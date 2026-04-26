@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module GuildedProvider
       PROVIDER_NAME = "guilded"
+      POPULARITY_SCORE = 50
       PROVIDER_ENABLED_SETTING = :chat_integration_guilded_enabled
       CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
@@ -34,23 +35,15 @@ module DiscourseChatIntegration
 
       def self.generate_guilded_message(post)
         topic = post.topic
-        category = ""
-        if topic.category
-          category =
-            (
-              if (topic.category.parent_category)
-                "[#{topic.category.parent_category.name}/#{topic.category.name}]"
-              else
-                "[#{topic.category.name}]"
-              end
-            )
-        end
-        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
-
-        icon_url =
-          if (url = (SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url)).present?
-            "#{Discourse.base_url}#{url}"
+        category =
+          if topic.category&.parent_category
+            "[#{topic.category.parent_category.name}/#{topic.category.name}]"
+          elsif topic.category
+            "[#{topic.category.name}]"
+          else
+            ""
           end
+        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         message = {
           embeds: [

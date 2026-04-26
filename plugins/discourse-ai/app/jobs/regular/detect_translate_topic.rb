@@ -53,9 +53,17 @@ module Jobs
       locales = DiscourseAi::Translation.locales
       return if locales.blank?
 
+      existing_base_locales =
+        TopicLocalization
+          .where(topic_id: topic.id)
+          .pluck(:locale)
+          .map { |l| l.split("_").first }
+          .to_set
+
       locales.each do |locale|
         next if LocaleNormalizer.is_same?(locale, detected_locale)
-        exists = topic.localizations.matching_locale(locale).exists?
+        base_locale = locale.split("_").first
+        exists = existing_base_locales.include?(base_locale)
 
         has_quota = DiscourseAi::Translation::TopicLocalizer.has_relocalize_quota?(topic, locale)
         next if !force && exists && !has_quota

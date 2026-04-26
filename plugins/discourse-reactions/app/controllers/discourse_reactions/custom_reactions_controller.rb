@@ -6,20 +6,13 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   requires_plugin DiscourseReactions::PLUGIN_NAME
 
-  before_action :ensure_logged_in, except: [:post_reactions_users]
+  before_action :ensure_logged_in, except: %i[reactions_users_list post_reactions_users]
 
   def toggle
     post = fetch_post_from_params
     reaction = params[:reaction]
 
-    invalid_reaction =
-      if SiteSetting.discourse_reactions_allow_any_emoji
-        !Emoji.exists?(reaction)
-      else
-        DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])
-      end
-
-    return render_json_error(post) if invalid_reaction
+    return render_json_error(post) unless DiscourseReactions::Reaction.valid?(reaction)
 
     begin
       manager =
@@ -158,6 +151,33 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     render_serialized reaction_users.first(PAGE_SIZE), UserReactionSerializer
   end
 
+  def reactions_users_list
+    post = fetch_post_from_params
+    page = params[:page].to_i.clamp(0..)
+    limit = params[:limit].present? ? params[:limit].to_i.clamp(1, 50) : 30
+
+    rows, total =
+      DiscourseReactions::PostReactionsQuery.call(
+        post: post,
+        reaction_filter: params[:reaction_value],
+        limit: limit,
+        offset: page * limit,
+      )
+
+    users =
+      rows.map do |row|
+        {
+          id: row.id,
+          username: row.username,
+          name: row.name,
+          avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
+          reaction: row.reaction,
+        }
+      end
+
+    render_json_dump(users: users, total_rows: total)
+  end
+
   def post_reactions_users
     params.require(:id).to_i
     reaction_value = params[:reaction_value]
@@ -259,10 +279,6 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       end
   end
 
-  def post_serializer(post)
-    PostSerializer.new(post, scope: guardian, root: false)
-  end
-
   def format_reaction_user(reaction)
     {
       id: reaction.reaction_value,
@@ -283,6 +299,10 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   def format_likes_users(likes)
     likes.includes([:user]).limit(MAX_USERS_COUNT + 1).map { |like| format_like_user(like) }
+  end
+
+  def post_serializer(post)
+    PostSerializer.new(post, scope: guardian, root: false)
   end
 
   def fetch_post_from_params

@@ -21,6 +21,9 @@ pt:
       title: "Explorador de Dados"
       create: "Criar"
       create_placeholder: "Nome da consulta..."
+      ai:
+        generate: "Gerar"
+        optional: "opcional"
       import:
         label: "Importar"
       help:

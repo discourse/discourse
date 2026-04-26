@@ -599,8 +599,6 @@ he:
           other: "נוצר לפני %{count} שנים"
     bookmarked:
       title: "סימנייה"
-      edit_bookmark: "עריכת סימנייה"
-      clear_bookmarks: "מחיקת סימניות"
       help:
         bookmark: "יש ללחוץ כדי להוסיף סימנייה לנושא הזה"
         edit_bookmark: "יש ללחוץ כדי לערוך את הסימנייה לפוסט בנושא זה"
@@ -619,12 +617,12 @@ he:
       clear_reminder: "פינוי התזכורת"
       edit: "עריכת סימנייה"
       not_bookmarked: "סימון פוסט זה בסימנייה"
+      topic_bookmark: "נושא"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
       created_with_reminder_generic: "סימנת את זה עם תזכורת %{date}. %{name}"
       delete: "מחיקת סימנייה"
       confirm_delete: "למחוק את הסימנייה הזאת? גם התזכורת תימחק."
-      confirm_clear: "לנקות את כל הסימניות מנושא זה?"
       save: "שמירה"
       no_timezone: 'עדיין לא הגדרת אזור זמן. לא תהיה לך אפשרות להגדיר תזכורות. ניתן להגדיר אותו <a href="%{basePath}/my/preferences/profile">בפרופיל שלך</a>.'
       invalid_custom_datetime: "התאריך והשעה שסיפקת שגויים, נא לנסות שוב."
@@ -2991,6 +2989,8 @@ he:
       medium_dark_tone: גוון עור כהה בינוני
       dark_tone: גוון עור כהה
       default: אמוג׳ים מותאמים
+    filter_input:
+      clear: "פינוי המסנן"
     shared_drafts:
       title: "טיוטות משותפות"
       notice: "הנושא הזה זמין לצפייה לאלו שיכולים לפרסם טיוטות שיתופיות."
@@ -3161,6 +3161,8 @@ he:
       wrap_modal:
         attributes_label: "תכונותמאפיינים"
         add_attribute: "הוספת מאפיין"
+        attribute_key: "מפתח"
+        attribute_value: "ערך"
         remove_attribute: "הסרת מאפיין"
         apply: "החלה"
         no_attributes: "לא נוספו מאפיינים עדיין."
@@ -3242,6 +3244,9 @@ he:
         copy: "העתקת קישור"
         remove: "הסרת קישור"
         visit: "פתיחת קישור בלשונית חיצונית"
+        link_copied: "הקישור הועתק!"
+      onebox_toolbar:
+        copy: "העתקת קישור"
         link_copied: "הקישור הועתק!"
       unsupported_token: "עורך הטקסט העשיר אינו תומך בכל היכולות בהן נעשה שימוש בפוסט הזה, מעביר אותך לעורך Markdown."
     notifications:
@@ -3753,12 +3758,35 @@ he:
         name: "מחיקה"
       update_category:
         name: "עדכון קטגוריה"
+      convert_to_public_topic:
+        name: "הפיכת הנושא לפומבי…"
+      convert_to_private_message:
+        name: "צור הודעה פרטית"
       reset_bump_dates:
         name: "איפוס תאריכי הקפצה"
       defer:
         name: "סימון כלא נקרא"
       update_notifications:
         name: "עדכון התראות"
+    nested_replies:
+      sort:
+        label: "מיון לפי"
+        top: "מובילים"
+        new: "חדשות"
+      load_more_children:
+        one: "תגובה נוספת"
+        two: "%{count} תגובות נוספות"
+        many: "%{count} תגובות נוספות"
+        other: "%{count} תגובות נוספות"
+      collapsed_replies:
+        one: "תגובה"
+        two: "שתי תגובות"
+        many: "שתי תגובות"
+        other: "שתי תגובות"
+      collapse: "צמצום"
+      no_replies: "עדיין אין תגובות."
+      deleted_post_placeholder: "[נמחק]"
+      pinned_reply: "נעוץ"
     topic:
       filter_to:
         one: "פוסט אחד בנושא"
@@ -4340,6 +4368,12 @@ he:
         two: "שני אנשים אהבו את הפוסט הזה."
         many: "%{count} אנשים אהבו את הפוסט הזה."
         other: "%{count} אנשים אהבו את הפוסט הזה."
+      likes_popup:
+        title:
+          one: "לייק %{count}"
+          two: "%{count} לייקים"
+          many: "%{count} לייקים"
+          other: "%{count} לייקים"
       sr_post_read_count_button:
         one: "מישהו או מישהי קראו את הפוסט הזה."
         two: "שניים או שתיים קראו את הפוסט הזה."
@@ -4380,7 +4414,7 @@ he:
           confirm_delete: "למחוק את התרגומים ל־‚%{languageCode}’?"
         success: "התרגומים עודכנו בהצלחה"
         post_language_selector:
-          none: "ללא"
+          none: "לא מוגדר"
         edit_warning:
           message: "זה פוסט מתורגם.<br><br> האם לערוך את הפוסט המקורי ב%{language} או לערוך את התרגום המסוים הזה?"
           action_original: "לערוך את הפוסט המקורי"
@@ -4407,6 +4441,7 @@ he:
       cancel_composer:
         confirm: "להתעלם מהפוסט שלך?"
         discard: "להשליך"
+        discard_edit: "התעלמות מהשינויים"
       via_email: "פוסט זה הגיע בדוא״ל"
       via_auto_generated_email: "פוסט זה הגיע דרך הודעת דוא״ל שנוצרה אוטומטית"
       whisper: "פוסט זה הוא לחישה פרטית למפקחים"
@@ -4453,8 +4488,8 @@ he:
           just_the_post: "לא, רק את הפוסט"
         admin: "פעולות ניהול של הפוסט"
         admin_action: "הנהלה"
-        permanently_delete: "למחוק לצמיתות"
-        permanently_delete_confirmation: "למחוק את הפוסט הזה לצמיתות? לא תהיה אפשרות לשחזר אותו."
+        permanently_delete: "מחיקה לצמיתות"
+        permanently_delete_confirm_phrase: "מחיקה לצמיתות"
         wiki: "יצירת wiki"
         unwiki: "הסרת הוויקי"
         convert_to_moderator: "הוספת צבע סגל"
@@ -4614,6 +4649,7 @@ he:
       back: "חזרה לקטגוריה"
       general: "כללי"
       settings: "הגדרות"
+      moderation: "פיקוח"
       advanced: "מתקדם"
       topic_template: "תבנית"
       tags: "תגיות"
@@ -4729,6 +4765,10 @@ he:
       review_group_name: "שם הקבוצה"
       require_topic_approval: "לדרוש אישור מפקח לכל הנושאים החדשים"
       require_reply_approval: "לדרוש אישור מפקח לכל התגובות החדשות"
+      posting_review_modes:
+        no_one: "אף אחד"
+        everyone: "כולם"
+      posting_review_groups_placeholder: "בחירת קבוצות…"
       this_year: "השנה"
       position: "מיקום בעמוד הקטגוריות:"
       default_position: "מקום ברירת מחדל"
@@ -5966,6 +6006,9 @@ he:
           staff: "סגל"
           all_members: "כל החברים"
           developers: "מפתחים"
+        impact_types:
+          feature_type: "יכולת"
+          other_type: "אחר"
         filter:
           search_placeholder: "סינון לפי שם, תיאור או תוסף…"
           no_results: "אין שינויים עתידיים שתואמים את המסנן שלך"
@@ -5992,7 +6035,6 @@ he:
           header_description: "כאן יש לספק מידע על האתר והצוות שלך כדי שאנשים יוכלו ללמוד מה מהות הקהילה שלך, מי העומדים מאחרויה ואיך לפנות אליך אם קורה משהו. מוצג ב<a href='%{basePath}/about'>עמוד על</a> האתר שלך."
         developer:
           title: "מפתחים"
-          header_description: "הגדרות מפתחים לשליטה במגבלות קצב, מכפילים וחישובים, מצב בטוח ושלל יכולות מתקדמות"
         experimental:
           title: "ניסיוני"
           header_description: "הפעלת/כיבוי יכולות ניסיוניות לאתר שלך, ברובן אפשר לשלוט לפי קבוצות"
@@ -6233,6 +6275,13 @@ he:
             logs:
               title: "יומנים"
               header_description: "הצגה וניהול של יומנים לגיבויים, שחזורים והעלאות"
+        problem_checks:
+          priority: "עדיפות"
+          status: "מצב"
+          last_run_at: "ריצה אחרונה"
+          ignore: "התעלמות"
+          more_options:
+            title: "אפשרויות נוספות"
         reports:
           title: "דוחות"
           header_description: "דוחות הם כלי רב עוצמה שמאפשר לך להבין מה קורה באתר שלך. הם יכולים לסייע לך לזהות מגמות, לאתר בעיות ולהחליט על בסיס נתונים."
@@ -6410,7 +6459,6 @@ he:
         new_features:
           title: "מה חדש?"
           subtitle: "אנו מוציאים לאור יכולות ושיפורים חדשים כל הזמן. העמוד הזה מסקר את הנקודות החשובות אבל ניתן ללחוץ על ‚מידע נוסף’ כדי לצפות בהערות ההוצאה לאור המפורטות."
-          no_new_features_error: "אירעה שגיאה בטעינת ערוץ העדכונים. ניתן לראות הכרזות קודמות על יכולות חדשות ב<a href='%{url}' target='_blank'>קהילת Discourse Meta</a>."
           learn_more: "מידע נוסף…"
         last_checked: "נבדק לאחרונה"
         refresh_problems: "רענן"

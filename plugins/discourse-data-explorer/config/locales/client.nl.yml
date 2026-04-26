@@ -23,6 +23,9 @@ nl:
       create: "Maken"
       create_placeholder: "Querynaam..."
       description_placeholder: "Voer hier een beschrijving in"
+      ai:
+        generate: "Genereren"
+        optional: "optioneel"
       import:
         label: "Importeren"
         unparseable_json: "Onparseerbaar JSON-bestand."

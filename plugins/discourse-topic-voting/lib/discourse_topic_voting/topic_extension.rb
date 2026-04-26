@@ -46,10 +46,10 @@ module DiscourseTopicVoting
       SQL
     end
 
-    def who_voted
+    def who_voted(limit: DiscourseTopicVoting::VOTER_PREVIEW_LIMIT)
       return if !SiteSetting.topic_voting_show_who_voted
 
-      self.votes.map(&:user)
+      votes.active.includes(:user).order(created_at: :desc).limit(limit).filter_map(&:user)
     end
   end
 end

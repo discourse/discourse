@@ -263,6 +263,9 @@ nl:
           bar_done:
             one: "%{count} bericht"
             other: "%{count} berichten"
+        theme_translations:
+          translate:
+            label: "Vertalen"
       spam:
         short_title: "Spam"
         title: "Spamafhandeling configureren"
@@ -555,7 +558,7 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-6: "Het intelligentste model van Antropic"
+          anthropic-claude-opus-4-7: "Het intelligentste model van Antropic"
           anthropic-claude-sonnet-4-6: "Optimale balans tussen snelheid en kosten"
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
           open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model"
@@ -754,8 +757,6 @@ nl:
           title: "AI-interactie weergeven"
           copy_request: "Verzoek kopiëren"
           copy_response: "Antwoord kopiëren"
-          request_tokens: "Verzoektokens:"
-          response_tokens: "Antwoordtokens:"
           request: "Verzoek"
           response: "Antwoord"
           next_log: "Volgende"

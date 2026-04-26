@@ -12,6 +12,9 @@ es:
           descriptions:
             ai:
               search: "Permite la búsqueda de IA"
+              stream_completion: "Permite la transmisión de realización de agentes de IA"
+              update_agents: "Permite actualizar agentes de IA"
+              manage_artifacts: "Permite gestionar artefactos de IA (listar, ver, crear, actualizar, eliminar)"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -33,12 +36,18 @@ es:
             create_ai_llm_model: "Crear modelo LLM"
             update_ai_llm_model: "Actualizar modelo LLM"
             delete_ai_llm_model: "Eliminar modelo LLM"
+            create_ai_agent: "Crear agente de IA"
+            update_ai_agent: "Actualizar agente de IA"
+            delete_ai_agent: "Eliminar agente de IA"
             create_ai_tool: "Crear herramienta de IA"
             update_ai_tool: "Actualizar herramienta de IA"
             delete_ai_tool: "Eliminar herramienta de IA"
             create_ai_embedding: "Crear incrustación de IA"
             update_ai_embedding: "Actualizar incrustación de IA"
             delete_ai_embedding: "Eliminar incrustación de IA"
+            create_ai_secret: "Crear secreto de IA"
+            update_ai_secret: "Actualizar secreto de IA"
+            delete_ai_secret: "Eliminar secreto de IA"
             update_ai_spam_settings: "Actualizar ajustes de detección de spam de IA"
   js:
     discourse_automation:
@@ -105,14 +114,33 @@ es:
             top_p:
               label: "Top P"
               description: "Top P a utilizar para el LLM. Aumentar para aumentar la aleatoriedad (dejar en blanco para utilizar el modelo por defecto)"
+            agent_id:
+              label: "Agente"
+              description: "Agente de IA para generación de informes"
+        ai_tool_action:
+          fields:
+            tool:
+              label: "Herramienta de IA"
+              description: "La herramienta de IA que se ejecuta cuando se activa la automatización"
+            llm_model:
+              label: "Modelo LLM"
+              description: "Modelo de lenguaje para herramientas que utilizan llm.generate() (opcional)"
         llm_agent_triage:
           fields:
+            agent:
+              label: "Agente"
+              description: "Agente de IA a utilizar para el triaje (debe tener configurado un LLM y un usuario por defecto)"
             whisper:
               label: "Responder como susurro"
+              description: "Si la respuesta del agente debe ser un susurro"
             silent_mode:
               label: "Modo silencioso"
+              description: "En el modo silencioso, el agente recibirá el contenido, pero no publicará nada en el foro, lo cual es útil al realizar un triaje con herramientas"
         llm_triage:
           fields:
+            triage_agent:
+              label: "Agente"
+              description: "Agente usado para el triaje, asegúrate de que responda con una sola palabra que puedas utilizar para desencadenar la acción"
             max_post_tokens:
               label: "Máximo de tokens de publicación"
               description: "El número máximo de tokens a escanear utilizando el triaje LLM"
@@ -143,24 +171,76 @@ es:
             flag_post:
               label: "Denunciar publicación"
               description: "Denuncia la publicación (como spam o para revisión)"
+            notify_author_pm:
+              label: "Notificar al autor por MP"
+              description: "Envía un mensaje personal al autor de la publicación cuando esta se ponga en cola y se elimine"
+            notify_author_pm_user:
+              label: "Remitente del MP"
+              description: "Usuario que enviará el MP (por defecto, el sistema)"
+            notify_author_pm_message:
+              label: "Contenido del MP"
+              description: "Mensaje personalizado opcional para enviar al autor"
             include_personal_messages:
               label: "Incluir mensajes personales"
               description: "También escanea y clasifica los mensajes personales"
             whisper:
               label: "Responder como susurro"
               description: "Si la respuesta de IA debe ser un susurro"
+            reply_agent:
+              label: "Agente de respuesta"
+              description: "Agente de IA que se utilizará para las respuestas (debe tener un LLM por defecto), tendrá prioridad sobre la respuesta enlatada"
             max_output_tokens:
               label: "Máximo de tokens de salida"
               description: "Cuando se especifica, establece un límite superior para el número máximo de tokens que el modelo puede generar. Respeta el límite máximo de tokens de salida del LLM."
+        llm_tagger:
+          tag_mode:
+            manual: "Utilizar lista de etiquetas específica (se configura a continuación)"
+            discover: "Deja que la IA descubra y utilice cualquier etiqueta del sitio"
+          fields:
+            tagger_agent:
+              label: "Agente de IA"
+              description: "El agente de IA que se utilizará para analizar y etiquetar temas"
+            tag_mode:
+              label: "Modo de selección de etiquetas"
+              description: "Elige cómo la IA selecciona las etiquetas"
+            available_tags:
+              label: "Etiquetas disponibles"
+              description: "Etiquetas que la IA puede seleccionar (solo se utilizan en modo manual)"
+            confidence_threshold:
+              label: "Umbral de confianza"
+              description: "Porcentaje mínimo de confianza (0-100) obligatorio para aplicar las etiquetas sugeridas"
+            max_tags_per_post:
+              label: "Número máximo de etiquetas por publicación"
+              description: "Número máximo de etiquetas que se pueden aplicar a una sola publicación"
+            max_post_tokens:
+              label: "Máximo de tokens de publicación"
+              description: "Número máximo de tokens del contenido de la publicación para analizar"
+            allow_restricted_tags:
+              label: "Permitir etiquetas restringidas"
+              description: "Permitir que la IA sugiera y aplique etiquetas con permisos o visibilidad restringidos."
+            max_posts_for_context:
+              label: "Número máximo de publicaciones para contexto"
+              description: "Número máximo de publicaciones del tema que se incluirán para el contexto de análisis (por defecto: 5)"
+            allow_system_posts:
+              label: "Permitir publicaciones del sistema"
+              description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
       default_llm:
         title: "Modelo LLM por defecto"
+        description: "El modelo LLM por defecto que se utilizará para todas las características de IA. Se usará si no se especifica ningún LLM en la configuración de características o en el agente. Si no se especifica ningún LLM por defecto, se usará el último LLM creado."
       llm_selector:
         none: "Ninguna"
+        saved: "El modelo LLM por defecto se ha actualizado correctamente"
       features:
         short_title: "Características"
+        description: "Estas son las características de IA disponibles para los visitantes de tu sitio. Se pueden configurar para usar agentes y LLM específicos, y los grupos pueden controlar su acceso."
+        back: "Volver a las características de IA"
+        settings_save_error: "Algunos ajustes no se han podido guardar."
         disabled: "(desactivado)"
+        agent:
+          one: "Agente:"
+          other: "Agentes:"
         groups: "Grupos:"
         llm:
           one: "LLM:"
@@ -177,11 +257,17 @@ es:
           bot: "Chatbot"
           name: "Bot"
           description: "Un bot de chat que puede responder preguntas y ayudar a los usuarios en mensajes personales, fotos y chats"
+          setting_groups:
+            settings: "Ajustes básicos"
+            access_control: "Control de acceso"
+            ui_settings: "Ajustes de interfaz de usuario"
+            integrations: "Integraciones"
         nav:
           configured: "Configurado"
           unconfigured: "Sin configurar"
         filters:
           all: "Todo"
+          text: "Buscar características, agentes, LLM o grupos..."
           no_results: "No se han encontrado características que coincidan con tus filtros."
           reset: "Restablecer"
         no_automations: "Aún no hay automatizaciones"
@@ -190,27 +276,45 @@ es:
           description: "Pone a disposición un botón de resumen que permite que los visitantes puedan resumir temas"
           topic_summaries: "Resúmenes de temas"
           gists: "Resúmenes breves de la lista de temas"
+          setting_groups:
+            settings: "Ajustes básicos"
+            gists: "Gists"
+            backfill: "Relleno"
         search:
           name: "Buscar"
           description: "Mejora la experiencia de búsqueda al proporcionar respuestas generadas por IA a las consultas"
           discoveries: "Descubrimientos"
+          setting_groups:
+            settings: "Ajustes básicos"
         embeddings:
           name: "Incrustaciones"
           description: "Impulsa características como Temas relacionados y Búsqueda de IA al generar representaciones semánticas de texto"
           hyde: "HyDE"
           setting_groups:
+            model_settings: "Ajustes del modelo"
             related_topics: "Temas relacionados"
+            semantic_search: "Búsqueda semántica"
         discord:
           name: "Integración de Discord"
           description: "Añade la posibilidad de buscar canales de Discord"
           search: "Búsqueda de Discord"
+          setting_groups:
+            settings: "Ajustes básicos"
+            discord_configuration: "Configuración de Discord"
         inference:
           name: "Conceptos inferidos"
           description: "Clasifica temas y publicaciones en áreas de interés/etiquetas."
           generate_concepts: "Inferencia de conceptos"
           match_concepts: "Coincidencia de conceptos"
           deduplicate_concepts: "Duplicación de conceptos"
+          setting_groups:
+            settings: "Ajustes básicos"
+            topic_criteria: "Criterios del tema"
+            post_criteria: "Criterios de la publicación"
+            agents: "Agentes"
         ai_helper:
+          edit: "Editar los ajustes del ayudante de IA"
+          name: "Ayudante de IA"
           description: "Ayuda a los usuarios a interactuar con la comunidad, como crear temas, escribir publicaciones y leer contenido"
           proofread: Corregir el texto
           title_suggestions: "Sugerir títulos"
@@ -223,8 +327,12 @@ es:
           image_caption: "Añadir pie de foto"
           translator: "Traductor"
           post_illustrator: "Ilustrador de publicaciones"
+          chat_thread_titles: "Títulos de los hilos de chat"
           setting_groups:
+            access_permissions: "Acceso y permisos"
+            enabled_features: "Características activadas"
             automation: "Automatización"
+            agents: "Agentes"
         translation:
           name: "Traducción"
           description: "Traduce el contenido a los idiomas compatibles"
@@ -232,6 +340,15 @@ es:
           post_raw_translator: "Traductor de publicaciones"
           topic_title_translator: "Traductor de títulos de temas"
           short_text_translator: "Traductor de textos cortos"
+          schedule_untranslated: "Traducciones programadas"
+          schedule_topic_success:
+            one: "Traducción programada para %{count} publicación no traducida."
+            other: "Traducción programada para %{count} publicaciones no traducidas."
+          schedule_topic_error: "Error al programar las traducciones. Inténtalo de nuevo."
+          setting_groups:
+            settings: "Ajustes básicos"
+            agents: "Agentes"
+            backfill_and_limits: "Relleno y límites"
         spam:
           name: "Spam"
           description: "Identifica spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
@@ -250,10 +367,16 @@ es:
       translations:
         title: "Traducciones"
         description: "Traduce automáticamente todo el contenido de tu foro al idioma preferido del usuario"
+        supported_locales: "Idiomas compatibles"
+        supported_locales_description: "Este ajuste del sitio también permite a los visitantes contribuir con traducciones de las publicaciones."
         admin_actions:
           translation_settings: "Ajustes de traducción"
           localization_settings: "Ajustes de localización"
+          enable_translations: "Activar traducciones automáticas"
         stats:
+          title: "Estadísticas de traducción"
+          backfill_disabled: "El relleno está desactivado, solo se traducirán las publicaciones nuevas."
+          backfill_message: "Los <a href='%{settingsUrl}'>ajustes de relleno</a> están configurados para traducir todas las publicaciones posteriores a %{date}. Se estima que tardará %{eta}."
           eta_minutes:
             one: "%{count} minuto"
             other: "%{count} minutos"
@@ -264,13 +387,28 @@ es:
             one: "%{count} día"
             other: "%{count} días"
         progress_chart:
+          title: "Progreso de la traducción"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} de %{total} publicaciones que no están en %{language} traducidas"
           bar_done:
             one: "%{count} publicación"
             other: "%{count} publicaciones"
+        theme_translations:
+          translate:
+            label: "Traducir"
+        translations_menu:
+          translate:
+            label: "Traducir publicación"
+            title: "Traduce esta publicación a todos los idiomas compatibles"
+            confirm: "Esto actualizará cualquier traducción existente en esta publicación. ¿Seguro que quieres continuar?"
+            success: "La publicación se ha enviado para su traducción"
+        credit_limit_warning: "Las traducciones están en pausa debido a los límites de crédito. Se reanudarán cuando se restablezcan los créditos en %{reset_time}."
+        credit_limit_warning_no_time: "Las traducciones están en pausa debido a los límites de crédito. Se reanudarán cuando se restablezcan los créditos."
       spam:
         short_title: "Spam"
         title: "Configurar el manejo de spam"
         select_llm: "Seleccionar LLM"
+        select_agent: "Seleccionar agente"
         custom_instructions: "Instrucciones personalizadas"
         custom_instructions_help: "Instrucciones personalizadas específicas de tu sitio para ayudar a guiar a la IA en la identificación de spam, por ejemplo: «Sé más agresivo a la hora de escanear las publicaciones que no estén en inglés»."
         last_seven_days: "Últimos 7 días"
@@ -291,7 +429,10 @@ es:
           post_url_label: "URL o ID de la publicación"
           post_url_placeholder: "https://tu-foro.com/t/topic/123/4 o ID de publicación"
           result: "Resultado"
+          reason: "Razonamiento"
           llm: "LLM"
+          scan_history: "Historial de escaneos"
+          sent_message: "Enviar mensaje"
           system_prompt: "Aviso del sistema"
           scan_log: "Registro de escaneo"
           run: "Ejecutar prueba"
@@ -314,6 +455,7 @@ es:
         feature: "Característica"
         usage_count: "Recuento de usos"
         model: "Modelo"
+        credits_remaining: "Créditos restantes"
         models_breakdown: "Uso por modelo"
         users_breakdown: "Uso por usuario"
         all_features: "Todas las características"
@@ -323,6 +465,8 @@ es:
         request_tokens: "Tokens de solicitud"
         response_tokens: "Tokens de respuesta"
         net_request_tokens: "Tokens de solicitud de red"
+        cache_read_tokens: "Tokens de lectura de la caché"
+        cache_write_tokens: "Tokens de escritura de la caché"
         cached_tokens: "Tokens almacenados en caché"
         cached_request_tokens: "Tokens de solicitud almacenados en caché"
         total_spending: "Coste estimado"
@@ -330,12 +474,18 @@ es:
         no_models: "No se han encontrado datos de uso del modelo"
         no_features: "No se han encontrado datos de uso de características"
         total: "Total"
+        included_in_plan: "Incluido en el plan"
+        included_models: "Uso incluido"
+        billed_models: "Uso facturado"
+        cost: "Coste"
         subheader_description: "Los tokens son las unidades básicas que utilizan los LLM para comprender y generar texto, los datos de uso pueden afectar a los costes"
         stat_tooltips:
           total_requests: "Todas las solicitudes realizadas a los LLM a través de Discourse"
           total_tokens: "Todos los tokens utilizados al solicitar un LLM"
           request_tokens: "Tokens utilizados cuando el LLM intenta comprender lo que dices"
           response_tokens: "Tokens utilizados cuando el LLM responde a tu consulta"
+          cache_read_tokens: "Tokens de solicitud previamente procesados que el LLM reutiliza de la caché para optimizar el rendimiento y el coste"
+          cache_write_tokens: "Tokens de solicitud que se escribieron en la caché para su posible reutilización futura"
           cached_tokens: "Tokens de solicitud previamente procesados que el LLM reutiliza para optimizar el rendimiento y el coste"
           total_spending: "Coste acumulativo de todos los tokens usados por los LLM según métricas de coste especificadas añadidas a los ajustes de configuración de LLM"
         periods:
@@ -343,22 +493,49 @@ es:
           last_week: "Última semana"
           last_month: "Último mes"
           custom: "Personalizado..."
+        credit_allocations: "Asignaciones de crédito"
       ai_agent:
         ai_tools: "Herramientas"
+        mcp_servers: "Servidores MCP"
+        mcp_server_tools_help: "Los servidores MCP seleccionados exponen todas sus herramientas por defecto. Limítalas por agente para reducir el uso de tokens y mantener centrada la elección de herramientas."
+        mcp_server_tool_count:
+          one: "%{count} herramienta"
+          other: "%{count} herramientas"
+        mcp_server_enabled_tool_count:
+          one: "%{count} herramienta activada"
+          other: "%{count} herramientas activadas"
+        mcp_server_all_tools_enabled: "Todas las herramientas activadas"
+        mcp_server_enabled_tools:
+          one: "%{count} de %{total} herramienta activada"
+          other: "%{count} de %{total} herramientas activadas"
+        mcp_server_choose_tools: "Seleccionar herramientas"
+        mcp_server_edit_tools: "Editar herramientas"
         tool_strategies:
           all: "Aplicar a todas las respuestas"
           replies:
             one: "Aplicar solo a la primera respuesta"
             other: "Aplicar a las primeras %{count} respuestas"
+        back: "Volver a los agentes"
         name: "Nombre"
         edit: "Editar"
         export: "Exportar"
         import: "Importar"
+        import_error_conflict: "Conflicto detectado al importar %{name}, ¿quieres actualizar el agente existente?"
         overwrite: "Sobrescribir"
         description: "Descripción"
-        no_llm_selected: "No se seleccionó ningún modelo de idioma"
+        no_llm_selected: "No se ha seleccionado ningún modelo de idioma"
+        use_parent_llm: "Usar modelo de idioma del agente"
         max_context_posts: "Número máximo de publicaciones contextuales"
-        max_context_posts_help: "El número máximo de mensajes a utilizar como contexto para la IA cuando responda a un usuario. (vacío por defecto)"
+        max_context_posts_help: "El número máximo de mensajes que se utilizarán como contexto para la IA cuando responda a un usuario (vacío por defecto)."
+        execution_mode: "Modo de ejecución"
+        execution_mode_help: "Controla cómo gestiona el agente la ejecución de herramientas y el contexto de la conversación. Por defecto utiliza límites fijos de turnos/herramientas. Agentic utiliza un presupuesto de tokens con compresión automática del contexto para sesiones de uso de herramientas más largas y eficaces."
+        execution_mode_options:
+          default: "Por defecto (límites fijos)"
+          agentic: "Agéntico (presupuesto de tokens)"
+        max_turn_tokens: "Máximo de tokens de turno"
+        max_turn_tokens_help: "Máximo total de tokens (entrada + salida) consumidos en todas las llamadas LLM durante una única respuesta del bot. Cuando se establece, sustituye los límites fijos de finalización/herramienta por un presupuesto de tokens, permitiendo un comportamiento más agéntico. Déjalo vacío para que permanezcan los límites por defecto."
+        compression_threshold: "Umbral de compresión"
+        compression_threshold_help: "Porcentaje de uso del contexto (20-99) a partir del cual se activa la compresión automática. Los valores más bajos activan la compresión antes, preservando más espacio libre."
         vision_enabled: Visión activada
         vision_enabled_help: Si está activada, la IA intentará comprender las imágenes que los usuarios publiquen en el tema, depende del modelo que se utilice para soportar la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI.
         vision_max_pixels: Tamaño de imagen admitido
@@ -366,34 +543,78 @@ es:
           low: 'Baja calidad: más barato (256x256)'
           medium: Calidad media (512x512)
           high: 'Alta calidad: más lento (1024x1024)'
+        show_thinking: Mostrar pensamiento
+        show_thinking_help: Mostrará a los usuarios finales el pensamiento interno y las llamadas a las herramientas del modelo lingüístico.
         mentionable: Permitir menciones
+        mentionable_help: Si están activadas, los usuarios de los grupos permitidos pueden mencionar a este usuario en sus publicaciones, y la IA responderá como este agente.
         user: Usuario
         create_user: Crear usuario
+        create_user_help: Opcionalmente, puedes adjuntar un usuario a este agente. Si lo haces, la IA utilizará a este usuario para responder a las solicitudes.
         default_llm: Modelo lingüístico por defecto
+        default_llm_help: El modelo de idioma por defecto que se utilizará para este agente. Obligatorio si deseas mencionar al agente en publicaciones públicas.
         system_prompt: Instrucción del sistema
         forced_tool_strategy: Estrategia de herramienta forzada
         allow_chat_direct_messages: "Permitir mensajes directos de chat"
+        allow_chat_direct_messages_help: "Si se activa, los usuarios de los grupos permitidos pueden enviar mensajes directos a este agente."
         allow_chat_channel_mentions: "Permitir menciones en el canal de chat"
+        allow_chat_channel_mentions_help: "Si se activan, los usuarios de los grupos permitidos pueden mencionar a este agente en los canales de chat."
         allow_personal_messages: "Permitir mensajes personales"
+        allow_personal_messages_help: "Si se activa, los usuarios de los grupos permitidos pueden enviar mensajes personales a este agente."
         allow_topic_mentions: "Permitir menciones en temas"
+        allow_topic_mentions_help: "Si se activa, los usuarios de los grupos permitidos pueden mencionar a este agente en los temas."
+        require_approval: "Requiere aprobación para herramientas de moderación"
+        require_approval_help: "Si se activa, las acciones de moderación (cerrar, borrar, editar, etc.) se enviarán a la cola de revisión para que el moderador las apruebe antes de su ejecución."
         force_default_llm: "Utilizar siempre el modelo de idioma por defecto"
         save: "Guardar"
+        saved: "Agente guardado"
         enabled: "¿Activado?"
-        tools: "Herramientas habilitadas"
+        tools: "Herramientas activadas"
+        tokens: "tokens"
+        context_cost: "Coste del contexto"
+        token_usage: "Uso del token"
+        tool_count: "Recuento de herramientas"
+        tool_count_value:
+          one: "%{count} herramienta"
+          other: "%{count} herramientas"
+        tool_tokens_total: "~%{tokens} tokens"
+        mcp_server_cost_name: "%{name} (servidor MCP)"
+        mcp_server_cost_value:
+          one: "~%{tokens} tokens, %{count} herramienta"
+          other: "~%{tokens} tokens, %{count} herramientas"
+        mcp_server_tokens_only: "~%{tokens} tokens"
         mcp_tools_modal:
+          title: "Herramientas de %{name}"
+          summary: "Por defecto, este agente puede utilizar todas las herramientas de este servidor. Selecciona un conjunto más pequeño para limitar el acceso y reducir el coste del prompt."
+          filter_placeholder: "Filtrar herramientas"
           select_all: "Seleccionar todo"
           clear_all: "Limpiar todo"
+          selection_summary:
+            one: "%{count} de %{total} herramienta seleccionada"
+            other: "%{count} de %{total} herramientas seleccionadas"
+          empty: "No se han encontrado herramientas que coincidan con este filtro."
+        tool_severity_medium: "Capacidad moderada"
+        tool_severity_high: "Capacidad alta"
+        tool_severity_too_many: "Demasiadas herramientas"
+        tool_tokens_warning: "El exceso de herramientas degrada el rendimiento de la IA al ocupar una valiosa memoria de conversación. Considera la posibilidad de eliminar las herramientas no esenciales."
+        tool_count_warning: "La definición de cada herramienta se envía al modelo en cada solicitud. Tener muchas herramientas aumenta el uso de tokens y puede confundir al modelo, lo que lleva a una peor selección de herramientas. Conserva solo las herramientas que este agente necesite realmente."
         forced_tools: "Herramientas forzadas"
         allowed_groups: "Grupos permitidos"
+        confirm_delete: "¿Seguro que quieres eliminar este agente?"
+        new: "Nuevo agente"
+        no_agents: "Aún no has creado ningún agente"
+        title: "Agentes"
+        short_title: "Agentes"
         delete: "Eliminar"
         temperature: "Temperatura"
         temperature_help: "Temperatura que se utilizará para el LLM. Aumentar para aumentar la creatividad (dejar vacío para utilizar el valor por defecto del modelo, generalmente un valor de 0,0 a 2,0)"
         top_p: "Top P"
-        top_p_help: "Top P a utilizar para el LLM, aumentar para aumentar la aleatoriedad (dejar vacío para utilizar el modelo por defecto, generalmente un valor de 0,0 a 1,0)"
+        top_p_help: "Top P que se utilizará para el LLM. Aumentar para aumentar la aleatoriedad (dejar vacío para utilizar el modelo por defecto, generalmente un valor de 0,0 a 1,0)"
         priority: "Prioridad"
+        priority_help: "Los agentes prioritarios se muestran a los usuarios en la parte superior de la lista de agentes. Si varios agentes tienen prioridad, se ordenarán alfabéticamente."
         tool_options: "Opciones de herramientas"
         rag_conversation_chunks: "Buscar fragmentos de conversación"
-        rag_conversation_chunks_help: "El número de fragmentos a utilizar para las búsquedas del modelo RAG. Aumentar para incrementar la cantidad de contexto que puede utilizar la IA."
+        rag_conversation_chunks_help: "El número de fragmentos que se utilizarán para las búsquedas del modelo RAG. Aumentar para incrementar la cantidad de contexto que puede utilizar la IA."
+        agent_description: "Los agentes son una característica potente que te permite personalizar el comportamiento del motor de IA en tu foro de Discourse. Actúan como «system message» que guía las respuestas e interacciones de la IA, ayudando a crear una experiencia de usuario más personalizada y atractiva."
         response_format:
           title: "Formato de respuesta JSON"
           no_format: "No se ha especificado ningún formato JSON"
@@ -413,8 +634,11 @@ es:
           enabled: "¿Bot de IA?"
         ai_bot:
           title: "Opciones de bot de IA"
+          save_first: "Habrá más opciones de bot de IA disponibles una vez que guardes el agente."
         filters:
+          text: "Encuentra un agente"
           reset: "Restablecer"
+          no_results: "No se han encontrado agentes que coincidan con tus filtros."
           all_features: "Cualquier característica"
         features_list:
           one: "Característica:"
@@ -443,7 +667,10 @@ es:
           uploading: "Subiendo..."
           remove: "Eliminar subida"
       tools:
+        back: "Volver a las herramientas"
         short_title: "Herramientas"
+        keywords: "mcp|servidor mcp|protocolo de contexto del modelo"
+        script_tools: "Herramientas del script"
         export: "Exportar"
         import: "Importar"
         import_error_conflict: "La herramienta ya existe, ¿quieres actualizarla?"
@@ -453,14 +680,17 @@ es:
         name_help: "El nombre aparecerá en la interfaz de usuario de Discourse y es el identificador corto que utilizarás para encontrar la herramienta en varios ajustes; debe ser distinto (es obligatorio)."
         new: "Nueva herramienta"
         tool_name: "Nombre de la herramienta"
+        tool_name_help: "El nombre de la herramienta se presenta al modelo de lenguaje grande. No es único, pero sí lo es para cada agente. (El agente se valida al guardar)."
         description: "Descripción"
         description_help: "Una descripción clara de la finalidad de la herramienta para el modelo lingüístico"
+        subheader_description: "Las herramientas y los servidores MCP amplían las capacidades de los agentes de IA."
         summary: "Resumen"
         summary_help: "Resumen de la finalidad de las herramientas que se mostrará a los usuarios finales"
         script: "Script"
         parameters: "Parámetros"
         save: "Guardar"
         parameter_type: "Tipo de parámetro"
+        parameter_item_type: "Tipo de elemento"
         add_parameter: "Añadir parámetro"
         remove_parameter: "Eliminar"
         parameter_required: "Obligatorio"
@@ -469,7 +699,12 @@ es:
         parameter_description: "Descripción del parámetro"
         enum_value: "Valor de enumeración"
         add_enum_value: "Añadir valor de enumeración"
-        credential_not_set: "(no establecido)"
+        secret_alias: "Alias de credencial"
+        secret_alias_help: "Alias al que se hace referencia desde los scripts mediante secrets.get(\"alias_name\"). Se pueden usar letras, números y guiones bajos."
+        secret_credential: "Credencial"
+        add_secret_contract: "Añadir credencial"
+        remove_secret_contract: "Eliminar credencial"
+        credential_not_set: "(no establecida)"
         edit: "Editar"
         test: "Probar"
         delete: "Eliminar"
@@ -481,30 +716,112 @@ es:
           result: "Resultado de la prueba"
       secrets:
         short_title: "Credenciales"
+        description: "Gestionar las credenciales de autenticación compartidas entre LLM, integraciones y herramientas."
         name: "Nombre"
         secret: "Valor"
+        select_secret: "Selecciona una credencial..."
+        create_new: "Nueva credencial"
+        add_secret: "Añadir credencial"
+        saved: "Credenciales guardadas"
+        confirm_delete: "¿Seguro que quieres eliminar esta credencial?"
+        delete_failed_in_use: "Esta credencial está actualmente en uso y no se puede eliminar."
+        no_secrets: "Aún no hay credenciales"
+        new_title: "Nueva credencial"
+        edit_title: "Editar credencial"
+        back: "Volver a las credenciales"
         save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
+        used_by: "Usado por"
+        not_used: "No está en uso"
         embedding: "Incrustado"
+        cannot_delete_in_use: "Esta credencial no se puede eliminar porque está siendo utilizada por:"
         tool: "Herramienta"
+        mcp_server: "Servidor MCP"
+        mcp_server_oauth_client_secret: "Secreto del cliente OAuth del servidor MCP"
+        modal:
+          title: "Crear nueva credencial"
       mcp_servers:
+        short_title: "Servidores MCP"
+        new: "Nuevo servidor MCP"
         name: "Nombre"
         description: "Descripción"
         url: "URL"
+        auth_type: "Autenticación"
         auth_types:
+          none: "Sin autenticación"
+          header_secret: "Credencial del encabezado"
           oauth: "OAuth"
+        secret: "Credencial"
+        auth_header: "Encabezado de autenticación"
+        auth_scheme: "Esquema de autenticación"
+        oauth_client_registration: "Registro de cliente OAuth"
+        oauth_client_registration_types:
+          client_metadata_document: "Documento de metadatos del cliente"
+          manual: "Credenciales de cliente manuales"
+        oauth_client_id: "ID de cliente OAuth"
+        oauth_client_secret: "Secreto del cliente de OAuth"
+        oauth_scopes: "Ámbitos de OAuth"
+        oauth_authorization_params: "parámetros de autorización OAuth"
+        oauth_authorization_params_help: "Objeto JSON opcional incorporado a la solicitud de autorización. Utiliza null para eliminar un parámetro por defecto."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "parámetros del token OAuth"
+        oauth_token_params_help: "Objeto JSON opcional incorporado a las solicitudes de token. Utiliza null para eliminar un parámetro por defecto."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Requerir token de actualización"
+        oauth_require_refresh_token_help: "La conexión OAuth fallará si el proveedor no devuelve un token de actualización."
+        oauth_json_object_required: "%{field} debe ser un objeto JSON."
+        oauth_show_advanced_options: "Mostrar opciones avanzadas"
+        oauth_hide_advanced_options: "Ocultar opciones avanzadas"
+        oauth_connection: "Conexión de OAuth"
+        oauth_status: "Estado de OAuth"
         oauth_statuses:
+          disconnected: "Desconectado"
           connected: "Conectados"
+          refresh_failed: "Error al actualizar"
+          error: "Requiere atención"
         oauth_connect: "Conectar"
+        oauth_reconnect: "Reconectar"
+        oauth_disconnect: "Desconectar"
+        oauth_connect_help: "Utiliza Conectar para guardar el servidor y autorizarlo."
+        oauth_client_metadata_url: "URL de metadatos del cliente"
+        oauth_granted_scopes: "Ámbitos concedidos"
+        oauth_access_token_expires_at: "El token de acceso caduca en"
+        oauth_authorization_endpoint: "Terminal de autorización"
+        oauth_token_endpoint: "Terminal del token"
+        oauth_revocation_endpoint: "Terminal de revocación"
+        oauth_issuer: "Emisor"
+        oauth_last_error: "Último error OAuth"
+        oauth_show_details: "Mostrar detalles"
         oauth_hide_details: "Ocultar detalles"
+        timeout_seconds: "Tiempo de espera de la solicitud (segundos)"
+        timeout_seconds_tooltip: "¿Cuánto tiempo espera Discourse al servidor MCP antes de que falle la solicitud? Mantén el valor en 30 a menos que el servidor sea persistentemente lento."
         enabled: "Activado"
         save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
+        test: "Probar la conexión"
+        saved: "Servidor MCP guardado"
+        confirm_delete: "¿Seguro que quieres eliminar este servidor MCP?"
+        back: "Volver a las herramientas"
+        health: "Estado"
+        healthy: "Bueno"
+        unhealthy: "Requiere atención"
+        tool_count:
+          one: "%{count} herramienta"
+          other: "%{count} herramientas"
         tools_modal:
+          title: "Herramientas de %{name}"
+          summary:
+            one: "Este servidor actualmente ofrece %{count} herramienta."
+            other: "Este servidor actualmente ofrece %{count} herramientas."
           parameters: "Parámetros"
           required: "Obligatorio"
+          no_parameters: "Esta herramienta no requiere ningún parámetro."
+        test_result: "Resultado de la conexión"
+        test_summary:
+          one: "Se ha descubierto %{count} herramienta usando el protocolo %{version}."
+          other: "Se han descubierto %{count} herramientas usando el protocolo %{version}."
       llms:
         short_title: "LLM"
         no_llms: "Aún no hay LLM"
@@ -518,13 +835,17 @@ es:
         url: "URL del servicio que aloja el modelo"
         api_key: "Clave API del servicio que aloja el modelo"
         vision_enabled: "Visión activada"
+        allowed_attachment_types: "Archivos adjuntos permitidos"
+        attachment_types_placeholder: "Selecciona o escribe extensiones (por ejemplo, pdf, txt, docx)"
         ai_bot_user: "Usuario de bot de IA"
         cost_input: "Coste de entrada"
         cost_cached_input: "Coste de entrada en caché"
+        cost_cache_write: "Coste de escritura de la caché"
         cost_output: "Coste de salida"
         save: "Guardar"
         edit: "Editar"
         saved: "Modelo LLM guardado"
+        back: "Volver a los LLM"
         confirm_delete: '¿Seguro que quieres eliminar este modelo?'
         delete: Eliminar
         quotas:
@@ -547,10 +868,16 @@ es:
           max_tokens_required: "Debe configurarse si no se establece el número máximo de usos"
           max_usages_help: "Número máximo de veces que cada usuario de este grupo puede utilizar el modelo de IA dentro de la duración especificada. Esta cuota se controla por usuario individual, no se comparte con todo el grupo."
           max_usages_required: "Debe configurarse si no se establece el número máximo de tokens"
+        credit_allocation:
+          credits_remaining: "%{remaining} de %{total} créditos restantes (%{percentage}%)"
+          soft_limit_warning: "A este modelo le quedan %{percentage}% de créditos de IA hoy"
+          hard_limit_warning: "Te has quedado sin créditos de IA para este modelo. Las funciones de IA que utilicen este modelo no estarán disponibles hasta %{reset_date}."
+          next_reset: "Los créditos se reinician en %{time}"
         usage:
           ai_bot: "Bot de IA"
           ai_helper: "Ayudante (%{agent})"
           ai_helper_image_caption: "Pie de foto"
+          ai_agent: "Agente (%{agent})"
           ai_summarization: "Resumir"
           ai_embeddings_semantic_search: "Búsqueda de IA"
           ai_spam: "Spam"
@@ -560,10 +887,20 @@ es:
           other: "Este modelo lo utilizan actualmente las siguientes %{settings}. Si está mal configurado, las características no funcionarán como se espera."
         model_description:
           none: "Ajustes generales que funcionan para la mayoría de los modelos lingüísticos"
-          anthropic-claude-opus-4-6: "El modelo antrópico más inteligente"
+          anthropic-claude-opus-4-7: "El modelo antrópico más inteligente"
           anthropic-claude-sonnet-4-6: "Equilibrio óptimo entre velocidad y coste"
           anthropic-claude-haiku-4-5: "Rápido y rentable"
+          google-gemini-3-pro: "El modelo de Google más inteligente"
+          google-gemini-3-flash: "Rápido y rentable con razonamiento multimodal"
+          open_ai-gpt-5-4: "El modelo estrella de OpenAI. Es ideal para la resolución de problemas en todos los dominios."
+          open_ai-gpt-5-4-mini: "Proporciona un equilibrio entre inteligencia, velocidad y coste."
           open_ai-gpt-5-nano: "El modelo GPT-5 más rápido y rentable"
+          open_router-deepseek-deepseek-v3-2: "El último modelo de alto rendimiento de DeepSeek"
+          open_router-moonshotai-kimi-k2-5: "Modelo multimodal de Moonshot con capacidades de visión"
+          open_router-x-ai-grok-4-fast: "El modelo estrella de xAI con visión"
+          open_router-minimax-minimax-m2-7: "Modelo multimodal de MiniMax con contexto amplio"
+          open_router-z-ai-glm-5-1: "Modelo multimodal de Z-AI con visión"
+          open_router-arcee-ai-trinity-large-preview-free: "Modelo gratuito de código abierto de Arcee AI"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:
           title: "LLM configurados"
@@ -580,6 +917,7 @@ es:
           title: "Ejecutar prueba"
           running: "Ejecutando prueba..."
           success: "Se ha realizado correctamente"
+          invalid_config: "Primero, corrige los siguientes errores en tu configuración:"
           failure: "Al intentar contactar con el modelo, se devolvió este error: %{error}"
         hints:
           max_prompt_tokens: "El número máximo de tokens que el modelo puede procesar en una sola solicitud"
@@ -587,11 +925,15 @@ es:
           display_name: "El nombre utilizado para hacer referencia a este modelo en la interfaz de tu sitio."
           name: "Incluimos esto en la llamada a la API para especificar qué modelo utilizaremos"
           vision_enabled: "Si está activada, la IA intentará comprender las imágenes. Depende del modelo utilizado que soporte la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI."
+          allowed_attachment_types: "Selecciona qué tipos de archivos adjuntos se enviarán al modelo. Déjalo en blanco para no permitir archivos adjuntos. Las imágenes se controlan mediante visión."
           cost_input: "El coste de entrada por cada millón de tokens para este modelo"
+          cost_cached_input: "El coste de entrada en caché por 1 M de tokens para este modelo (al leer de la caché de prompts)"
+          cost_cache_write: "El coste de escritura en caché por 1 M de tokens para este modelo (al escribir en la caché de prompts)"
           cost_output: "El coste de salida por cada millón de tokens para este modelo"
           cost_measure: "$/1M tokens"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (API Converse)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
@@ -604,23 +946,36 @@ es:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Personalizado"
         provider_fields:
           access_key_id: "ID de la clave de acceso a AWS Bedrock"
+          role_arn: "ARN de rol de AWS Bedrock"
+          inference_profile_arn: "ARN del perfil de inferencia de la aplicación AWS Bedrock"
           region: "Región de AWS Bedrock"
           organization: "ID de organización de OpenAI opcional"
           disable_system_prompt: "Desactivar el mensaje del sistema en las instrucciones"
           enable_native_tool: "Activar la compatibilidad con herramientas nativas"
           disable_native_tools: "Desactivar el soporte de herramientas nativas (usar herramientas basadas en XML)"
+          disable_native_structured_output: "Desactiva la salida estructurada nativa (utiliza en su lugar el prellenado de mensajes del asistente, necesario para Claude 3.x y versiones anteriores)"
           provider_order: "Orden de proveedores (lista delimitada por comas)"
           provider_quantizations: "Orden de las cuantificaciones de los proveedores (lista delimitada por comas, por ejemplo: fp16, fp8)"
           disable_streaming: "Desactiva las finalizaciones de streaming (convierte las peticiones de streaming en no streaming)"
           reasoning_effort: "Esfuerzo de razonamiento (solo aplicable a modelos de razonamiento)"
+          service_tier: "Nivel de servicio (flexible = menor coste/mayor latencia, prioritario = procesamiento más rápido)"
           enable_reasoning: "Activa el razonamiento (solo aplicable a modelos de razonamiento)"
+          adaptive_thinking: "Habilitar el pensamiento adaptativo (recomendado para los modelos Claude 4.6)"
+          enable_thinking: "Activar el pensamiento (modelos Gemini 2.5, utiliza presupuesto de tokens)"
+          thinking_level: "Nivel de pensamiento (modelos Gemini 3: controlan la profundidad del razonamiento)"
           thinking_tokens: "Número de tokens utilizados para pensar"
           reasoning_tokens: "Número de tokens utilizados para el razonamiento"
           disable_temperature: "Desactiva la temperatura (algunos modelos pensantes no admiten la temperatura)"
           disable_top_p: "Desactivar top P (algunos modelos no admiten top P)"
+          prompt_caching: "Modo de caché de prompts"
+          prompt_caching_never: "Nunca - No utilizar el almacenamiento en caché de prompts"
+          prompt_caching_tool_results: "Resultados de la herramienta: almacenar en caché cuando haya resultados de la herramienta (recomendado)"
+          prompt_caching_always: "Siempre - Utilizar siempre el almacenamiento en caché de prompts"
+          effort: "Nivel de esfuerzo"
       related_topics:
         title: "Temas relacionados"
         pill: "Relacionados"
@@ -672,16 +1027,26 @@ es:
           credits: "Subtitulado por IA"
           save_caption: "Guardar"
         no_content_error: "Añade contenido primero para realizar acciones de IA sobre él"
+      errors:
+        credit_limit_dialog:
+          title: "Se ha alcanzado el límite de créditos de la IA"
+          message_user: "Esta comunidad ha alcanzado el límite de créditos de la IA para hoy. Inténtalo de nuevo en %{reset_time} o ponte en contacto con el administrador de tu sitio para obtener más información."
+          message_without_time_user: "Esta comunidad ha alcanzado el límite de créditos de la IA para hoy. Las respuestas dejarán de estar disponibles hasta que el límite se restablezca. Ponte en contacto con el administrador de tu sitio para obtener más información."
+          message_admin: "Has alcanzado el límite de créditos de IA de tu plan. Las respuestas no estarán disponibles hasta que tu límite se restablezca en %{reset_time}."
+          message_without_time_admin: "Has alcanzado el límite de créditos de IA de tu plan. Las respuestas no estarán disponibles hasta que tu límite se restablezca."
       reviewables:
         model_used: "Modelo utilizado:"
         accuracy: "Precisión:"
         ai_tool_action:
+          agent: "Agente"
           tool: "Herramienta"
           parameters: "Parámetros"
+          post: "Publicación desencadenante"
       embeddings:
         short_title: "Incrustaciones"
         description: "Las incrustaciones son representaciones numéricas de datos que capturan el significado y las relaciones, lo que permite que las características de IA de Discourse, como Temas relacionados y Búsqueda de IA, comprendan y relacionen el contenido."
         new: "Nueva incrustación"
+        back: "Volver a las incrustaciones"
         save: "Guardar"
         saved: "Configuración de incrustación guardada"
         delete: "Eliminar"
@@ -728,12 +1093,21 @@ es:
           model_name: "Nombre del modelo"
         semantic_search: "Temas (semánticos)"
         semantic_search_results:
+          toggle: "Resultados de IA"
           unavailable: "Resultados de IA no disponibles"
+          zero_results_expanded: "No se han encontrado resultados, mostrando %{count} resultados de IA"
         semantic_search_tooltips:
           results_explanation: "Cuando esté activada, se añadirán resultados de búsqueda de IA adicionales a continuación."
           invalid_sort: "Los resultados de la búsqueda deben ordenarse por Relevancia para mostrar resultados de IA"
+          not_submitted: "Envía una búsqueda para activar los resultados de IA"
+          no_results: "No se han encontrado resultados de IA para esta búsqueda"
         semantic_search_unavailable_tooltip: "Los resultados de la búsqueda deben ordenarse por Relevancia para mostrar resultados de IA"
         ai_generated_result: "Resultado de búsqueda encontrado mediante IA"
+        ai_results_notice:
+          no_results: "No hay coincidencias exactas, pero aquí tienes algunos resultados relacionados."
+          few_results:
+            one: "Se ha encontrado %{count} coincidencia. Mostrando resultados relacionados."
+            other: "Se han encontrado %{count} coincidencias. Mostrando resultados relacionados."
         quick_search:
           suffix: "en todos los temas y publicaciones con IA"
       ai_artifact:
@@ -742,6 +1116,7 @@ es:
         click_to_run_label: "Ejecutar Artefacto"
       ai_bot:
         title: "Bot de IA"
+        agent: "Agente"
         llm: "Modelo"
         pm_warning: "Los moderadores supervisan periódicamente los mensajes del chatbot de IA."
         cancel_streaming: "Detener respuesta"
@@ -759,8 +1134,6 @@ es:
           title: "Ver la interacción con la IA"
           copy_request: "Copiar solicitud"
           copy_response: "Copiar respuesta"
-          request_tokens: "Tokens de solicitud:"
-          response_tokens: "Tokens de respuesta:"
           request: "Solicitud"
           response: "Respuesta"
           next_log: "Siguiente"
@@ -844,7 +1217,23 @@ es:
         topic:
           title: "Resumen del tema"
           close: "Cerrar panel de resumen"
+          regenerate_ai_summaries: "Regenerar resúmenes de IA"
+          regen_modal_description: "Selecciona qué tipo de resumen de IA quieres regenerar para este tema."
+          bulk_regen_description: "Selecciona qué tipo de resumen de IA quieres regenerar para los temas seleccionados."
+          regenerate_gists_option: "Resúmenes breves (gists)"
           regenerate_summaries_option: "Resúmenes de temas"
+          regenerate_gists_success:
+            one: "El resumen breve se ha regenerado correctamente"
+            other: "%{count} resúmenes breves se han regenerado correctamente"
+          regenerate_gists_error:
+            one: "Error al regenerar el resumen breve"
+            other: "Error al regenerar %{count} resúmenes breves"
+          regenerate_topic_summary_success:
+            one: "El resumen del tema se ha regenerado correctamente"
+            other: "%{count} resúmenes de temas se han regenerado correctamente"
+          regenerate_topic_summary_error:
+            one: "Error al regenerar el resumen del tema"
+            other: "Error al regenerar %{count} resúmenes de temas"
         topic_list_layout:
           button:
             compact: "Compacto"
@@ -858,6 +1247,7 @@ es:
         loading_convo: "Cargando conversación"
         collapse: "Contraer"
         timed_out: "Discobot no ha podido encontrar nada. Algo salió mal."
+        user_setting: "Activar los descubrimientos de búsqueda de IA"
         tooltip:
           header: "Búsqueda impulsada por IA"
           content: "Búsqueda de lenguaje natural impulsad por %{model}"
@@ -867,8 +1257,15 @@ es:
       user_preferences:
         empty: "No hay ajustes relevantes disponibles en este momento"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Herramienta aprobada"
+        rejected_tool_action:
+          title: "Herramienta rechazada"
       types:
         reviewable_ai_post:
           title: "Publicación denunciada por IA"
         reviewable_ai_chat_message:
           title: "Mensaje de chat denunciado por IA"
+        reviewable_ai_tool_action:
+          title: "Acción de herramienta de IA"

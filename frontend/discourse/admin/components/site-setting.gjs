@@ -13,7 +13,9 @@ import { isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import Description from "discourse/admin/components/site-settings/description";
 import JobStatus from "discourse/admin/components/site-settings/job-status";
-import SiteSetting from "discourse/admin/models/site-setting";
+import SiteSetting, {
+  isSettingValueTrue,
+} from "discourse/admin/models/site-setting";
 import DButton from "discourse/components/d-button";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -62,6 +64,7 @@ const CUSTOM_TYPES = [
 export default class SiteSettingComponent extends Component {
   @service modal;
   @service router;
+  @service adminSiteSettingStore;
   @service siteSettingChangeTracker;
   @service messageBus;
   @service site;
@@ -149,12 +152,79 @@ export default class SiteSettingComponent extends Component {
     return this.setting.themeable;
   }
 
+  get showUpcomingChangeDefaultWarning() {
+    return this.setting.upcoming_change_default_override_metadata;
+  }
+
+  get showDependsOnNotice() {
+    return this.setting.depends_on?.length > 0;
+  }
+
+  get dependsOnNoticeText() {
+    const path = basePath();
+    const links = this.setting.depends_on
+      .map((name, index) => {
+        const label = sanitize(
+          this.setting.depends_on_humanized_names?.[index] ||
+            name.replaceAll("_", " ")
+        );
+        return `<a href="${path}/admin/site_settings/category/all_results?filter=${encodeURIComponent(name)}">${label}</a>`;
+      })
+      .join(", ");
+
+    return trustHTML(
+      i18n("admin.site_settings.depends_on_notice", {
+        count: this.setting.depends_on.length,
+        dependencyLinks: links,
+      })
+    );
+  }
+
   get themeSiteSettingWarningText() {
     return trustHTML(
       i18n("admin.theme_site_settings.site_setting_warning", {
         basePath,
         defaultThemeName: sanitize(this.defaultTheme.name),
         defaultThemeId: this.defaultTheme.theme_id,
+      })
+    );
+  }
+
+  get upcomingChangeDefaultWarningText() {
+    // We only want to show the changed value for basic setting
+    // types otherwise the warning might get too long (e.g. strings)
+    // or hard to represent (e.g. upload, tag group list etc.)
+    if (
+      [
+        "icon",
+        "enum",
+        "email",
+        "username",
+        "bool",
+        "integer",
+        "float",
+      ].includes(this.setting.type)
+    ) {
+      return trustHTML(
+        i18n("admin.upcoming_changes.default_warning", {
+          basePath,
+          changeNamesFilter:
+            this.setting.upcoming_change_default_override_metadata
+              .change_setting_name,
+          oldDefaultValue:
+            this.setting.upcoming_change_default_override_metadata.old_default,
+          newDefaultValue:
+            this.setting.upcoming_change_default_override_metadata.new_default,
+        })
+      );
+    }
+
+    return trustHTML(
+      i18n("admin.upcoming_changes.default_warning_short", {
+        basePath,
+        changeNamesFilter:
+          this.setting.upcoming_change_default_override_metadata
+            .change_setting_name,
       })
     );
   }
@@ -294,7 +364,23 @@ export default class SiteSettingComponent extends Component {
   }
 
   get isDisabled() {
-    return this.setting.themeable || this.setting.disabled;
+    return (
+      this.setting.themeable ||
+      this.setting.disabled ||
+      this.isDisabledByDependency
+    );
+  }
+
+  get isDisabledByDependency() {
+    if (this.setting.depends_behavior !== "hidden") {
+      return false;
+    }
+    return (
+      this.setting.depends_on?.some((name) => {
+        const parent = this.adminSiteSettingStore.get(name);
+        return parent && !isSettingValueTrue(parent.buffered.get("value"));
+      }) ?? false
+    );
   }
 
   get canUpdate() {
@@ -366,6 +452,9 @@ export default class SiteSettingComponent extends Component {
   @action
   changeValueCallback(value) {
     this.buffered.set("value", value);
+    if (isSettingValueTrue(value)) {
+      this.adminSiteSettingStore.reveal(this.setting.setting);
+    }
   }
 
   @action
@@ -383,6 +472,9 @@ export default class SiteSettingComponent extends Component {
   resetDefault() {
     this.buffered.set("value", this.setting.default);
     this.setting.validationMessage = null;
+    if (isSettingValueTrue(this.setting.default)) {
+      this.adminSiteSettingStore.reveal(this.setting.setting);
+    }
   }
 
   @action
@@ -426,7 +518,8 @@ export default class SiteSettingComponent extends Component {
       class="row setting
         {{this.typeClass}}
         {{if this.overridden 'overridden'}}
-        {{if this.isDisabled 'disabled'}}"
+        {{if this.isDisabled 'disabled'}}
+        {{if this.isDisabledByDependency 'disabled-by-dependency'}}"
       ...attributes
     >
       <div class="setting-label">
@@ -496,10 +589,28 @@ export default class SiteSettingComponent extends Component {
             @outletArgs={{lazyHash setting=this.setting}}
           />
           {{#if this.showThemeSiteSettingWarning}}
-            <div class="setting-theme-warning">
+            <div class="setting-override-warning setting-theme-warning">
               <p class="setting-theme-warning__text">
                 {{icon "paintbrush"}}
                 {{this.themeSiteSettingWarningText}}
+              </p>
+            </div>
+          {{/if}}
+          {{#if this.showUpcomingChangeDefaultWarning}}
+            <div
+              class="setting-override-warning setting-upcoming-change-warning"
+            >
+              <p class="setting-upcoming-change-warning__text">
+                {{icon "flask"}}
+                {{this.upcomingChangeDefaultWarningText}}
+              </p>
+            </div>
+          {{/if}}
+          {{#if this.showDependsOnNotice}}
+            <div class="setting-override-warning setting-depends-on-notice">
+              <p class="setting-depends-on-notice__text">
+                {{icon "link"}}
+                {{this.dependsOnNoticeText}}
               </p>
             </div>
           {{/if}}

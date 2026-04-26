@@ -94,6 +94,17 @@ module Scheduler
       do_work(non_block = true) while !@queue.empty?
     end
 
+    # For tests: runs blocks passed to #later after the yielded block returns,
+    # rather than during.
+    def capture_later
+      captured = []
+      define_singleton_method(:later) { |*, **, &blk| captured << blk }
+      yield
+      captured.shift.call until captured.empty?
+    ensure
+      singleton_class.remove_method(:later)
+    end
+
     private
 
     def start_thread

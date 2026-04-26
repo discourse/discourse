@@ -24,9 +24,12 @@
 #                         is changed.
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
+# upcoming_change_default_override - Allow an upcoming change to control the new default value of this setting.
+#                          - upcoming_change: The site setting of the upcoming change to control this
+#                          - new_default: The new default value when the upcoming change is enabled
 # upcoming_change       - Additional metadata with the following options to show in the /admin/config/upcoming-changes page:
 #                          - status: experimental | alpha | beta | stable
-#                          - impact: two parts separated by comma - feature|other , staff|admins|moderators|all_members|developers
+#                          - impact: two parts separated by comma - feature|other|site_setting_default , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
 #                          - disallow_enabled_for_groups: true (optional) - restricts "Enabled for"
 #                            to only "Everyone" and "No One", removing group-based options.
@@ -593,6 +596,10 @@ basic:
   trigger_browser_pageview_events:
     default: false
     hidden: true
+  use_beacon_for_browser_page_views:
+    default: false
+    hidden: true
+    client: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"
@@ -1797,6 +1804,70 @@ content_localization:
     default: true
     area: "localization"
 
+nested_replies:
+  nested_replies_enabled:
+    default: false
+    client: true
+    area: "posts_and_topics"
+    hidden: true
+  nested_replies_default:
+    default: false
+    client: true
+    area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
+    hidden: true
+  nested_replies_default_sort:
+    default: "top"
+    client: true
+    type: enum
+    choices:
+      - top
+      - new
+      - old
+    area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
+    hidden: true
+  nested_replies_max_depth:
+    default: 10
+    client: true
+    type: integer
+    min: 1
+    max: 10
+    area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
+    hidden: true
+  nested_replies_cap_nesting_depth:
+    default: false
+    client: true
+    area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
+    hidden: true
+  nested_replies_backfill_batch_size:
+    default: 100
+    type: integer
+    min: 1
+    max: 10000
+    hidden: true
+  nested_replies_toggle_mode_groups:
+    type: group_list
+    list_type: compact
+    default: "3"
+    allow_any: false
+    refresh: true
+    area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
+    hidden: true
+
 email:
   email_time_window_mins:
     default: 10
@@ -1873,6 +1944,15 @@ email:
   email_subject:
     default: "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
     area: "email"
+  simple_email_subject:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      disallow_enabled_for_groups: true
+      learn_more_url: "https://meta.discourse.org/t/-/395927"
   reply_by_email_enabled:
     default: false
     validator: "ReplyByEmailEnabledValidator"
@@ -2190,6 +2270,8 @@ files:
     type: list
     regex: '\A((https?:\/\/.+)(\|https?:\/\/.+[|$])*)?\z'
   create_thumbnails: true
+  animated_topic_thumbnails:
+    default: false
   clean_up_uploads: true
   clean_orphan_uploads_grace_period_hours:
     default: 48
@@ -2238,6 +2320,15 @@ files:
   s3_secret_access_key:
     default: ""
     secret: true
+  s3_role_arn:
+    default: ""
+    min: 20
+    max: 2048 # https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
+  s3_role_session_name:
+    default: ""
+    min: 2
+    max: 64
+    regex: '^[\w+=,.@\-]+$' # https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
   s3_region:
     default: "us-east-1"
     enum: "S3RegionSiteSetting"
@@ -2711,6 +2802,11 @@ security:
   crawler_check_bypass_agents:
     hidden: true
     default: "cubot|MetaIAB"
+  crawler_asns:
+    hidden: true
+    default: "55967"
+    type: list
+    list_type: compact
   cors_origins:
     default: ""
     type: list
@@ -2786,7 +2882,7 @@ security:
   can_permanently_delete:
     default: false
     client: true
-    hidden: true
+    requires_confirmation: "simple_on_enable"
   suppress_secured_categories_from_admin:
     default: false
   include_secure_categories_in_tag_counts:
@@ -2861,12 +2957,6 @@ onebox:
     type: list
     secret: true
     list_type: secret
-  reddit_onebox_client_id:
-    default: ""
-    secret: true
-  reddit_onebox_client_secret:
-    default: ""
-    secret: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -3193,6 +3283,9 @@ embedding:
   embed_full_app:
     default: false
     client: true
+    area: "embedding"
+  suppress_third_party_analytics_in_embed:
+    default: true
     area: "embedding"
   embed_by_username:
     default: ""
@@ -3778,7 +3871,7 @@ uncategorized:
     hidden: true
     area: "interface"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/395100"
 
@@ -3808,7 +3901,7 @@ uncategorized:
 
   enable_site_owner_onboarding:
     client: true
-    default: false
+    default: true
     hidden: true
   site_owner_onboarding_max_days:
     default: 5
@@ -3840,16 +3933,6 @@ uncategorized:
     enum: "WelcomeBannerPageVisibility"
     default: "top_menu_pages"
     area: "interface"
-
-  modernize_foundation_theme:
-    default: false
-    client: true
-    hidden: true
-    area: "experimental"
-    upcoming_change:
-      impact: "feature,all_members"
-      status: "experimental"
-      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
 
 user_preferences:
   default_email_digest_frequency:
@@ -4231,7 +4314,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/395768"
       disallow_enabled_for_groups: true
@@ -4241,7 +4324,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/394784"
   enable_new_checkbox_style:
@@ -4250,32 +4333,38 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
+      impact: "feature,all_members"
+  enable_new_post_reactions_menu:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
       impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true
-    area: "experimental"
     upcoming_change:
       impact: "feature,all_members"
-      status: "beta"
+      status: "stable"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
   enable_form_templates:
     client: true
     default: false
     hidden: true
-    area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/278631"
   impersonate_without_logout:
     default: false
+    client: true
     hidden: true
-    area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:
@@ -4317,9 +4406,18 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/394971"
   experimental_topic_category_change_notification:
     default: false
     hidden: true
+  modernize_foundation_theme:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "beta"
+      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"

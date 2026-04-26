@@ -25,7 +25,7 @@ export default class ChannelsListPublic extends Component {
   }
 
   get hasUnreadThreads() {
-    return this.chatTrackingStateManager.hasUnreadThreads;
+    return this.chatTrackingStateManager.hasUnreadThreads();
   }
 
   get shouldShowMyThreads() {

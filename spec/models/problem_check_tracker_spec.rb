@@ -121,12 +121,91 @@ RSpec.describe ProblemCheckTracker do
     end
   end
 
+  describe "#ignored?" do
+    let(:problem_tracker) { described_class.new(ignored_at:) }
+
+    context "when the ignored timestamp is set" do
+      let(:ignored_at) { 1.day.ago }
+
+      it { expect(problem_tracker).to be_ignored }
+    end
+
+    context "when the ignored timestamp is not set" do
+      let(:ignored_at) { nil }
+
+      it { expect(problem_tracker).not_to be_ignored }
+    end
+  end
+
+  describe "#watched?" do
+    let(:problem_tracker) { described_class.new(ignored_at:) }
+
+    context "when the ignored timestamp is set" do
+      let(:ignored_at) { 1.day.ago }
+
+      it { expect(problem_tracker).not_to be_watched }
+    end
+
+    context "when the ignored timestamp is not set" do
+      let(:ignored_at) { nil }
+
+      it { expect(problem_tracker).to be_watched }
+    end
+  end
+
+  describe "#ignore!" do
+    let(:problem_tracker) { Fabricate(:problem_check_tracker, ignored_at:) }
+
+    context "when not currently ignored" do
+      let(:ignored_at) { nil }
+
+      it "sets the ignore timestamp" do
+        freeze_time
+
+        expect { problem_tracker.ignore! }.to change { problem_tracker.ignored_at }.from(nil).to(
+          be_within_one_second_of Time.current
+        )
+      end
+    end
+
+    context "when already ignored" do
+      let(:ignored_at) { 1.day.ago }
+
+      it "does not touch the ignore timestamp" do
+        expect { problem_tracker.ignore! }.not_to change { problem_tracker.ignored_at }
+      end
+    end
+  end
+
+  describe "#watch!" do
+    let(:problem_tracker) { Fabricate(:problem_check_tracker, ignored_at:) }
+
+    context "when not currently ignored" do
+      let(:ignored_at) { nil }
+
+      it "does not touch the ignore timestamp" do
+        expect { problem_tracker.watch! }.not_to change { problem_tracker.ignored_at }
+      end
+    end
+
+    context "when currently ignored" do
+      let(:ignored_at) { 1.day.ago }
+
+      it "clears the ignore timestamp" do
+        expect { problem_tracker.watch! }.to change { problem_tracker.ignored_at }.from(
+          be_within_one_second_of ignored_at
+        ).to(nil)
+      end
+    end
+  end
+
   describe "#problem!" do
     let(:problem_tracker) do
       Fabricate(
         :problem_check_tracker,
         identifier: "twitter_login",
         target: "foo",
+        ignored_at:,
         **original_attributes,
       )
     end
@@ -143,6 +222,7 @@ RSpec.describe ProblemCheckTracker do
 
     let(:blips) { 0 }
     let(:updated_attributes) { { blips: 1 } }
+    let(:ignored_at) { nil }
 
     it do
       freeze_time
@@ -155,10 +235,24 @@ RSpec.describe ProblemCheckTracker do
     context "when the maximum number of blips have been surpassed" do
       let(:blips) { 1 }
 
-      it "sounds the alarm" do
-        expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.to change {
-          AdminNotice.problem.count
-        }.by(1)
+      context "when the check isn't being ignored" do
+        let(:ignored_at) { nil }
+
+        it "sounds the alarm" do
+          expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.to change {
+            AdminNotice.problem.count
+          }.by(1)
+        end
+      end
+
+      context "when the check is being ignored" do
+        let(:ignored_at) { 1.day.ago }
+
+        it "does not sound the alarm" do
+          expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.not_to change {
+            AdminNotice.problem.count
+          }
+        end
       end
     end
 
@@ -281,32 +375,6 @@ RSpec.describe ProblemCheckTracker do
           AdminNotice.problem.count
         }.by(-1)
       end
-    end
-  end
-
-  describe "#reset" do
-    let(:problem_tracker) do
-      Fabricate(:problem_check_tracker, identifier: "twitter_login", **original_attributes)
-    end
-
-    let(:original_attributes) do
-      {
-        blips: 0,
-        last_problem_at: 1.week.ago,
-        last_success_at: Time.current,
-        last_run_at: 24.hours.ago,
-        next_run_at: nil,
-      }
-    end
-
-    let(:updated_attributes) { { blips: 0 } }
-
-    it do
-      freeze_time
-
-      expect { problem_tracker.reset(next_run_at: 24.hours.from_now) }.to change {
-        problem_tracker.attributes
-      }.to(hash_including(updated_attributes))
     end
   end
 end

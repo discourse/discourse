@@ -199,7 +199,7 @@ module("Integration | Component | Dates", function (hooks) {
         );
     });
 
-    // this test goes against the current implementation in local-dates
+// this test goes against the current implementation in local-dates
     skip("formats same day range", async function (assert) {
       await render(
         <template><Dates @event={{events.currentYear.endsSameDay}} /></template>
@@ -208,7 +208,7 @@ module("Integration | Component | Dates", function (hooks) {
       assert
         .dom(".event-dates")
         .hasText(
-          "Mon, Oct 6 12:00 AM → 1:00 AM",
+          "Mon, Oct 6 10:00 AM → 11:00 AM (Brisbane)",
           "`endsAt` should show time only"
         );
     });

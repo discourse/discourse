@@ -195,25 +195,33 @@
   }
 
   .reviewable-user-details {
+    --name-width: 8em;
+    --name-margin: 1em;
     padding-bottom: 0.25em;
     display: flex;
     margin-bottom: 0.5em;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+    }
 
     &:not(:last-child) {
       border-bottom: 1px solid var(--content-border-color);
     }
 
     .name {
-      width: 8em;
+      width: var(--name-width);
       font-weight: bold;
-      margin-right: 1em;
+      margin-right: var(--name-margin);
     }
 
     .value {
-      max-width: calc(
-        100% - 8em - 1em
-      ); // subtracting width of name and margin-right
-      overflow-wrap: break-word;
+      max-width: calc(100% - var(--name-width) - var(--name-margin));
+      overflow-wrap: anywhere;
+
+      @include viewport.until(sm) {
+        width: auto;
+      }
     }
   }
 }

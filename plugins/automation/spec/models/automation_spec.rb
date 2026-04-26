@@ -72,7 +72,7 @@ describe DiscourseAutomation::Automation do
     end
   end
 
-  context "when automation’s script has a field with validor" do
+  context "when automation’s script has a field with validator" do
     before do
       DiscourseAutomation::Scriptable.add("required_dogs") do
         field :dog, component: :text, validator: ->(input) { "must have dog" if input != "dog" }
@@ -161,6 +161,28 @@ describe DiscourseAutomation::Automation do
           }.to raise_error(ActiveRecord::RecordInvalid, /dog/)
         end
       end
+    end
+  end
+
+  describe ".serialize_context" do
+    it "serializes date and time as iso8601" do
+      expect(
+        described_class.serialize_context(
+          {
+            "time" => Time.utc(2026, 4, 15, 12, 0, 0),
+            "time_with_zone" => Time.utc(2026, 4, 15, 12, 0, 0).in_time_zone("Europe/Warsaw"),
+            "date_time" => DateTime.new(2026, 4, 15, 12, 0, 0),
+            "date" => Date.new(2026, 4, 15),
+          },
+        ),
+      ).to eq(
+        {
+          "time" => "2026-04-15T12:00:00Z",
+          "time_with_zone" => "2026-04-15T14:00:00+02:00",
+          "date_time" => "2026-04-15T12:00:00+00:00",
+          "date" => "2026-04-15",
+        },
+      )
     end
   end
 

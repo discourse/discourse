@@ -8,7 +8,7 @@ import { i18n } from "discourse-i18n";
 import ChatChannelLeaveBtn from "discourse/plugins/chat/discourse/components/chat-channel-leave-btn";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
+module("Component | chat-channel-leave-btn", function (hooks) {
   setupRenderingTest(hooks);
 
   test("accepts an optional onLeaveChannel callback", async function (assert) {

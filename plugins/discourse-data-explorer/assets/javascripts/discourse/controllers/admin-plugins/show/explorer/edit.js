@@ -7,21 +7,13 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
-import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
-const AI_GENERATION_CHANNEL_PREFIX =
-  "/discourse-data-explorer/queries/ai-generation";
-const AI_GENERATION_TIMEOUT_MS = 60000;
-
 export default class PluginsExplorerController extends Controller {
   @service modal;
   @service appEvents;
-  @service messageBus;
-  @service siteSettings;
-  @service toasts;
 
   @tracked params;
   @tracked editingName = false;
@@ -31,87 +23,39 @@ export default class PluginsExplorerController extends Controller {
   @tracked hideSchema = false;
   @tracked results = this.model.results;
   @tracked dirty = false;
-  @tracked aiGenerating = false;
+  @tracked isCachedResult = false;
 
   queryParams = ["params"];
   explain = false;
   order = null;
   form = null;
   shouldAutoRun = false;
-  _aiGenerationTimer = null;
 
   get saveDisabled() {
-    return this.aiGenerating || !this.dirty;
+    return !this.dirty;
   }
 
   get runDisabled() {
-    return this.aiGenerating || this.dirty;
+    return this.dirty;
   }
 
   get parsedParams() {
     return this.params ? JSON.parse(this.params) : null;
   }
 
+  get cachedAt() {
+    if (this.isCachedResult && this.results?.cached_at) {
+      return this.results.cached_at;
+    }
+    return null;
+  }
+
   get editDisabled() {
-    return this.model.is_default || this.aiGenerating;
+    return this.model.is_default;
   }
 
   get editorDisabled() {
-    return this.model.destroyed || this.aiGenerating;
-  }
-
-  setupAiGeneration() {
-    if (
-      !this.siteSettings.data_explorer_ai_queries_enabled ||
-      !this.model.ai_generating
-    ) {
-      return;
-    }
-
-    this.aiGenerating = true;
-    this.editingQuery = true;
-    const channel = `${AI_GENERATION_CHANNEL_PREFIX}/${this.model.id}`;
-
-    this.messageBus.subscribe(channel, this._onAiGenerationMessage, -1);
-
-    this._aiGenerationTimer = setTimeout(() => {
-      this._stopAiGeneration();
-      this.toasts.error({
-        data: { message: i18n("explorer.ai.generation_timeout") },
-      });
-    }, AI_GENERATION_TIMEOUT_MS);
-  }
-
-  teardownAiGeneration() {
-    if (this.model?.id) {
-      const channel = `${AI_GENERATION_CHANNEL_PREFIX}/${this.model.id}`;
-      this.messageBus.unsubscribe(channel, this._onAiGenerationMessage);
-    }
-    if (this._aiGenerationTimer) {
-      clearTimeout(this._aiGenerationTimer);
-      this._aiGenerationTimer = null;
-    }
-  }
-
-  @bind
-  _onAiGenerationMessage(data) {
-    if (data.status === "complete") {
-      this.model.set("sql", data.sql);
-      this.model.set("name", data.name);
-      this.model.set("description", data.description);
-      this.dirty = false;
-      this._stopAiGeneration();
-    } else if (data.status === "error") {
-      this._stopAiGeneration();
-      this.toasts.error({
-        data: { message: data.error || i18n("explorer.ai.generation_error") },
-      });
-    }
-  }
-
-  _stopAiGeneration() {
-    this.aiGenerating = false;
-    this.teardownAiGeneration();
+    return this.model.destroyed;
   }
 
   get groupOptions() {
@@ -342,6 +286,7 @@ export default class PluginsExplorerController extends Controller {
     )
       .then((result) => {
         this.results = result;
+        this.isCachedResult = false;
         if (!result.success) {
           this.showResults = false;
           return;

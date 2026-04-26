@@ -205,9 +205,6 @@ nl:
               description: "Optioneel, beperk de triggering tot alleen berichten met deze kenmerken"
           created: Gemaakt
           edited: Bewerkt
-          topics: Alle topics
-          personal_messages: Persoonlijke berichten
-          public_topics: Openbare topics (alle beveiligde categorieën uitsluiten)
           with_images: Afbeeldingen
           with_links: Links
           with_code: Code

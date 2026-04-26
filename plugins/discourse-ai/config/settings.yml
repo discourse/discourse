@@ -483,6 +483,13 @@ discourse_ai:
     client: false
     area: "ai-features/translation"
 
+  ai_translation_backfill_parallel_jobs:
+    default: 1
+    min: 1
+    max: 10
+    hidden: true
+    area: "ai-features/translation"
+
   ai_translation_verbose_logs:
     default: false
     client: false

@@ -35,7 +35,7 @@ pl_PL:
         few: "rozwiązania"
         many: "rozwiązania"
         other: "rozwiązania"
-      accepted_answer_solver_info: "Rozwiązane przez %{user} w %{post}"
+      accepted_answer_solver_info: "przez %{user} w %{post}"
       accepted_answer_post_number: "wpis %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -45,7 +45,7 @@ pl_PL:
       no_solved_topics_title: "Nie rozwiązałeś jeszcze żadnych tematów"
       no_solved_topics_title_others: "%{username} nie rozwiązał jeszcze żadnych tematów"
       no_solved_topics_body: "Gdy udzielisz pomocnej odpowiedzi na dany temat, Twoja odpowiedź może zostać wybrana jako rozwiązanie przez właściciela tematu lub personel."
-      marked_solved_by: "Oznaczono jako rozwiązane przez %{user}"
+      marked_solved_by: "zaakceptowano przez %{user}"
       confirm_move_solution_title: "Przenieś wpis z rozwiązaniem"
       confirm_move_solution:
         one: "Wybrany wpis jest oznaczony jako rozwiązanie tego tematu. Jeśli go przeniesiesz, temat zostanie zaktualizowany do nierozwiązanego."

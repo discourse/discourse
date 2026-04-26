@@ -195,7 +195,7 @@ cs:
           ai_summarization: "Shrnout"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-6: "Nejinteligentnější model společnosti Anthropic"
+          anthropic-claude-opus-4-7: "Nejinteligentnější model společnosti Anthropic"
           anthropic-claude-sonnet-4-6: "Optimální poměr rychlosti a nákladů"
         next:
           title: "Další"
@@ -310,8 +310,6 @@ cs:
           title: "Zobrazit interakci s umělou inteligencí"
           copy_request: "Kopírovat požadavek"
           copy_response: "Kopírovat odpověď"
-          request_tokens: "Tokeny požadavku:"
-          response_tokens: "Tokeny odpovědi:"
           request: "Požadavek"
           response: "Odpověď"
           next_log: "Další"

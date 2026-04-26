@@ -2,6 +2,7 @@
 
 module DiscourseChatIntegration::Provider::PowerAutomateProvider
   PROVIDER_NAME = "powerautomate"
+  POPULARITY_SCORE = 80
   PROVIDER_ENABLED_SETTING = :chat_integration_powerautomate_enabled
   CHANNEL_IDENTIFIER_KEY = "name"
   CHANNEL_PARAMETERS = [

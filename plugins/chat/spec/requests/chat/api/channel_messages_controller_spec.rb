@@ -225,6 +225,19 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
       end
 
+      context "when current user is silenced" do
+        before { UserSilencer.new(current_user).silence }
+
+        it "returns a 422" do
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "abcdefg",
+              }
+
+          expect(response.status).to eq(422)
+        end
+      end
+
       context "when message belongs to a different channel" do
         fab!(:other_channel, :category_channel)
         fab!(:other_message) { Fabricate(:chat_message, chat_channel: other_channel) }

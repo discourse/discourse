@@ -8,8 +8,6 @@ cs:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Bez akce"
         agree_and_suspend:
           title: "Pozastavit uživatele"
           description: "Schválit nahlášení a pozastavit uživatele."

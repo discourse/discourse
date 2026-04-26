@@ -14,10 +14,27 @@ ar:
     chat_integration:
       menu_title: "تكاملات الدرشة"
       settings: "الإعدادات"
+      nav:
+        providers: "مقدمو الخدمات"
+        providers_description: "إعداد تكاملات مقدمي خدمات الدردشة"
+      add_provider: "إضافة مقدِّم خدمة"
+      more_providers: "المزيد"
+      empty_state:
+        title: "ربط منصة الدردشة التي تستخدمها"
+        body: "أرسل إشعارات من Discourse إلى دردشة فريقك. اختر مقدم خدمة للبدء."
+      channels_title: "القنوات"
+      no_channels: "لم يتم إعداد أي قنوات حتى الآن."
+      channel_actions: "إجراءات القناة"
+      add_first_channel: "أضف قناتك الأولى على %{provider}"
       channels_with_errors: "فشلت بعض قنوات مقدِّم الخدمة هذا مؤخرًا في آخر مرة تم فيها إرسال الرسائل. انقر على أيقونة/أيقونات الأخطاء لمعرفة المزيد."
       channel_exception: "حدث خطأ غير معروف في آخر مرة تم فيها إرسال رسالة إلى هذه القناة."
       group_mention_template: "الإشارات إلى: @%{name}"
       group_message_template: "الرسائل إلى: @%{name}"
+      choose_group: "(اختر مجموعة)"
+      all_categories: "(جميع الفئات)"
+      all_tags: "(جميع الوسوم)"
+      create_rule: "إنشاء قاعدة"
+      add_channel: "إضافة قناة"
       delete_channel: "حذف"
       test_channel: "اختبار"
       edit_channel: "تعديل"
@@ -25,11 +42,14 @@ ar:
       test_modal:
         title: "إرسال رسالة اختبار"
         topic: "الموضوع"
+        send: "إرسال رسالة تجريبية"
         close: "إغلاق"
         error: "حدث خطأ غير معروف في أثناء إرسال الرسالة. تحقَّق من سجلات الموقع لمزيدٍ من المعلومات."
         success: "تم إرسال الرسالة بنجاح"
       type:
         normal: عادي
+        group_message: رسالة جماعية
+        group_mention: إشارة إلى مجموعة
       filter:
         mute: 'صامت'
         follow: 'المنشور الأول فقط'
@@ -50,6 +70,9 @@ ar:
           ok: "صالح"
           fail: "تنسيق غير صالح"
       edit_rule_modal:
+        edit_title: تعديل القاعدة
+        create_title: إنشاء قاعدة
+        save: حفظ القاعدة
         cancel: إلغاء
         provider: مقدِّم الخدمة
         type: النوع
@@ -70,7 +93,9 @@ ar:
           param:
             identifier:
               title: القناة
+              help: "على سبيل المثال: #channel أو @username"
           errors:
+            auth_error: "رمز المصادقة المقدم غير صالح"
             action_prohibited: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
             channel_not_found: "القناة المحددة غير موجودة على Slack."
         telegram:
@@ -93,6 +118,7 @@ ar:
               help: "اسم لوصف القناة. لا يتم استخدامه للاتصال بـ Discord."
             webhook_url:
               title: عنوان URL لخطاف الويب
+              help: 'يجب أن يكون رابط خطاف الويب المُنشأ في إعدادات خادم Discord بتنسيق: https://discord.com/api/webhooks/<webhook-id>/<webhook-token>'
         guilded:
           title: "Guilded"
           param:
@@ -107,6 +133,7 @@ ar:
           param:
             identifier:
               title: القناة
+              help: "على سبيل المثال: #channel أو @username"
           errors:
             channel_not_found: "القناة المحدَّدة غير موجودة على Mattermost"
         matrix:
@@ -137,6 +164,7 @@ ar:
           param:
             identifier:
               title: القناة
+              help: "على سبيل المثال: #channel أو @username"
           errors:
             invalid_channel: "هذه القناة غير موجودة على Rocket Chat"
         gitter:
@@ -144,6 +172,7 @@ ar:
           param:
             name:
               title: "الاسم"
+              help: "اسم غرفة Gitter؛ على سبيل المثال، gitterHQ/services"
             webhook_url:
               title: "عنوان URL لخطاف الويب"
               help: "عنوان URL الذي يتم إدخاله عند إنشاء تكامل جديد في غرفة Gitter."

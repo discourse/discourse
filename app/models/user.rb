@@ -1341,8 +1341,18 @@ class User < ActiveRecord::Base
     user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
   end
 
+  def full_silence_reason
+    text = silenced_record.try(:details) if silenced?
+    return text if text.blank?
+    PrettyText.cleanup(text.gsub("\n", "<br>"))
+  end
+
   def silence_reason
-    PrettyText.cleanup(silenced_record.try(:details)) if silenced?
+    if details = full_silence_reason
+      return details.split("<br>")[0]
+    end
+
+    nil
   end
 
   def silenced_at
@@ -2207,6 +2217,12 @@ class User < ActiveRecord::Base
 
     if SiteSetting.default_navigation_menu_categories.present?
       categories_to_update = SiteSetting.default_navigation_menu_categories.split("|")
+      categories_to_update =
+        DiscoursePluginRegistry.apply_modifier(
+          :default_navigation_categories,
+          categories_to_update,
+          user: self,
+        )
 
       SidebarSectionLinksUpdater.update_category_section_links(
         self,

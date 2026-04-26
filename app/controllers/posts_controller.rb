@@ -510,6 +510,18 @@ class PostsController < ApplicationController
     render body: nil
   end
 
+  def permanently_delete_check
+    post = find_post_from_params
+    obj = post.is_first_post? ? post.topic : post
+
+    if guardian.can_permanently_delete?(obj)
+      render json: { can_permanently_delete: true }
+    else
+      reason = obj.cannot_permanently_delete_reason(current_user)
+      render json: { can_permanently_delete: false, reason: }
+    end
+  end
+
   def permanently_delete_revisions
     guardian.ensure_can_permanently_delete_post_revisions!
 

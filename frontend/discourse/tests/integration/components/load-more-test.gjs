@@ -1,46 +1,21 @@
-import { render, waitUntil } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import LoadMore, {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
 } from "discourse/components/load-more";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
 
 module("Integration | Component | load-more", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
     enableLoadMoreObserver();
-    this.originalIntersectionObserver = window.IntersectionObserver;
-
-    window.IntersectionObserver = class MockIntersectionObserver {
-      callback;
-
-      constructor(callback) {
-        this.callback = callback;
-      }
-
-      observe(element) {
-        if (element) {
-          // Simulate intersection in next run loop
-          setTimeout(() => {
-            this.callback([
-              {
-                target: element,
-                isIntersecting: true,
-              },
-            ]);
-          }, 0);
-        }
-      }
-
-      unobserve() {}
-      disconnect() {}
-    };
+    this.observations = stubIntersectionObserver();
   });
 
   hooks.afterEach(function () {
-    window.IntersectionObserver = this.originalIntersectionObserver;
     disableLoadMoreObserver();
   });
 
@@ -52,7 +27,7 @@ module("Integration | Component | load-more", function (hooks) {
 
     await render(
       <template>
-        <LoadMore @action={{performLoadMore}} @root="#ember-testing">
+        <LoadMore @action={{performLoadMore}}>
           <table class="numbers">
             <tbody>
               <tr />
@@ -62,13 +37,9 @@ module("Integration | Component | load-more", function (hooks) {
       </template>
     );
 
-    await waitUntil(() => actionCalled === 1);
+    await this.observations[0]?.trigger();
 
-    assert.strictEqual(
-      actionCalled,
-      1,
-      "loadMore action should be called once"
-    );
+    assert.strictEqual(actionCalled, 1, "calls the loadMore action once");
   });
 
   test("does not call loadMore action if intersection occurs and this is not enabled", async function (assert) {
@@ -79,11 +50,7 @@ module("Integration | Component | load-more", function (hooks) {
 
     await render(
       <template>
-        <LoadMore
-          @action={{performLoadMore}}
-          @root="#ember-testing"
-          @enabled={{false}}
-        >
+        <LoadMore @action={{performLoadMore}} @enabled={{false}}>
           <table class="numbers">
             <tbody>
               <tr />
@@ -93,11 +60,9 @@ module("Integration | Component | load-more", function (hooks) {
       </template>
     );
 
-    assert.strictEqual(
-      actionCalled,
-      0,
-      "loadMore action should be called never"
-    );
+    await this.observations[0]?.trigger();
+
+    assert.strictEqual(actionCalled, 0, "does not call the loadMore action");
   });
 
   test("does not call loadMore action when isLoading is true", async function (assert) {
@@ -106,11 +71,7 @@ module("Integration | Component | load-more", function (hooks) {
 
     await render(
       <template>
-        <LoadMore
-          @action={{loadMore}}
-          @root="#ember-testing"
-          @isLoading={{true}}
-        >
+        <LoadMore @action={{loadMore}} @isLoading={{true}}>
           <table class="numbers">
             <tbody>
               <tr />
@@ -120,13 +81,11 @@ module("Integration | Component | load-more", function (hooks) {
       </template>
     );
 
-    // Wait to ensure the observer callback would have fired if it was created
-    await new Promise((resolve) => setTimeout(resolve, 50));
-
     assert.strictEqual(
-      actionCalled,
+      this.observations.length,
       0,
-      "loadMore action should not be called when isLoading is true"
+      "does not create an IntersectionObserver while loading"
     );
+    assert.strictEqual(actionCalled, 0, "does not call the loadMore action");
   });
 });

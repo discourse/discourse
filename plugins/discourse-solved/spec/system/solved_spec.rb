@@ -12,9 +12,9 @@ describe "Solved" do
   UNACCEPTED_BUTTON_SELECTOR = ".post-action-menu__solved-unaccepted"
   ACCEPTED_BUTTON_SELECTOR = ".post-action-menu__solved-accepted"
   ACCEPTED_ANSWER_QUOTE_SELECTOR = "aside.accepted-answer.quote"
-  SOLVER_INFO_SELECTOR = ".title .accepted-answer--solver"
-  ACCEPTER_INFO_SELECTOR = ".title .accepted-answer--accepter"
-  QUOTE_TOGGLE_SELECTOR = "aside.accepted-answer.quote button.quote-toggle"
+  SOLVER_INFO_SELECTOR = ".d-solved-answer__footer .d-solved-answer__solver"
+  ACCEPTER_INFO_SELECTOR = ".d-solved-answer__footer .d-solved-answer__accepter"
+  QUOTE_TOGGLE_SELECTOR = "aside.accepted-answer.quote button.d-solved-answer__toggle"
 
   before do
     SiteSetting.solved_enabled = true
@@ -126,10 +126,8 @@ describe "Solved" do
   end
 
   def verify_solver_and_accepter_info
-    expect(topic_page.find(SOLVER_INFO_SELECTOR)).to have_content("Solved by #{solver.name}")
-    expect(topic_page.find(ACCEPTER_INFO_SELECTOR)).to have_content(
-      "Marked as solved by #{accepter.name}",
-    )
+    expect(topic_page.find(SOLVER_INFO_SELECTOR)).to have_content(solver.name)
+    expect(topic_page.find(ACCEPTER_INFO_SELECTOR)).to have_content(accepter.name)
   end
 
   def verify_solution_info_present

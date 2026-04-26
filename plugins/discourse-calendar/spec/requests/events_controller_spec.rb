@@ -75,8 +75,14 @@ module DiscoursePostEvent
         )
 
         body = response.body
+        calendar_name =
+          I18n.t(
+            "discourse_calendar.calendar_subscriptions.all_events_feed_name",
+            site_title: SiteSetting.title,
+          )
         expect(body).to include("BEGIN:VCALENDAR")
         expect(body).to include("END:VCALENDAR")
+        expect(body).to include("X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}")
         expect(body).to include("BEGIN:VEVENT")
         expect(body).to include("END:VEVENT")
         expect(body).to include("SUMMARY:Test Event 1")
@@ -104,6 +110,31 @@ module DiscoursePostEvent
         expect(body).to include("LOCATION:https://meet.google.com/abc-defg-hij")
         expect(body).to include("DESCRIPTION:Bring your laptop and questions!")
         expect(body).to include("URL:https://example.com/event-info")
+      end
+
+      it "should not HTML-encode ampersands in ics format" do
+        Fabricate(
+          :event,
+          original_starts_at: 1.day.from_now,
+          name: "Tom & Jerry",
+          location: "Room A & B",
+          description: "Q & A session",
+          url: "https://example.com/event?a=1&b=2",
+        )
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.body).to include("SUMMARY:Tom & Jerry")
+        expect(response.body).not_to include("&amp;")
+      end
+
+      it "should not HTML-encode topic title used as ics summary" do
+        event = Fabricate(:event, original_starts_at: 1.day.from_now)
+        event.post.topic.update!(title: "Rock & Roll Music Festival 2026")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.body).to include("SUMMARY:Rock & Roll Music Festival 2026")
       end
 
       it "should handle events without location and description in ics format" do
@@ -242,6 +273,12 @@ module DiscoursePostEvent
               params: events_params.merge(user_api_key: user_api_key.key)
 
           expect(response.status).to eq(200)
+          calendar_name =
+            I18n.t(
+              "discourse_calendar.calendar_subscriptions.my_events_feed_name",
+              site_title: SiteSetting.title,
+            )
+          expect(response.body).to include("X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}")
           expect(response.body).to include("SUMMARY:Going Event")
           expect(response.body).to include("SUMMARY:Interested Event")
         end

@@ -327,7 +327,6 @@ ru:
       retry_staged_message:
         title: "Ошибка сети"
         action: "Отправить ещё раз?"
-      unreliable_network: "Сеть ненадёжна, отправка сообщений и сохранение черновиков могут не работать"
       bookmark_message: "Закладка"
       bookmark_message_edit: "Редактировать закладку"
       restore: "Восстановить удаленное сообщение"

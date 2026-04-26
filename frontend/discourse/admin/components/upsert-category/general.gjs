@@ -8,6 +8,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import DIconGridPicker from "discourse/components/d-icon-grid-picker";
 import DecoratedHtml from "discourse/components/decorated-html";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
@@ -24,7 +25,6 @@ import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import IconPicker from "discourse/select-kit/components/icon-picker";
 import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -327,11 +327,53 @@ export default class UpsertCategoryGeneral extends Component {
     }
   }
 
+  get #currentPermissionsArePrivate() {
+    const currentPermissions = this.permissions || [];
+    return (
+      currentPermissions.length > 0 &&
+      !currentPermissions.some((p) => p.group_id === AUTO_GROUPS.everyone.id)
+    );
+  }
+
+  get #isEditingExistingCategory() {
+    return Boolean(this.args.category.id);
+  }
+
+  #parentPermissionsAllowEveryone(parentPermissions) {
+    return parentPermissions.some(
+      (p) => p.group_id === AUTO_GROUPS.everyone.id
+    );
+  }
+
+  #currentPermissionsAreSubsetOf(parentPermissions) {
+    const parentGroupIds = new Set(parentPermissions.map((p) => p.group_id));
+    return (this.permissions || []).every((p) =>
+      parentGroupIds.has(p.group_id)
+    );
+  }
+
+  #shouldRetainPermissionsForParent(parentPermissions) {
+    if (!this.#isEditingExistingCategory) {
+      return false;
+    }
+
+    if (this.#parentPermissionsAllowEveryone(parentPermissions)) {
+      return true;
+    }
+
+    return (
+      this.#currentPermissionsArePrivate &&
+      this.#currentPermissionsAreSubsetOf(parentPermissions)
+    );
+  }
+
   @action
   async onParentCategoryChange(parentCategoryId) {
     if (!parentCategoryId) {
       this.args.form.set("visibility", null);
-      this.#setFormPermissions([this.#everyoneFullPermission]);
+      if (!this.#isEditingExistingCategory) {
+        this.#setFormPermissions([this.#everyoneFullPermission]);
+      }
       return;
     }
 
@@ -339,25 +381,32 @@ export default class UpsertCategoryGeneral extends Component {
       const result = await Category.reloadById(parentCategoryId);
       const parentCategory = this.site.updateCategory(result.category);
       parentCategory.setupGroupsAndPermissions();
+      const parentPermissions = parentCategory?.permissions;
 
-      if (parentCategory?.permissions?.length > 0) {
-        const hasEveryone = parentCategory.permissions.some(
-          (p) => p.group_id === AUTO_GROUPS.everyone.id
-        );
+      if (parentPermissions?.length > 0) {
+        const parentIsPublic =
+          this.#parentPermissionsAllowEveryone(parentPermissions);
 
-        if (!hasEveryone) {
+        if (!parentIsPublic) {
           this.args.form.set("visibility", null);
-
-          const newPermissions = parentCategory.permissions.map((p) => ({
-            group_name: p.group_name,
-            group_id: p.group_id,
-            permission_type: p.permission_type,
-          }));
-
-          this.#setFormPermissions(newPermissions);
-        } else {
-          this.#setFormPermissions([this.#everyoneFullPermission]);
         }
+
+        if (this.#shouldRetainPermissionsForParent(parentPermissions)) {
+          return;
+        }
+
+        if (parentIsPublic) {
+          this.#setFormPermissions([this.#everyoneFullPermission]);
+          return;
+        }
+
+        const newPermissions = parentPermissions.map((p) => ({
+          group_name: p.group_name,
+          group_id: p.group_id,
+          permission_type: p.permission_type,
+        }));
+
+        this.#setFormPermissions(newPermissions);
       }
     } catch (error) {
       popupAjaxError(error);
@@ -434,6 +483,41 @@ export default class UpsertCategoryGeneral extends Component {
     return rDiff + gDiff + bDiff;
   }
 
+  @action
+  validateColor(name, color, { addError }) {
+    color = color.trim();
+
+    let title;
+    if (name === "color") {
+      title = i18n("category.background_color");
+    } else {
+      throw new Error(`unknown title for category attribute ${name}`);
+    }
+
+    if (!color) {
+      addError(name, {
+        title,
+        message: i18n("category.color_validations.cant_be_empty"),
+      });
+      return;
+    }
+
+    if (color.length !== 3 && color.length !== 6) {
+      addError(name, {
+        title,
+        message: i18n("category.color_validations.incorrect_length"),
+      });
+      return;
+    }
+
+    if (!/^[0-9A-Fa-f]+$/.test(color)) {
+      addError(name, {
+        title,
+        message: i18n("category.color_validations.non_hexdecimal"),
+      });
+    }
+  }
+
   #setFormPermissions(permissions) {
     this.args.form.set("permissions", permissions);
   }
@@ -481,6 +565,7 @@ export default class UpsertCategoryGeneral extends Component {
         @title={{i18n "category.background_color"}}
         @format="max"
         @validation="required"
+        @validate={{this.validateColor}}
         @onSet={{this.onBackgroundColorSet}}
         @type="color"
         as |field|
@@ -531,21 +616,11 @@ export default class UpsertCategoryGeneral extends Component {
                   as |field|
                 >
                   <field.Control>
-                    <IconPicker
-                      @value={{readonly field.value}}
-                      @onlyAvailable={{true}}
-                      @options={{hash
-                        maximum=1
-                        disabled=field.disabled
-                        caretDownIcon="angle-down"
-                        caretUpIcon="angle-up"
-                        icons=field.value
-                      }}
+                    <DIconGridPicker
+                      @value={{field.value}}
                       @onChange={{field.set}}
-                      class="form-kit__control-icon"
-                      style={{trustHTML
-                        (concat "--icon-color: #" @transientData.color ";")
-                      }}
+                      @allowClear={{true}}
+                      @iconColor={{concat "#" @transientData.color}}
                     />
                   </field.Control>
                 </@form.Field>

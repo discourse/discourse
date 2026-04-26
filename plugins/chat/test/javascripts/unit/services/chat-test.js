@@ -2,7 +2,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Discourse Chat | Unit | Service | chat", function (needs) {
+acceptance("Unit | Service | chat", function (needs) {
   needs.user();
 
   needs.hooks.beforeEach(function () {
@@ -20,13 +20,13 @@ acceptance("Discourse Chat | Unit | Service | chat", function (needs) {
     );
     sinon
       .stub(this.chatTrackingStateManager, "allChannelUrgentCount")
-      .get(() => 5);
+      .returns(5);
     sinon
       .stub(this.chatPanePendingManager, "totalPendingMessageCount")
       .get(() => 10);
   });
 
-  test("getDocumentTitleCount returns urget count when title_count_mode is 'notifications'", function (assert) {
+  test("getDocumentTitleCount returns urgent count when title_count_mode is 'notifications'", function (assert) {
     this.currentUser.user_option.title_count_mode = "notifications";
 
     const count = this.chat.getDocumentTitleCount();

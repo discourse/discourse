@@ -20,6 +20,7 @@ import linkToolbar from "./link-toolbar";
 import markdownPaste from "./markdown-paste";
 import mention from "./mention";
 import onebox from "./onebox";
+import oneboxToolbar from "./onebox-toolbar";
 import orderedList from "./ordered-list";
 import overrideDragGhost from "./override-drag-ghost";
 import quote from "./quote";
@@ -42,6 +43,7 @@ const defaultExtensions = [
   emoji,
   image,
   onebox,
+  oneboxToolbar,
   code,
   link,
   linkToolbar,

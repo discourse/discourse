@@ -1,9 +1,8 @@
 /* eslint-disable ember/no-observers */
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action, computed } from "@ember/object";
+import EmberObject, { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, and, not, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
@@ -11,6 +10,7 @@ import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
+import { buildPermanentlyDeleteConfirmDialogArgs } from "discourse/components/dialog-messages/permanently-delete-confirm";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
@@ -28,6 +28,7 @@ import {
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { bind } from "discourse/lib/decorators";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
@@ -93,17 +94,12 @@ export default class TopicController extends Controller {
   @autoTrackedArray bookmarks = [];
   @autoTrackedArray selectedPostIds = [];
 
-  queryParams = ["filter", "username_filters", "replies_to_post_number"];
-
-  @and("canEditTopicFeaturedLink", "buffered.featured_link")
-  canRemoveTopicFeaturedLink;
-  @not("model.isPrivateMessage") showCategoryChooser;
-  @or("model.errorHtml", "model.errorMessage") hasError;
-  @not("hasError") noErrorYet;
-  @alias("site.categoriesList") categories;
-  @alias("selectedAllPosts") canDeselectAll;
-  @or("model.postStream.loadedAllPosts", "model.postStream.loadingLastPost")
-  loadedAllPosts;
+  queryParams = [
+    "filter",
+    "username_filters",
+    "replies_to_post_number",
+    "flat",
+  ];
 
   editingTopic = false;
   enteredAt = null;
@@ -113,6 +109,7 @@ export default class TopicController extends Controller {
   username_filters = null;
   replies_to_post_number = null;
   filter = null;
+  flat = null;
   quoteState = new QuoteState();
   currentPostId = null;
   userLastReadPostNumber = null;
@@ -136,6 +133,56 @@ export default class TopicController extends Controller {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("post:show-revision", this, "_showRevision");
+  }
+
+  @computed("model.isPrivateMessage")
+  get showCategoryChooser() {
+    return !this.model?.isPrivateMessage;
+  }
+
+  @computed("model.errorHtml", "model.errorMessage")
+  get hasError() {
+    return this.model?.errorHtml || this.model?.errorMessage;
+  }
+
+  @computed("hasError")
+  get noErrorYet() {
+    return !this.hasError;
+  }
+
+  @computed("site.categoriesList")
+  get categories() {
+    return this.site?.categoriesList;
+  }
+
+  set categories(value) {
+    set(this, "site.categoriesList", value);
+  }
+
+  @dependentKeyCompat
+  get canDeselectAll() {
+    return this.selectedAllPosts;
+  }
+
+  set canDeselectAll(value) {
+    this.selectedAllPosts = value;
+  }
+
+  @computed(
+    "model.postStream.loadedAllPosts",
+    "model.postStream.loadingLastPost"
+  )
+  get loadedAllPosts() {
+    return (
+      this.model?.postStream?.loadedAllPosts ||
+      this.model?.postStream?.loadingLastPost
+    );
+  }
+
+  @computed("canEditTopicFeaturedLink", "buffered.featured_link")
+  get canRemoveTopicFeaturedLink() {
+    // TODO (devxp) we need a buffered proxy that works with tracked properties
+    return this.canEditTopicFeaturedLink && this.get("buffered.featured_link");
   }
 
   @cached
@@ -545,6 +592,17 @@ export default class TopicController extends Controller {
       return;
     }
 
+    if (EmbedMode.enabled) {
+      const loadedPost = postStream.findLoadedPost(postId);
+      const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
+      const quotedText = buildQuote(post, buffer, opts);
+      this.appEvents.trigger("embed-composer:reply-to-post", post);
+      if (quotedText?.trim()) {
+        this.appEvents.trigger("composer:insert-block", quotedText);
+      }
+      return;
+    }
+
     const loadedPost = postStream.findLoadedPost(postId);
     const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
     const viewOpen = composer.get("model.viewOpen");
@@ -788,7 +846,6 @@ export default class TopicController extends Controller {
   // Post related methods
   @action
   async replyToPost(post) {
-    const composerController = this.composer;
     const topic = post ? post.get("topic") : this.model;
     const quoteState = this.quoteState;
     const postStream = this.get("model.postStream");
@@ -799,6 +856,23 @@ export default class TopicController extends Controller {
       return;
     }
 
+    if (EmbedMode.enabled) {
+      const quotedPost = postStream.findLoadedPost(quoteState.postId);
+      const quotedText = buildQuote(
+        quotedPost,
+        quoteState.buffer,
+        quoteState.opts
+      );
+      quoteState.clear();
+
+      this.appEvents.trigger("embed-composer:reply-to-post", post);
+      if (quotedText?.trim()) {
+        this.appEvents.trigger("composer:insert-block", quotedText.trim());
+      }
+      return false;
+    }
+
+    const composerController = this.composer;
     const quotedPost = postStream.findLoadedPost(quoteState.postId);
     const { markdown: buffer, opts: quoteOpts } = await quoteState.markdown();
     const quotedText = buildQuote(quotedPost, buffer, quoteOpts);
@@ -959,13 +1033,31 @@ export default class TopicController extends Controller {
   }
 
   @action
-  permanentlyDeletePost(post) {
-    return this.dialog.yesNoConfirm({
-      message: i18n("post.controls.permanently_delete_confirmation"),
-      didConfirm: () => {
-        this.send("deletePost", post, { force_destroy: true });
-      },
-    });
+  async permanentlyDeletePost(post) {
+    let result;
+    try {
+      result = await ajax(`/posts/${post.id}/permanently_delete_check.json`);
+    } catch (error) {
+      return popupAjaxError(error);
+    }
+
+    if (!result.can_permanently_delete) {
+      return this.dialog.alert(result.reason);
+    }
+
+    const message = post.firstPost
+      ? i18n("post.controls.permanently_delete_topic_confirmation")
+      : i18n("post.controls.permanently_delete_post_confirmation");
+
+    return this.dialog.confirm(
+      buildPermanentlyDeleteConfirmDialogArgs(
+        message,
+        i18n("post.controls.permanently_delete_confirm_phrase"),
+        () => {
+          this.send("deletePost", post, { force_destroy: true });
+        }
+      )
+    );
   }
 
   @action

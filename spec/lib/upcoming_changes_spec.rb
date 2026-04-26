@@ -385,6 +385,96 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".enabled?" do
+    after do
+      SiteSetting.remove_override!(setting_name)
+      SiteSetting.promote_upcoming_changes_on_status = :stable
+      UpcomingChanges.clear_caches!
+    end
+
+    context "when the setting has no row in the database (admin has not saved it)" do
+      before { SiteSetting.remove_override!(setting_name) }
+
+      it "returns the yaml default when the change is below promote_upcoming_changes_on_status" do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :experimental,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+          },
+        )
+        SiteSetting.promote_upcoming_changes_on_status = :stable
+
+        expect(described_class.enabled?(setting_name)).to eq(SiteSetting.defaults[setting_name])
+      end
+
+      it "returns true when the change meets or exceeds promote_upcoming_changes_on_status" do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :stable,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+          },
+        )
+        SiteSetting.promote_upcoming_changes_on_status = :stable
+
+        expect(described_class.enabled?(setting_name)).to eq(true)
+      end
+    end
+
+    context "when an admin has saved a value to the database" do
+      it "returns the stored value when true" do
+        SiteSetting.enable_upload_debug_mode = true
+
+        expect(described_class.enabled?(setting_name)).to eq(true)
+      end
+
+      it "returns the stored value when false even when the change meets promote_upcoming_changes_on_status" do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :beta,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+          },
+        )
+        SiteSetting.promote_upcoming_changes_on_status = :beta
+        SiteSetting.enable_upload_debug_mode = false
+
+        expect(described_class.enabled?(setting_name)).to eq(false)
+      end
+    end
+
+    context "when the change is permanent" do
+      before do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :permanent,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+          },
+        )
+      end
+
+      it "returns true even when the database value is false" do
+        SiteSetting.enable_upload_debug_mode = false
+
+        expect(described_class.enabled?(setting_name)).to eq(true)
+      end
+    end
+  end
+
   describe ".current_statuses" do
     include ActiveSupport::Testing::TimeHelpers
 
@@ -486,6 +576,14 @@ RSpec.describe UpcomingChanges do
 
       described_class.permanent_upcoming_changes
       expect(UpcomingChanges::List).to have_received(:call).twice
+    end
+  end
+
+  describe ".clear_caches!" do
+    it "clears the latest new feature created_at cache" do
+      Discourse.redis.set("latest_new_feature_created_at", Time.zone.now.iso8601)
+      described_class.clear_caches!
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_nil
     end
   end
 

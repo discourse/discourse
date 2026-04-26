@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { get } from "@ember/helper";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
@@ -51,7 +52,7 @@ const SchemaFormField = <template>
       @type="input-number"
       as |field|
     >
-      <field.Control />
+      <field.Control min={{@entry.min}} max={{@entry.max}} />
     </@formObject.Field>
   {{else}}
     <@formObject.Field
@@ -78,6 +79,12 @@ export default class EditCategoryTypeSchemaFields extends Component {
     );
   }
 
+  get hasCustomFields() {
+    return this.schema.category_custom_fields?.some((entry) =>
+      this.shouldDisplayField(entry)
+    );
+  }
+
   get className() {
     let classes = [
       "edit-category-type-schema-fields",
@@ -86,7 +93,29 @@ export default class EditCategoryTypeSchemaFields extends Component {
     if (this.args.active) {
       classes.push("active");
     }
+    if (!this.hasCustomFields) {
+      classes.push("--site-settings-only");
+    }
     return classes.join(" ");
+  }
+
+  @bind
+  groupEntries(entries) {
+    const groups = [];
+    const byDependsOn = new Map();
+
+    entries?.forEach((entry) => {
+      const dependsOn = entry.depends_on || null;
+      let group = byDependsOn.get(dependsOn);
+      if (!group) {
+        group = { dependsOn, entries: [] };
+        byDependsOn.set(dependsOn, group);
+        groups.push(group);
+      }
+      group.entries.push(entry);
+    });
+
+    return groups;
   }
 
   @bind
@@ -100,19 +129,21 @@ export default class EditCategoryTypeSchemaFields extends Component {
 
   <template>
     <div class={{this.className}}>
-      <@form.Section>
-        <@form.Object @name="custom_fields" as |customFields|>
-          {{#each this.schema.category_custom_fields as |entry|}}
-            {{#if (this.shouldDisplayField entry)}}
-              <SchemaFormField
-                @category={{@category}}
-                @entry={{entry}}
-                @formObject={{customFields}}
-              />
-            {{/if}}
-          {{/each}}
-        </@form.Object>
-      </@form.Section>
+      {{#if this.hasCustomFields}}
+        <@form.Section>
+          <@form.Object @name="custom_fields" as |customFields|>
+            {{#each this.schema.category_custom_fields as |entry|}}
+              {{#if (this.shouldDisplayField entry)}}
+                <SchemaFormField
+                  @category={{@category}}
+                  @entry={{entry}}
+                  @formObject={{customFields}}
+                />
+              {{/if}}
+            {{/each}}
+          </@form.Object>
+        </@form.Section>
+      {{/if}}
 
       {{yield to="beforeSiteSettings"}}
 
@@ -120,13 +151,35 @@ export default class EditCategoryTypeSchemaFields extends Component {
         @title={{i18n "category.type_settings_schema.site_settings"}}
         @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
       >
-        <@form.Object @name="category_type_site_settings" as |siteSettings|>
-          {{#each this.schema.site_settings as |entry|}}
-            <SchemaFormField
-              @category={{@category}}
-              @entry={{entry}}
-              @formObject={{siteSettings}}
-            />
+        <@form.Object
+          @name="category_type_site_settings"
+          as |siteSettings data|
+        >
+          {{#each (this.groupEntries this.schema.site_settings) as |group|}}
+            {{#if group.dependsOn}}
+              {{#if (get data group.dependsOn)}}
+                <div class="--dependent">
+                  <div class="--dependent-border"></div>
+                  <div class="--dependent-fields">
+                    {{#each group.entries as |entry|}}
+                      <SchemaFormField
+                        @category={{@category}}
+                        @entry={{entry}}
+                        @formObject={{siteSettings}}
+                      />
+                    {{/each}}
+                  </div>
+                </div>
+              {{/if}}
+            {{else}}
+              {{#each group.entries as |entry|}}
+                <SchemaFormField
+                  @category={{@category}}
+                  @entry={{entry}}
+                  @formObject={{siteSettings}}
+                />
+              {{/each}}
+            {{/if}}
           {{/each}}
         </@form.Object>
       </@form.Emphasis>

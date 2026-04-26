@@ -1144,6 +1144,7 @@ RSpec.describe PostAlerter do
         post_number: post.post_number,
         topic_title: post.topic.title,
         topic_id: post.topic.id,
+        post_id: post.id,
         excerpt: post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
         username: post.username,
         post_url: post.url,
@@ -1238,7 +1239,7 @@ RSpec.describe PostAlerter do
 
         alerts =
           MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
-            expect { mention_post }.to change { Jobs::PushNotification.jobs.count }.by(1)
+            expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }.by(1)
           end
 
         expect(alerts).not_to be_empty
@@ -1249,7 +1250,7 @@ RSpec.describe PostAlerter do
 
         alerts =
           MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
-            expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
+            expect { mention_post }.not_to change { Jobs::DeliverPushNotification.jobs.count }
           end
 
         expect(alerts).to be_empty
@@ -1268,7 +1269,7 @@ RSpec.describe PostAlerter do
 
     it "pushes nothing to suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
-      expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
+      expect { mention_post }.to_not change { Jobs::DeliverPushNotification.jobs.count }
 
       events = DiscourseEvent.track_events { mention_post }
       expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
@@ -1282,7 +1283,7 @@ RSpec.describe PostAlerter do
         ends_at: 1.day.from_now,
       )
 
-      expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
+      expect { mention_post }.to_not change { Jobs::DeliverPushNotification.jobs.count }
 
       events = DiscourseEvent.track_events { mention_post }
       expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
@@ -1300,6 +1301,8 @@ RSpec.describe PostAlerter do
       end
 
       set_subfolder "/subpath"
+      post = mention_post
+
       payload = {
         "secret_key" => SiteSetting.push_api_secret_key,
         "url" => Discourse.base_url,
@@ -1311,9 +1314,10 @@ RSpec.describe PostAlerter do
             "post_number" => 1,
             "topic_title" => topic.title,
             "topic_id" => topic.id,
+            "post_id" => post.id,
             "excerpt" => "Hello @eviltrout ❤",
             "username" => user.username,
-            "url" => UrlHelper.absolute(Discourse.base_path + mention_post.url),
+            "url" => UrlHelper.absolute(Discourse.base_path + post.url),
             "client_id" => "xxx0",
           },
           {
@@ -1321,15 +1325,14 @@ RSpec.describe PostAlerter do
             "post_number" => 1,
             "topic_title" => topic.title,
             "topic_id" => topic.id,
+            "post_id" => post.id,
             "excerpt" => "Hello @eviltrout ❤",
             "username" => user.username,
-            "url" => UrlHelper.absolute(Discourse.base_path + mention_post.url),
+            "url" => UrlHelper.absolute(Discourse.base_path + post.url),
             "client_id" => "xxx1",
           },
         ],
       }
-
-      post = mention_post
 
       expect(JSON.parse(body)).to eq(payload)
       expect(headers["Content-Type"]).to eq("application/json")
@@ -1355,6 +1358,7 @@ RSpec.describe PostAlerter do
       changes = {
         "notification_type" => Notification.types[:posted],
         "post_number" => new_post.post_number,
+        "post_id" => new_post.id,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
         "url" => UrlHelper.absolute(Discourse.base_path + new_post.url),
@@ -1375,6 +1379,7 @@ RSpec.describe PostAlerter do
 
       changes = {
         "post_number" => new_post.post_number,
+        "post_id" => new_post.id,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
         "url" => UrlHelper.absolute(Discourse.base_path + new_post.url),
@@ -1405,8 +1410,8 @@ RSpec.describe PostAlerter do
       SiteSetting.push_notification_time_window_mins = 10
       evil_trout.update!(last_seen_at: 5.minutes.ago)
 
-      expect { mention_post }.to change { Jobs::PushNotification.jobs.count }
-      expect(Jobs::PushNotification.jobs[0]["at"]).to be_within(30.seconds).of(
+      expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }
+      expect(Jobs::DeliverPushNotification.jobs[0]["at"]).to be_within(30.seconds).of(
         5.minutes.from_now.to_f,
       )
     end
@@ -1420,8 +1425,8 @@ RSpec.describe PostAlerter do
       it "delays sending push notification for active online user" do
         evil_trout.update!(last_seen_at: 5.minutes.ago)
 
-        expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
-        expect(Jobs::SendPushNotification.jobs[0]["at"]).not_to be_nil
+        expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }
+        expect(Jobs::DeliverPushNotification.jobs[0]["at"]).not_to be_nil
       end
 
       it "delays sending push notification for active online user for the correct delay ammount" do
@@ -1432,15 +1437,15 @@ RSpec.describe PostAlerter do
         # 10 minutes from now - 5 minutes ago = 5 minutes
         delay = 5.minutes.from_now.to_f
 
-        expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
-        expect(Jobs::SendPushNotification.jobs[0]["at"]).to be_within(30.seconds).of(delay)
+        expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }
+        expect(Jobs::DeliverPushNotification.jobs[0]["at"]).to be_within(30.seconds).of(delay)
       end
 
       it "does not delay push notification for inactive offline user" do
         evil_trout.update!(last_seen_at: 40.minutes.ago)
 
-        expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
-        expect(Jobs::SendPushNotification.jobs[0]["at"]).to be_nil
+        expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }
+        expect(Jobs::DeliverPushNotification.jobs[0]["at"]).to be_nil
       end
     end
   end
@@ -1519,7 +1524,7 @@ RSpec.describe PostAlerter do
 
       expect(events.size).to eq(0)
       expect(messages.size).to eq(0)
-      expect(Jobs::PushNotification.jobs.size).to eq(0)
+      expect(Jobs::DeliverPushNotification.jobs.size).to eq(0)
     end
 
     it "does not publish to MessageBus /notification-alert if the user has not been seen for > 30 days, but still sends a push notification" do
@@ -1554,7 +1559,7 @@ RSpec.describe PostAlerter do
         :post_notification_alert,
       )
       expect(messages.size).to eq(0)
-      expect(Jobs::PushNotification.jobs.size).to eq(1)
+      expect(Jobs::DeliverPushNotification.jobs.size).to eq(1)
     end
   end
 
@@ -2620,6 +2625,8 @@ RSpec.describe PostAlerter do
     it "skips sending a notification email to the group and all other email addresses that are _not_ members of the group,
     sends a group_smtp_email instead" do
       NotificationEmailer.enable
+      SiteSetting.simple_email_subject = true
+      SiteSetting.email_subject = "%{site_name}: %{topic_title}"
 
       incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
@@ -2653,7 +2660,7 @@ RSpec.describe PostAlerter do
       expect(email.from).to eq([SiteSetting.notification_email])
       expect(email.to).to contain_exactly(group_user1.user.email)
       expect(email.cc).to eq(nil)
-      expect(email.subject).to eq("[Discourse] [PM] #{topic.title}")
+      expect(email.subject).to eq("Discourse: #{topic.title}")
     end
 
     it "excludes users with email_messages_level set to never from group SMTP emails" do

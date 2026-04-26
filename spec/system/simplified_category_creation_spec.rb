@@ -7,6 +7,7 @@ describe "Simplified Category Creation" do
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:icon_picker) { PageObjects::Components::DIconGridPicker.new }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -117,7 +118,9 @@ describe "Simplified Category Creation" do
       form.field("color").fill_in("GGGGGG")
       category_page.save_settings
 
-      expect(page).to have_content("Color is invalid")
+      expect(form.field("color")).to have_errors(
+        I18n.t("js.category.color_validations.non_hexdecimal"),
+      )
     end
 
     it "shows error when icon is missing" do
@@ -125,10 +128,9 @@ describe "Simplified Category Creation" do
 
       form.field("name").fill_in("Test Category")
 
-      icon_picker = PageObjects::Components::SelectKit.new(".form-kit__control-icon")
       icon_picker.expand
+      icon_picker.select_first_icon
       icon_picker.clear
-      icon_picker.collapse
 
       category_page.save_settings
 
@@ -295,14 +297,71 @@ describe "Simplified Category Creation" do
     end
   end
 
-  describe "Settings Tab" do
-    it "enables topic approval requirement" do
-      category_page.visit_settings(category)
+  describe "Moderation Tab" do
+    it "creates a category with a group-based posting review mode" do
+      category_page.visit_new_category
 
-      form.field("category_setting.require_topic_approval").toggle
+      form.field("name").fill_in("Review Test")
+      category_page.toggle_advanced_settings
+      find(".edit-category-moderation a").click
+
+      category_page.topic_posting_review_mode_chooser(simplified: true).expand
+      category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
+        "everyone_except",
+      )
+
+      category_page.save_settings
+      expect(category_page).to have_posting_review_groups_error
+
+      category_page.topic_posting_review_group_chooser(simplified: true).expand
+      category_page.topic_posting_review_group_chooser(simplified: true).select_row_by_value(
+        group.id,
+      )
+
+      category_page.save_settings
+      expect(category_page).to have_no_posting_review_groups_error
+
+      created_category = Category.find_by(name: "Review Test")
+      category_page.visit_moderation(created_category)
+      expect(category_page).to have_topic_posting_review_mode("everyone_except", simplified: true)
+      expect(category_page).to have_topic_posting_review_groups(group, simplified: true)
+    end
+
+    it "allows selecting 'everyone' mode" do
+      category_page.visit_moderation(category)
+
+      category_page.topic_posting_review_mode_chooser(simplified: true).expand
+      category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
+        "everyone",
+      )
       category_page.save_settings
 
-      expect(category.reload.require_topic_approval?).to eq(true)
+      category_page.visit_moderation(category)
+      expect(category_page).to have_topic_posting_review_mode("everyone", simplified: true)
+    end
+
+    it "allows selecting 'everyone_except' mode with groups" do
+      category_page.visit_moderation(category)
+
+      category_page.topic_posting_review_mode_chooser(simplified: true).expand
+      category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
+        "everyone_except",
+      )
+
+      category_page.save_settings
+      expect(category_page).to have_posting_review_groups_error
+
+      category_page.topic_posting_review_group_chooser(simplified: true).expand
+      category_page.topic_posting_review_group_chooser(simplified: true).select_row_by_value(
+        group.id,
+      )
+
+      category_page.save_settings
+
+      category_page.visit_moderation(category)
+      expect(category_page).to have_no_posting_review_groups_error
+      expect(category_page).to have_topic_posting_review_mode("everyone_except", simplified: true)
+      expect(category_page).to have_topic_posting_review_groups(group, simplified: true)
     end
   end
 

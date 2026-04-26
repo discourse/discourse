@@ -184,7 +184,7 @@
     padding: var(--space-half) var(--space-2) 0 var(--space-2);
     margin-block: var(--space-4);
 
-    > div {
+    > div:not(.composer-image-gallery__mode-buttons) {
       display: flex;
       flex-wrap: wrap;
       gap: var(--space-2);
@@ -306,7 +306,8 @@
 
 .fk-d-menu[data-identifier="composer-link-toolbar"],
 .fk-d-menu[data-identifier="composer-image-toolbar"],
-.fk-d-menu[data-identifier="composer-image-alt-text"] {
+.fk-d-menu[data-identifier="composer-image-alt-text"],
+.fk-d-menu[data-identifier="composer-onebox-toolbar"] {
   user-select: none;
   z-index: z("composer", "dropdown");
 
@@ -341,6 +342,7 @@
 
     &.--active {
       background: var(--d-selected);
+      color: var(--d-selected-text-color);
     }
   }
 
