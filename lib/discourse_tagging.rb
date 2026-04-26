@@ -182,10 +182,9 @@ module DiscourseTagging
 
         missing_parent_tag_ids =
           parent_tags_map
-            .map do |_, parent_tag_ids|
-              (tag_ids & parent_tag_ids).size == 0 ? parent_tag_ids.first : nil
+            .flat_map do |_, parent_tag_ids|
+              (tag_ids & parent_tag_ids).size == 0 ? parent_tag_ids : []
             end
-            .compact
             .uniq
 
         missing_parent_tags = Tag.where(id: missing_parent_tag_ids).all
@@ -206,11 +205,14 @@ module DiscourseTagging
           parent_tags_map.each do |tag_id, parent_tag_ids|
             next if (tag_ids & parent_tag_ids).size > 0 # tag already has a parent tag
 
-            parent_tag = tags.select { |t| t.id == parent_tag_ids.first }.first
             original_child_tag = tags.select { |t| t.id == tag_id }.first
+            next if original_child_tag.blank?
 
-            next if parent_tag.blank? || original_child_tag.blank?
-            parent_child_names_map[parent_tag.name] = original_child_tag.name
+            parent_tag_ids.each do |parent_tag_id|
+              parent_tag = tags.select { |t| t.id == parent_tag_id }.first
+              next if parent_tag.blank?
+              parent_child_names_map[parent_tag.name] = original_child_tag.name
+            end
           end
 
           # replaces the added missing parent tags with the original tag
