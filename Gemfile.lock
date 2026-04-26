@@ -703,7 +703,7 @@ GEM
     tokenizers (0.6.4-x86_64-darwin)
     tokenizers (0.6.4-x86_64-linux)
     tokenizers (0.6.4-x86_64-linux-musl)
-    trilogy (2.12.3)
+    trilogy (2.12.4)
       bigdecimal
     tsort (0.2.0)
     ttfunk (1.8.0)
@@ -1262,7 +1262,7 @@ CHECKSUMS
   tokenizers (0.6.4-x86_64-darwin) sha256=102b143e71e59bc7ff29e5920f356ad74bbc941ae2d4e3a495ee92311ace7394
   tokenizers (0.6.4-x86_64-linux) sha256=cdec6e5b007d73de094cdc7e097e4ab9a545f37f9c30e376a53800c3a552a447
   tokenizers (0.6.4-x86_64-linux-musl) sha256=588031377e3f586b66687fc9dc59f901dea47d863733d871bf6801657e312c72
-  trilogy (2.12.3) sha256=1473da7ed7e204121929ba3dfa39c1365161f960fd4fe833a1dde4a61ff66fea
+  trilogy (2.12.4) sha256=dc51a53b6ad00967b3fcc37018653a3d6df8d946e07065cfaf3348b37939124a
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   ttfunk (1.8.0) sha256=a7cbc7e489cc46e979dde04d34b5b9e4f5c8f1ee5fc6b1a7be39b829919d20ca
   tty-color (0.6.0) sha256=6f9c37ca3a4e2367fb2e6d09722762647d6f455c111f05b59f35730eeb24332a
