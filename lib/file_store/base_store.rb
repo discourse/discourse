@@ -194,7 +194,8 @@ module FileStore
           ].max.kilobytes
 
           if object.respond_to?(:secure) ? object.secure? : object.upload.secure?
-            url = Discourse.store.signed_url_for_path(object.url)
+            url =
+              Discourse.store.signed_url_for_path(object.url, include_content_disposition: false)
           else
             url = Discourse.store.cdn_url(object.url)
           end

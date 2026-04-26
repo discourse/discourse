@@ -1,6 +1,6 @@
 import { array, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import CategoryUnread from "discourse/components/category-unread";
@@ -96,13 +96,13 @@ export default class ParentCategoryRow extends CategoryListItem {
           <footer class="clearfix category-topics-count">
             <div class="category-stat">
               <a href={{this.category.url}}>
-                {{htmlSafe this.category.statTotal}}
+                {{trustHTML this.category.statTotal}}
               </a>
             </div>
             {{#unless this.category.pickAll}}
               <div class="category-stat">
                 <a href={{this.category.url}}>
-                  {{htmlSafe this.category.stat}}
+                  {{trustHTML this.category.stat}}
                 </a>
               </div>
             {{/unless}}
@@ -208,7 +208,7 @@ export default class ParentCategoryRow extends CategoryListItem {
             @outletArgs={{lazyHash category=this.category}}
           >
             <td class="topics">
-              <div title={{this.category.statTitle}}>{{htmlSafe
+              <div title={{this.category.statTitle}}>{{trustHTML
                   this.category.stat
                 }}</div>
               <CategoryUnread

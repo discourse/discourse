@@ -441,6 +441,14 @@ RSpec.describe Oneboxer do
         expect(result[:preview]).to be_empty
       end
 
+      it "does not return onebox for domains in ignore_redirects when blocked" do
+        SiteSetting.blocked_onebox_domains = "x.com"
+
+        result = Oneboxer.external_onebox("https://x.com/someone/status/123")
+        expect(result[:onebox]).to be_empty
+        expect(result[:preview]).to be_empty
+      end
+
       it "does not return onebox if the Discourse-No-Onebox header == 1" do
         stub_request(:get, "https://website.com/discourse-no-onebox").to_return(
           status: 200,
@@ -761,6 +769,35 @@ RSpec.describe Oneboxer do
 
         expect(head_stub).to have_been_requested
         expect(redirect_head_stub).to have_been_requested
+      end
+    end
+
+    context "with ignore_redirects for Reddit URLs" do
+      before { Discourse.cache.clear }
+
+      it "resolves Reddit URLs without requesting the source URL" do
+        reddit_url =
+          "https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition"
+
+        head_stub =
+          stub_request(:head, reddit_url).to_return(
+            status: 301,
+            body: "",
+            headers: {
+              "location" => "#{reddit_url}/",
+            },
+          )
+
+        get_stub = stub_request(:get, reddit_url).to_return(status: 200, body: html)
+
+        result = Oneboxer.external_onebox(reddit_url)
+
+        expect(result[:onebox]).to be_present
+        expect(result[:onebox]).to include("https://embed.reddit.com/r/colors/comments/b4d5xm/")
+        expect(result[:preview]).to include("placeholder-icon generic")
+
+        expect(head_stub).not_to have_been_requested
+        expect(get_stub).not_to have_been_requested
       end
     end
   end

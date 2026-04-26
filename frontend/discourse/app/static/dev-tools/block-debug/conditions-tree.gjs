@@ -1,6 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import { formatValue } from "../lib/value-formatter";
 
@@ -124,10 +124,10 @@ class ConditionNode extends Component {
    * Calculates the CSS padding for indentation based on the node's depth.
    * Each level adds 12px of left padding.
    *
-   * @returns {ReturnType<typeof htmlSafe>} CSS style string for padding, marked as safe for binding.
+   * @returns {ReturnType<typeof trustHTML>} CSS style string for padding, marked as safe for binding.
    */
   get indentStyle() {
-    return htmlSafe(`padding-left: ${this.args.item.depth * 12}px`);
+    return trustHTML(`padding-left: ${this.args.item.depth * 12}px`);
   }
 
   /**

@@ -34,6 +34,7 @@ module Categories
     end
 
     step :log_action
+    step :clear_category_type_counts_cache
 
     private
 
@@ -78,6 +79,10 @@ module Categories
         "configure_category_type",
         { category_id: category.id, category_type: params.category_type },
       )
+    end
+
+    def clear_category_type_counts_cache
+      Discourse.cache.delete(Categories::TypeRegistry::COUNTS_CACHE_KEY)
     end
   end
 end

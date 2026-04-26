@@ -16,6 +16,13 @@ class ThemeSettingsMigrationsRunner
       Category.where("name_lower = LOWER(?)", category_name).pick(:id)
     end
 
+    # @param [String] Slug of the category to retrieve the id of.
+    # @return [Integer|nil] The id of the category with the given slug or nil if a category does not exist for the given
+    #   slug.
+    def get_category_id_by_slug(category_slug)
+      Category.where(slug: category_slug).pick(:id)
+    end
+
     # @param [String] URL string to check if it is a valid absolute URL, path or anchor.
     # @return [Boolean] True if the URL is a valid URL or path, false otherwise.
     def is_valid_url(url)

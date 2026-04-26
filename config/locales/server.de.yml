@@ -280,7 +280,7 @@ de:
       greater_than: muss größer als %{count} sein
       greater_than_or_equal_to: muss größer oder gleich %{count} sein
       has_already_been_used: "wird bereits verwendet"
-      in: muss in %{count} sein
+      in: muss innerhalb von %{count} sein
       inclusion: ist nicht in der Liste enthalten
       invalid: ist ungültig
       is_invalid: "scheint unklar zu sein, ist das ein ganzer Satz?"
@@ -441,7 +441,13 @@ de:
   deleted_topic: "Ups! Dieses Thema wurde gelöscht und ist nicht mehr verfügbar."
   delete_topic_failed: "Es kam zu einem Fehler beim Löschen des Themas. Bitte kontaktiere den Administrator der Website."
   reading_time: "Lesezeit"
+  reading_time_minutes:
+    one: "%{count} Minute 🕑"
+    other: "%{count} Minuten 🕑"
   likes: "„Gefällt mir“"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Ups! Du hast diese Aktion bereits durchgeführt. Kannst du versuchen, die Seite zu aktualisieren?"
   too_many_replies:
     one: "Entschuldigung, aber neue Benutzer sind vorübergehend auf %{count} Antwort pro Thema beschränkt."
@@ -596,6 +602,7 @@ de:
         one: "Maximal %{count} Benutzer kann auf einmal hinzugefügt werden"
         other: "Maximal %{count} Benutzer können auf einmal hinzugefügt werden"
       usernames_or_emails_required: "Benutzernamen oder E-Mails müssen vorhanden sein"
+      cannot_add_emails: "Um Mitglieder zu dieser Gruppe hinzuzufügen, können nur Benutzernamen verwendet werden. Um per E-Mail einzuladen, verwende die Schaltfläche „Einladen“."
       counting_too_many_email_domains:
         one: "Maximal %{count} E-Mail-Domain kann auf einmal gezählt werden"
         other: "Maximal %{count} E-Mail-Domains können auf einmal gezählt werden"
@@ -818,9 +825,11 @@ de:
       topic_exists_no_oldest: "Diese Kategorie kann nicht gelöscht werden, da die Anzahl der Themen %{count} beträgt."
     uncategorized_description: "Themen, welche keine Kategorie benötigen oder in keine existierende Kategorie passen."
   category_types:
+    not_available: "Der Kategorietyp '%{type_name}' ist nicht verfügbar."
     discussion:
       name: "Diskussion"
-      title: "diskussion"
+      title: "Diskussion"
+      description: "Eine Standardkategorie mit allem, was man für eine Unterhaltung braucht."
   trust_levels:
     admin: "Administrator"
     staff: "Team"
@@ -838,7 +847,6 @@ de:
       one: "%{count} „Gefällt mir“"
       other: "%{count} „Gefällt mir“"
     cannot_permanently_delete:
-      many_posts: "Dieses Thema hat wiederhergestellte Beiträge. Bitte lösche sie endgültig, bevor du das Thema endgültig löschst."
       wait_or_different_admin: "Du musst %{time_left} warten, bevor du diesen Beitrag endgültig löschen kannst, oder ein anderer Administrator muss dies tun."
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Bitte versuche es später noch einmal."
@@ -1060,6 +1068,8 @@ de:
     connection_error: "Es gab ein Problem beim Verbinden mit dem Server, überprüfe den Servernamen und den Port und versuche es erneut."
     timeout_error: "Zeitüberschreitung bei der Verbindung zum Server, überprüfe den Servernamen und den Port und versuche es erneut."
     unhandled_error: "Unbehandelter Fehler beim Testen der E-Mail-Einstellungen. %{message}"
+    invalid_host: "Der angegebene Host wird zu einer unzulässigen IP-Adresse aufgelöst."
+    host_resolve_failed: "Der angegebene Host konnte nicht aufgelöst werden."
   webauthn:
     validation:
       invalid_type_error: "Der angegebene webauthn-Typ war ungültig. Gültige Typen sind webauthn.get und webauthn.create."
@@ -1144,6 +1154,9 @@ de:
       weekly: "wöchentlich"
       every_month: "jeden Monat"
       every_six_months: "alle sechs Monate"
+  calendar_subscriptions:
+    application_name: "Kalender-Abonnements"
+    bookmarks_feed_name: "%{site_title} - Lesezeichen-Erinnerungen"
   user_api_key:
     title: 'Autorisiere „%{application_name}“'
     authorize: "Genehmigen"
@@ -1154,6 +1167,8 @@ de:
     permissions_header: 'Dies erlaubt „%{application_name}“:'
     redirect_warning: "Bei der Autorisierung wirst du weitergeleitet zu"
     instructions: 'Wir haben gerade einen neuen Benutzer-API-Schlüssel für dich generiert zur Verwendung mit „%{application_name}“, bitte füge den folgenden Schlüssel in deine Anwendung ein:'
+    copy_key: "Schlüssel kopieren"
+    copied: "Kopiert!"
     otp_description: 'Möchtest du „%{application_name}“ erlauben, auf diese Website zuzugreifen?'
     otp_confirmation:
       confirm_title: Weiter zu %{site_name}
@@ -1232,9 +1247,11 @@ de:
       description: "Liste der Meldungszustände einschließlich Art der Meldung, Beitragsersteller, Meldungsersteller und Zeit bis zur Lösung."
     visits:
       title: "Benutzerbesuche"
-      xaxis: "Tag"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobil"
       yaxis: "Anzahl der Besuche"
-      description: "Anzahl der Besuche von angemeldeten Benutzern."
+      description: "Anzahl der Besuche von angemeldeten Benutzern nach Gerätetyp."
     signups:
       title: "Neue Benutzer"
       xaxis: "Tag"
@@ -1301,7 +1318,7 @@ de:
       title: "TAB/MAB"
       xaxis: "Tag"
       yaxis: "TAB/MAB"
-      description: "Anzahl der Mitglieder, die sich innerhalb des letzten Tages angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, welche die „Bindung“ der Community angibt. Erstrebenswert sind 20 % oder mehr."
+      description: "Der Anteil der monatlich aktiven Mitglieder, die am Vortag zurückgekehrt sind. Dieser Prozentsatz zeigt, wie regelmäßig die Mitglieder wiederkommen; er wird auch als „Community-Bindung“ bezeichnet. Zielwert: > 20 %."
     daily_engaged_users:
       title: "Täglich engagierte Benutzer"
       xaxis: "Tag"
@@ -1716,8 +1733,6 @@ de:
     max_oneboxes_per_post: "Lege die maximale Anzahl von Oneboxes fest, die in einem Beitrag enthalten sein können. Oneboxes bieten eine Vorschau der verlinkten Inhalte im Beitrag."
     facebook_app_access_token: "Ein Token, das aus deiner Facebook-App-ID und deinem Geheimnis generiert wird. Wird verwendet, um Instagram-Oneboxes zu generieren."
     github_onebox_access_tokens: "Eine Zuordnung einer GitHub-Organisation oder eines GitHub-Benutzers zu einem GitHub-Zugriffs-Token, das verwendet wird, um GitHub-Oneboxes für private Repos, Commits, Pull Requests, Issues und Dateiinhalte zu erzeugen. Ohne dieses Token werden nur öffentliche GitHub-URLs in eine Onebox umgewandelt."
-    reddit_onebox_client_id: "Reddit-API-OAuth-Client-ID, die für authentifizierte Reddit-Oneboxes verwendet wird. Erstelle eine App vom Typ „script“ unter reddit.com/prefs/apps, um Anmeldedaten zu erhalten."
-    reddit_onebox_client_secret: "Reddit-API-OAuth-Client-Secret, das für authentifizierte Reddit-Oneboxes verwendet wird. Zu finden unter der App vom Typ „script“ die auf reddit.com/prefs/apps erstellt wurde."
     logo: "Das Logo oben links auf deiner Website. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1. Wenn leer, wird die Website-Überschrift angezeigt."
     logo_small: "Kleine Logo-Grafik oben links auf der Website, die beim Herunterscrollen angezeigt wird. Verwende ein quadratisches Bild (120 × 120). Falls leer, wird ein „Home“-Zeichen angezeigt."
     digest_logo: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Website. Verwende ein breites rechteckiges Bild. Verwende kein SVG-Bild. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
@@ -1800,6 +1815,7 @@ de:
     moderators_manage_categories: "Moderatoren erlauben, Kategorien zu erstellen und zu verwalten"
     moderators_manage_groups: "Moderatoren erlauben, Gruppen zu erstellen und zu verwalten"
     moderators_change_post_ownership: "Moderatoren erlauben, die Eigentümerschaft des Beitrags zu ändern"
+    change_post_ownership_allowed_groups: "Erlaube Benutzern in diesen Gruppen, den Eigentümer von Beiträgen zu ändern"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie eine IP-Adresse nutzen, die in der Liste der gefilterten IPs definiert ist (Administration > Protokolle > Gefilterte IPs)."
     blocked_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
@@ -2235,7 +2251,7 @@ de:
     allow_likes_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website mit „Gefällt mir“ versehen. Für diese Einstellung muss die Einstellung `allow anonymous mode` aktiviert sein."
     anonymous_posting_allowed_groups: "Gruppen, die den anonymen Modus nutzen dürfen. Für diese Einstellung muss die Einstellung „allow anonymous mode“ aktiviert sein."
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
-    hide_user_profiles_from_public: "Deaktiviert Benutzerkarten und Benutzerprofile für anonyme Benutzer. Zusammengefasste Statistiken im Benutzerverzeichnis sind weiterhin zugänglich."
+    hide_user_profiles_from_public: "Deaktiviere Benutzerkarten und Benutzerprofile für anonyme Benutzer. Zusammengefasste Statistiken im Benutzerverzeichnis sind weiterhin zugänglich."
     hide_new_user_profiles: "Verstecke Benutzerprofile der Vertrauensstufe 1 oder niedriger vor der Öffentlichkeit und bei Benutzern der Vertrauensstufe 1, bis sie zum ersten Mal posten. Diese Funktion ist auf Websites mit must_approve_users und invite_only bedingungslos deaktiviert."
     allow_users_to_hide_profile: "Benutzern erlauben, ihr Profil und ihre Präsenz auszublenden"
     hide_user_activity_tab: "Blende die Registerkarte „Aktivität“ in Benutzerprofilen (außer für Administratoren und den Benutzer selbst) aus."
@@ -2301,6 +2317,7 @@ de:
     embed_support_markdown: "Markdown-Formatierung für eingebettete Beiträge unterstützen."
     allowed_embed_selectors: "Eine kommaseparierte Liste von CSS-Elementen, die in Einbettungen erlaubt sind."
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
+    embed_full_app: "Aktiviere den vollständigen App-Modus für eingebettete Kommentare. Wenn diese Option aktiviert ist, wird bei eingebetteten Kommentaren die vollständige Discourse-Anwendung in einem iframe geladen, sodass die Benutzer direkt mit Themen interagieren können"
     embed_post_limit: "Maximale Anzahl der Beiträge, die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig."
     notify_about_reviewable_item_after: "Falls es Elemente zur Überprüfung gibt, die nach so vielen Stunden noch nicht bearbeitet wurden, eine persönliche Nachricht an die Moderatoren senden. Zum Deaktivieren auf 0 setzen."
@@ -2331,7 +2348,7 @@ de:
     disable_watched_word_checking_in_user_fields: "deaktiviere die Prüfung überwachter Wörter in Benutzerfeldern"
     watched_words_regular_expressions: "Erlaubt die Verwendung von regulären Ausdrücken zum Filtern von Wörtern. Wenn diese Funktion aktiviert ist, gruppiert sie sensible Wörter nach ihrer Groß- und Kleinschreibung. Anschließend werden alle ausgewählten Wörter in einem einzigen regulären Ausdruck zusammengefasst, wobei Wortgrenzen für regulär überwachte Wörter hinzugefügt werden. Diese Regex-basierte Filtermethode fügt also eine zusätzliche Kontrollebene für die Inhaltsmoderation hinzu, indem sie komplexere Wortmuster unterstützt. Die Einstellung ermöglicht es außerdem, den ursprünglichen Text einfach durch die Ersetzung deiner Wahl zu ersetzen."
     enable_fast_edit: "Fügt dem Beitragsauswahlmenü eine Schaltfläche hinzu, um eine kleine Auswahl inline zu bearbeiten."
-    old_post_notice_days: "Die Anzahl der Tage, nach denen die Benachrichtigungen über neue und wiederkehrende Benutzer ausgeblendet werden. Offizielle Mitteilungen bleibt immer sichtbar."
+    old_post_notice_days: "Die Anzahl der Tage, nach denen die Mitteilungen über neue und wiederkehrende Benutzer ausgeblendet werden. Offizielle Mitteilungen bleiben immer sichtbar."
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wie viele Tage vergehen sollten, bevor ein Benutzer als wiederkehrend betrachtet wird."
@@ -2442,18 +2459,18 @@ de:
     create_revision_on_bulk_topic_moves: "Erstelle eine Überarbeitung für die ersten Beiträge, wenn Themen massenweise in eine neue Kategorie verschoben werden."
     allow_changing_staged_user_tracking: "Zulassen, dass die Kategorie- und Schlagwort-Benachrichtigungseinstellungen eines vorbereiteten Benutzers von einem Administratorbenutzer geändert werden."
     use_email_for_username_and_name_suggestions: "Verwende den ersten Teil von E-Mail-Adressen für Vorschläge für Benutzernamen und Namen. Achtung: Dies kann es böswilligen Akteuren erleichtern, die E-Mail-Adressen deiner Mitglieder herauszufinden (weil ein großer Teil geläufige Anbieter wie `gmail.com` nutzt)."
-    use_name_for_username_suggestions: "Beim Vorschlagen von Benutzernamen den vollen Namen eines Benutzers verwenden."
     suggest_weekends_in_date_pickers: "Wochenenden (Samstag und Sonntag) in die Datumsvorschläge einbeziehen (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     show_bottom_topic_map: "Zeigt die Themenübersicht am Ende des Themas an, wenn es 10 Antworten oder mehr hat."
     show_topic_map_in_topics_without_replies: "Zeigt die Themenübersicht an, auch wenn es zum Thema keine Antworten gibt."
     enable_site_owner_onboarding: "Zeigt neuen Administratoren auf der Startseite ein Panel an, das ihnen den Einstieg erleichtert. Aktiviere diese Einstellung wieder, um die Einführungsschritte erneut zu sehen."
+    site_owner_onboarding_max_days: "Maximale Anzahl von Tagen nach der Erstellung der Website, an denen das Onboarding-Banner angezeigt wird."
     enable_welcome_banner: "Zeige auf den Hauptseiten mit Themenlisten ein Banner an, um Mitglieder willkommen zu heißen und ihnen die Suche nach Website-Inhalten zu ermöglichen"
     welcome_banner_image: "Lege ein Bild fest, das im Hintergrund des Willkommensbanners angezeigt werden soll."
     welcome_banner_location: "Legt fest, wo auf der Seite das Willkommensbanner erscheinen soll."
     welcome_banner_page_visibility: "Legt fest, auf welchen Seiten das Willkommensbanner erscheinen soll."
     welcome_banner_text_color: "Wenn du die Einstellung „Welcome banner image“ konfiguriert hast, kannst du mit dieser Einstellung die Textfarbe des Banners ändern, um sicherzustellen, dass er lesbar bleibt. Wenn du keine Farbe wählst oder kein Hintergrundbild hochgeladen hast, wird die Farbe vom aktiven Theme bestimmt."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
-    splash_screen_image: "Ein SVG-Bild, das auf dem Bildschirm angezeigt wird, während die Website geladen wird. Animierte SVGs sollten nur CSS-Transformations oder - Deckkraftanimationen verwenden. Verwende eindeutige Namen für die Css-Klassen und Keyframes. Du kannst var(--primary), var(--secondary) und var(--tertiary) verwenden, um auf die Farben des Themes zu verweisen."
+    splash_screen_image: "Ein SVG-Bild, das auf dem Bildschirm angezeigt wird, während die Website geladen wird. Animierte SVGs sollten nur CSS-Transformations oder -Deckkraftanimationen verwenden. Verwende eindeutige Namen für die CSS-Klassen und Keyframes. Du kannst var(--primary), var(--secondary) und var(--tertiary) verwenden, um auf die Farben des Themes zu verweisen."
     navigation_menu: "Lege die Seitenleiste oder das Kopfzeilen-Drop-down als Hauptnavigationsmenü für deine Website fest. Die Seitenleiste wird empfohlen."
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
@@ -2462,6 +2479,7 @@ de:
     show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     enable_auto_grid_images: "Schließt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Editor hochgeladen werden."
+    enable_new_checkbox_style: "Aktiviere den neu gestalteten Kontrollkästchen-Stil für FormKit-Kontrollkästchen."
     impersonate_without_logout: "Erlaube Administratoren in die Rolle eines anderen Benutzers zu schlüpfen, ohne sich von ihrem Administratorkonto abmelden zu müssen."
     experimental_impersonation_time_limit_minutes: "Nach welcher Zeitspanne das Schlüpfen in die Rolle eines Benutzers automatisch beendet wird."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
@@ -2484,13 +2502,11 @@ de:
     content_localization_crawler_param: "Liefert lokalisierte Inhalte an Webcrawler, wenn 'content localization enabled' und 'set locale from param' aktiviert sind. Die Liste der unterstützten Sprachumgebungen ist in 'content localization supported locales' definiert."
     content_localization_use_default_locale_when_unsupported: "Biete Benutzern, deren bevorzugte Sprache nicht in 'content localization supported locales' konfiguriert ist, lokalisierte Inhalte in der Standardsprache der Website an."
     content_localization_allow_author_localization: "Ermögliche es Autoren, die Lokalisierungen ihrer eigenen Themen und Beiträge über das Beitragsmenü zu aktualisieren."
-    enable_upcoming_changes: "Aktiviere bevorstehende Änderungen"
     fake_upcoming_change: "Dies ist keine echte bevorstehende Änderung. Sie dient zu Testzwecken und muss nicht übersetzt werden."
     floating_dismiss_topics_on_mobile: "Zeigt auf dem Handy über der Themenliste eine schwebende „Verwerfen …“-Schaltfläche, um den Zugriff zu erleichtern und Platz im oberen Bereich der Themenliste freizugeben"
     rename_faq_to_guidelines: "Diese Änderung benennt die FAQ-Seite in „Richtlinien“ um. Die FAQ-Seite ist weiterhin unter /faq erreichbar. Die Einstellung „faq url“ funktioniert wie bisher."
-    experimental_tag_settings_page: "Aktiviere eine eigene Einstellungsseite für Schlagwörter unter /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Ermöglicht eine vereinfachte Kategorienerstellung mit weniger Optionen und einer übersichtlicheren Oberfläche."
-    enable_custom_splash_screen: "Ermöglicht die Anpassung des Ladebildschirms mit einem eigenen SVG-Bild. Lade ein Bild über die Einstellung \"Splash Screen Image\" hoch. Achtung! Dies kann sich negativ auf die LCP-Bewertung und die Google-Indexierung auswirken."
+    enable_custom_splash_screen: "Ermöglicht die Anpassung des Ladebildschirms mit einem eigenen SVG-Bild. Lade ein Bild über die Einstellung „Splash Screen Image“ hoch. Achtung! Dies kann sich negativ auf die LCP-Bewertung und die Google-Indexierung auswirken."
     modernize_foundation_theme: "Diese Änderung führt Design-Änderungen am Foundation-Theme in Discourse ein."
     reporting_improvements: "Verbesserungen der Navigation, des Designs und der Benutzerfreundlichkeit für die Admin-Berichte in Discourse."
     errors:
@@ -2609,15 +2625,17 @@ de:
       exclude_tags_all: "Themen mit allen angegebenen Schlagwörtern ausschließen (durch Kommas getrennt)"
       tag_group: "Themen mit Schlagwörtern aus einer bestimmten Schlagwortgruppe anzeigen"
       exclude_tag_group: "Themen mit Schlagwörtern aus einer bestimmten Schlagwortgruppe ausschließen"
-      activity_before: "Themen mit letzter Aktivität vor einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
-      activity_after: "Themen mit letzter Aktivität nach einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
+      activity_before: "Themen mit letzter Aktivität vor einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
+      activity_after: "Themen mit letzter Aktivität nach einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
+      bookmarked_before: "Themen anzeigen, die vor einem Datum (JJJJ-MM-TT oder vor Tagen) mit Lesezeichen versehen wurden"
+      bookmarked_after: "Themen anzeigen, die nach einem Datum (JJJJ-MM-TT oder vor Tagen) mit Lesezeichen versehen wurden"
       created_before: "Themen anzeigen, die vor einem bestimmten Datum (JJJJ-MM-TT oder vor Tagen) erstellt wurden"
-      created_after: "Themen anzeigen, die nach einem Datum erstellt wurden (JJJJ-MM-TT oder vor Tagen)"
+      created_after: "Themen anzeigen, die nach einem Datum (JJJJ-MM-TT oder vor Tagen) erstellt wurden"
       created_by: "Themen anzeigen, die von einem bestimmten Benutzer oder Mitgliedern einer Gruppe erstellt wurden"
       created_by_user: "Themen anzeigen, die von 'Benutzername' oder einem Mitglied aus 'Gruppe' erstellt wurden (ohne @)"
       created_by_multiple: "Themen anzeigen, die von einem der angegebenen Benutzer oder Gruppen erstellt wurden (durch Kommas getrennt)"
-      latest_post_before: "Themen mit dem letzten Beitrag vor einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
-      latest_post_after: "Themen mit dem letzten Beitrag nach einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
+      latest_post_before: "Themen mit dem letzten Beitrag vor einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
+      latest_post_after: "Themen mit dem letzten Beitrag nach einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
       likes_min: "Themen mit mindestens so vielen „Gefällt mir“-Angaben anzeigen"
       likes_max: "Themen mit höchstens so vielen „Gefällt mir“-Angaben anzeigen"
       likes_op_min: "Themen anzeigen, deren erster Beitrag mindestens so viele „Gefällt mir“-Angaben hat"
@@ -2809,7 +2827,6 @@ de:
       invalid_iat: "Das Autorisierungstoken kann wegen unterschiedlicher Server-Uhrzeiten leider nicht geprüft werden. Bitte versuche es erneut."
       unauthorized: "Leider wurde deine Anfrage vom Anmeldeanbieter nicht autorisiert. Bitte versuche es erneut oder kontaktiere einen Administrator."
     omniauth_error_unknown: "Bei der Verarbeitung deiner Anmeldung ist etwas schiefgelaufen, bitte versuche es noch einmal."
-    omniauth_confirm_title: "Anmeldung per %{provider}"
     omniauth_confirm_button: "Weiter"
     authenticator_error_no_valid_email: "E-Mail-Adressen mit Bezug zu %{account} sind nicht erlaubt. Du musst möglicherweise dein Konto mit einer anderen E-Mail-Adresse einrichten."
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
@@ -3045,9 +3062,9 @@ de:
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)** durchführen
+      - Aktualisiere mit unserem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)**
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/%{new_version}) an
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
   new_version_mailer_with_notes:
@@ -3059,9 +3076,9 @@ de:
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)** durchführen
+      - Aktualisiere mit unserem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)**
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/%{new_version}) an
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
 
@@ -3119,47 +3136,9 @@ de:
     reviewable_queued_post_revise_and_reject:
       title: "Feedback zu deinem Beitrag"
       subject_template: "Feedback zu deinem Beitrag in %{topic_title}"
-      text_body_template: |
-        Hallo, %{username}!
-
-        Wir haben uns deinen Beitrag in [%{topic_title}](%{topic_url}) angesehen und haben Feedback für dich.
-
-        Grund: %{reason}
-
-        Feedback: %{feedback}
-
-        Du kannst deinen ursprünglichen Beitrag unten bearbeiten und erneut abschicken, um die vorgeschlagenen Änderungen vorzunehmen, oder auf diese Nachricht antworten, wenn du Fragen hast.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Danke!
-        Die Moderatoren von %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Feedback zu deinem Thema"
       subject_template: 'Feedback zum neuen Thema „%{topic_title}“'
-      text_body_template: |
-        Hallo, %{username}!
-
-        Wir haben dein neues Thema mit dem Titel „%{topic_title}“ überprüft und haben Feedback für dich.
-
-        Grund: %{reason}
-
-        Feedback: %{feedback}
-
-        Du kannst den Originalbeitrag deines Themas unten bearbeiten und erneut einreichen, um die vorgeschlagenen Änderungen vorzunehmen, oder auf diese Nachricht antworten, wenn du Fragen hast.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Danke!
-        Die Moderatoren von %{site_name}
     post_hidden_again:
       title: "Beitrag wieder ausgeblendet"
       preview: "Beitrag von Community-Mitgliedern wieder ausgeblendet."
@@ -5046,7 +5025,6 @@ de:
       restricted_to:
         one: '„%{tag_name}“ ist beschränkt auf die Kategorie „%{category_names}“'
         other: '„%{tag_name}“ ist beschränkt auf folgende Kategorien: %{category_names}'
-      synonym: 'Synonyme sind nicht erlaubt. Verwende stattdessen „%{tag_name}“.'
       has_synonyms: 'Schlagwort „%{tag_name}“ kann nicht verwendet werden, da es Synonyme hat.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Das Schlagwort „%{tags}“ kann nicht in der Kategorie „%{category}“ verwendet werden. Bitte entferne es.'

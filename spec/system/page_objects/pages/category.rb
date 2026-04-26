@@ -3,8 +3,6 @@
 module PageObjects
   module Pages
     class Category < PageObjects::Pages::Base
-      # keeping the various category related features combined for now
-
       def visit(category)
         page.visit("/c/#{category.id}")
         self
@@ -12,6 +10,11 @@ module PageObjects
 
       def visit_settings(category)
         page.visit("/c/#{category.slug}/edit/settings")
+        self
+      end
+
+      def visit_moderation(category)
+        page.visit("/c/#{category.slug}/edit/moderation")
         self
       end
 
@@ -39,7 +42,7 @@ module PageObjects
       end
 
       def visit_new_category
-        page.visit("/new-category")
+        page.visit("/new-category/setup")
         self
       end
 
@@ -53,13 +56,18 @@ module PageObjects
         self
       end
 
+      def visit_appearance(category)
+        visit_images(category)
+        self
+      end
+
       def visit_images(category)
         page.visit("/c/#{category.slug}/edit/images")
         self
       end
 
       def back_to_category
-        find(".edit-category-title-bar span", text: "Back to category").click
+        find(".edit-category .back-button").click
         self
       end
 
@@ -96,7 +104,7 @@ module PageObjects
       end
 
       def toggle_form_templates
-        find(".d-toggle-switch .d-toggle-switch__checkbox-slider").click
+        PageObjects::Components::DToggleSwitch.new(".toggle-template-type").toggle
         self
       end
 
@@ -183,6 +191,40 @@ module PageObjects
 
       def has_category_title?(title)
         page.has_css?(".category-header h1", text: title)
+      end
+
+      def topic_posting_review_mode_chooser(simplified: true)
+        if simplified
+          PageObjects::Components::SelectKit.new(
+            ".form-kit__field[data-name='category_setting.topic_posting_review_mode'] .combo-box",
+          )
+        else
+          PageObjects::Components::SelectKit.new(".topic-posting-review-mode .combo-box")
+        end
+      end
+
+      def topic_posting_review_group_chooser(simplified: true)
+        if simplified
+          PageObjects::Components::SelectKit.new(".form-kit .group-chooser")
+        else
+          PageObjects::Components::SelectKit.new(".topic-posting-review-mode .group-chooser")
+        end
+      end
+
+      def has_posting_review_groups_error?
+        page.has_content?(I18n.t("js.category.validations.groups_required"))
+      end
+
+      def has_no_posting_review_groups_error?
+        page.has_no_content?(I18n.t("js.category.validations.groups_required"))
+      end
+
+      def has_topic_posting_review_mode?(mode, simplified: true)
+        topic_posting_review_mode_chooser(simplified: simplified).has_selected_value?(mode)
+      end
+
+      def has_topic_posting_review_groups?(group, simplified: true)
+        topic_posting_review_group_chooser(simplified: simplified).has_selected_value?(group.id)
       end
     end
   end

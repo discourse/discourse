@@ -2,7 +2,7 @@
 
 class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
   # attributes are camelCase as the Q&A schema spec requires it
-  attributes :name, :text, :upvoteCount, :answerCount, :datePublished, :author
+  attributes :answerCount, :author, :dateModified, :datePublished, :name, :text, :upvoteCount
 
   def serializable_hash
     hash = { "@type" => "Question" }.merge(super)
@@ -11,6 +11,11 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
         accepted_answer,
         root: false,
       ).serializable_hash
+    end
+    if suggested_answers.present?
+      hash["suggestedAnswer"] = suggested_answers.map do |post|
+        DiscourseSolved::AnswerSchemaSerializer.new(post, root: false).serializable_hash
+      end
     end
     hash
   end
@@ -30,11 +35,15 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
   end
 
   def answerCount
-    accepted_answer.present? ? 1 : 0
+    (accepted_answer.present? ? 1 : 0) + suggested_answers.to_a.size
   end
 
   def datePublished
     object.created_at
+  end
+
+  def dateModified
+    object.first_post&.last_version_at || object.created_at
   end
 
   def author
@@ -45,5 +54,9 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
 
   def accepted_answer
     options[:accepted_answer]
+  end
+
+  def suggested_answers
+    options[:suggested_answers]
   end
 end

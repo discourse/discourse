@@ -7,6 +7,29 @@ We want high quality code and very senior engineering work. Best oriented object
 
 DONT USE ANY WRITING PLAN SKILL DURING THE SESSION
 
+## Autonomous Mode
+
+When the user says "autonomous mode" (or similar), apply these overrides:
+- Do NOT use AskUserQuestion — make your best judgment call and state what you chose
+- Do NOT wait for user approval at phase gates — present the deliverable and proceed immediately
+- Still present audit tables, but fix all FAILs and continue without waiting for confirmation
+- Still present service name suggestions, but pick the best one yourself
+
+## Task Tracking
+
+**MANDATORY:** At the start of every session using this skill, create a task for each phase using TaskCreate:
+
+1. "Phase 1: Deep Understanding"
+2. "Phase 2: Assessment"
+3. "Phase 3: Implementation"
+4. "Phase 4: Quality"
+5. "Phase 5: Business logic"
+6. "Phase 6: Security"
+7. "Phase 7: Specs"
+8. "Phase 8: Finalization"
+
+Create ALL tasks upfront before starting any work. Mark each task as `in_progress` when you begin it and `completed` when the user approves the phase gate.
+
 ## Execution Discipline
 
 Every phase is a discrete step. Complete one phase fully before starting the next. Each phase ends with a user-visible deliverable — findings, an audit table, or a confirmation. NEVER silently advance to the next phase.
@@ -65,7 +88,7 @@ Write the service, controller, update all callers, and remove dead code.
 
 **Gate:** Present a summary of all files created, modified, and deleted. Wait for user acknowledgment before proceeding to Phase 4.
 
-## Phase 4: Service Quality Check
+## Phase 4: Quality
 
 Review the service against these structural rules. List every violation found.
 
@@ -111,7 +134,7 @@ When in doubt AskUserQuestion.
 4. When the table is all PASS/NA, present it to the user for approval
 5. Proceed to Phase 5 only after user approval
 
-## Phase 5: Business Logic Review
+## Phase 5: Business logic
 
 Trace every code path in the original implementation against the new service. List every bug found by criticality.
 
@@ -128,11 +151,12 @@ Trace every code path in the original implementation against the new service. Li
 4. When the table is all PASS/NA, present it to the user for approval
 5. Proceed to Phase 6 only after user approval
 
-## Phase 6: Security Review
+## Phase 6: Security
 
 Review for security concerns. List every issue found by criticality.
 
 - Access control: are policies enforced consistently regardless of caller?
+- Category moderation: for category-scoped resources, never rely on `user.moderator?` / `guardian.is_moderator?` alone. Verify whether category moderators for the specific category should be allowed, and whether the actor can see or act on that exact resource via an existing guardian/policy method or `guardian.is_category_group_moderator?(category)` plus the relevant visibility check.
 - MessageBus: secure audience applied to all publishes on secured channels?
 - Data leakage: can non-privileged users infer existence of soft-deleted or private resources?
 

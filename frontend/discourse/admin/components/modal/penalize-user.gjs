@@ -4,7 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import AdminPenaltyPostAction from "discourse/admin/components/admin-penalty-post-action";
 import AdminPenaltyReason from "discourse/admin/components/admin-penalty-reason";
@@ -184,9 +184,9 @@ export default class PenalizeUser extends Component {
           {{#if (eq @model.penaltyType "suspend")}}
             <div class="penalty-reason-visibility">
               {{#if this.siteSettings.hide_suspension_reasons}}
-                {{htmlSafe (i18n "admin.user.suspend_reason_hidden_label")}}
+                {{trustHTML (i18n "admin.user.suspend_reason_hidden_label")}}
               {{else}}
-                {{htmlSafe (i18n "admin.user.suspend_reason_label")}}
+                {{trustHTML (i18n "admin.user.suspend_reason_label")}}
               {{/if}}
             </div>
           {{/if}}
@@ -221,7 +221,7 @@ export default class PenalizeUser extends Component {
         {{/if}}
       </:body>
       <:footer>
-        <div class="penalty-history">{{htmlSafe this.penaltyHistory}}</div>
+        <div class="penalty-history">{{trustHTML this.penaltyHistory}}</div>
         <DButton
           class="btn-danger perform-penalize"
           @action={{this.penalizeUser}}

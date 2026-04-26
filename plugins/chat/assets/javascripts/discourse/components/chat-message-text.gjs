@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DecoratedHtml from "discourse/components/decorated-html";
 import { i18n } from "discourse-i18n";
 import { isCollapsible } from "discourse/plugins/chat/discourse/components/chat-message-collapser";
@@ -25,7 +25,7 @@ export default class ChatMessageText extends Component {
         />
       {{else}}
         <DecoratedHtml
-          @html={{htmlSafe @cooked}}
+          @html={{trustHTML @cooked}}
           @decorate={{@decorate}}
           @className="chat-cooked"
         />

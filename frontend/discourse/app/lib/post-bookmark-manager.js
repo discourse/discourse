@@ -32,6 +32,8 @@ export default class PostBookmarkManager {
       .create(this.trackedBookmark)
       .then((updatedBookmark) => {
         this.trackedBookmark = updatedBookmark;
+        this._syncBookmarks(updatedBookmark.saveData);
+        this.model.createBookmark(updatedBookmark.saveData);
       });
   }
 
@@ -70,15 +72,17 @@ export default class PostBookmarkManager {
   }
 
   _syncBookmarks(data) {
-    if (!this.topicController.bookmarks) {
-      this.topicController.bookmarks = [];
+    if (!this.topicController.model.bookmarks) {
+      this.topicController.model.set("bookmarks", []);
     }
 
-    const bookmark = this.topicController.bookmarks.find(
+    const bookmark = this.topicController.model.bookmarks.find(
       (b) => b.id === data.id
     );
     if (!bookmark) {
-      this.topicController.bookmarks.push(Bookmark.create(data));
+      this.topicController.model.bookmarks.push(
+        Bookmark.create({ ...data, post_number: this.model.post_number })
+      );
     } else {
       bookmark.reminder_at = data.reminder_at;
       bookmark.name = data.name;

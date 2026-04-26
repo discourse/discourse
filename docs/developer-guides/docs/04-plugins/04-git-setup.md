@@ -35,7 +35,7 @@ git init
 git add README.md
 git commit -m "first commit"
 git remote add origin git@github.com:eviltrout/discourse-plugin-test.git
-git push -u origin master
+git push -u origin main
 ```
 
 Finally, create a `plugin.rb` file for your plugin as explained in [part 1](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins/30515). For this example I just created a dummy one:

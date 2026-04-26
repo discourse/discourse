@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 
@@ -21,11 +21,12 @@ export default class AdminNotice extends Component {
     <div class="notice">
       <div class="message">
         {{if @icon (icon @icon)}}
-        {{htmlSafe @problem.message}}
+        {{trustHTML @problem.message}}
       </div>
       {{#if this.canDismiss}}
         <DButton
           @action={{this.dismiss}}
+          @icon="eye-slash"
           @label="admin.dashboard.dismiss_notice"
           class="btn-default"
         />

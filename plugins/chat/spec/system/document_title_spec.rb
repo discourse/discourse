@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Document title", type: :system do
+RSpec.describe "Document title" do
   fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }

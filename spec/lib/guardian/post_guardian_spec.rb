@@ -861,6 +861,11 @@ RSpec.describe PostGuardian do
         expect(Guardian.new(actor).can_delete_all_posts?(admin)).to be_falsey
       end
 
+      it "is false if user is a moderator" do
+        another_moderator = Fabricate(:moderator, created_at: 1.day.ago)
+        expect(Guardian.new(actor).can_delete_all_posts?(another_moderator)).to be_falsey
+      end
+
       it "is true if number of posts is small" do
         user = Fabricate(:user, created_at: 1.day.ago)
         user.user_stat.update!(post_count: 1)
@@ -902,6 +907,11 @@ RSpec.describe PostGuardian do
 
       it "is false if user is an admin" do
         expect(Guardian.new(actor).can_delete_all_posts?(admin)).to be_falsey
+      end
+
+      it "is true if user is a moderator" do
+        another_moderator = Fabricate(:moderator, created_at: 1.day.ago)
+        expect(Guardian.new(actor).can_delete_all_posts?(another_moderator)).to be_truthy
       end
 
       it "is true if number of posts is small" do
@@ -1202,6 +1212,19 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(trust_level_4).can_see_deleted_posts?(post)).to be_falsey
       SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(trust_level_4).can_see_deleted_posts?(post)).to be_truthy
+    end
+  end
+
+  describe "#can_see_deleted_posts_for_user?" do
+    it "returns true for staff" do
+      expect(Guardian.new(admin).can_see_deleted_posts_for_user?).to eq(true)
+      expect(Guardian.new(moderator).can_see_deleted_posts_for_user?).to eq(true)
+    end
+
+    it "returns false for non-staff users in delete_all_posts_and_topics_allowed_groups" do
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      expect(Guardian.new(trust_level_4).can_see_deleted_posts_for_user?).to eq(false)
     end
   end
 

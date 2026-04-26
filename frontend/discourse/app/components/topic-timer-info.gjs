@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import DButton from "discourse/components/d-button";
@@ -15,7 +15,7 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class TopicTimerInfo extends Component {
-  clockIcon = htmlSafe(`${iconHTML("far-clock")}`);
+  clockIcon = trustHTML(`${iconHTML("far-clock")}`);
   trashLabel = i18n("post.controls.remove_timer");
 
   title = null;
@@ -110,19 +110,21 @@ export default class TopicTimerInfo extends Component {
       if (categoryId) {
         const category = Category.findById(categoryId);
 
-        options = Object.assign(
-          {
-            categoryName: category.get("slug"),
-            categoryUrl: category.get("url"),
-          },
-          options
-        );
+        if (category) {
+          options = Object.assign(
+            {
+              categoryName: category.get("slug"),
+              categoryUrl: category.get("url"),
+            },
+            options
+          );
+        }
       }
 
       options = Object.assign(options, this.additionalOpts());
       this.setProperties({
-        title: htmlSafe(`${moment(this.executeAt).format("LLLL")}`),
-        notice: htmlSafe(`${i18n(this._noticeKey(), options)}`),
+        title: trustHTML(`${moment(this.executeAt).format("LLLL")}`),
+        notice: trustHTML(`${i18n(this._noticeKey(), options)}`),
         showTopicTimer: true,
       });
 
@@ -158,6 +160,9 @@ export default class TopicTimerInfo extends Component {
     }
     if (this.basedOnLastPost && statusType === "close") {
       statusType = "close_after_last_post";
+    }
+    if (this.basedOnLastPost && statusType === "delete") {
+      statusType = "delete_after_last_post";
     }
 
     return `topic.status_update_notice.auto_${statusType}`;

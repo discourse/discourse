@@ -184,7 +184,8 @@ const extension = {
                   getHashtagTypeClasses()[validHashtag.type];
                 const hashtagIconHTML =
                   validHashtag.iconHtml ||
-                  hashtagTypeClass.generateIconHTML(validHashtag).trim();
+                  hashtagTypeClass?.generateIconHTML(validHashtag).trim() ||
+                  "";
 
                 domNode.innerHTML = `${hashtagIconHTML}${tagText}`;
               }

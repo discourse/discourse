@@ -1,5 +1,5 @@
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ChangesBanner from "discourse/admin/components/changes-banner";
 import EditCategoryGeneral from "discourse/admin/components/edit-category-general";
 import EditCategoryImages from "discourse/admin/components/edit-category-images";
@@ -10,6 +10,7 @@ import EditCategoryTags from "discourse/admin/components/edit-category-tags";
 import EditCategoryTopicTemplate from "discourse/admin/components/edit-category-topic-template";
 import UpsertCategoryAppearance from "discourse/admin/components/upsert-category/appearance";
 import UpsertCategoryGeneral from "discourse/admin/components/upsert-category/general";
+import UpsertCategoryModeration from "discourse/admin/components/upsert-category/moderation";
 import UpsertCategorySecurity from "discourse/admin/components/upsert-category/security";
 import UpsertCategorySettings from "discourse/admin/components/upsert-category/settings";
 import UpsertCategoryTags from "discourse/admin/components/upsert-category/tags";
@@ -35,6 +36,7 @@ const TAB_COMPONENTS_V2 = {
   general: UpsertCategoryGeneral,
   security: UpsertCategorySecurity,
   settings: UpsertCategorySettings,
+  moderation: UpsertCategoryModeration,
   images: UpsertCategoryAppearance,
   "topic-template": EditCategoryTopicTemplate,
   tags: UpsertCategoryTags,
@@ -74,6 +76,7 @@ export default <template>
       @onSubmit={{@controller.saveCategory}}
       @validate={{@controller.validateForm}}
       @onRegisterApi={{@controller.onRegisterFormApi}}
+      @onReset={{@controller.onFormReset}}
       as |form transientData|
     >
       <form.Section
@@ -91,6 +94,7 @@ export default <template>
               @selectedTab={{@controller.selectedTab}}
               @category={{@controller.model}}
               @registerValidator={{@controller.registerValidator}}
+              @registerAfterReset={{@controller.registerAfterReset}}
               @transientData={{transientData}}
               @form={{form}}
               @setSelectedTab={{@controller.setSelectedTab}}
@@ -109,6 +113,7 @@ export default <template>
                 @selectedTab={{@controller.selectedTab}}
                 @category={{@controller.model}}
                 @registerValidator={{@controller.registerValidator}}
+                @registerAfterReset={{@controller.registerAfterReset}}
                 @transientData={{transientData}}
                 @form={{form}}
               />
@@ -119,7 +124,7 @@ export default <template>
 
       {{#if @controller.showDeleteReason}}
         <form.Alert @type="warning" class="edit-category-delete-warning">
-          {{htmlSafe @controller.model.cannot_delete_reason}}
+          {{trustHTML @controller.model.cannot_delete_reason}}
         </form.Alert>
       {{/if}}
 
@@ -128,19 +133,17 @@ export default <template>
           <form.Actions class="edit-category-footer">
             {{#if @controller.model.can_delete}}
               <form.Button
-                @disabled={{@controller.deleteDisabled}}
                 @action={{@controller.deleteCategory}}
                 @icon="trash-can"
                 @label="category.delete"
-                class="btn-danger"
+                class="btn-danger btn-small"
               />
             {{else}}
               <form.Button
-                @disabled={{@controller.deleteDisabled}}
                 @action={{@controller.toggleDeleteTooltip}}
                 @icon="circle-question"
                 @label="category.delete"
-                class="btn-default"
+                class="btn-default btn-small"
               />
             {{/if}}
           </form.Actions>

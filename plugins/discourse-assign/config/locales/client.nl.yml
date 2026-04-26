@@ -136,10 +136,6 @@ nl:
           unassigned: "zijn niet langer toegewezen"
         assigned:
           label: "Toegewezen aan"
-    topics:
-      bulk:
-        unassign: "Toewijzing van topics opheffen"
-        assign: "Topics toewijzen"
     discourse_automation:
       scriptables:
         random_assign:

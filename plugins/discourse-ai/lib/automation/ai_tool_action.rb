@@ -10,7 +10,7 @@ module DiscourseAi
         llm =
           LlmModel.find_by(id: llm_model_id)&.then { |m| DiscourseAi::Completions::Llm.proxy(m) }
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             post: post,
             feature_name: "ai_tool_action",
             feature_context: {

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { convertIconClass } from "discourse/lib/icon-library";
@@ -34,7 +34,7 @@ export default class AvatarFlair extends Component {
       css.push("color: #" + escapeExpression(this.args.flairColor));
     }
 
-    return css.length > 0 ? htmlSafe(css.join("; ")) : null;
+    return css.length > 0 ? trustHTML(css.join("; ")) : null;
   }
 
   get title() {

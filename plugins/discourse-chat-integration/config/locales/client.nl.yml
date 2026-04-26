@@ -14,15 +14,14 @@ nl:
     chat_integration:
       menu_title: "Chatintegraties"
       settings: "Instellingen"
-      no_providers: "Je moet enkele providers inschakelen in de plug-ininstellingen"
+      more_providers: "Meer"
+      channels_title: "Kanalen"
       channels_with_errors: "De laatste keer dat berichten werden gestuurd, werkten sommige kanalen niet voor deze provider. Klik op de foutpictogrammen voor meer informatie."
       group_mention_template: "Vermeldingen van: @%{name}"
       group_message_template: "Berichten naar: @%{name}"
-      choose_group: "(kies een groep)"
-      all_categories: "(alle categorieën)"
-      all_tags: "(alle tags)"
-      create_rule: "Regel maken"
-      create_channel: "Kanaal maken"
+      choose_group: "(Kies een groep)"
+      all_categories: "(Alle categorieën)"
+      all_tags: "(Alle tags)"
       delete_channel: "Verwijderen"
       test_channel: "Testen"
       edit_channel: "Bewerken"
@@ -30,13 +29,10 @@ nl:
       test_modal:
         title: "Stuur een testbericht"
         topic: "Topic"
-        send: "Testbericht sturen"
         close: "Sluiten"
         success: "Bericht verzonden"
       type:
         normal: Normaal
-        group_message: Groepsbericht
-        group_mention: Groepsvermelding
       filter:
         mute: 'Dempen'
         follow: 'Alleen eerste bericht'
@@ -57,8 +53,6 @@ nl:
           ok: "Geldig"
           fail: "Ongeldige notatie"
       edit_rule_modal:
-        title: Regel bewerken
-        save: Regel opslaan
         cancel: Annuleren
         provider: Provider
         type: Type
@@ -79,7 +73,6 @@ nl:
           param:
             identifier:
               title: Kanaal
-              help: "bijvoorbeeld #kanaal, @gebruikersnaam."
           errors:
             action_prohibited: "De bot heeft geen toestemming om berichten in dat kanaal te plaatsen"
         telegram:
@@ -102,7 +95,6 @@ nl:
               help: "Een naam om het kanaal te beschrijven. Deze wordt niet gebruikt voor de verbinding met Discord."
             webhook_url:
               title: Webhook-URL
-              help: De in je Discourse-serverinstellingen gemaakte webhook-URL
         guilded:
           title: "Guilded"
           param:
@@ -117,7 +109,6 @@ nl:
           param:
             identifier:
               title: Kanaal
-              help: "bijvoorbeeld #kanaal, @gebruikersnaam."
           errors:
             channel_not_found: "Het opgegeven kanaal bestaat niet op Mattermost"
         matrix:
@@ -147,7 +138,6 @@ nl:
           param:
             identifier:
               title: Kanaal
-              help: "bijvoorbeeld #kanaal, @gebruikersnaam."
           errors:
             invalid_channel: "Dat kanaal bestaat niet op Rocket Chat"
         gitter:
@@ -155,16 +145,9 @@ nl:
           param:
             name:
               title: "Naam"
-              help: "De naam van een Gitter-ruimte, bijvoorbeeld gitterHQ/services."
             webhook_url:
               title: "Webhook-URL"
               help: "De opgegeven URL wanneer je een nieuwe integratie maakt in een Gitter-ruimte."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flowtoken"
-              help: "Het opgegeven flowtoken na het maken van een bron voor een flow waarin je berichten wilt sturen."
         groupme:
           title: "GroupMe"
           param:

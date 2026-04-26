@@ -1286,6 +1286,15 @@ RSpec.describe Post do
         Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
       expect(post.has_host_spam?).to eq(false)
     end
+
+    it "does not allowlist domains that merely end with an allowed domain" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      SiteSetting.allowed_spam_host_domains = "example.com"
+      user = Fabricate(:user, trust_level: 0)
+      post = Fabricate(:post, raw: "check out http://attacker-example.com/page", user: user)
+      post.acting_user.trust_level = 0
+      expect(post.has_host_spam?).to eq(true)
+    end
   end
 
   it "has custom fields" do

@@ -75,21 +75,21 @@ export default class AiFeatures extends Component {
             return true;
           }
 
-          const personaMatches = feature.personas?.some((persona) =>
-            persona.name?.toLowerCase().includes(term)
+          const agentMatches = feature.agents?.some((agent) =>
+            agent.name?.toLowerCase().includes(term)
           );
 
           const llmMatches = feature.llm_models?.some((llm) =>
             llm.name?.toLowerCase().includes(term)
           );
 
-          const groupMatches = feature.personas?.some((persona) =>
-            persona.allowed_groups?.some((group) =>
+          const groupMatches = feature.agents?.some((agent) =>
+            agent.allowed_groups?.some((group) =>
               group.name?.toLowerCase().includes(term)
             )
           );
 
-          return personaMatches || llmMatches || groupMatches;
+          return agentMatches || llmMatches || groupMatches;
         } catch (error) {
           // eslint-disable-next-line no-console
           console.error(`Error filtering features`, error);

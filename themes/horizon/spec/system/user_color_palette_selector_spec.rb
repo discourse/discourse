@@ -2,7 +2,7 @@
 
 require_relative "page_objects/components/user_color_palette_selector"
 
-describe "Horizon theme | User color palette selector", type: :system do
+describe "Horizon theme | User color palette selector" do
   let(:set_theme_as_default) { true }
   let!(:theme) do
     horizon_theme = upload_theme(set_theme_as_default: set_theme_as_default)

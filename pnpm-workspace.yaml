@@ -1,11 +1,11 @@
 strictPeerDependencies: true
 packages:
+- "docs/developer-guides"
 - "frontend/custom-proxy"
 - "frontend/deprecation-silencer"
 - "frontend/discourse"
 - "frontend/discourse-i18n"
 - "frontend/discourse-markdown-it"
-- "frontend/discourse-plugins"
 - "frontend/ember-cli-progress-ci"
 - "frontend/pretty-text"
 - "frontend/asset-processor"
@@ -52,6 +52,7 @@ packages:
 - "plugins/poll"
 - "plugins/spoiler-alert"
 - "plugins/styleguide"
+- "themes/horizon"
 allowedDeprecatedVersions:
   "@babel/plugin-proposal-class-properties": "*"
   "@babel/plugin-proposal-private-methods": "*"

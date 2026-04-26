@@ -102,10 +102,9 @@ RSpec.describe Admin::DashboardController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
-
       context "when there are no problems" do
         it "returns an empty array" do
-          get "/admin/dashboard/problems.json"
+          post "/admin/dashboard/problems.json"
 
           expect(response.status).to eq(200)
           json = response.parsed_body
@@ -120,7 +119,7 @@ RSpec.describe Admin::DashboardController do
         end
 
         it "returns an array of strings" do
-          get "/admin/dashboard/problems.json"
+          post "/admin/dashboard/problems.json"
           expect(response.status).to eq(200)
           json = response.parsed_body
           expect(json["problems"].size).to eq(2)
@@ -137,7 +136,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "returns a list of problems" do
-        get "/admin/dashboard/problems.json"
+        post "/admin/dashboard/problems.json"
 
         expect(response.status).to eq(200)
         json = response.parsed_body
@@ -149,7 +148,7 @@ RSpec.describe Admin::DashboardController do
       before { sign_in(user) }
 
       it "denies access with a 404 response" do
-        get "/admin/dashboard/problems.json"
+        post "/admin/dashboard/problems.json"
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -167,7 +166,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
-        expect(json["new_features"]).to eq(nil)
+        expect(json["new_features"]).to eq([])
       end
 
       it "fails gracefully for invalid JSON" do
@@ -175,7 +174,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
-        expect(json["new_features"]).to eq(nil)
+        expect(json["new_features"]).to eq([])
       end
 
       it "includes new features when available" do
@@ -204,7 +203,7 @@ RSpec.describe Admin::DashboardController do
         json = response.parsed_body
         expect(json["new_features"].length).to eq(2)
 
-        DiscourseUpdates.stubs(:new_features_payload).returns(
+        DiscourseUpdates.stubs(:new_features_response_json).returns(
           [
             {
               "id" => "3",
@@ -278,6 +277,51 @@ RSpec.describe Admin::DashboardController do
       it "doesn't error when there are no new features" do
         get "/admin/whats-new.json"
         expect(response.status).to eq(200)
+      end
+
+      context "when a permanent upcoming change exists and the feed is empty" do
+        before do
+          mock_upcoming_change_metadata(
+            {
+              enable_upload_debug_mode: {
+                impact: "other,developers",
+                status: :permanent,
+                impact_type: "other",
+                impact_role: "developers",
+                learn_more_url: "https://meta.discourse.org/t/-/1234",
+              },
+            },
+          )
+          UpcomingChanges.stubs(:image_exists?).returns(true)
+          UpcomingChanges.stubs(:image_data).returns(
+            {
+              url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+              width: 244,
+              height: 66,
+              file_path: file_from_fixtures("logo.png", "images").path,
+            },
+          )
+        end
+
+        it "includes the permanent upcoming change in the whats-new payload" do
+          freeze_time do
+            get "/admin/whats-new.json"
+            expect(response.status).to eq(200)
+            json = response.parsed_body
+            feature =
+              json["new_features"].find do |row|
+                row["upcoming_change_setting_name"] == "enable_upload_debug_mode"
+              end
+            expect(feature).to be_present
+            expect(feature["title"]).to eq(SiteSetting.humanized_names(:enable_upload_debug_mode))
+            expect(feature["description"]).to eq(SiteSetting.description(:enable_upload_debug_mode))
+            expect(feature["link"]).to eq("https://meta.discourse.org/t/-/1234")
+            expect(feature["screenshot_url"]).to eq(
+              "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+            )
+            expect(Time.parse(feature["created_at"])).to eq_time(Time.zone.now)
+          end
+        end
       end
     end
 

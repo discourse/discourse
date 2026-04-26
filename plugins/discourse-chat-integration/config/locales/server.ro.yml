@@ -29,8 +29,6 @@ ro:
             added_and_removed: "%{added} a fost adăugată și %{removed} a fost eliminată"
             added: "%{added} a fost adăugată"
             removed: "%{removed} a fost eliminată"
-      flowdock:
-        message_title: "postat"
       google:
         new_post: "Postare nouă pe %{site_title}"
         new_topic: "Subiect nou pe %{site_title}"

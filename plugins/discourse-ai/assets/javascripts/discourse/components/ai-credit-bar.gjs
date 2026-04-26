@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import { number } from "discourse/lib/formatter";
@@ -26,7 +26,7 @@ export default class AiCreditBar extends Component {
   }
 
   get fillStyle() {
-    return htmlSafe(`width: ${this.args.allocation.percentage_remaining}%`);
+    return trustHTML(`width: ${this.args.allocation.percentage_remaining}%`);
   }
 
   get barText() {

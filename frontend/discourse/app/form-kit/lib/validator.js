@@ -121,6 +121,7 @@ export default class Validator {
     let error = false;
 
     switch (type) {
+      case "input":
       case "input-text":
         if (rule.trim) {
           value = value?.trim();
@@ -140,7 +141,7 @@ export default class Validator {
         }
         break;
       case "checkbox":
-        if (value !== true) {
+        if (![true, "true"].includes(value)) {
           error = true;
         }
         break;

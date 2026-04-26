@@ -6,7 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 import PasswordField from "discourse/components/password-field";
@@ -91,7 +91,7 @@ export default class LocalLoginForm extends Component {
         : "email_login.complete_username";
       if (data.user_found === false) {
         this.args.flashChanged(
-          htmlSafe(
+          trustHTML(
             i18n(`${key}_not_found`, {
               email: loginName,
               username: loginName,
@@ -102,7 +102,7 @@ export default class LocalLoginForm extends Component {
       } else {
         const postfix = data.hide_taken ? "" : "_found";
         this.args.flashChanged(
-          htmlSafe(
+          trustHTML(
             i18n(`${key}${postfix}`, {
               email: loginName,
               username: loginName,

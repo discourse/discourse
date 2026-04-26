@@ -6,6 +6,12 @@ en:
         categories:
           discourse_post_event: "Discourse Event"
           discourse_calendar: "Calendar and Events"
+      web_hooks:
+        calendar_event:
+          group_name: "Calendar Event"
+          calendar_event_created: "Calendar event is created"
+          calendar_event_updated: "Calendar event is updated"
+          calendar_event_destroyed: "Calendar event is destroyed"
   js:
     notifications:
       titles:
@@ -22,6 +28,11 @@ en:
               label: Topic ID
     discourse_calendar:
       invite_user_notification: "%{username} invited you to: %{description}"
+      preferences:
+        all_events: "Discourse Calendar - All Events"
+        all_events_description: "All forum events"
+        my_events: "Discourse Calendar - My Events"
+        my_events_description: "Events you are going to or interested in"
       on_holiday: "On Holiday"
       disable_holiday: "Disable"
       enable_holiday: "Enable"
@@ -323,6 +334,9 @@ en:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} has automatically set your attendance and invited you to %{eventName}"
         an_event: "an event"
+      event_description:
+        show_more: "Show more"
+        show_less: "Show less"
       edit_reason: "Event updated"
       edit_reason_closed: "Event closed"
       edit_reason_opened: "Event opened"
@@ -449,6 +463,9 @@ en:
         timezone:
           label: Timezone
           remove_timezone: No timezone (UTC)
+        all_day:
+          label: "All day event"
+          description: "An all-day event will not have specific times, just a date. The event will run from the start of the day to the end of the day."
         reminders:
           label: "Reminders"
           types:
@@ -499,6 +516,8 @@ en:
         status:
           label: "Status"
         delete_confirmation_message: "Delete this event?"
+        image:
+          label: "Event image"
       invite_user_or_group:
         title: "Notify user(s) or group(s)"
         invite: "Send"

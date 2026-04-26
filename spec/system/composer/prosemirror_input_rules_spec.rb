@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Input rules", type: :system do
+describe "Composer - ProseMirror - Input rules" do
   include_context "with prosemirror editor"
 
   it "supports > to create a blockquote" do

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import draggable from "discourse/modifiers/draggable";
@@ -13,6 +13,7 @@ import BlockDebugButton from "./block-debug/button";
 import MobileViewButton from "./mobile-view/button";
 import PluginOutletDebugButton from "./plugin-outlet-debug/button";
 import SafeModeButton from "./safe-mode/button";
+import UpcomingChangesDebugButton from "./upcoming-changes-debug/button";
 import VerboseLocalizationButton from "./verbose-localization/button";
 
 export default class Toolbar extends Component {
@@ -24,7 +25,7 @@ export default class Toolbar extends Component {
 
   get style() {
     const clampedTop = Math.max(this.top, 0);
-    return htmlSafe(`top: min(100dvh - ${this.ownSize}px, ${clampedTop}px);`);
+    return trustHTML(`top: min(100dvh - ${this.ownSize}px, ${clampedTop}px);`);
   }
 
   @action
@@ -81,6 +82,7 @@ export default class Toolbar extends Component {
       </button>
       <PluginOutletDebugButton />
       <BlockDebugButton />
+      <UpcomingChangesDebugButton />
       <SafeModeButton />
       <VerboseLocalizationButton />
       {{#unless this.siteSettings.viewport_based_mobile_mode}}

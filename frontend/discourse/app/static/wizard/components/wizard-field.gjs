@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { assert } from "@ember/debug";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { or } from "discourse/truth-helpers";
@@ -55,7 +55,7 @@ export default class WizardFieldComponent extends Component {
 
           {{#if @field.description}}
             <div class="wizard-container__description">
-              {{htmlSafe @field.description}}
+              {{trustHTML @field.description}}
             </div>
           {{/if}}
         </label>
@@ -72,13 +72,13 @@ export default class WizardFieldComponent extends Component {
 
       {{#if @field.errorDescription}}
         <div class="wizard-container__description error">
-          {{htmlSafe this.field.errorDescription}}
+          {{trustHTML this.field.errorDescription}}
         </div>
       {{/if}}
 
       {{#if @field.extraDescription}}
         <div class="wizard-container__description extra">
-          {{htmlSafe this.field.extraDescription}}
+          {{trustHTML this.field.extraDescription}}
         </div>
 
         <PluginOutlet

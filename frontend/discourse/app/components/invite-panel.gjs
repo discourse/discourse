@@ -1,17 +1,15 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
 import { fn, hash } from "@ember/helper";
-import EmberObject, { action, computed } from "@ember/object";
-import { alias, and, equal, readOnly } from "@ember/object/computed";
+import EmberObject, { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import GeneratedInviteLink from "discourse/components/generated-invite-link";
 import TextField from "discourse/components/text-field";
-import { computedI18n } from "discourse/lib/computed";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -23,20 +21,9 @@ export default class InvitePanel extends Component {
   @service site;
   @service toasts;
 
-  @readOnly("currentUser.staff") isStaff;
-  @readOnly("currentUser.admin") isAdmin;
-  @alias("inviteModel.id") topicId;
-  @equal("inviteModel.archetype", "private_message") isPM;
-  @and("isStaff", "siteSettings.must_approve_users") showApprovalMessage;
-
   // eg: visible only to specific group members
-  @and("invitingToTopic", "inviteModel.category.read_restricted")
-  isPrivateTopic;
 
   // scope to allowed usernames
-  @alias("invitingToTopic") allowExistingMembers;
-
-  @computedI18n("invite.custom_message_placeholder") customMessagePlaceholder;
 
   groupIds = null;
   allGroups = null;
@@ -54,6 +41,54 @@ export default class InvitePanel extends Component {
     super.init(...arguments);
     this.setDefaultSelectedGroups();
     this.setGroupOptions();
+  }
+
+  @computed("currentUser.staff")
+  get isStaff() {
+    return this.currentUser?.staff;
+  }
+
+  @computed("currentUser.admin")
+  get isAdmin() {
+    return this.currentUser?.admin;
+  }
+
+  @computed("inviteModel.id")
+  get topicId() {
+    return this.inviteModel?.id;
+  }
+
+  set topicId(value) {
+    set(this, "inviteModel.id", value);
+  }
+
+  @computed("inviteModel.archetype")
+  get isPM() {
+    return this.inviteModel?.archetype === "private_message";
+  }
+
+  @computed("isStaff", "siteSettings.must_approve_users")
+  get showApprovalMessage() {
+    return this.isStaff && this.siteSettings?.must_approve_users;
+  }
+
+  @computed("invitingToTopic", "inviteModel.category.read_restricted")
+  get isPrivateTopic() {
+    return this.invitingToTopic && this.inviteModel?.category?.read_restricted;
+  }
+
+  @computed("invitingToTopic")
+  get allowExistingMembers() {
+    return this.invitingToTopic;
+  }
+
+  set allowExistingMembers(value) {
+    set(this, "invitingToTopic", value);
+  }
+
+  @computed()
+  get customMessagePlaceholder() {
+    return i18n(`invite.custom_message_placeholder`);
   }
 
   willDestroyElement() {
@@ -452,7 +487,7 @@ export default class InvitePanel extends Component {
     <div ...attributes>
       {{#if this.inviteModel.error}}
         <div class="alert alert-error">
-          {{htmlSafe this.errorMessage}}
+          {{trustHTML this.errorMessage}}
         </div>
       {{/if}}
 

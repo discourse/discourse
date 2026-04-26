@@ -6,10 +6,6 @@
 
 fi:
   accepted_answer: "Hyväksytty vastaus"
-  category_types:
-    support:
-      name: "Tuki"
-      title: "tuki"
   site_settings:
     solved_enabled: "Ota käyttöön Solved-lisäosa, salii käyttäjän merkitä ratkaisuja ketjuille"
     allow_solved_on_all_topics: "Salli käyttäjien valita ratkaisuja kaikissa ketjuissa (jos tätä ei ole valittu, ratkaisut voidaan ottaa käyttöön alue- tai tunnistekohtaisesti)"

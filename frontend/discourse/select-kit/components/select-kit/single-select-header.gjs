@@ -1,5 +1,4 @@
 import { computed } from "@ember/object";
-import { or } from "@ember/object/computed";
 import {
   attributeBindings,
   classNames,
@@ -14,7 +13,10 @@ import { i18n } from "discourse-i18n";
 @classNames("single-select-header")
 @attributeBindings("name", "ariaLabel:aria-label")
 export default class SingleSelectHeader extends SelectKitHeaderComponent {
-  @or("selectKit.options.headerAriaLabel", "name") ariaLabel;
+  @computed("selectKit.options.headerAriaLabel", "name")
+  get ariaLabel() {
+    return this.selectKit?.options?.headerAriaLabel || this.name;
+  }
 
   focusIn(event) {
     event.stopImmediatePropagation();

@@ -1,9 +1,8 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { mapBy } from "@ember/object/computed";
 import { next } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import loadChartJS, {
   loadChartJSDatalabels,
@@ -21,8 +20,6 @@ export default class PollBreakdownChart extends Component {
   highlightedOption = null;
   setHighlightedOption = null;
 
-  @mapBy("options", "votes") data;
-
   _optionToSlice = null;
   _previousHighlightedSliceIndex = null;
   _previousDisplayMode = null;
@@ -38,6 +35,11 @@ export default class PollBreakdownChart extends Component {
     if (this._chart) {
       this._chart.destroy();
     }
+  }
+
+  @computed("options.@each.votes")
+  get data() {
+    return this.options?.map?.((item) => item.votes) ?? [];
   }
 
   async didInsertElement() {
@@ -66,7 +68,7 @@ export default class PollBreakdownChart extends Component {
 
   @computed("optionColors", "index")
   get colorStyle() {
-    return htmlSafe(`background: ${this.optionColors[this.index]};`);
+    return trustHTML(`background: ${this.optionColors[this.index]};`);
   }
 
   @computed("data", "displayMode")

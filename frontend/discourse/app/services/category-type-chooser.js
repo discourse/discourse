@@ -8,18 +8,15 @@ export default class CategoryTypeChooser extends Service {
   _setupComplete = false;
 
   get isEnabled() {
-    return (
-      this.siteSettings.enable_simplified_category_creation &&
-      this.siteSettings.enable_category_type_setup
-    );
+    return this.siteSettings.enable_simplified_category_creation;
   }
 
   get hasCompletedSetup() {
     return this._selection !== null || this._setupComplete;
   }
 
-  choose(typeId, typeName, typeSchema, typeTitle) {
-    this._selection = { type: typeId, typeName, typeSchema, typeTitle };
+  choose(typeId, typeName, typeSchema, typeTitle, count) {
+    this._selection = { type: typeId, typeName, typeSchema, typeTitle, count };
     this._setupComplete = true;
   }
 

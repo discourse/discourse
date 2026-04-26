@@ -1,6 +1,5 @@
-import { click, fillIn, triggerEvent } from "@ember/test-helpers";
+import { click, fillIn, triggerEvent, waitFor } from "@ember/test-helpers";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 class Field {
   constructor(selector) {
@@ -23,6 +22,7 @@ class Field {
    */
   get inputElement() {
     switch (this.controlType) {
+      case "input":
       case "input-text":
       case "input-number":
       case "password":
@@ -48,6 +48,7 @@ class Field {
       case "input-number":
         return parseInt(this.inputElement.value, 10);
       // String-based controls fall through to return raw value
+      case "input":
       case "input-text":
       case "password":
       case "code":
@@ -60,6 +61,11 @@ class Field {
       case "checkbox":
       case "toggle":
         return this.inputElement.checked;
+      case "icon":
+        return (
+          this.element.querySelector(".d-icon-grid-picker")?.dataset?.value ||
+          null
+        );
       default:
         throw new Error(`Unsupported control type: ${this.controlType}`);
     }
@@ -171,11 +177,9 @@ class Field {
   async select(value) {
     switch (this.element.dataset.controlType) {
       case "icon":
-        const picker = selectKit(
-          "#" + this.element.querySelector("details").id
-        );
-        await picker.expand();
-        await picker.selectRowByValue(value);
+        await click(".d-icon-grid-picker-trigger");
+        await waitFor(`[data-icon-id="${value}"]`);
+        await click(`[data-icon-id="${value}"]`);
         break;
       case "select":
         this.inputElement.value = value;

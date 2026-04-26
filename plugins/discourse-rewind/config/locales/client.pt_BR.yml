@@ -5,21 +5,54 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
+      placeholder: Discourse Rewind
+      title: Rewind
+      loading: "Reticulando splines..."
+      viewing_other_user: "Você está visualizando o relatório Discourse Rewind de <strong>%{username}</strong>."
+      cannot_view_rewind: >
+        Você não pode visualizar este relatório do Discourse Rewind. Será que o proprietário deixou de compartilhá-lo publicamente?<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Ativar o recurso Discourse Rewind. Esse recurso exibirá uma retrospectiva das atividades do ano no seu perfil e no seu avatar."
+        share_publicly: "Compartilhe a retrospectiva do Discourse Rewind com outros membros do fórum. Qualquer membro do fórum poderá visualizar sua retrospectiva do Discourse Rewind."
+        cannot_share_when_profile_hidden: "Para compartilhar o Rewind, você precisa permitir que outras pessoas vejam seu perfil público."
       profile_link: "Veja seu Discourse Rewind %{rewindYear}"
       share:
         toggle_label:
           private: "Privado"
           public: "Público"
+        confirm: "Não esqueça de revisar o seu Rewind antes de compartilhar, pois ele pode incluir dados de mensagens pessoais. Você pode torná-lo privado novamente a qualquer momento."
+        confirm_button:
+          enable: "Tornar público"
+          disable: "Manter privado"
+        enabled_success: "Agora você pode compartilhar seu Rewind com outros membros do fórum."
+        disabled_success: "Seu Rewind agora é privado."
       reports:
         activity_calendar:
           title: Calendário de Atividade
+          cell_title:
+            visited_no_posts: "Você visitou e ficou só olhando em %{date}, mas não fez nenhuma postagem."
+            visited_no_posts_others: "%{username} visitou e ficou só olhando em %{date}, mas não fez nenhuma postagem."
+            visited_with_posts:
+              one: "Você fez %{count} postagem em %{date}."
+              other: "Você fez %{count} postagens em %{date}."
+            visited_with_posts_others:
+              one: "%{username} fez %{count} postagem em %{date}."
+              other: "%{username} fez %{count} postagens em %{date}."
+            no_activity: "Você não estava presente em %{date}."
+            no_activity_others: "%{username} não estava presente em %{date}."
         top_words:
           title: Uso de Palavras
         reading_time:
           title: Tempo de leitura
           book_comparison: "Você passou <code>%{readingTime}</code> lendo em nosso site! Esse é o tempo que levaria para ler <i>%{bookTitle}</i>"
+          book_comparison_others: "%{username} passou <code>%{readingTime}</code> lendo em nosso site! Esse é o tempo que levaria para ler <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Reações mais usadas em tópicos
           total_number: "Número total de reações: %{count}"
@@ -27,59 +60,147 @@ pt_BR:
           title: Reações mais recebidas em tópicos
         fbff:
           title: Seu FBFF (Forum Best Friend Forever)
+          title_others: "O FBFF (Forum Best Friend Forever) de %{username}"
         most_viewed_categories:
           title:
             one: Sua categoria mais visualizada
             other: Suas %{count} categorias mais visualizadas
+          title_others:
+            one: "A categoria mais visualizada de %{username}"
+            other: "As %{count} categorias mais visualizadas de %{username}"
         most_viewed_tags:
           title:
             one: Sua tag mais visualizada
             other: Suas %{count} tags mais visualizadas
+          title_others:
+            one: "A tag mais visualizada de %{username}"
+            other: "As %{count} tags mais visualizadas de %{username}"
         best_topics:
           view_topic: Ver tópico
           title:
             one: Seu melhor tópico
             other: Seus %{count} melhores tópicos
+          title_others:
+            one: "O melhor tópico de %{username}"
+            other: "Os %{count} melhores tópicos de %{username}"
         best_posts:
           view_post: Ver postagem
           title:
             one: Sua melhor postagem
             other: Suas %{count} melhores postagens
+          title_others:
+            one: "A melhor postagem de %{username}"
+            other: "As %{count} melhores postagens de %{username}"
         ai_usage:
+          title: Uso de IA
           total_requests: Total de Reqs.
           total_tokens: Total de Tokens
           success_rate: Taxa de Sucesso
+          favorite_features: Recursos mais utilizados
+          favorite_models: Modelos de IA mais utilizados
           wake_up: "Acorda, %{username}..."
           system_title: "USO DE IA DETECTADO"
           section_features: "TOP RECURSOS"
           section_models: "TOP MODELOS"
         assignments:
+          title: Atribuições
+          total_assigned: Atribuídos a mim
           total_assigned_others: "Atribuiu a %{username}"
+          completed: Tarefas concluídas
+          pending: Atribuições pendentes
+          assigned_by_user: Atribuições dadas
+          completion_rate: Taxa de conclusão
         chat_usage:
+          title: Atividade de chat
+          total_messages: Total de mensagens
+          dm_messages: Mensagens diretas
+          unique_dm_channels: Conversas por mensagem direta
+          reactions_received: Reações recebidas
           avg_message_length: Tamanho Médio de Mensagem
+          favorite_channels: Canais favoritos
           messages: mensagens
+          bot_name: XxRewindBotxX
           author: Você
           author_others: "%{username}"
           channel_title: "#chat-na-atividade"
           status_online: "● on-line"
+          message_1:
+            one: "Você enviou <strong>%{count}</strong> mensagem este ano!"
+            other: "Você enviou <strong>%{count}</strong> mensagens este ano!"
           reply_1: "kkkk incrível B-)"
+          message_2_MF: |
+            Você teve { dm_count, plural,
+                one {<strong>#</strong> conversa por mensagem direta}
+              other {<strong>#</strong> conversas por mensagem direta}
+            } com { channel_count, plural,
+                one {<strong>#</strong> pessoa ou grupo}
+              other {<strong>#</strong> diferentes pessoas ou grupos}
+            }.
           reply_2: "ShOo0ow :D"
+          message_3:
+            one: "As pessoas amaram suas mensagens! Você recebeu <strong>%{count}</strong> reação ❤️"
+            other: "As pessoas amaram suas mensagens! Você recebeu <strong>%{count}</strong> reações ❤️"
+          reply_3: "r0fl rAwr 8-)"
           message_4: "O tamanho médio de suas mensagens foi de <strong>%{length}</strong> caracteres"
           message_5: "Seus canais favoritos:"
+          dancing_baby_alt: "Bebê dançante"
+        favorite_gifs:
+          title:
+            one: Seu GIF favorito
+            other: Seus %{count} GIFs favoritos
+          title_others:
+            one: "O GIF favorito de %{username}"
+            other: "Os %{count} GIFs favoritos de %{username}"
+          total_usage:
+            one: Usado %{count} vez
+            other: Usado %{count} vezes no total
         invites:
           title: Convites
+          total_invites: Total de convites enviados
+          redeemed: Convites aceitos
+          redemption_rate: Taxa de aceitação
+          avg_trust_level: Nível de confiança médio
+          invitee_impact: Impacto dos seus convidados
+          invitee_impact_others: "Impacto dos convidados de %{username}"
           invitee_posts: Postagens criadas
+          invitee_topics: Tópicos iniciados
           invitee_likes: Curtidas Dadas
+          most_active_invitee: Convidado mais ativo
+          guest_book_title: Livro de visitas
+          guest_book_subtitle: Seus convites comunitários
+          guest_book_subtitle_others: "Convites comunitários de %{username}"
           label_invitations_sent: "Convites enviados:"
+          label_guests_joined: "Convites aceitos:"
+          label_acceptance_rate: "Taxa de aceitação:"
+          section_contributions: Contribuições de convidados
+          label_posts_written: "Postagens escritas:"
+          label_topics_started: "Tópicos iniciados:"
+          label_likes_given: "Curtidas dadas:"
+          section_most_active: Hóspede mais ativo
         new_user_interactions:
+          title: Mentoria para novos usuários
+          subtitle:
+            one: Você ajudou %{count} novo usuário este ano
+            other: Você ajudou %{count} novos usuários este ano
+          subtitle_others:
+            one: "%{username} ajudou %{count} novo usuário este ano"
+            other: "%{username} ajudou %{count} novos usuários este ano"
           new_member:
             one: "%{count} novo membro"
             other: "%{count} novos membros"
+          total_interactions: Total de interações
+          unique_new_users: Novos usuários exclusivos
           likes_given: Curtidas Dadas
+          replies: Respostas às postagens
           mentions: Menções
+          topics_with_new_users: Tópicos com novos usuários
           contributions_helped: suas contribuições ajudaram
+          contributions_helped_others: "As contribuições de %{username} ajudaram"
         time_of_day_activity:
           title: Ritmo de Atividade Diária
+          play_button: Reproduzir sua atividade como som
+          play_button_others: "Reproduzir a atividade de %{username} como som"
+          stop_button: Interromper a reprodução de áudio
         writing_analysis:
           title: Análise de Escrita
           menu_file: Arquivo
@@ -87,9 +208,36 @@ pt_BR:
           menu_additional: Adicional
           menu_opening: ABRINDO
           help_text: Pressione F1 para ajuda
+          app_name: DiscoStar Professional
           release_info: Versão %{rewindYear} de CDCK
           total_words: Total de Palavras
           total_posts: Total de Postagens
           avg_post_length: Tam. Médio de Post
           readability_score_label: Score de Legibilidade
           readability_level: Nível de Legibilidade
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "C.S. Lewis"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George R.R. Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Joan Didion"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virgina Woolf"
+              4: "Gabriel Garcia Marquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fyodor Dostoevsky"

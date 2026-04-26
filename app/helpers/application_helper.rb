@@ -369,9 +369,17 @@ module ApplicationHelper
 
     if opts[:read_time] && opts[:read_time] > 0 && opts[:like_count] && opts[:like_count] > 0
       result << tag(:meta, name: "twitter:label1", value: I18n.t("reading_time"))
-      result << tag(:meta, name: "twitter:data1", value: "#{opts[:read_time]} mins 🕑")
+      result << tag(
+        :meta,
+        name: "twitter:data1",
+        value: I18n.t("reading_time_minutes", count: opts[:read_time]),
+      )
       result << tag(:meta, name: "twitter:label2", value: I18n.t("likes"))
-      result << tag(:meta, name: "twitter:data2", value: "#{opts[:like_count]} ❤")
+      result << tag(
+        :meta,
+        name: "twitter:data2",
+        value: I18n.t("likes_count", count: opts[:like_count]),
+      )
     end
 
     if opts[:published_time]
@@ -419,11 +427,18 @@ module ApplicationHelper
     end
   end
 
-  def discourse_track_view_session_tag
-    return if !SiteSetting.trigger_browser_pageview_events
-    <<~HTML.html_safe
-      <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
-    HTML
+  def discourse_pageview_tracking_meta_tags
+    if !SiteSetting.trigger_browser_pageview_events &&
+         !SiteSetting.use_beacon_for_browser_page_views
+      return ""
+    end
+
+    tags = +""
+    tags << tag.meta(name: "discourse-track-view-session-id", content: SecureRandom.base64(32))
+    if SiteSetting.use_beacon_for_browser_page_views
+      tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
+    end
+    tags.html_safe
   end
 
   def gsub_emoji_to_unicode(str)
@@ -681,7 +696,11 @@ module ApplicationHelper
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
 
-    return user_scheme_id if user_scheme_id
+    if user_scheme_id
+      return user_scheme_id unless theme_limits_color_schemes?
+      return user_scheme_id if ColorScheme.exists?(id: user_scheme_id, theme_id: theme_id)
+    end
+
     return if theme_id.blank?
 
     @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
@@ -694,8 +713,23 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
-    user_dark_scheme_id ||
-      (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
+    if user_dark_scheme_id
+      return user_dark_scheme_id unless theme_limits_color_schemes?
+      return user_dark_scheme_id if ColorScheme.exists?(id: user_dark_scheme_id, theme_id: theme_id)
+    end
+
+    theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
+    dark_id = theme&.dark_color_scheme_id
+    return dark_id if dark_id.present?
+    return theme&.color_scheme_id if theme_limits_color_schemes?
+    -1
+  end
+
+  def theme_limits_color_schemes?
+    return @theme_limits_color_schemes if defined?(@theme_limits_color_schemes)
+    @theme_limits_color_schemes =
+      theme_id.present? &&
+        ThemeModifierSet.exists?(theme_id: theme_id, only_theme_color_schemes: true)
   end
 
   def current_homepage
@@ -705,6 +739,52 @@ module ApplicationHelper
   def build_plugin_html(name, **kwargs)
     return "" unless allow_plugins?
     DiscoursePluginRegistry.build_html(name, controller, **kwargs) || ""
+  end
+
+  def crawler_topic_container_schema(topic)
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_crawler_container_schema,
+        { itemscope: true, itemtype: "http://schema.org/DiscussionForumPosting" },
+        topic,
+      ),
+    )
+  end
+
+  def crawler_topic_main_entity_schema(topic)
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_main_entity_schema, {}, topic),
+    ).presence
+  end
+
+  def crawler_post_schema_hash(post, topic)
+    @crawler_post_schema_hash ||= {}
+    @crawler_post_schema_hash[post.id] ||= begin
+      default = {
+        itemprop: "comment",
+        itemscope: true,
+        itemtype: "http://schema.org/Comment",
+      } unless post.is_first_post?
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_post_schema, default || {}, post, topic)
+    end
+  end
+
+  def crawler_post_schema(post, topic)
+    tag.attributes(crawler_post_schema_hash(post, topic))
+  end
+
+  def crawler_post_schema_overridden?(post, topic)
+    hash = crawler_post_schema_hash(post, topic)
+    itemprop = hash[:itemprop]
+    (itemprop.present? && itemprop != "comment") || hash[:data].present?
+  end
+
+  def crawler_post_emits_microdata?(post, topic)
+    post.is_first_post? || crawler_post_schema_hash(post, topic)[:itemscope]
+  end
+
+  def crawler_post_schema_skip?(post, topic)
+    DiscoursePluginRegistry.apply_modifier(:topic_crawler_skip_post, false, post, topic)
   end
 
   # If there is plugin HTML return that, otherwise yield to the template

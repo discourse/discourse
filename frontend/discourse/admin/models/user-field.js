@@ -1,7 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
-import { i18n } from "discourse/lib/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import RestModel from "discourse/models/rest";
+import { i18n } from "discourse-i18n";
 
 export default class UserField extends RestModel {
   static fieldTypes() {
@@ -36,5 +37,10 @@ export default class UserField extends RestModel {
 }
 
 class UserFieldType extends EmberObject {
-  @i18n("id", "admin.user_fields.field_types.%@") name;
+  @tracked id;
+
+  @dependentKeyCompat
+  get name() {
+    return i18n(`admin.user_fields.field_types.${this.id}`);
+  }
 }

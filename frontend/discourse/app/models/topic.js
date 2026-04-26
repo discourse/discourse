@@ -1,21 +1,21 @@
 import { cached, tracked } from "@glimmer/tracking";
-import EmberObject, { computed } from "@ember/object";
+import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
-import { fmt, propertyEqual } from "discourse/lib/computed";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import deprecated from "discourse/lib/deprecated";
 import { longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
-import { deepMerge } from "discourse/lib/object";
+import { deepEqual, deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
+import { serializeTags } from "discourse/lib/serialize-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import {
@@ -107,15 +107,14 @@ export default class Topic extends RestModel {
 
     const data = { ...props };
 
-    // SHOULD NOT normalize tags to names - backend expects string array
     if (Array.isArray(data.tags)) {
-      data.tags = data.tags.map((t) => (typeof t === "string" ? t : t.name));
+      data.tags = serializeTags(data.tags);
     }
 
     if (opts.fastEdit) {
       data.keep_existing_draft = true;
     }
-    return ajax(topic.get("url"), {
+    return ajax(topic.get("updateUrl") || topic.get("url"), {
       type: "PUT",
       data: JSON.stringify(data),
       contentType: "application/json",
@@ -340,20 +339,6 @@ export default class Topic extends RestModel {
 
   message = null;
 
-  @alias("lastPoster.user") lastPosterUser;
-  @alias("lastPoster.primary_group") lastPosterGroup;
-  @alias("details.allowed_groups") allowedGroups;
-  @notEmpty("deleted_at") deleted;
-  @fmt("url", "%@/print") printUrl;
-  @equal("archetype", "private_message") isPrivateMessage;
-  @equal("archetype", "banner") isBanner;
-  @alias("bookmarks.length") bookmarkCount;
-  @and("pinned", "category.isUncategorizedCategory") isPinnedUncategorized;
-  @notEmpty("excerpt") hasExcerpt;
-  @propertyEqual("last_read_post_number", "highest_post_number") readLastPost;
-  @and("pinned", "readLastPost") canClearPin;
-  @or("details.can_edit", "details.can_edit_tags") canEditTags;
-
   @tracked _details = this.store.createRecord("topicDetails", {
     id: this.id,
     topic: this,
@@ -365,6 +350,87 @@ export default class Topic extends RestModel {
     pluginTrackedProperties.forEach((propertyKey) => {
       defineTrackedProperty(this, propertyKey);
     });
+  }
+
+  @computed("lastPoster.user")
+  get lastPosterUser() {
+    return this.lastPoster?.user;
+  }
+
+  set lastPosterUser(value) {
+    set(this, "lastPoster.user", value);
+  }
+
+  @computed("lastPoster.primary_group")
+  get lastPosterGroup() {
+    return this.lastPoster?.primary_group;
+  }
+
+  set lastPosterGroup(value) {
+    set(this, "lastPoster.primary_group", value);
+  }
+
+  @computed("details.allowed_groups")
+  get allowedGroups() {
+    return this.details?.allowed_groups;
+  }
+
+  set allowedGroups(value) {
+    set(this, "details.allowed_groups", value);
+  }
+
+  @computed("deleted_at")
+  get deleted() {
+    return !isEmpty(this.deleted_at);
+  }
+
+  @computed("url")
+  get printUrl() {
+    return `${this.url}/print`;
+  }
+
+  @computed("archetype")
+  get isPrivateMessage() {
+    return this.archetype === "private_message";
+  }
+
+  @computed("archetype")
+  get isBanner() {
+    return this.archetype === "banner";
+  }
+
+  @computed("bookmarks.length")
+  get bookmarkCount() {
+    return this.bookmarks?.length;
+  }
+
+  set bookmarkCount(value) {
+    set(this, "bookmarks.length", value);
+  }
+
+  @computed("pinned", "category.isUncategorizedCategory")
+  get isPinnedUncategorized() {
+    return this.pinned && this.category?.isUncategorizedCategory;
+  }
+
+  @computed("excerpt")
+  get hasExcerpt() {
+    return !isEmpty(this.excerpt);
+  }
+
+  @dependentKeyCompat
+  get readLastPost() {
+    return deepEqual(this.last_read_post_number, this.highest_post_number);
+  }
+
+  @computed("pinned", "readLastPost")
+  get canClearPin() {
+    return this.pinned && this.readLastPost;
+  }
+
+  @computed("details.can_edit", "details.can_edit_tags")
+  get canEditTags() {
+    return this.details?.can_edit || this.details?.can_edit_tags;
   }
 
   @computed("last_read_post_number", "highest_post_number")
@@ -567,7 +633,7 @@ export default class Topic extends RestModel {
   }
 
   @computed("id", "slug")
-  get url() {
+  get updateUrl() {
     let slug = this.slug || "";
     if (slug.trim().length === 0) {
       slug = "topic";
@@ -575,7 +641,18 @@ export default class Topic extends RestModel {
     return `${getURL("/t/")}${slug}/${this.id}`;
   }
 
-  // Helper to build a Url with a post number
+  @computed("id", "slug", "is_nested_view", "_forcedFlat")
+  get url() {
+    let slug = this.slug || "";
+    if (slug.trim().length === 0) {
+      slug = "topic";
+    }
+    if (this.is_nested_view && !this._forcedFlat) {
+      return `${getURL("/n/")}${slug}/${this.id}`;
+    }
+    return `${getURL("/t/")}${slug}/${this.id}`;
+  }
+
   urlForPostNumber(postNumber) {
     let url = this.url;
     if (postNumber > 0) {
@@ -601,13 +678,26 @@ export default class Topic extends RestModel {
     return this.unread_posts || this.new_posts;
   }
 
-  @computed("last_read_post_number", "url")
+  @computed("last_read_post_number", "url", "is_nested_view", "_forcedFlat")
   get lastReadUrl() {
+    if (this.is_nested_view && !this._forcedFlat) {
+      return this.url;
+    }
     return this.urlForPostNumber(this.last_read_post_number);
   }
 
-  @computed("last_read_post_number", "highest_post_number", "url")
+  @computed(
+    "last_read_post_number",
+    "highest_post_number",
+    "url",
+    "is_nested_view",
+    "_forcedFlat"
+  )
   get lastUnreadUrl() {
+    if (this.is_nested_view && !this._forcedFlat) {
+      return this.url;
+    }
+
     let customUrl = null;
     _customLastUnreadUrlCallbacks.some((cb) => {
       const result = cb(this);
@@ -636,8 +726,11 @@ export default class Topic extends RestModel {
     return this.urlForPostNumber(postNumber);
   }
 
-  @computed("highest_post_number", "url")
+  @computed("highest_post_number", "url", "is_nested_view", "_forcedFlat")
   get lastPostUrl() {
+    if (this.is_nested_view && !this._forcedFlat) {
+      return this.url;
+    }
     return this.urlForPostNumber(this.highest_post_number);
   }
 
@@ -687,7 +780,7 @@ export default class Topic extends RestModel {
     if (property === "closed") {
       this.incrementProperty("posts_count");
     }
-    return ajax(`${this.url}/status`, {
+    return ajax(`${this.updateUrl}/status`, {
       type: "PUT",
       data: {
         status: property,

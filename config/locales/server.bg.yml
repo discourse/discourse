@@ -145,7 +145,13 @@ bg:
   not_in_group:
     join_group: "Присъедини се към група"
   reading_time: "Време за четене"
+  reading_time_minutes:
+    one: "%{count} минута 🕑"
+    other: "%{count} минути 🕑"
   likes: "Харесвания"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговор във същата публикация."
     other: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговори в същата публикация."
@@ -484,6 +490,7 @@ bg:
   user_api_key:
     deny: "Отмени"
     read: "четене"
+    copied: "Копирано!"
     otp_confirmation:
       confirm_title: Продължете към %{site_name}
       logging_in_as: Влизане като %{username}
@@ -511,7 +518,8 @@ bg:
         flag: Тип
     visits:
       title: "Потребителски посещения "
-      xaxis: "Ден"
+      xaxis:
+        mobile: "Мобилен"
       yaxis: "Брой на посещенията"
     signups:
       xaxis: "Ден"
@@ -535,7 +543,6 @@ bg:
       yaxis: "Ден"
     dau_by_mau:
       xaxis: "Ден"
-      description: "Броят на членовете, които са влезли в системата през последния ден, разделен на броя на членовете, които са влезли в системата през последния месец - дава %, който показва \"привързаността\" на общността. Стремете се към >20%."
     daily_engaged_users:
       xaxis: "Ден"
     profile_views:

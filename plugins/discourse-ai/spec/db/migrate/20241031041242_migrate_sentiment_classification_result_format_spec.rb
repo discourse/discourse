@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require Rails.root.join(
-          "plugins/discourse-ai/db/post_migrate/20241031041242_migrate_sentiment_classification_result_format",
+          "plugins/discourse-ai/db/migrate/20241031041242_migrate_sentiment_classification_result_format",
         )
 
 RSpec.describe MigrateSentimentClassificationResultFormat do
   let(:connection) { ActiveRecord::Base.connection }
+
+  around { |example| ActiveRecord::Migration.suppress_messages { example.run } }
 
   before do
     enable_current_plugin

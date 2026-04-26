@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 es:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: Votación de publicación
   post_voting:
     reviewables:
       comment_already_handled: "Gracias, pero ya hemos revisado este comentario y hemos determinado que no es necesario denunciarlo de nuevo."
@@ -30,13 +26,16 @@ es:
         label: "Crear tema de Votar publicación"
       composer_actions:
         create_as_post_voting:
+          label: "Activar/desactivar votación de publicación"
           desc: "El tema se creará con publicaciones votables"
         remove_as_post_voting:
+          label: "Eliminar votación de publicación"
           desc: "El tema se creará en el formato normal"
     vote:
       already_voted: "Solo puedes votar una vez por pregunta."
       user_over_limit: "No puedes superar el número de votos para tu nivel de confianza."
       one_vote_per_post: "Solo puedes votar una vez por cada publicación."
+      toggle_voters: "Mostrar quién votó"
     last_answer_lowercase: última respuesta
     answer_lowercase:
       one: respuesta
@@ -58,6 +57,8 @@ es:
           edit: "editar"
           cancel: "cancelar"
           add: "Añadir un comentario"
+          actions:
+            delete: "Eliminar comentario"
           show:
             one: Mostrar %{count} comentario más
             other: Mostrar %{count} comentarios más

@@ -1,5 +1,5 @@
 import { get } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { avatarImg } from "discourse/lib/avatar-utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { formatUsername } from "discourse/lib/utilities";
@@ -81,5 +81,5 @@ export function renderAvatar(user, options) {
 }
 
 export default function avatar(user, params) {
-  return htmlSafe(renderAvatar.call(this, user, params));
+  return trustHTML(renderAvatar.call(this, user, params));
 }

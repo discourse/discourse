@@ -5,11 +5,11 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -32,7 +32,7 @@ import {
 import { clipboardHelpers } from "discourse/lib/utilities";
 import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
-import AiPersonaLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-persona-llm-selector";
+import AiAgentLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-agent-llm-selector";
 
 @tagName("")
 export default class AiBotConversations extends Component {
@@ -46,7 +46,7 @@ export default class AiBotConversations extends Component {
 
   @tracked creditStatus = null;
   @tracked selectedLlmId = null;
-  @tracked uploads = new TrackedArray();
+  @tracked uploads = trackedArray();
   // Don't track this directly - we'll get it from uppyUpload
 
   textarea = null;
@@ -60,7 +60,7 @@ export default class AiBotConversations extends Component {
 
     const instance = this.tooltip.register(element, {
       identifier: "ai-credit-limit-tooltip",
-      content: htmlSafe(
+      content: trustHTML(
         this.aiCredits.getCreditLimitMessage(this.creditStatus)
       ),
       placement: "top",
@@ -172,12 +172,12 @@ export default class AiBotConversations extends Component {
   }
 
   @action
-  async setPersonaId(id) {
-    this.aiBotConversationsHiddenSubmit.personaId = id;
-    // Only check persona credits if no LLM is explicitly selected
-    // (e.g., when persona has force_default_llm)
+  async setAgentId(id) {
+    this.aiBotConversationsHiddenSubmit.agentId = id;
+    // Only check agent credits if no LLM is explicitly selected
+    // (e.g., when agent has force_default_llm)
     if (!this.selectedLlmId) {
-      await this.#checkCreditStatus(id, "persona");
+      await this.#checkCreditStatus(id, "agent");
     }
   }
 
@@ -197,8 +197,8 @@ export default class AiBotConversations extends Component {
 
     try {
       this.creditStatus =
-        type === "persona"
-          ? await this.aiCredits.getPersonaCreditStatus(id)
+        type === "agent"
+          ? await this.aiCredits.getAgentCreditStatus(id)
           : await this.aiCredits.getLlmModelCreditStatus(id);
     } catch {
       // Fail open - allow usage if credit check fails
@@ -330,7 +330,7 @@ export default class AiBotConversations extends Component {
 
   @action
   removeUpload(upload) {
-    this.uploads = new TrackedArray(this.uploads.filter((u) => u !== upload));
+    this.uploads = trackedArray(this.uploads.filter((u) => u !== upload));
   }
 
   @action
@@ -347,7 +347,7 @@ export default class AiBotConversations extends Component {
         uploads: this.uploads,
         inProgressUploadsCount: this.inProgressUploads.length,
       });
-      this.uploads = new TrackedArray();
+      this.uploads = trackedArray();
     } catch (error) {
       popupAjaxError(error);
     }
@@ -371,12 +371,12 @@ export default class AiBotConversations extends Component {
   <template>
     <div class="ai-bot-conversations" ...attributes>
       {{bodyClass "ai-bot-conversations-page"}}
-      <AiPersonaLlmSelector
+      <AiAgentLlmSelector
         @showLabels={{true}}
-        @setPersonaId={{this.setPersonaId}}
+        @setAgentId={{this.setAgentId}}
         @setLlmId={{this.setLlmId}}
         @setTargetRecipient={{this.setTargetRecipient}}
-        @personaName={{@controller.persona}}
+        @agentName={{@controller.agent}}
         @llmName={{@controller.llm}}
       />
 

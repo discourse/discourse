@@ -19,6 +19,7 @@ import multiselect from "../components/sections/molecules/multi-select";
 import navigationBar from "../components/sections/molecules/navigation-bar";
 import navigationStacked from "../components/sections/molecules/navigation-stacked";
 import postMenu from "../components/sections/molecules/post-menu";
+import segmentedControl from "../components/sections/molecules/segmented-control";
 import signupCta from "../components/sections/molecules/signup-cta";
 import toasts from "../components/sections/molecules/toasts";
 import tooltips from "../components/sections/molecules/tooltips";
@@ -33,6 +34,7 @@ import topicFooterButtons from "../components/sections/organisms/04-topic-footer
 import topicList from "../components/sections/organisms/05-topic-list";
 import basicTopicList from "../components/sections/organisms/basic-topic-list";
 import categoriesList from "../components/sections/organisms/categories-list";
+import dockedComposer from "../components/sections/organisms/docked-composer";
 import modal from "../components/sections/organisms/modal";
 import moreTopics from "../components/sections/organisms/more-topics";
 import navigation from "../components/sections/organisms/navigation";
@@ -62,6 +64,11 @@ const SECTIONS = [
   { component: dateTimeInputs, category: "atoms", id: "date-time-inputs" },
   { component: dropdowns, category: "atoms", id: "dropdowns" },
   { component: topicLink, category: "atoms", id: "topic-link" },
+  {
+    component: segmentedControl,
+    category: "atoms",
+    id: "segmented-control",
+  },
   { component: breadCrumbs, category: "molecules", id: "bread-crumbs" },
   { component: categories, category: "molecules", id: "categories" },
   { component: charCounter, category: "molecules", id: "char-counter" },
@@ -109,6 +116,7 @@ const SECTIONS = [
   },
   { component: basicTopicList, category: "organisms", id: "basic-topic-list" },
   { component: categoriesList, category: "organisms", id: "categories-list" },
+  { component: dockedComposer, category: "organisms", id: "docked-composer" },
   { component: modal, category: "organisms", id: "modal" },
   { component: navigation, category: "organisms", id: "navigation" },
   { component: siteHeader, category: "organisms", id: "site-header" },

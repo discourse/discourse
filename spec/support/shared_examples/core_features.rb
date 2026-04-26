@@ -113,10 +113,8 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       it "likes a post" do
         click_on(topics.first.title)
-        within(".double-button") do
-          find(".toggle-like").click
-          expect(page).to have_content("1")
-        end
+        find(".toggle-like").click
+        expect(page).to have_css(".post-action-menu__like-count", text: "1")
       end
     end
   end
@@ -220,7 +218,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       enabled_plugins = Discourse.plugins.filter(&:enabled?)
 
       visit "/"
-      expect(page).to have_css("#site-logo", visible: :all) # Themes might hide it
+      expect(page).to have_css("div.discourse-root", visible: :all) # Themes might hide it
 
       plugin_script_tags =
         page
@@ -233,9 +231,9 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       enabled_plugins.each do |plugin|
         if plugin.js_asset_exists?
-          expect(plugin_script_tags).to include(plugin.directory_name)
+          expect(plugin_script_tags).to include(plugin.name)
         else
-          expect(plugin_script_tags).not_to include(plugin.directory_name)
+          expect(plugin_script_tags).not_to include(plugin.name)
         end
       end
     end

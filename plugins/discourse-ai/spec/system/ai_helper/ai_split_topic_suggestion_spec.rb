@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Post helper", type: :system do
+RSpec.describe "AI Post helper" do
   fab!(:user, :admin)
   fab!(:non_member_group, :group)
   fab!(:topic)

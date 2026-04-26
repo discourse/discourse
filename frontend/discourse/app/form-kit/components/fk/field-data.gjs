@@ -1,5 +1,9 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
+import curryComponent from "ember-curry-component";
+import { resolveFieldControl } from "discourse/form-kit/lib/field-control";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
 import uniqueId from "discourse/helpers/unique-id";
@@ -19,6 +23,12 @@ export default class FKFieldData extends Component {
    * @type {string}
    */
   errorId = uniqueId();
+
+  #controlArgs = { field: this };
+
+  // Set by legacy controls in their constructor (during render),
+  // read by the applyControlType modifier (post-render)
+  _legacyControlType;
 
   /**
    * Initializes the FKFieldData component.
@@ -82,6 +92,31 @@ export default class FKFieldData extends Component {
     return this.args.title;
   }
 
+  get hasExplicitType() {
+    return this.args.type !== undefined;
+  }
+
+  get type() {
+    return this.args.type ?? this._legacyControlType;
+  }
+
+  set type(value) {
+    this._legacyControlType = value;
+  }
+
+  /**
+   * Contextual component for the control set by `@type`.
+   * @type {Component}
+   */
+  @cached
+  get Control() {
+    return curryComponent(
+      resolveFieldControl(this.type, getOwner(this)),
+      this.#controlArgs,
+      getOwner(this)
+    );
+  }
+
   /**
    * Format of the field.
    * @type {string}
@@ -95,7 +130,7 @@ export default class FKFieldData extends Component {
    * @type {string}
    */
   get titleFormat() {
-    return this.args.titleFormat;
+    return this.args.titleFormat || this.format;
   }
 
   /**
@@ -103,7 +138,7 @@ export default class FKFieldData extends Component {
    * @type {string}
    */
   get descriptionFormat() {
-    return this.args.descriptionFormat;
+    return this.args.descriptionFormat || this.format;
   }
 
   /**
@@ -137,6 +172,10 @@ export default class FKFieldData extends Component {
    */
   get helpText() {
     return this.args.helpText;
+  }
+
+  get error() {
+    return (this.args.errors ?? {})[this.name];
   }
 
   /**
@@ -177,6 +216,10 @@ export default class FKFieldData extends Component {
     }
 
     return name;
+  }
+
+  get normalizedName() {
+    return this.name.replace(/\./g, "-");
   }
 
   /**

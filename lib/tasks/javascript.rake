@@ -90,6 +90,8 @@ task "javascript:update_constants" => :environment do
 
     export const INVITE_DESCRIPTION_MAX_LENGTH = #{Invite::DESCRIPTION_MAX_LENGTH};
 
+    export const POSTING_REVIEW_GROUP_BASED_MODES = #{CategorySetting::GROUP_BASED_MODES.to_json};
+
     export const USER_OPTION_COMPOSITION_MODES = #{UserOption.composition_mode_types.to_json};
 
     export const UPCOMING_CHANGES_USER_ENABLED_REASONS = #{UpcomingChanges.user_enabled_reasons.to_json};
@@ -109,12 +111,15 @@ task "javascript:update_constants" => :environment do
     };
   JS
 
+  require "emoji/regex_generator"
+
   write_template("pretty-text/addon/emoji/data.js", task_name, <<~JS)
     export const emojis = new Set(#{Emoji.standard.map(&:name).flatten.inspect});
     export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
     export const aliases = #{Emoji.aliases.inspect.gsub("=>", ":")};
     export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
     export const replacements = #{Emoji.unicode_replacements_json};
+    export const emojiReplacementRegex = "#{Emoji::RegexGenerator.generate}";
   JS
 
   write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Table Builder", type: :system do
+describe "Table Builder" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:insert_table_modal) { PageObjects::Modals::InsertTable.new }
@@ -166,15 +166,29 @@ describe "Table Builder", type: :system do
     end
 
     it "should not accept default Discourse keyboard shortcuts" do
-      # Some default keyboard shortcuts like Shift + S bring up a modal overriding
-      # the table builder modal and therefore should not be accepted
-
       topic_page.visit_topic(topic)
       topic_page.find(".btn-edit-table", visible: :all).click
       insert_table_modal.find_cell(0, 0)
       insert_table_modal.send_keys(:shift, "s")
       expect(page).to have_css(".insert-table-modal")
       expect(page).to have_no_css(".share-topic-modal")
+    end
+
+    it "does not show duplicate edit buttons on quoted tables" do
+      raw = <<~MD
+        [quote="#{user.username}, post:#{post1.post_number}, topic:#{topic.id}"]
+        |Make | Model | Year|
+        | - | - | - |
+        | Toyota | Supra | 1998 |
+        [/quote]
+      MD
+
+      quoting_post = create_post(user:, topic:, raw:)
+      topic_page.visit_topic(topic)
+
+      within "#post_#{quoting_post.post_number}" do
+        expect(page).to have_css(".btn-edit-table", count: 1, visible: :all)
+      end
     end
   end
 end

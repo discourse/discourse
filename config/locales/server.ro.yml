@@ -211,7 +211,15 @@ ro:
   not_in_group:
     join_group: "Alătură-te grupului"
   reading_time: "Durata citirii"
+  reading_time_minutes:
+    one: "%{count} minut 🕑"
+    few: "%{count} minute 🕑"
+    other: "%{count} de minute 🕑"
   likes: "Aprecieri"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspuns pe discuție."
     few: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspunsuri pe discuție."
@@ -429,6 +437,9 @@ ro:
       has_subcategories: "Nu putem șterge această categorie pentru că are subcategorii."
       topic_exists_no_oldest: "Nu poți șterge categoria fiindcă numărul subiectelor este de %{count}."
     uncategorized_description: "Subiecte care nu au nevoie de o categorie, sau care nu se potrivesc în nicio categorie deja existentă."
+  category_types:
+    discussion:
+      title: "discuție"
   trust_levels:
     admin: "Admin"
     staff: "Membrii echipei"
@@ -644,6 +655,7 @@ ro:
     deny: "Anulează"
     read: "citire"
     read_write: "citire/scriere"
+    copied: "Copiat!"
     otp_confirmation:
       confirm_title: Continuă la %{site_name}
       logging_in_as: Autentificare ca %{username}
@@ -681,9 +693,10 @@ ro:
         flag: Tip
     visits:
       title: "Vizite ale utilizatorilor"
-      xaxis: "Zi"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobil"
       yaxis: "Număr de vizite"
-      description: "Numărul de vizite ale utilizatorilor conectați."
     signups:
       xaxis: "Zi"
     new_contributors:

@@ -1,11 +1,11 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { empty, equal, notEmpty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 /** @type {import("discourse/helpers/element.gjs").default} */
@@ -19,49 +19,52 @@ import { i18n } from "discourse-i18n";
  * @property {object} Args
  *
  * // Text
- * @property {string} Args.title
- * @property {string} Args.translatedTitle
- * @property {string} Args.label
- * @property {string} Args.translatedLabel
+ * @property {string} [Args.title]
+ * @property {string} [Args.translatedTitle]
+ * @property {string} [Args.label]
+ * @property {string} [Args.translatedLabel]
  *
  * // Actions / events
- * @property {function|object} Args.action
- * @property {any} Args.actionParam
- * @property {boolean} Args.forwardEvent
- * @property {function} Args.onKeyDown
+ * @property {function|object} [Args.action]
+ * @property {any} [Args.actionParam]
+ * @property {boolean} [Args.forwardEvent]
+ * @property {function} [Args.onKeyDown]
  *
  * // Navigation
- * @property {string} Args.href
- * @property {string} Args.route
- * @property {object|object[]} Args.routeModels
+ * @property {string} [Args.href]
+ * @property {string} [Args.route]
+ * @property {object|object[]} [Args.routeModels]
  *
  * // State
- * @property {boolean} Args.isLoading
- * @property {boolean} Args.disabled
- * @property {boolean} Args.preventFocus
+ * @property {boolean} [Args.isLoading]
+ * @property {boolean} [Args.disabled]
+ * @property {boolean} [Args.preventFocus]
  *
  * // Display mode
  * @property {"link"} [Args.display]
  *
  * // Display / icon
- * @property {string} Args.icon
- * @property {boolean} Args.ellipsis
- * @property {string} Args.suffixIcon
+ * @property {string} [Args.icon]
+ * @property {boolean} [Args.ellipsis]
+ * @property {string} [Args.suffixIcon]
  *
  * // Accessibility
- * @property {string} Args.ariaLabel
- * @property {string} Args.translatedAriaLabel
- * @property {boolean} Args.ariaExpanded
- * @property {boolean} Args.ariaPressed
- * @property {string} Args.ariaControls
- * @property {boolean} Args.ariaHidden
+ * @property {string} [Args.ariaLabel]
+ * @property {string} [Args.translatedAriaLabel]
+ * @property {boolean} [Args.ariaExpanded]
+ * @property {boolean} [Args.ariaPressed]
+ * @property {string} [Args.ariaControls]
+ * @property {boolean} [Args.ariaHidden]
  *
  * // HTML attributes
- * @property {string} Args.type
- * @property {string} Args.id
- * @property {string} Args.form
- * @property {string} Args.tabindex
- * @property {string} Args.class
+ * @property {string} [Args.type]
+ * @property {string} [Args.id]
+ * @property {string} [Args.form]
+ * @property {string} [Args.tabindex]
+ * @property {string} [Args.class]
+ *
+ * // Root element type (enables ...attributes type checking)
+ * @property {HTMLButtonElement} Element
  *
  * // Optional yield
  * @property {object} Blocks
@@ -73,11 +76,20 @@ export default class DButton extends Component {
   @service router;
   @service capabilities;
 
-  @notEmpty("args.icon") btnIcon;
+  @computed("args.icon")
+  get btnIcon() {
+    return !isEmpty(this.args?.icon);
+  }
 
-  @equal("args.display", "link") btnLink;
+  @computed("args.display")
+  get btnLink() {
+    return this.args?.display === "link";
+  }
 
-  @empty("computedLabel") noText;
+  @computed("computedLabel")
+  get noText() {
+    return isEmpty(this.computedLabel);
+  }
 
   get forceDisabled() {
     return !!this.args.isLoading;
@@ -102,7 +114,7 @@ export default class DButton extends Component {
 
   get computedLabel() {
     if (this.args.label) {
-      return htmlSafe(i18n(this.args.label));
+      return trustHTML(i18n(this.args.label));
     }
     return this.args.translatedLabel;
   }
@@ -264,6 +276,8 @@ export default class DButton extends Component {
             &hellip;
           {{~/if~}}
         </span>
+      {{~else if (has-block)~}}
+        {{! Block content provides the label, no spacer needed }}
       {{~else if (or @icon @isLoading)~}}
         <span aria-hidden="true">
           &#8203;

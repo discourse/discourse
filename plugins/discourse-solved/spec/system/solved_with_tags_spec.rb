@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Solved with tags", type: :system do
+describe "Solved with tags" do
   fab!(:user)
   fab!(:replier, :user)
   fab!(:tag)

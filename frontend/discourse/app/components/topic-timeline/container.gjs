@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { actionDescriptionHtml } from "discourse/components/post-action-description";
@@ -171,7 +171,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get topicTitle() {
-    return htmlSafe(this.site.mobileView ? this.args.model.fancyTitle : "");
+    return trustHTML(this.site.mobileView ? this.args.model.fancyTitle : "");
   }
 
   get showTags() {
@@ -181,15 +181,15 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get style() {
-    return htmlSafe(`height: ${this.scrollareaHeight}px`);
+    return trustHTML(`height: ${this.scrollareaHeight}px`);
   }
 
   get beforePadding() {
-    return htmlSafe(`height: ${this.before}px`);
+    return trustHTML(`height: ${this.before}px`);
   }
 
   get afterPadding() {
-    return htmlSafe(`height: ${this.after}px`);
+    return trustHTML(`height: ${this.after}px`);
   }
 
   get showDockedButton() {
@@ -208,7 +208,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get lastReadStyle() {
-    return htmlSafe(
+    return trustHTML(
       `height: ${LAST_READ_HEIGHT}px; top: ${this.topPosition}px`
     );
   }
@@ -266,7 +266,7 @@ export default class TopicTimelineScrollArea extends Component {
 
   @bind
   calculatePosition() {
-    this.timelineScrollareaStyle = htmlSafe(
+    this.timelineScrollareaStyle = trustHTML(
       `height: ${this.scrollareaHeight}px`
     );
 
@@ -538,7 +538,7 @@ export default class TopicTimelineScrollArea extends Component {
         {{/if}}
 
         {{#if this.excerpt}}
-          <div class="post-excerpt">{{htmlSafe this.excerpt}}</div>
+          <div class="post-excerpt">{{trustHTML this.excerpt}}</div>
         {{/if}}
       </div>
     {{/if}}

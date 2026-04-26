@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Channel - Info - Settings page", type: :system do
+RSpec.describe "Channel - Info - Settings page" do
   fab!(:current_user, :user)
   fab!(:channel_1, :category_channel)
 

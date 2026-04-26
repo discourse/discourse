@@ -1,4 +1,4 @@
-export default {
+const userFixtures = {
   "/u/eviltrout.json": {
     user_badges: [
       {
@@ -3591,3 +3591,5 @@ export default {
     recent_searches: ["yellow", "blue"],
   },
 };
+
+export default userFixtures;

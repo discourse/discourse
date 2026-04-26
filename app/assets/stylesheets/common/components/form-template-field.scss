@@ -70,6 +70,12 @@
     color: var(--primary-medium);
   }
 
+  &__upload-hidden-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
   &__composer {
     // same default effective height (150px) than a text control
     height: 189px;

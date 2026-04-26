@@ -2,7 +2,7 @@
 
 require "discourse_ip_info"
 
-describe "Viewing reviewable item", type: :system do
+describe "Viewing reviewable item" do
   fab!(:admin)
   fab!(:moderator)
   fab!(:group)
@@ -252,6 +252,30 @@ describe "Viewing reviewable item", type: :system do
         expect(review_page).to have_account_in_modal(other_user.username)
       end
 
+      it "shows correct IP when navigating between reviewables" do
+        other_reviewable =
+          Fabricate(
+            :reviewable_flagged_post,
+            target_created_by: Fabricate(:user, ip_address: "2.125.160.216"),
+          )
+
+        Resolv::DNS
+          .any_instance
+          .stubs(:getname)
+          .with("2.125.160.216")
+          .returns("ip-2-125-160-216.example.com")
+
+        review_page.visit_reviewable(reviewable_flagged_post)
+        review_page.click_insights_tab
+
+        expect(review_page).to have_ip_hostname("ip-81-2-69-142.example.com")
+
+        review_page.visit_reviewable(other_reviewable)
+        review_page.click_insights_tab
+
+        expect(review_page).to have_ip_hostname("ip-2-125-160-216.example.com")
+      end
+
       context "when category moderator" do
         fab!(:category)
         fab!(:trust_level_1_user, :trust_level_1)
@@ -270,11 +294,10 @@ describe "Viewing reviewable item", type: :system do
         end
 
         it "does not show IP information" do
-          visit "/"
           review_page.visit_reviewable(reviewable_flagged_post)
           review_page.click_insights_tab
 
-          expect(page).not_to have_text("The requested URL or resource could not be found.")
+          expect(review_page).to have_no_ip_lookup_info
         end
       end
     end

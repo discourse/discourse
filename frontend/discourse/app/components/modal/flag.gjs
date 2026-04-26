@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import FlagActionType from "discourse/components/flag-action-type";
@@ -237,7 +237,7 @@ export default class Flag extends Component {
       {{on "keydown" this.onKeydown}}
     >
       <:body>
-        <p>{{htmlSafe (i18n "flagging.review_process_description")}}</p>
+        <p>{{trustHTML (i18n "flagging.review_process_description")}}</p>
         <PluginOutlet
           @name="after-flag-modal-review-process-description"
           @connectorTagName="div"

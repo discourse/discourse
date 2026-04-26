@@ -1215,7 +1215,6 @@ export default class SelectKit extends Component {
   _deprecated(text) {
     deprecated(text, {
       since: "v2.4.0",
-      dropFrom: "2.9.0.beta1",
       id: "discourse.select-kit",
     });
   }

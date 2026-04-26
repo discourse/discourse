@@ -71,6 +71,15 @@ class Plugin::Instance
     File.dirname(path)
   end
 
+  def resolved_dir
+    @resolved_dir ||=
+      if File.symlink?(root_dir)
+        File.expand_path(File.readlink(root_dir), "#{Rails.root}/plugins")
+      else
+        root_dir
+      end
+  end
+
   def seed_data
     @seed_data ||= ActiveSupport::HashWithIndifferentAccess.new({})
   end
@@ -1039,6 +1048,24 @@ class Plugin::Instance
   def add_api_parameter_route(methods: nil, actions: nil, formats: nil)
     DiscoursePluginRegistry.register_api_parameter_route(
       RouteMatcher.new(methods: methods, actions: actions, formats: formats),
+      self,
+    )
+  end
+
+  # Register an additional calendar subscription feed that appears in the user's
+  # calendar subscription preferences. Each feed needs a name (unique key),
+  # user API key scope name, and a lambda that builds the URL given (base_url, user, key).
+  #
+  # Example:
+  #   register_calendar_subscription_feed(
+  #     name: "all_events",
+  #     scope: "discourse-calendar:events_calendar",
+  #     description_key: "discourse_calendar.preferences.all_events_description",
+  #     url: ->(base_url, user, key) { "#{base_url}/events.ics?user_api_key=#{key}" }
+  #   )
+  def register_calendar_subscription_feed(name:, scope:, description_key:, url:)
+    DiscoursePluginRegistry.register_calendar_subscription_feed(
+      { name: name, scope: scope, description_key: description_key, url: url },
       self,
     )
   end

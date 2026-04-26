@@ -1,5 +1,5 @@
 import { Textarea } from "@ember/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
@@ -26,12 +26,12 @@ export default <template>
       <hr />
       <div class="text">
         <h3>{{i18n "admin.email.advanced_test.text"}}</h3>
-        <pre class="full-reason">{{htmlSafe @controller.text}}</pre>
+        <pre class="full-reason">{{trustHTML @controller.text}}</pre>
       </div>
       <hr />
       <div class="elided">
         <h3>{{i18n "admin.email.advanced_test.elided"}}</h3>
-        <pre class="full-reason">{{htmlSafe @controller.elided}}</pre>
+        <pre class="full-reason">{{trustHTML @controller.elided}}</pre>
       </div>
     {{/if}}
   </ConditionalLoadingSpinner>

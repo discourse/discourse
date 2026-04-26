@@ -11,14 +11,13 @@ import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-man
 export default class AiBotHeaderIcon extends Component {
   @service appEvents;
   @service currentUser;
-  @service navigationMenu;
   @service sidebarState;
   @service siteSettings;
   @service aiConversationsSidebarManager;
 
   get bots() {
     const availableBots = this.currentUser.ai_enabled_chat_bots
-      .filter((bot) => !bot.is_persona || bot.has_default_llm)
+      .filter((bot) => !bot.is_agent || bot.has_default_llm)
       .filter(Boolean);
 
     return availableBots ? availableBots.map((bot) => bot.model_name) : [];
@@ -44,10 +43,7 @@ export default class AiBotHeaderIcon extends Component {
   }
 
   get clickShouldRouteOutOfConversations() {
-    return (
-      !this.navigationMenu.isHeaderDropdownMode &&
-      this.sidebarState.currentPanel?.key === AI_CONVERSATIONS_PANEL
-    );
+    return this.sidebarState.currentPanel?.key === AI_CONVERSATIONS_PANEL;
   }
 
   get href() {

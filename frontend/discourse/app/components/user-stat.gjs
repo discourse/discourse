@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import formatDuration from "discourse/helpers/format-duration";
 import number from "discourse/helpers/number";
@@ -31,7 +31,7 @@ export default class UserStat extends Component {
       </span>
       <span class="label">
         {{#if @icon}}{{icon @icon}}{{/if}}
-        {{htmlSafe (i18n @label count=@value)}}
+        {{trustHTML (i18n @label count=@value)}}
       </span>
     </div>
   </template>

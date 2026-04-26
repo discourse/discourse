@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Discourse Math - chat message", type: :system do
+RSpec.describe "Discourse Math - chat message" do
   fab!(:current_user, :admin)
   fab!(:channel, :chat_channel)
 

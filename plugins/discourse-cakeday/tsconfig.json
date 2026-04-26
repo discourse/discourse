@@ -1,12 +1,16 @@
 {
   "extends": "discourse/tsconfig-plugin",
   "include": [
-    "./assets/javascripts/**/*",
-    "./test/javascripts/**/*"
+    "admin/assets/javascripts/**/*",
+    "assets/javascripts/**/*",
+    "test/javascripts/**/*"
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-cakeday/*": ["./assets/javascripts/*"]
+      "discourse/plugins/discourse-cakeday/*": ["./assets/javascripts/*"],
+      "discourse/plugins/discourse-cakeday/admin/*": [
+        "./admin/assets/javascripts/admin/*"
+      ]
     }
   }
 }

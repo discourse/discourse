@@ -91,8 +91,8 @@ module Onebox
       end
 
       def status_date_label(status)
-        key = status.presence || "opened"
-        I18n.t("onebox.github.status_date.#{key}", default: I18n.t("onebox.github.opened"))
+        key = status.presence || "open"
+        I18n.t("onebox.github.status_date.#{key}")
       end
 
       def pr_status_title(status)

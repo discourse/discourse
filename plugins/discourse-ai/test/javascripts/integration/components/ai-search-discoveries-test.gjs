@@ -13,7 +13,7 @@ module("Integration | Component | ai-search-discoveries", function (hooks) {
 
   hooks.beforeEach(function () {
     this.siteSettings.ai_discover_enabled = true;
-    this.currentUser.can_use_ai_discover_persona = true;
+    this.currentUser.can_use_ai_discover_agent = true;
 
     this.closeSearchMenuCalled = false;
     this.closeSearchMenu = () => {

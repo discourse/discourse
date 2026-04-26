@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
 
 const Post = <template>
@@ -29,7 +29,7 @@ const Post = <template>
 
       <blockquote>
         <p>
-          {{htmlSafe @ctx.post.excerpt}}
+          {{trustHTML @ctx.post.excerpt}}
         </p>
       </blockquote>
     </aside>

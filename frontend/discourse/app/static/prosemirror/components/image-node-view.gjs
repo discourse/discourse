@@ -4,7 +4,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
+import { waitForPromise } from "@ember/test-waiters";
 import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
@@ -314,7 +315,7 @@ export default class ImageNodeView extends Component {
 
     const scale = (this.args.node.attrs.scale ?? 100) / 100;
 
-    return htmlSafe(`width: ${width * scale}px`);
+    return trustHTML(`width: ${width * scale}px`);
   }
 
   get isInGrid() {
@@ -627,7 +628,9 @@ async function openLightbox(editorElement, currentImage) {
     };
   });
 
-  const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
+  const { default: PhotoSwipeLightbox } = await waitForPromise(
+    import("photoswipe/lightbox")
+  );
   const isTestEnv = isTesting() || isRailsTesting();
 
   const lightbox = new PhotoSwipeLightbox({
@@ -637,7 +640,7 @@ async function openLightbox(editorElement, currentImage) {
     zoomTitle: i18n("lightbox.zoom"),
     arrowPrevTitle: i18n("lightbox.previous"),
     arrowNextTitle: i18n("lightbox.next"),
-    pswpModule: () => import("photoswipe"),
+    pswpModule: () => waitForPromise(import("photoswipe")),
     tapAction: (pt, e) => {
       if (e.target.classList.contains("pswp__img")) {
         lightbox.pswp?.element?.classList.toggle("pswp--ui-visible");

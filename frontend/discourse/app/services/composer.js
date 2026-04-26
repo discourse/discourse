@@ -1,7 +1,6 @@
-/* eslint-disable ember/no-observers, ember/no-side-effects */
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
-import EmberObject, { action, computed } from "@ember/object";
-import { alias, and, or, reads } from "@ember/object/computed";
+import EmberObject, { action, computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, next, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
@@ -20,6 +19,7 @@ import {
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting } from "discourse/lib/environment";
 import prepareFormTemplateData, {
@@ -102,6 +102,7 @@ export default class ComposerService extends Service {
   @service messageBus;
   @service modal;
   @service router;
+  @service session;
   @service site;
   @service siteSettings;
   @service store;
@@ -126,15 +127,98 @@ export default class ComposerService extends Service {
 
   composerHeight = null;
 
-  @and("site.mobileView", "showPreview") forcePreview;
-  @alias("site.categoriesList") categories;
-  @alias("topicController.model") topicModel;
-  @reads("currentUser.staff") isStaffUser;
-  @reads("currentUser.whisperer") whisperer;
-  @and("model.creatingTopic", "isStaffUser") canUnlistTopic;
-  @or("replyingToWhisper", "model.whisper") isWhispering;
-
   @tracked _showPreview;
+
+  @tracked _isStaffUserOverride;
+  @tracked _whispererOverride;
+
+  init() {
+    super.init(...arguments);
+    window.addEventListener("beforeunload", this._beaconSaveDraft);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("beforeunload", this._beaconSaveDraft);
+  }
+
+  @bind
+  _beaconSaveDraft() {
+    if (!this._saveDraftDebounce || !this.model || !this.model.canSaveDraft) {
+      return;
+    }
+
+    cancel(this._saveDraftDebounce);
+    this._saveDraftDebounce = null;
+
+    const draftSequence = this.model.draftSequence;
+    this.model.set("draftSequence", draftSequence + 1);
+
+    Draft.saveBeacon(
+      this.model.draftKey,
+      draftSequence,
+      this.model.serializeDraftData(),
+      this.messageBus.clientId,
+      this.session.csrfToken
+    );
+  }
+
+  @computed("site.mobileView", "showPreview")
+  get forcePreview() {
+    return this.site?.mobileView && this.showPreview;
+  }
+
+  @computed("site.categoriesList")
+  get categories() {
+    return this.site?.categoriesList;
+  }
+
+  set categories(value) {
+    set(this, "site.categoriesList", value);
+  }
+
+  @computed("topicController.model")
+  get topicModel() {
+    return this.topicController?.model;
+  }
+
+  set topicModel(value) {
+    set(this, "topicController.model", value);
+  }
+
+  @computed("currentUser.staff")
+  get isStaffUser() {
+    if (this._isStaffUserOverride !== undefined) {
+      return this._isStaffUserOverride;
+    }
+    return this.currentUser?.staff;
+  }
+
+  set isStaffUser(value) {
+    this._isStaffUserOverride = value;
+  }
+
+  @computed("currentUser.whisperer")
+  get whisperer() {
+    if (this._whispererOverride !== undefined) {
+      return this._whispererOverride;
+    }
+    return this.currentUser?.whisperer;
+  }
+
+  set whisperer(value) {
+    this._whispererOverride = value;
+  }
+
+  @computed("model.creatingTopic", "isStaffUser")
+  get canUnlistTopic() {
+    return this.model?.creatingTopic && this.isStaffUser;
+  }
+
+  @computed("replyingToWhisper", "model.whisper")
+  get isWhispering() {
+    return this.replyingToWhisper || this.model?.whisper;
+  }
 
   get showPreview() {
     return (
@@ -296,15 +380,10 @@ export default class ComposerService extends Service {
 
   @computed
   get showToolbar() {
-    const storedVal = this.keyValueStore.get("toolbar-enabled");
-    if (this._toolbarEnabled === undefined && storedVal === undefined) {
-      // iPhone 6 is 375, anything narrower and toolbar should
-      // be default disabled.
-      // That said we should remember the state
-      this._toolbarEnabled =
-        window.innerWidth > 370 && !this.capabilities.isAndroid;
-    }
-    return this._toolbarEnabled || storedVal === "true";
+    return (
+      this._toolbarEnabled ??
+      this.keyValueStore.get("toolbar-enabled") !== "false"
+    );
   }
 
   set showToolbar(val) {
@@ -390,6 +469,18 @@ export default class ComposerService extends Service {
     }
 
     return SAVE_LABELS[this.model?.action];
+  }
+
+  @computed("model.editingPost")
+  get cancelLabel() {
+    return this.model?.editingPost
+      ? "composer.cancel_edit"
+      : "composer.discard";
+  }
+
+  @computed("model.editingPost")
+  get cancelIcon() {
+    return this.model?.editingPost ? "xmark" : "trash-can";
   }
 
   @computed("whisperer", "model.action")
@@ -858,7 +949,7 @@ export default class ComposerService extends Service {
             );
           } else {
             const wrapTag = attributesString.trim()
-              ? `[wrap ${attributesString}]`
+              ? `[wrap${attributesString}]`
               : "[wrap]";
             toolbarEvent.applySurround(
               `${wrapTag}\n`,
@@ -1214,7 +1305,7 @@ export default class ComposerService extends Service {
         if (result.responseJson.action === "enqueued") {
           this.postWasEnqueued(result.responseJson);
           if (result.responseJson.pending_post) {
-            let pendingPosts = this.topicController.model.pending_posts;
+            let pendingPosts = this.topicController.model?.pending_posts;
             if (pendingPosts) {
               pendingPosts.push(result.responseJson.pending_post);
             }
@@ -1677,6 +1768,12 @@ export default class ComposerService extends Service {
       if (this.get("model.anyDirty")) {
         this.modal.show(DiscardDraftModal, {
           model: {
+            confirmMessageKey: this.get("model.editingPost")
+              ? "post.cancel_composer.confirm_edit"
+              : "post.cancel_composer.confirm",
+            discardButtonKey: this.get("model.editingPost")
+              ? "post.cancel_composer.discard_edit"
+              : "post.cancel_composer.discard",
             onDestroyDraft: () => {
               return this.destroyDraft()
                 .then(() => {

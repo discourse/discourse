@@ -51,6 +51,7 @@ import {
   replaceCategoryLinkRenderer,
 } from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
+import { registerReviewableStatusName } from "discourse/helpers/reviewable-status";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
@@ -139,7 +140,6 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
-import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 
 const blockedModifications = ["component:topic-list"];
@@ -197,7 +197,6 @@ function wrapWithErrorHandler(func, messageKey) {
 class _PluginApi {
   constructor(container) {
     this.container = container;
-    this.h = warnWidgetsDecommissioned;
   }
 
   /**
@@ -694,20 +693,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  decorateWidget() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  attachWidgetAction() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
    * @deprecated
    *
    * This function is now an alias to `api.addTrackedPostProperties`.
@@ -916,18 +901,10 @@ class _PluginApi {
       {
         id: "discourse.add-toolbar-popup-menu-options-callback",
         since: "3.2",
-        dropFrom: "3.3",
       }
     );
 
     this.addComposerToolbarPopupMenuOption(opts);
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  cleanupStream() {
-    warnWidgetsDecommissioned();
   }
 
   /**
@@ -1027,13 +1004,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  changeWidgetSetting() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
    * Prevents a specific post from being cloaked during scroll.
    *
    * This is useful, for example, for posts that apply customizations that hold state which
@@ -1052,38 +1022,6 @@ class _PluginApi {
    **/
   preventCloak(postId, prevent = true) {
     preventCloaking(postId, prevent);
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  createWidget() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  reopenWidget() {
-    warnWidgetsDecommissioned();
-  }
-
-  addFlagProperty() {
-    deprecated(
-      "addFlagProperty has been removed. Use the reviewable API instead.",
-      { id: "discourse.add-flag-property" }
-    );
-  }
-
-  /**
-   * @deprecated Use `api.headerIcons` instead.
-   */
-  addHeaderPanel() {
-    // eslint-disable-next-line no-console
-    console.error(
-      consolePrefix(),
-      `api.addHeaderPanel: This API was decommissioned. Use api.headerIcons instead.`
-    );
   }
 
   /**
@@ -1417,13 +1355,6 @@ class _PluginApi {
 
   addCustomUserFieldValidationCallback(callback) {
     addCustomUserFieldValidationCallback(callback);
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  addPostTransformCallback() {
-    warnWidgetsDecommissioned();
   }
 
   /**
@@ -2190,6 +2121,14 @@ class _PluginApi {
    * @deprecated Use `addSaveableUserOption` instead
    */
   addSaveableUserOptionField(fieldName, options = {}) {
+    deprecated(
+      "`addSaveableUserOptionField` has been renamed to `addSaveableUserOption`",
+      {
+        id: "discourse.add-saveable-user-option-field",
+        since: "2026.3",
+      }
+    );
+
     this.addSaveableUserOption(fieldName, options);
   }
 
@@ -2266,6 +2205,25 @@ class _PluginApi {
    **/
   registerReviewableActionModal(reviewableType, modalClass) {
     registerReviewableActionModal(reviewableType, modalClass);
+  }
+
+  /**
+   * Register custom status names for a reviewable type, used in the
+   * review queue status badge (e.g. "Tool approved" instead of "Flag approved").
+   *
+   * The names are i18n key suffixes looked up as `review.statuses.{name}.title`.
+   *
+   * @param {String} reviewableType - The reviewable class name (e.g. "ReviewableAiToolAction")
+   * @param {String} approvedName - Status name for approved items
+   * @param {String} rejectedName - Status name for rejected items
+   *
+   * @example
+   * ```
+   * api.registerReviewableStatusName("ReviewableAiToolAction", "approved_tool_action", "rejected_tool_action");
+   * ```
+   **/
+  registerReviewableStatusName(reviewableType, approvedName, rejectedName) {
+    registerReviewableStatusName(reviewableType, approvedName, rejectedName);
   }
 
   /**
@@ -2469,13 +2427,6 @@ class _PluginApi {
    */
   addUserSearchOption(value) {
     CUSTOM_USER_SEARCH_OPTIONS.push(value);
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  dispatchWidgetAppEvent() {
-    warnWidgetsDecommissioned();
   }
 
   /**

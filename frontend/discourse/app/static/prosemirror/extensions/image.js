@@ -1,6 +1,7 @@
 import {
   lookupCachedUploadUrl,
   lookupUncachedUploadUrls,
+  MISSING,
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
@@ -227,7 +228,9 @@ const extension = {
 
           for (const { src } of unresolvedUrls) {
             const cachedUrl = lookupCachedUploadUrl(src).url;
-            if (cachedUrl) {
+            if (cachedUrl === MISSING) {
+              continue;
+            } else if (cachedUrl) {
               resolvedUrls[src] = cachedUrl;
             } else {
               uncachedSrcs.push(src);

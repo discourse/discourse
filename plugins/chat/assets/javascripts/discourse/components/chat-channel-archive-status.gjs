@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -22,7 +22,7 @@ export default class ChatChannelArchiveStatus extends Component {
     const translationKey = !archive.topicId
       ? "chat.channel_status.archive_failed_no_topic"
       : "chat.channel_status.archive_failed";
-    return htmlSafe(
+    return trustHTML(
       i18n(translationKey, {
         completed: archive.messages,
         total: archive.totalMessages,
@@ -32,7 +32,7 @@ export default class ChatChannelArchiveStatus extends Component {
   }
 
   get channelArchiveCompletedMessage() {
-    return htmlSafe(
+    return trustHTML(
       i18n("chat.channel_status.archive_completed", {
         topic_url: this.topicUrl,
       })

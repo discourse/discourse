@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import BooleanField from "discourse/admin/components/schema-setting/types/boolean";
 import CategoriesField from "discourse/admin/components/schema-setting/types/categories";
 import DatetimeField from "discourse/admin/components/schema-setting/types/datetime";
@@ -48,7 +48,7 @@ export default class SchemaSettingField extends Component {
       return;
     }
 
-    return htmlSafe(this.args.description.trim().replace(/\n/g, "<br>"));
+    return trustHTML(this.args.description.trim().replace(/\n/g, "<br>"));
   }
 
   <template>

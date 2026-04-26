@@ -35,6 +35,7 @@ class Admin::ApiController < Admin::AdminController
     scopes =
       ApiKeyScope
         .scope_mappings
+        .sort_by { |resource, _| resource.to_s }
         .reduce({}) do |memo, (resource, actions)|
           memo.tap do |m|
             m[resource] = actions.map do |k, v|

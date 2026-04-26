@@ -20,8 +20,8 @@ module DiscourseAi
 
           custom_prompt_allowed_group_ids =
             DB.query_single(
-              "SELECT allowed_group_ids FROM ai_personas WHERE id = :customp_prompt_persona_id",
-              customp_prompt_persona_id: SiteSetting.ai_helper_custom_prompt_persona,
+              "SELECT allowed_group_ids FROM ai_agents WHERE id = :customp_prompt_agent_id",
+              customp_prompt_agent_id: SiteSetting.ai_helper_custom_prompt_agent,
             ).flatten
 
           scope.user.in_any_groups?(custom_prompt_allowed_group_ids)

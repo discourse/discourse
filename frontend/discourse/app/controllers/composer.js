@@ -18,7 +18,6 @@ function clearPopupMenuOptionsCallback() {
     {
       id: "discourse.composer-controller.clear-popup-menu-options-callback",
       since: "3.2",
-      dropFrom: "3.3",
     }
   );
 

@@ -1,5 +1,4 @@
 import { action, computed } from "@ember/object";
-import { equal, gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
@@ -44,8 +43,15 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
   seq = 0;
 
-  @equal("action", EDIT) isEditing;
-  @gt("topic.slow_mode_seconds", 0) isInSlowMode;
+  @computed("action")
+  get isEditing() {
+    return this.action === EDIT;
+  }
+
+  @computed("topic.slow_mode_seconds")
+  get isInSlowMode() {
+    return this.topic?.slow_mode_seconds > 0;
+  }
 
   @computed("isEditing", "action", "whisper", "noBump", "isInSlowMode")
   get iconForComposerAction() {
@@ -64,7 +70,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     } else if (this.isEditing) {
       return "pencil";
     } else {
-      return "share";
+      return "reply";
     }
   }
 
@@ -163,7 +169,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
           postUsername: _postSnapshot.username,
         }),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_post",
       });
     }
@@ -180,7 +186,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       items.push({
         name: i18n("composer.composer_actions.reply_to_topic.label"),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_topic",
       });
     }

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import {
   applyHtmlDecorators,
@@ -111,11 +111,11 @@ export default class PollResultsPieComponent extends Component {
   });
 
   get canvasId() {
-    return htmlSafe(`poll-results-chart-${this.args.id}`);
+    return trustHTML(`poll-results-chart-${this.args.id}`);
   }
 
   get legendId() {
-    return htmlSafe(`poll-results-legend-${this.args.id}`);
+    return trustHTML(`poll-results-legend-${this.args.id}`);
   }
 
   @action

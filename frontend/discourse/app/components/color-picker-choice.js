@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
@@ -25,7 +25,7 @@ export default class ColorPickerChoice extends Component {
 
   @computed("color")
   get style() {
-    return htmlSafe(`background-color: #${this.color};`);
+    return trustHTML(`background-color: #${this.color};`);
   }
 
   click(e) {

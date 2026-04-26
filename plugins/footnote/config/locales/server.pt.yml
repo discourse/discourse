@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 pt:
+  site_settings:
+    enable_markdown_footnotes: ativar Markdown para notas de rodapé neste site
+    display_footnotes_inline: ativar a expansão inline de notas de rodapé

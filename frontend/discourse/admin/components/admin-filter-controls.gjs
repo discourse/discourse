@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
 import FilterInput from "discourse/components/filter-input";
@@ -42,7 +42,7 @@ export default class AdminFilterControls extends Component {
   @tracked dropdownFilter = "all";
   @tracked
   showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
-  dropdownFilters = new TrackedObject();
+  dropdownFilters = trackedObject();
 
   constructor() {
     super(...arguments);

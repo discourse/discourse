@@ -71,6 +71,23 @@ RSpec.describe UpcomingChanges do
       expect(result[:width]).to eq(244)
       expect(result[:height]).to eq(66)
     end
+
+    context "when include_file_path is true" do
+      it "returns the image URL, width, height, and file path" do
+        result = described_class.image_data(setting_name, include_file_path: true)
+
+        expect(result[:file_path]).to eq(
+          File.join(
+            Rails.root,
+            "spec",
+            "fixtures",
+            "images",
+            "upcoming_changes",
+            "#{setting_name}.png",
+          ),
+        )
+      end
+    end
   end
 
   describe ".change_metadata" do
@@ -365,6 +382,208 @@ RSpec.describe UpcomingChanges do
 
       expect(history.count).to eq(0)
       expect(history).to be_a(ActiveRecord::Relation)
+    end
+  end
+
+  describe ".enabled?" do
+    after do
+      SiteSetting.remove_override!(setting_name)
+      SiteSetting.promote_upcoming_changes_on_status = :stable
+      UpcomingChanges.clear_caches!
+    end
+
+    context "when the setting has no row in the database (admin has not saved it)" do
+      before { SiteSetting.remove_override!(setting_name) }
+
+      it "returns the yaml default when the change is below promote_upcoming_changes_on_status" do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :experimental,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+          },
+        )
+        SiteSetting.promote_upcoming_changes_on_status = :stable
+
+        expect(described_class.enabled?(setting_name)).to eq(SiteSetting.defaults[setting_name])
+      end
+
+      it "returns true when the change meets or exceeds promote_upcoming_changes_on_status" do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :stable,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+          },
+        )
+        SiteSetting.promote_upcoming_changes_on_status = :stable
+
+        expect(described_class.enabled?(setting_name)).to eq(true)
+      end
+    end
+
+    context "when an admin has saved a value to the database" do
+      it "returns the stored value when true" do
+        SiteSetting.enable_upload_debug_mode = true
+
+        expect(described_class.enabled?(setting_name)).to eq(true)
+      end
+
+      it "returns the stored value when false even when the change meets promote_upcoming_changes_on_status" do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :beta,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+          },
+        )
+        SiteSetting.promote_upcoming_changes_on_status = :beta
+        SiteSetting.enable_upload_debug_mode = false
+
+        expect(described_class.enabled?(setting_name)).to eq(false)
+      end
+    end
+
+    context "when the change is permanent" do
+      before do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :permanent,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+          },
+        )
+      end
+
+      it "returns true even when the database value is false" do
+        SiteSetting.enable_upload_debug_mode = false
+
+        expect(described_class.enabled?(setting_name)).to eq(true)
+      end
+    end
+  end
+
+  describe ".current_statuses" do
+    include ActiveSupport::Testing::TimeHelpers
+
+    before { described_class.clear_caches! }
+
+    after do
+      described_class.clear_caches!
+      UpcomingChangeEvent.where(upcoming_change_name: "timeline_status_setting").delete_all
+    end
+
+    it "returns an empty hash when there are no status_changed events" do
+      expect(described_class.current_statuses).to eq({})
+    end
+
+    it "maps each upcoming change to the latest status_changed new_value and timestamp" do
+      travel_to Time.zone.parse("2024-06-01 12:00:00") do
+        UpcomingChangeEvent.create!(
+          event_type: :status_changed,
+          upcoming_change_name: "timeline_status_setting",
+          event_data: {
+            "previous_value" => "alpha",
+            "new_value" => "beta",
+          },
+        )
+      end
+
+      latest_event =
+        travel_to(Time.zone.parse("2024-06-15 12:00:00")) do
+          UpcomingChangeEvent.create!(
+            event_type: :status_changed,
+            upcoming_change_name: "timeline_status_setting",
+            event_data: {
+              "previous_value" => "beta",
+              "new_value" => "stable",
+            },
+          )
+        end
+
+      result = described_class.current_statuses
+
+      expect(result["timeline_status_setting"]).to eq(
+        { status: "stable", changed_at: latest_event.created_at },
+      )
+    end
+
+    it "caches the result so the SQL runs only once until the cache key is deleted" do
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_status_setting",
+        event_data: {
+          "previous_value" => nil,
+          "new_value" => "experimental",
+        },
+      )
+
+      allow(DB).to receive(:query).and_call_original
+
+      2.times { described_class.current_statuses }
+      expect(DB).to have_received(:query).once
+
+      described_class.clear_caches!
+
+      described_class.current_statuses
+      expect(DB).to have_received(:query).twice
+    end
+  end
+
+  describe ".permanent_upcoming_changes" do
+    before do
+      described_class.clear_caches!
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :permanent,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+    end
+
+    after { described_class.clear_caches! }
+
+    it "returns only changes whose metadata status is permanent" do
+      list = described_class.permanent_upcoming_changes
+
+      expect(list.all? { |c| described_class.change_status(c[:setting]) == :permanent }).to eq(true)
+      expect(list.map { |c| c[:setting] }).to include(:enable_upload_debug_mode)
+    end
+
+    it "caches the list so UpcomingChanges::List runs only once until the cache key is deleted" do
+      allow(UpcomingChanges::List).to receive(:call).and_call_original
+
+      2.times { described_class.permanent_upcoming_changes }
+      expect(UpcomingChanges::List).to have_received(:call).once
+
+      described_class.clear_caches!
+
+      described_class.permanent_upcoming_changes
+      expect(UpcomingChanges::List).to have_received(:call).twice
+    end
+  end
+
+  describe ".clear_caches!" do
+    it "clears the latest new feature created_at cache" do
+      Discourse.redis.set("latest_new_feature_created_at", Time.zone.now.iso8601)
+      described_class.clear_caches!
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_nil
     end
   end
 

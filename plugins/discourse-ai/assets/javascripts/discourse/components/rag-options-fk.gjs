@@ -40,9 +40,10 @@ export default class RagOptionsFk extends Component {
         @title={{i18n "discourse_ai.rag.options.rag_chunk_tokens"}}
         @tooltip={{i18n "discourse_ai.rag.options.rag_chunk_tokens_help"}}
         @format="large"
+        @type="input-number"
         as |field|
       >
-        <field.Input @type="number" step="any" lang="en" />
+        <field.Control step="any" lang="en" />
       </@form.Field>
 
       <@form.Field
@@ -52,9 +53,10 @@ export default class RagOptionsFk extends Component {
           "discourse_ai.rag.options.rag_chunk_overlap_tokens_help"
         }}
         @format="large"
+        @type="input-number"
         as |field|
       >
-        <field.Input @type="number" step="any" lang="en" />
+        <field.Control step="any" lang="en" />
       </@form.Field>
 
       {{#if @allowImages}}
@@ -63,16 +65,17 @@ export default class RagOptionsFk extends Component {
           @title={{i18n "discourse_ai.rag.options.rag_llm_model"}}
           @tooltip={{i18n "discourse_ai.rag.options.rag_llm_model_help"}}
           @format="large"
+          @type="custom"
           as |field|
         >
-          <field.Custom>
+          <field.Control>
             <AiLlmSelector
               @value={{field.value}}
               @llms={{this.visionLlms}}
               @onChange={{field.set}}
-              class="ai-persona-editor__llms"
+              class="ai-agent-editor__llms"
             />
-          </field.Custom>
+          </field.Control>
         </@form.Field>
       {{/if}}
       {{yield}}

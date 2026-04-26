@@ -26,7 +26,14 @@ class ThemeJavascriptCompiler
   def compile!
     if !@compiled
       @compiled = true
-      @input_tree.transform_keys! { |k| k.sub(/\.js\.es6$/, ".js") }
+      @input_tree =
+        @input_tree.to_h do |k, v|
+          if k.end_with?(".js.es6")
+            [k.sub(/\.js\.es6$/, ".js"), AssetProcessor.append_es6_deprecation(v, k)]
+          else
+            [k, v]
+          end
+        end
       @input_tree.freeze
 
       output =

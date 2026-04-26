@@ -21,6 +21,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_be_merged,
              :full_suspend_reason,
              :suspended_till,
+             :full_silence_reason,
              :silence_reason,
              :penalty_counts,
              :next_penalty,
@@ -194,6 +195,6 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def include_upcoming_changes_stats?
-    SiteSetting.enable_upcoming_changes && scope.is_staff?
+    scope.is_staff?
   end
 end

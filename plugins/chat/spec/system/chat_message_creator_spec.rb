@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat message creator", type: :system do
+RSpec.describe "Chat message creator" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
   fab!(:current_user, :user)

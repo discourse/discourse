@@ -6,10 +6,6 @@
 
 hu:
   accepted_answer: "Elfogadott válasz"
-  category_types:
-    support:
-      name: "Támogatás"
-      title: "támogatás"
   site_settings:
     solved_enabled: "Solved plugin engedélyezése, hogy a felhasználók kiválaszthassák a megoldást a témához"
     allow_solved_on_all_topics: "A felhasználók kiválaszthatják a megoldásokat az összes témában (ha nincs bejelölve, akkor a megoldások kategóriánként vagy címkénként kapcsolhatók be)"

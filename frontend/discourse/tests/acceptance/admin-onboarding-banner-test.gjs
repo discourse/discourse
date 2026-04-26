@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { click, settled, visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
@@ -12,6 +12,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
   needs.user({
     admin: true,
     groups: [AUTO_GROUPS.admins],
+    show_site_owner_onboarding: true,
   });
 
   needs.settings({
@@ -72,9 +73,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert.dom(".admin-onboarding-banner").exists();
 
     await click(".admin-onboarding-banner .btn-close");
-    this.siteSettings.enable_site_owner_onboarding = false;
-
-    await settled();
     assert.dom(".admin-onboarding-banner").doesNotExist();
   });
 
@@ -108,7 +106,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
               title = "admin_onboarding_banner.start_posting.extra_option";
               body =
                 "admin_onboarding_banner.start_posting.extra_option_description";
-              actionLabel = "admin_onboarding_banner.start_posting.use_extra";
 
               @action
               onSelect() {
@@ -129,10 +126,71 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await step.clickAction();
 
-    assert.dom(".option").exists({ count: 2 });
-    await click(".extra-option .btn");
+    assert.dom(".start-posting-options-modal__card").exists({ count: 2 });
+    await click(".start-posting-options-modal__card.extra-option");
 
     step.isChecked();
+  });
+
+  test("registered posting-option can be disabled when step is complete", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "admin-onboarding-start-posting-options",
+        ({ value }) => {
+          value.push(
+            class CompletingOption extends StartPostingOption {
+              @service appEvents;
+
+              name = "completing-option";
+              title = "admin_onboarding_banner.start_posting.extra_option";
+              body =
+                "admin_onboarding_banner.start_posting.extra_option_description";
+
+              @action
+              onSelect() {
+                this.appEvents.trigger("admin-onboarding:posting-complete");
+                this.args.closeModal();
+              }
+            }
+          );
+
+          value.push(
+            class HideableOption extends StartPostingOption {
+              name = "hideable-option";
+              title = "admin_onboarding_banner.start_posting.extra_option";
+              body =
+                "admin_onboarding_banner.start_posting.extra_option_description";
+
+              get disableAction() {
+                return this.args.isComplete;
+              }
+
+              @action
+              onSelect() {}
+            }
+          );
+
+          return value;
+        }
+      );
+    });
+
+    await visit("/");
+
+    await withStep("start_posting", assert).clickAction();
+
+    assert.dom(".start-posting-options-modal__card").exists({ count: 3 });
+    assert
+      .dom(".start-posting-options-modal__card.hideable-option")
+      .isNotDisabled("card is enabled before step completion");
+
+    await click(".start-posting-options-modal__card.completing-option");
+
+    await withStep("start_posting", assert).clickAction();
+
+    assert
+      .dom(".start-posting-options-modal__card.hideable-option")
+      .isDisabled("card is disabled after step completion");
   });
 
   test("it can complete `invite_collaborators` step", async function (assert) {

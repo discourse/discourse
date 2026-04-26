@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 
 export default class FormTemplateFieldMultiSelect extends Component {
@@ -26,7 +26,7 @@ export default class FormTemplateFieldMultiSelect extends Component {
 
       {{#if @attributes.description}}
         <span class="form-template-field__description">
-          {{htmlSafe @attributes.description}}
+          {{trustHTML @attributes.description}}
         </span>
       {{/if}}
 

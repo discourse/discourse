@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 102
+  BASE_COMPILER_VERSION = 108
 
   PROCESSOR_DIR = "tmp/asset-processor"
   LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"
@@ -11,7 +11,6 @@ class AssetProcessor
     frontend/asset-processor/**/*.js
     frontend/discourse/lib/babel-transform-module-renames.js
     frontend/discourse/config/targets.js
-    frontend/discourse-plugins/transform-action-syntax.js
   ]
 
   @mutex = Mutex.new
@@ -20,8 +19,26 @@ class AssetProcessor
   class TranspileError < StandardError
   end
 
+  class TimeoutError < StandardError
+  end
+
   def self.booted?
     !!@ctx
+  end
+
+  def self.append_es6_deprecation(content, file_path)
+    pseudo_random_identifier = "deprecated_gjYVqPLMxe" # Just needs to be unique enough to avoid collisions with real code
+    <<~JS
+      #{content}
+      import #{pseudo_random_identifier} from "discourse/lib/deprecated";
+      #{pseudo_random_identifier}(
+        "The file '#{file_path}' uses the deprecated `.js.es6` extension. Use `.js` instead.",
+        {
+          id: "discourse.es6-extension",
+          url: "https://meta.discourse.org/t/398894",
+        }
+      );
+    JS
   end
 
   def self.transpile(data, root_path, logical_path, theme_id: nil, extension: nil)
@@ -135,8 +152,8 @@ class AssetProcessor
 
     source = load_or_build_processor_source
 
-    ctx.eval("globalThis.ROLLUP_PLUGIN_COMPILER = #{ENV["ROLLUP_PLUGIN_COMPILER"].to_json}")
     ctx.eval(source, filename: "asset-processor.js")
+    ctx.low_memory_notification # GC to free up memory used during init
 
     ctx
   end
@@ -167,8 +184,13 @@ class AssetProcessor
     mutex.synchronize do
       result = v8.call(*args, **kwargs)
       result = v8.call(fetch_result_call) if fetch_result_call
+      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
       result
     end
+  rescue MiniRacer::ScriptTerminatedError => e
+    timeout_error = TimeoutError.new("Script terminated: timeout after #{timeout / 1000}s")
+    timeout_error.set_backtrace(e.backtrace)
+    raise timeout_error
   rescue MiniRacer::RuntimeError => e
     message = e.message
     begin

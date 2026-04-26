@@ -7,14 +7,18 @@ class CategorySerializer < SiteCategorySerializer
     attributes :auto_bump_cooldown_days,
                :num_auto_bump_daily,
                :require_reply_approval,
-               :require_topic_approval
+               :require_topic_approval,
+               :nested_replies_default,
+               :topic_posting_review_mode,
+               :reply_posting_review_mode
   end
 
   class CategoryLocalizationSerializer < ApplicationSerializer
     attributes :id, :locale, :name, :description
   end
 
-  attributes :read_restricted,
+  attributes :locale,
+             :read_restricted,
              :available_groups,
              :auto_close_hours,
              :auto_close_based_on_last_post,
@@ -33,6 +37,8 @@ class CategorySerializer < SiteCategorySerializer
              :topic_featured_link_allowed,
              :search_priority,
              :moderating_group_ids,
+             :topic_posting_review_group_ids,
+             :reply_posting_review_group_ids,
              :default_slow_mode_seconds,
              :style_type,
              :emoji,
@@ -151,9 +157,7 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def category_types
-    if !SiteSetting.enable_simplified_category_creation || !SiteSetting.enable_category_type_setup
-      return {}
-    end
+    return {} if !SiteSetting.enable_simplified_category_creation
     object.category_types
   end
 end

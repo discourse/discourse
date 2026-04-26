@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import TextField from "discourse/components/text-field";
 import { i18n } from "discourse-i18n";
 
@@ -14,11 +14,11 @@ export default class SecondFactorConfirmPhrase extends Component {
 
   @action
   onConfirmPhraseInput(event) {
-    if (event.target.value === this.disabledString) {
-      this.dialog.set("confirmButtonDisabled", false);
-    } else {
-      this.dialog.set("confirmButtonDisabled", true);
-    }
+    this.dialog.set(
+      "confirmButtonDisabled",
+      event.target.value.toLocaleLowerCase() !==
+        this.disabledString.toLocaleLowerCase()
+    );
   }
 
   <template>
@@ -39,7 +39,7 @@ export default class SecondFactorConfirmPhrase extends Component {
     </ul>
 
     <p>
-      {{htmlSafe
+      {{trustHTML
         (i18n
           "user.second_factor.delete_confirm_instruction"
           confirm=this.disabledString

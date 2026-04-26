@@ -18,5 +18,38 @@ bg:
         search: "Търсене"
         time: "Време "
         summarize: "Обобщаване"
+      close_topic:
+        errors:
+          not_found: "Темата не е намерена."
+      unlist_topic:
+        errors:
+          not_found: "Темата не е намерена."
+      delete_topic:
+        errors:
+          not_found: "Темата не е намерена."
+      edit_tags:
+        errors:
+          not_found: "Темата не е намерена."
+      edit_category:
+        errors:
+          not_found: "Темата не е намерена."
+      set_topic_timer:
+        errors:
+          not_found: "Темата не е намерена."
+      set_slow_mode:
+        errors:
+          not_found: "Темата не е намерена."
+      move_posts:
+        errors:
+          not_found: "Темата не е намерена."
+      assign:
+        errors:
+          not_found: "Темата не е намерена."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Одобри"
+        reject:
+          title: "Отхвърли"
     ai_staff_action_logger:
       removed: "премахнато"

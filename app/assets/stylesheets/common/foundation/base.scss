@@ -10,6 +10,7 @@
   --d-nav-pill-border-radius: var(--d-border-radius);
   --d-input-border-radius: var(--d-border-radius);
   --d-content-background: initial;
+  --d-link-text-decoration: none;
 
   // used for padding & margin
   --space: 0.25rem; // 4px
@@ -37,7 +38,6 @@ html {
   font-size: var(--base-font-size);
   line-height: var(--line-height-large);
   background-color: var(--secondary);
-  overflow-y: scroll;
   direction: ltr;
 
   &.text-size-smallest {
@@ -64,7 +64,7 @@ a:visited,
 a:hover,
 a:active {
   color: var(--d-link-color);
-  text-decoration: none;
+  text-decoration: var(--d-link-text-decoration);
   cursor: pointer;
 }
 
@@ -77,6 +77,10 @@ hr {
   border: 0;
   border-top: 1px solid var(--content-border-color);
   padding: 0;
+}
+
+.dot-separator {
+  @include dot-separator;
 }
 
 // Lists

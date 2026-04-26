@@ -14,18 +14,35 @@ register_svg_icon "square-check"
 register_svg_icon "far-square"
 
 register_asset "stylesheets/solutions.scss"
-register_asset "stylesheets/mobile/solutions.scss", :mobile
 
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
   ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD = "enable_accepted_answers"
+  NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD = "notify_on_staff_accept_solved"
+  EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD = "empty_box_on_unsolved"
   MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
+
+  def self.accept_answer!(post, acting_user, topic: nil)
+    DiscourseSolved::AcceptAnswer.call(params: { post_id: post.id }, guardian: acting_user.guardian)
+  end
+
+  def self.unaccept_answer!(post, topic: nil)
+    DiscourseSolved::UnacceptAnswer.call(
+      params: {
+        post_id: post.id,
+      },
+      guardian: Discourse.system_user.guardian,
+    )
+  end
 end
 
 require_relative "lib/discourse_solved/engine"
 
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
+
+  UserUpdater::OPTION_ATTR.push(:notify_on_solved)
+  add_to_serializer(:user_option, :notify_on_solved) { object.notify_on_solved }
 
   reloadable_patch do
     register_category_type(DiscourseSolved::Categories::Types::Support)
@@ -35,8 +52,9 @@ after_initialize do
     ::Topic.prepend(DiscourseSolved::TopicExtension)
     ::Category.prepend(DiscourseSolved::CategoryExtension)
     ::PostSerializer.prepend(DiscourseSolved::PostSerializerExtension)
+    ::PostMover.prepend(DiscourseSolved::PostMoverExtension)
     ::UserSummary.prepend(DiscourseSolved::UserSummaryExtension)
-    ::TopicsController.prepend(DiscourseSolved::TopicsControllerExtension)
+
     ::Topic.attr_accessor(:accepted_answer_user_id)
     ::TopicPostersSummary.alias_method(:old_user_ids, :user_ids)
     ::TopicPostersSummary.prepend(DiscourseSolved::TopicPostersSummaryExtension)
@@ -53,18 +71,48 @@ after_initialize do
   register_topic_preloader_associations(:solved) if SiteSetting.solved_enabled
   Search.custom_topic_eager_load { [:solved] } if SiteSetting.solved_enabled
   Site.preloaded_category_custom_fields << DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
+  Site.preloaded_category_custom_fields << DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
+  Site.preloaded_category_custom_fields << DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD
 
   add_api_key_scope(
     :solved,
     { answer: { actions: %w[discourse_solved/answer#accept discourse_solved/answer#unaccept] } },
   )
 
+  register_modifier(:topic_crawler_container_schema) do |schema, topic|
+    DiscourseSolved::SchemaUtils.container_schema(topic) || schema
+  end
+
+  register_modifier(:topic_crawler_main_entity_schema) do |schema, topic|
+    DiscourseSolved::SchemaUtils.main_entity_schema(topic) || schema
+  end
+
+  register_modifier(:topic_crawler_post_schema) do |schema, post, topic|
+    DiscourseSolved::SchemaUtils.post_schema(post, topic) || schema
+  end
+
+  register_modifier(:topic_crawler_skip_post) do |default, post, topic|
+    DiscourseSolved::SchemaUtils.qa_page_schema?(topic) &&
+      post.post_type == Post.types[:small_action]
+  end
+
+  register_html_builder("server:topic-main-entity-meta-crawler") do |controller|
+    topic_view = controller.instance_variable_get(:@topic_view)
+    DiscourseSolved::SchemaUtils.main_entity_meta(topic_view&.topic, topic_view&.crawler_posts)
+  end
+
+  register_html_builder("server:topic-show-crawler-post-end") do |controller, post:|
+    topic = controller.instance_variable_get(:@topic_view)&.topic
+    DiscourseSolved::SchemaUtils.post_answer_meta(post, topic) if topic
+  end
+
   register_html_builder("server:before-head-close-crawler") do |controller|
-    topic_id = controller.instance_variable_get(:@topic_view)&.topic&.id
+    topic_view = controller.instance_variable_get(:@topic_view)
     result =
       DiscourseSolved::BuildSchemaMarkup.call(
         params: {
-          topic_id: topic_id,
+          topic_id: topic_view&.topic&.id,
+          post_ids: topic_view&.posts&.ids,
         },
         guardian: controller.guardian,
       )
@@ -72,11 +120,12 @@ after_initialize do
   end
 
   register_html_builder("server:before-head-close") do |controller|
-    topic_id = controller.instance_variable_get(:@topic_view)&.topic&.id
+    topic_view = controller.instance_variable_get(:@topic_view)
     result =
       DiscourseSolved::BuildSchemaMarkup.call(
         params: {
-          topic_id: topic_id,
+          topic_id: topic_view&.topic&.id,
+          post_ids: topic_view&.posts&.ids,
         },
         guardian: controller.guardian,
       )

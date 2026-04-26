@@ -300,9 +300,10 @@ RSpec.describe "Managing Posts solved status" do
     end
 
     it "sends notifications to correct users" do
-      SiteSetting.notify_on_staff_accept_solved = true
       user = Fabricate(:user)
       topic = Fabricate(:topic, user: user)
+      topic.category.notify_on_staff_accept_solved = true
+      topic.category.save_custom_fields
       post = Fabricate(:post, post_number: 2, topic: topic)
 
       op = topic.user
@@ -332,13 +333,12 @@ RSpec.describe "Managing Posts solved status" do
       fab!(:solution_accepter) { Fabricate(:user, trust_level: 4) }
       fab!(:author, :user)
 
-      before do
-        SiteSetting.notify_on_staff_accept_solved = true
-        MutedUser.create!(user_id: author.id, muted_user_id: solution_accepter.id)
-      end
+      before { MutedUser.create!(user_id: author.id, muted_user_id: solution_accepter.id) }
 
       it "does not send notification to post author" do
         topic = Fabricate(:topic, user: Fabricate(:user))
+        topic.category.notify_on_staff_accept_solved = true
+        topic.category.save_custom_fields
         post = Fabricate(:post, post_number: 2, topic: topic, user: author)
 
         expect {
@@ -353,6 +353,8 @@ RSpec.describe "Managing Posts solved status" do
 
       it "does not send notification to topic author" do
         topic = Fabricate(:topic, user: author)
+        topic.category.notify_on_staff_accept_solved = true
+        topic.category.save_custom_fields
         post = Fabricate(:post, post_number: 2, topic: topic, user: Fabricate(:user))
 
         expect {
@@ -378,7 +380,8 @@ RSpec.describe "Managing Posts solved status" do
     end
 
     it "works when the topic author has been deleted" do
-      SiteSetting.notify_on_staff_accept_solved = true
+      topic.category.notify_on_staff_accept_solved = true
+      topic.category.save_custom_fields
       SiteSetting.solved_topics_auto_close_hours = 0
       topic.user.destroy!
       topic.reload
@@ -920,6 +923,35 @@ RSpec.describe "Managing Posts solved status" do
 
       unauthorized_user_messages = messages.find { |m| m.group_ids.include?(other_group.id) }
       expect(unauthorized_user_messages).to eq(nil)
+    end
+  end
+
+  describe "DiscourseSolved.accept_answer! shim" do
+    fab!(:user, :trust_level_4)
+
+    it "delegates to the AcceptAnswer service" do
+      topic = Fabricate(:topic, user:)
+      reply = Fabricate(:post, topic:, post_number: 2)
+
+      DiscourseSolved.accept_answer!(reply, user)
+
+      expect(topic.reload.solved.answer_post_id).to eq(reply.id)
+    end
+  end
+
+  describe "DiscourseSolved.unaccept_answer! shim" do
+    fab!(:user, :trust_level_4)
+
+    it "delegates to the UnacceptAnswer service" do
+      topic = Fabricate(:topic, user:)
+      reply = Fabricate(:post, topic:, post_number: 2)
+
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, guardian: user.guardian)
+      expect(topic.reload.solved).to be_present
+
+      DiscourseSolved.unaccept_answer!(reply)
+
+      expect(topic.reload.solved).to be_nil
     end
   end
 end

@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -244,7 +244,7 @@ export default class GlobalNotice extends Component {
   @bind
   _handleLogsNoticeUpdate() {
     const logNotice = Notice.create({
-      text: htmlSafe(this.logsNoticeService.message),
+      text: trustHTML(this.logsNoticeService.message),
       id: "alert-logs-notice",
       options: {
         dismissable: true,
@@ -267,10 +267,10 @@ export default class GlobalNotice extends Component {
               class="alert alert-{{notice.options.level}} {{notice.id}}"
             >
               {{#if notice.options.html}}
-                {{htmlSafe notice.options.html}}
+                {{trustHTML notice.options.html}}
               {{/if}}
 
-              <span class="text">{{htmlSafe notice.text}}</span>
+              <span class="text">{{trustHTML notice.text}}</span>
 
               {{#if notice.options.dismissable}}
                 <DButton

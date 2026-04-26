@@ -2,14 +2,14 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 
 export default class UserTipContainer extends Component {
   @service userTips;
 
   get safeHtmlContent() {
-    return htmlSafe(this.args.data.contentHtml);
+    return trustHTML(this.args.data.contentHtml);
   }
 
   get showSkipButton() {

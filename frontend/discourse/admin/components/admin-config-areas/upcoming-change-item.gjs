@@ -1,20 +1,20 @@
 /* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import UpcomingChangeBadges from "discourse/admin/components/admin-config-areas/upcoming-change-badges";
 import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
 import GroupSelector from "discourse/components/group-selector";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -42,21 +42,6 @@ export default class UpcomingChangeItem extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this._savingEnabledForTimeout);
-  }
-
-  impactRoleIcon(impactRole) {
-    switch (impactRole) {
-      case "admins":
-        return "shield-halved";
-      case "moderators":
-        return "shield-halved";
-      case "staff":
-        return "shield-halved";
-      case "all_members":
-        return "users";
-      case "developers":
-        return "code";
-    }
   }
 
   get enabledForOptions() {
@@ -94,9 +79,13 @@ export default class UpcomingChangeItem extends Component {
   }
 
   get enabledForDisabled() {
+    return this.savingEnabledFor;
+  }
+
+  get showPermanentSoonNotice() {
     return (
-      this.args.change.upcoming_change.status === "permanent" ||
-      this.savingEnabledFor
+      this.args.change.upcoming_change.status === "stable" &&
+      this.args.change.upcoming_change.impact_type !== "site_setting_default"
     );
   }
 
@@ -104,6 +93,10 @@ export default class UpcomingChangeItem extends Component {
     return (
       this.args.change.dependents.length && this.bufferedEnabledFor !== "no_one"
     );
+  }
+
+  get showRelatedSettingLink() {
+    return this.args.change.related && this.bufferedEnabledFor !== "no_one";
   }
 
   @action
@@ -314,7 +307,7 @@ export default class UpcomingChangeItem extends Component {
 
               {{#if @change.upcoming_change.learn_more_url}}
                 <span class="upcoming-change__learn-more">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "feedback_with_link"
                       url=@change.upcoming_change.learn_more_url
@@ -326,69 +319,14 @@ export default class UpcomingChangeItem extends Component {
           </div>
         {{/if}}
 
-        {{#if (eq @change.upcoming_change.status "permanent")}}
-          <div class="upcoming-change__status-notice">
-            {{icon "triangle-exclamation"}}
-            {{i18n "admin.upcoming_changes.permanent_notice"}}
-          </div>
-        {{/if}}
-
-        {{#if (eq @change.upcoming_change.status "stable")}}
+        {{#if this.showPermanentSoonNotice}}
           <div class="upcoming-change__status-notice">
             {{icon "triangle-exclamation"}}
             {{i18n "admin.upcoming_changes.permanent_soon_notice"}}
           </div>
         {{/if}}
 
-        <div class="upcoming-change__badges">
-          <span
-            title={{i18n
-              (concat
-                "admin.upcoming_changes.statuses."
-                @change.upcoming_change.status
-              )
-            }}
-            class={{concatClass
-              "upcoming-change__badge"
-              (concat "--status-" @change.upcoming_change.status)
-            }}
-          >
-            {{icon
-              (if
-                (eq @change.upcoming_change.status "permanent")
-                "lock"
-                "far-circle-dot"
-              )
-            }}
-            {{i18n
-              (concat
-                "admin.upcoming_changes.statuses."
-                @change.upcoming_change.status
-              )
-            }}
-          </span>
-
-          <span
-            title={{i18n
-              (concat
-                "admin.upcoming_changes.impact_roles."
-                @change.upcoming_change.impact_role
-              )
-            }}
-            class={{concatClass
-              "upcoming-change__badge"
-              (concat "--impact-role-" @change.upcoming_change.impact_role)
-            }}
-          >
-            {{icon (this.impactRoleIcon @change.upcoming_change.impact_role)}}
-            {{i18n
-              (concat
-                "admin.upcoming_changes.impact_roles."
-                @change.upcoming_change.impact_role
-              )
-            }}
-          </span>
-        </div>
+        <UpcomingChangeBadges @upcomingChange={{@change.upcoming_change}} />
       </td>
       <td class="d-table__cell --detail upcoming-change__toggle-cell">
         <div class="d-table__mobile-label">
@@ -421,18 +359,25 @@ export default class UpcomingChangeItem extends Component {
           </div>
         {{/if}}
 
+        {{#if this.showRelatedSettingLink}}
+          <div class="upcoming-change__related">
+            <LinkTo
+              @route="adminSiteSettings"
+              @query={{hash filter=@change.related}}
+            >
+              {{i18n "admin.upcoming_changes.show_related_settings"}}
+            </LinkTo>
+          </div>
+        {{/if}}
+
         {{#if (eq this.bufferedEnabledFor "groups")}}
           <div class="upcoming-change__group-selection-wrapper">
-            {{#if (eq @change.upcoming_change.status "permanent")}}
-              {{i18n "admin.upcoming_changes.permanent_no_group_selection"}}
-            {{else}}
-              <GroupSelector
-                @groupFinder={{this.groupFinder}}
-                @groupNames={{this.bufferedGroups}}
-                @onChange={{this.groupsChanged}}
-                @placeholderKey="admin.upcoming_changes.select_groups"
-              />
-            {{/if}}
+            <GroupSelector
+              @groupFinder={{this.groupFinder}}
+              @groupNames={{this.bufferedGroups}}
+              @onChange={{this.groupsChanged}}
+              @placeholderKey="admin.upcoming_changes.select_groups"
+            />
 
             {{#if this.bufferedGroupsDirty}}
               <DButton

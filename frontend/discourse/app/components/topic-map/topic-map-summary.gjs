@@ -4,7 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -68,7 +68,7 @@ export default class TopicMapSummary extends Component {
   }
 
   get topRepliesSummaryEnabled() {
-    return this.args.postStream.summary;
+    return this.args.postStream?.summary;
   }
 
   get topRepliesTitle() {
@@ -148,13 +148,13 @@ export default class TopicMapSummary extends Component {
 
   @action
   showTopReplies() {
-    this.args.postStream.showTopReplies();
+    this.args.postStream?.showTopReplies();
   }
 
   @action
   cancelFilter() {
-    this.args.postStream.cancelFilter();
-    this.args.postStream.refresh();
+    this.args.postStream?.cancelFilter();
+    this.args.postStream?.refresh();
   }
 
   @action
@@ -319,7 +319,7 @@ export default class TopicMapSummary extends Component {
                           {{post.like_count}}
                           {{icon "heart"}}</span>
                         <p>
-                          {{htmlSafe (emojiUnescape post.blurb)}}
+                          {{trustHTML (emojiUnescape post.blurb)}}
                         </p>
                       </a>
                     </li>

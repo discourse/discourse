@@ -4,7 +4,7 @@ module DiscourseAi
   module Discord::Bot
     class Search < Base
       def initialize(body)
-        @search = DiscourseAi::Personas::Tools::Search
+        @search = DiscourseAi::Agents::Tools::Search
         super(body)
       end
 
@@ -12,7 +12,7 @@ module DiscourseAi
         results =
           @search.new(
             { search_query: @query },
-            persona_options: {
+            agent_options: {
               "max_results" => 10,
             },
             bot_user: nil,

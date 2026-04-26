@@ -122,6 +122,7 @@ class QunitRunner
         opts.separator <<~NOTES
           \nExamples:
             bin/qunit frontend/discourse/tests/unit/models/user-test.js
+            bin/qunit frontend/discourse/tests/unit/  # Run all tests in directory
             bin/qunit --standalone --target plugins  # Run all plugin tests
             bin/qunit --standalone --target chat     # Run single plugin tests
             bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js
@@ -183,14 +184,14 @@ class QunitRunner
       if File.directory?(path)
         test_files = Dir.glob(File.join(path, "**", "*-test.{js,gjs}"))
         if test_files.empty?
-          puts "Warning: No test files found in directory: #{path}" if @verbose
+          abort "Error: No test files found in directory: #{path}"
         else
           expanded.concat(test_files)
         end
       elsif File.file?(path)
         expanded << path
       else
-        puts "Warning: Path not found: #{path}"
+        abort "Error: Path not found: #{path}"
       end
     end
 
@@ -367,20 +368,29 @@ class QunitRunner
     install_node_dependencies!
 
     @rails_port = next_available_port(60_098)
-    unicorn_env = build_unicorn_environment(@rails_port)
-    unicorn_pid = nil
+    server_env = build_server_environment(@rails_port)
+    server_pid = nil
+    log_path = File.join(rails_root, "tmp", "test_server_#{@rails_port}.log")
 
     begin
       if @dry_run
-        puts "[dry-run] skipping unicorn startup"
+        puts "[dry-run] skipping server startup"
       else
-        unicorn_pid =
-          Process.spawn(unicorn_env, File.join(rails_root, "bin", "pitchfork"), pgroup: true)
+        server_pid =
+          Process.spawn(
+            server_env,
+            File.join(rails_root, "bin", "pitchfork"),
+            pgroup: true,
+            out: log_path,
+            err: %i[child out],
+          )
       end
-      wait_for_rails_server(@rails_port)
+
+      wait_for_rails_server(@rails_port, log_path)
+
       yield
     ensure
-      stop_unicorn(unicorn_pid, unicorn_env["UNICORN_PID_PATH"]) if unicorn_pid
+      stop_server(server_pid, server_env["UNICORN_PID_PATH"]) if server_pid
     end
   end
 
@@ -425,16 +435,16 @@ class QunitRunner
     false
   end
 
-  def build_unicorn_environment(unicorn_port)
-    pid_path = File.join(rails_root, "tmp/pids", "unicorn_test_#{unicorn_port}.pid")
+  def build_server_environment(server_port)
+    pid_path = File.join(rails_root, "tmp/pids", "test_server_#{server_port}.pid")
     env = {
       "RAILS_ENV" => @rails_env || "test",
       "SKIP_ENFORCE_HOSTNAME" => "1",
       "UNICORN_PID_PATH" => pid_path,
-      "UNICORN_PORT" => unicorn_port.to_s,
+      "UNICORN_PORT" => server_port.to_s,
       "UNICORN_SIDEKIQS" => "0",
       "DISCOURSE_SKIP_CSS_WATCHER" => "1",
-      "UNICORN_LISTENER" => "127.0.0.1:#{unicorn_port}",
+      "UNICORN_LISTENER" => "127.0.0.1:#{server_port}",
       "LOGSTASH_UNICORN_URI" => nil,
       "UNICORN_WORKERS" => "1",
       "UNICORN_TIMEOUT" => "90",
@@ -445,7 +455,7 @@ class QunitRunner
     env
   end
 
-  def wait_for_rails_server(port)
+  def wait_for_rails_server(port, log_path)
     if @dry_run
       puts "[dry-run] skipping Rails server warm-up"
       return
@@ -467,6 +477,7 @@ class QunitRunner
       end
 
       puts "Timed out. Cannot connect to forked server!"
+      puts File.read(log_path) if File.exist?(log_path)
       exit 1
     end
 
@@ -479,7 +490,12 @@ class QunitRunner
       return
     end
 
-    system("script/assemble_ember_build.rb", chdir: rails_root, exception: true)
+    system(
+      { "LOAD_PLUGINS" => should_load_plugins? ? "1" : "0" },
+      "script/assemble_ember_build.rb",
+      chdir: rails_root,
+      exception: true,
+    )
   end
 
   def build_theme_test_pages(query)
@@ -518,9 +534,9 @@ class QunitRunner
     encode_query_string(params)
   end
 
-  def stop_unicorn(pid, pid_path)
+  def stop_server(pid, pid_path)
     if @dry_run
-      puts "[dry-run] skipping unicorn shutdown"
+      puts "[dry-run] skipping server shutdown"
       return
     end
     Process.kill("-KILL", pid)

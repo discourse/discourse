@@ -3,8 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import Component, { Input, Textarea } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { afterRender } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import I18n, { i18n } from "discourse-i18n";
@@ -18,8 +17,15 @@ export default class AdminPenaltyPostAction extends Component {
   postAction = null;
   postEdit = null;
 
-  @equal("postAction", "edit") editing;
-  @equal("postAction", "delete_all") deletingAll;
+  @computed("postAction")
+  get editing() {
+    return this.postAction === "edit";
+  }
+
+  @computed("postAction")
+  get deletingAll() {
+    return this.postAction === "delete_all";
+  }
 
   @computed
   get penaltyActions() {
@@ -92,7 +98,7 @@ export default class AdminPenaltyPostAction extends Component {
     <div class="penalty-post-controls">
       <label>
         <div class="penalty-post-label">
-          {{htmlSafe (i18n "admin.user.penalty_post_actions")}}
+          {{trustHTML (i18n "admin.user.penalty_post_actions")}}
         </div>
       </label>
       <ComboBox
@@ -115,7 +121,7 @@ export default class AdminPenaltyPostAction extends Component {
           @checked={{this.confirmDeleteAll}}
           {{on "click" this.toggleConfirmDeleteAll}}
         />
-        {{htmlSafe this.deleteAllMessage}}
+        {{trustHTML this.deleteAllMessage}}
       </label>
     {{/if}}
   </template>

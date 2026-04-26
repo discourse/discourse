@@ -265,7 +265,11 @@ ko:
   deleted_topic: "이 주제는 삭제되었으며 더는 사용할 수 없습니다."
   delete_topic_failed: "이 주제를 삭제하는 중에 오류가 발생했습니다. 사이트 관리자에게 문의하세요."
   reading_time: "읽은 시간"
+  reading_time_minutes:
+    other: "%{count}분 🕑"
   likes: "좋아요"
+  likes_count:
+    other: "%{count} ❤"
   too_many_replies:
     other: "신규 사용자는 일시적으로 동일 주제에 %{count}개까지만 댓글을 달 수 있습니다."
   max_consecutive_replies:
@@ -817,6 +821,7 @@ ko:
     read: "읽기"
     read_write: "읽기/쓰기"
     instructions: '"%{application_name}" 애플리케이션과 함께 사용할 새 사용자 API 키를 생성했습니다. 다음 키를 애플리케이션에 붙여 넣으세요.'
+    copied: "복사되었습니다!"
     otp_description: '"%{application_name}"에서 이 사이트에 액세스하도록 허용할까요?'
     otp_confirmation:
       confirm_title: '%{site_name}에서 계속하기'
@@ -890,7 +895,9 @@ ko:
       description: "신고 유형, 게시자, 신고자 및 해결 시간을 포함한 신고 상태 목록입니다."
     visits:
       title: "사용자 방문 횟수"
-      xaxis: "일"
+      xaxis:
+        desktop: "데스크톱"
+        mobile: "모바일"
       yaxis: "방문 횟수"
     signups:
       title: "가입"
@@ -935,10 +942,8 @@ ko:
       yaxis: "일"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU / MAU"
       xaxis: "일"
       yaxis: "DAU / MAU"
-      description: "마지막 날에 로그인 한 회원 수를 지난 달에 로그인 한 회원 수로 나눈 값 – 커뮤니티 &#39;고착성&#39;을 나타내는 %를 반환합니다. 20 % 이상을 목표로하십시오."
     daily_engaged_users:
       title: "일일 참여 사용자"
       xaxis: "일"
@@ -1920,7 +1925,6 @@ ko:
     not_available: "사용할 수 없습니다. %{suggestion} 아이디는 어떠세요?"
     something_already_taken: "문제가 발생했습니다. 아이디 또는 이메일이 이미 등록되어 있을 수 있습니다. 비밀번호 찾기 링크를 시도해 보세요."
     omniauth_error_unknown: "로그인을 처리하는 중에 문제가 발생했습니다. 다시 시도하세요."
-    omniauth_confirm_title: "%{provider} 로그인"
     omniauth_confirm_button: "계속"
     authenticator_error_no_valid_email: "%{account} 계정과 연결된 이메일 주소는 허용되지 않습니다. 다른 이메일 주소로 계정을 환경설정해야 할 수도 있습니다."
     new_registrations_disabled: "지금은 새 계정을 등록할 수 없습니다."
@@ -3493,7 +3497,6 @@ ko:
       in_this_category: '이 카테고리에서는 ''%{tag_name}'' 태그를 사용할 수 없습니다'
       restricted_to:
         other: '''%{tag_name}'' 태그는 다음 카테고리로 제한됩니다. %{category_names}'
-      synonym: '동의어는 허용되지 않습니다. 대신 ''%{tag_name}'' 태그를 사용하세요.'
       has_synonyms: '''%{tag_name}''에는 동의어가 있으므로 사용할 수 없습니다.'
     required_tags_from_group:
       other: "최소 %{count}개의 %{tag_group_name} 태그를 포함해야 합니다. 이 그룹의 태그는 %{tags}입니다. %{tags}."

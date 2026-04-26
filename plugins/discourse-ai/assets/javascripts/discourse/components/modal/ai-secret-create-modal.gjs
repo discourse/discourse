@@ -48,9 +48,10 @@ export default class AiSecretCreateModal extends Component {
           @title={{i18n "discourse_ai.secrets.name"}}
           @validation="required|length:1,100"
           @format="large"
+          @type="input"
           as |field|
         >
-          <field.Input />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -58,9 +59,10 @@ export default class AiSecretCreateModal extends Component {
           @title={{i18n "discourse_ai.secrets.secret"}}
           @validation="required"
           @format="large"
+          @type="password"
           as |field|
         >
-          <field.Password autocomplete="off" />
+          <field.Control autocomplete="off" />
         </form.Field>
 
         <form.Actions>

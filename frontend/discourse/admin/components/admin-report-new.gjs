@@ -19,15 +19,17 @@ import { i18n } from "discourse-i18n";
   >
     {{#unless @report.isHidden}}
       <ConditionalLoadingSection @isLoading={{@report.isLoading}}>
-        {{#if
-          (and @report.siteSettings.reporting_improvements @report.model.legacy)
-        }}
-          <div class="alert alert-info">
-            {{icon "triangle-exclamation"}}
-            <span>{{i18n "admin.reports.legacy_warning"}}</span>
-          </div>
-        {{/if}}
         {{#if @report.showHeader}}
+          {{#if
+            (and
+              @report.siteSettings.reporting_improvements @report.model.legacy
+            )
+          }}
+            <div class="alert alert-info">
+              {{icon "triangle-exclamation"}}
+              <span>{{i18n "admin.reports.legacy_warning"}}</span>
+            </div>
+          {{/if}}
           <div class="header">
             {{#unless @report.showNotFoundError}}
               <DPageSubheader

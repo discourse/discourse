@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Watched Words", type: :system do
+describe "Composer - ProseMirror - Watched Words" do
   include_context "with prosemirror editor"
 
   context "with watched word replacements" do

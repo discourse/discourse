@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -111,17 +111,17 @@ function registerTopicFooterButtons(api) {
       const label = i18n("discourse_assign.assigned_to");
 
       if (user) {
-        return htmlSafe(
-          `<span class="unassign-label"><span class="text">${label}&nbsp;</span><span class="username">${
+        return trustHTML(
+          `<span class="unassign-label"><span class="text">${label}&nbsp;</span><span class="username">${escapeExpression(
             user.username
-          }</span></span>&nbsp;${renderAvatar(user, {
+          )}</span></span>&nbsp;${renderAvatar(user, {
             imageSize: "small",
             ignoreTitle: true,
           })}`
         );
       } else if (group) {
-        return htmlSafe(
-          `<span class="unassign-label">${label}</span> @${group.name}`
+        return trustHTML(
+          `<span class="unassign-label">${label}</span> @${escapeExpression(group.name)}`
         );
       }
     },
@@ -150,7 +150,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const label = i18n("discourse_assign.unassign.title");
 
-      return htmlSafe(
+      return trustHTML(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
@@ -194,7 +194,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const label = i18n("discourse_assign.reassign.to_self");
 
-      return htmlSafe(
+      return trustHTML(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
@@ -240,7 +240,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const label = i18n("discourse_assign.reassign.title_w_ellipsis");
 
-      return htmlSafe(
+      return trustHTML(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
@@ -418,7 +418,7 @@ function initialize(api) {
 
       return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
         note
-      )}">${name}</span></${tagName}>`;
+      )}">${escapeExpression(name)}</span></${tagName}>`;
     };
 
     // is there's one assignment just return the tag
@@ -490,7 +490,9 @@ function initialize(api) {
               }
 
               if (data.post_id) {
+                topic.indirectly_assigned_to ||= {};
                 if (data.type === "assigned") {
+                  topic.indirectly_assigned_to[data.post_id] ||= {};
                   topic.indirectly_assigned_to[data.post_id].assigned_to =
                     data.assigned_to;
                 } else if (data.type === "unassigned") {
@@ -704,6 +706,8 @@ export default {
         label: "topics.bulk.assign",
         icon: "user-plus",
         class: "btn-default assign-topics",
+        description: "topics.bulk.assign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_assign_topics",
         action({ setComponent }) {
           setComponent(BulkActionsAssignUser);
         },
@@ -715,6 +719,8 @@ export default {
         label: "topics.bulk.unassign",
         icon: "user-xmark",
         class: "btn-default unassign-topics",
+        description: "topics.bulk.unassign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_unassign_topics",
         action({ performAndRefresh }) {
           performAndRefresh({ type: "unassign" });
         },

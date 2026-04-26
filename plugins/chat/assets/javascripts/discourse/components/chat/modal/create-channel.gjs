@@ -6,7 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isBlank, isPresent } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -24,7 +24,7 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { not } from "discourse/truth-helpers";
 import I18n, { i18n } from "discourse-i18n";
 
-const DEFAULT_HINT = htmlSafe(
+const DEFAULT_HINT = trustHTML(
   i18n("chat.create_channel.choose_category.default_hint", {
     link: "/categories",
     category: "category",
@@ -238,7 +238,7 @@ export default class ChatModalCreateChannel extends Component {
               break;
           }
 
-          this.categoryPermissionsHint = htmlSafe(hint);
+          this.categoryPermissionsHint = trustHTML(hint);
         })
         .finally(() => {
           this.loadingPermissionHint = false;

@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import UserAction from "discourse/models/user-action";
 import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
@@ -13,7 +13,7 @@ export default class UserActivityReplies extends UserActivityStreamRoute {
     let title, body;
     if (this.isCurrentUser(user)) {
       title = i18n("user_activity.no_replies_title");
-      body = htmlSafe(
+      body = trustHTML(
         i18n("user_activity.no_replies_body", {
           searchUrl: getURL("/search"),
         })

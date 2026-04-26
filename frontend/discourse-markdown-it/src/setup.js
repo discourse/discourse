@@ -294,7 +294,6 @@ class API {
   whiteList(info) {
     deprecated("`whiteList` has been replaced with `allowList`", {
       since: "2.6.0.beta.4",
-      dropFrom: "2.7.0",
       id: "discourse.markdown-it.whitelist",
     });
 

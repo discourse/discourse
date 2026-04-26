@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { i18n } from "discourse-i18n";
 
@@ -80,6 +80,6 @@ export function popupAiCreditLimitError(errorOrPayload) {
 
   dialog.alert({
     title: i18n("discourse_ai.errors.credit_limit_dialog.title"),
-    message: htmlSafe(message),
+    message: trustHTML(message),
   });
 }

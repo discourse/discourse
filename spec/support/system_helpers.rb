@@ -4,6 +4,10 @@ require "highline/import"
 module SystemHelpers
   PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
+  # Pass to `send_keys` to move the caret to the start of the current line in a
+  # contenteditable. The Home key doesn't move the caret on macOS; Cmd+Left does.
+  LINE_START_KEY = RUBY_PLATFORM =~ /darwin/i ? %i[meta left] : :home
+
   def pause_test
     msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
     msg += "Browser inspection URLs:\n"
@@ -152,6 +156,8 @@ module SystemHelpers
   end
 
   def select_text_range(selector, start = 0, offset = 5)
+    expect(page).to have_selector(selector)
+
     js = <<-JS
       const node = document.querySelector(arguments[0]).childNodes[0];
       const selection = window.getSelection();

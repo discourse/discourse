@@ -8,17 +8,17 @@ module DiscourseAi
       class Inference < Base
         OPERATIONS = {
           "generate_concepts" => {
-            persona_class: DiscourseAi::Personas::ConceptFinder,
+            agent_class: DiscourseAi::Agents::ConceptFinder,
             schema_key: :concepts,
             schema_type: "array",
           },
           "match_concepts" => {
-            persona_class: DiscourseAi::Personas::ConceptMatcher,
+            agent_class: DiscourseAi::Agents::ConceptMatcher,
             schema_key: :matching_concepts,
             schema_type: "array",
           },
           "deduplicate_concepts" => {
-            persona_class: DiscourseAi::Personas::ConceptDeduplicator,
+            agent_class: DiscourseAi::Agents::ConceptDeduplicator,
             schema_key: :streamlined_tags,
             schema_type: "array",
           },
@@ -52,7 +52,7 @@ module DiscourseAi
           content = conversation_to_text(args)
           raise ArgumentError, "Missing input for generate concepts eval" if content.blank?
 
-          persona, user = persona_bundle(feature_name)
+          agent, user = agent_bundle(feature_name)
           context =
             build_ctx.tap do |ctx|
               ctx.messages = [{ type: :user, content: content }]
@@ -60,7 +60,7 @@ module DiscourseAi
             end
 
           values =
-            capture_structured_output(persona, user, llm, context, feature_name, execution_context:)
+            capture_structured_output(agent, user, llm, context, feature_name, execution_context:)
           wrap_result(format_response(values), { query: content })
         end
 
@@ -71,7 +71,7 @@ module DiscourseAi
             raise ArgumentError, "Match concepts eval requires :input/:conversation and :concepts"
           end
 
-          persona, user = persona_bundle(feature_name)
+          agent, user = agent_bundle(feature_name)
 
           context =
             build_ctx.tap do |ctx|
@@ -80,7 +80,7 @@ module DiscourseAi
             end
 
           values =
-            capture_structured_output(persona, user, llm, context, feature_name, execution_context:)
+            capture_structured_output(agent, user, llm, context, feature_name, execution_context:)
           wrap_result(format_response(values), { query: content, concepts: candidates })
         end
 
@@ -88,29 +88,29 @@ module DiscourseAi
           candidates = args[:concepts].to_a.map(&:to_s)
           raise ArgumentError, "Deduplicate concepts eval requires :concepts" if candidates.empty?
 
-          persona, user = persona_bundle(feature_name)
+          agent, user = agent_bundle(feature_name)
 
           context =
             build_ctx.tap { |ctx| ctx.messages = [{ type: :user, content: candidates.join(", ") }] }
 
           values =
-            capture_structured_output(persona, user, llm, context, feature_name, execution_context:)
+            capture_structured_output(agent, user, llm, context, feature_name, execution_context:)
           wrap_result(format_response(values), { concepts: candidates })
         end
 
-        def persona_bundle(op)
+        def agent_bundle(op)
           config = OPERATIONS.fetch(op) { raise ArgumentError }
-          persona_klass = config.fetch(:persona_class)
+          agent_klass = config.fetch(:agent_class)
 
-          resolve_persona(persona_class: persona_klass)
+          resolve_agent(agent_class: agent_klass)
         end
 
-        def capture_structured_output(persona, user, llm, context, op, execution_context:)
+        def capture_structured_output(agent, user, llm, context, op, execution_context:)
           schema = OPERATIONS.fetch(op)
           schema_key = schema[:schema_key]
           schema_type = schema[:schema_type] || "array"
 
-          bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
+          bot = DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm)
           capture_structured_response(
             bot,
             context,
@@ -137,7 +137,7 @@ module DiscourseAi
         end
 
         def build_ctx
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: Discourse.system_user,
             skip_show_thinking: true,
             feature_name: "evals/inference/#{feature_name}",

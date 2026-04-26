@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 
@@ -30,7 +30,7 @@ export default class UserColorPaletteMenuItem extends Component {
           "btn-flat user-color-palette-menu__item-choice"
           this.activeClass
         }}
-        style={{htmlSafe this.siteStyle}}
+        style={{trustHTML this.siteStyle}}
         @icon="circle"
         @translatedLabel={{@colorPalette.name}}
         @action={{this.paletteSelected}}

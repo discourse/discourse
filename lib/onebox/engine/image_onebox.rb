@@ -13,12 +13,8 @@ module Onebox
       end
 
       def to_html
-        # Fix Dropbox image links
-        if @url[%r{^https://www.dropbox.com/s/}]
-          @url.sub!("https://www.dropbox.com", "https://dl.dropboxusercontent.com")
-        end
-
-        escaped_url = ::Onebox::Helpers.normalize_url_for_output(@url)
+        url = ::Onebox::Helpers.normalize_dropbox_url(@url)
+        escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
         <<-HTML
           <a href="#{escaped_url}" target="_blank" rel="noopener" class="onebox">
             <img src="#{escaped_url}">

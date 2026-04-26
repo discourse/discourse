@@ -493,8 +493,6 @@ it:
           other: "Creato %{count} anni fa"
     bookmarked:
       title: "Segnalibro"
-      edit_bookmark: "Modifica Segnalibro"
-      clear_bookmarks: "Cancella Segnalibri"
       help:
         bookmark: "Clicca per mettere il segnalibro all'argomento"
         edit_bookmark: "Clicca per modificare il segnalibro di un messaggio in questo argomento"
@@ -513,12 +511,12 @@ it:
       clear_reminder: "Cancella promemoria"
       edit: "Modifica segnalibro"
       not_bookmarked: "aggiungi messaggio ai segnalibri"
+      topic_bookmark: "Argomento"
       remove_reminder_keep_bookmark: "Rimuovi il promemoria e mantieni il segnalibro"
       created_with_reminder: "Hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}. %{name}"
       created_with_reminder_generic: "L'hai aggiunto ai segnalibri con un promemoria per il %{date}. %{name}"
       delete: "Cancella Segnalibro"
       confirm_delete: "Vuoi eliminare questo segnalibro? Anche il promemoria verrà eliminato."
-      confirm_clear: "Vuoi rimuovere tutti i segnalibri da questo argomento?"
       save: "Salva"
       no_timezone: 'Non hai ancora impostato un fuso orario. Non sarai in grado di impostare promemoria. Creane uno <a href="%{basePath}/my/preferences/profile">nel tuo profilo</a> .'
       invalid_custom_datetime: "La data e l'ora fornite non sono valide, riprova."
@@ -1654,6 +1652,10 @@ it:
         interface: "Interfaccia"
         apps: "App"
         navigation_menu: "Menu di navigazione"
+        calendar_subscriptions: "Calendario"
+      calendar_subscriptions:
+        copied: "Copiato!"
+        add_to_google: "Google Calendar"
       change_password:
         success: "(email inviata)"
         in_progress: "(invio email in corso)"
@@ -2256,6 +2258,7 @@ it:
     form_kit:
       reset: Annulla
       optional: facoltativo
+      required: obbligatorie
       dirty_form: "Non hai caricato le modifiche! Vuoi davvero uscire?"
       errors:
         starts_with: "Deve iniziare con %{prefix}"
@@ -2649,6 +2652,8 @@ it:
       medium_dark_tone: Carnagione di tonalità medio-scura
       dark_tone: Carnagione di tonalità scura
       default: Emoji personalizzate
+    filter_input:
+      clear: "Cancella il filtro"
     shared_drafts:
       title: "Bozze condivise"
       notice: "Questo argomento è visibile solo a coloro che possono pubblicare bozze condivise."
@@ -2789,6 +2794,8 @@ it:
       list_item: "Elemento lista"
       toggle_direction: "Cambia direzione"
       wrap_modal:
+        attribute_key: "Chiave"
+        attribute_value: "Valore"
         apply: "Applica"
       help: "Aiuto Inserimento Markdown"
       exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
@@ -2857,6 +2864,9 @@ it:
         copy: "Copia link"
         remove: "Rimuovi link"
         visit: "Apri il link in una scheda esterna"
+        link_copied: "Link copiato!"
+      onebox_toolbar:
+        copy: "Copia link"
         link_copied: "Link copiato!"
     notifications:
       tooltip:
@@ -3181,11 +3191,8 @@ it:
         confirm: "Conferma"
         select_all: "Seleziona Tutto"
         clear_all: "Deseleziona Tutto"
-        unlist_topics: "Rendi argomenti invisibili"
-        relist_topics: "Ripubblica Argomenti"
         reset_bump_dates: "Reimposta la date di riproposizione"
         defer: "Contrassegna come non letto"
-        delete: "Elimina argomenti"
         delete_topics_count:
           one: "Cancella Argomento"
           other: "Elimina argomenti"
@@ -3218,29 +3225,20 @@ it:
           other: "Ignora i nuovi (%{count})"
         toggle: "interruttore di selezione multipla degli argomenti"
         actions: "Azioni Multiple"
-        change_category: "Imposta categoria..."
-        close_topics: "Chiudi argomenti"
-        archive_topics: "Archivia argomenti"
         move_messages_to_inbox: "Sposta nella posta in arrivo"
         archive_messages: "Sposta in archivio"
-        notification_level: "Notifiche…"
         change_notification_level: "Modifica livello di notifica"
         choose_new_category: "Scegli la nuova categoria per gli argomenti:"
-        selected:
-          one: "Hai selezionato <b>%{count}</b> argomento."
-          other: "Hai selezionato <b>%{count}</b> argomenti."
         selected_sole_category:
           one: "Hai selezionato <b>%{count}</b> argomento dalla categoria:"
           other: "Hai selezionato <b>%{count}</b> argomenti dalla categoria:"
         selected_count:
           one: "%{count} selezionato"
           other: "%{count} selezionati"
-        change_tags: "Sostituisci Etichette"
-        append_tags: "Aggiungi Etichette"
+        append_tags: "Aggiungi etichette"
         choose_new_tags: "Scegli nuove etichette per i seguenti argomenti:"
-        choose_append_tags: "Scegli nuove etichette da aggiungere a questi argomenti:"
+        choose_append_tags: "Aggiungi etichette"
         changed_tags: "Le etichette per quegli argomenti sono state cambiate."
-        remove_tags: "Rimuovi tutte le etichette"
         confirm_remove_tags:
           one: "Tutti i tag verranno rimossi da questo argomento. Sei sicuro?"
           other: "Tutti i tag verranno rimossi da <b>%{count}</b> argomenti. Sei sicuro?"
@@ -3274,7 +3272,6 @@ it:
         name: "Ignora"
       close_topics:
         name: "Chiudi"
-        note: "Nota"
         optional: (opzionale)
       archive_topics:
         name: "Archivia"
@@ -3288,24 +3285,37 @@ it:
         name: "Ripubblica"
       remove_tags:
         name: "Rimuovi etichette"
-      append_tags:
-        name: "Aggiungi etichette"
       replace_tags:
         name: "Sostituisci etichette"
       delete_topics:
         name: "Elimina"
       update_category:
         name: "Aggiorna categoria"
-        description: "Scegli la nuova categoria per gli argomenti selezionati"
+      convert_to_public_topic:
+        name: "Rendi l'argomento pubblico…"
+      convert_to_private_message:
+        name: "Rendi Messaggio Personale"
       reset_bump_dates:
         name: "Reimposta date di riproposizione"
-        description: "Reimposta la data di riproposizione dell'argomento alla data dell'ultimo messaggio creato. Questo modificherà l'ordine dell'elenco argomenti"
       defer:
         name: "Contrassegna come non letto"
-        description: "Contrassegna argomenti come non letti"
       update_notifications:
         name: "Aggiorna notifiche"
-        description: "Modifica livello di notifica a osservazione, seguito, normale o silenziato"
+    nested_replies:
+      sort:
+        label: "Ordina per"
+        top: "Popolari"
+        new: "Nuovo"
+      load_more_children:
+        one: "%{count} ulteriore risposta"
+        other: "%{count} ulteriori risposte"
+      collapsed_replies:
+        one: "%{count} risposta"
+        other: "%{count} risposte"
+      collapse: "Comprimi"
+      no_replies: "Ancora nessuna risposta."
+      deleted_post_placeholder: "[eliminato]"
+      pinned_reply: "Appuntato"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"
@@ -3806,6 +3816,10 @@ it:
       sr_post_like_count_button:
         one: "A %{count} persona piace questo messaggio."
         other: "A %{count} persone piace questo messaggio."
+      likes_popup:
+        title:
+          one: "%{count} \"Mi piace\""
+          other: "%{count} \"Mi piace\""
       sr_post_read_count_button:
         one: "%{count} persona ha letto a questo messaggio."
         other: "%{count} persone hanno letto questo messaggio."
@@ -3833,7 +3847,7 @@ it:
           confirm_delete: "Vuoi davvero eliminare le traduzioni per '%{languageCode}'?"
         success: "Le traduzioni sono state aggiornate con successo"
         post_language_selector:
-          none: "Nessuna"
+          none: "Non impostato"
         edit_warning:
           action_original: "Modifica il messaggio originale"
           action_translation: "Modifica questa traduzione"
@@ -3856,6 +3870,7 @@ it:
         attachment_download_requires_login: "Spiacenti, devi effettuare l'accesso per poter scaricare gli allegati."
       cancel_composer:
         discard: "Elimina"
+        discard_edit: "Annulla modifiche"
       via_email: "questo messaggio è arrivato via email"
       via_auto_generated_email: "questo messaggio è arrivato tramite una email auto generata"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
@@ -3899,7 +3914,7 @@ it:
         admin: "azioni post-amministrazione"
         admin_action: "Amministrazione"
         permanently_delete: "Elimina definitivamente"
-        permanently_delete_confirmation: "Sicuro di voler eliminare definitivamente questo messaggio? Non sarà possibile recuperarlo."
+        permanently_delete_confirm_phrase: "elimina definitivamente"
         wiki: "Rendi Wiki"
         unwiki: "Rimuovi Wiki"
         convert_to_moderator: "Aggiungi Colore Staff"
@@ -4044,6 +4059,7 @@ it:
       back: "Torna alla categoria"
       general: "Generale"
       settings: "Impostazioni"
+      moderation: "Moderazione"
       advanced: "Avanzato"
       topic_template: "Modello"
       tags: "Etichette"
@@ -4072,6 +4088,8 @@ it:
         tag_group: "Gruppo di Etichette"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"
       create_long: "Crea una nuova categoria"
+      type_settings_schema:
+        site_settings: "Impostazioni del sito"
       unsaved_changes: "Hai modifiche non salvate"
       slug_placeholder: "(Facoltativo) parole-sillabate per URL"
       creation_error: Si è verificato un errore nella creazione della categoria.
@@ -4104,6 +4122,8 @@ it:
       list: "Elenca le categorie"
       no_description: "Aggiungi una descrizione alla categoria."
       change_in_category_topic: "Modifica descrizione"
+      description_expand: "Mostra altro"
+      description_collapse: "Mostra meno"
       already_used: "Questo colore è già stato usato in un'altra categoria."
       color_palette: "Schema di colori"
       security: "Sicurezza"
@@ -4137,6 +4157,9 @@ it:
       review_group_name: "nome gruppo"
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutte le nuove risposte"
+      posting_review_modes:
+        everyone: "Chiunque"
+      posting_review_groups_placeholder: "Seleziona gruppi..."
       this_year: "quest'anno"
       position: "Posizione nella pagina delle Categorie:"
       position_disabled: "Le categorie verranno visualizzate in ordine di attività. Per controllare l'ordine delle categorie negli elenchi, abilita l'impostazione <a href='%{url}'>'posizioni di categoria fisse'</a>."
@@ -5186,8 +5209,6 @@ it:
         back: "Torna a tutti i report"
         group_traffic: "Traffico"
         group_members: "Membri"
-        group_moderation: "Moderazione"
-        group_security: "Sicurezza"
         group_other: "Altri"
       config_sections:
         account:
@@ -5219,6 +5240,9 @@ it:
           admins: "Amministratori"
           moderators: "Moderatori"
           staff: "Staff"
+        impact_types:
+          feature_type: "Funzionalità"
+          other_type: "Altri"
         filter:
           all: "Tutte"
           enabled: "Abilitato"
@@ -5235,7 +5259,6 @@ it:
           header_description: "Fornisci qui informazioni su questo sito e sul tuo team in modo che le persone possano scoprire di cosa si occupa la tua community, chi c'è dietro e come contattarti in caso di problemi. I dati verranno visualizzati sulla pagina <a href='%{basePath}/about'>Informazioni</a> del tuo sito."
         developer:
           title: "Sviluppatore"
-          header_description: "Impostazioni da sviluppatore per controllare limiti di velocità, moltiplicatori e calcoli, modalità provvisoria e altre funzionalità avanzate"
         experimental:
           title: "Sperimentale"
           header_description: "Attiva o disattiva le funzionalità sperimentali per il tuo sito: la maggior parte di queste può essere controllata a livello di gruppo"
@@ -5430,6 +5453,13 @@ it:
             logs:
               title: "Log"
               header_description: "Visualizza e gestisci i log per backup, ripristini e caricamenti"
+        problem_checks:
+          priority: "Priorità"
+          status: "Stato"
+          last_run_at: "Ultima esecuzione"
+          ignore: "Ignora"
+          more_options:
+            title: "Altre opzioni"
         reports:
           title: "Report"
           header_description: "I report sono uno strumento potente per aiutarti a capire cosa sta succedendo sul tuo sito. Possono aiutarti a identificare tendenze, individuare problemi e prendere decisioni basate sui dati."
@@ -5670,7 +5700,7 @@ it:
           all: "Tutti"
           view_table: "tabella"
           view_graph: "grafico"
-          refresh_report: "Aggiorna Rapporto"
+          refresh_report: "Aggiorna"
           daily: Ogni giorno
           monthly: Mensile
           weekly: Settimanale
@@ -6554,7 +6584,6 @@ it:
           import_web_tip: "Archivio contenente il tema"
           direct_install_tip: "Sei sicuro di voler installare <strong>%{name}</strong> dall'archivio elencato di seguito?"
           import_web_advanced: "Avanzato…"
-          import_file_tip: "File .tar.gz, .zip, o .dcstyle.json contenente il tema"
           is_private: "Il tema è in un archivio git privato"
           finish_install: "Completa l'installazione del tema"
           last_attempt: "Il processo di installazione non si è concluso, ultimo tentativo:"
@@ -7717,7 +7746,7 @@ it:
             confirm: "Sì, aggiorna i criteri della password"
           min_admin_password_length:
             confirm: "Sì, aggiorna i criteri della password"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Sì, aggiorna i criteri della password"
           block_common_passwords:
             confirm: "Sì, aggiorna i criteri della password"

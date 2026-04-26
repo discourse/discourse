@@ -3,6 +3,8 @@
 require "csv"
 
 class InvitesController < ApplicationController
+  ALLOWED_BULK_INVITE_COLUMNS = %w[email groups topic_id locale]
+
   requires_login only: %i[
                    create
                    create_multiple
@@ -207,6 +209,8 @@ class InvitesController < ApplicationController
       raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?
       guardian.ensure_can_invite_to!(topic)
     end
+
+    invite.topics.each { |t| guardian.ensure_can_invite_to!(t) } if !params.has_key?(:topic_id)
 
     if params[:group_ids].present? || params[:group_names].present?
       groups = Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
@@ -490,19 +494,29 @@ class InvitesController < ApplicationController
 
         csv_header = nil
         invites = []
+        valid_columns = nil
 
         CSV.foreach(file.tempfile, encoding: "bom|utf-8") do |row|
           # Try to extract a CSV header, if it exists
           if csv_header.nil?
             if row[0] == "email"
               csv_header = row
+              valid_columns = Set.new(ALLOWED_BULK_INVITE_COLUMNS + UserField.pluck(:name))
               next
             else
               csv_header = %w[email groups topic_id]
             end
           end
 
-          invites.push(csv_header.zip(row).map.to_h.filter { |k, v| v.present? }) if row[0].present?
+          if row[0].present?
+            invite =
+              csv_header
+                .zip(row)
+                .map
+                .to_h
+                .filter { |k, v| v.present? && (!valid_columns || valid_columns.include?(k)) }
+            invites.push(invite)
+          end
 
           break if invites.count >= SiteSetting.max_bulk_invites
         end
@@ -552,11 +566,13 @@ class InvitesController < ApplicationController
 
     # Show email if the user already authenticated their email
     different_external_email = false
+    email_verified_by_authentication = false
 
     if server_session[:authentication]
       auth_result = Auth::Result.from_session_data(server_session[:authentication], user: nil)
       if invite.email == auth_result.email
         email = invite.email
+        email_verified_by_authentication = auth_result.email_valid
       else
         different_external_email = true
       end
@@ -585,7 +601,8 @@ class InvitesController < ApplicationController
 
     info[:different_external_email] = true if different_external_email
 
-    if staged_user = User.where(staged: true).with_email(invite.email).first
+    if (email_verified_by_link || email_verified_by_authentication) &&
+         (staged_user = User.where(staged: true).with_email(invite.email).first)
       info[:username] = staged_user.username
       info[:user_fields] = staged_user.user_fields
     end

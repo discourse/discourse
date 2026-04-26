@@ -65,9 +65,10 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @title={{i18n "admin.config_areas.about.community_name"}}
         @validation="required"
         @format="large"
+        @type="input"
         as |field|
       >
-        <field.Input
+        <field.Control
           placeholder={{i18n
             "admin.config_areas.about.community_name_placeholder"
           }}
@@ -78,17 +79,19 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @name="summary"
         @title={{i18n "admin.config_areas.about.community_summary"}}
         @format="large"
+        @type="input"
         as |field|
       >
-        <field.Input />
+        <field.Control />
       </form.Field>
 
       <form.Field
         @name="extendedDescription"
         @title={{i18n "admin.config_areas.about.community_description"}}
+        @type="composer"
         as |field|
       >
-        <field.Composer />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -96,9 +99,10 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @title={{i18n "admin.config_areas.about.community_title"}}
         @description={{i18n "admin.config_areas.about.community_title_help"}}
         @format="large"
+        @type="input"
         as |field|
       >
-        <field.Input />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -106,9 +110,10 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @title={{i18n "admin.config_areas.about.banner_image"}}
         @helpText={{i18n "admin.config_areas.about.banner_image_help"}}
         @onSet={{this.setImage}}
+        @type="image"
         as |field|
       >
-        <field.Image @type="site_setting" />
+        <field.Control @type="site_setting" />
       </form.Field>
 
       <form.Submit

@@ -42,6 +42,7 @@ export default class BookmarkMenu extends Component {
 
     const custom = this.timeShortcuts.custom();
     custom.label = "time_shortcut.more_options";
+    custom.icon = "far-calendar-plus";
     this.reminderAtOptions.push(custom);
   }
 
@@ -115,7 +116,7 @@ export default class BookmarkMenu extends Component {
     }
 
     if (this.existingBookmark) {
-      return i18n("bookmarked.edit_bookmark");
+      return i18n("bookmarked.edit_bookmark", { count: 1 });
     } else {
       return i18n("bookmarked.title");
     }
@@ -329,6 +330,7 @@ export default class BookmarkMenu extends Component {
 
           {{else}}
             <dropdown.item class="bookmark-menu__row-title">
+              {{icon "bell"}}
               {{i18n "bookmarks.also_set_reminder"}}
             </dropdown.item>
 
@@ -344,6 +346,7 @@ export default class BookmarkMenu extends Component {
                   @translatedTitle={{this.reminderShortcutTimeTitle option}}
                   @action={{fn this.onChooseReminderOption option}}
                   class="bookmark-menu__row-btn btn-transparent"
+                  @icon={{option.icon}}
                 />
               </dropdown.item>
             {{/each}}

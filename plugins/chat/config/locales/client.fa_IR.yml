@@ -174,7 +174,6 @@ fa_IR:
       retry_staged_message:
         title: "خطای شبکه"
         action: "دوباره بفرستم؟"
-      unreliable_network: "شبکه پایدار نیست، ارسال پیام‌ها و ذخیره پیش‌نویس ممکن است کار نکند"
       bookmark_message: "نشانک"
       bookmark_message_edit: "ویرایش نشانک"
       restore: "بازگرداندن پیام حذف شده"

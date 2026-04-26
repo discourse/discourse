@@ -9,24 +9,22 @@ module DiscourseAi
         plugin.add_to_serializer(:current_user, :can_summarize) do
           return false if !SiteSetting.ai_summarization_enabled
 
-          if (
-               ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
-             ).blank?
+          if (ai_agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_summarization_agent)).blank?
             return false
           end
-          scope.user.in_any_groups?(ai_persona.allowed_group_ids.to_a)
+          scope.user.in_any_groups?(ai_agent.allowed_group_ids.to_a)
         end
 
         plugin.add_to_serializer(:topic_view, :summarizable) do
-          scope.can_see_summary?(object.topic)
+          scope.can_see_summary?(object.topic, cached_summary: ai_summary_record)
         end
 
-        plugin.add_to_serializer(:topic_view, :has_cached_summary) do
-          AiSummary.exists?(target: object.topic, summary_type: AiSummary.summary_types[:complete])
-        end
+        plugin.add_to_serializer(:topic_view, :has_cached_summary) { ai_summary_record.present? }
 
         plugin.add_to_serializer(:web_hook_topic_view, :summarizable) do
-          scope.can_see_summary?(object.topic)
+          cached_summary =
+            DiscourseAi::TopicSummarization.for(object.topic, scope.user).cached_summary
+          scope.can_see_summary?(object.topic, cached_summary: cached_summary)
         end
 
         plugin.add_to_serializer(
@@ -36,15 +34,18 @@ module DiscourseAi
         ) do
           return @ai_summary_record if defined?(@ai_summary_record)
           @ai_summary_record =
-            object.topic.ai_summaries.find_by(summary_type: AiSummary.summary_types[:complete])
+            DiscourseAi::TopicSummarization.for(object.topic, scope.user).cached_summary
         end
 
         plugin.add_to_serializer(
           :topic_view,
           :ai_summary,
           include_condition: -> do
-            DiscoursePluginRegistry.apply_modifier(:serialize_ai_summary, false) &&
-              scope.can_see_summary?(object.topic) && ai_summary_record.present?
+            next false if !DiscoursePluginRegistry.apply_modifier(:serialize_ai_summary, false)
+
+            summary_record = ai_summary_record
+            scope.can_see_summary?(object.topic, cached_summary: summary_record) &&
+              summary_record.present?
           end,
         ) do
           {

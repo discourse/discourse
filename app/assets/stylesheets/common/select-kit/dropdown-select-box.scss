@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .select-kit {
   &.single-select {
     &.dropdown-select-box {
@@ -43,9 +45,13 @@
             font-size: var(--font-0);
             color: var(--primary);
             padding: 0;
+            max-width: 100%;
 
             @include ellipsis;
-            max-width: 100%;
+
+            @include viewport.until(sm) {
+              font-weight: normal;
+            }
           }
 
           .desc {
@@ -56,11 +62,22 @@
             white-space: normal;
           }
         }
+
+        @include viewport.until(sm) {
+          .svg-icon-title {
+            width: auto;
+            height: auto;
+          }
+        }
       }
 
       .select-kit-collection {
         padding: 0;
         max-height: 100%;
+
+        @include viewport.until(sm) {
+          overflow-y: auto;
+        }
       }
 
       .select-kit-header {

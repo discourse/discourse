@@ -17,7 +17,7 @@ export default {
     }
 
     const availableBots = currentUser.ai_enabled_chat_bots.filter(
-      (bot) => !bot.is_persona || bot.has_default_llm
+      (bot) => !bot.is_agent || bot.has_default_llm
     );
 
     if (availableBots.length === 0) {

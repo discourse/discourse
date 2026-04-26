@@ -35,7 +35,7 @@ Now it's time to start writing some code! Open up the `my-first-theme` directory
 ```gjs
 import { apiInitializer } from "discourse/lib/api";
 
-export default apiInitializer("1.8.0", (api) => {
+export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
 
   api.renderInOutlet(

@@ -1,8 +1,8 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 
 export default function ageWithTooltip(dt, params = {}) {
-  return htmlSafe(
+  return trustHTML(
     autoUpdatingRelativeAge(new Date(dt), {
       ...params,
       title: params.title ?? true,

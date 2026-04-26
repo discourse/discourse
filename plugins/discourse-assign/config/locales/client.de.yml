@@ -36,6 +36,8 @@ de:
       topic_search_placeholder: "Themen nach Titel oder Beitragsinhalt suchen"
       sidebar_name_filter_placeholder: "Name/Benutzername"
       assigned: "Zugeordnet"
+      group_no_assignments_title: "Keine Zuordnungen"
+      group_no_assignments_body: "Derzeit gibt es keine aktiven Zuordnungen für diese Gruppe."
       group_everyone: "Jeder"
       assigned_to: "Zugeordnet zu"
       assigned_topic_to: "Thema zugeordnet zu <a href='%{path}'>%{username}</a>"
@@ -142,6 +144,14 @@ de:
       bulk:
         unassign: "Zuordnung von Themen aufheben"
         assign: "Themen zuordnen"
+        assign_description: "Die ausgewählten Themen dem folgenden Benutzer zuweisen:"
+        unassign_description: "Möchtest du die Zuordnung der ausgewählten Themen aufheben?"
+        confirm_assign_topics:
+          one: "%{count} Thema zuordnen"
+          other: "%{count} Themen zuordnen"
+        confirm_unassign_topics:
+          one: "Zuordnung von %{count} Thema aufheben"
+          other: "Zuordnung von %{count} Themen aufheben"
     discourse_automation:
       scriptables:
         random_assign:

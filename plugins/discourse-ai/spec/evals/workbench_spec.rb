@@ -65,7 +65,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         eval_case,
         output: output,
         total_targets: 1,
-        persona_key: :default,
+        agent_key: :default,
         formatter: formatter,
         announce_formatter: false,
         finalize_formatter: false,
@@ -141,10 +141,10 @@ RSpec.describe DiscourseAi::Evals::Workbench do
 
     before do
       enable_current_plugin
-      ensure_system_persona(DiscourseAi::Personas::Summarizer)
-      ensure_system_persona(DiscourseAi::Personas::ShortSummarizer)
-      ensure_system_persona(DiscourseAi::Personas::SpamDetector)
-      AiPersona.persona_cache.flush!
+      ensure_system_agent(DiscourseAi::Agents::Summarizer)
+      ensure_system_agent(DiscourseAi::Agents::ShortSummarizer)
+      ensure_system_agent(DiscourseAi::Agents::SpamDetector)
+      AiAgent.agent_cache.flush!
     end
 
     it "generates topic summaries using the summarization eval feature" do
@@ -185,7 +185,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         )
 
       captured_context = nil
-      allow(DiscourseAi::Personas::Bot).to receive(
+      allow(DiscourseAi::Agents::Bot).to receive(
         :as,
       ).and_wrap_original do |original, *args, **kwargs|
         original
@@ -231,27 +231,27 @@ RSpec.describe DiscourseAi::Evals::Workbench do
     end
   end
 
-  def ensure_system_persona(persona_class)
-    persona_id = DiscourseAi::Personas::Persona.system_personas[persona_class]
-    base = persona_class.new
+  def ensure_system_agent(agent_class)
+    agent_id = DiscourseAi::Agents::Agent.system_agents[agent_class]
+    base = agent_class.new
 
-    AiPersona
-      .find_or_initialize_by(id: persona_id)
-      .tap do |persona|
-        persona.system = true
-        persona.enabled = true
-        persona.priority ||= false
-        persona.name ||= persona_class.name
-        persona.description ||= persona_class.description
-        persona.system_prompt = base.system_prompt
-        persona.allowed_group_ids = [Group::AUTO_GROUPS[:everyone]]
-        persona.response_format = base.response_format
-        persona.examples = base.examples
-        persona.temperature = base.respond_to?(:temperature) ? base.temperature : nil
-        persona.top_p = base.respond_to?(:top_p) ? base.top_p : nil
-        persona.show_thinking = true
-        persona.tools ||= []
-        persona.save!(validate: false)
+    AiAgent
+      .find_or_initialize_by(id: agent_id)
+      .tap do |agent|
+        agent.system = true
+        agent.enabled = true
+        agent.priority ||= false
+        agent.name ||= agent_class.name
+        agent.description ||= agent_class.description
+        agent.system_prompt = base.system_prompt
+        agent.allowed_group_ids = [Group::AUTO_GROUPS[:everyone]]
+        agent.response_format = base.response_format
+        agent.examples = base.examples
+        agent.temperature = base.respond_to?(:temperature) ? base.temperature : nil
+        agent.top_p = base.respond_to?(:top_p) ? base.top_p : nil
+        agent.show_thinking = true
+        agent.tools ||= []
+        agent.save!(validate: false)
       end
   end
 

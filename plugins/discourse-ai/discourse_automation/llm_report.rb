@@ -21,14 +21,14 @@ if defined?(DiscourseAutomation)
     field :sample_size, component: :text, required: true, default_value: 100
     field :tokens_per_post, component: :text, required: true, default_value: 150
 
-    field :persona_id,
+    field :agent_id,
           component: :choices,
           required: true,
           default_value:
-            DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ReportRunner],
+            DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::ReportRunner],
           extra: {
             content:
-              DiscourseAi::Automation.available_persona_choices(
+              DiscourseAi::Automation.available_agent_choices(
                 require_user: false,
                 require_default_llm: false,
               ),
@@ -49,8 +49,10 @@ if defined?(DiscourseAutomation)
 
     field :allow_secure_categories, component: :boolean
 
-    field :top_p, component: :text
-    field :temperature, component: :text
+    if SiteSetting.ai_llm_temperature_top_p_enabled
+      field :top_p, component: :text
+      field :temperature, component: :text
+    end
 
     field :suppress_notifications, component: :boolean
     field :debug_mode, component: :boolean
@@ -72,7 +74,7 @@ if defined?(DiscourseAutomation)
         offset = fields.dig("offset", "value").to_i
         priority_group = fields.dig("priority_group", "value")
         tokens_per_post = fields.dig("tokens_per_post", "value")
-        persona_id = fields.dig("persona_id", "value")
+        agent_id = fields.dig("agent_id", "value")
 
         exclude_category_ids = fields.dig("exclude_categories", "value")
         exclude_tags = fields.dig("exclude_tags", "value")
@@ -92,9 +94,8 @@ if defined?(DiscourseAutomation)
         end
 
         # Backwards-compat for scripts created before this field was added.
-        if persona_id == "" || persona_id.nil?
-          persona_id =
-            DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ReportRunner]
+        if agent_id == "" || agent_id.nil?
+          agent_id = DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::ReportRunner]
         end
 
         suppress_notifications = !!fields.dig("suppress_notifications", "value")
@@ -103,7 +104,7 @@ if defined?(DiscourseAutomation)
           receivers: receivers,
           topic_id: topic_id,
           title: title,
-          persona_id: persona_id,
+          agent_id: agent_id,
           model: model,
           category_ids: category_ids,
           tags: tags,

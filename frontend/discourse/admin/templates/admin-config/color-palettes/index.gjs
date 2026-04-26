@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import ColorPaletteListItem from "discourse/admin/components/color-palette-list-item";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -45,7 +45,7 @@ export default <template>
   {{#if @controller.preferencesWarningMessage}}
     <p class="color-palette__warning">
       {{#if @controller.preferencesWarningMessage.usingNonDefaultTheme}}
-        {{htmlSafe
+        {{trustHTML
           (i18n
             "admin.customize.colors.non_default_theme_warning"
             themeName=@controller.preferencesWarningMessage.themeName
@@ -53,7 +53,7 @@ export default <template>
           )
         }}
       {{else}}
-        {{htmlSafe
+        {{trustHTML
           (i18n
             "admin.customize.colors.custom_schemes_warning"
             colorModes=@controller.preferencesWarningMessage.colorModes

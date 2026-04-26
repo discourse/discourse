@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Bot - Homepage", type: :system do
+RSpec.describe "AI Bot - Homepage" do
   let(:cdp) { PageObjects::CDP.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
@@ -38,12 +38,12 @@ RSpec.describe "AI Bot - Homepage", type: :system do
     claude_2.reload.user
   end
   fab!(:bot) do
-    persona =
-      AiPersona
-        .find(DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::General])
+    agent =
+      AiAgent
+        .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
         .class_instance
         .new
-    DiscourseAi::Personas::Bot.as(bot_user, persona: persona)
+    DiscourseAi::Agents::Bot.as(bot_user, agent: agent)
   end
 
   fab!(:pm) do
@@ -76,23 +76,23 @@ RSpec.describe "AI Bot - Homepage", type: :system do
   fab!(:topic_user) { Fabricate(:topic_user, topic: pm, user: user) }
   fab!(:topic_bot_user) { Fabricate(:topic_user, topic: pm, user: bot_user) }
 
-  fab!(:persona) do
-    persona =
-      AiPersona.create!(
-        name: "Test Persona",
-        description: "A test persona",
+  fab!(:agent) do
+    agent =
+      AiAgent.create!(
+        name: "Test Agent",
+        description: "A test agent",
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
         enabled: true,
         system_prompt: "You are a helpful bot",
       )
 
-    persona.create_user!
-    persona.update!(
+    agent.create_user!
+    agent.update!(
       default_llm_id: claude_2.id,
       allow_chat_channel_mentions: true,
       allow_topic_mentions: true,
     )
-    persona
+    agent
   end
 
   before do
@@ -242,33 +242,33 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       expect(sidebar).to have_section_link(pm.title)
     end
 
-    it "allows navigating to a specific LLM and persona" do
+    it "allows navigating to a specific LLM and agent" do
       # url encode name
-      persona_name = CGI.escape(persona.name)
+      agent_name = CGI.escape(agent.name)
       llm_name = CGI.escape(claude_2_dup.display_name)
-      visit "/discourse-ai/ai-bot/conversations?persona=#{persona_name}&llm=#{llm_name}"
+      visit "/discourse-ai/ai-bot/conversations?agent=#{agent_name}&llm=#{llm_name}"
 
-      ai_pm_homepage.persona_selector.expand # not needed, but helps to see what the list has
-      expect(ai_pm_homepage.persona_selector).to have_selected_name(persona.name)
+      ai_pm_homepage.agent_selector.expand # not needed, but helps to see what the list has
+      expect(ai_pm_homepage.agent_selector).to have_selected_name(agent.name)
       expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
     end
 
-    it "removes persona from selector when allow_personal_messages is disabled" do
+    it "removes agent from selector when allow_personal_messages is disabled" do
       begin
-        persona.update!(allow_personal_messages: false)
+        agent.update!(allow_personal_messages: false)
         ai_pm_homepage.visit
-        ai_pm_homepage.persona_selector.expand
-        expect(ai_pm_homepage.persona_selector).to have_no_option_name(persona.name)
+        ai_pm_homepage.agent_selector.expand
+        expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
       ensure
-        persona.update!(allow_personal_messages: true)
+        agent.update!(allow_personal_messages: true)
       end
     end
 
-    it "includes persona in selector when allow_personal_messages is enabled" do
+    it "includes agent in selector when allow_personal_messages is enabled" do
       # default is true
       ai_pm_homepage.visit
-      ai_pm_homepage.persona_selector.expand
-      expect(ai_pm_homepage.persona_selector).to have_option_name(persona.name)
+      ai_pm_homepage.agent_selector.expand
+      expect(ai_pm_homepage.agent_selector).to have_option_name(agent.name)
     end
 
     it "shows empty state when no PMs exist" do
@@ -360,8 +360,10 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       expect(composer).to be_opened
 
       composer.fill_in(with: "Hello bot replying to you")
-      composer.submit
-      expect(page).to have_content("Hello bot replying to you")
+      DiscourseAi::Completions::Llm.with_prepared_responses(["hello user"]) do
+        composer.submit
+        expect(page).to have_content("Hello bot replying to you")
+      end
     end
 
     it "does not render custom sidebar on non-authored bot pms" do
@@ -388,7 +390,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       expect(sidebar).to have_no_section_link(pm.title)
     end
 
-    it "Allows choosing persona and LLM" do
+    it "Allows choosing agent and LLM" do
       ai_pm_homepage.visit
 
       ai_pm_homepage.llm_selector.expand
@@ -412,12 +414,12 @@ RSpec.describe "AI Bot - Homepage", type: :system do
         SiteSetting.ai_bot_add_to_header = true
       end
 
-      it "keeps robot icon in the header and doesn't display sidebar back link" do
+      it "shows shuffle icon in the header and doesn't display sidebar back link" do
         visit "/"
         expect(header).to have_icon_in_bot_button(icon: "robot")
         header.click_bot_button
         expect(ai_pm_homepage).to have_homepage
-        expect(header).to have_icon_in_bot_button(icon: "robot")
+        expect(header).to have_icon_in_bot_button(icon: "shuffle")
         expect(ai_pm_homepage).to have_no_sidebar_back_link
       end
 

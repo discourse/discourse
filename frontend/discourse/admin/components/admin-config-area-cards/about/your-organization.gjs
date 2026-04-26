@@ -54,9 +54,10 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
         @name="companyName"
         @title={{i18n "admin.config_areas.about.company_name"}}
         @format="large"
+        @type="input"
         as |field|
       >
-        <field.Input
+        <field.Control
           placeholder={{i18n
             "admin.config_areas.about.company_name_placeholder"
           }}
@@ -71,9 +72,10 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
         @title={{i18n "admin.config_areas.about.governing_law"}}
         @description={{i18n "admin.config_areas.about.governing_law_help"}}
         @format="large"
+        @type="input"
         as |field|
       >
-        <field.Input
+        <field.Control
           placeholder={{i18n
             "admin.config_areas.about.governing_law_placeholder"
           }}
@@ -85,9 +87,10 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
         @title={{i18n "admin.config_areas.about.city_for_disputes"}}
         @description={{i18n "admin.config_areas.about.city_for_disputes_help"}}
         @format="large"
+        @type="input"
         as |field|
       >
-        <field.Input
+        <field.Control
           placeholder={{i18n
             "admin.config_areas.about.city_for_disputes_placeholder"
           }}

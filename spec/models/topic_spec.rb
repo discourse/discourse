@@ -342,6 +342,17 @@ RSpec.describe Topic do
     end
   end
 
+  describe "url" do
+    fab!(:topic)
+
+    it "omits blank slugs" do
+      topic.update_columns(title: "", slug: nil)
+      topic.reload
+
+      expect(topic.url).to eq("#{Discourse.base_url}/t/#{topic.id}")
+    end
+  end
+
   describe "updating a title to be shorter" do
     let!(:topic) { Fabricate(:topic) }
 
@@ -1253,6 +1264,14 @@ RSpec.describe Topic do
             expect(topic.allowed_groups.include?(admins)).to eq(true)
             expect(topic.remove_allowed_group(topic.user, "admins")).to eq(true)
             expect(topic.allowed_groups.include?(admins)).to eq(false)
+          end
+
+          it "sets has_messages to true on the invited group" do
+            group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone], has_messages: false)
+
+            topic.invite_group(topic.user, group)
+
+            expect(group.reload.has_messages).to eq(true)
           end
 
           def set_state!(group, user, state)
@@ -2370,9 +2389,23 @@ RSpec.describe Topic do
           TopicTimer.types[:publish_to_category],
           72,
           by_user: admin,
+          category_id: Fabricate(:category).id,
         )
 
       expect(topic_timer.execute_at).to eq_time(3.days.from_now)
+    end
+
+    it "raises an error for publish_to_category when category_id is not provided" do
+      freeze_time
+      persisted_topic = Fabricate(:topic)
+
+      expect {
+        persisted_topic.set_or_create_timer(
+          TopicTimer.types[:publish_to_category],
+          72,
+          by_user: admin,
+        )
+      }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "does not update topic's topic status created_at it was already set to close" do
@@ -2447,6 +2480,14 @@ RSpec.describe Topic do
         )
 
         expect(Topic.for_digest(user, 1.year.ago)).to eq([])
+      end
+
+      it "doesn't return topics from ignored users" do
+        ignored_user = Fabricate(:user)
+        Fabricate(:topic, user: ignored_user, created_at: 1.minute.ago)
+        Fabricate(:ignored_user, user:, ignored_user:, expiring_at: 2.months.from_now)
+
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
 
       it "does return watched topics from muted categories" do
@@ -3700,12 +3741,12 @@ RSpec.describe Topic do
 
       PostDestroyer.new(admin, post).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(
-        I18n.t("post.cannot_permanently_delete.many_posts"),
+        I18n.t("post.cannot_permanently_delete.many_posts", count: 1),
       )
 
       PostDestroyer.new(admin, post_2.reload).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(
-        I18n.t("post.cannot_permanently_delete.many_posts"),
+        I18n.t("post.cannot_permanently_delete.many_posts", count: 1),
       )
 
       PostDestroyer.new(admin, post_2.reload, force_destroy: true).destroy
@@ -3815,6 +3856,20 @@ RSpec.describe Topic do
       expect(topic.has_localization?("zh-CN")).to eq(true)
 
       expect(topic.has_localization?("z")).to eq(false)
+    end
+
+    it "returns true for a regional match (ja matches ja_JP)" do
+      topic = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic, locale: "ja_JP")
+
+      expect(topic.has_localization?("ja")).to eq(true)
+    end
+
+    it "returns true for a base locale match (pt_BR matches pt)" do
+      topic = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic, locale: "pt")
+
+      expect(topic.has_localization?("pt_BR")).to eq(true)
     end
   end
 

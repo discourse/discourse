@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User chat preferences", type: :system do
+RSpec.describe "User chat preferences" do
   fab!(:current_user, :user)
 
   let(:user_preferences_chat_page) { PageObjects::Pages::UserPreferencesChat.new }

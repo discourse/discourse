@@ -12,8 +12,10 @@ import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   chromeTest,
+  fakeTime,
   publishToMessageBus,
   selectText,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -40,7 +42,7 @@ acceptance(`Topic`, function (needs) {
 
   test("Reply as new topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click("button.share:nth-of-type(1)");
+    await click(".topic-post[data-post-number='1'] button.share");
     await click("button.new-topic");
 
     assert.dom(".d-editor-input").exists("the composer input is visible");
@@ -60,7 +62,7 @@ acceptance(`Topic`, function (needs) {
 
   test("Reply as new message", async function (assert) {
     await visit("/t/pm-for-testing/12");
-    await click("button.share:nth-of-type(1)");
+    await click(".topic-post[data-post-number='1'] button.share");
     await click("button.new-topic");
 
     assert.dom(".d-editor-input").exists("the composer input is visible");
@@ -321,7 +323,26 @@ acceptance(`Topic featured links`, function (needs) {
     await click(".topic-admin-visible .btn");
 
     await click(".toggle-admin-menu");
-    assert.dom(".topic-admin-pin").exists("should show the multi select menu");
+    assert.dom(".topic-admin-pin").exists("should show the pin menu item");
+  });
+
+  test("Bannering unlisted topic", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-visible .btn");
+
+    await click(".toggle-admin-menu");
+    assert
+      .dom(".topic-admin-pin")
+      .exists(
+        "should show the pin menu item for unlisted topics with can_banner_topic"
+      );
+
+    await click(".topic-admin-pin .btn");
+    assert
+      .dom(".make-banner")
+      .exists("should show the banner button for unlisted topics");
   });
 
   test("selecting posts", async function (assert) {
@@ -447,6 +468,11 @@ acceptance(`Topic featured links`, function (needs) {
 
 acceptance(`Topic pinning/unpinning as an admin`, function (needs) {
   needs.user({ admin: true });
+  needs.pretender((server, helper) => {
+    server.put("/t/a-topic-with-group-category-moderators/2480/status", () =>
+      helper.response({ success: "OK" })
+    );
+  });
 
   test("Admin pinning topic", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");
@@ -459,6 +485,38 @@ acceptance(`Topic pinning/unpinning as an admin`, function (needs) {
       .exists("should show the 'Pin Topic' button");
 
     assert.dom(".make-banner").exists("should show the 'Banner Topic' button");
+  });
+
+  test("Pinning a topic should consider user's timezone when selecting the later today date shortcut", async function (assert) {
+    const timezone = "America/Los_Angeles";
+    updateCurrentUser({ "user_option.timezone": timezone });
+    // Now:         2100-12-13 14:00 local / 2100-12-13 22:00 UTC
+    // Later today: 2100-12-13 17:00 local / 2100-12-14 01:00 UTC
+    //              emitted as "2100-12-13 17:00-08:00"
+    // Without timezone: parsed as 2100-12-13 17:00 UTC which is before
+    // now (2100-12-13 22:00 UTC)
+    const clock = fakeTime("2100-12-13T14:00:00", timezone, true);
+
+    try {
+      await visit("/t/topic-for-group-moderators/2480");
+
+      await click(".toggle-admin-menu");
+      await click(".topic-admin-pin .btn");
+
+      const futureDateInput = selectKit(
+        ".pin-until .future-date-input-selector"
+      );
+      await futureDateInput.expand();
+      await futureDateInput.selectRowByValue("later_today");
+
+      await click(".feature-topic .btn-primary");
+
+      assert
+        .dom(".d-modal.feature-topic")
+        .doesNotExist("topic is pinned and modal closes");
+    } finally {
+      clock.restore();
+    }
   });
 });
 
@@ -481,6 +539,11 @@ acceptance(`Topic pinning/unpinning as a staff member`, function (needs) {
 
 acceptance(`Topic pinning/unpinning as a group moderator`, function (needs) {
   needs.user({ moderator: false, admin: false, trust_level: 1 });
+  needs.pretender((server, helper) => {
+    const topicResponse = cloneJSON(topicFixtures["/t/2480/1.json"]);
+    delete topicResponse.details.can_banner_topic;
+    server.get("/t/2480.json", () => helper.response(topicResponse));
+  });
 
   test("Group category moderator pinning topic", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");

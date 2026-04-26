@@ -39,10 +39,9 @@ hr:
       llm_selector:
         none: "Ništa"
       features:
-        back: "Natrag"
         disabled: "(onemogućeno)"
         groups: "Grupe:"
-        no_persona: "Nije postavljeno"
+        no_agent: "Nije postavljeno"
         no_groups: "Ništa"
         edit: "Postavke"
         expand_list:
@@ -93,8 +92,7 @@ hr:
         periods:
           last_day: "Posljednja 24 sata"
           custom: "Prilagođeno..."
-      ai_persona:
-        back: "Natrag"
+      ai_agent:
         name: "Ime"
         edit: "Uredi"
         export: "Izvoz"
@@ -102,6 +100,8 @@ hr:
         user: Korisnik
         save: "Spremi"
         enabled: "Omogućeno?"
+        mcp_tools_modal:
+          clear_all: "Obriši sve"
         allowed_groups: "Dopuštene grupe"
         delete: "Izbriši"
         response_format:
@@ -115,7 +115,6 @@ hr:
           title: "Prijenosi"
           uploading: "Učitavanje..."
       tools:
-        back: "Natrag"
         export: "Izvoz"
         name: "Ime"
         description: "Opis"
@@ -131,17 +130,28 @@ hr:
         short_title: "Vjerodajnice"
         name: "Ime"
         secret: "Vrijednost"
-        back: "Natrag"
         save: "Spremi"
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Ugrađivanje"
+      mcp_servers:
+        name: "Ime"
+        description: "Opis"
+        url: "URL"
+        oauth_statuses:
+          connected: "Povezano"
+        oauth_connect: "Povežite se"
+        enabled: "Omogućeno"
+        save: "Spremi"
+        edit: "Uredi"
+        delete: "Izbriši"
+        tools_modal:
+          required: "Potrebno"
       llms:
         display_name: "Ime"
         provider: "Pružatelj usluga"
         save: "Spremi"
         edit: "Uredi"
-        back: "Natrag"
         delete: Izbriši
         quotas:
           group: "Grupa"
@@ -181,7 +191,6 @@ hr:
         image_caption:
           save_caption: "Spremi"
       embeddings:
-        back: "Natrag"
         save: "Spremi"
         delete: "Izbriši"
         edit: "Uredi"

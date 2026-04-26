@@ -1,10 +1,17 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import Category from "discourse/models/category";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 import ListSetting from "discourse/select-kit/components/list-setting";
 import { eq } from "discourse/truth-helpers";
 
 export default class AiFeatureSettingField extends Component {
   @service site;
+
+  @tracked selectedCategories = [];
 
   parseList = (value) => {
     return value?.toString().split("|").filter(Boolean) || [];
@@ -16,11 +23,40 @@ export default class AiFeatureSettingField extends Component {
     };
   };
 
+  constructor() {
+    super(...arguments);
+    if (this.controlType === "category_list") {
+      this.#loadCategories();
+    }
+  }
+
   get groupChoices() {
     return (this.site.groups || []).map((g) => ({
       name: g.name,
       id: g.id.toString(),
     }));
+  }
+
+  async #loadCategories() {
+    const ids = this.#categoryIds;
+    if (ids.length) {
+      this.selectedCategories = await Category.asyncFindByIds(ids);
+    }
+  }
+
+  get #categoryIds() {
+    return (this.args.field?.value || "").toString().split("|").filter(Boolean);
+  }
+
+  @action
+  categoryValueChanged() {
+    this.#loadCategories();
+  }
+
+  @action
+  onChangeCategories(categories) {
+    const value = (categories || []).map((c) => c.id).join("|");
+    this.args.field.set(value);
   }
 
   get hasEnumChoices() {
@@ -48,21 +84,30 @@ export default class AiFeatureSettingField extends Component {
 
   <template>
     {{#if (eq this.controlType "bool")}}
-      <@field.Checkbox>
+      <@Control>
         {{@setting.description}}
-      </@field.Checkbox>
+      </@Control>
     {{else if (eq this.controlType "integer")}}
-      <@field.Input @type="number" />
+      <@Control />
     {{else if (eq this.controlType "enum")}}
-      <@field.Select as |select|>
+      <@Control as |select|>
         {{#each @setting.valid_values as |option|}}
           <select.Option @value={{option.value}}>
             {{option.name}}
           </select.Option>
         {{/each}}
-      </@field.Select>
+      </@Control>
+    {{else if (eq this.controlType "category_list")}}
+      <@Control>
+        <div {{didUpdate this.categoryValueChanged @field.value}}>
+          <CategorySelector
+            @categories={{this.selectedCategories}}
+            @onChange={{this.onChangeCategories}}
+          />
+        </div>
+      </@Control>
     {{else if (eq this.controlType "group_list")}}
-      <@field.Custom>
+      <@Control>
         <ListSetting
           @value={{this.parseList @field.value}}
           @choices={{this.groupChoices}}
@@ -71,9 +116,9 @@ export default class AiFeatureSettingField extends Component {
           @valueProperty="id"
           @onChange={{this.serializeList @field.set}}
         />
-      </@field.Custom>
+      </@Control>
     {{else if (eq this.controlType "compact_list")}}
-      <@field.Custom>
+      <@Control>
         <ListSetting
           @value={{this.parseList @field.value}}
           @choices={{this.compactListChoices}}
@@ -82,9 +127,9 @@ export default class AiFeatureSettingField extends Component {
           @valueProperty={{if this.hasEnumChoices "value"}}
           @onChange={{this.serializeList @field.set}}
         />
-      </@field.Custom>
+      </@Control>
     {{else}}
-      <@field.Input />
+      <@Control />
     {{/if}}
   </template>
 }

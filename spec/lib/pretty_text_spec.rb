@@ -1715,8 +1715,18 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "replaces Emoji from Unicode 14.0" do
-      expect(PrettyText.cook("🫣")).to match(/\:face_with_peeking_eye\:/)
+    it "replaces Unicode emoji from all supported Emoji versions" do
+      expect(PrettyText.cook("😀")).to match(/\:grinning_face\:/) # Emoji 1.0
+      expect(PrettyText.cook("🤳")).to match(/\:selfie\:/) # Emoji 3.0
+      expect(PrettyText.cook("🦷")).to match(/\:tooth\:/) # Emoji 11.0
+      expect(PrettyText.cook("🧅")).to match(/\:onion\:/) # Emoji 12.0
+      expect(PrettyText.cook("🥷")).to match(/\:ninja\:/) # Emoji 13.0
+      expect(PrettyText.cook("❤️‍🔥")).to match(/\:heart_on_fire\:/) # Emoji 13.1
+      expect(PrettyText.cook("🫠")).to match(/\:melting_face\:/) # Emoji 14.0
+      expect(PrettyText.cook("🫨")).to match(/\:shaking_face\:/) # Emoji 15.0
+      expect(PrettyText.cook("🐦‍🔥")).to match(/\:phoenix\:/) # Emoji 15.1
+      expect(PrettyText.cook("🫩")).to match(/\:face_with_bags_under_eyes\:/) # Emoji 16.0
+      expect(PrettyText.cook("🫪")).to match(/\:distorted_face\:/) # Emoji 17.0
     end
 
     context "with subfolder" do
@@ -2583,6 +2593,27 @@ HTML
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
     end
 
+    it "handles attachment filenames with markdown characters" do
+      SiteSetting.authorized_extensions = "txt"
+
+      {
+        "_test_file_.txt" => "<em>",
+        "*test*.txt" => "<em>",
+        "**bold**.txt" => "<strong>",
+        "~~strike~~.txt" => "<s>",
+        "`code`.txt" => "<code>",
+      }.each do |filename, bad_tag|
+        upload = Fabricate(:upload, original_filename: filename, extension: "txt")
+        markdown = UploadMarkdown.new(upload).to_markdown
+        cooked = PrettyText.cook(markdown)
+
+        expect(cooked).to include('class="attachment"'),
+        "expected attachment class for filename: #{filename}\nmarkdown: #{markdown}\ncooked: #{cooked}"
+        expect(cooked).not_to include(bad_tag),
+        "unexpected #{bad_tag} for filename: #{filename}\nmarkdown: #{markdown}\ncooked: #{cooked}"
+      end
+    end
+
     it "can place a blank image if we can not find the upload" do
       raw = <<~MD
       ![upload](upload://abcABC.png)
@@ -2624,6 +2655,21 @@ HTML
       <iframe src='https://bob.com/abc/def'></iframe>
       <iframe src='https://bob.com/abc/def/../ghi'></iframe>
       <iframe src='https://bob.com/abc/def/ghi/../../jkl'></iframe>
+    HTML
+
+    html = <<~HTML
+      <iframe src="https://bob.com/abc/def"></iframe>
+    HTML
+
+    expect(PrettyText.cook(raw).strip).to eq(html.strip)
+  end
+
+  it "can skip URL-encoded relative paths in allowlist iframes" do
+    SiteSetting.allowed_iframes = "https://bob.com/abc/def"
+    raw = <<~HTML
+      <iframe src='https://bob.com/abc/def'></iframe>
+      <iframe src='https://bob.com/abc/def/%2e%2e/ghi'></iframe>
+      <iframe src='https://bob.com/abc/def/%2E%2E/ghi'></iframe>
     HTML
 
     html = <<~HTML

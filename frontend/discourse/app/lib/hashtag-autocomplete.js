@@ -1,5 +1,5 @@
 import { cancel } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import RichHashtagAutocompleteResults from "discourse/components/rich-hashtag-autocomplete-results";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
@@ -113,14 +113,20 @@ function _searchGeneric(term, contextualHashtagConfiguration) {
 }
 
 function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
+  // Only request types the client can actually render. Plugin-contributed
+  // types may be missing when their JS isn't loaded (e.g. in safe mode).
+  const registeredTypes = getHashtagTypeClassesNew();
+  const order = contextualHashtagConfiguration.filter(
+    (type) => type in registeredTypes
+  );
   currentSearch = ajax("/hashtags/search.json", {
-    data: { term, order: contextualHashtagConfiguration },
+    data: { term, order },
   });
   currentSearch
     .then((response) => {
       response.results?.forEach((result) => {
         // Convert :emoji: in the result text to HTML safely.
-        result.text = htmlSafe(emojiUnescape(escapeExpression(result.text)));
+        result.text = trustHTML(emojiUnescape(escapeExpression(result.text)));
 
         let opts = {
           preloaded: true,
@@ -142,7 +148,9 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
         }
 
         const hashtagType = getHashtagTypeClassesNew()[result.type];
-        result.iconHtml = hashtagType.generateIconHTML(opts);
+        if (hashtagType) {
+          result.iconHtml = hashtagType.generateIconHTML(opts);
+        }
       });
       resultFunc(response.results || CANCELLED_STATUS);
     })

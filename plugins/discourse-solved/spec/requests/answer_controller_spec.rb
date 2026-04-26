@@ -65,6 +65,7 @@ RSpec.describe DiscourseSolved::AnswerController do
       end
     end
   end
+
   describe "#unaccept" do
     before do
       # Setup an accepted solution

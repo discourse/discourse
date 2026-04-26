@@ -4,7 +4,7 @@ import { getOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
@@ -110,6 +110,9 @@ export default class FormTemplateFieldUpload extends Component {
 
     next(this, () => {
       this.args.onChange(this.uploadValue);
+      document
+        .querySelector(`input[name="${this.args.id}"]`)
+        ?.dispatchEvent(new Event("input", { bubbles: true }));
     });
   }
 
@@ -142,11 +145,9 @@ export default class FormTemplateFieldUpload extends Component {
 
       {{#if @attributes.description}}
         <span class="form-template-field__description">
-          {{htmlSafe @attributes.description}}
+          {{trustHTML @attributes.description}}
         </span>
       {{/if}}
-
-      <input type="hidden" name={{@id}} value={{this.uploadValue}} />
 
       <PickFilesButton
         @registerFileInput={{this.uppyUpload.setup}}
@@ -177,6 +178,16 @@ export default class FormTemplateFieldUpload extends Component {
           {{/each}}
         </ul>
       {{/if}}
+
+      <input
+        type="text"
+        name={{@id}}
+        value={{this.uploadValue}}
+        required={{if @validations.required "required" ""}}
+        class="form-template-field__upload-hidden-input"
+        tabindex="-1"
+        aria-hidden="true"
+      />
     </div>
   </template>
 }

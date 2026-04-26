@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { isBlank } from "@ember/utils";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -24,13 +25,13 @@ function roundDuration(duration) {
 function inputValueFromMinutes(minutes) {
   if (!minutes) {
     return null;
-  } else if (minutes > YEAR) {
+  } else if (minutes >= YEAR) {
     return roundDuration(minutes / YEAR);
-  } else if (minutes > MONTH) {
+  } else if (minutes >= MONTH) {
     return roundDuration(minutes / MONTH);
-  } else if (minutes > DAY) {
+  } else if (minutes >= DAY) {
     return roundDuration(minutes / DAY);
-  } else if (minutes > HOUR) {
+  } else if (minutes >= HOUR) {
     return roundDuration(minutes / HOUR);
   } else {
     return minutes;
@@ -38,13 +39,13 @@ function inputValueFromMinutes(minutes) {
 }
 
 function intervalFromMinutes(minutes) {
-  if (minutes > YEAR) {
+  if (minutes >= YEAR) {
     return "years";
-  } else if (minutes > MONTH) {
+  } else if (minutes >= MONTH) {
     return "months";
-  } else if (minutes > DAY) {
+  } else if (minutes >= DAY) {
     return "days";
-  } else if (minutes > HOUR) {
+  } else if (minutes >= HOUR) {
     return "hours";
   } else {
     return "mins";
@@ -55,11 +56,6 @@ export default class RelativeTimePicker extends Component {
   @tracked inputValue;
   @tracked duration;
   @tracked interval;
-
-  constructor() {
-    super(...arguments);
-    this.initValues();
-  }
 
   get intervals() {
     const count = this.duration ? parseFloat(this.duration) : 0;
@@ -160,30 +156,39 @@ export default class RelativeTimePicker extends Component {
       }
 
       this.duration = newDuration;
-      this.interval = intervalFromMinutes(this.duration);
-      this.inputValue = inputValueFromMinutes(this.duration);
+      this.interval = intervalFromMinutes(newDuration);
+      this.inputValue = inputValueFromMinutes(newDuration);
     }
 
-    this.args.onChange?.(this.duration);
+    this.args.onChange?.(this.outputDuration);
+  }
+
+  get outputDuration() {
+    if (this.args.durationOutputUnit === "hours") {
+      return this.duration / HOUR;
+    }
+    return this.duration;
   }
 
   @action
   onChangeInterval(interval) {
     this.interval = interval;
 
-    const newDuration = this.minutesFromInputValueAndInterval(
+    let newDuration = this.minutesFromInputValueAndInterval(
       this.inputValue,
       this.interval
     );
     if (newDuration !== this.duration) {
       this.duration = newDuration;
-      this.args.onChange?.(this.duration);
+      this.inputValue = inputValueFromMinutes(newDuration);
+      this.args.onChange?.(this.outputDuration);
     }
   }
 
   <template>
     <div class="relative-time-picker" ...attributes>
       <input
+        {{didInsert this.initValues}}
         {{didUpdate this.initValues @durationMinutes @durationHours}}
         {{on "change" this.onChangeDuration}}
         type="number"

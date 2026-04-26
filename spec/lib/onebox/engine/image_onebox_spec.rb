@@ -76,4 +76,12 @@ RSpec.describe Onebox::Engine::ImageOnebox do
       Onebox.preview("http://www.discourse.org/images/logo", { content_type: "image/png" }).to_s,
     ).to match(/<img/)
   end
+
+  context "with Dropbox URL" do
+    let(:html) { Onebox.preview("https://www.dropbox.com/scl/fi/abc123/image.png?rlkey=xyz").to_s }
+
+    it "transforms to direct download link" do
+      expect(html).to include("dl.dropboxusercontent.com")
+    end
+  end
 end

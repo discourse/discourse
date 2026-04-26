@@ -1,14 +1,12 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
-import { isEmpty } from "@ember/utils";
+import { trustHTML } from "@ember/template";
+import { isSettingValueTrue } from "discourse/admin/models/site-setting";
 
 export default class Bool extends Component {
   get enabled() {
-    return isEmpty(this.args.value)
-      ? false
-      : this.args.value.toString() === "true";
+    return isSettingValueTrue(this.args.value);
   }
 
   @action
@@ -28,7 +26,7 @@ export default class Bool extends Component {
         checked={{this.enabled}}
         disabled={{@disabled}}
       />
-      <span>{{htmlSafe @setting.description}}</span>
+      <span>{{trustHTML @setting.description}}</span>
     </label>
   </template>
 }

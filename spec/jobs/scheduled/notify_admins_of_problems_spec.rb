@@ -13,6 +13,17 @@ RSpec.describe ::Jobs::NotifyAdminsOfProblems do
     expect { described_class.new.execute({}) }.to change { Notification.count }.by(1)
   end
 
+  it "does not include ignored problem checks" do
+    ProblemCheckTracker.create!(
+      identifier: "bad_favicon_url",
+      last_success_at: 3.days.ago,
+      last_problem_at: 1.hour.ago,
+      ignored_at: 1.day.ago,
+    )
+
+    expect { described_class.new.execute({}) }.not_to change { Notification.count }
+  end
+
   it "does not replace old notification created in last 7 days" do
     ProblemCheckTracker.create!(
       identifier: "bad_favicon_url",

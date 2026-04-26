@@ -1,9 +1,9 @@
-import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 
-export default class FKControlTagChooser extends Component {
+export default class FKControlTagChooser extends FKBaseControl {
   static controlType = "tag-chooser";
 
   @action

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat | composer | channel", type: :system do
+RSpec.describe "Chat | composer | channel" do
   fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
   fab!(:current_user, :admin)
@@ -152,7 +152,7 @@ RSpec.describe "Chat | composer | channel", type: :system do
     it "does not show emoji autocomplete menu after whitespace" do
       chat_page.visit_channel(channel_1)
 
-      channel_page.composer.input.send_keys(":id ")
+      channel_page.composer.input.send_keys(":zznotemoji ")
 
       expect(page).to have_no_css(".autocomplete.ac-emoji")
     end

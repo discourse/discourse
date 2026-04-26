@@ -4,11 +4,57 @@ RSpec.describe PostActionUsersController do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:post) { Fabricate(:post, user: sign_in(user)) }
 
-  describe "index" do
+  describe "#index" do
     describe "when limit params is invalid" do
       include_examples "invalid limit params",
                        "/post_action_users.json",
                        described_class::INDEX_LIMIT
+    end
+
+    it "does not include total_rows_post_action_users for restricted action types" do
+      notify_mod = PostActionType.types[:notify_moderators]
+
+      PostActionCreator.new(post.user, post, notify_mod, message: "first report").perform
+      PostActionCreator.new(
+        Fabricate(:user, refresh_auto_groups: true),
+        post,
+        notify_mod,
+        message: "second report",
+      ).perform
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: notify_mod,
+            limit: 1,
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post_action_users"].map { |u| u["id"] }).to eq([user.id])
+      expect(response.parsed_body["total_rows_post_action_users"]).to be_nil
+    end
+
+    it "includes total_rows_post_action_users for restricted action types when staff" do
+      notify_mod = PostActionType.types[:notify_moderators]
+
+      PostActionCreator.new(post.user, post, notify_mod, message: "first report").perform
+      PostActionCreator.new(
+        Fabricate(:user, refresh_auto_groups: true),
+        post,
+        notify_mod,
+        message: "second report",
+      ).perform
+
+      sign_in(Fabricate(:admin))
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: notify_mod,
+            limit: 1,
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post_action_users"].map { |u| u["id"] }).to eq([user.id])
+      expect(response.parsed_body["total_rows_post_action_users"]).to eq(2)
     end
   end
 

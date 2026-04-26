@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
@@ -13,7 +13,7 @@ export default class UserActivityIndex extends UserActivityStreamRoute {
     const title = i18n("user_activity.no_activity_title");
     let body = "";
     if (this.isCurrentUser(user)) {
-      body = htmlSafe(
+      body = trustHTML(
         i18n("user_activity.no_activity_body", {
           topUrl: getURL("/top"),
           categoriesUrl: getURL("/categories"),

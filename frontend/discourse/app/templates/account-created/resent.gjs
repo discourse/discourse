@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
 import { i18n } from "discourse-i18n";
 
@@ -6,7 +6,7 @@ export default <template>
   <SignupProgressBar @step="activate" />
   <div class="ac-message">
     {{#if @controller.email}}
-      {{htmlSafe
+      {{trustHTML
         (i18n
           "login.sent_activation_email_again" currentEmail=@controller.email
         )

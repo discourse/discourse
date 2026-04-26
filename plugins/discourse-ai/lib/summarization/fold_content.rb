@@ -46,10 +46,7 @@ module DiscourseAi
           if summary
             @existing_summary = summary
 
-            if summary.original_content_sha != latest_sha ||
-                 content_to_summarize.any? { |cts| cts[:last_version_at] > summary.updated_at }
-              summary.mark_as_outdated
-            end
+            summary.mark_as_outdated if outdated_summary?(summary)
           end
         end
         @existing_summary
@@ -112,6 +109,18 @@ module DiscourseAi
         @latest_sha ||= AiSummary.build_sha(content_to_summarize.map { |c| c[:id] }.join)
       end
 
+      def outdated_summary?(summary)
+        if (fingerprint = strategy.summary_fingerprint)
+          return true if summary.original_content_sha != fingerprint[:original_content_sha]
+          return true if fingerprint[:latest_version_at]&.> summary.updated_at
+
+          return false
+        end
+
+        summary.original_content_sha != latest_sha ||
+          content_to_summarize.any? { |cts| cts[:last_version_at] > summary.updated_at }
+      end
+
       # @param items { Array<Hash> } - Content to summarize. Structure will be: { poster: who wrote the content, id: a way to order content, text: content }
       # @param user { User } - User object used for auditing usage.
       # @param &on_partial_blk { Block - Optional } - The passed block will get called with the LLM partial response.
@@ -142,7 +151,7 @@ module DiscourseAi
         end
 
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: user,
             skip_show_thinking: true,
             feature_name: strategy.feature,
@@ -155,7 +164,7 @@ module DiscourseAi
         buffer_blk =
           Proc.new do |partial, _, type|
             if type == :structured_output
-              json_summary_schema_key = bot.persona.response_format&.first.to_h
+              json_summary_schema_key = bot.agent.response_format&.first.to_h
               partial_summary =
                 partial.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
 

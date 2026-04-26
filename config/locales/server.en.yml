@@ -463,6 +463,8 @@ en:
   not_logged_in: "You need to be logged in to do that."
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
+  topic_converter:
+    too_many_recipients: "Cannot convert: this topic has more participants than the max allowed (%{max})."
   authenticator_not_found: "Authentication method does not exist, or has been disabled."
   authenticator_no_connect: "This authentication provider does not allow connection to an existing forum account."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
@@ -481,7 +483,13 @@ en:
   delete_topic_failed: "There was an error deleting that topic. Please contact the site's administrator."
 
   reading_time: "Reading time"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} mins 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
 
   action_already_performed: "Oops! You already performed this action. Can you try refreshing the page?"
 
@@ -651,6 +659,7 @@ en:
         one: "Maximum %{count} user can be added at once"
         other: "Maximum %{count} users can be added at once"
       usernames_or_emails_required: "Usernames or emails must be present"
+      cannot_add_emails: "Only usernames can be used to add members to this group. To invite by email, use the Invite button."
       counting_too_many_email_domains:
         one: "Maximum %{count} email domain can be counted at once"
         other: "Maximum %{count} email domains can be counted at once"
@@ -875,6 +884,7 @@ en:
       invalid_email_in: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
+      groups_required_for_mode: "You must select at least one group for %{setting}."
       description_incomplete: "The category description post must have at least one paragraph."
       description_too_long:
         one: "Description is too long (maximum is %{count} character)."
@@ -919,7 +929,9 @@ en:
       one: "%{count} Like"
       other: "%{count} Likes"
     cannot_permanently_delete:
-      many_posts: "This topic has undeleted posts. Please permanently delete them before permanently deleting the topic."
+      many_posts:
+        one: "This topic still has %{count} post that needs to be permanently deleted before the topic itself can be permanently deleted."
+        other: "This topic still has %{count} posts that need to be permanently deleted before the topic itself can be permanently deleted."
       wait_or_different_admin: "You must wait %{time_left} before permanently deleting this post or a different administrator must do it."
 
   rate_limiter:
@@ -1154,6 +1166,8 @@ en:
     connection_error: "There was an issue connecting with the server, check the server name and port and try again."
     timeout_error: "Connection to the server timed out, check the server name and port and try again."
     unhandled_error: "Unhandled error when testing email settings. %{message}"
+    invalid_host: "The provided host resolves to a disallowed IP address."
+    host_resolve_failed: "The provided host could not be resolved."
   webauthn:
     validation:
       invalid_type_error: "The webauthn type provided was invalid. Valid types are webauthn.get and webauthn.create."
@@ -1247,6 +1261,10 @@ en:
       every_month: "every month"
       every_six_months: "every six months"
 
+  calendar_subscriptions:
+    application_name: "Calendar Subscriptions"
+    bookmarks_feed_name: "%{site_title} - Bookmark reminders"
+
   user_api_key:
     title: 'Authorize "%{application_name}"'
     authorize: "Authorize"
@@ -1257,6 +1275,8 @@ en:
     permissions_header: 'This will allow "%{application_name}" to:'
     redirect_warning: "Authorizing will redirect you to"
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
+    copy_key: "Copy Key"
+    copied: "Copied!"
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
     otp_confirmation:
       confirm_title: Continue to %{site_name}
@@ -1825,9 +1845,6 @@ en:
     max_oneboxes_per_post: "Set the maximum number of oneboxes that can be included in a single post. Oneboxes provide a preview of linked content within the post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
     github_onebox_access_tokens: "A mapping of a GitHub organisation or user to a GitHub access token which is used to generate GitHub oneboxes for private repos, commits, pull requests, issues, and file contents. Without this, only public GitHub URLs will be oneboxed."
-    reddit_onebox_client_id: "Reddit API OAuth client ID used for authenticated Reddit oneboxes. Create a 'script' type app at reddit.com/prefs/apps to obtain credentials."
-    reddit_onebox_client_secret: "Reddit API OAuth client secret used for authenticated Reddit oneboxes. Found under the 'script' type app created at reddit.com/prefs/apps."
-
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
@@ -1846,6 +1863,7 @@ en:
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
+    simple_email_subject: "When enabled, the email subject lines will be more concise, containing only the essential information. This makes it easier for users to quickly understand the purpose of the email at a glance."
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
     enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up 2FA."
     enforce_second_factor_on_external_auth: "Require users to use two-factor authentication (2FA) at all times. When enabled, this will prevent users logging in with external authentication methods like social logins if they have 2FA enabled. When disabled, users will only need to confirm their 2FA when logging in with a username and password. Also see the `enforce_second_factor` setting."
@@ -1936,6 +1954,7 @@ en:
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Other host sources are ignored as strict-dynamic is enabled."
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
+    can_permanently_delete: "Allow admins to permanently destroy posts, topics, and post revisions. Permanently deleted data is completely removed from the database and cannot be recovered."
     suppress_secured_categories_from_admin: "Suppress private topics and PMs in some parts of UI for admins. Content will still be visible in some places. This is not a security feature: admins can always access all content on the site."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
@@ -2131,6 +2150,8 @@ en:
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images, attachments, and backups."
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images, attachments, and backups."
+    s3_role_arn: "The ARN of the IAM role to assume for S3 operations. When set alongside access keys, Discourse will use STS AssumeRole to obtain temporary credentials."
+    s3_role_session_name: "Optional session name used when assuming an IAM role for S3 operations. Appears in CloudTrail logs for auditing. Falls back to the server hostname if blank."
     s3_region: "The Amazon S3 region name that will be used to upload images and backups."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
     s3_use_cdn_url_for_all_uploads: "Use CDN URL for all the files uploaded to s3 instead of only for images."
@@ -2238,6 +2259,7 @@ en:
     here_mention_allowed_groups: "Groups that are allowed to mention @here. Admins and moderators can always mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
+    animated_topic_thumbnails: "Use the original animated image as the topic thumbnail instead of generating a static thumbnail."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     personal_email_time_window_seconds: "Wait (n) seconds before sending any personal message notification emails, to give users a chance to edit and finalize their messages."
@@ -2547,6 +2569,8 @@ en:
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
+    embed_full_app: "Enable full app mode for embedded comments. When enabled, embedded comments will load the full Discourse application in an iframe, allowing users to interact with topics directly"
+    suppress_third_party_analytics_in_embed: "Skip rendering third-party analytics scripts (Google Tag Manager, Google Analytics, Adobe Analytics) when Discourse is loaded inside a full app embed iframe. Prevents duplicate pageviews and tag firing when the host page already loads the same scripts."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
     notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
@@ -2721,11 +2745,12 @@ en:
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Warning: This can make it easier for bad actors to discover the email address of your members (because many people use common email providers like `gmail.com`)."
-    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
+    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames during SSO and OAuth signup flows."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
     enable_site_owner_onboarding: "Shows a panel on the homepage to new admins to help them get started. Re-enable this setting to see the onboarding steps again."
+    site_owner_onboarding_max_days: "Maximum number of days after site creation to show the onboarding banner."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
     welcome_banner_image: "Set an image to display in the background of the welcome banner."
     welcome_banner_location: "Determines where on the page the welcome banner will appear."
@@ -2742,6 +2767,8 @@ en:
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
+    enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
+    enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     impersonate_without_logout: "Allow admins to impersonate a user without having to log out of their admin account."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
@@ -2764,11 +2791,16 @@ en:
     content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
     content_localization_use_default_locale_when_unsupported: "Serve localized content in the site's default locale to users whose preferred language is not listed in 'content localization supported locales'."
     content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
-    enable_upcoming_changes: "Enable upcoming changes"
+    nested_replies_enabled: "Enable the nested replies view for topics."
+    nested_replies_default: "Use nested replies as the default view for all topics."
+    nested_replies_default_sort: "Default sort algorithm for nested replies view."
+    nested_replies_max_depth: "Maximum visual nesting depth for threaded replies. Posts deeper than this show a 'Continue this thread' link."
+    nested_replies_toggle_mode_groups: "Groups that can toggle between nested and flat view."
+    nested_replies_backfill_batch_size: "Number of topics to backfill nested reply stats for per scheduled run."
+    nested_replies_cap_nesting_depth: "Cap reply nesting at the maximum visual depth. When enabled, replies to the deepest level are re-parented as siblings instead of children."
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
-    experimental_tag_settings_page: "Enable a dedicated settings page for tags at /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
@@ -2896,6 +2928,8 @@ en:
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
       activity_after: "Show topics with last activity after a date (YYYY-MM-DD or days ago)"
+      bookmarked_before: "Show topics bookmarked before a date (YYYY-MM-DD or days ago)"
+      bookmarked_after: "Show topics bookmarked after a date (YYYY-MM-DD or days ago)"
       created_before: "Show topics created before a date (YYYY-MM-DD or days ago)"
       created_after: "Show topics created after a date (YYYY-MM-DD or days ago)"
       created_by: "Show topics created by a specific user or group"
@@ -3107,8 +3141,11 @@ en:
       unauthorized: "Sorry, the login provider did not authorize your request. Please try again or contact an administrator."
 
     omniauth_error_unknown: "Something went wrong processing your login, please try again."
-    omniauth_confirm_title: "Log in using %{provider}"
+    omniauth_confirm_title: "Log in with %{provider}"
     omniauth_confirm_button: "Continue"
+    omniauth_confirm_description: "You will be redirected to %{provider} to sign in"
+    omniauth_confirm_provider_description: "Secure authentication"
+    omniauth_confirm_footer_html: "You will be signed into %{site}"
     authenticator_error_no_valid_email: "No email addresses associated with %{account} are allowed. You may need to configure your account with a different email address."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     new_registrations_disabled_discourse_connect: "New account registrations are only allowed through Discourse Connect."
@@ -3309,6 +3346,7 @@ en:
   download_backup_mailer:
     title: "Download Backup Mailer"
     subject_template: "[%{email_prefix}] Site Backup Download"
+    subject_template_improved: "%{email_prefix}: Site backup download"
     text_body_template: |
       Here's the [site backup download](%{backup_file_path}) you requested.
 
@@ -3321,6 +3359,7 @@ en:
   admin_confirmation_mailer:
     title: "Admin Confirmation"
     subject_template: "[%{email_prefix}] Confirm new Admin Account"
+    subject_template_improved: "%{email_prefix}: Confirm new admin account"
     text_body_template: |
       Please confirm that you'd like to add **%{target_username} (%{target_email})** as an administrator for your forum.
 
@@ -3329,6 +3368,7 @@ en:
   test_mailer:
     title: "Test Mailer"
     subject_template: "[%{email_prefix}] Email Deliverability Test"
+    subject_template_improved: "%{email_prefix}: Email deliverability test"
     text_body_template: |
       This is a test email from
 
@@ -3348,6 +3388,7 @@ en:
   new_version_mailer:
     title: "New Version Mailer"
     subject_template: "[%{email_prefix}] New Discourse version, update available"
+    subject_template_improved: "%{email_prefix}: New Discourse version, update available"
     text_body_template: |
       Hooray, a new version of [Discourse](https://www.discourse.org) is available!
 
@@ -3356,13 +3397,14 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
   new_version_mailer_with_notes:
     title: "New Version Mailer with Notes"
     subject_template: "[%{email_prefix}] update available"
+    subject_template_improved: "%{email_prefix}: Update available"
     text_body_template: |
       Hooray, a new version of [Discourse](https://www.discourse.org) is available!
 
@@ -3371,7 +3413,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -3433,6 +3475,10 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
+    reviewable_queued_post_revise_and_reject_edit_post: "You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "You can edit your original post below and re-submit to make the suggested changes."
+    reviewable_queued_post_revise_and_reject_edit_topic: "You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "You can edit your topic's original post below and re-submit to make the suggested changes."
     reviewable_queued_post_revise_and_reject:
       title: "Feedback on your post"
       subject_template: "Feedback on your post in %{topic_title}"
@@ -3445,7 +3491,7 @@ en:
 
         Feedback: %{feedback}
 
-        You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+        %{edit_instructions}
 
         --------
 
@@ -3468,7 +3514,7 @@ en:
 
         Feedback: %{feedback}
 
-        You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+        %{edit_instructions}
 
         --------
 
@@ -3747,6 +3793,7 @@ en:
     email_reject_insufficient_trust_level:
       title: "Email Reject insufficient Trust Level"
       subject_template: "[%{email_prefix}] Email issue -- Insufficient Trust Level"
+      subject_template_improved: "%{email_prefix}: Email issue -- insufficient trust level"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3755,6 +3802,7 @@ en:
     email_reject_user_not_found:
       title: "Email Reject User Not Found"
       subject_template: "[%{email_prefix}] Email issue -- User Not Found"
+      subject_template_improved: "%{email_prefix}: Email issue -- user not found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3763,6 +3811,7 @@ en:
     email_reject_screened_email:
       title: "Email Reject Screened Email"
       subject_template: "[%{email_prefix}] Email issue -- Blocked Email"
+      subject_template_improved: "%{email_prefix}: Email issue -- blocked email"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3770,7 +3819,8 @@ en:
 
     email_reject_not_allowed_email:
       title: "Email Reject Not Allowed Email"
-      subject_template: "[%{email_prefix}] Email issue -- Blocked Email"
+      subject_template: "[%{email_prefix}] Email issue -- blocked email"
+      subject_template_improved: "%{email_prefix}: Email issue -- blocked email"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3779,6 +3829,7 @@ en:
     email_reject_inactive_user:
       title: "Email Reject Inactive User"
       subject_template: "[%{email_prefix}] Email issue -- Inactive User"
+      subject_template_improved: "%{email_prefix}: Email issue -- inactive user"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3787,6 +3838,7 @@ en:
     email_reject_silenced_user:
       title: "Email Reject Silenced User"
       subject_template: "[%{email_prefix}] Email issue -- Silenced User"
+      subject_template_improved: "%{email_prefix}: Email issue -- silenced user"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3795,6 +3847,7 @@ en:
     email_reject_reply_user_not_matching:
       title: "Email Reject User Not Matching"
       subject_template: "[%{email_prefix}] Email issue -- Unexpected Reply Address"
+      subject_template_improved: "%{email_prefix}: Email issue -- unexpected reply address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3803,6 +3856,7 @@ en:
     email_reject_empty:
       title: "Email Reject Empty"
       subject_template: "[%{email_prefix}] Email issue -- No Content"
+      subject_template_improved: "%{email_prefix}: Email issue -- no content"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3813,6 +3867,7 @@ en:
     email_reject_parsing:
       title: "Email Reject Parsing"
       subject_template: "[%{email_prefix}] Email issue -- Content Unrecognized"
+      subject_template_improved: "%{email_prefix}: Email issue -- content unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3821,6 +3876,7 @@ en:
     email_reject_invalid_access:
       title: "Email Reject Invalid Access"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Access"
+      subject_template_improved: "%{email_prefix}: Email issue -- invalid access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3829,6 +3885,7 @@ en:
     email_reject_strangers_not_allowed:
       title: "Email Reject Strangers Not Allowed"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Access"
+      subject_template_improved: "%{email_prefix}: Email issue -- invalid access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3837,6 +3894,7 @@ en:
     email_reject_invalid_post:
       title: "Email Reject Invalid Post"
       subject_template: "[%{email_prefix}] Email issue -- Posting error"
+      subject_template_improved: "%{email_prefix}: Email issue -- posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3845,6 +3903,7 @@ en:
     email_reject_invalid_post_specified:
       title: "Email Reject Invalid Post Specified"
       subject_template: "[%{email_prefix}] Email issue -- Posting error"
+      subject_template_improved: "%{email_prefix}: Email issue -- posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3858,6 +3917,7 @@ en:
     email_reject_post_too_short:
       title: "Email Reject Post Too Short"
       subject_template: "[%{email_prefix}] Email issue -- Post too short"
+      subject_template_improved: "%{email_prefix}: Email issue -- post too short"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3866,6 +3926,7 @@ en:
     email_reject_invalid_post_action:
       title: "Email Reject Invalid Post Action"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Post Action"
+      subject_template_improved: "%{email_prefix}: Email issue -- invalid post action"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3874,6 +3935,7 @@ en:
     email_reject_reply_key:
       title: "Email Reject Reply Key"
       subject_template: "[%{email_prefix}] Email issue -- Unknown Reply Key"
+      subject_template_improved: "%{email_prefix}: Email issue -- unknown reply key"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3882,6 +3944,7 @@ en:
     email_reject_bad_destination_address:
       title: "Email Reject Bad Destination Address"
       subject_template: "[%{email_prefix}] Email issue -- Unknown To: Address"
+      subject_template_improved: "%{email_prefix}: Email issue -- unknown to: address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3898,6 +3961,7 @@ en:
     email_reject_old_destination:
       title: "Email Reject Old Destination"
       subject_template: "[%{email_prefix}] Email issue -- You are trying to reply to an old notification"
+      subject_template_improved: "%{email_prefix}: Email issue -- you are trying to reply to an old notification"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3906,6 +3970,7 @@ en:
     email_reject_topic_not_found:
       title: "Email Reject Topic Not Found"
       subject_template: "[%{email_prefix}] Email issue -- Topic Not Found"
+      subject_template_improved: "%{email_prefix}: Email issue -- topic not found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3914,6 +3979,7 @@ en:
     email_reject_topic_closed:
       title: "Email Reject Topic Closed"
       subject_template: "[%{email_prefix}] Email issue -- Topic Closed"
+      subject_template_improved: "%{email_prefix}: Email issue -- topic closed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3922,6 +3988,7 @@ en:
     email_reject_auto_generated:
       title: "Email Reject Auto Generated"
       subject_template: "[%{email_prefix}] Email issue -- Auto Generated Reply"
+      subject_template_improved: "%{email_prefix}: Email issue -- auto generated reply"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3930,6 +3997,7 @@ en:
     email_reject_unrecognized_error:
       title: "Email Reject Unrecognized Error"
       subject_template: "[%{email_prefix}] Email issue -- Unrecognized Error"
+      subject_template_improved: "%{email_prefix}: Email issue -- unrecognized error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3938,6 +4006,7 @@ en:
     email_reject_attachment:
       title: "Email Attachment Rejected"
       subject_template: "[%{email_prefix}] Email issue -- Attachment Rejected"
+      subject_template_improved: "%{email_prefix}: Email issue -- attachment rejected"
       text_body_template: |
         Unfortunately some attachments in your email message to %{destination} (titled %{former_title}) were rejected.
 
@@ -3949,6 +4018,7 @@ en:
     email_reject_reply_not_allowed:
       title: "Email Reject Reply Not Allowed"
       subject_template: "[%{email_prefix}] Email issue -- Reply Not Allowed"
+      subject_template_improved: "%{email_prefix}: Email issue -- reply not allowed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3956,7 +4026,8 @@ en:
 
     email_reject_reply_to_digest:
       title: "Email Reject Reply To Summary"
-      subject_template: "[%{email_prefix}] Email issue -- Reply to Summary"
+      subject_template: "[%{email_prefix}] Email issue -- Reply To Summary"
+      subject_template_improved: "%{email_prefix}: Email issue -- reply to summary"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3967,6 +4038,7 @@ en:
     email_reject_too_many_recipients:
       title: "Email Reject Too Many Recipients"
       subject_template: "[%{email_prefix}] Email issue -- Too Many Recipients"
+      subject_template_improved: "%{email_prefix}: Email issue -- too many recipients"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3977,6 +4049,7 @@ en:
     email_error_notification:
       title: "Email Error Notification"
       subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
+      subject_template_improved: "%{email_prefix}: Email issue -- POP authentication error"
       text_body_template: |
         Unfortunately, there was an authentication error while polling mails from the POP server.
 
@@ -4114,7 +4187,7 @@ en:
 
     new_user_of_the_month:
       title: "You're a New User of the Month!"
-      subject_template: "You're a New User of the Month!"
+      subject_template: "You're a new user of the month!"
       text_body_template: |
         Congratulations, you've earned the **New User of the Month award for %{month_year}**. :trophy:
 
@@ -4229,6 +4302,7 @@ en:
     user_invited_to_private_message_pm_group:
       title: "User Invited Group to PM"
       subject_template: "[%{email_prefix}] %{username} invited @%{group_name} to a message '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited @%{group_name} to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4239,6 +4313,7 @@ en:
     user_invited_to_private_message_pm:
       title: "User Invited to PM"
       subject_template: "[%{email_prefix}] %{username} invited you to a message '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4249,6 +4324,7 @@ en:
     user_invited_to_private_message_pm_staged:
       title: "User Invited to PM Staged"
       subject_template: "[%{email_prefix}] %{username} invited you to a message '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4259,6 +4335,7 @@ en:
     user_invited_to_topic:
       title: "User Invited to Topic"
       subject_template: "[%{email_prefix}] %{username} invited you to '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited you to '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4270,6 +4347,7 @@ en:
       title: "User Replied"
       preview: "Someone replied to your post."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4282,6 +4360,7 @@ en:
     user_replied_pm:
       title: "User Replied PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4295,6 +4374,7 @@ en:
       title: "User Quoted"
       preview: "Someone quoted you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4308,6 +4388,7 @@ en:
       title: "User Linked"
       preview: "Post linked in another topic."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4321,6 +4402,7 @@ en:
       title: "User Mentioned"
       preview: "Someone mentioned you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4333,6 +4415,7 @@ en:
     user_mentioned_pm:
       title: "User Mentioned PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4345,6 +4428,7 @@ en:
     user_group_mentioned:
       title: "User Group Mentioned"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4357,6 +4441,7 @@ en:
     user_group_mentioned_pm:
       title: "User Group Mentioned PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4369,6 +4454,7 @@ en:
     user_group_mentioned_pm_group:
       title: "User Group Mentioned PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4382,6 +4468,7 @@ en:
       title: "User Posted"
       preview: "Someone replied to a topic you are Watching."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4394,6 +4481,7 @@ en:
     user_watching_category_or_tag:
       title: "User Watching Category or Tag"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4406,6 +4494,7 @@ en:
     user_watching_first_post:
       title: "User Watching First Post"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4419,6 +4508,7 @@ en:
       title: "User Posted PM"
       preview: "Someone sent you a PM."
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4438,6 +4528,7 @@ en:
     account_suspended:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
+      subject_template_improved: "Your account has been suspended"
       text_body_template: |
         You have been suspended from the forum until %{suspended_till}.
 
@@ -4446,6 +4537,7 @@ en:
     account_suspended_forever:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
+      subject_template_improved: "Your account has been suspended"
       text_body_template: |
         You have been suspended from the forum.
 
@@ -4454,6 +4546,7 @@ en:
     account_silenced:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
+      subject_template_improved: "Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum until %{silenced_till}.
 
@@ -4462,6 +4555,7 @@ en:
     account_silenced_forever:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
+      subject_template_improved: "Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum.
 
@@ -4470,6 +4564,7 @@ en:
     account_deleted:
       title: "Account Deleted"
       subject_template: "[%{email_prefix}] Your account has been deleted"
+      subject_template_improved: "Your account has been deleted"
       text_body_template: |
         Hello,
 
@@ -4482,6 +4577,7 @@ en:
     account_exists:
       title: "Account already exists"
       subject_template: "[%{email_prefix}] Account already exists"
+      subject_template_improved: "Account already exists"
       text_body_template: |
         You just tried to create an account at %{site_name}, or tried to change the email of an account to %{email}. However, an account already exists for %{email}.
 
@@ -4494,6 +4590,7 @@ en:
     account_second_factor_disabled:
       title: "Two-Factor Authentication disabled"
       subject_template: "[%{email_prefix}] Two-Factor Authentication disabled"
+      subject_template_improved: "Two-Factor Authentication disabled"
       text_body_template: |
         Two-factor authentication has been disabled on your account at %{site_name}. You can now log in with only your password; an additional authentication code is no longer required.
 
@@ -4514,6 +4611,7 @@ en:
       popular_posts: "Popular Posts"
       more_new: "New for you"
       subject_template: "[%{email_prefix}] Summary"
+      subject_template_improved: "Summary"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       your_email_settings: "your email settings"
       click_here: "click here"
@@ -4546,6 +4644,7 @@ en:
       title: "Forgot Password"
       preview: "Reset your password."
       subject_template: "[%{email_prefix}] Password reset"
+      subject_template_improved: "Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
 
@@ -4558,6 +4657,7 @@ en:
       title: "Log in via link"
       preview: "Log in via link."
       subject_template: "[%{email_prefix}] Log in via link"
+      subject_template_improved: "Log in via link"
       text_body_template: |
         Here's your link to log in at [%{site_name}](%{base_url}).
 
@@ -4569,7 +4669,8 @@ en:
     set_password:
       title: "Set Password"
       preview: "Set account password."
-      subject_template: "[%{email_prefix}] Set Password"
+      subject_template: "[%{email_prefix}] Set password"
+      subject_template_improved: "Set password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
@@ -4582,6 +4683,7 @@ en:
       title: "Admin Login"
       preview: "Admin login requested."
       subject_template: "[%{email_prefix}] Login"
+      subject_template_improved: "Login"
       text_body_template: |
         Somebody asked to log in to your account on [%{site_name}](%{base_url}).
 
@@ -4593,7 +4695,8 @@ en:
     account_created:
       title: "Account Created"
       preview: "New account created for you."
-      subject_template: "[%{email_prefix}] Your New Account"
+      subject_template: "[%{email_prefix}] Your new account"
+      subject_template_improved: "Your new account"
       text_body_template: |
         A new account was created for you at %{site_name}
 
@@ -4603,6 +4706,7 @@ en:
     confirm_new_email:
       title: "Confirm New Email"
       subject_template: "[%{email_prefix}] Confirm your new email address"
+      subject_template_improved: "Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
@@ -4613,6 +4717,7 @@ en:
     confirm_new_email_via_admin:
       title: "Confirm New Email"
       subject_template: "[%{email_prefix}] Confirm your new email address"
+      subject_template_improved: "Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
@@ -4623,6 +4728,7 @@ en:
     confirm_old_email:
       title: "Confirm Old Email"
       subject_template: "[%{email_prefix}] Confirm your current email address"
+      subject_template_improved: "Confirm your current email address"
       text_body_template: |
         Before we can change your email address, we need you to confirm that you control
         the current email account. After you complete this step, we will have you confirm
@@ -4635,6 +4741,7 @@ en:
     confirm_old_email_add:
       title: "Confirm Old Email (Add)"
       subject_template: "[%{email_prefix}] Confirm your current email address"
+      subject_template_improved: "Confirm your current email address"
       text_body_template: |
         Before we can add a new email address, we need you to confirm that you control
         the current email account. After you complete this step, we will have you confirm
@@ -4648,6 +4755,7 @@ en:
       title: "Notify Old Email"
       preview: "Email address updated."
       subject_template: "[%{email_prefix}] Your email address has been changed"
+      subject_template_improved: "Your email address has been changed"
       text_body_template: |
         This is an automated message to let you know that your email address for
         %{site_name} has been changed. If this was done in error, please contact
@@ -4660,6 +4768,7 @@ en:
     notify_old_email_add:
       title: "Notify Old Email (Add)"
       subject_template: "[%{email_prefix}] A new email address has been added"
+      subject_template_improved: "A new email address has been added"
       text_body_template: |
         This is an automated message to let you know that an email address for
         %{site_name} has been added. If this was done in error, please contact
@@ -4701,6 +4810,7 @@ en:
       title: "Signup"
       preview: "Confirm your account."
       subject_template: "[%{email_prefix}] Confirm your new account"
+      subject_template_improved: "Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -4712,6 +4822,7 @@ en:
     activation_reminder:
       title: "Activation Reminder"
       subject_template: "[%{email_prefix}] Reminder to confirm your account"
+      subject_template_improved: "Reminder to confirm your account"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -4725,7 +4836,8 @@ en:
     suspicious_login:
       title: "New Login Alert"
       preview: "Verify your device."
-      subject_template: "[%{site_name}] New Login from %{location}"
+      subject_template: "[%{site_name}] New login from %{location}"
+      subject_template_improved: "%{site_name}: New login from %{location}"
       text_body_template: |
         Hello,
 
@@ -4742,6 +4854,7 @@ en:
     post_approved:
       title: "Your post was approved"
       subject_template: "[%{site_name}] Your post was approved"
+      subject_template_improved: "%{site_name}: Your post was approved"
       text_body_template: |
         Hello,
 
@@ -5525,8 +5638,11 @@ en:
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
-      synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
+      restricted_to_truncated: '"%{tag_name}" is restricted to the following categories: %{category_names}, and %{more_count} more'
+      synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
+      one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'
+      missing_parent_tag: 'Requires the "%{parent_tag_name}" tag to use tags from the "%{tag_group_name}" group'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
         other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'

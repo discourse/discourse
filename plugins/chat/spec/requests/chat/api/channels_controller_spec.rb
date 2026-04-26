@@ -603,24 +603,46 @@ RSpec.describe Chat::Api::ChannelsController do
       end
 
       describe "when updating threading_enabled" do
-        it "sets the new value" do
+        it "can enable threading" do
           expect {
             put "/chat/api/channels/#{channel.id}", params: { channel: { threading_enabled: true } }
           }.to change { channel.reload.threading_enabled }.from(false).to(true)
 
           expect(response.parsed_body["channel"]["threading_enabled"]).to eq(true)
         end
+
+        it "can disable threading" do
+          channel.update!(threading_enabled: true)
+
+          expect {
+            put "/chat/api/channels/#{channel.id}",
+                params: {
+                  channel: {
+                    threading_enabled: false,
+                  },
+                },
+                as: :json
+          }.to change { channel.reload.threading_enabled }.from(true).to(false)
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channel"]["threading_enabled"]).to eq(false)
+        end
       end
 
       describe "when updating allow_channel_wide_mentions" do
-        it "sets the new value" do
-          put "/chat/api/channels/#{channel.id}",
-              params: {
-                channel: {
-                  allow_channel_wide_mentions: false,
-                },
-              }
+        it "can disable allow_channel_wide_mentions" do
+          channel.update!(allow_channel_wide_mentions: true)
 
+          expect {
+            put "/chat/api/channels/#{channel.id}",
+                params: {
+                  channel: {
+                    allow_channel_wide_mentions: false,
+                  },
+                }
+          }.to change { channel.reload.allow_channel_wide_mentions }.from(true).to(false)
+
+          expect(response.status).to eq(200)
           expect(response.parsed_body["channel"]["allow_channel_wide_mentions"]).to eq(false)
         end
       end

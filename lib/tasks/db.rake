@@ -103,7 +103,11 @@ end
 
 def execute_db_migration
   ActiveRecord::Tasks::DatabaseTasks.migrate
-  Rake::Task["db:seed"].invoke if ENV["SKIP_SEED_FU"] != "1"
+
+  if ENV["SKIP_SEED_FU"] != "1"
+    Rake::Task["db:seed"].reenable
+    Rake::Task["db:seed"].invoke
+  end
 
   if !Discourse.skip_post_deployment_migrations? && ENV["SKIP_OPTIMIZE_ICONS"] != "1"
     SiteIconManager.ensure_optimized!
@@ -115,76 +119,79 @@ task "multisite:migrate" => %w[
        environment
        set_locale
        assets:precompile:asset_processor
+       db:migrate
      ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",
     redis: Discourse.redis.without_namespace,
     validity: 1200,
   ) do
-    concurrency = ENV["DISCOURSE_MULTISITE_MIGRATE_CONCURRENCY"]&.to_i || 2
+    concurrency = ENV["DISCOURSE_MULTISITE_MIGRATE_CONCURRENCY"]&.to_i || 1
 
     puts "Multisite migrator is running using #{concurrency} processes"
 
-    databases = []
-    RailsMultisite::ConnectionManagement.each_connection { |db| databases << db }
+    # `db:migrate` prereq already migrated the default database.
+    databases =
+      RailsMultisite::ConnectionManagement.all_dbs - [RailsMultisite::ConnectionManagement::DEFAULT]
 
     puts "Running migrations and seeds for #{databases.join(", ")} database(s)"
 
-    results =
-      Parallel.map(
-        databases,
-        in_processes: concurrency,
-        isolation: true,
-        finish_in_order: true,
-        finish:
-          lambda do |db, _index, result|
-            result[:stdout]&.lines&.each { |line| puts "[#{db}] #{line}" }
-          end,
-      ) do |db|
-        Discourse.after_fork
+    should_fork = concurrency > 1 && databases.length > 1
 
-        output_buffer = StringIO.new
-        original_stdout = $stdout
-        $stdout = output_buffer
+    ENV["RAISE_SEED_ERRORS"] = "1"
 
-        error = nil
-
-        begin
+    migrate_databases =
+      lambda do |shard|
+        shard.each do |db|
           RailsMultisite::ConnectionManagement.with_connection(db) do
-            puts "Processing"
             puts "-" * 40
+            start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+            puts "Migrating #{db}"
             execute_db_migration
+            puts "Migrating #{db} done (#{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)}s)"
+            puts "Completed"
           end
-        rescue => e
-          error = e
         end
-
-        if error.nil?
-          puts "Completed"
-          puts "-" * 40
-        end
-
-        { db: db, stdout: output_buffer.string, error: error }
-      ensure
-        $stdout = original_stdout
       end
 
-    errors = results.select { |r| r[:error] }
+    log_dir = nil
 
-    if errors.any?
-      $stderr.puts
-      $stderr.puts "-" * 80
-      $stderr.puts "#{errors.length} database(s) failed!"
+    begin
+      if should_fork
+        log_dir = Dir.mktmpdir("multisite-migrate-")
 
-      errors.each do |result|
-        $stderr.puts
-        $stderr.puts "Failed to process #{result[:db]}"
-        $stderr.puts result[:error].inspect
-        $stderr.puts result[:error].backtrace
-        $stderr.puts
+        database_shard_size = (databases.size.to_f / concurrency).ceil
+        database_shards = databases.each_slice(database_shard_size).to_a
+
+        Discourse.before_fork
+
+        pids =
+          database_shards.map do |database_shard|
+            Process.fork do
+              Discourse.after_fork
+              $stdout.reopen(File.join(log_dir, "worker-#{Process.pid}.log"), "w")
+              $stderr.reopen($stdout)
+              $stdout.sync = true
+              migrate_databases.call(database_shard)
+            end
+          end
+
+        remaining = pids.to_set
+        failed = false
+        until remaining.empty?
+          pid, status = Process.waitpid2(-1)
+          next unless remaining.delete?(pid)
+          failed = true unless status.success?
+          log_path = File.join(log_dir, "worker-#{pid}.log")
+          puts File.read(log_path) if File.exist?(log_path)
+        end
+
+        raise "One or more child processes failed while migrating" if failed
+      else
+        migrate_databases.call(databases)
       end
-
-      raise errors.first[:error]
+    ensure
+      FileUtils.rm_rf(log_dir) if log_dir
     end
 
     Rake::Task["db:_dump"].invoke
@@ -237,6 +244,7 @@ task "db:seed" => "environment" do
   begin
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
   rescue => error
+    raise if ENV["RAISE_SEED_ERRORS"] == "1"
     error.backtrace.each { |l| puts l }
   end
 end

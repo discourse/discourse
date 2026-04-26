@@ -289,6 +289,31 @@ RSpec.describe Admin::WatchedWordsController do
         )
       end
 
+      it "reads file content before deferring work so tempfile cleanup does not cause errors" do
+        allow(Scheduler::Defer).to receive(
+          :later,
+        ).and_wrap_original do |original, *args, **kwargs, &block|
+          if args.first == "Upload watched words"
+            # Simulate Rack::TempfileReaper: delete all tempfiles before the deferred block runs.
+            # With the fix, File.read has already been called before Defer.later, so this is safe.
+            # Without the fix, the block tries File.read on a deleted tempfile.
+            ObjectSpace.each_object(Tempfile) do |tempfile|
+              tempfile.close! if tempfile.path&.include?("RackMultipart")
+            end
+          end
+          block.call
+        end
+
+        post "/admin/customize/watched_words/upload.json",
+             params: {
+               action_key: "flag",
+               file: Rack::Test::UploadedFile.new(file_from_fixtures("words.csv", "csv")),
+             }
+
+        expect(response.status).to eq(200)
+        expect(WatchedWord.count).to eq(6)
+      end
+
       it "handles files with invalid UTF-8 sequences" do
         content = String.new("h\xE9llo\nworld\x99").force_encoding("Windows-1250")
 

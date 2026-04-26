@@ -76,7 +76,6 @@ export default class Contents extends Component {
             message="The argument 'topic' is deprecated on the outlet 'header-contents__before', use 'topicInfo' or 'topicInfoVisible' instead"
             id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
             since="3.3.0.beta4-dev"
-            dropFrom="3.4.0"
             silence="discourse.header-service-topic"
           )
         }}
@@ -118,7 +117,6 @@ export default class Contents extends Component {
               message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
               id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
               since="3.3.0.beta4-dev"
-              dropFrom="3.4.0"
               silence="discourse.header-service-topic"
             )
           }}
@@ -138,7 +136,6 @@ export default class Contents extends Component {
               message="The argument 'topic' is deprecated on the outlet 'after-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
               id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
               since="3.3.0.beta4-dev"
-              dropFrom="3.4.0"
               silence="discourse.header-service-topic"
             )
           }}
@@ -156,7 +153,6 @@ export default class Contents extends Component {
             message="The argument 'topic' is deprecated on the outlet 'header-contents__after', use 'topicInfo' or 'topicInfoVisible' instead"
             id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
             since="3.3.0.beta4-dev"
-            dropFrom="3.4.0"
             silence="discourse.header-service-topic"
           )
         }}

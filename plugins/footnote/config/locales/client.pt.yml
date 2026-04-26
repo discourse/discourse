@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 pt:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Notas de rodapé do Discourse"
+  js:
+    footnote:
+      title: "Notas de rodapé"
+      add: "Adicionar nota de rodapé"

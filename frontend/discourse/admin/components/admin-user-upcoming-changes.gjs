@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { UPCOMING_CHANGES_USER_ENABLED_REASONS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
@@ -94,7 +94,7 @@ export default class AdminUserUpcomingChanges extends Component {
                     )
                   }}
                     <span class="upcoming-change-groups">
-                      {{htmlSafe
+                      {{trustHTML
                         (this.getGroupLinks upcomingChange.specific_groups)
                       }}
                     </span>

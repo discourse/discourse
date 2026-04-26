@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 
@@ -6,9 +6,9 @@ import SelectKitRowComponent from "discourse/select-kit/components/select-kit/se
 export default class HomepageStyleSelectorRow extends SelectKitRowComponent {
   <template>
     <div class="texts">
-      <span class="name">{{htmlSafe this.label}}</span>
+      <span class="name">{{trustHTML this.label}}</span>
       {{#if this.item.description}}
-        <span class="desc">{{htmlSafe this.item.description}}</span>
+        <span class="desc">{{trustHTML this.item.description}}</span>
       {{/if}}
     </div>
   </template>

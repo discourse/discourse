@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Wizard", type: :system do
+describe "Wizard" do
   fab!(:admin)
 
   let(:wizard_page) { PageObjects::Pages::Wizard.new }

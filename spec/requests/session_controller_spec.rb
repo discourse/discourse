@@ -1664,6 +1664,18 @@ RSpec.describe SessionController do
         expect(response.cookies["_t"]).to be_blank
       end
 
+      it "clears all push subscriptions on SSO single-logout" do
+        sign_in(@user)
+        Fabricate(:push_subscription, user: @user)
+        Fabricate(:push_subscription, user: @user)
+
+        @sso.logout = true
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        expect(@user.push_subscriptions.reload).to be_empty
+      end
+
       it "successfully logs out and redirects user to return_sso_url when the user is not logged in" do
         @sso.logout = true
         get "/session/sso_provider",

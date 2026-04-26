@@ -3,6 +3,33 @@
 describe TagLocalization do
   fab!(:tag)
 
+  describe "name cleaning" do
+    it "strips special characters from the name" do
+      localization = Fabricate(:tag_localization, tag:, locale: "nl", name: 'mijn-naam" (123)')
+
+      expect(localization.name).to eq("mijn-naam-123")
+    end
+
+    it "replaces whitespace with dashes" do
+      localization = Fabricate(:tag_localization, tag:, locale: "nl", name: "finances & accounting")
+
+      expect(localization.name).to eq("finances-accounting")
+    end
+
+    it "preserves unicode word characters" do
+      localization = Fabricate(:tag_localization, tag:, locale: "ja", name: "猫タグ")
+
+      expect(localization.name).to eq("猫タグ")
+    end
+
+    it "cleans name on update" do
+      localization = Fabricate(:tag_localization, tag:, locale: "nl", name: "clean-name")
+      localization.update!(name: 'dirty name" (test)')
+
+      expect(localization.name).to eq("dirty-name-test")
+    end
+  end
+
   describe "validations" do
     it "validates presence of name and locale" do
       localization = TagLocalization.new(tag:)

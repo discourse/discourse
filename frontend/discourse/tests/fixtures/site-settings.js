@@ -1,4 +1,4 @@
-export default {
+const siteSettingsFixtures = {
   "/admin/site_settings": {
     site_settings: [
       {
@@ -82,3 +82,5 @@ export default {
     ],
   },
 };
+
+export default siteSettingsFixtures;

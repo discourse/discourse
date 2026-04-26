@@ -1,23 +1,32 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { and } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsList from "./discourse-reactions-list";
 import DiscourseReactionsStatePanel from "./discourse-reactions-state-panel";
+import DiscourseReactionsUsersMenu from "./discourse-reactions-users-menu";
+
+const MENU_IDENTIFIER = "discourse-reactions-users-menu";
 
 export default class DiscourseReactionsCounter extends Component {
   @service capabilities;
+  @service menu;
   @service site;
   @service siteSettings;
 
-  reactionsUsers = new TrackedObject();
+  reactionsUsers = trackedObject();
+
+  get useNewMenu() {
+    return this.siteSettings.enable_new_post_reactions_menu;
+  }
 
   get elementId() {
     return `discourse-reactions-counter-${this.args.post.id}-${
@@ -41,7 +50,7 @@ export default class DiscourseReactionsCounter extends Component {
       this.reactionsUsers[reactionUser.id] = reactionUser.users;
     });
 
-    this.args.updatePopover();
+    this.args.updatePopover?.();
   }
 
   @action
@@ -55,8 +64,39 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   @action
+  keyDown(event) {
+    if (this.useNewMenu) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        this.#toggleMenu(event.currentTarget);
+      }
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      this.click(event);
+    } else if (event.key === "Escape" && this.args.statePanelExpanded) {
+      event.stopPropagation();
+      this.args.collapseStatePanel();
+      document.getElementById(this.elementId)?.focus();
+    }
+  }
+
+  @action
   click(event) {
     if (event.target.closest("[data-user-card]")) {
+      return;
+    }
+
+    if (this.useNewMenu) {
+      if (event.target.closest(".post-users-popup")) {
+        return;
+      }
+
+      event.stopPropagation();
+      event.preventDefault();
+      this.#toggleMenu(event.currentTarget);
       return;
     }
 
@@ -83,6 +123,10 @@ export default class DiscourseReactionsCounter extends Component {
 
   @action
   touchStart(event) {
+    if (this.useNewMenu) {
+      return;
+    }
+
     this.args.cancelCollapse();
 
     if (
@@ -138,6 +182,10 @@ export default class DiscourseReactionsCounter extends Component {
 
   @action
   pointerOver(event) {
+    if (this.useNewMenu) {
+      return;
+    }
+
     if (event.pointerType !== "mouse") {
       return;
     }
@@ -147,6 +195,10 @@ export default class DiscourseReactionsCounter extends Component {
 
   @action
   pointerOut(event) {
+    if (this.useNewMenu) {
+      return;
+    }
+
     if (event.pointerType !== "mouse") {
       return;
     }
@@ -154,6 +206,12 @@ export default class DiscourseReactionsCounter extends Component {
     if (!event.relatedTarget?.closest(`#${this.elementId}`)) {
       this.args.scheduleCollapse("collapseStatePanel");
     }
+  }
+
+  get counterAriaLabel() {
+    return i18n("discourse_reactions.counter.aria_label", {
+      count: this.args.post.reaction_users_count,
+    });
   }
 
   get onlyOneMainReaction() {
@@ -164,50 +222,94 @@ export default class DiscourseReactionsCounter extends Component {
     );
   }
 
+  #toggleMenu(trigger) {
+    const virtualElement = {
+      getBoundingClientRect: () => trigger.getBoundingClientRect(),
+    };
+
+    this.menu.show(virtualElement, {
+      identifier: MENU_IDENTIFIER,
+      component: DiscourseReactionsUsersMenu,
+      modalForMobile: true,
+      closeOnScroll: true,
+      arrow: true,
+      placement: "bottom",
+      offset: 15,
+      data: { post: this.args.post },
+    });
+  }
+
   <template>
     {{! template-lint-disable no-invalid-interactive no-pointer-down-event-binding }}
-    <div
-      id={{this.elementId}}
-      class={{this.classes}}
-      {{on "mousedown" this.mouseDown}}
-      {{on "mouseup" this.mouseUp}}
-      {{closeOnClickOutside this.clickOutside}}
-      {{on "touchstart" this.touchStart}}
-      {{on "pointerover" this.pointerOver}}
-      {{on "pointerout" this.pointerOut}}
-      {{on "click" this.click}}
-    >
-      {{#if @post.reaction_users_count}}
-        <DiscourseReactionsStatePanel
-          @post={{@post}}
-          @reactionsUsers={{this.reactionsUsers}}
-          @statePanelExpanded={{@statePanelExpanded}}
-          @scheduleCollapse={{@scheduleCollapse}}
-          @cancelCollapse={{@cancelCollapse}}
-        />
+    {{#if this.useNewMenu}}
+      <div
+        id={{this.elementId}}
+        class={{this.classes}}
+        role="button"
+        tabindex="0"
+        aria-label={{this.counterAriaLabel}}
+        {{on "mousedown" this.mouseDown}}
+        {{on "mouseup" this.mouseUp}}
+        {{on "click" this.click}}
+        {{on "keydown" this.keyDown}}
+      >
+        {{#if @post.reaction_users_count}}
+          <DiscourseReactionsList @post={{@post}} />
 
-        {{#unless this.onlyOneMainReaction}}
-          <DiscourseReactionsList
-            {{on "click" this.click}}
+          <span class="reactions-counter" aria-hidden="true">
+            {{@post.reaction_users_count}}
+          </span>
+        {{/if}}
+      </div>
+    {{else}}
+      <div
+        id={{this.elementId}}
+        class={{this.classes}}
+        role="button"
+        tabindex="0"
+        aria-label={{this.counterAriaLabel}}
+        {{on "mousedown" this.mouseDown}}
+        {{on "mouseup" this.mouseUp}}
+        {{closeOnClickOutside this.clickOutside}}
+        {{on "touchstart" this.touchStart}}
+        {{on "pointerover" this.pointerOver}}
+        {{on "pointerout" this.pointerOut}}
+        {{on "click" this.click}}
+        {{on "keydown" this.keyDown}}
+      >
+        {{#if @post.reaction_users_count}}
+          <DiscourseReactionsStatePanel
             @post={{@post}}
             @reactionsUsers={{this.reactionsUsers}}
-            @getUsers={{this.getUsers}}
+            @statePanelExpanded={{@statePanelExpanded}}
+            @scheduleCollapse={{@scheduleCollapse}}
+            @cancelCollapse={{@cancelCollapse}}
           />
-        {{/unless}}
 
-        <span class="reactions-counter">
-          {{@post.reaction_users_count}}
-        </span>
-
-        {{#if (and @post.yours this.onlyOneMainReaction)}}
-          <div class="discourse-reactions-reaction-button my-likes">
-            <DButton
-              class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-              @icon={{this.siteSettings.discourse_reactions_like_icon}}
+          {{#unless this.onlyOneMainReaction}}
+            <DiscourseReactionsList
+              {{on "click" this.click}}
+              @post={{@post}}
+              @reactionsUsers={{this.reactionsUsers}}
+              @getUsers={{this.getUsers}}
             />
-          </div>
+          {{/unless}}
+
+          <span class="reactions-counter" aria-hidden="true">
+            {{@post.reaction_users_count}}
+          </span>
+
+          {{#if (and @post.yours this.onlyOneMainReaction)}}
+            <div class="discourse-reactions-reaction-button my-likes">
+              <DButton
+                class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
+                @translatedTitle={{this.counterAriaLabel}}
+                @icon={{this.siteSettings.discourse_reactions_like_icon}}
+              />
+            </div>
+          {{/if}}
         {{/if}}
-      {{/if}}
-    </div>
+      </div>
+    {{/if}}
   </template>
 }

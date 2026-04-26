@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import {
   customGroupActionCodes,
   GROUP_ACTION_CODES,
@@ -26,7 +26,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username, path) {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
     }
   }
-  return htmlSafe(i18n(`action_codes.${actionCode}`, { who, when, path }));
+  return trustHTML(i18n(`action_codes.${actionCode}`, { who, when, path }));
 }
 
 export default class PostActionDescription extends Component {

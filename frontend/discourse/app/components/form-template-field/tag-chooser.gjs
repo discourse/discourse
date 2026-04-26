@@ -5,7 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { not } from "discourse/truth-helpers";
@@ -16,12 +16,18 @@ export default class TagChooserField extends Component {
   @service dialog;
 
   get formattedChoices() {
+    if (!this.args.choices) {
+      return [];
+    }
+
+    const tagChoices = this.args.attributes?.tag_choices || {};
+
     return this.args.choices.map((tag) => ({
       id: tag.id,
       name: tag.name,
-      display: this.args.attributes.tag_choices[tag.name]
-        ? this.args.attributes.tag_choices[tag.name]
-        : tag.name.replace(/-/g, " ").toUpperCase(),
+      display: tagChoices[tag.name]
+        ? tagChoices[tag.name]
+        : (tag.name || "").replace(/-/g, " ").toUpperCase(),
     }));
   }
 
@@ -89,15 +95,31 @@ export default class TagChooserField extends Component {
   }
 
   @action
-  handleSelectedTagNames(event) {
-    return Array.from(event.target.selectedOptions)
-      .map((option) => option.value)
-      .filter((name) => name !== "");
+  handleSelectedValues(event) {
+    const getFallbackValue = (optionValue) =>
+      optionValue.toLowerCase().replace(/\s+/g, "-");
+    let choiceMap = null;
+    const tagChoices = this.args.attributes?.tag_choices;
+
+    if (tagChoices) {
+      choiceMap = new Map(
+        Object.entries(tagChoices).map(([key, value]) => [value, key])
+      );
+    }
+
+    const selectedValues = Array.from(event.target.selectedOptions).map(
+      (option) => {
+        const mappedValue = choiceMap?.get(option.textContent.trim());
+        return mappedValue ?? getFallbackValue(option.value);
+      }
+    );
+
+    return selectedValues;
   }
 
   @action
   handleInput(event) {
-    const selectedTagNames = this.handleSelectedTagNames(event);
+    const selectedTagNames = this.handleSelectedValues(event);
     const validTagNames = this.formattedChoices.map((choice) => choice.name);
     const filteredTagNames = selectedTagNames.filter((name) =>
       validTagNames.includes(name)
@@ -146,7 +168,7 @@ export default class TagChooserField extends Component {
 
       {{#if @attributes.description}}
         <span class="form-template-field__description">
-          {{htmlSafe @attributes.description}}
+          {{trustHTML @attributes.description}}
         </span>
       {{/if}}
 
@@ -167,7 +189,7 @@ export default class TagChooserField extends Component {
         {{/if}}
         {{#each this.formattedChoices as |choice|}}
           <option
-            value={{choice.name}}
+            value={{choice.display}}
             selected={{this.isSelected choice.id}}
           >{{choice.display}}</option>
         {{/each}}

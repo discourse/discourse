@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AI Tool Management", type: :system do
+describe "AI Tool Management" do
   fab!(:admin)
   let(:page_header) { PageObjects::Components::DPageHeader.new }
 
@@ -64,7 +64,7 @@ describe "AI Tool Management", type: :system do
     expect(page.first(required_toggle_css).checked?).to eq(true)
     expect(page.first(enum_toggle_css).checked?).to eq(false)
 
-    visit "/admin/plugins/discourse-ai/ai-personas/new"
+    visit "/admin/plugins/discourse-ai/ai-agents/new"
 
     tool_id = AiTool.order("id desc").limit(1).pluck(:id).first
     tool_selector = PageObjects::Components::SelectKit.new("#control-tools .select-kit")

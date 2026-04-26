@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 
 /**
@@ -46,5 +46,5 @@ export function jsonToHtml(json) {
   }
 
   html += "</ul>";
-  return htmlSafe(html);
+  return trustHTML(html);
 }

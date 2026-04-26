@@ -1,9 +1,7 @@
 /* eslint-disable ember/no-classic-components */
-import { cached } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -28,8 +26,7 @@ export default class TagGroupsForm extends Component {
     ({ id }) => id !== AUTO_GROUPS.everyone.id
   );
 
-  @cached
-  @dependentKeyCompat
+  @computed("model")
   get buffered() {
     return BufferedProxy.create({
       content: this.model,
@@ -86,12 +83,12 @@ export default class TagGroupsForm extends Component {
     }
 
     if (isEmpty(attrs.name)) {
-      this.dialog.alert("tagging.groups.cannot_save.empty_name");
+      this.dialog.alert(i18n("tagging.groups.cannot_save.empty_name"));
       return false;
     }
 
     if (isEmpty(attrs.tags)) {
-      this.dialog.alert("tagging.groups.cannot_save.no_tags");
+      this.dialog.alert(i18n("tagging.groups.cannot_save.no_tags"));
       return false;
     }
 
@@ -106,7 +103,7 @@ export default class TagGroupsForm extends Component {
     } else if (permissionName === "private") {
       delete attrs.permissions[0];
     } else {
-      this.dialog.alert("tagging.groups.cannot_save.no_groups");
+      this.dialog.alert(i18n("tagging.groups.cannot_save.no_groups"));
       return false;
     }
 

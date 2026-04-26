@@ -31,7 +31,7 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
 
   describe "#generate_concepts_from_content" do
     before do
-      SiteSetting.inferred_concepts_generate_persona = -1
+      SiteSetting.inferred_concepts_generate_agent = -1
       SiteSetting.inferred_concepts_enabled = true
     end
 

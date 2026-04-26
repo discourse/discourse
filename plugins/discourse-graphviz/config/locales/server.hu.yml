@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    discourse_graphviz_enabled: "Engedélyezze a Graphviz bővítményt"
+    graphviz_default_svg: "Alapértelmezés szerint SVG megjelenítést használ képmegjelenítés helyett, grafikononként testreszabható az `svg=true|false` elemmel."

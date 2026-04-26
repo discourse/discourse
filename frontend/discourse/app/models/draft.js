@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse/lib/get-url";
 
 export default class Draft extends EmberObject {
   static clear(key, sequence) {
@@ -44,5 +45,15 @@ export default class Draft extends EmberObject {
       },
       ignoreUnsent: false,
     });
+  }
+
+  static saveBeacon(key, sequence, data, clientId, csrfToken) {
+    const formData = new FormData();
+    formData.append("draft_key", key);
+    formData.append("sequence", sequence);
+    formData.append("data", JSON.stringify(data));
+    formData.append("owner", clientId);
+    formData.append("authenticity_token", csrfToken);
+    navigator.sendBeacon(getURL("/drafts.json"), formData);
   }
 }

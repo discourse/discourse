@@ -10,6 +10,9 @@ bs_BA:
       default_query: "Uobičajen"
       or: "ili"
       create: "napravi"
+      ai:
+        generate: "Generate"
+        optional: "opcionalno"
       help:
         label: "Pomoć"
       schema:

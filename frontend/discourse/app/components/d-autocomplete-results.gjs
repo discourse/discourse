@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 // CSS selectors for autocomplete result items
 const RESULT_ITEM_SELECTOR = "li a";
@@ -129,14 +129,14 @@ export default class DAutocompleteResults extends Component {
     const template = this.args.data.template({ options: this.results });
 
     if (!this.isInitialRender || this.selectedIndex < 0) {
-      return htmlSafe(template);
+      return trustHTML(template);
     }
 
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = template;
     this._applySelectedClass(tempDiv, this.selectedIndex);
 
-    return htmlSafe(tempDiv.innerHTML);
+    return trustHTML(tempDiv.innerHTML);
   }
 
   get hasComponent() {

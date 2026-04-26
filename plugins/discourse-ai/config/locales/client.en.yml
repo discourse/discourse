@@ -4,10 +4,10 @@ en:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Allows AI search"
-              stream_completion: "Allows streaming AI persona completions"
-              update_personas: "Allows updating AI personas"
+              stream_completion: "Allows streaming AI agent completions"
+              update_agents: "Allows updating AI agents"
               manage_artifacts: "Allows managing AI artifacts (list, view, create, update, delete)"
 
       site_settings:
@@ -31,9 +31,9 @@ en:
             create_ai_llm_model: "Create LLM model"
             update_ai_llm_model: "Update LLM model"
             delete_ai_llm_model: "Delete LLM model"
-            create_ai_persona: "Create AI persona"
-            update_ai_persona: "Update AI persona"
-            delete_ai_persona: "Delete AI persona"
+            create_ai_agent: "Create AI agent"
+            update_ai_agent: "Update AI agent"
+            delete_ai_agent: "Delete AI agent"
             create_ai_tool: "Create AI tool"
             update_ai_tool: "Update AI tool"
             delete_ai_tool: "Delete AI tool"
@@ -110,9 +110,9 @@ en:
             top_p:
               label: "Top P"
               description: "Top P to use for the LLM, increase to increase randomness (leave empty to use model default)"
-            persona_id:
-              label: "Persona"
-              description: "AI Persona to use for report generation"
+            agent_id:
+              label: "Agent"
+              description: "AI agent to use for report generation"
 
         ai_tool_action:
           fields:
@@ -123,22 +123,22 @@ en:
               label: "LLM Model"
               description: "Language model for tools that use llm.generate() (optional)"
 
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "Persona"
-              description: "AI Persona to use for triage (must have default LLM and User set)"
+            agent:
+              label: "Agent"
+              description: "AI agent to use for triage (must have default LLM and User set)"
             whisper:
               label: "Reply as Whisper"
-              description: "Whether the persona's response should be a whisper"
+              description: "Whether the agent's response should be a whisper"
             silent_mode:
               label: "Silent Mode"
-              description: "In silent mode persona will receive the content but will not post anything on the forum - useful when performing triage using tools"
+              description: "In silent mode the agent will receive the content but will not post anything on the forum - useful when performing triage using tools"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Persona"
-              description: "Persona used to triage, be sure for it to reply with a single word you can use to trigger the action"
+            triage_agent:
+              label: "Agent"
+              description: "Agent used to triage, be sure for it to reply with a single word you can use to trigger the action"
             max_post_tokens:
               label: "Max Post Tokens"
               description: "The maximum number of tokens to scan using LLM triage"
@@ -184,9 +184,9 @@ en:
             whisper:
               label: "Reply as Whisper"
               description: "Whether the AI's response should be a whisper"
-            reply_persona:
-              label: "Reply Persona"
-              description: "AI Persona to use for replies (must have default LLM), will be prioritized over canned reply"
+            reply_agent:
+              label: "Reply Agent"
+              description: "AI agent to use for replies (must have default LLM), will be prioritized over canned reply"
             max_output_tokens:
               label: "Max output tokens"
               description: "When specified, sets an upper bound to the maximum number of tokens the model can generate. Respects LLM's max output tokens limit"
@@ -195,9 +195,9 @@ en:
             manual: "Use specific tag list (configured below)"
             discover: "Let AI discover and use any site tags"
           fields:
-            tagger_persona:
-              label: "AI Persona"
-              description: "The AI persona to use for analyzing and tagging topics"
+            tagger_agent:
+              label: "AI Agent"
+              description: "The AI agent to use for analyzing and tagging topics"
             tag_mode:
               label: "Tag Selection Mode"
               description: "Choose how the AI selects tags"
@@ -228,7 +228,7 @@ en:
 
       default_llm:
         title: "Default LLM model"
-        description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or persona. If no default LLM is specified, the last created LLM will be used."
+        description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or agent. If no default LLM is specified, the last created LLM will be used."
 
       llm_selector:
         none: "None"
@@ -236,19 +236,19 @@ en:
 
       features:
         short_title: "Features"
-        description: "These are the AI features available to visitors on your site. These can be configured to use specific personas and LLMs, and can be access controlled by groups."
-        back: "Back"
+        description: "These are the AI features available to visitors on your site. These can be configured to use specific agents and LLMs, and can be access controlled by groups."
+        back: "Back to AI features"
         settings_save_error: "Some settings could not be saved."
         disabled: "(disabled)"
-        persona:
-          one: "Persona:"
-          other: "Personas:"
+        agent:
+          one: "Agent:"
+          other: "Agents:"
         groups: "Groups:"
         llm:
           one: "LLM:"
           other: "LLMs:"
         no_llm: "No LLM selected"
-        no_persona: "Not set"
+        no_agent: "Not set"
         no_groups: "None"
         edit: "Settings"
         expand_list:
@@ -269,7 +269,7 @@ en:
           unconfigured: "Unconfigured"
         filters:
           all: "All"
-          text: "Search features, personas, LLMs, or groups..."
+          text: "Search features, agents, LLMs, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
 
@@ -315,10 +315,11 @@ en:
             settings: "Basic Settings"
             topic_criteria: "Topic Criteria"
             post_criteria: "Post Criteria"
-            personas: "Personas"
+            agents: "Agents"
 
         ai_helper:
-          name: "Helper"
+          edit: "Edit AI helper settings"
+          name: "AI Helper"
           description: "Assists users in community interaction, such as creating topics, writing posts, and reading content"
           proofread: Proofread text
           title_suggestions: "Suggest titles"
@@ -336,7 +337,7 @@ en:
             access_permissions: "Access & Permissions"
             enabled_features: "Enabled Features"
             automation: "Automation"
-            personas: "Personas"
+            agents: "Agents"
 
         translation:
           name: "Translation"
@@ -352,7 +353,7 @@ en:
           schedule_topic_error: "Failed to schedule translations. Please try again."
           setting_groups:
             settings: "Basic Settings"
-            personas: "Personas"
+            agents: "Agents"
             backfill_and_limits: "Backfill & Limits"
 
         spam:
@@ -380,6 +381,8 @@ en:
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
         supported_locales_description: "This site setting also allows visitors to contribute post translations."
+        translatable_categories: "Translatable categories"
+        translatable_categories_description: "Only content in the selected categories will be translated. Subcategories must be added separately."
         admin_actions:
           translation_settings: "Translation settings"
           localization_settings: "Localization settings"
@@ -404,6 +407,12 @@ en:
           bar_done:
             one: "%{count} post"
             other: "%{count} posts"
+        theme_translations:
+          translate:
+            label: "Translate"
+            title: "Translate to all supported languages using the selected language as the source"
+            queued: "Translation queued"
+            failed: "Failed to queue translation"
         translations_menu:
           translate:
             label: "Translate post"
@@ -417,7 +426,7 @@ en:
         short_title: "Spam"
         title: "Configure spam handling"
         select_llm: "Select LLM"
-        select_persona: "Select persona"
+        select_agent: "Select agent"
         custom_instructions: "Custom instructions"
         custom_instructions_help: "Custom instructions specific to your site to help guide the AI in identifying spam, e.g. 'Be more aggressive about scanning posts not in English'."
         last_seven_days: "Last 7 days"
@@ -505,27 +514,41 @@ en:
           custom: "Custom..."
         credit_allocations: "Credit allocations"
 
-      ai_persona:
+      ai_agent:
         ai_tools: "Tools"
+        mcp_servers: "MCP servers"
+        mcp_server_tools_help: "Selected MCP servers expose all of their tools by default. Narrow them per agent to reduce token usage and keep tool choice focused."
+        mcp_server_tool_count:
+          one: "%{count} tool"
+          other: "%{count} tools"
+        mcp_server_enabled_tool_count:
+          one: "%{count} tool enabled"
+          other: "%{count} tools enabled"
+        mcp_server_all_tools_enabled: "All tools enabled"
+        mcp_server_enabled_tools:
+          one: "%{count} of %{total} tool enabled"
+          other: "%{count} of %{total} tools enabled"
+        mcp_server_choose_tools: "Choose tools"
+        mcp_server_edit_tools: "Edit tools"
         tool_strategies:
           all: "Apply to all replies"
           replies:
             one: "Apply to first reply only"
             other: "Apply to first %{count} replies"
-        back: "Back"
+        back: "Back to agents"
         name: "Name"
         edit: "Edit"
         export: "Export"
         import: "Import"
-        import_error_conflict: "Conflict detected importing %{name}, would you like to update the existing persona?"
+        import_error_conflict: "Conflict detected importing %{name}, would you like to update the existing agent?"
         overwrite: "Overwrite"
         description: "Description"
         no_llm_selected: "No language model selected"
-        use_parent_llm: "Use persona's language model"
+        use_parent_llm: "Use agent's language model"
         max_context_posts: "Max context posts"
         max_context_posts_help: "The maximum number of posts to use as context for the AI when responding to a user. (empty for default)"
         execution_mode: "Execution Mode"
-        execution_mode_help: "Controls how the persona manages tool execution and conversation context. Default uses fixed turn/tool limits. Agentic uses a token budget with automatic context compression for longer, more capable tool-use sessions."
+        execution_mode_help: "Controls how the agent manages tool execution and conversation context. Default uses fixed turn/tool limits. Agentic uses a token budget with automatic context compression for longer, more capable tool-use sessions."
         execution_mode_options:
           default: "Default (Fixed Limits)"
           agentic: "Agentic (Token Budget)"
@@ -543,47 +566,75 @@ en:
         show_thinking: Show thinking
         show_thinking_help: Will show end users the internal thinking and tool calls of the language model.
         mentionable: Allow mentions
-        mentionable_help: If enabled, users in allowed groups can mention this user in posts, the AI will respond as this persona.
+        mentionable_help: If enabled, users in allowed groups can mention this user in posts, the AI will respond as this agent.
         user: User
         create_user: Create user
-        create_user_help: You can optionally attach a user to this persona. If you do, the AI will use this user to respond to requests.
+        create_user_help: You can optionally attach a user to this agent. If you do, the AI will use this user to respond to requests.
         default_llm: Default language model
-        default_llm_help: The default language model to use for this persona. Required if you wish to mention persona on public posts.
-        question_consolidator_llm: Language Model for Question Consolidator
-        question_consolidator_llm_help: The language model to use for the question consolidator, you may choose a less powerful model to save costs.
+        default_llm_help: The default language model to use for this agent. Required if you wish to mention the agent on public posts.
         system_prompt: System prompt
         forced_tool_strategy: Forced tool strategy
         allow_chat_direct_messages: "Allow chat direct messages"
-        allow_chat_direct_messages_help: "If enabled, users in allowed groups can send direct messages to this persona."
+        allow_chat_direct_messages_help: "If enabled, users in allowed groups can send direct messages to this agent."
         allow_chat_channel_mentions: "Allow chat channel mentions"
-        allow_chat_channel_mentions_help: "If enabled, users in allowed groups can mention this persona in chat channels."
+        allow_chat_channel_mentions_help: "If enabled, users in allowed groups can mention this agent in chat channels."
         allow_personal_messages: "Allow personal messages"
-        allow_personal_messages_help: "If enabled, users in allowed groups can send personal messages to this persona."
+        allow_personal_messages_help: "If enabled, users in allowed groups can send personal messages to this agent."
         allow_topic_mentions: "Allow topic mentions"
-        allow_topic_mentions_help: "If enabled, users in allowed groups can mention this persona in topics."
+        allow_topic_mentions_help: "If enabled, users in allowed groups can mention this agent in topics."
+        require_approval: "Require approval for moderation tools"
+        require_approval_help: "When enabled, moderation actions (close, delete, edit, etc.) will be sent to the review queue for moderator approval before execution."
         force_default_llm: "Always use default language model"
         save: "Save"
-        saved: "Persona saved"
+        saved: "Agent saved"
         enabled: "Enabled?"
         tools: "Enabled tools"
+        tokens: "tokens"
+        context_cost: "Context Cost"
+        token_usage: "Token Usage"
+        tool_count: "Tool Count"
+        tool_count_value:
+          one: "%{count} tool"
+          other: "%{count} tools"
+        tool_tokens_total: "~%{tokens} Tokens"
+        mcp_server_cost_name: "%{name} (MCP server)"
+        mcp_server_cost_value:
+          one: "~%{tokens} tokens, %{count} tool"
+          other: "~%{tokens} tokens, %{count} tools"
+        mcp_server_tokens_only: "~%{tokens} tokens"
+        mcp_tools_modal:
+          title: "%{name} tools"
+          summary: "By default this agent can use every tool from this server. Select a smaller set to limit access and reduce prompt cost."
+          filter_placeholder: "Filter tools"
+          select_all: "Select all"
+          clear_all: "Clear all"
+          selection_summary:
+            one: "%{count} of %{total} tool selected"
+            other: "%{count} of %{total} tools selected"
+          empty: "No tools match this filter."
+        tool_severity_medium: "Moderate capacity"
+        tool_severity_high: "High capacity"
+        tool_severity_too_many: "Too many tools"
+        tool_tokens_warning: "Excess tools degrade AI performance by taking up valuable conversation memory. Consider removing non-essential tools."
+        tool_count_warning: "Each tool's definition is sent to the model on every request. Having many tools increases token usage and can confuse the model, leading to worse tool selection. Only keep tools this agent actually needs."
         forced_tools: "Forced tools"
         allowed_groups: "Allowed groups"
-        confirm_delete: "Are you sure you want to delete this persona?"
-        new: "New persona"
-        no_personas: "You have not created any personas yet"
-        title: "Personas"
-        short_title: "Personas"
+        confirm_delete: "Are you sure you want to delete this agent?"
+        new: "New agent"
+        no_agents: "You have not created any agents yet"
+        title: "Agents"
+        short_title: "Agents"
         delete: "Delete"
         temperature: "Temperature"
         temperature_help: "Temperature to use for the LLM. Increase to increase creativity (leave empty to use model default, generally a value from 0.0 to 2.0)"
         top_p: "Top P"
         top_p_help: "Top P to use for the LLM, increase to increase randomness (leave empty to use model default, generally a value from 0.0 to 1.0)"
         priority: "Priority"
-        priority_help: "Priority personas are displayed to users at the top of the persona list. If multiple personas have priority, they will be sorted alphabetically."
+        priority_help: "Priority agents are displayed to users at the top of the agent list. If multiple agents have priority, they will be sorted alphabetically."
         tool_options: "Tool options"
         rag_conversation_chunks: "Search conversation chunks"
         rag_conversation_chunks_help: "The number of chunks to use for the RAG model searches. Increase to increase the amount of context the AI can use."
-        persona_description: "Personas are a powerful feature that allows you to customize the behavior of the AI engine in your Discourse forum. They act as a 'system message' that guides the AI's responses and interactions, helping to create a more personalized and engaging user experience."
+        agent_description: "Agents are a powerful feature that allows you to customize the behavior of the AI engine in your Discourse forum. They act as a 'system message' that guides the AI's responses and interactions, helping to create a more personalized and engaging user experience."
         response_format:
           title: "JSON response format"
           no_format: "No JSON format specified"
@@ -605,12 +656,12 @@ en:
 
         ai_bot:
           title: "AI bot options"
-          save_first: "More AI bot options will become available once you save the persona."
+          save_first: "More AI bot options will become available once you save the agent."
 
         filters:
-          text: "Find a persona"
+          text: "Find an agent"
           reset: "Reset"
-          no_results: "No personas found matching your filters."
+          no_results: "No agents found matching your filters."
           all_features: "Any feature"
 
         features_list:
@@ -643,8 +694,10 @@ en:
           remove: "Remove upload"
 
       tools:
-        back: "Back"
+        back: "Back to tools"
         short_title: "Tools"
+        keywords: "mcp|mcp server|model context protocol"
+        script_tools: "Script tools"
         export: "Export"
         import: "Import"
         import_error_conflict: "Tool already exists, would you like to update it?"
@@ -654,10 +707,10 @@ en:
         name_help: "Name will show up in the Discourse UI and is the short identifier you will use to find the tool in various settings, it should be distinct (it is required)"
         new: "New tool"
         tool_name: "Tool Name"
-        tool_name_help: "Tool Name is presented to the large language model. It is not distinct, but it is distinct per persona. (persona validates on save)"
+        tool_name_help: "Tool Name is presented to the large language model. It is not distinct, but it is distinct per agent. (agent validates on save)"
         description: "Description"
         description_help: "A clear description of the tool's purpose for the language model"
-        subheader_description: "Tools extend the capabilities of AI bots with user-defined JavaScript functions."
+        subheader_description: "Tools and MCP servers extend the capabilities of AI agents."
         summary: "Summary"
         summary_help: "Summary of tools purpose to be displayed to end users"
         script: "Script"
@@ -703,7 +756,7 @@ en:
         no_secrets: "No credentials yet"
         new_title: "New credential"
         edit_title: "Edit credential"
-        back: "Back"
+        back: "Back to credentials"
         save: "Save"
         edit: "Edit"
         delete: "Delete"
@@ -712,8 +765,92 @@ en:
         embedding: "Embedding"
         cannot_delete_in_use: "This credential cannot be deleted because it is in use by:"
         tool: "Tool"
+        mcp_server: "MCP server"
+        mcp_server_oauth_client_secret: "MCP server OAuth client secret"
         modal:
           title: "Create new credential"
+
+      mcp_servers:
+        short_title: "MCP servers"
+        new: "New MCP server"
+        name: "Name"
+        description: "Description"
+        url: "URL"
+        auth_type: "Authentication"
+        auth_types:
+          none: "No authentication"
+          header_secret: "Header credential"
+          oauth: "OAuth"
+        secret: "Credential"
+        auth_header: "Auth header"
+        auth_scheme: "Auth scheme"
+        oauth_client_registration: "OAuth client registration"
+        oauth_client_registration_types:
+          client_metadata_document: "Client metadata document"
+          manual: "Manual client credentials"
+        oauth_client_id: "OAuth client ID"
+        oauth_client_secret: "OAuth client secret"
+        oauth_scopes: "OAuth scopes"
+        oauth_authorization_params: "OAuth authorization params"
+        oauth_authorization_params_help: "Optional JSON object merged into the authorization request. Use null to remove a default parameter."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "OAuth token params"
+        oauth_token_params_help: "Optional JSON object merged into token requests. Use null to remove a default parameter."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Require refresh token"
+        oauth_require_refresh_token_help: "Fail the OAuth connection if the provider does not return a refresh token."
+        oauth_json_object_required: "%{field} must be a JSON object."
+        oauth_show_advanced_options: "Show advanced options"
+        oauth_hide_advanced_options: "Hide advanced options"
+        oauth_connection: "OAuth connection"
+        oauth_status: "OAuth status"
+        oauth_statuses:
+          disconnected: "Disconnected"
+          connected: "Connected"
+          refresh_failed: "Refresh failed"
+          error: "Needs attention"
+        oauth_connect: "Connect"
+        oauth_reconnect: "Reconnect"
+        oauth_disconnect: "Disconnect"
+        oauth_connect_help: "Use Connect to save the server and authorize it."
+        oauth_client_metadata_url: "Client metadata URL"
+        oauth_granted_scopes: "Granted scopes"
+        oauth_access_token_expires_at: "Access token expires at"
+        oauth_authorization_endpoint: "Authorization endpoint"
+        oauth_token_endpoint: "Token endpoint"
+        oauth_revocation_endpoint: "Revocation endpoint"
+        oauth_issuer: "Issuer"
+        oauth_last_error: "Last OAuth error"
+        oauth_show_details: "Show details"
+        oauth_hide_details: "Hide details"
+        timeout_seconds: "Request timeout (seconds)"
+        timeout_seconds_tooltip: "How long Discourse waits for the MCP server before the request fails. Keep 30 unless the server is consistently slow."
+        enabled: "Enabled"
+        save: "Save"
+        edit: "Edit"
+        delete: "Delete"
+        test: "Test connection"
+        saved: "MCP server saved"
+        confirm_delete: "Are you sure you want to delete this MCP server?"
+        back: "Back to tools"
+        health: "Health"
+        healthy: "Healthy"
+        unhealthy: "Needs attention"
+        tool_count:
+          one: "%{count} tool"
+          other: "%{count} tools"
+        tools_modal:
+          title: "%{name} tools"
+          summary:
+            one: "This server currently exposes %{count} tool."
+            other: "This server currently exposes %{count} tools."
+          parameters: "Parameters"
+          required: "Required"
+          no_parameters: "This tool does not require any parameters."
+        test_result: "Connection result"
+        test_summary:
+          one: "Discovered %{count} tool using protocol %{version}."
+          other: "Discovered %{count} tools using protocol %{version}."
 
       llms:
         short_title: "LLMs"
@@ -739,7 +876,7 @@ en:
         save: "Save"
         edit: "Edit"
         saved: "LLM model saved"
-        back: "Back"
+        back: "Back to LLMs"
         confirm_delete: Are you sure you want to delete this model?
         delete: Delete
         quotas:
@@ -769,32 +906,32 @@ en:
           next_reset: "Credits reset on %{time}"
         usage:
           ai_bot: "AI bot"
-          ai_helper: "Helper (%{persona})"
+          ai_helper: "Helper (%{agent})"
           ai_helper_image_caption: "Image caption"
-          ai_persona: "Persona (%{persona})"
+          ai_agent: "Agent (%{agent})"
           ai_summarization: "Summarize"
           ai_embeddings_semantic_search: "AI search"
           ai_spam: "Spam"
-          automation: "Automation (%{persona})"
+          automation: "Automation (%{agent})"
         in_use_warning:
           one: "This model is currently used by %{settings}. If misconfigured, the feature won't work as expected."
           other: "This model is currently used by the following: %{settings}. If misconfigured, features won't work as expected. "
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-6: "Anthropic's most intelligent model"
+          anthropic-claude-opus-4-7: "Anthropic's most intelligent model"
           anthropic-claude-sonnet-4-6: "Optimal balance of speed and cost"
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
           google-gemini-3-pro: "Google's most intelligent model"
           google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
-          open_ai-gpt-5-2: "OpenAI's flagship model, well suited for problem solving across domains"
-          open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost"
+          open_ai-gpt-5-4: "OpenAI's flagship model, well suited for problem solving across domains"
+          open_ai-gpt-5-4-mini: "Provides a balance between intelligence, speed, and cost"
           open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model"
           open_router-deepseek-deepseek-v3-2: "DeepSeek's latest high-performance model"
           open_router-moonshotai-kimi-k2-5: "Moonshot's multimodal model with vision capabilities"
           open_router-x-ai-grok-4-fast: "xAI's flagship model with vision"
-          open_router-minimax-minimax-m2-5: "MiniMax's multimodal model with large context"
-          open_router-z-ai-glm-5: "Z-AI's multimodal model with vision"
+          open_router-minimax-minimax-m2-7: "MiniMax's multimodal model with large context"
+          open_router-z-ai-glm-5-1: "Z-AI's multimodal model with vision"
           open_router-arcee-ai-trinity-large-preview-free: "Free open-source model from Arcee AI"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
@@ -832,6 +969,7 @@ en:
           cost_measure: "$/1M tokens"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (Converse API)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
@@ -850,6 +988,7 @@ en:
         provider_fields:
           access_key_id: "AWS Bedrock access key ID"
           role_arn: "AWS Bedrock Role ARN"
+          inference_profile_arn: "AWS Bedrock application inference profile ARN"
           region: "AWS Bedrock region"
           organization: "Optional OpenAI organization ID"
           disable_system_prompt: "Disable system message in prompts"
@@ -938,12 +1077,17 @@ en:
       reviewables:
         model_used: "Model used:"
         accuracy: "Accuracy:"
+        ai_tool_action:
+          agent: "Agent"
+          tool: "Tool"
+          parameters: "Parameters"
+          post: "Triggering Post"
 
       embeddings:
         short_title: "Embeddings"
         description: "Embeddings are numerical representations of data that capture meaning and relationships, enabling Discourse AI features like Related Topics and AI Search to understand and connect content."
         new: "New embedding"
-        back: "Back"
+        back: "Back to embeddings"
         save: "Save"
         saved: "Embedding configuration saved"
         delete: "Delete"
@@ -1002,6 +1146,11 @@ en:
           no_results: "No AI results found for this search"
         semantic_search_unavailable_tooltip: "Search results must be sorted by Relevance to display AI results"
         ai_generated_result: "Search result found using AI"
+        ai_results_notice:
+          no_results: "No exact matches, but here are some related results."
+          few_results:
+            one: "%{count} match found - showing related results."
+            other: "%{count} matches found - showing related results."
         quick_search:
           suffix: "in all topics and posts with AI"
 
@@ -1011,7 +1160,8 @@ en:
         click_to_run_label: "Run Artifact"
 
       ai_bot:
-        persona: "Persona"
+        title: "AI bot"
+        agent: "Agent"
         llm: "Model"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
@@ -1029,10 +1179,12 @@ en:
           title: "View AI interaction"
           copy_request: "Copy request"
           copy_response: "Copy response"
-          request_tokens: "Request tokens:"
-          response_tokens: "Response tokens:"
-          cache_read_tokens: "Cache read tokens:"
-          cache_write_tokens: "Cache write tokens:"
+          this_turn: "This turn:"
+          whole_conversation: "Conversation:"
+          tokens_summary: "%{request_tokens} in → %{response_tokens} out"
+          cache_both: "(cache %{read} read, %{write} write)"
+          cache_read_only: "(cache %{read} read)"
+          cache_write_only: "(cache %{write} write)"
           request: "Request"
           response: "Response"
           next_log: "Next"
@@ -1165,8 +1317,15 @@ en:
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Tool approved"
+        rejected_tool_action:
+          title: "Tool rejected"
       types:
         reviewable_ai_post:
           title: "AI-Flagged post"
         reviewable_ai_chat_message:
           title: "AI-Flagged chat message"
+        reviewable_ai_tool_action:
+          title: "AI Tool Action"

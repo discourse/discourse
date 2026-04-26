@@ -3,7 +3,9 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 
   const eventTz = event.timezone || "UTC";
 
-  params.start = moment(startsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
+  params.start = event.allDay
+    ? moment(startsAt).format("YYYY-MM-DD")
+    : moment(startsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
 
   if (event.isClosed) {
     params.closed = "true";
@@ -59,8 +61,14 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.maxAttendees = `${event.maxAttendees}`;
   }
 
+  if (event.allDay) {
+    params.allDay = "true";
+  }
+
   if (endsAt) {
-    params.end = moment(endsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
+    params.end = event.allDay
+      ? moment(endsAt).format("YYYY-MM-DD")
+      : moment(endsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
   }
 
   if (event.status === "private") {
@@ -84,6 +92,12 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
         return `${reminder.type}.${reminder.value}.${reminder.unit}`;
       })
       .join(",");
+  }
+
+  if (event.imageUpload?.short_url) {
+    params.image = event.imageUpload.short_url;
+  } else if (event.imageUpload?.url) {
+    params.image = event.imageUpload.url;
   }
 
   siteSettings.discourse_post_event_allowed_custom_fields

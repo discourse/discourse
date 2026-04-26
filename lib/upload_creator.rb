@@ -64,7 +64,9 @@ class UploadCreator
 
     @image_info =
       begin
-        FastImage.new(@file)
+        image = FastImage.new(@file)
+        image.type # eager load to rescue errors early
+        image
       rescue StandardError
         nil
       end
@@ -289,7 +291,9 @@ class UploadCreator
   def extract_image_info!
     @image_info =
       begin
-        FastImage.new(@file)
+        image = FastImage.new(@file)
+        image.type # eager load to rescue errors early
+        image
       rescue StandardError
         nil
       end
@@ -483,6 +487,7 @@ class UploadCreator
         I18n.t(
           "upload.images.larger_than_x_megapixels",
           max_image_megapixels: SiteSetting.max_image_megapixels,
+          original_filename: @upload.original_filename,
         ),
       )
       true

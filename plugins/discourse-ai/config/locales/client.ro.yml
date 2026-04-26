@@ -29,9 +29,6 @@ ro:
               label: "Etichete"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Personaj"
-              description: "Personajul este folosit pentru triaj, asigură-te că răspunde cu un singur cuvânt pe care îl poți folosi pentru a declanșa acțiunea."
             category:
               label: "Categorie"
             tags:
@@ -56,11 +53,9 @@ ro:
     discourse_ai:
       default_llm:
         title: "Model LLM implicit"
-        description: "Modelul LLM implicit de utilizat pentru toate funcțiile IA. Acesta va fi utilizat dacă nu este specificat niciun LLM în configurația funcționalității sau în personaj. Dacă nu este specificat niciun LLM implicit, se va utiliza ultimul LLM creat."
       llm_selector:
         none: "Nimic"
       features:
-        back: "Înapoi"
         disabled: "(dezactivat)"
         groups: "Grupuri:"
         no_groups: "Nimic"
@@ -133,8 +128,7 @@ ro:
         periods:
           last_day: "Ultimele 24 de ore"
           custom: "Personalizat..."
-      ai_persona:
-        back: "Înapoi"
+      ai_agent:
         name: "Nume"
         edit: "Editează"
         export: "Exportă"
@@ -143,6 +137,9 @@ ro:
         user: Utilizator
         save: "Salvează"
         enabled: "Activată?"
+        mcp_tools_modal:
+          select_all: "Selectează tot"
+          clear_all: "Șterge tot"
         delete: "Șterge"
         response_format:
           open_modal: "Editează"
@@ -153,7 +150,6 @@ ro:
           title: "Încărcări"
           uploading: "Se încarcă..."
       tools:
-        back: "Înapoi"
         export: "Exportă"
         import: "Importă"
         name: "Nume"
@@ -171,17 +167,27 @@ ro:
         short_title: "Date de conectare"
         name: "Nume"
         secret: "Valoare"
-        back: "Înapoi"
         save: "Salvează"
         edit: "Editează"
         delete: "Șterge"
         embedding: "Înglobare"
+      mcp_servers:
+        name: "Nume"
+        description: "Descriere"
+        url: "URL"
+        oauth_connect: "Conectează-te"
+        oauth_hide_details: "Ascunde detalii"
+        enabled: "Activate"
+        save: "Salvează"
+        edit: "Editează"
+        delete: "Șterge"
+        tools_modal:
+          required: "Obligatoriu"
       llms:
         display_name: "Nume"
         provider: "Furnizor"
         save: "Salvează"
         edit: "Editează"
-        back: "Înapoi"
         delete: Șterge
         quotas:
           group: "Grup"
@@ -196,11 +202,11 @@ ro:
         credit_allocation:
           soft_limit_warning: "Acest model are %{percentage}% din creditele IA rămase astăzi"
         usage:
-          ai_helper: "Ajutor (%{persona})"
+          ai_helper: "Ajutor (%{agent})"
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-6: "Cel mai inteligent model de la Anthropic"
+          anthropic-claude-opus-4-7: "Cel mai inteligent model de la Anthropic"
           open_ai-gpt-5-nano: "Cel mai rapid și mai rentabil model GPT-5"
         next:
           title: "Următorul"
@@ -228,7 +234,6 @@ ro:
         image_caption:
           save_caption: "Salvează"
       embeddings:
-        back: "Înapoi"
         save: "Salvează"
         delete: "Șterge"
         edit: "Editează"

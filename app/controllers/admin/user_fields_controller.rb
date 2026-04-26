@@ -60,7 +60,8 @@ class Admin::UserFieldsController < Admin::AdminController
 
   def destroy
     field = UserField.where(id: params.require(:id)).first
-    field.destroy if field.present?
+    field.presence&.destroy
+
     render json: success_json
   end
 

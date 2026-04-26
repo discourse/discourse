@@ -7,6 +7,8 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   scope :failing, -> { where("last_problem_at = last_run_at") }
   scope :passing, -> { where("last_success_at = last_run_at") }
+  scope :ignored, -> { where.not(ignored_at: nil) }
+  scope :watched, -> { where(ignored_at: nil) }
 
   before_destroy :silence_the_alarm
 
@@ -26,6 +28,28 @@ class ProblemCheckTracker < ActiveRecord::Base
     last_success_at == last_run_at
   end
 
+  def ignored?
+    ignored_at.present?
+  end
+
+  def watched?
+    !ignored?
+  end
+
+  def ignore!
+    return if ignored?
+
+    touch(:ignored_at)
+    silence_the_alarm
+  end
+
+  def watch!
+    return if watched?
+
+    update!(ignored_at: nil)
+    sound_the_alarm if sound_the_alarm?
+  end
+
   def problem!(next_run_at: nil, details: {})
     now = Time.current
 
@@ -41,12 +65,6 @@ class ProblemCheckTracker < ActiveRecord::Base
     silence_the_alarm
   end
 
-  def reset(next_run_at: nil)
-    now = Time.current
-
-    update!(blips: 0, last_run_at: now, last_success_at: now, next_run_at:)
-  end
-
   def check
     check = ProblemCheck[identifier]
 
@@ -60,12 +78,18 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   private
 
+  def reset(next_run_at: nil)
+    now = Time.current
+
+    update!(blips: 0, last_run_at: now, last_success_at: now, next_run_at:)
+  end
+
   def update_notice_details(details)
     admin_notice.where(identifier:).update_all(details: details.merge(target:))
   end
 
   def sound_the_alarm?
-    failing? && blips > check.max_blips
+    watched? && failing? && blips > check.max_blips
   end
 
   def sound_the_alarm
@@ -92,6 +116,7 @@ end
 #  blips           :integer          default(0), not null
 #  details         :json
 #  identifier      :string           not null
+#  ignored_at      :datetime
 #  last_problem_at :datetime
 #  last_run_at     :datetime
 #  last_success_at :datetime

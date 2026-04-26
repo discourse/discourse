@@ -12,31 +12,86 @@ module DiscourseDataExplorer
     skip_before_action :ensure_admin,
                        only: %i[group_reports_index group_reports_show group_reports_run public_run]
 
+    INDEX_LIMIT = 50
+
+    SORTABLE_COLUMNS = %w[name username last_run_at].freeze
+
     def index
-      queries =
-        DiscourseDataExplorer::Query
-          .where(hidden: false)
-          .order(:last_run_at, :name)
-          .includes(:groups)
-          .to_a
+      limit = INDEX_LIMIT
+      offset = params[:offset].to_i
+      filter = params[:filter]
 
-      DiscourseDataExplorer::Queries.default.each do |params|
-        attributes = params.last
-        persisted = queries.find { |q| q.id == attributes["id"] }
+      order_column = SORTABLE_COLUMNS.include?(params[:order]) ? params[:order] : "last_run_at"
+      order_direction = params[:ascending] == "true" ? :asc : :desc
 
-        # Once a default query has been run, it is also saved in the local db
-        # so we can skip creating a "fake" query for the UI here, and this also
-        # avoids double-ups of the default query in the UI.
-        next if persisted.present?
+      base_scope = DiscourseDataExplorer::Query.where(hidden: false).includes(:groups)
 
-        query =
-          DiscourseDataExplorer::Query.new(attributes.slice("id", "sql", "name", "description"))
-        query.user_id = Discourse::SYSTEM_USER_ID.to_s
-
-        queries << query
+      if order_column == "username"
+        base_scope =
+          base_scope.joins("LEFT JOIN users ON users.id = data_explorer_queries.user_id").order(
+            Arel.sql("users.username #{order_direction}"),
+          )
+      else
+        base_scope = base_scope.order(order_column => order_direction)
       end
 
-      render_serialized(queries, QuerySerializer, root: "queries")
+      if filter.present?
+        sanitized_filter = "%#{Query.sanitize_sql_like(filter)}%"
+        base_scope =
+          base_scope.where(
+            "data_explorer_queries.name ILIKE :filter OR data_explorer_queries.description ILIKE :filter",
+            filter: sanitized_filter,
+          )
+      end
+
+      persisted_count = base_scope.count
+
+      # Default queries are only persisted once run. Build in-memory records
+      # for any that haven't been run yet so they still appear in the list.
+      persisted_default_ids =
+        DiscourseDataExplorer::Query.where(hidden: false).where("id < 0").pluck(:id).to_set
+      unpersisted_defaults =
+        DiscourseDataExplorer::Queries.default.filter_map do |_, attributes|
+          next if persisted_default_ids.include?(attributes["id"])
+          if filter.present?
+            name_match = attributes["name"]&.downcase&.include?(filter.downcase)
+            desc_match = attributes["description"]&.downcase&.include?(filter.downcase)
+            next unless name_match || desc_match
+          end
+          query =
+            DiscourseDataExplorer::Query.new(attributes.slice("id", "sql", "name", "description"))
+          query.user_id = Discourse::SYSTEM_USER_ID.to_s
+          query
+        end
+
+      total_rows = persisted_count + unpersisted_defaults.size
+
+      # On the first page, fit defaults within the limit so the page size
+      # stays consistent. On subsequent pages, only DB results are returned.
+      if offset == 0
+        db_limit = [limit - unpersisted_defaults.size, 0].max
+        paginated = base_scope.limit(db_limit).to_a
+        queries = paginated + unpersisted_defaults
+        next_offset = paginated.size
+      else
+        paginated = base_scope.offset(offset).limit(limit).to_a
+        queries = paginated
+        next_offset = offset + limit
+      end
+
+      json = serialize_data(queries, QuerySerializer, root: "queries")
+      json["total_rows_queries"] = total_rows
+
+      if next_offset < persisted_count
+        load_more_params = { offset: next_offset }
+        load_more_params[:filter] = filter if filter.present?
+        load_more_params[:order] = order_column if order_column != "last_run_at"
+        load_more_params[:ascending] = "true" if order_direction == :asc
+        base_path = request.path.delete_suffix(".json")
+        json["load_more_queries"] = "#{base_path}.json?#{load_more_params.to_query}"
+      end
+
+      render_json_dump(json)
     end
 
     def show
@@ -48,7 +103,15 @@ module DiscourseDataExplorer
       end
 
       return raise Discourse::NotFound if !guardian.user_can_access_query?(@query) || @query.hidden
-      render_serialized @query, QueryDetailsSerializer, root: "query"
+
+      json = serialize_data(@query, QueryDetailsSerializer, root: nil)
+
+      unless params[:export]
+        cached = QueryRunner.cached_result(@query, params[:params])
+        json[:cached_result] = cached if cached
+      end
+
+      render_json_dump(query: json)
     end
 
     def groups
@@ -99,19 +162,46 @@ module DiscourseDataExplorer
     end
 
     def create
-      query =
-        Query.create!(
-          params
-            .require(:query)
-            .permit(:name, :description, :sql)
-            .merge(user_id: current_user.id, last_run_at: Time.now),
-        )
+      query_params = params.require(:query).permit(:name, :description, :sql)
       group_ids = params.require(:query)[:group_ids]
-      group_ids&.each { |group_id| query.query_groups.find_or_create_by!(group_id: group_id) }
+
+      query =
+        QueryCreator.create(query_params: query_params, group_ids: group_ids, user: current_user)
+
       render_serialized query, QueryDetailsSerializer, root: "query"
     end
 
+    def generate_with_ai
+      raise Discourse::NotFound unless AiQueryEnqueuer.enabled?
+      RateLimiter.new(
+        current_user,
+        "data-explorer-ai-generate",
+        10,
+        1.minute,
+        apply_limit_to_staff: true,
+      ).performed!
+
+      ai_description = params.require(:ai_description).strip
+      if ai_description.length > 2000
+        raise Discourse::InvalidParameters.new("ai_description is too long (max 2000 characters)")
+      end
+
+      generation_id = SecureRandom.hex
+      existing_sql = params[:existing_sql]&.strip.presence
+
+      AiQueryEnqueuer.enqueue(
+        generation_id: generation_id,
+        user: current_user,
+        ai_description: ai_description,
+        existing_sql: existing_sql,
+      )
+
+      render json: { generation_id: generation_id, status: "generating" }
+    end
+
     def update
+      sql_changed = @query.sql != params.dig(:query, :sql)
+
       ActiveRecord::Base.transaction do
         @query.update!(
           params.require(:query).permit(:name, :sql, :description).merge(hidden: false),
@@ -121,6 +211,8 @@ module DiscourseDataExplorer
         QueryGroup.where.not(group_id: group_ids).where(query_id: @query.id).delete_all
         group_ids&.each { |group_id| @query.query_groups.find_or_create_by!(group_id: group_id) }
       end
+
+      QueryRunner.invalidate(@query.id) if sql_changed
 
       render_serialized @query, QueryDetailsSerializer, root: "query"
     rescue ValidationError => e
@@ -151,75 +243,28 @@ module DiscourseDataExplorer
     def run
       rate_limit_query_runs!
 
-      check_xhr unless params[:download]
-
       query = Query.find(params[:id].to_i)
       query.update!(last_run_at: Time.now)
 
-      response.sending_file = true if params[:download]
+      explain = params[:explain] == "true"
+      return run_download(query, explain:) if params[:download]
 
-      query_params = {}
-      if params[:params]
-        query_params =
-          params[:params].is_a?(String) ? MultiJson.load(params[:params]) : params[:params]
-      end
-
-      opts = { current_user: current_user }
-      opts[:explain] = true if params[:explain] == "true"
-
-      opts[:limit] = if params[:format] == "csv"
-        limit = params.fetch(:limit, QUERY_RESULT_MAX_LIMIT).to_i
-        limit = QUERY_RESULT_MAX_LIMIT if limit > QUERY_RESULT_MAX_LIMIT
-        limit
-      else
+      check_xhr
+      limit =
         fetch_limit_from_params(
           default: SiteSetting.data_explorer_query_result_limit,
           max: QUERY_RESULT_MAX_LIMIT,
         )
-      end
 
-      result = DataExplorer.run_query(query, query_params, opts)
+      result = QueryRunner.run(query, params[:params], current_user:, explain:, limit:)
 
       if result[:error]
-        err = result[:error]
-
-        # Pretty printing logic
-        err_class = err.class
-        err_msg = err.message
-        if err.is_a? ActiveRecord::StatementInvalid
-          err_class = err.original_exception.class
-          err_msg.gsub!("#{err_class}:", "")
-        else
-          err_msg = "#{err_class}: #{err_msg}"
-        end
-
-        render json: { success: false, errors: [err_msg] }, status: :unprocessable_entity
+        render json: format_query_error(result[:error]), status: :unprocessable_entity
       else
-        content_disposition =
-          "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult"
-
-        respond_to do |format|
-          format.json do
-            response.headers["Content-Disposition"] = "#{content_disposition}.json" if params[
-              :download
-            ]
-
-            render json:
-                     ResultFormatConverter.convert(
-                       :json,
-                       result,
-                       query_params:,
-                       download: params[:download],
-                       explain: params[:explain] == "true",
-                     )
-          end
-          format.csv do
-            response.headers["Content-Disposition"] = "#{content_disposition}.csv"
-
-            render plain: ResultFormatConverter.convert(:csv, result)
-          end
-        end
+        render json: result
       end
+    rescue MultiJson::ParseError
+      render_invalid_json_params
     end
 
     private
@@ -238,6 +283,72 @@ module DiscourseDataExplorer
         Discourse.warn("Query run 10 second rate limit exceeded", query_id: params[:id])
       end
       raise e if GlobalSetting.max_data_explorer_api_req_mode.include?("block")
+    end
+
+    def run_download(query, explain:)
+      response.sending_file = true
+
+      format = params[:format] == "csv" ? :csv : :json
+      limit =
+        if format == :csv
+          csv_limit = params.fetch(:limit, QUERY_RESULT_MAX_LIMIT).to_i
+          [csv_limit, QUERY_RESULT_MAX_LIMIT].min
+        else
+          fetch_limit_from_params(
+            default: SiteSetting.data_explorer_query_result_limit,
+            max: QUERY_RESULT_MAX_LIMIT,
+          )
+        end
+
+      result =
+        QueryResultDownloader.download(
+          query,
+          params[:params],
+          current_user:,
+          explain:,
+          limit:,
+          format:,
+        )
+
+      if result[:error]
+        return render json: format_query_error(result[:error]), status: :unprocessable_entity
+      end
+
+      content_disposition =
+        "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult"
+
+      respond_to do |f|
+        f.json do
+          response.headers["Content-Disposition"] = "#{content_disposition}.json"
+          render json: result[:data]
+        end
+        f.csv do
+          response.headers["Content-Disposition"] = "#{content_disposition}.csv"
+          render plain: result[:data]
+        end
+      end
+    rescue MultiJson::ParseError
+      render_invalid_json_params
+    end
+
+    def format_query_error(err)
+      err_class = err.class
+      err_msg = err.message
+      if err.is_a?(ActiveRecord::StatementInvalid)
+        err_class = err.original_exception.class
+        err_msg.gsub!("#{err_class}:", "")
+      else
+        err_msg = "#{err_class}: #{err_msg}"
+      end
+      { success: false, errors: [err_msg] }
+    end
+
+    def render_invalid_json_params
+      render json: {
+               success: false,
+               errors: ["Invalid JSON in params"],
+             },
+             status: :unprocessable_entity
     end
 
     def set_group

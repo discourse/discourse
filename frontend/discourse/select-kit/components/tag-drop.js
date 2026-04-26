@@ -1,8 +1,6 @@
 import { action, computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import { setting } from "discourse/lib/computed";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
@@ -39,16 +37,30 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 export default class TagDrop extends ComboBoxComponent {
   @service tagUtils;
 
-  @readOnly("tag.name") value;
-
-  @setting("max_tag_search_results") maxTagSearchResults;
-  @setting("tags_sort_alphabetically") sortTagsAlphabetically;
-  @setting("max_tags_in_filter_list") maxTagsInFilterList;
-
   init() {
     super.init(...arguments);
 
     this.insertAfterCollection(MAIN_COLLECTION, MORE_TAGS_COLLECTION);
+  }
+
+  @computed("tag.id")
+  get value() {
+    return this.tag?.id;
+  }
+
+  @computed("siteSettings.max_tag_search_results")
+  get maxTagSearchResults() {
+    return this.siteSettings.max_tag_search_results;
+  }
+
+  @computed("siteSettings.tags_sort_alphabetically")
+  get sortTagsAlphabetically() {
+    return this.siteSettings.tags_sort_alphabetically;
+  }
+
+  @computed("siteSettings.max_tags_in_filter_list")
+  get maxTagsInFilterList() {
+    return this.siteSettings.max_tags_in_filter_list;
   }
 
   @computed("maxTagsInFilterList", "topTags.[]", "mainCollection.[]")
@@ -75,7 +87,7 @@ export default class TagDrop extends ComboBoxComponent {
   }
 
   modifyNoSelection() {
-    if (this.value === NONE_TAG) {
+    if (this.tag?.name === NONE_TAG) {
       return this.defaultItem(NO_TAG_ID, i18n("tagging.selector_no_tags"));
     } else {
       return this.defaultItem(ALL_TAGS_ID, i18n("tagging.selector_tags"));
@@ -83,7 +95,7 @@ export default class TagDrop extends ComboBoxComponent {
   }
 
   modifySelection(content) {
-    if (this.value === NONE_TAG) {
+    if (this.tag?.name === NONE_TAG) {
       return this.defaultItem(NO_TAG_ID, i18n("tagging.selector_no_tags"));
     }
 
@@ -94,9 +106,9 @@ export default class TagDrop extends ComboBoxComponent {
     return content;
   }
 
-  @computed("value")
+  @computed("tag.slug")
   get tagClass() {
-    return this.value ? `tag-${this.value}` : "tag_all";
+    return this.tag?.slug ? `tag-${this.tag.slug}` : "tag_all";
   }
 
   modifyComponentForRow() {

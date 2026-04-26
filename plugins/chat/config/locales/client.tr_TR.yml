@@ -300,7 +300,6 @@ tr_TR:
       retry_staged_message:
         title: "Ağ hatası"
         action: "Tekrar gönderilsin mi?"
-      unreliable_network: "Ağ güvenilir değil, mesaj gönderme ve taslağı kaydetme çalışmayabilir"
       bookmark_message: "Yer İmi"
       bookmark_message_edit: "Yer İmini Düzenle"
       restore: "Silinen mesajı geri yükle"
@@ -314,6 +313,9 @@ tr_TR:
         other: "%{count} okunmamış tartışmanız var"
       scroll_to_bottom: "En alta kaydır"
       scroll_to_new_messages: "Yeni mesajlara bak"
+      new_messages:
+        one: "%{count} yeni mesaj"
+        other: "%{count} yeni mesaj"
       sound:
         title: "Masaüstü sohbet bildirim sesi"
       sounds:

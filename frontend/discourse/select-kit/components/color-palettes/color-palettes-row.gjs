@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 
@@ -7,7 +7,7 @@ import SelectKitRowComponent from "discourse/select-kit/components/select-kit/se
 export default class ColorPalettesRow extends SelectKitRowComponent {
   @computed("item.colors.[]")
   get palettes() {
-    return htmlSafe(
+    return trustHTML(
       (this.item.colors || [])
         .filter((color) => color.name !== "secondary")
         .map((color) => `#${escape(color.hex)}`)
@@ -26,7 +26,7 @@ export default class ColorPalettesRow extends SelectKitRowComponent {
     );
 
     if (secondary && secondary.hex) {
-      return htmlSafe(`background-color:#${escape(secondary.hex)}`);
+      return trustHTML(`background-color:#${escape(secondary.hex)}`);
     } else {
       return "";
     }

@@ -47,7 +47,6 @@ import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatChannel extends Component {
   @service capabilities;
-  @service chat;
   @service chatApi;
   @service chatChannelsManager;
   @service chatDraftsManager;
@@ -499,7 +498,9 @@ export default class ChatChannel extends Component {
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
-      this.paneState.clearPendingMessages();
+      if (this.paneState.userIsPresent) {
+        this.paneState.clearPendingMessages();
+      }
       this.fetchMoreMessages({ direction: FUTURE });
       this.chatChannelScrollPositions.delete(this.args.channel.id);
     } else {
@@ -602,7 +603,6 @@ export default class ChatChannel extends Component {
         stagedMessage.cooked = "";
         stagedMessage.error = error.jqXHR.responseJSON.errors[0];
       } else {
-        this.chat.markNetworkAsUnreliable();
         stagedMessage.error = "network_error";
       }
     }
@@ -627,9 +627,6 @@ export default class ChatChannel extends Component {
       .sendMessage(this.args.channel.id, data)
       .catch((error) => {
         this._onSendError(data.staged_id, error);
-      })
-      .then(() => {
-        this.chat.markNetworkAsReliable();
       })
       .finally(() => {
         this.pane.sending = false;
@@ -760,6 +757,7 @@ export default class ChatChannel extends Component {
       <ChatScrollToBottomArrow
         @onScrollToBottom={{this.scrollToLatestMessage}}
         @isVisible={{this.paneState.hasPendingContentBelow}}
+        @channel={{@channel}}
       />
 
       {{#if this.pane.selectingMessages}}

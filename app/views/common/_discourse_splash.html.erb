@@ -135,10 +135,13 @@
       <%- unless splash_screen_image_animated? %>
       margin-top: -10vh;
       <%- end %>
+      @media (display-mode: standalone) {
+        transform: translateY(-5dvh);
+      }
       <%- else %>
       width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
       <%- end %>
-      height: 100vh;
+      height: 100dvh;
       background-size: cover;
     }
 

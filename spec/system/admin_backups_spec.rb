@@ -1,6 +1,6 @@
 #frozen_string_literal: true
 
-describe "Admin Backups Page", type: :system do
+describe "Admin Backups Page" do
   fab!(:current_user, :admin)
   let(:backups_page) { PageObjects::Pages::AdminBackups.new }
   let(:dialog) { PageObjects::Components::Dialog.new }

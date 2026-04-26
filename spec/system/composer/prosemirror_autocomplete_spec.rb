@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Autocomplete", type: :system do
+describe "Composer - ProseMirror - Autocomplete" do
   include_context "with prosemirror editor"
 
   it "triggers an autocomplete on mention" do
@@ -130,6 +130,11 @@ describe "Composer - ProseMirror - Autocomplete", type: :system do
         SiteSetting.external_system_avatars_url =
           "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
         SiteSetting.unicode_usernames = true
+
+        stub_request(:get, %r{\Ahttps://avatars\.discourse-cdn\.com/}).to_return(
+          status: 200,
+          body: "",
+        )
       end
 
       it "renders unicode mentions as nodes" do

@@ -931,6 +931,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
   end
 
   it "includes model params in the request" do
+    SiteSetting.ai_llm_temperature_top_p_enabled = true
     response = <<~TEXT
     data: {"candidates": [{"content": {"parts": [{"text": "Hello"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 399,"totalTokenCount": 399},"modelVersion": "gemini-1.5-pro-002"}
 

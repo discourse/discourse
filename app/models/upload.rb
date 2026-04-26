@@ -191,7 +191,9 @@ class Upload < ActiveRecord::Base
 
       image_info =
         begin
-          FastImage.new(original_path)
+          image = FastImage.new(original_path)
+          image.type # eager load to rescue errors early
+          image
         rescue StandardError
           nil
         end
@@ -254,11 +256,11 @@ class Upload < ActiveRecord::Base
     false
   end
 
-  def self.signed_url_from_secure_uploads_url(url)
+  def self.signed_url_from_secure_uploads_url(url, include_content_disposition:)
     route = UrlHelper.rails_route_from_url(url)
     url = Rails.application.routes.url_for(route.merge(only_path: true))
     secure_upload_s3_path = url[url.index(route[:path])..-1]
-    Discourse.store.signed_url_for_path(secure_upload_s3_path)
+    Discourse.store.signed_url_for_path(secure_upload_s3_path, include_content_disposition:)
   end
 
   def self.secure_uploads_url_from_upload_url(url)
@@ -419,7 +421,7 @@ class Upload < ActiveRecord::Base
           raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
 
           color
-        rescue Discourse::Utils::CommandError => e
+        rescue Discourse::Utils::CommandError
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
@@ -96,13 +96,13 @@ export default class Revision extends Component {
               (and @model.category_id_changes (not @model.archetype_changes))
             }}
               {{#if @previousCategory}}
-                {{htmlSafe @previousCategory}}
+                {{trustHTML @previousCategory}}
               {{else}}
                 {{icon "far-eye-slash" class="diff-del"}}
               {{/if}}
               &rarr;
               {{#if @currentCategory}}
-                {{htmlSafe @currentCategory}}
+                {{trustHTML @currentCategory}}
               {{else}}
                 {{icon "far-eye-slash" class="diff-ins"}}
               {{/if}}

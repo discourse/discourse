@@ -3,36 +3,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { makeArray } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-function _handleLastCheckedByEvent(event) {
-  ajax(`/append-last-checked-by/${event.currentTarget.postId}`, {
-    type: "PUT",
-  }).catch(popupAjaxError);
-}
-
-function _initializeDiscourseAutomation(api) {
-  _initializeGLobalUserNotices(api);
-
-  if (api.getCurrentUser()) {
-    api.decorateCookedElement(_decorateCheckedButton, {
-      id: "discourse-automation",
-    });
-  }
-}
-
-function _decorateCheckedButton(element, postDecorator) {
-  if (!postDecorator) {
-    return;
-  }
-
-  const elems = element.querySelectorAll(".btn-checked");
-  const postModel = postDecorator.getModel();
-
-  Array.from(elems).forEach((elem) => {
-    elem.postId = postModel.id;
-    elem.addEventListener("click", _handleLastCheckedByEvent, false);
-  });
-}
-
 function _initializeGLobalUserNotices(api) {
   const currentUser = api.getCurrentUser();
 
@@ -55,6 +25,6 @@ export default {
   name: "discourse-automation",
 
   initialize() {
-    withPluginApi(_initializeDiscourseAutomation);
+    withPluginApi(_initializeGLobalUserNotices);
   },
 };

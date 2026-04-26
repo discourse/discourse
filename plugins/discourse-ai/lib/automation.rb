@@ -53,14 +53,14 @@ module DiscourseAi
       SQL
     end
 
-    def self.available_persona_choices(require_user: true, require_default_llm: true)
-      relation = AiPersona.includes(:user)
+    def self.available_agent_choices(require_user: true, require_default_llm: true)
+      relation = AiAgent.includes(:user)
       relation = relation.where.not(user_id: nil) if require_user
       relation = relation.where.not(default_llm: nil) if require_default_llm
-      relation.map do |persona|
-        phash = { id: persona.id, translated_name: persona.name, description: persona.name }
+      relation.map do |agent|
+        phash = { id: agent.id, translated_name: agent.name, description: agent.name }
 
-        phash[:description] += " (#{persona&.user&.username})" if require_user
+        phash[:description] += " (#{agent&.user&.username})" if require_user
 
         phash
       end

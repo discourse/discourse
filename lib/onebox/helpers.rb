@@ -286,5 +286,20 @@ module Onebox
     def self.generic_placeholder_html
       "<div class='onebox-placeholder-container'><span class='placeholder-icon generic'></span></div>"
     end
+
+    def self.normalize_dropbox_url(url)
+      return url unless url.start_with?("https://www.dropbox.com/")
+
+      uri = URI.parse(url)
+      uri.host = "dl.dropboxusercontent.com"
+
+      if url.include?("/scl/")
+        params = URI.decode_www_form(uri.query.to_s).to_h
+        params["raw"] = "1"
+        uri.query = URI.encode_www_form(params)
+      end
+
+      uri.to_s
+    end
   end
 end

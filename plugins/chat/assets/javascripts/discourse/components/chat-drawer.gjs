@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -45,7 +45,7 @@ export default class ChatDrawer extends Component {
     this.appEvents.on("composer:opened", this, "_checkSize");
     this.appEvents.on("composer:resized", this, "_checkSize");
     this.appEvents.on("composer:div-resizing", this, "_dynamicCheckSize");
-    window.addEventListener("resize", this._checkSize);
+    window.addEventListener("resize", this._dynamicCheckSize);
     this.appEvents.on(
       "composer:resize-started",
       this,
@@ -63,7 +63,7 @@ export default class ChatDrawer extends Component {
       return;
     }
 
-    window.removeEventListener("resize", this._checkSize);
+    window.removeEventListener("resize", this._dynamicCheckSize);
 
     if (this.appEvents) {
       this.appEvents.off("chat:open-url", this, "openURL");
@@ -101,7 +101,7 @@ export default class ChatDrawer extends Component {
     const { width, height } = this.chatDrawerSize.size;
     let style = `width: ${escapeExpression((width || "0").toString())}px;`;
     style += `height: ${escapeExpression((height || "0").toString())}px;`;
-    this.set("drawerStyle", htmlSafe(style));
+    this.set("drawerStyle", trustHTML(style));
   }
 
   get drawerActions() {
@@ -170,12 +170,32 @@ export default class ChatDrawer extends Component {
     const composerIsClosed = composer.classList.contains("closed");
     const minRightMargin = 15;
 
+    const isPeekMode = document.body.classList.contains("peek-mode-active");
+
+    if (composerIsClosed || isPeekMode) {
+      drawerContainer.style.setProperty(
+        "--composer-right",
+        minRightMargin + "px"
+      );
+      drawerContainer.classList.remove("above-composer");
+      return;
+    }
+
+    const isRTL = document.documentElement.classList.contains("rtl");
+    const spaceToEnd = isRTL
+      ? composer.offsetLeft
+      : document.documentElement.clientWidth -
+        composer.offsetLeft -
+        composer.offsetWidth;
+    const drawerWidth = this.chatDrawerSize.size.width || 400;
+    const aboveComposer = spaceToEnd < drawerWidth;
+
     drawerContainer.style.setProperty(
       "--composer-right",
-      (composerIsClosed
-        ? minRightMargin
-        : Math.max(minRightMargin, composer.offsetLeft)) + "px"
+      (aboveComposer ? Math.max(minRightMargin, spaceToEnd) : minRightMargin) +
+        "px"
     );
+    drawerContainer.classList.toggle("above-composer", aboveComposer);
   }
 
   @action
@@ -227,6 +247,7 @@ export default class ChatDrawer extends Component {
   @action
   didResize(element, { width, height }) {
     this.chatDrawerSize.size = { width, height };
+    this._checkSize();
   }
 
   <template>

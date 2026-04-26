@@ -433,7 +433,13 @@ it:
   deleted_topic: "Ops! Questo argomento è stato eliminato e non è più disponibile."
   delete_topic_failed: "Si è verificato un errore durante l'eliminazione di questo argomento. Si prega di contattare l'amministratore del sito."
   reading_time: "Tempo di lettura"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} min 🕑"
   likes: "Mi piace"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Ops! Hai già eseguito questa azione. Vuoi provare ad aggiornare la pagina?"
   too_many_replies:
     one: "Spiacenti, ma i nuovi utenti possono temporaneamente inserire solo %{count} risposta nello stesso argomento."
@@ -822,7 +828,6 @@ it:
       one: "%{count} Mi Piace"
       other: "%{count} Mi Piace"
     cannot_permanently_delete:
-      many_posts: "Questo argomento contiene messaggi non cancellati. Occorre cancellarli definitivamente prima di eliminare definitivamente l'argomento."
       wait_or_different_admin: "Devi aspettare %{time_left} per poter eliminare definitivamente questo messaggio, oppure dovrà farlo un diverso amministratore."
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
@@ -1133,6 +1138,7 @@ it:
     read: "lettura"
     read_write: "lettura/scrittura"
     instructions: 'Abbiamo appena generato una nuova chiave API utente da usare con "%{application_name}", incolla la seguente chiave nella tua applicazione:'
+    copied: "Copiato!"
     otp_description: 'Vuoi consentire a "%{application_name}" l''accesso al sito?'
     otp_confirmation:
       confirm_title: Procedi su %{site_name}.
@@ -1211,9 +1217,10 @@ it:
       description: "Elenco degli stati delle segnalazioni inclusi tipo di segnalazione, autore, segnalante e tempo di risoluzione."
     visits:
       title: "Visite Utente"
-      xaxis: "Giorno"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobile"
       yaxis: "Numero di visite"
-      description: "Numero di visite di utenti autenticati."
     signups:
       title: "Iscrizioni"
       xaxis: "Giorno"
@@ -1275,10 +1282,8 @@ it:
       description: "Visualizzazioni di pagina per utenti registrati, utenti anonimi, crawler noti e altro traffico."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Giorno"
       yaxis: "DAU/MAU"
-      description: "Numero di utenti che hanno effettuato l'accesso nell'ultimo giorno diviso per il numero di utenti che hanno effettuato l'accesso nell'ultimo mese: restituisce una % che rappresenta 'l'attaccamento' alla comunità. Obiettivo > 20%."
     daily_engaged_users:
       title: "Utenti Impegnati Giornalmente"
       xaxis: "Giorno"
@@ -2368,7 +2373,6 @@ it:
     create_revision_on_bulk_topic_moves: "Crea una revisione per i primi messaggi quando gli argomenti vengono spostati in blocco in una nuova categoria."
     allow_changing_staged_user_tracking: "Consenti a un utente amministratore di modificare le preferenze di notifica di etichette e categorie di utenti provvisori."
     use_email_for_username_and_name_suggestions: "Usa la prima parte degli indirizzi e-mail per suggerire nome utente e nome. Attenzione: questo può facilitare a malintenzionati la scoperta dell'indirizzo e-mail dei tuoi membri (poiché molte persone usano provider email comuni come `gmail.com`)."
-    use_name_for_username_suggestions: "Usa il nome completo dell'utente durante il suggerimento di nomi utente."
     suggest_weekends_in_date_pickers: "Includi i fine settimana (sabato e domenica) nei suggerimenti del selettore di date (disabilita questa opzione se usi Discourse solo nei giorni feriali, dal lunedì al venerdì)."
     show_bottom_topic_map: "Mostra la mappa degli argomenti in fondo all'argomento quando ha 10 o più risposte."
     show_topic_map_in_topics_without_replies: "Mostra la mappa degli argomenti anche se l'argomento non ha risposte."
@@ -2682,7 +2686,6 @@ it:
       request_error: "Spiacenti, si è verificato un errore durante l'avvio dell'autorizzazione. Riprova."
       invalid_iat: "Spiacenti, non siamo in grado di verificare il token di autorizzazione a causa delle differenze di orario del server. Riprova."
     omniauth_error_unknown: "Si è verificato un errore durante l'accesso, riprova."
-    omniauth_confirm_title: "Accedi usando %{provider}"
     omniauth_confirm_button: "Continua"
     authenticator_error_no_valid_email: "Non sono ammessi gli indirizzi email associati a %{account}. Potrebbe essere necessario configurare il tuo account con un diverso indirizzo email."
     new_registrations_disabled: "Non sono permesse nuove registrazioni al momento."
@@ -2896,35 +2899,9 @@ it:
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
-    text_body_template: |
-      Evviva, è uscita una nuova versione di [Discourse](https://www.discourse.org)!
-
-      La tua versione: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Passa subito all'ultima versione con l'intuitivo **[aggiornamento da browser in un solo clic](%{base_url}/admin/update)**
-
-      - Scopri le novità nelle [note di rilascio](https://meta.discourse.org/tag/release-notes) o visualizza il [log originale delle modifiche GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org): troverai novità, discussioni e supporto su Discourse
   new_version_mailer_with_notes:
     title: "Mailer Nuova Versione con Note"
     subject_template: "[%{email_prefix}] aggiornamento disponibile"
-    text_body_template: |
-      Evviva, è uscita una nuova versione di [Discourse](https://www.discourse.org)!
-
-      La tua versione: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Passa subito all'ultima versione con l'intuitivo **[aggiornamento da browser in un solo clic](%{base_url}/admin/update)**
-
-      - Scopri le novità nelle [note di rilascio](https://meta.discourse.org/tag/release-notes) o visualizza il [log originale delle modifiche GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org): troverai novità, discussioni e supporto su Discourse
-
-      ### Note di rilascio
-
-      %{notes}
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa che non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la community ritiene che sia offensivo, ingiurioso, oppure che inciti all'odio o rappresenti una violazione delle [nostre linee guida della community](%{base_path}/guidelines)."
@@ -2973,47 +2950,9 @@ it:
     reviewable_queued_post_revise_and_reject:
       title: "Feedback sul tuo messaggio"
       subject_template: "Feedback sul tuo messaggio in %{topic_title}"
-      text_body_template: |
-        Ciao %{username},
-
-        Abbiamo esaminato il tuo messaggio in [%{topic_title}](%{topic_url}) e abbiamo un feedback per te.
-
-        Motivo: %{reason}
-
-        Feedback: %{feedback}
-
-        Puoi modificare il tuo post originale qui sotto e inviarlo nuovamente con le modifiche suggerite, o puoi rispondere a questo messaggio se hai domande.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Grazie,
-        I moderatori di %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Feedback sul tuo argomento"
       subject_template: 'Feedback sul nuovo argomento intitolato "%{topic_title}"'
-      text_body_template: |
-        Ciao %{username},
-
-        Abbiamo esaminato il tuo messaggio in "%{topic_title}" e abbiamo un feedback per te.
-
-        Motivo: %{reason}
-
-        Feedback: %{feedback}
-
-        Puoi modificare il tuo post originale qui sotto e inviarlo nuovamente con le modifiche suggerite, o puoi rispondere a questo messaggio se hai domande.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Grazie,
-        I moderatori di %{site_name}
     post_hidden_again:
       title: "Messaggio nascosto nuovamente"
       subject_template: "Messaggio nascosto dalle segnalazioni della comunità. Lo staff è stato informato"
@@ -4451,7 +4390,6 @@ it:
       restricted_to:
         one: '"%{tag_name}" è limitato alla categoria "%{category_names}"'
         other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
-      synonym: 'I sinonimi non sono ammessi. Utilizza invece "%{tag_name}".'
       has_synonyms: '"%{tag_name}" non può essere utilizzato perché ha dei sinonimi.'
       restricted_tags_cannot_be_used_in_category:
         one: 'L''etichetta "%{tags}" non può essere usata nella categoria "%{category}". Rimuovila.'

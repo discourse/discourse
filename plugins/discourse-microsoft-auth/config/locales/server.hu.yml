@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    microsoft_auth_enabled: "Engedélyezi a felhasználóknak a Microsofttal történő hitelesítést?"
+    microsoft_auth_client_id: 'Microsoft alkalmazásazonosító/ügyfél-azonosító (NEM a titkos azonosító) – a beállításhoz látogasson el a következő oldalra: <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>)'
+    microsoft_auth_client_secret: "Microsoft titkos jelszó (az értéket használja, NE a titkos azonosítót)"
+    microsoft_auth_email_verified: "Alapértelmezés szerint minden Microsoft e-mail cím ellenőrzöttként kezelése. FIGYELMEZTETÉS: Csak akkor engedélyezze ezt a lehetőséget, ha biztos benne, hogy minden felhasználójának ellenőrzött e-mail címe van."
+    microsoft_auth_tenant_id: 'Microsoft bérlői azonosító (a közös a szabványos, minden esetben KÖTELEZŐ, kivéve az egyetlen bérlőt) – az azonosító megkereséséhez látogasson el a <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView">oldalra https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView</a>'

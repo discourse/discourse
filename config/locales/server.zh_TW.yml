@@ -201,7 +201,11 @@ zh_TW:
   not_in_group:
     join_group: "加入團隊"
   reading_time: "閱讀時間"
+  reading_time_minutes:
+    other: "%{count} 分鐘 🕑"
   likes: "個讚"
+  likes_count:
+    other: "%{count} ❤"
   too_many_replies:
     other: "我們非常抱歉，新使用者被臨時限制在同一個主題上，只能回覆 %{count} 次"
   max_consecutive_replies:
@@ -654,6 +658,7 @@ zh_TW:
     read: "閲讀"
     read_write: "讀/寫"
     instructions: '系統熱騰騰產生了新的使用者API鑰匙給您使用，請將以下API鑰匙貼到您的應用程式裡。'
+    copied: "已複製!"
     otp_description: '你要允許進入%{application_name}這個網站嗎？'
     otp_confirmation:
       confirm_title: 繼續連接至 %{site_name}
@@ -724,7 +729,9 @@ zh_TW:
       description: "標記狀態清單，包括標記類型、張貼者、標記者與解决時間。"
     visits:
       title: "使用者瀏覽量"
-      xaxis: "天"
+      xaxis:
+        desktop: "電腦"
+        mobile: "行動裝置"
       yaxis: "瀏覽量"
     signups:
       title: "註冊"
@@ -766,10 +773,8 @@ zh_TW:
     site_traffic:
       yaxis: "天"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "天"
       yaxis: "\\bDAU/MAU"
-      description: "在最後一天登入的會員數除以上個月登入會員數，返回的%數表示社群黏著度。目標為＞20%。"
     daily_engaged_users:
       title: "每日活躍的使用者"
       xaxis: "天"

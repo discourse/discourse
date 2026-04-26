@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed, getProperties } from "@ember/object";
-import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -14,7 +13,30 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
-const FIELD_LIST = [
+// Only fields managed through FormKit in the legacy edit-category flow.
+// Other legacy tab components (settings, tags, etc.) write directly to the model.
+const LEGACY_FORMKIT_FIELDS = [
+  "name",
+  "slug",
+  "parent_category_id",
+  "color",
+  "text_color",
+  "style_type",
+  "emoji",
+  "icon",
+  "locale",
+  "localizations",
+  "email_in",
+  "email_in_enabled",
+  "email_in_allow_strangers",
+  "mailinglist_mirror",
+  "topic_template",
+  "topic_title_placeholder",
+  "form_template_ids",
+];
+
+// All fields managed through FormKit in the simplified creation flow.
+const SIMPLIFIED_FIELD_LIST = [
   "name",
   "slug",
   "parent_category_id",
@@ -24,6 +46,7 @@ const FIELD_LIST = [
   "style_type",
   "emoji",
   "icon",
+  "locale",
   "localizations",
   "position",
   "num_featured_topics",
@@ -34,6 +57,8 @@ const FIELD_LIST = [
   "all_topics_wiki",
   "allow_unlimited_owner_edits_on_first_post",
   "moderating_group_ids",
+  "topic_posting_review_group_ids",
+  "reply_posting_review_group_ids",
   "auto_close_hours",
   "auto_close_based_on_last_post",
   "default_view",
@@ -50,16 +75,17 @@ const FIELD_LIST = [
   "mailinglist_mirror",
   "allowed_tag_groups",
   "allowed_tags",
-];
-
-// Additional fields managed through FormKit in the simplified creation flow.
-// The legacy edit-category components manage these directly on the model.
-const SIMPLIFIED_FIELD_LIST = [
-  ...FIELD_LIST,
   "required_tag_groups",
   "minimum_required_tags",
   "allow_global_tags",
   "default_slow_mode_seconds",
+  "topic_template",
+  "topic_title_placeholder",
+  "form_template_ids",
+  "uploaded_logo",
+  "uploaded_logo_dark",
+  "uploaded_background",
+  "uploaded_background_dark",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
@@ -77,6 +103,7 @@ export default class EditCategoryTabsController extends Controller {
   @tracked
   showAdvancedTabs =
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
+  @tracked formData;
   @tracked selectedTab = "general";
   @tracked formApi = null;
   @autoTrackedArray panels = [];
@@ -89,15 +116,32 @@ export default class EditCategoryTabsController extends Controller {
   validators = [];
   textColors = ["000000", "FFFFFF"];
 
-  @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
+  /**
+   * Callbacks registered by tab components that are invoked when the form
+   * is reset, allowing child components to clean up their own state.
+   * @type {Function[]}
+   */
+  afterResetCallbacks = [];
 
-  get formData() {
+  @computed("showTooltip", "model.cannot_delete_reason")
+  get showDeleteReason() {
+    return this.showTooltip && this.model?.cannot_delete_reason;
+  }
+
+  @action
+  initFormData() {
     const enableSimplifiedCategoryCreation =
       this.siteSettings.enable_simplified_category_creation;
     const data = getProperties(
       this.model,
-      ...(enableSimplifiedCategoryCreation ? SIMPLIFIED_FIELD_LIST : FIELD_LIST)
+      ...(enableSimplifiedCategoryCreation
+        ? SIMPLIFIED_FIELD_LIST
+        : LEGACY_FORMKIT_FIELDS)
     );
+
+    if (this.siteSettings.content_localization_enabled && !data.locale) {
+      data.locale = this.siteSettings.default_locale;
+    }
 
     if (enableSimplifiedCategoryCreation) {
       if (!this.model.styleType) {
@@ -111,28 +155,24 @@ export default class EditCategoryTabsController extends Controller {
       data.category_setting = { ...(this.model.category_setting ?? {}) };
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
 
-      if (this.siteSettings.enable_category_type_setup) {
-        data.category_type_site_settings = {};
+      data.category_type_site_settings = {};
 
-        Object.values(this.model.category_types).forEach((categoryType) => {
-          categoryType.configuration_schema.category_custom_fields?.forEach(
-            (field) => {
-              data.custom_fields[field.key] ??= field.default;
-            }
-          );
+      Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
+        categoryType.configuration_schema.category_custom_fields?.forEach(
+          (field) => {
+            data.custom_fields[field.key] ??= field.default;
+          }
+        );
 
-          categoryType.configuration_schema.site_settings?.forEach(
-            (setting) => {
-              data.category_type_site_settings[setting.key] = this.model.id
-                ? setting.current
-                : setting.default;
-            }
-          );
+        categoryType.configuration_schema.site_settings?.forEach((setting) => {
+          data.category_type_site_settings[setting.key] = this.model.id
+            ? setting.current
+            : setting.default;
         });
-      }
+      });
     }
 
-    return data;
+    this.formData = data;
   }
 
   @computed("saving", "deleting")
@@ -161,10 +201,10 @@ export default class EditCategoryTabsController extends Controller {
       });
     }
 
-    const types = Object.values(this.model.category_types ?? {});
+    const types = Object.values(this.model.categoryTypes ?? {});
     if (types.length > 0) {
       return i18n("category.create_with_type", {
-        typeName: types[0].name.toLowerCase(),
+        typeName: types[0].title,
       });
     }
 
@@ -182,14 +222,33 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   setSelectedTab(tab) {
+    if (this.selectedTab === tab) {
+      return;
+    }
+
     this.selectedTab = tab;
     this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
   }
 
+  /**
+   * Runs all registered validators, then performs built-in validation for
+   * required fields (name, emoji, icon) when submitting from a non-general tab.
+   * Both `addError` and `removeError` are passed to validators so they can
+   * manage errors bidirectionally.
+   *
+   * @param {Object} data - The current form draft data.
+   * @param {Object} helpers
+   * @param {Function} helpers.addError - Adds a validation error for a field.
+   * @param {Function} helpers.removeError - Removes a validation error for a field.
+   */
   @action
-  validateForm(data, { addError }) {
+  validateForm(data, { addError, removeError }) {
     if (!this.siteSettings.enable_simplified_category_creation) {
       return;
+    }
+
+    for (const validator of this.validators) {
+      validator(data, { addError, removeError });
     }
 
     if (this.selectedTab === "general") {
@@ -230,6 +289,27 @@ export default class EditCategoryTabsController extends Controller {
   @action
   registerValidator(validator) {
     this.validators.push(validator);
+  }
+
+  /**
+   * Registers a callback that will be invoked when the form is reset.
+   * Tab components use this to synchronize their internal state (e.g.,
+   * clearing local selections) when the user resets the form.
+   *
+   * @param {Function} callback - The function to call on form reset.
+   */
+  @action
+  registerAfterReset(callback) {
+    this.afterResetCallbacks.push(callback);
+  }
+
+  /**
+   * Called by FormKit's `@onReset` hook. Invokes all registered
+   * after-reset callbacks so tab components can react to the reset.
+   */
+  @action
+  onFormReset() {
+    this.afterResetCallbacks.forEach((callback) => callback());
   }
 
   @action
@@ -299,6 +379,7 @@ export default class EditCategoryTabsController extends Controller {
       }
 
       this.set("saving", false);
+      this.initFormData();
 
       this.toasts.success({
         duration: "short",
@@ -325,6 +406,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   deleteCategory() {
+    if (this.deleteDisabled) {
+      return;
+    }
+
     this.set("deleting", true);
     this.dialog.deleteConfirm({
       title: i18n("category.delete_confirm"),
@@ -347,6 +432,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   toggleDeleteTooltip() {
+    if (this.deleteDisabled) {
+      return;
+    }
+
     this.toggleProperty("showTooltip");
   }
 

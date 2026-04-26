@@ -3,7 +3,8 @@
 # Development helper which prints a warning when you edit a non-autoloaded ruby file.
 # These include initializers, middleware, plugin.rb files, and more.
 # Launch the server with AUTO_RESTART=0 to disable automatic restarts.
-if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.running_in_rack?
+if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.running_in_rack? &&
+     !ENV["CI"]
   paths = [
     *Dir["#{Rails.root}/app/*"].reject { |path| path.end_with? "/assets" },
     "#{Rails.root}/config",
@@ -40,7 +41,7 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
       only: /(\.rb|settings.yml)$/,
       ignore: [/node_modules/, /\.git/, /\.devenv/],
     ) do |modified, added, removed|
-      supervisor_pid = UNICORN_DEV_SUPERVISOR_PID
+      supervisor_pid = DEV_SUPERVISOR_PID
       auto_restart = supervisor_pid && ENV["AUTO_RESTART"] != "0"
 
       files = modified + added + removed

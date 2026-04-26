@@ -1,9 +1,24 @@
-import { array, concat, fn, hash } from "@ember/helper";
-import { click, render } from "@ember/test-helpers";
+import { array, concat, fn, get, hash } from "@ember/helper";
+import { click, focus, render, typeIn } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+
+function getFieldMeta() {
+  return {
+    qux: { type: "text" },
+    quux: { type: "text" },
+  };
+}
+
+function fieldType(type) {
+  return type === "checkbox" ? "checkbox" : "input";
+}
+
+function fieldKeys(obj) {
+  return obj ? Object.keys(obj) : [];
+}
 
 module("Integration | Component | FormKit | Object", function (hooks) {
   setupRenderingTest(hooks);
@@ -13,11 +28,11 @@ module("Integration | Component | FormKit | Object", function (hooks) {
       <template>
         <Form @data={{hash foo=(hash bar=1 baz=2)}} as |form|>
           <form.Object @name="foo" as |object|>
-            <object.Field @name="bar" @title="bar" as |field|>
-              <field.Input />
+            <object.Field @type="input" @name="bar" @title="bar" as |field|>
+              <field.Control />
             </object.Field>
-            <object.Field @name="baz" @title="baz" as |field|>
-              <field.Input />
+            <object.Field @type="input" @name="baz" @title="baz" as |field|>
+              <field.Control />
             </object.Field>
           </form.Object>
         </Form>
@@ -50,11 +65,11 @@ module("Integration | Component | FormKit | Object", function (hooks) {
           <form.Object @name="one" as |one|>
             <one.Object @name="two" as |two|>
               <two.Object @name="three" as |three|>
-                <three.Field @name="foo" @title="foo" as |field|>
-                  <field.Input />
+                <three.Field @type="input" @name="foo" @title="foo" as |field|>
+                  <field.Control />
                 </three.Field>
-                <three.Field @name="bar" @title="bar" as |field|>
-                  <field.Input />
+                <three.Field @type="input" @name="bar" @title="bar" as |field|>
+                  <field.Control />
                 </three.Field>
               </two.Object>
             </one.Object>
@@ -80,8 +95,8 @@ module("Integration | Component | FormKit | Object", function (hooks) {
         >
           <form.Object @name="one" as |one|>
             <one.Collection @name="two" as |two twoIndex|>
-              <two.Field @name="foo" @title="foo" as |field|>
-                <field.Input />
+              <two.Field @type="input" @name="foo" @title="foo" as |field|>
+                <field.Control />
               </two.Field>
               <form.Button
                 class={{concat "remove-" twoIndex}}
@@ -104,5 +119,37 @@ module("Integration | Component | FormKit | Object", function (hooks) {
     await formKit().field("one.two.0.foo").fillIn("2");
 
     assert.form().field("one.two.0.foo").hasValue("2");
+  });
+
+  test("retains focus when @type depends on yielded data inside form.Object", async function (assert) {
+    await render(
+      <template>
+        <Form
+          @data={{hash foo="bar" baz=(hash qux="" quux="test")}}
+          as |form data|
+        >
+          <form.Object @name="baz" as |object objectData|>
+            {{#each (fieldKeys objectData) as |key|}}
+              {{#let (get (getFieldMeta data.foo) key) as |params|}}
+                <object.Field
+                  @type={{fieldType params.type}}
+                  @name={{key}}
+                  @title={{key}}
+                  as |field|
+                >
+                  <field.Control />
+                </object.Field>
+              {{/let}}
+            {{/each}}
+          </form.Object>
+        </Form>
+      </template>
+    );
+
+    const input = document.querySelector("[data-name='baz.qux'] input");
+    await focus(input);
+    await typeIn(input, "u", { delay: 0 });
+
+    assert.strictEqual(document.activeElement, input, "focus retained");
   });
 });

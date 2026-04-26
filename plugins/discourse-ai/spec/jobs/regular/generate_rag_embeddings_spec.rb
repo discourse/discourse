@@ -10,10 +10,10 @@ RSpec.describe Jobs::GenerateRagEmbeddings do
 
     let(:expected_embedding) { [0.0038493] * vector_def.dimensions }
 
-    fab!(:ai_persona)
+    fab!(:ai_agent)
 
-    let(:rag_document_fragment_1) { Fabricate(:rag_document_fragment, target: ai_persona) }
-    let(:rag_document_fragment_2) { Fabricate(:rag_document_fragment, target: ai_persona) }
+    let(:rag_document_fragment_1) { Fabricate(:rag_document_fragment, target: ai_agent) }
+    let(:rag_document_fragment_2) { Fabricate(:rag_document_fragment, target: ai_agent) }
 
     before do
       SiteSetting.ai_embeddings_selected_model = vector_def.id

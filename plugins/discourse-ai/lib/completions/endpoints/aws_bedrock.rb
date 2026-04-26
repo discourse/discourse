@@ -38,9 +38,9 @@ module DiscourseAi
 
               # effort parameter
               effort = llm_model.lookup_custom_param("effort")
-              result[:output_config] = { effort: effort } if %w[low medium high max].include?(
-                effort,
-              )
+              if AnthropicShared::EFFORT_VALUES.include?(effort)
+                result[:output_config] = { effort: effort }
+              end
 
               result
             else
@@ -95,13 +95,20 @@ module DiscourseAi
 
         def model_uri
           region = llm_model.lookup_custom_param("region")
+          inference_profile_arn = llm_model.lookup_custom_param("inference_profile_arn")
 
-          if region.blank? || bedrock_model_id.blank?
+          model_id =
+            if inference_profile_arn.present?
+              URI.encode_www_form_component(inference_profile_arn)
+            else
+              bedrock_model_id
+            end
+
+          if region.blank? || model_id.blank?
             raise CompletionFailed.new(I18n.t("discourse_ai.llm_models.bedrock_invalid_url"))
           end
 
-          api_url =
-            "https://bedrock-runtime.#{region}.amazonaws.com/model/#{bedrock_model_id}/invoke"
+          api_url = "https://bedrock-runtime.#{region}.amazonaws.com/model/#{model_id}/invoke"
 
           api_url = @streaming_mode ? (api_url + "-with-response-stream") : api_url
 

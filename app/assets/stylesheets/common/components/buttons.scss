@@ -196,6 +196,7 @@
   padding: $vpad $hpad;
   cursor: pointer;
   line-height: normal;
+  white-space: nowrap;
 
   .d-button__suffix-icon {
     margin-left: auto;
@@ -216,6 +217,7 @@
   @include hover {
     background-color: transparent;
     color: var(--tertiary-hover);
+    border: 0;
 
     .d-icon {
       color: var(--tertiary-hover);

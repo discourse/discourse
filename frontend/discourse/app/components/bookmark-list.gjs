@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
 import BookmarkActionsDropdown from "discourse/components/bookmark-actions-dropdown";
@@ -383,7 +383,7 @@ export default class BookmarkList extends Component {
                     <p
                       class="post-excerpt"
                       {{on "click" this.screenExcerptForExternalLink}}
-                    >{{htmlSafe bookmark.excerpt}}</p>
+                    >{{trustHTML bookmark.excerpt}}</p>
                   {{/if}}
                 </td>
                 {{#if this.site.desktopView}}

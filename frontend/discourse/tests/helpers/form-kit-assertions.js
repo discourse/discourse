@@ -57,14 +57,15 @@ class FieldHelper {
       }
       case "password":
         return this.element.querySelector(".form-kit__control-password").value;
+      case "input":
       case "input-number":
       case "input-text":
         return this.element.querySelector(".form-kit__control-input").value;
-      case "icon": {
-        return this.element.querySelector(
-          ".form-kit__control-icon .select-kit-header"
-        )?.dataset?.value;
-      }
+      case "icon":
+        return (
+          this.element.querySelector(".d-icon-grid-picker")?.dataset?.value ||
+          undefined
+        );
       case "question": {
         return (
           this.element.querySelector(".form-kit__control-radio:checked")

@@ -16,9 +16,18 @@ pt_BR:
     topic_voting_show_votes_on_profile: 'Permitir que usuários(as) vejam seus votos nos seus feeds de atividade?'
     topic_voting_alert_votes_left: 'Alertar usuário(a) quando houver esta quantidade de votos restantes'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "Exibir quem votou"
     votes_moved:
       one: "Um voto foi movido."
       other: "%{count} votos foram movidos."
     duplicated_votes:
       one: "Um voto não pôde ser movido porque o(a) usuário(a) já votou no outro tópico."
       other: "%{count} votos não puderam ser movidos porque o(a) usuário(a) já votou no outro tópico."
+    filter:
+      description:
+        topic_votes_min: "Número mínimo de votos de um tópico"
+        topic_votes_max: "Número máximo de votos no tópico"
+        order_topic_votes: "Ordenar tópicos por maior número de votos"
+        order_topic_votes_asc: "Ordenar tópicos por menor número de votos"

@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 
 export default class Reltime extends Component {
   get boundDateReplacement() {
-    return htmlSafe(
+    return trustHTML(
       autoUpdatingRelativeAge(new Date(this.args.ctx.value), { title: true })
     );
   }

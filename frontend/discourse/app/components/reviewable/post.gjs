@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DecoratedHtml, {
   applyHtmlDecorators,
 } from "discourse/components/decorated-html";
@@ -73,7 +73,7 @@ export default class ReviewablePost extends Component {
         {{else}}
           <DecoratedHtml
             @className="review-item__post-content"
-            @html={{htmlSafe @reviewable.cooked}}
+            @html={{trustHTML @reviewable.cooked}}
             @decorate={{this.decorate}}
             @model={{@reviewable}}
           />

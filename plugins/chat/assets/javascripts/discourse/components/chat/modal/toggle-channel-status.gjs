@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -26,9 +26,9 @@ export default class ChatModalToggleChannelStatus extends Component {
 
   get instructions() {
     if (this.channel?.isClosed) {
-      return htmlSafe(i18n("chat.channel_open.instructions"));
+      return trustHTML(i18n("chat.channel_open.instructions"));
     } else {
-      return htmlSafe(i18n("chat.channel_close.instructions"));
+      return trustHTML(i18n("chat.channel_close.instructions"));
     }
   }
 

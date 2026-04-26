@@ -256,6 +256,7 @@ Discourse::Application.routes.draw do
           get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
           put "site-setting" => "themes#update_theme_site_setting"
+          put "source" => "themes#update_source"
           get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
         end
 
@@ -342,7 +343,7 @@ Discourse::Application.routes.draw do
       post "/toggle-feature" => "dashboard#toggle_feature"
 
       resources :dashboard, only: [:index] do
-        collection { get "problems" }
+        collection { post "problems" }
       end
 
       resources :api, only: [:index], constraints: AdminConstraint.new do
@@ -435,6 +436,8 @@ Discourse::Application.routes.draw do
           get "login-and-authentication/#{location}" => "site_settings#index"
         end
 
+        # Needed for back-end routing to work.
+        #
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
@@ -504,6 +507,11 @@ Discourse::Application.routes.draw do
 
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
       resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
+      resources :problem_checks, only: %i[index], constraints: AdminConstraint.new do
+        put "ignore" => "problem_checks#ignore"
+        put "watch" => "problem_checks#watch"
+      end
+      get "problem-checks" => "problem_checks#index"
 
       delete "unknown_reviewables/destroy" => "unknown_reviewables#destroy"
     end # admin namespace
@@ -824,6 +832,10 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       get "#{root_path}/:username/preferences/apps" => "users#preferences",
+          :constraints => {
+            username: RouteFormat.username,
+          }
+      get "#{root_path}/:username/preferences/calendar-subscriptions" => "users#preferences",
           :constraints => {
             username: RouteFormat.username,
           }
@@ -1267,6 +1279,8 @@ Discourse::Application.routes.draw do
       put "revisions/:revision/show" => "posts#show_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/revert" => "posts#revert", :constraints => { revision: /\d+/ }
       delete "revisions/permanently_delete" => "posts#permanently_delete_revisions"
+      get "permanently_delete_check" => "posts#permanently_delete_check",
+          :constraints => AdminConstraint.new
       put "recover"
       collection do
         delete "destroy_many"
@@ -1408,6 +1422,19 @@ Discourse::Application.routes.draw do
     get "search/query" => "search#query"
     get "search" => "search#show"
     post "search/click" => "search#click"
+
+    # Nested replies routes
+    scope "n/:slug/:topic_id", constraints: { topic_id: /\d+/ } do
+      get "/children/:post_number" => "nested_topics#children",
+          :constraints => {
+            post_number: /\d+/,
+          }
+      get "/context/:post_number" => "nested_topics#context", :constraints => { post_number: /\d+/ }
+      put "/pin" => "nested_topics#pin"
+      put "/toggle" => "nested_topics#toggle"
+      get "/:post_number" => "nested_topics#context", :constraints => { post_number: /\d+/ }
+      get "/" => "nested_topics#show"
+    end
 
     # Topics resource
     get "t/:id" => "topics#show"
@@ -1859,6 +1886,10 @@ Discourse::Application.routes.draw do
 
     get "/user-api-key-client" => "user_api_key_clients#show"
     post "/user-api-key-client" => "user_api_key_clients#create"
+
+    get "/calendar-subscriptions" => "calendar_subscriptions#show"
+    post "/calendar-subscriptions" => "calendar_subscriptions#create"
+    delete "/calendar-subscriptions" => "calendar_subscriptions#destroy"
 
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"

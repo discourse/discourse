@@ -96,6 +96,23 @@ export default class FloatKitInstance {
     }, 500);
   }
 
+  @action
+  onDelayedHoverEnter(event) {
+    cancel(this.delayedHoverTimeout);
+    this.delayedHoverTimeout = discourseLater(() => {
+      if (this.expanded) {
+        return;
+      }
+      this.openedByDelayedHover = true;
+      this.onTrigger(event);
+    }, 250);
+  }
+
+  @action
+  onDelayedHoverLeave() {
+    cancel(this.delayedHoverTimeout);
+  }
+
   @bind
   onTouchCancel() {
     cancel(this.touchTimeout);
@@ -138,6 +155,17 @@ export default class FloatKitInstance {
               );
             }
 
+            break;
+          case "delayed-hover":
+            cancel(this.delayedHoverTimeout);
+            this.trigger.removeEventListener(
+              "pointerenter",
+              this.onDelayedHoverEnter
+            );
+            this.trigger.removeEventListener(
+              "pointerleave",
+              this.onDelayedHoverLeave
+            );
             break;
           case "click":
             this.trigger.removeEventListener("click", this.onClick);
@@ -198,6 +226,18 @@ export default class FloatKitInstance {
               );
             }
 
+            break;
+          case "delayed-hover":
+            this.trigger.addEventListener(
+              "pointerenter",
+              this.onDelayedHoverEnter,
+              { passive: true }
+            );
+            this.trigger.addEventListener(
+              "pointerleave",
+              this.onDelayedHoverLeave,
+              { passive: true }
+            );
             break;
           case "click":
             this.trigger.addEventListener("click", this.onClick, {

@@ -179,7 +179,13 @@ nb_NO:
   not_in_group:
     join_group: "Bli medlem av gruppe"
   reading_time: "Lesetid"
+  reading_time_minutes:
+    one: "%{count} minutt 🕑"
+    other: "%{count} minutter 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i det samme tråden."
     other: "Vi beklager, men for nye brukere er det en midlertidig begrenset på %{count} svar i samme emne."
@@ -607,6 +613,7 @@ nb_NO:
     deny: "Avbryt"
     read: "les"
     read_write: "les/skriv"
+    copied: "Kopiert!"
     otp_confirmation:
       confirm_title: Fortsett til %{site_name}
       logging_in_as: Logger inn som %{username}
@@ -660,7 +667,9 @@ nb_NO:
         time_to_resolution: Løsningstid
     visits:
       title: "Brukerbesøk"
-      xaxis: "Dag"
+      xaxis:
+        desktop: "Skrivebord"
+        mobile: "Mobil"
       yaxis: "Antall besøk"
     signups:
       title: "Nye brukere"
@@ -689,7 +698,6 @@ nb_NO:
     site_traffic:
       yaxis: "Dag"
     dau_by_mau:
-      title: "DAB/MAB"
       xaxis: "Dag"
       yaxis: "DAB/MAB"
     daily_engaged_users:

@@ -1,14 +1,16 @@
-import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKLabel from "discourse/form-kit/components/fk/label";
-import FKOptional from "discourse/form-kit/components/fk/optional";
+import FKRequired from "discourse/form-kit/components/fk/required";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
+import icon from "discourse/helpers/d-icon";
 import { eq, or } from "discourse/truth-helpers";
-import { i18n } from "discourse-i18n";
 
-export default class FKControlCheckbox extends Component {
+export default class FKControlCheckbox extends FKBaseControl {
   static controlType = "checkbox";
+  @service siteSettings;
 
   @action
   handleInput(event) {
@@ -22,25 +24,28 @@ export default class FKControlCheckbox extends Component {
         checked={{or (eq @field.value true) (eq @field.value "true")}}
         class="form-kit__control-checkbox"
         disabled={{@field.disabled}}
+        id={{@field.id}}
+        name={{@field.name}}
+        aria-invalid={{if @field.error "true"}}
+        aria-describedby={{if @field.error @field.errorId}}
         ...attributes
         {{on "change" this.handleInput}}
       />
+      {{#if this.siteSettings.enable_new_checkbox_style}}
+        <span class="form-kit__control-checkbox-checkmark">{{icon
+            "check"
+          }}</span>
+      {{/if}}
       <span class="form-kit__control-checkbox-content">
         <span class="form-kit__control-checkbox-title">
-          <span>{{@field.title}}</span>
+          <span>{{or @title @field.title}}</span>
 
-          {{#if @showRequiredLabel}}
-            <span class="form-kit__container-required">({{i18n
-                "form_kit.required"
-              }})</span>
-          {{else}}
-            <FKOptional @field={{@field}} />
+          {{#if @field.required}}
+            <FKRequired @field={{@field}} />
           {{/if}}
           <FKTooltip @field={{@field}} />
         </span>
-        {{#if @hasBlock}}
-          <span class="form-kit__control-checkbox-description">{{yield}}</span>
-        {{/if}}
+        <span class="form-kit__control-checkbox-description">{{yield}}</span>
       </span>
     </FKLabel>
   </template>

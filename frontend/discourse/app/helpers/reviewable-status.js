@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
   APPROVED,
@@ -8,6 +8,31 @@ import {
   REJECTED,
 } from "discourse/models/reviewable";
 import { i18n } from "discourse-i18n";
+
+const STATUS_NAMES = {
+  approved: {},
+  rejected: {},
+};
+
+/**
+ * Register a custom status name for a reviewable type.
+ *
+ * This allows plugins to customize the status badge text shown in the
+ * review queue after an action is performed (e.g. "Tool approved" instead
+ * of the default "Flag approved").
+ *
+ * @param {string} reviewableType - The reviewable class name (e.g. "ReviewableAiToolAction")
+ * @param {string} approvedName - i18n key suffix for the approved status (looked up as `review.statuses.{name}.title`)
+ * @param {string} rejectedName - i18n key suffix for the rejected status (looked up as `review.statuses.{name}.title`)
+ */
+export function registerReviewableStatusName(
+  reviewableType,
+  approvedName,
+  rejectedName
+) {
+  STATUS_NAMES.approved[reviewableType] = approvedName;
+  STATUS_NAMES.rejected[reviewableType] = rejectedName;
+}
 
 function dataFor(status, type) {
   switch (status) {
@@ -30,7 +55,7 @@ function dataFor(status, type) {
         default:
           return {
             icon: "check",
-            name: "approved_flag",
+            name: STATUS_NAMES.approved[type] || "approved_flag",
             cssClass: "approved",
           };
       }
@@ -51,7 +76,7 @@ function dataFor(status, type) {
         default:
           return {
             icon: "xmark",
-            name: "rejected_flag",
+            name: STATUS_NAMES.rejected[type] || "rejected_flag",
             cssClass: "rejected",
           };
       }
@@ -84,7 +109,7 @@ export function newReviewableStatus(status, type) {
     </div>
   `;
 
-  return htmlSafe(html);
+  return trustHTML(html);
 }
 
 export function htmlStatus(status, type) {
@@ -104,5 +129,5 @@ export function htmlStatus(status, type) {
 }
 
 export default function (status, type) {
-  return htmlSafe(htmlStatus(status, type));
+  return trustHTML(htmlStatus(status, type));
 }

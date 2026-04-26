@@ -68,7 +68,8 @@ module TopicGuardian
         end
       )
 
-    is_staff? || (can_create_topic_on_category?(category) && !category.require_topic_approval?)
+    is_staff? ||
+      (can_create_topic_on_category?(category) && !topic_posting_review_required?(category))
   end
 
   def can_create_post_on_topic?(topic)
@@ -173,15 +174,7 @@ module TopicGuardian
     # All other posts that were deleted still must be permanently deleted
     # before the topic can be deleted with the exception of small action
     # posts that will be deleted right before the topic is.
-    all_posts_count =
-      Post
-        .with_deleted
-        .where(topic_id: topic.id)
-        .where(
-          post_type: [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]],
-        )
-        .count
-    return false if all_posts_count > 1
+    return false if topic.deletable_posts_count > 1
 
     return false if !is_admin? || !can_see_topic?(topic)
     return false if !topic.deleted_at
@@ -316,7 +309,8 @@ module TopicGuardian
   end
 
   def can_banner_topic?(topic)
-    topic && authenticated? && !topic.private_message? && is_staff?
+    topic && authenticated? && !topic.private_message? && !topic.category&.read_restricted? &&
+      is_staff?
   end
 
   def can_change_archetype?(topic, new_archetype)

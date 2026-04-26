@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .form-kit__field {
   .form-kit__container-content {
     align-items: flex-start;
@@ -5,16 +7,29 @@
     width: var(--form-kit-medium-input);
   }
 
+  @include viewport.until(sm) {
+    .form-kit__container-content,
+    .form-kit__container {
+      width: 100% !important;
+    }
+  }
+
   &.--full {
     width: 100%;
   }
 
-  &-textarea,
   &-composer,
   &-code,
   &-image {
     .form-kit__container-content {
       width: var(--form-kit-large-input) !important;
+    }
+  }
+
+  &-textarea {
+    .form-kit__container-content {
+      min-width: var(--form-kit-large-input);
+      width: fit-content !important;
     }
   }
 
@@ -72,6 +87,7 @@
 
     &.--full {
       width: 100% !important;
+      min-width: var(--form-kit-small-input);
     }
   }
 }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin tag list site setting", type: :system do
+RSpec.describe "Admin tag list site setting" do
   fab!(:admin)
   fab!(:tag_1, :tag)
   fab!(:tag_2, :tag)

@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
@@ -72,7 +72,7 @@ export default class SecondFactorForm extends Component {
       <h3>{{this.secondFactorTitle}}</h3>
 
       {{#if this.optionalText}}
-        <p>{{htmlSafe this.optionalText}}</p>
+        <p>{{trustHTML this.optionalText}}</p>
       {{/if}}
 
       <p class="second-factor__description">{{this.secondFactorDescription}}</p>

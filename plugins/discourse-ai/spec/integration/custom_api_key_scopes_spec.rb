@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "API keys scoped to discourse_ai#manage_artifacts" do
+describe "API keys scoped to ai#manage_artifacts" do
   before { SiteSetting.discourse_ai_enabled = true }
 
   fab!(:admin)
@@ -9,7 +9,7 @@ describe "API keys scoped to discourse_ai#manage_artifacts" do
 
   let(:api_key) do
     key = ApiKey.create!
-    ApiKeyScope.create!(resource: "discourse_ai", action: "manage_artifacts", api_key_id: key.id)
+    ApiKeyScope.create!(resource: "ai", action: "manage_artifacts", api_key_id: key.id)
     key
   end
 

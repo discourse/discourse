@@ -10,7 +10,7 @@ el:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Επιτρέπει την αναζήτηση AI"
       site_settings:
         categories:
@@ -95,11 +95,10 @@ el:
       llm_selector:
         none: "Κανένα"
       features:
-        back: "Πίσω"
         settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
         disabled: "(απενεργοποιημένο)"
         groups: "Ομάδες:"
-        no_persona: "Δεν έχει οριστεί"
+        no_agent: "Δεν έχει οριστεί"
         no_groups: "Κανένα"
         edit: "Ρυθμίσεις"
         expand_list:
@@ -125,6 +124,8 @@ el:
         select_option: "Διαλέξτε μία επιλογή..."
       translations:
         title: "Μεταφράσεις"
+        admin_actions:
+          localization_settings: "Ρυθμίσεις τοπικοποίησης"
         stats:
           eta_minutes:
             one: "%{count} λεπτό"
@@ -157,8 +158,7 @@ el:
         periods:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."
-      ai_persona:
-        back: "Πίσω"
+      ai_agent:
         name: "Όνομα"
         edit: "Επεξεργασία"
         export: "Εξαγωγή"
@@ -167,26 +167,26 @@ el:
         mentionable: Να επιτρέπονται επισημάνσεις
         user: Χρήστης
         allow_chat_direct_messages: "Να επιτρέπονται τα άμεσα μηνύματα συνομιλίας"
-        allow_chat_direct_messages_help: "Εάν είναι ενεργοποιημένη, οι χρήστες σε επιτρεπόμενες ομάδες μπορούν να στέλνουν άμεσα μηνύματα σε αυτήν την περσόνα."
         allow_chat_channel_mentions: "Να επιτρέπονται επισημάνσεις καναλιών συνομιλίας"
         allow_topic_mentions: "Να επιτρέπονται επισημάνσεις θεμάτων"
         save: "Αποθήκευση"
         enabled: "Ενεργοποιημένο;"
+        mcp_tools_modal:
+          select_all: "Επιλογή όλων"
+          clear_all: "Εκκαθάριση όλων"
         allowed_groups: "Επιτρεπόμενες ομάδες"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         response_format:
           open_modal: "Επεξεργασία"
           modal:
             key_title: "Κλειδί"
         filters:
           reset: "Επαναφορά"
-          no_results: "Καμία περσόνα δεν αντιστοιχεί με τα φίλτρα σας."
       rag:
         uploads:
           title: "Μεταφορτώσεις"
           uploading: "Επιφόρτωση..."
       tools:
-        back: "Πίσω"
         export: "Εξαγωγή"
         import: "Εισαγωγή"
         no_tools: "Δεν έχετε δημιουργήσει κανένα εργαλείο ακόμη"
@@ -199,24 +199,38 @@ el:
         credential_not_set: "(δεν έχει οριστεί)"
         edit: "Επεξεργασία"
         test: "Δοκιμή"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
       secrets:
         short_title: "Διαπιστευτήρια"
         name: "Όνομα"
         secret: "Τιμή"
-        back: "Πίσω"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         embedding: "Ενσωμάτωση"
+      mcp_servers:
+        name: "Όνομα"
+        description: "Περιγραφή"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Συνδεδεμένος"
+        oauth_connect: "Συνδεθείτε"
+        oauth_hide_details: "Απόκρυψη λεπτομερειών"
+        enabled: "Ενεργοποιημένα"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        delete: "Διαγραφή"
+        tools_modal:
+          required: "Απαιτείται"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
         attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, docx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        back: "Πίσω"
-        delete: Σβήσιμο
+        delete: Διαγραφή
         quotas:
           group: "Ομάδα"
           max_usages: "Μέγιστες χρήσεις"
@@ -256,9 +270,8 @@ el:
         image_caption:
           save_caption: "Αποθήκευση"
       embeddings:
-        back: "Πίσω"
         save: "Αποθήκευση"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         edit: "Επεξεργασία"
         tests:
           success: "Επιτυχία!"
@@ -267,6 +280,7 @@ el:
           google: "Google"
           fake: "Προσαρμοσμένο"
       ai_bot:
+        title: "AI bot"
         llm: "Μοντέλο"
         try_again: "Δοκιμάστε ξανά"
         shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"
@@ -276,10 +290,6 @@ el:
           title: "Προβολή αλληλεπίδρασης AI"
           copy_request: "Αντιγραφή αιτήματος"
           copy_response: "Αντιγραφή απάντησης"
-          request_tokens: "Διακριτικά αιτήματος:"
-          response_tokens: "Διακριτικά απάντησης:"
-          cache_read_tokens: "Διακριτικά ανάγνωσης προσωρινής μνήμης:"
-          cache_write_tokens: "Διακριτικά εγγραφής προσωρινής μνήμης:"
           request: "Αίτημα"
           response: "Απάντηση"
           next_log: "Επόμενο"

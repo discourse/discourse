@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseSolved::AcceptAnswer do
-  describe described_class::Contract, type: :model do
+  describe ::DiscourseSolved::AcceptAnswer::Contract, type: :model do
     it { is_expected.to validate_presence_of(:post_id) }
   end
 
@@ -121,6 +121,21 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
         end
       end
 
+      context "when the post author has opted out of solved notifications" do
+        fab!(:acting_user, :admin)
+
+        before { post.user.user_option.update!(notify_on_solved: false) }
+
+        it "does not notify the post author" do
+          expect { result }.not_to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: post.user,
+            ).count
+          }
+        end
+      end
+
       context "when the acting user is the post author" do
         let(:guardian) { post.user.guardian }
 
@@ -135,7 +150,10 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       context "when notify_on_staff_accept_solved is enabled" do
-        before { SiteSetting.notify_on_staff_accept_solved = true }
+        before do
+          category.notify_on_staff_accept_solved = true
+          category.save_custom_fields
+        end
 
         context "when a staff member accepts on behalf of the topic owner" do
           fab!(:acting_user, :admin)
@@ -160,10 +178,28 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
             }
           end
         end
+
+        context "when the topic owner has opted out of solved notifications" do
+          fab!(:acting_user, :admin)
+
+          before { topic.user.user_option.update!(notify_on_solved: false) }
+
+          it "does not notify the topic owner" do
+            expect { result }.not_to change {
+              Notification.where(
+                notification_type: Notification.types[:custom],
+                user: topic.user,
+              ).count
+            }
+          end
+        end
       end
 
       context "when notify_on_staff_accept_solved is disabled" do
-        before { SiteSetting.notify_on_staff_accept_solved = false }
+        before do
+          category.notify_on_staff_accept_solved = false
+          category.save_custom_fields
+        end
 
         it "does not notify the topic owner" do
           expect { result }.not_to change {
@@ -172,6 +208,140 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
               user: topic.user,
             ).count
           }
+        end
+      end
+
+      context "when users are tracking or watching the topic" do
+        fab!(:watching_user, :user)
+        fab!(:tracking_user, :user)
+        fab!(:muted_user, :user)
+        fab!(:acting_user, :admin)
+
+        before do
+          TopicUser.change(
+            watching_user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:watching],
+          )
+          TopicUser.change(
+            tracking_user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:tracking],
+          )
+          TopicUser.change(
+            muted_user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:muted],
+          )
+        end
+
+        it "notifies watching users" do
+          expect { result }.to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: watching_user,
+            ).count
+          }.by(1)
+        end
+
+        it "notifies tracking users" do
+          expect { result }.to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: tracking_user,
+            ).count
+          }.by(1)
+        end
+
+        it "does not notify muted users" do
+          expect { result }.not_to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: muted_user,
+            ).count
+          }
+        end
+
+        context "when the acting user is also watching the topic" do
+          before do
+            TopicUser.change(
+              acting_user.id,
+              topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
+            )
+          end
+
+          it "does not notify the user who marked the solution" do
+            expect { result }.not_to change {
+              Notification.where(
+                notification_type: Notification.types[:custom],
+                user: acting_user,
+              ).count
+            }
+          end
+        end
+
+        it "uses the topic_solved_notification message" do
+          result
+          notification =
+            Notification.find_by(
+              notification_type: Notification.types[:custom],
+              user: watching_user,
+            )
+          data = JSON.parse(notification.data)
+          expect(data["message"]).to eq("solved.topic_solved_notification")
+          expect(data["title"]).to eq("solved.notification.topic_solved_title")
+        end
+
+        context "when the post author is also watching the topic" do
+          before do
+            TopicUser.change(
+              post.user_id,
+              topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
+            )
+          end
+
+          it "does not double-notify the post author" do
+            expect { result }.to change {
+              Notification.where(
+                notification_type: Notification.types[:custom],
+                user: post.user,
+                topic: topic,
+              ).count
+            }.by(1)
+
+            notification =
+              Notification.find_by(
+                notification_type: Notification.types[:custom],
+                user: post.user,
+                topic: topic,
+              )
+            expect(JSON.parse(notification.data)["message"]).to eq("solved.accepted_notification")
+          end
+        end
+
+        it "links to the solution post" do
+          result
+          notification =
+            Notification.find_by(
+              notification_type: Notification.types[:custom],
+              user: watching_user,
+            )
+          expect(notification.post_number).to eq(post.post_number)
+        end
+
+        context "when a watching user has opted out of solved notifications" do
+          before { watching_user.user_option.update!(notify_on_solved: false) }
+
+          it "does not notify the watching user" do
+            expect { result }.not_to change {
+              Notification.where(
+                notification_type: Notification.types[:custom],
+                user: watching_user,
+              ).count
+            }
+          end
         end
       end
 

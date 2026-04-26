@@ -4,13 +4,13 @@ RSpec.describe ProblemCheck::AiLlmStatus do
   subject(:check) { described_class.new(target) }
 
   fab!(:llm_model)
-  fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+  fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id) }
 
   let(:target) { llm_model.id }
 
   before do
     assign_fake_provider_to(:ai_default_llm_model)
-    SiteSetting.ai_summarization_persona = ai_persona.id
+    SiteSetting.ai_summarization_agent = ai_agent.id
     SiteSetting.ai_summarization_enabled = true
   end
 
@@ -84,8 +84,7 @@ RSpec.describe ProblemCheck::AiLlmStatus do
       it "skips seeded LLMs" do
         SiteSetting.ai_summarization_enabled = false
         seeded_llm = Fabricate(:seeded_model)
-        SiteSetting.ai_summarization_persona =
-          Fabricate(:ai_persona, default_llm_id: seeded_llm.id).id
+        SiteSetting.ai_summarization_agent = Fabricate(:ai_agent, default_llm_id: seeded_llm.id).id
         SiteSetting.ai_summarization_enabled = true
 
         3.times { create_log(response_tokens: 0, response_status: 500, llm_id: seeded_llm.id) }

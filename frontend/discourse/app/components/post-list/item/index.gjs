@@ -3,7 +3,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DecoratedHtml from "discourse/components/decorated-html";
 import ExpandPost from "discourse/components/expand-post";
@@ -181,7 +181,7 @@ export default class PostListItem extends Component {
         class="excerpt"
       >
         <DecoratedHtml
-          @html={{htmlSafe (or @post.expandedExcerpt @post.excerpt)}}
+          @html={{trustHTML (or @post.expandedExcerpt @post.excerpt)}}
           @className="cooked"
         />
       </div>

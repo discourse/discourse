@@ -6,6 +6,10 @@
 
 de:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Daten-Explorer"
     errors:
       explorer:
         no_semicolons: "Entferne die Semikolons aus der Anfrage."
@@ -22,6 +26,9 @@ de:
       create: "Erstellen"
       create_placeholder: "Name der Anfrage …"
       description_placeholder: "Hier bitte eine Beschreibung eingeben"
+      ai:
+        generate: "Erzeugen"
+        optional: "optional"
       import:
         label: "Importieren"
         unparseable_json: "JSON-Datei kann nicht verarbeitet werden."
@@ -90,7 +97,7 @@ de:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Daten-Explorer-Anfragen ausführen. Schränke den API-Schlüssel auf eine Reihe von Anfragen ein, indem du Anfrage-IDs angibst."
     discourse_automation:
       scriptables:

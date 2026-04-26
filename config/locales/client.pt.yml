@@ -500,8 +500,6 @@ pt:
           other: "Criado há %{count} anos atrás"
     bookmarked:
       title: "Adicionar Marcador"
-      edit_bookmark: "Editar Marcador"
-      clear_bookmarks: "Limpar Marcadores"
       help:
         bookmark: "Clique para adicionar este tópico aos marcadores"
         edit_bookmark: "Clique para editar o marcador de uma mensagem neste tópico"
@@ -520,12 +518,12 @@ pt:
       clear_reminder: "Limpar lembrete"
       edit: "Editar marcador"
       not_bookmarked: "adicionar esta mensagem aos marcadores"
+      topic_bookmark: "Tópico"
       remove_reminder_keep_bookmark: "Remover lembrete e manter marcador"
       created_with_reminder: "Você marcou este post com um lembrete %{date}. %{name}"
       created_with_reminder_generic: "Marcou isto com um lembrete %{date}. %{name}"
       delete: "Eliminar Marcador"
       confirm_delete: "Tem a certeza que deseja eliminar este marcador? O lembrete também será eliminado."
-      confirm_clear: "Tem a certeza que deseja limpar todos os marcadores deste tópico?"
       save: "Guardar"
       no_timezone: 'Você ainda não definiu um fuso horário. Você não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
       invalid_custom_datetime: "A data e a hora fornecidas são inválidas, tente novamente."
@@ -1667,6 +1665,9 @@ pt:
         interface: "Interface"
         apps: "Aplicações"
         navigation_menu: "Menu de Navegação"
+      calendar_subscriptions:
+        copied: "Copiado!"
+        add_to_google: "Calendário Google"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -2273,6 +2274,7 @@ pt:
     form_kit:
       reset: Repor
       optional: opcional
+      required: obrigatório
       dirty_form: "Não submeteste as tuas alterações! Tens a certeza de que queres sair?"
       errors:
         starts_with: "Deve começar com %{prefix}"
@@ -2793,6 +2795,8 @@ pt:
       list_item: "Item da Lista"
       toggle_direction: "Direção de alternar"
       wrap_modal:
+        attribute_key: "Chave"
+        attribute_value: "Valor"
         apply: "Aplicar"
       help: "Ajuda de Edição Markdown"
       collapse: "Minimizar o painel de compositor"
@@ -2863,6 +2867,9 @@ pt:
         copy: "Copiar link"
         remove: "Remover hiperligação"
         visit: "Abrir hiperligação num separador externo"
+        link_copied: "Ligação copiada!"
+      onebox_toolbar:
+        copy: "Copiar hiperligação"
         link_copied: "Ligação copiada!"
     notifications:
       tooltip:
@@ -3127,9 +3134,6 @@ pt:
       bulk:
         select_all: "Selecionar Tudo"
         clear_all: "Remover Tudo"
-        unlist_topics: "Remover Tópicos da Lista"
-        relist_topics: "Voltar a Listar Tópicos"
-        delete: "Eliminar Tópicos"
         delete_topics_count:
           one: "Eliminar Tópico"
           other: "Eliminar Tópicos"
@@ -3153,22 +3157,11 @@ pt:
           other: "Descartar Novos (%{count})"
         toggle: "ativar seleção em massa de tópicos"
         actions: "Ações em Massa"
-        change_category: "Definir Categoria..."
-        close_topics: "Fechar Tópicos"
-        archive_topics: "Arquivar tópicos"
         move_messages_to_inbox: "Mover para a Caixa de Entrada"
-        notification_level: "Notificações…"
         change_notification_level: "Alterar Nível de Notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
-        selected:
-          one: "Selecionou <b>%{count}</b> tópico."
-          other: "Selecionou <b>%{count}</b> tópicos."
-        change_tags: "Substituir Etiquetas"
-        append_tags: "Anexar Etiquetas"
         choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
-        choose_append_tags: "Escolha novas etiquetas para acrescentar a estes tópicos:"
         changed_tags: "As etiquetas para esses tópicos foram mudadas."
-        remove_tags: "Remover Todas as Etiquetas"
         confirm_remove_tags:
           one: "Todas as etiquetas serão removidas deste tópico. Tem a certeza?"
           other: "Todas as etiquetas serão removidas de <b>%{count}</b> tópicos. Tem a certeza?"
@@ -3198,17 +3191,33 @@ pt:
         name: "Arquivo"
       move_messages_to_inbox:
         name: "Mover para a Caixa de Entrada"
-      append_tags:
-        name: "Anexar Etiquetas"
       replace_tags:
         name: "Substituir Etiquetas"
       delete_topics:
         name: "Eliminar"
+      convert_to_public_topic:
+        name: "Tornar Tópico Público"
+      convert_to_private_message:
+        name: "Tornar Mensagem Pessoal"
       defer:
         name: "Marcar como Não Lido"
-        description: "Marcar tópicos como não lido"
       update_notifications:
         name: "Notificações de Atualização"
+    nested_replies:
+      sort:
+        label: "Ordenar por"
+        top: "Os Melhores"
+        new: "Novo"
+      load_more_children:
+        one: "mais %{count} resposta"
+        other: "mais %{count} respostas"
+      collapsed_replies:
+        one: "%{count} resposta"
+        other: "%{count} respostas"
+      collapse: "Colapsar"
+      no_replies: "Ainda sem respostas."
+      deleted_post_placeholder: "[eliminado]"
+      pinned_reply: "Fixado"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"
@@ -3649,6 +3658,10 @@ pt:
       sr_post_like_count_button:
         one: "%{count} pessoa gostou desta publicação."
         other: "%{count} pessoas gostaram desta publicação."
+      likes_popup:
+        title:
+          one: "%{count} curtiu"
+          other: "%{count} curtiram"
       filtered_replies_hint:
         one: "Ver esta publicação e a sua resposta"
         other: "Ver esta publicação e as suas %{count} respostas"
@@ -3675,7 +3688,7 @@ pt:
           confirm_delete: "Tem a certeza que pretende eliminar as traduções para '%{languageCode}'?"
         success: "As traduções foram atualizadas com sucesso"
         post_language_selector:
-          none: "Nenhuma"
+          none: "Não definido"
         edit_warning:
           action_original: "Editar publicação original"
           action_translation: "Editar esta tradução"
@@ -3728,7 +3741,6 @@ pt:
           just_the_post: "Não, apenas esta mensagem"
         admin: "ações administrativas de publicação"
         admin_action: "Administração"
-        permanently_delete: "Eliminar Permanentemente"
         wiki: "Criar Wiki"
         unwiki: "Remover Wiki"
         convert_to_moderator: "Adicionar Cor do Funcionário"
@@ -3849,6 +3861,7 @@ pt:
       back: "Voltar para a categoria"
       general: "Geral"
       settings: "Configurações"
+      moderation: "Moderação"
       advanced: "Avançado"
       topic_template: "Modelo"
       tags: "Etiquetas"
@@ -3898,6 +3911,8 @@ pt:
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
       delete_error: "Ocorreu um erro ao eliminar a categoria."
       no_description: "Por favor adicione uma descrição para esta categoria."
+      description_expand: "Mostrar mais"
+      description_collapse: "Mostrar menos"
       already_used: "Esta cor já foi usada para outra categoria"
       security: "Segurança"
       security_add_group: "Adicionar um grupo"
@@ -3925,6 +3940,9 @@ pt:
       subcategory_list_style: "Estilo da Lista de Subcategorias:"
       allow_badges_label: "Permitir a atribuição de crachás nesta categoria"
       review_group_name: "nome do grupo"
+      posting_review_modes:
+        everyone: "Todos"
+      posting_review_groups_placeholder: "Selecionar grupos..."
       this_year: "este ano"
       none_subcategory_text: "Nenhuma"
       visibility:
@@ -4537,8 +4555,6 @@ pt:
         back: "Voltar para todos os relatórios"
         group_traffic: "Tráfego"
         group_members: "Membros"
-        group_moderation: "Moderação"
-        group_security: "Segurança"
         group_other: "Outro"
       config_sections:
         account:
@@ -4569,6 +4585,9 @@ pt:
           admins: "Administradores"
           moderators: "Moderadores"
           staff: "Pessoal"
+        impact_types:
+          feature_type: "Funcionalidade"
+          other_type: "Outro"
         filter:
           all: "Todos"
           enabled: "Ativado"
@@ -4680,6 +4699,11 @@ pt:
           sub_pages:
             logs:
               title: "Logs"
+        problem_checks:
+          status: "Estado"
+          ignore: "Ignorar"
+          more_options:
+            title: "Mais opções"
         reports:
           title: "Relatórios"
           sub_pages:
@@ -4749,7 +4773,7 @@ pt:
         installed_version: "Instalado"
         latest_version: "Recentes"
         problems_found: "Alguns conselhos com base nas configurações atuais do seu site"
-        dismiss_notice: "Marcar Visto"
+        dismiss_notice: "Ignorar"
         new_features:
           title: "O que é novo?"
           learn_more: "Saiba mais..."
@@ -4803,7 +4827,7 @@ pt:
           all: "Tudo"
           view_table: "tabela"
           view_graph: "grafo"
-          refresh_report: "Atualizar relatório"
+          refresh_report: "Atualizar"
           daily: Diário
           monthly: Mensal
           weekly: Semanal

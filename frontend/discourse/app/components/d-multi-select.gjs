@@ -5,7 +5,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -23,7 +23,7 @@ import { i18n } from "discourse-i18n";
 
 class Skeleton extends Component {
   get width() {
-    return htmlSafe(`width: ${Math.floor(Math.random() * 70) + 20}%`);
+    return trustHTML(`width: ${Math.floor(Math.random() * 70) + 20}%`);
   }
 
   <template>

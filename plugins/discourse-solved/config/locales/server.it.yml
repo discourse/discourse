@@ -6,10 +6,6 @@
 
 it:
   accepted_answer: "Risposta accettata"
-  category_types:
-    support:
-      name: "Sostienici"
-      title: "sostienici"
   site_settings:
     solved_enabled: "Attiva il plugin 'solved', che consente agli autenti di selezionare soluzioni negli argomenti"
     allow_solved_on_all_topics: "Consenti agli utenti di selezionare soluzioni su tutti gli argomenti (se l'opzione è deselezionata, le soluzioni possono essere abilitate per categoria o etichetta)"

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
 import {
   DangerActionListItem,
@@ -97,7 +97,7 @@ export default class DPageHeader extends Component {
                     @identifier="d-page-header-mobile-actions"
                     @title={{i18n "more_options"}}
                     @icon="ellipsis-vertical"
-                    class="btn-small"
+                    class="btn-small btn-default"
                   >
                     <:content>
                       <DropdownMenu class="d-page-header__mobile-actions">
@@ -143,9 +143,9 @@ export default class DPageHeader extends Component {
 
         {{#if @descriptionLabel}}
           <p class="d-page-header__description">
-            {{htmlSafe @descriptionLabel}}
+            {{trustHTML @descriptionLabel}}
             {{#if @learnMoreUrl}}
-              <span class="d-page-header__learn-more">{{htmlSafe
+              <span class="d-page-header__learn-more">{{trustHTML
                   (i18n "learn_more_with_link" url=@learnMoreUrl)
                 }}</span>
             {{/if}}

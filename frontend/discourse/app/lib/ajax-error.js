@@ -1,5 +1,5 @@
 /* eslint-disable ember/no-jquery */
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import $ from "jquery";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { i18n } from "discourse-i18n";
@@ -66,6 +66,8 @@ export function extractErrorInfo(
       parsedError = parsedJSON.message;
     } else if (parsedJSON.failed) {
       parsedError = parsedJSON.failed;
+    } else if (parsedJSON.error_key) {
+      parsedError = i18n(parsedJSON.error_key);
     }
   }
 
@@ -78,6 +80,8 @@ export function extractErrorInfo(
   return {
     html,
     message: parsedError || defaultMessage || i18n("generic_error"),
+    errorKey: parsedJSON?.error_key ?? null,
+    status: error.status ?? null,
   };
 }
 
@@ -106,7 +110,7 @@ export function popupAjaxError(error) {
   const errorInfo = extractErrorInfo(error);
 
   if (errorInfo.html) {
-    dialog.alert({ message: htmlSafe(errorInfo.message) });
+    dialog.alert({ message: trustHTML(errorInfo.message) });
   } else {
     dialog.alert(errorInfo.message);
   }

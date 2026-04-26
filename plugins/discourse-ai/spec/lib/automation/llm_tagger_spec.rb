@@ -4,13 +4,13 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
   fab!(:user)
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
-  fab!(:ai_persona)
+  fab!(:ai_agent)
   fab!(:llm_model)
 
   before do
     enable_current_plugin
     SiteSetting.tagging_enabled = true
-    ai_persona.update!(default_llm: llm_model)
+    ai_agent.update!(default_llm: llm_model)
 
     Fabricate(:tag, name: "bug")
     Fabricate(:tag, name: "feature")
@@ -23,9 +23,9 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
     before do
       automation.fields.create!(
         component: "choices",
-        name: "tagger_persona",
+        name: "tagger_agent",
         metadata: {
-          value: ai_persona.id,
+          value: ai_agent.id,
         },
         target: "script",
       )
@@ -72,7 +72,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
         described_class.handle(
           post: post,
-          tagger_persona_id: ai_persona.id,
+          tagger_agent_id: ai_agent.id,
           available_tags: available_tags,
           confidence_threshold: 70,
           max_tags: 3,
@@ -91,7 +91,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
         described_class.handle(
           post: post,
-          tagger_persona_id: ai_persona.id,
+          tagger_agent_id: ai_agent.id,
           available_tags: available_tags,
           confidence_threshold: 70,
           max_tags: 3,
@@ -110,7 +110,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
         described_class.handle(
           post: post,
-          tagger_persona_id: ai_persona.id,
+          tagger_agent_id: ai_agent.id,
           available_tags: available_tags,
           confidence_threshold: 70,
           max_tags: 3,
@@ -131,7 +131,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
         described_class.handle(
           post: post,
-          tagger_persona_id: ai_persona.id,
+          tagger_agent_id: ai_agent.id,
           available_tags: available_tags,
           confidence_threshold: 70,
           max_tags: 2,
@@ -148,7 +148,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       DiscourseAi::Completions::Llm.with_prepared_responses(["invalid json"]) do
         described_class.handle(
           post: post,
-          tagger_persona_id: ai_persona.id,
+          tagger_agent_id: ai_agent.id,
           available_tags: available_tags,
           confidence_threshold: 70,
           max_tags: 3,
@@ -169,7 +169,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: post,
-            tagger_persona_id: ai_persona.id,
+            tagger_agent_id: ai_agent.id,
             tag_mode: "discover",
             available_tags: [],
             confidence_threshold: 70,
@@ -191,7 +191,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: post,
-            tagger_persona_id: ai_persona.id,
+            tagger_agent_id: ai_agent.id,
             tag_mode: "discover",
             available_tags: %w[bug feature], # discovery tag not in this list
             confidence_threshold: 70,
@@ -210,7 +210,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: post,
-            tagger_persona_id: ai_persona.id,
+            tagger_agent_id: ai_agent.id,
             tag_mode: "discover",
             available_tags: [],
             confidence_threshold: 70,
@@ -234,7 +234,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: post,
-            tagger_persona_id: ai_persona.id,
+            tagger_agent_id: ai_agent.id,
             tag_mode: "discover",
             available_tags: [],
             confidence_threshold: 70,
@@ -269,7 +269,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
             described_class.handle(
               post: post,
-              tagger_persona_id: ai_persona.id,
+              tagger_agent_id: ai_agent.id,
               tag_mode: "discover",
               available_tags: [],
               confidence_threshold: 70,
@@ -288,7 +288,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
             described_class.handle(
               post: post,
-              tagger_persona_id: ai_persona.id,
+              tagger_agent_id: ai_agent.id,
               tag_mode: "discover",
               available_tags: [],
               confidence_threshold: 70,
@@ -311,7 +311,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: post,
-            tagger_persona_id: ai_persona.id,
+            tagger_agent_id: ai_agent.id,
             available_tags: available_tags,
             confidence_threshold: 70,
             max_tags: 3,
@@ -325,7 +325,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       it "skips processing when manual mode has no available tags" do
         described_class.handle(
           post: post,
-          tagger_persona_id: ai_persona.id,
+          tagger_agent_id: ai_agent.id,
           tag_mode: "manual",
           available_tags: [],
           confidence_threshold: 70,
@@ -365,7 +365,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: post,
-            tagger_persona_id: ai_persona.id,
+            tagger_agent_id: ai_agent.id,
             available_tags: available_tags,
             confidence_threshold: 70,
             max_tags: 3,
@@ -384,7 +384,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: post,
-            tagger_persona_id: ai_persona.id,
+            tagger_agent_id: ai_agent.id,
             available_tags: available_tags,
             confidence_threshold: 70,
             max_tags: 3,
@@ -410,7 +410,7 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
           described_class.handle(
             post: system_post,
-            tagger_persona_id: ai_persona.id,
+            tagger_agent_id: ai_agent.id,
             available_tags: available_tags,
             confidence_threshold: 70,
             max_tags: 3,

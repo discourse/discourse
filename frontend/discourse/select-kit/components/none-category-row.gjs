@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import dirSpan from "discourse/helpers/dir-span";
@@ -9,7 +9,7 @@ import CategoryRowComponent from "discourse/select-kit/components/category-row";
 export default class NoneCategoryRow extends CategoryRowComponent {
   @computed("category")
   get badgeForCategory() {
-    return htmlSafe(
+    return trustHTML(
       categoryBadgeHTML(this.category, {
         link: false,
         allowUncategorized: true,
@@ -32,7 +32,7 @@ export default class NoneCategoryRow extends CategoryRowComponent {
           }}</div>
       {{/if}}
     {{else}}
-      {{htmlSafe this.label}}
+      {{trustHTML this.label}}
     {{/if}}
   </template>
 }

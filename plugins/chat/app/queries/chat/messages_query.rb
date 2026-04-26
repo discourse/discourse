@@ -106,12 +106,20 @@ module Chat
           .includes(:bookmarks)
           .includes(uploads: { optimized_videos: :optimized_upload })
           .includes(chat_channel: :chatable)
-          .includes(thread: %i[original_message last_message])
           .includes(:pinned_message)
           .where(chat_channel_id: channel.id)
 
       user_includes = SiteSetting.enable_user_status ? %i[user_status user_option] : %i[user_option]
-      query.includes(user: user_includes, user_mentions: { user: user_includes })
+      query.includes(
+        user: user_includes,
+        user_mentions: {
+          user: user_includes,
+        },
+        thread: {
+          original_message: [{ user: user_includes }, { user_mentions: { user: user_includes } }],
+          last_message: [:uploads, { user: user_includes }],
+        },
+      )
     end
 
     def self.query_around_target(target_message_id, channel, messages)

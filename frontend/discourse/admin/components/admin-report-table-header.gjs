@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -52,11 +52,11 @@ export default class AdminReportTableHeader extends Component {
           class="btn-transparent --primary sort-btn"
         >
           {{#if @label.htmlTitle}}
-            <span class="d-button-label">{{htmlSafe @label.htmlTitle}}</span>
+            <span class="d-button-label">{{trustHTML @label.htmlTitle}}</span>
           {{/if}}
         </DButton>
       {{else if @label.htmlTitle}}
-        <span class="title">{{htmlSafe @label.htmlTitle}}</span>
+        <span class="title">{{trustHTML @label.htmlTitle}}</span>
       {{else}}
         <span class="title">{{@label.title}}</span>
       {{/if}}

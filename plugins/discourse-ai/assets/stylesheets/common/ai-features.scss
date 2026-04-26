@@ -43,7 +43,7 @@
   }
 
   &__llm,
-  &__persona,
+  &__agent,
   &__groups {
     font-size: var(--font-down-1-rem);
     display: flex;
@@ -52,11 +52,11 @@
     color: var(--primary-high);
   }
 
-  &__persona {
+  &__agent {
     @include ellipsis;
   }
 
-  &__persona-link,
+  &__agent-link,
   &__llm-link {
     padding: 0;
     margin-right: var(--space-1);

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PinnedOptions from "discourse/components/pinned-options";
 import { i18n } from "discourse-i18n";
 
@@ -26,7 +26,7 @@ export default class PinnedButton extends Component {
         {{#if @appendReason}}
           <p class="reason">
             <PinnedOptions @value={{@pinned}} @topic={{@topic}} />
-            <span class="text">{{htmlSafe this.reasonText}}</span>
+            <span class="text">{{trustHTML this.reasonText}}</span>
           </p>
         {{else}}
           <PinnedOptions @value={{@pinned}} @topic={{@topic}} />

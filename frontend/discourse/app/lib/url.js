@@ -34,6 +34,14 @@ const SERVER_SIDE_ONLY = [
   /^\/pub\//,
   /^\/invites\//,
   /^\/styleguide/,
+  /^\/safe-mode/,
+  /^\/dev-mode/,
+  /^\/theme-qunit/,
+  /^\/llms\.txt$/,
+  /^\/robots\.txt$/,
+  /^\/offline\.html$/,
+  /^\/manifest\.webmanifest$/,
+  /^\/opensearch\.xml$/,
 ];
 
 // The amount of height (in pixels) that we factor in when jumpEnd is called so
@@ -117,9 +125,19 @@ class DiscourseURL extends EmberObject {
       if (opts.anchor) {
         selector = `#main #${opts.anchor}, a[name=${opts.anchor}]`;
         holder = document.querySelector(selector);
+
+        if (!holder) {
+          // Anchor not found — post may be cloaked. Scroll to the post
+          // placeholder to trigger uncloaking, then let LockOn retry
+          // until the anchor element appears in the rendered content.
+          const postHolder = document.querySelector(holderId);
+          if (postHolder) {
+            postHolder.scrollIntoView(true);
+          }
+        }
       }
 
-      if (!holder) {
+      if (!holder && !opts.anchor) {
         selector = holderId;
         holder = document.querySelector(selector);
       }
@@ -292,12 +310,16 @@ class DiscourseURL extends EmberObject {
     rewrites.push({ regexp, replacement, opts: opts || {} });
   }
 
-  redirectAbsolute(url) {
+  redirectAbsolute(url, { replace = false } = {}) {
     // Redirects will kill a test runner
     if (isTesting()) {
       return true;
     }
-    window.location = url;
+    if (replace) {
+      window.location.replace(url);
+    } else {
+      window.location = url;
+    }
     return true;
   }
 
@@ -342,7 +364,7 @@ class DiscourseURL extends EmberObject {
 
     const internalPath = url.replace(this.origin, "");
 
-    return internalPath.startsWith("/t/");
+    return internalPath.startsWith("/t/") || internalPath.startsWith("/n/");
   }
 
   /**

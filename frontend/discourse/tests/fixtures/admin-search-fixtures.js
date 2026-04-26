@@ -1,4 +1,4 @@
-export default {
+const adminSearchFixtures = {
   "/admin/search/all.json": {
     settings: [
       {
@@ -64,5 +64,22 @@ export default {
         description_link: null,
       },
     ],
+    upcoming_changes: [
+      {
+        setting: "enable_upload_debug_mode",
+        humanized_name: "Enable upload debug mode",
+        description: "This enables the amazing upload debug mode",
+        upcoming_change: {
+          enabled_for: "staff",
+          impact: "feature,all_members",
+          impact_role: "all_members",
+          impact_type: "feature",
+          learn_more_url: "https://meta.discourse.org/t/-/395100",
+          status: "alpha"
+        }
+      }
+    ]
   },
 };
+
+export default adminSearchFixtures;

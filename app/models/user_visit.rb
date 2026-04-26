@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserVisit < ActiveRecord::Base
+  belongs_to :user
+
   def self.counts_by_day_query(start_date, end_date, group_id = nil)
     result = where("visited_at >= ? and visited_at <= ?", start_date.to_date, end_date.to_date)
 

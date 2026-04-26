@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
 import { action, computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import TextField from "discourse/components/text-field";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -25,7 +24,10 @@ export default class AdminPenaltyReason extends Component {
     CUSTOM_REASON_KEY,
   ];
 
-  @equal("selectedReason", CUSTOM_REASON_KEY) isCustomReason;
+  @computed("selectedReason")
+  get isCustomReason() {
+    return this.selectedReason === CUSTOM_REASON_KEY;
+  }
 
   @computed("reasonKeys")
   get reasons() {
@@ -79,7 +81,7 @@ export default class AdminPenaltyReason extends Component {
         {{/if}}
       {{else if (eq @penaltyType "silence")}}
         <label class="silence-reason-title">
-          {{htmlSafe (i18n "admin.user.silence_reason_label")}}</label>
+          {{trustHTML (i18n "admin.user.silence_reason_label")}}</label>
 
         <ComboBox
           @content={{this.reasons}}

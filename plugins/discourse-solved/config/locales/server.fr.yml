@@ -6,10 +6,6 @@
 
 fr:
   accepted_answer: "Réponse acceptée"
-  category_types:
-    support:
-      name: "Soutenir"
-      title: "soutenir"
   site_settings:
     solved_enabled: "Activer l'extension permettant aux utilisateurs de sélectionner des solutions aux sujets"
     allow_solved_on_all_topics: "Autoriser les utilisateurs à sélectionner des solutions sur tous les sujets (lorsque cette option n'est pas activée, les solutions peuvent être activées par catégorie ou étiquette)"

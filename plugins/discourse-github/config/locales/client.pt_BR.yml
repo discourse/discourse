@@ -8,11 +8,11 @@ pt_BR:
   js:
     github:
       pr_status:
-        draft: "Rascunho"
-        open: "Aberto"
-        approved: "Aprovado"
-        merged: "Mesclado"
-        closed: "Fechados"
+        draft: "Rascunho (draft)"
+        open: "Aberto (open)"
+        approved: "Aprovado (approved)"
+        merged: "Mesclado (merged)"
+        closed: "Fechado (closed)"
   admin_js:
     admin:
       site_settings:

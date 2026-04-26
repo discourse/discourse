@@ -19,10 +19,12 @@ module Jobs
         return
       end
 
-      categories = Category.where(locale: nil)
-
-      if SiteSetting.ai_translation_backfill_limit_to_public_content
-        categories = categories.where(read_restricted: false)
+      target_category_ids = SiteSetting.ai_translation_target_categories
+      if target_category_ids.present?
+        categories =
+          Category.where(locale: nil).where(id: target_category_ids.split("|").map(&:to_i))
+      else
+        return
       end
 
       limit = SiteSetting.ai_translation_backfill_hourly_rate
@@ -46,11 +48,10 @@ module Jobs
     private
 
     def find_llm_model
-      persona_klass =
-        AiPersona.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_persona)
-      return nil if persona_klass.blank?
+      agent_klass = AiAgent.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_agent)
+      return nil if agent_klass.blank?
 
-      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
+      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
     end
   end
 end

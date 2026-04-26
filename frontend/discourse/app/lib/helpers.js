@@ -1,6 +1,6 @@
 import Helper from "@ember/component/helper";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import deprecated from "discourse/lib/deprecated";
 
 export function makeArray(obj) {
@@ -19,7 +19,7 @@ export function htmlHelper(fn) {
   return Helper.helper(function (...args) {
     args =
       args.length > 1 ? args[0].concat({ hash: args[args.length - 1] }) : args;
-    return htmlSafe(fn.apply(this, args) || "");
+    return trustHTML(fn.apply(this, args) || "");
   });
 }
 

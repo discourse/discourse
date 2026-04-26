@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames, tagName } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import $ from "jquery";
@@ -85,7 +85,7 @@ export default class MobileNav extends Component {
       {{#if this.selectedHtml}}
         <li>
           <a href {{on "click" this.toggleExpanded}} class="expander">
-            <span class="selection">{{htmlSafe this.selectedHtml}}</span>
+            <span class="selection">{{trustHTML this.selectedHtml}}</span>
             {{icon "angle-down"}}
           </a>
         </li>

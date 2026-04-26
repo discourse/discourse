@@ -14,3 +14,36 @@ sr:
       tool_summary:
         search: "Pretraži"
         time: "Vreme"
+      close_topic:
+        errors:
+          not_found: "Tema nije pronađena."
+      unlist_topic:
+        errors:
+          not_found: "Tema nije pronađena."
+      delete_topic:
+        errors:
+          not_found: "Tema nije pronađena."
+      edit_tags:
+        errors:
+          not_found: "Tema nije pronađena."
+      edit_category:
+        errors:
+          not_found: "Tema nije pronađena."
+      set_topic_timer:
+        errors:
+          not_found: "Tema nije pronađena."
+      set_slow_mode:
+        errors:
+          not_found: "Tema nije pronađena."
+      move_posts:
+        errors:
+          not_found: "Tema nije pronađena."
+      assign:
+        errors:
+          not_found: "Tema nije pronađena."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Odobri"
+        reject:
+          title: "Odbij"

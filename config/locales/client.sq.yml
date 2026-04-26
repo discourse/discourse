@@ -388,8 +388,6 @@ sq:
           other: "Krijuar %{count} vite më parë"
     bookmarked:
       title: "Të preferuarat"
-      edit_bookmark: "Redakto Shënuesin"
-      clear_bookmarks: "Pastro të preferuarat"
       help:
         bookmark: "Klikoni për të ruajtur këtë temë"
         edit_bookmark: "Klikoni për të modifikuar faqeshënuesin në një postim në këtë temë"
@@ -406,12 +404,12 @@ sq:
       create: "Krijo faqeshënues"
       edit: "Redakto faqeshënuesin"
       not_bookmarked: "shto postimin tek të preferuarat"
+      topic_bookmark: "Topic"
       remove_reminder_keep_bookmark: "Hiqni rikujtuesin dhe mbani faqeshënuesin"
       created_with_reminder: "Ju e keni shënuar këtë postim me një rikujtues %{date}. %{name}"
       created_with_reminder_generic: "Ju e keni shënuar këtë me një rikujtues %{date}. %{name}"
       delete: "Fshini faqeshënuesin"
       confirm_delete: "A jeni të sigurt që dëshironi të fshini këtë faqeshënues? Rikujtuesi gjithashtu do të fshihet."
-      confirm_clear: "A jeni të sigurt që dëshironi të hiqni të gjithë faqeshënuesit tuaj nga kjo temë?"
       save: "Ruaj"
       no_timezone: 'Nuk keni vendosur ende një zonë kohore. Nuk do të mund të vendosni rikujtues. Vendosni një <a href="%{basePath}/my/preferences/profile">në profilin tuaj</a>.'
       invalid_custom_datetime: "Data dhe ora që keni dhënë është e pavlefshme, ju lutemi provoni përsëri."
@@ -1468,6 +1466,8 @@ sq:
         tags: "Etiketat"
         interface: "Ndërfaqja"
         apps: "Aplikimet"
+      calendar_subscriptions:
+        copied: "Kopjuar!"
       change_password:
         success: "(emaili u dërgua)"
         in_progress: "(duke dërguar emailin)"
@@ -2056,6 +2056,7 @@ sq:
     form_kit:
       reset: Rivendosni
       optional: opsionale
+      required: i nevojshëm
       dirty_form: "Nuk i keni dorëzuar ndryshimet tuaja! Jeni të sigurt që dëshironi të largoheni?"
       errors:
         required: "E nevojshme"
@@ -2523,6 +2524,7 @@ sq:
       upload_description: "shkruaj përshkrimin e skedarit të ngarkuar këtu"
       list_item: "Element liste"
       wrap_modal:
+        attribute_value: "Vlera"
         apply: "Apliko"
       help: "Ndihmë mbi Markdown"
       exit_fullscreen_prompt: "Shtypni <kbd>ESC</kbd> për të dalë nga ekrani i plotë"
@@ -2578,6 +2580,9 @@ sq:
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit
       link_toolbar:
+        copy: "Kopjoni lidhjen"
+        link_copied: "Lidhja u kopjua!"
+      onebox_toolbar:
         copy: "Kopjoni lidhjen"
         link_copied: "Lidhja u kopjua!"
     notifications:
@@ -2894,11 +2899,8 @@ sq:
         confirm: "Konfirmo"
         select_all: "Zgjidh të gjitha"
         clear_all: "Pastro kriteret"
-        unlist_topics: "Hiq temat nga lista"
-        relist_topics: "Relistoni temat"
         reset_bump_dates: "Rivendos datat e përplasjes"
         defer: "Shëno si të palexuar"
-        delete: "Fshi temat"
         delete_topics_count:
           one: "Fshi temën"
           other: "Fshi temat"
@@ -2931,29 +2933,18 @@ sq:
           other: "Hiq të Ri (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Veprime në masë"
-        change_category: "Cakto kategorinë…"
-        close_topics: "Mbyll temat"
-        archive_topics: "Arkivo temat"
         move_messages_to_inbox: "Transfero në inbox"
         archive_messages: "Kaloni te Arkivi"
-        notification_level: "Njoftimet…"
         change_notification_level: "Ndrysho nivelin e njoftimit"
         choose_new_category: "Zgjidhni kategorinë e re për temat: "
-        selected:
-          one: "Keni zgjedhur <b>%{count}</b> temë."
-          other: "Keni zgjedhur <b>%{count}</b> tema."
         selected_sole_category:
           one: "Keni zgjedhur <b>%{count}</b> temë:"
           other: "Keni zgjedhur <b>%{count}</b> tema:"
         selected_count:
           one: "%{count} zgjedhur"
           other: "%{count} zgjedhur"
-        change_tags: "Zëvendësoni etiketat"
-        append_tags: "Shtoj Etiketa"
         choose_new_tags: "Zgjidh etiketa të reja për këto tema:"
-        choose_append_tags: "Zgjidhni etiketat e reja për të shtuar për këto tema:"
         changed_tags: "Etiketat e temave u ndryshuan. "
-        remove_tags: "Hiqni të gjitha etiketat"
         confirm_remove_tags:
           one: "Të gjitha etiketat do të hiqen nga kjo temë. A jeni të sigurt?"
           other: "Të gjitha etiketat do të hiqen nga temat %{count} . A jeni të sigurt?"
@@ -2982,7 +2973,6 @@ sq:
         name: "Hiqe"
       close_topics:
         name: "Mbyll"
-        note: "Shënim"
         optional: (opsionale)
       archive_topics:
         name: "Arkivoni"
@@ -2996,24 +2986,36 @@ sq:
         name: "Relistoni"
       remove_tags:
         name: "Hiqni etiketat"
-      append_tags:
-        name: "Shtoni etiketat"
       replace_tags:
         name: "Zëvendësoni etiketat"
       delete_topics:
         name: "Fshij"
       update_category:
         name: "Përditëso kategorinë"
-        description: "Zgjidhni kategorinë e re për temat e zgjedhura"
+      convert_to_public_topic:
+        name: "Bëni temën publike…"
+      convert_to_private_message:
+        name: "Bëni një mesazh personal"
       reset_bump_dates:
         name: "Rivendos datat e përplasjes"
-        description: "Rivendosni datën e ngritjes së temës në datën e fundit të postimit të krijuar, gjë që ndikon në renditjen në listën e temave"
       defer:
         name: "Shënoni të palexuar"
-        description: "Shënoni temat si të palexuara"
       update_notifications:
         name: "Përditëso Njoftimet"
-        description: "Ndrysho nivelin e njoftimit në Në Shikim, Në Ndjekje, Normal ose Në Heshtje"
+    nested_replies:
+      sort:
+        label: "Rendit sipas"
+        top: "Popullore"
+        new: "I Ri"
+      load_more_children:
+        one: "edhe %{count} përgjigje "
+        other: "janë %{count} përgjigje"
+      collapsed_replies:
+        one: "%{count} përgjigje"
+        other: "%{count} përgjigje"
+      collapse: "Zvogëloni"
+      no_replies: "Nuk ka ende përgjigje."
+      pinned_reply: "E përzgjedhur"
     topic:
       filter_to:
         one: "%{count} postim në temë"
@@ -3389,7 +3391,7 @@ sq:
           edit: "Redaktoni"
           delete: "Fshij"
         post_language_selector:
-          none: "Asnjë"
+          none: "Nuk është vendosur"
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
@@ -3506,6 +3508,8 @@ sq:
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
       no_description: "Shto një përshkrim për këtë kategori."
+      description_expand: "Shfaq më shumë"
+      description_collapse: "Shfaq më pak"
       already_used: "Kjo ngjyrë është përdorur nga një kategori tjetër"
       security: "Siguria"
       permissions:
@@ -3516,6 +3520,8 @@ sq:
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
       review_group_name: "emri i grupit"
+      posting_review_modes:
+        everyone: "Të gjithë"
       this_year: "këtë vit"
       none_subcategory_text: "Asnjë"
       visibility:
@@ -3963,7 +3969,6 @@ sq:
       reports:
         group_traffic: "Trafik"
         group_members: "Anëtarë"
-        group_security: "Siguria"
         group_other: "Të tjerë"
       config_sections:
         account:
@@ -3986,6 +3991,8 @@ sq:
           admins: "Administratorët"
           moderators: "Moderatorë"
           staff: "Stafi"
+        impact_types:
+          other_type: "Të tjerë"
         filter:
           all: "Të gjitha"
           enabled: "Aktivizuar"
@@ -4049,6 +4056,11 @@ sq:
           sub_pages:
             logs:
               title: "Ditari"
+        problem_checks:
+          status: "Status"
+          ignore: "Injoroni"
+          more_options:
+            title: "Më shumë mundësi"
         reports:
           sub_pages:
             settings:
@@ -4102,7 +4114,7 @@ sq:
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
         installed_version: "Instaluar"
         latest_version: "Të fundit"
-        dismiss_notice: "Hiqe"
+        dismiss_notice: "Injoroni"
         new_features:
           learn_more: "Mëso më shumë..."
         last_checked: "Verifikimi i fundit"
@@ -4130,7 +4142,7 @@ sq:
           all: "Të Gjithë"
           view_table: "tabelë"
           view_graph: "grafik"
-          refresh_report: "Rifresko raportin"
+          refresh_report: "Rifresko"
           daily: Ditore
           monthly: Mujore
           weekly: Javore

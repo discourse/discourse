@@ -14,7 +14,7 @@ import { i18n } from "discourse-i18n";
 export default class DashboardNewFeatures extends Component {
   @service currentUser;
 
-  @tracked newFeatures = null;
+  @tracked newFeatures = {};
   @tracked isLoading = true;
   @tracked feedError = false;
 
@@ -34,8 +34,7 @@ export default class DashboardNewFeatures extends Component {
         "/admin/whats-new.json?force_refresh=" + opts.forceRefresh
       );
 
-      if (!json.new_features || json.new_features.length === 0) {
-        this.newFeatures = {};
+      if (!json.new_features) {
         return;
       }
 
@@ -48,6 +47,7 @@ export default class DashboardNewFeatures extends Component {
         return acc;
       }, {});
     } catch (err) {
+      this.newFeatures = {};
       this.feedError = true;
       popupAjaxError(err);
     } finally {
@@ -77,13 +77,13 @@ export default class DashboardNewFeatures extends Component {
   get emptyLabel() {
     if (this.feedError) {
       return i18n("admin.dashboard.new_features.no_new_features_error", {
-        url: "https://meta.discourse.org/tags/c/announcements/67/release-notes",
+        url: "https://releases.discourse.org/",
       });
     }
 
     if (this.groupedNewFeatures.length === 0) {
       return i18n("admin.dashboard.new_features.no_new_features_found", {
-        url: "https://meta.discourse.org/tags/c/announcements/67/release-notes",
+        url: "https://releases.discourse.org/",
       });
     }
 

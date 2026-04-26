@@ -9,7 +9,6 @@ cs:
     user_notes:
       title: "Poznámky k uživateli"
       attach: "Přidat uživatelskou poznámku"
-      attach_note_description: "Přidejte poznámku o tomto uživateli. Tato poznámka bude viditelná pouze pro členy redakce."
       remove: "Odebrat uživatelskou poznámku"
       show: "Poznámky uživatele (%{count})"
       delete_confirm: "Opravdu chcete odstranit tuto poznámku k uživateli?"

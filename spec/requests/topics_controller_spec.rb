@@ -1208,7 +1208,7 @@ RSpec.describe TopicsController do
         end
 
         it "returns 403 when group is not allow listed" do
-          SiteSetting.change_post_ownership_allowed_groups = nil
+          SiteSetting.change_post_ownership_allowed_groups = ""
 
           post "/t/#{topic_allowed_user_can_see.id}/change-owner.json",
                params: {
@@ -2362,9 +2362,35 @@ RSpec.describe TopicsController do
             end
           end
 
+          it "returns success when updating with empty tags on a topic with no tags" do
+            expect(topic.tags).to be_empty
+
+            put "/t/#{topic.id}/tags.json"
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["errors"]).to be_nil
+          end
+
           it "can update tags" do
             expect do
               put "/t/#{topic.id}/tags.json", params: { tags: [{ id: tag.id, name: tag.name }] }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
+          it "can update tags when params are form-encoded as indexed hash" do
+            expect do
+              put "/t/#{topic.id}/tags.json",
+                  params: {
+                    tags: {
+                      "0" => {
+                        id: tag.id,
+                        name: tag.name,
+                      },
+                    },
+                  }
             end.to change { topic.reload.first_post.revisions.count }.by(1)
 
             expect(response.status).to eq(200)
@@ -2594,6 +2620,20 @@ RSpec.describe TopicsController do
             expect(result["errors"][0]).not_to include(tag3.name)
           end
 
+          it "does not resolve hidden tags sent by ID" do
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag3.name])
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json",
+                params: {
+                  tags: [{ id: tag2.id, name: tag2.name }, { id: tag3.id, name: "anything" }],
+                  category_id: restricted_category.id,
+                }
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.map(&:name)).not_to include(tag3.name)
+          end
+
           it "will clean tag params" do
             restricted_category.allowed_tags = [tag2.name]
 
@@ -2604,6 +2644,53 @@ RSpec.describe TopicsController do
                 }
 
             expect(response.status).to eq(200)
+          end
+
+          context "with content localization enabled" do
+            before do
+              SiteSetting.content_localization_enabled = true
+              SiteSetting.content_localization_supported_locales = "en|ja"
+              tag1.update!(locale: "en")
+              Fabricate(:tag_localization, tag: tag1, locale: "ja", name: "タグ1")
+              user.update!(locale: "ja")
+            end
+
+            it "can change category with localized tags" do
+              restricted_category.allowed_tags = [tag1.name]
+
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [{ id: tag1.id, name: "タグ1" }],
+                    category_id: restricted_category.id,
+                  }
+
+              expect(response.status).to eq(200)
+            end
+
+            it "can change category when tags are sent as strings" do
+              restricted_category.allowed_tags = [tag1.name]
+
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [tag1.name],
+                    category_id: restricted_category.id,
+                  }
+
+              expect(response.status).to eq(200)
+            end
+
+            it "can edit tags with localized tag names" do
+              tag2 = Fabricate(:tag, name: "planning", locale: "en")
+              Fabricate(:tag_localization, tag: tag2, locale: "ja", name: "計画")
+
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [{ id: tag1.id, name: "タグ1" }, { id: tag2.id, name: "計画" }],
+                  }
+
+              expect(response.status).to eq(200)
+              expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+            end
           end
         end
 
@@ -2805,6 +2892,15 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
+    it "shows a blank-slug topic without redirecting" do
+      topic.update_columns(title: "", slug: nil)
+      topic.reload
+
+      get "/t/#{topic.id}"
+
+      expect(response.status).to eq(200)
+    end
+
     it "return 404 for an invalid page" do
       get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
       expect(response.status).to eq(404)
@@ -2877,6 +2973,37 @@ RSpec.describe TopicsController do
       get "/t/#{topic.slug}", params: { silly_param: "hehe" }
 
       expect(response).to redirect_to(topic.relative_url)
+    end
+
+    it "redirects to nested view when nested_replies_default is enabled" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}"
+
+      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}")
+    end
+
+    it "does not redirect crawlers to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag(:body, with: { class: "crawler" })
+    end
+
+    it "does not redirect private messages to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+      pm = Fabricate(:private_message_topic, user: user)
+      Fabricate(:post, topic: pm, user: user)
+
+      sign_in(user)
+      get "/t/#{pm.slug}/#{pm.id}"
+
+      expect(response).not_to redirect_to("/n/#{pm.slug}/#{pm.id}")
     end
 
     it "returns 404 when an invalid slug is given and no id" do
@@ -3488,6 +3615,78 @@ RSpec.describe TopicsController do
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
         expect(response.status).to eq(404)
+      end
+    end
+
+    describe "with external permalink on a soft-deleted topic" do
+      fab!(:topic) { Fabricate(:post, user: post_author1).topic }
+
+      before do
+        topic.trash!(Discourse.system_user)
+        Permalink.create!(
+          url: "t/#{topic.slug}/#{topic.id}",
+          external_url: "https://www.example.com",
+        )
+      end
+
+      it "returns Discourse-Xhr-Redirect header for XHR requests" do
+        get "/t/#{topic.slug}/#{topic.id}.json",
+            headers: {
+              "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Discourse-Xhr-Redirect"]).to eq("true")
+        expect(response.body).to eq("https://www.example.com")
+      end
+
+      it "returns Discourse-Xhr-Redirect header for XHR requests when detailed_404 is enabled" do
+        SiteSetting.detailed_404 = true
+
+        get "/t/#{topic.slug}/#{topic.id}.json",
+            headers: {
+              "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Discourse-Xhr-Redirect"]).to eq("true")
+        expect(response.body).to eq("https://www.example.com")
+      end
+
+      it "returns 301 redirect for non-XHR requests" do
+        get "/t/#{topic.slug}/#{topic.id}"
+
+        expect(response.status).to eq(301)
+        expect(response.headers["Location"]).to eq("https://www.example.com")
+      end
+    end
+
+    describe "with external permalink on a nonexistent topic" do
+      let!(:nonexistent_topic_id) { Topic.maximum(:id) + 1 }
+
+      before do
+        Permalink.create!(
+          url: "t/old-topic/#{nonexistent_topic_id}",
+          external_url: "https://www.example.com",
+        )
+      end
+
+      it "returns Discourse-Xhr-Redirect header for XHR requests" do
+        get "/t/old-topic/#{nonexistent_topic_id}.json",
+            headers: {
+              "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Discourse-Xhr-Redirect"]).to eq("true")
+        expect(response.body).to eq("https://www.example.com")
+      end
+
+      it "returns 301 redirect for non-XHR requests" do
+        get "/t/old-topic/#{nonexistent_topic_id}"
+
+        expect(response.status).to eq(301)
+        expect(response.headers["Location"]).to eq("https://www.example.com")
       end
     end
 
@@ -4292,6 +4491,8 @@ RSpec.describe TopicsController do
     end
 
     describe "when logged in" do
+      fab!(:topic_2, :topic)
+
       before { sign_in(user) }
       let!(:operation) { { type: "change_category", category_id: "1", silent: true } }
       let!(:topic_ids) { [1, 2, 3] }
@@ -4309,6 +4510,19 @@ RSpec.describe TopicsController do
       it "requires a type field for the operation param" do
         put "/topics/bulk.json", params: { topic_ids: topic_ids, operation: {} }
         expect(response.status).to eq(400)
+      end
+
+      it "returns a proper error for an invalid operation type" do
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: topic_ids,
+              operation: {
+                type: "not_a_real_operation",
+              },
+            }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to be_present
       end
 
       it "can dismiss sub-categories posts as read" do
@@ -4618,6 +4832,43 @@ RSpec.describe TopicsController do
         )
         put "/topics/bulk.json", params: { topic_ids: [1], operation: operation }
         expect(response.parsed_body["errors"]).to eq(nil)
+      end
+
+      it "can pin multiple topics with pinned_until" do
+        sign_in(moderator)
+        pinned_until = 3.days.from_now.beginning_of_minute.iso8601
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id, topic_2.id],
+              operation: {
+                type: "pin",
+                pinned_globally: false,
+                pinned_until: pinned_until,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_ids"]).to contain_exactly(topic.id, topic_2.id)
+        expect(topic.reload.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+        expect(topic_2.reload.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+      end
+
+      it "can unpin multiple topics" do
+        sign_in(moderator)
+        topic.update_pinned(true, true)
+        topic_2.update_pinned(true, false)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id, topic_2.id],
+              operation: {
+                type: "unpin",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_ids"]).to contain_exactly(topic.id, topic_2.id)
       end
 
       it "respects the tracked parameter" do
@@ -5309,20 +5560,37 @@ RSpec.describe TopicsController do
   end
 
   describe "#feature_stats" do
-    it "works" do
-      get "/topics/feature_stats.json", params: { category_id: 1 }
+    fab!(:category_for_stats, :category)
+    fab!(:pinned_in_category_topic) do
+      Fabricate(:topic, category: category_for_stats, pinned_at: 1.hour.ago, pinned_globally: false)
+    end
+    fab!(:globally_pinned_topic) { Fabricate(:topic, pinned_at: 1.hour.ago, pinned_globally: true) }
+    fab!(:banner_topic) { Fabricate(:topic, archetype: Archetype.banner) }
+
+    it "returns category and global pin counts when category_id is provided" do
+      get "/topics/feature_stats.json", params: { category_id: category_for_stats.id }
 
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["pinned_in_category_count"]).to eq(0)
-      expect(json["pinned_globally_count"]).to eq(0)
-      expect(json["banner_count"]).to eq(0)
+      expect(json["pinned_in_category_count"]).to eq(1)
+      expect(json["pinned_globally_count"]).to eq(1)
+      expect(json["banner_count"]).to eq(1)
+    end
+
+    it "returns only global pin and banner counts when category_id is omitted" do
+      get "/topics/feature_stats.json"
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json).not_to have_key("pinned_in_category_count")
+      expect(json["pinned_globally_count"]).to eq(1)
+      expect(json["banner_count"]).to eq(1)
     end
 
     it "allows unlisted banner topic" do
-      Fabricate(:topic, category_id: 1, archetype: Archetype.banner, visible: false)
+      banner_topic.update!(visible: false)
 
-      get "/topics/feature_stats.json", params: { category_id: 1 }
+      get "/topics/feature_stats.json", params: { category_id: category_for_stats.id }
       json = response.parsed_body
       expect(json["banner_count"]).to eq(1)
     end
@@ -5342,8 +5610,8 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["pinned_in_category_count"]).to eq(0)
-      expect(json["pinned_globally_count"]).to eq(0)
-      expect(json["banner_count"]).to eq(0)
+      expect(json["pinned_globally_count"]).to eq(1)
+      expect(json["banner_count"]).to eq(1)
     end
   end
 
@@ -5724,6 +5992,32 @@ RSpec.describe TopicsController do
           json = response.parsed_body
 
           expect(json["category_id"]).to eq(topic.category_id)
+        end
+      end
+
+      describe "publishing topic to category without category_id" do
+        it "should return an error when setting a timer" do
+          post "/t/#{topic.id}/timer.json", params: { time: 24, status_type: "publish_to_category" }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "should allow removing a timer" do
+          topic.set_or_create_timer(
+            TopicTimer.types[:publish_to_category],
+            24,
+            by_user: admin,
+            category_id: topic.category_id,
+          )
+
+          post "/t/#{topic.id}/timer.json",
+               params: {
+                 time: nil,
+                 status_type: "publish_to_category",
+               }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.public_topic_timer).to eq(nil)
         end
       end
 
@@ -6861,30 +7155,23 @@ RSpec.describe TopicsController do
     fab!(:topic)
     fab!(:user)
 
-    before do
-      Jobs.run_immediately!
-      Scheduler::Defer.async = true
-      Scheduler::Defer.timeout = 0.1
-    end
-
-    after do
-      Scheduler::Defer.async = false
-      Scheduler::Defer.timeout = Scheduler::Deferrable::DEFAULT_TIMEOUT
-    end
+    before { Jobs.run_immediately! }
 
     it "does nothing if topic does not exist" do
       topic.destroy!
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
     it "does nothing if user from ID does not exist" do
       user.destroy!
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
@@ -6892,8 +7179,9 @@ RSpec.describe TopicsController do
       topic.shared_draft = Fabricate(:shared_draft)
 
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
@@ -6901,15 +7189,17 @@ RSpec.describe TopicsController do
       topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
 
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
     it "creates a topic view" do
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.to change { TopicViewItem.count }
     end
   end
@@ -6962,6 +7252,45 @@ RSpec.describe TopicsController do
         },
       )
       expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+  end
+
+  describe "third-party analytics in embed mode" do
+    fab!(:topic)
+
+    before do
+      SiteSetting.embed_full_app = true
+      SiteSetting.gtm_container_id = "GTM-ABCDEF"
+      SiteSetting.adobe_analytics_tags_url = "https://assets.adobedtm.com/launch-EN.min.js"
+    end
+
+    def parsed_body
+      Nokogiri::HTML5.fragment(response.body)
+    end
+
+    it "renders analytics tags by default" do
+      get "/t/#{topic.slug}/#{topic.id}"
+      expect(parsed_body.css("#data-google-tag-manager")).to be_present
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_present
+    end
+
+    it "skips analytics tags when loaded in embed mode" do
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
+      expect(parsed_body.css("#data-google-tag-manager")).to be_empty
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_empty
+    end
+
+    it "still renders analytics tags in embed mode when suppression setting is disabled" do
+      SiteSetting.suppress_third_party_analytics_in_embed = false
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
+      expect(parsed_body.css("#data-google-tag-manager")).to be_present
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_present
     end
   end
 end

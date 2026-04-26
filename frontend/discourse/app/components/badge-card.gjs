@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
@@ -95,11 +95,11 @@ export default class BadgeCard extends Component {
               {{/if}}
             </h3>
             <div id="badge-summary-{{@badge.slug}}" class="badge-summary">
-              {{htmlSafe this.summary}}
+              {{trustHTML this.summary}}
             </div>
             {{#if this.displayCount}}
               <div id="badge-granted-{{@badge.slug}}" class="badge-granted">
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "badges.awarded"
                     count=this.displayCount

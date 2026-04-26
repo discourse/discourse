@@ -85,7 +85,6 @@ module("Unit | Utility | deprecated", function (hooks) {
   test("works with all other metadata", async function (assert) {
     deprecated("My message", {
       id: "discourse.my_deprecation_id",
-      dropFrom: "v100",
       since: "v1",
       url: "https://example.com",
     });
@@ -97,7 +96,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.deepEqual(
       this.warnStub.args[0],
       [
-        "DEPRECATION NOTICE: My message [deprecated since Discourse v1] [removal in Discourse v100] [deprecation id: discourse.my_deprecation_id] [info: https://example.com]",
+        "DEPRECATION NOTICE: My message [deprecated since Discourse v1] [deprecation id: discourse.my_deprecation_id] [info: https://example.com]",
       ],
       "console.warn is called with the correct arguments"
     );
@@ -132,6 +131,23 @@ module("Unit | Utility | deprecated", function (hooks) {
       ["discourse.my_deprecation_id"],
       "incrementCount is called with the correct arguments"
     );
+  });
+
+  test("includes console prefix from source identifier", function (assert) {
+    deprecated("My message", {
+      id: "discourse.test",
+      source: {
+        type: "theme",
+        id: "123",
+        name: "test-theme",
+        path: "/admin/customize/themes/123?safe_mode=no_themes",
+      },
+    });
+    assert.strictEqual(this.warnStub.callCount, 1);
+    assert.deepEqual(this.warnStub.args[0], [
+      "[THEME 123 'test-theme']",
+      "DEPRECATION NOTICE: My message [deprecation id: discourse.test]",
+    ]);
   });
 
   test("can silence individual deprecations in tests", function (assert) {

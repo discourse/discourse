@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import ChatEmojiAvatar from "./chat-emoji-avatar";
@@ -54,7 +54,7 @@ export default class ChatMessageInReplyToIndicator extends Component {
         {{/if}}
 
         <span class="chat-reply__excerpt">
-          {{replaceEmoji (htmlSafe @message.inReplyTo.excerpt)}}
+          {{replaceEmoji (trustHTML @message.inReplyTo.excerpt)}}
         </span>
       </LinkTo>
     {{/if}}

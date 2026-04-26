@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import { emojiUnescape } from "discourse/lib/text";
@@ -26,7 +26,7 @@ export default class EmojiImages extends Component {
       {{#if this.siteSettings.enable_emoji}}
         <div title={{this.titleText}}>
           {{#each this.emojiHTML as |html|}}
-            {{htmlSafe html}}
+            {{trustHTML html}}
           {{/each}}
         </div>
       {{else}}

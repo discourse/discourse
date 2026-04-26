@@ -61,7 +61,7 @@ class TopicTrackingState
     publish_read(topic.id, 1, topic.user)
   end
 
-  def self.publish_latest(topic, whisper = false)
+  def self.publish_latest(topic)
     return unless topic.regular?
 
     payload = {
@@ -72,15 +72,10 @@ class TopicTrackingState
 
     payload[:tags] = topic.tags.pluck(:id).map { |id| { id: id } } if include_tags_in_report?
 
-    message = { topic_id: topic.id, message_type: LATEST_MESSAGE_TYPE, payload: payload }
+    message = { topic_id: topic.id, message_type: LATEST_MESSAGE_TYPE, payload: }
 
-    group_ids =
-      if whisper
-        [Group::AUTO_GROUPS[:staff], *SiteSetting.whispers_allowed_groups_map].flatten
-      else
-        secure_category_group_ids(topic)
-      end
-    MessageBus.publish(LATEST_MESSAGE_BUS_CHANNEL, message.as_json, group_ids: group_ids)
+    group_ids = secure_category_group_ids(topic)
+    MessageBus.publish(LATEST_MESSAGE_BUS_CHANNEL, message.as_json, group_ids:)
   end
 
   def self.unread_channel_key(user_id)

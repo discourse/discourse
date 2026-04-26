@@ -5,7 +5,6 @@ module Reports::TimeToFirstResponse
 
   class_methods do
     def report_time_to_first_response(report)
-      category_filter = report.filters.dig(:category)
       category_id, include_subcategories = report.add_category_filter
 
       report.icon = "reply"

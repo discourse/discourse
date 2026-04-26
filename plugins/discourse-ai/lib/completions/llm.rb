@@ -25,6 +25,7 @@ module DiscourseAi
         def provider_names
           providers = %w[
             aws_bedrock
+            aws_bedrock_converse
             anthropic
             vllm
             hugging_face
@@ -178,8 +179,10 @@ module DiscourseAi
 
         model_params = { max_tokens: max_tokens, stop_sequences: stop_sequences }
 
-        model_params[:temperature] = temperature if temperature
-        model_params[:top_p] = top_p if top_p
+        if SiteSetting.ai_llm_temperature_top_p_enabled
+          model_params[:temperature] = temperature if temperature
+          model_params[:top_p] = top_p if top_p
+        end
 
         # internals expect symbolized keys, so we normalize here
         response_format =

@@ -1,4 +1,4 @@
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -10,7 +10,7 @@ export default class AdminUserBadgesRoute extends DiscourseRoute {
   }
 
   async setupController(controller, model) {
-    super.setupController(controller, new TrackedArray(model));
+    super.setupController(controller, trackedArray(model));
 
     // Find all badges.
     controller.loading = true;

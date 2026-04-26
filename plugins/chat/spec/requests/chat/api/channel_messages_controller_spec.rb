@@ -106,6 +106,29 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
         expect(user_option_queries.size).to eq(2)
       end
+
+      it "preloads thread original message mentions to avoid N+1 queries" do
+        channel.update!(threading_enabled: true)
+
+        3.times do
+          original_message = Fabricate(:chat_message, chat_channel: channel)
+          thread = Fabricate(:chat_thread, channel: channel, original_message: original_message)
+          mentioned = Fabricate(:user)
+          mentioned.set_status!("status", "wave")
+          Fabricate(:user_chat_mention, chat_message: original_message, user: mentioned)
+          reply =
+            Fabricate(:chat_message, chat_channel: channel, thread: thread, message: "thread reply")
+          thread.update!(last_message: reply)
+        end
+
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        queries = track_sql_queries { get "/chat/api/channels/#{channel.id}/messages" }
+        mention_queries =
+          queries.select { |q| q.include?('"chat_mentions"') && q.include?("chat_message_id") }
+
+        expect(mention_queries.size).to eq(1)
+      end
     end
   end
 
@@ -191,6 +214,19 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
       context "when user is not the author" do
         fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
+
+        it "returns a 422" do
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "abcdefg",
+              }
+
+          expect(response.status).to eq(422)
+        end
+      end
+
+      context "when current user is silenced" do
+        before { UserSilencer.new(current_user).silence }
 
         it "returns a 422" do
           put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",

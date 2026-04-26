@@ -356,6 +356,29 @@ acceptance("Search - Full Page", function (needs) {
       .hasValue("none in:likes", "removes deselected filter from search term");
   });
 
+  test("duplicate in: filters in search term are deduplicated", async function (assert) {
+    const inSelector = selectKit(IN_OPTIONS_SELECTOR);
+
+    await visit("/search?expanded=true");
+    await fillIn(".search-query", "test in:likes in:likes in:title in:title");
+
+    assert.strictEqual(
+      inSelector.header().value(),
+      "likes,title",
+      "deduplicates filters in the multi-select"
+    );
+
+    await inSelector.expand();
+    await inSelector.selectRowByValue("seen");
+
+    assert
+      .dom(".search-query")
+      .hasValue(
+        "test in:likes in:title in:seen",
+        "deduplicates filters in the search term when user interacts with the filter"
+      );
+  });
+
   test("update status through advanced search UI", async function (assert) {
     const statusSelector = selectKit(
       ".search-advanced-options .select-kit#search-status-options"

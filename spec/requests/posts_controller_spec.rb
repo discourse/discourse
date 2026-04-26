@@ -112,6 +112,66 @@ RSpec.describe PostsController do
       expect(parsed["username"]).to eq(new_post.user.username)
       expect(parsed["cooked"]).to eq(new_post.cooked)
     end
+
+    context "with version parameter" do
+      let(:post_with_revisions) { Fabricate(:post, user: user, version: 2) }
+      let(:post_revision) { Fabricate(:post_revision, post: post_with_revisions) }
+
+      it "returns the reverted content for a visible revision" do
+        post_revision
+        sign_in(user)
+        get "/posts/#{post_with_revisions.id}.json?version=1"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["cooked"]).to eq("<p>BEFORE</p>")
+      end
+
+      context "when the revision is hidden" do
+        before { post_revision.update!(hidden: true) }
+
+        it "rejects access for a regular user" do
+          sign_in(user)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "rejects access for an anonymous user" do
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "allows access for staff" do
+          sign_in(admin)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["cooked"]).to eq("<p>BEFORE</p>")
+        end
+      end
+
+      context "when edit history is not visible to the public" do
+        before { SiteSetting.edit_history_visible_to_public = false }
+
+        it "rejects access for an anonymous user" do
+          post_revision
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "rejects access for a regular user who is not the poster" do
+          other_user = Fabricate(:user)
+          sign_in(other_user)
+          post_revision
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "allows access for staff" do
+          post_revision
+          sign_in(admin)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe "#by_number" do
@@ -675,6 +735,21 @@ RSpec.describe PostsController do
                   },
                 }
           }.not_to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        it "respects top-level bypass_bump=false over nested bypass_bump=true" do
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  bypass_bump: false,
+                  post: {
+                    raw: "updated content",
+                    bypass_bump: true,
+                  },
+                },
+                as: :json
+          }.to change { wiki_post.topic.reload.bumped_at }
           expect(response.status).to eq(200)
         end
 
@@ -1639,6 +1714,45 @@ RSpec.describe PostsController do
         expect(Post.last.topic.tags).to contain_exactly(tag)
       end
 
+      context "with content localization enabled" do
+        fab!(:japanese_user) { Fabricate(:user, locale: "ja", refresh_auto_groups: true) }
+        fab!(:localized_tag) { Fabricate(:tag, name: "strategy", locale: "en") }
+        fab!(:tag_localization) do
+          Fabricate(:tag_localization, tag: localized_tag, locale: "ja", name: "戦略")
+        end
+
+        before do
+          SiteSetting.tagging_enabled = true
+          SiteSetting.content_localization_enabled = true
+          SiteSetting.content_localization_supported_locales = "en|ja"
+          sign_in(japanese_user)
+        end
+
+        it "creates a topic with localized tags" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: [{ id: localized_tag.id, name: "戦略" }],
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.topic.tags).to contain_exactly(localized_tag)
+        end
+
+        it "creates a topic with tags sent as strings" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: ["strategy"],
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.topic.tags).to contain_exactly(localized_tag)
+        end
+      end
+
       it "creates the topic and post with the right attributes" do
         post "/posts.json",
              params: {
@@ -2561,6 +2675,69 @@ RSpec.describe PostsController do
     end
   end
 
+  describe "#permanently_delete_check" do
+    fab!(:post)
+
+    before { SiteSetting.can_permanently_delete = true }
+
+    it "returns 404 for anonymous users" do
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for regular users" do
+      sign_in(user)
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for moderators" do
+      sign_in(moderator)
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    context "when logged in as admin" do
+      before { sign_in(admin) }
+
+      it "returns can_permanently_delete true when allowed" do
+        PostDestroyer.new(Fabricate(:admin), post).destroy
+
+        get "/posts/#{post.id}/permanently_delete_check.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(true)
+        expect(json["reason"]).to be_nil
+      end
+
+      it "returns the reason when the same admin must wait" do
+        PostDestroyer.new(admin, post).destroy
+
+        get "/posts/#{post.id}/permanently_delete_check.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(false)
+        expect(json["reason"]).to eq(
+          I18n.t("post.cannot_permanently_delete.wait_or_different_admin", time_left: "5 minutes"),
+        )
+      end
+
+      it "returns the reason when topic has undeleted posts" do
+        Fabricate(:post, topic: post.topic)
+        PostDestroyer.new(Fabricate(:admin), post).destroy
+
+        get "/posts/#{post.id}/permanently_delete_check.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(false)
+        expect(json["reason"]).to eq(I18n.t("post.cannot_permanently_delete.many_posts", count: 1))
+      end
+    end
+  end
+
   describe "#permanently_delete_revisions" do
     before { SiteSetting.can_permanently_delete = true }
 
@@ -2903,6 +3080,17 @@ RSpec.describe PostsController do
         expect(data[0]["id"]).to eq(post_deleted_by_admin.id)
         expect(data[0]["deleted_by"]["id"]).to eq(admin.id)
       end
+
+      it "denies access to non-staff users in delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        non_staff_user = Fabricate(:user, refresh_auto_groups: true)
+        group.add(non_staff_user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+
+        sign_in(non_staff_user)
+        get "/posts/#{user.username}/deleted.json"
+        expect(response).to be_forbidden
+      end
     end
   end
 
@@ -3180,6 +3368,23 @@ RSpec.describe PostsController do
         post_ids = json["private_posts"].map { |p| p["id"] }
 
         expect(post_ids).to eq([post_id])
+      end
+
+      it "does not include whisper posts for non-whisperer users" do
+        sign_in(user)
+
+        pm = Fabricate(:private_message_topic, recipient: user)
+        regular_post = Fabricate(:post, topic: pm)
+        whisper_post = Fabricate(:post, topic: pm, post_type: Post.types[:whisper])
+
+        get "/private-posts.json"
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        post_ids = json["private_posts"].map { |p| p["id"] }
+
+        expect(post_ids).to include(regular_post.id)
+        expect(post_ids).to_not include(whisper_post.id)
       end
 
       it "returns private posts for json" do

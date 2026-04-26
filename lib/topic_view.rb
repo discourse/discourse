@@ -4,6 +4,21 @@ class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10_000
   MIN_POST_READ_TIME = 4.0
 
+  include PostDependentCache
+
+  memoize_for_posts :all_post_actions
+  memoize_for_posts :reviewable_counts
+  memoize_for_posts :post_custom_fields
+  memoize_for_posts :user_custom_fields
+  memoize_for_posts :category_group_moderator_user_ids
+  memoize_for_posts :mentioned_users
+  memoize_for_posts :link_counts
+  memoize_for_posts :read_posts_set
+  memoize_for_posts :primary_group_names, :@group_names
+  memoize_for_posts :post_user_badges
+  memoize_for_posts :last_post
+  memoize_for_posts :preloaded_post_data_store
+
   def self.on_preload(&blk)
     (@preload ||= Set.new) << blk
   end
@@ -31,6 +46,7 @@ class TopicView
     :personal_message,
     :can_review_topic,
     :page,
+    :skip_post_loading,
   )
   alias queued_posts_enabled? queued_posts_enabled
 
@@ -45,8 +61,19 @@ class TopicView
     :include_related,
   )
 
+  # Generic store for plugins to stash per-post preloaded data (keyed by post_id)
+  # on the TopicView rather than on Post objects. Cleared automatically when the
+  # post collection changes via reset_post_collection.
+  def preloaded_post_data(namespace)
+    @preloaded_post_data_store&.dig(namespace)
+  end
+
+  def set_preloaded_post_data(namespace, data)
+    @preloaded_post_data_store ||= {}
+    @preloaded_post_data_store[namespace] = data
+  end
+
   delegate :category, to: :topic, allow_nil: true, private: true
-  delegate :require_reply_approval?, to: :category, prefix: true, allow_nil: true, private: true
 
   def self.print_chunk_size
     1000
@@ -131,27 +158,35 @@ class TopicView
 
     @page = @page.to_i > 1 ? @page.to_i : calculate_page
 
-    setup_filtered_posts
-    @filtered_posts = apply_default_scope(@filtered_posts)
-    filter_posts(options)
+    if @skip_post_loading
+      @filtered_posts = @topic.posts.none
+      @predelete_filtered_posts = @filtered_posts
+      @posts = []
+    else
+      setup_filtered_posts
+      @filtered_posts = apply_default_scope(@filtered_posts)
+      filter_posts(options)
 
-    if @posts && !@skip_custom_fields
-      if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
-        @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
+      if @posts && !@skip_custom_fields
+        if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
+          @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
+        end
+
+        if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
+          @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), allowed_fields)
+        end
       end
 
-      if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
-        @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), allowed_fields)
-      end
+      TopicView.preload(self)
     end
-
-    TopicView.preload(self)
 
     @draft_key = @topic.draft_key
     @draft_sequence = DraftSequence.current(@user, @draft_key)
 
     @can_review_topic = @guardian.can_review_topic?(@topic)
-    @queued_posts_enabled = NewPostManager.queue_enabled? || category_require_reply_approval?
+    @queued_posts_enabled =
+      NewPostManager.queue_enabled? ||
+        (@guardian.authenticated? && @guardian.reply_posting_review_required?(@topic.category))
     @personal_message = @topic.private_message?
   end
 
@@ -508,11 +543,8 @@ class TopicView
   end
 
   def topic_user
-    @topic_user ||=
-      begin
-        return nil if @user.blank?
-        @topic.topic_users.find_by(user_id: @user.id)
-      end
+    return @topic_user if instance_variable_defined?(:@topic_user)
+    @topic_user = @user.present? ? @topic.topic_users.find_by(user_id: @user.id) : nil
   end
 
   def has_bookmarks?
@@ -531,6 +563,7 @@ class TopicView
         :reminder_at,
         :name,
         :auto_delete_preference,
+        "posts.post_number",
       )
   end
 
@@ -870,21 +903,17 @@ class TopicView
   protected
 
   def read_posts_set
-    @read_posts_set ||=
-      begin
-        result = Set.new
-        return result if @user.blank?
-        return result if topic_user.blank?
-
-        post_numbers =
-          PostTiming
-            .where(topic_id: @topic.id, user_id: @user.id)
-            .where(post_number: @posts.pluck(:post_number))
-            .pluck(:post_number)
-
-        post_numbers.each { |pn| result << pn }
-        result
-      end
+    return @read_posts_set if instance_variable_defined?(:@read_posts_set)
+    result = Set.new
+    if @user.present? && topic_user.present?
+      post_numbers =
+        PostTiming
+          .where(topic_id: @topic.id, user_id: @user.id)
+          .where(post_number: @posts.pluck(:post_number))
+          .pluck(:post_number)
+      post_numbers.each { |pn| result << pn }
+    end
+    @read_posts_set = result
   end
 
   private
@@ -969,7 +998,11 @@ class TopicView
       elsif SiteSetting.tagging_enabled
         :tags
       end
-    Topic.with_deleted.includes(:category, tags_include).find_by(id: topic_or_topic_id)
+    nested_topic_include = :nested_topic if SiteSetting.nested_replies_enabled
+    Topic
+      .with_deleted
+      .includes(:category, nested_topic_include, tags_include)
+      .find_by(id: topic_or_topic_id)
   end
 
   def find_post_replies_ids(post_id)

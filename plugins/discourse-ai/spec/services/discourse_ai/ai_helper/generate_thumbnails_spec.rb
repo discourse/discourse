@@ -6,8 +6,8 @@ RSpec.describe DiscourseAi::AiHelper::GenerateThumbnails do
 
     fab!(:user)
     fab!(:admin)
-    fab!(:post_illustrator_persona) do
-      AiPersona.create!(
+    fab!(:post_illustrator_agent) do
+      AiAgent.create!(
         name: "Post Illustrator",
         description: "Generates images for posts",
         system_prompt: "Generate images",
@@ -49,10 +49,10 @@ RSpec.describe DiscourseAi::AiHelper::GenerateThumbnails do
     before do
       enable_current_plugin
       assign_fake_provider_to(:ai_default_llm_model)
-      SiteSetting.ai_helper_post_illustrator_persona = post_illustrator_persona.id
+      SiteSetting.ai_helper_post_illustrator_agent = post_illustrator_agent.id
 
-      # Configure PostIllustrator persona with the image tool
-      post_illustrator_persona.update!(tools: [["custom-#{image_tool.id}", nil, true]])
+      # Configure PostIllustrator agent with the image tool
+      post_illustrator_agent.update!(tools: [["custom-#{image_tool.id}", nil, true]])
     end
 
     context "when text parameter is missing" do
@@ -67,16 +67,16 @@ RSpec.describe DiscourseAi::AiHelper::GenerateThumbnails do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when persona is not found" do
-      before { SiteSetting.ai_helper_post_illustrator_persona = 99_999 }
+    context "when agent is not found" do
+      before { SiteSetting.ai_helper_post_illustrator_agent = 99_999 }
 
-      it { is_expected.to fail_to_find_a_model(:persona) }
+      it { is_expected.to fail_to_find_a_model(:agent) }
     end
 
-    context "when persona has no image generation tool" do
+    context "when agent has no image generation tool" do
       before do
-        # Remove tools from persona
-        post_illustrator_persona.update!(tools: [])
+        # Remove tools from agent
+        post_illustrator_agent.update!(tools: [])
       end
 
       it { is_expected.to fail_a_policy(:has_image_generation_tool) }
@@ -85,7 +85,7 @@ RSpec.describe DiscourseAi::AiHelper::GenerateThumbnails do
     context "when image generation succeeds" do
       before do
         # Mock the bot reply to return custom_raw with upload URL
-        allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(
+        allow_any_instance_of(DiscourseAi::Agents::Bot).to receive(
           :reply,
         ) do |_bot, _context, &block|
           block.call("", "![test](#{upload.short_url})", :partial_invoke)
@@ -103,16 +103,14 @@ RSpec.describe DiscourseAi::AiHelper::GenerateThumbnails do
     end
 
     context "when bot returns no custom_raw" do
-      before do
-        allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(:reply).and_return(nil)
-      end
+      before { allow_any_instance_of(DiscourseAi::Agents::Bot).to receive(:reply).and_return(nil) }
 
       it { is_expected.to fail_a_step(:generate_images) }
     end
 
     context "when bot returns custom_raw without upload URLs" do
       before do
-        allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(
+        allow_any_instance_of(DiscourseAi::Agents::Bot).to receive(
           :reply,
         ) do |_bot, _context, &block|
           block.call("Some text without uploads", nil, :custom_raw)
@@ -124,7 +122,7 @@ RSpec.describe DiscourseAi::AiHelper::GenerateThumbnails do
 
     context "when upload is not found" do
       before do
-        allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(
+        allow_any_instance_of(DiscourseAi::Agents::Bot).to receive(
           :reply,
         ) do |_bot, _context, &block|
           block.call("", "![test](upload://nonexistentsha1234567890123456789012)", :partial_invoke)

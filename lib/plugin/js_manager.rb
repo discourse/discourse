@@ -4,40 +4,40 @@ module Plugin
   class JsManager
     @cache = {}
 
-    def self.js_asset_exists?(plugin_name)
-      maybe_cache("js_asset_exists_#{plugin_name}") do
-        has_source_files_in_dir(plugin_name, "assets/javascripts")
+    def self.js_asset_exists?(plugin_directory_name)
+      maybe_cache("js_asset_exists_#{plugin_directory_name}") do
+        has_source_files_in_dir(plugin_directory_name, "assets/javascripts")
       end
     end
 
-    def self.admin_js_asset_exists?(plugin_name)
-      maybe_cache("admin_js_asset_exists_#{plugin_name}") do
-        has_source_files_in_dir(plugin_name, "admin/assets/javascripts")
+    def self.admin_js_asset_exists?(plugin_directory_name)
+      maybe_cache("admin_js_asset_exists_#{plugin_directory_name}") do
+        has_source_files_in_dir(plugin_directory_name, "admin/assets/javascripts")
       end
     end
 
-    def self.test_js_asset_exists?(plugin_name)
-      maybe_cache("test_js_asset_exists_#{plugin_name}") do
-        has_source_files_in_dir(plugin_name, "test/javascripts")
+    def self.test_js_asset_exists?(plugin_directory_name)
+      maybe_cache("test_js_asset_exists_#{plugin_directory_name}") do
+        has_source_files_in_dir(plugin_directory_name, "test/javascripts")
       end
     end
 
-    def self.read_manifest(plugin_name)
-      maybe_cache("manifest_#{plugin_name}") do
-        manifest_path = "#{Rails.root}/app/assets/generated/#{plugin_name}/manifest.json"
+    def self.read_manifest(plugin_directory_name)
+      maybe_cache("manifest_#{plugin_directory_name}") do
+        manifest_path = "#{Rails.root}/app/assets/generated/#{plugin_directory_name}/manifest.json"
         JSON.parse(File.read(manifest_path))
       rescue Errno::ENOENT
         {}
       end
     end
 
-    def self.digested_logical_path_for(plugin_name, entrypoint_name)
-      manifest_entry = read_manifest(plugin_name)[entrypoint_name]
+    def self.digested_logical_path_for(plugin_directory_name, entrypoint_name)
+      manifest_entry = read_manifest(plugin_directory_name)[entrypoint_name]
       "js/plugins/#{manifest_entry["fileName"].delete_suffix(".js")}" if manifest_entry
     end
 
-    def self.import_paths_for(plugin_name, entrypoint_name)
-      read_manifest(plugin_name)[entrypoint_name]["imports"].map do
+    def self.import_paths_for(plugin_directory_name, entrypoint_name)
+      read_manifest(plugin_directory_name)[entrypoint_name]["imports"].map do
         "js/plugins/#{it.delete_suffix(".js")}"
       end
     end
@@ -51,7 +51,7 @@ module Plugin
       end
 
       parallel_count = [Etc.nprocessors, 4].min
-      AssetProcessor.timeout = 30_000
+      AssetProcessor.timeout = 120_000
 
       Parallel.each(Discourse.plugins, in_processes: parallel_count) do |plugin|
         compile_js_bundle(plugin)
@@ -84,7 +84,11 @@ module Plugin
           full_path = File.join(js_base, file)
           if File.file?(full_path)
             normalized_file_path = file.sub(/\.js\.es6$/, ".js")
-            tree[normalized_file_path] = File.read(full_path)
+            content = File.read(full_path)
+            content = AssetProcessor.append_es6_deprecation(content, file) if file.end_with?(
+              ".js.es6",
+            )
+            tree[normalized_file_path] = content
             if name == "test" && file.match(%r{/(acceptance|integration|unit)/})
               if file.match?(/-test\.g?js$/)
                 entrypoints_config[name][:modules] << normalized_file_path
@@ -104,6 +108,7 @@ module Plugin
             AssetProcessor::BASE_COMPILER_VERSION,
             AssetProcessor.ember_version,
             minify?.to_s,
+            plugin.name,
           ].join,
         )
       base36_digest = hex_digest.to_i(16).to_s(36).first(8)
@@ -121,7 +126,7 @@ module Plugin
       if !cache? || !files_exist
         compiler =
           Plugin::JsCompiler.new(
-            plugin.directory_name,
+            plugin.name,
             minify: minify?,
             tree: tree,
             entrypoints: entrypoints_config,
@@ -170,7 +175,7 @@ module Plugin
             relative_path = Pathname.new(file).relative_path_from(Rails.root)
             log "- #{relative_path}"
 
-            plugin = Discourse.plugins.find { |p| file.start_with?(p.directory) }
+            plugin = Discourse.plugins.find { |p| file.start_with?(p.resolved_dir) }
             changed_plugins << plugin if plugin
           end
 
@@ -215,8 +220,9 @@ module Plugin
       end
     end
 
-    private_class_method def self.has_source_files_in_dir(plugin_name, dir)
-      Dir.glob("plugins/#{plugin_name}/#{dir}/**/*.{js,hbs,gjs,es6}") { break true } || false
+    private_class_method def self.has_source_files_in_dir(plugin_directory_name, dir)
+      Dir.glob("plugins/#{plugin_directory_name}/#{dir}/**/*.{js,hbs,gjs,es6}") { break true } ||
+        false
     end
   end
 end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe "Share conversation", type: :system do
+RSpec.describe "Share conversation" do
   fab!(:admin) { Fabricate(:admin, username: "ai_sharer") }
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model("gpt-4") }
@@ -44,14 +44,14 @@ RSpec.describe "Share conversation", type: :system do
     page.execute_script("window.navigator.clipboard.writeText('')")
   end
 
-  it "can share a conversation with a persona user" do
+  it "can share a conversation with a agent user" do
     clip_text = nil
 
-    persona = Fabricate(:ai_persona, name: "Tester")
-    persona.create_user!
+    agent = Fabricate(:ai_agent, name: "Tester")
+    agent.create_user!
 
     Fabricate(:post, topic: pm, user: admin, raw: "How do I do stuff?")
-    Fabricate(:post, topic: pm, user: persona.user, raw: "No idea")
+    Fabricate(:post, topic: pm, user: agent.user, raw: "No idea")
 
     visit(pm.url)
 

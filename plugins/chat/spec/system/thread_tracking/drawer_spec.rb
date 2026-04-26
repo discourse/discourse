@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Thread tracking state | drawer", type: :system do
+describe "Thread tracking state | drawer" do
   include ActiveSupport::Testing::TimeHelpers
 
   fab!(:current_user, :admin)

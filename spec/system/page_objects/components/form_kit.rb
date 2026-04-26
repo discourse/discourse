@@ -31,11 +31,13 @@ module PageObjects
 
       def value
         case control_type
-        when /input-/, "password"
+        when "input", /input-/, "password"
           component.find("input").value
         when "color"
           component.find("input[type='text']").value
-        when "icon", "multi-select"
+        when "icon"
+          PageObjects::Components::DIconGridPicker.new(component).value
+        when "multi-select"
           picker = PageObjects::Components::SelectKit.new(component)
           picker.value
         when "tag-chooser"
@@ -117,7 +119,7 @@ module PageObjects
 
       def fill_in(value)
         case control_type
-        when "input-text", "password", "input-date", "input-number"
+        when "input", /input-/, "password"
           component.find("input").fill_in(with: value)
         when "color"
           component.find("input[type='text']").fill_in(with: value)
@@ -133,11 +135,9 @@ module PageObjects
       def select(value)
         case control_type
         when "icon"
-          selector = component.find(".form-kit__control-icon")["id"]
-          picker = PageObjects::Components::SelectKit.new("#" + selector)
+          picker = PageObjects::Components::DIconGridPicker.new(component)
           picker.expand
-          picker.search(value)
-          picker.select_row_by_value(value)
+          picker.select_icon(value)
         when "multi-select"
           selector = component.find(".form-kit__control-custom > .multi-select")["id"]
           picker = PageObjects::Components::SelectKit.new("#" + selector)

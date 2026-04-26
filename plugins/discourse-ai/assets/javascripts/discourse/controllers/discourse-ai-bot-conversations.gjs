@@ -3,6 +3,6 @@ import Controller from "@ember/controller";
 
 export default class DiscourseAiBotConversations extends Controller {
   @tracked llm = null;
-  @tracked persona = null;
-  queryParams = ["llm", "persona"];
+  @tracked agent = null;
+  queryParams = ["llm", "agent"];
 }

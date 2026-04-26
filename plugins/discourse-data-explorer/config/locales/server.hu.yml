@@ -5,3 +5,41 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    data_explorer_enabled: "Adatböngésző engedélyezése"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Privát üzenet ütemezése az Adatkezelő eredményeivel
+        description: Ütemezett jelentések küldése az üzenetei közé
+        no_csv_allowed: "Az `attach_csv` mező használatakor a `csv` kiterjesztést hozzá kell adni az engedélyezett kiterjesztések listájához a webhely beállításaiban."
+      recurring_data_explorer_result_topic:
+        title: Bejegyzés ütemezése egy témában az Adatkezelő eredményeivel
+        description: Ütemezett jelentések közzététele egy meghatározott témában
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "Ütemezett jelentés ehhez: %{query_name}"
+        body: |
+          Szia %{recipient_name}, az Adatkezelő jelentésed elkészült.
+
+          Lekérdezés neve:
+          %{query_name}
+
+          Íme az eredmények:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Lekérdezés megtekintése az Adatkezelőben</a>
+
+          Jelentés létrehozva: %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Ütemezett jelentés ehhez: %{query_name}
+
+          Íme az eredmények:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Lekérdezés megtekintése az Adatkezelőben</a>
+
+          Jelentés létrehozva ekkor: %{created_at} (%{timezone})
+      upload_appendix: "Függelék: [%{filename}|melléklet](%{short_url})"

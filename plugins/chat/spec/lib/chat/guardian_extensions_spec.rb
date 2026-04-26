@@ -565,8 +565,14 @@ RSpec.describe Chat::GuardianExtensions do
 
       context "when user is owner of the message" do
         context "when chatable is a category" do
-          it "allows to restore if owner can see category" do
+          it "allows owner to restore when deleted by owner" do
+            message.trash!(guardian.user)
             expect(guardian.can_restore_chat?(message, chatable)).to eq(true)
+          end
+
+          it "disallows owner to restore when deleted by staff" do
+            message.trash!(staff_guardian.user)
+            expect(guardian.can_restore_chat?(message, chatable)).to eq(false)
           end
 
           context "when category is restricted" do

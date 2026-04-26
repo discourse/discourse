@@ -2,7 +2,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isHTMLSafe } from "@ember/template";
@@ -13,6 +12,7 @@ import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
+import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
@@ -220,32 +220,106 @@ export default class Composer extends RestModel {
   draftSaving = false;
   draftForceSave = false;
   showFullScreenExitPrompt = false;
-  @reads("site.archetypes") archetypes;
-  @equal("action", CREATE_SHARED_DRAFT) sharedDraft;
-  @equal("action", CREATE_TOPIC) creatingTopic;
-  @equal("action", CREATE_SHARED_DRAFT) creatingSharedDraft;
-  @equal("action", PRIVATE_MESSAGE) creatingPrivateMessage;
-  @not("creatingPrivateMessage") notCreatingPrivateMessage;
-  @not("privateMessage") notPrivateMessage;
-  @or("creatingTopic", "editingFirstPost") topicFirstPost;
-  @equal("composeState", OPEN) viewOpen;
-  @equal("composeState", DRAFT) viewDraft;
-  @equal("composeState", FULLSCREEN) viewFullscreen;
-  @or("viewOpen", "viewFullscreen") viewOpenOrFullscreen;
-  @and("editingPost", "post.firstPost") editingFirstPost;
 
-  @or(
+  @tracked _categoryId = null;
+
+  @tracked _archetypesOverride;
+
+  @computed("site.archetypes")
+  get archetypes() {
+    if (this._archetypesOverride !== undefined) {
+      return this._archetypesOverride;
+    }
+    return this.site?.archetypes;
+  }
+
+  set archetypes(value) {
+    this._archetypesOverride = value;
+  }
+
+  @computed("action")
+  get sharedDraft() {
+    return this.action === CREATE_SHARED_DRAFT;
+  }
+
+  @computed("action")
+  get creatingTopic() {
+    return this.action === CREATE_TOPIC;
+  }
+
+  @computed("action")
+  get creatingSharedDraft() {
+    return this.action === CREATE_SHARED_DRAFT;
+  }
+
+  @computed("action")
+  get creatingPrivateMessage() {
+    return this.action === PRIVATE_MESSAGE;
+  }
+
+  @computed("creatingPrivateMessage")
+  get notCreatingPrivateMessage() {
+    return !this.creatingPrivateMessage;
+  }
+
+  @computed("privateMessage")
+  get notPrivateMessage() {
+    return !this.privateMessage;
+  }
+
+  @computed("creatingTopic", "editingFirstPost")
+  get topicFirstPost() {
+    return this.creatingTopic || this.editingFirstPost;
+  }
+
+  @computed("composeState")
+  get viewOpen() {
+    return this.composeState === OPEN;
+  }
+
+  @computed("composeState")
+  get viewDraft() {
+    return this.composeState === DRAFT;
+  }
+
+  @computed("composeState")
+  get viewFullscreen() {
+    return this.composeState === FULLSCREEN;
+  }
+
+  @computed("viewOpen", "viewFullscreen")
+  get viewOpenOrFullscreen() {
+    return this.viewOpen || this.viewFullscreen;
+  }
+
+  @computed("editingPost", "post.firstPost")
+  get editingFirstPost() {
+    return this.editingPost && this.post?.firstPost;
+  }
+
+  @computed(
     "creatingTopic",
     "creatingPrivateMessage",
     "editingFirstPost",
     "creatingSharedDraft"
   )
-  canEditTitle;
+  get canEditTitle() {
+    return (
+      this.creatingTopic ||
+      this.creatingPrivateMessage ||
+      this.editingFirstPost ||
+      this.creatingSharedDraft
+    );
+  }
 
-  @and("canEditTitle", "notCreatingPrivateMessage", "notPrivateMessage")
-  canCategorize;
-
-  @tracked _categoryId = null;
+  @computed("canEditTitle", "notCreatingPrivateMessage", "notPrivateMessage")
+  get canCategorize() {
+    return (
+      this.canEditTitle &&
+      this.notCreatingPrivateMessage &&
+      this.notPrivateMessage
+    );
+  }
 
   @computed("reply", "originalText")
   get replyDirty() {
@@ -257,9 +331,13 @@ export default class Composer extends RestModel {
     return (this.title || "").trim() !== (this.originalTitle || "").trim();
   }
 
-  @computed("replyDirty", "titleDirty", "hasMetaData")
+  @computed("replyDirty", "titleDirty", "canEditTitle", "hasMetaData")
   get anyDirty() {
-    return this.replyDirty || this.titleDirty || this.hasMetaData;
+    return (
+      this.replyDirty ||
+      (this.canEditTitle && this.titleDirty) ||
+      this.hasMetaData
+    );
   }
 
   @dependentKeyCompat
@@ -450,6 +528,11 @@ export default class Composer extends RestModel {
       : "composer.title_placeholder";
   }
 
+  @computed("category.topic_title_placeholder")
+  get categoryTitlePlaceholder() {
+    return this.category?.topic_title_placeholder || null;
+  }
+
   @computed("action", "post", "topic", "topic.title")
   get replyOptions() {
     const options = {
@@ -622,7 +705,7 @@ export default class Composer extends RestModel {
 
   @computed("metaData")
   get hasMetaData() {
-    return this.metaData ? isEmpty(Object.keys(this.metaData)) : false;
+    return this.metaData ? !isEmpty(Object.keys(this.metaData)) : false;
   }
 
   @computed("minimumTitleLength", "titleLength")
@@ -984,11 +1067,11 @@ export default class Composer extends RestModel {
           post,
           reply: post.raw,
           originalText: post.raw,
+          originalTitle: this.topic.title,
         });
 
         if (post.post_number === 1 && this.canEditTitle) {
           this.setProperties({
-            originalTitle: this.topic.title,
             originalTags: this.topic.tags,
           });
         }
@@ -1113,7 +1196,7 @@ export default class Composer extends RestModel {
     }
 
     const rollback = throwAjaxError((error) => {
-      post.setProperties("cooked", oldCooked);
+      post.setProperties({ cooked: oldCooked });
       this.set("composeState", OPEN);
       if (error.jqXHR && error.jqXHR.status === 409) {
         this.set("editConflict", true);
@@ -1142,10 +1225,7 @@ export default class Composer extends RestModel {
       let val = this.get(serializer[f]);
       if (typeof val !== "undefined") {
         if (f === "tags" && Array.isArray(val)) {
-          // extract tag names from objects for backend compatibility
-          if (val.some((t) => typeof t === "object" && t !== null)) {
-            val = val.map((t) => (typeof t === "object" ? t.name : t));
-          }
+          val = serializeTags(val);
         }
         set(dest, f, val);
       }
@@ -1342,6 +1422,10 @@ export default class Composer extends RestModel {
     return true;
   }
 
+  serializeDraftData() {
+    return this.serialize(_draft_serializer);
+  }
+
   saveDraft() {
     if (!this.canSaveDraft) {
       return Promise.reject();
@@ -1349,15 +1433,13 @@ export default class Composer extends RestModel {
 
     this.set("draftSaving", true);
 
-    const data = this.serialize(_draft_serializer);
-
     const draftSequence = this.draftSequence;
     this.set("draftSequence", this.draftSequence + 1);
 
     return Draft.save(
       this.draftKey,
       draftSequence,
-      data,
+      this.serializeDraftData(),
       this.messageBus.clientId,
       { forceSave: this.draftForceSave }
     )

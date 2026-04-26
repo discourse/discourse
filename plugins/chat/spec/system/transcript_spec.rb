@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Quoting chat message transcripts", type: :system do
+RSpec.describe "Quoting chat message transcripts" do
   fab!(:current_user, :user)
   fab!(:admin)
   fab!(:chat_channel_1, :chat_channel)

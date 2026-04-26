@@ -72,6 +72,14 @@ uk:
       starred: "Позначено зірочкою"
       starred_channels: "Позначені канали"
       starred_channels_empty: "Ви ще не позначили жодного каналу зірочкою. Позначте канали зірочкою, щоб побачити їх тут для швидкого доступу."
+      pinned_messages:
+        title: "Закріплені повідомлення"
+        close: "Закрити закріплені повідомлення"
+        pinned_by_you: "Закріплено вами"
+        pinned_by_user: "Закріплено користувачем %{username}"
+      no_pinned_messages: "У цьому каналі немає закріплених повідомлень."
+      pin_message: "Закріпити повідомлення"
+      unpin_message: "Відкріпити повідомлення"
       pinned: "Закріплені"
       browse_all_channels: "Переглянути всі канали"
       see_in: "Дивіться в"
@@ -98,6 +106,8 @@ uk:
         unstar_channel: "Зняти зірочку з каналу"
         close_channel: "Закрити канал"
         open_channel: "Відкрити канал"
+        open_channel_disabled_archived: "Архівні канали не можна відкрити повторно."
+        open_channel_disabled_read_only: "Канали лише для читання не можна повторно відкрити."
         archive_channel: "Архівувати канал"
         delete_channel: "Видалити канал"
         join_channel: "Приєднатися до каналу"
@@ -318,7 +328,6 @@ uk:
       retry_staged_message:
         title: "Помилка мережі"
         action: "Надіслати ще раз?"
-      unreliable_network: "Мережа ненадійна, надсилання повідомлень та збереження чернетки можуть не працювати"
       bookmark_message: "Додати закладку"
       bookmark_message_edit: "Редагувати закладку"
       restore: "Відновити видалене повідомлення"
@@ -334,6 +343,11 @@ uk:
         other: "У вас %{count} непрочитані обговорення"
       scroll_to_bottom: "Прокрутити вниз"
       scroll_to_new_messages: "Переглянути нові повідомлення"
+      new_messages:
+        one: "%{count} нове повідомлення"
+        few: "%{count} нових повідомлення"
+        many: "%{count} нових повідомлень"
+        other: "%{count} нових повідомлень"
       sound:
         title: "Звук сповіщення у чаті"
       sounds:

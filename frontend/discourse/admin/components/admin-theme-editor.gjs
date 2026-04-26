@@ -7,11 +7,10 @@ import { action, computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
 import icon from "discourse/helpers/d-icon";
-import { fmt } from "discourse/lib/computed";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { gt, lte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -41,7 +40,10 @@ export default class AdminThemeEditor extends Component {
 
   warning = null;
 
-  @fmt("fieldName", "currentTargetName", "%@|%@") editorId;
+  @computed("fieldName", "currentTargetName")
+  get editorId() {
+    return `${this.fieldName}|${this.currentTargetName}`;
+  }
 
   get visibleTargets() {
     return this.theme.targets.filter((target) => {
@@ -239,7 +241,7 @@ export default class AdminThemeEditor extends Component {
       {{/if}}
 
       {{#if this.warning}}
-        <pre class="field-warning">{{htmlSafe this.warning}}</pre>
+        <pre class="field-warning">{{trustHTML this.warning}}</pre>
       {{/if}}
 
       <div class="field-info">

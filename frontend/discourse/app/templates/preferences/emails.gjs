@@ -1,5 +1,5 @@
 import { fn, hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import SaveControls from "discourse/components/save-controls";
@@ -140,7 +140,7 @@ export default <template>
           @checked={{@controller.model.user_option.mailing_list_mode}}
         />
         <div class="instructions">
-          {{htmlSafe (i18n "user.mailing_list_mode.instructions")}}
+          {{trustHTML (i18n "user.mailing_list_mode.instructions")}}
         </div>
         {{#if @controller.model.user_option.mailing_list_mode}}
           <div

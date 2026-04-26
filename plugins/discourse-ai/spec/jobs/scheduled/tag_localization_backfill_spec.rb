@@ -42,9 +42,9 @@ describe Jobs::TagLocalizationBackfill do
 
   it "does not enqueue when credits are unavailable" do
     llm_model = Fabricate(:llm_model)
-    short_text_persona = Fabricate(:ai_persona)
-    short_text_persona.update!(default_llm_id: llm_model.id)
-    SiteSetting.ai_translation_short_text_translator_persona = short_text_persona.id
+    short_text_agent = Fabricate(:ai_agent)
+    short_text_agent.update!(default_llm_id: llm_model.id)
+    SiteSetting.ai_translation_short_text_translator_agent = short_text_agent.id
 
     LlmCreditAllocation.stubs(:credits_available?).with(llm_model).returns(false)
 

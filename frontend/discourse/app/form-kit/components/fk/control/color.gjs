@@ -1,10 +1,10 @@
-import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import {
@@ -22,7 +22,7 @@ function isColorUsed(usedColors, color) {
 }
 
 function colorStyle(color) {
-  return htmlSafe(`background-color: #${color};`);
+  return trustHTML(`background-color: #${color};`);
 }
 
 function colorLabel(usedColors, color) {
@@ -60,13 +60,13 @@ function colorLuminanceClass(color) {
   return calculateLuminance(color) > 0.5 ? "--is-light" : "--is-dark";
 }
 
-export default class FKControlColor extends Component {
+export default class FKControlColor extends FKBaseControl {
   static controlType = "color";
 
   @service currentUser;
 
   get showPrefix() {
-    return !this.args.allowNamedColors;
+    return this.args.prefixHex || !this.args.allowNamedColors;
   }
 
   get maxLength() {
@@ -103,8 +103,13 @@ export default class FKControlColor extends Component {
     );
   }
 
-  get normalizedValueForPicker() {
+  get bareValue() {
     const value = this.args.field.value;
+    return value?.replace(/^#/, "") ?? "";
+  }
+
+  get normalizedValueForPicker() {
+    const value = this.bareValue;
     if (!value) {
       return "#000000";
     }
@@ -121,7 +126,7 @@ export default class FKControlColor extends Component {
   }
 
   get pickerIconClass() {
-    const value = this.args.field.value;
+    const value = this.bareValue;
     if (!value || !isValidHex(value)) {
       return "--is-light";
     }
@@ -130,33 +135,41 @@ export default class FKControlColor extends Component {
     return calculateLuminance(hex) > 0.5 ? "--is-light" : "--is-dark";
   }
 
+  setValue(value) {
+    if (this.args.prefixHex && value && isValidHex(value.replace(/^#/, ""))) {
+      value = value.startsWith("#") ? value : `#${value}`;
+    }
+    this.args.field.set(value);
+  }
+
   @action
   handleTextInput(event) {
-    this.args.field.set(event.target.value);
+    this.setValue(event.target.value);
   }
 
   @action
   handleBlur() {
     if (!this.args.field.value && this.args.fallbackValue) {
-      this.args.field.set(this.args.fallbackValue);
+      this.setValue(this.args.fallbackValue);
     }
   }
 
   @action
   handlePickerInput(event) {
-    this.args.field.set(event.target.value.replace(/^#/, ""));
+    const value = event.target.value.replace(/^#/, "");
+    this.setValue(value);
   }
 
   @action
   handlePaste(event) {
     event.preventDefault();
     const colorCode = event.clipboardData.getData("text/plain") ?? "";
-    this.args.field.set(colorCode.replace(/^#/, ""));
+    this.setValue(colorCode.replace(/^#/, ""));
   }
 
   @action
   selectColor(color, closeMenu) {
-    this.args.field.set(color);
+    this.setValue(color);
     if (typeof closeMenu === "function") {
       closeMenu();
     }
@@ -170,10 +183,14 @@ export default class FKControlColor extends Component {
         {{/if}}
         <input
           type="text"
-          value={{@field.value}}
+          value={{this.bareValue}}
           maxlength={{this.maxLength}}
           class="form-kit__control-color-input-hex"
           disabled={{@field.disabled}}
+          id={{@field.id}}
+          name={{@field.name}}
+          aria-invalid={{if @field.error "true"}}
+          aria-describedby={{if @field.error @field.errorId}}
           {{on "input" this.handleTextInput}}
           {{on "blur" this.handleBlur}}
           {{on "paste" this.handlePaste}}

@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
 import decorateCookedContent from "../modifiers/decorate-cooked-content";
 import decoratePollOption from "../modifiers/decorate-poll-option";
 
 export default class PollResultsRankedChoiceComponent extends Component {
   get rankedChoiceWinnerText() {
-    return htmlSafe(
+    return trustHTML(
       i18n("poll.ranked_choice.winner", {
         count: this.args.rankedChoiceOutcome?.round_activity?.length,
         winner: this.args.rankedChoiceOutcome?.winning_candidate?.html,

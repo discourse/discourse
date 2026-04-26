@@ -7,37 +7,41 @@ module DiscourseAi
     CACHE_TTL = 5.seconds
 
     params do
-      attribute :persona_ids, :array, default: []
+      attribute :agent_ids, :array, default: []
       attribute :features, :array, default: []
       attribute :llm_model_ids, :array, default: []
 
-      validates :persona_ids, length: { maximum: 100 }
+      validates :agent_ids, length: { maximum: 100 }
       validates :features, length: { maximum: 100 }
       validates :llm_model_ids, length: { maximum: 100 }
 
       before_validation do
-        self.persona_ids = Array(persona_ids).compact.map(&:to_i).uniq
+        self.agent_ids = Array(agent_ids).compact.map(&:to_i).uniq
         self.features = Array(features).compact.map(&:to_s).uniq
         self.llm_model_ids = Array(llm_model_ids).compact.map(&:to_i).uniq
       end
     end
 
-    step :check_personas
+    step :check_agents
     step :check_features
     step :check_llm_models
 
     private
 
-    def check_personas(params:)
-      context[:personas] = {}
-      return true if params.persona_ids.blank?
+    def check_agents(params:, guardian:)
+      context[:agents] = {}
+      return true if params.agent_ids.blank?
 
-      # Batch load personas
-      personas = AiPersona.where(id: params.persona_ids).to_a
+      # Batch load agents scoped to enabled and user-accessible
+      agents =
+        AiAgent
+          .where(id: params.agent_ids, enabled: true)
+          .to_a
+          .select { |a| guardian.user.in_any_groups?(a.allowed_group_ids) }
 
       # Collect all LLM model IDs needed
       llm_model_ids =
-        personas.map { |p| p.default_llm_id || SiteSetting.ai_default_llm_model }.compact.uniq
+        agents.map { |p| p.default_llm_id || SiteSetting.ai_default_llm_model }.compact.uniq
 
       # Batch load LLM models with their credit allocations and daily usage
       llm_models =
@@ -46,12 +50,12 @@ module DiscourseAi
           .includes(llm_credit_allocation: :daily_usages)
           .index_by(&:id)
 
-      personas.each do |persona|
-        llm_model_id = persona.default_llm_id || SiteSetting.ai_default_llm_model
+      agents.each do |agent|
+        llm_model_id = agent.default_llm_id || SiteSetting.ai_default_llm_model
         llm_model = llm_models[llm_model_id]
         next unless llm_model&.credit_system_enabled?
 
-        context[:personas][persona.id] = {
+        context[:agents][agent.id] = {
           llm_model_id: llm_model.id,
           credit_status: cached_credit_status(llm_model),
         }
@@ -100,9 +104,10 @@ module DiscourseAi
       true
     end
 
-    def check_llm_models(params:)
+    def check_llm_models(params:, guardian:)
       context[:llm_models] = {}
       return true if params.llm_model_ids.blank?
+      return true unless guardian.is_staff?
 
       # Batch load LLM models with their credit allocations and daily usage
       llm_models =

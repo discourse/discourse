@@ -98,7 +98,7 @@ fr:
         title: Épingler le sujet
         description: Épingle un sujet spécifié à une date donnée
       banner_topic:
-        title: Créer un sujet en bannière
+        title: Convertir le sujet en bannière
         description: Transformer un sujet en bannière
       gift_exchange:
         title: Échange de cadeaux
@@ -112,7 +112,7 @@ fr:
         title: Suspendre l'utilisateur par e-mail
         description: Suspendez automatiquement un compte en fonction de l'adresse e-mail
       user_global_notice:
-        title: Avis global de l'utilisateur
+        title: Avis global pour l'utilisateur
         description: Permet d'afficher un avis global pour un utilisateur
       user_group_membership_through_badge:
         title: Adhésion à un groupe d'utilisateurs par le biais d'un badge
@@ -126,7 +126,7 @@ fr:
       send_pms_with_api_call:
         doc: Lorsque vous utilisez le script « send pms » avec le déclencheur « api call », le paramètre « usernames » de votre requête sera utilisé pour remplir la liste des destinataires.
       topic_required_words:
-        title: Mots requis pour le sujet
+        title: Mots requis dans le sujet
         description: Permet de définir une liste de mots obligatoires sur un sujet, au moins un mot doit être utilisé dans chaque publication.
         doc: Les mots obligatoires du sujet nécessitent un sujet. Lorsqu'une publication est éditée/créée, elle sera validée par rapport à la liste de mots, au moins un mot doit y être présent.
         errors:

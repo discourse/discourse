@@ -123,24 +123,30 @@ export default class AdminFontsForm extends Component {
         @title={{i18n "admin.config.fonts.form.base_font.title"}}
         @validation="required"
         @format="full"
+        @type="custom"
         as |field|
       >
-        <AdminFontChooser
-          @field={{field}}
-          @selectedFont={{transientData.base_font}}
-        />
+        <field.Control>
+          <AdminFontChooser
+            @field={{field}}
+            @selectedFont={{transientData.base_font}}
+          />
+        </field.Control>
       </form.Field>
       <form.Field
         @name="heading_font"
         @title={{i18n "admin.config.fonts.form.heading_font.title"}}
         @validation="required"
         @format="full"
+        @type="custom"
         as |field|
       >
-        <AdminFontChooser
-          @field={{field}}
-          @selectedFont={{transientData.heading_font}}
-        />
+        <field.Control>
+          <AdminFontChooser
+            @field={{field}}
+            @selectedFont={{transientData.heading_font}}
+          />
+        </field.Control>
       </form.Field>
       <form.Field
         @name="default_text_size"
@@ -150,9 +156,10 @@ export default class AdminFontsForm extends Component {
         }}
         @validation="required"
         @format="full"
+        @type="custom"
         as |field|
       >
-        <field.Custom>
+        <field.Control>
           {{#each DEFAULT_TEXT_SIZES as |textSize|}}
             <DButton
               @action={{fn this.setButtonValue field.set textSize}}
@@ -163,7 +170,7 @@ export default class AdminFontsForm extends Component {
               }}
             >{{textSize}}</DButton>
           {{/each}}
-        </field.Custom>
+        </field.Control>
       </form.Field>
       <form.Submit />
     </Form>

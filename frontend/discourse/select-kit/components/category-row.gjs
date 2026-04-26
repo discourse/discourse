@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty, isNone } from "@ember/utils";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
@@ -119,7 +119,7 @@ export default class CategoryRow extends Component {
 
   @cached
   get badgeForCategory() {
-    return htmlSafe(
+    return trustHTML(
       categoryBadgeHTML(this.category, {
         link: false,
         allowUncategorized:
@@ -311,7 +311,7 @@ export default class CategoryRow extends Component {
           </div>
         {{/if}}
       {{else}}
-        {{htmlSafe this.label}}
+        {{trustHTML this.label}}
       {{/if}}
     </div>
   </template>

@@ -34,6 +34,10 @@ module PageObjects
         )
       end
 
+      def has_name?(name)
+        find(".group-name input").value == name
+      end
+
       def has_tag_in_group?(tag_name)
         has_css?(".group-tags-list .tag-chooser", text: tag_name)
       end

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import IpLookup from "discourse/components/reviewable/ip-lookup";
 import { shortDate } from "discourse/lib/formatter";
 import { i18n } from "discourse-i18n";
@@ -84,7 +84,7 @@ export default class ReviewableInsights extends Component {
     insights.push({
       icon: "users",
       label: i18n("review.insights.user_activity"),
-      description: htmlSafe(activities.join(", ")),
+      description: trustHTML(activities.join(", ")),
     });
 
     // Visibility insight

@@ -85,8 +85,7 @@ RSpec.describe Jobs::ExportUserArchive do
       expect(system_message.first_post.raw).to eq(
         I18n.t(
           "system_messages.csv_export_succeeded.text_body_template",
-          download_link:
-            "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.human_filesize})",
+          download_link: UploadMarkdown.new(upload).attachment_markdown,
         ).chomp,
       )
 
@@ -145,8 +144,7 @@ RSpec.describe Jobs::ExportUserArchive do
         expect(system_message.first_post.raw).to eq(
           I18n.t(
             "system_messages.csv_export_succeeded.text_body_template",
-            download_link:
-              "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.human_filesize})",
+            download_link: UploadMarkdown.new(upload).attachment_markdown,
           ).chomp,
         )
       end
@@ -214,6 +212,10 @@ RSpec.describe Jobs::ExportUserArchive do
 
       expect(post1["reply_count"]).to eq(1)
       expect(post2["reply_count"]).to eq(0)
+
+      expect(post1["post_id"]).to eq(normal_post.id)
+      expect(post2["post_id"]).to eq(subsubpost.id)
+      expect(post3["post_id"]).to eq(message_post.id)
     end
 
     it "can export a post from a deleted category" do

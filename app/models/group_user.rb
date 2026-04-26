@@ -5,18 +5,9 @@ class GroupUser < ActiveRecord::Base
   belongs_to :user
 
   before_create :set_notification_level
-  after_destroy :grant_other_available_title
-  after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
-  after_save :update_title
 
-  after_save :set_primary_group
-
-  after_save :grant_trust_level
-  after_save :set_category_notifications
-  after_save :set_tag_notifications
-
-  after_commit :increase_group_user_count, on: [:create]
-  after_commit :decrease_group_user_count, on: [:destroy]
+  after_commit :sync_add_via_manager, on: :create
+  after_commit :sync_remove_via_manager, on: :destroy
 
   def self.notification_levels
     NotificationLevels.all
@@ -88,134 +79,78 @@ class GroupUser < ActiveRecord::Base
     self.notification_level = group&.default_notification_level || 3
   end
 
-  def set_primary_group
-    user.update!(primary_group: group) if group.primary_group
-  end
-
-  def remove_primary_and_flair_group
-    return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to update
-
-    updates = {}
-    updates[:primary_group_id] = nil if user.primary_group_id == group_id
-    updates[:flair_group_id] = nil if user.flair_group_id == group_id
-
-    user.update(updates) if updates.present?
-  end
-
-  def grant_other_available_title
-    if group.title.present? && group.title == user.title
-      user.update_attribute(:title, user.next_best_title)
-    end
-  end
-
-  def update_title
-    if group.title.present?
-      DB.exec(
-        "
-        UPDATE users SET title = :title
-        WHERE (title IS NULL OR title = '') AND id = :id",
-        id: user_id,
-        title: group.title,
-      )
-    end
-  end
-
-  def grant_trust_level
-    return if group.grant_trust_level.nil? || group.grant_trust_level.zero?
-
-    TrustLevelGranter.grant(group.grant_trust_level, user)
-  end
-
-  def recalculate_trust_level
-    return if group.grant_trust_level.nil? || group.grant_trust_level.zero?
-    return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to recalculate
-
-    Promotion.recalculate(user, use_previous_trust_level: true)
-  end
-
-  def set_category_notifications
-    self.class.set_category_notifications(group, user)
-  end
-
   def self.set_category_notifications(group, user)
-    group_levels =
-      group
-        .group_category_notification_defaults
-        .each_with_object({}) do |r, h|
-          h[r.notification_level] ||= []
-          h[r.notification_level] << r.category_id
-        end
-
-    return if group_levels.empty?
-
-    user_levels =
-      CategoryUser
-        .where(user_id: user.id)
-        .each_with_object({}) do |r, h|
-          h[r.notification_level] ||= []
-          h[r.notification_level] << r.category_id
-        end
-
-    higher_level_category_ids = user_levels.values.flatten
-
-    %i[muted regular tracking watching_first_post watching].each do |level|
-      level_num = NotificationLevels.all[level]
-      higher_level_category_ids -= (user_levels[level_num] || [])
-      if group_category_ids = group_levels[level_num]
-        CategoryUser.batch_set(
-          user,
-          level,
-          group_category_ids + (user_levels[level_num] || []) - higher_level_category_ids,
-        )
-      end
-    end
-  end
-
-  def set_tag_notifications
-    self.class.set_tag_notifications(group, user)
+    bulk_set_category_notifications(group, [user.id])
   end
 
   def self.set_tag_notifications(group, user)
-    group_levels =
-      group
-        .group_tag_notification_defaults
-        .each_with_object({}) do |r, h|
-          h[r.notification_level] ||= []
-          h[r.notification_level] << r.tag_id
-        end
+    bulk_set_tag_notifications(group, [user.id])
+  end
 
-    return if group_levels.empty?
+  def self.bulk_set_category_notifications(group, user_ids)
+    defaults = group.group_category_notification_defaults.to_a
+    return if defaults.empty?
 
-    user_levels =
-      TagUser
-        .where(user_id: user.id)
-        .each_with_object({}) do |r, h|
-          h[r.notification_level] ||= []
-          h[r.notification_level] << r.tag_id
-        end
-
-    higher_level_tag_ids = user_levels.values.flatten
-
-    %i[muted regular tracking watching_first_post watching].each do |level|
-      level_num = NotificationLevels.all[level]
-      higher_level_tag_ids -= (user_levels[level_num] || [])
-      if group_tag_ids = group_levels[level_num]
-        TagUser.batch_set(
-          user,
-          level,
-          group_tag_ids + (user_levels[level_num] || []) - higher_level_tag_ids,
-        )
-      end
+    defaults.each do |default|
+      DB.exec(
+        <<~SQL,
+          INSERT INTO category_users (user_id, category_id, notification_level)
+          SELECT unnest(ARRAY[:user_ids]::int[]), :category_id, :notification_level
+          ON CONFLICT (user_id, category_id) DO UPDATE
+            SET notification_level = #{semantically_higher_notification_level_sql("EXCLUDED.notification_level", "category_users.notification_level")}
+        SQL
+        user_ids: user_ids,
+        category_id: default.category_id,
+        notification_level: default.notification_level,
+      )
     end
+
+    CategoryUser.auto_watch(user_ids: user_ids)
+    CategoryUser.auto_track(user_ids: user_ids)
   end
 
-  def increase_group_user_count
-    Group.increment_counter(:user_count, self.group_id)
+  def self.bulk_set_tag_notifications(group, user_ids)
+    defaults = group.group_tag_notification_defaults.to_a
+    return if defaults.empty?
+
+    defaults.each do |default|
+      DB.exec(
+        <<~SQL,
+          INSERT INTO tag_users (user_id, tag_id, notification_level, created_at, updated_at)
+          SELECT unnest(ARRAY[:user_ids]::int[]), :tag_id, :notification_level, NOW(), NOW()
+          ON CONFLICT (user_id, tag_id) DO UPDATE
+            SET notification_level = #{semantically_higher_notification_level_sql("EXCLUDED.notification_level", "tag_users.notification_level")},
+                updated_at = NOW()
+        SQL
+        user_ids: user_ids,
+        tag_id: default.tag_id,
+        notification_level: default.notification_level,
+      )
+    end
+
+    TagUser.auto_watch(user_ids: user_ids)
+    TagUser.auto_track(user_ids: user_ids)
   end
 
-  def decrease_group_user_count
-    Group.decrement_counter(:user_count, self.group_id)
+  def sync_add_via_manager
+    GroupManager.new(group).sync_add_side_effects([user.id])
   end
+
+  def sync_remove_via_manager
+    GroupManager.new(group).sync_removal_side_effects([user.id])
+  end
+
+  def self.semantically_higher_notification_level_sql(new_col, existing_col)
+    <<~SQL.squish
+      CASE
+        WHEN (CASE #{new_col} WHEN 3 THEN 5 ELSE #{new_col} END) >=
+             (CASE #{existing_col} WHEN 3 THEN 5 ELSE #{existing_col} END)
+        THEN #{new_col}
+        ELSE #{existing_col}
+      END
+    SQL
+  end
+  private_class_method :semantically_higher_notification_level_sql
 end
 
 # == Schema Information

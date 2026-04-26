@@ -58,9 +58,9 @@ after_initialize do
   add_admin_route "discourse_automation.title", "automation", use_new_show_route: true
 
   add_api_key_scope(
-    :automations_trigger,
+    :automation,
     {
-      post: {
+      trigger_automation: {
         actions: %w[discourse_automation/automations#trigger],
         params: %i[context],
         formats: :json,
@@ -161,7 +161,9 @@ after_initialize do
     )
   end
 
-  on(:topic_closed) { |topic| ::DiscourseAutomation::EventHandlers.handle_topic_closed(topic) }
+  on(:topic_closed) do |topic, status|
+    ::DiscourseAutomation::EventHandlers.handle_topic_closed(topic, status)
+  end
 
   on(:post_created) do |post|
     DiscourseAutomation::EventHandlers.handle_post_created_edited(post, :create)

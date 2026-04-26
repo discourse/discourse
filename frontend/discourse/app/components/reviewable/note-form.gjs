@@ -90,13 +90,14 @@ export default class ReviewableNoteForm extends Component {
       >
         <form.Field
           @name="content"
+          @type="textarea"
           @title={{i18n "review.notes.add_note_description"}}
           @format="full"
           @validation="required:trim|length:1,2000"
           as |field|
         >
           <div class="reviewable-note-form__textarea-wrapper">
-            <field.Textarea
+            <field.Control
               @height={{80}}
               placeholder={{i18n "review.notes.placeholder"}}
               class="reviewable-note-form__textarea"

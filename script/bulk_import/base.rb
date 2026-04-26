@@ -197,6 +197,24 @@ class BulkImport::Base
     @last_imported_post_id = imported_post_ids.select { |id| id < PRIVATE_OFFSET }.max || -1
     @last_imported_private_post_id =
       imported_post_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
+
+    if defined?(BulkImport::Generic::MERGE_IMPORT) && BulkImport::Generic::MERGE_IMPORT
+      puts "MERGE_IMPORT mode: clearing imported ID maps to avoid cross-source collisions"
+      @groups = {}
+      @users = {}
+      @categories = {}
+      @topics = {}
+      @posts = {}
+      @uploads_mapping = {}
+      @badge_mapping = {}
+      @poll_mapping = {}
+      @poll_option_mapping = {}
+      @chat_direct_message_channel_mapping = {}
+      @chat_channel_mapping = {}
+      @chat_thread_mapping = {}
+      @chat_message_mapping = {}
+      @discourse_reaction_mapping = {}
+    end
   end
 
   def last_id(klass)
@@ -221,7 +239,7 @@ class BulkImport::Base
     map = {}
 
     @raw_connection.send_query(
-      "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type}",
+      "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id NOT LIKE '%:%'",
     )
     @raw_connection.set_single_row_mode
 
@@ -1505,9 +1523,11 @@ class BulkImport::Base
         existing_category_id = existing_category_id.to_i
       end
 
-      @categories[category[:imported_id].to_i] = existing_category_id
-      category[:skip] = true
-      return category
+      if existing_category_id && Category.exists?(id: existing_category_id)
+        @categories[category[:imported_id].to_i] = existing_category_id
+        category[:skip] = true
+        return category
+      end
     end
 
     category[:id] ||= @last_category_id += 1
@@ -2191,7 +2211,8 @@ class BulkImport::Base
     id_mapping_method_name = "#{name}_id_from_imported_id"
     return true unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
-      { record_id: send(id_mapping_method_name, imported_id), value: imported_id }
+      value = @import_prefix ? "#{@import_prefix}:#{imported_id}" : imported_id
+      { record_id: send(id_mapping_method_name, imported_id), value: value }
     end
     true
   rescue => e
@@ -2226,7 +2247,8 @@ class BulkImport::Base
     sql = "COPY migration_mappings (original_id, type, discourse_id) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |original_id, discourse_id|
-        @raw_connection.put_copy_data [original_id, type, discourse_id]
+        prefixed_id = @import_prefix ? "#{@import_prefix}:#{original_id}" : original_id
+        @raw_connection.put_copy_data [prefixed_id, type, discourse_id]
       end
     end
   end

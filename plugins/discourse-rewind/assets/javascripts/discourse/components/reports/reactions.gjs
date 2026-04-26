@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat, get } from "@ember/helper";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { i18n } from "discourse-i18n";
 
@@ -33,7 +33,7 @@ export default class Reactions extends Component {
 
   @action
   computePercentageStyle(count) {
-    return htmlSafe(`width: ${this.computePercentage(count)}`);
+    return trustHTML(`width: ${this.computePercentage(count)}`);
   }
 
   <template>

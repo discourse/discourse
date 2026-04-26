@@ -6,10 +6,41 @@ module DiscourseGamification
 
     self.table_name = "gamification_leaderboards"
 
+    has_many :leaderboard_scores,
+             class_name: "DiscourseGamification::GamificationLeaderboardScore",
+             foreign_key: :leaderboard_id,
+             dependent: :delete_all
+
     validates :name, exclusion: { in: %w[new], message: "%{value} is reserved." }
+    validate :validate_score_overrides
 
     attribute :period, :integer
     enum :period, { all_time: 0, yearly: 1, quarterly: 2, monthly: 3, weekly: 4, daily: 5 }
+
+    VALID_SCORABLE_KEYS =
+      Set.new(
+        %w[
+          like_given
+          like_received
+          solution
+          user_invited
+          time_read
+          post_read
+          topic_created
+          post_created
+          flag_created
+          day_visited
+          reaction_received
+          reaction_given
+          chat_reaction_received
+          chat_reaction_given
+          chat_message_created
+        ],
+      ).freeze
+
+    def score_override_for(key)
+      score_overrides&.dig(key)
+    end
 
     def resolve_period(given_period)
       return given_period if self.class.periods.key?(given_period)
@@ -38,6 +69,21 @@ module DiscourseGamification
         offset: offset,
       )
     end
+
+    private
+
+    def validate_score_overrides
+      return if score_overrides.blank?
+
+      score_overrides.each do |key, value|
+        if VALID_SCORABLE_KEYS.exclude?(key)
+          errors.add(:score_overrides, "contains invalid scorable key: #{key}")
+        end
+        unless value.is_a?(Integer) && value >= 0
+          errors.add(:score_overrides, "values must be non-negative integers")
+        end
+      end
+    end
   end
 end
 
@@ -46,18 +92,20 @@ end
 # Table name: gamification_leaderboards
 #
 #  id                     :bigint           not null, primary key
-#  name                   :string           not null
+#  default_period         :integer          default(0)
+#  excluded_groups_ids    :integer          default([]), not null, is an Array
 #  from_date              :date
+#  included_groups_ids    :integer          default([]), not null, is an Array
+#  name                   :string           not null
+#  period_filter_disabled :boolean          default(FALSE), not null
+#  scorable_category_ids  :integer          is an Array
+#  score_overrides        :jsonb
 #  to_date                :date
-#  for_category_id        :integer
-#  created_by_id          :integer          not null
+#  visible_to_groups_ids  :integer          default([]), not null, is an Array
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  visible_to_groups_ids  :integer          default([]), not null, is an Array
-#  included_groups_ids    :integer          default([]), not null, is an Array
-#  excluded_groups_ids    :integer          default([]), not null, is an Array
-#  default_period         :integer          default(0)
-#  period_filter_disabled :boolean          default(FALSE), not null
+#  created_by_id          :integer          not null
+#  for_category_id        :integer
 #
 # Indexes
 #

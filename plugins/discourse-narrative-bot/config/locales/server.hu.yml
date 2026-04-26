@@ -396,6 +396,19 @@ hu:
           Új néz ki, hogy még mindig figyeli :eyes: ezt a témát! Ha nem találja, akkor az értesítési szint gombja a téma alján található.
         reply: "Nagyszerű munka! Remélem, hogy nem némította le ezt a témát, sajnos néha kicsit fecsegős vagyok :grin:. \n\nNe feledje, hogy amikor egy témára válaszol, vagy egy témát néhány percnél tovább olvas, akkor azt automatikusan elkezdi követni is. Ezt megváltoztathatja a [felhasználói beállításokban](%{base_uri}/my/preferences)."
       poll:
+        instructions: |-
+          Tudtad, hogy bármelyik bejegyzéshez hozzáadhatsz szavazást? Próbáld ki a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> ikont a szerkesztőben egy **szavazás létrehozásához**.
+        not_found: |-
+          Hoppá! A válaszában nem volt szavazás
+
+          Használja a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> ikont a szerkesztőben, vagy másolja és illessze be ezt a szavazást a következő válaszába:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hé, szép kis szavazás! Hogy sikerült a tanításom?
 
@@ -404,6 +417,20 @@ hu:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Előfordulhat, hogy **el szeretnéd rejteni a részleteket** a válaszaidban:
+
+          - Amikor egy film vagy tévéműsor cselekménypontjait vitatod meg, amelyek spoilernek minősülnének.
+
+          - Amikor a bejegyzésed sok opcionális részletet igényel, amelyek egyszerre olvasva túlterhelőek lehetnek.
+
+          [details=Válaszd ki ezt, hogy lásd, hogyan működik!]
+          1. Válaszd ki a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> ikont a szerkesztőben.
+          2. Válaszd ki a "Részletek elrejtése" lehetőséget.
+          3. Szerkeszd a részletek összefoglalóját, és add hozzá a tartalmat.
+          [/details]
+
+          Használhatod a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> ikont a szerkesztőben, hogy részleteket adj hozzá a következő válaszodhoz?
         not_found: |-
           Gondjai vannak a részletező elem létrehozásával? Próbálja beilleszteni az alábbiakat a következő válaszába:
 

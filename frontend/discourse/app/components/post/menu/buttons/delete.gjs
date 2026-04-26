@@ -128,6 +128,7 @@ export default class PostMenuDeleteButton extends Component {
       @icon={{this.icon}}
       @label={{if @showLabel this.label}}
       @title={{this.title}}
+      @ariaLabel={{this.title}}
     />
   </template>
 }

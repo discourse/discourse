@@ -1,6 +1,10 @@
 inherit_gem:
   rubocop-discourse: stree-compat.yml
 
+inherit_mode:
+  merge:
+    - Exclude
+
 # Still work to do in ensuring we don't link old files
 Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
   Enabled: false

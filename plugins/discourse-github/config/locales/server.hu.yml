@@ -12,6 +12,8 @@ hu:
     github_linkback_access_token: 'Érvényes hozzáférési token a linkvisszaküldő felhasználó számára, valamint a jelvények odaítéléséhez szükséges commitok/hozzájárulások számlálásához. A tokenek beszerzésével kapcsolatos utasításokért lásd <a href="https://meta.discourse.org/t/99895">itt</a> .'
     github_linkback_maximum_links: "Egyetlen bejegyzésből létrehozható linkek maximális száma. Ha egy bejegyzés több linket tartalmaz, akkor egy sem jön létre."
     github_permalinks_enabled: "GitHub permalink felülírások engedélyezése"
+    github_pr_status_enabled: "GitHub pull request állapotának megjelenítése Oneboxokon (tervezet, nyitott, jóváhagyott, egyesített, lezárt)"
+    github_webhook_secret: "Titkos token a GitHub webhook aláírásának ellenőrzéséhez. Konfigurálja ezt az értéket a GitHub webhook beállításaiban."
     github_permalinks_exclude: "Fájlnév vagy könyvtár, amelyet ki kell zárni a permalink felülírásából. Csak a fájlnevet vagy a teljes elérési utat kell megadni: user/repository/optional-directory/filename"
     github_badges_enabled: "GitHub jelvények engedélyezése"
     github_badges_repos: "A közreműködések és véglegesítések kereséséhez használt GitHub-tárolók webcímei"

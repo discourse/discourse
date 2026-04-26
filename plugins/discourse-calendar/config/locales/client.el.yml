@@ -12,6 +12,12 @@ el:
         categories:
           discourse_post_event: "Εκδήλωση Discourse"
           discourse_calendar: "Ημερολόγιο και Εκδηλώσεις"
+      web_hooks:
+        calendar_event:
+          group_name: "Εκδήλωση ημερολογίου"
+          calendar_event_created: "Εκδήλωση ημερολογίου δημιουργήθηκε"
+          calendar_event_updated: "Εκδήλωση ημερολογίου ενημερώθηκε"
+          calendar_event_destroyed: "Εκδήλωση ημερολογίου καταστράφηκε"
   js:
     notifications:
       titles:
@@ -28,13 +34,23 @@ el:
               label: ID Θέματος
     discourse_calendar:
       invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
+      preferences:
+        all_events: "Ημερολόγιο Discourse - Όλες οι Εκδηλώσεις"
+        all_events_description: "Όλες οι εκδηλώσεις του φόρουμ"
+        my_events: "Ημερολόγιο Discourse - Οι Εκδηλώσεις μου"
+        my_events_description: "Εκδηλώσεις στις οποίες θα παραστείτε ή ενδιαφέρεστε"
       disable_holiday: "Απενεργοποίηση"
       enable_holiday: "Ενεργοποίηση"
+      holidays:
+        pick_region_description: "Επιλέξτε μια περιοχή για να δείτε τις αργίες για αυτήν την περιοχή."
       date: "Ημερομηνία"
+      add_to_calendar: "Προσθήκη στο Ημερολόγιο Google"
+      local_time: "Τοπική ώρα"
       region:
         title: "Περιοχή"
         none: "Κανένα"
         use_current_region: "Χρήση τρέχουσας περιοχής"
+        select_region: "Επιλέξτε μια περιοχή..."
         names:
           ae: "Ηνωμένα Αραβικά Εμιράτα"
           ar: "Αργεντινή"
@@ -69,6 +85,12 @@ el:
           ca_nt: "Καναδάς (ca_nt)"
           ca_nu: "Καναδάς (ca_nu)"
           ca_on: "Καναδάς (ca_on)"
+          ca: "Καναδάς"
+          ch: "Ελβετία"
+          cl: "Χιλή"
+          co: "Κολομβία"
+          cr: "Κόστα Ρίκα"
+          cz: "Τσεχία"
           de_bb: "Γερμανία (de_bb)"
           de_be: "Γερμανία (de_be)"
           de_bw: "Γερμανία (de_bw)"
@@ -120,6 +142,28 @@ el:
           gb_con: "Ηνωμένο Βασίλειο (gb_con)"
           gb_eaw: "Ηνωμένο Βασίλειο (gb_eaw)"
           gb_eng: "Ηνωμένο Βασίλειο (gb_eng)"
+          gb: "Ηνωμένο Βασίλειο"
+          ge: "Γεωργία"
+          gg: "Γκέρνσεϊ"
+          gh: "Γκάνα"
+          hk: "Χονγκ Κονγκ"
+          hr: "Κροατία"
+          hu: "Ουγγαρία"
+          id: "Ινδονησία"
+          ie: "Ιρλανδία"
+          im: "Νήσος Μαν"
+          in: "Ινδία"
+          is: "Ισλανδία"
+          it: "Ιταλία"
+          je: "Τζέρσεϊ"
+          jp: "Ιαπωνία"
+          li: "Λιχτενστάιν"
+          lt: "Λιθουανία"
+          lu: "Λουξεμβούργο"
+          lv: "Λετονία"
+          ma: "Μαρόκο"
+          mx: "Μεξικό"
+          my: "Μαλαισία"
           ng: "Νιγηρία"
           nl: "Ολλανδία"
           "no": "Νορβηγία"
@@ -170,6 +214,11 @@ el:
           us_gu: "Ηνωμένες Πολιτείες (us_gu)"
           us_hi: "Ηνωμένες Πολιτείες (us_hi)"
           us_ia: "Ηνωμένες Πολιτείες (us_ia)"
+          us: "Ηνωμένες Πολιτείες"
+          ve: "Βενεζουέλα"
+          vi: "Αμερικανικές Παρθένοι Νήσοι"
+          za: "Νότια Αφρική"
+          zw: "Ζιμπάμπουε"
       toolbar_button:
         today: "Σήμερα"
         month: "Μήνας"
@@ -178,6 +227,7 @@ el:
         year: "Χρόνος"
     group_timezones:
       search: "Αναζήτηση..."
+      group_availability: "Διαθεσιμότητα %{group}"
     discourse_post_event:
       notifications:
         before_event_reminder: "Μια εκδήλωση πρόκειται να ξεκινήσει"
@@ -186,6 +236,9 @@ el:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "Ο/Η %{username} έχει ορίσει αυτόματα την παρουσία σας και σας έχει προσκαλέσει στο %{eventName}"
         an_event: "μια εκδήλωση"
+      event_description:
+        show_more: "Δείτε περισσότερα"
+        show_less: "Δείξε λιγότερα"
       edit_reason: "Η εκδήλωση ενημερώθηκε"
       edit_reason_closed: "Η εκδήλωση έκλεισε"
       edit_reason_opened: "Η εκδήλωση άνοιξε"
@@ -208,6 +261,7 @@ el:
       bulk_invite: "Μαζική πρόσκληση"
       close_event: "Κλείσιμο εκδήλωσης"
       open_event: "Άνοιγμα εκδήλωσης"
+      destroy_event: "Καταστροφή εκδήλωσης"
       invitees_modal:
         title_invited: "Συμμετοχή σε Εκδήλωση"
         title_participated: "Λίστα χρηστών που συμμετείχαν"
@@ -227,6 +281,7 @@ el:
         send_bulk_invites: "Αποστολή προσκλήσεων"
         group_selector_placeholder: "Επιλέξτε μια ομάδα..."
         user_selector_placeholder: "Επιλέξτε χρήστη..."
+        inline_title: "Ενδογραμμική μαζική πρόσκληση"
         csv_title: "Μαζική πρόσκληση CSV"
       upcoming_events:
         title: "Προσεχείς εκδηλώσεις"
@@ -276,8 +331,10 @@ el:
           status:
             standalone:
               title: "Αυτόνομη"
+              description: "Δεν είναι δυνατή η συμμετοχή σε μεμονωμένη εκδήλωση."
             public:
               title: "Δημόσια"
+              description: "Σε μια δημόσια εκδήλωση μπορεί να συμμετάσχει οποιοσδήποτε."
             private:
               title: "Ιδιωτική"
               description: "Σε μια ιδιωτική εκδήλωση μπορούν να συμμετάσχουν μόνο προσκεκλημένοι χρήστες."
@@ -307,6 +364,9 @@ el:
         timezone:
           label: Ζώνη ώρας
           remove_timezone: Χωρίς ζώνη ώρας (UTC)
+        all_day:
+          label: "Ολοήμερη εκδήλωση"
+          description: "Μια ολοήμερη εκδήλωση δεν θα έχει συγκεκριμένες ώρες, μόνο ημερομηνία. Η εκδήλωση θα διαρκέσει από την αρχή έως το τέλος της ημέρας."
         reminders:
           label: "Υπενθυμίσεις"
           types:
@@ -331,11 +391,15 @@ el:
           every_week: "Κάθε εβδομάδα αυτήν την εργάσιμη ημέρα"
           every_two_weeks: "Κάθε δύο εβδομάδες αυτήν την εργάσιμη ημέρα"
           every_four_weeks: "Κάθε τέσσερις εβδομάδες αυτήν την εργάσιμη ημέρα"
+        minimal:
+          label: "Ελάχιστη εκδήλωση"
+          checkbox_label: "Απόκρυψη κουμπιών \"Θα παραστώ/Δεν θα παραστώ\" και κατάστασης προσκεκλημένων"
         max_attendees:
           label: "Μέγιστος αριθμός συμμετεχόντων"
           placeholder: "Χωρίς όριο"
         allow_chat:
           label: "Ενσωμάτωση συνομιλίας"
+          checkbox_label: "Δημιουργία και διαχείριση συγκεκριμένου καναλιού συνομιλίας για την εκδήλωση"
         url:
           label: "URL"
           placeholder: "Προαιρετικό"
@@ -344,6 +408,7 @@ el:
           placeholder: "Προσθέστε μια τοποθεσία, έναν σύνδεσμο ή κάτι άλλο."
         description:
           label: "Περιγραφή"
+          placeholder: "Πείτε στον κόσμο λίγο περισσότερα για την εκδήλωσή σας. Υποστηρίζονται νέες γραμμές και σύνδεσμοι."
         name:
           label: "Όνομα εκδήλωσης"
           placeholder: "Προαιρετικό, προεπιλογή στον τίτλο θέματος"
@@ -351,6 +416,7 @@ el:
           label: "Προσκεκλημένες ομάδες"
         status:
           label: "Κατάσταση"
+        delete_confirmation_message: "Διαγραφή αυτής της εκδήλωσης;"
       invite_user_or_group:
         title: "Ειδοποίηση χρήστη/ών ή ομάδας/ών"
         invite: "Αποστολή"

@@ -19,7 +19,7 @@ pt_BR:
       today: "Hoje"
       tomorrow: "Amanhã"
       upcoming: "Próximos"
-      all: "Todos(as)"
+      all: "Todos"
     birthdays:
       title: "Aniversários"
       month:

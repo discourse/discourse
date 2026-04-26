@@ -4,7 +4,6 @@ import { assert, runInDebug } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { join } from "@ember/runloop";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { isTesting } from "discourse/lib/environment";
 
 function getCurrentRouteInfos(router) {
@@ -20,7 +19,7 @@ function getRoutes(router) {
 
 function getRouteWithAction(router, actionName) {
   let action;
-  let handler = new TrackedArray(getRoutes(router)).find((route) => {
+  let handler = getRoutes(router).find((route) => {
     let actions = route.actions || route._actions;
     action = actions[actionName];
 

@@ -249,7 +249,11 @@ vi:
   deleted_topic: "Ôi! Chủ đề này đã bị xóa và không còn khả dụng nữa."
   delete_topic_failed: "Đã xảy ra lỗi khi xóa chủ đề đó. Vui lòng liên hệ với quản trị viên của trang web."
   reading_time: "Thời gian đọc"
+  reading_time_minutes:
+    other: "%{count} phút 🕑"
   likes: "Lượt Thích"
+  likes_count:
+    other: "%{count} ❤"
   too_many_replies:
     other: "Xin lỗi bạn, người dùng mới tạm thời bị giới hạn với %{count} câu trả lời trong một chủ đề."
   max_consecutive_replies:
@@ -711,6 +715,7 @@ vi:
   user_api_key:
     deny: "Hủy"
     read: "đã đọc"
+    copied: "Đã sao chép!"
     otp_confirmation:
       confirm_title: Tiếp tục tới %{site_name}
       logging_in_as: Đăng nhập bằng %{username}
@@ -767,7 +772,9 @@ vi:
       description: "Danh sách các trạng thái của cờ bao gồm loại cờ, người đăng, người gắn cờ và thời gian giải quyết."
     visits:
       title: "Các thành viên truy cập"
-      xaxis: "Ngày"
+      xaxis:
+        desktop: "Máy tính để bàn"
+        mobile: "Điện thoại"
       yaxis: "Số lần truy cập"
     signups:
       xaxis: "Ngày"
@@ -1517,7 +1524,6 @@ vi:
     not_available: "Không có sẵn. Thử %{suggestion}?"
     something_already_taken: "Có lỗi xảy ra, tên đăng nhập hoặc email đã được đăng ký. Thử sử dụng chức năng quên mật khẩu."
     omniauth_error_unknown: "Đã xảy ra lỗi khi xử lý thông tin đăng nhập của bạn, vui lòng thử lại."
-    omniauth_confirm_title: "Đăng nhập bằng %{provider}"
     omniauth_confirm_button: "Tiếp tục"
     authenticator_error_no_valid_email: "Không có địa chỉ email nào được liên kết với %{account} được phép. Bạn có thể cần phải định cấu hình tài khoản của mình bằng một địa chỉ email khác."
     new_registrations_disabled: "Đăng ký tài khoản mới không được cho phép tại thời điểm này."

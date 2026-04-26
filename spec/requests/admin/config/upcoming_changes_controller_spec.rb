@@ -4,8 +4,6 @@ RSpec.describe Admin::Config::UpcomingChangesController do
   fab!(:admin)
   fab!(:user)
 
-  before { SiteSetting.enable_upcoming_changes = true }
-
   describe "#index" do
     before do
       mock_upcoming_change_metadata(

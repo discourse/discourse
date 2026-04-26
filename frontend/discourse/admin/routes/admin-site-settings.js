@@ -6,6 +6,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteSettingsRoute extends DiscourseRoute {
+  @service adminSiteSettingStore;
   @service siteSettingChangeTracker;
 
   queryParams = {
@@ -30,7 +31,12 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
   }
 
   async model(params) {
-    this._siteSettings ??= await SiteSetting.findAll();
+    if (!this._siteSettings) {
+      this._siteSettings = await SiteSetting.findAll();
+      this.adminSiteSettingStore.register(
+        this._siteSettings.flatMap((category) => category.siteSettings)
+      );
+    }
 
     return {
       filteredSettings: this.filterSettings(
@@ -40,6 +46,7 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
       ),
       filtersApplied:
         params.filter || params.onlyOverridden || params.dependsOn,
+      activeFilter: params.filter ?? "",
     };
   }
 

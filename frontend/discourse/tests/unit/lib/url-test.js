@@ -90,6 +90,7 @@ module("Unit | Utility | url", function (hooks) {
   test("isInternalTopic", function (assert) {
     sinon.stub(DiscourseURL, "origin").get(() => "https://eviltrout.com");
     assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/t/123"));
+    assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/n/123"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/admin"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/u/test"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/tamales"));
@@ -103,6 +104,9 @@ module("Unit | Utility | url", function (hooks) {
 
     assert.true(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/t/123")
+    );
+    assert.true(
+      DiscourseURL.isInternalTopic("https://eviltrout.com/forum/n/123")
     );
     assert.false(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/admin")
@@ -286,6 +290,31 @@ module("Unit | Utility | url", function (hooks) {
       ),
       "secure-uploads on subfolder is redirected to server"
     );
+  });
+
+  test("routeTo redirects server-side-only routes", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "handleURL");
+
+    const routes = [
+      "/safe-mode",
+      "/dev-mode",
+      "/theme-qunit",
+      "/llms.txt",
+      "/robots.txt",
+      "/offline.html",
+      "/manifest.webmanifest",
+      "/opensearch.xml",
+    ];
+
+    for (const route of routes) {
+      DiscourseURL.redirectTo.resetHistory();
+      DiscourseURL.routeTo(route);
+      assert.true(
+        DiscourseURL.redirectTo.calledWith(route),
+        `${route} is redirected to server`
+      );
+    }
   });
 
   test("anchor handling", async function (assert) {

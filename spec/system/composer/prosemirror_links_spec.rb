@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Links", type: :system do
+describe "Composer - ProseMirror - Links" do
   include_context "with prosemirror editor"
 
   let(:upsert_hyperlink_modal) { PageObjects::Modals::UpsertHyperlink.new }

@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -15,7 +15,7 @@ const ChatComposerMessageDetails = <template>
       <ChatUserAvatar @user={{@message.user}} />
       <span class="chat-reply__username">{{@message.user.username}}</span>
       <span class="chat-reply__excerpt">
-        {{replaceEmoji (htmlSafe @message.excerpt)}}
+        {{replaceEmoji (trustHTML @message.excerpt)}}
       </span>
     </div>
 

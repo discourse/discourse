@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames, tagName } from "@ember-decorators/component";
 import $ from "jquery";
 import icon from "discourse/helpers/d-icon";
@@ -54,7 +54,7 @@ export default class Patreon extends Component {
           {{icon "xmark"}}
         </span>
 
-        {{htmlSafe
+        {{trustHTML
           (i18n
             "patreon.donation_prompt.body"
             campaignUrl=this.siteSettings.patreon_donation_prompt_campaign_url

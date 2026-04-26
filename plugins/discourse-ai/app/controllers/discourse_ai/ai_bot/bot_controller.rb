@@ -63,13 +63,13 @@ module DiscourseAi
 
         guardian.ensure_can_see!(prompt_post)
 
-        persona_id = retry_persona_id(post, prompt_post)
+        agent_id = retry_agent_id(post, prompt_post)
         llm_model_id = post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD]
 
         args = {
           post_id: prompt_post.id,
           bot_user_id: post.user_id,
-          persona_id: persona_id,
+          agent_id: agent_id,
           reply_post_id: post.id,
         }
 
@@ -101,19 +101,18 @@ module DiscourseAi
           .first
       end
 
-      def retry_persona_id(bot_reply_post, prompt_post)
-        persona_id =
-          bot_reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD].presence
+      def retry_agent_id(bot_reply_post, prompt_post)
+        agent_id = bot_reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].presence
 
-        persona_id ||= prompt_post.topic.custom_fields["ai_persona_id"].presence
+        agent_id ||= prompt_post.topic.custom_fields["ai_agent_id"].presence
 
-        if persona_id.blank?
-          persona_name = prompt_post.topic.custom_fields["ai_persona"].presence
-          persona_id = AiPersona.find_by(name: persona_name)&.id if persona_name.present?
+        if agent_id.blank?
+          agent_name = prompt_post.topic.custom_fields["ai_agent"].presence
+          agent_id = AiAgent.find_by(name: agent_name)&.id if agent_name.present?
         end
 
-        persona_id ||= DiscourseAi::Personas::General.id
-        persona_id.to_i
+        agent_id ||= DiscourseAi::Agents::General.id
+        agent_id.to_i
       end
     end
   end

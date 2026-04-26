@@ -23,6 +23,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :notification_level,
              :can_edit,
              :topic_template,
+             :topic_title_placeholder,
              :has_children,
              :subcategory_count,
              :sort_order,

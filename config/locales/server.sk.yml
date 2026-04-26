@@ -491,7 +491,17 @@ sk:
   deleted_topic: "Ups! Táto téma bola vymazaná a už nie je k dispozícii."
   delete_topic_failed: "Pri odstraňovaní tejto témy došlo k chybe. Obráťte sa, prosím, na správcu stránky."
   reading_time: "Doba čítania"
+  reading_time_minutes:
+    one: "%{count} minúta 🕑"
+    few: "%{count} minúty 🕑"
+    many: "%{count} minút 🕑"
+    other: "%{count} minút 🕑"
   likes: "Páči sa mi"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    many: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Ups! Túto akciu ste už vykonali. Môžete skúsiť obnoviť stránku?"
   too_many_replies:
     one: "Ľutujeme, noví používatelia majú dočasne obmedzený počet príspevkov na jeden v rámci jednej témy."
@@ -924,7 +934,6 @@ sk:
       many: "%{count} lajkov"
       other: "%{count} lajky"
     cannot_permanently_delete:
-      many_posts: "Táto téma má nezmazané príspevky. Pred trvalým vymazaním témy ich prosím natrvalo odstráňte."
       wait_or_different_admin: "Pred trvalým odstránením tohto príspevku musíte počkať %{time_left} , inak to musí urobiť iný správca."
   rate_limiter:
     slow_down: "Túto akciu ste vykonali príliš veľakrát, skúste to znova neskôr."
@@ -1283,6 +1292,7 @@ sk:
     read: "čítať"
     read_write: "čítať/zapisovať"
     instructions: 'Práve sme pre vás vygenerovali nový kľúč API používateľa, ktorý môžete použiť s „%{application_name}“, vložte do svojej aplikácie nasledujúci kľúč:'
+    copied: "Skopírované!"
     otp_description: 'Chcete povoliť prístup na túto stránku "%{application_name}"?'
     otp_confirmation:
       confirm_title: Pokračujte na %{site_name}
@@ -1361,9 +1371,10 @@ sk:
       description: "Zoznam stavov vlajok vrátane typu vlajky, plagátu, vlajky a času na vyriešenie."
     visits:
       title: "Používateľské návštevy"
-      xaxis: "Deň"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobil"
       yaxis: "Počet návštev"
-      description: "Počet návštev prihlásených používateľov."
     signups:
       title: "Registrácie"
       xaxis: "Deň"
@@ -1425,10 +1436,8 @@ sk:
       description: "Zobrazenia stránok prihlásených používateľov, anonymných používateľov, známych prehľadávačov a inej návštevnosti."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Deň"
       yaxis: "DAU/MAU"
-      description: "Počet členov, ktorí sa prihlásili za posledný deň, vydelený počtom členov, ktorí sa prihlásili za posledný mesiac - vráti %, ktoré udáva \"priľnavosť\" komunity. Snažte sa dosiahnuť > 20 %."
     daily_engaged_users:
       title: "Denne zapojení používatelia"
       xaxis: "Deň"
@@ -2515,7 +2524,6 @@ sk:
     create_revision_on_bulk_topic_moves: "Vytvorte revíziu pre prvé príspevky, keď sa témy hromadne presunú do novej kategórie."
     allow_changing_staged_user_tracking: "Umožniť nezaktívnenému používateľovi s právami administrátora meniť preferencie kategórií a upozornení na značky."
     use_email_for_username_and_name_suggestions: "Na návrhy používateľského mena a mena použite prvú časť e-mailových adries. Upozornenie: To môže zlým aktérom uľahčiť zistenie e-mailovej adresy vašich členov (pretože mnohí ľudia používajú bežných poskytovateľov e-mailu, ako je `gmail.com`)."
-    use_name_for_username_suggestions: "Pri navrhovaní používateľských mien používajte celé meno používateľa."
     suggest_weekends_in_date_pickers: "Zahrnúť víkendy (sobotu a nedeľu) do návrhov na výber dátumu (ak Discourse používate len počas pracovných dní, od pondelka do piatku, vypnite túto funkciu)."
     show_bottom_topic_map: "Zobrazí mapu témy v spodnej časti témy, ak má 10 alebo viac odpovedí."
     show_topic_map_in_topics_without_replies: "Zobrazí mapu témy, aj keď téma nemá žiadne odpovede."
@@ -2869,7 +2877,6 @@ sk:
       request_error: "Prepáčte, pri spustení autorizácie sa vyskytla chyba. Skúste to znova."
       invalid_iat: "Prepáčte, ale kvôli rozdielom v čase servera sa nám nepodarilo overiť autorizačný token. Skúste to znova."
     omniauth_error_unknown: "Niečo sa pokazilo pri spracovaní vášho prihlásenia, skúste to prosím znova."
-    omniauth_confirm_title: "Prihláste sa pomocou stránky %{provider}"
     omniauth_confirm_button: "Pokračovať"
     authenticator_error_no_valid_email: "Nie sú povolené žiadne e-mailové adresy spojené s %{account} . Možno budete musieť nakonfigurovať svoje konto s inou e-mailovou adresou."
     new_registrations_disabled: "Registrácia nových účtov momentálne nie je povolená."
@@ -3105,35 +3112,9 @@ sk:
   new_version_mailer:
     title: "Nová verzia Mailer"
     subject_template: "[%{email_prefix}] Nová verzia Discourse, k dispozícii je aktualizácia"
-    text_body_template: |
-      Hurá, nová verzia [Discourse](https://www.discourse.org) je k dispozícii!
-
-      Vaša verzia: %{installed_version}
-      Nová verzia: **%{new_version}**
-
-      - Aktualizujte pomocou nášho jednoduchého **[jednoklikového aktualizátora v prehliadači](%{base_url}/admin/update)**
-
-      - Zistite, čo je nové v [poznámkach k vydaniu](https://meta.discourse.org/tag/release-notes) alebo si pozrite [surový GitHub changelog](https://github.com/discourse/discourse/commits/main)
-
-      - Navštívte [meta.discourse.org](https://meta.discourse.org) pre novinky, diskusiu a podporu pre Discourse
   new_version_mailer_with_notes:
     title: "Nová verzia Mailer s poznámkami"
     subject_template: "[%{email_prefix}] k dispozícii je aktualizácia"
-    text_body_template: |
-      Hurá, nová verzia [Discourse](https://www.discourse.org) je k dispozícii!
-
-      Vaša verzia: %{installed_version}
-      Nová verzia: **%{new_version}**
-
-      - Aktualizujte pomocou nášho jednoduchého **[jednoklikového aktualizátora v prehliadači](%{base_url}/admin/update)**
-
-      - Zistite, čo je nové v [poznámkach k vydaniu](https://meta.discourse.org/tag/release-notes) alebo si pozrite [surový GitHub changelog](https://github.com/discourse/discourse/commits/main)
-
-      - Navštívte [meta.discourse.org](https://meta.discourse.org) pre novinky, diskusiu a podporu pre Discourse
-
-      ### Poznámky k vydaniu
-
-      %{notes}
   flag_reasons:
     off_topic: "Váš príspevok bol označený ako \"mimo-témy\": komunita cíti, že nie je vhodný do témy tak, ako je definovaná nadpisom a prvým príspevkom"
     inappropriate: "Váš príspevok bol označený ako **nevhodný**: komunita ho považuje za urážlivý, hanlivý, nenávistný alebo za porušenie [našich pravidiel komunity](%{base_path}/pravidlá)."
@@ -3188,49 +3169,9 @@ sk:
     reviewable_queued_post_revise_and_reject:
       title: "Spätná väzba na váš príspevok"
       subject_template: "Spätná väzba na váš príspevok v %{topic_title}"
-      text_body_template: |
-        ### Preklad
-
-        **Ahoj %{username},**
-
-        Preskúmali sme váš príspevok v [%{topic_title}](%{topic_url}) a máme pre vás niekoľko pripomienok.
-
-        Dôvod: %{reason}
-
-        Spätná väzba: %{feedback}
-
-        Môžete upraviť svoj pôvodný príspevok nižšie a znovu ho odoslať so zmenami, alebo odpovedzte na túto správu, ak máte nejaké otázky.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Ďakujeme,
-        Moderátori %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Spätná väzba k vašej téme"
       subject_template: 'Spätná väzba k novej téme s názvom "%{topic_title}"'
-      text_body_template: |
-        Ahoj %{username},
-
-        Preskúmali sme tvoju novú tému s názvom "%{topic_title}" a máme pre teba niekoľko pripomienok.
-
-        Dôvod: %{reason}
-
-        Spätná väzba: %{feedback}
-
-        Môžeš upraviť pôvodný príspevok svojej témy nižšie a znovu ho odoslať so zmenami, ktoré navrhujeme, alebo odpovedať na túto správu, ak máš nejaké otázky.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Ďakujeme,
-        Moderátori %{site_name}
     post_hidden_again:
       title: "Príspevok je opäť skrytý"
       subject_template: "Príspevok skrytý kvôli označeniam komunity, personál bol informovaný"
@@ -5073,7 +5014,6 @@ sk:
         few: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
         many: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
         other: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
-      synonym: 'Synonymá nie sú povolené. Namiesto toho použite "%{tag_name}".'
       has_synonyms: '"%{tag_name}" nemožno použiť, pretože má synonymá.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Značku "%{tags}" nemožno použiť v kategórii "%{category}". Odstráňte ju, prosím.'

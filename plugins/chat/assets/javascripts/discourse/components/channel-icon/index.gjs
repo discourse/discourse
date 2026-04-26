@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -18,7 +18,7 @@ export default class ChatChannelIcon extends Component {
   }
 
   get channelColorStyle() {
-    return htmlSafe(`color: #${this.args.channel.chatable.color}`);
+    return trustHTML(`color: #${this.args.channel.chatable.color}`);
   }
 
   get isThreadsList() {

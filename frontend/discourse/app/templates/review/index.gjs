@@ -1,6 +1,7 @@
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import NavItem from "discourse/components/nav-item";
 import ReviewIndex from "discourse/components/reviewable/index";
 import icon from "discourse/helpers/d-icon";
@@ -8,7 +9,7 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 <template>
-  <ul class="nav nav-pills reviewable-title">
+  <HorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
     <NavItem @route="review.index" @label="review.view_all" />
     <NavItem @route="review.topics" @label="review.grouped_by_topic" />
     {{#if @controller.currentUser.admin}}
@@ -18,7 +19,7 @@ import { i18n } from "discourse-i18n";
         @icon="wrench"
       />
     {{/if}}
-  </ul>
+  </HorizontalOverflowNav>
   {{#if @controller.displayUnknownReviewableTypesWarning}}
     <div class="alert alert-info unknown-reviewables">
       <span class="text">{{i18n
@@ -42,7 +43,7 @@ import { i18n } from "discourse-i18n";
           {{/if}}
         {{/each}}
       </ul>
-      <span class="text">{{htmlSafe
+      <span class="text">{{trustHTML
           (i18n
             "review.unknown.instruction"
             url="https://meta.discourse.org/t/350179"

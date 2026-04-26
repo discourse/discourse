@@ -408,7 +408,11 @@ ja:
   deleted_topic: "おっとっと！このトピックは削除されたため、利用できなくなりました。"
   delete_topic_failed: "トピックを削除中にエラーが発生しました。サイトの管理者にお問い合わせください。"
   reading_time: "閲覧時間"
+  reading_time_minutes:
+    other: "%{count} 分 🕑"
   likes: "いいね！"
+  likes_count:
+    other: "%{count} ❤"
   action_already_performed: "この操作はすでに実行済みです。ページを再読み込みしてください。"
   too_many_replies:
     other: "新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
@@ -778,7 +782,6 @@ ja:
     has_likes:
       other: "「いいね！」 %{count}"
     cannot_permanently_delete:
-      many_posts: "このトピックには削除されていない投稿があります。トピックを永久に削除する前に、それらのトピックを永久に削除してください。"
       wait_or_different_admin: "%{time_left} 待ってからこの投稿を永久に削除するか、別の管理者が削除する必要があります。"
   rate_limiter:
     slow_down: "この操作の実行回数が多すぎます。後でもう一度お試しください。"
@@ -1070,6 +1073,7 @@ ja:
     permissions_header: 'これにより、「%{application_name}」で次を行えます:'
     redirect_warning: "承認すると次の場所にリダイレクトされます:"
     instructions: '"%{application_name}" で使用できる新しいユーザー API キーを生成しました。次のキーをアプリケーションに貼り付けてください。'
+    copied: "コピーしました！"
     otp_description: '"%{application_name}" にこのサイトへのアクセスを許可しますか？'
     otp_confirmation:
       confirm_title: '%{site_name} に進む'
@@ -1148,9 +1152,10 @@ ja:
       description: "通報の種類、投稿者、通報者、および解決までの時間など、通報のステータスのリスト。"
     visits:
       title: "ユーザーアクセス"
-      xaxis: "日"
+      xaxis:
+        desktop: "デスクトップ"
+        mobile: "モバイル"
       yaxis: "アクセス数"
-      description: "サインイン済みのユーザーの訪問数。"
     signups:
       title: "登録"
       xaxis: "日"
@@ -1214,10 +1219,8 @@ ja:
       description: "ログインユーザー、匿名ユーザー、既知のクローラー、およびその他のトラフィックのページビュー。"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "日"
       yaxis: "DAU/MAU"
-      description: "前日にログインしたメンバーの数を先月にログインしたメンバーの数で割った数 - コミュニティーの「粘着性」を示す割合 % を返します。20% 以上を目指してください。"
     daily_engaged_users:
       title: "1 日のエンゲージユーザー"
       xaxis: "日"
@@ -2344,7 +2347,6 @@ ja:
     create_revision_on_bulk_topic_moves: "トピックが新しいカテゴリに一括して移動されたときに、最初の投稿のリビジョンを作成する。"
     allow_changing_staged_user_tracking: "ステージングユーザーのカテゴリとタグの通知設定を管理者ユーザーが変更することを許可する。"
     use_email_for_username_and_name_suggestions: "ユーザー名と名前の提案にメールアドレスの最初の部分を使用する。警告: 悪意のあるアクターがメンバーのメールアドレスを検出しやすくなります (多数のユーザーが「gmail.com」などの一般的なメールプロバイダーを使用しているため)。"
-    use_name_for_username_suggestions: "ユーザー名を提案する際に、ユーザーの氏名を使用します。"
     suggest_weekends_in_date_pickers: "日付ピッカーの候補に週末 (土曜日と日曜日) を含めます (月曜日から金曜日の平日にのみ Discourse を使用する場合は、これを無効にします)。"
     show_bottom_topic_map: "トピックに 10 件以上の返信がある場合、トピックの下にトピックマップを表示します。"
     show_topic_map_in_topics_without_replies: "トピックに返信がない場合でもトピックマップを表示します。"
@@ -2382,7 +2384,6 @@ ja:
     content_localization_crawler_param: "'content localization enabled' と 'set locale from param' が有効な場合にローカライズされたコンテンツをウェブクローラーに配信する。サポートされたロケールのリストは 'content localization supported locales' に定義されています。"
     content_localization_use_default_locale_when_unsupported: "優先言語が 'content localization supported locales' に含まれていないユーザーに、サイトのデフォルトのロケールでローカライズされたコンテンツを配信する。"
     content_localization_allow_author_localization: "作成者が投稿メニューから自分のトピックと投稿を更新することを許可する。"
-    enable_upcoming_changes: "次回の変更を有効にする"
     fake_upcoming_change: "これは実際の次回の変更ではありません。テストを目的としているため、この文字列の翻訳は不要です。"
     floating_dismiss_topics_on_mobile: "モバイル版では、アクセスの簡易性とトピックリストの上部のスペースを空けるために「閉じる...」フローティングボタンを表示する"
     rename_faq_to_guidelines: "この変更によって FAQ ページの名前が「ガイドライン」に変更されます。FAQ ページは引き続き /faq で利用できます。'faq url' 設定はこれまで通り機能します。"
@@ -2672,7 +2673,6 @@ ja:
       request_error: "認証を開始中にエラーが発生しました。もう一度お試しください。"
       invalid_iat: "サーバークロックの差により認証トークンを検証できませんでした。もう一度お試しください。"
     omniauth_error_unknown: "ログインを処理中に問題が発生しました。もう一度お試しください。"
-    omniauth_confirm_title: "%{provider} を使用してログイン"
     omniauth_confirm_button: "続行"
     authenticator_error_no_valid_email: "%{account} に関連付けられたメールアドレスは許可されていません。別のメールアドレスでアカウントを構成する必要がある場合があります。"
     new_registrations_disabled: "現在、新しいアカウントの登録を行えません。"
@@ -2892,35 +2892,9 @@ ja:
   new_version_mailer:
     title: "新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 新しい Discourse バージョン、更新が利用可能になりました"
-    text_body_template: |
-      [Discourse](https://www.discourse.org) の新しいバージョンを使用できるようになりました！
-
-      現在のバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - *[ワンクリックによるブラウザ更新](%{base_url}/admin/update)**を使って簡単に更新できます
-
-      - [リリースノート](https://meta.discourse.org/tag/release-notes)で新機能を確認するか、[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/main)をご覧ください
-
-      - Discourse の最新情報、ディスカッション、およびサポートについては、[meta.discourse.org](https://meta.discourse.org) にアクセスしてください
   new_version_mailer_with_notes:
     title: "注意付きの新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 更新が利用可能になりました"
-    text_body_template: |
-      [Discourse](https://www.discourse.org) の新しいバージョンを使用できるようになりました！
-
-      現在のバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - *[ワンクリックによるブラウザ更新](%{base_url}/admin/update)**を使って簡単に更新できます
-
-      - [リリースノート](https://meta.discourse.org/tag/release-notes)で新機能を確認するか、[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/main)をご覧ください
-
-      - Discourse の最新情報、ディスカッション、およびサポートについては、[meta.discourse.org](https://meta.discourse.org) にアクセスしてください
-
-      ### リリースノート
-
-      %{notes}
   flag_reasons:
     off_topic: "あなたの投稿は「話題に関係ない」として通報されました。コミュニティーはあなたの投稿がタイトルと最初の投稿で定義されているトピックにふさわしくないと判断しました。"
     inappropriate: "あなたの投稿は**不適切**として通報されました。コミュニティーは投稿が攻撃的、虐待的、ヘイト行為、または[コミュニティーガイドライン](%{base_path}/guidelines)に違反すると感じています。"
@@ -2970,47 +2944,9 @@ ja:
     reviewable_queued_post_revise_and_reject:
       title: "あなたの投稿に対するフィードバック"
       subject_template: "%{topic_title} のあなたの投稿に対するフィードバック"
-      text_body_template: |
-        %{username} さん、こんにちは。
-
-        [%{topic_title}](%{topic_url}) のあなたの投稿をレビューした結果、以下のフィードバックがあります。
-
-        理由: %{reason}
-
-        フィードバック: %{feedback}
-
-        提案された変更を適用するには、以下で元の投稿を編集して再送信するか、ご質問がある場合はこのメッセージに返信してください。
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        よろしくお願いします。
-        %{site_name} モデレーター
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "あなたのトピックに対するフィードバック"
       subject_template: '"%{topic_title}" という新しいトピックに対するフィードバック'
-      text_body_template: |
-        %{username} さん、こんにちは。
-
-        "%{topic_title}" という新しいトピックをレビューした結果、以下のフィードバックがあります。
-
-        理由: %{reason}
-
-        フィードバック: %{feedback}
-
-        提案された変更を適用するには、以下でトピックの元の投稿を編集するか、ご質問がある場合はこのメッセージに返信してください。
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        よろしくお願いします。
-        %{site_name} モデレーター
     post_hidden_again:
       title: "再度非表示"
       preview: "コミュニティーメンバーによって投稿は再度非表示になりました。"
@@ -4026,7 +3962,7 @@ ja:
       title: "古いメールを確認してください"
       subject_template: "[%{email_prefix}] 現在のメールアドレスを確認してください"
       text_body_template: |
-        メールアドレスを変更する前に、あなたが現在のメールアカウントを管理していることを確認する必要があります。このステップを完了したら、当たらhしいメールアドレスを確認してください。
+        メールアドレスを変更する前に、あなたが現在のメールアカウントを管理していることを確認する必要があります。このステップを完了したら、新しいメールアドレスを確認してください。
 
         次のリンクをクリックして、%{site_name} の現在のメールアドレスを確認してください。
 
@@ -4875,7 +4811,6 @@ ja:
       in_this_category: '"%{tag_name}" をこのカテゴリで使用できません'
       restricted_to:
         other: '"%{tag_name}" は次のカテゴリに制限されています: %{category_names}'
-      synonym: '同義語は許可されていません。代わりに "%{tag_name}" を使用してください。'
       has_synonyms: '"%{tag_name}" は同義語が含まれるため使用できません。'
       restricted_tags_cannot_be_used_in_category:
         other: '次のタグは "%{category}" カテゴリで使用できません: %{tags}。削除してください。'

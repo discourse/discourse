@@ -1,7 +1,7 @@
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
@@ -93,10 +93,10 @@ export default <template>
       <ResponsiveTable
         @className={{concatClass "users-list" @controller.query}}
         @ariaLabel={{@controller.title}}
-        @style={{htmlSafe
+        @style={{trustHTML
           (concat
             "grid-template-columns: minmax(min-content, 2fr) repeat("
-            (htmlSafe @controller.columnCount)
+            (trustHTML @controller.columnCount)
             ", minmax(min-content, 1fr))"
           )
         }}
@@ -362,7 +362,7 @@ export default <template>
                     <span>{{i18n "admin.users.silence_reason"}}</span>
                   </span>
                   <span class="directory-table__value">
-                    {{htmlSafe user.silence_reason}}
+                    {{trustHTML user.silence_reason}}
                   </span>
                 </div>
               {{/if}}

@@ -4,15 +4,18 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import Chart from "discourse/admin/components/chart";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Category from "discourse/models/category";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
 
@@ -23,9 +26,10 @@ export default class AiTranslations extends Component {
   @service site;
   @service siteSettings;
 
-  @tracked data = this.args.model?.translation_progress;
-  @tracked done = this.args.model?.posts_with_detected_locale;
-  @tracked total = this.args.model?.total;
+  @tracked data = null;
+  @tracked done = null;
+  @tracked total = null;
+  @tracked loadingProgress = false;
   @tracked
   translationEnabled =
     this.args.model?.translation_enabled &&
@@ -40,14 +44,44 @@ export default class AiTranslations extends Component {
     ? this.siteSettings.content_localization_supported_locales.split("|")
     : [];
   @tracked isSavingLocales = false;
+  @tracked isSavingCategories = false;
   @tracked isTogglingTranslation = false;
-  @tracked hourlyRate = this.args.model?.hourly_rate || 0;
   @tracked creditStatus = null;
   @tracked creditCheckComplete = false;
+  @tracked selectedCategories = [];
+  @tracked originalCategoryIds = this.args.model?.target_category_ids || [];
+  hourlyRate = this.args.model?.hourly_rate || 0;
 
   constructor() {
     super(...arguments);
     this._checkCredits();
+    this._loadTargetCategories();
+    if (this.enabled) {
+      this._loadProgress();
+    }
+  }
+
+  async _loadTargetCategories() {
+    const ids = this.args.model?.target_category_ids || [];
+    if (ids.length) {
+      this.selectedCategories = await Category.asyncFindByIds(ids);
+    }
+  }
+
+  async _loadProgress() {
+    this.loadingProgress = true;
+    try {
+      const response = await ajax(
+        "/admin/plugins/discourse-ai/ai-translations/progress.json"
+      );
+      this.data = response.translation_progress;
+      this.total = response.total;
+      this.done = response.posts_with_detected_locale;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingProgress = false;
+    }
   }
 
   async _checkCredits() {
@@ -72,13 +106,13 @@ export default class AiTranslations extends Component {
       this.creditStatus?.reset_time_formatted ||
       this.creditStatus?.reset_time_absolute;
     if (resetTime) {
-      return htmlSafe(
+      return trustHTML(
         i18n("discourse_ai.translations.credit_limit_warning", {
           reset_time: resetTime,
         })
       );
     }
-    return htmlSafe(
+    return trustHTML(
       i18n("discourse_ai.translations.credit_limit_warning_no_time")
     );
   }
@@ -90,14 +124,15 @@ export default class AiTranslations extends Component {
   }
 
   get showLocaleSelector() {
-    const noLocales =
-      this.args.model?.no_locales_configured ||
-      this.originalLocales.length === 0;
-    return noLocales && !this.translationEnabled;
+    return !this.translationEnabled;
   }
 
-  get showLocalizationSettingsButton() {
-    return this.enabled || !this.showLocaleSelector;
+  get categoriesChanged() {
+    const current = [...this.selectedCategories.map((c) => c.id)]
+      .sort()
+      .join("|");
+    const original = [...this.originalCategoryIds].sort().join("|");
+    return current !== original;
   }
 
   get isToggleDisabled() {
@@ -185,6 +220,42 @@ export default class AiTranslations extends Component {
   }
 
   @action
+  updateSelectedCategories(categories) {
+    this.selectedCategories = categories;
+  }
+
+  @action
+  async saveCategories() {
+    this.isSavingCategories = true;
+    try {
+      const ids = this.selectedCategories.map((c) => c.id);
+      await ajax("/admin/site_settings/ai_translation_target_categories", {
+        type: "PUT",
+        data: {
+          ai_translation_target_categories: ids.join("|"),
+        },
+      });
+      this.originalCategoryIds = ids;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.isSavingCategories = false;
+    }
+  }
+
+  @action
+  async cancelCategories() {
+    this.selectedCategories = await Category.asyncFindByIds(
+      this.originalCategoryIds
+    );
+  }
+
+  @action
+  resetCategories() {
+    this.selectedCategories = [];
+  }
+
+  @action
   async toggleTranslationEnabled() {
     if (this.isTogglingTranslation) {
       return;
@@ -210,16 +281,8 @@ export default class AiTranslations extends Component {
       this.translationEnabled = !this.translationEnabled;
 
       if (this.translationEnabled && !this.args.model.no_locales_configured) {
-        const response = await ajax(
-          "/admin/plugins/discourse-ai/ai-translations"
-        );
-        if (response.enabled) {
-          this.data = response.translation_progress;
-          this.total = response.total;
-          this.done = response.posts_with_detected_locale;
-          this.enabled = response.enabled;
-          this.hourlyRate = response.hourly_rate || 0;
-        }
+        this.enabled = true;
+        this._loadProgress();
       } else {
         this.enabled = false;
       }
@@ -287,7 +350,7 @@ export default class AiTranslations extends Component {
           });
         }
 
-        return htmlSafe(
+        return trustHTML(
           i18n("discourse_ai.translations.stats.backfill_message", {
             date: formattedDate,
             eta: timeKey,
@@ -439,21 +502,17 @@ export default class AiTranslations extends Component {
         @learnMoreUrl="https://meta.discourse.org/t/-/370969"
       >
         <:actions as |actions|>
-          {{#if this.enabled}}
-            <actions.Default
-              @label="discourse_ai.translations.admin_actions.translation_settings"
-              @route="adminPlugins.show.discourse-ai-features.edit"
-              @routeModels={{@model.translation_id}}
-              class="ai-translation-settings-button"
-            />
-          {{/if}}
-          {{#if this.showLocalizationSettingsButton}}
-            <actions.Default
-              @label="discourse_ai.translations.admin_actions.localization_settings"
-              @route="adminConfig.localization.settings"
-              class="ai-localization-settings-button"
-            />
-          {{/if}}
+          <actions.Default
+            @label="discourse_ai.translations.admin_actions.translation_settings"
+            @route="adminPlugins.show.discourse-ai-features.edit"
+            @routeModels={{@model.translation_id}}
+            class="ai-translation-settings-button"
+          />
+          <actions.Default
+            @label="discourse_ai.translations.admin_actions.localization_settings"
+            @route="adminConfig.localization.settings"
+            class="ai-localization-settings-button"
+          />
         </:actions>
       </DPageSubheader>
 
@@ -514,6 +573,49 @@ export default class AiTranslations extends Component {
                   }}</div>
               </div>
             </div>
+            <div class="setting">
+              <div class="setting-label">
+                <label>{{i18n
+                    "discourse_ai.translations.translatable_categories"
+                  }}</label>
+              </div>
+              <div class="setting-value">
+                <div class="ai-translations__category-input-row">
+                  <CategorySelector
+                    @categories={{this.selectedCategories}}
+                    @onChange={{this.updateSelectedCategories}}
+                  />
+                  {{#if this.categoriesChanged}}
+                    <div class="setting-controls">
+                      <DButton
+                        @action={{this.saveCategories}}
+                        @icon="check"
+                        @isLoading={{this.isSavingCategories}}
+                        @ariaLabel="save"
+                        class="ok setting-controls__ok"
+                      />
+                      <DButton
+                        @action={{this.cancelCategories}}
+                        @icon="xmark"
+                        @isLoading={{this.isSavingCategories}}
+                        @ariaLabel="cancel"
+                        class="cancel setting-controls__cancel"
+                      />
+                    </div>
+                  {{else if this.selectedCategories.length}}
+                    <DButton
+                      @action={{this.resetCategories}}
+                      @icon="arrow-rotate-left"
+                      @label="admin.settings.reset"
+                      class="undo setting-controls__undo"
+                    />
+                  {{/if}}
+                </div>
+                <div class="desc">{{i18n
+                    "discourse_ai.translations.translatable_categories_description"
+                  }}</div>
+              </div>
+            </div>
           </div>
         </div>
       {{/if}}
@@ -528,30 +630,33 @@ export default class AiTranslations extends Component {
       </div>
 
       {{#if this.enabled}}
-        <AdminConfigAreaCard class="ai-translations__charts">
-          <:header>
-            {{i18n "discourse_ai.translations.progress_chart.title"}}
-          </:header>
-          <:content>
-            <div class="ai-translations__stats-container">
-              {{#if this.backfillStatusMessage}}
-                <div class="ai-translations__stat-item">
-                  <span class="ai-translations__stat-label">
-                    {{this.backfillStatusMessage}}
-                  </span>
+        <ConditionalLoadingSpinner @condition={{this.loadingProgress}}>
+          {{#if this.data}}
+            <AdminConfigAreaCard class="ai-translations__charts">
+              <:header>
+                {{i18n "discourse_ai.translations.progress_chart.title"}}
+              </:header>
+              <:content>
+                <div class="ai-translations__stats-container">
+                  {{#if this.backfillStatusMessage}}
+                    <div class="ai-translations__stat-item">
+                      <span class="ai-translations__stat-label">
+                        {{this.backfillStatusMessage}}
+                      </span>
+                    </div>
+                  {{/if}}
                 </div>
-              {{/if}}
-            </div>
-            <div class="ai-translations__chart-container">
-              <Chart
-                @chartConfig={{this.chartConfig}}
-                @loadChartDataLabelsPlugin={{true}}
-                class="ai-translations__chart"
-              />
-            </div>
-          </:content>
-        </AdminConfigAreaCard>
-
+                <div class="ai-translations__chart-container">
+                  <Chart
+                    @chartConfig={{this.chartConfig}}
+                    @loadChartDataLabelsPlugin={{true}}
+                    class="ai-translations__chart"
+                  />
+                </div>
+              </:content>
+            </AdminConfigAreaCard>
+          {{/if}}
+        </ConditionalLoadingSpinner>
       {{/if}}
 
     </div>

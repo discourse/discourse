@@ -69,6 +69,18 @@ RSpec.describe PostVoting::CommentsController do
       expect(response.status).to eq(403)
     end
 
+    it "returns 403 when user cannot see the post (e.g. whisper)" do
+      whisper_post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper], user: admin)
+
+      post "/post_voting/comments.json",
+           params: {
+             post_id: whisper_post.id,
+             raw: "this is some content",
+           }
+
+      expect(response.status).to eq(403)
+    end
+
     it "returns the right response when post_id is invalid" do
       post "/post_voting/comments.json", params: { post_id: -999_999, raw: "this is some content" }
 

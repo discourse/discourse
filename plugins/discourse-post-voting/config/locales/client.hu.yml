@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 hu:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: Szavazás
   post_voting:
     reviewables:
       comment_already_handled: "Köszönjük, de már áttekintettük ezt a hozzászólást, és úgy döntöttünk, hogy nem kell újra megjelölni."
@@ -30,13 +26,16 @@ hu:
         label: "Szavazás bejegyzés létrehozása"
       composer_actions:
         create_as_post_voting:
+          label: "Szavazás be-/kikapcsolása"
           desc: "A téma szavazható bejegyzésekkel lesz létrehozva."
         remove_as_post_voting:
+          label: "Szavazás eltávolítás"
           desc: "A téma a szokásos formátumban lesz létrehozva."
     vote:
       already_voted: "Kérdésenként csak egyszer lehet szavazni."
       user_over_limit: "Nem lépheted túl a bizalmi szintedhez tartozó szavazatok számát."
       one_vote_per_post: "Minden bejegyzésre csak egyszer lehet szavazni."
+      toggle_voters: "Szavazók megjelenítése"
     last_answer_lowercase: utolsó válasz
     answer_lowercase:
       one: válasz
@@ -58,6 +57,8 @@ hu:
           edit: "szerkesztés"
           cancel: "mégse"
           add: "Hozzászólás írása"
+          actions:
+            delete: "Hozzászólás törlése"
           show:
             one: Mutass %{count} további hozzászólást
             other: Mutass %{count} további hozzászólást

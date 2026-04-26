@@ -37,6 +37,26 @@
   }
 }
 
+.leaderboard-scoring-details {
+  margin-top: 1em;
+
+  > summary {
+    font-size: var(--font-up-1);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0.5em 0;
+  }
+
+  &__description {
+    color: var(--primary-medium);
+    margin: 0 0 1em;
+  }
+
+  .form-kit__section + .form-kit__section {
+    margin-top: 1.5em;
+  }
+}
+
 .new-leaderboard-container {
   .form-kit__row {
     padding-top: 0;

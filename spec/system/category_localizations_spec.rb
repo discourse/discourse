@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe "Category Localizations", type: :system do
-  SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
+describe "Category Localizations" do
+  let(:switcher_selector) { "button[data-identifier='language-switcher']" }
 
   fab!(:admin)
   fab!(:category) do
@@ -17,7 +17,7 @@ describe "Category Localizations", type: :system do
   end
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }
-  let(:switcher) { PageObjects::Components::DMenu.new(SWITCHER_SELECTOR) }
+  let(:switcher) { PageObjects::Components::DMenu.new(switcher_selector) }
 
   before do
     SiteSetting.content_localization_supported_locales = "es|ja|fr"
@@ -71,6 +71,29 @@ describe "Category Localizations", type: :system do
       it "should show the localization tab" do
         category_page.visit_settings(category)
         expect(category_page).to have_setting_tab("localizations")
+      end
+
+      it "defaults to site locale when category has no locale" do
+        category_without_locale = Fabricate(:category, locale: nil)
+        category_page.visit_edit_localizations(category_without_locale)
+
+        expect(form.field("locale")).to have_value(SiteSetting.default_locale)
+      end
+
+      it "loads the saved locale correctly" do
+        category_page.visit_edit_localizations(category)
+
+        expect(form.field("locale")).to have_value("en")
+      end
+
+      it "allows setting and persisting the category locale" do
+        category_without_locale = Fabricate(:category, locale: nil)
+        category_page.visit_edit_localizations(category_without_locale)
+
+        form.field("locale").select("ja")
+        category_page.save_settings
+
+        expect(category_without_locale.reload.locale).to eq("ja")
       end
 
       describe "when editing a category with no category localizations" do
@@ -136,7 +159,9 @@ describe "Category Localizations", type: :system do
             count: 2,
           )
           expect(
-            page.all(".form-kit__control-select option.--selected").map(&:text),
+            page.all(".form-kit__collection .form-kit__control-select option.--selected").map(
+              &:text
+            ),
           ).to contain_exactly("Spanish (Español)", "Japanese (日本語)")
 
           page.find(".edit-category-tab-localizations .remove-localization", match: :first).click
@@ -252,7 +277,6 @@ describe "Category Localizations", type: :system do
 
             category_page.visit(category)
             category_page.click_edit_category
-            category_page.click_setting_tab("general")
 
             expect(find(".edit-category-tab-general input.category-name").value).to eq(
               category.name,

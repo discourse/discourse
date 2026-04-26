@@ -36,6 +36,8 @@ zh_CN:
       topic_search_placeholder: "按标题或帖子内容搜索话题"
       sidebar_name_filter_placeholder: "名称/用户名"
       assigned: "已指定"
+      group_no_assignments_title: "没有任务"
+      group_no_assignments_body: "该群组目前没有活动任务。"
       group_everyone: "所有人"
       assigned_to: "已指定给"
       assigned_topic_to: "将话题指定给 <a href='%{path}'>%{username}</a>"
@@ -129,8 +131,8 @@ zh_CN:
       web_hooks:
         assign_event:
           group_name: "指定事件"
-          assigned: "当用户指定主题时"
-          unassigned: "当用户取消指定主题时"
+          assigned: "当用户指定话题时"
+          unassigned: "当用户取消指定话题时"
     search:
       advanced:
         in:
@@ -142,6 +144,12 @@ zh_CN:
       bulk:
         unassign: "取消指定话题"
         assign: "指定话题"
+        assign_description: "将所选话题指定给以下用户："
+        unassign_description: "是否取消指定所选话题？"
+        confirm_assign_topics:
+          other: "指定 %{count} 个话题"
+        confirm_unassign_topics:
+          other: "取消指定 %{count} 个话题"
     discourse_automation:
       scriptables:
         random_assign:

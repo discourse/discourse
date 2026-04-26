@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
@@ -50,7 +50,7 @@ export default class PageLoadingSlider extends Component {
 
   get containerStyle() {
     const duration = this.loadingSlider.averageLoadingDuration.toFixed(2);
-    return htmlSafe(`--loading-duration: ${duration}s`);
+    return trustHTML(`--loading-duration: ${duration}s`);
   }
 
   @action

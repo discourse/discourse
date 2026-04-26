@@ -5,6 +5,6 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="edit-category admin-new-category-setup">
     <DPageHeader @titleLabel={{i18n "category.choose_type.title"}} />
-    <CategoryTypeCards @types={{@model}} />
+    <CategoryTypeCards @types={{@model.types}} @counts={{@model.counts}} />
   </div>
 </template>

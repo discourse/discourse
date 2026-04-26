@@ -1,16 +1,15 @@
 /* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
-import EmberObject, { computed, get, getProperties } from "@ember/object";
+import EmberObject, { computed, get, getProperties, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
 import { getOwner, setOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -18,7 +17,6 @@ import {
   removeValueFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
-import { url } from "discourse/lib/computed";
 import {
   AUTO_GROUPS,
   INTERFACE_COLOR_MODES,
@@ -140,6 +138,7 @@ let userOptionFields = [
   "notification_level_when_replying",
   "notify_on_linked_posts",
   "seen_popups",
+  "show_original_content",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
   "skip_new_user_tips",
@@ -163,7 +162,6 @@ function userOption(userOptionKey) {
         {
           id: "discourse.user.userOptions",
           since: "2.9.0.beta12",
-          dropFrom: "3.0.0.beta1",
         }
       );
 
@@ -176,7 +174,6 @@ function userOption(userOptionKey) {
         {
           id: "discourse.user.userOptions",
           since: "2.9.0.beta12",
-          dropFrom: "3.0.0.beta1",
         }
       );
 
@@ -254,25 +251,104 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("treat_as_new_topic_start_date") treat_as_new_topic_start_date;
   @userOption("composition_mode") composition_mode;
 
-  @gt("private_messages_stats.all", 0) hasPMs;
-  @gt("private_messages_stats.mine", 0) hasStartedPMs;
-  @gt("private_messages_stats.unread", 0) hasUnreadPMs;
-  @url("id", "username_lower", "/admin/users/%@1/%@2") adminPath;
-  @equal("trust_level", 0) isBasic;
-  @equal("trust_level", 3) isRegular;
-  @equal("trust_level", 4) isLeader;
-  @or("staff", "isLeader") canManageTopic;
-  @alias("sidebar_category_ids") sidebarCategoryIds;
-  @alias("sidebar_sections") sidebarSections;
-  @mapBy("sidebarTags", "name") sidebarTagNames;
-  @filterBy("groups", "has_messages", true) groupsWithMessages;
-  @alias("can_pick_theme_with_custom_homepage") canPickThemeWithCustomHomepage;
-  @alias("can_edit_tags") canEditTags;
-  @alias("can_change_post_owner") canChangePostOwner;
-
   numGroupsToDisplay = 2;
 
   statusManager = new UserStatusManager(this);
+
+  @computed("private_messages_stats.all")
+  get hasPMs() {
+    return this.private_messages_stats?.all > 0;
+  }
+
+  @computed("private_messages_stats.mine")
+  get hasStartedPMs() {
+    return this.private_messages_stats?.mine > 0;
+  }
+
+  @computed("private_messages_stats.unread")
+  get hasUnreadPMs() {
+    return this.private_messages_stats?.unread > 0;
+  }
+
+  @computed("id", "username_lower")
+  get adminPath() {
+    return getURL(`/admin/users/${this.id}/${this.username_lower}`);
+  }
+
+  @computed("trust_level")
+  get isBasic() {
+    return this.trust_level === 0;
+  }
+
+  @computed("trust_level")
+  get isRegular() {
+    return this.trust_level === 3;
+  }
+
+  @computed("trust_level")
+  get isLeader() {
+    return this.trust_level === 4;
+  }
+
+  @computed("staff", "isLeader")
+  get canManageTopic() {
+    return this.staff || this.isLeader;
+  }
+
+  @computed("sidebar_category_ids")
+  get sidebarCategoryIds() {
+    return this.sidebar_category_ids;
+  }
+
+  set sidebarCategoryIds(value) {
+    set(this, "sidebar_category_ids", value);
+  }
+
+  @dependentKeyCompat
+  get sidebarSections() {
+    return this.sidebar_sections;
+  }
+
+  set sidebarSections(value) {
+    this.sidebar_sections = value;
+  }
+
+  @computed("sidebarTags.@each.name")
+  get sidebarTagNames() {
+    return this.sidebarTags?.map?.((item) => item.name) ?? [];
+  }
+
+  @computed("groups.@each.has_messages")
+  get groupsWithMessages() {
+    return this.groups?.filter?.((item) => item.has_messages === true) ?? [];
+  }
+
+  @computed("can_pick_theme_with_custom_homepage")
+  get canPickThemeWithCustomHomepage() {
+    return this.can_pick_theme_with_custom_homepage;
+  }
+
+  set canPickThemeWithCustomHomepage(value) {
+    set(this, "can_pick_theme_with_custom_homepage", value);
+  }
+
+  @computed("can_edit_tags")
+  get canEditTags() {
+    return this.can_edit_tags;
+  }
+
+  set canEditTags(value) {
+    set(this, "can_edit_tags", value);
+  }
+
+  @computed("can_change_post_owner")
+  get canChangePostOwner() {
+    return this.can_change_post_owner;
+  }
+
+  set canChangePostOwner(value) {
+    set(this, "can_change_post_owner", value);
+  }
 
   @computed("user_option.composition_mode")
   get useRichEditor() {
@@ -325,8 +401,12 @@ export default class User extends RestModel.extend(Evented) {
     return this.staff && this.get("has_new_upcoming_changes");
   }
 
-  destroySession() {
-    return ajax(`/session/${this.username}`, { type: "DELETE" });
+  destroySession(pushSubscription) {
+    const data = {};
+    if (pushSubscription) {
+      data.push_subscription = pushSubscription;
+    }
+    return ajax(`/session/${this.username}`, { type: "DELETE", data });
   }
 
   @computed("username_lower")
@@ -353,9 +433,9 @@ export default class User extends RestModel.extend(Evented) {
       isEmpty(this.profile_background_upload_url) ||
       !this.siteSettings.allow_profile_backgrounds
     ) {
-      return htmlSafe("");
+      return trustHTML("");
     }
-    return htmlSafe(
+    return trustHTML(
       "background-image: url(" +
         getURLWithCDN(this.profile_background_upload_url) +
         ")"
@@ -896,7 +976,16 @@ export default class User extends RestModel.extend(Evented) {
         json.user.card_badge = Badge.create(json.user.card_badge);
       }
 
+      const timezone = json.user.timezone;
+      delete json.user.timezone;
+
       user.setProperties(json.user);
+
+      if (timezone) {
+        user.user_option ||= {};
+        user.user_option.timezone = timezone;
+      }
+
       return user;
     });
   }
@@ -1270,7 +1359,6 @@ export default class User extends RestModel.extend(Evented) {
       {
         id: "discourse.user.resolved-timezone",
         since: "2.9.0.beta12",
-        dropFrom: "3.0.0.beta1",
       }
     );
 
@@ -1401,7 +1489,7 @@ User.reopenClass({
         responses.set("count", responses.get("count") + stat.get("count"));
       });
 
-    const result = new TrackedArray();
+    const result = trackedArray();
     result.push(...stats.filter((stat) => !stat.isResponse));
 
     let insertAt = 0;
@@ -1582,7 +1670,7 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the User class instead of using Discourse.User", {
           since: "2.4.0",
-          id: "discourse.globals.user",
+          id: "discourse.global.user",
         });
         warned = true;
       }

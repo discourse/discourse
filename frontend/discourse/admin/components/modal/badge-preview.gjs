@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DModal from "discourse/components/d-modal";
 import icon from "discourse/helpers/d-icon";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -69,14 +69,14 @@ export default class BadgePreview extends Component {
         {{else}}
           <p class="grant-count">
             {{#if @model.badge.grant_count}}
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "admin.badges.preview.grant_count"
                   count=@model.badge.grant_count
                 )
               }}
             {{else}}
-              {{htmlSafe (i18n "admin.badges.preview.no_grant_count")}}
+              {{trustHTML (i18n "admin.badges.preview.no_grant_count")}}
             {{/if}}
           </p>
 
@@ -98,14 +98,14 @@ export default class BadgePreview extends Component {
             </p>
             <ul>
               {{#each this.processedSample as |html|}}
-                <li>{{htmlSafe html}}</li>
+                <li>{{trustHTML html}}</li>
               {{/each}}
             </ul>
           {{/if}}
 
           {{#if this.hasQueryPlan}}
             <div class="badge-query-plan">
-              {{htmlSafe this.queryPlanHtml}}
+              {{trustHTML this.queryPlanHtml}}
             </div>
           {{/if}}
         {{/if}}

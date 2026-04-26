@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { trackedObject } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
@@ -27,7 +27,7 @@ function attachPolls(elem, helper) {
 
     if (quotedId && post.quoted[quotedId]) {
       pollPost = EmberObject.create(post.quoted[quotedId]);
-      poll = new TrackedObject(pollPost.polls.find((p) => p.name === pollName));
+      poll = trackedObject(pollPost.polls.find((p) => p.name === pollName));
     }
 
     if (poll) {
@@ -92,8 +92,8 @@ function initializePolls(api) {
     "model:post",
     (Superclass) =>
       class extends Superclass {
-        @tracked polls_votes = new TrackedObject();
-        @tracked pollsObject = new TrackedObject();
+        @tracked polls_votes = trackedObject();
+        @tracked pollsObject = trackedObject();
         @tracked _polls;
 
         get polls() {
@@ -108,7 +108,7 @@ function initializePolls(api) {
         _refreshPollsObject() {
           for (const rawPoll of this.polls) {
             const name = rawPoll.name;
-            this.pollsObject[name] ||= new TrackedObject();
+            this.pollsObject[name] ||= trackedObject();
             Object.assign(this.pollsObject[name], rawPoll);
           }
         }

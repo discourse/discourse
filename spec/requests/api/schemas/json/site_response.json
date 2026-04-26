@@ -145,6 +145,15 @@
         },
         "circles_activity": {
           "type": "integer"
+        },
+        "boost": {
+          "type": "integer"
+        },
+        "suggested_edit_created": {
+          "type": "integer"
+        },
+        "suggested_edit_accepted": {
+          "type": "integer"
         }
       },
       "required": [
@@ -537,6 +546,9 @@
                 "integer",
                 "null"
               ]
+            },
+            "only_theme_color_schemes": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -708,6 +720,12 @@
                 "null"
               ]
             },
+            "topic_title_placeholder": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "has_children": {
               "type": "boolean"
             },
@@ -853,6 +871,7 @@
             "permission",
             "notification_level",
             "topic_template",
+            "topic_title_placeholder",
             "has_children",
             "subcategory_count",
             "sort_order",

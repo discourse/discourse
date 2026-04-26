@@ -5,6 +5,23 @@
 # https://translate.discourse.org/
 
 ru:
+  reports:
+    ad_plugin_ad_impressions:
+      description: "Отчет о показах рекламы"
+    ad_plugin_impressions_by_user:
+      title: Показы рекламного плагина по пользователям
+      description: "Показы рекламы сгруппированы по пользователям."
+    ad_plugin_click_through_rate:
+      title: эффективность конверсии рекламного плагина
+      description: "Отчет об эффективности рекламы по объявлениям и местам размещения"
+    ad_plugin_click_through_rate_by_placement:
+      title: Эффективность рекламного плагина в зависимости от места размещения
+      description: "Отчет об эффективности рекламы по размещению"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: Эффективность рекламного плагина по типам рекламы
+      description: "Отчет об эффективности рекламы по типам объявлений"
+  errors:
+    already_clicked: "Клик уже записан"
   site_settings:
     discourse_adplugin_enabled: Включить Discourse Adplugin.
     no_ads_for_personal_messages: "Не показывать рекламу при просмотре личных сообщений"
@@ -16,6 +33,7 @@ ru:
     house_ads_after_nth_post: 'Если включён параметр ''Между сообщениями'', показывать рекламу после каждых N сообщений, где N - указанное здесь значение.'
     house_ads_frequency: "Как часто следует показывать свои собственные рекламные объявления (в процентном соотношении), если другие рекламные сети настроены на показ объявлений."
     ads_txt: "Содержимое файла ads.txt. Дополнительную информацию можно найти на <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>странице поддержки Google AdSense</a>."
+    ad_plugin_routes_enabled: "Включите таргетинг по маршрутам для внутренней рекламы."
     dfp_publisher_id: "Введите сетевой код Google Ad Manager (ранее назывался DFP), который находится в настройках вашей сети. ПРИМЕЧАНИЕ. Вам нужно будет обновить параметр 'content security policy script src'. Смотрите <a href='https://meta.discourse.org/t/33734' target='_blank'>эту тему</a>, содержащую необходимые инструкции."
     dfp_publisher_id_mobile: "(Необязательно) Если вы хотите использовать другой идентификатор Ad Manager для мобильной версии сайта, введите его здесь. Оставьте поле пустым, чтобы использовать dfp_publisher_id на мобильном телефоне."
     dfp_through_trust_level: "Показывать рекламу пользователям, основываясь на уровне доверия. Пользователи с уровнем доверия, превышающим указанное здесь значение, не будут видеть рекламу."

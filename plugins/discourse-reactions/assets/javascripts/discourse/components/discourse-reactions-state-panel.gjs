@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import concatClass from "discourse/helpers/concat-class";
 import { and, eq } from "discourse/truth-helpers";
 import DiscourseReactionsStatePanelReaction from "./discourse-reactions-state-panel-reaction";
@@ -66,6 +68,16 @@ export default class DiscourseReactionsStatePanel extends Component {
     return !!Object.keys(this.args.reactionsUsers).length;
   }
 
+  @action
+  focusContainer(element) {
+    schedule("afterRender", () => {
+      const counter = element.closest(".discourse-reactions-counter");
+      if (counter?.matches(":focus-visible")) {
+        element.focus();
+      }
+    });
+  }
+
   <template>
     <div
       class={{concatClass "discourse-reactions-state-panel" this.classes}}
@@ -75,7 +87,12 @@ export default class DiscourseReactionsStatePanel extends Component {
       {{#if (and @statePanelExpanded @post.reactions.length)}}
         <div class="container">
           {{#if this.hasReactionData}}
-            <div class="counters">
+            <div
+              class="counters"
+              role="list"
+              tabindex="-1"
+              {{didInsert this.focusContainer}}
+            >
               {{#each @post.reactions key="id" as |reaction|}}
                 <DiscourseReactionsStatePanelReaction
                   @reaction={{reaction}}

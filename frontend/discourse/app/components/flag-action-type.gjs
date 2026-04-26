@@ -3,8 +3,7 @@ import Component, { Input, Textarea } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
-import { and, equal } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -13,9 +12,20 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class FlagActionType extends Component {
-  @and("flag.require_message", "selected") showMessageInput;
-  @and("flag.isIllegal", "selected") showConfirmation;
-  @equal("flag.name_key", "notify_user") isNotifyUser;
+  @computed("flag.require_message", "selected")
+  get showMessageInput() {
+    return this.flag?.require_message && this.selected;
+  }
+
+  @computed("flag.isIllegal", "selected")
+  get showConfirmation() {
+    return this.flag?.isIllegal && this.selected;
+  }
+
+  @computed("flag.name_key")
+  get isNotifyUser() {
+    return this.flag?.name_key === "notify_user";
+  }
 
   get flagDescription() {
     return applyValueTransformer("flag-description", this.description, {
@@ -106,7 +116,9 @@ export default class FlagActionType extends Component {
             />
 
             <div class="flag-action-type-details">
-              <span class="description">{{htmlSafe this.flagDescription}}</span>
+              <span class="description">{{trustHTML
+                  this.flagDescription
+                }}</span>
               {{#if this.showMessageInput}}
                 <Textarea
                   name="message"
@@ -143,7 +155,7 @@ export default class FlagActionType extends Component {
             />
             <div class="flag-action-type-details">
               <strong class="flag-name">{{this.formattedName}}</strong>
-              <div class="description">{{htmlSafe this.flagDescription}}</div>
+              <div class="description">{{trustHTML this.flagDescription}}</div>
               {{#if this.showMessageInput}}
                 <Textarea
                   name="message"

@@ -19,6 +19,8 @@ module DiscoursePostEvent
       :closed,
       :"chat-enabled",
       :"max-attendees",
+      :"all-day",
+      :image,
     ]
 
     def self.extract_events(post)
@@ -47,7 +49,9 @@ module DiscoursePostEvent
 
             if value && valid_options.include?(name)
               event ||= {}
-              event[name.sub("data-", "").to_sym] = if %w[data-name data-url].include?(name)
+              event[name.sub("data-", "").to_sym] = if %w[data-name data-url data-image].include?(
+                   name,
+                 )
                 value
               else
                 CGI.escapeHTML(value)
@@ -65,6 +69,20 @@ module DiscoursePostEvent
           event
         end
         .compact
+    end
+
+    def self.linkify_description(text, post: nil)
+      escaped = ERB::Util.html_escape(text)
+      html =
+        escaped.gsub(URI::DEFAULT_PARSER.make_regexp(%w[http https])) do |url|
+          "<a href=\"#{url}\">#{url}</a>"
+        end
+
+      doc = Nokogiri::HTML5.fragment(html)
+      add_nofollow = post.nil? || post.add_nofollow?
+      PrettyText.add_rel_attributes_to_user_content(doc, add_nofollow)
+
+      doc.to_html
     end
   end
 end

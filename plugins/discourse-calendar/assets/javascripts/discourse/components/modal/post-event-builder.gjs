@@ -13,6 +13,7 @@ import DateTimeInputRange from "discourse/components/date-time-input-range";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RadioButton from "discourse/components/radio-button";
+import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
@@ -32,14 +33,30 @@ export default class PostEventBuilder extends Component {
   @tracked isSaving = false;
   @tracked maxAttendeesInput = this.args.model.event.maxAttendees;
 
-  @tracked startsAt = moment(this.event.startsAt).tz(
-    this.event.timezone || "UTC"
-  );
+  @tracked allDay = this.event.allDay || false;
+  @tracked startsAt = this.#initStartsAt();
+  @tracked endsAt = this.#initEndsAt();
 
-  @tracked
-  endsAt =
-    this.event.endsAt &&
-    moment(this.event.endsAt).tz(this.event.timezone || "UTC");
+  #initStartsAt() {
+    if (this.event.allDay) {
+      return moment(this.event.startsAt, "YYYY-MM-DD");
+    }
+    return moment(this.event.startsAt).tz(this.event.timezone || "UTC");
+  }
+
+  #initEndsAt() {
+    if (!this.event.endsAt) {
+      return null;
+    }
+    if (this.event.allDay) {
+      return moment(this.event.endsAt, "YYYY-MM-DD");
+    }
+    return moment(this.event.endsAt).tz(this.event.timezone || "UTC");
+  }
+
+  get showTime() {
+    return !this.allDay;
+  }
 
   get isEditing() {
     return this.args.model.event.id || this.args.model.onUpdate;
@@ -198,6 +215,21 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
+  setAllDay(e) {
+    this.allDay = e.target.checked;
+    this.event.allDay = e.target.checked;
+    if (e.target.checked) {
+      // snap times to start/end of day in the event's timezone
+      if (this.startsAt) {
+        this.startsAt = this.startsAt.clone().startOf("day");
+      }
+      if (this.endsAt) {
+        this.endsAt = this.endsAt.clone().endOf("day");
+      }
+    }
+  }
+
+  @action
   onChangeStatus(newStatus) {
     this.event.rawInvitees = [];
     this.event.status = newStatus;
@@ -268,6 +300,16 @@ export default class PostEventBuilder extends Component {
   @action
   setShowLocalTime(e) {
     this.event.showLocalTime = e.target.checked;
+  }
+
+  @action
+  setImage(upload) {
+    this.event.imageUpload = upload;
+  }
+
+  @action
+  removeImage() {
+    this.event.imageUpload = null;
   }
 
   @action
@@ -385,7 +427,27 @@ export default class PostEventBuilder extends Component {
                   @to={{this.endsAt}}
                   @timezone={{@model.event.timezone}}
                   @onChange={{this.onChangeDates}}
+                  @showFromTime={{this.showTime}}
+                  @showToTime={{this.showTime}}
                 />
+              </EventField>
+
+              <EventField
+                @label="discourse_post_event.builder_modal.all_day.label"
+                class="all-day"
+              >
+                <label class="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={{this.allDay}}
+                    {{on "input" this.setAllDay}}
+                  />
+                  <span class="message">
+                    {{i18n
+                      "discourse_post_event.builder_modal.all_day.description"
+                    }}
+                  </span>
+                </label>
               </EventField>
 
               <EventField
@@ -569,6 +631,19 @@ export default class PostEventBuilder extends Component {
               </EventField>
 
               <EventField
+                @label="discourse_post_event.builder_modal.image.label"
+                class="image"
+              >
+                <UppyImageUploader
+                  @id="post-event-image-uploader"
+                  @imageUrl={{this.event.imageUrl}}
+                  @onUploadDone={{this.setImage}}
+                  @onUploadDeleted={{this.removeImage}}
+                  @type="event_image"
+                />
+              </EventField>
+
+              <EventField
                 class="reminders"
                 @label="discourse_post_event.builder_modal.reminders.label"
               >
@@ -614,7 +689,7 @@ export default class PostEventBuilder extends Component {
                       <DButton
                         @action={{fn @model.event.removeReminder reminder}}
                         @icon="xmark"
-                        class="remove-reminder"
+                        class="btn-default remove-reminder"
                       />
                     </div>
                   {{/each}}
@@ -625,7 +700,7 @@ export default class PostEventBuilder extends Component {
                   @icon="plus"
                   @label="discourse_post_event.builder_modal.add_reminder"
                   @action={{@model.event.addReminder}}
-                  class="add-reminder"
+                  class="btn-default add-reminder"
                 />
               </EventField>
 

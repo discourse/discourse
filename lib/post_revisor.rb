@@ -84,7 +84,8 @@ class PostRevisor
 
   POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type locale]
 
-  attr_reader :category_changed, :post_revision
+  # Extensions can inspect revision options via the `:post_edited` event payload.
+  attr_reader :category_changed, :post_revision, :opts
 
   def initialize(post, topic = post.topic)
     @post = post
@@ -134,7 +135,22 @@ class PostRevisor
       tc.record_change("category_id", current_category.id, nil)
       tc.topic.category_id = nil
     elsif new_category.nil? || tc.guardian.can_move_topic_to_category?(new_category_id)
-      tags = fields[:tags] || tc.topic.tags.map(&:name)
+      tags =
+        if fields[:tags].present?
+          input = fields[:tags]
+          if input.first.is_a?(String)
+            input
+          else
+            ids = input.filter_map { |t| t[:id]&.to_i }
+            names = input.filter_map { |t| t[:id].blank? && t[:name].presence }
+            names += Tag.visible(tc.guardian).where(id: ids).pluck(:name) if ids.present?
+            names
+          end
+        elsif fields.has_key?(:tags)
+          []
+        else
+          tc.topic.tags.map(&:name)
+        end
       if new_category &&
            !DiscourseTagging.validate_category_tags(tc.guardian, tc.topic, new_category, tags)
         tc.check_result(false)
@@ -341,9 +357,14 @@ class PostRevisor
     QuotedPost.extract_from(@post)
     TopicLink.extract_from(@post)
 
-    # Skip resetting highest post number if only changing post ownership
-    Topic.reset_highest(@topic.id) unless @fields.size == 1 && @fields.has_key?("user_id")
+    # Skip heavy post processing operations if the only change was the post ownership (user merges)
+    only_user_id_changed =
+      if @fields.has_key?("user_id")
+        content_tracked_fields = POST_TRACKED_FIELDS - %w[user_id edit_reason]
+        content_tracked_fields.none? { |f| @post.previous_changes.has_key?(f) }
+      end
 
+    Topic.reset_highest(@topic.id) unless only_user_id_changed
     post_process_post
     alert_users
     publish_changes

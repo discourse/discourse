@@ -128,7 +128,7 @@ d/shutdown_dev; d/boot_dev
   ```sh
   d/boot_dev -p
   ```
-- The Dockerfile comes from [discourse/discourse_docker on GitHub](https://github.com/discourse/discourse_docker), in particular [image/discourse_dev](https://github.com/discourse/discourse_docker/tree/master/image/discourse_dev).
+- The Dockerfile comes from [discourse/discourse_docker on GitHub](https://github.com/discourse/discourse_docker), in particular [image/discourse_dev](https://github.com/discourse/discourse_docker/tree/main/image/discourse_dev).
 
 ## Running Tests
 

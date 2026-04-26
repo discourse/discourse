@@ -246,7 +246,7 @@ export default class SearchAdvancedOptions extends Component {
       if (value === "personal") {
         value = "messages";
       }
-      if (validValues.includes(value)) {
+      if (validValues.includes(value) && !selectedFilters.includes(value)) {
         selectedFilters.push(value);
       }
     }

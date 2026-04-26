@@ -5,3 +5,13 @@
 # https://translate.discourse.org/
 
 hu:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: Adplugin Saját hirdetések megjelenítései
+      description: "Saját hirdetések megjelenítési jelentése"
+    ad_plugin_ad_impressions:
+      title: Hirdetésbővítmény hirdetésmegjelenítései
+      description: "Hirdetésmegjelenítési jelentés"
+    ad_plugin_impressions_by_user:
+      title: Hirdetési bővítmény megjelenítései felhasználó szerint
+      description: "Hirdetésmegjelenítések felhasználó szerint csoportosítva"

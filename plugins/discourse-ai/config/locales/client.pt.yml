@@ -10,7 +10,7 @@ pt:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Permite a procura com IA"
       site_settings:
         categories:
@@ -73,14 +73,13 @@ pt:
         none: "Nenhuma"
       features:
         short_title: "Funcionalidades"
-        back: "Voltar"
         disabled: "(desativado)"
         groups: "Grupos:"
         llm:
           one: "LLM:"
           other: "LLMs:"
         no_llm: "Nenhum LLM selecionado"
-        no_persona: "Não definido"
+        no_agent: "Não definido"
         no_groups: "Nenhuma"
         edit: "Configurações"
         expand_list:
@@ -110,7 +109,6 @@ pt:
           description: "Adiciona a capacidade para procurar canais no Discord"
           search: "Procura no Discord"
         ai_helper:
-          name: "Assistente"
           description: "Auxilia os utilizadores na interação com a comunidade, como criar tópicos, escrever artigos, e ler conteúdo"
           proofread: Rever texto
           title_suggestions: "Sugerir títulos"
@@ -150,6 +148,9 @@ pt:
           bar_done:
             one: "%{count} mensagem"
             other: "%{count} mensagens"
+        theme_translations:
+          translate:
+            label: "Traduzir"
       spam:
         short_title: "Spam"
         title: "Configurar manipulação do lixo eletrónico"
@@ -169,8 +170,7 @@ pt:
         periods:
           last_day: "Últimas 24 horas"
           custom: "Personalizar..."
-      ai_persona:
-        back: "Retroceder"
+      ai_agent:
         name: "Nome"
         edit: "Editar"
         export: "Exportar"
@@ -179,6 +179,9 @@ pt:
         user: Utilizador
         save: "Guardar"
         enabled: "Ativado?"
+        mcp_tools_modal:
+          select_all: "Selecionar tudo"
+          clear_all: "Limpar tudo"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
         response_format:
@@ -191,12 +194,12 @@ pt:
         features_list:
           one: "Funcionalidade:"
           other: "Funcionalidades:"
+        llms_list: "LLM:"
       rag:
         uploads:
           title: "Uploads"
           uploading: "A enviar…"
       tools:
-        back: "Retroceder"
         export: "Exportar"
         import: "Importar"
         name: "Nome"
@@ -213,17 +216,26 @@ pt:
         short_title: "Credenciais"
         name: "Nome"
         secret: "Valor"
-        back: "Anterior"
         save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporação"
+      mcp_servers:
+        name: "Nome"
+        description: "Descrição"
+        url: "URL"
+        oauth_connect: "Associar"
+        enabled: "Ativado"
+        save: "Guardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        tools_modal:
+          required: "Necessário"
       llms:
         display_name: "Nome"
         provider: "Provedor"
         save: "Guardar"
         edit: "Editar"
-        back: "Retroceder"
         delete: Eliminar
         quotas:
           group: "Grupo"
@@ -240,7 +252,7 @@ pt:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-6: "O modelo mais inteligente da Anthropic"
+          anthropic-claude-opus-4-7: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
@@ -264,7 +276,6 @@ pt:
         image_caption:
           save_caption: "Guardar"
       embeddings:
-        back: "Retroceder"
         save: "Guardar"
         delete: "Eliminar"
         edit: "Editar"

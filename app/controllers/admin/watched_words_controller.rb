@@ -58,10 +58,10 @@ class Admin::WatchedWordsController < Admin::StaffController
     action_key = params[:action_key].to_sym
     has_replacement = WatchedWord.has_replacement?(action_key)
 
+    content = Encodings.to_utf8(File.read(file.tempfile, mode: "rb"))
+
     Scheduler::Defer.later("Upload watched words") do
       begin
-        content = Encodings.to_utf8(File.read(file.tempfile, mode: "rb"))
-
         words_updated = 0
 
         CSV.parse(content) do |row|

@@ -1,12 +1,9 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
-import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { computed, set } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import PostLanguageSelector from "discourse/components/post-language-selector";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
@@ -31,14 +28,27 @@ const TITLES = {
 
 @tagName("")
 export default class ComposerActionTitle extends Component {
-  @service currentUser;
-  @service siteSettings;
-
-  @alias("model.replyOptions") options;
-  @alias("model.action") action;
-
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
+
+  @computed("model.replyOptions")
+  get options() {
+    return this.model?.replyOptions;
+  }
+
+  set options(value) {
+    set(this, "model.replyOptions", value);
+  }
+
+  @computed("model.action")
+  get action() {
+    return this.model?.action;
+  }
+
+  set action(value) {
+    set(this, "model.action", value);
+  }
+
   @computed("options", "action", "model.tags", "model.category")
   get actionTitle() {
     const result = this.model.customizationFor("actionTitle");
@@ -77,16 +87,6 @@ export default class ComposerActionTitle extends Component {
     }
   }
 
-  @computed("action")
-  get showPostLanguageSelector() {
-    const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
-    return (
-      this.currentUser &&
-      this.siteSettings.content_localization_enabled &&
-      allowedActions.includes(this.action)
-    );
-  }
-
   _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
     let editTitle = `
       <a class="post-link" href="${postLink.href}">${postLink.anchor}</a>
@@ -102,11 +102,11 @@ export default class ComposerActionTitle extends Component {
       `;
     }
 
-    return htmlSafe(editTitle);
+    return trustHTML(editTitle);
   }
 
   _formatReplyToTopic(link) {
-    return htmlSafe(
+    return trustHTML(
       `<a class="topic-link" href="${link.href}" data-topic-id="${this.get(
         "model.topic.id"
       )}">${link.anchor}</a>`
@@ -117,7 +117,7 @@ export default class ComposerActionTitle extends Component {
     const htmlLink = `<a class="user-link" href="${link.href}">${escape(
       link.anchor
     )}</a>`;
-    return htmlSafe(`${avatar}${htmlLink}`);
+    return trustHTML(`${avatar}${htmlLink}`);
   }
 
   <template>
@@ -140,12 +140,6 @@ export default class ComposerActionTitle extends Component {
         {{this.actionTitle}}
       </span>
 
-      {{#if this.showPostLanguageSelector}}
-        <PostLanguageSelector
-          @composerModel={{this.model}}
-          @selectedLanguage={{this.model.locale}}
-        />
-      {{/if}}
     </div>
   </template>
 }

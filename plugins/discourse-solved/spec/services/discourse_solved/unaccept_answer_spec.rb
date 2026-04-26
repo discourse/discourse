@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseSolved::UnacceptAnswer do
-  describe described_class::Contract, type: :model do
+  describe ::DiscourseSolved::UnacceptAnswer::Contract, type: :model do
     it { is_expected.to validate_presence_of(:post_id) }
   end
 
@@ -122,6 +122,30 @@ RSpec.describe DiscourseSolved::UnacceptAnswer do
 
       it "marks the topic as unsolved" do
         expect { result }.to change { DiscourseSolved::SolvedTopic.count }.by(-1)
+      end
+
+      context "when tracking/watching users have topic solved notifications" do
+        fab!(:watching_user, :user)
+
+        before do
+          Notification.create!(
+            notification_type: Notification.types[:custom],
+            user_id: watching_user.id,
+            topic_id: post.topic_id,
+            post_number: post.post_number,
+            data: { message: "solved.topic_solved_notification" }.to_json,
+          )
+        end
+
+        it "removes topic solved notifications" do
+          expect { result }.to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: watching_user,
+              topic: post.topic,
+            ).count
+          }.by(-1)
+        end
       end
 
       context "when an unaccepted_solution webhook is active" do

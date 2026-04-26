@@ -10,24 +10,24 @@ module Jobs
       reply_post = Post.find_by(id: args[:reply_post_id]) if args[:reply_post_id].present?
       return if args[:reply_post_id].present? && reply_post.nil?
       return if reply_post && reply_post.topic_id != post.topic_id
-      persona_id = args[:persona_id]
+      agent_id = args[:agent_id]
       llm_model_id = args[:llm_model_id]
 
       begin
-        persona = DiscourseAi::Personas::Persona.find_by(user: post.user, id: persona_id)
-        raise DiscourseAi::Personas::Bot::BOT_NOT_FOUND if persona.nil?
+        agent = DiscourseAi::Agents::Agent.find_by(user: post.user, id: agent_id)
+        raise DiscourseAi::Agents::Bot::BOT_NOT_FOUND if agent.nil?
 
         llm_model = LlmModel.find_by(id: llm_model_id.to_i) if !llm_model_id.to_i.zero?
-        bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona.new, model: llm_model)
+        bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new, model: llm_model)
 
         DiscourseAi::AiBot::Playground.new(bot).reply_to(
           post,
           feature_name: "bot",
           existing_reply_post: reply_post,
         )
-      rescue DiscourseAi::Personas::Bot::BOT_NOT_FOUND
+      rescue DiscourseAi::Agents::Bot::BOT_NOT_FOUND
         Rails.logger.warn(
-          "Bot not found for post #{post.id} - perhaps persona was deleted or bot was disabled",
+          "Bot not found for post #{post.id} - perhaps agent was deleted or bot was disabled",
         )
       end
     end

@@ -101,25 +101,17 @@ function validationOf(info) {
 }
 
 const components = {
-  int: <template>
-    <@field.Input @type="number" name={{@info.identifier}} />
-  </template>,
-  boolean: <template><@field.Checkbox name={{@info.identifier}} /></template>,
+  int: <template><@Control name={{@info.identifier}} /></template>,
+  boolean: <template><@Control name={{@info.identifier}} /></template>,
   boolean_three: BooleanThree,
   category_id: CategoryIdInput, // TODO
   user_id: UserIdInput,
   user_list: UserListInput,
   group_list: GroupInput,
-  date: <template>
-    <@field.Input @type="date" name={{@info.identifier}} />
-  </template>,
-  time: <template>
-    <@field.Input @type="time" name={{@info.identifier}} />
-  </template>,
-  datetime: <template>
-    <@field.Input @type="datetime-local" name={{@info.identifier}} />
-  </template>,
-  default: <template><@field.Input name={{@info.identifier}} /></template>,
+  date: <template><@Control name={{@info.identifier}} /></template>,
+  time: <template><@Control name={{@info.identifier}} /></template>,
+  datetime: <template><@Control name={{@info.identifier}} /></template>,
+  default: <template><@Control name={{@info.identifier}} /></template>,
 };
 
 function componentOf(info) {
@@ -134,11 +126,15 @@ export default class ParamInputForm extends Component {
   @service site;
 
   data = {};
+
   paramInfo = [];
+
   infoOf = {};
+
   form = null;
 
   promiseNormalizations = [];
+
   formLoaded = new Promise((res) => {
     this.__form_load_callback = res;
   });
@@ -151,6 +147,34 @@ export default class ParamInputForm extends Component {
       submit: this.submit,
       allNormalized: Promise.allSettled(this.promiseNormalizations),
     });
+  }
+
+  fieldTypeFor(info) {
+    let type = layoutMap[info.type] || "generic";
+
+    if (info.nullable && type === "boolean") {
+      return "select";
+    }
+
+    switch (type) {
+      case "int":
+        return "input-number";
+      case "boolean":
+        return "checkbox";
+      case "date":
+        return "input-date";
+      case "time":
+        return "input-time";
+      case "datetime":
+        return "input-datetime-local";
+      case "category_id":
+      case "user_id":
+      case "user_list":
+      case "group_list":
+        return "custom";
+      default:
+        return "input";
+    }
   }
 
   initializeParams() {
@@ -224,41 +248,47 @@ export default class ParamInputForm extends Component {
         }
         return value;
       case "date":
-        try {
-          if (!value) {
-            return null;
-          }
-          return moment(value).format("YYYY-MM-DD");
-        } catch {
-          this.addError(info.identifier, ERRORS.INVALID_DATE(String(value)));
-          return null;
+        const m = value && moment(value, "YYYY-MM-DD", true);
+        if (m?.isValid()) {
+          return m.format("YYYY-MM-DD");
+        } else {
+          return this.formatMoment(
+            info,
+            value,
+            "YYYY-MM-DD",
+            ERRORS.INVALID_DATE
+          );
         }
       case "time":
-        try {
-          if (!value) {
-            return null;
-          }
-          return moment(new Date(`1970/01/01 ${value}`).toISOString()).format(
-            "HH:mm"
-          );
-        } catch {
-          this.addError(info.identifier, ERRORS.INVALID_TIME(String(value)));
-          return null;
-        }
+        return this.formatMoment(
+          info,
+          value,
+          "HH:mm",
+          ERRORS.INVALID_TIME,
+          `1970/01/01 ${value}`
+        );
       case "datetime":
-        try {
-          if (!value) {
-            return null;
-          }
-          return moment(new Date(value).toISOString()).format(
-            "YYYY-MM-DD HH:mm"
-          );
-        } catch {
-          this.addError(info.identifier, ERRORS.INVALID_TIME(String(value)));
-          return null;
-        }
+        return this.formatMoment(
+          info,
+          value,
+          "YYYY-MM-DD HH:mm",
+          ERRORS.INVALID_TIME
+        );
       default:
         return value;
+    }
+  }
+
+  formatMoment(info, value, format, errorFn, parseInput = value) {
+    if (!value) {
+      return null;
+    }
+
+    try {
+      return moment(new Date(parseInput).toISOString()).format(format);
+    } catch {
+      this.addError(info.identifier, errorFn(String(value)));
+      return null;
     }
   }
 
@@ -447,9 +477,14 @@ export default class ParamInputForm extends Component {
                 @title={{info.identifier}}
                 @validation={{info.validation}}
                 @validate={{info.validate}}
+                @type={{this.fieldTypeFor info}}
                 as |field|
               >
-                <info.component @field={{field}} @info={{info}} />
+                <info.component
+                  @Control={{field.Control}}
+                  @field={{field}}
+                  @info={{info}}
+                />
                 <ConditionalLoadingSpinner
                   @condition={{info.loading}}
                   @size="small"

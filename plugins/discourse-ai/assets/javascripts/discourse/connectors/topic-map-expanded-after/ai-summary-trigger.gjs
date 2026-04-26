@@ -4,9 +4,10 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
+import EmbedMode from "discourse/lib/embed-mode";
 import AiSummaryModal from "../../components/modal/ai-summary-modal";
 
 export default class AiSummaryTrigger extends Component {
@@ -25,7 +26,7 @@ export default class AiSummaryTrigger extends Component {
 
     const instance = this.tooltip.register(element, {
       identifier: "ai-credit-limit-tooltip",
-      content: htmlSafe(
+      content: trustHTML(
         this.aiCredits.getCreditLimitMessage(this.creditStatus)
       ),
       placement: "top",
@@ -59,7 +60,7 @@ export default class AiSummaryTrigger extends Component {
     this.creditStatus = null;
     this.creditCheckComplete = false;
 
-    if (!this.currentUser) {
+    if (!this.currentUser || EmbedMode.enabled) {
       this.creditCheckComplete = true;
       return;
     }

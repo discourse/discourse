@@ -6,6 +6,6 @@ module DiscourseAi
     TOPIC_AI_BOT_PM_FIELD = "is_ai_bot_pm"
     POST_AI_LLM_NAME_FIELD = "ai_llm_name"
     POST_AI_LLM_MODEL_ID_FIELD = "ai_llm_model_id"
-    POST_AI_PERSONA_ID_FIELD = "ai_persona_id"
+    POST_AI_AGENT_ID_FIELD = "ai_agent_id"
   end
 end

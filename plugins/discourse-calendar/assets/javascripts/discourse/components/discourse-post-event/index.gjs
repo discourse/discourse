@@ -11,11 +11,13 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 import ChatChannel from "./chat-channel";
 import Creator from "./creator";
 import Dates from "./dates";
 import Description from "./description";
 import EventStatus from "./event-status";
+import Image from "./image";
 import Invitees from "./invitees";
 import Location from "./location";
 import MoreMenu from "./more-menu";
@@ -54,13 +56,19 @@ export default class DiscoursePostEvent extends Component {
   });
 
   getDisplayTime(time) {
-    if (this.event.showLocalTime) {
+    if (this.event.allDay) {
+      return moment(time, "YYYY-MM-DD");
+    } else if (this.event.showLocalTime) {
       return moment.tz(time, this.event.timezone || "UTC");
     } else {
       return moment
         .utc(time)
         .tz(this.currentUser?.user_option?.timezone || moment.tz.guess());
     }
+  }
+
+  get clampDescription() {
+    return this.args.clampDescription ?? false;
   }
 
   get withDescription() {
@@ -101,6 +109,15 @@ export default class DiscoursePostEvent extends Component {
     return this.event.isExpired && this.event.recurrence;
   }
 
+  get recurrenceLabel() {
+    if (!this.event?.recurrence) {
+      return null;
+    }
+    return i18n(
+      `discourse_post_event.builder_modal.recurrence.${this.event.recurrence}`
+    );
+  }
+
   @bind
   async loadEvent() {
     if (this.event) {
@@ -124,6 +141,10 @@ export default class DiscoursePostEvent extends Component {
         <div class="discourse-post-event">
           <div class="discourse-post-event-widget">
             {{#if event}}
+              <Image
+                @imageUpload={{event.imageUpload}}
+                @alt={{this.eventName}}
+              />
               <header class="event-header" {{this.setupMessageBus}}>
                 <div class="event-date">
                   <div class="month">
@@ -169,19 +190,23 @@ export default class DiscoursePostEvent extends Component {
                   </div>
                 </div>
 
-                <MoreMenu
-                  @event={{event}}
-                  @isStandaloneEvent={{this.isStandaloneEvent}}
-                  @composePrivateMessage={{routeAction "composePrivateMessage"}}
-                />
-
-                {{#if @onClose}}
-                  <DButton
-                    class="btn-default btn-small discourse-post-event-close"
-                    @icon="xmark"
-                    @action={{@onClose}}
+                <div class="event-header__controls">
+                  <MoreMenu
+                    @event={{event}}
+                    @isStandaloneEvent={{this.isStandaloneEvent}}
+                    @composePrivateMessage={{routeAction
+                      "composePrivateMessage"
+                    }}
                   />
-                {{/if}}
+
+                  {{#if @onClose}}
+                    <DButton
+                      class="btn-default btn-small discourse-post-event-close"
+                      @icon="xmark"
+                      @action={{@onClose}}
+                    />
+                  {{/if}}
+                </div>
               </header>
 
               <PluginOutlet
@@ -191,7 +216,9 @@ export default class DiscoursePostEvent extends Component {
                   Section=(component InfoSection event=event)
                   Url=(component Url url=event.url)
                   Description=(component
-                    Description description=event.description
+                    Description
+                    description=event.description
+                    clamp=this.clampDescription
                   )
                   Location=(component Location location=event.location)
                   Dates=(component
@@ -199,22 +226,37 @@ export default class DiscoursePostEvent extends Component {
                     event=event
                     expiredAndRecurring=this.expiredAndRecurring
                   )
+                  Recurrence=(component
+                    InfoSection icon="arrows-rotate" class="event-recurrence"
+                  )
+                  recurrenceLabel=this.recurrenceLabel
                   Invitees=(component Invitees event=event)
                   Status=(component Status event=event)
                   ChatChannel=(component ChatChannel event=event)
+                  Image=(component
+                    Image imageUpload=event.imageUpload alt=this.eventName
+                  )
                 }}
               >
                 <Dates
                   @event={{event}}
                   @expiredAndRecurring={{this.expiredAndRecurring}}
                 />
+                {{#if event.recurrence}}
+                  <InfoSection @icon="arrows-rotate" class="event-recurrence">
+                    {{this.recurrenceLabel}}
+                  </InfoSection>
+                {{/if}}
                 <Location @location={{event.location}} />
                 <Url @url={{event.url}} />
                 <ChatChannel @event={{event}} />
                 <Invitees @event={{event}} />
 
                 {{#if this.withDescription}}
-                  <Description @description={{event.description}} />
+                  <Description
+                    @descriptionHtml={{event.descriptionHtml}}
+                    @clamp={{this.clampDescription}}
+                  />
                 {{/if}}
 
                 {{#if @event.canUpdateAttendance}}
