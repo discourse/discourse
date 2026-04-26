@@ -16,6 +16,8 @@ describe PostMover do
   fab!(:user_reaction_3) { Fabricate(:reaction_user, reaction: reaction_3, post: post_2) }
   fab!(:user_reaction_4) { Fabricate(:reaction_user, reaction: reaction_4, post: post_2) }
 
+  before { enable_current_plugin }
+
   it "should create new post when topic's first post has no reactions" do
     old_topic = Fabricate(:topic)
     new_topic = Fabricate(:topic)
