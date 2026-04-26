@@ -245,7 +245,7 @@ GEM
       reline (>= 0.4.2)
     iso8601 (0.13.0)
     jmespath (1.6.2)
-    json (2.19.3)
+    json (2.19.4)
     json-schema (6.2.0)
       addressable (~> 2.8)
       bigdecimal (>= 3.1, < 5)
@@ -1047,7 +1047,7 @@ CHECKSUMS
   irb (1.17.0) sha256=168c4ddb93d8a361a045c41d92b2952c7a118fa73f23fe14e55609eb7a863aae
   iso8601 (0.13.0) sha256=298c2b15b7be5fa95a1372813d36a2257656cd8e906dfbc1f5cb409851425aa2
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
-  json (2.19.3) sha256=289b0bb53052a1fa8c34ab33cc750b659ba14a5c45f3fcf4b18762dc67c78646
+  json (2.19.4) sha256=670a7d333fb3b18ca5b29cb255eb7bef099e40d88c02c80bd42a3f30fe5239ac
   json-schema (6.2.0) sha256=e8bff46ed845a22c1ab2bd0d7eccf831c01fe23bb3920caa4c74db4306813666
   json_schemer (2.5.0) sha256=2f01fb4cce721a4e08dd068fc2030cffd0702a7f333f1ea2be6e8991f00ae396
   jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
