@@ -119,10 +119,41 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
 
       let(:form_data) { {} }
 
-      it { is_expected.to fail_a_step(:validate_required_form_fields) }
+      it { is_expected.to fail_a_step(:validate_form_submission) }
 
-      it "sets missing field labels" do
-        expect(result[:missing_fields]).to eq(["Feedback"])
+      it "sets the missing field error" do
+        expect(result[:form_errors]).to contain_exactly({ field_label: "Feedback", code: :missing })
+      end
+    end
+
+    context "when a number field receives a non-numeric value" do
+      fab!(:workflow) do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:manual"
+            g.node "form-action-1",
+                   "action:form",
+                   name: "Form Action",
+                   configuration: {
+                     "form_title" => "Resume Form",
+                     "form_fields" => [
+                       { "field_label" => "Age", "field_type" => "number", "required" => true },
+                     ],
+                   }
+            g.chain "trigger-1", "form-action-1"
+          end
+        Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
+      end
+
+      let(:form_data) { { "age" => "abc" } }
+
+      it { is_expected.to fail_a_step(:validate_form_submission) }
+
+      it "does not raise and reports the invalid value" do
+        expect { result }.not_to raise_error
+        expect(result[:form_errors]).to contain_exactly(
+          { field_label: "Age", code: :invalid_value },
+        )
       end
     end
 

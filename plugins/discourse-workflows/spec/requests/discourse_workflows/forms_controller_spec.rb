@@ -107,7 +107,7 @@ RSpec.describe DiscourseWorkflows::FormsController do
       expect(response.status).to eq(422)
     end
 
-    it "returns 422 with missing field labels when required fields are omitted" do
+    it "returns 422 with structured errors when required fields are omitted" do
       post form_path,
            params: {
              resume_token: initial_resume_token,
@@ -116,7 +116,9 @@ RSpec.describe DiscourseWorkflows::FormsController do
            },
            headers: origin_headers
       expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to eq(["Name"])
+      expect(response.parsed_body["errors"]).to eq(
+        [{ "field_label" => "Name", "code" => "missing" }],
+      )
     end
 
     context "when the form requires a logged-in user" do

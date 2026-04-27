@@ -23,7 +23,7 @@ module DiscourseWorkflows
     model :trigger_node
     policy :authenticated_if_required
     step :validate_initial_submission_token
-    step :validate_required_form_fields
+    step :validate_form_submission
     model :execution, :run_workflow
     model :response_metadata, :build_response_metadata
 
@@ -34,12 +34,13 @@ module DiscourseWorkflows
       guardian.authenticated?
     end
 
-    def validate_required_form_fields(trigger_node:, params:)
-      missing = Workflow.missing_required_form_fields(trigger_node, params.form_data)
-      if missing.present?
-        context[:missing_fields] = missing
-        fail!(I18n.t("discourse_workflows.errors.missing_required_fields"))
+    def validate_form_submission(trigger_node:, params:)
+      result = FormSchema.validate(trigger_node, params.form_data)
+      if !result.valid?
+        context[:form_errors] = result.errors.map(&:to_h)
+        fail!(I18n.t("discourse_workflows.errors.invalid_form_submission"))
       end
+      context[:coerced_form_data] = result.data
     end
 
     def fetch_workflow(params:)
@@ -72,10 +73,14 @@ module DiscourseWorkflows
       fail!(I18n.t("discourse_workflows.errors.invalid_form_token"))
     end
 
-    def run_workflow(workflow:, trigger_node:, params:, guardian:)
-      form_data = DiscourseWorkflows::Workflow.form_data_from(trigger_node, params.form_data)
-      form_data.transform_values! { |v| v.is_a?(String) ? v.truncate(MAX_FIELD_VALUE_LENGTH) : v }
-      trigger_data = { "form_data" => form_data, "submitted_at" => Time.current.utc.iso8601 }
+    def run_workflow(workflow:, trigger_node:, coerced_form_data:, guardian:)
+      coerced_form_data.transform_values! do |v|
+        v.is_a?(String) ? v.truncate(MAX_FIELD_VALUE_LENGTH) : v
+      end
+      trigger_data = {
+        "form_data" => coerced_form_data,
+        "submitted_at" => Time.current.utc.iso8601,
+      }
 
       options = DiscourseWorkflows::Executor::ExecutionOptions.new(user: guardian.user)
       DiscourseWorkflows::Executor.new(workflow, trigger_node["id"], trigger_data, options).run

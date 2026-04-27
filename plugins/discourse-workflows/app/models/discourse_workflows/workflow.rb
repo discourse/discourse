@@ -128,34 +128,6 @@ module DiscourseWorkflows
       fields.map { |f| f.merge("key" => form_field_key(f)) }
     end
 
-    def self.missing_required_form_fields(node, submitted_params)
-      data = submitted_params.with_indifferent_access
-      Array(node.dig("configuration", "form_fields")).filter_map do |field|
-        next unless field["required"]
-        next if field["field_type"] == "checkbox"
-        field["field_label"] if data[form_field_key(field)].blank?
-      end
-    end
-
-    def self.form_data_from(node, submitted_params)
-      Array(node.dig("configuration", "form_fields")).each_with_object({}) do |field, data|
-        key = form_field_key(field)
-        data[key] = coerce_form_field_value(submitted_params[key], field["field_type"])
-      end
-    end
-
-    def self.coerce_form_field_value(value, field_type)
-      case field_type
-      when "number"
-        return if value.blank?
-        value.to_s.include?(".") ? Float(value) : Integer(value)
-      when "checkbox"
-        ActiveModel::Type::Boolean.new.cast(value)
-      else
-        value
-      end
-    end
-
     private
 
     def error_workflow_must_exist

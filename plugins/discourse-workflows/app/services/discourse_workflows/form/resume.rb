@@ -20,18 +20,19 @@ module DiscourseWorkflows
 
     model :execution
     model :waiting_node
-    step :validate_required_form_fields
+    step :validate_form_submission
     model :claimed_execution
     step :resume_execution
 
     private
 
-    def validate_required_form_fields(waiting_node:, params:)
-      missing = Workflow.missing_required_form_fields(waiting_node, params.form_data)
-      if missing.present?
-        context[:missing_fields] = missing
-        fail!(I18n.t("discourse_workflows.errors.missing_required_fields"))
+    def validate_form_submission(waiting_node:, params:)
+      result = FormSchema.validate(waiting_node, params.form_data)
+      if !result.valid?
+        context[:form_errors] = result.errors.map(&:to_h)
+        fail!(I18n.t("discourse_workflows.errors.invalid_form_submission"))
       end
+      context[:coerced_form_data] = result.data
     end
 
     def fetch_execution(params:)
@@ -55,11 +56,8 @@ module DiscourseWorkflows
       )
     end
 
-    def resume_execution(execution:, claimed_execution:, waiting_node:, params:, guardian:)
-      form_data =
-        execution.accumulated_form_data.merge(
-          DiscourseWorkflows::Workflow.form_data_from(waiting_node, params.form_data),
-        )
+    def resume_execution(execution:, claimed_execution:, coerced_form_data:, guardian:)
+      form_data = execution.accumulated_form_data.merge(coerced_form_data)
 
       response_items = [
         { "json" => { "form_data" => form_data, "submitted_at" => Time.current.utc.iso8601 } },

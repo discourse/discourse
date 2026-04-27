@@ -84,17 +84,49 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
     context "when required form fields are missing" do
       let(:form_data) { {} }
 
-      it { is_expected.to fail_a_step(:validate_required_form_fields) }
+      it { is_expected.to fail_a_step(:validate_form_submission) }
 
-      it "sets missing field labels" do
-        expect(result[:missing_fields]).to eq(["Name"])
+      it "sets the missing field error" do
+        expect(result[:form_errors]).to contain_exactly({ field_label: "Name", code: :missing })
       end
     end
 
     context "when required form fields are blank" do
       let(:form_data) { { "name" => "" } }
 
-      it { is_expected.to fail_a_step(:validate_required_form_fields) }
+      it { is_expected.to fail_a_step(:validate_form_submission) }
+    end
+
+    context "when a number field receives a non-numeric value" do
+      let(:uuid) { "11111111-2222-3333-4444-555555555555" }
+
+      fab!(:workflow) do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1",
+                   "trigger:form",
+                   configuration: {
+                     "uuid" => "11111111-2222-3333-4444-555555555555",
+                     "form_title" => "Test Form",
+                     "form_fields" => [
+                       { "field_label" => "Age", "field_type" => "number", "required" => true },
+                     ],
+                     "response_mode" => "on_received",
+                   }
+          end
+        Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
+      end
+
+      let(:form_data) { { "age" => "abc" } }
+
+      it { is_expected.to fail_a_step(:validate_form_submission) }
+
+      it "does not raise and reports the invalid value" do
+        expect { result }.not_to raise_error
+        expect(result[:form_errors]).to contain_exactly(
+          { field_label: "Age", code: :invalid_value },
+        )
+      end
     end
 
     context "when the initial submission token is missing" do
