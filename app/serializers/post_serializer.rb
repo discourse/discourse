@@ -195,26 +195,13 @@ class PostSerializer < BasicPostSerializer
   end
 
   def editable_web_artifact_ids
-    return [] if object.cooked.blank? || !object.cooked.include?("artifact-id=")
-
-    ids =
-      Nokogiri::HTML5
-        .fragment(object.cooked)
-        .css("div.web-artifact, div.ai-artifact")
-        .map { |node| (node["data-web-artifact-id"] || node["data-ai-artifact-id"]).to_i }
-        .reject(&:zero?)
-        .uniq
-
-    return [] if ids.empty?
-
-    WebArtifact
-      .where(id: ids)
-      .select { |artifact| scope.can_edit_web_artifact?(artifact) }
-      .map(&:id)
+    post_web_artifacts.select { |artifact| scope.can_edit_web_artifact?(artifact) }.map(&:id)
   end
 
   def include_editable_web_artifact_ids?
-    scope.authenticated? && object.cooked.to_s.include?("artifact-id=")
+    return false if !scope.authenticated?
+    return false if SiteSetting.web_artifact_security == "disabled"
+    post_web_artifacts.present?
   end
 
   def can_delete
@@ -735,6 +722,15 @@ class PostSerializer < BasicPostSerializer
     @can_review_topic = @topic_view&.can_review_topic
     @can_review_topic ||= scope.can_review_topic?(object.topic)
     @can_review_topic
+  end
+
+  def post_web_artifacts
+    @post_web_artifacts ||=
+      if @topic_view
+        @topic_view.web_artifacts_by_post_id[object.id] || []
+      else
+        WebArtifact.where(post_id: object.id).to_a
+      end
   end
 
   def reviewable

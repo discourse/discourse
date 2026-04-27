@@ -954,12 +954,6 @@ RSpec.describe PostSerializer do
     fab!(:other_user, :user)
     fab!(:foreign_artifact) { Fabricate(:web_artifact, user: other_user, post: post_with_artifact) }
 
-    before { post_with_artifact.update_columns(cooked: <<~HTML) }
-          <p>look</p>
-          <div class="web-artifact" data-web-artifact-id="#{owned_artifact.id}"></div>
-          <div class="ai-artifact" data-ai-artifact-id="#{foreign_artifact.id}"></div>
-        HTML
-
     it "lists artifact ids the current user can edit" do
       json =
         PostSerializer.new(post_with_artifact, scope: Guardian.new(author), root: false).as_json
@@ -987,9 +981,16 @@ RSpec.describe PostSerializer do
       expect(json.key?(:editable_web_artifact_ids)).to eq(false)
     end
 
-    it "is omitted from posts that don't reference an artifact" do
+    it "is omitted from posts that don't have any artifacts attached" do
       plain_post = Fabricate(:post, user: author)
       json = PostSerializer.new(plain_post, scope: Guardian.new(author), root: false).as_json
+      expect(json.key?(:editable_web_artifact_ids)).to eq(false)
+    end
+
+    it "is omitted when web_artifact_security is disabled" do
+      SiteSetting.web_artifact_security = "disabled"
+      json =
+        PostSerializer.new(post_with_artifact, scope: Guardian.new(author), root: false).as_json
       expect(json.key?(:editable_web_artifact_ids)).to eq(false)
     end
   end

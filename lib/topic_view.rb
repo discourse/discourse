@@ -18,6 +18,7 @@ class TopicView
   memoize_for_posts :post_user_badges
   memoize_for_posts :last_post
   memoize_for_posts :preloaded_post_data_store
+  memoize_for_posts :web_artifacts_by_post_id
 
   def self.on_preload(&blk)
     (@preload ||= Set.new) << blk
@@ -238,6 +239,12 @@ class TopicView
         .to_h
 
     { users: user_badge_mapping, badges: indexed_badges }
+  end
+
+  def web_artifacts_by_post_id
+    return @web_artifacts_by_post_id ||= {} if SiteSetting.web_artifact_security == "disabled"
+
+    @web_artifacts_by_post_id ||= WebArtifact.where(post_id: @posts.map(&:id)).group_by(&:post_id)
   end
 
   def post_user_badges
