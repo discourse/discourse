@@ -114,8 +114,11 @@ module Chat
 
         chat_channel
           .chat_messages
-          .order("created_at ASC, id ASC")
-          .find_in_batches(batch_size: ARCHIVED_MESSAGES_PER_POST) do |message_batch|
+          .find_in_batches(
+            batch_size: ARCHIVED_MESSAGES_PER_POST,
+            cursor: %i[created_at id],
+            order: :asc,
+          ) do |message_batch|
             thread_ids = message_batch.map(&:thread_id).compact.uniq
             threads =
               chat_channel
