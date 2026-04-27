@@ -209,7 +209,7 @@ RSpec.describe DiscourseWorkflows::Form::Show do
                      configuration: {
                        "form_title" => "Waiting Form",
                        "form_description" => "={{ $execution.resume_url }}",
-                       "form_fields" => [],
+                       "form_fields" => [{ "field_label" => "Feedback", "field_type" => "text" }],
                      }
               g.chain "trigger-1", "form-action-1"
             end
@@ -233,7 +233,7 @@ RSpec.describe DiscourseWorkflows::Form::Show do
                      configuration: {
                        "form_title" => "Waiting Form",
                        "form_description" => "=ID is {{ $execution.id }}",
-                       "form_fields" => [],
+                       "form_fields" => [{ "field_label" => "Feedback", "field_type" => "text" }],
                      }
               g.chain "trigger-1", "form-action-1"
             end
@@ -270,7 +270,7 @@ RSpec.describe DiscourseWorkflows::Form::Show do
                      configuration: {
                        "form_title" => "Waiting Form",
                        "form_description" => '=Counter was {{ $("Manual").context["counter"] }}',
-                       "form_fields" => [],
+                       "form_fields" => [{ "field_label" => "Feedback", "field_type" => "text" }],
                      }
               g.chain "trigger-1", "form-action-1"
             end
@@ -307,7 +307,7 @@ RSpec.describe DiscourseWorkflows::Form::Show do
                      configuration: {
                        "form_title" => "Waiting Form",
                        "form_description" => "A waiting form",
-                       "form_fields" => [],
+                       "form_fields" => [{ "field_label" => "Feedback", "field_type" => "text" }],
                      }
               g.node "form-action-2", "action:form", configuration: { "form_fields" => [] }
               g.chain "trigger-1", "form-action-1", "form-action-2"
@@ -330,7 +330,7 @@ RSpec.describe DiscourseWorkflows::Form::Show do
                      configuration: {
                        "form_title" => "Waiting Form",
                        "form_description" => "A waiting form",
-                       "form_fields" => [],
+                       "form_fields" => [{ "field_label" => "Feedback", "field_type" => "text" }],
                      }
               g.node "action-between", "action:send_message"
               g.node "form-action-2", "action:form", configuration: { "form_fields" => [] }

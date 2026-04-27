@@ -113,7 +113,7 @@ RSpec.describe "Workflow Expression Editor" do
       page.find(".cm-wf-variable", text: "$json", wait: 5).hover
 
       expect(expression_editor).to have_hover_tooltip
-      expect(expression_editor.hover_tooltip_text).to include("previous node")
+      expect(expression_editor.hover_tooltip_text).to include("current input item")
     end
   end
 
