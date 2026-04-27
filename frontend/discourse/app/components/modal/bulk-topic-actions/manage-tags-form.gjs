@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
@@ -7,6 +8,8 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ManageTagsForm extends Component {
+  @tracked submitAttempted = false;
+
   formApi;
 
   initialData = {
@@ -29,13 +32,37 @@ export default class ManageTagsForm extends Component {
 
   @action
   triggerSubmit() {
+    this.submitAttempted = true;
+    this.#refreshDisabled();
     this.formApi?.submit();
   }
 
   @action
   afterFieldSet(value, { set, name }) {
     set(name, value);
-    this.args.setSubmitDisabled?.(!this.#hasAction());
+    this.#refreshDisabled();
+  }
+
+  @action
+  removeReplaceRow(collection, index) {
+    collection.remove(index);
+    // `collection.remove` doesn't re-key row errors, so drop them all.
+    this.formApi.removeErrors();
+    this.#refreshDisabled();
+  }
+
+  #refreshDisabled() {
+    this.args.setSubmitDisabled?.(!this.#canSubmit());
+  }
+
+  #canSubmit() {
+    if (!this.#hasAction()) {
+      return false;
+    }
+    if (this.submitAttempted && this.#hasInvalidRows()) {
+      return false;
+    }
+    return true;
   }
 
   #hasAction() {
@@ -52,12 +79,16 @@ export default class ManageTagsForm extends Component {
     );
   }
 
-  @action
-  removeReplaceRow(collection, index) {
-    collection.remove(index);
-    // `collection.remove` doesn't re-key row errors, so drop them all.
-    this.formApi.removeErrors();
-    this.args.setSubmitDisabled?.(!this.#hasAction());
+  #hasInvalidRows() {
+    const rows = this.formApi.get("replace_rows") ?? [];
+    return rows.some((row) => {
+      const status = this.#replaceRowStatus(row);
+      return (
+        status === "missing-from" ||
+        status === "missing-to" ||
+        status === "same-tag"
+      );
+    });
   }
 
   @action
