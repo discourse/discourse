@@ -71,7 +71,7 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateArtifact do
         [/details]
 
         ### Preview
-        <div class="ai-artifact" data-ai-artifact-id="#{artifact_id}"></div>
+        <div class="web-artifact" data-web-artifact-id="#{artifact_id}"></div>
       MD
       expect(tool.custom_raw.strip).to eq(expected.strip)
     end

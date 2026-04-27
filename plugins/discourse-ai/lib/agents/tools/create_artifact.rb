@@ -353,7 +353,7 @@ module DiscourseAi
             [/details]
 
             ### Preview
-            <div class="ai-artifact" data-ai-artifact-id="#{artifact.id}"></div>
+            <div class="web-artifact" data-web-artifact-id="#{artifact.id}"></div>
           MD
 
           self.custom_raw = html_preview

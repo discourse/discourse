@@ -120,8 +120,8 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
           first_post.update!(raw: <<~RAW)
             This is a post with an artifact
 
-            <div class="ai-artifact" data-ai-artifact-id="#{artifact.id}"></div>
-            <div class="ai-artifact" data-ai-artifact-id="#{artifact_not_allowed.id}"></div>
+            <div class="web-artifact" data-web-artifact-id="#{artifact.id}"></div>
+            <div class="web-artifact" data-web-artifact-id="#{artifact_not_allowed.id}"></div>
           RAW
 
           post "#{path}.json", params: { topic_id: user_pm_share.id }
@@ -378,10 +378,10 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
           )
 
         cooked_html =
-          "<p>Post with artifact</p>\n<div class=\"ai-artifact\" data-ai-artifact-id=\"#{artifact.id}\"></div>"
+          "<p>Post with artifact</p>\n<div class=\"web-artifact\" data-web-artifact-id=\"#{artifact.id}\"></div>"
         first_post.update_columns(
           raw:
-            "Post with artifact\n<div class=\"ai-artifact\" data-ai-artifact-id=\"#{artifact.id}\"></div>",
+            "Post with artifact\n<div class=\"web-artifact\" data-web-artifact-id=\"#{artifact.id}\"></div>",
           cooked: cooked_html,
         )
 

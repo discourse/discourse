@@ -99,9 +99,9 @@ export default class ShareModal extends Component {
 
     let version = "";
     if (event.target.dataset.artifactVersion) {
-      version = `data-ai-artifact-version="${event.target.dataset.artifactVersion}"`;
+      version = `data-web-artifact-version="${event.target.dataset.artifactVersion}"`;
     }
-    const artifactEmbed = `<div class="ai-artifact" ${version} data-ai-artifact-id="${event.target.dataset.artifactId}"></div>`;
+    const artifactEmbed = `<div class="web-artifact" ${version} data-web-artifact-id="${event.target.dataset.artifactId}"></div>`;
     const promise = new Promise((resolve) => {
       resolve(artifactEmbed);
     });

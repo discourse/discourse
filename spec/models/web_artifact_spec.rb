@@ -104,17 +104,6 @@ RSpec.describe WebArtifact do
       expect(artifact.post_id).to eq(post_for_linking.id)
     end
 
-    it "links artifacts with ai-artifact class name" do
-      doc =
-        Nokogiri::HTML5.fragment(
-          "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
-        )
-
-      WebArtifact.link_artifacts_from_cooked(doc, post_for_linking)
-      artifact.reload
-      expect(artifact.post_id).to eq(post_for_linking.id)
-    end
-
     it "does not link artifacts owned by a different user" do
       other_user = Fabricate(:user)
       other_artifact = Fabricate(:web_artifact, user: other_user, post: nil)

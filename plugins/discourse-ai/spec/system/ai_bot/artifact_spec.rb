@@ -39,7 +39,7 @@ RSpec.describe "AI Artifact with Data Attributes" do
       )
 
     raw_post_content =
-      "<div class='ai-artifact' data-ai-artifact-id='#{web_artifact.id}' data-custom-message='hello-from-post' data-post-author-id='#{author.id}'></div>"
+      "<div class='web-artifact' data-web-artifact-id='#{web_artifact.id}' data-custom-message='hello-from-post' data-post-author-id='#{author.id}'></div>"
     _post = Fabricate(:post, topic: topic, user: author, raw: raw_post_content)
 
     sign_in(user)
@@ -47,7 +47,7 @@ RSpec.describe "AI Artifact with Data Attributes" do
 
     find(".web-artifact__click-to-run button").click
 
-    artifact_element_selector = ".ai-artifact[data-ai-artifact-id='#{web_artifact.id}']"
+    artifact_element_selector = ".web-artifact[data-web-artifact-id='#{web_artifact.id}']"
     artifact_element = find(artifact_element_selector)
 
     expect(artifact_element).to have_css("iframe[data-custom-message='hello-from-post']")

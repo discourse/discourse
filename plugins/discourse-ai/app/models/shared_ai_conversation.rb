@@ -190,11 +190,10 @@ class SharedAiConversation < ActiveRecord::Base
 
     doc = Nokogiri::HTML5.fragment(html)
     doc
-      .css("div.ai-artifact, div.web-artifact")
+      .css("div.web-artifact")
       .each do |node|
-        id = (node["data-ai-artifact-id"] || node["data-web-artifact-id"]).to_i
-        version = node["data-ai-artifact-version"] || node["data-web-artifact-version"]
-        version_number = version.to_i if version
+        id = node["data-web-artifact-id"].to_i
+        version_number = node["data-web-artifact-version"]&.to_i
         if id > 0
           WebArtifact.share_publicly(id: id, post: post) if publish
           node.replace(WebArtifact.iframe_for(id, version_number))

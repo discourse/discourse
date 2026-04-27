@@ -91,13 +91,8 @@ class WebArtifact < ActiveRecord::Base
   end
 
   def self.link_artifacts_from_cooked(doc, post)
-    artifact_ids = []
-    doc
-      .css("div.web-artifact, div.ai-artifact")
-      .each do |node|
-        id = (node["data-web-artifact-id"] || node["data-ai-artifact-id"]).to_i
-        artifact_ids << id if id > 0
-      end
+    artifact_ids =
+      doc.css("div.web-artifact").map { |node| node["data-web-artifact-id"].to_i }.reject(&:zero?)
 
     return if artifact_ids.empty?
 

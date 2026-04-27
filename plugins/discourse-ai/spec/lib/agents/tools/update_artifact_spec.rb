@@ -71,7 +71,7 @@ RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
       expect(tool.custom_raw).to include("### HTML Changes")
       expect(tool.custom_raw).to include("### CSS Changes")
       expect(tool.custom_raw).to include("### JS Changes")
-      expect(tool.custom_raw).to include("<div class=\"ai-artifact\"")
+      expect(tool.custom_raw).to include("<div class=\"web-artifact\"")
     end
 
     it "handles partial updates with only some sections" do
@@ -328,7 +328,7 @@ RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
     expect(tool.custom_raw).to include("[details='View Changes']")
     expect(tool.custom_raw).to include("### HTML Changes")
     expect(tool.custom_raw).to include("### CSS Changes")
-    expect(tool.custom_raw).to include("<div class=\"ai-artifact\"")
+    expect(tool.custom_raw).to include("<div class=\"web-artifact\"")
   end
 
   it "correctly updates artifact using diff strategy" do
@@ -397,6 +397,6 @@ RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
     expect(tool.custom_raw).to include("### HTML Changes")
     expect(tool.custom_raw).to include("### CSS Changes")
     expect(tool.custom_raw).to include("### JS Changes")
-    expect(tool.custom_raw).to include("<div class=\"ai-artifact\"")
+    expect(tool.custom_raw).to include("<div class=\"web-artifact\"")
   end
 end

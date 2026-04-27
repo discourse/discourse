@@ -194,7 +194,7 @@ module DiscourseAi
           self.custom_raw = <<~HTML
             ### Artifact created successfully
 
-            <div class="ai-artifact" data-ai-artifact-id="#{artifact.id}"></div>
+            <div class="web-artifact" data-web-artifact-id="#{artifact.id}"></div>
           HTML
         end
 

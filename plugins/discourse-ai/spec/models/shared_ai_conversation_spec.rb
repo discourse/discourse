@@ -91,7 +91,7 @@ RSpec.describe SharedAiConversation, type: :model do
           post_number: 3,
           raw: "Here's an artifact",
           cooked:
-            "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}' data-ai-artifact-version='1'></div>",
+            "<div class='web-artifact' data-web-artifact-id='#{artifact.id}' data-web-artifact-version='1'></div>",
         )
 
       expect(artifact.public?).to be_falsey
