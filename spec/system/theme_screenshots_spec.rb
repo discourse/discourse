@@ -309,6 +309,13 @@ describe "Theme screenshots" do
     # live Capybara host/port.
     SiteIconManager.clear_cache!
 
+    # Visiting a topic triggers TopicUser.track_visit! via Scheduler::Defer.later
+    # (synchronous in test mode). If any earlier request ran Report.find, that
+    # marks the shared test-DB connection READ ONLY, making the subsequent UPDATE
+    # fail and poisoning the transaction for all later requests. Suppress only
+    # this write; all other deferred work still runs.
+    allow(TopicUser).to receive(:track_visit!)
+
     chat_system_bootstrap(admin, [chat_channel].compact) if defined?(Chat)
 
     sign_in(signed_in_user) if signed_in_user
