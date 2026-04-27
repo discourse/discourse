@@ -88,7 +88,6 @@ export default class SpreadsheetEditor extends Component {
 
     return this.dialog.yesNoConfirm({
       message: i18n("table_builder.modal.confirm_close"),
-      didConfirm: () => this.args.closeModal(),
     });
   }
 
