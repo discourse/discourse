@@ -70,6 +70,51 @@ RSpec.describe WebArtifactsController do
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
     end
+
+    it "removes security headers and disables crawling" do
+      sign_in(user)
+      get "/w/#{artifact.id}"
+      expect(response.headers["X-Frame-Options"]).to eq(nil)
+      expect(response.headers["Content-Security-Policy"]).to include("unsafe-inline")
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "forces a same-origin opener policy regardless of site setting" do
+      SiteSetting.cross_origin_opener_policy_header = "unsafe-none"
+
+      sign_in(user)
+      get "/w/#{artifact.id}"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
+    end
+
+    it "sanitizes CSS to prevent style tag breakout" do
+      sign_in(user)
+      malicious_css = '</style><script>alert("XSS from CSS")</script><style>'
+      artifact.update!(css: malicious_css)
+
+      get "/w/#{artifact.id}"
+      expect(response.status).to eq(200)
+
+      untrusted_html = Nokogiri.HTML5(response.body).at_css("iframe")["srcdoc"]
+      doc = Nokogiri.HTML5(untrusted_html)
+      doc.css("script").each { |s| expect(s.text).not_to include("alert") }
+      expect(doc.at_css("style").text).to include("alert")
+    end
+
+    it "validates event.source against the child iframe in the KV postMessage handler" do
+      sign_in(user)
+      get "/w/#{artifact.id}"
+      expect(response.status).to eq(200)
+
+      doc = Nokogiri.HTML5(response.body)
+      parent_scripts = doc.css("body > script").map(&:text)
+      kv_handler_script = parent_scripts.find { |s| s.include?("discourse-artifact-kv") }
+
+      expect(kv_handler_script).to be_present
+      expect(kv_handler_script).to match(/event\.source\s*!==?\s*\w+\.contentWindow/)
+    end
   end
 
   describe "#create" do

@@ -20,6 +20,9 @@ RSpec.describe WebArtifactKeyValue do
       record =
         described_class.new(web_artifact: web_artifact, user: user, key: "key_extra", value: "val")
       expect(record).not_to be_valid
+      expect(record.errors[:base]).to include(
+        I18n.t("web_artifact.errors.max_keys_exceeded", count: 2),
+      )
     end
 
     it "allows different users to have their own keys" do
