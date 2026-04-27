@@ -100,14 +100,14 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
     end
   end
 
-  describe ".remove_type" do
+  describe ".unconfigure_category" do
     before { described_class.configure_category(category, guardian: admin.guardian) }
 
     it "removes the enable_accepted_answers custom field" do
       expect(category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD]).to eq(
         "true",
       )
-      described_class.remove_type(category, guardian: admin.guardian)
+      described_class.unconfigure_category(category, guardian: admin.guardian)
       expect(
         category.reload.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD],
       ).to eq("false")

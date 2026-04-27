@@ -18,7 +18,7 @@ module Categories
           # intentional noop, nothing to do here
         end
 
-        def remove_type(category, guardian:)
+        def unconfigure_category(category, guardian:)
           # intentional noop, nothing to do here
         end
 

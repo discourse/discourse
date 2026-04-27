@@ -69,7 +69,7 @@ RSpec.describe DiscourseTopicVoting::Categories::Types::Ideas do
     end
   end
 
-  describe ".remove_type" do
+  describe ".unconfigure_category" do
     fab!(:admin)
 
     before { described_class.configure_category(category, guardian: admin.guardian) }
@@ -77,9 +77,9 @@ RSpec.describe DiscourseTopicVoting::Categories::Types::Ideas do
     it "removes the topic_voting_category_setting record" do
       expect(Category.can_vote?(category.id)).to eq(true)
 
-      expect { described_class.remove_type(category, guardian: admin.guardian) }.to change {
-        DiscourseTopicVoting::CategorySetting.count
-      }.by(-1)
+      expect {
+        described_class.unconfigure_category(category, guardian: admin.guardian)
+      }.to change { DiscourseTopicVoting::CategorySetting.count }.by(-1)
 
       expect(Category.can_vote?(category.id)).to eq(false)
     end

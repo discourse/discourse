@@ -108,10 +108,10 @@ module Categories
 
         # Reverse whatever configure_category does to mark this category as
         # a specific type. E.g. if there is a custom field that is set to true,
-        # remove_type should set it to false.
+        # unconfigure_category should set it to false.
         #
         # This SHOULD be overridden by category types.
-        def remove_type(category, guardian:)
+        def unconfigure_category(category, guardian:)
           raise NotImplementedError
         end
 
@@ -174,6 +174,18 @@ module Categories
         # Use +validate_schema!+ to verify a schema conforms to this contract.
         def configuration_schema
           {}
+        end
+
+        # Convenience method to get the setting/custom field names (keys)
+        # for a given schema type.
+        #
+        # Valid values for the +schema_type+ parameter are:
+        # - :general_category_settings
+        # - :site_settings
+        # - :category_custom_fields
+        # - :category_settings
+        def configuration_schema_keys(schema_type)
+          (configuration_schema[schema_type]&.keys || []).map(&:to_sym)
         end
 
         # Validates the hash returned by +configuration_schema+ using JSONSchemer.
