@@ -7,7 +7,6 @@ import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import htmlClass from "discourse/helpers/html-class";
 import getURL from "discourse/lib/get-url";
-import { i18n } from "discourse-i18n";
 
 export default class WebArtifactComponent extends Component {
   @service siteSettings;
@@ -148,7 +147,7 @@ export default class WebArtifactComponent extends Component {
           <DButton
             class="btn-flat btn-icon-text"
             @icon="discourse-compress"
-            @label={{i18n "web_artifact.collapse_view_label"}}
+            @label="web_artifact.collapse_view_label"
             @action={{this.toggleView}}
           />
         </div>
@@ -158,7 +157,7 @@ export default class WebArtifactComponent extends Component {
           <DButton
             class="btn btn-primary"
             @icon="play"
-            @label={{i18n "web_artifact.click_to_run_label"}}
+            @label="web_artifact.click_to_run_label"
             @action={{this.showArtifact}}
           />
         </div>
@@ -176,7 +175,7 @@ export default class WebArtifactComponent extends Component {
           <DButton
             class="btn-transparent btn-icon-text web-artifact__expand-button"
             @icon="discourse-expand"
-            @label={{i18n "web_artifact.expand_view_label"}}
+            @label="web_artifact.expand_view_label"
             @action={{this.toggleView}}
           />
         </div>

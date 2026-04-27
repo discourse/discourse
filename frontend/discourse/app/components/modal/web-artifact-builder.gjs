@@ -91,7 +91,7 @@ export default class WebArtifactBuilder extends Component {
       <:footer>
         <DButton
           @action={{this.insertArtifact}}
-          @label={{i18n "web_artifact.composer_insert"}}
+          @label="web_artifact.composer_insert"
           @disabled={{this.insertDisabled}}
           @isLoading={{this.loading}}
           class="btn-primary"
