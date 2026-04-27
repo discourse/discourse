@@ -134,88 +134,88 @@ ru:
       xaxis: "Позитивные(%)"
       yaxis: "Дата"
     emotion_admiration:
-      title: "\U0001F929 Восхищение"
+      title: "🤩 Восхищение"
       description: "Публикации, классифицированные AI по эмоции «восхищение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
-      title: "\U0001F604 Веселье"
+      title: "😄 Веселье"
       description: "Публикации, классифицированные AI по эмоции «веселье» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
-      title: "\U0001F620 Гнев"
+      title: "😠 Гнев"
       description: "Публикации, классифицированные AI по эмоции «гнев» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
-      title: "\U0001F612 Недовольство"
+      title: "😒 Недовольство"
       description: "Публикации, классифицированные AI по эмоции «недовольство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
-      title: "\U0001F44D Одобрение"
+      title: "👍 Одобрение"
       description: "Публикации, классифицированные AI по эмоции «одобрение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
-      title: "\U0001F917 Забота"
+      title: "🤗 Забота"
       description: "Публикации, классифицированные AI по эмоции «забота» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
-      title: "\U0001F615 Замешательство"
+      title: "😕 Замешательство"
       description: "Публикации, классифицированные AI по эмоции «замешательство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
-      title: "\U0001F914 Любопытство"
+      title: "🤔 Любопытство"
       description: "Публикации, классифицированные AI по эмоции «любопытство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
-      title: "\U0001F60D Восторг"
+      title: "😍 Восторг"
       description: "Публикации, классифицированные AI по эмоции «восторг» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
-      title: "\U0001F61E Разочарование"
+      title: "😞 Разочарование"
       description: "Публикации, классифицированные AI по эмоции «разочарование» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
-      title: "\U0001F44E Неодобрение"
+      title: "👎 Неодобрение"
       description: "Публикации, классифицированные AI по эмоции «неодобрение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
-      title: "\U0001F922 Отвращение"
+      title: "🤢 Отвращение"
       description: "Публикации, классифицированные AI по эмоции «отвращение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
-      title: "\U0001F633 Смущение"
+      title: "😳 Смущение"
       description: "Публикации, классифицированные AI по эмоции «смущение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
-      title: "\U0001F92A Волнение"
+      title: "🤪 Волнение"
       description: "Публикации, классифицированные AI по эмоции «волнение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
-      title: "\U0001F628 Страх"
+      title: "😨 Страх"
       description: "Публикации, классифицированные AI по эмоции «страх» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
-      title: "\U0001F64F Благодарность"
+      title: "🙏 Благодарность"
       description: "Публикации, классифицированные AI по эмоции «благодарность» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
-      title: "\U0001F622 Печаль"
+      title: "😢 Печаль"
       description: "Публикации, классифицированные AI по эмоции «печаль» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
-      title: "\U0001F60A Радость"
+      title: "😊 Радость"
       description: "Публикации, классифицированные AI по эмоции «радость» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_love:
       title: '❤️ Любовь'
       description: "Публикации, классифицированные AI по эмоции «любовь» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
-      title: "\U0001F630 Тревога"
+      title: "😰 Тревога"
       description: "Публикации, классифицированные AI по эмоции «тревога» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
-      title: "\U0001F610 Нейтральность"
+      title: "😐 Нейтральность"
       description: "Публикации, классифицированные AI по эмоции «нейтральность» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
-      title: "\U0001F31F Оптимизм"
+      title: "🌟 Оптимизм"
       description: "Публикации, классифицированные AI по эмоции «оптимизм» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
-      title: "\U0001F981 Гордость"
+      title: "🦁 Гордость"
       description: "Публикации, классифицированные AI по эмоции «гордость» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_realization:
-      title: "\U0001F4A1 Озарение"
+      title: "💡 Озарение"
       description: "Публикации, классифицированные AI по эмоции «озарение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
-      title: "\U0001F60C Облегчение"
+      title: "😌 Облегчение"
       description: "Публикации, классифицированные AI по эмоции «облегчение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_remorse:
-      title: "\U0001F614 Сожаление"
+      title: "😔 Сожаление"
       description: "Публикации, классифицированные AI по эмоции «сожаление» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_sadness:
-      title: "\U0001F62D Грусть"
+      title: "😭 Грусть"
       description: "Публикации, классифицированные AI по эмоции «грусть» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_surprise:
-      title: "\U0001F632 Удивление"
+      title: "😲 Удивление"
       description: "Публикации, классифицированные AI по эмоции «удивление» с помощью модели 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
@@ -688,13 +688,13 @@ ru:
       reports:
         overall_sentiment: "Общее настроение (позитивное — негативное)"
         post_emotion:
-          sadness: "Грусть \U0001F622"
-          surprise: "Удивление \U0001F631"
-          neutral: "Нейтральность \U0001F610"
-          fear: "Страх \U0001F628"
-          anger: "Гнев \U0001F621"
-          joy: "Радость \U0001F600"
-          disgust: "Отвращение \U0001F922"
+          sadness: "Грусть 😢"
+          surprise: "Удивление 😱"
+          neutral: "Нейтральность 😐"
+          fear: "Страх 😨"
+          anger: "Гнев 😡"
+          joy: "Радость 😀"
+          disgust: "Отвращение 🤢"
         sentiment_analysis:
           positive: "Позитивное"
           negative: "Негативное"

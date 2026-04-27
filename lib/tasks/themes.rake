@@ -227,22 +227,21 @@ task "themes:clone_all_official" do |task, args|
   require "theme_metadata"
   FileUtils.rm_rf("tmp/themes")
 
-  official_themes =
-    ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
-      repo = "https://github.com/discourse/#{theme_name}"
-      path = File.join(Rails.root, "tmp/themes/#{theme_name}")
+  ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
+    repo = "https://github.com/discourse/#{theme_name}"
+    path = File.join(Rails.root, "tmp/themes/#{theme_name}")
 
-      attempts = 0
+    attempts = 0
 
-      begin
-        attempts += 1
-        system("git clone #{repo} #{path}", exception: true)
-      rescue StandardError
-        abort("Failed to clone #{repo}") if attempts >= 3
-        STDERR.puts "Failed to clone #{repo}... trying again..."
-        retry
-      end
+    begin
+      attempts += 1
+      system("git clone #{repo} #{path}", exception: true)
+    rescue StandardError
+      abort("Failed to clone #{repo}") if attempts >= 3
+      STDERR.puts "Failed to clone #{repo}... trying again..."
+      retry
     end
+  end
 end
 
 desc "pull compatible theme versions for all themes"

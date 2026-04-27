@@ -492,7 +492,17 @@ cs:
   deleted_topic: "Jejda! Toto téma bylo smazáno a již není k dispozici."
   delete_topic_failed: "Při mazání tohoto tématu došlo k chybě. Obraťte se prosím na správce webu."
   reading_time: "Čas čtení"
+  reading_time_minutes:
+    one: "%{count} minuta 🕑"
+    few: "%{count} minuty 🕑"
+    many: "%{count} minut 🕑"
+    other: "%{count} minut 🕑"
   likes: "Líbí se"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    many: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Jejda! Tuto akci jste již provedli. Můžete zkusit obnovit stránku?"
   too_many_replies:
     one: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpověď v tématu."
@@ -930,7 +940,6 @@ cs:
       many: "%{count} Líbí se"
       other: "%{count} Líbí se"
     cannot_permanently_delete:
-      many_posts: "Toto téma obsahuje obnovené příspěvky. Před trvalým odstraněním tohoto tématu je prosím trvale smažte."
       wait_or_different_admin: "Před trvalým smazáním tohoto příspěvku musíte počkat %{time_left} nebo to musí udělat jiný administrátor."
   rate_limiter:
     slow_down: "Tuto akci jste provedli příliš mnohokrát, zkuste to prosím znovu později."
@@ -2315,7 +2324,6 @@ cs:
     gravatar_login_url: "URL relativní k `gravatar_base_url`, která uživateli poskytuje přihlášení ke službě Gravatar."
     allow_changing_staged_user_tracking: "Umožnit administrátorovi změnit předvolby oznámení o kategoriích a štítcích u předběžně založeného uživatele.."
     use_email_for_username_and_name_suggestions: "Pro návrhy uživatelského jména a jména použijte první část e-mailové adresy. Upozornění: To může usnadnit zjištění e-mailové adresy vašich členů útočníky (protože mnoho lidí používá běžné poskytovatele e-mailu, jako je `gmail.com`)."
-    use_name_for_username_suggestions: "Při navrhování uživatelských jmen použít celé jméno uživatele."
     adobe_analytics_tags_url: "Adresa URL tagů Adobe Analytics (`https://assets.adobedtm.com/...`)"
     errors:
       invalid_email: "Neplatná emailová adresa."
@@ -2563,7 +2571,6 @@ cs:
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
     omniauth_error_unknown: "Něco se pokazilo při zpracování vašeho přihlášení, zkuste to prosím znovu."
-    omniauth_confirm_title: "Přihlásit pomocí %{provider}"
     omniauth_confirm_button: "Pokračovat"
     authenticator_error_no_valid_email: "Nejsou povoleny žádné e-mailové adresy spojené s %{account} . Možná bude nutné nakonfigurovat účet s jinou e-mailovou adresou."
     new_registrations_disabled: "Registrace nových účtů nejsou v tuto chvíli povoleny."
@@ -4323,7 +4330,6 @@ cs:
         few: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
         many: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
         other: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-      synonym: 'Synonyma nejsou povolena. Místo toho použijte "%{tag_name}".'
       has_synonyms: '"%{tag_name}" nelze použít, protože má synonyma.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Štítek "%{tags}" nelze použít v kategorii "%{category}". Odstraňte jej prosím.'

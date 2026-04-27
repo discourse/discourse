@@ -121,6 +121,50 @@ RSpec.describe User do
         expect(SidebarSectionLink.exists?(linkable_type: "Category", user_id: user.id)).to eq(true)
         expect(SidebarSectionLink.exists?(linkable_type: "Tag", user_id: user.id)).to eq(false)
       end
+
+      describe "the :default_navigation_categories modifier" do
+        fab!(:alternate_category, :category)
+
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :default_navigation_categories }
+
+        it "lets plugins override the category ids used to seed the sidebar" do
+          block =
+            Proc.new do |_default_categories, opts|
+              expect(opts[:user]).to be_a(User)
+              [alternate_category.id.to_s]
+            end
+
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &block)
+
+          user = Fabricate(:user)
+
+          expect(
+            SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(
+              :linkable_id,
+            ),
+          ).to contain_exactly(alternate_category.id)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block)
+        end
+
+        it "passes the user to the modifier so plugins can branch on user attributes" do
+          received_users = []
+          block =
+            Proc.new do |default_categories, opts|
+              received_users << opts[:user]
+              default_categories
+            end
+
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &block)
+
+          user = Fabricate(:user)
+
+          expect(received_users).to contain_exactly(user)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block)
+        end
+      end
     end
 
     describe "#change_display_name" do

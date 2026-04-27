@@ -2902,6 +2902,8 @@ ur:
         name_label: "ریپ کا نام"
         attributes_label: "خصوصیات"
         add_attribute: "خصوصیت شامل کریں"
+        attribute_key: "کی"
+        attribute_value: "وَیلِیو"
         remove_attribute: "خصوصیت ہٹا دیں"
         apply: "لاگو کریں"
         unwrap: "اَن ریپ کریں"
@@ -2991,6 +2993,9 @@ ur:
         remove: "لنک ہٹانا"
         visit: "بیرونی ٹیب میں لنک کھولیں"
         link_copied: "لنک کاپی ہو گیا!"
+      onebox_toolbar:
+        copy: "رابطہ کاپی کریں"
+        link_copied: "رابطہ کاپی ہو گیا!"
       unsupported_token: "رِچ ٹیکسٹ ایڈیٹر اس پوسٹ میں استعمال ہونے والی تمام خصوصیات کو سپورٹ نہیں کرتا ہے؛مارک ڈاؤن ایڈیٹر پر منتقل کیا جا رہا ہے۔"
     notifications:
       tooltip:
@@ -3430,12 +3435,31 @@ ur:
         name: "مٹائیں"
       update_category:
         name: "تازہ ترین زمرہ"
+      convert_to_public_topic:
+        name: "عوامی موضوع بنائیں۔۔۔"
+      convert_to_private_message:
+        name: "ذاتی پیغام بنائیں"
       reset_bump_dates:
         name: "ٹکرانے کی تاریخیں دوبارہ ترتیب دیں"
       defer:
         name: "غیر پڑھا ہوا نشان زد"
       update_notifications:
         name: "اطلاعات کو اپ ڈیٹ"
+    nested_replies:
+      sort:
+        label: "ترتیب بہ"
+        top: "سب سے اوپر"
+        new: "نیا"
+      load_more_children:
+        one: "%{count} مزید جواب"
+        other: "%{count}مزید جوابات"
+      collapsed_replies:
+        one: "%{count} جواب"
+        other: "%{count} جوابات"
+      collapse: "بند کریں"
+      no_replies: "ابھی تک کوئی جوابات نہیں۔"
+      deleted_post_placeholder: "[مٹائیں]"
+      pinned_reply: "پِن ہوا"
     topic:
       filter_to:
         one: "موضوع میں %{count} پوسٹ"
@@ -3955,6 +3979,10 @@ ur:
       sr_post_like_count_button:
         one: "%{count} شخص نے اِس پوسٹ کو لائیک کیا."
         other: "%{count} لوگوں نے اِس پوسٹ کو لائیک کیا."
+      likes_popup:
+        title:
+          one: "%{count} پسند"
+          other: "%{count} پسندیدگیاں"
       sr_post_read_count_button:
         one: "%{count} شخص نے اس پوسٹ کو پڑھا"
         other: "%{count} لوگوں نے اس پوسٹ کو پڑھا"
@@ -3985,7 +4013,7 @@ ur:
           confirm_delete: "کیا آپ واقعی '%{languageCode}' کے ترجمے حذف کرنا چاہتے ہیں؟"
         success: "ترجمے کو کامیابی کے ساتھ اپ ڈیٹ کر دیا گیا"
         post_language_selector:
-          none: "کوئی نہیں"
+          none: "سیٹ نہیں"
         edit_warning:
           action_original: "اصل پوسٹ کی ترمیم"
           action_translation: "اس ترجمہ کی ترمیم"
@@ -4051,7 +4079,7 @@ ur:
         admin: "پوسٹ ایڈمن کے ایکشن"
         admin_action: "منتظم"
         permanently_delete: "مستقل طور پر حذف کریں"
-        permanently_delete_confirmation: "کیا آپ واقعی اس پوسٹ کو مستقل طور پر مٹانا چاہتے ہیں؟ آپ اسے بازیافت نہیں کر پائیں گے۔"
+        permanently_delete_confirm_phrase: "مستقل طور پر حذف کریں"
         wiki: "وِیکی بنائیں"
         unwiki: "وِیکی ختم کریں"
         convert_to_moderator: "عملہ کے رنگ شامل کریں"
@@ -4196,6 +4224,7 @@ ur:
       back: "واپس زمرے میں"
       general: "عام"
       settings: "سیٹِنگ"
+      moderation: "ماڈریٹر کا کام"
       advanced: "اعلی درجے کی"
       topic_template: "سانچہ"
       tags: "ٹیگز"
@@ -5376,6 +5405,8 @@ ur:
           admins: "منتظمین"
           moderators: "نگران"
           staff: "عملہ"
+        impact_types:
+          other_type: "دیگر"
         filter:
           all: "تمام"
           enabled: "فعال شدہ"
@@ -5391,7 +5422,6 @@ ur:
           header_description: "اس سائٹ اور اپنی ٹیم کے بارے میں یہاں معلومات فراہم کریں تاکہ لوگ جان سکیں کہ آپ کی کمیونٹی کیا ہے، اس کے پیچھے کون ہے، اور کوئی مسئلہ ہونے کی صورت میں آپ تک کیسے پہنچنا ہے۔ آپ کی سائٹ کے <a href='%{basePath}/about'>کے بارے میں صفحہ</a>پر دکھایا گیا ہے۔"
         developer:
           title: "ڈیولپر"
-          header_description: "شرح کی حدود، ضارب اور حسابات، سیف موڈ، اور دیگر جدید خصوصیات کو کنٹرول کرنے کے لیے ڈویلپر کی ترتیبات"
         experimental:
           title: "تجرباتی"
           header_description: "اپنی سائٹ کے لیے تجرباتی خصوصیات کو آن یا آف کریں، ان میں سے زیادہ تر کو گروپ کی بنیاد پر کنٹرول کیا جا سکتا ہے"
@@ -5588,6 +5618,12 @@ ur:
             logs:
               title: "لاگز"
               header_description: "بیک اپ، بحالی اور اپ لوڈز کے لیے لاگز دیکھیں اور ان کا نظم کریں"
+        problem_checks:
+          status: "سٹیٹس"
+          last_run_at: "چلا آخری دفعہ"
+          ignore: "نظر انداز کریں"
+          more_options:
+            title: "مزید اختیارات"
         reports:
           title: "رپورٹیں"
           header_description: "رپورٹس ایک طاقتور ٹول ہیں جو آپ کو یہ سمجھنے میں مدد کرتی ہیں کہ آپ کی سائٹ پر کیا ہو رہا ہے۔ وہ آپ کو رجحانات کی نشاندہی کرنے، مسائل کی نشاندہی کرنے اور ڈیٹا کی بنیاد پر فیصلے کرنے میں مدد کر سکتے ہیں۔"
@@ -5764,7 +5800,7 @@ ur:
         installed_version: "انسٹال کیا ہوا"
         latest_version: "تازہ ترین"
         problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
-        dismiss_notice: "بر خاست کریں"
+        dismiss_notice: "نظر انداز کریں"
         new_features:
           title: "نیا کیا ہے؟"
           subtitle: "ہم وقتاً فوقتاً نئی خصوصیات اور بہتریاں جاری کر رہے ہیں۔ یہ صفحہ نمایاں نکات کا احاطہ کرتا ہے، لیکن آپ 'مزید جانیں' پر کلک کر کے اجرا کی تفصیلات دیکھ سکتے ہیں"

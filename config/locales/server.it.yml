@@ -433,7 +433,13 @@ it:
   deleted_topic: "Ops! Questo argomento è stato eliminato e non è più disponibile."
   delete_topic_failed: "Si è verificato un errore durante l'eliminazione di questo argomento. Si prega di contattare l'amministratore del sito."
   reading_time: "Tempo di lettura"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} min 🕑"
   likes: "Mi piace"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Ops! Hai già eseguito questa azione. Vuoi provare ad aggiornare la pagina?"
   too_many_replies:
     one: "Spiacenti, ma i nuovi utenti possono temporaneamente inserire solo %{count} risposta nello stesso argomento."
@@ -822,7 +828,6 @@ it:
       one: "%{count} Mi Piace"
       other: "%{count} Mi Piace"
     cannot_permanently_delete:
-      many_posts: "Questo argomento contiene messaggi non cancellati. Occorre cancellarli definitivamente prima di eliminare definitivamente l'argomento."
       wait_or_different_admin: "Devi aspettare %{time_left} per poter eliminare definitivamente questo messaggio, oppure dovrà farlo un diverso amministratore."
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
@@ -2368,7 +2373,6 @@ it:
     create_revision_on_bulk_topic_moves: "Crea una revisione per i primi messaggi quando gli argomenti vengono spostati in blocco in una nuova categoria."
     allow_changing_staged_user_tracking: "Consenti a un utente amministratore di modificare le preferenze di notifica di etichette e categorie di utenti provvisori."
     use_email_for_username_and_name_suggestions: "Usa la prima parte degli indirizzi e-mail per suggerire nome utente e nome. Attenzione: questo può facilitare a malintenzionati la scoperta dell'indirizzo e-mail dei tuoi membri (poiché molte persone usano provider email comuni come `gmail.com`)."
-    use_name_for_username_suggestions: "Usa il nome completo dell'utente durante il suggerimento di nomi utente."
     suggest_weekends_in_date_pickers: "Includi i fine settimana (sabato e domenica) nei suggerimenti del selettore di date (disabilita questa opzione se usi Discourse solo nei giorni feriali, dal lunedì al venerdì)."
     show_bottom_topic_map: "Mostra la mappa degli argomenti in fondo all'argomento quando ha 10 o più risposte."
     show_topic_map_in_topics_without_replies: "Mostra la mappa degli argomenti anche se l'argomento non ha risposte."
@@ -2682,7 +2686,6 @@ it:
       request_error: "Spiacenti, si è verificato un errore durante l'avvio dell'autorizzazione. Riprova."
       invalid_iat: "Spiacenti, non siamo in grado di verificare il token di autorizzazione a causa delle differenze di orario del server. Riprova."
     omniauth_error_unknown: "Si è verificato un errore durante l'accesso, riprova."
-    omniauth_confirm_title: "Accedi usando %{provider}"
     omniauth_confirm_button: "Continua"
     authenticator_error_no_valid_email: "Non sono ammessi gli indirizzi email associati a %{account}. Potrebbe essere necessario configurare il tuo account con un diverso indirizzo email."
     new_registrations_disabled: "Non sono permesse nuove registrazioni al momento."
@@ -4387,7 +4390,6 @@ it:
       restricted_to:
         one: '"%{tag_name}" è limitato alla categoria "%{category_names}"'
         other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
-      synonym: 'I sinonimi non sono ammessi. Utilizza invece "%{tag_name}".'
       has_synonyms: '"%{tag_name}" non può essere utilizzato perché ha dei sinonimi.'
       restricted_tags_cannot_be_used_in_category:
         one: 'L''etichetta "%{tags}" non può essere usata nella categoria "%{category}". Rimuovila.'

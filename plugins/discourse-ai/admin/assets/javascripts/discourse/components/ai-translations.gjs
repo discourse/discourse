@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import Chart from "discourse/admin/components/chart";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -25,9 +26,10 @@ export default class AiTranslations extends Component {
   @service site;
   @service siteSettings;
 
-  @tracked data = this.args.model?.translation_progress;
-  @tracked done = this.args.model?.posts_with_detected_locale;
-  @tracked total = this.args.model?.total;
+  @tracked data = null;
+  @tracked done = null;
+  @tracked total = null;
+  @tracked loadingProgress = false;
   @tracked
   translationEnabled =
     this.args.model?.translation_enabled &&
@@ -44,22 +46,41 @@ export default class AiTranslations extends Component {
   @tracked isSavingLocales = false;
   @tracked isSavingCategories = false;
   @tracked isTogglingTranslation = false;
-  @tracked hourlyRate = this.args.model?.hourly_rate || 0;
   @tracked creditStatus = null;
   @tracked creditCheckComplete = false;
   @tracked selectedCategories = [];
   @tracked originalCategoryIds = this.args.model?.target_category_ids || [];
+  hourlyRate = this.args.model?.hourly_rate || 0;
 
   constructor() {
     super(...arguments);
     this._checkCredits();
     this._loadTargetCategories();
+    if (this.enabled) {
+      this._loadProgress();
+    }
   }
 
   async _loadTargetCategories() {
     const ids = this.args.model?.target_category_ids || [];
     if (ids.length) {
       this.selectedCategories = await Category.asyncFindByIds(ids);
+    }
+  }
+
+  async _loadProgress() {
+    this.loadingProgress = true;
+    try {
+      const response = await ajax(
+        "/admin/plugins/discourse-ai/ai-translations/progress.json"
+      );
+      this.data = response.translation_progress;
+      this.total = response.total;
+      this.done = response.posts_with_detected_locale;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingProgress = false;
     }
   }
 
@@ -260,16 +281,8 @@ export default class AiTranslations extends Component {
       this.translationEnabled = !this.translationEnabled;
 
       if (this.translationEnabled && !this.args.model.no_locales_configured) {
-        const response = await ajax(
-          "/admin/plugins/discourse-ai/ai-translations"
-        );
-        if (response.enabled) {
-          this.data = response.translation_progress;
-          this.total = response.total;
-          this.done = response.posts_with_detected_locale;
-          this.enabled = response.enabled;
-          this.hourlyRate = response.hourly_rate || 0;
-        }
+        this.enabled = true;
+        this._loadProgress();
       } else {
         this.enabled = false;
       }
@@ -617,30 +630,33 @@ export default class AiTranslations extends Component {
       </div>
 
       {{#if this.enabled}}
-        <AdminConfigAreaCard class="ai-translations__charts">
-          <:header>
-            {{i18n "discourse_ai.translations.progress_chart.title"}}
-          </:header>
-          <:content>
-            <div class="ai-translations__stats-container">
-              {{#if this.backfillStatusMessage}}
-                <div class="ai-translations__stat-item">
-                  <span class="ai-translations__stat-label">
-                    {{this.backfillStatusMessage}}
-                  </span>
+        <ConditionalLoadingSpinner @condition={{this.loadingProgress}}>
+          {{#if this.data}}
+            <AdminConfigAreaCard class="ai-translations__charts">
+              <:header>
+                {{i18n "discourse_ai.translations.progress_chart.title"}}
+              </:header>
+              <:content>
+                <div class="ai-translations__stats-container">
+                  {{#if this.backfillStatusMessage}}
+                    <div class="ai-translations__stat-item">
+                      <span class="ai-translations__stat-label">
+                        {{this.backfillStatusMessage}}
+                      </span>
+                    </div>
+                  {{/if}}
                 </div>
-              {{/if}}
-            </div>
-            <div class="ai-translations__chart-container">
-              <Chart
-                @chartConfig={{this.chartConfig}}
-                @loadChartDataLabelsPlugin={{true}}
-                class="ai-translations__chart"
-              />
-            </div>
-          </:content>
-        </AdminConfigAreaCard>
-
+                <div class="ai-translations__chart-container">
+                  <Chart
+                    @chartConfig={{this.chartConfig}}
+                    @loadChartDataLabelsPlugin={{true}}
+                    class="ai-translations__chart"
+                  />
+                </div>
+              </:content>
+            </AdminConfigAreaCard>
+          {{/if}}
+        </ConditionalLoadingSpinner>
       {{/if}}
 
     </div>

@@ -2214,10 +2214,21 @@ ar:
         upcoming_changes: "التغييرات القادمة"
         calendar_subscriptions: "التقويم"
       calendar_subscriptions:
+        description: "أنشئ روابط اشتراك لمزامنتها مع تطبيق التقويم المفضل لديك (Google Calendar أو Apple Calendar أو Outlook وغيرها). هذه الروابط هي روابط خاصة لأحداث التقويم المرتبطة بحسابك (تذكيرات الإشارات المرجعية، أحداث التقويم، وغيرها). يمكنك دائمًا إلغاء روابط الاشتراك التي تم إنشاؤها أو تجديدها."
+        generate: "إنشاء روابط الاشتراك"
         regenerate: "أعد توليد عناوين URL"
+        regenerate_confirm: "سيؤدي هذا إلى إلغاء روابط اشتراك التقويم الحالية. لن تتلقى تطبيقات التقويم التي تستخدم الروابط القديمة أي تحديثات. هل تريد المتابعة؟"
+        revoke: "إلغاء الاشتراك"
+        revoke_confirm: "سيؤدي هذا إلى إلغاء روابط اشتراك التقويم لديك. لن تتلقى تطبيقات التقويم التي تستخدمها أي تحديثات. هل تريد المتابعة؟"
+        urls_warning: "أصبحت روابط الاشتراك جاهزة! انقر على الأزرار أدناه لربطها بتطبيق التقويم لديك. ملاحظة: تُعرض هذه الروابط مرة واحدة فقط."
+        bookmarks: "تذكيرات الإشارات المرجعية"
+        bookmarks_description: "إشاراتك المرجعية التي تحتوي على تواريخ تذكير"
         copy: "انسخ الرابط"
         copied: "تم النسخ!"
         add_to_google: "تقويم Google"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Apple Calendar"
+        active_subscription: "لديك اشتراك فعّال في التقويم."
       change_password:
         success: "(تم إرسال رسالة البريد الإلكتروني)"
         in_progress: "(جارٍ إرسال رسالة البريد الإلكتروني)"
@@ -3562,6 +3573,8 @@ ar:
         name_label: "اسم عنصر الاحتواء"
         attributes_label: "السمات"
         add_attribute: "إضافة سمة"
+        attribute_key: "المفتاح"
+        attribute_value: "القيمة"
         remove_attribute: "إزالة السمة"
         apply: "تطبيق"
         unwrap: "إزالة عنصر الاحتواء"
@@ -3571,6 +3584,7 @@ ar:
       collapse: "تصغير لوحة أداة الإنشاء"
       open: "فتح لوحة أداة الإنشاء"
       abandon: "إغلاق أداة الإنشاء وتجاهل المسودة"
+      edit_reason: "أضف سبب التعديل"
       enter_fullscreen: "فتح أداة الإنشاء في وضع ملء الشاشة"
       exit_fullscreen: "اخرج من أداة الإنشاء في وضع ملء الشاشة"
       exit_fullscreen_prompt: "اضغط على <kbd>ESC</kbd> للخروج من وضع الشاشة الكاملة"
@@ -3650,6 +3664,9 @@ ar:
         copy: "نسخ الرابط"
         remove: "إزالة الرابط"
         visit: "فتح الرابط في تبويب جديد"
+        link_copied: "تم نسخ الرابط!"
+      onebox_toolbar:
+        copy: "نسخ الرابط"
         link_copied: "تم نسخ الرابط!"
       unsupported_token: "لا يدعم محرر النص المنسق جميع الميزات المستخدمة في هذا المنشور؛ مما يحولك إلى محرر Markdown."
     notifications:
@@ -3765,9 +3782,13 @@ ar:
         available:
           title: "التغييرات القادمة"
           description: "\"%{changeName}\" متاح للمعاينة"
+          description_two: "'%{changeName1}' و '%{changeName2}' متاحان للمعاينة"
+          description_many: "'%{changeName}' و%{otherChangeCount} تغييرات أخرى متاحة للمعاينة"
         automatically_promoted:
           title: "التغييرات القادمة"
           description: "تم تفعيل '%{changeName}' تلقائيًا"
+          description_two: "تم تفعيل '%{changeName1}' و '%{changeName2}' تلقائيًا"
+          description_many: "تم تفعيل %{changeName} و %{otherChangeCount} تغييرات أخرى تلقائيًا."
       dismiss_confirmation:
         body:
           default:
@@ -3842,6 +3863,8 @@ ar:
         votes_released: "صدَر التصويت"
         new_features: "تم إطلاق ميزات جديدة في Discourse"
         admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
+        upcoming_change_available: "تغييرات جديدة قادمة متاحة الآن"
+        upcoming_change_automatically_promoted: "تم تفعيل التغييرات القادمة تلقائيًا"
     upload_selector:
       change: "تغيير"
       delete: "حذف"
@@ -4078,6 +4101,8 @@ ar:
         confirm: "تأكيد"
         select_all: "تحديد الكل"
         clear_all: "مسح الكل"
+        unlist_topics: "إزالة الموضوعات من القائمة"
+        relist_topics: "إعادة عرض الموضوعات في القائمة"
         reset_bump_dates: "إعادة تعيين تواريخ الرفع"
         defer: "وضع علامة كغير مقروءة"
         delete: "احذف الموضوعات"
@@ -4186,6 +4211,62 @@ ar:
           few: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوعات. هل أنت متأكد؟"
           many: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوعًا. هل أنت متأكد؟"
           other: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوع. هل أنت متأكد؟"
+        confirm_update_topics:
+          zero: "تحديث %{count} من الموضوعات"
+          one: "تحديث موضوع واحد (%{count})"
+          two: "تحديث موضوعيْن (%{count})"
+          few: "تحديث %{count} موضوعات"
+          many: "تحديث %{count} موضوعًا"
+          other: "تحديث %{count} موضوع"
+        confirm_close_topics:
+          zero: "إغلاق %{count} من الموضوعات"
+          one: "إغلاق موضوع واحد (%{count})"
+          two: "إغلاق موضوعيْن (%{count})"
+          few: "إغلاق %{count} موضوعات"
+          many: "إغلاق %{count} موضوعًا"
+          other: "إغلاق %{count} موضوع"
+        confirm_archive_topics:
+          zero: "أرشفة %{count} من الموضوعات"
+          one: "أرشفة موضوع واحد (%{count})"
+          two: "أرشفة موضوعيْن (%{count})"
+          few: "أرشفة %{count} موضوعات"
+          many: "أرشفة %{count} موضوعًا"
+          other: "أرشفة %{count} موضوع"
+        confirm_unlist_topics:
+          zero: "إزالة %{count} من الموضوعات من القائمة"
+          one: "إزالة موضوع واحد (%{count}) من القائمة"
+          two: "إزالة موضوعيْن (%{count}) من القائمة"
+          few: "إزالة %{count} موضوعات من القائمة"
+          many: "إزالة %{count} موضوعًا من القائمة"
+          other: "إزالة %{count} موضوع من القائمة"
+        confirm_relist_topics:
+          zero: "إعادة إدراج %{count} من الموضوعات"
+          one: "إعادة إدراج موضوع واحد (%{count})"
+          two: "إعادة إدراج موضوعيْن (%{count})"
+          few: "إعادة إدراج %{count} موضوعات"
+          many: "إعادة إدراج %{count} موضوعًا"
+          other: "إعادة إدراج %{count} موضوع"
+        confirm_archive_messages:
+          zero: "أرشفة %{count} من الرسائل"
+          one: "أرشفة رسالة واحدة (%{count})"
+          two: "أرشفة رسالتيْن (%{count})"
+          few: "أرشفة %{count} رسائل"
+          many: "أرشفة %{count} رسالة"
+          other: "أرشفة %{count} رسالة"
+        confirm_move_to_inbox:
+          zero: "نقل %{count} من الرسائل إلى صندوق الوارد"
+          one: "نقل رسالة واحدة (%{count}) إلى صندوق الوارد"
+          two: "نقل رسالتيْن (%{count}) إلى صندوق الوارد"
+          few: "نقل %{count} رسائل إلى صندوق الوارد"
+          many: "نقل %{count} رسالة إلى صندوق الوارد"
+          other: "نقل %{count} رسالة إلى صندوق الوارد"
+        confirm_delete_topics:
+          zero: "حذف %{count} من الموضوعات"
+          one: "حذف موضوع واحد (%{count})"
+          two: "حذف موضوعيْن (%{count})"
+          few: "حذف %{count} موضوعات"
+          many: "حذف %{count} موضوعًا"
+          other: "حذف %{count} موضوع"
         progress:
           zero: "التقدُّم: <strong>%{count}</strong> موضوع"
           one: "التقدُّم: موضوع واحد (<strong>%{count}</strong>)"
@@ -4247,6 +4328,7 @@ ar:
         name: "تجاهل"
       close_topics:
         name: "إغلاق"
+        note: "أضف ملاحظة إلى هذه الموضوعات"
         optional: (اختياري)
       archive_topics:
         name: "الأرشيف"
@@ -4260,21 +4342,54 @@ ar:
         name: "إعادة الإدراج"
       remove_tags:
         name: "إزالة الوسوم"
+        description: "إزالة جميع الوسوم من الموضوعات المحددة."
       append_tags:
         name: "أضف وسوم"
+        description: "إضافة الوسوم التالية إلى الموضوعات المحددة:"
       replace_tags:
         name: "استبدال الوسوم"
+        description: "استبدل جميع الوسوم الحالية في الموضوعات المحددة بالوسوم التالية:"
       delete_topics:
         name: "حذف"
+        description: "احذف الموضوعات المحددة نهائيًا. لا يمكن التراجع عن هذا الإجراء."
       update_category:
         name: "تحديث الفئة"
+        description: "انقل جميع الموضوعات المحددة إلى الفئة التالية:"
+      convert_to_public_topic:
+        name: "التحويل إلى موضوع عام…"
+      convert_to_private_message:
+        name: "التحويل إلى رسالة خاصة"
       reset_bump_dates:
         name: "إعادة تعيين تواريخ الرفع"
+        description: "هل تريد تحديث \"تاريخ الرفع\" (Bump dates) ليتطابق مع تاريخ آخر مشاركة تم إنشاؤها؟ قد يؤثر ذلك في ترتيبها في قائمة الموضوعات."
       defer:
         name: "وضع علامة غير مقروءة"
       update_notifications:
         name: "تحديث الإشعارات"
         description: "قم بتحديث مستوى الإشعارات الشخصي للموضوعات المحددة ليصبح:"
+    nested_replies:
+      sort:
+        label: "الترتيب حسب"
+        top: "الأكثر نشاطًا"
+        new: "جديدة"
+      load_more_children:
+        zero: "%{count} ردًا آخر"
+        one: "رد واحد (%{count}) آخر"
+        two: "ردَّان (%{count}) آخران"
+        few: "%{count} ردود أخرى"
+        many: "%{count} ردًا آخر"
+        other: "%{count} رد آخر"
+      collapsed_replies:
+        zero: "%{count} من الردود"
+        one: "رد واحد (%{count})"
+        two: "%{count} من الردود"
+        few: "%{count} من الردود"
+        many: "%{count} من الردود"
+        other: "%{count} من الردود"
+      collapse: "طي"
+      no_replies: "لا توجد ردود بعد."
+      deleted_post_placeholder: "[تم الحذف]"
+      pinned_reply: "مثبَّت"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -4934,6 +5049,14 @@ ar:
         few: "%{count} أشخاص أعجبهم هذا المنشور."
         many: "%{count} شخصًا أعجبهم هذا المنشور."
         other: "%{count} شخص أعجبهم هذا المنشور."
+      likes_popup:
+        title:
+          zero: "%{count} إعجاب"
+          one: "إعجاب واحد (%{count})"
+          two: "إعجابان (%{count})"
+          few: "%{count} إعجابات"
+          many: "%{count} إعجابًا"
+          other: "%{count} إعجاب"
       sr_post_read_count_button:
         zero: "قرأ %{count} من الأشخاص هذا المنشور."
         one: "قرأ شخص واحد %{count} هذا المنشور."
@@ -4984,8 +5107,7 @@ ar:
           confirm_delete: "هل أنت متأكد أنك تريد حذف الترجمات للغة '%{languageCode}'؟"
         success: "تم تحديث الترجمات بنجاح"
         post_language_selector:
-          title: "لغة المنشور"
-          none: "لا يوجد"
+          none: "غير معيَّن"
         edit_warning:
           message: "هذا منشور مترجم.<br><br>هل تريد تعديل المنشور الأصلي باللغة %{language} أم تعديل هذه الترجمة المحددة؟"
           action_original: "تعديل المنشور الأصلي"
@@ -5014,6 +5136,7 @@ ar:
       cancel_composer:
         confirm: "أتريد تجاهل مشاركتك؟"
         discard: "تجاهل"
+        discard_edit: "تجاهل التغييرين"
       via_email: "لقد وصل هذا المنشور عبر البريد الإلكتروني"
       via_auto_generated_email: "لقد وصل هذا المنشور عبر رسالة إلكترونية تم إنشاؤها تلقائيًا"
       whisper: "هذا المنشور عبارة عن همسة خاصة للمشرفين"
@@ -5065,7 +5188,7 @@ ar:
         admin: "إجراءات المسؤول على المنشور"
         admin_action: "مسؤول"
         permanently_delete: "الحذف بشكلٍٍ دائم"
-        permanently_delete_confirmation: "هل تريد بالتأكيد حذف هذا المنشور بشكلٍٍ دائم؟ لن تتمكن من استعادته."
+        permanently_delete_confirm_phrase: "الحذف بشكلٍٍ دائم"
         wiki: "التحويل إلى Wiki"
         unwiki: "إزالة Wiki"
         convert_to_moderator: "لون إضافة فريق العمل"
@@ -5229,6 +5352,7 @@ ar:
         instructions: "شارِك رابطًا إلى هذا المنشور:"
       original_language: "اللغة الأصلية لهذا المنشور هي %{language}"
       original_language_and_outdated: "كُتب هذا المنشور أصلاً باللغة %{language}. من الممكن أن تكون الترجمة غير محدثة"
+      ai_translation_disclaimer: "قد تكون الترجمات المُولَّدة بالذكاء الاصطناعي غير دقيقة."
     category:
       none: "(بلا فئة)"
       all: "كل الفئات"
@@ -5240,9 +5364,12 @@ ar:
       back: "الرجوع إلى الفئة"
       general: "عام"
       settings: "الإعدادات"
+      moderation: "الإشراف"
       advanced: "متقدمة"
       show_advanced: "الإعدادات المتقدمة"
       topic_template: "قالب"
+      topic_title_placeholder: "نص إرشادي لعنوان موضوع الفئة"
+      topic_title_placeholder_placeholder: "[اختياري] نص إرشادي مخصص لعنوان موضوع هذه الفئة"
       tags: "الوسوم"
       localizations: "التوطينات"
       localization:
@@ -5275,8 +5402,15 @@ ar:
       create: "فئة جديدة"
       create_with_type: "الفئة %{typeName} الجديدة"
       create_long: "إنشاء فئة جديدة"
+      settings_apply_to_all_of_type_warning: "ستُطبّق التغييرات أدناه على جميع الفئات من هذا النوع"
       type_settings_schema:
+        category_settings: "إعدادات الفئة"
+        category_custom_fields: "إعدادات الفئة"
         site_settings: "إعدادات الموقع"
+      choose_type:
+        title: "اختر نوع الفئة"
+        requires_plugin: "يتطلب مكوّنًا إضافيًا"
+      create_category: "إنشاء فئة"
       save: "احفظ الفئة"
       unsaved_changes: "لديك تغييرات غير محفوظة"
       slug: "مسار الفئة"
@@ -5325,6 +5459,7 @@ ar:
       list: "إدراج الفئات"
       no_description: "يُرجى إضافة وصف لهذه الفئة."
       change_in_category_topic: "عدّل الوصف"
+      description_updated: "تم تحديث الوصف"
       description_expand: "عرض المزيد"
       description_collapse: "عرض أقل"
       already_used: "هذا اللون مستخدم بالفعل في فئة أخرى"
@@ -6662,6 +6797,7 @@ ar:
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"
+    reset_filter: "إعادة تعيين عامل التصفية"
     toggle_filters: "تبديل عوامل تصفية القائمة المنسدلة"
     admin:
       title: "مسؤول Discourse"
@@ -6681,6 +6817,7 @@ ar:
         group_traffic: "الزيارات"
         group_members: "الأعضاء"
         group_content: "المحتوى والصحة"
+        group_moderation_and_security: "الإشراف والأمان"
         group_other: "أخرى"
         legacy_warning: "هذا تقرير قديم، وسيتم إيقافه قريبًا. يرجى الاتصال بالدعم الفني إذا كنت بحاجة إلى مساعدة في إيجاد بديل."
       config_sections:
@@ -6750,6 +6887,9 @@ ar:
           staff: "فريق العمل"
           all_members: "جميع الأعضاء"
           developers: "المطوّرون"
+        impact_types:
+          feature_type: "الميزة"
+          other_type: "أخرى"
         filter:
           search_placeholder: "تصفية حسب الاسم، أو الوصف، أو المكون الإضافي..."
           no_results: "لا توجد تغييرات قادمة تطابق معايير التصفية"
@@ -6781,7 +6921,6 @@ ar:
           header_description: "قدّم هنا معلومات عن هذا الموقع وفريقك، بحيث يتمكّن المستخدمون من التعرّف على طبيعة مجتمعك، ومن يقف وراءه، وكيفية التواصل معك في حال وجود مشكلة. وستُعرَض هذه المعلومات في <a href='%{basePath}/about'>صفحة \"حول الموقع\"</a>."
         developer:
           title: "المطور"
-          header_description: "إعدادات المطور للتحكم في حدود المعدل، والمضاعفات، والحسابات، والوضع الآمن، وغير ذلك من الميزات المتقدمة."
         experimental:
           title: "تجريبي"
           header_description: "تبديل الميزات التجريبية إلى وضع التشغيل أو الإيقاف لموقعك، ويمكن التحكم في معظم تلك الميزات بشكلٍ جماعي"
@@ -7033,6 +7172,13 @@ ar:
             logs:
               title: "السجلات"
               header_description: "عرض سجلات النسخ الاحتياطية وإدارتها، والاستعادة، والتحميلات"
+        problem_checks:
+          priority: "الأولوية"
+          status: "الحالة"
+          last_run_at: "آخر تشغيل"
+          ignore: "تجاهل"
+          more_options:
+            title: "المزيد من الخيارات"
         reports:
           title: "التقارير"
           header_description: "تُعَد التقارير أداةً قوية لمساعدتك على فيهم ما يحدث على موقعك. ويمكنها مساعدتك على تحديد الاتجاهات الرائجة، واكتشاف المشكلات، واتخاذ القرارات استنادًا إلى البيانات."
@@ -7220,8 +7366,6 @@ ar:
         new_features:
           title: "ما الجديد؟"
           subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
-          no_new_features_found: "لا توجد عناصر في الموجز أو أن عامل التصفية الذي اخترته لم يُظهر أي نتائج. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة على <a href='%{url}' target='_blank'>مجتمع Discourse Meta</a>."
-          no_new_features_error: "حدث خطأ أثناء تحميل الموجز. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة في <a href='%{url}' target='_blank'>مجتمع Discourse Meta</a>."
           learn_more: "معرفة المزيد..."
         last_checked: "تاريخ آخر تحقُّق"
         refresh_problems: "تحديث"
@@ -7305,6 +7449,7 @@ ar:
           daily: يوميًا
           monthly: شهريًا
           weekly: أسبوعيًا
+          chart_group_period: "اختر فترة زمنية"
           value_so_far: "%{value} (حتى الآن)"
           dates: "التواريخ (بالتوقيت العالمي الموحَّد)"
           groups: "كل المجموعات"
@@ -8177,6 +8322,7 @@ ar:
           dark_color_scheme: "لوحة ألوان داكنة"
           default_light_scheme: "فاتحة (افتراضي)"
           color_scheme_select: "تحديد الألوان التي ستستخدمها السمة."
+          only_theme_color_schemes: "تحدد هذه السمة لوحات الألوان التي يمكن استخدامها."
           dark_color_scheme_select: "اختر الألوان التي ستستخدمها السمة في الوضع الداكن."
           edit_colors: "تعديل الألوان"
           custom_sections: "الأقسام المخصَّصة:"
@@ -8245,6 +8391,7 @@ ar:
           import_web_tip: "المستودع الذي يحتوي السمة"
           direct_install_tip: "هل تريد بالتأكيد تثبيت <strong>%{name}</strong> من المستودع المُدرَج أدناه؟"
           import_web_advanced: "متقدمة…"
+          import_file_tip: "ملف بصيغة tar.gz أو zip يحتوي على السمة"
           is_private: "السمة موجودة في مستودع Git خاص"
           finish_install: "إنهاء تثبيت السمة"
           last_attempt: "لم تنتهِ عملية التثبيت، آخر محاولة:"
@@ -8285,7 +8432,6 @@ ar:
             button: "غيّر المصدر"
             title: "غيّر مصدر السمة"
             repository_url: "رابط المستودع"
-            branch: "الفرع (اختياري)"
             updating: "يحدث مصدر القالب…"
             update: "تحديث المصدر"
             generate_new_key: "ولّد مفتاح SSH جديد"
@@ -8753,6 +8899,7 @@ ar:
             upcoming_change_available: "التغيير القادم متاح"
             change_site_setting_groups: "غيّر مجموعات إعدادات الموقع"
             discourse_id_regenerate_credentials: "إعادة إنشاء بيانات اعتماد معرف Discourse"
+            configure_category_type: "إعداد نوع الفئة"
         screened_emails:
           title: "عناوين البريد الإلكتروني الخاضعة للمراقبة"
           description: "عندما يحاول شخص ما إنشاء حساب جديد، سيتم التحقُّق من عناوين البريد الإلكتروني التالية وحظر التسجيل، أو اتخاذ إجراء آخر."
@@ -9418,7 +9565,9 @@ ar:
         more_than_50_results: "هناك أكثر من 50 نتيجة. يُرجى تحسين البحث."
         no_results: "لم يتم العثور على نصوص مطابقة على الموقع"
         interpolation_keys: "مفاتيح الاستيفاء المتاحة:"
+        interpolation_key_insert: "انقر للإدراج"
         interpolation_key_used: "مستخدمة بالفعل"
+        interpolation_key_invalid: "مفتاح غير معروف — لن يتم استبداله بقيمته"
         outdated:
           title: "هذه الترجمة قديمة"
           description: "لقد تغيَّرت الترجمة الافتراضية لهذا المفتاح منذ إنشاء هذا الاستبدال. يُرجى التحقق أدناه من مطابقة ترجمتك لأي تغييرات تم إجراؤها على الغرض الأصلي."

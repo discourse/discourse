@@ -117,3 +117,5 @@ ar:
         char_counter:
           title: "عداد الأحرف"
           placeholder: "أدخل نصك هنا..."
+        segmented_control:
+          title: "عنصر تحكم مُقسَّم (مجموعة أزرار تبديل)"

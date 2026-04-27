@@ -16,7 +16,6 @@ register_asset "stylesheets/common/index.scss"
 register_asset "stylesheets/desktop/index.scss", :desktop
 register_asset "stylesheets/mobile/index.scss", :mobile
 
-register_svg_icon "comments"
 register_svg_icon "comment-slash"
 register_svg_icon "comment-dots"
 register_svg_icon "lock"

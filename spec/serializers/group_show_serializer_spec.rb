@@ -137,8 +137,12 @@ RSpec.describe GroupShowSerializer do
         expect(serializer.as_json[:regular_category_ids]).to eq([])
         expect(serializer.as_json[:muted_category_ids]).to eq([])
 
-        expect(serializer.as_json[:watching_tags]).to eq([tag1.name])
-        expect(serializer.as_json[:tracking_tags]).to eq([tag2.name])
+        expect(serializer.as_json[:watching_tags]).to eq(
+          [{ id: tag1.id, name: tag1.name, slug: tag1.slug }],
+        )
+        expect(serializer.as_json[:tracking_tags]).to eq(
+          [{ id: tag2.id, name: tag2.name, slug: tag2.slug }],
+        )
         expect(serializer.as_json[:watching_first_post_tags]).to eq([])
         expect(serializer.as_json[:regular_tags]).to eq([])
         expect(serializer.as_json[:muted_tags]).to eq([])

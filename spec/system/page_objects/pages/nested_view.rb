@@ -155,7 +155,7 @@ module PageObjects
 
       def has_sort_active?(sort)
         has_css?(
-          ".nested-sort-selector__option--active",
+          ".nested-sort-selector button.active",
           text: I18n.t("js.nested_replies.sort.#{sort}"),
         )
       end
@@ -333,7 +333,7 @@ module PageObjects
       end
 
       def click_sort(sort)
-        find(".nested-sort-selector__option", text: I18n.t("js.nested_replies.sort.#{sort}")).click
+        find(".nested-sort-selector button", text: I18n.t("js.nested_replies.sort.#{sort}")).click
         self
       end
 
@@ -433,6 +433,20 @@ module PageObjects
       def has_uncloaked_root_for?(post)
         has_no_css?(".nested-post--cloaked [data-post-number='#{post.post_number}']") &&
           has_css?("[data-post-number='#{post.post_number}']")
+      end
+
+      # ── Suggested topics ──────────────────────────────────────────
+
+      def has_suggested_topics?
+        has_css?("#suggested-topics")
+      end
+
+      def has_no_suggested_topics?
+        has_no_css?("#suggested-topics")
+      end
+
+      def has_suggested_topic?(topic)
+        has_css?("#suggested-topics .topic-list-item[data-topic-id='#{topic.id}']")
       end
 
       private

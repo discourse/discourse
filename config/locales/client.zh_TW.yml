@@ -2528,6 +2528,8 @@ zh_TW:
       upload_description: "在此輸入上傳的描述"
       list_item: "清單項目"
       wrap_modal:
+        attribute_key: "金鑰"
+        attribute_value: "價值"
         apply: "套用"
       help: "Markdown 編輯說明"
       exit_fullscreen_prompt: "按<kbd>ESC</kbd>離開全螢幕"
@@ -2586,6 +2588,9 @@ zh_TW:
       delete_image_button: 刪除圖片
       toggle_image_grid: 切換影像網格
       link_toolbar:
+        copy: "複製連結"
+        link_copied: "連結已複製！"
+      onebox_toolbar:
         copy: "複製連結"
         link_copied: "連結已複製！"
     notifications:
@@ -2969,12 +2974,29 @@ zh_TW:
         name: "刪除"
       update_category:
         name: "更新分類"
+      convert_to_public_topic:
+        name: "設置為公共話題"
+      convert_to_private_message:
+        name: "設置為私訊"
       reset_bump_dates:
         name: "重設上浮日期"
       defer:
         name: "標註為未讀"
       update_notifications:
         name: "更新通知"
+    nested_replies:
+      sort:
+        label: "排序"
+        top: "精選"
+        new: "新使用者"
+      load_more_children:
+        other: "%{count} 個更多回覆"
+      collapsed_replies:
+        other: "%{count}個回覆"
+      collapse: "收起"
+      no_replies: "暫無回覆。"
+      deleted_post_placeholder: "[刪除]"
+      pinned_reply: "已釘選"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -3441,6 +3463,9 @@ zh_TW:
         other: "你和其他 %{count} 人讚了該貼"
       sr_post_like_count_button:
         other: "%{count} 個使用者對此貼文讚好."
+      likes_popup:
+        title:
+          other: "%{count}個讚"
       sr_post_read_count_button:
         other: "%{count} 人閱讀了這篇文章。"
       filtered_replies_hint:
@@ -3456,7 +3481,7 @@ zh_TW:
           edit: "編輯"
           delete: "刪除"
         post_language_selector:
-          none: "無"
+          none: "未設定"
       errors:
         create: "抱歉，建立你的貼文時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的貼文時發生錯誤，請再試一次。"
@@ -3516,7 +3541,7 @@ zh_TW:
         admin: "貼文管理動作"
         admin_action: "管理員"
         permanently_delete: "永久刪除"
-        permanently_delete_confirmation: "您確定要永久刪除此貼文嗎？您將無法恢復它。"
+        permanently_delete_confirm_phrase: "永久刪除"
         wiki: "做為共筆"
         unwiki: "取消共筆"
         convert_to_moderator: "增加工作人員顏色"
@@ -3649,6 +3674,7 @@ zh_TW:
       back: "回到類別"
       general: "一般"
       settings: "設定"
+      moderation: "管理"
       advanced: "進階"
       topic_template: "範本"
       tags: "標記"
@@ -4679,6 +4705,8 @@ zh_TW:
         impact_roles:
           moderators: "板主"
           staff: "管理員"
+        impact_types:
+          other_type: "其他"
         filter:
           all: "全部"
           enabled: "啟用"
@@ -4693,7 +4721,6 @@ zh_TW:
           header_description: "在這裡提供有關此網站和您團隊的資訊，以便人們可以了解您的社區、幕後人員，以及在出現問題時如何聯絡您。顯示在您網站的<a href='%{basePath}/about'>「關於」頁面</a>上。"
         developer:
           title: "開發人員"
-          header_description: "控制速率限制、乘數和計算、安全模式和其他進階功能的開發人員設定"
         experimental:
           title: "實驗性"
           header_description: "切換網站的實驗性功能，其中大部分功能可按組進行控制"
@@ -4853,6 +4880,11 @@ zh_TW:
             logs:
               title: "紀錄"
               header_description: "檢視和管理備份、還原和上傳的日誌"
+        problem_checks:
+          status: "狀態"
+          ignore: "忽略"
+          more_options:
+            title: "更多選項"
         reports:
           title: "報告"
           header_description: "報告是幫助您了解網站上所發生事情的有力工具。它們可以幫助您了解趨勢、發現問題並根據數據做出決策。"

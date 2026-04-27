@@ -491,7 +491,17 @@ sk:
   deleted_topic: "Ups! Táto téma bola vymazaná a už nie je k dispozícii."
   delete_topic_failed: "Pri odstraňovaní tejto témy došlo k chybe. Obráťte sa, prosím, na správcu stránky."
   reading_time: "Doba čítania"
+  reading_time_minutes:
+    one: "%{count} minúta 🕑"
+    few: "%{count} minúty 🕑"
+    many: "%{count} minút 🕑"
+    other: "%{count} minút 🕑"
   likes: "Páči sa mi"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    many: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Ups! Túto akciu ste už vykonali. Môžete skúsiť obnoviť stránku?"
   too_many_replies:
     one: "Ľutujeme, noví používatelia majú dočasne obmedzený počet príspevkov na jeden v rámci jednej témy."
@@ -924,7 +934,6 @@ sk:
       many: "%{count} lajkov"
       other: "%{count} lajky"
     cannot_permanently_delete:
-      many_posts: "Táto téma má nezmazané príspevky. Pred trvalým vymazaním témy ich prosím natrvalo odstráňte."
       wait_or_different_admin: "Pred trvalým odstránením tohto príspevku musíte počkať %{time_left} , inak to musí urobiť iný správca."
   rate_limiter:
     slow_down: "Túto akciu ste vykonali príliš veľakrát, skúste to znova neskôr."
@@ -2515,7 +2524,6 @@ sk:
     create_revision_on_bulk_topic_moves: "Vytvorte revíziu pre prvé príspevky, keď sa témy hromadne presunú do novej kategórie."
     allow_changing_staged_user_tracking: "Umožniť nezaktívnenému používateľovi s právami administrátora meniť preferencie kategórií a upozornení na značky."
     use_email_for_username_and_name_suggestions: "Na návrhy používateľského mena a mena použite prvú časť e-mailových adries. Upozornenie: To môže zlým aktérom uľahčiť zistenie e-mailovej adresy vašich členov (pretože mnohí ľudia používajú bežných poskytovateľov e-mailu, ako je `gmail.com`)."
-    use_name_for_username_suggestions: "Pri navrhovaní používateľských mien používajte celé meno používateľa."
     suggest_weekends_in_date_pickers: "Zahrnúť víkendy (sobotu a nedeľu) do návrhov na výber dátumu (ak Discourse používate len počas pracovných dní, od pondelka do piatku, vypnite túto funkciu)."
     show_bottom_topic_map: "Zobrazí mapu témy v spodnej časti témy, ak má 10 alebo viac odpovedí."
     show_topic_map_in_topics_without_replies: "Zobrazí mapu témy, aj keď téma nemá žiadne odpovede."
@@ -2869,7 +2877,6 @@ sk:
       request_error: "Prepáčte, pri spustení autorizácie sa vyskytla chyba. Skúste to znova."
       invalid_iat: "Prepáčte, ale kvôli rozdielom v čase servera sa nám nepodarilo overiť autorizačný token. Skúste to znova."
     omniauth_error_unknown: "Niečo sa pokazilo pri spracovaní vášho prihlásenia, skúste to prosím znova."
-    omniauth_confirm_title: "Prihláste sa pomocou stránky %{provider}"
     omniauth_confirm_button: "Pokračovať"
     authenticator_error_no_valid_email: "Nie sú povolené žiadne e-mailové adresy spojené s %{account} . Možno budete musieť nakonfigurovať svoje konto s inou e-mailovou adresou."
     new_registrations_disabled: "Registrácia nových účtov momentálne nie je povolená."
@@ -5007,7 +5014,6 @@ sk:
         few: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
         many: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
         other: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
-      synonym: 'Synonymá nie sú povolené. Namiesto toho použite "%{tag_name}".'
       has_synonyms: '"%{tag_name}" nemožno použiť, pretože má synonymá.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Značku "%{tags}" nemožno použiť v kategórii "%{category}". Odstráňte ju, prosím.'

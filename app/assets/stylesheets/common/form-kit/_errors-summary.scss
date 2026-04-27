@@ -6,11 +6,7 @@
   border: 1px solid var(--danger);
   background-color: var(--danger-low);
   border-radius: var(--d-border-radius);
-  width: var(--form-kit-large-input);
-
-  @include viewport.until(sm) {
-    width: 100%;
-  }
+  width: 100%;
 
   h2 {
     font-size: var(--font-0);

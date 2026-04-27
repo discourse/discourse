@@ -17,6 +17,8 @@ rescue LoadError
 end
 
 class BulkImport::Generic < BulkImport::Base
+  include HasSanitizableFields
+
   AVATAR_DIRECTORY = ENV["AVATAR_DIRECTORY"]
   UPLOAD_DIRECTORY = ENV["UPLOAD_DIRECTORY"]
   MERGE_IMPORT = ENV["MERGE_IMPORT"].present?
@@ -2225,10 +2227,14 @@ class BulkImport::Generic < BulkImport::Base
 
     tags.each do |row|
       cleaned_tag_name = DiscourseTagging.clean_tag(row["name"])
+      description = row["description"].presence&.truncate(1000)
       tag =
-        Tag.where("LOWER(name) = ?", cleaned_tag_name.downcase).first_or_create!(
-          name: cleaned_tag_name,
-        )
+        Tag
+          .where("LOWER(name) = ?", cleaned_tag_name.downcase)
+          .first_or_create!(name: cleaned_tag_name) { |t| t.description = description }
+      if description && tag.description != description
+        tag.update_columns(description: sanitize_field(description))
+      end
       @tag_mapping[row["id"]] = tag.id
 
       intermediate_group_ids = []

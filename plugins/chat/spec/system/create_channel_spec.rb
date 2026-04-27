@@ -206,12 +206,13 @@ RSpec.describe "Create channel" do
             end
 
             it "displays the correct warning" do
+              sorted_names = [group_1.name, group_2.name].sort
               expect(dialog).to have_content(
                 I18n.t(
                   "js.chat.create_channel.auto_join_users.warning_2_groups",
                   count: 1,
-                  group1: "@#{group_1.name}",
-                  group2: "@#{group_2.name}",
+                  group1: "@#{sorted_names.first}",
+                  group2: "@#{sorted_names.second}",
                 ),
               )
             end
@@ -231,8 +232,9 @@ RSpec.describe "Create channel" do
             it "displays the correct warning" do
               # NOTE: This has to be hardcoded because the I18n module in ruby
               # does not support messageFormat.
+              first_group = [group_1.name, group_2.name, group_3.name].sort.first
               expect(dialog).to have_content(
-                "Automatically add 1 user from @#{group_1.name} and 2 other groups?",
+                "Automatically add 1 user from @#{first_group} and 2 other groups?",
               )
             end
           end

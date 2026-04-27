@@ -2,7 +2,10 @@ import { concat } from "@ember/helper";
 import concatClass from "discourse/helpers/concat-class";
 
 const FKCol = <template>
-  <div class={{concatClass "form-kit__col" (if @size (concat "--col-" @size))}}>
+  <div
+    class={{concatClass "form-kit__col" (if @size (concat "--col-" @size))}}
+    ...attributes
+  >
     {{yield}}
   </div>
 </template>;

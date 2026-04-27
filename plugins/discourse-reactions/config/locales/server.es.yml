@@ -13,6 +13,7 @@ es:
     discourse_reactions_desaturated_reaction_panel: "Reduce el ruido visual de las reacciones mostrándolas con menos color hasta que se pasa el ratón por encima."
     discourse_reactions_excluded_from_like: "Reacciones que no cuentan como un Me gusta. Cualquier reacción que no esté en esta lista contará como un Me gusta para insignias, informes y otros fines."
     discourse_reactions_like_sync_enabled: "Si está activada, se crearán los registros de Me gusta correspondientes a las reacciones históricas, excepto para las reacciones definidas en «discourse_reactions_excluded_from_like». Esta sincronización se realizará regularmente en segundo plano, y también cuando cambies «discourse_reactions_excluded_from_like»."
+    discourse_reactions_allow_any_emoji: "Si esta opción está activada, añadirá un botón que permitirá a los usuarios seleccionar cualquier emoji en el selector de reacciones. Los miembros podrán elegir cualquier emoji, incluidos los emoji personalizados, para las reacciones. Para limitar las reacciones disponibles, utiliza el ajuste de sitio «emoji_deny_list»."
   badges:
     first_reaction:
       name: Primera reacción

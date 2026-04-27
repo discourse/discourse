@@ -36,6 +36,8 @@ de:
             create_ai_llm_model: "LLM-Modell erstellen"
             update_ai_llm_model: "LLM-Modell aktualisieren"
             delete_ai_llm_model: "LLM-Modell löschen"
+            create_ai_agent: "KI-Agent erstellen"
+            update_ai_agent: "KI-Agent aktualisieren"
             delete_ai_agent: "KI-Agent löschen"
             create_ai_tool: "KI-Tool erstellen"
             update_ai_tool: "KI-Tool aktualisieren"
@@ -114,6 +116,7 @@ de:
               description: "Top P für die LLM, erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
             agent_id:
               label: "Agent"
+              description: "KI-Agent für die Berichterstellung"
         ai_tool_action:
           fields:
             tool:
@@ -126,14 +129,18 @@ de:
           fields:
             agent:
               label: "Agent"
+              description: "KI-Agent, der für die Sichtung verwendet werden soll (Standard-LLM und -Benutzer müssen eingestellt sein)"
             whisper:
               label: "Als Flüstern antworten"
+              description: "Ob die Antwort des Agenten ein Flüstern sein soll"
             silent_mode:
               label: "Stiller Modus"
+              description: "Im stillen Modus empfängt der Agent den Inhalt, schreibt aber nichts in das Forum – nützlich bei der Sichtung mit Tools"
         llm_triage:
           fields:
             triage_agent:
               label: "Agent"
+              description: "Agent, der für die Triage verwendet wird. Achte darauf, dass er mit einem einzigen Wort antwortet, das du zum Auslösen der Aktion verwenden kannst"
             max_post_tokens:
               label: "Max. Beitrags-Token"
               description: "Die maximale Anzahl von Token, die mit LLM-Triage gescannt werden"
@@ -179,6 +186,9 @@ de:
             whisper:
               label: "Als Flüstern antworten"
               description: "Ob die Antwort der KI ein Flüstern sein soll"
+            reply_agent:
+              label: "Antwort-Agent"
+              description: "KI-Agent, der für Antworten verwendet werden soll (muss Standard-LLM haben), wird gegenüber vorgefertigten Antworten bevorzugt"
             max_output_tokens:
               label: "Maximale Ausgabetoken"
               description: "Wenn angegeben, wird eine Obergrenze für die maximale Anzahl von Token festgelegt, die das Modell erzeugen kann. Beachtet die Obergrenze für die Anzahl der ausgegebenen Token des LLM"
@@ -189,6 +199,7 @@ de:
           fields:
             tagger_agent:
               label: "KI-Agent"
+              description: "Der KI-Agent, der Themen analysiert und Schlagwörter hinzufügt"
             tag_mode:
               label: "Schlagwort-Auswahlmodus"
               description: "Wähle, wie die KI Schlagwörter auswählt"
@@ -217,11 +228,14 @@ de:
       title: "KI"
       default_llm:
         title: "Standard-LLM-Modell"
+        description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder im Agent kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
       llm_selector:
         none: "Keine Auswahl"
         saved: "Standard-LLM-Modell erfolgreich aktualisiert"
       features:
         short_title: "Funktionen"
+        description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Agenten und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
+        back: "Zurück zu KI-Funktionen"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
         agent:
@@ -253,6 +267,7 @@ de:
           unconfigured: "Nicht konfiguriert"
         filters:
           all: "Gesamt"
+          text: "Suche nach Funktionen, Agenten, LLM oder Gruppen …"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
         no_automations: "Es gibt noch keine Automatisierungen"
@@ -298,6 +313,7 @@ de:
             post_criteria: "Kriterien für Beiträge"
             agents: "Agenten"
         ai_helper:
+          edit: "Einstellungen für KI-Helfer bearbeiten"
           name: "KI-Helfer"
           description: "Unterstützt Benutzer bei der Interaktion in der Community, z. B. beim Erstellen von Themen, Verfassen von Beiträgen und Lesen von Inhalten"
           proofread: Text korrekturlesen
@@ -377,6 +393,9 @@ de:
           bar_done:
             one: "%{count} Beitrag"
             other: "%{count} Beiträge"
+        theme_translations:
+          translate:
+            label: "Übersetzen"
         translations_menu:
           translate:
             label: "Beitrag übersetzen"
@@ -389,6 +408,7 @@ de:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
         select_llm: "LLM auswählen"
+        select_agent: "Agent auswählen"
         custom_instructions: "Benutzerdefinierte Anweisungen"
         custom_instructions_help: "Benutzerdefinierte Anweisungen speziell für deine Website, die der KI beim Identifizieren von Spam helfen, z. B. „Gehe beim Scannen von Posts, die nicht in englischer Sprache sind, aggressiver vor.“"
         last_seven_days: "Letzte 7 Tage"
@@ -476,20 +496,46 @@ de:
         credit_allocations: "Guthabenzuweisungen"
       ai_agent:
         ai_tools: "Tools"
+        mcp_servers: "MCP-Server"
+        mcp_server_tools_help: "Ausgewählte MCP-Server stellen standardmäßig alle ihre Tools bereit. Um den Tokenverbrauch zu reduzieren und die Toolauswahl übersichtlicher zu gestalten, kann die Auswahl pro Agent eingeschränkt werden."
+        mcp_server_tool_count:
+          one: "%{count} Tool"
+          other: "%{count} Tools"
+        mcp_server_enabled_tool_count:
+          one: "%{count} Tool aktiviert"
+          other: "%{count} Tools aktiviert"
+        mcp_server_all_tools_enabled: "Alle Tools aktiviert"
+        mcp_server_enabled_tools:
+          one: "%{count} von %{total} Tool aktiviert"
+          other: "%{count} von %{total} Tools aktiviert"
+        mcp_server_choose_tools: "Tools auswählen"
+        mcp_server_edit_tools: "Tools bearbeiten"
         tool_strategies:
           all: "Auf alle Antworten anwenden"
           replies:
             one: "Nur auf die erste Antwort anwenden"
             other: "Auf die ersten %{count} Antworten anwenden"
+        back: "Zurück zu Agenten"
         name: "Name"
         edit: "Bearbeiten"
         export: "Exportieren"
         import: "Importieren"
+        import_error_conflict: "Beim Import von %{name} wurde ein Konflikt festgestellt. Möchtest du den vorhandenen Agenten aktualisieren?"
         overwrite: "Überschreiben"
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
+        use_parent_llm: "Sprachmodell des Agenten verwenden"
         max_context_posts: "Max. Kontext-Beiträge"
-        max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Nutzer verwenden soll (leer für Standardwert)."
+        max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Benutzer verwenden soll (leer für Standardwert)."
+        execution_mode: "Ausführungsmodus"
+        execution_mode_help: "Steuert, wie der Agent die Toolausführung und den Gesprächskontext verwaltet. Standardmäßig werden feste Runden-/Tool-Limits verwendet. Agentic verwendet ein Token-Budget mit automatischer Kontextkomprimierung für längere, leistungsfähigere Tool-Nutzungssitzungen."
+        execution_mode_options:
+          default: "Standard (feste Limits)"
+          agentic: "Agentic (Token-Budget)"
+        max_turn_tokens: "Max. Runden-Token"
+        max_turn_tokens_help: "Maximale Gesamtzahl an Token (Input + Output), die während einer einzelnen Bot-Antwort über alle LLM-Aufrufe hinweg verbraucht werden. Wenn diese Option gesetzt ist, werden die festen Limits für den Abschluss und die Tools durch ein Token-Budget ersetzt, das ein agentenbasiertes Verhalten ermöglicht. Leer lassen für Standardgrenzen."
+        compression_threshold: "Kompressionsschwelle"
+        compression_threshold_help: "Prozentualer Anteil der Kontextnutzung (20–99), bei dem die automatische Komprimierung einsetzt. Niedrigere Werte lösen die Komprimierung früher aus, sodass mehr Spielraum erhalten bleibt."
         vision_enabled: Sehen aktiviert
         vision_enabled_help: Wenn diese Funktion aktiviert ist, versucht die KI, die Bilder zu verstehen, die Benutzer im Thema posten (abhängig davon, ob das verwendete Modell Sehen unterstützt). Unterstützt von den neuesten Modellen von Anthropic, Google und OpenAI.
         vision_max_pixels: Unterstützte Bildgröße
@@ -500,27 +546,62 @@ de:
         show_thinking: Denken anzeigen
         show_thinking_help: Zeigt den Endbenutzern die internen Denkprozesse und Werkzeugaufrufe des Sprachmodells.
         mentionable: Erwähnungen zulassen
+        mentionable_help: Wenn diese Funktion aktiviert ist, können Benutzer in zulässigen Gruppen diesen Benutzer in Beiträgen erwähnen und die KI wird als dieser Agent antworten.
         user: Benutzer
         create_user: Benutzer erstellen
+        create_user_help: Du kannst diesem Agenten optional einen Benutzer zuordnen. Wenn du das tust, wird die KI diesen Nutzer verwenden, um auf Anfragen zu antworten.
         default_llm: Standard-Sprachmodell
+        default_llm_help: Das Standard-Sprachmodell, das für diesen Agenten verwendet werden soll. Erforderlich, wenn du den Agenten in öffentlichen Beiträgen erwähnen möchtest.
         system_prompt: System-Eingabeaufforderung
         forced_tool_strategy: Erzwungene Tool-Strategie
         allow_chat_direct_messages: "Chat-Direktnachrichten zulassen"
+        allow_chat_direct_messages_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen Direktnachrichten an diesen Agenten senden."
         allow_chat_channel_mentions: "Chat-Kanal-Erwähnungen zulassen"
+        allow_chat_channel_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diesen Agenten in Chatkanälen erwähnen."
         allow_personal_messages: "Persönliche Nachrichten zulassen"
+        allow_personal_messages_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen persönliche Nachrichten an diesen Agenten senden."
         allow_topic_mentions: "Themenerwähnungen zulassen"
+        allow_topic_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diesen Agenten in Themen erwähnen."
+        require_approval: "Genehmigung für Moderationstools erforderlich"
+        require_approval_help: "Wenn diese Option aktiviert ist, werden Moderationsaktionen (Schließen, Löschen, Bearbeiten usw.) vor der Ausführung zur Genehmigung durch den Moderator an die Überprüfungswarteschlange gesendet."
         force_default_llm: "Immer das Standard-Sprachmodell verwenden"
         save: "Speichern"
         saved: "Agent gespeichert"
         enabled: "Aktiviert?"
         tools: "Aktivierte Tools"
         tokens: "Token"
+        context_cost: "Kontextkosten"
+        token_usage: "Token-Nutzung"
+        tool_count: "Anzahl der Tools"
+        tool_count_value:
+          one: "%{count} Tool"
+          other: "%{count} Tools"
+        tool_tokens_total: "~%{tokens} Token"
+        mcp_server_cost_name: "%{name} (MCP-Server)"
+        mcp_server_cost_value:
+          one: "~%{tokens} Token, %{count} Tool"
+          other: "~%{tokens} Tokens, %{count} Tools"
+        mcp_server_tokens_only: "~%{tokens} Token"
         mcp_tools_modal:
+          title: "%{name} Tools"
+          summary: "Standardmäßig kann dieser Agent alle Tools von diesem Server nutzen. Wähle eine kleinere Menge, um den Zugriff zu begrenzen und die Kosten für die Eingabeaufforderung zu reduzieren."
+          filter_placeholder: "Tools filtern"
           select_all: "Alle auswählen"
           clear_all: "Alle löschen"
+          selection_summary:
+            one: "%{count} von %{total} Tool ausgewählt"
+            other: "%{count} von %{total} Tools ausgewählt"
+          empty: "Keine Tools entsprechen diesem Filter."
+        tool_severity_medium: "Mäßige Kapazität"
+        tool_severity_high: "Hohe Kapazität"
+        tool_severity_too_many: "Zu viele Tools"
+        tool_tokens_warning: "Überflüssige Tools verschlechtern die KI-Leistung, da sie wertvollen Konversationsspeicher beanspruchen. Ziehe in Erwägung, nicht benötigte Tools zu entfernen."
+        tool_count_warning: "Die Definitionen der einzelnen Tools werden bei jeder Anfrage an das Modell gesendet. Viele Tools erhöhen den Tokenverbrauch und können das Modell verwirren, was zu einer schlechteren Toolauswahl führt. Behalte nur Tools, die der Agent tatsächlich benötigt."
         forced_tools: "Erzwungene Tools"
         allowed_groups: "Zulässige Gruppen"
+        confirm_delete: "Bist du sicher, dass du diesen Agenten löschen möchtest?"
         new: "Neuer Agent"
+        no_agents: "Du hast noch keine Agenten erstellt"
         title: "Agenten"
         short_title: "Agenten"
         delete: "Löschen"
@@ -529,9 +610,11 @@ de:
         top_p: "Top P"
         top_p_help: "Top P für das LLM. Erhöhen, um die Zufälligkeit zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, in der Regel ein Wert zwischen 0,0 und 1,0)"
         priority: "Priorität"
+        priority_help: "Agenten mit Priorität werden den Benutzern am Anfang der Agenten-Liste angezeigt. Wenn mehrere Agenten Priorität haben, werden sie alphabetisch sortiert."
         tool_options: "Tool-Optionen"
         rag_conversation_chunks: "Suchunterhaltungs-Chunks"
         rag_conversation_chunks_help: "Die Anzahl der Chunks, die für die RAG-Modell-Suche verwendet werden. Erhöhen, um die Menge des Kontexts zu steigern, den die KI verwenden kann."
+        agent_description: "Agenten sind eine leistungsstarke Funktion, mit der du das Verhalten der KI-Engine in deinem Discourse-Forum anpassen kannst. Sie fungieren als „Systemnachricht“, welche die Antworten und Interaktionen der KI steuert und dazu beiträgt, ein persönlicheres und ansprechenderes Erlebnis für Benutzer zu schaffen."
         response_format:
           title: "JSON-Antwortformat"
           no_format: "Kein JSON-Format angegeben"
@@ -551,8 +634,11 @@ de:
           enabled: "KI-Bot?"
         ai_bot:
           title: "KI-Bot-Optionen"
+          save_first: "Weitere KI-Bot-Optionen werden verfügbar, sobald du den Agenten gespeichert hast."
         filters:
+          text: "Finde einen Agenten"
           reset: "Zurücksetzen"
+          no_results: "Es wurden keine Agenten gefunden, die deinen Filtern entsprechen."
           all_features: "Jede Funktion"
         features_list:
           one: "Funktion:"
@@ -581,8 +667,10 @@ de:
           uploading: "Wird hochgeladen …"
           remove: "Upload entfernen"
       tools:
+        back: "Zurück zu Tools"
         short_title: "Tools"
         keywords: "mcp|mcp-Server|Modellkontextprotokoll"
+        script_tools: "Skript-Tools"
         export: "Exportieren"
         import: "Importieren"
         import_error_conflict: "Tool existiert bereits, möchtest du es aktualisieren?"
@@ -592,14 +680,17 @@ de:
         name_help: "Der Name wird in der Discourse-Benutzeroberfläche angezeigt und ist die Kurzkennung, die du verwendest, um das Tool in verschiedenen Einstellungen zu finden. Er sollte eindeutig sein (er ist erforderlich)."
         new: "Neues Tool"
         tool_name: "Name des Tools"
+        tool_name_help: "Der Werkzeugname wird dem großen Sprachmodell präsentiert. Er ist nicht eindeutig, aber er ist für jeden Agenten eindeutig. (Agent validiert beim Speichern)"
         description: "Beschreibung"
         description_help: "Eine klare Beschreibung des Zwecks des Tools für das Sprachmodell"
+        subheader_description: "Tools und MCP-Server erweitern die Fähigkeiten von KI-Agenten."
         summary: "Zusammenfassung"
         summary_help: "Zusammenfassung des Zwecks der Tools, die den Endnutzern angezeigt werden soll"
         script: "Skript"
         parameters: "Parameter"
         save: "Speichern"
         parameter_type: "Parametertyp"
+        parameter_item_type: "Objekttyp"
         add_parameter: "Parameter hinzufügen"
         remove_parameter: "Entfernen"
         parameter_required: "Erforderlich"
@@ -637,6 +728,7 @@ de:
         no_secrets: "Noch keine Anmeldedaten"
         new_title: "Neue Anmeldedaten"
         edit_title: "Anmeldedaten bearbeiten"
+        back: "Zurück zu den Anmeldedaten"
         save: "Speichern"
         edit: "Bearbeiten"
         delete: "Löschen"
@@ -645,31 +737,84 @@ de:
         embedding: "Einbettung"
         cannot_delete_in_use: "Diese Anmeldedaten können nicht gelöscht werden. Sie werden verwendet von:"
         tool: "Tool"
+        mcp_server: "MCP-Server"
+        mcp_server_oauth_client_secret: "MCP-Server OAuth-Client-Geheimnis"
         modal:
           title: "Neue Anmeldedaten erstellen"
       mcp_servers:
+        short_title: "MCP-Server"
+        new: "Neuer MCP-Server"
         name: "Name"
         description: "Beschreibung"
         url: "URL"
+        auth_type: "Authentifizierung"
         auth_types:
+          none: "Keine Authentifizierung"
+          header_secret: "Header-Anmeldedaten"
           oauth: "OAuth"
         secret: "Anmeldedaten"
+        auth_header: "Auth-Header"
+        auth_scheme: "Auth-Schema"
+        oauth_client_registration: "OAuth Client-Tegistrierung"
+        oauth_client_registration_types:
+          client_metadata_document: "Client-Metadatendokument"
+          manual: "Manuelle Client-Anmeldedaten"
+        oauth_client_id: "OAuth Client-ID"
+        oauth_client_secret: "OAuth Client-Geheimnis"
+        oauth_scopes: "OAuth Bereiche"
         oauth_token_params_placeholder: "{}"
         oauth_json_object_required: "%{field} muss ein JSON-Objekt sein."
         oauth_show_advanced_options: "Erweiterte Optionen anzeigen"
         oauth_hide_advanced_options: "Erweiterte Optionen ausblenden"
+        oauth_connection: "OAuth Verbindung"
+        oauth_status: "OAuth Status"
         oauth_statuses:
+          disconnected: "Getrennt"
           connected: "Verbunden"
+          refresh_failed: "Aktualisieren fehlgeschlagen"
+          error: "Aufmerksamkeit erforderlich"
         oauth_connect: "Verbinden"
+        oauth_reconnect: "Erneut verbinden"
+        oauth_disconnect: "Trennen"
+        oauth_connect_help: "Verwende „Verbinden“, um den Server zu speichern und ihn zu autorisieren."
+        oauth_client_metadata_url: "Client-Metadaten-URL"
+        oauth_granted_scopes: "Gewährte Bereiche"
+        oauth_access_token_expires_at: "Zugriffstoken läuft ab:"
+        oauth_authorization_endpoint: "Autorisierungsendpunkt"
+        oauth_token_endpoint: "Token-Endpunkt"
+        oauth_revocation_endpoint: "Widerrufsendpunkt"
+        oauth_issuer: "Aussteller"
+        oauth_last_error: "Letzter OAuth-Fehler"
         oauth_show_details: "Details anzeigen"
         oauth_hide_details: "Details ausblenden"
+        timeout_seconds: "Anfrage-Timeout (Sekunden)"
+        timeout_seconds_tooltip: "Wie lange Discourse auf den MCP-Server wartet, bevor die Anfrage fehlschlägt. Auf 30 lassen, es sei denn, der Server ist konstant langsam."
         enabled: "Aktiviert"
         save: "Speichern"
         edit: "Bearbeiten"
         delete: "Löschen"
+        test: "Verbindung testen"
+        saved: "MCP-Server gespeichert"
+        confirm_delete: "Bist du sicher, dass du diesen MCP-Server löschen möchtest?"
+        back: "Zurück zu Tools"
+        health: "Zustand"
+        healthy: "Einwandfrei"
+        unhealthy: "Aufmerksamkeit erforderlich"
+        tool_count:
+          one: "%{count} Tool"
+          other: "%{count} Tools"
         tools_modal:
+          title: "%{name} Tools"
+          summary:
+            one: "Dieser Server stellt aktuell %{count} Tool zur Verfügung."
+            other: "Dieser Server stellt aktuell %{count} Tools zur Verfügung."
           parameters: "Parameter"
           required: "Erforderlich"
+          no_parameters: "Dieses Tool benötigt keine Parameter."
+        test_result: "Verbindungsergebnis"
+        test_summary:
+          one: "%{count} Tool entdeckt mit Protokoll %{version}."
+          other: "%{count} Tools entdeckt mit Protokoll %{version}."
       llms:
         short_title: "LLM"
         no_llms: "Noch keine LLM"
@@ -693,6 +838,7 @@ de:
         save: "Speichern"
         edit: "Bearbeiten"
         saved: "LLM-Modell gespeichert"
+        back: "Zurück zu LLM"
         confirm_delete: Bist du sicher, dass du dieses Modell löschen willst?
         delete: Löschen
         quotas:
@@ -724,6 +870,7 @@ de:
           ai_bot: "KI-Bot"
           ai_helper: "Helfer (%{agent})"
           ai_helper_image_caption: "Bildbeschriftungen"
+          ai_agent: "Agent (%{agent})"
           ai_summarization: "Zusammenfassen"
           ai_embeddings_semantic_search: "KI-Suche"
           ai_spam: "Spam"
@@ -733,19 +880,19 @@ de:
           other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
         model_description:
           none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
-          anthropic-claude-opus-4-6: "Das intelligenteste Modell von Anthropic"
+          anthropic-claude-opus-4-7: "Das intelligenteste Modell von Anthropic"
           anthropic-claude-sonnet-4-6: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-3-pro: "Googles intelligentestes Modell"
           google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
-          open_ai-gpt-5-2: "Das Vorzeigemodell von OpenAI, gut geeignet für Problemlösungen in verschiedenen Bereichen"
-          open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten."
+          open_ai-gpt-5-4: "Das Vorzeigemodell von OpenAI, gut geeignet für Problemlösungen in verschiedenen Bereichen"
+          open_ai-gpt-5-4-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten."
           open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell"
           open_router-deepseek-deepseek-v3-2: "DeepSeeks neuestes Hochleistungsmodell"
           open_router-moonshotai-kimi-k2-5: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
           open_router-x-ai-grok-4-fast: "Das Vorzeigemodell von xAI mit Bildverarbeitung"
-          open_router-minimax-minimax-m2-5: "Das multimodale Modell von MiniMax mit großem Kontext"
-          open_router-z-ai-glm-5: "Das multimodale Modell von Z-AI mit Bildverarbeitung"
+          open_router-minimax-minimax-m2-7: "Das multimodale Modell von MiniMax mit großem Kontext"
+          open_router-z-ai-glm-5-1: "Das multimodale Modell von Z-AI mit Bildverarbeitung"
           open_router-arcee-ai-trinity-large-preview-free: "Kostenloses Open-Source-Modell von Arcee AI"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
@@ -779,6 +926,7 @@ de:
           cost_measure: "$/1M Token"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (Converse API)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
@@ -796,6 +944,7 @@ de:
         provider_fields:
           access_key_id: "AWS-Bedrock-Zugangsschlüssel-ID"
           role_arn: "AWS Bedrock-Rollen-ARN"
+          inference_profile_arn: "AWS Bedrock Anwendungs-Inferenzprofil ARN"
           region: "AWS-Bedrock-Region"
           organization: "Optionale OpenAI-Organisations-ID"
           disable_system_prompt: "Systemmeldung in Eingabeaufforderungen deaktivieren"
@@ -806,6 +955,7 @@ de:
           provider_quantizations: "Reihenfolge der Provider-Quantisierungen (kommagetrennte Liste, z. B.: fp16,fp8)"
           disable_streaming: "Streaming-Vervollständigung deaktivieren (Streaming-Anfragen in Nicht-Streaming-Anfragen umwandeln)"
           reasoning_effort: "Argumentationsaufwand (gilt nur für Argumentationsmodelle)"
+          service_tier: "Service-Stufe (Flex = geringere Kosten/höhere Latenzzeit, Priority = schnellere Verarbeitung)"
           enable_reasoning: "Argumentation aktivieren (nur für Argumentationsmodelle anwendbar)"
           adaptive_thinking: "Aktiviere adaptives Denken (empfohlen für Claude-4.6-Modelle)"
           enable_thinking: "Aktiviere das Denken (Gemini-2.5-Modelle – verwendet Token-Budget)"
@@ -884,10 +1034,12 @@ de:
           agent: "Agent"
           tool: "Tool"
           parameters: "Parameter"
+          post: "Auslösender Beitrag"
       embeddings:
         short_title: "Einbettungen"
         description: "Einbettungen sind numerische Darstellungen von Daten, die Bedeutungen und Beziehungen erfassen und es Discourse-KI-Funktionen wie „Verwandte Themen“ und „KI-Suche“ ermöglichen, Inhalte zu verstehen und zu verknüpfen."
         new: "Neue Einbettung"
+        back: "Zurück zu den Einbettungen"
         save: "Speichern"
         saved: "Einbettungskonfiguration gespeichert"
         delete: "Löschen"
@@ -944,6 +1096,11 @@ de:
           no_results: "Für diese Suche wurden keine KI-Ergebnisse gefunden."
         semantic_search_unavailable_tooltip: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
         ai_generated_result: "Suchergebnis mit KI gefunden"
+        ai_results_notice:
+          no_results: "Keine exakten Treffer, aber hier sind einige verwandte Ergebnisse."
+          few_results:
+            one: "%{count} Treffer gefunden – verwandte Ergebnisse werden angezeigt."
+            other: "%{count} Treffer gefunden – verwandte Ergebnisse werden angezeigt."
         quick_search:
           suffix: "in allen Themen und Beiträgen mit KI"
       ai_artifact:
@@ -970,10 +1127,6 @@ de:
           title: "KI-Interaktion ansehen"
           copy_request: "Anfrage kopieren"
           copy_response: "Antwort kopieren"
-          request_tokens: "Anfrage-Token:"
-          response_tokens: "Antwort-Token:"
-          cache_read_tokens: "Zwischengespeicherte Lesetoken:"
-          cache_write_tokens: "Zwischengespeicherte Schreibtoken:"
           request: "Anfrage"
           response: "Antwort"
           next_log: "Weiter"
@@ -1097,6 +1250,11 @@ de:
       user_preferences:
         empty: "Zurzeit sind keine relevanten Einstellungen verfügbar"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Tool genehmigt"
+        rejected_tool_action:
+          title: "Tool abgelehnt"
       types:
         reviewable_ai_post:
           title: "KI-gemeldeter Beitrag"

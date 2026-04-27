@@ -1302,6 +1302,7 @@ sw:
       upload_description: "Ingiza maelezo kuhusu upakiaji hapa"
       list_item: "Listi kitu"
       wrap_modal:
+        attribute_value: "Thamani"
         apply: "Tumia"
       help: "Msaada kwenye kuhariri MarkDown"
       modal_ok: "Sawa"
@@ -1521,6 +1522,19 @@ sw:
         name: "Badilisha Lebo"
       delete_topics:
         name: "Futa"
+      convert_to_private_message:
+        name: "Tengeneza Ujumbe Binafsi"
+    nested_replies:
+      sort:
+        label: "Panga kwa"
+        top: "Juu"
+        new: "Mpya"
+      collapsed_replies:
+        one: "%{count} jibu"
+        other: "%{count} majibu"
+      collapse: "Kunja"
+      no_replies: "Bado hakuna majibu."
+      pinned_reply: "Imebandikwa"
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"
@@ -1809,8 +1823,6 @@ sw:
           actions: "Vitendo"
           edit: "Hariri"
           delete: "Futa"
-        post_language_selector:
-          none: "Hakuna"
       errors:
         create: "Samahani, hitilafu imetokea wakati wa kutengeneza chapisho lako. Tafadhali jaribu tena."
         edit: "Samahani, hitilafu imetokea wakati wa kuhariri chapisho lako. Tafadhali jaribu tena."
@@ -2423,6 +2435,8 @@ sw:
           admins: "Viongozi"
           moderators: "Wasimamizi"
           staff: "Wasaidizi"
+        impact_types:
+          other_type: "Nyingine"
         filter:
           all: "Yote"
           enabled: "Imeruhusiwa"
@@ -2484,6 +2498,8 @@ sw:
           sub_pages:
             logs:
               title: "Batli"
+        problem_checks:
+          ignore: "Puuzia"
         reports:
           sub_pages:
             settings:
@@ -2537,7 +2553,7 @@ sw:
         stale_data: "Utafutaji wa toleo la sasa haujafanyika hivi karibuni. Hakikisha sidekiq inafanya kazi."
         installed_version: "Imesanikishwa"
         latest_version: "Hivi Karibuni"
-        dismiss_notice: "Ondosha..."
+        dismiss_notice: "Puuzia"
         new_features:
           learn_more: "Jifunze zaidi..."
         last_checked: "Mara ya Mwisho imeangaliwa"

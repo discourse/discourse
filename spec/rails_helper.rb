@@ -437,7 +437,7 @@ RSpec.configure do |config|
     module IgnoreServerCapturedErrors
       def raise_server_error!
         super
-      rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN => e
+      rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN
         # Ignore these exceptions - caused by client. Handled by the app server in dev/prod
       end
     end
@@ -497,7 +497,6 @@ RSpec.configure do |config|
         example_file_path = example.metadata[:rerun_file_path]
 
         if example_file_path
-          expanded_example_file_path = Pathname.new(example_file_path).expand_path
           match =
             example_file_path.to_s.match(
               %r{^#{Regexp.escape(Rails.root.to_s)}/(plugins|themes|spec)/([^/]+)/},
@@ -872,6 +871,11 @@ RSpec.configure do |config|
     setup_system_test
 
     BlockRequestsMiddleware.current_example_location = example.location
+
+    # Suppress the "Before you post, please select a category or tag" education
+    # popup — it intercepts pointer events and makes system specs flaky when
+    # they click things in the composer.
+    SiteSetting.educate_until_posts = 0
 
     if example.metadata[:video]
       Capybara.current_session.driver.on_save_screenrecord do |video|

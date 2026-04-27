@@ -7155,30 +7155,23 @@ RSpec.describe TopicsController do
     fab!(:topic)
     fab!(:user)
 
-    before do
-      Jobs.run_immediately!
-      Scheduler::Defer.async = true
-      Scheduler::Defer.timeout = 0.1
-    end
-
-    after do
-      Scheduler::Defer.async = false
-      Scheduler::Defer.timeout = Scheduler::Deferrable::DEFAULT_TIMEOUT
-    end
+    before { Jobs.run_immediately! }
 
     it "does nothing if topic does not exist" do
       topic.destroy!
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
     it "does nothing if user from ID does not exist" do
       user.destroy!
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
@@ -7186,8 +7179,9 @@ RSpec.describe TopicsController do
       topic.shared_draft = Fabricate(:shared_draft)
 
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
@@ -7195,15 +7189,17 @@ RSpec.describe TopicsController do
       topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
 
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
     it "creates a topic view" do
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.to change { TopicViewItem.count }
     end
   end
@@ -7256,6 +7252,45 @@ RSpec.describe TopicsController do
         },
       )
       expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+  end
+
+  describe "third-party analytics in embed mode" do
+    fab!(:topic)
+
+    before do
+      SiteSetting.embed_full_app = true
+      SiteSetting.gtm_container_id = "GTM-ABCDEF"
+      SiteSetting.adobe_analytics_tags_url = "https://assets.adobedtm.com/launch-EN.min.js"
+    end
+
+    def parsed_body
+      Nokogiri::HTML5.fragment(response.body)
+    end
+
+    it "renders analytics tags by default" do
+      get "/t/#{topic.slug}/#{topic.id}"
+      expect(parsed_body.css("#data-google-tag-manager")).to be_present
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_present
+    end
+
+    it "skips analytics tags when loaded in embed mode" do
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
+      expect(parsed_body.css("#data-google-tag-manager")).to be_empty
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_empty
+    end
+
+    it "still renders analytics tags in embed mode when suppression setting is disabled" do
+      SiteSetting.suppress_third_party_analytics_in_embed = false
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
+      expect(parsed_body.css("#data-google-tag-manager")).to be_present
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_present
     end
   end
 end

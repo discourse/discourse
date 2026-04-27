@@ -25,7 +25,7 @@ module Jobs
       # See https://github.com/mperham/sidekiq/blob/3330df0ee37cfd3e0cd3ef01e3e66b584b99d488/lib/sidekiq/job_retry.rb#L216-L234
       case exception.wrapped
       when SocketError
-        return RETRY_TIMES[count]
+        next RETRY_TIMES[count]
       end
     end
 

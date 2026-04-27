@@ -15,9 +15,9 @@ export default apiInitializer((api) => {
     "localized",
     (topicController, data) => {
       const currentUser = api.getCurrentUser();
-      const showOriginal =
-        currentUser?.user_option?.show_original_content ||
-        cookie("content-localization-show-original");
+      const showOriginal = currentUser
+        ? currentUser.user_option?.show_original_content
+        : cookie("content-localization-show-original");
 
       if (!showOriginal) {
         const postStream = topicController.get("model.postStream");

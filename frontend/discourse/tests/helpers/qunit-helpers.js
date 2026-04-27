@@ -22,6 +22,7 @@ import {
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
+import { resetComposerMessagesCache } from "discourse/components/composer-messages";
 import { clearPluginDocumentTitleCounters } from "discourse/components/d-document";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { resetHtmlDecorators } from "discourse/components/decorated-html";
@@ -233,6 +234,7 @@ export function testCleanup(container, app) {
   cleanUpComposerUploadHandler();
   cleanUpComposerUploadMarkdownResolver();
   cleanUpComposerUploadPreProcessor();
+  resetComposerMessagesCache();
   clearTopicFooterDropdowns();
   clearTopicFooterButtons();
   clearDesktopNotificationHandlers();

@@ -380,16 +380,6 @@ module SiteSettingExtension
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
 
-        if !is_hidden && type_supervisor.dependencies[setting_name].present? &&
-             type_supervisor.dependencies.behaviors[setting_name] == :hidden
-          # Hidden if any of the dependent settings are not true. Use the getter so upcoming
-          # change settings use their resolved value (promotion status, admin override, etc.).
-          is_hidden =
-            !type_supervisor.dependencies[setting_name].all? do |dependency|
-              respond_to?(dependency) && public_send(dependency)
-            end
-        end
-
         next true if !is_hidden
         next false if !include_hidden
         next true if filter_allowed_hidden.nil?
@@ -496,8 +486,13 @@ module SiteSettingExtension
             requires_confirmation: requires_confirmation_settings[s],
             upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
-            depends_on: type_supervisor.dependencies[s],
           }
+
+          if depends_on = type_supervisor.dependencies[s]
+            opts_data[:depends_on] = depends_on
+            opts_data[:depends_on_humanized_names] = depends_on.map { |dep| humanized_names(dep) }
+            opts_data[:depends_behavior] = type_supervisor.dependencies.behaviors[s]
+          end
 
           if upcoming_change_default_override_metadata
             opts_data[

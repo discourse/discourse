@@ -77,7 +77,7 @@ RSpec.describe CurrentUserSerializer do
 
     it "includes muted tags" do
       payload = serializer.as_json
-      expect(payload[:muted_tags]).to eq([{ id: tag.id, name: tag.name }])
+      expect(payload[:muted_tags]).to eq([{ id: tag.id, name: tag.name, slug: tag.slug }])
     end
   end
 

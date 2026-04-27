@@ -288,6 +288,7 @@ module UpcomingChanges
   def self.clear_caches!
     Discourse.cache.delete(current_statuses_cache_key)
     Discourse.cache.delete(permanent_upcoming_changes_cache_key)
+    DiscourseUpdates.clear_latest_new_feature_created_at_cache
   end
 
   def self.current_statuses_cache_key

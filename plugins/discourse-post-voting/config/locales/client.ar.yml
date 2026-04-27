@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 ar:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: التصويت على المنشورات
   post_voting:
     reviewables:
       comment_already_handled: "شكرًا، لكننا راجعنا هذا التعليق بالفعل وقررنا أنه لا يلزم الإبلاغ عنه مرة أخرى."
@@ -39,6 +35,7 @@ ar:
       already_voted: "يمكنك التصويت مرة واحدة فقط لكل سؤال."
       user_over_limit: "لا يمكنك تجاوز عدد الأصوات لمستوى ثقتك."
       one_vote_per_post: "يمكنك التصويت مرة واحدة فقط لكل منشور."
+      toggle_voters: "عرض أسماء المصوِّتين"
     last_answer_lowercase: الإجابة الأخيرة
     answer_lowercase:
       zero: إجابات
@@ -76,6 +73,8 @@ ar:
           edit: "تعديل"
           cancel: "إلغاء"
           add: "إضافة تعليق"
+          actions:
+            delete: "حذف التعليق"
           show:
             zero: عرض %{count} تعليقًا إضافيًا
             one: عرض تعليق واحد (%{count}) إضافي

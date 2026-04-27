@@ -170,7 +170,7 @@
     background-clip: border-box;
   }
 
-  .form-kit__field-toggle .form-kit__container-content.--full {
+  .form-kit__field-toggle.--full .form-kit__container-content {
     // avoid label wrapping
     width: var(--form-kit-small-input) !important;
   }
@@ -278,7 +278,7 @@
 
 .admin-welcome-banner-form {
   #control-enabledThemes {
-    .form-kit__container-content.--large {
+    .form-kit__field.--large .form-kit__container-content {
       .d-multi-select-trigger__selection-label {
         // show selection full names (overrides unnecessary truncation)
         max-width: unset;

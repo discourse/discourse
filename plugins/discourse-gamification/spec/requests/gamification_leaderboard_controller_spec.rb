@@ -64,7 +64,7 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
 
   before do
     SiteSetting.discourse_gamification_enabled = true
-    DiscourseGamification::GamificationScore.calculate_scores(since_date: 10.days.ago)
+    DiscourseGamification::GamificationLeaderboardScore.calculate_all(since_date: 10.days.ago)
     sign_in(current_user)
   end
 
@@ -79,6 +79,25 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
       expect(data["users"][0]["username"]).to eq(current_user.username)
       expect(data["users"][0]["avatar_template"]).to eq(current_user.avatar_template)
       expect(data["users"][0]["total_score"]).to eq(current_user.gamification_score)
+    end
+
+    it "does not expose admin scoring configuration" do
+      scorable_category_id = 123
+      leaderboard.update!(
+        score_overrides: {
+          "like_received" => 10,
+        },
+        scorable_category_ids: [scorable_category_id],
+      )
+      DiscourseGamification::LeaderboardCachedView.new(leaderboard).create
+
+      get "/leaderboard/#{leaderboard.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["leaderboard"]).to_not include(
+        "score_overrides",
+        "scorable_category_ids",
+      )
     end
 
     it "returns an in progress message when leaderboard positions are not ready" do
@@ -114,7 +133,7 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
 
     it "only returns users that are a part of a group within included_groups_ids" do
       # multiple scores present
-      expect(DiscourseGamification::GamificationScore.all.map(&:user_id)).to include(
+      expect(DiscourseGamification::GamificationLeaderboardScore.all.map(&:user_id)).to include(
         current_user.id,
         user_2.id,
       )
@@ -132,12 +151,12 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
     it "excludes staged, anon users, currently suspended and deleted users" do
       user_3.destroy
       # prove score for staged/anon user exists
-      expect(DiscourseGamification::GamificationScore.all.map(&:user_id)).to include(
+      expect(DiscourseGamification::GamificationLeaderboardScore.all.map(&:user_id)).to include(
         staged_user.id,
         anon_user.id,
       )
 
-      expect(DiscourseGamification::GamificationScore.all.map(&:user_id)).to_not include(
+      expect(DiscourseGamification::GamificationLeaderboardScore.all.map(&:user_id)).to_not include(
         currently_suspended_user.id,
         user_3.id,
       )

@@ -300,7 +300,6 @@ de:
       retry_staged_message:
         title: "Netzwerkfehler"
         action: "Erneut senden?"
-      unreliable_network: "Das Netzwerk ist unzuverlässig, das Senden von Nachrichten und das Speichern von Entwürfen funktioniert möglicherweise nicht"
       bookmark_message: "Lesezeichen"
       bookmark_message_edit: "Lesezeichen bearbeiten"
       restore: "Gelöschte Nachricht wiederherstellen"
@@ -314,6 +313,9 @@ de:
         other: "Du hast %{count} ungelesene Diskussionen"
       scroll_to_bottom: "Nach unten scrollen"
       scroll_to_new_messages: "Neue Nachrichten anzeigen"
+      new_messages:
+        one: "%{count} neue Nachricht"
+        other: "%{count} neue Nachrichten"
       sound:
         title: "Desktop-Chat-Benachrichtigungston"
       sounds:
