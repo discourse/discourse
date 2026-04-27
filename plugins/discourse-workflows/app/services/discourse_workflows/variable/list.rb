@@ -7,7 +7,7 @@ module DiscourseWorkflows
     DEFAULT_LIMIT = 25
     MAX_LIMIT = 100
 
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     params do
       attribute :cursor, :integer
@@ -23,10 +23,6 @@ module DiscourseWorkflows
     only_if(:has_more_variables) { model :load_more_url, :build_load_more_url, optional: true }
 
     private
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
-    end
 
     def fetch_variables(params:)
       scope = DiscourseWorkflows::Variable.order(id: :desc)

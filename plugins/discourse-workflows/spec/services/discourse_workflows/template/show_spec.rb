@@ -14,15 +14,26 @@ RSpec.describe DiscourseWorkflows::Template::Show do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, **dependencies) }
+
+    fab!(:admin)
 
     let(:params) { { template_id: } }
     let(:template_id) { "auto-tag-topics" }
+    let(:dependencies) { { guardian: admin.guardian } }
 
     context "when contract is invalid" do
       let(:template_id) { nil }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "when user cannot manage workflows" do
+      fab!(:user)
+
+      let(:dependencies) { { guardian: user.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
     context "when template is not found" do

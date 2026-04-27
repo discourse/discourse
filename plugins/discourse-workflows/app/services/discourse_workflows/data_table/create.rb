@@ -8,6 +8,8 @@ module DiscourseWorkflows
     MAX_COLUMN_NAME_LENGTH = 63
     COLUMN_NAME_FORMAT = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/
 
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+
     params do
       attribute :name, :string
       attribute :columns, :array, default: []

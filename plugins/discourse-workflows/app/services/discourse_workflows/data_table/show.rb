@@ -12,5 +12,6 @@ module DiscourseWorkflows
     end
 
     model :data_table
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
   end
 end

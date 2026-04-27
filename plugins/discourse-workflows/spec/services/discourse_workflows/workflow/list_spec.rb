@@ -2,11 +2,19 @@
 
 RSpec.describe DiscourseWorkflows::Workflow::List do
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
+    fab!(:admin)
     fab!(:user)
 
     let(:params) { {} }
+    let(:dependencies) { { guardian: admin.guardian } }
+
+    context "when user cannot manage workflows" do
+      let(:dependencies) { { guardian: user.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
+    end
 
     context "when there are no workflows" do
       it { is_expected.to run_successfully }

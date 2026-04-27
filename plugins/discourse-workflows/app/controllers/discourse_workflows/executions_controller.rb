@@ -30,6 +30,7 @@ module DiscourseWorkflows
                  }
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
@@ -39,6 +40,7 @@ module DiscourseWorkflows
       ) do |result|
         on_success { |deleted_count:| render json: { deleted_count: deleted_count } }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
@@ -51,6 +53,7 @@ module DiscourseWorkflows
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:execution) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
   end

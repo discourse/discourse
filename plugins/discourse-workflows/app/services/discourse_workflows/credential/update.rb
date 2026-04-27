@@ -20,7 +20,7 @@ module DiscourseWorkflows
     end
 
     model :credential
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     model :credential, :save_credential
     step :log_credential_update
@@ -29,10 +29,6 @@ module DiscourseWorkflows
 
     def fetch_credential(params:)
       DiscourseWorkflows::Credential.find_by(id: params.credential_id)
-    end
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
     end
 
     def save_credential(credential:, params:)

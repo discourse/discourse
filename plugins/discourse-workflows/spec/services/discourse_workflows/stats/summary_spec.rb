@@ -2,12 +2,21 @@
 
 RSpec.describe DiscourseWorkflows::Stats::Summary do
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:user)
-    fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: user) }
+    fab!(:admin)
+    fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
 
     let(:params) { {} }
+    let(:dependencies) { { guardian: admin.guardian } }
+
+    context "when user cannot manage workflows" do
+      fab!(:user)
+
+      let(:dependencies) { { guardian: user.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
+    end
 
     context "when there are no executions" do
       it { is_expected.to run_successfully }
@@ -74,7 +83,7 @@ RSpec.describe DiscourseWorkflows::Stats::Summary do
     end
 
     context "when filtering by workflow_id" do
-      fab!(:other_workflow) { Fabricate(:discourse_workflows_workflow, created_by: user) }
+      fab!(:other_workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
 
       before do
         Fabricate(

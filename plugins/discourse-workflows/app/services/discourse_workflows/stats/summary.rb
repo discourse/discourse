@@ -6,6 +6,8 @@ module DiscourseWorkflows
 
     RECENT_PERIOD = 7.days
 
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+
     params { attribute :workflow_id, :integer }
 
     model :recent_executions, optional: true

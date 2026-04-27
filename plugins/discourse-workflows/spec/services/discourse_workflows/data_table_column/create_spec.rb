@@ -8,7 +8,7 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Create do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, guardian: admin.guardian) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:admin)
 
@@ -22,11 +22,20 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Create do
     fab!(:row) { insert_data_table_row(data_table, "email" => "test@example.com") }
 
     let(:params) { { data_table_id: data_table.id, name: "score", column_type: "number" } }
+    let(:dependencies) { { guardian: admin.guardian } }
 
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil, name: nil, column_type: nil } }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "when user cannot manage workflows" do
+      fab!(:user)
+
+      let(:dependencies) { { guardian: user.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
     context "when the data table does not exist" do

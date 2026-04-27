@@ -10,7 +10,7 @@ module DiscourseWorkflows
     end
 
     model :credential
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :referencing_workflows, optional: true
     policy :credential_not_in_use
 
@@ -22,10 +22,6 @@ module DiscourseWorkflows
 
     def fetch_credential(params:)
       DiscourseWorkflows::Credential.find_by(id: params.credential_id)
-    end
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
     end
 
     def fetch_referencing_workflows(credential:)

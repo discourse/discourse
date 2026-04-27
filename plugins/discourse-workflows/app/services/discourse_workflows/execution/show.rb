@@ -11,6 +11,7 @@ module DiscourseWorkflows
     end
 
     model :execution
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     private
 

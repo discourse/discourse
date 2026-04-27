@@ -8,7 +8,7 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Rename do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, guardian: admin.guardian) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:admin)
 
@@ -25,11 +25,20 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Rename do
     fab!(:row) { insert_data_table_row(data_table, "email" => "test@example.com") }
 
     let(:params) { { data_table_id: data_table.id, column_name: "email", name: "contact_email" } }
+    let(:dependencies) { { guardian: admin.guardian } }
 
     context "when contract is invalid" do
       let(:params) { { data_table_id: data_table.id, column_name: "email", name: "123-invalid" } }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "when user cannot manage workflows" do
+      fab!(:user)
+
+      let(:dependencies) { { guardian: user.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
     context "when the data table does not exist" do

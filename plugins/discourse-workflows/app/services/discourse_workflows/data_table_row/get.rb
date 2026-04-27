@@ -22,6 +22,7 @@ module DiscourseWorkflows
     end
 
     model :data_table
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :facade, :build_facade
     model :query, :build_query
     model :query_result, :execute_query

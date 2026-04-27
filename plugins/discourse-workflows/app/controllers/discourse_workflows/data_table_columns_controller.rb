@@ -17,6 +17,7 @@ module DiscourseWorkflows
           )
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
@@ -33,6 +34,7 @@ module DiscourseWorkflows
           )
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
@@ -47,6 +49,7 @@ module DiscourseWorkflows
           )
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
   end

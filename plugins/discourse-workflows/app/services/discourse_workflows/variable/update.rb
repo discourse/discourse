@@ -14,7 +14,7 @@ module DiscourseWorkflows
       validates :value, presence: true
     end
 
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :variable
 
     transaction do
@@ -23,10 +23,6 @@ module DiscourseWorkflows
     end
 
     private
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
-    end
 
     def fetch_variable(params:)
       DiscourseWorkflows::Variable.find_by(id: params.variable_id)

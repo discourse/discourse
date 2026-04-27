@@ -4,7 +4,7 @@ module DiscourseWorkflows
   class Credential::Create
     include Service::Base
 
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     params do
       attribute :name, :string
@@ -32,10 +32,6 @@ module DiscourseWorkflows
     step :log_credential_creation
 
     private
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
-    end
 
     def valid_credential_type(params:)
       Registry.find_credential_type(params.credential_type).present?

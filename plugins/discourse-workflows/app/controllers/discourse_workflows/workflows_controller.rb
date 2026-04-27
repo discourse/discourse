@@ -16,6 +16,7 @@ module DiscourseWorkflows
                  }
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
@@ -28,6 +29,7 @@ module DiscourseWorkflows
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
@@ -55,7 +57,7 @@ module DiscourseWorkflows
             status: :unprocessable_entity,
           )
         end
-        on_failed_policy(:can_create_workflow) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_model_errors(:workflow) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),
@@ -90,6 +92,7 @@ module DiscourseWorkflows
           )
         end
         on_model_not_found(:workflow) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_model_errors(:workflow) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),

@@ -12,17 +12,13 @@ module DiscourseWorkflows
       validates :topic_id, presence: true
     end
 
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :workflow
     model :trigger_node
     model :topic
     step :enqueue_workflow
 
     private
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
-    end
 
     def fetch_workflow(params:)
       DiscourseWorkflows::WorkflowDependency

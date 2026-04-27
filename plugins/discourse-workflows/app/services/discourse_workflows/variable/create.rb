@@ -4,7 +4,7 @@ module DiscourseWorkflows
   class Variable::Create
     include Service::Base
 
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     params do
       attribute :key, :string
@@ -26,10 +26,6 @@ module DiscourseWorkflows
     step :log_variable_creation
 
     private
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
-    end
 
     def create_variable(params:)
       DiscourseWorkflows::Variable.create(**params)

@@ -31,6 +31,7 @@ module DiscourseWorkflows
     end
 
     model :data_table
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     policy :column_exists
     policy :not_reserved_column
     policy :name_differs

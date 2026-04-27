@@ -2,7 +2,19 @@
 
 RSpec.describe DiscourseWorkflows::NodeType::List do
   describe ".call" do
-    subject(:result) { described_class.call }
+    subject(:result) { described_class.call(**dependencies) }
+
+    fab!(:admin)
+
+    let(:dependencies) { { guardian: admin.guardian } }
+
+    context "when user cannot manage workflows" do
+      fab!(:user)
+
+      let(:dependencies) { { guardian: user.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
+    end
 
     context "when everything's ok" do
       fab!(:badge) { Fabricate(:badge, name: "Helpful") }
@@ -146,6 +158,8 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
   end
 
   describe "#fetch_node_types" do
+    fab!(:admin)
+
     it "includes unavailable node types with available: false" do
       unavailable_class =
         Class.new(DiscourseWorkflows::NodeType) do
@@ -172,7 +186,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       )
       DiscourseWorkflows::Registry.reset_indexes!
 
-      result = described_class.call
+      result = described_class.call(guardian: admin.guardian)
       unavailable =
         result[:node_types].find { |nt| nt[:identifier] == "action:unavailable_palette_test" }
 

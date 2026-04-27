@@ -6,16 +6,26 @@ RSpec.describe DiscourseWorkflows::DataTable::Show do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
+    fab!(:admin)
     fab!(:data_table, :discourse_workflows_data_table)
 
     let(:params) { { data_table_id: data_table.id } }
+    let(:dependencies) { { guardian: admin.guardian } }
 
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil } }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "when user cannot manage workflows" do
+      fab!(:user)
+
+      let(:dependencies) { { guardian: user.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
     context "when data table does not exist" do

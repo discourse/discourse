@@ -32,6 +32,7 @@ module DiscourseWorkflows
     end
 
     model :workflow
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     transaction do
       step :update_workflow

@@ -22,10 +22,10 @@ RSpec.describe DiscourseWorkflows::Workflow::Create do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when user cannot create workflow" do
+    context "when user cannot manage workflows" do
       fab!(:user)
 
-      it { is_expected.to fail_a_policy(:can_create_workflow) }
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
     context "when graph population fails" do

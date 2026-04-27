@@ -33,6 +33,14 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Destroy do
       it { is_expected.to fail_a_contract }
     end
 
+    context "when user cannot manage workflows" do
+      fab!(:user)
+
+      let(:dependencies) { { guardian: user.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
+    end
+
     context "when the data table does not exist" do
       let(:params) { { data_table_id: -1, column_name: "email" } }
 

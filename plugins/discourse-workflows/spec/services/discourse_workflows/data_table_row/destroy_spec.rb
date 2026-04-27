@@ -6,12 +6,27 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Destroy do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, **dependencies) }
+
+    fab!(:admin)
+
+    let(:dependencies) { { guardian: admin.guardian } }
 
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil } }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "when user cannot manage workflows" do
+      fab!(:user)
+      fab!(:data_table, :discourse_workflows_data_table)
+      fab!(:row) { insert_data_table_row(data_table) }
+
+      let(:params) { { data_table_id: data_table.id, row_id: row["id"] } }
+      let(:dependencies) { { guardian: user.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
     context "with row_id (single-row delete)" do

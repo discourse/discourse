@@ -4,14 +4,10 @@ module DiscourseWorkflows
   class Template::List
     include Service::Base
 
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :templates, optional: true
 
     private
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
-    end
 
     def fetch_templates
       Dir

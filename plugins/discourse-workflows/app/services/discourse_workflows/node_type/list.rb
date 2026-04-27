@@ -4,6 +4,8 @@ module DiscourseWorkflows
   class NodeType::List
     include Service::Base
 
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+
     model :node_types
     model :credential_types
     model :expression_context

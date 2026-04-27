@@ -10,7 +10,7 @@ module DiscourseWorkflows
     end
 
     model :workflow
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     transaction do
       step :destroy
@@ -23,10 +23,6 @@ module DiscourseWorkflows
 
     def fetch_workflow(params:)
       DiscourseWorkflows::Workflow.find_by(id: params.workflow_id)
-    end
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
     end
 
     def destroy(workflow:)

@@ -19,6 +19,7 @@ module DiscourseWorkflows
           )
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_model_errors(:query) { |model| render_invalid_model(model) }
       end
     end
@@ -36,6 +37,7 @@ module DiscourseWorkflows
           )
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_policy(:within_storage_limit) { render_storage_limit_exceeded }
         on_model_errors(:row_input) { |model| render_invalid_model(model) }
       end
@@ -54,6 +56,7 @@ module DiscourseWorkflows
           )
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_policy(:within_storage_limit) { render_storage_limit_exceeded }
         on_model_errors(:query) { |model| render_invalid_model(model) }
         on_model_errors(:row_input) { |model| render_invalid_model(model) }
@@ -79,6 +82,7 @@ module DiscourseWorkflows
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
         on_model_not_found(:existing_row) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_policy(:within_storage_limit) { render_storage_limit_exceeded }
         on_model_errors(:row_input) { |model| render_invalid_model(model) }
       end
@@ -103,6 +107,7 @@ module DiscourseWorkflows
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
         on_model_not_found(:row) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
@@ -119,6 +124,7 @@ module DiscourseWorkflows
           )
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_model_errors(:query) { |model| render_invalid_model(model) }
       end
     end

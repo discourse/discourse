@@ -10,7 +10,7 @@ module DiscourseWorkflows
     end
 
     model :variable
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     transaction do
       step :destroy_variable
@@ -21,10 +21,6 @@ module DiscourseWorkflows
 
     def fetch_variable(params:)
       DiscourseWorkflows::Variable.find_by(id: params.variable_id)
-    end
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
     end
 
     def log_variable_deletion(variable:, guardian:)

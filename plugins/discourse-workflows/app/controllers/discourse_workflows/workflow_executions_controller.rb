@@ -19,6 +19,7 @@ module DiscourseWorkflows
                  }
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
   end

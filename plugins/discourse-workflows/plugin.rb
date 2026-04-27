@@ -53,6 +53,8 @@ DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_nodes)
 DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_credential_types)
 
 after_initialize do
+  add_to_class(:guardian, :can_manage_workflows?) { is_admin? }
+
   nodes_dir = File.join(File.dirname(__FILE__), "lib/discourse_workflows/nodes")
   Dir.glob(File.join(nodes_dir, "**/*.rb")).each { |f| Rails.autoloaders.main.load_file(f) }
 

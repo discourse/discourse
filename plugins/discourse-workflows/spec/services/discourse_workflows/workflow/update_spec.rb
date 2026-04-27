@@ -31,6 +31,14 @@ RSpec.describe DiscourseWorkflows::Workflow::Update do
       it { is_expected.to fail_to_find_a_model(:workflow) }
     end
 
+    context "when user cannot manage workflows" do
+      fab!(:non_admin, :user)
+
+      let(:dependencies) { { guardian: non_admin.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
+    end
+
     context "when graph population fails" do
       let(:nodes) { [{ client_id: "node_1", type: "trigger:manual", name: "Manual" }] }
 

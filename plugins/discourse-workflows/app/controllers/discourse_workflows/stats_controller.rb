@@ -8,6 +8,7 @@ module DiscourseWorkflows
       DiscourseWorkflows::Stats::Summary.call(service_params) do |result|
         on_success { |stats:| render json: stats }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
@@ -15,6 +16,7 @@ module DiscourseWorkflows
       DiscourseWorkflows::Stats::Summary.call(service_params) do |result|
         on_success { |stats:| render json: stats }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
   end

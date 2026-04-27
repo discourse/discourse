@@ -21,6 +21,14 @@ RSpec.describe DiscourseWorkflows::DataTable::Create do
       it { is_expected.to fail_a_contract }
     end
 
+    context "when user cannot manage workflows" do
+      fab!(:user)
+
+      let(:guardian) { user.guardian }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
+    end
+
     context "when model is invalid" do
       let(:params) { { name: "123 invalid!", columns: [] } }
 

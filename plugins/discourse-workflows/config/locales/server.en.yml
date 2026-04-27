@@ -6,6 +6,7 @@ en:
       schedule_rules_required: "At least one schedule rule is required."
       invalid_schedule_rule: "One or more schedule rules are invalid."
       not_enabled: "The discourse-workflows plugin is not enabled."
+      no_permission_to_manage: "You don't have permission to manage workflows."
       invalid_form_submission: "The form submission has invalid or missing fields."
       invalid_form_token: "The form token is invalid or has expired."
       already_resumed: "This execution has already been resumed."

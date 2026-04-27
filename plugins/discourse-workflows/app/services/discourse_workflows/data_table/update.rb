@@ -6,6 +6,7 @@ module DiscourseWorkflows
     include Concerns::DataTableServiceHelpers
 
     model :data_table
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     params(default_values_from: :data_table) do
       attribute :name, :string
 

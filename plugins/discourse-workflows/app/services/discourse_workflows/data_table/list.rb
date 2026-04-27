@@ -7,6 +7,8 @@ module DiscourseWorkflows
     DEFAULT_LIMIT = 25
     MAX_LIMIT = 100
 
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+
     params do
       attribute :cursor, :integer
       attribute :limit, :integer

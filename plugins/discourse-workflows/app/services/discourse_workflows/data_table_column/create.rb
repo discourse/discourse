@@ -33,6 +33,7 @@ module DiscourseWorkflows
     end
 
     model :data_table
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     policy :column_limit_not_reached
 
     step :add_storage_column

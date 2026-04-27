@@ -17,6 +17,8 @@ module DiscourseWorkflows
       ) latest_execution ON TRUE
     SQL
 
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+
     params do
       attribute :cursor, :integer
       attribute :limit, :integer

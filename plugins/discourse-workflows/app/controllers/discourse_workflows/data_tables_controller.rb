@@ -21,6 +21,7 @@ module DiscourseWorkflows
                  }
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
@@ -33,6 +34,7 @@ module DiscourseWorkflows
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:data_table) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
@@ -48,6 +50,7 @@ module DiscourseWorkflows
             status: :bad_request,
           )
         end
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_model_errors(:data_table) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),
@@ -72,6 +75,7 @@ module DiscourseWorkflows
           )
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_model_errors(:data_table) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),
@@ -87,6 +91,7 @@ module DiscourseWorkflows
       ) do |result|
         on_success { head :no_content }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_policy(:data_table_not_in_use) do
           render(
             json:

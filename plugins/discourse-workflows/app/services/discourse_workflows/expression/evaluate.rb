@@ -12,16 +12,12 @@ module DiscourseWorkflows
       validates :template, presence: true
     end
 
-    policy :can_manage_workflows
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :workflow, optional: true
     model :preview_context, :build_preview_context
     model :segments, :resolve_segments, optional: true
 
     private
-
-    def can_manage_workflows(guardian:)
-      guardian.is_admin?
-    end
 
     def fetch_workflow(params:)
       DiscourseWorkflows::Workflow.find_by(id: params.workflow_id)

@@ -15,7 +15,7 @@ module DiscourseWorkflows
       validates :name, presence: true
     end
 
-    policy :can_create_workflow
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     transaction do
       model :workflow, :create_workflow
@@ -26,10 +26,6 @@ module DiscourseWorkflows
     step :clear_site_cache
 
     private
-
-    def can_create_workflow(guardian:)
-      guardian.is_admin?
-    end
 
     def create_workflow(params:, guardian:)
       DiscourseWorkflows::Workflow.create(
