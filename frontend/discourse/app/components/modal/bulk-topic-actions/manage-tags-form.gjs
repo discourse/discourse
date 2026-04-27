@@ -71,19 +71,17 @@ export default class ManageTagsForm extends Component {
       removeError(toName);
 
       const status = this.#replaceRowStatus(row);
+
       if (status === "valid" || status === "empty") {
         return;
       }
 
       const message = this.#messageForStatus(status);
 
-      if (status === "missing-from") {
-        addError(fromName, { title, message });
-      } else if (status === "missing-to") {
+      if (status === "missing-to") {
         addError(toName, { title, message });
       } else {
         addError(fromName, { title, message });
-        addError(toName, { title, message });
       }
     });
   }
