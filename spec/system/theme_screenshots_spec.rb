@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# System spec for capturing screenshots across the two core themes
-# (Foundation and Horizon) × light/dark color modes. Skipped by default — run via:
+# System spec for capturing screenshots and comparing results across themes and branches
+# Run via:
 #
 #   TAKE_SCREENSHOTS=1 bin/rspec spec/system/theme_screenshots_spec.rb
 #
@@ -30,10 +30,6 @@
 #                             capture only the remote theme.
 #   SCREENSHOTS_THEME_ID    — ID of a theme already present in the test DB to add to the matrix.
 #                             Combine with SCREENSHOTS_THEME_NAME for a nicer filename label.
-ALL_THEMES = [
-  { name: "foundation", id: Theme::CORE_THEMES["foundation"] },
-  { name: "horizon", id: Theme::CORE_THEMES["horizon"] },
-].freeze
 
 DEVICES = (ENV["SCREENSHOTS_DEVICES"] || "desktop,mobile").split(",").map(&:strip).freeze
 
@@ -44,6 +40,7 @@ DEFAULT_SCREENSHOT_ROUTES = %w[
   /new-topic
   /admin
   /my/summary
+  /c/announcements
   /groups
   /t/random
 ].freeze
@@ -60,18 +57,98 @@ describe "Theme screenshots" do
   fab!(:category) { Fabricate(:category, name: "Announcements") }
   fab!(:category_2, :category)
 
+  # We could potentially move these to post fabricators
+  # Keeping them here now so that this spec is self-contained
+  TOPIC_POSTS = [
+    { title: "Welcome to our community discussion forum", raw: <<~MD },
+        ## Welcome! :wave:
+
+        We're so glad you're here. This community is a place to **share ideas**, ask questions,
+        and connect with others who share your interests.
+      MD
+    { title: "New release: performance improvements and bug fixes", raw: <<~MD },
+        ## What's new in v3.4
+
+        This release focuses on **speed** and **stability**. Here's what changed:
+
+        ### Performance
+        - Topic list loads ~40% faster on large forums
+        - Reduced memory usage on long-running workers
+        - Image lazy-loading now enabled by default
+
+        ### Bug fixes
+        - Fixed an edge case where notifications were duplicated after a merge
+        - Resolved a rendering issue with `code blocks` inside quotes
+        - Corrected timestamp display in timezones east of UTC+8
+
+        ```ruby
+        # Enable the new loader in your settings
+        SiteSetting.experimental_fast_loader = true
+        ```
+
+        Full changelog available in the [release notes](#).
+      MD
+    { title: "How do I customize my notification preferences?", raw: <<~MD },
+        I've been getting a lot of emails lately and I'd like to fine-tune which ones I receive.
+        I know there's a preferences page but I'm not sure which settings do what.
+
+        Specifically, I'm trying to:
+
+        1. Stop receiving emails for *every* reply in threads I've participated in
+        2. Still get notified when someone **mentions me directly**
+        3. Keep daily digest emails, but switch them to weekly
+
+        I've looked at **Preferences → Notifications** but some options aren't obvious.
+        Is there documentation for what each setting does?
+
+        Thanks in advance!
+      MD
+    { title: "Looking for feedback on the updated navigation design", raw: <<~MD },
+        Hey everyone — we've been working on a redesign of the top navigation and would love
+        your thoughts before we roll it out broadly.
+
+        ### What's changing
+
+        | Before | After |
+        |--------|-------|
+        | Fixed sidebar, always visible | Collapsible sidebar with toggle |
+        | Categories in top bar | Categories moved to sidebar |
+        | Single search icon | Expanded search bar on desktop |
+
+        ### Our goals
+        - Reduce visual clutter on smaller screens
+        - Make categories more discoverable
+        - Free up vertical space for content
+
+        > We know navigation changes can be disruptive — that's exactly why we want feedback
+        > *before* shipping, not after.
+
+        What do you think? Drop your reactions below.
+      MD
+    { title: "Please read before posting: community guidelines", raw: <<~MD },
+        ## Community guidelines
+
+        To keep this a welcoming space for everyone, we ask that all members follow these guidelines.
+
+        ### Be respectful
+        Treat others as you'd like to be treated. Disagreement is fine; personal attacks are not.
+        This includes **sarcasm** and passive-aggressive language.
+
+        ### Stay on topic
+        Post in the most relevant category. If you're unsure, use *Uncategorized* and a moderator
+        will help move it.
+
+        ### Search before posting
+        Use the search bar — common questions are often already answered. It saves everyone time.
+      MD
+  ].freeze
+
   fab!(:topics) do
-    titles = [
-      "Welcome to our community discussion forum",
-      "New release: performance improvements and bug fixes",
-      "How do I customize my notification preferences?",
-      "Looking for feedback on the updated navigation design",
-      "Please read before posting: community guidelines",
-    ]
     cats = [category, category_2]
-    titles.each_with_index.map do |title, i|
-      post = Fabricate(:post, topic: Fabricate(:topic, title: title, category: cats[i % cats.size]))
-      post.topic
+    TOPIC_POSTS.each_with_index.map do |spec, i|
+      topic = Fabricate(:topic, title: spec[:title], category: cats[i % cats.size])
+      Fabricate(:post, topic: topic, raw: spec[:raw])
+      topic
     end
   end
 
@@ -163,12 +240,13 @@ describe "Theme screenshots" do
   # (filtered by SCREENSHOTS_THEMES), then appends any extra theme passed via
   # SCREENSHOTS_THEME_ID (must already be installed in the dev DB).
   let(:themes) do
+    core = Theme::CORE_THEMES.map { |name, id| { name: name, id: id } }
     base =
       if ENV["SCREENSHOTS_THEMES"].present?
         requested = ENV["SCREENSHOTS_THEMES"].split(",").map { |n| n.downcase.strip }
-        ALL_THEMES.select { |t| requested.include?(t[:name]) }
+        core.select { |t| requested.include?(t[:name]) }
       else
-        ALL_THEMES.dup
+        core
       end
 
     if (url = ENV["SCREENSHOTS_THEME_URL"].presence)
@@ -194,6 +272,8 @@ describe "Theme screenshots" do
       raw = ENV["SCREENSHOTS_PATHS"].strip
       paths = (raw == "all") ? DEFAULT_SCREENSHOT_ROUTES : raw.split(",").map(&:strip)
       paths.map { |p| expand_path(p) }
+    elsif ENV["SCREENSHOTS_PATH"].present?
+      [expand_path(ENV["SCREENSHOTS_PATH"].strip)]
     else
       DEFAULT_SCREENSHOT_ROUTES.map { |p| expand_path(p) }
     end
@@ -216,7 +296,9 @@ describe "Theme screenshots" do
     # Sync the built-in core themes here to materialize the ThemeFields. Idempotent; the
     # writes are rolled back with the test transaction, so it won't pollute the
     # DB for unrelated specs.
-    (themes & ALL_THEMES).each { |t| SystemThemesManager.sync_theme!(t[:name]) }
+    themes.each do |t|
+      SystemThemesManager.sync_theme!(t[:name]) if Theme::CORE_THEMES.key?(t[:name])
+    end
 
     # `SiteIconManager.<icon>_url` caches the fully-qualified URL (e.g.
     # `mobile_logo_url`) in a DistributedCache on first access. If that first
@@ -467,7 +549,9 @@ describe "Theme screenshots" do
         pw_page.route(%r{/message-bus/}, ->(route, _request) { route.abort })
         @message_bus_blocked = true
       end
-      pw_page.wait_for_load_state(state: "networkidle", timeout: 5_000)
+      pw_page.wait_for_load_state(state: "networkidle", timeout: 10_000)
+    rescue Playwright::TimeoutError
+      # page is visually complete; a stray background request is still open
     end
   end
 

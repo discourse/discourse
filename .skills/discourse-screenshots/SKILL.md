@@ -14,7 +14,7 @@ Drives a system spec (`spec/system/theme_screenshots_spec.rb`) that boots a head
 | Foundation | `-1`     | light, dark |
 | Horizon    | `-2`     | light, dark |
 
-Output is eight files by default — one per theme × mode × device: `desktop-foundation-light.png`, `mobile-foundation-light.png`, `desktop-foundation-dark.png`, `mobile-foundation-dark.png`, plus the matching four `*-horizon-*` files. When signed in, the role (`-user` / `-admin`) is inserted after the theme name (e.g. `mobile-horizon-admin-dark.png`). When capturing multiple paths, a path slug is also appended (e.g. `mobile-horizon-admin-dark-latest.png`).
+Output files follow the pattern `{device}-{theme}-{role}-{mode}[-{slug}].png`. The default run (signed in as admin, all routes) produces files like `desktop-foundation-admin-light-latest.png`. When only one path is captured the slug suffix is omitted: `desktop-foundation-admin-light.png`.
 
 ## How to run
 
@@ -31,10 +31,10 @@ Screenshots land in `tmp/theme-screenshots/`. `LOAD_PLUGINS=1` is always include
 | `TAKE_SCREENSHOTS`      | *(unset — spec is skipped)*  | Must be `1` for the spec to run.                           |
 | `LOAD_PLUGINS`          | `1`                          | Always set to `1` so chat and other plugin routes work.    |
 | `SCREENSHOTS_DIR`       | `tmp/theme-screenshots`      | Where PNGs are written.                                    |
-| `SCREENSHOTS_PATH`      | `/`                          | Single path to capture. Special sentinels: `/t/random` (random fabricated topic), `/my/*` (expanded to `/u/:username/*` for signed-in users). |
-| `SCREENSHOTS_PATHS`     | *(unset)*                    | Comma-separated paths, or `all` for the full route list: `/latest`, `/categories`, `/groups`, `/admin`, `/my/summary`, `/chat`, `/new-topic`. Overrides `SCREENSHOTS_PATH` when set. `/admin` requires `SCREENSHOTS_AS=admin`; `/chat` and `/my/*` require `user` or `admin`; `/chat` also requires `LOAD_PLUGINS=1`. |
+| `SCREENSHOTS_PATH`      | *(unset)*                    | Single path to capture. Special sentinels: `/t/random` (random fabricated topic), `/my/*` (expanded to `/u/:username/*` for signed-in users). |
+| `SCREENSHOTS_PATHS`     | *(unset)*                    | Comma-separated paths, or `all` for the full route list: `/latest`, `/categories`, `/groups`, `/admin`, `/my/summary`, `/chat`, `/new-topic`, `/t/random`. Overrides `SCREENSHOTS_PATH` when set. `/admin` requires `SCREENSHOTS_AS=admin`; `/chat` and `/my/*` require `user` or `admin`; `/chat` also requires `LOAD_PLUGINS=1`. When neither var is set, all default routes are captured. |
 | `SCREENSHOTS_MODES`     | `light,dark`                 | Comma-separated color modes (`light`, `dark`).             |
-| `SCREENSHOTS_AS`        | `anonymous`                  | Who to sign in as: `anonymous`, `user`, or `admin`.        |
+| `SCREENSHOTS_AS`        | `admin`                      | Who to sign in as: `anonymous`, `user`, or `admin`.        |
 | `SCREENSHOTS_DEVICES`   | `desktop,mobile`             | Comma-separated devices. Mobile uses Playwright's WebKit driver with an iPhone UA. |
 | `SCREENSHOTS_THEMES`    | `foundation,horizon`         | Comma-separated built-in theme names to capture. Use `foundation` or `horizon` to restrict to one. |
 | `SCREENSHOTS_THEME_URL` | *(unset)*                    | Git URL of a remote theme to install into the test DB and add to the matrix. Use `SCREENSHOTS_THEME_NAME` for the filename label (default: repo name). Set `SCREENSHOTS_THEMES=` (empty) to capture only the remote theme. |
@@ -49,8 +49,8 @@ Screenshots land in `tmp/theme-screenshots/`. `LOAD_PLUGINS=1` is always include
 # Default — all themes × light/dark × desktop/mobile at /
 TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 bin/rspec spec/system/theme_screenshots_spec.rb
 
-# /categories page as admin, dark only, desktop only
-TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 SCREENSHOTS_PATH=/categories SCREENSHOTS_AS=admin \
+# /categories page, dark only, desktop only
+TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 SCREENSHOTS_PATH=/categories \
   SCREENSHOTS_MODES=dark SCREENSHOTS_DEVICES=desktop \
   bin/rspec spec/system/theme_screenshots_spec.rb
 
@@ -118,6 +118,6 @@ When this skill is invoked:
 
 ## Extending
 
-To add more built-in themes, edit the `ALL_THEMES` constant at the top of the spec: `{ name: "label", id: <theme_id> }`.
+Built-in themes come from `Theme::CORE_THEMES` on the model — no constant to edit. Use `SCREENSHOTS_THEME_URL` or `SCREENSHOTS_THEME_ID` to add themes at runtime.
 
-To add more routes to the `all` sweep, edit the `ALL_SCREENSHOT_ROUTES` constant.
+To add more routes to the default sweep, edit the `DEFAULT_SCREENSHOT_ROUTES` constant at the top of the spec.
