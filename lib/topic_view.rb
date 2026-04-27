@@ -242,7 +242,7 @@ class TopicView
   end
 
   def web_artifacts_by_post_id
-    return @web_artifacts_by_post_id ||= {} if SiteSetting.web_artifact_security == "disabled"
+    return {} if SiteSetting.web_artifact_security == "disabled"
 
     @web_artifacts_by_post_id ||= WebArtifact.where(post_id: @posts.map(&:id)).group_by(&:post_id)
   end
