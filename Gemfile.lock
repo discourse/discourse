@@ -311,7 +311,7 @@ GEM
     mini_sql (1.6.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
-    minio_runner (1.0.1)
+    minio_runner (1.1.0)
     minitest (6.0.5)
       drb (~> 2.0)
       prism (~> 1.5)
@@ -1084,7 +1084,7 @@ CHECKSUMS
   mini_scheduler (0.18.0) sha256=d2f084f38da8d76c5844a92f0d6bd01fc9982a8b5e6c7679b6cf44c82da33503
   mini_sql (1.6.0) sha256=5296637f6a4af5bb43e06788037e9a2968ff9c8eb65928befcba8cb41f42d6ee
   mini_suffix (0.3.3) sha256=8d1d33f92f69a2247c9b7d27173235da90479d955cdb863b63a7f53843b722e7
-  minio_runner (1.0.1) sha256=3675ad7abd79177b3fdd9f37e20fe46f7d4dcbb41f3f30a53db2207277241795
+  minio_runner (1.1.0) sha256=ebb2bedea253011fcd34ed3229706c9b453f0f363601dee7ce065e0163bdcf2f
   minitest (6.0.5) sha256=f007d7246bf4feea549502842cd7c6aba8851cdc9c90ba06de9c476c0d01155c
   mocha (3.1.0) sha256=75f42d69ebfb1f10b32489dff8f8431d37a418120ecdfc07afe3bc183d4e1d56
   msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
