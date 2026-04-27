@@ -371,7 +371,12 @@ describe "Theme screenshots" do
         end
       end
 
-    write_comparison_html(html_path, "#{device.capitalize} · #{all_labels.join(" vs ")}", pages)
+    write_comparison_html(
+      html_path,
+      "#{device.capitalize} · #{all_labels.join(" vs ")}",
+      pages,
+      device: device,
+    )
     puts "🌐 Comparison: file://#{html_path}"
   end
 
@@ -417,13 +422,18 @@ describe "Theme screenshots" do
       end
 
     html_path = File.join(output_dir, "compare-#{device}#{role_suffix}-vs-baseline.html")
-    write_comparison_html(html_path, "#{device.capitalize} · #{baseline_label} vs current", pages)
+    write_comparison_html(
+      html_path,
+      "#{device.capitalize} · #{baseline_label} vs current",
+      pages,
+      device: device,
+    )
     puts "🌐 Baseline comparison: file://#{html_path}"
   end
 
   # Generates a self-contained HTML comparison page with prev/next pagination.
   # pages: [{label:, entries: [{label:, file:}, ...]}] — file paths may be anywhere on disk.
-  def write_comparison_html(html_path, title, pages)
+  def write_comparison_html(html_path, title, pages, device: nil)
     html_dir = File.dirname(html_path)
     total = pages.size
     first_label = pages.first&.fetch(:label, "") || ""
@@ -466,7 +476,7 @@ describe "Theme screenshots" do
         .page.active { display: flex; }
         .col { flex: 1; min-width: 0; }
         .col-label { position: sticky; top: 40px; background: #1a1a1a; padding: 5px 10px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #222; z-index: 10; }
-        img { width: 100%; display: block; }
+        img { width: 100%; display: block; #{device == "mobile" ? "height: calc(100vh - 70px); object-fit: contain; object-position: top;" : ""} }
         </style>
         </head>
         <body>
@@ -555,13 +565,13 @@ describe "Theme screenshots" do
     end
   end
 
-  # Desktop: full-page screenshot. Mobile: viewport-only at a fixed height (844px)
+  # Desktop: full-page screenshot. Mobile: viewport-only at a fixed height (1000px)
   # so that comparisons are 1:1 regardless of page content length.
   def full_page_screenshot(path, device:)
     page.driver.with_playwright_page do |pw_page|
       if device == "mobile"
         vp = pw_page.viewport_size
-        pw_page.set_viewport_size(width: vp[:width], height: 844)
+        pw_page.set_viewport_size(width: vp[:width], height: 1000)
         pw_page.screenshot(path: path)
       else
         pw_page.screenshot(path: path, fullPage: true)
