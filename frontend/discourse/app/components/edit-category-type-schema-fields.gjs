@@ -57,8 +57,7 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
-      @titleFormat="full"
-      @descriptionFormat="full"
+      @labelFormat="full"
       @format="large"
       as |field|
     >
