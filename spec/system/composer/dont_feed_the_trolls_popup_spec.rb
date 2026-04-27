@@ -12,8 +12,6 @@ describe "Composer don't feed the trolls popup" do
   before { sign_in user }
 
   it "shows a popup when about to reply to a troll" do
-    SiteSetting.educate_until_posts = 0
-
     topic_page.visit_topic(topic)
     topic_page.click_post_action_button(reply, :reply)
 
