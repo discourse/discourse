@@ -749,4 +749,36 @@ RSpec.describe TopicViewSerializer do
       expect(json[:has_localized_content]).to eq(nil)
     end
   end
+
+  describe "#canonical_url" do
+    fab!(:topic_embed) { Fabricate(:topic_embed, topic: topic) }
+
+    context "when embed_set_canonical_url is enabled" do
+      before { SiteSetting.embed_set_canonical_url = true }
+
+      it "returns the embed_url for topics with topic_embed" do
+        json = serialize_topic(topic, user)
+        expect(json[:canonical_url]).to eq(topic_embed.embed_url)
+      end
+    end
+
+    context "when embed_set_canonical_url is disabled" do
+      before { SiteSetting.embed_set_canonical_url = false }
+
+      it "does not include canonical_url" do
+        json = serialize_topic(topic, user)
+        expect(json[:canonical_url]).to eq(nil)
+      end
+    end
+
+    context "when topic has no topic_embed" do
+      before { SiteSetting.embed_set_canonical_url = true }
+
+      it "does not include canonical_url" do
+        topic_without_embed = Fabricate(:topic)
+        json = serialize_topic(topic_without_embed, user)
+        expect(json[:canonical_url]).to eq(nil)
+      end
+    end
+  end
 end

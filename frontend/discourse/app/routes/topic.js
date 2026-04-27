@@ -26,6 +26,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 const SCROLL_DELAY = 500;
 
 export default class TopicRoute extends DiscourseRoute {
+  @service canonicalUrl;
   @service composer;
   @service screenTrack;
   @service currentUser;
@@ -404,6 +405,8 @@ export default class TopicRoute extends DiscourseRoute {
     this.appEvents.trigger("header:hide-topic");
 
     this.controllerFor("topic").set("model", null);
+
+    this.canonicalUrl.clear();
   }
 
   setupController(controller, model) {
@@ -424,6 +427,8 @@ export default class TopicRoute extends DiscourseRoute {
 
     // We reset screen tracking every time a topic is entered
     this.screenTrack.start(model.get("id"), controller);
+
+    this.canonicalUrl.set(model.get("canonical_url") || null);
 
     schedule("afterRender", () =>
       this.appEvents.trigger("header:update-topic", model)

@@ -81,6 +81,7 @@ class TopicViewSerializer < ApplicationSerializer
     :has_localized_content,
     :can_localize_topic,
     :is_nested_view,
+    :canonical_url,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -346,5 +347,13 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_is_nested_view?
     SiteSetting.nested_replies_enabled && !object.topic.private_message?
+  end
+
+  def canonical_url
+    object.topic.topic_embed&.embed_url
+  end
+
+  def include_canonical_url?
+    SiteSetting.embed_set_canonical_url && object.topic.topic_embed.present?
   end
 end
