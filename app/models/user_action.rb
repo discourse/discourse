@@ -240,6 +240,7 @@ class UserAction < ActiveRecord::Base
     SQL
 
     apply_common_filters(builder, user_id, guardian, ignore_private_messages)
+    filter_ignored_users(builder, guardian)
 
     if action_id
       builder.where("a.id = :id", id: action_id.to_i)
@@ -421,7 +422,6 @@ class UserAction < ActiveRecord::Base
 
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)
     filter_categories(builder, guardian)
-    filter_ignored_users(builder, guardian)
   end
 
   def self.filter_private_messages(builder, user_id, guardian, ignore_private_messages = false)
