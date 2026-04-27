@@ -135,6 +135,7 @@ export default class WorkflowCanvas extends Component {
     await runManualTrigger({
       node: this.#nodes().find((n) => n.clientId === clientId),
       clientId,
+      workflowId: this.args.workflowId,
       toasts: this.toasts,
       router: this.router,
     });
