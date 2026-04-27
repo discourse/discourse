@@ -494,6 +494,7 @@ export default class Category extends RestModel {
   init() {
     super.init(...arguments);
     this.setupGroupsAndPermissions();
+    this.setupCategoryTypes();
   }
 
   setupCategoryTypes() {
