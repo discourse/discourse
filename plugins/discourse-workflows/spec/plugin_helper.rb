@@ -8,6 +8,7 @@ module DiscourseWorkflowsSpecHelper
   included do
     before do
       SiteSetting.discourse_workflows_enabled = true
+      DiscourseWorkflows::Registry.reset_indexes!
       Jobs::DiscourseWorkflows::ExecuteSecondsSchedule.jobs.clear
       Jobs::DiscourseWorkflows::ResumeWaitingExecution.jobs.clear
     end

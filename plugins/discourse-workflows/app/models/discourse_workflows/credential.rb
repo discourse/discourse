@@ -11,6 +11,7 @@ module DiscourseWorkflows
     validates :name, presence: true, length: { maximum: 128 }
     validates :credential_type, presence: true, length: { maximum: 64 }
     validates :data, presence: true
+    validate :data_matches_schema
 
     def decrypted_data
       CredentialEncryptor.decrypt(data)
@@ -27,6 +28,24 @@ module DiscourseWorkflows
           new_val == REDACTED_VALUE ? orig_val : new_val
         end
       self.decrypted_data = merged
+    end
+
+    private
+
+    def data_matches_schema
+      return if credential_type.blank? || data.blank?
+
+      type_class = Registry.find_credential_type(credential_type)
+      return if type_class.nil?
+
+      CredentialDataValidator
+        .call(credential_type: type_class, data: decrypted_data)
+        .each do |field|
+          errors.add(
+            :data,
+            I18n.t("discourse_workflows.errors.credential.missing_required_field", field: field),
+          )
+        end
     end
   end
 end

@@ -55,6 +55,18 @@ RSpec.describe DiscourseWorkflows::Credential::Create do
       it { is_expected.to fail_a_contract }
     end
 
+    context "when data is missing a required field" do
+      let(:params) { super().merge(data: { user: "admin" }) }
+
+      it { is_expected.to fail_with_an_invalid_model(:credential) }
+    end
+
+    context "when a required field is empty" do
+      let(:params) { super().merge(data: { user: "admin", password: "" }) }
+
+      it { is_expected.to fail_with_an_invalid_model(:credential) }
+    end
+
     context "when everything is valid" do
       it { is_expected.to run_successfully }
 

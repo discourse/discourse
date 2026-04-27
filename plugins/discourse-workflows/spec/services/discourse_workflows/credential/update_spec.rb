@@ -145,5 +145,11 @@ RSpec.describe DiscourseWorkflows::Credential::Update do
 
       it { is_expected.to fail_a_contract }
     end
+
+    context "when an explicit empty value would clear a required field" do
+      let(:params) { { credential_id: credential.id, name: "New name", data: { password: "" } } }
+
+      it { is_expected.to fail_with_an_invalid_model(:credential) }
+    end
   end
 end

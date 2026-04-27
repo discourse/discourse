@@ -13,5 +13,7 @@ en:
       storage_limit_exceeded: "Data table storage limit exceeded."
       create_post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
+      credential:
+        missing_required_field: "is missing required field '%{field}'"
   site_settings:
     discourse_workflows_enabled: "Enable the discourse-workflows plugin."
