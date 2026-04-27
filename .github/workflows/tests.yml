@@ -404,22 +404,31 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Merge Artifacts
+      - name: Check for artifacts to merge
+        id: check-artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          names=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?per_page=100" --jq '.artifacts[].name')
+          if echo "$names" | grep -q '^failed-system-test-artifacts-'; then
+            echo "has_failed_system=true" >> "$GITHUB_OUTPUT"
+          fi
+          if echo "$names" | grep -q '^flaky-test-reports-'; then
+            echo "has_flaky=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Merge failed system test artifacts
+        if: steps.check-artifacts.outputs.has_failed_system == 'true'
         uses: actions/upload-artifact/merge@v7
         with:
           name: failed-system-test-artifacts
           pattern: failed-system-test-artifacts-*
           delete-merged: true
-          separate-directories: false
-        # Don't fail the job if there aren't any artifacts to merge.
-        continue-on-error: true
 
-      - name: Merge Artifacts
+      - name: Merge flaky test reports
+        if: steps.check-artifacts.outputs.has_flaky == 'true'
         uses: actions/upload-artifact/merge@v7
         with:
           name: flaky-test-reports
           pattern: flaky-test-reports-*
           delete-merged: true
-          separate-directories: false
-        # Don't fail the job if there aren't any artifacts to merge.
-        continue-on-error: true
