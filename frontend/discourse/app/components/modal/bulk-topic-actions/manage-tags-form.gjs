@@ -168,6 +168,7 @@ export default class ManageTagsForm extends Component {
             "topic_bulk_actions.manage_tags.remove.description"
           }}
           @type="tag-chooser"
+          @showOptional={{false}}
           @format="full"
           @onSet={{this.afterFieldSet}}
           as |field|
@@ -192,6 +193,7 @@ export default class ManageTagsForm extends Component {
         @title={{i18n "topic_bulk_actions.manage_tags.add.title"}}
         @description={{i18n "topic_bulk_actions.manage_tags.add.description"}}
         @type="tag-chooser"
+        @showOptional={{false}}
         @format="full"
         @onSet={{this.afterFieldSet}}
         as |field|
