@@ -297,9 +297,16 @@
     }
   }
 
+  &__issues-title {
+    padding: var(--space-2) var(--space-3) var(--space-half);
+    font-size: var(--font-down-2);
+    font-weight: bold;
+    color: var(--primary);
+  }
+
   &__issues-list {
     margin: 0;
-    padding: var(--space-2) var(--space-3);
+    padding: 0 var(--space-3) var(--space-2);
     font-size: var(--font-down-2);
     list-style: none;
     max-width: 260px;
@@ -311,7 +318,6 @@
       margin: 0;
       color: var(--primary);
       word-break: break-word;
-      font-family: var(--d-font-family--monospace);
     }
   }
 

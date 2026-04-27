@@ -9,6 +9,8 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
+import formatNodeIssue from "../../../lib/workflows/format-node-issue";
 import getNodeIssues from "../../../lib/workflows/node-issues";
 import {
   nodeTypeIcon,
@@ -42,6 +44,10 @@ export default class WorkflowNode extends Component {
 
   portLabel = (key) => {
     return nodeTypePortLabel(this.resolvedNodeType, key);
+  };
+
+  formatIssue = (issue) => {
+    return formatNodeIssue(issue, this.resolvedNodeType);
   };
 
   get data() {
@@ -201,9 +207,12 @@ export default class WorkflowNode extends Component {
                 {{icon "triangle-exclamation"}}
               </:trigger>
               <:content>
+                <div class="workflow-rete-node__issues-title">
+                  {{i18n "discourse_workflows.node_issues.title"}}
+                </div>
                 <ul class="workflow-rete-node__issues-list">
                   {{#each this.issues as |issue|}}
-                    <li>{{issue.path}}</li>
+                    <li>{{this.formatIssue issue}}</li>
                   {{/each}}
                 </ul>
               </:content>

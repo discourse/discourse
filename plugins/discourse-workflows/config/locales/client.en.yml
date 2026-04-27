@@ -3,6 +3,10 @@ en:
     discourse_workflows:
       node_unavailable:
         default: "This node is currently unavailable"
+      node_issues:
+        title: "Configuration issues"
+        required: "%{label} is required"
+        unknown: "%{label}: %{message}"
       admin:
         title: "Workflows"
       title: "Workflows"
