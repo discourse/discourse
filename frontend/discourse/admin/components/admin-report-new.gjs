@@ -95,7 +95,7 @@ import { i18n } from "discourse-i18n";
 
                 <DSegmentedControl
                   class="chart-groupings"
-                  @name={{concat "chart-grouping-" @report.model.type}}
+                  @name="chart-grouping-{{@report.model.type}}"
                   @label="admin.dashboard.reports.chart_group_period"
                   @items={{@report.chartGroupingSegmentItems}}
                   @value={{@report.options.chartGrouping}}
