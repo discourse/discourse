@@ -469,7 +469,7 @@ class UserAction < ActiveRecord::Base
   end
 
   def self.filter_ignored_users(builder, guardian)
-    return unless guardian.user
+    return unless guardian&.user
 
     builder.where(<<~SQL, current_user_id: guardian.user.id)
       NOT EXISTS (
