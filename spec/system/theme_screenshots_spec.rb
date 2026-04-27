@@ -37,7 +37,16 @@ ALL_THEMES = [
 
 DEVICES = (ENV["SCREENSHOTS_DEVICES"] || "desktop,mobile").split(",").map(&:strip).freeze
 
-ALL_SCREENSHOT_ROUTES = %w[/latest /categories /groups /admin /my/summary /chat /new-topic].freeze
+DEFAULT_SCREENSHOT_ROUTES = %w[
+  /latest
+  /categories
+  /chat
+  /new-topic
+  /admin
+  /my/summary
+  /groups
+  /t/random
+].freeze
 
 describe "Theme screenshots" do
   include ChatSystemHelpers if defined?(ChatSystemHelpers)
@@ -131,9 +140,15 @@ describe "Theme screenshots" do
     dir
   end
 
+  let(:raw_dir) do
+    dir = File.join(output_dir, "raw")
+    FileUtils.mkdir_p(dir)
+    dir
+  end
+
   let(:modes) { (ENV["SCREENSHOTS_MODES"] || "light,dark").split(",").map(&:strip).map(&:to_sym) }
 
-  let(:sign_in_as) { (ENV["SCREENSHOTS_AS"] || "anonymous").downcase.strip }
+  let(:sign_in_as) { (ENV["SCREENSHOTS_AS"] || "admin").downcase.strip }
 
   let(:signed_in_user) do
     case sign_in_as
@@ -177,10 +192,10 @@ describe "Theme screenshots" do
   let(:target_paths) do
     if ENV["SCREENSHOTS_PATHS"].present?
       raw = ENV["SCREENSHOTS_PATHS"].strip
-      paths = (raw == "all") ? ALL_SCREENSHOT_ROUTES : raw.split(",").map(&:strip)
+      paths = (raw == "all") ? DEFAULT_SCREENSHOT_ROUTES : raw.split(",").map(&:strip)
       paths.map { |p| expand_path(p) }
     else
-      [expand_path(ENV["SCREENSHOTS_PATH"] || "/")]
+      DEFAULT_SCREENSHOT_ROUTES.map { |p| expand_path(p) }
     end
   end
 
@@ -244,11 +259,8 @@ describe "Theme screenshots" do
           slug = path_slug(path)
           path_suffix = target_paths.size > 1 ? "-#{slug}" : ""
           filename =
-            File.join(
-              output_dir,
-              "#{device}-#{theme[:name]}#{role_suffix}-#{mode}#{path_suffix}.png",
-            )
-          full_page_screenshot(filename)
+            File.join(raw_dir, "#{device}-#{theme[:name]}#{role_suffix}-#{mode}#{path_suffix}.png")
+          full_page_screenshot(filename, device: device)
           puts "📸 Saved: #{filename}"
 
           comparisons[mode][slug] << { label: theme[:name], file: filename }
@@ -256,37 +268,154 @@ describe "Theme screenshots" do
       end
     end
 
-    create_comparisons(device, comparisons) if themes.size > 1
+    create_html_comparison(device, comparisons) if themes.size > 1
+    create_baseline_comparison(device) if ENV["SCREENSHOTS_BASELINE_DIR"].present?
   end
 
-  def create_comparisons(device, comparisons)
+  def create_html_comparison(device, comparisons)
     role_suffix = sign_in_as == "anonymous" ? "" : "-#{sign_in_as}"
+    all_labels =
+      comparisons
+        .values
+        .flat_map { |paths| paths.values.flat_map { |e| e.map { |x| x[:label] } } }
+        .uniq
+    html_path = File.join(output_dir, "compare-#{device}#{role_suffix}.html")
 
-    comparisons.each do |mode, paths|
-      paths.each do |slug, entries|
-        path_suffix = comparisons.values.any? { |p| p.size > 1 } ? "-#{slug}" : ""
-        output = File.join(output_dir, "compare-#{device}#{role_suffix}-#{mode}#{path_suffix}.png")
-
-        args = %w[magick montage]
-        entries.each { |e| args.push("-label", e[:label], e[:file]) }
-        args.push(
-          "-tile",
-          "#{entries.size}x1",
-          "-geometry",
-          "+4+4",
-          "-pointsize",
-          "28",
-          "-background",
-          "#1a1a1a",
-          "-fill",
-          "white",
-          output,
-        )
-
-        system(*args)
-        puts "🖼️  Comparison: #{output}"
+    pages =
+      comparisons.flat_map do |mode, paths|
+        paths.map do |slug, entries|
+          label = paths.size > 1 || comparisons.size > 1 ? "#{slug} · #{mode}" : mode.to_s
+          { label: label, entries: entries }
+        end
       end
-    end
+
+    write_comparison_html(html_path, "#{device.capitalize} · #{all_labels.join(" vs ")}", pages)
+    puts "🌐 Comparison: file://#{html_path}"
+  end
+
+  def create_baseline_comparison(device)
+    baseline_src = ENV["SCREENSHOTS_BASELINE_DIR"].to_s.strip
+    return unless File.directory?(baseline_src)
+
+    role_suffix = sign_in_as == "anonymous" ? "" : "-#{sign_in_as}"
+    baseline_label = ENV["SCREENSHOTS_BASELINE_LABEL"].presence || File.basename(baseline_src)
+
+    baseline_dest = File.join(output_dir, "_baseline")
+    FileUtils.mkdir_p(baseline_dest)
+
+    by_mode = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
+
+    Dir
+      .glob(File.join(raw_dir, "#{device}-*.png"))
+      .sort
+      .each do |current_file|
+        filename = File.basename(current_file)
+        src = File.join(baseline_src, filename)
+        next unless File.exist?(src)
+
+        dest = File.join(baseline_dest, filename)
+        FileUtils.cp(src, dest) unless File.exist?(dest)
+
+        mode = modes.find { |m| filename.include?("-#{m}") } || modes.first
+        slug_match = filename.match(/-#{mode}(?:-([^.]+))?\.png$/)
+        slug = slug_match&.[](1) || "root"
+
+        by_mode[mode][slug] << { label: baseline_label, file: dest }
+        by_mode[mode][slug] << { label: "current", file: current_file }
+      end
+
+    return if by_mode.empty?
+
+    pages =
+      by_mode.flat_map do |mode, paths|
+        paths.map do |slug, entries|
+          label = paths.size > 1 || by_mode.size > 1 ? "#{slug} · #{mode}" : mode.to_s
+          { label: label, entries: entries }
+        end
+      end
+
+    html_path = File.join(output_dir, "compare-#{device}#{role_suffix}-vs-baseline.html")
+    write_comparison_html(html_path, "#{device.capitalize} · #{baseline_label} vs current", pages)
+    puts "🌐 Baseline comparison: file://#{html_path}"
+  end
+
+  # Generates a self-contained HTML comparison page with prev/next pagination.
+  # pages: [{label:, entries: [{label:, file:}, ...]}] — file paths may be anywhere on disk.
+  def write_comparison_html(html_path, title, pages)
+    html_dir = File.dirname(html_path)
+    total = pages.size
+    first_label = pages.first&.fetch(:label, "") || ""
+
+    pages_html =
+      pages
+        .each_with_index
+        .map do |page, i|
+          active = i == 0 ? " active" : ""
+          cols =
+            page[:entries].map do |entry|
+              rel = Pathname.new(entry[:file]).relative_path_from(Pathname.new(html_dir)).to_s
+              <<~COL
+                <div class="col">
+                  <div class="col-label">#{entry[:label]}</div>
+                  <img src="#{rel}" loading="lazy">
+                </div>
+              COL
+            end
+          %(<div class="page#{active}" data-label="#{page[:label]}">\n#{cols.join}\n</div>)
+        end
+        .join("\n")
+
+    File.write(html_path, <<~HTML)
+        <!doctype html>
+        <html>
+        <head>
+        <meta charset="utf-8">
+        <title>#{title}</title>
+        <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #111; color: #eee; font-family: system-ui, sans-serif; }
+        nav { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: #1a1a1a; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 20; }
+        .btn { padding: 3px 10px; background: #2a2a2a; color: #ccc; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px; line-height: 1.4; }
+        .btn:disabled { opacity: 0.3; cursor: default; }
+        #counter { font-size: 12px; color: #666; min-width: 44px; text-align: center; }
+        #page-label { font-size: 13px; color: #ddd; }
+        #title { font-size: 12px; color: #555; margin-left: auto; }
+        .page { display: none; flex-direction: row; gap: 2px; }
+        .page.active { display: flex; }
+        .col { flex: 1; min-width: 0; }
+        .col-label { position: sticky; top: 40px; background: #1a1a1a; padding: 5px 10px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #222; z-index: 10; }
+        img { width: 100%; display: block; }
+        </style>
+        </head>
+        <body>
+        <nav>
+          <button class="btn" id="btn-prev" onclick="go(-1)" disabled>&#8592;</button>
+          <span id="counter">1 / #{total}</span>
+          <button class="btn" id="btn-next" onclick="go(1)"#{total <= 1 ? " disabled" : ""}>&#8594;</button>
+          <span id="page-label">#{first_label}</span>
+          <span id="title">#{title}</span>
+        </nav>
+        #{pages_html}
+        <script>
+        var idx = 0;
+        var pages = document.querySelectorAll('.page');
+        function go(dir) {
+          idx = Math.max(0, Math.min(pages.length - 1, idx + dir));
+          pages.forEach(function(p) { p.classList.remove('active'); });
+          pages[idx].classList.add('active');
+          document.getElementById('counter').textContent = (idx + 1) + ' / ' + pages.length;
+          document.getElementById('page-label').textContent = pages[idx].dataset.label;
+          document.getElementById('btn-prev').disabled = idx === 0;
+          document.getElementById('btn-next').disabled = idx === pages.length - 1;
+        }
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'ArrowLeft') go(-1);
+          if (e.key === 'ArrowRight') go(1);
+        });
+        </script>
+        </body>
+        </html>
+      HTML
   end
 
   # Converts a site-relative path into a safe filename segment.
@@ -298,7 +427,8 @@ describe "Theme screenshots" do
   def expand_path(raw)
     case raw
     when "/t/random"
-      topics.sample.relative_url
+      t = topics.sample
+      "/t/#{t.slug}/#{t.id}"
     when "/chat"
       raise "/chat requires SCREENSHOTS_AS=user or admin" if sign_in_as == "anonymous"
       raw
@@ -341,8 +471,18 @@ describe "Theme screenshots" do
     end
   end
 
-  def full_page_screenshot(path)
-    page.driver.with_playwright_page { |pw_page| pw_page.screenshot(path: path, fullPage: true) }
+  # Desktop: full-page screenshot. Mobile: viewport-only at a fixed height (844px)
+  # so that comparisons are 1:1 regardless of page content length.
+  def full_page_screenshot(path, device:)
+    page.driver.with_playwright_page do |pw_page|
+      if device == "mobile"
+        vp = pw_page.viewport_size
+        pw_page.set_viewport_size(width: vp[:width], height: 844)
+        pw_page.screenshot(path: path)
+      else
+        pw_page.screenshot(path: path, fullPage: true)
+      end
+    end
   end
 
   # The `?preview_theme_id=` query param surfaces a global notice ("You are

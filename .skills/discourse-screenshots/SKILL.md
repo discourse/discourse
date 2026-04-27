@@ -19,17 +19,17 @@ Output is eight files by default — one per theme × mode × device: `desktop-f
 ## How to run
 
 ```bash
-TAKE_SCREENSHOTS=1 bin/rspec spec/system/theme_screenshots_spec.rb
+TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 bin/rspec spec/system/theme_screenshots_spec.rb
 ```
 
-Screenshots land in `tmp/theme-screenshots/`. Add `LOAD_PLUGINS=1` when capturing plugin routes (e.g. `/chat`).
+Screenshots land in `tmp/theme-screenshots/`. `LOAD_PLUGINS=1` is always included so chat routes work.
 
 ### Arguments (env vars)
 
 | Var                     | Default                      | Purpose                                                    |
 |-------------------------|------------------------------|------------------------------------------------------------|
 | `TAKE_SCREENSHOTS`      | *(unset — spec is skipped)*  | Must be `1` for the spec to run.                           |
-| `LOAD_PLUGINS`          | *(unset)*                    | Set to `1` when capturing plugin routes like `/chat`.      |
+| `LOAD_PLUGINS`          | `1`                          | Always set to `1` so chat and other plugin routes work.    |
 | `SCREENSHOTS_DIR`       | `tmp/theme-screenshots`      | Where PNGs are written.                                    |
 | `SCREENSHOTS_PATH`      | `/`                          | Single path to capture. Special sentinels: `/t/random` (random fabricated topic), `/my/*` (expanded to `/u/:username/*` for signed-in users). |
 | `SCREENSHOTS_PATHS`     | *(unset)*                    | Comma-separated paths, or `all` for the full route list: `/latest`, `/categories`, `/groups`, `/admin`, `/my/summary`, `/chat`, `/new-topic`. Overrides `SCREENSHOTS_PATH` when set. `/admin` requires `SCREENSHOTS_AS=admin`; `/chat` and `/my/*` require `user` or `admin`; `/chat` also requires `LOAD_PLUGINS=1`. |
@@ -40,15 +40,17 @@ Screenshots land in `tmp/theme-screenshots/`. Add `LOAD_PLUGINS=1` when capturin
 | `SCREENSHOTS_THEME_URL` | *(unset)*                    | Git URL of a remote theme to install into the test DB and add to the matrix. Use `SCREENSHOTS_THEME_NAME` for the filename label (default: repo name). Set `SCREENSHOTS_THEMES=` (empty) to capture only the remote theme. |
 | `SCREENSHOTS_THEME_ID`  | *(unset)*                    | ID of a theme already present in the test DB to add to the matrix. Use `SCREENSHOTS_THEME_NAME` to set its filename label. |
 | `SCREENSHOTS_THEME_NAME`| repo name / `theme-<id>`     | Display name used in filenames for the extra theme.        |
+| `SCREENSHOTS_BASELINE_DIR` | *(unset)*               | Path to a directory of previously captured screenshots. When set, the spec generates an HTML comparison pairing baseline PNGs against the current run's PNGs (matched by filename). Use for PR-vs-main comparisons. |
+| `SCREENSHOTS_BASELINE_LABEL` | basename of dir       | Label shown in the HTML comparison for baseline screenshots. Defaults to the directory's basename. |
 
 ### Examples
 
 ```bash
 # Default — all themes × light/dark × desktop/mobile at /
-TAKE_SCREENSHOTS=1 bin/rspec spec/system/theme_screenshots_spec.rb
+TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 bin/rspec spec/system/theme_screenshots_spec.rb
 
 # /categories page as admin, dark only, desktop only
-TAKE_SCREENSHOTS=1 SCREENSHOTS_PATH=/categories SCREENSHOTS_AS=admin \
+TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 SCREENSHOTS_PATH=/categories SCREENSHOTS_AS=admin \
   SCREENSHOTS_MODES=dark SCREENSHOTS_DEVICES=desktop \
   bin/rspec spec/system/theme_screenshots_spec.rb
 
@@ -61,6 +63,24 @@ TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 \
 # Full route sweep as admin (all built-in themes, all modes)
 TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 SCREENSHOTS_PATHS=all SCREENSHOTS_AS=admin \
   bin/rspec spec/system/theme_screenshots_spec.rb
+
+# Compare a remote theme against core themes on key screens (HTML output)
+TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 \
+  SCREENSHOTS_THEME_URL=https://github.com/org/my-theme \
+  SCREENSHOTS_THEME_NAME=my-theme \
+  SCREENSHOTS_PATHS=/latest,/categories \
+  bin/rspec spec/system/theme_screenshots_spec.rb
+# → generates compare-desktop.html, compare-mobile.html
+
+# PR vs main: step 1 — capture baseline on main branch
+TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 SCREENSHOTS_DIR=tmp/baseline SCREENSHOTS_PATHS=/latest,/categories \
+  bin/rspec spec/system/theme_screenshots_spec.rb
+
+# PR vs main: step 2 — capture current branch and generate HTML comparison
+TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 SCREENSHOTS_BASELINE_DIR=tmp/baseline \
+  SCREENSHOTS_BASELINE_LABEL=main SCREENSHOTS_PATHS=/latest,/categories \
+  bin/rspec spec/system/theme_screenshots_spec.rb
+# → generates compare-desktop-vs-baseline.html, compare-mobile-vs-baseline.html
 ```
 
 ## Fabricated data
@@ -89,7 +109,8 @@ When this skill is invoked:
    - "all routes" / "all pages" / "full route sweep" → `SCREENSHOTS_PATHS=all`
    - A comma-separated list of paths → `SCREENSHOTS_PATHS=…`
    - A directory path (e.g. "save to /tmp/foo") → `SCREENSHOTS_DIR=…`
-3. If the paths include `/chat` or any other plugin route, add `LOAD_PLUGINS=1`.
+   - "compare with baseline from /path" / "compare against main" → `SCREENSHOTS_BASELINE_DIR=…`; if the user names the baseline (e.g. "main") also set `SCREENSHOTS_BASELINE_LABEL=…`
+3. Always include `LOAD_PLUGINS=1` so chat routes work.
 4. If the user requests an unknown built-in theme name, tell them only `foundation` and `horizon` are supported — for any other theme use `SCREENSHOTS_THEME_URL`.
 5. Always prefix with `TAKE_SCREENSHOTS=1`.
 6. Run via `bin/rspec spec/system/theme_screenshots_spec.rb` from the repo root.
