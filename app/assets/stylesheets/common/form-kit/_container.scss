@@ -6,6 +6,10 @@
   flex-direction: column;
   align-items: flex-start;
 
+  &.--full {
+    width: 100%;
+  }
+
   @include viewport.until(sm) {
     width: 100%;
   }
