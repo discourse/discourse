@@ -5,13 +5,14 @@ module DiscourseWorkflows
     requires_plugin DiscourseWorkflows::PLUGIN_NAME
 
     def create
-      DiscourseWorkflows::Workflow::Execute.call(
+      DiscourseWorkflows::Workflow::ManualExecute.call(
         service_params.deep_merge(params: { user_id: current_user.id }),
       ) do |result|
         on_success do |execution:|
           render json: { execution: { id: execution.id, workflow_id: execution.workflow_id } }
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_model_not_found(:trigger_node) { raise Discourse::NotFound }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
       end
