@@ -207,14 +207,16 @@ export default class WorkflowNode extends Component {
                 {{icon "triangle-exclamation"}}
               </:trigger>
               <:content>
-                <div class="workflow-rete-node__issues-title">
-                  {{i18n "discourse_workflows.node_issues.title"}}
+                <div class="workflow-rete-node__issues">
+                  <div class="workflow-rete-node__issues-title">
+                    {{i18n "discourse_workflows.node_issues.title"}}
+                  </div>
+                  <ul class="workflow-rete-node__issues-list">
+                    {{#each this.issues as |issue|}}
+                      <li>{{this.formatIssue issue}}</li>
+                    {{/each}}
+                  </ul>
                 </div>
-                <ul class="workflow-rete-node__issues-list">
-                  {{#each this.issues as |issue|}}
-                    <li>{{this.formatIssue issue}}</li>
-                  {{/each}}
-                </ul>
               </:content>
             </DMenu>
           {{/if}}
