@@ -189,6 +189,7 @@ describe "Topic bulk select" do
       topic_2.update!(tags: [tag1, tag3])
 
       modal = open_manage_tags_modal([topic, topic_2])
+      expect(modal).to have_disabled_submit
 
       modal.select_replace_from(tag1.name)
       modal.select_replace_to(tag1.name)

@@ -47,6 +47,10 @@ module PageObjects
         find("#bulk-topics-confirm").click
       end
 
+      def has_disabled_submit?
+        has_css?("#bulk-topics-confirm[disabled]")
+      end
+
       def has_remove_all_notice?
         has_css?("#{ROOT_SELECTOR} .manage-tags-form__warning")
       end
