@@ -456,7 +456,7 @@ basic:
     default: ""
     allow_any: false
     refresh: true
-    disallowed_groups: "0|4"
+    disallowed_groups: "0|4|5"
     area: "group_permissions"
   hidden_post_visible_groups:
     type: group_list

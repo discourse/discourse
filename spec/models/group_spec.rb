@@ -301,8 +301,6 @@ RSpec.describe Group do
         1,
         2,
         3,
-        4,
-        5,
         10,
       )
     end
@@ -313,6 +311,16 @@ RSpec.describe Group do
 
     it "returns an empty array when passing an unknown group" do
       expect(described_class.auto_groups_between(:trust_level_0, :trust_level_1337)).to be_empty
+    end
+
+    it "excludes pseudogroups that encompass large sets of users" do
+      expect(described_class.auto_groups_between(:admins, :trust_level_1)).to contain_exactly(
+        1,
+        2,
+        3,
+        10,
+        11,
+      )
     end
   end
 

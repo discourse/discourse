@@ -109,7 +109,7 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
 
           select_queries = queries.select { |q| q.include?("SELECT") && !q.include?("SELECT 1") }
 
-          expect(select_queries.length).to be <= 6
+          expect(select_queries.length).to be <= 5
         end
 
         it "handles mixed valid and invalid IDs" do
