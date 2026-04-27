@@ -40,8 +40,10 @@ DEFAULT_SCREENSHOT_ROUTES = %w[
   /new-topic
   /admin
   /my/summary
+  /my/messages
   /c/announcements
   /groups
+  /filter
   /t/random
 ].freeze
 
