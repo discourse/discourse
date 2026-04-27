@@ -246,6 +246,68 @@ RSpec.describe UserAction do
         expect(likee_stream.count).not_to eq(old_count + 1)
       end
     end
+
+    context "with ignored users" do
+      before { Fabricate(:ignored_user, user: likee, ignored_user: liker) }
+
+      def likee_stream_for(viewer)
+        UserAction.stream(user_id: likee.id, guardian: Guardian.new(viewer))
+      end
+
+      it "hides likes from ignored users when the ignorer views the stream" do
+        PostActionCreator.like(liker, post)
+        expect(likee_stream_for(likee).count).to eq(old_count)
+      end
+
+      it "still shows the likes to anonymous viewers" do
+        PostActionCreator.like(liker, post)
+        expect(likee_stream.count).to eq(old_count + 1)
+      end
+
+      it "still shows the likes to other logged-in viewers who aren't ignoring the liker" do
+        other = Fabricate(:user)
+        PostActionCreator.like(liker, post)
+        expect(likee_stream_for(other).count).to eq(old_count + 1)
+      end
+
+      it "does not hide likes from ignored admins" do
+        liker.update!(admin: true)
+        PostActionCreator.like(liker, post)
+        expect(likee_stream_for(likee).count).to eq(old_count + 1)
+      end
+
+      it "does not hide likes from ignored moderators" do
+        liker.update!(moderator: true)
+        PostActionCreator.like(liker, post)
+        expect(likee_stream_for(likee).count).to eq(old_count + 1)
+      end
+
+      it "only hides the ignored user's rows when normal and ignored users both engage with the same topic" do
+        normal_user = Fabricate(:user, refresh_auto_groups: true)
+
+        PostActionCreator.like(normal_user, post)
+        normal_reply =
+          create_post(topic: post.topic, user: normal_user, reply_to_post_number: post.post_number)
+        PostAlerter.post_created(normal_reply)
+
+        PostActionCreator.like(liker, post)
+        ignored_reply =
+          create_post(topic: post.topic, user: liker, reply_to_post_number: post.post_number)
+        PostAlerter.post_created(ignored_reply)
+
+        actions = likee_stream_for(likee)
+        acting_user_ids = actions.map(&:acting_user_id).uniq
+
+        expect(acting_user_ids).to include(normal_user.id)
+        expect(acting_user_ids).not_to include(liker.id)
+
+        post_ids = actions.map(&:post_id).compact
+        expect(post_ids).to include(normal_reply.id)
+        expect(post_ids).not_to include(ignored_reply.id)
+
+        expect(actions.map(&:topic_id)).to include(post.topic_id)
+      end
+    end
   end
 
   describe "when a user posts a new topic" do
