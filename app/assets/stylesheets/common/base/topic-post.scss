@@ -429,12 +429,12 @@ nav.post-controls {
         }
       }
 
-      &__like-count {
-        color: var(--d-post-control-text-color) !important;
-        gap: var(--space-2);
-
-        &.has-liked .d-icon {
-          color: var(--danger);
+      &__double-button {
+        .discourse-no-touch & {
+          &:not(.has-liked):hover {
+            --d-post-control-background--hover: var(--love-low);
+            --d-button-flat-icon-color--hover: var(--love);
+          }
         }
       }
     }
@@ -581,6 +581,17 @@ nav.post-controls {
           color: var(--d-post-control-create-icon-color);
         }
       }
+    }
+  }
+
+  .post-action-menu__like-count {
+    display: inline-flex;
+    align-items: center;
+    color: var(--d-post-control-text-color) !important;
+    gap: var(--space-2);
+
+    &.has-liked .d-icon {
+      color: var(--danger);
     }
   }
 

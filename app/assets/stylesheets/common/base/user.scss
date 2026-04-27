@@ -124,6 +124,7 @@
   .user-notifications-filter {
     display: block;
     width: 100%;
+    padding-bottom: var(--space-2);
     border-bottom: 0.5px solid var(--content-border-color);
   }
 }

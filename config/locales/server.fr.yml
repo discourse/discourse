@@ -433,7 +433,13 @@ fr:
   deleted_topic: "Ce sujet a été supprimé et n'est plus disponible."
   delete_topic_failed: "Une erreur est survenue pendant la suppression de ce sujet. Veuillez contacter l'administrateur du site."
   reading_time: "Temps de lecture"
+  reading_time_minutes:
+    one: "%{count} minute 🕑"
+    other: "%{count} minutes 🕑"
   likes: "J'aime"
+  likes_count:
+    one: "%{count}  ❤"
+    other: "%{count}  ❤"
   action_already_performed: "Oups ! Vous avez déjà effectué cette action. Pouvez-vous essayer d'actualiser la page ?"
   too_many_replies:
     one: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à %{count} réponse par sujet."
@@ -822,7 +828,6 @@ fr:
       one: "%{count} « J'aime »"
       other: "%{count} « J'aime »"
     cannot_permanently_delete:
-      many_posts: "Ce sujet contient des messages non supprimés. Veuillez les supprimer définitivement avant de supprimer définitivement le sujet."
       wait_or_different_admin: "Vous devez attendre %{time_left} avant de supprimer définitivement ce message ou demander à un autre administrateur de le faire."
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, veuillez réessayer plus tard."
@@ -2374,7 +2379,6 @@ fr:
     create_revision_on_bulk_topic_moves: "Créer une révision des premières publications lorsque des sujets sont déplacés en bloc vers une nouvelle catégorie."
     allow_changing_staged_user_tracking: "Permettre aux administrateurs de modifier les préférences de notification relatives aux catégories et aux étiquettes, pour les comptes d'utilisateurs distants."
     use_email_for_username_and_name_suggestions: "Utilisez la première partie des adresses e-mail pour suggérer des noms d'utilisateur et des noms de famille. Attention : cela peut faciliter la découverte de l'adresse e-mail de vos membres par des personnes malintentionnées (car de nombreuses personnes utilisent des fournisseurs de messagerie courants comme « gmail.com »)."
-    use_name_for_username_suggestions: "Utiliser le nom complet d'un utilisateur lorsque vous suggérez des noms d'utilisateur."
     suggest_weekends_in_date_pickers: "Inclure les week-ends dans les suggestions du sélectionneur de date (désactivez ce paramètre si vous n'utilisez Discourse que les jours de semaine)."
     show_bottom_topic_map: "Affiche la carte du sujet en bas du sujet lorsqu'il contient 10 réponses ou plus."
     show_topic_map_in_topics_without_replies: "Affiche la carte du sujet même si le sujet ne comprend aucune réponse."
@@ -2689,7 +2693,6 @@ fr:
       request_error: "Une erreur s'est produite lors du démarrage de l'autorisation. Veuillez réessayer."
       invalid_iat: "Nous ne sommes pas en mesure de vérifier le jeton d'autorisation en raison de différences d'horloge du serveur. Veuillez réessayer."
     omniauth_error_unknown: "Un problème est survenu lors de votre connexion. Veuillez réessayer."
-    omniauth_confirm_title: "Connectez-vous à l'aide de %{provider}"
     omniauth_confirm_button: "Continuer"
     authenticator_error_no_valid_email: "Aucune adresse e-mail associée à %{account} n'est autorisée. Vous devrez peut-être configurer votre compte avec une autre adresse."
     new_registrations_disabled: "La création de nouveaux comptes n'est pas autorisée pour le moment."
@@ -4796,7 +4799,6 @@ fr:
       restricted_to:
         one: 'L''étiquette « %{tag_name} » est réservée à la catégorie « %{category_names} »'
         other: 'L''étiquette « %{tag_name} » est réservée aux catégories suivantes : %{category_names}'
-      synonym: 'Les synonymes ne sont pas autorisés. Utilisez « %{tag_name} ».'
       has_synonyms: 'L''étiquette « %{tag_name} » ne peut pas être utilisée car elle a des synonymes.'
       restricted_tags_cannot_be_used_in_category:
         one: 'L''étiquette « %{tags} » ne peut pas être utilisée dans la catégorie « %{category} ». Veuillez la supprimer.'

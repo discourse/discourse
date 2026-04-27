@@ -1,4 +1,9 @@
 en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Discourse Data Explorer"
   js:
     discourse_ai:
       features:

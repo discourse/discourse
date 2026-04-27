@@ -28,6 +28,7 @@ pt_BR:
       description_placeholder: "Insira uma descrição aqui"
       ai:
         generate: "Gerar"
+        optional: "opcional"
       import:
         label: "Importar"
         unparseable_json: "Arquivo JSON não analisável"

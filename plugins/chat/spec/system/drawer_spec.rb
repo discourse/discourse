@@ -211,55 +211,37 @@ RSpec.describe "Drawer" do
     end
   end
 
-  context "when sending a message from topic" do
-    fab!(:topic)
-    fab!(:posts) { Fabricate.times(5, :post, topic: topic) }
-    fab!(:channel, :chat_channel)
+  context "when sending a message from a thread while viewing a topic" do
+    fab!(:post1, :post)
+    fab!(:post2) { Fabricate(:post, topic: post1.topic) }
+    fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel, with_replies: 1, use_service: true) }
     fab!(:membership) do
       Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
     end
 
     let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
+    let(:thread_page) { PageObjects::Pages::ChatThread.new }
 
-    context "when on a channel" do
-      xit "has context" do
-        ::Chat::CreateMessage
-          .expects(:call)
-          .with do |value|
-            value["topic_id"] === topic.id.to_s &&
-              value["post_ids"] === [posts[1].id.to_s, posts[2].id.to_s, posts[3].id.to_s]
-          end
+    before { Jobs.run_immediately! }
 
-        topic_page.visit_topic(topic, post_number: 3)
-        chat_page.open_from_header
-        drawer_page.open_channel(channel)
-        channel_page.send_message
-      end
-    end
+    it "has topic context" do
+      tested_context = {}
+      blk = ->(*, context) { tested_context = context }
+      DiscourseEvent.on(:chat_message_created, &blk)
 
-    context "when on a thread" do
-      before { channel.update!(threading_enabled: true) }
+      topic_page.visit_topic(post1.topic)
+      chat_page.open_from_header
+      drawer_page.open_channel(channel)
+      drawer_page.open_thread_list
+      thread_list_page.open_thread(thread)
+      thread_page.send_message
 
-      fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
-
-      let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
-      let(:thread_page) { PageObjects::Pages::ChatThread.new }
-
-      xit "has context" do
-        ::Chat::CreateMessage
-          .expects(:call)
-          .with do |value|
-            value["topic_id"] === topic.id.to_s &&
-              value["post_ids"] === [posts[1].id.to_s, posts[2].id.to_s, posts[3].id.to_s]
-          end
-
-        topic_page.visit_topic(topic, post_number: 3)
-        chat_page.open_from_header
-        drawer_page.open_channel(channel)
-        drawer_page.open_thread_list
-        thread_list_page.open_thread(thread_1)
-        thread_page.send_message
-      end
+      expect(tested_context.dig(:context, :post_ids)).to eq([post1.id, post2.id])
+      expect(tested_context.dig(:context, :topic_id)).to eq(post1.topic_id)
+    ensure
+      DiscourseEvent.off(:chat_message_created, &blk)
     end
   end
 

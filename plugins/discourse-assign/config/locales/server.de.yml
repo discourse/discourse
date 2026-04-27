@@ -22,9 +22,12 @@ de:
     remind_assigns_frequency: "Häufigkeit, mit der Benutzer an zugeordnete Themen erinnert werden."
     pending_assign_reminder_threshold: "Anzahl ausstehender Zuweisungen zum Auslösen einer Erinnerungsbenachrichtigung."
     max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugeordnet werden können."
-    assign_allowed_on_groups: "Benutzer in diesen Gruppen dürfen Themen zuordnen und können Themen zugeordnet werden."
+    assign_allowed_on_groups: "Benutzer in diesen Gruppen dürfen Themen zuordnen."
     enable_assign_status: "Füge zu jeder Zuordnung ein anpassbares Statusfeld hinzu."
     assign_statuses: "Liste der Status, die für jede Zuordnung verfügbar sind. Der erste Status ist der Standardstatus, der für jede neue Zuordnung verwendet wird."
+    ignore_solved_topics_in_assigned_reminder: "Verhindere, dass Erinnerungen für Zuordnungen gelöste Themen betreffen. Nur relevant, wenn das Plugin „Discourse Gelöst“ verwendet wird."
+    assignment_status_on_solve: "Wenn ein Thema als gelöst markiert wird, aktualisiere alle Zuordnungen auf diesen Status"
+    assignment_status_on_unsolve: "Wenn ein Thema als ungelöst markiert wird, aktualisiere alle Zuordnungen auf diesen Status"
     errors:
       assign_statuses:
         too_few: "Es müssen mindestens zwei verschiedene Status verfügbar sein."

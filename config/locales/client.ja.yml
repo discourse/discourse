@@ -2754,6 +2754,8 @@ ja:
         name_label: "ラップ名"
         attributes_label: "属性"
         add_attribute: "属性を追加する"
+        attribute_key: "キー"
+        attribute_value: "値"
         remove_attribute: "属性を削除する"
         apply: "適用"
         unwrap: "ラップを解除する"
@@ -2842,6 +2844,9 @@ ja:
         copy: "リンクをコピー"
         remove: "リンクの削除"
         visit: "外部タブでリンクを開く"
+        link_copied: "リンクがコピーされました！"
+      onebox_toolbar:
+        copy: "リンクをコピー"
         link_copied: "リンクがコピーされました！"
       unsupported_token: "リッチテキストエディターではこの投稿で使用されているすべての機能がサポートされていないため、Markdown エディターに切り替えます。"
     notifications:
@@ -3248,12 +3253,29 @@ ja:
         name: "削除"
       update_category:
         name: "カテゴリを更新"
+      convert_to_public_topic:
+        name: "公開トピックにする…"
+      convert_to_private_message:
+        name: "個人メッセージにする"
       reset_bump_dates:
         name: "バンプ日をリセット"
       defer:
         name: "未読にする"
       update_notifications:
         name: "通知を更新"
+    nested_replies:
+      sort:
+        label: "並べ替え"
+        top: "人気"
+        new: "新規"
+      load_more_children:
+        other: "他 %{count} 件の返信"
+      collapsed_replies:
+        other: "返信: %{count} 件"
+      collapse: "折りたたむ"
+      no_replies: "まだ返信はありません。"
+      deleted_post_placeholder: "[削除済み]"
+      pinned_reply: "固定"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -3749,6 +3771,9 @@ ja:
         other: "あなたと他 %{count} 人がこの投稿に「いいね！」しました"
       sr_post_like_count_button:
         other: "%{count} 人がこの投稿に「いいね！」しました."
+      likes_popup:
+        title:
+          other: "「いいね！」 %{count}"
       sr_post_read_count_button:
         other: "%{count} 人がこの投稿を読みました。"
       filtered_replies_hint:
@@ -3774,8 +3799,7 @@ ja:
           confirm_delete: "'%{languageCode}' の翻訳を削除してもよろしいですか？"
         success: "翻訳は正しく更新されました"
         post_language_selector:
-          title: "投稿の言語"
-          none: "なし"
+          none: "未設定"
         edit_warning:
           message: "これは翻訳された投稿です。<br><br>元の%{language}の投稿を編集しますか？またはこの特定の翻訳を編集しますか？"
           action_original: "元の投稿を編集する"
@@ -3799,6 +3823,7 @@ ja:
       cancel_composer:
         confirm: "投稿を破棄しますか？"
         discard: "破棄"
+        discard_edit: "変更を破棄"
       via_email: "これはメールで投稿されました"
       via_auto_generated_email: "この投稿は自動生成メール経由で届きました"
       whisper: "この投稿はモデレーターの非公開のささやきです"
@@ -3840,7 +3865,7 @@ ja:
         admin: "投稿の管理者操作"
         admin_action: "管理"
         permanently_delete: "永久に削除"
-        permanently_delete_confirmation: "この投稿を永久に削除してよろしいですか？復元できなくなります。"
+        permanently_delete_confirm_phrase: "永久に削除"
         wiki: "ウィキにする"
         unwiki: "ウィキから削除"
         convert_to_moderator: "スタッフの色を追加"
@@ -3979,6 +4004,7 @@ ja:
       back: "カテゴリに戻る"
       general: "一般"
       settings: "設定"
+      moderation: "モデレーション"
       advanced: "高度"
       show_advanced: "高度な設定"
       topic_template: "テンプレート"
@@ -5216,6 +5242,9 @@ ja:
           staff: "スタッフ"
           all_members: "すべてのメンバー"
           developers: "開発者"
+        impact_types:
+          feature_type: "機能"
+          other_type: "その他"
         filter:
           search_placeholder: "名前、説明、またはプラグインでフィルタ..."
           no_results: "フィルタに一致する次回の変更はありません"
@@ -5244,7 +5273,6 @@ ja:
           header_description: "コミュニティーの目的、運営者、および問題が発生した場合の連絡方法がわかるように、このサイトとチームに関する情報をここに入力します。サイトの<a href='%{basePath}/about'>情報ページ</a>に表示されます。"
         developer:
           title: "開発者"
-          header_description: "レート制限、乗数と計算、セーフモード、およびその他の高度な機能を制御するための開発者設定"
         experimental:
           title: "実験的"
           header_description: "サイトの実験的機能をオンまたはオフに切り替えます。これらのほとんどは、グループ単位で制御できます。"
@@ -5489,6 +5517,13 @@ ja:
             logs:
               title: "ログ"
               header_description: "バックアップ、復元、およびアップロードのログを表示および管理します"
+        problem_checks:
+          priority: "優先度"
+          status: "ステータス"
+          last_run_at: "最終実行"
+          ignore: "無視"
+          more_options:
+            title: "その他のオプション"
         reports:
           title: "レポート"
           header_description: "レポートは、サイトで起きていることを理解するのに役立つ強力なツールです。トレンドの特定、問題の検出、データに基づく決定に役立ちます。"
@@ -5664,11 +5699,10 @@ ja:
         installed_version: "インストール済み"
         latest_version: "最新"
         problems_found: "現在のサイト設定に基づいたアドバイス"
-        dismiss_notice: "閉じる"
+        dismiss_notice: "無視"
         new_features:
           title: "新機能"
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
-          no_new_features_error: "フィードを読み込み中にエラーが発生しました。以前の新機能の発表は <a href='%{url}' target='_blank'>Discover Meta コミュニティー</a>をご覧ください。"
           learn_more: "もっと詳しく..."
         last_checked: "最終チェック"
         refresh_problems: "更新"

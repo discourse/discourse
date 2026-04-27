@@ -147,88 +147,88 @@ pt_BR:
       xaxis: "Positivo (%)"
       yaxis: "Data"
     emotion_admiration:
-      title: "\U0001F929 Admiração"
+      title: "🤩 Admiração"
       description: "Postagens classificadas com o gesto de admiração pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_amusement:
-      title: "\U0001F604 Diversão"
+      title: "😄 Diversão"
       description: "Postagens classificadas com o gesto de diversão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_anger:
-      title: "\U0001F620 Raiva"
+      title: "😠 Raiva"
       description: "Postagens classificadas com o gesto de raiva pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_annoyance:
-      title: "\U0001F612 Aborrecimento"
+      title: "😒 Aborrecimento"
       description: "Postagens classificadas com o gesto de aborrecimento pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_approval:
-      title: "\U0001F44D Aprovação"
+      title: "👍 Aprovação"
       description: "Postagens classificadas com o gesto de aprovação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_caring:
-      title: "\U0001F917 Carinho"
+      title: "🤗 Carinho"
       description: "Postagens classificadas com o gesto de carinho pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_confusion:
-      title: "\U0001F615 Confusão"
+      title: "😕 Confusão"
       description: "Postagens classificadas com o gesto de confusão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_curiosity:
-      title: "\U0001F914 Curiosidade"
+      title: "🤔 Curiosidade"
       description: "Postagens classificadas com o gesto de curiosidade pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_desire:
-      title: "\U0001F60D Desejo"
+      title: "😍 Desejo"
       description: "Postagens classificadas com o gesto de desejo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_disappointment:
-      title: "\U0001F61E Decepção"
+      title: "😞 Decepção"
       description: "Postagens classificadas com o gesto de decepção pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_disapproval:
-      title: "\U0001F44E Desaprovação"
+      title: "👎 Desaprovação"
       description: "Postagens classificadas com o gesto de desaprovação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_disgust:
-      title: "\U0001F922 Repulsa"
+      title: "🤢 Repulsa"
       description: "Postagens classificadas com o gesto de desgosto pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_embarrassment:
-      title: "\U0001F633 Vergonha"
+      title: "😳 Vergonha"
       description: "Postagens classificadas com o gesto de vergonha pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_excitement:
-      title: "\U0001F92A Empolgação"
+      title: "🤪 Empolgação"
       description: "Postagens classificadas com o gesto de empolgação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_fear:
-      title: "\U0001F628 Medo"
+      title: "😨 Medo"
       description: "Postagens classificadas com o gesto de medo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_gratitude:
-      title: "\U0001F64F Gratidão"
+      title: "🙏 Gratidão"
       description: "Postagens classificadas com o gesto de gratidão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_grief:
-      title: "\U0001F622 Pesar"
+      title: "😢 Pesar"
       description: "Postagens classificadas com o gesto de pesar pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_joy:
-      title: "\U0001F60A Alegria"
+      title: "😊 Alegria"
       description: "Postagens classificadas com o gesto de alegria pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_love:
       title: '❤️ Amor'
       description: "Postagens classificadas com o gesto de amor pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_nervousness:
-      title: "\U0001F630 Nervosismo"
+      title: "😰 Nervosismo"
       description: "Postagens classificadas com o gesto de nervosismo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_neutral:
-      title: "\U0001F610 Neutro"
+      title: "😐 Neutro"
       description: "Postagens classificadas com o gesto de neutralidade pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_optimism:
-      title: "\U0001F31F Otimismo"
+      title: "🌟 Otimismo"
       description: "Postagens classificadas com o gesto de otimismo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_pride:
-      title: "\U0001F981 Orgulho"
+      title: "🦁 Orgulho"
       description: "Postagens classificadas com o gesto de orgulho pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_realization:
-      title: "\U0001F4A1 Percepção"
+      title: "💡 Percepção"
       description: "Postagens classificadas com o gesto de percepção pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_relief:
-      title: "\U0001F60C Alívio"
+      title: "😌 Alívio"
       description: "Postagens classificadas com o gesto de alívio pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_remorse:
-      title: "\U0001F614 Remorso"
+      title: "😔 Remorso"
       description: "Postagens classificadas com o gesto de remorso pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_sadness:
-      title: "\U0001F62D Tristeza"
+      title: "😭 Tristeza"
       description: "Postagens classificadas com o gesto de tristeza pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_surprise:
-      title: "\U0001F632 Surpresa"
+      title: "😲 Surpresa"
       description: "Postagens classificadas com o gesto de surpresa pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
   discourse_ai:
     ai_artifact:
@@ -637,13 +637,13 @@ pt_BR:
       reports:
         overall_sentiment: "Opinião geral (Positiva - Negativa)"
         post_emotion:
-          sadness: "Tristeza \U0001F622"
-          surprise: "Surpresa \U0001F631"
-          neutral: "Neutro \U0001F610"
-          fear: "Medo \U0001F628"
-          anger: "Raiva \U0001F621"
-          joy: "Alegria \U0001F600"
-          disgust: "Repulsa \U0001F922"
+          sadness: "Tristeza 😢"
+          surprise: "Surpresa 😱"
+          neutral: "Neutro 😐"
+          fear: "Medo 😨"
+          anger: "Raiva 😡"
+          joy: "Alegria 😀"
+          disgust: "Repulsa 🤢"
         sentiment_analysis:
           positive: "Positivo"
           negative: "Negativo"

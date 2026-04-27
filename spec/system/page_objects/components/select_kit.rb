@@ -115,19 +115,19 @@ module PageObjects
       end
 
       def select_row_by_value(value)
-        expanded_component.find(".select-kit-row[data-value='#{value}']").click
+        with_dom_retry { expanded_component.find(".select-kit-row[data-value='#{value}']").click }
       end
 
       def select_row_by_name(name)
-        expanded_component.find(".select-kit-row[data-name='#{name}']").click
+        with_dom_retry { expanded_component.find(".select-kit-row[data-name='#{name}']").click }
       end
 
       def select_row_by_index(index)
-        expanded_component.find(".select-kit-row[data-index='#{index}']").click
+        with_dom_retry { expanded_component.find(".select-kit-row[data-index='#{index}']").click }
       end
 
       def unselect_by_name(name)
-        expanded_component.find(".selected-choice[data-name='#{name}']").click
+        with_dom_retry { expanded_component.find(".selected-choice[data-name='#{name}']").click }
       end
 
       def clear

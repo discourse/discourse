@@ -133,7 +133,13 @@ sq:
   not_in_group:
     join_group: "Bashkoju grupit"
   reading_time: "Koha e leximit"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} mins 🕑"
   likes: "Pëlqime"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   embed:
     start_discussion: "Fillo Diskutim"
     continue: "Vazhdo Diskutimin"

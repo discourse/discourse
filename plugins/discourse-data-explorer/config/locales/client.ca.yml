@@ -24,6 +24,7 @@ ca:
       description_placeholder: "Introduïu una descripció aquí"
       ai:
         generate: "Genera"
+        optional: "opcional"
       import:
         label: "Importa"
       help:

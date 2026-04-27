@@ -7,7 +7,7 @@ class SiteSetting::Update
 
   options do
     attribute :allow_changing_hidden, :array, default: []
-    attribute :overridden_setting_names, default: {}
+    attribute :overridden_setting_names, default: -> { {} }
   end
 
   policy :current_user_is_admin

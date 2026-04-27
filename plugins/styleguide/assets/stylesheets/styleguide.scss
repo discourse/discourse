@@ -279,3 +279,9 @@
     z-index: 0;
   }
 }
+
+.more-topics-examples {
+  .more-topics__container {
+    flex-grow: 1;
+  }
+}

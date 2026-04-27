@@ -81,5 +81,11 @@
       background: transparent;
       color: var(--primary);
     }
+
+    &.is-disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      pointer-events: none;
+    }
   }
 }

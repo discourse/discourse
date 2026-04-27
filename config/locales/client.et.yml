@@ -1507,6 +1507,7 @@ et:
       upload_description: "sisesta üleslaaditu kirjeldus siia"
       list_item: "Loendi element"
       wrap_modal:
+        attribute_value: "Väärtus"
         apply: "Rakenda"
       help: "Markdowni redigeerimisspikker"
       modal_ok: "Sobib"
@@ -1719,6 +1720,22 @@ et:
         name: "Asenda sildid"
       delete_topics:
         name: "Kustuta"
+      convert_to_private_message:
+        name: "Loo isiklik sõnum"
+    nested_replies:
+      sort:
+        label: "Järjesta"
+        top: "Juhtivad"
+        new: "Uus"
+      load_more_children:
+        one: "veel %{count} vastus"
+        other: "veel %{count} vastust"
+      collapsed_replies:
+        one: "%{count} vastus"
+        other: "%{count} vastust"
+      collapse: "Ahenda"
+      no_replies: "Veel ei ole vastuseid."
+      pinned_reply: "Esiletõstetud"
     topic:
       filter_to:
         one: "%{count} postitus teemas"
@@ -2070,8 +2087,6 @@ et:
           actions: "Tegevused"
           edit: "Muuda"
           delete: "Kustuta"
-        post_language_selector:
-          none: "Pole"
       errors:
         create: "Vabandame, postituse loomisel tekkis viga. Palun proovi uuesti."
         edit: "Vabandame, postituse redigeerimisel tekkis viga. Palun proovi uuesti."
@@ -2185,6 +2200,7 @@ et:
       back: "Tagasi kategooriasse"
       general: "Üldine"
       settings: "Sätted"
+      moderation: "Modereerimine"
       tags: "Sildid"
       localization:
         name: "Nimi"
@@ -2749,6 +2765,8 @@ et:
           admins: "Adminnid"
           moderators: "Moderaatorid"
           staff: "Meeskond"
+        impact_types:
+          other_type: "Muu"
         filter:
           all: "Kõik"
           enabled: "Sisse lülitatud"
@@ -2812,6 +2830,9 @@ et:
           sub_pages:
             logs:
               title: "Logid"
+        problem_checks:
+          status: "Staatus"
+          ignore: "Ignoreeri"
         reports:
           sub_pages:
             settings:

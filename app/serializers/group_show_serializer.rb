@@ -150,10 +150,10 @@ class GroupShowSerializer < BasicGroupSerializer
       GroupTagNotificationDefault
         .where(group_id: object.id)
         .joins(:tag)
-        .pluck(:notification_level, :name)
-        .inject({}) do |h, arr|
-          h[arr[0]] ||= []
-          h[arr[0]] << arr[1]
+        .pluck(:notification_level, "tags.id", "tags.name", "tags.slug")
+        .inject({}) do |h, (level, id, name, slug)|
+          h[level] ||= []
+          h[level] << { id:, name:, slug: }
           h
         end
   end

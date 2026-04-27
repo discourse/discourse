@@ -8,8 +8,8 @@ import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import processNode from "../lib/process-node";
-import NestedPost from "./nested-post";
+import processNode from "../../lib/process-node";
+import NestedPost from "./post";
 
 export default class NestedPostChildren extends Component {
   @service appEvents;

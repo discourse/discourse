@@ -1,8 +1,14 @@
+@use "lib/viewport";
+
 .form-kit__container {
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
   align-items: flex-start;
+
+  @include viewport.until(sm) {
+    width: 100%;
+  }
 
   &.--column {
     .form-kit__container-content {
@@ -44,11 +50,53 @@
     flex-direction: row;
     align-items: flex-start;
     max-width: 100%;
+    width: var(--form-kit-medium-input);
 
-    &.--small {
-      width: var(--form-kit-small-input) !important;
+    @include viewport.until(sm) {
+      width: 100%;
+    }
+  }
+}
+
+.form-kit__container-title,
+.form-kit__container-description,
+.form-kit__container-content {
+  .--small & {
+    width: var(--form-kit-small-input);
+  }
+
+  @include viewport.from(sm) {
+    .--medium & {
+      width: var(--form-kit-medium-input);
     }
 
+    .--large & {
+      width: var(--form-kit-large-input);
+    }
+
+    .--max & {
+      max-width: var(--form-kit-max-input);
+      width: 100%;
+    }
+
+    .--full & {
+      width: 100%;
+      min-width: var(--form-kit-small-input);
+    }
+  }
+}
+
+// Override: child has its own modifier from @titleFormat / @descriptionFormat.
+// Lives in a separate block AFTER the cascade so on equal specificity, source
+// order makes the explicit override win. Yes, this one sucks a bit. I know.
+.form-kit__container-title,
+.form-kit__container-description,
+.form-kit__container-content {
+  &.--small {
+    width: var(--form-kit-small-input);
+  }
+
+  @include viewport.from(sm) {
     &.--medium {
       width: var(--form-kit-medium-input);
     }
@@ -63,7 +111,8 @@
     }
 
     &.--full {
-      width: 100% !important;
+      width: 100%;
+      min-width: var(--form-kit-small-input);
     }
   }
 }

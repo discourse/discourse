@@ -12,6 +12,7 @@ hr:
       create: "Stvorite"
       ai:
         generate: "Generiraj"
+        optional: "neobvezno"
       help:
         label: "Pomoć"
       schema:

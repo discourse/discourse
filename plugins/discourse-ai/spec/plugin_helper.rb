@@ -20,4 +20,7 @@ module DiscourseAi::ChatBotHelper
   end
 end
 
-RSpec.configure { |config| config.include DiscourseAi::ChatBotHelper }
+RSpec.configure do |config|
+  config.include DiscourseAi::ChatBotHelper
+  config.before { AiAgent.agent_cache.flush! }
+end

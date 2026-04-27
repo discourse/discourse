@@ -872,6 +872,11 @@ RSpec.configure do |config|
 
     BlockRequestsMiddleware.current_example_location = example.location
 
+    # Suppress the "Before you post, please select a category or tag" education
+    # popup — it intercepts pointer events and makes system specs flaky when
+    # they click things in the composer.
+    SiteSetting.educate_until_posts = 0
+
     if example.metadata[:video]
       Capybara.current_session.driver.on_save_screenrecord do |video|
         saved_path =

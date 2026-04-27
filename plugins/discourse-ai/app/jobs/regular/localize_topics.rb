@@ -6,8 +6,8 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      limit = args[:limit]
-      raise Discourse::InvalidParameters.new(:limit) if limit.blank? || limit <= 0
+      pairs = args[:pairs]
+      raise Discourse::InvalidParameters.new(:pairs) if pairs.blank?
 
       return if !DiscourseAi::Translation.backfill_enabled?
 
@@ -24,63 +24,34 @@ module Jobs
         find_llm_model_for_agent(SiteSetting.ai_translation_post_raw_translator_agent)
       return if topic_title_llm_model.blank? && post_raw_llm_model.blank?
 
-      locales = DiscourseAi::Translation.locales
-      return if locales.blank?
+      topic_ids = pairs.map(&:first).uniq
+      topics_by_id = Topic.where(id: topic_ids).index_by(&:id)
 
-      locale_pairs = locales.map { |l| [l.split("_").first, l] }
+      translated = 0
+      pairs.each do |topic_id, target_locale|
+        topic = topics_by_id[topic_id]
+        next if topic.nil?
 
-      topics =
-        DiscourseAi::Translation::TopicCandidates
-          .get
-          .where.not(locale: nil)
-          .order(updated_at: :desc)
-          .limit(limit)
-
-      return if topics.empty?
-
-      existing =
-        TopicLocalization
-          .where(topic_id: topics.map(&:id))
-          .pluck(:topic_id, :locale)
-          .group_by(&:first)
-
-      existing_base_locales =
-        existing.transform_values { |pairs| pairs.map { |_, loc| loc.split("_").first }.to_set }
-
-      budget = limit
-      translated_counts = Hash.new(0)
-
-      topics.each do |topic|
-        break if budget <= 0
-        topic_base = topic.locale.split("_").first
-
-        locale_pairs.each do |base_locale, target_locale|
-          break if budget <= 0
-          next if topic_base == base_locale
-          next if existing_base_locales.dig(topic.id)&.include?(base_locale)
-
-          begin
-            DiscourseAi::Translation::TopicLocalizer.localize(
-              topic,
-              target_locale,
-              topic_title_llm_model:,
-              post_raw_llm_model:,
-            )
-            translated_counts[target_locale] += 1
-            budget -= 1
-          rescue FinalDestination::SSRFDetector::LookupFailedError
-            # do nothing, there are too many sporadic lookup failures
-          rescue => e
-            DiscourseAi::Translation::VerboseLogger.log(
-              "Failed to translate topic #{topic.id} to #{target_locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-            )
-          end
+        begin
+          DiscourseAi::Translation::TopicLocalizer.localize(
+            topic,
+            target_locale,
+            topic_title_llm_model:,
+            post_raw_llm_model:,
+          )
+          translated += 1
+        rescue FinalDestination::SSRFDetector::LookupFailedError
+          # do nothing, there are too many sporadic lookup failures
+        rescue => e
+          DiscourseAi::Translation::VerboseLogger.log(
+            "Failed to translate topic #{topic.id} to #{target_locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+          )
         end
       end
 
-      translated_counts.each do |target_locale, count|
+      if translated > 0
         DiscourseAi::Translation::VerboseLogger.log(
-          "Translated #{count} topics to #{target_locale}",
+          "Translated #{translated}/#{pairs.size} topic localizations: #{pairs.map { |id, loc| "#{id}:#{loc}" }.join(", ")}",
         )
       end
     end

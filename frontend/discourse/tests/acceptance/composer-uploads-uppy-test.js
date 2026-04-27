@@ -8,7 +8,7 @@ import {
   visit,
   waitFor,
 } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import { Promise } from "rsvp";
 import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -433,7 +433,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
-  skip("should place cursor properly after inserting a placeholder", async function (assert) {
+  test("places cursor properly after inserting a placeholder", async function (assert) {
     const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
@@ -444,12 +444,13 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     input.selectionStart = 10;
     input.selectionEnd = 10;
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       // after uploading we have this in the textarea:
       // "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\ntext after image"
       // cursor should be just before "text after image":
-      assert.strictEqual(input.selectionStart, 76);
-      assert.strictEqual(input.selectionEnd, 76);
+      assert.dom(".d-editor-input").hasProperty("selectionStart", 76);
+      assert.dom(".d-editor-input").hasProperty("selectionEnd", 76);
       done();
     });
 

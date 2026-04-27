@@ -158,88 +158,88 @@ tr_TR:
       xaxis: "Pozitif(%)"
       yaxis: "Tarih"
     emotion_admiration:
-      title: "\U0001F929 Hayranlık"
+      title: "🤩 Hayranlık"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla hayranlık duygusu ile sınıflandırılan gönderiler."
     emotion_amusement:
-      title: "\U0001F604 Eğlenme"
+      title: "😄 Eğlenme"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla eğlenme duygusu ile sınıflandırılan gönderiler."
     emotion_anger:
-      title: "\U0001F620 Öfke"
+      title: "😠 Öfke"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla öfke duygusu ile sınıflandırılan gönderiler."
     emotion_annoyance:
-      title: "\U0001F612 Rahatsız olma"
+      title: "😒 Rahatsız olma"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla rahatsız olma duygusu ile sınıflandırılan gönderiler."
     emotion_approval:
-      title: "\U0001F44D Onaylama"
+      title: "👍 Onaylama"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla onaylama duygusu ile sınıflandırılan gönderiler."
     emotion_caring:
-      title: "\U0001F917 Önemseme"
+      title: "🤗 Önemseme"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla önemseme duygusu ile sınıflandırılan gönderiler."
     emotion_confusion:
-      title: "\U0001F615 Kafa karışıklığı"
+      title: "😕 Kafa karışıklığı"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla kafa karışıklığı duygusu ile sınıflandırılan gönderiler."
     emotion_curiosity:
-      title: "\U0001F914 Merak"
+      title: "🤔 Merak"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla merak duygusu ile sınıflandırılan gönderiler."
     emotion_desire:
-      title: "\U0001F60D Arzu"
+      title: "😍 Arzu"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla arzu duygusu ile sınıflandırılan gönderiler."
     emotion_disappointment:
-      title: "\U0001F61E Hayal kırıklığı"
+      title: "😞 Hayal kırıklığı"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla hayal kırıklığı duygusu ile sınıflandırılan gönderiler."
     emotion_disapproval:
-      title: "\U0001F44E Onaylamama"
+      title: "👎 Onaylamama"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla onaylamama duygusu ile sınıflandırılan gönderiler."
     emotion_disgust:
-      title: "\U0001F922 İğrenme"
+      title: "🤢 İğrenme"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla iğrenme duygusu ile sınıflandırılan gönderiler."
     emotion_embarrassment:
-      title: "\U0001F633 Utanma"
+      title: "😳 Utanma"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla utanma duygusu ile sınıflandırılan gönderiler."
     emotion_excitement:
-      title: "\U0001F92A Heyecan"
+      title: "🤪 Heyecan"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla heyecan duygusu ile sınıflandırılan gönderiler."
     emotion_fear:
-      title: "\U0001F628 Korku"
+      title: "😨 Korku"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla korku duygusu ile sınıflandırılan gönderiler."
     emotion_gratitude:
-      title: "\U0001F64F Minnettarlık"
+      title: "🙏 Minnettarlık"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla minnettarlık duygusu ile sınıflandırılan gönderiler."
     emotion_grief:
-      title: "\U0001F622 Keder"
+      title: "😢 Keder"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla keder duygusu ile sınıflandırılan gönderiler."
     emotion_joy:
-      title: "\U0001F60A Neşe"
+      title: "😊 Neşe"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla neşe duygusu ile sınıflandırılan gönderiler."
     emotion_love:
       title: '❤️ Sevgi'
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla sevgi duygusu ile sınıflandırılan gönderiler."
     emotion_nervousness:
-      title: "\U0001F630 Gerginlik"
+      title: "😰 Gerginlik"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla gerginlik duygusu ile sınıflandırılan gönderiler."
     emotion_neutral:
-      title: "\U0001F610 Nötr"
+      title: "😐 Nötr"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla nötr duygusu ile sınıflandırılan gönderiler."
     emotion_optimism:
-      title: "\U0001F31F İyimserlik"
+      title: "🌟 İyimserlik"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla iyimserlik duygusu ile sınıflandırılan gönderiler."
     emotion_pride:
-      title: "\U0001F981 Gurur"
+      title: "🦁 Gurur"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla gurur duygusu ile sınıflandırılan gönderiler."
     emotion_realization:
-      title: "\U0001F4A1 Farkına varma"
+      title: "💡 Farkına varma"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla farkına varma duygusu ile sınıflandırılan gönderiler."
     emotion_relief:
-      title: "\U0001F60C Rahatlama"
+      title: "😌 Rahatlama"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla rahatlama duygusu ile sınıflandırılan gönderiler."
     emotion_remorse:
-      title: "\U0001F614 Pişmanlık"
+      title: "😔 Pişmanlık"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla pişmanlık duygusu ile sınıflandırılan gönderiler."
     emotion_sadness:
-      title: "\U0001F62D Üzüntü"
+      title: "😭 Üzüntü"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla üzüntü duygusu ile sınıflandırılan gönderiler."
     emotion_surprise:
-      title: "\U0001F632 Şaşırma"
+      title: "😲 Şaşırma"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla şaşırma duygusu ile sınıflandırılan gönderiler."
   discourse_ai:
     ai_artifact:
@@ -831,13 +831,13 @@ tr_TR:
       reports:
         overall_sentiment: "Genel duygu (Olumlu - Olumsuz)"
         post_emotion:
-          sadness: "Üzüntü \U0001F622"
-          surprise: "Şaşırma \U0001F631"
-          neutral: "Nötr \U0001F610"
-          fear: "Korku \U0001F628"
-          anger: "Öfke \U0001F621"
-          joy: "Neşe \U0001F600"
-          disgust: "İğrenme \U0001F922"
+          sadness: "Üzüntü 😢"
+          surprise: "Şaşırma 😱"
+          neutral: "Nötr 😐"
+          fear: "Korku 😨"
+          anger: "Öfke 😡"
+          joy: "Neşe 😀"
+          disgust: "İğrenme 🤢"
         sentiment_analysis:
           positive: "Pozitif"
           negative: "Negatif"

@@ -579,6 +579,14 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".clear_caches!" do
+    it "clears the latest new feature created_at cache" do
+      Discourse.redis.set("latest_new_feature_created_at", Time.zone.now.iso8601)
+      described_class.clear_caches!
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_nil
+    end
+  end
+
   describe ".enabled_for_user?" do
     context "for logged-in user" do
       fab!(:user)

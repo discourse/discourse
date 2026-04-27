@@ -9,6 +9,7 @@ es:
   site_settings:
     solved_enabled: "Activar el complemento de solución, que permite a los usuarios seleccionar soluciones para temas"
     allow_solved_on_all_topics: "Permitir que los usuarios seleccionen soluciones en todos los temas (si no lo marcas, puedes activarlo individualmente por categoría o etiqueta)"
+    allow_solved_in_groups: "Permitir marcar soluciones en los mensajes grupales para estos grupos."
     accept_all_solutions_trust_level: "Nivel de confianza mínimo requerido para aceptar soluciones en cualquier tema (incluso cuando no sea el publicador original)"
     accept_all_solutions_allowed_groups: "Grupos que pueden aceptar soluciones sobre cualquier tema (aunque no sean PO). Los administradores y moderadores siempre están autorizados."
     empty_box_on_unsolved: "Mostrar un cuadro vacío junto a los temas sin solución"
@@ -27,6 +28,7 @@ es:
   reports:
     accepted_solutions:
       title: "Soluciones aceptadas"
+      description: "¿Cuántos temas tuvieron una solución aceptada por día en un rango de fechas, con filtro de categoría opcional y un total de comparación de 30 días?"
       xaxis: "Día"
       yaxis: "Total"
   solved:

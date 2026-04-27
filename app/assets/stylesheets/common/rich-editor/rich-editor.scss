@@ -342,6 +342,7 @@
 
     &.--active {
       background: var(--d-selected);
+      color: var(--d-selected-text-color);
     }
   }
 

@@ -1795,6 +1795,16 @@ id:
         name: "Hapus"
       defer:
         name: "Tandai Belum Dibaca"
+    nested_replies:
+      sort:
+        new: "Baru"
+      load_more_children:
+        other: "%{count} jawaban lainnya"
+      collapsed_replies:
+        other: "%{count} balasan"
+      collapse: "Persempit"
+      no_replies: "Belum ada balasan"
+      deleted_post_placeholder: "[dihapus]"
     topic:
       create: "Topik Baru"
       archive_message:
@@ -1905,13 +1915,14 @@ id:
       has_replies:
         other: "%{count} Balasan"
       has_replies_count: "%{count}"
+      likes_popup:
+        title:
+          other: "%{count} suka"
       localizations:
         table:
           actions: "Aksi"
           edit: "Ubah"
           delete: "Hapus"
-        post_language_selector:
-          none: "Tidak ada"
       errors:
         upload: "Maaf, terjadi kesalahan saat mengunggah %{file_name}. Silakan coba lagi."
         backup_too_large: "Maaf, file cadangan terlalu besar."
@@ -2344,6 +2355,8 @@ id:
         impact_roles:
           moderators: "Moderator"
           staff: "Staf"
+        impact_types:
+          other_type: "Lainnya"
         filter:
           all: "Semua"
           enabled: "Diaktifkan"
@@ -2386,6 +2399,9 @@ id:
           sub_pages:
             logs:
               title: "Log"
+        problem_checks:
+          status: "Status"
+          ignore: "Abaikan"
         reports:
           sub_pages:
             settings:
@@ -2406,7 +2422,7 @@ id:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
         latest_version: "Terbaru"
-        dismiss_notice: "Bubar"
+        dismiss_notice: "Abaikan"
         last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"
         moderators: "Moderator:"

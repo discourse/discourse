@@ -12,6 +12,7 @@ fa_IR:
       create: "ایجاد"
       ai:
         generate: "تولید کردن"
+        optional: "اختیاری"
       import:
         label: "ورود داده‌ها"
       help:

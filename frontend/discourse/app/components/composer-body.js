@@ -24,6 +24,7 @@ import Composer from "discourse/models/composer";
   "currentUserPrimaryGroupClass"
 )
 export default class ComposerBody extends Component {
+  @service appEvents;
   @service capabilities;
 
   elementId = "reply-control";
@@ -72,6 +73,13 @@ export default class ComposerBody extends Component {
     });
   }
 
+  @observes("composeState")
+  _onComposerOpen() {
+    if (this.composeState === Composer.OPEN) {
+      this.appEvents.trigger("composer:opened");
+    }
+  }
+
   composerResized() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -83,17 +91,15 @@ export default class ComposerBody extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    const triggerOpen = () => {
-      if (this.get("composer.composeState") === Composer.OPEN) {
-        this.appEvents.trigger("composer:opened");
-      }
-    };
-    triggerOpen();
+    if (this.composeState === Composer.OPEN) {
+      this.appEvents.trigger("composer:opened");
+    }
 
     this.element.addEventListener("transitionend", (event) => {
-      if (event.propertyName === "height") {
-        triggerOpen();
-      } else if (event.propertyName === "max-width") {
+      if (
+        event.propertyName === "height" ||
+        event.propertyName === "max-width"
+      ) {
         this.composerResized();
       }
     });

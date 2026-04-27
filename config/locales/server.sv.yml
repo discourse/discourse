@@ -326,7 +326,13 @@ sv:
   deleted_topic: "Hoppsan! Detta ämne har tagits bort och är inte längre tillgängligt."
   delete_topic_failed: "Det uppstod ett fel när det ämnet skulle tas bort. Kontakta webbplatsens administratör."
   reading_time: "Lästid"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} min 🕑"
   likes: "Gillningar"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Hoppsan! Du har redan utfört den här åtgärden. Kan du försöka uppdatera sidan?"
   too_many_replies:
     one: "Tyvärr är nya användare tillfälligt begränsade till %{count} svar i samma ämne."
@@ -655,7 +661,6 @@ sv:
       one: "%{count} gillning"
       other: "%{count} gillningar"
     cannot_permanently_delete:
-      many_posts: "Det här ämnet har återskapade inlägg. Radera dem permanent innan du raderar ämnet permanent."
       wait_or_different_admin: "Du måste vänta %{time_left} innan du tar bort detta inlägg permanent eller så måste en annan administratör göra det."
   rate_limiter:
     slow_down: "Du har utfört den här åtgärden för många gånger, försök igen senare."
@@ -2020,7 +2025,6 @@ sv:
     share_quote_visibility: "Avgör när du ska visa citatdelningsknappar: aldrig, endast till anonyma användare eller för alla användare. "
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
-    use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
     default_navigation_menu_categories: "Valda kategorier visas som standard under navigeringsmenyns sektion Kategorier."
@@ -2212,7 +2216,6 @@ sv:
     not_available: "Inte tillgänglig. Testa %{suggestion}?"
     something_already_taken: "Något gick fel. Kanske har användarnamnet eller e-postadressen redan registrerats. Testa Glömt lösenord-länken."
     omniauth_error_unknown: "Något gick fel med din inloggning, vi ber dig försöka igen."
-    omniauth_confirm_title: "Logga in genom %{provider}"
     omniauth_confirm_button: "Fortsätt"
     authenticator_error_no_valid_email: "Det tillåts inga e-postadresser som är kopplade till %{account}. Du kan behöva konfigurera ditt konto med en annan e-postadress."
     new_registrations_disabled: "Nya kontoregistreringar är för närvarande inte tillåtna."
@@ -3976,7 +3979,6 @@ sv:
       restricted_to:
         one: '"%{tag_name}" är begränsad till kategorin %{category_names}'
         other: '"%{tag_name}" är begränsad till följande kategorier: %{category_names}'
-      synonym: 'Synonymer tillåts inte. Använd "%{tag_name}" istället.'
       has_synonyms: '"%{tag_name}" kan inte användas eftersom den har synonymer.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Taggen "%{tags}" kan inte användas i kategorin "%{category}". Ta bort den.'

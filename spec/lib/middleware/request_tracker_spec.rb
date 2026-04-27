@@ -863,7 +863,7 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     it "skips beacon page view when the remote IP resolves to a crawler ASN" do
-      DiscourseIpInfo.stubs(:get).returns({ asn: CrawlerDetection::CRAWLER_ASNS.first })
+      DiscourseIpInfo.stubs(:get).returns({ asn: SiteSetting.crawler_asns_map.first.to_i })
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
       middleware.call(beacon_env({}, { "action_dispatch.remote_ip" => "1.2.3.4" }))
       CachedCounting.flush

@@ -164,7 +164,7 @@ RSpec.describe CrawlerDetection do
       expect(CrawlerDetection.crawler_ip?("")).to eq(false)
     end
 
-    it "returns false when the resolved ASN is not in CRAWLER_ASNS" do
+    it "returns false when the resolved ASN is not in crawler_asns site setting" do
       DiscourseIpInfo.stubs(:get).with("1.2.3.4").returns({ asn: 1 })
       expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(false)
     end
@@ -174,11 +174,11 @@ RSpec.describe CrawlerDetection do
       expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(false)
     end
 
-    it "returns true when the resolved ASN is in CRAWLER_ASNS" do
+    it "returns true when the resolved ASN is in crawler_asns site setting" do
       DiscourseIpInfo
         .stubs(:get)
         .with("1.2.3.4")
-        .returns({ asn: CrawlerDetection::CRAWLER_ASNS.first })
+        .returns({ asn: SiteSetting.crawler_asns_map.first.to_i })
       expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(true)
     end
   end

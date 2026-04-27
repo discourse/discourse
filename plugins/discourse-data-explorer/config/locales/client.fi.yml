@@ -25,6 +25,7 @@ fi:
       description_placeholder: "Kirjoita kuvaus tähän"
       ai:
         generate: "Luo"
+        optional: "valinnainen"
       import:
         label: "Tuo"
         unparseable_json: "JSON-tiedosto ei ole jäsennettävissä."

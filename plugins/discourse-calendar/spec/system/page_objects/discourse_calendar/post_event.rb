@@ -7,12 +7,16 @@ module PageObjects
         TRIGGER_MENU_SELECTOR = ".discourse-post-event-more-menu-trigger"
 
         def open_more_menu
-          find(TRIGGER_MENU_SELECTOR).click
+          # post-event component re-renders on a post re-cook and message_bus
+          # events, so we need to retry on stale refs (hence `synchronize`)
+          page.document.synchronize { find("#{TRIGGER_MENU_SELECTOR}:not(.--saving)").click }
+
+          has_css?(".discourse-post-event-more-menu-content")
           self
         end
 
         def going
-          find(".going-button").click
+          page.document.synchronize { find(".going-button").click }
           self
         end
 

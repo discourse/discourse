@@ -68,8 +68,6 @@ describe "glimmer topic list" do
   end
 
   describe "topic highlighting" do
-    # TODO: Those require `Capybara.disable_animation = false`
-
     it "highlights newly received topics" do
       Fabricate(:read_topic, current_user: user)
 
