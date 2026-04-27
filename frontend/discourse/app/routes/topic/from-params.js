@@ -1,4 +1,5 @@
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -18,6 +19,16 @@ export default class TopicFromParams extends DiscourseRoute {
   model(params, transition) {
     params = params || {};
     params.track_visit = true;
+
+    // If the parent topic route is restoring from cache, the PostStream
+    // is already populated — skip the server fetch.
+    const topicRoute = getOwner(this).lookup("route:topic");
+    if (topicRoute._restoringFromCache) {
+      const cached = topicRoute._restoringFromCache;
+      params.nearPost = cached.currentPost;
+      params._fromCache = true;
+      return params;
+    }
 
     const topic = this.modelFor("topic");
 
@@ -96,6 +107,32 @@ export default class TopicFromParams extends DiscourseRoute {
 
     const topicController = this.controllerFor("topic");
     const topic = this.modelFor("topic");
+
+    // Restore from cache: skip post loading, restore scroll position
+    const topicRoute = getOwner(this).lookup("route:topic");
+    if (params._fromCache && topicRoute._restoringFromCache) {
+      const cached = topicRoute._restoringFromCache;
+      topicRoute._restoringFromCache = null;
+
+      topicController.setProperties({
+        "model.currentPost": cached.currentPost,
+        enteredIndex: cached.enteredIndex,
+        enteredAt: Date.now().toString(),
+        userLastReadPostNumber: cached.userLastReadPostNumber,
+        highestPostNumber: cached.highestPostNumber,
+      });
+
+      this.appEvents.trigger("page:topic-loaded", topic);
+      topicController.subscribe();
+
+      if (cached.scrollAnchor) {
+        schedule("afterRender", () =>
+          DiscourseURL.jumpToPost(cached.scrollAnchor.postNumber)
+        );
+      }
+      return;
+    }
+
     const postStream = topic.postStream;
 
     // TODO we are seeing errors where closest post is null and this is exploding

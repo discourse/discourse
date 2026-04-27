@@ -18,7 +18,7 @@ export default class NestedController extends Controller {
   @service dialog;
   @service currentUser;
   @service messageBus;
-  @service nestedViewCache;
+  @service routeViewCache;
   @service router;
 
   @tracked topic;
@@ -125,7 +125,7 @@ export default class NestedController extends Controller {
 
   @action
   viewFullThread() {
-    this.nestedViewCache.useNextTransition();
+    this.routeViewCache.useNextTransition();
     this.router.transitionTo("nested", this.topic.slug, this.topic.id, {
       queryParams: { sort: this.sort, context: null },
     });
