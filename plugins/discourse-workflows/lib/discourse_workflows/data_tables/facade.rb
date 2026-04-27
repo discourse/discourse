@@ -348,8 +348,10 @@ module DiscourseWorkflows
       end
 
       def with_lock_timeout
-        connection.execute("SET LOCAL lock_timeout = '#{LOCK_TIMEOUT_MS}ms'")
-        yield
+        connection.transaction do
+          connection.execute("SET LOCAL lock_timeout = '#{LOCK_TIMEOUT_MS}ms'")
+          yield
+        end
       rescue PG::LockNotAvailable
         raise
       end

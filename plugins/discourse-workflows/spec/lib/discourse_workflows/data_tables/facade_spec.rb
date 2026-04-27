@@ -630,6 +630,19 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     end
   end
 
+  describe "lock timeout" do
+    it "wraps the block in a transaction so SET LOCAL lock_timeout takes effect" do
+      initial_open_transactions = ActiveRecord::Base.connection.open_transactions
+      observed_open_transactions = nil
+
+      facade.send(:with_lock_timeout) do
+        observed_open_transactions = ActiveRecord::Base.connection.open_transactions
+      end
+
+      expect(observed_open_transactions).to eq(initial_open_transactions + 1)
+    end
+  end
+
   describe "#add_column!" do
     it "adds a column to the storage table" do
       facade.add_column!("notes", "string")
