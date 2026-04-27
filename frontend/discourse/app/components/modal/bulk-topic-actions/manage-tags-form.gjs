@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
@@ -8,8 +7,6 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ManageTagsForm extends Component {
-  @tracked submitAttempted = false;
-
   formApi;
 
   initialData = {
@@ -32,15 +29,13 @@ export default class ManageTagsForm extends Component {
 
   @action
   triggerSubmit() {
-    this.submitAttempted = true;
-    this.#refreshDisabled();
     this.formApi?.submit();
   }
 
   @action
   afterFieldSet(value, { set, name }) {
     set(name, value);
-    this.#refreshDisabled();
+    this.args.setSubmitDisabled?.(this.#isEmpty());
   }
 
   @action
@@ -48,47 +43,21 @@ export default class ManageTagsForm extends Component {
     collection.remove(index);
     // `collection.remove` doesn't re-key row errors, so drop them all.
     this.formApi.removeErrors();
-    this.#refreshDisabled();
+    this.args.setSubmitDisabled?.(this.#isEmpty());
   }
 
-  #refreshDisabled() {
-    this.args.setSubmitDisabled?.(!this.#canSubmit());
-  }
-
-  #canSubmit() {
-    if (!this.#hasAction()) {
-      return false;
-    }
-    if (this.submitAttempted && this.#hasInvalidRows()) {
-      return false;
-    }
-    return true;
-  }
-
-  #hasAction() {
+  #isEmpty() {
     const removeAll = this.formApi.get("remove_all_tags") ?? false;
     const removeTags = this.formApi.get("remove_tags") ?? [];
     const addTags = this.formApi.get("add_tags") ?? [];
     const rows = this.formApi.get("replace_rows") ?? [];
 
     return (
-      removeAll ||
-      addTags.length > 0 ||
-      (!removeAll && removeTags.length > 0) ||
-      rows.some((row) => this.#replaceRowStatus(row) !== "empty")
+      !removeAll &&
+      addTags.length === 0 &&
+      removeTags.length === 0 &&
+      rows.every((row) => this.#replaceRowStatus(row) === "empty")
     );
-  }
-
-  #hasInvalidRows() {
-    const rows = this.formApi.get("replace_rows") ?? [];
-    return rows.some((row) => {
-      const status = this.#replaceRowStatus(row);
-      return (
-        status === "missing-from" ||
-        status === "missing-to" ||
-        status === "same-tag"
-      );
-    });
   }
 
   @action
