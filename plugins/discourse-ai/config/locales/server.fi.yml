@@ -104,88 +104,88 @@ fi:
       xaxis: "Positiivinen (%)"
       yaxis: "Päivämäärä"
     emotion_admiration:
-      title: "\U0001F929 Ihailu"
+      title: "🤩 Ihailu"
       description: "Viestit, jotka on luokiteltu ihailun tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_amusement:
-      title: "\U0001F604 Huvittuneisuus"
+      title: "😄 Huvittuneisuus"
       description: "Viestit, jotka on luokiteltu huvittuneisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_anger:
-      title: "\U0001F620 Viha"
+      title: "😠 Viha"
       description: "Viestit, jotka on luokiteltu vihan tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_annoyance:
-      title: "\U0001F612 Ärsytys"
+      title: "😒 Ärsytys"
       description: "Viestit, jotka on luokiteltu ärsytyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_approval:
-      title: "\U0001F44D Hyväksyntä"
+      title: "👍 Hyväksyntä"
       description: "Viestit, jotka on luokiteltu hyväksynnän tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_caring:
-      title: "\U0001F917 Välittäminen"
+      title: "🤗 Välittäminen"
       description: "Viestit, jotka on luokiteltu välittämisen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_confusion:
-      title: "\U0001F615 Hämmennys"
+      title: "😕 Hämmennys"
       description: "Viestit, jotka on luokiteltu hämmennyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_curiosity:
-      title: "\U0001F914 Uteliaisuus"
+      title: "🤔 Uteliaisuus"
       description: "Viestit, jotka on luokiteltu uteliaisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_desire:
-      title: "\U0001F60D Halu"
+      title: "😍 Halu"
       description: "Viestit, jotka on luokiteltu halun tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_disappointment:
-      title: "\U0001F61E Pettymys"
+      title: "😞 Pettymys"
       description: "Viestit, jotka on luokiteltu pettymyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_disapproval:
-      title: "\U0001F44E Paheksunta"
+      title: "👎 Paheksunta"
       description: "Viestit, jotka on luokiteltu paheksunnan tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_disgust:
-      title: "\U0001F922 Inho"
+      title: "🤢 Inho"
       description: "Viestit, jotka on luokiteltu inhon tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_embarrassment:
-      title: "\U0001F633 Häpeä"
+      title: "😳 Häpeä"
       description: "Viestit, jotka on luokiteltu häpeän tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_excitement:
-      title: "\U0001F92A Innostus"
+      title: "🤪 Innostus"
       description: "Viestit, jotka on luokiteltu innostuksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_fear:
-      title: "\U0001F628 Pelko"
+      title: "😨 Pelko"
       description: "Viestit, jotka on luokiteltu pelon tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_gratitude:
-      title: "\U0001F64F Kiitollisuus"
+      title: "🙏 Kiitollisuus"
       description: "Viestit, jotka on luokiteltu kiitollisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_grief:
-      title: "\U0001F622 Murheellisuus"
+      title: "😢 Murheellisuus"
       description: "Viestit, jotka on luokiteltu murheellisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_joy:
-      title: "\U0001F60A Ilo"
+      title: "😊 Ilo"
       description: "Viestit, jotka on luokiteltu ilon tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_love:
       title: '❤️ Rakkaus'
       description: "Viestit, jotka on luokiteltu rakkauden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_nervousness:
-      title: "\U0001F630 Hermostuneisuus"
+      title: "😰 Hermostuneisuus"
       description: "Viestit, jotka on luokiteltu hermostuneisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_neutral:
-      title: "\U0001F610 Neutraali"
+      title: "😐 Neutraali"
       description: "Viestit, jotka on luokiteltu neutraalilla tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_optimism:
-      title: "\U0001F31F Optimismi"
+      title: "🌟 Optimismi"
       description: "Viestit, jotka on luokiteltu optimismin tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_pride:
-      title: "\U0001F981 Ylpeys"
+      title: "🦁 Ylpeys"
       description: "Viestit, jotka on luokiteltu ylpeyden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_realization:
-      title: "\U0001F4A1 Oivallus"
+      title: "💡 Oivallus"
       description: "Viestit, jotka on luokiteltu oivalluksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_relief:
-      title: "\U0001F60C Helpotus"
+      title: "😌 Helpotus"
       description: "Viestit, jotka on luokiteltu helpotuksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_remorse:
-      title: "\U0001F614 Katumus"
+      title: "😔 Katumus"
       description: "Viestit, jotka on luokiteltu katumuksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_sadness:
-      title: "\U0001F62D Suru"
+      title: "😭 Suru"
       description: "Viestit, jotka on luokiteltu surullisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_surprise:
-      title: "\U0001F632 Yllätys"
+      title: "😲 Yllätys"
       description: "Viestit, jotka on luokiteltu yllätyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
   discourse_ai:
     ai_artifact:
@@ -537,13 +537,13 @@ fi:
       reports:
         overall_sentiment: "Yleinen sävy (positiivinen–negatiivinen)"
         post_emotion:
-          sadness: "Suru \U0001F622"
-          surprise: "Yllätys \U0001F631"
-          neutral: "Neutraali \U0001F610"
-          fear: "Pelko \U0001F628"
-          anger: "Viha \U0001F621"
-          joy: "Ilo \U0001F600"
-          disgust: "Inho \U0001F922"
+          sadness: "Suru 😢"
+          surprise: "Yllätys 😱"
+          neutral: "Neutraali 😐"
+          fear: "Pelko 😨"
+          anger: "Viha 😡"
+          joy: "Ilo 😀"
+          disgust: "Inho 🤢"
         sentiment_analysis:
           positive: "Positiivinen"
           negative: "Negatiivinen"

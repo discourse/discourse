@@ -328,7 +328,6 @@ uk:
       retry_staged_message:
         title: "Помилка мережі"
         action: "Надіслати ще раз?"
-      unreliable_network: "Мережа ненадійна, надсилання повідомлень та збереження чернетки можуть не працювати"
       bookmark_message: "Додати закладку"
       bookmark_message_edit: "Редагувати закладку"
       restore: "Відновити видалене повідомлення"

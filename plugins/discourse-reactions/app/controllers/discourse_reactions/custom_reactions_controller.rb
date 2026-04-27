@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class DiscourseReactions::CustomReactionsController < ApplicationController
+  MAX_USERS_COUNT = 26
   PAGE_SIZE = 20
 
   requires_plugin DiscourseReactions::PLUGIN_NAME
 
-  before_action :ensure_logged_in, except: %i[reactions_users_list]
+  before_action :ensure_logged_in, except: %i[reactions_users_list post_reactions_users]
 
   def toggle
     post = fetch_post_from_params
@@ -177,7 +178,128 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     render_json_dump(users: users, total_rows: total)
   end
 
+  def post_reactions_users
+    params.require(:id).to_i
+    reaction_value = params[:reaction_value]
+    post = fetch_post_from_params
+
+    raise Discourse::InvalidParameters if !post
+
+    reaction_users = []
+
+    if !reaction_value || reaction_value == DiscourseReactions::Reaction.main_reaction_id
+      # We only want to get likes that don't have an associated ReactionUser
+      # record, which count as a like or there will be double ups for main_reaction_id.
+      likes =
+        post.post_actions.where(
+          DiscourseReactions::PostActionExtension.filter_reaction_likes_sql,
+          like: PostActionType::LIKE_POST_ACTION_ID,
+          valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
+        )
+
+      # Filter out likes for reactions that are not longer enabled,
+      # which match up to a ReactionUser in historical data.
+      historical_reaction_likes =
+        likes
+          .joins(
+            "LEFT JOIN discourse_reactions_reaction_users ON discourse_reactions_reaction_users.user_id = post_actions.user_id AND discourse_reactions_reaction_users.post_id = post_actions.post_id",
+          )
+          .joins(
+            "LEFT JOIN discourse_reactions_reactions ON discourse_reactions_reactions.id = discourse_reactions_reaction_users.reaction_id",
+          )
+          .where.not(
+            discourse_reactions_reactions: {
+              reaction_value: DiscourseReactions::Reaction.valid_reactions.to_a,
+            },
+          )
+
+      likes = likes.where.not(id: historical_reaction_likes.select(:id))
+    end
+
+    if likes.present?
+      main_reaction =
+        DiscourseReactions::Reaction.find_by(
+          reaction_value: DiscourseReactions::Reaction.main_reaction_id,
+          post_id: post.id,
+        )
+      count = likes.length
+      users = format_likes_users(likes)
+
+      # Also include ReactionUser records for main_reaction_id
+      # if they have been created in the past; new records created
+      # using main_reaction_id will only make a PostAction.
+      if main_reaction && main_reaction[:reaction_users_count]
+        (users << get_users(main_reaction)).flatten!
+        users.sort_by! { |user| user[:created_at] }
+        count += main_reaction.reaction_users_count.to_i
+      end
+
+      reaction_users << {
+        id: DiscourseReactions::Reaction.main_reaction_id,
+        count: count,
+        users: users.reverse.slice(0, MAX_USERS_COUNT + 1),
+      }
+    end
+
+    if !reaction_value
+      post
+        .reactions
+        .select do |reaction|
+          reaction[:reaction_users_count] &&
+            reaction[:reaction_value] != DiscourseReactions::Reaction.main_reaction_id
+        end
+        .each { |reaction| reaction_users << format_reaction_user(reaction) }
+    elsif reaction_value != DiscourseReactions::Reaction.main_reaction_id
+      post
+        .reactions
+        .where(reaction_value: reaction_value)
+        .select { |reaction| reaction[:reaction_users_count] }
+        .each { |reaction| reaction_users << format_reaction_user(reaction) }
+    end
+
+    render_json_dump(reaction_users: reaction_users)
+  end
+
   private
+
+  def get_users(reaction)
+    reaction
+      .reaction_users
+      .includes(:user)
+      .order("discourse_reactions_reaction_users.created_at desc")
+      .limit(MAX_USERS_COUNT + 1)
+      .map do |reaction_user|
+        {
+          username: reaction_user.user.username,
+          name: reaction_user.user.name,
+          avatar_template: reaction_user.user.avatar_template,
+          can_undo: reaction_user.can_undo?,
+          created_at: reaction_user.created_at.to_s,
+        }
+      end
+  end
+
+  def format_reaction_user(reaction)
+    {
+      id: reaction.reaction_value,
+      count: reaction.reaction_users_count.to_i,
+      users: get_users(reaction),
+    }
+  end
+
+  def format_like_user(like)
+    {
+      username: like.user.username,
+      name: like.user.name,
+      avatar_template: like.user.avatar_template,
+      can_undo: guardian.can_delete_post_action?(like),
+      created_at: like.created_at.to_s,
+    }
+  end
+
+  def format_likes_users(likes)
+    likes.includes([:user]).limit(MAX_USERS_COUNT + 1).map { |like| format_like_user(like) }
+  end
 
   def post_serializer(post)
     PostSerializer.new(post, scope: guardian, root: false)

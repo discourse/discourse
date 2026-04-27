@@ -2986,6 +2986,8 @@ hu:
         name_label: "Név körbefogása"
         attributes_label: "Tulajdonságok"
         add_attribute: "Attribútum hozzáadása"
+        attribute_key: "Kulcs"
+        attribute_value: "Érték"
         remove_attribute: "Attribútum eltávolítása"
         apply: "Alkalmaz"
         unwrap: "Körbefogás eltávolítása"
@@ -3074,6 +3076,9 @@ hu:
         copy: "Hivatkozás másolása"
         remove: "Hivatkozás eltávolítása"
         visit: "Hivatkozás megnyitása külső lapon"
+        link_copied: "Hivatkozás másolva!"
+      onebox_toolbar:
+        copy: "Hivatkozás másolása"
         link_copied: "Hivatkozás másolva!"
       unsupported_token: "A szövegszerkesztő nem támogatja a bejegyzésben használt összes funkciót; a Markdown szerkesztőre váltunk."
     notifications:
@@ -3533,12 +3538,31 @@ hu:
         name: "Törlés"
       update_category:
         name: "Kategória frissítése"
+      convert_to_public_topic:
+        name: "Nyilvános téma létrehozása…"
+      convert_to_private_message:
+        name: "Személyes üzenet írása"
       reset_bump_dates:
         name: "Előrehozási dátum alaphelyzetbe állítása"
       defer:
         name: "Megjelölés olvasatlanként"
       update_notifications:
         name: "Értesítések frissítése"
+    nested_replies:
+      sort:
+        label: "Rendezés"
+        top: "Népszerű"
+        new: "Új"
+      load_more_children:
+        one: "és %{count} további válasz"
+        other: "és %{count} további válasz"
+      collapsed_replies:
+        one: "%{count} válasz"
+        other: "%{count} válasz"
+      collapse: "Összecsukás"
+      no_replies: "Még nincsenek hozzászólások."
+      deleted_post_placeholder: "[törölve]"
+      pinned_reply: "Kiemelt"
     topic:
       filter_to:
         one: "%{count} bejegyzés a témában"
@@ -4067,6 +4091,10 @@ hu:
       sr_post_like_count_button:
         one: "%{count} embernek tetszett ez a bejegyzés."
         other: "%{count} embernek tetszett ez a bejegyzés."
+      likes_popup:
+        title:
+          one: "%{count} kedvelés"
+          other: "%{count} kedvelés"
       sr_post_read_count_button:
         one: "%{count} ember olvasta ezt a bejegyzést."
         other: "%{count} ember olvasta ezt a bejegyzést."
@@ -4097,8 +4125,7 @@ hu:
           confirm_delete: "Biztos, hogy törölni akarja a(z) „%{languageCode}” fordításokat?"
         success: "A fordítások sikeresen frissültek"
         post_language_selector:
-          title: "Bejegyzés nyelve"
-          none: "Egyik sem"
+          none: "Nincs beállítva"
         edit_warning:
           message: "Ez egy lefordított bejegyzés.<br><br>Szerkeszteni szeretnéd az eredeti bejegyzést a %{language} -ban, vagy ezt a konkrét fordítást?"
           action_original: "Eredeti bejegyzés szerkesztése"
@@ -4123,6 +4150,7 @@ hu:
       cancel_composer:
         confirm: "Elveted a bejegyzést?"
         discard: "Elvetés"
+        discard_edit: "Változások elvetése"
       via_email: "ez a válasz e-mailben érkezett"
       via_auto_generated_email: "ez a bejegyzés egy automatikusan előállított e-mailen keresztül érkezett"
       whisper: "ez a hozzászólás egy privát suttogás a moderátorok számára."
@@ -4166,7 +4194,7 @@ hu:
         admin: "bejegyzés adminisztrátori műveletei"
         admin_action: "Adminisztrátor"
         permanently_delete: "Végleges törlés"
-        permanently_delete_confirmation: "Biztos, hogy véglegesen törli ezt a bejegyzést? Nem fogja tudni helyreállítani."
+        permanently_delete_confirm_phrase: "végleges törlés"
         wiki: "Wiki létrehozása"
         unwiki: "Wiki eltávolítása"
         convert_to_moderator: "Stábszín hozzáadása"
@@ -4313,6 +4341,7 @@ hu:
       back: "Vissza a kategóriához"
       general: "Általános"
       settings: "Beállítások"
+      moderation: "Moderálás"
       advanced: "Speciális"
       show_advanced: "Speciális beállítások"
       topic_template: "Sablon"
@@ -5650,6 +5679,9 @@ hu:
           staff: "Stáb"
           all_members: "Minden tag"
           developers: "Fejlesztők"
+        impact_types:
+          feature_type: "Funkció"
+          other_type: "Egyéb"
         filter:
           search_placeholder: "Szűrés név, leírás vagy bővítmény alapján..."
           no_results: "Nincsenek a szűrőnek megfelelő közelgő változások"
@@ -5681,7 +5713,6 @@ hu:
           header_description: "Adjon meg itt információkat erről a webhelyről és csapatáról, hogy az emberek megtudják, miről szól a közössége, ki áll a háttérben, és hogyan érhetik el Önt probléma esetén. Megjelenik a webhely <a href='%{basePath}/about'>Névjegy oldalon</a>."
         developer:
           title: "Fejlesztői"
-          header_description: "Fejlesztői beállítások a sebességkorlátok, a szorzók és számítások, a biztonságos üzemmód és egyéb speciális funkciók szabályozásához"
         experimental:
           title: "Kísérleti"
           header_description: "Kísérleti funkciók be- vagy kikapcsolása webhelyén, ezek többsége csoportszinten vezérelhető"
@@ -5929,6 +5960,12 @@ hu:
             logs:
               title: "Naplók"
               header_description: "Megtekintheti és kezelheti a biztonsági mentések, visszaállítások és feltöltések naplóit"
+        problem_checks:
+          status: "Állapot"
+          last_run_at: "Utolsó futás"
+          ignore: "Letiltás"
+          more_options:
+            title: "További lehetőségek"
         reports:
           title: "Jelentések"
           header_description: "A jelentések egy hatékony eszköz, amely segít megérteni, mi történik a webhelyén. Segítségükkel azonosíthatja a trendeket, felismerheti a problémákat, és adatok alapján hozhat döntéseket."
@@ -6108,12 +6145,10 @@ hu:
         installed_version: "Telepítve"
         latest_version: "Legfrissebb"
         problems_found: "Néhány tanács az aktuális webhelybeállítások alapján"
-        dismiss_notice: "Elvetés"
+        dismiss_notice: "Letiltás"
         new_features:
           title: "Újdonságok?"
           subtitle: "Folyamatosan új funkciókat és fejlesztéseket adunk ki. Ez az oldal a legfontosabbakat tartalmazza, de a 'Tudjon meg többet' gombra kattintva részletes kiadási jegyzeteket is megtekinthet."
-          no_new_features_found: "Nincsenek elemek a hírfolyamban, vagy a választott szűrő nem hozott eredményt. A korábbi új funkciókkal kapcsolatos bejelentéseket a <a href='%{url}' target='_blank'>Discourse Meta közösségében</a> tekintheti meg."
-          no_new_features_error: "Hiba történt a hírfolyam betöltésekor. A korábbi új funkciókkal kapcsolatos bejelentéseket a <a href='%{url}' target='_blank'>Discourse Meta közösség</a>oldalán tekintheti meg."
           learn_more: "Tudjon meg többet..."
         last_checked: "Utoljára ellenőrizve"
         refresh_problems: "Újratöltés"

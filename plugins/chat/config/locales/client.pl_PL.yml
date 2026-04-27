@@ -157,8 +157,8 @@ pl_PL:
       muted: "wyciszono"
       joined: "dołączono"
       empty_state:
-        direct_message_cta: "Rozpocznij czat osobisty"
-        direct_message: "Możesz także rozpocząć osobisty czat z jednym lub kilkoma użytkownikami."
+        direct_message_cta: "Rozpocznij prywatny czat"
+        direct_message: "Możesz także rozpocząć prywatny czat z jednym lub kilkoma użytkownikami."
         title: "Nie znaleziono żadnych kanałów"
         my_threads: "Nie masz jeszcze żadnych wątków. Wątki, w których bierzesz udział, będą wyświetlane tutaj."
       email_frequency:
@@ -316,7 +316,6 @@ pl_PL:
       retry_staged_message:
         title: "Błąd sieci"
         action: "Wyślij ponownie?"
-      unreliable_network: "Sieć jest zawodna, wysyłanie wiadomości i zapisywanie szkiców może nie działać"
       bookmark_message: "Zakładka"
       bookmark_message_edit: "Edytuj zakładkę"
       restore: "Przywróć usuniętą wiadomość"
@@ -593,10 +592,10 @@ pl_PL:
       direct_messages:
         title: "PW"
         aria_label: "Przełącz na wiadomości bezpośrednie"
-        new: "Utwórz osobisty czat"
+        new: "Utwórz prywatny czat"
         create: "Utwórz"
-        leave: "Opuść ten osobisty czat"
-        close: "Zamknij ten osobisty czat"
+        leave: "Opuść ten prywatny czat"
+        close: "Zamknij ten prywatny czat"
         cannot_create: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       channel_list:
         title: "Kanały"
@@ -689,7 +688,7 @@ pl_PL:
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."
         illegal: "Ten post wymaga uwagi personelu, ponieważ uważam, że zawiera treści niezgodne z prawem."
         spam: "Ta wiadomość to reklama lub akt wandalizmu. Nie jest przydatna ani istotna dla bieżącego kanału."
-        notify_user: "Chcę porozmawiać z tą osobą bezpośrednio i osobiście o jej przesłaniu."
+        notify_user: "Chcę porozmawiać z tą osobą bezpośrednio i prywatnie o jej przesłaniu."
         notify_moderators: "Ta wiadomość wymaga uwagi personelu z innego powodu niewymienionego powyżej."
       flagging:
         action: "Oflaguj wiadomość"
@@ -774,10 +773,10 @@ pl_PL:
           other_plain: 'oznaczył %{identifier} w "%{channel}"'
           other_html: '<span>%{username}</span> <span>oznaczył %{identifier} w "%{channel}"</span>'
         direct_message_chat_mention:
-          direct: "wspomniał o tobie na czacie osobistym"
-          direct_html: "<span>%{username}</span> <span>wspomniał o Tobie na czacie osobistym</span>"
-          other_plain: "oznaczył %{identifier} na czacie osobistym"
-          other_html: "<span>%{username}</span> <span>oznaczył %{identifier} na czacie osobistym</span>"
+          direct: "wspomniał o Tobie na prywatnym czacie"
+          direct_html: "<span>%{username}</span> <span>wspomniał o Tobie na prywatnym czacie</span>"
+          other_plain: "oznaczył %{identifier} na prywatnym czacie"
+          other_html: "<span>%{username}</span> <span>oznaczył %{identifier} na prywatnym czacie</span>"
         chat_message: "Nowa wiadomość na czacie"
         chat_quoted: "%{username} zacytował Twoją wiadomość na czacie"
       titles:
@@ -828,11 +827,11 @@ pl_PL:
       chat:
         help: "Czat jest włączony dla tego tematu"
     user:
-      allow_private_messages: "Zezwalaj innym użytkownikom na wysyłanie mi osobistych wiadomości i bezpośrednich wiadomości na czacie"
-      muted_users_instructions: "Wyłącz wszystkie powiadomienia, wiadomości osobiste i bezpośrednie wiadomości czatu od tych użytkowników."
-      allowed_pm_users_instructions: "Zezwalaj na wysyłanie osobistych wiadomości lub bezpośrednich wiadomości na czacie tylko od tych użytkowników."
-      allow_private_messages_from_specific_users: "Zezwalaj tylko określonym użytkownikom na wysyłanie mi osobistych wiadomości lub bezpośrednich wiadomości na czacie"
-      ignored_users_instructions: "Zignoruj wszystkie posty, wiadomości, powiadomienia, wiadomości osobiste i bezpośrednie wiadomości na czacie od tych użytkowników."
+      allow_private_messages: "Zezwalaj innym użytkownikom na wysyłanie mi prywatnych wiadomości i bezpośrednich wiadomości na czacie"
+      muted_users_instructions: "Wyłącz wszystkie powiadomienia, prywatne wiadomości i bezpośrednie wiadomości czatu od tych użytkowników."
+      allowed_pm_users_instructions: "Zezwalaj na wysyłanie prywatnych wiadomości lub bezpośrednich wiadomości na czacie tylko od tych użytkowników."
+      allow_private_messages_from_specific_users: "Zezwalaj tylko określonym użytkownikom na wysyłanie mi prywatnych wiadomości lub bezpośrednich wiadomości na czacie"
+      ignored_users_instructions: "Zignoruj wszystkie posty, wiadomości, powiadomienia, prywatne wiadomości i bezpośrednie wiadomości na czacie od tych użytkowników."
     user_menu:
       no_chat_notifications_title: "Nie masz jeszcze żadnych powiadomień czatu"
       no_chat_notifications_body: >

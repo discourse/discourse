@@ -2,30 +2,48 @@ import { waitForPromise } from "@ember/test-waiters";
 import { isTesting } from "discourse/lib/environment";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
-export async function waitForAnimationEnd(element) {
-  return new Promise((resolve) => {
-    const style = window.getComputedStyle(element);
-    const duration = parseFloat(style.animationDuration) * 1000 || 0;
-    const delay = parseFloat(style.animationDelay) * 1000 || 0;
-    const totalTime = duration + delay;
+// Resolves on the animationend/transitionend event, or on a timeout if the event never triggers.
+function waitForEndEvent(element, eventName, styleKey, filter) {
+  return waitForPromise(
+    new Promise((resolve) => {
+      const style = window.getComputedStyle(element);
+      const duration = parseFloat(style[`${styleKey}Duration`]) * 1000 || 0;
+      const delay = parseFloat(style[`${styleKey}Delay`]) * 1000 || 0;
 
-    const handleAnimationEnd = () => {
-      clearTimeout(timeoutId);
-      element.removeEventListener("animationend", handleAnimationEnd);
-      resolve();
-    };
+      const handler = (event) => {
+        if (filter && !filter(event)) {
+          return;
+        }
 
-    const timeoutId = setTimeout(
-      () => {
-        element.removeEventListener("animationend", handleAnimationEnd);
+        clearTimeout(timeoutId);
+        element.removeEventListener(eventName, handler);
         resolve();
-      },
-      // The timeout acts as a fallback in case the "animationend" event does not fire (e.g., when no animation is present).
-      Math.max(totalTime + 50, 50)
-    );
+      };
 
-    element.addEventListener("animationend", handleAnimationEnd);
-  });
+      const timeoutId = setTimeout(
+        () => {
+          element.removeEventListener(eventName, handler);
+          resolve();
+        },
+        Math.max(duration + delay + 50, 50)
+      );
+
+      element.addEventListener(eventName, handler);
+    })
+  );
+}
+
+export function waitForAnimationEnd(element) {
+  return waitForEndEvent(element, "animationend", "animation");
+}
+
+export function waitForTransitionEnd(element, propertyName) {
+  return waitForEndEvent(
+    element,
+    "transitionend",
+    "transition",
+    (event) => event.propertyName === propertyName
+  );
 }
 
 export async function animateClosing(element, className = "-closing") {
@@ -34,7 +52,7 @@ export async function animateClosing(element, className = "-closing") {
   }
   element.classList.add(className);
 
-  await waitForPromise(waitForAnimationEnd(element));
+  await waitForAnimationEnd(element);
 
   element.classList.remove(className);
 }

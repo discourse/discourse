@@ -190,13 +190,13 @@ pl_PL:
               description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy dokładnie do kategorii określonych powyżej.
             restricted_archetype:
               label: Typ tematu
-              description: Opcjonalnie, zezwól na wyzwalanie tylko w tematach lub wiadomościach osobistych.
+              description: Opcjonalnie, zezwól na wyzwalanie tylko w tematach lub prywatnych wiadomościach.
             restricted_groups:
               label: Ograniczone grupy
               description: Opcjonalne, uruchomi się tylko wtedy, gdy użytkownik postu należy do jednej z tych grup
             restricted_inbox_groups:
               label: Ograniczone grupy skrzynek odbiorczych
-              description: Opcjonalne, uruchomi się tylko wtedy, gdy tematem posta jest wiadomość prywatna w jednej ze skrzynek odbiorczych grupy
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy tematem wpisu jest prywatna wiadomość w jednej ze skrzynek odbiorczych grupy
             excluded_groups:
               label: Wykluczone grupy
               description: Opcjonalnie, pomiń wyzwalacz, jeśli użytkownik postu należy do którejkolwiek z tych grup
@@ -218,7 +218,7 @@ pl_PL:
           created: Utworzono
           edited: Edytowany
           topics: Tematy (wszystkie kategorie)
-          personal_messages: Tylko wiadomości osobiste
+          personal_messages: Tylko prywatne wiadomości
           public_topics: Tematy (tylko kategorie publiczne)
           with_images: Obrazy
           with_links: Linki
@@ -322,6 +322,12 @@ pl_PL:
             tags:
               label: Tagi
               description: Lista tagów do dodania do tematu.
+            closed_automatically:
+              label: Automatycznie zamknięte tematy
+              description: Dodawaj tagi do automatycznie zamykanych tematów.
+            closed_manually:
+              label: Ręcznie zamknięte tematy
+              description: Dodawaj tagi do ręcznie zamkniętych tematów.
         post:
           fields:
             creator:

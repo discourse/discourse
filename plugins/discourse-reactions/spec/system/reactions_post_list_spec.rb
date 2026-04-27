@@ -12,6 +12,7 @@ describe "Reactions | Post reaction user list" do
 
   before do
     SiteSetting.discourse_reactions_enabled = true
+    SiteSetting.enable_new_post_reactions_menu = true
 
     DiscourseReactions::ReactionManager.new(
       reaction_value: "heart",

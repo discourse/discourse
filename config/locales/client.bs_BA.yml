@@ -1735,6 +1735,8 @@ bs_BA:
       upload_description: "unesi opis učitanog"
       list_item: "Listaj predmet"
       wrap_modal:
+        attribute_key: "Ključ"
+        attribute_value: "Value"
         apply: "Snimi"
       help: "Pomoć za Markdown"
       modal_ok: "OK"
@@ -1994,6 +1996,25 @@ bs_BA:
         name: "Zamijeni oznake"
       delete_topics:
         name: "Delete"
+      convert_to_private_message:
+        name: "Pretvori u privatnu poruku"
+    nested_replies:
+      sort:
+        label: "Sortiraj po"
+        top: "Top teme"
+        new: "Novo"
+      load_more_children:
+        one: "još %{count} odgovor"
+        few: "još %{count} odgovora"
+        other: "još %{count} odgovora"
+      collapsed_replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
+      collapse: "Spusti"
+      no_replies: "Bez odgovora."
+      deleted_post_placeholder: "[isbrisano]"
+      pinned_reply: "Zakačena"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -2359,8 +2380,6 @@ bs_BA:
           actions: "Akcije"
           edit: "Edit"
           delete: "Delete"
-        post_language_selector:
-          none: "Ništa"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -2499,6 +2518,7 @@ bs_BA:
       view: "View Topics in Category"
       general: "General"
       settings: "Postavke"
+      moderation: "Moderacija"
       tags: "Oznake"
       localization:
         name: "Ime"
@@ -3177,6 +3197,8 @@ bs_BA:
           admins: "Admins"
           moderators: "Moderators"
           staff: "Staff"
+        impact_types:
+          other_type: "Other"
         filter:
           all: "Sve"
           enabled: "Omogućen"
@@ -3240,6 +3262,9 @@ bs_BA:
           sub_pages:
             logs:
               title: "Logs"
+        problem_checks:
+          status: "Status"
+          ignore: "Zanemari"
         reports:
           title: "Izvještaji"
           sub_pages:
@@ -3305,7 +3330,7 @@ bs_BA:
         installed_version: "Installed"
         latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
-        dismiss_notice: "Odbaci"
+        dismiss_notice: "Zanemari"
         new_features:
           learn_more: "Saznaj više..."
         last_checked: "Zadnje pogledani"

@@ -324,6 +324,9 @@ he:
             two: "שני פוסטים"
             many: "שני פוסטים"
             other: "שני פוסטים"
+        theme_translations:
+          translate:
+            label: "תרגום"
         translations_menu:
           translate:
             label: "תרגום פוסט"
@@ -632,7 +635,7 @@ he:
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
-          anthropic-claude-opus-4-6: "המודל החכם ביותר של Anthropic"
+          anthropic-claude-opus-4-7: "המודל החכם ביותר של Anthropic"
           anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
           google-gemini-3-pro: "המודל החכם ביותר של Google"
@@ -832,8 +835,6 @@ he:
           title: "הצגת התכתובת מול הבינה המלאכותית"
           copy_request: "העתקת הבקשה"
           copy_response: "העתקת תגובה"
-          request_tokens: "אסימוני בקשה:"
-          response_tokens: "אסימוני תגובה:"
           request: "בקשה"
           response: "תשובה"
           next_log: "הבא"

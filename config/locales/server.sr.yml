@@ -89,7 +89,15 @@ sr:
   not_found: "Zatraženi URL ili resurs nije pronađen."
   read_only_mode_enabled: "Sajt je u čitaj samo modu. Interakcije su isključene."
   reading_time: "Vreme za čitanje"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    few: "%{count} min 🕑"
+    other: "%{count} min 🕑"
   likes: "Lajkovi"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    other: "%{count} ❤"
   embed:
     start_discussion: "Započnite diskusiju"
     continue: "Nastavite diskusiju"

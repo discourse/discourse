@@ -2439,6 +2439,8 @@ da:
       list_item: "Listepunkt"
       toggle_direction: "Skift retning"
       wrap_modal:
+        attribute_key: "Nøgle"
+        attribute_value: "værdi"
         apply: "Anvend"
       help: "Hjælp til Markdown-redigering"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
@@ -2492,6 +2494,9 @@ da:
       image_scale_button: "Skaler billedet til %{percent}%"
       delete_image_button: Slet Billede
       link_toolbar:
+        copy: "Kopiér link"
+        link_copied: "Link kopieret!"
+      onebox_toolbar:
         copy: "Kopiér link"
         link_copied: "Link kopieret!"
     notifications:
@@ -2813,8 +2818,27 @@ da:
         name: "Slet"
       update_category:
         name: "Opdater Kategori"
+      convert_to_public_topic:
+        name: "Gør til Offentligt Emne…"
+      convert_to_private_message:
+        name: "Lav privat besked"
       reset_bump_dates:
         name: "Nulstil Bump Datoer"
+    nested_replies:
+      sort:
+        label: "Sorter efter"
+        top: "Top"
+        new: "Nye"
+      load_more_children:
+        one: "%{count} svar til"
+        other: "%{count} svar til"
+      collapsed_replies:
+        one: "%{count} svar"
+        other: "%{count} svar"
+      collapse: "Fold sammen"
+      no_replies: "Ingen svar, endnu."
+      deleted_post_placeholder: "[slettet]"
+      pinned_reply: "Fastgjort"
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"
@@ -3248,6 +3272,10 @@ da:
       sr_post_like_count_button:
         one: "%{count} synes godt om dette indlæg."
         other: "%{count} synes godt om dette indlæg."
+      likes_popup:
+        title:
+          one: "%{count} Synes om"
+          other: "%{count} Synes om"
       filtered_replies_hint:
         one: "Se dette indlæg og dets svar"
         other: "Se dette indlæg og dets %{count} svar"
@@ -3263,7 +3291,7 @@ da:
           delete: "Slet"
         add: "Tilføj ny oversættelse"
         post_language_selector:
-          none: "Ingen"
+          none: "Ikke indstillet"
       errors:
         create: "Beklager, der opstod en fejl under oprettelsen af dit indlæg. Prøv venligst igen."
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."
@@ -3317,7 +3345,6 @@ da:
           just_the_post: "Nej, kun dette indlæg"
         admin: "indlæg administrator handlinger"
         admin_action: "Admin"
-        permanently_delete: "Slet permanent"
         wiki: "Opret Wiki"
         unwiki: "Fjern Wiki"
         convert_to_moderator: "Tilføj Personale farve"
@@ -3447,6 +3474,7 @@ da:
       back: "Tilbage til kategori"
       general: "Overordnet"
       settings: "Indstillinger"
+      moderation: "Moderation"
       advanced: "Avanceret"
       topic_template: "Skabelon"
       tags: "Tags"
@@ -4369,6 +4397,8 @@ da:
           admins: "Admins"
           moderators: "Moderatorer"
           staff: "Personale"
+        impact_types:
+          other_type: "Andre"
         filter:
           all: "Alle"
           enabled: "Aktiveret"
@@ -4485,6 +4515,12 @@ da:
           sub_pages:
             logs:
               title: "Logs"
+        problem_checks:
+          status: "Status"
+          last_run_at: "Sidste kørsel"
+          ignore: "Ignorér"
+          more_options:
+            title: "Flere muligheder"
         reports:
           title: "Rapporter"
           sub_pages:
@@ -4572,7 +4608,7 @@ da:
         installed_version: "Installeret"
         latest_version: "Seneste version"
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
-        dismiss_notice: "Ignorer Alle"
+        dismiss_notice: "Ignorér"
         new_features:
           title: "Hvad er nyt?"
           learn_more: "Lær mere..."

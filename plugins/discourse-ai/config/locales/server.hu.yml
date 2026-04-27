@@ -9,7 +9,7 @@ hu:
     overall_sentiment:
       yaxis: "Dátum"
     emotion_neutral:
-      title: "\U0001F610 Semleges"
+      title: "😐 Semleges"
   discourse_ai:
     tools:
       presets:
@@ -61,7 +61,7 @@ hu:
     sentiment:
       reports:
         post_emotion:
-          neutral: "Semleges \U0001F610"
+          neutral: "Semleges 😐"
         sentiment_analysis:
           neutral: "Semleges"
     ai_staff_action_logger:

@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import LoadMore from "discourse/components/load-more";
+import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicMap from "discourse/components/topic-map";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -13,13 +14,13 @@ import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { gt, includes } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import NestedFloatingActions from "./nested-floating-actions";
-import NestedOp from "./nested-op";
-import NestedPost from "./nested-post";
-import NestedSortSelector from "./nested-sort-selector";
-import NestedViewHeader from "./nested-view-header";
+import NestedFloatingActions from "./nested/floating-actions";
+import NestedHeader from "./nested/header";
+import NestedOp from "./nested/op";
+import NestedPost from "./nested/post";
+import NestedSortSelector from "./nested/sort-selector";
 
-export default class NestedView extends Component {
+export default class Nested extends Component {
   @service currentUser;
   @service header;
   @service screenTrack;
@@ -54,7 +55,7 @@ export default class NestedView extends Component {
         topicId=@topic.id
       }}
     >
-      <NestedViewHeader
+      <NestedHeader
         @topic={{@topic}}
         @editingTopic={{@editingTopic}}
         @buffered={{@buffered}}
@@ -164,11 +165,21 @@ export default class NestedView extends Component {
         @outletArgs={{lazyHash model=@topic}}
       />
 
-      <PluginOutlet
-        @name="topic-above-suggested"
-        @connectorTagName="div"
-        @outletArgs={{lazyHash model=@topic}}
-      />
+      {{#unless @hasMoreRoots}}
+        <PluginOutlet
+          @name="topic-above-suggested"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash model=@topic}}
+        />
+
+        <MoreTopics @topic={{@topic}} />
+
+        <PluginOutlet
+          @name="topic-below-suggested"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash model=@topic}}
+        />
+      {{/unless}}
 
       <PluginOutlet
         @name="topic-navigation-bottom"

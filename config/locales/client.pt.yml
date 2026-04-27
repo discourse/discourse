@@ -2795,6 +2795,8 @@ pt:
       list_item: "Item da Lista"
       toggle_direction: "Direção de alternar"
       wrap_modal:
+        attribute_key: "Chave"
+        attribute_value: "Valor"
         apply: "Aplicar"
       help: "Ajuda de Edição Markdown"
       collapse: "Minimizar o painel de compositor"
@@ -2865,6 +2867,9 @@ pt:
         copy: "Copiar link"
         remove: "Remover hiperligação"
         visit: "Abrir hiperligação num separador externo"
+        link_copied: "Ligação copiada!"
+      onebox_toolbar:
+        copy: "Copiar hiperligação"
         link_copied: "Ligação copiada!"
     notifications:
       tooltip:
@@ -3190,10 +3195,29 @@ pt:
         name: "Substituir Etiquetas"
       delete_topics:
         name: "Eliminar"
+      convert_to_public_topic:
+        name: "Tornar Tópico Público"
+      convert_to_private_message:
+        name: "Tornar Mensagem Pessoal"
       defer:
         name: "Marcar como Não Lido"
       update_notifications:
         name: "Notificações de Atualização"
+    nested_replies:
+      sort:
+        label: "Ordenar por"
+        top: "Os Melhores"
+        new: "Novo"
+      load_more_children:
+        one: "mais %{count} resposta"
+        other: "mais %{count} respostas"
+      collapsed_replies:
+        one: "%{count} resposta"
+        other: "%{count} respostas"
+      collapse: "Colapsar"
+      no_replies: "Ainda sem respostas."
+      deleted_post_placeholder: "[eliminado]"
+      pinned_reply: "Fixado"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"
@@ -3634,6 +3658,10 @@ pt:
       sr_post_like_count_button:
         one: "%{count} pessoa gostou desta publicação."
         other: "%{count} pessoas gostaram desta publicação."
+      likes_popup:
+        title:
+          one: "%{count} curtiu"
+          other: "%{count} curtiram"
       filtered_replies_hint:
         one: "Ver esta publicação e a sua resposta"
         other: "Ver esta publicação e as suas %{count} respostas"
@@ -3660,7 +3688,7 @@ pt:
           confirm_delete: "Tem a certeza que pretende eliminar as traduções para '%{languageCode}'?"
         success: "As traduções foram atualizadas com sucesso"
         post_language_selector:
-          none: "Nenhuma"
+          none: "Não definido"
         edit_warning:
           action_original: "Editar publicação original"
           action_translation: "Editar esta tradução"
@@ -3713,7 +3741,6 @@ pt:
           just_the_post: "Não, apenas esta mensagem"
         admin: "ações administrativas de publicação"
         admin_action: "Administração"
-        permanently_delete: "Eliminar Permanentemente"
         wiki: "Criar Wiki"
         unwiki: "Remover Wiki"
         convert_to_moderator: "Adicionar Cor do Funcionário"
@@ -3834,6 +3861,7 @@ pt:
       back: "Voltar para a categoria"
       general: "Geral"
       settings: "Configurações"
+      moderation: "Moderação"
       advanced: "Avançado"
       topic_template: "Modelo"
       tags: "Etiquetas"
@@ -4557,6 +4585,9 @@ pt:
           admins: "Administradores"
           moderators: "Moderadores"
           staff: "Pessoal"
+        impact_types:
+          feature_type: "Funcionalidade"
+          other_type: "Outro"
         filter:
           all: "Todos"
           enabled: "Ativado"
@@ -4668,6 +4699,11 @@ pt:
           sub_pages:
             logs:
               title: "Logs"
+        problem_checks:
+          status: "Estado"
+          ignore: "Ignorar"
+          more_options:
+            title: "Mais opções"
         reports:
           title: "Relatórios"
           sub_pages:
@@ -4737,7 +4773,7 @@ pt:
         installed_version: "Instalado"
         latest_version: "Recentes"
         problems_found: "Alguns conselhos com base nas configurações atuais do seu site"
-        dismiss_notice: "Marcar Visto"
+        dismiss_notice: "Ignorar"
         new_features:
           title: "O que é novo?"
           learn_more: "Saiba mais..."

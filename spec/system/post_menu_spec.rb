@@ -513,6 +513,7 @@ describe "Post menu" do
     end
 
     it "shows the users who liked when clicking on the like count" do
+      SiteSetting.enable_new_post_reactions_menu = true
       PostActionCreator.like(user, post)
       PostActionCreator.like(admin, post)
 

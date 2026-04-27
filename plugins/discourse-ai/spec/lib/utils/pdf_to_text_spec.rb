@@ -12,7 +12,7 @@ RSpec.describe DiscourseAi::Utils::PdfToText do
   end
 
   describe "#extract_text" do
-    xit "extracts text from PDF pages" do
+    it "extracts text from PDF pages" do
       pdf_to_text = described_class.new(upload: upload)
       pages = []
       pdf_to_text.extract_text { |page| pages << page }
@@ -22,10 +22,13 @@ RSpec.describe DiscourseAi::Utils::PdfToText do
   end
 
   context "when improving PDF extraction with LLM" do
-    xit "can properly simulate a file" do
-      if ENV["CI"]
-        skip "This test requires imagemagick is installed with ghostscript support - which is not available in CI"
-      end
+    def imagemagick_with_ghostscript?
+      system("magick", "-version", out: File::NULL, err: File::NULL) &&
+        system("gs", "--version", out: File::NULL, err: File::NULL)
+    end
+
+    it "can properly simulate a file" do
+      skip "Requires imagemagick with ghostscript support" unless imagemagick_with_ghostscript?
 
       responses = [
         "<chunk>Page 1: LLM chunk 1</chunk><chunk>Page 1: LLM chunk 2</chunk>",
@@ -44,10 +47,9 @@ RSpec.describe DiscourseAi::Utils::PdfToText do
       expect(pages).to eq(["Page 1: LLM chunk 1", "Page 1: LLM chunk 2", "Page 2: LLM chunk 3"])
     end
 
-    xit "works as expected" do
-      if ENV["CI"]
-        skip "This test requires imagemagick is installed with ghostscript support - which is not available in CI"
-      end
+    it "works as expected" do
+      skip "Requires imagemagick with ghostscript support" unless imagemagick_with_ghostscript?
+
       pdf_to_text = described_class.new(upload: upload, user: user, llm_model: llm_model)
       pages = []
 

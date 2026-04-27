@@ -12,6 +12,7 @@ ug:
       create: "قۇر"
       ai:
         generate: "ھاسىللا"
+        optional: "تاللاشچان"
       help:
         label: "ياردەم"
       types:

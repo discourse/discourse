@@ -9,23 +9,21 @@ module DiscourseAi
         supported_locales =
           SiteSetting.content_localization_supported_locales.presence&.split("|") || []
 
-        if supported_locales.empty?
-          return(
-            render json:
-                     base_result.merge(
-                       {
-                         translation_progress: [],
-                         total: 0,
-                         posts_with_detected_locale: 0,
-                         no_locales_configured: true,
-                       },
-                     )
-          )
+        result = base_result
+        result[:no_locales_configured] = true if supported_locales.empty?
+
+        render json: result
+      end
+
+      def progress
+        unless DiscourseAi::Translation.enabled? &&
+                 SiteSetting.ai_translation_backfill_max_age_days > 0
+          return(render json: { translation_progress: [], total: 0, posts_with_detected_locale: 0 })
         end
 
         data = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
 
-        render json: base_result.merge(data)
+        render json: data
       end
 
       private

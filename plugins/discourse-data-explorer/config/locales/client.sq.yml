@@ -12,6 +12,7 @@ sq:
       create: "Krijo"
       ai:
         generate: "Gjenero"
+        optional: "opsionale"
       import:
         label: "Importo"
       help:

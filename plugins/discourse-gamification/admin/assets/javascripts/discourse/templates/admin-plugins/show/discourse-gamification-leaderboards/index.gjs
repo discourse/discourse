@@ -48,7 +48,7 @@ export default <template>
           </thead>
 
           <tbody>
-            {{#each @controller.sortedLeaderboards as |leaderboard|}}
+            {{#each @controller.model.leaderboards as |leaderboard|}}
               <tr id={{concat "leaderboard-admin__row-" leaderboard.id}}>
                 <td>
                   <LinkTo

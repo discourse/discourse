@@ -2924,6 +2924,8 @@ el:
       list_item: "Στοιχείο Λίστας"
       toggle_direction: "Εναλλαγή κατεύθυνσης"
       wrap_modal:
+        attribute_key: "Κλειδί"
+        attribute_value: "Τιμή"
         apply: "Εφαρμογή"
       help: "Βοήθεια Επεξεργασίας Markdown"
       collapse: "Ελαχιστοποίηση του επεξεργαστή κειμένου"
@@ -3004,6 +3006,9 @@ el:
         copy: "Αντιγραφή συνδέσμου"
         remove: "Αφαίρεση συνδέσμου"
         visit: "Άνοιγμα συνδέσμου σε εξωτερική καρτέλα"
+        link_copied: "Ο σύνδεσμος αντιγράφηκε!"
+      onebox_toolbar:
+        copy: "Αντιγραφή συνδέσμου"
         link_copied: "Ο σύνδεσμος αντιγράφηκε!"
       unsupported_token: "Ο επεξεργαστής εμπλουτισμένου κειμένου δεν υποστηρίζει όλες τις λειτουργίες που χρησιμοποιούνται σε αυτήν την ανάρτηση. Γίνεται εναλλαγή στον επεξεργαστή Markdown."
     notifications:
@@ -3491,11 +3496,30 @@ el:
       update_category:
         name: "Ενημέρωση Κατηγορίας"
         description: "Μετακινήστε όλα τα επιλεγμένα θέματα στην ακόλουθη κατηγορία:"
+      convert_to_public_topic:
+        name: "Κάντε δημόσιο θέμα…"
+      convert_to_private_message:
+        name: "Κάνε προσωπικό μήνυμα"
       defer:
         name: "Σήμανση ως αδιάβαστα"
       update_notifications:
         name: "Ενημέρωση Ειδοποιήσεων"
         description: "Ενημερώστε το προσωπικό σας επίπεδο ειδοποίησης για τα επιλεγμένα θέματα σε:"
+    nested_replies:
+      sort:
+        label: "Ταξινόμηση κατά"
+        top: "Κορυφαία"
+        new: "Νέο"
+      load_more_children:
+        one: "%{count} ακόμα απάντηση"
+        other: "%{count} ακόμα απαντήσεις"
+      collapsed_replies:
+        one: "%{count} απάντηση"
+        other: "%{count} απαντήσεις"
+      collapse: "Σύμπτυξη"
+      no_replies: "Καμία απάντηση ακόμη."
+      deleted_post_placeholder: "[διαγράφηκε]"
+      pinned_reply: "Καρφιτσωμένο"
     topic:
       filter_to:
         one: "%{count} ανάρτηση σε θέμα"
@@ -4022,6 +4046,10 @@ el:
       sr_post_like_count_button:
         one: "%{count} άτομο πάτησε \"Μου αρέσει\" στην ανάρτηση."
         other: "%{count} άτομα πάτησαν \"Μου αρέσει\" στην ανάρτηση."
+      likes_popup:
+        title:
+          one: "%{count} «μου αρέσει»"
+          other: "%{count} «μου αρέσει»"
       sr_post_read_count_button:
         one: "%{count} άτομο διάβασε αυτή την ανάρτηση."
         other: "%{count} άτομα διάβασαν αυτή την ανάρτηση."
@@ -4048,8 +4076,7 @@ el:
           confirm_delete: "Σίγουρα θέλετε να διαγράψετε τις μεταφράσεις για '%{languageCode}';"
         success: "Οι μεταφράσεις ενημερώθηκαν με επιτυχία"
         post_language_selector:
-          title: "Γλώσσα ανάρτησης"
-          none: "Κανένα"
+          none: "Δεν έχει οριστεί"
         edit_warning:
           message: "Αυτή είναι μια μεταφρασμένη ανάρτηση.<br><br> Θέλετε να επεξεργαστείτε την πρωτότυπη ανάρτηση στα %{language} ή να επεξεργαστείτε αυτήν τη συγκεκριμένη μετάφραση;"
           action_original: "Επεξεργασία αρχικής ανάρτησης"
@@ -4074,6 +4101,7 @@ el:
       cancel_composer:
         confirm: "Θέλετε να απορρίψετε την ανάρτησή σας;"
         discard: "Απόρριψη"
+        discard_edit: "Απόρριψη αλλαγών"
       via_email: "αυτή η ανάρτηση ήρθε μέσω email"
       via_auto_generated_email: "αυτή η ανάρτηση ήρθε μέσω ενός email που δημιουργήθηκε αυτόματα"
       whisper: "αυτή η ανάρτηση είναι εμπιστευτική προς τους συντονιστές"
@@ -4115,8 +4143,8 @@ el:
           just_the_post: "Όχι, σβήσε μόνο την ανάρτηση"
         admin: "ενέργειες διαχειριστή ανάρτησης"
         admin_action: "Διαχειριστής"
-        permanently_delete: "Μόνιμη Διαγραφή"
-        permanently_delete_confirmation: "Σίγουρα θέλετε να διαγράψετε οριστικά αυτήν την ανάρτηση; Δεν θα μπορείτε να την ανακτήσετε."
+        permanently_delete: "Μόνιμη διαγραφή"
+        permanently_delete_confirm_phrase: "μόνιμη διαγραφή"
         wiki: "Δημιουργία Βίκι"
         unwiki: "Αφαίρεση Βίκι"
         convert_to_moderator: "Πρόσθεσε Χρώμα Συνεργάτη"
@@ -4259,6 +4287,7 @@ el:
       back: "Επιστροφή στην κατηγορία"
       general: "Γενικά"
       settings: "Ρυθμίσεις"
+      moderation: "Συντονισμός"
       advanced: "Προχωρημένα"
       show_advanced: "Προηγμένες ρυθμίσεις"
       topic_template: "Πρότυπο"
@@ -5517,6 +5546,9 @@ el:
           staff: "Συνεργάτες"
           all_members: "Όλα τα μέλη"
           developers: "Προγραμματιστές"
+        impact_types:
+          feature_type: "Λειτουργία"
+          other_type: "Άλλα"
         filter:
           search_placeholder: "Φιλτράρισμα κατά όνομα, περιγραφή ή πρόσθετο..."
           no_results: "Καμία επερχόμενη αλλαγή δεν αντιστοιχεί με το φίλτρο σας"
@@ -5747,6 +5779,12 @@ el:
           sub_pages:
             logs:
               title: "Αρχεία καταγραφής"
+        problem_checks:
+          status: "Κατάσταση"
+          last_run_at: "Τελευταία εκτέλεση"
+          ignore: "Αγνόηση"
+          more_options:
+            title: "Περισσότερες επιλογές"
         reports:
           title: "Αναφορές"
           sub_pages:
@@ -5898,7 +5936,7 @@ el:
         installed_version: "Εγκατεστημένα"
         latest_version: "Τελευταία"
         problems_found: "Μερικές συμβουλές με βάση τις τρέχουσες ρυθμίσεις του ιστότοπού σας"
-        dismiss_notice: "Παράβλεψη"
+        dismiss_notice: "Αγνόηση"
         new_features:
           title: "Τι νέο υπάρχει;"
           learn_more: "Μάθε περισσότερα..."

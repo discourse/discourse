@@ -441,7 +441,13 @@ pt_BR:
   deleted_topic: "Ops! Este tópico foi excluído e não está mais disponível."
   delete_topic_failed: "Ocorreu um erro ao excluir este tópico. Entre em contato com o(a) administrador(a) do site."
   reading_time: "Tempo de leitura"
+  reading_time_minutes:
+    one: "%{count} minuto 🕑"
+    other: "%{count} minutos 🕑"
   likes: "Curtidas"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Ops! Você já realizou esta ação. Poderia tentar atualizar a página?"
   too_many_replies:
     one: "Lamentamos, mas usuários(as) novos(as) estão temporariamente limitados(as) a %{count} resposta no mesmo tópico."
@@ -834,7 +840,6 @@ pt_BR:
       one: "%{count} curtida"
       other: "%{count} curtidas"
     cannot_permanently_delete:
-      many_posts: "Este tópico tem postagens não removidas. Elas devem ser excluídas permanentemente antes de excluir permanentemente o tópico."
       wait_or_different_admin: "Você deve aguardar %{time_left} antes de excluir permanentemente esta postagem ou um membro diferente da administração precisa fazer isso."
   rate_limiter:
     slow_down: "Você executou esta ação muitas vezes. Tente novamente mais tarde."
@@ -1712,8 +1717,6 @@ pt_BR:
     max_oneboxes_per_post: "Defina a quantidade máxima de Oneboxes que podem ser inclusos em uma única postagem. Oneboxes oferecem uma pré-visualização do conteúdo vinculado nela."
     facebook_app_access_token: "Um token gerado do seu segredo e ID do app Facebook. Usado para gerar Oneboxes do Instagram."
     github_onebox_access_tokens: "Mapeamento de uma organização do GitHub ou usuário(a) para um token de acesso do GitHub usado na geração de Oneboxes do GitHub para reposições privadas, confirmações, solicitações de pull, problemas e conteúdo de arquivos. Sem isso, apenas URLs públicas do GitHub URLs serão adicionadas ao Onebox."
-    reddit_onebox_client_id: "ID do cliente OAuth da API do Reddit usado para autenticação de contas Reddit OneBox. Crie um aplicativo do tipo \"script\" em reddit.com/prefs/apps para obter as credenciais."
-    reddit_onebox_client_secret: "Segredo do cliente OAuth da API do Reddit usado para autenticação de contas unidirecionais do Reddit. Encontrado no aplicativo do tipo 'script' criado em reddit.com/prefs/apps."
     logo: "A imagem do logotipo no canto superior à esquerda do seu site. Use uma imagem retangular larga com 120 de altura e proporção maior que 3:1. Se for deixada em branco, o texto do título do site será exibido."
     logo_small: "A pequena imagem do logotipo no canto superior à esquerda do site, exibida ao rolar para baixo. Use uma imagem quadrada de 120×120. Se for deixada em branco, um glifo de página inicial será exibido."
     digest_logo: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Use uma imagem retangular larga. Não use uma imagem SVG. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
@@ -2437,7 +2440,6 @@ pt_BR:
     create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
     allow_changing_staged_user_tracking: "Permitir a alteração das preferências de notificação de etiquetas e categoria do(a) usuário(a) por parte de um(a) usuário(a) administrador(a)."
     use_email_for_username_and_name_suggestions: "Use a primeira parte dos endereços de e-mail para sugerir nomes e nomes de usuário(a). Aviso: isso pode facilitar que agentes inescrupulosos descubram o endereço de e-mail dos seus membros (já que muita gente usa provedores comuns de e-mail, como o \"gmail.com\")."
-    use_name_for_username_suggestions: "Use o nome completo de um usuário ao sugerir nomes de usuário."
     suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."
     show_bottom_topic_map: "Mostra o mapa de tópico na parte inferior do tópico quando tiver pelo menos dez respostas."
     show_topic_map_in_topics_without_replies: "Mostra o mapa de tópico mesmo se o tópico não tiver nenhuma resposta."
@@ -2802,7 +2804,6 @@ pt_BR:
       invalid_iat: "Desculpe, não foi possível verificar o token de autorização devido à diferença de horário do servidor. Tente novamente."
       unauthorized: "Desculpe, o provedor de login não autorizou sua solicitação. Tente novamente ou entre em contato com um administrador."
     omniauth_error_unknown: "Algo deu errado ao processar seu login, por favor tente novamente."
-    omniauth_confirm_title: "Entrar com a conta usando %{provider}"
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Não é autorizado nenhum endereço de e-mail associado a %{account}. Você pode precisar configurar sua conta com um endereço de e-mail diferente."
     new_registrations_disabled: "Não é permitido cadastrar novas contas por enquanto."
@@ -4965,7 +4966,6 @@ pt_BR:
       restricted_to:
         one: '"%{tag_name}" é restrito à categoria "%{category_names}"'
         other: '"%{tag_name}" é restrito às seguintes categorias: %{category_names}'
-      synonym: 'Sinônimos não são permitidos. Use "%{tag_name}".'
       has_synonyms: '"%{tag_name}" não pode ser usado porque tem sinônimos.'
       restricted_tags_cannot_be_used_in_category:
         one: 'A etiqueta "%{tags}" não pode ser usada na categoria "%{category}". Remova.'

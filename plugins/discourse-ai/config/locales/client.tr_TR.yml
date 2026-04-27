@@ -369,6 +369,8 @@ tr_TR:
         description: "Forumunuzdaki tüm içeriği kullanıcının tercih ettiği dile otomatik olarak çevirin"
         supported_locales: "Desteklenen diller"
         supported_locales_description: "Bu site ayarı, ziyaretçilerin yazı çevirilerine katkıda bulunmalarına da olanak tanır."
+        translatable_categories: "Çevrilebilir kategoriler"
+        translatable_categories_description: "Yalnızca seçilen kategorilerdeki içerikler çevrilecektir. Alt kategoriler ayrı olarak eklenmelidir."
         admin_actions:
           translation_settings: "Çeviri ayarları"
           localization_settings: "Yerelleştirme ayarları"
@@ -393,6 +395,12 @@ tr_TR:
           bar_done:
             one: "%{count} gönderi"
             other: "%{count} gönderi"
+        theme_translations:
+          translate:
+            label: "Çevir"
+            title: "Seçilen dili kaynak dil olarak kullanarak desteklenen tüm dillere çevir"
+            queued: "Çeviri kuyruğa alındı"
+            failed: "Çeviri kuyruğa eklenemedi"
         translations_menu:
           translate:
             label: "Gönderiyi çevir"
@@ -884,19 +892,19 @@ tr_TR:
           other: "Bu model şu anda şunlar tarafından kullanılıyor: %{settings}. Yanlış yapılandırılırsa özellikler beklendiği gibi çalışmaz. "
         model_description:
           none: "Çoğu dil modeli için çalışan genel ayarlar"
-          anthropic-claude-opus-4-6: "Antropic'in en akıllı modeli"
+          anthropic-claude-opus-4-7: "Antropic'in en akıllı modeli"
           anthropic-claude-sonnet-4-6: "Hız ve maliyetin optimum dengesi"
           anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
           google-gemini-3-pro: "Google'ın en akıllı modeli"
           google-gemini-3-flash: "Hızlı ve uygun maliyetli, çok modlu akıl yürütme"
-          open_ai-gpt-5-2: "OpenAI'nin amiral gemisi modeli, farklı alanlarda problem çözme için son derece uygun"
-          open_ai-gpt-5-mini: "Zeka, hız ve maliyet arasında denge sağlar"
+          open_ai-gpt-5-4: "OpenAI'nin amiral gemisi modeli, farklı alanlarda problem çözme için son derece uygun"
+          open_ai-gpt-5-4-mini: "Zeka, hız ve maliyet arasında denge sağlar"
           open_ai-gpt-5-nano: "En hızlı ve en uygun maliyetli GPT-5 modeli"
           open_router-deepseek-deepseek-v3-2: "DeepSeek'in en yeni yüksek performanslı modeli"
           open_router-moonshotai-kimi-k2-5: "Moonshot'ın vizyon yeteneklerine sahip multimodal modeli"
           open_router-x-ai-grok-4-fast: "xAI'nin vizyon sahibi amiral gemisi modeli"
-          open_router-minimax-minimax-m2-5: "MiniMax'ın geniş bağlamlı multimodal modeli"
-          open_router-z-ai-glm-5: "Z-AI'nin görme özelliğine sahip çok modlu modeli"
+          open_router-minimax-minimax-m2-7: "MiniMax'ın geniş bağlamlı multimodal modeli"
+          open_router-z-ai-glm-5-1: "Z-AI'nin görme özelliğine sahip çok modlu modeli"
           open_router-arcee-ai-trinity-large-preview-free: "Arcee AI'dan ücretsiz açık kaynaklı model"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
@@ -1131,10 +1139,12 @@ tr_TR:
           title: "YZ etkileşimini görüntüleyin"
           copy_request: "İsteği kopyala"
           copy_response: "Yanıtı kopyala"
-          request_tokens: "Talep token'ları:"
-          response_tokens: "Yanıt token'ları:"
-          cache_read_tokens: "Önbellek okuma jetonları:"
-          cache_write_tokens: "Önbellek yazma jetonları:"
+          this_turn: "Bu tur:"
+          whole_conversation: "Konuşma:"
+          tokens_summary: "Giriş: %{request_tokens} → Çıkış: %{response_tokens}"
+          cache_both: "(önbellek %{read} okuma, %{write} yazma)"
+          cache_read_only: "(önbellek %{read} okuma)"
+          cache_write_only: "(önbellek %{write} yazma)"
           request: "Talep"
           response: "Yanıt"
           next_log: "Sonraki"
