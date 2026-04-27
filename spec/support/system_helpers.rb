@@ -371,8 +371,24 @@ module SystemHelpers
     element.with_playwright_element_handle do |playwright_element|
       playwright_element.wait_for_element_state("hidden")
     rescue Playwright::Error => e
-      raise e unless e.message.match?(/Element is not attached to the DOM/)
+      raise if !detached_element_error?(e)
     end
+  end
+
+  # Retries the block on "Element is not attached to the DOM" error.
+  # That's usually a `find(...).click` racing a re-render.
+  def with_dom_retry(timeout: Capybara.default_max_wait_time)
+    deadline = Time.current + timeout.seconds
+    begin
+      yield
+    rescue Playwright::Error => e
+      retry if detached_element_error?(e) && Time.current < deadline
+      raise
+    end
+  end
+
+  def detached_element_error?(error)
+    error.is_a?(Playwright::Error) && error.message.include?("Element is not attached to the DOM")
   end
 
   def locator(selector, locator = nil)
