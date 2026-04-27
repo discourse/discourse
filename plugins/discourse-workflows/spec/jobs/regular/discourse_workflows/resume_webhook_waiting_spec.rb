@@ -15,4 +15,13 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWebhookWaiting do
     expect(::DiscourseWorkflows::Executor).not_to have_received(:resume)
     expect(execution.reload.status).to eq("waiting")
   end
+
+  it "does not resume when another caller already claimed the execution" do
+    allow(::DiscourseWorkflows::Executor).to receive(:resume)
+    allow(::DiscourseWorkflows::Execution).to receive(:claim_for_resume).and_return(nil)
+
+    described_class.new.execute(execution_id: execution.id)
+
+    expect(::DiscourseWorkflows::Executor).not_to have_received(:resume)
+  end
 end

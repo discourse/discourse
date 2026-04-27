@@ -25,6 +25,16 @@ module DiscourseWorkflows
 
     scope :by_resume_token, ->(token) { where(status: :waiting, resume_token: token.to_s) }
 
+    def self.claim_for_resume(id:, resume_token: nil)
+      scope = where(id: id, status: :waiting)
+      scope = scope.where(resume_token: resume_token) if resume_token
+
+      affected = scope.update_all(status: statuses[:running], updated_at: Time.current)
+      return nil if affected.zero?
+
+      find_by(id: id)
+    end
+
     def self.compute_run_time_ms(steps)
       waiting_types = NodeType.waiting_identifiers
       timed =
@@ -48,24 +58,31 @@ module DiscourseWorkflows
     def fail_with_timeout!
       message = I18n.t("discourse_workflows.errors.approval_timed_out")
       node_id = waiting_node_id
+      claimed = false
 
       transaction do
-        attrs = {
-          status: :error,
-          error: message,
-          finished_at: Time.current,
-          waiting_node_id: nil,
-          waiting_until: nil,
-          resume_token: nil,
-          timeout_action: nil,
-        }
+        run_time_ms = execution_data && self.class.compute_run_time_ms(execution_data.steps_array)
 
-        if execution_data
-          attrs[:run_time_ms] = self.class.compute_run_time_ms(execution_data.steps_array)
-        end
+        affected =
+          self
+            .class
+            .where(id: id, status: :waiting)
+            .update_all(
+              status: self.class.statuses[:error],
+              error: message,
+              finished_at: Time.current,
+              run_time_ms: run_time_ms,
+              waiting_node_id: nil,
+              waiting_until: nil,
+              resume_token: nil,
+              timeout_action: nil,
+              updated_at: Time.current,
+            )
 
-        update!(attrs)
+        next if affected.zero?
 
+        claimed = true
+        reload
         update_step_status_in_data!(
           node_id,
           Executor::Step::WAITING,
@@ -73,6 +90,8 @@ module DiscourseWorkflows
           message,
         )
       end
+
+      claimed
     end
 
     def waiting_step_input_items

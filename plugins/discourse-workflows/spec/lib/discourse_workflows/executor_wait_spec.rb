@@ -142,7 +142,8 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(execution.status).to eq("waiting")
 
       response_items = [{ "json" => { "approved" => true } }]
-      resumed = DiscourseWorkflows::Executor.resume(execution.reload, response_items)
+      claimed = DiscourseWorkflows::Execution.claim_for_resume(id: execution.id)
+      resumed = DiscourseWorkflows::Executor.resume(claimed, response_items)
 
       expect(resumed).to have_attributes(
         status: "success",
@@ -155,7 +156,7 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(after_output.first["json"]).to include("approved" => true, "done" => "true")
     end
 
-    it "raises when attempting to resume a non-waiting execution" do
+    it "raises when the execution has not been claimed for resume" do
       response_items = [{ "json" => { "approved" => true } }]
 
       expect {

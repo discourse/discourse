@@ -126,6 +126,12 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
       end
     end
 
+    context "when the execution has already been claimed for resume" do
+      before { allow(DiscourseWorkflows::Execution).to receive(:claim_for_resume).and_return(nil) }
+
+      it { is_expected.to fail_to_find_a_model(:claimed_execution) }
+    end
+
     context "when everything is valid" do
       it { is_expected.to run_successfully }
 

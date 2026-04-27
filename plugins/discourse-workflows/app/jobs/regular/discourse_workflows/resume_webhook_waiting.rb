@@ -6,15 +6,11 @@ module Jobs
       def execute(args)
         return unless SiteSetting.discourse_workflows_enabled
 
-        execution =
-          ::DiscourseWorkflows::Execution
-            .where(id: args[:execution_id], status: :waiting)
-            .lock("FOR UPDATE SKIP LOCKED")
-            .first
-        return if execution.nil?
+        claimed = ::DiscourseWorkflows::Execution.claim_for_resume(id: args[:execution_id])
+        return if claimed.nil?
 
         response_items = args[:response_items] || [{ "json" => {} }]
-        ::DiscourseWorkflows::Executor.resume(execution, response_items)
+        ::DiscourseWorkflows::Executor.resume(claimed, response_items)
       end
     end
   end

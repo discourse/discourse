@@ -40,9 +40,10 @@ module DiscourseWorkflows
     end
 
     def self.resume(execution, response_items, user: nil)
-      unless execution.waiting?
+      unless execution.running?
         raise ArgumentError,
-              "Cannot resume execution #{execution.id} with status '#{execution.status}'"
+              "Cannot resume execution #{execution.id} with status '#{execution.status}' " \
+                "(callers must claim via Execution.claim_for_resume first)"
       end
 
       workflow = execution.workflow

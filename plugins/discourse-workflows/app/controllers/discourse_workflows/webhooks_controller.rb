@@ -52,6 +52,12 @@ module DiscourseWorkflows
           response.headers["WWW-Authenticate"] = 'Basic realm="Webhook"'
           render json: { error: "unauthorized" }, status: :unauthorized
         end
+        on_model_not_found(:claimed_execution) do
+          render json: {
+                   error: I18n.t("discourse_workflows.errors.already_resumed"),
+                 },
+                 status: :conflict
+        end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end

@@ -6,19 +6,17 @@ module Jobs
       def execute(args)
         return unless SiteSetting.discourse_workflows_enabled
 
-        execution =
-          ::DiscourseWorkflows::Execution
-            .includes(:execution_data)
-            .where(id: args[:execution_id], status: :waiting)
-            .lock("FOR UPDATE SKIP LOCKED")
-            .first
-        return if execution.nil?
+        execution = ::DiscourseWorkflows::Execution.find_by(id: args[:execution_id])
+        return if execution.nil? || !execution.waiting?
         return if execution.waiting_until.present? && execution.waiting_until > Time.current
 
         if execution.timeout_action == "fail"
           execution.fail_with_timeout!
         else
-          ::DiscourseWorkflows::Executor.resume(execution, execution.waiting_step_input_items)
+          claimed = ::DiscourseWorkflows::Execution.claim_for_resume(id: execution.id)
+          return if claimed.nil?
+
+          ::DiscourseWorkflows::Executor.resume(claimed, claimed.waiting_step_input_items)
         end
       end
     end

@@ -60,7 +60,10 @@ module DiscourseWorkflows
 
       only_if(:async_resume?) { step :enqueue_async_resume }
 
-      only_if(:sync_resume?) { step :resume_execution_synchronously }
+      only_if(:sync_resume?) do
+        model :claimed_execution
+        step :resume_execution_synchronously
+      end
     end
 
     only_if(:triggering_new_workflow) do
@@ -96,8 +99,14 @@ module DiscourseWorkflows
       stored_suffix = waiting_node.dig("configuration", "webhook_suffix").to_s
       return nil unless suffix == stored_suffix
 
-      execution.lock!("FOR UPDATE SKIP LOCKED")
       execution
+    end
+
+    def fetch_claimed_execution(waiting_execution:, params:)
+      DiscourseWorkflows::Execution.claim_for_resume(
+        id: waiting_execution.id,
+        resume_token: params.token,
+      )
     end
 
     def resuming_execution(waiting_execution:)
@@ -134,12 +143,12 @@ module DiscourseWorkflows
       )
     end
 
-    def resume_execution_synchronously(waiting_execution:, params:)
-      node = waiting_execution.workflow.find_node(waiting_execution.waiting_node_id)
+    def resume_execution_synchronously(claimed_execution:, params:)
+      node = claimed_execution.workflow.find_node(claimed_execution.waiting_node_id)
       config = node&.dig("configuration") || {}
 
       context[:sync_execution] = DiscourseWorkflows::Executor.resume(
-        waiting_execution,
+        claimed_execution,
         params.response_items,
       )
       context[:sync_response_mode] = config["response_mode"]

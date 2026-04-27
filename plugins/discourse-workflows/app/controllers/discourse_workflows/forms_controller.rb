@@ -54,13 +54,20 @@ module DiscourseWorkflows
 
     def update
       DiscourseWorkflows::Form::Resume.call(service_params) do
-        on_success do |execution:|
+        on_success do |claimed_execution:|
           render json: {
-                   resume_token: execution.execution_data&.context_data&.dig("__resume_token"),
+                   resume_token:
+                     claimed_execution.execution_data&.context_data&.dig("__resume_token"),
                  }
         end
         on_failed_step(:validate_required_form_fields) do |missing_fields:|
           render json: { errors: missing_fields }, status: :unprocessable_entity
+        end
+        on_model_not_found(:claimed_execution) do
+          render json: {
+                   error: I18n.t("discourse_workflows.errors.already_resumed"),
+                 },
+                 status: :conflict
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:execution) { raise Discourse::NotFound }

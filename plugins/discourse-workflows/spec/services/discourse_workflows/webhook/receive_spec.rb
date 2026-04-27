@@ -151,6 +151,14 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
           expect(result[:sync_response_mode]).to eq("when_last_node_finishes")
           expect(result[:sync_response_code]).to eq("200")
         end
+
+        context "when the execution has already been claimed for resume" do
+          before do
+            allow(DiscourseWorkflows::Execution).to receive(:claim_for_resume).and_return(nil)
+          end
+
+          it { is_expected.to fail_to_find_a_model(:claimed_execution) }
+        end
       end
     end
 

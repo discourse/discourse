@@ -22,7 +22,10 @@ module DiscourseWorkflows
         expired_execution.fail_with_timeout!
       else
         response_items = expired_execution.waiting_step_input_items
-        Executor.resume(expired_execution, response_items)
+        claimed = DiscourseWorkflows::Execution.claim_for_resume(id: expired_execution.id)
+        return if claimed.nil?
+
+        Executor.resume(claimed, response_items)
       end
     end
   end

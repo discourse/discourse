@@ -21,6 +21,7 @@ module DiscourseWorkflows
     model :execution
     model :waiting_node
     step :validate_required_form_fields
+    model :claimed_execution
     step :resume_execution
 
     private
@@ -34,11 +35,7 @@ module DiscourseWorkflows
     end
 
     def fetch_execution(params:)
-      execution =
-        DiscourseWorkflows::Execution
-          .by_resume_token(params.resume_token)
-          .lock("FOR UPDATE SKIP LOCKED")
-          .first
+      execution = DiscourseWorkflows::Execution.by_resume_token(params.resume_token).first
       return unless execution
 
       node = execution.workflow.find_node(execution.waiting_node_id)
@@ -51,7 +48,14 @@ module DiscourseWorkflows
       execution.workflow.find_node(execution.waiting_node_id)
     end
 
-    def resume_execution(execution:, waiting_node:, params:, guardian:)
+    def fetch_claimed_execution(execution:, params:)
+      DiscourseWorkflows::Execution.claim_for_resume(
+        id: execution.id,
+        resume_token: params.resume_token,
+      )
+    end
+
+    def resume_execution(execution:, claimed_execution:, waiting_node:, params:, guardian:)
       form_data =
         execution.accumulated_form_data.merge(
           DiscourseWorkflows::Workflow.form_data_from(waiting_node, params.form_data),
@@ -60,7 +64,7 @@ module DiscourseWorkflows
       response_items = [
         { "json" => { "form_data" => form_data, "submitted_at" => Time.current.utc.iso8601 } },
       ]
-      DiscourseWorkflows::Executor.resume(execution, response_items, user: guardian.user)
+      DiscourseWorkflows::Executor.resume(claimed_execution, response_items, user: guardian.user)
     end
   end
 end
