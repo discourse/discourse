@@ -10,35 +10,38 @@ module DiscourseWorkflows
       validates :data_table_id, presence: true
     end
 
-    model :data_table
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :data_table
+    model :referencing_workflows, optional: true
     policy :data_table_not_in_use
 
-    step :destroy_data_table
-    step :log_staff_action
+    step :delete_data_table
+    step :log
 
     private
 
-    def data_table_not_in_use(data_table:)
+    def fetch_referencing_workflows(data_table:)
       workflow_ids =
         DiscourseWorkflows::WorkflowDependency.workflows_referencing(
           "data_table_id",
           data_table.id,
         ).pluck(:workflow_id)
-      referencing = DiscourseWorkflows::Workflow.where(id: workflow_ids)
-      context[:referencing_workflows] = referencing
-      referencing.blank?
+      DiscourseWorkflows::Workflow.where(id: workflow_ids).to_a
     end
 
-    def log_staff_action(data_table:, guardian:)
+    def data_table_not_in_use(referencing_workflows:)
+      referencing_workflows.blank?
+    end
+
+    def delete_data_table(data_table:)
+      data_table.destroy!
+    end
+
+    def log(data_table:, guardian:)
       StaffActionLogger.new(guardian.user).log_custom(
         "discourse_workflows_data_table_destroyed",
         subject: data_table.name,
       )
-    end
-
-    def destroy_data_table(data_table:)
-      data_table.destroy!
     end
   end
 end

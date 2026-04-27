@@ -2,6 +2,7 @@
 
 RSpec.describe DiscourseWorkflows::Variable::Update do
   describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:variable_id) }
     it { is_expected.to validate_presence_of(:key) }
     it { is_expected.to validate_presence_of(:value) }
   end

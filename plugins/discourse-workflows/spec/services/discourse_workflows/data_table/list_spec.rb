@@ -15,9 +15,7 @@ RSpec.describe DiscourseWorkflows::DataTable::List do
       context "when limit is not provided" do
         it "returns the default limit" do
           contract.valid?
-          expect(contract.normalized_limit).to eq(
-            DiscourseWorkflows::DataTable::List::DEFAULT_LIMIT,
-          )
+          expect(contract.normalized_limit).to eq(DiscourseWorkflows::Pagination::DEFAULT_LIMIT)
         end
       end
 
@@ -35,7 +33,7 @@ RSpec.describe DiscourseWorkflows::DataTable::List do
 
         it "clamps to maximum" do
           contract.valid?
-          expect(contract.normalized_limit).to eq(DiscourseWorkflows::DataTable::List::MAX_LIMIT)
+          expect(contract.normalized_limit).to eq(DiscourseWorkflows::Pagination::MAX_LIMIT)
         end
       end
 

@@ -4,9 +4,6 @@ module DiscourseWorkflows
   class Credential::List
     include Service::Base
 
-    DEFAULT_LIMIT = 25
-    MAX_LIMIT = 100
-
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     params do
@@ -15,11 +12,12 @@ module DiscourseWorkflows
       attribute :type, :string
 
       before_validation do
-        self.limit = limit.to_i.clamp(1, Credential::List::MAX_LIMIT) if limit.present?
+        self.limit =
+          limit.to_i.clamp(1, DiscourseWorkflows::Pagination::MAX_LIMIT) if limit.present?
       end
 
       def resolved_limit
-        limit || Credential::List::DEFAULT_LIMIT
+        limit || DiscourseWorkflows::Pagination::DEFAULT_LIMIT
       end
     end
 

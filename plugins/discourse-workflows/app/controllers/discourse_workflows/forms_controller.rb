@@ -43,8 +43,8 @@ module DiscourseWorkflows
                  }
         end
         on_failed_policy(:authenticated_if_required) { raise Discourse::NotLoggedIn }
-        on_failed_step(:validate_form_submission) do |form_errors:|
-          render json: { errors: form_errors }, status: :unprocessable_entity
+        on_failed_step(:ensure_form_valid) do |form_validation:|
+          render json: { errors: form_validation.errors.map(&:to_h) }, status: :unprocessable_entity
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
@@ -60,8 +60,8 @@ module DiscourseWorkflows
                      claimed_execution.execution_data&.context_data&.dig("__resume_token"),
                  }
         end
-        on_failed_step(:validate_form_submission) do |form_errors:|
-          render json: { errors: form_errors }, status: :unprocessable_entity
+        on_failed_step(:ensure_form_valid) do |form_validation:|
+          render json: { errors: form_validation.errors.map(&:to_h) }, status: :unprocessable_entity
         end
         on_model_not_found(:claimed_execution) do
           render json: {

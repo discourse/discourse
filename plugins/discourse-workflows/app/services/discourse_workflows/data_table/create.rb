@@ -4,10 +4,6 @@ module DiscourseWorkflows
   class DataTable::Create
     include Service::Base
 
-    VALID_COLUMN_TYPES = %w[string number boolean date].freeze
-    MAX_COLUMN_NAME_LENGTH = 63
-    COLUMN_NAME_FORMAT = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/
-
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     params do
@@ -15,6 +11,21 @@ module DiscourseWorkflows
       attribute :columns, :array, default: []
 
       validates :name, presence: true
+
+      def normalized_columns
+        columns.filter_map do |column|
+          column = column.respond_to?(:to_h) ? column.to_h.deep_stringify_keys : column
+          name = column["name"].to_s
+          type = column["type"].to_s
+          next if name.blank? || type.blank?
+          next unless DiscourseWorkflows::DataTable::COLUMN_NAME_FORMAT.match?(name)
+          next if DiscourseWorkflows::DataTable::VALID_COLUMN_TYPES.exclude?(type)
+          next if DiscourseWorkflows::DataTables::Storage::RESERVED_COLUMN_NAMES.include?(name)
+          next if name.length > DiscourseWorkflows::DataTable::MAX_COLUMN_NAME_LENGTH
+
+          { "name" => name, "type" => type }
+        end
+      end
     end
 
     transaction do
@@ -27,14 +38,14 @@ module DiscourseWorkflows
     private
 
     def build_data_table(params:)
-      data_table = DiscourseWorkflows::DataTable.new(name: params.name)
-      data_table.save
-      data_table
+      DiscourseWorkflows::DataTable.create(name: params.name)
     end
 
     def create_storage_table(data_table:, params:)
-      columns = normalize_columns(params.columns)
-      DiscourseWorkflows::DataTables::Facade.create_table!(data_table, columns: columns)
+      DiscourseWorkflows::DataTables::Facade.create_table!(
+        data_table,
+        columns: params.normalized_columns,
+      )
     end
 
     def log(data_table:, guardian:)
@@ -42,20 +53,6 @@ module DiscourseWorkflows
         "discourse_workflows_data_table_created",
         subject: data_table.name,
       )
-    end
-    def normalize_columns(columns)
-      columns.filter_map do |column|
-        column = column.respond_to?(:to_h) ? column.to_h.deep_stringify_keys : column
-        name = column["name"].to_s
-        type = column["type"].to_s
-        next if name.blank? || type.blank?
-        next unless COLUMN_NAME_FORMAT.match?(name)
-        next if VALID_COLUMN_TYPES.exclude?(type)
-        next if DiscourseWorkflows::DataTables::Storage::RESERVED_COLUMN_NAMES.include?(name)
-        next if name.length > MAX_COLUMN_NAME_LENGTH
-
-        { "name" => name, "type" => type }
-      end
     end
   end
 end

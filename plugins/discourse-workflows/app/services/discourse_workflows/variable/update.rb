@@ -10,6 +10,7 @@ module DiscourseWorkflows
       attribute :value, :string
       attribute :description, :string
 
+      validates :variable_id, presence: true
       validates :key, presence: true
       validates :value, presence: true
     end
@@ -17,10 +18,8 @@ module DiscourseWorkflows
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :variable
 
-    transaction do
-      model :variable, :save_variable
-      step :log_variable_update
-    end
+    model :variable, :save_variable
+    step :log_variable_update
 
     private
 

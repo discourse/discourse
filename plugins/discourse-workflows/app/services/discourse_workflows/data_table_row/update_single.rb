@@ -14,8 +14,8 @@ module DiscourseWorkflows
       validates :row_id, presence: true
     end
 
-    model :data_table
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :data_table
     model :facade, :build_facade
     policy :within_storage_limit
     model :existing_row

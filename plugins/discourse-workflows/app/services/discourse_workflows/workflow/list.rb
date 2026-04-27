@@ -4,9 +4,6 @@ module DiscourseWorkflows
   class Workflow::List
     include Service::Base
 
-    DEFAULT_LIMIT = 25
-    MAX_LIMIT = 100
-
     LATEST_EXECUTION_JOIN = <<~SQL.freeze
       LEFT JOIN LATERAL (
         SELECT status, discourse_workflows_executions.created_at AS executed_at
@@ -26,7 +23,13 @@ module DiscourseWorkflows
       attribute :trigger_type, :string
       attribute :exclude_id, :integer
 
-      after_validation { self.limit = (limit || DEFAULT_LIMIT).clamp(1, MAX_LIMIT) }
+      after_validation do
+        self.limit =
+          (limit || DiscourseWorkflows::Pagination::DEFAULT_LIMIT).clamp(
+            1,
+            DiscourseWorkflows::Pagination::MAX_LIMIT,
+          )
+      end
     end
 
     model :workflows, optional: true

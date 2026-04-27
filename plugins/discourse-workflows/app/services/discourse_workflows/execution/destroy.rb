@@ -12,20 +12,18 @@ module DiscourseWorkflows
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     transaction do
-      step :clear_execution_data
-      step :remove_executions
+      step :delete_execution_data
+      model :deleted_count, :delete_executions
     end
 
     private
 
-    def clear_execution_data(params:)
+    def delete_execution_data(params:)
       DiscourseWorkflows::ExecutionData.where(execution_id: params.execution_ids).delete_all
     end
 
-    def remove_executions(params:)
-      context[:deleted_count] = DiscourseWorkflows::Execution.where(
-        id: params.execution_ids,
-      ).delete_all
+    def delete_executions(params:)
+      DiscourseWorkflows::Execution.where(id: params.execution_ids).delete_all
     end
   end
 end

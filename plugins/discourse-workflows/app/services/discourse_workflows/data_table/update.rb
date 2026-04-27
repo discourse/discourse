@@ -5,13 +5,16 @@ module DiscourseWorkflows
     include Service::Base
     include Concerns::DataTableServiceHelpers
 
-    model :data_table
-    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
-    params(default_values_from: :data_table) do
+    params do
+      attribute :data_table_id, :integer
       attribute :name, :string
 
+      validates :data_table_id, presence: true
       validates :name, presence: true
     end
+
+    policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :data_table
     model :data_table, :update_data_table
 
     step :log
@@ -19,7 +22,7 @@ module DiscourseWorkflows
     private
 
     def update_data_table(data_table:, params:)
-      data_table.update(**params)
+      data_table.update(name: params.name)
       data_table
     end
 

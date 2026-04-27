@@ -5,8 +5,6 @@ module DiscourseWorkflows
     include Service::Base
     include Concerns::DataTableServiceHelpers
 
-    MAX_COLUMN_NAME_LENGTH = 63
-
     params do
       attribute :data_table_id, :integer
       attribute :column_name, :string
@@ -17,10 +15,10 @@ module DiscourseWorkflows
       validates :name,
                 presence: true,
                 length: {
-                  maximum: MAX_COLUMN_NAME_LENGTH,
+                  maximum: DiscourseWorkflows::DataTable::MAX_COLUMN_NAME_LENGTH,
                 },
                 format: {
-                  with: /\A[a-zA-Z_][a-zA-Z0-9_]*\z/,
+                  with: DiscourseWorkflows::DataTable::COLUMN_NAME_FORMAT,
                   message:
                     "must start with a letter or underscore and contain only letters, numbers, and underscores",
                 },
@@ -30,8 +28,8 @@ module DiscourseWorkflows
                 }
     end
 
-    model :data_table
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :data_table
     policy :column_exists
     policy :not_reserved_column
     policy :name_differs

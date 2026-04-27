@@ -23,7 +23,10 @@ module NodeExecutionHelpers
     result = action.execute(DiscourseWorkflows::Executor::NodeExecutionContext.new(**kwargs))
     return result if result.is_a?(DiscourseWorkflows::Executor::NodeResult)
 
-    DiscourseWorkflows::Executor::NodeResult.from_output_arrays(result, ports: described_class.ports)
+    DiscourseWorkflows::Executor::NodeResult.from_output_arrays(
+      result,
+      ports: described_class.ports,
+    )
   ensure
     resolver&.dispose
     sandbox&.dispose

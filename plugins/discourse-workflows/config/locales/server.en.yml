@@ -11,6 +11,7 @@ en:
       invalid_form_token: "The form token is invalid or has expired."
       already_resumed: "This execution has already been resumed."
       storage_limit_exceeded: "Data table storage limit exceeded."
+      no_rows_matched_filter: "No rows matched the provided filter."
       create_post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
       credential:

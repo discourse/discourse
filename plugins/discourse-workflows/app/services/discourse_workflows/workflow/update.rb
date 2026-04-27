@@ -31,8 +31,8 @@ module DiscourseWorkflows
       end
     end
 
-    model :workflow
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :workflow
 
     transaction do
       step :update_workflow
@@ -40,7 +40,7 @@ module DiscourseWorkflows
       only_if(:error_workflow_changed_without_graph) { step :reindex_dependencies }
     end
 
-    step :clear_site_cache
+    step :expire_workflow_caches
     only_if(:workflow_enabled) { step :start_seconds_schedules }
 
     private
@@ -64,10 +64,10 @@ module DiscourseWorkflows
           nodes_data: params.nodes || [],
           connections_data: params.connections || [],
         )
-      fail!(workflow.errors.full_messages.join(", ")) if result == false
+      fail!(workflow.errors.full_messages) if result == false
     end
 
-    def clear_site_cache
+    def expire_workflow_caches
       Site.clear_cache
       DiscourseWorkflows::WorkflowDependency.clear_cache!
     end

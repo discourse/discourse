@@ -13,13 +13,14 @@ module DiscourseWorkflows
       validates :data_table_id, presence: true
     end
 
-    model :data_table
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :data_table
     model :facade, :build_facade
     policy :within_storage_limit
     model :query, :build_query
     model :row_input, :build_row_input
-    step :update_matching_rows
+    model :updated_count, :update_matching_rows
+    step :ensure_rows_matched
 
     private
 
@@ -32,8 +33,11 @@ module DiscourseWorkflows
     end
 
     def update_matching_rows(facade:, query:, row_input:)
-      context[:updated_count] = facade.update(query:, row_input:)
-      fail!("No rows matched filter") if context[:updated_count] == 0
+      facade.update(query:, row_input:)
+    end
+
+    def ensure_rows_matched(updated_count:)
+      fail!(I18n.t("discourse_workflows.errors.no_rows_matched_filter")) if updated_count == 0
     end
   end
 end

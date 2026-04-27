@@ -119,10 +119,12 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
 
       let(:form_data) { {} }
 
-      it { is_expected.to fail_a_step(:validate_form_submission) }
+      it { is_expected.to fail_a_step(:ensure_form_valid) }
 
       it "sets the missing field error" do
-        expect(result[:form_errors]).to contain_exactly({ field_label: "Feedback", code: :missing })
+        expect(result[:form_validation].errors.map(&:to_h)).to contain_exactly(
+          { field_label: "Feedback", code: :missing },
+        )
       end
     end
 
@@ -147,11 +149,11 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
 
       let(:form_data) { { "age" => "abc" } }
 
-      it { is_expected.to fail_a_step(:validate_form_submission) }
+      it { is_expected.to fail_a_step(:ensure_form_valid) }
 
       it "does not raise and reports the invalid value" do
         expect { result }.not_to raise_error
-        expect(result[:form_errors]).to contain_exactly(
+        expect(result[:form_validation].errors.map(&:to_h)).to contain_exactly(
           { field_label: "Age", code: :invalid_value },
         )
       end

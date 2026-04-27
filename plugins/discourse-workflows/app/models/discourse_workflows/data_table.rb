@@ -4,6 +4,10 @@ module DiscourseWorkflows
   class DataTable < ActiveRecord::Base
     self.table_name = "discourse_workflows_data_tables"
 
+    VALID_COLUMN_TYPES = %w[string number boolean date].freeze
+    MAX_COLUMN_NAME_LENGTH = 63
+    COLUMN_NAME_FORMAT = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/
+
     validates :name,
               presence: true,
               uniqueness: true,

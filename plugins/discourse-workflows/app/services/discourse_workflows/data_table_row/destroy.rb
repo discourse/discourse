@@ -22,20 +22,20 @@ module DiscourseWorkflows
       end
     end
 
-    model :data_table
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :data_table
     model :facade, :build_facade
 
     only_if(:single_row_mode?) do
       model :row, :fetch_row
-      step :destroy_batch_rows
+      model :deleted_count, :delete_batch_rows
     end
 
-    only_if(:batch_mode?) { step :destroy_batch_rows }
+    only_if(:batch_mode?) { model :deleted_count, :delete_batch_rows }
 
     only_if(:filter_mode?) do
       model :query, :build_query
-      step :destroy_filtered_rows
+      model :deleted_count, :delete_filtered_rows
     end
 
     private
@@ -60,13 +60,13 @@ module DiscourseWorkflows
       facade.build_query(filter: params.filter)
     end
 
-    def destroy_batch_rows(facade:, params:)
+    def delete_batch_rows(facade:, params:)
       ids = params.row_ids.presence || [params.row_id]
-      context[:deleted_count] = facade.delete_rows(ids)
+      facade.delete_rows(ids)
     end
 
-    def destroy_filtered_rows(facade:, query:)
-      context[:deleted_count] = facade.delete(query:)
+    def delete_filtered_rows(facade:, query:)
+      facade.delete(query:)
     end
   end
 end

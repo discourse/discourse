@@ -2,6 +2,7 @@
 
 RSpec.describe DiscourseWorkflows::DataTable::Update do
   describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:data_table_id) }
     it { is_expected.to validate_presence_of(:name) }
   end
 
@@ -21,7 +22,7 @@ RSpec.describe DiscourseWorkflows::DataTable::Update do
     let(:dependencies) { { guardian: admin.guardian } }
 
     context "when data table does not exist" do
-      let(:params) { { data_table_id: -1 } }
+      let(:params) { { data_table_id: -1, name: "anything" } }
 
       it { is_expected.to fail_to_find_a_model(:data_table) }
     end

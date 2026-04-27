@@ -8,8 +8,7 @@ module DiscourseWorkflows
 
     def call
       return false unless validate_nodes
-      node_map = build_node_map
-      persist_graph!(node_map)
+      persist_graph(build_node_map)
     end
 
     private
@@ -48,7 +47,7 @@ module DiscourseWorkflows
         DiscourseWorkflows::Registry::DEFAULT_VERSION
     end
 
-    def persist_graph!(node_map)
+    def persist_graph(node_map)
       new_nodes = node_map.values
       new_connections = build_connections(node_map)
       attributes = { nodes: new_nodes, connections: new_connections }
@@ -61,8 +60,9 @@ module DiscourseWorkflows
         attributes[:static_data] = workflow.static_data.except(*removed_ids.to_a)
       end
 
-      workflow.update!(**attributes)
+      return false unless workflow.update(**attributes)
       DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
+      true
     end
 
     def validate_nodes

@@ -11,7 +11,7 @@ module DiscourseWorkflows
       validates :data_table_id, presence: true
     end
 
-    model :data_table
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :data_table
   end
 end

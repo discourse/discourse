@@ -10,8 +10,8 @@ module DiscourseWorkflows
       validates :execution_id, presence: true
     end
 
-    model :execution
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :execution
 
     private
 

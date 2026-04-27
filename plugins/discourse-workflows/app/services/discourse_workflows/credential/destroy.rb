@@ -9,8 +9,8 @@ module DiscourseWorkflows
       validates :credential_id, presence: true
     end
 
-    model :credential
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :credential
     model :referencing_workflows, optional: true
     policy :credential_not_in_use
 

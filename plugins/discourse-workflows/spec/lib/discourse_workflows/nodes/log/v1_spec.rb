@@ -8,7 +8,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
     config = { "entries" => [] }.merge(configuration)
     instance = described_class.new(configuration: config)
     item_json = input_items.first&.dig("json") || {}
-    resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => item_json }, sandbox: sandbox)
+    resolver =
+      DiscourseWorkflows::ExpressionResolver.new({ "$json" => item_json }, sandbox: sandbox)
     exec_ctx =
       DiscourseWorkflows::Executor::NodeExecutionContext.new(
         input_items: input_items,

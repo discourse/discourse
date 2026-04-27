@@ -125,7 +125,8 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
 
       resolver_ctx = context.resolver_context.merge("$json" => {})
       sandbox = DiscourseWorkflows::JsSandbox.new(resolver_ctx, user: user)
-      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_ctx, user: user, sandbox: sandbox)
+      resolver =
+        DiscourseWorkflows::ExpressionResolver.new(resolver_ctx, user: user, sandbox: sandbox)
 
       result = resolver.resolve("={{ $execution.workflow_id }}")
       expect(result).to eq(execution.workflow.id)

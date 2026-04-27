@@ -4,16 +4,19 @@ module DiscourseWorkflows
   class Variable::List
     include Service::Base
 
-    DEFAULT_LIMIT = 25
-    MAX_LIMIT = 100
-
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     params do
       attribute :cursor, :integer
       attribute :limit, :integer
 
-      after_validation { self.limit = (limit || DEFAULT_LIMIT).clamp(1, MAX_LIMIT) }
+      after_validation do
+        self.limit =
+          (limit || DiscourseWorkflows::Pagination::DEFAULT_LIMIT).clamp(
+            1,
+            DiscourseWorkflows::Pagination::MAX_LIMIT,
+          )
+      end
     end
 
     model :variables, optional: true

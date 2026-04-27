@@ -9,8 +9,8 @@ module DiscourseWorkflows
       validates :workflow_id, presence: true
     end
 
-    model :workflow
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :workflow
 
     private
 

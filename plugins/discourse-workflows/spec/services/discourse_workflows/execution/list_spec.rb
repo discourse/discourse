@@ -18,7 +18,7 @@ RSpec.describe DiscourseWorkflows::Execution::List do
 
       it "clamps to MAX_LIMIT" do
         contract.valid?
-        expect(contract.limit).to eq(DiscourseWorkflows::Execution::List::MAX_LIMIT)
+        expect(contract.limit).to eq(DiscourseWorkflows::Pagination::MAX_LIMIT)
       end
     end
 
@@ -54,7 +54,7 @@ RSpec.describe DiscourseWorkflows::Execution::List do
         let(:limit) { nil }
 
         it "returns the default limit" do
-          expect(contract.effective_limit).to eq(DiscourseWorkflows::Execution::List::DEFAULT_LIMIT)
+          expect(contract.effective_limit).to eq(DiscourseWorkflows::Pagination::DEFAULT_LIMIT)
         end
       end
     end

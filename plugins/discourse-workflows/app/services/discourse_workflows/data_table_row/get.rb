@@ -5,9 +5,6 @@ module DiscourseWorkflows
     include Service::Base
     include Concerns::DataTableServiceHelpers
 
-    DEFAULT_LIMIT = 25
-    MAX_LIMIT = 100
-
     params do
       attribute :data_table_id, :integer
       attribute :filter
@@ -18,11 +15,14 @@ module DiscourseWorkflows
 
       validates :data_table_id, presence: true
 
-      before_validation { self.limit = [[limit.to_i, 1].max, MAX_LIMIT].min if limit.present? }
+      before_validation do
+        self.limit =
+          limit.to_i.clamp(1, DiscourseWorkflows::Pagination::MAX_LIMIT) if limit.present?
+      end
     end
 
-    model :data_table
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :data_table
     model :facade, :build_facade
     model :query, :build_query
     model :query_result, :execute_query
@@ -32,7 +32,7 @@ module DiscourseWorkflows
     def build_query(facade:, params:)
       facade.build_query(
         filter: params.filter,
-        limit: params.limit || DEFAULT_LIMIT,
+        limit: params.limit || DiscourseWorkflows::Pagination::DEFAULT_LIMIT,
         offset: params.offset,
         sort_by: params.sort_by,
         sort_direction: params.sort_direction,

@@ -84,17 +84,19 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
     context "when required form fields are missing" do
       let(:form_data) { {} }
 
-      it { is_expected.to fail_a_step(:validate_form_submission) }
+      it { is_expected.to fail_a_step(:ensure_form_valid) }
 
       it "sets the missing field error" do
-        expect(result[:form_errors]).to contain_exactly({ field_label: "Name", code: :missing })
+        expect(result[:form_validation].errors.map(&:to_h)).to contain_exactly(
+          { field_label: "Name", code: :missing },
+        )
       end
     end
 
     context "when required form fields are blank" do
       let(:form_data) { { "name" => "" } }
 
-      it { is_expected.to fail_a_step(:validate_form_submission) }
+      it { is_expected.to fail_a_step(:ensure_form_valid) }
     end
 
     context "when a number field receives a non-numeric value" do
@@ -119,11 +121,11 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
 
       let(:form_data) { { "age" => "abc" } }
 
-      it { is_expected.to fail_a_step(:validate_form_submission) }
+      it { is_expected.to fail_a_step(:ensure_form_valid) }
 
       it "does not raise and reports the invalid value" do
         expect { result }.not_to raise_error
-        expect(result[:form_errors]).to contain_exactly(
+        expect(result[:form_validation].errors.map(&:to_h)).to contain_exactly(
           { field_label: "Age", code: :invalid_value },
         )
       end
@@ -132,13 +134,13 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
     context "when the initial submission token is missing" do
       let(:resume_token) { nil }
 
-      it { is_expected.to fail_a_step(:validate_initial_submission_token) }
+      it { is_expected.to fail_a_policy(:valid_initial_submission_token) }
     end
 
     context "when the initial submission token is invalid" do
       let(:resume_token) { "invalid-token" }
 
-      it { is_expected.to fail_a_step(:validate_initial_submission_token) }
+      it { is_expected.to fail_a_policy(:valid_initial_submission_token) }
     end
 
     context "when everything's ok" do

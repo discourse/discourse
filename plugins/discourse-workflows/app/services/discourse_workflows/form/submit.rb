@@ -22,8 +22,9 @@ module DiscourseWorkflows
     model :workflow
     model :trigger_node
     policy :authenticated_if_required
-    step :validate_initial_submission_token
-    step :validate_form_submission
+    policy :valid_initial_submission_token
+    model :form_validation, :validate_form
+    step :ensure_form_valid
     model :execution, :run_workflow
     model :response_metadata, :build_response_metadata
 
@@ -34,13 +35,14 @@ module DiscourseWorkflows
       guardian.authenticated?
     end
 
-    def validate_form_submission(trigger_node:, params:)
-      result = FormSchema.validate(trigger_node, params.form_data)
-      if !result.valid?
-        context[:form_errors] = result.errors.map(&:to_h)
+    def validate_form(trigger_node:, params:)
+      FormSchema.validate(trigger_node, params.form_data)
+    end
+
+    def ensure_form_valid(form_validation:)
+      unless form_validation.valid?
         fail!(I18n.t("discourse_workflows.errors.invalid_form_submission"))
       end
-      context[:coerced_form_data] = result.data
     end
 
     def fetch_workflow(params:)
@@ -59,26 +61,23 @@ module DiscourseWorkflows
         .find { |node| node.dig("configuration", "uuid") == params.uuid }
     end
 
-    def validate_initial_submission_token(workflow:, trigger_node:, params:)
-      if params.resume_token.present? &&
-           DiscourseWorkflows::FormTriggerToken.valid?(
-             params.resume_token,
-             workflow_id: workflow.id,
-             trigger_node_id: trigger_node["id"],
-             uuid: params.uuid,
-           )
-        return
-      end
-
-      fail!(I18n.t("discourse_workflows.errors.invalid_form_token"))
+    def valid_initial_submission_token(workflow:, trigger_node:, params:)
+      params.resume_token.present? &&
+        DiscourseWorkflows::FormTriggerToken.valid?(
+          params.resume_token,
+          workflow_id: workflow.id,
+          trigger_node_id: trigger_node["id"],
+          uuid: params.uuid,
+        )
     end
 
-    def run_workflow(workflow:, trigger_node:, coerced_form_data:, guardian:)
-      coerced_form_data.transform_values! do |v|
-        v.is_a?(String) ? v.truncate(MAX_FIELD_VALUE_LENGTH) : v
-      end
+    def run_workflow(workflow:, trigger_node:, form_validation:, guardian:)
+      truncated_form_data =
+        form_validation.data.transform_values do |v|
+          v.is_a?(String) ? v.truncate(MAX_FIELD_VALUE_LENGTH) : v
+        end
       trigger_data = {
-        "form_data" => coerced_form_data,
+        "form_data" => truncated_form_data,
         "submitted_at" => Time.current.utc.iso8601,
       }
 

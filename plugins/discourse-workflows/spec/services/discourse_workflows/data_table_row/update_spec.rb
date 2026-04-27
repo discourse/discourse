@@ -98,7 +98,7 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Update do
         }
       end
 
-      it { is_expected.to fail_a_step(:update_matching_rows) }
+      it { is_expected.to fail_a_step(:ensure_rows_matched) }
     end
   end
 end

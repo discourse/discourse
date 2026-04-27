@@ -9,13 +9,12 @@ module DiscourseWorkflows
       validates :variable_id, presence: true
     end
 
-    model :variable
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :variable
 
-    transaction do
-      step :destroy_variable
-      step :log_variable_deletion
-    end
+    transaction { step :destroy_variable }
+
+    step :log_variable_deletion
 
     private
 

@@ -9,15 +9,13 @@ module DiscourseWorkflows
       validates :workflow_id, presence: true
     end
 
-    model :workflow
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :workflow
 
-    transaction do
-      step :destroy
-      step :log
-    end
+    transaction { step :delete_workflow }
 
-    step :clear_site_cache
+    step :log
+    step :expire_workflow_caches
 
     private
 
@@ -25,7 +23,7 @@ module DiscourseWorkflows
       DiscourseWorkflows::Workflow.find_by(id: params.workflow_id)
     end
 
-    def destroy(workflow:)
+    def delete_workflow(workflow:)
       workflow.destroy!
     end
 
@@ -37,7 +35,7 @@ module DiscourseWorkflows
       )
     end
 
-    def clear_site_cache
+    def expire_workflow_caches
       Site.clear_cache
       DiscourseWorkflows::WorkflowDependency.clear_cache!
     end

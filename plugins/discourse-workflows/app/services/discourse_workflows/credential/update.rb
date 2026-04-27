@@ -19,8 +19,8 @@ module DiscourseWorkflows
       end
     end
 
-    model :credential
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :credential
 
     model :credential, :save_credential
     step :log_credential_update

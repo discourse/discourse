@@ -13,8 +13,8 @@ module DiscourseWorkflows
       validates :column_name, presence: true
     end
 
-    model :data_table
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :data_table
     policy :column_exists
     policy :not_reserved_column
 

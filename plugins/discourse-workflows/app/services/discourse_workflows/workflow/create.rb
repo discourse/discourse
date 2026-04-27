@@ -23,7 +23,7 @@ module DiscourseWorkflows
     end
 
     step :log
-    step :clear_site_cache
+    step :expire_workflow_caches
 
     private
 
@@ -53,8 +53,9 @@ module DiscourseWorkflows
       )
     end
 
-    def clear_site_cache
+    def expire_workflow_caches
       Site.clear_cache
+      DiscourseWorkflows::WorkflowDependency.clear_cache!
     end
   end
 end

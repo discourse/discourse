@@ -62,7 +62,7 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
     end
 
     it "returns load_more_workflows when there are more results" do
-      stub_const(DiscourseWorkflows::Workflow::List, "DEFAULT_LIMIT", 1) do
+      stub_const(DiscourseWorkflows::Pagination, "DEFAULT_LIMIT", 1) do
         Fabricate(:discourse_workflows_workflow, created_by: admin, name: "First")
         Fabricate(:discourse_workflows_workflow, created_by: admin, name: "Second")
 

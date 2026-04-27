@@ -5,9 +5,7 @@ module DiscourseWorkflows
     include Service::Base
     include Concerns::DataTableServiceHelpers
 
-    VALID_COLUMN_TYPES = %w[string number boolean date].freeze
     MAX_COLUMNS = 30
-    MAX_COLUMN_NAME_LENGTH = 63
 
     params do
       attribute :data_table_id, :integer
@@ -18,10 +16,10 @@ module DiscourseWorkflows
       validates :name,
                 presence: true,
                 length: {
-                  maximum: MAX_COLUMN_NAME_LENGTH,
+                  maximum: DiscourseWorkflows::DataTable::MAX_COLUMN_NAME_LENGTH,
                 },
                 format: {
-                  with: /\A[a-zA-Z_][a-zA-Z0-9_]*\z/,
+                  with: DiscourseWorkflows::DataTable::COLUMN_NAME_FORMAT,
                   message:
                     "must start with a letter or underscore and contain only letters, numbers, and underscores",
                 },
@@ -29,11 +27,15 @@ module DiscourseWorkflows
                   in: DataTables::Storage::RESERVED_COLUMN_NAMES,
                   message: "is reserved",
                 }
-      validates :column_type, presence: true, inclusion: { in: VALID_COLUMN_TYPES }
+      validates :column_type,
+                presence: true,
+                inclusion: {
+                  in: DiscourseWorkflows::DataTable::VALID_COLUMN_TYPES,
+                }
     end
 
-    model :data_table
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
+    model :data_table
     policy :column_limit_not_reached
 
     step :add_storage_column

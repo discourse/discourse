@@ -38,14 +38,11 @@ module DiscourseWorkflows
     end
 
     def create_credential(params:)
-      credential =
-        DiscourseWorkflows::Credential.new(
-          name: params.name,
-          credential_type: params.credential_type,
-        )
-      credential.decrypted_data = params.normalized_data
-      credential.save
-      credential
+      DiscourseWorkflows::Credential.create(
+        name: params.name,
+        credential_type: params.credential_type,
+        decrypted_data: params.normalized_data,
+      )
     end
 
     def log_credential_creation(credential:, guardian:)

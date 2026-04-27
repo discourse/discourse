@@ -20,19 +20,21 @@ module DiscourseWorkflows
 
     model :execution
     model :waiting_node
-    step :validate_form_submission
+    model :form_validation, :validate_form
+    step :ensure_form_valid
     model :claimed_execution
     step :resume_execution
 
     private
 
-    def validate_form_submission(waiting_node:, params:)
-      result = FormSchema.validate(waiting_node, params.form_data)
-      if !result.valid?
-        context[:form_errors] = result.errors.map(&:to_h)
+    def validate_form(waiting_node:, params:)
+      FormSchema.validate(waiting_node, params.form_data)
+    end
+
+    def ensure_form_valid(form_validation:)
+      unless form_validation.valid?
         fail!(I18n.t("discourse_workflows.errors.invalid_form_submission"))
       end
-      context[:coerced_form_data] = result.data
     end
 
     def fetch_execution(params:)
@@ -56,8 +58,8 @@ module DiscourseWorkflows
       )
     end
 
-    def resume_execution(execution:, claimed_execution:, coerced_form_data:, guardian:)
-      form_data = execution.accumulated_form_data.merge(coerced_form_data)
+    def resume_execution(execution:, claimed_execution:, form_validation:, guardian:)
+      form_data = execution.accumulated_form_data.merge(form_validation.data)
 
       response_items = [
         { "json" => { "form_data" => form_data, "submitted_at" => Time.current.utc.iso8601 } },

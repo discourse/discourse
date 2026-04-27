@@ -4,9 +4,6 @@ module DiscourseWorkflows
   class Execution::List
     include Service::Base
 
-    DEFAULT_LIMIT = 25
-    MAX_LIMIT = 100
-
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
 
     params do
@@ -15,11 +12,12 @@ module DiscourseWorkflows
       attribute :limit, :integer
 
       before_validation do
-        self.limit = limit.to_i.clamp(1, Execution::List::MAX_LIMIT) if limit.present?
+        self.limit =
+          limit.to_i.clamp(1, DiscourseWorkflows::Pagination::MAX_LIMIT) if limit.present?
       end
 
       def effective_limit
-        limit || DEFAULT_LIMIT
+        limit || DiscourseWorkflows::Pagination::DEFAULT_LIMIT
       end
     end
 
