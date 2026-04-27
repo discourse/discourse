@@ -7,12 +7,15 @@ import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import htmlClass from "discourse/helpers/html-class";
 import getURL from "discourse/lib/get-url";
+import WebArtifactBuilder from "./modal/web-artifact-builder";
 
 export default class WebArtifactComponent extends Component {
   @service siteSettings;
+  @service modal;
 
   @tracked expanded = false;
   @tracked showingArtifact = false;
+  @tracked cacheBuster = 0;
 
   #popStateHandler;
 
@@ -50,6 +53,10 @@ export default class WebArtifactComponent extends Component {
       return false;
     }
 
+    if (this.args.previewMode) {
+      return true;
+    }
+
     if (this.siteSettings.web_artifact_security === "strict") {
       return true;
     }
@@ -72,6 +79,9 @@ export default class WebArtifactComponent extends Component {
     if (this.args.artifactVersion) {
       url = `${url}/${this.args.artifactVersion}`;
     }
+    if (this.cacheBuster) {
+      url = `${url}?_=${this.cacheBuster}`;
+    }
     return url;
   }
 
@@ -93,6 +103,18 @@ export default class WebArtifactComponent extends Component {
       history.back();
     }
     this.expanded = !this.expanded;
+  }
+
+  @action
+  editArtifact() {
+    this.modal.show(WebArtifactBuilder, {
+      model: {
+        artifactId: this.args.artifactId,
+        onSaved: () => {
+          this.cacheBuster = Date.now();
+        },
+      },
+    });
   }
 
   get wrapperClasses() {
@@ -172,6 +194,14 @@ export default class WebArtifactComponent extends Component {
       {{/if}}
       {{#if this.showFooter}}
         <div class="web-artifact__footer">
+          {{#if @canEdit}}
+            <DButton
+              class="btn-transparent btn-icon-text web-artifact__edit-button"
+              @icon="pencil"
+              @label="web_artifact.edit_label"
+              @action={{this.editArtifact}}
+            />
+          {{/if}}
           <DButton
             class="btn-transparent btn-icon-text web-artifact__expand-button"
             @icon="discourse-expand"

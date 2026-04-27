@@ -8,9 +8,17 @@ function initializeWebArtifacts(api) {
         return;
       }
 
+      const post = helper.getModel?.();
+      const editableIds = new Set(post?.editable_web_artifact_ids || []);
+      const previewMode = !post;
+
       [
         ...element.querySelectorAll("div.ai-artifact, div.web-artifact"),
       ].forEach((artifactElement) => {
+        if (artifactElement.closest("aside.quote")) {
+          return;
+        }
+
         const artifactId =
           artifactElement.getAttribute("data-web-artifact-id") ||
           artifactElement.getAttribute("data-ai-artifact-id");
@@ -35,6 +43,10 @@ function initializeWebArtifacts(api) {
           artifactElement.hasAttribute("data-web-artifact-seamless") ||
           artifactElement.hasAttribute("data-ai-artifact-seamless");
 
+        const canEdit =
+          previewMode ||
+          (artifactId && editableIds.has(parseInt(artifactId, 10)));
+
         const dataAttributes = {};
         for (const attr of artifactElement.attributes) {
           if (
@@ -56,16 +68,15 @@ function initializeWebArtifacts(api) {
               @artifactHeight={{artifactHeight}}
               @autorun={{autorun}}
               @seamless={{seamless}}
+              @canEdit={{canEdit}}
+              @previewMode={{previewMode}}
               @dataAttributes={{dataAttributes}}
             />
           </template>
         );
       });
     },
-    {
-      id: "web-artifact",
-      onlyStream: true,
-    }
+    { id: "web-artifact" }
   );
 }
 

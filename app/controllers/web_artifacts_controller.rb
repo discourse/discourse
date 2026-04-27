@@ -52,10 +52,40 @@ class WebArtifactsController < ApplicationController
     end
   end
 
+  def metadata
+    artifact = WebArtifact.find(params[:id])
+    raise Discourse::InvalidAccess if !guardian.can_edit_web_artifact?(artifact)
+
+    render json: {
+             id: artifact.id,
+             name: artifact.name,
+             html: artifact.html,
+             css: artifact.css,
+             js: artifact.js,
+           }
+  end
+
+  def update
+    artifact = WebArtifact.find(params[:id])
+    raise Discourse::InvalidAccess if !guardian.can_edit_web_artifact?(artifact)
+    RateLimiter.new(current_user, "update-web-artifact", 20, 1.minute).performed!
+
+    artifact.update!(name: artifact_params[:name].to_s[0...255]) if artifact_params[:name].present?
+
+    artifact.create_new_version(
+      html: artifact_params[:html],
+      css: artifact_params[:css],
+      js: artifact_params[:js],
+      change_description: artifact_params[:change_description],
+    )
+
+    head :no_content
+  end
+
   private
 
   def artifact_params
-    params.permit(:name, :html, :css, :js)
+    params.permit(:name, :html, :css, :js, :change_description)
   end
 
   def build_untrusted_html(artifact, name)

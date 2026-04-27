@@ -15,9 +15,49 @@ export default class WebArtifactBuilder extends Component {
   @tracked css = "";
   @tracked js = "";
   @tracked loading = false;
+  @tracked initialized = !this.editingArtifactId;
 
-  get insertDisabled() {
-    return this.loading || (!this.html && !this.css && !this.js);
+  constructor() {
+    super(...arguments);
+    if (this.editingArtifactId) {
+      this.loadArtifact();
+    }
+  }
+
+  get editingArtifactId() {
+    return this.args.model.artifactId;
+  }
+
+  get title() {
+    return this.editingArtifactId
+      ? "web_artifact.edit_title"
+      : "web_artifact.composer_title";
+  }
+
+  get submitLabel() {
+    return this.editingArtifactId
+      ? "web_artifact.save_label"
+      : "web_artifact.composer_insert";
+  }
+
+  get submitDisabled() {
+    return (
+      this.loading || !this.initialized || (!this.html && !this.css && !this.js)
+    );
+  }
+
+  async loadArtifact() {
+    try {
+      const data = await ajax(`/web-artifacts/${this.editingArtifactId}.json`);
+      this.name = data.name || "";
+      this.html = data.html || "";
+      this.css = data.css || "";
+      this.js = data.js || "";
+      this.initialized = true;
+    } catch (e) {
+      popupAjaxError(e);
+      this.args.closeModal();
+    }
   }
 
   @action
@@ -26,22 +66,34 @@ export default class WebArtifactBuilder extends Component {
   }
 
   @action
-  async insertArtifact() {
+  async submit() {
     this.loading = true;
     try {
-      const result = await ajax("/web-artifacts.json", {
-        type: "POST",
-        data: {
-          name: this.name || "Untitled",
-          html: this.html,
-          css: this.css,
-          js: this.js,
-        },
-      });
-
-      this.args.model.toolbarEvent.addText(
-        `<div class="web-artifact" data-web-artifact-id="${result.id}"></div>`
-      );
+      if (this.editingArtifactId) {
+        await ajax(`/web-artifacts/${this.editingArtifactId}.json`, {
+          type: "PUT",
+          data: {
+            name: this.name || "Untitled",
+            html: this.html,
+            css: this.css,
+            js: this.js,
+          },
+        });
+        this.args.model.onSaved?.();
+      } else {
+        const result = await ajax("/web-artifacts.json", {
+          type: "POST",
+          data: {
+            name: this.name || "Untitled",
+            html: this.html,
+            css: this.css,
+            js: this.js,
+          },
+        });
+        this.args.model.toolbarEvent.addText(
+          `<div class="web-artifact" data-web-artifact-id="${result.id}"></div>`
+        );
+      }
       this.args.closeModal();
     } catch (e) {
       popupAjaxError(e);
@@ -52,7 +104,7 @@ export default class WebArtifactBuilder extends Component {
 
   <template>
     <DModal
-      @title={{i18n "web_artifact.composer_title"}}
+      @title={{i18n this.title}}
       @closeModal={{@closeModal}}
       class="web-artifact-builder-modal"
     >
@@ -90,9 +142,9 @@ export default class WebArtifactBuilder extends Component {
       </:body>
       <:footer>
         <DButton
-          @action={{this.insertArtifact}}
-          @label="web_artifact.composer_insert"
-          @disabled={{this.insertDisabled}}
+          @action={{this.submit}}
+          @label={{this.submitLabel}}
+          @disabled={{this.submitDisabled}}
           @isLoading={{this.loading}}
           class="btn-primary"
         />

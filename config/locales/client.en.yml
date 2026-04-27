@@ -9224,14 +9224,17 @@ en:
       expand_view_label: "Expand view"
       collapse_view_label: "Exit fullscreen (ESC or back button)"
       click_to_run_label: "Run artifact"
+      edit_label: "Edit artifact"
       link: "Open artifact"
       copy_embed: "Copy embed code"
       composer_title: "Insert web artifact"
+      edit_title: "Edit web artifact"
       composer_name_label: "Name"
       composer_html_label: "HTML"
       composer_css_label: "CSS"
       composer_js_label: "JavaScript"
       composer_insert: "Insert"
+      save_label: "Save"
 
   wizard_js:
     wizard:

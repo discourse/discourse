@@ -100,7 +100,8 @@ class PostSerializer < BasicPostSerializer
              :locale,
              :is_localized,
              :language,
-             :localization_outdated
+             :localization_outdated,
+             :editable_web_artifact_ids
 
   def initialize(object, opts)
     super(object, opts)
@@ -191,6 +192,29 @@ class PostSerializer < BasicPostSerializer
 
   def can_edit
     scope.can_edit?(object)
+  end
+
+  def editable_web_artifact_ids
+    return [] if object.cooked.blank? || !object.cooked.include?("artifact-id=")
+
+    ids =
+      Nokogiri::HTML5
+        .fragment(object.cooked)
+        .css("div.web-artifact, div.ai-artifact")
+        .map { |node| (node["data-web-artifact-id"] || node["data-ai-artifact-id"]).to_i }
+        .reject(&:zero?)
+        .uniq
+
+    return [] if ids.empty?
+
+    WebArtifact
+      .where(id: ids)
+      .select { |artifact| scope.can_edit_web_artifact?(artifact) }
+      .map(&:id)
+  end
+
+  def include_editable_web_artifact_ids?
+    scope.authenticated? && object.cooked.to_s.include?("artifact-id=")
   end
 
   def can_delete

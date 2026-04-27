@@ -131,4 +131,63 @@ RSpec.describe WebArtifactsController do
       expect(response.status).to eq(404)
     end
   end
+
+  describe "#metadata" do
+    before { SiteSetting.web_artifact_security = "strict" }
+
+    it "returns artifact metadata for the owner" do
+      sign_in(user)
+      get "/web-artifacts/#{artifact.id}.json"
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["id"]).to eq(artifact.id)
+      expect(json["name"]).to eq(artifact.name)
+    end
+
+    it "returns 403 for non-owner non-admin" do
+      other_user = Fabricate(:user)
+      sign_in(other_user)
+      get "/web-artifacts/#{artifact.id}.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "returns artifact metadata for admin" do
+      sign_in(admin)
+      get "/web-artifacts/#{artifact.id}.json"
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#update" do
+    before { SiteSetting.web_artifact_security = "strict" }
+
+    it "creates a new version on update" do
+      sign_in(user)
+      put "/web-artifacts/#{artifact.id}.json",
+          params: {
+            html: "<p>updated</p>",
+            css: ".x{color:red}",
+            js: "",
+            change_description: "tweak",
+          }
+      expect(response.status).to eq(204)
+
+      version = artifact.versions.order(:version_number).last
+      expect(version.html).to eq("<p>updated</p>")
+      expect(version.change_description).to eq("tweak")
+    end
+
+    it "returns 403 for non-owner non-admin" do
+      other_user = Fabricate(:user)
+      sign_in(other_user)
+      put "/web-artifacts/#{artifact.id}.json", params: { html: "<p>x</p>" }
+      expect(response.status).to eq(403)
+    end
+
+    it "allows admin to edit any artifact" do
+      sign_in(admin)
+      put "/web-artifacts/#{artifact.id}.json", params: { html: "<p>by admin</p>" }
+      expect(response.status).to eq(204)
+    end
+  end
 end

@@ -944,4 +944,53 @@ RSpec.describe PostSerializer do
       expect(json.key?(:post_localizations_count)).to eq(false)
     end
   end
+
+  describe "#editable_web_artifact_ids" do
+    fab!(:author, :user)
+    fab!(:post_with_artifact) { Fabricate(:post, user: author) }
+
+    fab!(:owned_artifact) { Fabricate(:web_artifact, user: author, post: post_with_artifact) }
+
+    fab!(:other_user, :user)
+    fab!(:foreign_artifact) { Fabricate(:web_artifact, user: other_user, post: post_with_artifact) }
+
+    before { post_with_artifact.update_columns(cooked: <<~HTML) }
+          <p>look</p>
+          <div class="web-artifact" data-web-artifact-id="#{owned_artifact.id}"></div>
+          <div class="ai-artifact" data-ai-artifact-id="#{foreign_artifact.id}"></div>
+        HTML
+
+    it "lists artifact ids the current user can edit" do
+      json =
+        PostSerializer.new(post_with_artifact, scope: Guardian.new(author), root: false).as_json
+      expect(json[:editable_web_artifact_ids]).to contain_exactly(owned_artifact.id)
+    end
+
+    it "lists all artifact ids for admins" do
+      admin = Fabricate(:admin)
+      json = PostSerializer.new(post_with_artifact, scope: Guardian.new(admin), root: false).as_json
+      expect(json[:editable_web_artifact_ids]).to contain_exactly(
+        owned_artifact.id,
+        foreign_artifact.id,
+      )
+    end
+
+    it "is empty for users who own none of the referenced artifacts" do
+      stranger = Fabricate(:user)
+      json =
+        PostSerializer.new(post_with_artifact, scope: Guardian.new(stranger), root: false).as_json
+      expect(json[:editable_web_artifact_ids]).to eq([])
+    end
+
+    it "is omitted from unauthenticated payloads" do
+      json = PostSerializer.new(post_with_artifact, scope: Guardian.new, root: false).as_json
+      expect(json.key?(:editable_web_artifact_ids)).to eq(false)
+    end
+
+    it "is omitted from posts that don't reference an artifact" do
+      plain_post = Fabricate(:post, user: author)
+      json = PostSerializer.new(plain_post, scope: Guardian.new(author), root: false).as_json
+      expect(json.key?(:editable_web_artifact_ids)).to eq(false)
+    end
+  end
 end

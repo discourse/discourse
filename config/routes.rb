@@ -1518,6 +1518,8 @@ Discourse::Application.routes.draw do
     # Web artifact routes
     get "w/:id(/:version)" => "web_artifacts#show"
     post "web-artifacts" => "web_artifacts#create", :defaults => { format: :json }
+    get "web-artifacts/:id" => "web_artifacts#metadata", :defaults => { format: :json }
+    put "web-artifacts/:id" => "web_artifacts#update", :defaults => { format: :json }
     scope "/web-artifact-key-values/:artifact_id", defaults: { format: :json } do
       get "/" => "web_artifact_key_values#index"
       post "/" => "web_artifact_key_values#set"
