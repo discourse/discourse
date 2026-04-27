@@ -600,6 +600,7 @@ export default class UpsertCategoryGeneral extends Component {
             class={{concatClass
               "category-type-selector__result"
               (unless type.available "--unavailable")
+              (concat "--category-type-" type.id)
             }}
           >
             <div class="category-type-selector__name">

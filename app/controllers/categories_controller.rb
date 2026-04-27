@@ -236,7 +236,7 @@ class CategoriesController < ApplicationController
       # Handles adding or removing category types registered by plugins
       # based on the multi-type selector in the General tab for categories.
       if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
-        manage_category_types(cat, pending_custom_fields)
+        manage_category_types(cat, pending_custom_fields || {})
         cat.reload
       end
 
@@ -567,11 +567,6 @@ class CategoriesController < ApplicationController
       current_category_types = category.category_types.keys
       removed_category_types = current_category_types - new_category_types
       added_category_types = new_category_types - current_category_types
-
-      puts "NEW CATEGORY TYPES: #{new_category_types}"
-      puts "REMOVED CATEGORY TYPES: #{removed_category_types}"
-      puts "ADDED CATEGORY TYPES: #{added_category_types}"
-      puts "CURRENT CATEGORY TYPES: #{current_category_types}"
 
       # Some category custom fields (like
       # DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD) control whether

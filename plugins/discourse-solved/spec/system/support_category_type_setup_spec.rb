@@ -66,6 +66,22 @@ RSpec.describe "Support Category Type Setup" do
     end
   end
 
+  context "for an existing category with no support category type" do
+    fab!(:category)
+
+    it "can add the support category type" do
+      visit("/c/#{category.slug}/edit")
+      category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+      category_type_selector.expand
+      category_type_selector.option(".category-type-selector__result.--category-type-support").click
+      banner.click_save
+      expect(toast).to have_success(I18n.t("js.saved"))
+      expect(page).to have_css(".nav-pills .edit-category-support")
+      category.reload
+      expect(category.category_types.keys).to eq(%i[discussion support])
+    end
+  end
+
   context "when there is a support category already configured" do
     fab!(:category)
 
@@ -119,6 +135,17 @@ RSpec.describe "Support Category Type Setup" do
       expect(category.custom_fields["empty_box_on_unsolved"]).to eq("false")
       expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("72")
       expect(SiteSetting.show_who_marked_solved).to eq(true)
+    end
+
+    it "can remove the support category type" do
+      visit("/c/#{category.slug}/edit")
+      category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+      category_type_selector.remove_selected_option("Support")
+      banner.click_save
+      expect(toast).to have_success(I18n.t("js.saved"))
+      expect(page).to have_no_css(".nav-pills .edit-category-support")
+      category.reload
+      expect(category.category_types.keys).to eq(%i[discussion])
     end
   end
 
