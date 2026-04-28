@@ -5,6 +5,10 @@
   background: var(--secondary);
   padding: var(--space-4);
   border-radius: var(--d-border-radius-large);
+  max-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
+  );
 
   &__header {
     margin-bottom: 1em;
