@@ -37,6 +37,8 @@ describe "JS Deprecation Handling" do
 
     visit("/latest")
 
+    expect(page).to have_css("#site-logo")
+
     page.execute_script <<~JS
       const deprecated = require("discourse/lib/deprecated").default;
       deprecated("Fake deprecation message", { id: "fake.deprecation1" })
