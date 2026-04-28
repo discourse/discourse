@@ -210,7 +210,10 @@ RSpec.describe "User menu notifications | sidebar" do
     before do
       Chat::InviteUsersToChannel.call(
         guardian: Guardian.new(Fabricate(:admin)),
-        params: { channel_id: channel_1.id, user_ids: [current_user.id] },
+        params: {
+          channel_id: channel_1.id,
+          user_ids: [current_user.id],
+        },
       )
     end
 
