@@ -84,6 +84,25 @@ module PageObjects
         find("#visible-permission").checked?
       end
 
+      def select_private_permission
+        find("#private-permission").click
+        self
+      end
+
+      def has_private_permission_checked?
+        find("#private-permission").checked?
+      end
+
+      def has_public_permission_checked?
+        find("#public-permission").checked?
+      end
+
+      def private_group_chooser
+        PageObjects::Components::SelectKit.new(
+          ".group-visibility-option:has(#private-permission) .group-chooser",
+        )
+      end
+
       def save
         find(".tag-group-controls .btn-primary").click
         self
