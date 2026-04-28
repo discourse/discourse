@@ -2,7 +2,7 @@
 @import "common/foundation/mixins";
 
 .admin-onboarding-banner {
-  margin-block: var(--space-8) var(--space-4);
+  margin-bottom: var(--space-4);
   color: var(--secondary);
 
   @include viewport.until(sm) {

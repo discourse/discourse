@@ -152,11 +152,6 @@
     padding-block: 0;
   }
 
-  // welcome banner
-  #main-outlet:has(.welcome-banner) {
-    --main-outlet-padding-top: 0;
-  }
-
   .welcome-banner__wrap {
     padding-block: var(--d-main-content-gap);
   }
