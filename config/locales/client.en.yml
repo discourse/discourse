@@ -5027,7 +5027,7 @@ en:
           high: "High"
           very_high: "Very high"
       sort_options:
-        default: "default"
+        default: "Default"
         likes: "Likes"
         op_likes: "Original post likes"
         views: "Views"
@@ -5038,6 +5038,7 @@ en:
         created: "Created"
       sort_ascending: "Ascending"
       sort_descending: "Descending"
+      sort_direction: "Sort direction"
       subcategory_list_styles:
         rows: "Rows"
         rows_with_featured_topics: "Rows with featured topics"
