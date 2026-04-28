@@ -40,7 +40,7 @@ module Chat
       # Builds the `actions`/`action_data` fields that enable a "Reply"
       # quick-action button on web push notifications for a chat message.
       # The chat plugin's service worker dispatches on the "chat-reply"
-      # action name (see plugins/chat/assets/javascripts/service-worker.js).
+      # action name (see plugins/chat/assets/javascripts/chat-service-worker-extensions.js).
       def push_notification_reply_action(chat_message, user)
         I18n.with_locale(user.effective_locale) do
           {
