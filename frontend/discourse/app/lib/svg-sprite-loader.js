@@ -18,7 +18,7 @@ export function loadSprites(spritePath, spriteName) {
     spriteContainer.appendChild(sprites);
   }
 
-  loadScript(spritePath).then(() => {
+  return loadScript(spritePath).then(() => {
     sprites.innerHTML = window.__svg_sprite;
     // we got to clean up here... this is one giant string
     delete window.__svg_sprite;

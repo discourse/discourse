@@ -3,6 +3,7 @@ import * as fs from "fs";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
+import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
 
 writeResolverConfig(
   {
@@ -99,6 +100,7 @@ export function buildConfig({ devMode } = {}) {
         parallel: true,
         skipPreflightCheck: true,
       }),
+      wrapTestModulesPlugin(),
       {
         name: "resolve-externals",
         resolveId(source) {

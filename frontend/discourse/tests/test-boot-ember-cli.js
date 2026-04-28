@@ -66,7 +66,13 @@ export async function startTests() {
 
   let availableModules;
   if (testingCore) {
-    availableModules = import.meta.glob("./**/*-test.{gjs,js}");
+    const rawModules = import.meta.glob("./**/*-test.{gjs,js}", {
+      eager: true,
+    });
+    availableModules = {};
+    for (const [key, value] of Object.entries(rawModules)) {
+      availableModules[key] = value.default;
+    }
   }
 
   startEmberExam({

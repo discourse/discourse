@@ -249,7 +249,7 @@ export default function setupTests(config) {
   }
 
   let app;
-  QUnit.testStart(function (ctx) {
+  QUnit.testStart(async function (ctx) {
     let settings = resetSettings();
 
     resetThemeSettings();
@@ -264,7 +264,7 @@ export default function setupTests(config) {
     } else {
       setupS3CDN(null, null, { snapshot: true });
     }
-    loadSprites(setupData.svgSpritePath, "fontawesome");
+    await loadSprites(setupData.svgSpritePath, "fontawesome");
 
     applyDefaultHandlers();
 
