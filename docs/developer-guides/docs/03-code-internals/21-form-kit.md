@@ -564,13 +564,9 @@ Additionally, the following CSS variables are provided to customize these defaul
 - medium: `--form-kit-medium-input`
 - large: `--form-kit-large-input`
 
-## @titleFormat
+## @labelFormat
 
-Allows to override `@format` for the title. See `@format` for details.
-
-## @descriptionFormat
-
-Allows to override `@format` for the description. See `@format` for details.
+Overrides the width of the title and description (the label area) independently of `@format`. Useful when long descriptions need more room than the input itself — e.g. `@format="small"` with `@labelFormat="full"` keeps a small input but lets the description span the form. Only emit it when the label area should differ from the field; otherwise both inherit from `@format`. See `@format` for the available values.
 
 ## Checkbox
 

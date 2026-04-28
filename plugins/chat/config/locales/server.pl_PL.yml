@@ -12,7 +12,7 @@ pl_PL:
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
     chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować. Pamiętaj, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
     chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
-    chat_dm_retention_days: "Wiadomości czatu w osobistych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
+    chat_dm_retention_days: "Wiadomości czatu na prywatnych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_auto_silence_duration: "Liczba minut, przez które użytkownicy zostaną wyciszeni, gdy przekroczą limit szybkości tworzenia wiadomości na czacie. Ustaw na '0', aby wyłączyć automatyczne wyciszanie."
     chat_allowed_messages_for_trust_level_0: "Liczba wiadomości, które użytkownicy o poziomie zaufania 0 mogą wysłać w ciągu 30 sekund. Ustaw na '0', aby wyłączyć limit."
     chat_allowed_messages_for_other_trust_levels: "Liczba wiadomości, które użytkownicy z poziomami zaufania 1-4 mogą wysłać w ciągu 30 sekund. Ustaw na '0', aby wyłączyć limit."
@@ -22,7 +22,7 @@ pl_PL:
     chat_minimum_message_length: "Minimalna liczba znaków wiadomości na czacie."
     chat_allow_uploads: "Zezwalaj na przesyłanie plików w publicznych kanałach czatu i kanałach wiadomości bezpośrednich."
     chat_archive_destination_topic_status: "Status, jaki powinien mieć temat docelowy po zakończeniu archiwizacji kanału. Dotyczy to tylko sytuacji, gdy temat docelowy jest nowym tematem, a nie istniejącym."
-    direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie czatów osobistych między użytkownikami. Uwaga: personel zawsze może tworzyć czaty osobiste, a użytkownicy będą mogli odpowiadać na czaty osobiste inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
+    direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie prywatnych czatów między użytkownikami. Uwaga: personel zawsze może tworzyć prywatne czaty, a użytkownicy będą mogli odpowiadać na prywatne czaty inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
     chat_message_flag_allowed_groups: "Użytkownicy w tych grupach mogą oznaczać flagami wiadomości czatu. Należy pamiętać, że administratorzy i moderatorzy zawsze mogą oznaczać flagami wiadomości czatu."
     chat_pinning_messages_allowed_groups: "Użytkownicy w tych grupach mogą przypinać wiadomości czatu w kanałach, do których mają dostęp. Pamiętaj, że administratorzy i moderatorzy zawsze mogą przypinać wiadomości czatu. Każdy członek czatu grupowego lub wiadomości prywatnej może przypinać tam wiadomości."
     max_mentions_per_chat_message: "Maksymalna liczba powiadomień @name, których użytkownik może użyć w wiadomości na czacie."
@@ -100,7 +100,7 @@ pl_PL:
       actor_ignoring_target_user: "Ignorujesz %{username}, więc nie możesz wysyłać do niego wiadomości."
       actor_muting_target_user: "Wyciszasz %{username}, więc nie możesz wysyłać do niego wiadomości."
       actor_disallowed_dms: "Zdecydowałeś się uniemożliwić użytkownikom wysyłanie Ci prywatnych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości."
-      actor_preventing_target_user_from_dm: "Zdecydowałeś się uniemożliwić %{username} wysyłanie do Ciebie osobistych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości do nich."
+      actor_preventing_target_user_from_dm: "Zdecydowałeś się uniemożliwić %{username} wysyłanie do Ciebie prywatnych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości do nich."
       not_reachable: "Przepraszamy, %{username} nie używa czatu."
       user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       over_chat_max_direct_message_users_allow_self: "Możesz utworzyć bezpośrednią wiadomość tylko z samym sobą."
@@ -254,10 +254,10 @@ pl_PL:
         direct: '%{username} wspomniał(a) o Tobie w "%{channel}"'
         other_type: '%{username} wspomniał %{identifier} w "%{channel}"'
       direct_message_chat_mention:
-        direct: "%{username} wspomniał(a) o Tobie na czacie osobistym"
-        other_type: "%{username} oznaczył %{identifier} na czacie osobistym"
+        direct: "%{username} wspomniał(a) o Tobie na prywatnym czacie"
+        other_type: "%{username} oznaczył %{identifier} na prywatnym czacie"
       new_chat_message: '%{username} wysłał(a) wiadomość w "%{channel}"'
-      new_direct_chat_message: "%{username} wysłał(a) wiadomość w osobistym czacie"
+      new_direct_chat_message: "%{username} wysłał(a) wiadomość na prywatnym czacie"
   discourse_automation:
     scriptables:
       send_chat_message:

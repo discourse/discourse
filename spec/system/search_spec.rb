@@ -89,25 +89,24 @@ describe "Search" do
     before do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
-      SiteSetting.rate_limit_search_anon_user_per_minute = 4
+      SiteSetting.rate_limit_search_anon_user_per_minute = 1
       RateLimiter.enable
       Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
     end
 
     after { SearchIndexer.disable }
 
-    xit "rate limits searches for anonymous users" do
-      queries = %w[one two three four]
-
+    it "rate limits searches for anonymous users" do
       visit("/search?expanded=true")
 
-      queries.each do |query|
-        search_page.clear_search_input
-        search_page.type_in_search(query)
-        search_page.click_search_button
-      end
+      search_page.type_in_search("first")
+      search_page.click_search_button
+      expect(search_page).to have_no_css(".search-container .spinner")
 
-      # Rate limit error should kick in after 4 queries
+      search_page.clear_search_input
+      search_page.type_in_search("second")
+      search_page.click_search_button
+
       expect(search_page).to have_warning_message
     end
   end

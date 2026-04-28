@@ -15,10 +15,36 @@ ar:
       reactions_title: "التفاعلات"
       state_panel:
         more_users: "و%{count} أخرى..."
+        show_users: "عرض المزيد من المستخدمين"
+        hide_users: "عرض عدد أقل من المستخدمين"
+        reaction_group:
+          zero: "%{reaction}: %{count} من المستخدمين"
+          one: "%{reaction}: مستخدم واحد (%{count})"
+          two: "%{reaction}: مستخدمان (%{count})"
+          few: "%{reaction}: %{count} مستخدمين"
+          many: "%{reaction}: %{count} مستخدمًا"
+          other: "%{reaction}: %{count} مستخدم"
       picker:
         react_with: "تفاعل مع هذا المنشور باستخدام: %{reaction}"
         cant_remove_reaction: "لم يعد بإمكانك إزالة تفاعلك"
         remove_reaction: "إزالة هذا التفاعل %{reaction}"
+      users_popup:
+        all: "الكل"
+        title:
+          zero: "%{count} تفاعل"
+          one: "تفاعل واحد (%{count})"
+          two: "تفاعلان (%{count})"
+          few: "%{count} تفاعلات"
+          many: "%{count} تفاعلًا"
+          other: "%{count} تفاعل"
+      counter:
+        aria_label:
+          zero: "%{count} من التفاعل"
+          one: "تفاعل واحد (%{count})"
+          two: "تفاعلان (%{count})"
+          few: "%{count} تفاعلات"
+          many: "%{count} تفاعلًا"
+          other: "%{count} تفاعل"
       main_reaction:
         add: "تسجيل الإعجاب بهذا المنشور"
         remove: "إزالة هذا الإعجاب"

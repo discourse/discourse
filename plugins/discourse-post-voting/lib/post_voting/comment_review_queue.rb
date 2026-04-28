@@ -43,15 +43,14 @@ module PostVoting
             payload: payload,
           )
         reviewable.update(target_created_by: comment.user)
-        score =
-          reviewable.add_score(
-            guardian.user,
-            flag_type_id,
-            meta_topic_id: post&.topic_id,
-            take_action: opts[:take_action],
-            reason: queued_for_review ? "post_voting_comment_queued_by_staff" : nil,
-            force_review: queued_for_review,
-          )
+        reviewable.add_score(
+          guardian.user,
+          flag_type_id,
+          meta_topic_id: post&.topic_id,
+          take_action: opts[:take_action],
+          reason: queued_for_review ? "post_voting_comment_queued_by_staff" : nil,
+          force_review: queued_for_review,
+        )
 
         if opts[:take_action]
           reviewable.perform(guardian.user, :agree_and_delete)

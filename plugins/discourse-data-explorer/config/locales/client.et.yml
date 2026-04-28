@@ -18,6 +18,7 @@ et:
       create_placeholder: "Päringu nimi..."
       ai:
         generate: "Genereeri"
+        optional: "valikuline"
       import:
         label: "Impordi"
       help:

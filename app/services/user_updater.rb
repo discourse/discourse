@@ -259,7 +259,7 @@ class UserUpdater
         )
       end
       DiscourseEvent.trigger(:within_user_updater_transaction, user, attributes)
-    rescue Addressable::URI::InvalidURIError => e
+    rescue Addressable::URI::InvalidURIError
       # Prevent 500 for crazy url input
       return saved
     end

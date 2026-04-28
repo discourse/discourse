@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.config.after_initialize do |config|
-  if Rails.env.development?
+  if Rails.env.development? && !ENV["CI"]
     require "listen"
 
     class Watcher

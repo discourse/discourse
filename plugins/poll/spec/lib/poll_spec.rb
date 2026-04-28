@@ -543,7 +543,7 @@ RSpec.describe DiscoursePoll::Poll do
 
       it "returns all serialized voters" do
         voters = DiscoursePoll::Poll.serialized_voters(poll)
-        voters.transform_values! { |users| users.sort_by { |ranked_u| ranked_u[:user][:username] } }
+        voters.transform_values! { |users| users.sort_by { |ranked_u| ranked_u[:user][:id] } }
         expect(voters).to eq(
           {
             poll_options.first.digest => [
@@ -568,7 +568,7 @@ RSpec.describe DiscoursePoll::Poll do
       it "correctly paginates voters" do
         opts = { page: 1, limit: 2 }.with_indifferent_access
         voters = DiscoursePoll::Poll.serialized_voters(poll, opts)
-        voters.transform_values! { |users| users.sort_by { |ranked_u| ranked_u[:user][:username] } }
+        voters.transform_values! { |users| users.sort_by { |ranked_u| ranked_u[:user][:id] } }
         expect(voters).to eq(
           {
             poll_options.first.digest => [
@@ -588,7 +588,7 @@ RSpec.describe DiscoursePoll::Poll do
 
         opts = { page: 2, limit: 2 }.with_indifferent_access
         voters = DiscoursePoll::Poll.serialized_voters(poll, opts)
-        voters.transform_values! { |users| users.sort_by { |ranked_u| ranked_u[:user][:username] } }
+        voters.transform_values! { |users| users.sort_by { |ranked_u| ranked_u[:user][:id] } }
         expect(voters).to eq(
           {
             poll_options.first.digest => [

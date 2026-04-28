@@ -12,6 +12,7 @@ lv:
       create: "Izveidot"
       ai:
         generate: "Radīt"
+        optional: "pēc izvēles"
       import:
         label: "Importēt"
       help:

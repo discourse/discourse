@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
@@ -10,11 +10,11 @@ import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import UpcomingChangeBadges from "discourse/admin/components/admin-config-areas/upcoming-change-badges";
 import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
 import GroupSelector from "discourse/components/group-selector";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -42,21 +42,6 @@ export default class UpcomingChangeItem extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this._savingEnabledForTimeout);
-  }
-
-  impactRoleIcon(impactRole) {
-    switch (impactRole) {
-      case "admins":
-        return "shield-halved";
-      case "moderators":
-        return "shield-halved";
-      case "staff":
-        return "shield-halved";
-      case "all_members":
-        return "users";
-      case "developers":
-        return "code";
-    }
   }
 
   get enabledForOptions() {
@@ -341,63 +326,7 @@ export default class UpcomingChangeItem extends Component {
           </div>
         {{/if}}
 
-        <div class="upcoming-change__badges">
-          <DTooltip
-            @content={{i18n
-              (concat
-                "admin.upcoming_changes.status_descriptions."
-                @change.upcoming_change.status
-              )
-            }}
-          >
-            <:trigger>
-              <span
-                class={{concatClass
-                  "upcoming-change__badge"
-                  "--has-tooltip"
-                  (concat "--status-" @change.upcoming_change.status)
-                }}
-              >
-                <span class="upcoming-change__badge-content">
-
-                  {{icon "flask"}}
-                  {{i18n
-                    (concat
-                      "admin.upcoming_changes.statuses."
-                      @change.upcoming_change.status
-                    )
-                  }}
-                </span>
-                <span class="upcoming-change__badge-info">
-                  {{icon "info"}}
-                </span>
-              </span>
-            </:trigger>
-          </DTooltip>
-
-          <span
-            title={{i18n
-              (concat
-                "admin.upcoming_changes.impact_roles."
-                @change.upcoming_change.impact_role
-              )
-            }}
-            class={{concatClass
-              "upcoming-change__badge"
-              (concat "--impact-role-" @change.upcoming_change.impact_role)
-            }}
-          >
-            <span class="upcoming-change__badge-content">
-              {{icon (this.impactRoleIcon @change.upcoming_change.impact_role)}}
-              {{i18n
-                (concat
-                  "admin.upcoming_changes.impact_roles."
-                  @change.upcoming_change.impact_role
-                )
-              }}
-            </span>
-          </span>
-        </div>
+        <UpcomingChangeBadges @upcomingChange={{@change.upcoming_change}} />
       </td>
       <td class="d-table__cell --detail upcoming-change__toggle-cell">
         <div class="d-table__mobile-label">

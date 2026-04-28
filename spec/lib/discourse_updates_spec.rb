@@ -200,7 +200,7 @@ RSpec.describe DiscourseUpdates do
       ]
       updated_features += sample_features
 
-      Discourse.redis.set("new_features", MultiJson.dump(updated_features))
+      DiscourseUpdates.update_new_features(MultiJson.dump(updated_features))
       expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
     end
 
@@ -366,6 +366,82 @@ RSpec.describe DiscourseUpdates do
         freeze_time
         expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
         DiscourseUpdates.mark_new_features_as_seen(admin.id)
+        expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
+      end
+    end
+  end
+
+  describe ".latest_new_feature_created_at" do
+    let!(:newest_date) { 5.minutes.ago }
+    let!(:sample_features) do
+      [
+        { "emoji" => "🤾", "title" => "Old Feature", "created_at" => 40.minutes.ago },
+        { "emoji" => "🙈", "title" => "Middle Feature", "created_at" => 15.minutes.ago },
+        { "emoji" => "🤾", "title" => "Newest Feature", "created_at" => newest_date },
+      ]
+    end
+
+    before { Discourse.redis.set("new_features", MultiJson.dump(sample_features)) }
+    after { DiscourseUpdates.clean_state }
+
+    it "returns the max created_at from merged features" do
+      result = DiscourseUpdates.latest_new_feature_created_at
+      expect(result).to be_within(1.second).of(newest_date)
+    end
+
+    it "caches the result in Redis on subsequent calls" do
+      DiscourseUpdates.latest_new_feature_created_at
+
+      Discourse.redis.set("new_features", MultiJson.dump([]))
+      result = DiscourseUpdates.latest_new_feature_created_at
+      expect(result).to be_within(1.second).of(newest_date)
+    end
+
+    it "returns nil when no features exist" do
+      Discourse.redis.set("new_features", MultiJson.dump([]))
+      expect(DiscourseUpdates.latest_new_feature_created_at).to be_nil
+    end
+
+    it "is invalidated by update_new_features" do
+      DiscourseUpdates.latest_new_feature_created_at
+
+      new_date = 1.minute.ago
+      new_features = [{ "emoji" => "🤾", "title" => "Brand New", "created_at" => new_date }]
+      DiscourseUpdates.update_new_features(MultiJson.dump(new_features))
+
+      result = DiscourseUpdates.latest_new_feature_created_at
+      expect(result).to be_within(1.second).of(new_date)
+    end
+
+    it "is invalidated by clean_state" do
+      DiscourseUpdates.latest_new_feature_created_at
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_present
+
+      DiscourseUpdates.clean_state
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_nil
+    end
+  end
+
+  describe "has_unseen_features? caching" do
+    fab!(:admin)
+    let!(:feature_date) { 5.minutes.ago }
+    let!(:sample_features) do
+      [{ "emoji" => "🤾", "title" => "A Feature", "created_at" => feature_date }]
+    end
+
+    before { Discourse.redis.set("new_features", MultiJson.dump(sample_features)) }
+    after { DiscourseUpdates.clean_state }
+
+    it "uses the cached timestamp instead of recomputing on repeated calls" do
+      DiscourseUpdates.latest_new_feature_created_at
+
+      Discourse.redis.set("new_features", "invalid json")
+      expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
+    end
+
+    it "returns false when the latest feature timestamp equals last_seen" do
+      freeze_time do
+        Discourse.redis.set("new_features_last_seen_user_#{admin.id}", feature_date.iso8601)
         expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
       end
     end

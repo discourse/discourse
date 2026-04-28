@@ -387,6 +387,9 @@ ru:
             few: "%{count} публикации"
             many: "%{count} публикаций"
             other: "%{count} публикаций"
+        theme_translations:
+          translate:
+            label: "Переводить"
         translations_menu:
           translate:
             label: "Перевести пост"
@@ -738,19 +741,19 @@ ru:
           other: "Эта модель сейчас используется в следующих параметрах: %{settings}. В случае неправильной настройки функции не будут работать должным образом. "
         model_description:
           none: "Общие настройки, подходящие для большинства языковых моделей"
-          anthropic-claude-opus-4-6: "Самая интеллектуальная модель Anthropic"
+          anthropic-claude-opus-4-7: "Самая интеллектуальная модель Anthropic"
           anthropic-claude-sonnet-4-6: "Оптимальный баланс скорости и стоимости"
           anthropic-claude-haiku-4-5: "Быстрая и экономически эффективная модель"
           google-gemini-3-pro: "Самая интеллектуальная модель Google"
           google-gemini-3-flash: "Быстрое и экономичное решение с использованием мультимодального подхода."
-          open_ai-gpt-5-2: "Флагманская модель OpenAI, отлично подходящая для решения задач в различных областях."
-          open_ai-gpt-5-mini: "Обеспечивает баланс между интеллектом, скоростью и стоимостью."
+          open_ai-gpt-5-4: "Флагманская модель OpenAI, отлично подходящая для решения задач в различных областях."
+          open_ai-gpt-5-4-mini: "Обеспечивает баланс между интеллектом, скоростью и стоимостью."
           open_ai-gpt-5-nano: "Самая быстрая и экономичная модель GPT-5"
           open_router-deepseek-deepseek-v3-2: "Новейшая высокопроизводительная модель DeepSeek"
           open_router-moonshotai-kimi-k2-5: "Мультимодальная модель Moonshot с возможностями компьютерного зрения"
           open_router-x-ai-grok-4-fast: "Флагманская модель xAI с функцией компьютерного зрения"
-          open_router-minimax-minimax-m2-5: "Мультимодальная модель MiniMax с большим контекстом"
-          open_router-z-ai-glm-5: "Мультимодальная модель Z-AI с использованием компьютерного зрения"
+          open_router-minimax-minimax-m2-7: "Мультимодальная модель MiniMax с большим контекстом"
+          open_router-z-ai-glm-5-1: "Мультимодальная модель Z-AI с использованием компьютерного зрения"
           open_router-arcee-ai-trinity-large-preview-free: "Бесплатная модель с открытым исходным кодом от Arcee AI"
         preseeded_model_description: "Предварительно настроенная модель с открытым исходным кодом, использующая %{model}"
         configured:
@@ -967,8 +970,6 @@ ru:
           title: "Просмотр взаимодействий с AI"
           copy_request: "Копировать запрос"
           copy_response: "Копировать ответ"
-          request_tokens: "Токены запроса:"
-          response_tokens: "Токены ответа:"
           request: "Запрос"
           response: "Ответ"
           next_log: "Далее"

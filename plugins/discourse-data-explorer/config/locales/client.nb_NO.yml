@@ -23,6 +23,7 @@ nb_NO:
       create_placeholder: "Spørringsnavn…"
       ai:
         generate: "Generer API-nøkkel"
+        optional: "valgfritt"
       import:
         label: "Importer"
       help:

@@ -12,6 +12,8 @@ es:
     github_linkback_access_token: 'Un token de acceso válido para el usuario que publicará el enlace de regreso y para contar commits/contribuciones para conceder insignias. Puedes obtener instrucciones sobre cómo obtener un token <a href="https://meta.discourse.org/t/99895">aquí</a>.'
     github_linkback_maximum_links: "Número máximo de enlaces a crear a partir de una sola entrada. Cuando una entrada contiene más enlaces, no se crea ninguno."
     github_permalinks_enabled: "Habilitar sobrescrituras de enlaces permanentes de GitHub"
+    github_pr_status_enabled: "Muestra el estado de las pull request de GitHub en las oneboxes (borrador, abierta, aprobada, fusionada, cerrada)"
+    github_webhook_secret: "Token secreto para la verificación de la firma del webhook de GitHub. Configura este valor en los ajustes de tu webhook de GitHub."
     github_permalinks_exclude: "Nombre de archivo o directorio que debe excluirse de las sobrescrituras de enlaces permanentes. Proporciona solo el nombre de archivo o la ruta completa: usuario/repositorio/directorio-opcional/nombre_del_archivo"
     github_badges_enabled: "Habilitar insignias de GitHub"
     github_badges_repos: "URL de los repositorios de GitHub para buscar contribuciones y commits"

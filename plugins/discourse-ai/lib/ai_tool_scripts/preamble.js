@@ -150,11 +150,14 @@
  *    the agent. The runner intentionally grants admin-level power to the script.
  *    Know these non-obvious defaults:
  *
- *    - Read ops (`getPost`, `getTopic`, `getUser`, `getAgent`, `search`) use the
+ *    - Read ops (`getPost`, `getTopic`, `getUser`, `getAgent`) use the
  *      SystemUser scope. Results may include PMs, user emails, IP addresses,
  *      staff-category content, and other staff-only serializer fields. Do not
  *      return this data verbatim to the invoking user unless you've verified
  *      they're authorized to see it.
+ *
+ *    - `search` and `filterTopics` default to public visibility. Pass
+ *      `with_private: true` to elevate them to the SystemUser scope.
  *
  *    - Write ops (`createTopic`, `createPost`, `editPost`, `editTopic`,
  *      `createChatMessage`) enforce permissions via the Guardian of the user
@@ -183,8 +186,23 @@
  *    discourse.search(params): Performs a Discourse search.
  *    Parameters:
  *      params (Object): Search parameters (e.g., { search_query: "keyword", with_private: true, max_results: 10 }).
- *                       `with_private: true` searches across all posts visible to the SystemUser. `result_style: 'detailed'` is used by default.
+ *                       By default this searches public content. `with_private: true` searches across all posts visible to the
+ *                       SystemUser. `result_style: 'detailed'` is used by default.
  *    Returns: Object (Discourse search results structure, includes posts, topics, users etc.)
+ *
+ *    discourse.filterTopics(params): Filters topics using Discourse topic filter syntax.
+ *    Parameters:
+ *      params (Object): { q: string, limit?: number, page?: number, with_private?: boolean }
+ *                       `q` uses Discourse topic filter syntax (for example: "category:support order:created").
+ *                       By default this only returns topics visible publicly. Pass `with_private: true` to elevate to the
+ *                       SystemUser scope.
+ *    Returns: Object { query, page, limit, topics }
+ *      query (string): The filter query that was executed.
+ *      page (number): The page number used.
+ *      limit (number): The effective per-page limit used.
+ *      topics (Array<Object>): Topic summaries — same shape as `getTopic` (ListableTopicSerializer plus
+ *                              `url`, `tags`, `first_post_id`, `category_id`, `category_name`,
+ *                              `category_slug`, `views`, `like_count`).
  *
  *    discourse.getPost(post_id): Retrieves details for a specific post.
  *    Parameters:
@@ -194,8 +212,9 @@
  *    discourse.getTopic(topic_id): Retrieves details for a specific topic.
  *    Parameters:
  *      topic_id (number): The ID of the topic.
- *    Returns: Object (Topic details using ListableTopicSerializer structure, plus `tags`, `first_post_id`,
- *             `category_id`, `category_name`, `category_slug`) or null if not found/accessible.
+ *    Returns: Object (Topic details using ListableTopicSerializer structure, plus `url`, `tags`,
+ *             `first_post_id`, `category_id`, `category_name`, `category_slug`, `views`, `like_count`)
+ *             or null if not found/accessible.
  *
  *    discourse.getUser(user_id_or_username): Retrieves details for a specific user.
  *    Parameters:

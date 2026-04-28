@@ -24,12 +24,19 @@ module ::DiscourseTopicVoting
   PLUGIN_NAME = "discourse-topic-voting"
   ENABLE_TOPIC_VOTING_SETTING = "enable_topic_voting"
   VOTER_PREVIEW_LIMIT = 104
+  BADGE_NAMES = %w[Daydreamer Brainstormer Innovator Visionary].freeze
 end
 
+require_relative "lib/discourse_topic_voting/badge_queries"
 require_relative "lib/discourse_topic_voting/engine"
 require_relative "lib/discourse_topic_voting/topic_votes_filter"
 
 after_initialize do
+  SeedFu.fixture_paths << Rails
+    .root
+    .join("plugins", "discourse-topic-voting", "db", "fixtures")
+    .to_s
+
   reloadable_patch do
     register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)
     CategoriesController.prepend(DiscourseTopicVoting::CategoriesControllerExtension)
@@ -112,6 +119,11 @@ after_initialize do
     posts.reorder(
       "COALESCE((SELECT dvtvc.votes_count FROM topic_voting_topic_vote_count dvtvc WHERE dvtvc.topic_id = topics.id), 0) DESC",
     )
+  end
+
+  register_modifier(:badge_granter_suppress_notification) do |suppress, badge, granted_at, _|
+    next true if DiscourseTopicVoting::BADGE_NAMES.include?(badge.name) && granted_at < 2.weeks.ago
+    suppress
   end
 
   register_modifier(:topics_filter_options) do |results, _guardian|
@@ -212,48 +224,7 @@ after_initialize do
     end
   end
 
-  on(:topic_merged) do |orig, dest|
-    moved_votes = 0
-    duplicated_votes = 0
-
-    who_voted = orig.votes.map(&:user)
-    if who_voted.present? && orig.closed
-      who_voted.each do |user|
-        next if user.blank?
-
-        user_votes = user.topics_with_vote.pluck(:topic_id)
-        user_archived_votes = user.topics_with_archived_vote.pluck(:topic_id)
-
-        if user_votes.include?(orig.id) || user_archived_votes.include?(orig.id)
-          if user_votes.include?(dest.id) || user_archived_votes.include?(dest.id)
-            duplicated_votes += 1
-            user.votes.destroy_by(topic_id: orig.id)
-          else
-            user
-              .votes
-              .find_by(topic_id: orig.id, user_id: user.id)
-              .update!(topic_id: dest.id, archive: dest.closed)
-            moved_votes += 1
-          end
-        else
-          next
-        end
-      end
-    end
-
-    if moved_votes > 0
-      orig.update_vote_count
-      dest.update_vote_count
-
-      if moderator_post = orig.ordered_posts.where(action_code: "split_topic").last
-        moderator_post.raw << "\n\n#{I18n.t("topic_voting.votes_moved", count: moved_votes)}"
-        if duplicated_votes > 0
-          moderator_post.raw << " #{I18n.t("topic_voting.duplicated_votes", count: duplicated_votes)}"
-        end
-        moderator_post.save!
-      end
-    end
-  end
+  on(:topic_merged) { |orig, dest| DiscourseTopicVoting::TopicMerger.merge(orig, dest) }
 
   on(:merging_users) do |source_user, target_user|
     DiscourseTopicVoting::UserMerger.merge(source_user, target_user)

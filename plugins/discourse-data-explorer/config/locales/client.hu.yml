@@ -28,6 +28,7 @@ hu:
       description_placeholder: "Adjon meg egy leírást"
       ai:
         generate: "Generálás"
+        optional: "nem kötelező"
       import:
         label: "Importálás"
         unparseable_json: "Nem értelmezhető JSON-fájl."

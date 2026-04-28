@@ -73,6 +73,7 @@ module SvgSprite
         code
         code-branch
         comment
+        comments
         compress
         copy
         crosshairs

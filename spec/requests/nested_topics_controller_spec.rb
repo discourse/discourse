@@ -121,6 +121,54 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json["page"]).to eq(0)
     end
 
+    it "piggybacks suggested topics at the top level when the first page is the last page" do
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      suggested = Fabricate(:post).topic
+      sign_in(user)
+
+      get show_url(topic, page: 0)
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json["has_more_roots"]).to eq(false)
+      expect(json["topic"]).not_to have_key("suggested_topics")
+      expect(json).to have_key("suggested_topics")
+      expect(json["suggested_topics"].map { |t| t["id"] }).to include(suggested.id)
+    end
+
+    it "omits suggested topics on page 0 when there are more pages to load" do
+      (NestedReplies::TreeLoader::ROOTS_PER_PAGE + 1).times do
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      end
+      Fabricate(:post).topic
+      sign_in(user)
+
+      get show_url(topic, page: 0)
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json["has_more_roots"]).to eq(true)
+      expect(json).not_to have_key("suggested_topics")
+      expect(json["topic"]).not_to have_key("suggested_topics")
+    end
+
+    it "piggybacks suggested topics on the final loadMore page" do
+      (NestedReplies::TreeLoader::ROOTS_PER_PAGE + 1).times do
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      end
+      suggested = Fabricate(:post).topic
+      sign_in(user)
+
+      get show_url(topic, page: 1)
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json["has_more_roots"]).to eq(false)
+      expect(json).not_to have_key("topic")
+      expect(json).to have_key("suggested_topics")
+      expect(json["suggested_topics"].map { |t| t["id"] }).to include(suggested.id)
+    end
+
     it "does not include topic metadata on subsequent pages" do
       25.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
       sign_in(user)

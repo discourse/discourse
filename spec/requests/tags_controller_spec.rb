@@ -2189,7 +2189,9 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["watched_tags"]).to eq([])
       expect(response.parsed_body["watching_first_post_tags"]).to eq([])
-      expect(response.parsed_body["tracked_tags"]).to eq([{ "id" => tag.id, "name" => tag.name }])
+      expect(response.parsed_body["tracked_tags"]).to eq(
+        [{ "id" => tag.id, "name" => tag.name, "slug" => tag.slug }],
+      )
       expect(response.parsed_body["muted_tags"]).to eq([])
       expect(response.parsed_body["regular_tags"]).to eq([])
 
@@ -2210,7 +2212,9 @@ RSpec.describe TagsController do
         expect(response.parsed_body["watched_tags"]).to eq([])
         expect(response.parsed_body["watching_first_post_tags"]).to eq([])
         expect(response.parsed_body["tracked_tags"]).to eq([])
-        expect(response.parsed_body["muted_tags"]).to eq([{ "id" => tag.id, "name" => tag.name }])
+        expect(response.parsed_body["muted_tags"]).to eq(
+          [{ "id" => tag.id, "name" => tag.name, "slug" => tag.name }],
+        )
         expect(response.parsed_body["regular_tags"]).to eq([])
       end.to change { user.tag_users.count }.by(1)
 

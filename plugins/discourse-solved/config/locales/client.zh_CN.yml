@@ -42,7 +42,7 @@ zh_CN:
       no_solved_topics_title: "您尚未解决任何话题"
       no_solved_topics_title_others: "%{username} 还没有解决任何话题"
       no_solved_topics_body: "当您对某个话题提供有用的回复时，您的回复可能会被话题所有者或管理人员选为解决方案。"
-      marked_solved_by: "由 %{user} 标记为已解决"
+      marked_solved_by: "已被 %{user} 接受"
       confirm_move_solution_title: "移动解决方案帖子"
       confirm_move_solution:
         other: "您选择的其中一个帖子被标记为此话题的解决方案。如果您将其移动，话题将更新为未解决。"
@@ -68,9 +68,9 @@ zh_CN:
           description: "您将收到此主题每条新回复的通知，并在该问题得到解决时获得提醒。系统会显示本话题的新回帖数量。"
       category_type_support:
         title: "支持"
-        not_support_type: "注意！您已经禁用了在此类别中将帖子标记为解决方案的功能。要重新打开，您可以在 \"设置 \"选项卡中找到相关设置。"
+        not_support_type: "注意！您已经禁用在此类别中将帖子标记为解决方案的功能。要重新打开，您可以在“设置”选项卡中找到相关设置。"
         remove_support_type: "移除支持类型"
-        confirm_remove_support_type: "您确定要移除此分类下将帖子标记为解决方案的功能吗？您可以稍后在“设置”选项卡中重新启用此功能。"
+        confirm_remove_support_type: "确定要移除在此类别下将帖子标记为解决方案的功能吗？您可以稍后在“设置”选项卡中重新启用此功能。"
     topic_statuses:
       solved:
         help: "此话题有解决方案"

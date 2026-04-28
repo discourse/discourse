@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
 
-acceptance(`Discourse Reactions - Custom Emoji Picker`, function (needs) {
+acceptance("Custom Emoji Picker", function (needs) {
   needs.user();
 
   needs.settings({
@@ -92,56 +92,53 @@ acceptance(`Discourse Reactions - Custom Emoji Picker`, function (needs) {
   });
 });
 
-acceptance(
-  `Discourse Reactions - Custom Emoji Picker Disabled`,
-  function (needs) {
-    needs.user();
+acceptance("Custom Emoji Picker Disabled", function (needs) {
+  needs.user();
 
-    needs.settings({
-      discourse_reactions_enabled: true,
-      discourse_reactions_enabled_reactions: "otter|open_mouth|heart",
-      discourse_reactions_reaction_for_like: "heart",
-      discourse_reactions_like_icon: "heart",
-      discourse_reactions_allow_any_emoji: false,
-    });
+  needs.settings({
+    discourse_reactions_enabled: true,
+    discourse_reactions_enabled_reactions: "otter|open_mouth|heart",
+    discourse_reactions_reaction_for_like: "heart",
+    discourse_reactions_like_icon: "heart",
+    discourse_reactions_allow_any_emoji: false,
+  });
 
-    needs.pretender((server, helper) => {
-      const topicPath = "/t/374.json";
-      server.get(topicPath, () => helper.response(ReactionsTopics[topicPath]));
+  needs.pretender((server, helper) => {
+    const topicPath = "/t/374.json";
+    server.get(topicPath, () => helper.response(ReactionsTopics[topicPath]));
 
-      server.put(
-        "/discourse-reactions/posts/:post_id/custom-reactions/:reaction/toggle.json",
-        () => helper.response({ success: "OK" })
+    server.put(
+      "/discourse-reactions/posts/:post_id/custom-reactions/:reaction/toggle.json",
+      () => helper.response({ success: "OK" })
+    );
+  });
+
+  test("Does not show EmojiPicker button when discourse_reactions_allow_any_emoji is disabled", async function (assert) {
+    await visit("/t/topic_with_reactions_and_likes/374");
+    await triggerEvent(
+      "#post_2 button.btn-toggle-reaction-like",
+      "pointerover",
+      { pointerType: "mouse" }
+    );
+
+    assert
+      .dom(".emoji-picker-trigger")
+      .doesNotExist(
+        "EmojiPicker button does not exist when setting is disabled"
       );
-    });
+  });
 
-    test("Does not show EmojiPicker button when discourse_reactions_allow_any_emoji is disabled", async function (assert) {
-      await visit("/t/topic_with_reactions_and_likes/374");
-      await triggerEvent(
-        "#post_2 button.btn-toggle-reaction-like",
-        "pointerover",
-        { pointerType: "mouse" }
-      );
+  test("Reactions picker grid only counts enabled reactions when EmojiPicker is disabled", async function (assert) {
+    await visit("/t/topic_with_reactions_and_likes/374");
+    await triggerEvent(
+      "#post_2 button.btn-toggle-reaction-like",
+      "pointerover",
+      { pointerType: "mouse" }
+    );
 
-      assert
-        .dom(".emoji-picker-trigger")
-        .doesNotExist(
-          "EmojiPicker button does not exist when setting is disabled"
-        );
-    });
-
-    test("Reactions picker grid only counts enabled reactions when EmojiPicker is disabled", async function (assert) {
-      await visit("/t/topic_with_reactions_and_likes/374");
-      await triggerEvent(
-        "#post_2 button.btn-toggle-reaction-like",
-        "pointerover",
-        { pointerType: "mouse" }
-      );
-
-      // With 3 enabled reactions and no emoji picker button = 3 total
-      assert
-        .dom(".discourse-reactions-picker-container")
-        .hasClass("col-3", "Grid has 3 columns without EmojiPicker button");
-    });
-  }
-);
+    // With 3 enabled reactions and no emoji picker button = 3 total
+    assert
+      .dom(".discourse-reactions-picker-container")
+      .hasClass("col-3", "Grid has 3 columns without EmojiPicker button");
+  });
+});

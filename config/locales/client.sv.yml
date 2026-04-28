@@ -2286,6 +2286,8 @@ sv:
       upload_description: "skriv en bildbeskrivning här"
       list_item: "Listobjekt"
       wrap_modal:
+        attribute_key: "Key"
+        attribute_value: "Värde"
         apply: "Tillämpa"
       help: "Markdown-redigeringshjälp"
       exit_fullscreen_prompt: "Tryck på <kbd>ESC</kbd> för att lämna helskärmsläget"
@@ -2339,6 +2341,8 @@ sv:
       delete_image_button: Radera bild
       toggle_image_grid: Växla bildrutnät
       link_toolbar:
+        link_copied: "Länken kopierad!"
+      onebox_toolbar:
         link_copied: "Länken kopierad!"
     notifications:
       tooltip:
@@ -2728,6 +2732,25 @@ sv:
         name: "Radera"
       update_category:
         name: "Uppdatera kategori"
+      convert_to_public_topic:
+        name: "Gör offentligt ämne…"
+      convert_to_private_message:
+        name: "Skapa personligt meddelande"
+    nested_replies:
+      sort:
+        label: "Sortera efter"
+        top: "Topp"
+        new: "Nya"
+      load_more_children:
+        one: "Ytterligare %{count} svar"
+        other: "Ytterligare %{count} svar"
+      collapsed_replies:
+        one: "%{count} svar"
+        other: "%{count} svar"
+      collapse: "Förminska"
+      no_replies: "Inga svar ännu."
+      deleted_post_placeholder: "[raderade]"
+      pinned_reply: "Fäst"
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"
@@ -3209,6 +3232,10 @@ sv:
       sr_post_like_count_button:
         one: "%{count} person gillade detta inlägg."
         other: "%{count} personer gillade detta inlägg."
+      likes_popup:
+        title:
+          one: "%{count} gillning"
+          other: "%{count} gillningar"
       filtered_replies_hint:
         one: "Visa detta inlägg och dess svar"
         other: "Visa detta inlägg och dess %{count} svar"
@@ -3223,7 +3250,7 @@ sv:
           edit: "Redigera"
           delete: "Ta bort"
         post_language_selector:
-          none: "Ingen"
+          none: "Inte inställd"
       errors:
         create: "Tyvärr uppstod det ett fel under skapandet av ditt inlägg. Vi ber dig försöka igen."
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
@@ -3281,8 +3308,6 @@ sv:
           just_the_post: "Nej, bara det här inlägget"
         admin: "administratörsåtgärder för inlägg"
         admin_action: "Admin"
-        permanently_delete: "Radera permanent"
-        permanently_delete_confirmation: "Är du säker på att du permanent vill ta bort det här inlägget? Du kommer inte att kunna återställa den."
         wiki: "Skapa wiki"
         unwiki: "Ta bort wiki"
         convert_to_moderator: "Lägg till personalfärg"
@@ -3418,6 +3443,7 @@ sv:
       back: "Tillbaka till kategorin"
       general: "Allmänt"
       settings: "Inställningar"
+      moderation: "Moderering"
       advanced: "Avancerat"
       topic_template: "Mall"
       tags: "Taggar"
@@ -4397,6 +4423,8 @@ sv:
           admins: "Administratörer"
           moderators: "Moderatorer"
           staff: "Personal"
+        impact_types:
+          other_type: "Övrigt"
         filter:
           all: "Alla"
           enabled: "Aktiverad"
@@ -4472,6 +4500,10 @@ sv:
           sub_pages:
             logs:
               title: "Loggar"
+        problem_checks:
+          status: "Status"
+          last_run_at: "Senast körd"
+          ignore: "Ignorera"
         reports:
           title: "Rapporter"
           sub_pages:
@@ -4539,7 +4571,7 @@ sv:
         installed_version: "Installerad"
         latest_version: "Senaste"
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
-        dismiss_notice: "Avfärda"
+        dismiss_notice: "Ignorera"
         new_features:
           learn_more: "Läs mer..."
         last_checked: "Senast kollad"

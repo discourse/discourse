@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
-module("Discourse Chat | Unit | slugify-channel", function () {
+module("Unit | slugify-channel", function () {
   test("defaults for title", function (assert) {
     assert.strictEqual(slugifyChannel({ title: "Foo bar" }), "foo-bar");
   });

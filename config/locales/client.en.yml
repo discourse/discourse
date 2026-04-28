@@ -6245,6 +6245,10 @@ en:
           staff: "Staff"
           all_members: "All members"
           developers: "Developers"
+        impact_types:
+          feature_type: "Feature"
+          other_type: "Other"
+          site_setting_default_type: "Setting default"
         filter:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
@@ -6528,6 +6532,20 @@ en:
             logs:
               title: "Logs"
               header_description: "View and manage logs for backups, restores, and uploads"
+        problem_checks:
+          title: "Problem checks"
+          header_description: "View all registered problem checks and their current status."
+          identifier: "Check"
+          target: "Target"
+          priority: "Priority"
+          status: "Status"
+          passing: "Passing"
+          failing: "Failing"
+          last_run_at: "Last run"
+          ignore: "Ignore"
+          watch: "Watch"
+          more_options:
+            title: "More options"
         reports:
           title: "Reports"
           header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
@@ -6710,7 +6728,7 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
-        dismiss_notice: "Dismiss"
+        dismiss_notice: "Ignore"
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
@@ -8876,6 +8894,9 @@ en:
       site_settings:
         title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
+        depends_on_notice:
+          one: "This setting is only applied when %{dependencyLinks} is enabled."
+          other: "This setting is only applied when %{dependencyLinks} are enabled."
         discard:
           one: "Discard change"
           other: "Discard changes"
@@ -8988,7 +9009,7 @@ en:
             confirm: "Yes, I understand that inactive users will be permanently deleted unless I set this value to 0"
           can_permanently_delete:
             prompt: "Enabling this allows admins to permanently destroy posts, topics, and post revisions. Permanently deleted data cannot be recovered. This may also affect data integrity and break existing links."
-            confirm: "Yes, I understand permanently deleted data cannot be recovered"
+            confirm: "I understand"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

@@ -5,7 +5,6 @@ class ThemeTranslationManager
   attr_reader :key, :default, :theme
 
   def self.list_from_hash(locale:, hash:, theme:, parent_keys: [])
-    list = []
     hash
       .map do |key, value|
         this_key_array = parent_keys + [key]
@@ -61,12 +60,11 @@ class ThemeTranslationManager
   end
 
   def create_record!(value)
-    record =
-      ThemeTranslationOverride.create!(
-        locale: @locale,
-        translation_key: @key,
-        theme: @theme,
-        value: value,
-      )
+    ThemeTranslationOverride.create!(
+      locale: @locale,
+      translation_key: @key,
+      theme: @theme,
+      value: value,
+    )
   end
 end

@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 
-module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
+module("Component | chat-message-reaction", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adds reacted class when user reacted", async function (assert) {

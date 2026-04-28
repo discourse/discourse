@@ -216,18 +216,22 @@ class TagUser < ActiveRecord::Base
 
       muted_tag_names = SiteSetting.default_tags_muted.split("|")
 
-      tag_data = Tag.where(name: default_tag_names + muted_tag_names).pluck(:name, :id).to_h
+      tag_data =
+        Tag
+          .where(name: default_tag_names + muted_tag_names)
+          .pluck(:name, :id, :slug)
+          .to_h { |name, id, slug| [name, [id, slug]] }
 
       notification_levels =
         default_tag_names.filter_map do |name|
-          id = tag_data[name]
-          [id, { level: self.notification_levels[:regular], name: }] if id
+          id, slug = tag_data[name]
+          [id, { level: self.notification_levels[:regular], name:, slug: }] if id
         end
 
       notification_levels +=
         muted_tag_names.filter_map do |name|
-          id = tag_data[name]
-          [id, { level: self.notification_levels[:muted], name: }] if id
+          id, slug = tag_data[name]
+          [id, { level: self.notification_levels[:muted], name:, slug: }] if id
         end
     else
       notification_levels =
@@ -235,8 +239,8 @@ class TagUser < ActiveRecord::Base
           .notification_level_visible
           .where(user:)
           .joins(:tag)
-          .pluck("tags.id", "tags.name", :notification_level)
-          .map { |id, name, level| [id, { level:, name: }] }
+          .pluck("tags.id", "tags.name", "tags.slug", :notification_level)
+          .map { |id, name, slug, level| [id, { level:, name:, slug: }] }
     end
 
     notification_levels.to_h

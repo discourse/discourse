@@ -273,7 +273,6 @@ ja:
       retry_staged_message:
         title: "ネットワークエラー"
         action: "もう一度送信しますか？"
-      unreliable_network: "ネットワークが不安定です。メッセージの送信と下書きの保存が機能しない可能性があります"
       bookmark_message: "ブックマーク"
       bookmark_message_edit: "ブックマークを編集"
       restore: "削除されたメッセージを復元する"

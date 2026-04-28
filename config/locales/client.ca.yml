@@ -1733,6 +1733,8 @@ ca:
       upload_description: "escriviu aquí una descripció del fitxer que es carrega"
       list_item: "Element de llista"
       wrap_modal:
+        attribute_key: "Clau"
+        attribute_value: "Valor"
         apply: "Aplica"
       help: "Ajuda d'edició Markdown"
       modal_ok: "D'acord"
@@ -1988,6 +1990,23 @@ ca:
         name: "Reemplaça etiquetes"
       delete_topics:
         name: "Suprimeix"
+      convert_to_private_message:
+        name: "Converteix en missatge personal"
+    nested_replies:
+      sort:
+        label: "Ordena per"
+        top: "Principals"
+        new: "Nou"
+      load_more_children:
+        one: "%{count} resposta més"
+        other: "%{count} respostes més "
+      collapsed_replies:
+        one: "%{count} resposta"
+        other: "%{count} respostes"
+      collapse: "Redueix"
+      no_replies: "Encara sense respostes"
+      deleted_post_placeholder: "[suprimit]"
+      pinned_reply: "Afixat"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"
@@ -2331,13 +2350,15 @@ ca:
       sr_post_like_count_button:
         one: "La publicació agrada a %{count} persona."
         other: "La publicació agrada a %{count} persones."
+      likes_popup:
+        title:
+          one: "%{count} 'm'agrada'"
+          other: "%{count} 'm'agrada'"
       localizations:
         table:
           actions: "Accions"
           edit: "Edita"
           delete: "Suprimeix"
-        post_language_selector:
-          none: "Cap"
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."
@@ -2465,6 +2486,7 @@ ca:
       view: "Mostra temes per categories"
       general: "General"
       settings: "Configuració"
+      moderation: "Moderació"
       tags: "Etiquetes"
       localization:
         name: "Nom"
@@ -3087,6 +3109,8 @@ ca:
           admins: "Administradors"
           moderators: "Moderadors"
           staff: "Equip responsable"
+        impact_types:
+          other_type: "Altres"
         filter:
           all: "Tots"
           enabled: "Activat"
@@ -3152,6 +3176,10 @@ ca:
           sub_pages:
             logs:
               title: "Registres"
+        problem_checks:
+          status: "Estat"
+          last_run_at: "Darrera execució"
+          ignore: "Ignora"
         reports:
           title: "Reports"
           sub_pages:
@@ -3218,7 +3246,7 @@ ca:
         installed_version: "Instal·lat"
         latest_version: "Més recents"
         problems_found: "Uns quants consells basats en la configuració actual del lloc web."
-        dismiss_notice: "Descarta-ho"
+        dismiss_notice: "Ignora"
         new_features:
           learn_more: "Per a saber-ne més..."
         last_checked: "Comprovat per darrera vegada"

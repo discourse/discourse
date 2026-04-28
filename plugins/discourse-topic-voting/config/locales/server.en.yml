@@ -49,3 +49,21 @@ en:
         topic_votes_max: "Maximum number of topic votes"
         order_topic_votes: "Order topics by most votes"
         order_topic_votes_asc: "Order topics by fewest votes"
+
+  badges:
+    daydreamer:
+      name: "Daydreamer"
+      description: "Receive a vote on your topic"
+      long_description: "This badge is granted for receiving a vote on one of your topics. :white_check_mark: Nice idea. :+1:"
+    brainstormer:
+      name: "Brainstormer"
+      description: "Receive 5 votes on your topic"
+      long_description: "This badge is granted for receiving 5 votes on one of your topics. :white_check_mark: Your topic is getting traction."
+    innovator:
+      name: "Innovator"
+      description: "Receive 15 votes on your topic"
+      long_description: "This badge is granted for receiving 15 votes on one of your topics. :white_check_mark: So good it can't be ignored."
+    visionary:
+      name: "Visionary"
+      description: "Receive 25 votes on your topic"
+      long_description: "This badge is granted for receiving 25 votes on one of your topics. :white_check_mark: Give the people what they want! :clap:"

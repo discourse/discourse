@@ -2852,6 +2852,8 @@ nl:
       list_item: "Lijstitem"
       toggle_direction: "Richting schakelen"
       wrap_modal:
+        attribute_key: "Sleutel"
+        attribute_value: "Waarde"
         apply: "Toepassen"
       help: "Hulp voor Markdown"
       exit_fullscreen_prompt: "Druk op <kbd>ESC</kbd> om het volledige scherm te sluiten"
@@ -2920,6 +2922,9 @@ nl:
         copy: "Link kopiëren"
         remove: "Link verwijderen"
         visit: "Link openen in extern tabblad"
+        link_copied: "Link gekopieerd!"
+      onebox_toolbar:
+        copy: "Link kopiëren"
         link_copied: "Link gekopieerd!"
     notifications:
       tooltip:
@@ -3349,12 +3354,31 @@ nl:
         name: "Verwijderen"
       update_category:
         name: "Categorie bijwerken"
+      convert_to_public_topic:
+        name: "Topic openbaar maken…"
+      convert_to_private_message:
+        name: "Persoonlijk bericht maken"
       reset_bump_dates:
         name: "Omhoogplaatsingsdatums resetten"
       defer:
         name: "Markeren als ongelezen"
       update_notifications:
         name: "Meldingen bijwerken"
+    nested_replies:
+      sort:
+        label: "Sorteren op"
+        top: "Top"
+        new: "Nieuw"
+      load_more_children:
+        one: "Nog %{count} antwoord"
+        other: "Nog %{count} antwoorden"
+      collapsed_replies:
+        one: "%{count} antwoord"
+        other: "%{count} antwoorden"
+      collapse: "Samenvouwen"
+      no_replies: "Nog geen antwoorden."
+      deleted_post_placeholder: "[verwijderd]"
+      pinned_reply: "Vastgemaakt"
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -3858,6 +3882,10 @@ nl:
       sr_post_like_count_button:
         one: "%{count} persoon heeft dit bericht geliket."
         other: "%{count} personen hebben dit bericht geliket."
+      likes_popup:
+        title:
+          one: "%{count} like"
+          other: "%{count} likes"
       sr_post_read_count_button:
         one: "%{count} persoon heeft dit bericht gelezen."
         other: "%{count} personen hebben dit bericht gelezen."
@@ -3885,7 +3913,7 @@ nl:
           confirm_delete: "Weet je zeker dat je vertalingen voor '%{languageCode}' wilt verwijderen?"
         success: "Vertalingen zijn bijgewerkt"
         post_language_selector:
-          none: "Geen"
+          none: "Niet ingesteld"
         edit_warning:
           action_original: "Origineel bericht bewerken"
           action_translation: "Deze vertaling bewerken"
@@ -3908,6 +3936,7 @@ nl:
         attachment_download_requires_login: "Sorry, je moet aangemeld zijn om bijlagen te downloaden."
       cancel_composer:
         discard: "Weggooien"
+        discard_edit: "Wijzigingen negeren"
       via_email: "dit bericht is binnengekomen via e-mail"
       via_auto_generated_email: "dit bericht is binnengekomen via een automatisch gegenereerde e-mail"
       whisper: "dit bericht is alleen toegankelijk voor moderators"
@@ -3951,7 +3980,7 @@ nl:
         admin: "berichtbeheeracties"
         admin_action: "Beheerder"
         permanently_delete: "Permanent verwijderen"
-        permanently_delete_confirmation: "Weet je zeker dat je dit bericht permanent wilt verwijderen? Je kunt het niet herstellen."
+        permanently_delete_confirm_phrase: "permanent verwijderen"
         wiki: "Wiki maken"
         unwiki: "Wiki verwijderen"
         convert_to_moderator: "Medewerkerkleur toevoegen"
@@ -4096,6 +4125,7 @@ nl:
       back: "Terug naar categorie"
       general: "Algemeen"
       settings: "Instellingen"
+      moderation: "Moderatie"
       advanced: "Geavanceerd"
       topic_template: "Sjabloon"
       tags: "Tags"
@@ -5277,6 +5307,9 @@ nl:
           admins: "Beheerders"
           moderators: "Moderators"
           staff: "Medewerker"
+        impact_types:
+          feature_type: "Functie"
+          other_type: "Overig"
         filter:
           all: "Alles"
           enabled: "Ingeschakeld"
@@ -5293,7 +5326,6 @@ nl:
           header_description: "Geef hier informatie over deze site en je team, zodat mensen te weten kunnen komen waar je community over gaat, wie erachter zit en hoe men je kan bereiken in geval van problemen. Dit wordt weergegeven op de <a href='%{basePath}/about'>Over-pagina</a> van je site."
         developer:
           title: "Ontwikkelaar"
-          header_description: "Ontwikkelaarsinstellingen voor het beheren van frequentielimieten, vermenigvuldigers en berekeningen, veilige modus en andere geavanceerde functies"
         experimental:
           title: "Experimenteel"
           header_description: "Schakel experimentele functies voor je site in of uit. De meeste hiervan kunnen op groepsbasis worden beheerd."
@@ -5488,6 +5520,13 @@ nl:
             logs:
               title: "Logs"
               header_description: "Bekijk en beheer logs voor back-up, herstel en uploads"
+        problem_checks:
+          priority: "Prioriteit"
+          status: "Status"
+          last_run_at: "Laatste uitvoering"
+          ignore: "Negeren"
+          more_options:
+            title: "Meer opties"
         reports:
           title: "Rapporten"
           header_description: "Rapporten zijn een krachtig hulpmiddel om te begrijpen wat er op je site gebeurt. Ze kunnen je helpen trends te identificeren, problemen te signaleren en beslissingen te nemen op basis van gegevens."
@@ -5661,7 +5700,7 @@ nl:
         installed_version: "Geïnstalleerd"
         latest_version: "Nieuwste"
         problems_found: "Advies op basis van je huidige website-instellingen"
-        dismiss_notice: "Sluiten"
+        dismiss_notice: "Negeren"
         new_features:
           title: "Wat is er nieuw?"
           subtitle: "We brengen voortdurend nieuwe functies en verbeteringen uit. Deze pagina behandelt de belangrijkste punten, maar je kunt op 'Meer informatie' klikken om uitgebreide releaseopmerkingen te bekijken."

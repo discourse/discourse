@@ -4,6 +4,7 @@ import AdminReport from "discourse/admin/components/admin-report";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import DSegmentedControl from "discourse/components/d-segmented-control";
 import DateTimeInputRange from "discourse/components/date-time-input-range";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
@@ -92,23 +93,14 @@ import { i18n } from "discourse-i18n";
             <div class="chart__filters">
               {{#if @report.isChartMode}}
 
-                <div
+                <DSegmentedControl
                   class="chart-groupings"
-                  role="tablist"
-                  aria-label={{i18n
-                    "admin.dashboard.reports.chart_group_period"
-                  }}
-                >
-                  {{#each @report.chartGroupings as |chartGrouping|}}
-                    <DButton
-                      @label={{chartGrouping.label}}
-                      @action={{fn @report.changeGrouping chartGrouping.id}}
-                      @disabled={{chartGrouping.disabled}}
-                      class={{chartGrouping.class}}
-                      role="tab"
-                    />
-                  {{/each}}
-                </div>
+                  @name="chart-grouping-{{@report.model.type}}"
+                  @label="admin.dashboard.reports.chart_group_period"
+                  @items={{@report.chartGroupingSegmentItems}}
+                  @value={{@report.options.chartGrouping}}
+                  @onSelect={{@report.changeGrouping}}
+                />
               {{/if}}
 
               {{#if @report.showDatesOptions}}

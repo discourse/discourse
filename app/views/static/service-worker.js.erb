@@ -78,7 +78,13 @@ self.addEventListener('notificationclick', function(event) {
     // focuses if it is
     event.waitUntil(
       clients.matchAll({ type: "window" }).then(function (clientList) {
-        var reusedClientWindow = clientList.some(function (client) {
+        // Skip nested frames (e.g. full-app embed iframes) — we want to
+        // focus/open a standalone Discourse window, not navigate an embed.
+        var topLevelClients = clientList.filter(function (client) {
+          return client.frameType !== "nested";
+        });
+
+        var reusedClientWindow = topLevelClients.some(function (client) {
           if (client.url === baseUrl + url && "focus" in client) {
             client.focus();
             return true;

@@ -360,6 +360,7 @@ de:
       toggle_verbose_localization: "Erweiterte Lokalisierungshinweise umschalten"
       toggle_mobile_view: "Mobile Ansicht umschalten"
       disable_dev_tools: "Entwicklertools deaktivieren"
+      toggle_upcoming_changes_debug: "Debuggen von bevorstehenden Änderungen ein-/ ausschalten"
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -587,6 +588,8 @@ de:
       edit: "Lesezeichen bearbeiten"
       not_bookmarked: "diesen Beitrag mit Lesezeichen versehen"
       topic_bookmark: "Thema"
+      post_bookmark: "Beitrag #%{post_number}"
+      jump_to_post: "Springe zu #%{post_number}"
       bookmark_topic: "Thema mit Lesezeichen versehen"
       edit_topic_bookmark: "Lesezeichen am Thema bearbeiten"
       delete_topic_bookmark: "Lesezeichen am Thema löschen"
@@ -2858,6 +2861,14 @@ de:
       clear: "Filter löschen"
     d_icon_grid_picker:
       select_icon: "Symbol auswählen"
+      search_placeholder: "Symbole durchsuchen..."
+      no_results: "Keine Symbole gefunden"
+      results_count:
+        one: "%{count} Symbol gefunden"
+        other: "%{count} Symbole gefunden"
+      favorites: "Favoriten"
+      selected_icon: "Ausgewähltes Symbol: %{iconName}"
+      clear: "Symbol abwählen"
     shared_drafts:
       title: "Gemeinsame Entwürfe"
       notice: "Dieses Thema ist nur für diejenigen sichtbar, die gemeinsame Entwürfe veröffentlichen können."
@@ -2952,6 +2963,7 @@ de:
       title: "Oder drücke %{modifier}Eingabetaste"
       save_and_close: "Speichern und schließen"
       discard: "Verwerfen"
+      cancel_edit: "Bearbeiten abbrechen"
       draft_saved: "Entwurf gespeichert!"
       users_placeholder: "Benutzer oder Gruppen hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
@@ -3014,6 +3026,8 @@ de:
         name_label: "Wrap-Name"
         attributes_label: "Attribute"
         add_attribute: "Attribut hinzufügen"
+        attribute_key: "Schlüssel"
+        attribute_value: "Wert"
         remove_attribute: "Attribut entfernen"
         apply: "Anwenden"
         unwrap: "Wrap auflösen"
@@ -3103,6 +3117,13 @@ de:
         copy: "Link kopieren"
         remove: "Link entfernen"
         visit: "Link in externer Registerkarte öffnen"
+        link_copied: "Link kopiert!"
+        load_preview: "Vorschau laden"
+        preview_failed: "Vorschau konnte nicht geladen werden"
+      onebox_toolbar:
+        copy: "Link kopieren"
+        visit: "Link öffnen"
+        remove_preview: "Vorschau entfernen"
         link_copied: "Link kopiert!"
       unsupported_token: "Der Rich-Text-Editor unterstützt nicht alle Funktionen, die in diesem Beitrag verwendet werden; es wird daher auf den Markdown-Editor ausgewichen."
     notifications:
@@ -3387,6 +3408,11 @@ de:
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
     current_user: "zu deiner Benutzerseite gehen"
     view_all: "Alle %{tab} anzeigen"
+    permanently_delete:
+      title: "Bist du dir absolut sicher?"
+      confirm_instruction: "Bitte tippe <b>%{phrase}</b> unten zur Bestätigung ein:"
+      controls:
+        delete: "Ich verstehe die Konsequenzen, dauerhaft löschen"
     user_menu:
       generic_no_items: "Es gibt keine Einträge in dieser Liste."
       sr_menu_tabs: "Registerkarten des Benutzermenüs"
@@ -3447,6 +3473,8 @@ de:
         clear_all: "Auswahl aufheben"
         unlist_topics: "Themen aus der Liste entfernen"
         relist_topics: "Themen wieder auflisten"
+        pin_topics: "Diese Themen hervorheben"
+        unpin_topics: "Themen loslösen"
         reset_bump_dates: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
         defer: "Als ungelesen markieren"
         delete: "Themen löschen"
@@ -3511,6 +3539,9 @@ de:
         confirm_remove_tags:
           one: "Alle Schlagwörter werden aus diesem Thema entfernt. Bist du sicher?"
           other: "Alle Schlagwörter werden aus <b>%{count}</b> Themen entfernt. Bist du sicher?"
+        confirm_unpin_topics:
+          one: "%{count} Thema loslösen"
+          other: "%{count} Themen loslösen"
         confirm_update_topics:
           one: "%{count} Thema aktualisieren"
           other: "%{count} Themen aktualisieren"
@@ -3581,6 +3612,7 @@ de:
         optional: (optional)
       archive_topics:
         name: "Archivieren"
+        description: "Archivierte Themen werden bei der Suche und in der Liste der aktuellen Themen ausgeblendet. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Mehr erfahren</a>"
       archive_messages:
         name: "Ins Archiv verschieben"
       move_messages_to_inbox:
@@ -3605,6 +3637,10 @@ de:
       update_category:
         name: "Kategorie aktualisieren"
         description: "Verschiebe alle ausgewählten Themen in die folgende Kategorie:"
+      convert_to_public_topic:
+        name: "Umwandeln in öffentliches Thema …"
+      convert_to_private_message:
+        name: "In persönliche Nachricht umwandeln"
       reset_bump_dates:
         name: "„Nach oben verschieben“-Daten zurücksetzen"
         description: "Möchtest du das „Nach oben verschieben“-Datum auf das vom zuletzt erstellten Beitrag setzen? Das kann die Reihenfolge in der Themenliste beeinflussen."
@@ -3613,6 +3649,26 @@ de:
       update_notifications:
         name: "Benachrichtigungsstufe aktualisieren"
         description: "Ändere deine persönliche Benachrichtigungsstufe für die ausgewählten Themen auf:"
+      pin_topics:
+        name: "Anheften"
+      unpin_topics:
+        name: "Loslösen"
+        description: "Alle ausgewählten Themen, die in einer Kategorie oder global angeheftet sind, loslösen"
+    nested_replies:
+      sort:
+        label: "Sortieren nach"
+        top: "Angesagte"
+        new: "Neue"
+      load_more_children:
+        one: "%{count} weitere Antwort"
+        other: "%{count} weitere Antworten"
+      collapsed_replies:
+        one: "%{count} Antwort"
+        other: "%{count} Antworten"
+      collapse: "Zuklappen"
+      no_replies: "Noch keine Antworten."
+      deleted_post_placeholder: "[gelöscht]"
+      pinned_reply: "Angeheftet"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -3746,6 +3802,7 @@ de:
         publish_to: "Veröffentlichen in:"
         when: "Wann:"
         time_frame_required: "Bitte wähle einen Zeitrahmen aus"
+        category_required: "Bitte wähle eine Kategorie"
         min_duration: "Dauer muss mehr als 0 betragen"
         max_duration: "Dauer muss weniger als 20 Jahre betragen"
         duration: "Dauer"
@@ -3927,6 +3984,12 @@ de:
         banner_note: "Benutzer können das Ankündigungsbanner schließen und so für sich selbst dauerhaft ausblenden. Es kann zu jeder Zeit höchstens ein Thema ein Banner sein."
         no_banner_exists: "Es gibt kein Thema für das Ankündigungsbanner."
         banner_exists: "Es <strong class='badge badge-notification unread'>gibt bereits</strong> ein anderes Thema für das Ankündigungsbanner."
+      bulk_feature_topic:
+        pin: "Diese Themen am Anfang ihrer jeweiligen Kategorie anzeigen bis"
+        pin_note: "Benutzer können die Themen für sich selbst loslösen."
+        pin_globally: "Diese Themen am Anfang aller Themenlisten anzeigen bis"
+        pin_button: "Themen anheften"
+        pin_globally_button: "Themen global anheften"
       inviting: "Einladungen werden gesendet …"
       automatically_add_to_groups: "Diese Einladung beinhaltet auch Zugang zu den folgenden Gruppen:"
       invite_private:
@@ -4144,6 +4207,10 @@ de:
       sr_post_like_count_button:
         one: "Dieser Beitrag gefällt %{count} Person."
         other: "Dieser Beitrag gefällt %{count} Personen."
+      likes_popup:
+        title:
+          one: "%{count} „Gefällt mir“"
+          other: "%{count} „Gefällt mir“"
       sr_post_read_count_button:
         one: "%{count} Person hat diesen Beitrag gelesen."
         other: "%{count} Personen haben diesen Beitrag gelesen."
@@ -4174,8 +4241,7 @@ de:
           confirm_delete: "Bist du sicher, dass du die Übersetzungen für '%{languageCode}' löschen willst?"
         success: "Die Übersetzungen wurden erfolgreich aktualisiert"
         post_language_selector:
-          title: "Sprache des Beitrags"
-          none: "Keine"
+          none: "Nicht festgelegt"
         edit_warning:
           message: "Dies ist ein übersetzter Beitrag.<br><br>Willst du den Originalbeitrag auf %{language} bearbeiten oder diese spezielle Übersetzung bearbeiten?"
           action_original: "Originalbeitrag bearbeiten"
@@ -4199,7 +4265,9 @@ de:
         attachment_download_requires_login: "Entschuldige, du musst angemeldet sein, um Anhänge herunterladen zu können."
       cancel_composer:
         confirm: "Willst du deinen Beitrag verwerfen?"
+        confirm_edit: "Möchtest du deine Änderungen verwerfen?"
         discard: "Verwerfen"
+        discard_edit: "Änderungen verwerfen"
       via_email: "dieser Beitrag ist per E-Mail eingetroffen"
       via_auto_generated_email: "dieser Beitrag ist per automatisch generierter E-Mail eingegangen"
       whisper: "dies ist ein privater geflüsterter Beitrag für Moderatoren"
@@ -4225,6 +4293,7 @@ de:
         delete: "diesen Beitrag löschen"
         undelete_action: "Beitrag wiederherstellen"
         undelete: "diesen Beitrag wiederherstellen"
+        view_deleted: "Inhalt des gelöschten Beitrags anzeigen"
         share_action: "Teilen"
         share: "Link zu diesem Beitrag teilen"
         copy_action: "Link kopieren"
@@ -4243,7 +4312,7 @@ de:
         admin: "Administrative Aktionen"
         admin_action: "Admin-Panel"
         permanently_delete: "Endgültig löschen"
-        permanently_delete_confirmation: "Bist du sicher, dass du diesen Beitrag endgültig löschen möchtest? Du kannst ihn nicht wiederherstellen."
+        permanently_delete_confirm_phrase: "endgültig löschen"
         wiki: "Wiki erstellen"
         unwiki: "Wiki entfernen"
         convert_to_moderator: "Team-Einfärbung hinzufügen"
@@ -4391,6 +4460,7 @@ de:
       back: "Zurück zur Kategorie"
       general: "Allgemeines"
       settings: "Einstellungen"
+      moderation: "Moderation"
       advanced: "Erweitert "
       show_advanced: "Erweiterte Einstellungen"
       topic_template: "Vorlage"
@@ -4461,6 +4531,7 @@ de:
       icon: "Symbol"
       emoji: "Emojis"
       select_emoji: "Wähle ein Emoji"
+      select_icon: "Symbol auswählen"
       background_color: "Farbe"
       foreground_color: "Textfarbe"
       color_validations:
@@ -4536,6 +4607,8 @@ de:
       posting_review_modes:
         no_one: "Keinen"
         everyone: "Jeden"
+        everyone_except: "Alle außer ausgewählten Gruppen"
+        no_one_except: "Niemand außer ausgewählten Gruppen"
       posting_review_groups_placeholder: "Gruppen auswählen …"
       this_year: "dieses Jahr"
       position: "Position auf der Kategorien-Seite:"
@@ -5708,6 +5781,8 @@ de:
         permanent_no_group_selection: "Nicht änderbar, dauerhafte Änderungen gelten für alle Gruppen."
         no_changes: "Derzeit gibt es keine bevorstehenden Änderungen."
         preview: "Vorschau"
+        default_warning: "Der Standardwert für diese Einstellung hat sich aufgrund einer <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>bevorstehenden Änderung</a> von %{oldDefaultValue} auf %{newDefaultValue} geändert."
+        default_warning_short: "Der Standardwert für diese Einstellung hat sich geändert. Erfahre mehr darüber auf der Seite mit den <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>bevorstehenden Änderungen</a>."
         enabled_for_options:
           no_one: "Keinen"
           everyone: "Jeden"
@@ -5733,6 +5808,10 @@ de:
           staff: "Team"
           all_members: "Alle Mitglieder"
           developers: "Entwickler"
+        impact_types:
+          feature_type: "Funktion"
+          other_type: "Sonstiges"
+          site_setting_default_type: "Standardwert der Einstellung"
         filter:
           search_placeholder: "Nach Namen, Beschreibung oder Plug-in filtern …"
           no_results: "Keine bevorstehende Änderung entspricht deinem Filter"
@@ -5745,6 +5824,7 @@ de:
           impact_type_all: "Alle Änderungstypen"
           impact_type_feature: "Funktion"
           impact_type_other: "Sonstiges"
+          impact_type_site_setting_default: "Standardwert der Einstellung"
           status_all: "Alle Status"
           status_conceptual: "Konzeptionell"
           status_experimental: "Experimentell"
@@ -5764,7 +5844,6 @@ de:
           header_description: "Gib hier Informationen über diese Website und dein Team an, damit andere erfahren, worum es in deiner Community geht, wer dahinter steht und wie sie dich erreichen können, falls es ein Problem gibt. Wird auf der Seite <a href='%{basePath}/about'>Über uns</a> deiner Website angezeigt."
         developer:
           title: "Entwickler"
-          header_description: "Entwicklereinstellungen zur Steuerung von Ratenlimits, Multiplikatoren und Berechnungen, dem abgesicherten Modus und anderen erweiterten Funktionen"
         experimental:
           title: "Experimentell"
           header_description: "Schalte experimentelle Funktionen für deine Website ein oder aus – die meisten davon können auf Gruppenbasis gesteuert werden"
@@ -6012,6 +6091,13 @@ de:
             logs:
               title: "Protokolle"
               header_description: "Protokolle für Backups, Wiederherstellungen und Uploads anzeigen und verwalten"
+        problem_checks:
+          priority: "Priorität"
+          status: "Status"
+          last_run_at: "Letzte Ausführung"
+          ignore: "Ignorieren"
+          more_options:
+            title: "Mehr Optionen"
         reports:
           title: "Berichte"
           header_description: "Berichte sind ein leistungsfähiges Instrument, das dir hilft zu verstehen, was auf deiner Website passiert. Sie können dir helfen, Trends zu erkennen, Probleme aufzudecken und Entscheidungen auf der Grundlage von Daten zu treffen."
@@ -6191,12 +6277,10 @@ de:
         installed_version: "Installiert"
         latest_version: "Neueste"
         problems_found: "Ein paar Ratschläge basierend auf deinen aktuellen Website-Einstellungen"
-        dismiss_notice: "Verwerfen"
+        dismiss_notice: "Ignorieren"
         new_features:
           title: "Was ist neu?"
           subtitle: "Wir veröffentlichen laufend neue Funktionen und Verbesserungen. Auf dieser Seite findest du die wichtigsten Neuerungen, aber du kannst auch auf „Mehr erfahren“ klicken, um ausführliche Versionshinweise zu lesen."
-          no_new_features_found: "Es gibt keine Einträge im Feed oder der ausgewählte Filter hat keine Ergebnisse zurückgegeben. Du kannst frühere Ankündigungen neuer Funktionen in der <a href='%{url}' target='_blank'>Discourse Meta Community</a> sehen."
-          no_new_features_error: "Es gab einen Fehler beim Laden des Feeds. Du kannst frühere Ankündigungen neuer Funktionen in der <a href='%{url}' target='_blank'>Discourse Meta Community</a> sehen."
           learn_more: "Mehr erfahren …"
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
@@ -7211,6 +7295,11 @@ de:
             button: "Quelle ändern"
             title: "Theme-Quelle ändern"
             repository_url: "Repository-URL"
+            updating: "Theme-Quelle wird aktualisiert …"
+            update: "Quelle aktualisieren"
+            has_existing_key: "Für dieses Theme ist ein vorhandener SSH-Schlüssel konfiguriert."
+            generate_new_key: "Neuen SSH-Schlüssel generieren"
+            keep_existing_key: "Vorhandenen SSH-Schlüssel behalten"
           add: "Hinzufügen"
           theme_settings: "Theme-eigene Einstellungen"
           theme_site_settings: "Einstellungen, die das Theme überschreiben kann"
@@ -8564,6 +8653,8 @@ de:
         crawler_settings_saved: "Crawler-Einstellungen gespeichert"
         back: "Zurück zu Einbettung"
         configuration_snippet: "Konfigurationsausschnitt"
+        full_app_mode: "Vollständiger App-Modus"
+        full_app_mode_description: "Lade die vollständige Discourse-Anwendung in den eingebetteten iframe, damit die Benutzer antworten, „Gefällt mir“ verwenden, zitieren und direkt mit Themen interagieren können"
         host_form:
           add_header: "Host hinzufügen"
           edit_header: "Host bearbeiten"

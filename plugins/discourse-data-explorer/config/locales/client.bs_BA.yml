@@ -12,6 +12,7 @@ bs_BA:
       create: "napravi"
       ai:
         generate: "Generate"
+        optional: "opcionalno"
       help:
         label: "Pomoć"
       schema:

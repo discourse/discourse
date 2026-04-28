@@ -110,6 +110,7 @@ export default class NestedController extends Controller {
       this.rootNodes = [...this.rootNodes, ...newNodes];
       this.page = data.page;
       this.hasMoreRoots = data.has_more_roots || false;
+      this.#assignSuggestedAndRelated(data);
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -539,5 +540,23 @@ export default class NestedController extends Controller {
 
   #processNode(nodeData) {
     return processNode(this.store, this.topic, nodeData);
+  }
+
+  #assignSuggestedAndRelated(data) {
+    if (!this.topic) {
+      return;
+    }
+    if (data.suggested_topics !== undefined) {
+      this.topic.suggested_topics = data.suggested_topics;
+    }
+    if (data.related_topics !== undefined) {
+      this.topic.related_topics = data.related_topics;
+    }
+    if (data.related_messages !== undefined) {
+      this.topic.related_messages = data.related_messages;
+    }
+    if (data.suggested_group_name !== undefined) {
+      this.topic.suggested_group_name = data.suggested_group_name;
+    }
   }
 }

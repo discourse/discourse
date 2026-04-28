@@ -6,8 +6,9 @@ import {
   focus,
   settled,
   visit,
+  waitFor,
 } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import { Promise } from "rsvp";
 import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -17,6 +18,7 @@ import {
   chromeTest,
   createFile,
   paste,
+  silenceConsoleErrorsMatching,
 } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -244,7 +246,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   });
 
   test("cancelling uploads clears the placeholders out", async function (assert) {
-    const consoleErrorStub = sinon.stub(console, "error");
+    const consoleErrorStub = silenceConsoleErrorsMatching("[Uppy]");
 
     await visit("/");
     await click("#create-topic");
@@ -280,11 +282,6 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       appEvents.trigger("composer:add-files", [image, image2]);
     });
     await click("#cancel-file-upload");
-
-    assert.true(
-      consoleErrorStub.calledWithMatch("[Uppy]"),
-      "Uppy logs the cancelled uploads to the console"
-    );
 
     consoleErrorStub.restore();
   });
@@ -436,7 +433,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
-  skip("should place cursor properly after inserting a placeholder", async function (assert) {
+  test("places cursor properly after inserting a placeholder", async function (assert) {
     const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
@@ -447,12 +444,13 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     input.selectionStart = 10;
     input.selectionEnd = 10;
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       // after uploading we have this in the textarea:
       // "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\ntext after image"
       // cursor should be just before "text after image":
-      assert.strictEqual(input.selectionStart, 76);
-      assert.strictEqual(input.selectionEnd, 76);
+      assert.dom(".d-editor-input").hasProperty("selectionStart", 76);
+      assert.dom(".d-editor-input").hasProperty("selectionEnd", 76);
       done();
     });
 
@@ -555,39 +553,30 @@ acceptance(
     });
 
     test("should show a consolidated message for multiple failed uploads", async function (assert) {
-      const consoleErrorStub = sinon.stub(console, "error");
+      const consoleErrorStub = silenceConsoleErrorsMatching("[Uppy]");
 
       await visit("/");
       await click("#create-topic");
       const appEvents = getOwner(this).lookup("service:app-events");
       const image = createFile("meme1.png");
       const image1 = createFile("meme2.png");
-      const done = assert.async();
-
-      appEvents.on("composer:upload-error", async () => {
-        await settled();
-
-        if (find(".dialog-body")) {
-          assert
-            .dom(".dialog-body")
-            .hasText(
-              "Sorry, there was an error uploading meme1.png and meme2.png. Please try again.",
-              "it should show a consolidated error dialog"
-            );
-          // eslint-disable-next-line qunit/no-conditional-assertions
-          assert.true(
-            consoleErrorStub.calledWithMatch("[Uppy]"),
-            "Uppy logs the upload failures to the console"
-          );
-
-          await click(".dialog-footer .btn-primary");
-          consoleErrorStub.restore();
-
-          done();
-        }
-      });
 
       appEvents.trigger("composer:add-files", [image, image1]);
+
+      await waitFor(".dialog-body");
+      assert
+        .dom(".dialog-body")
+        .hasText(
+          "Sorry, there was an error uploading meme1.png and meme2.png. Please try again.",
+          "shows a consolidated error dialog"
+        );
+      assert.true(
+        consoleErrorStub.calledWithMatch("[Uppy]"),
+        "Uppy logs the upload failures to the console"
+      );
+
+      await click(".dialog-footer .btn-primary");
+      consoleErrorStub.restore();
     });
   }
 );

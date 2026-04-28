@@ -26,6 +26,11 @@ tr_TR:
         react_with: "Bu gönderiye şununla tepki verin: %{reaction}"
         cant_remove_reaction: "Artık tepkinizi kaldıramazsınız"
         remove_reaction: "Bu %{reaction} tepkisini kaldır"
+      users_popup:
+        all: "Tümü"
+        title:
+          one: "%{count} Yorum"
+          other: "%{count} Yorum"
       counter:
         aria_label:
           one: "%{count} yorum"

@@ -97,7 +97,6 @@ pt:
       retry_staged_message:
         title: "Erro de rede"
         action: "Enviar novamente?"
-      unreliable_network: "A rede não é confiável. Enviar mensagens e salvar rascunhos poderá não funcionar"
       bookmark_message: "Adicionar Marcador"
       bookmark_message_edit: "Editar Favorito"
       restore: "Restaurar mensagem apagada"
