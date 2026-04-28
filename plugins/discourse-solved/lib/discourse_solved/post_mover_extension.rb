@@ -11,15 +11,16 @@ module DiscourseSolved
       if solved_topic
         topic_answers_to_move = solved_topic.topic_answers.where(answer_post_id: post_ids)
 
+        target_allows_answers = Guardian.new(user).allow_accepted_answers?(topic)
+        target_solved_topic =
+          DiscourseSolved::SolvedTopic.find_or_create_by!(topic: topic) if target_allows_answers
+
         topic_answers_to_move.each do |ta|
-          target_solved_topic = DiscourseSolved::SolvedTopic.find_by(topic: topic)
-          accepts_answers = Guardian.new(user).allow_accepted_answers?(topic)
-          can_have_more_answers =
+          target_can_have_more_answers =
             SiteSetting.solved_allow_multiple_solutions ||
               !target_solved_topic&.topic_answers.present?
 
-          if accepts_answers && can_have_more_answers
-            target_solved_topic ||= DiscourseSolved::SolvedTopic.find_or_create_by!(topic: topic)
+          if target_allows_answers && target_can_have_more_answers
             ta.update!(solved_topic: target_solved_topic)
           else
             DiscourseSolved::UnacceptAnswer.call(
