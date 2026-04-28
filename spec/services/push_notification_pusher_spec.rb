@@ -62,6 +62,45 @@ RSpec.describe PushNotificationPusher do
       expect(message[:icon]).to match(%r{\A/assets/push-notifications/mentioned-\w{8}.png\z})
     end
 
+    it "forwards actions and action_data when present in the payload" do
+      actions = [
+        {
+          action: "test-reply",
+          title: "Reply",
+          placeholder: "Reply…",
+          type: "text",
+          icon: "https://example.com/icon.png",
+        },
+      ]
+      action_data = { channel_id: 42, thread_id: 7 }
+
+      message =
+        PushNotificationPusher.push(
+          user,
+          {
+            topic_title: topic_title,
+            username: username,
+            excerpt: "description",
+            topic_id: 1,
+            base_url: base_url,
+            post_url: post_url,
+            notification_type: 1,
+            post_number: 1,
+            actions: actions,
+            action_data: action_data,
+          },
+        )
+
+      expect(message[:actions]).to eq(actions)
+      expect(message[:action_data]).to eq(action_data)
+    end
+
+    it "omits actions and action_data when not present in the payload" do
+      message = execute_push
+      expect(message).not_to have_key(:actions)
+      expect(message).not_to have_key(:action_data)
+    end
+
     it "sends notification in user's locale" do
       SiteSetting.allow_user_locale = true
       user.update!(locale: "pt_BR")
