@@ -73,7 +73,7 @@ describe "Topic page" do
 
     visit("/t/#{topic.slug}/#{topic.id}")
 
-    expect(".toggle-admin-menu").to be_present
+    expect(page).to have_css(".toggle-admin-menu")
 
     send_keys([:shift, "a"])
 
