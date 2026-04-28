@@ -50,6 +50,10 @@ export default class DMultiSelect extends Component {
     return this.args.label ?? i18n("multi_select.label");
   }
 
+  get noResultsLabel() {
+    return this.args.noResultsLabel ?? i18n("multi_select.no_results");
+  }
+
   @cached
   get data() {
     if (this.isDestroying || this.isDestroyed) {
@@ -325,7 +329,7 @@ export default class DMultiSelect extends Component {
               </div>
             {{else}}
               <div class="d-multi-select__search-no-results">
-                {{i18n "multi_select.no_results"}}
+                {{this.noResultsLabel}}
               </div>
             {{/if}}
           {{/if}}

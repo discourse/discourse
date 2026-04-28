@@ -4913,6 +4913,8 @@ en:
       color_used: "Color in use"
       predefined_colors: "Predefined color options"
       name_placeholder: "One or two words recommended"
+      category_types: "Category types"
+      category_types_no_results: "No other category types found"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
