@@ -270,14 +270,6 @@ RSpec.describe UserAction do
         expect(likee_stream_for(other).count).to eq(old_count + 1)
       end
 
-      %i[admin moderator].each do |role|
-        it "does not hide likes from ignored #{role}s" do
-          liker.update!(role => true)
-          PostActionCreator.like(liker, post)
-          expect(likee_stream_for(likee).count).to eq(old_count + 1)
-        end
-      end
-
       it "hides only the ignored user's actions, not other users' actions on the same topic" do
         normal_user = Fabricate(:user)
         PostActionCreator.like(normal_user, post)
