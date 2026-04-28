@@ -466,6 +466,8 @@ describe "Content Localization" do
 
         # refresh should show correct state of post content
         page.refresh
+        expect(page).to have_css("#site-logo")
+
         scroll_to_post(21)
         expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
       end
