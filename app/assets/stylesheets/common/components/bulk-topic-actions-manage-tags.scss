@@ -11,7 +11,7 @@
       width: auto;
 
       .form-kit__container-title {
-        color: var(--primary-med-or-secondary-high);
+        color: var(--primary-medium);
         font-weight: normal !important;
         white-space: nowrap;
       }
@@ -30,7 +30,6 @@
 
     .form-kit__row {
       padding-top: 0;
-      row-gap: var(--space-2);
 
       // Form-kit collapses every `--col-*` to 100% width below `lg`, which
       // stacks the from-chooser, arrow, to-chooser and remove button into a
