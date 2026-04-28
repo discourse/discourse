@@ -1,27 +1,23 @@
 .manage-tags-form {
-  position: relative;
+  &__remove-section {
+    position: relative;
 
-  #control-remove_all_tags {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: auto;
+    #control-remove_all_tags {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: auto;
 
-    .form-kit__container-title {
-      color: var(--primary-med-or-secondary-high);
-      font-weight: normal !important;
-      white-space: nowrap;
+      .form-kit__container-title {
+        color: var(--primary-med-or-secondary-high);
+        font-weight: normal !important;
+        white-space: nowrap;
+      }
     }
   }
 
   &__warning {
     margin-top: 2rem;
-  }
-
-  .form-kit__errors-summary {
-    z-index: z(
-      "base"
-    ); // One-off overrule for unusual toggle placement in this form
   }
 
   &__replace {
@@ -32,6 +28,7 @@
 
     .form-kit__row {
       padding-top: 0;
+      row-gap: var(--space-2);
     }
   }
 

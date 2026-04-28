@@ -152,39 +152,41 @@ export default class ManageTagsForm extends Component {
       as |form transientData|
     >
 
-      {{#if transientData.remove_all_tags}}
-        <form.Alert @type="error" class="manage-tags-form__warning">
-          {{trustHTML
-            (i18n "topic_bulk_actions.manage_tags.remove.all_warning")
-          }}
-        </form.Alert>
-      {{else}}
+      <form.Container @format="full" class="manage-tags-form__remove-section">
+        {{#if transientData.remove_all_tags}}
+          <form.Alert @type="error" class="manage-tags-form__warning">
+            {{trustHTML
+              (i18n "topic_bulk_actions.manage_tags.remove.all_warning")
+            }}
+          </form.Alert>
+        {{else}}
+          <form.Field
+            @name="remove_tags"
+            @title={{i18n "topic_bulk_actions.manage_tags.remove.title"}}
+            @description={{i18n
+              "topic_bulk_actions.manage_tags.remove.description"
+            }}
+            @type="tag-chooser"
+            @showOptional={{false}}
+            @format="full"
+            @onSet={{this.afterFieldSet}}
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        {{/if}}
+
         <form.Field
-          @name="remove_tags"
-          @title={{i18n "topic_bulk_actions.manage_tags.remove.title"}}
-          @description={{i18n
-            "topic_bulk_actions.manage_tags.remove.description"
-          }}
-          @type="tag-chooser"
+          @name="remove_all_tags"
+          @title={{i18n "topic_bulk_actions.manage_tags.remove.all_toggle"}}
+          @type="toggle"
           @showOptional={{false}}
-          @format="full"
           @onSet={{this.afterFieldSet}}
           as |field|
         >
           <field.Control />
         </form.Field>
-      {{/if}}
-
-      <form.Field
-        @name="remove_all_tags"
-        @title={{i18n "topic_bulk_actions.manage_tags.remove.all_toggle"}}
-        @type="toggle"
-        @showOptional={{false}}
-        @onSet={{this.afterFieldSet}}
-        as |field|
-      >
-        <field.Control />
-      </form.Field>
+      </form.Container>
 
       <form.Field
         @name="add_tags"
