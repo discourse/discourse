@@ -1757,6 +1757,10 @@ posting:
     default: true
     hidden: true
     area: "posts_and_topics"
+  rich_editor_inline_diff_enabled:
+    client: true
+    default: true
+    area: "posts_and_topics"
 
 content_localization:
   content_localization_enabled:

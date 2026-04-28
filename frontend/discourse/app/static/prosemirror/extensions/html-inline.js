@@ -62,6 +62,57 @@ function serializeHtmlAttrs(htmlAttrs) {
 
 const ALL_ALLOWED_TAGS = [...Object.keys(HTML_INLINE_MARKS), ...ALLOWED_INLINE];
 
+const OPEN_TAG_RE = /^<([a-z]+)(?:\s[^>]*)?\/?>$/i;
+const CLOSE_TAG_RE = /^<\/([a-z]+)>$/i;
+
+// Memoized per tokens array: parse.html_inline runs once per token, so we
+// only walk the array once instead of doing a forward scan per open tag.
+const PAIRED_OPENS = new WeakMap();
+
+// Returns the set of `tokens` indexes whose open tag has a matching close
+// later in the array. Per-tag-name stacks mirror HTML's parsing rules for
+// nested same-name tags.
+function pairedOpenIndexes(tokens) {
+  let cached = PAIRED_OPENS.get(tokens);
+  if (cached) {
+    return cached;
+  }
+  cached = new Set();
+  const stacks = new Map();
+
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i].type !== "html_inline") {
+      continue;
+    }
+    const content = tokens[i].content;
+    const openMatch = content.match(OPEN_TAG_RE);
+    if (openMatch) {
+      const tag = openMatch[1].toLowerCase();
+      if (!ALLOWED_INLINE.includes(tag)) {
+        continue;
+      }
+      let stack = stacks.get(tag);
+      if (!stack) {
+        stack = [];
+        stacks.set(tag, stack);
+      }
+      stack.push(i);
+      continue;
+    }
+    const closeMatch = content.match(CLOSE_TAG_RE);
+    if (closeMatch) {
+      const tag = closeMatch[1].toLowerCase();
+      const stack = stacks.get(tag);
+      if (stack && stack.length) {
+        cached.add(stack.pop());
+      }
+    }
+  }
+
+  PAIRED_OPENS.set(tokens, cached);
+  return cached;
+}
+
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
@@ -93,7 +144,7 @@ const extension = {
     },
   },
   parse: {
-    html_inline: (state, token) => {
+    html_inline: (state, token, tokens, i) => {
       const openMatch = token.content.match(/^<([a-z]+)(\s[^>]*)?\/?>$/i);
       const closeMatch = token.content.match(/^<\/([a-z]+)>$/i);
 
@@ -136,6 +187,9 @@ const extension = {
             }
 
             if (ALLOWED_INLINE.includes(tagName)) {
+              if (!pairedOpenIndexes(tokens).has(i)) {
+                return;
+              }
               const htmlAttrs = extractHtmlAttrs(element, tagName);
               state.openNode(state.schema.nodes.html_inline, {
                 tag: tagName,
@@ -153,6 +207,9 @@ const extension = {
         }
 
         if (ALLOWED_INLINE.includes(tagName)) {
+          if (!pairedOpenIndexes(tokens).has(i)) {
+            return;
+          }
           state.openNode(state.schema.nodes.html_inline, {
             tag: tagName,
           });
@@ -176,7 +233,12 @@ const extension = {
         }
 
         if (ALLOWED_INLINE.includes(tagName)) {
-          state.closeNode();
+          // Silently skip orphan close tags: their open was already dropped
+          // by pairedOpenIndexes, so there is no matching html_inline node
+          // on the stack to close.
+          if (state.top()?.type === state.schema.nodes.html_inline) {
+            state.closeNode();
+          }
         }
       }
     },

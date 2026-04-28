@@ -109,6 +109,7 @@ export default class ComposerService extends Service {
   @service toasts;
 
   @tracked allowPreview = false;
+  @tracked inlineDiffEnabled = false;
   @tracked selectedTranslationLocale = null;
   checkedMessages = false;
   messageCount = null;
@@ -135,11 +136,27 @@ export default class ComposerService extends Service {
   init() {
     super.init(...arguments);
     window.addEventListener("beforeunload", this._beaconSaveDraft);
+    this.appEvents.on(
+      "composer:rich-editor-toggled",
+      this,
+      "onRichEditorToggled"
+    );
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
     window.removeEventListener("beforeunload", this._beaconSaveDraft);
+    this.appEvents.off(
+      "composer:rich-editor-toggled",
+      this,
+      "onRichEditorToggled"
+    );
+  }
+
+  onRichEditorToggled(richEditorEnabled) {
+    if (!richEditorEnabled && this.inlineDiffEnabled) {
+      this.inlineDiffEnabled = false;
+    }
   }
 
   @bind
@@ -565,6 +582,18 @@ export default class ComposerService extends Service {
           showActiveIcon: true,
           active: ({ state }) => state?.inWrap,
         }),
+        this._setupPopupMenuOption({
+          name: "toggle-diff",
+          action: this.toggleInlineDiff,
+          icon: "right-left",
+          label: "composer.toggle_diff",
+          shortcut: "Shift+d",
+          condition: () =>
+            this.siteSettings.rich_editor_inline_diff_enabled &&
+            this.model?.editingPost,
+          showActiveIcon: true,
+          active: () => this.inlineDiffEnabled,
+        }),
       ];
 
       return [
@@ -963,6 +992,22 @@ export default class ComposerService extends Service {
           : undefined,
       },
     });
+  }
+
+  @action
+  toggleInlineDiff(toolbarEvent) {
+    if (toolbarEvent.commands?.toggleInlineDiff) {
+      this.inlineDiffEnabled = !this.inlineDiffEnabled;
+      toolbarEvent.commands.toggleInlineDiff(this.inlineDiffEnabled);
+    } else {
+      this.dialog.yesNoConfirm({
+        message: i18n("composer.toggle_diff_rich_editor_required"),
+        didConfirm: () => {
+          this.inlineDiffEnabled = true;
+          this.appEvents.trigger("composer:request-rich-editor");
+        },
+      });
+    }
   }
 
   @action
@@ -1976,6 +2021,7 @@ export default class ComposerService extends Service {
     document.activeElement?.blur();
     document.documentElement.style.removeProperty("--composer-height");
     this.setProperties({ model: null, lastValidatedAt: null });
+    this.inlineDiffEnabled = false;
 
     // This is a temporary solution to reset the saved form template state while we don't store drafts
     this.set("formTemplateInitialValues", undefined);

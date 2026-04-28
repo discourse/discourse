@@ -53,15 +53,16 @@ module(
         '<p><a href="https://example.com" title="Title">x</a></p>',
         '[x](https://example.com "Title")',
       ],
-      "unmatched opening inline tag auto-closes": [
-        "<kbd>x",
-        "<p><kbd>x</kbd> </p>",
-        "<kbd>x</kbd> ",
-      ],
+      "unmatched opening inline tag is dropped": ["<kbd>x", "<p>x</p>", "x"],
       "unmatched opening link tag auto-closes": [
         '<a href="https://example.com">x',
         '<p><a href="https://example.com">x</a></p>',
         "[x](https://example.com)",
+      ],
+      "extra orphan close tag is dropped": [
+        "<sub>x</sub></sub>",
+        "<p><sub>x</sub> </p>",
+        "<sub>x</sub> ",
       ],
       "image HTML with src, alt, width and height": [
         '<img src="https://example.com/image.png" alt="Alt text" width="100" height="200">',

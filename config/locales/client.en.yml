@@ -3252,6 +3252,9 @@ en:
       list_item: "List item"
       toggle_direction: "Toggle direction"
       apply_wrap_title: "Apply wrap"
+      toggle_diff: "Toggle changes"
+      toggle_diff_rich_editor_required: "Showing changes requires the rich text editor. Switch to it now?"
+      diff_revert: "Revert this change"
       wrap_modal:
         title: "Edit Wrap"
         name_label: "Wrap name"
