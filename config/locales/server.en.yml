@@ -5615,6 +5615,9 @@ en:
 
   tags:
     title: "Tags"
+    groups:
+      errors:
+        empty_permissions: "Tag group must have at least one permission."
     restricted_tag_disallowed: 'You cannot apply the tag "%{tag}".'
     restricted_tag_remove_disallowed: 'You cannot remove the tag "%{tag}".'
     minimum_required_tags:
