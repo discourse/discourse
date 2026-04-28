@@ -562,13 +562,7 @@ class PostRevisor
       @post.public_send("#{field}=", @fields[field]) if @fields.has_key?(field)
     end
 
-    if @post.reply_to_post_number_changed?
-      @post.reply_to_user_id = @new_reply_to_parent&.user_id
-      # A reply to a whisper is itself a whisper.
-      if @new_reply_to_parent&.post_type == Post.types[:whisper]
-        @post.post_type = Post.types[:whisper]
-      end
-    end
+    @post.reply_to_user_id = @new_reply_to_parent&.user_id if @post.reply_to_post_number_changed?
 
     @post.edit_reason = @fields[:edit_reason] if should_create_new_version?
     @post.last_editor_id = @editor.id
