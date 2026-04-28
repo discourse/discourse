@@ -55,10 +55,12 @@ class NestedTopic::ShowContext
   end
 
   def fetch_target_post(params:, topic_view:, loader:)
-    post = topic_view.topic.posts.find_by(post_number: params.target_post_number)
-    return if post.nil?
-    return if loader.visible_post_types.exclude?(post.post_type)
-    post
+    # apply_visibility unscopes deleted_at and filters by visible_post_types,
+    # matching the rest of the tree-loading code. Without this, a link to a
+    # since-soft-deleted post (e.g. a stale last_read_post_number from
+    # suggested topics) would 404 even though the deleted_post_placeholder
+    # path in the serializer is designed to render it.
+    loader.apply_visibility(topic_view.topic.posts).find_by(post_number: params.target_post_number)
   end
 
   def should_walk_ancestors(params:, target_post:)
