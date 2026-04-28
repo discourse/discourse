@@ -246,7 +246,14 @@ describe "Request tracking" do
             CachedCounting.flush
 
             # Does not count error as a pageview
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_logged_in_total",
+                "page_view_crawler_total",
+              ),
+            ).to include(
               "page_view_anon_total" => 1,
               "page_view_anon_browser_total" => 1,
               "page_view_logged_in_total" => 0,
