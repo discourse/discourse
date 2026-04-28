@@ -81,7 +81,6 @@ const CLOSED = "closed",
     topic_id: "topic.id",
     original_text: "originalText",
     locale: "locale",
-    reply_to_post_number: "reply_to_post_number",
   },
   _edit_topic_serializer = {
     title: "topic.title",
@@ -1227,6 +1226,12 @@ export default class Composer extends RestModel {
     };
 
     this.serialize(_update_serializer, props);
+
+    // Only send when changed; otherwise a stale composer value could
+    // clobber a concurrent reply-target change by another editor.
+    if (this.reply_to_post_number !== (post?.reply_to_post_number ?? null)) {
+      props.reply_to_post_number = this.reply_to_post_number;
+    }
 
     // user clicked "overwrite edits" button
     if (this.editConflict) {

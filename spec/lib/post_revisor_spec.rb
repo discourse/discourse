@@ -2180,6 +2180,50 @@ describe PostRevisor do
       expect(first_reply.reload.reply_count).to eq(new_parent_reply_count)
     end
 
+    it "cleans up the PostReply row when the previous parent is already trashed" do
+      original_post.trash!
+
+      expect(
+        PostReply.where(post_id: original_post.id, reply_post_id: post_to_edit.id),
+      ).to be_present
+
+      expect(revise(first_reply.post_number)).to eq(true)
+
+      expect(PostReply.where(post_id: original_post.id, reply_post_id: post_to_edit.id)).to be_empty
+    end
+
+    it "mirrors the new parent's whisper post_type" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff]
+
+      # Whisper must come before the post being revised — fresh topic so
+      # the post ordering is explicit.
+      whisper_topic = Fabricate(:topic, user: admin)
+      Fabricate(:post, topic: whisper_topic, user: admin, post_number: 1)
+      whisper =
+        PostCreator.create!(
+          admin,
+          topic_id: whisper_topic.id,
+          raw: "a whisper, long enough to be valid",
+          post_type: Post.types[:whisper],
+        )
+      regular_reply =
+        PostCreator.create!(
+          admin,
+          topic_id: whisper_topic.id,
+          raw: "a regular reply, long enough to be valid",
+        )
+
+      expect(
+        PostRevisor.new(regular_reply).revise!(
+          admin,
+          { reply_to_post_number: whisper.post_number },
+          bypass_rate_limiter: true,
+        ),
+      ).to eq(true)
+
+      expect(regular_reply.reload.post_type).to eq(Post.types[:whisper])
+    end
+
     context "with nested reply stats" do
       def direct_reply_count(post)
         NestedViewPostStat.where(post_id: post.id).pick(:direct_reply_count) || 0

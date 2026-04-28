@@ -564,7 +564,10 @@ class PostRevisor
 
     if @post.reply_to_post_number_changed?
       @post.reply_to_user_id = @new_reply_to_parent&.user_id
-      @post.instance_variable_set(:@reply_to_post, nil)
+      # A reply to a whisper is itself a whisper.
+      if @new_reply_to_parent&.post_type == Post.types[:whisper]
+        @post.post_type = Post.types[:whisper]
+      end
     end
 
     @post.edit_reason = @fields[:edit_reason] if should_create_new_version?
@@ -889,7 +892,12 @@ class PostRevisor
   def resolve_reply_to_change
     new_post_number = @fields[:reply_to_post_number]
 
-    @old_reply_to_parent = @post.reply_to_post
+    # Resolve trashed prior parents too — their stale `PostReply` row and
+    # `reply_count` need cleanup on reparent.
+    @old_reply_to_parent =
+      if @post.reply_to_post_number.present?
+        Post.with_deleted.find_by(topic_id: @post.topic_id, post_number: @post.reply_to_post_number)
+      end
     @new_reply_to_parent = nil
 
     return true if new_post_number == @post.reply_to_post_number
@@ -909,7 +917,6 @@ class PostRevisor
 
   def valid_reply_to_parent?(parent)
     return false if parent.blank?
-    return false if parent.deleted_at.present?
     return false if parent.id == @post.id
     return false if @post.post_number.present? && parent.post_number >= @post.post_number
     return false unless guardian.can_see?(parent)
@@ -923,7 +930,7 @@ class PostRevisor
     old_post_number = @old_reply_to_parent.post_number
     still_referenced =
       @post.reply_to_post_number == old_post_number ||
-        Array(@post.quoted_post_numbers).include?(old_post_number)
+        @post.quoted_post_numbers.include?(old_post_number)
     return if still_referenced
 
     deleted = PostReply.where(post_id: @old_reply_to_parent.id, reply_post_id: @post.id).delete_all

@@ -231,13 +231,19 @@ export default class History extends Component {
         );
       }
       if (result.post) {
-        // `PostSerializer` omits `reply_to_user` when nil, so the post's
-        // in-memory value isn't cleared after a revert that removes the
-        // reply target. Explicitly mirror the reverted state onto the post.
-        post.setProperties({
+        // `PostSerializer` omits `reply_to_user` when the user is nil OR
+        // when `suppress_reply_when_quoting` is on and the post quotes its
+        // target. Treat a missing key as "leave alone" — only clear it
+        // when the post number is also cleared.
+        const props = {
           reply_to_post_number: result.post.reply_to_post_number ?? null,
-          reply_to_user: result.post.reply_to_user ?? null,
-        });
+        };
+        if ("reply_to_user" in result.post) {
+          props.reply_to_user = result.post.reply_to_user;
+        } else if (result.post.reply_to_post_number == null) {
+          props.reply_to_user = null;
+        }
+        post.setProperties(props);
       }
       this.args.closeModal();
     } catch (e) {

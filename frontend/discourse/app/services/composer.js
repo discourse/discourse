@@ -78,6 +78,14 @@ async function loadDraft(store, opts = {}) {
     attrs[f] = draft[f] || opts[f];
   });
 
+  // `||` above collapses explicit `null`; for these fields `null` means
+  // "no reply target" and must round-trip through the draft.
+  ["reply_to_post_number", "reply_to_user"].forEach((f) => {
+    if (draft && f in draft) {
+      attrs[f] = draft[f];
+    }
+  });
+
   const composer = store.createRecord("composer");
   await composer.open(attrs);
 
@@ -602,9 +610,17 @@ export default class ComposerService extends Service {
   // isn't rendered next to the title (mobile) or is suppressed (e.g.
   // `suppress_reply_when_quoting`), regardless of whether a target already
   // exists.
+  //
+  // Post 1 (the OP) has no earlier posts — the picker would have nothing
+  // to select.
   get canOpenReplyToModal() {
     const model = this.model;
-    return model?.action === EDIT && !!model?.post?.can_edit && !!model?.topic;
+    return (
+      model?.action === EDIT &&
+      !!model?.post?.can_edit &&
+      !!model?.topic &&
+      (model?.post?.post_number ?? 0) > 1
+    );
   }
 
   @action
