@@ -219,7 +219,7 @@ export default class UpsertCategoryAppearance extends Component {
         as |field|
       >
         <field.Control
-          @nonePlaceholderLabel={{i18n "category.sort_options.default"}}
+          @nonePlaceholder={{i18n "category.sort_options.default"}}
           as |select|
         >
           {{#each this.availableViews as |availableView|}}
@@ -238,7 +238,7 @@ export default class UpsertCategoryAppearance extends Component {
         as |field|
       >
         <field.Control
-          @nonePlaceholderLabel={{i18n "category.sort_options.default"}}
+          @nonePlaceholder={{i18n "category.sort_options.default"}}
           as |select|
         >
           {{#each this.topPeriods as |period|}}
@@ -257,7 +257,7 @@ export default class UpsertCategoryAppearance extends Component {
         as |field|
       >
         <field.Control
-          @nonePlaceholderLabel={{i18n "category.sort_options.default"}}
+          @nonePlaceholder={{i18n "category.sort_options.default"}}
           as |select|
         >
           {{#each this.sortOrders as |sort|}}
@@ -275,7 +275,7 @@ export default class UpsertCategoryAppearance extends Component {
           as |field|
         >
           <field.Control
-            @nonePlaceholderLabel={{i18n "category.sort_options.default"}}
+            @nonePlaceholder={{i18n "category.sort_options.default"}}
             as |select|
           >
             {{#each this.sortAscendingOptions as |option|}}
@@ -295,7 +295,7 @@ export default class UpsertCategoryAppearance extends Component {
         as |field|
       >
         <field.Control
-          @nonePlaceholderLabel={{i18n "category.sort_options.default"}}
+          @nonePlaceholder={{i18n "category.sort_options.default"}}
           as |select|
         >
           {{#each this.listFilters as |filter|}}
@@ -326,7 +326,7 @@ export default class UpsertCategoryAppearance extends Component {
             as |field|
           >
             <field.Control
-              @nonePlaceholderLabel={{i18n "category.sort_options.default"}}
+              @nonePlaceholder={{i18n "category.sort_options.default"}}
               as |select|
             >
               {{#each this.subcategoryListStyles as |style|}}

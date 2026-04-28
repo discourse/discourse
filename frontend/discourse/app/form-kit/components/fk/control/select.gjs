@@ -33,7 +33,7 @@ export default class FKControlSelect extends FKBaseControl {
       @value={{@field.value}}
       @onChange={{@field.set}}
       @includeNone={{this.includeNone}}
-      @nonePlaceholderLabel={{@nonePlaceholderLabel}}
+      @nonePlaceholder={{@nonePlaceholder}}
       id={{@field.id}}
       name={{@field.name}}
       aria-invalid={{if @field.error "true"}}

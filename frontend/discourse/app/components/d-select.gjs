@@ -70,8 +70,8 @@ export default class DSelect extends Component {
     >
       {{#if this.includeNone}}
         <DSelectOption @value={{NO_VALUE_OPTION}}>
-          {{#if @nonePlaceholderLabel}}
-            {{@nonePlaceholderLabel}}
+          {{#if @nonePlaceholder}}
+            {{@nonePlaceholder}}
           {{else}}
             {{#if this.hasSelectedValue}}
               {{i18n "none_placeholder"}}

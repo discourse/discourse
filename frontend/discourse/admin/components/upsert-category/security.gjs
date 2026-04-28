@@ -254,9 +254,7 @@ export default class UpsertCategorySecurity extends Component {
                     >
                       <field.Control
                         class="available-groups"
-                        @nonePlaceholderLabel={{i18n
-                          "category.security_add_group"
-                        }}
+                        @nonePlaceholder={{i18n "category.security_add_group"}}
                         as |select|
                       >
                         {{#each this.availableGroups as |group|}}
