@@ -406,4 +406,31 @@ module SystemHelpers
   def html_translation_to_text(html_translation)
     Nokogiri.HTML5(html_translation).at("body").inner_text
   end
+
+  def capture_log_entries(controller:, entries:, action: nil)
+    log = Rails.root.join("log", "#{Rails.env}.log")
+    File.truncate(log, 0) if File.exist?(log)
+
+    yield
+
+    read =
+      lambda do
+        return [] unless File.exist?(log)
+        File.open(log) do |f|
+          f
+            .read
+            .lines
+            .reject { |l| l.strip.empty? }
+            .filter_map do |line|
+              JSON.parse(line)
+            rescue JSON::ParserError
+              nil
+            end
+            .select { |e| e["controller"] == controller && (action.nil? || e["action"] == action) }
+        end
+      end
+
+    try_until_success { raise Capybara::ExpectationNotMet if read.call.size < entries }
+    read.call
+  end
 end

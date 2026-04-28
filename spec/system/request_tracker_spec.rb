@@ -674,4 +674,111 @@ describe "Request tracking" do
       end
     end
   end
+
+  describe "BPV log entries" do
+    fab!(:user)
+    fab!(:topic)
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.use_beacon_for_browser_page_views = true
+      Middleware::RequestTracker.bpv_notifications_enabled = true
+    end
+
+    after { Middleware::RequestTracker.bpv_notifications_enabled = false }
+
+    def common_fields(controller:, action:, path:, username:, url:)
+      {
+        "controller" => controller,
+        "action" => action,
+        "method" => "POST",
+        "path" => path,
+        "status" => 204,
+        "format" => "json",
+        "tracked" => true,
+        "ip" => be_present,
+        "url" => url,
+        "session_id" => be_present,
+        "username" => username ? eq(username) : be_blank,
+      }
+    end
+
+    shared_examples "logs piggyback and beacon entries on home and topic" do
+      it "writes piggyback and beacon entries on each navigation" do
+        home_url = "#{Discourse.base_url_no_prefix}/"
+
+        home_entries =
+          capture_log_entries(controller: "PageviewController", entries: 2) { visit "/" }
+
+        home_piggyback = home_entries.find { |e| e["action"] == "piggyback" }
+        home_beacon = home_entries.find { |e| e["action"] == "beacon" }
+
+        expect(home_piggyback).to include(
+          common_fields(
+            controller: "PageviewController",
+            action: "piggyback",
+            path: "/pageview",
+            username: expected_username,
+            url: home_url,
+          ),
+        )
+        expect(home_beacon).to include(
+          common_fields(
+            controller: "PageviewController",
+            action: "beacon",
+            path: "/srv/pv",
+            username: expected_username,
+            url: home_url,
+          ),
+        )
+
+        topic_entries =
+          capture_log_entries(controller: "PageviewController", entries: 2) do
+            find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
+          end
+
+        topic_piggyback = topic_entries.find { |e| e["action"] == "piggyback" }
+        topic_beacon = topic_entries.find { |e| e["action"] == "beacon" }
+
+        expect(topic_piggyback).to include(
+          common_fields(
+            controller: "PageviewController",
+            action: "piggyback",
+            path: "/pageview",
+            username: expected_username,
+            url: topic.url,
+          ),
+          "topic_id" => topic.id,
+          "referrer" => home_url,
+        )
+        expect(topic_beacon).to include(
+          common_fields(
+            controller: "PageviewController",
+            action: "beacon",
+            path: "/srv/pv",
+            username: expected_username,
+            url: topic.url,
+          ),
+          "topic_id" => topic.id,
+          "referrer" => home_url,
+        )
+
+        all_session_ids = (home_entries + topic_entries).map { |e| e["session_id"] }.uniq
+        expect(all_session_ids.size).to eq(1)
+      end
+    end
+
+    context "when anonymous" do
+      let(:expected_username) { nil }
+
+      include_examples "logs piggyback and beacon entries on home and topic"
+    end
+
+    context "when logged in" do
+      before { sign_in(user) }
+      let(:expected_username) { user.username }
+
+      include_examples "logs piggyback and beacon entries on home and topic"
+    end
+  end
 end
