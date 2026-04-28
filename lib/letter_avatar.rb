@@ -71,7 +71,7 @@ class LetterAvatar
 
       filename = fullsize_path(identity)
 
-      # Use Helvetica on macOS (where NimbusSans-Regular is unavailable)
+      # Use NimbusSans-Regular, except for macOS where it is unavailable, use Helvetica there
       font = RbConfig::CONFIG["host_os"].match?(/darwin/i) ? "Helvetica" : "NimbusSans-Regular"
       # and adjust vertical offset accordingly
       vertical_offset = font == "Helvetica" ? 26 : 34
