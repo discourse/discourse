@@ -1895,7 +1895,10 @@ Discourse::Application.routes.draw do
     get "/dev-mode" => "dev_mode#index"
     post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
 
-    get "/theme-qunit" => "qunit#index", :constraints => ->(req) { req.params["id"].nil? }
+    get "/theme-qunit" => "qunit#index",
+        :constraints => ->(req) do
+          req.params["id"].nil? && req.params["name"].nil? && req.params["url"].nil?
+        end
     get "/theme-qunit" => "qunit#theme"
     get "/theme-tests", to: redirect("/theme-qunit")
 

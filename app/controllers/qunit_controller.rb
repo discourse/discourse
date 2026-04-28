@@ -14,6 +14,7 @@ class QunitController < ApplicationController
 
   def index
     raise Discourse::NotFound.new if !can_see_theme_qunit?
+    csp_nonce_placeholder # set up header, so that Capybara.disable_animation=true works correctly
     @suggested_themes =
       Theme
         .where(id: ThemeField.where(target_id: Theme.targets[:tests_js]).distinct.pluck(:theme_id))
