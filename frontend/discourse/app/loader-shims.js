@@ -67,13 +67,7 @@ loaderShim("@glimmer/tracking", () => importSync("@glimmer/tracking"));
 loaderShim("@uppy/aws-s3", () => importSync("@uppy/aws-s3"));
 loaderShim("@uppy/core", () => importSync("@uppy/core"));
 loaderShim("@uppy/drop-target", () => importSync("@uppy/drop-target"));
-loaderShim("@uppy/utils/lib/AbortController", () =>
-  importSync("@uppy/utils/lib/AbortController")
-);
-loaderShim("@uppy/utils/lib/delay", () => importSync("@uppy/utils/lib/delay"));
-loaderShim("@uppy/utils/lib/EventTracker", () =>
-  importSync("@uppy/utils/lib/EventTracker")
-);
+loaderShim("@uppy/utils", () => importSync("@uppy/utils"));
 loaderShim("@uppy/xhr-upload", () => importSync("@uppy/xhr-upload"));
 loaderShim("a11y-dialog", () => importSync("a11y-dialog"));
 loaderShim("discourse-i18n", () => importSync("discourse-i18n"));

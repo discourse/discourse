@@ -454,20 +454,20 @@ importers:
         specifier: ^21.0.1
         version: 21.0.1
       '@uppy/aws-s3':
-        specifier: ^4.1.0
-        version: 4.1.0(@uppy/core@4.2.2)
+        specifier: ^5.1.0
+        version: 5.1.0(@uppy/core@5.2.0)
       '@uppy/core':
-        specifier: ^4.2.2
-        version: 4.2.2
+        specifier: ^5.2.0
+        version: 5.2.0
       '@uppy/drop-target':
-        specifier: 3.0.1
-        version: 3.0.1(@uppy/core@4.2.2)
+        specifier: ^4.1.0
+        version: 4.1.0(@uppy/core@5.2.0)
       '@uppy/utils':
-        specifier: ^6.0.3
-        version: 6.0.3
+        specifier: ^7.2.0
+        version: 7.2.0
       '@uppy/xhr-upload':
-        specifier: ^4.2.1
-        version: 4.2.1(@uppy/core@4.2.2)
+        specifier: ^5.2.0
+        version: 5.2.0(@uppy/core@5.2.0)
       a11y-dialog:
         specifier: 8.1.5
         version: 8.1.5
@@ -3160,34 +3160,34 @@ packages:
     peerDependencies:
       typescript: '>=4.8.4 <6.0.0'
 
-  '@uppy/aws-s3@4.1.0':
-    resolution: {integrity: sha512-xRip1Lo3He+3J3fP/SooEFQJKWMCVADTl8J375PzvpaeNnDFKa6W2XLEEl/fGy/K7vI4sH8Znz4+omdtSFCPSQ==}
+  '@uppy/aws-s3@5.1.0':
+    resolution: {integrity: sha512-UBz+shrtDbnOf11AboDrkc9Fq2Cdf8HbFftE+gqfxig6fkv5rHpHhBCLkl8wCGAq+X/CxdqvvNhm/OM23Uzw2w==}
     peerDependencies:
-      '@uppy/core': ^4.2.0
+      '@uppy/core': ^5.2.0
 
-  '@uppy/companion-client@4.1.0':
-    resolution: {integrity: sha512-nQ8CQfZcYVBNtFQ6ePj7FDIq38DXlH0YpzP/91LR9gnDVISJKKUuvWfr6tPktj1lRw9FZV8jLmlMKT2ituVKiw==}
+  '@uppy/companion-client@5.1.1':
+    resolution: {integrity: sha512-DzrOWTbIZHvtgAFXBMYHk2wD27NjpBSVhY2tEiEIUhPd2CxbFRZjHM/N3HOt3VwZEAP471QWFLlJRWPcIY3A2Q==}
     peerDependencies:
-      '@uppy/core': ^4.2.0
+      '@uppy/core': ^5.1.1
 
-  '@uppy/core@4.2.2':
-    resolution: {integrity: sha512-TfTXngDLHK+gNwbpt1tgKfQ0vQwa7V5ilAnD/VNT+6AGW+/dqGFLZbA6q8xKvVTZ2sUbwDMSWFtqem+G04AhNQ==}
+  '@uppy/core@5.2.0':
+    resolution: {integrity: sha512-uvfNyz4cnaplt7LYJmEZHuqOuav0tKp4a9WKJIaH6iIj7XiqYvS2J5SEByexAlUFlzefOAyjzj4Ja2dd/8aMrw==}
 
-  '@uppy/drop-target@3.0.1':
-    resolution: {integrity: sha512-nDWXUYtTyyq0Vq7/J0WeRi8eyevGmAIoA5Uy/IJJiKYI5MXP7X3eSIXym161wrsyHZi0ZGUkf0XAwl9e6ZLe/A==}
+  '@uppy/drop-target@4.1.0':
+    resolution: {integrity: sha512-QPOwlOfYlf4gOzdj75Mx0YxM0d6Jv1ui2aCERse1pwtIeQGQ0QPe5lmTi0o3p8dTnqACUmoM6SJOpAHQozCSkA==}
     peerDependencies:
-      '@uppy/core': ^4.0.1
+      '@uppy/core': ^5.2.0
 
-  '@uppy/store-default@4.1.0':
-    resolution: {integrity: sha512-z5VSc4PNXpAtrrUPg5hdKJO5Ul7u4ZYLyK+tYzvEgzgR4nLVZmpGzj/d4N90jXpUqEibWKXvevODEB5VlTLHzg==}
+  '@uppy/store-default@5.0.0':
+    resolution: {integrity: sha512-hQtCSQ1yGiaval/wVYUWquYGDJ+bpQ7e4FhUUAsRQz1x1K+o7NBtjfp63O9I4Ks1WRoKunpkarZ+as09l02cPw==}
 
-  '@uppy/utils@6.0.3':
-    resolution: {integrity: sha512-GBVzyAIeVKNe/F3TT63rXR80MSL9ov/FG3BbApO+4wbIt4vai7xpOxGCeTXpW2JjEeOwEb50n1fn92zMCdV9Dg==}
+  '@uppy/utils@7.2.0':
+    resolution: {integrity: sha512-6lC246qszMv6bTyl/+QyHwrudgeguWkA94ME1wHn+a6uRAvmtAEaUManIfGqTJfoKvWAiCJqdJPl5xRJjhAloQ==}
 
-  '@uppy/xhr-upload@4.2.1':
-    resolution: {integrity: sha512-pafgk0vLr+FKDHo+xmBMwNncj68oRNoaTnj0por7LPND0QGXV7xwBZnGGkQhiHLooV2MNBEhFQtx93A76cEINg==}
+  '@uppy/xhr-upload@5.2.0':
+    resolution: {integrity: sha512-3LV/X5Of6BINnKplP+CwUJ0a4/7cRFfzxwGyXnW+uCrNQHoo09dttcz3begWHejGvzenQHuUnMO3Fxyc71Pryg==}
     peerDependencies:
-      '@uppy/core': ^4.2.2
+      '@uppy/core': ^5.2.0
 
   '@vitest/expect@4.0.18':
     resolution: {integrity: sha512-8sCWUyckXXYvx4opfzVY03EOiYVxyNrHS5QxX3DAIi5dpJAAkyJezHCP77VMX4HKA2LDT/Jpfo8i2r5BE3GnQQ==}
@@ -6994,8 +6994,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@5.0.8:
-    resolution: {integrity: sha512-TcJPw+9RV9dibz1hHUzlLVy8N4X9TnwirAjrU08Juo6BNKggzVfP2ZJ/3ZUSq15Xl5i85i+Z89XBO90pB2PghQ==}
+  nanoid@5.1.9:
+    resolution: {integrity: sha512-ZUvP7KeBLe3OZ1ypw6dI/TzYJuvHP77IM4Ry73waSQTLn8/g8rpdjfyVAh7t1/+FjBtG4lCP42MEbDxOsRpBMw==}
     engines: {node: ^18 || >=20}
     hasBin: true
 
@@ -7602,6 +7602,9 @@ packages:
 
   preact@10.23.2:
     resolution: {integrity: sha512-kKYfePf9rzKnxOAKDpsWhg/ysrHPqT+yQ7UW4JjdnqjFIeNUnNcEJvhuA8fDenxAGWzUqtd51DfVg7xp/8T9NA==}
+
+  preact@10.29.1:
+    resolution: {integrity: sha512-gQCLc/vWroE8lIpleXtdJhTFDogTdZG9AjMUpVkDf2iTCNwYNWA+u16dL41TqUDJO4gm2IgrcMv3uTpjd4Pwmg==}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -11950,47 +11953,47 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
-  '@uppy/aws-s3@4.1.0(@uppy/core@4.2.2)':
+  '@uppy/aws-s3@5.1.0(@uppy/core@5.2.0)':
     dependencies:
-      '@uppy/companion-client': 4.1.0(@uppy/core@4.2.2)
-      '@uppy/core': 4.2.2
-      '@uppy/utils': 6.0.3
+      '@uppy/companion-client': 5.1.1(@uppy/core@5.2.0)
+      '@uppy/core': 5.2.0
+      '@uppy/utils': 7.2.0
 
-  '@uppy/companion-client@4.1.0(@uppy/core@4.2.2)':
+  '@uppy/companion-client@5.1.1(@uppy/core@5.2.0)':
     dependencies:
-      '@uppy/core': 4.2.2
-      '@uppy/utils': 6.0.3
+      '@uppy/core': 5.2.0
+      '@uppy/utils': 7.2.0
       namespace-emitter: 2.0.1
       p-retry: 6.2.0
 
-  '@uppy/core@4.2.2':
+  '@uppy/core@5.2.0':
     dependencies:
       '@transloadit/prettier-bytes': 0.3.4
-      '@uppy/store-default': 4.1.0
-      '@uppy/utils': 6.0.3
+      '@uppy/store-default': 5.0.0
+      '@uppy/utils': 7.2.0
       lodash: 4.18.1
       mime-match: 1.0.2
       namespace-emitter: 2.0.1
-      nanoid: 5.0.8
+      nanoid: 5.1.9
       preact: 10.23.2
 
-  '@uppy/drop-target@3.0.1(@uppy/core@4.2.2)':
+  '@uppy/drop-target@4.1.0(@uppy/core@5.2.0)':
     dependencies:
-      '@uppy/core': 4.2.2
-      '@uppy/utils': 6.0.3
+      '@uppy/core': 5.2.0
+      '@uppy/utils': 7.2.0
 
-  '@uppy/store-default@4.1.0': {}
+  '@uppy/store-default@5.0.0': {}
 
-  '@uppy/utils@6.0.3':
+  '@uppy/utils@7.2.0':
     dependencies:
       lodash: 4.18.1
-      preact: 10.23.2
+      preact: 10.29.1
 
-  '@uppy/xhr-upload@4.2.1(@uppy/core@4.2.2)':
+  '@uppy/xhr-upload@5.2.0(@uppy/core@5.2.0)':
     dependencies:
-      '@uppy/companion-client': 4.1.0(@uppy/core@4.2.2)
-      '@uppy/core': 4.2.2
-      '@uppy/utils': 6.0.3
+      '@uppy/companion-client': 5.1.1(@uppy/core@5.2.0)
+      '@uppy/core': 5.2.0
+      '@uppy/utils': 7.2.0
 
   '@vitest/expect@4.0.18':
     dependencies:
@@ -16769,7 +16772,7 @@ snapshots:
 
   nanoid@3.3.11: {}
 
-  nanoid@5.0.8: {}
+  nanoid@5.1.9: {}
 
   nanomatch@1.2.13:
     dependencies:
@@ -17391,6 +17394,8 @@ snapshots:
   preact@10.12.1: {}
 
   preact@10.23.2: {}
+
+  preact@10.29.1: {}
 
   prelude-ls@1.2.1: {}
 

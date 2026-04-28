@@ -211,7 +211,7 @@ export const TextManipulation = {};
  * @readonly
  */
 
-/** @typedef {import("@uppy/utils/lib/UppyFile").MinimalRequiredUppyFile<any,any>} UppyFile */
+/** @typedef {import("@uppy/utils").MinimalRequiredUppyFile<any,any>} UppyFile */
 
 /**
  * Interface for handling placeholders on upload events
