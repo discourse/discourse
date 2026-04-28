@@ -70,6 +70,16 @@ after_initialize do
   register_category_list_topics_preloader_associations(:solved) if SiteSetting.solved_enabled
   register_topic_preloader_associations(:solved) if SiteSetting.solved_enabled
   Search.custom_topic_eager_load { [:solved] } if SiteSetting.solved_enabled
+
+  TopicView.on_preload do |topic_view|
+    next unless SiteSetting.solved_enabled
+
+    solved = topic_view.topic.solved
+    next unless solved
+
+    ActiveRecord::Associations::Preloader.new(records: [solved], associations: :topic_answers).call
+  end
+
   Site.preloaded_category_custom_fields << DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
   Site.preloaded_category_custom_fields << DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
   Site.preloaded_category_custom_fields << DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD
