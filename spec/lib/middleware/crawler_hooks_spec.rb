@@ -24,7 +24,29 @@ describe Middleware::CrawlerHooks do
   let(:json_middleware) do
     Middleware::CrawlerHooks.new(
       lambda do |_|
-        [200, { "Content-Type" => "application/json; charset=utf-8" }, ['{ "key": "value" }']]
+        [
+          200,
+          {
+            "Content-Type" => "application/json; charset=utf-8",
+            "X-Discourse-Crawler-View" => "true",
+          },
+          ['{ "key": "value" }'],
+        ]
+      end,
+    )
+  end
+  let(:binary_middleware) do
+    Middleware::CrawlerHooks.new(
+      lambda do |_|
+        [
+          200,
+          {
+            "Content-Type" => "application/zip",
+            "Content-Disposition" => "attachment; filename=\"file.zip\"",
+            "X-Discourse-Crawler-View" => "true",
+          },
+          ["PK\x03\x04binarydata".b],
+        ]
       end,
     )
   end
@@ -71,11 +93,43 @@ describe Middleware::CrawlerHooks do
     end
 
     it "does not modify responses for non-HTML content types" do
-      status, headers, response = json_middleware.call(env("HTTP_USER_AGENT" => crawler_user_agent))
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+
+      status, headers, response =
+        json_middleware.call(
+          env(
+            :path => "https://discourse.site",
+            :params => {
+              Discourse::LOCALE_PARAM => "fr",
+            },
+            "HTTP_USER_AGENT" => crawler_user_agent,
+          ),
+        )
 
       expect(status).to eq(200)
       expect(headers["Content-Type"]).to include("application/json")
       expect(response).to eq(['{ "key": "value" }'])
+    end
+
+    it "does not parse binary file downloads as HTML" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+
+      status, headers, response =
+        binary_middleware.call(
+          env(
+            :path => "https://discourse.site/uploads/short-url/abc.zip",
+            :params => {
+              Discourse::LOCALE_PARAM => "fr",
+            },
+            "HTTP_USER_AGENT" => crawler_user_agent,
+          ),
+        )
+
+      expect(status).to eq(200)
+      expect(headers["Content-Type"]).to eq("application/zip")
+      expect(response).to eq(["PK\x03\x04binarydata".b])
     end
 
     it "does not modify responses for non-200 status codes" do

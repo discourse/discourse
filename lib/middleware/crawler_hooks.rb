@@ -11,6 +11,7 @@ module Middleware
       status, headers, response = @app.call(env)
 
       if status == 200 && headers["X-Discourse-Crawler-View"] &&
+           headers["Content-Type"]&.include?("text/html") &&
            SiteSetting.content_localization_enabled &&
            SiteSetting.content_localization_crawler_param
         response = transform_response(request:, response:)
