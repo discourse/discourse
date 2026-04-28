@@ -340,6 +340,8 @@ describe "Topic bulk select" do
       sign_in(admin)
       visit("/latest")
 
+      expect(page).to have_css("#site-logo")
+
       send_keys([:shift, "b"])
       send_keys("j")
       send_keys("x") # toggle select

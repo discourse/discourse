@@ -43,7 +43,7 @@ describe "Topic page" do
     it "includes the copy button" do
       visit("/t/#{topic.slug}/#{topic.id}")
 
-      expect(".codeblock-button-wrapper").to be_present
+      expect(page).to have_css(".codeblock-button-wrapper")
     end
   end
 
