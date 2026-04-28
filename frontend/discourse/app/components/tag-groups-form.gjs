@@ -102,9 +102,7 @@ export default class TagGroupsForm extends Component {
       attrs.permissions[0] = PermissionType.READONLY;
     } else if (permissionName === "private") {
       delete attrs.permissions[0];
-    }
 
-    if (permissionName === "private") {
       const hasGroups = Object.keys(attrs.permissions).some(
         (k) => parseInt(k, 10) !== AUTO_GROUPS.everyone.id
       );

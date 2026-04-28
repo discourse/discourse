@@ -161,14 +161,12 @@ describe "Tag Groups" do
 
       tag_groups_page.save
 
-      try_until_success do
-        private_tag_group.reload
-        expect(private_tag_group.tags.map(&:name)).to include("rats")
-      end
+      page.refresh
+      tag_groups_page.click_tag_group("Private Group")
 
-      permissions = private_tag_group.tag_group_permissions.pluck(:group_id, :permission_type).to_h
-      expect(permissions).to eq(staff_group.id => TagGroupPermission.permission_types[:full])
-      expect(permissions).not_to have_key(0)
+      expect(tag_groups_page).to have_tag_in_group("rats")
+      expect(tag_groups_page).to have_private_permission_checked
+      expect(tag_groups_page).to have_private_group(staff_group.name)
     end
 
     it "does not change permissions when navigating from a public tag group then editing tags" do
@@ -187,14 +185,12 @@ describe "Tag Groups" do
 
       tag_groups_page.save
 
-      try_until_success do
-        private_tag_group.reload
-        expect(private_tag_group.tags.map(&:name)).to include("rats")
-      end
+      page.refresh
+      tag_groups_page.click_tag_group("Private Group")
 
-      permissions = private_tag_group.tag_group_permissions.pluck(:group_id, :permission_type).to_h
-      expect(permissions).to eq(staff_group.id => TagGroupPermission.permission_types[:full])
-      expect(permissions).not_to have_key(0)
+      expect(tag_groups_page).to have_tag_in_group("rats")
+      expect(tag_groups_page).to have_private_permission_checked
+      expect(tag_groups_page).to have_private_group(staff_group.name)
     end
 
     it "blocks save and preserves permissions when group chooser is cleared on a private group" do
@@ -211,9 +207,11 @@ describe "Tag Groups" do
       expect(dialog).to have_content(I18n.t("js.tagging.groups.cannot_save.no_groups"))
       dialog.click_yes
 
-      permissions = private_tag_group.tag_group_permissions.pluck(:group_id, :permission_type).to_h
-      expect(permissions).to eq(staff_group.id => TagGroupPermission.permission_types[:full])
-      expect(permissions).not_to have_key(0)
+      page.refresh
+      tag_groups_page.click_tag_group("Private Group")
+
+      expect(tag_groups_page).to have_private_permission_checked
+      expect(tag_groups_page).to have_private_group(staff_group.name)
     end
   end
 
