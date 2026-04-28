@@ -209,6 +209,23 @@ RSpec.describe "Drawer" do
 
       expect(drawer_page).to have_open_channel(channel)
     end
+
+    it "returns to the homepage when toggling chat icon after expanding drawer to full page" do
+      SiteSetting.chat_separate_sidebar_mode = "fullscreen"
+      SiteSetting.top_menu = "categories|latest|new"
+
+      visit("/discuss/")
+      chat_page.open_from_header
+      expect(page).to have_css("body.has-drawer-chat")
+
+      drawer_page.maximize
+      expect(page).to have_css("body.has-full-page-chat")
+
+      find(".chat-header-icon").click
+
+      expect(page).to have_current_path("/discuss/categories")
+      expect(page).to have_no_css("body.has-full-page-chat")
+    end
   end
 
   context "when sending a message from a thread while viewing a topic" do
