@@ -468,6 +468,7 @@ html.discourse-reactions-no-select {
   text-align: center;
   cursor: pointer;
   border-radius: var(--d-button-border-radius);
+  margin-top: var(--space-1);
 
   &:focus-visible {
     outline: none;

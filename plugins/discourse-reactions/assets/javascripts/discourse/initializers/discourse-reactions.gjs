@@ -163,7 +163,7 @@ function customizePostMenu(api) {
     ({ value: dag, context: { buttonKeys } }) => {
       dag.replace(buttonKeys.LIKE, ReactionsActionButton);
       dag.add("discourse-reactions-actions", ReactionsActionSummary, {
-        after: buttonKeys.REPLIES,
+        before: buttonKeys.REPLIES,
       });
     }
   );
