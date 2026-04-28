@@ -52,6 +52,10 @@
       <%= theme_translations_lookup %>
     <%- end %>
 
+    <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
+
+    <%= preload_script 'browser-detect' %>
+
     <%= preload_script "vendor", type_module: true %>
     <%= preload_script "discourse", type_module: true %>
 
@@ -146,6 +150,8 @@
     <% end %>
 
     <%= preload_script "start-discourse", type_module: true %>
+
+    <script defer src="<%= script_asset_path "browser-update" %>" nonce="<%= csp_nonce_placeholder %>"></script>
 
     <%= yield :data %>
 
