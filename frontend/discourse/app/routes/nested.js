@@ -1,11 +1,15 @@
 import { getOwner } from "@ember/owner";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
+import EmbedMode from "discourse/lib/embed-mode";
 import PreloadStore from "discourse/lib/preload-store";
+import Draft from "discourse/models/draft";
 import processNode from "../lib/process-node";
 
 export default class NestedRoute extends Route {
+  @service composer;
   @service nestedViewCache;
   @service screenTrack;
   @service site;
@@ -100,6 +104,16 @@ export default class NestedRoute extends Route {
     }
 
     this.screenTrack.start(model.topic.id, controller);
+
+    if (!isEmpty(model.topic.draft) && !EmbedMode.enabled) {
+      this.composer.open({
+        draft: Draft.getLocal(model.topic.draft_key, model.topic.draft),
+        draftKey: model.topic.draft_key,
+        draftSequence: model.topic.draft_sequence,
+        ignoreIfChanged: true,
+        topic: model.topic,
+      });
+    }
   }
 
   deactivate() {
