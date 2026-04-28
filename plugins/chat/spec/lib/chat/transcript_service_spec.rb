@@ -468,6 +468,35 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
+  it "doesn't collapse a regular message into a thread group when their ids collide" do
+    regular_message = Fabricate(:chat_message, user: user1, chat_channel: channel)
+    thread =
+      Fabricate(
+        :chat_thread,
+        replies_count: 1,
+        id: regular_message.id,
+        original_message: Fabricate(:chat_message, user: user1, chat_channel: channel),
+      )
+    reply = Fabricate(:chat_message, user: user1, chat_channel: channel, thread: thread)
+
+    rendered = service([regular_message.id, thread.original_message.id, reply.id]).generate_markdown
+
+    expect(rendered).to eq(<<~MARKDOWN)
+    [chat quote="martinchat;#{regular_message.id};#{regular_message.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true"]
+    #{regular_message.message}
+    [/chat]
+
+    [chat quote="martinchat;#{thread.original_message.id};#{thread.original_message.created_at.iso8601}" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
+    #{thread.original_message.message}
+
+    [chat quote="martinchat;#{reply.id};#{reply.created_at.iso8601}"]
+    #{reply.message}
+    [/chat]
+
+    [/chat]
+    MARKDOWN
+  end
+
   it "doesn't add thread info for threads with no replies" do
     thread =
       Fabricate(
