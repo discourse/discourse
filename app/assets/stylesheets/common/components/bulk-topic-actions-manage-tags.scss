@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .manage-tags-form {
   &__remove-section {
     position: relative;
@@ -29,6 +31,22 @@
     .form-kit__row {
       padding-top: 0;
       row-gap: var(--space-2);
+
+      // Form-kit collapses every `--col-*` to 100% width below `lg`, which
+      // stacks the from-chooser, arrow, to-chooser and remove button into a
+      // tall column. Restore the desktop ratios so the replace row stays on
+      // a single line on mobile.
+      // TODO: looking at adding a proper opt-out in form-kit so we don't
+      // need this override.
+      @include viewport.until(lg) {
+        .--col-1 {
+          width: 8.33333333% !important;
+        }
+
+        .--col-5 {
+          width: 41.66666667% !important;
+        }
+      }
     }
   }
 
