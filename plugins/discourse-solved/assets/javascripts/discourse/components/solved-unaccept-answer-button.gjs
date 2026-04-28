@@ -42,9 +42,9 @@ export default class SolvedUnacceptAnswerButton extends Component {
   }
 
   get showAcceptedBy() {
-    return !!(
-      !this.siteSettings.show_who_marked_solved &&
-      this.answerInfo?.accepter_username
+    return !(
+      !this.siteSettings.show_who_marked_solved ||
+      !this.answerInfo?.accepter_username
     );
   }
 
