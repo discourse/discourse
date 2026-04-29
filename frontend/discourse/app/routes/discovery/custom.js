@@ -1,4 +1,4 @@
-import { applyValueTransformer } from "discourse/lib/transformer";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class DiscoveryCustomRoute extends DiscourseRoute {
@@ -7,7 +7,7 @@ export default class DiscoveryCustomRoute extends DiscourseRoute {
   };
 
   model(data) {
-    return applyValueTransformer("custom-homepage-model", null, {
+    return applyBehaviorTransformer("custom-homepage-model", () => null, {
       queryParams: data,
     });
   }

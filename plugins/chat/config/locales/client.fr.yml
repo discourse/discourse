@@ -277,7 +277,6 @@ fr:
       retry_staged_message:
         title: "Erreur de réseau"
         action: "Envoyer à nouveau ?"
-      unreliable_network: "Le réseau n'est pas fiable, l'envoi de messages et l'enregistrement de brouillon peuvent ne pas fonctionner"
       bookmark_message: "Signet"
       bookmark_message_edit: "Modifier le signet"
       restore: "Restaurer le message supprimé"

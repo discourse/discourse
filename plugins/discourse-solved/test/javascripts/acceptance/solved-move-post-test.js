@@ -4,7 +4,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers";
 
-acceptance("Discourse Solved | Move Solution Post", function (needs) {
+acceptance("Move Solution Post", function (needs) {
   needs.user({ admin: true });
 
   needs.settings({

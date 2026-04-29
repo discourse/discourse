@@ -779,6 +779,10 @@ module ApplicationHelper
     (itemprop.present? && itemprop != "comment") || hash[:data].present?
   end
 
+  def crawler_post_emits_microdata?(post, topic)
+    post.is_first_post? || crawler_post_schema_hash(post, topic)[:itemscope]
+  end
+
   def crawler_post_schema_skip?(post, topic)
     DiscoursePluginRegistry.apply_modifier(:topic_crawler_skip_post, false, post, topic)
   end

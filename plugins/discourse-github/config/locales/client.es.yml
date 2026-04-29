@@ -11,6 +11,7 @@ es:
         draft: "Borrador"
         open: "Abierto"
         approved: "Aprobado"
+        merged: "Fusionado"
         closed: "Cerrado"
   admin_js:
     admin:

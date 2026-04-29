@@ -37,6 +37,7 @@ module.exports = function (environment) {
     ENV.locationType = "none";
 
     // keep test console output quieter
+    ENV.EmberENV.LOG_VERSION = false;
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 

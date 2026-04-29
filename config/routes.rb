@@ -128,10 +128,9 @@ Discourse::Application.routes.draw do
           delete "owners" => "groups#remove_owner"
           put "primary" => "groups#set_primary"
         end
-      end
-      resources :groups, only: [:destroy], constraints: AdminConstraint.new do
         collection { put "automatic_membership_count" => "groups#automatic_membership_count" }
       end
+      resources :groups, only: [:destroy], constraints: AdminConstraint.new
 
       resources :users, id: RouteFormat.username, only: %i[index destroy] do
         collection do
@@ -436,6 +435,8 @@ Discourse::Application.routes.draw do
           get "login-and-authentication/#{location}" => "site_settings#index"
         end
 
+        # Needed for back-end routing to work.
+        #
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
@@ -505,6 +506,11 @@ Discourse::Application.routes.draw do
 
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
       resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
+      resources :problem_checks, only: %i[index], constraints: AdminConstraint.new do
+        put "ignore" => "problem_checks#ignore"
+        put "watch" => "problem_checks#watch"
+      end
+      get "problem-checks" => "problem_checks#index"
 
       delete "unknown_reviewables/destroy" => "unknown_reviewables#destroy"
     end # admin namespace

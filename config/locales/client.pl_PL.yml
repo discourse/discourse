@@ -755,7 +755,7 @@ pl_PL:
         many: "Czy na pewno chcesz usunąć tych %{count} szkiców?"
         other: "Czy na pewno chcesz usunąć tych %{count} szkiców?"
       new_topic: "Nowy szkic tematu"
-      new_private_message: "Nowy szkic wiadomości osobistej"
+      new_private_message: "Nowy szkic prywatnej wiadomości"
       edit_topic: "Edytuj szkic tematu"
       dropdown:
         title: "Otwórz menu najnowszych szkiców"
@@ -771,6 +771,8 @@ pl_PL:
       allow_access: "Zezwól na dostęp"
       continue_as_guest: "Kontynuuj jako gość"
       be_first_to_reply: "Bądź pierwszą osobą, która odpowie!"
+      replying_to: "W odpowiedzi do %{username}"
+      reply_placeholder: "Napisz odpowiedź..."
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
       few: "Zobacz %{count} nowe tematy"
@@ -1056,7 +1058,7 @@ pl_PL:
         delimiter: "lub"
         something_else_wrong: "Czy jest coś nie tak z tym %{reviewable_type}?"
         approve_user: "Zatwierdzić tego użytkownika?"
-        suspect_user: "Czy to spam użytkownika?"
+        suspect_user: "Czy ta osoba to spam?"
         approve_post: "Zatwierdzić ten wpis?"
         approve_topic: "Zatwierdzić ten temat?"
       types:
@@ -1568,7 +1570,7 @@ pl_PL:
         position: "Pozycja"
       posts: "Wpisy"
       topics: "Tematy"
-      latest: "Aktualne"
+      latest: "Najnowsze"
       subcategories: "Podkategorie"
       muted: "Wyciszone kategorie"
       topic_sentence:
@@ -1682,7 +1684,7 @@ pl_PL:
         ignore_option_title: "Nie będziesz otrzymywać żadnych powiadomień związanych z tym użytkownikiem, a cała jego zawartość zostanie ukryta."
         add_ignored_user: "Dodaj…"
         mute_option: "Wyciszenie"
-        mute_option_title: "Nie będziesz otrzymywać żadnych powiadomień, wiadomości osobistych ani bezpośrednich wiadomości na czacie od tego użytkownika."
+        mute_option_title: "Nie będziesz otrzymywać żadnych powiadomień, prywatnych wiadomości ani bezpośrednich wiadomości na czacie od tego użytkownika."
         normal_option: "Normalny"
         normal_option_title: "Zostaniesz powiadomiony, jeśli ten użytkownik odpowie ci, zacytuje lub o tobie wspomni."
       notification_schedule:
@@ -1743,13 +1745,13 @@ pl_PL:
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       dismiss_bookmarks_tooltip: "Oznacz wszystkie przypomnienia o nieprzeczytanych zakładkach jako przeczytane"
-      dismiss_messages_tooltip: "Oznacz wszystkie przypomnienia o nieprzeczytanych wiadomościach osobistych jako przeczytane"
+      dismiss_messages_tooltip: "Oznacz wszystkie przypomnienia o nieprzeczytanych prywatnych wiadomościach jako przeczytane"
       no_likes_title: "Nie otrzymałeś jeszcze żadnych polubień"
       no_likes_body: >
         Otrzymasz powiadomienie za każdym razem, gdy ktoś polubi Twój post, dzięki czemu będziesz mógł zobaczyć, co inni uznają za wartościowe. Inni zobaczą to samo, gdy polubisz ich posty! <br><br> Powiadomienia o polubieniach nigdy nie są wysyłane do Ciebie e-mailem, ale możesz dostosować sposób otrzymywania powiadomień o polubieniach na stronie swoich <a href='%{preferencesUrl}'>preferencji powiadomień</a>.
       no_messages_title: "Nie masz żadnych wiadomości"
       no_messages_body: >
-        Potrzebujesz bezpośredniej, osobistej rozmowy z kimś, poza normalnym tokiem rozmowy? Wyślij wiadomość, wybierając awatar i używając przycisku %{icon} wiadomość.<br><br> Jeśli potrzebujesz pomocy, możesz <a href='%{aboutUrl}'>wysłać wiadomość do członka personelu</a>.
+        Potrzebujesz bezpośredniej, prywatnej rozmowy z kimś, poza normalnym tokiem rozmowy? Wyślij wiadomość, wybierając awatar i używając przycisku %{icon} wiadomość.<br><br> Jeśli potrzebujesz pomocy, możesz <a href='%{aboutUrl}'>wysłać wiadomość do członka personelu</a>.
       no_bookmarks_title: "Nie masz jeszcze żadnych zakładek"
       no_bookmarks_body: >
         Rozpocznij zakładki za pomocą przycisku %{icon} i zostaną one wymienione tutaj w celu ułatwienia odniesienia się do nich w późniejszym czasie. Możesz też zaplanować przypomnienie!
@@ -1858,7 +1860,7 @@ pl_PL:
       muted_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
       allowed_pm_users: "Dozwolone"
       allowed_pm_users_instructions: "Zezwalaj tylko na PW od tych użytkowników."
-      allow_private_messages_from_specific_users: "Zezwalaj tylko określonym użytkownikom na wysyłanie mi osobistych wiadomości"
+      allow_private_messages_from_specific_users: "Zezwalaj tylko określonym użytkownikom na wysyłanie mi prywatnych wiadomości"
       ignored_users: "Zignorowany"
       ignored_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
       tracked_topics_link: "Pokaż"
@@ -1916,8 +1918,8 @@ pl_PL:
       messages:
         all: "wszystkie skrzynki odbiorcze"
         inbox: "Skrzynka odbiorcza"
-        personal: "Osobista"
-        latest: "Aktualne"
+        personal: "Prywatna"
+        latest: "Najnowsze"
         sent: "Wysłane"
         unread: "Nieprzeczytane"
         unread_with_count:
@@ -1940,7 +1942,7 @@ pl_PL:
         all_tags: "Wszystkie tagi"
         warnings: "Oficjalne ostrzeżenia"
         read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
-        read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>wiadomościach osobistych</a>."
+        read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>prywatnych wiadomościach</a>."
         read_more_group_pm_MF: |
           { HAS_UNREAD_AND_NEW, select,
             true {
@@ -1989,26 +1991,26 @@ pl_PL:
               }
               { NEW, plural,
                    =0 {}
-                  one { i <a href="{basePath}/u/{username}/messages/new"># nowa</a> wiadomość pozostała, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
-                  few { i <a href="{basePath}/u/{username}/messages/new"># nowe</a> wiadomości pozostały, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
-                 many { i <a href="{basePath}/u/{username}/messages/new"># nowych</a> wiadomości pozostało, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
-                other { i <a href="{basePath}/u/{username}/messages/new"># nowych</a> wiadomości pozostało, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
+                  one { i <a href="{basePath}/u/{username}/messages/new"># nowa</a> wiadomość pozostała, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
+                  few { i <a href="{basePath}/u/{username}/messages/new"># nowe</a> wiadomości pozostały, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
+                 many { i <a href="{basePath}/u/{username}/messages/new"># nowych</a> wiadomości pozostało, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
+                other { i <a href="{basePath}/u/{username}/messages/new"># nowych</a> wiadomości pozostało, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {Pozostała <a href="{basePath}/u/{username}/messages/unread"># nieprzeczytana</a> wiadomość, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
-                  few {Pozostały <a href="{basePath}/u/{username}/messages/unread"># nieprzeczytane</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
-                 many {Pozostało <a href="{basePath}/u/{username}/messages/unread"># nieprzeczytanych</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
-                other {Pozostało <a href="{basePath}/u/{username}/messages/unread"># nieprzeczytanych</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
+                  one {Pozostała <a href="{basePath}/u/{username}/messages/unread"># nieprzeczytana</a> wiadomość, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
+                  few {Pozostały <a href="{basePath}/u/{username}/messages/unread"># nieprzeczytane</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
+                 many {Pozostało <a href="{basePath}/u/{username}/messages/unread"># nieprzeczytanych</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
+                other {Pozostało <a href="{basePath}/u/{username}/messages/unread"># nieprzeczytanych</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {Pozostała <a href="{basePath}/u/{username}/messages/new"># nowa</a> wiadomość, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
-                  few {Pozostały <a href="{basePath}/u/{username}/messages/new"># nowe</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
-                 many {Pozostało <a href="{basePath}/u/{username}/messages/new"># nowych</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
-                other {Pozostało <a href="{basePath}/u/{username}/messages/new"># nowych</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">wiadomości osobiste</a>}
+                  one {Pozostała <a href="{basePath}/u/{username}/messages/new"># nowa</a> wiadomość, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
+                  few {Pozostały <a href="{basePath}/u/{username}/messages/new"># nowe</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
+                 many {Pozostało <a href="{basePath}/u/{username}/messages/new"># nowych</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
+                other {Pozostało <a href="{basePath}/u/{username}/messages/new"># nowych</a> wiadomości, lub przejrzyj inne <a href="{basePath}/u/{username}/messages">prywatne wiadomości</a>}
               }
             }
             other {}
@@ -2348,7 +2350,7 @@ pl_PL:
         always: "zawsze"
         only_when_away: "tylko kiedy jest daleko"
         never: "nigdy"
-      email_messages_level: "Wyślij do mnie e-mail, gdy otrzymam wiadomość osobistą"
+      email_messages_level: "Wyślij mi e-mail, gdy otrzymam wiadomość prywatną"
       include_tl0_in_digests: "Dołącz treści od nowych użytkowników w e-mailach podsumowujących."
       email_in_reply_to: "Zawieraj w e-mailach fragment oryginalnych postów z odpowiedzi"
       other_settings: "Inne"
@@ -2476,7 +2478,7 @@ pl_PL:
           expires_at: "Wygasa o"
           expires_after: "Wygasa po"
           custom_message: "Wiadomość niestandardowa"
-          custom_message_placeholder: "Dodaj osobistą notatkę do swojego zaproszenia"
+          custom_message_placeholder: "Dodaj prywatną notatkę do swojego zaproszenia"
           send_invite_email: "Zapisz i wyślij e-mail"
           send_invite_email_instructions: "Ogranicz zaproszenie do emaila, aby wysłać email z zaproszeniem"
           update_invite: "Aktualizuj"
@@ -2812,7 +2814,7 @@ pl_PL:
       in_progress: "Podsumowanie tematu za pomocą sztucznej inteligencji"
       summarized_on: "Podsumowane przez sztuczną inteligencję w %{date}"
       model_used: "Użyta AI: %{model}"
-      outdated: "Podsumowanie jest nieaktualne"
+      outdated: "Podsumowanie jest przestarzałe"
       outdated_posts:
         one: "(brakuje %{count} wpisu)"
         few: "(brakuje %{count} wpisów)"
@@ -3205,16 +3207,16 @@ pl_PL:
         other: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osób</a>. Czy na pewno?"
       cannot_see_mention:
         category: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie ma dostępu do tej kategorii. Będziesz musiał dodać go do grupy, która ma dostęp do tej kategorii."
-        private: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie może zobaczyć tej wiadomości osobistej. Będziesz musiał zaprosić go do tej wiadomości osobistej."
+        private: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie może zobaczyć tej prywatnej wiadomości. Będziesz musiał zaprosić go do tej prywatnej wiadomości."
         muted_topic: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ wyciszył ten temat."
         not_allowed: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie został zaproszony do tego tematu."
       cannot_see_group_mention:
         not_mentionable: "Nie możesz wspomnieć o grupie @%{group}."
         some_not_allowed:
-          one: "Wspomniałeś o @%{group}, ale tylko %{count} członek zostanie powiadomiony, ponieważ inni członkowie grupy nie mogą zobaczyć tej osobistej wiadomości. Będziesz musiał zaprosić ich do tej osobistej wiadomości."
-          few: "Wspomniałeś o @%{group}, ale tylko %{count} członkowie zostaną powiadomieni, ponieważ inni członkowie grupy nie mogą zobaczyć tej osobistej wiadomości. Będziesz musiał zaprosić ich do tej osobistej wiadomości."
-          many: "Wspomniałeś o @%{group}, ale tylko %{count} członków zostanie powiadomionych, ponieważ inni członkowie grupy nie mogą zobaczyć tej osobistej wiadomości. Będziesz musiał zaprosić ich do tej osobistej wiadomości."
-          other: "Wspomniałeś o @%{group}, ale tylko %{count} członków zostanie powiadomionych, ponieważ inni członkowie grupy nie mogą zobaczyć tej osobistej wiadomości. Będziesz musiał zaprosić ich do tej osobistej wiadomości."
+          one: "Wspomniałeś o @%{group}, ale tylko %{count} członek zostanie powiadomiony, ponieważ inni członkowie grupy nie mogą zobaczyć tej prywatnej wiadomości. Będziesz musiał zaprosić ich do tej prywatnej wiadomości."
+          few: "Wspomniałeś o @%{group}, ale tylko %{count} członkowie zostaną powiadomieni, ponieważ inni członkowie grupy nie mogą zobaczyć tej prywatnej wiadomości. Będziesz musiał zaprosić ich do tej prywatnej wiadomości."
+          many: "Wspomniałeś o @%{group}, ale tylko %{count} członków zostanie powiadomionych, ponieważ inni członkowie grupy nie mogą zobaczyć tej prywatnej wiadomości. Będziesz musiał zaprosić ich do tej prywatnej wiadomości."
+          other: "Wspomniałeś o @%{group}, ale tylko %{count} członków zostanie powiadomionych, ponieważ inni członkowie grupy nie mogą zobaczyć tej prywatnej wiadomości. Będziesz musiał zaprosić ich do tej prywatnej wiadomości."
         not_allowed: "Wspomniałeś @%{group}, ale żaden z jej członków nie zostanie powiadomiony, ponieważ nie są w stanie zobaczyć tej prywatnej wiadomości. Będziesz musiał zaprosić ich do tej prywatnej wiadomości."
       here_mention:
         one: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkownika – czy jesteś pewien?"
@@ -3262,6 +3264,7 @@ pl_PL:
       title: "Lub naciśnij %{modifier}Enter"
       save_and_close: "Zapisz i zamknij"
       discard: "Odrzuć"
+      cancel_edit: "Anuluj edycję"
       draft_saved: "Szkic zapisany!"
       users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
@@ -3281,6 +3284,7 @@ pl_PL:
       uploading: "Przesyłanie…"
       show_preview: "pokaż podgląd"
       hide_preview: "ukryj podgląd"
+      resize: "Zmień rozmiar kompozytora"
       switch_to_markdown: "Przełącz się na standardowy edytor Markdown (%{keyboardShortcut})"
       switch_to_rich_text: "Przełącz się na nowy edytor tekstu sformatowanego (%{keyboardShortcut})"
       quote_post_title: "Cytuj cały wpis"
@@ -3324,6 +3328,8 @@ pl_PL:
         name_label: "Zawiń nazwę"
         attributes_label: "Atrybuty"
         add_attribute: "Dodaj atrybut"
+        attribute_key: "Klucz"
+        attribute_value: "Wartość"
         remove_attribute: "Usuń atrybut"
         apply: "Zastosuj"
         unwrap: "Rozwiń"
@@ -3377,7 +3383,7 @@ pl_PL:
           desc: Utwórz nowy temat
         create_personal_message:
           label: "Nowa wiadomość"
-          desc: "Utwórz nową osobistą wiadomość"
+          desc: "Utwórz nową prywatną wiadomość"
         shared_draft:
           label: "Udostępniony szkic"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
@@ -3413,6 +3419,13 @@ pl_PL:
         copy: "Skopiuj link"
         remove: "Usuń link"
         visit: "Otwórz link w karcie zewnętrznej"
+        link_copied: "Link skopiowany!"
+        load_preview: "Załaduj podgląd"
+        preview_failed: "Nie można załadować podglądu"
+      onebox_toolbar:
+        copy: "Skopiuj link"
+        visit: "Otwórz link"
+        remove_preview: "Usuń podgląd"
         link_copied: "Link skopiowany!"
       unsupported_token: "Edytor tekstu sformatowanego nie obsługuje wszystkich funkcji przedstawionych w tym poście; w związku z tym przełączymy Cię do edytora Markdown."
     notifications:
@@ -3528,10 +3541,10 @@ pl_PL:
             many: "Jesteś pewny? Masz %{count} przypomnień o nieprzeczytanych zakładkach."
             other: "Jesteś pewny? Masz %{count} przypomnień o nieprzeczytanych zakładkach."
           messages:
-            one: "Jesteś pewny? Masz %{count} przypomnienie o nieprzeczytanych wiadomościach osobistych."
-            few: "Jesteś pewny? Masz %{count} przypomnień o nieprzeczytanych wiadomościach osobistych."
-            many: "Jesteś pewny? Masz %{count} przypomnień o nieprzeczytanych wiadomościach osobistych."
-            other: "Jesteś pewny? Masz %{count} przypomnień o nieprzeczytanych wiadomościach osobistych."
+            one: "Czy na pewno? Masz %{count} nieprzeczytaną wiadomość prywatną."
+            few: "Czy na pewno? Masz %{count} nieprzeczytane wiadomości prywatne."
+            many: "Czy na pewno? Masz %{count} nieprzeczytanych wiadomości prywatnych."
+            other: "Czy na pewno? Masz %{count} nieprzeczytanych wiadomości prywatnych."
         dismiss: "Odrzuć"
         cancel: "Anuluj"
       group_message_summary:
@@ -3545,7 +3558,7 @@ pl_PL:
         quoted: '%{username} cytuje cie w "%{topic}" - %{site_title}'
         replied: '%{username} odpowiada na twój wpis w "%{topic}" - %{site_title}'
         posted: '%{username} pisze w "%{topic}" - %{site_title}'
-        private_message: '%{username} wysłał Ci osobistą wiadomość w „%{topic}” - %{site_title}'
+        private_message: '%{username} wysłał Ci prywatną wiadomość w "%{topic}" - %{site_title}'
         linked: '%{username} linkuje do twojego wpisu z "%{topic}" - %{site_title}'
         watching_first_post: '%{username} utworzył(a) nowy temat „%{topic}” - %{site_title}'
         watching_category_or_tag: '%{username} pisze w "%{topic}" - %{site_title}'
@@ -3558,8 +3571,8 @@ pl_PL:
         quoted: "zacytowany"
         edited: "edytowane"
         liked: "nowe polubienie"
-        private_message: "nowa wiadomość osobista"
-        invited_to_private_message: "zaproszony do osobistej wiadomości"
+        private_message: "nowa prywatna wiadomość"
+        invited_to_private_message: "zaproszono do prywatnej wiadomości"
         invitee_accepted: "zaproszenie przyjęte"
         posted: "nowy wpis"
         watching_category_or_tag: "nowy wpis"
@@ -3593,7 +3606,7 @@ pl_PL:
     search:
       sort_by: "Sortuj po"
       relevance: "Trafność"
-      latest_post: "Aktualne wpisy"
+      latest_post: "Najnowsze wpisy"
       latest_topic: "Najnowszy wątek"
       last_read: "Ostatnio czytane"
       most_viewed: "Popularne"
@@ -3727,12 +3740,17 @@ pl_PL:
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
     current_user: "idź do swojej strony użytkowanika"
     view_all: "zobacz wszystkie %{tab}"
+    permanently_delete:
+      title: "Czy na pewno?"
+      confirm_instruction: "Wpisz poniżej <b>%{phrase}</b> , aby potwierdzić:"
+      controls:
+        delete: "Rozumiem konsekwencje, usuń na stałe"
     user_menu:
       generic_no_items: "Na tej liście nie ma żadnych pozycji."
       sr_menu_tabs: "Zakładki menu użytkownika"
       view_all_notifications: "zobacz wszystkie powiadomienia"
       view_all_bookmarks: "zobacz wszystkie zakładki"
-      view_all_messages: "wyświetl wszystkie wiadomości osobiste"
+      view_all_messages: "wyświetl wszystkie prywatne wiadomości"
       tabs:
         all_notifications: "Wszystkie powiadomienia"
         replies: "Odpowiedzi"
@@ -3759,12 +3777,12 @@ pl_PL:
           few: "Obserwowane tematy - %{count} nieprzeczytane obserwowane tematy"
           many: "Obserwowane tematy - %{count} nieprzeczytanych obserwowanych tematów"
           other: "Obserwowane tematy - %{count} nieprzeczytanych obserwowanych tematów"
-        messages: "Wiadomości osobiste"
+        messages: "Prywatne wiadomości"
         messages_with_unread:
-          one: "Wiadomości osobiste - %{count} nieprzeczytana wiadomość"
-          few: "Wiadomości osobiste - %{count} nieprzeczytane wiadomości"
-          many: "Wiadomości osobiste - %{count} nieprzeczytanych wiadomości"
-          other: "Wiadomości osobiste - %{count} nieprzeczytanych wiadomości"
+          one: "Prywatne wiadomości - %{count} nieprzeczytana wiadomość"
+          few: "Prywatne wiadomości - %{count} nieprzeczytane wiadomości"
+          many: "Prywatne wiadomości - %{count} nieprzeczytanych wiadomości"
+          other: "Prywatne wiadomości - %{count} nieprzeczytanych wiadomości"
         bookmarks: "Zakładki"
         bookmarks_with_unread:
           one: "Zakładki - %{count} nieprzeczytana zakładka"
@@ -3803,6 +3821,8 @@ pl_PL:
         clear_all: "Wyczyść wszystko"
         unlist_topics: "Usuń tematy z listy"
         relist_topics: "Zamieść ponownie tematy"
+        pin_topics: "Wyróżnij te tematy"
+        unpin_topics: "Odepnij tematy"
         reset_bump_dates: "Zresetuj datę podbicia"
         defer: "Oznacz jako nieprzeczytany"
         delete: "Usuń tematy"
@@ -3865,6 +3885,8 @@ pl_PL:
         archive_topics: "Zarchiwizuj tematy"
         move_messages_to_inbox: "Przenieś do skrzynki odbiorczej"
         archive_messages: "Przenieś do archiwum"
+        convert_to_public_topic: "Upublicznij tematy"
+        convert_to_private_message: "Utwórz prywatne wiadomości"
         notification_level: "Aktualizuj powiadomienia"
         change_notification_level: "Zmień poziom powiadomień"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
@@ -3889,6 +3911,11 @@ pl_PL:
           few: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
           many: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
           other: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
+        confirm_unpin_topics:
+          one: "Odepnij %{count} temat"
+          few: "Odepnij %{count} tematy"
+          many: "Odepnij %{count} tematów"
+          other: "Odepnij %{count} tematów"
         confirm_update_topics:
           one: "Zaktualizuj %{count} temat"
           few: "Zaktualizuj %{count} tematy"
@@ -4010,6 +4037,12 @@ pl_PL:
       update_category:
         name: "Aktualizuj kategorię"
         description: "Przenieś wszystkie wybrane tematy do następującej kategorii:"
+      convert_to_public_topic:
+        name: "Upublicznij temat…"
+        description: "Przenieś wybrane prywatne wiadomości do tematu publicznego w następującej kategorii:"
+      convert_to_private_message:
+        name: "Utwórz prywatną wiadomość"
+        description: "Konwertuj wybrane tematy publiczne na prywatne wiadomości."
       reset_bump_dates:
         name: "Zresetuj datę odświeżenia"
         description: "Czy chcesz zaktualizować daty publikacji postów do daty ostatniego utworzenia? Może to wpłynąć na ich kolejność na liście tematów."
@@ -4018,6 +4051,55 @@ pl_PL:
       update_notifications:
         name: "Aktualizuj powiadomienia"
         description: "Zaktualizuj swój osobisty poziom powiadomień dla wybranych tematów, aby:"
+      pin_topics:
+        name: "Przypnij"
+      unpin_topics:
+        name: "Odepnij"
+        description: "Odepnij wszystkie wybrane tematy, które są przypięte do kategorii lub przypięte globalnie"
+    nested_replies:
+      nested_view: "Widok zagnieżdżony"
+      flat_view: "Widok płaski"
+      view_as_nested: "Wyświetl jako zagnieżdżone"
+      view_as_flat: "Wyświetl jako płaskie"
+      sort:
+        label: "Sortuj po"
+        top: "Popularne"
+        new: "Nowe"
+        old: "Stare"
+      load_more_children:
+        one: "%{count} odpowiedź więcej"
+        few: "%{count} odpowiedzi więcej"
+        many: "%{count} odpowiedzi więcej"
+        other: "%{count} odpowiedzi więcej"
+      load_more_children_generic: "Więcej odpowiedzi"
+      continue_thread: "Kontynuuj ten wątek"
+      new_replies:
+        one: "%{count} nowa odpowiedź"
+        few: "%{count} nowe odpowiedzi"
+        many: "%{count} nowych odpowiedzi"
+        other: "%{count} nowych odpowiedzi"
+      collapsed_replies:
+        one: "%{count} odpowiedź"
+        few: "%{count} odpowiedzi"
+        many: "%{count} odpowiedzi"
+        other: "%{count} odpowiedzi"
+      collapse: "Zwiń"
+      collapse_parent: "Zwiń wątek nadrzędny"
+      category_settings:
+        default_nested_view: "Użyj widoku zagnieżdżonego jako domyślnego dla tematów w tej kategorii"
+      no_replies: "Nie ma jeszcze odpowiedzi."
+      deleted_post_placeholder: "[usunięty]"
+      op_badge: "OP"
+      pinned_reply: "Przypięty"
+      pin_reply: "Przypnij na górę"
+      unpin_reply: "Odepnij"
+      topic_admin_menu:
+        enable_nested_replies: "Włącz zagnieżdżone odpowiedzi"
+        disable_nested_replies: "Wyłącz zagnieżdżone odpowiedzi"
+      context:
+        banner: "Przeglądasz pojedynczy wątek z tego tematu."
+        view_full_topic: "Zobacz cały temat"
+        view_parent_context: "Wyświetl kontekst nadrzędny"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -4171,6 +4253,7 @@ pl_PL:
         publish_to: "Opublikuj do:"
         when: "Kiedy:"
         time_frame_required: "Wybierz przedział czasowy"
+        category_required: "Wybierz kategorię"
         min_duration: "Czas trwania musi być większy niż 0"
         max_duration: "Czas trwania musi być krótszy niż 20 lat"
         duration: "Czas trwania"
@@ -4298,7 +4381,7 @@ pl_PL:
         visible: "Pokaż temat"
         reset_read: "Zresetuj przeczytane dane"
         make_public: "Upublicznij temat…"
-        make_private: "Utwórz osobistą wiadomość"
+        make_private: "Utwórz prywatną wiadomość"
         reset_bump_date: "Zresetuj datę podbicia"
       feature:
         pin: "Przypnij temat"
@@ -4328,7 +4411,7 @@ pl_PL:
         help: "Otwórz widok wydruku dla tego tematu"
       flag_topic:
         title: "Zgłoś"
-        help: "Oznacz ten temat prywatną flagą lub wyślij osobistą wiadomość na jego temat"
+        help: "prywatnie oznacz ten temat, aby zwrócić uwagę lub wyślij prywatną wiadomość na ten temat"
         success_message: "Ten temat został pomyślnie oflagowany."
       make_public:
         title: "Konwertuj na temat publiczny"
@@ -4366,6 +4449,12 @@ pl_PL:
         banner_note: "Użytkownicy mogą usunąć baner zamykając go przyciskiem. Tylko jeden temat może być banerem w danej chwili."
         no_banner_exists: "Baner nie jest obecnie ustawiony."
         banner_exists: "Baner <strong class='badge badge-notification unread'>jest</strong> obecnie ustawiony."
+      bulk_feature_topic:
+        pin: "Spraw, aby te tematy wyświetlały się na górze kategorii tematów, aż do"
+        pin_note: "Użytkownicy mogą odpinać tematy indywidualnie dla siebie."
+        pin_globally: "Spraw, aby te tematy wyświetlały się na górze wszystkich list tematów, aż do"
+        pin_button: "Przypnij tematy"
+        pin_globally_button: "Przypnij tematy globalnie"
       inviting: "Zapraszam…"
       automatically_add_to_groups: "To zaproszenie obejmuje również dostęp do tych grup:"
       invite_private:
@@ -4521,7 +4610,7 @@ pl_PL:
           action_translation: "Edytuj przetłumaczony tytuł tematu"
         editing_translation: "Edycja tłumaczenia %{language}"
     post_list:
-      title: "Aktualne wpisy"
+      title: "Najnowsze wpisy"
       empty: "Brak wpisów"
       aria_post_number: "%{title} - wpis #%{postNumber}"
       bulk:
@@ -4615,6 +4704,12 @@ pl_PL:
         few: "%{count} osoby lajkują ten wpis."
         many: "%{count} osób lajkuje ten wpis."
         other: "%{count} osób polubiło ten wpis."
+      likes_popup:
+        title:
+          one: "%{count} polubienie"
+          few: "%{count} polubienia"
+          many: "%{count} polubień"
+          other: "%{count} polubień"
       sr_post_read_count_button:
         one: "%{count} osoba przeczytała ten post."
         few: "%{count} osoby przeczytały ten post."
@@ -4656,7 +4751,8 @@ pl_PL:
         success: "Tłumaczenia zostały pomyślnie zaktualizowane"
         post_language_selector:
           title: "Język wpisu"
-          none: "Brak"
+          header: "Ten wpis jest w…"
+          none: "Nie ustawiono"
         edit_warning:
           message: "To jest przetłumaczony wpis.<br><br>Czy chcesz edytować oryginalny wpis w języku %{language} czy edytować to konkretne tłumaczenie?"
           action_original: "Edytuj oryginalny wpis"
@@ -4682,7 +4778,9 @@ pl_PL:
         attachment_download_requires_login: "Przepraszamy, musisz się zalogować, aby pobierać załączniki."
       cancel_composer:
         confirm: "Czy chcesz usunąć swój wpis?"
+        confirm_edit: "Czy chcesz odrzucić zmiany?"
         discard: "Odrzuć"
+        discard_edit: "Odrzuć zmiany"
       via_email: "ten wpis został dodany emailem"
       via_auto_generated_email: "ten wpis został dodany poprzez automatycznie wygenerowaną wiadomość e-mail"
       whisper: "ten wpis jest prywatnym szeptem do moderatorów"
@@ -4702,12 +4800,13 @@ pl_PL:
         edit_action: "Edytuj"
         edit_anonymous: "Przykro nam, ale musisz być zalogowany aby edytować ten wpis."
         flag_action: "Oflaguj"
-        flag: "oflaguj ten post prywatnie, aby zwrócić na niego uwagę lub wyślij prywatną wiadomość na jego temat"
+        flag: "prywatnie oznacz ten wpis, aby zwrócić uwagę lub wyślij prywatną wiadomość na ten temat"
         anonymous_flag: "wyślij e-mail do personelu, aby oflagować ten post"
         delete_action: "Usuń wpis"
         delete: "usuń ten wpis"
         undelete_action: "Cofnij usunięcie wpisu"
         undelete: "przywróc ten wpis"
+        view_deleted: "zobacz usuniętą treść wpisu"
         share_action: "Udostępnij"
         share: "udostępnij odnośnik do tego wpisu"
         copy_action: "Skopiuj link"
@@ -4730,13 +4829,19 @@ pl_PL:
         admin: "administracja wpisem (tryb wiki itp)"
         admin_action: "Administratorzy"
         permanently_delete: "Usuń bezpowrotnie"
-        permanently_delete_confirmation: "Czy na pewno chcesz usunąć ten post? Nie będziesz w stanie go odzyskać."
+        permanently_delete_post_confirmation: "Tej czynności <b>nie można</b> cofnąć. Spowoduje to <b>trwałe usunięcie</b> tego wpisu i usunięcie go z bazy danych."
+        permanently_delete_topic_confirmation: "Tej czynności <b>nie można</b> cofnąć. Spowoduje to <b>trwałe usunięcie</b> tego tematu i usunięcie go z bazy danych."
+        permanently_delete_confirm_phrase: "usuń bezpowrotnie"
         wiki: "Włącz tryb Wiki"
+        wiki_description: "pozwól dozwolonym grupom edytować ten wpis"
         unwiki: "Wyłącz tryb Wiki"
         convert_to_moderator: "Włącz kolor moderatora"
+        convert_to_moderator_description: "wyróżnij treść tego wpisu"
         revert_to_regular: "Wyłącz kolor moderatora"
         rebake: "Odśwież HTML"
+        rebake_description: "przetwórz ten wpis ponownie, aby naprawić formatowanie lub osadzenia"
         publish_page: "Publikowanie strony"
+        publish_page_description: "opublikuj ten temat jako osobną stronę"
         unhide: "Wycofaj ukrycie"
         change_owner: "Zmień właściciela…"
         grant_badge: "Przyznaj odznakę…"
@@ -4744,6 +4849,7 @@ pl_PL:
         lock_post_description: "nie pozwalaj postującemu edytować tego wpisu"
         unlock_post: "Odblokuj wpis"
         unlock_post_description: "zezwól postującemu na edycję tego wpisu"
+        add_post_notice_description: "dodaj wyróżnioną informację powyżej tego wpisu"
         delete_topic_disallowed_modal: "Nie masz uprawnień do usunięcia tego tematu. Jeśli naprawdę chcesz go usunąć, prześlij flagę do moderatora wraz z uzasadnieniem."
         delete_topic_disallowed: "nie masz uprawnień do usunięcia tego tematu"
         delete_topic_confirm_modal:
@@ -4892,6 +4998,7 @@ pl_PL:
       back: "Powrót do kategorii"
       general: "Ogólne"
       settings: "Ustawienia"
+      moderation: "Moderacja"
       advanced: "Zaawansowane"
       show_advanced: "Ustawienia zaawansowane"
       topic_template: "Szablon"
@@ -5038,11 +5145,15 @@ pl_PL:
       require_reply_approval: "Wymagaj zatwierdzenia moderatora dla wszystkich nowych odpowiedzi"
       require_topic_approval_for: "Wymagaj zatwierdzenia nowych tematów przez moderatora..."
       require_reply_approval_for: "Wymagaj zatwierdzenia nowych odpowiedzi przez moderatora..."
+      new_topic_approval: "Zatwierdzenie nowego tematu"
+      new_reply_approval: "Zatwierdzenie nowej odpowiedzi"
       posting_review_modes:
         no_one: "Nikt"
         everyone: "Wszyscy"
         everyone_except: "Wszyscy oprócz wybranych grup"
         no_one_except: "Nikt oprócz wybranych grup"
+      posting_review_groups_require_approval: "Grupy wymagające zatwierdzenia"
+      posting_review_groups_no_approval: "Grupy niewymagające zatwierdzenia"
       posting_review_groups_placeholder: "Wybierz grupy..."
       this_year: "ten rok"
       position: "Pozycja na stronie kategorii:"
@@ -5300,7 +5411,7 @@ pl_PL:
         button:
           label: "Filtr"
       latest:
-        title: "Aktualne"
+        title: "Najnowsze"
         title_with_count:
           one: "Aktualne (%{count})"
           few: "Aktualne (%{count})"
@@ -5456,7 +5567,7 @@ pl_PL:
         go_to_unread_post: "%{shortcut} Idź do pierwszego nieprzeczytanego wpisu"
       application:
         title: "Aplikacja"
-        create: "%{shortcut} Utwórz nowy temat lub wiadomość osobistą"
+        create: "%{shortcut} Utwórz nowy temat lub prywatną wiadomość"
         notifications: "%{shortcut} otwarte powiadomienia"
         hamburger_menu: "%{shortcut} Otwórz menu nawigacyjne"
         user_profile_menu: "%{shortcut} Otwórz menu użytkownika"
@@ -5523,7 +5634,7 @@ pl_PL:
         print: "%{shortcut} Drukuj temat"
         defer: "%{shortcut} Oznacz temat jako nieprzeczytany"
         topic_admin_actions: "%{shortcut} Otwórz działania administratora tematu"
-        archive_private_message: "%{shortcut} Przełącz archiwum wiadomości osobistych"
+        archive_private_message: "%{shortcut} Przełącz archiwizację prywatnych wiadomości"
       search_menu:
         title: "Menu wyszukiwania"
         prev_next: "%{shortcut} Przesuń zaznaczenie w górę i w dół"
@@ -5945,7 +6056,7 @@ pl_PL:
           header_link_text: "O stronie"
         messages:
           header_link_text: "Wiadomości"
-          header_action_title: "Utwórz osobistą wiadomość"
+          header_action_title: "Utwórz prywatną wiadomość"
           links:
             inbox: "Skrzynka odbiorcza"
             sent: "Wysłane"
@@ -6024,7 +6135,7 @@ pl_PL:
               title: "Zaproś nowych członków"
             my_messages:
               content: "Moje wiadomości"
-              title: "Moje osobiste wiadomości"
+              title: "Moje prywatne wiadomości"
         global_section: "Sekcja globalna, widoczna dla wszystkich"
       panels:
         forum:
@@ -6332,6 +6443,10 @@ pl_PL:
           staff: "Zespół"
           all_members: "Wszyscy członkowie"
           developers: "Deweloperzy"
+        impact_types:
+          feature_type: "Funkcja"
+          other_type: "Inne"
+          site_setting_default_type: "Ustawienie domyślne"
         filter:
           search_placeholder: "Filtruj według nazwy, opisu lub wtyczki..."
           no_results: "Brak nadchodzących zmian odpowiadających wybranemu filtrowi"
@@ -6364,7 +6479,7 @@ pl_PL:
           header_description: "Tutaj podaj informacje o tej stronie i swoim zespole, aby ludzie mogli dowiedzieć się, o czym jest Twoja społeczność, kto za nią stoi i jak się z Tobą skontaktować w razie problemów. Wyświetlane na stronie <a href='%{basePath}/about'>O stronie</a> Twojej witryny."
         developer:
           title: "Deweloperskie"
-          header_description: "Ustawienia deweloperskie do kontrolowania limitów szybkości, mnożników i obliczeń, trybu bezpiecznego i innych zaawansowanych funkcji."
+          header_description: "Ustawienia programistyczne umożliwiające sterowanie trybem awaryjnym i innymi zaawansowanymi funkcjami"
         experimental:
           title: "Eksperymentalne"
           header_description: "Włączaj lub wyłączaj eksperymentalne funkcje dla swojej witryny, większość z nich może być kontrolowana dla grupy."
@@ -6614,6 +6729,20 @@ pl_PL:
             logs:
               title: "Logi"
               header_description: "Przeglądaj dzienniki kopii zapasowych, przywracania i przesyłania oraz zarządzaj nimi."
+        problem_checks:
+          title: "Sprawdzanie problemów"
+          header_description: "Zobacz wszystkie zarejestrowane zgłoszenia problemów i ich aktualny status."
+          identifier: "Sprawdź"
+          target: "Cel"
+          priority: "Priorytet"
+          status: "Status"
+          passing: "Zdawanie"
+          failing: "Niepowodzenie"
+          last_run_at: "Ostatnie uruchomienie"
+          ignore: "Ignoruj"
+          watch: "Obserwuj"
+          more_options:
+            title: "Więcej opcji"
         reports:
           title: "Zgłoszenia"
           header_description: "Raporty to potężne narzędzie, które pomoże Ci zrozumieć, co dzieje się w Twojej witrynie. Mogą pomóc Ci zidentyfikować trendy, zauważyć problemy i podejmować decyzje w oparciu o dane."
@@ -6795,12 +6924,12 @@ pl_PL:
         installed_version: "Zainstalowana"
         latest_version: "Najnowsza"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
-        dismiss_notice: "Odrzuć"
+        dismiss_notice: "Ignoruj"
         new_features:
           title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
-          no_new_features_found: "Brak elementów w kanale lub wybrany filtr nie zwrócił żadnych wyników. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w <a href='%{url}' target='_blank'>społeczności Discourse Meta</a>."
-          no_new_features_error: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w <a href='%{url}' target='_blank'>społeczności Discourse Meta</a>."
+          no_new_features_found: "Brak elementów w kanale lub wybrany filtr nie zwrócił żadnych wyników. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć na <a href='%{url}' target='_blank'>stronie Discourse Releases</a>."
+          no_new_features_error: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć na <a href='%{url}' target='_blank'>stronie Discourse Releases</a>."
           learn_more: "Dowiedz się więcej..."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
@@ -7366,7 +7495,7 @@ pl_PL:
             Nazwa użytkownika personelu, z którego będą wysyłane wszystkie automatyczne wiadomości. Jeśli pozostanie puste, używane będzie domyślne konto systemowe.
           site_contact_group: "Grupa kontaktowa witryny"
           site_contact_group_help: |
-            Grupa, która zostanie zaproszona do wszystkich automatycznie wysyłanych wiadomości osobistych.
+            Grupa, która zostanie zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości.
           your_organization: "Twoja organizacja"
           your_organization_description: "Informacje te zostaną wykorzystane w Warunkach korzystania z usługi i Polityce prywatności, aby wskazać, kto zarządza witryną i w ramach jakiej jurysdykcji."
           company_name: "Nazwa"
@@ -7841,7 +7970,7 @@ pl_PL:
             button: "Zmień źródło"
             title: "Zmień źródło motywu"
             repository_url: "Adres URL repozytorium"
-            branch: "Gałąź (opcjonalnie)"
+            branch: "Gałąź"
             updating: "Aktualizowanie źródła motywu…"
             update: "Aktualizuj źródło"
             has_existing_key: "W tym motywie skonfigurowano istniejący klucz SSH."
@@ -8666,7 +8795,7 @@ pl_PL:
         activity: Aktywność
         like_count: Polubienia dane / otrzymane
         last_100_days: "w ostatnich 100 dniach"
-        private_topics_count: Wiadomości osobiste
+        private_topics_count: Prywatne wiadomości
         posts_read_count: Przeczytane wpisy
         post_count: Napisane wpisy
         second_factor_enabled: Uwierzytelnianie dwuskładnikowe włączone
@@ -8968,6 +9097,11 @@ pl_PL:
       site_settings:
         title: "Ustawienia witryny"
         description: "Skonfiguruj ustawienia swojej witryny Discourse, aby dostosować jej wygląd, funkcjonalność i wrażenia użytkownika."
+        depends_on_notice:
+          one: "To ustawienie jest stosowane tylko wtedy, gdy włączono %{dependencyLinks}."
+          few: "To ustawienie jest stosowane tylko wtedy, gdy włączono %{dependencyLinks}."
+          many: "To ustawienie jest stosowane tylko wtedy, gdy włączono %{dependencyLinks}."
+          other: "To ustawienie jest stosowane tylko wtedy, gdy włączono %{dependencyLinks}."
         discard:
           one: "Odrzuć zmianę"
           few: "Odrzuć zmiany"
@@ -9043,6 +9177,7 @@ pl_PL:
           groups: "Grupy"
           dashboard: "Panel"
           navigation: "Nawigacja"
+          nested_replies: "Zagnieżdżone odpowiedzi"
           experimental: "Eksperymentalne"
         secret_list:
           invalid_input: "Pola tekstowe nie mogą być puste ani zawierać znaku pionowej kreski."
@@ -9087,6 +9222,9 @@ pl_PL:
           clean_up_inactive_users_after_days:
             prompt: "Ustawienie tej wartości na inną niż 0 spowoduje trwałe usunięcie użytkowników, którzy nie będą aktywni przez określoną liczbę dni. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, rozumiem, że nieaktywni użytkownicy zostaną trwale usunięci, chyba że ustawię tę wartość na 0"
+          can_permanently_delete:
+            prompt: "Włączenie tej opcji umożliwia administratorom trwałe usuwanie wpisów, tematów i wersji wpisów. Trwale usuniętych danych nie można odzyskać. Może to również wpłynąć na integralność danych i zerwanie istniejących linków."
+            confirm: "Rozumiem"
         job_status:
           completed: "Aktualizacja ukończona"
           enqueued: "Aktualizacja w toku"

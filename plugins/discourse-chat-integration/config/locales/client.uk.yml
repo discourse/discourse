@@ -14,10 +14,49 @@ uk:
     chat_integration:
       menu_title: "Інтеграція чату"
       settings: "Налаштування"
+      nav:
+        providers: "Провайдери"
+        providers_description: "Налаштуйте інтеграцію з провайдером чату"
+      add_provider: "Додати провайдера"
+      view_provider_settings: "Перегляд налаштувань провайдера"
+      more_providers: "Більше"
+      confirm_setup_provider: "Ви впевнені, що хочете ввімкнути постачальника %{provider}? Його можна вимкнути пізніше на вкладці \"Налаштування\"."
+      setup_provider_modal:
+        title: "Налаштування провайдера %{provider}"
+        setup_instructions: "Будь ласка, надайте наступні дані для налаштування провайдера %{provider} . %{additionalInstructions}"
+        confirm_setup: "Підтвердити налаштування"
+        success: "Провайдера %{provider} успішно налаштовано"
+        slack:
+          instructions: "Потрібен або токен доступу, або URL-адреса вихідного веб-хука."
+          at_least_one_required: "Введіть токен доступу або URL-адресу вихідного вебхука."
+          access_token:
+            title: "Маркер доступу"
+            description: "Токен доступу OAuth для Slack-бота"
+          outbound_webhook_url:
+            title: "URL-адреса вихідного вебхука"
+            description: "URL-адреса вихідного вебхука Slack"
+        telegram:
+          instructions: "Маркер доступу буде перевірено під час збереження."
+          access_token:
+            title: "Маркер доступу"
+            description: "Токен доступу до бота Telegram від BotFather"
+      empty_state:
+        title: "Підключіть свою чат-платформу"
+        body: "Надсилайте сповіщення з Discourse у чат вашої команди. Оберіть провайдера, щоб розпочати роботу."
+      channels_title: "Канали"
+      channels_description: "Налаштування каналів для постачальника %{provider}."
+      no_channels: "Канали ще не налаштовані."
+      channel_actions: "Дії каналу"
+      add_first_channel: "Додайте свій перший канал %{provider}"
       channels_with_errors: "Деякі канали цього провайдера не вдавалися, коли останній раз надсилалися повідомлення. Клацніть піктограму помилок, щоб дізнатися більше."
       channel_exception: "Невідома помилка сталася під час останнього надсилання повідомлення на цей канал."
       group_mention_template: "Згадки про: @%{name}"
       group_message_template: "Повідомлення до: @ %{name}"
+      choose_group: "(Виберіть групу)"
+      all_categories: "(Всі розділи)"
+      all_tags: "(Всі теґи)"
+      create_rule: "Створити правило"
+      add_channel: "Додати канал"
       delete_channel: "Видалити"
       test_channel: "Тест"
       edit_channel: "Редагувати"
@@ -25,11 +64,14 @@ uk:
       test_modal:
         title: "Надіслати тестове повідомлення"
         topic: "Тема"
+        send: "Надіслати тестове повідомлення"
         close: "Закрити"
         error: "Під час надсилання повідомлення сталася невідома помилка. Перегляньте журнали сайту для отримання додаткової інформації."
         success: "Повідомлення успішно надіслано"
       type:
         normal: Нормальний
+        group_message: Групове повідомлення
+        group_mention: Згадка групи
       filter:
         mute: 'Приглушити'
         follow: 'Лише перший допис'
@@ -50,6 +92,9 @@ uk:
           ok: "Дійсний"
           fail: "Недійсний формат"
       edit_rule_modal:
+        edit_title: Редагувати правило
+        create_title: Створити правило
+        save: Зберегти правило
         cancel: Скасувати
         provider: Провайдер
         type: Тип
@@ -70,7 +115,11 @@ uk:
           param:
             identifier:
               title: Канал
+              help: "Наприклад, #channel або @username"
           errors:
+            at_least_one_required: "Введіть токен доступу або URL-адресу вихідного веб-хука."
+            invalid_webhook_url: "URL-адреса вихідного вебхука має бути дійсним посиланням https://hooks.slack.com/services/...."
+            auth_error: "Наданий токен автентифікації недійсний"
             action_prohibited: "Бот не має дозволу на публікацію в цьому каналі"
             channel_not_found: "Зазначений канал не існує в Slack"
         telegram:
@@ -83,6 +132,8 @@ uk:
               title: Chat ID
               help: Номер, який вам надає бот, або ідентифікатор трансляційного каналу у формі @channelname
           errors:
+            access_token_required: "Потрібен токен доступу бота."
+            webhook_setup_failed: "Не вдалося зареєструвати вебхук у Telegram. Перевірте токен і спробуйте ще раз."
             channel_not_found: "Зазначений канал не існує в Telegram"
             forbidden: "Бот не має дозволу публікувати в цей канал"
         discord:
@@ -93,6 +144,7 @@ uk:
               help: "Назва для опису каналу. Він не використовується для з’єднання з Discord."
             webhook_url:
               title: URL-адреса веб-хука
+              help: URL-адреса вебхука, створена в налаштуваннях вашого сервера Discord, повинна бути у форматі https://discord.com/api/webhooks/<webhook-id>/<webhook-token>
         guilded:
           title: "Гільдійний"
           param:
@@ -107,6 +159,7 @@ uk:
           param:
             identifier:
               title: Канал
+              help: "Наприклад, #channel або @username"
           errors:
             channel_not_found: "Зазначений канал не існує в Найважливіших"
         matrix:
@@ -137,6 +190,7 @@ uk:
           param:
             identifier:
               title: Канал
+              help: "Наприклад, #channel або @username"
           errors:
             invalid_channel: "Цей канал не існує в Rocket Chat"
         gitter:
@@ -144,6 +198,7 @@ uk:
           param:
             name:
               title: "Імʼя"
+              help: "Назва кімнати Gitter, наприклад, gitterHQ/services"
             webhook_url:
               title: "URL-адреса веб-хука"
               help: "URL-адреса, яка створюється під час створення нової інтеграції з Gitter кімнатою."

@@ -2217,6 +2217,12 @@ class User < ActiveRecord::Base
 
     if SiteSetting.default_navigation_menu_categories.present?
       categories_to_update = SiteSetting.default_navigation_menu_categories.split("|")
+      categories_to_update =
+        DiscoursePluginRegistry.apply_modifier(
+          :default_navigation_categories,
+          categories_to_update,
+          user: self,
+        )
 
       SidebarSectionLinksUpdater.update_category_section_links(
         self,

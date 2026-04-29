@@ -10,7 +10,7 @@ import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts";
 const topic = topicWithAssignedPosts();
 const post = topic.post_stream.posts[1];
 
-acceptance(`Discourse Assign | Topic level assign menu`, function (needs) {
+acceptance("Topic level assign menu", function (needs) {
   needs.user();
   needs.settings({
     assign_enabled: true,

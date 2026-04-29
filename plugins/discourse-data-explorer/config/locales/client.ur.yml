@@ -24,6 +24,7 @@ ur:
       description_placeholder: "یہاں تفصیل درج کریں"
       ai:
         generate: "تخلیق کریں"
+        optional: "اختیاری"
       import:
         label: "درآمد"
       help:

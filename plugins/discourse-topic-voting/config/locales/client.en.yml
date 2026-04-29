@@ -1,4 +1,9 @@
 en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_topic_voting: "Discourse Topic Voting"
   js:
     category:
       sort_options:

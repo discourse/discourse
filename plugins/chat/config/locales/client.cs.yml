@@ -303,7 +303,6 @@ cs:
       retry_staged_message:
         title: "Chyba sítě"
         action: "Poslat znovu?"
-      unreliable_network: "Síť je nespolehlivá, odesílání zpráv a ukládání konceptů nemusí fungovat."
       bookmark_message: "Založit"
       bookmark_message_edit: "Upravit záložku"
       restore: "Obnovit smazanou zprávu"

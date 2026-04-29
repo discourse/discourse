@@ -201,11 +201,67 @@ describe "Content Localization" do
         expect(topic_page.topic_title).to have_content("織田信長の生涯")
       end
 
+      fab!(:ja_topic) do
+        topic = Fabricate(:topic, title: "日本語で書かれたトピック", locale: "ja", user: admin)
+        Fabricate(:post, topic:, locale: "ja", raw: "日本語の投稿です")
+        topic
+      end
+      fab!(:ja_topic_en_localization) do
+        Fabricate(
+          :topic_localization,
+          topic: ja_topic,
+          locale: "en",
+          fancy_title: "A topic written in Japanese",
+        )
+      end
+
+      it "shows original title on topic list for anonymous users when topic locale matches browsing locale" do
+        visit("/?tl=ja")
+        expect(page).to have_css(".topic-list-body .raw-topic-link", text: "日本語で書かれたトピック")
+        expect(page).to have_no_css(
+          ".topic-list-body .raw-topic-link",
+          text: "A topic written in Japanese",
+        )
+
+        # navigate away and come back — locale should persist via cookie
+        visit("/")
+        expect(page).to have_css(".topic-list-body .raw-topic-link", text: "日本語で書かれたトピック")
+        expect(page).to have_no_css(
+          ".topic-list-body .raw-topic-link",
+          text: "A topic written in Japanese",
+        )
+      end
+
       it "ignores tl parameter for logged-in users" do
         sign_in(site_local_user)
         visit("/t/#{topic.id}?tl=ja")
 
         expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+      end
+    end
+
+    context "when transitioning from anonymous to logged-in" do
+      let(:language_switcher) { PageObjects::Components::LanguageSwitcher.new }
+
+      before do
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.content_localization_language_switcher = "all"
+      end
+
+      it "ignores the show-original cookie for logged-in users" do
+        visit("/")
+        language_switcher.select_language("ja")
+
+        visit("/t/#{topic.id}")
+        expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
+
+        page.find(toggle_localize_button_selector).click
+        expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+
+        sign_in(japanese_user)
+
+        visit("/t/#{topic.id}")
+        expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
       end
     end
 

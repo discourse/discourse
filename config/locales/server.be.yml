@@ -168,7 +168,17 @@ be:
   invalid_grant_badge_reason_link: "Знешняя або недапушчальная спасылка дыскурс не дапускаецца ў прычыне бейдж"
   email_template_cant_be_modified: "Гэты шаблон электроннай пошты не можа быць зменены"
   reading_time: "чытанне часу"
+  reading_time_minutes:
+    one: "%{count} хв 🕑"
+    few: "%{count} хв 🕑"
+    many: "%{count} хв 🕑"
+    other: "%{count} хв 🕑"
   likes: "сімпатыі"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    many: "%{count} ❤"
+    other: "%{count} ❤"
   embed:
     start_discussion: "пачаць абмеркаванне"
     continue: "працягнуць Размовы"

@@ -1,24 +1,18 @@
 # frozen_string_literal: true
 
 class DiscourseReactions::CustomReactionsController < ApplicationController
+  MAX_USERS_COUNT = 26
   PAGE_SIZE = 20
 
   requires_plugin DiscourseReactions::PLUGIN_NAME
 
-  before_action :ensure_logged_in, except: %i[reactions_users_list]
+  before_action :ensure_logged_in, except: %i[reactions_users_list post_reactions_users]
 
   def toggle
     post = fetch_post_from_params
     reaction = params[:reaction]
 
-    invalid_reaction =
-      if SiteSetting.discourse_reactions_allow_any_emoji
-        !Emoji.exists?(reaction)
-      else
-        DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])
-      end
-
-    return render_json_error(post) if invalid_reaction
+    return render_json_error(post) unless DiscourseReactions::Reaction.valid?(reaction)
 
     begin
       manager =
@@ -161,13 +155,14 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     post = fetch_post_from_params
     page = params[:page].to_i.clamp(0..)
     limit = params[:limit].present? ? params[:limit].to_i.clamp(1, 50) : 30
-    offset = page * limit
-    main_reaction = DiscourseReactions::Reaction.main_reaction_id
-    like_type = PostActionType::LIKE_POST_ACTION_ID
-    reaction_filter = params[:reaction_value]
 
     rows, total =
-      fetch_reaction_rows(post, reaction_filter, main_reaction, like_type, limit, offset)
+      DiscourseReactions::PostReactionsQuery.call(
+        post: post,
+        reaction_filter: params[:reaction_value],
+        limit: limit,
+        offset: page * limit,
+      )
 
     users =
       rows.map do |row|
@@ -183,104 +178,127 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     render_json_dump(users: users, total_rows: total)
   end
 
-  private
+  def post_reactions_users
+    params.require(:id).to_i
+    reaction_value = params[:reaction_value]
+    post = fetch_post_from_params
 
-  def plain_likes_scope(post, like_type)
-    PostAction.where(post_id: post.id).where(
-      DiscourseReactions::PostActionExtension.filter_reaction_likes_sql,
-      like: like_type,
-      valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
-    )
-  end
+    raise Discourse::InvalidParameters if !post
 
-  def fetch_reaction_rows(post, reaction_filter, main_reaction, like_type, limit, offset)
-    if reaction_filter.present? && reaction_filter != main_reaction
-      total =
-        DiscourseReactions::ReactionUser
-          .joins(:reaction)
-          .where(
-            post_id: post.id,
+    reaction_users = []
+
+    if !reaction_value || reaction_value == DiscourseReactions::Reaction.main_reaction_id
+      # We only want to get likes that don't have an associated ReactionUser
+      # record, which count as a like or there will be double ups for main_reaction_id.
+      likes =
+        post.post_actions.where(
+          DiscourseReactions::PostActionExtension.filter_reaction_likes_sql,
+          like: PostActionType::LIKE_POST_ACTION_ID,
+          valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
+        )
+
+      # Filter out likes for reactions that are not longer enabled,
+      # which match up to a ReactionUser in historical data.
+      historical_reaction_likes =
+        likes
+          .joins(
+            "LEFT JOIN discourse_reactions_reaction_users ON discourse_reactions_reaction_users.user_id = post_actions.user_id AND discourse_reactions_reaction_users.post_id = post_actions.post_id",
+          )
+          .joins(
+            "LEFT JOIN discourse_reactions_reactions ON discourse_reactions_reactions.id = discourse_reactions_reaction_users.reaction_id",
+          )
+          .where.not(
             discourse_reactions_reactions: {
-              reaction_value: reaction_filter,
+              reaction_value: DiscourseReactions::Reaction.valid_reactions.to_a,
             },
           )
-          .count
 
-      rows =
-        DB.query(
-          <<~SQL,
-            SELECT u.id, u.username, u.name, u.uploaded_avatar_id,
-                   dr.reaction_value AS reaction, drru.created_at
-            FROM discourse_reactions_reaction_users drru
-            INNER JOIN discourse_reactions_reactions dr ON dr.id = drru.reaction_id
-            INNER JOIN users u ON u.id = drru.user_id
-            WHERE drru.post_id = :post_id AND dr.reaction_value = :reaction_filter
-            ORDER BY drru.created_at ASC
-            LIMIT :limit OFFSET :offset
-          SQL
-          post_id: post.id,
-          reaction_filter: reaction_filter,
-          limit: limit,
-          offset: offset,
-        )
-    elsif reaction_filter == main_reaction
-      total = plain_likes_scope(post, like_type).count
-
-      rows =
-        DB.query(
-          <<~SQL,
-            SELECT u.id, u.username, u.name, u.uploaded_avatar_id,
-                   :main_reaction AS reaction, post_actions.created_at
-            FROM post_actions
-            INNER JOIN users u ON u.id = post_actions.user_id
-            WHERE post_actions.post_id = :post_id
-              AND (#{DiscourseReactions::PostActionExtension.filter_reaction_likes_sql})
-            ORDER BY post_actions.created_at ASC
-            LIMIT :limit OFFSET :offset
-          SQL
-          post_id: post.id,
-          like: like_type,
-          valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
-          main_reaction: main_reaction,
-          limit: limit,
-          offset: offset,
-        )
-    else
-      reaction_user_count = DiscourseReactions::ReactionUser.where(post_id: post.id).count
-      plain_like_count = plain_likes_scope(post, like_type).count
-      total = reaction_user_count + plain_like_count
-
-      rows =
-        DB.query(
-          <<~SQL,
-            SELECT * FROM (
-              SELECT u.id, u.username, u.name, u.uploaded_avatar_id,
-                     dr.reaction_value AS reaction, drru.created_at
-              FROM discourse_reactions_reaction_users drru
-              INNER JOIN discourse_reactions_reactions dr ON dr.id = drru.reaction_id
-              INNER JOIN users u ON u.id = drru.user_id
-              WHERE drru.post_id = :post_id
-              UNION ALL
-              SELECT u.id, u.username, u.name, u.uploaded_avatar_id,
-                     :main_reaction AS reaction, post_actions.created_at
-              FROM post_actions
-              INNER JOIN users u ON u.id = post_actions.user_id
-              WHERE post_actions.post_id = :post_id
-                AND (#{DiscourseReactions::PostActionExtension.filter_reaction_likes_sql})
-            ) combined
-            ORDER BY created_at ASC
-            LIMIT :limit OFFSET :offset
-          SQL
-          post_id: post.id,
-          like: like_type,
-          valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
-          main_reaction: main_reaction,
-          limit: limit,
-          offset: offset,
-        )
+      likes = likes.where.not(id: historical_reaction_likes.select(:id))
     end
 
-    [rows, total]
+    if likes.present?
+      main_reaction =
+        DiscourseReactions::Reaction.find_by(
+          reaction_value: DiscourseReactions::Reaction.main_reaction_id,
+          post_id: post.id,
+        )
+      count = likes.length
+      users = format_likes_users(likes)
+
+      # Also include ReactionUser records for main_reaction_id
+      # if they have been created in the past; new records created
+      # using main_reaction_id will only make a PostAction.
+      if main_reaction && main_reaction[:reaction_users_count]
+        (users << get_users(main_reaction)).flatten!
+        users.sort_by! { |user| user[:created_at] }
+        count += main_reaction.reaction_users_count.to_i
+      end
+
+      reaction_users << {
+        id: DiscourseReactions::Reaction.main_reaction_id,
+        count: count,
+        users: users.reverse.slice(0, MAX_USERS_COUNT + 1),
+      }
+    end
+
+    if !reaction_value
+      post
+        .reactions
+        .select do |reaction|
+          reaction[:reaction_users_count] &&
+            reaction[:reaction_value] != DiscourseReactions::Reaction.main_reaction_id
+        end
+        .each { |reaction| reaction_users << format_reaction_user(reaction) }
+    elsif reaction_value != DiscourseReactions::Reaction.main_reaction_id
+      post
+        .reactions
+        .where(reaction_value: reaction_value)
+        .select { |reaction| reaction[:reaction_users_count] }
+        .each { |reaction| reaction_users << format_reaction_user(reaction) }
+    end
+
+    render_json_dump(reaction_users: reaction_users)
+  end
+
+  private
+
+  def get_users(reaction)
+    reaction
+      .reaction_users
+      .includes(:user)
+      .order("discourse_reactions_reaction_users.created_at desc")
+      .limit(MAX_USERS_COUNT + 1)
+      .map do |reaction_user|
+        {
+          username: reaction_user.user.username,
+          name: reaction_user.user.name,
+          avatar_template: reaction_user.user.avatar_template,
+          can_undo: reaction_user.can_undo?,
+          created_at: reaction_user.created_at.to_s,
+        }
+      end
+  end
+
+  def format_reaction_user(reaction)
+    {
+      id: reaction.reaction_value,
+      count: reaction.reaction_users_count.to_i,
+      users: get_users(reaction),
+    }
+  end
+
+  def format_like_user(like)
+    {
+      username: like.user.username,
+      name: like.user.name,
+      avatar_template: like.user.avatar_template,
+      can_undo: guardian.can_delete_post_action?(like),
+      created_at: like.created_at.to_s,
+    }
+  end
+
+  def format_likes_users(likes)
+    likes.includes([:user]).limit(MAX_USERS_COUNT + 1).map { |like| format_like_user(like) }
   end
 
   def post_serializer(post)
@@ -307,7 +325,13 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   def secure_reaction_users!(reaction_users)
     builder = DB.build("/*where*/")
     UserAction.apply_common_filters(builder, current_user.id, guardian)
-    reaction_users.where(builder.to_sql.delete_prefix("/*where*/").delete_prefix("WHERE"))
+    sql =
+      builder
+        .to_sql
+        .delete_prefix("/*where*/")
+        .delete_prefix("WHERE")
+        .gsub("a.acting_user_id", "discourse_reactions_reaction_users.user_id")
+    reaction_users.where(sql)
   end
 
   def translate_to_reactions(likes)

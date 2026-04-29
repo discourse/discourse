@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 fi:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: Viestiäänestys
   post_voting:
     reviewables:
       comment_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän kommentin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
@@ -37,6 +33,7 @@ fi:
       already_voted: "Voit äänestää vain yhtä vastausta tähän kysymykseen."
       user_over_limit: "Et voi ylittää luottamustasosi äänimäärää."
       one_vote_per_post: "Voit äänestää kutakin viestiä vain kerran."
+      toggle_voters: "Näytä äänestäneet"
     last_answer_lowercase: viimeisin vastaus
     answer_lowercase:
       one: vastaus
@@ -58,6 +55,8 @@ fi:
           edit: "muokkaa"
           cancel: "peruuta"
           add: "Lisää kommentti"
+          actions:
+            delete: "Poista kommentti"
           show:
             one: Näytä %{count} kommentti lisää
             other: Näytä %{count} kommenttia lisää

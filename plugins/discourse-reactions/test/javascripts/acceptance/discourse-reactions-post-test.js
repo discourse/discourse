@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
 
-acceptance(`Discourse Reactions - Post`, function (needs) {
+acceptance("Post", function (needs) {
   needs.user();
 
   needs.settings({
@@ -11,6 +11,7 @@ acceptance(`Discourse Reactions - Post`, function (needs) {
     discourse_reactions_enabled_reactions: "otter|open_mouth",
     discourse_reactions_reaction_for_like: "heart",
     discourse_reactions_like_icon: "heart",
+    enable_new_post_reactions_menu: true,
   });
 
   needs.pretender((server, helper) => {

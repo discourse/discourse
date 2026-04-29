@@ -25,6 +25,7 @@ fr:
       description_placeholder: "Saisissez une description ici"
       ai:
         generate: "Générer"
+        optional: "facultatif"
       import:
         label: "Importer"
         unparseable_json: "Fichier JSON non analysable."

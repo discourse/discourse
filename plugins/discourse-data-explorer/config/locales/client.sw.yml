@@ -24,6 +24,7 @@ sw:
       description_placeholder: "Andika maelezo hapa"
       ai:
         generate: "Tengeneza"
+        optional: "sio Muhimu"
       import:
         label: "Imeingizwa kutoka sehemu nyingine"
       help:

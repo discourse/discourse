@@ -92,7 +92,7 @@ export default class TagGroupsForm extends Component {
       return false;
     }
 
-    attrs.permissions ??= {};
+    attrs.permissions = { ...(attrs.permissions ?? {}) };
 
     const permissionName = this.buffered.get("permissionName");
 
@@ -102,9 +102,14 @@ export default class TagGroupsForm extends Component {
       attrs.permissions[0] = PermissionType.READONLY;
     } else if (permissionName === "private") {
       delete attrs.permissions[0];
-    } else {
-      this.dialog.alert(i18n("tagging.groups.cannot_save.no_groups"));
-      return false;
+
+      const hasGroups = Object.keys(attrs.permissions).some(
+        (k) => parseInt(k, 10) !== AUTO_GROUPS.everyone.id
+      );
+      if (!hasGroups) {
+        this.dialog.alert(i18n("tagging.groups.cannot_save.no_groups"));
+        return false;
+      }
     }
 
     this.model

@@ -16,15 +16,10 @@ describe "Edit Category Settings" do
     it "allows selecting hot as the default view" do
       category_page.visit_appearance(category)
 
-      category_default_view_select_kit.expand
-      expect(category_default_view_select_kit).to have_option_value("hot")
-      expect(category_default_view_select_kit).to have_option_value("latest")
-      expect(category_default_view_select_kit).to have_option_value("top")
-
-      category_default_view_select_kit.select_row_by_value("hot")
+      form.field("default_view").select("hot")
       category_page.save_settings
 
-      expect(category_default_view_select_kit.value).to eq("hot")
+      expect(form.field("default_view").value).to eq("hot")
 
       visit "/c/#{category.slug}/#{category.id}"
       expect(page).to have_css(".navigation-container .hot.active", text: "Hot")

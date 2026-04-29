@@ -36,6 +36,8 @@ es:
       topic_search_placeholder: "Buscar temas por título o contenido"
       sidebar_name_filter_placeholder: "Nombre/nombre de usuario"
       assigned: "Asignada"
+      group_no_assignments_title: "Sin asignaciones"
+      group_no_assignments_body: "Actualmente no hay asignaciones activas para este grupo."
       group_everyone: "Todos"
       assigned_to: "Asignado a"
       assigned_topic_to: "Tema asignado a <a href='%{path}'>%{username}</a>"
@@ -129,6 +131,8 @@ es:
       web_hooks:
         assign_event:
           group_name: "Asignar eventos"
+          assigned: "Cuando un usuario asigna un tema"
+          unassigned: "Cuando un usuario anula la asignación de un tema"
     search:
       advanced:
         in:
@@ -136,6 +140,18 @@ es:
           unassigned: "están sin asignar"
         assigned:
           label: "Asignado a"
+    topics:
+      bulk:
+        unassign: "Anular asignación de temas"
+        assign: "Asignar temas"
+        assign_description: "Asigna todos los temas seleccionados a la siguiente categoría:"
+        unassign_description: "¿Quieres anular la selección de los temas seleccionados?"
+        confirm_assign_topics:
+          one: "Asginar %{count} tema"
+          other: "Asginar %{count} temas"
+        confirm_unassign_topics:
+          one: "Anular asignación de %{count} tema"
+          other: "Anular asignación de %{count} temas"
     discourse_automation:
       scriptables:
         random_assign:

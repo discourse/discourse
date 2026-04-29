@@ -20,6 +20,7 @@ export default class SiteSettingFilter {
     opts.includeAllCategory ??= true;
 
     let pluginFilter;
+    let upcomingChangeDefaultOverrideFilter;
 
     if (filter) {
       filter = filter
@@ -32,6 +33,13 @@ export default class SiteSettingFilter {
 
           if (word.startsWith("plugin:")) {
             pluginFilter = word.slice("plugin:".length).trim();
+            return false;
+          }
+
+          if (word.startsWith("upcoming_change_default_override:")) {
+            upcomingChangeDefaultOverrideFilter = word
+              .slice("upcoming_change_default_override:".length)
+              .trim();
             return false;
           }
 
@@ -74,6 +82,14 @@ export default class SiteSettingFilter {
           }
 
           if (pluginFilter && siteSetting.plugin !== pluginFilter) {
+            return false;
+          }
+
+          if (
+            upcomingChangeDefaultOverrideFilter &&
+            siteSetting.get("upcoming_change_default_override_metadata")
+              ?.change_setting_name !== upcomingChangeDefaultOverrideFilter
+          ) {
             return false;
           }
 

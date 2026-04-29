@@ -372,18 +372,16 @@ describe "Simplified Category Creation" do
     end
 
     it "sets default view to latest" do
-      category_page.visit_images(category)
+      category_page.visit_appearance(category)
 
-      default_view_selector = PageObjects::Components::SelectKit.new("#category-default-view")
-      default_view_selector.expand
-      default_view_selector.select_row_by_value("latest")
+      form.field("default_view").select("latest")
       category_page.save_settings
 
       expect(category.reload.default_view).to eq("latest")
     end
 
     it "uploads a category logo" do
-      category_page.visit_images(category)
+      category_page.visit_appearance(category)
 
       attach_file(
         "category-logo-uploader__input",

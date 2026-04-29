@@ -265,7 +265,11 @@ ko:
   deleted_topic: "이 주제는 삭제되었으며 더는 사용할 수 없습니다."
   delete_topic_failed: "이 주제를 삭제하는 중에 오류가 발생했습니다. 사이트 관리자에게 문의하세요."
   reading_time: "읽은 시간"
+  reading_time_minutes:
+    other: "%{count}분 🕑"
   likes: "좋아요"
+  likes_count:
+    other: "%{count} ❤"
   too_many_replies:
     other: "신규 사용자는 일시적으로 동일 주제에 %{count}개까지만 댓글을 달 수 있습니다."
   max_consecutive_replies:
@@ -1921,7 +1925,6 @@ ko:
     not_available: "사용할 수 없습니다. %{suggestion} 아이디는 어떠세요?"
     something_already_taken: "문제가 발생했습니다. 아이디 또는 이메일이 이미 등록되어 있을 수 있습니다. 비밀번호 찾기 링크를 시도해 보세요."
     omniauth_error_unknown: "로그인을 처리하는 중에 문제가 발생했습니다. 다시 시도하세요."
-    omniauth_confirm_title: "%{provider} 로그인"
     omniauth_confirm_button: "계속"
     authenticator_error_no_valid_email: "%{account} 계정과 연결된 이메일 주소는 허용되지 않습니다. 다른 이메일 주소로 계정을 환경설정해야 할 수도 있습니다."
     new_registrations_disabled: "지금은 새 계정을 등록할 수 없습니다."
@@ -3494,7 +3497,6 @@ ko:
       in_this_category: '이 카테고리에서는 ''%{tag_name}'' 태그를 사용할 수 없습니다'
       restricted_to:
         other: '''%{tag_name}'' 태그는 다음 카테고리로 제한됩니다. %{category_names}'
-      synonym: '동의어는 허용되지 않습니다. 대신 ''%{tag_name}'' 태그를 사용하세요.'
       has_synonyms: '''%{tag_name}''에는 동의어가 있으므로 사용할 수 없습니다.'
     required_tags_from_group:
       other: "최소 %{count}개의 %{tag_group_name} 태그를 포함해야 합니다. 이 그룹의 태그는 %{tags}입니다. %{tags}."

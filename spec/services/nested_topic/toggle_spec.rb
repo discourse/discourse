@@ -3,7 +3,6 @@
 RSpec.describe NestedTopic::Toggle do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:topic_id) }
-    it { is_expected.to validate_inclusion_of(:enabled).in_array([true, false]) }
   end
 
   describe ".call" do

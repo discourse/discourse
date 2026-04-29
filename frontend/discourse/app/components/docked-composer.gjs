@@ -45,12 +45,6 @@ export default class DockedComposer extends Component {
   #dragStart = null;
   #rootElement = null;
 
-  #handleInput = (event) => {
-    const value = event?.target?.value ?? "";
-    this.reply = value;
-    this.persistDraft(value);
-  };
-
   #handlePaste = (event) => {
     if (!this.textarea || document.activeElement !== this.textarea) {
       return;
@@ -70,17 +64,29 @@ export default class DockedComposer extends Component {
   };
 
   #handleKeyDown = (event) => {
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey &&
-      !event.isComposing &&
-      !event.metaKey &&
-      !event.ctrlKey &&
-      !event.altKey
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.submit();
+    if (event.key !== "Enter" || event.isComposing) {
+      return;
+    }
+
+    const submitOnEnter = this.args.submitOnEnter ?? true;
+
+    if (submitOnEnter) {
+      if (
+        !event.shiftKey &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.altKey
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.submit();
+      }
+    } else {
+      if (event.metaKey || event.ctrlKey) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.submit();
+      }
     }
   };
 
@@ -149,7 +155,6 @@ export default class DockedComposer extends Component {
       // capture phase so Enter-to-send wins over ItsATrap / smart-list handlers
       this.textarea.addEventListener("keydown", this.#handleKeyDown, true);
       this.textarea.addEventListener("paste", this.#handlePaste);
-      this.textarea.addEventListener("input", this.#handleInput);
     }
   }
 
@@ -205,7 +210,6 @@ export default class DockedComposer extends Component {
   teardown() {
     this.textarea?.removeEventListener("keydown", this.#handleKeyDown, true);
     this.textarea?.removeEventListener("paste", this.#handlePaste);
-    this.textarea?.removeEventListener("input", this.#handleInput);
     this.uppyUpload?.teardown();
     this.#rootElement = null;
   }

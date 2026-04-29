@@ -12,14 +12,10 @@ sv:
     topic_voting:
       reached_limit: "Du har inga fler röster, ta bort en befintlig röst!"
       list_votes: "Visa en lista över dina röster"
-      votes_nav_help: "ämnen med de flesta rösterna"
       voted: "Du röstade i detta ämne"
       allow_topic_voting: "Låt användare rösta om ämnen i denna kategori"
       vote_title: "Rösta"
       vote_title_plural: "Röster"
-      voted_title: "Röstade"
-      voting_closed_title: "Stängd"
-      voting_limit: "Begränsa"
       votes:
         one: "%{count} röst"
         other: "%{count} röster"
@@ -27,12 +23,14 @@ sv:
         one: "Rösta"
         other: "Röster"
       remove_vote: "Ta bort röst"
+      and_more_voters: "och %{count} till..."
+      show_voters: "Visa vem som röstat"
+      vote_count_thousands: "%{count}k"
       no_votes_title_self: "Du har inte röstat på något ämne ännu"
       no_votes_title_others: "%{username} har inte röstat på något ämne ännu"
     filters:
       votes:
         title: "Röster"
-        help: "ämnen med de flesta rösterna"
       my_votes:
         title: "Mina röster"
         help: "ämnen du röstade i"

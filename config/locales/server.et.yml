@@ -145,7 +145,13 @@ et:
   not_in_group:
     join_group: "Liitu grupiga"
   reading_time: "Lugemise aeg"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} minutit 🕑"
   likes: "Meeldimisi"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Vabandame, kuid ajutiselt on uutel kasutajatel lubatud %{count} vastus teema kohta."
     other: "Vabandame, kuid ajutiselt on uutel kasutajatel lubatud %{count} vastust teema kohta."

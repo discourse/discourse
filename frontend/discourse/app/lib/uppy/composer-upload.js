@@ -269,7 +269,7 @@ export default class UppyComposerUpload {
 
     this.uppyWrapper.uppyInstance.on("progress", (progress) => {
       run(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.composer.isDestroying || this.composer.isDestroyed) {
           return;
         }
 

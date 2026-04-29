@@ -61,10 +61,10 @@ describe TopicsController do
       crawler_html = response.body
 
       expect(crawler_html).to match(
-        %r{<span class="post-voting-comment-cooked" itemprop="comment"><p>this is a comment!</p></span>},
+        %r{<span class="post-voting-comments__comment-cooked" itemprop="comment"><p>this is a comment!</p></span>},
       )
       expect(crawler_html).to match(
-        %r{<span class="post-voting-answer-count-span" itemprop="answerCount">3</span>},
+        %r{<span class="post-voting-answer-count__value" itemprop="answerCount">3</span>},
       )
     end
   end

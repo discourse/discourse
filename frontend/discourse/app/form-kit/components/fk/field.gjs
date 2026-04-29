@@ -132,7 +132,7 @@ export default class FKField extends Component {
                 (if field.type (concat "form-kit__field-" field.type))
                 (if field.error "has-error")
                 (if field.disabled "is-disabled")
-                (if (eq field.format "full") "--full")
+                (if field.format (concat "--" field.format))
               }}
               data-disabled={{field.disabled}}
               data-name={{field.name}}
@@ -144,7 +144,7 @@ export default class FKField extends Component {
                 <FKLabel
                   class={{concatClass
                     "form-kit__container-title"
-                    (if field.titleFormat (concat "--" field.titleFormat))
+                    (if field.labelFormat (concat "--" field.labelFormat))
                   }}
                   @fieldId={{field.id}}
                 >
@@ -159,20 +159,12 @@ export default class FKField extends Component {
                 <FKText
                   class={{concatClass
                     "form-kit__container-description"
-                    (if
-                      field.descriptionFormat
-                      (concat "--" field.descriptionFormat)
-                    )
+                    (if field.labelFormat (concat "--" field.labelFormat))
                   }}
                 >{{field.description}}</FKText>
               {{/if}}
 
-              <div
-                class={{concatClass
-                  "form-kit__container-content"
-                  (if field.format (concat "--" field.format))
-                }}
-              >
+              <div class="form-kit__container-content">
                 {{#if field.hasExplicitType}}
                   {{yield field}}
                 {{else}}

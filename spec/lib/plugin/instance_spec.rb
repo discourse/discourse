@@ -46,6 +46,11 @@ TEXT
       expect(plugin_instance.humanized_name).to eq("Sample plugin")
     end
 
+    it "converts underscores in the plugin name to spaces" do
+      plugin_instance.metadata.stubs(:name).returns("docker_manager")
+      expect(plugin_instance.humanized_name).to eq("Docker manager")
+    end
+
     it "removes any Discourse prefix from the setting category name" do
       TranslationOverride.upsert!(
         "en",

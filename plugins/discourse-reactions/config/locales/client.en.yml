@@ -23,8 +23,8 @@ en:
       users_popup:
         all: "All"
         title:
-          one: "%{count} reaction"
-          other: "%{count} reactions"
+          one: "%{count} Reaction"
+          other: "%{count} Reactions"
       counter:
         aria_label:
           one: "%{count} reaction"

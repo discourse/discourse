@@ -86,6 +86,13 @@ after_initialize do
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
   end
 
+  # Avoid a mini_sql warning ("no type cast defined") by registering a halfvec text decoder.
+  if !GlobalSetting.skip_db?
+    if halfvec_oid = DB.query_single("SELECT oid FROM pg_type WHERE typname = 'halfvec'").first
+      DB.type_map.add_coder(PG::TextDecoder::String.new(oid: halfvec_oid))
+    end
+  end
+
   # do not autoload this cause we may have no namespace
   require_relative "discourse_automation/llm_triage"
   require_relative "discourse_automation/llm_report"

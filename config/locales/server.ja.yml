@@ -408,7 +408,11 @@ ja:
   deleted_topic: "おっとっと！このトピックは削除されたため、利用できなくなりました。"
   delete_topic_failed: "トピックを削除中にエラーが発生しました。サイトの管理者にお問い合わせください。"
   reading_time: "閲覧時間"
+  reading_time_minutes:
+    other: "%{count} 分 🕑"
   likes: "いいね！"
+  likes_count:
+    other: "%{count} ❤"
   action_already_performed: "この操作はすでに実行済みです。ページを再読み込みしてください。"
   too_many_replies:
     other: "新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
@@ -778,7 +782,6 @@ ja:
     has_likes:
       other: "「いいね！」 %{count}"
     cannot_permanently_delete:
-      many_posts: "このトピックには削除されていない投稿があります。トピックを永久に削除する前に、それらのトピックを永久に削除してください。"
       wait_or_different_admin: "%{time_left} 待ってからこの投稿を永久に削除するか、別の管理者が削除する必要があります。"
   rate_limiter:
     slow_down: "この操作の実行回数が多すぎます。後でもう一度お試しください。"
@@ -2344,7 +2347,6 @@ ja:
     create_revision_on_bulk_topic_moves: "トピックが新しいカテゴリに一括して移動されたときに、最初の投稿のリビジョンを作成する。"
     allow_changing_staged_user_tracking: "ステージングユーザーのカテゴリとタグの通知設定を管理者ユーザーが変更することを許可する。"
     use_email_for_username_and_name_suggestions: "ユーザー名と名前の提案にメールアドレスの最初の部分を使用する。警告: 悪意のあるアクターがメンバーのメールアドレスを検出しやすくなります (多数のユーザーが「gmail.com」などの一般的なメールプロバイダーを使用しているため)。"
-    use_name_for_username_suggestions: "ユーザー名を提案する際に、ユーザーの氏名を使用します。"
     suggest_weekends_in_date_pickers: "日付ピッカーの候補に週末 (土曜日と日曜日) を含めます (月曜日から金曜日の平日にのみ Discourse を使用する場合は、これを無効にします)。"
     show_bottom_topic_map: "トピックに 10 件以上の返信がある場合、トピックの下にトピックマップを表示します。"
     show_topic_map_in_topics_without_replies: "トピックに返信がない場合でもトピックマップを表示します。"
@@ -2671,7 +2673,6 @@ ja:
       request_error: "認証を開始中にエラーが発生しました。もう一度お試しください。"
       invalid_iat: "サーバークロックの差により認証トークンを検証できませんでした。もう一度お試しください。"
     omniauth_error_unknown: "ログインを処理中に問題が発生しました。もう一度お試しください。"
-    omniauth_confirm_title: "%{provider} を使用してログイン"
     omniauth_confirm_button: "続行"
     authenticator_error_no_valid_email: "%{account} に関連付けられたメールアドレスは許可されていません。別のメールアドレスでアカウントを構成する必要がある場合があります。"
     new_registrations_disabled: "現在、新しいアカウントの登録を行えません。"
@@ -4810,7 +4811,6 @@ ja:
       in_this_category: '"%{tag_name}" をこのカテゴリで使用できません'
       restricted_to:
         other: '"%{tag_name}" は次のカテゴリに制限されています: %{category_names}'
-      synonym: '同義語は許可されていません。代わりに "%{tag_name}" を使用してください。'
       has_synonyms: '"%{tag_name}" は同義語が含まれるため使用できません。'
       restricted_tags_cannot_be_used_in_category:
         other: '次のタグは "%{category}" カテゴリで使用できません: %{tags}。削除してください。'

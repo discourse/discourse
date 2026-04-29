@@ -27,6 +27,15 @@ export default class AdminSiteSettingsController extends Controller {
     set(this, "model.filtersApplied", value);
   }
 
+  @computed("model.activeFilter")
+  get activeFilter() {
+    return this.model?.activeFilter ?? "";
+  }
+
+  set activeFilter(value) {
+    set(this, "model.activeFilter", value);
+  }
+
   @debounce(INPUT_DELAY)
   filterContent(filterData) {
     if (this._skipBounce) {

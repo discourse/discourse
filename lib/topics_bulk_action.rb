@@ -32,6 +32,8 @@ class TopicsBulkAction
       reset_bump_dates
       pin
       unpin
+      convert_to_public_topic
+      convert_to_private_message
     ]
   end
 
@@ -166,6 +168,31 @@ class TopicsBulkAction
         else
           t.errors.full_messages.each { |msg| @errors[msg] += 1 }
         end
+      end
+    end
+  end
+
+  def convert_to_public_topic
+    bulk_convert(from_pm: true) { |c| c.convert_to_public_topic(@operation[:category_id]) }
+  end
+
+  def convert_to_private_message
+    bulk_convert(from_pm: false, &:convert_to_private_message)
+  end
+
+  def bulk_convert(from_pm:)
+    silent = @operation.fetch(:silent, true)
+
+    topics.each do |t|
+      next if t.private_message? != from_pm
+      next unless guardian.can_convert_topic?(t)
+
+      yield TopicConverter.new(t, @user, silent: silent)
+
+      if t.errors.any?
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      elsif t.reload.private_message? != from_pm
+        @changed_ids << t.id
       end
     end
   end

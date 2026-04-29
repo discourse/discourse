@@ -78,21 +78,28 @@
   &__editor {
     flex: 1 1 auto;
     min-width: 0;
+    contain: inline-size;
     position: relative;
 
     .d-editor-container {
       background: transparent;
     }
 
+    .d-editor-button-bar__scroll-btn {
+      --fade-color: var(--d-input-bg-color);
+    }
+
     .d-editor-textarea-column {
       position: relative;
-      border: 1px solid var(--primary-low);
+      border: var(--d-input-border);
       border-radius: var(--d-input-border-radius);
       background: var(--d-input-bg-color);
       transition: border-color 0.15s ease-in-out;
 
       &:focus-within {
-        border-color: var(--tertiary);
+        border-color: var(--d-input-focused-color);
+        outline: 2px solid var(--d-input-focused-color);
+        outline-offset: -2px;
       }
 
       &:has(.d-editor-input[disabled]) {
@@ -112,6 +119,10 @@
       border: none;
       background: transparent;
       box-shadow: none;
+
+      &.in-focus {
+        outline: none;
+      }
     }
 
     .d-editor-input {

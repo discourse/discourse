@@ -16,18 +16,22 @@ zh_CN:
       state_panel:
         more_users: "还有 %{count} 个…"
         show_users: "显示更多用户"
-        hide_users: "显示较少用户"
+        hide_users: "显示更少用户"
         reaction_group:
-          other: "%{reaction}: %{count} 名用户"
+          other: "%{reaction}：%{count} 个用户"
       reaction:
         forbidden: "您不能对此帖子作出反应或改变对该帖子的反应。"
       picker:
         react_with: "使用以下方式回应此帖子：%{reaction}"
         cant_remove_reaction: "您无法再移除您自己的回应了"
         remove_reaction: "删除此 %{reaction} 回应"
+      users_popup:
+        all: "所有"
+        title:
+          other: "%{count} 个回应"
       counter:
         aria_label:
-          other: "%{count} 个反应"
+          other: "%{count} 个回应"
       main_reaction:
         add: "点赞此帖子"
         remove: "移除此赞"

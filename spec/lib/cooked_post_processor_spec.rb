@@ -551,9 +551,13 @@ RSpec.describe CookedPostProcessor do
             )
           end
 
+          let(:secure_uploads_url) do
+            "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png"
+          end
+
           let(:cooked_html) { <<~HTML }
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
-            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="#{secure_uploads_url}" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.png?dl=1" title="large.png"><img src="#{secure_uploads_url}" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">#{upload.width}×#{upload.height} 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg>
             </div></a></div></p>
             HTML
 
@@ -570,10 +574,7 @@ RSpec.describe CookedPostProcessor do
               post.link_post_uploads
             end
 
-            # TODO fix this spec, it is sometimes getting CDN links when it runs concurrently
-            xit "handles secure images with the correct lightbox link href" do
-              FastImage.expects(:size).returns([1750, 2000])
-              OptimizedImage.expects(:resize).returns(true)
+            it "handles secure images with the correct lightbox link href" do
               cpp.post_process
 
               expect(cpp.html).to match_html cooked_html

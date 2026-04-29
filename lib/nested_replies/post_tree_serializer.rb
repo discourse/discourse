@@ -6,12 +6,29 @@ module NestedReplies
       @topic = topic
       @topic_view = topic_view
       @guardian = guardian
+      @ignored_user_ids = IgnoredUser.ignored_ids_for(guardian.user)
     end
+
+    SUGGESTED_AND_RELATED_KEYS = %i[
+      suggested_topics
+      suggested_group_name
+      related_topics
+      related_messages
+    ].freeze
 
     def serialize_topic
       serializer = TopicViewSerializer.new(@topic_view, scope: @guardian, root: false)
       json = serializer.as_json
-      json.except(:post_stream, :timeline_lookup, :user_badges)
+      json.except(:post_stream, :timeline_lookup, :user_badges, *SUGGESTED_AND_RELATED_KEYS)
+    end
+
+    # Produces the suggested/related payload we piggyback on whichever
+    # response has has_more_roots=false — mirroring how the flat view
+    # ships suggested_topics on the final /t/:id/posts.json chunk.
+    def serialize_suggested_and_related
+      serializer = TopicViewSerializer.new(@topic_view, scope: @guardian, root: false)
+      json = serializer.as_json
+      json.slice(*SUGGESTED_AND_RELATED_KEYS)
     end
 
     def serialize_post(post, reply_counts, descendant_counts = {})
@@ -44,6 +61,11 @@ module NestedReplies
               :total_descendant_count,
             )
         end
+      elsif post.post_number != 1 && @ignored_user_ids.include?(post.user_id)
+        json[:ignored_post_placeholder] = true
+        json[:cooked] = ""
+        json[:raw] = nil
+        json[:actions_summary] = []
       end
 
       json

@@ -126,19 +126,13 @@ export default class FKFieldData extends Component {
   }
 
   /**
-   * Format of the title.
+   * Format of the title and description (label area). Overrides @format
+   * for the title and description, leaving the field's content area at
+   * @format. Useful when long descriptions need more room than the input.
    * @type {string}
    */
-  get titleFormat() {
-    return this.args.titleFormat || this.format;
-  }
-
-  /**
-   * Format of the description.
-   * @type {string}
-   */
-  get descriptionFormat() {
-    return this.args.descriptionFormat || this.format;
+  get labelFormat() {
+    return this.args.labelFormat;
   }
 
   /**
@@ -164,6 +158,14 @@ export default class FKFieldData extends Component {
    */
   get description() {
     return this.args.description;
+  }
+
+  /**
+   * Placeholder text for input fields.
+   * @type {string}
+   */
+  get placeholder() {
+    return this.args.placeholder;
   }
 
   /**
