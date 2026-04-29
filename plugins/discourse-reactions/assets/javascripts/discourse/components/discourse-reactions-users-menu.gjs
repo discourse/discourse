@@ -21,12 +21,12 @@ export default class DiscourseReactionsUsersMenu extends Component {
     const entry = this.#tabCache.get(filter);
 
     if (entry) {
-      const haveRequestedPage = entry.users.length >= nextOffset;
-      const haveLastPartialPage =
-        !entry.canLoadMore && entry.users.length > offset;
-      if (haveRequestedPage || haveLastPartialPage) {
+      const cached = entry.users.slice(offset, nextOffset);
+      const fullPage = cached.length === pageSize;
+      const lastPartialPage = !entry.canLoadMore && cached.length > 0;
+      if (fullPage || lastPartialPage) {
         return {
-          users: entry.users.slice(offset, nextOffset),
+          users: cached,
           canLoadMore: entry.users.length > nextOffset || entry.canLoadMore,
         };
       }
