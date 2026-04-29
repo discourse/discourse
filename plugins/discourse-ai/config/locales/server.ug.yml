@@ -91,6 +91,10 @@ ug:
       unlist_topic:
         errors:
           not_found: "تېما تېپىلمىدى."
+      lock_post:
+        errors:
+          not_found: "يازما تېپىلمىدى."
+          not_allowed: "بۇ يازمىنى قۇلۇپلاش ياكى قۇلۇپىنى ئېچىش ئىجازىتىڭىز يوق."
       delete_topic:
         errors:
           not_found: "تېما تېپىلمىدى."

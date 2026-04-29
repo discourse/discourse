@@ -1936,7 +1936,6 @@ el:
         Η απάντησή σας στάλθηκε από μία αποκλεισμένη διεύθυνση email. Δοκιμάστε να στείλετε από κάποια άλλη διεύθυνση email ή [επικοινωνήστε με την διαχείριση](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Email Απερρίφθη Μη Επιτρεπτό Email"
-      subject_template: "[%{email_prefix}] Πρόβλημα Email -- Αποκλεισμένο Email"
       text_body_template: |2
 
         Λυπούμαστε, αλλά το email προς %{destination} (με τίτλο %{former_title}) δεν λειτούργησε.
@@ -2139,7 +2138,6 @@ el:
       text_body_template: "Η ρύθμιση `download_remote_images_to_local` απενεργοποιήθηκε επειδή το όριο χώρου στο δίσκο του `download_remote_images_threshold` έχει ξεπεραστεί"
     new_user_of_the_month:
       title: "Έχεις επιλεχθεί ως Χρήστης του Μήνα!"
-      subject_template: "Έχεις επιλεχθεί ως Χρήστης του Μήνα!"
       text_body_template: |
         Συγχαρητήρια, κέρδισες το βραβείο **Νέος Χρήστης του Μήνα για %{month_year}**. :trophy:
 
@@ -2450,6 +2448,7 @@ el:
     account_exists:
       title: "Ο λογαριασμός υπάρχει ήδη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός υπάρχει ήδη"
+      subject_template_improved: "Ο λογαριασμός υπάρχει ήδη"
       text_body_template: |2
 
         Μόλις προσπαθήσατε να δημιουργήσετε έναν λογαριασμό στην %{site_name} η προσπαθήσατε να αλλάξετε το email ενός λογαριασμού σε %{email}. Ωστόσο ένας λογαριασός υπάρχει ήδη για το %{email}.
@@ -2462,6 +2461,7 @@ el:
     account_second_factor_disabled:
       title: "Έλεγχος Ταυτότητας Δύο Παραγόντων Απενεργοποιημένος"
       subject_template: "[%{email_prefix}] Ο έλεγχος ταυτότητας δύο παραγόντων απενεργοποιήθηκε"
+      subject_template_improved: "Έλεγχος Ταυτότητας Δύο Παραγόντων Απενεργοποιημένος"
     digest:
       why: "Μια σύντομη περίληψη του %{site_link} από %{since}"
       since_last_visit: "Από την τελευταία σου επίσκεψη"
@@ -2474,6 +2474,7 @@ el:
       popular_posts: "Δημοφιλείς Αναρτήσεις"
       more_new: "Νέα για σένα"
       subject_template: "[%{email_prefix}] Σύνοψη"
+      subject_template_improved: "Περίληψη"
       unsubscribe: "Λάβατε αυτή την σύνοψη από την %{site_link} επειδή δεν σας είδαμε εδώ και μερικές μέρες. Αν δεν θέλετε να λαμβάνετε αυτή την σύνοψη, αλλάξτε τις %{email_preferences_link} ή %{unsubscribe_link} για διαγραφή από την λίστα."
       your_email_settings: "ρυθμίσεις email"
       click_here: "κάνε κλικ εδώ"
@@ -2496,10 +2497,10 @@ el:
       title: "Συνδεθείτε μέσω συνδέσμου"
       preview: "Συνδεθείτε μέσω συνδέσμου."
       subject_template: "[%{email_prefix}] Συνδεθείτε μέσω συνδέσμου"
+      subject_template_improved: "Συνδεθείτε μέσω συνδέσμου"
     set_password:
       title: "Όρισε κωδικό πρόσβασης"
       preview: "Ορίστε τον κωδικό πρόσβασης λογαριασμού."
-      subject_template: "[%{email_prefix}] Όρισε Κωδικό Πρόσβασης"
       text_body_template: |2
 
         Κάποιος ζήτησε να προστεθεί ένας κωδικός στον λογαριασμό σας στην [%{site_name}](%{base_url}). Εναλλακτικά μπορείτε να συνδεθείτε χρησιμοποιώντας μια υπηρεσία ταυτοποίησης χρήστη (Google, Facebook, κλπ) η οποία θα πρέπει να αντιστοιχίζεται με αυτήν την επικυρωμένη διεύθυνση email.
@@ -2513,10 +2514,10 @@ el:
       title: "Σύνδεση Διαχειριστή"
       preview: "Ζητήθηκε σύνδεση διαχειριστή."
       subject_template: "[%{email_prefix}] Σύνδεση"
+      subject_template_improved: "Σύνδεση"
     account_created:
       title: "Ο Λογαριασμός Δημιουργήθηκε"
       preview: "Νέος λογαριασμός δημιουργήθηκε για εσάς."
-      subject_template: "[%{email_prefix}] Ο νέος σας Λογαριασμός"
       text_body_template: |2
 
         Ένας νέος λογαριασμός χρήστη δημιουργηθηκε για εσάς στην %{site_name}
@@ -2577,7 +2578,6 @@ el:
     suspicious_login:
       title: "Ειδοποίηση νέας σύνδεσης"
       preview: "Επαληθεύστε τη συσκευή σας."
-      subject_template: "[%{site_name}] Νέα σύνδεση από %{location}"
     post_approved:
       title: "Η ανάρτησή σας εγκρίθηκε"
       subject_template: "[%{site_name}] Η ανάρτησή σας εγκρίθηκε"

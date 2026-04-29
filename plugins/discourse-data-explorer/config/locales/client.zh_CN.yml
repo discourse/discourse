@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Discourse 数据浏览器"
   js:
     discourse_ai:
       features:
@@ -33,9 +38,13 @@ zh_CN:
         description_hint: "请用简洁明了的语言描述您的需求。我们将为您生成 SQL 代码、名称和描述。"
         description_placeholder: "例如：显示不同时间段的注册情况"
         generate: "生成"
+        regenerate: "重新生成"
         generating: "使用 AI 生成查询..."
         generation_timeout: "AI 查询生成超时。您可以手动编写 SQL 语句。"
         generation_error: "生成查询时出错。"
+        save_query: "保存查询"
+        write_manually: "手动编写 SQL"
+        sql_label: "SQL"
         optional: "可选"
       import:
         label: "导入"

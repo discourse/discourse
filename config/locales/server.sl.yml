@@ -1063,7 +1063,6 @@ sl:
         Vaše e-sporočilo je bilo poslano na blokiran e-naslov. Poskusite poslati na drug e-naslov ali [kontaktirajte osebje](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-sporočilo zavrnjeno - nedovoljen e-naslov"
-      subject_template: "[%{email_prefix}] Napaka e-pošte -- blokiran e-naslov"
       text_body_template: |
         Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.
 
@@ -1285,7 +1284,6 @@ sl:
       text_body_template: "Nastavitev `download_remote_images_to_local` je onemogočena, ker je bil dosežena `download_remote_images_threshold` omejitev prostora na disku ."
     new_user_of_the_month:
       title: "Vi ste nov uporabnik meseca!"
-      subject_template: "Vi ste nov uporabnik meseca!"
       text_body_template: |
         Čestitamo, osvojili ste **Nov uporabnik meseca %{month_year}**. :trophy:
 
@@ -1516,6 +1514,7 @@ sl:
     account_exists:
       title: "Račun že obstaja"
       subject_template: "[%{email_prefix}] Račun že obstaja"
+      subject_template_improved: "Račun že obstaja"
       text_body_template: |
         Poizkusili ste ustvariti račun na %{site_name} ali spremeniti e-naslov računa na %{email}, vendar račun s tem naslovom že obstaja.
 
@@ -1535,6 +1534,7 @@ sl:
       popular_posts: "Zanimivi prispevki"
       more_new: "Novo za vas"
       subject_template: "[%{email_prefix}] Povzetek"
+      subject_template_improved: "Povzetek"
       unsubscribe: "Ta povzetek je poslan s strani %{site_link}, ker vas nekaj časa ni bilo na strani. Spremenite %{email_preferences_link} ali %{unsubscribe_link} za odjavo."
       your_email_settings: "vaše nastavitve e-pošte"
       click_here: "kliknite tukaj"
@@ -1552,6 +1552,7 @@ sl:
       title: "Prijava s povezavo"
       preview: "Prijava s povezavo."
       subject_template: "[%{email_prefix}] Prijava s povezavo"
+      subject_template_improved: "Prijava s povezavo"
       text_body_template: |
         Tukaj je vaša povezava za prijavo na [%{site_name}](%{base_url}).
 
@@ -1561,7 +1562,6 @@ sl:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Nastavi geslo"
-      subject_template: "[%{email_prefix}] Nastavi geslo"
       text_body_template: |
         Nekdo je zahteval dodajanje gesla na vašemu računu pri [%{site_name}](%{base_url}). Alternativno se lahko prijavite tudi s podprtimi zunanjimi računi (Google, Facebook...), ki se ujemajo z vašim e-naslovom.
 
@@ -1572,9 +1572,9 @@ sl:
     admin_login:
       title: "Admin prijava"
       subject_template: "[%{email_prefix}] Prijava"
+      subject_template_improved: "Prijava"
     account_created:
       title: "Račun ustvarjen"
-      subject_template: "[%{email_prefix}] Vaš nov uporabniški račun"
       text_body_template: |
         Ustvarjen je bil nov uporabniški račun na %{site_name}
 
@@ -1649,7 +1649,6 @@ sl:
         Če zgornja povezava ne deluje, poskusite kopirati povezavo v naslov v vašem spletnem brskalniku.
     suspicious_login:
       title: "Opozorilo nove prijave"
-      subject_template: "[%{site_name}] Opozorilo nove prijave iz %{location}"
     post_approved:
       title: "Vaš prispevek je bil odobren"
   page_not_found:

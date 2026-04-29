@@ -3408,7 +3408,6 @@ de:
         Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-Mail abgelehnt, weil E-Mail-Adresse nicht erlaubt"
-      subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail blockiert"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
@@ -3573,7 +3572,6 @@ de:
         Du hast keine Berechtigung, auf das Thema zu antworten. Wenn du denkst, dass dies ein Fehler ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-Mail abgelehnt, weil Antwort auf Zusammenfassung"
-      subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwort auf Zusammenfassung"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
@@ -3719,7 +3717,6 @@ de:
       text_body_template: "Die Einstellung `download_remote_images_to_local` wurde deaktiviert, da das Speicherplatzlimit von `download_remote_images_threshold` erreicht wurde."
     new_user_of_the_month:
       title: "Du bist ein neuer Benutzer des Monats!"
-      subject_template: "Du bist ein neuer Benutzer des Monats!"
       text_body_template: |
         Glückwunsch, du hast die Auszeichnung **Neuer Benutzer des Monats %{month_year}** erhalten. :trophy:
 
@@ -4049,6 +4046,7 @@ de:
     account_exists:
       title: "Konto existiert bereits"
       subject_template: "[%{email_prefix}] Konto existiert bereits"
+      subject_template_improved: "Konto existiert bereits"
       text_body_template: |
         Du hast gerade versucht, ein Konto auf %{site_name} zu erstellen oder die E-Mail-Adresse eines Kontos auf %{email} zu ändern. Allerdings gibt es schon ein Konto für %{email}.
 
@@ -4060,6 +4058,7 @@ de:
     account_second_factor_disabled:
       title: "Zwei-Faktor-Authentifizierung deaktiviert"
       subject_template: "[%{email_prefix}] Zwei-Faktor-Authentifizierung deaktiviert"
+      subject_template_improved: "Zwei-Faktor-Authentifizierung deaktiviert"
       text_body_template: |
         Die Zwei-Faktor-Authentifizierung deines Benutzerkontos bei %{site_name} wurde deaktiviert. Du kannst dich nun allein mit deinem Passwort anmelden. Ein zusätzlicher Code ist nicht mehr erforderlich.
 
@@ -4079,6 +4078,7 @@ de:
       popular_posts: "Beliebte Beiträge"
       more_new: "Neu für dich"
       subject_template: "[%{email_prefix}] Zusammenfassung"
+      subject_template_improved: "Zusammenfassung"
       unsubscribe: "Diese Zusammenfassung wird von %{site_link} versendet, wenn wir dich einige Zeit lang nicht gesehen haben. Ändere %{email_preferences_link} oder %{unsubscribe_link} zum Abbestellen."
       your_email_settings: "deine E-Mail-Einstellungen"
       click_here: "klicke hier"
@@ -4099,6 +4099,7 @@ de:
       title: "Anmeldung über Link"
       preview: "Anmeldung über Link."
       subject_template: "[%{email_prefix}] Anmeldung über Link"
+      subject_template_improved: "Anmeldung über Link"
       text_body_template: |
         Hier ist dein Link, um dich bei [%{site_name}](%{base_url}) anzumelden.
 
@@ -4109,7 +4110,6 @@ de:
     set_password:
       title: "Passwort festlegen"
       preview: "Passwort festlegen."
-      subject_template: "[%{email_prefix}] Passwort festlegen"
       text_body_template: |
         Jemand hat angefordert, ein Passwort zu deinem Konto auf [%{site_name}](%{base_url}) hinzuzufügen. Alternativ kannst du dich mit jedem unterstützten Online-Service (Google, Facebook usw.) anmelden, der mit dieser validierten E-Mail-Adresse verknüpft ist.
 
@@ -4121,6 +4121,7 @@ de:
       title: "Administrator-Anmeldung"
       preview: "Administrator-Anmeldung angefordert."
       subject_template: "[%{email_prefix}] Anmeldung"
+      subject_template_improved: "Anmeldung"
       text_body_template: |
         Jemand hat versucht, sich bei deinem Konto auf [%{site_name}](%{base_url}) anzumelden.
 
@@ -4131,7 +4132,6 @@ de:
     account_created:
       title: "Konto erstellt"
       preview: "Neues Konto für dich erstellt."
-      subject_template: "[%{email_prefix}] Dein neues Konto"
       text_body_template: |
         Ein neues Konto wurde für dich bei %{site_name} erstellt
 
@@ -4244,7 +4244,6 @@ de:
     suspicious_login:
       title: "Warnung über neue Anmeldung"
       preview: "Verifiziere dein Gerät."
-      subject_template: "[%{site_name}] Neue Anmeldung von %{location}"
       text_body_template: |
         Hallo,
 

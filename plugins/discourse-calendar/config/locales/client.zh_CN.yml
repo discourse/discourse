@@ -516,6 +516,8 @@ zh_CN:
         status:
           label: "状态"
         delete_confirmation_message: "删除此活动？"
+        image:
+          label: "活动图片"
       invite_user_or_group:
         title: "通知用户或群组"
         invite: "发送"

@@ -3459,7 +3459,6 @@ tr_TR:
         Yanıtınız engellenmiş bir e-posta adresinden gönderildi. Başka bir e-posta adresinden göndermeyi deneyin veya [bir personel üyesiyle iletişime geçin](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-posta Reddedildi İzin Verilmeyen E-posta"
-      subject_template: "[%{email_prefix}] E-posta sorunu -- Engellenen E-posta"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3624,7 +3623,6 @@ tr_TR:
         Konuya yanıt verme izniniz yok. Bunun bir hata olduğunu düşünüyorsanız [bir personel üyesiyle iletişime geçin](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-posta Reddedildi Özete Yanıt"
-      subject_template: "[%{email_prefix}] E-posta sorunu -- Özete Yanıt"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3770,7 +3768,6 @@ tr_TR:
       text_body_template: "\"Download_remote_images_to_local\" ayarı, \"download_remote_images_threshold\" adresindeki disk alanı sınırına ulaşıldığı için devre dışı bırakıldı."
     new_user_of_the_month:
       title: "Ayın Yeni Kullanıcısısınız!"
-      subject_template: "Ayın Yeni Kullanıcısısınız!"
       text_body_template: |
         Tebrikler, %{month_year}** için **Ayın Yeni Kullanıcısı ödülünü kazandınız. :trophy:
 
@@ -4100,6 +4097,7 @@ tr_TR:
     account_exists:
       title: "Hesap zaten mevcut"
       subject_template: "[%{email_prefix}] Hesap zaten mevcut"
+      subject_template_improved: "Hesap zaten mevcut"
       text_body_template: |
         Az önce %{site_name}'ta bir hesap oluşturmaya veya bir hesabın e-postasını %{email} olarak değiştirmeye çalıştınız. Ancak %{email} için zaten bir hesap var.
 
@@ -4111,6 +4109,7 @@ tr_TR:
     account_second_factor_disabled:
       title: "İki Adımlı Kimlik Doğrulama devre dışı"
       subject_template: "[%{email_prefix}] İki Adımlı Kimlik Doğrulama devre dışı"
+      subject_template_improved: "İki Adımlı Kimlik Doğrulama devre dışı"
       text_body_template: |
         %{site_name} adresindeki hesabınızda iki faktörlü kimlik doğrulama devre dışı bırakılmıştır. Artık yalnızca şifrenizle oturum açabilirsiniz; ek kimlik doğrulama kodu artık gerekli değildir.
 
@@ -4130,6 +4129,7 @@ tr_TR:
       popular_posts: "Popüler Gönderiler"
       more_new: "Sizin için yeni"
       subject_template: "[%{email_prefix}] Özet"
+      subject_template_improved: "Özet"
       unsubscribe: "Bu özet, sizi bir süredir görmediğimizde %{site_link} tarafından gönderilir. %{email_preferences_link} değiştirin veya abonelikten çıkmak için %{unsubscribe_link}."
       your_email_settings: "e-posta ayarlarınız"
       click_here: "buraya tıklayın"
@@ -4150,6 +4150,7 @@ tr_TR:
       title: "Bağlantı yoluyla giriş yapın"
       preview: "Bağlantı yoluyla giriş yapın."
       subject_template: "[%{email_prefix}] Bağlantı yoluyla giriş yapın"
+      subject_template_improved: "Bağlantı yoluyla giriş yapın"
       text_body_template: |
         İşte [%{site_name}](%{base_url}) üzerinde giriş yapmak için bağlantınız.
 
@@ -4160,7 +4161,6 @@ tr_TR:
     set_password:
       title: "Şifre Belirle"
       preview: "Hesap şifresini ayarlayın."
-      subject_template: "[%{email_prefix}] Şifre Belirle"
       text_body_template: |
         Biri [%{site_name}](%{base_url}) hesabınıza şifre eklemek istedi. Alternatif olarak, bu doğrulanmış e-posta adresiyle ilişkili desteklenen herhangi bir çevrimiçi hizmeti (Google, Facebook, vb.) kullanarak giriş yapabilirsiniz.
 
@@ -4172,6 +4172,7 @@ tr_TR:
       title: "Yönetici Girişi"
       preview: "Yönetici girişi isteniyor."
       subject_template: "[%{email_prefix}] Giriş"
+      subject_template_improved: "Giriş yap"
       text_body_template: |
         Biri [%{site_name}](%{base_url}) hesabınıza giriş yapmak istedi.
 
@@ -4182,7 +4183,6 @@ tr_TR:
     account_created:
       title: "Hesap Oluşturuldu"
       preview: "Sizin için yeni bir hesap oluşturuldu."
-      subject_template: "[%{email_prefix}] Yeni Hesabınız"
       text_body_template: |
         Sizin için %{site_name}'ta yeni bir hesap oluşturuldu
 
@@ -4271,7 +4271,6 @@ tr_TR:
     suspicious_login:
       title: "Yeni Giriş Uyarısı"
       preview: "Cihazınızı doğrulayın."
-      subject_template: "[%{site_name}] %{location} Konumundan Yeni Giriş"
       text_body_template: |
         Merhaba,
 

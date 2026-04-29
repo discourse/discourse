@@ -3200,7 +3200,6 @@ ug:
         جاۋابىڭىز توسۇلغان ئېلخەت ئادرېسىدىن يوللانغان. باشقا ئېلخەت ئادرېسىدا يوللاپ سىناپ بېقىڭ، ياكى [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "ئېلخەت رەت قىلىندى يول قويۇلمايدىغان ئېلخەت"
-      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - توسۇلغان ئېلخەت"
       text_body_template: |
         كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
 
@@ -3365,7 +3364,6 @@ ug:
         بۇ تېمىغا جاۋاب بېرىش ئىجازىتىڭىز يوق. ئەگەر بۇنى خاتالىق دەپ قارىسىڭىز، [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "ئېلخەت رەت قىلىندى خۇلاسىگە جاۋاب"
-      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - خۇلاسىگە جاۋاب"
       text_body_template: |
         كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
 
@@ -3492,7 +3490,6 @@ ug:
       text_body_template: "بۇ «download_remote_images_to_local» تەڭشەك چەكلەنگەن چۈنكى «download_remote_images_threshold» دىكى دىسكا بوشلۇقى چېكىگە يەتكەن."
     new_user_of_the_month:
       title: "سىز بۇ ئايدىكى يېڭى ئىشلەتكۈچى!"
-      subject_template: "سىز بۇ ئايدىكى يېڭى ئىشلەتكۈچى!"
       text_body_template: |
         مۇبارەك بولسۇن، سىز **%{month_year} ئايدىكى ئەڭ ياخشى يېڭى ئىشلەتكۈچى مۇكاپاتى** غا ئېرىشتىڭىز. :trophy:
 
@@ -3810,6 +3807,7 @@ ug:
     account_exists:
       title: "ھېسابات مەۋجۇت"
       subject_template: "[%{email_prefix}] ھېسابات مەۋجۇت"
+      subject_template_improved: "ھېسابات مەۋجۇت"
       text_body_template: |
         ھازىر سىز %{site_name} دا ھېسابات قۇرۇشنى سىنىدىڭىز ياكى ھېساباتىڭىزنىڭ ئېلخەت ئادرېسىنى %{email} غا ئۆزگەرتىشنى سىنىدىڭىز. ئەمما %{email} نىڭ بىر ھېساباتى مەۋجۇت.
 
@@ -3821,6 +3819,7 @@ ug:
     account_second_factor_disabled:
       title: "ئىككى ئامىللىق دەلىللەش چەكلەندى"
       subject_template: "[%{email_prefix}] ئىككى ئامىللىق دەلىللەش چەكلەندى"
+      subject_template_improved: "ئىككى ئامىللىق دەلىللەش چەكلەندى"
     digest:
       why: "%{site_link} نىڭ %{since} دىن بۇيانقى قىسقىچە خۇلاسىسى"
       since_last_visit: "ئالدىنقى قېتىملىق زىيارىتىڭىزدىن بۇيان"
@@ -3834,6 +3833,7 @@ ug:
       popular_posts: "ئالقىشلىق يازما"
       more_new: "يېڭى مەزمۇن"
       subject_template: "[%{email_prefix}] خۇلاسە"
+      subject_template_improved: "خۇلاسە"
       unsubscribe: "سىزنى بىر مەزگىل بولدى كۆرمىدۇق، شۇڭا بۇ خۇلاسىنى %{site_link} ئەۋەتكەن. %{email_preferences_link} نى ئۆزگەرتىڭ ياكى %{unsubscribe_link} مۇشتەرىلىكتىن چېكىنىڭ."
       your_email_settings: "ئېلخەت تەڭشىكىڭىز"
       click_here: "بۇ جاينى چېكىڭ"
@@ -3853,6 +3853,7 @@ ug:
       title: "ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ"
       preview: "ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ."
       subject_template: "[%{email_prefix}] ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ"
+      subject_template_improved: "ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ"
       text_body_template: |
         بۇ [%{site_name}](%{base_url}) دىكى تىزىمغا كىرىش ئۇلانمىسى.
 
@@ -3862,7 +3863,6 @@ ug:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "ئىم تەڭشەك"
-      subject_template: "[%{email_prefix} ئىم تەڭشەك"
       text_body_template: |
         بىرەيلەن [%{site_name}](%{base_url}) دىكى ھېساباتىڭىزغا ئىم قوشۇشنى ئىلتىماس قىلدى. سىز دەلىللەنگەن ئېلخەت ئادرېسى بىلەن باغلانغان توردىكى مۇلازىمەت (Google، Facebook قاتارلىق) نى قوللايدىغان ئېلخەت بىلەن تىزىمغا كىرەلەيسىز.
 
@@ -3873,6 +3873,7 @@ ug:
     admin_login:
       title: "باشقۇرغۇچى تىزىمغا كىرىش"
       subject_template: "[%{email_prefix}] تىزىمغا كىرىش"
+      subject_template_improved: "تىزىمغا كىر"
       text_body_template: |
         بىرەيلەن [%{site_name}](%{base_url}) دىكى ھېساباتىڭىزغا كىرىشنى ئىلتىماس قىلدى.
 
@@ -3882,7 +3883,6 @@ ug:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "ھېسابات قۇرۇلدى"
-      subject_template: "[%{email_prefix}] يېڭى ھېساباتىڭىز"
       text_body_template: |
         %{site_name} دا سىزگە يېڭى ھېسابات قۇرۇلدى
 
@@ -3981,7 +3981,6 @@ ug:
         ئەگەر يۇقىرىقى ئۇلانمىنى چەككىلى بولمىسا، ئۇنى كۆچۈرۈپ توركۆرگۈنىڭ ئادرېس بالدىقىغا چاپلاپ سىناڭ.
     suspicious_login:
       title: "يېڭى تىزىمغا كىرىش ئاگاھلاندۇرۇشى"
-      subject_template: "[%{site_name}] كە %{location} دىن يېڭىدىن تىزىمغا كىردى"
       text_body_template: |
         سالام،
 

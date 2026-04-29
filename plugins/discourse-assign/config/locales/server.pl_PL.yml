@@ -65,6 +65,7 @@ pl_PL:
   assign_mailer:
     title: "Przypisz mailera"
     subject_template: "[%{email_prefix}] %{assignee_name} przypisał Cię do '%{topic_title}'!"
+    subject_template_improved: "%{email_prefix}: %{assignee_name} przypisał Cię do '%{topic_title}'!"
     text_body_template: |
       Hej, %{assignee_name} **przypisał** Cię do dyskusji
       > **%{topic_title}**
