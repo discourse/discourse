@@ -73,6 +73,11 @@ jobs:
           grep -m1 'flags' /proc/cpuinfo | tr ' ' '\n' | grep -E '^(sse4_2|ssse3|avx2)$' || true
           nproc
 
+      - name: Install gdb
+        run: |
+          apt-get update -qq
+          apt-get install -y --no-install-recommends gdb
+
       - name: Install gems
         run: |
           bundle config --local path "${GITHUB_WORKSPACE}/script/oj_yjit_repro/vendor/bundle"
