@@ -28,7 +28,7 @@ RSpec.describe "Editing Sidebar Community Section" do
 
     modal = sidebar.click_community_section_more_button.click_customize_community_section_button
     modal.fill_link("Topics", "/latest", "paper-plane")
-    modal.topics_link.drag_to(modal.review_link, html5: true, delay: 0.4)
+    modal.topics_link.drag_to(modal.review_link, delay: 0.4)
     modal.save
     modal.confirm_update
 
