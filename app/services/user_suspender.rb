@@ -10,7 +10,7 @@ class UserSuspender
     by_user:,
     message: nil,
     post_id: nil,
-    reviewable: nil
+    reviewable_id: nil
   )
     @user = user
     @suspended_till = suspended_till
@@ -18,7 +18,7 @@ class UserSuspender
     @by_user = by_user
     @message = message
     @post_id = post_id
-    @reviewable = reviewable
+    @reviewable_id = reviewable_id
   end
 
   def suspend
@@ -31,11 +31,12 @@ class UserSuspender
       @user.save!
 
       @user_history =
-        StaffActionLogger.new(@by_user, reviewable: @reviewable).log_user_suspend(
+        StaffActionLogger.new(@by_user).log_user_suspend(
           @user,
           @reason,
           message: @message,
           post_id: @post_id,
+          reviewable_id: @reviewable_id,
         )
     end
     @user.logged_out

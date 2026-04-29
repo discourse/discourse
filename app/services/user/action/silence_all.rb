@@ -13,10 +13,6 @@ class User::Action::SilenceAll < Service::ActionBase
 
   private
 
-  def reviewable
-    @reviewable ||= Reviewable.find_by(id: reviewable_id) if reviewable_id
-  end
-
   def silenced_users
     users.map do |user|
       UserSilencer
@@ -28,7 +24,7 @@ class User::Action::SilenceAll < Service::ActionBase
           silenced_till:,
           reason:,
           post_id:,
-          reviewable:,
+          reviewable_id:,
         )
         .tap do |silencer|
           next unless silencer.silence

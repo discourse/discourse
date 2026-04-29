@@ -138,25 +138,25 @@ class ReviewableAiPost < Reviewable
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, self)
+    PostDestroyer.delete_with_replies(performed_by, post, id)
 
     perform_ignore(performed_by, args)
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, self)
+    PostDestroyer.delete_with_replies(performed_by, post, id)
 
     agree
   end
 
   def perform_delete_user(performed_by, args)
-    UserDestroyer.new(performed_by).destroy(post.user, delete_opts)
+    UserDestroyer.new(performed_by).destroy(post.user, delete_opts.merge(reviewable_id: id))
 
     agree
   end
 
   def perform_delete_user_block(performed_by, args)
-    delete_options = delete_opts
+    delete_options = delete_opts.merge(reviewable_id: id)
 
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
@@ -172,7 +172,7 @@ class ReviewableAiPost < Reviewable
   end
 
   def destroyer(performed_by)
-    PostDestroyer.new(performed_by, post, reviewable: self)
+    PostDestroyer.new(performed_by, post, reviewable_id: id)
   end
 
   def agree

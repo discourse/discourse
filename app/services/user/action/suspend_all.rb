@@ -13,10 +13,6 @@ class User::Action::SuspendAll < Service::ActionBase
 
   private
 
-  def reviewable
-    @reviewable ||= Reviewable.find_by(id: reviewable_id) if reviewable_id
-  end
-
   def suspended_users
     users.map do |user|
       UserSuspender.new(
@@ -26,7 +22,7 @@ class User::Action::SuspendAll < Service::ActionBase
         by_user: actor,
         message: message,
         post_id: post_id,
-        reviewable: reviewable,
+        reviewable_id: reviewable_id,
       ).tap(&:suspend)
     rescue => err
       Discourse.warn_exception(err, message: "failed to suspend user with ID #{user.id}")

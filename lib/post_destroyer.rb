@@ -46,14 +46,14 @@ class PostDestroyer
       .find_each { |post| PostDestroyer.new(Discourse.system_user, post, context: context).destroy }
   end
 
-  def self.delete_with_replies(performed_by, post, reviewable = nil, defer_reply_flags: true)
+  def self.delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post, reviewable: reviewable).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
 
     options = { defer_flags: defer_reply_flags }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-      options.merge!({ reviewable: reviewable, notify_responders: true, parent_post: post })
+      options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
     end
     replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
   end
@@ -203,16 +203,20 @@ class PostDestroyer
       remove_associated_notifications
 
       if @user.id != @post.user_id && !@opts[:skip_staff_log]
-        logger = StaffActionLogger.new(@user, reviewable: @opts[:reviewable])
+        logger = StaffActionLogger.new(@user)
 
         if @post.topic && @post.is_first_post?
           logger.log_topic_delete_recover(
             @post.topic,
             permanent? ? "delete_topic_permanently" : "delete_topic",
-            @opts.slice(:context),
+            @opts.slice(:context, :reviewable_id),
           )
         else
-          logger.log_post_deletion(@post, **@opts.slice(:context), permanent: permanent?)
+          logger.log_post_deletion(
+            @post,
+            **@opts.slice(:context, :reviewable_id),
+            permanent: permanent?,
+          )
         end
       end
 
@@ -387,7 +391,7 @@ class PostDestroyer
   end
 
   def handle_reviewable_after_deletion
-    if @opts[:reviewable]
+    if @opts[:reviewable_id]
       handle_explicit_reviewable
     elsif @post.reviewable_flag
       handle_post_reviewable_flag
@@ -395,8 +399,11 @@ class PostDestroyer
   end
 
   def handle_explicit_reviewable
+    reviewable = Reviewable.find_by(id: @opts[:reviewable_id])
+    return unless reviewable
+
     notify_deletion(
-      @opts[:reviewable],
+      reviewable,
       { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] },
     )
 

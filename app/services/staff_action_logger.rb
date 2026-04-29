@@ -3,12 +3,21 @@
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
   def self.base_attrs
-    %i[topic_id post_id category_id context subject ip_address previous_value new_value]
+    %i[
+      topic_id
+      post_id
+      category_id
+      context
+      subject
+      ip_address
+      previous_value
+      new_value
+      reviewable_id
+    ]
   end
 
-  def initialize(admin, reviewable: nil)
+  def initialize(admin)
     @admin = admin
-    @reviewable = reviewable
     raise Discourse::InvalidParameters.new(:admin) unless @admin && @admin.is_a?(User)
   end
 
@@ -43,7 +52,6 @@ class StaffActionLogger
     attrs[:acting_user_id] = @admin.id
     attrs[:action] = UserHistory.actions[:custom_staff]
     attrs[:custom_type] = custom_type
-    attrs[:reviewable_id] = @reviewable&.id
 
     UserHistory.create!(attrs)
   end
@@ -895,6 +903,7 @@ class StaffActionLogger
         details: details.join("\n"),
         topic_id: topic&.id,
         category_id: reviewable.category_id,
+        reviewable_id: reviewable.id,
       ),
     )
   end
@@ -1191,7 +1200,7 @@ class StaffActionLogger
       acting_user_id: @admin.id,
       context: opts[:context],
       details: opts[:details],
-      reviewable_id: @reviewable&.id,
+      reviewable_id: opts[:reviewable_id],
     }
   end
 

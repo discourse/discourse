@@ -16,18 +16,14 @@ class User::Action::TriggerPostAction < Service::ActionBase
 
   private
 
-  def reviewable
-    @reviewable ||= Reviewable.find_by(id: reviewable_id) if reviewable_id
-  end
-
   def delete
     return unless guardian.can_delete_post_or_topic?(post)
-    PostDestroyer.new(user, post, reviewable: reviewable).destroy
+    PostDestroyer.new(user, post, reviewable_id: reviewable_id).destroy
   end
 
   def delete_replies
     return unless guardian.can_delete_post_or_topic?(post)
-    PostDestroyer.delete_with_replies(user, post, reviewable)
+    PostDestroyer.delete_with_replies(user, post, reviewable_id)
   end
 
   def edit

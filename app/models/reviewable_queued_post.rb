@@ -115,11 +115,11 @@ class ReviewableQueuedPost < Reviewable
     save
 
     if target_created_by.silenced?
-      UserSilencer.unsilence(target_created_by, performed_by, reviewable: self)
+      UserSilencer.unsilence(target_created_by, performed_by, reviewable_id: self.id)
     end
 
     if performed_by.staff?
-      StaffActionLogger.new(performed_by, reviewable: self).log_post_approved(created_post)
+      StaffActionLogger.new(performed_by).log_post_approved(created_post, reviewable_id: self.id)
     end
 
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
@@ -152,9 +152,7 @@ class ReviewableQueuedPost < Reviewable
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:rejected_post, self)
 
-    if performed_by.staff?
-      StaffActionLogger.new(performed_by, reviewable: self).log_post_rejected(self, DateTime.now)
-    end
+    StaffActionLogger.new(performed_by).log_post_rejected(self, DateTime.now) if performed_by.staff?
 
     create_result(:success, :rejected)
   end
@@ -196,9 +194,7 @@ class ReviewableQueuedPost < Reviewable
       ),
       pm_translation_args,
     )
-    if performed_by.staff?
-      StaffActionLogger.new(performed_by, reviewable: self).log_post_rejected(self, DateTime.now)
-    end
+    StaffActionLogger.new(performed_by).log_post_rejected(self, DateTime.now) if performed_by.staff?
     create_result(:success, :rejected)
   end
 
