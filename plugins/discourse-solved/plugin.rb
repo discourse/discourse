@@ -199,6 +199,19 @@ after_initialize do
   add_to_serializer(:post, :accepted_answer) { topic&.solved&.answer_post_id == object.id }
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
 
+  add_to_serializer(
+    :topic_view,
+    :me_too_count,
+    include_condition: -> { scope.me_too_visible?(object.topic) },
+  ) { object.topic.me_too_count }
+  add_to_serializer(
+    :topic_view,
+    :user_did_me_too,
+    include_condition: -> { scope.me_too_visible?(object.topic) && scope.user.present? },
+  ) { DiscourseSolved::TopicMeToo.exists?(topic_id: object.topic.id, user_id: scope.user.id) }
+  add_to_serializer(:topic_view, :can_me_too) { scope.can_me_too?(object.topic) }
+  add_to_serializer(:topic_view, :me_too_visible) { scope.me_too_visible?(object.topic) }
+
   on(:post_destroyed) do |post|
     DiscourseSolved::UnacceptAnswer.call(
       params: {

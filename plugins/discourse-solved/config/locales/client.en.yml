@@ -53,6 +53,12 @@ en:
       confirm_solved_removal_confirm: "Confirm"
       confirm_solved_removal_cancel: "Cancel"
 
+      me_too:
+        label:
+          one: "Me too (%{count})"
+          other: "Me too (%{count})"
+        title: "I am also experiencing this issue"
+
       no_answer:
         title: Has your question been answered?
         description: "Highlight the answer and help others by using the solution button below the correct reply."

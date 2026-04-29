@@ -3,7 +3,18 @@
 module DiscourseSolved::TopicExtension
   extend ActiveSupport::Concern
 
-  prepended { has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy }
+  prepended do
+    has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy
+    has_many :me_toos,
+             class_name: "DiscourseSolved::TopicMeToo",
+             foreign_key: :topic_id,
+             dependent: :delete_all
+  end
+
+  def me_too_count
+    # The topic author is implicitly counted (no row stored for them).
+    me_toos.count + 1
+  end
 
   def solved_auto_close_hours
     hours = category&.solved_auto_close_hours || 0

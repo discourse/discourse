@@ -236,3 +236,35 @@ $solved-color: var(--success);
     display: none;
   }
 }
+
+.solved-me-too-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5em;
+}
+
+.solved-me-too-row .post-action-menu__solved-me-too {
+  border: 1px solid var(--primary-medium);
+  border-radius: 4px;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-medium);
+  }
+
+  &:not(.has-me-too) {
+    &:hover,
+    &:focus-visible {
+      .d-icon {
+        color: var(--tertiary);
+      }
+    }
+  }
+
+  &.has-me-too {
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+}

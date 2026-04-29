@@ -51,5 +51,23 @@ module DiscourseSolved
     def can_unaccept_answer?(topic, post)
       can_accept_answer?(topic, post) || (is_staff? && topic&.solved.present?)
     end
+
+    def can_me_too?(topic)
+      return false unless authenticated?
+      return false unless current_user.upcoming_change_enabled?(:enable_solved_me_too)
+      return false if topic.blank? || topic.private_message?
+      return false if topic.solved.present?
+      return false unless allow_accepted_answers?(topic)
+      return false if topic.user_id == current_user.id
+      can_see_topic?(topic)
+    end
+
+    def me_too_visible?(topic)
+      return false unless SiteSetting.enable_solved_me_too
+      return false if topic.blank? || topic.private_message?
+      return false if topic.solved.present?
+      return false unless allow_accepted_answers?(topic)
+      true
+    end
   end
 end

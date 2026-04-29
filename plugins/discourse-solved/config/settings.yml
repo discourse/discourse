@@ -66,4 +66,11 @@ discourse_solved:
       status: "alpha"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/398338"
+  enable_solved_me_too:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
 

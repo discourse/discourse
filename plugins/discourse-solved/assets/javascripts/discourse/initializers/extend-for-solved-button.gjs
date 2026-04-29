@@ -5,6 +5,7 @@ import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import SolvedAcceptAnswerButton from "../components/solved-accept-answer-button";
 import SolvedAcceptedAnswer from "../components/solved-accepted-answer";
+import SolvedMeTooButton from "../components/solved-me-too-button";
 import SolvedUnacceptAnswerButton from "../components/solved-unaccept-answer-button";
 import setAcceptedSolution from "../lib/set-accepted-solution";
 
@@ -39,7 +40,13 @@ function initializeWithApi(api) {
     api.addDiscoveryQueryParam("solved", { replace: true, refreshModel: true });
   }
 
-  api.addTrackedTopicProperties("accepted_answer", "has_accepted_answer");
+  api.addTrackedTopicProperties(
+    "accepted_answer",
+    "has_accepted_answer",
+    "me_too_count",
+    "user_did_me_too",
+    "me_too_visible"
+  );
 }
 
 function customizeNotificationDescriptions(api) {
@@ -127,6 +134,27 @@ function customizePostMenu(api) {
         );
     }
   );
+
+  api.renderAfterWrapperOutlet(
+    "post-menu",
+    class extends Component {
+      static shouldRender(args) {
+        const post = args.post;
+        return (
+          post?.post_number === 1 &&
+          !post.topic_accepted_answer &&
+          post.topic?.me_too_visible &&
+          topicHasSolvedEnabled(post.topic)
+        );
+      }
+
+      <template>
+        <div class="solved-me-too-row">
+          <SolvedMeTooButton @post={{@post}} />
+        </div>
+      </template>
+    }
+  );
 }
 
 function handleMessages(api) {
@@ -140,6 +168,14 @@ function handleMessages(api) {
 
   api.registerCustomPostMessageCallback("accepted_solution", callback);
   api.registerCustomPostMessageCallback("unaccepted_solution", callback);
+
+  api.registerCustomPostMessageCallback("me_too", (controller, message) => {
+    const topic = controller.model;
+    if (!topic) {
+      return;
+    }
+    topic.set("me_too_count", message.count);
+  });
 }
 
 export default {
