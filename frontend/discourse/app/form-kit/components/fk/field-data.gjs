@@ -161,6 +161,14 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Placeholder text for input fields.
+   * @type {string}
+   */
+  get placeholder() {
+    return this.args.placeholder;
+  }
+
+  /**
    * Help text of the field.
    * @type {string}
    */
