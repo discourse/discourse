@@ -16,7 +16,7 @@ register_asset "stylesheets/common/index.scss"
 register_asset "stylesheets/desktop/index.scss", :desktop
 register_asset "stylesheets/mobile/index.scss", :mobile
 
-register_service_worker "javascripts/chat-service-worker-extensions.js"
+register_service_worker "service-worker/chat-service-worker-extensions.js"
 
 register_svg_icon "comment-slash"
 register_svg_icon "comment-dots"
