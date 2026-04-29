@@ -135,7 +135,13 @@ module Chat
                 .to_a
 
             full_batch = (buffer + message_batch + threads).uniq { |msg| msg.id }
-            message_chunk = full_batch.group_by { |msg| msg.thread_id || msg.id }.values.flatten
+
+            # Namespacing the key prevents collisions between chat_message id and chat_thread id.
+            message_chunk =
+              full_batch
+                .group_by { |msg| msg.thread_id ? [:thread, msg.thread_id] : [:message, msg.id] }
+                .values
+                .flatten
 
             buffer.clear
 
