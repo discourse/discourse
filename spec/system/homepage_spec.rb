@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe "Homepage" do
-  include ThemeScreenshotMarker
   fab!(:admin)
   fab!(:user)
   fab!(:topics) { Fabricate.times(5, :post).map(&:topic) }
@@ -19,7 +18,6 @@ describe "Homepage" do
   it "shows a list of topics by default" do
     visit "/"
     expect(discovery.topic_list).to have_topics(count: 5)
-    screenshot_here(label: "topic-list")
   end
 
   it "allows users to pick their homepage" do

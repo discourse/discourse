@@ -85,8 +85,9 @@ describe "Theme screenshots" do
   end
 
   it "captures screenshots" do
-    run_marker_matrix(device: "desktop") if DEVICES.include?("desktop")
+    FileUtils.rm_f(Dir.glob(File.join(raw_dir, "*.png")))
 
+    run_marker_matrix(device: "desktop") if DEVICES.include?("desktop")
     run_marker_matrix(device: "mobile") if DEVICES.include?("mobile")
 
     generate_comparison_html

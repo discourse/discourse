@@ -3,6 +3,7 @@
 require "rotp"
 
 shared_examples "login scenarios" do
+  include ThemeScreenshotMarker
   let(:login_form) { PageObjects::Pages::Login.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
@@ -128,9 +129,13 @@ shared_examples "login scenarios" do
 
     it "cannot browse annonymously" do
       visit "/"
+
+      screenshot_here(label: "login-required")
       expect(page).to have_css(".login-welcome")
       expect(page).to have_css(".site-logo")
       find(".login-welcome .login-button").click
+
+      screenshot_here(label: "login-form")
 
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
       login_form.fill(username: "john", password: "supersecurepassword").click_login
