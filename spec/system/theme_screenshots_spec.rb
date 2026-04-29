@@ -1,51 +1,24 @@
 # frozen_string_literal: true
 
-# System spec for capturing screenshots and comparing results across themes and branches
+# System spec for capturing screenshots at marked points in other system specs.
 # Run via:
 #
 #   TAKE_SCREENSHOTS=1 bin/rspec spec/system/theme_screenshots_spec.rb
 #
-# Themes are applied per-request via `?preview_theme_id=` so we don't mutate the
-# default theme — no cache clears, no teardown needed.
+# Discovers all system specs that call `screenshot_here` and runs them under
+# each combination of theme × device × color mode, then generates a single
+# HTML comparison page with tabs for device and color mode.
 #
 # Optional env vars:
 #   SCREENSHOTS_DIR         — output directory (default: tmp/theme-screenshots)
-#   SCREENSHOTS_PATH        — single path to visit (default: /). Special sentinels:
-#                             `/t/random` resolves to a randomly-picked fabricated topic.
-#                             `/my/*` is expanded to `/u/:username/*` for signed-in users.
-#   SCREENSHOTS_PATHS       — comma-separated paths, or "all" for the full route list:
-#                               /latest, /categories, /groups, /admin, /my/summary,
-#                               /chat, /new-topic
-#                             When set, overrides SCREENSHOTS_PATH. Note that /admin
-#                             requires SCREENSHOTS_AS=admin; /chat and /my/* require user or admin.
 #   SCREENSHOTS_MODES       — comma-separated modes (default: light,dark)
-#   SCREENSHOTS_AS          — who to sign in as: anonymous|user|admin (default: anonymous)
-#   SCREENSHOTS_DEVICES     — comma-separated devices (default: desktop,mobile). Mobile
-#                             uses the Playwright WebKit driver with an iPhone UA so
-#                             Discourse's server-side mobile detection kicks in.
-#   SCREENSHOTS_THEMES      — comma-separated theme names to capture (default: foundation,horizon)
-#   SCREENSHOTS_THEME_URL   — git URL of a remote theme to install into the test DB and add to
-#                             the capture matrix. Use SCREENSHOTS_THEME_NAME for the filename
-#                             label (default: repo name). Set SCREENSHOTS_THEMES= (empty) to
-#                             capture only the remote theme.
-#   SCREENSHOTS_THEME_ID    — ID of a theme already present in the test DB to add to the matrix.
-#                             Combine with SCREENSHOTS_THEME_NAME for a nicer filename label.
+#   SCREENSHOTS_DEVICES     — comma-separated devices (default: desktop,mobile)
+#   SCREENSHOTS_THEMES      — comma-separated theme names (default: foundation,horizon)
+#   SCREENSHOTS_THEME_URL   — git URL of a remote theme to install into the test DB
+#   SCREENSHOTS_THEME_NAME  — filename label for the remote theme (default: repo name)
+#   SCREENSHOTS_THEME_ID    — ID of a theme already present in the test DB
 
 DEVICES = (ENV["SCREENSHOTS_DEVICES"] || "desktop,mobile").split(",").map(&:strip).freeze
-
-DEFAULT_SCREENSHOT_ROUTES = %w[
-  /latest
-  /categories
-  /chat
-  /new-topic
-  /admin
-  /my/summary
-  /my/messages
-  /c/announcements
-  /groups
-  /filter
-  /t/random
-].freeze
 
 describe "Theme screenshots" do
   include ChatSystemHelpers if defined?(ChatSystemHelpers)
@@ -59,160 +32,6 @@ describe "Theme screenshots" do
   fab!(:category) { Fabricate(:category, name: "Announcements") }
   fab!(:category_2, :category)
 
-  # We could potentially move these to post fabricators
-  # Keeping them here now so that this spec is self-contained
-  TOPIC_POSTS = [
-    { title: "Welcome to our community discussion forum", raw: <<~MD },
-        ## Welcome! :wave:
-
-        We're so glad you're here. This community is a place to **share ideas**, ask questions,
-        and connect with others who share your interests.
-      MD
-    { title: "New release: performance improvements and bug fixes", raw: <<~MD },
-        ## What's new in v3.4
-
-        This release focuses on **speed** and **stability**. Here's what changed:
-
-        ### Performance
-        - Topic list loads ~40% faster on large forums
-        - Reduced memory usage on long-running workers
-        - Image lazy-loading now enabled by default
-
-        ### Bug fixes
-        - Fixed an edge case where notifications were duplicated after a merge
-        - Resolved a rendering issue with `code blocks` inside quotes
-        - Corrected timestamp display in timezones east of UTC+8
-
-        ```ruby
-        # Enable the new loader in your settings
-        SiteSetting.experimental_fast_loader = true
-        ```
-
-        Full changelog available in the [release notes](#).
-      MD
-    { title: "How do I customize my notification preferences?", raw: <<~MD },
-        I've been getting a lot of emails lately and I'd like to fine-tune which ones I receive.
-        I know there's a preferences page but I'm not sure which settings do what.
-
-        Specifically, I'm trying to:
-
-        1. Stop receiving emails for *every* reply in threads I've participated in
-        2. Still get notified when someone **mentions me directly**
-        3. Keep daily digest emails, but switch them to weekly
-
-        I've looked at **Preferences → Notifications** but some options aren't obvious.
-        Is there documentation for what each setting does?
-
-        Thanks in advance!
-      MD
-    { title: "Looking for feedback on the updated navigation design", raw: <<~MD },
-        Hey everyone — we've been working on a redesign of the top navigation and would love
-        your thoughts before we roll it out broadly.
-
-        ### What's changing
-
-        | Before | After |
-        |--------|-------|
-        | Fixed sidebar, always visible | Collapsible sidebar with toggle |
-        | Categories in top bar | Categories moved to sidebar |
-        | Single search icon | Expanded search bar on desktop |
-
-        ### Our goals
-        - Reduce visual clutter on smaller screens
-        - Make categories more discoverable
-        - Free up vertical space for content
-
-        > We know navigation changes can be disruptive — that's exactly why we want feedback
-        > *before* shipping, not after.
-
-        What do you think? Drop your reactions below.
-      MD
-    { title: "Please read before posting: community guidelines", raw: <<~MD },
-        ## Community guidelines
-
-        To keep this a welcoming space for everyone, we ask that all members follow these guidelines.
-
-        ### Be respectful
-        Treat others as you'd like to be treated. Disagreement is fine; personal attacks are not.
-        This includes **sarcasm** and passive-aggressive language.
-
-        ### Stay on topic
-        Post in the most relevant category. If you're unsure, use *Uncategorized* and a moderator
-        will help move it.
-
-        ### Search before posting
-        Use the search bar — common questions are often already answered. It saves everyone time.
-      MD
-  ].freeze
-
-  fab!(:topics) do
-    cats = [category, category_2]
-    TOPIC_POSTS.each_with_index.map do |spec, i|
-      topic = Fabricate(:topic, title: spec[:title], category: cats[i % cats.size])
-      Fabricate(:post, topic: topic, raw: spec[:raw])
-      topic
-    end
-  end
-
-  fab!(:chat_channel) do
-    if defined?(Chat)
-      channel = Fabricate(:chat_channel, name: "General", chatable: category)
-      channel.add(admin)
-      channel.add(user)
-      Fabricate(
-        :chat_message,
-        chat_channel: channel,
-        user: admin,
-        message: "Hey everyone, welcome!",
-      )
-      Fabricate(
-        :chat_message,
-        chat_channel: channel,
-        user: user,
-        message: "Thanks for joining the community.",
-      )
-      Fabricate(
-        :chat_message,
-        chat_channel: channel,
-        user: admin,
-        message: "Don't forget to check out the latest announcements.",
-      )
-      channel
-    end
-  end
-
-  fab!(:dm_channels) do
-    if defined?(Chat)
-      dm1 =
-        Fabricate(:direct_message_channel, users: [admin, user]).tap do |ch|
-          Fabricate(
-            :chat_message,
-            chat_channel: ch,
-            user: admin,
-            message: "Hey, quick question about the announcement post.",
-          )
-          Fabricate(:chat_message, chat_channel: ch, user: user, message: "Sure, what's up?")
-          Fabricate(
-            :chat_message,
-            chat_channel: ch,
-            user: admin,
-            message: "Can you review the draft before we publish?",
-          )
-        end
-      dm2 =
-        Fabricate(:direct_message_channel, users: [admin, user_2]).tap do |ch|
-          Fabricate(
-            :chat_message,
-            chat_channel: ch,
-            user: user_2,
-            message: "Just checking in — are you free for the sync tomorrow?",
-          )
-          Fabricate(:chat_message, chat_channel: ch, user: admin, message: "Yes, I'll be there!")
-        end
-      [dm1, dm2]
-    end
-  end
-
   let(:output_dir) do
     dir = ENV["SCREENSHOTS_DIR"] || Rails.root.join("tmp/theme-screenshots").to_s
     FileUtils.mkdir_p(dir)
@@ -225,22 +44,8 @@ describe "Theme screenshots" do
     dir
   end
 
-  let(:modes) { (ENV["SCREENSHOTS_MODES"] || "light,dark").split(",").map(&:strip).map(&:to_sym) }
+  let(:modes) { (ENV["SCREENSHOTS_MODES"] || "light,dark").split(",").map(&:strip) }
 
-  let(:sign_in_as) { (ENV["SCREENSHOTS_AS"] || "admin").downcase.strip }
-
-  let(:signed_in_user) do
-    case sign_in_as
-    when "admin"
-      admin
-    when "user"
-      user
-    end
-  end
-
-  # Builds the list of themes to capture. Starts from the built-in constant list
-  # (filtered by SCREENSHOTS_THEMES), then appends any extra theme passed via
-  # SCREENSHOTS_THEME_ID (must already be installed in the dev DB).
   let(:themes) do
     core = Theme::CORE_THEMES.map { |name, id| { name: name, id: id } }
     base =
@@ -267,332 +72,421 @@ describe "Theme screenshots" do
     base
   end
 
-  # Returns the list of site-relative paths to visit. Driven by SCREENSHOTS_PATHS
-  # (comma-separated or "all") or falls back to SCREENSHOTS_PATH / "/".
-  let(:target_paths) do
-    if ENV["SCREENSHOTS_PATHS"].present?
-      raw = ENV["SCREENSHOTS_PATHS"].strip
-      paths = (raw == "all") ? DEFAULT_SCREENSHOT_ROUTES : raw.split(",").map(&:strip)
-      paths.map { |p| expand_path(p) }
-    elsif ENV["SCREENSHOTS_PATH"].present?
-      [expand_path(ENV["SCREENSHOTS_PATH"].strip)]
-    else
-      DEFAULT_SCREENSHOT_ROUTES.map { |p| expand_path(p) }
-    end
-  end
-
   before do
-    SiteSetting.global_notice = ""
-    SiteSetting.login_required = false
-
-    # `preview_theme_id` requires the theme to be user-selectable for anonymous /
-    # regular users (staff can always preview). Flip built-in core themes on so the
-    # spec works across all sign-in modes.
     Theme.where(id: themes.map { |t| t[:id] }).update_all(user_selectable: true)
 
-    # `db/fixtures/600_themes.rb` (which calls SystemThemesManager.sync!) only
-    # runs on `rake db:seed`, and the dev-mode initializer (999-themes.rb) is
-    # gated on Rails.env.development?. So in a fresh test DB, Horizon will
-    # be missing its color definitions.
-    #
-    # Sync the built-in core themes here to materialize the ThemeFields. Idempotent; the
-    # writes are rolled back with the test transaction, so it won't pollute the
-    # DB for unrelated specs.
     themes.each do |t|
       SystemThemesManager.sync_theme!(t[:name]) if Theme::CORE_THEMES.key?(t[:name])
     end
 
-    # `SiteIconManager.<icon>_url` caches the fully-qualified URL (e.g.
-    # `mobile_logo_url`) in a DistributedCache on first access. If that first
-    # access happens before `setup_system_test` sets `force_hostname` / `port`,
-    # the cached URL hardcodes `http://test.localhost` with no port — which the
-    # WebKit driver used for mobile can't resolve, so the mobile logo renders
-    # as a broken image. Flush the cache here so URLs are regenerated with the
-    # live Capybara host/port.
     SiteIconManager.clear_cache!
 
-    # Visiting a topic triggers TopicUser.track_visit! via Scheduler::Defer.later
-    # (synchronous in test mode). If any earlier request ran Report.find, that
-    # marks the shared test-DB connection READ ONLY, making the subsequent UPDATE
-    # fail and poisoning the transaction for all later requests. Suppress only
-    # this write; all other deferred work still runs.
     allow(TopicUser).to receive(:track_visit!)
-
-    chat_system_bootstrap(admin, [chat_channel].compact) if defined?(Chat)
-
-    sign_in(signed_in_user) if signed_in_user
   end
 
-  it "captures desktop screenshots", if: DEVICES.include?("desktop") do
-    capture_matrix(device: "desktop")
-  end
+  it "captures screenshots" do
+    run_marker_matrix(device: "desktop") if DEVICES.include?("desktop")
 
-  it "captures mobile screenshots", :mobile, if: DEVICES.include?("mobile") do
-    capture_matrix(device: "mobile")
+    run_marker_matrix(device: "mobile") if DEVICES.include?("mobile")
+
+    generate_comparison_html
   end
 
   private
 
-  def capture_matrix(device:)
-    # comparisons[mode][path_slug] = [{label:, file:}, ...]
-    comparisons = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
+  def discover_marker_specs
+    Dir
+      .glob(Rails.root.join("spec/system/**/*.rb").to_s)
+      .reject { |f| File.realpath(f) == File.realpath(__FILE__) }
+      .select { |f| File.read(f).include?("screenshot_here") }
+  end
 
-    themes.each do |theme|
-      modes.each do |mode|
-        emulate_color_scheme(mode)
-        target_paths.each do |path|
-          visit preview_url(path, theme[:id])
+  def run_marker_matrix(device:)
+    specs = discover_marker_specs
+    if specs.empty?
+      puts "No specs with screenshot_here markers found."
+      return
+    end
 
-          wait_for_network_idle
-          hide_preview_notice
+    puts "Found #{specs.size} spec(s) with markers: #{specs.map { |s| File.basename(s) }.join(", ")}"
 
-          role_suffix = sign_in_as == "anonymous" ? "" : "-#{sign_in_as}"
-          slug = path_slug(path)
-          path_suffix = target_paths.size > 1 ? "-#{slug}" : ""
-          filename =
-            File.join(raw_dir, "#{device}-#{theme[:name]}#{role_suffix}-#{mode}#{path_suffix}.png")
-          full_page_screenshot(filename, device: device)
-          puts "📸 Saved: #{filename}"
+    marker_groups = load_marker_groups(specs)
+    filter_marker_examples(marker_groups, specs, device)
+    filter_device_split(marker_groups, device)
+    apply_device_metadata(marker_groups, device)
 
-          comparisons[mode][slug] << { label: theme[:name], file: filename }
+    # `group.run` sets `RSpec.current_example` per inner example and leaves it
+    # `nil` when the group finishes. The outer example's after-hooks (e.g.
+    # rails_helper's `extra_failure_lines`) read it, so restore it after each
+    # inner run.
+    outer_example = RSpec.current_example
+    begin
+      themes.each do |theme|
+        modes.each do |mode|
+          with_screenshot_env(theme: theme, mode: mode, device: device) do
+            marker_groups.each do |group|
+              group.run(RSpec.configuration.reporter)
+              RSpec.current_example = outer_example
+            end
+          end
+        end
+      end
+    ensure
+      RSpec.current_example = outer_example
+      cleanup_marker_groups(marker_groups)
+    end
+  end
+
+  # Loads each marker spec file via `load` so its `describe` blocks register new
+  # example groups in `RSpec.world`. Returns just the groups added by these files
+  # so the matrix loop can run them and the cleanup step can remove them.
+  #
+  # Spec authors don't have to remember `include ThemeScreenshotMarker` —
+  # discovery is by `screenshot_here` text match, and we auto-include the
+  # module so the call resolves in nested contexts and shared_examples.
+  def load_marker_groups(spec_files)
+    groups = []
+    spec_files.each do |spec_file|
+      before = RSpec.world.example_groups.dup
+      load spec_file
+      new_groups = RSpec.world.example_groups - before
+      new_groups.each do |g|
+        g.include(ThemeScreenshotMarker) if g.included_modules.exclude?(ThemeScreenshotMarker)
+      end
+      groups.concat(new_groups)
+    end
+    groups
+  end
+
+  # Marker specs are normal system specs — they have many `it` blocks that don't
+  # call `screenshot_here`. Running those wastes time and produces noisy
+  # failures (e.g. mobile-incompatible interactions). Strip them down to just
+  # the examples that actually capture a screenshot for the current device.
+  #
+  # Examples whose `screenshot_here` was called with `only: :desktop` (or
+  # `:mobile`) are kept only on the matching leg.
+  def filter_marker_examples(groups, spec_files, device)
+    constraints = spec_files.to_h { |f| [File.expand_path(f), screenshot_example_constraints(f)] }
+    groups.each { |g| keep_screenshot_examples(g, constraints, device) }
+  end
+
+  # Returns a hash mapping the line number of each `it` / `scenario` / `example`
+  # / `specify` block that contains `screenshot_here` to a constraint hash:
+  #   { only: :desktop } — call site has `only: :desktop`
+  #   { only: nil }     — call site has no constraint
+  #
+  # If a single example contains multiple `screenshot_here` calls with
+  # conflicting constraints, the most permissive (no `only`) wins.
+  def screenshot_example_constraints(spec_file)
+    lines = File.readlines(spec_file)
+    result = {}
+    lines.each_with_index do |line, idx|
+      next if line.exclude?("screenshot_here")
+      only_match = line.match(/only:\s*:(\w+)/)
+      only = only_match ? only_match[1].to_sym : nil
+      (idx - 1).downto(0) do |i|
+        if lines[i] =~ /^\s*(it|scenario|example|specify)\b/
+          existing = result[i + 1]
+          result[i + 1] = { only: only } if existing.nil? || existing[:only]
+          break
         end
       end
     end
-
-    create_html_comparison(device, comparisons) if themes.size > 1
-    create_baseline_comparison(device) if ENV["SCREENSHOTS_BASELINE_DIR"].present?
+    result
   end
 
-  def create_html_comparison(device, comparisons)
-    role_suffix = sign_in_as == "anonymous" ? "" : "-#{sign_in_as}"
-    all_labels =
-      comparisons
-        .values
-        .flat_map { |paths| paths.values.flat_map { |e| e.map { |x| x[:label] } } }
-        .uniq
-    html_path = File.join(output_dir, "compare-#{device}#{role_suffix}.html")
+  def keep_screenshot_examples(group, constraints_per_file, device)
+    group.examples.select! do |ex|
+      file = File.expand_path(ex.metadata[:file_path])
+      constraint = (constraints_per_file[file] || {})[ex.metadata[:line_number]]
+      next false unless constraint
+      only = constraint[:only]
+      only.nil? || only.to_s == device
+    end
+    group.children.each { |child| keep_screenshot_examples(child, constraints_per_file, device) }
+    group.children.reject! { |child| empty_group?(child) }
+  end
 
-    pages =
-      comparisons.flat_map do |mode, paths|
-        paths.map do |slug, entries|
-          label = paths.size > 1 || comparisons.size > 1 ? "#{slug} · #{mode}" : mode.to_s
-          { label: label, entries: entries }
+  def empty_group?(group)
+    group.examples.empty? && group.children.all? { |c| empty_group?(c) }
+  end
+
+  # Some specs split their suite by device with sibling contexts — one tagged
+  # `mobile: true`, the other left as desktop (e.g. signup_spec's
+  # "when desktop" / "when mobile" using shared_examples). Detect that pattern
+  # by spotting a group whose children have a mix of mobile and non-mobile
+  # metadata, and keep only the side that matches the current leg. Specs
+  # without this pattern are unaffected.
+  def filter_device_split(groups, device)
+    groups.each { |g| filter_device_split_recursively(g, device) }
+    groups.reject! { |g| empty_group?(g) }
+  end
+
+  def filter_device_split_recursively(group, device)
+    group.children.each { |child| filter_device_split_recursively(child, device) }
+
+    has_mobile = group.children.any? { |c| c.metadata[:mobile] }
+    has_non_mobile = group.children.any? { |c| !c.metadata[:mobile] }
+    return unless has_mobile && has_non_mobile
+
+    if device == "mobile"
+      group.children.select! { |c| c.metadata[:mobile] }
+    else
+      group.children.select! { |c| !c.metadata[:mobile] }
+    end
+  end
+
+  # The `:mobile` metadata is what triggers the global `before(:each)` hook in
+  # rails_helper to switch the Capybara driver to the mobile WebKit driver.
+  # Marker specs don't tag themselves `:mobile`, so we stamp it on at runtime
+  # when we're in the mobile leg of the matrix.
+  def apply_device_metadata(groups, device)
+    return unless device == "mobile"
+    groups.each { |g| set_mobile_recursively(g) }
+  end
+
+  def set_mobile_recursively(group)
+    group.metadata[:mobile] = true
+    group.examples.each { |ex| ex.metadata[:mobile] = true }
+    group.children.each { |child| set_mobile_recursively(child) }
+  end
+
+  def cleanup_marker_groups(groups)
+    groups.each { |g| RSpec.world.example_groups.delete(g) }
+  end
+
+  def with_screenshot_env(theme:, mode:, device:)
+    saved = {}
+    overrides = {
+      "TAKE_SCREENSHOTS" => "1",
+      "SCREENSHOTS_DIR" => output_dir,
+      "SCREENSHOTS_THEME_ID" => theme[:id].to_s,
+      "SCREENSHOTS_THEME_NAME" => theme[:name],
+      "SCREENSHOTS_MODE" => mode.to_s,
+      "SCREENSHOTS_DEVICE" => device,
+    }
+    overrides.each do |k, v|
+      saved[k] = ENV[k]
+      ENV[k] = v
+    end
+    yield
+  ensure
+    saved.each { |k, v| v.nil? ? ENV.delete(k) : ENV[k] = v }
+  end
+
+  # Scans raw_dir for all captured PNGs and builds a single HTML comparison page
+  # with tabs for device and color mode, and label-by-label pagination.
+  # Called after each device run — the final call sees all screenshots.
+  def generate_comparison_html
+    theme_names = themes.map { |t| t[:name] }
+
+    # panels[device][mode][label] = [{label: theme_name, file: abs_path}, ...]
+    panels =
+      Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = Hash.new { |h3, k3| h3[k3] = [] } } }
+
+    Dir
+      .glob(File.join(raw_dir, "*.png"))
+      .sort
+      .each do |file|
+        basename = File.basename(file, ".png")
+        DEVICES.each do |device|
+          next unless basename.start_with?("#{device}-")
+          rest = basename.delete_prefix("#{device}-")
+          theme_names.each do |theme_name|
+            next unless rest.start_with?("#{theme_name}-")
+            rest2 = rest.delete_prefix("#{theme_name}-")
+            modes.each do |mode|
+              next unless rest2.start_with?("#{mode}-")
+              label = rest2.delete_prefix("#{mode}-")
+              panels[device][mode][label] << { label: theme_name, file: file }
+              break
+            end
+            break
+          end
+          break
         end
       end
 
-    write_comparison_html(
-      html_path,
-      "#{device.capitalize} · #{all_labels.join(" vs ")}",
-      pages,
-      device: device,
-    )
+    return if panels.empty?
+
+    html_path = File.join(output_dir, "compare.html")
+    write_comparison_html(html_path, panels)
     puts "🌐 Comparison: file://#{html_path}"
   end
 
-  def create_baseline_comparison(device)
-    baseline_src = ENV["SCREENSHOTS_BASELINE_DIR"].to_s.strip
-    return unless File.directory?(baseline_src)
-
-    role_suffix = sign_in_as == "anonymous" ? "" : "-#{sign_in_as}"
-    baseline_label = ENV["SCREENSHOTS_BASELINE_LABEL"].presence || File.basename(baseline_src)
-
-    baseline_dest = File.join(output_dir, "_baseline")
-    FileUtils.mkdir_p(baseline_dest)
-
-    by_mode = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
-
-    Dir
-      .glob(File.join(raw_dir, "#{device}-*.png"))
-      .sort
-      .each do |current_file|
-        filename = File.basename(current_file)
-        src = File.join(baseline_src, filename)
-        next unless File.exist?(src)
-
-        dest = File.join(baseline_dest, filename)
-        FileUtils.cp(src, dest) unless File.exist?(dest)
-
-        mode = modes.find { |m| filename.include?("-#{m}") } || modes.first
-        slug_match = filename.match(/-#{mode}(?:-([^.]+))?\.png$/)
-        slug = slug_match&.[](1) || "root"
-
-        by_mode[mode][slug] << { label: baseline_label, file: dest }
-        by_mode[mode][slug] << { label: "current", file: current_file }
-      end
-
-    return if by_mode.empty?
-
-    pages =
-      by_mode.flat_map do |mode, paths|
-        paths.map do |slug, entries|
-          label = paths.size > 1 || by_mode.size > 1 ? "#{slug} · #{mode}" : mode.to_s
-          { label: label, entries: entries }
-        end
-      end
-
-    html_path = File.join(output_dir, "compare-#{device}#{role_suffix}-vs-baseline.html")
-    write_comparison_html(
-      html_path,
-      "#{device.capitalize} · #{baseline_label} vs current",
-      pages,
-      device: device,
-    )
-    puts "🌐 Baseline comparison: file://#{html_path}"
-  end
-
-  # Generates a self-contained HTML comparison page with prev/next pagination.
-  # pages: [{label:, entries: [{label:, file:}, ...]}] — file paths may be anywhere on disk.
-  def write_comparison_html(html_path, title, pages, device: nil)
+  def write_comparison_html(html_path, panels)
     html_dir = File.dirname(html_path)
-    total = pages.size
-    first_label = pages.first&.fetch(:label, "") || ""
 
-    pages_html =
-      pages
-        .each_with_index
-        .map do |page, i|
-          active = i == 0 ? " active" : ""
-          cols =
-            page[:entries].map do |entry|
-              rel = Pathname.new(entry[:file]).relative_path_from(Pathname.new(html_dir)).to_s
-              <<~COL
-                <div class="col">
-                  <div class="col-label">#{entry[:label]}</div>
-                  <img src="#{rel}" loading="lazy">
-                </div>
-              COL
+    available_devices = DEVICES.select { |d| panels[d].any? }
+    available_modes = modes.select { |m| panels.values.any? { |dm| dm[m]&.any? } }
+    all_labels = panels.values.flat_map { |modes_h| modes_h.values.flat_map(&:keys) }.uniq
+
+    panels_html =
+      available_devices
+        .flat_map do |device|
+          available_modes.flat_map do |mode|
+            all_labels.map do |label|
+              entries = panels[device][mode][label]
+              next "" if entries.empty?
+
+              cols =
+                entries.map do |entry|
+                  rel = Pathname.new(entry[:file]).relative_path_from(Pathname.new(html_dir)).to_s
+                  <<~COL
+                  <div class="col">
+                    <div class="col-label">#{entry[:label]}</div>
+                    <img src="#{rel}" loading="lazy">
+                  </div>
+                COL
+                end
+
+              panel_id = "panel-#{device}-#{mode}-#{label}"
+              <<~PANEL
+              <div class="panel" id="#{panel_id}" data-device="#{device}" data-mode="#{mode}" data-label="#{label}">
+                #{cols.join}
+              </div>
+            PANEL
             end
-          %(<div class="page#{active}" data-label="#{page[:label]}">\n#{cols.join}\n</div>)
+          end
         end
         .join("\n")
+
+    device_tabs_html =
+      available_devices
+        .map do |d|
+          active = d == available_devices.first ? " active" : ""
+          %(<button class="tab#{active}" data-device="#{d}" onclick="selectDevice('#{d}')">#{d.capitalize}</button>)
+        end
+        .join("\n      ")
+
+    mode_tabs_html =
+      available_modes
+        .map do |m|
+          active = m == available_modes.first ? " active" : ""
+          %(<button class="tab#{active}" data-mode="#{m}" onclick="selectMode('#{m}')">#{m.capitalize}</button>)
+        end
+        .join("\n      ")
+
+    panels_json =
+      available_devices.flat_map do |device|
+        available_modes.flat_map do |mode|
+          all_labels.filter_map do |label|
+            next if panels[device][mode][label].empty?
+            %({ "device": "#{device}", "mode": "#{mode}", "label": "#{label}" })
+          end
+        end
+      end
 
     File.write(html_path, <<~HTML)
         <!doctype html>
         <html>
         <head>
         <meta charset="utf-8">
-        <title>#{title}</title>
+        <title>Theme Screenshots</title>
         <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #111; color: #eee; font-family: system-ui, sans-serif; }
-        nav { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: #1a1a1a; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 20; }
+        body { background: #111; color: #eee; font-family: system-ui, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; padding: 7px 12px; background: #1a1a1a; border-bottom: 1px solid #333; flex-shrink: 0; }
+        .header-left { display: flex; align-items: center; gap: 4px; }
+        .header-center { display: flex; justify-content: center; }
+        .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+        .tab-group { display: flex; gap: 4px; }
+        .tab { padding: 3px 12px; background: #2a2a2a; color: #888; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .tab.active { background: #3a3a3a; color: #fff; border-color: #666; }
+        .sep { width: 1px; background: #333; height: 22px; margin: 0 4px; }
         .btn { padding: 3px 10px; background: #2a2a2a; color: #ccc; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px; line-height: 1.4; }
         .btn:disabled { opacity: 0.3; cursor: default; }
         #counter { font-size: 12px; color: #666; min-width: 44px; text-align: center; }
-        #page-label { font-size: 13px; color: #ddd; }
-        #title { font-size: 12px; color: #555; margin-left: auto; }
-        .page { display: none; flex-direction: row; gap: 2px; }
-        .page.active { display: flex; }
-        .col { flex: 1; min-width: 0; }
-        .col-label { position: sticky; top: 40px; background: #1a1a1a; padding: 5px 10px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #222; z-index: 10; }
-        img { width: 100%; display: block; #{device == "mobile" ? "height: calc(100vh - 70px); object-fit: contain; object-position: top;" : ""} }
+        #label-display { font-size: 14px; font-weight: 600; color: #fff; text-align: center; letter-spacing: 0.01em; }
+        .content { flex: 1; overflow: hidden; }
+        .panel { display: none; flex-direction: row; gap: 2px; height: 100%; }
+        .panel.active { display: flex; }
+        .col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .col-label { flex-shrink: 0; background: #1a1a1a; padding: 5px 10px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #222; }
+        img { flex: 1; min-height: 0; width: 100%; object-fit: contain; object-position: top center; display: block; }
         </style>
         </head>
         <body>
-        <nav>
-          <button class="btn" id="btn-prev" onclick="go(-1)" disabled>&#8592;</button>
-          <span id="counter">1 / #{total}</span>
-          <button class="btn" id="btn-next" onclick="go(1)"#{total <= 1 ? " disabled" : ""}>&#8594;</button>
-          <span id="page-label">#{first_label}</span>
-          <span id="title">#{title}</span>
-        </nav>
-        #{pages_html}
+        <header>
+          <div class="header-left">
+            <div class="tab-group" id="device-tabs">
+              #{device_tabs_html}
+            </div>
+            <div class="sep"></div>
+            <div class="tab-group" id="mode-tabs">
+              #{mode_tabs_html}
+            </div>
+          </div>
+          <div class="header-center">
+            <span id="label-display"></span>
+          </div>
+          <div class="header-right">
+            <button class="btn" id="btn-prev" onclick="navigate(-1)">&#8592;</button>
+            <span id="counter"></span>
+            <button class="btn" id="btn-next" onclick="navigate(1)">&#8594;</button>
+          </div>
+        </header>
+        <div class="content">
+          #{panels_html}
+        </div>
         <script>
-        var idx = 0;
-        var pages = document.querySelectorAll('.page');
-        function go(dir) {
-          idx = Math.max(0, Math.min(pages.length - 1, idx + dir));
-          pages.forEach(function(p) { p.classList.remove('active'); });
-          pages[idx].classList.add('active');
-          document.getElementById('counter').textContent = (idx + 1) + ' / ' + pages.length;
-          document.getElementById('page-label').textContent = pages[idx].dataset.label;
-          document.getElementById('btn-prev').disabled = idx === 0;
-          document.getElementById('btn-next').disabled = idx === pages.length - 1;
+        var allPanels = [#{panels_json.join(",\n")}];
+        var currentDevice = #{available_devices.first.to_json};
+        var currentMode = #{available_modes.first.to_json};
+        var labelIndex = 0;
+
+        function filtered() {
+          return allPanels.filter(function(p) {
+            return p.device === currentDevice && p.mode === currentMode;
+          });
         }
+
+        function show() {
+          var set = filtered();
+          labelIndex = Math.max(0, Math.min(set.length - 1, labelIndex));
+          document.querySelectorAll('.panel').forEach(function(el) {
+            el.classList.remove('active');
+          });
+          if (!set.length) return;
+          var p = set[labelIndex];
+          var el = document.getElementById('panel-' + p.device + '-' + p.mode + '-' + p.label);
+          if (el) el.classList.add('active');
+          document.getElementById('counter').textContent = (labelIndex + 1) + ' / ' + set.length;
+          document.getElementById('label-display').textContent = p.label;
+          document.getElementById('btn-prev').disabled = labelIndex === 0;
+          document.getElementById('btn-next').disabled = labelIndex === set.length - 1;
+        }
+
+        function navigate(dir) {
+          labelIndex += dir;
+          show();
+        }
+
+        function selectDevice(device) {
+          currentDevice = device;
+          document.querySelectorAll('#device-tabs .tab').forEach(function(t) {
+            t.classList.toggle('active', t.dataset.device === device);
+          });
+          show();
+        }
+
+        function selectMode(mode) {
+          currentMode = mode;
+          document.querySelectorAll('#mode-tabs .tab').forEach(function(t) {
+            t.classList.toggle('active', t.dataset.mode === mode);
+          });
+          show();
+        }
+
         document.addEventListener('keydown', function(e) {
-          if (e.key === 'ArrowLeft') go(-1);
-          if (e.key === 'ArrowRight') go(1);
+          if (e.key === 'ArrowLeft') navigate(-1);
+          if (e.key === 'ArrowRight') navigate(1);
         });
+
+        show();
         </script>
         </body>
         </html>
       HTML
-  end
-
-  # Converts a site-relative path into a safe filename segment.
-  def path_slug(path)
-    slug = path.delete_prefix("/").gsub("/", "-").gsub(/[^a-zA-Z0-9\-_]/, "")
-    slug.empty? ? "root" : slug
-  end
-
-  def expand_path(raw)
-    case raw
-    when "/t/random"
-      t = topics.sample
-      "/t/#{t.slug}/#{t.id}"
-    when "/chat"
-      raise "/chat requires SCREENSHOTS_AS=user or admin" if sign_in_as == "anonymous"
-      raw
-    when %r{\A/my(/.*)?\z}
-      # `UsersController#my_redirect` does a bare `redirect_to` that drops any
-      # query string, so `/my/anything?preview_theme_id=X` loses the preview.
-      # Expand to the canonical `/u/:username/...` path here so the query
-      # survives. Requires a signed-in user.
-      username = signed_in_user&.encoded_username
-      raise "/my/* requires SCREENSHOTS_AS=user or admin" if username.blank?
-      "/u/#{username}#{Regexp.last_match(1)}"
-    else
-      raw
-    end
-  end
-
-  def preview_url(path, theme_id)
-    separator = path.include?("?") ? "&" : "?"
-    "#{path}#{separator}preview_theme_id=#{theme_id}"
-  end
-
-  def emulate_color_scheme(mode)
-    page.driver.with_playwright_page { |pw_page| pw_page.emulate_media(colorScheme: mode.to_s) }
-  end
-
-  # Wait for the page to stop making network requests instead of polling for a
-  # route-specific selector. Works across /, /categories, /t/..., /wizard, etc.
-  # without needing to teach the spec about each page's DOM shape.
-  #
-  # MessageBus long-polling holds an HTTP request open indefinitely, which
-  # would prevent `networkidle` from ever settling — abort those requests at
-  # the network layer on first use.
-  def wait_for_network_idle
-    page.driver.with_playwright_page do |pw_page|
-      unless @message_bus_blocked
-        pw_page.route(%r{/message-bus/}, ->(route, _request) { route.abort })
-        @message_bus_blocked = true
-      end
-      pw_page.wait_for_load_state(state: "networkidle", timeout: 10_000)
-    rescue Playwright::TimeoutError
-      # page is visually complete; a stray background request is still open
-    end
-  end
-
-  # Desktop: full-page screenshot. Mobile: viewport-only at a fixed height (1000px)
-  # so that comparisons are 1:1 regardless of page content length.
-  def full_page_screenshot(path, device:)
-    page.driver.with_playwright_page do |pw_page|
-      if device == "mobile"
-        vp = pw_page.viewport_size
-        pw_page.set_viewport_size(width: vp[:width], height: 1000)
-        pw_page.screenshot(path: path)
-      else
-        pw_page.screenshot(path: path, fullPage: true)
-      end
-    end
-  end
-
-  # The `?preview_theme_id=` query param surfaces a global notice ("You are
-  # currently previewing a theme…") that we don't want in screenshots.
-  def hide_preview_notice
-    page.driver.with_playwright_page do |pw_page|
-      pw_page.add_style_tag(content: "#global-notice-theme-preview { display: none !important; }")
-    end
   end
 end

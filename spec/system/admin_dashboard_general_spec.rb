@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin Dashboard General Tab" do
+  include ThemeScreenshotMarker
   fab!(:admin)
   fab!(:user)
   fab!(:user_visit) { Fabricate(:user_visit, user: admin) }
@@ -14,6 +15,8 @@ describe "Admin Dashboard General Tab" do
 
     it "displays correct visit counters combining desktop and mobile visits" do
       visit("/admin")
+
+      screenshot_here(label: "admin-dashboard")
 
       within ".admin-report.visits .admin-report-counters" do
         expect(page).to have_css(".today-count", text: "2")

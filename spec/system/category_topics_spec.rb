@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe "Viewing categories page" do
+  include ThemeScreenshotMarker
   fab!(:user)
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
@@ -13,6 +14,8 @@ describe "Viewing categories page" do
       sign_in(user)
 
       visit("/categories")
+
+      screenshot_here(label: "categories")
 
       category_list.click_new_posts_badge(count: 1)
       category_list.click_topic(topic)

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin Customize Themes" do
+  include ThemeScreenshotMarker
   fab!(:color_scheme) do
     Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
   end
@@ -18,6 +19,7 @@ describe "Admin Customize Themes" do
     it "should keep sidebar navigation link active" do
       theme_page.visit(theme)
       expect(sidebar).to have_active_link("admin_themes_and_components")
+      screenshot_here(label: "admin-themes")
     end
 
     it "should allow admin to update the light color scheme of the theme" do

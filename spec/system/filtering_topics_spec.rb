@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe "Filtering topics" do
+  include ThemeScreenshotMarker
   fab!(:user)
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_query_filter) { PageObjects::Components::TopicQueryFilter.new }
@@ -86,6 +87,8 @@ describe "Filtering topics" do
       sign_in(user)
 
       visit("/filter")
+
+      screenshot_here(label: "filter")
 
       expect(topic_list).to have_topics(count: 3)
       expect(topic_list).to have_topic(topic_with_tag)

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Composer" do
+  include ThemeScreenshotMarker
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
 
@@ -10,6 +12,8 @@ describe "Composer" do
     page.visit "/new-topic"
 
     expect(composer).to be_opened
+
+    screenshot_here(label: "composer-open")
 
     composer.fill_content("@#{user.username}")
     composer.preview.find("a.mention").click

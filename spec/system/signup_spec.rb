@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 shared_examples "signup scenarios" do
+  include ThemeScreenshotMarker
+
   let(:signup_page) { PageObjects::Pages::Signup.new }
   let(:login_page) { PageObjects::Pages::Login.new }
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
@@ -19,6 +21,8 @@ shared_examples "signup scenarios" do
         .fill_username("john")
         .fill_password("supersecurepassword")
       expect(signup_page).to have_valid_fields
+
+      screenshot_here(label: "signup")
 
       signup_page.click_create_account
 
@@ -41,6 +45,8 @@ shared_examples "signup scenarios" do
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
       visit activation_link
+
+      screenshot_here(label: "signup-activation")
 
       activate_account.click_activate_account
       activate_account.click_continue
