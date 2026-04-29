@@ -5,6 +5,7 @@ import { getUploadMarkdown } from "discourse/lib/uploads";
 import { i18n } from "discourse-i18n";
 
 export default class AiBotDockedSubmit extends Service {
+  @service appEvents;
   @service dialog;
   @service siteSettings;
 
@@ -48,7 +49,7 @@ export default class AiBotDockedSubmit extends Service {
       // streaming service arms its idle timer off that. Marking with a
       // null postId would render a stop button that can't call
       // /stop-streaming.
-      return await ajax("/posts.json", {
+      const response = await ajax("/posts.json", {
         method: "POST",
         data: {
           raw: rawContent,
@@ -56,6 +57,13 @@ export default class AiBotDockedSubmit extends Service {
           nested_post: true,
         },
       });
+
+      this.appEvents.trigger("discourse-ai:bot-pm-reply-created", {
+        topicId,
+        postId: response?.post?.id,
+      });
+
+      return response;
     } finally {
       this.loading = false;
     }
