@@ -574,8 +574,7 @@ RSpec.describe UserSerializer do
     end
 
     it "is not included for staff when the target user has a password" do
-      json =
-        UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+      json = UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
 
       expect(json).not_to have_key(:no_password)
     end
