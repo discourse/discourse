@@ -678,9 +678,14 @@ class SessionController < ApplicationController
 
   def destroy(trusted_return_url: nil)
     return_url = params[:return_url].presence
-    # only allow relative paths, reject protocol-relative (//evil.com) and backslash (/\evil.com)
-    return_url = nil if return_url &&
-      (!return_url.start_with?("/") || return_url[1] == "/" || return_url[1] == "\\")
+    if return_url
+      begin
+        uri = URI(return_url)
+        return_url = nil if uri.host.present? || uri.scheme.present? || !uri.path&.start_with?("/")
+      rescue URI::Error, ArgumentError
+        return_url = nil
+      end
+    end
 
     redirect_url = trusted_return_url || return_url || SiteSetting.logout_redirect.presence
 
