@@ -179,6 +179,10 @@ export default class DMultiSelect extends Component {
   remove(selectedItem, event) {
     event?.stopPropagation();
 
+    if (!selectedItem.canRemove) {
+      return;
+    }
+
     // Reset preselected item since the available options will change
     this.preselectedItem = null;
 
@@ -256,10 +260,13 @@ export default class DMultiSelect extends Component {
                     item
                     to="selection"
                   }}</span>
-                {{icon
-                  "xmark"
-                  class="d-multi-select-trigger__remove-selection-icon"
-                }}
+
+                {{#if item.canRemove}}
+                  {{icon
+                    "xmark"
+                    class="d-multi-select-trigger__remove-selection-icon"
+                  }}
+                {{/if}}
               </button>
             {{/each}}
           </div>

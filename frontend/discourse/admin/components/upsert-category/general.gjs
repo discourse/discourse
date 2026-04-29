@@ -34,6 +34,8 @@ import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+const DISCUSSION_TYPE_ID = "discussion";
+
 export default class UpsertCategoryGeneral extends Component {
   @service appEvents;
   @service site;
@@ -57,11 +59,13 @@ export default class UpsertCategoryGeneral extends Component {
   );
 
   #previousPermissions = null;
-  #discussionType = null;
 
   constructor() {
     super(...arguments);
-    this.#discussionType = this.args.category.categoryTypes.discussion;
+    this.categoryTypes = [...this.categoryTypeChooser.allTypes].map((type) => ({
+      ...type,
+      canRemove: type.id !== DISCUSSION_TYPE_ID,
+    }));
   }
 
   @bind
@@ -71,9 +75,7 @@ export default class UpsertCategoryGeneral extends Component {
     }
 
     return ids
-      .map((id) =>
-        this.categoryTypeChooser.allTypes.find((type) => type.id === id)
-      )
+      .map((id) => this.categoryTypes.find((type) => type.id === id))
       .filter(Boolean);
   }
 
@@ -365,25 +367,20 @@ export default class UpsertCategoryGeneral extends Component {
     return this.args.category.id != null;
   }
 
-  get loadTypes() {
-    return async (term) =>
-      this.categoryTypeChooser.allTypes.filter((type) => {
-        if (type.id === this.#discussionType.id) {
-          return false;
-        }
+  @bind
+  async loadTypes(term) {
+    return this.categoryTypes.filter((type) => {
+      if (type.id === DISCUSSION_TYPE_ID) {
+        return false;
+      }
 
-        return type.name.toLowerCase().includes(term.toLowerCase());
-      });
+      return type.name.toLowerCase().includes(term.toLowerCase());
+    });
   }
 
   @action
   async onChangeCategoryTypes(field, newSelectedTypes) {
     const nextTypes = [...newSelectedTypes];
-
-    // Always show discussion type, which cannot be removed, as a placeholder.
-    if (nextTypes.length === 0) {
-      nextTypes.push(this.#discussionType);
-    }
 
     const previousTypes = this.mapCategoryTypeIdsToTypes(field.value);
 
