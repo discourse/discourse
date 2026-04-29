@@ -39,7 +39,7 @@ after_initialize do
   require_relative "app/models/reviewable_post_voting_comment"
   require_relative "app/serializers/basic_voter_serializer"
   require_relative "app/serializers/post_voting_comment_serializer"
-  require_relative "app/serializers/reviewable_post_voting_comments_serializer"
+  require_relative "app/serializers/reviewable_post_voting_comment_serializer"
 
   register_svg_icon "vote-up"
   register_svg_icon "vote-up-filled"
