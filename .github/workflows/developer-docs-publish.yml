@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   dry_run:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    if: (github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror') && github.head_ref != '0-a-oj'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 

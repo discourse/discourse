@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   build:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    if: (github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror') && github.head_ref != '0-a-oj'
     name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
       ${{

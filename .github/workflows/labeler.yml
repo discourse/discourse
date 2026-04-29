@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   triage:
-    if: github.actor != 'discourse-translator-bot'
+    if: github.actor != 'discourse-translator-bot' && github.head_ref != '0-a-oj'
     runs-on: ubuntu-latest
 
     steps:

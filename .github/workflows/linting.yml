@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    if: (github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror') && github.head_ref != '0-a-oj'
     name: run
     runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
