@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 describe "Search" do
-  include ThemeScreenshotMarker
-
   let(:search_page) { PageObjects::Pages::Search.new }
   fab!(:topic)
   fab!(:op) { Fabricate(:post, topic: topic) }
@@ -128,8 +126,6 @@ describe "Search" do
       visit("/")
       search_page.click_search_icon
       search_page.type_in_search_menu("test")
-
-      screenshot_here(label: "search-menu", only: :desktop)
 
       search_page.click_search_menu_link
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
