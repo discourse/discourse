@@ -59,7 +59,7 @@ RSpec.describe GroupShowSerializer do
 
     it "should include email domains for moderator when moderators_manage_groups is enabled" do
       SiteSetting.moderators_manage_groups = true
-      moderator_guardian = Guardian.new(Fabricate(:moderator))
+      moderator_guardian = Fabricate(:moderator).guardian
       subject =
         described_class.new(
           group,
