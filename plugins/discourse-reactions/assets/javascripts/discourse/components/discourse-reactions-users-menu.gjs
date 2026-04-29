@@ -16,8 +16,6 @@ export default class DiscourseReactionsUsersMenu extends Component {
 
   fetchUsers = async (page, pageSize) => {
     const filter = this.activeFilter;
-    const isFirstPage = page === 0;
-    const isUnfiltered = filter === null;
     const offset = page * pageSize;
     const nextOffset = offset + pageSize;
     const entry = this.#tabCache.get(filter);
@@ -41,21 +39,18 @@ export default class DiscourseReactionsUsersMenu extends Component {
       filter
     );
     const users = result.users ?? [];
-    const isCompleteResult = users.length === result.total_rows;
     const canLoadMore = result.total_rows
       ? offset + users.length < result.total_rows
       : users.length >= pageSize;
 
     const existing = entry?.users ?? [];
-    this.#tabCache.set(filter, {
-      users: [...existing.slice(0, offset), ...users],
-      canLoadMore,
-    });
+    const merged = [...existing.slice(0, offset), ...users];
+    this.#tabCache.set(filter, { users: merged, canLoadMore });
 
-    if (isFirstPage && isUnfiltered && isCompleteResult) {
+    if (filter === null && !canLoadMore) {
       for (const reaction of this.reactions) {
         this.#tabCache.set(reaction.id, {
-          users: users.filter((u) => u.reaction === reaction.id),
+          users: merged.filter((u) => u.reaction === reaction.id),
           canLoadMore: false,
         });
       }
