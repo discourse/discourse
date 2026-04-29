@@ -278,6 +278,20 @@ acceptance(
               { permission_type: 1, group_name: "moderators", group_id: 2 },
             ],
             custom_fields: {},
+            category_types: [
+              {
+                id: "discussion",
+                name: "Discussion",
+                configuration_schema: {},
+              },
+            ],
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
           },
         })
       );
