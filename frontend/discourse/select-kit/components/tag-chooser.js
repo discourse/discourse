@@ -128,9 +128,13 @@ export default class TagChooser extends MultiSelectComponent {
     return this.tagUtils.createContentFromInput(input);
   }
 
+  get _normalizedBlockedTags() {
+    return makeArray(this.blockedTags).filter(Boolean);
+  }
+
   search(query) {
     const selectedTags = makeArray(this.tags).filter(Boolean);
-    const blockedTags = makeArray(this.blockedTags).filter(Boolean);
+    const blockedTags = this._normalizedBlockedTags;
 
     const data = {
       q: query,
@@ -187,7 +191,7 @@ export default class TagChooser extends MultiSelectComponent {
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    const blockedTags = makeArray(this.blockedTags).filter(Boolean);
+    const blockedTags = this._normalizedBlockedTags;
     if (blockedTags.length) {
       // extract names from blockedTags (may be strings or objects)
       const blockedNames = blockedTags.map((t) =>
