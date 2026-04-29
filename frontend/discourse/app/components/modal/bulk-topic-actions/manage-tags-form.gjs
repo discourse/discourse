@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { array, fn, hash } from "@ember/helper";
+import { array, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
@@ -79,10 +79,7 @@ export default class ManageTagsForm extends Component {
 
       if (status === "missing-from") {
         addError(fromName, { title, message });
-      } else if (status === "missing-to") {
-        addError(toName, { title, message });
       } else {
-        addError(fromName, { title, message });
         addError(toName, { title, message });
       }
     });
@@ -109,10 +106,6 @@ export default class ManageTagsForm extends Component {
       return "missing-to";
     }
 
-    if (from.id === to.id) {
-      return "same-tag";
-    }
-
     return "valid";
   }
 
@@ -122,8 +115,6 @@ export default class ManageTagsForm extends Component {
         return i18n("topic_bulk_actions.manage_tags.replace.missing_from");
       case "missing-to":
         return i18n("topic_bulk_actions.manage_tags.replace.missing_to");
-      case "same-tag":
-        return i18n("topic_bulk_actions.manage_tags.replace.same_tag");
       default:
         return null;
     }
@@ -210,60 +201,63 @@ export default class ManageTagsForm extends Component {
         class="manage-tags-form__replace"
       >
         <form.Collection @name="replace_rows" as |collection index|>
+          {{#let (get transientData.replace_rows index) as |replaceRow|}}
+            <form.Row as |row|>
+              <row.Col @size={{5}}>
+                <collection.Field
+                  @name="from"
+                  @title={{i18n
+                    "topic_bulk_actions.manage_tags.replace.from_placeholder"
+                  }}
+                  @showTitle={{false}}
+                  @type="tag-chooser"
+                  @format="full"
+                  @onSet={{this.afterFieldSet}}
+                  as |field|
+                >
+                  <field.Control
+                    @maximum={{1}}
+                    @placeholder="topic_bulk_actions.manage_tags.replace.from_placeholder"
+                    @blockedTags={{replaceRow.to}}
+                  />
+                </collection.Field>
+              </row.Col>
 
-          <form.Row as |row|>
-            <row.Col @size={{5}}>
-              <collection.Field
-                @name="from"
-                @title={{i18n
-                  "topic_bulk_actions.manage_tags.replace.from_placeholder"
-                }}
-                @showTitle={{false}}
-                @type="tag-chooser"
-                @format="full"
-                @onSet={{this.afterFieldSet}}
-                as |field|
-              >
-                <field.Control
-                  @maximum={{1}}
-                  @placeholder="topic_bulk_actions.manage_tags.replace.from_placeholder"
+              <row.Col @size={{1}} class="manage-tags-form__replace-arrow">
+                {{icon "arrow-right"}}
+              </row.Col>
+
+              <row.Col @size={{5}}>
+                <collection.Field
+                  @name="to"
+                  @title={{i18n
+                    "topic_bulk_actions.manage_tags.replace.to_placeholder"
+                  }}
+                  @showTitle={{false}}
+                  @type="tag-chooser"
+                  @format="full"
+                  @onSet={{this.afterFieldSet}}
+                  as |field|
+                >
+                  <field.Control
+                    @categoryId={{@categoryId}}
+                    @maximum={{1}}
+                    @placeholder="topic_bulk_actions.manage_tags.replace.to_placeholder"
+                    @blockedTags={{replaceRow.from}}
+                  />
+                </collection.Field>
+              </row.Col>
+
+              <row.Col @size={{1}}>
+                <form.Button
+                  @icon="xmark"
+                  @action={{fn this.removeReplaceRow collection index}}
+                  @title="topic_bulk_actions.manage_tags.replace.remove_replacement"
+                  class="manage-tags-form__replace-row-remove"
                 />
-              </collection.Field>
-            </row.Col>
-
-            <row.Col @size={{1}} class="manage-tags-form__replace-arrow">
-              {{icon "arrow-right"}}
-            </row.Col>
-
-            <row.Col @size={{5}}>
-              <collection.Field
-                @name="to"
-                @title={{i18n
-                  "topic_bulk_actions.manage_tags.replace.to_placeholder"
-                }}
-                @showTitle={{false}}
-                @type="tag-chooser"
-                @format="full"
-                @onSet={{this.afterFieldSet}}
-                as |field|
-              >
-                <field.Control
-                  @categoryId={{@categoryId}}
-                  @maximum={{1}}
-                  @placeholder="topic_bulk_actions.manage_tags.replace.to_placeholder"
-                />
-              </collection.Field>
-            </row.Col>
-
-            <row.Col @size={{1}}>
-              <form.Button
-                @icon="xmark"
-                @action={{fn this.removeReplaceRow collection index}}
-                @title="topic_bulk_actions.manage_tags.replace.remove_replacement"
-                class="manage-tags-form__replace-row-remove"
-              />
-            </row.Col>
-          </form.Row>
+              </row.Col>
+            </form.Row>
+          {{/let}}
         </form.Collection>
 
         <form.Button

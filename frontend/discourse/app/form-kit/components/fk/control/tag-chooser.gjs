@@ -21,6 +21,7 @@ export default class FKControlTagChooser extends FKBaseControl {
       @unlimitedTagCount={{@unlimited}}
       @categoryId={{@categoryId}}
       @allowCreate={{@allowCreate}}
+      @blockedTags={{@blockedTags}}
       @options={{hash
         disabled=@field.disabled
         filterPlaceholder=@placeholder

@@ -192,15 +192,7 @@ describe "Topic bulk select" do
       expect(modal).to have_disabled_submit
 
       modal.select_replace_from(tag1.name)
-      modal.select_replace_to(tag1.name)
-
-      modal.click_confirm
-      expect(modal).to have_replace_row_error(
-        text: I18n.t("js.topic_bulk_actions.manage_tags.replace.same_tag"),
-      )
-
       modal.select_replace_to(tag5.name)
-      expect(modal).to have_no_replace_row_error
 
       modal.add_tags(tag4.name)
       modal.remove_tags(tag2.name)

@@ -3892,7 +3892,6 @@ en:
           to_placeholder: "Replacement tag"
           missing_from: "A source tag is required"
           missing_to: "A replacement tag is required"
-          same_tag: "Source and replacement tags must differ"
       delete_topics:
         name: "Delete"
         description: "Permanently delete the selected topics. This action cannot be undone."
