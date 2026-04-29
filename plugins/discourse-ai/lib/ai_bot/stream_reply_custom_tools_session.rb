@@ -113,7 +113,9 @@ module DiscourseAi
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 @source_post,
                 max_posts: max_context_posts,
-                include_uploads: @bot.agent.class.vision_enabled,
+                include_image_uploads: @bot.agent.class.vision_enabled,
+                include_document_uploads: @bot.model.allowed_attachment_types.present?,
+                allowed_attachment_types: @bot.model.allowed_attachment_types,
                 bot_usernames: available_bot_usernames,
               ),
           )
