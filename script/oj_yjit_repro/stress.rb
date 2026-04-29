@@ -27,6 +27,7 @@
 #
 # Leave this running for hours. The prod crash is "once in a while".
 
+require "active_support/json"
 require "oj"
 Oj.optimize_rails
 
