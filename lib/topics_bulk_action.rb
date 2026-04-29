@@ -320,39 +320,27 @@ class TopicsBulkAction
   end
 
   def manage_tags
-    add_names = resolve_tag_id_list(@operation[:add_tag_ids])
-    remove_names = resolve_tag_id_list(@operation[:remove_tag_ids])
-    replace_map = build_replace_map(@operation[:replace_tags])
+    add_ids = (@operation[:add_tag_ids] || []).map(&:to_i)
+    remove_ids = (@operation[:remove_tag_ids] || []).map(&:to_i)
+    replace_pairs =
+      (@operation[:replace_tags] || []).map { |e| [e[:from_tag_id].to_i, e[:to_tag_id].to_i] }
+
+    valid_ids = Tag.where(id: (add_ids + remove_ids + replace_pairs).flatten).pluck(:id)
+    add_ids &= valid_ids
+    remove_ids &= valid_ids
+    replace_map =
+      replace_pairs.each_with_object({}) do |(from_id, to_id), map|
+        map[from_id] ||= to_id if valid_ids.include?(from_id) && valid_ids.include?(to_id)
+      end
 
     topics_with_tags.each do |t|
-      current = t.tags.map(&:name)
-      base = @operation[:remove_all_tags] ? [] : current - remove_names
-      with_adds = base | add_names
-      final = with_adds.map { |name| replace_map[name] || name }
+      current = t.tags.map(&:id)
+      base = @operation[:remove_all_tags] ? [] : current - remove_ids
+      final = (base | add_ids).map { |id| replace_map[id] || id }.uniq
 
       next if final.sort == current.sort
 
-      apply_tag_revision(t, final)
-    end
-  end
-
-  def resolve_tag_id_list(ids)
-    return [] if ids.blank?
-    Tag.where(id: ids).pluck(:name)
-  end
-
-  def build_replace_map(replace_entries)
-    entries = replace_entries || []
-    ids = entries.flat_map { |e| [e[:from_tag_id], e[:to_tag_id]] }.compact
-    return {} if ids.empty?
-
-    names_by_id = Tag.where(id: ids).pluck(:id, :name).to_h
-
-    entries.each_with_object({}) do |entry, map|
-      from_name = names_by_id[entry[:from_tag_id].to_i]
-      to_name = names_by_id[entry[:to_tag_id].to_i]
-      next unless from_name && to_name
-      map[from_name] ||= to_name
+      apply_tag_revision(t, Tag.where(id: final).pluck(:name))
     end
   end
 
