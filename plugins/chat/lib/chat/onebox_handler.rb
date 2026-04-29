@@ -40,9 +40,26 @@ module Chat
       {
         channel_id: chat_channel.id,
         channel_name: chat_channel.name,
+        channel_url: channel_onebox_url(chat_channel),
         is_category: chat_channel.category_channel?,
         color: chat_channel.category_channel? ? chat_channel.chatable.color : nil,
       }
+    end
+
+    def self.channel_onebox_url(chat_channel)
+      "#{Discourse.base_path}/chat/c/-/#{chat_channel.id}"
+    end
+
+    def self.thread_onebox_url(chat_channel, thread_id)
+      "#{channel_onebox_url(chat_channel)}/t/#{thread_id}"
+    end
+
+    def self.message_onebox_url(message)
+      if message.thread_id
+        "#{thread_onebox_url(message.chat_channel, message.thread_id)}/#{message.id}"
+      else
+        "#{channel_onebox_url(message.chat_channel)}/#{message.id}"
+      end
     end
 
     def self.render_thread_onebox(args, thread)
@@ -50,6 +67,7 @@ module Chat
         cooked: build_thread_snippet(thread),
         thread_id: thread.id,
         thread_title: thread.title,
+        thread_url: thread_onebox_url(thread.channel, thread.id),
         thread_title_connector: I18n.t("chat.onebox.thread_title_connector"),
         images: get_image_uploads(thread),
       )
@@ -60,6 +78,7 @@ module Chat
     def self.render_message_onebox(args, message, thread)
       args.merge!(
         message_id: message.id,
+        message_url: message_onebox_url(message),
         username: message.user.username,
         avatar_url: message.user.avatar_template_url.gsub("{size}", "20"),
         cooked: message.cooked,
@@ -67,6 +86,7 @@ module Chat
         created_at_str: message.created_at.iso8601,
         thread_id: message.thread_id,
         thread_title: thread&.title,
+        thread_url: message.thread_id && thread_onebox_url(message.chat_channel, message.thread_id),
         images: get_image_uploads(message),
       )
 

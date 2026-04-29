@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DComboButton from "discourse/components/d-combo-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
@@ -143,7 +144,7 @@ export default class TopicDraftsDropdown extends Component {
 
               <dropdown.item>
                 <DButton
-                  @href="/my/activity/drafts"
+                  @href={{getURL "/my/activity/drafts"}}
                   @model={{this.currentUser}}
                   class="btn-link view-all-drafts"
                 >

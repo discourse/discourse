@@ -16,7 +16,8 @@ class NestedTopicsController < ApplicationController
   def show
     if spa_boot_request?
       if use_crawler_layout?
-        redirect_to "/t/#{params[:slug]}/#{params[:topic_id]}", status: :moved_permanently
+        redirect_to "#{Discourse.base_path}/t/#{params[:slug]}/#{params[:topic_id]}",
+                    status: :moved_permanently
         return
       end
 
@@ -56,7 +57,7 @@ class NestedTopicsController < ApplicationController
   def context
     if spa_boot_request?
       if use_crawler_layout?
-        redirect_to "/t/#{params[:slug]}/#{params[:topic_id]}/#{params[:post_number]}",
+        redirect_to "#{Discourse.base_path}/t/#{params[:slug]}/#{params[:topic_id]}/#{params[:post_number]}",
                     status: :moved_permanently
         return
       end
@@ -142,7 +143,7 @@ class NestedTopicsController < ApplicationController
     return unless @topic.private_message?
 
     if request.get?
-      url = "/t/#{@topic.slug}/#{@topic.id}"
+      url = "#{Discourse.base_path}/t/#{@topic.slug}/#{@topic.id}"
       post_number = params[:post_number].to_i
       url << "/#{post_number}" if post_number > 0
       redirect_to url, status: :found

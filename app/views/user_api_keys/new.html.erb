@@ -42,7 +42,7 @@
     <%= hidden_field_tag('padding', @padding) if @padding %>
     <div class='authorize-api-key__buttons'>
       <%= submit_tag t('user_api_key.authorize'), class: 'btn btn-primary' %>
-      <a href="/" class='btn btn-default'><%= t('user_api_key.deny') %></a>
+      <a href="<%= path "/" %>" class='btn btn-default'><%= t('user_api_key.deny') %></a>
     </div>
   <% end %>
 <% end %>

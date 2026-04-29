@@ -7,14 +7,9 @@
     </div>
     <div class="chat-transcript-username">{{username}}</div>
     <div class="chat-transcript-datetime">
-      {{#thread_id}}
-        <a href="/chat/c/-/{{channel_id}}/t/{{thread_id}}/{{message_id}}" title="{{created_at}}">{{created_at}}</a>
-      {{/thread_id}}
-      {{^thread_id}}
-        <a href="/chat/c/-/{{channel_id}}/{{message_id}}" title="{{created_at}}">{{created_at}}</a>
-      {{/thread_id}}
+      <a href="{{message_url}}" title="{{created_at}}">{{created_at}}</a>
     </div>
-    <a class="chat-transcript-channel" href="/chat/c/-/{{channel_id}}">
+    <a class="chat-transcript-channel" href="{{channel_url}}">
       {{#is_category}}
         <span class="category-chat-badge" style="color: #{{color}}">
           <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
@@ -29,7 +24,7 @@
     </a>
     {{#thread_id}}
       <span class="chat-transcript-separator">&#124</span>
-      <a class="chat-transcript-thread" href="/chat/c/-/{{channel_id}}/t/{{thread_id}}">
+      <a class="chat-transcript-thread" href="{{thread_url}}">
         <span class="topic-thread-icon">
           <svg class="fa d-icon d-icon-discourse-threads svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#discourse-threads"></use></svg>
         </span>

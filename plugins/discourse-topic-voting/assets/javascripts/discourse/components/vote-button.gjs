@@ -7,6 +7,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
+import getURL from "discourse/lib/get-url";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { and, eq, not } from "discourse/truth-helpers";
@@ -181,7 +182,7 @@ export default class VoteBox extends Component {
                     count=this.currentUser.votes_left
                     max=this.currentUser.vote_limit
                   }}
-                  @href="/my/activity/votes"
+                  @href={{getURL "/my/activity/votes"}}
                   @icon="check-to-slot"
                   class="btn-transparent see-votes topic-voting-menu__row-btn"
                 />
@@ -217,7 +218,7 @@ export default class VoteBox extends Component {
                     count=this.currentUser.votes_left
                     max=this.currentUser.vote_limit
                   }}
-                  @href="/my/activity/votes"
+                  @href={{getURL "/my/activity/votes"}}
                   @icon="check-to-slot"
                   class="btn-transparent see-votes topic-voting-menu__row-btn"
                 />
@@ -230,7 +231,7 @@ export default class VoteBox extends Component {
                     count=this.currentUser.votes_left
                     max=this.currentUser.vote_limit
                   }}
-                  @href="/my/activity/votes"
+                  @href={{getURL "/my/activity/votes"}}
                   @icon="check-to-slot"
                   class="btn-transparent see-votes topic-voting-menu__row-btn"
                 />

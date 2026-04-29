@@ -8,6 +8,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
+import getURL from "discourse/lib/get-url";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -229,7 +230,7 @@ export default class WelcomeBanner extends Component {
             <DButton
               @icon="magnifying-glass"
               @title="search.open_advanced"
-              @href="/search?expanded=true"
+              @href={{getURL "/search?expanded=true"}}
               class="search-icon"
             />
             <SearchMenu

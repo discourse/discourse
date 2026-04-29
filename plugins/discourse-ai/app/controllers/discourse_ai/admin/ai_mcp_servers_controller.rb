@@ -104,7 +104,7 @@ module DiscourseAi
             "discourse_ai.mcp_servers.errors.oauth_callback_failed",
             message: e.message,
           )
-          redirect_to "/admin/plugins/discourse-ai/ai-tools"
+          redirect_to "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-tools"
         end
       end
 

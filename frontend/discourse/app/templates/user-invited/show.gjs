@@ -17,6 +17,7 @@ import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
 import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
+import { groupPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -246,7 +247,7 @@ export default <template>
                           {{#each invite.groups as |g|}}
                             <span class="invite-extra">
                               <a
-                                href="/g/{{g.name}}"
+                                href={{groupPath g.name}}
                                 class="invite-extra-item-link"
                               >{{icon "users"}}
                                 {{g.name}}

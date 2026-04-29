@@ -223,4 +223,76 @@ describe Chat::OneboxHandler do
       end
     end
   end
+
+  context "when Discourse is installed in a subfolder" do
+    before { set_subfolder "/forum" }
+
+    fab!(:message) do
+      Fabricate(:chat_message, chat_channel: public_channel, user: user, message: "Hello world!")
+    end
+    fab!(:thread_original_message) do
+      Fabricate(:chat_message, chat_channel: public_channel, user: user, message: "Thread starter")
+    end
+    fab!(:thread) do
+      Fabricate(:chat_thread, channel: public_channel, original_message: thread_original_message)
+    end
+
+    it "prefixes all channel onebox links with the subfolder" do
+      public_channel.add(user)
+      Chat::Channel.ensure_consistency!
+
+      onebox_html = Chat::OneboxHandler.handle(public_chat_url, { channel_id: public_channel.id })
+
+      expect(onebox_html).to include(%Q(href="/forum/chat/c/-/#{public_channel.id}"))
+      expect(onebox_html).not_to include(%Q(href="/chat/c/-/))
+    end
+
+    it "prefixes all message onebox links with the subfolder" do
+      onebox_html =
+        Chat::OneboxHandler.handle(
+          "#{public_chat_url}/#{message.id}",
+          { channel_id: public_channel.id, message_id: message.id },
+        )
+
+      expect(onebox_html).to include(%Q(href="/forum/chat/c/-/#{public_channel.id}/#{message.id}"))
+      expect(onebox_html).to include(%Q(href="/forum/chat/c/-/#{public_channel.id}"))
+      expect(onebox_html).not_to include(%Q(href="/chat/c/-/))
+    end
+
+    it "prefixes all threaded-message onebox links with the subfolder" do
+      threaded_message =
+        Fabricate(
+          :chat_message,
+          chat_channel: public_channel,
+          user: user,
+          thread: thread,
+          message: "In the thread",
+        )
+
+      onebox_html =
+        Chat::OneboxHandler.handle(
+          "#{public_chat_url}/#{threaded_message.id}",
+          { channel_id: public_channel.id, message_id: threaded_message.id },
+        )
+
+      expect(onebox_html).to include(
+        %Q(href="/forum/chat/c/-/#{public_channel.id}/t/#{thread.id}/#{threaded_message.id}"),
+      )
+      expect(onebox_html).to include(%Q(href="/forum/chat/c/-/#{public_channel.id}/t/#{thread.id}"))
+      expect(onebox_html).to include(%Q(href="/forum/chat/c/-/#{public_channel.id}"))
+      expect(onebox_html).not_to include(%Q(href="/chat/c/-/))
+    end
+
+    it "prefixes all thread onebox links with the subfolder" do
+      onebox_html =
+        Chat::OneboxHandler.handle(
+          "#{public_chat_url}/t/#{thread.id}",
+          { channel_id: public_channel.id, thread_id: thread.id },
+        )
+
+      expect(onebox_html).to include(%Q(href="/forum/chat/c/-/#{public_channel.id}/t/#{thread.id}"))
+      expect(onebox_html).to include(%Q(href="/forum/chat/c/-/#{public_channel.id}"))
+      expect(onebox_html).not_to include(%Q(href="/chat/c/-/))
+    end
+  end
 end

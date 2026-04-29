@@ -12,6 +12,7 @@ import icon from "discourse/helpers/d-icon";
 import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -165,7 +166,10 @@ export default class GamificationLeaderboard extends Component {
           class="leaderboard__period-chooser"
         />
         {{#if this.currentUser.staff}}
-          <a href="/admin/plugins/gamification" class="leaderboard__settings">
+          <a
+            href={{getURL "/admin/plugins/gamification"}}
+            class="leaderboard__settings"
+          >
             {{icon "gear"}}
             {{unless
               this.site.mobileView

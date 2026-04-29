@@ -12,6 +12,7 @@ import AddSynonymsConfirmation from "discourse/components/tag-settings/add-synon
 import TagSettingsLocalizations from "discourse/components/tag-settings/localizations";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
 import { eq } from "discourse/truth-helpers";
@@ -97,7 +98,9 @@ export default class TagSettings extends Component {
           ? i18n("tagging.tag_groups_info_prefix.one")
           : i18n("tagging.tag_groups_info_prefix.other");
       const groups = (this.args.tag.tag_groups || [])
-        .map((tg) => `<a href="/tag_groups/${tg.id}">${tg.name}</a>`)
+        .map(
+          (tg) => `<a href="${getURL(`/tag_groups/${tg.id}`)}">${tg.name}</a>`
+        )
         .join(", ");
       parts.push(`${prefix}${groups}.`);
     }
@@ -106,7 +109,7 @@ export default class TagSettings extends Component {
       const categoriesHtml = this.args.tag.categories
         .map(
           (cat) =>
-            `<a href="/c/${cat.slug}/${cat.id}" class="badge-category">${cat.name}</a>`
+            `<a href="${getURL(`/c/${cat.slug}/${cat.id}`)}" class="badge-category">${cat.name}</a>`
         )
         .join(" ");
       parts.push(`${i18n("tagging.restricted_to")} ${categoriesHtml}.`);

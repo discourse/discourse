@@ -6,6 +6,7 @@ import { trustHTML } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { ajax } from "discourse/lib/ajax";
+import { groupPath } from "discourse/lib/url";
 
 export default class AboutPageExtraGroups extends Component {
   @service site;
@@ -117,7 +118,7 @@ export default class AboutPageExtraGroups extends Component {
             {{if this.showGroupDescription '--has-description'}}"
         >
           <h3>
-            <a href="/g/{{group.name}}">{{this.groupName group}}</a>
+            <a href={{groupPath group.name}}>{{this.groupName group}}</a>
           </h3>
           {{#if this.showGroupDescription}}
             <p>{{trustHTML group.bio_cooked}}</p>

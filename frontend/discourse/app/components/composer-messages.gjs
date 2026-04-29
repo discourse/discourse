@@ -16,6 +16,7 @@ import {
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
+import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import { autoTrackedArray } from "../lib/tracked-tools";
 
@@ -171,7 +172,7 @@ export default class ComposerMessages extends Component {
           let usernames = [];
           response.usernames.forEach((username, index) => {
             usernames[index] =
-              `<a class='mention' href='/u/${username}'>@${username}</a>`;
+              `<a class='mention' href='${userPath(username)}'>@${username}</a>`;
           });
 
           let body_key;
