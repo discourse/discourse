@@ -271,9 +271,16 @@ class TopicEmbed < ActiveRecord::Base
     response.title = opts[:title] if opts[:title].present?
     import_user = opts[:user] if opts[:user].present?
     import_user = response.author if response.author.present?
-    url = normalize_url(response.url) if response.url.present?
 
-    TopicEmbed.import(import_user, url, response.title, response.body)
+    embed_url = url
+
+    if response.url.present?
+      original_uri = URI.parse(UrlHelper.normalized_encode(url))
+      canonical_uri = URI.parse(UrlHelper.normalized_encode(response.url))
+      embed_url = response.url if original_uri.host == canonical_uri.host
+    end
+
+    TopicEmbed.import(import_user, normalize_url(embed_url), response.title, response.body)
   end
 
   # Convert any relative URLs to absolute. RSS is annoying for this.
