@@ -535,6 +535,22 @@ RSpec.describe GroupsController do
     describe "when accessing by id" do
       include_examples "group show behavior", "/groups/by-id", :id
     end
+
+    context "as a moderator with moderators_manage_groups enabled" do
+      before { SiteSetting.moderators_manage_groups = true }
+
+      it "includes automatic_membership_email_domains in the response" do
+        group.update!(automatic_membership_email_domains: "test.org")
+        sign_in(moderator)
+
+        get "/groups/#{group.name}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["group"]["automatic_membership_email_domains"]).to eq(
+          "test.org",
+        )
+      end
+    end
   end
 
   describe "#mentions" do

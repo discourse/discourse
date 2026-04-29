@@ -128,10 +128,9 @@ Discourse::Application.routes.draw do
           delete "owners" => "groups#remove_owner"
           put "primary" => "groups#set_primary"
         end
-      end
-      resources :groups, only: [:destroy], constraints: AdminConstraint.new do
         collection { put "automatic_membership_count" => "groups#automatic_membership_count" }
       end
+      resources :groups, only: [:destroy], constraints: AdminConstraint.new
 
       resources :users, id: RouteFormat.username, only: %i[index destroy] do
         collection do
