@@ -103,9 +103,13 @@ jobs:
           # SIGINT trap exits cleanly, then gdb prints bt (no stack on a
           # clean exit) and quits. timeout still returns 124 because IT had
           # to signal — that remains our "survived the window" indicator.
+          # gdb needs an ELF binary, not the `bundle` shebang script — run
+          # ruby directly with bundler/setup to honour BUNDLE_GEMFILE.
           timeout --kill-after=20 --signal=INT "$duration" \
             gdb -q --batch \
               -ex "set pagination off" \
+              -ex "set confirm off" \
+              -ex "set disable-randomization off" \
               -ex "handle SIGINT  pass nostop noprint" \
               -ex "handle SIGTERM pass nostop noprint" \
               -ex "run" \
@@ -113,7 +117,7 @@ jobs:
               -ex "thread apply all bt full" \
               -ex "info registers" \
               -ex "quit" \
-              --args bundle exec ruby stress.rb 2>&1 | tee stress.log
+              --args ruby -rbundler/setup stress.rb 2>&1 | tee stress.log
           code=${PIPESTATUS[0]}
           echo "Wrapper exit code: $code"
           # Belt-and-suspenders: detect a crash by log content too, in case
