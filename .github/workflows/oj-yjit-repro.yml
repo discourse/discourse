@@ -1,0 +1,135 @@
+name: oj YJIT crash repro
+
+# Investigation harness for the YJIT panic seen in production with oj 3.16.13.
+# Each matrix cell stresses the rails encoder for DURATION_MINUTES and passes
+# if it survives without crashing.
+# Discussed in https://github.com/discourse/discourse/pull/39568.
+#
+# Trigger: add the `run-oj-stress` label to this PR. To re-run, remove the
+# label and add it again. Defaults below — edit and push to change them.
+
+on:
+  pull_request:
+    types: [labeled]
+
+env:
+  DURATION_MINUTES: "120"
+  THREADS: "8"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: oj-yjit-repro-${{ github.head_ref }}
+  cancel-in-progress: false
+
+jobs:
+  stress:
+    if: >-
+      github.repository_owner == 'discourse'
+      && github.event.label.name == 'run-oj-stress'
+    name: oj=${{ matrix.oj }} yjit=${{ matrix.yjit }}
+    runs-on: cdck-linux-8-core
+    container: discourse/discourse_test:release
+    timeout-minutes: 360
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - oj: "3.16.12"
+            yjit: "1"  # baseline — should NOT crash
+          - oj: "3.16.13"
+            yjit: "1"  # suspect — expected to crash if our hypothesis is right
+          - oj: "3.16.13"
+            yjit: "0"  # rules out a YJIT-only bug
+          - oj: "3.17.0"
+            yjit: "1"  # the question we want answered
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: script/oj_yjit_repro
+
+    env:
+      OJ_VERSION: ${{ matrix.oj }}
+      RUBY_YJIT_ENABLE: ${{ matrix.yjit }}
+      BUNDLE_GEMFILE: ${{ github.workspace }}/script/oj_yjit_repro/Gemfile
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+        working-directory: ${{ github.workspace }}
+
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Show host info
+        run: |
+          ruby -v
+          grep -m1 'model name' /proc/cpuinfo || true
+          grep -m1 'flags' /proc/cpuinfo | tr ' ' '\n' | grep -E '^(sse4_2|ssse3|avx2)$' || true
+          nproc
+
+      - name: Install gems
+        run: |
+          bundle config --local path "${GITHUB_WORKSPACE}/script/oj_yjit_repro/vendor/bundle"
+          bundle install --jobs "$(nproc)"
+
+      - name: Sanity check
+        run: |
+          bundle exec ruby -e '
+            require "oj"
+            puts "oj=#{Oj::VERSION} ruby=#{RUBY_VERSION} yjit=#{defined?(RubyVM::YJIT) && RubyVM::YJIT.enabled?}"
+          '
+          gdb --version | head -1
+
+      - name: Stress
+        id: stress
+        run: |
+          duration=$(( DURATION_MINUTES * 60 ))
+          ulimit -c unlimited 2>/dev/null || true
+          set +e
+          # gdb wraps ruby so that any abort()/SIGABRT (rb_bug, YJIT panic,
+          # SIGSEGV, etc.) leaves us with a full bt of all threads in the log.
+          # `timeout --signal=INT` lets gdb forward SIGINT to ruby, our
+          # SIGINT trap exits cleanly, then gdb prints bt (no stack on a
+          # clean exit) and quits. timeout still returns 124 because IT had
+          # to signal — that remains our "survived the window" indicator.
+          timeout --kill-after=20 --signal=INT "$duration" \
+            gdb -q --batch \
+              -ex "set pagination off" \
+              -ex "handle SIGINT  pass nostop noprint" \
+              -ex "handle SIGTERM pass nostop noprint" \
+              -ex "run" \
+              -ex "echo \n=== Backtrace at termination ===\n" \
+              -ex "thread apply all bt full" \
+              -ex "info registers" \
+              -ex "quit" \
+              --args bundle exec ruby stress.rb 2>&1 | tee stress.log
+          code=${PIPESTATUS[0]}
+          echo "Wrapper exit code: $code"
+          # Belt-and-suspenders: detect a crash by log content too, in case
+          # gdb caught the abort and exited 0 instead of propagating.
+          if grep -qE '\[BUG\]|Aborted|SIGABRT|SIGSEGV|SIGILL|panicked at' stress.log; then
+            echo "::error::Crash detected — see uploaded log artifact for full bt"
+            grep -nE '\[BUG\]|panicked at|Aborted|=== Backtrace' stress.log | head -20
+            exit 1
+          fi
+          if [ "$code" -eq 124 ]; then
+            echo "::notice::Survived ${duration}s without crashing"
+            exit 0
+          fi
+          echo "::error::Harness exited unexpectedly (code $code, no crash markers)"
+          tail -n 200 stress.log
+          exit 1
+
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stress-log-oj${{ matrix.oj }}-yjit${{ matrix.yjit }}
+          path: script/oj_yjit_repro/stress.log
+          if-no-files-found: ignore

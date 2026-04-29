@@ -1,0 +1,4 @@
+source "https://rubygems.org"
+
+# CI overrides via OJ_VERSION; defaults to the suspect build for local runs.
+gem "oj", ENV.fetch("OJ_VERSION", "3.16.13")
