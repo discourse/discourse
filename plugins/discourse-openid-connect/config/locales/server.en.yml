@@ -18,6 +18,16 @@ en:
     openid_connect_groups_claim: "The name of the claim in the OIDC token that contains the user's groups as an array of strings. Leave blank to disable group syncing."
     openid_connect_match_by_email: "Use email address to match OpenID Connect authentications to existing Discourse user accounts."
     openid_connect_use_pkce: "Enable Proof Key for Code Exchange (PKCE) for OpenID Connect authentication."
+    openid_connect_match_by_username: "Use username to match OpenID Connect authentications to existing Discourse user accounts. username_change_period must be 0."
+    openid_connect_groups_enabled: "Enable group membership from mapping of OpenID Connect group membership."
+    openid_connect_groups_maps: "Mappings of OpenID Connect group names to comma-separated list of discourse group names, e.g. '/keycloak-developers:discourse_devgroup_members,discourse_usergroup_moderators' will add a user in keycloak group '/keycloak-developers' to both groups 'discourse_devgroup_members' and 'discourse_usergroup_moderators'.  Discourse groups can appear more than once."
+    openid_connect_groups_remove_unmapped_groups: "If user is not in any OpenID Connect group that maps to a discourse group, remove existing membership from that discourse group.  Only groups set in openid_connect_groups_maps will be removed."
+    openid_connect_gitlab_override_if_user_exists: "If the user exists in gitlab, use group membership decisions from that and ignore the OpenID Connect group membership."
+    openid_connect_gitlab_api_base: "API base for your gitlab instance, e.g. https://gitlab.example.com/api/v4 .  Uses env DISCOURSE_OPENID_CONNECT_GITLAB_API_BASE if not set here."
+    openid_connect_gitlab_api_private_token: "API private token for Gitlab access.  Uses env DISCOURSE_OPENID_CONNECT_GITLAB_API_PRIVATE_TOKEN (recommended) if not set here."
+    openid_connect_groups_gitlab_repository_role_maps: "'Minimum role value;Project name' to Group mapping (Developer value is 30, see https://docs.gitlab.com/api/members/ ), e.g 'excalibur-devs-group:30;Camelot/excalibur'"
+    openid_connect_gitlab_remove_unmapped_groups: "Remove group access if a 'minimum role value;Project name' is not met."
+    openid_connect_gitlab_api_verbose_log: "Verbose logs for Gitlab API project/role check."
   login:
     omniauth_error:
       openid_connect_discovery_error: Unable to fetch configuration from identity provider. Please try again.

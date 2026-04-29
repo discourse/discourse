@@ -59,3 +59,29 @@ discourse_openid_connect:
   openid_connect_use_pkce:
     default: false
     area: "oidc"
+  openid_connect_match_by_username:
+    default: false
+  openid_connect_groups_enabled:
+    default: false
+    client: true
+  openid_connect_groups_maps:
+    default: ""
+    type: list
+    list_type: simple
+  openid_connect_groups_remove_unmapped_groups:
+    default: true
+  openid_connect_gitlab_override_if_user_exists:
+    default: true
+  openid_connect_gitlab_api_base:
+    default: ""
+  openid_connect_gitlab_api_private_token:
+    default: ""
+    secret: true
+  openid_connect_groups_gitlab_repository_role_maps:
+    default: ""
+    type: list
+    list_type: simple
+  openid_connect_gitlab_remove_unmapped_groups:
+    default: true
+  openid_connect_gitlab_api_verbose_log:
+    default: false
