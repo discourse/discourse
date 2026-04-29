@@ -19,6 +19,8 @@ end
 require_relative "lib/post_voting/engine"
 
 after_initialize do
+  Discourse::Application.routes.append { mount PostVoting::Engine, at: "post_voting" }
+
   require_relative "lib/post_voting/vote_manager"
   require_relative "lib/post_voting/guardian_extension"
   require_relative "lib/post_voting/comment_creator"
