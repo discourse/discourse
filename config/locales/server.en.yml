@@ -1274,6 +1274,7 @@ en:
     logged_in_as: "Logged in as"
     permissions_header: 'This will allow "%{application_name}" to:'
     redirect_warning: "Authorizing will redirect you to"
+    write_scope_warning: "Full write access requested — this application will be able to post, edit, and delete content. Proceed only if you fully trust it."
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     copy_key: "Copy Key"
     copied: "Copied!"
