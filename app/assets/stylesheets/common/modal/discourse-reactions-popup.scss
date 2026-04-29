@@ -1,7 +1,8 @@
 @use "lib/viewport";
 
 // specific d-modal overrules
-.fk-d-menu-modal.discourse-reactions-users-menu-content {
+.fk-d-menu-modal.discourse-reactions-users-menu-content,
+.fk-d-menu-modal.post-liked-users-menu-content {
   .d-modal {
     &__container {
       height: clamp(50dvh, 50dvh, 60dvh);
