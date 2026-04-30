@@ -6,7 +6,7 @@ on:
       - main
       - stable
       - release/*
-      - precompile-asset-improvements
+      - 2026-4-assets
     tags:
       - beta
       - v*
@@ -18,7 +18,7 @@ concurrency:
 jobs:
   publish-assets:
     if: github.repository == 'discourse/discourse'
-    runs-on: 'cdck-linux-8-core'
+    runs-on: "cdck-linux-8-core"
     container: discourse/discourse_test:release
     timeout-minutes: 30
 
@@ -40,6 +40,7 @@ jobs:
 
       - uses: actions/checkout@v6
         with:
+          ref: release/2026.4
           fetch-depth: 1
 
       - name: Setup Git
