@@ -2,17 +2,18 @@ import { ajax } from "discourse/lib/ajax";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 function captchaSelector(siteSettings) {
-  if (siteSettings.discourse_captcha_provider === "hcaptcha") {
-    return "hcaptcha";
-  } else if (siteSettings.discourse_captcha_provider === "recaptcha") {
-    return "recaptcha";
+  if (siteSettings.discourse_captcha_provider !== "none") {
+    return siteSettings.discourse_captcha_provider;
+  } else {
+    return false;
   }
 }
 
 function initializeHCaptcha(api, container) {
   const siteSettings = container.lookup("service:site-settings");
+
   if (
-    siteSettings.discourse_captcha_enabled &&
+    !siteSettings.discourse_captcha_enabled ||
     !captchaSelector(siteSettings)
   ) {
     return;

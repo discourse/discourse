@@ -200,6 +200,105 @@ RSpec.describe "Users", type: :request do
       end
     end
 
+    context "when captcha provider returns server error" do
+      context "when using hCaptcha" do
+        before do
+          SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::HCAPTCHA
+
+          stub_request(:post, DiscourseHcaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+            body: {
+              secret: SiteSetting.hcaptcha_secret_key,
+              response: "token-from-hCaptcha",
+            },
+          ).to_return(status: 500, body: "Internal Server Error")
+        end
+
+        it "fails registration" do
+          post "/captcha/hcaptcha/create.json", params: { token: "token-from-hCaptcha" }
+          post "/u.json", params: user_params
+          expect(JSON.parse(response.body)["success"]).to be(false)
+        end
+      end
+
+      context "when using reCaptcha" do
+        before do
+          SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::RECAPTCHA
+
+          stub_request(:post, DiscourseHcaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+            body: {
+              secret: SiteSetting.recaptcha_secret_key,
+              response: "token-from-reCaptcha",
+            },
+          ).to_return(status: 503, body: "Service Unavailable")
+        end
+
+        it "fails registration" do
+          post "/captcha/recaptcha/create.json", params: { token: "token-from-reCaptcha" }
+          post "/u.json", params: user_params
+          expect(JSON.parse(response.body)["success"]).to be(false)
+        end
+      end
+    end
+
+    context "when captcha provider returns malformed response" do
+      context "when using hCaptcha" do
+        before do
+          SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::HCAPTCHA
+
+          stub_request(:post, DiscourseHcaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+            body: {
+              secret: SiteSetting.hcaptcha_secret_key,
+              response: "token-from-hCaptcha",
+            },
+          ).to_return(status: 200, body: "not valid json")
+        end
+
+        it "fails registration" do
+          post "/captcha/hcaptcha/create.json", params: { token: "token-from-hCaptcha" }
+          post "/u.json", params: user_params
+          expect(JSON.parse(response.body)["success"]).to be(false)
+        end
+      end
+
+      context "when using reCaptcha" do
+        before do
+          SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::RECAPTCHA
+
+          stub_request(:post, DiscourseHcaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+            body: {
+              secret: SiteSetting.recaptcha_secret_key,
+              response: "token-from-reCaptcha",
+            },
+          ).to_return(status: 200, body: "not valid json")
+        end
+
+        it "fails registration" do
+          post "/captcha/recaptcha/create.json", params: { token: "token-from-reCaptcha" }
+          post "/u.json", params: user_params
+          expect(JSON.parse(response.body)["success"]).to be(false)
+        end
+      end
+    end
+
+    context "when captcha response has success field as nil" do
+      before do
+        SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::HCAPTCHA
+
+        stub_request(:post, DiscourseHcaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+          body: {
+            secret: SiteSetting.hcaptcha_secret_key,
+            response: "token-from-hCaptcha",
+          },
+        ).to_return(status: 200, body: '{"error-codes":["missing-input-secret"]}')
+      end
+
+      it "fails registration" do
+        post "/captcha/hcaptcha/create.json", params: { token: "token-from-hCaptcha" }
+        post "/u.json", params: user_params
+        expect(JSON.parse(response.body)["success"]).to be(false)
+      end
+    end
+
     private
 
     def honeypot_magic(params)

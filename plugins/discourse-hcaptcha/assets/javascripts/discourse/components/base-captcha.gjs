@@ -81,7 +81,7 @@ export default class BaseCaptcha extends Component {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(`Failed to load ${this.providerName} script:`, error);
-      this.captchaError = this.captchaErrorKey;
+      this.captchaError = i18n(this.captchaErrorKey);
     }
   }
 
