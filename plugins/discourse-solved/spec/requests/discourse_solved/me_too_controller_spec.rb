@@ -24,7 +24,7 @@ RSpec.describe DiscourseSolved::MeTooController do
 
       it "creates a me-too record and returns updated counts" do
         expect { post "/solution/me_too.json", params: { topic_id: topic.id } }.to change {
-          DiscourseSolved::TopicMeToo.count
+          DiscourseSolved::MeToo.count
         }.by(1)
         expect(response.status).to eq(200)
         body = response.parsed_body
@@ -35,7 +35,7 @@ RSpec.describe DiscourseSolved::MeTooController do
       it "toggles the me-too off when called twice" do
         post "/solution/me_too.json", params: { topic_id: topic.id }
         expect { post "/solution/me_too.json", params: { topic_id: topic.id } }.to change {
-          DiscourseSolved::TopicMeToo.count
+          DiscourseSolved::MeToo.count
         }.by(-1)
         expect(response.parsed_body["user_did_me_too"]).to eq(false)
       end

@@ -6,7 +6,7 @@ module DiscourseSolved::TopicExtension
   prepended do
     has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy
     has_many :me_toos,
-             class_name: "DiscourseSolved::TopicMeToo",
+             class_name: "DiscourseSolved::MeToo",
              foreign_key: :topic_id,
              dependent: :delete_all
   end

@@ -23,8 +23,7 @@ class DiscourseSolved::MeTooController < ::ApplicationController
   private
 
   def rate_limit_me_too
-    return if current_user.staff?
-    RateLimiter.new(nil, "me-too-hr-#{current_user.id}", 30, 1.hour).performed!
-    RateLimiter.new(nil, "me-too-min-#{current_user.id}", 6, 30.seconds).performed!
+    return if current_user.staff? || params[:topic_id].blank?
+    RateLimiter.new(nil, "me-too-#{current_user.id}-#{params[:topic_id]}", 5, 1.hour).performed!
   end
 end

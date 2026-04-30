@@ -71,7 +71,7 @@ RSpec.describe DiscourseSolved::ToggleMeToo do
 
       it "creates a me-too record" do
         expect { result }.to change {
-          DiscourseSolved::TopicMeToo.where(topic:, user: acting_user).count
+          DiscourseSolved::MeToo.where(topic:, user: acting_user).count
         }.by(1)
       end
 
@@ -119,13 +119,13 @@ RSpec.describe DiscourseSolved::ToggleMeToo do
     end
 
     context "when the user has already recorded a me-too" do
-      before { DiscourseSolved::TopicMeToo.create!(topic:, user: acting_user) }
+      before { DiscourseSolved::MeToo.create!(topic:, user: acting_user) }
 
       it { is_expected.to run_successfully }
 
       it "removes the me-too record" do
         expect { result }.to change {
-          DiscourseSolved::TopicMeToo.where(topic:, user: acting_user).count
+          DiscourseSolved::MeToo.where(topic:, user: acting_user).count
         }.by(-1)
       end
 

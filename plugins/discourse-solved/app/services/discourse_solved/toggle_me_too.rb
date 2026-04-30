@@ -36,7 +36,7 @@ class DiscourseSolved::ToggleMeToo
   end
 
   def fetch_existing_me_too(topic:, guardian:)
-    DiscourseSolved::TopicMeToo.find_by(topic_id: topic.id, user_id: guardian.user.id)
+    DiscourseSolved::MeToo.find_by(topic_id: topic.id, user_id: guardian.user.id)
   end
 
   def existing_me_too_present?(existing_me_too:)
@@ -52,7 +52,7 @@ class DiscourseSolved::ToggleMeToo
   end
 
   def record_me_too(topic:, guardian:)
-    DiscourseSolved::TopicMeToo.create(topic:, user: guardian.user)
+    DiscourseSolved::MeToo.create(topic:, user: guardian.user)
   end
 
   def notification_level_below_tracking?(topic:, guardian:)

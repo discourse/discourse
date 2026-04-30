@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseSolved::TopicMeToo, type: :model do
+RSpec.describe DiscourseSolved::MeToo, type: :model do
   fab!(:topic)
   fab!(:user)
 
