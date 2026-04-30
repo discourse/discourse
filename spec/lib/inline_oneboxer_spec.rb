@@ -434,4 +434,18 @@ RSpec.describe InlineOneboxer do
       expect(results[0][:title]).to eq("Custom Onebox for Wizard")
     end
   end
+
+  it "returns engine-supplied title and css_class" do
+    url = "https://example.com/foo"
+    allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(
+      title: "Engine title",
+      css_class: "--engine-class",
+    )
+
+    expect(InlineOneboxer.lookup(url, skip_cache: true)).to eq(
+      url: url,
+      title: "Engine title",
+      css_class: "--engine-class",
+    )
+  end
 end

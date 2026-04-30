@@ -248,6 +248,29 @@ RSpec.describe CookedPostProcessor do
           expect(cpp.html).to_not have_tag("a[rel='noopener nofollow ugc']")
         end
       end
+
+      describe "engine-supplied css_class" do
+        let(:url) { "https://example.com/foo" }
+        let(:post) { Fabricate(:post, user: user_with_auto_groups, raw: "Look at #{url} today") }
+        let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+        before do
+          allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(
+            title: "engine title",
+            css_class: "--gh-status-merged",
+          )
+        end
+
+        after { InlineOneboxer.invalidate(url) }
+
+        it "adds the css_class alongside inline-onebox" do
+          cpp.post_process
+
+          link = Nokogiri::HTML5.fragment(cpp.html).at_css(%(a[href="#{url}"]))
+          expect(link["class"]).to eq("inline-onebox --gh-status-merged")
+          expect(link.text).to eq("engine title")
+        end
+      end
     end
 
     context "when processing images" do
