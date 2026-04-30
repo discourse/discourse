@@ -179,7 +179,7 @@ export default class DMultiSelect extends Component {
   remove(selectedItem, event) {
     event?.stopPropagation();
 
-    if (!selectedItem.canRemove) {
+    if (selectedItem.preventRemoval) {
       return;
     }
 
@@ -261,12 +261,12 @@ export default class DMultiSelect extends Component {
                     to="selection"
                   }}</span>
 
-                {{#if item.canRemove}}
+                {{#unless item.preventRemoval}}
                   {{icon
                     "xmark"
                     class="d-multi-select-trigger__remove-selection-icon"
                   }}
-                {{/if}}
+                {{/unless}}
               </button>
             {{/each}}
           </div>

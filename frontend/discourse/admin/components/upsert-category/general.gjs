@@ -64,7 +64,7 @@ export default class UpsertCategoryGeneral extends Component {
     super(...arguments);
     this.categoryTypes = [...this.categoryTypeChooser.allTypes].map((type) => ({
       ...type,
-      canRemove: type.id !== DISCUSSION_TYPE_ID,
+      preventRemoval: type.id === DISCUSSION_TYPE_ID,
     }));
   }
 
