@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/davidtaylorhq/capybara-playwright-driver.git
-  revision: 80328a37e8f8c3f24af4e02192ba8e67878e8b4f
+  revision: eaf47e9044fd3ee639a2a98217b3c2bd5af2db87
   branch: capybara-locator
   specs:
     capybara-playwright-driver (0.5.9)
