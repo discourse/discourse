@@ -354,6 +354,7 @@ RSpec.describe DiscourseWorkflows::Executor do
 
         second_execution = described_class.new(workflow, "trigger-1", trigger_data).run
         expect(second_execution.status).to eq("rate_limited")
+        expect(second_execution.trigger_data).to eq("rate_limited" => true)
       end
     end
 

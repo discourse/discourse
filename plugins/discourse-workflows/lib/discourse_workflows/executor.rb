@@ -62,7 +62,7 @@ module DiscourseWorkflows
 
     def run
       return @store.create_execution_with_status(:skipped) unless @workflow.enabled?
-      return @store.create_execution_with_status(:rate_limited) unless rate_limiter.within_limits?
+      return @store.create_rate_limited_execution unless rate_limiter.within_limits?
 
       execute_flow(:start_execution!) do
         trigger_node = @snapshot.find_node(@trigger_node_id)

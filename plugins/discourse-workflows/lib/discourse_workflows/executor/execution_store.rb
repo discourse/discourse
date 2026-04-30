@@ -76,6 +76,22 @@ module DiscourseWorkflows
         )
       end
 
+      def create_rate_limited_execution
+        now = Time.current
+
+        DiscourseWorkflows::Execution.create!(
+          workflow: workflow,
+          trigger_node_id: @trigger_node_id,
+          status: :rate_limited,
+          trigger_data: {
+            "rate_limited" => true,
+          },
+          execution_mode: @options.execution_mode,
+          started_at: now,
+          finished_at: now,
+        )
+      end
+
       def pause_waiting_execution!(node:, waiting_until: nil, steps: [])
         execution.update!(
           status: :waiting,
