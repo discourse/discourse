@@ -344,7 +344,7 @@ module Email
         "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;",
       )
 
-      style(".post-excerpt img.emoji", "max-height: 20px;")
+      style(".post-excerpt img.emoji", "max-height: 20px; vertical-align: middle;")
 
       format_custom
     end
