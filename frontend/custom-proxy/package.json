@@ -9,11 +9,9 @@
   ],
   "ember-addon": {
     "before": [
+      "broccoli-watcher",
       "broccoli-serve-files",
       "proxy-server-middleware"
-    ],
-    "after": [
-      "broccoli-watcher"
     ]
   },
   "devDependencies": {
@@ -22,6 +20,7 @@
     "glob": "^13.0.6",
     "html-entities": "^2.6.0",
     "html-rewriter-wasm": "^0.4.1",
+    "js-yaml": "^4",
     "node-fetch": "^3.3.2"
   },
   "engines": {

@@ -118,6 +118,16 @@ elsif Rails.configuration.multisite
       Rails.configuration.hosts.concat(specification.spec.configuration_hash[:host_names])
     end
   end
+
+  if RailsMultisite::ConnectionManagement.dynamic_path_prefix_enabled?
+    # TODO: This is a weird monkey patch just to override a singleton method for our own class
+    # See if we can make this cleaner
+    class GlobalSetting
+      def self.relative_url_root
+        RailsMultisite::ConnectionManagement.current_path_prefix || ""
+      end
+    end
+  end
 elsif defined?(RailsFailover::ActiveRecord) && Rails.configuration.active_record_rails_failover
   Rails.configuration.middleware.insert_before(
     MessageBus::Rack::Middleware,

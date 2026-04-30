@@ -57,7 +57,7 @@ gem "discourse_math_bundle"
 
 gem "message_bus"
 
-gem "rails_multisite"
+gem "rails_multisite", github: "discourse/rails_multisite", branch: "feature/subpath-config"
 
 gem "fastimage"
 

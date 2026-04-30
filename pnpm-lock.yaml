@@ -225,6 +225,9 @@ importers:
       html-rewriter-wasm:
         specifier: ^0.4.1
         version: 0.4.1
+      js-yaml:
+        specifier: ^4
+        version: 4.1.1
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2

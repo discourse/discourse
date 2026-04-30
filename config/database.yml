@@ -18,6 +18,7 @@ development:
     ###   - restart sidekiq if you change this setting
     ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
     - "<%= ENV['DISCOURSE_HOSTNAME'] || 'localhost' %>"
+  path_prefix: <%= ENV['DISCOURSE_DEFAULT_DB_RELATIVE_URL_ROOT'] %>
   variables: <%= db_variables.to_json %>
 
 # Warning: The database defined as "test" will be erased and

@@ -7,6 +7,19 @@ require "mini_scheduler/web"
 USERNAME_ROUTE_FORMAT = /[%\w.\-]+?/ unless defined?(USERNAME_ROUTE_FORMAT)
 BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined?(BACKUP_ROUTE_FORMAT)
 
+def relative_url_root_redirect(path)
+  lambda do |params, request|
+    if RailsMultisite::ConnectionManagement.dynamic_path_prefix_enabled?
+      path_prefix = (RailsMultisite::ConnectionManagement.current_path_prefix || "") + "/"
+    elsif defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root
+      path_prefix = Rails.configuration.relative_url_root + "/"
+    else
+      path_prefix = "/"
+    end
+    path_prefix + path
+  end
+end
+
 Discourse::Application.routes.draw do
   def patch(*)
   end # Disable PATCH requests
@@ -1341,7 +1354,7 @@ Discourse::Application.routes.draw do
       put "toggle_favorite" => "user_badges#toggle_favorite", :constraints => { format: :json }
     end
 
-    get "/c", to: redirect(relative_url_root + "categories")
+    get "/c", to: redirect(relative_url_root_redirect("categories"))
 
     resources :categories, only: %i[index create update destroy]
     post "categories/reorder" => "categories#reorder"

@@ -160,6 +160,7 @@ class GlobalSetting
     hash["idle_timeout"] = connection_reaper_age if connection_reaper_age.present?
     hash["reaping_frequency"] = connection_reaper_interval if connection_reaper_interval.present?
     hash["advisory_locks"] = !!self.db_advisory_locks
+    hash["path_prefix"] = default_db_relative_url_root if default_db_relative_url_root.present?
 
     db_variables = provider.keys.filter { |k| k.to_s.starts_with? "db_variables_" }
     if db_variables.length > 0
