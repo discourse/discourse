@@ -9,6 +9,7 @@ describe "Reactions | Post reaction user list" do
   let(:reactions_list) do
     PageObjects::Components::PostReactionsList.new("#post_#{post.post_number}")
   end
+  let(:popup) { PageObjects::Components::PostReactionsPopup.new }
 
   before do
     SiteSetting.discourse_reactions_enabled = true
@@ -31,9 +32,9 @@ describe "Reactions | Post reaction user list" do
     visit(post.url)
     expect(reactions_list).to have_reaction("heart")
 
-    find(".discourse-reactions-counter").click
+    reactions_list.click_counter
 
-    expect(page).to have_css(".post-users-popup")
+    expect(popup).to be_open
     find(".post-users-popup .post-users-popup__name[data-user-card=#{user_2.username}]").click
 
     expect(page).to have_css(".user-card.user-card-#{user_2.username}")
@@ -46,7 +47,7 @@ describe "Reactions | Post reaction user list" do
     visit(post.url)
     expect(reactions_list).to have_reaction("heart")
 
-    find(".discourse-reactions-counter").click
+    reactions_list.click_counter
 
     expect(page).to have_css(
       ".post-users-popup__name[data-user-card=#{user_2.username}]",
@@ -62,7 +63,7 @@ describe "Reactions | Post reaction user list" do
     visit(post.url)
     expect(reactions_list).to have_reaction("heart")
 
-    find(".discourse-reactions-counter").click
+    reactions_list.click_counter
 
     expect(page).to have_css(
       ".post-users-popup__name[data-user-card=#{user_2.username}]",
@@ -77,14 +78,12 @@ describe "Reactions | Post reaction user list" do
     expect(reactions_list).to have_reaction("heart")
 
     reactions_list.click_reaction("clap")
-    expect(page).to have_css(".post-users-popup")
 
-    within(".post-users-popup") do
-      expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=clap].is-active")
-      expect(page).to have_no_css(".post-users-popup__filter[data-reaction-filter=heart].is-active")
-      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
-      expect(page).to have_no_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
-    end
+    expect(popup).to be_open
+    expect(popup).to have_active_filter("clap")
+    expect(popup).to have_no_active_filter("heart")
+    expect(popup).to have_user(user_3.username)
+    expect(popup).to have_no_user(user_2.username)
   end
 
   it "opens the users popup with no filter when clicking the counter number" do
@@ -92,12 +91,10 @@ describe "Reactions | Post reaction user list" do
     visit(post.url)
     expect(reactions_list).to have_reaction("heart")
 
-    find(".discourse-reactions-counter .reactions-counter").click
-    expect(page).to have_css(".post-users-popup")
+    reactions_list.click_counter_number
 
-    within(".post-users-popup") do
-      expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=all].is-active")
-    end
+    expect(popup).to be_open
+    expect(popup).to have_active_filter("all")
   end
 
   it "switches the active filter without reopening the menu when another emoji is clicked" do
@@ -106,13 +103,11 @@ describe "Reactions | Post reaction user list" do
     expect(reactions_list).to have_reaction("heart")
 
     reactions_list.click_reaction("heart")
-    expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=heart].is-active")
-    popup = find(".post-users-popup")
+    expect(popup).to have_active_filter("heart")
 
     reactions_list.click_reaction("clap")
-    expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=clap].is-active")
-    expect(page).to have_no_css(".post-users-popup__filter[data-reaction-filter=heart].is-active")
-    expect(page.find(".post-users-popup")).to eq(popup)
+    expect(popup).to have_active_filter("clap")
+    expect(popup).to have_no_active_filter("heart")
   end
 
   it "switches to the all filter without reopening the menu when the counter number is clicked" do
@@ -121,13 +116,11 @@ describe "Reactions | Post reaction user list" do
     expect(reactions_list).to have_reaction("heart")
 
     reactions_list.click_reaction("heart")
-    expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=heart].is-active")
-    popup = find(".post-users-popup")
+    expect(popup).to have_active_filter("heart")
 
-    find(".discourse-reactions-counter .reactions-counter").click
-    expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=all].is-active")
-    expect(page).to have_no_css(".post-users-popup__filter[data-reaction-filter=heart].is-active")
-    expect(page.find(".post-users-popup")).to eq(popup)
+    reactions_list.click_counter_number
+    expect(popup).to have_active_filter("all")
+    expect(popup).to have_no_active_filter("heart")
   end
 
   it "filters the users popup by reaction" do
@@ -135,24 +128,22 @@ describe "Reactions | Post reaction user list" do
     visit(post.url)
     expect(reactions_list).to have_reaction("heart")
 
-    find(".discourse-reactions-counter .reactions-counter").click
-    expect(page).to have_css(".post-users-popup")
+    reactions_list.click_counter_number
+    expect(popup).to be_open
 
-    within(".post-users-popup") do
-      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
-      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
+    expect(popup).to have_user(user_2.username)
+    expect(popup).to have_user(user_3.username)
 
-      find("[data-reaction-filter=heart]").click
-      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
-      expect(page).to have_no_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
+    popup.click_filter("heart")
+    expect(popup).to have_user(user_2.username)
+    expect(popup).to have_no_user(user_3.username)
 
-      find("[data-reaction-filter=clap]").click
-      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
-      expect(page).to have_no_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
+    popup.click_filter("clap")
+    expect(popup).to have_user(user_3.username)
+    expect(popup).to have_no_user(user_2.username)
 
-      find("[data-reaction-filter=all]").click
-      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
-      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
-    end
+    popup.click_filter("all")
+    expect(popup).to have_user(user_2.username)
+    expect(popup).to have_user(user_3.username)
   end
 end
