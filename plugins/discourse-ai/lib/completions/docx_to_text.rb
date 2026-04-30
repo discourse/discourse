@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 require "nokogiri"
-require "zip"
+require "compression/safe_zip_reader"
 
 module DiscourseAi
   module Completions
     class DocxToText
       MAX_ENTRY_XML_BYTES = 10 * 1024 * 1024
       MAX_TOTAL_XML_BYTES = 30 * 1024 * 1024
-      READ_CHUNK_BYTES = 16 * 1024
+      MAX_ZIP_ENTRIES = 1_000
       MAX_EXTRACTED_TEXT_CHARS = 100_001
       MAX_PARAGRAPHS = 20_000
 
@@ -284,16 +284,18 @@ module DiscourseAi
       end
 
       def convert
-        remaining_bytes = MAX_TOTAL_XML_BYTES
         part_texts = []
         extracted_chars = 0
 
-        ::Zip::File.open(path) do |zip_file|
-          numbering, remaining_bytes = numbering_for(zip_file, remaining_bytes)
+        Compression::SafeZipReader.open(
+          path,
+          max_entries: MAX_ZIP_ENTRIES,
+          max_total_bytes: MAX_TOTAL_XML_BYTES,
+        ) do |zip_file|
+          numbering = numbering_for(zip_file)
 
           text_entries(zip_file).each do |entry|
-            xml = read_xml_entry(entry, remaining_bytes)
-            remaining_bytes -= xml.bytesize
+            xml = read_xml_entry(zip_file, entry)
 
             text = extract_text_from_xml(xml, numbering)
             next if text.blank?
@@ -311,12 +313,11 @@ module DiscourseAi
 
       attr_reader :path
 
-      def numbering_for(zip_file, remaining_bytes)
+      def numbering_for(zip_file)
         entry = zip_file.find_entry("word/numbering.xml")
-        return Numbering.new, remaining_bytes if entry.blank? || entry.directory?
+        return Numbering.new if entry.blank? || entry.directory?
 
-        xml = read_xml_entry(entry, remaining_bytes)
-        [Numbering.from_xml(xml), remaining_bytes - xml.bytesize]
+        Numbering.from_xml(read_xml_entry(zip_file, entry))
       end
 
       def text_entries(zip_file)
@@ -349,25 +350,10 @@ module DiscourseAi
         end
       end
 
-      def read_xml_entry(entry, remaining_bytes)
-        limit = [MAX_ENTRY_XML_BYTES, remaining_bytes].min
-        raise EntryTooLargeError, "DOCX XML content is too large" if limit <= 0
-
-        if entry.size && entry.size > limit
-          raise EntryTooLargeError, "DOCX XML entry #{entry.name} is too large"
-        end
-
-        data = +""
-        entry.get_input_stream do |stream|
-          while (chunk = stream.read(READ_CHUNK_BYTES))
-            data << chunk
-            if data.bytesize > limit
-              raise EntryTooLargeError, "DOCX XML entry #{entry.name} is too large"
-            end
-          end
-        end
-
-        data
+      def read_xml_entry(zip_file, entry)
+        zip_file.read_entry(entry, max_bytes: MAX_ENTRY_XML_BYTES)
+      rescue Compression::SafeZipReader::EntryTooLargeError => e
+        raise EntryTooLargeError, e.message
       end
 
       def extract_text_from_xml(xml, numbering)

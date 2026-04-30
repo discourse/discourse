@@ -2,14 +2,14 @@
 
 require "nokogiri"
 require "pathname"
-require "zip"
+require "compression/safe_zip_reader"
 
 module DiscourseAi
   module Completions
     class XlsxToText
       MAX_ENTRY_XML_BYTES = 10 * 1024 * 1024
       MAX_TOTAL_XML_BYTES = 30 * 1024 * 1024
-      READ_CHUNK_BYTES = 16 * 1024
+      MAX_ZIP_ENTRIES = 1_000
       MAX_EXTRACTED_TEXT_CHARS = 100_001
       MAX_SHEETS = 50
       MAX_ROWS_PER_SHEET = 10_000
@@ -33,11 +33,13 @@ module DiscourseAi
       end
 
       def convert
-        remaining_bytes = MAX_TOTAL_XML_BYTES
-
-        ::Zip::File.open(path) do |zip_file|
-          shared_strings, remaining_bytes = shared_strings_for(zip_file, remaining_bytes)
-          sheets, remaining_bytes = sheets_for(zip_file, remaining_bytes)
+        Compression::SafeZipReader.open(
+          path,
+          max_entries: MAX_ZIP_ENTRIES,
+          max_total_bytes: MAX_TOTAL_XML_BYTES,
+        ) do |zip_file|
+          shared_strings = shared_strings_for(zip_file)
+          sheets = sheets_for(zip_file)
 
           sheet_texts = []
           extracted_chars = 0
@@ -48,8 +50,7 @@ module DiscourseAi
               entry = zip_file.find_entry(sheet.path)
               next if entry.blank? || entry.directory?
 
-              xml = read_xml_entry(entry, remaining_bytes)
-              remaining_bytes -= xml.bytesize
+              xml = read_xml_entry(zip_file, entry)
 
               text = sheet_text(xml, shared_strings)
               next if text.blank?
@@ -68,12 +69,11 @@ module DiscourseAi
 
       attr_reader :path
 
-      def shared_strings_for(zip_file, remaining_bytes)
+      def shared_strings_for(zip_file)
         entry = zip_file.find_entry(SHARED_STRINGS_PATH)
-        return [], remaining_bytes if entry.blank? || entry.directory?
+        return [] if entry.blank? || entry.directory?
 
-        xml = read_xml_entry(entry, remaining_bytes)
-        [parse_shared_strings(xml), remaining_bytes - xml.bytesize]
+        parse_shared_strings(read_xml_entry(zip_file, entry))
       end
 
       def parse_shared_strings(xml)
@@ -83,26 +83,21 @@ module DiscourseAi
         doc.xpath("//sst/si").map { |si| normalize_inline_text(string_item_text(si)) }
       end
 
-      def sheets_for(zip_file, remaining_bytes)
+      def sheets_for(zip_file)
         workbook_entry = zip_file.find_entry(WORKBOOK_PATH)
-        if workbook_entry.blank? || workbook_entry.directory?
-          return fallback_sheets(zip_file), remaining_bytes
-        end
+        return fallback_sheets(zip_file) if workbook_entry.blank? || workbook_entry.directory?
 
         rels = {}
         rels_entry = zip_file.find_entry(WORKBOOK_RELS_PATH)
         if rels_entry.present? && !rels_entry.directory?
-          rels_xml = read_xml_entry(rels_entry, remaining_bytes)
-          remaining_bytes -= rels_xml.bytesize
-          rels = workbook_relationships(rels_xml)
+          rels = workbook_relationships(read_xml_entry(zip_file, rels_entry))
         end
 
-        workbook_xml = read_xml_entry(workbook_entry, remaining_bytes)
-        remaining_bytes -= workbook_xml.bytesize
+        workbook_xml = read_xml_entry(zip_file, workbook_entry)
 
         sheets = parse_workbook_sheets(workbook_xml, rels)
         sheets = fallback_sheets(zip_file) if sheets.empty?
-        [sheets, remaining_bytes]
+        sheets
       end
 
       def workbook_relationships(xml)
@@ -155,25 +150,10 @@ module DiscourseAi
         Pathname.new(normalized_target).cleanpath.to_s
       end
 
-      def read_xml_entry(entry, remaining_bytes)
-        limit = [MAX_ENTRY_XML_BYTES, remaining_bytes].min
-        raise EntryTooLargeError, "XLSX XML content is too large" if limit <= 0
-
-        if entry.size && entry.size > limit
-          raise EntryTooLargeError, "XLSX XML entry #{entry.name} is too large"
-        end
-
-        data = +""
-        entry.get_input_stream do |stream|
-          while (chunk = stream.read(READ_CHUNK_BYTES))
-            data << chunk
-            if data.bytesize > limit
-              raise EntryTooLargeError, "XLSX XML entry #{entry.name} is too large"
-            end
-          end
-        end
-
-        data
+      def read_xml_entry(zip_file, entry)
+        zip_file.read_entry(entry, max_bytes: MAX_ENTRY_XML_BYTES)
+      rescue Compression::SafeZipReader::EntryTooLargeError => e
+        raise EntryTooLargeError, e.message
       end
 
       def sheet_text(xml, shared_strings)

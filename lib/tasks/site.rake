@@ -2,8 +2,13 @@
 
 require "yaml"
 require "zip"
+require "compression/safe_zip_reader"
 
 class ZippedSiteStructure
+  MAX_ZIP_ENTRIES = 10_000
+  MAX_JSON_ENTRY_BYTES = 50 * 1024 * 1024
+  MAX_UPLOAD_ENTRY_BYTES = 1024 * 1024 * 1024
+
   attr_reader :zip
 
   def initialize(path, create: false)
@@ -20,7 +25,7 @@ class ZippedSiteStructure
   end
 
   def get(name)
-    data = @zip.get_input_stream("#{name}.json").read
+    data = read_entry("#{name}.json", max_bytes: MAX_JSON_ENTRY_BYTES)
     JSON.parse(data)
   end
 
@@ -71,7 +76,7 @@ class ZippedSiteStructure
     puts "  - Importing upload #{upload["filename"]} from #{upload["path"]}"
 
     tempfile = Tempfile.new(upload["filename"], binmode: true)
-    tempfile.write(@zip.get_input_stream(upload["path"]).read)
+    stream_entry_to_file(upload["path"], tempfile, max_bytes: MAX_UPLOAD_ENTRY_BYTES)
     tempfile.rewind
 
     @uploads[upload["path"]] ||= UploadCreator.new(tempfile, upload["filename"], opts).create_for(
@@ -79,7 +84,20 @@ class ZippedSiteStructure
     )
   end
 
+  def read_entry(path, max_bytes:)
+    safe_zip_reader.read_entry(path, max_bytes: max_bytes, required: true)
+  end
+
+  def stream_entry_to_file(path, file, max_bytes:)
+    safe_zip_reader.stream_entry_to_file(path, file, max_bytes: max_bytes, required: true)
+  end
+
   private
+
+  def safe_zip_reader
+    @safe_zip_reader ||=
+      Compression::SafeZipReader.new(@zip, max_entries: MAX_ZIP_ENTRIES).validate!
+  end
 
   def get_unique_path(path)
     return path if @zip.find_entry(path).blank?
@@ -498,7 +516,11 @@ task "site:import_structure", [:zip_path] => :environment do |task, args|
           )
         elsif t["filename"].present?
           tempfile = Tempfile.new(t["filename"], binmode: true)
-          tempfile.write(data.zip.get_input_stream(t["path"]).read)
+          data.stream_entry_to_file(
+            t["path"],
+            tempfile,
+            max_bytes: ZippedSiteStructure::MAX_UPLOAD_ENTRY_BYTES,
+          )
           tempfile.flush
 
           RemoteTheme.update_zipped_theme(

@@ -12,22 +12,37 @@ RSpec.describe DiscourseAi::Completions::XlsToText do
       Discourse::Utils::CommandError.new("missing xls2csv"),
     )
 
+    allow(Discourse::SafeExec).to receive(:capture)
+
     expect(described_class.convert("/tmp/sample.xls")).to be_nil
-    expect(Discourse::Utils).not_to have_received(:execute_command).with("xls2csv", any_args)
+    expect(Discourse::SafeExec).not_to have_received(:capture).with("xls2csv", any_args)
   end
 
   it "converts xls files with xls2csv" do
+    tempfile = Tempfile.new(%w[sample .xls])
+    tempfile.close
+
     allow(Discourse::Utils).to receive(:execute_command).with("which", "xls2csv").and_return(
       "/usr/bin/xls2csv\n",
     )
-    allow(Discourse::Utils).to receive(:execute_command).with(
+    allow(Discourse::SafeExec).to receive(:capture).with(
       "xls2csv",
-      "/tmp/sample.xls",
+      tempfile.path,
+      read: described_class.sandbox_read_paths(tempfile.path),
+      execute: Discourse::SafeExec.default_execute_paths,
       timeout: described_class::XLS2CSV_TIMEOUT_SECONDS,
+      env: described_class::SAFE_EXEC_ENV,
+      unsetenv_others: true,
+      rlimits: described_class::XLS2CSV_RLIMITS,
+      seccomp_deny_network: true,
+      max_output_bytes: described_class::MAX_CONVERSION_OUTPUT_BYTES,
+      truncate_output: true,
       failure_message: "Failed to convert .xls upload to text",
     ).and_return("Name,Value\nAlice,1\n")
 
-    expect(described_class.convert("/tmp/sample.xls")).to eq("Name,Value\nAlice,1\n")
+    expect(described_class.convert(tempfile.path)).to eq("Name,Value\nAlice,1\n")
+  ensure
+    tempfile&.close!
   end
 
   it "uses the real xls2csv binary when it is available" do
