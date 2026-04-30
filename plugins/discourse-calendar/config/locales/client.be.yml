@@ -22,9 +22,6 @@ be:
         day: "дзень"
         year: "год"
     discourse_post_event:
-      event_description:
-        show_more: "Паказаць больш"
-        show_less: "Паказаць менш"
       upcoming_events:
         status: "Статус"
       models:

@@ -1686,11 +1686,6 @@ et:
         move_messages_to_inbox: "Liiguta sisendkausta"
         change_notification_level: "Muuda teavituste taset"
         choose_new_category: "Vali teemadele uus kategooria:"
-        choose_new_tags: "Vali teemadele uued sildid:"
-        changed_tags: "Nende teemade silte on muudetud."
-        confirm_remove_tags:
-          one: "Sellelt teemalt eemaldatakse kõik sildid. Kas oled kindel?"
-          other: "<b>%{count}</b> teemalt eemaldatakse kõik sildid. Kas oled kindel?"
         progress:
           one: "Edenemine: <strong>%{count}</strong> teema"
           other: "Edenemine: <strong>%{count}</strong> teemat"
@@ -1716,8 +1711,6 @@ et:
         name: "Arhiiv"
       move_messages_to_inbox:
         name: "Liiguta postkasti"
-      replace_tags:
-        name: "Asenda sildid"
       delete_topics:
         name: "Kustuta"
       convert_to_private_message:
@@ -1735,6 +1728,7 @@ et:
         other: "%{count} vastust"
       collapse: "Ahenda"
       no_replies: "Veel ei ole vastuseid."
+      ignored_post_placeholder: "[ignoreeritud]"
       pinned_reply: "Esiletõstetud"
     topic:
       filter_to:
@@ -2286,7 +2280,7 @@ et:
           ignore: "Ignoreeri"
           high: "Kõrge"
       sort_options:
-        default: "vaikimisi"
+        default: "Vaikimisi"
         likes: "Meeldimisi"
         views: "Vaatamisi"
         posts: "Postitused"
@@ -3408,6 +3402,7 @@ et:
         topic_id: "Teema ID"
         post_id: "Postituse ID"
         category_id: "Kategooria ID"
+        reviewable_id: "Vaata üle"
         delete: "Kustuta"
         edit: "Muuda"
         save: "Salvesta"

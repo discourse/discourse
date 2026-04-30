@@ -10,5 +10,3 @@ id:
       vote_title: "Pilih"
       votes:
         other: "%{count} suara"
-      show_voters: "Tunjukkan siapa yang memilih"
-      vote_count_thousands: "%{count}k"

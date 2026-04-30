@@ -15,7 +15,6 @@ it:
       alt:
         solved:
           accepted_notification: "accettata"
-          topic_solved_notification: "risolto"
     solutions: "Soluzioni"
     solved:
       title: "Risolti"
@@ -45,7 +44,6 @@ it:
       no_answer:
         title: La tua domanda ha avuto risposta?
         description: "Evidenzia la risposta e aiuta gli altri utilizzando il pulsante della soluzione sotto la risposta corretta."
-      topic_solved_notification: "<p> <span>%{username}</span> %{description} </p>"
       notification:
         title: "il tuo messaggio è stato contrassegnato come soluzione"
       category_type_support:

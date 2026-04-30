@@ -397,6 +397,7 @@ uk:
     broken_transformer_alert: "Сталася помилка. Ваш сайт може працювати неправильно."
     broken_block_alert: "Виявлено помилку конфігурації блоку. Перегляньте консоль браузера для отримання детальної інформації."
     broken_block_factory_alert: "Не вдалося завантажити блок. Деякі елементи інтерфейсу можуть відображатися неправильно."
+    on_before_category_types_change_error: "Виникла помилка при зміні типів категорій. Перевірте консоль браузера для отримання додаткової інформації."
     critical_deprecation:
       notice: "<b>[Повідомлення адміністратора]</b> %{source} містить код, який потребує оновлення. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>дізнатися більше</em></a>)"
@@ -3895,27 +3896,11 @@ uk:
         notification_level: "Сповіщення про оновлення"
         change_notification_level: "Змінити рівень сповіщень"
         choose_new_category: "Виберіть новий розділ для цих тем:"
-        selected_sole_category:
-          one: "Ви вибрали <b>%{count}</b> тему з категорії:"
-          few: "Ви вибрали <b>%{count}</b> теми з категорії:"
-          many: "Ви вибрали <b>%{count}</b> тем з категорії:"
-          other: "Ви вибрали <b>%{count}</b> тем з категорії:"
         selected_count:
           one: "%{count} вибрано"
           few: "%{count} вибрано"
           many: "%{count} вибрано"
           other: "%{count} вибрано"
-        change_tags: "Замінити теги"
-        append_tags: "Додати теґи"
-        choose_new_tags: "Виберіть нові теґи для цих тем:"
-        choose_append_tags: "Додати теґи"
-        changed_tags: "Теґи цих тем було змінено."
-        remove_tags: "Видалити теги"
-        confirm_remove_tags:
-          one: "Усі теґи будуть видалені з цієї теми. Ви впевнені"
-          few: "Усі теґи будуть видалені з <b>%{count}</b> тем. Ви впевнені?"
-          many: "Усі теґи будуть видалені з <b>%{count}</b> тем. Ви впевнені?"
-          other: "Усі теґи буде видалено з <b>%{count}</b> тем. Ви впевнені?"
         confirm_unpin_topics:
           one: "Відкріпити %{count} тему"
           few: "Відкріпити %{count} теми"
@@ -4027,15 +4012,13 @@ uk:
         description: "Непублічні теми приховані у списку тем, але до них все ще можна отримати доступ за прямим посиланням. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Дізнатися більше</a>"
       relist_topics:
         name: "Вставити повторно"
-      remove_tags:
-        name: "Видалити теги"
-        description: "Видалити всі теги з вибраних тем."
-      append_tags:
-        name: "Додати теги"
-        description: "Додати наступні теги до вибраних тем:"
-      replace_tags:
-        name: "Замінити теґи"
-        description: "Замінити всі існуючі теги на вибрані теми наступним:"
+      manage_tags:
+        add:
+          title: "Додати теґи"
+        remove:
+          title: "Видалити теги"
+        replace:
+          title: "Замінити теги"
       delete_topics:
         name: "Видалити"
         description: "Видалити вибрані теми назавжди. Цю дію не можна скасувати."
@@ -4094,6 +4077,7 @@ uk:
         default_nested_view: "Використовувати вкладений вигляд за замовчуванням для тем цієї категорії"
       no_replies: "Ще не написав жодного повідомлення."
       deleted_post_placeholder: "[вилучено]"
+      ignored_post_placeholder: "[ігноровано]"
       op_badge: "OP"
       pinned_reply: "Закріплені"
       pin_reply: "Закріпити вгорі"
@@ -5094,6 +5078,8 @@ uk:
       color_used: "Колір використовується"
       predefined_colors: "Попередньо визначені варіанти кольорів"
       name_placeholder: "Рекомендується одне або два слова"
+      category_types: "Типи категорій"
+      category_types_no_results: "Інших типів категорій не знайдено"
       color_placeholder: "Будь-який веб-колір"
       delete_confirm: "Ви впевнені, що хочете видалити цей розділ?"
       delete_error: "Під час видалення розділу сталася помилка."
@@ -5209,7 +5195,7 @@ uk:
           high: "Високий"
           very_high: "Дуже високий"
       sort_options:
-        default: "типово"
+        default: "Стандартна"
         likes: "Вподобання"
         op_likes: "Вподобання оригінального допису"
         views: "Перегляди"
@@ -8290,6 +8276,7 @@ uk:
         topic_id: "ID теми"
         post_id: "ID допису"
         category_id: "ID розділу"
+        reviewable_id: "Розглянути"
         delete: "Видалити"
         edit: "Редагувати"
         save: "Зберегти"

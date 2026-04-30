@@ -313,9 +313,6 @@ es:
         other: "Tienes %{count} discusiones sin leer"
       scroll_to_bottom: "Desplazar hacia abajo"
       scroll_to_new_messages: "Ver nuevos mensajes"
-      new_messages:
-        one: "%{count} mensaje nuevo"
-        other: "%{count} mensajes nuevos"
       sound:
         title: "Sonido de notificación de chat de escritorio"
       sounds:

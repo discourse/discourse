@@ -39,6 +39,9 @@ vi:
     popup:
       chat_mention:
         direct: '%{username} nhắc đến bạn trong "%{channel}"'
+    actions:
+      chat_reply:
+        title: Trả lời
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

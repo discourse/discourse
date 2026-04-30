@@ -6,12 +6,6 @@
 
 zh_CN:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "数据资源管理器"
-          description: "数据浏览器的 AI 驱动查询生成"
-          query_generation: "查询生成"
     errors:
       explorer:
         no_semicolons: "从查询中移除分号。"
@@ -28,15 +22,6 @@ zh_CN:
       create: "创建"
       create_placeholder: "查询名称…"
       description_placeholder: "在此处输入描述"
-      ai:
-        description_title: "使用 AI 生成"
-        description_hint: "请用简洁明了的语言描述您的需求。我们将为您生成 SQL 代码、名称和描述。"
-        description_placeholder: "例如：显示不同时间段的注册情况"
-        generate: "生成"
-        generating: "使用 AI 生成查询..."
-        generation_timeout: "AI 查询生成超时。您可以手动编写 SQL 语句。"
-        generation_error: "生成查询时出错。"
-        optional: "可选"
       import:
         label: "导入"
         unparseable_json: "无法解析的 JSON 文件。"
@@ -73,7 +58,6 @@ zh_CN:
       show_graph: "图表"
       others_dirty: "查询具有未保存的更改，如果您离开，这些更改将丢失。"
       run_time: "查询在 %{value} 毫秒内完成。"
-      cached_result_notice: "显示来自 %{relative_time}的缓存结果。"
       result_count:
         other: "%{count} 个结果。"
       max_result_count:

@@ -56,6 +56,19 @@ RSpec.describe GroupShowSerializer do
         described_class.new(group, scope: Guardian.new, root: false, owner_group_ids: [group.id])
       expect(subject.as_json[:automatic_membership_email_domains]).to eq(nil)
     end
+
+    it "should include email domains for moderator when moderators_manage_groups is enabled" do
+      SiteSetting.moderators_manage_groups = true
+      moderator_guardian = Fabricate(:moderator).guardian
+      subject =
+        described_class.new(
+          group,
+          scope: moderator_guardian,
+          root: false,
+          owner_group_ids: [group.id],
+        )
+      expect(subject.as_json[:automatic_membership_email_domains]).to eq("ilovediscourse.com")
+    end
   end
 
   describe "admin only fields" do

@@ -161,6 +161,14 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Placeholder text for input fields.
+   * @type {string}
+   */
+  get placeholder() {
+    return this.args.placeholder;
+  }
+
+  /**
    * Help text of the field.
    * @type {string}
    */
@@ -179,6 +187,16 @@ export default class FKFieldData extends Component {
    */
   get showTitle() {
     return this.args.showTitle ?? true;
+  }
+
+  /**
+   * Indicates whether to show the `(optional)` marker next to the title when
+   * the field has no `required` validation rule.
+   * Defaults to `true`.
+   * @type {boolean}
+   */
+  get showOptional() {
+    return this.args.showOptional ?? true;
   }
 
   /**

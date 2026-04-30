@@ -2262,7 +2262,6 @@ gl:
         A súa resposta foi enviada desde un enderezo electrónico que está bloqueado. Probe a facer o envío desde outro enderezo ou [contacte cun membro do equipo](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Correo electrónico de rexeitamento por ser un correo non permitido"
-      subject_template: "[%{email_prefix}] Problema de correo electrónico -- Correo electrónico bloqueado"
       text_body_template: |
         Sentímolo, mais a mensaxe de correo enviada a %{destination} (co título %{former_title}) non funcionou.
 
@@ -2427,7 +2426,6 @@ gl:
         Non ten permisos para responder no tema. Se pensa que isto é un erro, [contacte cun membro do equipo](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Correo electrónico de rexeitamento por responder a un resumo"
-      subject_template: "[%{email_prefix}] Problema de correo electrónico -- Resposta a un resumo"
       text_body_template: |
         Sentímolo, mais a súa mensaxe de correo a %{destination} (co título %{former_title}) non funcionou.
 
@@ -2544,7 +2542,6 @@ gl:
       text_body_template: "O axuste `download_remote_images_to_local` foi desactivada porque se alcanzou o límite do espazo do disco configurado en `download_remote_images_threshold`."
     new_user_of_the_month:
       title: "É o usuario novo do mes!"
-      subject_template: "É o usuario novo do mes!"
       text_body_template: |
         Parabéns! Gañou o **Premio ao Usuario Novo do Mes de %{month_year}**. :trophy:
 
@@ -2831,6 +2828,7 @@ gl:
     account_exists:
       title: "A conta xa existe"
       subject_template: "[%{email_prefix}] A conta xa existe"
+      subject_template_improved: "A conta xa existe"
       text_body_template: |
         Tentou crear unha conta en %{site_name}ou tentou cambiar o correo electrónico dunha conta para %{email}. Porén, xa existe unha conta para %{email}.
 
@@ -2842,6 +2840,7 @@ gl:
     account_second_factor_disabled:
       title: "Autenticación en dous pasos desactivada"
       subject_template: "[%{email_prefix}] Autenticación en dous pasos desactivada"
+      subject_template_improved: "Autenticación en dous pasos desactivada"
     digest:
       since_last_visit: "Desde a súa última visita"
       new_topics: "Novos temas"
@@ -2854,6 +2853,7 @@ gl:
       popular_posts: "Publicacións máis populares"
       more_new: "Novo para vostede"
       subject_template: "[%{email_prefix}] Resumo"
+      subject_template_improved: "Resumo"
       unsubscribe: "Este resumo envíaselle desde %{site_link} cando levamos tempo sen velo. Cambie %{email_preferences_link} ou %{unsubscribe_link} para cancelar a subscrición."
       your_email_settings: "a configuración do seu correo electrónico"
       click_here: "prema aquí"
@@ -2872,6 +2872,7 @@ gl:
       title: "Iniciar sesión vía ligazón"
       preview: "Iniciar sesión vía ligazón."
       subject_template: "[%{email_prefix}] Iniciar sesión vía ligazón"
+      subject_template_improved: "Iniciar sesión vía ligazón"
       text_body_template: |
         Velaquí a súa ligazón para iniciar sesión en [%{site_name}](%{base_url}).
 
@@ -2881,7 +2882,6 @@ gl:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Estabelecer o contrasinal"
-      subject_template: "[%{email_prefix}] Estabelecer o contrasinal"
       text_body_template: |
         Alguén solicitou engadir un contrasinal á súa conta en [%{site_name}](%{base_url}). Como alternativa, pode iniciar sesión utilizando calquera dos servizos en liña compatibles (Google, Facebook etc.) que estea asociado con este enderezo de correo electrónico xa validado.
 
@@ -2892,6 +2892,7 @@ gl:
     admin_login:
       title: "Inicio de sesión de administrador"
       subject_template: "[%{email_prefix}] Inicio de sesión"
+      subject_template_improved: "Iniciar sesión"
       text_body_template: |
         Alguén solicitou iniciar sesión na súa conta en [%{site_name}](%{base_url}).
 
@@ -2901,7 +2902,6 @@ gl:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Conta creada"
-      subject_template: "[%{email_prefix}] A súa nova conta"
       text_body_template: |
         Creouse unha nova conta para vostede en %{site_name}
 
@@ -3018,7 +3018,6 @@ gl:
         Se non pode premer na ligazón, probe a copiala e pegala na barra de enderezos do seu navegador.
     suspicious_login:
       title: "Alerta de novo inicio de sesión"
-      subject_template: "[%{site_name}] Novo inicio de sesión desde %{location}"
     post_approved:
       title: "A súa publicación foi aprobada"
   page_forbidden:

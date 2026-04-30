@@ -263,9 +263,6 @@ it:
           bar_done:
             one: "%{count} messaggio"
             other: "%{count} messaggi"
-        theme_translations:
-          translate:
-            label: "Traduci"
       spam:
         short_title: "Spam"
         title: "Configura la gestione dello spam"
@@ -558,7 +555,6 @@ it:
           other: "Questo modello è attualmente utilizzato dai seguenti elementi: %{settings}. Se configurato in modo errato, le funzionalità non funzioneranno come previsto. "
         model_description:
           none: "Impostazioni generali che vanno bene per la maggior parte dei modelli linguistici"
-          anthropic-claude-opus-4-7: "Il modello più intelligente di Anthropic"
           anthropic-claude-sonnet-4-6: "Equilibrio ottimale tra velocità e costi"
           anthropic-claude-haiku-4-5: "Veloce e conveniente"
           open_ai-gpt-5-nano: "Il modello GPT-5 più veloce ed economicamente efficiente"

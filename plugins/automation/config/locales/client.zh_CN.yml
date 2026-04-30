@@ -214,9 +214,6 @@ zh_CN:
               description: "可选，仅限于触发具有这些功能的帖子"
           created: 创建
           edited: 已编辑
-          topics: 主题（所有类别）
-          personal_messages: 仅限私人信息
-          public_topics: 主题（仅限公开类别）
           with_images: 图片
           with_links: 链接
           with_code: 代码

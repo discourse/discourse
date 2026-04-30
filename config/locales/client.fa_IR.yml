@@ -3022,17 +3022,9 @@ fa_IR:
         archive_messages: "انتقال به بایگانی"
         change_notification_level: "تغییر سطح آگاه‌سازی"
         choose_new_category: "یک دسته‌بندی جدید برای موضوع انتخاب نمایید"
-        selected_sole_category:
-          one: "شما <b>%{count}</b> موضوع را از دسته انتخاب کرده اید:"
-          other: "شما <b>%{count}</b> موضوع را از دسته انتخاب کرده اید:"
         selected_count:
           one: "%{count} تا انتخاب شده است"
           other: "%{count} تا انتخاب شده است"
-        choose_new_tags: "انتخاب برچسب‌های جدید برای این موضوعات:"
-        changed_tags: "انتخاب برچسب برای موضوعاتی که عوض شدند"
-        confirm_remove_tags:
-          one: "همه برچسب ها از این موضوع حذف خواهند شد. آیا مطمئن هستید؟"
-          other: "همه برچسب ها از <b>%{count}</b> موضوع حذف خواهند شد. آیا مطمئن هستید؟"
         progress:
           one: "پیشرفت: <strong>%{count}</strong> موضوع"
           other: "پیشرفت: <strong>%{count}</strong> موضوع"
@@ -3069,10 +3061,6 @@ fa_IR:
         name: "لغو فهرست"
       relist_topics:
         name: "فهرست مجدد"
-      remove_tags:
-        name: "حذف برچسب‌ها"
-      replace_tags:
-        name: "جایگزینی برچسب‌ها"
       delete_topics:
         name: "حذف"
       update_category:
@@ -3101,6 +3089,7 @@ fa_IR:
       collapse: "جمع کردن"
       no_replies: "بدون پاسخ"
       deleted_post_placeholder: "[حذف شده]"
+      ignored_post_placeholder: "[صرف نظر شده]"
       pinned_reply: "سنجاق شده"
     topic:
       filter_to:
@@ -6265,6 +6254,7 @@ fa_IR:
         topic_id: " شناسه موضوع"
         post_id: "شناسه نوشته"
         category_id: "شناسه دسته بندی"
+        reviewable_id: "بازنگری"
         delete: "حذف"
         edit: "ویرایش‌"
         save: "ذخیره "

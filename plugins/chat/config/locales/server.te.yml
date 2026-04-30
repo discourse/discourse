@@ -30,6 +30,10 @@ te:
         is_already_in_use: "ఇప్పటికే వాడుకలో ఉంది"
     onebox:
       thread_title_connector: "లో"
+  discourse_push_notifications:
+    actions:
+      chat_reply:
+        title: ప్రత్యుత్తరం ఇవ్వండి
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

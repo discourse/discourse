@@ -157,6 +157,10 @@ class NestedTopicsController < ApplicationController
       TopicView.new(topic_id, current_user, skip_custom_fields: true, skip_post_loading: true)
     @topic = @topic_view.topic
     guardian.ensure_can_see!(@topic)
+
+    if should_track_visit?
+      @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
+    end
   rescue Discourse::InvalidAccess
     raise Discourse::NotFound
   end

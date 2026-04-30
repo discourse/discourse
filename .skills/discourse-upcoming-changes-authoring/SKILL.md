@@ -127,7 +127,6 @@ When `increase_suggested_topics_max_days_old_default` is enabled (either manuall
 - **Non-destructive**: If an admin has manually set a custom value for the target setting, the override does not apply — it only affects the default.
 - **Reversible**: Disabling the upcoming change deactivates the override and restores the original default.
 - **Default-locale only**: Overrides currently only apply on the default locale.
-- **Related setting link**: `UpcomingChanges.find_related_default_override_for_change` finds the target setting for a given upcoming change, used to show cross-links in the UI.
 
 ## Key Design Decisions
 

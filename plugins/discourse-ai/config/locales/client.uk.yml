@@ -377,8 +377,6 @@ uk:
         description: "Автоматично перекладати весь вміст на вашому форумі на бажану мову користувача"
         supported_locales: "Підтримувані мови"
         supported_locales_description: "Це налаштування сайту також дозволяє відвідувачам долучатися до перекладу публікацій."
-        translatable_categories: "Категорії, що перекладаються"
-        translatable_categories_description: "Буде перекладено лише вміст вибраних категорій. Підкатегорії потрібно додавати окремо."
         admin_actions:
           translation_settings: "Налаштування перекладу"
           localization_settings: "Налаштування локалізації"
@@ -411,12 +409,6 @@ uk:
             few: "%{count} дописів"
             many: "%{count} дописи"
             other: "%{count} дописи"
-        theme_translations:
-          translate:
-            label: "Перекласти"
-            title: "Перекладіть усіма підтримуваними мовами, використовуючи вибрану мову як мову оригіналу"
-            queued: "Переклад поставлено в чергу"
-            failed: "Не вдалося додати переклад до черги"
         translations_menu:
           translate:
             label: "Перекласти публікацію"
@@ -799,17 +791,6 @@ uk:
         oauth_client_id: "ID клієнта OAuth"
         oauth_client_secret: "Секрет клієнта OAuth"
         oauth_scopes: "Області OAuth"
-        oauth_authorization_params: "Параметри авторизації OAuth"
-        oauth_authorization_params_help: "Необов'язковий об’єкт JSON влитий у запит авторизації. Використовуйте null для видалення типового параметру."
-        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
-        oauth_token_params: "Параметри токена OAuth"
-        oauth_token_params_help: "Необов'язковий JSON-об'єкт, об'єднаний у запити токенів. Використовуйте null, щоб видалити параметр за замовчуванням."
-        oauth_token_params_placeholder: "{}"
-        oauth_require_refresh_token: "Потрібен токен оновлення"
-        oauth_require_refresh_token_help: "Збій OAuth-з’єднання, якщо постачальник не повертає токен оновлення."
-        oauth_json_object_required: "%{field} має бути об'єктом JSON."
-        oauth_show_advanced_options: "Показати розширені параметри"
-        oauth_hide_advanced_options: "Приховати розширені параметри"
         oauth_connection: "Підключення OAuth"
         oauth_status: "Статус OAuth"
         oauth_statuses:
@@ -932,19 +913,14 @@ uk:
           other: "Ця модель зараз використовується: %{settings}. У разі неправильного налаштування функція не працюватиме належним чином. "
         model_description:
           none: "Загальні налаштування, що працюють для більшості мовних моделей"
-          anthropic-claude-opus-4-7: "Найрозумніша модель Anthropic"
           anthropic-claude-sonnet-4-6: "Оптимальний баланс швидкості та витрат"
           anthropic-claude-haiku-4-5: "Швидко та економічно ефективно"
           google-gemini-3-pro: "Найрозумніша модель Google"
           google-gemini-3-flash: "Швидко та економічно ефективно з мультимодальним мисленням"
-          open_ai-gpt-5-4: "Флагманська модель OpenAI, добре підходить для вирішення проблем у різних доменах"
-          open_ai-gpt-5-4-mini: "Забезпечує баланс між інтелектом, швидкістю та вартістю"
           open_ai-gpt-5-nano: "Найшвидша та найекономічніша модель GPT-5"
           open_router-deepseek-deepseek-v3-2: "Остання високопродуктивна модель DeepSeek"
           open_router-moonshotai-kimi-k2-5: "Мультимодальна модель Moonshot з можливостями технічного зору"
           open_router-x-ai-grok-4-fast: "Флагманська модель xAI з функцією бачення"
-          open_router-minimax-minimax-m2-7: "Мультимодальна модель MiniMax з широким контекстом"
-          open_router-z-ai-glm-5-1: "Мультимодальна модель Z-AI із баченням"
           open_router-arcee-ai-trinity-large-preview-free: "Безкоштовна модель з відкритим вихідним кодом від Arcee AI"
         preseeded_model_description: "Попередньо налаштована модель з відкритим кодом, що використовує %{model}"
         configured:
@@ -1183,12 +1159,6 @@ uk:
           title: "Переглянути взаємодію зі ШІ"
           copy_request: "Скопіювати запит"
           copy_response: "Копіювати відповідь"
-          this_turn: "Цей поворот:"
-          whole_conversation: "Розмова:"
-          tokens_summary: "%{request_tokens} вхід → %{response_tokens} вихід"
-          cache_both: "(кеш %{read} читання, %{write} запис)"
-          cache_read_only: "(кеш %{read} читання)"
-          cache_write_only: "(кеш %{write} запис)"
           request: "Запит"
           response: "відповідь"
           next_log: "Далі"

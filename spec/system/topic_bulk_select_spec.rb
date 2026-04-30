@@ -141,72 +141,87 @@ describe "Topic bulk select" do
     end
   end
 
-  context "when appending tags" do
+  context "when managing tags" do
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
     fab!(:tag3, :tag)
+    fab!(:topic) { Fabricate(:post).topic }
+    fab!(:topic_2) { Fabricate(:post).topic }
 
     before { SiteSetting.tagging_enabled = true }
 
-    def open_append_modal(topics_to_select = nil)
+    def open_manage_tags_modal(topics_to_select)
       sign_in(admin)
       visit("/latest")
 
-      open_bulk_actions_modal(topics_to_select, "append-tags")
+      open_bulk_actions_modal(topics_to_select, "manage-tags")
+      PageObjects::Modals::ManageTags.new
     end
 
     context "when in mobile", mobile: true do
       it "is working" do
         # behavior is already tested on desktop, we simply ensure
         # the general workflow is working on mobile
-        open_append_modal
+        open_manage_tags_modal([topic, topic_2])
       end
     end
 
-    it "appends tags to selected topics" do
-      open_append_modal
+    it "removes all tags when the toggle is enabled" do
+      topic.update!(tags: [tag1, tag2, tag3])
+      topic_2.update!(tags: [tag1, tag2])
 
-      topic_bulk_actions_modal.tag_selector.expand
-      topic_bulk_actions_modal.tag_selector.search(tag1.name)
-      topic_bulk_actions_modal.tag_selector.select_row_by_name(tag1.name)
-      topic_bulk_actions_modal.tag_selector.search(tag2.name)
-      topic_bulk_actions_modal.tag_selector.select_row_by_name(tag2.name)
+      modal = open_manage_tags_modal([topic, topic_2])
+      modal.toggle_remove_all
 
-      topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(modal).to have_remove_all_notice
+      expect(modal).to have_no_remove_tag_selector
 
-      expect(
-        find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
-      ).to have_content(tag1.name)
-      expect(
-        find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
-      ).to have_content(tag2.name)
+      modal.click_confirm
+
+      expect(topic_list).to have_no_topic_tags(topic)
+      expect(topic_list).to have_no_topic_tags(topic_2)
     end
 
-    context "when selecting topics in different categories" do
-      before do
-        topics
-          .last(2)
-          .each do |topic|
-            topic.update!(category: Fabricate(:category))
-            topic.update!(category: Fabricate(:category))
-          end
-      end
+    it "adds, removes, and replaces tags in a single submission" do
+      tag4 = Fabricate(:tag)
+      tag5 = Fabricate(:tag)
+      topic.update!(tags: [tag1, tag2])
+      topic_2.update!(tags: [tag1, tag3])
 
-      it "does not show an additional note about the category in the modal" do
-        open_append_modal(topics.last(2))
+      modal = open_manage_tags_modal([topic, topic_2])
+      expect(modal).to have_disabled_submit
 
-        expect(topic_bulk_actions_modal).to have_no_category_badge(topics.last.reload.category)
-      end
+      modal.select_replace_from(tag1.name)
+      modal.select_replace_to(tag5.name)
+
+      modal.add_tags(tag4.name)
+      modal.remove_tags(tag2.name)
+
+      modal.click_confirm
+
+      expect(topic_list).to have_topic_tags(topic, tags: [tag4, tag5])
+      expect(topic_list).to have_topic_tags(topic_2, tags: [tag3, tag4, tag5])
     end
 
     context "when selecting topics that are all in the same category" do
       fab!(:category)
 
-      before { topics.last.update!(category_id: category.id) }
+      before do
+        topic.update!(category_id: category.id)
+        topic_2.update!(category_id: category.id)
+      end
 
-      it "shows an additional note about the category in the modal" do
-        open_append_modal
-        expect(topic_bulk_actions_modal).to have_category_badge(category)
+      it "limits tag search to restricted tags when category does not allow global tags" do
+        restricted_tag_group = Fabricate(:tag_group)
+        restricted_tag = Fabricate(:tag)
+        TagGroupMembership.create!(tag: restricted_tag, tag_group: restricted_tag_group)
+        CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
+
+        modal = open_manage_tags_modal([topic, topic_2])
+
+        modal.add_tag_selector.expand
+
+        expect(modal.add_tag_selector.option_names).to contain_exactly(restricted_tag.name)
       end
 
       it "allows for searching restricted tags for that category and other tags too if the category allows it" do
@@ -216,22 +231,14 @@ describe "Topic bulk select" do
         CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
         category.update!(allow_global_tags: true)
 
-        open_append_modal
+        modal = open_manage_tags_modal([topic, topic_2])
 
-        topic_bulk_actions_modal.tag_selector.expand
-        topic_bulk_actions_modal.tag_selector.search(restricted_tag.name)
-        topic_bulk_actions_modal.tag_selector.select_row_by_name(restricted_tag.name)
-        topic_bulk_actions_modal.tag_selector.search(tag1.name)
-        topic_bulk_actions_modal.tag_selector.select_row_by_name(tag1.name)
+        modal.add_tags(restricted_tag.name, tag1.name)
 
-        topic_bulk_actions_modal.click_bulk_topics_confirm
+        modal.click_confirm
 
-        expect(
-          find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
-        ).to have_content(restricted_tag.name)
-        expect(
-          find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
-        ).to have_content(tag1.name)
+        expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag, tag1])
+        expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag, tag1])
       end
     end
   end

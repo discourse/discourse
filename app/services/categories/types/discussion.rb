@@ -14,6 +14,14 @@ module Categories
           Category.none
         end
 
+        def configure_category(category, guardian:, configuration_values: {})
+          # intentional noop, nothing to do here
+        end
+
+        def unconfigure_category(category, guardian:)
+          # intentional noop, nothing to do here
+        end
+
         def category_matches?(category)
           # NOTE (martin) For now, all categories are considered discussion categories,
           # a discussion category is basically the old "vanilla" category type

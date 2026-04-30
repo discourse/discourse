@@ -4,10 +4,6 @@ module PageObjects
     class TopicBulkActions < PageObjects::Modals::Base
       MODAL_SELECTOR = ".topic-bulk-actions-modal"
 
-      def tag_selector
-        PageObjects::Components::SelectKit.new(".tag-chooser")
-      end
-
       def category_selector
         PageObjects::Components::SelectKit.new(".category-chooser")
       end

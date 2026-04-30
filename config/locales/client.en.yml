@@ -376,6 +376,7 @@ en:
     broken_transformer_alert: "There was an error. Your site may not work properly."
     broken_block_alert: "A block configuration error was detected. Check browser console for details."
     broken_block_factory_alert: "A block failed to load. Some UI elements may not display correctly."
+    on_before_category_types_change_error: "An error occurred while changing the category types. Check the browser console for more information."
 
     critical_deprecation:
       notice: "<b>[Admin Notice]</b> %{source} contains code which needs updating. (id:%{id})"
@@ -3133,6 +3134,16 @@ en:
         placeholder: "Enter translation for post here..."
         show_raw_markdown: "Show raw"
 
+      change_reply_to:
+        title: "Change reply target"
+        hint: "Scroll the timeline to find the post you'd like to reply to."
+        current_selection: "Selected: post #%{post_number} by @%{username}"
+        invalid_target: "Choose a post earlier than the one you're editing."
+        submit: "Set reply target"
+        open: "Change which post this replies to"
+        open_from_menu: "Reply to another post"
+        remove: "Remove reply target"
+
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
         other: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} users. Nobody will be notified."
@@ -3781,27 +3792,19 @@ en:
         notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
-        selected_sole_category:
-          one: "You have selected <b>%{count}</b> topic from category:"
-          other: "You have selected <b>%{count}</b> topics from category:"
         selected_count:
           one: "%{count} selected"
           other: "%{count} selected"
-        change_tags: "Replace tags"
-        append_tags: "Add tags"
-        choose_new_tags: "Choose new tags for these topics:"
-        choose_append_tags: "Add tags"
-        changed_tags: "The tags of those topics were changed."
-        remove_tags: "Remove tags"
-        confirm_remove_tags:
-          one: "All tags will be removed from this topic. Are you sure?"
-          other: "All tags will be removed from %{count} topics. Are you sure?"
+        manage_tags: "Manage tags"
         confirm_unpin_topics:
           one: "Un-pin %{count} topic"
           other: "Un-pin %{count} topics"
         confirm_update_topics:
           one: "Update %{count} topic"
           other: "Update %{count} topics"
+        confirm_apply_to_topics:
+          one: "Apply to %{count} topic"
+          other: "Apply to %{count} topics"
         confirm_close_topics:
           one: "Close %{count} topic"
           other: "Close %{count} topics"
@@ -3881,15 +3884,25 @@ en:
         description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
       relist_topics:
         name: "Relist"
-      remove_tags:
-        name: "Remove Tags"
-        description: "Remove all tags from the selected topics."
-      append_tags:
-        name: "Add Tags"
-        description: "Add the following tags to the selected topics:"
-      replace_tags:
-        name: "Replace Tags"
-        description: "Replace all existing tags on the selected topics with the following:"
+      manage_tags:
+        name: "Manage tags"
+        add:
+          title: "Add tags"
+          description: "Added to all selected topics"
+        remove:
+          title: "Remove tags"
+          description: "Removed whenever present"
+          all_toggle: "Remove all tags"
+          all_warning: "<strong>All existing tags</strong> will be removed from the selected topics. This cannot be undone."
+        replace:
+          title: "Replace tags"
+          description: "Swaps one tag for another"
+          add_replacement: "Add replacement"
+          remove_replacement: "Remove replacement"
+          from_placeholder: "Tag to replace"
+          to_placeholder: "Replacement tag"
+          missing_from: "A source tag is required"
+          missing_to: "A replacement tag is required"
       delete_topics:
         name: "Delete"
         description: "Permanently delete the selected topics. This action cannot be undone."
@@ -3943,6 +3956,8 @@ en:
         default_nested_view: "Use nested view as default for topics in this category"
       no_replies: "No replies yet."
       deleted_post_placeholder: "[deleted]"
+      ignored_post_placeholder: "[ignored]"
+      toggle_ignored_content: "Show ignored content"
       op_badge: "OP"
       pinned_reply: "Pinned"
       pin_reply: "Pin to top"
@@ -4731,6 +4746,8 @@ en:
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
+        reply_to:
+          none: "No reply target"
         controls:
           first: "First revision"
           previous: "Previous revision"
@@ -4912,6 +4929,8 @@ en:
       color_used: "Color in use"
       predefined_colors: "Predefined color options"
       name_placeholder: "One or two words recommended"
+      category_types: "Category types"
+      category_types_no_results: "No other category types found"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
@@ -5027,7 +5046,7 @@ en:
           high: "High"
           very_high: "Very high"
       sort_options:
-        default: "default"
+        default: "Default"
         likes: "Likes"
         op_likes: "Original post likes"
         views: "Views"
@@ -5038,6 +5057,7 @@ en:
         created: "Created"
       sort_ascending: "Ascending"
       sort_descending: "Descending"
+      sort_direction: "Sort direction"
       subcategory_list_styles:
         rows: "Rows"
         rows_with_featured_topics: "Rows with featured topics"
@@ -8073,6 +8093,7 @@ en:
         topic_id: "Topic ID"
         post_id: "Post ID"
         category_id: "Category ID"
+        reviewable_id: "Review"
         delete: "Delete"
         edit: "Edit"
         save: "Save"

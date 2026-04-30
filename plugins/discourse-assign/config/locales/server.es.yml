@@ -22,7 +22,6 @@ es:
     remind_assigns_frequency: "Frecuencia para recordar a los usuarios sobre los temas asignados."
     pending_assign_reminder_threshold: "Número de asignaciones pendientes que activa una notificación de recordatorio."
     max_assigned_topics: "Número máximo de temas que se pueden asignar a un usuario."
-    assign_allowed_on_groups: "Los usuarios de estos grupos pueden asignar temas."
     enable_assign_status: "Añade un campo de estado personalizable a cada asignación."
     assign_statuses: "Lista de estados disponibles para cada asignación. El primer estado es el que se aplica por defecto a cada nueva asignación."
     ignore_solved_topics_in_assigned_reminder: "Evita que los recordatorios de asignaciones incluyan temas resueltos. Solo es relevante cuando se utiliza el plugin de solución de Discourse."

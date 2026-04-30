@@ -12,7 +12,6 @@ ru:
           poll: "Плагин «Опрос» для Discourse"
   js:
     poll:
-      title: "Опрос"
       dynamic:
         enabled_hint: "Опции могут быть добавлены или удалены."
       voters:

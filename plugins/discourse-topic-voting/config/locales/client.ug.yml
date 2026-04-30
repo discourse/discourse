@@ -18,9 +18,6 @@ ug:
       anonymous_button:
         one: "بېلەت تاشلاش"
         other: "بېلەت"
-      and_more_voters: "ۋە باشقا %{count}..."
-      show_voters: "بېلەت تاشلىغانلارنى كۆرسەت"
-      vote_count_thousands: "%{count} مىڭ"
     filters:
       votes:
         title: "بېلەت"

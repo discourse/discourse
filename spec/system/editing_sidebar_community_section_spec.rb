@@ -17,13 +17,13 @@ RSpec.describe "Editing Sidebar Community Section" do
     expect(sidebar).to have_no_customize_community_section_button
   end
 
-  xit "allows admin to edit community section and reset to default" do
+  it "allows admin to edit community section and reset to default" do
     sign_in(admin)
 
     visit("/latest")
 
     expect(sidebar.primary_section_icons("community")).to eq(
-      %w[layer-group user flag wrench paper-plane ellipsis-vertical],
+      %w[layer-group user inbox flag wrench paper-plane ellipsis-vertical],
     )
 
     modal = sidebar.click_community_section_more_button.click_customize_community_section_button
@@ -35,11 +35,11 @@ RSpec.describe "Editing Sidebar Community Section" do
     page.refresh
 
     expect(sidebar.primary_section_links("community")).to eq(
-      ["My posts", "Topics", "Review", "Admin", "Invite", "More"],
+      ["My posts", "My messages", "Topics", "Review", "Admin", "Invite", "More"],
     )
 
     expect(sidebar.primary_section_icons("community")).to eq(
-      %w[user paper-plane flag wrench paper-plane ellipsis-vertical],
+      %w[user inbox paper-plane flag wrench paper-plane ellipsis-vertical],
     )
 
     modal = sidebar.click_community_section_more_button.click_customize_community_section_button
@@ -48,11 +48,11 @@ RSpec.describe "Editing Sidebar Community Section" do
     expect(sidebar).to have_section("Community")
 
     expect(sidebar.primary_section_links("community")).to eq(
-      ["Topics", "My posts", "Review", "Admin", "Invite", "More"],
+      ["Topics", "My posts", "My messages", "Review", "Admin", "Invite", "More"],
     )
 
     expect(sidebar.primary_section_icons("community")).to eq(
-      %w[layer-group user flag wrench paper-plane ellipsis-vertical],
+      %w[layer-group user inbox flag wrench paper-plane ellipsis-vertical],
     )
   end
 

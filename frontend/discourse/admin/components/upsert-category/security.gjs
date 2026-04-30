@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { isNone } from "@ember/utils";
 import UpsertCategoryPermissionRow from "discourse/admin/components/upsert-category/permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
@@ -9,7 +9,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
-import ComboBox from "discourse/select-kit/components/combo-box";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -118,6 +117,16 @@ export default class UpsertCategorySecurity extends Component {
       },
     ];
     this.#setFormPermissions(newPermissions);
+  }
+
+  @action
+  onSecurityAddGroupSet(value) {
+    if (isNone(value)) {
+      return;
+    }
+
+    const groupId = typeof value === "string" ? parseInt(value, 10) : value;
+    this.onSelectGroup(Number.isNaN(groupId) ? value : groupId);
   }
 
   @action
@@ -234,15 +243,27 @@ export default class UpsertCategorySecurity extends Component {
               >
                 <div class="add-group">
                   <span class="group-name">
-                    <ComboBox
-                      @content={{this.availableGroups}}
-                      @onChange={{this.onSelectGroup}}
-                      @value={{null}}
-                      @valueProperty="id"
-                      @nameProperty="name"
-                      @options={{hash none="category.security_add_group"}}
-                      class="available-groups"
-                    />
+                    <@form.Field
+                      @name="security_add_group_id"
+                      @title={{i18n "category.security_add_group"}}
+                      @showTitle={{false}}
+                      @format="max"
+                      @type="select"
+                      @onSet={{this.onSecurityAddGroupSet}}
+                      as |field|
+                    >
+                      <field.Control
+                        class="available-groups"
+                        @nonePlaceholder={{i18n "category.security_add_group"}}
+                        as |select|
+                      >
+                        {{#each this.availableGroups as |group|}}
+                          <select.Option
+                            @value={{group.id}}
+                          >{{group.name}}</select.Option>
+                        {{/each}}
+                      </field.Control>
+                    </@form.Field>
                   </span>
                 </div>
               </PluginOutlet>

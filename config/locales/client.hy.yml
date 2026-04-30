@@ -2561,8 +2561,6 @@ hy:
         selected_count:
           one: "%{count} ընտրված"
           other: "%{count} ընտրված"
-        choose_new_tags: "Ընտրել նոր պիտակներ այս թեմաների համար՝"
-        changed_tags: "Այդ թեմաների պիտակները փոփոխվել են:"
         error_topic_count:
           one: "%{count} թեմա"
           other: "%{count} թեմա"
@@ -2588,8 +2586,6 @@ hy:
         name: "Տեղափոխել Մուտքային"
       unlist_topics:
         name: "Ցուցակից հանել"
-      replace_tags:
-        name: "Փոխարինել Պիտակները"
       delete_topics:
         name: "Ջնջել"
       update_category:
@@ -2610,6 +2606,7 @@ hy:
       collapse: "Կրճատել"
       no_replies: "Պատասխաններ դեռևս չկան:"
       deleted_post_placeholder: "[ջնջված է]"
+      ignored_post_placeholder: "[անտեսված]"
       pinned_reply: "Ամրակցված"
     topic:
       filter_to:
@@ -3233,7 +3230,7 @@ hy:
           low: "Բարձր"
           high: "Բարձր"
       sort_options:
-        default: "լռելյայն"
+        default: "Լռելյայն"
         likes: "Հավանումների"
         views: "Դիտումների"
         posts: "Գրառումների"
@@ -4674,6 +4671,7 @@ hy:
         topic_id: "Թեմայի ID"
         post_id: "Գրառման ID"
         category_id: "Կատեգորիայի ID"
+        reviewable_id: "Վերանայում"
         delete: "Ջնջել"
         edit: "Խմբագրել"
         save: "Պահպանել"

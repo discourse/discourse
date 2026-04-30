@@ -3,13 +3,22 @@
 class UserSuspender
   attr_reader :user_history
 
-  def initialize(user, suspended_till:, reason:, by_user:, message: nil, post_id: nil)
+  def initialize(
+    user,
+    suspended_till:,
+    reason:,
+    by_user:,
+    message: nil,
+    post_id: nil,
+    reviewable_id: nil
+  )
     @user = user
     @suspended_till = suspended_till
     @reason = reason
     @by_user = by_user
     @message = message
     @post_id = post_id
+    @reviewable_id = reviewable_id
   end
 
   def suspend
@@ -27,6 +36,7 @@ class UserSuspender
           @reason,
           message: @message,
           post_id: @post_id,
+          reviewable_id: @reviewable_id,
         )
     end
     PushNotificationPusher.clear_subscriptions(@user)

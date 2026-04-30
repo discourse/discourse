@@ -10,7 +10,6 @@ ur:
       alt:
         solved:
           accepted_notification: "منظور"
-          topic_solved_notification: "حل شدہ"
     solved:
       title: "حل شدہ"
       allow_accepted_answers: "ٹاپک کے مالک اور اسٹاف کو حل کے طور پر ایک جواب کو نشان زد کرنے کی اجازت دیں"
@@ -35,7 +34,6 @@ ur:
       move_post_cancel: "منسوخ کریں"
       confirm_solved_removal_confirm: "تصدیق کریں"
       confirm_solved_removal_cancel: "منسوخ کریں"
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
     topic_statuses:
       solved:
         help: "اِس ٹاپک کا حل ہے"

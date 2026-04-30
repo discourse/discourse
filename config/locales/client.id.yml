@@ -1775,7 +1775,6 @@ id:
         move_messages_to_inbox: "Pindah ke Kotak Masuk"
         selected_count:
           other: "%{count} dipilih"
-        choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
         error_topic_count:
           other: "%{count} topik"
       none:
@@ -1805,6 +1804,7 @@ id:
       collapse: "Persempit"
       no_replies: "Belum ada balasan"
       deleted_post_placeholder: "[dihapus]"
+      ignored_post_placeholder: "[diabaikan]"
     topic:
       create: "Topik Baru"
       archive_message:
@@ -2013,7 +2013,7 @@ id:
           low: "Rendah"
           high: "Tinggi"
       sort_options:
-        default: "asal"
+        default: "Asal"
         likes: "Suka"
         posts: "Pos"
         activity: "Aktifitas"
@@ -2710,6 +2710,7 @@ id:
         action: "Aksi"
         created_at: "Dibuat"
         ip_address: "IP"
+        reviewable_id: "Ulasan"
         delete: "Hapus"
         edit: "Ubah"
         save: "Simpan"

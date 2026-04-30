@@ -39,6 +39,9 @@ lt:
     popup:
       chat_mention:
         direct: '%{username} paminėjo tave "%{channel}"'
+    actions:
+      chat_reply:
+        title: Atsakyti
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

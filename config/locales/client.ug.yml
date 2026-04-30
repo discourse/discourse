@@ -517,6 +517,10 @@ ug:
           other: "%{count} يىل ئىلگىرى قۇرۇلغان"
     bookmarked:
       title: "خەتكۈچ"
+      edit_bookmark:
+        one: "خەتكۈچ تەھرىر"
+        other: "خەتكۈچ تەھرىر"
+      delete_bookmarks: "ھەممە خەتكۈچنى ئۆچۈر"
       help:
         bookmark: "چېكىلسە بۇ تېمىنى خەتكۈچكە قوشىدۇ"
         edit_bookmark: "چېكىلسە بۇ تېمىدىكى يازمىنىڭ خەتكۈچىنى تەھرىرلەيدۇ"
@@ -3380,17 +3384,9 @@ ug:
         archive_messages: "ئارخىپقا يۆتكە"
         change_notification_level: "ئۇقتۇرۇش دەرىجىسىنى ئۆزگەرت"
         choose_new_category: "تېمىغا يېڭى سەھىپە تاللىنىدۇ:"
-        selected_sole_category:
-          one: "سەھىپىدىنن <b>%{count}</b> تېما تاللىدىڭىز:"
-          other: "سەھىپىدىنن <b>%{count}</b> تېما تاللىدىڭىز:"
         selected_count:
           one: "%{count} تاللاندى"
           other: "%{count} تاللاندى"
-        choose_new_tags: "بۇ تېمىغا يېڭى بەلگە تاللىنىدۇ:"
-        changed_tags: "بۇ تېمىلارنىڭ بەلگىسى ئۆزگەرتىلگەن."
-        confirm_remove_tags:
-          one: "ھەممە بەلگە بۇ تېمىدىن چىقىرىۋېتىلىدۇ. راستتىنلا شۇنداق قىلامسىز؟"
-          other: "ھەممە بەلگە %{count} تېمىدىن چىقىرىۋېتىلىدۇ. راستتىنلا شۇنداق قىلامسىز؟"
         progress:
           one: "ئىلگىرىلىشى: <strong>%{count}</strong> تېما"
           other: "ئىلگىرىلىشى: <strong>%{count}</strong> تېما"
@@ -3433,10 +3429,6 @@ ug:
         name: "تىزىمدىن چىقىرىۋەت"
       relist_topics:
         name: "تىزىمغا قايتا قوش"
-      remove_tags:
-        name: "بەلگىنى چىقىرىۋەت"
-      replace_tags:
-        name: "بەلگە ئالماشتۇر"
       delete_topics:
         name: "ئۆچۈر"
       update_category:
@@ -3464,6 +3456,7 @@ ug:
         other: "%{count} جاۋاب"
       collapse: "يىغ"
       no_replies: "تېخى جاۋاب يوق."
+      ignored_post_placeholder: "[پەرۋا قىلمايدىغان]"
       pinned_reply: "چوققىلاندى"
     topic:
       filter_to:
@@ -7198,6 +7191,7 @@ ug:
         topic_id: "تېما كىملىكى"
         post_id: "يازما كىملىكى"
         category_id: "سەھىپە كىملىكى"
+        reviewable_id: "تەستىقلا"
         delete: "ئۆچۈر"
         edit: "تەھرىر"
         save: "ساقلا"

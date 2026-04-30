@@ -377,8 +377,6 @@ pl_PL:
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
         supported_locales: "Obsługiwane języki"
         supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
-        translatable_categories: "Kategorie możliwe do przetłumaczenia"
-        translatable_categories_description: "Przetłumaczone zostaną tylko treści z wybranych kategorii. Podkategorie należy dodać osobno."
         admin_actions:
           translation_settings: "Ustawienia tłumaczenia"
           localization_settings: "Ustawienia lokalizacji"
@@ -411,12 +409,6 @@ pl_PL:
             few: "%{count} wpisy"
             many: "%{count} wpisów"
             other: "%{count} wpisów"
-        theme_translations:
-          translate:
-            label: "Przetłumacz"
-            title: "Przetłumacz na wszystkie obsługiwane języki, używając wybranego języka jako języka źródłowego"
-            queued: "Tłumaczenie w kolejce"
-            failed: "Nie udało się dodać tłumaczenia do kolejki"
         translations_menu:
           translate:
             label: "Przetłumacz post"
@@ -798,17 +790,6 @@ pl_PL:
         oauth_client_id: "Identyfikator klienta OAuth"
         oauth_client_secret: "Tajny klucz klienta OAuth"
         oauth_scopes: "Zakresy OAuth"
-        oauth_authorization_params: "Parametry autoryzacji OAuth"
-        oauth_authorization_params_help: "Opcjonalny obiekt JSON scalony z żądaniem autoryzacji. Użyj wartości null, aby usunąć domyślny parametr."
-        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
-        oauth_token_params: "Parametry tokena OAuth"
-        oauth_token_params_help: "Opcjonalny obiekt JSON scalony z żądaniami tokenów. Użyj wartości null, aby usunąć domyślny parametr."
-        oauth_token_params_placeholder: "{}"
-        oauth_require_refresh_token: "Wymagaj odświeżenia tokena"
-        oauth_require_refresh_token_help: "Połączenie OAuth nie zostanie nawiązane, jeśli dostawca nie zwróci tokena odświeżania."
-        oauth_json_object_required: "%{field} musi być obiektem JSON."
-        oauth_show_advanced_options: "Pokaż opcje zaawansowane"
-        oauth_hide_advanced_options: "Ukryj opcje zaawansowane"
         oauth_connection: "Połączenie OAuth"
         oauth_status: "Status OAuth"
         oauth_statuses:
@@ -931,19 +912,14 @@ pl_PL:
           other: "Ten model jest obecnie używany przez: %{settings}. W przypadku nieprawidłowej konfiguracji funkcje nie będą działać zgodnie z oczekiwaniami. "
         model_description:
           none: "Ogólne ustawienia, które działają dla większości modeli językowych"
-          anthropic-claude-opus-4-7: "Najbardziej inteligentny model Anthropic"
           anthropic-claude-sonnet-4-6: "Optymalna równowaga między szybkością a kosztami"
           anthropic-claude-haiku-4-5: "Szybki i opłacalny"
           google-gemini-3-pro: "Najinteligentniejszy model Google"
           google-gemini-3-flash: "Szybki i ekonomiczny dzięki rozumowaniu multimodalnemu"
-          open_ai-gpt-5-4: "Flagowy model OpenAI, doskonale nadający się do rozwiązywania problemów w różnych domenach"
-          open_ai-gpt-5-4-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami"
           open_ai-gpt-5-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5"
           open_router-deepseek-deepseek-v3-2: "Najnowszy, wysokowydajny model firmy DeepSeek"
           open_router-moonshotai-kimi-k2-5: "Multimodalny model Moonshot z funkcjami wizyjnymi"
           open_router-x-ai-grok-4-fast: "Flagowy model xAI z wizją"
-          open_router-minimax-minimax-m2-7: "Multimodalny model MiniMax z dużym kontekstem"
-          open_router-z-ai-glm-5-1: "Multimodalny model Z-AI z wizją"
           open_router-arcee-ai-trinity-large-preview-free: "Darmowy model open-source od Arcee AI"
         preseeded_model_description: "Wstępnie skonfigurowany model open-source wykorzystujący %{model}"
         configured:
@@ -1182,12 +1158,6 @@ pl_PL:
           title: "Wyświetl interakcję AI"
           copy_request: "Prośba o kopiowanie"
           copy_response: "Odpowiedź kopiowania"
-          this_turn: "Ta tura:"
-          whole_conversation: "Rozmowa:"
-          tokens_summary: "%{request_tokens} wejście → %{response_tokens} wyjście"
-          cache_both: "(pamięć podręczna %{read} odczyt, %{write} zapis)"
-          cache_read_only: "(odczyt pamięci podręcznej %{read})"
-          cache_write_only: "(zapis pamięci podręcznej %{write})"
           request: "Żądanie"
           response: "Odpowiedź"
           next_log: "Następna"

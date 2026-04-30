@@ -15,7 +15,7 @@
 
   &-textarea {
     @include viewport.from(sm) {
-      .form-kit__container-content {
+      &:not(.--full) .form-kit__container-content {
         min-width: var(--form-kit-large-input);
         width: fit-content !important;
       }

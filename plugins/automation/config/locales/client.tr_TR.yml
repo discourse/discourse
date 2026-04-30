@@ -215,9 +215,6 @@ tr_TR:
               description: "İsteğe bağlı, tetiklemeyi yalnızca bu özelliklere sahip gönderilerle sınırlayın"
           created: Oluşturulma
           edited: Düzenlendi
-          topics: Konular (tüm kategoriler)
-          personal_messages: Yalnızca kişisel mesajlar
-          public_topics: Konular (sadece herkese açık kategoriler)
           with_images: Görüntüler
           with_links: Bağlantılar
           with_code: Kod
@@ -320,12 +317,6 @@ tr_TR:
             tags:
               label: Etiketler
               description: Konuya eklenecek etiketlerin listesi.
-            closed_automatically:
-              label: Otomatik olarak kapatılan konular
-              description: Otomatik olarak kapatılan konulara etiket ekleyin.
-            closed_manually:
-              label: Elle kapatılan konular
-              description: Manuel olarak kapatılan başlıklara etiket ekleyin.
         post:
           fields:
             creator:

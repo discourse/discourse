@@ -2033,4 +2033,253 @@ describe PostRevisor do
       expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_nil
     end
   end
+
+  describe "revising reply_to_post_number" do
+    fab!(:topic)
+    fab!(:op_author, :user)
+    fab!(:first_reply_author, :user)
+    fab!(:second_reply_author, :user)
+    fab!(:editor) { Fabricate(:user, refresh_auto_groups: true) }
+
+    fab!(:original_post) { Fabricate(:post, topic: topic, user: op_author, post_number: 1) }
+    fab!(:first_reply) do
+      PostCreator.create!(
+        first_reply_author,
+        topic_id: topic.id,
+        raw: "first reply body, long enough to be valid",
+        reply_to_post_number: 1,
+      )
+    end
+    fab!(:second_reply) do
+      PostCreator.create!(
+        second_reply_author,
+        topic_id: topic.id,
+        raw: "second reply body, long enough to be valid",
+        reply_to_post_number: 1,
+      )
+    end
+    fab!(:post_to_edit) do
+      PostCreator.create!(
+        editor,
+        topic_id: topic.id,
+        raw: "my reply body, long enough to be valid",
+        reply_to_post_number: 1,
+      )
+    end
+
+    def revise(value, opts = {})
+      PostRevisor.new(post_to_edit).revise!(
+        editor,
+        { reply_to_post_number: value },
+        { bypass_rate_limiter: true }.merge(opts),
+      )
+    end
+
+    it "reparents to another earlier post and syncs reply_to_user_id" do
+      original_parent_reply_count = original_post.reload.reply_count
+
+      expect(revise(first_reply.post_number)).to eq(true)
+
+      post_to_edit.reload
+      expect(post_to_edit.reply_to_post_number).to eq(first_reply.post_number)
+      expect(post_to_edit.reply_to_user_id).to eq(first_reply.user_id)
+      expect(first_reply.reload.reply_count).to eq(1)
+      expect(original_post.reload.reply_count).to eq(original_parent_reply_count - 1)
+    end
+
+    it "removes the reply relationship when set to nil" do
+      expect(revise(nil)).to eq(true)
+
+      post_to_edit.reload
+      expect(post_to_edit.reply_to_post_number).to be_nil
+      expect(post_to_edit.reply_to_user_id).to be_nil
+      expect(PostReply.where(post_id: original_post.id, reply_post_id: post_to_edit.id)).to be_empty
+    end
+
+    it "tracks the change in a PostRevision" do
+      revise(first_reply.post_number, force_new_version: true)
+
+      revision = post_to_edit.post_revisions.order(:number).last
+      expect(revision.modifications["reply_to_post_number"]).to eq([1, first_reply.post_number])
+    end
+
+    it "does not create a revision when the value is unchanged" do
+      expect { revise(post_to_edit.reply_to_post_number) }.not_to change {
+        post_to_edit.post_revisions.count
+      }
+    end
+
+    it "rejects a self-reference" do
+      expect(revise(post_to_edit.post_number)).to eq(false)
+      expect(post_to_edit.errors[:reply_to_post_number]).to be_present
+      expect(post_to_edit.reload.reply_to_post_number).to eq(1)
+    end
+
+    it "rejects a later post in the topic" do
+      later_post =
+        PostCreator.create!(
+          first_reply_author,
+          topic_id: topic.id,
+          raw: "a later post, long enough to be valid",
+        )
+      expect(revise(later_post.post_number)).to eq(false)
+      expect(post_to_edit.errors[:reply_to_post_number]).to be_present
+    end
+
+    it "rejects a post that does not exist in the topic" do
+      expect(revise(999)).to eq(false)
+      expect(post_to_edit.errors[:reply_to_post_number]).to be_present
+    end
+
+    it "rejects a deleted post" do
+      first_reply.trash!
+      expect(revise(first_reply.post_number)).to eq(false)
+      expect(post_to_edit.errors[:reply_to_post_number]).to be_present
+    end
+
+    it "keeps the PostReply row for the old parent if the post still quotes it" do
+      post_to_edit.update!(
+        raw: "quoting\n[quote=\"#{op_author.username}, post:1, topic:#{topic.id}\"]hi[/quote]",
+      )
+      post_to_edit.extract_quoted_post_numbers
+      post_to_edit.save!
+
+      expect(revise(first_reply.post_number)).to eq(true)
+      expect(
+        PostReply.where(post_id: original_post.id, reply_post_id: post_to_edit.id),
+      ).to be_present
+    end
+
+    it "rejects a target the editor cannot see" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff]
+      whisper =
+        PostCreator.create!(
+          admin,
+          topic_id: topic.id,
+          raw: "a whisper the editor cannot see",
+          post_type: Post.types[:whisper],
+        )
+
+      expect(revise(whisper.post_number)).to eq(false)
+      expect(post_to_edit.errors[:reply_to_post_number]).to be_present
+    end
+
+    it "does not create new PostReply rows when the post save fails" do
+      SiteSetting.min_post_length = 500
+      new_parent_reply_count = first_reply.reload.reply_count
+
+      result =
+        PostRevisor.new(post_to_edit).revise!(
+          editor,
+          { raw: "too short", reply_to_post_number: first_reply.post_number },
+          bypass_rate_limiter: true,
+        )
+
+      expect(result).to eq(false)
+      expect(PostReply.where(post_id: first_reply.id, reply_post_id: post_to_edit.id)).to be_empty
+      expect(first_reply.reload.reply_count).to eq(new_parent_reply_count)
+    end
+
+    it "cleans up the PostReply row when the previous parent is already trashed" do
+      original_post.trash!
+
+      expect(
+        PostReply.where(post_id: original_post.id, reply_post_id: post_to_edit.id),
+      ).to be_present
+
+      expect(revise(first_reply.post_number)).to eq(true)
+
+      expect(PostReply.where(post_id: original_post.id, reply_post_id: post_to_edit.id)).to be_empty
+    end
+
+    context "with nested reply stats" do
+      def direct_reply_count(post)
+        NestedViewPostStat.where(post_id: post.id).pick(:direct_reply_count) || 0
+      end
+
+      def total_descendant_count(post)
+        NestedViewPostStat.where(post_id: post.id).pick(:total_descendant_count) || 0
+      end
+
+      it "moves the subtree between ancestor chains on reparent" do
+        SiteSetting.nested_replies_enabled = true
+
+        nested_op = Fabricate(:post, topic: topic, user: op_author)
+        nested_reparent_target =
+          PostCreator.create!(
+            first_reply_author,
+            topic_id: topic.id,
+            raw: "reparent target, long enough to be valid",
+            reply_to_post_number: nested_op.post_number,
+          )
+        moved_post =
+          PostCreator.create!(
+            editor,
+            topic_id: topic.id,
+            raw: "the one we'll reparent, long enough",
+            reply_to_post_number: nested_op.post_number,
+          )
+
+        # Before: nested_op has two direct children (target + moved_post).
+        expect(direct_reply_count(nested_op)).to eq(2)
+        expect(total_descendant_count(nested_op)).to eq(2)
+        expect(direct_reply_count(nested_reparent_target)).to eq(0)
+        expect(total_descendant_count(nested_reparent_target)).to eq(0)
+
+        result =
+          PostRevisor.new(moved_post).revise!(
+            editor,
+            { reply_to_post_number: nested_reparent_target.post_number },
+            bypass_rate_limiter: true,
+          )
+
+        expect(result).to eq(true)
+        # After: moved_post now lives under target. nested_op stays a shared
+        # ancestor (2 total descendants) but loses a direct child; target
+        # gains one direct + one total.
+        expect(direct_reply_count(nested_op)).to eq(1)
+        expect(total_descendant_count(nested_op)).to eq(2)
+        expect(direct_reply_count(nested_reparent_target)).to eq(1)
+        expect(total_descendant_count(nested_reparent_target)).to eq(1)
+      end
+
+      it "moves the subtree up when the new target is the current grandparent" do
+        SiteSetting.nested_replies_enabled = true
+
+        nested_op = Fabricate(:post, topic: topic, user: op_author)
+        middle =
+          PostCreator.create!(
+            first_reply_author,
+            topic_id: topic.id,
+            raw: "middle, long enough to be valid",
+            reply_to_post_number: nested_op.post_number,
+          )
+        moved_post =
+          PostCreator.create!(
+            editor,
+            topic_id: topic.id,
+            raw: "will move up, long enough",
+            reply_to_post_number: middle.post_number,
+          )
+
+        expect(direct_reply_count(nested_op)).to eq(1)
+        expect(total_descendant_count(nested_op)).to eq(2)
+        expect(direct_reply_count(middle)).to eq(1)
+        expect(total_descendant_count(middle)).to eq(1)
+
+        PostRevisor.new(moved_post).revise!(
+          editor,
+          { reply_to_post_number: nested_op.post_number },
+          bypass_rate_limiter: true,
+        )
+
+        # middle loses its only descendant; nested_op's total stays at 2,
+        # its direct child count goes from 1 to 2.
+        expect(direct_reply_count(middle)).to eq(0)
+        expect(total_descendant_count(middle)).to eq(0)
+        expect(direct_reply_count(nested_op)).to eq(2)
+        expect(total_descendant_count(nested_op)).to eq(2)
+      end
+    end
+  end
 end

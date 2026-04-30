@@ -5,33 +5,20 @@
 # https://translate.discourse.org/
 
 pl_PL:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_topic_voting: "Głosowanie na tematy Discourse"
   js:
     category:
       sort_options:
         votes: "Głosy"
     topic_voting:
-      category_type_ideas:
-        title: "Pomysły"
-        not_ideas_type: "Uwaga! Głosowanie w tej kategorii zostało wyłączone. Aby je ponownie włączyć, znajdziesz odpowiednie ustawienia na karcie Ustawienia."
-        remove_ideas_type: "Usuń typ pomysłów"
-        confirm_remove_ideas_type: "Czy na pewno chcesz usunąć możliwość głosowania z tej kategorii? Istniejące głosy zostaną zachowane, ale członkowie nie będą mogli oddawać nowych głosów."
       notification_label:
         vote_released: "Głos zwrócony"
       title: "Głosowanie na temat"
       reached_limit: "Oddałeś już maksymalną liczbę głosów!"
       list_votes: "Lista twoich głosów"
-      votes_nav_help: "tematy z największą liczbą głosów w historii"
-      hot_nav_help: "najpopularniejsze ostatnio tematy, w tym te, na które ostatnio głosowano"
       voted: "Oddałeś już głos"
       allow_topic_voting: "Pozwól użytkownikom głosować na tematy w tej kategorii"
       vote_title: "Głosuj"
       vote_title_plural: "Głosy"
-      voting_closed_description: "Głosowanie w tym temacie jest zamknięte"
       see_votes: "Masz jeszcze głosów: %{count}/%{max}"
       locked: "Zablokowano"
       locked_description: "Zwiększ poziom zaufania do głosowania"
@@ -46,17 +33,11 @@ pl_PL:
         many: "Głosy"
         other: "Głosy"
       remove_vote: "Usuń głos"
-      watch_topic: "Powiadom mnie o nowych wpisach"
-      no_votes_yet: "Nikt jeszcze na to nie głosował"
-      and_more_voters: "i %{count} więcej..."
-      show_voters: "Pokaż, kto głosował"
-      vote_count_thousands: "%{count}k"
       no_votes_title_self: "Nie głosowałeś jeszcze na żaden temat"
       no_votes_title_others: "%{username} nie zagłosował jeszcze na żaden temat"
     filters:
       votes:
         title: "Głosy"
-        help: "tematy z największą liczbą głosów w historii"
       my_votes:
         title: "Moje głosy"
         help: "tematy, na które głosowałeś"

@@ -1139,14 +1139,18 @@ class TopicsController < ApplicationController
           :silent,
           :pinned_globally,
           :pinned_until,
+          :remove_all_tags,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
           tag_ids: [],
           tags: [],
+          add_tag_ids: [],
+          remove_tag_ids: [],
+          replace_tags: %i[from_tag_id to_tag_id],
         )
         .to_h
-        .symbolize_keys
+        .deep_symbolize_keys
 
-    %i[silent pinned_globally].each do |key|
+    %i[silent pinned_globally remove_all_tags].each do |key|
       operation[key] = ActiveModel::Type::Boolean.new.cast(operation[key]) if operation.has_key?(
         key,
       )

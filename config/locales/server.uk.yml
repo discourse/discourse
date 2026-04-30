@@ -1916,6 +1916,7 @@ uk:
     notification_email: "Відправник: E-mail використовується для надсилання всіх системних листів. Домен, вказаний тут повинен мати правильно сконфігуровані SPF, DKIM і reverse PTR записи, для успішного надсилання листів."
     email_custom_headers: "Список користувацьких заголовків електронних листів"
     email_subject: "Налаштовуваний формат теми для стандартних листів. Дивіться: <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
+    simple_email_subject: "Якщо цю функцію ввімкнено, теми електронних листів будуть стислишими та міститимуть лише основну інформацію. Це дозволяє користувачам швидко зрозуміти мету листа з першого погляду."
     detailed_404: "Надає користувачам більше інформації про те, чому вони не можуть отримати доступ до певної теми. Примітка: Це не дуже безпечно, оскільки користувачі дізнаються, чи URL-адреса посилається на дійсну тему."
     enforce_second_factor: "Вимагати від користувачів увімкнення двофакторної автентифікації (2FA) перед доступом до інтерфейсу Discourse. Цей параметр не впливає на автентифікацію API або «постачальника DiscourseConnect». Якщо ввімкнено enforce_second_factor_on_external_auth, користувачі не зможуть входити за допомогою зовнішніх постачальників автентифікації після налаштування 2FA."
     enforce_second_factor_on_external_auth: "Вимагати від користувачів постійного використання двофакторної автентифікації (2FA). Якщо цю функцію ввімкнено, користувачі не зможуть входити в систему за допомогою зовнішніх методів автентифікації, таких як соціальні мережі, якщо у них увімкнено 2FA. Якщо її вимкнено, користувачам потрібно буде підтвердити свою 2FA лише під час входу за допомогою імені користувача та пароля. Дивіться також налаштування `enforce_second_factor`."
@@ -2488,6 +2489,7 @@ uk:
     allowed_embed_selectors: "Список розділених комами елементів CSS, дозволених до вбудовування."
     allowed_href_schemes: "Схеми, дозволені у посиланнях, крім http та https."
     embed_full_app: "Увімкнути повний режим програми для вбудованих коментарів. Якщо цю функцію ввімкнено, вбудовані коментарі завантажуватимуть повну версію програми Discourse у фреймі iframe, що дозволить користувачам безпосередньо взаємодіяти з темами."
+    suppress_third_party_analytics_in_embed: "Пропускати відображення сторонніх аналітичних скриптів (Google Tag Manager, Google Analytics, Adobe Analytics), коли Discourse завантажується всередині повного вбудованого iframe програми. Запобігає дублюванню переглядів сторінок та спрацьовуванню тегів, коли на головній сторінці вже завантажено ті самі скрипти."
     embed_post_limit: "Максимальна кількість дописів для вставки."
     embed_username_required: "Для створення теми потрібне ім’я користувача."
     notify_about_reviewable_item_after: "Якщо є питання, які не були розглянуті через стільки годин, буде надіслано особисте повідомлення модераторам. Встановіть 0, щоб вимкнути."
@@ -3242,6 +3244,7 @@ uk:
   download_backup_mailer:
     title: "Download Backup Mailer"
     subject_template: "[%{email_prefix}] Завантажити резервну копію сайту"
+    subject_template_improved: "%{email_prefix}: Завантаження резервної копії сайту"
     text_body_template: |
       Ось [завантаження резервної копії сайту](%{backup_file_path}) яке Ви запитували.
 
@@ -3253,11 +3256,13 @@ uk:
   admin_confirmation_mailer:
     title: "Підтвердження адміністратора"
     subject_template: "[%{email_prefix}] Підтвердить новий обліковий запис Адміністратора"
+    subject_template_improved: "%{email_prefix}: Підтвердити новий обліковий запис адміністратора"
     text_body_template: |
       Підтвердить, що ви хочете додати **%{target_username}(%{target_email})** як адміністратора вашого форуму. [Підтвердити обліковий запис адміністратора](%{admin_confirm_url})
   test_mailer:
     title: "Тест Mailer"
     subject_template: "[%{email_prefix}] Тест надійності електронної пошти"
+    subject_template_improved: "%{email_prefix}: Тест на доставку електронної пошти"
     text_body_template: |
       Це тестовий електронний лист від
 
@@ -3276,6 +3281,7 @@ uk:
   new_version_mailer:
     title: "Нова версія Mailer"
     subject_template: "[%{email_prefix}] Нова версія Discourse, доступно оновлення"
+    subject_template_improved: "%{email_prefix}: Нова версія Discourse, доступне оновлення"
     text_body_template: |
       Ура, нова версія [Discourse](https://www.discourse.org) доступна!
 
@@ -3290,6 +3296,7 @@ uk:
   new_version_mailer_with_notes:
     title: "Нова версія Mailer з примітками"
     subject_template: "[%{email_prefix}] доступне оновлення"
+    subject_template_improved: "%{email_prefix}: Оновлення доступне"
     text_body_template: |
       Ура, нова версія [Discourse](https://www.discourse.org) доступна!
 
@@ -3633,6 +3640,7 @@ uk:
     email_reject_insufficient_trust_level:
       title: "Відхилено e-mail: недостатній рівень довіри"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою – недостатній рівень довіри"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою – недостатній рівень довіри"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3640,6 +3648,7 @@ uk:
     email_reject_user_not_found:
       title: "Електронний лист у випадку, коли користувача не знайдено"
       subject_template: "[%{email_prefix}] Проблема електронної пошти -- користувача не знайдено"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- користувача не знайдено"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3647,13 +3656,15 @@ uk:
     email_reject_screened_email:
       title: "Email відхилено: адреса відправника заблокована"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою — заблокована електронна пошта"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- заблокована електронна пошта"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
         Ваша відповідь надіслана з заблокованої електронної адреси. Спробуйте надіслати з іншої електронної адреси або [зверніться до команди обслуговування](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Email відхилено. Заборонена поштова скринька"
-      subject_template: "[%{email_prefix}] Проблема з електронною поштою — заблокована електронна пошта"
+      subject_template: "[%{email_prefix}] Проблема з електронною поштою -- заблокована електронна пошта"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- заблокована електронна пошта"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3661,6 +3672,7 @@ uk:
     email_reject_inactive_user:
       title: "Email відхилено: неактивний користувач"
       subject_template: "[%{email_prefix}] Проблема електронної пошти -- Неактивний користувач"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- неактивний користувач"
       text_body_template: |
         Вибачте, але ваше повідомлення електронної пошти до %{destination} (з темою %{former_title}) не спрацювало.
 
@@ -3668,6 +3680,7 @@ uk:
     email_reject_silenced_user:
       title: "Email відхилено: заблокований користувач"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою -- Заблокований користувач"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою - користувач заблокований"
       text_body_template: |
         Вибачте, але ваше повідомлення електронної пошти до %{destination} (з темою %{former_title}) не спрацювало.
 
@@ -3675,6 +3688,7 @@ uk:
     email_reject_reply_user_not_matching:
       title: "Електронна пошта Відхилена, адреса не відповідає користувачу"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою – неочікувана адреса для відповіді"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою - неочікувана адреса відповіді"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3682,6 +3696,7 @@ uk:
     email_reject_empty:
       title: "Електронна пошта відхилена: немає вмісту"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою – немає вмісту"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- немає контенту"
       text_body_template: |
         Вибачте, але ваше повідомлення електронної пошти до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3691,6 +3706,7 @@ uk:
     email_reject_parsing:
       title: "Відхилено E-mail: помилка перевірки вмісту"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою – вміст нерозпізнано"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою – вміст не розпізнано"
       text_body_template: |
         Вибачте, але ваше повідомлення електронної пошти до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3698,6 +3714,7 @@ uk:
     email_reject_invalid_access:
       title: "Email відхилено: помилка доступу"
       subject_template: "[%{email_prefix}] Проблема електронної пошти -- Недійсний доступ"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою – недійсний доступ"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3705,6 +3722,7 @@ uk:
     email_reject_strangers_not_allowed:
       title: "Email відхилено: відповідь від невідомого користувача"
       subject_template: "[%{email_prefix}] Проблема електронної пошти -- Недійсний доступ"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою – недійсний доступ"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3712,6 +3730,7 @@ uk:
     email_reject_invalid_post:
       title: "Email відхилений: помилка публікації"
       subject_template: "[%{email_prefix}] Проблема електронної пошти -- Помилка надсилання"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою - помилка надсилання"
       text_body_template: |
         Вибачте, але ваше повідомлення електронної пошти до %{destination} (під назвою %{former_title}) не опрацьоване.
 
@@ -3719,6 +3738,7 @@ uk:
     email_reject_invalid_post_specified:
       title: "Email відхилено: неправильне повідомлення"
       subject_template: "[%{email_prefix}] Проблема електронної пошти -- Помилка надсилання"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою - помилка надсилання"
       text_body_template: |
         Вибачте, але ваше повідомлення електронної пошти до %{destination} (з темою %{former_title}) не опрацьоване.
 
@@ -3731,6 +3751,7 @@ uk:
     email_reject_post_too_short:
       title: "Email відхилено: надто коротке повідомлення"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою – повідомлення закоротке"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою – публікація занадто коротка"
       text_body_template: |
         Вибачте, але ваше повідомлення електронної пошти до %{destination} (з темою %{former_title}) не опрацьоване.
 
@@ -3738,6 +3759,7 @@ uk:
     email_reject_invalid_post_action:
       title: "Email відхилено: дія не розпізнана"
       subject_template: "[%{email_prefix}] Проблема електронної пошти – Недійсна дія надсилання"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою – недійсна дія публікації"
       text_body_template: |
         Вибачте, але ваше повідомлення електронної пошти до %{destination} (з темою %{former_title}) не опрацьоване.
 
@@ -3745,6 +3767,7 @@ uk:
     email_reject_reply_key:
       title: "Ключ відповіді електронною поштою відхилити"
       subject_template: "[%{email_prefix}] Проблема електронної пошти - невідомий ключ відповіді"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- невідомий ключ відповіді"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3752,6 +3775,7 @@ uk:
     email_reject_bad_destination_address:
       title: "Email відхилено: неправильна адреса одержувача"
       subject_template: "[%{email_prefix}] Проблема електронної пошти -- Невідомо: адреса"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- адреса невідома"
       text_body_template: |
         Вибачте, але ваше повідомлення електронної пошти до %{destination} (з темою %{former_title}) не опрацьоване.
 
@@ -3767,6 +3791,7 @@ uk:
     email_reject_old_destination:
       title: "Email відхилено: відповідь на прострочене повідомлення"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою - Ви намагаєтеся відповісти на старе сповіщення"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою – ви намагаєтеся відповісти на старе сповіщення"
       text_body_template: |
         Вибачте, але ваше повідомлення електронної пошти до %{destination} (з темою %{former_title}) не опрацьоване.
 
@@ -3774,6 +3799,7 @@ uk:
     email_reject_topic_not_found:
       title: "Email відхилений: тема не знайдена"
       subject_template: "[%{email_prefix}] Проблема електронної пошти -- Тема не знайдена"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- тему не знайдено"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3781,6 +3807,7 @@ uk:
     email_reject_topic_closed:
       title: "Email відхилено: тема закрита"
       subject_template: "[%{email_prefix}] Проблема електронної пошти -- Тема закрита"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- тему закрито"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3788,6 +3815,7 @@ uk:
     email_reject_auto_generated:
       title: "Відхилено автоматично створену електронну пошту"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою -- автоматично згенерована відповідь"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- автоматично згенерована відповідь"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3795,6 +3823,7 @@ uk:
     email_reject_unrecognized_error:
       title: "Відхилено нерозпізнану помилку електронною поштою"
       subject_template: "[%{email_prefix}] Проблема електронної пошти – нерозпізнана помилка"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою – нерозпізнана помилка"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3802,6 +3831,7 @@ uk:
     email_reject_attachment:
       title: "Вкладення електронної пошти відхилено"
       subject_template: "[%{email_prefix}] Проблема електронної пошти – вкладення відхилено"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- вкладення відхилено"
       text_body_template: |
         На жаль, деякі вкладення у вашому листі до %{destination} (з темою %{former_title}) було відхилено.
 
@@ -3812,13 +3842,15 @@ uk:
     email_reject_reply_not_allowed:
       title: "Відповіді електронною поштою не дозволено"
       subject_template: "[%{email_prefix}] Проблема електронної пошти -- Відповідь заборонена"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- відповідь не дозволена"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
         Ви не маєте прав відповідати в цю тему. Якщо ви вважаєте, що це помилка, [зверніться до команди обслуговування](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Email відхилено: відповідь на Email-дайджест"
-      subject_template: "[%{email_prefix}] Проблема електронної пошти -- Відповідь на резюме"
+      subject_template: "[%{email_prefix}] Проблема з електронною поштою -- Відповісти на резюме"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- відповідь на короткий опис"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3828,6 +3860,7 @@ uk:
     email_reject_too_many_recipients:
       title: "Забагато одержувачів відхилити електронний лист"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою – надто багато одержувачів"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою – забагато одержувачів"
       text_body_template: |
         Вибачте, але ваш лист до %{destination} (з темою %{former_title}) не опрацьовано.
 
@@ -3837,6 +3870,7 @@ uk:
     email_error_notification:
       title: "Повідомлення про помилки електронною поштою"
       subject_template: "[%{email_prefix}] Проблема з електронною поштою – помилка автентифікації POP"
+      subject_template_improved: "%{email_prefix}: Проблема з електронною поштою -- помилка автентифікації POP"
       text_body_template: |
         На жаль, сталася помилка автентифікації під час отримання листів із сервера POP.
 
@@ -4057,6 +4091,7 @@ uk:
     user_invited_to_private_message_pm_group:
       title: "Користувач запрошено групою до PM"
       subject_template: "[%{email_prefix}] %{username} запросив @%{group_name} до теми '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} запросив @%{group_name} до повідомлення '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4066,6 +4101,7 @@ uk:
     user_invited_to_private_message_pm:
       title: "Користувача, запрошено до PM"
       subject_template: "[%{email_prefix}] %{username} запросив вас до теми '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} запросив вас до повідомлення '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4075,6 +4111,7 @@ uk:
     user_invited_to_private_message_pm_staged:
       title: "Користувача, запрошено до PM Staged"
       subject_template: "[%{email_prefix}] %{username} запросив вас до теми '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} запросив вас до повідомлення '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4084,6 +4121,7 @@ uk:
     user_invited_to_topic:
       title: "Користувача запрошено до теми"
       subject_template: "[%{email_prefix}] %{username} запросив вас до теми '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} запросив вас до '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4094,6 +4132,7 @@ uk:
       title: "Користувач відповів"
       preview: "Хтось відповів на ваш пост."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4105,6 +4144,7 @@ uk:
     user_replied_pm:
       title: "Користувач відповів PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4117,6 +4157,7 @@ uk:
       title: "Користувач цитує"
       preview: "Хтось процитував вас у дописі."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4129,6 +4170,7 @@ uk:
       title: "Користувач пов’язаний"
       preview: "Посилання на публікацію в іншій темі."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4141,6 +4183,7 @@ uk:
       title: "Згаданий користувач"
       preview: "Хтось згадував про вас у дописі."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4152,6 +4195,7 @@ uk:
     user_mentioned_pm:
       title: "Згаданий користувач PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4163,6 +4207,7 @@ uk:
     user_group_mentioned:
       title: "Згадана група користувачів"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4174,6 +4219,7 @@ uk:
     user_group_mentioned_pm:
       title: "Група користувачів, згадана PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4185,6 +4231,7 @@ uk:
     user_group_mentioned_pm_group:
       title: "Група користувачів, згадана PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4197,6 +4244,7 @@ uk:
       title: "Користувач створив допис"
       preview: "Хтось відповів на тему, яку ви переглядаєте."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4208,6 +4256,7 @@ uk:
     user_watching_category_or_tag:
       title: "Категорія або тег, за яким стежить користувач"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4219,6 +4268,7 @@ uk:
     user_watching_first_post:
       title: "Користувач переглядає перший допис"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4231,6 +4281,7 @@ uk:
       title: " Користувач написав PM"
       preview: "Хтось надіслав вам приватне повідомлення."
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4248,6 +4299,7 @@ uk:
     account_suspended:
       title: "Обліковий запис призупинено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис призупинено"
+      subject_template_improved: "Ваш обліковий запис призупинено"
       text_body_template: |
         Вас призупинено на форумі до %{suspended_till}.
 
@@ -4255,6 +4307,7 @@ uk:
     account_suspended_forever:
       title: "Обліковий запис призупинено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис призупинено"
+      subject_template_improved: "Ваш обліковий запис призупинено"
       text_body_template: |
         Вас призупинено на форумі.
 
@@ -4262,6 +4315,7 @@ uk:
     account_silenced:
       title: "Обліковий запис заблоковано"
       subject_template: "[%{email_prefix}] Ваш обліковий запис заблоковано"
+      subject_template_improved: "Ваш обліковий запис заблоковано"
       text_body_template: |
         Вас заблоковано на форумі до %{silenced_till}.
 
@@ -4269,6 +4323,7 @@ uk:
     account_silenced_forever:
       title: "Обліковий запис заблоковано"
       subject_template: "[%{email_prefix}] Ваш обліковий запис заблоковано"
+      subject_template_improved: "Ваш обліковий запис заблоковано"
       text_body_template: |
         Вас заблоковано на форумі.
 
@@ -4276,6 +4331,7 @@ uk:
     account_deleted:
       title: "Обліковий запис видалено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис видалено"
+      subject_template_improved: "Ваш обліковий запис видалено"
       text_body_template: |
         Привіт,
 
@@ -4287,6 +4343,7 @@ uk:
     account_exists:
       title: "Обліковий запис вже існує"
       subject_template: "[%{email_prefix}] Обліковий запис вже існує"
+      subject_template_improved: "Обліковий запис вже існує"
       text_body_template: |
         Ви щойно намагалися створити обліковий запис на %{site_name} або намагалися змінити електронну адресу облікового запису на %{email}. Однак обліковий запис для %{email} вже існує.
 
@@ -4298,6 +4355,7 @@ uk:
     account_second_factor_disabled:
       title: "Двофакторну автентифікацію вимкнено"
       subject_template: "[%{email_prefix}] Двофакторна автентифікація вимкнена"
+      subject_template_improved: "Двофакторну автентифікацію вимкнено"
       text_body_template: |
         Двофакторну автентифікацію вимкнено у вашому обліковому записі о %{site_name}. Тепер ви можете увійти, використовуючи лише свій пароль; додатковий код автентифікації більше не потрібен.
 
@@ -4317,6 +4375,7 @@ uk:
       popular_posts: "Популярні дописи"
       more_new: "Нове для вас"
       subject_template: "[%{email_prefix}] Підсумок"
+      subject_template_improved: "Підсумок"
       unsubscribe: "Цей підсумок надсилається з %{site_link}, коли ми вас не бачили певний час. Змініть %{email_preferences_link} або %{unsubscribe_link}, щоб скасувати підписку."
       your_email_settings: "налаштування електронної пошти"
       click_here: "натисніть тут"
@@ -4326,6 +4385,7 @@ uk:
       title: "Забув(ла) пароль"
       preview: "Скинути пароль."
       subject_template: "[%{email_prefix}] Зміна пароля"
+      subject_template_improved: "Скидання пароля"
       text_body_template: |
         Хтось попросив змінити ваш пароль на [%{site_name}](%{base_url}).
 
@@ -4337,6 +4397,7 @@ uk:
       title: "Увійдіть за посиланням"
       preview: "Увійдіть за посиланням."
       subject_template: "[%{email_prefix}] Увійти за посиланням"
+      subject_template_improved: "Увійдіть за посиланням"
       text_body_template: |
         Ось ваше посилання для входу на [%{site_name}](%{base_url}).
 
@@ -4348,6 +4409,7 @@ uk:
       title: "Встановити пароль"
       preview: "Встановити пароль облікового запису."
       subject_template: "[%{email_prefix}] Встановити пароль"
+      subject_template_improved: "Встановити пароль"
       text_body_template: |
         Хтось попросив додати пароль до вашого облікового запису на [%{site_name}](%{base_url}). Крім того, ви можете увійти за допомогою будь-якої підтримуваної онлайн-служби (Google, Facebook тощо), пов’язаної з цією підтвердженою електронною адресою.
 
@@ -4359,6 +4421,7 @@ uk:
       title: "Логін Адміністратора"
       preview: "Запитується вхід адміністратора."
       subject_template: "[%{email_prefix}] Вхід"
+      subject_template_improved: "Вхід"
       text_body_template: |
         Хтось попросив увійти у ваш обліковий запис на [%{site_name}](%{base_url}).
 
@@ -4370,6 +4433,7 @@ uk:
       title: "Обліковий запис створено"
       preview: "Для вас створено новий обліковий запис."
       subject_template: "[%{email_prefix}] Ваш новий обліковий запис"
+      subject_template_improved: "Ваш новий обліковий запис"
       text_body_template: |
         Для вас було створено новий обліковий запис %{site_name}
 
@@ -4378,6 +4442,7 @@ uk:
     confirm_new_email:
       title: "Підтвердити нову електронну адресу"
       subject_template: "[%{email_prefix}] Підтвердьте свою нову електронну адресу"
+      subject_template_improved: "Підтвердіть свою нову електронну пошту"
       text_body_template: |
         Підтвердьте свою нову адресу електронної пошти на %{site_name}, натиснувши таке посилання:
 
@@ -4387,6 +4452,7 @@ uk:
     confirm_new_email_via_admin:
       title: "Підтвердити нову електронну адресу"
       subject_template: "[%{email_prefix}] Підтвердьте свою нову електронну адресу"
+      subject_template_improved: "Підтвердіть свою нову електронну пошту"
       text_body_template: |
         Підтвердьте свою нову адресу електронної пошти на %{site_name}, натиснувши наступне посилання:
 
@@ -4396,6 +4462,7 @@ uk:
     confirm_old_email:
       title: "Підтвердити стару електронну адресу"
       subject_template: "[%{email_prefix}] Підтвердьте свою поточну електронну адресу"
+      subject_template_improved: "Підтвердіть свою поточну адресу електроної пошти"
       text_body_template: |
         Перш ніж ми зможемо змінити вашу електронну адресу, нам потрібно підтвердити, що ви контролюєте
         поточний обліковий запис електронної пошти. Коли ви виконаєте цей крок, ми попросимо вас підтвердити
@@ -4407,6 +4474,7 @@ uk:
     confirm_old_email_add:
       title: "Підтвердити стару електронну адресу (додати)"
       subject_template: "[%{email_prefix}] Підтвердьте свою поточну електронну адресу"
+      subject_template_improved: "Підтвердіть свою поточну адресу електроної пошти"
       text_body_template: |
         Перш ніж ми зможемо додати нову адресу електронної пошти, нам потрібно підтвердити, що ви контролюєте
         поточний обліковий запис електронної пошти. Коли ви виконаєте цей крок, ми попросимо вас підтвердити
@@ -4419,6 +4487,7 @@ uk:
       title: "Повідомити стару електронну пошту"
       preview: "Адресу електронної пошти оновлено."
       subject_template: "[%{email_prefix}] Вашу адресу електронної пошти було змінено"
+      subject_template_improved: "Вашу адресу електронної пошти було змінено"
       text_body_template: |
         Це автоматичне повідомлення, щоб повідомити вам, що ваша адреса електронної пошти для
         %{site_name} була змінена. Якщо це було зроблено помилково, зверніться
@@ -4430,6 +4499,7 @@ uk:
     notify_old_email_add:
       title: "Повідомити стару електронну адресу (Додати)"
       subject_template: "[%{email_prefix}] Додано нову електронну адресу"
+      subject_template_improved: "Додано нову адресу електронної пошти"
       text_body_template: |
         Це автоматичне повідомлення, щоб повідомити вам, що адресу електронної пошти для
         %{site_name} було додано. Якщо це було зроблено помилково, зверніться
@@ -4468,6 +4538,7 @@ uk:
       title: "Реєстрація"
       preview: "Підтвердіть свій обліковий запис."
       subject_template: "[%{email_prefix}] Підтвердьте свій новий обліковий запис"
+      subject_template_improved: "Підтвердіть свій новий акаунт"
       text_body_template: |
         Ласкаво просимо до %{site_name}!
 
@@ -4478,6 +4549,7 @@ uk:
     activation_reminder:
       title: "Нагадування про активацію"
       subject_template: "[%{email_prefix}] Нагадування про підтвердження облікового запису"
+      subject_template_improved: "Нагадування про підтвердження облікового запису"
       text_body_template: |
         Ласкаво просимо до %{site_name}!
 
@@ -4490,7 +4562,8 @@ uk:
     suspicious_login:
       title: "Сповіщення про новий логін"
       preview: "Перевірте свій пристрій."
-      subject_template: "[%{site_name}] Новий Логін від %{location}"
+      subject_template: "[%{site_name}] Новий вхід на сайт з %{location}"
+      subject_template_improved: "%{site_name}: Новий логін від %{location}"
       text_body_template: |
         Привіт,
 
@@ -4506,6 +4579,7 @@ uk:
     post_approved:
       title: "Ваш допис було схвалено"
       subject_template: "[%{site_name}] Ваш допис було схвалено"
+      subject_template_improved: "%{site_name}: Ваша публікація була схвалена"
       text_body_template: |
         Привіт,
 

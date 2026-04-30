@@ -2333,8 +2333,6 @@ sl:
         move_messages_to_inbox: "Prestavi v Prejeto"
         change_notification_level: "Spremeni raven obveščanja"
         choose_new_category: "Izberi novo kategorijo za temo:"
-        choose_new_tags: "Izberite nove oznake za te teme:"
-        changed_tags: "Oznake na teh temah so bile spremenjene."
         progress:
           one: "Napredek: <strong>%{count}</strong> tema"
           two: "Napredek: <strong>%{count}</strong> temi"
@@ -2364,10 +2362,6 @@ sl:
         name: "Arhiviraj"
       move_messages_to_inbox:
         name: "Prestavi v Prejeto"
-      remove_tags:
-        name: "Odstrani oznake"
-      replace_tags:
-        name: "Zamenjaj oznake"
       delete_topics:
         name: "Izbriši"
       convert_to_public_topic:
@@ -2392,6 +2386,7 @@ sl:
       collapse: "Skrči"
       no_replies: "Ni odgovorov."
       deleted_post_placeholder: "[izbrisano]"
+      ignored_post_placeholder: "[prezrti]"
       pinned_reply: "Pripeto"
     topic:
       filter_to:
@@ -3092,7 +3087,7 @@ sl:
           low: "Nizka"
           high: "Visoka"
       sort_options:
-        default: "privzeto"
+        default: "Privzeto"
         likes: "Všečki"
         views: "Ogledi"
         posts: "Prispevki"
@@ -4383,6 +4378,7 @@ sl:
         topic_id: "ID teme"
         post_id: "ID prispevka"
         category_id: "ID kategorije"
+        reviewable_id: "Pregled"
         delete: "Izbriši"
         edit: "Uredi"
         save: "Shrani"

@@ -12,8 +12,6 @@ lt:
         link_to_settings: "Nustatymai"
         refresh: "Atnaujinti"
         name: "Vardas"
-        section:
-          groups: "Grupės"
         period:
           all_time: "Per visą laiką"
           yearly: "Kasmet"

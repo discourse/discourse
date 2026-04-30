@@ -25,6 +25,7 @@ class PostRevisionSerializer < ApplicationSerializer
              :body_changes,
              :title_changes,
              :user_changes,
+             :reply_to_post_number_changes,
              :tags_changes,
              :category_id_changes,
              :can_edit,
@@ -186,6 +187,17 @@ class PostRevisionSerializer < ApplicationSerializer
     previous["user_id"] != current["user_id"]
   end
 
+  def reply_to_post_number_changes
+    {
+      previous: reply_to_info(previous["reply_to_post_number"]),
+      current: reply_to_info(current["reply_to_post_number"]),
+    }
+  end
+
+  def include_reply_to_post_number_changes?
+    previous["reply_to_post_number"] != current["reply_to_post_number"]
+  end
+
   def tags_changes
     pre = filter_tags previous["tags"]
     cur = filter_tags current["tags"]
@@ -243,6 +255,7 @@ class PostRevisionSerializer < ApplicationSerializer
       "post_type" => [post.post_type],
       "user_id" => [post.user_id],
       "locale" => [post.locale],
+      "reply_to_post_number" => [post.reply_to_post_number],
     }
 
     # Retrieve any `tracked_topic_fields`
@@ -318,5 +331,23 @@ class PostRevisionSerializer < ApplicationSerializer
   def filter_category_id(category_id)
     return if category_id.blank?
     Category.secured(scope).find_by(id: category_id)&.id
+  end
+
+  def reply_to_info(post_number)
+    return nil if post_number.blank?
+
+    target = Post.where(topic_id: topic.id, post_number: post_number).first
+    info = { post_number: post_number }
+
+    # Only enrich with the target's author if the current viewer can see
+    # that post. Deleted posts, whispers, and posts in restricted
+    # categories must not leak their author through the revision history.
+    if target && scope.can_see?(target) && target.user
+      info[:username] = target.user.username_lower
+      info[:display_username] = target.user.username
+      info[:avatar_template] = target.user.avatar_template
+    end
+
+    info
   end
 end

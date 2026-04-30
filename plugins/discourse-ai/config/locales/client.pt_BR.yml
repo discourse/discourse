@@ -359,9 +359,6 @@ pt_BR:
           bar_done:
             one: "%{count} postagem"
             other: "%{count} postagens"
-        theme_translations:
-          translate:
-            label: "Traduzir"
         translations_menu:
           translate:
             label: "Traduzir postagem"
@@ -705,19 +702,14 @@ pt_BR:
           other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
-          anthropic-claude-opus-4-7: "Modelo mais inteligente da Anthropic"
           anthropic-claude-sonnet-4-6: "Equilíbrio ideal entre custo e velocidade"
           anthropic-claude-haiku-4-5: "Rápido e econômico"
           google-gemini-3-pro: "O modelo mais inteligente do Google"
           google-gemini-3-flash: "Modelo rápido e econômico com raciocínio multimodal"
-          open_ai-gpt-5-4: "O modelo principal da OpenAI, muito adequado para a resolução de problemas em diversas áreas."
-          open_ai-gpt-5-4-mini: "Proporciona um equilíbrio entre inteligência, velocidade e custo."
           open_ai-gpt-5-nano: "O modelo do GPT-5 mais rápido e econômico"
           open_router-deepseek-deepseek-v3-2: "O mais recente modelo de alto desempenho da DeepSeek"
           open_router-moonshotai-kimi-k2-5: "Modelo multimodal da Moonshot com recursos de visão"
           open_router-x-ai-grok-4-fast: "O modelo principal da xAI com visão"
-          open_router-minimax-minimax-m2-7: "Modelo multimodal do MiniMax com contexto amplo"
-          open_router-z-ai-glm-5-1: "Modelo multimodal da Z-AI com visão"
           open_router-arcee-ai-trinity-large-preview-free: "Modelo gratuito de código aberto da Arcee AI"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:

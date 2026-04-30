@@ -156,7 +156,7 @@ class GroupsController < ApplicationController
     group = Group.find(params[:id])
     guardian.ensure_can_edit!(group) if !guardian.can_admin_group?(group)
 
-    group_attributes = group_params(automatic: group.automatic)
+    group_attributes = group_params(automatic: group.automatic, group:)
     reset_group_email_settings_if_disabled!(group, group_attributes)
 
     categories, tags = []
@@ -796,7 +796,7 @@ class GroupsController < ApplicationController
     end
   end
 
-  def group_params(automatic: false)
+  def group_params(automatic: false, group: nil)
     attributes = %i[
       bio_raw
       default_notification_level
@@ -836,13 +836,16 @@ class GroupsController < ApplicationController
         :primary_group,
         :name,
         :grant_trust_level,
-        :automatic_membership_email_domains,
         :publish_read_state,
         :allow_unknown_sender_topic_replies,
       )
 
       custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
       attributes << { custom_fields: custom_fields } if custom_fields.present?
+    end
+
+    if !automatic && group && guardian.can_admin_group?(group)
+      attributes.push(:automatic_membership_email_domains)
     end
 
     if !automatic || current_user.admin

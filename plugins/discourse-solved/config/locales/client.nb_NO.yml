@@ -10,7 +10,6 @@ nb_NO:
       alt:
         solved:
           accepted_notification: "godtatt"
-          topic_solved_notification: "løst"
     solved:
       title: "Løst"
       allow_accepted_answers: "Tillat enmeeier og personale å markere et svar som løsning"

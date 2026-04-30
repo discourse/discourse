@@ -56,6 +56,7 @@ import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
+import { resetOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
 import {
   clearCache as clearOutletCache,
   resetExtraClasses,
@@ -274,6 +275,7 @@ export function testCleanup(container, app) {
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
   clearRegisteredEditCategoryTabs();
+  resetOnBeforeCategoryTypesChange();
   clearAddedTrackedPostProperties();
   clearAddedTrackedTopicProperties();
   resetGroupPostSmallActionCodes();

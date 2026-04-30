@@ -66,6 +66,22 @@ RSpec.describe "Support Category Type Setup" do
     end
   end
 
+  context "for an existing category with no support category type" do
+    fab!(:category)
+
+    it "can add the support category type" do
+      visit("/c/#{category.slug}/edit")
+      category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+      category_type_selector.expand
+      category_type_selector.option(".category-type-selector__result.--category-type-support").click
+      banner.click_save
+      expect(toast).to have_success(I18n.t("js.saved"))
+      expect(page).to have_css(".nav-pills .edit-category-support")
+      category.reload
+      expect(category.category_types.keys).to eq(%i[discussion support])
+    end
+  end
+
   context "when there is a support category already configured" do
     fab!(:category)
 
@@ -121,17 +137,15 @@ RSpec.describe "Support Category Type Setup" do
       expect(SiteSetting.show_who_marked_solved).to eq(true)
     end
 
-    it "can remove the support type from the category" do
-      visit("/c/#{category.slug}/edit/support")
-      page.find(".support-category--danger-zone .support-category__remove-type").click
-      expect(dialog).to have_content(
-        I18n.t("js.solved.category_type_support.confirm_remove_support_type"),
-      )
-      dialog.click_yes
+    it "can remove the support category type" do
+      visit("/c/#{category.slug}/edit")
+      category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+      category_type_selector.remove_selected_option("Support")
+      banner.click_save
       expect(toast).to have_success(I18n.t("js.saved"))
-      expect(page).to have_css(".edit-category-general.active")
-      expect(page).to have_current_path("/c/#{category.slug}/edit/general")
-      expect(category.reload.custom_fields["enable_accepted_answers"]).to eq("false")
+      expect(page).to have_no_css(".nav-pills .edit-category-support")
+      category.reload
+      expect(category.category_types.keys).to eq(%i[discussion])
     end
   end
 

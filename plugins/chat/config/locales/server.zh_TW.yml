@@ -54,6 +54,9 @@ zh_TW:
         direct: '%{username} 在 "%{channel}" 提及了您'
         other_type: '%{username} 在 "%{channel}" 提及了 %{identifier}'
       new_chat_message: '%{username} 在 "%{channel}" 傳送了訊息'
+    actions:
+      chat_reply:
+        title: 回覆
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

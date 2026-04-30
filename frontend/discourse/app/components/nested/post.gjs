@@ -18,6 +18,7 @@ import PostMetaData from "discourse/components/post/meta-data";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
@@ -41,6 +42,8 @@ export default class NestedPost extends Component {
   @tracked lineHighlighted = false;
   @tracked collapsed;
   @tracked showDeletedContent = false;
+  @tracked showIgnoredContent = false;
+  @tracked loadingIgnoredContent = false;
 
   restoreScroll = modifier((element) => {
     const anchor = this.args.scrollAnchor;
@@ -63,7 +66,8 @@ export default class NestedPost extends Component {
     } else {
       this.expanded =
         (this.args.children?.length ?? 0) > 0 ||
-        this.args.post.deleted_post_placeholder === true;
+        this.args.post.deleted_post_placeholder === true ||
+        this.args.post.ignored_post_placeholder === true;
       this.collapsed = false;
     }
 
@@ -156,6 +160,14 @@ export default class NestedPost extends Component {
     return this.args.post.deleted_post_placeholder === true;
   }
 
+  get isIgnoredPlaceholder() {
+    return this.args.post.ignored_post_placeholder === true;
+  }
+
+  get renderIgnoredPlaceholder() {
+    return this.isIgnoredPlaceholder && !this.showIgnoredContent;
+  }
+
   get showContinueThread() {
     return (
       this.atMaxDepth &&
@@ -207,6 +219,25 @@ export default class NestedPost extends Component {
   @action
   toggleDeletedContent() {
     this.showDeletedContent = !this.showDeletedContent;
+  }
+
+  @action
+  async revealIgnoredContent() {
+    if (this.showIgnoredContent || this.loadingIgnoredContent) {
+      return;
+    }
+
+    const post = this.args.post;
+    try {
+      this.loadingIgnoredContent = true;
+      const result = await ajax(`/posts/${post.id}/cooked.json`);
+      post.set("cooked", result.cooked);
+      this.showIgnoredContent = true;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingIgnoredContent = false;
+    }
   }
 
   @action
@@ -317,9 +348,24 @@ export default class NestedPost extends Component {
         <div class="nested-post__gutter">
           {{#unless this.isMobile}}
             {{#if this.isDeletedPlaceholder}}
-              <div class="nested-post__deleted-avatar-placeholder">
+              <div class="nested-post__placeholder-avatar">
                 {{icon "trash-can"}}
               </div>
+            {{else if this.renderIgnoredPlaceholder}}
+              <button
+                type="button"
+                class="nested-post__placeholder-avatar nested-post__placeholder-avatar--reveal"
+                data-post-number={{@post.post_number}}
+                aria-label={{i18n "nested_replies.toggle_ignored_content"}}
+                disabled={{this.loadingIgnoredContent}}
+                {{on "click" this.revealIgnoredContent}}
+              >
+                {{#if this.loadingIgnoredContent}}
+                  {{icon "spinner" class="fa-spin"}}
+                {{else}}
+                  {{icon "far-eye-slash"}}
+                {{/if}}
+              </button>
             {{else}}
               <PostAvatar @post={{@post}} @size="small" />
             {{/if}}
@@ -362,6 +408,10 @@ export default class NestedPost extends Component {
                 <span class="nested-post__collapsed-username">{{i18n
                     "nested_replies.deleted_post_placeholder"
                   }}</span>
+              {{else if this.renderIgnoredPlaceholder}}
+                <span class="nested-post__collapsed-username">{{i18n
+                    "nested_replies.ignored_post_placeholder"
+                  }}</span>
               {{else}}
                 <span
                   class="nested-post__collapsed-username"
@@ -377,11 +427,11 @@ export default class NestedPost extends Component {
             </button>
           {{else if this.isDeletedPlaceholder}}
             <div
-              class="nested-post__deleted-placeholder"
+              class="nested-post__placeholder nested-post__placeholder--deleted"
               data-post-number={{@post.post_number}}
             >
-              <div class="nested-post__deleted-actions">
-                <span class="nested-post__deleted-label">{{i18n
+              <div class="nested-post__placeholder-actions">
+                <span class="nested-post__placeholder-label">{{i18n
                     "nested_replies.deleted_post_placeholder"
                   }}</span>
                 {{#if this.currentUser.staff}}
@@ -406,14 +456,25 @@ export default class NestedPost extends Component {
                 {{/if}}
               </div>
               {{#if this.showDeletedContent}}
-                <div class="nested-post__deleted-content">
-                  <div class="nested-post__deleted-content-header">
+                <div class="nested-post__placeholder-reveal">
+                  <div class="nested-post__placeholder-reveal-header">
                     <PostAvatar @post={{@post}} @size="small" />
                     <PostMetaData @post={{@post}} />
                   </div>
                   <PostCookedHtml @post={{@post}} />
                 </div>
               {{/if}}
+            </div>
+          {{else if this.renderIgnoredPlaceholder}}
+            <div
+              class="nested-post__placeholder nested-post__placeholder--ignored"
+              data-post-number={{@post.post_number}}
+            >
+              <div class="nested-post__placeholder-actions">
+                <span class="nested-post__placeholder-label">{{i18n
+                    "nested_replies.ignored_post_placeholder"
+                  }}</span>
+              </div>
             </div>
           {{else}}
             {{#let (lazyHash post=@post) as |postOutletArgs|}}

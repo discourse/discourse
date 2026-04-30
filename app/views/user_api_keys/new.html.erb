@@ -21,6 +21,12 @@
     </ul>
   </div>
 
+  <% if @scopes&.split(",")&.include?("write") %>
+  <div class='authorize-api-key__write-warning alert alert-warning'>
+    <p><%= t("user_api_key.write_scope_warning") %></p>
+  </div>
+  <% end %>
+
   <% if @redirect_uri %>
   <div class='authorize-api-key__redirect'>
     <p class="authorize-api-key__redirect-url">

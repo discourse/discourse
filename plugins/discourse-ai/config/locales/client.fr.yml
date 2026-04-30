@@ -263,9 +263,6 @@ fr:
           bar_done:
             one: "%{count} publication"
             other: "%{count} publications"
-        theme_translations:
-          translate:
-            label: "Traduire"
       spam:
         short_title: "Contenu indésirable"
         title: "Configuration de la gestion du contenu indésirable"
@@ -559,7 +556,6 @@ fr:
           other: "Ce modèle est actuellement utilisé par %{settings}. Si la configuration est incorrecte, les fonctionnalités ne fonctionneront pas comme prévu. "
         model_description:
           none: "Paramètres généraux qui fonctionnent pour la plupart des modèles linguistiques"
-          anthropic-claude-opus-4-7: "Le modèle le plus intelligent d'Anthropic"
           anthropic-claude-sonnet-4-6: "Équilibre optimal entre vitesse et coût"
           anthropic-claude-haiku-4-5: "Rapide et économique"
           open_ai-gpt-5-nano: "Le modèle GPT-5 le plus rapide et le plus économique"

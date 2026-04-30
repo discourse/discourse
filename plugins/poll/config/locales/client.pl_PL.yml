@@ -12,7 +12,6 @@ pl_PL:
           poll: "Ankieta Discourse"
   js:
     poll:
-      title: "Ankieta"
       dynamic:
         enabled_hint: "Można dodawać i usuwać opcje."
       voters:

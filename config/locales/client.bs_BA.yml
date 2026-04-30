@@ -1968,8 +1968,6 @@ bs_BA:
         actions: "Masovno odrađene akcije"
         move_messages_to_inbox: "Idi u inbox"
         choose_new_category: "Izaberi novu kategoriju za temu:"
-        choose_new_tags: "Odaberi nove tagove za ove teme:"
-        changed_tags: "Tagovi ovih tema su izmijenjeni."
         error_topic_count:
           one: "%{count} tema"
           few: "%{count} teme"
@@ -1992,8 +1990,6 @@ bs_BA:
         name: "Arhiva"
       move_messages_to_inbox:
         name: "Premjesti u Sanduče"
-      replace_tags:
-        name: "Zamijeni oznake"
       delete_topics:
         name: "Delete"
       convert_to_private_message:
@@ -2014,6 +2010,7 @@ bs_BA:
       collapse: "Spusti"
       no_replies: "Bez odgovora."
       deleted_post_placeholder: "[isbrisano]"
+      ignored_post_placeholder: "[ignorisano]"
       pinned_reply: "Zakačena"
     topic:
       filter_to:
@@ -2603,7 +2600,7 @@ bs_BA:
           low: "Nisko"
           high: "Visoko"
       sort_options:
-        default: "obićno"
+        default: "Uobičajen"
         likes: "Sviđanja"
         views: "Pogledano"
         posts: "Objava"
@@ -3975,6 +3972,7 @@ bs_BA:
         topic_id: "Topic ID"
         post_id: "Post ID"
         category_id: "ID kategorije"
+        reviewable_id: "Pregled"
         delete: "Delete"
         edit: "Edit"
         save: "Save"

@@ -33,7 +33,6 @@ he:
       already_voted: "אפשר להצביע רק פעם אחת לכל שאלה."
       user_over_limit: "אסור לחרוג מכמות ההצבעות לדרגת האמון שלך."
       one_vote_per_post: "אפשר להצביע רק פעם אחת לכל פוסט."
-      toggle_voters: "להציג מי המצביעים"
     last_answer_lowercase: תשובה אחרונה
     answer_lowercase:
       one: תשובה
@@ -63,8 +62,6 @@ he:
           edit: "עריכה"
           cancel: "ביטול"
           add: "הוספת תגובה"
-          actions:
-            delete: "מחיקת תגובה"
           show:
             one: הצגת תגובה %{count} נוספת
             two: הצגת %{count} תגובות נוספות

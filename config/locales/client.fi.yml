@@ -3232,19 +3232,9 @@ fi:
         archive_messages: "Siirrä arkistoon"
         change_notification_level: "Muuta ilmoitustasoa"
         choose_new_category: "Valitse uusi alue ketjuille:"
-        selected_sole_category:
-          one: "Olet valinnut <b>%{count}</b> ketjun alueelta:"
-          other: "Olet valinnut <b>%{count}</b> ketjua alueelta:"
         selected_count:
           one: "%{count} valittu"
           other: "%{count} valittu"
-        append_tags: "Lisää tunnisteita"
-        choose_new_tags: "Valitse tunnisteet näille ketjuille:"
-        choose_append_tags: "Lisää tunnisteita"
-        changed_tags: "Ketjujen tunnisteet muutettiin."
-        confirm_remove_tags:
-          one: "Kaikki tunnisteet poistetaan tästä ketjusta. Oletko varma?"
-          other: "Kaikki tunnisteet poistetaan <b>%{count}</b> ketjusta. Oletko varma?"
         progress:
           one: "Edetty: <strong>%{count}</strong> ketju"
           other: "Edetty: <strong>%{count}</strong> ketjua"
@@ -3286,10 +3276,9 @@ fi:
         name: "Poista listaus"
       relist_topics:
         name: "Lisää luetteloon uudelleen"
-      remove_tags:
-        name: "Poista tunnisteita"
-      replace_tags:
-        name: "Korvaa tunnisteet"
+      manage_tags:
+        add:
+          title: "Lisää tunnisteita"
       delete_topics:
         name: "Poista"
       update_category:
@@ -3318,6 +3307,7 @@ fi:
       collapse: "Kutista"
       no_replies: "Ei vielä vastauksia."
       deleted_post_placeholder: "[poistettu]"
+      ignored_post_placeholder: "[sivuutettu]"
       pinned_reply: "Kiinnitetty"
     topic:
       filter_to:
@@ -4199,7 +4189,7 @@ fi:
           low: "Matala"
           high: "Korkea"
       sort_options:
-        default: "oletus"
+        default: "Oletus"
         likes: "Tykkäykset"
         views: "Katselut"
         posts: "Viestit"
@@ -6918,6 +6908,7 @@ fi:
         topic_id: "Ketjun tunnus"
         post_id: "Viestin tunnus"
         category_id: "Alueen tunnus"
+        reviewable_id: "Käsittele"
         delete: "Poista"
         edit: "Muokkaa"
         save: "Tallenna"

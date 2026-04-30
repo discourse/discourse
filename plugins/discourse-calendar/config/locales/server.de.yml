@@ -67,9 +67,6 @@ de:
     sidebar_show_upcoming_events: "Zeige den Link für anstehende Ereignisse in der Seitenleiste unter „Mehr“."
     calendar_first_day_of_week: "Lege den ersten Wochentag für die Kalenderanzeige fest. Zur Auswahl stehen Samstag, Sonntag oder Montag."
   discourse_calendar:
-    calendar_subscriptions:
-      all_events_feed_name: "%{site_title} - Alle Ereignisse"
-      my_events_feed_name: "%{site_title} - Meine Ereignisse"
     invite_user_notification: "%{username} lädt dich ein zu: %{description}"
     calendar_must_be_in_first_post: "Kalender-Tag kann nur im ersten Beitrag eines Themas verwendet werden."
     more_than_one_calendar: "Ein Beitrag kann nicht mehr als einen Kalender enthalten."

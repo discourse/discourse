@@ -1702,8 +1702,6 @@ lt:
         Jūsų paskyra neturi reikiamo patikimumo lygio, kad galėtumėte paskelbti naujas temas šiuo el. pašto adresu. Jei manote, kad tai klaida, [susisiekite su darbuotoju] (%{base_url}/apie).
     email_reject_screened_email:
       subject_template: "[%{email_prefix}] El. pašto problema - užblokuotas el. paštas"
-    email_reject_not_allowed_email:
-      subject_template: "[%{email_prefix}] El. pašto problema - užblokuotas el. paštas"
     email_reject_inactive_user:
       title: "El. pašto atmetimas Neaktyvus vartotojas"
       subject_template: "[%{email_prefix}] El. Pašto problema - neaktyvus vartotojas"
@@ -1785,7 +1783,6 @@ lt:
         Dabar galite vėl kurti naujus atsakymus ir temas. Ačiū už kantrybę.
     new_user_of_the_month:
       title: "Jūs esate naujas mėnesio vartotojas!"
-      subject_template: "Jūs esate naujas mėnesio vartotojas!"
       text_body_template: |
         Sveikiname, pelnėte ** naujo mėnesio naudotojo apdovanojimą už %{month_year}**. :trophy:
 
@@ -1988,6 +1985,7 @@ lt:
     account_exists:
       title: "Paskyra jau egzistuoja"
       subject_template: "[%{email_prefix}] Paskyra jau egzistuoja"
+      subject_template_improved: "Paskyra jau egzistuoja"
       text_body_template: |
         Jūs ką tik bandėte sukurti paskyrą %{site_name}arba bandėte pakeisti paskyros el. %{email} %{email}paskyra jau yra.
 
@@ -1999,6 +1997,7 @@ lt:
     account_second_factor_disabled:
       title: "Dviejų veiksnių autentifikavimas išjungtas"
       subject_template: "[%{email_prefix}] Dviejų veiksnių autentifikavimas išjungtas"
+      subject_template_improved: "Dviejų veiksnių autentifikavimas išjungtas"
     digest:
       since_last_visit: "Nuo paskutinio jūsų apsilankymo"
       new_topics: "Naujos temos"
@@ -2009,6 +2008,7 @@ lt:
       join_the_discussion: "Skaityti daugiau"
       popular_posts: "Populiarūs įrašai"
       more_new: "Jūs dar neskaitėte"
+      subject_template_improved: "Santrauka"
       unsubscribe: "Ši santrauka siunčiama iš %{site_link} kai kurį laiką jūsų nematėme. Norėdami atšaukti prenumeratą, pakeiskite %{email_preferences_link}arba %{unsubscribe_link}"
       your_email_settings: "Jūsų el. pašto nustatymai"
       click_here: "spustelti čia"
@@ -2027,6 +2027,7 @@ lt:
       title: "Prisijungti per nuorodą"
       preview: "Prisijungti per nuorodą."
       subject_template: "[%{email_prefix}] Prisijunk per nuorodą"
+      subject_template_improved: "Prisijungti per nuorodą"
       text_body_template: |
         Čia yra jūsų nuoroda prisijungti adresu [%{site_name}] (%{base_url}).
 
@@ -2036,7 +2037,6 @@ lt:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Nustatyti slaptažodį"
-      subject_template: "[%{email_prefix}] Nustatyti slaptažodį"
       text_body_template: |
         Kažkas paprašė pridėti slaptažodį prie jūsų paskyros [%{site_name}] (%{base_url}). Arba galite prisijungti naudodami bet kurią palaikomą internetinę paslaugą („Google“, „Facebook“ ir kt.), Susietą su šiuo patvirtintu el. pašto adresu.
 
@@ -2047,6 +2047,7 @@ lt:
     admin_login:
       title: "Administratoriaus prisijungimas"
       subject_template: "[%{email_prefix}] Prisijungti"
+      subject_template_improved: "Prisijungimas"
       text_body_template: |
         Kažkas paprašė prisijungti prie jūsų paskyros [%{site_name}] (%{base_url}).
 
@@ -2056,7 +2057,6 @@ lt:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Paskyra sukurta"
-      subject_template: "[%{email_prefix}] Jūsų nauja paskyra"
       text_body_template: |
         Jums sukurta nauja paskyra %{site_name}
 
@@ -2173,7 +2173,6 @@ lt:
         Jei aukščiau esančios nuorodos negalima spustelėti, pabandykite nukopijuoti ir įklijuoti ją į savo Interneto naršyklės adreso juostą.
     suspicious_login:
       title: "Įspėjimas apie naują prisijungimą"
-      subject_template: "[%{site_name}] Naujas prisijungimas iš %{location}"
     post_approved:
       title: "Jūsų įrašas buvo patvirtintas"
       subject_template: "[%{site_name}] Jūsų įrašas buvo patvirtintas"

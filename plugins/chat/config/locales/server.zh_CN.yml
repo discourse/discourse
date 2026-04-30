@@ -21,6 +21,7 @@ zh_CN:
     chat_duplicate_message_sensitivity: "同一发件人的重复邮件在短时间内被屏蔽的可能性。0 到 1.0 之间的十进制数，1.0 是最高设置（在更短的时间内更频繁地屏蔽消息）。设置为 0 将允许重复消息。"
     chat_minimum_message_length: "聊天消息的最少字符数。"
     chat_allow_uploads: "允许在公共聊天频道和直接消息频道中上传文件。"
+    chat_show_copy_button_on_codeblocks: "在聊天消息中的代码块上显示复制按钮。"
     chat_archive_destination_topic_status: "频道归档完成后目标话题应处于的状态。这仅适用于目标话题是新话题而不是现有话题的情况。"
     direct_message_enabled_groups: "允许这些群组中的用户创建用户间的个人聊天。请注意：管理人员始终可以创建个人聊天，用户将能够回复有权创建个人聊天的用户发起的个人聊天。"
     chat_message_flag_allowed_groups: "这些群组中的用户可以举报聊天消息。请注意，管理员和版主始终可以举报聊天消息。"
@@ -219,6 +220,10 @@ zh_CN:
         other_type: "%{username} 在个人聊天中提及“%{identifier}”"
       new_chat_message: '%{username} 在“%{channel}”中发送了一条消息'
       new_direct_chat_message: "%{username} 在个人聊天中发送了一条消息"
+    actions:
+      chat_reply:
+        title: 回复
+        placeholder: 回复…
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -244,19 +249,34 @@ zh_CN:
       subject:
         private_email:
           other: "[%{site_name}] 新消息"
+        private_email_improved:
+          other: "新消息"
         watched_thread:
           other: "[%{site_name}] %{channel} 中有新消息串消息"
+        watched_thread_improved:
+          other: "%{channel} 中的新消息"
         watched_threads:
           other: "[%{site_name}] %{channel} 和其他 %{count} 个频道中的新消息串消息"
+        watched_threads_improved:
+          other: "%{channel} 和 %{count} 其他频道中的新消息"
         chat_dm_1:
           other: "[%{site_name}] 来自 %{name} 的新消息"
+        chat_dm_1_improved:
+          other: "来自 %{name} 的新消息"
         chat_dm_2: "[%{site_name}] 来自 %{name_1} 和 %{name_2} 的新消息"
+        chat_dm_2_improved: "%{name_1} 和 %{name_2} 中有新消息"
         chat_dm_3_or_more: "[%{site_name}] 来自 %{name} 和其他 %{count} 个私信频道的新消息"
+        chat_dm_3_or_more_improved: "来自 %{name} 和 %{count} 其他直接消息频道的新消息"
         chat_channel_1:
           other: "[%{site_name}] %{channel} 中的新消息"
+        chat_channel_1_improved:
+          other: "%{channel} 中有新消息"
         chat_channel_2: "[%{site_name}] %{channel_1} 和 %{channel_2} 中的新消息"
+        chat_channel_2_improved: "%{channel_1} 和 %{channel_2} 中有新消息"
         chat_channel_3_or_more: "[%{site_name}] %{channel} 和其他 %{count} 个频道中的新消息"
+        chat_channel_3_or_more_improved: "%{channel} 和 %{count} 其他频道中的新消息"
         chat_channel_and_dm: "[%{site_name}] %{channel} 中和来自 %{name} 的新消息"
+        chat_channel_and_dm_improved: "来自 %{channel} 和 %{name} 的新消息"
       unsubscribe: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
       unsubscribe_no_link: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"
       view_messages:

@@ -329,9 +329,6 @@ cs:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} automaticky nastavil vaši účast a pozval vás na %{eventName}"
         an_event: "událost"
-      event_description:
-        show_more: "Zobrazit více"
-        show_less: "Zobrazit méně"
       edit_reason: "Událost aktualizována"
       edit_reason_closed: "Akce uzavřena"
       edit_reason_opened: "Událost otevřena"

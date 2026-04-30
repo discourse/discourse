@@ -67,9 +67,6 @@ es:
     sidebar_show_upcoming_events: "Muestra el enlace de los próximos eventos en la barra lateral en «Más»."
     calendar_first_day_of_week: "Establece el primer día de la semana para la visualización del calendario. Las opciones son sábado, domingo o lunes."
   discourse_calendar:
-    calendar_subscriptions:
-      all_events_feed_name: "%{site_title} - Todos los eventos"
-      my_events_feed_name: "%{site_title} - Mis eventos"
     invite_user_notification: "%{username} te invitó a: %{description}"
     calendar_must_be_in_first_post: "La etiqueta de calendario solo se puede utilizar en la primera publicación de un tema."
     more_than_one_calendar: "No puedes tener más de un calendario en una publicación."

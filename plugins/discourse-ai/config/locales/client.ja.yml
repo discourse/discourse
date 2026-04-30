@@ -346,9 +346,6 @@ ja:
           tooltip_translated: "全 %{total} 件中 %{done} 件の %{language} 以外の投稿が翻訳されました"
           bar_done:
             other: "投稿 %{count} 件"
-        theme_translations:
-          translate:
-            label: "翻訳"
         translations_menu:
           translate:
             label: "投稿を翻訳する"
@@ -670,7 +667,6 @@ ja:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
-          anthropic-claude-opus-4-7: "Anthropic の最もインテリジェントなモデル"
           anthropic-claude-sonnet-4-6: "速度とコストの最適なバランス"
           anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
           google-gemini-3-pro: "Google の最もインテリジェントなモデル"
