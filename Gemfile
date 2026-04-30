@@ -227,8 +227,6 @@ gem "rqrcode"
 
 gem "rubyzip", require: false
 
-gem "ffi", require: false
-
 install_if -> { RUBY_PLATFORM.include?("linux") } do
   gem "landlock", require: false
 end

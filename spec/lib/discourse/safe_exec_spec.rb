@@ -4,24 +4,101 @@ require "discourse/safe_exec"
 
 RSpec.describe Discourse::SafeExec do
   describe ".capture" do
-    it "falls back to execute_command when Landlock is unavailable" do
-      allow(described_class).to receive(:landlock_supported?).and_return(false)
-      allow(Discourse::Utils).to receive(:execute_command).with(
+    it "delegates sandboxed execution to Landlock::SafeExec" do
+      status = instance_double(Process::Status, exited?: true, exitstatus: 0)
+      result =
+        instance_double(
+          Landlock::SafeExec::Result,
+          stdout: "hello\n",
+          stderr: "",
+          status: status,
+          output_truncated?: false,
+        )
+
+      allow(Landlock::SafeExec).to receive(:capture).and_return(result)
+
+      expect(
+        described_class.capture(
+          "echo",
+          "hello",
+          read: ["/tmp/input"],
+          execute: described_class.default_execute_paths,
+          timeout: 1,
+          env: {
+            "PATH" => ENV["PATH"].to_s,
+          },
+          unsetenv_others: true,
+          rlimits: {
+            cpu_seconds: 1,
+          },
+          seccomp_deny_network: true,
+          max_output_bytes: 1024,
+          truncate_output: true,
+        ),
+      ).to eq("hello\n")
+
+      expect(Landlock::SafeExec).to have_received(:capture).with(
         "echo",
         "hello",
+        read: ["/tmp/input"],
+        write: [],
+        execute: described_class.default_execute_paths,
         timeout: 1,
-        failure_message: "failed",
+        failure_message: "",
         success_status_codes: [0],
-        chdir: ".",
-      ).and_return("hello\n")
-
-      expect(described_class.capture("echo", "hello", timeout: 1, failure_message: "failed")).to eq(
-        "hello\n",
+        env: {
+          "PATH" => ENV["PATH"].to_s,
+        },
+        inherit_env: false,
+        chdir: nil,
+        connect_tcp: nil,
+        bind_tcp: [],
+        rlimits: {
+          cpu_seconds: 1,
+        },
+        seccomp_deny_network: true,
+        max_output_bytes: 1024,
+        truncate_output: true,
       )
     end
 
+    it "converts Landlock command failures to Discourse command errors" do
+      status = instance_double(Process::Status, exited?: true, exitstatus: 1)
+      result =
+        instance_double(
+          Landlock::SafeExec::Result,
+          stdout: "",
+          stderr: "nope",
+          status: status,
+          output_truncated?: false,
+        )
+
+      allow(Landlock::SafeExec).to receive(:capture).and_return(result)
+
+      expect { described_class.capture("false", failure_message: "failed") }.to raise_error(
+        Discourse::Utils::CommandError,
+        /failed\nnope/,
+      )
+    end
+
+    it "returns truncated stdout without checking the terminated status" do
+      status = instance_double(Process::Status, exited?: false, exitstatus: nil)
+      result =
+        instance_double(
+          Landlock::SafeExec::Result,
+          stdout: "x" * 1024,
+          stderr: "",
+          status: status,
+          output_truncated?: true,
+        )
+
+      allow(Landlock::SafeExec).to receive(:capture).and_return(result)
+
+      expect(described_class.capture("tool", truncate_output: true)).to eq("x" * 1024)
+    end
+
     it "captures stdout from a landlocked subprocess" do
-      skip "Landlock is not supported" if !described_class.landlock_supported?
+      skip "Landlock SafeExec is not supported" if !described_class.landlock_supported?
 
       output =
         described_class.capture(
@@ -35,7 +112,7 @@ RSpec.describe Discourse::SafeExec do
     end
 
     it "denies access to paths outside of the Landlock policy" do
-      skip "Landlock is not supported" if !described_class.landlock_supported?
+      skip "Landlock SafeExec is not supported" if !described_class.landlock_supported?
 
       Tempfile.create("safe-exec") do |tempfile|
         tempfile.write("secret")
@@ -51,10 +128,8 @@ RSpec.describe Discourse::SafeExec do
         }.to raise_error(Discourse::Utils::CommandError)
       end
     end
-    it "can clear the child environment" do
-      skip "Landlock is not supported" if !described_class.landlock_supported?
 
-      output = nil
+    it "can clear the child environment" do
       previous_secret = ENV["SAFE_EXEC_SECRET"]
       ENV["SAFE_EXEC_SECRET"] = "hidden"
       output =
@@ -69,21 +144,22 @@ RSpec.describe Discourse::SafeExec do
           },
           unsetenv_others: true,
         )
+
+      expect(output).to eq("unset")
+    ensure
       if previous_secret.nil?
         ENV.delete("SAFE_EXEC_SECRET")
       else
         ENV["SAFE_EXEC_SECRET"] = previous_secret
       end
-
-      expect(output).to eq("unset")
     end
 
     it "denies network syscalls when requested" do
-      skip "seccomp is not supported" if !Discourse::Seccomp.supported?
+      skip "Landlock SafeExec is not supported" if !described_class.landlock_supported?
 
       expect {
         described_class.capture(
-          "ruby",
+          RbConfig.ruby,
           "-rsocket",
           "-e",
           "UDPSocket.new",
@@ -99,8 +175,6 @@ RSpec.describe Discourse::SafeExec do
     end
 
     it "terminates commands that exceed the output limit" do
-      allow(described_class).to receive(:landlock_supported?).and_return(false)
-
       expect {
         described_class.capture(
           RbConfig.ruby,
@@ -112,8 +186,6 @@ RSpec.describe Discourse::SafeExec do
     end
 
     it "truncates commands that exceed the output limit when requested" do
-      allow(described_class).to receive(:landlock_supported?).and_return(false)
-
       output =
         described_class.capture(
           RbConfig.ruby,
@@ -125,12 +197,6 @@ RSpec.describe Discourse::SafeExec do
 
       expect(output.bytesize).to eq(1024)
       expect(output).to eq("x" * 1024)
-    end
-
-    it "ignores unsupported rlimits" do
-      allow(Process).to receive(:setrlimit).and_raise(NotImplementedError)
-
-      expect { described_class.apply_rlimits(cpu_seconds: 1) }.not_to raise_error
     end
   end
 end

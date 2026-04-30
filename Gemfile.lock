@@ -256,7 +256,7 @@ GEM
       simpleidn (~> 0.2)
     jwt (2.10.1)
       base64
-    landlock (0.1.1)
+    landlock (0.2)
     language_server-protocol (3.17.0.5)
     libv8-node (24.12.0.1)
     libv8-node (24.12.0.1-aarch64-linux)
@@ -821,7 +821,6 @@ DEPENDENCIES
   faraday-retry
   fast_blank
   fastimage
-  ffi
   goldiloader
   hashery
   highline
@@ -1054,7 +1053,7 @@ CHECKSUMS
   json-schema (6.2.0) sha256=e8bff46ed845a22c1ab2bd0d7eccf831c01fe23bb3920caa4c74db4306813666
   json_schemer (2.5.0) sha256=2f01fb4cce721a4e08dd068fc2030cffd0702a7f333f1ea2be6e8991f00ae396
   jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
-  landlock (0.1.1) sha256=182405f2df2dfedef8970491fd7e80c2a6f5f8011d38d7f8687be7fdb6610c7b
+  landlock (0.2) sha256=9bb86d7d12b16485b278ba575d49f55b730089c7a3d0f45a769fe4d7384d5e55
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   libv8-node (24.12.0.1) sha256=d93d23b861bfe5de3ba829e34a142402fb83b4c3592dd58d9ac4e027588d739a
   libv8-node (24.12.0.1-aarch64-linux) sha256=22bd0246cde85d70c88cf772727ac3677a20ac1d169105f82efe5f1f7c39f755

@@ -10,6 +10,7 @@ module DiscourseAi
       SAFE_EXEC_ENV = { "PATH" => ENV["PATH"].to_s }.freeze
       ANTIWORD_RLIMITS = {
         cpu_seconds: ANTIWORD_TIMEOUT_SECONDS,
+        memory_bytes: 256 * 1024 * 1024,
         file_size_bytes: 1 * 1024 * 1024,
         open_files: 64,
         processes: 0,
