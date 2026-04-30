@@ -1560,7 +1560,7 @@ RSpec.describe Middleware::RequestTracker do
       expect { tracker.call(env) }.to raise_error(RateLimiter::LimitExceeded)
 
       CachedCounting.flush
-      expect(ApplicationRequest["http_total_total"]).to eq(1)
+      expect(ApplicationRequest.stats["http_total_total"]).to eq(1)
       expect(fake_logger.warnings).to be_empty
     end
   end
