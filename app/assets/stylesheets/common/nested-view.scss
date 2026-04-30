@@ -3,6 +3,7 @@
 // ── Top-level nested view ──────────────────────────────────────────
 .nested-view {
   background: var(--secondary);
+  margin: 0 auto;
   padding: var(--space-4);
   border-radius: var(--d-border-radius-large);
   max-width: calc(
@@ -244,8 +245,6 @@
 
   &__floating-reply {
     box-shadow: var(--shadow-dropdown);
-    border-radius: 2em;
-    padding: 0.65em 1.25em;
   }
 }
 
