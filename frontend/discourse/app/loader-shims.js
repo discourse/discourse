@@ -115,3 +115,15 @@ loaderShim("xss", () => importSync("xss"));
 loaderShim("discourse/lib/transformer/registry", () =>
   importSync("discourse/lib/registry/transformers")
 );
+loaderShim("ember-this-fallback/deprecations-helper", () =>
+  importSync("./lib/ember-this-fallback/deprecations-helper")
+);
+loaderShim("ember-this-fallback/is-component", () =>
+  importSync("./lib/ember-this-fallback/is-component")
+);
+loaderShim("ember-this-fallback/this-fallback-helper", () =>
+  importSync("./lib/ember-this-fallback/this-fallback-helper")
+);
+loaderShim("ember-this-fallback/try-lookup-helper", () =>
+  importSync("./lib/ember-this-fallback/try-lookup-helper")
+);
