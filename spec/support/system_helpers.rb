@@ -54,11 +54,18 @@ module SystemHelpers
     self
   end
 
+  # Waits for the app to boot after `visit`.
+  # Use `page.visit` to test non-Ember pages.
+  def visit(...)
+    super
+    page.assert_selector("#main.ember-application", visible: :all)
+  end
+
   def sign_in(user)
-    visit File.join(
-            GlobalSetting.relative_url_root || "",
-            "/session/#{user.encoded_username}/become.json?redirect=false",
-          )
+    page.visit File.join(
+                 GlobalSetting.relative_url_root || "",
+                 "/session/#{user.encoded_username}/become.json?redirect=false",
+               )
 
     expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
