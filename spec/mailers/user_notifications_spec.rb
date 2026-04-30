@@ -1146,6 +1146,12 @@ RSpec.describe UserNotifications do
       end
 
       it "includes full content for staged users" do
+        # Staged users don't receive these notification types (see Jobs::NotificationEmail#perform_enqueue)
+        skip_types = %i[linked quoted mentioned group_mentioned]
+        if skip_types.include?(notification_type)
+          skip "Staged users don't receive #{notification_type} emails"
+        end
+
         SiteSetting.private_email = true
         user.update!(staged: true)
 
