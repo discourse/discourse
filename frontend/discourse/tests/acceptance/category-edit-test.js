@@ -311,6 +311,20 @@ acceptance(
               { permission_type: 1, group_name: "moderators", group_id: 2 },
               { permission_type: 1, group_name: "custom_group", group_id: 4 },
             ],
+            category_types: [
+              {
+                id: "discussion",
+                name: "Discussion",
+                configuration_schema: {},
+              },
+            ],
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
           },
         })
       );
@@ -329,6 +343,20 @@ acceptance(
             group_permissions: [
               { permission_type: 1, group_name: "custom_group", group_id: 4 },
             ],
+            category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
           },
         })
       );
@@ -346,6 +374,20 @@ acceptance(
             available_groups: ["admins", "moderators", "staff"],
             group_permissions: [
               { permission_type: 1, group_name: "everyone", group_id: 0 },
+            ],
+            category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
             ],
           },
         })
@@ -370,6 +412,20 @@ acceptance(
               { permission_type: 1, group_name: "staff", group_id: 3 },
             ],
             custom_fields: {},
+            category_types: [
+              {
+                id: "discussion",
+                name: "Discussion",
+                configuration_schema: {},
+              },
+            ],
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
           },
         })
       );
