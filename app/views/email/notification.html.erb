@@ -9,7 +9,7 @@
 
   <div class='header-instructions'>%{header_instructions}</div>
 
-  <%- if SiteSetting.private_email? %>
+  <%- if !show_post_content %>
     <p><%= t('system_messages.contents_hidden') %></p>
   <% else %>
     <%= render partial: 'email/post', locals: { post: post, use_excerpt: SiteSetting.post_excerpts_in_emails } %>

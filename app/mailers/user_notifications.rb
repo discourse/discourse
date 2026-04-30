@@ -673,7 +673,7 @@ class UserNotifications < ActionMailer::Base
       participants = self.class.participants(post, user)
     end
 
-    if SiteSetting.private_email?
+    if SiteSetting.private_email? && !user.staged?
       title = I18n.t("system_messages.private_topic_title", id: post.topic_id)
     end
 
@@ -708,7 +708,7 @@ class UserNotifications < ActionMailer::Base
       topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
       topic_url = post.topic&.url
 
-      if SiteSetting.private_email?
+      if SiteSetting.private_email? && !user.staged?
         topic_excerpt = ""
         topic_url = ""
       end
@@ -734,7 +734,7 @@ class UserNotifications < ActionMailer::Base
 
       in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to
 
-      if SiteSetting.private_email?
+      if SiteSetting.private_email? && !user.staged?
         message = I18n.t("system_messages.contents_hidden")
       else
         message =
@@ -766,6 +766,7 @@ class UserNotifications < ActionMailer::Base
               classes: Rtl.new(user).css_class,
               first_footer_classes: first_footer_classes,
               reply_above_line: false,
+              show_post_content: !SiteSetting.private_email? || user.staged?,
             },
           )
       end

@@ -1125,7 +1125,7 @@ RSpec.describe UserNotifications do
 
   shared_examples "respect for private_email" do
     context "with private_email" do
-      it "doesn't support reply by email" do
+      it "doesn't include topic title or slug for regular users" do
         SiteSetting.private_email = true
 
         mailer =
@@ -1143,6 +1143,23 @@ RSpec.describe UserNotifications do
         expect(message.html_part.body.to_s).not_to include(topic.slug)
         expect(message.text_part.body.to_s).not_to include(topic.title)
         expect(message.text_part.body.to_s).not_to include(topic.slug)
+      end
+
+      it "includes full content for staged users" do
+        SiteSetting.private_email = true
+        user.update!(staged: true)
+
+        mailer =
+          UserNotifications.public_send(
+            mail_type,
+            user,
+            notification_type: Notification.types[notification.notification_type],
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
+        message = mailer.message
+
+        expect(message.text_part.body.to_s).to include(notification.post.raw)
       end
     end
   end
