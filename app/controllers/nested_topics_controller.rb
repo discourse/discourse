@@ -96,6 +96,9 @@ class NestedTopicsController < ApplicationController
         .includes(:user)
         .order(:created_at)
 
+    Post.preload_custom_fields(posts, ["action_code_who", "action_code_path"])
+
+    @topic.association(:user).load
     creator = @topic.user
     actions = [
       {
