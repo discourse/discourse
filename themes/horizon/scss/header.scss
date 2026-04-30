@@ -4,6 +4,10 @@
   box-shadow: none;
 }
 
+#site-logo {
+  height: inherit;
+}
+
 body.has-sidebar-page .d-header {
   .home-logo-wrapper-outlet,
   .header-sidebar-toggle {

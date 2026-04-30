@@ -17,6 +17,23 @@
   display: flex;
   align-items: center;
   height: var(--header-offset);
+  gap: var(--space-4);
+  padding-inline: var(--space-4);
+  box-sizing: border-box;
+
+  @include viewport.until(lg) {
+    --d-logo-height: 2.25em;
+  }
+
+  .sidebar-hamburger-dropdown & {
+    display: none;
+  }
+
+  .btn-sidebar-toggle {
+    height: auto;
+    width: auto;
+    margin: 0;
+  }
 
   .title {
     height: var(--d-logo-height);
