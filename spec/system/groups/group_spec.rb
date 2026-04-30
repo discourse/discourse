@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe "Group" do
-  include ThemeScreenshotMarker
   let(:group_page) { PageObjects::Pages::Group.new }
   let(:group_index_page) { PageObjects::Pages::GroupIndex.new }
   let(:group_form_page) { PageObjects::Pages::GroupForm.new }
@@ -16,7 +15,7 @@ describe "Group" do
       it "creates a new group" do
         group_index_page.visit
 
-        screenshot_here(label: "groups")
+        screenshot_marker(label: "groups")
 
         group_index_page.click_new_group
 

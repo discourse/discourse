@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe "Topic list" do
-  include ThemeScreenshotMarker
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
   fab!(:admin)
 
@@ -146,13 +145,13 @@ describe "Topic list" do
 
     visit("/latest")
     expect(discovery.topic_list).to have_topics
-    screenshot_here(label: "topic-list")
+    screenshot_marker(label: "topic-list")
 
     visit "/categories"
-    screenshot_here(label: "categories")
+    screenshot_marker(label: "categories")
 
     find("#create-topic").click
     expect(page).to have_css("#reply-control.open")
-    screenshot_here(label: "composer-new-topic")
+    screenshot_marker(label: "composer-new-topic")
   end
 end

@@ -1,25 +1,21 @@
 # frozen_string_literal: true
 
-# Mixin for system specs that want to capture a screenshot at a specific point.
+# Included in all system specs (via rails_helper) to provide screenshot_marker.
 #
 # Usage:
-#   RSpec.describe "Composer" do
-#     include ThemeScreenshotMarker
-#
-#     it "opens the composer" do
-#       # ... set up state ...
-#       screenshot_here(label: "composer-open")
-#       # ... assertions ...
-#     end
+#   it "opens the composer" do
+#     # ... set up state ...
+#     screenshot_marker(label: "composer-open")
+#     # ... assertions ...
 #   end
 #
-# screenshot_here is a no-op unless TAKE_SCREENSHOTS=1 is set.
+# screenshot_marker is a no-op unless TAKE_SCREENSHOTS=1 is set.
 # Output lands in tmp/theme-screenshots/raw/ (or SCREENSHOTS_DIR/raw/).
 #
 # When run via the theme_screenshots_spec matrix runner, SCREENSHOTS_THEME_ID,
 # SCREENSHOTS_THEME_NAME, SCREENSHOTS_MODE, and SCREENSHOTS_DEVICE are injected
-# as env vars. The before hook sets SiteSetting.default_theme_id so every
-# subsequent page visit in the example renders with the correct theme.
+# internally as env vars. The before hook sets SiteSetting.default_theme_id so
+# every subsequent page visit in the example renders with the correct theme.
 #
 module ThemeScreenshotMarker
   def self.included(base)
@@ -47,7 +43,7 @@ module ThemeScreenshotMarker
   # full search menu is desktop-only). The orchestrator parses this kwarg
   # from the source to also skip the surrounding example on the wrong leg —
   # this in-method check is a belt-and-braces fallback.
-  def screenshot_here(label:, only: nil)
+  def screenshot_marker(label:, only: nil)
     return unless ENV["TAKE_SCREENSHOTS"] == "1"
 
     device = ENV["SCREENSHOTS_DEVICE"] || "desktop"

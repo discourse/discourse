@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 describe "Topic page" do
-  include ThemeScreenshotMarker
-
   fab!(:topic)
   fab!(:admin)
 
@@ -64,7 +62,7 @@ describe "Topic page" do
     it "displays the gap to admins, and allows them to expand it" do
       visit "/t/#{topic.slug}/#{topic.id}"
 
-      screenshot_here(label: "topic-page")
+      screenshot_marker(label: "topic-page")
 
       expect(page).to have_css(".topic-post", count: 2)
       find(".post-stream .gap").click()

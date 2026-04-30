@@ -5,7 +5,7 @@
 #
 #   TAKE_SCREENSHOTS=1 bin/rspec spec/system/theme_screenshots_spec.rb
 #
-# Discovers all system specs that call `screenshot_here` and runs them under
+# Discovers all system specs that call `screenshot_marker` and runs them under
 # each combination of theme × device × color mode, then generates a single
 # HTML comparison page with tabs for device and color mode.
 #
@@ -15,8 +15,7 @@
 #   SCREENSHOTS_DEVICES     — comma-separated devices (default: desktop,mobile)
 #   SCREENSHOTS_THEMES      — comma-separated theme names (default: foundation,horizon)
 #   SCREENSHOTS_THEME_URL   — git URL of a remote theme to install into the test DB
-#   SCREENSHOTS_THEME_NAME  — filename label for the remote theme (default: repo name)
-#   SCREENSHOTS_THEME_ID    — ID of a theme already present in the test DB
+#                             (theme name is deduced from the repo name in the URL)
 
 DEVICES = (ENV["SCREENSHOTS_DEVICES"] || "desktop,mobile").split(",").map(&:strip).freeze
 
@@ -24,13 +23,6 @@ describe "Theme screenshots" do
   include ChatSystemHelpers if defined?(ChatSystemHelpers)
 
   before { skip "Set TAKE_SCREENSHOTS=1 to run this spec" if ENV["TAKE_SCREENSHOTS"] != "1" }
-
-  fab!(:admin)
-  fab!(:user)
-  fab!(:user_2, :user)
-
-  fab!(:category) { Fabricate(:category, name: "Announcements") }
-  fab!(:category_2, :category)
 
   let(:output_dir) do
     dir = ENV["SCREENSHOTS_DIR"] || Rails.root.join("tmp/theme-screenshots").to_s
@@ -57,16 +49,13 @@ describe "Theme screenshots" do
       end
 
     if (url = ENV["SCREENSHOTS_THEME_URL"].presence)
-      name = ENV["SCREENSHOTS_THEME_NAME"].presence || File.basename(url.chomp("/"), ".git")
+      name = File.basename(url.chomp("/"), ".git")
       tmpdir = Dir.mktmpdir("discourse_theme_screenshot_")
       system("git", "clone", "--depth", "1", url, tmpdir, exception: true)
       theme = RemoteTheme.import_theme_from_directory(tmpdir)
       theme.update!(user_selectable: true)
       Stylesheet::Manager.clear_theme_cache!
       base = base + [{ name: name, id: theme.id }]
-    elsif (id = ENV["SCREENSHOTS_THEME_ID"].presence&.to_i)
-      name = ENV["SCREENSHOTS_THEME_NAME"].presence || "theme-#{id}"
-      base = base + [{ name: name, id: id }]
     end
 
     base
@@ -99,13 +88,13 @@ describe "Theme screenshots" do
     Dir
       .glob(Rails.root.join("spec/system/**/*.rb").to_s)
       .reject { |f| File.realpath(f) == File.realpath(__FILE__) }
-      .select { |f| File.read(f).include?("screenshot_here") }
+      .select { |f| File.read(f).include?("screenshot_marker") }
   end
 
   def run_marker_matrix(device:)
     specs = discover_marker_specs
     if specs.empty?
-      puts "No specs with screenshot_here markers found."
+      puts "No specs with screenshot_marker markers found."
       return
     end
 
@@ -139,32 +128,19 @@ describe "Theme screenshots" do
   end
 
   # Loads each marker spec file via `load` so its `describe` blocks register new
-  # example groups in `RSpec.world`. Returns just the groups added by these files
-  # so the matrix loop can run them and the cleanup step can remove them.
-  #
-  # Spec authors don't have to remember `include ThemeScreenshotMarker` —
-  # discovery is by `screenshot_here` text match, and we auto-include the
-  # module so the call resolves in nested contexts and shared_examples.
+  # example groups in `RSpec.world`.
   def load_marker_groups(spec_files)
     groups = []
     spec_files.each do |spec_file|
       before = RSpec.world.example_groups.dup
       load spec_file
-      new_groups = RSpec.world.example_groups - before
-      new_groups.each do |g|
-        g.include(ThemeScreenshotMarker) if g.included_modules.exclude?(ThemeScreenshotMarker)
-      end
-      groups.concat(new_groups)
+      groups.concat(RSpec.world.example_groups - before)
     end
     groups
   end
 
-  # Marker specs are normal system specs — they have many `it` blocks that don't
-  # call `screenshot_here`. Running those wastes time and produces noisy
-  # failures (e.g. mobile-incompatible interactions). Strip them down to just
-  # the examples that actually capture a screenshot for the current device.
-  #
-  # Examples whose `screenshot_here` was called with `only: :desktop` (or
+  # Filter specs that don't include a `screenshot_marker`
+  # Examples whose `screenshot_marker` was called with `only: :desktop` (or
   # `:mobile`) are kept only on the matching leg.
   def filter_marker_examples(groups, spec_files, device)
     constraints = spec_files.to_h { |f| [File.expand_path(f), screenshot_example_constraints(f)] }
@@ -172,17 +148,17 @@ describe "Theme screenshots" do
   end
 
   # Returns a hash mapping the line number of each `it` / `scenario` / `example`
-  # / `specify` block that contains `screenshot_here` to a constraint hash:
+  # / `specify` block that contains `screenshot_marker` to a constraint hash:
   #   { only: :desktop } — call site has `only: :desktop`
   #   { only: nil }     — call site has no constraint
   #
-  # If a single example contains multiple `screenshot_here` calls with
+  # If a single example contains multiple `screenshot_marker` calls with
   # conflicting constraints, the most permissive (no `only`) wins.
   def screenshot_example_constraints(spec_file)
     lines = File.readlines(spec_file)
     result = {}
     lines.each_with_index do |line, idx|
-      next if line.exclude?("screenshot_here")
+      next if line.exclude?("screenshot_marker")
       only_match = line.match(/only:\s*:(\w+)/)
       only = only_match ? only_match[1].to_sym : nil
       (idx - 1).downto(0) do |i|
@@ -275,9 +251,7 @@ describe "Theme screenshots" do
     saved.each { |k, v| v.nil? ? ENV.delete(k) : ENV[k] = v }
   end
 
-  # Scans raw_dir for all captured PNGs and builds a single HTML comparison page
-  # with tabs for device and color mode, and label-by-label pagination.
-  # Called after each device run — the final call sees all screenshots.
+  # Scans raw_dir for all captured PNGs and builds an HTML comparison page.
   def generate_comparison_html
     theme_names = themes.map { |t| t[:name] }
 
@@ -336,7 +310,7 @@ describe "Theme screenshots" do
                   <<~COL
                   <div class="col">
                     <div class="col-label">#{entry[:label]}</div>
-                    <img src="#{rel}" loading="lazy">
+                    <img src="#{rel}" loading="lazy" onclick="openLightbox(this)">
                   </div>
                 COL
                 end
@@ -404,7 +378,11 @@ describe "Theme screenshots" do
         .panel.active { display: flex; }
         .col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
         .col-label { flex-shrink: 0; background: #1a1a1a; padding: 5px 10px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #222; }
-        img { flex: 1; min-height: 0; width: 100%; object-fit: contain; object-position: top center; display: block; }
+        .col img { flex: 1; min-height: 0; width: 100%; object-fit: contain; object-position: top center; display: block; cursor: zoom-in; }
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 100; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: zoom-out; }
+        .lightbox.active { display: flex; }
+        .lightbox-label { color: #bbb; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+        .lightbox img { max-width: 95vw; max-height: calc(95vh - 32px); object-fit: contain; cursor: zoom-out; }
         </style>
         </head>
         <body>
@@ -429,6 +407,10 @@ describe "Theme screenshots" do
         </header>
         <div class="content">
           #{panels_html}
+        </div>
+        <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+          <div class="lightbox-label" id="lightbox-label"></div>
+          <img id="lightbox-img" src="">
         </div>
         <script>
         var allPanels = [#{panels_json.join(",\n")}];
@@ -479,7 +461,34 @@ describe "Theme screenshots" do
           show();
         }
 
+        var lightboxImages = [];
+        var lightboxIndex = 0;
+
+        function showLightboxImage() {
+          var img = lightboxImages[lightboxIndex];
+          document.getElementById('lightbox-label').textContent = img.closest('.col').querySelector('.col-label').textContent;
+          document.getElementById('lightbox-img').src = img.src;
+        }
+
+        function openLightbox(img) {
+          var panel = img.closest('.panel');
+          lightboxImages = Array.from(panel.querySelectorAll('.col img'));
+          lightboxIndex = lightboxImages.indexOf(img);
+          showLightboxImage();
+          document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+          document.getElementById('lightbox').classList.remove('active');
+        }
+
         document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') { closeLightbox(); return; }
+          if (document.getElementById('lightbox').classList.contains('active')) {
+            if (e.key === 'ArrowLeft') { lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length; showLightboxImage(); }
+            if (e.key === 'ArrowRight') { lightboxIndex = (lightboxIndex + 1) % lightboxImages.length; showLightboxImage(); }
+            return;
+          }
           if (e.key === 'ArrowLeft') navigate(-1);
           if (e.key === 'ArrowRight') navigate(1);
         });
