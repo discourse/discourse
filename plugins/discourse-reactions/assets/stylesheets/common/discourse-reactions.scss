@@ -19,6 +19,7 @@ html.discourse-reactions-no-select {
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 0.2em 0;
 
       &:nth-of-type(1n + 4) {
         display: none;
