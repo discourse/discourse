@@ -100,6 +100,36 @@ describe "Reactions | Post reaction user list" do
     end
   end
 
+  it "switches the active filter without reopening the menu when another emoji is clicked" do
+    sign_in(current_user)
+    visit(post.url)
+    expect(reactions_list).to have_reaction("heart")
+
+    reactions_list.click_reaction("heart")
+    expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=heart].is-active")
+    popup = find(".post-users-popup")
+
+    reactions_list.click_reaction("clap")
+    expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=clap].is-active")
+    expect(page).to have_no_css(".post-users-popup__filter[data-reaction-filter=heart].is-active")
+    expect(page.find(".post-users-popup")).to eq(popup)
+  end
+
+  it "switches to the all filter without reopening the menu when the counter number is clicked" do
+    sign_in(current_user)
+    visit(post.url)
+    expect(reactions_list).to have_reaction("heart")
+
+    reactions_list.click_reaction("heart")
+    expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=heart].is-active")
+    popup = find(".post-users-popup")
+
+    find(".discourse-reactions-counter .reactions-counter").click
+    expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=all].is-active")
+    expect(page).to have_no_css(".post-users-popup__filter[data-reaction-filter=heart].is-active")
+    expect(page.find(".post-users-popup")).to eq(popup)
+  end
+
   it "filters the users popup by reaction" do
     sign_in(current_user)
     visit(post.url)
