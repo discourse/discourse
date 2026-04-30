@@ -219,6 +219,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
                    configuration: {
                      "response_type" => "redirect",
                      "redirect_url" => "https://example.com/thanks",
+                     "allowed_redirect_domains" => [{ "domain" => "example.com" }],
                    }
             g.connect "wait-1", "respond-1"
           end
@@ -288,6 +289,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
                    configuration: {
                      "response_type" => "redirect",
                      "redirect_url" => "https://example.com/thanks",
+                     "allowed_redirect_domains" => [{ "domain" => "example.com" }],
                    }
           end
         setup_webhook_with_response(
@@ -304,6 +306,86 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
 
         expect(response.status).to eq(302)
         expect(response.headers["Location"]).to eq("https://example.com/thanks")
+      end
+
+      it "rejects external redirect responses when the domain is not allowed" do
+        extra =
+          build_workflow_graph do |g|
+            g.node "respond-1",
+                   "action:respond_to_webhook",
+                   configuration: {
+                     "response_type" => "redirect",
+                     "redirect_url" => "https://example.com/thanks",
+                   }
+          end
+        setup_webhook_with_response(
+          response_mode: "respond_to_webhook",
+          target_node_id: "respond-1",
+          extra: extra,
+        )
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["error"]).to eq("invalid_redirect_url")
+      end
+
+      it "allows wildcard subdomain redirect responses" do
+        extra =
+          build_workflow_graph do |g|
+            g.node "respond-1",
+                   "action:respond_to_webhook",
+                   configuration: {
+                     "response_type" => "redirect",
+                     "redirect_url" => "https://docs.example.com/thanks",
+                     "allowed_redirect_domains" => [{ "domain" => "*.example.com" }],
+                   }
+          end
+        setup_webhook_with_response(
+          response_mode: "respond_to_webhook",
+          target_node_id: "respond-1",
+          extra: extra,
+        )
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(302)
+        expect(response.headers["Location"]).to eq("https://docs.example.com/thanks")
+      end
+
+      it "does not allow wildcard domains to match the root domain" do
+        extra =
+          build_workflow_graph do |g|
+            g.node "respond-1",
+                   "action:respond_to_webhook",
+                   configuration: {
+                     "response_type" => "redirect",
+                     "redirect_url" => "https://example.com/thanks",
+                     "allowed_redirect_domains" => [{ "domain" => "*.example.com" }],
+                   }
+          end
+        setup_webhook_with_response(
+          response_mode: "respond_to_webhook",
+          target_node_id: "respond-1",
+          extra: extra,
+        )
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["error"]).to eq("invalid_redirect_url")
       end
 
       it "returns JSON when respond_to_webhook node produces JSON" do

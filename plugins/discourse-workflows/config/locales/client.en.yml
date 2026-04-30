@@ -454,9 +454,15 @@ en:
         status_code: "Status Code"
         redirect_url: "Redirect URL"
         redirect_url_placeholder: "https://example.com/thanks"
+        allowed_redirect_domains: "Allowed redirect domains"
+        allowed_redirect_domains_description: "External domains this node may redirect to. Use exact hostnames such as example.com or wildcard subdomains such as *.example.com. Only use wildcards when the redirect URL cannot be influenced by untrusted request data."
+        add_allowed_redirect_domain: "Add domain"
+        domain: "Domain"
+        domain_placeholder: "example.com"
         response_body: "Response Body"
         response_body_placeholder: '{"success": true}'
         headers: "Response Headers"
+        add_header: "Add response header"
       data_table_node:
         resource: "Resource"
         resources:

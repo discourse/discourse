@@ -182,10 +182,7 @@ export default class Collection extends Component {
   }
 
   <template>
-    <@form.Section
-      @title={{if this.itemCount this.label}}
-      @subtitle={{if this.itemCount this.description}}
-    >
+    <@form.Section @title={{this.label}} @subtitle={{this.description}}>
       <@form.Collection
         @name={{@fieldName}}
         @tagName="div"

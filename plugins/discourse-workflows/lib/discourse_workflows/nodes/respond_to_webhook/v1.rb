@@ -43,6 +43,18 @@ module DiscourseWorkflows
                 response_type: %w[redirect],
               },
             },
+            allowed_redirect_domains: {
+              type: :collection,
+              visible_if: {
+                response_type: %w[redirect],
+              },
+              item_schema: {
+                domain: {
+                  type: :string,
+                  required: true,
+                },
+              },
+            },
             response_body: {
               type: :string,
               required: false,
@@ -74,6 +86,7 @@ module DiscourseWorkflows
             response_type: :string,
             status_code: :integer,
             redirect_url: :string,
+            allowed_redirect_domains: :array,
             response_body: :string,
             headers: :object,
           }
@@ -100,9 +113,17 @@ module DiscourseWorkflows
             response_type: response_type,
             status_code: status_code,
             redirect_url: config["redirect_url"],
+            allowed_redirect_domains:
+              normalize_allowed_redirect_domains(config["allowed_redirect_domains"]),
             response_body: config["response_body"],
             headers: normalize_headers(config["headers"]),
           }
+        end
+
+        def normalize_allowed_redirect_domains(domains_config)
+          Array(domains_config).filter_map do |domain_config|
+            domain_config["domain"].to_s.strip.downcase.presence
+          end
         end
       end
     end

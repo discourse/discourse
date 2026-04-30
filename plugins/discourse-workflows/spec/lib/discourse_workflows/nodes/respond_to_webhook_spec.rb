@@ -10,7 +10,23 @@ RSpec.describe DiscourseWorkflows::Nodes::RespondToWebhook::V1 do
 
       expect(result["response_type"]).to eq("redirect")
       expect(result["redirect_url"]).to eq("https://example.com/thanks")
+      expect(result["allowed_redirect_domains"]).to eq([])
       expect(result["status_code"]).to eq(302)
+    end
+
+    it "returns normalized allowed redirect domains" do
+      config = {
+        "response_type" => "redirect",
+        "redirect_url" => "https://example.com/thanks",
+        "allowed_redirect_domains" => [
+          { "domain" => " Example.com " },
+          { "domain" => "*.Example.org" },
+          { "domain" => "" },
+        ],
+      }
+      result = execute_node(configuration: config, item: item)
+
+      expect(result["allowed_redirect_domains"]).to eq(%w[example.com *.example.org])
     end
 
     it "returns JSON response data" do

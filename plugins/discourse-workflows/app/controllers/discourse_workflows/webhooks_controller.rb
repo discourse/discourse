@@ -8,21 +8,6 @@ module DiscourseWorkflows
     skip_before_action :redirect_to_login_if_required
     skip_before_action :check_xhr
 
-    BLOCKED_RESPONSE_HEADERS = %w[
-      set-cookie
-      content-security-policy
-      content-security-policy-report-only
-      x-frame-options
-      access-control-allow-origin
-      access-control-allow-credentials
-      access-control-allow-methods
-      access-control-allow-headers
-      strict-transport-security
-      transfer-encoding
-      host
-      connection
-    ].to_set.freeze
-
     WEBHOOK_RATE_LIMIT = 20
     WEBHOOK_RATE_PERIOD = 10
 
@@ -89,10 +74,7 @@ module DiscourseWorkflows
     end
 
     def apply_custom_headers(headers)
-      (headers || {}).each do |key, value|
-        next if BLOCKED_RESPONSE_HEADERS.include?(key.to_s.downcase)
-        response.headers[key] = value
-      end
+      (headers || {}).each { |key, value| response.headers[key] = value }
     end
 
     def render_webhook_response(output)
@@ -100,7 +82,11 @@ module DiscourseWorkflows
 
       case output["response_type"]
       when "redirect"
-        render_webhook_redirect(output["redirect_url"], status_code)
+        render_webhook_redirect(
+          output["redirect_url"],
+          status_code,
+          output["allowed_redirect_domains"],
+        )
       when "json"
         render json: parse_json_body(output["response_body"]), status: status_code
       when "text"
@@ -112,8 +98,8 @@ module DiscourseWorkflows
       end
     end
 
-    def render_webhook_redirect(url, status_code)
-      unless valid_redirect_url?(url)
+    def render_webhook_redirect(url, status_code, allowed_domains)
+      unless valid_redirect_url?(url, allowed_domains)
         return render json: { error: "invalid_redirect_url" }, status: :bad_request
       end
       redirect_to url, status: status_code, allow_other_host: true
@@ -163,12 +149,40 @@ module DiscourseWorkflows
       }
     end
 
-    def valid_redirect_url?(url)
+    def valid_redirect_url?(url, allowed_domains)
       return false if url.blank?
       uri = URI.parse(url)
-      uri.scheme.in?(%w[http https]) && uri.host.present?
+      return true if uri.relative?
+      return false unless uri.scheme.in?(%w[http https]) && uri.host.present?
+      return true if uri.host.casecmp?(Discourse.current_hostname)
+
+      redirect_host_allowed?(uri.host, allowed_domains)
     rescue URI::InvalidURIError
       false
+    end
+
+    def redirect_host_allowed?(host, allowed_domains)
+      host = host.to_s.downcase
+      Array(allowed_domains).any? do |domain|
+        domain = domain.to_s.strip.downcase
+        valid_redirect_domain_entry?(domain) && redirect_domain_matches?(host, domain)
+      end
+    end
+
+    def valid_redirect_domain_entry?(domain)
+      return false if domain.blank? || domain == "*"
+      return false if domain.include?("/") || domain.include?(":")
+
+      domain.start_with?("*.") ? domain.length > 2 : !domain.include?("*")
+    end
+
+    def redirect_domain_matches?(host, domain)
+      if domain.start_with?("*.")
+        suffix = domain.delete_prefix("*.")
+        host.end_with?(".#{suffix}") && host != suffix
+      else
+        host == domain
+      end
     end
 
     def sanitize_status_code(code)
