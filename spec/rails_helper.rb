@@ -831,6 +831,7 @@ RSpec.configure do |config|
       # so only the first test's timezone would be applied. Instead, we use CDP
       # to override the timezone per-test in the before(:each) hook below.
       colorScheme: example.metadata[:color_scheme],
+      use_locators: true,
     }
 
     if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
