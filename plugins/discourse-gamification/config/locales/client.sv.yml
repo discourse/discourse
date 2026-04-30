@@ -23,8 +23,6 @@ sv:
         cta: "Skapa din första topplista"
         none: "Inga topplistor har skapats ännu."
         confirm_destroy: "Är du säker på att du vill ta bort denna topplista?"
-        section:
-          groups: "Grupper"
         date:
           range: "Från / Till datumintervall"
           helper: "Om datum lämnas tomma kommer topplistan att visa intjänade poäng utan tidsbegränsningar."
@@ -34,8 +32,6 @@ sv:
         included_groups_help: "Endast användare i dessa grupper kommer att inkluderas i topplistan. Lämna tomt för att lista alla."
         excluded_groups: "Exkluderade grupper"
         excluded_groups_help: "Ta bort användare i dessa grupper från att inkluderas i topplistan. Lämna tomt för att lista alla."
-        weight:
-          solution: "Lösning"
         period:
           all_time: "Alltid"
           yearly: "Årsvis"

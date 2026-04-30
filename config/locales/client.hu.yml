@@ -3465,19 +3465,9 @@ hu:
         archive_messages: "Áthelyezés az archívumba"
         change_notification_level: "Értesítési szint módosítása"
         choose_new_category: "Válassza ki az új kategóriát a témákhoz:"
-        selected_sole_category:
-          one: "<b>%{count}</b> témát választott ki a következő kategóriából:"
-          other: "<b>%{count}</b> témát választott ki a következő kategóriából:"
         selected_count:
           one: "%{count} kiválasztva"
           other: "%{count} kiválasztva"
-        append_tags: "Címkék hozzáadása"
-        choose_new_tags: "Válasszon új címkéket ezekhez a témákhoz:"
-        choose_append_tags: "Címkék hozzáadása"
-        changed_tags: "Azon témák címkéi megváltoztak."
-        confirm_remove_tags:
-          one: "Az összes címke eltávolításra kerül erről a témáról. Biztos benne?"
-          other: "Az összes címke eltávolításra kerül <b>%{count}</b> témáról. Biztos benne?"
         progress:
           one: "Folyamat: <strong>%{count}</strong> téma"
           other: "Folyamat: <strong>%{count}</strong> téma"
@@ -3530,10 +3520,9 @@ hu:
         name: "Levétel a listáról"
       relist_topics:
         name: "Felvétel a listára"
-      remove_tags:
-        name: "Címkék eltávolítása"
-      replace_tags:
-        name: "Címkék cseréje"
+      manage_tags:
+        add:
+          title: "Címkék hozzáadása"
       delete_topics:
         name: "Törlés"
       update_category:
@@ -3562,6 +3551,7 @@ hu:
       collapse: "Összecsukás"
       no_replies: "Még nincsenek hozzászólások."
       deleted_post_placeholder: "[törölve]"
+      ignored_post_placeholder: "[figyelmen kívül hagyott]"
       pinned_reply: "Kiemelt"
     topic:
       filter_to:
@@ -4532,7 +4522,7 @@ hu:
           high: "Magas"
           very_high: "Nagyon magas"
       sort_options:
-        default: "alapértelmezett"
+        default: "Alapértelmezett"
         likes: "Kedvelések"
         op_likes: "Eredeti bejegyzés kedvelései"
         views: "Megtekintések"
@@ -7453,6 +7443,7 @@ hu:
         topic_id: "Témakör azonosító"
         post_id: "Bejegyzés azonosító"
         category_id: "Kategória ID"
+        reviewable_id: "Áttekintés"
         delete: "Törlés"
         edit: "Szerkesztés"
         save: "Mentés"

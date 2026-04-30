@@ -15,11 +15,9 @@ tr_TR:
       alt:
         solved:
           accepted_notification: "kabul edildi"
-          topic_solved_notification: "çözüldü"
     solutions: "Çözümler"
     solved:
       title: "Çözüldü"
-      notify_on_solved: "Takip ettiğim veya izlediğim bir konu çözüldüğünde bana bildirim gönder. Bu, çözüm eklenmesine izin verilen kategorilerdeki konular için geçerlidir."
       allow_accepted_answers: "Konu sahibinin ve personelin bir yanıtı çözüm olarak işaretlemesine izin verin"
       solved_topics_auto_close_hours: "Konu çözüldü olarak işaretlendiğinde, son yanıttan (n) saat sonra otomatik olarak kapatılsın."
       notify_on_staff_accept_solved: "Personel bir çözümü işaretlediğinde konu açan kişiye bildirim gönder"
@@ -33,7 +31,6 @@ tr_TR:
       solution_summary:
         one: "çözüm"
         other: "çözüm"
-      accepted_answer_solver_info: "%{user} tarafından %{post} içinde"
       accepted_answer_post_number: "%{post_number}. gönderi"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -43,7 +40,6 @@ tr_TR:
       no_solved_topics_title: "Henüz hiçbir konuyu çözmediniz"
       no_solved_topics_title_others: "%{username} henüz hiçbir konuyu çözmedi"
       no_solved_topics_body: "Bir konuya yararlı bir yanıt verdiğinizde, yanıtınız konu sahibi veya personel tarafından çözüm olarak seçilebilir."
-      marked_solved_by: "%{user} tarafından kabul edildi"
       confirm_move_solution_title: "Çözüm gönderisini taşı"
       confirm_move_solution:
         one: "Seçtiğiniz gönderi bu konunun çözümü olarak işaretlenmiştir. Gönderiyi taşırsanız, konu çözülmemiş olarak güncellenecektir."
@@ -60,15 +56,8 @@ tr_TR:
       no_answer:
         title: Sorunuz yanıtlandı mı?
         description: "Yanıtı vurgulayın ve doğru cevabın altındaki çözüm düğmesini kullanarak başkalarına yardımcı olun."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "gönderiniz çözüm olarak işaretlendi"
-        topic_solved_title: "Konu çözüldü"
-      topic_notifications:
-        tracking:
-          description: "Birisi @adınızı etiketlediğinde, size yanıt verdiğinde veya konu çözüldüğünde bildirim alacaksınız. Bu konu için yeni yanıtların sayısı gösterilecektir."
-        watching:
-          description: "Bu konudaki her yeni yanıt ve konunun çözüldüğü zaman size bildirim gönderilecektir. Bu konu için yeni yanıtların sayısı gösterilecektir."
       category_type_support:
         title: "Destek"
         not_support_type: "Dikkat! Bu kategoride gönderileri çözüm olarak işaretleme özelliğini devre dışı bıraktınız. Bu özelliği tekrar etkinleştirmek için Ayarlar sekmesinde ilgili ayarları bulabilirsiniz."

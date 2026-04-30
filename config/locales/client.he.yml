@@ -3685,25 +3685,11 @@ he:
         archive_messages: "העברה לארכיון"
         change_notification_level: "שינוי רמת ההתראות"
         choose_new_category: "נא לבחור קטגוריה לנושאים:"
-        selected_sole_category:
-          one: "בחרת נושא <b>%{count}</b> מהקטגוריה:"
-          two: "בחרת <b>%{count}</b> נושאים מהקטגוריה:"
-          many: "בחרת <b>%{count}</b> נושאים מהקטגוריה:"
-          other: "בחרת <b>%{count}</b> נושאים מהקטגוריה:"
         selected_count:
           one: "%{count} נבחרו"
           two: "%{count} נבחרו"
           many: "%{count} נבחרו"
           other: "%{count} נבחרו"
-        append_tags: "הוספת תגיות"
-        choose_new_tags: "בחירה בתגיות חדשות לנושאים אלו:"
-        choose_append_tags: "הוספת תגיות"
-        changed_tags: "התגיות של נושאים אלו השתנו."
-        confirm_remove_tags:
-          one: "כל התגיות יוסרו מהנושא הזה. להמשיך?"
-          two: "כל התגיות יוסרו מ־<b>%{count}</b> הנושאים האלה. להמשיך?"
-          many: "כל התגיות יוסרו מ־<b>%{count}</b> הנושאים האלה. להמשיך?"
-          other: "כל התגיות יוסרו מ־<b>%{count}</b> הנושאים האלה. להמשיך?"
         progress:
           one: "התקדמות: נושא <strong>%{count}</strong>"
           two: "התקדמות: <strong>%{count}</strong> נושאים"
@@ -3750,10 +3736,9 @@ he:
         name: "הסתרה"
       relist_topics:
         name: "החזרה"
-      remove_tags:
-        name: "הסרת תגיות"
-      replace_tags:
-        name: "החלפת תגיות"
+      manage_tags:
+        add:
+          title: "הוספת תגיות"
       delete_topics:
         name: "מחיקה"
       update_category:
@@ -3786,6 +3771,7 @@ he:
       collapse: "צמצום"
       no_replies: "עדיין אין תגובות."
       deleted_post_placeholder: "[נמחק]"
+      ignored_post_placeholder: "[זכה להתעלמות]"
       pinned_reply: "נעוץ"
     topic:
       filter_to:
@@ -7789,6 +7775,7 @@ he:
         topic_id: "זהות (ID) נושא"
         post_id: "מזהה פוסט"
         category_id: "מזהה קטגוריה"
+        reviewable_id: "סקירה"
         delete: "מחיקה"
         edit: "עריכה"
         save: "שמור"

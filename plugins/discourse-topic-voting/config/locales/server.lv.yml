@@ -9,7 +9,3 @@ lv:
     topic_voting_enabled: 'Atļaut lietotājiem balsot šajā tēmā?'
     topic_voting_show_who_voted: 'Atļaut lietotājiem redzēt kurš balsojis?'
     topic_voting_show_votes_on_profile: 'Atļaut lietotājiem redzēt viņu balsojumus viņu aktivitātēs?'
-  topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Parādīt, kas balsoja"

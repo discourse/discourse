@@ -12,8 +12,6 @@ lv:
         link_to_settings: "Iestatījumi"
         refresh: "Pārlādēt"
         name: "Vārds"
-        section:
-          groups: "Grupas"
         period:
           all_time: "Vienmēr"
           yearly: "Gada"

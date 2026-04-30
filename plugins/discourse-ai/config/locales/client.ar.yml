@@ -425,9 +425,6 @@ ar:
             few: "%{count} منشورات"
             many: "%{count} منشورًا"
             other: "%{count} منشور"
-        theme_translations:
-          translate:
-            label: "ترجم"
         translations_menu:
           translate:
             label: "ترجمة المنشور"
@@ -956,19 +953,14 @@ ar:
           other: "هذا النموذج مُستخدَم حاليًا من قِبل %{settings}. إذا تم تكوينه بشكلٍ خاطئ، فلن تعمل الميزات كما هو متوقَّع. "
         model_description:
           none: "الإعدادات العامة التي تعمل مع معظم نماذج اللغة"
-          anthropic-claude-opus-4-7: "النموذج الأكثر ذكاءً لدى Anthropic"
           anthropic-claude-sonnet-4-6: "التوازن الأمثل بين السرعة والتكلفة"
           anthropic-claude-haiku-4-5: "سريع وفعَّال من حيث التكلفة"
           google-gemini-3-pro: "النموذج الأكثر ذكاءً لدى Google"
           google-gemini-3-flash: "سريع وفعَّال من حيث التكلفة مع الاستدلال متعدد النماذج"
-          open_ai-gpt-5-4: "النموذج الرائد لدى OpenAI، وهو مناسب جدًا لحل المشكلات عبر نطاقات متعددة"
-          open_ai-gpt-5-4-mini: "يوفر توازنًا بين الذكاء والسرعة والتكلفة"
           open_ai-gpt-5-nano: "أسرع وأوفر نموذج GPT-5 من حيث التكلفة"
           open_router-deepseek-deepseek-v3-2: "أحدث نموذج عالي الأداء من DeepSeek"
           open_router-moonshotai-kimi-k2-5: "نموذج Moonshot متعدد الوسائط القادر على الرؤية"
           open_router-x-ai-grok-4-fast: "النموذج الرائد لشركة xAI بتقنية الرؤية"
-          open_router-minimax-minimax-m2-7: "نموذج MiniMax متعدد الوسائط مع سياق كبير"
-          open_router-z-ai-glm-5-1: "نموذج Z-AI متعدد الوسائط بتقنية الرؤية"
           open_router-arcee-ai-trinity-large-preview-free: "نموذج مجاني مفتوح المصدر من شركة Arcee AI"
         preseeded_model_description: "نموذج مفتوح المصدر تم تكوينه مسبقًا باستخدام %{model}"
         configured:

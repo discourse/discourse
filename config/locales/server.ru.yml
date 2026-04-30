@@ -3645,7 +3645,6 @@ ru:
         Ответ был отправлен с заблокированного адреса электронной почты. Попробуйте отправить письмо с другого адреса электронной почты или [свяжитесь с сотрудником](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Письмо отклонено: запрещенный адрес электронной почты"
-      subject_template: "[%{email_prefix}] Проблема с письмом: адрес электронной почты заблокирован"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3810,7 +3809,6 @@ ru:
         У вас нет прав для ответа в этой теме. Если вы считаете, что это ошибка, [свяжитесь с сотрудником](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Письмо отклонено: ответ на сводку"
-      subject_template: "[%{email_prefix}] Проблема с письмом: ответ на сводку"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3958,7 +3956,6 @@ ru:
       text_body_template: "Настройка `download_remote_images_to_local` была отключена, поскольку диск заполнился до отметки, указанной в настройке `download_remote_images_threshold`."
     new_user_of_the_month:
       title: "Вы новый пользователь месяца!"
-      subject_template: "Вы новый пользователь месяца!"
       text_body_template: |
         Поздравляем: вы заработали награду **Новый пользователь месяца за %{month_year}**. :trophy:
 
@@ -4291,6 +4288,7 @@ ru:
     account_exists:
       title: "Аккаунт уже существует"
       subject_template: "[%{email_prefix}] Аккаунт уже существует"
+      subject_template_improved: "Аккаунт уже существует"
       text_body_template: |
         Вы попытались создать аккаунт на сайте %{site_name} или изменить адрес электронной почты аккаунта на %{email}. Однако аккаунт для %{email} уже существует.
 
@@ -4302,6 +4300,7 @@ ru:
     account_second_factor_disabled:
       title: "Двухфакторная аутентификация отключена"
       subject_template: "[%{email_prefix}] Двухфакторная аутентификация отключена"
+      subject_template_improved: "Двухфакторная аутентификация отключена"
       text_body_template: |
         Двухфакторная аутентификация отключена в вашей учетной записи по адресу %{site_name}. Теперь вы можете войти в систему, используя только свой пароль; дополнительный код аутентификации больше не требуется.
 
@@ -4321,6 +4320,7 @@ ru:
       popular_posts: "Популярные сообщения"
       more_new: "Новинки"
       subject_template: "[%{email_prefix}] — сводка"
+      subject_template_improved: "Сводка"
       unsubscribe: "Эта сводка отправлена с сайта %{site_link}, куда вы давно не заходили. Вы можете изменить %{email_preferences_link} или %{unsubscribe_link}."
       your_email_settings: "настройки рассылки"
       click_here: "отписаться"
@@ -4341,6 +4341,7 @@ ru:
       title: "Вход по ссылке"
       preview: "Вход по ссылке."
       subject_template: "[%{email_prefix}] Вход по ссылке"
+      subject_template_improved: "Вход по ссылке"
       text_body_template: |
         Ниже приведена ссылка для входа на форум [%{site_name}](%{base_url}).
 
@@ -4351,7 +4352,6 @@ ru:
     set_password:
       title: "Установка пароля"
       preview: "Установить пароль для учетной записи."
-      subject_template: "[%{email_prefix}] Установка пароля"
       text_body_template: |
         Кто-то попросил добавить пароль к вашему аккаунту на сайте [%{site_name}](%{base_url}). Сейчас вы можете входить в систему с помощью поддерживаемого онлайн-сервиса (Google, Facebook и т. д.), связанного с этим подтверждённым адресом электронной почты.
 
@@ -4363,6 +4363,7 @@ ru:
       title: "Вход администратора"
       preview: "Запрошен вход в систему администратора."
       subject_template: "[%{email_prefix}] Вход"
+      subject_template_improved: "Аккаунты"
       text_body_template: |
         Кто-то попросил войти под вашим аккаунтом на сайт [%{site_name}](%{base_url}).
 
@@ -4373,7 +4374,6 @@ ru:
     account_created:
       title: "Аккаунт создан"
       preview: "Для вас создан новый аккаунт."
-      subject_template: "[%{email_prefix}] Ваш новый аккаунт"
       text_body_template: |
         Для вас был создан новый аккаунт на сайте %{site_name}.
 
@@ -4494,7 +4494,6 @@ ru:
     suspicious_login:
       title: "Оповещение о новом входе"
       preview: "Проверьте ваше устройство."
-      subject_template: "[%{site_name}] Новый вход на сайт (место: %{location})"
       text_body_template: |
         Здравствуйте!
 

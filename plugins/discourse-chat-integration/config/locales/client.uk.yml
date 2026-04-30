@@ -18,33 +18,11 @@ uk:
         providers: "Провайдери"
         providers_description: "Налаштуйте інтеграцію з провайдером чату"
       add_provider: "Додати провайдера"
-      view_provider_settings: "Перегляд налаштувань провайдера"
       more_providers: "Більше"
-      confirm_setup_provider: "Ви впевнені, що хочете ввімкнути постачальника %{provider}? Його можна вимкнути пізніше на вкладці \"Налаштування\"."
-      setup_provider_modal:
-        title: "Налаштування провайдера %{provider}"
-        setup_instructions: "Будь ласка, надайте наступні дані для налаштування провайдера %{provider} . %{additionalInstructions}"
-        confirm_setup: "Підтвердити налаштування"
-        success: "Провайдера %{provider} успішно налаштовано"
-        slack:
-          instructions: "Потрібен або токен доступу, або URL-адреса вихідного веб-хука."
-          at_least_one_required: "Введіть токен доступу або URL-адресу вихідного вебхука."
-          access_token:
-            title: "Маркер доступу"
-            description: "Токен доступу OAuth для Slack-бота"
-          outbound_webhook_url:
-            title: "URL-адреса вихідного вебхука"
-            description: "URL-адреса вихідного вебхука Slack"
-        telegram:
-          instructions: "Маркер доступу буде перевірено під час збереження."
-          access_token:
-            title: "Маркер доступу"
-            description: "Токен доступу до бота Telegram від BotFather"
       empty_state:
         title: "Підключіть свою чат-платформу"
         body: "Надсилайте сповіщення з Discourse у чат вашої команди. Оберіть провайдера, щоб розпочати роботу."
       channels_title: "Канали"
-      channels_description: "Налаштування каналів для постачальника %{provider}."
       no_channels: "Канали ще не налаштовані."
       channel_actions: "Дії каналу"
       add_first_channel: "Додайте свій перший канал %{provider}"
@@ -117,8 +95,6 @@ uk:
               title: Канал
               help: "Наприклад, #channel або @username"
           errors:
-            at_least_one_required: "Введіть токен доступу або URL-адресу вихідного веб-хука."
-            invalid_webhook_url: "URL-адреса вихідного вебхука має бути дійсним посиланням https://hooks.slack.com/services/...."
             auth_error: "Наданий токен автентифікації недійсний"
             action_prohibited: "Бот не має дозволу на публікацію в цьому каналі"
             channel_not_found: "Зазначений канал не існує в Slack"
@@ -132,8 +108,6 @@ uk:
               title: Chat ID
               help: Номер, який вам надає бот, або ідентифікатор трансляційного каналу у формі @channelname
           errors:
-            access_token_required: "Потрібен токен доступу бота."
-            webhook_setup_failed: "Не вдалося зареєструвати вебхук у Telegram. Перевірте токен і спробуйте ще раз."
             channel_not_found: "Зазначений канал не існує в Telegram"
             forbidden: "Бот не має дозволу публікувати в цей канал"
         discord:

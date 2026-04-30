@@ -2399,7 +2399,6 @@ ur:
         آپ کا جواب ایک بلاک شدہ ای میل ایڈریس سے بھیجا گیا تھا۔ کسی دوسرے ای میل ایڈریس سے بھیجنے کی کوشش کریں، یا [ایک سٹاف ممبر سے رابطہ کریں](%{base_url}/about)۔
     email_reject_not_allowed_email:
       title: "ای میل مسترد غیر اجازت یافتہ ای میل"
-      subject_template: "[%{email_prefix}] ای میل مسئلہ -- بلاک کردہ ای میل"
       text_body_template: |
         ہمیں افسوس ہے، لیکن آپ کا %{destination} پر ای میل پیغام (عنوان %{former_title}) کام نہیں کیا۔
 
@@ -2651,7 +2650,6 @@ ur:
       text_body_template: "`download_remote_images_to_local` ترتیب غیر فعال کر دی گئی تھی کیونکہ` download_remote_images_threshold` پر ڈِسک میں جگہ کی حد تک پہنچ گئے تھے۔"
     new_user_of_the_month:
       title: "ماہ کے سب سے زیادہ قابل قدر نئے رکن!"
-      subject_template: "آپ مہینہ کے سب سے زیادہ قابل قدر نئے صارف ہیں!"
       text_body_template: |
         مبارک ہو، آپ نے %{month_year}** کے لیے **ماہ کے نئے رکن کا ایوارڈ حاصل کر لیا ہے۔ :trophy:
 
@@ -2911,6 +2909,7 @@ ur:
     account_exists:
       title: "اکاؤنٹ پہلے سے موجود"
       subject_template: "[%{email_prefix}] اکاؤنٹ پہلے سے ہی موجود ہے"
+      subject_template_improved: "اکاؤنٹ پہلے سے موجود"
       text_body_template: |
         آپ نے ابھی %{site_name} پر ایک اکاؤنٹ بنانے کی کوشش کی، یا ایک اکاؤنٹ کی ای میل کو %{email} پر تبدیل کرنے کی کوشش کی۔ تاہم، %{email} کیلئے ایک اکاؤنٹ پہلے سے ہی موجود ہے۔
 
@@ -2922,6 +2921,7 @@ ur:
     account_second_factor_disabled:
       title: "دو عنصری تصدیق کو غیر فعال کر دیا گیا۔"
       subject_template: "[%{email_prefix}] دو عنصری تصدیق کو غیر فعال کر دیا گیا۔"
+      subject_template_improved: "دو عنصری تصدیق کو غیر فعال کر دیا گیا۔"
     digest:
       since_last_visit: "آپ کے آخری دورے کے بعد سے"
       new_topics: "نئے ٹاپک"
@@ -2933,6 +2933,7 @@ ur:
       popular_posts: "مقبول دھاگے"
       more_new: "آپ کے لیے نیا"
       subject_template: "[%{email_prefix}] خلاصہ"
+      subject_template_improved: "Summary"
       unsubscribe: "یہ خلاصہ %{site_link} کی طرف سے بھیجا گیا کیونکہ کچھ دیر سے آپ کو نہیں دیکھا گیا۔ %{email_preferences_link} کو تبدیل کریں، یا ان سبسکرائب کرنے کیلئے %{unsubscribe_link}۔"
       your_email_settings: "آپ کی ای میل ترتیبات"
       click_here: "یہاں کلِک کریں"
@@ -2950,6 +2951,7 @@ ur:
       title: "بذریعہ لِنک لاگ اِن کریں"
       preview: "بذریعہ لِنک لاگ اِن کریں."
       subject_template: "[%{email_prefix}] بذریعہ لِنک لاگ اِن کریں"
+      subject_template_improved: "بذریعہ لِنک لاگ اِن کریں"
       text_body_template: |
         [%{site_name}](%{base_url}) پر لاگ اِن کرنے کیلئے آپ کا لِنک یہ ہے۔
 
@@ -2959,7 +2961,6 @@ ur:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "پاسوَرڈ مقرر"
-      subject_template: "[%{email_prefix}] پاسوَرڈ مقرر کریں"
       text_body_template: |
         کسی نے [%{site_name}](%{base_url}) پر آپ کے اکاؤنٹ پر پاسوَرڈ مقرر کرنے کیلئے کہا۔ متبادل طور پر، آپ اِس تصدیق کردہ ای میل ایڈریس سے منسلک کسی بھی قابل آن لائن سروس (گُوگل، فَیس بُک، وغیرہ) کا استعمال کرتے ہوئے لاگ اِن کرسکتے ہیں۔
 
@@ -2970,9 +2971,9 @@ ur:
     admin_login:
       title: "منتظم لاگ اِن"
       subject_template: "[%{email_prefix}] لاگ اِن"
+      subject_template_improved: "لاگ ان"
     account_created:
       title: "اکاؤنٹ تشکیل"
-      subject_template: "[%{email_prefix}] آپ کا نیا اکاؤنٹ"
       text_body_template: |
         %{site_name} پر آپ کیلئے ایک نیا اکاؤنٹ بنایا گیا تھا
 
@@ -3042,7 +3043,6 @@ ur:
         اگر اوپر والا لِنک کلک نہیں ہوتا ہو، تو اپنے ویب براؤزر کے ایڈریس بار میں کاپی اور پَیسٹ کرنے کی کوشش کریں۔
     suspicious_login:
       title: "نیا لاگ اِن انتباہ"
-      subject_template: "[%{site_name}] %{location}سے نیا لاگ ان"
     post_approved:
       title: "آپ کی پوسٹ منظور ہو گئی تھی"
   page_not_found:

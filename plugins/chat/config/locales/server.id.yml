@@ -175,6 +175,9 @@ id:
         other_type: "%{username} menyebut %{identifier} di obrolan pribadi"
       new_chat_message: '%{username} mengirim pesan di "%{channel}"'
       new_direct_chat_message: "%{username} mengirim pesan di obrolan pribadi"
+    actions:
+      chat_reply:
+        title: Balas
   discourse_automation:
     scriptables:
       send_chat_message:

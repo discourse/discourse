@@ -3229,19 +3229,9 @@ it:
         archive_messages: "Sposta in archivio"
         change_notification_level: "Modifica livello di notifica"
         choose_new_category: "Scegli la nuova categoria per gli argomenti:"
-        selected_sole_category:
-          one: "Hai selezionato <b>%{count}</b> argomento dalla categoria:"
-          other: "Hai selezionato <b>%{count}</b> argomenti dalla categoria:"
         selected_count:
           one: "%{count} selezionato"
           other: "%{count} selezionati"
-        append_tags: "Aggiungi etichette"
-        choose_new_tags: "Scegli nuove etichette per i seguenti argomenti:"
-        choose_append_tags: "Aggiungi etichette"
-        changed_tags: "Le etichette per quegli argomenti sono state cambiate."
-        confirm_remove_tags:
-          one: "Tutti i tag verranno rimossi da questo argomento. Sei sicuro?"
-          other: "Tutti i tag verranno rimossi da <b>%{count}</b> argomenti. Sei sicuro?"
         progress:
           one: "Avanzamento: <strong>%{count}</strong> argomento"
           other: "Avanzamento: <strong>%{count}</strong> argomenti"
@@ -3283,10 +3273,9 @@ it:
         name: "Rendi invisibile"
       relist_topics:
         name: "Ripubblica"
-      remove_tags:
-        name: "Rimuovi etichette"
-      replace_tags:
-        name: "Sostituisci etichette"
+      manage_tags:
+        add:
+          title: "Aggiungi etichette"
       delete_topics:
         name: "Elimina"
       update_category:
@@ -3315,6 +3304,7 @@ it:
       collapse: "Comprimi"
       no_replies: "Ancora nessuna risposta."
       deleted_post_placeholder: "[eliminato]"
+      ignored_post_placeholder: "[ignorato]"
       pinned_reply: "Appuntato"
     topic:
       filter_to:
@@ -4196,7 +4186,7 @@ it:
           low: "Bassa"
           high: "Alta"
       sort_options:
-        default: "predefinito"
+        default: "Predefinito"
         likes: "Mi piace"
         views: "Visualizzazioni"
         posts: "Messaggi"
@@ -6908,6 +6898,7 @@ it:
         topic_id: "ID argomento"
         post_id: "ID messaggio"
         category_id: "ID categoria"
+        reviewable_id: "Revisiona"
         delete: "Cancella"
         edit: "Modifica"
         save: "Salva"

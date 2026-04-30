@@ -3408,22 +3408,10 @@ hr:
         archive_messages: "Premjestiti u arhivu"
         change_notification_level: "Promijenite razinu obavijesti"
         choose_new_category: "Odaberite novu kategoriju za teme:"
-        selected_sole_category:
-          one: "Odabrali ste <b>%{count}</b> temu iz kategorije:"
-          few: "Odabrali ste <b>%{count}</b> teme iz kategorije:"
-          other: "Odabrali ste <b>%{count}</b> teme iz kategorije:"
         selected_count:
           one: "%{count} odabrano"
           few: "%{count} odabrano"
           other: "%{count} odabrano"
-        append_tags: "Dodaj oznake"
-        choose_new_tags: "Odaberite nove oznake za ove teme:"
-        choose_append_tags: "Dodaj oznake"
-        changed_tags: "Oznake tih tema su promijenjene."
-        confirm_remove_tags:
-          one: "Sve oznake bit će uklonjene iz ove teme. Jesi li siguran?"
-          few: "Sve oznake <b>%{count}</b> bit će uklonjene iz ove teme. Jeste li sigurni?"
-          other: "Sve oznake bit će uklonjene iz <b>%{count}</b> temi. Jeste li sigurni?"
         progress:
           one: "Napredak: <strong>%{count}</strong> tema"
           few: "Napredak: <strong>%{count}</strong> tema"
@@ -3467,10 +3455,9 @@ hr:
         name: "Uklonite objavu"
       relist_topics:
         name: "Ponovno objavite"
-      remove_tags:
-        name: "Ukloni oznake"
-      replace_tags:
-        name: "Zamijeni oznake"
+      manage_tags:
+        add:
+          title: "Dodaj oznake"
       delete_topics:
         name: "Pobriši"
       update_category:
@@ -3501,6 +3488,7 @@ hr:
       collapse: "Sakrij"
       no_replies: "Još nema odgovora."
       deleted_post_placeholder: "[izbrisao]"
+      ignored_post_placeholder: "[ignorirano]"
       pinned_reply: "Zakvačeno"
     topic:
       filter_to:
@@ -4424,7 +4412,7 @@ hr:
           low: "Nizak"
           high: "Visok"
       sort_options:
-        default: "zadano"
+        default: "Zadano"
         likes: "Like-ova"
         views: "Pregledi"
         posts: "Objave"
@@ -6787,6 +6775,7 @@ hr:
         topic_id: "ID teme"
         post_id: "ID objave"
         category_id: "ID kategorije"
+        reviewable_id: "Osvrt"
         delete: "Obriši"
         edit: "Izmjeni"
         save: "Spremi"

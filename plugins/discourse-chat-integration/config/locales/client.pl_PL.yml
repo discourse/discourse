@@ -18,33 +18,11 @@ pl_PL:
         providers: "Dostawcy"
         providers_description: "Konfiguruj integracje dostawców czatów"
       add_provider: "Dodaj dostawcę"
-      view_provider_settings: "Wyświetl ustawienia dostawcy"
       more_providers: "Więcej"
-      confirm_setup_provider: "Czy na pewno chcesz włączyć dostawcę %{provider} ? Możesz go później wyłączyć na karcie Ustawienia."
-      setup_provider_modal:
-        title: "Skonfiguruj dostawcę %{provider}"
-        setup_instructions: "Podaj następujące szczegóły, aby skonfigurować dostawcę %{provider} . %{additionalInstructions}"
-        confirm_setup: "Potwierdź konfigurację"
-        success: "Dostawca %{provider} został pomyślnie skonfigurowany"
-        slack:
-          instructions: "Wymagany jest token dostępu lub adres URL webhooka wychodzącego."
-          at_least_one_required: "Wprowadź token dostępu lub adres URL webhooka wychodzącego."
-          access_token:
-            title: "Token dostępu"
-            description: "Token dostępu OAuth bota Slacka"
-          outbound_webhook_url:
-            title: "Adres URL webhooka wychodzącego"
-            description: "Adres URL webhooka wychodzącego Slacka"
-        telegram:
-          instructions: "Token dostępu zostanie sprawdzony przy zapisywaniu."
-          access_token:
-            title: "Token dostępu"
-            description: "Token dostępu do bota Telegramu od BotFather"
       empty_state:
         title: "Połącz swoją platformę czatu"
         body: "Wysyłaj powiadomienia z Discourse na czat swojego zespołu. Wybierz dostawcę, aby rozpocząć."
       channels_title: "Kanały"
-      channels_description: "Skonfiguruj kanały dla dostawcy %{provider}."
       no_channels: "Nie skonfigurowano jeszcze żadnych kanałów."
       channel_actions: "Działania kanału"
       add_first_channel: "Dodaj swój pierwszy kanał %{provider}"
@@ -117,8 +95,6 @@ pl_PL:
               title: Kanał
               help: "Na przykład #kanał lub @nazwaużytkownika"
           errors:
-            at_least_one_required: "Wprowadź token dostępu lub adres URL webhooka wychodzącego."
-            invalid_webhook_url: "Adres URL webhooka wychodzącego musi być prawidłowym linkiem https://hooks.slack.com/services/..."
             auth_error: "Podany token uwierzytelniania jest nieprawidłowy"
             action_prohibited: "Bot nie ma uprawnień do publikowania na tym kanale"
             channel_not_found: "Podany kanał nie istnieje w Slacku"
@@ -132,8 +108,6 @@ pl_PL:
               title: ID czatu
               help: Numer nadany przez bota lub identyfikator kanału nadawania w formie @nazwakanału
           errors:
-            access_token_required: "Wymagany jest token dostępu bota."
-            webhook_setup_failed: "Nie udało się zarejestrować webhooka w Telegramie. Sprawdź token i spróbuj ponownie."
             channel_not_found: "Określony kanał nie istnieje w Telegramie"
             forbidden: "Bot nie ma uprawnień do publikowania na tym kanale"
         discord:

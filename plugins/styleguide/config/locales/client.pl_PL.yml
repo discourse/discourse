@@ -95,8 +95,6 @@ pl_PL:
           title: "Więcej tematów"
         post_menu:
           title: "Menu postu"
-        docked_composer:
-          title: "Kompozytor zadokowany"
         modal:
           title: "Modalne"
           header: "Tytuł modalu"

@@ -26,9 +26,6 @@ sq:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      event_description:
-        show_more: "Shfaq më shumë"
-        show_less: "Shfaq më pak"
       show_all: "Shfaqni të gjitha"
       bulk_invite: "Ftesë me shumicë"
       bulk_invite_modal:

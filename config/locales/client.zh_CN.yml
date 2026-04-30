@@ -2755,6 +2755,15 @@ zh_CN:
         no_translation_yet: "开始输入以查看翻译预览…"
         placeholder: "在此处输入帖子的翻译…"
         show_raw_markdown: "以原格式显示"
+      change_reply_to:
+        title: "更改回复目标"
+        hint: "滚动时间轴，找到您要回复的帖子。"
+        current_selection: "已选中：帖子 #%{post_number} ，作者：@%{username}"
+        invalid_target: "选择比你正在编辑的帖子更早的帖子。"
+        submit: "设置回复目标"
+        open: "更改此回复指向的帖子"
+        open_from_menu: "回复另一个帖子"
+        remove: "删除回复目标"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
@@ -3335,18 +3344,9 @@ zh_CN:
         notification_level: "更新通知"
         change_notification_level: "更改通知级别"
         choose_new_category: "为话题选择新类别："
-        selected_sole_category:
-          other: "您已从以下类别中选择 <b>%{count}</b> 个话题。"
         selected_count:
           other: "已选择 %{count} 个"
-        change_tags: "替换标签"
-        append_tags: "添加标签"
-        choose_new_tags: "为这些话题选择新标签："
-        choose_append_tags: "添加标签"
-        changed_tags: "这些话题的标签已更改。"
-        remove_tags: "移除标签"
-        confirm_remove_tags:
-          other: "所有标签将从 <b>%{count}</b> 个话题中移除。确定吗？"
+        manage_tags: "管理标签"
         confirm_unpin_topics:
           other: "取消置顶 %{count} 主题"
         confirm_update_topics:
@@ -3416,15 +3416,16 @@ zh_CN:
         description: "未公开的主题不会显示在话题列表中，但仍可通过直接链接访问。 <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>了解更多</a>"
       relist_topics:
         name: "重新公开"
-      remove_tags:
-        name: "移除标签"
-        description: "从所选话题中移除所有标签。"
-      append_tags:
-        name: "添加标签"
-        description: "为所选话题添加以下标签："
-      replace_tags:
-        name: "替换标签"
-        description: "将所选话题的所有现有标签替换为以下内容："
+      manage_tags:
+        name: "管理标签"
+        add:
+          title: "添加标签"
+          description: "已添加到所有选定话题"
+        remove:
+          title: "移除标签"
+          all_toggle: "移除所有标签"
+        replace:
+          title: "替换标签"
       delete_topics:
         name: "删除"
         description: "永久删除所选话题。此操作无法撤消。"
@@ -3433,8 +3434,10 @@ zh_CN:
         description: "将所有所选话题移至以下类别："
       convert_to_public_topic:
         name: "设为公开话题…"
+        description: "将选定的私人消息移至以下类别的公共话题中："
       convert_to_private_message:
         name: "设为个人消息"
+        description: "将选定的公共话题转换为私人消息。"
       reset_bump_dates:
         name: "重置顶帖日期"
         description: "是否要将顶帖日期更新为帖子最后创建的日期？这可能会影响它们在话题列表列表中的排序。"
@@ -3450,18 +3453,41 @@ zh_CN:
         description: "取消置顶所有被固定到一个类别或全局固定的选定主题"
     nested_replies:
       nested_view: "嵌套视图"
+      flat_view: "平面视图"
+      view_as_nested: "以嵌套方式查看"
+      view_as_flat: "以平面图查看"
       sort:
         label: "排序依据"
         top: "排行榜"
         new: "新"
+        old: "旧的"
       load_more_children:
         other: "其他 %{count} 个回复"
+      load_more_children_generic: "更多回复"
+      continue_thread: "继续此主题"
+      new_replies:
+        other: "%{count} 条回复"
       collapsed_replies:
         other: "%{count} 条回复"
       collapse: "收起"
+      collapse_parent: "折叠父主题"
+      category_settings:
+        default_nested_view: "此类别中的主题默认使用嵌套视图。"
       no_replies: "暂无回复。"
       deleted_post_placeholder: "[已删除]"
+      ignored_post_placeholder: "[已忽略]"
+      toggle_ignored_content: "显示忽略的内容"
+      op_badge: "OP"
       pinned_reply: "已置顶"
+      pin_reply: "置顶"
+      unpin_reply: "取消置顶"
+      topic_admin_menu:
+        enable_nested_replies: "启用嵌套回复"
+        disable_nested_replies: "禁用嵌套回复"
+      context:
+        banner: "您正在查看的是本主题中的单个主题。"
+        view_full_topic: "查看完整主题"
+        view_parent_context: "查看父上下文"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -3995,6 +4021,8 @@ zh_CN:
           confirm_delete: "确定要删除 '%{languageCode}' 的翻译吗？"
         success: "翻译已成功更新"
         post_language_selector:
+          title: "帖子语言"
+          header: "此帖位于…"
           none: "未设置"
         edit_warning:
           message: "这是一篇翻译的帖子。<br><br>您想编辑%{language}原帖，还是编辑此特定翻译？"
@@ -4018,6 +4046,7 @@ zh_CN:
         attachment_download_requires_login: "抱歉，您需要登录才能下载附件。"
       cancel_composer:
         confirm: "是否要放弃您的帖子？"
+        confirm_edit: "您确定要放弃所做的更改吗？"
         discard: "舍弃"
         discard_edit: "舍弃更改"
       via_email: "此帖子通过电子邮件送达"
@@ -4045,6 +4074,7 @@ zh_CN:
         delete: "删除此帖子"
         undelete_action: "取消删除帖子"
         undelete: "取消删除此帖子"
+        view_deleted: "查看已删除的帖子内容"
         share_action: "分享"
         share: "分享此帖子的链接"
         copy_action: "复制链接"
@@ -4061,13 +4091,19 @@ zh_CN:
         admin: "帖子管理员操作"
         admin_action: "管理员"
         permanently_delete: "永久删除"
+        permanently_delete_post_confirmation: "此操作 <b>无法</b> 撤销。这将 <b>永久删除</b> 此帖子并将其从数据库中移除。"
+        permanently_delete_topic_confirmation: "此操作 <b>无法</b> 撤销。这将 <b>永久删除</b> 此主题并将其从数据库中移除。"
         permanently_delete_confirm_phrase: "永久删除"
         wiki: "设为 Wiki"
+        wiki_description: "允许特定群组编辑此帖子"
         unwiki: "移除 Wiki"
         convert_to_moderator: "添加管理人员颜色"
+        convert_to_moderator_description: "突出显示此帖子的内容"
         revert_to_regular: "移除管理人员颜色"
         rebake: "重新构建 HTML"
+        rebake_description: "重新处理此帖子以修复格式或嵌入内容。"
         publish_page: "页面发布"
+        publish_page_description: "将此主题发布为独立页面"
         unhide: "取消隐藏"
         change_owner: "更改所有权…"
         grant_badge: "授予徽章…"
@@ -4075,6 +4111,7 @@ zh_CN:
         lock_post_description: "阻止发帖人编辑此帖子"
         unlock_post: "解锁帖子"
         unlock_post_description: "允许发帖人编辑此帖子"
+        add_post_notice_description: "在此帖子上方添加高亮通知"
         delete_topic_disallowed_modal: "您无权删除此话题。如果您确实希望将其删除，请提交举报并说明原因，以便引起版主注意。"
         delete_topic_disallowed: "您无权删除此话题"
         delete_topic_confirm_modal:
@@ -4118,6 +4155,8 @@ zh_CN:
         locale:
           no_locale_set: "未设置语言"
           locale_removed: "语言已移除"
+        reply_to:
+          none: "没有回复目标"
         controls:
           first: "第一个修订"
           previous: "上一个修订"
@@ -4349,11 +4388,15 @@ zh_CN:
       require_reply_approval: "所有新回复都需要版主审批"
       require_topic_approval_for: "所有新话题都需要版主审批..."
       require_reply_approval_for: "所有新回复都需要版主审批..."
+      new_topic_approval: "新主题批准"
+      new_reply_approval: "新回复批准"
       posting_review_modes:
         no_one: "没有人"
         everyone: "所有人"
         everyone_except: "除选定群组之外的所有人"
         no_one_except: "除了选定的群组之外没有人"
+      posting_review_groups_require_approval: "需要批准的群组"
+      posting_review_groups_no_approval: "不需要批准的群组"
       posting_review_groups_placeholder: "选择组…"
       this_year: "今年"
       position: "类别页面上的位置："
@@ -4415,6 +4458,7 @@ zh_CN:
         created: "创建日期"
       sort_ascending: "升序"
       sort_descending: "降序"
+      sort_direction: "排序方向"
       subcategory_list_styles:
         rows: "行"
         rows_with_featured_topics: "有精选话题的行"
@@ -5543,6 +5587,7 @@ zh_CN:
           header_description: "在这里提供有关此站点和您的团队的信息，以便人们可以了解您的社区、幕后人员，以及在出现问题时如何联系您。显示在您的站点的<a href='%{basePath}/about'>“关于”页面</a>上。"
         developer:
           title: "开发者"
+          header_description: "开发者设置用于控制安全模式和其他高级功能"
         experimental:
           title: "实验性"
           header_description: "切换网站的实验性功能，其中大部分功能可按组进行控制"
@@ -5790,10 +5835,17 @@ zh_CN:
               title: "日志"
               header_description: "查看和管理备份、恢复和上传内容"
         problem_checks:
+          title: "问题检查"
+          header_description: "查看所有已注册的问题检查及其当前状态。"
+          identifier: "检查"
+          target: "目标"
           priority: "优先级"
           status: "状态"
+          passing: "通过"
+          failing: "失败"
           last_run_at: "最后一次运行"
           ignore: "忽略"
+          watch: "已关注"
           more_options:
             title: "更多选项"
         reports:
@@ -5978,6 +6030,8 @@ zh_CN:
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
+          no_new_features_found: "Feed 中没有条目，或者您的所选筛选器没有返回结果。 您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上看到以前的新功能公告。"
+          no_new_features_error: "加载 Feed 时出错。您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上查看以前的新功能公告。"
           learn_more: "了解详情…"
         last_checked: "上次检查"
         refresh_problems: "刷新"
@@ -6979,6 +7033,7 @@ zh_CN:
             button: "更改源"
             title: "更改主题源"
             repository_url: "存储库 URL"
+            branch: "分支"
             updating: "更新主题源…"
             update: "更新源"
             has_existing_key: "此主题已配置 SSH 密钥。"
@@ -7276,6 +7331,7 @@ zh_CN:
         topic_id: "话题 ID"
         post_id: "帖子 ID"
         category_id: "类别 ID"
+        reviewable_id: "审核"
         delete: "删除"
         edit: "编辑"
         save: "保存"
@@ -8041,6 +8097,8 @@ zh_CN:
       site_settings:
         title: "网站设置"
         description: "配置您的 Discourse 网站的设置以自定义其外观、功能和用户体验。"
+        depends_on_notice:
+          other: "此设置仅在启用 %{dependencyLinks} 时生效。"
         discard:
           other: "舍弃更改"
         save:
@@ -8104,6 +8162,7 @@ zh_CN:
           groups: "群组"
           dashboard: "信息中心"
           navigation: "导航"
+          nested_replies: "嵌套回复"
           experimental: "实验性"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
@@ -8145,6 +8204,9 @@ zh_CN:
           clean_up_inactive_users_after_days:
             prompt: "将此值设置为 0 以外的任何值都会导致在该天数内不再活跃的用户被永久删除。确定要继续吗？"
             confirm: "是的，我明白除非我将此值设置为 0，否则不活跃用户将被永久删除。"
+          can_permanently_delete:
+            prompt: "启用此功能后，管理员可以永久删除帖子、主题和帖子修订版本。永久删除的数据无法恢复。这也可能影响数据完整性并导致现有链接失效。"
+            confirm: "我明白"
         job_status:
           completed: "更新完成"
           enqueued: "正在更新"

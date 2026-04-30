@@ -27,8 +27,6 @@ ur:
         cta: "اپنا پہلا لیڈر بورڈ بنائیں"
         none: "ابھی تک کوئی لیڈر بورڈ نہیں بنایا۔"
         confirm_destroy: "کیا آپ واقعی اس لیڈر بورڈ کو حذف کرنا چاہتے ہیں؟"
-        section:
-          groups: "گروپس"
         date:
           range: "سے / تک تاریخ کی حد"
           from: "تاریخ سے"
@@ -43,9 +41,6 @@ ur:
         default_period: "طے شدہ مدت"
         default_period_help: "اس لیڈر بورڈ کے لئے ظاہر کرنے کے لئے پہلے سے طے شدہ وقت کی مدت مقرر کریں۔"
         period_filter_disabled: "وقت کی مدت کے فلٹر کو غیر فعال کریں"
-        weight:
-          post_created: "دھاگہ بنایا گیا"
-          solution: "حل"
         period:
           all_time: "تمام اوقات"
           yearly: "سالانہ"

@@ -19,8 +19,6 @@ nl:
         react_with: "Reageer op dit bericht met: %{reaction}"
         cant_remove_reaction: "Je kunt je reactie niet meer verwijderen"
         remove_reaction: "Deze %{reaction} reactie verwijderen"
-      users_popup:
-        all: "Alles"
       main_reaction:
         add: "Dit bericht liken"
         remove: "Deze like verwijderen"

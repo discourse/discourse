@@ -21,13 +21,8 @@ hr:
         name: "Ime"
         name_placeholder: "Ime..."
         confirm_destroy: "Jeste li sigurni da želite izbrisati ovu ploču s najboljim rezultatima?"
-        section:
-          groups: "Grupe"
         date:
           range: "Od/do datumskog raspona"
-        weight:
-          post_created: "Objava je kreirana"
-          solution: "Riješenje"
         period:
           all_time: "Oduvijek"
           yearly: "Godišnje"

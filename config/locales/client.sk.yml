@@ -3461,23 +3461,11 @@ sk:
         archive_messages: "Presunúť do archívu"
         change_notification_level: "Zmena úrovne oznámení"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
-        selected_sole_category:
-          one: "Vybrali ste <b>%{count}</b> tému z kategórie:"
-          few: "Vybrali ste <b>%{count}</b> tém z kategórie:"
-          many: "Vybrali ste <b>%{count}</b> tém z kategórie:"
-          other: "Vybrali ste <b>%{count}</b> témy z kategórie:"
         selected_count:
           one: "%{count} vybrané"
           few: "%{count} vybrané"
           many: "%{count} vybrané"
           other: "%{count} vybrané"
-        choose_new_tags: "Vyberte si nové značky pre tieto témy:"
-        changed_tags: "Značky týchto tém boli zmenené."
-        confirm_remove_tags:
-          one: "Všetky značky budú z tejto témy odstránené. Ste si istí?"
-          few: "Všetky značky budú odstránené z %{count} tém. Ste si istý/á?"
-          many: "Všetky značky budú odstránené z %{count} tém. Ste si istý/á?"
-          other: "Všetky značky budú odstránené z %{count} tém. Ste si istý/á?"
         progress:
           one: "Pokrok: <strong>%{count}</strong> téma"
           few: "Pokrok: <strong>%{count}</strong> tém"
@@ -3523,10 +3511,6 @@ sk:
         name: "Zrušiť zoznam"
       relist_topics:
         name: "Opätovné zaradenie do zoznamu"
-      remove_tags:
-        name: "Odstrániť značky"
-      replace_tags:
-        name: "Nahradiť značky"
       delete_topics:
         name: "Odstrániť"
       update_category:
@@ -3558,6 +3542,7 @@ sk:
         other: "%{count} odpovedí"
       collapse: "Zbaliť"
       no_replies: "Zatiaľ žiadne odpovede."
+      ignored_post_placeholder: "[ignorovať]"
       pinned_reply: "Pripnutý"
     topic:
       filter_to:
@@ -4519,7 +4504,7 @@ sk:
           low: "Nízka"
           high: "Vysoká"
       sort_options:
-        default: "predvolené"
+        default: "Predvolené"
         likes: "Páči sa mi"
         views: "Zobrazenia"
         posts: "Príspevky"
@@ -7346,6 +7331,7 @@ sk:
         topic_id: "ID témy"
         post_id: "ID príspevku"
         category_id: "ID kategórie"
+        reviewable_id: "Recenzia"
         delete: "Odstrániť"
         edit: "Upraviť"
         save: "Uložiť"

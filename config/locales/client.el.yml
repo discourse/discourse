@@ -3399,21 +3399,9 @@ el:
         notification_level: "Ενημέρωση ειδοποιήσεων"
         change_notification_level: "Αλλαγή επιπέδου ειδοποίησης"
         choose_new_category: "Επιλέξτε τη νέα κατηγορία για τα θέματα:"
-        selected_sole_category:
-          one: "Έχεις επιλέξει <b>%{count}</b> θέμα από την κατηγορία:"
-          other: "Έχεις επιλέξει <b>%{count}</b> θέματα από την κατηγορία:"
         selected_count:
           one: "%{count} επιλεγμένα"
           other: "%{count} επιλεγμένα"
-        change_tags: "Αντικατάσταση ετικετών"
-        append_tags: "Προσθήκη ετικετών"
-        choose_new_tags: "Επιλέξτε νέες ετικέτες για αυτά τα θέματα:"
-        choose_append_tags: "Προσθήκη ετικετών"
-        changed_tags: "Οι ετικέτες αυτών των θεμάτων έχουν αλλάξει."
-        remove_tags: "Αφαίρεση ετικετών"
-        confirm_remove_tags:
-          one: "Όλες οι ετικέτες θα αφαιρεθούν από αυτό το θέμα. Είσαι σίγουρος;"
-          other: "Όλες οι ετικέτες θα αφαιρεθούν από %{count} θέματα. Είσαι σίγουρος;"
         confirm_update_topics:
           one: "Ενημέρωση %{count} θέματος"
           other: "Ενημέρωση %{count} θεμάτων"
@@ -3481,15 +3469,13 @@ el:
         name: "Μετακίνηση στο Αρχείο"
       move_messages_to_inbox:
         name: "Μετακίνηση στα Εισερχόμενα"
-      remove_tags:
-        name: "Αφαίρεση ετικετών"
-        description: "Αφαίρεση όλων των ετικετών από τα επιλεγμένα θέματα."
-      append_tags:
-        name: "Προσθήκη ετικετών"
-        description: "Προσθέστε τις ακόλουθες ετικέτες στα επιλεγμένα θέματα:"
-      replace_tags:
-        name: "Αντικατάσταση Ετικετών "
-        description: "Αντικαταστήστε όλες τις υπάρχουσες ετικέτες στα επιλεγμένα θέματα με τις ακόλουθες:"
+      manage_tags:
+        add:
+          title: "Προσθήκη ετικετών"
+        remove:
+          title: "Αφαίρεση ετικετών"
+        replace:
+          title: "Αντικατάσταση ετικετών"
       delete_topics:
         name: "Διαγραφή"
         description: "Διαγράψτε μόνιμα τα επιλεγμένα θέματα. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
@@ -4465,7 +4451,7 @@ el:
           high: "Υψηλή"
           very_high: "Πολύ υψηλή"
       sort_options:
-        default: "προεπιλογή"
+        default: "Προεπιλογή"
         likes: "Αρέσει"
         views: "Προβολές"
         posts: "Αναρτήσεις"
@@ -7108,6 +7094,7 @@ el:
         topic_id: "ID Θέματος"
         post_id: "ID Ανάρτησης"
         category_id: "ID Κατηγορίας"
+        reviewable_id: "Έλεγχος"
         delete: "Διαγραφή"
         edit: "Επεξεργασία"
         save: "Αποθήκευση"

@@ -32,8 +32,6 @@ hu:
         cta: "Első ranglista létrehozása"
         none: "Nincs még ranglista létrehozva."
         confirm_destroy: "Biztosan törli ezt a ranglistát?"
-        section:
-          groups: "Csoportok"
         date:
           range: "Dátumtartomány"
           from: "Ettől:"
@@ -48,9 +46,6 @@ hu:
         default_period: "Alapértelmezett időszak"
         default_period_help: "Állítsa be a ranglistán megjelenítendő alapértelmezett időtartamot."
         period_filter_disabled: "Az időszakszűrő letiltása"
-        weight:
-          post_created: "Bejegyzés létrehozva"
-          solution: "Megoldás"
         period:
           all_time: "Bármikor"
           yearly: "Éves"

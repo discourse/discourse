@@ -8,5 +8,3 @@ sq:
   js:
     topic_voting:
       vote_title: "Voto"
-      show_voters: "Shfaq votuesit"
-      vote_count_thousands: "%{count}k"

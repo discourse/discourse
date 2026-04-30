@@ -5,33 +5,20 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_topic_voting: "Discourse Konu Oylama"
   js:
     category:
       sort_options:
         votes: "Oylar"
     topic_voting:
-      category_type_ideas:
-        title: "Fikirler"
-        not_ideas_type: "Dikkat! Bu kategoride oylama özelliğini devre dışı bıraktınız. Bu özelliği tekrar etkinleştirmek için Ayarlar sekmesinden ilgili ayarlara ulaşabilirsiniz."
-        remove_ideas_type: "Fikir türünü kaldır"
-        confirm_remove_ideas_type: "Bu kategoriden oylama özelliğini kaldırmak istediğinizden emin misiniz? Mevcut oylar korunacak, ancak üyeler yeni oy kullanamayacak."
       notification_label:
         vote_released: "Oy iade edildi"
       title: "Konu oylaması"
       reached_limit: "Oy hakkınız kalmadı, mevcut bir oyunuzu kaldırın!"
       list_votes: "Oylarınızı listeleyin"
-      votes_nav_help: "Tüm zamanların en çok oy alan konuları"
-      hot_nav_help: "en son oylananlar da dahil olmak üzere en popüler konular"
       voted: "Bu konuyu oyladınız"
       allow_topic_voting: "Kullanıcıların bu kategorideki konularda oy kullanmasına izin verilsin mi?"
       vote_title: "Oy ver"
       vote_title_plural: "Oylar"
-      voting_closed_description: "Bu konudaki oylama sona ermiştir"
       see_votes: "%{count}/%{max} oy hakkınız kaldı"
       locked: "Kilitli"
       locked_description: "Oy vermek için güven düzeyinizi artırın"
@@ -42,17 +29,11 @@ tr_TR:
         one: "Oy ver"
         other: "Oylar"
       remove_vote: "Oyu kaldır"
-      watch_topic: "Yeni gönderiler hakkında beni bilgilendir"
-      no_votes_yet: "Henüz kimse buna oy vermedi"
-      and_more_voters: "ve %{count} tane daha..."
-      show_voters: "Oy verenleri göster"
-      vote_count_thousands: "%{count} bin"
       no_votes_title_self: "Henüz herhangi bir konu için oy kullanmadınız"
       no_votes_title_others: "%{username} henüz herhangi bir konu için oy kullanmadı"
     filters:
       votes:
         title: "Oylar"
-        help: "Tüm zamanların en çok oy alan konuları"
       my_votes:
         title: "Oylarım"
         help: "oy verdiğiniz konular"

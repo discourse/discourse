@@ -7,23 +7,6 @@
 tr_TR:
   site_settings:
     data_explorer_enabled: "Veri gezginiyi etkinleştir"
-    data_explorer_ai_queries_enabled: "Veri Gezgini'nde yapay zeka sorgu oluşturma özelliğini etkinleştir"
-  discourse_ai:
-    ai_bot:
-      agents:
-        ai_query_generator:
-          name: "Veri Gezgini Sorgu Oluşturucu"
-          description: "Doğal dilden Data Explorer için SQL sorguları oluşturur"
-      tool_help:
-        run_sql: "Bir SQL sorgusu çalıştırır ve sonuçları döndürür"
-      tool_summary:
-        run_sql: "SQL sorgusu çalıştırma"
-      tool_description:
-        run_sql: "SQL sorgusu çalıştırıldı"
-  discourse_data_explorer:
-    ai:
-      error_agent_not_configured: "Yapay Zeka ajanı yapılandırılmamış. Lütfen AI özellikleri ayarlarını kontrol edin."
-      error_no_sql_returned: "AI geçerli bir SQL sorgusu döndürmedi. Lütfen tekrar deneyin veya sorguyu manuel olarak yazın."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

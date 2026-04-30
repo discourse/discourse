@@ -217,9 +217,6 @@ uk:
               description: "Необов’язково, обмежувати лише повідомлення з цими функціями"
           created: Створено
           edited: Відредаговано
-          topics: Теми (всі категорії)
-          personal_messages: Тільки особисті повідомлення
-          public_topics: Теми (лише загальнодоступні категорії)
           with_images: Зображення
           with_links: Посилання
           with_code: Код
@@ -322,12 +319,6 @@ uk:
             tags:
               label: Теґи
               description: Список тегів для додавання до теми.
-            closed_automatically:
-              label: Автоматично закриті теми
-              description: Додайте теги до автоматично закритих тем.
-            closed_manually:
-              label: Теми, закриті вручну
-              description: Додайте теги до тем, закритих вручну.
         post:
           fields:
             creator:

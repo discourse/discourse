@@ -3348,6 +3348,7 @@ ar:
         categories_admin_dropdown:
           title: "إدارة الفئات"
         tag_category_admin_dropdown:
+          edit_category: "تعديل الفئة"
           edit_tag: "تعديل الوسم"
         bulk_select_topics_dropdown:
           title: "الإجراءات الجماعية"
@@ -4184,13 +4185,6 @@ ar:
         notification_level: "حدِّث الإشعارات"
         change_notification_level: "تغيير مستوى الإشعارات"
         choose_new_category: "اختر الفئة الجديدة للموضوعات:"
-        selected_sole_category:
-          zero: "لقد حدَّدت <b>%{count}</b> موضوع من الفئة:"
-          one: "لقد حدَّدت موضوعًا واحدًا (<b>%{count}</b>) من الفئة:"
-          two: "لقد حدَّدت موضوعَين (<b>%{count}</b>) من الفئة:"
-          few: "لقد حدَّدت <b>%{count}</b>موضوعات من الفئة:"
-          many: "لقد حدَّدت <b>%{count}</b>موضوعًا من الفئة:"
-          other: "لقد حدَّدت <b>%{count}</b> موضوع من الفئة:"
         selected_count:
           zero: "المحدَّدة: %{count}"
           one: "المحدَّدة: %{count}"
@@ -4198,19 +4192,6 @@ ar:
           few: "المحدَّدة: %{count}"
           many: "المحدَّدة: %{count}"
           other: "المحدَّدة: %{count}"
-        change_tags: "استبدل الوسوم"
-        append_tags: "إضافة وسوم"
-        choose_new_tags: "اختيار الوسوم الجديدة لهذه الموضوعات:"
-        choose_append_tags: "إضافة وسوم"
-        changed_tags: "تم تغيير وسومات هذه الموضوعات."
-        remove_tags: "أزِل الوسوم"
-        confirm_remove_tags:
-          zero: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوع. هل أنت متأكد؟"
-          one: "ستتم إزالة كل الوسوم من هذا الموضوع. هل أنت متأكد؟"
-          two: "ستتم إزالة كل الوسوم من موضوعَين (<b>%{count}</b>). هل أنت متأكد؟"
-          few: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوعات. هل أنت متأكد؟"
-          many: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوعًا. هل أنت متأكد؟"
-          other: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوع. هل أنت متأكد؟"
         confirm_update_topics:
           zero: "تحديث %{count} من الموضوعات"
           one: "تحديث موضوع واحد (%{count})"
@@ -4328,27 +4309,28 @@ ar:
         name: "تجاهل"
       close_topics:
         name: "إغلاق"
+        description: "تمنع الموضوعات المغلقة إضافة ردود جديدة. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>معرفة المزيد</a>"
         note: "أضف ملاحظة إلى هذه الموضوعات"
         optional: (اختياري)
       archive_topics:
         name: "الأرشيف"
+        description: "تُخفى الموضوعات المؤرشفة من نتائج البحث وقائمة أحدث الموضوعات. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>معرفة المزيد</a>"
       archive_messages:
         name: "النقل إلى الأرشيف"
       move_messages_to_inbox:
         name: "النقل إلى صندوق الوارد"
       unlist_topics:
         name: "إلغاء الإدراج"
+        description: "لا تظهر الموضوعات غير المُدرجة في قائمة الموضوعات، ولكن يمكن الوصول إليها عبر رابط مباشر. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>معرفة المزيد</a>"
       relist_topics:
         name: "إعادة الإدراج"
-      remove_tags:
-        name: "إزالة الوسوم"
-        description: "إزالة جميع الوسوم من الموضوعات المحددة."
-      append_tags:
-        name: "أضف وسوم"
-        description: "إضافة الوسوم التالية إلى الموضوعات المحددة:"
-      replace_tags:
-        name: "استبدال الوسوم"
-        description: "استبدل جميع الوسوم الحالية في الموضوعات المحددة بالوسوم التالية:"
+      manage_tags:
+        add:
+          title: "إضافة وسوم"
+        remove:
+          title: "أزِل الوسوم"
+        replace:
+          title: "استبدل الوسوم"
       delete_topics:
         name: "حذف"
         description: "احذف الموضوعات المحددة نهائيًا. لا يمكن التراجع عن هذا الإجراء."
@@ -4389,6 +4371,7 @@ ar:
       collapse: "طي"
       no_replies: "لا توجد ردود بعد."
       deleted_post_placeholder: "[تم الحذف]"
+      ignored_post_placeholder: "[التجاهل]"
       pinned_reply: "مثبَّت"
     topic:
       filter_to:
@@ -5560,7 +5543,7 @@ ar:
           high: "عالية"
           very_high: "مرتفعة جدًا"
       sort_options:
-        default: "افتراضية"
+        default: "افتراضي"
         likes: "تسجيلات الإعجاب"
         op_likes: "تسجيلات الإعجاب على المنشور الأصلي"
         views: "مرات العرض"
@@ -8753,6 +8736,7 @@ ar:
         topic_id: "معرِّف الموضوع"
         post_id: "معرِّف المنشور"
         category_id: "معرِّف الفئة"
+        reviewable_id: "المراجعة"
         delete: "حذف"
         edit: "تعديل"
         save: "حفظ"

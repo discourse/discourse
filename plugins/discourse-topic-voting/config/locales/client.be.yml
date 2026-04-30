@@ -22,7 +22,6 @@ be:
         many: "Галасоў"
         other: "Галасоў"
       remove_vote: "Выдалісь галасаванне"
-      vote_count_thousands: "%{count} тыс."
     filters:
       votes:
         title: "Галасоў"

@@ -213,6 +213,9 @@ ug:
         other_type: "%{username} شەخسىي سۆھبەتتە %{identifier} ئاتالدى"
       new_chat_message: '%{username}] «%{channel}» دا ئۇچۇر يوللىدى'
       new_direct_chat_message: "%{username} شەخسىي سۆھبەتتە ئۇچۇر يوللىدى"
+    actions:
+      chat_reply:
+        title: جاۋاب
   discourse_automation:
     scriptables:
       send_chat_message:

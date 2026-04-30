@@ -12,11 +12,6 @@ da:
         link_to_settings: "Indstillinger"
         refresh: "Genindlæs"
         name: "Navn"
-        section:
-          groups: "Grupper"
-        weight:
-          post_created: "Indlæg oprettet"
-          solution: "Løsning"
         period:
           all_time: "Alt"
           yearly: "Årligt"

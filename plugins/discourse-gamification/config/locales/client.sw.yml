@@ -12,10 +12,6 @@ sw:
         link_to_settings: "Mipangilio"
         refresh: "Rudisha Tena"
         name: "Jina"
-        section:
-          groups: "Makundi"
-        weight:
-          solution: "Jibu"
         period:
           all_time: "Wakati wote"
           yearly: "Kila Mwaka"

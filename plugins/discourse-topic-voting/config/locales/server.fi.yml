@@ -16,9 +16,6 @@ fi:
     topic_voting_show_votes_on_profile: 'Sallitaanko käyttäjien nähdä äänensä toimintasyötteessä?'
     topic_voting_alert_votes_left: 'Ilmoita käyttäjälle, kun näin monta ääntä on jäljellä'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Näytä äänestäneet"
     votes_moved:
       one: "Ääni siirrettiin."
       other: "%{count} ääntä siirrettiin."

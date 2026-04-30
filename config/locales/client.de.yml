@@ -3524,21 +3524,9 @@ de:
         notification_level: "Benachrichtigungsstufe aktualisieren"
         change_notification_level: "Benachrichtigungsstufe ändern"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
-        selected_sole_category:
-          one: "Du hast <b>%{count}</b> Thema aus der Kategorie ausgewählt:"
-          other: "Du hast <b>%{count}</b> Themen aus der Kategorie ausgewählt:"
         selected_count:
           one: "%{count} ausgewählt"
           other: "%{count} ausgewählt"
-        change_tags: "Schlagwörter ersetzen"
-        append_tags: "Schlagwörter hinzufügen"
-        choose_new_tags: "Neue Schlagwörter für diese Themen wählen:"
-        choose_append_tags: "Schlagwörter hinzufügen"
-        changed_tags: "Die Schlagwörter dieser Themen wurden geändert."
-        remove_tags: "Schlagwörter entfernen"
-        confirm_remove_tags:
-          one: "Alle Schlagwörter werden aus diesem Thema entfernt. Bist du sicher?"
-          other: "Alle Schlagwörter werden aus <b>%{count}</b> Themen entfernt. Bist du sicher?"
         confirm_unpin_topics:
           one: "%{count} Thema loslösen"
           other: "%{count} Themen loslösen"
@@ -3622,15 +3610,13 @@ de:
         description: "Nicht gelistete Themen sind in der Themenliste nicht sichtbar aber der Zugriff ist immer noch über einem direkten Link möglich. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Mehr erfahren</a>"
       relist_topics:
         name: "Wieder sichtbar machen"
-      remove_tags:
-        name: "Schlagwörter entfernen"
-        description: "Entferne alle Schlagwörter von den ausgewählten Themen."
-      append_tags:
-        name: "Schlagwörter hinzufügen"
-        description: "Füge die folgenden Schlagwörter zu den ausgewählten Themen hinzu:"
-      replace_tags:
-        name: "Schlagwörter ersetzen"
-        description: "Ersetze alle vorhandenen Schlagwörter der ausgewählten Themen durch die folgenden:"
+      manage_tags:
+        add:
+          title: "Schlagwörter hinzufügen"
+        remove:
+          title: "Schlagwörter entfernen"
+        replace:
+          title: "Schlagwörter ersetzen"
       delete_topics:
         name: "Löschen"
         description: "Lösche die ausgewählten Themen endgültig. Diese Aktion kann nicht rückgängig gemacht werden."
@@ -3668,6 +3654,7 @@ de:
       collapse: "Zuklappen"
       no_replies: "Noch keine Antworten."
       deleted_post_placeholder: "[gelöscht]"
+      ignored_post_placeholder: "[ignoriert]"
       pinned_reply: "Angeheftet"
     topic:
       filter_to:
@@ -7597,6 +7584,7 @@ de:
         topic_id: "Themen-ID"
         post_id: "Beitrags-ID"
         category_id: "Kategorie-ID"
+        reviewable_id: "Überprüfen"
         delete: "Löschen"
         edit: "Bearbeiten"
         save: "Speichern"

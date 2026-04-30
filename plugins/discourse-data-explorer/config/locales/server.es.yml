@@ -7,23 +7,6 @@
 es:
   site_settings:
     data_explorer_enabled: "Activar el explorador de datos"
-    data_explorer_ai_queries_enabled: "Activar la generación de consultas de IA en el explorador de datos"
-  discourse_ai:
-    ai_bot:
-      agents:
-        ai_query_generator:
-          name: "Generador de consultas del explorador de datos"
-          description: "Genera consultas SQL para el explorador de datos a partir de lenguaje natural"
-      tool_help:
-        run_sql: "Ejecuta una consulta SQL y devuelve resultados"
-      tool_summary:
-        run_sql: "Ejecutando consulta SQL"
-      tool_description:
-        run_sql: "Consulta SQL ejecutada"
-  discourse_data_explorer:
-    ai:
-      error_agent_not_configured: "El agente de IA no está configurado. Revisa los ajustes de las funciones de IA."
-      error_no_sql_returned: "La IA no devolvió una consulta SQL válida. Inténtalo de nuevo o escribe la consulta manualmente."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

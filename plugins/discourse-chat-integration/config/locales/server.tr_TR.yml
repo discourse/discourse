@@ -78,10 +78,6 @@ tr_TR:
       added_and_removed: "%{added} eklendi ve %{removed} kaldırıldı"
       added: "%{added} eklendi"
       removed: "%{removed} kaldırıldı"
-    errors:
-      provider_already_enabled: "'%{name}' sağlayıcısı zaten etkinleştirilmiş durumda"
-      provider_not_found: "'%{name}' sağlayıcısı bulunamadı"
-      setting_update_failed: "Ayarlar güncellenemedi: %{errors}"
     provider:
       slack:
         status:
