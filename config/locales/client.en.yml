@@ -291,6 +291,7 @@ en:
       last_item: "and"
 
     action_codes:
+      topic_created: "Created this topic %{when}"
       public_topic: "Made this topic public %{when}"
       open_topic: "Converted this to a topic %{when}"
       private_topic: "Made this topic a personal message %{when}"
@@ -3965,6 +3966,10 @@ en:
       topic_admin_menu:
         enable_nested_replies: "Enable nested replies"
         disable_nested_replies: "Disable nested replies"
+      activity_log:
+        link: "Activity log"
+        title: "Topic activity log"
+        empty: "No topic activity to show."
       context:
         banner: "You are viewing a single thread from this topic."
         view_full_topic: "View full topic"

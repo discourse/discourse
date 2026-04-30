@@ -16,6 +16,7 @@ module.exports = function (environment) {
       },
       EXTEND_PROTOTYPES: false,
       LOG_STACKTRACE_ON_DEPRECATION: false,
+      LOG_VERSION: false,
     },
 
     APP: {
@@ -36,8 +37,6 @@ module.exports = function (environment) {
     // Testem prefers this...
     ENV.locationType = "none";
 
-    // keep test console output quieter
-    ENV.EmberENV.LOG_VERSION = false;
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
