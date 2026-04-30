@@ -51,10 +51,11 @@ RSpec.describe DiscourseHcaptcha::HcaptchaProvider do
     before { SiteSetting.hcaptcha_secret_key = "test-secret-key" }
 
     it "returns the response from hCaptcha" do
-      stub_request(:post, "https://hcaptcha.com/siteverify").to_return(
-        status: 200,
-        body: '{"success":true}',
-      )
+      stub =
+        stub_request(:post, "https://hcaptcha.com/siteverify").to_return(
+          status: 200,
+          body: '{"success":true}',
+        )
 
       response = provider.send_captcha_verification(token)
 

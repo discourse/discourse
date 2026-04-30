@@ -50,13 +50,24 @@ RSpec.describe DiscourseHcaptcha::RecaptchaProvider do
   describe "#send_captcha_verification" do
     let(:token) { "test-recaptcha-token" }
 
-    before { SiteSetting.recaptcha_secret_key = "test-secret-key" }
+    before do
+      SiteSetting.enable_local_logins = true
+      SiteSetting.discourse_captcha_enabled = true
+      SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::RECAPTCHA
+
+      SiteSetting.recaptcha_site_key = "site-key"
+      SiteSetting.recaptcha_secret_key = "secret-key"
+    end
 
     it "returns the response from reCAPTCHA" do
-      stub_request(:post, "https://www.google.com/recaptcha/api/siteverify").to_return(
-        status: 200,
-        body: '{"success":true,"challenge_ts":"2024-01-01T00:00:00Z","hostname":"example.com"}',
-      )
+      stub =
+        stub_request(
+          :post,
+          DiscourseHcaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL,
+        ).to_return(
+          status: 200,
+          body: '{"success":true,"challenge_ts":"2024-01-01T00:00:00Z","hostname":"example.com"}',
+        )
 
       response = provider.send_captcha_verification(token)
 
