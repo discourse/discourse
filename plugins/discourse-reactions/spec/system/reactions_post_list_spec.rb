@@ -71,12 +71,41 @@ describe "Reactions | Post reaction user list" do
     expect(page).to have_no_css(".post-users-popup__username")
   end
 
+  it "opens the users popup pre-filtered when clicking a specific reaction emoji" do
+    sign_in(current_user)
+    visit(post.url)
+    expect(reactions_list).to have_reaction("heart")
+
+    reactions_list.click_reaction("clap")
+    expect(page).to have_css(".post-users-popup")
+
+    within(".post-users-popup") do
+      expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=clap].is-active")
+      expect(page).to have_no_css(".post-users-popup__filter[data-reaction-filter=heart].is-active")
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
+      expect(page).to have_no_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
+    end
+  end
+
+  it "opens the users popup with no filter when clicking the counter number" do
+    sign_in(current_user)
+    visit(post.url)
+    expect(reactions_list).to have_reaction("heart")
+
+    find(".discourse-reactions-counter .reactions-counter").click
+    expect(page).to have_css(".post-users-popup")
+
+    within(".post-users-popup") do
+      expect(page).to have_css(".post-users-popup__filter[data-reaction-filter=all].is-active")
+    end
+  end
+
   it "filters the users popup by reaction" do
     sign_in(current_user)
     visit(post.url)
     expect(reactions_list).to have_reaction("heart")
 
-    find(".discourse-reactions-counter").click
+    find(".discourse-reactions-counter .reactions-counter").click
     expect(page).to have_css(".post-users-popup")
 
     within(".post-users-popup") do

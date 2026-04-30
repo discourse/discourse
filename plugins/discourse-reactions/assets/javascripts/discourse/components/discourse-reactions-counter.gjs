@@ -96,7 +96,10 @@ export default class DiscourseReactionsCounter extends Component {
 
       event.stopPropagation();
       event.preventDefault();
-      this.#toggleMenu(event.currentTarget);
+      const reactionEl = event.target.closest(
+        ".discourse-reactions-list-emoji[data-reaction-id]"
+      );
+      this.#toggleMenu(event.currentTarget, reactionEl?.dataset.reactionId);
       return;
     }
 
@@ -222,7 +225,7 @@ export default class DiscourseReactionsCounter extends Component {
     );
   }
 
-  #toggleMenu(trigger) {
+  #toggleMenu(trigger, initialFilter = null) {
     const virtualElement = {
       getBoundingClientRect: () => trigger.getBoundingClientRect(),
     };
@@ -235,7 +238,7 @@ export default class DiscourseReactionsCounter extends Component {
       arrow: true,
       placement: "bottom",
       offset: 15,
-      data: { post: this.args.post },
+      data: { post: this.args.post, initialFilter },
     });
   }
 
