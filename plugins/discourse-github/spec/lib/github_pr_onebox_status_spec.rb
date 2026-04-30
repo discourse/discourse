@@ -235,8 +235,7 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
         stub_request(:get, reviews_api_uri).to_return(status: 200, body: "[]")
 
         expect(onebox.inline_data).to eq(
-          title:
-            "#{open_pr_response["title"]} · Pull Request #1253 · discourse/discourse",
+          title: "#{open_pr_response["title"]} · Pull Request #1253 · discourse/discourse",
           css_class: "--gh-status-open",
         )
       end
