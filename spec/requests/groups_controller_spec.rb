@@ -1121,6 +1121,26 @@ RSpec.describe GroupsController do
         expect(group.flair_bg_color).to eq("FFF")
       end
 
+      it "should not clear automatic_membership_email_domains when moderator owner updates group" do
+        SiteSetting.moderators_manage_groups = false
+        user.update!(moderator: true)
+        group.update!(automatic_membership_email_domains: "test.org")
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                bio_raw: "updated bio",
+                automatic_membership_email_domains: "",
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.automatic_membership_email_domains).to eq("test.org")
+        expect(group.bio_raw).to eq("updated bio")
+      end
+
       it "should not be allowed to update automatic groups" do
         group = Group.find(Group::AUTO_GROUPS[:admins])
 
