@@ -10,7 +10,6 @@ pt:
       alt:
         solved:
           accepted_notification: "aceite"
-          topic_solved_notification: "resolvido"
     solved:
       title: "Resolvido"
       allow_accepted_answers: "Permitir que o autor do tópico e a equipa marquem uma resposta como a solução"
@@ -31,7 +30,6 @@ pt:
       move_post_cancel: "Cancelar"
       confirm_solved_removal_confirm: "Confirmar"
       confirm_solved_removal_cancel: "Cancelar"
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
     topic_statuses:
       solved:
         help: "Este tópico tem uma solução"

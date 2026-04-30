@@ -35,7 +35,6 @@ ja:
       already_voted: "質問ごとに 1 回だけ投票できます。"
       user_over_limit: "信頼レベルの投票数を超えることはできません。"
       one_vote_per_post: "投稿ごとに 1 回だけ投票できます。"
-      toggle_voters: "投票者を表示する"
     last_answer_lowercase: 最後の回答
     answer_lowercase:
       other: 回答
@@ -53,8 +52,6 @@ ja:
           edit: "編集"
           cancel: "キャンセル"
           add: "コメントを追加する"
-          actions:
-            delete: "コメントを削除"
           show:
             other: さらに %{count} 件のコメントを表示
           delete:

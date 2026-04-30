@@ -15,7 +15,3 @@ sw:
     topic_voting_show_who_voted: 'Je unaruhusu watumiaji waone aliyepiga kura?'
     topic_voting_show_votes_on_profile: 'waruhusu watumiaji waone kura zao kwenye orodha ya shughuli zao kwenye mtandao'
     topic_voting_alert_votes_left: 'Mjulishe mtumiaji wakati kura kadhaa zikiondoka'
-  topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Onyesha waliopiga kura"

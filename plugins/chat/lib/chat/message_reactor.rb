@@ -13,6 +13,7 @@ module Chat
     end
 
     def react!(message_id:, react_action:, emoji:)
+      emoji = Emoji.unicode_replacements[emoji] || emoji
       @guardian.ensure_can_join_chat_channel!(@chat_channel)
       @guardian.ensure_can_react!
       validate_channel_status!

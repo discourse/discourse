@@ -36,8 +36,6 @@ zh_CN:
       topic_search_placeholder: "按标题或帖子内容搜索话题"
       sidebar_name_filter_placeholder: "名称/用户名"
       assigned: "已指定"
-      group_no_assignments_title: "没有任务"
-      group_no_assignments_body: "该群组目前没有活动任务。"
       group_everyone: "所有人"
       assigned_to: "已指定给"
       assigned_topic_to: "将话题指定给 <a href='%{path}'>%{username}</a>"

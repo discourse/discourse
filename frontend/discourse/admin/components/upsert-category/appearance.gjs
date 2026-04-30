@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -8,7 +8,6 @@ import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
-import ComboBox from "discourse/select-kit/components/combo-box";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -54,11 +53,6 @@ export default class UpsertCategoryAppearance extends Component {
   @action
   onUploadDeleted(field) {
     this.args.form.set(field, { id: null, url: null });
-  }
-
-  @action
-  onSortAscendingChange(value) {
-    this.args.form.set("sort_ascending", value);
   }
 
   get subcategoryListStyles() {
@@ -221,18 +215,18 @@ export default class UpsertCategoryAppearance extends Component {
         @name="default_view"
         @title={{i18n "category.default_view"}}
         @format="max"
-        @type="custom"
+        @type="select"
         as |field|
       >
-        <field.Control>
-          <ComboBox
-            @id="category-default-view"
-            @content={{this.availableViews}}
-            @value={{field.value}}
-            @valueProperty="value"
-            @onChange={{field.set}}
-            @options={{hash none="category.sort_options.default"}}
-          />
+        <field.Control
+          @nonePlaceholder={{i18n "category.sort_options.default"}}
+          as |select|
+        >
+          {{#each this.availableViews as |availableView|}}
+            <select.Option
+              @value={{availableView.value}}
+            >{{availableView.name}}</select.Option>
+          {{/each}}
         </field.Control>
       </@form.Field>
 
@@ -240,18 +234,18 @@ export default class UpsertCategoryAppearance extends Component {
         @name="default_top_period"
         @title={{i18n "category.default_top_period"}}
         @format="max"
-        @type="custom"
+        @type="select"
         as |field|
       >
-        <field.Control>
-          <ComboBox
-            @id="category-default-top-period"
-            @content={{this.topPeriods}}
-            @value={{field.value}}
-            @valueProperty="value"
-            @onChange={{field.set}}
-            @options={{hash none="category.sort_options.default"}}
-          />
+        <field.Control
+          @nonePlaceholder={{i18n "category.sort_options.default"}}
+          as |select|
+        >
+          {{#each this.topPeriods as |period|}}
+            <select.Option
+              @value={{period.value}}
+            >{{period.name}}</select.Option>
+          {{/each}}
         </field.Control>
       </@form.Field>
 
@@ -259,48 +253,56 @@ export default class UpsertCategoryAppearance extends Component {
         @name="sort_order"
         @title={{i18n "category.sort_order"}}
         @format="max"
-        @type="custom"
+        @type="select"
         as |field|
       >
-        <field.Control>
-          <ComboBox
-            @id="category-sort-order"
-            @content={{this.sortOrders}}
-            @value={{field.value}}
-            @valueProperty="value"
-            @onChange={{field.set}}
-            @options={{hash none="category.sort_options.default"}}
-          />
-
-          {{#unless this.isDefaultSortOrder}}
-            <ComboBox
-              @id="category-sort-ascending"
-              @content={{this.sortAscendingOptions}}
-              @value={{this.sortAscendingOption}}
-              @valueProperty="value"
-              @onChange={{this.onSortAscendingChange}}
-              @options={{hash none="category.sort_options.default"}}
-            />
-          {{/unless}}
+        <field.Control
+          @nonePlaceholder={{i18n "category.sort_options.default"}}
+          as |select|
+        >
+          {{#each this.sortOrders as |sort|}}
+            <select.Option @value={{sort.value}}>{{sort.name}}</select.Option>
+          {{/each}}
         </field.Control>
       </@form.Field>
+
+      {{#unless this.isDefaultSortOrder}}
+        <@form.Field
+          @name="sort_ascending"
+          @title={{i18n "category.sort_direction"}}
+          @format="max"
+          @type="select"
+          as |field|
+        >
+          <field.Control
+            @nonePlaceholder={{i18n "category.sort_options.default"}}
+            as |select|
+          >
+            {{#each this.sortAscendingOptions as |option|}}
+              <select.Option
+                @value={{option.value}}
+              >{{option.name}}</select.Option>
+            {{/each}}
+          </field.Control>
+        </@form.Field>
+      {{/unless}}
 
       <@form.Field
         @name="default_list_filter"
         @title={{i18n "category.default_list_filter"}}
         @format="max"
-        @type="custom"
+        @type="select"
         as |field|
       >
-        <field.Control>
-          <ComboBox
-            @id="category-default-list-filter"
-            @content={{this.listFilters}}
-            @value={{field.value}}
-            @valueProperty="value"
-            @onChange={{field.set}}
-            @options={{hash none="category.sort_options.default"}}
-          />
+        <field.Control
+          @nonePlaceholder={{i18n "category.sort_options.default"}}
+          as |select|
+        >
+          {{#each this.listFilters as |filter|}}
+            <select.Option
+              @value={{filter.value}}
+            >{{filter.name}}</select.Option>
+          {{/each}}
         </field.Control>
       </@form.Field>
 
@@ -320,17 +322,18 @@ export default class UpsertCategoryAppearance extends Component {
             @name="subcategory_list_style"
             @title={{i18n "category.subcategory_list_style"}}
             @format="max"
-            @type="custom"
+            @type="select"
             as |field|
           >
-            <field.Control>
-              <ComboBox
-                @id="subcategory-list-style"
-                @content={{this.subcategoryListStyles}}
-                @value={{field.value}}
-                @valueProperty="value"
-                @onChange={{field.set}}
-              />
+            <field.Control
+              @nonePlaceholder={{i18n "category.sort_options.default"}}
+              as |select|
+            >
+              {{#each this.subcategoryListStyles as |style|}}
+                <select.Option
+                  @value={{style.value}}
+                >{{style.name}}</select.Option>
+              {{/each}}
             </field.Control>
           </@form.Field>
         {{/if}}

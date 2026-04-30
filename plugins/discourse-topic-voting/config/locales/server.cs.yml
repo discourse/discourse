@@ -16,9 +16,6 @@ cs:
     topic_voting_show_votes_on_profile: 'Povolit uživatelům zobrazit jejich hlasování ve přehledu aktivit?'
     topic_voting_alert_votes_left: 'Upozornit uživatele, když mu zbývá tolik hlasů'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Zobrazit kdo hlasoval"
     votes_moved:
       one: "Hlas byl přesunut."
       few: "%{count} hlasy byly přesunuty."

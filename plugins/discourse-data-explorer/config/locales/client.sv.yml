@@ -6,10 +6,6 @@
 
 sv:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Datautforskaren"
     errors:
       explorer:
         no_semicolons: "Ta bort semikolon från sökningen."
@@ -23,9 +19,6 @@ sv:
       create: "Skapa"
       create_placeholder: "Sökningsnamn..."
       description_placeholder: "Ange en beskrivning här"
-      ai:
-        generate: "Generera"
-        optional: "valfritt"
       import:
         label: "Importera"
         unparseable_json: "JSON-fil kan inte tolkas."

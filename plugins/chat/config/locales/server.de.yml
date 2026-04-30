@@ -21,6 +21,7 @@ de:
     chat_duplicate_message_sensitivity: "Die Wahrscheinlichkeit, dass eine doppelte Nachricht desselben Absenders innerhalb eines kurzen Zeitraums blockiert wird. Dezimalzahl zwischen 0 und 1,0, wobei 1,0 die höchste Einstellung ist (Nachrichten werden häufiger in kürzerer Zeit blockiert). Auf `0` setzen, um doppelte Nachrichten zuzulassen."
     chat_minimum_message_length: "Mindestanzahl von Zeichen für eine Chat-Nachricht."
     chat_allow_uploads: "Uploads in öffentlichen Chat-Kanälen und Direktnachrichtenkanälen zulassen."
+    chat_show_copy_button_on_codeblocks: "Zeigt die Schaltfläche „Kopieren“ auf Codeblöcken in Chat-Nachrichten an."
     chat_archive_destination_topic_status: "Der Status, den das Zielthema haben soll, sobald eine Kanalarchivierung abgeschlossen ist. Dies gilt nur, wenn das Zielthema ein neues Thema ist und kein vorhandenes."
     direct_message_enabled_groups: "Benutzern in diesen Gruppen erlauben, persönliche Benutzer-zu-Benutzer-Chats zu erstellen. Hinweis: Teammitglieder können immer persönliche Chats erstellen und Benutzer können auf persönliche Chats antworten, die von Benutzern initiiert wurden, die die Berechtigung haben, sie zu erstellen."
     chat_message_flag_allowed_groups: "Benutzer in diesen Gruppen dürfen Chat-Nachrichten melden. Beachte, dass Administratoren und Moderatoren immer Chatnachrichten melden können."
@@ -232,6 +233,9 @@ de:
         other_type: "%{username} hat %{identifier} im persönlichen Chat erwähnt"
       new_chat_message: '%{username} hat eine Nachricht in „%{channel}“ gesendet'
       new_direct_chat_message: "%{username} hat eine Nachricht im persönlichen Chat gesendet"
+    actions:
+      chat_reply:
+        title: Antworten
   discourse_automation:
     scriptables:
       send_chat_message:

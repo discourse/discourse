@@ -340,9 +340,6 @@ ru:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} автоматически определил(-а) ваше присутствие и пригласил(-а) вас на мероприятие «%{eventName}»"
         an_event: "событие"
-      event_description:
-        show_more: "Развернуть"
-        show_less: "Свернуть"
       edit_reason: "Мероприятие обновлено"
       edit_reason_closed: "Мероприятие закрыто"
       edit_reason_opened: "Мероприятие открыто"

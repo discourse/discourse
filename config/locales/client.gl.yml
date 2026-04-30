@@ -2122,11 +2122,6 @@ gl:
         move_messages_to_inbox: "Mover á caixa de entrada"
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
-        choose_new_tags: "Seleccione novas etiquetas para estes temas:"
-        changed_tags: "As etiquetas deses temas cambiaron."
-        confirm_remove_tags:
-          one: "Retiraranse todas as etiquetas deste tema. Está seguro?"
-          other: "Retiraranse todas as etiquetas destes <b>%{count}</b> temas. Está seguro?"
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
@@ -2152,10 +2147,6 @@ gl:
         name: "Arquivo"
       move_messages_to_inbox:
         name: "Mover á caixa de entrada"
-      remove_tags:
-        name: "Retirar etiquetas"
-      replace_tags:
-        name: "Substituír etiquetas"
       delete_topics:
         name: "Eliminar"
       convert_to_private_message:
@@ -2174,6 +2165,7 @@ gl:
       collapse: "Pregar"
       no_replies: "Aínda sen respostas."
       deleted_post_placeholder: "[eliminado]"
+      ignored_post_placeholder: "[ignorado]"
       pinned_reply: "Fixado"
     topic:
       filter_to:
@@ -2855,7 +2847,7 @@ gl:
           low: "Baixa"
           high: "Alta"
       sort_options:
-        default: "predeterminado"
+        default: "Predeterminado"
         likes: "Gústames"
         views: "Vistas"
         posts: "Publicacións"
@@ -4334,6 +4326,7 @@ gl:
         topic_id: "ID do tema"
         post_id: "ID da publicación"
         category_id: "ID da categoría"
+        reviewable_id: "Revisar"
         delete: "Eliminar"
         edit: "Editar"
         save: "Gardar"

@@ -21,6 +21,7 @@ pl_PL:
     chat_duplicate_message_sensitivity: "Prawdopodobieństwo, że zduplikowana wiadomość od tego samego nadawcy zostanie zablokowana w krótkim czasie. Liczba dziesiętna z zakresu od 0 do 1,0, gdzie 1,0 jest najwyższym ustawieniem (blokuje wiadomości częściej w krótszym czasie). Ustaw na „0”, aby zezwolić na duplikaty wiadomości."
     chat_minimum_message_length: "Minimalna liczba znaków wiadomości na czacie."
     chat_allow_uploads: "Zezwalaj na przesyłanie plików w publicznych kanałach czatu i kanałach wiadomości bezpośrednich."
+    chat_show_copy_button_on_codeblocks: "Pokaż przycisk kopiowania w blokach kodu w wiadomościach czatu."
     chat_archive_destination_topic_status: "Status, jaki powinien mieć temat docelowy po zakończeniu archiwizacji kanału. Dotyczy to tylko sytuacji, gdy temat docelowy jest nowym tematem, a nie istniejącym."
     direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie prywatnych czatów między użytkownikami. Uwaga: personel zawsze może tworzyć prywatne czaty, a użytkownicy będą mogli odpowiadać na prywatne czaty inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
     chat_message_flag_allowed_groups: "Użytkownicy w tych grupach mogą oznaczać flagami wiadomości czatu. Należy pamiętać, że administratorzy i moderatorzy zawsze mogą oznaczać flagami wiadomości czatu."
@@ -258,6 +259,10 @@ pl_PL:
         other_type: "%{username} oznaczył %{identifier} na prywatnym czacie"
       new_chat_message: '%{username} wysłał(a) wiadomość w "%{channel}"'
       new_direct_chat_message: "%{username} wysłał(a) wiadomość na prywatnym czacie"
+    actions:
+      chat_reply:
+        title: Odpowiedz
+        placeholder: Odpowiedz…
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -289,31 +294,61 @@ pl_PL:
           few: "[%{site_name}] Nowe wiadomości"
           many: "[%{site_name}] Nowe wiadomości"
           other: "[%{site_name}] Nowe wiadomości"
+        private_email_improved:
+          one: "Nowa wiadomość"
+          few: "Nowe wiadomości"
+          many: "Nowe wiadomości"
+          other: "Nowe wiadomości"
         watched_thread:
           one: "[%{site_name}] Nowa wiadomość wątku w %{channel}"
           few: "[%{site_name}] Nowe wiadomość wątku w %{channel}"
           many: "[%{site_name}] Nowe wiadomość wątku w %{channel}"
           other: "[%{site_name}] Nowe wiadomość wątku w %{channel}"
+        watched_thread_improved:
+          one: "Nowa wiadomość wątku w %{channel}"
+          few: "Nowe wiadomości wątku w %{channel}"
+          many: "Nowe wiadomości wątku w %{channel}"
+          other: "Nowe wiadomości wątku w %{channel}"
         watched_threads:
           one: "[%{site_name}] Nowe wiadomości wątku na %{channel} i %{count} innym kanale"
           few: "[%{site_name}] Nowe wiadomości wątku na %{channel} i %{count} innych kanałach"
           many: "[%{site_name}] Nowe wiadomości wątku na %{channel} i %{count} innych kanałach"
           other: "[%{site_name}] Nowe wiadomości wątku na %{channel} i %{count} innych kanałach"
+        watched_threads_improved:
+          one: "Nowe wiadomości wątku w %{channel} i %{count} innym kanale"
+          few: "Nowe wiadomości wątku w %{channel} i %{count} innych kanałach"
+          many: "Nowe wiadomości wątku w %{channel} i %{count} innych kanałach"
+          other: "Nowe wiadomości wątku w %{channel} i %{count} innych kanałach"
         chat_dm_1:
           one: "[%{site_name}] Nowa wiadomość od %{name}"
           few: "[%{site_name}] Nowe wiadomości od %{name}"
           many: "[%{site_name}] Nowe wiadomości od %{name}"
           other: "[%{site_name}] Nowe wiadomości od %{name}"
+        chat_dm_1_improved:
+          one: "Nowa wiadomość od %{name}"
+          few: "Nowe wiadomości od %{name}"
+          many: "Nowe wiadomości od %{name}"
+          other: "Nowe wiadomości od %{name}"
         chat_dm_2: "[%{site_name}] Nowe wiadomości od %{name_1} i %{name_2}"
+        chat_dm_2_improved: "Nowe wiadomości od %{name_1} i %{name_2}"
         chat_dm_3_or_more: "[%{site_name}] Nowe wiadomości z %{name} i %{count} innych kanałów wiadomości bezpośrednich"
+        chat_dm_3_or_more_improved: "Nowe wiadomości z %{name} i %{count} innych kanałów wiadomości bezpośrednich"
         chat_channel_1:
           one: "[%{site_name}] Nowa wiadomość w %{channel}"
           few: "[%{site_name}] Nowe wiadomości w %{channel}"
           many: "[%{site_name}] Nowe wiadomości w %{channel}"
           other: "[%{site_name}] Nowe wiadomości w %{channel}"
+        chat_channel_1_improved:
+          one: "Nowa wiadomość w %{channel}"
+          few: "Nowe wiadomości w %{channel}"
+          many: "Nowe wiadomości w %{channel}"
+          other: "Nowe wiadomości w %{channel}"
         chat_channel_2: "[%{site_name}] Nowe wiadomości w %{channel_1} i %{channel_2}"
+        chat_channel_2_improved: "Nowe wiadomości w %{channel_1} i %{channel_2}"
         chat_channel_3_or_more: "[%{site_name}] Nowe wiadomości na %{channel} i %{count} innych kanałach"
+        chat_channel_3_or_more_improved: "Nowe wiadomości w %{channel} i %{count} innych kanałach"
         chat_channel_and_dm: "[%{site_name}] Nowe wiadomości w %{channel} i od %{name}"
+        chat_channel_and_dm_improved: "Nowe wiadomości w %{channel} i z %{name}"
       unsubscribe: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}, lub %{unsubscribe_link}, aby zrezygnować z subskrypcji."
       unsubscribe_no_link: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}."
       view_messages:

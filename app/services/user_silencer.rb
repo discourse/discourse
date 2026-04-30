@@ -37,7 +37,7 @@ class UserSilencer
       context = "#{message_type}: #{@opts[:reason]}"
 
       if @by_user
-        log_params = { context: context, details: details }
+        log_params = { context: context, details: details, reviewable_id: @opts[:reviewable_id] }
         log_params[:post_id] = @opts[:post_id].to_i if @opts[:post_id]
 
         @user_history = StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
@@ -97,7 +97,12 @@ class UserSilencer
     if @user.save
       DiscourseEvent.trigger(:user_unsilenced, user: @user, by_user: @by_user)
       SystemMessage.create(@user, :unsilenced)
-      StaffActionLogger.new(@by_user).log_unsilence_user(@user) if @by_user
+      if @by_user
+        StaffActionLogger.new(@by_user).log_unsilence_user(
+          @user,
+          reviewable_id: @opts[:reviewable_id],
+        )
+      end
     end
   end
 

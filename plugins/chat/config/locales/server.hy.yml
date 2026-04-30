@@ -34,6 +34,9 @@ hy:
     popup:
       chat_mention:
         direct: '%{username} -ը նշել է Ձեզ այստեղ՝ "%{channel}"'
+    actions:
+      chat_reply:
+        title: Պատասխանել
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

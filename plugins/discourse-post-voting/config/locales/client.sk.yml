@@ -24,8 +24,6 @@ sk:
     composer:
       create_post_voting:
         label: "Vytvoriť tému hlasovania o príspevku"
-    vote:
-      toggle_voters: "Ukázať kto hlasoval"
     post_voting:
       post:
         post_voting_comment:

@@ -24,12 +24,19 @@ module ::DiscourseTopicVoting
   PLUGIN_NAME = "discourse-topic-voting"
   ENABLE_TOPIC_VOTING_SETTING = "enable_topic_voting"
   VOTER_PREVIEW_LIMIT = 104
+  BADGE_NAMES = %w[Daydreamer Brainstormer Innovator Visionary].freeze
 end
 
+require_relative "lib/discourse_topic_voting/badge_queries"
 require_relative "lib/discourse_topic_voting/engine"
 require_relative "lib/discourse_topic_voting/topic_votes_filter"
 
 after_initialize do
+  SeedFu.fixture_paths << Rails
+    .root
+    .join("plugins", "discourse-topic-voting", "db", "fixtures")
+    .to_s
+
   reloadable_patch do
     register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)
     CategoriesController.prepend(DiscourseTopicVoting::CategoriesControllerExtension)
@@ -112,6 +119,11 @@ after_initialize do
     posts.reorder(
       "COALESCE((SELECT dvtvc.votes_count FROM topic_voting_topic_vote_count dvtvc WHERE dvtvc.topic_id = topics.id), 0) DESC",
     )
+  end
+
+  register_modifier(:badge_granter_suppress_notification) do |suppress, badge, granted_at, _|
+    next true if DiscourseTopicVoting::BADGE_NAMES.include?(badge.name) && granted_at < 2.weeks.ago
+    suppress
   end
 
   register_modifier(:topics_filter_options) do |results, _guardian|

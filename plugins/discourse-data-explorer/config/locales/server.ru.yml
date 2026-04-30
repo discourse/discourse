@@ -7,23 +7,6 @@
 ru:
   site_settings:
     data_explorer_enabled: "Включить обозреватель данных"
-    data_explorer_ai_queries_enabled: "Включите генерацию запросов с использованием ИИ в обозревателе данных."
-  discourse_ai:
-    ai_bot:
-      agents:
-        ai_query_generator:
-          name: "Генератор запросов Data Explorer"
-          description: "Генерирует SQL-запросы для Data Explorer на основе естественного языка."
-      tool_help:
-        run_sql: "Выполняет SQL-запрос и возвращает результаты."
-      tool_summary:
-        run_sql: "Выполнение SQL-запроса"
-      tool_description:
-        run_sql: "Выполнен SQL-запрос"
-  discourse_data_explorer:
-    ai:
-      error_agent_not_configured: "Агент ИИ не настроен. Пожалуйста, проверьте настройки функций ИИ."
-      error_no_sql_returned: "Искусственный интеллект не вернул корректный SQL-запрос. Пожалуйста, попробуйте еще раз или напишите запрос вручную."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

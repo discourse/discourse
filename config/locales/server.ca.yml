@@ -1871,7 +1871,6 @@ ca:
       text_body_template: "Ho sentim, però el vostre missatge de correu a %{destination} (titulat %{former_title}) no ha funcionat. \n\nLa vostra resposta s'ha enviat des d'una adreça de correu blocada. Proveu d'enviar-la des d'una altra adreça o bé [contacteu amb un membre de l'equip responsable](%{base_url}/about).\n"
     email_reject_not_allowed_email:
       title: "Correu rebutjat: correu no permès"
-      subject_template: "[%{email_prefix}] Problema de correu electrònic: correu electrònic bloquejat"
       text_body_template: "Ho sentim, però el vostre missatge de correu a %{destination} (titulat %{former_title}) no ha funcionat. \n\nLa vostra resposta s'ha enviat des d'una adreça de correu blocada. Proveu d'enviar-la des d'una altra adreça o bé [contacteu amb un membre de l'equip responsable](%{base_url}/about).\n"
     email_reject_inactive_user:
       title: "Correu rebutjat: usuari inactiu"
@@ -2043,7 +2042,6 @@ ca:
       text_body_template: "S'ha inhabilitat el paràmetre `download_remote_images_to_local` perquè s'ha arribat al límit d'espai de disc en `download_remote_images_threshold`."
     new_user_of_the_month:
       title: "Sou el nou usuari del mes!"
-      subject_template: "Sou un nou usuari del mes!"
       text_body_template: |
         Enhorabona, heu guanyat el premi **Nou usuari del mes en %{month_year}**. :trophy:
 
@@ -2306,6 +2304,7 @@ ca:
     account_exists:
       title: "El compte ja existeix"
       subject_template: "[%{email_prefix}] El compte ja existeix"
+      subject_template_improved: "El compte ja existeix"
       text_body_template: "Fa poc heu intentat crear un compte en %{site_name}, o heu intentat canviar el correu d'un compte a %{email}. Tanmateix, ja existeix un compte per a %{email}. \n\nSi heu oblidat la contrasenya, [restabliu-la ara](%{base_url}/password-reset). \n\nSi no heu intentat crear un compte per a %{email} o canviar la vostra adreça de correu, no us preocupeu: podeu ignorar aquest missatge de manera segura. \n\nSi teniu alguna pregunta, [poseu-vos en contacte amb l'equip responsable] (%{base_url}/about).\n"
     digest:
       since_last_visit: "Des de la vostra darrera visita"
@@ -2318,6 +2317,7 @@ ca:
       popular_posts: "Publicacions populars"
       more_new: "Nou per a vós"
       subject_template: "[%{email_prefix}] Resum"
+      subject_template_improved: "Resum"
       unsubscribe: "Aquest resum és enviat des de %{site_link} quan no us hem vist en molt de temps. Canvieu %{email_preferences_link} o %{unsubscribe_link} per a cancel·lar la subscripció."
       your_email_settings: "la vostra configuració de correu"
       click_here: "feu clic aquí"
@@ -2330,17 +2330,17 @@ ca:
       title: "Inicia la sessió mitjançant enllaç"
       preview: "Inicia la sessió mitjançant enllaç."
       subject_template: "[%{email_prefix}] Inicia sessió mitjançant enllaç"
+      subject_template_improved: "Inicia la sessió mitjançant enllaç"
       text_body_template: "L'enllaç per a iniciar sessió en [%{site_name}](%{base_url}). \n\nSi no heu sol·licitat aquest enllaç, podeu ignorar el correu de manera segura. \n\nFeu clic en l'enllaç següent per a iniciar sessió: \n%{base_url}/session/email-login/%{email_token}\n"
     set_password:
       title: "Estableix la contrasenya"
-      subject_template: "[%{email_prefix}] Establiu la contrasenya"
       text_body_template: "Algú ha demanat afegir una contrasenya al vostre compte en [%{site_name}](%{base_url}). Com a alternativa, podeu iniciar la sessió amb qualsevol servei en línia compatible (Google, Facebook, etc.) associat a aquesta adreça de correu validada. \n\nSi no heu fet aquesta sol·licitud, podeu ignorar aquest correu electrònic de manera segura.\n\nFeu clic en l'enllaç següent per a triar una contrasenya: \n%{base_url}/u/password-reset/%{email_token}\n"
     admin_login:
       title: "Inicia sessió d'administració"
       subject_template: "[%{email_prefix}] Inici de sessió"
+      subject_template_improved: "Inicia la sessió"
     account_created:
       title: "Compte creat"
-      subject_template: "[%{email_prefix}] El vostre compte nou"
       text_body_template: |
         Us hem creat un compte nou en %{site_name}.
 
@@ -2376,7 +2376,6 @@ ca:
       text_body_template: "Benvingut a %{site_name}! \n\nAixò és un recordatori amigable per a activar el vostre compte.\n\nFeu clic en l'enllaç següent per a confirmar i activar el vostre compte nou: \n%{base_url}/u/activate-account/%{email_token} \n\nSi no es pot fer clic en l'enllaç anterior, proveu de copiar-lo i enganxar-lo en la barra d'adreça del vostre navegador web.\n"
     suspicious_login:
       title: "Notificació d'inici de sessió nou"
-      subject_template: "[%{site_name}] Inici de sessió nou des de %{location}"
     post_approved:
       title: "La vostra publicació ha estat aprovada"
   page_not_found:

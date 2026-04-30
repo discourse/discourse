@@ -217,9 +217,6 @@ pl_PL:
               description: "Opcjonalnie, ogranicz wyzwalanie tylko do postów z tymi funkcjami"
           created: Utworzono
           edited: Edytowany
-          topics: Tematy (wszystkie kategorie)
-          personal_messages: Tylko prywatne wiadomości
-          public_topics: Tematy (tylko kategorie publiczne)
           with_images: Obrazy
           with_links: Linki
           with_code: Kod
@@ -322,12 +319,6 @@ pl_PL:
             tags:
               label: Tagi
               description: Lista tagów do dodania do tematu.
-            closed_automatically:
-              label: Automatycznie zamknięte tematy
-              description: Dodawaj tagi do automatycznie zamykanych tematów.
-            closed_manually:
-              label: Ręcznie zamknięte tematy
-              description: Dodawaj tagi do ręcznie zamkniętych tematów.
         post:
           fields:
             creator:

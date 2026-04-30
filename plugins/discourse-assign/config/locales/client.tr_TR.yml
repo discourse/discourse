@@ -36,8 +36,6 @@ tr_TR:
       topic_search_placeholder: "Konuları başlığa veya gönderi içeriğine göre arayın"
       sidebar_name_filter_placeholder: "Ad/Kullanıcı Adı"
       assigned: "Atandı"
-      group_no_assignments_title: "Atama yok"
-      group_no_assignments_body: "Şu anda bu grup için aktif bir görev bulunmamaktadır."
       group_everyone: "Herkes"
       assigned_to: "Şuraya atandı:"
       assigned_topic_to: "Konu <a href='%{path}'>%{username}</a> adlı kullanıcıya atandı"

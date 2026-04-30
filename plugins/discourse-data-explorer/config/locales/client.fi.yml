@@ -6,10 +6,6 @@
 
 fi:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Dataselain"
     errors:
       explorer:
         no_semicolons: "Poista puolipisteet kyselystä."
@@ -23,9 +19,6 @@ fi:
       create: "Luo"
       create_placeholder: "Kyselyn nimi..."
       description_placeholder: "Kirjoita kuvaus tähän"
-      ai:
-        generate: "Luo"
-        optional: "valinnainen"
       import:
         label: "Tuo"
         unparseable_json: "JSON-tiedosto ei ole jäsennettävissä."

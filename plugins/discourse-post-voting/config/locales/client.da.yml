@@ -8,8 +8,6 @@ da:
   js:
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
-    vote:
-      toggle_voters: "Vis hvem der stemte"
     post_voting:
       post:
         post_voting_comment:

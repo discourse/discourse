@@ -12,8 +12,6 @@ gl:
         link_to_settings: "Configuración"
         refresh: "Actualizar"
         name: "Nome"
-        section:
-          groups: "Grupos"
         period:
           all_time: "Desde o principio"
           yearly: "Anual"

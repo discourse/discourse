@@ -947,10 +947,8 @@ ar:
       quota_required: "يجب عليك تحديد الحد الأقصى للرموز أو الاستخدامات لهذا النموذج"
       no_query_specified: معلمة الاستعلام مطلوبة، يُرجى تحديدها.
       no_user_for_agent: الوكيل المحدد غير مرتبط بأي مستخدم.
-      agent_not_found: "الوكيل المحدد غير موجود. يرجى التحقق من agent_name أو agent_id (المعلمان القديمة: agent_name أو agent_id)."
       no_user_specified: اسم المستخدم أو معلمة user_unique_id مطلوبة، يُرجى تحديدها.
       user_not_found: المستخدم المحدَّد غير موجود. تحقَّق من معلمة username.
-      agent_disabled: "الوكيل المحدد معطّل. يرجى التحقق من agent_name أو agent_id (المعلمان القديمة: agent_name أو agent_id)."
       no_default_llm: يجب تحديد نموذج لغوي افتراضي للوكيل (default_llm).
       user_not_allowed: غير مسموح للمستخدم بالمشاركة في الموضوع.
       invalid_stream_resume_token: رمز resume_token غير صالح أو انتهت صلاحيته.

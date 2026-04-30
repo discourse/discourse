@@ -22,7 +22,6 @@ zh_CN:
     remind_assigns_frequency: "就已指定的话题提醒用户的频率。"
     pending_assign_reminder_threshold: "触发提醒通知的待处理指定数量。"
     max_assigned_topics: "可以指定给用户的最大话题数。"
-    assign_allowed_on_groups: "这些群组中的用户可以分配话题。"
     enable_assign_status: "向每个指定添加可自定义的状态字段。"
     assign_statuses: "每个指定可用的状态列表。第一个状态是应用于每个新指定的默认状态。"
     ignore_solved_topics_in_assigned_reminder: "防止指定的提醒中包含已解决的话题。仅在使用 discourse-assign 插件时相关。"

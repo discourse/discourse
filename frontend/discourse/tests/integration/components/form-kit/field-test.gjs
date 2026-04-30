@@ -250,6 +250,39 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.dom(".form-kit__container-title").doesNotExist();
   });
 
+  test("@showOptional", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            as |field|
+          ><field.Control /></form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__container-optional").exists();
+
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            @showOptional={{false}}
+            as |field|
+          ><field.Control /></form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__container-optional").doesNotExist();
+  });
+
   test("@format", async function (assert) {
     await render(
       <template>

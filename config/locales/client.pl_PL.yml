@@ -397,6 +397,7 @@ pl_PL:
     broken_transformer_alert: "Wystąpił błąd. Twoja witryna może nie działać prawidłowo."
     broken_block_alert: "Wykryto błąd konfiguracji bloku. Szczegóły znajdziesz w konsoli przeglądarki."
     broken_block_factory_alert: "Nie udało się załadować bloku. Niektóre elementy interfejsu użytkownika mogą nie wyświetlać się poprawnie."
+    on_before_category_types_change_error: "Wystąpił błąd podczas zmiany typów kategorii. Więcej informacji znajdziesz w konsoli przeglądarki."
     critical_deprecation:
       notice: "<b>[Uwaga administratora]</b> %{source} zawiera kod, który wymaga aktualizacji. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>dowiedz się więcej</em></a>)"
@@ -3190,6 +3191,15 @@ pl_PL:
         no_translation_yet: "Zacznij pisać, aby zobaczyć podgląd tłumaczenia..."
         placeholder: "Tutaj wprowadź tłumaczenie wpisu..."
         show_raw_markdown: "Pokaż surowe"
+      change_reply_to:
+        title: "Zmień cel odpowiedzi"
+        hint: "Przewiń oś czasu, aby znaleźć wpis, na który chcesz odpowiedzieć."
+        current_selection: "Wybrano: wpis nr %{post_number} autorstwa @%{username}"
+        invalid_target: "Wybierz wpis wcześniejszy niż ten, który edytujesz."
+        submit: "Ustaw cel odpowiedzi"
+        open: "Zmień wpis, na który odpowiada"
+        open_from_menu: "Odpowiedz na inny wpis"
+        remove: "Usuń cel odpowiedzi"
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
         few: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
@@ -3890,27 +3900,12 @@ pl_PL:
         notification_level: "Aktualizuj powiadomienia"
         change_notification_level: "Zmień poziom powiadomień"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
-        selected_sole_category:
-          one: "Wybrano <b>%{count}</b> temat z kategorii:"
-          few: "Wybrano <b>%{count}</b> tematy z kategorii:"
-          many: "Wybrano <b>%{count}</b> tematów z kategorii:"
-          other: "Wybrano <b>%{count}</b> tematów z kategorii:"
         selected_count:
           one: "%{count} wybrano"
           few: "%{count} wybrano"
           many: "%{count} wybrano"
           other: "%{count} wybrano"
-        change_tags: "Zmień tagi"
-        append_tags: "Dodaj tagi"
-        choose_new_tags: "Wybierz nowe tagi dla tych tematów:"
-        choose_append_tags: "Dodaj tagi"
-        changed_tags: "Tagi tych tematów były zmieniane."
-        remove_tags: "Usuń tagi"
-        confirm_remove_tags:
-          one: "Wszystkie tagi zostaną usunięte z tego tematu. Jesteś pewny?"
-          few: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
-          many: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
-          other: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
+        manage_tags: "Zarządzaj tagami"
         confirm_unpin_topics:
           one: "Odepnij %{count} temat"
           few: "Odepnij %{count} tematy"
@@ -3921,6 +3916,11 @@ pl_PL:
           few: "Zaktualizuj %{count} tematy"
           many: "Zaktualizuj %{count} tematów"
           other: "Zaktualizuj %{count} tematów"
+        confirm_apply_to_topics:
+          one: "Zastosuj do %{count} tematu"
+          few: "Zastosuj do %{count} tematów"
+          many: "Zastosuj do %{count} tematów"
+          other: "Zastosuj do %{count} tematów"
         confirm_close_topics:
           one: "Zamknij %{count} temat"
           few: "Zamknij %{count} tematy"
@@ -4022,15 +4022,25 @@ pl_PL:
         description: "Tematy niewymienione na liście są ukryte, ale nadal można uzyskać do nich dostęp za pomocą bezpośredniego linku. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Dowiedz się więcej</a>"
       relist_topics:
         name: "Dodaj do listy"
-      remove_tags:
-        name: "Usuń tagi"
-        description: "Usuń wszystkie tagi z wybranych tematów."
-      append_tags:
-        name: "Dodaj tagi"
-        description: "Dodaj następujące tagi do wybranych tematów:"
-      replace_tags:
-        name: "Zmień tagi"
-        description: "Zastąp wszystkie istniejące tagi w wybranych tematach następującymi:"
+      manage_tags:
+        name: "Zarządzaj tagami"
+        add:
+          title: "Dodaj tagi"
+          description: "Dodano do wszystkich wybranych tematów"
+        remove:
+          title: "Usuń tagi"
+          description: "Usunięte, jeśli są obecne"
+          all_toggle: "Usuń wszystkie tagi"
+          all_warning: "<strong>Wszystkie istniejące tagi</strong> zostaną usunięte z wybranych tematów. Tej operacji nie można cofnąć."
+        replace:
+          title: "Zmień tagi"
+          description: "Zamienia jeden tag na inny"
+          add_replacement: "Dodaj zamiennik"
+          remove_replacement: "Usuń zamiennik"
+          from_placeholder: "Tag do zastąpienia"
+          to_placeholder: "Tag zastępczy"
+          missing_from: "Wymagany jest tag źródłowy"
+          missing_to: "Wymagany jest tag zastępczy"
       delete_topics:
         name: "Usuń"
         description: "Trwale usuń wybrane tematy. Tej czynności nie można cofnąć."
@@ -4089,6 +4099,8 @@ pl_PL:
         default_nested_view: "Użyj widoku zagnieżdżonego jako domyślnego dla tematów w tej kategorii"
       no_replies: "Nie ma jeszcze odpowiedzi."
       deleted_post_placeholder: "[usunięty]"
+      ignored_post_placeholder: "[zignorowano]"
+      toggle_ignored_content: "Pokaż zignorowaną treść"
       op_badge: "OP"
       pinned_reply: "Przypięty"
       pin_reply: "Przypnij na górę"
@@ -4914,6 +4926,8 @@ pl_PL:
         locale:
           no_locale_set: "Nie ustawiono języka"
           locale_removed: "Język usunięty"
+        reply_to:
+          none: "Brak celu odpowiedzi"
         controls:
           first: "Pierwsza wersja"
           previous: "Poprzednia wersja"
@@ -5089,6 +5103,8 @@ pl_PL:
       color_used: "Kolor w użyciu"
       predefined_colors: "Predefiniowane opcje kolorów"
       name_placeholder: "Zalecane jedno lub dwa słowa"
+      category_types: "Typy kategorii"
+      category_types_no_results: "Nie znaleziono innych typów kategorii"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
       delete_error: "Podczas próby usunięcia tej kategorii wystąpił błąd."
@@ -5204,7 +5220,7 @@ pl_PL:
           high: "Wysoki"
           very_high: "Bardzo wysoki"
       sort_options:
-        default: "domyślny"
+        default: "Domyślny"
         likes: "Polubienia"
         op_likes: "Polubienia pierwszego wpisu"
         views: "Odsłony"
@@ -5215,6 +5231,7 @@ pl_PL:
         created: "Utworzony"
       sort_ascending: "Rosnąco"
       sort_descending: "Malejąco"
+      sort_direction: "Kierunek sortowania"
       subcategory_list_styles:
         rows: "Rzędy"
         rows_with_featured_topics: "Rzędy z wybranymi tematami"
@@ -8283,6 +8300,7 @@ pl_PL:
         topic_id: "ID tematu"
         post_id: "ID wpisu"
         category_id: "ID kategorii"
+        reviewable_id: "Przejrzyj"
         delete: "Usuń"
         edit: "Edytuj"
         save: "Zapisz"

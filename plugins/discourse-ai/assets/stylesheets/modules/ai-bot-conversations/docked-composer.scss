@@ -1,0 +1,56 @@
+@use "lib/viewport";
+
+body.has-ai-bot-docked-composer {
+  // hide the floating composer on bot PMs — the docked composer has
+  // replaced it. Scoped to the body class, which is only present while
+  // the DockedComposer component is rendered (cleared on unmount), so
+  // navigating to a non-bot-PM topic restores the popup composer.
+  #reply-control {
+    display: none !important;
+  }
+
+  // hide reply-related affordances now that the docked composer covers them
+  .topic-footer-main-buttons .create,
+  .timeline-footer-controls .reply-to-post,
+  .topic-post nav.post-controls button.reply {
+    display: none;
+  }
+
+  // Belt-and-braces for the value-transformer in ai-bot-replies.js that
+  // suppresses the MoreTopics tabs on bot PMs — in case a connector or
+  // theme injects its own `.more-topics__container` we don't want the
+  // tabs reading as a partial topic footer.
+  .more-topics__container {
+    display: none;
+  }
+}
+
+// AI-bot variant of the docked composer: align with the PM post body's
+// visible bordered box.
+// - max-width matches the full topic-post row width (avatar + body + padding)
+// - content offset is topic-avatar-width minus the --pm-padding negative
+//   margin that personal-message.scss applies to `.regular.contents`,
+//   which pulls the bordered body 1.25em to the left.
+.docked-composer.ai-bot-docked-composer {
+  --docked-composer-max-width: calc(
+    var(--topic-avatar-width) + var(--topic-body-width) +
+      (var(--topic-body-width-padding) * 2)
+  );
+  --docked-composer-content-offset: calc(
+    var(--topic-avatar-width) - var(--pm-padding, 1.25em)
+  );
+
+  // ~4 lines tall by default; still expands further with content
+  --docked-composer-input-min-height: 7em;
+}
+
+.ai-bot-docked-composer__disclaimer {
+  margin: 0;
+  text-align: center;
+  font-size: var(--font-down-2);
+  color: var(--primary-medium);
+
+  @include viewport.until(sm) {
+    display: none;
+  }
+}

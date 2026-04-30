@@ -69,6 +69,7 @@ class Admin::GroupsController < Admin::StaffController
   end
 
   def automatic_membership_count
+    guardian.ensure_can_create_group!
     domains = Group.get_valid_email_domains(params.require(:automatic_membership_email_domains))
     group_id = params[:id]
     user_count = 0

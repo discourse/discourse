@@ -15,7 +15,6 @@ vi:
       alt:
         solved:
           accepted_notification: "đã chấp nhận"
-          topic_solved_notification: "Có giải pháp"
     solutions: "Giải pháp"
     solved:
       title: "Giải pháp"
@@ -44,7 +43,6 @@ vi:
       no_answer:
         title: Câu hỏi của bạn đã được giải đáp chưa?
         description: "Hãy đánh dấu câu trả lời và giúp đỡ người khác bằng cách sử dụng nút \"Giải pháp\" bên dưới câu trả lời đúng."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "Tút của bạn được đánh dấu là giải pháp"
     topic_statuses:

@@ -32,8 +32,6 @@ sk:
         cta: "Vytvorte svoj prvý rebríček"
         none: "Zatiaľ neboli vytvorené žiadne rebríčky."
         confirm_destroy: "Naozaj chcete odstrániť túto rebríček?"
-        section:
-          groups: "Skupiny"
         date:
           range: "Rozsah dátumov od / do"
           from: "Od dátumu"
@@ -48,9 +46,6 @@ sk:
         default_period: "Predvolené obdobie"
         default_period_help: "Nastavenie predvoleného časového obdobia zobrazenia tohto rebríčka."
         period_filter_disabled: "Zakázanie filtra časového obdobia"
-        weight:
-          post_created: "Príspevok vytvorený"
-          solution: "Riešenie"
         period:
           all_time: "Za celú dobu"
           yearly: "Ročne"

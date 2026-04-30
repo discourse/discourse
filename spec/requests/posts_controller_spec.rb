@@ -919,6 +919,68 @@ RSpec.describe PostsController do
         expect(post.reload.custom_fields[:random_number]).to eq("244")
       end
     end
+
+    describe "reply_to_post_number" do
+      fab!(:topic)
+      fab!(:op) { Fabricate(:post, topic: topic, user: Fabricate(:user)) }
+      fab!(:first_reply) do
+        Fabricate(:post, topic: topic, user: Fabricate(:user), reply_to_post_number: op.post_number)
+      end
+      fab!(:editable_post) do
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          reply_to_post_number: op.post_number,
+          reply_to_user_id: op.user_id,
+        )
+      end
+
+      before { sign_in(user) }
+
+      it "reparents the post to another earlier post" do
+        put "/posts/#{editable_post.id}.json",
+            params: {
+              post: {
+                raw: editable_post.raw,
+                reply_to_post_number: first_reply.post_number,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        editable_post.reload
+        expect(editable_post.reply_to_post_number).to eq(first_reply.post_number)
+        expect(editable_post.reply_to_user_id).to eq(first_reply.user_id)
+      end
+
+      it "clears the reply relationship when set to null" do
+        put "/posts/#{editable_post.id}.json",
+            params: {
+              post: {
+                raw: editable_post.raw,
+                reply_to_post_number: nil,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        editable_post.reload
+        expect(editable_post.reply_to_post_number).to be_nil
+        expect(editable_post.reply_to_user_id).to be_nil
+      end
+
+      it "returns an error when the target is invalid" do
+        put "/posts/#{editable_post.id}.json",
+            params: {
+              post: {
+                raw: editable_post.raw,
+                reply_to_post_number: editable_post.post_number,
+              },
+            }
+
+        expect(response.status).to eq(422)
+        expect(editable_post.reload.reply_to_post_number).to eq(op.post_number)
+      end
+    end
   end
 
   describe "#destroy_bookmark" do
@@ -2959,6 +3021,25 @@ RSpec.describe PostsController do
 
         post.topic.reload
         expect(post.topic.tags.pluck(:name).sort).to eq(%w[tag1 tag2])
+      end
+
+      it "supports reverting reply-target-only revisions" do
+        earlier_post = Fabricate(:post, topic: post.topic, post_number: post.post_number - 1)
+        post.update!(reply_to_post_number: nil)
+
+        reply_to_revision =
+          Fabricate(
+            :post_revision,
+            post: post,
+            modifications: {
+              "reply_to_post_number" => [earlier_post.post_number, nil],
+            },
+          )
+
+        put "/posts/#{post_id}/revisions/#{reply_to_revision.number}/revert.json"
+
+        expect(response.status).to eq(200)
+        expect(post.reload.reply_to_post_number).to eq(earlier_post.post_number)
       end
     end
   end

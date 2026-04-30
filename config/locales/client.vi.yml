@@ -3198,14 +3198,8 @@ vi:
         archive_messages: "Di chuyển đến Lưu trữ"
         change_notification_level: "Thay đổi mức thông báo"
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
-        selected_sole_category:
-          other: "Bạn đã chọn <b>%{count}</b> chủ đề từ chuyên mục:"
         selected_count:
           other: "%{count} được chọn"
-        choose_new_tags: "Chọn thẻ mới cho các chuyên mục sau:"
-        changed_tags: "Các thẻ của các chủ đề đó đã được thay đổi."
-        confirm_remove_tags:
-          other: "Tất cả các thẻ sẽ bị xóa khỏi <b>%{count}</b> chủ đề. Bạn có chắc không?"
         progress:
           other: "Tiến độ: <strong>%{count}</strong> chủ đề"
         notify: "Thông báo cho người dùng về thay đổi này"
@@ -3247,10 +3241,6 @@ vi:
         name: "Bỏ công khai"
       relist_topics:
         name: "Công khai lại"
-      remove_tags:
-        name: "Xóa thẻ"
-      replace_tags:
-        name: "Thay thế thẻ"
       delete_topics:
         name: "Xóa"
       update_category:
@@ -3277,6 +3267,7 @@ vi:
       collapse: "Thu gọn"
       no_replies: "Chưa có trả lời."
       deleted_post_placeholder: "[đã xóa]"
+      ignored_post_placeholder: "[đã bỏ qua]"
       pinned_reply: "Đã ghim"
     topic:
       filter_to:
@@ -4178,7 +4169,7 @@ vi:
           high: "Cao"
           very_high: "Rất cao"
       sort_options:
-        default: "mặc định"
+        default: "Mặc định"
         likes: "Thích"
         op_likes: "Lượt thích tút gốc"
         views: "Xem"
@@ -6994,6 +6985,7 @@ vi:
         topic_id: "ID Chủ đề"
         post_id: "ID Tút"
         category_id: "ID Chuyên mục"
+        reviewable_id: "Review"
         delete: "Xóa"
         edit: "Sửa"
         save: "Lưu"

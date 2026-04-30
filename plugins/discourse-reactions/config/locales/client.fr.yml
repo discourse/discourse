@@ -19,8 +19,6 @@ fr:
         react_with: "Réagir à ce message avec : %{reaction}"
         cant_remove_reaction: "Vous ne pouvez plus supprimer votre réaction"
         remove_reaction: "Supprimer cette réaction %{reaction}"
-      users_popup:
-        all: "Tout"
       main_reaction:
         add: "J'aime cette publication"
         remove: "Supprimer ce « J'aime »"

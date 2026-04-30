@@ -16,9 +16,6 @@ ja:
     topic_voting_show_votes_on_profile: 'ユーザーがアクティビティフィードで投票を閲覧することを許可しますか？'
     topic_voting_alert_votes_left: '残りの票数がこの票数になったらユーザーに通知する'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "投票者を表示する"
     votes_moved:
       other: "%{count} 票が移動されました。"
     duplicated_votes:

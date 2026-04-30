@@ -1172,4 +1172,86 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(TopicUser.count).to eq(topic_user_count)
     end
   end
+
+  describe "GET activity" do
+    def activity_url(topic)
+      "/n/#{topic.slug}/#{topic.id}/activity.json"
+    end
+
+    it "returns 404 when nested replies is disabled" do
+      SiteSetting.nested_replies_enabled = false
+      sign_in(user)
+      get activity_url(topic)
+      expect(response.status).to eq(404)
+    end
+
+    it "includes a synthetic topic_created entry first" do
+      sign_in(user)
+      get activity_url(topic)
+      expect(response.status).to eq(200)
+
+      actions = response.parsed_body["small_actions"]
+      expect(actions.length).to eq(1)
+      expect(actions[0]["action_code"]).to eq("topic_created")
+      expect(actions[0]["username"]).to eq(user.username)
+    end
+
+    it "returns small action posts in chronological order after topic_created" do
+      sign_in(user)
+
+      topic.add_small_action(admin, "closed.enabled")
+      topic.add_small_action(admin, "opened.enabled")
+      topic.add_small_action(admin, "invited_user", "testuser")
+
+      get activity_url(topic)
+      expect(response.status).to eq(200)
+
+      actions = response.parsed_body["small_actions"]
+      expect(actions.length).to eq(4)
+      expect(actions[0]["action_code"]).to eq("topic_created")
+      expect(actions[1]["action_code"]).to eq("closed.enabled")
+      expect(actions[2]["action_code"]).to eq("opened.enabled")
+      expect(actions[3]["action_code"]).to eq("invited_user")
+      expect(actions[3]["action_code_who"]).to eq("testuser")
+      expect(actions[1]["username"]).to eq(admin.username)
+    end
+
+    it "excludes whisper action-code posts for non-whisperers" do
+      topic.add_moderator_post(
+        admin,
+        nil,
+        post_type: Post.types[:whisper],
+        action_code: "assigned",
+        custom_fields: {
+          "action_code_who" => user.username,
+        },
+      )
+
+      sign_in(user)
+      get activity_url(topic)
+
+      actions = response.parsed_body["small_actions"]
+      expect(actions.map { |a| a["action_code"] }).not_to include("assigned")
+    end
+
+    it "includes whisper action-code posts for whisperers" do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+
+      topic.add_moderator_post(
+        admin,
+        nil,
+        post_type: Post.types[:whisper],
+        action_code: "assigned",
+        custom_fields: {
+          "action_code_who" => user.username,
+        },
+      )
+
+      sign_in(admin)
+      get activity_url(topic)
+
+      actions = response.parsed_body["small_actions"]
+      expect(actions.map { |a| a["action_code"] }).to include("assigned")
+    end
+  end
 end

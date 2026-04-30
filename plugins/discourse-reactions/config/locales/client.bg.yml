@@ -7,8 +7,6 @@
 bg:
   js:
     discourse_reactions:
-      users_popup:
-        all: "Всички"
       main_reaction:
         add: "Харесайте тази публикация"
     notifications:

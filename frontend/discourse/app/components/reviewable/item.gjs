@@ -562,6 +562,7 @@ export default class ReviewableItem extends Component {
       return adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
+        reviewableId: reviewable.get("id"),
         before: performAction,
       });
     }

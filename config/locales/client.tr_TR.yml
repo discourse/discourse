@@ -3531,21 +3531,9 @@ tr_TR:
         notification_level: "Bildirimleri güncelle"
         change_notification_level: "Bildirim Seviyesini Değiştir"
         choose_new_category: "Konular için yeni kategoriyi seç:"
-        selected_sole_category:
-          one: "Kategoriden <b>%{count}</b> konu seçtiniz:"
-          other: "Kategoriden <b>%{count}</b> konu seçtiniz:"
         selected_count:
           one: "%{count} tane seçildi"
           other: "%{count} tane seçildi"
-        change_tags: "Etiketleri değiştir"
-        append_tags: "Etiket ekle"
-        choose_new_tags: "Bu konular için yeni etiketler seçin:"
-        choose_append_tags: "Etiket ekle"
-        changed_tags: "Bu konuların etiketleri değiştirildi."
-        remove_tags: "Etiketleri kaldır"
-        confirm_remove_tags:
-          one: "Bu konudan tüm etiketler kaldırılacak. Emin misiniz?"
-          other: "%{count} konudan tüm etiketler kaldırılacak. Emin misiniz?"
         confirm_unpin_topics:
           one: "%{count} konuyu sabitlemekten vazgeç"
           other: "%{count} konuyu sabitlemekten vazgeç"
@@ -3629,15 +3617,13 @@ tr_TR:
         description: "Listelenmemiş konular konu listesinde görünmez, ancak doğrudan bağlantı yoluyla erişilebilir. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Daha fazla bilgi edinin</a>"
       relist_topics:
         name: "Yeniden listele"
-      remove_tags:
-        name: "Etiketleri kaldır"
-        description: "Seçili konulardaki tüm etiketleri kaldır."
-      append_tags:
-        name: "Etiket ekle"
-        description: "Seçilen konulara aşağıdaki etiketleri ekleyin:"
-      replace_tags:
-        name: "Etiketleri Değiştir"
-        description: "Seçilen konulardaki mevcut tüm etiketleri aşağıdakilerle değiştirin:"
+      manage_tags:
+        add:
+          title: "Etiket ekle"
+        remove:
+          title: "Etiketleri kaldır"
+        replace:
+          title: "Etiketleri değiştir"
       delete_topics:
         name: "Sil"
         description: "Seçilen konuları kalıcı olarak sil. Bu işlem geri alınamaz."
@@ -3690,6 +3676,7 @@ tr_TR:
         default_nested_view: "Bu kategorideki başlıklar için varsayılan olarak iç içe geçmiş görünümü kullan"
       no_replies: "Henüz yanıt yok."
       deleted_post_placeholder: "[silindi]"
+      ignored_post_placeholder: "[yok Sayıldı]"
       op_badge: "OP"
       pinned_reply: "Sabitlendi"
       pin_reply: "En üste sabitle"
@@ -4707,7 +4694,7 @@ tr_TR:
           high: "Yüksek"
           very_high: "Çok yüksek"
       sort_options:
-        default: "varsayılan"
+        default: "Varsayılan"
         likes: "Beğeniler"
         op_likes: "Orijinal gönderi beğenileri"
         views: "Görüntülemeler"
@@ -7656,6 +7643,7 @@ tr_TR:
         topic_id: "Konu Kimliği"
         post_id: "Gönderi Kimliği"
         category_id: "Kategori Kimliği"
+        reviewable_id: "İncele"
         delete: "Sil"
         edit: "Düzenle"
         save: "Kaydet"

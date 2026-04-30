@@ -310,9 +310,6 @@ sv:
       notifications:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} har automatiskt ställt in din närvaro och bjudit in dig till %{eventName}"
-      event_description:
-        show_more: "Visa mer"
-        show_less: "Visa mindre"
       edit_reason: "Evenemang uppdaterat"
       topic_title:
         starts_at: "Evenemanget börjar: %{date}"

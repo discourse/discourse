@@ -114,9 +114,13 @@ class ReviewableQueuedPost < Reviewable
     self.topic_id = created_post.topic_id if topic_id.nil?
     save
 
-    UserSilencer.unsilence(target_created_by, performed_by) if target_created_by.silenced?
+    if target_created_by.silenced?
+      UserSilencer.unsilence(target_created_by, performed_by, reviewable_id: self.id)
+    end
 
-    StaffActionLogger.new(performed_by).log_post_approved(created_post) if performed_by.staff?
+    if performed_by.staff?
+      StaffActionLogger.new(performed_by).log_post_approved(created_post, reviewable_id: self.id)
+    end
 
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:approved_post, self, created_post)

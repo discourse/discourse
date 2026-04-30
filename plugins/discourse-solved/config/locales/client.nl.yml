@@ -15,7 +15,6 @@ nl:
       alt:
         solved:
           accepted_notification: "geaccepteerd"
-          topic_solved_notification: "opgelost"
     solutions: "Oplossingen"
     solved:
       title: "Opgelost"
@@ -45,7 +44,6 @@ nl:
       no_answer:
         title: Is je vraag beantwoord?
         description: "Markeer het antwoord en help anderen door de oplossingsknop onder het juiste antwoord te gebruiken."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "Je bericht is gemarkeerd als oplossing"
       category_type_support:

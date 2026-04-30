@@ -202,27 +202,27 @@ RSpec.describe "User menu notifications | sidebar" do
     end
   end
 
-  context "when inviting a user" do
+  context "when invited to a channel" do
     fab!(:channel_1, :chat_channel)
-    fab!(:other_user, :user)
 
-    before { channel_1.add(current_user) }
+    let(:user_menu) { PageObjects::Components::UserMenu.new }
 
-    xit "shows an invitation notification" do
-      Jobs.run_immediately!
+    before do
+      Chat::InviteUsersToChannel.call(
+        guardian: Guardian.new(Fabricate(:admin)),
+        params: {
+          channel_id: channel_1.id,
+          user_ids: [current_user.id],
+        },
+      )
+    end
 
-      chat.visit_channel(channel_1)
-      channel.send_message("this is fine @#{other_user.username}")
-      find(".invite-link", wait: 5).click
+    it "shows an invitation notification" do
+      visit("/discuss")
+      user_menu.open
 
-      using_session(:user_1) do
-        sign_in(other_user)
-        visit("/discuss")
-        find(".header-dropdown-toggle.current-user").click
-
-        expect(find("#user-menu-button-chat-notifications")).to have_content(1)
-        expect(find("#quick-access-all-notifications")).to have_css(".chat-invitation.unread")
-      end
+      expect(page).to have_css("#user-menu-button-chat-notifications", text: "1")
+      expect(page).to have_css("#quick-access-all-notifications .chat-invitation.unread")
     end
   end
 end

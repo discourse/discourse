@@ -19,8 +19,6 @@ fa_IR:
         react_with: "واکنش به این نوشته با: %{reaction}"
         cant_remove_reaction: "شما دیگر واکنش خود را نمی‌توانید حذف کنید"
         remove_reaction: "حذف این %{reaction} واکنش"
-      users_popup:
-        all: "همه"
       main_reaction:
         add: "پسندیدن این فرسته"
         remove: "حذف واکنش پسندیدن"

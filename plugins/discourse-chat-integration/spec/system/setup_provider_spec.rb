@@ -147,6 +147,8 @@ RSpec.describe "Chat integration setup provider" do
             "Content-Type" => "application/json",
           },
         )
+        allow(Rails.logger).to receive(:error).and_call_original
+        allow(Rails.logger).to receive(:error).with(/\AFailed to setup telegram webhook\./)
 
         setup_provider_from_menu("telegram")
         expect(modal).to be_open

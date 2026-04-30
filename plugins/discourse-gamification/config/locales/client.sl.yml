@@ -12,10 +12,6 @@ sl:
         link_to_settings: "Nastavitve"
         refresh: "Osveži"
         name: "Ime"
-        section:
-          groups: "Skupine"
-        weight:
-          solution: "Rešitev"
         period:
           all_time: "Ves čas"
           yearly: "V letu"

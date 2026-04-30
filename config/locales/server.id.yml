@@ -1318,6 +1318,7 @@ id:
       why: "Ringkasan singkat %{site_link} sejak %{since}"
       liked_received: "Likes Diterima"
       new_users: "Pengguna Baru"
+      subject_template_improved: "Ringkasan"
       from: "%{site_name}"
       preheader: "Ringkasan singkat sejak %{since}"
     forgot_password:

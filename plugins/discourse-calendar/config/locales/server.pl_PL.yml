@@ -66,11 +66,7 @@ pl_PL:
     event_participation_buttons: "Lista przycisków umożliwiających udział w wydarzeniu, z których mogą korzystać użytkownicy."
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
-    enable_events_category_type_setup: "Włącza opcję typu kategorii „Zdarzenia” podczas konfiguracji tworzenia kategorii. Uwaga: aby ta opcja zadziałała, opcja „Włącz uproszczone tworzenie kategorii” musi być włączona."
   discourse_calendar:
-    calendar_subscriptions:
-      all_events_feed_name: "%{site_title} - Wszystkie wydarzenia"
-      my_events_feed_name: "%{site_title} - Moje wydarzenia"
     invite_user_notification: "%{username} zaprosił Cię do: %{description}"
     calendar_must_be_in_first_post: "Tag kalendarza może być użyty tylko w pierwszym poście tematu."
     more_than_one_calendar: "W poście nie można umieścić więcej niż jednego kalendarza."

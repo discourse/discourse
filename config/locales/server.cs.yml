@@ -3095,7 +3095,6 @@ cs:
         Vaše odpověď byla odeslána ze zablokované e-mailové adresy. Zkuste odeslat z jiné e-mailové adresy nebo [kontaktujte redakci](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Odmítnutí e-mailu: Nepovolená adresa"
-      subject_template: "[%{email_prefix}] Problém s e-mailem -- Blokovaná adresa"
       text_body_template: |
         Je nám líto, ale vaše e-mailová zpráva na adresu %{destination} (s názvem %{former_title}) nefungovala.
 
@@ -3582,6 +3581,7 @@ cs:
     account_exists:
       title: "Účet již existuje"
       subject_template: "[%{email_prefix}] Účet již existuje"
+      subject_template_improved: "Účet již existuje"
       text_body_template: |
         Právě jste se pokusili vytvořit účet na %{site_name}, nebo jste se pokusili změnit e-mail účtu na %{email}. Účet pro %{email} však již existuje.
 
@@ -3603,6 +3603,7 @@ cs:
       popular_posts: "Populární příspěvky"
       more_new: "Novinky pro vás"
       subject_template: "[%{email_prefix}] Shrnutí"
+      subject_template_improved: "Souhrn"
       unsubscribe: "Tento souhrn je odeslán z %{site_link} poté, co jsme vás už nějakou dobu neviděli. Změňte %{email_preferences_link} nebo %{unsubscribe_link} pro odhlášení odběru."
       your_email_settings: "vaše nastavení e-mailů"
       click_here: "klikněte zde"
@@ -3620,6 +3621,7 @@ cs:
       title: "Přihlášení pomocí odkazu"
       preview: "Přihlášení pomocí odkazu."
       subject_template: "[%{email_prefix}] Přihlášení pomocí odkazu"
+      subject_template_improved: "Přihlášení pomocí odkazu"
       text_body_template: |
         Zde je Váš odkaz pro přihlášení na [%{site_name}](%{base_url}).
 
@@ -3629,7 +3631,6 @@ cs:
         %{base_url}/session/email-login/%{email_token}.
     set_password:
       title: "Nastavit heslo"
-      subject_template: "[%{email_prefix}] Nastavení hesla"
       text_body_template: |
         Někdo požádal o přidání hesla k vašemu účtu na [%{site_name}](%{base_url}). Případně se můžete přihlásit pomocí jakékoli podporované online služby (Google, Facebook atd.), která je spojena s touto ověřenou e-mailovou adresou.
 
@@ -3640,6 +3641,7 @@ cs:
     admin_login:
       title: "Přihlášení správce"
       subject_template: "[%{email_prefix}] Přihlášení"
+      subject_template_improved: "Login"
       text_body_template: |
         Někdo požádal o přihlášení k vašemu účtu na [%{site_name}](%{base_url}).
 
@@ -3754,7 +3756,6 @@ cs:
         Pokud na výše uvedený odkaz nelze kliknout, zkuste jej zkopírovat a vložit do adresního řádku vašeho webového prohlížeče.
     suspicious_login:
       title: "Upozornění na nové přihlášení"
-      subject_template: "[%{site_name}] Nové přihlášení z %{location}"
       text_body_template: |
         Dobrý den,
 

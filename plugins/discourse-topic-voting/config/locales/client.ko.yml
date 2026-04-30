@@ -22,9 +22,6 @@ ko:
       anonymous_button:
         other: "투표"
       remove_vote: "투표 삭제"
-      and_more_voters: "그리고 %{count} 더..."
-      show_voters: "투표한 사람 보기"
-      vote_count_thousands: "%{count}천"
     filters:
       votes:
         title: "투표"

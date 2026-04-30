@@ -15,7 +15,6 @@ fi:
       alt:
         solved:
           accepted_notification: "hyväksytty"
-          topic_solved_notification: "ratkaistu"
     solutions: "Ratkaisut"
     solved:
       title: "Ratkaistu"
@@ -45,7 +44,6 @@ fi:
       no_answer:
         title: Onko kysymykseesi vastattu?
         description: "Korosta vastaus ja auta muita käyttämällä oikean vastauksen alla olevaa ratkaisupainiketta."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "viestisi merkittiin ratkaisuksi"
       category_type_support:

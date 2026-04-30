@@ -103,6 +103,7 @@ export default class PenalizeUser extends Component {
         post_action: this.postAction,
         post_edit: this.postEdit,
         other_user_ids: this.otherUserIds,
+        reviewable_id: this.args.model.reviewableId,
       };
 
       if (this.args.model.penaltyType === "suspend") {

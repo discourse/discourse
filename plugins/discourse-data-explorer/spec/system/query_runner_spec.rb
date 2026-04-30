@@ -24,6 +24,7 @@ RSpec.describe "Data explorer query runner" do
       visit("/admin/plugins/discourse-data-explorer/queries/#{query_a.id}")
       find(".query-run .btn-primary").click
       expect(page).to have_css(".query-results .result-header")
+      expect(page).to have_css(".query-results-table-wrapper.--expanded")
 
       find(".back-button").click
       first("a[href='/admin/plugins/discourse-data-explorer/queries/#{query_b.id}']").click

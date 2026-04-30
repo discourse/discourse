@@ -495,13 +495,32 @@ RSpec.describe Admin::GroupsController do
       context "with moderators_manage_groups enabled" do
         before { SiteSetting.moderators_manage_groups = true }
 
-        include_examples "automatic membership count inaccessible"
+        it "returns count of users whose emails match the domain" do
+          Fabricate(:user, email: "user1@somedomain.org")
+
+          put "/admin/groups/automatic_membership_count.json",
+              params: {
+                automatic_membership_email_domains: "somedomain.org",
+                id: group.id,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user_count"]).to eq(1)
+        end
       end
 
       context "with moderators_manage_groups disabled" do
         before { SiteSetting.moderators_manage_groups = false }
 
-        include_examples "automatic membership count inaccessible"
+        it "denies access with a 403 response" do
+          put "/admin/groups/automatic_membership_count.json",
+              params: {
+                automatic_membership_email_domains: "somedomain.org",
+                id: group.id,
+              }
+
+          expect(response.status).to eq(403)
+        end
       end
     end
 

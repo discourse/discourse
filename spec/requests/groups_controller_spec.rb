@@ -535,6 +535,22 @@ RSpec.describe GroupsController do
     describe "when accessing by id" do
       include_examples "group show behavior", "/groups/by-id", :id
     end
+
+    context "as a moderator with moderators_manage_groups enabled" do
+      before { SiteSetting.moderators_manage_groups = true }
+
+      it "includes automatic_membership_email_domains in the response" do
+        group.update!(automatic_membership_email_domains: "test.org")
+        sign_in(moderator)
+
+        get "/groups/#{group.name}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["group"]["automatic_membership_email_domains"]).to eq(
+          "test.org",
+        )
+      end
+    end
   end
 
   describe "#mentions" do
@@ -1103,6 +1119,26 @@ RSpec.describe GroupsController do
         group.reload
         expect(group.title).to eq("Original Title")
         expect(group.flair_bg_color).to eq("FFF")
+      end
+
+      it "should not clear automatic_membership_email_domains when moderator owner updates group" do
+        SiteSetting.moderators_manage_groups = false
+        user.update!(moderator: true)
+        group.update!(automatic_membership_email_domains: "test.org")
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                bio_raw: "updated bio",
+                automatic_membership_email_domains: "",
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.automatic_membership_email_domains).to eq("test.org")
+        expect(group.bio_raw).to eq("updated bio")
       end
 
       it "should not be allowed to update automatic groups" do
