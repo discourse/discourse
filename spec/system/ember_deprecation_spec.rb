@@ -54,6 +54,28 @@ describe "JS Deprecation Handling" do
     expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
   end
 
+  it "emits ember-this-fallback deprecation for theme .hbs connectors using property fallback" do
+    t = Fabricate(:theme, name: "Theme With Hbs Connector")
+    t.set_field(
+      target: :extra_js,
+      name: "discourse/connectors/below-footer/my-connector.hbs",
+      value: "{{someProperty}}",
+    )
+    t.save!
+    SiteSetting.default_theme_id = t.id
+
+    visit "/latest"
+    expect(find("#main-outlet-wrapper")).to be_visible
+
+    try_until_success do
+      expect(
+        $playwright_logger.logs.any? do |log|
+          log[:message].include?("ember-this-fallback.this-property-fallback")
+        end,
+      ).to eq(true)
+    end
+  end
+
   it "can show warnings triggered during initial render" do
     sign_in Fabricate(:admin)
 
