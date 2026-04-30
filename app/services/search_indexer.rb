@@ -327,7 +327,7 @@ class SearchIndexer
 
     if Topic === obj && (obj.saved_change_to_title? || force)
       if obj.posts
-        if post = obj.posts.find_by(post_number: 1)
+        if post = obj.posts.where(post_number: 1).pick(:id, :cooked)
           SearchIndexer.update_posts_index(
             post_id: post.id,
             topic_title: obj.title,
