@@ -1558,8 +1558,9 @@ RSpec.describe Middleware::RequestTracker do
       app = lambda { |env| raise RateLimiter::LimitExceeded, 1 }
       tracker = Middleware::RequestTracker.new(app)
       expect { tracker.call(env) }.to raise_error(RateLimiter::LimitExceeded)
+
       CachedCounting.flush
-      expect(ApplicationRequest.stats).to include("http_total_total" => 1)
+      expect(ApplicationRequest.stats["http_total_total"]).to eq(1)
       expect(fake_logger.warnings).to be_empty
     end
   end
