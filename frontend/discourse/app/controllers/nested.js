@@ -22,6 +22,7 @@ export default class NestedController extends Controller {
   @service modal;
   @service nestedViewCache;
   @service router;
+  @service site;
 
   @tracked topic;
   @tracked opPost;
@@ -424,6 +425,10 @@ export default class NestedController extends Controller {
         return;
       }
 
+      if (!this.#isVisibleInTree(postData)) {
+        return;
+      }
+
       const post = this.store.createRecord("post", postData);
       post.topic = this.topic;
 
@@ -448,6 +453,20 @@ export default class NestedController extends Controller {
     } finally {
       this.#pendingPostIds.delete(data.id);
     }
+  }
+
+  // Mirrors the server-side filter in NestedReplies::TreeLoader#apply_visibility:
+  // small_action posts (close/open/etc.) belong in the activity log, not the tree;
+  // whispers with an action_code (e.g. assigns) are likewise activity-log-only.
+  #isVisibleInTree(postData) {
+    const postTypes = this.site.post_types;
+    if (postData.post_type === postTypes.small_action) {
+      return false;
+    }
+    if (postData.post_type === postTypes.whisper && postData.action_code) {
+      return false;
+    }
+    return true;
   }
 
   #isPostKnown(postId) {
