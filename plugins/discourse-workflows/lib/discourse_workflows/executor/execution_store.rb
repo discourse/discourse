@@ -6,6 +6,10 @@ module DiscourseWorkflows
       include FormExecutionChannel
 
       MAX_EXECUTION_DATA_SIZE = 5.megabytes
+      MAX_STEP_IO_SIZE = 128.kilobytes
+      MAX_STEP_STRING_BYTES = 16.kilobytes
+      MAX_STEP_COLLECTION_SIZE = 50
+      MAX_STEP_IO_DEPTH = 8
 
       delegate :workflow, :trigger_data, to: :@execution_context
 
@@ -146,11 +150,110 @@ module DiscourseWorkflows
           }.to_json
         end
 
+        if json_data.bytesize > MAX_EXECUTION_DATA_SIZE
+          Rails.logger.warn(
+            "discourse-workflows: execution data for execution #{execution.id} " \
+              "still exceeds #{MAX_EXECUTION_DATA_SIZE} bytes, truncating entries",
+          )
+          json_data = {
+            "entries" => compact_entries(entries),
+            "context" => {
+              "__truncated" => true,
+            },
+            "node_contexts" => {
+            },
+          }.to_json
+        end
+
         ed.update!(data: json_data, workflow_data: @workflow_snapshot_data)
       end
 
       def steps_to_entries(steps)
-        steps.group_by(&:node_id).transform_values { |node_steps| node_steps.map(&:to_h) }
+        steps
+          .group_by(&:node_id)
+          .transform_values { |node_steps| node_steps.map { |step| step_to_entry(step) } }
+      end
+
+      def step_to_entry(step)
+        entry = step.to_h
+        entry["input"] = bounded_step_io(entry["input"]) if entry.key?("input")
+        entry["output"] = bounded_step_io(entry["output"]) if entry.key?("output")
+        entry
+      end
+
+      def bounded_step_io(value)
+        bounded_value = bound_execution_value(value)
+        return bounded_value if bounded_value.to_json.bytesize <= MAX_STEP_IO_SIZE
+
+        truncated_value(value, MAX_STEP_IO_SIZE, "step_io_size_limit")
+      end
+
+      def bound_execution_value(value, depth = 0)
+        return truncated_value(value, nil, "step_io_depth_limit") if depth >= MAX_STEP_IO_DEPTH
+
+        case value
+        when String
+          bound_string(value)
+        when Array
+          bound_array(value, depth)
+        when Hash
+          bound_hash(value, depth)
+        else
+          value
+        end
+      end
+
+      def bound_string(value)
+        return value if value.bytesize <= MAX_STEP_STRING_BYTES
+
+        {
+          "__truncated" => true,
+          "__reason" => "step_string_size_limit",
+          "__original_bytes" => value.bytesize,
+          "preview" => value.byteslice(0, MAX_STEP_STRING_BYTES).scrub,
+        }
+      end
+
+      def bound_array(value, depth)
+        kept_items =
+          value
+            .first(MAX_STEP_COLLECTION_SIZE)
+            .map { |item| bound_execution_value(item, depth + 1) }
+        return kept_items if value.size <= MAX_STEP_COLLECTION_SIZE
+
+        kept_items << truncated_value(value, nil, "step_collection_size_limit")
+      end
+
+      def bound_hash(value, depth)
+        kept_pairs =
+          value
+            .first(MAX_STEP_COLLECTION_SIZE)
+            .to_h { |key, hash_value| [key, bound_execution_value(hash_value, depth + 1)] }
+        return kept_pairs if value.size <= MAX_STEP_COLLECTION_SIZE
+
+        kept_pairs.merge(
+          "__truncated" => true,
+          "__reason" => "step_collection_size_limit",
+          "__omitted_keys" => value.size - MAX_STEP_COLLECTION_SIZE,
+        )
+      end
+
+      def truncated_value(value, max_bytes, reason)
+        result = { "__truncated" => true, "__reason" => reason, "__class" => value.class.name }
+        result["__max_bytes"] = max_bytes if max_bytes
+        result["__original_size"] = value.size if value.respond_to?(:size)
+        result
+      end
+
+      def compact_entries(entries)
+        entries.transform_values do |node_steps|
+          Array(node_steps).map do |step|
+            step.except("input", "output").merge(
+              "input" => truncated_value([], nil, "execution_data_size_limit"),
+              "output" => truncated_value([], nil, "execution_data_size_limit"),
+            )
+          end
+        end
       end
 
       def trigger_error_workflow(error, steps)

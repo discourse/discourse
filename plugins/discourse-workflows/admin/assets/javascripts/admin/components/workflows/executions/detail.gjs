@@ -13,11 +13,88 @@ function formatJson(data) {
   return JSON.stringify(data, null, 2);
 }
 
-function formatStepData(data) {
+function isTruncationMarker(value) {
+  return value?.__truncated === true && value.__reason;
+}
+
+function truncationLabel(kind) {
+  return i18n(`discourse_workflows.executions.truncated.${kind}`);
+}
+
+function truncationDetails(marker) {
+  const details = [];
+
+  if (marker.__original_bytes) {
+    details.push(
+      i18n("discourse_workflows.executions.truncated.original_bytes", {
+        count: marker.__original_bytes,
+      })
+    );
+  }
+
+  if (marker.__original_size) {
+    details.push(
+      i18n("discourse_workflows.executions.truncated.original_size", {
+        count: marker.__original_size,
+      })
+    );
+  }
+
+  if (marker.__max_bytes) {
+    details.push(
+      i18n("discourse_workflows.executions.truncated.max_bytes", {
+        count: marker.__max_bytes,
+      })
+    );
+  }
+
+  return details.length ? ` (${details.join(", ")})` : "";
+}
+
+function formatTruncationMarker(marker, kind = "value") {
+  return `${truncationLabel(kind)}${truncationDetails(marker)}`;
+}
+
+function replaceTruncationMarkers(value) {
+  if (isTruncationMarker(value)) {
+    return formatTruncationMarker(value);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(replaceTruncationMarkers);
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, nestedValue]) => [
+        key,
+        replaceTruncationMarkers(nestedValue),
+      ])
+    );
+  }
+
+  return value;
+}
+
+function formatStepData(data, kind = "value") {
+  if (isTruncationMarker(data)) {
+    return formatTruncationMarker(data, kind);
+  }
+
+  data = replaceTruncationMarkers(data);
+
   if (!Array.isArray(data) || !data.every((i) => i?.json)) {
     return formatJson(data);
   }
   return formatJson(data.length === 1 ? data[0].json : data.map((i) => i.json));
+}
+
+function formatInputData(data) {
+  return formatStepData(data, "input");
+}
+
+function formatOutputData(data) {
+  return formatStepData(data, "output");
 }
 
 function itemCount(data) {
@@ -127,13 +204,13 @@ export default class ExecutionDetail extends Component {
 
       if (step.input && Object.keys(step.input).length > 0) {
         lines.push(
-          `  Input: ${JSON.stringify(step.input, null, 2).replace(/\n/g, "\n    ")}`
+          `  Input: ${formatInputData(step.input).replace(/\n/g, "\n    ")}`
         );
       }
 
       if (step.output && Object.keys(step.output).length > 0) {
         lines.push(
-          `  Output: ${JSON.stringify(step.output, null, 2).replace(/\n/g, "\n    ")}`
+          `  Output: ${formatOutputData(step.output).replace(/\n/g, "\n    ")}`
         );
       }
 
@@ -263,7 +340,7 @@ export default class ExecutionDetail extends Component {
                       {{i18n "discourse_workflows.executions.items"}}</span>
                   {{/if}}
                 </summary>
-                <pre>{{formatStepData step.input}}</pre>
+                <pre>{{formatInputData step.input}}</pre>
               </details>
               <details class="workflows-execution-detail__step-section">
                 <summary>
@@ -275,7 +352,7 @@ export default class ExecutionDetail extends Component {
                       {{i18n "discourse_workflows.executions.items"}}</span>
                   {{/if}}
                 </summary>
-                <pre>{{formatStepData step.output}}</pre>
+                <pre>{{formatOutputData step.output}}</pre>
               </details>
               {{#if step.error}}
                 <div

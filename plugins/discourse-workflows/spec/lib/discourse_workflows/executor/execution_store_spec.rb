@@ -52,6 +52,104 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       expect(parsed["context"]["node_a"]).to eq([{ "json" => { "x" => 1 } }])
       expect(parsed["entries"]["1"]).to be_present
     end
+
+    it "truncates oversized step strings before persistence" do
+      stub_const(described_class, :MAX_STEP_STRING_BYTES, 10) do
+        steps = [
+          DiscourseWorkflows::Executor::Step.build(
+            node: OpenStruct.new(id: "1", name: "Node A", type: "action:code", type_version: "1.0"),
+            position: 0,
+            input: [{ "json" => { "body" => "x" * 100 } }],
+            status: DiscourseWorkflows::Executor::Step::SUCCESS,
+            output: [{ "json" => { "body" => "y" * 100 } }],
+          ),
+        ]
+
+        store.finish!(steps: steps)
+
+        entry = JSON.parse(store.execution.execution_data.data).dig("entries", "1", 0)
+        expect(entry.dig("input", 0, "json", "body")).to include(
+          "__truncated" => true,
+          "__reason" => "step_string_size_limit",
+          "__original_bytes" => 100,
+          "preview" => "x" * 10,
+        )
+        expect(entry.dig("output", 0, "json", "body")).to include(
+          "__truncated" => true,
+          "__reason" => "step_string_size_limit",
+          "__original_bytes" => 100,
+          "preview" => "y" * 10,
+        )
+      end
+    end
+
+    it "summarizes step input and output that still exceed the per-field size limit" do
+      stub_const(described_class, :MAX_STEP_IO_SIZE, 250) do
+        stub_const(described_class, :MAX_STEP_STRING_BYTES, 1.kilobyte) do
+          steps = [
+            DiscourseWorkflows::Executor::Step.build(
+              node:
+                OpenStruct.new(id: "1", name: "Node A", type: "action:code", type_version: "1.0"),
+              position: 0,
+              input: [{ "json" => { "body" => "x" * 500 } }],
+              status: DiscourseWorkflows::Executor::Step::SUCCESS,
+              output: [{ "json" => { "body" => "y" * 500 } }],
+            ),
+          ]
+
+          store.finish!(steps: steps)
+
+          entry = JSON.parse(store.execution.execution_data.data).dig("entries", "1", 0)
+          expect(entry["input"]).to include(
+            "__truncated" => true,
+            "__reason" => "step_io_size_limit",
+            "__class" => "Array",
+            "__max_bytes" => 250,
+          )
+          expect(entry["output"]).to include(
+            "__truncated" => true,
+            "__reason" => "step_io_size_limit",
+            "__class" => "Array",
+            "__max_bytes" => 250,
+          )
+        end
+      end
+    end
+
+    it "compacts entries when bounded step data still exceeds the execution size limit" do
+      stub_const(described_class, :MAX_EXECUTION_DATA_SIZE, 5.kilobytes) do
+        steps =
+          8.times.map do |index|
+            DiscourseWorkflows::Executor::Step.build(
+              node:
+                OpenStruct.new(
+                  id: "node-#{index}",
+                  name: "Node #{index}",
+                  type: "action:code",
+                  type_version: "1.0",
+                ),
+              position: index,
+              input: [{ "json" => { "body" => "x" * 1000 } }],
+              status: DiscourseWorkflows::Executor::Step::SUCCESS,
+              output: [{ "json" => { "body" => "y" * 1000 } }],
+            )
+          end
+
+        store.finish!(steps: steps)
+
+        data = store.execution.execution_data.data
+        entry = JSON.parse(data).dig("entries", "node-0", 0)
+        expect(data.bytesize).to be <= described_class::MAX_EXECUTION_DATA_SIZE
+        expect(entry["input"]).to include(
+          "__truncated" => true,
+          "__reason" => "execution_data_size_limit",
+        )
+        expect(entry["output"]).to include(
+          "__truncated" => true,
+          "__reason" => "execution_data_size_limit",
+        )
+      end
+    end
   end
 
   describe "#resume!" do

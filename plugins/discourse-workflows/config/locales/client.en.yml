@@ -522,6 +522,13 @@ en:
         error: "Error"
         reason: "Reason"
         with_value: "with value"
+        truncated:
+          input: "Input truncated"
+          output: "Output truncated"
+          value: "Value truncated"
+          original_bytes: "%{count} bytes before truncation"
+          original_size: "%{count} items before truncation"
+          max_bytes: "%{count} byte limit"
         statuses:
           pending: "Pending"
           running: "Running"
