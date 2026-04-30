@@ -54,18 +54,21 @@ module SystemHelpers
     self
   end
 
-  # Waits for the app to boot after `visit`.
-  # Use `page.visit` to test non-Ember pages.
+  # Waits for the Ember app to boot after `visit`.
   def visit(...)
     super
+
+    # `<discourse-assets>` doesn't appear on non-ember pages
+    return if page.has_no_css?("discourse-assets", wait: 0, visible: :all)
+
     page.assert_selector("#main.ember-application", visible: :all)
   end
 
   def sign_in(user)
-    page.visit File.join(
-                 GlobalSetting.relative_url_root || "",
-                 "/session/#{user.encoded_username}/become.json?redirect=false",
-               )
+    visit File.join(
+            GlobalSetting.relative_url_root || "",
+            "/session/#{user.encoded_username}/become.json?redirect=false",
+          )
 
     expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
