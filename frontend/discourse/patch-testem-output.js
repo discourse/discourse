@@ -38,7 +38,13 @@ module.exports = function patchTestemOutput() {
 
     const label = labelForRunner(this);
     socket.on("browser-console", (type, ...args) => {
-      console.log(`[${label}] [${type}] ${args.join(" ")}`);
+      if (type === "group") {
+        type = `「group」`;
+      } else {
+        type = `[${type}]`;
+      }
+
+      console.log(`[${label}] ${type} ${args.join(" ")}`);
     });
     socket.on("top-level-error", (msg, url, line) => {
       console.log(`[${label}] [error] ${msg} at ${url}:${line}`);
