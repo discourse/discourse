@@ -34,6 +34,34 @@ RSpec.describe PostSerializer do
       expect(visible_actions_for(admin).sort).to eq(%i[like notify_user spam])
     end
 
+    it "subtracts likes from ignored users from the like count" do
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      regular_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, post)
+      PostActionCreator.like(regular_liker, post)
+      Fabricate(:ignored_user, user: actor, ignored_user: ignored_liker)
+      post.reload
+
+      serializer = PostSerializer.new(post, scope: Guardian.new(actor), root: false)
+      like_summary = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+      expect(post.like_count).to eq(3)
+      expect(like_summary[:count]).to eq(2)
+    end
+
+    it "does not adjust the like count for anonymous viewers" do
+      ignorer = Fabricate(:user, refresh_auto_groups: true)
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, post)
+      Fabricate(:ignored_user, user: ignorer, ignored_user: ignored_liker)
+      post.reload
+
+      serializer = PostSerializer.new(post, scope: Guardian.new, root: false)
+      like_summary = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+      expect(like_summary[:count]).to eq(post.like_count)
+    end
+
     it "can't flag your own post to notify yourself" do
       serializer = PostSerializer.new(post, scope: Guardian.new(post.user), root: false)
       notify_user_action =

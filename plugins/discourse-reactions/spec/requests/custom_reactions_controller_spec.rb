@@ -502,6 +502,43 @@ describe DiscourseReactions::CustomReactionsController do
       expect(user_4_rows.size).to eq(1)
       expect(user_4_rows.first["reaction"]).to eq("hugs")
     end
+
+    context "with ignored users" do
+      it "hides reactions and likes from users the current user has ignored" do
+        sign_in(user_1)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_3)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_5)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
+
+        expect(response.status).to eq(200)
+        usernames = response.parsed_body["users"].map { |u| u["username"] }
+        expect(usernames).not_to include(user_3.username, user_5.username)
+        expect(usernames).to include(user_2.username, user_4.username)
+        expect(response.parsed_body["total_rows"]).to eq(usernames.size)
+      end
+
+      it "still shows reactions to anonymous viewers" do
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_3)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
+
+        expect(response.status).to eq(200)
+        usernames = response.parsed_body["users"].map { |u| u["username"] }
+        expect(usernames).to include(user_3.username)
+      end
+
+      it "does not affect viewers who are not ignoring anyone" do
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_3)
+        sign_in(user_2)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
+
+        expect(response.status).to eq(200)
+        usernames = response.parsed_body["users"].map { |u| u["username"] }
+        expect(usernames).to include(user_3.username)
+      end
+    end
   end
 
   describe "#post_reactions_users" do
@@ -564,6 +601,51 @@ describe DiscourseReactions::CustomReactionsController do
       sign_in(user_2)
       get "/discourse-reactions/posts/#{private_post.id}/reactions-users.json"
       expect(response.status).to eq(200)
+    end
+
+    context "with ignored users" do
+      it "hides ignored users from reactions and likes" do
+        sign_in(user_1)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_2)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_5)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+
+        expect(response.status).to eq(200)
+        usernames =
+          response.parsed_body["reaction_users"].flat_map do |entry|
+            entry["users"].map { |u| u["username"] }
+          end
+        expect(usernames).not_to include(user_2.username, user_5.username)
+        expect(usernames).to include(user_1.username, user_3.username, user_4.username)
+      end
+
+      it "hides ignored users when filtering by main_reaction (heart)" do
+        sign_in(user_1)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_5)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json?reaction_value=#{DiscourseReactions::Reaction.main_reaction_id}"
+
+        expect(response.status).to eq(200)
+        usernames =
+          response.parsed_body["reaction_users"].flat_map do |entry|
+            entry["users"].map { |u| u["username"] }
+          end
+        expect(usernames).not_to include(user_5.username)
+      end
+
+      it "still shows reactions to anonymous viewers" do
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_5)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+
+        expect(response.status).to eq(200)
+        usernames =
+          response.parsed_body["reaction_users"].flat_map do |entry|
+            entry["users"].map { |u| u["username"] }
+          end
+        expect(usernames).to include(user_5.username)
+      end
     end
 
     it "does not double up reactions which also count as likes if the reaction is no longer enabled" do

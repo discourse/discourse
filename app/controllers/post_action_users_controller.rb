@@ -15,14 +15,12 @@ class PostActionUsersController < ApplicationController
     post = Post.with_deleted.find_by(id: params[:id].to_i)
     guardian.ensure_can_see!(post)
 
+    post_actions = post.post_actions.where(post_action_type_id: post_action_type_id).includes(:user)
+
+    post_actions = filter_ignored_users(post_actions)
+
     post_actions =
-      post
-        .post_actions
-        .where(post_action_type_id: post_action_type_id)
-        .includes(:user)
-        .offset(page * page_size)
-        .order("post_actions.created_at ASC")
-        .limit(page_size)
+      post_actions.offset(page * page_size).order("post_actions.created_at ASC").limit(page_size)
 
     post_actions =
       DiscoursePluginRegistry.apply_modifier(:post_action_users_list, post_actions, post)
@@ -52,6 +50,19 @@ class PostActionUsersController < ApplicationController
   end
 
   private
+
+  def filter_ignored_users(scope)
+    return scope if current_user.blank?
+
+    scope.where(<<~SQL, current_user_id: current_user.id)
+      NOT EXISTS (
+        SELECT 1 FROM ignored_users ig
+        WHERE ig.user_id = :current_user_id
+          AND ig.ignored_user_id = post_actions.user_id
+          AND ig.ignored_user_id <> :current_user_id
+      )
+    SQL
+  end
 
   def current_user_muting_or_ignoring_users(user_ids)
     return [] if current_user.blank?

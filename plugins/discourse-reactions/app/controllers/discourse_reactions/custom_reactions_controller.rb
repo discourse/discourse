@@ -162,6 +162,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
         reaction_filter: params[:reaction_value],
         limit: limit,
         offset: page * limit,
+        current_user_id: current_user&.id,
       )
 
     users =
@@ -214,6 +215,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           )
 
       likes = likes.where.not(id: historical_reaction_likes.select(:id))
+      likes =
+        DiscourseReactions::PostReactionsQuery.apply_ignored_users_filter(
+          likes,
+          user_column: "post_actions.user_id",
+          current_user_id: current_user&.id,
+        )
     end
 
     if likes.present?
@@ -263,8 +270,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   private
 
   def get_users(reaction)
-    reaction
-      .reaction_users
+    DiscourseReactions::PostReactionsQuery
+      .apply_ignored_users_filter(
+        reaction.reaction_users,
+        user_column: "discourse_reactions_reaction_users.user_id",
+        current_user_id: current_user&.id,
+      )
       .includes(:user)
       .order("discourse_reactions_reaction_users.created_at desc")
       .limit(MAX_USERS_COUNT + 1)
