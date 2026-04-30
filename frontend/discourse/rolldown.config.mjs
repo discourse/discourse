@@ -1,5 +1,6 @@
 import { ember } from "@embroider/vite";
 import * as fs from "fs";
+import { basename } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
@@ -82,9 +83,9 @@ export function buildConfig({ devMode } = {}) {
       sourcemap: true,
       cleanDir: !devMode,
       hashCharacters: "base36",
-      assetFileNames: "assets/[name]-[hash].digested[extname]",
-      chunkFileNames: "assets/[name]-[hash].digested.js",
-      entryFileNames: "assets/[name]-[hash].digested.js",
+      assetFileNames: "assets/js/[name]-[hash].digested[extname]",
+      chunkFileNames: "assets/js/[name]-[hash].digested.js",
+      entryFileNames: "assets/js/[name]-[hash].digested.js",
     },
     watch: {
       clearScreen: false,
@@ -122,6 +123,40 @@ export function buildConfig({ devMode } = {}) {
             };
           }
           return null;
+        },
+      },
+      {
+        name: "move-sourcemaps",
+        generateBundle(_options, bundle) {
+          const mapEntries = Object.entries(bundle).filter(([f]) =>
+            f.endsWith(".map")
+          );
+
+          for (const [oldFileName, asset] of mapEntries) {
+            // assets/js/foo.js.map → assets/map/foo.js.map
+            const newFileName = oldFileName.replace(
+              /^assets\/js\//,
+              "assets/map/"
+            );
+
+            this.emitFile({
+              type: "asset",
+              fileName: newFileName,
+              source: asset.source,
+            });
+
+            delete bundle[oldFileName];
+
+            // Patch the corresponding JS chunk
+            const jsFileName = oldFileName.slice(0, -4);
+            const chunk = bundle[jsFileName];
+            if (chunk?.code) {
+              chunk.code = chunk.code.replace(
+                /\/\/# sourceMappingURL=.+/,
+                `//# sourceMappingURL=../map/${basename(oldFileName)}`
+              );
+            }
+          }
         },
       },
       {

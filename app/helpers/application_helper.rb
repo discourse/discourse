@@ -124,17 +124,9 @@ module ApplicationHelper
       end
 
       if is_brotli_req?
-        if path.include?("/assets/js/")
-          path = path.sub("/assets/js/", "/assets/br/")
-        else
-          path = path.sub(/\.([^.]+)\z/, '.br.\1')
-        end
+        path = path.sub("/assets/js/", "/assets/br/")
       elsif is_gzip_req?
-        if path.include?("/assets/js/")
-          path = path.sub("/assets/js/", "/assets/gz/")
-        else
-          path = path.sub(/\.([^.]+)\z/, '.gz.\1')
-        end
+        path = path.sub("/assets/js/", "/assets/gz/")
       end
     end
 
