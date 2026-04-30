@@ -1,6 +1,10 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import { ICONS } from "discourse/components/post/small-action";
+import {
+  customGroupActionCodes,
+  GROUP_ACTION_CODES,
+  ICONS,
+} from "discourse/components/post/small-action";
 import UserAvatar from "discourse/components/user-avatar";
 import icon from "discourse/helpers/d-icon";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
@@ -13,6 +17,35 @@ const ACTIVITY_LOG_ICONS = {
   topic_created: "plus",
 };
 
+// `action_codes.*` translations interpolate %{who}/%{when}/%{path} at arbitrary
+// positions inside a translated sentence, so the substitutions have to be HTML
+// strings — there's no template-only equivalent. Mirrors small-action.gjs.
+function buildDescription(action, topicId) {
+  const code = action.action_code;
+  const when = autoUpdatingRelativeAge(new Date(action.created_at), {
+    format: "medium-with-ago-and-on",
+  });
+  const path = getURL(action.action_code_path || `/t/${topicId}`);
+  const who = mentionLinkFor(code, action.action_code_who);
+
+  return trustHTML(i18n(`action_codes.${code}`, { who, when, path }));
+}
+
+function mentionLinkFor(code, who) {
+  if (!who) {
+    return "";
+  }
+
+  const escaped = escapeExpression(who);
+  if (
+    GROUP_ACTION_CODES.includes(code) ||
+    customGroupActionCodes.includes(code)
+  ) {
+    return `<a class="mention-group" href="/g/${encodeURIComponent(who)}">@${escaped}</a>`;
+  }
+  return `<a class="mention" href="${userPath(who)}">@${escaped}</a>`;
+}
+
 export default class NestedActivityLogItem extends Component {
   get iconName() {
     const code = this.args.action.action_code;
@@ -20,22 +53,7 @@ export default class NestedActivityLogItem extends Component {
   }
 
   get description() {
-    const sa = this.args.action;
-    const when = autoUpdatingRelativeAge(new Date(sa.created_at), {
-      format: "medium-with-ago-and-on",
-    });
-
-    let who = "";
-    if (sa.action_code_who) {
-      const escaped = escapeExpression(sa.action_code_who);
-      who = `<a class="mention" href="${userPath(sa.action_code_who)}">@${escaped}</a>`;
-    }
-
-    const path = getURL(sa.action_code_path || `/t/${this.args.topicId}`);
-
-    return trustHTML(
-      i18n(`action_codes.${sa.action_code}`, { who, when, path })
-    );
+    return buildDescription(this.args.action, this.args.topicId);
   }
 
   get user() {
