@@ -650,6 +650,10 @@ login:
     client: true
     default: true
     hidden: true
+  allow_passkeys_for_2fa:
+    client: true
+    default: false
+    area: "login"
   allow_new_registrations:
     client: true
     default: true

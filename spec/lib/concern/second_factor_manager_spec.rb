@@ -163,6 +163,27 @@ RSpec.describe SecondFactorManager do
     end
   end
 
+  describe "#passkeys_for_2fa_enabled?" do
+    before do
+      SiteSetting.allow_passkeys_for_2fa = true
+      Fabricate(:passkey_with_random_credential, user: user)
+    end
+
+    it "is true when both setting flags are on" do
+      expect(user.passkeys_for_2fa_enabled?).to eq(true)
+    end
+
+    it "is false when the global enable_passkeys kill switch is off" do
+      SiteSetting.enable_passkeys = false
+      expect(user.passkeys_for_2fa_enabled?).to eq(false)
+    end
+
+    it "is false when allow_passkeys_for_2fa is off" do
+      SiteSetting.allow_passkeys_for_2fa = false
+      expect(user.passkeys_for_2fa_enabled?).to eq(false)
+    end
+  end
+
   describe "#authenticate_second_factor" do
     let(:params) { {} }
     let(:server_session) { ServerSession.new("some-prefix") }
@@ -176,6 +197,32 @@ RSpec.describe SecondFactorManager do
 
       it "keeps used_2fa_method nil because no authentication is done" do
         expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(nil)
+      end
+
+      context "when the user has a passkey and allow_passkeys_for_2fa is enabled" do
+        # Login / email-login / password-reset flows call authenticate_second_factor
+        # without a second_factor_method. They don't advertise passkeys, so a
+        # passkey-only user must still pass through these flows; only the explicit
+        # 2FA endpoint (which submits a method) should require passkey validation.
+        before do
+          SiteSetting.allow_passkeys_for_2fa = true
+          Fabricate(:passkey_with_random_credential, user: user)
+        end
+
+        it "returns OK when no second_factor_method is submitted" do
+          expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
+        end
+
+        it "validates the credential when a method is submitted" do
+          params_with_method = {
+            second_factor_method: UserSecondFactor.methods[:security_key],
+            second_factor_token: {
+              credentialId: "missing",
+            },
+          }
+          result = user.authenticate_second_factor(params_with_method, server_session)
+          expect(result.ok).to eq(false)
+        end
       end
     end
 
