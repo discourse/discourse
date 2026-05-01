@@ -204,7 +204,9 @@ export default class AiBotDockedComposer extends Component {
           >
             {{#if this.isStreaming}}
               <span class="ai-bot-scroll-indicator__dots">
-                <span></span><span></span><span></span>
+                <span class="ai-bot-scroll-indicator__dot"></span><span
+                  class="ai-bot-scroll-indicator__dot"
+                ></span><span class="ai-bot-scroll-indicator__dot"></span>
               </span>
             {{else}}
               {{icon "chevron-down"}}
