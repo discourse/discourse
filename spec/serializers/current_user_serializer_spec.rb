@@ -483,4 +483,38 @@ RSpec.describe CurrentUserSerializer do
       end
     end
   end
+
+  describe "#has_new_upcoming_changes" do
+    fab!(:admin)
+    subject(:serializer) { described_class.new(admin, scope: guardian, root: false) }
+
+    let(:guardian) { Guardian.new(admin) }
+
+    it "is suppressed for an admin created on a new site even if `added` events follow" do
+      Migration::Helpers.stubs(:new_site?).returns(true)
+      created_admin = Fabricate(:admin)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "some_setting",
+        created_at: Migration::Helpers.site_created_at + 30.minutes,
+      )
+      payload =
+        described_class.new(created_admin, scope: Guardian.new(created_admin), root: false).as_json
+      expect(payload[:has_new_upcoming_changes]).to eq(false)
+    end
+
+    it "is true once an `added` event lands after the stamped timestamp" do
+      Migration::Helpers.stubs(:new_site?).returns(true)
+      created_admin = Fabricate(:admin)
+      future_event_time = (Migration::Helpers.site_created_at + 2.hours)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "some_setting",
+        created_at: future_event_time,
+      )
+      payload =
+        described_class.new(created_admin, scope: Guardian.new(created_admin), root: false).as_json
+      expect(payload[:has_new_upcoming_changes]).to eq(true)
+    end
+  end
 end
