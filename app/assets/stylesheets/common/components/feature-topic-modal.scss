@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 .feature-section {
-  .desc {
+  &__description {
     width: 100%;
   }
 

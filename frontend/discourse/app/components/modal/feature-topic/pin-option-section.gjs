@@ -56,7 +56,7 @@ export default class PinOptionSection extends Component {
       class="feature-section"
       as |form|
     >
-      <div class="desc">
+      <div class="feature-section__description">
         {{#if @statsMessage}}
           <p>
             <ConditionalLoadingSpinner @size="small" @condition={{@loading}}>

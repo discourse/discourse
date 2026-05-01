@@ -143,7 +143,7 @@ export default class FeatureTopic extends Component {
       <:body>
         {{#if @model.topic.pinned_at}}
           <div class="feature-section">
-            <div class="desc">
+            <div class="feature-section__description">
               {{#if @model.topic.pinned_globally}}
                 <p>
                   <ConditionalLoadingSpinner
@@ -214,7 +214,7 @@ export default class FeatureTopic extends Component {
         {{#if @model.topic.details.can_banner_topic}}
           <hr />
           <div class="feature-section">
-            <div class="desc">
+            <div class="feature-section__description">
               <p>
                 <ConditionalLoadingSpinner
                   @size="small"
