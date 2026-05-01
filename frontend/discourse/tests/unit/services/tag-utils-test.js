@@ -34,8 +34,22 @@ module("Unit | Service | tag-utils", function (hooks) {
       "has-spaces"
     );
     assert.strictEqual(
-      this.tagUtils.createContentFromInput("special!@#chars"),
+      this.tagUtils.createContentFromInput("special!@chars"),
       "specialchars"
     );
+  });
+
+  test("createContentFromInput allows useful symbolic tag names", function (assert) {
+    assert.strictEqual(this.tagUtils.createContentFromInput("C++"), "c++");
+    assert.strictEqual(this.tagUtils.createContentFromInput("C#"), "c#");
+    assert.strictEqual(this.tagUtils.createContentFromInput("F#"), "f#");
+    assert.strictEqual(this.tagUtils.createContentFromInput("C%"), "c%");
+    assert.strictEqual(this.tagUtils.createContentFromInput("$100"), "$100");
+    assert.strictEqual(this.tagUtils.createContentFromInput("R&D"), "r&d");
+    assert.strictEqual(
+      this.tagUtils.createContentFromInput("node.js"),
+      "node.js"
+    );
+    assert.strictEqual(this.tagUtils.createContentFromInput("x=1"), "x=1");
   });
 });

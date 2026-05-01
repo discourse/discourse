@@ -8,7 +8,7 @@ module("Unit | Utility | render-tag", function (hooks) {
   test("defaultRenderTag", function (assert) {
     assert.strictEqual(
       renderTag("foo", { description: "foo description" }),
-      "<a href='/tag/foo'  data-tag-name=foo title=\"foo description\"  class='discourse-tag simple'>foo</a>",
+      "<a href='/tag/foo'  data-tag-name='foo' title=\"foo description\"  class='discourse-tag simple'>foo</a>",
       "formats tag as link with plain description in hover"
     );
 
@@ -16,8 +16,25 @@ module("Unit | Utility | render-tag", function (hooks) {
       renderTag("foo", {
         description: 'foo description <a href="localhost">link</a>',
       }),
-      "<a href='/tag/foo'  data-tag-name=foo title=\"foo description link\"  class='discourse-tag simple'>foo</a>",
+      "<a href='/tag/foo'  data-tag-name='foo' title=\"foo description link\"  class='discourse-tag simple'>foo</a>",
       "removes any html tags from description"
+    );
+  });
+
+  test("defaultRenderTag encodes legacy tag links with URL-reserved characters", function (assert) {
+    assert.strictEqual(
+      renderTag("c#"),
+      "<a href='/tag/c%23'  data-tag-name='c#' class='discourse-tag simple'>c#</a>"
+    );
+
+    assert.strictEqual(
+      renderTag("c++"),
+      "<a href='/tag/c%2B%2B'  data-tag-name='c++' class='discourse-tag simple'>c++</a>"
+    );
+
+    assert.strictEqual(
+      renderTag("c%"),
+      "<a href='/tag/c%25'  data-tag-name='c%' class='discourse-tag simple'>c%</a>"
     );
   });
 

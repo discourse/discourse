@@ -412,16 +412,16 @@ RSpec.describe SiteSerializer do
     end
 
     it "should use slug_for_url for tags with empty slugs" do
-      numeric_tag =
-        Fabricate(:tag, name: "1").tap { |tag| Fabricate.times(10, :topic, tags: [tag]) }
+      empty_slug_tag =
+        Fabricate(:tag, name: "🚀").tap { |tag| Fabricate.times(10, :topic, tags: [tag]) }
 
-      expect(numeric_tag.slug).to eq("")
+      expect(empty_slug_tag.slug).to eq("")
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      numeric_entry =
-        serialized[:navigation_menu_site_top_tags].find { |t| t[:id] == numeric_tag.id }
+      empty_slug_entry =
+        serialized[:navigation_menu_site_top_tags].find { |t| t[:id] == empty_slug_tag.id }
 
-      expect(numeric_entry[:slug]).to eq("#{numeric_tag.id}-tag")
+      expect(empty_slug_entry[:slug]).to eq("#{empty_slug_tag.id}-tag")
     end
 
     it "should return an empty array if site has no top tags" do

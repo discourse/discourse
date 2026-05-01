@@ -425,6 +425,39 @@ RSpec.describe TagsController do
       expect(topic_list["tags"].map { |t| t["id"] }).to contain_exactly(tag.id)
     end
 
+    it "shows tags with plus, hash, and percent characters by canonical id URL and encoded legacy URL" do
+      cpp = Fabricate(:tag, name: "c++")
+      csharp = Fabricate(:tag, name: "c#")
+      cpercent = Fabricate(:tag, name: "c%")
+      cpp_topic = Fabricate(:topic, tags: [cpp])
+      csharp_topic = Fabricate(:topic, tags: [csharp])
+      cpercent_topic = Fabricate(:topic, tags: [cpercent])
+
+      get "/tag/#{cpp.slug}/#{cpp.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        cpp_topic.id,
+      )
+
+      get "/tag/#{csharp.slug_for_url}/#{csharp.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        csharp_topic.id,
+      )
+
+      get "/tag/c%23.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        csharp_topic.id,
+      )
+
+      get "/tag/c%25.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        cpercent_topic.id,
+      )
+    end
+
     it "should handle invalid tags" do
       get "/tag/%2ftest%2f"
       expect(response.status).to eq(404)

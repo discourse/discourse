@@ -53,6 +53,30 @@ RSpec.describe Tag do
       )
     end
 
+    it "allows tags that share the same generated slug" do
+      cpp = Fabricate(:tag, name: "c++")
+      csharp = Fabricate(:tag, name: "c#")
+
+      cpercent = Fabricate(:tag, name: "c%")
+
+      expect(cpp.slug).to eq("c")
+      expect(csharp.slug).to eq("c_")
+      expect(cpercent.slug).to eq("c__")
+      expect(cpp.url).to eq("#{Discourse.base_path}/tag/c/#{cpp.id}")
+      expect(csharp.url).to eq("#{Discourse.base_path}/tag/c_/#{csharp.id}")
+      expect(cpercent.url).to eq("#{Discourse.base_path}/tag/c__/#{cpercent.id}")
+    end
+
+    it "generates numeric slugs for tags when the id keeps the URL unambiguous" do
+      percent = Fabricate(:tag, name: "100%")
+      dollars = Fabricate(:tag, name: "$100")
+
+      expect(percent.slug).to eq("100")
+      expect(dollars.slug).to eq("100_")
+      expect(percent.url).to eq("#{Discourse.base_path}/tag/100/#{percent.id}")
+      expect(dollars.url).to eq("#{Discourse.base_path}/tag/100_/#{dollars.id}")
+    end
+
     it 'does not allow creation of tag with name in "RESERVED_TAGS"' do
       expect { Fabricate.build(:tag, name: "None").save! }.to raise_error(
         ActiveRecord::RecordInvalid,
@@ -207,14 +231,14 @@ RSpec.describe Tag do
     end
 
     context "with numeric-only tag names" do
-      it "uses id-tag fallback for empty slugs" do
+      it "uses numeric slugs because the tag id keeps URLs unambiguous" do
         numeric_tag = Fabricate(:tag, name: "1")
         Fabricate(:topic, tags: [numeric_tag])
-        expect(numeric_tag.slug).to eq("")
+        expect(numeric_tag.slug).to eq("1")
 
         result = Tag.top_tags
         entry = result.find { |t| t[:id] == numeric_tag.id }
-        expect(entry[:slug]).to eq("#{numeric_tag.id}-tag")
+        expect(entry[:slug]).to eq("1")
       end
     end
 
@@ -520,9 +544,9 @@ RSpec.describe Tag do
       expect(tag.slug).to eq("hello-world")
     end
 
-    it "uses empty slug for numeric-only names" do
+    it "uses numeric slug for numeric-only names" do
       tag = Fabricate(:tag, name: "123")
-      expect(tag.slug).to eq("")
+      expect(tag.slug).to eq("123")
     end
 
     it "removes apostrophes from names" do
@@ -545,12 +569,12 @@ RSpec.describe Tag do
       expect(tag.slug).to eq("")
     end
 
-    it "resolves conflicts by setting slug to empty" do
+    it "resolves conflicts by adding underscores" do
       tag1 = Fabricate(:tag, name: "test")
       tag2 = Fabricate(:tag, name: "Test!")
 
       expect(tag1.slug).to eq("test")
-      expect(tag2.slug).to eq("")
+      expect(tag2.slug).to eq("test_")
     end
 
     it "preserves existing slug when name unchanged" do
@@ -584,10 +608,9 @@ RSpec.describe Tag do
     end
 
     it "returns id-tag when slug is empty" do
-      Fabricate(:tag, name: "test")
-      tag = Fabricate(:tag, name: "Test!")
+      tag = Fabricate(:tag, name: "test")
+      tag.update_column(:slug, "")
 
-      expect(tag.slug).to eq("")
       expect(tag.slug_for_url).to eq("#{tag.id}-tag")
     end
   end

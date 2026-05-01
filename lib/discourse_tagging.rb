@@ -2,7 +2,9 @@
 
 module DiscourseTagging
   TAGS_FIELD_NAME = "tags"
-  TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
+  # Tag names can include symbols commonly used in names like c++, c#, c%, $100, r&d,
+  # node.js, and x=1.
+  TAGS_FILTER_REGEXP = /[\/\?\[\]@!'\(\)\*,;\\`^\s|\{\}"<>]+/ # /?[]@!'()*,;\`^|{}"<>
   TAGS_STAFF_CACHE_KEY = "staff_tag_names"
 
   TAG_GROUP_TAG_IDS_SQL = <<-SQL
@@ -917,11 +919,13 @@ module DiscourseTagging
     names_to_create = cleaned_names.reject { |n| existing_names.include?(n.downcase) }
     if names_to_create.present?
       now = Time.current
+      candidate_slugs = names_to_create.map { |n| Tag.slug_for_name(n) }.select(&:present?)
+      used_slugs = Set.new(Tag.where(slug: candidate_slugs).pluck(:slug).map(&:downcase))
       rows =
         names_to_create.map do |n|
           {
             name: n,
-            slug: Slug.for(n, ""),
+            slug: Tag.unique_slug_for(n, used_slugs: used_slugs),
             target_tag_id: target_tag.id,
             created_at: now,
             updated_at: now,

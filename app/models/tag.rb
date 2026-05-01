@@ -73,6 +73,50 @@ class Tag < ActiveRecord::Base
     update_topic_counts
   end
 
+  def self.slug_for_name(name)
+    name = name.gsub(Emoji::EMOJI_CODE_REGEXP, "") if name.present?
+
+    slug =
+      case (SiteSetting.slug_generation_method || :ascii).to_sym
+      when :ascii
+        I18n.with_locale(SiteSetting.default_locale) { name.tr("'", "").parameterize }
+      when :encoded
+        CGI.escape(name.strip.gsub(/\s+/, "-").gsub(Slug::CHAR_FILTER_REGEXP, "").downcase)
+      else
+        ""
+      end
+
+    slug.tr("_", "-").truncate(Slug::MAX_LENGTH, omission: "").squeeze("-").gsub(/\A-+|-+\z/, "")
+  end
+
+  def self.unique_slug_for(name, excluding_id: nil, used_slugs: nil)
+    base_slug = slug_for_name(name)
+    return "" if base_slug.blank?
+
+    used_slugs ||= Set.new
+    scope = Tag.where("lower(slug) = ?", base_slug.downcase)
+    scope = scope.where.not(id: excluding_id) if excluding_id.present?
+
+    if !used_slugs.include?(base_slug.downcase) && !scope.exists?
+      used_slugs << base_slug.downcase
+      return base_slug
+    end
+
+    suffix = "_"
+    loop do
+      slug = "#{base_slug.truncate(Slug::MAX_LENGTH - suffix.length, omission: "")}#{suffix}"
+      scope = Tag.where("lower(slug) = ?", slug.downcase)
+      scope = scope.where.not(id: excluding_id) if excluding_id.present?
+
+      if !used_slugs.include?(slug.downcase) && !scope.exists?
+        used_slugs << slug.downcase
+        return slug
+      end
+
+      suffix += "_"
+    end
+  end
+
   def self.update_topic_counts
     DB.exec <<~SQL
       UPDATE tags t
@@ -301,8 +345,7 @@ class Tag < ActiveRecord::Base
     return if name.blank?
 
     if self.slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
-      self.slug = Slug.for(name, "")
-      self.slug = "" if self.slug.blank? || duplicate_slug?
+      self.slug = self.class.unique_slug_for(name, excluding_id: id)
     end
   end
 

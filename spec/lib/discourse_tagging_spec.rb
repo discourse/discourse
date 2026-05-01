@@ -1867,9 +1867,20 @@ RSpec.describe DiscourseTagging do
         expect(DiscourseTagging.clean_tag("hel\ufefflo")).to eq("hello")
       end
 
+      it "allows language tag names with plus, hash, and percent characters" do
+        expect(DiscourseTagging.clean_tag("C++")).to eq("c++")
+        expect(DiscourseTagging.clean_tag("C#")).to eq("c#")
+        expect(DiscourseTagging.clean_tag("f#")).to eq("f#")
+        expect(DiscourseTagging.clean_tag("c%")).to eq("c%")
+        expect(DiscourseTagging.clean_tag("$100")).to eq("$100")
+        expect(DiscourseTagging.clean_tag("r&d")).to eq("r&d")
+        expect(DiscourseTagging.clean_tag("node.js")).to eq("node.js")
+        expect(DiscourseTagging.clean_tag("x=1")).to eq("x=1")
+      end
+
       it "removes multiple consecutive dashes" do
         expect(DiscourseTagging.clean_tag("hello---world")).to eq("hello-world")
-        expect(DiscourseTagging.clean_tag("Finances & Accounting")).to eq("finances-accounting")
+        expect(DiscourseTagging.clean_tag("Finances & Accounting")).to eq("finances-&-accountin")
       end
     end
 
@@ -2095,6 +2106,22 @@ RSpec.describe DiscourseTagging do
       DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: ["synonym1"])
       s = Tag.where_name("synonym1").first
       expect(s.slug).to eq("synonym1")
+    end
+
+    it "can create language synonyms that generate colliding slugs" do
+      expect {
+        expect(
+          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: %w[c++ c# c%]),
+        ).to eq(true)
+      }.to change { Tag.count }.by(3)
+
+      cpp = Tag.find_by_name("c++")
+      csharp = Tag.find_by_name("c#")
+      cpercent = Tag.find_by_name("c%")
+      expect_same_tag_names(tag1.reload.synonyms, [cpp, csharp, cpercent])
+      expect(cpp.slug).to eq("c")
+      expect(csharp.slug).to eq("c_")
+      expect(cpercent.slug).to eq("c__")
     end
 
     it "can add existing and new tags" do

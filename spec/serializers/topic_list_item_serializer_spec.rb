@@ -99,14 +99,14 @@ RSpec.describe TopicListItemSerializer do
     end
 
     it "uses slug_for_url for tags with empty slugs" do
-      numeric_tag = Fabricate(:tag, name: "7")
-      expect(numeric_tag.slug).to eq("")
+      empty_slug_tag = Fabricate(:tag, name: "7")
+      empty_slug_tag.update_column(:slug, "")
 
-      topic.tags << numeric_tag
+      topic.tags << empty_slug_tag
       json = TopicListItemSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
-      entry = json[:tags].find { |t| t[:id] == numeric_tag.id }
+      entry = json[:tags].find { |t| t[:id] == empty_slug_tag.id }
 
-      expect(entry[:slug]).to eq("#{numeric_tag.id}-tag")
+      expect(entry[:slug]).to eq("#{empty_slug_tag.id}-tag")
     end
   end
 

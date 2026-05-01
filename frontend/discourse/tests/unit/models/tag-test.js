@@ -19,6 +19,11 @@ module("Unit | Model | tag", function (hooks) {
     assert.strictEqual(tag.totalCount, 13);
   });
 
+  test("url encodes legacy tag names without ids", function (assert) {
+    const tag = this.store.createRecord("tag", { name: "c#" });
+    assert.strictEqual(tag.url, "/tag/c%23");
+  });
+
   test("pmOnly", function (assert) {
     const tag = this.store.createRecord("tag", { pm_only: false });
 

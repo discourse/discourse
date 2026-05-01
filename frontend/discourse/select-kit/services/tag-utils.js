@@ -73,7 +73,7 @@ export default class TagUtils extends Service {
     input = input
       .trim()
       .replace(/\s+/g, "-")
-      .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/g, "")
+      .replace(/[\/\?\[\]@!'\(\)\*,;\\`^\s|\{\}"<>]+/g, "")
       .replace(/-{2,}/g, "-")
       .substring(0, this.siteSettings.max_tag_length);
 
