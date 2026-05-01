@@ -68,7 +68,7 @@ module ThemeScreenshotMarker
     filename = File.join(raw_dir, "#{device}-#{theme_name}-#{mode}-#{label}.png")
 
     page.driver.with_playwright_page do |pw_page|
-      pw_page.set_viewport_size(width: pw_page.viewport_size[:width], height: 1000)
+      pw_page.set_viewport_size(width: pw_page.viewport_size[:width], height: 1200)
       pw_page.screenshot(path: filename)
     end
 

@@ -22,8 +22,6 @@
 DEVICES = (ENV["SCREENSHOTS_DEVICES"] || "desktop,mobile").split(",").map(&:strip).freeze
 
 describe "Theme screenshots" do
-  include ChatSystemHelpers if defined?(ChatSystemHelpers)
-
   before { skip "Set TAKE_SCREENSHOTS=1 to run this spec" if ENV["TAKE_SCREENSHOTS"] != "1" }
 
   let(:output_dir) do
@@ -87,8 +85,12 @@ describe "Theme screenshots" do
   private
 
   def discover_marker_specs
+    patterns = [
+      Rails.root.join("spec/system/**/*.rb").to_s,
+      Rails.root.join("plugins/*/spec/system/**/*.rb").to_s,
+    ]
     Dir
-      .glob(Rails.root.join("spec/system/**/*.rb").to_s)
+      .glob(patterns)
       .reject { |f| File.realpath(f) == File.realpath(__FILE__) }
       .select { |f| File.read(f).include?("screenshot_marker") }
   end
@@ -251,6 +253,7 @@ describe "Theme screenshots" do
       "TAKE_SCREENSHOTS" => "1",
       "SCREENSHOTS_DIR" => output_dir,
       "SCREENSHOTS_THEME_NAME" => theme[:name],
+      "SCREENSHOTS_THEME_ID" => theme[:id].to_s,
       "SCREENSHOTS_MODE" => mode.to_s,
       "SCREENSHOTS_DEVICE" => device,
     }
