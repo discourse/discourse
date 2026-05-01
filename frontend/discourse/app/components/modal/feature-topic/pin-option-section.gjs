@@ -6,6 +6,7 @@ import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
 import FutureDateInput from "discourse/components/future-date-input";
+import icon from "discourse/helpers/d-icon";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import { i18n } from "discourse-i18n";
 
@@ -65,7 +66,8 @@ export default class PinOptionSection extends Component {
         {{/if}}
 
         <p>{{@noteMessage}}</p>
-        <p>{{trustHTML @pinMessage}}</p>
+        <p class="feature-section__pin-message">{{trustHTML @pinMessage}}
+          {{icon "far-clock"}}</p>
 
         <form.Field
           @name="pinUntil"
