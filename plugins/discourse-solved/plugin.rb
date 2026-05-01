@@ -50,6 +50,7 @@ after_initialize do
     ::WebHook.prepend(DiscourseSolved::WebHookExtension)
     ::TopicViewSerializer.prepend(DiscourseSolved::TopicViewSerializerExtension)
     ::Topic.prepend(DiscourseSolved::TopicExtension)
+    ::User.prepend(DiscourseSolved::UserExtension)
     ::Category.prepend(DiscourseSolved::CategoryExtension)
     ::PostSerializer.prepend(DiscourseSolved::PostSerializerExtension)
     ::PostMover.prepend(DiscourseSolved::PostMoverExtension)

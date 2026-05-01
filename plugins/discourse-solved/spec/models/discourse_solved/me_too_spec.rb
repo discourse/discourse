@@ -20,4 +20,14 @@ RSpec.describe DiscourseSolved::MeToo, type: :model do
     other_user = Fabricate(:user)
     expect(described_class.new(topic:, user: other_user)).to be_valid
   end
+
+  it "is deleted when its user is destroyed" do
+    Fabricate(:me_too, topic:, user:)
+    expect { user.destroy! }.to change { described_class.where(user_id: user.id).count }.to(0)
+  end
+
+  it "is deleted when its topic is destroyed" do
+    Fabricate(:me_too, topic:, user:)
+    expect { topic.destroy! }.to change { described_class.where(topic_id: topic.id).count }.to(0)
+  end
 end
