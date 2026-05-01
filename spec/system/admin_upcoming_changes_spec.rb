@@ -263,6 +263,47 @@ describe "Admin upcoming changes" do
     upcoming_changes_page.filter_controls.select_all_dropdown_option(dropdown_id: "enabled")
   end
 
+  it "updates the filter when a notification is clicked while already on the page" do
+    user_menu = PageObjects::Components::UserMenu.new
+
+    Fabricate(
+      :notification,
+      user: current_user,
+      notification_type: Notification.types[:upcoming_change_available],
+      data: {
+        upcoming_change_names: ["enable_upload_debug_mode"],
+        upcoming_change_humanized_names: [
+          SiteSettings::LabelFormatter.humanized_name(:enable_upload_debug_mode),
+        ],
+        count: 1,
+      }.to_json,
+    )
+    Fabricate(
+      :notification,
+      user: current_user,
+      notification_type: Notification.types[:upcoming_change_available],
+      data: {
+        upcoming_change_names: ["about_page_extra_groups_show_description"],
+        upcoming_change_humanized_names: [
+          SiteSettings::LabelFormatter.humanized_name(:about_page_extra_groups_show_description),
+        ],
+        count: 1,
+      }.to_json,
+    )
+
+    visit "/"
+
+    user_menu.open.click_notification_with_href("enable_upload_debug_mode")
+
+    expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
+    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+
+    user_menu.open.click_notification_with_href("about_page_extra_groups_show_description")
+
+    expect(upcoming_changes_page).to have_change(:about_page_extra_groups_show_description)
+    expect(upcoming_changes_page).to have_no_change(:enable_upload_debug_mode)
+  end
+
   it "displays a notification dot on the sidebar and clears it when navigating to upcoming changes" do
     sidebar = PageObjects::Components::NavigationMenu::Sidebar.new
 
