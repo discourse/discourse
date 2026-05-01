@@ -7,9 +7,12 @@ class DiscourseSolved::MeTooController < ::ApplicationController
   before_action :rate_limit_me_too
 
   def create
-    DiscourseSolved::ToggleMeToo.call(service_params) do
+    DiscourseSolved::MeToo::Toggle.call(service_params) do
       on_success do |topic:, existing_me_too:|
-        render json: { count: topic.me_too_count, user_did_me_too: existing_me_too.blank? }
+        render json: {
+                 count: DiscourseSolved::MeToo.count_for(topic),
+                 user_did_me_too: existing_me_too.blank?,
+               }
       end
       on_model_not_found(:topic) { raise Discourse::NotFound }
       on_failed_policy(:can_me_too) { raise Discourse::InvalidAccess }

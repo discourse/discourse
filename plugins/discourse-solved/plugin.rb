@@ -203,7 +203,7 @@ after_initialize do
     :topic_view,
     :me_too_count,
     include_condition: -> { scope.me_too_visible?(object.topic) },
-  ) { object.topic.me_too_count }
+  ) { DiscourseSolved::MeToo.count_for(object.topic) }
   add_to_serializer(
     :topic_view,
     :user_did_me_too,

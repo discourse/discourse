@@ -11,11 +11,6 @@ module DiscourseSolved::TopicExtension
              dependent: :delete_all
   end
 
-  def me_too_count
-    # The topic author is implicitly counted (no row stored for them).
-    me_toos.count + 1
-  end
-
   def solved_auto_close_hours
     hours = category&.solved_auto_close_hours || 0
     hours.zero? ? SiteSetting.solved_topics_auto_close_hours : hours

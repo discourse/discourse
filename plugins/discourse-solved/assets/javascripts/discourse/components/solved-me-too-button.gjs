@@ -6,7 +6,6 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 import { i18n } from "discourse-i18n";
 
 export default class SolvedMeTooButton extends Component {
@@ -45,14 +44,6 @@ export default class SolvedMeTooButton extends Component {
 
       topic.set("me_too_count", result.count);
       topic.set("user_did_me_too", result.user_did_me_too);
-
-      const currentLevel = topic.details?.notification_level;
-      if (
-        result.user_did_me_too &&
-        (currentLevel == null || currentLevel < NotificationLevels.TRACKING)
-      ) {
-        await topic.details.updateNotifications(NotificationLevels.TRACKING);
-      }
     } catch (e) {
       popupAjaxError(e);
     } finally {

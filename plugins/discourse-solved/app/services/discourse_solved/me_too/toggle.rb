@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DiscourseSolved::ToggleMeToo
+class DiscourseSolved::MeToo::Toggle
   include Service::Base
 
   params do
@@ -11,9 +11,10 @@ class DiscourseSolved::ToggleMeToo
 
   model :topic
   policy :can_me_too
-  model :existing_me_too, optional: true
 
   lock(:topic) do
+    model :existing_me_too, optional: true
+
     transaction do
       only_if(:existing_me_too_present?) { step :withdraw_me_too }
       only_if(:existing_me_too_absent?) do
@@ -36,7 +37,7 @@ class DiscourseSolved::ToggleMeToo
   end
 
   def fetch_existing_me_too(topic:, guardian:)
-    DiscourseSolved::MeToo.find_by(topic_id: topic.id, user_id: guardian.user.id)
+    DiscourseSolved::MeToo.find_by(topic:, user: guardian.user)
   end
 
   def existing_me_too_present?(existing_me_too:)
@@ -48,7 +49,7 @@ class DiscourseSolved::ToggleMeToo
   end
 
   def withdraw_me_too(existing_me_too:)
-    existing_me_too.destroy!
+    existing_me_too.destroy
   end
 
   def record_me_too(topic:, guardian:)
@@ -73,7 +74,11 @@ class DiscourseSolved::ToggleMeToo
   def publish_me_too_change(topic:, existing_me_too:)
     MessageBus.publish(
       "/topic/#{topic.id}",
-      { type: :me_too, count: topic.me_too_count, user_did_me_too: existing_me_too.blank? },
+      {
+        type: :me_too,
+        count: DiscourseSolved::MeToo.count_for(topic),
+        user_did_me_too: existing_me_too.blank?,
+      },
       topic.secure_audience_publish_messages,
     )
   end
