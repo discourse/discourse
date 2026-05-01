@@ -68,7 +68,19 @@ function initializeAIBotReplies(api) {
       if (data?.done) {
         streamingState?.markFinishedAfterRender(topicId, data?.post_id);
       } else {
-        streamingState?.markStarted(topicId, data?.post_id);
+        const postId = data?.post_id;
+        // If the post is already rendered and has no .streaming class, this
+        // chunk is a stale replay of a stream that already finished. Calling
+        // markStarted would wrongly show the stop button until the 15-s idle
+        // timer fires. Clear any leftover state and bail out instead.
+        if (postId) {
+          const postEl = document.querySelector(`[data-post-id="${postId}"]`);
+          if (postEl && !postEl.classList.contains("streaming")) {
+            streamingState?.markFinished(topicId);
+            return;
+          }
+        }
+        streamingState?.markStarted(topicId, postId);
       }
 
       streamPostText(this.model.postStream, data);
@@ -81,11 +93,17 @@ function initializeAIBotReplies(api) {
         this.model.details.allowed_users &&
         this.model.details.allowed_users.filter(isGPTBot).length >= 1
       ) {
-        // -3 is not obvious, but the implementation in message bus is -2 (last + new), -3 (last 2 + new)
+        // -2 replays only the last message before listening for new ones.
+        // A completed stream always ends with done:true as its final message,
+        // so replaying just the last event is enough to resume an in-progress
+        // stream AND avoids the stale-state bug where replaying an earlier
+        // chunk calls markStarted right before the done message, leaving the
+        // MutationObserver waiting for a .streaming class that never gets
+        // removed (because streamPostText has nothing left to stream).
         this.messageBus.subscribe(
           `discourse-ai/ai-bot/topic/${this.model.id}`,
           this.onAIBotStreamedReply.bind(this),
-          -3
+          -2
         );
       }
     },

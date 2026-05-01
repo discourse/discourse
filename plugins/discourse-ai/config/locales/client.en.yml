@@ -1244,6 +1244,10 @@ en:
           last_30_days: "Last 30 days"
           upload_files: "Upload files"
           uploads_in_progress: "Cannot submit while uploads are in progress"
+          show_toolbar: "Show formatting toolbar"
+          hide_toolbar: "Hide formatting toolbar"
+          scroll_to_bottom: "Scroll to bottom"
+          streaming_below: "New content below"
       sentiments:
         dashboard:
           title: "Sentiment"
