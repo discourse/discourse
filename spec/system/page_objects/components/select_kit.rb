@@ -25,8 +25,10 @@ module PageObjects
         has_no_css?(@context)
       end
 
-      def expanded_component
-        return expand if is_collapsed?
+      def expanded_component(skip_collapsed_check: false)
+        # Skip collapsed check to avoid infinite loop when called
+        # from .expand
+        return expand if is_collapsed? && !skip_collapsed_check
         find(@context + ".is-expanded")
       end
 
@@ -89,7 +91,7 @@ module PageObjects
 
       def expand
         collapsed_component.find(".select-kit-header", visible: :all).click
-        expanded_component
+        expanded_component(skip_collapsed_check: true)
       end
 
       def collapse
@@ -115,19 +117,19 @@ module PageObjects
       end
 
       def select_row_by_value(value)
-        expanded_component.find(".select-kit-row[data-value='#{value}']").click
+        with_dom_retry { expanded_component.find(".select-kit-row[data-value='#{value}']").click }
       end
 
       def select_row_by_name(name)
-        expanded_component.find(".select-kit-row[data-name='#{name}']").click
+        with_dom_retry { expanded_component.find(".select-kit-row[data-name='#{name}']").click }
       end
 
       def select_row_by_index(index)
-        expanded_component.find(".select-kit-row[data-index='#{index}']").click
+        with_dom_retry { expanded_component.find(".select-kit-row[data-index='#{index}']").click }
       end
 
       def unselect_by_name(name)
-        expanded_component.find(".selected-choice[data-name='#{name}']").click
+        with_dom_retry { expanded_component.find(".selected-choice[data-name='#{name}']").click }
       end
 
       def clear

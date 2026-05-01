@@ -38,9 +38,6 @@ pt:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username}%{description}"
-      event_description:
-        show_more: "Mostrar mais"
-        show_less: "Mostrar menos"
       show_all: "Mostrar tudo"
       add_to_calendar: "Adicionar ao calendário"
       bulk_invite: "Convite em Série"

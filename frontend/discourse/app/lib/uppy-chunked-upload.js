@@ -1,8 +1,4 @@
-import {
-  AbortController,
-  createAbortError,
-} from "@uppy/utils/lib/AbortController";
-import delay from "@uppy/utils/lib/delay";
+import { AbortController, createAbortError, delay } from "@uppy/utils";
 import { Promise } from "rsvp";
 
 const MB = 1024 * 1024;

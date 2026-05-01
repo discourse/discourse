@@ -2618,6 +2618,82 @@ RSpec.describe SessionController do
     ensure
       DiscourseEvent.off(:before_session_destroy, &callback)
     end
+
+    context "with return_url parameter" do
+      it "rejects absolute external URLs" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json",
+               params: {
+                 return_url: "https://evil.com/phishing",
+               },
+               xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/")
+      end
+
+      it "rejects protocol-relative URLs" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json",
+               params: {
+                 return_url: "//evil.com/phishing",
+               },
+               xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/")
+      end
+
+      it "rejects backslash variants that browsers may normalize to protocol-relative" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json", params: { return_url: "/\\evil.com" }, xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/")
+      end
+
+      it "rejects javascript: scheme URLs" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json",
+               params: {
+                 return_url: "javascript:alert(1)",
+               },
+               xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/")
+      end
+
+      it "rejects external URLs for non-XHR requests" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json", params: { return_url: "https://evil.com/phishing" }
+
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("http://test.localhost/")
+      end
+
+      it "allows valid relative paths" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json",
+               params: {
+                 return_url: "/t/some-topic/123",
+               },
+               xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/t/some-topic/123")
+      end
+
+      it "allows bare root path and takes precedence over logout_redirect" do
+        SiteSetting.logout_redirect = "/login"
+
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json", params: { return_url: "/" }, xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/")
+      end
+    end
   end
 
   describe "#one_time_password" do

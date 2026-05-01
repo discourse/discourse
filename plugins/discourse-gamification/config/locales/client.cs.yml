@@ -32,8 +32,6 @@ cs:
         cta: "Vytvořte si svůj první žebříček"
         none: "Zatím nebyly vytvořeny žádné žebříčky."
         confirm_destroy: "Opravdu chcete tento žebříček odstranit?"
-        section:
-          groups: "Skupiny"
         date:
           range: "Časové období od/do"
           from: "Od data"
@@ -48,9 +46,6 @@ cs:
         default_period: "Výchozí období"
         default_period_help: "Nastavte výchozí časové období, pro které se má zobrazit tento žebříček."
         period_filter_disabled: "Zakázat filtr časového období"
-        weight:
-          post_created: "Příspěvek vytvořen"
-          solution: "Řešení"
         period:
           all_time: "Za celou dobu"
           yearly: "Ročně"

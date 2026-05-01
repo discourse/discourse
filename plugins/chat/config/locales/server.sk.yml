@@ -235,6 +235,9 @@ sk:
         other_type: "%{username} spomenul %{identifier} v osobnom chate"
       new_chat_message: '%{username} odoslal správu v „%{channel}“'
       new_direct_chat_message: "%{username} poslal správu v osobnom rozhovore"
+    actions:
+      chat_reply:
+        title: Odpoveď
   discourse_automation:
     scriptables:
       send_chat_message:

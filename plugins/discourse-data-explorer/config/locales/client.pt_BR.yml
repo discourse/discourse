@@ -6,10 +6,6 @@
 
 pt_BR:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Explorador de Dados"
     errors:
       explorer:
         no_semicolons: "Remover os pontos e vírgulas da consulta."
@@ -26,9 +22,6 @@ pt_BR:
       create: "Criar"
       create_placeholder: "Nome da consulta…"
       description_placeholder: "Insira uma descrição aqui"
-      ai:
-        generate: "Gerar"
-        optional: "opcional"
       import:
         label: "Importar"
         unparseable_json: "Arquivo JSON não analisável"

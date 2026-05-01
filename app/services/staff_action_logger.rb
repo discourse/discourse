@@ -3,7 +3,17 @@
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
   def self.base_attrs
-    %i[topic_id post_id category_id context subject ip_address previous_value new_value]
+    %i[
+      topic_id
+      post_id
+      category_id
+      context
+      subject
+      ip_address
+      previous_value
+      new_value
+      reviewable_id
+    ]
   end
 
   def initialize(admin)
@@ -893,6 +903,7 @@ class StaffActionLogger
         details: details.join("\n"),
         topic_id: topic&.id,
         category_id: reviewable.category_id,
+        reviewable_id: reviewable.id,
       ),
     )
   end
@@ -1185,7 +1196,12 @@ class StaffActionLogger
 
   def params(opts = nil)
     opts ||= {}
-    { acting_user_id: @admin.id, context: opts[:context], details: opts[:details] }
+    {
+      acting_user_id: @admin.id,
+      context: opts[:context],
+      details: opts[:details],
+      reviewable_id: opts[:reviewable_id],
+    }
   end
 
   def validate_category(category)

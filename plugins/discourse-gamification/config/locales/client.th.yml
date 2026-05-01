@@ -12,10 +12,6 @@ th:
         link_to_settings: "การตั้งค่า"
         refresh: "รีเฟรช"
         name: "ชื่อ"
-        section:
-          groups: "กลุ่ม"
-        weight:
-          solution: "วิธีแก้ปัญหา"
         period:
           all_time: "ตลอดเวลา"
           yearly: "รายปี"

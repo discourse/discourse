@@ -7,23 +7,6 @@
 zh_CN:
   site_settings:
     data_explorer_enabled: "启用数据资源管理器"
-    data_explorer_ai_queries_enabled: "在数据浏览器中启用 AI 查询生成"
-  discourse_ai:
-    ai_bot:
-      agents:
-        ai_query_generator:
-          name: "数据浏览器查询生成器"
-          description: "从自然语言生成数据浏览器的 SQL 查询"
-      tool_help:
-        run_sql: "运行 SQL 查询并返回结果"
-      tool_summary:
-        run_sql: "运行 SQL 查询"
-      tool_description:
-        run_sql: "已运行 SQL 查询"
-  discourse_data_explorer:
-    ai:
-      error_agent_not_configured: "AI代理尚未配置。请检查AI功能设置。"
-      error_no_sql_returned: "AI未返回有效的SQL查询语句。请重试或手动编写查询语句。"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

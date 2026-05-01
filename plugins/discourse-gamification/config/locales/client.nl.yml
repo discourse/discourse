@@ -32,8 +32,6 @@ nl:
         cta: "Maak je eerste klassement"
         none: "Nog geen klassementen gemaakt."
         confirm_destroy: "Weet je zeker dat je dit klassement wilt verwijderen?"
-        section:
-          groups: "Groepen"
         date:
           range: "Datumbereik van/tot"
           from: "Vanaf datum"
@@ -48,9 +46,6 @@ nl:
         default_period: "Standaard periode"
         default_period_help: "Stel de standaard periode in die voor dit klassement moet worden weergegeven."
         period_filter_disabled: "Tijdsperiodefilter uitschakelen"
-        weight:
-          post_created: "Bericht gemaakt"
-          solution: "Oplossing"
         period:
           all_time: "Sinds het begin"
           yearly: "Jaarlijks"

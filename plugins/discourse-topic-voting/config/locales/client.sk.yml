@@ -23,9 +23,6 @@ sk:
         many: "Hlasy"
         other: "Hlasy"
       remove_vote: "Odstrániť hlas"
-      and_more_voters: "a %{count} ďalšie..."
-      show_voters: "Ukázať kto hlasoval"
-      vote_count_thousands: "%{count}tis"
     filters:
       votes:
         title: "Hlasy"

@@ -40,13 +40,20 @@ const categoryFixtures = {
         "Can't delete this category because it has 2030 topics. Oldest topic is <a href=\"https://localhost:3000/t/when-a-new-post-appears-in-a-topic-the-bookmark-isn-t-updated/39\">When a new post appears in a topic, the bookmark isn't updated</a>.",
       allow_badges: true,
       custom_fields: {},
-      category_types: {
-        discussion: {
+      category_types: [
+        {
           id: "discussion",
           name: "Discussion",
           configuration_schema: {}
         },
-      }
+      ],
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
+          configuration_schema: {}
+        },
+      ],
     },
   },
   "/c/11/show.json": {
@@ -120,13 +127,20 @@ const categoryFixtures = {
       uploaded_background_dark: null,
       required_tag_groups: [{ min_count: 1, name: "TagGroup1" }],
       category_localizations: [],
-      category_types: {
-        discussion: {
+      category_types: [
+        {
           id: "discussion",
           name: "Discussion",
           configuration_schema: {}
         },
-      }
+      ],
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
+          configuration_schema: {}
+        },
+      ],
     },
   },
   "/c/2481/show.json": {
@@ -142,13 +156,20 @@ const categoryFixtures = {
       group_permissions: [
         { permission_type: 1, group_name: "moderators", group_id: 2 },
       ],
-      category_types: {
-        discussion: {
+      category_types: [
+        {
           id: "discussion",
           name: "Discussion",
           configuration_schema: {}
         },
-      }
+      ],
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
+          configuration_schema: {}
+        },
+      ],
     },
   },
 };

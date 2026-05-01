@@ -96,22 +96,28 @@ describe "Post event" do
       visit(post.topic.url)
 
       # First click: join the event; since max is 1, it reaches capacity and shows Full
-      post_event_page.going
-      expect(page).to have_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.event.full"),
-      )
+      try_until_success do
+        post_event_page.going
+
+        expect(page).to have_css(
+          ".going-button",
+          text: I18n.t("js.discourse_post_event.models.event.full"),
+        )
+      end
 
       # Second click: leave the event; label should no longer be Full
-      post_event_page.going
-      expect(page).to have_no_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.event.full"),
-      )
-      expect(page).to have_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.invitee.status.going"),
-      )
+      try_until_success do
+        post_event_page.going
+
+        expect(page).to have_css(
+          ".going-button",
+          text: I18n.t("js.discourse_post_event.models.invitee.status.going"),
+        )
+        expect(page).to have_no_css(
+          ".going-button",
+          text: I18n.t("js.discourse_post_event.models.event.full"),
+        )
+      end
     end
   end
 
@@ -188,8 +194,11 @@ describe "Post event" do
 
     post_event_page.close
     post_event_page.open
-    post_event_page.going.open_more_menu
-    find(".show-all-participants").click
+
+    try_until_success { post_event_page.going }.open_more_menu do
+      locator(".show-all-participants").click
+    end
+
     find(".d-modal input.filter").fill_in(with: user.username)
     find(".d-modal .add-invitee").click
 

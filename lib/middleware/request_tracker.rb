@@ -231,6 +231,7 @@ class Middleware::RequestTracker
       timing: timing,
       queue_seconds: env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY],
       request_remote_ip: request_remote_ip,
+      occurred_at: Time.zone.now,
     }.merge(view_tracking_data)
 
     if request_data[:is_background]
@@ -669,10 +670,12 @@ class Middleware::RequestTracker
       user_id: data[:current_user_id],
       url: data[:tracking_url],
       ip_address: data[:request_remote_ip],
+      country_code: DiscourseIpInfo.get(data[:request_remote_ip])[:country_code],
       user_agent: data[:user_agent],
       referrer: data[:tracking_referrer],
       session_id: data[:tracking_session_id],
       topic_id: data[:topic_id],
+      occurred_at: data[:occurred_at],
     }
   end
   private_class_method :build_browser_pageview_event_payload

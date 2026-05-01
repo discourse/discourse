@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import AiBotDockedComposer from "../components/ai-bot-docked-composer";
 import AiBotHeaderIcon from "../components/ai-bot-header-icon";
 import AiAgentFlair from "../components/post/ai-agent-flair";
 import AiCancelStreaming from "../components/post/meta-data/ai-cancel-streaming";
@@ -12,6 +13,23 @@ import {
   streamPostText,
 } from "../lib/ai-streamer/progress-handlers";
 
+function focusDockedComposer() {
+  requestAnimationFrame(() => {
+    document.querySelector(".ai-bot-docked-composer .d-editor-input")?.focus();
+  });
+}
+
+function lookupStreamingState(api) {
+  // Guarded because the container may be destroyed by the time the
+  // topic controller's unsubscribe hook runs (particularly during
+  // test tear-down of acceptance suites).
+  try {
+    return api.container.lookup("service:ai-bot-streaming-state");
+  } catch {
+    return null;
+  }
+}
+
 let allowDebug = false;
 
 function attachHeaderIcon(api) {
@@ -21,10 +39,38 @@ function attachHeaderIcon(api) {
 function initializeAIBotReplies(api) {
   initializePauseButton(api);
 
+  api.renderInOutlet("topic-area-bottom", AiBotDockedComposer);
+
+  // Suppress MoreTopics tabs (Related Messages / Suggested) entirely on
+  // bot PMs. Relying on CSS `display: none` on `.more-topics__container`
+  // was racey during back-to-forum navigation: the body class could lag
+  // the DOM teardown and leave the tabs briefly visible on the next
+  // route. Returning an empty tabs array instead keeps the component
+  // rendering nothing regardless of transition timing.
+  api.registerValueTransformer("more-topics-tabs", ({ value, context }) => {
+    if (context?.topic?.is_bot_pm) {
+      return [];
+    }
+    return value;
+  });
+
   api.modifyClass("controller:topic", {
     pluginId: "discourse-ai",
 
     onAIBotStreamedReply: function (data) {
+      if (!this.model?.postStream) {
+        return;
+      }
+
+      const streamingState = lookupStreamingState(api);
+      const topicId = this.model.id;
+
+      if (data?.done) {
+        streamingState?.markFinishedAfterRender(topicId, data?.post_id);
+      } else {
+        streamingState?.markStarted(topicId, data?.post_id);
+      }
+
       streamPostText(this.model.postStream, data);
     },
     subscribe: function () {
@@ -45,11 +91,32 @@ function initializeAIBotReplies(api) {
     },
     unsubscribe: function () {
       // we may have infected post stream so lets clean it up
-      cleanupStreamingData(this.model.postStream);
+      if (this.model?.postStream) {
+        cleanupStreamingData(this.model.postStream);
+      }
+
+      if (this.model?.id) {
+        // Guarded lookup: the container can be destroyed before
+        // `unsubscribe` runs (teardown during test owner destruction),
+        // in which case there's nothing to mark finished anyway.
+        const streamingState = lookupStreamingState(api);
+        streamingState?.markFinished(this.model.id);
+      }
 
       this.messageBus.unsubscribe("discourse-ai/ai-bot/topic/*");
       this._super();
     },
+  });
+
+  // When a user triggers a reply on a bot PM (via the `r` shortcut, the
+  // reply button, or a quote), focus the docked composer. The floating
+  // composer still opens internally but is hidden by CSS; quote text it
+  // receives is relayed to the docked composer via `composer:insert-block`
+  // which our DEditor subscribes to.
+  api.onAppEvent("page:compose-reply", (topic) => {
+    if (topic?.is_bot_pm) {
+      focusDockedComposer();
+    }
   });
 }
 

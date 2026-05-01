@@ -87,13 +87,13 @@ describe "Composer - ProseMirror - Pasting content" do
     )
   end
 
-  xit "ignores text/html content if Files are present" do
+  it "ignores text/html content if Files are present" do
     open_composer
-    paste_and_click_image(cdp)
-    expect(rich).to have_css("img[data-orig-src]", count: 1)
+    paste_and_click_image
+    expect(rich).to have_no_css("img[src^='data:']")
     composer.focus # making sure the toggle click won't be captured as a double click
     composer.toggle_rich_editor
-    expect(composer).to have_value("![image|244x66](upload://hGLky57lMjXvqCWRhcsH31ShzmO.png)")
+    expect(composer).to have_value(%r{\A!\[image\|244x66\]\(upload://\w+\.png\)\z})
   end
 
   it "handles multiple data URI images pasted simultaneously" do

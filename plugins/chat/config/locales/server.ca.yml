@@ -32,6 +32,9 @@ ca:
     popup:
       chat_mention:
         direct: '%{username} us ha mencionat en "%{channel}"'
+    actions:
+      chat_reply:
+        title: Respon
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

@@ -54,6 +54,14 @@ module SystemHelpers
     self
   end
 
+  # Waits for the Ember app to boot before continuing.
+  def visit(...)
+    super
+    return if page.has_no_css?("discourse-assets", wait: 0, visible: :all)
+
+    page.assert_selector("#main.ember-application", visible: :all)
+  end
+
   def sign_in(user)
     visit File.join(
             GlobalSetting.relative_url_root || "",
@@ -371,8 +379,24 @@ module SystemHelpers
     element.with_playwright_element_handle do |playwright_element|
       playwright_element.wait_for_element_state("hidden")
     rescue Playwright::Error => e
-      raise e unless e.message.match?(/Element is not attached to the DOM/)
+      raise if !detached_element_error?(e)
     end
+  end
+
+  # Retries the block on "Element is not attached to the DOM" error.
+  # That's usually a `find(...).click` racing a re-render.
+  def with_dom_retry(timeout: Capybara.default_max_wait_time)
+    deadline = Time.current + timeout.seconds
+    begin
+      yield
+    rescue Playwright::Error => e
+      retry if detached_element_error?(e) && Time.current < deadline
+      raise
+    end
+  end
+
+  def detached_element_error?(error)
+    error.is_a?(Playwright::Error) && error.message.include?("Element is not attached to the DOM")
   end
 
   def locator(selector, locator = nil)
@@ -391,3 +415,16 @@ module SystemHelpers
     Nokogiri.HTML5(html_translation).at("body").inner_text
   end
 end
+
+module CapybaraSessionEmberWaiter
+  # Waits for the Ember app to boot before continuing.
+  def refresh
+    super
+    return unless RSpec.current_example&.metadata&.[](:type) == :system
+    return if has_no_css?("discourse-assets", wait: 0, visible: :all)
+
+    assert_selector("#main.ember-application", visible: :all)
+  end
+end
+
+Capybara::Session.prepend(CapybaraSessionEmberWaiter)

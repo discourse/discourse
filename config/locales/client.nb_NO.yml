@@ -2857,17 +2857,9 @@ nb_NO:
         archive_messages: "Flytt til arkiv"
         change_notification_level: "Endre varslingsnivå"
         choose_new_category: "Velg den nye kategorien for emnene:"
-        selected_sole_category:
-          one: "Du har valgt <b>%{count}</b> emne fra kategorien:"
-          other: "Du har valgt <b>%{count}</b> emner fra kategorien:"
         selected_count:
           one: "%{count} valgt"
           other: "%{count} valgt"
-        choose_new_tags: "Velg nye stikkord for følgende emner:"
-        changed_tags: "Stikkordene for de valgte emnene ble endret."
-        confirm_remove_tags:
-          one: "Alle stikkord vil bli fjernet fra dette emnet. Er du sikker?"
-          other: "Alle stikkord vil bli fjernet fra %{count} emner. Er du sikker?"
         progress:
           one: "Fremgang: <strong>%{count}</strong> emne"
           other: "Fremgang: <strong>%{count}</strong> emner"
@@ -2904,10 +2896,6 @@ nb_NO:
         name: "Avliste"
       relist_topics:
         name: "Liste på nytt"
-      remove_tags:
-        name: "Fjern stikkord"
-      replace_tags:
-        name: "Erstatt stikkord"
       delete_topics:
         name: "Slett"
       update_category:
@@ -2936,6 +2924,7 @@ nb_NO:
       collapse: "Fold sammen"
       no_replies: "Ingen svar ennå."
       deleted_post_placeholder: "[slettet]"
+      ignored_post_placeholder: "[ignorert]"
       pinned_reply: "Fastsatt"
     topic:
       filter_to:
@@ -3740,7 +3729,7 @@ nb_NO:
           low: "Lav"
           high: "Høy"
       sort_options:
-        default: "forvalg"
+        default: "Forvalg"
         likes: "Likes"
         views: "Visninger"
         posts: "Innlegg"
@@ -5164,6 +5153,7 @@ nb_NO:
         topic_id: "Emne-ID"
         post_id: "Innleggs-ID"
         category_id: "Kategori-ID"
+        reviewable_id: "Gjennomgang"
         delete: "Slett"
         edit: "Endre"
         save: "Lagre"

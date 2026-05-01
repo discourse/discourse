@@ -5,7 +5,3 @@
 # https://translate.discourse.org/
 
 th:
-  topic_voting:
-    category_type:
-      show_who_voted:
-        label: "แสดงรายชื่อผู้โหวต"

@@ -16,6 +16,9 @@ th:
     popup:
       chat_mention:
         direct: '%{username} พูดถึงคุณใน "%{channel}"'
+    actions:
+      chat_reply:
+        title: ตอบ
   unsubscribe:
     chat_summary:
       never: ไม่เคย

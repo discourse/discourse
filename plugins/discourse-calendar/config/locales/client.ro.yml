@@ -34,9 +34,6 @@ ro:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} ți-a setat automat participarea și te-a invitat la %{eventName}"
         an_event: "un eveniment"
-      event_description:
-        show_more: "Arată mai multe"
-        show_less: "Arată mai puține"
       invite: "Notifică utilizator"
       add_to_calendar: "Adaugă în calendar"
       send_pm_to_creator: "Trimite PM către %{username}"

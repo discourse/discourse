@@ -19,7 +19,7 @@ describe "Simplified Category Creation" do
 
   describe "Selecting category type when setting up a new category" do
     it "automatically skips category type selection when only one type (discussion) is available" do
-      visit("/new-category/setup")
+      category_page.visit_new_category
       expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
       expect(page).to have_current_path("/new-category/general")
     end
@@ -250,6 +250,12 @@ describe "Simplified Category Creation" do
       expect(page).to have_content("Updated category description")
       expect(toasts).to have_success(I18n.t("js.category.description_updated"))
     end
+
+    it "does not allow selecting other category types when creating a new category" do
+      category_page.visit_new_category
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+      expect(page).to have_no_css(".category-type-selector")
+    end
   end
 
   describe "Security Tab" do
@@ -372,18 +378,16 @@ describe "Simplified Category Creation" do
     end
 
     it "sets default view to latest" do
-      category_page.visit_images(category)
+      category_page.visit_appearance(category)
 
-      default_view_selector = PageObjects::Components::SelectKit.new("#category-default-view")
-      default_view_selector.expand
-      default_view_selector.select_row_by_value("latest")
+      form.field("default_view").select("latest")
       category_page.save_settings
 
       expect(category.reload.default_view).to eq("latest")
     end
 
     it "uploads a category logo" do
-      category_page.visit_images(category)
+      category_page.visit_appearance(category)
 
       attach_file(
         "category-logo-uploader__input",

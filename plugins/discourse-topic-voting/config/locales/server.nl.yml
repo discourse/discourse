@@ -16,9 +16,6 @@ nl:
     topic_voting_show_votes_on_profile: 'Toestaan dat gebruikers hun stemmen zien in hun activiteitfeed?'
     topic_voting_alert_votes_left: 'Gebruiker waarschuwen als zoveel stemmen resteren'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Weergeven wie er heeft gestemd"
     votes_moved:
       one: "Een stem is verplaatst."
       other: "%{count} stemmen zijn verplaatst."

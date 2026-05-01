@@ -29,6 +29,9 @@ class PushNotificationPusher
         url: payload[:post_url]&.sub(/\A#{Discourse.base_path}/, ""),
       }
 
+      message[:actions] = payload[:actions] if payload[:actions].present?
+      message[:action_data] = payload[:action_data] if payload[:action_data].present?
+
       subscriptions(user).each { |subscription| send_notification(user, subscription, message) }
     end
 

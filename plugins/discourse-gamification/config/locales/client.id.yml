@@ -12,10 +12,6 @@ id:
         link_to_settings: "Pengaturan"
         refresh: "Segarkan"
         name: "Nama"
-        section:
-          groups: "Grup"
-        weight:
-          solution: "Solusi"
         period:
           all_time: "Sepanjang Waktu"
       create: "Buat"

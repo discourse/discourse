@@ -23,9 +23,6 @@ sv:
         one: "Rösta"
         other: "Röster"
       remove_vote: "Ta bort röst"
-      and_more_voters: "och %{count} till..."
-      show_voters: "Visa vem som röstat"
-      vote_count_thousands: "%{count}k"
       no_votes_title_self: "Du har inte röstat på något ämne ännu"
       no_votes_title_others: "%{username} har inte röstat på något ämne ännu"
     filters:

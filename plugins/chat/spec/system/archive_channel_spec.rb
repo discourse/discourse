@@ -104,23 +104,21 @@ RSpec.describe "Archive channel" do
             chat_channel: channel_1,
             archived_by: current_user,
             destination_topic_title: "This will be the archive topic",
+            destination_category_id: channel_1.chatable_id,
             total_messages: 2,
             archived_messages: 1,
             archive_error: "Something went wrong",
           )
         end
 
-        xit "can be retried" do
-          Jobs.run_immediately!
-
+        it "can be retried" do
           chat.visit_channel(channel_1)
           click_button(I18n.t("js.chat.channel_archive.retry"))
-          expect(page).to have_css(".chat-channel-archive-status a")
 
-          new_window = window_opened_by { find(".chat-channel-archive-status a").click }
-          within_window(new_window) do
-            expect(page).to have_content(archive.destination_topic_title)
-          end
+          Jobs::Chat::ChannelArchive.new.execute(chat_channel_archive_id: archive.id)
+
+          archive_link = find(".chat-channel-archive-status a")
+          expect(archive_link[:href]).to end_with("/t/-/#{archive.reload.destination_topic_id}")
         end
       end
     end

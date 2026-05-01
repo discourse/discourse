@@ -6,6 +6,7 @@ export default class CategoryTypeChooser extends Service {
 
   _selection = null;
   _setupComplete = false;
+  _allTypes = null;
 
   get isEnabled() {
     return this.siteSettings.enable_simplified_category_creation;
@@ -13,6 +14,14 @@ export default class CategoryTypeChooser extends Service {
 
   get hasCompletedSetup() {
     return this._selection !== null || this._setupComplete;
+  }
+
+  get allTypes() {
+    return this._allTypes;
+  }
+
+  set allTypes(types) {
+    this._allTypes = types;
   }
 
   choose(typeId, typeName, typeSchema, typeTitle, count) {

@@ -15,7 +15,3 @@ nb_NO:
     topic_voting_show_who_voted: 'Tillat brukere å se hvem som stemte?'
     topic_voting_show_votes_on_profile: 'Tillat brukere å se stemmene sine i aktivitetslisten?'
     topic_voting_alert_votes_left: 'Varsle bruker når dette antallet stemmer er igjen'
-  topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Vis hvem som har stemt"

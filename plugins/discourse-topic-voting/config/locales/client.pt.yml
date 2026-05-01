@@ -23,9 +23,6 @@ pt:
         one: "Voto"
         other: "Votos"
       remove_vote: "Remover voto"
-      and_more_voters: "e mais %{count}..."
-      show_voters: "Mostrar quem votou"
-      vote_count_thousands: "%{count}k"
     filters:
       votes:
         title: "Votos"

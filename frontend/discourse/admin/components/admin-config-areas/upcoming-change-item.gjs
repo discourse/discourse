@@ -95,8 +95,15 @@ export default class UpcomingChangeItem extends Component {
     );
   }
 
-  get showRelatedSettingLink() {
-    return this.args.change.related && this.bufferedEnabledFor !== "no_one";
+  get showDefaultOverrideSettingLink() {
+    return (
+      this.args.change.overriding_defaults &&
+      this.bufferedEnabledFor !== "no_one"
+    );
+  }
+
+  get defaultOverrideSettingFilter() {
+    return `upcoming_change_default_override:${this.args.change.setting}`;
   }
 
   @action
@@ -359,11 +366,11 @@ export default class UpcomingChangeItem extends Component {
           </div>
         {{/if}}
 
-        {{#if this.showRelatedSettingLink}}
-          <div class="upcoming-change__related">
+        {{#if this.showDefaultOverrideSettingLink}}
+          <div class="upcoming-change__default-override-setting">
             <LinkTo
               @route="adminSiteSettings"
-              @query={{hash filter=@change.related}}
+              @query={{hash filter=this.defaultOverrideSettingFilter}}
             >
               {{i18n "admin.upcoming_changes.show_related_settings"}}
             </LinkTo>

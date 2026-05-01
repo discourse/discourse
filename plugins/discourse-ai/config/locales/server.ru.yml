@@ -752,10 +752,8 @@ ru:
       quota_required: "Необходимо указать максимальное количество токенов или использований для этой модели"
       no_query_specified: Параметр запроса обязателен, укажите его.
       no_user_for_agent: Указанный агент не имеет связанного с ним пользователя.
-      agent_not_found: "Указанный агент не существует. Проверьте параметры agent_name или agent_id (устаревшие: agent_name или agent_id)."
       no_user_specified: Параметры user_unique_id или username обязательны, укажите нужное.
       user_not_found: Указанный пользователь не существует. Проверьте параметр username.
-      agent_disabled: "Указанный агент отключен. Проверьте параметры agent_name или agent_id (устаревшие: agent_name или agent_id)."
       no_default_llm: У агента должен быть определен параметр default_llm.
       user_not_allowed: Пользователю не разрешено участвовать в теме.
       prompt_message_length: Сообщение %{idx} превышает ограничение в 1000 символов.

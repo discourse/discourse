@@ -232,6 +232,9 @@ hu:
         other_type: "%{username} megemlítette %{identifier} felhasználót egy személyes csevegésben"
       new_chat_message: '%{username} üzenet küldött a következő csatornán: „%{channel}”'
       new_direct_chat_message: "%{username} üzenetet küldött egy személyes csevegésben"
+    actions:
+      chat_reply:
+        title: Válasz
   discourse_automation:
     scriptables:
       send_chat_message:

@@ -35,7 +35,6 @@ de:
       already_voted: "Du kannst nur einmal pro Frage abstimmen."
       user_over_limit: "Du kannst nicht öfter abstimmen, als es deine Vertrauensstufe erlaubt."
       one_vote_per_post: "Du kannst nur einmal pro Beitrag abstimmen."
-      toggle_voters: "Anzeigen, wer abgestimmt hat"
     last_answer_lowercase: letzte Antwort
     answer_lowercase:
       one: Antwort
@@ -57,8 +56,6 @@ de:
           edit: "bearbeiten"
           cancel: "abbrechen"
           add: "Kommentar hinzufügen"
-          actions:
-            delete: "Kommentar löschen"
           show:
             one: '%{count} weiteren Kommentar anzeigen'
             other: '%{count} weitere Kommentare anzeigen'

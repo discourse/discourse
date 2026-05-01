@@ -26,6 +26,9 @@ bs_BA:
     popup:
       chat_mention:
         direct: '%{username} vas je spomenuo/la u "%{channel}"'
+    actions:
+      chat_reply:
+        title: Odgovori
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

@@ -354,14 +354,13 @@ RSpec.describe "AI Bot - Homepage" do
       expect(ai_pm_homepage).to have_homepage
     end
 
-    it "can send a new message to the bot" do
+    it "can send a new message to the bot via the docked composer" do
       topic_page.visit_topic(pm)
-      topic_page.click_reply_button
-      expect(composer).to be_opened
+      expect(page).to have_css(".ai-bot-docked-composer")
 
-      composer.fill_in(with: "Hello bot replying to you")
       DiscourseAi::Completions::Llm.with_prepared_responses(["hello user"]) do
-        composer.submit
+        find(".ai-bot-docked-composer .d-editor-input").fill_in(with: "Hello bot replying to you")
+        find(".ai-bot-docked-composer .d-editor-input").send_keys(:enter)
         expect(page).to have_content("Hello bot replying to you")
       end
     end

@@ -8,4 +8,3 @@ te:
   js:
     topic_voting:
       vote_title: "వోటు"
-      vote_count_thousands: "%{count} వేల"

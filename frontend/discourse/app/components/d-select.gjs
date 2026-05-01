@@ -33,6 +33,17 @@ export class DSelectOption extends Component {
 }
 
 export default class DSelect extends Component {
+  get htmlSelectValue() {
+    const value = this.args.value;
+    if (value === NO_VALUE_OPTION) {
+      return NO_VALUE_OPTION;
+    }
+    if (isNone(value) || value === "") {
+      return NO_VALUE_OPTION;
+    }
+    return value;
+  }
+
   @action
   handleInput(event) {
     // if an option has no value, event.target.value will be the content of the option
@@ -52,22 +63,28 @@ export default class DSelect extends Component {
 
   <template>
     <select
-      value={{@value}}
+      value={{this.htmlSelectValue}}
       ...attributes
       class="d-select"
       {{on "input" this.handleInput}}
     >
       {{#if this.includeNone}}
         <DSelectOption @value={{NO_VALUE_OPTION}}>
-          {{#if this.hasSelectedValue}}
-            {{i18n "none_placeholder"}}
+          {{#if @nonePlaceholder}}
+            {{@nonePlaceholder}}
           {{else}}
-            {{i18n "select_placeholder"}}
+            {{#if this.hasSelectedValue}}
+              {{i18n "none_placeholder"}}
+            {{else}}
+              {{i18n "select_placeholder"}}
+            {{/if}}
           {{/if}}
         </DSelectOption>
       {{/if}}
 
-      {{yield (hash Option=(component DSelectOption selected=@value))}}
+      {{yield
+        (hash Option=(component DSelectOption selected=this.htmlSelectValue))
+      }}
     </select>
   </template>
 }

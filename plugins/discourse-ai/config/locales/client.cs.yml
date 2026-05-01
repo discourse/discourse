@@ -195,7 +195,6 @@ cs:
           ai_summarization: "Shrnout"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-7: "Nejinteligentnější model společnosti Anthropic"
           anthropic-claude-sonnet-4-6: "Optimální poměr rychlosti a nákladů"
         next:
           title: "Další"

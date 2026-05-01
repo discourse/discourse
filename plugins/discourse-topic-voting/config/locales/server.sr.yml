@@ -5,7 +5,3 @@
 # https://translate.discourse.org/
 
 sr:
-  topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Prikaži ko je glasao"

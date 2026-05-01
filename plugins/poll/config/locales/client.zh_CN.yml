@@ -12,7 +12,6 @@ zh_CN:
           poll: "Discourse 投票"
   js:
     poll:
-      title: "投票"
       dynamic:
         enabled_hint: "可以添加或移除选项。"
       voters:

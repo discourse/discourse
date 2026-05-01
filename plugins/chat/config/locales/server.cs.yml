@@ -253,6 +253,9 @@ cs:
         other_type: "%{username} zmínil/a %{identifier} v soukromém chatu"
       new_chat_message: '%{username} poslal zprávu v "%{channel}“'
       new_direct_chat_message: "%{username} poslal/a zprávu v soukromém chatu"
+    actions:
+      chat_reply:
+        title: Odpověď
   discourse_automation:
     scriptables:
       send_chat_message:

@@ -273,6 +273,7 @@ module DiscourseUpdates
 
     def clear_latest_new_feature_created_at_cache
       Discourse.redis.del(latest_new_feature_created_at_key)
+    rescue Redis::CannotConnectError
     end
 
     def new_features_last_seen(user_id)

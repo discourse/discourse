@@ -84,6 +84,7 @@ import {
 import { registerIconRenderer, replaceIcon } from "discourse/lib/icon-library";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
+import { registerOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import {
   extraConnectorClass,
@@ -3336,6 +3337,26 @@ class _PluginApi {
    */
   registerEditCategoryTab(tab) {
     registeredEditCategoryTabs.push(tab);
+  }
+
+  /**
+   * Register a callback that runs when the user changes category type selection in the
+   * **simplified** category editor (General tab) when `enable_simplified_category_creation` is
+   * enabled. It does not run on the legacy category editor.
+   *
+   * Callbacks run in order. Each may be `async`. The change applies only if every callback
+   * returns a **truthy** value; a **falsy** return blocks the new selection. If a callback
+   * throws, the error is reported and the change is blocked; in tests the error is rethrown.
+   *
+   * The callback receives:
+   * - `nextTypes` - normalized type objects after the empty-to-discussion rule
+   * - `previousTypes` - selection before this change
+   * - `category`, `form`, and optionally `transientData`
+   *
+   * @param {function(Object): (boolean|undefined|Promise<boolean|undefined>)} fn
+   */
+  registerOnBeforeCategoryTypesChange(fn) {
+    registerOnBeforeCategoryTypesChange(fn);
   }
 
   /**

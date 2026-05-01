@@ -2427,12 +2427,6 @@ ko:
         move_messages_to_inbox: "받은 편지함으로 이동"
         change_notification_level: "알림 수준 변경"
         choose_new_category: "글에 대한 새 카테고리 선택:"
-        append_tags: "태그 추가"
-        choose_new_tags: "다음 글에 대한 새 태그 선택:"
-        choose_append_tags: "태그 추가"
-        changed_tags: "해당 글의 태그가 변경되었습니다."
-        confirm_remove_tags:
-          other: "<b>%{count}</b>개의 글에서 태그가 모두 제거됩니다. 계속할까요?"
         progress:
           other: "진행률: <strong>%{count}</strong>개의 글"
         error_topic_count:
@@ -2460,10 +2454,9 @@ ko:
         name: "보관"
       move_messages_to_inbox:
         name: "받은 편지함으로 이동"
-      remove_tags:
-        name: "태그 제거"
-      replace_tags:
-        name: "태그 바꾸기"
+      manage_tags:
+        add:
+          title: "태그 추가"
       delete_topics:
         name: "삭제하기"
       convert_to_private_message:
@@ -2482,6 +2475,7 @@ ko:
       collapse: "축소"
       no_replies: "아직 댓글이 없습니다."
       deleted_post_placeholder: "[삭제됨]"
+      ignored_post_placeholder: "[무시됨]"
       pinned_reply: "핀 지정됨"
     topic:
       filter_to:
@@ -3171,7 +3165,7 @@ ko:
           low: "낮은"
           high: "높음"
       sort_options:
-        default: "디폴트"
+        default: "기본"
         likes: "좋아요"
         views: "조회수"
         posts: "게시글 수"
@@ -4762,6 +4756,7 @@ ko:
         topic_id: "주제 ID"
         post_id: "게시물 ID"
         category_id: "카테고리 ID"
+        reviewable_id: "검토"
         delete: "삭제"
         edit: "편집"
         save: "저장"

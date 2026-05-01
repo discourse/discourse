@@ -940,10 +940,10 @@ en:
       quota_required: "You must specify maximum tokens or usages for this model"
       no_query_specified: The query parameter is required, please specify it.
       no_user_for_agent: The agent specified does not have a user associated with it.
-      agent_not_found: "The agent specified does not exist. Check the agent_name or agent_id params (legacy: agent_name or agent_id)."
+      agent_not_found: "The agent specified does not exist. Check the agent_name or agent_id params (legacy: persona_name or persona_id)."
       no_user_specified: The username or the user_unique_id parameter is required, please specify it.
       user_not_found: The user specified does not exist. Check the username param.
-      agent_disabled: "The agent specified is disabled. Check the agent_name or agent_id params (legacy: agent_name or agent_id)."
+      agent_disabled: "The agent specified is disabled. Check the agent_name or agent_id params (legacy: persona_name or persona_id)."
       no_default_llm: The agent must have a default_llm defined.
       user_not_allowed: The user is not allowed to participate in the topic.
       invalid_stream_resume_token: The resume_token is invalid or has expired.

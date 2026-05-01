@@ -7,8 +7,6 @@
 hy:
   js:
     discourse_reactions:
-      users_popup:
-        all: "Բոլոր"
       main_reaction:
         add: "Հավանել այս գրառումը"
     notifications:

@@ -393,9 +393,6 @@ es:
           bar_done:
             one: "%{count} publicación"
             other: "%{count} publicaciones"
-        theme_translations:
-          translate:
-            label: "Traducir"
         translations_menu:
           translate:
             label: "Traducir publicación"
@@ -762,17 +759,6 @@ es:
         oauth_client_id: "ID de cliente OAuth"
         oauth_client_secret: "Secreto del cliente de OAuth"
         oauth_scopes: "Ámbitos de OAuth"
-        oauth_authorization_params: "parámetros de autorización OAuth"
-        oauth_authorization_params_help: "Objeto JSON opcional incorporado a la solicitud de autorización. Utiliza null para eliminar un parámetro por defecto."
-        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
-        oauth_token_params: "parámetros del token OAuth"
-        oauth_token_params_help: "Objeto JSON opcional incorporado a las solicitudes de token. Utiliza null para eliminar un parámetro por defecto."
-        oauth_token_params_placeholder: "{}"
-        oauth_require_refresh_token: "Requerir token de actualización"
-        oauth_require_refresh_token_help: "La conexión OAuth fallará si el proveedor no devuelve un token de actualización."
-        oauth_json_object_required: "%{field} debe ser un objeto JSON."
-        oauth_show_advanced_options: "Mostrar opciones avanzadas"
-        oauth_hide_advanced_options: "Ocultar opciones avanzadas"
         oauth_connection: "Conexión de OAuth"
         oauth_status: "Estado de OAuth"
         oauth_statuses:
@@ -887,19 +873,14 @@ es:
           other: "Este modelo lo utilizan actualmente las siguientes %{settings}. Si está mal configurado, las características no funcionarán como se espera."
         model_description:
           none: "Ajustes generales que funcionan para la mayoría de los modelos lingüísticos"
-          anthropic-claude-opus-4-7: "El modelo antrópico más inteligente"
           anthropic-claude-sonnet-4-6: "Equilibrio óptimo entre velocidad y coste"
           anthropic-claude-haiku-4-5: "Rápido y rentable"
           google-gemini-3-pro: "El modelo de Google más inteligente"
           google-gemini-3-flash: "Rápido y rentable con razonamiento multimodal"
-          open_ai-gpt-5-4: "El modelo estrella de OpenAI. Es ideal para la resolución de problemas en todos los dominios."
-          open_ai-gpt-5-4-mini: "Proporciona un equilibrio entre inteligencia, velocidad y coste."
           open_ai-gpt-5-nano: "El modelo GPT-5 más rápido y rentable"
           open_router-deepseek-deepseek-v3-2: "El último modelo de alto rendimiento de DeepSeek"
           open_router-moonshotai-kimi-k2-5: "Modelo multimodal de Moonshot con capacidades de visión"
           open_router-x-ai-grok-4-fast: "El modelo estrella de xAI con visión"
-          open_router-minimax-minimax-m2-7: "Modelo multimodal de MiniMax con contexto amplio"
-          open_router-z-ai-glm-5-1: "Modelo multimodal de Z-AI con visión"
           open_router-arcee-ai-trinity-large-preview-free: "Modelo gratuito de código abierto de Arcee AI"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:

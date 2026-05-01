@@ -19,8 +19,6 @@ ug:
         react_with: "بۇ يازمىغا ئىنكاس قايتۇرۇش شەكلى: %{reaction}"
         cant_remove_reaction: "ئىنكاسىڭىزنى ئەمدى چىقىرىۋېتەلمەيسىز"
         remove_reaction: "بۇ %{reaction} ئىنكاسنى چىقىرىۋېتىدۇ"
-      users_popup:
-        all: "ھەممىسى"
       main_reaction:
         add: "بۇ يازمىنى ياقتۇر"
         remove: "بۇ ياقتۇرۇشنى چىقىرىۋەت"

@@ -200,6 +200,13 @@ export default class DModal extends Component {
       return;
     }
 
+    if (this.args.beforeClose) {
+      const canClose = await this.args.beforeClose({ initiatedBy });
+      if (canClose === false) {
+        return;
+      }
+    }
+
     try {
       this.animating = true;
 

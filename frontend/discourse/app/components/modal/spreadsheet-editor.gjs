@@ -29,6 +29,7 @@ export default class SpreadsheetEditor extends Component {
   defaultColWidth = 150;
   isEditingTable = !!this.args.model.tableTokens;
   alignments = null;
+  initialSnapshot = null;
 
   constructor() {
     super(...arguments);
@@ -70,6 +71,8 @@ export default class SpreadsheetEditor extends Component {
     } else {
       this.buildNewTable();
     }
+
+    this.initialSnapshot = this.captureSnapshot();
   }
 
   @action
@@ -78,13 +81,19 @@ export default class SpreadsheetEditor extends Component {
   }
 
   @action
-  interceptCloseModal() {
-    if (this._hasChanges()) {
-      this.dialog.yesNoConfirm({
-        message: i18n("table_builder.modal.confirm_close"),
-        didConfirm: () => this.args.closeModal(),
-      });
-    } else {
+  confirmClose() {
+    if (!this.hasChanges) {
+      return true;
+    }
+
+    return this.dialog.yesNoConfirm({
+      message: i18n("table_builder.modal.confirm_close"),
+    });
+  }
+
+  @action
+  async cancelClose() {
+    if (await this.confirmClose()) {
       this.args.closeModal();
     }
   }
@@ -106,25 +115,18 @@ export default class SpreadsheetEditor extends Component {
     }
   }
 
-  _hasChanges() {
-    if (this.isEditingTable) {
-      const originalSpreadsheetData = this.extractTableContent(
-        tokenRange(this.args.model.tableTokens, "tr_open", "tr_close")
-      );
-      const currentHeaders = this.spreadsheet.getHeaders().split(",");
-      const currentRows = this.spreadsheet.getData();
-      const currentSpreadsheetData = currentHeaders.concat(currentRows.flat());
+  captureSnapshot() {
+    return JSON.stringify({
+      headers: this.spreadsheet.getHeaders(),
+      data: this.spreadsheet.getData(),
+    });
+  }
 
-      return (
-        JSON.stringify(currentSpreadsheetData) !==
-        JSON.stringify(originalSpreadsheetData)
-      );
-    } else {
-      return this.spreadsheet
-        .getData()
-        .flat()
-        .some((element) => element !== "");
-    }
+  get hasChanges() {
+    return (
+      this.initialSnapshot !== null &&
+      this.captureSnapshot() !== this.initialSnapshot
+    );
   }
 
   async loadJspreadsheet() {
@@ -354,7 +356,8 @@ export default class SpreadsheetEditor extends Component {
   <template>
     <DModal
       @title={{i18n this.modalAttributes.title}}
-      @closeModal={{this.interceptCloseModal}}
+      @closeModal={{@closeModal}}
+      @beforeClose={{this.confirmClose}}
       class="insert-table-modal"
     >
       <:body>
@@ -377,7 +380,7 @@ export default class SpreadsheetEditor extends Component {
               class="btn-insert-table"
             />
 
-            <DModalCancel @close={{this.interceptCloseModal}} />
+            <DModalCancel @close={{this.cancelClose}} />
           </div>
 
           <div class="secondary-actions">

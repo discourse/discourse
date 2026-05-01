@@ -98,10 +98,21 @@ module Categories
         end
 
         # Configure any category-specific settings or custom fields that are
-        # specific to this category type.
+        # specific to this category type, including whatever setting or custom
+        # field values make this category type unique.
         #
         # This SHOULD be overridden by category types.
         def configure_category(category, guardian:, configuration_values: {})
+          raise NotImplementedError
+        end
+
+        # Reverse whatever configure_category does to mark this category as
+        # a specific type. E.g. if there is a custom field that is set to true,
+        # unconfigure_category should set it to false.
+        #
+        # This SHOULD be overridden by category types.
+        def unconfigure_category(category, guardian:)
+          raise NotImplementedError
         end
 
         # Returns a hash describing the configuration schema for this category type.
@@ -163,6 +174,18 @@ module Categories
         # Use +validate_schema!+ to verify a schema conforms to this contract.
         def configuration_schema
           {}
+        end
+
+        # Convenience method to get the setting/custom field names (keys)
+        # for a given schema type.
+        #
+        # Valid values for the +schema_type+ parameter are:
+        # - :general_category_settings
+        # - :site_settings
+        # - :category_custom_fields
+        # - :category_settings
+        def configuration_schema_keys(schema_type)
+          (configuration_schema[schema_type]&.keys || []).map(&:to_sym)
         end
 
         # Validates the hash returned by +configuration_schema+ using JSONSchemer.

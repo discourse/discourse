@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
 import moment from "moment";
@@ -49,6 +50,8 @@ export default class QueryResult extends Component {
 
   @tracked showChart;
   @tracked showTable;
+  @tracked tableExpanded = false;
+  @tracked hasOverflow = false;
 
   constructor() {
     super(...arguments);
@@ -78,6 +81,24 @@ export default class QueryResult extends Component {
     if (queryId) {
       store.set({ key: `showTable_${queryId}`, value: this.showTable });
     }
+  }
+
+  get showExpandButton() {
+    return this.hasOverflow && !this.tableExpanded;
+  }
+
+  @action
+  checkOverflow(element) {
+    if (!this.chartVisible) {
+      this.tableExpanded = true;
+      return;
+    }
+    this.hasOverflow = element.scrollHeight > element.clientHeight;
+  }
+
+  @action
+  expandTable() {
+    this.tableExpanded = true;
   }
 
   get chartVisible() {
@@ -391,7 +412,11 @@ export default class QueryResult extends Component {
         {{/if}}
 
         {{#if this.showTable}}
-          <div class="query-results-table-wrapper">
+          <div
+            class="query-results-table-wrapper
+              {{if this.tableExpanded '--expanded'}}"
+            {{didInsert this.checkOverflow}}
+          >
             <table class="query-results-table">
               <thead>
                 <tr class="headers">
@@ -424,6 +449,14 @@ export default class QueryResult extends Component {
               </tbody>
             </table>
           </div>
+          {{#if this.showExpandButton}}
+            <DButton
+              @action={{this.expandTable}}
+              @icon="chevron-down"
+              @translatedTitle={{i18n "show_more"}}
+              class="btn-flat query-results-expand-btn"
+            />
+          {{/if}}
         {{/if}}
 
       </section>

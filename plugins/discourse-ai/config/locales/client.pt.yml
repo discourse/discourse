@@ -148,9 +148,6 @@ pt:
           bar_done:
             one: "%{count} mensagem"
             other: "%{count} mensagens"
-        theme_translations:
-          translate:
-            label: "Traduzir"
       spam:
         short_title: "Spam"
         title: "Configurar manipulação do lixo eletrónico"
@@ -251,8 +248,6 @@ pt:
         usage:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-7: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:

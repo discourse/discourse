@@ -35,7 +35,7 @@ jobs:
       - uses: ./.github/actions/setup-release-environment
 
       - name: Maybe tag release
-        run: bin/rake release:maybe_tag_release[${{ github.sha }}]
+        run: bin/rake release:maybe_tag_release[${{ inputs.branch || github.sha }}]
 
       - name: Maybe update release tags
-        run: bin/rake release:update_release_tags[${{ github.sha }}]
+        run: bin/rake release:update_release_tags[${{ inputs.branch || github.sha }}]

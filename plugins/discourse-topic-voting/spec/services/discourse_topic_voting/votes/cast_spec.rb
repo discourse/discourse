@@ -100,6 +100,13 @@ RSpec.describe DiscourseTopicVoting::Votes::Cast do
       it "does not enqueue the upvote webhook when not configured" do
         expect { result }.not_to change(Jobs::EmitWebHookEvent.jobs, :size)
       end
+
+      it "enqueues the backfill badges job" do
+        expect { result }.to change(Jobs::DiscourseTopicVoting::BackfillBadges.jobs, :size).by(1)
+        expect(Jobs::DiscourseTopicVoting::BackfillBadges.jobs.last["args"].first).to include(
+          "topic_id" => topic.id,
+        )
+      end
     end
   end
 end

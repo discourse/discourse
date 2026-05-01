@@ -5,18 +5,7 @@
 # https://translate.discourse.org/
 
 uk:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_data_explorer: "Discourse Data Explorer"
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Data Explorer"
-          description: "Генерація запитів на основі штучного інтелекту до Data Explorer"
-          query_generation: "Створення запитів"
     errors:
       explorer:
         no_semicolons: "Вилучіть крапки з комою з запиту."
@@ -33,19 +22,6 @@ uk:
       create: "Створити"
       create_placeholder: "Назва запиту..."
       description_placeholder: "Введіть тут опис"
-      ai:
-        description_title: "Генеруйте за допомогою ШІ"
-        description_hint: "Опишіть, що ви хочете, простою мовою. Ми згенеруємо для вас запит SQL, назву та опис."
-        description_placeholder: "наприклад, показати мені реєстрації в часі"
-        generate: "Згенерувати"
-        regenerate: "Перегенерувати"
-        generating: "Створення запиту за допомогою ШІ..."
-        generation_timeout: "Вичерпано час генерації запитів ШІ. Ви можете написати запит SQL вручну."
-        generation_error: "Щось пішло не так при створенні запиту."
-        save_query: "Зберегти запит"
-        write_manually: "Напишіть SQL вручну"
-        sql_label: "SQL"
-        optional: "опціонально"
       import:
         label: "Імпорт"
         unparseable_json: "Непридатний для обробки JSON файл."
@@ -82,7 +58,6 @@ uk:
       show_graph: "Графік"
       others_dirty: "У запиті є не збережені зміни, які будуть втрачені, якщо ви перейдете далі."
       run_time: "Запит виконано за %{value} мс."
-      cached_result_notice: "Показ кешованих результатів з %{relative_time}."
       result_count:
         one: "%{count} результат."
         few: "%{count} результатів."

@@ -149,7 +149,7 @@ describe Chat::ChannelArchiveService do
         expect(@channel_archive.chat_channel.chat_messages.count).to eq(0)
       end
 
-      xit "creates the correct posts for a channel with messages and threads" do
+      it "creates the correct posts for a channel with messages and threads" do
         channel.update!(threading_enabled: true)
 
         create_messages(2)

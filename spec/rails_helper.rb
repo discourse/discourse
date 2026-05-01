@@ -29,7 +29,7 @@ CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127
 
 class RspecErrorTracker
   def self.exceptions
-    @exceptions ||= {}
+    @exceptions ||= []
   end
 
   def self.clear_exceptions
@@ -37,7 +37,7 @@ class RspecErrorTracker
   end
 
   def self.report_exception(path, exception)
-    exceptions[path] = exception
+    exceptions << [path, exception]
   end
 
   def initialize(app, config = {})
@@ -55,6 +55,16 @@ class RspecErrorTracker
       RspecErrorTracker.report_exception(env["PATH_INFO"], e)
       raise e
     end
+  end
+end
+
+# Some errors are caught by `Discourse.warn_exception` and don't reach
+# `RspecErrorTracker`, for example errors in hijacked responses.
+module RspecWarnExceptionCapture
+  def warn_exception(e, message: "", env: nil)
+    path = env&.[]("PATH_INFO") || "(no request path)"
+    RspecErrorTracker.report_exception(path, e)
+    super
   end
 end
 
@@ -92,6 +102,7 @@ end
 
 ENV["RAILS_ENV"] ||= "test"
 require File.expand_path("../../config/environment", __FILE__)
+Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
@@ -871,6 +882,11 @@ RSpec.configure do |config|
     setup_system_test
 
     BlockRequestsMiddleware.current_example_location = example.location
+
+    # Suppress the "Before you post, please select a category or tag" education
+    # popup — it intercepts pointer events and makes system specs flaky when
+    # they click things in the composer.
+    SiteSetting.educate_until_posts = 0
 
     if example.metadata[:video]
       Capybara.current_session.driver.on_save_screenrecord do |video|

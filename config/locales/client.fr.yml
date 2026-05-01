@@ -3247,19 +3247,9 @@ fr:
         archive_messages: "Déplacer vers les archives"
         change_notification_level: "Modifier le niveau de notification"
         choose_new_category: "Choisissez la nouvelle catégorie pour ces sujets :"
-        selected_sole_category:
-          one: "Vous avez sélectionné <b>%{count}</b> sujet de la catégorie :"
-          other: "Vous avez sélectionné <b>%{count}</b> sujets de la catégorie :"
         selected_count:
           one: "Sélection : %{count}"
           other: "Sélection : %{count}"
-        append_tags: "Ajouter des étiquettes"
-        choose_new_tags: "Choisissez de nouvelles étiquettes pour ces sujets :"
-        choose_append_tags: "Ajouter des étiquettes"
-        changed_tags: "Les étiquettes de ces sujets ont été modifiées."
-        confirm_remove_tags:
-          one: "Toutes les étiquettes seront supprimées de ce sujet. Voulez-vous continuer ?"
-          other: "Toutes les étiquettes seront supprimées des <b>%{count}</b> sujets. Voulez-vous continuer ?"
         progress:
           one: "Progression : <strong>%{count}</strong> sujet"
           other: "Progression : <strong>%{count}</strong> sujets"
@@ -3301,10 +3291,9 @@ fr:
         name: "Retirer de la liste"
       relist_topics:
         name: "Remettre dans la liste"
-      remove_tags:
-        name: "Supprimer des étiquettes"
-      replace_tags:
-        name: "Remplacer des étiquettes"
+      manage_tags:
+        add:
+          title: "Ajouter des étiquettes"
       delete_topics:
         name: "Supprimer"
       update_category:
@@ -3333,6 +3322,7 @@ fr:
       collapse: "Réduire"
       no_replies: "Pas encore de réponse."
       deleted_post_placeholder: "[supprimés]"
+      ignored_post_placeholder: "[ignoré]"
       pinned_reply: "Épinglé"
     topic:
       filter_to:
@@ -4225,7 +4215,7 @@ fr:
           low: "Faible"
           high: "Élevée"
       sort_options:
-        default: "par défaut"
+        default: "Par défaut"
         likes: "« J'aime »"
         views: "Vues"
         posts: "Messages"
@@ -6937,6 +6927,7 @@ fr:
         topic_id: "Identifiant du sujet"
         post_id: "Identifiant du message"
         category_id: "Identifiant de la catégorie"
+        reviewable_id: "À examiner"
         delete: "Supprimer"
         edit: "Modifier"
         save: "Enregistrer"

@@ -458,6 +458,7 @@ pt_BR:
       start_posting:
         title: "Comece a postar"
         description: "Dê às pessoas algo sobre o que conversar."
+        action: "Ver ideias"
         choose_option: "Como você gostaria de começar?"
         predefined_topics: "Modelos para quebrar o gelo"
         predefined_topics_subtitle: "Dê aos novos membros algo sobre o que conversar. Escolha um modelo para editar e crie o seu próprio."
@@ -563,6 +564,9 @@ pt_BR:
           other: "Criado(a) há menos de %{count} anos"
     bookmarked:
       title: "Favorito"
+      edit_bookmark:
+        one: "Editar favorito"
+        other: "Editar favoritos"
       help:
         bookmark: "Clique para adicionar este tópico aos favoritos"
         edit_bookmark: "Clique para editar o favorito numa postagem deste tópico"
@@ -658,6 +662,7 @@ pt_BR:
       storage_access_prompt: "Já tem uma conta %{site_name}? Permita o acesso à sua sessão para comentar como você mesmo."
       allow_access: "Permitir acesso"
       continue_as_guest: "Continuar como convidado"
+      be_first_to_reply: "Seja o primeiro a responder!"
     topic_count_all:
       one: "Veja %{count} novo tópico"
       other: "Veja %{count} novos tópicos"
@@ -1137,6 +1142,7 @@ pt_BR:
       add_members:
         title: "Adicionar usuários(a) a %{group_name}"
         description: "Insira uma lista de usuários(as) que você quer convidar para o grupo ou cole em uma lista separada por vírgulas:"
+        description_usernames_only: "Insira uma lista de nomes de usuário que você quer convidar para o grupo ou cole em uma lista separada por vírgulas:"
         usernames_placeholder: "nomes de usuário(a)"
         usernames_or_emails_placeholder: "nomes de usuário(a) ou e-maiis"
         notify_users: "Notificar usuários"
@@ -1809,8 +1815,12 @@ pt_BR:
         upcoming_changes: "Alterações previstas"
         calendar_subscriptions: "Calendário"
       calendar_subscriptions:
+        regenerate: "Regenerar URLs"
+        copy: "Copiar URL"
         copied: "Copiou!"
         add_to_google: "Google Calendar"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Calendário da Apple"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -3458,19 +3468,9 @@ pt_BR:
         archive_messages: "Mover para o arquivo"
         change_notification_level: "Alterar nível de notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
-        selected_sole_category:
-          one: "Você selecionou <b>%{count}</b> tópico da categoria:"
-          other: "Você selecionou <b>%{count}</b> tópicos da categoria:"
         selected_count:
           one: "Selecionou %{count}"
           other: "Selecionou %{count}"
-        append_tags: "Adicionar etiquetas"
-        choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
-        choose_append_tags: "Adicionar etiquetas"
-        changed_tags: "As etiquetas destes tópicos foram alteradas."
-        confirm_remove_tags:
-          one: "Todas as etiquetas serão removidas deste tópico. Deseja prosseguir?"
-          other: "Todas as etiquetas serão removidas de <b>%{count}</b> tópicos. Deseja prosseguir?"
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
@@ -3523,10 +3523,9 @@ pt_BR:
         name: "Remover da lista"
       relist_topics:
         name: "Listar novamente"
-      remove_tags:
-        name: "Remover tags"
-      replace_tags:
-        name: "Substituir etiquetas"
+      manage_tags:
+        add:
+          title: "Adicionar etiquetas"
       delete_topics:
         name: "Excluir"
       update_category:
@@ -3541,11 +3540,16 @@ pt_BR:
         name: "Marcar não lido"
       update_notifications:
         name: "Atualizar notificações"
+      pin_topics:
+        name: "Fixar"
+      unpin_topics:
+        name: "Desafixar"
     nested_replies:
       sort:
         label: "Ordenar por"
         top: "Melhores"
         new: "Nova"
+        old: "Antigo"
       load_more_children:
         one: "%{count} resposta a mais"
         other: "%{count} respostas a mais"
@@ -3556,6 +3560,7 @@ pt_BR:
       no_replies: "Nenhuma resposta ainda."
       deleted_post_placeholder: "[excluído]"
       pinned_reply: "Fixada"
+      unpin_reply: "Desafixar"
     topic:
       filter_to:
         one: "%{count} postagem no tópico"
@@ -3867,6 +3872,9 @@ pt_BR:
         banner_note: "Usuários(as) podem descartar o banner ao fechar. Apenas um tópico pode ser colocado como banner em um momento."
         no_banner_exists: "Não existe tópico de banner."
         banner_exists: "<strong class='badge badge-notification unread'>Existe</strong> um tópico de banner."
+      bulk_feature_topic:
+        pin_button: "Fixar tópicos"
+        pin_globally_button: "Fixar tópicos globalmente"
       inviting: "Convidando…"
       automatically_add_to_groups: "Este convite também inclui acesso a estes grupos:"
       invite_private:
@@ -4118,6 +4126,7 @@ pt_BR:
           confirm_delete: "Tem certeza de que deseja excluir as traduções para \"%{languageCode}\"?"
         success: "As traduções foram atualizadas"
         post_language_selector:
+          title: "Idioma da publicação"
           none: "Não configurado"
         edit_warning:
           message: "Esta é uma postagem traduzida.<br><br> Você quer editar a postagem original em %{language} ou editar essa tradução específica?"
@@ -4142,6 +4151,7 @@ pt_BR:
         attachment_download_requires_login: "Desculpe, você precisa entrar para baixar arquivos anexos."
       cancel_composer:
         confirm: "Você deseja excluir sua postagem?"
+        confirm_edit: "Você deseja descartar suas alterações?"
         discard: "Descartar"
         discard_edit: "Descartar alterações"
       via_email: "postagem recebida via e-mail"
@@ -4247,6 +4257,7 @@ pt_BR:
           one: "Tem certeza de que deseja mesclar estas postagens?"
           other: "Tem certeza de que deseja mesclar estas %{count} postagens?"
       revisions:
+        diff_too_complex: "O diff é muito complexo para exibir. Por favor, tente visualizar edições menores individualmente."
         locale:
           no_locale_set: "Nenhum idioma definido"
           locale_removed: "Idioma removido"
@@ -4322,6 +4333,7 @@ pt_BR:
         instructions: "Compartilhar o link desta postagem:"
       original_language: "Esta postagem foi originalmente escrita em %{language}"
       original_language_and_outdated: "Esta postagem foi escrita originalmente em %{language}. A tradução pode estar desatualizada"
+      ai_translation_disclaimer: "Traduções geradas por IA podem ser imprecisas."
     category:
       none: "(sem categoria)"
       all: "Todas as categorias"
@@ -4340,6 +4352,8 @@ pt_BR:
       tags: "Etiquetas"
       localizations: "Localizações"
       localization:
+        language: "Idioma da categoria"
+        language_description: "O idioma principal do nome e descrição desta categoria."
         locale: "Localidade"
         name: "Nome"
         description: "Descrição"
@@ -4360,6 +4374,7 @@ pt_BR:
         delete: "Excluir"
         add: "Adicionar grupo de tags necessário"
         placeholder: "Selecionar grupo de etiquetas…"
+        min_count: "Contagem de etiquetas"
         tag_group: "Grupo de etiquetas"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       delete: "Excluir categoria"
@@ -4367,6 +4382,9 @@ pt_BR:
       create_long: "Criar uma nova categoria"
       type_settings_schema:
         site_settings: "Configurações do site"
+      choose_type:
+        requires_plugin: "Requer plugin"
+      create_category: "Criar categoria"
       save: "Salvar categoria"
       unsaved_changes: "Você tem alterações não salvas"
       slug: "Slug da categoria"
@@ -4415,6 +4433,7 @@ pt_BR:
       list: "Listar categorias"
       no_description: "Adicione uma descrição para esta categoria."
       change_in_category_topic: "Editar descrição"
+      description_updated: "Descrição atualizada"
       description_expand: "Exibir mais"
       description_collapse: "Exibir menos"
       already_used: "Esta cor já foi usada para outra categoria"
@@ -4515,7 +4534,7 @@ pt_BR:
           high: "Alta"
           very_high: "Muito alta"
       sort_options:
-        default: "padrão"
+        default: "Padrão"
         likes: "Curtidas"
         op_likes: "Curtidas da postagem original"
         views: "Visualizações"
@@ -5573,6 +5592,7 @@ pt_BR:
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
+    reset_filter: "Redefinir filtro"
     toggle_filters: "Alternar filtros suspensos"
     admin:
       title: "Administrador(a) do Discourse"
@@ -5592,6 +5612,7 @@ pt_BR:
         group_traffic: "Tráfego"
         group_members: "Membros"
         group_content: "Conteúdo e saúde"
+        group_moderation_and_security: "Moderação & Segurança"
         group_other: "Outras"
         legacy_warning: "Este é um relatório legado. Ele será desativado em breve. Se precisar de ajuda para encontrar o substituto, entre em contato com o suporte."
       config_sections:
@@ -5937,6 +5958,7 @@ pt_BR:
               title: "Registros"
               header_description: "Visualizar e gerenciar logs de backups, restaurações e uploads"
         problem_checks:
+          target: "Alvo"
           priority: "Prioridade"
           status: "Status"
           last_run_at: "Última execução"
@@ -6193,6 +6215,7 @@ pt_BR:
           daily: A cada dia
           monthly: Todo mês
           weekly: A cada semana
+          chart_group_period: "Selecione um período"
           value_so_far: "%{value} (até agora)"
           dates: "Datas (UTC)"
           groups: "Todos os grupos"
@@ -7037,6 +7060,7 @@ pt_BR:
           dark_color_scheme: "Paleta de cores escuras"
           default_light_scheme: "Claro (padrão)"
           color_scheme_select: "Selecione as cores que serão usadas pelo tema."
+          only_theme_color_schemes: "Esse tema limita quais paletas de cores podem ser utilizadas."
           dark_color_scheme_select: "Selecionar cores a serem usadas pelo tema no modo escuro."
           edit_colors: "Editar cores"
           custom_sections: "Seções personalizadas:"
@@ -7097,6 +7121,7 @@ pt_BR:
           import_web_tip: "Repositório contendo tema"
           direct_install_tip: "Tem certeza de que quer instalar <strong>%{name}</strong> do repositório listado abaixo?"
           import_web_advanced: "Avançado…"
+          import_file_tip: "Arquivo .tar.gz ou .zip contendo o tema"
           is_private: "O tema está em um repositório git privado"
           finish_install: "Concluir a instalação do tema"
           last_attempt: "O processo de instalação não foi concluído, última tentativa:"
@@ -7133,6 +7158,14 @@ pt_BR:
           update_success: "Atualização de %{theme} concluída"
           up_to_date: "O tema está atualizado. Última verificação:"
           has_overwritten_history: "A versão atual do tema não existe mais porque o histórico de Git foi sobrescrito por um envio de push forçado."
+          change_source:
+            repository_url: "URL do Repositório"
+            branch: "Branch"
+            updating: "Atualizando fonte do tema..."
+            update: "Atualizar Fonte"
+            has_existing_key: "Esse tema atualmente tem uma chave SSH configurada."
+            generate_new_key: "Gerar nova chave SSH"
+            keep_existing_key: "Manter chave SSH existente"
           add: "Adicionar"
           theme_settings: "Configurações de tema personalizadas"
           theme_site_settings: "Configurações que podem ser substituídas por tema"
@@ -7430,6 +7463,7 @@ pt_BR:
         topic_id: "ID do tópico"
         post_id: "ID da mensagem"
         category_id: "ID da categoria"
+        reviewable_id: "Revisar"
         delete: "Excluir"
         edit: "Editar"
         save: "Salvar"
@@ -7576,6 +7610,7 @@ pt_BR:
             upcoming_change_available: "alteração prevista disponível"
             change_site_setting_groups: "alterar grupos de configuração do site"
             discourse_id_regenerate_credentials: "regerar credenciais do Discourse ID"
+            configure_category_type: "configurar o tipo de categoria"
         screened_emails:
           title: "E-mails filtrados"
           description: "Quando alguém tentar criar uma conta nova, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -8194,6 +8229,7 @@ pt_BR:
         more_than_50_results: "Existem mais de 50 resultados. Refine sua pesquisa."
         no_results: "Nennhum texto de site correspondente encontrado"
         interpolation_keys: "Chaves de interpolação disponíveis:"
+        interpolation_key_insert: "Clique para inserir"
         interpolation_key_used: "Já utilizado"
         outdated:
           title: "Esta tradução está desatualizada"
@@ -8322,6 +8358,8 @@ pt_BR:
           clean_up_inactive_users_after_days:
             prompt: "Definir este valor para qualquer número diferente de 0 fará com que os usuários que não estiverem ativos por esse número de dias sejam excluídos permanentemente. Tem certeza de que deseja prosseguir?"
             confirm: "Sim, entendo que usuários inativos serão excluídos permanentemente, a menos que eu defina este valor como 0."
+          can_permanently_delete:
+            confirm: "Eu entendo"
         job_status:
           completed: "Atualização concluída"
           enqueued: "Atualização em andamento"
@@ -8483,6 +8521,7 @@ pt_BR:
         crawler_settings_saved: "Configurações de rastreador salvas"
         back: "Voltar para incorporação"
         configuration_snippet: "Snippet de configuração"
+        full_app_mode: "Modo completo da aplicação"
         host_form:
           add_header: "Adicionar host"
           edit_header: "Editar host"

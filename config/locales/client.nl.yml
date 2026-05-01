@@ -3291,19 +3291,9 @@ nl:
         archive_messages: "Verplaatsen naar archief"
         change_notification_level: "Meldingsniveau wijzigen"
         choose_new_category: "Kies de nieuwe categorie voor de topics:"
-        selected_sole_category:
-          one: "Je hebt <b>%{count}</b> topic geselecteerd uit de categorie:"
-          other: "Je hebt <b>%{count}</b> topics geselecteerd uit de categorie:"
         selected_count:
           one: "%{count} geselecteerd"
           other: "%{count} geselecteerd"
-        append_tags: "Tags toevoegen"
-        choose_new_tags: "Kies nieuwe tags voor deze topics:"
-        choose_append_tags: "Tags toevoegen"
-        changed_tags: "De tags van deze topics zijn gewijzigd."
-        confirm_remove_tags:
-          one: "Alle tags worden verwijderd van dit topic. Weet je het zeker?"
-          other: "Alle tags worden verwijderd van %{count} topics. Weet je het zeker?"
         progress:
           one: "Voortgang: <strong>%{count}</strong> topic"
           other: "Voortgang: <strong>%{count}</strong> topics"
@@ -3346,10 +3336,9 @@ nl:
         name: "Onzichtbaar maken"
       relist_topics:
         name: "Opnieuw zichtbaar maken"
-      remove_tags:
-        name: "Tags verwijderen"
-      replace_tags:
-        name: "Tags vervangen"
+      manage_tags:
+        add:
+          title: "Tags toevoegen"
       delete_topics:
         name: "Verwijderen"
       update_category:
@@ -3378,6 +3367,7 @@ nl:
       collapse: "Samenvouwen"
       no_replies: "Nog geen antwoorden."
       deleted_post_placeholder: "[verwijderd]"
+      ignored_post_placeholder: "[genegeerd]"
       pinned_reply: "Vastgemaakt"
     topic:
       filter_to:
@@ -4263,7 +4253,7 @@ nl:
           low: "Laag"
           high: "Hoog"
       sort_options:
-        default: "standaard"
+        default: "Standaard"
         likes: "Likes"
         views: "Weergaven"
         posts: "Berichten"
@@ -6975,6 +6965,7 @@ nl:
         topic_id: "Topic-ID"
         post_id: "Bericht-ID"
         category_id: "Categorie-ID"
+        reviewable_id: "Beoordelen"
         delete: "Verwijderen"
         edit: "Bewerken"
         save: "Opslaan"
