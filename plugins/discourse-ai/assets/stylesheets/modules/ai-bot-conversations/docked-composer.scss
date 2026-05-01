@@ -5,7 +5,8 @@ body.has-ai-bot-docked-composer {
   // replaced it. Scoped to the body class, which is only present while
   // the DockedComposer component is rendered (cleared on unmount), so
   // navigating to a non-bot-PM topic restores the popup composer.
-  #reply-control {
+  // Allow it to show when editing a post (composer-action-edit class).
+  #reply-control:not(.composer-action-edit) {
     display: none !important;
   }
 
@@ -52,6 +53,32 @@ body.has-ai-bot-docked-composer {
   &.docked-composer--at-bottom::before {
     display: none;
   }
+
+  @include viewport.until(sm) {
+    --docked-composer-content-offset: 0px;
+    --docked-composer-max-width: 100%;
+  }
+
+  &.docked-composer--keyboard-open {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    padding-bottom: 0;
+    margin-top: 0;
+    transition: none;
+
+    // cover the gap between the composer and the keyboard
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 100vh;
+      background: var(--secondary);
+    }
+  }
 }
 
 // Place the resize handle inside the editor box, directly above the toolbar.
@@ -65,6 +92,10 @@ body.has-ai-bot-docked-composer {
     position: relative;
     z-index: 2;
     margin-bottom: -1em;
+
+    @include viewport.until(sm) {
+      display: none;
+    }
   }
 }
 
@@ -73,6 +104,10 @@ body.has-ai-bot-docked-composer {
 .docked-composer.ai-bot-docked-composer .d-editor-textarea-column {
   padding-top: 1em;
   border-color: var(--content-border-color);
+}
+
+.docked-composer.ai-bot-docked-composer .d-editor-input {
+  padding-left: 2.5em;
 }
 
 // Animate the toolbar in/out for the AI bot composer

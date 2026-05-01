@@ -32,14 +32,46 @@ export default class AiBotDockedComposer extends Component {
   @tracked hasContentBelow = false;
 
   #resizeObserver = null;
+  #keyboardOpen = false;
+  #composerEl = null;
 
   #checkScroll = () => {
     const threshold = 100;
-    this.hasContentBelow =
+    const below =
       document.documentElement.scrollHeight -
         window.scrollY -
         window.innerHeight >
       threshold;
+    if (below !== this.hasContentBelow) {
+      this.hasContentBelow = below;
+    }
+  };
+
+  #onViewportChange = () => {
+    if (!window.visualViewport) {
+      return;
+    }
+    const keyboardOffset = window.innerHeight - window.visualViewport.height;
+    const composerEl = this.#composerEl;
+    if (!composerEl) {
+      return;
+    }
+
+    if (keyboardOffset > 100) {
+      if (!this.#keyboardOpen) {
+        this.#keyboardOpen = true;
+        composerEl.classList.add("docked-composer--keyboard-open");
+      }
+      const top =
+        window.visualViewport.offsetTop +
+        window.visualViewport.height -
+        composerEl.offsetHeight;
+      composerEl.style.top = `${top}px`;
+    } else if (this.#keyboardOpen) {
+      this.#keyboardOpen = false;
+      composerEl.classList.remove("docked-composer--keyboard-open");
+      composerEl.style.top = "";
+    }
   };
 
   get topic() {
@@ -115,18 +147,30 @@ export default class AiBotDockedComposer extends Component {
   }
 
   @action
-  setupScrollListener() {
+  setupScrollListener(element) {
+    this.#composerEl = element;
     window.addEventListener("scroll", this.#checkScroll, { passive: true });
     this.#resizeObserver = new ResizeObserver(this.#checkScroll);
     this.#resizeObserver.observe(document.body);
     this.#checkScroll();
+    window.visualViewport?.addEventListener("resize", this.#onViewportChange);
+    window.visualViewport?.addEventListener("scroll", this.#onViewportChange);
   }
 
   @action
   teardownScrollListener() {
+    this.#composerEl = null;
     window.removeEventListener("scroll", this.#checkScroll);
     this.#resizeObserver?.disconnect();
     this.#resizeObserver = null;
+    window.visualViewport?.removeEventListener(
+      "resize",
+      this.#onViewportChange
+    );
+    window.visualViewport?.removeEventListener(
+      "scroll",
+      this.#onViewportChange
+    );
   }
 
   @action
