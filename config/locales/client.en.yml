@@ -4289,6 +4289,7 @@ en:
         unpin: "Remove this topic from the top of the %{categoryLink} category."
         unpin_until: "Remove this topic from the top of the %{categoryLink} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
+        pin_until: "Pin until"
         pin_validation: "A date is required to pin this topic."
         not_pinned: "There are no topics pinned in %{categoryLink}."
         already_pinned:
