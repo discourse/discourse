@@ -264,6 +264,9 @@ sk:
             few: "%{count} príspevky"
             many: "%{count} príspevkov"
             other: "%{count} príspevkov"
+        theme_translations:
+          translate:
+            label: "Preložiť"
       spam:
         short_title: "Spam"
         title: "Konfigurácia spracovania spamu"
@@ -560,9 +563,10 @@ sk:
           other: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
         model_description:
           none: "Všeobecné nastavenia, ktoré fungujú pre väčšinu jazykových modelov"
+          anthropic-claude-opus-4-7: "Najinteligentnejší model spoločnosti Anthropic"
           anthropic-claude-sonnet-4-6: "Optimálna rovnováha medzi rýchlosťou a cenou"
           anthropic-claude-haiku-4-5: "Rýchle a cenovo výhodné"
-          open_ai-gpt-5-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-5"
+          open_ai-gpt-5-4-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-5"
         preseeded_model_description: "Predkonfigurovaný model s otvoreným zdrojovým kódom využívajúci %{model}"
         configured:
           title: "Nakonfigurované LLM"

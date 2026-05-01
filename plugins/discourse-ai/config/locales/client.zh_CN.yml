@@ -365,6 +365,8 @@ zh_CN:
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
         supported_locales: "支持的语言"
         supported_locales_description: "此站点设置还允许访客为帖子翻译做贡献。"
+        translatable_categories: "可翻译类别"
+        translatable_categories_description: "只有选定类别中的内容才会被翻译。子类别需要单独添加。"
         admin_actions:
           translation_settings: "翻译设置"
           localization_settings: "本地化设置"
@@ -385,6 +387,12 @@ zh_CN:
           tooltip_translated: "%{done} 个非%{language}帖子已翻译，共 %{total} 个"
           bar_done:
             other: "%{count} 个帖子"
+        theme_translations:
+          translate:
+            label: "翻译"
+            title: "使用选定的语言作为源语言，翻译成所有支持的语言。"
+            queued: "翻译已入队"
+            failed: "翻译入队失败"
         translations_menu:
           translate:
             label: "翻译帖子"
@@ -743,6 +751,17 @@ zh_CN:
         oauth_client_id: "OAuth 客户端 ID"
         oauth_client_secret: "OAuth 客户端密钥"
         oauth_scopes: "OAuth 作用域"
+        oauth_authorization_params: "OAuth授权参数"
+        oauth_authorization_params_help: "可选的 JSON 对象，已合并到授权请求中。使用 null 可移除默认参数。"
+        oauth_authorization_params_placeholder: '{"access_type": "offline"}。'
+        oauth_token_params: "OAuth令牌参数"
+        oauth_token_params_help: "可选的 JSON 对象，会合并到令牌请求中。使用 null 可移除默认参数。"
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "需要刷新令牌"
+        oauth_require_refresh_token_help: "如果提供商未返回刷新令牌，则 OAuth 连接失败。"
+        oauth_json_object_required: "%{field} 必须是一个 JSON 对象。"
+        oauth_show_advanced_options: "显示高级选项"
+        oauth_hide_advanced_options: "隐藏高级选项"
         oauth_connection: "OAuth 连接"
         oauth_status: "OAuth 状态"
         oauth_statuses:
@@ -853,15 +872,14 @@ zh_CN:
           other: "此模型目前的使用者为 %{settings}。如果配置错误，功能将无法按预期运行。"
         model_description:
           none: "适用于大多数语言模型的常规设置"
+          anthropic-claude-opus-4-7: "Anthropic 最智能的模型"
           anthropic-claude-sonnet-4-6: "速度与成本的最佳平衡"
           anthropic-claude-haiku-4-5: "快速、经济高效"
-          google-gemini-3-pro: "Google 最智能的模型"
+          google-gemini-3-1-pro: "Google 最智能的模型"
           google-gemini-3-flash: "快速且经济实惠，并具备多模态推理能力"
-          open_ai-gpt-5-nano: "最快、最具成本效益的 GPT-5 模型"
-          open_router-deepseek-deepseek-v3-2: "DeepSeek 的最新高性能模型"
-          open_router-moonshotai-kimi-k2-5: "Moonshot 具有视觉能力的多模态模型"
-          open_router-x-ai-grok-4-fast: "xAI 的旗舰视觉模型"
-          open_router-arcee-ai-trinity-large-preview-free: "来自 Arcee AI 的免费开源模型"
+          open_ai-gpt-5-4: "OpenAI 的旗舰模型，非常适合跨领域解决问题"
+          open_ai-gpt-5-4-nano: "最快、最具成本效益的 GPT-5 模型"
+          open_router-moonshotai-kimi-k2-6: "Moonshot 具有视觉能力的多模态模型"
         preseeded_model_description: "利用 %{model} 的预配置开源模型"
         configured:
           title: "配置的 LLM"
@@ -1093,6 +1111,12 @@ zh_CN:
           title: "查看 AI 互动"
           copy_request: "复制请求"
           copy_response: "复制回答"
+          this_turn: "这回合："
+          whole_conversation: "对话"
+          tokens_summary: "%{request_tokens} 输入 → %{response_tokens} 输出"
+          cache_both: "（缓存读取 %{read} ， %{write} 写入）"
+          cache_read_only: "（缓存 %{read} 读取）"
+          cache_write_only: "（缓存 %{write} 写入）"
           request: "请求"
           response: "回答"
           next_log: "下一步"
