@@ -47,7 +47,8 @@ const extension = {
 
   inputRules: [
     {
-      match: /(^|\W)(#[\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})\s$/,
+      match:
+        /(^|\W)(#[\u00C0-\u1FFF\u2C00-\uD7FF\w:-](?:[\u00C0-\u1FFF\u2C00-\uD7FF\w:.-]{0,99}[\u00C0-\u1FFF\u2C00-\uD7FF\w:-])?)\s$/,
       handler: (state, match, start, end) => {
         const hashtagStart = start + match[1].length;
         const name = match[2].slice(1);

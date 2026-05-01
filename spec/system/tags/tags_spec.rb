@@ -82,42 +82,21 @@ describe "Tags" do
       )
     end
 
-    it "displays and navigates tags with plus, hash, and percent characters" do
-      cpp_tag = Fabricate(:tag, name: "c++")
-      csharp_tag = Fabricate(:tag, name: "c#")
-      cpercent_tag = Fabricate(:tag, name: "c%")
-      cpp_topic = Fabricate(:topic, tags: [cpp_tag]).tap { |t| Fabricate(:post, topic: t) }
-      csharp_topic = Fabricate(:topic, tags: [csharp_tag]).tap { |t| Fabricate(:post, topic: t) }
-      cpercent_topic =
-        Fabricate(:topic, tags: [cpercent_tag]).tap { |t| Fabricate(:post, topic: t) }
+    it "displays and navigates tags with periods" do
+      node_tag = Fabricate(:tag, name: "node.js")
+      other_tag = Fabricate(:tag, name: "other")
+      node_topic = Fabricate(:topic, tags: [node_tag]).tap { |t| Fabricate(:post, topic: t) }
+      other_topic = Fabricate(:topic, tags: [other_tag]).tap { |t| Fabricate(:post, topic: t) }
 
       sign_in(user_tl1)
       visit "/latest"
 
-      expect(discovery.topic_list).to have_topic_tag(cpp_topic, "c++")
-      expect(discovery.topic_list).to have_topic_tag(csharp_topic, "c#")
-      expect(discovery.topic_list).to have_topic_tag(cpercent_topic, "c%")
+      expect(discovery.topic_list).to have_topic_tag(node_topic, "node.js")
 
-      discovery.topic_list.click_topic_tag(cpp_topic, "c++")
-      expect(page).to have_current_path("/tag/#{cpp_tag.slug}/#{cpp_tag.id}")
-      expect(discovery.topic_list).to have_topic(cpp_topic)
-      expect(discovery.topic_list).to have_no_topic(csharp_topic)
-
-      expect(discovery.topic_list).to have_no_topic(cpercent_topic)
-
-      visit "/latest"
-      discovery.topic_list.click_topic_tag(csharp_topic, "c#")
-      expect(page).to have_current_path("/tag/#{csharp_tag.slug_for_url}/#{csharp_tag.id}")
-      expect(discovery.topic_list).to have_topic(csharp_topic)
-      expect(discovery.topic_list).to have_no_topic(cpp_topic)
-      expect(discovery.topic_list).to have_no_topic(cpercent_topic)
-
-      visit "/latest"
-      discovery.topic_list.click_topic_tag(cpercent_topic, "c%")
-      expect(page).to have_current_path("/tag/#{cpercent_tag.slug_for_url}/#{cpercent_tag.id}")
-      expect(discovery.topic_list).to have_topic(cpercent_topic)
-      expect(discovery.topic_list).to have_no_topic(cpp_topic)
-      expect(discovery.topic_list).to have_no_topic(csharp_topic)
+      discovery.topic_list.click_topic_tag(node_topic, "node.js")
+      expect(page).to have_current_path("/tag/#{node_tag.slug}/#{node_tag.id}")
+      expect(discovery.topic_list).to have_topic(node_topic)
+      expect(discovery.topic_list).to have_no_topic(other_topic)
     end
 
     it "displays tags on topics in topic lists" do

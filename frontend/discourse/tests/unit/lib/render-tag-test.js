@@ -21,20 +21,10 @@ module("Unit | Utility | render-tag", function (hooks) {
     );
   });
 
-  test("defaultRenderTag encodes legacy tag links with URL-reserved characters", function (assert) {
+  test("defaultRenderTag encodes legacy tag links with periods", function (assert) {
     assert.strictEqual(
-      renderTag("c#"),
-      "<a href='/tag/c%23'  data-tag-name='c#' class='discourse-tag simple'>c#</a>"
-    );
-
-    assert.strictEqual(
-      renderTag("c++"),
-      "<a href='/tag/c%2B%2B'  data-tag-name='c++' class='discourse-tag simple'>c++</a>"
-    );
-
-    assert.strictEqual(
-      renderTag("c%"),
-      "<a href='/tag/c%25'  data-tag-name='c%' class='discourse-tag simple'>c%</a>"
+      renderTag("node.js"),
+      "<a href='/tag/node%2Ejs'  data-tag-name='node.js' class='discourse-tag simple'>node.js</a>"
     );
   });
 

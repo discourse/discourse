@@ -19,7 +19,7 @@ export function defaultRenderTag(tag, params) {
   const visibleName = escapeExpression(tagName);
   const tagNameLower = tagName.toLowerCase();
   const tagNameAttr = escapeExpression(tagNameLower);
-  const tagPathName = encodeURIComponent(tagNameLower);
+  const tagPathName = encodeURIComponent(tagNameLower).replaceAll(".", "%2E");
 
   const classes = ["discourse-tag"];
   const htmlTag = params.tagName || "a";

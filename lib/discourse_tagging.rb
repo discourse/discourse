@@ -2,9 +2,8 @@
 
 module DiscourseTagging
   TAGS_FIELD_NAME = "tags"
-  # Tag names can include symbols commonly used in names like c++, c#, c%, $100, r&d,
-  # node.js, and x=1.
-  TAGS_FILTER_REGEXP = /[\/\?\[\]@!'\(\)\*,;\\`^\s|\{\}"<>]+/ # /?[]@!'()*,;\`^|{}"<>
+  # Tag names can include periods, like node.js.
+  TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=%\`^|{}"<>
   TAGS_STAFF_CACHE_KEY = "staff_tag_names"
 
   TAG_GROUP_TAG_IDS_SQL = <<-SQL
@@ -821,7 +820,8 @@ module DiscourseTagging
     tag.gsub!(/[^[:word:][:punct:]]+/, "")
     tag.gsub!(TAGS_FILTER_REGEXP, "")
     tag.squeeze!("-")
-    truncate ? tag[0...SiteSetting.max_tag_length] : tag
+    tag = truncate ? tag[0...SiteSetting.max_tag_length] : tag
+    tag.gsub(/\A\.+|\.+\z/, "")
   end
 
   def self.tags_for_saving(tags_arg, guardian, opts = {})

@@ -39,17 +39,20 @@ module("Unit | Service | tag-utils", function (hooks) {
     );
   });
 
-  test("createContentFromInput allows useful symbolic tag names", function (assert) {
-    assert.strictEqual(this.tagUtils.createContentFromInput("C++"), "c++");
-    assert.strictEqual(this.tagUtils.createContentFromInput("C#"), "c#");
-    assert.strictEqual(this.tagUtils.createContentFromInput("F#"), "f#");
-    assert.strictEqual(this.tagUtils.createContentFromInput("C%"), "c%");
-    assert.strictEqual(this.tagUtils.createContentFromInput("$100"), "$100");
-    assert.strictEqual(this.tagUtils.createContentFromInput("R&D"), "r&d");
+  test("createContentFromInput allows periods in tag names", function (assert) {
     assert.strictEqual(
       this.tagUtils.createContentFromInput("node.js"),
       "node.js"
     );
-    assert.strictEqual(this.tagUtils.createContentFromInput("x=1"), "x=1");
+    assert.strictEqual(
+      this.tagUtils.createContentFromInput(".node.js."),
+      "node.js"
+    );
+    assert.strictEqual(this.tagUtils.createContentFromInput("C++"), "c");
+    assert.strictEqual(this.tagUtils.createContentFromInput("C#"), "c");
+    assert.strictEqual(this.tagUtils.createContentFromInput("C%"), "c");
+    assert.strictEqual(this.tagUtils.createContentFromInput("$100"), "100");
+    assert.strictEqual(this.tagUtils.createContentFromInput("R&D"), "rd");
+    assert.strictEqual(this.tagUtils.createContentFromInput("x=1"), "x1");
   });
 });

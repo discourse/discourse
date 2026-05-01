@@ -1927,6 +1927,37 @@ RSpec.describe PrettyText do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
     end
 
+    tag_with_periods = Fabricate(:tag, name: "sam.i.am")
+    Fabricate(:topic, tags: [tag_with_periods])
+    cooked = PrettyText.cook(" #sam.i.am", user_id: user.id)
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag_with_periods.url,
+        "data-type": "tag",
+        "data-slug": tag_with_periods.name,
+        "data-id": tag_with_periods.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+
+    cooked = PrettyText.cook(" #known::tag.", user_id: user.id)
+    expect(cooked).to include("</a>.")
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)", user_id: user.id)
 
     html = <<~HTML

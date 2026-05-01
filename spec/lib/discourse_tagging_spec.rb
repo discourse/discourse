@@ -1867,15 +1867,15 @@ RSpec.describe DiscourseTagging do
         expect(DiscourseTagging.clean_tag("hel\ufefflo")).to eq("hello")
       end
 
-      it "allows language tag names with plus, hash, and percent characters" do
-        expect(DiscourseTagging.clean_tag("C++")).to eq("c++")
-        expect(DiscourseTagging.clean_tag("C#")).to eq("c#")
-        expect(DiscourseTagging.clean_tag("f#")).to eq("f#")
-        expect(DiscourseTagging.clean_tag("c%")).to eq("c%")
-        expect(DiscourseTagging.clean_tag("$100")).to eq("$100")
-        expect(DiscourseTagging.clean_tag("r&d")).to eq("r&d")
+      it "allows tag names with periods" do
         expect(DiscourseTagging.clean_tag("node.js")).to eq("node.js")
-        expect(DiscourseTagging.clean_tag("x=1")).to eq("x=1")
+        expect(DiscourseTagging.clean_tag(".node.js.")).to eq("node.js")
+        expect(DiscourseTagging.clean_tag("C++")).to eq("c")
+        expect(DiscourseTagging.clean_tag("C#")).to eq("c")
+        expect(DiscourseTagging.clean_tag("c%")).to eq("c")
+        expect(DiscourseTagging.clean_tag("$100")).to eq("100")
+        expect(DiscourseTagging.clean_tag("r&d")).to eq("rd")
+        expect(DiscourseTagging.clean_tag("x=1")).to eq("x1")
       end
 
       it "removes multiple consecutive dashes" do
@@ -2108,20 +2108,18 @@ RSpec.describe DiscourseTagging do
       expect(s.slug).to eq("synonym1")
     end
 
-    it "can create language synonyms that generate colliding slugs" do
+    it "can create synonyms that generate colliding slugs" do
       expect {
         expect(
-          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: %w[c++ c# c%]),
+          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: %w[node.js node-js]),
         ).to eq(true)
-      }.to change { Tag.count }.by(3)
+      }.to change { Tag.count }.by(2)
 
-      cpp = Tag.find_by_name("c++")
-      csharp = Tag.find_by_name("c#")
-      cpercent = Tag.find_by_name("c%")
-      expect_same_tag_names(tag1.reload.synonyms, [cpp, csharp, cpercent])
-      expect(cpp.slug).to eq("c")
-      expect(csharp.slug).to eq("c_")
-      expect(cpercent.slug).to eq("c__")
+      node_dot = Tag.find_by_name("node.js")
+      node_dash = Tag.find_by_name("node-js")
+      expect_same_tag_names(tag1.reload.synonyms, [node_dot, node_dash])
+      expect(node_dot.slug).to eq("node-js")
+      expect(node_dash.slug).to eq("node-js_")
     end
 
     it "can add existing and new tags" do

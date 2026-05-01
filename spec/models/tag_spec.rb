@@ -53,28 +53,31 @@ RSpec.describe Tag do
       )
     end
 
-    it "allows tags that share the same generated slug" do
-      cpp = Fabricate(:tag, name: "c++")
-      csharp = Fabricate(:tag, name: "c#")
+    it "allows tags with periods in names" do
+      node = Fabricate(:tag, name: "node.js")
 
-      cpercent = Fabricate(:tag, name: "c%")
-
-      expect(cpp.slug).to eq("c")
-      expect(csharp.slug).to eq("c_")
-      expect(cpercent.slug).to eq("c__")
-      expect(cpp.url).to eq("#{Discourse.base_path}/tag/c/#{cpp.id}")
-      expect(csharp.url).to eq("#{Discourse.base_path}/tag/c_/#{csharp.id}")
-      expect(cpercent.url).to eq("#{Discourse.base_path}/tag/c__/#{cpercent.id}")
+      expect(node.slug).to eq("node-js")
+      expect(node.url).to eq("#{Discourse.base_path}/tag/node-js/#{node.id}")
     end
 
-    it "generates numeric slugs for tags when the id keeps the URL unambiguous" do
-      percent = Fabricate(:tag, name: "100%")
-      dollars = Fabricate(:tag, name: "$100")
+    it "allows tags that share the same generated slug" do
+      node_dot = Fabricate(:tag, name: "node.js")
+      node_dash = Fabricate(:tag, name: "node-js")
 
-      expect(percent.slug).to eq("100")
-      expect(dollars.slug).to eq("100_")
-      expect(percent.url).to eq("#{Discourse.base_path}/tag/100/#{percent.id}")
-      expect(dollars.url).to eq("#{Discourse.base_path}/tag/100_/#{dollars.id}")
+      expect(node_dot.slug).to eq("node-js")
+      expect(node_dash.slug).to eq("node-js_")
+      expect(node_dot.url).to eq("#{Discourse.base_path}/tag/node-js/#{node_dot.id}")
+      expect(node_dash.url).to eq("#{Discourse.base_path}/tag/node-js_/#{node_dash.id}")
+    end
+
+    it "generates unique numeric slugs when the id keeps the URL unambiguous" do
+      first = Fabricate(:tag, name: "100")
+      second = Fabricate(:tag, name: "100.")
+
+      expect(first.slug).to eq("100")
+      expect(second.slug).to eq("100_")
+      expect(first.url).to eq("#{Discourse.base_path}/tag/100/#{first.id}")
+      expect(second.url).to eq("#{Discourse.base_path}/tag/100_/#{second.id}")
     end
 
     it 'does not allow creation of tag with name in "RESERVED_TAGS"' do
