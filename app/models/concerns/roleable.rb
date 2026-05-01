@@ -34,7 +34,6 @@ module Roleable
     auto_approve_user
     enqueue_staff_welcome_message(:moderator)
     set_default_notification_levels(:moderators)
-    mark_upcoming_changes_seen_on_new_site!
   end
 
   def revoke_moderation!
@@ -47,7 +46,6 @@ module Roleable
     auto_approve_user
     enqueue_staff_welcome_message(:admin)
     set_default_notification_levels(:admins)
-    mark_upcoming_changes_seen_on_new_site!
   end
 
   def revoke_admin!
@@ -87,19 +85,5 @@ module Roleable
       ReviewableUser.set_approved_fields!(self, Discourse.system_user)
       self.save!
     end
-  end
-
-  # To avoid showing a blue dot for upcoming changes in the
-  # admin UI, since we make UpcomingChangeEvent.added entries
-  # for the site when we run Jobs::CheckUpcomingChanges for
-  # the first time. We don't need to notify admins so early
-  # about old upcoming changes.
-  def mark_upcoming_changes_seen_on_new_site!
-    return unless Migration::Helpers.new_site?
-    return if custom_fields["last_visited_upcoming_changes_at"].present?
-    custom_fields["last_visited_upcoming_changes_at"] = (
-      Migration::Helpers.site_created_at + 1.hour
-    ).iso8601
-    save_custom_fields
   end
 end

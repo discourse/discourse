@@ -181,7 +181,6 @@ class User < ActiveRecord::Base
   after_create :set_default_categories_preferences
   after_create :set_default_tags_preferences
   after_create :set_default_sidebar_section_links
-  after_create :mark_upcoming_changes_seen_on_new_site!, if: :staff?
   after_update :set_default_sidebar_section_links, if: Proc.new { self.saved_change_to_staged? }
 
   after_update :trigger_user_updated_event,

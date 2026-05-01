@@ -582,67 +582,6 @@ RSpec.describe User do
     end
   end
 
-  describe "mark_upcoming_changes_seen_on_new_site!" do
-    let(:custom_field) { "last_visited_upcoming_changes_at" }
-    let(:expected_stamp) { (Migration::Helpers.site_created_at + 1.hour).iso8601 }
-
-    context "when site is new" do
-      before { Migration::Helpers.stubs(:new_site?).returns(true) }
-
-      it "stamps last_visited_upcoming_changes_at when an admin is created" do
-        admin = Fabricate(:admin)
-        expect(admin.custom_fields[custom_field]).to eq(expected_stamp)
-      end
-
-      it "stamps last_visited_upcoming_changes_at when a moderator is created" do
-        mod = Fabricate(:moderator)
-        expect(mod.custom_fields[custom_field]).to eq(expected_stamp)
-      end
-
-      it "does not stamp for non-staff users" do
-        user = Fabricate(:user)
-        expect(user.custom_fields[custom_field]).to be_blank
-      end
-
-      it "stamps when a regular user is promoted via grant_admin!" do
-        user = Fabricate(:user)
-        expect(user.custom_fields[custom_field]).to be_blank
-        user.grant_admin!
-        expect(user.reload.custom_fields[custom_field]).to eq(expected_stamp)
-      end
-
-      it "stamps when a regular user is promoted via grant_moderation!" do
-        user = Fabricate(:user)
-        user.grant_moderation!
-        expect(user.reload.custom_fields[custom_field]).to eq(expected_stamp)
-      end
-
-      it "preserves an existing last_visited_upcoming_changes_at value" do
-        existing = 5.minutes.ago.iso8601
-        user = Fabricate(:user)
-        user.custom_fields[custom_field] = existing
-        user.save_custom_fields
-        user.grant_admin!
-        expect(user.reload.custom_fields[custom_field]).to eq(existing)
-      end
-    end
-
-    context "when site is not new" do
-      before { Migration::Helpers.stubs(:new_site?).returns(false) }
-
-      it "does not stamp on staff creation" do
-        admin = Fabricate(:admin)
-        expect(admin.custom_fields[custom_field]).to be_blank
-      end
-
-      it "does not stamp on grant_admin!" do
-        user = Fabricate(:user)
-        user.grant_admin!
-        expect(user.reload.custom_fields[custom_field]).to be_blank
-      end
-    end
-  end
-
   describe ".set_default_tags_preferences" do
     let(:tag) { Fabricate(:tag) }
 
