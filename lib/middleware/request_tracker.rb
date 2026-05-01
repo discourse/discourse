@@ -670,6 +670,7 @@ class Middleware::RequestTracker
       user_id: data[:current_user_id],
       url: data[:tracking_url],
       ip_address: data[:request_remote_ip],
+      country_code: DiscourseIpInfo.get(data[:request_remote_ip])[:country_code],
       user_agent: data[:user_agent],
       referrer: data[:tracking_referrer],
       session_id: data[:tracking_session_id],

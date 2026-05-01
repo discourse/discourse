@@ -597,6 +597,7 @@ RSpec.describe Middleware::RequestTracker do
         before { SiteSetting.trigger_browser_pageview_events = true }
         it "triggers event for anonymous user page views when `login_required` site setting is false" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+          DiscourseIpInfo.stubs(:get).returns(country_code: "AU")
 
           data =
             Middleware::RequestTracker.get_data(
@@ -622,6 +623,7 @@ RSpec.describe Middleware::RequestTracker do
           expect(event[:url]).to eq("https://discourse.org")
           expect(event[:referrer]).to eq("https://example.com")
           expect(event).to have_key(:ip_address)
+          expect(event[:country_code]).to eq("AU")
           expect(event[:user_agent]).to be_present
         end
 
@@ -681,6 +683,7 @@ RSpec.describe Middleware::RequestTracker do
 
         it "triggers event for logged-in user page views" do
           user = Fabricate(:user, active: true)
+          DiscourseIpInfo.stubs(:get).returns(country_code: "DE")
           token = UserAuthToken.generate!(user_id: user.id)
           cookie =
             create_auth_cookie(
@@ -713,6 +716,7 @@ RSpec.describe Middleware::RequestTracker do
           expect(event[:url]).to eq("https://discourse.org")
           expect(event[:referrer]).to eq("https://example.com")
           expect(event).to have_key(:ip_address)
+          expect(event[:country_code]).to eq("DE")
           expect(event[:user_agent]).to be_present
         end
 
@@ -819,6 +823,7 @@ RSpec.describe Middleware::RequestTracker do
 
     it "increments beacon-specific counters and fires beacon event with correct data" do
       SiteSetting.trigger_browser_pageview_events = true
+      DiscourseIpInfo.stubs(:get).returns(country_code: "US")
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
 
       events =
@@ -846,6 +851,7 @@ RSpec.describe Middleware::RequestTracker do
       expect(event[:referrer]).to eq("https://test.com/")
       expect(event[:session_id]).to eq("abc123")
       expect(event[:topic_id]).to eq(123)
+      expect(event[:country_code]).to eq("US")
       expect(event[:user_agent]).to eq(
         "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       )
