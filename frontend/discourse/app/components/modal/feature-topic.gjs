@@ -211,8 +211,8 @@ export default class FeatureTopic extends Component {
             />
           {{/if}}
         {{/if}}
-        <hr />
         {{#if @model.topic.details.can_banner_topic}}
+          <hr />
           <div class="feature-section">
             <div class="desc">
               <p>
