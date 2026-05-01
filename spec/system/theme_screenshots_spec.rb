@@ -16,6 +16,8 @@
 #   SCREENSHOTS_THEMES      — comma-separated theme names (default: foundation,horizon)
 #   SCREENSHOTS_THEME_URL   — git URL of a remote theme to install into the test DB
 #                             (theme name is deduced from the repo name in the URL)
+#   SCREENSHOTS_SUBSET      — substring filter on marker labels; only examples whose
+#                             label contains this string are captured (e.g. "topic")
 
 DEVICES = (ENV["SCREENSHOTS_DEVICES"] || "desktop,mobile").split(",").map(&:strip).freeze
 
@@ -149,11 +151,12 @@ describe "Theme screenshots" do
 
   # Returns a hash mapping the line number of each `it` / `scenario` / `example`
   # / `specify` block that contains `screenshot_marker` to a constraint hash:
-  #   { only: :desktop } — call site has `only: :desktop`
-  #   { only: nil }     — call site has no constraint
+  #   { only: :desktop, labels: ["my-label"] } — call site has `only: :desktop`
+  #   { only: nil, labels: ["a", "b"] }        — call site has no constraint
   #
   # If a single example contains multiple `screenshot_marker` calls with
   # conflicting constraints, the most permissive (no `only`) wins.
+  # All labels across all markers in the example are collected.
   def screenshot_example_constraints(spec_file)
     lines = File.readlines(spec_file)
     result = {}
@@ -161,10 +164,17 @@ describe "Theme screenshots" do
       next if line.exclude?("screenshot_marker")
       only_match = line.match(/only:\s*:(\w+)/)
       only = only_match ? only_match[1].to_sym : nil
+      label_match = line.match(/label:\s*["']([^"']+)["']/)
+      label = label_match ? label_match[1] : nil
       (idx - 1).downto(0) do |i|
         if lines[i] =~ /^\s*(it|scenario|example|specify)\b/
           existing = result[i + 1]
-          result[i + 1] = { only: only } if existing.nil? || existing[:only]
+          if existing
+            existing[:only] = only if existing[:only] # most permissive (nil) wins
+            existing[:labels] << label if label
+          else
+            result[i + 1] = { only: only, labels: label ? [label] : [] }
+          end
           break
         end
       end
@@ -173,12 +183,15 @@ describe "Theme screenshots" do
   end
 
   def keep_screenshot_examples(group, constraints_per_file, device)
+    subset = ENV["SCREENSHOTS_SUBSET"].presence
     group.examples.select! do |ex|
       file = File.expand_path(ex.metadata[:file_path])
       constraint = (constraints_per_file[file] || {})[ex.metadata[:line_number]]
       next false unless constraint
       only = constraint[:only]
-      only.nil? || only.to_s == device
+      next false unless only.nil? || only.to_s == device
+      next false if subset && constraint[:labels].none? { |l| l.include?(subset) }
+      true
     end
     group.children.each { |child| keep_screenshot_examples(child, constraints_per_file, device) }
     group.children.reject! { |child| empty_group?(child) }
@@ -237,7 +250,6 @@ describe "Theme screenshots" do
     overrides = {
       "TAKE_SCREENSHOTS" => "1",
       "SCREENSHOTS_DIR" => output_dir,
-      "SCREENSHOTS_THEME_ID" => theme[:id].to_s,
       "SCREENSHOTS_THEME_NAME" => theme[:name],
       "SCREENSHOTS_MODE" => mode.to_s,
       "SCREENSHOTS_DEVICE" => device,

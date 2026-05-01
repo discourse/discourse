@@ -5,14 +5,14 @@ description: Capture screenshots of the local Discourse site across the two core
 
 # Discourse screenshots
 
-Drives a system spec (`spec/system/theme_screenshots_spec.rb`) that discovers all system specs containing `screenshot_here` marker calls, runs them under each combination of theme × device × color mode, and outputs PNGs plus a single `compare.html` viewer.
+Drives a system spec (`spec/system/theme_screenshots_spec.rb`) that discovers all system specs containing `screenshot_marker` marker calls, runs them under each combination of theme × device × color mode, and outputs PNGs plus a single `compare.html` viewer.
 
 ## How it works
 
-Spec authors place `screenshot_here(label: "my-label")` at the moment they want to capture. The orchestrator auto-discovers those specs and runs only the `it` blocks that contain a marker, skipping everything else. The `only:` kwarg restricts a capture to one device leg:
+Spec authors place `screenshot_marker(label: "my-label")` at the moment they want to capture. The orchestrator auto-discovers those specs and runs only the `it` blocks that contain a marker, skipping everything else. The `only:` kwarg restricts a capture to one device leg:
 
 ```ruby
-screenshot_here(label: "search-menu", only: :desktop)
+screenshot_marker(label: "search-menu", only: :desktop)
 ```
 
 Output files: `tmp/theme-screenshots/raw/{device}-{theme}-{mode}-{label}.png`
@@ -45,7 +45,7 @@ TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 bin/rspec spec/system/theme_screenshots_spec.r
 | `SCREENSHOTS_THEMES`    | `foundation,horizon`| Comma-separated built-in theme names to include.              |
 | `SCREENSHOTS_THEME_URL` | *(unset)*           | Git URL of a remote theme to install and add to the matrix.   |
 | `SCREENSHOTS_THEME_NAME`| repo name           | Filename label for the remote/extra theme.                    |
-| `SCREENSHOTS_THEME_ID`  | *(unset)*           | ID of a theme already in the test DB to add to the matrix.    |
+| `SCREENSHOTS_SUBSET`    | *(unset)*           | Substring filter on marker labels — only captures markers whose label contains this string. |
 
 ### Examples
 
@@ -66,6 +66,10 @@ TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 \
   SCREENSHOTS_THEME_URL=https://github.com/org/my-theme \
   SCREENSHOTS_THEME_NAME=my-theme \
   bin/rspec spec/system/theme_screenshots_spec.rb
+
+# Only capture markers whose label contains "topic"
+TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 SCREENSHOTS_SUBSET=topic \
+  bin/rspec spec/system/theme_screenshots_spec.rb
 ```
 
 ## Invocation instructions
@@ -78,7 +82,7 @@ When this skill is invoked:
    - "desktop only" / "mobile only" → `SCREENSHOTS_DEVICES=…`
    - "foundation only" / "just horizon" → `SCREENSHOTS_THEMES=…`
    - A git URL for a theme → `SCREENSHOTS_THEME_URL=…`; also set `SCREENSHOTS_THEME_NAME=<label>` if the user provides a name
-   - A theme ID (e.g. "theme 42") → `SCREENSHOTS_THEME_ID=42`
+   - A label substring (e.g. "only topic markers", "just signup") → `SCREENSHOTS_SUBSET=…`
    - A directory path (e.g. "save to /tmp/foo") → `SCREENSHOTS_DIR=…`
 3. Always include `LOAD_PLUGINS=1`.
 4. Always prefix with `TAKE_SCREENSHOTS=1`.
@@ -88,7 +92,7 @@ When this skill is invoked:
 
 ## Adding markers to a spec
 
-In any system spec, `include ThemeScreenshotMarker` and call `screenshot_here` at the point you want to capture:
+In any system spec, `include ThemeScreenshotMarker` and call `screenshot_marker` at the point you want to capture:
 
 ```ruby
 describe "Search" do
@@ -99,10 +103,10 @@ describe "Search" do
     search_page.type_in_search("test")
     search_page.click_search_button
 
-    screenshot_here(label: "search-results")               # captured on all devices
-    screenshot_here(label: "search-menu", only: :desktop)  # desktop only
+    screenshot_marker(label: "search-results")               # captured on all devices
+    screenshot_marker(label: "search-menu", only: :desktop)  # desktop only
   end
 end
 ```
 
-The `include ThemeScreenshotMarker` line is required — without it, `screenshot_here` is undefined when the spec is run directly. The orchestrator also auto-includes it as a safety net, but relying on that alone will break direct spec runs.
+The `include ThemeScreenshotMarker` line is required — without it, `screenshot_marker` is undefined when the spec is run directly. The orchestrator also auto-includes it as a safety net, but relying on that alone will break direct spec runs.
