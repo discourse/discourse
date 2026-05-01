@@ -3020,6 +3020,7 @@ en:
   original_poster: "Original Poster"
   most_recent_poster: "Most Recent Poster"
   frequent_poster: "Frequent Poster"
+  recent_poster: "Recent Poster"
   # Example: "Original Poster, Most Recent Poster"
   poster_description_joiner: ", "
 
