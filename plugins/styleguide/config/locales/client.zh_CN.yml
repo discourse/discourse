@@ -95,6 +95,8 @@ zh_CN:
           title: "更多话题"
         post_menu:
           title: "帖子菜单"
+        docked_composer:
+          title: "Docked Composer"
         modal:
           title: "模式窗口"
           header: "模式窗口标题"

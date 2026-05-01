@@ -65,6 +65,7 @@ zh_CN:
   assign_mailer:
     title: "指定邮件程序"
     subject_template: "[%{email_prefix}] %{assignee_name} 将您指定至 '%{topic_title}'！"
+    subject_template_improved: "[%{email_prefix}] %{assignee_name} 将您指定至 '%{topic_title}'！"
     text_body_template: |
       嘿，%{assignee_name} 将您**指定**至讨论
       > **%{topic_title}**

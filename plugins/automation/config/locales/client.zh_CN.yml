@@ -319,6 +319,12 @@ zh_CN:
             tags:
               label: 标签
               description: 要添加到话题的标签列表。
+            closed_automatically:
+              label: 自动关闭的主题
+              description: 为自动关闭的主题添加标签。
+            closed_manually:
+              label: 手动关闭主题
+              description: 为手动关闭的主题添加标签。
         post:
           fields:
             creator:

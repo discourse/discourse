@@ -1591,7 +1591,6 @@ be:
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
     new_user_of_the_month:
       title: "Вы новы карыстальнік месяцы!"
-      subject_template: "Вы новы карыстальнік месяцы!"
       text_body_template: |
         Congratulations, you've earned the **New User of the Month award for %{month_year}**. :trophy:
 
@@ -1818,6 +1817,7 @@ be:
     account_exists:
       title: "Лік ужо існуе"
       subject_template: "[% {Email_prefix}] Лік ужо існуе"
+      subject_template_improved: "Лік ужо існуе"
       text_body_template: |
         Вы проста спрабавалі стварыць уліковы запіс на% {SITE_NAME}, або спрабавалі змяніць адрас электроннай пошты ўліковага запісу на% {адрас электроннай пошты}. Аднак уліковы запіс ўжо існуе для% {} электроннай пошты.Калі вы забылі свой пароль, [скіньце яго] (% {base_url}
     digest:
@@ -1831,6 +1831,7 @@ be:
       popular_posts: "Папулярныя паведамленні"
       more_new: "Новае для вас"
       subject_template: "[%{email_prefix}] Кароткае апісанне"
+      subject_template_improved: "Зводка"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       your_email_settings: "your email settings"
       click_here: "click here"
@@ -1848,6 +1849,7 @@ be:
       title: "Увайсці па спасылцы"
       preview: "Увайсці па спасылцы."
       subject_template: "[%{email_prefix}] Уваход па спасылцы"
+      subject_template_improved: "Увайсці па спасылцы"
       text_body_template: |
         Вось ваша спасылка каб ўвайсці на [%{site_name}](%{base_url}).
 
@@ -1857,7 +1859,6 @@ be:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "ўсталяваць пароль"
-      subject_template: "[%{email_prefix}] Усталяваць пароль"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
@@ -1868,9 +1869,9 @@ be:
     admin_login:
       title: "Увайсці як адміністратар"
       subject_template: "[%{email_prefix}] Увайсці"
+      subject_template_improved: "Уваход"
     account_created:
       title: "Уліковы запіс створаны"
-      subject_template: "[%{email_prefix}] Ваш новы рахунак"
       text_body_template: |
         A new account was created for you at %{site_name}
 
@@ -1915,7 +1916,6 @@ be:
         Сардэчна запрашаем у% {site_name}!Гэта сяброўскае напамін, каб актываваць свой рахунак.Націсніце на спасылку, каб пацвердзіць і актываваць новы рахунак:% {Base_url}
     suspicious_login:
       title: "Новы Лагін абвесткі"
-      subject_template: "[%{site_name}] New Login from %{location}"
   page_not_found:
     title: "На жаль! Гэтая старонка не існуе або з'яўляецца прыватнай уласнасцю."
     see_more: "Больш"

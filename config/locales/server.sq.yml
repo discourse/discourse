@@ -1147,11 +1147,14 @@ sq:
       new_users: "Përdorues të rinj"
       join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
+      subject_template_improved: "Përmbledhja"
       click_here: "klikoni këtu"
     forgot_password:
       title: "Harruat Fjalëkalimin"
     set_password:
       title: "Vendos Fjalëkalim"
+    admin_login:
+      subject_template_improved: "Identifikohu"
     confirm_new_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
     confirm_new_email_via_admin:

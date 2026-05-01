@@ -6,6 +6,10 @@
 
 fa_IR:
   accepted_answer: "پاسخ پذیرفته شد"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "به صاحب عنوان و مدیران اجازه انتخاب یک پاسخ را به عنوان راه حل بده."
   site_settings:
     prioritize_solved_topics_in_search: "اولویت‌بندی موضوعات حل شده در نتایج جستجو"
   reports:
