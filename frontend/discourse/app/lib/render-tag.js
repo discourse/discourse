@@ -17,9 +17,8 @@ export function defaultRenderTag(tag, params) {
   params = params || {};
   const tagName = typeof tag === "string" ? tag : tag.name;
   const visibleName = escapeExpression(tagName);
-  const tagNameLower = tagName.toLowerCase();
-  const tagNameAttr = escapeExpression(tagNameLower);
-  const tagPathName = encodeURIComponent(tagNameLower).replaceAll(".", "%2E");
+  const tagNameLower = visibleName.toLowerCase();
+  const tagPathName = tagNameLower.replaceAll(".", "%2E");
 
   const classes = ["discourse-tag"];
   const htmlTag = params.tagName || "a";
@@ -58,9 +57,8 @@ export function defaultRenderTag(tag, params) {
     "<" +
     htmlTag +
     href +
-    " data-tag-name='" +
-    tagNameAttr +
-    "'" +
+    " data-tag-name=" +
+    tagNameLower +
     (params.description ? ' title="' + escape(hoverDescription) + '" ' : "") +
     " class='" +
     classes.join(" ") +

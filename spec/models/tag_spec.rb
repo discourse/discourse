@@ -53,33 +53,6 @@ RSpec.describe Tag do
       )
     end
 
-    it "allows tags with periods in names" do
-      node = Fabricate(:tag, name: "node.js")
-
-      expect(node.slug).to eq("node-js")
-      expect(node.url).to eq("#{Discourse.base_path}/tag/node-js/#{node.id}")
-    end
-
-    it "allows tags that share the same generated slug" do
-      node_dot = Fabricate(:tag, name: "node.js")
-      node_dash = Fabricate(:tag, name: "node-js")
-
-      expect(node_dot.slug).to eq("node-js")
-      expect(node_dash.slug).to eq("node-js_")
-      expect(node_dot.url).to eq("#{Discourse.base_path}/tag/node-js/#{node_dot.id}")
-      expect(node_dash.url).to eq("#{Discourse.base_path}/tag/node-js_/#{node_dash.id}")
-    end
-
-    it "generates unique numeric slugs when the id keeps the URL unambiguous" do
-      first = Fabricate(:tag, name: "100")
-      second = Fabricate(:tag, name: "100.")
-
-      expect(first.slug).to eq("100")
-      expect(second.slug).to eq("100_")
-      expect(first.url).to eq("#{Discourse.base_path}/tag/100/#{first.id}")
-      expect(second.url).to eq("#{Discourse.base_path}/tag/100_/#{second.id}")
-    end
-
     it 'does not allow creation of tag with name in "RESERVED_TAGS"' do
       expect { Fabricate.build(:tag, name: "None").save! }.to raise_error(
         ActiveRecord::RecordInvalid,
@@ -234,14 +207,14 @@ RSpec.describe Tag do
     end
 
     context "with numeric-only tag names" do
-      it "uses numeric slugs because the tag id keeps URLs unambiguous" do
+      it "uses id-tag fallback for empty slugs" do
         numeric_tag = Fabricate(:tag, name: "1")
         Fabricate(:topic, tags: [numeric_tag])
-        expect(numeric_tag.slug).to eq("1")
+        expect(numeric_tag.slug).to eq("")
 
         result = Tag.top_tags
         entry = result.find { |t| t[:id] == numeric_tag.id }
-        expect(entry[:slug]).to eq("1")
+        expect(entry[:slug]).to eq("#{numeric_tag.id}-tag")
       end
     end
 
@@ -547,9 +520,9 @@ RSpec.describe Tag do
       expect(tag.slug).to eq("hello-world")
     end
 
-    it "uses numeric slug for numeric-only names" do
+    it "uses empty slug for numeric-only names" do
       tag = Fabricate(:tag, name: "123")
-      expect(tag.slug).to eq("123")
+      expect(tag.slug).to eq("")
     end
 
     it "removes apostrophes from names" do
@@ -572,12 +545,12 @@ RSpec.describe Tag do
       expect(tag.slug).to eq("")
     end
 
-    it "resolves conflicts by adding underscores" do
+    it "resolves conflicts by setting slug to empty" do
       tag1 = Fabricate(:tag, name: "test")
       tag2 = Fabricate(:tag, name: "Test!")
 
       expect(tag1.slug).to eq("test")
-      expect(tag2.slug).to eq("test_")
+      expect(tag2.slug).to eq("")
     end
 
     it "preserves existing slug when name unchanged" do
@@ -611,9 +584,10 @@ RSpec.describe Tag do
     end
 
     it "returns id-tag when slug is empty" do
-      tag = Fabricate(:tag, name: "test")
-      tag.update_column(:slug, "")
+      Fabricate(:tag, name: "test")
+      tag = Fabricate(:tag, name: "Test!")
 
+      expect(tag.slug).to eq("")
       expect(tag.slug_for_url).to eq("#{tag.id}-tag")
     end
   end

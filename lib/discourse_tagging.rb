@@ -919,13 +919,11 @@ module DiscourseTagging
     names_to_create = cleaned_names.reject { |n| existing_names.include?(n.downcase) }
     if names_to_create.present?
       now = Time.current
-      candidate_slugs = names_to_create.map { |n| Tag.slug_for_name(n) }.select(&:present?)
-      used_slugs = Set.new(Tag.where(slug: candidate_slugs).pluck(:slug).map(&:downcase))
       rows =
         names_to_create.map do |n|
           {
             name: n,
-            slug: Tag.unique_slug_for(n, used_slugs: used_slugs),
+            slug: Slug.for(n, ""),
             target_tag_id: target_tag.id,
             created_at: now,
             updated_at: now,
