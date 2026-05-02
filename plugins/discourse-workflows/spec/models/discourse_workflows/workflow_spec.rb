@@ -79,6 +79,42 @@ RSpec.describe DiscourseWorkflows::Workflow do
     end
   end
 
+  describe "#each_seconds_schedule_rule" do
+    it "only iterates the first MAX_RULES_PER_NODE rules per node" do
+      cap = DiscourseWorkflows::ScheduleRule::MAX_RULES_PER_NODE
+      rules = Array.new(cap + 3) { { "interval" => "seconds", "seconds_between_triggers" => 30 } }
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:schedule", configuration: { "rules" => rules }
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
+
+      indices = []
+      workflow.each_seconds_schedule_rule { |_node, _rule, index| indices << index }
+
+      expect(indices).to eq((0...cap).to_a)
+    end
+
+    it "skips non-seconds rules within the considered window" do
+      rules = [
+        { "interval" => "minutes", "minutes_between_triggers" => 5 },
+        { "interval" => "seconds", "seconds_between_triggers" => 30 },
+        { "interval" => "cron", "cron" => "0 9 * * *" },
+        { "interval" => "seconds", "seconds_between_triggers" => 30 },
+      ]
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:schedule", configuration: { "rules" => rules }
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
+
+      indices = []
+      workflow.each_seconds_schedule_rule { |_node, _rule, index| indices << index }
+
+      expect(indices).to eq([1, 3])
+    end
+  end
+
   describe "dependent destroy" do
     it "destroys associated executions" do
       graph =

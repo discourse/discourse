@@ -6,6 +6,8 @@ module DiscourseWorkflows
 
     VALID_INTERVALS = %w[seconds minutes hours days weeks months cron].freeze
 
+    MAX_RULES_PER_NODE = 5
+
     WEEKDAY_MAP = {
       0 => "SU",
       1 => "MO",

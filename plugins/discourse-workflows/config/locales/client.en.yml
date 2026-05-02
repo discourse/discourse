@@ -255,6 +255,9 @@ en:
         add_item: "Add item"
         remove_item: "Remove item"
         add_attributes: "Attributes"
+        max_items_reached:
+          one: "Limited to %{count} item."
+          other: "Limited to %{count} items."
       webhook:
         http_method: "HTTP Method"
         path: "Path"

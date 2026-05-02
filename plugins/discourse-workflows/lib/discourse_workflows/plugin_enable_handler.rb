@@ -25,15 +25,8 @@ module DiscourseWorkflows
 
     def restart_seconds_chains!
       Workflow.enabled.find_each do |workflow|
-        workflow.nodes.each do |node|
-          next if node["type"] != "trigger:schedule"
-
-          rules = ScheduleRule.rules_from_configuration(node["configuration"] || {})
-          rules.each_with_index do |rule, index|
-            next unless ScheduleRule.seconds_rule?(rule)
-
-            ScheduleRule.start_seconds_chain!(workflow, node["id"], index, rule)
-          end
+        workflow.each_seconds_schedule_rule do |node, rule, rule_index|
+          ScheduleRule.start_seconds_chain!(workflow, node["id"], rule_index, rule)
         end
       end
     end

@@ -32,6 +32,7 @@ module DiscourseWorkflows
             rules: {
               type: :collection,
               required: true,
+              max_items: ScheduleRule::MAX_RULES_PER_NODE,
               ui: {
                 flat: true,
               },
@@ -189,6 +190,17 @@ module DiscourseWorkflows
 
           if rules.empty?
             errors.add(:base, I18n.t("discourse_workflows.errors.schedule_rules_required"))
+            return
+          end
+
+          if rules.size > ScheduleRule::MAX_RULES_PER_NODE
+            errors.add(
+              :base,
+              I18n.t(
+                "discourse_workflows.errors.too_many_schedule_rules",
+                count: ScheduleRule::MAX_RULES_PER_NODE,
+              ),
+            )
             return
           end
 

@@ -29,6 +29,35 @@ RSpec.describe DiscourseWorkflows::Nodes::Schedule::V1 do
       described_class.validate_configuration(config, errors)
       expect(errors).not_to be_empty
     end
+
+    it "accepts up to MAX_RULES_PER_NODE rules" do
+      config = {
+        "rules" =>
+          Array.new(DiscourseWorkflows::ScheduleRule::MAX_RULES_PER_NODE) do
+            { "interval" => "minutes", "minutes_between_triggers" => 5 }
+          end,
+      }
+      errors = ActiveModel::Errors.new(Object.new)
+      described_class.validate_configuration(config, errors)
+      expect(errors).to be_empty
+    end
+
+    it "rejects more than MAX_RULES_PER_NODE rules" do
+      config = {
+        "rules" =>
+          Array.new(DiscourseWorkflows::ScheduleRule::MAX_RULES_PER_NODE + 1) do
+            { "interval" => "minutes", "minutes_between_triggers" => 5 }
+          end,
+      }
+      errors = ActiveModel::Errors.new(Object.new)
+      described_class.validate_configuration(config, errors)
+      expect(errors.full_messages).to include(
+        I18n.t(
+          "discourse_workflows.errors.too_many_schedule_rules",
+          count: DiscourseWorkflows::ScheduleRule::MAX_RULES_PER_NODE,
+        ),
+      )
+    end
   end
 
   describe "#output" do

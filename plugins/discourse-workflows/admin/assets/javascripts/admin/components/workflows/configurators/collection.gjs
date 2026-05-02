@@ -113,8 +113,28 @@ export default class Collection extends Component {
     return this.args.emptyStateDescription && this.itemCount === 0;
   }
 
+  get maxItems() {
+    return this.args.schema?.max_items ?? null;
+  }
+
+  get atMaxItems() {
+    return this.maxItems !== null && this.itemCount >= this.maxItems;
+  }
+
+  get maxItemsReachedTitle() {
+    if (!this.atMaxItems) {
+      return null;
+    }
+    return i18n("discourse_workflows.property_engine.max_items_reached", {
+      count: this.maxItems,
+    });
+  }
+
   @action
   addItem() {
+    if (this.atMaxItems) {
+      return;
+    }
     const item = this.args.emptyItem ? this.args.emptyItem() : this.emptyItem;
     this.args.form.addItemToCollection(this.args.fieldName, item);
     this.args.onAdd?.(item);
@@ -349,6 +369,8 @@ export default class Collection extends Component {
           @action={{this.addItem}}
           @icon="plus"
           @translatedLabel={{this.addLabel}}
+          @disabled={{this.atMaxItems}}
+          @translatedTitle={{this.maxItemsReachedTitle}}
           class="btn-default"
         />
       {{/if}}

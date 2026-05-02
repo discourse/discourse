@@ -212,6 +212,9 @@ RSpec.describe DiscourseWorkflows::ScheduleRule do
       expect(
         described_class.valid_rule?({ "interval" => "seconds", "seconds_between_triggers" => 0 }),
       ).to be(false)
+      expect(
+        described_class.valid_rule?({ "interval" => "seconds", "seconds_between_triggers" => 60 }),
+      ).to be(false)
     end
 
     it "rejects unknown intervals" do
@@ -331,6 +334,26 @@ RSpec.describe DiscourseWorkflows::ScheduleRule do
 
       data = workflow.reload.node_static_data("trigger-1")
       expect(data.dig("seconds_tokens", "0")).to be_present
+    end
+  end
+
+  describe ".seconds_interval" do
+    it "clamps to the valid range" do
+      expect(
+        described_class.seconds_interval(
+          { "interval" => "seconds", "seconds_between_triggers" => 0 },
+        ),
+      ).to eq(1)
+      expect(
+        described_class.seconds_interval(
+          { "interval" => "seconds", "seconds_between_triggers" => 600 },
+        ),
+      ).to eq(59)
+    end
+
+    it "passes through valid values" do
+      rule = { "interval" => "seconds", "seconds_between_triggers" => 30 }
+      expect(described_class.seconds_interval(rule)).to eq(30)
     end
   end
 

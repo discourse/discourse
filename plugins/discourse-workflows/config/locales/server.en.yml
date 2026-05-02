@@ -5,6 +5,9 @@ en:
       webhook_timed_out: "Webhook timed out"
       schedule_rules_required: "At least one schedule rule is required."
       invalid_schedule_rule: "One or more schedule rules are invalid."
+      too_many_schedule_rules:
+        one: "A schedule node can have at most %{count} rule."
+        other: "A schedule node can have at most %{count} rules."
       not_enabled: "The discourse-workflows plugin is not enabled."
       no_permission_to_manage: "You don't have permission to manage workflows."
       invalid_form_submission: "The form submission has invalid or missing fields."

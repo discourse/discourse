@@ -25,6 +25,7 @@ module DiscourseWorkflows
       options_source
       min
       max
+      max_items
       validate
       visible_if
       visible_unless

@@ -74,7 +74,10 @@ module DiscourseWorkflows
       nodes.each do |node|
         next unless node["type"] == "trigger:schedule"
 
-        rules = ScheduleRule.rules_from_configuration(node["configuration"] || {})
+        rules =
+          ScheduleRule.rules_from_configuration(node["configuration"] || {}).first(
+            ScheduleRule::MAX_RULES_PER_NODE,
+          )
         rules.each_with_index do |rule, rule_index|
           next unless ScheduleRule.seconds_rule?(rule)
           yield node, rule, rule_index
