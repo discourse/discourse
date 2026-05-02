@@ -6,15 +6,14 @@ module DiscourseWorkflows
     end
 
     def self.validate_items!(items, source:)
-      return unless Rails.env.local?
-      unless items.is_a?(Array) && items.all? { |i| i.is_a?(Hash) && i.key?("json") }
+      unless items.is_a?(Array) &&
+               items.all? { |item| item.is_a?(Hash) && item["json"].is_a?(Hash) }
         raise Error,
               "Invalid items from #{source}: expected Array<{ 'json' => Hash }>, got #{items.inspect.truncate(200)}"
       end
     end
 
     def self.validate_output_arrays!(result, source:)
-      return unless Rails.env.local?
       unless result.is_a?(Array) && result.all? { |inner| inner.is_a?(Array) }
         raise Error, "#{source}: execute must return Array<Array<Item>>, got #{result.class}"
       end
@@ -22,7 +21,6 @@ module DiscourseWorkflows
     end
 
     def self.validate_node_result!(result, source:, ports:)
-      return unless Rails.env.local?
       unless result.is_a?(Executor::NodeResult)
         raise Error, "#{source}: execute must return Executor::NodeResult, got #{result.class}"
       end

@@ -35,6 +35,12 @@ RSpec.describe DiscourseWorkflows::ItemContract do
       )
     end
 
+    it "rejects items with non-object json data" do
+      expect {
+        described_class.validate_items!([{ "json" => "not an object" }], source: "test")
+      }.to raise_error(DiscourseWorkflows::ItemContract::Error)
+    end
+
     it "rejects items that are not hashes" do
       expect { described_class.validate_items!(["string"], source: "test") }.to raise_error(
         DiscourseWorkflows::ItemContract::Error,
@@ -88,7 +94,8 @@ RSpec.describe DiscourseWorkflows::ItemContract do
     end
 
     it "rejects unknown outputs" do
-      result = DiscourseWorkflows::Executor::NodeResult.new("unexpected" => [{ "json" => { "a" => 1 } }])
+      result =
+        DiscourseWorkflows::Executor::NodeResult.new("unexpected" => [{ "json" => { "a" => 1 } }])
 
       expect {
         described_class.validate_node_result!(result, source: "test", ports: [{ key: "main" }])
@@ -105,6 +112,15 @@ RSpec.describe DiscourseWorkflows::ItemContract do
       expect {
         described_class.validate_node_result!(result, source: "test", ports: [])
       }.to raise_error(DiscourseWorkflows::ItemContract::Error, /multiple outputs/)
+    end
+
+    it "validates items within node result outputs" do
+      result =
+        DiscourseWorkflows::Executor::NodeResult.new("main" => [{ "json" => "not an object" }])
+
+      expect {
+        described_class.validate_node_result!(result, source: "test", ports: [{ key: "main" }])
+      }.to raise_error(DiscourseWorkflows::ItemContract::Error)
     end
   end
 end
