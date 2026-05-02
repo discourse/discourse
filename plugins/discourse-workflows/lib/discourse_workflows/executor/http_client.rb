@@ -23,7 +23,12 @@ module DiscourseWorkflows
           raise "HTTP request failed with status #{response.status}"
         end
 
-        parsed = DiscourseWorkflows::Nodes::HttpRequest::ResponseParser.parse(response)
+        parsed =
+          DiscourseWorkflows::Nodes::HttpRequest::ResponseParser.parse(
+            response,
+            max_size_kb: config["max_response_size_kb"],
+            log: @exec_ctx.log,
+          )
         Response.new(status: parsed[:status], headers: parsed[:headers], body: parsed[:body])
       end
 

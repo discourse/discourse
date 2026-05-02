@@ -138,6 +138,11 @@ module DiscourseWorkflows
               required: false,
               default: false,
             },
+            max_response_size_kb: {
+              type: :integer,
+              required: false,
+              default: 1024,
+            },
           }
         end
 
@@ -185,7 +190,13 @@ module DiscourseWorkflows
         end
 
         def request_options(config)
-          config.slice("authentication", "credential_id", "never_error", "query_params")
+          config.slice(
+            "authentication",
+            "credential_id",
+            "never_error",
+            "query_params",
+            "max_response_size_kb",
+          )
         end
       end
     end

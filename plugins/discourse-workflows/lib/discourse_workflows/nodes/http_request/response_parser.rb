@@ -5,14 +5,25 @@ module DiscourseWorkflows
     module HttpRequest
       class ResponseParser
         MAX_RESPONSE_BODY_SIZE = 1.megabyte
+        MAX_ALLOWED_SIZE = 10.megabytes
 
-        def self.parse(response)
-          { status: response.status, headers: response.headers.to_h, body: parse_body(response) }
+        def self.parse(response, max_size_kb: nil, log: nil)
+          max_size =
+            if max_size_kb
+              max_size_kb.to_i.kilobytes.clamp(1.kilobyte, MAX_ALLOWED_SIZE)
+            else
+              MAX_RESPONSE_BODY_SIZE
+            end
+          {
+            status: response.status,
+            headers: response.headers.to_h,
+            body: parse_body(response, max_size, log),
+          }
         end
 
-        def self.parse_body(response)
+        def self.parse_body(response, max_size, log)
           content_type = response.headers["content-type"] || ""
-          body = truncate_body(response.body)
+          body = truncate_body(response.body, max_size, log)
 
           if content_type.include?("application/json")
             JSON.parse(body)
@@ -23,9 +34,12 @@ module DiscourseWorkflows
           { "data" => body }
         end
 
-        def self.truncate_body(raw_body)
-          if raw_body.is_a?(String) && raw_body.bytesize > MAX_RESPONSE_BODY_SIZE
-            raw_body.byteslice(0, MAX_RESPONSE_BODY_SIZE).scrub("")
+        def self.truncate_body(raw_body, max_size, log)
+          if raw_body.is_a?(String) && raw_body.bytesize > max_size
+            log&.warn(
+              "Response body truncated from #{raw_body.bytesize} bytes to #{max_size} bytes",
+            )
+            raw_body.byteslice(0, max_size).scrub("")
           else
             raw_body.to_s
           end

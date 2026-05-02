@@ -65,5 +65,64 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::ResponseParser do
 
       expect(result[:body]["data"].bytesize).to eq(described_class::MAX_RESPONSE_BODY_SIZE)
     end
+
+    it "emits a warning log when truncation occurs" do
+      large_body = "x" * (described_class::MAX_RESPONSE_BODY_SIZE + 100)
+      response =
+        build_response(status: 200, body: large_body, headers: { "content-type" => "text/plain" })
+      log = instance_spy(DiscourseWorkflows::Executor::StepLog)
+
+      described_class.parse(response, log: log)
+
+      expect(log).to have_received(:warn).with(a_string_including("truncated"))
+    end
+
+    it "does not emit a warning log when no truncation occurs" do
+      response =
+        build_response(status: 200, body: "small", headers: { "content-type" => "text/plain" })
+      log = instance_spy(DiscourseWorkflows::Executor::StepLog)
+
+      described_class.parse(response, log: log)
+
+      expect(log).not_to have_received(:warn)
+    end
+
+    it "respects a custom max_response_size_kb" do
+      response =
+        build_response(status: 200, body: "x" * 3000, headers: { "content-type" => "text/plain" })
+      log = instance_spy(DiscourseWorkflows::Executor::StepLog)
+
+      result = described_class.parse(response, max_size_kb: 2, log: log)
+
+      expect(log).to have_received(:warn).with(a_string_including("truncated"))
+      expect(result[:body]["data"].bytesize).to eq(2.kilobytes)
+    end
+
+    it "clamps max_response_size_kb to a minimum of 1 KB" do
+      response =
+        build_response(status: 200, body: "x" * 2048, headers: { "content-type" => "text/plain" })
+      log = instance_spy(DiscourseWorkflows::Executor::StepLog)
+
+      result = described_class.parse(response, max_size_kb: 0, log: log)
+
+      expect(result[:body]["data"].bytesize).to eq(1.kilobyte)
+    end
+
+    it "clamps max_response_size_kb to the hard cap" do
+      response =
+        build_response(
+          status: 200,
+          body: "x" * (described_class::MAX_ALLOWED_SIZE + 100),
+          headers: {
+            "content-type" => "text/plain",
+          },
+        )
+      log = instance_spy(DiscourseWorkflows::Executor::StepLog)
+
+      result = described_class.parse(response, max_size_kb: 999_999, log: log)
+
+      expect(log).to have_received(:warn).with(a_string_including("truncated"))
+      expect(result[:body]["data"].bytesize).to eq(described_class::MAX_ALLOWED_SIZE)
+    end
   end
 end
