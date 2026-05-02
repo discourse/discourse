@@ -88,16 +88,18 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          type = @configuration.fetch("type") { "simple" }
+          item = exec_ctx.input_items.first || { "json" => {} }
+          config = exec_ctx.get_parameters(item)
+          type = config.fetch("type") { "simple" }
 
           items =
             case type
             when "simple"
-              sort_simple(exec_ctx.input_items)
+              sort_simple(exec_ctx.input_items, config)
             when "random"
               sort_random(exec_ctx.input_items)
             when "code"
-              sort_code(exec_ctx)
+              sort_code(exec_ctx, config)
             else
               exec_ctx.input_items.dup
             end
@@ -106,8 +108,8 @@ module DiscourseWorkflows
 
         private
 
-        def sort_simple(input_items)
-          sort_fields = @configuration["sort_fields"]
+        def sort_simple(input_items, config)
+          sort_fields = config["sort_fields"]
           return input_items.dup if sort_fields.blank?
 
           input_items.sort { |a, b| compare_items(a, b, sort_fields) }
@@ -149,8 +151,8 @@ module DiscourseWorkflows
           input_items.shuffle
         end
 
-        def sort_code(exec_ctx)
-          code = @configuration["code"].to_s
+        def sort_code(exec_ctx, config)
+          code = config["code"].to_s
           unless code.match?(/\breturn\b/)
             raise ArgumentError, "Code must contain a return statement"
           end
