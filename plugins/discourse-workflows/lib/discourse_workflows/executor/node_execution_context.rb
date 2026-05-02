@@ -88,6 +88,15 @@ module DiscourseWorkflows
         with_item(item) { resolve_all_parameters }
       end
 
+      def data_table(id)
+        id = id.to_s
+        ensure_data_table_access!(id)
+        table = DiscourseWorkflows::DataTable.find(Integer(id))
+        DiscourseWorkflows::DataTables::NodeProxy.new(
+          DiscourseWorkflows::DataTables::Facade.new(table),
+        )
+      end
+
       def get_credential(credential_id)
         raise ArgumentError, "credential_id is required" if credential_id.blank?
 
@@ -147,6 +156,25 @@ module DiscourseWorkflows
       end
 
       private
+
+      def ensure_data_table_access!(data_table_id)
+        if @workflow && @node_id
+          return if workflow_references_data_table?(data_table_id)
+        elsif @configuration["data_table_id"].to_s == data_table_id
+          return
+        end
+
+        raise Discourse::InvalidAccess
+      end
+
+      def workflow_references_data_table?(data_table_id)
+        DiscourseWorkflows::WorkflowDependency.exists?(
+          workflow_id: @workflow.id,
+          node_id: @node_id,
+          dependency_type: "data_table_id",
+          dependency_key: data_table_id,
+        )
+      end
 
       def ensure_credential_access!(credential_id)
         expected_credential_id = @configuration["credential_id"].to_s

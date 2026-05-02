@@ -177,45 +177,31 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          @run_as_user = exec_ctx.run_as_user
           item = exec_ctx.input_items.first || { "json" => {} }
           config = exec_ctx.get_parameters(item)
 
-          result = execute_with_config(config, item)
+          result = execute_with_config(config, item, exec_ctx)
           [result]
         end
 
         private
 
-        def execute_with_config(config, item)
-          data_table = DiscourseWorkflows::DataTable.find(Integer(config.fetch("data_table_id")))
-          facade = DiscourseWorkflows::DataTables::Facade.new(data_table)
-          columns_resolver = ColumnsResolver.new(data_table)
-
+        def execute_with_config(config, item, exec_ctx)
+          proxy = exec_ctx.data_table(config.fetch("data_table_id"))
           operation_name = config.fetch("operation") { "insert" }
-          validate_storage_limit! unless operation_name == "get"
 
-          config = auto_mapped_config(config, item, data_table) if auto_mapping?(
-            config,
-            operation_name,
-          )
+          config = auto_mapped_config(config, item, proxy) if auto_mapping?(config, operation_name)
 
-          Operations.for(operation_name).new(facade, columns_resolver).execute(config)
+          Operations.for(operation_name).new(proxy).execute(config)
         end
 
         def auto_mapping?(config, operation_name)
           operation_name == "insert" && config["mapping_mode"] == "auto"
         end
 
-        def auto_mapped_config(config, item, data_table)
+        def auto_mapped_config(config, item, proxy)
           json = item["json"] || {}
-          column_names = data_table.columns.map { |c| c["name"] }
-          config.merge("columns" => json.slice(*column_names))
-        end
-
-        def validate_storage_limit!
-          return if DiscourseWorkflows::DataTables::Facade.within_storage_limit?
-          raise ArgumentError, "Data table storage limit exceeded"
+          config.merge("columns" => json.slice(*proxy.column_names))
         end
       end
     end

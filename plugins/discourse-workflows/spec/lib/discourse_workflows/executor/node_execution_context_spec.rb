@@ -136,6 +136,58 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#data_table" do
+    fab!(:admin)
+    fab!(:data_table, :discourse_workflows_data_table)
+
+    it "returns a NodeProxy for the requested data table when config references it" do
+      ctx =
+        described_class.new(
+          input_items: [],
+          configuration: {
+            "data_table_id" => data_table.id,
+          },
+          resolver: nil,
+        )
+
+      expect(ctx.data_table(data_table.id)).to be_a(DiscourseWorkflows::DataTables::NodeProxy)
+    end
+
+    it "allows access when the current workflow node references the data table" do
+      workflow = workflow_with_data_table_dependency(data_table)
+      ctx = build_data_table_context(workflow: workflow)
+
+      expect(ctx.data_table(data_table.id)).to be_a(DiscourseWorkflows::DataTables::NodeProxy)
+    end
+
+    it "denies access when the current workflow node does not reference the data table" do
+      workflow = workflow_with_data_table_dependency(data_table)
+      DiscourseWorkflows::WorkflowDependency.where(workflow_id: workflow.id).delete_all
+      ctx = build_data_table_context(workflow: workflow)
+
+      expect { ctx.data_table(data_table.id) }.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "does not reveal whether an unauthorized data table id exists" do
+      ctx = build_data_table_context(configuration: { "data_table_id" => data_table.id + 1 })
+
+      expect { ctx.data_table(data_table.id) }.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "raises when the node is not configured to use the requested data table" do
+      ctx =
+        described_class.new(
+          input_items: [],
+          configuration: {
+            "data_table_id" => data_table.id + 1,
+          },
+          resolver: nil,
+        )
+
+      expect { ctx.data_table(data_table.id) }.to raise_error(Discourse::InvalidAccess)
+    end
+  end
+
   describe "#find_user" do
     fab!(:user)
     fab!(:other_user, :user)
@@ -310,6 +362,24 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       expect(ctx).to be_waiting
       expect(ctx.waiting_until).to be_nil
     end
+  end
+
+  def workflow_with_data_table_dependency(data_table)
+    graph =
+      build_workflow_graph do |g|
+        g.node "dt-1", "action:data_table", configuration: { "data_table_id" => data_table.id }
+      end
+    Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
+  end
+
+  def build_data_table_context(workflow: nil, configuration: { "data_table_id" => data_table.id })
+    described_class.new(
+      input_items: [],
+      configuration: configuration,
+      resolver: nil,
+      workflow: workflow,
+      node_id: workflow ? "dt-1" : nil,
+    )
   end
 
   def workflow_with_credential_dependency(credential)

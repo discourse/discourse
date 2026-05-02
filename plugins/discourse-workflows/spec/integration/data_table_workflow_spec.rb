@@ -43,6 +43,7 @@ RSpec.describe "Data Table workflow integration" do
       end
 
     workflow.update!(**graph)
+    DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
   end
 
   it "inserts a data table row when a post is created" do

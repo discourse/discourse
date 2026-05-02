@@ -107,6 +107,8 @@ module DiscourseWorkflows
       SORT_DIRECTIONS = { "asc" => "ASC", "desc" => "DESC" }.freeze
       MAX_LIMIT = 100
 
+      attr_reader :data_table
+
       def initialize(data_table)
         @data_table = data_table
         @table_name = Storage.table_name(data_table.id)
@@ -137,12 +139,14 @@ module DiscourseWorkflows
       end
 
       def insert(row_input)
+        validate_storage_limit!
         with_statement_timeout { insert_row(row_input.columns) }
       end
 
       def update_row(row_id:, row_input:)
         return nil if row_input.columns.empty?
 
+        validate_storage_limit!
         with_statement_timeout do
           um = build_update_manager(row_input.columns)
           um.where(@table[:id].eq(row_id))
@@ -157,6 +161,7 @@ module DiscourseWorkflows
       def update(query:, row_input:)
         return 0 if row_input.columns.empty?
 
+        validate_storage_limit!
         with_statement_timeout do
           um = build_update_manager(row_input.columns)
           um = apply_filters(um, query.normalized_filter)
@@ -165,6 +170,7 @@ module DiscourseWorkflows
       end
 
       def delete(query:)
+        validate_storage_limit!
         with_statement_timeout do
           dm = Arel::DeleteManager.new
           dm.from(@table)
@@ -176,6 +182,7 @@ module DiscourseWorkflows
       def delete_rows(row_ids)
         return 0 if row_ids.empty?
 
+        validate_storage_limit!
         with_statement_timeout do
           dm = Arel::DeleteManager.new
           dm.from(@table)
@@ -213,6 +220,11 @@ module DiscourseWorkflows
       end
 
       private
+
+      def validate_storage_limit!
+        return if self.class.within_storage_limit?
+        raise ArgumentError, "Data table storage limit exceeded"
+      end
 
       def query_rows(data_query)
         query = @table.project(Arel.star, Arel.sql("COUNT(*) OVER() AS _total_count"))
