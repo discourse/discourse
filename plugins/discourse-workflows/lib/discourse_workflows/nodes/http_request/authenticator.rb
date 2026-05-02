@@ -4,12 +4,11 @@ module DiscourseWorkflows
   module Nodes
     module HttpRequest
       class Authenticator
-        def self.apply(config, headers)
+        def self.apply(config, headers, exec_ctx)
           auth_mode = config.fetch("authentication") { "none" }
           return if auth_mode == "none"
 
-          credential = fetch_credential(config["credential_id"], auth_mode)
-          cred_data = credential.decrypted_data
+          cred_data = fetch_credential_data(exec_ctx, config["credential_id"], auth_mode)
 
           case auth_mode
           when "basic_auth"
@@ -19,25 +18,29 @@ module DiscourseWorkflows
           end
         end
 
-        def self.fetch_credential(credential_id, auth_mode)
+        def self.fetch_credential_data(exec_ctx, credential_id, auth_mode)
           if credential_id.blank?
             raise ArgumentError, "credential_id is required for authentication mode '#{auth_mode}'"
           end
-          DiscourseWorkflows::Credential.find(credential_id)
+          if exec_ctx.nil?
+            raise ArgumentError, "exec_ctx is required for authentication mode '#{auth_mode}'"
+          end
+
+          exec_ctx.get_credential(credential_id)
         end
 
         def self.apply_basic_auth(headers, cred_data)
-          user = ExpressionResolver.resolve(cred_data["user"])
-          password = ExpressionResolver.resolve(cred_data["password"])
+          user = cred_data["user"]
+          password = cred_data["password"]
           headers["Authorization"] = "Basic #{Base64.strict_encode64("#{user}:#{password}")}"
         end
 
         def self.apply_bearer_token(headers, cred_data)
-          token = ExpressionResolver.resolve(cred_data["token"])
+          token = cred_data["token"]
           headers["Authorization"] = "Bearer #{token}"
         end
 
-        private_class_method :fetch_credential, :apply_basic_auth, :apply_bearer_token
+        private_class_method :fetch_credential_data, :apply_basic_auth, :apply_bearer_token
       end
     end
   end

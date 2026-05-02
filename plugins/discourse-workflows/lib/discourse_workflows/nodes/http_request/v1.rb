@@ -4,7 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module HttpRequest
       class V1 < NodeType
-        TIMEOUT_SECONDS = 30
+        include HttpHelpers
+
         FILTERED_HEADER_PATTERNS = [/key/i, /secret/i, /token/i, /authorization/i, /password/i]
 
         def self.identifier
@@ -147,21 +148,31 @@ module DiscourseWorkflows
         def execute(exec_ctx)
           items =
             exec_ctx.input_items.map do |item|
-              config = exec_ctx.get_parameters(item)
-              result = process(config, exec_ctx.log)
-              wrap(result)
+              exec_ctx.with_item(item) do
+                config = exec_ctx.get_parameters(item)
+                result = process(config, exec_ctx)
+                wrap(result)
+              end
             end
           [items]
         end
 
         private
 
-        def process(config, log)
-          method, uri, headers, body = RequestBuilder.new(config).build
-          log_request(log, method, uri, headers, body)
-          never_error = config.fetch("never_error", false)
-          response = send_request(method, uri, headers, body, never_error:)
-          ResponseParser.parse(response)
+        def process(config, exec_ctx)
+          method = config.fetch("method") { "GET" }.downcase.to_sym
+          headers = normalize_headers(config["headers"])
+          body = build_body(method, config, headers)
+          log_request(exec_ctx.log, method, config["url"], headers, body)
+          response =
+            exec_ctx.http_request(
+              method: method,
+              url: config["url"],
+              headers: headers,
+              body: body,
+              options: request_options(config),
+            )
+          { status: response.status, headers: response.headers, body: response.body }
         end
 
         def log_request(log, method, uri, headers, body)
@@ -173,21 +184,8 @@ module DiscourseWorkflows
           log.info("[body omitted]") if body.present?
         end
 
-        def send_request(method, uri, headers, body, never_error: false)
-          conn =
-            Faraday.new(
-              nil,
-              request: {
-                timeout: TIMEOUT_SECONDS,
-                open_timeout: TIMEOUT_SECONDS,
-                write_timeout: TIMEOUT_SECONDS,
-              },
-            ) { |f| f.adapter FinalDestination::FaradayAdapter }
-          response = conn.run_request(method, uri.to_s, body, headers)
-          if !never_error && !(200..299).cover?(response.status)
-            raise "HTTP request failed with status #{response.status}"
-          end
-          response
+        def request_options(config)
+          config.slice("authentication", "credential_id", "never_error", "query_params")
         end
       end
     end

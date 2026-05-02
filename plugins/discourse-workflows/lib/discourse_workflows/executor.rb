@@ -250,6 +250,7 @@ module DiscourseWorkflows
         run_as_user: run_as_user,
         resolver: resolver,
         vars: preloaded_vars,
+        workflow: @workflow,
         execution_id: @store.execution&.id,
         resume_token: @context.resume_token,
         node_id: node.id.to_s,

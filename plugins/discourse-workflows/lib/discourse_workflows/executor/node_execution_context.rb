@@ -24,6 +24,7 @@ module DiscourseWorkflows
         run_as_user: Discourse.system_user,
         resolver: nil,
         vars: nil,
+        workflow: nil,
         execution_id: nil,
         resume_token: nil,
         node_id: nil,
@@ -38,6 +39,7 @@ module DiscourseWorkflows
         @run_as_user = run_as_user
         @resolver = resolver
         @vars = vars
+        @workflow = workflow
         @execution_id = execution_id
         @resume_token = resume_token
         @node_id = node_id
@@ -86,6 +88,21 @@ module DiscourseWorkflows
         with_item(item) { resolve_all_parameters }
       end
 
+      def get_credential(credential_id)
+        raise ArgumentError, "credential_id is required" if credential_id.blank?
+
+        credential_id = credential_id.to_s
+        ensure_credential_access!(credential_id)
+        credential = DiscourseWorkflows::Credential.find_by(id: credential_id)
+        raise Discourse::InvalidAccess if credential.nil?
+
+        @resolver.resolve_hash(credential.decrypted_data)
+      end
+
+      def http_request(method:, url:, headers: {}, body: nil, options: {})
+        HttpClient.new(self).request(method:, url:, headers:, body:, options:)
+      end
+
       def collect_errors!
         @expression_errors = @resolver&.expression_errors || []
       end
@@ -105,10 +122,30 @@ module DiscourseWorkflows
         @waiting == true
       end
 
-      private
-
       def with_item(item)
         @resolver.with_item(item, item_index: item_index_for(item)) { yield }
+      end
+
+      private
+
+      def ensure_credential_access!(credential_id)
+        expected_credential_id = @configuration["credential_id"].to_s
+        if @workflow && @node_id
+          return if workflow_references_credential?(credential_id)
+        elsif expected_credential_id == credential_id
+          return
+        end
+
+        raise Discourse::InvalidAccess
+      end
+
+      def workflow_references_credential?(credential_id)
+        DiscourseWorkflows::WorkflowDependency.exists?(
+          workflow_id: @workflow.id,
+          node_id: @node_id,
+          dependency_type: "credential_id",
+          dependency_key: credential_id,
+        )
       end
 
       def sandbox_budget_tracker

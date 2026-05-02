@@ -27,6 +27,179 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#get_credential" do
+    fab!(:admin)
+    fab!(:credential) do
+      Fabricate(
+        :discourse_workflows_credential,
+        credential_type: "basic_auth",
+        data:
+          DiscourseWorkflows::CredentialEncryptor.encrypt(
+            { "user" => "={{ $json.username }}", "password" => "static-password" },
+          ),
+      )
+    end
+
+    it "decrypts and resolves credential expressions against the current item" do
+      resolver_context = { "$json" => {} }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx =
+        described_class.new(
+          input_items: [],
+          configuration: {
+            "credential_id" => credential.id,
+          },
+          resolver: resolver,
+        )
+
+      resolved =
+        ctx.with_item({ "json" => { "username" => "item-user" } }) do
+          ctx.get_credential(credential.id)
+        end
+
+      expect(resolved).to eq("user" => "item-user", "password" => "static-password")
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "allows access when the current workflow node references the credential" do
+      workflow = workflow_with_credential_dependency(credential)
+      ctx, resolver, sandbox = build_credential_context(workflow: workflow)
+
+      resolved =
+        ctx.with_item({ "json" => { "username" => "dependency-user" } }) do
+          ctx.get_credential(credential.id)
+        end
+
+      expect(resolved).to eq("user" => "dependency-user", "password" => "static-password")
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "denies access when the current workflow node does not reference the credential" do
+      workflow = workflow_with_credential_dependency(credential)
+      DiscourseWorkflows::WorkflowDependency.where(workflow_id: workflow.id).delete_all
+      ctx, resolver, sandbox = build_credential_context(workflow: workflow)
+
+      expect { ctx.get_credential(credential.id) }.to raise_error(Discourse::InvalidAccess)
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "does not reveal whether an unauthorized credential id exists" do
+      ctx, resolver, sandbox =
+        build_credential_context(configuration: { "credential_id" => credential.id + 1 })
+
+      expect { ctx.get_credential(credential.id) }.to raise_error(Discourse::InvalidAccess)
+      expect { ctx.get_credential(credential.id + 1000) }.to raise_error(Discourse::InvalidAccess)
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "raises when the node is not configured to use the requested credential" do
+      resolver_context = { "$json" => {} }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx =
+        described_class.new(
+          input_items: [],
+          configuration: {
+            "credential_id" => credential.id + 1,
+          },
+          resolver: resolver,
+        )
+
+      expect { ctx.get_credential(credential.id) }.to raise_error(Discourse::InvalidAccess)
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+  end
+
+  describe "#http_request" do
+    it "returns a parsed response object" do
+      stub_request(:get, "https://api.example.com/data").to_return(
+        status: 200,
+        body: { ok: true }.to_json,
+        headers: {
+          "content-type" => "application/json",
+        },
+      )
+
+      ctx = described_class.new(input_items: [], resolver: nil)
+      response = ctx.http_request(method: "GET", url: "https://api.example.com/data")
+
+      expect(response.status).to eq(200)
+      expect(response.headers).to include("content-type" => "application/json")
+      expect(response.body).to eq("ok" => true)
+    end
+
+    it "retries transient response statuses" do
+      stub_request(:get, "https://api.example.com/retry").to_return(
+        { status: 503, body: "unavailable" },
+        {
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        },
+      )
+
+      ctx = described_class.new(input_items: [], resolver: nil)
+      response = ctx.http_request(method: "GET", url: "https://api.example.com/retry")
+
+      expect(response.status).to eq(200)
+      expect(response.body).to eq("ok" => true)
+      expect(WebMock).to have_requested(:get, "https://api.example.com/retry").twice
+    end
+
+    it "does not retry non-GET transient response statuses by default" do
+      stub_request(:post, "https://api.example.com/retry").to_return(
+        status: 503,
+        body: "unavailable",
+      )
+
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect {
+        ctx.http_request(method: "POST", url: "https://api.example.com/retry")
+      }.to raise_error(RuntimeError, "HTTP request failed with status 503")
+      expect(WebMock).to have_requested(:post, "https://api.example.com/retry").once
+    end
+
+    it "allows callers to opt non-GET requests into retries" do
+      stub_request(:post, "https://api.example.com/retry").to_return(
+        { status: 503, body: "unavailable" },
+        {
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        },
+      )
+
+      ctx = described_class.new(input_items: [], resolver: nil)
+      response =
+        ctx.http_request(
+          method: "POST",
+          url: "https://api.example.com/retry",
+          options: {
+            max_retries: 1,
+          },
+        )
+
+      expect(response.status).to eq(200)
+      expect(WebMock).to have_requested(:post, "https://api.example.com/retry").twice
+    end
+  end
+
   describe "#put_execution_to_wait" do
     it "defaults to not waiting" do
       ctx = described_class.new(input_items: [], resolver: nil)
@@ -52,5 +225,28 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       expect(ctx).to be_waiting
       expect(ctx.waiting_until).to be_nil
     end
+  end
+
+  def workflow_with_credential_dependency(credential)
+    graph =
+      build_workflow_graph do |g|
+        g.node "http-1", "action:http_request", configuration: { "credential_id" => credential.id }
+      end
+    Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
+  end
+
+  def build_credential_context(workflow: nil, configuration: { "credential_id" => credential.id })
+    resolver_context = { "$json" => {} }
+    sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+    resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+    ctx =
+      described_class.new(
+        input_items: [],
+        configuration: configuration,
+        resolver: resolver,
+        workflow: workflow,
+        node_id: workflow ? "http-1" : nil,
+      )
+    [ctx, resolver, sandbox]
   end
 end
