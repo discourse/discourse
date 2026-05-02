@@ -65,6 +65,29 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
       expect(result).to eq({ "a" => false, "b" => false, "c" => false, "d" => true })
     end
 
+    it "casts float values" do
+      config = {
+        "include_input" => false,
+        "fields" => [
+          { "key" => "score", "value" => "3.14", "type" => "float" },
+          { "key" => "whole", "value" => "7", "type" => "float" },
+        ],
+      }
+
+      result = execute_node(configuration: config, item: item)
+
+      expect(result).to eq({ "score" => 3.14, "whole" => 7.0 })
+    end
+
+    it "raises on non-numeric float cast" do
+      config = {
+        "include_input" => false,
+        "fields" => [{ "key" => "score", "value" => "abc", "type" => "float" }],
+      }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(ArgumentError)
+    end
+
     it "raises on non-numeric integer cast" do
       config = {
         "include_input" => false,

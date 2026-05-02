@@ -47,7 +47,7 @@ module DiscourseWorkflows
                 type: {
                   type: :options,
                   required: true,
-                  options: %w[string integer boolean],
+                  options: %w[string integer float boolean],
                 },
                 value: {
                   type: :string,
@@ -134,6 +134,8 @@ module DiscourseWorkflows
           case type
           when "integer"
             Integer(value)
+          when "float"
+            Float(value)
           when "boolean"
             %w[true 1].include?(value.to_s.downcase)
           else
