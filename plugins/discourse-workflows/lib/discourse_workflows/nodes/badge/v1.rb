@@ -70,7 +70,7 @@ module DiscourseWorkflows
           items =
             exec_ctx.input_items.map do |item|
               config = exec_ctx.get_parameters(item)
-              result = process(run_as_user, config)
+              result = process(exec_ctx, run_as_user, config)
               wrap(result)
             end
           [items]
@@ -78,8 +78,8 @@ module DiscourseWorkflows
 
         private
 
-        def process(run_as_user, config)
-          user = User.find_by!(username: config["username"])
+        def process(exec_ctx, run_as_user, config)
+          user = exec_ctx.find_user(username: config["username"])
           badge = ::Badge.find(config["badge_id"])
 
           case config["operation"]

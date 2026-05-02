@@ -125,7 +125,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
       }
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
-        ActiveRecord::RecordNotFound,
+        DiscourseWorkflows::NodeError,
+        "User 'nonexistent_user' not found",
       )
     end
 

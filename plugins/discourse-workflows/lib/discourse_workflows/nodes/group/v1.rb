@@ -85,11 +85,10 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          run_as_user = exec_ctx.run_as_user
           items =
             exec_ctx.input_items.map do |item|
               config = exec_ctx.get_parameters(item)
-              result = process(run_as_user, config)
+              result = process(exec_ctx, config)
               wrap(result)
             end
           [items]
@@ -97,18 +96,18 @@ module DiscourseWorkflows
 
         private
 
-        def process(run_as_user, config)
+        def process(exec_ctx, config)
           group = ::Group.find(config["group_id"])
-          Guardian.new(run_as_user).ensure_can_see_group!(group)
+          exec_ctx.guardian.ensure_can_see_group!(group)
           group_data = Schemas::Group.resolve(group)
 
           return { group: group_data } if config["operation"] == "get"
 
-          Guardian.new(run_as_user).ensure_can_edit_group!(group)
+          exec_ctx.guardian.ensure_can_edit_group!(group)
 
-          user = User.find_by!(username: config["username"])
+          user = exec_ctx.find_user(username: config["username"])
 
-          logger = GroupActionLogger.new(run_as_user, group)
+          logger = GroupActionLogger.new(exec_ctx.run_as_user, group)
 
           case config["operation"]
           when "remove"

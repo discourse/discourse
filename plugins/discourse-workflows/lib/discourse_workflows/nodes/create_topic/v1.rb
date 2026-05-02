@@ -66,7 +66,7 @@ module DiscourseWorkflows
           items =
             exec_ctx.input_items.map do |item|
               config = exec_ctx.get_parameters(item)
-              result = process(config)
+              result = process(exec_ctx, config)
               wrap(result)
             end
           [items]
@@ -74,8 +74,8 @@ module DiscourseWorkflows
 
         private
 
-        def process(config)
-          author = User.find_by!(username: config["username"])
+        def process(exec_ctx, config)
+          author = exec_ctx.find_user(username: config["username"])
           tag_names = normalize_tag_names(config["tag_names"])
 
           DiscourseTools::CreateTopic.call(

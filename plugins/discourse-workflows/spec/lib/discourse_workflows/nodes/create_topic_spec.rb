@@ -81,7 +81,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateTopic::V1 do
           },
           item: item,
         )
-      end.to raise_error(ActiveRecord::RecordNotFound)
+      end.to raise_error(DiscourseWorkflows::NodeError, "User 'nonexistent_user' not found")
     end
 
     it "raises when topic creation fails validation" do

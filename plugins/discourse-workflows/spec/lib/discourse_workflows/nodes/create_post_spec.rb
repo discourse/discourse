@@ -73,7 +73,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
           },
           item: item,
         )
-      end.to raise_error(ActiveRecord::RecordNotFound)
+      end.to raise_error(DiscourseWorkflows::NodeError, "User with id -999 not found")
     end
 
     it "raises when the topic is closed" do

@@ -48,11 +48,10 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          run_as_user = exec_ctx.run_as_user
           items =
             exec_ctx.input_items.map do |item|
               config = exec_ctx.get_parameters(item)
-              result = process(run_as_user, config)
+              result = process(exec_ctx, config)
               wrap(result)
             end
           [items]
@@ -60,9 +59,8 @@ module DiscourseWorkflows
 
         private
 
-        def process(run_as_user, config)
+        def process(exec_ctx, config)
           topic = Topic.find(config["topic_id"])
-          guardian = Guardian.new(run_as_user)
 
           names =
             Array
@@ -75,10 +73,10 @@ module DiscourseWorkflows
           when "remove"
             old_tag_names = topic.tags.pluck(:name)
             desired_tag_names = old_tag_names - names
-            tag_topic!(topic, guardian, desired_tag_names)
+            tag_topic!(topic, exec_ctx.guardian, desired_tag_names)
             { tag_names: old_tag_names & names, topic_id: topic.id }
           else
-            tag_topic!(topic, guardian, names, append: true)
+            tag_topic!(topic, exec_ctx.guardian, names, append: true)
             { tag_names: names, topic_id: topic.id }
           end
         end

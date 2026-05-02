@@ -53,7 +53,7 @@ module DiscourseWorkflows
           items =
             exec_ctx.input_items.map do |item|
               config = exec_ctx.get_parameters(item)
-              result = process(run_as_user, config)
+              result = process(exec_ctx, run_as_user, config)
               wrap(result)
             end
           [items]
@@ -61,11 +61,12 @@ module DiscourseWorkflows
 
         private
 
-        def process(run_as_user, config)
+        def process(exec_ctx, run_as_user, config)
           topic = Topic.find(config["topic_id"])
           ensure_topic_is_open!(topic)
 
-          author = config["user_id"].present? ? User.find(config["user_id"]) : run_as_user
+          author =
+            config["user_id"].present? ? exec_ctx.find_user(id: config["user_id"]) : run_as_user
           post = PostCreator.new(author, build_post_args(topic, config)).create!
 
           { post: Schemas::Post.resolve(post) }

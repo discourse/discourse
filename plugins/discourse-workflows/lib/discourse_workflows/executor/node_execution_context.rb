@@ -99,6 +99,26 @@ module DiscourseWorkflows
         @resolver.resolve_hash(credential.decrypted_data)
       end
 
+      def guardian
+        @guardian ||= Guardian.new(run_as_user)
+      end
+
+      def find_user(username: nil, id: nil)
+        if username.present? == id.present?
+          raise ArgumentError, "Provide exactly one of username or id"
+        end
+
+        if username.present?
+          user = User.find_by(username: username)
+          raise DiscourseWorkflows::NodeError, "User '#{username}' not found" if user.nil?
+        else
+          user = User.find_by(id: id)
+          raise DiscourseWorkflows::NodeError, "User with id #{id} not found" if user.nil?
+        end
+
+        ensure_can_act_as_user!(user)
+      end
+
       def http_request(method:, url:, headers: {}, body: nil, options: {})
         HttpClient.new(self).request(method:, url:, headers:, body:, options:)
       end
@@ -137,6 +157,16 @@ module DiscourseWorkflows
         end
 
         raise Discourse::InvalidAccess
+      end
+
+      def ensure_can_act_as_user!(target_user)
+        return target_user if run_as_user == Discourse.system_user
+        return target_user if run_as_user.id == target_user.id
+        return target_user if guardian.is_admin?
+
+        raise DiscourseWorkflows::NodeError,
+              "User '#{run_as_user.username}' is not allowed to act on behalf of " \
+                "user '#{target_user.username}'"
       end
 
       def workflow_references_credential?(credential_id)

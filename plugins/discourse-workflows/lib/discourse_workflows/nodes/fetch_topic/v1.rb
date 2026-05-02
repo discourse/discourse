@@ -29,11 +29,10 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          run_as_user = exec_ctx.run_as_user
           items =
             exec_ctx.input_items.map do |item|
               config = exec_ctx.get_parameters(item)
-              result = process(run_as_user, config)
+              result = process(exec_ctx, config)
               wrap(result)
             end
           [items]
@@ -41,9 +40,9 @@ module DiscourseWorkflows
 
         private
 
-        def process(run_as_user, config)
+        def process(exec_ctx, config)
           topic = Topic.find(config["topic_id"])
-          Guardian.new(run_as_user).ensure_can_see!(topic)
+          exec_ctx.guardian.ensure_can_see!(topic)
           { topic: Schemas::Topic.resolve(topic) }
         end
       end
