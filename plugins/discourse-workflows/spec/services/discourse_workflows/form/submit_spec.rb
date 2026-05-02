@@ -163,6 +163,17 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
         )
       end
 
+      context "with a long form field value" do
+        let(:form_data) { { "name" => "a" * 10_001 } }
+
+        it "stores the truncated value in trigger data" do
+          result
+
+          stored_name = result[:execution].trigger_data.dig("form_data", "name")
+          expect(stored_name.length).to eq(DiscourseWorkflows::FormSchema::MAX_FIELD_VALUE_LENGTH)
+        end
+      end
+
       context "when a non-adjacent downstream form action exists" do
         before do
           extra =

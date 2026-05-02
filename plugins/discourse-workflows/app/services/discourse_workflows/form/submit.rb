@@ -4,8 +4,6 @@ module DiscourseWorkflows
   class Form::Submit
     include Service::Base
 
-    MAX_FIELD_VALUE_LENGTH = 10_000
-
     params do
       attribute :uuid, :string
       attribute :resume_token, :string
@@ -72,12 +70,8 @@ module DiscourseWorkflows
     end
 
     def run_workflow(workflow:, trigger_node:, form_validation:, guardian:)
-      truncated_form_data =
-        form_validation.data.transform_values do |v|
-          v.is_a?(String) ? v.truncate(MAX_FIELD_VALUE_LENGTH) : v
-        end
       trigger_data = {
-        "form_data" => truncated_form_data,
+        "form_data" => form_validation.data,
         "submitted_at" => Time.current.utc.iso8601,
       }
 

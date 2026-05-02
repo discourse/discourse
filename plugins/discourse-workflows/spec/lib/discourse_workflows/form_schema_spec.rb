@@ -44,6 +44,15 @@ RSpec.describe DiscourseWorkflows::FormSchema do
       expect(result.data["age"]).to be_nil
     end
 
+    it "truncates long string field values" do
+      schema = node({ "field_label" => "Feedback", "field_type" => "text" })
+
+      result = described_class.validate(schema, { "feedback" => "a" * 10_001 })
+
+      expect(result).to be_valid
+      expect(result.data["feedback"].length).to eq(described_class::MAX_FIELD_VALUE_LENGTH)
+    end
+
     it "reports missing required fields" do
       schema =
         node(

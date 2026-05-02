@@ -2,6 +2,8 @@
 
 module DiscourseWorkflows
   class FormSchema
+    MAX_FIELD_VALUE_LENGTH = 10_000
+
     Result =
       Struct.new(:errors, :data, keyword_init: true) do
         def valid?
@@ -59,7 +61,7 @@ module DiscourseWorkflows
       when "checkbox"
         ActiveModel::Type::Boolean.new.cast(value)
       else
-        value
+        value.is_a?(String) ? value.truncate(MAX_FIELD_VALUE_LENGTH) : value
       end
     end
 

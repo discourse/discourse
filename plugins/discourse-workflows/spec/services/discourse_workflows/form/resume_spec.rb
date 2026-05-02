@@ -172,6 +172,19 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
         result
         expect(execution.reload.status).not_to eq("waiting")
       end
+
+      context "with a long form field value" do
+        let(:form_data) { { "feedback" => "a" * 10_001 } }
+
+        it "uses the truncated value when resuming" do
+          result
+
+          stored_feedback = result[:form_validation].data["feedback"]
+          expect(stored_feedback.length).to eq(
+            DiscourseWorkflows::FormSchema::MAX_FIELD_VALUE_LENGTH,
+          )
+        end
+      end
     end
   end
 end
