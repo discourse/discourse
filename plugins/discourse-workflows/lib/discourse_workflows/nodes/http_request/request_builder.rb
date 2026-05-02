@@ -6,8 +6,6 @@ module DiscourseWorkflows
       class RequestBuilder
         include HttpHelpers
 
-        ALLOWED_PORTS = Set[80, 443].freeze
-
         def initialize(config, exec_ctx = nil)
           @config = config
           @exec_ctx = exec_ctx
@@ -32,7 +30,6 @@ module DiscourseWorkflows
             raise "Only HTTP and HTTPS URLs are supported"
           end
           raise "URL must include a host" if uri.host.blank?
-          raise "Only standard ports (80/443) are supported" if ALLOWED_PORTS.exclude?(uri.port)
 
           append_query_params(uri, query_params)
           uri

@@ -26,11 +26,11 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::RequestBuilder do
       )
     end
 
-    it "raises for non-standard ports" do
-      expect { described_class.new("url" => "https://example.com:8443/api").build }.to raise_error(
-        RuntimeError,
-        /Only standard ports/,
-      )
+    it "allows non-standard ports" do
+      config = { "method" => "GET", "url" => "https://example.com:8443/api" }
+      _, uri, _, _ = described_class.new(config).build
+
+      expect(uri.port).to eq(8443)
     end
 
     it "appends query params to the URL" do
