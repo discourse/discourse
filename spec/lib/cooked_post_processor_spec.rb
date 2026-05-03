@@ -270,6 +270,22 @@ RSpec.describe CookedPostProcessor do
           expect(link["class"]).to eq("inline-onebox --gh-status-merged")
           expect(link.text).to eq("engine title")
         end
+
+        it "escapes HTML in engine-supplied title and css_class" do
+          allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(
+            title: %(<script>alert("xss")</script>),
+            css_class: %(broken" onerror="alert(1)),
+          )
+
+          cpp.post_process
+
+          doc = Nokogiri::HTML5.fragment(cpp.html)
+          link = doc.at_css(%(a[href="#{url}"]))
+
+          expect(link.text).to eq(%(<script>alert("xss")</script>))
+          expect(link["onerror"]).to be_nil
+          expect(doc.css("script")).to be_empty
+        end
       end
     end
 
