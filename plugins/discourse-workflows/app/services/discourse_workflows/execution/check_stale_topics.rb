@@ -22,24 +22,21 @@ module DiscourseWorkflows
         threshold = hours.hours.ago
         tracked_ids = DiscourseWorkflows::TriggerTracking.triggered_topic_ids(workflow, node["id"])
 
-        newly_stale_ids =
-          stale_topics_scope(threshold)
-            .where.not(id: tracked_ids)
-            .limit(MAX_TOPICS_PER_CYCLE)
-            .pluck(:id)
+        newly_stale_topics =
+          stale_topics_scope(threshold).where.not(id: tracked_ids).limit(MAX_TOPICS_PER_CYCLE).to_a
 
-        Topic
-          .where(id: newly_stale_ids)
-          .each do |topic|
-            trigger = DiscourseWorkflows::Nodes::StaleTopic::V1.new(topic)
+        newly_stale_topics.each do |topic|
+          trigger = DiscourseWorkflows::Nodes::StaleTopic::V1.new(topic)
 
-            Jobs.enqueue(
-              Jobs::DiscourseWorkflows::ExecuteWorkflow,
-              workflow_id: workflow.id,
-              trigger_node_id: node["id"],
-              trigger_data: trigger.output,
-            )
-          end
+          Jobs.enqueue(
+            Jobs::DiscourseWorkflows::ExecuteWorkflow,
+            workflow_id: workflow.id,
+            trigger_node_id: node["id"],
+            trigger_data: trigger.output,
+          )
+        end
+
+        newly_stale_ids = newly_stale_topics.map(&:id)
 
         still_tracked =
           if tracked_ids.any?
