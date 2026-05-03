@@ -82,11 +82,7 @@ module DiscourseWorkflows
     def fetch_waiting_execution(params:)
       return nil if params.execution_id.blank? || params.token.blank?
 
-      execution =
-        DiscourseWorkflows::Execution
-          .where(status: :waiting)
-          .where(resume_token: params.token)
-          .find_by(id: params.execution_id)
+      execution = DiscourseWorkflows::Execution.find_by(id: params.execution_id, status: :waiting)
       return nil unless execution
       unless ActiveSupport::SecurityUtils.secure_compare(execution.resume_token, params.token)
         return nil
