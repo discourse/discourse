@@ -51,7 +51,7 @@ module DiscourseWorkflows
         joins(:workflow).where(
           dependency_type: "node_type",
           dependency_key: type,
-          workflows: {
+          discourse_workflows_workflows: {
             enabled: true,
           },
         ).pluck(:workflow_id, :node_id)
