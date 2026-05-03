@@ -125,7 +125,7 @@ module DiscourseWorkflows
     end
 
     def check_webhook_rate_limit
-      key = "workflow_webhook:#{request.ip}"
+      key = "workflow_webhook:#{request.remote_ip}"
       limiter = RateLimiter.new(nil, key, WEBHOOK_RATE_LIMIT, WEBHOOK_RATE_PERIOD)
       unless limiter.performed!(raise_error: false)
         render json: { error: "rate_limit" }, status: :too_many_requests
