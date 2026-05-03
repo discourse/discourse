@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import {
   fieldType,
@@ -20,9 +22,29 @@ function optionName(option, nameProperty) {
 }
 
 export default class ComboBoxField extends Component {
+  @service workflowsNodeTypes;
+
+  @tracked _remoteOptions = null;
+
+  constructor(owner, args) {
+    super(owner, args);
+    const source = args.schema?.options_source;
+    const identifier = args.nodeDefinition?.identifier;
+    if (source && identifier) {
+      this.workflowsNodeTypes
+        .loadSourceOptions(identifier, source)
+        .then((options) => {
+          this._remoteOptions = options;
+        });
+    }
+  }
+
   get metadataOptions() {
     const source = this.args.schema?.options_source;
-    return source ? this.args.metadata?.[source] || [] : null;
+    if (!source) {
+      return null;
+    }
+    return this._remoteOptions || [];
   }
 
   get controlOptions() {

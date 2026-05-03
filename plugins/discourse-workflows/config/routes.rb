@@ -30,6 +30,10 @@ DiscourseWorkflows::Engine.routes.draw do
       put "/workflows/:id" => "workflows#update"
       delete "/workflows/:id" => "workflows#destroy"
       get "/node-types" => "node_types#index"
+      get "/node-types/:identifier/options/:source_key" => "node_types#options",
+          :constraints => {
+            identifier: %r{[^/]+},
+          }
       get "/templates" => "templates#index"
       get "/templates/:id" => "templates#show"
       post "/executions" => "executions#create"

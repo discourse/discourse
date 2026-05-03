@@ -22,10 +22,10 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     )
   end
 
-  describe ".metadata" do
+  describe ".load_options" do
     it "marks reserved columns" do
-      metadata = described_class.metadata
-      table_meta = metadata[:data_tables].find { |dt| dt[:id] == data_table.id }
+      tables = described_class.load_options("data_tables")
+      table_meta = tables.find { |dt| dt[:id] == data_table.id }
       column_names_reserved = table_meta[:columns].select { |c| c[:reserved] }.map { |c| c[:name] }
 
       expect(column_names_reserved).to contain_exactly("id", "created_at", "updated_at")

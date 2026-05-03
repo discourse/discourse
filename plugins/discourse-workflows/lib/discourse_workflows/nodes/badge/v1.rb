@@ -57,8 +57,11 @@ module DiscourseWorkflows
           }
         end
 
-        def self.metadata
-          { badges: ::Badge.order(:name).pluck(:id, :name).map { |id, name| { id:, name: } } }
+        def self.load_options(source_key)
+          case source_key
+          when "badges"
+            ::Badge.order(:name).pluck(:id, :name).map { |id, name| { id:, name: } }
+          end
         end
 
         def self.output_schema

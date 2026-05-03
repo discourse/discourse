@@ -150,26 +150,26 @@ module DiscourseWorkflows
           }
         end
 
-        def self.metadata
-          {
-            data_tables:
-              DiscourseWorkflows::DataTable
-                .order(:name)
-                .map do |dt|
-                  {
-                    id: dt.id,
-                    name: dt.name,
-                    columns:
-                      dt.columns.map do |c|
-                        col = { name: c["name"], type: c["type"] }
-                        if DataTables::Storage::RESERVED_COLUMN_NAMES.include?(c["name"])
-                          col[:reserved] = true
-                        end
-                        col
-                      end,
-                  }
-                end,
-          }
+        def self.load_options(source_key)
+          case source_key
+          when "data_tables"
+            DiscourseWorkflows::DataTable
+              .order(:name)
+              .map do |dt|
+                {
+                  id: dt.id,
+                  name: dt.name,
+                  columns:
+                    dt.columns.map do |c|
+                      col = { name: c["name"], type: c["type"] }
+                      col[:reserved] = true if DataTables::Storage::RESERVED_COLUMN_NAMES.include?(
+                        c["name"],
+                      )
+                      col
+                    end,
+                }
+              end
+          end
         end
 
         def self.output_schema

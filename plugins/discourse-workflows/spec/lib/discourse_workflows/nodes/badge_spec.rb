@@ -4,11 +4,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
   fab!(:user)
   fab!(:badge)
 
-  describe ".metadata" do
+  describe ".load_options" do
     fab!(:badge_2) { Fabricate(:badge, name: "A badge") }
 
     it "returns badges for the chooser" do
-      expect(described_class.metadata[:badges]).to include(
+      expect(described_class.load_options("badges")).to include(
         { id: badge_2.id, name: badge_2.name },
         { id: badge.id, name: badge.name },
       )

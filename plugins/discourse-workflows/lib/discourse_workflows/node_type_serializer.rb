@@ -21,7 +21,6 @@ module DiscourseWorkflows
         property_schema: @latest_class.property_schema,
         property_schema_versions: property_schema_versions,
         output_schema: output_schema,
-        metadata: metadata,
         ui: ui,
         capabilities: capabilities,
         ports: @latest_class.ports,
@@ -48,11 +47,6 @@ module DiscourseWorkflows
 
     def output_schema
       @latest_class.respond_to?(:output_schema) ? @latest_class.output_schema : {}
-    end
-
-    def metadata
-      meta = @latest_class.respond_to?(:metadata) ? @latest_class.metadata : {}
-      meta || {}
     end
   end
 end

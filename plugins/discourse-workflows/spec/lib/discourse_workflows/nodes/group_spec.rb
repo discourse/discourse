@@ -6,16 +6,16 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
   fab!(:group)
   fab!(:group_2) { Fabricate(:group, name: "another_group") }
 
-  describe ".metadata" do
+  describe ".load_options" do
     it "returns non-automatic groups for the chooser" do
-      expect(described_class.metadata[:groups]).to include(
+      expect(described_class.load_options("groups")).to include(
         { id: group.id, name: group.name },
         { id: group_2.id, name: group_2.name },
       )
     end
 
     it "excludes automatic groups" do
-      auto_group_ids = described_class.metadata[:groups].map { |g| g[:id] }
+      auto_group_ids = described_class.load_options("groups").map { |g| g[:id] }
       expect(auto_group_ids).not_to include(*Group::AUTO_GROUP_IDS.values)
     end
   end
