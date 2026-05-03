@@ -96,6 +96,10 @@ module DiscourseWorkflows
     # --- Main loop ---
 
     def execute_flow(setup_method, *setup_args, &block)
+      db = RailsMultisite::ConnectionManagement.current_db
+      chains = DiscourseWorkflows::CurrentExecution.workflow_execution_chains || {}
+      DiscourseWorkflows::CurrentExecution.workflow_execution_chains =
+        chains.merge(db => @options.workflow_execution_chain + [@workflow.id])
       send(setup_method, *setup_args)
       yield
       process_queue
