@@ -66,11 +66,7 @@ tr_TR:
     event_participation_buttons: "Kullanıcıların kullanabileceği etkinlik katılım düğmelerinin listesi."
     sidebar_show_upcoming_events: "Kenar çubuğunda 'Daha Fazla' altında yaklaşan etkinlikler bağlantısını gösterin."
     calendar_first_day_of_week: "Takvim görüntüsü için haftanın ilk gününü ayarlayın. Seçenekler Cumartesi, Pazar veya Pazartesi'dir."
-    enable_events_category_type_setup: "Kategori oluşturma ayarları sırasında \"Etkinlikler\" kategori türü seçeneğini etkinleştirir. Bunun geçerli olabilmesi için \"basitleştirilmiş kategori oluşturma\" seçeneğinin etkinleştirilmiş olması gerektiğini unutmayın."
   discourse_calendar:
-    calendar_subscriptions:
-      all_events_feed_name: "%{site_title} - Tüm etkinlikler"
-      my_events_feed_name: "%{site_title} - Etkinliklerim"
     invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
     calendar_must_be_in_first_post: "Takvim etiketi, bir konunun yalnızca ilk gönderisinde kullanılabilir."
     more_than_one_calendar: "Bir gönderide birden fazla takviminiz olamaz."

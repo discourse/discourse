@@ -66,11 +66,7 @@ uk:
     event_participation_buttons: "Список кнопок участі у заходах, які можуть використовувати користувачі."
     sidebar_show_upcoming_events: "Показати посилання на майбутні події на бічній панелі в розділі «Більше»."
     calendar_first_day_of_week: "Встановіть перший день тижня для відображення календаря. Доступні варіанти: субота, неділя або понеділок."
-    enable_events_category_type_setup: "Вмикає опцію типу категорії «Події» під час налаштування створення категорії. Зверніть увагу, що для цього має бути ввімкнено опцію «увімкнути спрощене створення категорій»."
   discourse_calendar:
-    calendar_subscriptions:
-      all_events_feed_name: "%{site_title} - Усі події"
-      my_events_feed_name: "%{site_title} - Мої події"
     invite_user_notification: "%{username} запросили Вас на: %{description}"
     calendar_must_be_in_first_post: "Тег календаря можна використовувати лише в першому дописі теми."
     more_than_one_calendar: "Ви не можете мати більше одного календаря в публікації."

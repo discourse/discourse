@@ -54,6 +54,14 @@ module SystemHelpers
     self
   end
 
+  # Waits for the Ember app to boot before continuing.
+  def visit(...)
+    super
+    return if page.has_no_css?("discourse-assets", wait: 0, visible: :all)
+
+    page.assert_selector("#main.ember-application", visible: :all)
+  end
+
   def sign_in(user)
     visit File.join(
             GlobalSetting.relative_url_root || "",
@@ -407,3 +415,16 @@ module SystemHelpers
     Nokogiri.HTML5(html_translation).at("body").inner_text
   end
 end
+
+module CapybaraSessionEmberWaiter
+  # Waits for the Ember app to boot before continuing.
+  def refresh
+    super
+    return unless RSpec.current_example&.metadata&.[](:type) == :system
+    return if has_no_css?("discourse-assets", wait: 0, visible: :all)
+
+    assert_selector("#main.ember-application", visible: :all)
+  end
+end
+
+Capybara::Session.prepend(CapybaraSessionEmberWaiter)

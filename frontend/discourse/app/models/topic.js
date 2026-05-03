@@ -210,10 +210,17 @@ export default class Topic extends RestModel {
       }
     }
 
-    return ajax("/topics/bulk", {
+    const request = {
       type: "PUT",
       data,
-    });
+    };
+
+    if (options?.asJSON) {
+      request.contentType = "application/json";
+      request.data = JSON.stringify(data);
+    }
+
+    return ajax("/topics/bulk", request);
   }
 
   static bulkOperationByFilter(filter, operation, options, isTracked) {

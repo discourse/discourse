@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import EditCategoryTypeSchemaFields from "discourse/components/edit-category-type-schema-fields";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
@@ -57,18 +56,7 @@ export default class UpsertCategorySupport extends Component {
         @category={{@category}}
         @categoryType="support"
         @form={{@form}}
-      >
-        <:beforeSiteSettings>
-          <div class="support-category--danger-zone">
-            <DButton
-              class="btn-small support-category__remove-type"
-              @action={{this.removeSupportCategory}}
-              @icon="link-slash"
-              @label="solved.category_type_support.remove_support_type"
-            />
-          </div>
-        </:beforeSiteSettings>
-      </EditCategoryTypeSchemaFields>
+      />
     {{else}}
       {{i18n "solved.category_type_support.not_support_type"}}
     {{/if}}

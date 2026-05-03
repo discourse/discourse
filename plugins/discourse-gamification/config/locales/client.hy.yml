@@ -12,10 +12,6 @@ hy:
         link_to_settings: "Կարգավորումներ"
         refresh: "Թարմացնել"
         name: "Անուն"
-        section:
-          groups: "Խմբեր"
-        weight:
-          solution: "Լուծում"
         period:
           all_time: "Ամբողջ Ժամանակվա"
           yearly: "Տարվա Ընթացքում"

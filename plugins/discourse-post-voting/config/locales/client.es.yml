@@ -35,7 +35,6 @@ es:
       already_voted: "Solo puedes votar una vez por pregunta."
       user_over_limit: "No puedes superar el número de votos para tu nivel de confianza."
       one_vote_per_post: "Solo puedes votar una vez por cada publicación."
-      toggle_voters: "Mostrar quién votó"
     last_answer_lowercase: última respuesta
     answer_lowercase:
       one: respuesta
@@ -57,8 +56,6 @@ es:
           edit: "editar"
           cancel: "cancelar"
           add: "Añadir un comentario"
-          actions:
-            delete: "Eliminar comentario"
           show:
             one: Mostrar %{count} comentario más
             other: Mostrar %{count} comentarios más

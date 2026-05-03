@@ -93,6 +93,17 @@ RSpec.describe "AI Bot docked composer" do
     expect(page).to have_css("#topic-footer-buttons .create")
   end
 
+  it "hides the toolbar by default and shows it when the toggle button is clicked" do
+    topic_page.visit_topic(pm)
+
+    expect(page).to have_css(".ai-bot-docked-composer.docked-composer--toolbar-hidden")
+    expect(page).to have_no_css(".d-editor-button-bar__wrap", visible: true)
+
+    find(".ai-bot-docked-composer__toolbar-toggle").click
+
+    expect(page).to have_no_css(".ai-bot-docked-composer.docked-composer--toolbar-hidden")
+  end
+
   it "clears the reply field after a successful submit" do
     topic_page.visit_topic(pm)
 

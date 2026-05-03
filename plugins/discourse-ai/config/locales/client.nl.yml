@@ -561,7 +561,7 @@ nl:
           anthropic-claude-opus-4-7: "Het intelligentste model van Antropic"
           anthropic-claude-sonnet-4-6: "Optimale balans tussen snelheid en kosten"
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
-          open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model"
+          open_ai-gpt-5-4-nano: "Snelste en meest kostenefficiënte GPT-5-model"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
         configured:
           title: "Geconfigureerde LLM's"

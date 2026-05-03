@@ -15,7 +15,3 @@ hr:
     topic_voting_show_who_voted: 'Dopusti korisnicima da vide tko je glasao?'
     topic_voting_show_votes_on_profile: 'Dopusti korisnicima da vide svoje glasove u njihovim listama aktivnosti?'
     topic_voting_alert_votes_left: 'Obavijesti korisnika kada je preostalo ovoliko glasova'
-  topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Pokažite tko je glasao"

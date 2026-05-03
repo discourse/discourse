@@ -42,18 +42,18 @@ RSpec.describe "Channel - Info - Members page" do
         Jobs::Chat::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
       end
 
-      xit "shows all members" do
+      it "loads more members on scroll" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_selector(".c-channel-members__list-item", count: 60)
+        expect(page).to have_css("li.c-channel-members__list-item.-member", minimum: 20)
+        initial_count = page.all("li.c-channel-members__list-item.-member").count
 
-        scroll_to(find(".c-channel-members__list-item:nth-child(60)"))
+        page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
 
-        expect(page).to have_selector(".c-channel-members__list-item", count: 100)
-
-        scroll_to(find(".c-channel-members__list-item:nth-child(100)"))
-
-        expect(page).to have_selector(".c-channel-members__list-item", count: 100)
+        expect(page).to have_css(
+          "li.c-channel-members__list-item.-member",
+          minimum: initial_count + 1,
+        )
       end
 
       context "with filter" do
@@ -70,7 +70,7 @@ RSpec.describe "Channel - Info - Members page" do
       end
 
       context "with user status" do
-        xit "renders status next to name" do
+        it "renders status next to name" do
           SiteSetting.enable_user_status = true
           current_user.set_status!("walking the dog", "dog")
 

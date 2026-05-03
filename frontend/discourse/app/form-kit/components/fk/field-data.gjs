@@ -190,6 +190,16 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Indicates whether to show the `(optional)` marker next to the title when
+   * the field has no `required` validation rule.
+   * Defaults to `true`.
+   * @type {boolean}
+   */
+  get showOptional() {
+    return this.args.showOptional ?? true;
+  }
+
+  /**
    * Function to add errors to the field.
    * @type {Function}
    */

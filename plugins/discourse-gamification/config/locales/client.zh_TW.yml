@@ -13,10 +13,6 @@ zh_TW:
         refresh: "重新整理"
         name: "名稱"
         name_placeholder: "名字..."
-        section:
-          groups: "群組"
-        weight:
-          solution: "解決方式"
         period:
           all_time: "所有時間"
           yearly: "年"

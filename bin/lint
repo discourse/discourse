@@ -6,6 +6,124 @@ require "open3"
 require "shellwords"
 require "pathname"
 
+PROJECT_ROOT = File.expand_path("..", __dir__)
+
+# Runs linters directly (bundle exec rubocop/stree, pnpm lint) for files that
+# live outside the core repo (e.g. plugins/*) where lefthook is not available.
+class ExternalLinter
+  RUBY_EXTENSIONS = %w[rb rake thor].freeze
+  PRETTIER_EXTENSIONS = %w[css scss js gjs cjs mjs].freeze
+  ESLINT_EXTENSIONS = %w[js gjs].freeze
+  EMBER_TEMPLATE_LINT_EXTENSIONS = %w[gjs].freeze
+  STYLELINT_EXTENSIONS = %w[scss].freeze
+
+  JS_EXTENSIONS =
+    (
+      PRETTIER_EXTENSIONS + ESLINT_EXTENSIONS + EMBER_TEMPLATE_LINT_EXTENSIONS +
+        STYLELINT_EXTENSIONS
+    ).uniq.freeze
+
+  def initialize(root, files, fix:, verbose: false)
+    @root = root
+    @files = files
+    @fix = fix
+    @verbose = verbose
+  end
+
+  def run
+    ruby_files = @files.select { |f| ruby_file?(f) || File.basename(f) == "Gemfile" }
+    js_files = @files.select { |f| js_file?(f) }
+
+    success = true
+    success &= run_ruby_linters(ruby_files) if ruby_files.any?
+    success &= run_js_linters(js_files) if js_files.any?
+    success
+  end
+
+  private
+
+  def ruby_file?(f)
+    RUBY_EXTENSIONS.include?(File.extname(f)[1..])
+  end
+
+  def js_file?(f)
+    JS_EXTENSIONS.include?(File.extname(f)[1..])
+  end
+
+  def relative_paths(files)
+    files.map { |f| Pathname.new(File.expand_path(f)).relative_path_from(Pathname.new(@root)).to_s }
+  end
+
+  def run_cmd(*cmd)
+    puts "Running: #{cmd.shelljoin}" if @verbose
+    system(*cmd)
+  end
+
+  def run_ruby_linters(files)
+    rel_files = relative_paths(files)
+    success = true
+
+    Dir.chdir(@root) do
+      run_cmd("bundle", "install") or abort "bundle install failed in #{@root}"
+
+      stree_subcmd = @fix ? "write" : "check"
+      stree_ok = run_cmd("bundle", "exec", "stree", stree_subcmd, *rel_files)
+      success &= stree_ok unless @fix
+
+      rubocop_args = @fix ? ["--autocorrect"] : []
+      rubocop_ok = run_cmd("bundle", "exec", "rubocop", *rubocop_args, *rel_files)
+      success &= rubocop_ok unless @fix
+    end
+
+    success
+  end
+
+  def run_js_linters(files)
+    by_ext = ->(exts) { files.select { |f| exts.include?(File.extname(f)[1..]) } }
+
+    prettier_files = by_ext.call(PRETTIER_EXTENSIONS)
+    eslint_files = by_ext.call(ESLINT_EXTENSIONS)
+    ember_template_lint_files = by_ext.call(EMBER_TEMPLATE_LINT_EXTENSIONS)
+    stylelint_files = by_ext.call(STYLELINT_EXTENSIONS)
+
+    success = true
+
+    Dir.chdir(@root) do
+      run_cmd("pnpm", "i") or abort "pnpm i failed in #{@root}"
+
+      if prettier_files.any?
+        rel = relative_paths(prettier_files)
+        args = @fix ? ["--write"] : ["--list-different"]
+        ok = run_cmd("pnpm", "prettier", *args, *rel)
+        success &= ok unless @fix
+      end
+
+      if eslint_files.any?
+        rel = relative_paths(eslint_files)
+        args = @fix ? ["--fix"] : ["--quiet"]
+        ok = run_cmd("pnpm", "eslint", *args, *rel)
+        success &= ok unless @fix
+      end
+
+      if ember_template_lint_files.any?
+        rel = relative_paths(ember_template_lint_files)
+        args = @fix ? ["--fix"] : []
+        ok = run_cmd("pnpm", "ember-template-lint", *args, *rel)
+        success &= ok unless @fix
+      end
+
+      if stylelint_files.any?
+        rel = relative_paths(stylelint_files)
+        args = @fix ? ["--fix"] : []
+        ok = run_cmd("pnpm", "stylelint", *args, *rel)
+        success &= ok unless @fix
+      end
+    end
+
+    success
+  end
+end
+
 class LefthookLinter
   def initialize(options = {})
     @fix = options[:fix]
@@ -130,39 +248,76 @@ class LefthookLinter
 
   def run_fix_mode(files)
     if files == EVERYTHING
-      puts "🔧 Running linters in fix mode on all files" if @verbose
-    else
-      puts "🔧 Running linters in fix mode on #{files.length} file/s" if @verbose
+      puts "Running linters in fix mode on all files" if @verbose
+      run_lefthook_command("fix-all", [])
+      return
     end
 
-    if files == EVERYTHING
-      # Run fix-all on all files (no file filtering)
-      run_lefthook_command("fix-all", [])
-    elsif files.empty?
+    if files.empty?
       puts "No files to fix, exiting."
-    else
-      # Run fix-staged on specific files
-      run_lefthook_command("fix-staged", files)
+      return
     end
+
+    core, external = partition_files(files)
+    run_lefthook_command("fix-staged", core) if core.any?
+    external.each { |root, fs| ExternalLinter.new(root, fs, fix: true, verbose: @verbose).run }
   end
 
   def run_check_mode(files)
     if files == EVERYTHING
-      puts "🔍 Running linters in check mode on all files" if @verbose
-    else
-      puts "🔍 Running linters in check mode on #{files.length} file/s" if @verbose
+      puts "Running linters in check mode on all files" if @verbose
+      run_lefthook_command("lints", [])
+      return
     end
 
-    if files == EVERYTHING
-      run_lefthook_command("lints", [])
-    elsif files.empty?
+    if files.empty?
       puts "No files to lint, exiting."
-    else
-      run_lefthook_command("pre-commit", files)
+      return
+    end
+
+    core, external = partition_files(files)
+    run_lefthook_command("pre-commit", core) if core.any?
+    external.each do |root, fs|
+      success = ExternalLinter.new(root, fs, fix: false, verbose: @verbose).run
+      exit 1 unless success
     end
   end
 
-  PROJECT_ROOT = File.expand_path("..", __dir__)
+  def partition_files(files)
+    core_files = []
+    external_files = Hash.new { |h, k| h[k] = [] }
+
+    files.each do |f|
+      if (root = external_plugin_root(f))
+        external_files[File.join(PROJECT_ROOT, root)] << f
+      else
+        core_files << f
+      end
+    end
+
+    [core_files, external_files]
+  end
+
+  # Returns "plugins/<name>" if the file is in an unbundled plugin directory, else nil.
+  def external_plugin_root(file)
+    path = normalize_relative_path(file)
+    return nil unless path.start_with?("plugins/")
+
+    parts = path.split("/")
+    return nil if parts.length < 2
+
+    plugin_dir = "plugins/#{parts[1]}"
+    bundled_plugins.include?(plugin_dir) ? nil : plugin_dir
+  end
+
+  def bundled_plugins
+    @bundled_plugins ||=
+      begin
+        out, status = Open3.capture2(File.join(PROJECT_ROOT, "script", "list_bundled_plugins"))
+        abort "Failed to list bundled plugins" unless status.success?
+        Set.new(out.lines.map(&:strip).reject(&:empty?))
+      end
+  end
 
   def run_lefthook_command(hook, files)
     if !files.empty?

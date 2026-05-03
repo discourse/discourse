@@ -3732,23 +3732,11 @@ cs:
         archive_messages: "Přesunout do archivu"
         change_notification_level: "Změnit úroveň upozornění"
         choose_new_category: "Zvolte novou kategorii pro témata:"
-        selected_sole_category:
-          one: "Vybrali jste <b>%{count}</b> téma z kategorie:"
-          few: "Vybrali jste <b>%{count}</b> témata z kategorie:"
-          many: "Vybrali jste <b>%{count}</b> témat z kategorie:"
-          other: "Vybrali jste <b>%{count}</b> témat z kategorie:"
         selected_count:
           one: "%{count} vybrané"
           few: "%{count} vybraná"
           many: "%{count} vybraných"
           other: "%{count} vybraných"
-        choose_new_tags: "Zvolte nové štítky pro tato témata:"
-        changed_tags: "Štítky těchto témat byly změněny."
-        confirm_remove_tags:
-          one: "Všechny štítky budou z tohoto tématu odstraněny. Jsi si jisti?"
-          few: "Všechny štítky budou z těchto %{count} témat odstraněny. Jste si jisti?"
-          many: "Všechny štítky budou z těchto %{count} témat odstraněny. Jste si jisti?"
-          other: "Všechny štítky budou z těchto %{count} témat odstraněny. Jste si jisti?"
         progress:
           one: "Průběh: <strong>%{count}</strong> téma"
           few: "Průběh: <strong>%{count}</strong> témata"
@@ -3796,10 +3784,6 @@ cs:
         name: "Skrýt"
       relist_topics:
         name: "Zrušit skrytí"
-      remove_tags:
-        name: "Odebrat štítky"
-      replace_tags:
-        name: "Zaměnit štítky"
       delete_topics:
         name: "Smazat"
       update_category:
@@ -3832,6 +3816,7 @@ cs:
       collapse: "Sbalit"
       no_replies: "Zatím žádné odpovědi."
       deleted_post_placeholder: "[smazáno]"
+      ignored_post_placeholder: "[ignorováno]"
       pinned_reply: "Připnuto"
     topic:
       filter_to:
@@ -4735,9 +4720,17 @@ cs:
       topic_featured_link_allowed: "Povolit zobrazené odkazy v této kategorii"
       delete: "Smazat kategorii"
       create: "Přidat kategorii"
+      create_with_type: "Nová kategorie typu %{typeName}"
       create_long: "Vytvořit novou kategorii"
+      settings_apply_to_all_of_type_warning: "Níže uvedené změny se vztahují na všechny kategorie tohoto typu"
       type_settings_schema:
+        category_settings: "Nastavení kategorie"
+        category_custom_fields: "Nastavení kategorie"
         site_settings: "Nastavení webu"
+      choose_type:
+        title: "Vyberte typ kategorie"
+        requires_plugin: "Vyžaduje plugin"
+      create_category: "Vytvořit kategorii"
       save: "Uložit kategorii"
       unsaved_changes: "Máte neuložené změny"
       slug: "URL kategorie"
@@ -4797,9 +4790,15 @@ cs:
         reply: "Odpovědět"
         create: "Vytvořit"
         no_groups_selected: "Nebyl udělen přístup žádným skupinám; tato kategorie bude viditelná pouze pro redaktory."
+        everyone_full_access: 'Tato kategorie je veřejná, každý může vidět, odpovídat a vytvářet příspěvky. Chcete-li omezit oprávnění, odeberte jedno nebo více oprávnění přidělených skupině "%{everyone_group}".'
+        everyone_reply_access: 'Tato kategorie je veřejná, každý může vidět a odpovídat na témata. Chcete-li omezit oprávnění, odeberte skupinu "%{everyone_group}“.'
+        everyone_see_access: 'Tato kategorie je veřejná, každý může vidět příspěvky. Chcete-li omezit oprávnění, odeberte skupinu "%{everyone_group}“.'
         specific_groups_have_access: "Tato kategorie je soukromá, pouze vybrané skupiny mohou vidět, odpovědět a vytvářet příspěvky."
+        all_parent_groups_used: "Byly přidány všechny skupiny z nadřazené kategorie. Chcete-li přidat další skupiny, přidejte je nejprve do nadřazené kategorie."
         toggle_reply: "Přepnout oprávnění Odpovědět"
         toggle_full: "Přepnout oprávnění Vytvořit"
+        inherited: 'Toto oprávnění se dědí ze skupiny "%{everyone_group}".'
+      special_warning: "Tato kategorie je přednastavená a její nastavení zabezpečení nelze změnit. Pokud tuto kategorii nechcete používat, nesnažte se ji měnit, ale odstraňte ji."
       uncategorized_security_warning: "Toto je speciální kategorie, která je určena pro témata, která nemají žádnou kategorii a nemůže mít nastavení zabezpečení."
       uncategorized_general_warning: 'Toto je speciální kategorie. Používá se jako výchozí kategorie pro nová témata, u kterých není vybrána žádná kategorie. Pokud chcete tomuto chování zabránit a vynutit si výběr kategorie, <a href="%{settingLink}">, zakažte prosím toto nastavení</a>. Pokud chcete změnit název nebo popis, přejděte na <a href="%{customizeLink}">Přizpůsobení/Textový obsah</a>.'
       pending_permission_change_alert: "Do této kategorie jste nepřidali %{group} ; kliknutím na toto tlačítko je přidejte."
@@ -4875,7 +4874,7 @@ cs:
           high: "Vysoká"
           very_high: "Velmi vysoká"
       sort_options:
-        default: "výchozí"
+        default: "Výchozí"
         likes: "Líbí se"
         op_likes: "Líbí se v úvodním příspěvku"
         views: "Zobrazení"
@@ -6071,7 +6070,7 @@ cs:
           everyone: "Všichni"
           specific_groups: "Specifické skupiny"
           specific_groups_with_group_names:
-            one: "skupina %{groupNames}"
+            one: "skupinu %{groupNames}"
             few: "skupiny %{groupNames}"
             many: "skupiny %{groupNames}"
             other: "skupiny %{groupNames}"
@@ -7891,6 +7890,7 @@ cs:
         topic_id: "ID tématu"
         post_id: "ID příspěvku"
         category_id: "ID kategorie"
+        reviewable_id: "Revize"
         delete: "Smazat"
         edit: "Upravit"
         save: "Uložit"

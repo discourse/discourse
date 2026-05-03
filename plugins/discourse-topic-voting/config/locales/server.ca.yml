@@ -16,9 +16,6 @@ ca:
     topic_voting_show_votes_on_profile: 'Voleu permetre als usuaris veure els seus vots en el seu canal d''activitat?'
     topic_voting_alert_votes_left: 'Alerta l''usuari quan quedi aquesta quantitat de vots'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Mostra qui ha votat"
     votes_moved:
       one: "S'ha mogut un vot"
       other: "S'han mogut %{count} vots."

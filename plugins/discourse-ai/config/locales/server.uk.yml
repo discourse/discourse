@@ -926,10 +926,10 @@ uk:
       quota_required: "Ви повинні вказати максимальну кількість токенів або варіантів використання для цієї моделі"
       no_query_specified: Параметр запиту є обов'язковим, будь ласка, вкажіть його.
       no_user_for_agent: З вказаним агентом не пов'язано користувача.
-      agent_not_found: "Вказаний агент не існує. Перевірте параметри agent_name або agent_id (legacy: agent_name або agent_id)."
+      agent_not_found: "Вказаний агент не існує. Перевірте параметри agent_name або agent_id (застарілі: persona_name або persona_id)."
       no_user_specified: Ім'я користувача або параметр user_unique_id є обов'язковим, будь ласка, вкажіть його.
       user_not_found: Зазначений користувач не існує. Перевірте параметр імені користувача.
-      agent_disabled: "Вказаний агент вимкнено. Перевірте параметри agent_name або agent_id (застарілі: agent_name або agent_id)."
+      agent_disabled: "Вказаний агент вимкнено. Перевірте параметри agent_name або agent_id (застарілі: persona_name або persona_id)."
       no_default_llm: Агент повинен мати визначений default_llm.
       user_not_allowed: Користувачеві заборонено брати участь у темі.
       invalid_stream_resume_token: Токен resume_token є недійсним або його термін дії закінчився.

@@ -42,6 +42,156 @@ body.has-ai-bot-docked-composer {
 
   // ~4 lines tall by default; still expands further with content
   --docked-composer-input-min-height: 7em;
+
+  // Remove the spacing above the composer
+  padding-top: 0;
+  margin-top: 0;
+
+  // Hide the fade when already at the bottom — nothing is being obscured
+  // above the composer so the gradient adds no information.
+  &.docked-composer--at-bottom::before {
+    display: none;
+  }
+}
+
+// Place the resize handle inside the editor box, directly above the toolbar.
+// The handle overlaps 1em into the editor column, which has matching padding-top
+// added below to create exactly that amount of space above the toolbar.
+.docked-composer.ai-bot-docked-composer.docked-composer--resizable {
+  gap: 0;
+
+  .docked-composer__resize-handle {
+    height: 1em;
+    position: relative;
+    z-index: 2;
+    margin-bottom: -1em;
+  }
+}
+
+// Create the 1em slot at the top of the input box that the resize handle fills;
+// use content-border-color to tie the editor box visually to the page chrome
+.docked-composer.ai-bot-docked-composer .d-editor-textarea-column {
+  padding-top: 1em;
+  border-color: var(--content-border-color);
+}
+
+// Animate the toolbar in/out for the AI bot composer
+.docked-composer.ai-bot-docked-composer .d-editor-button-bar__wrap {
+  overflow: hidden;
+  max-height: 4em;
+  opacity: 1;
+  transition:
+    max-height 0.25s ease,
+    opacity 0.2s ease;
+}
+
+.docked-composer.ai-bot-docked-composer.docked-composer--toolbar-hidden
+  .d-editor-button-bar__wrap {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+// Toolbar toggle button: mirrors submit-btn chrome but sits at bottom-left
+.ai-bot-docked-composer__toolbar-toggle.btn {
+  position: absolute;
+  left: 0.5em;
+  right: auto;
+  bottom: 0.5em;
+  z-index: 2;
+  min-width: auto;
+  min-height: auto;
+  padding: 0.35em 0.5em;
+  border-radius: var(--d-button-border-radius);
+  background: transparent !important;
+
+  .d-icon {
+    color: var(--primary-medium) !important;
+    font-size: var(--font-down-1);
+  }
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    background: var(--primary-very-low) !important;
+
+    .d-icon {
+      color: var(--primary-high) !important;
+    }
+  }
+}
+
+// Floating scroll indicator: appears above the composer when content is below.
+// Shows animated dots while streaming, a chevron-down arrow otherwise.
+.ai-bot-scroll-indicator {
+  position: absolute;
+  bottom: calc(100% + 0.75em);
+  left: calc(50% + var(--docked-composer-content-offset) / 2);
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4em 0.8em;
+  background: var(--secondary);
+  border: 1px solid var(--content-border-color);
+  border-radius: 2em;
+  cursor: pointer;
+
+  // reset native button styles
+  appearance: none;
+  font: inherit;
+
+  .d-icon {
+    width: 0.875em;
+    height: 0.875em;
+    color: var(--primary-medium);
+  }
+
+  &:hover {
+    border-color: var(--primary-medium);
+
+    .d-icon {
+      color: var(--primary);
+    }
+  }
+
+  &__dots {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-block: 0.15em;
+  }
+
+  &__dot {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary-medium);
+    animation: ai-scroll-dot 1.4s ease-in-out infinite;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes ai-scroll-dot {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
 }
 
 .ai-bot-docked-composer__disclaimer {

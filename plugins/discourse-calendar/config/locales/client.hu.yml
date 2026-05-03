@@ -329,9 +329,6 @@ hu:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} automatikusan beállította a részvételét, és meghívta erre: %{eventName}"
         an_event: "esemény"
-      event_description:
-        show_more: "Több megjelenítése"
-        show_less: "Kevesebb megjelenítése"
       edit_reason: "Esemény frissítve"
       edit_reason_closed: "Esemény lezárva"
       edit_reason_opened: "Esemény megnyitva"

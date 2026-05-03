@@ -2690,7 +2690,6 @@ sv:
       text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas. \n\nDitt svarsmeddelande skickades från en blockerad e-postadress. Försök skicka meddelandet från en annan e-postadress, eller [kontakta personal](%{base_url}/about).\n"
     email_reject_not_allowed_email:
       title: "E-posten avslås, ej tillåten e-post"
-      subject_template: "[%{email_prefix}] E-postfel -- Blockerad e-post"
       text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas. \n\nDitt svarsmeddelande skickades från en blockerad e-postadress. Försök skicka meddelandet från en annan e-postadress, eller [kontakta personal](%{base_url}/about). \n"
     email_reject_inactive_user:
       title: "E-posten avslås, inaktiverad användare"
@@ -2843,7 +2842,6 @@ sv:
         Ditt konto har inte rättigheter att svara på ämnet. Om du tror att det här är ett misstag, [kontakta personal](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-posten avslås; svar på sammanfattning"
-      subject_template: "[%{email_prefix}] E-postfel -- Svar på sammanfattning"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
@@ -2926,7 +2924,6 @@ sv:
       text_body_template: "Inställningen `download_remote_images_to_local` har inaktiverats eftersom diskutrymmet har nått sin övre gräns."
     new_user_of_the_month:
       title: "Du är Månadens nya användare!"
-      subject_template: "Grattis, du har tilldelats utmärkelsen ** Månadens nya användare för %{month_year}**. : Trofén:\n\nDenna utmärkelse beviljas endast till två nya användare per månad och den kommer att visas permanent på [sidan för utmärkelser] (%{url}).\n\nDu har snabbt blivit en värdefull medlem i vår gemenskap. Tack för att du gick med och fortsätt med det fantastiska arbetet!"
       text_body_template: |
         Grattis, du har tilldelats utmärkelsen ** Månadens nya användare för %{month_year}**. :trophy:
 
@@ -3186,6 +3183,7 @@ sv:
     account_exists:
       title: "Konto finns redan"
       subject_template: "[%{email_prefix}] Konto finns redan"
+      subject_template_improved: "Konto finns redan"
       text_body_template: |
         Du försökte precis skapa ett konto hos %{site_name} eller försökte ändra e-postmeddelandet till ett konto för %{email}. Det finns dock redan ett konto för %{email}.
 
@@ -3197,6 +3195,7 @@ sv:
     account_second_factor_disabled:
       title: "Tvåfaktorsautentisering inaktiverad"
       subject_template: "[%{email_prefix}] Tvåfaktorsautentisering inaktiverad"
+      subject_template_improved: "Tvåfaktorsautentisering inaktiverad"
     digest:
       since_last_visit: "Sedan ditt senaste besök"
       new_topics: "Nya ämnen"
@@ -3209,6 +3208,7 @@ sv:
       popular_posts: "Populära inlägg"
       more_new: "Nytt för er"
       subject_template: "[%{email_prefix}] Sammanfattning"
+      subject_template_improved: "Sammanfattning"
       unsubscribe: "Den här sammanfattningen skickas från %{site_link} när vi inte har sett dig på ett tag. Ändra %{email_preferences_link}, eller %{unsubscribe_link} för att avprenumerera."
       your_email_settings: "dina e-postinställningar"
       click_here: "klicka här"
@@ -3227,18 +3227,18 @@ sv:
       title: "Logga in via länk"
       preview: "Logga in via länk."
       subject_template: "[%{email_prefix}] Logga in via länk"
+      subject_template_improved: "Logga in via länk"
       text_body_template: "Här är din länk för att logga in hos [%{site_name}](%{base_url}). \n\nOm du inte begärde denna länk kan du utan vidare ignorera detta e-postmeddelande. \n\nKlicka på följande länk för att logga in: \n%{base_url}/session/email-login/%{email_token}\n"
     set_password:
       title: "Välj lösenord"
-      subject_template: "[%{email_prefix}] Ange lösenord"
       text_body_template: "Någon har begärt att lägga till ett lösenord för ditt konto hos [%{site_name}](%{base_url}). Du kan också logga in genom att använda någon av våra alternativa onlinetjänster (Google eller Facebook, etc) som är kopplat till din validerade e-postadress. \n\nOm du inte gjorde denna begäran så kan du utan vidare ignorera det här e-postmeddelandet.\n\nFölj nedanstående länk för att välja ett nytt lösenord:\n%{base_url}/u/password-reset/%{email_token}\n"
     admin_login:
       title: "Administratörsinloggning"
       subject_template: "[%{email_prefix}] Logga in"
+      subject_template_improved: "Inloggning"
       text_body_template: "Någon bad om att få logga in på ditt konto hos [%{site_name}](%{base_url}). \n\nOm det inte var på din begäran kan du utan vidare ignorera detta e-postmeddelande. \n\nKlicka på följande länk för att logga in: \n%{base_url}/session/email-login/%{email_token}\n"
     account_created:
       title: "Konto skapat"
-      subject_template: "[%{email_prefix}] Ditt nya konto"
       text_body_template: "Ett nytt konto har skapats för dig på %{site_name}\n\nKlicka på följande länk för att välja ett nytt lösenord för ditt nya konto: \n%{base_url}/u/password-reset/%{email_token}\n"
     confirm_new_email:
       title: "Bekräfta den nya e-postadressen"
@@ -3335,7 +3335,6 @@ sv:
         Om länken ovan inte är klickbar, försök kopiera och klistra in den i adressfältet i din webbläsare.
     suspicious_login:
       title: "Ny inloggningsvarning"
-      subject_template: "[%{site_name}] Ny inloggning från %{location}"
       text_body_template: "Hej, \n\nVi noterade en inloggning från en enhet eller plats som du vanligtvis inte använder. Var det du?\n\n - Plats: %{location} (%{client_ip})\n - Webbläsare: %{browser}\n - Enhet: %{device} – %{os}\n\nOm det var du, toppen! Du behöver inte göra något mer. \n\nOm det inte var du, ber vi dig [granska dina befintliga sessioner](%{base_url}/my/preferences/security) samt överväga att ändra ditt lösenord.\n"
     post_approved:
       title: "Ditt inlägg godkändes"

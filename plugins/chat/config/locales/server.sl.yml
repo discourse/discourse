@@ -28,6 +28,9 @@ sl:
     popup:
       chat_mention:
         direct: '%{username} vas je omenil v "%{channel}"'
+    actions:
+      chat_reply:
+        title: Odgovori
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

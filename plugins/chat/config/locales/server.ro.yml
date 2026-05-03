@@ -62,6 +62,9 @@ ro:
     popup:
       chat_mention:
         direct: '%{username} te-a menționat în discuția „%{channel}”'
+    actions:
+      chat_reply:
+        title: Răspunde
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

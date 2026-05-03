@@ -232,6 +232,9 @@ pt_BR:
         other_type: "%{username} mencionou %{identifier} no chat pessoal"
       new_chat_message: '%{username} enviou uma mensagem em "%{channel}"'
       new_direct_chat_message: "%{username} enviou uma mensagem no chat"
+    actions:
+      chat_reply:
+        title: Responder
   discourse_automation:
     scriptables:
       send_chat_message:

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -9,17 +9,23 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DIconGridPicker from "discourse/components/d-icon-grid-picker";
+import DMultiSelect from "discourse/components/d-multi-select";
 import DecoratedHtml from "discourse/components/decorated-html";
 import EmojiPicker from "discourse/components/emoji-picker";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import categoryBadge from "discourse/helpers/category-badge";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import emoji from "discourse/helpers/emoji";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
+import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import { runOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
@@ -28,6 +34,8 @@ import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+const DISCUSSION_TYPE_ID = "discussion";
+
 export default class UpsertCategoryGeneral extends Component {
   @service appEvents;
   @service site;
@@ -35,6 +43,7 @@ export default class UpsertCategoryGeneral extends Component {
   @service toasts;
   @service composer;
   @service store;
+  @service categoryTypeChooser;
 
   @tracked loadingDescription = false;
   @tracked descriptionHtml = null;
@@ -50,6 +59,25 @@ export default class UpsertCategoryGeneral extends Component {
   );
 
   #previousPermissions = null;
+
+  constructor() {
+    super(...arguments);
+    this.categoryTypes = [...this.categoryTypeChooser.allTypes].map((type) => ({
+      ...type,
+      preventRemoval: type.id === DISCUSSION_TYPE_ID,
+    }));
+  }
+
+  @bind
+  mapCategoryTypeIdsToTypes(ids) {
+    if (!ids?.length) {
+      return [];
+    }
+
+    return ids
+      .map((id) => this.categoryTypes.find((type) => type.id === id))
+      .filter(Boolean);
+  }
 
   @action
   registerDescriptionListener() {
@@ -335,8 +363,46 @@ export default class UpsertCategoryGeneral extends Component {
     );
   }
 
-  get #isEditingExistingCategory() {
-    return Boolean(this.args.category.id);
+  get isEditingExistingCategory() {
+    return this.args.category.id != null;
+  }
+
+  @bind
+  async loadTypes(term) {
+    return this.categoryTypes.filter((type) => {
+      if (type.id === DISCUSSION_TYPE_ID) {
+        return false;
+      }
+
+      return type.name.toLowerCase().includes(term.toLowerCase());
+    });
+  }
+
+  @action
+  async onChangeCategoryTypes(field, newSelectedTypes) {
+    const nextTypes = [...newSelectedTypes];
+
+    const previousTypes = this.mapCategoryTypeIdsToTypes(field.value);
+
+    const allowed = await runOnBeforeCategoryTypesChange({
+      nextTypes,
+      previousTypes,
+      category: this.args.category,
+      form: this.args.form,
+      transientData: this.args.transientData,
+    });
+
+    if (!allowed) {
+      this.typeSelectorDMenuApi?.close();
+      return;
+    }
+
+    field.set(nextTypes.map((type) => type.id));
+  }
+
+  @action
+  onRegisterTypeSelectorDMenuApi(api) {
+    this.typeSelectorDMenuApi = api;
   }
 
   #parentPermissionsAllowEveryone(parentPermissions) {
@@ -353,7 +419,7 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   #shouldRetainPermissionsForParent(parentPermissions) {
-    if (!this.#isEditingExistingCategory) {
+    if (!this.isEditingExistingCategory) {
       return false;
     }
 
@@ -371,7 +437,7 @@ export default class UpsertCategoryGeneral extends Component {
   async onParentCategoryChange(parentCategoryId) {
     if (!parentCategoryId) {
       this.args.form.set("visibility", null);
-      if (!this.#isEditingExistingCategory) {
+      if (!this.isEditingExistingCategory) {
         this.#setFormPermissions([this.#everyoneFullPermission]);
       }
       return;
@@ -523,6 +589,62 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   <template>
+    {{#if this.isEditingExistingCategory}}
+      <@form.Field
+        @name="category_types"
+        @title={{i18n "category.category_types"}}
+        @format="max"
+        @type="custom"
+        as |field|
+      >
+        <field.Control>
+          <DMultiSelect
+            id={{field.id}}
+            @loadFn={{this.loadTypes}}
+            @onChange={{fn this.onChangeCategoryTypes field}}
+            @selection={{this.mapCategoryTypeIdsToTypes field.value}}
+            @onRegisterDMenuApi={{this.onRegisterTypeSelectorDMenuApi}}
+            @contentClass="category-type-selector__content"
+            @noResultsLabel={{i18n "category.category_types_no_results"}}
+            class="category-type-selector"
+          >
+            <:result as |type|>
+              <div
+                class={{concatClass
+                  "category-type-selector__result"
+                  (unless type.available "--unavailable")
+                  (concat "--category-type-" type.id)
+                }}
+              >
+                <div class="category-type-selector__name">
+                  <span class="category-type-selector__icon">
+                    {{emoji type.icon}}
+                  </span>
+
+                  {{type.name}}
+
+                  {{#unless type.available}}
+                    <span class="category-type-selector__result-badge">
+                      <PluginOutlet
+                        @name="category-type-selector-result-badge"
+                        @outletArgs={{lazyHash type=type}}
+                      />
+                    </span>
+                  {{/unless}}
+                </div>
+                <div class="category-type-selector__description">
+                  {{type.description}}
+                </div>
+              </div>
+            </:result>
+            <:selection as |type|>
+              {{type.name}}
+            </:selection>
+          </DMultiSelect>
+        </field.Control>
+      </@form.Field>
+    {{/if}}
+
     <@form.Section
       class={{concatClass
         "edit-category-tab"

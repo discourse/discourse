@@ -19,8 +19,6 @@ sv:
         react_with: "Reagera på det här inlägget med: %{reaction}"
         cant_remove_reaction: "Du kan inte längre ta bort din reaktion"
         remove_reaction: "Ta bort denna %{reaction}-reaktion"
-      users_popup:
-        all: "Alla"
       main_reaction:
         add: "Gilla detta inlägg"
         remove: "Ta bort denna gillning"

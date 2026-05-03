@@ -68,6 +68,17 @@ RSpec.describe UserSilencer do
       expect(old_post.topic).to be_visible
     end
 
+    it "links the staff action log to the reviewable when passed via opts" do
+      reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
+
+      expect { UserSilencer.silence(user, admin, reviewable_id: reviewable.id) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:silence_user],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
+    end
+
     context "with a plugin hook" do
       before do
         @override_silence_message = ->(opts) do

@@ -6,10 +6,6 @@
 
 he:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "דפדפן נתונים"
     errors:
       explorer:
         no_semicolons: "הסרת הנקודה פסיק מהשאילתה."
@@ -23,9 +19,6 @@ he:
       create: "יצירה"
       create_placeholder: "שם השאילתה…"
       description_placeholder: "יש להקליד תיאור כאן"
-      ai:
-        generate: "ייצר"
-        optional: "רשות"
       import:
         label: "ייבוא"
         unparseable_json: "קובץ JSON שאינו ניתן לפענוח."

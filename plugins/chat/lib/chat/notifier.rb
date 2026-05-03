@@ -61,6 +61,12 @@ module Chat
             }.compact,
           }
         end
+      rescue => e
+        # Never let a quick-reply payload failure abort the notify job —
+        # the job creates DB notifications before sending alerts, and a
+        # Sidekiq retry would re-create them.
+        Discourse.warn_exception(e, message: "Failed to build chat push notification reply action")
+        {}
       end
 
       def notify_edit(chat_message:, timestamp:)

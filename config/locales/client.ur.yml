@@ -3374,17 +3374,9 @@ ur:
         archive_messages: "آرکائیو میں منتقل"
         change_notification_level: "نوٹیفیکیشن لیول تبدیل کریں"
         choose_new_category: "موضوعات کیلئے نئے زمرہ کا انتخاب کریں:"
-        selected_sole_category:
-          one: "آپ نے زمرہ سے <b>%{count}</b> موضوع منتخب کیا ہے:"
-          other: "آپ نے زمرہ سے <b>%{count}</b> موضوعات کا انتخاب کیا ہے:"
         selected_count:
           one: "%{count} کا انتخاب"
           other: "%{count} کا انتخاب"
-        choose_new_tags: "ان موضوعات کیلئے نئے ٹیگز کا انتخاب کریں:"
-        changed_tags: "ان موضوعات کے ٹیگز تبدیل کر دیے گئے تھے۔"
-        confirm_remove_tags:
-          one: "اس موضوع سے تمام دھجیاں ہٹا دی جائیں گی۔ کیا آپ کو یقین ہے؟"
-          other: "تمام دھجیوں کو %{count} موضوعات سے ہٹا دیا جائے گا۔ کیا آپ کو یقین ہے؟"
         progress:
           one: "پیش رفت: <strong>%{count}</strong> موضوع"
           other: "پیش رفت: <strong>%{count}</strong> موضوعات"
@@ -3427,10 +3419,6 @@ ur:
         name: "غیر فہرست"
       relist_topics:
         name: "دوبارہ لگانا"
-      remove_tags:
-        name: "دھجیاں ہٹائیں"
-      replace_tags:
-        name: "ٹیگز بدلیں"
       delete_topics:
         name: "مٹائیں"
       update_category:
@@ -3459,6 +3447,7 @@ ur:
       collapse: "بند کریں"
       no_replies: "ابھی تک کوئی جوابات نہیں۔"
       deleted_post_placeholder: "[مٹائیں]"
+      ignored_post_placeholder: "[نظر انداز کردہ]"
       pinned_reply: "پِن ہوا"
     topic:
       filter_to:
@@ -4356,7 +4345,7 @@ ur:
           low: "کم"
           high: "زیادہ"
       sort_options:
-        default: "پہلے سے طے شدہ"
+        default: "ڈِیفالٹ"
         likes: "پسندیدگیاں"
         views: "مشاهدات"
         posts: "دھاگے"
@@ -6941,6 +6930,7 @@ ur:
         topic_id: "ٹاپک ID"
         post_id: "پوسٹ ID"
         category_id: "زمرہ ID"
+        reviewable_id: "جائزہ لیں"
         delete: "حذف کریں"
         edit: "ترمیم کریں"
         save: "محفوظ کریں"

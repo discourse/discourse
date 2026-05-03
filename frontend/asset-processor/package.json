@@ -36,7 +36,7 @@
     "postcss-nesting": "^14.0.0",
     "readable-stream": "^4.7.0",
     "source-map-js": "^1.2.1",
-    "terser": "^5.46.1"
+    "terser": "^5.46.2"
   },
   "engines": {
     "node": ">= 20",

@@ -7,8 +7,6 @@
 et:
   js:
     discourse_reactions:
-      users_popup:
-        all: "Kõik"
       main_reaction:
         add: "Laigi seda postitust"
     notifications:

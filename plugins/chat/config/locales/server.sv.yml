@@ -195,6 +195,9 @@ sv:
         other_type: "%{username} nämnde %{identifier} i personlig chatt"
       new_chat_message: '%{username} skickade ett meddelande i "%{channel}"'
       new_direct_chat_message: "%{username} skickade ett meddelande i personlig chatt"
+    actions:
+      chat_reply:
+        title: Svara
   discourse_automation:
     scriptables:
       send_chat_message:

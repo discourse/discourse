@@ -27,9 +27,6 @@ zh_CN:
       anonymous_button:
         other: "投票"
       remove_vote: "移除投票"
-      and_more_voters: "还有 %{count} 个…"
-      show_voters: "显示投票人"
-      vote_count_thousands: "%{count}k"
       no_votes_title_self: "您还没有为任何话题投票"
       no_votes_title_others: "%{username} 还没有为任何话题投票"
     filters:

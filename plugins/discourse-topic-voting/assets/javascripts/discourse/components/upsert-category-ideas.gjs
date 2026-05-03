@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import EditCategoryTypeSchemaFields from "discourse/components/edit-category-type-schema-fields";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
@@ -53,20 +52,7 @@ export default class UpsertCategoryIdeas extends Component {
         @category={{@category}}
         @categoryType="ideas"
         @form={{@form}}
-      >
-        <:beforeSiteSettings>
-          {{#if @category.id}}
-            <div class="ideas-category--danger-zone">
-              <DButton
-                class="btn-small ideas-category__remove-type"
-                @action={{this.removeIdeasCategory}}
-                @icon="link-slash"
-                @label="topic_voting.category_type_ideas.remove_ideas_type"
-              />
-            </div>
-          {{/if}}
-        </:beforeSiteSettings>
-      </EditCategoryTypeSchemaFields>
+      />
     {{else}}
       {{i18n "topic_voting.category_type_ideas.not_ideas_type"}}
     {{/if}}

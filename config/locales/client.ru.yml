@@ -3789,27 +3789,11 @@ ru:
         notification_level: "Уведомления об обновлении"
         change_notification_level: "Изменить уровень уведомлений"
         choose_new_category: "Выберите новую категорию для этих тем:"
-        selected_sole_category:
-          one: "Вы выбрали <b>%{count}</b> тему из этой категории:"
-          few: "Вы выбрали <b>%{count}</b> темы из этой категории:"
-          many: "Вы выбрали <b>%{count}</b> тем из этой категории:"
-          other: "Вы выбрали <b>%{count}</b> темы из этой категории:"
         selected_count:
           one: "Выбрано %{count}"
           few: "Выбрано %{count}"
           many: "Выбрано %{count}"
           other: "Выбрано %{count}"
-        change_tags: "Заменить теги"
-        append_tags: "Добавить теги"
-        choose_new_tags: "Выберите новые теги для этих тем:"
-        choose_append_tags: "Добавить теги"
-        changed_tags: "Теги этих тем изменены."
-        remove_tags: "Удалить теги"
-        confirm_remove_tags:
-          one: "Все теги будут удалены из этой темы. Продолжить?"
-          few: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
-          many: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
-          other: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
         progress:
           one: "Выполнено: <strong>%{count}</strong> тема"
           few: "Выполнено: <strong>%{count}</strong> темы"
@@ -3861,15 +3845,13 @@ ru:
         description: "Темы, не указанные в списке, скрыты, но к ним по-прежнему можно получить доступ по прямой ссылке. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Узнать больше</a>"
       relist_topics:
         name: "Показать повторно"
-      remove_tags:
-        name: "Удалить теги"
-        description: "Удалите все теги из выбранных тем."
-      append_tags:
-        name: "Добавить теги"
-        description: "Добавьте следующие теги к выбранным темам:"
-      replace_tags:
-        name: "Заменить теги"
-        description: "Замените все существующие теги для выбранных тем следующими:"
+      manage_tags:
+        add:
+          title: "Добавить теги"
+        remove:
+          title: "Удалить теги"
+        replace:
+          title: "Заменить теги"
       delete_topics:
         name: "Удалить"
         description: "Удалить выбранные темы безвозвратно. Это действие необратимо."
@@ -3906,6 +3888,7 @@ ru:
       collapse: "Свернуть"
       no_replies: "Ответов пока нет."
       deleted_post_placeholder: "[удалённые]"
+      ignored_post_placeholder: "[игнорировать]"
       pinned_reply: "Закреплена"
     topic:
       filter_to:
@@ -4967,7 +4950,7 @@ ru:
           high: "Высокий"
           very_high: "Очень высокий"
       sort_options:
-        default: "по умолчанию"
+        default: "Домашнюю страницу"
         likes: "Количество лайков"
         views: "Количество просмотров"
         posts: "Количество сообщений"
@@ -7972,6 +7955,7 @@ ru:
         topic_id: "ID темы"
         post_id: "ID сообщения"
         category_id: "ID категории"
+        reviewable_id: "Очередь проверки"
         delete: "Удалить"
         edit: "Изменить"
         save: "Сохранить"

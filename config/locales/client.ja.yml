@@ -3195,16 +3195,8 @@ ja:
         archive_messages: "アーカイブに移動"
         change_notification_level: "通知レベルを変更"
         choose_new_category: "このトピックの新しいカテゴリを選択:"
-        selected_sole_category:
-          other: "カテゴリから <b>%{count} 件</b>のトピックを選択しました:"
         selected_count:
           other: "%{count} 個選択済み"
-        append_tags: "タグを追加"
-        choose_new_tags: "これらのトピックに新しいタグを選択:"
-        choose_append_tags: "タグを追加"
-        changed_tags: "トピックのタグが変更されました。"
-        confirm_remove_tags:
-          other: "<b>%{count}</b> 件のトピックからすべてのタグが削除されます。よろしいですか？"
         progress:
           other: "進捗状況: <strong>%{count}</strong> 件のトピック"
         performing: "一括操作を実行中です。お待ちください…"
@@ -3245,10 +3237,9 @@ ja:
         name: "掲載取消"
       relist_topics:
         name: "再掲載"
-      remove_tags:
-        name: "タグを削除"
-      replace_tags:
-        name: "タグを置換"
+      manage_tags:
+        add:
+          title: "タグを追加"
       delete_topics:
         name: "削除"
       update_category:
@@ -3275,6 +3266,7 @@ ja:
       collapse: "折りたたむ"
       no_replies: "まだ返信はありません。"
       deleted_post_placeholder: "[削除済み]"
+      ignored_post_placeholder: "[無視]"
       pinned_reply: "固定"
     topic:
       filter_to:
@@ -6986,6 +6978,7 @@ ja:
         topic_id: "トピック ID"
         post_id: "投稿 ID"
         category_id: "カテゴリ ID"
+        reviewable_id: "レビュー"
         delete: "削除"
         edit: "編集"
         save: "保存"

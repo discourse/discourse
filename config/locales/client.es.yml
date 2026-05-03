@@ -3516,21 +3516,9 @@ es:
         notification_level: "Actualizar notificaciones"
         change_notification_level: "Cambiar nivel de notificación"
         choose_new_category: "Elige la nueva categoría de los temas:"
-        selected_sole_category:
-          one: "Has seleccionado <b>%{count}</b> tema de la categoría:"
-          other: "Has seleccionado <b>%{count}</b> temas de la categoría:"
         selected_count:
           one: "%{count} seleccionado"
           other: "%{count} seleccionados"
-        change_tags: "Reemplazar etiquetas"
-        append_tags: "Añadir etiquetas"
-        choose_new_tags: "Elige etiquetas nuevas para estos temas:"
-        choose_append_tags: "Añadir etiquetas"
-        changed_tags: "Se han cambiado las etiquetas de esos temas."
-        remove_tags: "Eliminar etiquetas"
-        confirm_remove_tags:
-          one: "Todas las etiquetas se eliminarán de este tema. ¿Estás seguro/a?"
-          other: "Todas las etiquetas se eliminarán de <b>%{count}</b> temas. ¿Estás seguro/a?"
         confirm_unpin_topics:
           one: "Desanclar %{count} tema"
           other: "Desanclar %{count} temas"
@@ -3614,15 +3602,13 @@ es:
         description: "Los temas no listados están ocultos en la lista de temas, pero aún se puede acceder a ellos mediante un enlace directo. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Más información</a>."
       relist_topics:
         name: "Volver a publicar"
-      remove_tags:
-        name: "Eliminar etiquetas"
-        description: "Elimina todas las etiquetas de los temas seleccionados."
-      append_tags:
-        name: "Añadir etiquetas"
-        description: "Añade las siguientes etiquetas a los temas seleccionados:"
-      replace_tags:
-        name: "Remplazar etiquetas"
-        description: "Sustituye todas las etiquetas existentes en los temas seleccionados por lo siguiente:"
+      manage_tags:
+        add:
+          title: "Añadir etiquetas"
+        remove:
+          title: "Eliminar etiquetas"
+        replace:
+          title: "Reemplazar etiquetas"
       delete_topics:
         name: "Eliminar"
         description: "Elimina permanentemente los temas seleccionados. Esta acción no se puede deshacer."
@@ -3660,6 +3646,7 @@ es:
       collapse: "Contraer"
       no_replies: "No hay respuestas aún."
       deleted_post_placeholder: "[eliminado]"
+      ignored_post_placeholder: "[ignorados]"
       pinned_reply: "Anclado"
     topic:
       filter_to:
@@ -4652,7 +4639,7 @@ es:
           high: "Alta"
           very_high: "Muy alta"
       sort_options:
-        default: "por defecto"
+        default: "Por defecto"
         likes: "Me gusta"
         op_likes: "Me gusta en la primera publicación"
         views: "Vistas"
@@ -7589,6 +7576,7 @@ es:
         topic_id: "ID del tema"
         post_id: "ID de la publicación"
         category_id: "ID de la categoría"
+        reviewable_id: "Revisión"
         delete: "Eliminar"
         edit: "Editar"
         save: "Guardar"

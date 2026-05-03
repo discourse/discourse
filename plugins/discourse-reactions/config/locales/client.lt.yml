@@ -9,8 +9,6 @@ lt:
     discourse_reactions:
       state_panel:
         more_users: "ir %{count} daugiau..."
-      users_popup:
-        all: "Visi"
       main_reaction:
         add: "Mėgti šį įrašą"
     notifications:

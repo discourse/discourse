@@ -329,9 +329,6 @@ he:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "הנוכחות שלך הוגדרה על ידי %{username} שגם הזמין או הזמינה אותך אל %{eventName}"
         an_event: "אירוע"
-      event_description:
-        show_more: "להציג יותר"
-        show_less: "להציג פחות"
       edit_reason: "האירוע עודכן"
       edit_reason_closed: "אירוע נסגר"
       edit_reason_opened: "אירוע נפתח"

@@ -2937,17 +2937,9 @@ sq:
         archive_messages: "Kaloni te Arkivi"
         change_notification_level: "Ndrysho nivelin e njoftimit"
         choose_new_category: "Zgjidhni kategorinë e re për temat: "
-        selected_sole_category:
-          one: "Keni zgjedhur <b>%{count}</b> temë:"
-          other: "Keni zgjedhur <b>%{count}</b> tema:"
         selected_count:
           one: "%{count} zgjedhur"
           other: "%{count} zgjedhur"
-        choose_new_tags: "Zgjidh etiketa të reja për këto tema:"
-        changed_tags: "Etiketat e temave u ndryshuan. "
-        confirm_remove_tags:
-          one: "Të gjitha etiketat do të hiqen nga kjo temë. A jeni të sigurt?"
-          other: "Të gjitha etiketat do të hiqen nga temat %{count} . A jeni të sigurt?"
         progress:
           one: "Progresi: <strong>%{count}</strong> temë"
           other: "Progresi: <strong>%{count}</strong> tema"
@@ -2984,10 +2976,6 @@ sq:
         name: "Çlistimi"
       relist_topics:
         name: "Relistoni"
-      remove_tags:
-        name: "Hiqni etiketat"
-      replace_tags:
-        name: "Zëvendësoni etiketat"
       delete_topics:
         name: "Fshij"
       update_category:
@@ -3015,6 +3003,7 @@ sq:
         other: "%{count} përgjigje"
       collapse: "Zvogëloni"
       no_replies: "Nuk ka ende përgjigje."
+      ignored_post_placeholder: "[injoruar]"
       pinned_reply: "E përzgjedhur"
     topic:
       filter_to:
@@ -3543,7 +3532,7 @@ sq:
         options:
           normal: "Normal"
       sort_options:
-        default: "paracaktuar"
+        default: "Paracaktuar"
         likes: "Pëlqime"
         views: "Shikimet"
         posts: "Postime"
@@ -4522,6 +4511,7 @@ sq:
         topic_id: "ID e temës"
         post_id: "ID e postimit"
         category_id: "ID e kategorisë"
+        reviewable_id: "Shqyrtuar"
         delete: "Fshij"
         edit: "Redakto"
         save: "Ruaj"

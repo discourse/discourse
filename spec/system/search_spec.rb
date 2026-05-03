@@ -255,13 +255,10 @@ describe "Search" do
       find(".search-info .bulk-select").click
       find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .bulk-select input").click
       find(".search-info .bulk-select-topics-dropdown-trigger").click
-      find(".bulk-select-topics-dropdown-content .append-tags").click
-      expect(topic_bulk_actions_modal).to be_open
-      tag_selector = PageObjects::Components::SelectKit.new(".tag-chooser")
-      tag_selector.search(tag1.name)
-      tag_selector.select_row_by_name(tag1.name)
-      tag_selector.collapse
-      topic_bulk_actions_modal.click_bulk_topics_confirm
+      PageObjects::Components::TopicListHeader.new.click_bulk_button("manage-tags")
+      manage_tags_modal = PageObjects::Modals::ManageTags.new
+      manage_tags_modal.add_tags(tag1.name)
+      manage_tags_modal.click_confirm
       expect(
         find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
       ).to have_content(tag1.name)

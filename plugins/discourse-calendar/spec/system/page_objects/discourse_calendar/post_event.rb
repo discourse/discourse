@@ -7,22 +7,20 @@ module PageObjects
         TRIGGER_MENU_SELECTOR = ".discourse-post-event-more-menu-trigger"
 
         def open_more_menu
-          # post-event component re-renders on a post re-cook and message_bus
-          # events, so we need to retry on stale refs (hence `synchronize`)
-          page.document.synchronize { find("#{TRIGGER_MENU_SELECTOR}:not(.--saving)").click }
-
-          has_css?(".discourse-post-event-more-menu-content")
+          try_until_success do
+            locator("#{TRIGGER_MENU_SELECTOR}:not(.--saving)").click
+            yield if block_given?
+          end
           self
         end
 
         def going
-          page.document.synchronize { find(".going-button").click }
+          locator(".going-button").click
           self
         end
 
         def open_bulk_invite_modal
-          open_more_menu
-          find(".dropdown-menu__item.bulk-invite").click
+          open_more_menu { locator(".dropdown-menu__item.bulk-invite").click }
           self
         end
 
@@ -47,7 +45,7 @@ module PageObjects
         end
 
         def click_description_toggle
-          find(".event-description__toggle").click
+          locator(".event-description__toggle").click
           self
         end
 
@@ -61,9 +59,8 @@ module PageObjects
 
         def close
           has_css?(".discourse-post-event .status-and-creators .status:not(.closed)")
-          open_more_menu
-          find(".close-event").click
-          find("#dialog-holder .btn-primary").click
+          open_more_menu { locator(".close-event").click }
+          locator("#dialog-holder .btn-primary").click
           has_css?(".discourse-post-event .status-and-creators .status.closed")
           has_no_css?("#{TRIGGER_MENU_SELECTOR}.--saving")
           self
@@ -71,23 +68,20 @@ module PageObjects
 
         def open
           has_css?(".discourse-post-event .status-and-creators .status.closed")
-          open_more_menu
-          find(".open-event").click
-          find("#dialog-holder .btn-primary").click
+          open_more_menu { locator(".open-event").click }
+          locator("#dialog-holder .btn-primary").click
           has_css?(".discourse-post-event .status-and-creators .status:not(.closed)")
           has_no_css?("#{TRIGGER_MENU_SELECTOR}.--saving")
           self
         end
 
         def add_to_calendar
-          open_more_menu
-          find(".add-to-calendar .btn").click
+          open_more_menu { locator(".add-to-calendar .btn").click }
           self
         end
 
         def edit
-          open_more_menu
-          find(".edit-event").click
+          open_more_menu { locator(".edit-event").click }
         end
       end
     end

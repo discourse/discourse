@@ -16,9 +16,6 @@ vi:
     topic_voting_show_votes_on_profile: 'Cho phép người dùng xem phiếu bình chọn của họ trong luồng hoạt động của họ?'
     topic_voting_alert_votes_left: 'Thông báo cho người dùng khi số phiếu bình chọn còn lại'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Hiện người đã bình chọn"
     votes_moved:
       other: "%{count} phiếu bình chọn đã được chuyển."
     duplicated_votes:

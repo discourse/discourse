@@ -896,10 +896,8 @@ tr_TR:
       quota_required: "Bu model için maksimum token veya kullanımları belirtmelisiniz"
       no_query_specified: Sorgu parametresi gerekli, lütfen belirtin.
       no_user_for_agent: Belirtilen ajanın ilişkili bir kullanıcısı yok.
-      agent_not_found: "Belirtilen aracı mevcut değil. agent_name veya agent_id parametrelerini kontrol edin (eski sürüm: agent_name veya agent_id)."
       no_user_specified: Kullanıcı adı veya user_unique_id parametresi gerekli, lütfen belirtin.
       user_not_found: Belirtilen kullanıcı mevcut değil. Kullanıcı adı parametresini kontrol edin.
-      agent_disabled: "Belirtilen aracı devre dışı bırakılmıştır. agent_name veya agent_id parametrelerini kontrol edin (eski sürüm: agent_name veya agent_id)."
       no_default_llm: Ajanın bir default_llm tanımı olması gerekir.
       user_not_allowed: Kullanıcının konuya katılmasına izin verilmiyor.
       invalid_stream_resume_token: resume_token geçersiz veya süresi dolmuş.

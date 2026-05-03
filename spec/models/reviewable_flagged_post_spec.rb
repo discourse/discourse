@@ -334,6 +334,30 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(nested_reply.reload.deleted_at).to be_present
     end
 
+    it "delete_and_ignore_replies links the staff action log to the reviewable" do
+      create_reply(post)
+      post.reload
+
+      expect { reviewable.perform(moderator, :delete_and_ignore_replies) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:delete_topic],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
+    end
+
+    it "delete_and_agree_replies links the staff action log to the reviewable" do
+      create_reply(post)
+      post.reload
+
+      expect { reviewable.perform(moderator, :delete_and_agree_replies) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:delete_topic],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
+    end
+
     it "disagrees with the flags" do
       reviewable.perform(moderator, :disagree)
       expect(reviewable).to be_rejected

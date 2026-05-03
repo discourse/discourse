@@ -2356,6 +2356,15 @@ RSpec.describe TopicQuery do
         )
       end
     end
+    fab!(:second_watched_tag) do
+      Fabricate(:tag).tap do |tag|
+        TagUser.create!(
+          user: user,
+          tag: tag,
+          notification_level: TagUser.notification_levels[:watching],
+        )
+      end
+    end
     fab!(:muted_tag) do
       Fabricate(:tag).tap do |tag|
         TagUser.create!(
@@ -2385,6 +2394,18 @@ RSpec.describe TopicQuery do
           topic_in_watched_category_and_muted_tag.id,
           topic_in_muted_category_and_watched_tag.id,
         )
+      end
+
+      it "does not return fewer topics when multiple watched tags match the same topic" do
+        user.user_option.update!(watched_precedence_over_muted: true)
+        topics_with_multiple_watched_tags =
+          4.times.map do
+            Fabricate(:topic, category: muted_category, tags: [watched_tag, second_watched_tag])
+          end
+
+        query = TopicQuery.new(user, per_page: 4).list_latest
+
+        expect(query.topics.map(&:id)).to eq(topics_with_multiple_watched_tags.reverse.map(&:id))
       end
     end
 

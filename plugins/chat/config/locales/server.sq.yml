@@ -188,6 +188,9 @@ sq:
         direct: "%{username} ju përmendi në bisedë private"
       new_chat_message: '%{username} dërgoi një mesazh në "%{channel}"'
       new_direct_chat_message: "%{username} dërgoi një mesazh në bisedën personale."
+    actions:
+      chat_reply:
+        title: Përgjigju
   discourse_automation:
     scriptables:
       send_chat_message:

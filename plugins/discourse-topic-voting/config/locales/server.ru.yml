@@ -17,9 +17,6 @@ ru:
     topic_voting_show_votes_on_profile: 'Разрешить пользователям видеть свои голоса в ленте активности?'
     topic_voting_alert_votes_left: 'Предупреждать пользователя, когда осталось мало голосов'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Показывать проголосовавших (не отмечайте, если голосование анонимное)"
     votes_moved:
       one: "%{count} голос был перемещен."
       few: "%{count} голоса было перемещено."

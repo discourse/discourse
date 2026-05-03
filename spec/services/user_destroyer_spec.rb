@@ -157,6 +157,17 @@ RSpec.describe UserDestroyer do
 
         expect(reviewable.reload).to be_rejected
       end
+
+      it "links the staff action log to the reviewable when passed via opts" do
+        expect {
+          UserDestroyer.new(admin).destroy(reviewable.target, reviewable_id: reviewable.id)
+        }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:delete_user],
+            reviewable_id: reviewable.id,
+          ).count
+        }.by(1)
+      end
     end
 
     context "with a directory item record" do

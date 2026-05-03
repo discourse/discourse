@@ -291,6 +291,7 @@ en:
       last_item: "and"
 
     action_codes:
+      topic_created: "Created this topic %{when}"
       public_topic: "Made this topic public %{when}"
       open_topic: "Converted this to a topic %{when}"
       private_topic: "Made this topic a personal message %{when}"
@@ -376,6 +377,7 @@ en:
     broken_transformer_alert: "There was an error. Your site may not work properly."
     broken_block_alert: "A block configuration error was detected. Check browser console for details."
     broken_block_factory_alert: "A block failed to load. Some UI elements may not display correctly."
+    on_before_category_types_change_error: "An error occurred while changing the category types. Check the browser console for more information."
 
     critical_deprecation:
       notice: "<b>[Admin Notice]</b> %{source} contains code which needs updating. (id:%{id})"
@@ -3791,27 +3793,19 @@ en:
         notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
-        selected_sole_category:
-          one: "You have selected <b>%{count}</b> topic from category:"
-          other: "You have selected <b>%{count}</b> topics from category:"
         selected_count:
           one: "%{count} selected"
           other: "%{count} selected"
-        change_tags: "Replace tags"
-        append_tags: "Add tags"
-        choose_new_tags: "Choose new tags for these topics:"
-        choose_append_tags: "Add tags"
-        changed_tags: "The tags of those topics were changed."
-        remove_tags: "Remove tags"
-        confirm_remove_tags:
-          one: "All tags will be removed from this topic. Are you sure?"
-          other: "All tags will be removed from %{count} topics. Are you sure?"
+        manage_tags: "Manage tags"
         confirm_unpin_topics:
           one: "Un-pin %{count} topic"
           other: "Un-pin %{count} topics"
         confirm_update_topics:
           one: "Update %{count} topic"
           other: "Update %{count} topics"
+        confirm_apply_to_topics:
+          one: "Apply to %{count} topic"
+          other: "Apply to %{count} topics"
         confirm_close_topics:
           one: "Close %{count} topic"
           other: "Close %{count} topics"
@@ -3891,15 +3885,25 @@ en:
         description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
       relist_topics:
         name: "Relist"
-      remove_tags:
-        name: "Remove Tags"
-        description: "Remove all tags from the selected topics."
-      append_tags:
-        name: "Add Tags"
-        description: "Add the following tags to the selected topics:"
-      replace_tags:
-        name: "Replace Tags"
-        description: "Replace all existing tags on the selected topics with the following:"
+      manage_tags:
+        name: "Manage tags"
+        add:
+          title: "Add tags"
+          description: "Added to all selected topics"
+        remove:
+          title: "Remove tags"
+          description: "Removed whenever present"
+          all_toggle: "Remove all tags"
+          all_warning: "<strong>All existing tags</strong> will be removed from the selected topics. This cannot be undone."
+        replace:
+          title: "Replace tags"
+          description: "Swaps one tag for another"
+          add_replacement: "Add replacement"
+          remove_replacement: "Remove replacement"
+          from_placeholder: "Tag to replace"
+          to_placeholder: "Replacement tag"
+          missing_from: "A source tag is required"
+          missing_to: "A replacement tag is required"
       delete_topics:
         name: "Delete"
         description: "Permanently delete the selected topics. This action cannot be undone."
@@ -3962,6 +3966,10 @@ en:
       topic_admin_menu:
         enable_nested_replies: "Enable nested replies"
         disable_nested_replies: "Disable nested replies"
+      activity_log:
+        link: "Activity log"
+        title: "Topic activity log"
+        empty: "No topic activity to show."
       context:
         banner: "You are viewing a single thread from this topic."
         view_full_topic: "View full topic"
@@ -4926,6 +4934,8 @@ en:
       color_used: "Color in use"
       predefined_colors: "Predefined color options"
       name_placeholder: "One or two words recommended"
+      category_types: "Category types"
+      category_types_no_results: "No other category types found"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
@@ -8088,6 +8098,7 @@ en:
         topic_id: "Topic ID"
         post_id: "Post ID"
         category_id: "Category ID"
+        reviewable_id: "Review"
         delete: "Delete"
         edit: "Edit"
         save: "Save"

@@ -19,7 +19,7 @@ describe "Simplified Category Creation" do
 
   describe "Selecting category type when setting up a new category" do
     it "automatically skips category type selection when only one type (discussion) is available" do
-      visit("/new-category/setup")
+      category_page.visit_new_category
       expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
       expect(page).to have_current_path("/new-category/general")
     end
@@ -249,6 +249,12 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".edit-category-description-container .readonly-field")
       expect(page).to have_content("Updated category description")
       expect(toasts).to have_success(I18n.t("js.category.description_updated"))
+    end
+
+    it "does not allow selecting other category types when creating a new category" do
+      category_page.visit_new_category
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+      expect(page).to have_no_css(".category-type-selector")
     end
   end
 

@@ -58,15 +58,13 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     await click(".bulk-select-topics-dropdown-trigger");
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item")
-      .exists({ count: 7 });
+      .exists({ count: 5 });
 
     [
       "update-notifications",
       "reset-bump-dates",
       "close-topics",
-      "append-tags",
-      "replace-tags",
-      "remove-tags",
+      "manage-tags",
       "delete-topics",
     ].forEach((action) => {
       assert
@@ -140,11 +138,9 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     );
 
     await click(".bulk-select-topics-dropdown-trigger");
-    ["append-tags", "replace-tags", "remove-tags"].forEach((action) => {
-      assert
-        .dom(`.fk-d-menu__inner-content .dropdown-menu__item .${action}`)
-        .doesNotExist();
-    });
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .manage-tags")
+      .doesNotExist();
   });
 
   test("does not allow tagging actions if user cannot manage topic", async function (assert) {
@@ -157,11 +153,9 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     );
 
     await click(".bulk-select-topics-dropdown-trigger");
-    ["append-tags", "replace-tags", "remove-tags"].forEach((action) => {
-      assert
-        .dom(`.fk-d-menu__inner-content .dropdown-menu__item .${action}`)
-        .doesNotExist();
-    });
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .manage-tags")
+      .doesNotExist();
   });
 
   test("does not allow deleting topics if user is not staff", async function (assert) {

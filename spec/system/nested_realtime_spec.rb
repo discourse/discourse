@@ -3,6 +3,7 @@
 RSpec.describe "Nested view real-time updates" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
   fab!(:root_reply) do
@@ -57,6 +58,27 @@ RSpec.describe "Nested view real-time updates" do
         text: "A child reply via message bus",
         wait: 10,
       )
+    end
+  end
+
+  describe "small_action posts" do
+    it "does not insert close/open small_actions into the tree" do
+      nested_view.visit_nested(topic)
+      expect(nested_view).to have_root_post(root_reply)
+
+      small_action = topic.add_small_action(admin, "closed.enabled")
+
+      # A real reply published right after — once it surfaces, the small_action's
+      # message bus event has already been delivered (same channel, in order),
+      # so we can safely assert it never landed in the tree.
+      new_reply =
+        PostCreator.create!(other_user, topic_id: topic.id, raw: "Real reply that must show")
+
+      expect(page).to have_css(".nested-view__new-replies-btn", wait: 10)
+      find(".nested-view__new-replies-btn").click
+
+      expect(nested_view).to have_root_post(new_reply)
+      expect(page).to have_no_css("[data-post-number='#{small_action.post_number}']")
     end
   end
 end

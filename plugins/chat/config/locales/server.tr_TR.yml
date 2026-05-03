@@ -21,6 +21,7 @@ tr_TR:
     chat_duplicate_message_sensitivity: "Aynı gönderen tarafından eş kopya bir mesajın kısa bir süre içinde engellenme olasılığı. 0 ila 1,0 arasında ondalık sayı, 1,0 en yüksek ayardır (mesajları daha kısa sürede daha sık engeller). Eş kopya mesajlara izin vermek için \"0\" olarak ayarlayın."
     chat_minimum_message_length: "Bir sohbet mesajı için minimum karakter sayısı."
     chat_allow_uploads: "Herkese açık sohbet kanallarında ve doğrudan mesaj kanallarında yüklemelere izin verin."
+    chat_show_copy_button_on_codeblocks: "Sohbet mesajlarındaki kod bloklarında kopyala düğmesini göster."
     chat_archive_destination_topic_status: "Kanal arşivi tamamlandıktan sonra hedef konunun olması gereken durum. Bu, yalnızca hedef konu mevcut bir konu değil, yeni bir konu olduğunda geçerlidir."
     direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
     chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir. Yöneticilerin ve moderatörlerin sohbet mesajlarını her zaman işaretleyebileceğini unutmayın."
@@ -232,6 +233,9 @@ tr_TR:
         other_type: "%{username} kişisel sohbette şundan bahsetti: %{identifier}"
       new_chat_message: '%{username} "%{channel}" adlı kanalda bir mesaj gönderdi'
       new_direct_chat_message: "%{username} kişisel sohbette bir mesaj gönderdi"
+    actions:
+      chat_reply:
+        title: Yanıtla
   discourse_automation:
     scriptables:
       send_chat_message:

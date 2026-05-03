@@ -29,9 +29,6 @@ bg:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      event_description:
-        show_more: "Покажи повече"
-        show_less: "Покажи по-малко"
       bulk_invite: "Групова покана"
       bulk_invite_modal:
         title: "Групова покана"
