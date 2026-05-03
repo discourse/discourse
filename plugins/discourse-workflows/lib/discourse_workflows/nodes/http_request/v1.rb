@@ -6,8 +6,6 @@ module DiscourseWorkflows
       class V1 < NodeType
         include HttpHelpers
 
-        FILTERED_HEADER_PATTERNS = [/key/i, /secret/i, /token/i, /authorization/i, /password/i]
-
         def self.identifier
           "action:http_request"
         end
@@ -183,10 +181,21 @@ module DiscourseWorkflows
         def log_request(log, method, uri, headers, body)
           log.info("#{method.to_s.upcase} #{uri}")
           if headers.present?
-            filtered = ActiveSupport::ParameterFilter.new(FILTERED_HEADER_PATTERNS).filter(headers)
+            filtered =
+              ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters).filter(
+                headers,
+              )
             filtered.each { |k, v| log.info("#{k}: #{v}") }
           end
-          log.info("[body omitted]") if body.present?
+          if body.is_a?(Hash)
+            filtered_body =
+              ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters).filter(
+                body,
+              )
+            log.info(filtered_body.to_json)
+          elsif body.present?
+            log.info("[body omitted]")
+          end
         end
 
         def request_options(config)
