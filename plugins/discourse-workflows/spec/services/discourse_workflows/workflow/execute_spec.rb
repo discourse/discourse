@@ -43,9 +43,11 @@ RSpec.describe DiscourseWorkflows::Workflow::Execute do
     context "when workflow_id is not provided" do
       let(:params) { { trigger_node_id: "trigger-1" } }
 
+      before { DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }
+
       it { is_expected.to run_successfully }
 
-      it "finds the workflow by scanning trigger nodes" do
+      it "finds the workflow via dependency index" do
         expect { result }.to change { DiscourseWorkflows::Execution.count }.by(1)
       end
     end

@@ -26,14 +26,14 @@ module DiscourseWorkflows
 
     def fetch_workflow(params:)
       if params.workflow_id.present?
-        DiscourseWorkflows::Workflow.find_by(id: params.workflow_id)
-      else
-        DiscourseWorkflows::Workflow.enabled.find_each do |w|
-          node = w.find_node(params.trigger_node_id)
-          return w if node
-        end
-        nil
+        return DiscourseWorkflows::Workflow.find_by(id: params.workflow_id)
       end
+
+      DiscourseWorkflows::Workflow
+        .enabled
+        .joins(:workflow_dependencies)
+        .where(discourse_workflows_workflow_dependencies: { node_id: params.trigger_node_id })
+        .first
     end
 
     def fetch_trigger_node(workflow:, params:)
