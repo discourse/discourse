@@ -260,6 +260,7 @@ module DiscourseWorkflows
         node_id: node.id.to_s,
         flow_context: @context.context,
         resolver_context: resolver_ctx,
+        workflow_dependencies: preloaded_workflow_dependencies,
       )
     end
 
@@ -411,6 +412,16 @@ module DiscourseWorkflows
 
     def preloaded_vars
       @preloaded_vars ||= DiscourseWorkflows::Variable.pluck(:key, :value).to_h
+    end
+
+    def preloaded_workflow_dependencies
+      @preloaded_workflow_dependencies ||=
+        DiscourseWorkflows::WorkflowDependency
+          .where(workflow: @workflow)
+          .pluck(:node_id, :dependency_type, :dependency_key)
+          .each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |(node_id, type, key), h|
+            h[node_id.to_s] << "#{type}:#{key}"
+          end
     end
 
     def sandbox_budget_tracker

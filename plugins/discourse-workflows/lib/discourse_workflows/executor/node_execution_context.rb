@@ -29,7 +29,8 @@ module DiscourseWorkflows
         resume_token: nil,
         node_id: nil,
         flow_context: nil,
-        resolver_context: nil
+        resolver_context: nil,
+        workflow_dependencies: nil
       )
         @input_items = input_items
         @configuration = configuration
@@ -50,6 +51,7 @@ module DiscourseWorkflows
         @log = StepLog.new
         @waiting = false
         @waiting_until = nil
+        @workflow_dependencies = workflow_dependencies
       end
 
       def get_context(scope = :flow)
@@ -168,12 +170,16 @@ module DiscourseWorkflows
       end
 
       def workflow_references_data_table?(data_table_id)
-        DiscourseWorkflows::WorkflowDependency.exists?(
-          workflow_id: @workflow.id,
-          node_id: @node_id,
-          dependency_type: "data_table_id",
-          dependency_key: data_table_id,
-        )
+        if @workflow_dependencies
+          @workflow_dependencies[@node_id].include?("data_table_id:#{data_table_id}")
+        else
+          DiscourseWorkflows::WorkflowDependency.exists?(
+            workflow_id: @workflow.id,
+            node_id: @node_id,
+            dependency_type: "data_table_id",
+            dependency_key: data_table_id,
+          )
+        end
       end
 
       def ensure_credential_access!(credential_id)
@@ -198,12 +204,16 @@ module DiscourseWorkflows
       end
 
       def workflow_references_credential?(credential_id)
-        DiscourseWorkflows::WorkflowDependency.exists?(
-          workflow_id: @workflow.id,
-          node_id: @node_id,
-          dependency_type: "credential_id",
-          dependency_key: credential_id,
-        )
+        if @workflow_dependencies
+          @workflow_dependencies[@node_id].include?("credential_id:#{credential_id}")
+        else
+          DiscourseWorkflows::WorkflowDependency.exists?(
+            workflow_id: @workflow.id,
+            node_id: @node_id,
+            dependency_type: "credential_id",
+            dependency_key: credential_id,
+          )
+        end
       end
 
       def sandbox_budget_tracker
