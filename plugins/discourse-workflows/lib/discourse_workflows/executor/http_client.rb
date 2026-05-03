@@ -58,9 +58,10 @@ module DiscourseWorkflows
       end
 
       def connection
-        Faraday.new(nil, request: request_options) do |f|
-          f.adapter FinalDestination::FaradayAdapter
-        end
+        @connection ||=
+          Faraday.new(nil, request: request_options) do |f|
+            f.adapter FinalDestination::FaradayAdapter
+          end
       end
 
       def request_options
