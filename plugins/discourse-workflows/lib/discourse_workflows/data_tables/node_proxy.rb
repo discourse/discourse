@@ -34,6 +34,14 @@ module DiscourseWorkflows
         @columns_resolver = Nodes::DataTable::ColumnsResolver.new(facade.data_table)
       end
 
+      def data_table
+        @facade.data_table
+      end
+
+      def facade
+        @facade
+      end
+
       def column_names
         @facade.data_table.columns.map { |c| c["name"] }
       end

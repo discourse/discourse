@@ -187,12 +187,17 @@ module DiscourseWorkflows
         private
 
         def execute_with_config(config, item, exec_ctx)
-          proxy = exec_ctx.data_table(config.fetch("data_table_id"))
+          node_proxy = exec_ctx.data_table(config.fetch("data_table_id"))
+          facade = node_proxy.facade
+          columns_resolver = ColumnsResolver.new(facade.data_table)
           operation_name = config.fetch("operation") { "insert" }
 
-          config = auto_mapped_config(config, item, proxy) if auto_mapping?(config, operation_name)
+          config = auto_mapped_config(config, item, node_proxy) if auto_mapping?(
+            config,
+            operation_name,
+          )
 
-          Operations.for(operation_name).new(proxy).execute(config)
+          Operations.for(operation_name).new(facade, columns_resolver).execute(config)
         end
 
         def auto_mapping?(config, operation_name)
