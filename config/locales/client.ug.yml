@@ -517,6 +517,10 @@ ug:
           other: "%{count} يىل ئىلگىرى قۇرۇلغان"
     bookmarked:
       title: "خەتكۈچ"
+      edit_bookmark:
+        one: "خەتكۈچ تەھرىر"
+        other: "خەتكۈچ تەھرىر"
+      delete_bookmarks: "ھەممە خەتكۈچنى ئۆچۈر"
       help:
         bookmark: "چېكىلسە بۇ تېمىنى خەتكۈچكە قوشىدۇ"
         edit_bookmark: "چېكىلسە بۇ تېمىدىكى يازمىنىڭ خەتكۈچىنى تەھرىرلەيدۇ"

@@ -2041,7 +2041,6 @@ da:
         Dit svar blev sendt fra en blokeret e-mail-adresse. Prøv at sende fra en anden e-mail-adresse, eller [kontakt en medarbejder](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-Mail Afvist Ikke Tilladt E-Mail"
-      subject_template: "[%{email_prefix}] E-mail problem -- Blokeret e-mail"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
@@ -2275,7 +2274,6 @@ da:
       text_body_template: "Indstillingen `download_remote_images_to_local` blev slået fra fordi grænsen for bug af diskplads i `download_remote_images_threshold` blev nået."
     new_user_of_the_month:
       title: "Du er månedens nye bruger!"
-      subject_template: "Du er månedens nye bruger!"
       text_body_template: |
         Tillykke, du har optjent **Månedens nye bruger for %{month_year}**. :trophy:
 
@@ -2552,6 +2550,7 @@ da:
     account_exists:
       title: "Konto findes allerede"
       subject_template: "[%{email_prefix}] Kontoen findes allerede"
+      subject_template_improved: "Konto findes allerede"
       text_body_template: |
         Du har lige prøvet at oprette en konto på %{site_name} eller prøvet at ændre e-mailen til en konto til %{email}. Der findes dog allerede en konto til %{email}.
 
@@ -2563,6 +2562,7 @@ da:
     account_second_factor_disabled:
       title: "To-Faktor godkendelse deaktiveret"
       subject_template: "[%{email_prefix}] To-Faktor godkendelse deaktiveret"
+      subject_template_improved: "To-Faktor godkendelse deaktiveret"
     digest:
       since_last_visit: "Siden dit sidste besøg"
       new_topics: "Nye Emner"
@@ -2574,6 +2574,7 @@ da:
       popular_posts: "Populære Indlæg"
       more_new: "Nyt for dig"
       subject_template: "[%{email_prefix}] Sammendrag"
+      subject_template_improved: "Statistik"
       your_email_settings: "dine e-mail-indstillinger"
       click_here: "klik her"
       from: "%{site_name}"
@@ -2591,6 +2592,7 @@ da:
       title: "Log ind via link"
       preview: "Log ind via link."
       subject_template: "[%{email_prefix}] Log ind via link"
+      subject_template_improved: "Log ind via link"
       text_body_template: |
         Her er dit link til at logge ind på [%{site_name}](%{base_url}).
 
@@ -2600,7 +2602,6 @@ da:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Angiv adgangskode"
-      subject_template: "[%{email_prefix}] Angiv adgangskode"
       text_body_template: |
         Nogen bad om at tilføje en adgangskode til din konto på [%{site_name}](%{base_url}). Alternativt kan du logge ind ved hjælp af enhver understøttet onlinetjeneste (Google, Facebook osv.), Der er knyttet til denne validerede e-mail-adresse.
 
@@ -2611,6 +2612,7 @@ da:
     admin_login:
       title: "Admin Login"
       subject_template: "[%{email_prefix}] Login"
+      subject_template_improved: "Brugernavn"
       text_body_template: |
         Nogen bad om at logge ind på din konto på [%{site_name}](%{base_url}).
 
@@ -2620,7 +2622,6 @@ da:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Konto Oprettet"
-      subject_template: "[%{email_prefix}] Din Nye Konto"
       text_body_template: |
         En ny konto blev oprettet til dig på %{site_name}
 

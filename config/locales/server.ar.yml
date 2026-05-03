@@ -3816,7 +3816,6 @@ ar:
         تم إرسال ردك من عنوان بريد إلكتروني محظور. جرِّب الإرسال من عنوان بريد إلكتروني آخر أو [تواصل مع أحد أعضاء فريق العمل](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "تم رفض الرسالة الإلكترونية لأن عنوان البريد الإلكتروني غير مسموح به"
-      subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - عنوان البريد الإلكتروني محظور"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3974,7 +3973,6 @@ ar:
         ليس لديك الأذونات اللازمة للرد على هذا الموضوع، إذا كنت تعتقد أن هذا خطأ، [فتواصل مع أحد أعضاء فريق العمل](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "تم رفض الرسالة الإلكترونية لأنه قد تم الرد على ملخص"
-      subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - تم الرد على ملخص"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -4122,7 +4120,6 @@ ar:
       text_body_template: "تم إيقاف الإعداد \"download_remote_images_to_local\" بسبب الوصول إلى حد مساحة القرص في \"download_remote_images_threshold\"."
     new_user_of_the_month:
       title: "أنت المستخدم الجديد لهذا الشهر!"
-      subject_template: "أنت المستخدم الجديد لهذا الشهر!"
       text_body_template: |
         تهانينا، لقد ربحت **جائزة المستخدم الجديد لهذا الشهر عن شهر %{month_year}**. :trophy:
 
@@ -4468,6 +4465,7 @@ ar:
     account_exists:
       title: "الحساب موجود بالفعل"
       subject_template: "[%{email_prefix}] الحساب موجود بالفعل"
+      subject_template_improved: "الحساب موجود بالفعل"
       text_body_template: |
         لقد حاولت للتو إنشاء حساب على %{site_name}، أو حاولت تغيير عنوان البريد الإلكتروني للحساب إلى %{email}، لكن هناك حسابًا موجودًا بالفعل بعنوان البريد الإلكتروني %{email}.
 
@@ -4479,6 +4477,7 @@ ar:
     account_second_factor_disabled:
       title: "تم إيقاف المصادقة الثنائية"
       subject_template: "[%{email_prefix}] تم إيقاف المصادقة الثنائية"
+      subject_template_improved: "تم إيقاف المصادقة الثنائية"
       text_body_template: |
         تم تعطيل المصادقة الثنائية على حسابك في %{site_name}. يمكنك الآن تسجيل الدخول باستخدام كلمة مرورك فقط؛ لم يعُد رمز المصادقة الإضافي مطلوبًا.
 
@@ -4498,6 +4497,7 @@ ar:
       popular_posts: "المنشورات الرائجة"
       more_new: "الجديد لك"
       subject_template: "[%{email_prefix}] الملخص"
+      subject_template_improved: "الملخص"
       unsubscribe: "تم إرسال هذا الملخص من %{site_link} عندما لم نرك لفترة. غيِّر %{email_preferences_link}، أو%{unsubscribe_link} لإلغاء الاشتراك."
       your_email_settings: "إعدادات بريدك الإلكتروني"
       click_here: "انقر هنا"
@@ -4518,6 +4518,7 @@ ar:
       title: "تسجيل الدخول عبر رابط"
       preview: "تسجيل الدخول عبر رابط."
       subject_template: "[%{email_prefix}] تسجيل الدخول عبر رابط"
+      subject_template_improved: "تسجيل الدخول عبر رابط"
       text_body_template: |
         إليك الرابط الخاص بك لتسجيل الدخول على [%{site_name}](%{base_url}).
 
@@ -4528,7 +4529,6 @@ ar:
     set_password:
       title: "تعيين كلمة المرور"
       preview: "تعيين كلمة المرور الخاصة بالحساب"
-      subject_template: "[%{email_prefix}] تعيين كلمة المرور"
       text_body_template: |
         طلب شخص ما إضافة كلمة مرور إلى حسابك على [%{site_name}](%{base_url}). بدلًا من ذلك، يمكنك تسجيل الدخول باستخدام أي خدمة مدعومة عبر الإنترنت (Google ،Facebook، إلى آخره) مرتبطة بعنوان البريد الإلكتروني الذي تم التحقُّق منه.
 
@@ -4540,6 +4540,7 @@ ar:
       title: "تسجيل دخول المسؤول"
       preview: "تم تقديم طلب لتسجيل دخول المسؤول."
       subject_template: "[%{email_prefix}] تسجيل الدخول"
+      subject_template_improved: "تسجيل الدخول"
       text_body_template: |
         طلب شخص ما تسجيل الدخول إلى حسابك على [%{site_name}](%{base_url}).
 
@@ -4550,7 +4551,6 @@ ar:
     account_created:
       title: "تم إنشاء الحساب"
       preview: "تم إنشاء حساب جديد لك."
-      subject_template: "[%{email_prefix}] حسابك الجديد"
       text_body_template: |
         تم إنشاء حساب جديد لك على %{site_name}
 
@@ -4664,7 +4664,6 @@ ar:
     suspicious_login:
       title: "تنبيه بعملية تسجيل دخول جديدة"
       preview: "تحقق من جهازك."
-      subject_template: "[%{site_name}] عملية تسجيل دخول جديدة من %{location}"
       text_body_template: "مرحبًا،\n\nلاحظنا عملية تسجيل دخول من جهاز أو موقع لا تستخدمه عادةً. هل كان هذا أنت؟\n\n - الموقع: %{location} (%{client_ip}) \n - المتصفح: %{browser}\n - الجهاز: %{device} - %{os}\n\nإذا كان هذا أنت، رائع! لا يوجد شيء آخر عليك القيام به.\n\nإذا لم يكن هذا أنت، يُرجى [مراجعة جلساتك الحالية](%{base_url}/my/preferences/security) والتفكير في تغيير كلمة مرورك.\n"
     post_approved:
       title: "تمت الموافقة على منشورك"

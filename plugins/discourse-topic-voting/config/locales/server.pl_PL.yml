@@ -58,3 +58,20 @@ pl_PL:
         topic_votes_max: "Maksymalna liczba głosów w temacie"
         order_topic_votes: "Uporządkuj tematy według największej liczby głosów"
         order_topic_votes_asc: "Uporządkuj tematy według najmniejszej liczby głosów"
+  badges:
+    daydreamer:
+      name: "Marzyciel"
+      description: "Otrzymaj głos na swój temat"
+      long_description: "Tę odznakę przyznajemy za otrzymanie głosu w jednym z Twoich tematów. :white_check_mark: Świetny pomysł. :+1:"
+    brainstormer:
+      name: "Pomysłodawca"
+      description: "Otrzymaj 5 głosów na swój temat"
+      long_description: "Tę odznakę przyznajemy za otrzymanie 5 głosów w jednym z Twoich tematów. :white_check_mark: Twój temat zyskuje na popularności."
+    innovator:
+      name: "Nowator"
+      description: "Otrzymaj 15 głosów na swój temat"
+      long_description: "Odznakę tę przyznajemy za otrzymanie 15 głosów w jednym z Twoich tematów. :white_check_mark: Tak dobry, że nie można go zignorować."
+    visionary:
+      name: "Wizjoner"
+      description: "Otrzymaj 25 głosów na swój temat"
+      long_description: "Ta odznaka jest przyznawana za uzyskanie 25 głosów w jednym z Twoich tematów. :white_check_mark: Daj ludziom to, czego chcą! :clap:"

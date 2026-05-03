@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 id:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Izinkan pemilik topik dan staf untuk menandai balasan sebagai solusi"
   site_settings:
     solved_enabled: "Aktifkan plugin yang terpecahkan, inzinkan pengguna memilih solusi untuk topik"
     notify_on_staff_accept_solved: "Kirim notifikasi ke pembuat topik saat postingan ditandai sebagai solusi oleh staf."

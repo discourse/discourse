@@ -559,6 +559,10 @@ el:
           other: "Δημιουργήθηκε %{count} χρόνια πριν"
     bookmarked:
       title: "Σελιδοδείκτης"
+      edit_bookmark:
+        one: "Επεξεργασία σελιδοδείκτη"
+        other: "Επεξεργασία σελιδοδεικτών"
+      delete_bookmarks: "Διαγραφή όλων των σελιδοδεικτών"
       help:
         bookmark: "Κάντε κλικ για να βάλετε σελιδοδείκτη σε αυτό το θέμα"
         edit_bookmark: "Πατήστε για να επεξεργαστείτε τον σελιδοδείκτη σε μια ανάρτηση σε αυτό το θέμα"
@@ -578,6 +582,8 @@ el:
       edit: "Επεξεργασία σελιδοδείκτη"
       not_bookmarked: "πρόσθεσε σελιδοδείκτη σε αυτήν την ανάρτηση"
       topic_bookmark: "Νήμα"
+      post_bookmark: "Ανάρτηση #%{post_number}"
+      jump_to_post: "Μετάβαση στο #%{post_number}"
       remove_reminder_keep_bookmark: "Αφαίρεση υπενθύμισης και διατήρηση σελιδοδείκτη"
       created_with_reminder: "Έχετε προσθέσει σελιδοδείκτη σε αυτήν την ανάρτηση με υπενθύμιση %{date}. %{name}"
       created_with_reminder_generic: "Το έχετε βάλει σελιδοδείκτη με μια υπενθύμιση %{date}. %{name}"
@@ -655,6 +661,8 @@ el:
       allow_access: "Επιτρέψτε την πρόσβαση"
       continue_as_guest: "Συνέχεια ως Επισκέπτης"
       be_first_to_reply: "Γίνε ο πρώτος που θα απαντήσει!"
+      replying_to: "Απάντηση σε %{username}"
+      reply_placeholder: "Γράψτε μια απάντηση..."
     topic_count_all:
       one: "Δείτε %{count} νέο θέμα"
       other: "Δείτε %{count} νέα θέματα"
