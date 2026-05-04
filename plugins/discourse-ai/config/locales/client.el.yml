@@ -182,6 +182,9 @@ el:
             key_title: "Κλειδί"
         filters:
           reset: "Επαναφορά"
+        features_list:
+          one: "Λειτουργία:"
+          other: "Λειτουργίες:"
       rag:
         uploads:
           title: "Μεταφορτώσεις"

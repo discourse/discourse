@@ -531,6 +531,8 @@ ru:
         status:
           label: "Статус"
         delete_confirmation_message: "Удалить это событие?"
+        image:
+          label: "Изображение события"
       invite_user_or_group:
         title: "Уведомить пользователей или группы"
         invite: "Отправить"
