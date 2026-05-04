@@ -58,15 +58,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
 
   describe "GET /admin/plugins/discourse-workflows/executions" do
     it "returns executions" do
-      execution =
-        DiscourseWorkflows::Execution.create!(
-          workflow: workflow,
-          status: :success,
-          started_at: 1.hour.ago,
-          finished_at: Time.current,
-          trigger_data: {
-          },
-        )
+      execution = Fabricate(:discourse_workflows_completed_execution, workflow: workflow)
 
       get "/admin/plugins/discourse-workflows/executions.json"
 
@@ -80,7 +72,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
     end
 
     it "returns meta with total rows" do
-      DiscourseWorkflows::Execution.create!(workflow: workflow, status: :pending, trigger_data: {})
+      Fabricate(:discourse_workflows_execution, workflow: workflow)
 
       get "/admin/plugins/discourse-workflows/executions.json"
 
@@ -89,20 +81,8 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
     end
 
     it "paginates with cursor param" do
-      execution_1 =
-        DiscourseWorkflows::Execution.create!(
-          workflow: workflow,
-          status: :pending,
-          trigger_data: {
-          },
-        )
-      execution_2 =
-        DiscourseWorkflows::Execution.create!(
-          workflow: workflow,
-          status: :pending,
-          trigger_data: {
-          },
-        )
+      execution_1 = Fabricate(:discourse_workflows_execution, workflow: workflow)
+      execution_2 = Fabricate(:discourse_workflows_execution, workflow: workflow)
 
       get "/admin/plugins/discourse-workflows/executions.json",
           params: {
@@ -117,9 +97,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
   end
 
   describe "DELETE /admin/plugins/discourse-workflows/executions" do
-    fab!(:execution) do
-      DiscourseWorkflows::Execution.create!(workflow: workflow, status: :success, trigger_data: {})
-    end
+    fab!(:execution) { Fabricate(:discourse_workflows_completed_execution, workflow: workflow) }
 
     it "deletes executions" do
       delete "/admin/plugins/discourse-workflows/executions.json", params: { ids: [execution.id] }
@@ -131,39 +109,12 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
   end
 
   describe "GET /admin/plugins/discourse-workflows/executions/:id" do
-    fab!(:execution) do
-      DiscourseWorkflows::Execution.create!(
-        workflow: workflow,
-        status: :success,
-        started_at: 1.hour.ago,
-        finished_at: Time.current,
-        trigger_data: {
-        },
-      )
-    end
+    fab!(:execution) { Fabricate(:discourse_workflows_completed_execution, workflow: workflow) }
 
     before do
-      DiscourseWorkflows::ExecutionData.create!(
-        execution_id: execution.id,
-        data: {
-          "entries" => {
-            "Manual Trigger" => [
-              {
-                "node_id" => "trigger-1",
-                "node_name" => "Manual Trigger",
-                "node_type" => "trigger:manual",
-                "position" => 0,
-                "status" => "success",
-                "input" => [],
-                "output" => [],
-                "started_at" => 1.hour.ago.iso8601,
-                "finished_at" => Time.current.iso8601,
-              },
-            ],
-          },
-          "context" => {
-          },
-        }.to_json,
+      Fabricate(
+        :discourse_workflows_execution_data_with_steps,
+        execution: execution,
         workflow_data: {
         },
       )

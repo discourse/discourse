@@ -34,14 +34,10 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
     it "returns the latest execution status for each workflow" do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
 
-      DiscourseWorkflows::Execution.create!(
+      Fabricate(:discourse_workflows_error_execution, workflow: workflow, created_at: 2.hours.ago)
+      Fabricate(
+        :discourse_workflows_completed_execution,
         workflow: workflow,
-        status: :error,
-        created_at: 2.hours.ago,
-      )
-      DiscourseWorkflows::Execution.create!(
-        workflow: workflow,
-        status: :success,
         created_at: 1.hour.ago,
       )
 
