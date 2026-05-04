@@ -144,11 +144,13 @@ module PageObjects
           picker.expand
           picker.search(value)
           picker.select_row_by_name(value)
+          picker.collapse
         when "tag-chooser"
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.expand
           picker.search(value)
           picker.select_row_by_name(value)
+          picker.collapse
         when "select"
           PageObjects::Components::DSelect.new(component.find(".form-kit__control-select")).select(
             value,
