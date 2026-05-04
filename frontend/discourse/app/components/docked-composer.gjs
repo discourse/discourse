@@ -212,6 +212,10 @@ export default class DockedComposer extends Component {
         this.uploads.push(upload);
       },
     });
+
+    if (this.fileInputEl) {
+      this.uppyUpload.setup(this.fileInputEl);
+    }
   }
 
   @action
