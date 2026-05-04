@@ -14,9 +14,6 @@ module DiscourseReactions
       [query.rows, query.total]
     end
 
-    # Filters a scope to exclude rows where +user_column+ refers to a user the
-    # +current_user_id+ has ignored. Used outside this class for grouped queries
-    # that don't go through #rows / #total.
     def self.apply_ignored_users_filter(scope, user_column:, current_user_id:)
       return scope if current_user_id.blank?
 

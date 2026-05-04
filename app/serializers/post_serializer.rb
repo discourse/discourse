@@ -341,8 +341,6 @@ class PostSerializer < BasicPostSerializer
       count_col = "#{sym}_count".to_sym
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
-      # Only adjust the +like+ count: flag counts are visible to staff for
-      # moderation and should not be perturbed by personal ignore relationships.
       count = [count.to_i - ignored_like_count, 0].max if count && sym == :like
       summary = { id: id, count: count }
 
