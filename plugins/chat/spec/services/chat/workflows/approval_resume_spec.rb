@@ -12,15 +12,16 @@ RSpec.describe Chat::Workflows::ApprovalResume do
     fab!(:user)
     fab!(:channel, :chat_channel)
 
-    let(:params) { { execution_id:, approved: true, action_token: } }
+    let(:resume_token) { execution.resume_token }
+    let(:params) { { execution_id:, approved: true, action_token:, channel_id: channel.id } }
     let(:execution_id) { execution.id }
-    let(:action_token) { execution.waiting_config&.dig("approve_token") }
+    let(:action_token) { "#{resume_token}:approve" }
 
     before { SiteSetting.chat_enabled = true }
 
     context "when plugin is disabled" do
       let(:execution_id) { 1 }
-      let(:action_token) { "abc" }
+      let(:action_token) { "abc:approve" }
 
       before { SiteSetting.discourse_workflows_enabled = false }
 
@@ -36,46 +37,41 @@ RSpec.describe Chat::Workflows::ApprovalResume do
 
     context "when execution does not exist" do
       let(:execution_id) { -1 }
-      let(:action_token) { "abc" }
+      let(:action_token) { "abc:approve" }
 
       it { is_expected.to fail_to_find_a_model(:execution) }
     end
 
     context "when execution is not waiting" do
       fab!(:execution) { Fabricate(:discourse_workflows_execution, status: :success) }
-      let(:action_token) { "abc" }
-
-      it { is_expected.to fail_to_find_a_model(:execution) }
-    end
-
-    context "when execution is waiting on a different handler type" do
-      fab!(:execution) do
-        Fabricate(
-          :discourse_workflows_execution,
-          status: :waiting,
-          waiting_config: {
-            "wait_type" => "timer",
-          },
-        )
-      end
-      let(:action_token) { "abc" }
+      let(:action_token) { "abc:approve" }
 
       it { is_expected.to fail_to_find_a_model(:execution) }
     end
 
     context "when action_token does not match" do
       fab!(:execution) do
-        Fabricate(
-          :discourse_workflows_execution,
-          status: :waiting,
-          waiting_config: {
-            "wait_type" => "chat_approval",
-            "approve_token" => "correct_approve_token",
-            "deny_token" => "correct_deny_token",
-          },
-        )
+        Fabricate(:discourse_workflows_execution, status: :waiting, resume_token: "correct-token")
       end
-      let(:action_token) { "stale_token" }
+      let(:action_token) { "wrong-token:approve" }
+
+      it { is_expected.to fail_to_find_a_model(:execution) }
+    end
+
+    context "when action_type is missing" do
+      fab!(:execution) do
+        Fabricate(:discourse_workflows_execution, status: :waiting, resume_token: "correct-token")
+      end
+      let(:action_token) { "correct-token" }
+
+      it { is_expected.to fail_to_find_a_model(:execution) }
+    end
+
+    context "when action_type is unrecognized" do
+      fab!(:execution) do
+        Fabricate(:discourse_workflows_execution, status: :waiting, resume_token: "correct-token")
+      end
+      let(:action_token) { "correct-token:unknown" }
 
       it { is_expected.to fail_to_find_a_model(:execution) }
     end
@@ -107,7 +103,8 @@ RSpec.describe Chat::Workflows::ApprovalResume do
       end
 
       context "when denied" do
-        let(:params) { { execution_id:, approved: false, action_token: } }
+        let(:action_token) { "#{resume_token}:deny" }
+        let(:params) { { execution_id:, approved: false, action_token:, channel_id: channel.id } }
 
         it { is_expected.to run_successfully }
 

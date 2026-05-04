@@ -13,7 +13,27 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
   end
 
   describe "#execute" do
-    it "sends a chat message and returns a WaitForResume with chat approval config" do
+    let(:resume_token) { SecureRandom.uuid }
+    let(:sandbox) { DiscourseWorkflows::JsSandbox.new({}) }
+
+    after { sandbox.dispose }
+
+    def build_exec_ctx(config)
+      resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }, sandbox: sandbox)
+      DiscourseWorkflows::Executor::NodeExecutionContext.new(
+        input_items: [{ "json" => {} }],
+        node_context: {
+        },
+        resolver: resolver,
+        configuration: config,
+        property_schema: described_class.property_schema,
+        execution_id: execution.id,
+        node_id: "node_abc",
+        resume_token: resume_token,
+      )
+    end
+
+    it "sends a chat message and puts the execution to wait" do
       config = {
         "message" => "Please approve this",
         "approve_label" => "Yes",
@@ -23,32 +43,33 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
         "timeout_action" => "fail",
       }
       instance = described_class.new(configuration: config)
+      exec_ctx = build_exec_ctx(config)
 
       freeze_time do
-        wait =
-          instance.execute(
-            DiscourseWorkflows::Executor::NodeExecutionContext.new(
-              input_items: [{ "json" => {} }],
-              node_context: {
-              },
-              resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
-              configuration: config,
-              property_schema: described_class.property_schema,
-              execution_id: execution.id,
-              node_id: "node_abc",
-            ),
-          )
+        instance.execute(exec_ctx)
 
-        expect(wait).to be_a(DiscourseWorkflows::Executor::WaitForResume)
-        expect(wait.waiting_until).to eq(30.minutes.from_now)
-        expect(wait.waiting_config["wait_type"]).to eq("chat_approval")
-        expect(wait.waiting_config["timeout_action"]).to eq("fail")
-        expect(wait.waiting_config["chat_channel_id"]).to eq(channel.id)
-        expect(wait.waiting_config["chat_message_id"]).to be_present
-        expect(wait.waiting_config["timeout_response_items"]).to eq(
-          [{ "json" => { "approved" => false, "channel_id" => channel.id, "timed_out" => true } }],
-        )
+        expect(exec_ctx.waiting?).to be true
+        expect(exec_ctx.waiting_until).to eq(30.minutes.from_now)
       end
+    end
+
+    it "creates buttons with resume_token-based action IDs" do
+      config = {
+        "message" => "Please approve this",
+        "approve_label" => "Yes",
+        "deny_label" => "No",
+        "channel_id" => channel.id.to_s,
+        "timeout_action" => "fail",
+      }
+      instance = described_class.new(configuration: config)
+      exec_ctx = build_exec_ctx(config)
+      instance.execute(exec_ctx)
+
+      message = Chat::Message.last
+      buttons = message.blocks.first["elements"]
+      expect(buttons.map { |b| b["action_id"] }).to eq(
+        ["#{resume_token}:approve", "#{resume_token}:deny"],
+      )
     end
 
     it "uses default labels when none provided" do
@@ -58,25 +79,11 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
         "timeout_action" => "deny",
       }
       instance = described_class.new(configuration: config)
+      exec_ctx = build_exec_ctx(config)
+      instance.execute(exec_ctx)
 
-      wait =
-        instance.execute(
-          DiscourseWorkflows::Executor::NodeExecutionContext.new(
-            input_items: [{ "json" => {} }],
-            node_context: {
-            },
-            resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
-            configuration: config,
-            property_schema: described_class.property_schema,
-            execution_id: execution.id,
-            node_id: "node_xyz",
-          ),
-        )
-
-      expect(wait).to be_a(DiscourseWorkflows::Executor::WaitForResume)
-      expect(wait.waiting_config["wait_type"]).to eq("chat_approval")
-      expect(wait.waiting_config["timeout_action"]).to eq("deny")
-      expect(wait.waiting_until).to be_nil
+      expect(exec_ctx.waiting?).to be true
+      expect(exec_ctx.waiting_until).to be_nil
     end
   end
 end

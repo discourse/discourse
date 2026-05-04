@@ -11,6 +11,7 @@ module Chat
         attribute :execution_id, :integer
         attribute :approved, :boolean
         attribute :action_token, :string
+        attribute :channel_id, :integer
 
         validates :execution_id, presence: true
         validates :action_token, presence: true
@@ -26,35 +27,22 @@ module Chat
       end
 
       def fetch_execution(params:)
-        execution =
-          ::DiscourseWorkflows::Execution
-            .waiting_with_type("chat_approval")
-            .where(id: params.execution_id)
-            .lock("FOR UPDATE SKIP LOCKED")
-            .first
+        resume_token, action_type = params.action_token.to_s.split(":", 2)
+        return nil if %w[approve deny].exclude?(action_type)
+        return nil if resume_token.blank?
 
-        return nil unless execution
+        found =
+          ::DiscourseWorkflows::Execution.by_resume_token(resume_token).find_by(
+            id: params.execution_id,
+          )
+        return nil unless found
 
-        approve_token = execution.waiting_config&.dig("approve_token").to_s
-        deny_token = execution.waiting_config&.dig("deny_token").to_s
-        token = params.action_token.to_s
-
-        unless ActiveSupport::SecurityUtils.secure_compare(approve_token, token) ||
-                 ActiveSupport::SecurityUtils.secure_compare(deny_token, token)
-          return nil
-        end
-
-        execution
+        ::DiscourseWorkflows::Execution.claim_for_resume(id: found.id, resume_token: resume_token)
       end
 
       def resume_execution(execution:, params:)
         response_items = [
-          {
-            "json" => {
-              "approved" => params.approved,
-              "channel_id" => execution.waiting_config&.dig("chat_channel_id"),
-            },
-          },
+          { "json" => { "approved" => params.approved, "channel_id" => params.channel_id } },
         ]
         ::DiscourseWorkflows::Executor.resume(execution, response_items)
       end

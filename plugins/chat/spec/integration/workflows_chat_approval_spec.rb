@@ -103,16 +103,7 @@ RSpec.describe "Wait for Approval end-to-end" do
 
     expect(execution.reload.status).to eq("success")
 
-    execution.update!(
-      status: :waiting,
-      waiting_node_id: "wait-1",
-      waiting_config: {
-        "wait_type" => "chat_approval",
-        "approve_token" => SecureRandom.hex(32),
-        "deny_token" => SecureRandom.hex(32),
-        "chat_channel_id" => channel.id,
-      },
-    )
+    execution.update!(status: :waiting, waiting_node_id: "wait-1", resume_token: SecureRandom.uuid)
 
     stale_interaction =
       Chat::MessageInteraction.new(

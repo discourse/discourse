@@ -83,34 +83,14 @@ if defined?(DiscourseWorkflows)
             deny_label = config["deny_label"].presence || "Deny"
             channel_id = config.fetch("channel_id").to_i
             timeout_minutes = config["timeout_minutes"].presence&.to_i
-            timeout_action = config.fetch("timeout_action") { "deny" }
 
-            approve_token = SecureRandom.hex(32)
-            deny_token = SecureRandom.hex(32)
+            approve_action_id = "#{exec_ctx.resume_token}:approve"
+            deny_action_id = "#{exec_ctx.resume_token}:deny"
 
-            blocks = approval_blocks(approve_token, deny_token, approve_label, deny_label)
-            chat_message = send_chat_message(channel_id, message_text, blocks)
+            blocks = approval_blocks(approve_action_id, deny_action_id, approve_label, deny_label)
+            send_chat_message(channel_id, message_text, blocks)
 
-            Executor::WaitForResume.new(
-              waiting_until: timeout_minutes&.minutes&.from_now,
-              waiting_config: {
-                "wait_type" => "chat_approval",
-                "timeout_action" => timeout_action,
-                "chat_message_id" => chat_message.id,
-                "chat_channel_id" => channel_id,
-                "approve_token" => approve_token,
-                "deny_token" => deny_token,
-                "timeout_response_items" => [
-                  {
-                    "json" => {
-                      "approved" => false,
-                      "channel_id" => channel_id,
-                      "timed_out" => true,
-                    },
-                  },
-                ],
-              },
-            )
+            exec_ctx.put_execution_to_wait(timeout_minutes&.minutes&.from_now)
           end
 
           private

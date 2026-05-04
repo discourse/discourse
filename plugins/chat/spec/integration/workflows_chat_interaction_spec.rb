@@ -24,14 +24,15 @@ RSpec.describe "Chat interaction listener for workflow approvals" do
     execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
     expect(execution.status).to eq("waiting")
 
-    approve_token = execution.waiting_config["approve_token"]
+    resume_token = execution.resume_token
+    approve_action_id = "#{resume_token}:approve"
 
     interaction =
       Chat::MessageInteraction.new(
         user: user,
         message: Chat::Message.last,
         action: {
-          "action_id" => approve_token,
+          "action_id" => approve_action_id,
           "value" => "approve",
         },
       )
@@ -41,7 +42,8 @@ RSpec.describe "Chat interaction listener for workflow approvals" do
       args: {
         execution_id: execution.id,
         approved: true,
-        action_token: approve_token,
+        action_token: approve_action_id,
+        channel_id: channel.id,
       },
     ) { DiscourseEvent.trigger(:chat_message_interaction, interaction) }
   end
@@ -52,7 +54,23 @@ RSpec.describe "Chat interaction listener for workflow approvals" do
         user: user,
         message: chat_message,
         action: {
-          "action_id" => "unknown_action_id",
+          "action_id" => "unknown-token:approve",
+        },
+      )
+
+    expect { DiscourseEvent.trigger(:chat_message_interaction, interaction) }.not_to change(
+      Jobs::Chat::ResumeWorkflowApproval.jobs,
+      :size,
+    )
+  end
+
+  it "ignores interactions with an unrecognized action type" do
+    interaction =
+      Chat::MessageInteraction.new(
+        user: user,
+        message: chat_message,
+        action: {
+          "action_id" => "some-token:unknown",
         },
       )
 

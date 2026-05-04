@@ -9,6 +9,7 @@ module Jobs
             execution_id: args[:execution_id],
             approved: args[:approved],
             action_token: args[:action_token],
+            channel_id: args[:channel_id],
           },
         )
       end

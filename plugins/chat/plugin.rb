@@ -113,30 +113,22 @@ after_initialize do
     on(:chat_message_interaction) do |interaction|
       next unless SiteSetting.discourse_workflows_enabled
 
-      token = interaction.action&.dig("action_id").to_s
-      next if token.blank?
+      action_id = interaction.action&.dig("action_id").to_s
+      next if action_id.blank?
 
-      execution =
-        DiscourseWorkflows::Execution
-          .waiting_with_type("chat_approval")
-          .where(
-            "waiting_config->>'approve_token' = :token OR waiting_config->>'deny_token' = :token",
-            token: token,
-          )
-          .first
+      resume_token, action_type = action_id.split(":", 2)
+      next if %w[approve deny].exclude?(action_type)
+      next if resume_token.blank?
+
+      execution = DiscourseWorkflows::Execution.by_resume_token(resume_token).first
       next unless execution
-
-      approved =
-        ActiveSupport::SecurityUtils.secure_compare(
-          execution.waiting_config["approve_token"].to_s,
-          token,
-        )
 
       Jobs.enqueue(
         Jobs::Chat::ResumeWorkflowApproval,
         execution_id: execution.id,
-        approved: approved,
-        action_token: token,
+        approved: action_type == "approve",
+        action_token: action_id,
+        channel_id: interaction.message.chat_channel_id,
       )
     end
   end
