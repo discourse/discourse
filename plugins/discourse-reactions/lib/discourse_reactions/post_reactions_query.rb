@@ -88,42 +88,6 @@ module DiscourseReactions
         end
     end
 
-    # Counts of reactions/likes on this post grouped by reaction value, with the
-    # current user's ignored users excluded. Returns a Hash like
-    # { "heart" => 3, "laughing" => 1 }.
-    def reaction_counts
-      @reaction_counts ||=
-        DB
-          .query(<<~SQL, **bindings)
-            SELECT reaction, COUNT(*) AS count FROM (
-              #{reactions_select_sql}
-              UNION ALL
-              #{plain_likes_select_sql}
-            ) combined
-            GROUP BY reaction
-          SQL
-          .each_with_object({}) { |row, hash| hash[row.reaction] = row.count.to_i }
-    end
-
-    # Distinct count of users who reacted/liked this post, with ignored users
-    # excluded. A user counts once even if they both liked and reacted.
-    def total_distinct_users
-      @total_distinct_users ||= DB.query_single(<<~SQL, **bindings).first.to_i
-          SELECT COUNT(DISTINCT user_id) FROM (
-            SELECT drru.user_id
-            FROM discourse_reactions_reaction_users drru
-            WHERE drru.post_id = :post_id
-            #{ignored_users_filter_sql("drru.user_id")}
-            UNION ALL
-            SELECT post_actions.user_id
-            FROM post_actions
-            WHERE post_actions.post_id = :post_id
-              AND (#{shadow_like_filter})
-            #{ignored_users_filter_sql("post_actions.user_id")}
-          ) combined
-        SQL
-    end
-
     private
 
     attr_reader :post, :reaction_filter, :limit, :offset, :current_user_id

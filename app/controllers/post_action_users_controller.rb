@@ -15,32 +15,30 @@ class PostActionUsersController < ApplicationController
     post = Post.with_deleted.find_by(id: params[:id].to_i)
     guardian.ensure_can_see!(post)
 
-    post_actions = post.post_actions.where(post_action_type_id: post_action_type_id).includes(:user)
+    post_actions =
+      filter_ignored_users(post.post_actions.where(post_action_type_id: post_action_type_id))
+    filtered_total = post_actions.count if current_user&.ignored_user_ids&.any?
 
-    filtering_active = current_user.present? && current_user.ignored_user_ids.any?
-    post_actions = filter_ignored_users(post_actions)
+    post_actions =
+      post_actions
+        .includes(:user)
+        .offset(page * page_size)
+        .order("post_actions.created_at ASC")
+        .limit(page_size)
 
-    paginated_post_actions =
-      post_actions.offset(page * page_size).order("post_actions.created_at ASC").limit(page_size)
-
-    paginated_post_actions =
-      DiscoursePluginRegistry.apply_modifier(:post_action_users_list, paginated_post_actions, post)
+    post_actions =
+      DiscoursePluginRegistry.apply_modifier(:post_action_users_list, post_actions, post)
 
     can_see_actors = guardian.can_see_post_actors?(post.topic, post_action_type_id)
 
     if !can_see_actors
       raise Discourse::InvalidAccess if current_user.blank?
-      paginated_post_actions = paginated_post_actions.where(user_id: current_user.id)
+      post_actions = post_actions.where(user_id: current_user.id)
     end
 
     action_type = PostActionType.types.key(post_action_type_id)
-    total_count =
-      if filtering_active
-        post_actions.count
-      else
-        post["#{action_type}_count"].to_i
-      end
-    post_actions = paginated_post_actions.to_a
+    total_count = filtered_total || post["#{action_type}_count"].to_i
+    post_actions = post_actions.to_a
     data = {
       post_action_users:
         serialize_data(

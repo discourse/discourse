@@ -163,12 +163,91 @@ after_initialize do
   # Helper module for shared reactions serialization logic
   module ReactionsSerializerHelpers
     def self.reactions_for_post(post, scope = nil)
-      DiscourseReactions::PostReactionsQuery
-        .new(post: post, current_user_id: scope&.user&.id)
-        .reaction_counts
-        .select { |reaction_value, _| Emoji.exists?(reaction_value) }
-        .map { |reaction_value, count| { id: reaction_value, type: :emoji, count: count } }
-        .sort_by { |reaction| [-reaction[:count].to_i, reaction[:id]] }
+      ignored_ids = scope&.user&.ignored_user_ids || []
+      reactions = []
+      reaction_users_counting_as_like = Set.new
+
+      post
+        .emoji_reactions
+        .select { |reaction| reaction[:reaction_users_count] }
+        .each do |reaction|
+          count =
+            if ignored_ids.any?
+              reaction.reaction_users.count { |ru| !ignored_ids.include?(ru.user_id) }
+            else
+              reaction.reaction_users_count
+            end
+          next if count.to_i.zero?
+          reactions << {
+            id: reaction.reaction_value,
+            type: reaction.reaction_type.to_sym,
+            count: count,
+          }
+
+          # NOTE: It does not matter if the reaction is currently an enabled one,
+          # we need to handle historical data here too so we don't see double-ups in the UI.
+          if !DiscourseReactions::Reaction.reactions_excluded_from_like.include?(
+               reaction.reaction_value,
+             ) && reaction.reaction_value != DiscourseReactions::Reaction.main_reaction_id
+            reaction_users_counting_as_like.merge(reaction.reaction_users.pluck(:user_id))
+          end
+        end
+
+      likes_query =
+        post.post_actions.where(post_action_type_id: PostActionType::LIKE_POST_ACTION_ID)
+
+      likes_query = likes_query.where.not(user_id: ignored_ids) if ignored_ids.any?
+
+      # Get rid of any PostAction records that match up to a ReactionUser
+      # that is NOT main_reaction_id and is NOT excluded, otherwise we double
+      # up on the count/reaction shown in the UI.
+      if reaction_users_counting_as_like.any?
+        likes_query = likes_query.where.not(user_id: reaction_users_counting_as_like.to_a)
+      end
+
+      # Also get rid of any PostAction records that match up to a ReactionUser
+      # that is now the main_reaction_id and has historical data.
+      # This subquery checks if there's a matching ReactionUser with main_reaction_id.
+      likes_query =
+        likes_query.where(
+          <<~SQL,
+            post_actions.id NOT IN (
+              SELECT post_actions.id
+              FROM post_actions
+              INNER JOIN discourse_reactions_reaction_users
+                ON discourse_reactions_reaction_users.post_id = post_actions.post_id
+                AND discourse_reactions_reaction_users.user_id = post_actions.user_id
+              INNER JOIN discourse_reactions_reactions
+                ON discourse_reactions_reactions.id = discourse_reactions_reaction_users.reaction_id
+              WHERE post_actions.post_id = :post_id
+                AND post_actions.post_action_type_id = :like_type
+                AND discourse_reactions_reactions.reaction_value = :main_reaction
+            )
+          SQL
+          post_id: post.id,
+          like_type: PostActionType::LIKE_POST_ACTION_ID,
+          main_reaction: DiscourseReactions::Reaction.main_reaction_id,
+        )
+
+      likes = likes_query.count
+
+      # Likes will only be blank if there are only reactions where the reaction is in
+      # discourse_reactions_excluded_from_like. All other reactions will have a `PostAction` record.
+      return reactions.sort_by { |reaction| [-reaction[:count].to_i, reaction[:id]] } if likes.zero?
+
+      # Reactions using main_reaction_id only have a `PostAction` record,
+      # not any `ReactionUser` records, as long as the main_reaction_id was never
+      # changed -- if it was then we could have a ReactionUser as well.
+      reaction_likes, reactions =
+        reactions.partition { |r| r[:id] == DiscourseReactions::Reaction.main_reaction_id }
+
+      reactions << {
+        id: DiscourseReactions::Reaction.main_reaction_id,
+        type: :emoji,
+        count: likes + reaction_likes.sum { |r| r[:count] },
+      }
+
+      reactions.sort_by { |reaction| [-reaction[:count].to_i, reaction[:id]] }
     end
 
     def self.current_user_reaction_for_post(post, scope)
@@ -207,10 +286,29 @@ after_initialize do
     end
 
     def self.reaction_users_count_for_post(post, scope = nil)
-      DiscourseReactions::PostReactionsQuery.new(
-        post: post,
-        current_user_id: scope&.user&.id,
-      ).total_distinct_users
+      ignored_ids = scope&.user&.ignored_user_ids || []
+
+      if ignored_ids.empty?
+        return post.reaction_users_count unless post.reaction_users_count.nil?
+        return TopicViewSerializer.posts_reaction_users_count(post.id)[post.id]
+      end
+
+      DB.query_single(
+        <<~SQL,
+        SELECT COUNT(DISTINCT user_id) FROM (
+          SELECT user_id FROM post_actions
+            WHERE post_id = :post_id AND post_action_type_id = :like_id
+              AND deleted_at IS NULL AND user_id NOT IN (:ignored_ids)
+          UNION
+          SELECT drru.user_id FROM discourse_reactions_reaction_users drru
+            INNER JOIN discourse_reactions_reactions dr ON dr.id = drru.reaction_id
+            WHERE dr.post_id = :post_id AND drru.user_id NOT IN (:ignored_ids)
+        ) sub
+      SQL
+        post_id: post.id,
+        ignored_ids: ignored_ids,
+        like_id: PostActionType::LIKE_POST_ACTION_ID,
+      ).first
     end
 
     def self.current_user_used_main_reaction_for_post(post, scope)
@@ -272,8 +370,8 @@ after_initialize do
   end
 
   add_to_serializer(:post, :reactions) do
-    # Preloaded data computes global counts; only safe to use when no per-viewer
-    # filtering is needed (anonymous, or viewer with no ignored users).
+    # Preloaded data computes global counts; fall back to the per-viewer
+    # helper when the viewer has ignored users so their reactions are excluded.
     map = topic_view&.preloaded_post_data(:reactions)
     if map && map.key?(object.id) && (scope.user.blank? || scope.user.ignored_user_ids.empty?)
       map[object.id]

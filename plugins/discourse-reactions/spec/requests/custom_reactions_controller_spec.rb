@@ -527,17 +527,6 @@ describe DiscourseReactions::CustomReactionsController do
         usernames = response.parsed_body["users"].map { |u| u["username"] }
         expect(usernames).to include(user_3.username)
       end
-
-      it "does not affect viewers who are not ignoring anyone" do
-        Fabricate(:ignored_user, user: user_1, ignored_user: user_3)
-        sign_in(user_2)
-
-        get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
-
-        expect(response.status).to eq(200)
-        usernames = response.parsed_body["users"].map { |u| u["username"] }
-        expect(usernames).to include(user_3.username)
-      end
     end
   end
 
