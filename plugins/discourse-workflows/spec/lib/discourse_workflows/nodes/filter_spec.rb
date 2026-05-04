@@ -1,23 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Filter::V1 do
-  let(:sandbox) { DiscourseWorkflows::JsSandbox.new({}) }
-  after { sandbox.dispose }
-
-  def build_exec_ctx(items, configuration: {})
-    resolver =
-      DiscourseWorkflows::ExpressionResolver.new(
-        { "$json" => items.first&.dig("json") || {} },
-        sandbox: sandbox,
-      )
-    DiscourseWorkflows::Executor::NodeExecutionContext.new(
-      input_items: items,
-      configuration: configuration,
-      property_schema: described_class.property_schema,
-      resolver: resolver,
-    )
-  end
-
   describe "#execute" do
     let(:category_id_equals_5_config) do
       {
@@ -37,21 +20,19 @@ RSpec.describe DiscourseWorkflows::Nodes::Filter::V1 do
     end
 
     it "routes passing items to true" do
-      filter = described_class.new(configuration: category_id_equals_5_config)
-
       items = [{ "json" => { "category_id" => 5 } }]
-      result = filter.execute(build_exec_ctx(items, configuration: category_id_equals_5_config))
-      expect(result[0]).to eq(items)
-      expect(result[1]).to eq([])
+      result = execute_node_result(configuration: category_id_equals_5_config, input_items: items)
+      output = result.output_arrays(ports: described_class.ports)
+      expect(output[0]).to eq(items)
+      expect(output[1]).to eq([])
     end
 
     it "routes failing items to false" do
-      filter = described_class.new(configuration: category_id_equals_5_config)
-
       items = [{ "json" => { "category_id" => 10 } }]
-      result = filter.execute(build_exec_ctx(items, configuration: category_id_equals_5_config))
-      expect(result[0]).to eq([])
-      expect(result[1]).to eq(items)
+      result = execute_node_result(configuration: category_id_equals_5_config, input_items: items)
+      output = result.output_arrays(ports: described_class.ports)
+      expect(output[0]).to eq([])
+      expect(output[1]).to eq(items)
     end
 
     it "uses already-resolved string literals as values" do
@@ -69,11 +50,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Filter::V1 do
         ],
         "combinator" => "and",
       }
-      filter = described_class.new(configuration: config)
-
       items = [{ "json" => { "category_id" => 5 } }]
-      result = filter.execute(build_exec_ctx(items, configuration: config))
-      expect(result[0]).to eq(items)
+      result = execute_node_result(configuration: config, input_items: items)
+      output = result.output_arrays(ports: described_class.ports)
+      expect(output[0]).to eq(items)
     end
 
     it "works with expression-resolved left values" do
@@ -91,11 +71,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Filter::V1 do
         ],
         "combinator" => "and",
       }
-      filter = described_class.new(configuration: config)
-
       items = [{ "json" => {} }]
-      result = filter.execute(build_exec_ctx(items, configuration: config))
-      expect(result[0]).to eq(items)
+      result = execute_node_result(configuration: config, input_items: items)
+      output = result.output_arrays(ports: described_class.ports)
+      expect(output[0]).to eq(items)
     end
 
     it "filters out null array values for empty checks" do
@@ -113,12 +92,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Filter::V1 do
         ],
         "combinator" => "and",
       }
-      filter = described_class.new(configuration: config)
-
       items = [{ "json" => { "tags" => nil } }]
-      result = filter.execute(build_exec_ctx(items, configuration: config))
-      expect(result[0]).to eq([])
-      expect(result[1]).to eq(items)
+      result = execute_node_result(configuration: config, input_items: items)
+      output = result.output_arrays(ports: described_class.ports)
+      expect(output[0]).to eq([])
+      expect(output[1]).to eq(items)
     end
   end
 end

@@ -3,26 +3,9 @@
 RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
   def execute(input_items, configuration = {})
     config = { "type" => "simple" }.merge(configuration)
-    instance = described_class.new(configuration: config)
-    resolver_context = { "$json" => {} }
-    sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
-    resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
-    result =
-      instance.execute(
-        DiscourseWorkflows::Executor::NodeExecutionContext.new(
-          input_items: input_items,
-          configuration: config,
-          property_schema: described_class.property_schema,
-          node_context: {
-          },
-          resolver: resolver,
-          resolver_context: resolver_context,
-        ),
-      )
-    result[0]
-  ensure
-    resolver&.dispose
-    sandbox&.dispose
+    execute_node_result(configuration: config, input_items: input_items).primary_items(
+      ports: described_class.ports,
+    )
   end
 
   describe "simple mode" do
@@ -164,27 +147,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
         "type" => "code",
         "code" => 'console.log("comparing", a.json.n, b.json.n); return a.json.n - b.json.n;',
       }
-      action = described_class.new(configuration: configuration)
-      resolver_context = { "$json" => {} }
-      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
-      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
-      exec_ctx =
-        DiscourseWorkflows::Executor::NodeExecutionContext.new(
-          input_items: input,
-          configuration: configuration,
-          property_schema: described_class.property_schema,
-          node_context: {
-          },
-          resolver: resolver,
-          resolver_context: resolver_context,
-        )
-      action.execute(exec_ctx)
-
-      messages = exec_ctx.log.entries.map { |e| e["message"] }
-      expect(messages).to include(a_string_matching(/comparing/))
-    ensure
-      resolver&.dispose
-      sandbox&.dispose
+      execute_node_result(configuration: configuration, input_items: input) do |ctx|
+        messages = ctx.log.entries.map { |e| e["message"] }
+        expect(messages).to include(a_string_matching(/comparing/))
+      end
     end
   end
 end

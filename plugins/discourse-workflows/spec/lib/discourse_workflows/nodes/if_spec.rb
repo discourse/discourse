@@ -1,33 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
-  let(:sandbox) { DiscourseWorkflows::JsSandbox.new({}) }
-  after { sandbox.dispose }
-
   def build_config(conditions:, combinator: "and", options: {})
     { "conditions" => conditions, "combinator" => combinator, "options" => options }
   end
 
-  def build_condition(configuration)
-    described_class.new(configuration: configuration)
-  end
-
   def wrap_items(*jsons)
     jsons.map { |json| { "json" => json } }
-  end
-
-  def build_exec_ctx(items, configuration: {}, resolver: nil)
-    resolver ||=
-      DiscourseWorkflows::ExpressionResolver.new(
-        { "$json" => items.first&.dig("json") || {} },
-        sandbox: sandbox,
-      )
-    DiscourseWorkflows::Executor::NodeExecutionContext.new(
-      input_items: items,
-      configuration: configuration,
-      property_schema: described_class.property_schema,
-      resolver: resolver,
-    )
   end
 
   describe "#execute" do
@@ -57,15 +36,14 @@ RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
             ],
             combinator: "and",
           )
-        condition = build_condition(config)
 
         items = wrap_items({ "status" => "closed", "enabled" => true })
-        result = condition.execute(build_exec_ctx(items, configuration: config))
-        expect(result[0]).to eq(items)
+        result = execute_node_result(configuration: config, input_items: items)
+        expect(result.output_arrays(ports: described_class.ports)[0]).to eq(items)
 
         items = wrap_items({ "status" => "closed", "enabled" => false })
-        result = condition.execute(build_exec_ctx(items, configuration: config))
-        expect(result[1]).to eq(items)
+        result = execute_node_result(configuration: config, input_items: items)
+        expect(result.output_arrays(ports: described_class.ports)[1]).to eq(items)
       end
 
       it "or: any condition passing is enough" do
@@ -93,15 +71,14 @@ RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
             ],
             combinator: "or",
           )
-        condition = build_condition(config)
 
         items = wrap_items({ "status" => "archived" })
-        result = condition.execute(build_exec_ctx(items, configuration: config))
-        expect(result[0]).to eq(items)
+        result = execute_node_result(configuration: config, input_items: items)
+        expect(result.output_arrays(ports: described_class.ports)[0]).to eq(items)
 
         items = wrap_items({ "status" => "open" })
-        result = condition.execute(build_exec_ctx(items, configuration: config))
-        expect(result[1]).to eq(items)
+        result = execute_node_result(configuration: config, input_items: items)
+        expect(result.output_arrays(ports: described_class.ports)[1]).to eq(items)
       end
     end
 
@@ -121,14 +98,14 @@ RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
               },
             ],
           )
-        condition = build_condition(config)
 
         items = wrap_items({ "status" => "closed", "id" => 1 }, { "status" => "open", "id" => 2 })
-        result = condition.execute(build_exec_ctx(items, configuration: config))
-        expect(result[0].length).to eq(1)
-        expect(result[0].first["json"]["id"]).to eq(1)
-        expect(result[1].length).to eq(1)
-        expect(result[1].first["json"]["id"]).to eq(2)
+        result = execute_node_result(configuration: config, input_items: items)
+        output = result.output_arrays(ports: described_class.ports)
+        expect(output[0].length).to eq(1)
+        expect(output[0].first["json"]["id"]).to eq(1)
+        expect(output[1].length).to eq(1)
+        expect(output[1].first["json"]["id"]).to eq(2)
       end
     end
 
@@ -148,11 +125,10 @@ RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
               },
             ],
           )
-        condition = build_condition(config)
 
         items = wrap_items({ "status" => "closed" })
-        result = condition.execute(build_exec_ctx(items, configuration: config))
-        expect(result[1]).to eq(items)
+        result = execute_node_result(configuration: config, input_items: items)
+        expect(result.output_arrays(ports: described_class.ports)[1]).to eq(items)
       end
     end
   end

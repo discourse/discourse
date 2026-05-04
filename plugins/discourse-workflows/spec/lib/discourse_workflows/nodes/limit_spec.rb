@@ -3,16 +3,9 @@
 RSpec.describe DiscourseWorkflows::Nodes::Limit::V1 do
   def execute(input_items, configuration = {})
     config = { "max_items" => 10, "keep" => "first" }.merge(configuration)
-    instance = described_class.new(configuration: config)
-    result =
-      instance.execute(
-        DiscourseWorkflows::Executor::NodeExecutionContext.new(
-          input_items: input_items,
-          node_context: {
-          },
-        ),
-      )
-    result[0]
+    execute_node_result(configuration: config, input_items: input_items).primary_items(
+      ports: described_class.ports,
+    )
   end
 
   def make_indexed_items(count)
