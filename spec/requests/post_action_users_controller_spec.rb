@@ -178,6 +178,24 @@ RSpec.describe PostActionUsersController do
     expect(user_ids).to include(ignored_user.id)
   end
 
+  it "reports the filtered total in total_rows_post_action_users" do
+    stub_const(described_class, "INDEX_LIMIT", 2) do
+      ignored_user = Fabricate(:user)
+      PostActionCreator.like(ignored_user, post)
+      3.times { PostActionCreator.like(Fabricate(:user), post) }
+      Fabricate(:ignored_user, user: user, ignored_user: ignored_user)
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: PostActionType.types[:like],
+            limit: 2,
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["total_rows_post_action_users"]).to eq(3)
+    end
+  end
+
   it "does not hide users from the like list when they are not in the actor's PM allowlist" do
     user_not_in_allowlist = Fabricate(:user)
     user_in_allowlist = Fabricate(:user)

@@ -335,13 +335,15 @@ class PostSerializer < BasicPostSerializer
       @topic_view ? @topic_view.post_action_type_view : PostActionTypeView.new
 
     public_flag_types = @post_action_type_view.public_types
-    ignored_counts = ignored_post_action_counts_by_type
+    ignored_like_count = ignored_like_count_for_viewer
 
     @post_action_type_view.types.each do |sym, id|
       count_col = "#{sym}_count".to_sym
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
-      count = [count.to_i - ignored_counts[id].to_i, 0].max if count && ignored_counts[id]
+      # Only adjust the +like+ count: flag counts are visible to staff for
+      # moderation and should not be perturbed by personal ignore relationships.
+      count = [count.to_i - ignored_like_count, 0].max if count && sym == :like
       summary = { id: id, count: count }
 
       if scope.post_can_act?(
@@ -391,16 +393,18 @@ class PostSerializer < BasicPostSerializer
     result
   end
 
-  def ignored_post_action_counts_by_type
-    return {} if scope.user.blank?
+  def ignored_like_count_for_viewer
+    return 0 if scope.user.blank?
 
     ignored_ids = scope.user.ignored_user_ids
-    return {} if ignored_ids.empty?
+    return 0 if ignored_ids.empty?
 
-    PostAction
-      .where(post_id: object.id, user_id: ignored_ids, deleted_at: nil)
-      .group(:post_action_type_id)
-      .count
+    PostAction.where(
+      post_id: object.id,
+      user_id: ignored_ids,
+      post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+      deleted_at: nil,
+    ).count
   end
 
   def include_draft_sequence?

@@ -238,7 +238,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       if main_reaction && main_reaction[:reaction_users_count]
         (users << get_users(main_reaction)).flatten!
         users.sort_by! { |user| user[:created_at] }
-        count += main_reaction.reaction_users_count.to_i
+        count += filtered_reaction_users_count(main_reaction)
       end
 
       reaction_users << {
@@ -293,9 +293,19 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   def format_reaction_user(reaction)
     {
       id: reaction.reaction_value,
-      count: reaction.reaction_users_count.to_i,
+      count: filtered_reaction_users_count(reaction),
       users: get_users(reaction),
     }
+  end
+
+  def filtered_reaction_users_count(reaction)
+    return reaction.reaction_users_count.to_i if current_user.blank?
+
+    DiscourseReactions::PostReactionsQuery.apply_ignored_users_filter(
+      reaction.reaction_users,
+      user_column: "discourse_reactions_reaction_users.user_id",
+      current_user_id: current_user.id,
+    ).count
   end
 
   def format_like_user(like)

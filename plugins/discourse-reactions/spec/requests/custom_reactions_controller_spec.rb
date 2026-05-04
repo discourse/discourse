@@ -646,6 +646,19 @@ describe DiscourseReactions::CustomReactionsController do
           end
         expect(usernames).to include(user_5.username)
       end
+
+      it "keeps reaction count consistent with the filtered users list" do
+        sign_in(user_1)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_2)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+
+        expect(response.status).to eq(200)
+        response.parsed_body["reaction_users"].each do |entry|
+          expect(entry["users"].length).to eq(entry["count"]),
+          "expected count #{entry["count"]} to match #{entry["users"].length} users for #{entry["id"]}"
+        end
+      end
     end
 
     it "does not double up reactions which also count as likes if the reaction is no longer enabled" do
