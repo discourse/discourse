@@ -80,7 +80,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionContext do
 
       expect(execution_context.context).to include("trigger" => trigger_data, "node_a" => "data_a")
       expect(
-        execution_context.node_context_for(OpenStruct.new(id: "node_a", name: "node_a")),
+        execution_context.node_context_for(Struct.new(:id, :name).new("node_a", "node_a")),
       ).to eq("counter" => 1)
     end
 
