@@ -52,7 +52,9 @@ will automatically be appended. So if you created the file:
 With the contents:
 
 ```gjs
-<template><b>Hello World</b></template>
+<template>
+  <b>Hello World</b>
+</template>
 ```
 
 Discourse would insert `<b>Hello World</b>` at that point in the template.

@@ -143,9 +143,7 @@ export default class BrandOfficialTopics extends Component {
   }
   // ... (any other logic)
 
-  <template>
-    {{! ... }}
-  </template>
+  <template>{{! ... }}</template>
 }
 ```
 
