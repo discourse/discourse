@@ -9,11 +9,6 @@
   flex-direction: column;
   gap: var(--space-4);
 
-  &.--engagement {
-    border-radius: var(--d-border-radius-large);
-    border: 1px solid var(--primary-low);
-  }
-
   &__info {
     font-size: var(--font-down-1-rem);
     color: var(--primary-low-mid);
@@ -38,6 +33,70 @@
       font-size: var(--font-up-1-rem);
     }
   }
+
+  &__subheader {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  &__subintro {
+    max-width: 60ch;
+
+    p {
+      font-size: var(--font-down-1-rem);
+      color: var(--primary-high);
+      margin-bottom: 0;
+    }
+  }
+
+  &__metrics {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  &__metric-number {
+    font-size: var(--font-up-3);
+  }
+
+  &__metric-label {
+    font-size: var(--font-down-2-rem);
+    color: var(--primary-medium);
+  }
+
+  &__callout {
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low-mid);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--d-border-radius-large);
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__wrapper {
+    .--kpi & {
+      display: flex;
+      flex-wrap: wrap;
+      border: 1px solid var(--primary-low);
+      border-radius: var(--d-border-radius-large);
+    }
+
+    .--reports & {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+
+    .--traffic & {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      border-radius: var(--d-border-radius-large);
+      border: 1px solid var(--primary-low);
+      padding: var(--space-4);
+      padding-bottom: 0;
+    }
+  }
 }
 
 .db-kpi {
@@ -55,13 +114,6 @@
 
   &:hover {
     background: var(--primary-very-low);
-  }
-
-  &__wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-large);
   }
 
   &__arrow {
@@ -127,16 +179,10 @@
 }
 
 .db-report {
-  &__wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4);
-  }
-
   &__card {
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius-large);
-    padding: var(--space-2);
+    padding: var(--space-4);
     box-sizing: border-box;
     background: var(--secondary);
     height: 250px; // to be removed when cards come in with aspect-ratio;
@@ -156,14 +202,17 @@
   }
 
   &__label {
-    display: inline-flex;
-    align-items: center;
     color: var(--primary-high);
     background: var(--primary-low);
     border-radius: 4px;
     font-size: var(--font-down-3);
     padding: var(--space-half) var(--space-2);
     font-weight: 400;
+
+    &.--data-explorer {
+      background: var(--tertiary-low);
+      color: var(--tertiary);
+    }
   }
 
   &__remove {
@@ -183,5 +232,67 @@
       border-color: var(--tertiary);
       color: var(--tertiary);
     }
+  }
+}
+
+.db-traffic {
+  &__chart {
+    height: 500px; // remove later
+  }
+
+  &__lists {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    border-top: 1px solid var(--primary-low);
+    margin-inline: calc(var(--space-4) * -1);
+    padding-inline: var(--space-4);
+  }
+
+  &__referrers {
+    border-right: 1px solid var(--primary-low);
+    padding-right: var(--space-4);
+    padding-block: var(--space-4);
+  }
+
+  &__countries {
+    padding-block: var(--space-4);
+  }
+
+  &__list-heading {
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__list-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__count {
+    color: var(--primary-medium);
+  }
+}
+
+.db-upgrade-banner {
+  display: flex;
+  justify-content: space-between;
+  background: var(--tertiary-very-low);
+  color: var(--tertiary);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--d-border-radius-large);
+  font-size: var(--font-down-1-rem);
+
+  p {
+    margin: 0;
   }
 }
