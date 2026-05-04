@@ -1897,6 +1897,8 @@ Discourse::Application.routes.draw do
     get "/dev-mode" => "dev_mode#index"
     post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
 
+    get "/new-page" => "new_page#index"
+
     get "/theme-qunit" => "qunit#theme"
     get "/theme-tests", to: redirect("/theme-qunit")
 
