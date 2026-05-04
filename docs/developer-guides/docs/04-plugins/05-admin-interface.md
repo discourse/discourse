@@ -42,23 +42,27 @@ The lines below that set up the server side mapping of routes for our plugin. On
 
 Next, we'll add a template that will be displayed when the user visits the `/admin/plugins/purple-tentacle` path. It will just be a button that shows an animated gif of purple tentacle when the user clicks a button:
 
-**`assets/javascripts/discourse/templates/admin/plugins-purple-tentacle.hbs`**
+**`assets/javascripts/discourse/templates/admin/plugins-purple-tentacle.gjs`**
 
-```hbs
-{{#if tentacleVisible}}
-  <div class="tentacle">
-    <img src="https://eviltrout.com/images/tentacle.gif" />
+```gjs
+import DButton from "discourse/components/d-button";
+
+<template>
+  {{#if @controller.tentacleVisible}}
+    <div class="tentacle">
+      <img src="https://eviltrout.com/images/tentacle.gif" />
+    </div>
+  {{/if}}
+
+  <div class="buttons">
+    <DButton
+      @label="purple_tentacle.show"
+      @action={{@controller.showTentacle}}
+      @icon="eye"
+      @id="show-tentacle"
+    />
   </div>
-{{/if}}
-
-<div class="buttons">
-  <DButton
-    @label="purple_tentacle.show"
-    @action={{action "showTentacle"}}
-    @icon="eye"
-    @id="show-tentacle"
-  />
-</div>
+</template>
 ```
 
 If you've learned the basics of handlebars the template should be pretty simple to understand. The `<DButton />` is a component in Discourse we use for showing a button with a label and icon.
@@ -103,9 +107,9 @@ If you look at your developer console, you should see an error that provides a c
 Uncaught Error: Nothing handled the action 'showTentacle'`
 ```
 
-Ah yes, the reason is in our handlebars template we are depending on a couple of things:
+Ah yes, the reason is in our template we are depending on a couple of things:
 
-1. That when the user clicks the button, `showTentacle` will be called.
+1. That when the user clicks the button, `showTentacle` will be called on the controller.
 2. `showTentacle` should set the property `tentacleVisible` to `true` so that the image shows up.
 
 If you haven't read the [Ember Guides on Controllers](https://guides.emberjs.com/v3.28.0/routing/controllers/) now is a good time to do so, because we'll implement a controller for our `purple-tentacle` template that will handle this logic.
