@@ -18,16 +18,7 @@ RSpec.describe DiscourseWorkflows::WorkflowExecutionsController do
   end
 
   describe "GET /admin/plugins/discourse-workflows/workflows/:workflow_id/executions" do
-    fab!(:execution) do
-      DiscourseWorkflows::Execution.create!(
-        workflow: workflow,
-        status: :success,
-        started_at: 1.hour.ago,
-        finished_at: Time.current,
-        trigger_data: {
-        },
-      )
-    end
+    fab!(:execution) { Fabricate(:discourse_workflows_completed_execution, workflow: workflow) }
 
     it "returns executions for the workflow" do
       get "/admin/plugins/discourse-workflows/workflows/#{workflow.id}/executions.json"
