@@ -47,6 +47,7 @@ module ThemeScreenshotMarker
     return unless ENV["TAKE_SCREENSHOTS"] == "1"
 
     device = ENV["SCREENSHOTS_DEVICE"] || "desktop"
+
     return if only && only.to_s != device
 
     output_dir = ENV["SCREENSHOTS_DIR"] || Rails.root.join("tmp/theme-screenshots").to_s

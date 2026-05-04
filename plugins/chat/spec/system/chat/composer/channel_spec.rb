@@ -57,7 +57,7 @@ RSpec.describe "Chat | composer | channel" do
 
         expect(thread_page.composer).to be_focused
 
-        screenshot_marker(label: "chat-thread")
+        screenshot_marker(label: "chat-thread", only: "desktop")
       end
     end
   end

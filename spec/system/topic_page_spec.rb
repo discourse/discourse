@@ -177,7 +177,7 @@ describe "Topic page" do
 
       # compare the selected text with the last paragraph
       expect(select_content).to eq(
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempor.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat risus. Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan. Vestibulum feugiat mi vitae turpis tempor dignissim.",
       )
     end
   end

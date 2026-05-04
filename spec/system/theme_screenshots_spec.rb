@@ -153,7 +153,7 @@ describe "Theme screenshots" do
 
   # Returns a hash mapping the line number of each `it` / `scenario` / `example`
   # / `specify` block that contains `screenshot_marker` to a constraint hash:
-  #   { only: :desktop, labels: ["my-label"] } — call site has `only: :desktop`
+  #   { only: :desktop, labels: ["my-label"] } — call site has `only: :desktop` or `only: "desktop"`
   #   { only: nil, labels: ["a", "b"] }        — call site has no constraint
   #
   # If a single example contains multiple `screenshot_marker` calls with
@@ -164,8 +164,8 @@ describe "Theme screenshots" do
     result = {}
     lines.each_with_index do |line, idx|
       next if line.exclude?("screenshot_marker")
-      only_match = line.match(/only:\s*:(\w+)/)
-      only = only_match ? only_match[1].to_sym : nil
+      only_match = line.match(/only:\s*(?::(\w+)|["'](\w+)["'])/)
+      only = only_match ? (only_match[1] || only_match[2]).to_sym : nil
       label_match = line.match(/label:\s*["']([^"']+)["']/)
       label = label_match ? label_match[1] : nil
       (idx - 1).downto(0) do |i|
