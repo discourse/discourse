@@ -58,7 +58,7 @@ class ExternalLinter
 
   def run_linter(name, *cmd)
     puts "[bin/lint] Running #{name}..."
-    @results << [name, run_cmd(*cmd)] unless @fix
+    @results << [name, run_cmd(*cmd)]
   end
 
   def run_ruby_linters(files)
