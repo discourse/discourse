@@ -30,8 +30,8 @@ discourse_solved:
     default: false
     hidden: true
   solved_quote_length:
-    default: 300
-    client: false
+    default: 700
+    client: true
   solved_topics_auto_close_hours:
     default: 0
     min: 0
