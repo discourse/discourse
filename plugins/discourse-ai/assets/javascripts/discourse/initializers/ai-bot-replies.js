@@ -37,6 +37,8 @@ function attachHeaderIcon(api) {
 }
 
 function initializeAIBotReplies(api) {
+  const siteSettings = api.container.lookup("service:site-settings");
+
   initializePauseButton(api);
 
   api.renderInOutlet("topic-area-bottom", AiBotDockedComposer);
@@ -48,7 +50,10 @@ function initializeAIBotReplies(api) {
   // route. Returning an empty tabs array instead keeps the component
   // rendering nothing regardless of transition timing.
   api.registerValueTransformer("more-topics-tabs", ({ value, context }) => {
-    if (context?.topic?.is_bot_pm) {
+    if (
+      siteSettings.ai_bot_enable_docked_composer &&
+      context?.topic?.is_bot_pm
+    ) {
       return [];
     }
     return value;
@@ -132,7 +137,7 @@ function initializeAIBotReplies(api) {
   // receives is relayed to the docked composer via `composer:insert-block`
   // which our DEditor subscribes to.
   api.onAppEvent("page:compose-reply", (topic) => {
-    if (topic?.is_bot_pm) {
+    if (siteSettings.ai_bot_enable_docked_composer && topic?.is_bot_pm) {
       focusDockedComposer();
     }
   });

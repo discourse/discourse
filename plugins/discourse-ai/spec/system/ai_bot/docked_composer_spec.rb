@@ -48,6 +48,7 @@ RSpec.describe "AI Bot docked composer" do
     toggle_enabled_bots(bots: [claude_2])
     SiteSetting.navigation_menu = "sidebar"
     SiteSetting.ai_bot_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
+    SiteSetting.ai_bot_enable_docked_composer = true
     Jobs.run_immediately!
     sign_in(user)
   end
@@ -115,5 +116,13 @@ RSpec.describe "AI Bot docked composer" do
     end
 
     expect(find(".ai-bot-docked-composer .d-editor-input").value).to eq("")
+  end
+
+  it "falls back to the standard composer when the docked composer is disabled" do
+    SiteSetting.ai_bot_enable_docked_composer = false
+    topic_page.visit_topic(pm)
+
+    expect(page).to have_no_css(".ai-bot-docked-composer")
+    expect(page).to have_css("#topic-footer-buttons .create")
   end
 end

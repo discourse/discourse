@@ -79,7 +79,10 @@ export default class AiBotDockedComposer extends Component {
   }
 
   get isBotPm() {
-    return this.topic?.is_bot_pm === true;
+    return (
+      this.siteSettings.ai_bot_enable_docked_composer &&
+      this.topic?.is_bot_pm === true
+    );
   }
 
   get topicId() {
