@@ -43,12 +43,7 @@ a.inline-onebox {
 }
 
 .onebox.githubpullrequest .github-row {
-  &.--gh-status-draft,
-  &.--gh-status-open,
-  &.--gh-status-approved,
-  &.--gh-status-changes_requested,
-  &.--gh-status-merged,
-  &.--gh-status-closed {
+  &[class*="--gh-status-"] {
     .github-icon-container {
       display: block;
       grid-area: icon;
@@ -86,19 +81,18 @@ a.inline-onebox {
 }
 
 a.inline-onebox {
-  &.--gh-status-draft::before,
-  &.--gh-status-open::before,
-  &.--gh-status-approved::before,
-  &.--gh-status-changes_requested::before,
-  &.--gh-status-merged::before,
-  &.--gh-status-closed::before {
+  --gh-icon-size: 1.2em;
+
+  &[class*="--gh-status-"]::before {
     content: "";
     display: inline-block;
-    width: 1.2em;
-    height: 1.2em;
+    height: var(--gh-icon-size);
+    width: var(--gh-icon-size);
     margin-inline-end: 0.2em;
-    mask-image: var(--gh-status-icon);
+    mask-size: 100% 100%;
     mask-repeat: no-repeat;
+    mask-position: center;
+    mask-image: var(--gh-status-icon);
     background-color: var(--gh-status-color);
     vertical-align: -0.2em;
   }
