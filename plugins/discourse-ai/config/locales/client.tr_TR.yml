@@ -1192,6 +1192,7 @@ tr_TR:
           last_30_days: "Son 30 gün"
           upload_files: "Dosya yükle"
           uploads_in_progress: "Yüklemeler devam ederken gönderilemiyor"
+          scroll_to_bottom: "En alta kaydır"
       sentiments:
         dashboard:
           title: "Duyarlılık"

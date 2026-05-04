@@ -2186,9 +2186,37 @@ ur:
   new_version_mailer:
     title: "نیا ورژن مَیلر"
     subject_template: "[%{email_prefix}] نیا ڈِسکورس ورژن، اَپ ڈیٹ دستیاب ہے"
+    subject_template_improved: "%{email_prefix}: نیا ڈسکورس ورژن، اپ ڈیٹ دستیاب ہے۔"
+    text_body_template: |
+      واہ! [Discourse](https://www.discourse.org) کا نیا ورژن دستیاب ہے!
+
+      آپ کا ورژن: %{installed_version}
+      نیا ورژن: **%{new_version}**
+
+      - ہمارے آسان **[ایک کلک براؤزر اپ ڈیٹ](%{base_url}/admin/update)** کے ذریعے اپ ڈیٹ کریں
+
+      - [ریلیز نوٹس](https://releases.discourse.org/changelog/%{new_version}) میں دیکھیں کہ نیا کیا ہے
+
+      - خبروں، بحث اور ڈسکورس کی معاونت کے لیے [meta.discourse.org](https://meta.discourse.org) ملاحظہ کریں
   new_version_mailer_with_notes:
     title: "نوٹس کے ساتھ نیا ورژن مَیلر"
     subject_template: "[%{email_prefix}] اَپ ڈیٹ دستیاب ہے"
+    subject_template_improved: "%{email_prefix}: اپ ڈیٹ دستیاب ہے۔"
+    text_body_template: |
+      واہ، [Discourse](https://www.discourse.org) کا نیا ورژن دستیاب ہے!
+
+      آپ کا ورژن: %{installed_version}
+      نیا ورژن: **%{new_version}**
+
+      - ہمارے آسان **[ایک کلک براؤزر اپ ڈیٹ](%{base_url}/admin/update)** کے ذریعے اپ ڈیٹ کریں
+
+      - دیکھیں کہ [ریلیز نوٹس](https://releases.discourse.org/changelog/%{new_version}) میں کیا نیا ہے
+
+      - خبروں، بحث اور ڈسکورس کی معاونت کے لیے [meta.discourse.org](https://meta.discourse.org) ملاحظہ کریں
+
+      ### ریلیز نوٹس
+
+      %{notes}
   flag_reasons:
     off_topic: "آپ کی پوسٹ کو **موضوع سے ہٹ کر** کے طور پر فلَیگ کیا گیا تھا: کمیونٹی سمجھتی ہے کہ یہ ٹاپک کیلئے اچھی فِٹ نہیں ہے، جیسا کہ عنوان اور پہلی پوسٹ کی طرف سے فی الحال بیان کیا گیا ہے۔"
     spam: "آپ کی پوسٹ کو **سپَیم** کے طور پر فلَیگ کیا گیا تھا: کمیونٹی سمجھتی ہے کہ یہ ایک اشتہار ہے، ایسی چیز جو کہ بجائے توقع کے مطابق مفید یا موضوع سے متعلقہ ہونے، کے فطرت میں زیادہ تر پرَومَوشنل ہے۔"

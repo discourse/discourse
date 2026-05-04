@@ -810,6 +810,7 @@ it:
           last_30_days: "Ultimi 30 giorni"
           upload_files: "Carica file"
           uploads_in_progress: "Impossibile caricare mentre sono in corso altri caricamenti"
+          scroll_to_bottom: "Scorri fino in fondo"
       sentiments:
         dashboard:
           title: "Sentimento"

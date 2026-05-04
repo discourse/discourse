@@ -810,6 +810,7 @@ nl:
           last_30_days: "Afgelopen 30 dagen"
           upload_files: "Bestanden uploaden"
           uploads_in_progress: "Kan niet verzenden terwijl het uploaden bezig is"
+          scroll_to_bottom: "Naar beneden scrollen"
       sentiments:
         dashboard:
           title: "Sentiment"

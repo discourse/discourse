@@ -269,6 +269,7 @@ tr_TR:
       comma: ", "
       last_item: "ve"
     action_codes:
+      topic_created: "Bu konuyu %{when} tarihinde oluşturdu"
       public_topic: "Bu konuyu herkese açık yaptı, %{when}"
       open_topic: "Bunu bir konuya dönüştürdü, %{when}"
       private_topic: "Bu konuyu kişisel mesaj yaptı, %{when}"
@@ -341,6 +342,7 @@ tr_TR:
     broken_transformer_alert: "Bir hata oluştu. Siteniz düzgün çalışmayabilir."
     broken_block_alert: "Bir blok yapılandırma hatası algılandı. Ayrıntılar için tarayıcı konsolunu kontrol edin."
     broken_block_factory_alert: "Bir blok yüklenemedi. Bazı kullanıcı arayüzü öğeleri doğru görüntülenmeyebilir."
+    on_before_category_types_change_error: "Kategori türlerini değiştirirken bir hata oluştu. Daha fazla bilgi için tarayıcı konsolunu kontrol edin."
     critical_deprecation:
       notice: "<b>[Yönetici Duyurusu]</b> %{source}, güncellenmesi gereken kod içeriyor. (kimlik:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>daha fazla bilgi edinin</em></a>)"
@@ -2911,6 +2913,15 @@ tr_TR:
         no_translation_yet: "Çevirinin önizlemesini görmek için yazmaya başlayın..."
         placeholder: "Gönderinin çevirisini buraya girin..."
         show_raw_markdown: "Ham verileri göster"
+      change_reply_to:
+        title: "Yanıt hedefini değiştir"
+        hint: "Zaman çizelgesini kaydırarak yanıt vermek istediğiniz gönderiyi bulun."
+        current_selection: "Seçilen: @%{username} tarafından yazılan #%{post_number} numaralı gönderi"
+        invalid_target: "Düzenlediğiniz gönderiden daha eski bir gönderi seçin."
+        submit: "Yanıt hedefini belirle"
+        open: "Bu yorumun yanıtlandığı gönderiyi değiştir"
+        open_from_menu: "Başka bir gönderiye yanıt ver"
+        remove: "Yanıt hedefini kaldır"
       group_mentioned_limit:
         one: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
         other: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
@@ -3534,12 +3545,16 @@ tr_TR:
         selected_count:
           one: "%{count} tane seçildi"
           other: "%{count} tane seçildi"
+        manage_tags: "Etiketleri yönet"
         confirm_unpin_topics:
           one: "%{count} konuyu sabitlemekten vazgeç"
           other: "%{count} konuyu sabitlemekten vazgeç"
         confirm_update_topics:
           one: "%{count} konuyu güncelle"
           other: "%{count} konuyu güncelle"
+        confirm_apply_to_topics:
+          one: "%{count} konuya uygula"
+          other: "%{count} konuya uygula"
         confirm_close_topics:
           one: "%{count} konuyu kapat"
           other: "%{count} konuyu kapat"
@@ -3618,12 +3633,20 @@ tr_TR:
       relist_topics:
         name: "Yeniden listele"
       manage_tags:
+        name: "Etiketleri yönet"
         add:
           title: "Etiket ekle"
+          description: "Seçilen tüm konulara eklendi"
         remove:
           title: "Etiketleri kaldır"
+          all_toggle: "Tüm etiketleri kaldır"
+          all_warning: "<strong>Seçilen konulardan mevcut tüm etiketler</strong> kaldırılacaktır. Bu işlem geri alınamaz."
         replace:
           title: "Etiketleri değiştir"
+          description: "Bir etiketi başka bir etiketle değiştirir"
+          add_replacement: "Değiştirme ekle"
+          remove_replacement: "Değiştirmeyi kaldır"
+          from_placeholder: "Değiştirilecek etiket"
       delete_topics:
         name: "Sil"
         description: "Seçilen konuları kalıcı olarak sil. Bu işlem geri alınamaz."

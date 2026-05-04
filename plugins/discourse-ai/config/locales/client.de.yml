@@ -1174,6 +1174,7 @@ de:
           last_30_days: "Letzte 30 Tage"
           upload_files: "Dateien hochladen"
           uploads_in_progress: "Absenden nicht möglich, solange Uploads nicht abgeschlossen sind"
+          scroll_to_bottom: "Nach unten scrollen"
       sentiments:
         dashboard:
           title: "Stimmung"

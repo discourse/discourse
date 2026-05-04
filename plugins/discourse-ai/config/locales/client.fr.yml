@@ -811,6 +811,7 @@ fr:
           last_30_days: "30 derniers jours"
           upload_files: "Téléverser des fichiers"
           uploads_in_progress: "Impossible d'envoyer que des téléversements sont en cours"
+          scroll_to_bottom: "Défiler vers le bas"
       sentiments:
         dashboard:
           title: "Sentiment"

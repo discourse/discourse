@@ -1243,6 +1243,10 @@ pl_PL:
           last_30_days: "Ostatnie 30 dni"
           upload_files: "Prześlij pliki"
           uploads_in_progress: "Nie można przesłać, gdy trwa przesyłanie"
+          show_toolbar: "Pokaż pasek narzędzi formatowania"
+          hide_toolbar: "Ukryj pasek narzędzi formatowania"
+          scroll_to_bottom: "Przewiń na dół"
+          streaming_below: "Nowa treść poniżej"
       sentiments:
         dashboard:
           title: "Sentiment"

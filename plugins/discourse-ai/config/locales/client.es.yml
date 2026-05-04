@@ -1181,6 +1181,7 @@ es:
           last_30_days: "Últimos 30 días"
           upload_files: "Subir archivos"
           uploads_in_progress: "No se puede enviar mientras se están subiendo archivos"
+          scroll_to_bottom: "Desplazar hacia abajo"
       sentiments:
         dashboard:
           title: "Sentimiento"

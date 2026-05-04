@@ -298,6 +298,7 @@ pt:
           today: "Hoje"
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"
+          scroll_to_bottom: "Rolar até o final"
       sentiments:
         sentiment_analysis:
           filter_types:

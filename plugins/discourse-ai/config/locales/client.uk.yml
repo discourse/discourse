@@ -1238,6 +1238,7 @@ uk:
           last_30_days: "Останні 30 днів"
           upload_files: "Завантажити файли"
           uploads_in_progress: "Неможливо надіслати файл під час завантаження"
+          scroll_to_bottom: "Прокрутити вниз"
       sentiments:
         dashboard:
           title: "Почуття"

@@ -938,6 +938,7 @@ ja:
           last_30_days: "過去 30 日間"
           upload_files: "ファイルをアップロード"
           uploads_in_progress: "アップロード中は送信できません"
+          scroll_to_bottom: "一番下にスクロール"
       sentiments:
         dashboard:
           title: "センチメント"

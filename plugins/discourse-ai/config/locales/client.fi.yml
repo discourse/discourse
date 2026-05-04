@@ -810,6 +810,7 @@ fi:
           last_30_days: "Viimeiset 30 päivää"
           upload_files: "Lataa tiedostoja"
           uploads_in_progress: "Lähettäminen ei onnistu, kun latauksia on käynnissä"
+          scroll_to_bottom: "Vieritä alas"
       sentiments:
         dashboard:
           title: "Sävy"

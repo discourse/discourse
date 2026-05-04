@@ -984,6 +984,7 @@ pt_BR:
           last_30_days: "Últimos 30 dias"
           upload_files: "Enviar arquivos"
           uploads_in_progress: "Não é possível enviar enquanto houver envios em andamento"
+          scroll_to_bottom: "Rolar para a parte inferior"
       sentiments:
         dashboard:
           title: "Sentimento"

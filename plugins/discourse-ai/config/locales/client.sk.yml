@@ -818,6 +818,7 @@ sk:
           last_30_days: "Posledných 30 dní"
           upload_files: "Nahrávanie súborov"
           uploads_in_progress: "Nemožno odoslať, keď prebieha nahrávanie"
+          scroll_to_bottom: "Prejdite nadol"
       sentiments:
         dashboard:
           title: "Sentiment"

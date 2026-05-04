@@ -1169,6 +1169,10 @@ zh_CN:
           last_30_days: "过去 30 天"
           upload_files: "上传文件"
           uploads_in_progress: "上传过程中无法提交"
+          show_toolbar: "显示工具栏"
+          hide_toolbar: "隐藏工具栏"
+          scroll_to_bottom: "滚动到底部"
+          streaming_below: "下方新增内容"
       sentiments:
         dashboard:
           title: "情绪"
