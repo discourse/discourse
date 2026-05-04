@@ -470,31 +470,16 @@ module DiscourseAi
           result
         end
 
-        def attachment_type_for(encoded)
-          ext = File.extname(encoded[:filename].to_s).delete_prefix(".").downcase
-          mime = encoded[:mime_type].to_s.downcase
-
-          return "pdf" if ext == "pdf" || mime.include?("pdf")
-          return "docx" if ext == "docx" || mime.include?("wordprocessingml.document")
-          return "doc" if ext == "doc" || mime == "application/msword"
-          return "xlsx" if ext == "xlsx" || mime.include?("spreadsheetml.sheet")
-          return "xls" if ext == "xls" || mime == "application/vnd.ms-excel"
-          return "csv" if ext == "csv" || mime.include?("text/csv") || mime.include?("csv")
-          return "txt" if ext == "txt" || mime.include?("text/plain")
-          return "rtf" if ext == "rtf" || mime.include?("rtf")
-          return "html" if %w[html htm].include?(ext) || mime.include?("html")
-          return "md" if %w[md markdown].include?(ext) || mime.include?("markdown")
-
-          "file"
-        end
-
         def document_allowed?(encoded)
           return true if encoded[:kind] != :document
 
           allowed_types = llm_model.allowed_attachment_types
           return false if allowed_types.blank?
 
-          allowed_types.include?(attachment_type_for(encoded))
+          ext = File.extname(encoded[:filename].to_s).delete_prefix(".")
+          allowed_types.include?(
+            DiscourseAi::Completions::UploadEncoder.attachment_type_for(ext, encoded[:mime_type]),
+          )
         end
       end
     end
