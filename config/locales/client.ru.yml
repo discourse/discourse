@@ -653,6 +653,7 @@ ru:
           other: "Создано %{count} года назад"
     bookmarked:
       title: "Закладки"
+      delete_bookmarks: "Удалить все закладки"
       help:
         bookmark: "Добавить тему в закладки"
         edit_bookmark: "Изменить закладку для сообщения в этой теме"
@@ -3662,6 +3663,9 @@ ru:
     not_logged_in_user: "страница пользователя с историей его последней активности и настроек"
     current_user: "перейти на вашу страницу пользователя"
     view_all: "Просмотреть все %{tab}"
+    permanently_delete:
+      title: "Вы абсолютно уверены?"
+      confirm_instruction: "Пожалуйста, введите ниже <b>%{phrase}</b> для подтверждения:"
     user_menu:
       generic_no_items: "Нет элементов в списке."
       sr_menu_tabs: "Вкладки меню пользователя"
@@ -3888,6 +3892,10 @@ ru:
       update_notifications:
         name: "Обновить уведомления"
         description: "Измените свой персональный уровень уведомлений для выбранных тем следующим образом:"
+      pin_topics:
+        name: "Закрепить"
+      unpin_topics:
+        name: "Открепить"
     nested_replies:
       sort:
         label: "Сортировать по"
@@ -3907,6 +3915,8 @@ ru:
       no_replies: "Ответов пока нет."
       deleted_post_placeholder: "[удалённые]"
       pinned_reply: "Закреплена"
+      pin_reply: "Закрепить вверху"
+      unpin_reply: "Открепить"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"

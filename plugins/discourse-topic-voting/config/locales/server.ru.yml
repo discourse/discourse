@@ -5,7 +5,13 @@
 # https://translate.discourse.org/
 
 ru:
+  category_types:
+    ideas:
+      name: "Идеи"
+      title: "идеи"
+      description: "Здесь участники могут предлагать идеи и голосовать за те, которые им больше всего нравятся."
   site_settings:
+    enable_ideas_category_type_setup: "Включает опцию типа категории «Идеи» при настройке создания категории. Обратите внимание, что для вступления изменений в силу необходимо включить опцию «Включить упрощенное создание категорий»."
     topic_voting_enabled: 'Разрешить пользователям голосовать по темам?'
     topic_voting_enable_vote_limits: 'Ограничьте количество голосов, отдаваемых одним пользователем, в зависимости от уровня доверия.'
     topic_voting_tl0_vote_limit: 'Сколько активных голосов разрешено пользователям с TL0?'
@@ -20,6 +26,22 @@ ru:
     category_type:
       show_who_voted:
         label: "Показывать проголосовавших (не отмечайте, если голосование анонимное)"
+      show_votes_on_profile:
+        label: "Показать голоса в профиле"
+      enable_vote_limits:
+        label: "Ограничьте количество голосов участников"
+      tl0_vote_limit:
+        label: "Лимит голосов TL0"
+      tl1_vote_limit:
+        label: "Лимит голосов TL1"
+      tl2_vote_limit:
+        label: "Лимит голосов TL2"
+      tl3_vote_limit:
+        label: "Лимит голосов TL3"
+      tl4_vote_limit:
+        label: "Лимит голосов TL4"
+      alert_votes_left:
+        label: "Уведомление о количестве оставшихся голосов"
     votes_moved:
       one: "%{count} голос был перемещен."
       few: "%{count} голоса было перемещено."
@@ -36,3 +58,11 @@ ru:
         topic_votes_max: "Максимальное количество голосов в теме"
         order_topic_votes: "Сортировать темы по количеству голосов"
         order_topic_votes_asc: "Сортировать темы по наименьшему количеству голосов"
+  badges:
+    daydreamer:
+      name: "Мечтатель"
+    innovator:
+      name: "Инноватор"
+    visionary:
+      name: "Визионер"
+      long_description: "Этот значок выдается за получение 25 голосов по одной из ваших тем. :white_check_mark: Дайте людям то, чего они хотят! :clap:"
