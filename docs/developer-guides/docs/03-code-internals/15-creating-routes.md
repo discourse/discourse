@@ -74,7 +74,7 @@ And, like on the Rails API side we need to wire up the route. Open the file `app
 this.route("snack");
 ```
 
-We have one final thing left to do in Ember land, and that’s to have the Ember application perform an AJAX request to fetch our JSON from the server. Let’s create one last file. This will be an [Ember Route](https://guides.emberjs.com/v1.10.0/routing/specifying-a-routes-model/). Its `model()` function will be called when the route is entered, so we’ll make our `ajax` call in there:
+We have one final thing left to do in Ember land, and that’s to have the Ember application perform an AJAX request to fetch our JSON from the server. Let’s create one last file. This will be an [Ember Route](https://guides.emberjs.com/release/routing/specifying-a-routes-model/). Its `model()` function will be called when the route is entered, so we’ll make our `ajax` call in there:
 
 **app/assets/javascripts/admin/routes/admin-snack.js**
 

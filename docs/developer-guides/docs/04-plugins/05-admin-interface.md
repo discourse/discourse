@@ -81,7 +81,7 @@ export default {
 };
 ```
 
-A route map is something we added to discourse to make it so that plugins could add routes to the ember application. The syntax within `map()` is very similar to [Ember's router](https://guides.emberjs.com/v3.28.0/routing/defining-your-routes/). In this case our route map is very simple, it just declares one route called `purple-tentacle` under `/admin/plugins`.
+A route map is something we added to discourse to make it so that plugins could add routes to the ember application. The syntax within `map()` is very similar to [Ember's router](https://guides.emberjs.com/release/routing/defining-your-routes/). In this case our route map is very simple, it just declares one route called `purple-tentacle` under `/admin/plugins`.
 
 Finally, let's add our translation strings:
 
@@ -112,7 +112,7 @@ Ah yes, the reason is in our template we are depending on a couple of things:
 1. That when the user clicks the button, `showTentacle` will be called on the controller.
 2. `showTentacle` should set the property `tentacleVisible` to `true` so that the image shows up.
 
-If you haven't read the [Ember Guides on Controllers](https://guides.emberjs.com/v3.28.0/routing/controllers/) now is a good time to do so, because we'll implement a controller for our `purple-tentacle` template that will handle this logic.
+If you haven't read the [Ember Guides on Controllers](https://guides.emberjs.com/release/routing/controllers/) now is a good time to do so, because we'll implement a controller for our `purple-tentacle` template that will handle this logic.
 
 Create the following file:
 

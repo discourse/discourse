@@ -10,7 +10,7 @@ Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-par
 
 ### Getting Started: Handlebars Templates
 
-Discourse's client application is written using the Ember.js Javascript framework. Ember uses [Handlebars](https://guides.emberjs.com/v4.12.0/components) for all HTML templates. There's a great introduction to the templating language at that link, so definitely read it thoroughly.
+Discourse's client application is written using the Ember.js Javascript framework. Ember uses [Handlebars](https://guides.emberjs.com/release/components) for all HTML templates. There's a great introduction to the templating language at that link, so definitely read it thoroughly.
 
 ### The Problem: Adding elements to the Discourse User Interface
 
