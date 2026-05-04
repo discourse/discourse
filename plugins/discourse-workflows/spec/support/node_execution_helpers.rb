@@ -5,6 +5,7 @@ module NodeExecutionHelpers
     configuration:,
     item: nil,
     input_items: nil,
+    node_context: nil,
     run_as_user: Discourse.system_user,
     &block
   )
@@ -22,6 +23,7 @@ module NodeExecutionHelpers
       resolver_context: resolver_context,
     }
     kwargs[:run_as_user] = run_as_user if run_as_user
+    kwargs[:node_context] = node_context if node_context
 
     ctx = DiscourseWorkflows::Executor::NodeExecutionContext.new(**kwargs)
     raw = action.execute(ctx)
