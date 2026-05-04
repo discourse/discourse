@@ -252,6 +252,17 @@ RSpec.describe UserApiKeysController do
       expect(response.status).to eq(302)
     end
 
+    it "rejects wildcard auth_redirect matches outside the candidate host" do
+      SiteSetting.allowed_user_api_auth_redirects = "https://*.example.com/callback"
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      post "/user-api-key.json",
+           params: args.merge(auth_redirect: "https://evil.com/path/.example.com/callback")
+
+      expect(response.status).to eq(403)
+      expect(response.body).to include("errors")
+    end
+
     it "preserves query params in auth_redirect" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
@@ -274,11 +285,18 @@ RSpec.describe UserApiKeysController do
         )
       end
 
-      before { sign_in(user) }
+      before do
+        sign_in(user)
+        SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+      end
 
-      it "does not require allowed_user_api_auth_redirects site setting" do
+      it "requires registered client auth_redirect to stay on the global allowlist" do
+        SiteSetting.allowed_user_api_auth_redirects = "https://good.example.com/callback"
+
         post "/user-api-key.json", params: args
-        expect(response.status).to eq(302)
+
+        expect(response.status).to eq(403)
+        expect(response.body).to include("errors")
       end
 
       it "does not require application_name or public_key params" do
@@ -358,6 +376,21 @@ RSpec.describe UserApiKeysController do
       get "/user-api-key/otp", params: otp_args.merge(padding: "invalid")
       expect(response.status).to eq(400)
     end
+
+    it "does not show the form when auth_redirect differs from a registered client's redirect" do
+      SiteSetting.allowed_user_api_auth_redirects = "https://*.example.com/callback"
+
+      Fabricate(
+        :user_api_key_client,
+        public_key: public_key,
+        auth_redirect: "https://legitimate.example.com/callback",
+      )
+
+      get "/user-api-key/otp",
+          params: otp_args.merge(auth_redirect: "https://evil.example.com/callback")
+
+      expect(response.status).to eq(403)
+    end
   end
 
   describe "#create_otp" do
@@ -369,6 +402,22 @@ RSpec.describe UserApiKeysController do
     it "refuses to redirect to disallowed place" do
       sign_in(Fabricate(:user))
       post "/user-api-key/otp", params: otp_args
+      expect(response.status).to eq(403)
+    end
+
+    it "does not allow auth_redirect that differs from a registered client's redirect" do
+      SiteSetting.allowed_user_api_auth_redirects = "https://*.example.com/callback"
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      Fabricate(
+        :user_api_key_client,
+        public_key: public_key,
+        auth_redirect: "https://legitimate.example.com/callback",
+      )
+
+      post "/user-api-key/otp",
+           params: otp_args.merge(auth_redirect: "https://evil.example.com/callback")
+
       expect(response.status).to eq(403)
     end
 

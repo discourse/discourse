@@ -137,7 +137,9 @@ class UserApiKeysController < ApplicationController
 
   def otp
     require_params_otp
+    find_client_by_public_key
     validate_params_otp
+    validate_auth_redirect
 
     unless current_user
       cookies[:destination_url] = request.fullpath
@@ -158,6 +160,7 @@ class UserApiKeysController < ApplicationController
 
   def create_otp
     require_params_otp
+    find_client_by_public_key
     validate_params_otp
     validate_auth_redirect
 
@@ -197,6 +200,10 @@ class UserApiKeysController < ApplicationController
     @client = UserApiKeyClient.find_by(client_id: params[:client_id])
   end
 
+  def find_client_by_public_key
+    @client = UserApiKeyClient.find_by(public_key: params[:public_key])
+  end
+
   def require_params
     %i[nonce scopes client_id].each { |p| params.require(p) }
   end
@@ -234,7 +241,12 @@ class UserApiKeysController < ApplicationController
 
   def validate_auth_redirect
     return unless params.key?(:auth_redirect)
-    if UserApiKeyClient.invalid_auth_redirect?(params[:auth_redirect], client: @client)
+
+    if @client&.auth_redirect.present? && params[:auth_redirect] != @client.auth_redirect
+      raise Discourse::InvalidAccess
+    end
+
+    if UserApiKeyClient.invalid_auth_redirect?(params[:auth_redirect])
       raise Discourse::InvalidAccess
     end
   end
