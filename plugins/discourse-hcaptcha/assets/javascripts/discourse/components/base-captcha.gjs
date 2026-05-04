@@ -22,13 +22,11 @@ export default class BaseCaptcha extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    if (this.isCaptchaLoaded) {
-      this.captchaApi.reset(this.widgetId);
-    }
   }
 
   initializeCaptcha() {
     if (this.isCaptchaLoaded) {
+      this.captchaApi = window[this.captchaApiName];
       next(() => {
         if (document.getElementById(this.containerId)) {
           this.renderCaptcha(this.siteKey);
@@ -40,7 +38,7 @@ export default class BaseCaptcha extends Component {
   }
 
   get isCaptchaLoaded() {
-    return typeof this.captchaApi !== "undefined";
+    return typeof window[this.captchaApiName] !== "undefined";
   }
 
   renderCaptcha() {

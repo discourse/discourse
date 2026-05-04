@@ -36,9 +36,8 @@ function initializeHCaptcha(api, container) {
       });
       return true;
     } catch {
-      return false;
-    } finally {
       captchaService.reset();
+      return false;
     }
   });
 }
