@@ -1,11 +1,42 @@
+.db-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
 .db-section {
-  background: var(--secondary);
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius-large);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  &.--engagement {
+    border-radius: var(--d-border-radius-large);
+    border: 1px solid var(--primary-low);
+  }
 
   &__info {
     font-size: var(--font-down-1-rem);
     color: var(--primary-low-mid);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-down-2-rem);
+    font-weight: 600;
+    color: var(--primary-medium);
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 1px;
+  }
+
+  &__intro {
+    max-width: 60ch;
+    margin: 0;
+
+    .--kpi & {
+      font-size: var(--font-up-1-rem);
+    }
   }
 }
 
@@ -29,6 +60,8 @@
   &__wrapper {
     display: flex;
     flex-wrap: wrap;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-large);
   }
 
   &__arrow {
@@ -89,6 +122,66 @@
 
     &.--neg {
       color: var(--danger);
+    }
+  }
+}
+
+.db-report {
+  &__wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  &__card {
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-large);
+    padding: var(--space-2);
+    box-sizing: border-box;
+    background: var(--secondary);
+    height: 250px; // to be removed when cards come in with aspect-ratio;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-down-1-rem);
+    font-weight: 600;
+  }
+
+  &__label {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary-high);
+    background: var(--primary-low);
+    border-radius: 4px;
+    font-size: var(--font-down-3);
+    padding: var(--space-half) var(--space-2);
+    font-weight: 400;
+  }
+
+  &__remove {
+    margin-left: auto;
+  }
+
+  &__add-report {
+    border: 1px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius-large);
+    background: var(--secondary);
+    color: var(--primary-medium);
+    padding: var(--space-2);
+
+    &:hover,
+    &:focus {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+      color: var(--tertiary);
     }
   }
 }
