@@ -94,14 +94,14 @@ a.inline-onebox {
   &.--gh-status-closed::after {
     content: "";
     display: inline-block;
-    width: 0.9em;
+    width: 1.1em;
     aspect-ratio: $icon-aspect-ratio;
     margin-inline-start: 0.15em;
-    vertical-align: -0.2em;
     mask-size: 100% 100%;
     mask-repeat: no-repeat;
     mask-position: center;
     mask-image: var(--gh-status-icon);
     background-color: var(--gh-status-color);
+    position: absolute;
   }
 }
