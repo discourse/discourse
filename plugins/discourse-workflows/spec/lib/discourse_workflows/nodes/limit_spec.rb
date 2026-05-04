@@ -6,7 +6,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Limit::V1 do
     instance = described_class.new(configuration: config)
     result =
       instance.execute(
-        DiscourseWorkflows::Executor::NodeExecutionContext.new(input_items: input_items, node_context: {}),
+        DiscourseWorkflows::Executor::NodeExecutionContext.new(
+          input_items: input_items,
+          node_context: {
+          },
+        ),
       )
     result[0]
   end

@@ -6,7 +6,10 @@ RSpec.describe DiscourseWorkflows::Nodes::LoopOverItems::V1 do
   end
 
   def build_exec_ctx(items, node_context: {})
-    DiscourseWorkflows::Executor::NodeExecutionContext.new(input_items: items, node_context: node_context)
+    DiscourseWorkflows::Executor::NodeExecutionContext.new(
+      input_items: items,
+      node_context: node_context,
+    )
   end
 
   describe "#execute" do

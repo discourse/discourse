@@ -90,7 +90,12 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
 
     it "paginates with cursor param" do
       execution_1 =
-        DiscourseWorkflows::Execution.create!(workflow: workflow, status: :pending, trigger_data: {})
+        DiscourseWorkflows::Execution.create!(
+          workflow: workflow,
+          status: :pending,
+          trigger_data: {
+          },
+        )
       execution_2 =
         DiscourseWorkflows::Execution.create!(
           workflow: workflow,
