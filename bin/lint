@@ -25,7 +25,7 @@ class ExternalLinter
 
   def initialize(root, files, fix:, verbose: false)
     @root = root
-    @files = files
+    @files = files.map { |f| File.expand_path(f) }
     @fix = fix
     @verbose = verbose
   end
@@ -50,30 +50,23 @@ class ExternalLinter
     JS_EXTENSIONS.include?(File.extname(f)[1..])
   end
 
-  def relative_paths(files)
-    files.map { |f| Pathname.new(File.expand_path(f)).relative_path_from(Pathname.new(@root)).to_s }
-  end
-
   def run_cmd(*cmd)
-    puts "Running: #{cmd.shelljoin}" if @verbose
-    system(*cmd)
+    puts "Running: #{cmd.shelljoin} (cwd: #{@root})" if @verbose
+    system(*cmd, chdir: @root)
   end
 
   def run_ruby_linters(files)
-    rel_files = relative_paths(files)
     success = true
 
-    Dir.chdir(@root) do
-      run_cmd("bundle", "install") or abort "bundle install failed in #{@root}"
+    run_cmd("bundle", "install") or abort "bundle install failed in #{@root}"
 
-      stree_subcmd = @fix ? "write" : "check"
-      stree_ok = run_cmd("bundle", "exec", "stree", stree_subcmd, *rel_files)
-      success &= stree_ok unless @fix
+    stree_subcmd = @fix ? "write" : "check"
+    stree_ok = run_cmd("bundle", "exec", "stree", stree_subcmd, *files)
+    success &= stree_ok unless @fix
 
-      rubocop_args = @fix ? ["--autocorrect"] : []
-      rubocop_ok = run_cmd("bundle", "exec", "rubocop", *rubocop_args, *rel_files)
-      success &= rubocop_ok unless @fix
-    end
+    rubocop_args = @fix ? ["--autocorrect"] : []
+    rubocop_ok = run_cmd("bundle", "exec", "rubocop", *rubocop_args, *files)
+    success &= rubocop_ok unless @fix
 
     success
   end
@@ -86,38 +79,33 @@ class ExternalLinter
     ember_template_lint_files = by_ext.call(EMBER_TEMPLATE_LINT_EXTENSIONS)
     stylelint_files = by_ext.call(STYLELINT_EXTENSIONS)
 
+    pnpm = ["pnpm", "--ignore-workspace"]
     success = true
 
-    Dir.chdir(@root) do
-      run_cmd("pnpm", "i") or abort "pnpm i failed in #{@root}"
+    run_cmd(*pnpm, "i") or abort "pnpm i failed in #{@root}"
 
-      if prettier_files.any?
-        rel = relative_paths(prettier_files)
-        args = @fix ? ["--write"] : ["--list-different"]
-        ok = run_cmd("pnpm", "prettier", *args, *rel)
-        success &= ok unless @fix
-      end
+    if prettier_files.any?
+      args = @fix ? ["--write"] : ["--list-different"]
+      ok = run_cmd(*pnpm, "prettier", *args, *prettier_files)
+      success &= ok unless @fix
+    end
 
-      if eslint_files.any?
-        rel = relative_paths(eslint_files)
-        args = @fix ? ["--fix"] : ["--quiet"]
-        ok = run_cmd("pnpm", "eslint", *args, *rel)
-        success &= ok unless @fix
-      end
+    if eslint_files.any?
+      args = @fix ? ["--fix"] : ["--quiet"]
+      ok = run_cmd(*pnpm, "eslint", *args, *eslint_files)
+      success &= ok unless @fix
+    end
 
-      if ember_template_lint_files.any?
-        rel = relative_paths(ember_template_lint_files)
-        args = @fix ? ["--fix"] : []
-        ok = run_cmd("pnpm", "ember-template-lint", *args, *rel)
-        success &= ok unless @fix
-      end
+    if ember_template_lint_files.any?
+      args = @fix ? ["--fix"] : []
+      ok = run_cmd(*pnpm, "ember-template-lint", *args, *ember_template_lint_files)
+      success &= ok unless @fix
+    end
 
-      if stylelint_files.any?
-        rel = relative_paths(stylelint_files)
-        args = @fix ? ["--fix"] : []
-        ok = run_cmd("pnpm", "stylelint", *args, *rel)
-        success &= ok unless @fix
-      end
+    if stylelint_files.any?
+      args = @fix ? ["--fix"] : []
+      ok = run_cmd(*pnpm, "stylelint", *args, *stylelint_files)
+      success &= ok unless @fix
     end
 
     success
