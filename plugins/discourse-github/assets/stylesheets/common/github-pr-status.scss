@@ -86,22 +86,20 @@ a.inline-onebox {
 }
 
 a.inline-onebox {
-  &.--gh-status-draft::after,
-  &.--gh-status-open::after,
-  &.--gh-status-approved::after,
-  &.--gh-status-changes_requested::after,
-  &.--gh-status-merged::after,
-  &.--gh-status-closed::after {
+  &.--gh-status-draft::before,
+  &.--gh-status-open::before,
+  &.--gh-status-approved::before,
+  &.--gh-status-changes_requested::before,
+  &.--gh-status-merged::before,
+  &.--gh-status-closed::before {
     content: "";
     display: inline-block;
-    width: 1.1em;
-    aspect-ratio: $icon-aspect-ratio;
-    margin-inline-start: 0.15em;
-    mask-size: 100% 100%;
-    mask-repeat: no-repeat;
-    mask-position: center;
+    width: 1.2em;
+    height: 1.2em;
+    margin-inline-end: 0.2em;
     mask-image: var(--gh-status-icon);
+    mask-repeat: no-repeat;
     background-color: var(--gh-status-color);
-    position: absolute;
+    vertical-align: -0.2em;
   }
 }
