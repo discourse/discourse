@@ -56,6 +56,10 @@ en:
       weekly: "weekly"
       monthly: "monthly"
       quarterly: "quarterly"
+    discourse_workflows:
+      assign_topic:
+        error: "Failed to assign topic: %{reason}"
+        assignee_not_found: "Could not find user or group: %{assignee}"
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"
@@ -95,11 +99,6 @@ en:
   discourse_push_notifications:
     popup:
       assigned: "@%{username} assigned you"
-  discourse_assign:
-    discourse_workflows:
-      assign_topic:
-        error: "Failed to assign topic: %{reason}"
-        assignee_not_found: "Could not find user or group: %{assignee}"
   activerecord:
     errors:
       models:
