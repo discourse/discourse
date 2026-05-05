@@ -183,6 +183,7 @@ module SvgSprite
         gift
         globe
         grip-lines
+        grip-vertical
         hand-point-right
         handshake-angle
         hashtag

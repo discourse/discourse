@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .db-main {
   display: flex;
   flex-direction: column;
@@ -28,6 +30,50 @@
 
   &.--neg {
     background: var(--danger-low);
+  }
+}
+
+.db-customise {
+  padding: var(--space-4);
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    @include viewport.until(sm) {
+      gap: var(--space-5);
+    }
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  &__section-name {
+    margin-right: var(--space-4);
+  }
+
+  &__drag-handle {
+    color: var(--primary-low-mid);
+  }
+
+  .d-toggle-switch {
+    margin-left: auto;
+
+    @include viewport.from(sm) {
+      --toggle-switch-width: 32px;
+      --toggle-switch-height: 18px;
+    }
+
+    .d-icon-check {
+      display: none;
+    }
   }
 }
 

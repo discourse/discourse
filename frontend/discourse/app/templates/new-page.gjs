@@ -1,8 +1,59 @@
+import { array, hash } from "@ember/helper";
 import DButton from "discourse/components/d-button";
+import DSegmentedControl from "discourse/components/d-segmented-control";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
+import DMenu from "discourse/float-kit/components/d-menu";
 import icon from "discourse/helpers/d-icon";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 
+const sections = [
+  { id: "highlights", label: "Highlights", visible: true },
+  { id: "traffic", label: "Site traffic", visible: true },
+  { id: "engagement", label: "Engagement", visible: true },
+  { id: "support", label: "Support", visible: true },
+  { id: "search", label: "Search", visible: true },
+  { id: "reports", label: "Reports", visible: true },
+  { id: "system", label: "System", visible: false },
+];
+
 <template>
+  <div class="db-toolbar">
+    <DSegmentedControl
+      @name="period"
+      @value="month"
+      @items={{array
+        (hash value="day" label="Day")
+        (hash value="week" label="Week")
+        (hash value="month" label="Month")
+        (hash value="custom" label="Custom")
+      }}
+    />
+
+    <DMenu
+      @identifier="db-customise"
+      @icon="gear"
+      @label="Customise"
+      @triggerClass="btn-default"
+      @modalForMobile={{true}}
+    >
+      <:content>
+        <div class="db-customise">
+          <ul class="db-customise__list">
+            {{#each sections as |s|}}
+              <li class="db-customise__row">
+                <span class="db-customise__drag-handle">{{icon
+                    "grip-vertical"
+                  }}</span>
+                <span class="db-customise__section-name">{{s.label}}</span>
+                <DToggleSwitch @state={{s.visible}} />
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      </:content>
+    </DMenu>
+  </div>
+
   <h1>Dashboard</h1>
   <div class="db-main">
     <div class="db-section --kpi">
