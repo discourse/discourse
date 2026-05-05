@@ -8,28 +8,28 @@ Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-par
 
 ---
 
-### Getting Started: Handlebars Templates
+### Getting Started: Templates
 
-Discourse's client application is written using the Ember.js Javascript framework. Ember uses [Handlebars](https://guides.emberjs.com/release/components) for all HTML templates. There's a great introduction to the templating language at that link, so definitely read it thoroughly.
+Discourse's client application is written using the Ember.js Javascript framework. Ember uses [Templates](https://guides.emberjs.com/release/components/) to generate HTML. There's a great introduction to the templating language at that link, so definitely read it thoroughly.
 
 ### The Problem: Adding elements to the Discourse User Interface
 
 Many plugins need to add and extend the Discourse web interface. We provide a mechanism to do this called plugin outlets in handlebars templates.
 
-If you browse the discourse handlebars templates, you'll often see the following markup:
+If you browse the Discourse templates, you'll often see the following markup:
 
 ```hbs
 <PluginOutlet @name="edit-topic" />
 ```
 
-This is declaring a plugin outlet called "edit-topic". It's an extension point in the template that plugin authors can leverage to add their own handlebars markup.
+This is declaring a plugin outlet called "edit-topic". It's an extension point in the template that plugin authors can leverage to add their own markup.
 
-When authoring your plugin, look in the discourse handlebars templates (in `.hbs` files) you want to change for a `<PluginOutlet />`. If there isn't one, just ask us to extend it! We'll happily add them if you have a good use case. If you want to make it easier and faster for us to do that, please submit a pull request on github!
+When authoring your plugin, look in the Discourse templates (in `.gjs` files) you want to change for a `<PluginOutlet />`. If there isn't one, just ask us to extend it! We'll happily add them if you have a good use case. If you want to make it easier and faster for us to do that, please submit a pull request on GitHub!
 
-> :exclamation: If you want to see some of the places where plugin outlets exist, you can run the following command if you're on OSX or Linux:
+> :exclamation: If you want to see some of the places where plugin outlets exist, you can run the following command in a POSIX-compliant shell:
 >
 > ```sh
-> git grep "<PluginOutlet" -- "*.hbs"
+> git grep -A 1 "<PluginOutlet" -- "*.gjs"
 > ```
 
 You can also display the plugin outlets on a Discourse site by turning on the [Discourse Developer Toolbar](https://meta.discourse.org/t/introducing-discourse-developer-toolbar/346215). Just type `enableDevTools()` in the browser console on a Discourse forum and click the plug icon that appears on the left side of the page.
@@ -38,7 +38,7 @@ You can also display the plugin outlets on a Discourse site by turning on the [D
 
 Once you've found the plugin outlet you want to add to, you have to write a `connector` for it. A connector is a `.gjs` component whose filename includes `connectors/<outlet name>` in its path.
 
-For example, if the Discourse handlebars template has:
+For example, if the Discourse template has:
 
 ```hbs
 <PluginOutlet @name="evil-trout" />
@@ -59,7 +59,7 @@ With the contents:
 
 Discourse would insert `<b>Hello World</b>` at that point in the template.
 
-Note that we called the file `hello.gjs` -- The final part of the filename does not matter, but it must be unique across every plugin. It's useful to name it something descriptive of what you are extending it to do. This will make debugging easier in the future.
+Note that we called the file `hello.gjs` -- The filename (as opposed to the directory name) does not matter, but it must be unique across every plugin. It's useful to name it something descriptive of what you are extending it to do. This will make debugging easier in the future.
 
 ### Troubleshooting
 

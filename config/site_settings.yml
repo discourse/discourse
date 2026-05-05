@@ -3874,24 +3874,11 @@ uncategorized:
     default: true
     area: "interface"
 
-  enable_custom_splash_screen:
-    default: false
-    client: true
-    hidden: true
-    area: "interface"
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/395100"
-
   splash_screen_image:
     default: ""
     type: upload
     authorized_extensions: "svg"
     area: "interface"
-    depends_on:
-      - "enable_custom_splash_screen"
-    depends_behavior: "hidden"
     validator: "UploadSettingValidator"
 
   suggest_weekends_in_date_pickers:

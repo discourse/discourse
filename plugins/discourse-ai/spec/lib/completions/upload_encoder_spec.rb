@@ -47,6 +47,49 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     zip_bytes(entries, ".xlsx")
   end
 
+  def odt_bytes(entries)
+    zip_bytes(entries, ".odt")
+  end
+
+  def ods_bytes(entries)
+    zip_bytes(entries, ".ods")
+  end
+
+  def odt_content_xml(text)
+    <<~XML
+      <?xml version="1.0" encoding="UTF-8"?>
+      <office:document-content
+        xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+        xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0">
+        <office:body>
+          <office:text>
+            <text:p>#{text}</text:p>
+          </office:text>
+        </office:body>
+      </office:document-content>
+    XML
+  end
+
+  def ods_content_xml(sheet_name, cell_text)
+    <<~XML
+      <?xml version="1.0" encoding="UTF-8"?>
+      <office:document-content
+        xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+        xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+        xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0">
+        <office:body>
+          <office:spreadsheet>
+            <table:table table:name="#{sheet_name}">
+              <table:table-row>
+                <table:table-cell office:value-type="string"><text:p>#{cell_text}</text:p></table:table-cell>
+              </table:table-row>
+            </table:table>
+          </office:spreadsheet>
+        </office:body>
+      </office:document-content>
+    XML
+  end
+
   def docx_document_xml(text)
     <<~XML
       <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -302,6 +345,108 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
           "Failed to convert .xlsx upload to text",
           "upload_id=#{upload.id}",
           "sample.xlsx",
+          "Zip",
+        ),
+      )
+      expect(encoded).to be_empty
+    end
+
+    it "converts .odt files to text" do
+      upload =
+        create_doc_upload(
+          contents: odt_bytes("content.xml" => odt_content_xml("Converted ODT document text")),
+          filename: "sample.odt",
+        )
+
+      encoded =
+        described_class.encode(
+          upload_ids: [upload.id],
+          max_pixels: 1_048_576,
+          allowed_kinds: %i[document],
+          allowed_attachment_types: ["odt"],
+        )
+
+      expect(encoded.length).to eq(1)
+      expect(encoded.first).to include(
+        kind: :document,
+        filename: "sample.odt",
+        mime_type: "text/plain",
+        converted_from: "odt",
+      )
+      expect(encoded.first[:text]).to start_with("Uploaded document: sample.odt (")
+      expect(encoded.first[:text]).to include("\n\nConverted ODT document text")
+      expect(encoded.first).not_to have_key(:base64)
+    end
+
+    it "logs odt conversion failures and skips the upload" do
+      upload = create_doc_upload(contents: "raw odt bytes", filename: "sample.odt")
+
+      allow(Rails.logger).to receive(:warn)
+
+      encoded =
+        described_class.encode(
+          upload_ids: [upload.id],
+          max_pixels: 1_048_576,
+          allowed_kinds: %i[document],
+          allowed_attachment_types: ["odt"],
+        )
+
+      expect(Rails.logger).to have_received(:warn).with(
+        a_string_including(
+          "Failed to convert .odt upload to text",
+          "upload_id=#{upload.id}",
+          "sample.odt",
+          "Zip",
+        ),
+      )
+      expect(encoded).to be_empty
+    end
+
+    it "converts .ods files to text" do
+      upload =
+        create_doc_upload(
+          contents: ods_bytes("content.xml" => ods_content_xml("Sales", "Converted ODS cell")),
+          filename: "sample.ods",
+        )
+
+      encoded =
+        described_class.encode(
+          upload_ids: [upload.id],
+          max_pixels: 1_048_576,
+          allowed_kinds: %i[document],
+          allowed_attachment_types: ["ods"],
+        )
+
+      expect(encoded.length).to eq(1)
+      expect(encoded.first).to include(
+        kind: :document,
+        filename: "sample.ods",
+        mime_type: "text/plain",
+        converted_from: "ods",
+      )
+      expect(encoded.first[:text]).to start_with("Uploaded document: sample.ods (")
+      expect(encoded.first[:text]).to include("\n\nSheet: Sales\n\nConverted ODS cell")
+      expect(encoded.first).not_to have_key(:base64)
+    end
+
+    it "logs ods conversion failures and skips the upload" do
+      upload = create_doc_upload(contents: "raw ods bytes", filename: "sample.ods")
+
+      allow(Rails.logger).to receive(:warn)
+
+      encoded =
+        described_class.encode(
+          upload_ids: [upload.id],
+          max_pixels: 1_048_576,
+          allowed_kinds: %i[document],
+          allowed_attachment_types: ["ods"],
+        )
+
+      expect(Rails.logger).to have_received(:warn).with(
+        a_string_including(
+          "Failed to convert .ods upload to text",
+          "upload_id=#{upload.id}",
+          "sample.ods",
           "Zip",
         ),
       )

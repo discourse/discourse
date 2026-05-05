@@ -8265,7 +8265,6 @@ tr_TR:
           other: "Kullanıcının %{count} üzeri gönderisi olduğundan tüm gönderiler silinemiyor. (delete_all_posts_max)"
         delete_confirm_title: "Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu işlem kalıcıdır!"
         delete_confirm: "Mevcut tartışmalardan içeriğin kaldırılmasını önlemek için kullanıcıları silmek yerine anonimleştirmek genellikle tercih edilir."
-        delete_and_block: "Kullanıcıyı silin ve e-posta adresini ve IP adresini engelleyin"
         delete_dont_block: "Kullanıcı sil"
         deleting_user: "Kullanıcı siliniyor…"
         deleted: "Kullanıcı silindi."

@@ -529,9 +529,6 @@ zh_CN:
         max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总 token 数（输入 + 输出）。设置后，将固定的补全/工具限值替换为 token 预算，从而实现更智能的行为。留空则使用默认限值。"
         compression_threshold: "压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
-        vision_enabled: 启用视觉
-        vision_enabled_help: 如果启用，AI 将尝试理解用户在话题中发布的图片，这取决于使用的模型是否支持视觉。Anthropic、Google 和 OpenAI 的最新模型支持该功能。
-        vision_max_pixels: 支持的图片大小
         vision_max_pixel_sizes:
           low: 低品质 - 最便宜 (256x256)
           medium: 中等品质 (512x512)
@@ -820,9 +817,6 @@ zh_CN:
         max_output_tokens: "最大输出词元数"
         url: "托管模型的服务的 URL"
         api_key: "托管模型的服务的 API 密钥"
-        vision_enabled: "启用视觉"
-        allowed_attachment_types: "允许的附件"
-        attachment_types_placeholder: "选择或输入扩展名（例如，pdf、txt、docx）"
         ai_bot_user: "AI 机器人用户"
         cost_input: "输入成本"
         cost_cached_input: "缓存输入成本"
@@ -903,8 +897,6 @@ zh_CN:
           max_output_tokens: "模型在单个请求中可以生成的最大词元数"
           display_name: "用于在您的站点界面上引用此模型的名称。"
           name: "我们将其包含在 API 调用中以指定我们将使用哪个模型"
-          vision_enabled: "如果启用，AI 将尝试理解图片，这取决于使用的模型是否支持视觉。Anthropic、Google 和 OpenAI 的最新模型支持该功能。"
-          allowed_attachment_types: "选择要转发给模型的附件类型。留空则禁止附件。图片通过视觉进行控制。"
           cost_input: "此模型每 100 万个词元的输入成本"
           cost_cached_input: "此模型每 100 万个词元的缓存输入成本（从提示缓存读取时）"
           cost_cache_write: "此模型每 100 万个词元的缓存写入成本（从提示缓存写入时）"

@@ -12,13 +12,14 @@ RSpec.describe ReviewableAiToolAction do
     SiteSetting.ai_bot_enabled = true
   end
 
-  def create_tool_action(tool_name: "close_topic", params: nil)
+  def create_tool_action(tool_name: "close_topic", params: nil, post_id: nil)
     params ||= { topic_id: topic.id, closed: true, reason: "Off-topic" }
     AiToolAction.create!(
       tool_name: tool_name,
       tool_parameters: params,
       ai_agent: ai_agent,
       bot_user_id: bot_user.id,
+      post_id: post_id,
     )
   end
 
@@ -39,6 +40,29 @@ RSpec.describe ReviewableAiToolAction do
       force_review: true,
     )
     reviewable
+  end
+
+  describe "#created_new!" do
+    fab!(:private_category_group, :group)
+    fab!(:private_category) { Fabricate(:private_category, group: private_category_group) }
+    fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+    fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+    it "scopes the reviewable to the target post's topic and category" do
+      tool_action = create_tool_action(post_id: private_post.id)
+      reviewable = create_reviewable(tool_action)
+
+      expect(reviewable.topic).to eq(private_topic)
+      expect(reviewable.category).to eq(private_category)
+    end
+
+    it "leaves topic and category blank when the target action has no post" do
+      tool_action = create_tool_action(post_id: nil)
+      reviewable = create_reviewable(tool_action)
+
+      expect(reviewable.topic).to be_nil
+      expect(reviewable.category).to be_nil
+    end
   end
 
   describe "#build_actions" do

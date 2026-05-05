@@ -2454,6 +2454,7 @@ zh_CN:
     enable_custom_splash_screen: "允许您使用自己的 SVG 图片自定义加载启动画面。通过 'splash screen image' 设置上传图片。警告：这可能会对 LCP 分数和 Google 索引产生负面影响。"
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题引入了设计修改。"
     reporting_improvements: "改进了 Discourse 管理员报告的导航、设计和实用性。"
+    dashboard_improvements: "改进了 Discourse 管理仪表盘的导航、设计和实用性。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_datetime: "日期时间格式无效。请确保输入有效的日期和时间。"
