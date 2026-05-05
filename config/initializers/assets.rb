@@ -31,3 +31,5 @@ Rails.application.config.assets.excluded_paths.push(
 Rails.application.config.assets.compilers.filter! do |type, compiler|
   type == "text/javascript" && compiler == Propshaft::Compiler::SourceMappingUrls
 end
+
+Mime::Type.register "application/wasm", :wasm

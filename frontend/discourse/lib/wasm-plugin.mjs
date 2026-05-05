@@ -19,29 +19,31 @@ export default function wasmPlugin() {
               : original,
       };
     },
-    async transform(code, id) {
-      if (!code.includes(".wasm")) {
-        return null;
-      }
-      const matches = [...code.matchAll(WASM_RE)];
-      if (!matches.length) {
-        return null;
-      }
+    transform: {
+      filter: {
+        code: WASM_RE,
+      },
+      async handler(code, id) {
+        const matches = [...code.matchAll(WASM_RE)];
+        if (!matches.length) {
+          return null;
+        }
 
-      const refs = {};
-      for (const [, path] of matches) {
-        refs[path] ??= this.emitFile({
-          type: "asset",
-          name: basename(path),
-          source: await fs.readFile(resolve(dirname(id), path)),
-        });
-      }
+        const refs = {};
+        for (const [, path] of matches) {
+          refs[path] ??= this.emitFile({
+            type: "asset",
+            name: basename(path),
+            source: await fs.readFile(resolve(dirname(id), path)),
+          });
+        }
 
-      return code.replace(
-        WASM_RE,
-        (_, path) =>
-          `new URL(import.meta.ROLLUP_FILE_URL_${refs[path]}, import.meta.url)`
-      );
+        return code.replace(
+          WASM_RE,
+          (_, path) =>
+            `new URL(import.meta.ROLLUP_FILE_URL_${refs[path]}, import.meta.url)`
+        );
+      },
     },
   };
 }
