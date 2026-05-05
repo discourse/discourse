@@ -19,7 +19,6 @@ export default class NestedRoute extends Route {
   queryParams = {
     sort: { refreshModel: true },
     context: { refreshModel: true },
-    collapseReplies: { refreshModel: false },
   };
 
   buildRouteInfoMetadata() {

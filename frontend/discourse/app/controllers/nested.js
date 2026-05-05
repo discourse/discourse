@@ -42,8 +42,7 @@ export default class NestedController extends Controller {
   @tracked newRootPostIds = [];
   @tracked editingTopic = false;
   @tracked pinnedPostIds = [];
-  @tracked collapseReplies = false;
-  queryParams = ["sort", "context", { collapseReplies: "collapse_replies" }];
+  queryParams = ["sort", "context"];
 
   // Externalized expansion state: postNumber → { expanded, collapsed }
   // Components read on construction, write on toggle.

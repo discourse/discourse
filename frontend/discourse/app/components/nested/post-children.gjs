@@ -231,7 +231,6 @@ export default class NestedPostChildren extends Component {
             @fetchedChildrenCache={{@fetchedChildrenCache}}
             @scrollAnchor={{@scrollAnchor}}
             @registerPost={{@registerPost}}
-            @collapseFromDepth={{@collapseFromDepth}}
           />
         {{/each}}
 
