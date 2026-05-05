@@ -4445,4 +4445,4 @@ experimental:
     client: true
     upcoming_change:
       status: "conceptual"
-      impact: "feature,admin"
+      impact: "feature,admins"
