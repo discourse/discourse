@@ -1059,7 +1059,23 @@ Renders a `<textarea>` element.
 
 ### @height
 
-Sets the height of the textarea.
+Sets the height of the textarea in pixels.
+
+### @minHeight
+
+Sets the minimum height of the textarea in pixels.
+
+### @maxHeight
+
+Sets the maximum height of the textarea in pixels.
+
+### @autoResize
+
+When true, resizes the textarea to fit its content on initial render and as
+the value changes. Combine with `@minHeight` and `@maxHeight` to keep long
+text fields usable without letting them take over the page. Width is controlled
+by the field's `@format`; use `@format="full"` for long text that should use
+the available horizontal space.
 
 **Example**
 
@@ -1072,6 +1088,26 @@ Sets the height of the textarea.
     as |field|
   >
     <field.Control @height={{120}} />
+  </form.Field>
+</Form>
+```
+
+**Auto-resizing example**
+
+```hbs
+<Form as |form|>
+  <form.Field
+    @name="prompt"
+    @title="Prompt"
+    @type="textarea"
+    @format="full"
+    as |field|
+  >
+    <field.Control
+      @autoResize={{true}}
+      @minHeight={{240}}
+      @maxHeight={{600}}
+    />
   </form.Field>
 </Form>
 ```

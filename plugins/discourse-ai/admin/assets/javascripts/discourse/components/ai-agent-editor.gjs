@@ -594,11 +594,15 @@ export default class AgentEditor extends Component {
           @title={{i18n "discourse_ai.ai_agent.system_prompt"}}
           @validation="required|length:1,100000"
           @disabled={{data.system}}
-          @format="large"
+          @format="full"
           @type="textarea"
           as |field|
         >
-          <field.Control />
+          <field.Control
+            @autoResize={{true}}
+            @minHeight={{216}}
+            @maxHeight={{700}}
+          />
         </form.Field>
 
         <AiAgentResponseFormatEditor @form={{form}} @data={{data}} />
