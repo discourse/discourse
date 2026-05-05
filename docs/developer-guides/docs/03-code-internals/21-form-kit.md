@@ -1076,6 +1076,25 @@ Sets the height of the textarea.
 </Form>
 ```
 
+### @autoResize
+
+Grows the textarea with its content. Bounds can be set via the `--form-kit-textarea-min-height` (default `150px`) and `--form-kit-textarea-max-height` (default `none`) custom properties on any ancestor.
+
+**Example**
+
+```hbs
+<form.Field @name="description" @type="textarea" as |field|>
+  <field.Control @autoResize={{true}} />
+</form.Field>
+```
+
+```css
+[data-name="description"] {
+  --form-kit-textarea-min-height: 10rem;
+  --form-kit-textarea-max-height: 50rem;
+}
+```
+
 ## Toggle
 
 Renders a `<DToggleSwitch />` component.

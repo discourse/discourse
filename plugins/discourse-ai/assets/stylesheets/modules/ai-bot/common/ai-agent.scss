@@ -235,6 +235,11 @@
     }
   }
 
+  [data-name="system_prompt"] {
+    --form-kit-textarea-min-height: 13.5rem;
+    --form-kit-textarea-max-height: 43.75rem;
+  }
+
   &__tool-options {
     padding: 1em;
     border: 1px solid var(--content-border-color);
