@@ -14,7 +14,7 @@ Propshaft::Helper.prepend(
           retry if attempts < 3
         elsif Rails.env.test?
           # Assets might not be compiled in test mode. Just return a fake path
-          "/assets/#{path.sub(".", "-aaaaaaaa.")}"
+          "/assets/#{path}"
         else
           raise e
         end
