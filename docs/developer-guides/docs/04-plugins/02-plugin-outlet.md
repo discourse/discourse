@@ -24,7 +24,7 @@ If you browse the Discourse templates, you'll often see the following markup:
 
 This is declaring a plugin outlet called "edit-topic". It's an extension point in the template that plugin authors can leverage to add their own markup.
 
-When authoring your plugin, look in the Discourse  templates (in `.gjs` files) you want to change for a `<PluginOutlet />`. If there isn't one, just ask us to extend it! We'll happily add them if you have a good use case. If you want to make it easier and faster for us to do that, please submit a pull request on GitHub!
+When authoring your plugin, look in the Discourse templates (in `.gjs` files) you want to change for a `<PluginOutlet />`. If there isn't one, just ask us to extend it! We'll happily add them if you have a good use case. If you want to make it easier and faster for us to do that, please submit a pull request on GitHub!
 
 > :exclamation: If you want to see some of the places where plugin outlets exist, you can run the following command in a POSIX-compliant shell:
 >
