@@ -4,13 +4,13 @@ import { fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
 import FilterInput from "discourse/components/filter-input";
 import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
+import { resettableTracked } from "discourse/lib/tracked-tools";
 import { and, not } from "discourse/truth-helpers";
 
 /**
@@ -39,10 +39,12 @@ import { and, not } from "discourse/truth-helpers";
  */
 
 export default class AdminFilterControls extends Component {
-  @tracked textFilter = "";
   @tracked dropdownFilter = "all";
   @tracked
   showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
+  @resettableTracked
+  textFilter = this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "";
+
   dropdownFilters = trackedObject();
 
   constructor() {
@@ -183,23 +185,12 @@ export default class AdminFilterControls extends Component {
 
   @action
   setupComponent() {
-    this.syncTextFilterFromArg();
-
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownOptions).forEach((key) => {
         this.dropdownFilters[key] = this.defaultValue(key);
       });
     } else {
       this.dropdownFilter = this.defaultDropdownValue;
-    }
-  }
-
-  @action
-  syncTextFilterFromArg() {
-    if (this.args.initialTextFilter) {
-      this.textFilter = this.args.initialTextFilter.replace(/,\s*/g, ", ");
-    } else {
-      this.textFilter = "";
     }
   }
 
@@ -257,7 +248,6 @@ export default class AdminFilterControls extends Component {
           (if this.hasMultipleDropdowns "--multiple-dropdowns")
         }}
         {{didInsert this.setupComponent}}
-        {{didUpdate this.syncTextFilterFromArg @initialTextFilter}}
       >
         <div class="admin-filter-controls__inputs">
           <FilterInput
