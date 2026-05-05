@@ -610,6 +610,14 @@ export function applyDefaultHandlers() {
     // Category model expects `permissions` to be an array (@autoTrackedArray).
     delete category.permissions;
 
+    // `category_types` is sent as an array of IDs but returned back as a hash.
+    category.category_types = Object.fromEntries(
+      (category.category_types ?? []).map((id) => [
+        id,
+        { id, name: id, configuration_schema: {} },
+      ])
+    );
+
     return response({ category });
   });
 
