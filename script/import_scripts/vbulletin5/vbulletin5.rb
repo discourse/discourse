@@ -15,13 +15,13 @@ class ImportScripts::VBulletin < ImportScripts::Base
   # override these using environment vars
 
   URL_PREFIX = ENV["URL_PREFIX"] || "forum/"
-  DB_PREFIX = ENV["DB_PREFIX"] || ""
+  DB_PREFIX = ENV["DB_PREFIX"] || "vb_"
   DB_HOST = ENV["DB_HOST"] || "localhost"
-  DB_NAME = ENV["DB_NAME"] || "sci"
-  DB_PASS = ENV["DB_PASS"] || "password123"
-  DB_USER = ENV["DB_USER"] || "root"
-  ATTACH_DIR = ENV["ATTACH_DIR"] || "/shared/uploads/attachments"
-  AVATAR_DIR = ENV["AVATAR_DIR"] || "/shared/uploads/avatars"
+  DB_NAME = ENV["DB_NAME"] || "vbulletin"
+  DB_PASS = ENV["DB_PASS"] || "password"
+  DB_USER = ENV["DB_USER"] || "username"
+  ATTACH_DIR = ENV["ATTACH_DIR"] || "/home/discourse/vbulletin/attach"
+  AVATAR_DIR = ENV["AVATAR_DIR"] || "/home/discourse/vbulletin/avatars"
 
   # Maps BBCode inline formatting tags to their HTML equivalents.
   BBCODE_INLINE = { "b" => "strong", "strong" => "strong",
