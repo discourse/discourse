@@ -519,11 +519,13 @@ class Post < ActiveRecord::Base
   end
 
   def reply_notification_target
-    return if reply_to_post_number.blank?
+    target_post_number = reply_to_post_number
+    target_post_number = 1 if target_post_number.blank? && topic&.nested_view?
+    return if target_post_number.blank?
     Post.find_by(
       "topic_id = :topic_id AND post_number = :post_number AND user_id <> :user_id",
       topic_id: topic_id,
-      post_number: reply_to_post_number,
+      post_number: target_post_number,
       user_id: user_id,
     ).try(:user)
   end

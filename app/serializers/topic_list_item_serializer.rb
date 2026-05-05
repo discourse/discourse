@@ -20,7 +20,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :allowed_user_count,
              :participant_groups,
              :is_hot,
-             :is_nested_view
+             :is_nested_view,
+             :has_new_replies
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -154,6 +155,18 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def include_is_nested_view?
     SiteSetting.nested_replies_enabled && !object.private_message?
+  end
+
+  def has_new_replies
+    last_visited = object.user_data&.last_visited_at
+    return false if last_visited.blank?
+    return false if object.last_post_user_id == scope.user&.id
+    object.bumped_at > last_visited
+  end
+
+  def include_has_new_replies?
+    return false unless scope.user
+    object.nested_view?
   end
 
   private

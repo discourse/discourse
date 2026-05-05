@@ -69,7 +69,8 @@ class TopicCreator
     process_private_message(topic)
     save_topic(topic)
     create_warning(topic)
-    watch_topic(topic)
+    set_author_notification_level(topic)
+    set_pm_recipient_notification_levels(topic)
     create_shared_draft(topic)
     UserActionManager.topic_created(topic)
 
@@ -111,9 +112,21 @@ class TopicCreator
     UserWarning.create(topic: topic, user: @added_users.first, created_by: @user)
   end
 
-  def watch_topic(topic)
-    topic.notifier.watch_topic!(topic.user_id) unless @opts[:auto_track] == false
+  def set_author_notification_level(topic)
+    return if @opts[:auto_track] == false
 
+    if topic.nested_view?
+      topic.notifier.track_topic!(topic.user_id)
+    else
+      topic.notifier.watch_topic!(topic.user_id)
+    end
+  end
+
+  # Iterates the topic's PM allowed users + groups and applies their default
+  # notification levels. No-op for regular (non-PM) topics, where these
+  # collections are empty. Author-side notification level is set separately
+  # in #set_author_notification_level.
+  def set_pm_recipient_notification_levels(topic)
     topic.reload.topic_allowed_users.each do |tau|
       next if tau.user_id == -1 || tau.user_id == topic.user_id
       topic.notifier.watch!(tau.user_id)

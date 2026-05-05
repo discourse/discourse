@@ -14,6 +14,7 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { groupPath } from "discourse/lib/url";
+import { i18n } from "discourse-i18n";
 
 export default class TopicCell extends Component {
   get participantGroups() {
@@ -74,7 +75,16 @@ export default class TopicCell extends Component {
           />
           {{~! no whitespace ~}}
           <UnreadIndicator @topic={{@topic}} />
-          {{~#if @showTopicPostBadges~}}
+          {{~#if @topic.is_nested_view~}}
+            {{~#if @topic.has_new_replies~}}
+              <span class="topic-post-badges">&nbsp;<a
+                  href={{@topic.lastUnreadUrl}}
+                  title={{i18n "topic.has_new_replies"}}
+                  aria-label={{i18n "topic.has_new_replies"}}
+                  class="badge badge-notification new-replies"
+                >&nbsp;</a></span>
+            {{~/if~}}
+          {{~else if @showTopicPostBadges~}}
             <TopicPostBadges
               @unreadPosts={{@topic.unread_posts}}
               @unseen={{@topic.unseen}}

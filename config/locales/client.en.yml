@@ -3423,6 +3423,12 @@ en:
       liked_by_multiple_users:
         one: "%{username} and %{count} other"
         other: "%{username} and %{count} others"
+      replied_consolidated_in_topic:
+        one: "%{count} new reply in your topic"
+        other: "%{count} new replies in your topic"
+      replied_consolidated_to_post:
+        one: "%{count} new reply to your post"
+        other: "%{count} new replies to your post"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
@@ -3995,6 +4001,7 @@ en:
 
       list: "Topics"
       new: "new topic"
+      has_new_replies: "new replies since your last visit"
       unread: "unread"
       new_topics:
         one: "%{count} new topic"

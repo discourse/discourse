@@ -704,6 +704,12 @@ class Topic < ActiveRecord::Base
     self.archetype == Archetype.default
   end
 
+  def nested_view?
+    return false unless SiteSetting.nested_replies_enabled
+    return false if private_message?
+    nested_topic.present? || SiteSetting.nested_replies_default
+  end
+
   def open?
     !self.closed?
   end
