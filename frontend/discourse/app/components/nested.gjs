@@ -146,6 +146,7 @@ export default class Nested extends Component {
             @getCloakingData={{this.viewportTracker.getCloakingData}}
             @cloakAbove={{this.cloakAbove}}
             @cloakBelow={{this.cloakBelow}}
+            @collapseFromDepth={{if @collapseReplies 0}}
           />
         {{else}}
           <div class="nested-view__empty">
