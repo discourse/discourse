@@ -24,13 +24,13 @@ export default class CategoryTypeChooser extends Service {
     this._allTypes = types;
   }
 
+  get currentSelection() {
+    return this._selection;
+  }
+
   choose(typeId, typeName, typeSchema, typeTitle, count) {
     this._selection = { type: typeId, typeName, typeSchema, typeTitle, count };
     this._setupComplete = true;
-  }
-
-  currentSelection() {
-    return this._selection;
   }
 
   reset() {

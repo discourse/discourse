@@ -20,6 +20,10 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
     });
   }
 
+  get dynamicCategoryTypeTabs() {
+    return Object.values(this.args.controller.model.categoryTypes);
+  }
+
   get visiblePrimaryTabs() {
     return registeredEditCategoryTabs.filter(
       (tab) =>
@@ -74,6 +78,15 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
                 />
               {{/if}}
             {{/if}}
+          {{/each}}
+          {{#each this.dynamicCategoryTypeTabs as |dynamicTab|}}
+            <EditCategoryTab
+              @panels={{@controller.panels}}
+              @selectedTab={{@controller.selectedTab}}
+              @params={{@controller.parentParams}}
+              @tab={{dynamicTab.id}}
+              @tabTitle={{dynamicTab.name}}
+            />
           {{/each}}
           <EditCategoryTab
             @panels={{@controller.panels}}
@@ -150,6 +163,15 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
               @params={{@controller.parentParams}}
               @tab={{pluginTab.id}}
               @tabTitle={{pluginTab.name}}
+            />
+          {{/each}}
+          {{#each this.dynamicCategoryTypeTabs as |dynamicTab|}}
+            <EditCategoryTab
+              @panels={{@controller.panels}}
+              @selectedTab={{@controller.selectedTab}}
+              @params={{@controller.parentParams}}
+              @tab={{dynamicTab.id}}
+              @tabTitle={{dynamicTab.name}}
             />
           {{/each}}
         {{/if}}

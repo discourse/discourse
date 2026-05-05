@@ -46,6 +46,15 @@ RSpec.describe "Support Category Type Setup" do
     expect(category.custom_fields["empty_box_on_unsolved"]).to eq("true")
   end
 
+  it "is able to click the support tab when creating a new category when solved is disabled" do
+    SiteSetting.solved_enabled = false
+    visit("/new-category/setup")
+    category_type_card.find_type_card("support").click
+    expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
+    category_page.toggle_advanced_settings
+    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
+  end
+
   context "when the support category type setup is disabled" do
     before { SiteSetting.enable_support_category_type_setup = false }
 

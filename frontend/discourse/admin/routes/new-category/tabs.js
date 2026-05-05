@@ -30,7 +30,7 @@ export default class NewCategoryTabs extends DiscourseRoute {
     // when creating a new category, so we need to keep the selection in memory.
     //
     // categoryTypeChooser is reset when leaving the newCategory route anyway.
-    const result = this.categoryTypeChooser.currentSelection();
+    const result = this.categoryTypeChooser.currentSelection;
     if (result) {
       const initialTypes = {};
       initialTypes[result.type] = {
