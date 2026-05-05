@@ -600,8 +600,7 @@ export default class AgentEditor extends Component {
         >
           <field.Control
             @autoResize={{true}}
-            @minHeight={{216}}
-            @maxHeight={{700}}
+            class="ai-agent-editor__system-prompt"
           />
         </form.Field>
 

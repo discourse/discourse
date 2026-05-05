@@ -235,6 +235,12 @@
     }
   }
 
+  &__system-prompt {
+    min-height: 13.5rem;
+    max-height: 43.75rem;
+    overflow-y: auto;
+  }
+
   &__tool-options {
     padding: 1em;
     border: 1px solid var(--content-border-color);

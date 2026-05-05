@@ -1059,23 +1059,16 @@ Renders a `<textarea>` element.
 
 ### @height
 
-Sets the height of the textarea in pixels.
-
-### @minHeight
-
-Sets the minimum height of the textarea in pixels.
-
-### @maxHeight
-
-Sets the maximum height of the textarea in pixels.
+Sets the height of the textarea in pixels. Prefer CSS for sizing concerns when
+possible, especially for responsive or context-specific minimum and maximum
+sizes.
 
 ### @autoResize
 
 When true, resizes the textarea to fit its content on initial render and as
-the value changes. Combine with `@minHeight` and `@maxHeight` to keep long
-text fields usable without letting them take over the page. Width is controlled
-by the field's `@format`; use `@format="full"` for long text that should use
-the available horizontal space.
+the value changes. Use CSS to set minimum and maximum sizes for auto-resizing
+textareas. Width is controlled by the field's `@format`; use `@format="full"`
+for long text that should use the available horizontal space.
 
 **Example**
 
@@ -1103,13 +1096,17 @@ the available horizontal space.
     @format="full"
     as |field|
   >
-    <field.Control
-      @autoResize={{true}}
-      @minHeight={{240}}
-      @maxHeight={{600}}
-    />
+    <field.Control @autoResize={{true}} class="my-plugin__prompt" />
   </form.Field>
 </Form>
+```
+
+```scss
+.my-plugin__prompt {
+  min-height: 15rem;
+  max-height: 40rem;
+  overflow-y: auto;
+}
 ```
 
 ## Toggle

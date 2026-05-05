@@ -37,7 +37,7 @@ function numericStyleValue(style, property) {
   return Number.parseFloat(style[property]) || 0;
 }
 
-function expectedTextareaHeight(textarea, { minHeight, maxHeight } = {}) {
+function expectedTextareaHeight(textarea) {
   const style = getComputedStyle(textarea);
   let height = textarea.scrollHeight;
 
@@ -47,15 +47,11 @@ function expectedTextareaHeight(textarea, { minHeight, maxHeight } = {}) {
       numericStyleValue(style, "borderBottomWidth");
   }
 
-  if (minHeight !== undefined) {
-    height = Math.max(height, minHeight);
-  }
-
-  if (maxHeight !== undefined) {
-    height = Math.min(height, maxHeight);
-  }
-
   return `${Math.ceil(height)}px`;
+}
+
+async function waitForTextareaResize() {
+  await new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
 module(
@@ -194,23 +190,6 @@ module(
         .hasAttribute("style", "height: 42px");
     });
 
-    test("@minHeight and @maxHeight", async function (assert) {
-      await render(
-        <template>
-          <Form as |form|>
-            <form.Field @type="textarea" @name="foo" @title="Foo" as |field|>
-              <field.Control @minHeight={{120}} @maxHeight={{400}} />
-            </form.Field>
-          </Form>
-        </template>
-      );
-
-      const textarea = document.querySelector(".form-kit__control-textarea");
-
-      assert.strictEqual(textarea.style.minHeight, "120px");
-      assert.strictEqual(textarea.style.maxHeight, "400px");
-    });
-
     test("@autoResize sizes on insert and input", async function (assert) {
       await withTextareaScrollHeight(
         (textarea) => (textarea.value.includes("long") ? 500 : 80),
@@ -224,10 +203,49 @@ module(
                   @title="Content"
                   as |field|
                 >
+                  <field.Control @autoResize={{true}} />
+                </form.Field>
+              </Form>
+            </template>
+          );
+
+          const textarea = document.querySelector(
+            ".form-kit__control-textarea"
+          );
+          await waitForTextareaResize();
+
+          assert.strictEqual(
+            textarea.style.height,
+            expectedTextareaHeight(textarea)
+          );
+
+          await formKit().field("content").fillIn("long content");
+          await waitForTextareaResize();
+
+          assert.strictEqual(
+            textarea.style.height,
+            expectedTextareaHeight(textarea)
+          );
+        }
+      );
+    });
+
+    test("@autoResize allows CSS-based sizing", async function (assert) {
+      await withTextareaScrollHeight(
+        (textarea) => (textarea.value.includes("long") ? 500 : 80),
+        async () => {
+          await render(
+            <template>
+              <Form @data={{hash content="long content"}} as |form|>
+                <form.Field
+                  @type="textarea"
+                  @name="content"
+                  @title="Content"
+                  as |field|
+                >
                   <field.Control
                     @autoResize={{true}}
-                    @minHeight={{120}}
-                    @maxHeight={{400}}
+                    style="min-height: 120px; max-height: 400px; overflow-y: auto"
                   />
                 </form.Field>
               </Form>
@@ -237,20 +255,16 @@ module(
           const textarea = document.querySelector(
             ".form-kit__control-textarea"
           );
+          await waitForTextareaResize();
+          const style = getComputedStyle(textarea);
 
           assert.strictEqual(
             textarea.style.height,
-            expectedTextareaHeight(textarea, { minHeight: 120 })
+            expectedTextareaHeight(textarea)
           );
-          assert.strictEqual(textarea.style.minHeight, "120px");
-          assert.strictEqual(textarea.style.maxHeight, "400px");
-
-          await formKit().field("content").fillIn("long content");
-
-          assert.strictEqual(
-            textarea.style.height,
-            expectedTextareaHeight(textarea, { maxHeight: 400 })
-          );
+          assert.strictEqual(style.minHeight, "120px");
+          assert.strictEqual(style.maxHeight, "400px");
+          assert.strictEqual(style.overflowY, "auto");
         }
       );
     });
@@ -275,7 +289,7 @@ module(
                   @title="Content"
                   as |field|
                 >
-                  <field.Control @autoResize={{true}} @minHeight={{100}} />
+                  <field.Control @autoResize={{true}} />
                 </form.Field>
               </Form>
             </template>
@@ -284,14 +298,16 @@ module(
           const textarea = document.querySelector(
             ".form-kit__control-textarea"
           );
+          await waitForTextareaResize();
 
           assert.strictEqual(
             textarea.style.height,
-            expectedTextareaHeight(textarea, { minHeight: 100 })
+            expectedTextareaHeight(textarea)
           );
 
           formApi.set("content", "long content");
           await settled();
+          await waitForTextareaResize();
 
           assert.strictEqual(
             textarea.style.height,
