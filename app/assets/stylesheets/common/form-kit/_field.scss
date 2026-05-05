@@ -8,8 +8,10 @@
   &-composer,
   &-code,
   &-image {
-    .form-kit__container-content {
-      width: var(--form-kit-large-input) !important;
+    &:not(.--small, .--medium, .--large, .--max, .--full) {
+      .form-kit__container-content {
+        width: var(--form-kit-large-input);
+      }
     }
   }
 
