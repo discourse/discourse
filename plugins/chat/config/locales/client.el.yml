@@ -565,6 +565,10 @@ el:
         chat_invitation: "Προσκλήθηκες σε κανάλι συνομιλίας"
         chat_quoted: "Παράθεση μηνύματος συνομιλίας"
         chat_watched_thread: "Νήμα παρακολουθούμενης συνομιλίας"
+    action_codes:
+      chat:
+        enabled: '%{who} ενεργοποίησε τη <button class="btn-link open-chat">συνομιλία</button> %{when}'
+        disabled: "%{who} έκλεισε τη συνομιλία %{when}"
     discourse_automation:
       scriptables:
         send_chat_message:
