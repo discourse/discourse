@@ -753,6 +753,8 @@ describe "Request tracking" do
       end
 
       context "when anonymous" do
+        let(:discovery) { PageObjects::Pages::Discovery.new }
+
         it "tracks topic views correctly via beacon" do
           visit "/"
 
@@ -774,14 +776,14 @@ describe "Request tracking" do
 
           beacon_event =
             all_events
-              .select { |e| e[:event_name] == :beacon_browser_pageview }
-              .find { |e| e[:params].last[:topic_id] == topic.id }
+              .select { |event| event[:event_name] == :beacon_browser_pageview }
+              .find { |event| event[:params].last[:topic_id] == topic.id }
               &.dig(:params)
               &.last
           non_beacon_event =
             all_events
-              .select { |e| e[:event_name] == :browser_pageview }
-              .find { |e| e[:params].last[:topic_id] == topic.id }
+              .select { |event| event[:event_name] == :browser_pageview }
+              .find { |event| event[:params].last[:topic_id] == topic.id }
               &.dig(:params)
               &.last
 
@@ -794,6 +796,32 @@ describe "Request tracking" do
             expect(event[:ip_address]).to eq("::1")
             expect(event[:referrer]).to eq("#{Discourse.base_url}/")
             expect(event[:session_id]).to be_present
+          end
+        end
+
+        it "tracks the previous URL as referrer on browser back navigation via beacon" do
+          visit "/"
+          wait_for_beacon_count(1)
+
+          discovery.topic_list.visit_topic(topic)
+          wait_for_beacon_count(2)
+
+          events =
+            DiscourseEvent.track_events(:beacon_browser_pageview) do
+              page.go_back
+              wait_for_beacon_count(3)
+            end
+
+          beacon_back_event = events.first[:params].last
+
+          expect(beacon_back_event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
+          expect(beacon_back_event[:referrer]).to eq(topic.url)
+        end
+
+        def wait_for_beacon_count(count)
+          try_until_success do
+            CachedCounting.flush
+            expect(ApplicationRequest.stats["page_view_anon_browser_beacon_total"]).to eq(count)
           end
         end
       end
