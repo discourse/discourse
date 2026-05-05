@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   pr-closed:
-    if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
+    if: ${{ github.repository == 'discourse/discourse' && github.event_name == 'pull_request' && github.event.action == 'closed' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -69,7 +69,7 @@ jobs:
           abort "VM returned #{res.code}: #{res.body}" unless res.is_a?(Net::HTTPSuccess)
 
   security-scan:
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.action != 'closed' && !github.event.pull_request.draft) }}
+    if: ${{ github.repository == 'discourse/discourse' && (github.event_name == 'workflow_dispatch' || (github.event.action != 'closed' && !github.event.pull_request.draft)) }}
     runs-on: ubuntu-latest
 
     steps:
