@@ -610,13 +610,17 @@ export function applyDefaultHandlers() {
     // Category model expects `permissions` to be an array (@autoTrackedArray).
     delete category.permissions;
 
-    // `category_types` is sent as an array of IDs but returned back as a hash.
-    category.category_types = Object.fromEntries(
-      (category.category_types ?? []).map((id) => [
-        id,
-        { id, name: id, configuration_schema: {} },
-      ])
-    );
+    // The simplified flow sends `category_types` as an array of IDs but the
+    // real response is a hash `{type_id: metadata}`; other flows send the
+    // hash unchanged.
+    if (Array.isArray(category.category_types)) {
+      category.category_types = Object.fromEntries(
+        category.category_types.map((id) => [
+          id,
+          { id, name: id, configuration_schema: {} },
+        ])
+      );
+    }
 
     return response({ category });
   });
