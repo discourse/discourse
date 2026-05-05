@@ -86,6 +86,10 @@ module SecondFactorManager
       self.security_keys&.where(factor_type: UserSecurityKey.factor_types[:first_factor])&.exists?
   end
 
+  # Passkey-as-2FA (`passkeys_for_2fa_enabled?`) is intentionally excluded:
+  # it only satisfies `/session/2fa`. Password login, email login, and password
+  # reset have no passkey UI yet, so counting passkeys here would make those
+  # flows skip 2FA for passkey-only users.
   def has_any_second_factor_methods_enabled?
     totp_enabled? || security_keys_enabled?
   end
