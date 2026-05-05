@@ -54,14 +54,6 @@ module SystemHelpers
     self
   end
 
-  # Waits for the Ember app to boot before continuing.
-  def visit(...)
-    super
-    return if page.has_no_css?("discourse-assets", wait: 0, visible: :all)
-
-    page.assert_selector("#main.ember-application", visible: :all)
-  end
-
   def sign_in(user)
     visit File.join(
             GlobalSetting.relative_url_root || "",
@@ -444,12 +436,24 @@ module SystemHelpers
 end
 
 module CapybaraSessionEmberWaiter
-  # Waits for the Ember app to boot before continuing.
+  def visit(...)
+    super
+    wait_for_ember_boot
+  end
+
   def refresh
     super
-    return unless RSpec.current_example&.metadata&.[](:type) == :system
-    return if has_no_css?("discourse-assets", wait: 0, visible: :all)
+    wait_for_ember_boot
+  end
 
+  private
+
+  def wait_for_ember_boot
+    return unless RSpec.current_example&.metadata&.[](:type) == :system
+
+    # `<discourse-assets>` is only present on Ember pages;
+    return if has_no_css?("discourse-assets", wait: 0, visible: :all)
+    # `ember-application` is added to `#main` when the app boots.
     assert_selector("#main.ember-application", visible: :all)
   end
 end
