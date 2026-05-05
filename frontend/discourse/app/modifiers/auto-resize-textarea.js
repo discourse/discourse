@@ -28,7 +28,9 @@ function resizeTextarea(element, { manageOverflow }) {
     const maxHeight = Number.parseFloat(getComputedStyle(element).maxHeight);
 
     element.style.overflowY =
-      element.scrollHeight > maxHeight ? "auto" : "hidden";
+      Number.isFinite(maxHeight) && element.scrollHeight > maxHeight
+        ? "auto"
+        : "hidden";
   }
 }
 

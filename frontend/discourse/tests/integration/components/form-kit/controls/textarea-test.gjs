@@ -316,5 +316,27 @@ module(
         }
       );
     });
+
+    test("does not resize when @autoResize is not passed", async function (assert) {
+      await render(
+        <template>
+          <Form @data={{hash content="some content"}} as |form|>
+            <form.Field
+              @type="textarea"
+              @name="content"
+              @title="Content"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      const textarea = document.querySelector(".form-kit__control-textarea");
+      await waitForTextareaResize();
+
+      assert.strictEqual(textarea.style.height, "");
+    });
   }
 );
