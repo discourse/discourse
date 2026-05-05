@@ -5,34 +5,45 @@ module DiscourseRssPolling
     requires_plugin "discourse-rss-polling"
 
     def show
-      render json: FeedSettingFinder.all
+      feeds = RssFeed.includes(:user)
+      render json:
+               ActiveModel::ArraySerializer.new(
+                 feeds,
+                 each_serializer: FeedSettingSerializer,
+                 root: :feed_settings,
+               ).to_json
     end
 
     def update
-      feed = params[:feed_setting]
-
-      if feed
-        rss_feed = RssFeed.find_by_id(feed["id"]) || RssFeed.new
-
-        tags = feed["discourse_tags"]&.map { |t| t["name"] }&.join(",")
-        rss_feed.assign_attributes(
-          url: feed["feed_url"],
-          author: feed["author_username"],
-          category_id: feed["discourse_category_id"],
-          tags:,
-          category_filter: feed["feed_category_filter"],
-        )
-        if rss_feed.save
-          render json: { success: true }
-        else
+      FeedSetting::Update.call(params: params[:feed_setting]) do
+        on_success { render json: { success: true } }
+        on_failed_contract do |contract|
+          render json: {
+                   success: false,
+                   errors: contract.errors.full_messages,
+                 },
+                 status: :bad_request
+        end
+        on_model_not_found(:user) do |_, params:|
+          render json: {
+                   success: false,
+                   errors: [
+                     I18n.t(
+                       "rss_polling.errors.unknown_author_username",
+                       username: params.author_username,
+                     ),
+                   ],
+                 },
+                 status: :unprocessable_entity
+        end
+        on_model_errors(:rss_feed) do |rss_feed|
           render json: {
                    success: false,
                    errors: rss_feed.errors.full_messages,
                  },
                  status: :unprocessable_entity
         end
-      else
-        render json: { success: false, error: "Invalid feed data" }, status: :bad_request
+        on_failure { render json: { success: false }, status: :unprocessable_entity }
       end
     end
 
@@ -46,12 +57,6 @@ module DiscourseRssPolling
       else
         render json: { success: false, error: "Feed not found" }, status: :not_found
       end
-    end
-
-    private
-
-    def feed_setting_params
-      params.require(:feed_settings)
     end
   end
 end

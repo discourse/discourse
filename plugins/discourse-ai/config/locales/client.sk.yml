@@ -361,9 +361,6 @@ sk:
         no_llm_selected: "Nie je vybraný žiadny jazykový model"
         max_context_posts: "Maximálny počet kontextových príspevkov"
         max_context_posts_help: "Maximálny počet príspevkov, ktoré sa majú použiť ako kontext pre AI pri odpovedi používateľovi. (predvolene prázdne)"
-        vision_enabled: Videnie povolené
-        vision_enabled_help: Ak je táto funkcia zapnutá, AI sa pokúsi porozumieť obrázkom, ktoré používatelia uverejňujú v téme, v závislosti od použitého modelu podporujúceho videnie. Podporované najnovšími modelmi od spoločností Anthropic, Google a OpenAI.
-        vision_max_pixels: Podporovaná veľkosť obrázka
         vision_max_pixel_sizes:
           low: Nízka kvalita - najlacnejšie (256x256)
           medium: Stredná kvalita (512x512)
@@ -519,7 +516,6 @@ sk:
         max_output_tokens: "Maximálny počet výstupných tokenov"
         url: "URL adresa služby, ktorá je hostiteľom modelu"
         api_key: "Kľúč API služby, ktorá je hostiteľom modelu"
-        vision_enabled: "Videnie povolené"
         ai_bot_user: "AI bot Používateľ"
         cost_input: "Vstupné náklady"
         cost_cached_input: "Cena vstupu uložená v vyrovnávacej pamäti"
@@ -589,7 +585,6 @@ sk:
           max_output_tokens: "Maximálny počet tokenov, ktoré môže model vygenerovať v jednej požiadavke"
           display_name: "Názov, ktorý sa používa na odkazovanie na tento model v rozhraní vášho webu."
           name: "Tento údaj zahrnieme do volania API, aby sme určili, ktorý model použijeme"
-          vision_enabled: "Ak je táto funkcia zapnutá, AI sa pokúsi porozumieť obrázkom. Závisí to od použitého modelu podporujúceho videnie. Podporované najnovšími modelmi od spoločností Anthropic, Google a OpenAI."
           cost_input: "Vstupné náklady na 1 milión tokenov pre tento model"
           cost_output: "Výstupné náklady na 1 milión tokenov pre tento model"
           cost_measure: "Tokeny $/1 milión"

@@ -230,7 +230,6 @@ el:
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
-        attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, docx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         delete: Διαγραφή

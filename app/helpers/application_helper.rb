@@ -534,8 +534,7 @@ module ApplicationHelper
   end
 
   def custom_splash_screen_enabled?
-    @custom_splash_screen_enabled ||=
-      SiteSetting.enable_custom_splash_screen && SiteSetting.splash_screen_image.is_a?(Upload)
+    @custom_splash_screen_enabled ||= SiteSetting.splash_screen_image.is_a?(Upload)
   end
 
   def splash_screen_image_animated?

@@ -461,9 +461,6 @@ ja:
         no_llm_selected: "言語モデルは選択されていません"
         max_context_posts: "最大コンテキスト投稿数"
         max_context_posts_help: "AI がユーザーに返答するときにコンテキストとして使用する投稿の最大数。(デフォルトの場合は空白)"
-        vision_enabled: ビジョン対応
-        vision_enabled_help: 有効にすると、AI は、ビジョンのサポートに使用されているモデルに応じてユーザーがトピックに投稿する画像を理解しようとします。Anthropic、Google、および OpenAI の最新モデルでサポートされています。
-        vision_max_pixels: サポートされている画像サイズ
         vision_max_pixel_sizes:
           low: 低品質 - 最も安い (256x256)
           medium: 中品質 (512x512)
@@ -620,9 +617,6 @@ ja:
         max_output_tokens: "最大出力トークン"
         url: "モデルをホストするサービスの URL"
         api_key: "モデルをホストするサービスの API キー"
-        vision_enabled: "ビジョン対応"
-        allowed_attachment_types: "許可される添付ファイル"
-        attachment_types_placeholder: "拡張子を選択または入力 (pdf、txt、docxなど)"
         ai_bot_user: "AI ボットユーザー"
         cost_input: "入力コスト"
         cost_cached_input: "キャッシュ入力コスト"
@@ -697,8 +691,6 @@ ja:
           max_output_tokens: "1 つのリクエストでモデルが生成できるトークンの最大数"
           display_name: "サイトのインターフェース全体でこのモデルを参照するために使用される名前。"
           name: "これを API 呼び出しに含めて、使用するモデルを指定します"
-          vision_enabled: "有効にすると、AI は画像を理解しようとします。ビジョンのサポートに使用されているモデルに応じます。Anthropic、Google、および OpenAI の最新モデルでサポートされています。"
-          allowed_attachment_types: "モデルに転送する添付ファイルの種類を選択します。添付ファイルを許可しない場合は空白のままにします。画像はビジョンで制御されます。"
           cost_input: "このモデルの 100 万トークン当たりの入力コスト"
           cost_cached_input: "このモデルの 100 万トークン当たりのキャッシュされた入力コスト (プロンプトキャッシュから読み取る場合)"
           cost_cache_write: "このモデルの 100 万トークン当たりのキャッシュ書き込みコスト (プロンプトキャッシュから書き込む場合)"
