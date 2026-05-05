@@ -17,8 +17,10 @@ module DiscourseWebauthn
       end
 
       # 6. Identify the user being authenticated and verify that this user is the
-      #    owner of the public key credential source credentialSource identified by credential.id:
-      security_key = UserSecurityKey.find_by(credential_id: @params[:credentialId])
+      #    owner of the public key credential source credentialSource identified by credential.id.
+      #    Disabled credentials must be rejected even if a row still exists in the database;
+      #    advertised allow-lists already exclude them, but the lookup here must enforce it too.
+      security_key = UserSecurityKey.find_by(credential_id: @params[:credentialId], enabled: true)
       raise(KeyNotFoundError, I18n.t("webauthn.validation.not_found_error")) if security_key.blank?
 
       accepted_factor_types = Array(@factor_type)

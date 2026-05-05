@@ -3311,6 +3311,26 @@ RSpec.describe SessionController do
 
           expect(response.status).to eq(403)
         end
+
+        it "rejects an assertion from a disabled passkey even when the user has another enabled passkey" do
+          SiteSetting.allow_passkeys_for_2fa = true
+          simulate_localhost_passkey_challenge
+          passkey.update!(enabled: false)
+          Fabricate(:passkey_with_random_credential, user: user)
+
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+
+          post "/session/2fa.json",
+               params: {
+                 nonce: nonce,
+                 second_factor_method: UserSecondFactor.methods[:security_key],
+                 second_factor_token: valid_passkey_auth_data,
+               }
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["error"]).to eq(I18n.t("webauthn.validation.not_found_error"))
+        end
       end
     end
   end
