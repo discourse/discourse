@@ -70,11 +70,18 @@ export default class NestedPost extends Component {
         this.args.post.ignored_post_placeholder === true;
 
       // When the URL signals collapse-replies (e.g. via a consolidated
-      // reply notification or AMA-style entry point), posts deeper than
-      // the focal level start collapsed so users can scan the focal level
-      // without scrolling through nested replies. depth 0 = the focal
-      // level (roots in the root view, the chain root in context view).
-      if (this.args.collapseReplies && this.args.depth >= 1) {
+      // reply notification or AMA-style entry point), posts at/below the
+      // threshold start with their children hidden so users can scan the
+      // focal level without scrolling through nested replies. The view
+      // sets the threshold:
+      //   - Root view: 0 (depth-0 root post hides its own replies)
+      //   - Context view: 1 (depth-1 direct replies hide their children)
+      // The post itself still renders normally; an "Expand X replies"
+      // button appears below for the user to opt-in.
+      if (
+        this.args.collapseFromDepth != null &&
+        this.args.depth >= this.args.collapseFromDepth
+      ) {
         this.expanded = false;
       } else {
         this.expanded = wouldExpand;
@@ -604,7 +611,7 @@ export default class NestedPost extends Component {
               @fetchedChildrenCache={{@fetchedChildrenCache}}
               @scrollAnchor={{@scrollAnchor}}
               @registerPost={{@registerPost}}
-              @collapseReplies={{@collapseReplies}}
+              @collapseFromDepth={{@collapseFromDepth}}
             />
           {{/if}}
         </div>

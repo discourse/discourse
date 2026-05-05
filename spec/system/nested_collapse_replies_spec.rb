@@ -26,24 +26,41 @@ RSpec.describe "Nested view collapse_replies URL param" do
     sign_in(op_user)
   end
 
-  it "renders all descendants by default" do
-    nested_view.visit_nested(topic)
+  context "in the root view" do
+    it "renders all descendants by default" do
+      nested_view.visit_nested(topic)
 
-    expect(nested_view).to have_post(root_post)
-    expect(nested_view).to have_post(reply_to_root)
-    expect(nested_view).to have_post(reply_to_reply)
+      expect(nested_view).to have_post(root_post)
+      expect(nested_view).to have_post(reply_to_root)
+      expect(nested_view).to have_post(reply_to_reply)
+    end
+
+    it "hides the root post's replies entirely when collapse_replies=true" do
+      page.visit("/n/#{topic.slug}/#{topic.id}?collapse_replies=true")
+
+      # Roots are the focal level — visible.
+      expect(nested_view).to have_post(root_post)
+
+      # Their replies (depth 1+) are hidden behind an "Expand X replies"
+      # button on the root, so the user can scan only the new roots.
+      expect(nested_view).to have_no_post(reply_to_root)
+      expect(nested_view).to have_no_post(reply_to_reply)
+    end
   end
 
-  it "starts replies-of-replies collapsed when collapse_replies=1 is set" do
-    page.visit("/n/#{topic.slug}/#{topic.id}?collapse_replies=true")
+  context "in the context view" do
+    it "renders direct replies but hides grandchildren when collapse_replies=true" do
+      page.visit("/n/#{topic.slug}/#{topic.id}/#{root_post.post_number}?collapse_replies=true")
 
-    # The root reply (depth 0) and its direct reply (depth 1) are still
-    # rendered — that's the focal level the user is here to catch up on.
-    expect(nested_view).to have_post(root_post)
-    expect(nested_view).to have_post(reply_to_root)
+      expect(nested_view).to have_context_view
 
-    # Grandchildren (depth 2+) start collapsed and are not in the DOM
-    # until the user expands the depth-1 post.
-    expect(nested_view).to have_no_post(reply_to_reply)
+      # Chain root and its direct replies (the "new content") are visible.
+      expect(nested_view).to have_post(root_post)
+      expect(nested_view).to have_post(reply_to_root)
+
+      # Grandchildren of the chain root are collapsed behind an "Expand"
+      # button on the depth-1 reply.
+      expect(nested_view).to have_no_post(reply_to_reply)
+    end
   end
 end
