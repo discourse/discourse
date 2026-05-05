@@ -62,9 +62,27 @@ export default class UserInvitedShowController extends Controller {
     this._canInviteToForumOverride = value;
   }
 
-  @computed("currentUser.admin", "siteSettings.allow_bulk_invite")
+  @computed("user.id", "currentUser.id")
+  get viewingSelf() {
+    return this.user?.id === this.currentUser?.id;
+  }
+
+  @computed("canInviteToForum", "viewingSelf")
+  get canCreateInvite() {
+    return this.canInviteToForum && this.viewingSelf;
+  }
+
+  @computed(
+    "currentUser.admin",
+    "siteSettings.allow_bulk_invite",
+    "viewingSelf"
+  )
   get canBulkInvite() {
-    return this.currentUser?.admin && this.siteSettings?.allow_bulk_invite;
+    return (
+      this.currentUser?.admin &&
+      this.siteSettings?.allow_bulk_invite &&
+      this.viewingSelf
+    );
   }
 
   @observes("searchTerm")
