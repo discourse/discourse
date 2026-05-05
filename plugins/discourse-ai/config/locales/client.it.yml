@@ -358,9 +358,6 @@ it:
         no_llm_selected: "Nessun modello linguistico selezionato"
         max_context_posts: "Numero massimo di messaggi di contesto"
         max_context_posts_help: "Il numero massimo di post da utilizzare come contesto per l'IA quando si risponde a un utente. (vuoto per impostazione predefinita)"
-        vision_enabled: Visione abilitata
-        vision_enabled_help: Se l'opzione è abilitata, l'intelligenza artificiale tenterà di comprendere le immagini che gli utenti pubblicano nell'argomento, a seconda del modello utilizzato per supportare la visione. Supportato dagli ultimi modelli di Anthropic, Google e OpenAI.
-        vision_max_pixels: Dimensione immagine supportata
         vision_max_pixel_sizes:
           low: 'Bassa qualità: più veloce (256x256)'
           medium: Qualità media (512x512)
@@ -515,7 +512,6 @@ it:
         max_output_tokens: "Massimo token di output"
         url: "URL del servizio che ospita il modello"
         api_key: "Chiave API del servizio che ospita il modello"
-        vision_enabled: "Visione abilitata"
         ai_bot_user: "Utente bot IA"
         cost_input: "Costo di input"
         cost_cached_input: "Costo di ingresso in cache"
@@ -584,7 +580,6 @@ it:
           max_output_tokens: "Il numero massimo di token che il modello può generare in una singola richiesta"
           display_name: "Il nome utilizzato per fare riferimento a questo modello nell'interfaccia del sito."
           name: "Lo includiamo nella chiamata API per specificare quale modello utilizzeremo"
-          vision_enabled: "Se l'opzione è abilitata, l'intelligenza artificiale tenterà di comprendere le immagini. Dipende dal modello utilizzato per supportare la visione. Supportato dagli ultimi modelli di Anthropic, Google e OpenAI."
           cost_input: "Il costo di input di 1 milione di token per questo modello"
           cost_output: "Il costo di output di 1 milione di token per questo modello"
           cost_measure: "$/milione token"

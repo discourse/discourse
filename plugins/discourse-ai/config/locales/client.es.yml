@@ -536,9 +536,6 @@ es:
         max_turn_tokens_help: "Máximo total de tokens (entrada + salida) consumidos en todas las llamadas LLM durante una única respuesta del bot. Cuando se establece, sustituye los límites fijos de finalización/herramienta por un presupuesto de tokens, permitiendo un comportamiento más agéntico. Déjalo vacío para que permanezcan los límites por defecto."
         compression_threshold: "Umbral de compresión"
         compression_threshold_help: "Porcentaje de uso del contexto (20-99) a partir del cual se activa la compresión automática. Los valores más bajos activan la compresión antes, preservando más espacio libre."
-        vision_enabled: Visión activada
-        vision_enabled_help: Si está activada, la IA intentará comprender las imágenes que los usuarios publiquen en el tema, depende del modelo que se utilice para soportar la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI.
-        vision_max_pixels: Tamaño de imagen admitido
         vision_max_pixel_sizes:
           low: 'Baja calidad: más barato (256x256)'
           medium: Calidad media (512x512)
@@ -834,9 +831,6 @@ es:
         max_output_tokens: "Máximo de tokens de salida"
         url: "URL del servicio que aloja el modelo"
         api_key: "Clave API del servicio que aloja el modelo"
-        vision_enabled: "Visión activada"
-        allowed_attachment_types: "Archivos adjuntos permitidos"
-        attachment_types_placeholder: "Selecciona o escribe extensiones (por ejemplo, pdf, txt, docx)"
         ai_bot_user: "Usuario de bot de IA"
         cost_input: "Coste de entrada"
         cost_cached_input: "Coste de entrada en caché"
@@ -918,8 +912,6 @@ es:
           max_output_tokens: "El número máximo de tokens que el modelo puede generar en una sola solicitud"
           display_name: "El nombre utilizado para hacer referencia a este modelo en la interfaz de tu sitio."
           name: "Incluimos esto en la llamada a la API para especificar qué modelo utilizaremos"
-          vision_enabled: "Si está activada, la IA intentará comprender las imágenes. Depende del modelo utilizado que soporte la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI."
-          allowed_attachment_types: "Selecciona qué tipos de archivos adjuntos se enviarán al modelo. Déjalo en blanco para no permitir archivos adjuntos. Las imágenes se controlan mediante visión."
           cost_input: "El coste de entrada por cada millón de tokens para este modelo"
           cost_cached_input: "El coste de entrada en caché por 1 M de tokens para este modelo (al leer de la caché de prompts)"
           cost_cache_write: "El coste de escritura en caché por 1 M de tokens para este modelo (al escribir en la caché de prompts)"

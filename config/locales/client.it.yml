@@ -7462,7 +7462,6 @@ it:
           other: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggi. (delete_all_posts_max.)"
         delete_confirm_title: "Vuoi davvero eliminare questo utente? Questa operazione è irreversibile!"
         delete_confirm: "In genere è preferibile rendere anonimi gli utenti piuttosto che eliminarli, per evitare di rimuoverne i contenuti dalle discussioni esistenti."
-        delete_and_block: "Elimina l'utente e blocca la sua e-mail e il suo indirizzo IP"
         delete_dont_block: "Elimina utente"
         deleting_user: "Cancellazione utente…"
         deleted: "L'utente è stato cancellato."
