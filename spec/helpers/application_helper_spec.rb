@@ -57,12 +57,17 @@ RSpec.describe ApplicationHelper do
         global_setting :s3_access_key_id, "123"
         global_setting :s3_secret_access_key, "123"
         global_setting :s3_cdn_url, "https://s3cdn.com"
+
+        # Backend RSpec tests might be run without real manifest/assets
+        EmberCli.stubs(:script_chunks).returns(
+          { "start-discourse" => "js/start-discourse-20n62q6s.digested" },
+        )
       end
 
       it "deals correctly with subfolder" do
         set_subfolder "/community"
         expect(helper.preload_script("start-discourse")).to include(
-          %r{https://s3cdn.com/assets/start-discourse-\w{8}.js},
+          %r{https://s3cdn.com/assets/js/start-discourse-\w{8}.digested.js},
         )
       end
 
@@ -71,7 +76,7 @@ RSpec.describe ApplicationHelper do
         set_cdn_url "https://awesome.com"
         set_subfolder "/community"
         expect(helper.preload_script("start-discourse")).to include(
-          %r{https://s3cdn.com/s3_subpath/assets/start-discourse-\w{8}.js},
+          %r{https://s3cdn.com/s3_subpath/assets/js/start-discourse-\w{8}.digested.js},
         )
       end
 
@@ -79,32 +84,32 @@ RSpec.describe ApplicationHelper do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "br"
         link = helper.preload_script("start-discourse")
 
-        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.br.js})
+        expect(link).to include(%r{https://s3cdn.com/assets/br/start-discourse-\w{8}.digested.js})
       end
 
       it "gives s3 cdn if asset host is not set" do
         link = helper.preload_script("start-discourse")
 
-        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
+        expect(link).to include(%r{https://s3cdn.com/assets/js/start-discourse-\w{8}.digested.js})
       end
 
       it "can fall back to gzip compression" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip"
         link = helper.preload_script("start-discourse")
-        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.gz.js})
+        expect(link).to include(%r{https://s3cdn.com/assets/gz/start-discourse-\w{8}.digested.js})
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
         link = helper.preload_script("start-discourse")
 
-        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
+        expect(link).to include(%r{https://s3cdn.com/assets/js/start-discourse-\w{8}.digested.js})
       end
 
       it "uses separate asset CDN if configured" do
         global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
         expect(helper.preload_script("start-discourse")).to include(
-          %r{https://s3-asset-cdn.example.com/assets/start-discourse-\w{8}.js},
+          %r{https://s3-asset-cdn.example.com/assets/js/start-discourse-\w{8}.digested.js},
         )
       end
     end
