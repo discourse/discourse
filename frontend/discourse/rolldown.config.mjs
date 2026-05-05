@@ -4,6 +4,7 @@ import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
+import wasmPlugin from "./lib/wasm-plugin.mjs";
 import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
 
 writeResolverConfig(
@@ -102,6 +103,7 @@ export function buildConfig({ devMode } = {}) {
         skipPreflightCheck: true,
       }),
       wrapTestModulesPlugin(),
+      wasmPlugin(),
       {
         name: "resolve-externals",
         resolveId(source) {
