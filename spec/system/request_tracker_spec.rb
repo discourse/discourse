@@ -799,7 +799,7 @@ describe "Request tracking" do
           end
         end
 
-        it "tracks the previous URL as referrer on browser back navigation via beacon" do
+        it "tracks the previous URL as referrer on browser back and forward navigation via beacon" do
           visit "/"
           wait_for_beacon_count(1)
 
@@ -816,6 +816,17 @@ describe "Request tracking" do
 
           expect(beacon_back_event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
           expect(beacon_back_event[:referrer]).to eq(topic.url)
+
+          events =
+            DiscourseEvent.track_events(:beacon_browser_pageview) do
+              page.go_forward
+              wait_for_beacon_count(4)
+            end
+
+          beacon_forward_event = events.first[:params].last
+
+          expect(beacon_forward_event[:url]).to eq(topic.url)
+          expect(beacon_forward_event[:referrer]).to eq("#{Discourse.base_url}/")
         end
 
         def wait_for_beacon_count(count)
