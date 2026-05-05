@@ -135,8 +135,6 @@ export default {
       });
     }
 
-    // Captured here rather than in routeWillChange because the browser
-    // updates window.location.href before popstate-driven transitions fire.
     _preNavigationUrl = window.location.href;
   },
 
