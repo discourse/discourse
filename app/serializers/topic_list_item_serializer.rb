@@ -150,7 +150,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def is_nested_view
-    object.nested_view?
+    true
   end
 
   def include_is_nested_view?
@@ -161,15 +161,17 @@ class TopicListItemSerializer < ListableTopicSerializer
   # the existing unread_posts/new_posts/unseen badges are deliberately not
   # shown when is_nested_view is true (see post-count-or-badges.gjs).
   def has_new_replies
-    last_visited = object.user_data&.last_visited_at
-    return false if last_visited.blank?
-    return false if object.last_post_user_id == scope.user&.id
-    object.bumped_at > last_visited
+    true
   end
 
   def include_has_new_replies?
     return false unless scope.user
-    object.nested_view?
+    return false unless object.nested_view?
+
+    last_visited = object.user_data&.last_visited_at
+    return false if last_visited.blank?
+    return false if object.last_post_user_id == scope.user.id
+    object.bumped_at > last_visited
   end
 
   private

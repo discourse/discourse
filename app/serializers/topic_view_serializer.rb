@@ -341,7 +341,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def is_nested_view
-    object.topic.nested_view?
+    true
   end
 
   def include_is_nested_view?

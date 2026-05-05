@@ -320,32 +320,32 @@ RSpec.describe TopicListItemSerializer do
       ).as_json
     end
 
-    it "returns true when bumped_at is after last_visited_at and the user wasn't the last poster" do
+    it "is included when bumped_at is after last_visited_at and the user wasn't the last poster" do
       nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: other_user.id)
       json = serialize_with_user_data(last_visited_at: 5.minutes.ago)
 
       expect(json[:has_new_replies]).to eq(true)
     end
 
-    it "returns false when last_visited_at is more recent than bumped_at" do
+    it "is omitted when last_visited_at is more recent than bumped_at" do
       nested_topic_record.update!(bumped_at: 5.minutes.ago, last_post_user_id: other_user.id)
       json = serialize_with_user_data(last_visited_at: 1.minute.ago)
 
-      expect(json[:has_new_replies]).to eq(false)
+      expect(json.key?(:has_new_replies)).to eq(false)
     end
 
-    it "returns false when the current user was the last poster" do
+    it "is omitted when the current user was the last poster" do
       nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: user.id)
       json = serialize_with_user_data(last_visited_at: 5.minutes.ago)
 
-      expect(json[:has_new_replies]).to eq(false)
+      expect(json.key?(:has_new_replies)).to eq(false)
     end
 
-    it "returns false when the user has never visited the topic" do
+    it "is omitted when the user has never visited the topic" do
       nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: other_user.id)
       json = serialize_with_user_data(last_visited_at: nil)
 
-      expect(json[:has_new_replies]).to eq(false)
+      expect(json.key?(:has_new_replies)).to eq(false)
     end
 
     it "is omitted from the payload for flat topics" do
