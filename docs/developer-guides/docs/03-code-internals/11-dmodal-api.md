@@ -37,14 +37,16 @@ This example will create a simple Modal like this:
 
 Before introducing any more complexity, it's usually best to wrap up your new Modal in its own Component definition. Let's move the `<DModal>` stuff inside a new `<MyModal />` component
 
-```hbs
-{{! components/my-modal.hbs }}
-<DModal @title="My Modal" @closeModal={{@closeModal}}>
-  Hello world, this is some content in a modal
-</DModal>
+```gjs
+// components/my-modal.gjs
+<template>
+  <DModal @title="My Modal" @closeModal={{@closeModal}}>
+    Hello world, this is some content in a modal
+  </DModal>
+</template>
 ```
 
-Introducing a companion `.js` component file will allow you to introduce more complex logic and state.
+Upgrading this `.gjs` file to a class-based component will allow you to introduce more complex logic and state.
 
 To make use of the new component, update the call site to reference it, making sure to pass in a `@closeModal` argument.
 
@@ -79,7 +81,7 @@ Many modals have some kind of call-to-action. In Discourse these tend to be loca
 
 ## Rendering a modal from a non-hbs context
 
-Ideally, `<DModal>` instances should be rendered from within an Ember handlebars template using the declarative technique demonstrated above. If that's not feasible for your use case (e.g. you need to trigger a modal from Discourse's legacy 'raw-hbs' or 'widget' rendering systems) then it can be done by injecting the `modal` service and calling `modal.show()`.
+Ideally, `<DModal>` instances should be rendered from within an Ember template using the declarative technique demonstrated above. If that's not feasible for your use case, it can be done by injecting the `modal` service and calling `modal.show()`.
 
 Make sure you've wrapped up your modal in its own component as described above. Then, trigger the modal by passing a reference of your component class to `showModal`:
 

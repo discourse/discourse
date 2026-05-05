@@ -114,6 +114,11 @@ module PageObjects
 
       def search(value = nil)
         expanded_component.find(".select-kit-filter .filter-input").fill_in(with: value)
+        wait_for_loaded
+      end
+
+      def wait_for_loaded
+        has_no_css?("#{@context}.is-loading")
       end
 
       def select_row_by_value(value)

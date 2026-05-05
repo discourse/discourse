@@ -75,6 +75,7 @@ RSpec.describe "Channel - Info - Members page" do
           current_user.set_status!("walking the dog", "dog")
 
           chat_page.visit_channel_members(channel_1)
+          find(".c-channel-members__filter").fill_in(with: current_user.username)
 
           expect(page).to have_selector(
             ".-member .user-status-message img[alt='#{current_user.user_status.emoji}']",

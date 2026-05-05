@@ -3,7 +3,7 @@ import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-// The message bus replays the last two events on subscribe. The idle
+// The message bus replays the last event on subscribe (-2 offset). The idle
 // timer only arms once we've received a real streaming chunk (with a
 // postId); between chunks we expect a new update within ~40ms, so a
 // generous ceiling of 15s can't race a live stream.

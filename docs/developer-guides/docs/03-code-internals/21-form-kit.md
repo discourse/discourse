@@ -1943,10 +1943,12 @@ FormKit works seamlessly with `<PluginOutlet />`. You can use plugin outlets ins
 
 Then, in your connector, you can use the outlet arguments to add custom fields:
 
-```hbs title="connectors/above-foo-form/bar-input.hbs"
-<@outletArgs.form.Field @name="bar" @title="Bar" @type="input" as |field|>
-  <field.Control />
-</@outletArgs.form.Field>
+```gjs title="connectors/above-foo-form/bar-input.gjs"
+<template>
+  <@outletArgs.form.Field @name="bar" @title="Bar" @type="input" as |field|>
+    <field.Control />
+  </@outletArgs.form.Field>
+</template>
 ```
 
 ## Styling

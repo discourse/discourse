@@ -65,5 +65,35 @@ RSpec.describe DiscourseAi::Completions::Dialects::OpenAiResponses do
         name: "echo",
       )
     end
+
+    it "renders converted document uploads as input_text parts" do
+      llm_model.update!(allowed_attachment_types: ["docx"])
+      converted_text = "Uploaded document: sample.docx (13 Bytes)\n\nConverted text"
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          nil,
+          messages: [{ type: :user, content: ["Read this: ", { upload_id: 123 }] }],
+        )
+
+      allow(DiscourseAi::Completions::UploadEncoder).to receive(:encode).and_return(
+        [
+          {
+            kind: :document,
+            filename: "sample.docx",
+            mime_type: "text/plain",
+            text: converted_text,
+            converted_from: "docx",
+          },
+        ],
+      )
+
+      translated = described_class.new(prompt, llm_model).translate
+      user_message = translated.find { |msg| msg[:role] == "user" }
+
+      expect(user_message[:content]).to eq(
+        [{ type: "input_text", text: "Read this: " }, { type: "input_text", text: converted_text }],
+      )
+      expect(user_message[:content]).not_to include(hash_including(type: "input_file"))
+    end
   end
 end

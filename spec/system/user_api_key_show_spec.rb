@@ -14,6 +14,8 @@ RSpec.describe "User API Key Show Page" do
     # Visit the authorization page (no auth_redirect means show page after submit)
     visit "/user-api-key/new?#{URI.encode_www_form(scopes: "read", client_id: "x" * 32, application_name: "Test Application", public_key: public_key, nonce: SecureRandom.hex)}"
 
+    screenshot_marker(label: "user-api-key-auth")
+
     # Submit the authorization form
     click_button I18n.t("user_api_key.authorize")
 

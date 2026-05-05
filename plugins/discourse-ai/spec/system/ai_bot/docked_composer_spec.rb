@@ -48,6 +48,7 @@ RSpec.describe "AI Bot docked composer" do
     toggle_enabled_bots(bots: [claude_2])
     SiteSetting.navigation_menu = "sidebar"
     SiteSetting.ai_bot_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
+    SiteSetting.ai_bot_enable_docked_composer = true
     Jobs.run_immediately!
     sign_in(user)
   end
@@ -93,6 +94,17 @@ RSpec.describe "AI Bot docked composer" do
     expect(page).to have_css("#topic-footer-buttons .create")
   end
 
+  it "hides the toolbar by default and shows it when the toggle button is clicked" do
+    topic_page.visit_topic(pm)
+
+    expect(page).to have_css(".ai-bot-docked-composer.docked-composer--toolbar-hidden")
+    expect(page).to have_no_css(".d-editor-button-bar__wrap", visible: true)
+
+    find(".ai-bot-docked-composer__toolbar-toggle").click
+
+    expect(page).to have_no_css(".ai-bot-docked-composer.docked-composer--toolbar-hidden")
+  end
+
   it "clears the reply field after a successful submit" do
     topic_page.visit_topic(pm)
 
@@ -104,5 +116,13 @@ RSpec.describe "AI Bot docked composer" do
     end
 
     expect(find(".ai-bot-docked-composer .d-editor-input").value).to eq("")
+  end
+
+  it "falls back to the standard composer when the docked composer is disabled" do
+    SiteSetting.ai_bot_enable_docked_composer = false
+    topic_page.visit_topic(pm)
+
+    expect(page).to have_no_css(".ai-bot-docked-composer")
+    expect(page).to have_css("#topic-footer-buttons .create")
   end
 end

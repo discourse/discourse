@@ -291,6 +291,10 @@ class GlobalSetting
     end
   end
 
+  def self.sendmail_settings
+    { arguments: %w[-i] }
+  end
+
   class BaseProvider
     def self.coerce(setting)
       return setting == "true" if setting == "true" || setting == "false"

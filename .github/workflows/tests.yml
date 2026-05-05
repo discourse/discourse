@@ -240,8 +240,6 @@ jobs:
       - name: Check Annotations
         if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
         run: |
-          bin/rake annotate:ensure_all_indexes
-
           directories=""
           if [ "${{ matrix.target }}" = "core" ]; then
             directories="app/models"
@@ -249,7 +247,9 @@ jobs:
             directories="$(script/list_bundled_plugins | xargs -I{} find {} -type d -path '*/app/models' -maxdepth 3)"
           fi
 
-          bin/annotaterb models --model-dir $(echo "${directories}" | tr '\n' ',')
+          # annotate:clean runs the seed + annotaterb in a temporary postgres so it
+          # doesn't pollute the rspec test DB.
+          MODEL_DIR="$(echo "${directories}" | tr '\n' ',')" bin/rake annotate:clean
 
           if [ ! -z "$(git status --porcelain ${directories})" ]; then
             echo "Core annotations are not up to date. To resolve, run:"

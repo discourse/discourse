@@ -42,6 +42,10 @@ module PageObjects
         page.has_no_css?("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
       end
 
+      def has_bulk_select_enabled?
+        page.has_css?("#{TOPIC_LIST_ITEM_SELECTOR} input.bulk-select")
+      end
+
       def has_closed_status?(topic)
         page.has_css?("#{topic_list_item_closed(topic)}")
       end

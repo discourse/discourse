@@ -133,7 +133,10 @@ RSpec.describe "AI Bot - Homepage" do
   end
 
   context "when `ai_bot_enable_dedicated_ux` is enabled" do
-    before { SiteSetting.ai_bot_add_to_header = true }
+    before do
+      SiteSetting.ai_bot_add_to_header = true
+      SiteSetting.ai_bot_enable_docked_composer = true
+    end
 
     it "allows uploading files to a new conversation" do
       ai_pm_homepage.visit

@@ -232,7 +232,9 @@ module DiscourseAi
             post,
             max_posts: 5,
             bot_usernames: available_bot_usernames,
-            include_uploads: bot.agent.class.vision_enabled,
+            include_image_uploads: include_image_uploads?,
+            include_document_uploads: include_document_uploads?,
+            allowed_attachment_types: bot.model.allowed_attachment_types,
           )
 
         # conversation context may contain tool calls, and confusing user names
@@ -325,7 +327,9 @@ module DiscourseAi
                 message,
                 channel: channel,
                 context_post_ids: context_post_ids,
-                include_uploads: bot.agent.class.vision_enabled,
+                include_image_uploads: include_image_uploads?,
+                include_document_uploads: include_document_uploads?,
+                allowed_attachment_types: bot.model.allowed_attachment_types,
                 max_messages: max_chat_messages,
                 bot_user_ids: available_bot_user_ids,
                 instruction_message: instruction_message,
@@ -460,7 +464,9 @@ module DiscourseAi
                 post,
                 style: context_style,
                 max_posts: max_context_posts,
-                include_uploads: bot.agent.class.vision_enabled,
+                include_image_uploads: include_image_uploads?,
+                include_document_uploads: include_document_uploads?,
+                allowed_attachment_types: bot.model.allowed_attachment_types,
                 bot_usernames: available_bot_usernames,
               ),
           )
@@ -692,6 +698,14 @@ module DiscourseAi
 
       def available_bot_user_ids
         @bot_ids ||= AiAgent.joins(:user).pluck("users.id").concat(available_bot_users.map(&:id))
+      end
+
+      def include_image_uploads?
+        bot.agent.class.vision_enabled
+      end
+
+      def include_document_uploads?
+        bot.model.allowed_attachment_types.present?
       end
 
       private

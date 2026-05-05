@@ -354,6 +354,14 @@ discourse_ai:
     default: ""
     secret: true
     area: "ai-features/bot"
+  ai_bot_enable_docked_composer:
+    default: false
+    hidden: true
+    client: true
+    area: "ai-features/bot"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
   ai_discover_enabled:
     default: false
     client: true

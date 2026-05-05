@@ -8,7 +8,7 @@
   line-height: normal;
   box-sizing: border-box;
   width: 200px;
-  border: 1px solid var(--primary-medium);
+  border: 1px solid var(--primary-low-mid);
   justify-content: space-between;
 
   &.-expanded {
@@ -73,6 +73,7 @@
   align-items: center;
   border-radius: var(--d-border-radius);
   background-color: var(--primary-low);
+  gap: var(--space-1);
 
   &:hover {
     background-color: var(--primary-low-mid);
@@ -82,6 +83,10 @@
     @include ellipsis;
     max-width: 3.5em;
   }
+}
+
+.d-multi-select-trigger__remove-selection-icon {
+  font-size: var(--font-down-1);
 }
 
 .d-multi-select-trigger__expand-btn {

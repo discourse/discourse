@@ -227,6 +227,10 @@ gem "rqrcode"
 
 gem "rubyzip", require: false
 
+install_if -> { RUBY_PLATFORM.include?("linux") } do
+  gem "landlock", require: false
+end
+
 gem "sshkey", require: false
 
 gem "rchardet", require: false

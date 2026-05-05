@@ -126,6 +126,7 @@ pl_PL:
     ai_bot_add_to_header: "Wyświetl przycisk w nagłówku, aby rozpocząć wiadomość prywatną z botem AI"
     ai_bot_add_to_community_section: "Wyświetl link w sekcji społeczności na pasku bocznym, aby rozpocząć prywatną wiadomość z botem AI"
     ai_bot_github_access_token: "Token dostępu GitHub do użytku z narzędziami GitHub AI (wymagany do obsługi wyszukiwania)"
+    ai_bot_enable_docked_composer: "Włącz dokowany kompozytor w stylu czatu dla konwersacji botów AI zamiast standardowego kompozytora pływającego."
     ai_discover_enabled: "Włącz funkcję wyszukiwania odkrywczego"
     ai_discover_agent: "Agent do wykorzystania w funkcji wyszukiwania odkrywczego"
     ai_google_custom_search_api_key: "Klucz dla Google Custom Search API, zobacz: https://developers.google.com/custom-search"

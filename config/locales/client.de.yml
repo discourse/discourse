@@ -8183,7 +8183,6 @@ de:
           other: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Siehe die Einstellung „delete_all_posts_max“.)"
         delete_confirm_title: "Bist du sicher, dass du diesen Benutzer löschen möchtest? Dies kann nicht rückgängig gemacht werden!"
         delete_confirm: "Im Allgemeinen ist es besser, Benutzer zu anonymisieren, als sie zu löschen, um zu vermeiden, dass Inhalte aus bestehenden Diskussionen entfernt werden."
-        delete_and_block: "Benutzer löschen und seine E-Mail- und IP-Adresse blockieren"
         delete_dont_block: "Benutzer löschen"
         deleting_user: "Benutzer wird gelöscht …"
         deleted: "Der Benutzer wurde gelöscht."

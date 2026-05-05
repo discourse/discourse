@@ -47,6 +47,8 @@ RSpec.describe "Admin AI translations" do
 
       expect(translations_page).to have_charts_section
       expect(translations_page).to have_chart
+
+      screenshot_marker(label: "ai-admin-translations", only: "desktop")
     end
 
     it "navigates to translation settings when clicking the settings button" do

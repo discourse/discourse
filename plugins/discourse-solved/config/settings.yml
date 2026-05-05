@@ -33,8 +33,8 @@ discourse_solved:
     default: false
     hidden: true
   solved_quote_length:
-    default: 300
-    client: false
+    default: 700
+    client: true
   solved_topics_auto_close_hours:
     default: 0
     min: 0
@@ -66,7 +66,7 @@ discourse_solved:
     hidden: true
     client: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/398338"
 

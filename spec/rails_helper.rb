@@ -101,6 +101,7 @@ class PlaywrightLogger
 end
 
 ENV["RAILS_ENV"] ||= "test"
+ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
 require "rspec/rails"
@@ -267,6 +268,7 @@ RSpec.configure do |config|
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
   config.include SystemHelpers, type: :system
+  config.include ThemeScreenshotMarker, type: :system
   config.include DiscourseWebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers

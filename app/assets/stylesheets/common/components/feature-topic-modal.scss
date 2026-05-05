@@ -1,0 +1,17 @@
+@use "lib/viewport";
+
+.feature-section {
+  &__description {
+    width: 100%;
+  }
+
+  &__pin-message {
+    margin-bottom: var(--space-1);
+
+    .d-icon {
+      @include viewport.until(sm) {
+        display: none;
+      }
+    }
+  }
+}

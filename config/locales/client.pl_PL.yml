@@ -325,6 +325,7 @@ pl_PL:
       comma: ", "
       last_item: "i"
     action_codes:
+      topic_created: "Utworzono ten temat %{when}"
       public_topic: "Upublicznij ten temat %{when}"
       open_topic: "Przekonwertowano to na temat %{when}"
       private_topic: "Przekształcił(a) ten temat w prywatną wiadomość %{when}"
@@ -4108,6 +4109,10 @@ pl_PL:
       topic_admin_menu:
         enable_nested_replies: "Włącz zagnieżdżone odpowiedzi"
         disable_nested_replies: "Wyłącz zagnieżdżone odpowiedzi"
+      activity_log:
+        link: "Dziennik aktywności"
+        title: "Dziennik aktywności tematu"
+        empty: "Brak aktywności tematu do wyświetlenia."
       context:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"
@@ -4434,6 +4439,7 @@ pl_PL:
         unpin: "Odepnij ten temat z początku kategorii %{categoryLink}."
         unpin_until: "Odepnij ten temat z początku kategorii %{categoryLink} lub poczekaj do <strong>%{until}</strong>."
         pin_note: "Każdy użytkownik może samodzielnie usunąć przypięcie dla samego siebie."
+        pin_until: "Przypnij aż do"
         pin_validation: "Przypięcie tego tematu wymaga podania daty."
         not_pinned: "Brak przypiętych tematów w %{categoryLink}."
         already_pinned:
@@ -8923,8 +8929,10 @@ pl_PL:
           other: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
         delete_confirm_title: "Czy na pewno chcesz usunąć tego użytkownika? To jest trwałe!"
         delete_confirm: "Zasadniczo lepiej jest anonimizować użytkowników niż ich usuwać, aby uniknąć usuwania treści z istniejących dyskusji."
-        delete_and_block: "Usuń użytkownika i zablokuj jego adres e-mail oraz adres IP."
+        delete_and_block: "Usuń i zablokuj użytkownika"
+        delete_and_block_description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP."
         delete_dont_block: "Usuń użytkownika"
+        delete_dont_block_description: "Usuń użytkownika bez blokowania."
         deleting_user: "Usuwanie użytkownika…"
         deleted: "Użytkownik został usunięty."
         delete_failed: "Wystąpił błąd podczas usuwania użytkownika. Upewnij się, że wszystkie wpisy zostały usunięte przed przystąpieniem do usuwania użytkownika."

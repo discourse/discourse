@@ -117,6 +117,13 @@ body.has-ai-conversations-sidebar {
     display: none;
   }
 
+  @include viewport.until(sm) {
+    #topic-progress-wrapper,
+    .topic-navigation.with-topic-progress {
+      display: none;
+    }
+  }
+
   @include viewport.until(lg) {
     .archetype-private_message .topic-post:last-child {
       margin-bottom: 0;

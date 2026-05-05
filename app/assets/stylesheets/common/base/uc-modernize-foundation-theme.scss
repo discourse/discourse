@@ -58,7 +58,8 @@
       .profile-tab-btn,
       .back-button,
       .composer-actions-btn,
-      .language-switcher-trigger
+      .language-switcher-trigger,
+      .d-multi-select-trigger__expand-btn
     ) {
       padding-block: 0;
       height: var(--d-control-height);
@@ -72,7 +73,8 @@
       .user-menu-tab,
       .user-menu-tab-active,
       .composer-actions-btn,
-      .dropdown-select-box-header
+      .dropdown-select-box-header,
+      .d-multi-select-trigger__expand-btn
     ) {
       width: var(--d-control-height);
     }
@@ -271,6 +273,10 @@
   .select-kit.combo-box.tag-drop .selected-name,
   .select-kit.combo-box.tag-drop .caret-icon {
     color: var(--primary);
+  }
+
+  .d-multi-select__search-container {
+    padding-block: 0;
   }
 
   // Header

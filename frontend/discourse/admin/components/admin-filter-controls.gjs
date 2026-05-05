@@ -10,6 +10,7 @@ import DSelect from "discourse/components/d-select";
 import FilterInput from "discourse/components/filter-input";
 import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
+import { resettableTracked } from "discourse/lib/tracked-tools";
 import { and, not } from "discourse/truth-helpers";
 
 /**
@@ -38,10 +39,12 @@ import { and, not } from "discourse/truth-helpers";
  */
 
 export default class AdminFilterControls extends Component {
-  @tracked textFilter = "";
   @tracked dropdownFilter = "all";
   @tracked
   showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
+  @resettableTracked
+  textFilter = this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "";
+
   dropdownFilters = trackedObject();
 
   constructor() {
@@ -182,10 +185,6 @@ export default class AdminFilterControls extends Component {
 
   @action
   setupComponent() {
-    if (this.args.initialTextFilter) {
-      this.textFilter = this.args.initialTextFilter.replace(/,\s*/g, ", ");
-    }
-
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownOptions).forEach((key) => {
         this.dropdownFilters[key] = this.defaultValue(key);

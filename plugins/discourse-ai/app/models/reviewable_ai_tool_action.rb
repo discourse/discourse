@@ -3,6 +3,20 @@
 require_dependency "reviewable"
 
 class ReviewableAiToolAction < Reviewable
+  def created_new!
+    super
+
+    self.topic ||= target_post&.topic
+    self.category_id ||= topic&.category_id
+  end
+
+  def target_post
+    return @target_post if defined?(@target_post)
+
+    post_id = target&.post_id
+    @target_post = post_id ? Post.find_by(id: post_id) : nil
+  end
+
   def build_actions(actions, guardian, args)
     return actions if !pending?
 
