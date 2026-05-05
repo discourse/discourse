@@ -663,7 +663,7 @@ class Guardian
   end
 
   def is_api?
-    @user && request&.env&.dig(Auth::DefaultCurrentUserProvider::API_KEY_ENV)
+    @user && request&.env&.dig(Auth::DefaultCurrentUserProvider::API_KEY_ENV).present?
   end
 
   protected
