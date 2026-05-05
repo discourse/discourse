@@ -762,7 +762,9 @@ RSpec.describe ApplicationController do
 
     before do
       admin
-      allow_any_instance_of(ApplicationHelper).to receive(:include_splash_screen?).and_return(true)
+      allow_any_instance_of(ApplicationController).to receive(:include_splash_screen?).and_return(
+        true,
+      )
     end
 
     it "adds a preloader splash screen" do
