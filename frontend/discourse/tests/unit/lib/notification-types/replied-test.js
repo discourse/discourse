@@ -47,7 +47,7 @@ module("Unit | Notification Types | replied", function (hooks) {
     assert.strictEqual(director.linkHref, "/t/test-topic/100/5");
   });
 
-  test("linkHref appends ?sort=new for the topic-bucket (reply_to_post_number=1)", function (assert) {
+  test("linkHref points at the specific post for a singular nested-topic-bucket reply", function (assert) {
     const notification = getNotification({
       data: { reply_to_post_number: 1 },
     });
@@ -56,13 +56,54 @@ module("Unit | Notification Types | replied", function (hooks) {
       "replied",
       getOwner(this).lookup("service:site-settings")
     );
-    assert.strictEqual(director.linkHref, "/t/test-topic/100/5?sort=new");
+    assert.strictEqual(director.linkHref, "/t/test-topic/100/5");
   });
 
-  test("linkHref is unchanged for a per-post bucket (reply_to_post_number > 1)", function (assert) {
+  test("linkHref points at the specific post for a singular per-post-bucket reply", function (assert) {
     const notification = getNotification({
       data: { reply_to_post_number: 4 },
     });
+    const director = createRenderDirector(
+      notification,
+      "replied",
+      getOwner(this).lookup("service:site-settings")
+    );
+    assert.strictEqual(director.linkHref, "/t/test-topic/100/5");
+  });
+
+  test("linkHref targets the topic root with sort=new&collapse_replies=true for a consolidated topic-bucket notification", function (assert) {
+    const notification = getNotification({
+      data: { reply_to_post_number: 1, consolidated_count: 3 },
+    });
+    const director = createRenderDirector(
+      notification,
+      "replied",
+      getOwner(this).lookup("service:site-settings")
+    );
+    assert.strictEqual(
+      director.linkHref,
+      "/n/test-topic/100?sort=new&collapse_replies=true"
+    );
+  });
+
+  test("linkHref targets the bucket parent's context with sort=new&collapse_replies=true for a consolidated per-post-bucket notification", function (assert) {
+    const notification = getNotification({
+      data: { reply_to_post_number: 4, consolidated_count: 2 },
+    });
+    const director = createRenderDirector(
+      notification,
+      "replied",
+      getOwner(this).lookup("service:site-settings")
+    );
+    assert.strictEqual(
+      director.linkHref,
+      "/n/test-topic/100/4?sort=new&collapse_replies=true"
+    );
+  });
+
+  test("linkHref is unchanged for flat-topic consolidated notifications", function (assert) {
+    // Flat topics never get the bucket fields (regression guard).
+    const notification = getNotification();
     const director = createRenderDirector(
       notification,
       "replied",

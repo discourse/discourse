@@ -295,6 +295,79 @@ RSpec.describe Notification do
     end
   end
 
+  describe "#url" do
+    fab!(:topic)
+    fab!(:post) { Fabricate(:post, topic: topic, post_number: 5) }
+
+    it "returns the relative topic url for a regular reply notification" do
+      notification =
+        Fabricate(
+          :notification,
+          notification_type: Notification.types[:replied],
+          topic: topic,
+          post_number: 5,
+          data: { topic_title: topic.title, display_username: "u" }.to_json,
+        )
+
+      expect(notification.url).to eq(topic.relative_url(5))
+    end
+
+    it "returns the topic root with sort=new&collapse_replies=true for a consolidated topic-bucket notification" do
+      notification =
+        Fabricate(
+          :notification,
+          notification_type: Notification.types[:replied],
+          topic: topic,
+          post_number: 7,
+          data: {
+            topic_title: topic.title,
+            display_username: "3 replies",
+            reply_to_post_number: 1,
+            consolidated_count: 3,
+          }.to_json,
+        )
+
+      expect(notification.url).to eq("/n/#{topic.slug}/#{topic.id}?sort=new&collapse_replies=true")
+    end
+
+    it "returns the bucket parent's context with sort=new&collapse_replies=true for a consolidated per-post-bucket notification" do
+      notification =
+        Fabricate(
+          :notification,
+          notification_type: Notification.types[:replied],
+          topic: topic,
+          post_number: 7,
+          data: {
+            topic_title: topic.title,
+            display_username: "2 replies",
+            reply_to_post_number: 4,
+            consolidated_count: 2,
+          }.to_json,
+        )
+
+      expect(notification.url).to eq(
+        "/n/#{topic.slug}/#{topic.id}/4?sort=new&collapse_replies=true",
+      )
+    end
+
+    it "uses the legacy specific-post URL for a singular nested-bucket notification" do
+      notification =
+        Fabricate(
+          :notification,
+          notification_type: Notification.types[:replied],
+          topic: topic,
+          post_number: 5,
+          data: {
+            topic_title: topic.title,
+            display_username: "u",
+            reply_to_post_number: 1,
+          }.to_json,
+        )
+
+      expect(notification.url).to eq(topic.relative_url(5))
+    end
+  end
+
   describe "data" do
     let(:notification) { Fabricate.build(:notification) }
 

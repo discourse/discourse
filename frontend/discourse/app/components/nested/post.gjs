@@ -64,10 +64,21 @@ export default class NestedPost extends Component {
       this.expanded = cached.expanded;
       this.collapsed = cached.collapsed;
     } else {
-      this.expanded =
+      const wouldExpand =
         (this.args.children?.length ?? 0) > 0 ||
         this.args.post.deleted_post_placeholder === true ||
         this.args.post.ignored_post_placeholder === true;
+
+      // When the URL signals collapse-replies (e.g. via a consolidated
+      // reply notification or AMA-style entry point), posts deeper than
+      // the focal level start collapsed so users can scan the focal level
+      // without scrolling through nested replies. depth 0 = the focal
+      // level (roots in the root view, the chain root in context view).
+      if (this.args.collapseReplies && this.args.depth >= 1) {
+        this.expanded = false;
+      } else {
+        this.expanded = wouldExpand;
+      }
       this.collapsed = false;
     }
 
@@ -593,6 +604,7 @@ export default class NestedPost extends Component {
               @fetchedChildrenCache={{@fetchedChildrenCache}}
               @scrollAnchor={{@scrollAnchor}}
               @registerPost={{@registerPost}}
+              @collapseReplies={{@collapseReplies}}
             />
           {{/if}}
         </div>

@@ -282,7 +282,23 @@ class Notification < ActiveRecord::Base
   end
 
   def url
-    topic.presence&.relative_url(post_number)
+    return if topic.blank?
+
+    # Consolidated nested-bucket :replied notifications target the bucket
+    # parent's level, sorted by new with grandchildren collapsed, so the
+    # user sees all the new content at once. We build /n/ directly to
+    # preserve the query string (the /t/ → /n/ redirect would strip it).
+    if notification_type == Notification.types[:replied] &&
+         (data_hash["consolidated_count"].to_i > 1) && data_hash["reply_to_post_number"].present?
+      bucket = data_hash["reply_to_post_number"].to_i
+      base = "#{Discourse.base_path}/n/"
+      base << "#{topic.slug}/" if topic.slug.present?
+      base << topic.id.to_s
+      base << "/#{bucket}" if bucket > 1
+      return "#{base}?sort=new&collapse_replies=true"
+    end
+
+    topic.relative_url(post_number)
   end
 
   def post

@@ -1,5 +1,5 @@
+import getURL from "discourse/lib/get-url";
 import NotificationTypeBase from "discourse/lib/notification-types/base";
-import { postUrl } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class extends NotificationTypeBase {
@@ -16,13 +16,16 @@ export default class extends NotificationTypeBase {
   }
 
   get linkHref() {
-    if (this.isTopicBucket && this.topicId) {
-      const url = postUrl(
-        this.notification.slug,
-        this.topicId,
-        this.notification.post_number
-      );
-      return `${url}?sort=new`;
+    // Consolidated bucket notifications target the bucket parent's level
+    // (not a single new post) so the user sees all the new content at
+    // once. sort=new puts the latest first; collapse_replies hides
+    // grandchildren so the catch-up view is uncluttered.
+    if (this.isBucketed && this.consolidatedCount > 1 && this.topicId) {
+      let url = getURL(`/n/${this.notification.slug}/${this.topicId}`);
+      if (!this.isTopicBucket) {
+        url += `/${this.notification.data.reply_to_post_number}`;
+      }
+      return `${url}?sort=new&collapse_replies=true`;
     }
     return super.linkHref;
   }

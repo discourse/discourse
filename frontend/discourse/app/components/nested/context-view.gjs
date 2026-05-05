@@ -191,6 +191,7 @@ export default class NestedContextView extends Component {
               @getCloakingData={{this.viewportTracker.getCloakingData}}
               @cloakAbove={{this.cloakAbove}}
               @cloakBelow={{this.cloakBelow}}
+              @collapseReplies={{@collapseReplies}}
             />
           {{/each}}
         </div>
