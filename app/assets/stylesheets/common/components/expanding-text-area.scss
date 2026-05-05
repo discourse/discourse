@@ -7,6 +7,8 @@
     height: auto;
     resize: none;
     max-width: 100%;
+    min-height: var(--expanding-text-area-min-height, auto);
+    max-height: var(--expanding-text-area-max-height, none);
   }
 
   @supports not (field-sizing: content) {
@@ -27,6 +29,8 @@
       padding: 0.5em 0.65em;
       border: 1px solid transparent;
       font: inherit;
+      min-height: var(--expanding-text-area-min-height, auto);
+      max-height: var(--expanding-text-area-max-height, none);
     }
   }
 }

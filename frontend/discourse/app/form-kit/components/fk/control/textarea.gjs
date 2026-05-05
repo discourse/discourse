@@ -1,8 +1,8 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
+import ExpandingTextArea from "discourse/components/expanding-text-area";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
 import { escapeExpression } from "discourse/lib/utilities";
 
@@ -42,31 +42,23 @@ export default class FKControlTextarea extends FKBaseControl {
     return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
   }
 
-  get wrapperElement() {
-    return element(this.args.autoResize ? "div" : "");
+  get textareaElement() {
+    return this.args.autoResize ? ExpandingTextArea : element("textarea");
   }
 
   <template>
-    <this.wrapperElement
-      class="form-kit__control-textarea-wrap"
-      data-replicated-value={{@field.value}}
-    >
-      <textarea
-        class={{concatClass
-          "form-kit__control-textarea"
-          (if @autoResize "form-kit__control-textarea--auto-resize")
-        }}
-        style={{this.style}}
-        disabled={{@field.disabled}}
-        value={{@field.value}}
-        id={{@field.id}}
-        name={{@field.name}}
-        aria-invalid={{if @field.error "true"}}
-        aria-describedby={{if @field.error @field.errorId}}
-        ...attributes
-        {{on "input" this.handleInput}}
-        {{on "keydown" this.onKeyDown}}
-      />
-    </this.wrapperElement>
+    <this.textareaElement
+      {{on "input" this.handleInput}}
+      {{on "keydown" this.onKeyDown}}
+      style={{this.style}}
+      disabled={{@field.disabled}}
+      value={{@field.value}}
+      id={{@field.id}}
+      name={{@field.name}}
+      aria-invalid={{if @field.error "true"}}
+      aria-describedby={{if @field.error @field.errorId}}
+      class="form-kit__control-textarea"
+      ...attributes
+    />
   </template>
 }

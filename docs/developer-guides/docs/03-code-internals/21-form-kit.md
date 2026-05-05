@@ -1078,7 +1078,7 @@ Sets the height of the textarea.
 
 ### @autoResize
 
-Grows the textarea with its content. Bounds can be set via the `--form-kit-textarea-min-height` (default `150px`) and `--form-kit-textarea-max-height` (default `none`) custom properties on any ancestor.
+Grows the textarea with its content (renders via `<ExpandingTextArea>`). Bounds can be set via the `--expanding-text-area-min-height` (default `auto`) and `--expanding-text-area-max-height` (default `none`) custom properties on any ancestor.
 
 **Example**
 
@@ -1090,8 +1090,8 @@ Grows the textarea with its content. Bounds can be set via the `--form-kit-texta
 
 ```css
 [data-name="description"] {
-  --form-kit-textarea-min-height: 10rem;
-  --form-kit-textarea-max-height: 50rem;
+  --expanding-text-area-min-height: 10rem;
+  --expanding-text-area-max-height: 50rem;
 }
 ```
 
