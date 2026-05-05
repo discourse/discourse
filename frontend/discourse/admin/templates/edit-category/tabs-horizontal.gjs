@@ -21,7 +21,9 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
   }
 
   get dynamicCategoryTypeTabs() {
-    return Object.values(this.args.controller.model.categoryTypes);
+    return Object.values(this.args.controller.model.categoryTypes).reject(
+      (type) => type.id === "discussion" || !type.visible
+    );
   }
 
   get visiblePrimaryTabs() {
@@ -32,7 +34,10 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
   }
 
   get hasPrimaryTabs() {
-    return this.visiblePrimaryTabs.length > 0;
+    return (
+      this.visiblePrimaryTabs.length > 0 ||
+      this.dynamicCategoryTypeTabs.length > 0
+    );
   }
 
   <template>

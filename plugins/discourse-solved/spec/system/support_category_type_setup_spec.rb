@@ -51,7 +51,6 @@ RSpec.describe "Support Category Type Setup" do
     visit("/new-category/setup")
     category_type_card.find_type_card("support").click
     expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
-    category_page.toggle_advanced_settings
     expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
   end
 
@@ -163,7 +162,9 @@ RSpec.describe "Support Category Type Setup" do
 
     it "shows the not support type message" do
       visit("/c/#{category.slug}/edit/support")
-      expect(page).to have_content(I18n.t("js.solved.category_type_support.not_support_type"))
+      expect(page).to have_content(
+        I18n.t("js.category.unknown_category_type_description", categoryType: "support"),
+      )
     end
   end
 end

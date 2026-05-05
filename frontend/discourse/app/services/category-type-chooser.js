@@ -28,8 +28,16 @@ export default class CategoryTypeChooser extends Service {
     return this._selection;
   }
 
-  choose(typeId, typeName, typeSchema, typeTitle, count) {
-    this._selection = { type: typeId, typeName, typeSchema, typeTitle, count };
+  choose(type, count) {
+    this._selection = {
+      type: type.id,
+      typeName: type.name,
+      typeSchema: type.configuration_schema,
+      typeTitle: type.title,
+      visible: type.visible,
+      available: type.available,
+      count,
+    };
     this._setupComplete = true;
   }
 

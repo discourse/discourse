@@ -46,6 +46,16 @@ const TAB_COMPONENTS_V2 = {
   localizations: EditCategoryLocalizations,
 };
 
+const UnknownCategoryType = <template>
+  <div class="edit-category-unknown-category-type">
+    <h3>{{i18n "category.unknown_category_type"}}</h3>
+    <p>{{i18n
+        "category.unknown_category_type_description"
+        categoryType=@categoryType
+      }}</p>
+  </div>
+</template>;
+
 export default class Tabs extends Component {
   @bind
   componentFor(name, useSimplified) {
@@ -67,7 +77,7 @@ export default class Tabs extends Component {
       return EditCategoryTypeSchemaFields;
     }
 
-    throw new Error(`No category-tab component found for tab name: ${name}`);
+    return UnknownCategoryType;
   }
 
   <template>

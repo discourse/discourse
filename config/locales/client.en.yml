@@ -4936,6 +4936,8 @@ en:
       predefined_colors: "Predefined color options"
       name_placeholder: "One or two words recommended"
       category_types: "Category types"
+      unknown_category_type: "Unknown category type"
+      unknown_category_type_description: "The category type '%{categoryType}' is not supported or not enabled on this category."
       category_types_no_results: "No other category types found"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"

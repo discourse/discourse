@@ -109,7 +109,9 @@ RSpec.describe "Ideas Category Type Setup" do
 
     it "shows the not ideas type message" do
       visit("/c/#{category.slug}/edit/ideas")
-      expect(page).to have_content(I18n.t("js.topic_voting.category_type_ideas.not_ideas_type"))
+      expect(page).to have_content(
+        I18n.t("js.category.unknown_category_type_description", categoryType: "ideas"),
+      )
     end
   end
 end
