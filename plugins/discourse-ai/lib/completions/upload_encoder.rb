@@ -63,6 +63,8 @@ module DiscourseAi
         return "doc" if ext == "doc" || mime == "application/msword"
         return "xlsx" if ext == "xlsx" || mime.include?("spreadsheetml.sheet")
         return "xls" if ext == "xls" || mime == "application/vnd.ms-excel"
+        return "odt" if ext == "odt" || mime.include?("opendocument.text")
+        return "ods" if ext == "ods" || mime.include?("opendocument.spreadsheet")
         return "csv" if ext == "csv" || mime.include?("text/csv") || mime.include?("csv")
         return "txt" if ext == "txt" || mime.include?("text/plain")
         return "rtf" if ext == "rtf" || mime.include?("rtf")
@@ -104,6 +106,12 @@ module DiscourseAi
             return text_payload if text_payload
           elsif attachment_type == "xlsx"
             text_payload = xlsx_to_text_payload(upload, path)
+            return text_payload if text_payload
+          elsif attachment_type == "odt"
+            text_payload = odt_to_text_payload(upload, path)
+            return text_payload if text_payload
+          elsif attachment_type == "ods"
+            text_payload = ods_to_text_payload(upload, path)
             return text_payload if text_payload
           elsif attachment_type == "rtf"
             text_payload = rtf_to_text_payload(upload, path)
@@ -200,6 +208,34 @@ module DiscourseAi
           text_document_payload(upload, path, text, converted_from: "xlsx")
         rescue StandardError => e
           log_document_conversion_failure(upload, "xlsx", "#{e.class}: #{e.message}")
+          nil
+        end
+
+        def odt_to_text_payload(upload, path)
+          text = normalize_extracted_text(DiscourseAi::Completions::OdtToText.convert(path))
+
+          if text.blank?
+            log_document_conversion_failure(upload, "odt", "ODT converter returned blank output")
+            return
+          end
+
+          text_document_payload(upload, path, text, converted_from: "odt")
+        rescue StandardError => e
+          log_document_conversion_failure(upload, "odt", "#{e.class}: #{e.message}")
+          nil
+        end
+
+        def ods_to_text_payload(upload, path)
+          text = normalize_extracted_text(DiscourseAi::Completions::OdsToText.convert(path))
+
+          if text.blank?
+            log_document_conversion_failure(upload, "ods", "ODS converter returned blank output")
+            return
+          end
+
+          text_document_payload(upload, path, text, converted_from: "ods")
+        rescue StandardError => e
+          log_document_conversion_failure(upload, "ods", "#{e.class}: #{e.message}")
           nil
         end
 
