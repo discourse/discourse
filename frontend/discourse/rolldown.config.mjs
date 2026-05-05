@@ -4,7 +4,6 @@ import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
-import wasmPlugin from "./lib/wasm-plugin.mjs";
 import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
 
 writeResolverConfig(
@@ -67,6 +66,10 @@ export function buildConfig({ devMode } = {}) {
     },
     experimental: {
       incrementalBuild: true,
+      resolveNewUrlToAsset: true,
+    },
+    moduleTypes: {
+      ".wasm": "asset",
     },
     input: {
       discourse: "discourse.js",
@@ -84,7 +87,12 @@ export function buildConfig({ devMode } = {}) {
       sourcemap: true,
       cleanDir: !devMode,
       hashCharacters: "base36",
-      assetFileNames: "assets/js/[name]-[hash].digested[extname]",
+      assetFileNames: (asset) => {
+        if (asset.names?.some((n) => n.endsWith(".wasm"))) {
+          return "assets/wasm/[name]-[hash].digested[extname]";
+        }
+        return "assets/js/[name]-[hash].digested[extname]";
+      },
       chunkFileNames: "assets/js/[name]-[hash].digested.js",
       entryFileNames: "assets/js/[name]-[hash].digested.js",
     },
@@ -103,7 +111,6 @@ export function buildConfig({ devMode } = {}) {
         skipPreflightCheck: true,
       }),
       wrapTestModulesPlugin(),
-      wasmPlugin(),
       {
         name: "resolve-externals",
         resolveId(source) {
