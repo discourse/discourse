@@ -394,6 +394,8 @@ class PostSerializer < BasicPostSerializer
   def ignored_like_count_for_viewer
     return 0 if scope.user.blank?
 
+    return @topic_view.ignored_user_like_counts[object.id].to_i if @topic_view
+
     ignored_ids = scope.user.ignored_user_ids
     return 0 if ignored_ids.empty?
 

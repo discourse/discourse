@@ -62,6 +62,28 @@ RSpec.describe PostSerializer do
       expect(like_summary[:count]).to eq(post.like_count)
     end
 
+    it "batches ignored-like counts across posts in a topic view" do
+      other_post = Fabricate(:post, topic: post.topic)
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, post)
+      PostActionCreator.like(ignored_liker, other_post)
+      Fabricate(:ignored_user, user: actor, ignored_user: ignored_liker)
+
+      topic_view = TopicView.new(post.topic, actor)
+      queries =
+        track_sql_queries do
+          topic_view.posts.each do |p|
+            serializer = PostSerializer.new(p, scope: Guardian.new(actor), root: false)
+            serializer.topic_view = topic_view
+            serializer.actions_summary
+          end
+        end
+
+      ignored_like_queries =
+        queries.count { |sql| sql.include?("post_actions") && sql.include?("ignored_user") }
+      expect(ignored_like_queries).to be <= 1
+    end
+
     it "can't flag your own post to notify yourself" do
       serializer = PostSerializer.new(post, scope: Guardian.new(post.user), root: false)
       notify_user_action =
