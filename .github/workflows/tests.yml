@@ -106,11 +106,7 @@ jobs:
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
         run: |
-          if [ "${{ matrix.target }}" = "themes" ]; then
-            echo "QUNIT_PARALLEL=2" >> $GITHUB_ENV
-          else
-            echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
-          fi
+          echo "QUNIT_PARALLEL=1" >> $GITHUB_ENV
 
       - uses: actions/checkout@v6
         with:
