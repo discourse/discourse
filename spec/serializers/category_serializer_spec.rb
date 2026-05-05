@@ -318,6 +318,8 @@ RSpec.describe CategorySerializer do
         Categories::TypeRegistry.register(MockCategoryType)
       end
 
+      after { Categories::TypeRegistry.reset! }
+
       it "returns the available visible category types" do
         json = described_class.new(category, scope: admin.guardian, root: false).as_json
         expect(json[:available_category_types]).to eq(

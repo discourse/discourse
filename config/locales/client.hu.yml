@@ -8048,7 +8048,6 @@ hu:
           other: "Nem lehet törölni az összes hozzászólást, mert a felhasználónak több mint %{count} hozzászólása van. (delete_all_posts_max)"
         delete_confirm_title: "Biztosan törli ezt a felhasználót? Ez végleges!"
         delete_confirm: "Általában előnyösebb a felhasználók anonimizálása, mint a törlésük, hogy elkerüljük a meglévő viták tartalmának eltávolítását."
-        delete_and_block: "Törölje a felhasználót, és blokkolja az e-mail- és IP-címét"
         delete_dont_block: "Felhasználó törlése"
         deleting_user: "Felhasználó törlése"
         deleted: "A felhasználó el lett távolítva"

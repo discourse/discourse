@@ -268,6 +268,7 @@ RSpec.configure do |config|
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
   config.include SystemHelpers, type: :system
+  config.include ThemeScreenshotMarker, type: :system
   config.include DiscourseWebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers

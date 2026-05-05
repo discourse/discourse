@@ -307,6 +307,8 @@ describe "Admin upcoming changes" do
   it "displays a notification dot on the sidebar and clears it when navigating to upcoming changes" do
     sidebar = PageObjects::Components::NavigationMenu::Sidebar.new
 
+    Discourse.stubs(:site_creation_date).returns(1.day.ago)
+
     UpcomingChangeEvent.create!(
       event_type: :added,
       upcoming_change_name: "enable_upload_debug_mode",
