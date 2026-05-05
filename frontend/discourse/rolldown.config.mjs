@@ -1,6 +1,6 @@
 import { ember } from "@embroider/vite";
 import * as fs from "fs";
-import { basename } from "path";
+import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
@@ -115,10 +115,15 @@ export function buildConfig({ devMode } = {}) {
       },
       {
         name: "css-loader",
-        load(id) {
+        transform(code, id) {
           if (id.endsWith(".css")) {
             return {
-              code: "",
+              code: `
+                const style = document.createElement("style");
+                style.innerHTML = ${JSON.stringify(code)};
+                style.dataset.rolldownModuleId = ${JSON.stringify(relative(import.meta.dirname, id))};
+                document.head.append(style);
+              `,
               moduleType: "js",
             };
           }
