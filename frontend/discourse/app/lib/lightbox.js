@@ -70,7 +70,18 @@ async function initLightbox(elem, additionalData = {}) {
     escKey: false,
     tapAction,
     paddingFn,
-    pswpModule: async () => await waitForPromise(import("photoswipe")),
+    pswpModule: async () => {
+      // eslint-disable-next-line no-console
+      console.log("[lightbox] before photoswipe import");
+      const p = import("photoswipe");
+      p.then(
+        // eslint-disable-next-line no-console
+        () => console.log("[lightbox] photoswipe resolved"),
+        // eslint-disable-next-line no-console
+        (e) => console.log("[lightbox] photoswipe rejected", e)
+      );
+      return await waitForPromise(p);
+    },
     appendToEl: isTesting() && document.getElementById("ember-testing"),
   });
 
