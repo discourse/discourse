@@ -23,21 +23,22 @@ class ExternalLinter
         STYLELINT_EXTENSIONS
     ).uniq.freeze
 
+  attr_reader :results
+
   def initialize(root, files, fix:, verbose: false)
     @root = root
-    @files = files
+    @files = files.map { |f| File.expand_path(f) }
     @fix = fix
     @verbose = verbose
+    @results = []
   end
 
   def run
     ruby_files = @files.select { |f| ruby_file?(f) || File.basename(f) == "Gemfile" }
     js_files = @files.select { |f| js_file?(f) }
 
-    success = true
-    success &= run_ruby_linters(ruby_files) if ruby_files.any?
-    success &= run_js_linters(js_files) if js_files.any?
-    success
+    run_ruby_linters(ruby_files) if ruby_files.any?
+    run_js_linters(js_files) if js_files.any?
   end
 
   private
@@ -50,32 +51,25 @@ class ExternalLinter
     JS_EXTENSIONS.include?(File.extname(f)[1..])
   end
 
-  def relative_paths(files)
-    files.map { |f| Pathname.new(File.expand_path(f)).relative_path_from(Pathname.new(@root)).to_s }
+  def run_cmd(*cmd)
+    puts "Running: #{cmd.shelljoin} (cwd: #{@root})" if @verbose
+    system(*cmd, chdir: @root)
   end
 
-  def run_cmd(*cmd)
-    puts "Running: #{cmd.shelljoin}" if @verbose
-    system(*cmd)
+  def run_linter(name, *cmd)
+    puts "[bin/lint] Running #{name}..."
+    @results << [name, run_cmd(*cmd)]
   end
 
   def run_ruby_linters(files)
-    rel_files = relative_paths(files)
-    success = true
+    puts "[bin/lint] Installing bundler dependencies in #{@root}..."
+    run_cmd("bundle", "install") or abort "bundle install failed in #{@root}"
 
-    Dir.chdir(@root) do
-      run_cmd("bundle", "install") or abort "bundle install failed in #{@root}"
+    stree_subcmd = @fix ? "write" : "check"
+    run_linter("stree", "bundle", "exec", "stree", stree_subcmd, *files)
 
-      stree_subcmd = @fix ? "write" : "check"
-      stree_ok = run_cmd("bundle", "exec", "stree", stree_subcmd, *rel_files)
-      success &= stree_ok unless @fix
-
-      rubocop_args = @fix ? ["--autocorrect"] : []
-      rubocop_ok = run_cmd("bundle", "exec", "rubocop", *rubocop_args, *rel_files)
-      success &= rubocop_ok unless @fix
-    end
-
-    success
+    rubocop_args = @fix ? ["--autocorrect"] : []
+    run_linter("rubocop", "bundle", "exec", "rubocop", *rubocop_args, *files)
   end
 
   def run_js_linters(files)
@@ -86,41 +80,35 @@ class ExternalLinter
     ember_template_lint_files = by_ext.call(EMBER_TEMPLATE_LINT_EXTENSIONS)
     stylelint_files = by_ext.call(STYLELINT_EXTENSIONS)
 
-    success = true
+    pnpm = ["pnpm", "--ignore-workspace"]
+    puts "[bin/lint] Installing pnpm dependencies in #{@root}..."
+    run_cmd(*pnpm, "i") or abort "pnpm i failed in #{@root}"
 
-    Dir.chdir(@root) do
-      run_cmd("pnpm", "i") or abort "pnpm i failed in #{@root}"
-
-      if prettier_files.any?
-        rel = relative_paths(prettier_files)
-        args = @fix ? ["--write"] : ["--list-different"]
-        ok = run_cmd("pnpm", "prettier", *args, *rel)
-        success &= ok unless @fix
-      end
-
-      if eslint_files.any?
-        rel = relative_paths(eslint_files)
-        args = @fix ? ["--fix"] : ["--quiet"]
-        ok = run_cmd("pnpm", "eslint", *args, *rel)
-        success &= ok unless @fix
-      end
-
-      if ember_template_lint_files.any?
-        rel = relative_paths(ember_template_lint_files)
-        args = @fix ? ["--fix"] : []
-        ok = run_cmd("pnpm", "ember-template-lint", *args, *rel)
-        success &= ok unless @fix
-      end
-
-      if stylelint_files.any?
-        rel = relative_paths(stylelint_files)
-        args = @fix ? ["--fix"] : []
-        ok = run_cmd("pnpm", "stylelint", *args, *rel)
-        success &= ok unless @fix
-      end
+    if prettier_files.any?
+      args = @fix ? ["--write"] : ["--list-different"]
+      run_linter("prettier", *pnpm, "prettier", *args, *prettier_files)
     end
 
-    success
+    if eslint_files.any?
+      args = @fix ? ["--fix"] : ["--quiet"]
+      run_linter("eslint", *pnpm, "eslint", *args, *eslint_files)
+    end
+
+    if ember_template_lint_files.any?
+      args = @fix ? ["--fix"] : []
+      run_linter(
+        "ember-template-lint",
+        *pnpm,
+        "ember-template-lint",
+        *args,
+        *ember_template_lint_files,
+      )
+    end
+
+    if stylelint_files.any?
+      args = @fix ? ["--fix"] : []
+      run_linter("stylelint", *pnpm, "stylelint", *args, *stylelint_files)
+    end
   end
 end
 
@@ -133,6 +121,7 @@ class LefthookLinter
     @wip = options[:wip]
     @files = options[:files] || []
     @verbose = options[:verbose]
+    @results = []
   end
 
   EVERYTHING = ["ALL FILES"]
@@ -144,6 +133,18 @@ class LefthookLinter
       run_fix_mode(files)
     else
       run_check_mode(files)
+    end
+
+    print_summary
+    exit 1 if @results.any? { |_, ok| !ok }
+  end
+
+  def print_summary
+    failed = @results.reject { |_, ok| ok }
+    if failed.empty?
+      puts "[bin/lint] All lints passed"
+    else
+      failed.each { |name, _| puts "[bin/lint] #{name} failed" }
     end
   end
 
@@ -260,7 +261,11 @@ class LefthookLinter
 
     core, external = partition_files(files)
     run_lefthook_command("fix-staged", core) if core.any?
-    external.each { |root, fs| ExternalLinter.new(root, fs, fix: true, verbose: @verbose).run }
+    external.each do |root, fs|
+      linter = ExternalLinter.new(root, fs, fix: true, verbose: @verbose)
+      linter.run
+      collect_external_results(root, linter)
+    end
   end
 
   def run_check_mode(files)
@@ -278,9 +283,15 @@ class LefthookLinter
     core, external = partition_files(files)
     run_lefthook_command("pre-commit", core) if core.any?
     external.each do |root, fs|
-      success = ExternalLinter.new(root, fs, fix: false, verbose: @verbose).run
-      exit 1 unless success
+      linter = ExternalLinter.new(root, fs, fix: false, verbose: @verbose)
+      linter.run
+      collect_external_results(root, linter)
     end
+  end
+
+  def collect_external_results(root, linter)
+    rel = Pathname.new(root).relative_path_from(Pathname.new(PROJECT_ROOT)).to_s
+    linter.results.each { |name, ok| @results << ["#{name} (#{rel})", ok] }
   end
 
   def partition_files(files)
@@ -334,8 +345,9 @@ class LefthookLinter
     files.each { |f| cmd << "--file" << f }
     cmd << "--verbose" if @verbose
 
+    puts "[bin/lint] Running core linters via lefthook..."
     puts "Running: #{cmd.shelljoin}" if @verbose
-    exit 1 unless system({ "LEFTHOOK" => "1" }, *cmd)
+    @results << ["core linters", system({ "LEFTHOOK" => "1" }, *cmd)]
   end
 
   def normalize_relative_path(file)

@@ -237,6 +237,7 @@ hu:
           today: "Ma"
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"
+          scroll_to_bottom: "Görgetés lefelé"
       sentiments:
         sentiment_analysis:
           filter_types:

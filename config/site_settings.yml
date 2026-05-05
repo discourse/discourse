@@ -4439,3 +4439,10 @@ experimental:
       impact: "feature,all_members"
       status: "beta"
       learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
+  dashboard_improvements:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "conceptual"
+      impact: "feature,admins"

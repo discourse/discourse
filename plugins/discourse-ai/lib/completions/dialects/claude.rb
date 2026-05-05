@@ -175,6 +175,7 @@ module DiscourseAi
 
         def upload_node(details)
           return if details.blank?
+          return { type: "text", text: details[:text] } if details[:text].present?
 
           if details[:kind] == :document || details[:mime_type] == "application/pdf"
             {

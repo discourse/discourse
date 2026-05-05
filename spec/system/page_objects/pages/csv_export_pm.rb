@@ -12,12 +12,12 @@ module PageObjects
         original_save_path = Capybara.save_path
         Capybara.save_path = Downloads::FOLDER
 
-        click_link ".zip"
-        Downloads.wait_for_download
-
         zip_name = find("a.attachment").text
         zip_path = File.join(Downloads::FOLDER, zip_name)
         @downloaded_files << zip_path
+
+        click_link ".zip"
+        Downloads.wait_for(zip_path)
 
         csv_path = unzip(zip_path).first
         @downloaded_files << csv_path
@@ -27,7 +27,7 @@ module PageObjects
       end
 
       def clear_downloads
-        @downloaded_files.each { |file| FileUtils.rm(file) }
+        @downloaded_files.each { |file| FileUtils.rm_f(file) }
         @downloaded_files = []
       end
 

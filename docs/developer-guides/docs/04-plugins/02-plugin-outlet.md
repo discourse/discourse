@@ -10,7 +10,7 @@ Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-par
 
 ### Getting Started: Handlebars Templates
 
-Discourse's client application is written using the Ember.js Javascript framework. Ember uses [Handlebars](https://guides.emberjs.com/v4.12.0/components) for all HTML templates. There's a great introduction to the templating language at that link, so definitely read it thoroughly.
+Discourse's client application is written using the Ember.js Javascript framework. Ember uses [Handlebars](https://guides.emberjs.com/release/components) for all HTML templates. There's a great introduction to the templating language at that link, so definitely read it thoroughly.
 
 ### The Problem: Adding elements to the Discourse User Interface
 
@@ -36,7 +36,7 @@ You can also display the plugin outlets on a Discourse site by turning on the [D
 
 ### Connecting to a Plugin Outlet
 
-Once you've found the plugin outlet you want to add to, you have to write a `connector` for it. A connector is really just a handlebars template whose filename includes `connectors/<outlet name>` in it.
+Once you've found the plugin outlet you want to add to, you have to write a `connector` for it. A connector is a `.gjs` component whose filename includes `connectors/<outlet name>` in its path.
 
 For example, if the Discourse handlebars template has:
 
@@ -44,20 +44,22 @@ For example, if the Discourse handlebars template has:
 <PluginOutlet @name="evil-trout" />
 ```
 
-Then any handlebars files you create in the `connectors/evil-trout` directory
+Then any `.gjs` files you create in the `connectors/evil-trout` directory
 will automatically be appended. So if you created the file:
 
-`plugins/hello/assets/javascripts/discourse/connectors/evil-trout/hello.hbs`
+`plugins/hello/assets/javascripts/discourse/connectors/evil-trout/hello.gjs`
 
 With the contents:
 
-```hbs
-<b>Hello World</b>
+```gjs
+<template>
+  <b>Hello World</b>
+</template>
 ```
 
 Discourse would insert `<b>Hello World</b>` at that point in the template.
 
-Note that we called the file `hello.hbs` -- The final part of the filename does not matter, but it must be unique across every plugin. It's useful to name it something descriptive of what you are extending it to do. This will make debugging easier in the future.
+Note that we called the file `hello.gjs` -- The final part of the filename does not matter, but it must be unique across every plugin. It's useful to name it something descriptive of what you are extending it to do. This will make debugging easier in the future.
 
 ### Troubleshooting
 

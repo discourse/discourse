@@ -189,10 +189,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def has_new_upcoming_changes
     last_visited = object.custom_fields["last_visited_upcoming_changes_at"]
-
-    scope = UpcomingChangeEvent.added
-    scope = scope.where("created_at > ?", Time.zone.parse(last_visited)) if last_visited.present?
-    scope.exists?
+    return false if last_visited.blank? && object.created_at < Discourse.site_creation_date + 1.hour
+    cutoff = last_visited.present? ? Time.zone.parse(last_visited) : object.created_at
+    UpcomingChangeEvent.added.where("created_at > ?", cutoff).exists?
   end
 
   def can_post_anonymously

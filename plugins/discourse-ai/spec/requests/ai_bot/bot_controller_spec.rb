@@ -321,20 +321,25 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
     it "streams a replacement into the existing bot reply" do
       retry_text = "second attempt"
+      messages = nil
 
       DiscourseAi::Completions::Llm.with_prepared_responses([retry_text]) do
         post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
 
-        Jobs::CreateAiReply.new.execute(
-          post_id: prompt_post.id,
-          bot_user_id: bot_user.id,
-          agent_id: reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].to_i,
-          reply_post_id: reply_post.id,
-        )
+        messages =
+          MessageBus.track_publish("discourse-ai/ai-bot/topic/#{reply_post.topic_id}") do
+            Jobs::CreateAiReply.new.execute(
+              post_id: prompt_post.id,
+              bot_user_id: bot_user.id,
+              agent_id: reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].to_i,
+              reply_post_id: reply_post.id,
+            )
+          end
       end
 
       expect(response.status).to eq(200)
       expect(reply_post.reload.raw).to eq(retry_text)
+      expect(messages.first.data).to include(post_id: reply_post.id, raw: "")
       expect(reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].to_i).to eq(
         agent.id,
       )

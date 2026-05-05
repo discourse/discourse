@@ -257,6 +257,7 @@ ur:
           today: "آج"
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"
+          scroll_to_bottom: "نیچے تک سکرول کریں"
       sentiments:
         sentiment_analysis:
           filter_types:

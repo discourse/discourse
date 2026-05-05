@@ -350,6 +350,7 @@ describe "Topic bulk select" do
       expect(page).to have_css("#site-logo")
 
       send_keys([:shift, "b"])
+      expect(topic_list).to have_bulk_select_enabled
       send_keys("j")
       send_keys("x") # toggle select
       expect(topic_list).to have_checkbox_selected_on_row(1)
@@ -368,6 +369,7 @@ describe "Topic bulk select" do
       expect(topic_list).to have_topics
 
       send_keys([:shift, "b"])
+      expect(topic_list).to have_bulk_select_enabled
       send_keys("j")
       send_keys("x")
       send_keys([:shift, "d"])

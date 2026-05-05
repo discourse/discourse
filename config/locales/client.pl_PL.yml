@@ -325,6 +325,7 @@ pl_PL:
       comma: ", "
       last_item: "i"
     action_codes:
+      topic_created: "Utworzono ten temat %{when}"
       public_topic: "Upublicznij ten temat %{when}"
       open_topic: "Przekonwertowano to na temat %{when}"
       private_topic: "Przekształcił(a) ten temat w prywatną wiadomość %{when}"
@@ -4108,6 +4109,10 @@ pl_PL:
       topic_admin_menu:
         enable_nested_replies: "Włącz zagnieżdżone odpowiedzi"
         disable_nested_replies: "Wyłącz zagnieżdżone odpowiedzi"
+      activity_log:
+        link: "Dziennik aktywności"
+        title: "Dziennik aktywności tematu"
+        empty: "Brak aktywności tematu do wyświetlenia."
       context:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"

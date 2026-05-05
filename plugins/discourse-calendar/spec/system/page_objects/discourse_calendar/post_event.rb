@@ -9,7 +9,6 @@ module PageObjects
         def open_more_menu
           try_until_success do
             locator("#{TRIGGER_MENU_SELECTOR}:not(.--saving)").click
-            # has_css?(".discourse-post-event-more-menu-content")
             yield if block_given?
           end
           self

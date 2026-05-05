@@ -52,6 +52,6 @@ discourse_topic_voting:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/399365"
