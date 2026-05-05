@@ -240,6 +240,7 @@ export default class UserPasskeys extends Component {
             @action={{this.addPasskey}}
             @icon="plus"
             @label="user.passkeys.add_passkey"
+            class="btn-default"
           />
         </div>
       {{/if}}

@@ -95,6 +95,7 @@ export default <template>
                       @title={{i18n "admin.permalink.more_options"}}
                       @icon="ellipsis-vertical"
                       @onRegisterApi={{@controller.onRegisterApi}}
+                      @triggerClass="btn-default"
                     >
                       <:content>
                         <DropdownMenu as |dropdown|>

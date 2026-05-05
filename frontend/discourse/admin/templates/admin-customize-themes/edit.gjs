@@ -11,7 +11,7 @@ export default <template>
           @title="go_back"
           @action={{@controller.goBack}}
           @icon="chevron-left"
-          class="btn-small editor-back-button"
+          class="btn-default btn-small editor-back-button"
         />
 
         <span class="editor-theme-name-wrapper">

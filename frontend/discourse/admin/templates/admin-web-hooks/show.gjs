@@ -18,7 +18,7 @@ export default <template>
         @action={{@controller.edit}}
         @icon="far-pen-to-square"
         @title="admin.web_hooks.edit"
-        class="no-text admin-webhooks__edit-button"
+        class="btn-default no-text admin-webhooks__edit-button"
       />
 
       <DButton

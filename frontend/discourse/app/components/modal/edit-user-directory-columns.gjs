@@ -151,12 +151,12 @@ export default class EditUserDirectoryColumns extends Component {
                   <DButton
                     @icon="arrow-up"
                     @action={{fn this.moveUp column}}
-                    class="button-secondary move-column-up"
+                    class="btn-default button-secondary move-column-up"
                   />
                   <DButton
                     @icon="arrow-down"
                     @action={{fn this.moveDown column}}
-                    class="button-secondary"
+                    class="btn-default button-secondary move-column-down"
                   />
                 </div>
               </div>
@@ -173,7 +173,7 @@ export default class EditUserDirectoryColumns extends Component {
         <DButton
           @label="directory.edit_columns.reset_to_default"
           @action={{this.resetToDefault}}
-          class="btn-secondary reset-to-default"
+          class="btn-default btn-secondary reset-to-default"
         />
       </:footer>
     </DModal>

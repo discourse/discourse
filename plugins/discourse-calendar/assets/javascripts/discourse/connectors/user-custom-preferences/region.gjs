@@ -41,6 +41,7 @@ export default class Region extends Component {
         @icon="globe"
         @label="discourse_calendar.region.use_current_region"
         @action={{this.useCurrentRegion}}
+        class="btn-default"
       />
     </div>
   </template>

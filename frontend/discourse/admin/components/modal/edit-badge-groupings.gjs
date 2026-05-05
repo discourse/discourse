@@ -102,20 +102,31 @@ export default class EditBadgeGroupings extends Component {
                     <DButton
                       @action={{fn (mut wc.editing) false}}
                       @icon="check"
+                      class="btn-default"
                     />
                   {{else}}
                     <DButton
                       @action={{fn (mut wc.editing) true}}
                       @disabled={{wc.system}}
                       @icon="pencil"
+                      class="btn-default"
                     />
                   {{/if}}
-                  <DButton @action={{fn this.up wc}} @icon="chevron-up" />
-                  <DButton @action={{fn this.down wc}} @icon="chevron-down" />
+                  <DButton
+                    @action={{fn this.up wc}}
+                    @icon="chevron-up"
+                    class="btn-default"
+                  />
+                  <DButton
+                    @action={{fn this.down wc}}
+                    @icon="chevron-down"
+                    class="btn-default"
+                  />
                   <DButton
                     @action={{fn this.delete wc}}
                     @disabled={{wc.system}}
                     @icon="xmark"
+                    class="btn-default"
                   />
                 </div>
               </li>
@@ -124,7 +135,7 @@ export default class EditBadgeGroupings extends Component {
         </div>
         <DButton
           @action={{this.add}}
-          class="badge-groupings__add-grouping"
+          class="btn-default badge-groupings__add-grouping"
           @label="admin.badges.new"
         />
       </:body>
