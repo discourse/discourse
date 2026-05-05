@@ -40,9 +40,7 @@ module DiscourseRssPolling
       end
 
       def upsert_rss_feed(params:, user:)
-        feed =
-          ::DiscourseRssPolling::RssFeed.find_by(id: params.id) ||
-            ::DiscourseRssPolling::RssFeed.new
+        feed = RssFeed.find_or_initialize_by(id: params.id)
         feed.assign_attributes(
           url: params.feed_url,
           user: user,
@@ -50,7 +48,7 @@ module DiscourseRssPolling
           tags: params.tag_names,
           category_filter: params.feed_category_filter,
         )
-        feed.save
+        feed.save!
         feed
       end
     end
