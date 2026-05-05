@@ -106,10 +106,7 @@ export default {
       return;
     }
 
-    const skipBeacon =
-      transition.urlMethod === "replace" && transition.queryParamsOnly;
-
-    if (!skipBeacon) {
+    if (!(transition.urlMethod === "replace" && transition.queryParamsOnly)) {
       const trackingSessionId = document.querySelector(
         "meta[name=discourse-track-view-session-id]"
       )?.content;
