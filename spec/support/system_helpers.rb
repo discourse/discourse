@@ -434,4 +434,3 @@ module SystemHelpers
     read.call
   end
 end
-
