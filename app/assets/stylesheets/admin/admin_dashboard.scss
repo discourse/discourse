@@ -4,6 +4,33 @@
   gap: var(--space-12);
 }
 
+.db-delta {
+  font-size: var(--font-down-2-rem);
+  font-weight: bold;
+
+  &.--pos {
+    color: var(--success);
+  }
+
+  &.--neg {
+    color: var(--danger);
+  }
+}
+
+.db-pill {
+  font-size: var(--font-down-3);
+  border-radius: 6.25rem;
+  padding: var(--space-half) var(--space-2);
+
+  &.--pos {
+    background: var(--success-low);
+  }
+
+  &.--neg {
+    background: var(--danger-low);
+  }
+}
+
 .db-section {
   display: flex;
   flex-direction: column;
@@ -37,7 +64,7 @@
   &__subheader {
     display: flex;
     justify-content: space-between;
-    gap: var(--space-4);
+    gap: var(--space-8);
   }
 
   &__subintro {
@@ -52,15 +79,18 @@
 
   &__metrics {
     display: flex;
-    justify-content: space-between;
-    gap: var(--space-4);
+    justify-content: flex-end;
+    flex-grow: 1;
+    gap: var(--space-10);
   }
 
   &__metric-number {
+    white-space: nowrap;
     font-size: var(--font-up-3);
   }
 
   &__metric-label {
+    white-space: nowrap;
     font-size: var(--font-down-2-rem);
     color: var(--primary-medium);
   }
@@ -71,6 +101,44 @@
     padding: var(--space-3) var(--space-4);
     border-radius: var(--d-border-radius-large);
     font-size: var(--font-down-1-rem);
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    border-top: 1px solid var(--primary-low);
+    margin-inline: calc(var(--space-4) * -1);
+    padding-inline: var(--space-4);
+
+    &.--single {
+      grid-template-columns: auto;
+      border-right: none;
+      padding: var(--space-4);
+    }
+  }
+
+  &__row-block {
+    &:first-of-type {
+      border-right: 1px solid var(--primary-low);
+      padding-right: var(--space-4);
+      padding-block: var(--space-4);
+    }
+
+    &:last-of-type {
+      padding-block: var(--space-4);
+    }
+  }
+
+  &__row-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__row-block-title {
+    font-size: var(--font-down-1-rem);
+    margin: 0;
   }
 
   &__wrapper {
@@ -87,7 +155,8 @@
       gap: var(--space-4);
     }
 
-    .--traffic & {
+    .--traffic &,
+    .--engagement & {
       display: flex;
       flex-direction: column;
       gap: var(--space-4);
@@ -145,36 +214,9 @@
     color: var(--primary);
   }
 
-  &__pill {
-    font-size: var(--font-down-3);
-    border-radius: 6.25rem;
-    padding: var(--space-half) var(--space-2);
-
-    &.--pos {
-      background: var(--success-low);
-    }
-
-    &.--neg {
-      background: var(--danger-low);
-    }
-  }
-
   &__label {
     font-size: var(--font-down-1-rem);
     color: var(--primary-medium);
-  }
-
-  &__delta {
-    font-size: var(--font-down-2-rem);
-    font-weight: bold;
-
-    &.--pos {
-      color: var(--success);
-    }
-
-    &.--neg {
-      color: var(--danger);
-    }
   }
 }
 
@@ -238,25 +280,6 @@
 .db-traffic {
   &__chart {
     height: 500px; // remove later
-  }
-
-  &__lists {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4);
-    border-top: 1px solid var(--primary-low);
-    margin-inline: calc(var(--space-4) * -1);
-    padding-inline: var(--space-4);
-  }
-
-  &__referrers {
-    border-right: 1px solid var(--primary-low);
-    padding-right: var(--space-4);
-    padding-block: var(--space-4);
-  }
-
-  &__countries {
-    padding-block: var(--space-4);
   }
 
   &__list-heading {

@@ -1,5 +1,6 @@
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 
 <template>
   <h1>Dashboard</h1>
@@ -13,13 +14,13 @@ import icon from "discourse/helpers/d-icon";
         <a class="db-kpi">
           <div class="db-kpi__value">1,100</div>
           <div class="db-kpi__label">New sign-ups</div>
-          <div class="db-kpi__delta --pos">+12%</div>
+          <div class="db-delta --pos">+12%</div>
           <span class="db-kpi__arrow">{{icon "arrow-right"}}</span>
         </a>
         <a class="db-kpi">
           <div class="db-kpi__value-row">
             <div class="db-kpi__value">21%</div>
-            <span class="db-kpi__pill --pos">stable</span>
+            <span class="db-pill --pos">stable</span>
           </div>
           <div class="db-kpi__label">
             DAU / MAU stickiness
@@ -29,7 +30,7 @@ import icon from "discourse/helpers/d-icon";
               title="Daily active users divided by monthly active users. Higher means members come back more often."
             >{{icon "far-circle-question"}}</span>
           </div>
-          <div class="db-kpi__delta --pos">+0.4pts</div>
+          <div class="db-delta --pos">+0.4pts</div>
           <span class="db-kpi__arrow">{{icon "arrow-right"}}</span>
         </a>
         <a class="db-kpi">
@@ -42,7 +43,7 @@ import icon from "discourse/helpers/d-icon";
               title="Members who posted, replied, or reacted for the first time this period."
             >{{icon "far-circle-question"}}</span>
           </div>
-          <div class="db-kpi__delta --pos">+6%</div>
+          <div class="db-delta --pos">+6%</div>
           <span class="db-kpi__arrow">{{icon "arrow-right"}}</span>
         </a>
         <a class="db-kpi">
@@ -55,7 +56,7 @@ import icon from "discourse/helpers/d-icon";
               title="Topics in support categories with a marked solution, divided by total topics."
             >{{icon "far-circle-question"}}</span>
           </div>
-          <div class="db-kpi__delta --pos">+1%</div>
+          <div class="db-delta --pos">+1%</div>
           <span class="db-kpi__arrow">{{icon "arrow-right"}}</span>
         </a>
       </div>
@@ -174,9 +175,9 @@ import icon from "discourse/helpers/d-icon";
         <div class="db-traffic__chart">
           PLACEHOLDER FOR TRAFFIC CHART
         </div>
-        <div class="db-traffic__lists">
-          <div class="db-traffic__referrers">
-            <h3 class="db-traffic__list-heading">Top referrers</h3>
+        <div class="db-section__row">
+          <div class="db-section__row-block">
+            <h3 class="db-section__row-block-title">Top referrers</h3>
             <ul class="db-traffic__list">
               <li class="db-traffic__list-row">
                 <span class="db-traffic__name">news.ycombinator.com</span>
@@ -205,8 +206,8 @@ import icon from "discourse/helpers/d-icon";
               </li>
             </ul>
           </div>
-          <div class="db-traffic__countries">
-            <h3 class="db-traffic__list-heading">Top countries</h3>
+          <div class="db-section__row-block">
+            <h3 class="db-section__row-block-title">Top countries</h3>
             <ul class="db-traffic__list">
               <li class="db-traffic__list-row">
                 <span class="db-traffic__name">🇺🇸 United States</span>
@@ -229,6 +230,68 @@ import icon from "discourse/helpers/d-icon";
                 <span class="db-traffic__value">4%</span>
               </li>
             </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="db-section --engagement">
+      <h2 class="db-section__header">Engagement</h2>
+      <div class="db-section__wrapper">
+        <div class="db-section__subheader">
+          <div class="db-section__subintro">
+            <h3>Members are forming a habit of coming back.</h3>
+            <p>Stickiness is steady at 21% and new sign-ups are up 9%, but
+              daily-engaged members slipped 5% — most active members are
+              participating less often than last month.</p>
+          </div>
+          <div class="db-section__metrics">
+            <div class="db-section__metric">
+              <div class="db-section__metric-number">38%</div>
+              <div class="db-section__metric-label">
+                DAU / MAU
+              </div>
+              <span class="db-pill --pos">stable</span>
+            </div>
+            <div class="db-section__metric">
+              <div class="db-section__metric-number">150</div>
+              <div class="db-section__metric-label">Daily visitors
+              </div>
+              <span class="db-delta --neg">-2%</span>
+            </div>
+            <div class="db-section__metric">
+              <div class="db-section__metric-number">248</div>
+              <div class="db-section__metric-label">New sign ups
+              </div>
+              <span class="db-delta --pos">+12%</span>
+            </div>
+          </div>
+        </div>
+        {{! only needed when adding multiple rows }}
+        <div class="db-section__subwrapper">
+          <div class="db-section__row">
+            <div class="db-section__row-block">
+              <div class="db-section__row-block-header">
+                <h3 class="db-section__row-block-title">Trust Level Pipeline</h3>
+                <span class="db-pill --pos">+72 climbing</span>
+              </div>
+            </div>
+            <div class="db-section__row-block">
+              <div class="db-section__row-block-header">
+                <h3 class="db-section__row-block-title">Who's contributing?</h3>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="db-section__row --single">
+            <div class="db-section__row-block-header">
+              <h3 class="db-section__row-block-title">Activity by category</h3>
+              <CategorySelector />
+            </div>
+            <div class="db-activity">
+              //table
+            </div>
           </div>
         </div>
       </div>
