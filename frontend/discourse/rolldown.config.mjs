@@ -115,8 +115,11 @@ export function buildConfig({ devMode } = {}) {
       },
       {
         name: "css-loader",
-        transform(code, id) {
-          if (id.endsWith(".css")) {
+        transform: {
+          filter: {
+            id: /\.css$/,
+          },
+          handler(code, id) {
             return {
               code: `
                 const style = document.createElement("style");
@@ -126,8 +129,7 @@ export function buildConfig({ devMode } = {}) {
               `,
               moduleType: "js",
             };
-          }
-          return null;
+          },
         },
       },
       {
