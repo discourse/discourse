@@ -1,7 +1,7 @@
 <section id="d-splash">
   <style>
     html {
-      <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+      <%- if custom_splash_screen_enabled? %>
       overflow: hidden !important;
       <%- else %>
       overflow-y: hidden !important;
@@ -16,7 +16,7 @@
 
       #d-splash {
         --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
-        <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+        <%- if custom_splash_screen_enabled? %>
           <%- if splash_screen_image_animated? %>
           --primary: #<%= light_color_hex_for_name("primary") %>;
           --secondary: #<%= light_color_hex_for_name("secondary") %>;
@@ -33,7 +33,7 @@
 
       #d-splash {
         --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
-        <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+        <%- if custom_splash_screen_enabled? %>
           <%- if splash_screen_image_animated? %>
           --primary: #<%= light_color_hex_for_name("primary") %>;
           --secondary: #<%= light_color_hex_for_name("secondary") %>;
@@ -50,7 +50,7 @@
 
       #d-splash {
         --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
-        <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+        <%- if custom_splash_screen_enabled? %>
           <%- if splash_screen_image_animated? %>
           --primary: #<%= dark_color_hex_for_name("primary") %>;
           --secondary: #<%= dark_color_hex_for_name("secondary") %>;
@@ -71,7 +71,7 @@
 
         #d-splash {
           --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
-          <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+          <%- if custom_splash_screen_enabled? %>
             <%- if splash_screen_image_animated? %>
             --primary: #<%= light_color_hex_for_name("primary") %>;
             --secondary: #<%= light_color_hex_for_name("secondary") %>;
@@ -91,7 +91,7 @@
 
         #d-splash {
           --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
-          <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+          <%- if custom_splash_screen_enabled? %>
             <%- if splash_screen_image_animated? %>
             --primary: #<%= dark_color_hex_for_name("primary") %>;
             --secondary: #<%= dark_color_hex_for_name("secondary") %>;
@@ -118,7 +118,7 @@
     #d-splash .preloader-image {
       --splash-dot-size: max(1vw, 25px);
       --splash-dot-spacing: calc(var(--splash-dot-size) * 1.5);
-      <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+      <%- if custom_splash_screen_enabled? %>
       width: 700px;
       @media (width < 700px) {
         width: 320px;
@@ -154,7 +154,7 @@
       }
     }
 
-    <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+    <%- if custom_splash_screen_enabled? %>
     #d-splash .dots-container {
       position: relative;
       width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
@@ -170,7 +170,7 @@
       animation-delay: calc(var(--n) * 0.15s);
 
       position: absolute;
-      <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+      <%- if custom_splash_screen_enabled? %>
       top: 0;
       <%- else %>
       top: calc(50% - var(--splash-dot-size) / 2);
@@ -206,7 +206,7 @@
       }
     }
 
-    <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+    <%- if custom_splash_screen_enabled? %>
     #d-splash .preloader-image {
       --splash-dot-size: max(0.7vw, 14px);
     }
@@ -246,7 +246,7 @@
   </style>
 
   <div class="preloader-image" elementtiming="discourse-splash-visible">
-    <%- if SiteSetting.splash_screen_image.is_a?(Upload) %>
+    <%- if custom_splash_screen_enabled? %>
       <%- if splash_screen_image_animated? %>
         <div class="splash-logo-container"><%= splash_screen_inline_svg %></div>
       <%- else %>
