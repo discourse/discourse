@@ -183,11 +183,15 @@ class DiscourseSolved::AcceptAnswer
     WebHook.enqueue_solved_hooks(:accepted_solution, post, WebHook.generate_payload(:post, post))
   end
 
-  def publish_solution(post:, topic:)
+  def publish_solution(post:, topic:, guardian:)
     DiscourseEvent.trigger(:accepted_solution, post)
     MessageBus.publish(
       "/topic/#{topic.id}",
-      { type: :accepted_solution, accepted_answers: topic.reload.accepted_answers_post_info },
+      {
+        type: :accepted_solution,
+        accepted_answers:
+          DiscourseSolved::AcceptedAnswersSerializer.serialize(topic.reload, guardian),
+      },
       topic.secure_audience_publish_messages,
     )
   end

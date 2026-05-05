@@ -86,11 +86,15 @@ class DiscourseSolved::UnacceptAnswer
     WebHook.enqueue_solved_hooks(:unaccepted_solution, post, WebHook.generate_payload(:post, post))
   end
 
-  def publish_unaccepted(post:, topic:)
+  def publish_unaccepted(post:, topic:, guardian:)
     DiscourseEvent.trigger(:unaccepted_solution, post)
     MessageBus.publish(
       "/topic/#{topic.id}",
-      { type: :unaccepted_solution, accepted_answers: topic.reload.accepted_answers_post_info },
+      {
+        type: :unaccepted_solution,
+        accepted_answers:
+          DiscourseSolved::AcceptedAnswersSerializer.serialize(topic.reload, guardian),
+      },
       topic.secure_audience_publish_messages,
     )
   end

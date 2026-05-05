@@ -77,7 +77,12 @@ after_initialize do
     solved = topic_view.topic.solved
     next unless solved
 
-    ActiveRecord::Associations::Preloader.new(records: [solved], associations: :topic_answers).call
+    ActiveRecord::Associations::Preloader.new(
+      records: [solved],
+      associations: {
+        topic_answers: [{ post: :user }, :accepter],
+      },
+    ).call
   end
 
   Site.preloaded_category_custom_fields << DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD

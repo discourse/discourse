@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import { helperContext } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
@@ -72,21 +71,7 @@ function customizePost(api) {
 
   api.renderAfterWrapperOutlet(
     "post-content-cooked-html",
-    class extends Component {
-      static shouldRender(args) {
-        return (
-          args.post?.post_number === 1 &&
-          args.post?.topic?.accepted_answers?.length > 0
-        );
-      }
-
-      <template>
-        <SolvedAcceptedAnswers
-          @post={{@post}}
-          @decoratorState={{@decoratorState}}
-        />
-      </template>
-    }
+    SolvedAcceptedAnswers
   );
 }
 

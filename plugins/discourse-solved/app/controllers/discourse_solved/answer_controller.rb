@@ -7,7 +7,11 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
   def accept
     DiscourseSolved::AcceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
-      on_success { |topic:| render_json_dump(topic.accepted_answers_post_info) }
+      on_success do |topic:|
+        render_json_dump(
+          DiscourseSolved::AcceptedAnswersSerializer.serialize(topic.reload, guardian),
+        )
+      end
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
       on_failed_policy(:can_accept_answer) { raise Discourse::InvalidAccess }
@@ -26,7 +30,11 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
   def unaccept
     DiscourseSolved::UnacceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
-      on_success { |topic:| render_json_dump(topic.reload.accepted_answers_post_info) }
+      on_success do |topic:|
+        render_json_dump(
+          DiscourseSolved::AcceptedAnswersSerializer.serialize(topic.reload, guardian),
+        )
+      end
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
       on_failed_policy(:can_unaccept_answer) { raise Discourse::InvalidAccess }

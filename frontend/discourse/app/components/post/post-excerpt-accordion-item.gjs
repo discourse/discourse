@@ -1,8 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
-import { action } from "@ember/object";
-//import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import RelativeDate from "discourse/components/relative-date";
@@ -13,37 +9,21 @@ import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import { i18n } from "discourse-i18n";
 
 export default class PostExcerptAccordionItem extends Component {
-  //@service siteSettings;
-
-  @tracked expanded = false;
-
   get excerptPost() {
     return this.args.excerptPost;
   }
 
   get topic() {
-    return this.args.post.topic;
+    return this.excerptPost.topic;
   }
 
   get quoteId() {
-    return `post-excerpt-${this.topic.id}-${this.postExcerpt.post_number}`;
+    return `post-excerpt-${this.topic.id}-${this.excerptPost.post_number}`;
   }
-
-  // get hasExcerpt() {
-  //   return !!this.excerptPost.cooked;
-  // }
 
   get hasContent() {
-    return !!this.postExcerpt?.cooked;
+    return !!this.excerptPost?.cooked;
   }
-
-  // get showMarkedBy() {
-  //   return this.siteSettings.show_who_marked_solved;
-  // }
-
-  // get showSolvedBy() {
-  //   return !(!this.answer.username || !this.answer.post_number);
-  // }
 
   get postPath() {
     return `${this.topic.url}/${this.excerptPost.post_number}`;
@@ -51,17 +31,6 @@ export default class PostExcerptAccordionItem extends Component {
 
   get userDisplayName() {
     return userPrioritizedName(this.excerptPost.user);
-  }
-
-  // get accepterDisplayName() {
-  //   const username = this.answer.accepter_username;
-  //   const name = this.answer.accepter_name;
-  //   return this.siteSettings.display_name_on_posts && name ? name : username;
-  // }
-
-  @action
-  toggleExpanded() {
-    this.expanded = !this.expanded;
   }
 
   <template>
@@ -72,7 +41,7 @@ export default class PostExcerptAccordionItem extends Component {
           (if this.hasContent "d-post-excerpt-accordion-item--has-excerpt")
           (unless this.hasContent "title-only")
         }}
-        data-expanded={{this.expanded}}
+        data-expanded={{@isExpanded}}
         data-username={{this.excerptPost.user.username}}
         data-post={{this.excerptPost.post_number}}
         data-topic={{this.topic.id}}
@@ -80,55 +49,67 @@ export default class PostExcerptAccordionItem extends Component {
         <div class="d-post-excerpt-accordion-item__header">
           <div class="d-post-excerpt-accordion-item__metadata">
             {{#if (has-block "accordionItemMetadata")}}
-              {{yield
-                (hash excerptPost=this.excerptPost)
-                to="accordionItemMetadata"
-              }}
+              {{yield this.excerptPost to="accordionItemMetadata"}}
             {{else}}
               <UserLink @user={{this.excerptPost.user}}>
                 {{boundAvatarTemplate
                   this.excerptPost.user.avatar_template
                   "tiny"
                 }}
+                <span>
+                  {{this.userDisplayName}}
+                </span>
               </UserLink>
-              <span>
-                {{this.userDisplayName}}
-              </span>
               <span class="dot-separator"></span>
               <a
                 href={{this.excerptPost.post_url}}
                 title={{i18n "post.sr_date"}}
               >
-                <RelativeDate @date={{@statusPost.displayDate}} />
+                <RelativeDate @date={{this.excerptPost.displayDate}} />
               </a>
             {{/if}}
           </div>
-          <div class="d-solved-answer__controls">
+          <div class="d-post-excerpt-accordion-item__controls">
             {{#if this.hasContent}}
               <DButton
-                class="btn-flat d-solved-answer__toggle"
-                @action={{this.toggleExpanded}}
+                class="btn-flat d-post-excerpt-accordion-item__toggle"
+                @action={{@onToggleExpanded}}
                 @ariaControls={{this.quoteId}}
-                @ariaExpanded={{this.expanded}}
-                @ariaLabel={{if this.expanded "post.collapse" "expand"}}
-                @title={{if this.expanded "post.collapse" "expand"}}
-                @icon={{if this.expanded "chevron-up" "chevron-down"}}
+                @ariaExpanded={{@isExpanded}}
+                @ariaLabel={{if @isExpanded "post.collapse" "expand"}}
+                @title={{if @isExpanded "post.collapse" "expand"}}
+                @icon={{if @isExpanded "chevron-up" "chevron-down"}}
               />
             {{/if}}
           </div>
         </div>
 
-        {{#if this.hasContent}}
-          <blockquote
-            id={{this.quoteId}}
-            class="d-post-excerpt-accordion-item__content"
-          >
-            <PostCookedHtml
-              @post={{this.excerptPost}}
-              @decoratorState={{@decoratorState}}
-            />
-          </blockquote>
-        {{/if}}
+        <div class="d-post-excerpt-accordion-item__body">
+          {{#if this.hasContent}}
+
+            <blockquote
+              id={{this.quoteId}}
+              class="d-post-excerpt-accordion-item__content"
+            >
+              {{#if (has-block "beforeAccordionItemContent")}}
+                {{yield this.excerptPost to="beforeAccordionItemContent"}}
+              {{/if}}
+
+              <PostCookedHtml
+                @post={{this.excerptPost}}
+                @decoratorState={{@decoratorState}}
+              />
+
+            </blockquote>
+
+            <div class="d-post-excerpt-accordion-item__read-more">
+              <a href={{this.excerptPost.post_url}} class="read-more-link">
+                {{i18n "read_more"}}
+              </a>
+            </div>
+
+          {{/if}}
+        </div>
       </div>
     {{/if}}
   </template>

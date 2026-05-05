@@ -10,6 +10,6 @@ module DiscourseSolved::TopicViewSerializerExtension
   end
 
   def accepted_answers
-    object.topic.accepted_answers_post_info
+    DiscourseSolved::AcceptedAnswersSerializer.serialize(object.topic, scope)
   end
 end

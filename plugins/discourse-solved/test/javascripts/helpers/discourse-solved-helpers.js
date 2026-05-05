@@ -199,11 +199,20 @@ export const postStreamWithAcceptedAnswerExcerpt = (excerpt) => ({
   message_bus_last_id: 0,
   accepted_answers: [
     {
+      id: 22,
+      avatar_template: "/letter_avatar_proxy/v2/letter/k/ac91a4/{size}.png",
+      created_at: "2026-05-04T20:56:36.579Z",
+      cooked: excerpt ? `<p>${excerpt}</p>` : excerpt, //`<p>${excerpt}</p>`,
       post_number: 2,
+      accepter: {
+        id: 1,
+        username: "tomtom",
+        name: "Tomtom",
+        avatar_template: "/letter_avatar_proxy/v2/letter/k/ac91a4/{size}.png",
+      },
+      user_deleted: false,
+      user_id: 1,
       username: "kzh",
-      excerpt: excerpt ? `<p>${excerpt}</p>` : excerpt,
-      accepter_username: "tomtom",
-      accepter_name: "Tomtom",
     },
   ],
 });
