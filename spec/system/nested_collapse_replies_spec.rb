@@ -22,7 +22,7 @@ RSpec.describe "Nested view collapse_replies URL param" do
 
   before do
     SiteSetting.nested_replies_enabled = true
-    NestedTopic.find_or_create_by!(topic: topic)
+    Fabricate(:nested_topic, topic: topic)
     sign_in(op_user)
   end
 

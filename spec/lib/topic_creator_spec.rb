@@ -28,7 +28,7 @@ RSpec.describe TopicCreator do
     context "with topic success cases" do
       before do
         TopicCreator.any_instance.expects(:save_topic).returns(true)
-        TopicCreator.any_instance.expects(:set_pm_recipient_notification_levels).returns(true)
+        TopicCreator.any_instance.expects(:apply_pm_recipient_notification_levels).returns(true)
         SiteSetting.allow_duplicate_topic_titles = true
       end
 
@@ -550,7 +550,7 @@ RSpec.describe TopicCreator do
       context "with success cases" do
         before do
           TopicCreator.any_instance.expects(:save_topic).returns(true)
-          TopicCreator.any_instance.expects(:set_pm_recipient_notification_levels).returns(true)
+          TopicCreator.any_instance.expects(:apply_pm_recipient_notification_levels).returns(true)
           SiteSetting.allow_duplicate_topic_titles = true
           SiteSetting.enable_staged_users = true
         end

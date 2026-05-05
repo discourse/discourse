@@ -305,7 +305,7 @@ RSpec.describe TopicListItemSerializer do
 
     before do
       SiteSetting.nested_replies_enabled = true
-      NestedTopic.find_or_create_by!(topic: nested_topic_record)
+      Fabricate(:nested_topic, topic: nested_topic_record)
     end
 
     def serialize_with_user_data(last_visited_at:)

@@ -70,7 +70,7 @@ class TopicCreator
     save_topic(topic)
     create_warning(topic)
     set_author_notification_level(topic)
-    set_pm_recipient_notification_levels(topic)
+    apply_pm_recipient_notification_levels(topic)
     create_shared_draft(topic)
     UserActionManager.topic_created(topic)
 
@@ -122,17 +122,15 @@ class TopicCreator
     end
   end
 
-  # Iterates the topic's PM allowed users + groups and applies their default
-  # notification levels. No-op for regular (non-PM) topics, where these
-  # collections are empty. Author-side notification level is set separately
-  # in #set_author_notification_level.
-  def set_pm_recipient_notification_levels(topic)
+  def apply_pm_recipient_notification_levels(topic)
+    return unless topic.private_message?
+
     topic.reload.topic_allowed_users.each do |tau|
       next if tau.user_id == -1 || tau.user_id == topic.user_id
       topic.notifier.watch!(tau.user_id)
     end
 
-    topic.reload.topic_allowed_groups.each do |topic_allowed_group|
+    topic.topic_allowed_groups.each do |topic_allowed_group|
       group = topic_allowed_group.group
 
       begin

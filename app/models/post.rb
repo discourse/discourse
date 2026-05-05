@@ -518,6 +518,10 @@ class Post < ActiveRecord::Base
       )
   end
 
+  # In a nested-view topic, a "root" reply (no reply_to_post_number) is
+  # treated as targeting post 1, so the OP gets the :replied notification.
+  # New callers that don't want this behavior should branch on the topic
+  # type before calling.
   def reply_notification_target
     target_post_number = reply_to_post_number
     target_post_number = 1 if target_post_number.blank? && topic&.nested_view?

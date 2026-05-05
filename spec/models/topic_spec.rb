@@ -3924,13 +3924,13 @@ RSpec.describe Topic do
     it "returns false when nested_replies_enabled is off" do
       SiteSetting.nested_replies_enabled = false
       SiteSetting.nested_replies_default = true
-      NestedTopic.find_or_create_by!(topic: topic)
+      Fabricate(:nested_topic, topic: topic)
       expect(topic.reload.nested_view?).to eq(false)
     end
 
     it "returns true when the topic has a nested_topic record and the feature is enabled" do
       SiteSetting.nested_replies_enabled = true
-      NestedTopic.find_or_create_by!(topic: topic)
+      Fabricate(:nested_topic, topic: topic)
       expect(topic.reload.nested_view?).to eq(true)
     end
 

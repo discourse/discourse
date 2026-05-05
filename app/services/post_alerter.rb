@@ -378,14 +378,9 @@ class PostAlerter
     unread_posts(user, topic).count
   end
 
-  # Bucket-scoped variant of #unread_posts. Note this intentionally does NOT
-  # mirror unread_posts' "posts the user cares about" filtering (reply_to_user_id
-  # match, watching topic/category/tag). For nested-bucket consolidation, the
-  # bucket itself *is* the scope — every post with the matching parent is by
-  # definition relevant to the recipient (they're either the OP for bucket 1,
-  # or the parent post's author for bucket N>1). Keeping the filter simple
-  # avoids double-restricting the count and matches the consolidated
-  # notification's "X new replies in this bucket" semantics.
+  # Bucket membership is the scope here — we don't re-apply the watching/reply_to
+  # filters that #unread_posts uses, since a recipient is by definition the
+  # parent author (or OP for bucket 1).
   def unread_posts_in_bucket(user, topic, bucket_post_number)
     last_read =
       TopicUser.where(user_id: user.id, topic_id: topic.id).pick(:last_read_post_number) || 0
@@ -393,9 +388,8 @@ class PostAlerter
     scope =
       Post.secured(Guardian.new(user)).where(topic_id: topic.id).where("post_number > ?", last_read)
 
-    if bucket_post_number == 1
-      # Bucket 1 = "replies to the topic root." Post 1 itself is the root, not
-      # a reply to it, so exclude it from the count.
+    if bucket_post_number == Notification::TOPIC_ROOT_BUCKET
+      # Post 1 is the root itself, not a reply to it.
       scope.where("reply_to_post_number IS NULL OR reply_to_post_number = 1").where(
         "post_number > 1",
       )
@@ -419,7 +413,9 @@ class PostAlerter
     User.transaction do
       scope = user.notifications.where(notification_type: types, topic_id: topic.id)
       if bucket_post_number
-        scope = scope.where("(data::jsonb ->> 'reply_to_post_number')::int = ?", bucket_post_number)
+        # Compare as text — `data` is stored as text and a future malformed
+        # value (e.g. empty string) would raise on a `::int` cast.
+        scope = scope.where("data::jsonb ->> 'reply_to_post_number' = ?", bucket_post_number.to_s)
       end
       scope.destroy_all
 
@@ -581,13 +577,9 @@ class PostAlerter
       end
     end
 
-    # Lookup keyed on (topic_id, post_number) of the *incoming* post. For
-    # nested-bucket :replied notifications the consolidated row's stored
-    # post_number is the bucket's first-unread post (set below), not the
-    # incoming post's number, so an incoming reply doesn't collide with the
-    # consolidated row here. Dedup is still correct: each new bucket reply
-    # falls through to the COLLAPSED branch which destroys + recreates the
-    # bucket row.
+    # Keyed on the *incoming* post's number. A consolidated nested-bucket row
+    # stores the bucket's first-unread post number, so it won't collide here —
+    # the COLLAPSED branch below destroys + recreates the bucket row.
     existing_notifications =
       user
         .notifications
@@ -622,7 +614,7 @@ class PostAlerter
 
     if COLLAPSED_NOTIFICATION_TYPES.include?(type)
       if type == Notification.types[:replied] && topic.nested_view?
-        bucket_post_number = post.reply_to_post_number || 1
+        bucket_post_number = post.reply_to_post_number || Notification::TOPIC_ROOT_BUCKET
         destroy_notifications(
           user,
           [Notification.types[:replied]],
@@ -673,9 +665,6 @@ class PostAlerter
       display_username: opts[:display_username] || post.user.username,
     }
 
-    # Bucket fields are nested-only. Flat topics keep the legacy
-    # consolidated-:replied data shape (no reply_to_post_number,
-    # no consolidated_count) so the existing flat-topic UI is untouched.
     if bucket_post_number
       notification_data[:reply_to_post_number] = bucket_post_number
       notification_data[:consolidated_count] = consolidated_count if consolidated_count

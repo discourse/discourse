@@ -2603,7 +2603,7 @@ RSpec.describe Post do
     context "when the topic is in nested view" do
       before do
         SiteSetting.nested_replies_enabled = true
-        NestedTopic.find_or_create_by!(topic: topic)
+        Fabricate(:nested_topic, topic: topic)
       end
 
       it "redirects a root post to the topic's first-post author" do

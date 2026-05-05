@@ -1899,7 +1899,7 @@ RSpec.describe PostAlerter do
 
     before do
       SiteSetting.nested_replies_enabled = true
-      NestedTopic.find_or_create_by!(topic: nested_topic_record)
+      Fabricate(:nested_topic, topic: nested_topic_record)
     end
 
     it "notifies the OP via :replied for a root post (no reply_to_post_number)" do
@@ -1999,7 +1999,7 @@ RSpec.describe PostAlerter do
       PostAlerter.post_created(flat_root)
       expect(op.notifications.where(notification_type: Notification.types[:replied]).count).to eq(0)
 
-      NestedTopic.find_or_create_by!(topic: flat_topic)
+      Fabricate(:nested_topic, topic: flat_topic)
 
       nested_root =
         Fabricate(
@@ -2041,7 +2041,7 @@ RSpec.describe PostAlerter do
 
     before do
       SiteSetting.nested_replies_enabled = true
-      NestedTopic.find_or_create_by!(topic: bucket_topic)
+      Fabricate(:nested_topic, topic: bucket_topic)
     end
 
     def post_alert(user:, post_number:, reply_to: nil)

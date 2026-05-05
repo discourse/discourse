@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActionList from "discourse/components/topic-list/action-list";
+import NewRepliesDot from "discourse/components/topic-list/new-replies-dot";
 import ParticipantGroups from "discourse/components/topic-list/participant-groups";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
@@ -14,7 +15,6 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { groupPath } from "discourse/lib/url";
-import { i18n } from "discourse-i18n";
 
 export default class TopicCell extends Component {
   get participantGroups() {
@@ -77,12 +77,7 @@ export default class TopicCell extends Component {
           <UnreadIndicator @topic={{@topic}} />
           {{~#if @topic.is_nested_view~}}
             {{~#if @topic.has_new_replies~}}
-              <span class="topic-post-badges">&nbsp;<a
-                  href={{@topic.lastUnreadUrl}}
-                  title={{i18n "topic.has_new_replies"}}
-                  aria-label={{i18n "topic.has_new_replies"}}
-                  class="badge badge-notification new-replies"
-                >&nbsp;</a></span>
+              <NewRepliesDot @topic={{@topic}} />
             {{~/if~}}
           {{~else if @showTopicPostBadges~}}
             <TopicPostBadges
