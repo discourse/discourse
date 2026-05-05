@@ -3870,10 +3870,6 @@ uncategorized:
     default: false
     area: "users"
 
-  splash_screen:
-    default: true
-    area: "interface"
-
   enable_custom_splash_screen:
     default: false
     client: true
