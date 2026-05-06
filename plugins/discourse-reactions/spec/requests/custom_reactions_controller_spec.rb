@@ -456,6 +456,22 @@ describe DiscourseReactions::CustomReactionsController do
       expect(parsed[0]["post"]["user"]["id"]).to eq(user_1.id)
       expect(parsed[0]["reaction"]["id"]).to eq(like.id)
     end
+
+    it "does not include reactions or likes from ignored users" do
+      sign_in(user_1)
+      Fabricate(:ignored_user, user: user_1, ignored_user: user_3)
+      Fabricate(:ignored_user, user: user_1, ignored_user: user_5)
+
+      get "/discourse-reactions/posts/reactions-received.json",
+          params: {
+            username: user_1.username,
+            include_likes: true,
+          }
+
+      usernames = response.parsed_body.map { |reaction| reaction["user"]["username"] }
+      expect(usernames).not_to include(user_3.username, user_5.username)
+      expect(usernames).to include(user_2.username, user_4.username)
+    end
   end
 
   describe "#reactions_users_list" do

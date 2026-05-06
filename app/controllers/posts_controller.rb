@@ -114,6 +114,7 @@ class PostsController < ApplicationController
             add_excerpt: true,
             add_title: true,
             all_post_actions: counts,
+            ignored_user_like_counts: PostAction.ignored_user_like_counts_for(posts, current_user),
           ),
         )
       end
@@ -149,7 +150,15 @@ class PostsController < ApplicationController
       end
 
       format.json do
-        render_json_dump(serialize_data(posts, PostSerializer, scope: guardian, add_excerpt: true))
+        render_json_dump(
+          serialize_data(
+            posts,
+            PostSerializer,
+            scope: guardian,
+            add_excerpt: true,
+            ignored_user_like_counts: PostAction.ignored_user_like_counts_for(posts, current_user),
+          ),
+        )
       end
     end
   end

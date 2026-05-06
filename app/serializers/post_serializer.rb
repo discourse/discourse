@@ -12,6 +12,7 @@ class PostSerializer < BasicPostSerializer
     all_post_actions
     add_excerpt
     notice_created_by_users
+    ignored_user_like_counts
   ]
 
   INSTANCE_VARS.each { |v| self.public_send(:attr_accessor, v) }
@@ -393,8 +394,8 @@ class PostSerializer < BasicPostSerializer
 
   def ignored_like_count_for_viewer
     return 0 if scope.user.blank?
-
     return @topic_view.ignored_user_like_counts[object.id].to_i if @topic_view
+    return @ignored_user_like_counts[object.id].to_i if @ignored_user_like_counts
 
     ignored_ids = scope.user.ignored_user_ids
     return 0 if ignored_ids.empty?

@@ -3384,6 +3384,23 @@ RSpec.describe PostsController do
       expect(body).to include(public_post.topic.slug)
     end
 
+    it "excludes ignored users' likes from JSON like counts" do
+      viewer = Fabricate(:user, refresh_auto_groups: true)
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      regular_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, public_post)
+      PostActionCreator.like(regular_liker, public_post)
+      Fabricate(:ignored_user, user: viewer, ignored_user: ignored_liker)
+      sign_in(viewer)
+
+      get "/u/#{user.username}/activity.json"
+
+      post_json = response.parsed_body.find { |post| post["id"] == public_post.id }
+      like_summary =
+        post_json["actions_summary"].find { |action| action["id"] == PostActionType.types[:like] }
+      expect(like_summary["count"]).to eq(1)
+    end
+
     it "returns 404 if `hide_profile` user option is checked" do
       user.user_option.update_columns(hide_profile: true)
 
@@ -3564,6 +3581,24 @@ RSpec.describe PostsController do
         expect(post_ids).to include public_post.id
         expect(post_ids).to_not include private_post.id
         expect(post_ids).to_not include topicless_post.id
+      end
+
+      it "excludes ignored users' likes from json like counts" do
+        viewer = Fabricate(:user, refresh_auto_groups: true)
+        ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+        regular_liker = Fabricate(:user, refresh_auto_groups: true)
+        PostActionCreator.like(ignored_liker, public_post)
+        PostActionCreator.like(regular_liker, public_post)
+        Fabricate(:ignored_user, user: viewer, ignored_user: ignored_liker)
+        sign_in(viewer)
+
+        get "/posts.json"
+
+        post_json =
+          response.parsed_body["latest_posts"].find { |post| post["id"] == public_post.id }
+        like_summary =
+          post_json["actions_summary"].find { |action| action["id"] == PostActionType.types[:like] }
+        expect(like_summary["count"]).to eq(1)
       end
     end
   end

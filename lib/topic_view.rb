@@ -684,20 +684,7 @@ class TopicView
   end
 
   def ignored_user_like_counts
-    return {} if @user.blank?
-
-    ignored_ids = @user.ignored_user_ids
-    return {} if ignored_ids.empty?
-
-    PostAction
-      .where(
-        post_id: @posts.map(&:id),
-        user_id: ignored_ids,
-        post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
-        deleted_at: nil,
-      )
-      .group(:post_id)
-      .count
+    PostAction.ignored_user_like_counts_for(@posts, @user)
   end
 
   def reviewable_counts
