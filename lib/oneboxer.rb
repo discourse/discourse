@@ -128,15 +128,6 @@ module Oneboxer
   end
 
   def self.inline_data_for(url)
-    uri =
-      begin
-        URI(url)
-      rescue URI::Error
-        nil
-      end
-    return if uri.nil? || uri.hostname.blank?
-    return if Onebox::DomainChecker.is_blocked?(uri.hostname)
-
     engine_class = engine(url)
     return if engine_class.nil? || !engine_class.method_defined?(:inline_data)
 
