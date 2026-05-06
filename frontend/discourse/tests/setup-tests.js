@@ -207,16 +207,6 @@ function writeSummaryLine(message) {
 export default function setupTests(config) {
   const target = getUrlParameter("target") || "core";
 
-  // Diagnostic heartbeat: logs every 1s with the current tick number and the
-  // `performance.now()` reading. If the main thread is blocked, ticks pause
-  // and resume; if testem just disconnected, ticks keep firing but the logs
-  // are buffered and flush all at once when the WebSocket reconnects.
-  let __tick = 0;
-  setInterval(() => {
-    // eslint-disable-next-line no-console
-    console.log(`[heartbeat] tick=${++__tick} t=${performance.now().toFixed(0)}`);
-  }, 1000);
-
   disableCloaking();
 
   setupDeprecationCounter({ QUnit, origin: target });

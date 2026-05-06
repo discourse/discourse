@@ -337,17 +337,3 @@ if (pluginTestPages) {
 }
 
 module.exports.proxies["/*/*"] = { target, xfwd: true };
-
-// Diagnostic-only A/B: serve /assets/js/* and /assets/map/* locally from
-// frontend/discourse/dist/* instead of round-tripping through Rails.
-// Compares the two paths to see whether Rails-side serialization is the cause
-// of dynamic-import stalls under parallel browsers.
-if (process.env.BYPASS_RAILS_ASSETS === "1") {
-  const path = require("path");
-  const distDir = path.resolve(__dirname, "dist");
-  module.exports.routes = {
-    "/assets/js": path.join(distDir, "assets/js"),
-    "/assets/map": path.join(distDir, "assets/map"),
-    "/assets/wasm": path.join(distDir, "assets/wasm"),
-  };
-}

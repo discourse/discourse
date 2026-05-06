@@ -67,30 +67,6 @@ class EmberCli < ActiveSupport::CurrentAttributes
     preloads
   end
 
-  # Diagnostic: pre-warm every dynamic-import chunk for the test bundle so the
-  # first call to `import("photoswipe")`/`import("pikaday")`/lazy route loads
-  # don't fight for CPU during the test run. Used only by qunit.html.erb.
-  # Safe no-op when manifest is missing (e.g. ember-cli builds).
-  def self.test_dynamic_preloads
-    return cache[:test_dynamic_preloads] if cache.key?(:test_dynamic_preloads)
-    return cache[:test_dynamic_preloads] = [] if ENV["DISABLE_TEST_PRELOAD"] == "1"
-    manifest = JSON.parse(File.read("#{dist_dir}/manifest/manifest.json"))
-
-    by_file = manifest.each_with_object({}) { |(_, v), h| h[v["file"]] = v }
-    files = []
-    seen = Set.new
-    walk = ->(entry) do
-      return if !entry || seen.include?(entry["file"])
-      seen.add(entry["file"])
-      files << entry["file"].delete_prefix("assets/").delete_suffix(".js")
-      entry["imports"]&.each { |i| walk.call(by_file[i]) }
-    end
-    manifest.each_value { |entry| walk.call(entry) if entry["isDynamicEntry"] }
-    cache[:test_dynamic_preloads] = files
-  rescue Errno::ENOENT
-    cache[:test_dynamic_preloads] = []
-  end
-
   def self.is_ember_cli_asset?(name)
     name === "@embroider/virtual/test-support" || assets.include?(name) ||
       script_chunks.values.flatten.include?(name.delete_suffix(".js"))

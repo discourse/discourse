@@ -81,13 +81,6 @@
       </script>
 
       <%= preload_script "tests/test-entrypoint", type_module: true %>
-
-      <%# Diagnostic: pre-warm heavy dynamic-import chunks so the first
-          `import("photoswipe")`/`import("chart.js/auto")` during a test
-          doesn't fight for CPU and stall past the 60s qunit timeout. %>
-      <% EmberCli.test_dynamic_preloads.each do |chunk| %>
-        <link rel="modulepreload" href="<%= script_asset_path(chunk) %>" />
-      <% end %>
     <%- end %>
 
     <%= discourse_stylesheet_link_tag("qunit-custom", theme_id: nil) %>

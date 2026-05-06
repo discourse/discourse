@@ -111,10 +111,6 @@ jobs:
           else
             echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
           fi
-          echo "DISABLE_TEST_PRELOAD=1" >> $GITHUB_ENV
-          echo "LOG_TEST_REQUESTS=1" >> $GITHUB_ENV
-          # Toggle to 1 to A/B the testem-direct-serve experiment.
-          echo "BYPASS_RAILS_ASSETS=0" >> $GITHUB_ENV
 
       - uses: actions/checkout@v6
         with:
@@ -309,23 +305,7 @@ jobs:
 
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        run: |
-          # Stream the spawned-Rails-server log alongside QUnit output. bin/qunit
-          # --standalone spawns Rails on a port (typically 4566) and redirects
-          # its stdio to tmp/test_server_<port>.log. We wait for that file to
-          # appear, then tail it with the expanded glob so [req-start]/[req-end]
-          # lines show up in the CI output.
-          mkdir -p tmp
-          (
-            while [ -z "$(ls tmp/test_server_*.log 2>/dev/null)" ]; do
-              sleep 0.2
-            done
-            tail -F -n 0 tmp/test_server_*.log 2>/dev/null \
-              | sed -u 's/^/[rails] /'
-          ) &
-          tail_pid=$!
-          trap "kill $tail_pid 2>/dev/null || true" EXIT
-          QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
       - name: Asset Processor Tests
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
