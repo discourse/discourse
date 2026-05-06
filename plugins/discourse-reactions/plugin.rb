@@ -75,8 +75,10 @@ after_initialize do
     ).call
 
     post_ids = posts.map(&:id).uniq
+    ignored_user_ids = topic_view.guardian.user&.ignored_user_ids || []
 
-    reaction_users_count_map = TopicViewSerializer.posts_reaction_users_count(post_ids)
+    reaction_users_count_map =
+      TopicViewSerializer.posts_reaction_users_count(post_ids, ignored_user_ids: ignored_user_ids)
     post_actions_with_reaction_users =
       DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
         post_ids,
@@ -92,12 +94,20 @@ after_initialize do
         ""
       end
 
+    ignored_users_filter =
+      if ignored_user_ids.present?
+        "AND pa.user_id NOT IN (:ignored_user_ids)"
+      else
+        ""
+      end
+
     sql_params = {
       post_ids: post_ids,
       like_type: PostActionType::LIKE_POST_ACTION_ID,
       main_reaction: main_reaction,
     }
     sql_params[:excluded] = excluded if excluded.present?
+    sql_params[:ignored_user_ids] = ignored_user_ids if ignored_user_ids.present?
 
     likes_rows = DB.query(<<~SQL, **sql_params)
         SELECT pa.post_id, COUNT(*) as likes_count
@@ -105,6 +115,7 @@ after_initialize do
         WHERE pa.deleted_at IS NULL
           AND pa.post_id IN (:post_ids)
           AND pa.post_action_type_id = :like_type
+          #{ignored_users_filter}
           AND NOT EXISTS (
             SELECT 1 FROM discourse_reactions_reaction_users dru
             JOIN discourse_reactions_reactions dr ON dr.id = dru.reaction_id
@@ -134,13 +145,20 @@ after_initialize do
       emoji_reactions = post.emoji_reactions.select { |r| r.reaction_users_count.to_i > 0 }
 
       reactions =
-        emoji_reactions.map do |reaction|
-          {
-            id: reaction.reaction_value,
-            type: reaction.reaction_type.to_sym,
-            count: reaction.reaction_users_count,
-          }
-        end
+        emoji_reactions
+          .map do |reaction|
+            count =
+              if ignored_user_ids.present?
+                reaction.reaction_users.count { |ru| !ignored_user_ids.include?(ru.user_id) }
+              else
+                reaction.reaction_users_count
+              end
+
+            next if count.to_i.zero?
+
+            { id: reaction.reaction_value, type: reaction.reaction_type.to_sym, count: count }
+          end
+          .compact
 
       likes = likes_map[post.id] || 0
 
@@ -370,10 +388,8 @@ after_initialize do
   end
 
   add_to_serializer(:post, :reactions) do
-    # Preloaded data computes global counts; fall back to the per-viewer
-    # helper when the viewer has ignored users so their reactions are excluded.
     map = topic_view&.preloaded_post_data(:reactions)
-    if map && map.key?(object.id) && (scope.user.blank? || scope.user.ignored_user_ids.empty?)
+    if map && map.key?(object.id)
       map[object.id]
     else
       ReactionsSerializerHelpers.reactions_for_post(object, scope)
@@ -386,7 +402,7 @@ after_initialize do
 
   add_to_serializer(:post, :reaction_users_count) do
     map = topic_view&.preloaded_post_data(:reaction_users_count)
-    if map && map.key?(object.id) && (scope.user.blank? || scope.user.ignored_user_ids.empty?)
+    if map && map.key?(object.id)
       map[object.id].to_i
     else
       ReactionsSerializerHelpers.reaction_users_count_for_post(object, scope).to_i
