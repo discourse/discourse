@@ -47,7 +47,7 @@ RSpec.describe Jobs::PollMailbox do
 
         i18n_key = "dashboard.problem.poll_pop3_auth_error"
 
-        expect(AdminNotice.find_by(identifier: "poll_pop3_auth_error").message).to eq(
+        expect(AdminNotice.find_by(identifier: "poll_pop3_auth_error").message).to match_html(
           I18n.t(i18n_key, base_path: Discourse.base_path),
         )
       end
@@ -59,7 +59,7 @@ RSpec.describe Jobs::PollMailbox do
 
         i18n_key = "dashboard.problem.poll_pop3_timeout"
 
-        expect(AdminNotice.find_by(identifier: "poll_pop3_timeout").message).to eq(
+        expect(AdminNotice.find_by(identifier: "poll_pop3_timeout").message).to match_html(
           I18n.t(i18n_key, base_path: Discourse.base_path),
         )
       end
