@@ -6,6 +6,22 @@
   gap: var(--space-12);
 }
 
+.db-toolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-8);
+
+  &__actions {
+    display: flex;
+    gap: var(--space-4);
+    margin-left: auto;
+  }
+}
+
+h1 {
+  margin: 0; // to be done proper
+}
+
 .db-delta {
   font-size: var(--font-down-2-rem);
   font-weight: bold;

@@ -18,46 +18,48 @@ const sections = [
 
 <template>
   <div class="db-toolbar">
-    <DSegmentedControl
-      @name="period"
-      @value="month"
-      @items={{array
-        (hash value="day" label="Day")
-        (hash value="week" label="Week")
-        (hash value="month" label="Month")
-        (hash value="custom" label="Custom")
-      }}
-    />
+    <h1>Dashboard</h1>
 
-    <DMenu
-      @identifier="db-customise"
-      @icon="gear"
-      @label="Customise"
-      @triggerClass="btn-default"
-      @modalForMobile={{true}}
-    >
-      <:content>
-        <div class="db-customise">
-          <ul class="db-customise__list">
-            {{#each sections as |s|}}
-              <li class="db-customise__row">
-                <span class="db-customise__drag-handle">{{icon
-                    "grip-vertical"
-                  }}</span>
-                <span class="db-customise__section-name">{{s.label}}</span>
-                <DToggleSwitch @state={{s.visible}} />
-              </li>
-            {{/each}}
-          </ul>
-        </div>
-      </:content>
-    </DMenu>
+    <div class="db-toolbar__actions">
+      <DSegmentedControl
+        @name="period"
+        @value="month"
+        @items={{array
+          (hash value="day" label="Day")
+          (hash value="week" label="Week")
+          (hash value="month" label="Month")
+          (hash value="custom" label="Custom")
+        }}
+      />
+
+      <DMenu
+        @identifier="db-customise"
+        @icon="gear"
+        @label="Customise"
+        @triggerClass="btn-default"
+        @modalForMobile={{true}}
+      >
+        <:content>
+          <div class="db-customise">
+            <ul class="db-customise__list">
+              {{#each sections as |s|}}
+                <li class="db-customise__row">
+                  <span class="db-customise__drag-handle">{{icon
+                      "grip-vertical"
+                    }}</span>
+                  <span class="db-customise__section-name">{{s.label}}</span>
+                  <DToggleSwitch @state={{s.visible}} />
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+        </:content>
+      </DMenu>
+    </div>
   </div>
 
-  <h1>Dashboard</h1>
   <div class="db-main">
     <div class="db-section --kpi">
-      <h2 class="db-section__header">April 2026</h2>
       <p class="db-section__intro">Your community grew to 1,100 new members this
         month — and resolved 73% of questions without staff. Most growth came
         from a Hacker News spike on Mar 8–9.</p>
