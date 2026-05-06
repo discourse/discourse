@@ -159,6 +159,8 @@ RSpec.describe Admin::DashboardController do
   describe "#new_features" do
     after { DiscourseUpdates.clean_state }
 
+    before { UpcomingChanges.stubs(:permanent_upcoming_changes).returns([]) }
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -281,16 +283,22 @@ RSpec.describe Admin::DashboardController do
 
       context "when a permanent upcoming change exists and the feed is empty" do
         before do
-          mock_upcoming_change_metadata(
-            {
-              enable_upload_debug_mode: {
-                impact: "other,developers",
-                status: :permanent,
-                impact_type: "other",
-                impact_role: "developers",
-                learn_more_url: "https://meta.discourse.org/t/-/1234",
+          UpcomingChanges.unstub(:permanent_upcoming_changes)
+          UpcomingChanges.stubs(:permanent_upcoming_changes).returns(
+            [
+              {
+                setting: :enable_upload_debug_mode,
+                humanized_name: SiteSetting.humanized_names(:enable_upload_debug_mode),
+                description: SiteSetting.description(:enable_upload_debug_mode),
+                upcoming_change: {
+                  learn_more_url: "https://meta.discourse.org/t/-/1234",
+                  image: {
+                    url:
+                      "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+                  },
+                },
               },
-            },
+            ],
           )
           UpcomingChanges.stubs(:image_exists?).returns(true)
           UpcomingChanges.stubs(:image_data).returns(
