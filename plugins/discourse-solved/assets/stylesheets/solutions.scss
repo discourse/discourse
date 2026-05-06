@@ -130,6 +130,23 @@ $solved-color: var(--success);
     &__metadata {
       color: var(--primary-low-mid);
 
+      a {
+        &,
+        &:hover,
+        &:visited {
+          .discourse-no-touch &,
+          .discourse-touch & {
+            color: var(--primary-low-mid);
+            background: transparent;
+
+            .d-icon {
+              color: var(--primary-low-mid);
+              background: transparent;
+            }
+          }
+        }
+      }
+
       .user-name {
         color: var(--primary);
       }

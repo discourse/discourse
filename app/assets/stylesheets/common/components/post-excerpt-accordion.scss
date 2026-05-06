@@ -44,23 +44,7 @@
     align-items: center;
 
     .user-name {
-      font-weight: 500;
-    }
-
-    a {
-      &:hover,
-      &:visited {
-        .discourse-no-touch &,
-        .discourse-touch & {
-          color: var(--primary-low-mid);
-          background: transparent;
-
-          .d-icon {
-            color: var(--primary-low-mid);
-            background: transparent;
-          }
-        }
-      }
+      color: var(--primary);
     }
   }
 

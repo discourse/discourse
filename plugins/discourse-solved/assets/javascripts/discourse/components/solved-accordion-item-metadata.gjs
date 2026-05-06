@@ -1,12 +1,10 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import RelativeDate from "discourse/components/relative-date";
 import UserLink from "discourse/components/user-link";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
-import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export default class SolvedAccordionItemMetadata extends Component {
@@ -16,31 +14,30 @@ export default class SolvedAccordionItemMetadata extends Component {
     return this.args.excerptPost;
   }
 
-  @cached
-  get user() {
-    return User.create(this.excerptPost.user);
-  }
-
   get userDisplayName() {
-    return userPrioritizedName(this.user);
-  }
-
-  @cached
-  get accepter() {
-    return User.create(this.excerptPost.accepter);
+    return userPrioritizedName({
+      username: this.excerptPost.username,
+      name: this.excerptPost.name,
+    });
   }
 
   get accepterDisplayName() {
-    return userPrioritizedName(this.accepter);
+    return userPrioritizedName({
+      username: this.excerptPost.accepter_username,
+      name: this.excerptPost.accepter_name,
+    });
   }
 
   get showAccepter() {
-    return !!this.siteSettings.show_who_marked_solved;
+    return (
+      !!this.siteSettings.show_who_marked_solved &&
+      this.excerptPost.accepter_username
+    );
   }
 
   <template>
-    <UserLink @user={{this.excerptPost.user}}>
-      {{boundAvatarTemplate this.excerptPost.user.avatar_template "tiny"}}
+    <UserLink @username={{this.excerptPost.username}}>
+      {{boundAvatarTemplate this.excerptPost.avatar_template "tiny"}}
       <span class="user-name">
         {{this.userDisplayName}}
       </span>
@@ -60,7 +57,7 @@ export default class SolvedAccordionItemMetadata extends Component {
         >
           <Placeholder @name="user" @class="d-solved-accordion__accepter">
 
-            <UserLink @user={{this.accepter}}>
+            <UserLink @username={{this.excerptPost.accepter_username}}>
               {{this.accepterDisplayName}}
             </UserLink>
           </Placeholder>

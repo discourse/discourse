@@ -19,14 +19,11 @@ module DiscourseSolved
         .filter_map do |ta|
           next unless ta.post
 
-          serialized = PostSerializer.new(ta.post, scope: guardian, root: false).as_json
+          serialized = BasicPostSerializer.new(ta.post, scope: guardian, root: false).as_json
 
           if ta.accepter
-            serialized[:accepter] = BasicUserSerializer.new(
-              ta.accepter,
-              scope: guardian,
-              root: false,
-            ).as_json
+            serialized[:accepter_username] = ta.accepter.username
+            serialized[:accepter_name] = ta.accepter.name if SiteSetting.enable_names?
           end
 
           serialized
