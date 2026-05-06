@@ -73,6 +73,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   # Safe no-op when manifest is missing (e.g. ember-cli builds).
   def self.test_dynamic_preloads
     return cache[:test_dynamic_preloads] if cache.key?(:test_dynamic_preloads)
+    return cache[:test_dynamic_preloads] = [] if ENV["DISABLE_TEST_PRELOAD"] == "1"
     manifest = JSON.parse(File.read("#{dist_dir}/manifest/manifest.json"))
 
     by_file = manifest.each_with_object({}) { |(_, v), h| h[v["file"]] = v }

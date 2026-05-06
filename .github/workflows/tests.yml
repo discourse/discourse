@@ -111,6 +111,7 @@ jobs:
           else
             echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
           fi
+          echo "DISABLE_TEST_PRELOAD=1" >> $GITHUB_ENV
 
       - uses: actions/checkout@v6
         with:
