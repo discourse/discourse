@@ -547,32 +547,66 @@ RSpec.configure do |config|
     module CapybaraPlaywrightBasePatch
       private
 
-      def execute_async_client_settled_script(session)
-        result = session.evaluate_async_script(<<~JS)
+      def execute_async_client_settled_script(session, await_ember_boot: false)
+        timeout_ms = Capybara.default_max_wait_time * 1000
+
+        if await_ember_boot
+          # Combined wait: ember-boot + clientSettled in a single CDP roundtrip.
+          # Replaces the previous sequence of three roundtrips (clientSettled +
+          # has_no_css?("discourse-assets", wait: 0) + assert_selector(
+          # "#main.ember-application")). On Ember pages, the rails-testing
+          # initializer (which defines window.clientSettled) runs before
+          # `#main.ember-application` is added, so checking clientSettled after
+          # that selector matches preserves the original ordering guarantee.
+          script = <<~JS
+            const done = arguments[0];
+            const timeoutMs = #{timeout_ms};
+
+            (async () => {
+              if (document.querySelector("discourse-assets")) {
+                const deadline = Date.now() + timeoutMs;
+                while (!document.querySelector("#main.ember-application")) {
+                  if (Date.now() >= deadline) {
+                    throw new Error(
+                      "ember-boot-timeout: #main.ember-application not found within " + timeoutMs + "ms"
+                    );
+                  }
+                  await new Promise((r) => setTimeout(r, 50));
+                }
+              }
+              if (window.clientSettled) {
+                return window.clientSettled(timeoutMs);
+              }
+            })().then(() => done()).catch((error) => done(error.message));
+          JS
+        else
+          script = <<~JS
             const done = arguments[0];
 
             if (window.clientSettled) {
-              window.clientSettled(#{Capybara.default_max_wait_time * 1000})
+              window.clientSettled(#{timeout_ms})
                 .then(done)
                 .catch((error) => { done(error.message) });
             } else {
               done();
             }
           JS
+        end
 
+        result = session.evaluate_async_script(script)
         raise result if result.is_a? String
       end
 
-      def wait_for_client_settled(method_name)
+      def wait_for_client_settled(method_name, await_ember_boot: false)
         session = @driver.send(:session)
 
         if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
           now = Time.now.to_f
           puts "[#{now}] #{method_name}: START"
-          execute_async_client_settled_script(session)
+          execute_async_client_settled_script(session, await_ember_boot:)
           puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
         else
-          execute_async_client_settled_script(session)
+          execute_async_client_settled_script(session, await_ember_boot:)
         end
       end
     end
@@ -607,12 +641,16 @@ RSpec.configure do |config|
     module CapybaraPlaywrightBrowserPatch
       include CapybaraPlaywrightBasePatch
 
+      EMBER_AWARE_METHODS = %i[visit refresh].freeze
       METHODS_TO_PATCH = %i[visit go_back go_forward refresh resize_window_to]
 
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
-          wait_for_client_settled(method_name)
+          wait_for_client_settled(
+            method_name,
+            await_ember_boot: EMBER_AWARE_METHODS.include?(method_name),
+          )
           result
         end
       end

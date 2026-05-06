@@ -435,27 +435,9 @@ module SystemHelpers
   end
 end
 
-module CapybaraSessionEmberWaiter
-  def visit(...)
-    super
-    wait_for_ember_boot
-  end
-
-  def refresh
-    super
-    wait_for_ember_boot
-  end
-
-  private
-
-  def wait_for_ember_boot
-    return unless RSpec.current_example&.metadata&.[](:type) == :system
-
-    # `<discourse-assets>` is only present on Ember pages;
-    return if has_no_css?("discourse-assets", wait: 0, visible: :all)
-    # `ember-application` is added to `#main` when the app boots.
-    assert_selector("#main.ember-application", visible: :all)
-  end
-end
-
-Capybara::Session.prepend(CapybaraSessionEmberWaiter)
+# NOTE: ember-boot waiting is handled at the Playwright `Browser` layer for
+# `visit`/`refresh` (see `CapybaraPlaywrightBrowserPatch` in
+# `spec/rails_helper.rb`), where it shares a single CDP roundtrip with the
+# `clientSettled` wait. Keeping the wait at the lower layer avoids duplicate
+# `has_no_css?` / `assert_selector` polls (each their own roundtrip) at the
+# `Capybara::Session` layer.
