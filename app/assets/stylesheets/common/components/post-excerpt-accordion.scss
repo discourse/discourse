@@ -120,7 +120,7 @@
     left: 0;
     right: 0;
     height: 100%;
-    background: linear-gradient(transparent, var(--secondary));
+    background: linear-gradient(transparent, 75%, var(--secondary));
     pointer-events: none;
     z-index: 1;
   }

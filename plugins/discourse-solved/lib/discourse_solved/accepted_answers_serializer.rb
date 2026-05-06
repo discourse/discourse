@@ -15,7 +15,7 @@ module DiscourseSolved
 
       solved
         .topic_answers
-        .sort_by(&:created_at)
+        .sort_by { |ta| ta.post&.created_at }
         .filter_map do |ta|
           next unless ta.post
 
