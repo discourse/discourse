@@ -127,7 +127,6 @@ function protoProp(prototype, key, descriptor) {
 @classNameBindings(
   "selectKit.isLoading:is-loading",
   "selectKit.isExpanded:is-expanded",
-  "selectKit.isPlacedAbove:is-placed-above",
   "selectKit.options.disabled:is-disabled",
   "selectKit.isHidden:is-hidden",
   "selectKit.hasSelection:has-selection"
@@ -162,7 +161,6 @@ function protoProp(prototype, key, descriptor) {
   autofocus: false,
   placementStrategy: null,
   mobilePlacementStrategy: null,
-  mobilePlacement: null,
   desktopPlacementStrategy: null,
   hiddenValues: null,
   disabled: false,
@@ -216,7 +214,6 @@ export default class SelectKit extends Component {
         isLoading: false,
         isHidden: false,
         isExpanded: false,
-        isPlacedAbove: false,
         isFilterExpanded: false,
         enterDisabled: false,
         hasSelection: false,
@@ -962,7 +959,6 @@ export default class SelectKit extends Component {
 
     this.selectKit.setProperties({
       isExpanded: false,
-      isPlacedAbove: false,
       filter: null,
     });
   }
@@ -976,12 +972,16 @@ export default class SelectKit extends Component {
     this.clearErrors();
     this.selectKit.onOpen(event);
 
-    this.cleanupFloatingUi?.();
-    this.cleanupFloatingUi = autoUpdate(
-      this.getHeader(),
-      this._bodyElement(),
-      () => this.updateFloatingUiPosition()
-    );
+    if (this.site.desktopView) {
+      this.cleanupFloatingUi?.();
+      this.cleanupFloatingUi = autoUpdate(
+        this.getHeader(),
+        this._bodyElement(),
+        () => this.updateFloatingUiPosition()
+      );
+    } else {
+      this.updateFloatingUiPosition();
+    }
 
     this.selectKit.setProperties({
       isExpanded: true,
@@ -1094,11 +1094,11 @@ export default class SelectKit extends Component {
       hide(),
     ];
 
-    return computePosition(referenceElement, floatingElement, {
-      placement: this._computePlacement(),
+    computePosition(referenceElement, floatingElement, {
+      placement: this.selectKit.options.placement,
       strategy,
       middleware,
-    }).then(({ x, y, placement, middlewareData }) => {
+    }).then(({ x, y, middlewareData }) => {
       const style = {
         width,
         minWidth,
@@ -1117,7 +1117,6 @@ export default class SelectKit extends Component {
         }
       }
 
-      this.selectKit.set("isPlacedAbove", placement.startsWith("top"));
       Object.assign(floatingElement.style, style);
     });
   }
@@ -1211,14 +1210,6 @@ export default class SelectKit extends Component {
     }
 
     return placementStrategy;
-  }
-
-  _computePlacement() {
-    if (this.site.mobileView && this.selectKit.options.mobilePlacement) {
-      return this.selectKit.options.mobilePlacement;
-    }
-
-    return this.selectKit.options.placement;
   }
 
   _deprecated(text) {

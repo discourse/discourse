@@ -2,7 +2,6 @@ import { hash } from "@ember/helper";
 import { find, render, tab } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DButton from "discourse/components/d-button";
-import { forceMobile } from "discourse/lib/mobile";
 import SingleSelect from "discourse/select-kit/components/single-select";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -505,30 +504,6 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     const body = find(".select-kit-body").getBoundingClientRect();
 
     assert.true(header.bottom > body.top, "correctly offsets the body");
-  });
-
-  test("options.mobilePlacement", async function (assert) {
-    forceMobile();
-    setDefaultState(this);
-
-    await render(
-      <template>
-        <div style="position: fixed; top: 50%; left: 0; right: 0;">
-          <SingleSelect
-            @value={{this.value}}
-            @content={{this.content}}
-            @options={{hash mobilePlacement="top"}}
-          />
-        </div>
-      </template>
-    );
-    await this.subject.expand();
-
-    const header = find(".select-kit-header").getBoundingClientRect();
-    const body = find(".select-kit-body").getBoundingClientRect();
-
-    assert.true(body.bottom < header.top, "body opens above the header");
-    assert.dom(".select-kit").hasClass("is-placed-above");
   });
 
   test("options.expandedOnInsert", async function (assert) {
