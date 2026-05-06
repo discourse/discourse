@@ -26,10 +26,9 @@ module PageObjects
       end
 
       def expanded_component(skip_collapsed_check: false)
-        # Skip collapsed check to avoid infinite loop when called
-        # from .expand
-        return expand if is_collapsed? && !skip_collapsed_check
-        find(@context + ".is-expanded")
+        # Skip collapsed check to avoid infinite loop when called from .expand
+        expand if is_collapsed? && !skip_collapsed_check
+        locator("#{@context}.is-expanded")
       end
 
       def collapsed_component
@@ -95,25 +94,27 @@ module PageObjects
       end
 
       def collapse
-        expanded_component.find(".select-kit-header").click
+        expanded_component.locator(".select-kit-header").click
         collapsed_component
       end
 
       def collapse_with_escape
-        expanded_component.send_keys(:escape)
+        expanded_component.press("Escape")
         collapsed_component
       end
 
       def has_filter?
-        expanded_component.has_css?(".select-kit-filter .filter-input", visible: true)
+        expanded_component # auto-expands if collapsed
+        has_css?("#{@context}.is-expanded .select-kit-filter .filter-input", visible: true)
       end
 
       def has_no_filter?
-        expanded_component.has_no_css?(".select-kit-filter .filter-input")
+        expanded_component
+        has_no_css?("#{@context}.is-expanded .select-kit-filter .filter-input")
       end
 
       def search(value = nil)
-        expanded_component.find(".select-kit-filter .filter-input").fill_in(with: value)
+        expanded_component.locator(".select-kit-filter .filter-input").fill(value.to_s)
         wait_for_loaded
       end
 
@@ -122,35 +123,41 @@ module PageObjects
       end
 
       def select_row_by_value(value)
-        with_dom_retry { expanded_component.find(".select-kit-row[data-value='#{value}']").click }
+        expanded_component.locator(".select-kit-row[data-value='#{value}']").click
       end
 
       def select_row_by_name(name)
-        with_dom_retry { expanded_component.find(".select-kit-row[data-name='#{name}']").click }
+        expanded_component.locator(".select-kit-row[data-name='#{name}']").click
       end
 
       def select_row_by_index(index)
-        with_dom_retry { expanded_component.find(".select-kit-row[data-index='#{index}']").click }
+        expanded_component.locator(".select-kit-row[data-index='#{index}']").click
       end
 
       def unselect_by_name(name)
-        with_dom_retry { expanded_component.find(".selected-choice[data-name='#{name}']").click }
+        expanded_component.locator(".selected-choice[data-name='#{name}']").click
       end
 
       def clear
-        expanded_component.all(".selected-choice").each(&:click)
+        choices = expanded_component.locator(".selected-choice")
+        choices.first.click while choices.count > 0
       end
 
       def has_selected_row_name?(name)
-        expanded_component.has_css?(".select-kit-row.is-selected[data-name='#{name}']")
+        expanded_component
+        has_css?("#{@context}.is-expanded .select-kit-row.is-selected[data-name='#{name}']")
       end
 
       def has_no_selected_row?
-        expanded_component.has_no_css?(".select-kit-row.is-selected")
+        expanded_component
+        has_no_css?("#{@context}.is-expanded .select-kit-row.is-selected")
       end
 
       def option_names
-        expanded_component.all(".select-kit-row").map { |row| row["data-name"] }
+        expanded_component
+          .locator(".select-kit-row")
+          .all
+          .map { |row| row.get_attribute("data-name") }
       end
     end
   end
