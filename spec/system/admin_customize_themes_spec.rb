@@ -382,6 +382,15 @@ describe "Admin Customize Themes" do
       visit("/")
       expect(banner).to be_visible
 
+      # Wait for the `/client_settings` subscription's first poll finish.
+      try_until_success do
+        expect(
+          page.evaluate_script(
+            "window.MessageBus.callbacks.find(c => c.channel === '/client_settings')?.last_id",
+          ),
+        ).not_to eq(-1)
+      end
+
       using_session(:admin) do
         sign_in(admin)
         theme_page.visit(theme.id)
