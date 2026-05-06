@@ -6168,6 +6168,32 @@ RSpec.describe TopicsController do
         expect(response.parsed_body["error_type"]).to eq("invalid_access")
       end
     end
+
+    context "when logged in as a moderator" do
+      it "blocks duration-based publishing to a category the moderator cannot create topics in" do
+        sign_in(moderator)
+
+        admin_only_category = Fabricate(:category)
+        admin_only_category.set_permissions(admins: :full)
+        admin_only_category.save!
+
+        moderator_guardian = Guardian.new(moderator)
+        expect(moderator_guardian.can_moderate?(topic)).to eq(true)
+        expect(moderator_guardian.can_create_topic_on_category?(admin_only_category)).to eq(false)
+
+        post "/t/#{topic.id}/timer.json",
+             params: {
+               duration_minutes: 60,
+               based_on_last_post: true,
+               status_type: "publish_to_category",
+               category_id: admin_only_category.id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(topic.reload.public_topic_timer).to eq(nil)
+      end
+    end
   end
 
   describe "#set_slow_mode" do
