@@ -21,8 +21,8 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
   }
 
   get dynamicCategoryTypeTabs() {
-    return Object.values(this.args.controller.model.categoryTypes).reject(
-      (type) => type.id === "discussion" || !type.visible
+    return Object.values(this.args.controller.model.categoryTypes).filter(
+      (type) => type.id !== "discussion" && type.visible
     );
   }
 
