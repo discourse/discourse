@@ -200,7 +200,7 @@ export default class UpsertCategorySecurity extends Component {
       </@form.Alert>
 
       {{#unless @category.is_special}}
-        <@form.Container>
+        <@form.Container @format="full">
           <div class="category-permissions-table">
             <div class="permission-row row-header">
               <span class="group-name">{{i18n
