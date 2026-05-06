@@ -109,18 +109,20 @@ class NestedTopicsController < ApplicationController
     ]
 
     actions.concat(
-      posts.map do |post|
-        {
-          id: post.id,
-          action_code: post.action_code,
-          action_code_who: post.custom_fields["action_code_who"],
-          action_code_path: post.custom_fields["action_code_path"],
-          created_at: post.created_at,
-          username: post.user&.username,
-          avatar_template: post.user&.avatar_template,
-          cooked: post.cooked,
-        }
-      end,
+      posts
+        .select { |post| guardian.can_see_post?(post) }
+        .map do |post|
+          {
+            id: post.id,
+            action_code: post.action_code,
+            action_code_who: post.custom_fields["action_code_who"],
+            action_code_path: post.custom_fields["action_code_path"],
+            created_at: post.created_at,
+            username: post.user&.username,
+            avatar_template: post.user&.avatar_template,
+            cooked: post.cooked,
+          }
+        end,
     )
 
     render json: { small_actions: actions }

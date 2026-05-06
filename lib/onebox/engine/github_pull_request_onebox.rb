@@ -23,6 +23,22 @@ module Onebox
         "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/pulls/#{match[:number]}"
       end
 
+      def inline_data
+        return unless SiteSetting.github_pr_status_enabled
+
+        pr_data = raw(github_auth_header(match[:org]))
+        status = fetch_pr_status(pr_data)&.dig(:status)
+        return unless status
+
+        title =
+          "#{pr_data["title"]} · Pull Request ##{match[:number]} · " \
+            "#{match[:org]}/#{match[:repository]}"
+        { title: title, css_class: "--gh-status-#{status}" }
+      rescue StandardError => e
+        Rails.logger.warn("Inline GitHub PR onebox error for #{@url}: #{e.message}")
+        nil
+      end
+
       private
 
       def match

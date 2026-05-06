@@ -112,4 +112,49 @@ module("Integration | Component | docked-composer", function (hooks) {
 
     assert.true(submitted, "Meta+Enter submits when submitOnEnter is false");
   });
+
+  test("keyboard End key respects @maxResizeOffset when provided", async function (assert) {
+    await render(
+      <template>
+        <DockedComposer
+          @resizable={{true}}
+          @maxResizeOffset={{200}}
+          @composerEvents={{false}}
+          @draftKey="test-resize-max"
+        />
+      </template>
+    );
+
+    await triggerKeyEvent(".docked-composer__resize-handle", "keydown", "End");
+
+    assert.strictEqual(
+      document
+        .querySelector(".docked-composer__resize-handle")
+        .getAttribute("aria-valuenow"),
+      "200",
+      "End key snaps to @maxResizeOffset, not the default 400"
+    );
+  });
+
+  test("keyboard End key defaults to 400 when @maxResizeOffset is not provided", async function (assert) {
+    await render(
+      <template>
+        <DockedComposer
+          @resizable={{true}}
+          @composerEvents={{false}}
+          @draftKey="test-resize-default"
+        />
+      </template>
+    );
+
+    await triggerKeyEvent(".docked-composer__resize-handle", "keydown", "End");
+
+    assert.strictEqual(
+      document
+        .querySelector(".docked-composer__resize-handle")
+        .getAttribute("aria-valuenow"),
+      "400",
+      "End key defaults to 400 when no @maxResizeOffset"
+    );
+  });
 });

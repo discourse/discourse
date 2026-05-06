@@ -96,23 +96,27 @@
     padding: var(--space-3);
     padding-bottom: 0;
     margin: 0;
-    max-height: 10em;
+    max-height: calc(
+      var(--solved-max-lines, 14) * var(--cooked-line-height) * 1em
+    ); // solved-max-lines set in post-excerpt-accordion-item.gjs
     overflow: hidden;
 
     .cooked {
       padding: 0 !important;
     }
 
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 100%;
-      background: linear-gradient(transparent, 70%, var(--secondary));
-      pointer-events: none;
-      z-index: 1;
+    &[data-overflowing] {
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        background: linear-gradient(transparent, 70%, var(--secondary));
+        pointer-events: none;
+        z-index: 1;
+      }
     }
   }
 

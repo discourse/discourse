@@ -340,21 +340,32 @@ acceptance("Admin - User Index", function (needs) {
 
   test("delete user - delete without blocking works as expected", async function (assert) {
     await visit("/admin/users/5/user5");
-    await click(".btn-user-delete");
+
+    const dropdown = selectKit(".btn-user-delete");
+    await dropdown.expand();
+    await dropdown.selectRowByValue("delete_dont_block");
 
     assert
       .dom("#dialog-title")
       .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
-    await click(".dialog-footer .delete-dont-block");
+    await click(
+      ".delete-user-modal.delete-dont-block .dialog-footer .btn-danger"
+    );
 
     assert.false(deleteAndBlock, "user does not get blocked");
   });
 
   test("delete user - delete and block works as expected", async function (assert) {
     await visit("/admin/users/5/user5");
-    await click(".btn-user-delete");
-    await click(".dialog-footer .delete-and-block");
+
+    const dropdown = selectKit(".btn-user-delete");
+    await dropdown.expand();
+    await dropdown.selectRowByValue("delete_and_block");
+
+    await click(
+      ".delete-user-modal.delete-and-block .dialog-footer .btn-danger"
+    );
 
     assert.true(deleteAndBlock, "user does get blocked");
   });

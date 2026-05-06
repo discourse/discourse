@@ -5,7 +5,11 @@ describe "Solved" do
   fab!(:solver, :user)
   fab!(:accepter) { Fabricate(:user, name: "<b>DERP<b>") }
   fab!(:topic) { Fabricate(:post, user: admin).topic }
-  fab!(:solver_post) { Fabricate(:post, topic:, user: solver, cooked: "The answer is 42") }
+  fab!(:solver_post) do
+    long_cooked =
+      "<p>The answer is 42.</p>" + ("<p>Some additional context for the answer.</p>" * 10)
+    Fabricate(:post, topic:, user: solver, cooked: long_cooked)
+  end
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
@@ -31,7 +35,7 @@ describe "Solved" do
     verify_solution_unaccepted_state(2)
     accept_solution(2)
     verify_solution_accepted_state(2)
-    verify_solution_quote_content(2, solver_post.cooked)
+    verify_solution_quote_content(2, "The answer is 42")
     verify_solver_and_accepter_info(2, solver, accepter)
     expand_solution_quote(2)
   end
@@ -55,7 +59,31 @@ describe "Solved" do
     Fabricate(:topic_answer, solved_topic:, post: solver_post, accepter:)
     sign_in(solver)
     visit "/my/activity/solved"
-    expect(page.find(".post-list")).to have_content(solver_post.cooked)
+    expect(page.find(".post-list")).to have_content("The answer is 42")
+  end
+
+  describe "solution excerpt expand toggle" do
+    it "shows the toggle when the answer overflows the preview" do
+      solved_topic = Fabricate(:solved_topic, topic:)
+      Fabricate(:topic_answer, solved_topic:, post: solver_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_css(QUOTE_TOGGLE_SELECTOR)
+    end
+
+    it "hides the toggle when the answer fits within the preview" do
+      short_post = Fabricate(:post, topic:, user: solver, cooked: "<p>The answer is 42.</p>")
+      solved_topic = Fabricate(:solved_topic, topic:)
+      Fabricate(:topic_answer, solved_topic:, post: short_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_css(ACCEPTED_ANSWER_QUOTE_SELECTOR)
+      expect(topic_page).to have_no_css(QUOTE_TOGGLE_SELECTOR)
+    end
   end
 
   describe "solution excerpt formatting" do
@@ -120,7 +148,7 @@ describe "Solved" do
       verify_solution_accepted_state(2)
       verify_solution_unaccepted_state(3)
       verify_solution_info_present
-      verify_solution_quote_content(2, solver_post.cooked)
+      verify_solution_quote_content(2, "The answer is 42")
       verify_solver_and_accepter_info(2, solver, accepter)
       expand_solution_quote(2)
 
@@ -136,13 +164,12 @@ describe "Solved" do
       verify_solution_accepted_state(2)
       verify_solution_accepted_state(3)
       verify_solution_info_present
-      verify_solution_quote_content(2, solver_post.cooked)
-      verify_solution_quote_content(3, solver_post2.cooked)
+      verify_solution_quote_content(2, "The answer is 42")
+      verify_solution_quote_content(3, "The answer is over 9000")
       verify_solver_and_accepter_info(2, solver, accepter)
       verify_solver_and_accepter_info(3, solver2, accepter2)
 
       expand_solution_quote(2)
-      expand_solution_quote(3)
     end
 
     it "correctly updates excerpts when removing one of many accepted solutions" do
@@ -157,8 +184,8 @@ describe "Solved" do
       verify_solution_accepted_state(2)
       verify_solution_accepted_state(3)
       verify_solution_info_present
-      verify_solution_quote_content(2, solver_post.cooked)
-      verify_solution_quote_content(3, solver_post2.cooked)
+      verify_solution_quote_content(2, "The answer is 42")
+      verify_solution_quote_content(3, "The answer is over 9000")
       verify_solver_and_accepter_info(2, solver, accepter)
       verify_solver_and_accepter_info(3, solver2, accepter)
 
@@ -167,7 +194,7 @@ describe "Solved" do
       verify_solution_unaccepted_state(2)
       verify_solution_accepted_state(3)
       verify_solution_info_present
-      verify_solution_quote_content(3, solver_post2.cooked)
+      verify_solution_quote_content(3, "The answer is over 9000")
       verify_solver_and_accepter_info(3, solver2, accepter)
 
       unaccept_solution(3)

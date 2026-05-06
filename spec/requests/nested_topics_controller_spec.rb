@@ -1216,6 +1216,73 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(actions[1]["username"]).to eq(admin.username)
     end
 
+    it "does not expose hidden small-action posts to users who cannot see them" do
+      visible_action =
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "closed.enabled",
+          raw: "visible activity body",
+        )
+      hidden_action =
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "opened.enabled",
+          raw: "hidden activity secret",
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+      sign_in(user)
+      get activity_url(topic)
+      expect(response.status).to eq(200)
+
+      actions = response.parsed_body["small_actions"]
+      ids = actions.map { |action| action["id"] }
+      expect(ids).to include(visible_action.id)
+      expect(ids).not_to include(hidden_action.id)
+      expect(response.body).not_to include("hidden activity secret")
+    end
+
+    it "does not expose hidden small-action posts to anonymous users" do
+      Fabricate(
+        :small_action,
+        topic: topic,
+        user: admin,
+        action_code: "opened.enabled",
+        raw: "hidden activity secret",
+        hidden: true,
+        hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+      )
+
+      get activity_url(topic)
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("hidden activity secret")
+    end
+
+    it "still exposes hidden small-action posts to staff" do
+      hidden_action =
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "opened.enabled",
+          raw: "hidden activity secret",
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+      sign_in(admin)
+      get activity_url(topic)
+      expect(response.status).to eq(200)
+
+      actions = response.parsed_body["small_actions"]
+      expect(actions.map { |action| action["id"] }).to include(hidden_action.id)
+    end
+
     it "excludes whisper action-code posts for non-whisperers" do
       topic.add_moderator_post(
         admin,

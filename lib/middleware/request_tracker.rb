@@ -3,10 +3,20 @@
 require "method_profiler"
 require "middleware/anonymous_cache"
 require "http_user_agent_encoder"
+require "discourse_lograge"
 
 class Middleware::RequestTracker
   @@detailed_request_loggers = nil
   @@ip_skipper = nil
+  @@bpv_notifications_enabled = !Rails.env.test?
+
+  def self.bpv_notifications_enabled
+    @@bpv_notifications_enabled
+  end
+
+  def self.bpv_notifications_enabled=(value)
+    @@bpv_notifications_enabled = value
+  end
 
   # You can add exceptions to our app rate limiter in the app.yml ENV section.
   # example:
@@ -105,57 +115,35 @@ class Middleware::RequestTracker
       end
     end
 
-    if data[:browser_page_view] && !data[:is_crawler] && !data[:is_beacon]
-      if data[:has_auth_cookie]
-        ApplicationRequest.increment!(:page_view_logged_in_browser)
-        ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
-
-        trigger_browser_pageview_event(data)
-
-        if data[:topic_id].present? && data[:current_user_id].present?
-          TopicsController.defer_topic_view(
-            data[:topic_id],
-            data[:request_remote_ip],
-            data[:current_user_id],
-          )
+    if tracks_browser_page_view?(data)
+      if data[:is_beacon]
+        if data[:has_auth_cookie]
+          ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
+          if data[:is_mobile]
+            ApplicationRequest.increment!(:page_view_logged_in_browser_mobile_beacon)
+          end
+        else
+          ApplicationRequest.increment!(:page_view_anon_browser_beacon)
+          ApplicationRequest.increment!(:page_view_anon_browser_mobile_beacon) if data[:is_mobile]
         end
-      elsif !SiteSetting.login_required
-        ApplicationRequest.increment!(:page_view_anon_browser)
-        ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
-
-        trigger_browser_pageview_event(data)
-
-        if data[:topic_id].present?
-          TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
+        trigger_beacon_browser_pageview_event(data)
+      else
+        if data[:has_auth_cookie]
+          ApplicationRequest.increment!(:page_view_logged_in_browser)
+          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+        else
+          ApplicationRequest.increment!(:page_view_anon_browser)
+          ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
         end
+        trigger_browser_pageview_event(data)
       end
-    end
 
-    if data[:is_beacon] && !data[:is_crawler]
-      if data[:has_auth_cookie]
-        ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
-        if data[:is_mobile]
-          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile_beacon)
-        end
-
-        trigger_beacon_browser_pageview_event(data)
-
-        if data[:topic_id].present? && data[:current_user_id].present?
-          TopicsController.defer_topic_view(
-            data[:topic_id],
-            data[:request_remote_ip],
-            data[:current_user_id],
-          )
-        end
-      elsif !SiteSetting.login_required && !CrawlerDetection.crawler_ip?(data[:request_remote_ip])
-        ApplicationRequest.increment!(:page_view_anon_browser_beacon)
-        ApplicationRequest.increment!(:page_view_anon_browser_mobile_beacon) if data[:is_mobile]
-
-        trigger_beacon_browser_pageview_event(data)
-
-        if data[:topic_id].present?
-          TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
-        end
+      if data[:topic_id].present? && (!data[:has_auth_cookie] || data[:current_user_id].present?)
+        TopicsController.defer_topic_view(
+          data[:topic_id],
+          data[:request_remote_ip],
+          data[:current_user_id],
+        )
       end
     end
 
@@ -205,25 +193,36 @@ class Middleware::RequestTracker
     is_message_bus = request.path.start_with?("#{Discourse.base_path}/message-bus/")
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
 
-    current_user_id =
-      if view_tracking_data[:deferred_track_view] || view_tracking_data[:explicit_track_view]
-        begin
-          (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
-        rescue Discourse::InvalidAccess => err
-          # This error is raised when the API key is invalid, no need to stop the show.
-          Discourse.warn_exception(
-            err,
-            message: "RequestTracker.get_data failed with an invalid API key error",
-          )
-          nil
+    current_user_id = nil
+    current_username = nil
+
+    if view_tracking_data[:browser_page_view]
+      begin
+        if auth_cookie.is_a?(Hash)
+          current_user_id = auth_cookie[:user_id]
+          current_username = auth_cookie[:username]
+        else
+          user = CurrentUser.lookup_from_env(env)
+          if user
+            current_user_id = user.id
+            current_username = user.username
+          end
         end
+      rescue Discourse::InvalidAccess => err
+        # This error is raised when the API key is invalid, no need to stop the show.
+        Discourse.warn_exception(
+          err,
+          message: "RequestTracker.get_data failed with an invalid API key error",
+        )
       end
+    end
 
     request_data = {
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: has_auth_cookie,
       current_user_id: current_user_id,
+      current_username: current_username,
       is_api: is_api,
       is_user_api: is_user_api,
       is_background: is_message_bus || is_topic_timings,
@@ -285,7 +284,7 @@ class Middleware::RequestTracker
         @@detailed_request_loggers.each { |logger| logger.call(env, data) }
       end
 
-      log_later(data)
+      log_later(data, env, request)
     end
   end
 
@@ -342,7 +341,8 @@ class Middleware::RequestTracker
 
     env["discourse.request_tracker"] = self
 
-    if self.class.is_beacon_tracking_request?(request)
+    if self.class.is_beacon_tracking_request?(request) ||
+         self.class.is_pageview_tracking_request?(request)
       result = [204, {}, []]
       return result
     end
@@ -402,10 +402,13 @@ class Middleware::RequestTracker
     end
   end
 
-  def log_later(data)
+  def log_later(data, env, request)
     Scheduler::Defer.later("Track view") do
       begin
-        self.class.log_request(data) unless Discourse.pg_readonly_mode?
+        unless Discourse.pg_readonly_mode?
+          self.class.log_request(data)
+          instrument_browser_page_view(env, request, data)
+        end
       rescue ActiveRecord::ReadOnlyError
         # Just noop if ActiveRecord is preventing writes
       end
@@ -614,9 +617,22 @@ class Middleware::RequestTracker
     }
   end
 
+  def self.tracks_browser_page_view?(data)
+    return false unless data[:browser_page_view]
+    return false if data[:is_crawler]
+    return true if data[:has_auth_cookie]
+    return false if SiteSetting.login_required
+    return false if data[:is_beacon] && CrawlerDetection.crawler_ip?(data[:request_remote_ip])
+    true
+  end
+
   def self.is_beacon_tracking_request?(request)
     SiteSetting.use_beacon_for_browser_page_views && request.post? &&
       request.path == Discourse.beacon_pv_tracking_path
+  end
+
+  def self.is_pageview_tracking_request?(request)
+    request.post? && request.path == "#{Discourse.base_path}/pageview"
   end
 
   def self.extract_beacon_view_tracking_data(env)
@@ -679,4 +695,46 @@ class Middleware::RequestTracker
     }
   end
   private_class_method :build_browser_pageview_event_payload
+
+  private
+
+  def instrument_browser_page_view(env, request, data)
+    return unless data[:browser_page_view]
+    return unless DiscourseLograge.enabled?
+    return unless self.class.bpv_notifications_enabled
+
+    request ||= Rack::Request.new(env)
+
+    if data[:is_beacon]
+      action = "beacon"
+      path = request.fullpath
+    else
+      action = "piggyback"
+      path = "#{Discourse.base_path}/pageview"
+    end
+
+    payload = {
+      controller: "PageviewController",
+      action: action,
+      method: "POST",
+      path: path,
+      format: :json,
+      status: 204,
+      params: {
+      },
+      headers: ActionDispatch::Request.new(env).headers,
+      custom_payload:
+        DiscourseLograge.custom_payload(
+          ip: data[:request_remote_ip],
+          username: data[:current_username],
+          tracked: self.class.tracks_browser_page_view?(data),
+          url: data[:tracking_url],
+          referrer: data[:tracking_referrer],
+          session_id: data[:tracking_session_id],
+          topic_id: data[:topic_id],
+        ),
+    }
+
+    ActiveSupport::Notifications.instrument("process_action.action_controller", payload)
+  end
 end

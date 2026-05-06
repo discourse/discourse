@@ -32,6 +32,16 @@ export default class PostExcerptAccordion extends Component {
     return this.args.excerptPosts ?? [];
   }
 
+  get showToggle() {
+    return (
+      this.hasExcerpt && this.measured && (this.isOverflowing || this.expanded)
+    );
+  }
+
+  get overflowingAttr() {
+    return this.measured ? String(this.isOverflowing) : "true";
+  }
+
   get allExpanded() {
     return this.excerptPosts.every((excerptPost) =>
       this.expandedIds.has(excerptPost.id)
@@ -81,6 +91,7 @@ export default class PostExcerptAccordion extends Component {
           @excerptPost={{excerptPost}}
           @isExpanded={{this.itemIsExpanded excerptPost.id}}
           @onToggleExpanded={{fn this.toggleItemExpanded excerptPost.id}}
+          @linesDisplayed={{@linesDisplayed}}
         >
           <:accordionItemMetadata>
             {{yield excerptPost to="accordionItemMetadata"}}

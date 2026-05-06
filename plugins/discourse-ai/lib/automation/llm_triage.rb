@@ -89,9 +89,17 @@ module DiscourseAi
             strict: SiteSetting.ai_strict_token_counting,
           ) if max_post_tokens.present?
 
-        if post.upload_ids.present? && triage_agent.vision_enabled
+        upload_ids =
+          DiscourseAi::Completions::PromptMessagesBuilder.filtered_upload_ids_for_prompt(
+            post.upload_ids,
+            include_image_uploads: triage_agent.vision_enabled,
+            include_document_uploads: model.allowed_attachment_types.present?,
+            allowed_attachment_types: model.allowed_attachment_types,
+          )
+
+        if upload_ids.present?
           input = [input]
-          input.concat(post.upload_ids.map { |upload_id| { upload_id: upload_id } })
+          input.concat(upload_ids.map { |upload_id| { upload_id: upload_id } })
         end
 
         bot_ctx =

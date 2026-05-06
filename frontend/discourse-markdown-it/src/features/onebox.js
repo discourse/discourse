@@ -100,9 +100,12 @@ function applyOnebox(state, silent) {
 
             if (onebox && onebox.title) {
               text.content = onebox.title;
-              attrs.push(["class", "inline-onebox"]);
+              child.attrJoin("class", "inline-onebox");
+              if (onebox.css_class) {
+                child.attrJoin("class", onebox.css_class);
+              }
             } else if (!onebox) {
-              attrs.push(["class", "inline-onebox-loading"]);
+              child.attrJoin("class", "inline-onebox-loading");
             }
           }
         }

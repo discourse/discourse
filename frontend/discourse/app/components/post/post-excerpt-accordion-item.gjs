@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import RelativeDate from "discourse/components/relative-date";
@@ -6,7 +8,10 @@ import UserLink from "discourse/components/user-link";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
+import onResize from "discourse/modifiers/on-resize";
 import { i18n } from "discourse-i18n";
+
+const DEFAULT_LINES_DISPLAYED = 14;
 
 export default class PostExcerptAccordionItem extends Component {
   get excerptPost() {
@@ -33,6 +38,24 @@ export default class PostExcerptAccordionItem extends Component {
     return userPrioritizedName(this.excerptPost.user);
   }
 
+  get linesDisplayed() {
+    return this.args.linesDisplayed || DEFAULT_LINES_DISPLAYED;
+  }
+
+  get maxHeightStyle() {
+    return trustHTML(`--excerpt-max-lines: ${this.args.linesDisplayed}`);
+  }
+
+  @action
+  checkOverflow(entries) {
+    const blockquote = entries?.[0]?.target;
+    if (!blockquote) {
+      return;
+    }
+    this.isOverflowing = blockquote.scrollHeight > blockquote.clientHeight + 1;
+    this.measured = true;
+  }
+
   <template>
     {{#if this.excerptPost}}
       <div
@@ -41,7 +64,9 @@ export default class PostExcerptAccordionItem extends Component {
           (if this.hasContent "d-post-excerpt-accordion-item--has-excerpt")
           (unless this.hasContent "title-only")
         }}
+        style={{this.maxHeightStyle}}
         data-expanded={{@isExpanded}}
+        data-overflowing="{{this.overflowingAttr}}"
         data-username={{this.excerptPost.user.username}}
         data-post={{this.excerptPost.post_number}}
         data-topic={{this.topic.id}}
@@ -90,6 +115,7 @@ export default class PostExcerptAccordionItem extends Component {
             <blockquote
               id={{this.quoteId}}
               class="d-post-excerpt-accordion-item__content"
+              {{onResize this.checkOverflow}}
             >
               {{#if (has-block "beforeAccordionItemContent")}}
                 {{yield this.excerptPost to="beforeAccordionItemContent"}}

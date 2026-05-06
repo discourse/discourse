@@ -102,36 +102,37 @@ export default {
   },
 
   handleRouteDidChange(transition) {
-    if (
-      transition.isAborted ||
-      (transition.urlMethod === "replace" && transition.queryParamsOnly)
-    ) {
+    if (transition.isAborted) {
       return;
     }
 
-    const trackingSessionId = document.querySelector(
-      "meta[name=discourse-track-view-session-id]"
-    )?.content;
-    const referrerUrl = transition.from
-      ? _preNavigationUrl
-      : document.referrer.length
-        ? document.referrer
-        : null;
+    if (!(transition.urlMethod === "replace" && transition.queryParamsOnly)) {
+      const trackingSessionId = document.querySelector(
+        "meta[name=discourse-track-view-session-id]"
+      )?.content;
+      const referrerUrl = transition.from
+        ? _preNavigationUrl
+        : document.referrer.length
+          ? document.referrer
+          : null;
 
-    let topicId;
-    if (
-      transition.to.name === "topic.fromParamsNear" ||
-      transition.to.name === "topic.fromParams"
-    ) {
-      topicId = transition.to.parent.params.id;
+      let topicId;
+      if (
+        transition.to.name === "topic.fromParamsNear" ||
+        transition.to.name === "topic.fromParams"
+      ) {
+        topicId = transition.to.parent.params.id;
+      }
+
+      sendBeaconPageview({
+        sessionId: trackingSessionId,
+        url: window.location.href,
+        referrer: referrerUrl,
+        topicId,
+      });
     }
 
-    sendBeaconPageview({
-      sessionId: trackingSessionId,
-      url: window.location.href,
-      referrer: referrerUrl,
-      topicId,
-    });
+    _preNavigationUrl = window.location.href;
   },
 
   handleRouteWillChange(transition) {
@@ -171,7 +172,6 @@ export default {
       trackingUrl = new URL(path, window.location.origin).href;
       trackingReferrer = window.location.href;
     }
-    _preNavigationUrl = window.location.href;
     trackNextAjaxAsPageview(trackingSessionId, trackingUrl, trackingReferrer);
 
     if (

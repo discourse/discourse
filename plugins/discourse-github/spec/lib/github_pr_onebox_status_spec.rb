@@ -219,6 +219,36 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
     end
   end
 
+  describe "#inline_data" do
+    let(:onebox) { Onebox::Engine::GithubPullRequestOnebox.new(gh_link) }
+
+    it "returns nil when github_pr_status_enabled is false" do
+      SiteSetting.github_pr_status_enabled = false
+      expect(onebox.inline_data).to be_nil
+    end
+
+    context "when github_pr_status_enabled is true" do
+      before { SiteSetting.github_pr_status_enabled = true }
+
+      it "returns a title with repo and PR number plus a status css class" do
+        stub_request(:get, api_uri).to_return(status: 200, body: MultiJson.dump(open_pr_response))
+        stub_request(:get, reviews_api_uri).to_return(status: 200, body: "[]")
+
+        expect(onebox.inline_data).to eq(
+          title: "#{open_pr_response["title"]} · Pull Request #1253 · discourse/discourse",
+          css_class: "--gh-status-open",
+        )
+      end
+
+      it "returns nil when the status fetch fails" do
+        stub_request(:get, api_uri).to_return(status: 200, body: MultiJson.dump(open_pr_response))
+        stub_request(:get, reviews_api_uri).to_return(status: 500, body: "error")
+
+        expect(onebox.inline_data).to be_nil
+      end
+    end
+  end
+
   describe "#status_date_label" do
     let(:onebox) { Onebox::Engine::GithubPullRequestOnebox.new(gh_link) }
 

@@ -17,6 +17,7 @@ import i18nYesNo from "discourse/helpers/i18n-yes-no";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, gt, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -959,7 +960,7 @@ export default <template>
 
   <section>
     <hr />
-    <div class="pull-right">
+    <div class="admin-user__danger-controls">
       {{#if @controller.model.active}}
         {{#if @controller.model.can_impersonate}}
           <DButton
@@ -983,11 +984,18 @@ export default <template>
       {{/if}}
 
       {{#if @controller.model.canBeDeleted}}
-        <DButton
-          @label="admin.user.delete"
-          @icon="trash-can"
-          @action={{@controller.destroyUser}}
-          class="btn-danger btn-user-delete"
+        <DropdownSelectBox
+          @nameProperty="label"
+          @content={{@controller.deleteUserOptions}}
+          @onChange={{@controller.destroyUser}}
+          @options={{hash
+            icon="trash-can"
+            showCaret=true
+            translatedNone=(i18n "admin.user.delete")
+            customStyle=true
+            btnCustomClasses="btn-danger"
+          }}
+          class="btn-user-delete"
         />
       {{/if}}
 
@@ -1002,8 +1010,6 @@ export default <template>
     </div>
 
     {{#if @controller.deleteExplanation}}
-      <div class="clearfix"></div>
-      <br />
       <div class="pull-right">
         {{icon "triangle-exclamation"}}
         <span class="delete-explanation">

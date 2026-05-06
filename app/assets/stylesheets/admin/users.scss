@@ -249,3 +249,11 @@
     margin: 5px 5px 0 0;
   }
 }
+
+.admin-user__danger-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  width: 100%;
+  gap: var(--space-2);
+}

@@ -126,6 +126,7 @@ en:
     ai_bot_add_to_header: "Display a button in the header to start a PM with an AI Bot"
     ai_bot_add_to_community_section: "Display a link in the sidebar community section to start a PM with an AI Bot"
     ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
+    ai_bot_enable_docked_composer: "Enable the docked chat-style composer for AI bot conversations instead of the standard floating composer."
 
     ai_discover_enabled: "Enable the discovery search feature"
     ai_discover_agent: "Agent to use for discovery search feature"

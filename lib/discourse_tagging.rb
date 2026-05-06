@@ -574,12 +574,19 @@ module DiscourseTagging
       builder_params[:cleaned_term] = term
 
       if opts[:term_type] == DiscourseTagging.term_types[:starts_with]
-        builder.where("starts_with(LOWER(name), LOWER(:cleaned_term))")
-        sql.gsub!("/*and_name_like*/", "AND starts_with(LOWER(t.name), LOWER(:cleaned_term))")
+        name_match_sql = "starts_with(LOWER(t.name), LOWER(:cleaned_term))"
       else
-        builder.where("position(LOWER(:cleaned_term) IN LOWER(t.name)) <> 0")
-        sql.gsub!("/*and_name_like*/", "AND position(LOWER(:cleaned_term) IN LOWER(t.name)) <> 0")
+        name_match_sql = "position(LOWER(:cleaned_term) IN LOWER(t.name)) <> 0"
       end
+
+      localized_tag_ids = tag_ids_matching_localizations(term, term_type: opts[:term_type])
+      if localized_tag_ids.present?
+        builder_params[:localized_tag_ids] = localized_tag_ids
+        name_match_sql = "(#{name_match_sql} OR t.id IN (:localized_tag_ids))"
+      end
+
+      builder.where(name_match_sql)
+      sql.gsub!("/*and_name_like*/", "AND #{name_match_sql}")
     else
       sql.gsub!("/*and_name_like*/", "")
     end
@@ -820,6 +827,19 @@ module DiscourseTagging
     tag.gsub!(TAGS_FILTER_REGEXP, "")
     tag.squeeze!("-")
     truncate ? tag[0...SiteSetting.max_tag_length] : tag
+  end
+
+  def self.tag_ids_matching_localizations(term, term_type:)
+    return [] if !SiteSetting.content_localization_enabled
+
+    match_sql =
+      if term_type == term_types[:starts_with]
+        "starts_with(LOWER(name), LOWER(?))"
+      else
+        "position(LOWER(?) IN LOWER(name)) <> 0"
+      end
+
+    TagLocalization.where(locale: I18n.locale.to_s).where(match_sql, term).pluck(:tag_id)
   end
 
   def self.tags_for_saving(tags_arg, guardian, opts = {})
