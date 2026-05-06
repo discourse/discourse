@@ -392,6 +392,15 @@ RSpec.describe UpcomingChanges do
       UpcomingChanges.clear_caches!
     end
 
+    context "when the change is not registered" do
+      it "raises ArgumentError" do
+        expect { described_class.enabled?(:not_an_upcoming_change) }.to raise_error(
+          ArgumentError,
+          /Unknown upcoming change/,
+        )
+      end
+    end
+
     context "when the setting has no row in the database (admin has not saved it)" do
       before { SiteSetting.remove_override!(setting_name) }
 
