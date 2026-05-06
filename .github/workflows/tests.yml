@@ -67,26 +67,7 @@ jobs:
       matrix:
         include:
           - target: core
-            build_type: backend
-          - target: core
-            build_type: frontend
-          - target: core
             build_type: system
-          - target: plugins
-            build_type: backend
-          - target: plugins
-            build_type: frontend
-          - target: core-plugins
-            build_type: system
-          - target: chat
-            build_type: system
-          - target: official-plugins
-            build_type: system
-          - target: themes
-            build_type: frontend
-          - target: themes
-            build_type: system
-
     steps:
       - name: Enable jemalloc
         run: echo /usr/lib/libjemalloc.so.1 > /etc/ld.so.preload
