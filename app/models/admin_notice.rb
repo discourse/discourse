@@ -1,15 +1,23 @@
 # frozen_string_literal: true
 
 class AdminNotice < ActiveRecord::Base
+  MESSAGE_ALLOWED_TAGS = %w[a pre ul li].freeze
+  MESSAGE_ALLOWED_ATTRIBUTES = %w[href target rel].freeze
+  MESSAGE_SANITIZER = Rails::Html::SafeListSanitizer.new
+
   validates :identifier, presence: true
 
   enum :priority, %i[low high].freeze
   enum :subject, %i[problem].freeze
 
   def message
-    I18n.t(
-      "dashboard.#{subject}.#{identifier}",
-      **details.symbolize_keys.merge(base_path: Discourse.base_path),
+    MESSAGE_SANITIZER.sanitize(
+      I18n.t(
+        "dashboard.#{subject}.#{identifier}",
+        **details.symbolize_keys.merge(base_path: Discourse.base_path),
+      ),
+      tags: MESSAGE_ALLOWED_TAGS,
+      attributes: MESSAGE_ALLOWED_ATTRIBUTES,
     )
   end
 end
