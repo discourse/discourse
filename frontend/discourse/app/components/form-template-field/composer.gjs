@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -12,6 +14,10 @@ export default class FormTemplateFieldComposer extends Component {
 
   @tracked composerValue = this.args.value || "";
 
+  _boundElement = null;
+  _focusTarget = null;
+  _claimUploadTarget = null;
+
   @action
   handleInput(event) {
     this.composerValue = event.target.value;
@@ -21,35 +27,67 @@ export default class FormTemplateFieldComposer extends Component {
   }
 
   @action
-  onEditorSetup(textManipulation) {
-    if (
-      !textManipulation.textarea ||
-      !this.args.uppyComposerUpload ||
-      !this.composer.allowUpload
-    ) {
+  setupUploads(wrapperElement) {
+    if (!this.args.uppyComposerUpload || !this.composer.allowUpload) {
       return;
     }
 
-    const element = textManipulation.textarea.closest(".d-editor");
+    const dEditor = wrapperElement.querySelector(".d-editor");
+    if (!dEditor) {
+      return;
+    }
+
+    this._boundElement = dEditor;
+    this.args.uppyComposerUpload.setup(dEditor);
+  }
+
+  @action
+  teardownUploads() {
+    if (this._focusTarget && this._claimUploadTarget) {
+      this._focusTarget.removeEventListener("focusin", this._claimUploadTarget);
+      this._focusTarget = null;
+      this._claimUploadTarget = null;
+    }
+
+    if (this._boundElement && this.args.uppyComposerUpload) {
+      this.args.uppyComposerUpload.teardown(this._boundElement);
+      this._boundElement = null;
+    }
+  }
+
+  @action
+  onEditorSetup(textManipulation) {
+    if (!this._boundElement || !this.args.uppyComposerUpload) {
+      return;
+    }
+
     this.args.uppyComposerUpload.textManipulation = textManipulation;
-    this.args.uppyComposerUpload.setup(element);
+
+    const editorTarget =
+      textManipulation.textarea || textManipulation.view?.dom;
+    if (!editorTarget) {
+      return;
+    }
+
+    if (this._focusTarget && this._claimUploadTarget) {
+      this._focusTarget.removeEventListener("focusin", this._claimUploadTarget);
+    }
 
     const claimUploadTarget = () => {
       this.args.uppyComposerUpload.textManipulation = textManipulation;
     };
-    textManipulation.textarea.addEventListener("focusin", claimUploadTarget);
-
-    return () => {
-      textManipulation.textarea.removeEventListener(
-        "focusin",
-        claimUploadTarget
-      );
-      this.args.uppyComposerUpload.teardown(element);
-    };
+    editorTarget.addEventListener("focusin", claimUploadTarget);
+    this._focusTarget = editorTarget;
+    this._claimUploadTarget = claimUploadTarget;
   }
 
   <template>
-    <div class="control-group form-template-field" data-field-type="composer">
+    <div
+      class="control-group form-template-field"
+      data-field-type="composer"
+      {{didInsert this.setupUploads}}
+      {{willDestroy this.teardownUploads}}
+    >
       {{#if @attributes.label}}
         <label class="form-template-field__label">
           {{@attributes.label}}

@@ -1,5 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
-import { render, triggerEvent, waitUntil } from "@ember/test-helpers";
+import { render, settled, triggerEvent, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import FormComposer from "discourse/components/form-template-field/composer";
@@ -108,6 +109,81 @@ module(
         uppy.textManipulation,
         initialTextManipulation,
         "focusin restores this field's textManipulation as the upload target"
+      );
+    });
+
+    test("calls teardown when the field is destroyed", async function (assert) {
+      stubAllowUpload(this, true);
+
+      const uppy = fakeUppy();
+      const state = new (class {
+        @tracked show = true;
+      })();
+      this.set("uppy", uppy);
+      this.set("state", state);
+
+      await render(
+        <template>
+          {{#if this.state.show}}
+            <FormComposer
+              @onChange={{noop}}
+              @uppyComposerUpload={{this.uppy}}
+            />
+          {{/if}}
+        </template>
+      );
+
+      await waitUntil(() => uppy.setup.called);
+      const setupElement = uppy.setup.firstCall.firstArg;
+
+      state.show = false;
+      await settled();
+
+      assert.true(uppy.teardown.called, "teardown runs on destroy");
+      assert.strictEqual(
+        uppy.teardown.firstCall.firstArg,
+        setupElement,
+        "teardown receives the same element setup was called with"
+      );
+    });
+
+    test("multiple fields each set up the shared uppy and route on focus", async function (assert) {
+      stubAllowUpload(this, true);
+
+      const uppy = fakeUppy();
+      this.set("uppy", uppy);
+
+      await render(
+        <template>
+          <FormComposer @onChange={{noop}} @uppyComposerUpload={{this.uppy}} />
+          <FormComposer @onChange={{noop}} @uppyComposerUpload={{this.uppy}} />
+        </template>
+      );
+
+      await waitUntil(() => uppy.setup.callCount === 2);
+
+      const textareas = document.querySelectorAll(
+        "[data-field-type='composer'] .d-editor-input"
+      );
+      assert.strictEqual(textareas.length, 2, "both fields render textareas");
+
+      await triggerEvent(textareas[0], "focusin");
+      const fieldATextManipulation = uppy.textManipulation;
+
+      await triggerEvent(textareas[1], "focusin");
+      const fieldBTextManipulation = uppy.textManipulation;
+
+      assert.notStrictEqual(
+        fieldATextManipulation,
+        fieldBTextManipulation,
+        "each field has its own textManipulation"
+      );
+
+      await triggerEvent(textareas[0], "focusin");
+      assert.strictEqual(
+        uppy.textManipulation,
+        fieldATextManipulation,
+        "focusing field A again restores its textManipulation"
       );
     });
   }
