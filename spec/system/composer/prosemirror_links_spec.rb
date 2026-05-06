@@ -21,6 +21,7 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("[Example](https://example.com)")
     composer.send_keys(:left, :left, :left)
     # Use Tab to navigate to the toolbar and Enter to activate edit
+    expect(page).to have_css("[data-identifier='composer-link-toolbar']")
     composer.send_keys(:tab, :enter)
     expect(upsert_hyperlink_modal).to be_open
     expect(upsert_hyperlink_modal.link_text_value).to eq("Example")
@@ -39,6 +40,7 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("[Example](https://example.com)")
     composer.send_keys(:left, :left, :left)
     # Use Tab to navigate to the toolbar and Enter to activate edit
+    expect(page).to have_css("[data-identifier='composer-link-toolbar']")
     composer.send_keys(:tab, :enter)
     expect(upsert_hyperlink_modal).to be_open
     expect(upsert_hyperlink_modal.link_text_value).to eq("Example")
@@ -166,6 +168,7 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("[Party :tada: Time](https://example.com)")
     composer.send_keys(:left, :left, :left)
     # Use Tab to navigate to the toolbar and Enter to activate edit
+    expect(page).to have_css("[data-identifier='composer-link-toolbar']")
     composer.send_keys(:tab, :enter)
     expect(upsert_hyperlink_modal).to be_open
     expect(upsert_hyperlink_modal.link_text_value).to eq("Party :tada: Time")
@@ -184,6 +187,7 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("[**Bold** and *italic* text](https://example.com)")
     composer.send_keys(:left, :left, :left)
     # Use Tab to navigate to the toolbar and Enter to activate edit
+    expect(page).to have_css("[data-identifier='composer-link-toolbar']")
     composer.send_keys(:tab, :enter)
     expect(upsert_hyperlink_modal).to be_open
     expect(upsert_hyperlink_modal.link_text_value).to eq("**Bold** and *italic* text")

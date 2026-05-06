@@ -5,11 +5,6 @@
 # https://translate.discourse.org/
 
 pl_PL:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_post_voting: "Głosowanie na wpisy Discourse"
   post_voting:
     reviewables:
       comment_already_handled: "Dziękujemy, ale sprawdziliśmy już ten komentarz i stwierdziliśmy, że nie ma potrzeby jego ponownego oznaczania."
@@ -40,14 +35,6 @@ pl_PL:
       already_voted: "Na jedno pytanie można oddać tylko jeden głos."
       user_over_limit: "Nie możesz przekroczyć liczby głosów odpowiadającej Twojemu poziomowi zaufania."
       one_vote_per_post: "Na każdy wpis można oddać tylko jeden głos."
-      button:
-        upvote: "Głosuj za"
-        remove_upvote: "Usuń głos za"
-        downvote: "Głos przeciw"
-        remove_downvote: "Usuń głos przeciw"
-      toggle_voters: "Pokaż, kto głosował"
-      upvotes: "Głosy za"
-      downvotes: "Głosy przeciw"
     last_answer_lowercase: ostatnia odpowiedź
     answer_lowercase:
       one: odpowiedź
@@ -77,10 +64,6 @@ pl_PL:
           edit: "edytuj"
           cancel: "anuluj"
           add: "Dodaj komentarz"
-          actions:
-            edit: "Edytuj komentarz"
-            delete: "Usuń komentarz"
-            flag: "Oflaguj komentarz"
           show:
             one: Pokaż jeszcze %{count} komentarz
             few: Pokaż jeszcze %{count} komentarze

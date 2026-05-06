@@ -5,6 +5,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
 
 const CollapsedInfo = <template>
@@ -67,7 +68,7 @@ const CollapsedInfo = <template>
                   @action={{fn (routeAction "checkEmail") @model}}
                   @icon="envelope"
                   @label="admin.users.check_email.text"
-                  class="btn-primary"
+                  class="btn-small btn-primary"
                 />
               {{/if}}
             </dd>
@@ -95,12 +96,21 @@ const CollapsedInfo = <template>
         {{/if}}
 
         {{#if @canDeleteUser}}
-          <div class="pull-right"><DButton
-              @action={{@adminDelete}}
-              @icon="triangle-exclamation"
-              @label="user.admin_delete"
-              class="btn-danger btn-delete-user"
-            /></div>
+          <div class="pull-right">
+            <DropdownSelectBox
+              @nameProperty="label"
+              @content={{@adminDeleteOptions}}
+              @onChange={{@adminDelete}}
+              @options={{hash
+                icon="triangle-exclamation"
+                showCaret=true
+                translatedNone=(i18n "user.admin_delete")
+                customStyle=true
+                btnCustomClasses="btn-danger"
+              }}
+              class="btn-small btn-delete-user"
+            />
+          </div>
         {{/if}}
 
         <PluginOutlet

@@ -212,6 +212,9 @@ fr:
         other_type: "%{username} a mentionné %{identifier} dans la discussion privée"
       new_chat_message: '%{username} a envoyé un message dans « %{channel} »'
       new_direct_chat_message: "%{username} a envoyé un message dans la discussion privée"
+    actions:
+      chat_reply:
+        title: Réponse
   discourse_automation:
     scriptables:
       send_chat_message:

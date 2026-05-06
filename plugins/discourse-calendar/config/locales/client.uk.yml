@@ -340,9 +340,6 @@ uk:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} автоматично встановив вашу присутність і запросив вас на %{eventName}"
         an_event: "подія"
-      event_description:
-        show_more: "Показати більше"
-        show_less: "Показати менше"
       edit_reason: "Подію оновлено"
       edit_reason_closed: "Подія закрита"
       edit_reason_opened: "Подія відкрита"
@@ -531,8 +528,6 @@ uk:
         status:
           label: "Статус"
         delete_confirmation_message: "Видалити цю подію?"
-        image:
-          label: "Зображення події"
       invite_user_or_group:
         title: "Сповістити користувача(ів) або групу(и)"
         invite: "Надіслати"

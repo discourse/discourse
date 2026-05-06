@@ -2768,19 +2768,9 @@ da:
         archive_messages: "Flyt til arkiv"
         change_notification_level: "Skift Notifikationsniveau"
         choose_new_category: "Vælg den nye kategori for emnerne:"
-        selected_sole_category:
-          one: "Du har valgt <b>%{count}</b> emne fra kategorien:"
-          other: "Du har valgt <b>%{count}</b> emner fra kategorien:"
         selected_count:
           one: "%{count} valgt"
           other: "%{count} valgt"
-        append_tags: "Tilføj mærker"
-        choose_new_tags: "Vælg nye tags for dette emne"
-        choose_append_tags: "Tilføj mærker"
-        changed_tags: "Tags for dette emne blev ændret"
-        confirm_remove_tags:
-          one: "Alle mærker fjernes fra dette emne. Er du sikker?"
-          other: "Alle tags fjernes fra %{count} emner. Er du sikker?"
         progress:
           one: "Fremskridt: <strong>%{count}</strong> emne"
           other: "Fremskridt: <strong>%{count}</strong> emner"
@@ -2810,10 +2800,9 @@ da:
         name: "Flyt til arkiv"
       move_messages_to_inbox:
         name: "Flyt til indbakke"
-      remove_tags:
-        name: "Fjern tags"
-      replace_tags:
-        name: "Erstat tags"
+      manage_tags:
+        add:
+          title: "Tilføj mærker"
       delete_topics:
         name: "Slet"
       update_category:
@@ -2838,6 +2827,7 @@ da:
       collapse: "Fold sammen"
       no_replies: "Ingen svar, endnu."
       deleted_post_placeholder: "[slettet]"
+      ignored_post_placeholder: "[ignorerede]"
       pinned_reply: "Fastgjort"
     topic:
       filter_to:
@@ -3589,7 +3579,7 @@ da:
           low: "Lav"
           high: "Høj"
       sort_options:
-        default: "standard"
+        default: "Standard"
         likes: "Synes godt om"
         views: "Visninger"
         posts: "Indlæg"
@@ -5540,6 +5530,7 @@ da:
         topic_id: "Emne ID"
         post_id: "Indlægs ID"
         category_id: "Kategori-id"
+        reviewable_id: "Anmeldelse"
         delete: "Slet"
         edit: "Redigér"
         save: "Gem"

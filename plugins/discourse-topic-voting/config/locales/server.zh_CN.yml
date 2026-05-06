@@ -17,9 +17,6 @@ zh_CN:
     topic_voting_show_votes_on_profile: '允许用户在活动源中查看其投票？'
     topic_voting_alert_votes_left: '当投票机会还有此数值时通知用户'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "显示投票人"
     votes_moved:
       other: "%{count} 个投票已被移动。"
     duplicated_votes:

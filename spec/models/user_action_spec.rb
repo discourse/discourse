@@ -246,6 +246,40 @@ RSpec.describe UserAction do
         expect(likee_stream.count).not_to eq(old_count + 1)
       end
     end
+
+    context "with ignored users" do
+      before { Fabricate(:ignored_user, user: likee, ignored_user: liker) }
+
+      def likee_stream_for(viewer)
+        UserAction.stream(user_id: likee.id, guardian: Guardian.new(viewer))
+      end
+
+      it "hides likes from ignored users when the ignorer views the stream" do
+        PostActionCreator.like(liker, post)
+        expect(likee_stream_for(likee).count).to eq(old_count)
+      end
+
+      it "still shows the likes to anonymous viewers" do
+        PostActionCreator.like(liker, post)
+        expect(likee_stream.count).to eq(old_count + 1)
+      end
+
+      it "still shows the likes to other logged-in viewers who aren't ignoring the liker" do
+        other = Fabricate(:user)
+        PostActionCreator.like(liker, post)
+        expect(likee_stream_for(other).count).to eq(old_count + 1)
+      end
+
+      it "hides only the ignored user's actions, not other users' actions on the same topic" do
+        normal_user = Fabricate(:user)
+        PostActionCreator.like(normal_user, post)
+        PostActionCreator.like(liker, post)
+
+        acting_user_ids = likee_stream_for(likee).map(&:acting_user_id).uniq
+        expect(acting_user_ids).to include(normal_user.id)
+        expect(acting_user_ids).not_to include(liker.id)
+      end
+    end
   end
 
   describe "when a user posts a new topic" do

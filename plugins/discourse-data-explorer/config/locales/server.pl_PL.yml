@@ -7,23 +7,6 @@
 pl_PL:
   site_settings:
     data_explorer_enabled: "Włącz eksplorator danych"
-    data_explorer_ai_queries_enabled: "Włącz generowanie zapytań AI w Eksploratorze danych"
-  discourse_ai:
-    ai_bot:
-      agents:
-        ai_query_generator:
-          name: "Generator zapytań Eksploratora danych"
-          description: "Generuje zapytania SQL dla Eksploratora danych z języka naturalnego"
-      tool_help:
-        run_sql: "Uruchamia zapytanie SQL i zwraca wyniki"
-      tool_summary:
-        run_sql: "Uruchamianie zapytania SQL"
-      tool_description:
-        run_sql: "Uruchomiono zapytanie SQL"
-  discourse_data_explorer:
-    ai:
-      error_agent_not_configured: "Agent AI nie jest skonfigurowany. Sprawdź ustawienia funkcji AI."
-      error_no_sql_returned: "Sztuczna inteligencja nie zwróciła prawidłowego zapytania SQL. Spróbuj ponownie lub wpisz zapytanie ręcznie."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

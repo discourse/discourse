@@ -1050,17 +1050,7 @@ class TopicView
     @filtered_posts = unfiltered_posts
 
     if @user
-      sql = <<~SQL
-        SELECT ignored_user_id
-        FROM ignored_users as ig
-        INNER JOIN users as u ON u.id = ig.ignored_user_id
-        WHERE ig.user_id = :current_user_id
-          AND ig.ignored_user_id <> :current_user_id
-          AND NOT u.admin
-          AND NOT u.moderator
-      SQL
-
-      ignored_user_ids = DB.query_single(sql, current_user_id: @user.id)
+      ignored_user_ids = IgnoredUser.ignored_ids_for(@user)
 
       if ignored_user_ids.present?
         @filtered_posts =

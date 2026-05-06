@@ -34,6 +34,7 @@ RSpec.describe "Reports" do
     expect(page).not_to have_css(".query-results .result-header")
     find(".query-run .btn-primary").click
     expect(page).to have_css(".query-results .result-header")
+    expect(page).to have_css(".query-results-table-wrapper.--expanded")
 
     find(".group-reports-nav-item-outlet a").click
     all(".group-reports a ").last.click

@@ -355,7 +355,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_no_password?
-    !object.has_password?
+    (user_is_current_user || scope.is_staff?) && !object.has_password?
   end
 
   private

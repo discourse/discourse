@@ -554,19 +554,22 @@ class User < ActiveRecord::Base
 
     logged_in_shortcut = group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
 
-    system_user_in_required_groups =
-      (
-        is_system_user? &&
-          (
-            (
-              Group.auto_groups_between(:admins, :trust_level_4) - [Group::AUTO_GROUPS[:anonymous]]
-            ) & group_ids
-          ).any?
-      )
+    return true if everyone_shortcut || logged_in_shortcut
 
-    has_required_groups = (group_ids & belonging_to_group_ids).any?
+    # Sometimes the system user doesn't have their auto groups
+    # from some strange edge case, this handles it.
+    if (
+         is_system_user? &&
+           (
+             (
+               Group.auto_groups_between(:admins, :trust_level_4) - [Group::AUTO_GROUPS[:anonymous]]
+             ) & group_ids
+           ).any?
+       )
+      return true
+    end
 
-    everyone_shortcut || logged_in_shortcut || system_user_in_required_groups || has_required_groups
+    (group_ids & belonging_to_group_ids).any?
   end
 
   def belonging_to_group_ids

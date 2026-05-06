@@ -45,6 +45,8 @@ module DiscourseTopicVoting
         @source_topic.update_vote_count
         @target_topic.update_vote_count
 
+        Jobs.enqueue(Jobs::DiscourseTopicVoting::BackfillBadges, topic_id: @target_topic.id)
+
         if moderator_post = @source_topic.ordered_posts.where(action_code: "split_topic").last
           moderator_post.raw << "\n\n#{I18n.t("topic_voting.votes_moved", count: moved_votes)}"
           if duplicated_votes > 0

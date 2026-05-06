@@ -165,7 +165,6 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
   end
 
   it "breaks out of inline spoiler when pressing Enter" do
-    skip_on_ci!("Flaky test - breaking out of inline spoiler when pressing Enter")
     open_composer
 
     composer.type_content("Test ")
@@ -182,19 +181,21 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
 
     expect(rich).to have_css("span.spoiled.spoiler-blurred", text: "hello")
 
-    composer.send_keys(:left)
-    composer.send_keys(:left)
+    composer.send_keys(:left, :left)
 
     expect(rich).to have_css("span.spoiled:not(.spoiler-blurred)", text: "hello")
 
-    # ENTER at the end of the node
     composer.send_keys(:enter)
+    expect(rich).to have_css("p:has(span.spoiled) + p", text: "X")
 
-    # Backspace, position cursor at hell|o, ENTER
     composer.send_keys(:backspace)
-    composer.send_keys(:left)
-    composer.send_keys(:left)
-    sleep 0.01
+    expect(rich).to have_no_css("p + p")
+
+    # Position cursor at "hell|o"
+    select_text_range(".ProseMirror span.spoiled", 4, 0)
+
+    expect(rich).to have_css("span.spoiled:not(.spoiler-blurred)", text: "hello")
+
     composer.send_keys(:enter)
 
     expect(rich).to have_css("p", text: "Test")
@@ -214,9 +215,11 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
 
     expect(rich).to have_css("span.spoiled", text: "hello")
 
-    composer.send_keys(:control, :left)
+    # Position cursor at start of "hello" inside the spoiler — :control, :left has
+    # platform-dependent behavior (word-jump on Linux/Windows, line-jump on macOS).
+    select_text_range(".ProseMirror span.spoiled", 0, 0)
+
     composer.send_keys(:backspace)
-    sleep 0.01
     composer.send_keys(:enter)
 
     expect(rich).to have_css("p:not(:has(span.spoiled)) + p:has(span.spoiled)", text: "hello")

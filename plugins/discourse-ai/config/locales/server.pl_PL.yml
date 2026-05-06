@@ -126,6 +126,7 @@ pl_PL:
     ai_bot_add_to_header: "Wyświetl przycisk w nagłówku, aby rozpocząć wiadomość prywatną z botem AI"
     ai_bot_add_to_community_section: "Wyświetl link w sekcji społeczności na pasku bocznym, aby rozpocząć prywatną wiadomość z botem AI"
     ai_bot_github_access_token: "Token dostępu GitHub do użytku z narzędziami GitHub AI (wymagany do obsługi wyszukiwania)"
+    ai_bot_enable_docked_composer: "Włącz dokowany kompozytor w stylu czatu dla konwersacji botów AI zamiast standardowego kompozytora pływającego."
     ai_discover_enabled: "Włącz funkcję wyszukiwania odkrywczego"
     ai_discover_agent: "Agent do wykorzystania w funkcji wyszukiwania odkrywczego"
     ai_google_custom_search_api_key: "Klucz dla Google Custom Search API, zobacz: https://developers.google.com/custom-search"
@@ -926,10 +927,10 @@ pl_PL:
       quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"
       no_query_specified: Parametr zapytania jest wymagany, podaj go.
       no_user_for_agent: Określony agent nie ma powiązanego użytkownika.
-      agent_not_found: "Określony agent nie istnieje. Sprawdź parametry agent_name lub agent_id (starsze: agent_name lub agent_id)."
+      agent_not_found: "Podany agent nie istnieje. Sprawdź parametry agent_name lub agent_id (starsze: persona_name lub persona_id)."
       no_user_specified: Wymagana jest nazwa użytkownika lub parametr user_unique_id, proszę go podać.
       user_not_found: Podany użytkownik nie istnieje. Sprawdź parametr nazwy użytkownika.
-      agent_disabled: "Określony agent jest wyłączony. Sprawdź parametry agent_name lub agent_id (starsze: agent_name lub agent_id)."
+      agent_disabled: "Określony agent jest wyłączony. Sprawdź parametry agent_name lub agent_id (starsze: persona_name lub persona_id)."
       no_default_llm: Agent musi mieć zdefiniowany parametr default_llm.
       user_not_allowed: Użytkownik nie ma prawa brać udziału w dyskusji na ten temat.
       invalid_stream_resume_token: Token resume_token jest nieprawidłowy lub wygasł.

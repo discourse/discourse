@@ -4631,6 +4631,56 @@ RSpec.describe TopicsController do
         expect(topic.reload.tags).to include(tag1)
       end
 
+      it "can manage tags via add, remove and replace across multiple topics" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        tag_1 = Fabricate(:tag)
+        tag_2 = Fabricate(:tag)
+        tag_3 = Fabricate(:tag)
+        tag_4 = Fabricate(:tag)
+        topic_1 = Fabricate(:topic_with_op, user: user, tags: [tag_1, tag_2])
+        topic_2 = Fabricate(:topic_with_op, user: user, tags: [tag_2, tag_3])
+        topic_3 = Fabricate(:topic_with_op, user: user, tags: [tag_1])
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic_1.id, topic_2.id, topic_3.id],
+              operation: {
+                type: "manage_tags",
+                add_tag_ids: [tag_4.id],
+                remove_tag_ids: [tag_2.id],
+                replace_tags: [{ from_tag_id: tag_1.id, to_tag_id: tag_3.id }],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(topic_1.reload.tags).to contain_exactly(tag_3, tag_4)
+        expect(topic_2.reload.tags).to contain_exactly(tag_3, tag_4)
+        expect(topic_3.reload.tags).to contain_exactly(tag_3, tag_4)
+      end
+
+      it "can clear all tags with remove_all_tags across multiple topics" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        tag_1 = Fabricate(:tag)
+        tag_2 = Fabricate(:tag)
+        topic_1 = Fabricate(:topic_with_op, user: user, tags: [tag_1, tag_2])
+        topic_2 = Fabricate(:topic_with_op, user: user, tags: [tag_2])
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic_1.id, topic_2.id],
+              operation: {
+                type: "manage_tags",
+                remove_all_tags: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(topic_1.reload.tags).to be_empty
+        expect(topic_2.reload.tags).to be_empty
+      end
+
       it "includes errors in the response when operations partially fail" do
         sign_in(Fabricate(:admin))
 
@@ -7252,6 +7302,45 @@ RSpec.describe TopicsController do
         },
       )
       expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+  end
+
+  describe "third-party analytics in embed mode" do
+    fab!(:topic)
+
+    before do
+      SiteSetting.embed_full_app = true
+      SiteSetting.gtm_container_id = "GTM-ABCDEF"
+      SiteSetting.adobe_analytics_tags_url = "https://assets.adobedtm.com/launch-EN.min.js"
+    end
+
+    def parsed_body
+      Nokogiri::HTML5.fragment(response.body)
+    end
+
+    it "renders analytics tags by default" do
+      get "/t/#{topic.slug}/#{topic.id}"
+      expect(parsed_body.css("#data-google-tag-manager")).to be_present
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_present
+    end
+
+    it "skips analytics tags when loaded in embed mode" do
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
+      expect(parsed_body.css("#data-google-tag-manager")).to be_empty
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_empty
+    end
+
+    it "still renders analytics tags in embed mode when suppression setting is disabled" do
+      SiteSetting.suppress_third_party_analytics_in_embed = false
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
+      expect(parsed_body.css("#data-google-tag-manager")).to be_present
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_present
     end
   end
 end

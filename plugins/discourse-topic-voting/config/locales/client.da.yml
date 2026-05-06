@@ -23,9 +23,6 @@ da:
         one: "Stemmeafgivelse"
         other: "Stemmer"
       remove_vote: "Fjern stemme"
-      and_more_voters: "og %{count} mere..."
-      show_voters: "Vis hvem der stemte"
-      vote_count_thousands: "%{count}k"
       no_votes_title_self: "Du har endnu ikke stemt på noget emne."
     filters:
       votes:

@@ -61,6 +61,16 @@ RSpec.describe UserApiKeysController do
         expect(response.status).to eq(400)
       end
 
+      it "shows write scope warning when write scope is requested" do
+        get "/user-api-key/new", params: args.merge(scopes: "write")
+        expect(response.body).to include(I18n.t("user_api_key.write_scope_warning"))
+      end
+
+      it "does not show write scope warning for read-only scopes" do
+        get "/user-api-key/new", params: args
+        expect(response.body).not_to include(I18n.t("user_api_key.write_scope_warning"))
+      end
+
       it "does not show redirect warning when auth_redirect is discourse://auth_redirect" do
         SiteSetting.allowed_user_api_auth_redirects = "discourse://auth_redirect"
 
@@ -191,6 +201,16 @@ RSpec.describe UserApiKeysController do
       encrypted = Base64.decode64(response.parsed_body["payload"])
       parsed = JSON.parse(decrypt_payload(encrypted))
       expect(UserApiKey.with_key(parsed["key"]).first.user_id).to eq(user.id)
+    end
+
+    it "renders show template with application_name when no auth_redirect provided" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(user)
+
+      post "/user-api-key", params: args.except(:auth_redirect)
+      expect(response.status).to eq(200)
+      expect(response.body).to include(args[:application_name])
     end
 
     it "encrypts payload with OAEP padding when requested" do

@@ -27,9 +27,6 @@ te:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      event_description:
-        show_more: "మరిన్ని చూపించండి"
-        show_less: "తక్కువ చూపించండి"
       show_all: "అన్నీ చూపండి"
       add_to_calendar: "క్యాలెండర్‌కు జోడించండి"
       created_by: "సృష్టికర్త"

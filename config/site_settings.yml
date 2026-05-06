@@ -456,7 +456,7 @@ basic:
     default: ""
     allow_any: false
     refresh: true
-    disallowed_groups: "0|4"
+    disallowed_groups: "0|4|5"
     area: "group_permissions"
   hidden_post_visible_groups:
     type: group_list
@@ -1956,6 +1956,15 @@ email:
   email_subject:
     default: "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
     area: "email"
+  simple_email_subject:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      disallow_enabled_for_groups: true
+      learn_more_url: "https://meta.discourse.org/t/-/395927"
   reply_by_email_enabled:
     default: false
     validator: "ReplyByEmailEnabledValidator"
@@ -2701,6 +2710,9 @@ trust:
   tl3_requires_topics_viewed_cap:
     default: 500
     area: "trust_levels"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_defaults_for_trust_level_3_requirements"
+      new_default: 250
   tl3_requires_posts_read:
     default: 25
     max: 100
@@ -2709,6 +2721,9 @@ trust:
     default: 20000
     max: 99000
     area: "trust_levels"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_defaults_for_trust_level_3_requirements"
+      new_default: 2000
   tl3_requires_topics_viewed_all_time:
     default: 200
     area: "trust_levels"
@@ -2722,6 +2737,9 @@ trust:
     default: 14
     max: 10000
     area: "trust_levels"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_defaults_for_trust_level_3_requirements"
+      new_default: 100
   tl3_requires_likes_given:
     default: 30
     area: "trust_levels"
@@ -3306,6 +3324,9 @@ embedding:
     default: false
     client: true
     area: "embedding"
+  suppress_third_party_analytics_in_embed:
+    default: true
+    area: "embedding"
   embed_by_username:
     default: ""
     type: username
@@ -3884,24 +3905,11 @@ uncategorized:
     default: true
     area: "interface"
 
-  enable_custom_splash_screen:
-    default: false
-    client: true
-    hidden: true
-    area: "interface"
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/395100"
-
   splash_screen_image:
     default: ""
     type: upload
     authorized_extensions: "svg"
     area: "interface"
-    depends_on:
-      - "enable_custom_splash_screen"
-    depends_behavior: "hidden"
     validator: "UploadSettingValidator"
 
   suggest_weekends_in_date_pickers:
@@ -4343,14 +4351,9 @@ experimental:
       learn_more_url: "https://meta.discourse.org/t/-/395768"
       disallow_enabled_for_groups: true
   enable_auto_grid_images:
-    default: false
+    default: true
     client: true
-    hidden: true
     area: "experimental"
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/394784"
   enable_new_checkbox_style:
     default: false
     client: true
@@ -4377,20 +4380,7 @@ experimental:
       learn_more_url: "https://meta.discourse.org/t/-/395099"
   enable_form_templates:
     client: true
-    default: false
-    hidden: true
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/278631"
-  impersonate_without_logout:
-    default: false
-    client: true
-    hidden: true
-    upcoming_change:
-      status: "stable"
-      impact: "feature,staff"
-      learn_more_url: "https://meta.discourse.org/t/-/119683"
+    default: true
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -4430,9 +4420,18 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/394971"
+  enable_new_defaults_for_trust_level_3_requirements:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/397098"
+      disallow_enabled_for_groups: true
   experimental_topic_category_change_notification:
     default: false
     hidden: true
@@ -4455,3 +4454,10 @@ experimental:
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/121323"
       disallow_enabled_for_groups: true
+  dashboard_improvements:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "conceptual"
+      impact: "feature,admins"

@@ -135,6 +135,7 @@ $solved-color: var(--success);
 
   &__controls {
     margin-left: auto;
+    display: flex;
   }
 
   &__toggle,
@@ -182,7 +183,9 @@ $solved-color: var(--success);
     background: var(--secondary);
     border: 0;
     padding: var(--space-3);
-    max-height: clamp(1px, 20vh, 20em);
+    max-height: calc(
+      var(--solved-max-lines, 14) * var(--cooked-line-height) * 1em
+    ); // solved-max-lines set in solved-accepted-answer.gjs
     overflow: hidden;
     margin: 0;
     border-left: 1px solid var(--primary-low);
@@ -223,7 +226,8 @@ $solved-color: var(--success);
     @include ellipsis;
   }
 
-  &[data-expanded="true"] > blockquote {
+  &[data-expanded="true"] > blockquote,
+  &[data-overflowing="false"] > blockquote {
     max-height: none;
     overflow: visible;
 

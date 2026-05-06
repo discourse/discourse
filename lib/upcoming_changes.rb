@@ -288,6 +288,7 @@ module UpcomingChanges
   def self.clear_caches!
     Discourse.cache.delete(current_statuses_cache_key)
     Discourse.cache.delete(permanent_upcoming_changes_cache_key)
+    DiscourseUpdates.clear_latest_new_feature_created_at_cache
   end
 
   def self.current_statuses_cache_key
@@ -371,16 +372,5 @@ module UpcomingChanges
   # This is done via depends_on and depends_behavior: hidden in site_settings.yml.
   def self.find_dependents_for_change(change_setting_name)
     settings_provider.type_supervisor.dependencies.dependents(change_setting_name.to_s)
-  end
-
-  # Some upcoming changes when enabled will override the default value
-  # of another setting.
-  #
-  # This is done via upcoming_change_default_override in site_settings.yml.
-  def self.find_related_default_override_for_change(change_setting_name)
-    settings_provider
-      .upcoming_change_default_overrides
-      .find { |_, override| override[:upcoming_change] == change_setting_name.to_sym }
-      &.first
   end
 end

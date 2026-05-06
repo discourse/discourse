@@ -18,33 +18,11 @@ tr_TR:
         providers: "Sağlayıcılar"
         providers_description: "Sohbet sağlayıcısı entegrasyonlarını yapılandırın"
       add_provider: "Sağlayıcı ekle"
-      view_provider_settings: "Sağlayıcı ayarlarını görüntüle"
       more_providers: "Daha fazla"
-      confirm_setup_provider: "%{provider} sağlayıcısını etkinleştirmek istediğinizden emin misiniz? Bu ayar daha sonra Ayarlar sekmesinden devre dışı bırakılabilir."
-      setup_provider_modal:
-        title: "%{provider} sağlayıcısını kur"
-        setup_instructions: "%{provider} sağlayıcısını kurmak için lütfen aşağıdaki bilgileri girin. %{additionalInstructions}"
-        confirm_setup: "Kurulumu onayla"
-        success: "%{provider} sağlayıcısı başarıyla kuruldu"
-        slack:
-          instructions: "Erişim jetonu veya giden webhook URL'si gereklidir."
-          at_least_one_required: "Bir erişim jetonu veya giden webhook URL'si girin."
-          access_token:
-            title: "Erişim jetonu"
-            description: "Slack botunun OAuth erişim jetonu"
-          outbound_webhook_url:
-            title: "Giden webhook URL'si"
-            description: "Slack'in giden webhook URL'si"
-        telegram:
-          instructions: "Erişim jetonu, kaydetme işlemi sırasında doğrulanacaktır."
-          access_token:
-            title: "Erişim jetonu"
-            description: "BotFather'dan alınan Telegram bot erişim jetonu"
       empty_state:
         title: "Sohbet platformunuzu bağlayın."
         body: "Discourse'tan ekibinizin sohbetine bildirimler gönderin. Başlamak için bir sağlayıcı seçin."
       channels_title: "Kanallar"
-      channels_description: "%{provider} sağlayıcısı için kanalları yapılandırın."
       no_channels: "Henüz hiçbir kanal yapılandırılmadı."
       channel_actions: "Kanal işlemleri"
       add_first_channel: "İlk %{provider} kanalınızı ekleyin"
@@ -117,8 +95,6 @@ tr_TR:
               title: Kanal
               help: "Örneğin #kanal veya @kullanıcıadı"
           errors:
-            at_least_one_required: "Bir erişim jetonu veya giden webhook URL'si girin."
-            invalid_webhook_url: "Giden webhook URL'si, geçerli bir https://hooks.slack.com/services/... bağlantısı olmalıdır."
             auth_error: "Verilen kimlik doğrulama belirteci geçersiz."
             action_prohibited: "Botun bu kanala gönderi yapma izni yok"
             channel_not_found: "Belirtilen kanal Slack'te mevcut değil"
@@ -132,8 +108,6 @@ tr_TR:
               title: Sohbet Kimliği
               help: Bot tarafından size verilen bir numara veya @channelname biçimindeki bir yayın kanalı tanımlayıcısı
           errors:
-            access_token_required: "Bir bot erişim jetonu gereklidir."
-            webhook_setup_failed: "Webhook Telegram'a kaydedilemedi. Jetonu kontrol edin ve tekrar deneyin."
             channel_not_found: "Belirtilen kanal Telegram'da mevcut değil"
             forbidden: "Botun bu kanala gönderi yapma izni yok"
         discord:

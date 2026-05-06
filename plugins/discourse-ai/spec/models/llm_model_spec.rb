@@ -56,4 +56,13 @@ RSpec.describe LlmModel do
       expect(bedrock_model.valid?).to be true
     end
   end
+
+  describe "allowed_attachment_types" do
+    it "normalizes markdown attachments to md" do
+      model = Fabricate.build(:llm_model)
+      model.allowed_attachment_types = %w[pdf markdown md htm text]
+
+      expect(model.allowed_attachment_types).to eq(%w[pdf md html txt])
+    end
+  end
 end

@@ -6,10 +6,6 @@
 
 hu:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Adatfelfedező"
     errors:
       explorer:
         no_semicolons: "Pontosvesszők eltávolítása a lekérdezésből."
@@ -26,9 +22,6 @@ hu:
       create: "Létrehozás"
       create_placeholder: "Lekérdezés neve…"
       description_placeholder: "Adjon meg egy leírást"
-      ai:
-        generate: "Generálás"
-        optional: "nem kötelező"
       import:
         label: "Importálás"
         unparseable_json: "Nem értelmezhető JSON-fájl."

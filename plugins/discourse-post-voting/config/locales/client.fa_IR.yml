@@ -12,8 +12,6 @@ fa_IR:
       composer_actions:
         remove_as_post_voting:
           desc: "موضوع در ساختار عادی ایجاد خواهد شد"
-    vote:
-      toggle_voters: "نمایش رای دهندگان"
     last_answer_lowercase: آخرین پاسخ
     answer_lowercase:
       one: پاسخ

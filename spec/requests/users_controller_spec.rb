@@ -4204,6 +4204,11 @@ RSpec.describe UsersController do
         get "/my/messages/group/#{group.name}"
         expect(response).to redirect_to("/u/#{user1.username}/messages/group/#{group.name}")
       end
+
+      it "works with alphanumeric params" do
+        get "/my/messages/tags/example-123"
+        expect(response).to redirect_to("/u/#{user1.username}/messages/tags/example-123")
+      end
     end
   end
 

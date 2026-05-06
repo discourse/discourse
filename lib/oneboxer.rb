@@ -127,6 +127,13 @@ module Oneboxer
     Discourse.cache.delete(onebox_failed_cache_key(url))
   end
 
+  def self.inline_data_for(url)
+    engine_class = engine(url)
+    return if engine_class.nil? || !engine_class.method_defined?(:inline_data)
+
+    engine_class.new(url).inline_data
+  end
+
   # Parse URLs out of HTML, returning the document when finished.
   def self.each_onebox_link(doc, extra_paths: [])
     onebox_links = doc.css("a.#{ONEBOX_CSS_CLASS}", *extra_paths)

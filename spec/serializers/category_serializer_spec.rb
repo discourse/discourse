@@ -276,4 +276,44 @@ RSpec.describe CategorySerializer do
       expect(json[:category_setting][:require_reply_approval]).to eq(true)
     end
   end
+
+  describe "#category_types" do
+    it "returns the category types" do
+      json = described_class.new(category, scope: admin.guardian, root: false).as_json
+      expect(json[:category_types]).to eq(
+        { discussion: Categories::TypeRegistry.all[:discussion].metadata },
+      )
+    end
+  end
+
+  describe "#available_category_types" do
+    class MockCategoryType < ::Categories::Types::Base
+      type_id :mock_type
+
+      class << self
+        def category_matches?(category)
+          true
+        end
+
+        def find_matches
+          Category.none
+        end
+
+        def visible?
+          false
+        end
+      end
+    end
+
+    before { Categories::TypeRegistry.register(MockCategoryType) }
+
+    after { Categories::TypeRegistry.reset! }
+
+    it "returns the available visible category types" do
+      json = described_class.new(category, scope: admin.guardian, root: false).as_json
+      expect(json[:available_category_types]).to eq(
+        [Categories::TypeRegistry.all[:discussion].metadata],
+      )
+    end
+  end
 end

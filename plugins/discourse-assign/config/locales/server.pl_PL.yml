@@ -22,7 +22,6 @@ pl_PL:
     remind_assigns_frequency: "Częstotliwość przypominania użytkownikom o przypisanych tematach."
     pending_assign_reminder_threshold: "Liczba oczekujących zadań, które powodują wysłanie przypomnienia."
     max_assigned_topics: "Maksymalna liczba tematów, jakie można przypisać użytkownikowi."
-    assign_allowed_on_groups: "Użytkownicy w tych grupach mogą przypisywać tematy."
     enable_assign_status: "Dodaj pole statusu, które można dostosować do każdego zadania."
     assign_statuses: "Lista statusów dostępnych dla każdego zadania. Pierwszy status to domyślny status stosowany do każdego nowego zadania."
     ignore_solved_topics_in_assigned_reminder: "Zapobiegaj wyświetlaniu przypomnień o zadaniach zawierających rozwiązane tematy. Ma znaczenie tylko w przypadku korzystania z wtyczki discourse-solved."

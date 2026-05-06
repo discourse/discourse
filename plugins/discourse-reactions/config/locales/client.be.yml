@@ -7,7 +7,5 @@
 be:
   js:
     discourse_reactions:
-      users_popup:
-        all: "Усе"
       main_reaction:
         add: "Упадабаць гэты пост"

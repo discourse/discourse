@@ -1,7 +1,8 @@
 @use "lib/viewport";
 
 // specific d-modal overrules
-.fk-d-menu-modal.discourse-reactions-users-menu-content {
+.fk-d-menu-modal.discourse-reactions-users-menu-content,
+.fk-d-menu-modal.post-liked-users-menu-content {
   .d-modal {
     &__container {
       height: clamp(50dvh, 50dvh, 60dvh);
@@ -39,6 +40,7 @@
     position: sticky;
     top: 0;
     background: var(--secondary);
+    z-index: z("base");
   }
 
   &__header {
@@ -135,15 +137,10 @@
     }
   }
 
-  &__avatar-link {
-    flex-shrink: 0;
-    display: flex;
-
-    .avatar {
-      @include viewport.until(sm) {
-        width: 32px;
-        height: 32px;
-      }
+  .avatar {
+    @include viewport.until(sm) {
+      width: 32px;
+      height: 32px;
     }
   }
 

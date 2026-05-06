@@ -28,13 +28,13 @@ From those changes, generate a **commit message** and **PR description** followi
 
 ## PR Description Rules
 
-Immediately after the commit message, output a Markdown PR description using exactly this format:
+Immediately after the commit message, output a PR description using exactly this format:
 
-> **Previously**, [brief description of the old state or issue].
+> Previously, [brief description of the old state or issue, in the past tense].
 >
-> **In this update**, [brief description of the change].
+> This change [brief description of the change and the effect it has, in the present tense].
 
-Keep both sections extremely brief — ideally one sentence each.
+Keep both sections extremely brief — ideally one sentence each. You may use markdown if it's useful (e.g. for short code snippets). Focus on the motivation for the change. 'why' is more important than 'what'.
 
 ## Constraints
 
@@ -45,9 +45,9 @@ Keep both sections extremely brief — ideally one sentence each.
 ```
 UX: Improve `UserSelector` contrast for dark mode
 
-**Previously**, the text in the `UserSelector` component was difficult to read on dark backgrounds due to low contrast.
+Previously, the text in the `UserSelector` component was difficult to read on dark backgrounds due to low contrast.
 
-**In this update**, updated the text color to use the `--primary-medium` CSS variable.
+This update changes the text color to use the `--primary-medium` CSS variable, which improves readability.
 ```
 
 ## Steps

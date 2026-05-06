@@ -128,9 +128,13 @@ shared_examples "login scenarios" do
 
     it "cannot browse annonymously" do
       visit "/"
+
+      screenshot_marker(label: "login-required")
       expect(page).to have_css(".login-welcome")
       expect(page).to have_css(".site-logo")
       find(".login-welcome .login-button").click
+
+      screenshot_marker(label: "login-form")
 
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
       login_form.fill(username: "john", password: "supersecurepassword").click_login

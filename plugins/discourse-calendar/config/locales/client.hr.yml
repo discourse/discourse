@@ -29,9 +29,6 @@ hr:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      event_description:
-        show_more: "Prikaži više"
-        show_less: "Prikaži manje"
       show_all: "Prikaži sve"
       add_to_calendar: "Dodaj u kalendar"
       created_by: "Napravio"

@@ -534,11 +534,7 @@ module ApplicationHelper
   end
 
   def custom_splash_screen_enabled?
-    return @custom_splash_screen_enabled if defined?(@custom_splash_screen_enabled)
-
-    @custom_splash_screen_enabled =
-      UpcomingChanges.enabled_for_user?(:enable_custom_splash_screen, current_user) &&
-        SiteSetting.splash_screen_image.is_a?(Upload)
+    @custom_splash_screen_enabled ||= SiteSetting.splash_screen_image.is_a?(Upload)
   end
 
   def splash_screen_image_animated?
@@ -777,6 +773,10 @@ module ApplicationHelper
     hash = crawler_post_schema_hash(post, topic)
     itemprop = hash[:itemprop]
     (itemprop.present? && itemprop != "comment") || hash[:data].present?
+  end
+
+  def crawler_post_emits_microdata?(post, topic)
+    post.is_first_post? || crawler_post_schema_hash(post, topic)[:itemscope]
   end
 
   def crawler_post_schema_skip?(post, topic)

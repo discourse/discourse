@@ -17,7 +17,7 @@ module Onebox
     end
 
     def oneboxed
-      return if @uri.nil?
+      return if @uri.nil? || @uri.host.nil?
       return if @uri.port && !Onebox.options.allowed_ports.include?(@uri.port)
       return if @uri.scheme && !Onebox.options.allowed_schemes.include?(@uri.scheme)
 

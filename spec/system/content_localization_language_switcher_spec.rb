@@ -6,6 +6,7 @@ describe "Content localization language switcher" do
 
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:switcher) { PageObjects::Components::DMenu.new(switcher_selector) }
+  let(:language_switcher) { PageObjects::Components::LanguageSwitcher.new }
 
   fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
 
@@ -106,10 +107,10 @@ describe "Content localization language switcher" do
     visit("/")
     expect(page.find(switcher_selector)).to have_content("EN")
 
-    select_language("ja")
+    language_switcher.select_language("ja")
     expect(page.find(switcher_selector)).to have_content("JA")
 
-    select_language("es")
+    language_switcher.select_language("es")
     expect(page.find(switcher_selector)).to have_content("ES")
   end
 
@@ -119,7 +120,7 @@ describe "Content localization language switcher" do
     visit("/")
     expect(topic_list).to have_content("Life strategies from The Art of War")
 
-    select_language("es")
+    language_switcher.select_language("es")
 
     expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
@@ -134,7 +135,7 @@ describe "Content localization language switcher" do
       expect(page.find("#navigation-bar")).to have_content(I18n.t("js.filters.latest.title"))
     end
 
-    select_language("es")
+    language_switcher.select_language("es")
 
     expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
@@ -147,7 +148,7 @@ describe "Content localization language switcher" do
 
     visit("/t/#{topic.id}")
 
-    select_language("ja")
+    language_switcher.select_language("ja")
 
     expect(topic_list).to have_content("孫子兵法からの人生戦略")
     I18n.with_locale(:ja) do
@@ -164,7 +165,7 @@ describe "Content localization language switcher" do
       )
     end
 
-    select_language("es")
+    language_switcher.select_language("es")
 
     expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
@@ -185,16 +186,11 @@ describe "Content localization language switcher" do
     expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
 
     switcher.collapse
-    select_language("ja")
+    language_switcher.select_language("ja")
     switcher.expand
 
     expect(page).to have_css("[data-menu-option-id='ja'].--selected")
     expect(page).to have_no_css("[data-menu-option-id='en'].--selected")
     expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
-  end
-
-  def select_language(locale)
-    switcher.expand
-    switcher.option("[data-menu-option-id='#{locale}']").click
   end
 end

@@ -29,9 +29,6 @@ nb_NO:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      event_description:
-        show_more: "Vis mer"
-        show_less: "Vis mindre"
       show_all: "Vis alle"
       bulk_invite: "Bulk invitasjon"
       bulk_invite_modal:

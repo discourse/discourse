@@ -115,7 +115,7 @@ el:
     track_selector:
       reset_trigger: "έναρξη"
       skip_trigger: "παράλειψη"
-      help_trigger: "βοήθεια"
+      help_trigger: "εμφάνιση βοήθειας"
       random_mention:
         reply: |-
           Γεια σας! Για να μάθετε τι μπορώ να κάνω, πείτε `@%{discobot_username} %{help_trigger}`.

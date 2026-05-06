@@ -17,9 +17,6 @@ ar:
     topic_voting_show_votes_on_profile: 'هل تريد السماح للأعضاء برؤية أصواتهم في موجز النشاط؟'
     topic_voting_alert_votes_left: 'تنبيه المستخدم عندما يتبقى هذا العدد من الأصوات'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "عرض أسماء المصوِّتين"
     votes_moved:
       zero: "تم نقل %{count} من الأصوات."
       one: "تم نقل صوت واحد."

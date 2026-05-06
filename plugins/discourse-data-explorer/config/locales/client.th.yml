@@ -10,8 +10,6 @@ th:
       default_query: "ค่าเริ่มต้น"
       or: "หรือ"
       create: "สร้าง"
-      ai:
-        optional: "ทางเลือก"
       help:
         label: "ช่วยเหลือ"
       schema:

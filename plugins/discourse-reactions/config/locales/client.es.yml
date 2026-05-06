@@ -20,17 +20,10 @@ es:
         reaction_group:
           one: "%{reaction}: %{count} usuario"
           other: "%{reaction}: %{count} usuarios"
-      reaction:
-        forbidden: "No tienes permiso para reaccionar ni cambiar tu reacción a esta publicación."
       picker:
         react_with: "Reacciona a esta publicación con: %{reaction}"
         cant_remove_reaction: "Ya no puedes eliminar tu reacción"
         remove_reaction: "Eliminar la reacción %{reaction}"
-      users_popup:
-        all: "Todo"
-        title:
-          one: "%{count} Reacción"
-          other: "%{count} Reacciones"
       counter:
         aria_label:
           one: "%{count} reacción"

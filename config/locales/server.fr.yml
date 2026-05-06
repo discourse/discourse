@@ -3252,7 +3252,6 @@ fr:
         Votre réponse a été envoyée depuis une adresse bloquée. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-mail rejeté - E-mail non autorisé"
-      subject_template: "[%{email_prefix}] Problème d'e-mail - E-mail bloqué"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre e-mail à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -3417,7 +3416,6 @@ fr:
         Vous n'êtes pas autorisé(e) à répondre au sujet. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-mail rejeté - Réponse au résumé"
-      subject_template: "[%{email_prefix}] Problème d'e-mail - Réponse au résumé"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre e-mail à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -3536,7 +3534,6 @@ fr:
       text_body_template: "Le paramètre « download_remote_images_to_local » a été désactivé car la limite (« download_remote_images_threshold ») d'espace disque utilisé par les images vient d'être dépassée."
     new_user_of_the_month:
       title: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"
-      subject_template: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"
       text_body_template: |
         Félicitations, vous avez reçu le prix du **nouveau membre du mois de %{month_year}**. :trophy:
 
@@ -3854,6 +3851,7 @@ fr:
     account_exists:
       title: "Le compte existe déjà"
       subject_template: "[%{email_prefix}] Le compte existe déjà"
+      subject_template_improved: "Le compte existe déjà"
       text_body_template: |
         Vous venez d'essayer de créer un compte sur %{site_name}, ou d'essayer de changer l'adresse e-mail d'un compte vers %{email}. Cependant, un compte existe déjà pour %{email}.
 
@@ -3865,6 +3863,7 @@ fr:
     account_second_factor_disabled:
       title: "Authentification à deux facteurs désactivée"
       subject_template: "[%{email_prefix}] Authentification à deux facteurs désactivée"
+      subject_template_improved: "Authentification à deux facteurs désactivée"
     digest:
       why: "Un bref résumé de %{site_link} depuis %{since}"
       since_last_visit: "Depuis votre dernière visite"
@@ -3878,6 +3877,7 @@ fr:
       popular_posts: "Messages populaires"
       more_new: "Nouveau pour vous"
       subject_template: "[%{email_prefix}] Résumé"
+      subject_template_improved: "Résumé"
       unsubscribe: "Ce résumé vous est envoyé par %{site_link} lorsque vous ne vous connectez pas pendant un moment. Vous pouvez %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
       your_email_settings: "vos préférences d'e-mail"
       click_here: "cliquez ici"
@@ -3898,6 +3898,7 @@ fr:
       title: "Se connecter avec un lien"
       preview: "Se connecter avec un lien."
       subject_template: "[%{email_prefix}] Se connecter avec un lien"
+      subject_template_improved: "Se connecter avec un lien"
       text_body_template: |
         Voici votre lien pour vous connecter à [%{site_name}](%{base_url}).
 
@@ -3908,7 +3909,6 @@ fr:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Définir le mot de passe"
-      subject_template: "[%{email_prefix}] Définir le mot de passe"
       text_body_template: |
         Quelqu'un a demandé un mot de passe pour votre compte sur [%{site_name}](%{base_url}). Vous pouvez vous identifier en utilisant un service en ligne pris en charge (Google, Facebook, etc.) qui est associé avec cette adresse e-mail.
 
@@ -3920,6 +3920,7 @@ fr:
     admin_login:
       title: "Connexion administrateur"
       subject_template: "[%{email_prefix}] Connexion"
+      subject_template_improved: "Connexion"
       text_body_template: |
         Quelqu'un a demandé à se connecter sur votre compte sur [%{site_name}](%{base_url}).
 
@@ -3930,7 +3931,6 @@ fr:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Compte créé"
-      subject_template: "[%{email_prefix}] Votre nouveau compte"
       text_body_template: |
         Un nouveau compte a été créé pour vous sur %{site_name}
 
@@ -4043,7 +4043,6 @@ fr:
         Si le lien n'est pas cliquable, essayez de le copier-coller dans la barre d'adresse de votre navigateur.
     suspicious_login:
       title: "Notification de nouvelle connexion"
-      subject_template: "[%{site_name}] Nouvelle connexion depuis %{location}"
       text_body_template: |
         Bonjour,
 

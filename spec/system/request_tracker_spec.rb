@@ -22,7 +22,14 @@ describe "Request tracking" do
           visit "/"
           try_until_success do
             CachedCounting.flush
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_logged_in_total",
+                "page_view_crawler_total",
+              ),
+            ).to eq(
               "page_view_anon_total" => 1,
               "page_view_anon_browser_total" => 1,
               "page_view_logged_in_total" => 0,
@@ -45,7 +52,14 @@ describe "Request tracking" do
 
           try_until_success do
             CachedCounting.flush
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_logged_in_total",
+                "page_view_crawler_total",
+              ),
+            ).to eq(
               "page_view_anon_total" => 2,
               "page_view_anon_browser_total" => 2,
               "page_view_logged_in_total" => 0,
@@ -73,7 +87,14 @@ describe "Request tracking" do
 
           try_until_success do
             CachedCounting.flush
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_logged_in_total",
+                "page_view_crawler_total",
+              ),
+            ).to eq(
               "page_view_anon_total" => 0,
               "page_view_anon_browser_total" => 0,
               "page_view_logged_in_total" => 0,
@@ -95,7 +116,15 @@ describe "Request tracking" do
 
           try_until_success do
             CachedCounting.flush
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_logged_in_total",
+                "page_view_crawler_total",
+                "page_view_logged_in_browser_total",
+              ),
+            ).to eq(
               "page_view_anon_total" => 0,
               "page_view_anon_browser_total" => 0,
               "page_view_logged_in_total" => 1,
@@ -119,7 +148,15 @@ describe "Request tracking" do
           find(".nav-item_categories a").click
           try_until_success do
             CachedCounting.flush
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_logged_in_total",
+                "page_view_crawler_total",
+                "page_view_logged_in_browser_total",
+              ),
+            ).to eq(
               "page_view_anon_total" => 0,
               "page_view_anon_browser_total" => 0,
               "page_view_logged_in_total" => 2,
@@ -149,7 +186,15 @@ describe "Request tracking" do
             CachedCounting.flush
 
             # Does not count error as a pageview
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "http_4xx_total",
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_logged_in_total",
+                "page_view_crawler_total",
+              ),
+            ).to eq(
               "http_4xx_total" => 1,
               "page_view_anon_total" => 0,
               "page_view_anon_browser_total" => 0,
@@ -165,7 +210,15 @@ describe "Request tracking" do
 
       try_until_success do
         CachedCounting.flush
-        expect(ApplicationRequest.stats).to include(
+        expect(
+          ApplicationRequest.stats.slice(
+            "http_4xx_total",
+            "page_view_anon_total",
+            "page_view_anon_browser_total",
+            "page_view_logged_in_total",
+            "page_view_crawler_total",
+          ),
+        ).to eq(
           "http_4xx_total" => 1,
           "page_view_anon_total" => 1,
           "page_view_anon_browser_total" => 1,
@@ -184,7 +237,14 @@ describe "Request tracking" do
             CachedCounting.flush
 
             # Does not count error as a pageview
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_logged_in_total",
+                "page_view_crawler_total",
+              ),
+            ).to eq(
               "page_view_anon_total" => 1,
               "page_view_anon_browser_total" => 1,
               "page_view_logged_in_total" => 0,
@@ -211,7 +271,15 @@ describe "Request tracking" do
         CachedCounting.flush
 
         # Does not count error as a pageview
-        expect(ApplicationRequest.stats).to include(
+        expect(
+          ApplicationRequest.stats.slice(
+            "http_4xx_total",
+            "page_view_anon_total",
+            "page_view_anon_browser_total",
+            "page_view_logged_in_total",
+            "page_view_crawler_total",
+          ),
+        ).to eq(
           "http_4xx_total" => 1,
           "page_view_anon_total" => 0,
           "page_view_anon_browser_total" => 0,
@@ -224,7 +292,15 @@ describe "Request tracking" do
 
       try_until_success do
         CachedCounting.flush
-        expect(ApplicationRequest.stats).to include(
+        expect(
+          ApplicationRequest.stats.slice(
+            "http_4xx_total",
+            "page_view_anon_total",
+            "page_view_anon_browser_total",
+            "page_view_logged_in_total",
+            "page_view_crawler_total",
+          ),
+        ).to eq(
           "http_4xx_total" => 1,
           "page_view_anon_total" => 1,
           "page_view_anon_browser_total" => 1,
@@ -246,7 +322,14 @@ describe "Request tracking" do
             CachedCounting.flush
 
             # Does not count error as a pageview
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_logged_in_total",
+                "page_view_crawler_total",
+              ),
+            ).to eq(
               "page_view_anon_total" => 1,
               "page_view_anon_browser_total" => 1,
               "page_view_logged_in_total" => 0,
@@ -273,7 +356,15 @@ describe "Request tracking" do
             visit "/"
             try_until_success do
               CachedCounting.flush
-              expect(ApplicationRequest.stats).to include(
+              expect(
+                ApplicationRequest.stats.slice(
+                  "page_view_anon_total",
+                  "page_view_anon_browser_total",
+                  "page_view_anon_browser_beacon_total",
+                  "page_view_logged_in_total",
+                  "page_view_crawler_total",
+                ),
+              ).to eq(
                 "page_view_anon_total" => 1,
                 "page_view_anon_browser_total" => 1,
                 "page_view_anon_browser_beacon_total" => 1,
@@ -307,7 +398,15 @@ describe "Request tracking" do
             find(".nav-item_categories a").click
 
             CachedCounting.flush
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_anon_browser_beacon_total",
+                "page_view_logged_in_total",
+                "page_view_crawler_total",
+              ),
+            ).to eq(
               "page_view_anon_total" => 2,
               "page_view_anon_browser_total" => 2,
               "page_view_anon_browser_beacon_total" => 2,
@@ -344,7 +443,16 @@ describe "Request tracking" do
 
             try_until_success do
               CachedCounting.flush
-              expect(ApplicationRequest.stats).to include(
+              expect(
+                ApplicationRequest.stats.slice(
+                  "page_view_anon_total",
+                  "page_view_anon_browser_total",
+                  "page_view_logged_in_total",
+                  "page_view_logged_in_browser_total",
+                  "page_view_logged_in_browser_beacon_total",
+                  "page_view_crawler_total",
+                ),
+              ).to eq(
                 "page_view_anon_total" => 0,
                 "page_view_anon_browser_total" => 0,
                 "page_view_logged_in_total" => 1,
@@ -379,7 +487,16 @@ describe "Request tracking" do
           DiscourseEvent.track_events do
             find(".nav-item_categories a").click
             CachedCounting.flush
-            expect(ApplicationRequest.stats).to include(
+            expect(
+              ApplicationRequest.stats.slice(
+                "page_view_anon_total",
+                "page_view_anon_browser_total",
+                "page_view_logged_in_total",
+                "page_view_logged_in_browser_total",
+                "page_view_logged_in_browser_beacon_total",
+                "page_view_crawler_total",
+              ),
+            ).to eq(
               "page_view_anon_total" => 0,
               "page_view_anon_browser_total" => 0,
               "page_view_logged_in_total" => 2,
@@ -416,7 +533,15 @@ describe "Request tracking" do
 
             try_until_success do
               CachedCounting.flush
-              expect(ApplicationRequest.stats).to include(
+              expect(
+                ApplicationRequest.stats.slice(
+                  "page_view_anon_total",
+                  "page_view_anon_browser_total",
+                  "page_view_anon_browser_beacon_total",
+                  "page_view_logged_in_total",
+                  "page_view_crawler_total",
+                ),
+              ).to eq(
                 "page_view_anon_total" => 0,
                 "page_view_anon_browser_total" => 0,
                 "page_view_anon_browser_beacon_total" => 0,
@@ -628,6 +753,8 @@ describe "Request tracking" do
       end
 
       context "when anonymous" do
+        let(:discovery) { PageObjects::Pages::Discovery.new }
+
         it "tracks topic views correctly via beacon" do
           visit "/"
 
@@ -649,14 +776,14 @@ describe "Request tracking" do
 
           beacon_event =
             all_events
-              .select { |e| e[:event_name] == :beacon_browser_pageview }
-              .find { |e| e[:params].last[:topic_id] == topic.id }
+              .select { |event| event[:event_name] == :beacon_browser_pageview }
+              .find { |event| event[:params].last[:topic_id] == topic.id }
               &.dig(:params)
               &.last
           non_beacon_event =
             all_events
-              .select { |e| e[:event_name] == :browser_pageview }
-              .find { |e| e[:params].last[:topic_id] == topic.id }
+              .select { |event| event[:event_name] == :browser_pageview }
+              .find { |event| event[:params].last[:topic_id] == topic.id }
               &.dig(:params)
               &.last
 
@@ -671,7 +798,151 @@ describe "Request tracking" do
             expect(event[:session_id]).to be_present
           end
         end
+
+        it "tracks the previous URL as referrer on browser back and forward navigation via beacon" do
+          visit "/"
+          wait_for_beacon_count(1)
+
+          discovery.topic_list.visit_topic(topic)
+          wait_for_beacon_count(2)
+
+          events =
+            DiscourseEvent.track_events(:beacon_browser_pageview) do
+              page.go_back
+              wait_for_beacon_count(3)
+            end
+
+          beacon_back_event = events.first[:params].last
+
+          expect(beacon_back_event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
+          expect(beacon_back_event[:referrer]).to eq(topic.url)
+
+          events =
+            DiscourseEvent.track_events(:beacon_browser_pageview) do
+              page.go_forward
+              wait_for_beacon_count(4)
+            end
+
+          beacon_forward_event = events.first[:params].last
+
+          expect(beacon_forward_event[:url]).to eq(topic.url)
+          expect(beacon_forward_event[:referrer]).to eq("#{Discourse.base_url}/")
+        end
+
+        def wait_for_beacon_count(count)
+          try_until_success do
+            CachedCounting.flush
+            expect(ApplicationRequest.stats["page_view_anon_browser_beacon_total"]).to eq(count)
+          end
+        end
       end
+    end
+  end
+
+  describe "BPV log entries" do
+    fab!(:user)
+    fab!(:topic)
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.use_beacon_for_browser_page_views = true
+      Middleware::RequestTracker.bpv_notifications_enabled = true
+    end
+
+    after { Middleware::RequestTracker.bpv_notifications_enabled = false }
+
+    def common_fields(controller:, action:, path:, username:, url:)
+      {
+        "controller" => controller,
+        "action" => action,
+        "method" => "POST",
+        "path" => path,
+        "status" => 204,
+        "format" => "json",
+        "tracked" => true,
+        "ip" => be_present,
+        "url" => url,
+        "session_id" => be_present,
+        "username" => username ? eq(username) : be_blank,
+      }
+    end
+
+    shared_examples "logs piggyback and beacon entries on home and topic" do
+      it "writes piggyback and beacon entries on each navigation" do
+        home_url = "#{Discourse.base_url_no_prefix}/"
+
+        home_entries =
+          capture_log_entries(controller: "PageviewController", entries: 2) { visit "/" }
+
+        home_piggyback = home_entries.find { |e| e["action"] == "piggyback" }
+        home_beacon = home_entries.find { |e| e["action"] == "beacon" }
+
+        expect(home_piggyback).to include(
+          common_fields(
+            controller: "PageviewController",
+            action: "piggyback",
+            path: "/pageview",
+            username: expected_username,
+            url: home_url,
+          ),
+        )
+        expect(home_beacon).to include(
+          common_fields(
+            controller: "PageviewController",
+            action: "beacon",
+            path: "/srv/pv",
+            username: expected_username,
+            url: home_url,
+          ),
+        )
+
+        topic_entries =
+          capture_log_entries(controller: "PageviewController", entries: 2) do
+            find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
+          end
+
+        topic_piggyback = topic_entries.find { |e| e["action"] == "piggyback" }
+        topic_beacon = topic_entries.find { |e| e["action"] == "beacon" }
+
+        expect(topic_piggyback).to include(
+          common_fields(
+            controller: "PageviewController",
+            action: "piggyback",
+            path: "/pageview",
+            username: expected_username,
+            url: topic.url,
+          ),
+          "topic_id" => topic.id,
+          "referrer" => home_url,
+        )
+        expect(topic_beacon).to include(
+          common_fields(
+            controller: "PageviewController",
+            action: "beacon",
+            path: "/srv/pv",
+            username: expected_username,
+            url: topic.url,
+          ),
+          "topic_id" => topic.id,
+          "referrer" => home_url,
+        )
+
+        all_session_ids = (home_entries + topic_entries).map { |e| e["session_id"] }.uniq
+        expect(all_session_ids.size).to eq(1)
+      end
+    end
+
+    context "when anonymous" do
+      let(:expected_username) { nil }
+
+      include_examples "logs piggyback and beacon entries on home and topic"
+    end
+
+    context "when logged in" do
+      before { sign_in(user) }
+      let(:expected_username) { user.username }
+
+      include_examples "logs piggyback and beacon entries on home and topic"
     end
   end
 end

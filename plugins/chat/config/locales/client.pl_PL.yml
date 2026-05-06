@@ -331,11 +331,6 @@ pl_PL:
         other: "Masz %{count} nieprzeczytanych dyskusji"
       scroll_to_bottom: "Przewiń na dół"
       scroll_to_new_messages: "Zobacz nowe wiadomości"
-      new_messages:
-        one: "%{count} nowa wiadomość"
-        few: "%{count} nowe wiadomości"
-        many: "%{count} nowych wiadomości"
-        other: "%{count} nowych wiadomości"
       sound:
         title: "Dźwięk powiadomienia czatu na pulpicie"
       sounds:

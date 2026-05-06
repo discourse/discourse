@@ -153,7 +153,15 @@ class Group < ActiveRecord::Base
 
     return [] if lower_group.blank? || upper_group.blank?
 
-    (lower_group..upper_group).to_a & AUTO_GROUPS.values
+    (lower_group..upper_group).to_a &
+      (
+        AUTO_GROUPS.values -
+          [
+            Group::AUTO_GROUPS[:anonymous],
+            Group::AUTO_GROUPS[:logged_in_users],
+            Group::AUTO_GROUPS[:everyone],
+          ]
+      )
   end
 
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
@@ -167,7 +175,16 @@ class Group < ActiveRecord::Base
           groups = groups.order(order) if order
           groups = groups.order("groups.name ASC") unless order&.include?("name")
 
-          groups = groups.where("groups.id > 0") if !opts || !opts[:include_everyone]
+          opts ||= {}
+
+          if !opts[:include_pseudogroups]
+            groups = groups.where("groups.id > 0") unless opts[:include_everyone]
+            groups =
+              groups.where(
+                "groups.id NOT IN (:ids)",
+                ids: [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]],
+              )
+          end
 
           if !user&.admin
             is_staff = !!user&.staff?
@@ -222,7 +239,16 @@ class Group < ActiveRecord::Base
         Proc.new { |user, order, opts|
           groups = self.order(order || "name ASC")
 
-          groups = groups.where("groups.id > 0") if !opts || !opts[:include_everyone]
+          opts ||= {}
+
+          if !opts[:include_pseudogroups]
+            groups = groups.where("groups.id > 0") unless opts[:include_everyone]
+            groups =
+              groups.where(
+                "groups.id NOT IN (:ids)",
+                ids: [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]],
+              )
+          end
 
           if !user&.admin
             is_staff = !!user&.staff?

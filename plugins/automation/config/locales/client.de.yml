@@ -215,9 +215,6 @@ de:
               description: "Optional, beschränke die Auslösung auf Beiträge mit diesen Merkmalen"
           created: Erstellt
           edited: Bearbeitet
-          topics: Themen (alle Kategorien)
-          personal_messages: Nur persönliche Nachrichten
-          public_topics: Themen (nur öffentliche Kategorien)
           with_images: Bilder
           with_links: Links
           with_code: Code

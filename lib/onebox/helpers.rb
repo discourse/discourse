@@ -99,14 +99,19 @@ module Onebox
 
         size_bytes = Onebox.options.max_download_kb * 1024
         http.request(request) do |response|
-          if cookie = response.get_fields("set-cookie")
-            headers["Cookie"] = cookie.join("; ") if allow_cross_domain_cookies
-            # HACK: If this breaks again in the future, use HTTP::CookieJar from gem 'http-cookie'
-            # See test: it "does not send cookies to the wrong domain"
-            redir_header = { "Cookie" => cookie.join("; ") }
-          end
+          if set_cookies = response.get_fields("set-cookie")
+            cookie_header =
+              set_cookies.map { |c| c.split(";", 2).first.strip }.reject(&:empty?).join("; ")
 
-          redir_header = nil unless redir_header.is_a? Hash
+            headers["Cookie"] = cookie_header if allow_cross_domain_cookies
+
+            if redirect_location = response["location"]
+              redirect_host = Addressable::URI.parse(redirect_location).host
+              if redirect_host.nil? || redirect_host == uri.host
+                redirect_header = { "Cookie" => cookie_header }
+              end
+            end
+          end
 
           code = response.code.to_i
           unless code === 200
@@ -117,7 +122,7 @@ module Onebox
                 response["location"],
                 redirect_limit: redirect_limit - 1,
                 domain: "#{uri.scheme}://#{uri.host}",
-                headers: allow_cross_domain_cookies ? headers : redir_header,
+                headers: allow_cross_domain_cookies ? headers : redirect_header,
                 allow_cross_domain_cookies: allow_cross_domain_cookies,
               )
             )

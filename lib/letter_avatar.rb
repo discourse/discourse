@@ -71,6 +71,11 @@ class LetterAvatar
 
       filename = fullsize_path(identity)
 
+      # Use NimbusSans-Regular, except for macOS where it is unavailable, use Helvetica there
+      font = RbConfig::CONFIG["host_os"].match?(/darwin/i) ? "Helvetica" : "NimbusSans-Regular"
+      # and adjust vertical offset accordingly
+      vertical_offset = font == "Helvetica" ? 26 : 34
+
       instructions = %W[
         -size
         #{FULLSIZE}x#{FULLSIZE}
@@ -80,11 +85,11 @@ class LetterAvatar
         -fill
         #FFFFFFCC
         -font
-        NimbusSans-Regular
+        #{font}
         -gravity
         Center
         -annotate
-        -0+34
+        -0+#{vertical_offset}
         #{letter}
         -depth
         8

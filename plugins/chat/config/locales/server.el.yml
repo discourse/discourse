@@ -124,6 +124,9 @@ el:
         direct: "%{username} σας επισήμανε σε προσωπική συνομιλία"
         other_type: "%{username} επισήμανε %{identifier} σε προσωπική συνομιλία"
       new_direct_chat_message: "%{username} έστειλε ένα μήνυμα σε προσωπική συνομιλία"
+    actions:
+      chat_reply:
+        title: Απάντηση
   discourse_automation:
     scriptables:
       send_chat_message:

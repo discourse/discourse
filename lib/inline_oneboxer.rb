@@ -58,6 +58,10 @@ class InlineOneboxer
       end
     end
 
+    if data = Oneboxer.inline_data_for(url)
+      return onebox_for(url, data[:title], opts, css_class: data[:css_class])
+    end
+
     always_allow = SiteSetting.enable_inline_onebox_on_all_domains
     allowed_domains = SiteSetting.allowed_inline_onebox_domains&.split("|") unless always_allow
 
@@ -105,7 +109,7 @@ class InlineOneboxer
 
   private
 
-  def self.onebox_for(url, title, opts)
+  def self.onebox_for(url, title, opts, css_class: nil)
     title = title && Emoji.gsub_emoji_to_unicode(title)
     if title && opts[:post_number]
       title += " - "
@@ -126,6 +130,7 @@ class InlineOneboxer
     title = WordWatcher.censor_text(title) if title.present?
 
     onebox = { url: url, title: title }
+    onebox[:css_class] = css_class if css_class.present?
 
     Discourse.cache.write(cache_key(url), onebox, expires_in: 1.day) if !opts[:skip_cache]
     onebox

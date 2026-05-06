@@ -6,6 +6,7 @@ export default class CategoryTypeChooser extends Service {
 
   _selection = null;
   _setupComplete = false;
+  _allTypes = null;
 
   get isEnabled() {
     return this.siteSettings.enable_simplified_category_creation;
@@ -15,13 +16,29 @@ export default class CategoryTypeChooser extends Service {
     return this._selection !== null || this._setupComplete;
   }
 
-  choose(typeId, typeName, typeSchema, typeTitle, count) {
-    this._selection = { type: typeId, typeName, typeSchema, typeTitle, count };
-    this._setupComplete = true;
+  get allTypes() {
+    return this._allTypes;
   }
 
-  currentSelection() {
+  set allTypes(types) {
+    this._allTypes = types;
+  }
+
+  get currentSelection() {
     return this._selection;
+  }
+
+  choose(type, count) {
+    this._selection = {
+      type: type.id,
+      typeName: type.name,
+      typeSchema: type.configuration_schema,
+      typeTitle: type.title,
+      visible: type.visible,
+      available: type.available,
+      count,
+    };
+    this._setupComplete = true;
   }
 
   reset() {

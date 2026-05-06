@@ -12,7 +12,6 @@ es:
           poll: "Encuesta de Discourse"
   js:
     poll:
-      title: "Encuesta"
       dynamic:
         enabled_hint: "Se pueden añadir o eliminar opciones."
       voters:

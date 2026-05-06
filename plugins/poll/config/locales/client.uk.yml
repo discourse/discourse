@@ -12,7 +12,6 @@ uk:
           poll: "Опитування Discourse"
   js:
     poll:
-      title: "Опитування"
       dynamic:
         enabled_hint: "Опції можна додавати або видаляти."
       voters:

@@ -250,6 +250,39 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.dom(".form-kit__container-title").doesNotExist();
   });
 
+  test("@showOptional", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            as |field|
+          ><field.Control /></form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__container-optional").exists();
+
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            @showOptional={{false}}
+            as |field|
+          ><field.Control /></form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__container-optional").doesNotExist();
+  });
+
   test("@format", async function (assert) {
     await render(
       <template>
@@ -270,14 +303,14 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       .dom(".form-kit__field.--full")
       .exists("it applies the --full class to the field");
     assert
-      .dom(".form-kit__container-description.--full")
-      .exists("it applies the --full class to the description");
+      .dom(".form-kit__container-description:not([class*='--'])")
+      .exists("it does not apply a format class to the description");
     assert
-      .dom(".form-kit__container-title.--full")
-      .exists("it applies the --full class to the title");
+      .dom(".form-kit__container-title:not([class*='--'])")
+      .exists("it does not apply a format class to the title");
   });
 
-  test("@descriptionFormat", async function (assert) {
+  test("@labelFormat", async function (assert) {
     await render(
       <template>
         <Form as |form|>
@@ -286,8 +319,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo"
             @title="Foo"
             @description="foo description"
-            @format="full"
-            @descriptionFormat="large"
+            @format="large"
+            @labelFormat="full"
             as |field|
           ><field.Control /></form.Field>
         </Form>
@@ -295,35 +328,14 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     );
 
     assert
-      .dom(".form-kit__field.--full")
-      .exists("it applies the --full class to the field");
+      .dom(".form-kit__field.--large")
+      .exists("it applies the --large class to the field");
     assert
-      .dom(".form-kit__container-description.--large")
-      .exists("it applies the --large class to the description");
-  });
-
-  test("@titleFormat", async function (assert) {
-    await render(
-      <template>
-        <Form as |form|>
-          <form.Field
-            @type="input"
-            @name="foo"
-            @title="Foo"
-            @format="full"
-            @titleFormat="large"
-            as |field|
-          ><field.Control /></form.Field>
-        </Form>
-      </template>
-    );
-
+      .dom(".form-kit__container-title.--full")
+      .exists("it applies the --full class to the title");
     assert
-      .dom(".form-kit__field.--full")
-      .exists("it applies the --full class to the field");
-    assert
-      .dom(".form-kit__container-title.--large")
-      .exists("it applies the --large class to the title");
+      .dom(".form-kit__container-description.--full")
+      .exists("it applies the --full class to the description");
   });
 
   test("@onSet", async function (assert) {

@@ -19,8 +19,6 @@ pt_BR:
         react_with: "Reaja a esta postagem com: %{reaction}"
         cant_remove_reaction: "Você não pode mais remover sua reação"
         remove_reaction: "Remova esta %{reaction} reação"
-      users_popup:
-        all: "Todos"
       main_reaction:
         add: "Curtir esta postagem"
         remove: "Remova essa curtida"

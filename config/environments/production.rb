@@ -28,7 +28,7 @@ Discourse::Application.configure do
     config.action_mailer.smtp_settings = smtp_settings
   else
     config.action_mailer.delivery_method = :sendmail
-    config.action_mailer.sendmail_settings = { arguments: "-i" }
+    config.action_mailer.sendmail_settings = GlobalSetting.sendmail_settings
   end
 
   # Send deprecation notices to registered listeners

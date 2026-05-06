@@ -213,6 +213,34 @@ RSpec.describe DiscourseAi::Completions::Dialects::Gemini do
       expect(translated[:messages].last.dig(:parts, 0, :text).length).to be <
         context.long_message_text(length: 5_000).length
     end
+
+    it "renders converted document uploads as text parts" do
+      model.update!(allowed_attachment_types: ["docx"])
+      converted_text = "Uploaded document: sample.docx (13 Bytes)\n\nConverted text"
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          nil,
+          messages: [{ type: :user, content: ["Read this: ", { upload_id: 123 }] }],
+        )
+
+      allow(DiscourseAi::Completions::UploadEncoder).to receive(:encode).and_return(
+        [
+          {
+            kind: :document,
+            filename: "sample.docx",
+            mime_type: "text/plain",
+            text: converted_text,
+            converted_from: "docx",
+          },
+        ],
+      )
+
+      translated = described_class.new(prompt, model).translate
+      user_message = translated[:messages].find { |msg| msg[:role] == "user" }
+
+      expect(user_message[:parts]).to eq([{ text: "Read this: " }, { text: converted_text }])
+      expect(user_message[:parts]).not_to include(hash_including(inlineData: anything))
+    end
   end
 
   describe "#tools" do

@@ -71,9 +71,6 @@ id:
     group_timezones:
       search: "Cari..."
     discourse_post_event:
-      event_description:
-        show_more: "Tampilkan lebih banyak"
-        show_less: "Tampilkan lebih sedikit"
       bulk_invite_modal:
         confirm: "konfirmasi"
         success: "File telah sukses diunggah, anda akan mendapat pesan pemberitahuan saat proses telah selesai."

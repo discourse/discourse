@@ -33,7 +33,6 @@ nl:
       already_voted: "Je kunt maar één keer stemmen per vraag."
       user_over_limit: "Je mag het aantal stemmen voor je vertrouwensniveau niet overschrijden."
       one_vote_per_post: "Je kunt maar één keer stemmen per bericht."
-      toggle_voters: "Weergeven wie er heeft gestemd"
     last_answer_lowercase: laatste antwoord
     answer_lowercase:
       one: antwoord
@@ -55,8 +54,6 @@ nl:
           edit: "bewerken"
           cancel: "annuleren"
           add: "Voeg een reactie toe"
-          actions:
-            delete: "Reactie verwijderen"
           show:
             one: Nog %{count} reactie weergeven
             other: Nog %{count} reacties weergeven

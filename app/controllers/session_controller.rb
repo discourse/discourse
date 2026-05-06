@@ -56,9 +56,8 @@ class SessionController < ApplicationController
     if result.second_factor_auth_skipped?
       data = result.data
       if data[:logout]
-        params[:return_url] = data[:return_sso_url]
         PushNotificationPusher.clear_subscriptions(current_user) if current_user
-        destroy
+        destroy(trusted_return_url: data[:return_sso_url])
         return
       end
 
@@ -677,8 +676,18 @@ class SessionController < ApplicationController
     end
   end
 
-  def destroy
-    redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
+  def destroy(trusted_return_url: nil)
+    return_url = params[:return_url].presence
+    if return_url
+      begin
+        uri = URI(return_url)
+        return_url = nil if uri.host.present? || uri.scheme.present? || !uri.path&.start_with?("/")
+      rescue URI::Error, ArgumentError
+        return_url = nil
+      end
+    end
+
+    redirect_url = trusted_return_url || return_url || SiteSetting.logout_redirect.presence
 
     redirect_url ||=
       if SiteSetting.login_required

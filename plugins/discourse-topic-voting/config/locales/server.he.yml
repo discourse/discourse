@@ -16,9 +16,6 @@ he:
     topic_voting_show_votes_on_profile: 'לאפשר למשתמשים לראות את ההצבעות שלהם בהזנת הפעילות?'
     topic_voting_alert_votes_left: 'להודיע למשתמש כאשר נותרו לו מספר מסוים של הצבעות'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "להציג מי המצביעים"
     votes_moved:
       one: "הצבעה הועברה."
       two: "%{count} הצבעות הועברו."

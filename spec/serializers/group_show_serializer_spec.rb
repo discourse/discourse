@@ -56,6 +56,19 @@ RSpec.describe GroupShowSerializer do
         described_class.new(group, scope: Guardian.new, root: false, owner_group_ids: [group.id])
       expect(subject.as_json[:automatic_membership_email_domains]).to eq(nil)
     end
+
+    it "should include email domains for moderator when moderators_manage_groups is enabled" do
+      SiteSetting.moderators_manage_groups = true
+      moderator_guardian = Fabricate(:moderator).guardian
+      subject =
+        described_class.new(
+          group,
+          scope: moderator_guardian,
+          root: false,
+          owner_group_ids: [group.id],
+        )
+      expect(subject.as_json[:automatic_membership_email_domains]).to eq("ilovediscourse.com")
+    end
   end
 
   describe "admin only fields" do
@@ -137,8 +150,12 @@ RSpec.describe GroupShowSerializer do
         expect(serializer.as_json[:regular_category_ids]).to eq([])
         expect(serializer.as_json[:muted_category_ids]).to eq([])
 
-        expect(serializer.as_json[:watching_tags]).to eq([tag1.name])
-        expect(serializer.as_json[:tracking_tags]).to eq([tag2.name])
+        expect(serializer.as_json[:watching_tags]).to eq(
+          [{ id: tag1.id, name: tag1.name, slug: tag1.slug }],
+        )
+        expect(serializer.as_json[:tracking_tags]).to eq(
+          [{ id: tag2.id, name: tag2.name, slug: tag2.slug }],
+        )
         expect(serializer.as_json[:watching_first_post_tags]).to eq([])
         expect(serializer.as_json[:regular_tags]).to eq([])
         expect(serializer.as_json[:muted_tags]).to eq([])

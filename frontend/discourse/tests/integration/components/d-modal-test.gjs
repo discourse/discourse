@@ -154,6 +154,39 @@ module("Integration | Component | d-modal", function (hooks) {
     );
   });
 
+  test("beforeClose can abort closing", async function (assert) {
+    let allowClose = false;
+    const closeModal = () => assert.step("closeModal");
+    const beforeClose = ({ initiatedBy }) => {
+      assert.strictEqual(initiatedBy, "initiatedByCloseButton");
+      assert.step("beforeClose");
+      return allowClose;
+    };
+
+    await render(
+      <template>
+        <DModal
+          @inline={{true}}
+          @closeModal={{closeModal}}
+          @beforeClose={{beforeClose}}
+        />
+      </template>
+    );
+
+    await click(".d-modal .modal-close");
+    assert.verifySteps(
+      ["beforeClose"],
+      "closeModal is not called when beforeClose returns false"
+    );
+
+    allowClose = true;
+    await click(".d-modal .modal-close");
+    assert.verifySteps(
+      ["beforeClose", "closeModal"],
+      "closeModal is called when beforeClose returns true"
+    );
+  });
+
   test("header and body classes", async function (assert) {
     await render(
       <template>

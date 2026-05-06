@@ -19,8 +19,6 @@ hu:
         react_with: "Reagálás erre a bejegyzésre ezzel: %{reaction}"
         cant_remove_reaction: "Nem lehet eltávolítani a reakciót"
         remove_reaction: "A(z) %{reaction} reakció eltávolítása"
-      users_popup:
-        all: "Összes"
       main_reaction:
         add: "Bejegyzés kedvelése"
         remove: "Kedvelés eltávolítása"

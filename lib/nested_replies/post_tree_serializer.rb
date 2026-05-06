@@ -6,6 +6,7 @@ module NestedReplies
       @topic = topic
       @topic_view = topic_view
       @guardian = guardian
+      @ignored_user_ids = IgnoredUser.ignored_ids_for(guardian.user)
     end
 
     SUGGESTED_AND_RELATED_KEYS = %i[
@@ -60,6 +61,11 @@ module NestedReplies
               :total_descendant_count,
             )
         end
+      elsif post.post_number != 1 && @ignored_user_ids.include?(post.user_id)
+        json[:ignored_post_placeholder] = true
+        json[:cooked] = ""
+        json[:raw] = nil
+        json[:actions_summary] = []
       end
 
       json

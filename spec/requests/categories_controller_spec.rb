@@ -615,6 +615,7 @@ RSpec.describe CategoriesController do
                   "id" => "discussion",
                   "name" => I18n.t("category_types.discussion.name"),
                   "title" => "discussion",
+                  "visible" => true,
                 },
               },
             )

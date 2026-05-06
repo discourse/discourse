@@ -7,8 +7,6 @@
 id:
   js:
     discourse_reactions:
-      users_popup:
-        all: "Semua"
       main_reaction:
         add: "Sukai post ini"
     notifications:
