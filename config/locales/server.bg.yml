@@ -241,6 +241,7 @@ bg:
       admins: "админи"
       moderators: "модератори"
       staff: "персонал"
+      anonymous: "анонимен"
       trust_level_0: "trust_level_0 "
       trust_level_1: "trust_level_1 "
       trust_level_2: "trust_level_2 "

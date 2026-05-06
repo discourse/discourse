@@ -103,6 +103,7 @@ th:
       admins: "ผู้ดูแลระบบ"
       moderators: "ผู้ดูแล"
       staff: "ทีมงาน"
+      anonymous: "ไม่ระบุชื่อ"
   education:
     until_posts:
       other: "%{count} โพส"

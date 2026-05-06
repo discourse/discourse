@@ -354,6 +354,7 @@ lt:
       admins: "administratoriai"
       moderators: "moderatoriai"
       staff: "personalas"
+      anonymous: "anonimas"
       trust_level_0: "pasitikėjimo_lygis_0"
       trust_level_1: "pasitikėjimo_lygis_1"
       trust_level_2: "pasitikėjimo_lygis_2"

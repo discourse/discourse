@@ -403,6 +403,7 @@ ko:
       admins: "관리자"
       moderators: "운영자"
       staff: "운영진"
+      anonymous: "익명"
       trust_level_0: "회원등급 0"
       trust_level_1: "회원등급 1"
       trust_level_2: "회원등급 2"

@@ -487,6 +487,7 @@ sv:
       admins: "administratörer"
       moderators: "moderatorer"
       staff: "personal"
+      anonymous: "anonym"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"

@@ -604,6 +604,7 @@ fr:
       admins: "administrateurs"
       moderators: "modérateurs"
       staff: "responsables"
+      anonymous: "anonymes"
       trust_level_0: "niveau_confiance_0"
       trust_level_1: "niveau_confiance_1"
       trust_level_2: "niveau_confiance_2"

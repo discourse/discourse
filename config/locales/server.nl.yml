@@ -604,6 +604,7 @@ nl:
       admins: "beheerders"
       moderators: "moderators"
       staff: "medewerkers"
+      anonymous: "anoniem"
       trust_level_0: "vertrouwensniveau_0"
       trust_level_1: "vertrouwensniveau_1"
       trust_level_2: "vertrouwensniveau_2"

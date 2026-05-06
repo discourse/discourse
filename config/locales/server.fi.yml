@@ -604,6 +604,7 @@ fi:
       admins: "ylläpitäjät"
       moderators: "valvojat"
       staff: "henkilökunta"
+      anonymous: "anonyymeja"
       trust_level_0: "luottamustaso_0"
       trust_level_1: "luottamustaso_1"
       trust_level_2: "luottamustaso_2"

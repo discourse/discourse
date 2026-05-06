@@ -423,6 +423,7 @@ hr:
       admins: "administratori"
       moderators: "moderatori"
       staff: "osoblje"
+      anonymous: "anonimno"
       trust_level_0: "razina_povjerenja_0"
       trust_level_1: "razina_povjerenja_1"
       trust_level_2: "razina_povjerenja_2"

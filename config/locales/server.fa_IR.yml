@@ -587,6 +587,7 @@ fa_IR:
       admins: "مدیران ارشد"
       moderators: "مدیران"
       staff: "همکاران"
+      anonymous: "ناشناس"
       trust_level_0: "سطح اعتماد 0"
       trust_level_1: "سطح اعتماد 1"
       trust_level_2: "سطح اعتماد 2"

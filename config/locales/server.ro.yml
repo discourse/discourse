@@ -327,6 +327,7 @@ ro:
       admins: "administratori"
       moderators: "moderatori"
       staff: "personal"
+      anonymous: "anonimi"
       trust_level_0: "nivel_de_încredere_0"
       trust_level_1: "nivel_de_încredere_1"
       trust_level_2: "nivel_de_încredere_2"

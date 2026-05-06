@@ -458,6 +458,7 @@ ur:
       admins: "منتظمین"
       moderators: "نگرانوں"
       staff: "عملہ"
+      anonymous: "گمنام"
       trust_level_0: "فعالیت_کا_درجہ_0"
       trust_level_1: "فعالیت_کا_درجہ_1"
       trust_level_2: "فعالیت_کا_درجہ_2"

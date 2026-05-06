@@ -5,20 +5,30 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_topic_voting: "Discourse 帖子投票"
   js:
     category:
       sort_options:
         votes: "投票"
     topic_voting:
+      category_type_ideas:
+        title: "想法"
       notification_label:
         vote_released: "投票已返还"
       title: "投票话题"
       reached_limit: "您无法再投票了，请移除现有投票！"
       list_votes: "列出您的投票"
+      votes_nav_help: "得票最多的主题"
+      hot_nav_help: "近期热门主题，包括近期投票最多的主题"
       voted: "您已经为为话题投过票了"
       allow_topic_voting: "允许用户为此类别中的话题投票"
       vote_title: "投票"
       vote_title_plural: "投票"
+      voting_closed_description: "本主题的投票已结束。"
       see_votes: "您还剩余 %{count}/%{max} 票"
       locked: "已锁定"
       locked_description: "提升信任级别以投票"
@@ -27,11 +37,17 @@ zh_CN:
       anonymous_button:
         other: "投票"
       remove_vote: "移除投票"
+      watch_topic: "有新帖子时通知我"
+      no_votes_yet: "还没有人对此投票"
+      and_more_voters: "还有 %{count} 个…"
+      show_voters: "显示投票人"
+      vote_count_thousands: "%{count}k"
       no_votes_title_self: "您还没有为任何话题投票"
       no_votes_title_others: "%{username} 还没有为任何话题投票"
     filters:
       votes:
         title: "投票"
+        help: "得票最多的主题"
       my_votes:
         title: "我的投票"
         help: "您投过票的话题"

@@ -700,6 +700,7 @@ sk:
       admins: "administrátori"
       moderators: "moderátori"
       staff: "personál"
+      anonymous: "anonymný"
       trust_level_0: "stupen_dovery_0"
       trust_level_1: "stupen_dovery_1"
       trust_level_2: "stupen_dovery_2"

@@ -312,6 +312,7 @@ hy:
       admins: "ադմինները"
       moderators: "մոդերատորներ"
       staff: "անձնակազմ"
+      anonymous: "անանուն"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"

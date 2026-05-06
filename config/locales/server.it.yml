@@ -604,6 +604,7 @@ it:
       admins: "amministratori"
       moderators: "moderatori"
       staff: "staff"
+      anonymous: "anonimo"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"

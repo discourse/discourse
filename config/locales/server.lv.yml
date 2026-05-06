@@ -108,6 +108,7 @@ lv:
       admins: "administratori"
       moderators: "moderatori"
       staff: "personāls"
+      anonymous: "anonīmi"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"

@@ -389,6 +389,7 @@ vi:
       admins: "quản trị"
       moderators: "điều hành"
       staff: "nhân viên"
+      anonymous: "ẩn danh"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"

@@ -10,3 +10,6 @@ pl_PL:
     rss_polling_frequency: "[Pobieranie RSS] Częstotliwość aktualizacji strony (w minutach)"
     rss_polling_use_pubdate: "[Pobieranie RSS] Ustaw datę utworzenia tematu na datę publikacji znalezioną w kanale RSS"
     rss_polling_update_tags: "[Pobieranie RSS] Aktualizuj tagi tematu, gdy temat jest aktualizowany. Wyłączenie tej opcji powoduje pobranie początkowych tagów, ale uniemożliwia dalsze ich zmiany."
+  rss_polling:
+    errors:
+      unknown_author_username: "Nie znaleziono użytkownika o nazwie „%{username}”."

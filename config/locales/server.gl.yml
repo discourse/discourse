@@ -393,6 +393,7 @@ gl:
       admins: "administradores"
       moderators: "moderadores"
       staff: "equipo"
+      anonymous: "anónimo"
       trust_level_0: "nivel_de_confianza_0"
       trust_level_1: "nivel_de_confianza_1"
       trust_level_2: "nivel_de_confianza_2"
