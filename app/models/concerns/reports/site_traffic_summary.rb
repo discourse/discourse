@@ -7,15 +7,28 @@ module Reports::SiteTrafficSummary
     def report_site_traffic_summary(report)
       report.modes = [Report::MODES[:stacked_chart]]
 
+      # Pick the human-pageview req_types based on the site's pageview-tracking
+      # mode. Legacy sites use `page_view_logged_in` / `page_view_anon`; modern
+      # sites use the browser-detected variants. Crawler counts are the same in
+      # both modes. The SQL aliases are kept stable (`page_view_logged_in_browser`,
+      # `page_view_anon_browser`, `page_view_crawler`) so the frontend doesn't
+      # need to know which mode the site is in.
+      legacy = SiteSetting.use_legacy_pageviews
+      logged_in_req_type =
+        ApplicationRequest.req_types[legacy ? :page_view_logged_in : :page_view_logged_in_browser]
+      anon_req_type =
+        ApplicationRequest.req_types[legacy ? :page_view_anon : :page_view_anon_browser]
+      crawler_req_type = ApplicationRequest.req_types[:page_view_crawler]
+
       first_browser_pageview_date =
         DB.query_single(
           <<~SQL,
             SELECT date FROM application_requests
-            WHERE req_type = :page_view_logged_in_browser OR req_type = :page_view_anon_browser
+            WHERE req_type = :logged_in_req_type OR req_type = :anon_req_type
             ORDER BY date LIMIT 1
           SQL
-          page_view_logged_in_browser: ApplicationRequest.req_types[:page_view_logged_in_browser],
-          page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser],
+          logged_in_req_type: logged_in_req_type,
+          anon_req_type: anon_req_type,
         ).first
 
       data =
@@ -23,9 +36,9 @@ module Reports::SiteTrafficSummary
           <<~SQL,
             SELECT
               date,
-              SUM(CASE WHEN req_type = :page_view_logged_in_browser THEN count ELSE 0 END) AS page_view_logged_in_browser,
-              SUM(CASE WHEN req_type = :page_view_anon_browser THEN count ELSE 0 END) AS page_view_anon_browser,
-              SUM(CASE WHEN req_type = :page_view_crawler THEN count ELSE 0 END) AS page_view_crawler
+              SUM(CASE WHEN req_type = :logged_in_req_type THEN count ELSE 0 END) AS page_view_logged_in_browser,
+              SUM(CASE WHEN req_type = :anon_req_type THEN count ELSE 0 END) AS page_view_anon_browser,
+              SUM(CASE WHEN req_type = :crawler_req_type THEN count ELSE 0 END) AS page_view_crawler
             FROM application_requests
             WHERE date >= :start_date AND date <= :end_date
             GROUP BY date
@@ -33,9 +46,9 @@ module Reports::SiteTrafficSummary
           SQL
           start_date: report.start_date,
           end_date: report.end_date,
-          page_view_crawler: ApplicationRequest.req_types[:page_view_crawler],
-          page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser],
-          page_view_logged_in_browser: ApplicationRequest.req_types[:page_view_logged_in_browser],
+          logged_in_req_type: logged_in_req_type,
+          anon_req_type: anon_req_type,
+          crawler_req_type: crawler_req_type,
         )
 
       prior_period_length = report.end_date.to_date - report.start_date.to_date
@@ -46,17 +59,17 @@ module Reports::SiteTrafficSummary
         DB.query_hash(
           <<~SQL,
             SELECT
-              COALESCE(SUM(CASE WHEN req_type = :page_view_logged_in_browser THEN count ELSE 0 END), 0) AS page_view_logged_in_browser,
-              COALESCE(SUM(CASE WHEN req_type = :page_view_anon_browser THEN count ELSE 0 END), 0) AS page_view_anon_browser,
-              COALESCE(SUM(CASE WHEN req_type = :page_view_crawler THEN count ELSE 0 END), 0) AS page_view_crawler
+              COALESCE(SUM(CASE WHEN req_type = :logged_in_req_type THEN count ELSE 0 END), 0) AS page_view_logged_in_browser,
+              COALESCE(SUM(CASE WHEN req_type = :anon_req_type THEN count ELSE 0 END), 0) AS page_view_anon_browser,
+              COALESCE(SUM(CASE WHEN req_type = :crawler_req_type THEN count ELSE 0 END), 0) AS page_view_crawler
             FROM application_requests
             WHERE date >= :start_date AND date <= :end_date
           SQL
           start_date: prior_start_date,
           end_date: prior_end_date,
-          page_view_crawler: ApplicationRequest.req_types[:page_view_crawler],
-          page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser],
-          page_view_logged_in_browser: ApplicationRequest.req_types[:page_view_logged_in_browser],
+          logged_in_req_type: logged_in_req_type,
+          anon_req_type: anon_req_type,
+          crawler_req_type: crawler_req_type,
         ).first ||
           {
             "page_view_logged_in_browser" => 0,

@@ -40,6 +40,8 @@ Source: post #1 of the [Site Traffic section topic](https://dev.discourse.org/t/
 
 **Visibility:** the section appears only when the dashboard improvements feature is on. With it off, the existing admin dashboard is unchanged.
 
+**Pageview-tracking modes:** the section works on both the modern browser-based pageview-tracking model (default for new sites) **and** the legacy pageview-tracking model (`use_legacy_pageviews = true`). The headline, KPI, and chart series are sourced from whichever counters the site is actively collecting — modern sites use the browser-detected `page_view_logged_in_browser` / `page_view_anon_browser` counters, legacy sites use the older `page_view_logged_in` / `page_view_anon` counters. The crawler series uses the same counter in both modes. Crawler/anon/logged-in semantics are slightly different between the two models (the legacy counters can include some bot traffic that the browser-detected counters filter out), but the **product behavior** of the section is the same: humans + crawlers split, headline = humans only, KPI = logged-in share of humans.
+
 ## Layout
 
 A single section card. Top-down: section heading → headline + KPI row → filter pills → chart → drill-down link. On private communities, the headline expands full-width since the KPI is hidden. The section is responsive: elements stack on narrow viewports.
