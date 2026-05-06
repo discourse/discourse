@@ -278,18 +278,11 @@ RSpec.describe CategorySerializer do
   end
 
   describe "#category_types" do
-    it "returns the category types when simplified category creation is enabled" do
-      SiteSetting.enable_simplified_category_creation = true
+    it "returns the category types" do
       json = described_class.new(category, scope: admin.guardian, root: false).as_json
       expect(json[:category_types]).to eq(
         { discussion: Categories::TypeRegistry.all[:discussion].metadata },
       )
-    end
-
-    it "returns an empty array when simplified category creation is disabled" do
-      SiteSetting.enable_simplified_category_creation = false
-      json = described_class.new(category, scope: admin.guardian, root: false).as_json
-      expect(json[:category_types]).to eq({})
     end
   end
 
@@ -312,29 +305,15 @@ RSpec.describe CategorySerializer do
       end
     end
 
-    context "when simplified category creation is enabled" do
-      before do
-        SiteSetting.enable_simplified_category_creation = true
-        Categories::TypeRegistry.register(MockCategoryType)
-      end
+    before { Categories::TypeRegistry.register(MockCategoryType) }
 
-      after { Categories::TypeRegistry.reset! }
+    after { Categories::TypeRegistry.reset! }
 
-      it "returns the available visible category types" do
-        json = described_class.new(category, scope: admin.guardian, root: false).as_json
-        expect(json[:available_category_types]).to eq(
-          [Categories::TypeRegistry.all[:discussion].metadata],
-        )
-      end
-    end
-
-    context "when simplified category creation is disabled" do
-      before { SiteSetting.enable_simplified_category_creation = false }
-
-      it "returns an empty array" do
-        json = described_class.new(category, scope: admin.guardian, root: false).as_json
-        expect(json[:available_category_types]).to eq([])
-      end
+    it "returns the available visible category types" do
+      json = described_class.new(category, scope: admin.guardian, root: false).as_json
+      expect(json[:available_category_types]).to eq(
+        [Categories::TypeRegistry.all[:discussion].metadata],
+      )
     end
   end
 end

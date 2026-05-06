@@ -21,11 +21,12 @@ end
 pr_number = ENV.fetch("PR_NUMBER")
 
 # Get PR details (title, body, base branch)
-pr = JSON.parse(gh("pr", "view", pr_number, "--json", "title,body,baseRefName").stdout)
+pr = JSON.parse(gh("pr", "view", pr_number, "--json", "title,body,baseRefName,mergeCommit").stdout)
 
 pr_title = pr["title"]
 pr_body = pr["body"] || ""
 base_branch = pr["baseRefName"]
+merge_commit = pr["mergeCommit"]["oid"]
 
 puts "PR ##{pr_number}: #{pr_title}"
 puts "Base branch: #{base_branch}"
@@ -88,7 +89,13 @@ backport_versions.each do |version|
   run("git", "checkout", "-B", backport_branch, "origin/#{release_branch}")
 
   # Cherry-pick the commits
-  cherry_pick_range = "#{merge_base}..#{pr_head}"
+  cherry_pick_range =
+    if merge_commit
+      merge_commit
+    else
+      "#{merge_base}..#{pr_head}"
+    end
+
   puts "Cherry-picking #{cherry_pick_range}..."
   result = run("git", "cherry-pick", cherry_pick_range, allow_failure: true)
 

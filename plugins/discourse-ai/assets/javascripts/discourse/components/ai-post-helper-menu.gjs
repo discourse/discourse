@@ -171,7 +171,7 @@ export default class AiPostHelperMenu extends Component {
   async _updateResult(result) {
     if (isAiCreditLimitError(result)) {
       this.loading = false;
-      this.menuState = this.MENU_STATES.triggers;
+      this.menuState = this.MENU_STATES.options;
       popupAiCreditLimitError(result);
       return;
     }
@@ -226,7 +226,7 @@ export default class AiPostHelperMenu extends Component {
         popupAjaxError(error);
       }
       this.loading = false;
-      this.menuState = this.MENU_STATES.triggers;
+      this.menuState = this.MENU_STATES.options;
     }
 
     return this._activeAiRequest;

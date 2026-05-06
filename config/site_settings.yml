@@ -456,7 +456,7 @@ basic:
     default: ""
     allow_any: false
     refresh: true
-    disallowed_groups: "0"
+    disallowed_groups: "0|4|5"
     area: "group_permissions"
   hidden_post_visible_groups:
     type: group_list
@@ -464,6 +464,7 @@ basic:
     default: "14"
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   push_notifications_prompt:
     default: true
@@ -541,11 +542,13 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
+    disallowed_groups: "4"
     area: "group_permissions"
   about_page_extra_groups:
     client: true
     default: ""
     type: group_list
+    disallowed_groups: "4"
     area: "about"
   about_page_extra_groups_initial_members:
     client: true
@@ -1076,6 +1079,7 @@ users:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     validator: "AtLeastOneGroupValidator"
     area: "group_permissions"
   anonymous_account_duration_minutes:
@@ -1343,6 +1347,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   editing_grace_period:
     default: 300
@@ -1365,6 +1370,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     validator: "AtLeastOneGroupValidator"
     area: "group_permissions"
   post_edit_time_limit:
@@ -1469,6 +1475,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   title_max_word_length:
     default: 30
@@ -1600,6 +1607,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   approve_new_topics_unless_allowed_groups:
     default: "1|2|10" # auto groups admins, moderators, trust_level_0
@@ -1607,6 +1615,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   approve_suspect_users:
     default: true
@@ -1701,6 +1710,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   blur_tl0_flagged_posts_media:
     default: true
@@ -1769,6 +1779,7 @@ content_localization:
     allow_any: false
     client: true
     default: "1|2" # admin, moderator
+    disallowed_groups: "4"
     area: "localization"
   content_localization_allow_author_localization:
     default: true
@@ -1862,6 +1873,7 @@ nested_replies:
     default: "3"
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "posts_and_topics"
     depends_on:
       - "nested_replies_enabled"
@@ -1998,6 +2010,7 @@ email:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   email_in_authserv_id:
     default: ""
@@ -2198,6 +2211,7 @@ email:
     default: "1|2"
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
 
 files:
@@ -2385,6 +2399,7 @@ files:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   default_avatars:
     default: ""
@@ -2543,6 +2558,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   edit_wiki_post_allowed_groups:
     default: "1|2|11" # auto group admins, moderators, trust_level_1
@@ -2550,6 +2566,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   edit_post_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
@@ -2557,6 +2574,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   self_wiki_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
@@ -2564,6 +2582,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   send_email_messages_allowed_groups:
     default: "1|2|14" # auto group admins, moderators, trust_level_4
@@ -2571,6 +2590,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   flag_post_allowed_groups:
     default: "1|2|11" # auto group admins, moderators, trust_level_1
@@ -2578,6 +2598,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "flags|group_permissions"
   allow_all_users_to_flag_illegal_content:
     default: false
@@ -2593,6 +2614,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   embedded_media_post_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
@@ -2600,6 +2622,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   profile_background_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
@@ -2607,6 +2630,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   user_card_background_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
@@ -2614,6 +2638,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   invite_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
@@ -2621,6 +2646,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   ignore_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
@@ -2628,6 +2654,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
@@ -2729,15 +2756,18 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   edit_all_topic_groups:
     default: "13"
     type: group_list
+    disallowed_groups: "4"
     area: "group_permissions"
   edit_all_post_groups:
     default: "1|2|14" # auto group admins, moderators, and TL4
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
+    disallowed_groups: "4"
     area: "group_permissions"
 
 security:
@@ -2785,6 +2815,7 @@ security:
     type: group_list
     list_type: compact
     default: ""
+    disallowed_groups: "4"
   moderators_view_emails:
     client: true
     default: false
@@ -4121,6 +4152,7 @@ user_api:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   allowed_user_api_push_urls:
     default: ""
@@ -4184,6 +4216,7 @@ tags:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   edit_tags_allowed_groups:
     default: "1|2" # auto group admins, moderators
@@ -4191,6 +4224,7 @@ tags:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   tag_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
@@ -4198,6 +4232,7 @@ tags:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     client: true
     area: "group_permissions"
   max_tag_search_results:
@@ -4227,6 +4262,7 @@ tags:
     default: ""
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   suppress_overlapping_tags_in_list:
     default: false
@@ -4311,14 +4347,9 @@ experimental:
       learn_more_url: "https://meta.discourse.org/t/-/395768"
       disallow_enabled_for_groups: true
   enable_auto_grid_images:
-    default: false
+    default: true
     client: true
-    hidden: true
     area: "experimental"
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/394784"
   enable_new_checkbox_style:
     default: false
     client: true
@@ -4345,20 +4376,7 @@ experimental:
       learn_more_url: "https://meta.discourse.org/t/-/395099"
   enable_form_templates:
     client: true
-    default: false
-    hidden: true
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/278631"
-  impersonate_without_logout:
-    default: false
-    client: true
-    hidden: true
-    upcoming_change:
-      status: "stable"
-      impact: "feature,staff"
-      learn_more_url: "https://meta.discourse.org/t/-/119683"
+    default: true
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -4398,7 +4416,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/394971"
   enable_new_defaults_for_trust_level_3_requirements:

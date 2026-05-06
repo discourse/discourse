@@ -6701,7 +6701,6 @@ zh_TW:
           other: "無法刪除所有貼文，因為此使用者擁有超過 %{count} 篇貼文。( delete_all_posts_max )"
         delete_confirm_title: "確定要刪除此使用者嗎？此操作無法撤銷！"
         delete_confirm: "通常最好將使用者匿名而不是刪除他們，以避免從現有討論中移除內容。"
-        delete_and_block: "刪除使用者並禁止其電子郵件和 IP 地址"
         delete_dont_block: "刪除使用者"
         deleting_user: "正在刪除使用者..."
         deleted: "此使用者已刪除。"

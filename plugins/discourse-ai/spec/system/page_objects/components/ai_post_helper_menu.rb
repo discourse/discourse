@@ -28,7 +28,8 @@ module PageObjects
       end
 
       def has_suggestion_value?(value)
-        page.has_css?("#{SUGGESTION_SELECTOR}__text", text: value)
+        # Bumped wait because of: MessageBus, typing animation, text cooking.
+        page.has_css?("#{SUGGESTION_SELECTOR}__text:not(.streaming)", text: value, wait: 10)
       end
 
       def suggestion_value

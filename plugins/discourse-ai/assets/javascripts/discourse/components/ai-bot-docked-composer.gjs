@@ -214,7 +214,7 @@ export default class AiBotDockedComposer extends Component {
             "discourse_ai.ai_bot.conversations.hide_toolbar"
             "discourse_ai.ai_bot.conversations.show_toolbar"
           }}
-          class="docked-composer__submit-btn ai-bot-docked-composer__toolbar-toggle"
+          class="ai-bot-docked-composer__toolbar-toggle"
         />
         {{#if this.isStreaming}}
           <DButton

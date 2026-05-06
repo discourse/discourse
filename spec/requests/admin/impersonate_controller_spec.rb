@@ -121,10 +121,7 @@ RSpec.describe Admin::ImpersonateController do
   describe "#destroy" do
     before { sign_in(admin) }
 
-    it "checks if experimental impersonation is allowed for the acting user" do
-      SiteSettingGroup.create!(name: "impersonate_without_logout", group_ids: "1|2")
-      SiteSetting.refresh!
-
+    it "succeeds and logs the impersonation" do
       post "/admin/impersonate.json", params: { username_or_email: user.username }
 
       delete "/admin/impersonate.json"

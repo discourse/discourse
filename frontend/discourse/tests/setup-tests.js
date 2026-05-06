@@ -226,13 +226,6 @@ export default function setupTests(config) {
     );
   };
 
-  sinon.config = {
-    injectIntoThis: false,
-    injectInto: null,
-    properties: ["spy", "stub", "mock", "clock", "sandbox"],
-    useFakeTimers: true,
-  };
-
   // Stop the message bus so we don't get ajax calls
   MessageBus.stop();
 

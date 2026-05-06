@@ -8522,7 +8522,6 @@ cs:
           other: "Nelze smazat všechny příspěvky, protože uživatel má více než %{count} příspěvků. (delete_all_posts_max)"
         delete_confirm_title: "Jste si jisti, že chcete odstranit tohoto uživatele? Tato akce je trvalá!"
         delete_confirm: "Obecně je vhodnější uživatele spíše anonymizovat než mazat, aby se předešlo odstranění obsahu existujících diskusí."
-        delete_and_block: "Smazat uživatele a zablokovat jeho e-mail a IP adresu"
         delete_dont_block: "Smazat uživatele"
         deleting_user: "Odstranění uživatele…"
         deleted: "Uživatel byl smazán."

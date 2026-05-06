@@ -16,7 +16,7 @@ module PageObjects
         zip_path = File.join(Downloads::FOLDER, zip_name)
         @downloaded_files << zip_path
 
-        click_link ".zip"
+        page.driver.with_playwright_page { |pw_page| pw_page.expect_download { click_link ".zip" } }
         Downloads.wait_for(zip_path)
 
         csv_path = unzip(zip_path).first
