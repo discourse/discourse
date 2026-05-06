@@ -26,7 +26,6 @@ export default class FKControlTagChooser extends FKBaseControl {
         disabled=@field.disabled
         filterPlaceholder=@placeholder
         maximum=@maximum
-        mobilePlacement=@mobilePlacement
       }}
       class="form-kit__control-tag-chooser"
     />

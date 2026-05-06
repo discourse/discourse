@@ -31,17 +31,6 @@
     pointer-events: none;
   }
 
-  &.is-placed-above.is-expanded {
-    .select-kit-body {
-      flex-direction: column-reverse;
-    }
-
-    .select-kit-collection {
-      display: flex;
-      flex-direction: column-reverse;
-    }
-  }
-
   &.is-expanded {
     z-index: z("dropdown");
 
