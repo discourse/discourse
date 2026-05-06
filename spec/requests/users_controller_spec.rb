@@ -7409,6 +7409,23 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
+    it "does not allow moderators to view another user's private bookmarks" do
+      private_post =
+        Fabricate(:private_message_post, user: user1, raw: "Private bookmarked message content")
+      TopicUser.change(user1.id, private_post.topic, total_msecs_viewed: 1)
+      private_bookmark =
+        Fabricate(:bookmark, user: user1, bookmarkable: private_post, name: "Private bookmark note")
+
+      sign_in(moderator)
+      get "/u/#{user1.username}/bookmarks.json"
+
+      aggregate_failures do
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(private_bookmark.name)
+        expect(response.body).not_to include(private_post.raw)
+      end
+    end
+
     it "shows a helpful message if no bookmarks are found" do
       bookmark1.destroy
       bookmark2.destroy
