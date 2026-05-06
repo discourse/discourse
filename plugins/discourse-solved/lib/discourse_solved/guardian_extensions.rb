@@ -67,8 +67,9 @@ module DiscourseSolved
       return false if topic.blank? || topic.private_message?
       return false if topic.solved.present?
       return false unless allow_accepted_answers?(topic)
-      if authenticated? && !current_user.upcoming_change_enabled?(:enable_solved_me_too)
-        return false
+      if authenticated?
+        return false unless current_user.upcoming_change_enabled?(:enable_solved_me_too)
+        return false if topic.user_id == current_user.id
       end
       true
     end

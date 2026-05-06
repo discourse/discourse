@@ -139,13 +139,7 @@ function customizePostMenu(api) {
     "post-menu",
     class extends Component {
       static shouldRender(args) {
-        const post = args.post;
-        return (
-          post?.post_number === 1 &&
-          !post.topic_accepted_answer &&
-          post.topic?.me_too_visible &&
-          topicHasSolvedEnabled(post.topic)
-        );
+        return args.post?.post_number === 1;
       }
 
       <template>
