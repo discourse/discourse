@@ -63,10 +63,8 @@ function periodToDateRange(period, customStart, customEnd) {
 }
 
 function bucketingForLength(days) {
-  if (days <= 91) {
+  if (days <= 183) {
     return "daily";
-  } else if (days < 365) {
-    return "weekly";
   }
   return "monthly";
 }
@@ -88,28 +86,23 @@ function makeXTicksCallback({ bucketing, startMs, endMs }) {
   };
 }
 
-function isTodayBucket(tickMs, bucketing) {
+function isTodayBucket(tickMs) {
   const today = moment.utc().startOf("day");
-  const m = moment.utc(tickMs).startOf("day");
-  if (bucketing === "daily") {
-    return m.isSame(today, "day");
-  }
-  if (bucketing === "weekly") {
-    const end = m.clone().add(6, "days");
-    return today.isBetween(m, end, "day", "[]");
-  }
-  return false;
+  return moment.utc(tickMs).startOf("day").isSame(today, "day");
 }
 
 function makeXTickColorCallback({ bucketing }) {
-  if (bucketing === "monthly") {
+  // Today indicator only applies to daily buckets — at monthly granularity
+  // the entire current-month bucket is in-progress, not just the rightmost
+  // day, so a partial-day cue doesn't fit.
+  if (bucketing !== "daily") {
     return null;
   }
   return function (context) {
     if (!context.tick) {
       return undefined;
     }
-    if (isTodayBucket(context.tick.value, bucketing)) {
+    if (isTodayBucket(context.tick.value)) {
       return getComputedStyle(document.documentElement)
         .getPropertyValue("--primary-medium")
         .trim();
@@ -127,30 +120,12 @@ function makeTooltipTitleCallback({ bucketing }) {
     const ms = tooltipItems[0].parsed.x;
     const start = moment.utc(ms);
 
-    let title;
-
     if (bucketing === "monthly") {
-      title = start.format("MMMM YYYY");
-      return title;
+      return start.format("MMMM YYYY");
     }
 
-    if (bucketing === "weekly") {
-      const end = start.clone().add(6, "days");
-      if (start.year() !== end.year()) {
-        title = `${start.format("D MMM YYYY")} – ${end.format("D MMM YYYY")}`;
-      } else if (start.month() !== end.month()) {
-        title = `${start.format("D MMM")} – ${end.format("D MMM YYYY")}`;
-      } else {
-        title = `${start.format("D")} – ${end.format("D MMM YYYY")}`;
-      }
-      if (isTodayBucket(start.valueOf(), "weekly")) {
-        title += ` ${todayPartial}`;
-      }
-      return title;
-    }
-
-    title = start.format("ddd, D MMM YYYY");
-    if (isTodayBucket(start.valueOf(), "daily")) {
+    let title = start.format("ddd, D MMM YYYY");
+    if (isTodayBucket(start.valueOf())) {
       title += ` ${todayPartial}`;
     }
     return title;
@@ -422,9 +397,6 @@ export default class AdminDashboardSiteTraffic extends Component {
       }
       // Cross-year daily labels are ~2× wider (have year), so reduce density.
       return this.spansYears ? 8 : 31;
-    }
-    if (this.bucketing === "weekly") {
-      return 14;
     }
     return 60;
   }
