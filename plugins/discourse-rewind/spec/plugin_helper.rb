@@ -7,8 +7,7 @@ module DiscourseRewindSpecHelper
   end
 
   def random_datetime
-    # date should be defined via fab! in the spec
-    date.to_a.sample.to_datetime + rand(0..23).hours + rand(0..59).minutes + rand(0..59).seconds
+    rand(date.first.to_time...date.last.to_time)
   end
 end
 

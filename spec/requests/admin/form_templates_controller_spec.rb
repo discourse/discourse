@@ -5,8 +5,6 @@ RSpec.describe Admin::FormTemplatesController do
   fab!(:user)
   fab!(:form_template)
 
-  before { SiteSetting.enable_form_templates = true }
-
   describe "#index" do
     context "when logged in as an admin" do
       before { sign_in(admin) }

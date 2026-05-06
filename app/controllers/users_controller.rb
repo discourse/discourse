@@ -1908,7 +1908,7 @@ class UsersController < ApplicationController
 
   def bookmarks
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
+    guardian.ensure_can_see_bookmarks!(user)
     user_guardian = Guardian.new(user)
 
     respond_to do |format|

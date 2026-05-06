@@ -80,6 +80,16 @@ module SecondFactorManager
         &.exists?
   end
 
+  def passkeys_for_2fa_enabled?
+    SiteSetting.allow_passkeys_for_2fa && SiteSetting.enable_passkeys &&
+      !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
+      self.security_keys&.where(factor_type: UserSecurityKey.factor_types[:first_factor])&.exists?
+  end
+
+  # Passkey-as-2FA (`passkeys_for_2fa_enabled?`) is intentionally excluded:
+  # it only satisfies `/session/2fa`. Password login, email login, and password
+  # reset have no passkey UI yet, so counting passkeys here would make those
+  # flows skip 2FA for passkey-only users.
   def has_any_second_factor_methods_enabled?
     totp_enabled? || security_keys_enabled?
   end
@@ -106,7 +116,10 @@ module SecondFactorManager
 
   def authenticate_second_factor(params, server_session)
     ok_result = SecondFactorAuthenticationResult.new(true)
-    return ok_result if !security_keys_enabled? && !totp_or_backup_codes_enabled?
+    if !security_keys_enabled? && !totp_or_backup_codes_enabled? &&
+         (!passkeys_for_2fa_enabled? || params[:second_factor_method].blank?)
+      return ok_result
+    end
 
     second_factor_token = params[:second_factor_token]
     second_factor_method = params[:second_factor_method]&.to_i
@@ -157,17 +170,20 @@ module SecondFactorManager
     when UserSecondFactor.methods[:backup_codes]
       return backup_codes_enabled?
     when UserSecondFactor.methods[:security_key]
-      return security_keys_enabled?
+      return security_keys_enabled? || passkeys_for_2fa_enabled?
     end
     false
   end
 
   def authenticate_security_key(server_session, security_key_credential)
+    factor_types = [UserSecurityKey.factor_types[:second_factor]]
+    factor_types << UserSecurityKey.factor_types[:first_factor] if passkeys_for_2fa_enabled?
+
     ::DiscourseWebauthn::AuthenticationService.new(
       self,
       security_key_credential,
       session: server_session,
-      factor_type: UserSecurityKey.factor_types[:second_factor],
+      factor_type: factor_types,
     ).authenticate_security_key
   end
 

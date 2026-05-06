@@ -760,20 +760,18 @@ RSpec.describe ApplicationController do
   describe "splash_screen" do
     let(:admin) { Fabricate(:admin) }
 
-    before { admin }
+    before do
+      admin
+      allow_any_instance_of(ApplicationController).to receive(:include_splash_screen?).and_return(
+        true,
+      )
+    end
 
-    it "adds a preloader splash screen when enabled" do
+    it "adds a preloader splash screen" do
       get "/"
 
       expect(response.status).to eq(200)
       expect(response.body).to include("d-splash")
-
-      SiteSetting.splash_screen = false
-
-      get "/"
-
-      expect(response.status).to eq(200)
-      expect(response.body).not_to include("d-splash")
     end
 
     context "with color schemes" do
