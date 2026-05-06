@@ -6,6 +6,7 @@ class TagSettingsUpdater
   def initialize(tag, actor)
     @tag = tag
     @actor = actor
+    @guardian = Guardian.new(actor)
     @errors = []
   end
 
@@ -56,14 +57,20 @@ class TagSettingsUpdater
   def remove_synonyms(removed_ids)
     return if removed_ids.blank?
 
-    Tag.where(id: removed_ids, target_tag_id: @tag.id).update_all(target_tag_id: nil)
+    synonym_tag_ids = editable_synonym_ids(Tag.where(id: removed_ids, target_tag_id: @tag.id))
+    Tag.where(id: synonym_tag_ids, target_tag_id: @tag.id).update_all(target_tag_id: nil)
   end
 
   def add_synonyms(new_synonyms)
     return if new_synonyms.blank?
 
     synonym_tag_ids = new_synonyms.filter_map { |t| t[:id]&.to_i }
+    synonym_tag_ids = editable_synonym_ids(Tag.where(id: synonym_tag_ids))
     DiscourseTagging.add_or_create_synonyms(@tag, synonym_tag_ids:) if synonym_tag_ids.present?
+  end
+
+  def editable_synonym_ids(synonyms)
+    synonyms.filter_map { |synonym| synonym.id if @guardian.can_edit_tag?(synonym) }
   end
 
   def update_localizations(localizations)
