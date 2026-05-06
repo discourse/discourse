@@ -284,7 +284,7 @@ export default class InstallThemeModal extends Component {
   <template>
     <DModal
       @bodyClass="install-theme"
-      class="admin-install-theme-modal"
+      class="admin-install-theme-modal -large"
       @title={{i18n "admin.customize.theme.install"}}
       @closeModal={{@closeModal}}
     >
@@ -323,6 +323,19 @@ export default class InstallThemeModal extends Component {
               <div class="popular-theme-items">
                 {{#each this.themes as |theme|}}
                   <div class="popular-theme-item" data-name={{theme.name}}>
+                    {{#if theme.screenshot_url}}
+                      <div class="popular-theme-screenshot">
+                        <img
+                          alt={{i18n
+                            "admin.customize.theme.screenshot"
+                            name=theme.name
+                          }}
+                          loading="lazy"
+                          src={{theme.screenshot_url}}
+                        />
+                      </div>
+                    {{/if}}
+
                     <div class="popular-theme-name">
                       <a
                         href={{theme.meta_url}}
@@ -347,7 +360,7 @@ export default class InstallThemeModal extends Component {
                         <span>{{i18n "admin.customize.theme.installed"}}</span>
                       {{else}}
                         <DButton
-                          class="btn-default btn-small"
+                          class="btn-primary"
                           @label="admin.customize.theme.install"
                           @disabled={{this.installDisabled}}
                           @icon="upload"

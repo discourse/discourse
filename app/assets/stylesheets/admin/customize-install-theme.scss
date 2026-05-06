@@ -1,5 +1,13 @@
 @use "lib/viewport";
 
+.d-modal.-large.admin-install-theme-modal {
+  @include viewport.from(sm) {
+    .d-modal__container {
+      max-width: min(1100px, 90vw);
+    }
+  }
+}
+
 .install-theme {
   display: flex;
 
@@ -82,24 +90,38 @@
 }
 
 .popular-theme-items {
-  height: 65vh;
+  height: 70vh;
   overflow: auto;
   padding-right: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 2fr));
+  gap: 1em;
+
+  @include viewport.until(sm) {
+    display: block;
+  }
 }
 
 .popular-theme-item {
-  border-bottom: 1px solid var(--content-border-color);
-  padding: 8px 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  max-height: 22rem;
+  border: 1px solid var(--content-border-color);
+  border-radius: 4px;
+  padding: 0.75em;
+  overflow: hidden;
 
   @include viewport.until(sm) {
-    flex-direction: column;
-    align-items: initial;
+    margin-bottom: 0.75em;
   }
 
   .popular-theme-name {
     flex: 1;
+    width: 100%;
+    margin: 0.75em 0;
+    min-height: 0;
+    overflow: auto;
 
     .popular-theme-type {
       font-weight: normal;
@@ -120,15 +142,18 @@
 
     .popular-theme-description {
       font-size: var(--font-down-1);
-      padding-right: 20px;
+      margin-top: 0.35em;
     }
   }
 
   .popular-theme-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75em;
+    width: 100%;
+
     @include viewport.until(sm) {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       margin-top: 0.25em;
     }
 
@@ -140,11 +165,25 @@
     }
 
     > a {
-      display: block;
       font-size: var(--font-down-2);
-      margin-top: 5px;
       text-align: center;
     }
+  }
+}
+
+.popular-theme-screenshot {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--primary-low);
+  border-radius: 3px;
+  background: var(--primary-very-low);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 

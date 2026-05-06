@@ -62,6 +62,24 @@ module PageObjects
         expect(all(".theme-card__title").map(&:text)).to eq(names)
       end
 
+      def has_theme_cards?(count:)
+        has_css?(".themes-cards-container > .admin-config-area-card", count: count)
+      end
+
+      def has_install_more_themes_card?
+        has_css?(
+          ".theme-card.--install-more",
+          text: I18n.t("admin_js.admin.customize.theme.install_more_themes"),
+        )
+      end
+
+      def click_install_more_themes
+        find(".theme-card.--install-more").click_button(
+          I18n.t("admin_js.admin.config_areas.themes_and_components.themes.install"),
+        )
+        PageObjects::Modals::InstallTheme.new
+      end
+
       def has_no_theme?(name)
         has_no_css?(".theme-card.#{name.parameterize}")
       end
