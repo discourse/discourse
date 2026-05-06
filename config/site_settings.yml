@@ -653,6 +653,10 @@ login:
     client: true
     default: true
     hidden: true
+  allow_passkeys_for_2fa:
+    client: true
+    default: false
+    area: "login"
   allow_new_registrations:
     client: true
     default: true
@@ -3900,10 +3904,6 @@ uncategorized:
   allow_changing_staged_user_tracking:
     default: false
     area: "users"
-
-  splash_screen:
-    default: true
-    area: "interface"
 
   splash_screen_image:
     default: ""

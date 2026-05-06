@@ -228,6 +228,30 @@ RSpec.describe PushNotificationPusher do
       expect(subscription.error_count).to eq(1)
     end
 
+    it "handles DNS lookup failures for endpoints whose domain no longer resolves" do
+      WebPush.expects(:payload_send).raises(
+        FinalDestination::SSRFDetector::LookupFailedError.new("lookup failed"),
+      )
+      subscription = create_subscription
+
+      expect { execute_push }.to_not raise_exception
+
+      subscription.reload
+      expect(subscription.error_count).to eq(1)
+    end
+
+    it "handles endpoints that resolve to disallowed IPs" do
+      WebPush.expects(:payload_send).raises(
+        FinalDestination::SSRFDetector::DisallowedIpError.new("disallowed"),
+      )
+      subscription = create_subscription
+
+      expect { execute_push }.to_not raise_exception
+
+      subscription.reload
+      expect(subscription.error_count).to eq(1)
+    end
+
     describe "`watching_category_or_tag` notifications" do
       it "Uses the 'watching_first_post' translation when new topic was created" do
         message =
