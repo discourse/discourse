@@ -49,6 +49,9 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
+    # Skip the CDN proxy under QUnit; the timeout would block the single worker.
+    return render_blank if ENV["DISCOURSE_QUNIT_SERVER"] == "1"
+
     hijack do
       begin
         proxy_avatar(

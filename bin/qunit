@@ -448,6 +448,7 @@ class QunitRunner
       "LOGSTASH_UNICORN_URI" => nil,
       "UNICORN_WORKERS" => "1",
       "UNICORN_TIMEOUT" => "90",
+      "DISCOURSE_QUNIT_SERVER" => "1",
     }
 
     env["LOAD_PLUGINS"] = "1" if should_load_plugins?
