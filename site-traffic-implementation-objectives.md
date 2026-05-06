@@ -122,7 +122,7 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 
 3.5 Custom range opens a date-range picker. The picker rejects inverted ranges and dates beyond today.
 
-3.6 Switching periods updates all dependent UI together.
+3.6 Switching periods updates all dependent UI together. **The chart's x-axis range and bucketing stay anchored to the currently displayed data until the new fetch lands** — admins do not see the chart's date range expand, contract, or re-bucket ahead of the new bars. The transition is atomic: when new data arrives, the axis range, bucketing, headline, KPI, and bars all swap to the new period together.
 
 3.7 **Rapid changes show the latest selection.** When admins cycle quickly through periods, the data displayed always reflects their most recent choice — slower in-flight responses for older selections never overwrite newer ones.
 

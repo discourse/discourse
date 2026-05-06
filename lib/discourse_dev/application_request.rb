@@ -17,7 +17,7 @@ module DiscourseDev
     def initialize
       settings = DiscourseDev.config.application_request
       @baseline = settings[:logged_in_browser_pageviews_per_day]
-      @end_date = Date.yesterday
+      @end_date = Date.current
       @start_date = 2.years.ago.to_date
       @random = Random.new(DiscourseDev.config.seed || 1)
     end
@@ -72,6 +72,10 @@ module DiscourseDev
       base *= WEEKEND_FACTOR if date.saturday? || date.sunday?
       base *= (1.0 - JITTER_RANGE / 2) + (@random.rand * JITTER_RANGE)
       base *= (SPIKE_MIN + @random.rand * SPIKE_RANGE) if spike_dates.include?(date)
+      # Today is partial-by-design — scale the seeded count by the fraction
+      # of UTC hours elapsed so the rightmost bar reads as a real
+      # in-progress day rather than a full one.
+      base *= (Time.now.utc.hour + 1) / 24.0 if date == Date.current
       [base.round, 1].max
     end
 

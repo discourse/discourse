@@ -226,6 +226,24 @@ export default class AdminDashboardSiteTraffic extends Component {
     return i18n(`admin.dashboard.site_traffic.period_descriptor.${period}`);
   }
 
+  // Chart-rendering dates anchor to the *model* the chart is currently
+  // showing, not to the live period selection. Without this, switching
+  // (say) Last 30 days → Last 90 days would stretch the x-axis range and
+  // re-bucket immediately on click, before the new bars arrive — the
+  // chart would visibly "expand" first, then repopulate. Anchoring keeps
+  // the axis stable until the new data lands.
+  get modelStartDate() {
+    return this.model?.start_date
+      ? moment.utc(this.model.start_date, "YYYY-MM-DD").startOf("day")
+      : this.startDate;
+  }
+
+  get modelEndDate() {
+    return this.model?.end_date
+      ? moment.utc(this.model.end_date, "YYYY-MM-DD").startOf("day")
+      : this.endDate;
+  }
+
   get currentTotals() {
     return this.model?.related_data?.current_totals;
   }
@@ -363,8 +381,8 @@ export default class AdminDashboardSiteTraffic extends Component {
     if (!this.model) {
       return null;
     }
-    const startFmt = ymd(this.startDate);
-    const endFmt = ymd(this.endDate);
+    const startFmt = ymd(this.modelStartDate);
+    const endFmt = ymd(this.modelEndDate);
     const filledSeries = this.visibleSeries.map((series) => ({
       req: series.req,
       label: series.label,
@@ -385,19 +403,20 @@ export default class AdminDashboardSiteTraffic extends Component {
   }
 
   get bucketing() {
-    const days = this.endDate.diff(this.startDate, "days") + 1;
+    const days = this.modelEndDate.diff(this.modelStartDate, "days") + 1;
     return bucketingForLength(days);
   }
 
   get spansYears() {
     return (
-      moment.utc(this.startDate).year() !== moment.utc(this.endDate).year()
+      moment.utc(this.modelStartDate).year() !==
+      moment.utc(this.modelEndDate).year()
     );
   }
 
   get xMaxTicksLimit() {
     if (this.bucketing === "daily") {
-      const days = this.endDate.diff(this.startDate, "days") + 1;
+      const days = this.modelEndDate.diff(this.modelStartDate, "days") + 1;
       if (days > 31) {
         return 12;
       }
@@ -414,7 +433,7 @@ export default class AdminDashboardSiteTraffic extends Component {
     if (this.bucketing !== "daily") {
       return true;
     }
-    const days = this.endDate.diff(this.startDate, "days") + 1;
+    const days = this.modelEndDate.diff(this.modelStartDate, "days") + 1;
     // autoSkip when there are too many labels OR when each label is wider
     // (cross-year periods include the year on every label).
     return days > 31 || this.spansYears;
@@ -424,8 +443,8 @@ export default class AdminDashboardSiteTraffic extends Component {
     if (!this.model?.data) {
       return 0;
     }
-    const startFmt = ymd(this.startDate);
-    const endFmt = ymd(this.endDate);
+    const startFmt = ymd(this.modelStartDate);
+    const endFmt = ymd(this.modelEndDate);
     const visibleNotHidden = this.visibleSeries.filter(
       (s) => !this.hiddenSeries.has(s.req)
     );
@@ -470,8 +489,8 @@ export default class AdminDashboardSiteTraffic extends Component {
       xMaxTicksLimit: this.xMaxTicksLimit,
       xTicksCallback: makeXTicksCallback({
         bucketing,
-        startMs: this.startDate.valueOf(),
-        endMs: this.endDate.valueOf(),
+        startMs: this.modelStartDate.valueOf(),
+        endMs: this.modelEndDate.valueOf(),
       }),
       xTickColorCallback: makeXTickColorCallback({ bucketing }),
       tooltipTitleCallback: makeTooltipTitleCallback({ bucketing }),
