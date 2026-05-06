@@ -18,15 +18,25 @@ if ENV["LOG_TEST_REQUESTS"] == "1"
       method = env["REQUEST_METHOD"]
       pid = Process.pid
       t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-      Rails.logger.warn("[req-start] in_flight=#{n} pid=#{pid} #{method} #{path}")
+      log("[req-start] in_flight=#{n} pid=#{pid} #{method} #{path}")
       status, headers, body = @app.call(env)
       t1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-      Rails.logger.warn(
+      log(
         "[req-end]   in_flight=#{@@in_flight.value} pid=#{pid} dt=#{((t1 - t0) * 1000).to_i}ms #{status} #{path}",
       )
       [status, headers, body]
     ensure
       @@in_flight.decrement
+    end
+
+    private
+
+    # bin/qunit redirects spawned-Rails-server stdio to tmp/test_server_<port>.log,
+    # which the workflow tails. Rails.logger.* goes to log/test.log instead, so
+    # write to STDERR to land in the file we're actually capturing in CI.
+    def log(line)
+      $stderr.puts(line)
+      $stderr.flush
     end
   end
 

@@ -310,11 +310,19 @@ jobs:
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: |
-          # Stream Rails test log alongside QUnit output so the
-          # [req-start]/[req-end] lines from the test request logger appear
-          # interleaved with browser console output in CI.
-          mkdir -p log && touch log/test.log
-          (tail -F log/test.log | sed -u 's/^/[rails] /') &
+          # Stream the spawned-Rails-server log alongside QUnit output. bin/qunit
+          # --standalone spawns Rails on a port (typically 4566) and redirects
+          # its stdio to tmp/test_server_<port>.log. We wait for that file to
+          # appear, then tail it with the expanded glob so [req-start]/[req-end]
+          # lines show up in the CI output.
+          mkdir -p tmp
+          (
+            while [ -z "$(ls tmp/test_server_*.log 2>/dev/null)" ]; do
+              sleep 0.2
+            done
+            tail -F -n 0 tmp/test_server_*.log 2>/dev/null \
+              | sed -u 's/^/[rails] /'
+          ) &
           tail_pid=$!
           trap "kill $tail_pid 2>/dev/null || true" EXIT
           QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
