@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import CustomDateRangeModal from "discourse/admin/components/modal/custom-date-range";
+import SiteTrafficCustomRangeModal from "discourse/admin/components/modal/site-traffic-custom-range";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
@@ -44,7 +44,7 @@ export default class SiteTrafficPeriodSelector extends Component {
   @action
   onPeriodChange(period) {
     if (period === SITE_TRAFFIC_PERIODS.CUSTOM) {
-      this.modal.show(CustomDateRangeModal, {
+      this.modal.show(SiteTrafficCustomRangeModal, {
         model: {
           startDate: this.args.startDate,
           endDate: this.args.endDate,

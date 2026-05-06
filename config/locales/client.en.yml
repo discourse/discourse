@@ -6993,6 +6993,13 @@ en:
               crawlers: "Crawlers"
               today_partial: "(today, partial)"
           drilldown: "See details →"
+          custom_range:
+            title: "Pick a custom date range"
+            pick_start: "Pick a start date"
+            pick_end: "Pick an end date (started %{start})"
+            range: "%{start} – %{end}"
+            apply: "Apply"
+            cancel: "Cancel"
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."

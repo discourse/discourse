@@ -187,6 +187,145 @@
   min-width: 12em;
 }
 
+// Calendar-style custom date range picker (prototype). Replaces the
+// generic CustomDateRangeModal for the Site Traffic section.
+.site-traffic-custom-range {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  min-width: 28em;
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+
+    .btn {
+      flex: 0 0 auto;
+    }
+  }
+
+  &__titles {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: space-around;
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  &__months {
+    display: flex;
+    gap: 1.5em;
+    justify-content: center;
+  }
+
+  &__month {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+
+  &__dow {
+    display: grid;
+    grid-template-columns: repeat(7, 2.25em);
+    gap: 0.1em;
+  }
+
+  &__dow-cell {
+    text-align: center;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    line-height: 1.5em;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 2.25em);
+    gap: 0.1em;
+  }
+
+  &__cell {
+    box-sizing: border-box;
+    width: 2.25em;
+    height: 2.25em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 0;
+    transition:
+      background 80ms ease,
+      color 80ms ease;
+
+    &:hover:not(.is-disabled, .is-blank) {
+      background: var(--primary-very-low);
+    }
+
+    &.is-blank {
+      cursor: default;
+    }
+
+    &.is-today {
+      box-shadow: inset 0 0 0 1px var(--tertiary);
+    }
+
+    &.is-in-range {
+      background: var(--tertiary-low);
+      border-radius: 0;
+    }
+
+    &.is-start,
+    &.is-end {
+      background: var(--tertiary);
+      color: var(--secondary);
+      border-radius: 4px;
+    }
+
+    &.is-start {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &.is-end {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    &.is-start.is-end {
+      border-radius: 4px;
+    }
+
+    &.is-disabled {
+      color: var(--primary-low);
+      cursor: not-allowed;
+    }
+  }
+
+  &__summary {
+    text-align: center;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    min-height: 1.4em;
+  }
+}
+
+@media screen and (width <= 600px) {
+  .site-traffic-custom-range {
+    min-width: 0;
+
+    &__months {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}
+
 @media screen and (width <= 767px) {
   .admin-dashboard-site-traffic {
     &__card {
