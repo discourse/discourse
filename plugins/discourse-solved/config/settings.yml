@@ -5,6 +5,7 @@ discourse_solved:
   solved_allow_multiple_solutions:
     default: false
     client: true 
+    hidden: true
   show_who_marked_solved:
     default: false
     client: true
