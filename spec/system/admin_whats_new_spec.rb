@@ -11,6 +11,7 @@ describe "Admin What's New Page" do
   end
 
   def set_new_features_response_json(payload)
+    UpcomingChanges.stubs(:permanent_upcoming_changes).returns([])
     Discourse.redis.set("new_features", MultiJson.dump(payload))
   end
 

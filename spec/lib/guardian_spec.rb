@@ -37,6 +37,24 @@ RSpec.describe Guardian do
     expect { Guardian.new(user) }.not_to raise_error
   end
 
+  describe "AnonymousUser#in_any_groups?" do
+    let(:anon) { Guardian::AnonymousUser.new }
+
+    it "returns true when the anonymous auto group is in the list" do
+      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(true)
+      expect(
+        anon.in_any_groups?([Group::AUTO_GROUPS[:admins], Group::AUTO_GROUPS[:anonymous]]),
+      ).to eq(true)
+    end
+
+    it "returns false for any other group, including everyone and logged_in_users" do
+      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:everyone]])).to eq(false)
+      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(false)
+      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(false)
+      expect(anon.in_any_groups?([])).to eq(false)
+    end
+  end
+
   describe "can_enable_safe_mode" do
     fab!(:user)
     fab!(:moderator)

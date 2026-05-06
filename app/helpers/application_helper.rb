@@ -525,6 +525,10 @@ module ApplicationHelper
     SiteSetting.splash_screen
   end
 
+  def custom_splash_screen_enabled?
+    @custom_splash_screen_enabled ||= SiteSetting.splash_screen_image.is_a?(Upload)
+  end
+
   def splash_screen_image_animated?
     build_splash_screen_image unless defined?(@splash_screen_image_svg)
     @splash_screen_image_svg.present? && @splash_screen_image_svg.match?(/@keyframes\s/)

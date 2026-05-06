@@ -312,6 +312,16 @@ RSpec.describe Group do
     it "returns an empty array when passing an unknown group" do
       expect(described_class.auto_groups_between(:trust_level_0, :trust_level_1337)).to be_empty
     end
+
+    it "excludes pseudogroups that encompass large sets of users" do
+      expect(described_class.auto_groups_between(:admins, :trust_level_1)).to contain_exactly(
+        1,
+        2,
+        3,
+        10,
+        11,
+      )
+    end
   end
 
   describe ".refresh_automatic_group!" do
@@ -406,6 +416,18 @@ RSpec.describe Group do
     it "makes sure the everyone group is not visible except to staff" do
       g = Group.refresh_automatic_group!(:everyone)
       expect(g.visibility_level).to eq(Group.visibility_levels[:staff])
+    end
+
+    it "makes sure the anonymous and logged_in_users pseudogroups are hidden and have no members" do
+      anon = Group.refresh_automatic_group!(:anonymous)
+      expect(anon.id).to eq(Group::AUTO_GROUPS[:anonymous])
+      expect(anon.visibility_level).to eq(Group.visibility_levels[:staff])
+      expect(GroupUser.where(group_id: anon.id).count).to eq(0)
+
+      logged_in = Group.refresh_automatic_group!(:logged_in_users)
+      expect(logged_in.id).to eq(Group::AUTO_GROUPS[:logged_in_users])
+      expect(logged_in.visibility_level).to eq(Group.visibility_levels[:staff])
+      expect(GroupUser.where(group_id: logged_in.id).count).to eq(0)
     end
 
     it "makes sure automatic groups are visible to logged on users" do
@@ -930,6 +952,39 @@ RSpec.describe Group do
 
       expect(
         Group.visible_groups(admin, [], {}).where(id: Group::AUTO_GROUPS[:everyone]).exists?,
+      ).to eq(false)
+    end
+
+    it "includes logged_in_users, anonymous and everyone groups when include_pseudogroups is true" do
+      expect(
+        Group
+          .visible_groups(admin, [], include_pseudogroups: true)
+          .where(id: Group::AUTO_GROUPS[:everyone])
+          .exists?,
+      ).to eq(true)
+      expect(
+        Group
+          .visible_groups(admin, [], include_pseudogroups: true)
+          .where(id: Group::AUTO_GROUPS[:anonymous])
+          .exists?,
+      ).to eq(true)
+      expect(
+        Group
+          .visible_groups(admin, [], include_pseudogroups: true)
+          .where(id: Group::AUTO_GROUPS[:logged_in_users])
+          .exists?,
+      ).to eq(true)
+    end
+
+    it "does not include logged_in_users, anonymous and everyone groups by default" do
+      expect(
+        Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:everyone]).exists?,
+      ).to eq(false)
+      expect(
+        Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:anonymous]).exists?,
+      ).to eq(false)
+      expect(
+        Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:logged_in_users]).exists?,
       ).to eq(false)
     end
 

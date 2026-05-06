@@ -612,9 +612,20 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
+          wait_for_ember_boot
           wait_for_client_settled(method_name)
           result
         end
+      end
+
+      private
+
+      # `<discourse-assets>` is only present on Ember pages; `ember-application`
+      # is added to the root element (`#main`) once Ember mounts.
+      def wait_for_ember_boot
+        session = @driver.send(:session)
+        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
+        session.assert_selector("#main.ember-application", visible: :all)
       end
     end
 

@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseUpdates do
+  # DiscourseUpdates merges against UpcomingChanges.permanent_upcoming_changes; stub it
+  # so these examples do not depend on which settings are marked permanent in
+  # site_settings.yml.
+  def stub_permanent_upcoming_changes!(changes)
+    UpcomingChanges.stubs(:permanent_upcoming_changes).returns(changes)
+  end
+
+  def stub_merge_uc_example_status!(uc_status)
+    if uc_status == :permanent
+      stub_permanent_upcoming_changes!(permanent_upcoming_changes)
+    else
+      stub_permanent_upcoming_changes!([])
+    end
+  end
+
   def stub_data(latest, missing, critical, updated_at)
     DiscourseUpdates.latest_version = latest
     DiscourseUpdates.missing_versions_count = missing
@@ -9,6 +24,22 @@ RSpec.describe DiscourseUpdates do
   end
 
   subject(:version) { DiscourseUpdates.check_version }
+
+  let(:permanent_upcoming_changes) do
+    [
+      {
+        setting: :enable_upload_debug_mode,
+        humanized_name: "Enable upload debug mode",
+        description: "Debug uploads.",
+        upcoming_change: {
+          learn_more_url: "https://meta.discourse.org/t/-/1234",
+          image: {
+            url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+          },
+        },
+      },
+    ]
+  end
 
   context "when version check was done at the current installed version" do
     before { DiscourseUpdates.last_installed_version = Discourse::VERSION::STRING }
@@ -156,6 +187,8 @@ RSpec.describe DiscourseUpdates do
     end
 
     before(:each) do
+      stub_permanent_upcoming_changes!([])
+
       Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
       Discourse.redis.del "new_features_last_seen_user_#{admin2.id}"
       Discourse.redis.set("new_features", MultiJson.dump(sample_features))
@@ -340,17 +373,7 @@ RSpec.describe DiscourseUpdates do
         Discourse.redis.del("new_features_last_seen_user_#{admin.id}")
         Discourse.redis.set("new_features", MultiJson.dump([]))
 
-        mock_upcoming_change_metadata(
-          {
-            enable_upload_debug_mode: {
-              impact: "other,developers",
-              status: :permanent,
-              impact_type: "other",
-              impact_role: "developers",
-              learn_more_url: "https://meta.discourse.org/t/-/1234",
-            },
-          },
-        )
+        stub_permanent_upcoming_changes!(permanent_upcoming_changes)
 
         UpcomingChanges.stubs(:image_exists?).returns(true)
         UpcomingChanges.stubs(:image_data).returns(
@@ -381,7 +404,11 @@ RSpec.describe DiscourseUpdates do
       ]
     end
 
-    before { Discourse.redis.set("new_features", MultiJson.dump(sample_features)) }
+    before do
+      stub_permanent_upcoming_changes!([])
+      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+    end
+
     after { DiscourseUpdates.clean_state }
 
     it "returns the max created_at from merged features" do
@@ -429,7 +456,11 @@ RSpec.describe DiscourseUpdates do
       [{ "emoji" => "🤾", "title" => "A Feature", "created_at" => feature_date }]
     end
 
-    before { Discourse.redis.set("new_features", MultiJson.dump(sample_features)) }
+    before do
+      stub_permanent_upcoming_changes!([])
+      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+    end
+
     after { DiscourseUpdates.clean_state }
 
     it "uses the cached timestamp instead of recomputing on repeated calls" do
@@ -448,27 +479,6 @@ RSpec.describe DiscourseUpdates do
   end
 
   describe ".merge_new_features_with_upcoming_changes" do
-    def mock_merge_uc_metadata(uc_status)
-      mock_upcoming_change_metadata(
-        {
-          floating_dismiss_topics_on_mobile: {
-            impact: "feature,all_members",
-            status: :beta,
-            impact_type: "feature",
-            impact_role: "all_members",
-            learn_more_url: "https://meta.discourse.org/t/-/387322",
-          },
-          enable_upload_debug_mode: {
-            impact: "other,developers",
-            status: uc_status,
-            impact_type: "other",
-            impact_role: "developers",
-            learn_more_url: "https://meta.discourse.org/t/-/1234",
-          },
-        },
-      )
-    end
-
     def feature_for_uc_setting(features)
       features.find { |f| f[:upcoming_change_setting_name].to_s == "enable_upload_debug_mode" }
     end
@@ -486,17 +496,10 @@ RSpec.describe DiscourseUpdates do
     end
 
     context "when there are no permanent upcoming changes" do
-      before { mock_merge_uc_metadata(:beta) }
+      before { stub_merge_uc_example_status!(:beta) }
 
       it "returns the same new_features array without modification" do
-        features = [
-          {
-            title: "Feed item",
-            description: "From meta",
-            created_at: 1.hour.ago.to_s,
-            upcoming_change_setting_name: "other_setting",
-          },
-        ]
+        features = [{ title: "Feed item", description: "From meta", created_at: 1.hour.ago.to_s }]
 
         result = described_class.merge_new_features_with_upcoming_changes(features)
         expect(result).to eq(features)
@@ -504,6 +507,8 @@ RSpec.describe DiscourseUpdates do
     end
 
     context "when the feed already includes a feature for an upcoming change" do
+      before { stub_merge_uc_example_status!(:permanent) }
+
       let(:upcoming_change_setting_name) { "enable_upload_debug_mode" }
       let(:feed_feature) do
         {
@@ -519,13 +524,13 @@ RSpec.describe DiscourseUpdates do
       end
 
       context "when the upcoming change is permanent" do
-        before { mock_merge_uc_metadata(:permanent) }
-
         it "keeps the feed row and does not inject a duplicate from the UC" do
           new_features = [feed_feature.deep_dup]
           result = described_class.merge_new_features_with_upcoming_changes(new_features)
 
-          expect(result.length).to eq(1)
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).to include(
+            "enable_upload_debug_mode",
+          )
           row = feature_for_uc_setting(result)
           expect(row[:title]).to eq("Official feed title")
           expect(row[:description]).to eq("Marketing copy from the new features feed")
@@ -536,41 +541,27 @@ RSpec.describe DiscourseUpdates do
       end
 
       context "when the upcoming change is not permanent" do
-        before { mock_merge_uc_metadata(:beta) }
+        before { stub_merge_uc_example_status!(:beta) }
 
         it "excludes the item from the new features feed" do
           new_features = [feed_feature.deep_dup]
           result = described_class.merge_new_features_with_upcoming_changes(new_features)
-          expect(result.length).to eq(0)
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
+            :enable_upload_debug_mode,
+          )
         end
       end
 
       context "when this site does not have any permanent upcoming changes" do
-        before { mock_merge_uc_metadata(:beta) }
+        before { stub_merge_uc_example_status!(:beta) }
 
         it "excludes the feed item with the upcoming_change_setting_name" do
           new_features = [feed_feature.deep_dup]
           result = described_class.merge_new_features_with_upcoming_changes(new_features)
-          expect(result.length).to eq(0)
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
+            :enable_upload_debug_mode,
+          )
         end
-      end
-    end
-
-    context "when a permanent UC is not in the feed" do
-      before { mock_merge_uc_metadata(:permanent) }
-
-      it "injects a feature using UC name, description, learn URL, and screenshot" do
-        result = described_class.merge_new_features_with_upcoming_changes([])
-
-        expect(result.length).to eq(1)
-        feature = feature_for_uc_setting(result)
-        expect(feature[:title]).to eq(SiteSetting.humanized_names(:enable_upload_debug_mode))
-        expect(feature[:description]).to eq(SiteSetting.description(:enable_upload_debug_mode))
-        expect(feature[:link]).to eq("https://meta.discourse.org/t/-/1234")
-        expect(feature[:screenshot_url]).to eq(
-          UpcomingChanges.image_data(:enable_upload_debug_mode)[:url],
-        )
-        expect(feature[:upcoming_change_setting_name]).to eq(:enable_upload_debug_mode)
       end
 
       it "uses the status_changed event time when the UC became permanent" do

@@ -626,6 +626,28 @@ RSpec.describe TagsController do
       )
     end
 
+    context "when a synonym is hidden from the current user" do
+      fab!(:hidden_synonym) do
+        Fabricate(
+          :tag,
+          name: "hidden-synonym",
+          description: "private synonym description",
+          target_tag: tag,
+        )
+      end
+      fab!(:hidden_tag_group) do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [hidden_synonym])
+      end
+
+      it "does not expose the synonym" do
+        get "/tag/#{tag.name}/info.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "synonyms")).to be_empty
+        expect(response.body).not_to include(hidden_synonym.name)
+        expect(response.body).not_to include(hidden_synonym.description)
+      end
+    end
+
     it "returns 404 if tag is staff-only" do
       _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
       get "/tag/test/info.json"

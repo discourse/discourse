@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ManageTagsForm extends Component {
@@ -42,6 +43,15 @@ export default class ManageTagsForm extends Component {
   blockedTagsFor(rows, index, side) {
     const tags = rows?.[index]?.[side];
     return tags?.length ? tags : undefined;
+  }
+
+  @bind
+  mobilePlacementForReplaceRowTagChooser(rows, index) {
+    const rowsBelow = rows.length - 1 - index;
+    if (rowsBelow < 3) {
+      return "top";
+    }
+    return null;
   }
 
   @action
@@ -228,6 +238,10 @@ export default class ManageTagsForm extends Component {
                     index
                     "to"
                   }}
+                  @mobilePlacement={{this.mobilePlacementForReplaceRowTagChooser
+                    transientData.replace_rows
+                    index
+                  }}
                 />
               </collection.Field>
             </row.Col>
@@ -256,6 +270,10 @@ export default class ManageTagsForm extends Component {
                     transientData.replace_rows
                     index
                     "from"
+                  }}
+                  @mobilePlacement={{this.mobilePlacementForReplaceRowTagChooser
+                    transientData.replace_rows
+                    index
                   }}
                 />
               </collection.Field>
