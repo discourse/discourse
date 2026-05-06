@@ -554,9 +554,7 @@ export default class UppyComposerUpload {
 
   @bind
   _pasteEventListener(event) {
-    if (
-      !document.querySelector(this.editorInputClass)?.contains(event.target)
-    ) {
+    if (!event.target.closest(this.editorInputClass)) {
       return;
     }
 

@@ -1120,6 +1120,7 @@ export default class ComposerEditor extends Component {
               @initialValues={{this.composer.formTemplateInitialValues}}
               @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
               @onChange={{this.updateFormPreview}}
+              @uppyComposerUpload={{this.uppyComposerUpload}}
             />
           </form>
         </div>
