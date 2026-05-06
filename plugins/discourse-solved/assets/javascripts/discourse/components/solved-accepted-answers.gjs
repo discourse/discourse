@@ -1,9 +1,12 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import PostExcerptAccordion from "discourse/components/post/post-excerpt-accordion";
 import icon from "discourse/helpers/d-icon";
-import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
 import SolvedAccordionItemMetadata from "./solved-accordion-item-metadata";
+
+const CHARS_PER_LINE = 90;
+const DEFAULT_LINES_DISPLAYED = 14;
 
 export default class SolvedAcceptedAnswers extends Component {
   static shouldRender(args) {
@@ -13,16 +16,14 @@ export default class SolvedAcceptedAnswers extends Component {
     );
   }
 
+  @service siteSettings;
+
   get topic() {
     return this.args.post.topic;
   }
 
   get acceptedAnswers() {
-    return (this.topic.accepted_answers ?? []).map((answer) => {
-      const post = Post.create(answer);
-      post.topic = this.topic;
-      return post;
-    });
+    return this.topic.accepted_answers ?? [];
   }
 
   get hasAnswer() {
@@ -33,13 +34,23 @@ export default class SolvedAcceptedAnswers extends Component {
     return this.acceptedAnswers?.length > 1;
   }
 
+  get linesDisplayed() {
+    const chars = this.siteSettings.solved_quote_length;
+    if (chars <= 0) {
+      return DEFAULT_LINES_DISPLAYED;
+    }
+
+    return Math.max(1, Math.ceil(chars / CHARS_PER_LINE));
+  }
+
   <template>
     <PostExcerptAccordion
       @excerptPosts={{this.acceptedAnswers}}
       @decoratorState={{@decoratorState}}
+      @linesDisplayed={{this.linesDisplayed}}
       class="d-solved-answers"
     >
-      <:accordionHeader>
+      <:header>
         <h3 class="d-solved-answers__title">
 
           {{#if this.hasAnswer}}
@@ -50,14 +61,16 @@ export default class SolvedAcceptedAnswers extends Component {
         </h3>
 
         {{#if this.hasMultipleAnswers}}
-          {{this.acceptedAnswers.length}}
-          {{i18n "solved.solution_summary" count=this.acceptedAnswers.length}}
+          <span class="d-solved-answers__solution_count">
+            {{this.acceptedAnswers.length}}
+            {{i18n "solved.solution_summary" count=this.acceptedAnswers.length}}
+          </span>
         {{/if}}
-      </:accordionHeader>
+      </:header>
 
-      <:accordionItemMetadata as |excerptPost|>
+      <:itemMetadata as |excerptPost|>
         <SolvedAccordionItemMetadata @excerptPost={{excerptPost}} />
-      </:accordionItemMetadata>
+      </:itemMetadata>
     </PostExcerptAccordion>
   </template>
 }

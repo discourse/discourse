@@ -36,15 +36,13 @@ export default class SolvedAccordionItemMetadata extends Component {
   }
 
   <template>
-    <UserLink @username={{this.excerptPost.username}}>
+    <UserLink @username={{this.excerptPost.username}} class="user-link">
       {{boundAvatarTemplate this.excerptPost.avatar_template "tiny"}}
-      <span class="user-name">
-        {{this.userDisplayName}}
-      </span>
+      <span>{{this.userDisplayName}}</span>
     </UserLink>
     <span class="dot-separator"></span>
     <a href={{this.excerptPost.post_url}} title={{i18n "post.sr_date"}}>
-      <RelativeDate @date={{this.excerptPost.displayDate}} />
+      <RelativeDate @date={{this.excerptPost.created_at}} />
     </a>
 
     {{#if this.showAccepter}}
@@ -55,9 +53,12 @@ export default class SolvedAccordionItemMetadata extends Component {
           @key="solved.marked_solved_by"
           as |Placeholder|
         >
-          <Placeholder @name="user" @class="d-solved-accordion__accepter">
+          <Placeholder @name="user" @class="d-solved-answers__accepter">
 
-            <UserLink @username={{this.excerptPost.accepter_username}}>
+            <UserLink
+              @username={{this.excerptPost.accepter_username}}
+              class="accepter-link"
+            >
               {{this.accepterDisplayName}}
             </UserLink>
           </Placeholder>

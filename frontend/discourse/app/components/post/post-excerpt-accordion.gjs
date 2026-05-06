@@ -16,30 +16,30 @@ export default class PostExcerptAccordion extends Component {
   }
 
   resetExpandedIds() {
+    const defaultExpanded = this.args.defaultExpanded;
+
     this.expandedIds.clear();
 
-    const firstExcerptPostId = this.args.excerptPosts?.[0]?.id;
-    if (firstExcerptPostId) {
-      this.expandedIds.add(firstExcerptPostId);
+    switch (defaultExpanded) {
+      case "all":
+        this.excerptPosts.forEach((excerptPost) =>
+          this.expandedIds.add(excerptPost.id)
+        );
+        break;
+      case "none":
+        break;
+      case "first":
+      case "":
+      default:
+        const firstExcerptPostId = this.args.excerptPosts?.[0]?.id;
+        if (firstExcerptPostId) {
+          this.expandedIds.add(firstExcerptPostId);
+        }
     }
-  }
-
-  get topic() {
-    return this.args.post.topic;
   }
 
   get excerptPosts() {
     return this.args.excerptPosts ?? [];
-  }
-
-  get showToggle() {
-    return (
-      this.hasExcerpt && this.measured && (this.isOverflowing || this.expanded)
-    );
-  }
-
-  get overflowingAttr() {
-    return this.measured ? String(this.isOverflowing) : "true";
   }
 
   get allExpanded() {
@@ -79,8 +79,8 @@ export default class PostExcerptAccordion extends Component {
     >
       {{!-- <a {{on "click" this.toggleAllExpanded}}> --}}
       <div class="d-post-excerpt-accordion__header">
-        {{#if (has-block "accordionHeader")}}
-          {{yield this.excerptPosts to="accordionHeader"}}
+        {{#if (has-block "header")}}
+          {{yield this.excerptPosts to="header"}}
         {{/if}}
       </div>
       {{! </a> }}
@@ -92,14 +92,15 @@ export default class PostExcerptAccordion extends Component {
           @isExpanded={{this.itemIsExpanded excerptPost.id}}
           @onToggleExpanded={{fn this.toggleItemExpanded excerptPost.id}}
           @linesDisplayed={{@linesDisplayed}}
+          @defaultExpanded="first"
         >
-          <:accordionItemMetadata>
-            {{yield excerptPost to="accordionItemMetadata"}}
-          </:accordionItemMetadata>
+          <:itemMetadata>
+            {{yield excerptPost to="itemMetadata"}}
+          </:itemMetadata>
 
-          <:accordionItemBeforeContent>
-            {{yield excerptPost to="accordionItemBeforeContent"}}
-          </:accordionItemBeforeContent>
+          <:itemBeforeContent>
+            {{yield excerptPost to="itemBeforeContent"}}
+          </:itemBeforeContent>
         </PostExcerptAccordionItem>
       {{/each}}
     </aside>

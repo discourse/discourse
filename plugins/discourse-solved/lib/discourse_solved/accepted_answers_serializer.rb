@@ -19,7 +19,8 @@ module DiscourseSolved
         .filter_map do |ta|
           next unless ta.post
 
-          serialized = BasicPostSerializer.new(ta.post, scope: guardian, root: false).as_json
+          serialized =
+            PostExcerptAccordionItemSerializer.new(ta.post, scope: guardian, root: false).as_json
 
           if ta.accepter
             serialized[:accepter_username] = ta.accepter.username

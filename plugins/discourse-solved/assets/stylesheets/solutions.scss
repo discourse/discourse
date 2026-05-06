@@ -110,46 +110,53 @@ $solved-color: var(--success);
 }
 
 .d-solved-answers {
+  margin-left: var(--topic-body-width-padding);
+
   & .d-post-excerpt-accordion {
     &__header {
       color: var(--secondary);
       background-color: $solved-color;
       border-color: $solved-color;
-      font-size: var(--font-down-2);
     }
   }
 
   &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
     margin: 0;
-    padding-left: var(--space-1);
     text-transform: uppercase;
     font-weight: normal;
+  }
+
+  &__solution_count {
+    font-size: var(--font-down-1);
   }
 
   .d-post-excerpt-accordion-item {
     &__metadata {
       color: var(--primary-low-mid);
 
-      a {
-        &,
-        &:hover,
-        &:visited {
-          .discourse-no-touch &,
-          .discourse-touch & {
-            color: var(--primary-low-mid);
-            background: transparent;
+      // a {
+      //   &,
+      //   &:hover,
+      //   &:visited {
+      //     .discourse-no-touch &,
+      //     .discourse-touch & {
+      //       color: var(--primary-low-mid);
+      //       background: transparent;
 
-            .d-icon {
-              color: var(--primary-low-mid);
-              background: transparent;
-            }
-          }
-        }
-      }
+      //       .d-icon {
+      //         color: var(--primary-low-mid);
+      //         background: transparent;
+      //       }
+      //     }
+      //   }
+      // }
 
-      .user-name {
-        color: var(--primary);
-      }
+      // .user-name {
+      //   color: var(--primary);
+      // }
     }
   }
 }

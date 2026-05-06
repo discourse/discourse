@@ -1,6 +1,5 @@
 .d-post-excerpt-accordion {
   background: var(--secondary);
-  margin-left: var(--topic-body-width-padding);
 
   &__header {
     display: flex;
@@ -8,8 +7,7 @@
     gap: var(--space-2);
     color: var(--primary);
     background-color: var(--secondary);
-    padding: 0.6em;
-    padding-left: var(--space-3);
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
     border-top-left-radius: var(--d-border-radius-large);
     border-top-right-radius: var(--d-border-radius-large);
     border-color: var(--primary-low);
@@ -40,11 +38,28 @@
 
   &__metadata {
     display: flex;
-    gap: var(--space-1);
     align-items: center;
+    gap: var(--space-1);
 
-    .user-name {
+    a {
+      &,
+      &:hover,
+      &:visited {
+        color: var(--primary-low-mid);
+      }
+    }
+
+    .user-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
       color: var(--primary);
+
+      &,
+      &:hover,
+      &:visited {
+        color: var(--primary);
+      }
     }
   }
 
@@ -97,27 +112,25 @@
     padding-bottom: 0;
     margin: 0;
     max-height: calc(
-      var(--solved-max-lines, 14) * var(--cooked-line-height) * 1em
-    ); // solved-max-lines set in post-excerpt-accordion-item.gjs
+      var(--excerpt-max-lines, 6) * var(--cooked-line-height) * 1em
+    ); // excerpt-max-lines set in post-excerpt-accordion-item.gjs
     overflow: hidden;
 
     .cooked {
       padding: 0 !important;
     }
+  }
 
-    &[data-overflowing] {
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 100%;
-        background: linear-gradient(transparent, 70%, var(--secondary));
-        pointer-events: none;
-        z-index: 1;
-      }
-    }
+  &[data-overflowing="true"] &__content::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(transparent, var(--secondary));
+    pointer-events: none;
+    z-index: 1;
   }
 
   &__read-more {

@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
@@ -11,19 +12,18 @@ import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import onResize from "discourse/modifiers/on-resize";
 import { i18n } from "discourse-i18n";
 
-const DEFAULT_LINES_DISPLAYED = 14;
+const DEFAULT_LINES_DISPLAYED = 6;
 
 export default class PostExcerptAccordionItem extends Component {
+  @tracked measured = false;
+  @tracked isOverflowing = false;
+
   get excerptPost() {
     return this.args.excerptPost;
   }
 
-  get topic() {
-    return this.excerptPost.topic;
-  }
-
   get quoteId() {
-    return `post-excerpt-${this.topic.id}-${this.excerptPost.post_number}`;
+    return `post-excerpt-${this.excerptPost.topic_id}-${this.excerptPost.post_number}`;
   }
 
   get hasContent() {
@@ -31,11 +31,14 @@ export default class PostExcerptAccordionItem extends Component {
   }
 
   get postPath() {
-    return `${this.topic.url}/${this.excerptPost.post_number}`;
+    return this.excerptPost.post_url;
   }
 
   get userDisplayName() {
-    return userPrioritizedName(this.excerptPost.user);
+    return userPrioritizedName({
+      username: this.excerptPost.username,
+      name: this.excerptPost.name,
+    });
   }
 
   get linesDisplayed() {
@@ -43,15 +46,25 @@ export default class PostExcerptAccordionItem extends Component {
   }
 
   get maxHeightStyle() {
-    return trustHTML(`--excerpt-max-lines: ${this.args.linesDisplayed}`);
+    return trustHTML(`--excerpt-max-lines: ${this.linesDisplayed}`);
+  }
+
+  get overflowingAttr() {
+    return this.measured ? String(this.isOverflowing) : "true";
   }
 
   @action
   checkOverflow(entries) {
+    if (!this.args.isExpanded) {
+      this.isOverflowing = false;
+      this.measured = true;
+    }
+
     const blockquote = entries?.[0]?.target;
     if (!blockquote) {
       return;
     }
+
     this.isOverflowing = blockquote.scrollHeight > blockquote.clientHeight + 1;
     this.measured = true;
   }
@@ -66,31 +79,29 @@ export default class PostExcerptAccordionItem extends Component {
         }}
         style={{this.maxHeightStyle}}
         data-expanded={{@isExpanded}}
-        data-overflowing="{{this.overflowingAttr}}"
+        data-overflowing={{this.overflowingAttr}}
         data-username={{this.excerptPost.user.username}}
         data-post={{this.excerptPost.post_number}}
         data-topic={{this.topic.id}}
       >
         <div class="d-post-excerpt-accordion-item__header">
           <div class="d-post-excerpt-accordion-item__metadata">
-            {{#if (has-block "accordionItemMetadata")}}
-              {{yield this.excerptPost to="accordionItemMetadata"}}
+            {{#if (has-block "itemMetadata")}}
+              {{yield this.excerptPost to="itemMetadata"}}
             {{else}}
-              <UserLink @user={{this.excerptPost.user}}>
-                {{boundAvatarTemplate
-                  this.excerptPost.user.avatar_template
-                  "tiny"
-                }}
-                <span>
-                  {{this.userDisplayName}}
-                </span>
+              <UserLink
+                @username={{this.excerptPost.username}}
+                class="user-link"
+              >
+                {{boundAvatarTemplate this.excerptPost.avatar_template "tiny"}}
+                <span>{{this.userDisplayName}}</span>
               </UserLink>
               <span class="dot-separator"></span>
               <a
                 href={{this.excerptPost.post_url}}
                 title={{i18n "post.sr_date"}}
               >
-                <RelativeDate @date={{this.excerptPost.displayDate}} />
+                <RelativeDate @date={{this.excerptPost.created_at}} />
               </a>
             {{/if}}
           </div>
@@ -117,7 +128,7 @@ export default class PostExcerptAccordionItem extends Component {
               class="d-post-excerpt-accordion-item__content"
               {{onResize this.checkOverflow}}
             >
-              {{#if (has-block "beforeAccordionItemContent")}}
+              {{#if (has-block "beforeItemContent")}}
                 {{yield this.excerptPost to="beforeAccordionItemContent"}}
               {{/if}}
 
