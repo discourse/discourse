@@ -199,10 +199,16 @@ export default class DiscourseReactionsActions extends Component {
   }
 
   @action
-  touchStart() {
-    this._validTouch = true;
+  touchStart(event) {
+    this._validTouch = !!event.target.closest(
+      ".discourse-reactions-reaction-button"
+    );
 
     cancel(this._touchTimeout);
+
+    if (!this._validTouch) {
+      return false;
+    }
 
     if (this.capabilities.touch) {
       document.documentElement?.classList?.toggle(
