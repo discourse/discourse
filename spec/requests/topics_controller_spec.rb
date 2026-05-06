@@ -2908,6 +2908,34 @@ RSpec.describe TopicsController do
       expect(response.parsed_body).not_to have_key("tags_descriptions")
     end
 
+    it "does not expose links from hidden posts in topic details to non-staff viewers" do
+      visible_post =
+        create_post(topic:, user: post_author1, raw: "[Visible](https://visible-link.example.com)")
+      hidden_post =
+        create_post(topic:, user: post_author1, raw: "[Hidden](https://hidden-link.example.com)")
+
+      topic.topic_links.find_by!(post: visible_post).update!(clicks: 1, title: "Visible title")
+      topic.topic_links.find_by!(post: hidden_post).update!(clicks: 1, title: "Hidden title")
+
+      hidden_post.hide!(PostActionType.types[:off_topic])
+
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["details"]["links"]).to contain_exactly(
+        a_hash_including("url" => "https://visible-link.example.com", "title" => "Visible title"),
+      )
+
+      sign_in(moderator)
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["details"]["links"]).to contain_exactly(
+        a_hash_including("url" => "https://visible-link.example.com", "title" => "Visible title"),
+        a_hash_including("url" => "https://hidden-link.example.com", "title" => "Hidden title"),
+      )
+    end
+
     it "shows a blank-slug topic without redirecting" do
       topic.update_columns(title: "", slug: nil)
       topic.reload
