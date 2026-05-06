@@ -4540,3 +4540,7 @@ experimental:
     upcoming_change:
       status: "conceptual"
       impact: "feature,admins"
+  experimental_dashboard_improvements_site_traffic:
+    default: false
+    hidden: true
+    client: true

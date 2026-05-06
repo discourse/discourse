@@ -28,7 +28,7 @@ class Report
     storage_stats: :storage_stats,
   }
 
-  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs]
+  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic site_traffic_summary page_view_legacy_total_reqs]
 
   HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
     consolidated_page_views_browser_detection
@@ -88,6 +88,7 @@ class Report
   include Reports::ConsolidatedPageViews
   include Reports::ConsolidatedPageViewsBrowserDetection
   include Reports::SiteTraffic
+  include Reports::SiteTrafficSummary
   include Reports::DailyEngagedUsers
   include Reports::DauByMau
   include Reports::Emails
@@ -156,7 +157,8 @@ class Report
                 :legacy,
                 :default_group_by,
                 :y_axis_title,
-                :current_user
+                :current_user,
+                :related_data
 
   def self.default_days
     30
@@ -287,6 +289,7 @@ class Report
       json[:limit] = limit if limit
       json[:default_group_by] = default_group_by if default_group_by
       json[:y_axis_title] = y_axis_title if y_axis_title
+      json[:related_data] = related_data if related_data
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(

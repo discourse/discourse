@@ -119,7 +119,7 @@ export default class AdminReportStackedChart extends Component {
         },
         plugins: {
           legend: {
-            display: data.datasets.length > 1,
+            display: chartOptions.showLegend ?? data.datasets.length > 1,
             position: chartOptions.legendPosition || "bottom",
             onClick: (e, legendItem, legend) => {
               const index = legendItem.datasetIndex;
@@ -190,7 +190,9 @@ export default class AdminReportStackedChart extends Component {
                   count: I18n.toNumber(total, { precision: 0 }),
                 });
               },
-              title: (tooltipItem) => this.#tooltipTitle(tooltipItem),
+              title:
+                chartOptions.tooltipTitleCallback ||
+                ((tooltipItem) => this.#tooltipTitle(tooltipItem)),
             },
           },
         },
@@ -207,6 +209,7 @@ export default class AdminReportStackedChart extends Component {
           y: {
             stacked: true,
             display: true,
+            beginAtZero: true,
             grid: {
               color: getCSSColor("--primary-very-low"),
               display: !chartOptions.hideYAxisGridLines,
@@ -214,9 +217,17 @@ export default class AdminReportStackedChart extends Component {
             ticks: {
               callback: (label) => number(label),
               sampleSize: 5,
-              maxRotation: 25,
+              maxRotation: chartOptions.yMaxRotation ?? 25,
               minRotation: 0,
-              stepSize: 1,
+              ...(chartOptions.yStepSize !== undefined &&
+              chartOptions.yStepSize !== null
+                ? { stepSize: chartOptions.yStepSize }
+                : chartOptions.yStepSize === undefined
+                  ? { stepSize: 1 }
+                  : {}),
+              ...(chartOptions.yMaxTicksLimit !== undefined
+                ? { maxTicksLimit: chartOptions.yMaxTicksLimit }
+                : {}),
             },
           },
           x: {
@@ -231,6 +242,16 @@ export default class AdminReportStackedChart extends Component {
               sampleSize: 5,
               maxRotation: 50,
               minRotation: 0,
+              autoSkip: chartOptions.xAutoSkip ?? false,
+              ...(chartOptions.xMaxTicksLimit !== undefined
+                ? { maxTicksLimit: chartOptions.xMaxTicksLimit }
+                : {}),
+              ...(chartOptions.xTicksCallback
+                ? { callback: chartOptions.xTicksCallback }
+                : {}),
+              ...(chartOptions.xTickColorCallback
+                ? { color: chartOptions.xTickColorCallback }
+                : {}),
             },
           },
         },

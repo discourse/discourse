@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdminDashboardSiteTraffic from "discourse/admin/components/admin-dashboard-site-traffic";
 import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
@@ -17,6 +18,7 @@ import { i18n } from "discourse-i18n";
 
 export default class RedesignedAdminDashboard extends Component {
   @service currentUser;
+  @service siteSettings;
 
   @tracked pendingSections;
 
@@ -28,6 +30,10 @@ export default class RedesignedAdminDashboard extends Component {
     this.pendingSections = this.#buildPendingSections(
       this.args.loadedSections?.configuration?.sections
     );
+  }
+
+  get useExperimentalSiteTraffic() {
+    return this.siteSettings.experimental_dashboard_improvements_site_traffic;
   }
 
   @action
@@ -139,14 +145,22 @@ export default class RedesignedAdminDashboard extends Component {
                 @endDate={{@loadedSections.endDate}}
               />
             {{else if (eq section.id "traffic")}}
-              <DashboardTraffic
-                @traffic={{section.data}}
-                @period={{@loadedSections.period}}
-                @loading={{@loadingSections}}
-                @fetchError={{@sectionsFetchError}}
-                @startDate={{@loadedSections.startDate}}
-                @endDate={{@loadedSections.endDate}}
-              />
+              {{#if this.useExperimentalSiteTraffic}}
+                <AdminDashboardSiteTraffic
+                  @period={{@loadedSections.period}}
+                  @startDate={{@loadedSections.startDate}}
+                  @endDate={{@loadedSections.endDate}}
+                />
+              {{else}}
+                <DashboardTraffic
+                  @traffic={{section.data}}
+                  @period={{@loadedSections.period}}
+                  @loading={{@loadingSections}}
+                  @fetchError={{@sectionsFetchError}}
+                  @startDate={{@loadedSections.startDate}}
+                  @endDate={{@loadedSections.endDate}}
+                />
+              {{/if}}
             {{else if (eq section.id "engagement")}}
               <DashboardEngagement
                 @startDate={{@loadedSections.startDate}}

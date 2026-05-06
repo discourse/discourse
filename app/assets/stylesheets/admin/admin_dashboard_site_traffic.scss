@@ -1,0 +1,206 @@
+.admin-dashboard-site-traffic {
+  margin-bottom: 2em;
+
+  &__section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin-bottom: 0.75em;
+    padding: 0 0.25em;
+  }
+
+  &__heading {
+    margin: 0;
+    text-transform: uppercase;
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    color: var(--primary-medium);
+    letter-spacing: 0.08em;
+  }
+
+  &__card-wrapper {
+    position: relative;
+  }
+
+  &__card {
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-large, 8px);
+    padding: 1.75em 2em;
+    display: grid;
+    gap: 1.5em;
+    transition: opacity 120ms ease-out;
+  }
+
+  // Loading state: dim the card immediately on period change so the click
+  // feels acknowledged. The page-level loading slider (top of the page,
+  // the same indicator Discourse uses for navigation) provides the active
+  // "data is loading" cue; the dim provides "this content is stale" context.
+  // Both fade in and snap back via the base 120ms transition.
+  &--loading &__card {
+    opacity: 0.5;
+  }
+
+  &__summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2em;
+    flex-wrap: wrap;
+  }
+
+  &__headline {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__headline-text {
+    margin: 0;
+    font-size: var(--font-up-3);
+    font-weight: 600;
+    color: var(--primary);
+    line-height: 1.3;
+  }
+
+  &__headline--down &__headline-text {
+    color: var(--primary);
+
+    // Negative trend cue: red on the trend portion only would require markup
+    // surgery; for the prototype we tint the whole line subtly.
+    .admin-dashboard-site-traffic__trend-down,
+    & {
+      // no-op placeholder — keep readable color, distinguish via emphasis later
+    }
+  }
+
+  &__kpi-row {
+    display: flex;
+    gap: 2em;
+    flex: 0 0 auto;
+    align-items: flex-start;
+  }
+
+  &__kpi {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15em;
+    text-align: left;
+  }
+
+  &__kpi-value {
+    font-size: var(--font-up-4);
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+  }
+
+  &__kpi-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5em;
+    margin: 0.25em 0;
+  }
+
+  &__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--primary-medium);
+    cursor: pointer;
+    font-size: var(--font-down-1);
+    line-height: 1;
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+
+    &--active {
+      color: var(--primary);
+    }
+  }
+
+  &__pill-swatch {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 0.85em;
+    height: 0.85em;
+    border-radius: 2px;
+    border: 1.5px solid transparent;
+    flex: 0 0 auto;
+  }
+
+  &__chart {
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .admin-report-chart {
+      height: 320px;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    color: var(--primary-medium);
+    padding: 2em 1em;
+  }
+
+  &__error {
+    text-align: center;
+    color: var(--danger);
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  &__drilldown {
+    text-align: right;
+    margin-top: 0.25em;
+
+    a {
+      color: var(--tertiary);
+      font-weight: 500;
+    }
+  }
+}
+
+.site-traffic-period-selector__combo {
+  min-width: 12em;
+}
+
+@media screen and (width <= 767px) {
+  .admin-dashboard-site-traffic {
+    &__card {
+      padding: 1.25em;
+    }
+
+    &__summary {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    &__kpi-row {
+      gap: 1.5em;
+      flex-wrap: wrap;
+    }
+  }
+}
