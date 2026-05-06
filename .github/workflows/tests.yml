@@ -2,11 +2,6 @@ name: Tests
 
 on:
   pull_request:
-    paths-ignore:
-      - ".github/workflows/migration-tests.yml"
-      - ".github/dependabot.yml"
-      - ".github/labeler.yml"
-      - "migrations/**"
   push:
     branches:
       - main
