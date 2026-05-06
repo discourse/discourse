@@ -53,12 +53,13 @@
       display: flex;
       align-items: center;
       gap: var(--space-1);
-      color: var(--primary);
+      color: var(--primary-medium);
+      font-weight: bold;
 
       &,
       &:hover,
       &:visited {
-        color: var(--primary);
+        color: var(--primary-medium);
       }
     }
   }
@@ -69,7 +70,7 @@
 
   &__toggle {
     .d-icon {
-      color: var(--primary);
+      color: var(--primary-medium);
       background: transparent;
       font-size: var(--font-down-1-rem);
     }
@@ -78,11 +79,11 @@
     &:visited {
       .discourse-no-touch &,
       .discourse-touch & {
-        color: var(--primary);
+        color: var(--primary-medium);
         background: transparent;
 
         .d-icon {
-          color: var(--primary);
+          color: var(--primary-medium);
           background: transparent;
         }
       }
@@ -93,21 +94,12 @@
     }
   }
 
-  &__date {
-    &:hover,
-    &:visited {
-      color: var(--primary-low-mid);
-    }
-  }
-
-  &__post-link {
-    font-weight: bold;
-  }
-
   &__content {
     position: relative;
     background: var(--secondary);
-    border: 0;
+    border-color: var(--primary-low);
+    border-style: solid;
+    border-width: 1px 0 0 0;
     padding: var(--space-3);
     padding-bottom: 0;
     margin: 0;
@@ -137,37 +129,6 @@
     padding: var(--space-3);
   }
 
-  //   &__read-more {
-  //     // font-size: var(--font-down-1);
-  //     position: absolute;
-  //     bottom: 0;
-  //     left: 0;
-  //     right: 0;
-  //     padding-left: var(--space-3);
-  //     padding-bottom: var(--space-3);
-  //     padding-top: var(--space-1);
-  //     z-index: 2;
-
-  //     // background: var(--secondary);
-  //   }
-
-  //   &__footer {
-  //     border: 1px solid var(--primary-low);
-  //     white-space: nowrap;
-  //   }
-  //   &__solver,
-  //   &__accepter {
-  //     @include ellipsis;
-  //   }
-
-  //   &[data-expanded="true"] > &__content {
-  //     max-height: none;
-  //     overflow: visible;
-
-  //     &::after {
-  //       display: none;
-  //     }
-  //   }
   &:not([data-expanded]) > &__body {
     display: none;
   }
