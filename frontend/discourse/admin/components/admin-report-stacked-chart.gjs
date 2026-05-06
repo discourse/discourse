@@ -215,6 +215,7 @@ export default class AdminReportStackedChart extends Component {
               display: !chartOptions.hideYAxisGridLines,
             },
             ticks: {
+              color: getCSSColor("--primary"),
               callback: (label) => number(label),
               sampleSize: 5,
               maxRotation: chartOptions.yMaxRotation ?? 25,
@@ -239,6 +240,7 @@ export default class AdminReportStackedChart extends Component {
             ticks: {
               callback: (value) =>
                 this.#categoryTickLabel(value, data.labels, timeUnit),
+              color: getCSSColor("--primary"),
               sampleSize: 5,
               maxRotation: 50,
               minRotation: 0,

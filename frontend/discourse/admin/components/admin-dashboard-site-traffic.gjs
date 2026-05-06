@@ -91,23 +91,26 @@ function isTodayBucket(tickMs) {
   return moment.utc(tickMs).startOf("day").isSame(today, "day");
 }
 
+function cssVar(name) {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+}
+
 function makeXTickColorCallback({ bucketing }) {
-  // Today indicator only applies to daily buckets — at monthly granularity
-  // the entire current-month bucket is in-progress, not just the rightmost
-  // day, so a partial-day cue doesn't fit.
-  if (bucketing !== "daily") {
-    return null;
-  }
+  // Always return a callback so all tick labels get a theme-aware color
+  // (Chart.js's hardcoded default is a fixed gray that's unreadable in
+  // dark mode). The today indicator (daily buckets only) gets a more
+  // muted color than the default.
   return function (context) {
+    const themeDefault = cssVar("--primary");
     if (!context.tick) {
-      return undefined;
+      return themeDefault;
     }
-    if (isTodayBucket(context.tick.value)) {
-      return getComputedStyle(document.documentElement)
-        .getPropertyValue("--primary-medium")
-        .trim();
+    if (bucketing === "daily" && isTodayBucket(context.tick.value)) {
+      return cssVar("--primary-medium");
     }
-    return undefined;
+    return themeDefault;
   };
 }
 
