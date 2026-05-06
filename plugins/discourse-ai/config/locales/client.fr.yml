@@ -358,9 +358,6 @@ fr:
         no_llm_selected: "Aucun modèle linguistique sélectionné"
         max_context_posts: "Nombre maximal de publications contextuelles"
         max_context_posts_help: "Le nombre maximal de publications à utiliser comme contexte pour l'IA lorsqu'elle répond à un utilisateur. (vide par défaut)"
-        vision_enabled: Vision activée
-        vision_enabled_help: Si cette option est activée, l'IA tentera de comprendre les images publiées par les utilisateurs dans le sujet, en fonction du modèle utilisé prenant en charge la vision. Pris en charge par les derniers modèles d'Anthropic, Google et OpenAI.
-        vision_max_pixels: Taille d'image prise en charge
         vision_max_pixel_sizes:
           low: Qualité faible - moins cher (256x256)
           medium: Qualité moyenne (512x512)
@@ -516,7 +513,6 @@ fr:
         max_output_tokens: "Nombre maximum de jetons de sortie"
         url: "URL du service hébergeant le modèle"
         api_key: "Clé d'API du service hébergeant le modèle"
-        vision_enabled: "Vision activée"
         ai_bot_user: "Utilisateur robot IA"
         cost_input: "Coût des entrées"
         cost_cached_input: "Coût des entrées mises en cache"
@@ -585,7 +581,6 @@ fr:
           max_output_tokens: "Le nombre maximal de jetons que le modèle peut générer dans une seule requête"
           display_name: "Le nom utilisé pour faire référence à ce modèle dans l'interface de votre site."
           name: "Nous l'incluons dans l'appel d'API pour spécifier le modèle que nous allons utiliser"
-          vision_enabled: "Si cette option est activée, l'IA tentera de comprendre les images. Cela dépend du modèle utilisé prenant en charge la vision. Pris en charge par les derniers modèles d'Anthropic, Google et OpenAI."
           cost_input: "Le coût d'entrée par million de jetons pour ce modèle"
           cost_output: "Le coût de sortie par million de jetons pour ce modèle"
           cost_measure: "$/million de jetons"

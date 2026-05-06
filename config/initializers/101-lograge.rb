@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
+require "discourse_lograge"
+
+if DiscourseLograge.enabled?
   require "lograge"
 
   Rails.application.config.after_initialize do
@@ -79,7 +81,7 @@ if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
               nil
             end
 
-          { ip: ip, username: username }
+          DiscourseLograge.custom_payload(ip: ip, username: username)
         rescue => e
           Rails.logger.warn(
             "Failed to append custom payload: #{e.message}\n#{e.backtrace.join("\n")}",
@@ -172,8 +174,10 @@ if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
         Rails.logger.broadcasts.find { |logger| logger.is_a?(ActiveSupport::Logger) },
       )
 
-      Logster.logger.subscribe do |severity, message, progname, opts, &block|
-        config.lograge.logger.add_with_opts(severity, message, progname, opts, &block)
+      if Logster.logger
+        Logster.logger.subscribe do |severity, message, progname, opts, &block|
+          config.lograge.logger.add_with_opts(severity, message, progname, opts, &block)
+        end
       end
     end
   end

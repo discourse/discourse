@@ -541,9 +541,6 @@ tr_TR:
         max_turn_tokens_help: "Tek bir bot yanıtı sırasında tüm LLM çağrıları boyunca tüketilen maksimum toplam jeton (giriş + çıkış). Ayarlandığında, sabit tamamlama/araç sınırlarını bir jeton bütçesi ile değiştirerek daha fazla ajan davranışı sağlar. Varsayılan sınırlar için boş bırakın."
         compression_threshold: "Sıkıştırma Eşiği"
         compression_threshold_help: "Otomatik sıkıştırmanın devreye girdiği bağlam kullanım yüzdesi (20–99). Daha düşük değerler sıkıştırmayı daha erken tetikler ve daha fazla boşluk bırakır."
-        vision_enabled: Vizyon etkin
-        vision_enabled_help: Etkinleştirilirse YZ, kullanıcıların konuya gönderdiği görüntüleri anlamaya çalışır; bu, vizyonu destekleyen kullanılan modele bağlıdır. Anthropic, Google ve OpenAI'ın en son modelleri tarafından desteklenir.
-        vision_max_pixels: Desteklenen görüntü boyutu
         vision_max_pixel_sizes:
           low: Düşük kalite - en ucuz (256x256)
           medium: Orta kalite (512x512)
@@ -839,9 +836,6 @@ tr_TR:
         max_output_tokens: "Maks. çıktı token'ları"
         url: "Modeli barındıran hizmetin URL'si"
         api_key: "Modeli barındıran hizmetin API Anahtarı"
-        vision_enabled: "Vizyon etkin"
-        allowed_attachment_types: "İzin verilen ekler"
-        attachment_types_placeholder: "Uzantıları seçin veya yazın (ör. pdf, txt, docx)"
         ai_bot_user: "YZ botu Kullanıcısı"
         cost_input: "Girdi maliyeti"
         cost_cached_input: "Ön belleğe alınmış girdi maliyeti"
@@ -923,8 +917,6 @@ tr_TR:
           max_output_tokens: "Modelin tek bir talepte oluşturabileceği maksimum token sayısı"
           display_name: "Sitenizin arayüzünde bu modele atıfta bulunmak için kullanılan ad."
           name: "Hangi modeli kullanacağımızı belirtmek için bunu API çağrısına dâhil ediyoruz"
-          vision_enabled: "Etkinleştirilirse YZ görüntüleri anlamaya çalışır. Görmeyi destekleyen kullanılan modele bağlıdır. Anthropic, Google ve OpenAI'ın en son modelleri tarafından desteklenir."
-          allowed_attachment_types: "Modele hangi ek türlerinin iletileceğini seçin. Ekleri izin vermemek için boş bırakın. Görüntüler görme yoluyla kontrol edilir."
           cost_input: "Bu model için 1 milyon token başına girdi maliyeti"
           cost_cached_input: "Bu model için 1 milyon jeton başına önbelleğe alınmış girdi maliyeti (komut isteminden önbellekten okunurken)"
           cost_cache_write: "Bu model için 1 milyon jeton başına önbellek yazma maliyeti (önbelleğe yazarken)"

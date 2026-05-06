@@ -294,6 +294,7 @@ module Categories
             description: I18n.t("category_types.#{type_id}.description", default: ""),
             icon:,
             available: available?,
+            visible: visible?,
             configuration_schema: resolved_configuration_schema,
           }.merge(additional_metadata)
         end

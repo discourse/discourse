@@ -358,9 +358,6 @@ fi:
         no_llm_selected: "Kielimallia ei ole valittu"
         max_context_posts: "Kontekstiviestien enimmäismäärä"
         max_context_posts_help: "Kontekstina käytettävien viestien enimmäismäärä, kun tekoäly vastaa käyttäjälle (käytä oletusta jättämällä tyhjäksi)"
-        vision_enabled: Näkö käytössä
-        vision_enabled_help: Jos tämä on käytössä, tekoäly yrittää ymmärtää kuvia, joita käyttäjät julkaisevat ketjussa, riippuen siitä, tukeeko käytettävä malli näköä. Anthropicin, Googlen ja OpenAI:n uusimmat mallit tukevat näköä.
-        vision_max_pixels: Tuettu kuvakoko
         vision_max_pixel_sizes:
           low: Heikko laatu – halvin (256x256)
           medium: Keskilaatuinen (512x512)
@@ -515,7 +512,6 @@ fi:
         max_output_tokens: "Tuotossaneiden enimmäismäärä"
         url: "Mallia isännöivän palvelun URL-osoite"
         api_key: "Mallia isännöivän palvelun API-avain"
-        vision_enabled: "Näkö käytössä"
         ai_bot_user: "Tekoälybottikäyttäjä"
         cost_input: "Syötekustannukset"
         cost_cached_input: "Välimuistissa olevan syötteen hinta"
@@ -584,7 +580,6 @@ fi:
           max_output_tokens: "Enimmäismäää saneita, jonka malli voi luoda yhdessä pyynnössä"
           display_name: "Nimi, jota käytetään viittaamaan tähän malliin sivustosi käyttöliittymässä."
           name: "Sisällytämme tämän API-kutsuun määrittääksemme, mitä mallia käytämme"
-          vision_enabled: "Jos tämä on käytössä, tekoäly yrittää ymmärtää kuvia. Tämä riippuu siitä, tukeeko käytettävä malli näköä. Anthropicin, Googlen ja OpenAI:n uusimmat mallit tukevat näköä."
           cost_input: "Tämän mallin syöttökustannukset miljoonaa sanetta kohden"
           cost_output: "Tämän mallin tuotoskustannukset miljoonaa sanetta kohden"
           cost_measure: "$/1 milj. sanetta"

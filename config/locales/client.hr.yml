@@ -7224,7 +7224,6 @@ hr:
           other: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
         delete_confirm_title: "Jeste li sigurni da želite izbrisati ovog korisnika? Ovo je trajno!"
         delete_confirm: "Općenito je bolje anonimizirati korisnike umjesto brisanja, kako bi se izbjeglo uklanjanje sadržaja iz postojećih rasprava."
-        delete_and_block: "Izbriši korisnika i blokiraj njegove e-mail i IP adresu"
         delete_dont_block: "Izbriši korisnika"
         deleting_user: "Brisanje korisnika…"
         deleted: "Korisnik je obrisan."

@@ -475,9 +475,6 @@ pt_BR:
         no_llm_selected: "Nenhum modelo de linguagem selecionado"
         max_context_posts: "Máximo de postagens de contexto"
         max_context_posts_help: "A quantidade máxima de postagens para usar como contexto para a IA ao responder ao(à) usuário(a). (deixar vazio para padrão)"
-        vision_enabled: Visão ativada
-        vision_enabled_help: Ative para a IA tentar entender as imagens postadas pelos(as) usuários(as) no tópico conforme o modelo usado na visão compatível. É compatível com os modelos mais recentes do Anthropic, Google e OpenAI.
-        vision_max_pixels: Tamanho de imagem compatível
         vision_max_pixel_sizes:
           low: Baixa qualidade - menor custo (256x256)
           medium: Qualidade média (512x512)
@@ -654,9 +651,6 @@ pt_BR:
         max_output_tokens: "Máximo de tokens de saída"
         url: "URL do serviço da hospedagem do modelo"
         api_key: "Chave de API do serviço da hospedagem do modelo"
-        vision_enabled: "Visão ativada"
-        allowed_attachment_types: "Anexos permitidos"
-        attachment_types_placeholder: "Selecione ou digite as extensões (ex.: pdf, txt, docx)"
         ai_bot_user: "Usuário(a) de bot de IA"
         cost_input: "Custo de entrada"
         cost_cached_input: "Custo de entrada em cache"
@@ -736,8 +730,6 @@ pt_BR:
           max_output_tokens: "A quantidade máxima de tokens que o modelo pode gerar em uma única solicitação"
           display_name: "O nome usado para referenciar este modelo na interface do seu site."
           name: "Incluímos na chamada da API para especificar qual modelo será usado"
-          vision_enabled: "Ative para a IA tentar entender as imagens. Depende do modelo usado na visão compatível. É compatível com os modelos mais recentes do Anthropic, Google e OpenAI."
-          allowed_attachment_types: "Escolher quais tipos de anexos serão encaminhados para o modelo. Deixe em branco para não permitir anexos. As imagens são controladas por visão computacional."
           cost_input: "O custo de entrada a cada 1 milhão de tokens para este modelo"
           cost_cached_input: "O custo de entrada em cache por 1 milhão de tokens para este modelo (ao ler do cache de prompts)"
           cost_cache_write: "O custo de gravação em cache por 1 milhão de tokens para este modelo (ao gravar no cache de prompts)"

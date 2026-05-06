@@ -54,14 +54,6 @@ module SystemHelpers
     self
   end
 
-  # Waits for the Ember app to boot before continuing.
-  def visit(...)
-    super
-    return if page.has_no_css?("discourse-assets", wait: 0, visible: :all)
-
-    page.assert_selector("#main.ember-application", visible: :all)
-  end
-
   def sign_in(user)
     visit File.join(
             GlobalSetting.relative_url_root || "",
@@ -414,15 +406,54 @@ module SystemHelpers
   def html_translation_to_text(html_translation)
     Nokogiri.HTML5(html_translation).at("body").inner_text
   end
+
+  def capture_log_entries(controller:, entries:, action: nil)
+    log = Rails.root.join("log", "#{Rails.env}.log")
+    File.truncate(log, 0) if File.exist?(log)
+
+    yield
+
+    read =
+      lambda do
+        return [] unless File.exist?(log)
+        File.open(log) do |f|
+          f
+            .read
+            .lines
+            .reject { |l| l.strip.empty? }
+            .filter_map do |line|
+              JSON.parse(line)
+            rescue JSON::ParserError
+              nil
+            end
+            .select { |e| e["controller"] == controller && (action.nil? || e["action"] == action) }
+        end
+      end
+
+    try_until_success { raise Capybara::ExpectationNotMet if read.call.size < entries }
+    read.call
+  end
 end
 
 module CapybaraSessionEmberWaiter
-  # Waits for the Ember app to boot before continuing.
+  def visit(...)
+    super
+    wait_for_ember_boot
+  end
+
   def refresh
     super
-    return unless RSpec.current_example&.metadata&.[](:type) == :system
-    return if has_no_css?("discourse-assets", wait: 0, visible: :all)
+    wait_for_ember_boot
+  end
 
+  private
+
+  def wait_for_ember_boot
+    return unless RSpec.current_example&.metadata&.[](:type) == :system
+
+    # `<discourse-assets>` is only present on Ember pages;
+    return if has_no_css?("discourse-assets", wait: 0, visible: :all)
+    # `ember-application` is added to `#main` when the app boots.
     assert_selector("#main.ember-application", visible: :all)
   end
 end

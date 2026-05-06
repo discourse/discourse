@@ -3874,24 +3874,11 @@ uncategorized:
     default: true
     area: "interface"
 
-  enable_custom_splash_screen:
-    default: false
-    client: true
-    hidden: true
-    area: "interface"
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/395100"
-
   splash_screen_image:
     default: ""
     type: upload
     authorized_extensions: "svg"
     area: "interface"
-    depends_on:
-      - "enable_custom_splash_screen"
-    depends_behavior: "hidden"
     validator: "UploadSettingValidator"
 
   suggest_weekends_in_date_pickers:
@@ -4328,14 +4315,9 @@ experimental:
       learn_more_url: "https://meta.discourse.org/t/-/395768"
       disallow_enabled_for_groups: true
   enable_auto_grid_images:
-    default: false
+    default: true
     client: true
-    hidden: true
     area: "experimental"
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/394784"
   enable_new_checkbox_style:
     default: false
     client: true
@@ -4362,20 +4344,7 @@ experimental:
       learn_more_url: "https://meta.discourse.org/t/-/395099"
   enable_form_templates:
     client: true
-    default: false
-    hidden: true
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/278631"
-  impersonate_without_logout:
-    default: false
-    client: true
-    hidden: true
-    upcoming_change:
-      status: "stable"
-      impact: "feature,staff"
-      learn_more_url: "https://meta.discourse.org/t/-/119683"
+    default: true
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -4439,3 +4408,10 @@ experimental:
       impact: "feature,all_members"
       status: "beta"
       learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
+  dashboard_improvements:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "conceptual"
+      impact: "feature,admins"
