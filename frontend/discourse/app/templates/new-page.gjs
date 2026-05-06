@@ -68,7 +68,7 @@ const sections = [
           <div class="db-kpi__value">1,100</div>
           <div class="db-kpi__label">New sign-ups</div>
           <div class="db-delta --pos">+12%</div>
-          <span class="db-kpi__arrow">{{icon "arrow-right"}}</span>
+          <span class="db-link-arrow">{{icon "arrow-right"}}</span>
         </a>
         <a class="db-kpi">
           <div class="db-kpi__value-row">
@@ -84,7 +84,7 @@ const sections = [
             >{{icon "far-circle-question"}}</span>
           </div>
           <div class="db-delta --pos">+0.4pts</div>
-          <span class="db-kpi__arrow">{{icon "arrow-right"}}</span>
+          <span class="db-link-arrow">{{icon "arrow-right"}}</span>
         </a>
         <a class="db-kpi">
           <div class="db-kpi__value">374</div>
@@ -97,7 +97,7 @@ const sections = [
             >{{icon "far-circle-question"}}</span>
           </div>
           <div class="db-delta --pos">+6%</div>
-          <span class="db-kpi__arrow">{{icon "arrow-right"}}</span>
+          <span class="db-link-arrow">{{icon "arrow-right"}}</span>
         </a>
         <a class="db-kpi">
           <div class="db-kpi__value">73%</div>
@@ -110,7 +110,7 @@ const sections = [
             >{{icon "far-circle-question"}}</span>
           </div>
           <div class="db-delta --pos">+1%</div>
-          <span class="db-kpi__arrow">{{icon "arrow-right"}}</span>
+          <span class="db-link-arrow">{{icon "arrow-right"}}</span>
         </a>
       </div>
     </div>
@@ -230,7 +230,12 @@ const sections = [
         </div>
         <div class="db-section__row">
           <div class="db-section__row-block">
-            <h3 class="db-section__row-block-title">Top referrers</h3>
+            <div class="db-section__row-block-header">
+              <a class="db-section__row-block-title">Top referrers<span
+                  class="db-link-arrow"
+                >{{icon "arrow-right"}}</span></a>
+
+            </div>
             <ul class="db-traffic__list">
               <li class="db-traffic__list-row">
                 <span class="db-traffic__name">news.ycombinator.com</span>

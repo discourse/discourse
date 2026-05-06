@@ -93,6 +93,17 @@ h1 {
   }
 }
 
+.db-link-arrow {
+  position: absolute;
+  opacity: 0;
+  font-size: var(--font-down-2-rem);
+  transform: translateX(-4px);
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
+  color: var(--tertiary);
+}
+
 .db-section {
   display: flex;
   flex-direction: column;
@@ -199,8 +210,26 @@ h1 {
   }
 
   &__row-block-title {
+    position: relative;
+    color: var(--primary);
+    margin-bottom: var(--space-2);
+    font-weight: bold;
     font-size: var(--font-down-1-rem);
-    margin: 0;
+
+    .db-link-arrow {
+      top: 0;
+      right: calc(var(--space-6) * -1);
+      margin-left: var(--space-4);
+    }
+
+    &:hover {
+      color: var(--primary);
+
+      .db-link-arrow {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
   }
 
   &__wrapper {
@@ -243,22 +272,15 @@ h1 {
     border-right: 1px solid var(--primary-low);
   }
 
-  &:hover {
-    background: var(--primary-very-low);
-  }
-
-  &__arrow {
-    opacity: 0;
-    position: absolute;
+  .db-link-arrow {
     top: var(--space-4);
     right: var(--space-4);
-    font-size: var(--font-down-2-rem);
-    transform: translateX(-4px);
-    transition:
-      opacity 0.15s,
-      transform 0.15s;
+  }
 
-    .db-kpi:hover & {
+  &:hover {
+    background: var(--primary-very-low);
+
+    .db-link-arrow {
       opacity: 1;
       transform: translateX(0);
     }
