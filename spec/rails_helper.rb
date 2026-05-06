@@ -1053,10 +1053,13 @@ RSpec.configure do |config|
 
     expect(deprecation_error).to be_nil, deprecation_error
 
+    expected_deprecations = RSpec.current_example.metadata[:expected_js_deprecations] || []
+
     $playwright_logger&.logs&.each do |log|
       next if log[:level] != "count"
       deprecation_id = log[:message][/^deprecation_id:(.+?):\s*\d+$/, 1]
       next if deprecation_id.nil?
+      next if expected_deprecations.include?(deprecation_id)
 
       deprecations = RSpec.current_example.metadata[:js_deprecations] ||= Hash.new(0)
       deprecations[deprecation_id] += 1
