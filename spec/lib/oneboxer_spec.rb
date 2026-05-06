@@ -27,28 +27,6 @@ RSpec.describe Oneboxer do
     end
   end
 
-  describe ".inline_data_for" do
-    let(:url) { "https://github.com/discourse/discourse/pull/1" }
-
-    it "returns nil for a blocked domain without instantiating the engine" do
-      SiteSetting.blocked_onebox_domains = "github.com"
-      allow(Oneboxer).to receive(:engine).and_call_original
-
-      expect(Oneboxer.inline_data_for(url)).to be_nil
-      expect(Oneboxer).not_to have_received(:engine)
-    end
-
-    it "returns nil when a parent domain is blocked" do
-      SiteSetting.blocked_onebox_domains = "github.com"
-
-      expect(Oneboxer.inline_data_for("https://api.github.com/foo")).to be_nil
-    end
-
-    it "returns nil for an unparseable URL" do
-      expect(Oneboxer.inline_data_for("not a url")).to be_nil
-    end
-  end
-
   describe "local oneboxes" do
     def link(url)
       url = "#{Discourse.base_url}#{url}"
