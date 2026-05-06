@@ -78,6 +78,7 @@ export default class UpsertCategoryTags extends Component {
           (i18n "category.tags_allowed_tag_groups" categoryName=@category.name)
           (i18n "category.tags_allowed_tag_groups_new_category")
         }}
+        @format="full"
       >
         <TagGroupChooser
           @id="category-allowed-tag-groups"

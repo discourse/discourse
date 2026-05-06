@@ -18,6 +18,18 @@ RSpec.describe ProblemCheck do
           "failing_check"
         end
       end
+    UnsafeDetailsCheck =
+      Class.new(described_class) do
+        def call
+          ProblemCheck::Problem.new(
+            "Unsafe problem",
+            details: {
+              detail: "<img src=x onerror=alert(1)>Unsafe",
+              link_url: 'https://example.com" onclick="alert(1)',
+            },
+          )
+        end
+      end
     PassingCheck =
       Class.new(described_class) do
         def call
@@ -39,6 +51,7 @@ RSpec.describe ProblemCheck do
         DisabledCheck,
         MultiTargetCheck,
         FailingCheck,
+        UnsafeDetailsCheck,
         PassingCheck,
       ],
       &example
@@ -51,6 +64,7 @@ RSpec.describe ProblemCheck do
     Object.send(:remove_const, MultiTargetCheck.name)
     Object.send(:remove_const, PluginCheck.name)
     Object.send(:remove_const, FailingCheck.name)
+    Object.send(:remove_const, UnsafeDetailsCheck.name)
     Object.send(:remove_const, PassingCheck.name)
   end
 
@@ -62,6 +76,7 @@ RSpec.describe ProblemCheck do
   let(:multi_target_check) { MultiTargetCheck }
   let(:plugin_check) { PluginCheck }
   let(:failing_check) { FailingCheck }
+  let(:unsafe_details_check) { UnsafeDetailsCheck }
   let(:passing_check) { PassingCheck }
 
   describe ".[]" do
@@ -138,6 +153,32 @@ RSpec.describe ProblemCheck do
   describe "#run" do
     context "when check is failing" do
       it { expect { failing_check.new.run }.to change { ProblemCheckTracker.failing.count }.by(1) }
+    end
+
+    context "when problem details contain unsafe HTML" do
+      before do
+        I18n.backend.store_translations(
+          :en,
+          dashboard: {
+            problem: {
+              unsafe_details_check: 'Problem <a href="%{link_url}">details</a>: %{detail}',
+            },
+          },
+        )
+      end
+
+      it "sanitizes problem details rendered in admin notice messages" do
+        unsafe_details_check.new.run
+
+        message = AdminNotice.find_by!(identifier: "unsafe_details_check").message
+
+        aggregate_failures do
+          expect(message).to include('<a href="https://example.com">details</a>')
+          expect(message).to include("Unsafe")
+          expect(message).not_to include("onclick")
+          expect(message).not_to include("<img")
+        end
+      end
     end
 
     context "when check is passing" do

@@ -89,6 +89,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :use_crawler_layout?
 
+  def include_splash_screen?
+    !Rails.env.test?
+  end
+  helper_method :include_splash_screen?
+
   def perform_refresh_session
     refresh_session(current_user) unless @readonly_mode
   end

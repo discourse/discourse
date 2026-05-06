@@ -163,6 +163,24 @@ RSpec.describe Emoji do
       HTML
     end
 
+    it "escapes non-emoji text" do
+      replaced_str = described_class.codes_to_img(%(This <img src=x onerror="alert('xss')"> :foo:))
+
+      expect(replaced_str).to eq(
+        "This &lt;img src=x onerror=&quot;alert(&#39;xss&#39;)&quot;&gt; :foo:",
+      )
+    end
+
+    it "escapes generated image attribute values" do
+      Plugin::CustomEmoji.register("xssxx", %q|" onerror="alert('xss')|)
+
+      replaced_str = described_class.codes_to_img(":xssxx:")
+
+      expect(replaced_str).to eq(
+        %(<img src="&quot; onerror=&quot;alert(&#39;xss&#39;)" title="xssxx" class="emoji" alt="xssxx" loading="lazy" width="20" height="20">),
+      )
+    end
+
     it "doesn't replace non-existing codes" do
       replaced_str =
         described_class.codes_to_img("This is a good day :woman: :foo: :bar:t4: :man:t8:")

@@ -147,6 +147,7 @@ export default class UpsertCategoryAppearance extends Component {
       class={{concatClass
         "edit-category-tab"
         "edit-category-tab-images"
+        "--full"
         (if (eq @selectedTab "images") "active")
       }}
     >

@@ -70,7 +70,6 @@ module SystemHelpers
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_url = ""
     SiteSetting.enable_user_tips = false
-    SiteSetting.splash_screen = false
     SiteSetting.allowed_internal_hosts =
       (
         SiteSetting.allowed_internal_hosts.to_s.split("|") +
@@ -434,28 +433,3 @@ module SystemHelpers
     read.call
   end
 end
-
-module CapybaraSessionEmberWaiter
-  def visit(...)
-    super
-    wait_for_ember_boot
-  end
-
-  def refresh
-    super
-    wait_for_ember_boot
-  end
-
-  private
-
-  def wait_for_ember_boot
-    return unless RSpec.current_example&.metadata&.[](:type) == :system
-
-    # `<discourse-assets>` is only present on Ember pages;
-    return if has_no_css?("discourse-assets", wait: 0, visible: :all)
-    # `ember-application` is added to `#main` when the app boots.
-    assert_selector("#main.ember-application", visible: :all)
-  end
-end
-
-Capybara::Session.prepend(CapybaraSessionEmberWaiter)

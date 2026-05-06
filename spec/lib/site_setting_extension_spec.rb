@@ -1391,7 +1391,7 @@ RSpec.describe SiteSettingExtension do
 
     it "is included in all_settings output" do
       setting = SiteSetting.all_settings.find { |s| s[:setting] == :whispers_allowed_groups }
-      expect(setting[:disallowed_groups]).to eq("0")
+      expect(setting[:disallowed_groups]).to eq("0|4|5")
     end
   end
 

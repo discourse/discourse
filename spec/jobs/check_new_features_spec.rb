@@ -25,6 +25,26 @@ RSpec.describe Jobs::CheckNewFeatures do
     )
   end
 
+  let(:permanent_upcoming_changes) do
+    [
+      {
+        setting: :enable_upload_debug_mode,
+        humanized_name: SiteSetting.humanized_names(:enable_upload_debug_mode),
+        description: SiteSetting.description(:enable_upload_debug_mode),
+        upcoming_change: {
+          learn_more_url: "https://meta.discourse.org/t/-/1234",
+          image: {
+            url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+          },
+        },
+      },
+    ]
+  end
+
+  def stub_permanent_upcoming_changes!(changes)
+    UpcomingChanges.stubs(:permanent_upcoming_changes).returns(changes)
+  end
+
   fab!(:admin1, :admin)
   fab!(:admin2, :admin)
 
@@ -44,6 +64,7 @@ RSpec.describe Jobs::CheckNewFeatures do
     DiscourseUpdates.stubs(:current_version).returns("2.8.1.beta13")
     freeze_time
     stub_new_features_endpoint(feature1, feature2, pending_feature)
+    UpcomingChanges.stubs(:permanent_upcoming_changes).returns([])
   end
 
   after { DiscourseUpdates.clean_state }
@@ -84,6 +105,7 @@ RSpec.describe Jobs::CheckNewFeatures do
 
   context "when a permanent upcoming change is merged into an empty new-features feed" do
     before do
+      stub_permanent_upcoming_changes!(permanent_upcoming_changes)
       UpcomingChanges.stubs(:image_exists?).returns(true)
       UpcomingChanges.stubs(:image_data).returns(
         {
@@ -100,17 +122,6 @@ RSpec.describe Jobs::CheckNewFeatures do
       Notification.destroy_all
 
       status_changed_at = 1.day.ago
-      mock_upcoming_change_metadata(
-        {
-          enable_upload_debug_mode: {
-            impact: "other,developers",
-            status: :permanent,
-            impact_type: "other",
-            impact_role: "developers",
-            learn_more_url: "https://meta.discourse.org/t/-/1234",
-          },
-        },
-      )
       event =
         UpcomingChangeEvent.create!(
           event_type: :status_changed,
@@ -121,6 +132,7 @@ RSpec.describe Jobs::CheckNewFeatures do
           },
           created_at: status_changed_at,
         )
+      Discourse.cache.delete(UpcomingChanges.current_statuses_cache_key)
 
       described_class.new.execute({})
 
@@ -157,6 +169,7 @@ RSpec.describe Jobs::CheckNewFeatures do
     end
 
     before do
+      stub_permanent_upcoming_changes!(permanent_upcoming_changes)
       UpcomingChanges.stubs(:image_exists?).returns(true)
       UpcomingChanges.stubs(:image_data).returns(
         {
@@ -173,17 +186,6 @@ RSpec.describe Jobs::CheckNewFeatures do
       Notification.destroy_all
 
       uc_became_permanent_at = 2.days.ago
-      mock_upcoming_change_metadata(
-        {
-          enable_upload_debug_mode: {
-            impact: "other,developers",
-            status: :permanent,
-            impact_type: "other",
-            impact_role: "developers",
-            learn_more_url: "https://meta.discourse.org/t/-/1234",
-          },
-        },
-      )
       UpcomingChangeEvent.create!(
         event_type: :status_changed,
         upcoming_change_name: "enable_upload_debug_mode",
@@ -193,6 +195,7 @@ RSpec.describe Jobs::CheckNewFeatures do
         },
         created_at: uc_became_permanent_at,
       )
+      Discourse.cache.delete(UpcomingChanges.current_statuses_cache_key)
 
       DiscourseUpdates.update_new_features([feature_stale].to_json)
 
@@ -222,17 +225,6 @@ RSpec.describe Jobs::CheckNewFeatures do
       Notification.destroy_all
 
       uc_became_permanent_at = 2.days.ago
-      mock_upcoming_change_metadata(
-        {
-          enable_upload_debug_mode: {
-            impact: "other,developers",
-            status: :permanent,
-            impact_type: "other",
-            impact_role: "developers",
-            learn_more_url: "https://meta.discourse.org/t/-/1234",
-          },
-        },
-      )
       UpcomingChangeEvent.create!(
         event_type: :status_changed,
         upcoming_change_name: "enable_upload_debug_mode",
@@ -242,6 +234,7 @@ RSpec.describe Jobs::CheckNewFeatures do
         },
         created_at: uc_became_permanent_at,
       )
+      Discourse.cache.delete(UpcomingChanges.current_statuses_cache_key)
 
       DiscourseUpdates.update_new_features([feature_stale].to_json)
       stub_new_features_endpoint(feature_newer_than_uc, feature_stale)

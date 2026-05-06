@@ -168,7 +168,11 @@ describe "Category Localizations" do
           category_page.save_settings
           page.refresh
 
-          expect(category_page).to_not have_css("#control-localizations-0-locale option.--selected")
+          expect(CategoryLocalization.where(category_id: category.id).count).to eq(1)
+          expect(category_page).to have_selector(
+            ".edit-category-tab-localizations .form-kit__collection .form-kit__row",
+            count: 1,
+          )
         end
       end
     end

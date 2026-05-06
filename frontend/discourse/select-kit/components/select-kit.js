@@ -188,6 +188,12 @@ export default class SelectKit extends Component {
   @autoTrackedArray mainCollection = null;
   @autoTrackedArray errorsCollection = null;
 
+  _handleNativeToggle = () => {
+    if (this.element.open !== this.selectKit.isExpanded) {
+      this.element.open ? this._open() : this._close();
+    }
+  };
+
   init() {
     super.init(...arguments);
 
@@ -326,6 +332,8 @@ export default class SelectKit extends Component {
       this.updateFloatingUiPosition
     );
 
+    this.element.addEventListener("toggle", this._handleNativeToggle);
+
     if (this.selectKit.options.expandedOnInsert) {
       next(() => {
         this._open();
@@ -348,6 +356,8 @@ export default class SelectKit extends Component {
       this,
       this.updateFloatingUiPosition
     );
+
+    this.element.removeEventListener("toggle", this._handleNativeToggle);
 
     this.cleanupFloatingUi?.();
   }
