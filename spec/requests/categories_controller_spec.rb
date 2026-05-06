@@ -483,6 +483,21 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(422)
         end
 
+        it "rejects invalid emoji names" do
+          post "/categories.json",
+               params: {
+                 name: "Emoji Category",
+                 color: "ff0",
+                 text_color: "fff",
+                 style_type: "emoji",
+                 emoji: %(<img src=x onerror="alert('xss')">),
+               }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include("Emoji is invalid")
+          expect(Category.find_by(name: "Emoji Category")).to be_nil
+        end
+
         it "returns errors with invalid group" do
           category = Fabricate(:category, user: admin)
           readonly = CategoryGroup.permission_types[:readonly]
