@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
@@ -54,6 +55,15 @@ export default class PostExcerptAccordionItem extends Component {
   }
 
   @action
+  onClickHeader(event) {
+    if (event.target.closest("a")) {
+      return;
+    }
+
+    this.args.onToggleExpanded();
+  }
+
+  @action
   checkOverflow(entries) {
     if (!this.args.isExpanded) {
       this.isOverflowing = false;
@@ -84,7 +94,11 @@ export default class PostExcerptAccordionItem extends Component {
         data-post={{this.excerptPost.post_number}}
         data-topic={{this.topic.id}}
       >
-        <div class="d-post-excerpt-accordion-item__header">
+        {{! template-lint-disable no-invalid-interactive }}
+        <div
+          class="d-post-excerpt-accordion-item__header"
+          {{on "click" this.onClickHeader}}
+        >
           <div class="d-post-excerpt-accordion-item__metadata">
             {{#if (has-block "itemMetadata")}}
               {{yield this.excerptPost to="itemMetadata"}}

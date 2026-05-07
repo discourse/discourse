@@ -6,7 +6,6 @@ import { i18n } from "discourse-i18n";
 import SolvedAccordionItemMetadata from "./solved-accordion-item-metadata";
 
 const CHARS_PER_LINE = 90;
-const DEFAULT_LINES_DISPLAYED = 14;
 
 export default class SolvedAcceptedAnswers extends Component {
   static shouldRender(args) {
@@ -37,7 +36,7 @@ export default class SolvedAcceptedAnswers extends Component {
   get linesDisplayed() {
     const chars = this.siteSettings.solved_quote_length;
     if (chars <= 0) {
-      return DEFAULT_LINES_DISPLAYED;
+      return null;
     }
 
     return Math.max(1, Math.ceil(chars / CHARS_PER_LINE));
