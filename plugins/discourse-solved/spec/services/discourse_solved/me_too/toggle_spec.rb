@@ -10,7 +10,11 @@ RSpec.describe DiscourseSolved::MeToo::Toggle do
 
     fab!(:author, :user)
     fab!(:acting_user, :user)
-    fab!(:category)
+    fab!(:category) do
+      Fabricate(:category).tap do |c|
+        c.upsert_custom_fields(DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true")
+      end
+    end
     fab!(:topic) { Fabricate(:topic_with_op, category:, user: author) }
 
     let(:params) { { topic_id: topic.id } }
@@ -18,8 +22,8 @@ RSpec.describe DiscourseSolved::MeToo::Toggle do
 
     before do
       SiteSetting.solved_enabled = true
-      SiteSetting.allow_solved_on_all_topics = true
       SiteSetting.enable_solved_me_too = true
+      DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
     end
 
     context "when contract is invalid" do
@@ -57,6 +61,22 @@ RSpec.describe DiscourseSolved::MeToo::Toggle do
 
       context "when the topic is a private message" do
         fab!(:topic) { Fabricate(:private_message_topic, user: author) }
+
+        it { is_expected.to fail_a_policy(:can_me_too) }
+      end
+
+      context "when the topic is not in a support category" do
+        fab!(:other_category, :category)
+        fab!(:topic) { Fabricate(:topic_with_op, category: other_category, user: author) }
+
+        it { is_expected.to fail_a_policy(:can_me_too) }
+      end
+
+      context "when allow_solved_on_all_topics is enabled but the category is not a support category" do
+        fab!(:other_category, :category)
+        fab!(:topic) { Fabricate(:topic_with_op, category: other_category, user: author) }
+
+        before { SiteSetting.allow_solved_on_all_topics = true }
 
         it { is_expected.to fail_a_policy(:can_me_too) }
       end

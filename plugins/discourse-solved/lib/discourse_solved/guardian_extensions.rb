@@ -57,7 +57,7 @@ module DiscourseSolved
       return false unless current_user.upcoming_change_enabled?(:enable_solved_me_too)
       return false if topic.blank? || topic.private_message?
       return false if topic.solved.present?
-      return false unless allow_accepted_answers?(topic)
+      return false unless topic_in_support_category?(topic)
       return false if topic.user_id == current_user.id
       can_see_topic?(topic)
     end
@@ -66,12 +66,21 @@ module DiscourseSolved
       return false unless SiteSetting.enable_solved_me_too
       return false if topic.blank? || topic.private_message?
       return false if topic.solved.present?
-      return false unless allow_accepted_answers?(topic)
+      return false unless topic_in_support_category?(topic)
       if authenticated?
         return false unless current_user.upcoming_change_enabled?(:enable_solved_me_too)
-        return false if topic.user_id == current_user.id
       end
       true
+    end
+
+    def topic_in_support_category?(topic)
+      return false if topic.category_id.blank?
+
+      if !DiscourseSolved::AcceptedAnswerCache.allowed
+        DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
+      end
+
+      DiscourseSolved::AcceptedAnswerCache.allowed.include?(topic.category_id)
     end
   end
 end

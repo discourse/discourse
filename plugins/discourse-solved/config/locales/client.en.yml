@@ -58,6 +58,7 @@ en:
           one: "Me too (%{count})"
           other: "Me too (%{count})"
         title: "I am also experiencing this issue"
+        author_title: "You started this topic"
 
       no_answer:
         title: Has your question been answered?

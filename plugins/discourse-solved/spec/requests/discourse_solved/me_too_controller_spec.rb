@@ -3,14 +3,18 @@
 RSpec.describe DiscourseSolved::MeTooController do
   fab!(:author, :user)
   fab!(:acting_user, :user)
-  fab!(:category)
+  fab!(:category) do
+    Fabricate(:category).tap do |c|
+      c.upsert_custom_fields(DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true")
+    end
+  end
   fab!(:topic) { Fabricate(:topic, category:, user: author) }
   fab!(:post_1, :post) { Fabricate(:post, topic:) }
 
   before do
     SiteSetting.solved_enabled = true
-    SiteSetting.allow_solved_on_all_topics = true
     SiteSetting.enable_solved_me_too = true
+    DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
   end
 
   describe "POST /solution/me_too" do
@@ -43,6 +47,12 @@ RSpec.describe DiscourseSolved::MeTooController do
       it "rejects when the policy fails" do
         SiteSetting.enable_solved_me_too = false
         post "/solution/me_too.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
+
+      it "rejects when the topic is not in a support category" do
+        other_topic = Fabricate(:topic, user: author)
+        post "/solution/me_too.json", params: { topic_id: other_topic.id }
         expect(response.status).to eq(403)
       end
 

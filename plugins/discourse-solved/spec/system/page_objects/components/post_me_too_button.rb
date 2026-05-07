@@ -26,6 +26,10 @@ module PageObjects
         within_post { has_css?("#{SELECTOR}.has-me-too") }
       end
 
+      def has_read_only?
+        within_post { has_css?("#{SELECTOR}.is-read-only[disabled]") }
+      end
+
       def has_count?(count)
         within_post { has_css?(SELECTOR, text: "Me too (#{count})") }
       end
