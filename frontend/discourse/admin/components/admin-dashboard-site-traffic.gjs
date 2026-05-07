@@ -63,8 +63,10 @@ function periodToDateRange(period, customStart, customEnd) {
 }
 
 function bucketingForLength(days) {
-  if (days <= 183) {
+  if (days <= 31) {
     return "daily";
+  } else if (days < 365) {
+    return "weekly";
   }
   return "monthly";
 }
@@ -86,8 +88,19 @@ function makeXTicksCallback({ bucketing, startMs, endMs }) {
   };
 }
 
-function isTodayBucket(tickMs) {
+function weeklyBucketStart(ms) {
+  // Weeks always run Monday → Sunday. moment's `isoWeek` starts on Monday
+  // regardless of the user's locale.
+  return moment.utc(ms).startOf("isoWeek");
+}
+
+function isTodayBucket(tickMs, bucketing) {
   const today = moment.utc().startOf("day");
+  if (bucketing === "weekly") {
+    const start = weeklyBucketStart(tickMs);
+    const end = start.clone().add(6, "days");
+    return today.isBetween(start, end, "day", "[]");
+  }
   return moment.utc(tickMs).startOf("day").isSame(today, "day");
 }
 
@@ -100,18 +113,83 @@ function cssVar(name) {
 function makeXTickColorCallback({ bucketing }) {
   // Always return a callback so all tick labels get a theme-aware color
   // (Chart.js's hardcoded default is a fixed gray that's unreadable in
-  // dark mode). The today indicator (daily buckets only) is stepped one
+  // dark mode). The today indicator (daily/weekly buckets) is stepped one
   // tone lighter than the default so it reads as more muted.
   return function (context) {
     const themeDefault = cssVar("--primary-medium");
     if (!context.tick) {
       return themeDefault;
     }
-    if (bucketing === "daily" && isTodayBucket(context.tick.value)) {
-      return cssVar("--primary-low");
+    if (bucketing === "monthly") {
+      return themeDefault;
     }
-    return themeDefault;
+    return isTodayBucket(context.tick.value, bucketing)
+      ? cssVar("--primary-low")
+      : themeDefault;
   };
+}
+
+function escapeHtml(s) {
+  return String(s).replace(
+    /[&<>"']/g,
+    (c) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      })[c]
+  );
+}
+
+function tooltipTitleFor(bucketing, bucketStartMs) {
+  const start = moment.utc(bucketStartMs);
+  if (bucketing === "monthly") {
+    return start.format("MMM YYYY");
+  }
+  if (bucketing === "weekly") {
+    const wkStart = weeklyBucketStart(bucketStartMs);
+    const wkEnd = wkStart.clone().add(6, "days");
+    if (wkStart.year() !== wkEnd.year()) {
+      return `${wkStart.format("D MMM YYYY")} – ${wkEnd.format("D MMM YYYY")}`;
+    }
+    return `${wkStart.format("D MMM")} – ${wkEnd.format("D MMM YYYY")}`;
+  }
+  return start.format("ddd, D MMM YYYY");
+}
+
+function tooltipPartialFor(bucketing, bucketStartMs) {
+  const today = moment.utc().startOf("day");
+  if (bucketing === "daily") {
+    if (moment.utc(bucketStartMs).isSame(today, "day")) {
+      return i18n("admin.dashboard.site_traffic.chart.tooltip.partial.today");
+    }
+    return null;
+  }
+  if (bucketing === "weekly") {
+    const wkStart = weeklyBucketStart(bucketStartMs);
+    const wkEnd = wkStart.clone().add(6, "days");
+    if (
+      today.isBetween(wkStart, wkEnd, "day", "[]") &&
+      !today.isSame(wkEnd, "day")
+    ) {
+      return `${wkStart.format("ddd")} – ${today.format("ddd")}`;
+    }
+    return null;
+  }
+  if (bucketing === "monthly") {
+    const monthStart = moment.utc(bucketStartMs).startOf("month");
+    const monthEnd = monthStart.clone().endOf("month");
+    if (
+      today.isBetween(monthStart, monthEnd, "day", "[]") &&
+      !today.isSame(monthEnd, "day")
+    ) {
+      return `1 – ${today.format("D MMM")}`;
+    }
+    return null;
+  }
+  return null;
 }
 
 function makeTooltipTitleCallback({ bucketing }) {
@@ -174,10 +252,125 @@ export default class AdminDashboardSiteTraffic extends Component {
   };
   pillIsActive = (req) => !this.hiddenSeries.has(req);
   _requestSeq = 0;
+  _tooltipEl = null;
 
   constructor() {
     super(...arguments);
     this.fetchReport();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    if (this._tooltipEl) {
+      this._tooltipEl.remove();
+      this._tooltipEl = null;
+    }
+  }
+
+  _ensureTooltipEl() {
+    if (!this._tooltipEl || !document.body.contains(this._tooltipEl)) {
+      const el = document.createElement("div");
+      el.className = "site-traffic-tooltip";
+      document.body.appendChild(el);
+      this._tooltipEl = el;
+    }
+    return this._tooltipEl;
+  }
+
+  @action
+  renderTooltip(context) {
+    const tooltipModel = context.tooltip;
+    const el = this._ensureTooltipEl();
+
+    if (
+      !tooltipModel ||
+      tooltipModel.opacity === 0 ||
+      !tooltipModel.dataPoints?.length
+    ) {
+      el.classList.remove("is-shown");
+      return;
+    }
+
+    const bucketing = this.bucketing;
+    const bucketStartMs = tooltipModel.dataPoints[0].parsed.x;
+
+    let loggedIn = null;
+    let anon = null;
+    let crawler = null;
+    for (const dp of tooltipModel.dataPoints) {
+      const req = dp.dataset.req;
+      if (req === SERIES.LOGGED_IN) {
+        loggedIn = dp;
+      } else if (req === SERIES.ANON) {
+        anon = dp;
+      } else if (req === SERIES.CRAWLER) {
+        crawler = dp;
+      }
+    }
+
+    const loggedInVal = loggedIn?.parsed.y || 0;
+    const anonVal = anon?.parsed.y || 0;
+    const crawlerVal = crawler?.parsed.y || 0;
+    const isPublic = this.isPublicSite;
+    const humanTotal = isPublic ? loggedInVal + anonVal : loggedInVal;
+
+    const title = tooltipTitleFor(bucketing, bucketStartMs);
+    const partial = tooltipPartialFor(bucketing, bucketStartMs);
+    const pageviewsLabel = i18n(
+      "admin.dashboard.site_traffic.chart.tooltip.pageviews"
+    );
+    const loggedInLabel = i18n(
+      "admin.dashboard.site_traffic.filters.logged_in"
+    );
+    const anonLabel = i18n("admin.dashboard.site_traffic.filters.anonymous");
+    const crawlersLabel = i18n("admin.dashboard.site_traffic.filters.crawlers");
+
+    let html = `<div class="site-traffic-tooltip__title">${escapeHtml(title)}</div>`;
+    if (partial) {
+      html += `<div class="site-traffic-tooltip__partial">${escapeHtml(partial)}</div>`;
+    }
+    html += `<div class="site-traffic-tooltip__divider"></div>`;
+    html += `<div class="site-traffic-tooltip__row site-traffic-tooltip__row--total">
+      <span class="site-traffic-tooltip__label">${escapeHtml(pageviewsLabel)}</span>
+      <span>${humanTotal.toLocaleString()}</span>
+    </div>`;
+    if (loggedIn) {
+      html += `<div class="site-traffic-tooltip__row">
+        <span class="site-traffic-tooltip__label site-traffic-tooltip__label--indent">
+          <span class="site-traffic-tooltip__swatch" style="background-color: ${SERIES_COLORS[SERIES.LOGGED_IN]}"></span>
+          ${escapeHtml(loggedInLabel)}
+        </span>
+        <span>${loggedInVal.toLocaleString()}</span>
+      </div>`;
+    }
+    if (anon && isPublic) {
+      html += `<div class="site-traffic-tooltip__row">
+        <span class="site-traffic-tooltip__label site-traffic-tooltip__label--indent">
+          <span class="site-traffic-tooltip__swatch" style="background-color: ${SERIES_COLORS[SERIES.ANON]}"></span>
+          ${escapeHtml(anonLabel)}
+        </span>
+        <span>${anonVal.toLocaleString()}</span>
+      </div>`;
+    }
+    if (crawler) {
+      html += `<div class="site-traffic-tooltip__divider"></div>`;
+      html += `<div class="site-traffic-tooltip__row site-traffic-tooltip__row--crawlers">
+        <span class="site-traffic-tooltip__label">
+          <span class="site-traffic-tooltip__swatch" style="background-color: ${SERIES_COLORS[SERIES.CRAWLER]}"></span>
+          ${escapeHtml(crawlersLabel)}
+        </span>
+        <span>${crawlerVal.toLocaleString()}</span>
+      </div>`;
+    }
+
+    el.innerHTML = html;
+
+    const canvasRect = context.chart.canvas.getBoundingClientRect();
+    const left = canvasRect.left + window.scrollX + tooltipModel.caretX + 12;
+    const top = canvasRect.top + window.scrollY + tooltipModel.caretY - 24;
+    el.style.left = `${left}px`;
+    el.style.top = `${top}px`;
+    el.classList.add("is-shown");
   }
 
   get isPublicSite() {
@@ -397,6 +590,9 @@ export default class AdminDashboardSiteTraffic extends Component {
       // Cross-year daily labels are ~2× wider (have year), so reduce density.
       return this.spansYears ? 8 : 12;
     }
+    if (this.bucketing === "weekly") {
+      return this.spansYears ? 8 : 14;
+    }
     return 60;
   }
 
@@ -462,7 +658,7 @@ export default class AdminDashboardSiteTraffic extends Component {
         endMs: this.modelEndDate.valueOf(),
       }),
       xTickColorCallback: makeXTickColorCallback({ bucketing }),
-      tooltipTitleCallback: makeTooltipTitleCallback({ bucketing }),
+      tooltipExternal: this.renderTooltip,
       yStepSize: this.yStepSize,
       yMaxTicksLimit: 6,
       yMaxRotation: 0,

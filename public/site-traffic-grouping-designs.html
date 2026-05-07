@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Site traffic — Bucket grouping design exploration</title>
+<style>
+  :root {
+    --primary: #222;
+    --secondary: #646464;
+    --tertiary: #919191;
+    --quaternary: #e9e9e9;
+    --highlight: #ffe4a8;
+    --danger: #e45735;
+    --success: #2c8c3a;
+    --primary-low: #f3f3f3;
+
+    --logged-in: #2c5d8a;
+    --anonymous: #6da5d4;
+    --crawlers: #d99852;
+
+    --card-bg: #fff;
+    --page-bg: #fafafa;
+    --border: #e5e5e5;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--page-bg);
+    color: var(--primary);
+    margin: 0;
+    padding: 32px 24px 80px;
+    line-height: 1.5;
+  }
+
+  .page { max-width: 1080px; margin: 0 auto; }
+
+  .page-header {
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--tertiary);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin: 6px 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  h2 {
+    font-size: 20px;
+    margin: 0 0 8px;
+    letter-spacing: -0.005em;
+  }
+
+  h3 {
+    font-size: 14px;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--secondary);
+    font-weight: 600;
+  }
+
+  .lede {
+    color: var(--secondary);
+    max-width: 680px;
+    font-size: 15px;
+  }
+
+  .problem-frame {
+    background: #fff8e3;
+    border: 1px solid #f0d995;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #5a4a18;
+    margin-top: 16px;
+  }
+  .problem-frame code {
+    background: rgba(0,0,0,0.06);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12.5px;
+  }
+
+  .option {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+  .option--recommended {
+    border-color: #2c8c3a;
+    box-shadow: 0 0 0 3px rgba(44, 140, 58, 0.08);
+  }
+  .option-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .option-tag {
+    font-size: 11px;
+    background: var(--quaternary);
+    color: var(--secondary);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .option-tag--rec {
+    background: #2c8c3a;
+    color: #fff;
+  }
+  .option-summary {
+    color: var(--secondary);
+    margin: 0 0 22px;
+    font-size: 14.5px;
+    max-width: 760px;
+  }
+  .try-it {
+    font-size: 11px;
+    color: var(--success);
+    border: 1px solid #cfe6cf;
+    background: #f1f9ee;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* === Mock card layout === */
+  .mock-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 24px 26px;
+    margin: 18px 0;
+  }
+  .mock-section-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--tertiary);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .mock-headline-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 18px;
+  }
+  .mock-headline { font-size: 13.5px; color: var(--primary); }
+  .mock-headline strong {
+    font-size: 22px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .mock-headline .trend-up { color: var(--success); }
+  .mock-headline .trend-down { color: var(--danger); }
+  .mock-kpi { text-align: right; font-size: 12px; color: var(--secondary); }
+  .mock-kpi strong {
+    display: block;
+    font-size: 18px;
+    color: var(--primary);
+    margin-top: 2px;
+  }
+
+  /* === Toolbar === */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .period-select {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 28px 6px 12px;
+    font-size: 13px;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--tertiary) 50%),
+                      linear-gradient(135deg, var(--tertiary) 50%, transparent 50%);
+    background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .period-select:focus {
+    outline: 2px solid var(--logged-in);
+    outline-offset: 1px;
+  }
+  .toolbar-spacer { flex: 1; }
+  .toolbar-label {
+    font-size: 12px;
+    color: var(--tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  /* Segmented control */
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .seg button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    cursor: pointer;
+    color: var(--secondary);
+    border-right: 1px solid var(--border);
+    font-family: inherit;
+  }
+  .seg button:last-child { border-right: 0; }
+  .seg button.is-active {
+    background: var(--primary);
+    color: #fff;
+  }
+  .seg button[disabled] {
+    color: #c8c8c8;
+    cursor: not-allowed;
+    background: #fafafa;
+  }
+  .seg button:not([disabled]):not(.is-active):hover { background: var(--primary-low); }
+
+  /* Inline grouping caption + popover */
+  .grouping-caption {
+    font-size: 12.5px;
+    color: var(--secondary);
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+  .caption-trigger {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    padding: 2px 0;
+    font: inherit;
+    color: var(--primary);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--quaternary);
+    text-underline-offset: 3px;
+  }
+  .caption-trigger:hover { text-decoration-color: var(--secondary); }
+  .caption-trigger:focus {
+    outline: 2px solid var(--logged-in);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  .see-details { color: var(--secondary); font-size: 12.5px; text-decoration: none; }
+  .see-details:hover { color: var(--primary); }
+
+  .popover {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    font-size: 12.5px;
+    min-width: 220px;
+    z-index: 10;
+    display: none;
+  }
+  .popover.is-open { display: block; }
+  .popover-label {
+    padding: 6px 12px;
+    color: var(--tertiary);
+    text-transform: uppercase;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+  .popover-row {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    padding: 6px 12px;
+    font: inherit;
+    cursor: pointer;
+    border-radius: 4px;
+    color: var(--primary);
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .popover-row:hover:not([disabled]) { background: var(--primary-low); }
+  .popover-row.is-current { background: var(--quaternary); font-weight: 600; }
+  .popover-row[disabled] { color: var(--tertiary); cursor: not-allowed; }
+  .popover-row .meta { color: var(--tertiary); font-weight: 400; font-size: 11.5px; }
+
+  /* Filter pills */
+  .pills { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 12px;
+    background: #fff;
+    cursor: pointer;
+    color: var(--primary);
+    font-family: inherit;
+  }
+  .pill .swatch { width: 8px; height: 8px; border-radius: 999px; }
+  .pill:focus { outline: 2px solid var(--logged-in); outline-offset: 1px; }
+  .pill.is-off { color: var(--tertiary); }
+  .pill.is-off .swatch {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 2px currentColor;
+  }
+  .pill[disabled] { cursor: not-allowed; opacity: 0.5; }
+
+  /* Chart */
+  .chart { position: relative; height: 220px; margin-top: 8px; }
+  .y-axis {
+    position: absolute;
+    inset: 0 auto 22px 0;
+    width: 36px;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--tertiary);
+    padding-right: 4px;
+    text-align: right;
+  }
+  .plot {
+    position: absolute;
+    inset: 0 0 22px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    overflow: hidden;
+  }
+  .plot.is-dense { gap: 1px; }
+  .plot.is-very-dense { gap: 0; }
+  .bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column-reverse;
+    min-width: 0;
+    border-radius: 1px 1px 0 0;
+    overflow: hidden;
+    transition: opacity 120ms ease;
+    cursor: pointer;
+  }
+  .bar .seg-li { background: var(--logged-in); }
+  .bar .seg-an { background: var(--anonymous); }
+  .bar .seg-cr { background: var(--crawlers); }
+  .bar.is-today { opacity: 0.55; }
+  .bar.is-partial { opacity: 0.7; }
+  .bar:hover { filter: brightness(1.1); }
+
+  .x-axis {
+    position: absolute;
+    left: 40px;
+    right: 0;
+    bottom: 0;
+    height: 18px;
+    font-size: 10.5px;
+    color: var(--tertiary);
+    padding-top: 4px;
+  }
+  .x-axis span {
+    position: absolute;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .x-axis span.is-today { opacity: 0.55; }
+
+  .density-warning {
+    margin-top: 8px;
+    font-size: 11.5px;
+    color: var(--danger);
+    background: #fff1ed;
+    border: 1px solid #f0c6b6;
+    border-radius: 4px;
+    padding: 4px 8px;
+    display: none;
+  }
+  .density-warning.is-shown { display: inline-block; }
+
+  /* === Custom chart tooltip === */
+  .chart-tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1000;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    min-width: 200px;
+    max-width: 280px;
+    display: none;
+  }
+  .chart-tooltip.is-shown { display: block; }
+  .chart-tooltip__title {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 13px;
+  }
+  .chart-tooltip__partial {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fef0eb;
+    color: var(--danger);
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 5px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.02em;
+  }
+  .chart-tooltip__partial::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6.5' fill='none' stroke='%23e45735' stroke-width='1.4'/><path d='M8 1.5 A 6.5 6.5 0 0 1 8 14.5 Z' fill='%23e45735'/></svg>");
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  .chart-tooltip__divider {
+    border-top: 1px solid var(--border);
+    margin: 8px -12px;
+  }
+  .chart-tooltip__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 2px 0;
+    color: var(--secondary);
+    font-size: 12px;
+  }
+  .chart-tooltip__row--total {
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 2px;
+  }
+  .chart-tooltip__row--crawlers {
+    border-top: 1px dashed var(--border);
+    margin-top: 6px;
+    padding-top: 6px;
+    color: var(--primary);
+    font-weight: 600;
+  }
+  .chart-tooltip__row .label { display: flex; align-items: center; gap: 6px; }
+  .chart-tooltip__row .label--indent { padding-left: 12px; font-weight: 400; color: var(--secondary); }
+  .chart-tooltip__row .swatch {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* === Tooltip showcase === */
+  .tooltip-showcase {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin: 22px 0 8px;
+  }
+  .ts-cell {
+    background: var(--page-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ts-label {
+    font-size: 11px;
+    color: var(--tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+  .ts-tooltip {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    font-size: 12px;
+  }
+
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin: 18px 0 6px;
+  }
+  .rule-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .rule-card h4 {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: var(--primary);
+  }
+  .rule-card p {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--secondary);
+  }
+
+  /* Comparison grid */
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 18px;
+  }
+  .col h3 { margin-bottom: 6px; }
+  .pros, .cons { margin: 0; padding: 0; list-style: none; font-size: 13px; }
+  .pros li, .cons li { padding: 4px 0 4px 22px; position: relative; color: var(--secondary); }
+  .pros li::before { content: "+"; position: absolute; left: 4px; color: var(--success); font-weight: 700; }
+  .cons li::before { content: "−"; position: absolute; left: 4px; color: var(--danger); font-weight: 700; }
+
+  .verdict {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: var(--primary-low);
+    border-left: 3px solid var(--secondary);
+    font-size: 13.5px;
+    color: var(--secondary);
+    border-radius: 0 4px 4px 0;
+  }
+  .option--recommended .verdict {
+    background: #f1f9ee;
+    border-color: var(--success);
+    color: #2a4f23;
+  }
+
+  .recommendation {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-top: 36px;
+  }
+  .recommendation h2 { margin-top: 0; }
+  .recommendation h3 { margin: 18px 0 8px; color: var(--primary); }
+  .rec-list {
+    margin: 12px 0 0;
+    padding-left: 18px;
+    color: var(--secondary);
+    font-size: 14px;
+  }
+  .rec-list li { margin-bottom: 8px; }
+
+  .footer-note {
+    margin-top: 24px;
+    font-size: 12px;
+    color: var(--tertiary);
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    .columns { grid-template-columns: 1fr; }
+    .toolbar { gap: 8px; }
+    .tooltip-showcase, .rules-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="page-header">
+    <div class="eyebrow">UI/UX exploration · Site traffic · Admin dashboard</div>
+    <h1>Bucket grouping: day / week / month</h1>
+    <p class="lede">
+      The site-traffic chart aggregates pageviews into bars. Adding weekly bucketing for in-between ranges
+      raises two questions: <strong>(1)</strong> do admins pick the bucket, or does the system?
+      <strong>(2)</strong> how does each individual bar communicate what it represents — since a "weekly bar"
+      reading 24,500 is the sum of seven days, not one. Options A&ndash;D below cover the first question;
+      the tooltip section covers the second. Try the period selector, the bucket controls, the filter pills,
+      and hover any bar to see the tooltip.
+    </p>
+    <div class="problem-frame">
+      <strong>Constraint to keep in mind.</strong> Bar density is the real readability driver:
+      ≈ 7&ndash;90 bars reads cleanly, ≈ 180 daily bars (Last 90 days) is the upper bound,
+      ≈ 365 daily bars is unreadable. Try Last 12 months → Day in Option B to feel the failure mode.
+    </div>
+  </header>
+
+  <!-- ======================= OPTION A ======================= -->
+  <section class="option" data-option="A">
+    <div class="option-header">
+      <h2>Option A — Adaptive only</h2>
+      <span class="option-tag">Lowest friction</span>
+      <span class="try-it">Try the period selector</span>
+    </div>
+    <p class="option-summary">
+      The system chooses the bucket from the period length and a small caption underneath the chart says what
+      it picked. <em>Daily</em> for ≤ 31 days, <em>weekly</em> for 32&ndash;183 days, <em>monthly</em> for &gt; 183 days.
+    </p>
+    <div class="mock-card" data-mock="A"></div>
+
+    <div class="columns">
+      <div class="col">
+        <h3>Pros</h3>
+        <ul class="pros">
+          <li>Zero learning curve. Admins never have to think about bucket size.</li>
+          <li>Impossible to land on a broken view (300+ daily bars on a long range).</li>
+          <li>Smallest UI surface — period selector stays the only chart control.</li>
+          <li>Matches Stripe, Plausible, GA4 default behaviour.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>Cons</h3>
+        <ul class="cons">
+          <li>Power admins lose the ability to see daily detail inside a long custom range.</li>
+          <li>The current spec (§7.2) explicitly rejects weekly bucketing — adding it back here means a content change, not just UI.</li>
+          <li>Caption text is easy to miss; some admins may misread weekly bars as daily.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="verdict"><strong>Best when:</strong> v1, where simplicity beats flexibility.</div>
+  </section>
+
+  <!-- ======================= OPTION B ======================= -->
+  <section class="option" data-option="B">
+    <div class="option-header">
+      <h2>Option B — Explicit segmented control</h2>
+      <span class="option-tag">Maximum control</span>
+      <span class="try-it">Try Day · Week · Month</span>
+    </div>
+    <p class="option-summary">
+      A <em>Day · Week · Month</em> segmented control sits next to the period selector. Options that don't make
+      sense for the current period are disabled, not hidden, so the control's shape stays predictable.
+    </p>
+    <div class="mock-card" data-mock="B"></div>
+
+    <div class="columns">
+      <div class="col">
+        <h3>Pros</h3>
+        <ul class="pros">
+          <li>Direct, recognisable. Admins see exactly what they'll get and can switch instantly.</li>
+          <li>Useful escape hatch: a 6-month custom investigation can still see daily detail.</li>
+          <li>Disabled-not-hidden states keep the toolbar shape stable as periods change.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>Cons</h3>
+        <ul class="cons">
+          <li>Adds a second chart-shaping control — twice the cognitive load on first load.</li>
+          <li>Daily on Last 12 months is technically possible (~365 bars). Either we cap it or ship a knowingly-busy chart.</li>
+          <li>Persisting a sticky choice across sessions risks &ldquo;why is my chart suddenly all bars?&rdquo;</li>
+          <li>Mobile cost: two control groups have to wrap on narrow screens.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="verdict">
+      <strong>Best when:</strong> the audience is power-admin heavy and frequently inspects custom ranges.
+      Probably more control than v1 needs.
+    </div>
+  </section>
+
+  <!-- ======================= OPTION C (RECOMMENDED) ======================= -->
+  <section class="option option--recommended" data-option="C">
+    <div class="option-header">
+      <h2>Option C — Smart default with low-emphasis override</h2>
+      <span class="option-tag option-tag--rec">Recommended</span>
+      <span class="try-it">Click the caption ↓</span>
+    </div>
+    <p class="option-summary">
+      The system picks the bucket; the bucket name below the chart is a clickable button that opens a
+      Day&nbsp;/&nbsp;Week&nbsp;/&nbsp;Month popover. The default looks indistinguishable from Option A.
+    </p>
+    <div class="mock-card" data-mock="C"></div>
+
+    <div class="columns">
+      <div class="col">
+        <h3>Pros</h3>
+        <ul class="pros">
+          <li>Default experience is identical to Option A — no extra control to read.</li>
+          <li>Override is discoverable without competing for the period selector's attention.</li>
+          <li>Override stays a single click away when an admin needs to verify a different aggregation.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>Cons</h3>
+        <ul class="cons">
+          <li>One more interaction layer to design and test (popover, focus management, keyboard).</li>
+          <li>Caption-as-control is less common; some admins won't realise they can change it.</li>
+          <li>Hover-only would fail accessibility — must be focusable and clickable.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="verdict">
+      <strong>Best when:</strong> we want the default to feel like a one-control section, but still let curious
+      admins drill in.
+    </div>
+  </section>
+
+  <!-- ======================= OPTION D ======================= -->
+  <section class="option" data-option="D">
+    <div class="option-header">
+      <h2>Option D — Period selector encodes both</h2>
+      <span class="option-tag">Most opinionated</span>
+      <span class="try-it">Open the dropdown</span>
+    </div>
+    <p class="option-summary">
+      Bucket choice is folded into the period selector itself. Each preset implies its own bucket and the menu
+      labels say so out loud (&ldquo;Last 90 days · weekly&rdquo;).
+    </p>
+    <div class="mock-card" data-mock="D"></div>
+
+    <div class="columns">
+      <div class="col">
+        <h3>Pros</h3>
+        <ul class="pros">
+          <li>Single chart-shaping control. Period and bucket move as one decision.</li>
+          <li>Menu labels educate admins about how the chart aggregates without extra captions.</li>
+          <li>Especially neat on mobile — only one dropdown to fit.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>Cons</h3>
+        <ul class="cons">
+          <li>No way to override at all from the dashboard.</li>
+          <li>Locks bucket to period — admins surveying a 4-month custom investigation can't drop to daily.</li>
+          <li>Slightly noisy preset labels for the 90% who never think about it.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="verdict">
+      <strong>Best when:</strong> the dashboard is read-only and we want to actively resist power-admin tweaking.
+    </div>
+  </section>
+
+  <!-- ======================= TOOLTIP DESIGN ======================= -->
+  <section class="option" data-option="T">
+    <div class="option-header">
+      <h2>Tooltip design — communicating the bucket per-bar</h2>
+      <span class="option-tag">Cross-cutting</span>
+      <span class="try-it">Hover any bar above</span>
+    </div>
+    <p class="option-summary">
+      Whichever option ships, the chart-level caption only tells admins what aggregation is active globally —
+      each individual bar still has to communicate what it represents. A weekly bar showing
+      &ldquo;24,500&rdquo; should read at a glance as a 7-day sum, not a single day's count. The tooltip
+      carries that signal three ways:
+    </p>
+
+    <div class="rules-grid">
+      <div class="rule-card">
+        <h4>1. Title carries the bucket</h4>
+        <p>Daily: <em>Mon, 5 May 2026</em> (day of week + date). Weekly: a date range — <em>27 Apr&nbsp;–&nbsp;3 May 2026</em>. Monthly: <em>May 2026</em>. The title shape alone identifies the bucket size — no separate &ldquo;Daily/Weekly/Monthly&rdquo; sub-header needed.</p>
+      </div>
+      <div class="rule-card">
+        <h4>2. Partial coverage, in a red pill</h4>
+        <p>When a bucket is cut short by today or by the period boundary, a red pill below the title names the actual coverage: <em>Mon&nbsp;–&nbsp;Wed</em> for a partial week, <em>1&nbsp;–&nbsp;6 May</em> for a partial month, <em>today</em> for the partial daily bar. Pairs with the bar's reduced opacity.</p>
+      </div>
+      <div class="rule-card">
+        <h4>3. Humans vs crawlers</h4>
+        <p>&ldquo;Pageviews&rdquo; (logged in + anonymous) sums to a bold total. When the Crawlers filter is active, crawlers render below a dashed divider with their own bold total, making it visible that the headline number doesn't include bots.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 24px;">All six tooltip states, side by side</h3>
+    <div class="tooltip-showcase">
+      <div class="ts-cell">
+        <div class="ts-label">Daily — normal day</div>
+        <div class="ts-tooltip">
+          <div class="chart-tooltip__title">Tue, 5 May 2026</div>
+          <div class="chart-tooltip__divider"></div>
+          <div class="chart-tooltip__row chart-tooltip__row--total"><span class="label">Pageviews</span><span>10,300</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--logged-in)"></span>Logged in</span><span>3,500</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--anonymous)"></span>Anonymous</span><span>6,800</span></div>
+        </div>
+      </div>
+      <div class="ts-cell">
+        <div class="ts-label">Daily — today (partial)</div>
+        <div class="ts-tooltip">
+          <div class="chart-tooltip__title">Wed, 6 May 2026</div>
+          <div class="chart-tooltip__partial">today</div>
+          <div class="chart-tooltip__divider"></div>
+          <div class="chart-tooltip__row chart-tooltip__row--total"><span class="label">Pageviews</span><span>4,100</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--logged-in)"></span>Logged in</span><span>1,400</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--anonymous)"></span>Anonymous</span><span>2,700</span></div>
+        </div>
+      </div>
+      <div class="ts-cell">
+        <div class="ts-label">Weekly — full week</div>
+        <div class="ts-tooltip">
+          <div class="chart-tooltip__title">27 Apr – 3 May 2026</div>
+          <div class="chart-tooltip__divider"></div>
+          <div class="chart-tooltip__row chart-tooltip__row--total"><span class="label">Pageviews</span><span>71,400</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--logged-in)"></span>Logged in</span><span>24,500</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--anonymous)"></span>Anonymous</span><span>46,900</span></div>
+        </div>
+      </div>
+      <div class="ts-cell">
+        <div class="ts-label">Weekly — current week (partial)</div>
+        <div class="ts-tooltip">
+          <div class="chart-tooltip__title">4 – 6 May 2026</div>
+          <div class="chart-tooltip__partial">Mon – Wed</div>
+          <div class="chart-tooltip__divider"></div>
+          <div class="chart-tooltip__row chart-tooltip__row--total"><span class="label">Pageviews</span><span>30,200</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--logged-in)"></span>Logged in</span><span>10,300</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--anonymous)"></span>Anonymous</span><span>19,900</span></div>
+        </div>
+      </div>
+      <div class="ts-cell">
+        <div class="ts-label">Monthly — full month</div>
+        <div class="ts-tooltip">
+          <div class="chart-tooltip__title">Apr 2026</div>
+          <div class="chart-tooltip__divider"></div>
+          <div class="chart-tooltip__row chart-tooltip__row--total"><span class="label">Pageviews</span><span>305,800</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--logged-in)"></span>Logged in</span><span>104,000</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--anonymous)"></span>Anonymous</span><span>201,800</span></div>
+          <div class="chart-tooltip__row chart-tooltip__row--crawlers"><span class="label"><span class="swatch" style="background: var(--crawlers)"></span>Crawlers</span><span>54,600</span></div>
+        </div>
+      </div>
+      <div class="ts-cell">
+        <div class="ts-label">Monthly — current month (partial)</div>
+        <div class="ts-tooltip">
+          <div class="chart-tooltip__title">May 2026</div>
+          <div class="chart-tooltip__partial">1 – 6 May</div>
+          <div class="chart-tooltip__divider"></div>
+          <div class="chart-tooltip__row chart-tooltip__row--total"><span class="label">Pageviews</span><span>61,400</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--logged-in)"></span>Logged in</span><span>21,000</span></div>
+          <div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--anonymous)"></span>Anonymous</span><span>40,400</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <strong>Why this matters:</strong> the tooltip is the only place where a bar's bucket size can be
+      stated unambiguously alongside its number. Without the sub-header line, admins lose the connection
+      between the chart-level grouping decision (Option A&ndash;D) and the per-bar reading.
+    </div>
+  </section>
+
+  <!-- ======================= RECOMMENDATION ======================= -->
+  <section class="recommendation">
+    <h2>Recommendation</h2>
+    <p style="color: var(--secondary); margin-top: 0;">
+      Ship <strong>Option C — Smart default with low-emphasis override</strong> for v1, paired with the
+      tooltip design above. Specifics:
+    </p>
+
+    <h3>Bucket selection (chart-level)</h3>
+    <ul class="rec-list">
+      <li><strong>Default rule</strong>: daily ≤ 31 days · weekly 32&ndash;183 days · monthly &gt; 183 days. Same rule for custom ranges of equivalent length.</li>
+      <li><strong>Caption-as-control</strong>: <em>Showing weekly totals</em> sits below the chart. The bucket name itself is the button — its underline is the only affordance — opening a 3-item popover (Day / Week / Month). The current selection is highlighted; nonsense options are disabled with a brief reason.</li>
+      <li><strong>Disable, don't hide</strong>, options that would render nonsense (&ldquo;Month&rdquo; on Last 7 days). Show the disabled reason in the row's helper text.</li>
+      <li><strong>Don't persist</strong> a manual override across sessions; <strong>reset on period change</strong>.</li>
+      <li><strong>Accessibility</strong>: caption is a <code>&lt;button&gt;</code>, popover is a roving-tab-index listbox, disabled rows have <code>aria-disabled</code>.</li>
+    </ul>
+
+    <h3>Tooltip (per-bar communication)</h3>
+    <ul class="rec-list">
+      <li><strong>Title format follows the bucket</strong>: <em>Tue, 5 May 2026</em> (daily, day of week + date) · <em>27 Apr – 3 May 2026</em> (weekly, as a date range) · <em>May 2026</em> (monthly). The title shape alone identifies the bucket — no &ldquo;Daily/Weekly/Monthly&rdquo; sub-header in normal cases.</li>
+      <li><strong>Partial coverage shown in a red pill</strong> below the title — names the actual coverage rather than describing the gap. Weekly: <em>Mon&nbsp;–&nbsp;Wed</em> or <em>Wed&nbsp;–&nbsp;Sun</em>. Monthly: <em>1&nbsp;–&nbsp;6 May</em>. Daily: <em>today</em>. Pairs with reduced bar opacity. The cause (in-progress vs. range-cut) is implicit from the bar's position in the chart, so the sub-line stays minimal.</li>
+      <li><strong>Pageviews / Crawlers separation</strong>: humans (logged in + anonymous) sum to a bold &ldquo;Pageviews&rdquo; total; crawlers, when active, render below a dashed divider so admins always see that the headline number doesn't include bots.</li>
+      <li><strong>Hidden series stay hidden</strong>: a deactivated filter pill removes its row from the tooltip too — no &ldquo;0 logged in&rdquo; line when the series is off.</li>
+      <li><strong>Touch + keyboard</strong>: tap-to-pin on touch devices; bars are focusable so keyboard users get the same tooltip.</li>
+    </ul>
+  </section>
+
+  <p class="footer-note">Interactive design exploration · /public/site-traffic-grouping-designs.html</p>
+</div>
+
+<!-- Single shared tooltip element -->
+<div class="chart-tooltip" id="chart-tooltip"></div>
+
+<script>
+'use strict';
+
+// =================================================================
+// Data: 540 days of plausible-looking pageview data, ending today
+// =================================================================
+const TODAY = new Date(Date.UTC(2026, 4, 6));
+const DAY_MS = 86400000;
+
+function generateDaily(days) {
+  const out = [];
+  let s = 1337;
+  const rand = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+  const start = new Date(TODAY.getTime() - (days - 1) * DAY_MS);
+  for (let i = 0; i < days; i++) {
+    const date = new Date(start.getTime() + i * DAY_MS);
+    const dow = date.getUTCDay();
+    const weekendFactor = (dow === 0 || dow === 6) ? 0.7 : 1.0;
+    const trend = 1 + (i / days) * 0.35;
+    const noise = 0.85 + rand() * 0.3;
+    const isToday = sameUTCDay(date, TODAY);
+    let humans = Math.round(10000 * trend * weekendFactor * noise);
+    // today is partial — collected fewer hours of the day
+    if (isToday) humans = Math.round(humans * 0.4);
+    const loggedIn = Math.round(humans * (0.32 + rand() * 0.06));
+    const anonymous = humans - loggedIn;
+    let crawlers = Math.round(humans * (0.18 + rand() * 0.08));
+    if (isToday) crawlers = Math.round(crawlers * 0.4);
+    out.push({ date, loggedIn, anonymous, crawlers });
+  }
+  return out;
+}
+
+// =================================================================
+// Date / format helpers
+// =================================================================
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function shortDayLabel(d) { return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`; }
+function longDayLabel(d)  { return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`; }
+function dowName(d)       { return DOW[d.getUTCDay()]; }
+function monthLabel(d)    { return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`; }
+function sameUTCDay(a, b) {
+  return a.getUTCFullYear() === b.getUTCFullYear() &&
+         a.getUTCMonth() === b.getUTCMonth() &&
+         a.getUTCDate() === b.getUTCDate();
+}
+function mondayKey(d) {
+  const dow = d.getUTCDay();
+  const offset = dow === 0 ? -6 : 1 - dow;
+  const monday = new Date(d.getTime() + offset * DAY_MS);
+  return monday.toISOString().slice(0, 10);
+}
+function parseUTC(s) { return new Date(s + 'T00:00:00Z'); }
+function daysInMonth(d) {
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+}
+function formatRange(start, end) {
+  const sy = start.getUTCFullYear(), ey = end.getUTCFullYear();
+  const sm = start.getUTCMonth(),    em = end.getUTCMonth();
+  if (sy === ey && sm === em) {
+    return `${start.getUTCDate()} – ${end.getUTCDate()} ${MONTHS[em]} ${ey}`;
+  }
+  if (sy === ey) {
+    return `${start.getUTCDate()} ${MONTHS[sm]} – ${end.getUTCDate()} ${MONTHS[em]} ${ey}`;
+  }
+  return `${shortDayLabel(start)} ${sy} – ${shortDayLabel(end)} ${ey}`;
+}
+
+const ALL_DAYS = generateDaily(540);
+
+// =================================================================
+// Periods + bucketing
+// =================================================================
+const PERIOD_PRESETS = [
+  { key: '7',   label: 'Last 7 days',    days: 7 },
+  { key: '30',  label: 'Last 30 days',   days: 30 },
+  { key: '90',  label: 'Last 90 days',   days: 90 },
+  { key: '365', label: 'Last 12 months', days: 365 },
+];
+
+function periodRows(periodDays) {
+  return ALL_DAYS.slice(ALL_DAYS.length - periodDays);
+}
+function priorRows(periodDays) {
+  const end = ALL_DAYS.length - periodDays;
+  const start = Math.max(0, end - periodDays);
+  return ALL_DAYS.slice(start, end);
+}
+
+function autoBucket(periodDays) {
+  if (periodDays <= 31) return 'day';
+  if (periodDays <= 183) return 'week';
+  return 'month';
+}
+
+function bucketAvailability(periodDays, bucket) {
+  const count = bucketCount(periodDays, bucket);
+  if (bucket === 'month' && periodDays < 60) {
+    return { disabled: true, reason: 'Range too short', count };
+  }
+  if (bucket === 'week' && periodDays < 14) {
+    return { disabled: true, reason: 'Range too short', count };
+  }
+  return { disabled: false, count };
+}
+
+function bucketCount(periodDays, bucket) {
+  if (bucket === 'day') return periodDays;
+  if (bucket === 'week') return Math.ceil(periodDays / 7);
+  const rows = periodRows(periodDays);
+  const set = new Set(rows.map(r => r.date.getUTCFullYear() * 12 + r.date.getUTCMonth()));
+  return set.size;
+}
+
+function bucketize(rows, bucket) {
+  if (bucket === 'day') {
+    return rows.map(r => ({
+      bucket: 'day',
+      key: r.date.toISOString().slice(0, 10),
+      label: shortDayLabel(r.date),
+      dateObj: r.date,
+      loggedIn: r.loggedIn,
+      anonymous: r.anonymous,
+      crawlers: r.crawlers,
+      isToday: sameUTCDay(r.date, TODAY),
+      partial: sameUTCDay(r.date, TODAY) ? 'today' : null,
+    }));
+  }
+  if (bucket === 'week') {
+    const map = new Map();
+    for (const r of rows) {
+      const key = mondayKey(r.date);
+      let b = map.get(key);
+      if (!b) {
+        const startDate = parseUTC(key);
+        const endDate = new Date(startDate.getTime() + 6 * DAY_MS);
+        b = {
+          bucket: 'week',
+          key,
+          label: shortDayLabel(startDate),
+          startDate, endDate,
+          actualStart: r.date,
+          actualEnd: r.date,
+          dayCount: 0,
+          loggedIn: 0, anonymous: 0, crawlers: 0,
+          isToday: false,
+        };
+        map.set(key, b);
+      }
+      if (r.date < b.actualStart) b.actualStart = r.date;
+      if (r.date > b.actualEnd) b.actualEnd = r.date;
+      b.dayCount++;
+      b.loggedIn += r.loggedIn;
+      b.anonymous += r.anonymous;
+      b.crawlers += r.crawlers;
+      if (sameUTCDay(r.date, TODAY)) b.isToday = true;
+    }
+    for (const b of map.values()) {
+      b.partial = b.dayCount < 7 ? (b.isToday ? 'today' : 'period-cut') : null;
+      b.rangeStart = b.partial ? b.actualStart : b.startDate;
+      b.rangeEnd = b.partial ? b.actualEnd : b.endDate;
+    }
+    return Array.from(map.values());
+  }
+  // month
+  const map = new Map();
+  for (const r of rows) {
+    const y = r.date.getUTCFullYear();
+    const m = r.date.getUTCMonth();
+    const key = `${y}-${String(m + 1).padStart(2, '0')}`;
+    let b = map.get(key);
+    if (!b) {
+      const monthDate = new Date(Date.UTC(y, m, 1));
+      b = {
+        bucket: 'month',
+        key,
+        label: monthLabel(r.date),
+        monthDate,
+        daysInMonth: daysInMonth(monthDate),
+        actualStart: r.date,
+        actualEnd: r.date,
+        dayCount: 0,
+        loggedIn: 0, anonymous: 0, crawlers: 0,
+        isToday: false,
+      };
+      map.set(key, b);
+    }
+    if (r.date < b.actualStart) b.actualStart = r.date;
+    if (r.date > b.actualEnd) b.actualEnd = r.date;
+    b.dayCount++;
+    b.loggedIn += r.loggedIn;
+    b.anonymous += r.anonymous;
+    b.crawlers += r.crawlers;
+    if (sameUTCDay(r.date, TODAY)) b.isToday = true;
+  }
+  for (const b of map.values()) {
+    b.partial = b.dayCount < b.daysInMonth ? (b.isToday ? 'today' : 'period-cut') : null;
+  }
+  return Array.from(map.values());
+}
+
+// =================================================================
+// Number formatting
+// =================================================================
+function abbrev(n) {
+  if (n >= 1e6) return (n / 1e6).toFixed(n >= 10e6 ? 0 : 1).replace(/\.0$/, '') + 'M';
+  if (n >= 1e3) return Math.round(n / 1e3) + 'k';
+  return String(n);
+}
+function abbrevRound(n) {
+  if (n >= 1e6) return Math.round(n / 1e6) + 'M';
+  if (n >= 1e3) return Math.round(n / 1e3) + 'k';
+  return String(n);
+}
+function niceCeil(n) {
+  if (n === 0) return 1;
+  const exp = Math.floor(Math.log10(n));
+  const base = Math.pow(10, exp);
+  const f = n / base;
+  let nf;
+  if (f <= 1) nf = 1;
+  else if (f <= 2) nf = 2;
+  else if (f <= 2.5) nf = 2.5;
+  else if (f <= 5) nf = 5;
+  else nf = 10;
+  return nf * base;
+}
+
+// =================================================================
+// Tooltip rendering (shared across all live charts)
+// =================================================================
+const tooltipEl = document.getElementById('chart-tooltip');
+
+function tooltipHTML(b, filters) {
+  const humans = (filters.loggedIn ? b.loggedIn : 0) + (filters.anonymous ? b.anonymous : 0);
+
+  let title, partial = null;
+  if (b.bucket === 'day') {
+    title = `${dowName(b.dateObj)}, ${longDayLabel(b.dateObj)}`;
+    if (b.partial === 'today') partial = 'today';
+  } else if (b.bucket === 'week') {
+    title = formatRange(b.rangeStart, b.rangeEnd);
+    if (b.partial) {
+      partial = `${dowName(b.rangeStart)} – ${dowName(b.rangeEnd)}`;
+    }
+  } else {
+    title = monthLabel(b.monthDate);
+    if (b.partial) {
+      const mName = MONTHS[b.actualStart.getUTCMonth()];
+      partial = `${b.actualStart.getUTCDate()} – ${b.actualEnd.getUTCDate()} ${mName}`;
+    }
+  }
+
+  let html = `
+    <div class="chart-tooltip__title">${title}</div>
+    ${partial ? `<div class="chart-tooltip__partial">${partial}</div>` : ''}
+    <div class="chart-tooltip__divider"></div>
+    <div class="chart-tooltip__row chart-tooltip__row--total">
+      <span class="label">Pageviews</span>
+      <span>${humans.toLocaleString()}</span>
+    </div>
+  `;
+  if (filters.loggedIn) {
+    html += `<div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--logged-in)"></span>Logged in</span><span>${b.loggedIn.toLocaleString()}</span></div>`;
+  }
+  if (filters.anonymous) {
+    html += `<div class="chart-tooltip__row"><span class="label label--indent"><span class="swatch" style="background: var(--anonymous)"></span>Anonymous</span><span>${b.anonymous.toLocaleString()}</span></div>`;
+  }
+  if (filters.crawlers) {
+    html += `<div class="chart-tooltip__row chart-tooltip__row--crawlers"><span class="label"><span class="swatch" style="background: var(--crawlers)"></span>Crawlers</span><span>${b.crawlers.toLocaleString()}</span></div>`;
+  }
+  return html;
+}
+
+function showTooltip(e, b, filters) {
+  tooltipEl.innerHTML = tooltipHTML(b, filters);
+  tooltipEl.classList.add('is-shown');
+  positionTooltip(e);
+}
+function positionTooltip(e) {
+  const pad = 14;
+  const rect = tooltipEl.getBoundingClientRect();
+  let x = e.clientX + pad;
+  let y = e.clientY + pad;
+  if (x + rect.width > window.innerWidth - 8) x = e.clientX - rect.width - pad;
+  if (y + rect.height > window.innerHeight - 8) y = e.clientY - rect.height - pad;
+  tooltipEl.style.left = x + 'px';
+  tooltipEl.style.top = y + 'px';
+}
+function hideTooltip() { tooltipEl.classList.remove('is-shown'); }
+
+// =================================================================
+// Chart rendering
+// =================================================================
+function renderChart(host, buckets, filters) {
+  host.innerHTML = '';
+
+  const yAxis = document.createElement('div');
+  yAxis.className = 'y-axis';
+  const stackTotals = buckets.map(b =>
+    (filters.loggedIn ? b.loggedIn : 0) +
+    (filters.anonymous ? b.anonymous : 0) +
+    (filters.crawlers ? b.crawlers : 0)
+  );
+  const rawMax = Math.max(1, ...stackTotals);
+  const yMax = niceCeil(rawMax);
+  [0, yMax / 4, yMax / 2, (3 * yMax) / 4, yMax].forEach(v => {
+    const s = document.createElement('span');
+    s.textContent = abbrevRound(v);
+    yAxis.appendChild(s);
+  });
+  host.appendChild(yAxis);
+
+  const plot = document.createElement('div');
+  plot.className = 'plot';
+  if (buckets.length > 60) plot.classList.add('is-dense');
+  if (buckets.length > 180) plot.classList.add('is-very-dense');
+
+  buckets.forEach(b => {
+    const total = (filters.loggedIn ? b.loggedIn : 0) +
+                  (filters.anonymous ? b.anonymous : 0) +
+                  (filters.crawlers ? b.crawlers : 0);
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    if (b.isToday) bar.classList.add('is-today');
+    else if (b.partial) bar.classList.add('is-partial');
+    bar.style.height = (total / yMax * 100) + '%';
+    bar.tabIndex = 0;
+
+    if (filters.crawlers) {
+      const cr = document.createElement('div');
+      cr.className = 'seg-cr';
+      cr.style.flex = b.crawlers;
+      bar.appendChild(cr);
+    }
+    if (filters.anonymous) {
+      const an = document.createElement('div');
+      an.className = 'seg-an';
+      an.style.flex = b.anonymous;
+      bar.appendChild(an);
+    }
+    if (filters.loggedIn) {
+      const li = document.createElement('div');
+      li.className = 'seg-li';
+      li.style.flex = b.loggedIn;
+      bar.appendChild(li);
+    }
+
+    bar.addEventListener('mouseenter', e => showTooltip(e, b, filters));
+    bar.addEventListener('mousemove', positionTooltip);
+    bar.addEventListener('mouseleave', hideTooltip);
+    bar.addEventListener('focus', e => {
+      const r = bar.getBoundingClientRect();
+      showTooltip({ clientX: r.left + r.width / 2, clientY: r.top }, b, filters);
+    });
+    bar.addEventListener('blur', hideTooltip);
+
+    plot.appendChild(bar);
+  });
+  host.appendChild(plot);
+
+  const xAxis = document.createElement('div');
+  xAxis.className = 'x-axis';
+  const want = Math.min(6, buckets.length);
+  const idxs = new Set([0, buckets.length - 1]);
+  if (want > 2) {
+    for (let k = 1; k < want - 1; k++) {
+      idxs.add(Math.round(k * (buckets.length - 1) / (want - 1)));
+    }
+  }
+  buckets.forEach((b, i) => {
+    if (!idxs.has(i)) return;
+    const span = document.createElement('span');
+    span.textContent = b.label;
+    if (b.isToday) span.classList.add('is-today');
+    span.style.left = ((i + 0.5) / buckets.length * 100) + '%';
+    xAxis.appendChild(span);
+  });
+  host.appendChild(xAxis);
+}
+
+// =================================================================
+// Common DOM scaffolding for an option card
+// =================================================================
+function buildScaffold(host, opts) {
+  host.innerHTML = `
+    <div class="mock-section-title">Site traffic</div>
+    <div class="mock-headline-row">
+      <div class="mock-headline">
+        <strong data-role="headline-count">—</strong>
+        <span data-role="headline-period">—</span>
+        <span data-role="headline-trend"></span>
+      </div>
+      <div class="mock-kpi">
+        Logged-in share
+        <strong data-role="kpi">—</strong>
+      </div>
+    </div>
+    <div class="toolbar" data-role="toolbar"></div>
+    <div class="pills" data-role="pills"></div>
+    <div class="chart" data-role="chart"></div>
+    <div class="density-warning" data-role="density-warning"></div>
+    ${opts.captionSlot ? '<div class="grouping-caption" data-role="caption"></div>' : ''}
+  `;
+}
+
+function buildPills(host, state, onChange) {
+  const items = [
+    { key: 'loggedIn',  label: 'Logged in',  color: 'var(--logged-in)' },
+    { key: 'anonymous', label: 'Anonymous',  color: 'var(--anonymous)' },
+    { key: 'crawlers',  label: 'Crawlers',   color: 'var(--crawlers)'  },
+  ];
+  host.innerHTML = '';
+  items.forEach(it => {
+    const btn = document.createElement('button');
+    btn.className = 'pill' + (state.filters[it.key] ? '' : ' is-off');
+    btn.type = 'button';
+    btn.innerHTML = `<span class="swatch" style="background: ${it.color}; color: ${it.color};"></span>${it.label}`;
+    btn.addEventListener('click', () => {
+      const activeCount = Object.values(state.filters).filter(Boolean).length;
+      if (state.filters[it.key] && activeCount === 1) return;
+      state.filters[it.key] = !state.filters[it.key];
+      onChange();
+    });
+    host.appendChild(btn);
+  });
+}
+
+function updateHeadline(host, state) {
+  const rows = periodRows(state.periodDays);
+  const prior = priorRows(state.periodDays);
+  const humans = rows.reduce((s, r) => s + r.loggedIn + r.anonymous, 0);
+  const priorHumans = prior.reduce((s, r) => s + r.loggedIn + r.anonymous, 0);
+  const loggedIn = rows.reduce((s, r) => s + r.loggedIn, 0);
+  const headlineCount = host.querySelector('[data-role="headline-count"]');
+  const headlinePeriod = host.querySelector('[data-role="headline-period"]');
+  const headlineTrend = host.querySelector('[data-role="headline-trend"]');
+  const kpi = host.querySelector('[data-role="kpi"]');
+
+  headlineCount.textContent = `${abbrev(humans)} pageviews`;
+  const periodLabel = (PERIOD_PRESETS.find(p => p.days === state.periodDays) || {}).label || `${state.periodDays} days`;
+  headlinePeriod.textContent = `in the ${periodLabel.toLowerCase()}`;
+
+  if (priorHumans > 0) {
+    const delta = (humans - priorHumans) / priorHumans;
+    const pct = Math.abs(delta) >= 0.01 ? Math.round(delta * 100) : Math.round(delta * 1000) / 10;
+    if (Math.abs(pct) > 0) {
+      const cls = delta >= 0 ? 'trend-up' : 'trend-down';
+      const word = delta >= 0 ? 'up' : 'down';
+      headlineTrend.innerHTML = ` — <span class="${cls}">${word} ${Math.abs(pct)}%</span>`;
+    } else {
+      headlineTrend.textContent = '';
+    }
+  } else {
+    headlineTrend.textContent = '';
+  }
+
+  const share = humans > 0 ? Math.round(loggedIn / humans * 100) : 0;
+  kpi.textContent = `${share}%`;
+}
+
+function updateDensityWarning(host, count) {
+  const w = host.querySelector('[data-role="density-warning"]');
+  if (count > 200) {
+    w.classList.add('is-shown');
+    w.textContent = `${count} bars — likely too dense to read.`;
+  } else {
+    w.classList.remove('is-shown');
+  }
+}
+
+function bucketUnitPlural(bucket, n) {
+  if (bucket === 'day') return n === 1 ? 'day' : 'days';
+  if (bucket === 'week') return n === 1 ? 'week' : 'weeks';
+  return n === 1 ? 'month' : 'months';
+}
+
+function bucketAdverb(bucket) {
+  return bucket === 'day' ? 'daily' : bucket === 'week' ? 'weekly' : 'monthly';
+}
+
+// =================================================================
+// OPTION A
+// =================================================================
+function initOptionA() {
+  const host = document.querySelector('[data-mock="A"]');
+  const state = {
+    periodDays: 90,
+    filters: { loggedIn: true, anonymous: true, crawlers: false },
+  };
+  buildScaffold(host, { captionSlot: true });
+  const toolbar = host.querySelector('[data-role="toolbar"]');
+  toolbar.innerHTML = `<select class="period-select" data-role="period"></select>`;
+  const sel = toolbar.querySelector('[data-role="period"]');
+  PERIOD_PRESETS.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.days; o.textContent = p.label; sel.appendChild(o);
+  });
+  sel.value = state.periodDays;
+  sel.addEventListener('change', () => { state.periodDays = +sel.value; render(); });
+
+  function render() {
+    const bucket = autoBucket(state.periodDays);
+    const buckets = bucketize(periodRows(state.periodDays), bucket);
+    renderChart(host.querySelector('[data-role="chart"]'), buckets, state.filters);
+    buildPills(host.querySelector('[data-role="pills"]'), state, render);
+    updateHeadline(host, state);
+    updateDensityWarning(host, buckets.length);
+    host.querySelector('[data-role="caption"]').innerHTML = `
+      <span>Showing <strong>${bucketAdverb(bucket)}</strong> totals</span>
+      <a class="see-details" href="#">See details →</a>
+    `;
+  }
+  render();
+}
+
+// =================================================================
+// OPTION B
+// =================================================================
+function initOptionB() {
+  const host = document.querySelector('[data-mock="B"]');
+  const state = {
+    periodDays: 90, bucket: 'week',
+    filters: { loggedIn: true, anonymous: true, crawlers: false },
+  };
+  buildScaffold(host, { captionSlot: false });
+  const toolbar = host.querySelector('[data-role="toolbar"]');
+  toolbar.innerHTML = `
+    <select class="period-select" data-role="period"></select>
+    <span class="toolbar-spacer"></span>
+    <span class="toolbar-label">Group by</span>
+    <div class="seg" data-role="seg">
+      <button data-bucket="day">Day</button>
+      <button data-bucket="week">Week</button>
+      <button data-bucket="month">Month</button>
+    </div>
+  `;
+  const sel = toolbar.querySelector('[data-role="period"]');
+  PERIOD_PRESETS.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.days; o.textContent = p.label; sel.appendChild(o);
+  });
+  sel.value = state.periodDays;
+  sel.addEventListener('change', () => {
+    state.periodDays = +sel.value;
+    if (bucketAvailability(state.periodDays, state.bucket).disabled) {
+      state.bucket = autoBucket(state.periodDays);
+    }
+    render();
+  });
+  toolbar.querySelectorAll('[data-bucket]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      state.bucket = btn.dataset.bucket;
+      render();
+    });
+  });
+  function render() {
+    toolbar.querySelectorAll('[data-bucket]').forEach(btn => {
+      const av = bucketAvailability(state.periodDays, btn.dataset.bucket);
+      btn.disabled = av.disabled;
+      btn.classList.toggle('is-active', state.bucket === btn.dataset.bucket && !av.disabled);
+      btn.title = av.disabled ? av.reason : `${av.count} bars`;
+    });
+    const buckets = bucketize(periodRows(state.periodDays), state.bucket);
+    renderChart(host.querySelector('[data-role="chart"]'), buckets, state.filters);
+    buildPills(host.querySelector('[data-role="pills"]'), state, render);
+    updateHeadline(host, state);
+    updateDensityWarning(host, buckets.length);
+  }
+  render();
+}
+
+// =================================================================
+// OPTION C
+// =================================================================
+function initOptionC() {
+  const host = document.querySelector('[data-mock="C"]');
+  const state = {
+    periodDays: 90, bucketOverride: null,
+    filters: { loggedIn: true, anonymous: true, crawlers: false },
+  };
+  buildScaffold(host, { captionSlot: true });
+  const toolbar = host.querySelector('[data-role="toolbar"]');
+  toolbar.innerHTML = `<select class="period-select" data-role="period"></select>`;
+  const sel = toolbar.querySelector('[data-role="period"]');
+  PERIOD_PRESETS.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.days; o.textContent = p.label; sel.appendChild(o);
+  });
+  sel.value = state.periodDays;
+  sel.addEventListener('change', () => {
+    state.periodDays = +sel.value;
+    state.bucketOverride = null;
+    render();
+  });
+  document.addEventListener('click', e => {
+    const cap = host.querySelector('[data-role="caption"]');
+    if (!cap || cap.contains(e.target)) return;
+    const pop = cap.querySelector('.popover');
+    if (pop) pop.classList.remove('is-open');
+  });
+  function effective() { return state.bucketOverride || autoBucket(state.periodDays); }
+  function render() {
+    const bucket = effective();
+    const buckets = bucketize(periodRows(state.periodDays), bucket);
+    renderChart(host.querySelector('[data-role="chart"]'), buckets, state.filters);
+    buildPills(host.querySelector('[data-role="pills"]'), state, render);
+    updateHeadline(host, state);
+    updateDensityWarning(host, buckets.length);
+
+    const cap = host.querySelector('[data-role="caption"]');
+    cap.innerHTML = `
+      <span>
+        Showing <button class="caption-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+          <strong>${bucketAdverb(bucket)}</strong> totals
+        </button>
+      </span>
+      <a class="see-details" href="#">See details →</a>
+      <div class="popover" role="listbox">
+        <div class="popover-label">Group by</div>
+        ${['day','week','month'].map(b => {
+          const av = bucketAvailability(state.periodDays, b);
+          const isCur = b === bucket;
+          const meta = av.disabled ? `<span class="meta">${av.reason}</span>` : '';
+          return `<button class="popover-row${isCur ? ' is-current' : ''}" type="button" data-bucket="${b}" ${av.disabled ? 'disabled aria-disabled="true"' : ''} role="option">
+            <span>${b[0].toUpperCase() + b.slice(1)}</span>${meta}
+          </button>`;
+        }).join('')}
+      </div>
+    `;
+    const trigger = cap.querySelector('.caption-trigger');
+    const pop = cap.querySelector('.popover');
+    trigger.addEventListener('click', e => {
+      e.stopPropagation();
+      const wasOpen = pop.classList.contains('is-open');
+      pop.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', String(!wasOpen));
+    });
+    cap.querySelectorAll('.popover-row').forEach(row => {
+      if (row.disabled) return;
+      row.addEventListener('click', e => {
+        e.stopPropagation();
+        state.bucketOverride = row.dataset.bucket;
+        pop.classList.remove('is-open');
+        render();
+      });
+    });
+  }
+  render();
+}
+
+// =================================================================
+// OPTION D
+// =================================================================
+function initOptionD() {
+  const host = document.querySelector('[data-mock="D"]');
+  const state = {
+    periodDays: 90,
+    filters: { loggedIn: true, anonymous: true, crawlers: false },
+  };
+  buildScaffold(host, { captionSlot: false });
+  const toolbar = host.querySelector('[data-role="toolbar"]');
+  toolbar.innerHTML = `<select class="period-select" data-role="period" style="min-width: 220px;"></select>`;
+  const sel = toolbar.querySelector('[data-role="period"]');
+  PERIOD_PRESETS.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.days;
+    o.textContent = `${p.label} · ${bucketAdverb(autoBucket(p.days))}`;
+    sel.appendChild(o);
+  });
+  sel.value = state.periodDays;
+  sel.addEventListener('change', () => { state.periodDays = +sel.value; render(); });
+  function render() {
+    const bucket = autoBucket(state.periodDays);
+    const buckets = bucketize(periodRows(state.periodDays), bucket);
+    renderChart(host.querySelector('[data-role="chart"]'), buckets, state.filters);
+    buildPills(host.querySelector('[data-role="pills"]'), state, render);
+    updateHeadline(host, state);
+    updateDensityWarning(host, buckets.length);
+  }
+  render();
+}
+
+initOptionA();
+initOptionB();
+initOptionC();
+initOptionD();
+</script>
+</body>
+</html>

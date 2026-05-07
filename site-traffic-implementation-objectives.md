@@ -191,8 +191,9 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 7.1 The chart shows pageview trends as stacked bars over the selected period.
 
 7.2 Bars are aggregated based on the period's length, so the chart stays readable at any range:
-- **Up to about six months (≤ 183 days)**: one bar per day. This covers the Last 7 days, Last 30 days, and Last 90 days presets, plus custom ranges of comparable length. Daily bucketing preserves day-level resolution; admins can spot weekday patterns and individual spikes.
-- **More than six months (> 183 days)**: one bar per month. This covers the Last 12 months preset and longer custom ranges. Weekly bucketing is intentionally not used — the visual jump from daily-detail to monthly-summary feels natural at this length, and weekly buckets at long ranges produced labels that didn't anchor to anything meaningful (irregular calendar-month rhythm).
+- **Up to one month (≤ 31 days)**: one bar per day. Covers the Last 7 days and Last 30 days presets and short custom ranges.
+- **More than one month, less than one year (32–364 days)**: one bar per week. Covers the Last 90 days preset and equivalent custom ranges. **Weeks always run Monday → Sunday** regardless of the viewer's locale week-start preference, so admins on different locales see consistent week boundaries. The x-axis label for each weekly bar is the bucket's start date (the Monday) and sits centered under the bar.
+- **One year or more (≥ 365 days)**: one bar per month. Covers the Last 12 months preset and longer custom ranges.
 
 The same rules apply to preset and custom periods of equivalent length.
 
@@ -201,13 +202,13 @@ The same rules apply to preset and custom periods of equivalent length.
 7.4 On private communities, only the Logged in series renders.
 
 7.5 **X-axis labels stay readable across all periods**:
-- The label format is appropriate to the bucket type: a day + month for daily, a month name for monthly.
+- The label format is appropriate to the bucket type: a day + month for daily and weekly bucketing (the weekly label is the bucket's Monday start), a month name for monthly.
 - **Unified year rule**: when a period spans calendar boundaries, **every** label includes the year (e.g., `22 Dec 2025`, `23 Dec 2025`, …, `1 Jan 2026`, …). When a period stays within one calendar year, no labels include the year (e.g., `8 Mar`, `15 Mar`). This produces a consistent axis format across the period — no asymmetric mix of short and long labels.
 - **Monthly bucketing** always includes the year on every label, regardless of whether it spans years, since the year-or-longer scale at this bucket size almost always crosses calendar boundaries and the small label count (≤12 in the Last 12 months preset) leaves room for the extra characters.
 - **Density is automatic, not pinned**: the chart picks how many labels fit at the current width rather than forcing every bar to be labeled. Even short ranges like Last 7 days and Last 30 days do not label every single bar — labels thin to a comfortable density. Cross-year daily ranges show fewer labels than same-year daily ranges of equal length because each cross-year label is wider.
 - The first and last visible bars are always labeled, so admins always see the start and end of their selection.
 
-7.6 **Today indicator**: when the rightmost bar's bucket includes today, its X-axis label is rendered with reduced visual emphasis. This applies only to daily buckets, where the partial-day cue is meaningful. Monthly buckets have no indicator (the entire current-month bucket is in-progress rather than just the rightmost day).
+7.6 **Today indicator**: when the rightmost bar's bucket includes today, its X-axis label is rendered with reduced visual emphasis. This applies to daily and weekly buckets, where the partial-bucket cue is meaningful. Monthly buckets have no indicator (the entire current-month bucket is in-progress rather than just the rightmost day).
 
 7.6a **Axis label visual style**: tick labels on both the X and Y axes are rendered in a **muted text tone** (theme-aware — readable in both light and dark mode but visibly lighter than body text) and a **smaller font size than body text**. The labels should recede visually so the chart bars and shape dominate. The today indicator on the X axis (§7.6) uses an even more muted variant of the same family so it remains visually distinct against the surrounding labels without competing with the bars.
 
@@ -215,12 +216,25 @@ The same rules apply to preset and custom periods of equivalent length.
 
 7.8 The Y-axis starts at 0.
 
-7.9 Hovering or touching a bar shows a tooltip containing:
-- The bucket's date in a form appropriate to the bucket — a single date for daily, a month name for monthly. Daily tooltips include the day of the week so admins can spot weekly patterns at a glance.
-- A "(today, partial)" suffix on the rightmost daily bar when its bucket is today.
-- The bar's pageview total (humans only).
-- A separate "Crawlers" line with the crawler count.
-- A per-series human breakdown (logged-in, anonymous) on public communities.
+7.9 Hovering or touching a bar shows a custom tooltip whose layout follows the **Option C** design from the design exploration in `public/site-traffic-grouping-designs.html`. The tooltip is built as HTML (rather than the Chart.js-default canvas tooltip) so it can render the structure described below using the section's existing visual styling (Discourse theme colors, fonts).
+
+The tooltip carries three pieces of information:
+
+- **The bucket's date or date range, in a form that identifies the bucket size on its own**:
+  - Daily: weekday + date, e.g., "Tue, 5 May 2026".
+  - Weekly: an inclusive Monday–Sunday range, e.g., "27 Apr – 3 May 2026" (with year on both ends when the bucket straddles a year boundary).
+  - Monthly: month + year, e.g., "May 2026".
+  The title shape alone identifies the bucket size; no separate "Daily / Weekly / Monthly" sub-header is needed.
+- **Partial-coverage indicator** (a small red pill below the title) when the bucket is in-progress or cut short by the period boundary. The pill names the actual coverage rather than describing the gap:
+  - Daily, today: "today".
+  - Weekly, current week (today is in this bucket but the bucket extends past today): a relative weekday range, e.g., "Mon – Wed".
+  - Monthly, current month: a date range from the first of the month to today, e.g., "1 – 6 May".
+  The pill pairs with the partial bar's existing visual cues (label tone, etc.). The cause (in-progress vs. range-cut) is implicit from the bar's position.
+- **Pageviews vs. Crawlers separation, with a bold humans-only total**:
+  - A bold "Pageviews" total = logged-in + anonymous (humans only) on public sites; logged-in only on private sites.
+  - Indented sub-rows under the total break humans down by series (logged-in, anonymous) with a small color swatch matching the chart series.
+  - When the Crawlers filter is active, crawlers render below a dashed divider with their own row, making it visually clear that the headline pageview number does not include bots.
+  - Hidden series (filter pills toggled off) are also hidden from the tooltip — no "0 logged in" line when that pill is off.
 
 7.10 The tooltip explicitly distinguishes "Pageviews" (humans) from "Crawlers", so admins see at a glance that the headline number doesn't include crawlers.
 

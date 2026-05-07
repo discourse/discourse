@@ -98,6 +98,7 @@ export default class AdminReportStackedChart extends Component {
         hidden: chartOptions.hiddenLabels.includes(series.req),
         borderRadius: 2,
         maxBarThickness: 30,
+        req: series.req,
       })),
     };
 
@@ -162,39 +163,46 @@ export default class AdminReportStackedChart extends Component {
               },
             },
           },
-          tooltip: {
-            mode: "index",
-            intersect: false,
-            backgroundColor: getCSSColor("--primary"),
-            titleColor: getCSSColor("--secondary"),
-            bodyColor: getCSSColor("--secondary"),
-            footerColor: getCSSColor("--secondary"),
-            titleMarginBottom: 16,
-            footerMarginTop: 16,
-            padding: {
-              left: 20,
-              right: 20,
-              top: 12,
-              bottom: 12,
-            },
-            bodySpacing: 8,
-            cornerRadius: 8,
-            boxPadding: 4,
-            callbacks: {
-              beforeFooter: (tooltipItem) => {
-                const total = tooltipItem.reduce(
-                  (sum, item) => sum + parseInt(item.parsed.y || 0, 10),
-                  0
-                );
-                return i18n("admin.reports.chart.total", {
-                  count: I18n.toNumber(total, { precision: 0 }),
-                });
+          tooltip: chartOptions.tooltipExternal
+            ? {
+                enabled: false,
+                external: chartOptions.tooltipExternal,
+                mode: "index",
+                intersect: false,
+              }
+            : {
+                mode: "index",
+                intersect: false,
+                backgroundColor: getCSSColor("--primary"),
+                titleColor: getCSSColor("--secondary"),
+                bodyColor: getCSSColor("--secondary"),
+                footerColor: getCSSColor("--secondary"),
+                titleMarginBottom: 16,
+                footerMarginTop: 16,
+                padding: {
+                  left: 20,
+                  right: 20,
+                  top: 12,
+                  bottom: 12,
+                },
+                bodySpacing: 8,
+                cornerRadius: 8,
+                boxPadding: 4,
+                callbacks: {
+                  beforeFooter: (tooltipItem) => {
+                    const total = tooltipItem.reduce(
+                      (sum, item) => sum + parseInt(item.parsed.y || 0, 10),
+                      0
+                    );
+                    return i18n("admin.reports.chart.total", {
+                      count: I18n.toNumber(total, { precision: 0 }),
+                    });
+                  },
+                  title:
+                    chartOptions.tooltipTitleCallback ||
+                    ((tooltipItem) => this.#tooltipTitle(tooltipItem)),
+                },
               },
-              title:
-                chartOptions.tooltipTitleCallback ||
-                ((tooltipItem) => this.#tooltipTitle(tooltipItem)),
-            },
-          },
         },
 
         layout: {

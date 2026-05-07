@@ -6992,6 +6992,8 @@ en:
               pageviews: "Pageviews"
               crawlers: "Crawlers"
               today_partial: "(today, partial)"
+              partial:
+                today: "today"
           drilldown: "See details →"
           custom_range:
             title: "Pick a custom date range"
