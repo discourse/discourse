@@ -1,12 +1,12 @@
-import { decodeAnimated as decodeGifAnimated } from "@jsquash/gif";
-import { decode as decodeHeic } from "@jsquash/heic";
-import { encode as encodeJpeg } from "@jsquash/jpeg";
-import { decode as decodeJxl } from "@jsquash/jxl";
-import resize from "@jsquash/resize";
+import { decodeAnimated as decodeGifAnimated } from "@discourse/gif";
+import { decode as decodeHeic } from "@discourse/heic";
+import { encode as encodeJpeg } from "@discourse/jpeg";
+import { decode as decodeJxl } from "@discourse/jxl";
+import resize from "@discourse/resize";
 import {
   encode as encodeWebp,
   encodeAnimated as encodeWebpAnimated,
-} from "@jsquash/webp";
+} from "@discourse/webp";
 
 function resizeWithAspect(
   input_width,
