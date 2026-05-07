@@ -21,6 +21,16 @@ module CategoryGuardian
       )
   end
 
+  def can_use_category_upload?(category, upload)
+    return false if @user.blank? || upload.blank?
+    return true if is_admin?
+    return true if category && category_upload_ids(category).include?(upload.id)
+    return true if !upload.secure?
+    return true if is_my_own?(upload)
+
+    UserUpload.exists?(upload_id: upload.id, user_id: @user.id)
+  end
+
   def can_delete_category?(category)
     can_edit_category?(category) && category.topic_count <= 0 && !category.uncategorized? &&
       !category.has_children?
@@ -80,6 +90,15 @@ module CategoryGuardian
   end
 
   private
+
+  def category_upload_ids(category)
+    [
+      category.uploaded_logo_id,
+      category.uploaded_logo_dark_id,
+      category.uploaded_background_id,
+      category.uploaded_background_dark_id,
+    ]
+  end
 
   def posting_review_required?(category, post_type)
     return false if category.nil?

@@ -3,6 +3,13 @@
 class CategoriesController < ApplicationController
   include TopicQueryParams
 
+  CATEGORY_UPLOAD_KEYS = %i[
+    uploaded_logo_id
+    uploaded_logo_dark_id
+    uploaded_background_id
+    uploaded_background_dark_id
+  ]
+
   requires_login except: %i[
                    index
                    categories_and_latest
@@ -180,7 +187,7 @@ class CategoriesController < ApplicationController
         return render json: { errors: [e.message] }, status: :unprocessable_entity
       end
 
-    if @category.save
+    if category_uploads_authorized?(@category) && @category.save
       @category.move_to(position.to_i) if position
 
       if category_type.present? &&
@@ -225,6 +232,7 @@ class CategoriesController < ApplicationController
 
     json_result(@category, serializer: CategorySerializer) do |cat|
       old_category_params = category_params.dup
+      next false if !category_uploads_authorized?(cat)
 
       cat.move_to(category_params[:position].to_i) if category_params[:position]
       category_params.delete(:position)
@@ -640,6 +648,20 @@ class CategoriesController < ApplicationController
   def required_create_params
     required_param_keys.each { |key| params.require(key) }
     category_params
+  end
+
+  def category_uploads_authorized?(category)
+    CATEGORY_UPLOAD_KEYS.each do |key|
+      next if !category_params.key?(key) || category_params[key].blank?
+
+      upload = Upload.find_by(id: category_params[key])
+      next if guardian.can_use_category_upload?(category, upload)
+
+      category.errors.add(:base, I18n.t("upload.unauthorized"))
+      return false
+    end
+
+    true
   end
 
   def category_params
