@@ -31,18 +31,25 @@ module Reports::SiteTrafficSummary
           anon_req_type: anon_req_type,
         ).first
 
+      # Generate one row per day in the selected range, joining against
+      # application_requests. Days that have no row in application_requests
+      # return zero counts. This guarantees the response always contains an
+      # entry for every day in the period — the chart can rely on
+      # complete data without needing to fill gaps client-side.
       data =
         DB.query(
           <<~SQL,
             SELECT
-              date,
-              SUM(CASE WHEN req_type = :logged_in_req_type THEN count ELSE 0 END) AS page_view_logged_in_browser,
-              SUM(CASE WHEN req_type = :anon_req_type THEN count ELSE 0 END) AS page_view_anon_browser,
-              SUM(CASE WHEN req_type = :crawler_req_type THEN count ELSE 0 END) AS page_view_crawler
-            FROM application_requests
-            WHERE date >= :start_date AND date <= :end_date
-            GROUP BY date
-            ORDER BY date ASC
+              d.date,
+              COALESCE(SUM(CASE WHEN ar.req_type = :logged_in_req_type THEN ar.count ELSE 0 END), 0) AS page_view_logged_in_browser,
+              COALESCE(SUM(CASE WHEN ar.req_type = :anon_req_type THEN ar.count ELSE 0 END), 0) AS page_view_anon_browser,
+              COALESCE(SUM(CASE WHEN ar.req_type = :crawler_req_type THEN ar.count ELSE 0 END), 0) AS page_view_crawler
+            FROM (
+              SELECT generate_series(:start_date::date, :end_date::date, '1 day'::interval)::date AS date
+            ) d
+            LEFT JOIN application_requests ar ON ar.date = d.date
+            GROUP BY d.date
+            ORDER BY d.date ASC
           SQL
           start_date: report.start_date,
           end_date: report.end_date,

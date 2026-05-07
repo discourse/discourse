@@ -199,6 +199,8 @@ The same rules apply to preset and custom periods of equivalent length.
 
 **Every day in the selected period is represented in the chart**, even if no pageview data exists for that day. Missing-data days are filled in as zero values rather than skipped — so the x-axis spacing stays uniform, daily slots are never collapsed, and partial weeks/months at the start or end of the period still render their bars with whatever data they have.
 
+**This is a server-side guarantee**: the API endpoint returns one entry per day in the selected period, regardless of whether the underlying request log has rows for those days. Days with no recorded data return zero counts. The frontend can rely on the response being complete and does not need to fill gaps client-side.
+
 7.3 On public communities, bars stack: Logged in at the bottom, Anonymous in the middle, Crawlers on top. Each color matches its filter pill.
 
 7.4 On private communities, only the Logged in series renders.
