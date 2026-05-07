@@ -79,7 +79,7 @@ describe "Post event" do
       post_event_form_page.fill_description("foo\nbar").fill_timezone(timezone).submit
 
       expect(composer).to have_value <<~EVENT.strip
-        [event start="2025-06-15 14:30" status="public" timezone="#{timezone}"]
+        [event start="2025-06-15 14:30" status="public" timezone="#{timezone}" end="2025-06-15 15:30"]
         foo
         bar
         [/event]
@@ -115,6 +115,8 @@ describe "Post event" do
 
       find(".toolbar-menu__options-trigger").click
       click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
+
+      find(".post-event-builder-modal .d-modal__footer .advanced-settings").click
 
       tz_select =
         PageObjects::Components::SelectKit.new(".post-event-builder-modal .timezone-input")
@@ -334,6 +336,7 @@ describe "Post event" do
     composer.fill_title("Test event with updates")
     find(".toolbar-menu__options-trigger").click
     find("button[title='#{I18n.t("js.discourse_post_event.builder_modal.attach")}']").click
+    find(".d-modal .d-modal__footer .advanced-settings").click
     find(".d-modal input[name=status][value=private]").click
     find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
@@ -349,6 +352,7 @@ describe "Post event" do
     expect(page).to have_css(".discourse-post-event")
 
     post_event_page.edit
+    find(".d-modal .d-modal__footer .advanced-settings").click
 
     expect(find(".d-modal input[name=status][value=private]").checked?).to eq(true)
     expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)

@@ -24,7 +24,7 @@ module("Integration | Component | time-input", function (hooks) {
       </template>
     );
 
-    assert.strictEqual(this.subject.header().name(), "14:58");
+    assert.strictEqual(this.subject.header().name(), "2:58 PM");
   });
 
   test("prevents mutations", async function (assert) {
@@ -38,7 +38,7 @@ module("Integration | Component | time-input", function (hooks) {
 
     await this.subject.expand();
     await this.subject.selectRowByIndex(3);
-    assert.strictEqual(this.subject.header().name(), "14:58");
+    assert.strictEqual(this.subject.header().name(), "2:58 PM");
   });
 
   test("allows mutations through actions", async function (assert) {
@@ -57,6 +57,6 @@ module("Integration | Component | time-input", function (hooks) {
 
     await this.subject.expand();
     await this.subject.selectRowByIndex(3);
-    assert.strictEqual(this.subject.header().name(), "00:45");
+    assert.strictEqual(this.subject.header().name(), "12:45 AM");
   });
 });

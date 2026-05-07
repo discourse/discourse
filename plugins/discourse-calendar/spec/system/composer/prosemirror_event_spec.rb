@@ -35,7 +35,7 @@ describe "Composer - ProseMirror - Event Editor" do
 
       expect(rich).to have_css(".composer-event__month", text: "DEC")
       expect(rich).to have_css(".composer-event__day", text: "20")
-      expect(rich).to have_css(".composer-event__date-range--has-values")
+      expect(rich).to have_css(".composer-event__date-input")
     end
   end
 
@@ -81,10 +81,9 @@ describe "Composer - ProseMirror - Event Editor" do
       expect(rich).to have_css(".composer-event__location-external-link")
 
       # Verify date inputs have values
-      start_input = rich.find("input[type='datetime-local']", match: :first)
-      end_input = rich.all("input[type='datetime-local']").last
-      expect(start_input.value).not_to be_empty
-      expect(end_input.value).not_to be_empty
+      date_inputs = rich.all(".composer-event__date-input")
+      expect(date_inputs.first.value).not_to be_empty
+      expect(date_inputs.last.value).not_to be_empty
     end
 
     it "allows editing name field and persists to markdown" do
@@ -155,13 +154,12 @@ describe "Composer - ProseMirror - Event Editor" do
       )
       composer.toggle_rich_editor
 
-      start_input = rich.find("input[type='datetime-local']", match: :first)
-      start_input.fill_in(with: "2024-12-20T14:00")
-
-      end_input = rich.all("input[type='datetime-local']").last
-      end_input.fill_in(with: "2024-12-20T16:00")
-
-      expect(rich).to have_css(".composer-event__date-range--has-values")
+      date_inputs = rich.all(".composer-event__date-input")
+      time_inputs = rich.all(".composer-event__time-input")
+      date_inputs.first.fill_in(with: "2024-12-20")
+      time_inputs.first.fill_in(with: "14:00")
+      date_inputs.last.fill_in(with: "2024-12-20")
+      time_inputs.last.fill_in(with: "16:00")
 
       composer.toggle_rich_editor
       markdown_content = find(".d-editor-input").value
