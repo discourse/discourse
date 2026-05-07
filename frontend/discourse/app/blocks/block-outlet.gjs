@@ -226,6 +226,11 @@ function createChildBlock(entry, owner, debugContext = {}) {
       {
         name: blockMeta?.blockName,
         id,
+        // The composite stable key for this entry (`${blockName}:${__stableKey}`),
+        // minted in entry-processing.js. Exposed here so debug consumers can
+        // correlate a rendered block back to its layout entry without inventing
+        // their own identifier.
+        key: debugContext.key,
         Component: wrappedComponent,
         args: argsWithDefaults,
         containerArgs,
