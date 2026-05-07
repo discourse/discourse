@@ -989,6 +989,129 @@ module("Unit | Lib | blocks/validation/args", function () {
         /has "instanceOfName" with a "model:\*" instanceOf.*only valid for class references/
       );
     });
+
+    test("ui hints: accepts schema with no ui field", function (assert) {
+      const schema = { title: { type: "string" } };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: accepts a complete ui hint object", function (assert) {
+      const schema = {
+        title: {
+          type: "string",
+          ui: {
+            control: "text",
+            label: "Title",
+            placeholder: "Welcome",
+            helpText: "Shown at the top of the banner.",
+            group: "Content",
+            hidden: false,
+          },
+        },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: throws for non-object ui value", function (assert) {
+      const schema = { title: { type: "string", ui: "text" } };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui" value\. Must be an object/
+      );
+    });
+
+    test("ui hints: throws for unknown ui property", function (assert) {
+      const schema = {
+        title: { type: "string", ui: { control: "text", typo: 1 } },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /unknown ui properties: typo/
+      );
+    });
+
+    test("ui hints: throws for unsupported control name", function (assert) {
+      const schema = { title: { type: "string", ui: { control: "wysiwyg" } } };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.control" value "wysiwyg"/
+      );
+    });
+
+    test("ui hints: throws for non-string label", function (assert) {
+      const schema = { title: { type: "string", ui: { label: 42 } } };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.label" value\. Must be a string/
+      );
+    });
+
+    test("ui hints: throws for non-boolean hidden", function (assert) {
+      const schema = { title: { type: "string", ui: { hidden: "yes" } } };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.hidden" value\. Must be a boolean/
+      );
+    });
+
+    test("ui hints: accepts a conditional with equals", function (assert) {
+      const schema = {
+        ctaUrl: {
+          type: "string",
+          ui: { conditional: { arg: "ctaLabel", equals: "Buy now" } },
+        },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: accepts a conditional with notEmpty", function (assert) {
+      const schema = {
+        ctaUrl: {
+          type: "string",
+          ui: { conditional: { arg: "ctaLabel", notEmpty: true } },
+        },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: throws when conditional has neither equals nor notEmpty", function (assert) {
+      const schema = {
+        ctaUrl: {
+          type: "string",
+          ui: { conditional: { arg: "ctaLabel" } },
+        },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /Must specify at least one of "equals" or "notEmpty"/
+      );
+    });
+
+    test("ui hints: throws when conditional.arg is missing", function (assert) {
+      const schema = {
+        ctaUrl: {
+          type: "string",
+          ui: { conditional: { equals: "x" } },
+        },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.conditional\.arg" value\. Must be a non-empty string/
+      );
+    });
+
+    test("ui hints: throws for unknown conditional property", function (assert) {
+      const schema = {
+        ctaUrl: {
+          type: "string",
+          ui: { conditional: { arg: "ctaLabel", equals: "x", typo: true } },
+        },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /unknown "ui\.conditional" properties: typo/
+      );
+    });
   });
 
   module("validateArgName", function () {

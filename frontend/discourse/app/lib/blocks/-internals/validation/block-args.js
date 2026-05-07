@@ -6,6 +6,8 @@
  * for use with blocks. Key differences from condition arg validation:
  * - Supports "default" values (conditions don't use defaults)
  * - Validates "required + default" contradiction
+ * - Supports `ui` hints that drive the visual editor's inspector controls
+ *   (no runtime effect; pure metadata)
  * - Supports childArgs with "unique" property
  *
  * @module discourse/lib/blocks/-internals/validation/block-args
@@ -25,13 +27,192 @@ import {
 } from "discourse/lib/blocks/-internals/validation/args";
 
 /**
+ * Valid `ui.control` values. Drives the visual editor's inspector field-type
+ * mapping. Adding a new control requires both this list (so the validator
+ * accepts it at decoration time) and a corresponding renderer in the
+ * inspector's FormKit-from-schema mapper. The list is also re-exported from
+ * `discourse/lib/blocks` so plugin and theme authors can reference it.
+ */
+export const VALID_UI_CONTROLS = Object.freeze([
+  "text",
+  "textarea",
+  "number",
+  "toggle",
+  "select",
+  "radio-group",
+  "color",
+  "icon",
+  "emoji",
+  "image-upload",
+  "url",
+  "rich-text",
+  "code",
+  "category-select",
+  "tag-select",
+  "user-select",
+  "group-select",
+]);
+
+/**
+ * Valid properties on the `ui` hint object. Anything else triggers a
+ * decoration-time error so typos surface immediately.
+ */
+const VALID_UI_PROPERTIES = Object.freeze([
+  "control",
+  "label",
+  "placeholder",
+  "helpText",
+  "group",
+  "hidden",
+  "conditional",
+]);
+
+/**
+ * Valid properties on the `ui.conditional` predicate object.
+ */
+const VALID_UI_CONDITIONAL_PROPERTIES = Object.freeze([
+  "arg",
+  "equals",
+  "notEmpty",
+]);
+
+/**
+ * Valid properties for block arg schema definitions. Extends the shared
+ * `VALID_ARG_SCHEMA_PROPERTIES` with `ui` so blocks can opt into inspector
+ * hints without polluting the condition arg schema (which has no inspector).
+ */
+export const VALID_BLOCK_ARG_SCHEMA_PROPERTIES = Object.freeze([
+  ...VALID_ARG_SCHEMA_PROPERTIES,
+  "ui",
+]);
+
+/**
  * Valid properties for childArgs schema definitions.
- * Includes all standard arg properties plus "unique" for sibling uniqueness validation.
+ * Includes block arg properties plus "unique" for sibling uniqueness validation.
  */
 export const VALID_CHILD_ARG_SCHEMA_PROPERTIES = Object.freeze([
-  ...VALID_ARG_SCHEMA_PROPERTIES,
+  ...VALID_BLOCK_ARG_SCHEMA_PROPERTIES,
   "unique",
 ]);
+
+/**
+ * Validates the `ui` hint object on a block arg.
+ *
+ * The `ui` field is purely advisory metadata for the visual editor — it
+ * never affects runtime behaviour of the block itself. We still validate it
+ * at decoration time so authors get fast feedback on typos and unsupported
+ * controls instead of silently-broken inspector fields later.
+ *
+ * @param {*} uiDef - The value of `ui` from the arg schema (any type — we
+ *   handle non-objects defensively).
+ * @param {string} argName - The arg name, for error messages.
+ * @param {string} blockName - The block name, for error messages.
+ * @param {string} argLabel - "arg" or "childArgs arg", for error messages.
+ */
+function validateUIHints(uiDef, argName, blockName, argLabel) {
+  if (uiDef === undefined) {
+    return;
+  }
+
+  if (uiDef === null || typeof uiDef !== "object" || Array.isArray(uiDef)) {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui" value. Must be an object.`
+    );
+  }
+
+  const unknownProps = Object.keys(uiDef).filter(
+    (prop) => !VALID_UI_PROPERTIES.includes(prop)
+  );
+  if (unknownProps.length > 0) {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has unknown ui properties: ${unknownProps.join(", ")}. ` +
+        `Valid ui properties are: ${VALID_UI_PROPERTIES.join(", ")}.`
+    );
+  }
+
+  if (uiDef.control !== undefined) {
+    if (typeof uiDef.control !== "string") {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.control" value. Must be a string.`
+      );
+    }
+    if (!VALID_UI_CONTROLS.includes(uiDef.control)) {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.control" value "${uiDef.control}". ` +
+          `Valid controls are: ${VALID_UI_CONTROLS.join(", ")}.`
+      );
+    }
+  }
+
+  for (const prop of ["label", "placeholder", "helpText", "group"]) {
+    if (uiDef[prop] !== undefined && typeof uiDef[prop] !== "string") {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.${prop}" value. Must be a string.`
+      );
+    }
+  }
+
+  if (uiDef.hidden !== undefined && typeof uiDef.hidden !== "boolean") {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.hidden" value. Must be a boolean.`
+    );
+  }
+
+  if (uiDef.conditional !== undefined) {
+    validateUIConditional(uiDef.conditional, argName, blockName, argLabel);
+  }
+}
+
+/**
+ * Validates a `ui.conditional` predicate. The predicate hides the field
+ * unless another arg satisfies a condition. At least one of `equals` or
+ * `notEmpty` must be set, otherwise the predicate has no semantics.
+ */
+function validateUIConditional(conditional, argName, blockName, argLabel) {
+  if (
+    conditional === null ||
+    typeof conditional !== "object" ||
+    Array.isArray(conditional)
+  ) {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.conditional" value. Must be an object.`
+    );
+  }
+
+  const unknownProps = Object.keys(conditional).filter(
+    (prop) => !VALID_UI_CONDITIONAL_PROPERTIES.includes(prop)
+  );
+  if (unknownProps.length > 0) {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has unknown "ui.conditional" properties: ${unknownProps.join(", ")}. ` +
+        `Valid properties are: ${VALID_UI_CONDITIONAL_PROPERTIES.join(", ")}.`
+    );
+  }
+
+  if (typeof conditional.arg !== "string" || conditional.arg === "") {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.conditional.arg" value. Must be a non-empty string.`
+    );
+  }
+
+  if (
+    conditional.notEmpty !== undefined &&
+    typeof conditional.notEmpty !== "boolean"
+  ) {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.conditional.notEmpty" value. Must be a boolean.`
+    );
+  }
+
+  // The predicate needs at least one comparator. Without `equals` or
+  // `notEmpty` we have no rule to evaluate against the referenced arg.
+  if (conditional.equals === undefined && conditional.notEmpty === undefined) {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.conditional" value. ` +
+        `Must specify at least one of "equals" or "notEmpty".`
+    );
+  }
+}
 
 /**
  * Validates block-specific default value rules:
@@ -94,7 +275,7 @@ export function validateArgsSchema(argsSchema, blockName) {
     const shouldContinue = validateArgSchemaEntry(argDef, argName, {
       entityName: blockName,
       entityType: "Block",
-      validProperties: VALID_ARG_SCHEMA_PROPERTIES,
+      validProperties: VALID_BLOCK_ARG_SCHEMA_PROPERTIES,
     });
 
     if (!shouldContinue) {
@@ -102,6 +283,7 @@ export function validateArgsSchema(argsSchema, blockName) {
     }
 
     validateBlockDefaultValue(argDef, argName, blockName);
+    validateUIHints(argDef.ui, argName, blockName, "arg");
   }
 }
 
@@ -191,5 +373,6 @@ export function validateChildArgsSchema(childArgsSchema, blockName) {
     }
 
     validateBlockDefaultValue(argDef, argName, blockName, "childArgs arg");
+    validateUIHints(argDef.ui, argName, blockName, "childArgs arg");
   }
 }
