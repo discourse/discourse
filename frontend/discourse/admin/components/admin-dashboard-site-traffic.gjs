@@ -483,6 +483,7 @@ export default class AdminDashboardSiteTraffic extends Component {
         endMs: this.modelEndDate.valueOf(),
       }),
       xTickColorCallback: makeXTickColorCallback({ bucketing }),
+      xMax: ymd(this.modelEndDate),
       tooltipTitleCallback: makeTooltipTitleCallback({ bucketing }),
       yStepSize: this.yStepSize,
       yMaxTicksLimit: 6,
