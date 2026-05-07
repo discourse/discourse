@@ -19,9 +19,10 @@ import { extractError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
-import { eq } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import { buildParams } from "../../lib/raw-event-helper";
+import CompactEventEditor from "../compact-event-editor";
 import EventField from "../event-field";
 
 export default class PostEventBuilder extends Component {
@@ -32,10 +33,14 @@ export default class PostEventBuilder extends Component {
   @tracked flash = null;
   @tracked isSaving = false;
   @tracked maxAttendeesInput = this.args.model.event.maxAttendees;
+  @tracked screen = this.args.model.initialScreen || "compact";
 
   @tracked allDay = this.event.allDay || false;
   @tracked startsAt = this.#initStartsAt();
   @tracked endsAt = this.#initEndsAt();
+  @tracked
+  previousRsvpStatus =
+    this.event.status === "standalone" ? "public" : this.event.status;
 
   #initStartsAt() {
     if (this.event.allDay) {
@@ -74,7 +79,7 @@ export default class PostEventBuilder extends Component {
   }
 
   get reminderTypes() {
-    return [
+    const types = [
       {
         value: "notification",
         name: i18n(
@@ -88,6 +93,9 @@ export default class PostEventBuilder extends Component {
         ),
       },
     ];
+    return this.allowsRsvps
+      ? types
+      : types.filter((t) => t.value !== "notification");
   }
 
   get reminderUnits() {
@@ -135,14 +143,21 @@ export default class PostEventBuilder extends Component {
   }
 
   get availableRecurrences() {
+    const ref = this.startsAt || moment();
+    const weekday = ref.format("dddd");
+    const dayOfMonth = ref.date();
+    const isLast = dayOfMonth + 7 > ref.daysInMonth();
+    const ordinalKey = isLast
+      ? "last"
+      : ["first", "second", "third", "fourth"][Math.ceil(dayOfMonth / 7) - 1];
+    const ordinal = i18n(
+      `discourse_post_event.builder_modal.recurrence.ordinals.${ordinalKey}`
+    );
+
     return [
       {
         id: "every_day",
         name: i18n("discourse_post_event.builder_modal.recurrence.every_day"),
-      },
-      {
-        id: "every_month",
-        name: i18n("discourse_post_event.builder_modal.recurrence.every_month"),
       },
       {
         id: "every_weekday",
@@ -152,18 +167,29 @@ export default class PostEventBuilder extends Component {
       },
       {
         id: "every_week",
-        name: i18n("discourse_post_event.builder_modal.recurrence.every_week"),
+        name: i18n("discourse_post_event.builder_modal.recurrence.every_week", {
+          weekday,
+        }),
       },
       {
         id: "every_two_weeks",
         name: i18n(
-          "discourse_post_event.builder_modal.recurrence.every_two_weeks"
+          "discourse_post_event.builder_modal.recurrence.every_two_weeks",
+          { weekday }
         ),
       },
       {
         id: "every_four_weeks",
         name: i18n(
-          "discourse_post_event.builder_modal.recurrence.every_four_weeks"
+          "discourse_post_event.builder_modal.recurrence.every_four_weeks",
+          { weekday }
+        ),
+      },
+      {
+        id: "every_month",
+        name: i18n(
+          "discourse_post_event.builder_modal.recurrence.every_month",
+          { ordinal, weekday }
         ),
       },
     ];
@@ -185,6 +211,119 @@ export default class PostEventBuilder extends Component {
       this.siteSettings.chat_enabled &&
       (this.currentUser.admin || this.currentUser.moderator)
     );
+  }
+
+  get isAdvancedScreen() {
+    return this.screen === "advanced";
+  }
+
+  get showScreenToggle() {
+    return this.args.model.initialScreen !== "advanced";
+  }
+
+  get userTimezone() {
+    return this.currentUser?.user_option?.timezone || moment.tz.guess();
+  }
+
+  get statusText() {
+    return i18n(
+      `discourse_post_event.models.event.status.${this.event.status || "public"}.title`
+    );
+  }
+
+  get eventNamePlaceholder() {
+    return i18n("discourse_post_event.composer.name_placeholder");
+  }
+
+  @action
+  toggleAdvanced() {
+    this.screen = this.isAdvancedScreen ? "compact" : "advanced";
+  }
+
+  @action
+  updateName(value) {
+    this.event.name = value;
+  }
+
+  @action
+  updateLocation(value) {
+    this.event.location = value || "";
+  }
+
+  @action
+  updateDescription(value) {
+    this.event.description = value;
+  }
+
+  @action
+  updateStart(newMoment) {
+    if (!newMoment) {
+      return;
+    }
+    const tz = this.event.timezone || "UTC";
+    const m = newMoment.clone().tz(tz);
+    this.event.startsAt = m;
+    this.startsAt = m;
+  }
+
+  @action
+  updateEnd(newMoment) {
+    if (!newMoment) {
+      this.event.endsAt = null;
+      this.endsAt = null;
+      return;
+    }
+    const tz = this.event.timezone || "UTC";
+    const m = newMoment.clone().tz(tz);
+    this.event.endsAt = m;
+    this.endsAt = m;
+  }
+
+  @action
+  updateAllDay(allDay) {
+    this.allDay = allDay;
+    this.event.allDay = allDay;
+    if (allDay) {
+      if (this.startsAt) {
+        const snapped = this.startsAt.clone().startOf("day");
+        this.startsAt = snapped;
+        this.event.startsAt = snapped;
+      }
+      if (this.endsAt) {
+        const snapped = this.endsAt.clone().endOf("day");
+        this.endsAt = snapped;
+        this.event.endsAt = snapped;
+      }
+      if (
+        this.startsAt &&
+        this.endsAt &&
+        this.startsAt.isSame(this.endsAt, "day")
+      ) {
+        this.endsAt = null;
+        this.event.endsAt = null;
+      }
+    } else if (this.startsAt) {
+      const tz = this.event.timezone || "UTC";
+      const nowTime = moment.tz(tz);
+      const newStart = this.startsAt
+        .clone()
+        .hour(nowTime.hour())
+        .minute(nowTime.minute())
+        .second(0)
+        .millisecond(0);
+      this.startsAt = newStart;
+      this.event.startsAt = newStart;
+
+      const newEnd = newStart.clone().add(1, "hour");
+      this.endsAt = newEnd;
+      this.event.endsAt = newEnd;
+    }
+  }
+
+  @action
+  updateMaxAttendees(value) {
+    this.event.maxAttendees = value;
+    this.maxAttendeesInput = value || "";
   }
 
   @action
@@ -216,16 +355,35 @@ export default class PostEventBuilder extends Component {
 
   @action
   setAllDay(e) {
-    this.allDay = e.target.checked;
-    this.event.allDay = e.target.checked;
+    this.updateAllDay(e.target.checked);
+  }
+
+  get allowsRsvps() {
+    return this.event.status !== "standalone";
+  }
+
+  @action
+  addReminder() {
+    this.event.addReminder({
+      type: this.allowsRsvps ? "notification" : "bumpTopic",
+      value: 15,
+      unit: "minutes",
+      period: "before",
+    });
+  }
+
+  @action
+  setAllowRsvps(e) {
     if (e.target.checked) {
-      // snap times to start/end of day in the event's timezone
-      if (this.startsAt) {
-        this.startsAt = this.startsAt.clone().startOf("day");
+      this.event.status = this.previousRsvpStatus || "public";
+    } else {
+      if (this.event.status && this.event.status !== "standalone") {
+        this.previousRsvpStatus = this.event.status;
       }
-      if (this.endsAt) {
-        this.endsAt = this.endsAt.clone().endOf("day");
-      }
+      this.event.status = "standalone";
+      this.event.reminders = (this.event.reminders || []).map((r) =>
+        r.type === "notification" ? { ...r, type: "bumpTopic" } : r
+      );
     }
   }
 
@@ -310,11 +468,6 @@ export default class PostEventBuilder extends Component {
   @action
   removeImage() {
     this.event.imageUpload = null;
-  }
-
-  @action
-  setMinimal(e) {
-    this.event.minimal = e.target.checked;
   }
 
   @action
@@ -406,397 +559,416 @@ export default class PostEventBuilder extends Component {
       @title={{i18n
         (concat
           "discourse_post_event.builder_modal."
-          (if this.isEditing "update_event_title" "create_event_title")
+          (if
+            this.isAdvancedScreen
+            "advanced_settings_title"
+            (if this.isEditing "update_event_title" "create_event_title")
+          )
         )
       }}
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
-      class="post-event-builder-modal"
+      class="post-event-builder-modal
+        {{if this.isAdvancedScreen 'is-advanced' 'is-compact'}}"
     >
       <:body>
         <ConditionalLoadingSection @isLoading={{this.isSaving}}>
-          <form>
-            <PluginOutlet
-              @name="post-event-builder-form"
-              @outletArgs={{lazyHash event=@model.event}}
-              @connectorTagName="div"
-            >
-              <EventField>
-                <DateTimeInputRange
-                  @from={{this.startsAt}}
-                  @to={{this.endsAt}}
-                  @timezone={{@model.event.timezone}}
-                  @onChange={{this.onChangeDates}}
-                  @showFromTime={{this.showTime}}
-                  @showToTime={{this.showTime}}
-                />
-              </EventField>
-
-              <EventField
-                @label="discourse_post_event.builder_modal.all_day.label"
-                class="all-day"
+          {{#if this.isAdvancedScreen}}
+            <form>
+              <PluginOutlet
+                @name="post-event-builder-form"
+                @outletArgs={{lazyHash event=@model.event}}
+                @connectorTagName="div"
               >
-                <label class="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={{this.allDay}}
-                    {{on "input" this.setAllDay}}
-                  />
-                  <span class="message">
-                    {{i18n
-                      "discourse_post_event.builder_modal.all_day.description"
-                    }}
-                  </span>
-                </label>
-              </EventField>
-
-              <EventField
-                @label="discourse_post_event.builder_modal.name.label"
-                class="name"
-              >
-                <input
-                  type="text"
-                  value={{@model.event.name}}
-                  {{on "input" this.setName}}
-                  placeholder={{i18n
-                    "discourse_post_event.builder_modal.name.placeholder"
-                  }}
-                />
-              </EventField>
-
-              <EventField
-                @label="discourse_post_event.builder_modal.location.label"
-                class="location"
-              >
-                <input
-                  type="text"
-                  value={{@model.event.location}}
-                  {{on "input" this.setLocation}}
-                  placeholder={{i18n
-                    "discourse_post_event.builder_modal.location.placeholder"
-                  }}
-                />
-              </EventField>
-
-              {{#if this.shouldRenderUrl}}
-                <EventField
-                  @label="discourse_post_event.builder_modal.url.label"
-                  class="url"
-                >
-                  <input
-                    type="url"
-                    value={{@model.event.url}}
-                    {{on "input" this.setUrl}}
-                    placeholder={{i18n
-                      "discourse_post_event.builder_modal.url.placeholder"
-                    }}
-                  />
-                </EventField>
-              {{/if}}
-
-              <EventField
-                @label="discourse_post_event.builder_modal.description.label"
-                class="description"
-              >
-                <textarea
-                  value={{@model.event.description}}
-                  {{on "input" this.setDescription}}
-                  placeholder={{i18n
-                    "discourse_post_event.builder_modal.description.placeholder"
-                  }}
-                ></textarea>
-              </EventField>
-
-              <EventField
-                class="max-attendees"
-                @label="discourse_post_event.builder_modal.max_attendees.label"
-              >
-                <input
-                  type="number"
-                  min="1"
-                  step="1"
-                  value={{this.maxAttendeesInput}}
-                  {{on "input" this.setMaxAttendees}}
-                  placeholder={{i18n
-                    "discourse_post_event.builder_modal.max_attendees.placeholder"
-                  }}
-                />
-              </EventField>
-
-              <EventField
-                class="timezone"
-                @label="discourse_post_event.builder_modal.timezone.label"
-              >
-                <TimezoneInput
-                  @value={{@model.event.timezone}}
-                  @onChange={{this.setNewTimezone}}
-                  @none="discourse_post_event.builder_modal.timezone.remove_timezone"
-                />
-              </EventField>
-
-              <EventField
-                class="show-local-time"
-                @label="discourse_post_event.builder_modal.show_local_time.label"
-              >
-                <label class="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={{@model.event.showLocalTime}}
-                    {{on "input" this.setShowLocalTime}}
-                  />
-                  <span class="message">
-                    {{i18n
-                      "discourse_post_event.builder_modal.show_local_time.description"
-                      timezone=@model.event.timezone
-                    }}
-                  </span>
-                </label>
-              </EventField>
-
-              <EventField
-                @label="discourse_post_event.builder_modal.status.label"
-              >
-                <label class="radio-label">
-                  <RadioButton
-                    @name="status"
-                    @value="public"
-                    @selection={{@model.event.status}}
-                    @onChange={{this.onChangeStatus}}
-                  />
-                  <span class="message">
-                    <span class="title">
-                      {{i18n
-                        "discourse_post_event.models.event.status.public.title"
-                      }}
-                    </span>
-                    <span class="description">
-                      {{i18n
-                        "discourse_post_event.models.event.status.public.description"
-                      }}
-                    </span>
-                  </span>
-                </label>
-                <label class="radio-label">
-                  <RadioButton
-                    @name="status"
-                    @value="private"
-                    @selection={{@model.event.status}}
-                    @onChange={{this.onChangeStatus}}
-                  />
-                  <span class="message">
-                    <span class="title">
-                      {{i18n
-                        "discourse_post_event.models.event.status.private.title"
-                      }}
-                    </span>
-                    <span class="description">
-                      {{i18n
-                        "discourse_post_event.models.event.status.private.description"
-                      }}
-                    </span>
-                  </span>
-                </label>
-                <label class="radio-label">
-                  <RadioButton
-                    @name="status"
-                    @value="standalone"
-                    @selection={{@model.event.status}}
-                    @onChange={{this.onChangeStatus}}
-                  />
-                  <span class="message">
-                    <span class="title">
-                      {{i18n
-                        "discourse_post_event.models.event.status.standalone.title"
-                      }}
-                    </span>
-                    <span class="description">
-                      {{i18n
-                        "discourse_post_event.models.event.status.standalone.description"
-                      }}
-                    </span>
-                  </span>
-                </label>
-              </EventField>
-
-              <EventField
-                @enabled={{eq @model.event.status "private"}}
-                @label="discourse_post_event.builder_modal.invitees.label"
-              >
-                <GroupSelector
-                  @groupFinder={{this.groupFinder}}
-                  @groupNames={{@model.event.rawInvitees}}
-                  @onChangeCallback={{this.setRawInvitees}}
-                  @placeholderKey="topic.invite_private.group_name"
-                />
-              </EventField>
-
-              <EventField
-                @label="discourse_post_event.builder_modal.image.label"
-                class="image"
-              >
-                <UppyImageUploader
-                  @id="post-event-image-uploader"
-                  @imageUrl={{this.event.imageUrl}}
-                  @onUploadDone={{this.setImage}}
-                  @onUploadDeleted={{this.removeImage}}
-                  @type="event_image"
-                />
-              </EventField>
-
-              <EventField
-                class="reminders"
-                @label="discourse_post_event.builder_modal.reminders.label"
-              >
-                <div class="reminders-list">
-                  {{#each @model.event.reminders as |reminder|}}
-                    <div class="reminder-item">
-                      <ComboBox
-                        @value={{reminder.type}}
-                        @nameProperty="name"
-                        @valueProperty="value"
-                        @content={{this.reminderTypes}}
-                        class="reminder-type"
-                      />
-
-                      <input
-                        type="number"
-                        class="reminder-value"
-                        min="0"
-                        step="1"
-                        value={{reminder.value}}
-                        {{on "input" (fn this.setReminderValue reminder)}}
-                        placeholder={{i18n
-                          "discourse_post_event.builder_modal.name.placeholder"
-                        }}
-                      />
-
-                      <ComboBox
-                        @value={{reminder.unit}}
-                        @nameProperty="name"
-                        @valueProperty="value"
-                        @content={{this.reminderUnits}}
-                        class="reminder-unit"
-                      />
-
-                      <ComboBox
-                        @value={{reminder.period}}
-                        @nameProperty="name"
-                        @valueProperty="value"
-                        @content={{this.reminderPeriods}}
-                        class="reminder-period"
-                      />
-
-                      <DButton
-                        @action={{fn @model.event.removeReminder reminder}}
-                        @icon="xmark"
-                        class="btn-default remove-reminder"
-                      />
-                    </div>
-                  {{/each}}
-                </div>
-
-                <DButton
-                  @disabled={{this.addReminderDisabled}}
-                  @icon="plus"
-                  @label="discourse_post_event.builder_modal.add_reminder"
-                  @action={{@model.event.addReminder}}
-                  class="btn-default add-reminder"
-                />
-              </EventField>
-
-              <EventField
-                class="recurrence"
-                @label="discourse_post_event.builder_modal.recurrence.label"
-              >
-                <ComboBox
-                  class="available-recurrences"
-                  @value={{@model.event.recurrence}}
-                  @content={{this.availableRecurrences}}
-                  @onChange={{this.setRecurrence}}
-                  @options={{lazyHash
-                    none="discourse_post_event.builder_modal.recurrence.none"
-                  }}
-                />
-              </EventField>
-
-              {{#if @model.event.recurrence}}
-                <EventField
-                  @label="discourse_post_event.builder_modal.recurrence_until.label"
-                  class="recurrence-until"
-                >
-                  <DateInput
-                    @date={{this.recurrenceUntil}}
-                    @onChange={{this.setRecurrenceUntil}}
+                <EventField>
+                  <DateTimeInputRange
+                    @from={{this.startsAt}}
+                    @to={{this.endsAt}}
                     @timezone={{@model.event.timezone}}
+                    @onChange={{this.onChangeDates}}
+                    @showFromTime={{this.showTime}}
+                    @showToTime={{this.showTime}}
                   />
                 </EventField>
-              {{/if}}
 
-              <EventField
-                class="minimal-event"
-                @label="discourse_post_event.builder_modal.minimal.label"
-              >
-                <label class="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={{@model.event.minimal}}
-                    {{on "input" this.setMinimal}}
-                  />
-                  <span class="message">
-                    {{i18n
-                      "discourse_post_event.builder_modal.minimal.checkbox_label"
-                    }}
-                  </span>
-                </label>
-              </EventField>
-
-              {{#if this.showChat}}
                 <EventField
-                  class="allow-chat"
-                  @label="discourse_post_event.builder_modal.allow_chat.label"
+                  @label="discourse_post_event.builder_modal.all_day.label"
+                  class="all-day"
                 >
                   <label class="checkbox-label">
                     <input
                       type="checkbox"
-                      checked={{@model.event.chatEnabled}}
-                      {{on "input" this.setChatEnabled}}
+                      checked={{this.allDay}}
+                      {{on "input" this.setAllDay}}
                     />
                     <span class="message">
                       {{i18n
-                        "discourse_post_event.builder_modal.allow_chat.checkbox_label"
+                        "discourse_post_event.builder_modal.all_day.description"
                       }}
                     </span>
                   </label>
                 </EventField>
-              {{/if}}
 
-              {{#if this.allowedCustomFields.length}}
                 <EventField
-                  @label="discourse_post_event.builder_modal.custom_fields.label"
+                  @label="discourse_post_event.builder_modal.name.label"
+                  class="name"
                 >
-                  <p class="event-field-description">
-                    {{i18n
-                      "discourse_post_event.builder_modal.custom_fields.description"
+                  <input
+                    type="text"
+                    value={{@model.event.name}}
+                    {{on "input" this.setName}}
+                    placeholder={{i18n
+                      "discourse_post_event.builder_modal.name.placeholder"
                     }}
-                  </p>
-                  {{#each this.allowedCustomFields as |allowedCustomField|}}
-                    <span class="label custom-field-label">
-                      {{allowedCustomField}}
-                    </span>
+                  />
+                </EventField>
+
+                <EventField
+                  @label="discourse_post_event.builder_modal.location.label"
+                  class="location"
+                >
+                  <input
+                    type="text"
+                    value={{@model.event.location}}
+                    {{on "input" this.setLocation}}
+                    placeholder={{i18n
+                      "discourse_post_event.builder_modal.location.placeholder"
+                    }}
+                  />
+                </EventField>
+
+                {{#if this.shouldRenderUrl}}
+                  <EventField
+                    @label="discourse_post_event.builder_modal.url.label"
+                    class="url"
+                  >
                     <input
-                      type="text"
-                      class="custom-field-input"
-                      value={{get @model.event.customFields allowedCustomField}}
-                      {{on "input" (fn this.setCustomField allowedCustomField)}}
+                      type="url"
+                      value={{@model.event.url}}
+                      {{on "input" this.setUrl}}
                       placeholder={{i18n
-                        "discourse_post_event.builder_modal.custom_fields.placeholder"
+                        "discourse_post_event.builder_modal.url.placeholder"
                       }}
                     />
-                  {{/each}}
+                  </EventField>
+                {{/if}}
+
+                <EventField
+                  @label="discourse_post_event.builder_modal.description.label"
+                  class="description"
+                >
+                  <textarea
+                    value={{@model.event.description}}
+                    {{on "input" this.setDescription}}
+                    placeholder={{i18n
+                      "discourse_post_event.builder_modal.description.placeholder"
+                    }}
+                  ></textarea>
                 </EventField>
-              {{/if}}
-            </PluginOutlet>
-          </form>
+
+                <EventField
+                  class="allow-rsvps"
+                  @label="discourse_post_event.builder_modal.allow_rsvps.label"
+                >
+                  <label class="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={{this.allowsRsvps}}
+                      {{on "input" this.setAllowRsvps}}
+                    />
+                    <span class="message">
+                      {{i18n
+                        "discourse_post_event.builder_modal.allow_rsvps.description"
+                      }}
+                    </span>
+                  </label>
+                </EventField>
+
+                <EventField
+                  class="max-attendees"
+                  @label="discourse_post_event.builder_modal.max_attendees.label"
+                >
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={{this.maxAttendeesInput}}
+                    disabled={{not this.allowsRsvps}}
+                    {{on "input" this.setMaxAttendees}}
+                    placeholder={{i18n
+                      "discourse_post_event.builder_modal.max_attendees.placeholder"
+                    }}
+                  />
+                </EventField>
+
+                {{#if this.allowsRsvps}}
+                  <EventField
+                    @label="discourse_post_event.builder_modal.attendee_type.label"
+                  >
+                    <label class="radio-label">
+                      <RadioButton
+                        @name="status"
+                        @value="public"
+                        @selection={{@model.event.status}}
+                        @onChange={{this.onChangeStatus}}
+                      />
+                      <span class="message">
+                        <span class="title">
+                          {{i18n
+                            "discourse_post_event.models.event.status.public.title"
+                          }}
+                        </span>
+                        <span class="description">
+                          {{i18n
+                            "discourse_post_event.models.event.status.public.description"
+                          }}
+                        </span>
+                      </span>
+                    </label>
+                    <label class="radio-label">
+                      <RadioButton
+                        @name="status"
+                        @value="private"
+                        @selection={{@model.event.status}}
+                        @onChange={{this.onChangeStatus}}
+                      />
+                      <span class="message">
+                        <span class="title">
+                          {{i18n
+                            "discourse_post_event.models.event.status.private.title"
+                          }}
+                        </span>
+                        <span class="description">
+                          {{i18n
+                            "discourse_post_event.models.event.status.private.description"
+                          }}
+                        </span>
+                      </span>
+                    </label>
+                  </EventField>
+
+                  <EventField
+                    @enabled={{eq @model.event.status "private"}}
+                    @label="discourse_post_event.builder_modal.invitees.label"
+                  >
+                    <GroupSelector
+                      @groupFinder={{this.groupFinder}}
+                      @groupNames={{@model.event.rawInvitees}}
+                      @onChangeCallback={{this.setRawInvitees}}
+                      @placeholderKey="topic.invite_private.group_name"
+                    />
+                  </EventField>
+                {{/if}}
+
+                <EventField
+                  class="timezone"
+                  @label="discourse_post_event.builder_modal.timezone.label"
+                >
+                  <TimezoneInput
+                    @value={{@model.event.timezone}}
+                    @onChange={{this.setNewTimezone}}
+                    @none="discourse_post_event.builder_modal.timezone.remove_timezone"
+                  />
+                </EventField>
+
+                <EventField
+                  class="show-local-time"
+                  @label="discourse_post_event.builder_modal.show_local_time.label"
+                >
+                  <label class="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={{@model.event.showLocalTime}}
+                      {{on "input" this.setShowLocalTime}}
+                    />
+                    <span class="message">
+                      {{i18n
+                        "discourse_post_event.builder_modal.show_local_time.description"
+                        timezone=@model.event.timezone
+                      }}
+                    </span>
+                  </label>
+                </EventField>
+
+                <EventField
+                  class="reminders"
+                  @label="discourse_post_event.builder_modal.reminders.label"
+                >
+                  <div class="reminders-list">
+                    {{#each @model.event.reminders as |reminder|}}
+                      <div class="reminder-item">
+                        <ComboBox
+                          @value={{reminder.type}}
+                          @nameProperty="name"
+                          @valueProperty="value"
+                          @content={{this.reminderTypes}}
+                          class="reminder-type"
+                        />
+
+                        <input
+                          type="number"
+                          class="reminder-value"
+                          min="0"
+                          step="1"
+                          value={{reminder.value}}
+                          {{on "input" (fn this.setReminderValue reminder)}}
+                          placeholder={{i18n
+                            "discourse_post_event.builder_modal.name.placeholder"
+                          }}
+                        />
+
+                        <ComboBox
+                          @value={{reminder.unit}}
+                          @nameProperty="name"
+                          @valueProperty="value"
+                          @content={{this.reminderUnits}}
+                          class="reminder-unit"
+                        />
+
+                        <ComboBox
+                          @value={{reminder.period}}
+                          @nameProperty="name"
+                          @valueProperty="value"
+                          @content={{this.reminderPeriods}}
+                          class="reminder-period"
+                        />
+
+                        <DButton
+                          @action={{fn @model.event.removeReminder reminder}}
+                          @icon="xmark"
+                          class="btn-default remove-reminder"
+                        />
+                      </div>
+                    {{/each}}
+                  </div>
+
+                  <DButton
+                    @disabled={{this.addReminderDisabled}}
+                    @icon="plus"
+                    @label="discourse_post_event.builder_modal.add_reminder"
+                    @action={{this.addReminder}}
+                    class="btn-default add-reminder"
+                  />
+                </EventField>
+
+                <EventField
+                  class="recurrence"
+                  @label="discourse_post_event.builder_modal.recurrence.label"
+                >
+                  <ComboBox
+                    class="available-recurrences"
+                    @value={{@model.event.recurrence}}
+                    @content={{this.availableRecurrences}}
+                    @onChange={{this.setRecurrence}}
+                    @options={{lazyHash
+                      none="discourse_post_event.builder_modal.recurrence.none"
+                    }}
+                  />
+                </EventField>
+
+                {{#if @model.event.recurrence}}
+                  <EventField
+                    @label="discourse_post_event.builder_modal.recurrence_until.label"
+                    class="recurrence-until"
+                  >
+                    <DateInput
+                      @date={{this.recurrenceUntil}}
+                      @onChange={{this.setRecurrenceUntil}}
+                      @timezone={{@model.event.timezone}}
+                    />
+                  </EventField>
+                {{/if}}
+
+                {{#if this.showChat}}
+                  <EventField
+                    class="allow-chat"
+                    @label="discourse_post_event.builder_modal.allow_chat.label"
+                  >
+                    <label class="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={{@model.event.chatEnabled}}
+                        {{on "input" this.setChatEnabled}}
+                      />
+                      <span class="message">
+                        {{i18n
+                          "discourse_post_event.builder_modal.allow_chat.checkbox_label"
+                        }}
+                      </span>
+                    </label>
+                  </EventField>
+                {{/if}}
+
+                {{#if this.allowedCustomFields.length}}
+                  <EventField
+                    @label="discourse_post_event.builder_modal.custom_fields.label"
+                  >
+                    <p class="event-field-description">
+                      {{i18n
+                        "discourse_post_event.builder_modal.custom_fields.description"
+                      }}
+                    </p>
+                    {{#each this.allowedCustomFields as |allowedCustomField|}}
+                      <span class="label custom-field-label">
+                        {{allowedCustomField}}
+                      </span>
+                      <input
+                        type="text"
+                        class="custom-field-input"
+                        value={{get
+                          @model.event.customFields
+                          allowedCustomField
+                        }}
+                        {{on
+                          "input"
+                          (fn this.setCustomField allowedCustomField)
+                        }}
+                        placeholder={{i18n
+                          "discourse_post_event.builder_modal.custom_fields.placeholder"
+                        }}
+                      />
+                    {{/each}}
+                  </EventField>
+                {{/if}}
+
+                <EventField
+                  @label="discourse_post_event.builder_modal.image.label"
+                  class="image"
+                >
+                  <UppyImageUploader
+                    @id="post-event-image-uploader"
+                    @imageUrl={{this.event.imageUrl}}
+                    @onUploadDone={{this.setImage}}
+                    @onUploadDeleted={{this.removeImage}}
+                    @type="event_image"
+                  />
+                </EventField>
+              </PluginOutlet>
+            </form>
+          {{else}}
+            <div class="composer-event-node">
+              <CompactEventEditor
+                @name={{@model.event.name}}
+                @location={{@model.event.location}}
+                @description={{@model.event.description}}
+                @maxAttendees={{@model.event.maxAttendees}}
+                @startsAt={{this.startsAt}}
+                @endsAt={{this.endsAt}}
+                @allDay={{this.allDay}}
+                @timezone={{@model.event.timezone}}
+                @userTimezone={{this.userTimezone}}
+                @statusText={{this.statusText}}
+                @namePlaceholder={{this.eventNamePlaceholder}}
+                @onUpdateName={{this.updateName}}
+                @onUpdateLocation={{this.updateLocation}}
+                @onUpdateDescription={{this.updateDescription}}
+                @onUpdateStart={{this.updateStart}}
+                @onUpdateEnd={{this.updateEnd}}
+                @onUpdateAllDay={{this.updateAllDay}}
+                @onUpdateMaxAttendees={{this.updateMaxAttendees}}
+              />
+            </div>
+          {{/if}}
         </ConditionalLoadingSection>
       </:body>
       <:footer>
@@ -819,6 +991,16 @@ export default class PostEventBuilder extends Component {
             @label="discourse_post_event.builder_modal.create"
             @icon="calendar-day"
             @action={{this.createEvent}}
+          />
+        {{/if}}
+
+        {{#if this.showScreenToggle}}
+          <DButton
+            class="btn-default advanced-settings
+              {{if this.isAdvancedScreen 'is-active'}}"
+            @icon="gear"
+            @label="discourse_post_event.builder_modal.advanced_settings"
+            @action={{this.toggleAdvanced}}
           />
         {{/if}}
       </:footer>

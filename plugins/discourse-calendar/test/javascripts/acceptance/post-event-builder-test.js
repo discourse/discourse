@@ -28,6 +28,8 @@ acceptance("Post event - composer", function (needs) {
 
     const modal = ".post-event-builder-modal";
 
+    await click(`${modal} .d-modal__footer .advanced-settings`);
+
     const timezoneInput = selectKit(
       `${modal} .event-field.timezone .timezone-input`
     );
@@ -43,18 +45,18 @@ acceptance("Post event - composer", function (needs) {
 
     const fromTime = selectKit(`${modal} .from .d-time-input .select-kit`);
     await fromTime.expand();
-    await fromTime.selectRowByName("12:00");
+    await fromTime.selectRowByName("12:00 PM");
 
     await fillIn(`${modal} .to input[type=date]`, "2022-07-01");
     const toTime = selectKit(`${modal} .to .d-time-input .select-kit`);
     await toTime.expand();
-    await toTime.selectRowByName("13:00");
+    await toTime.selectRowByName("1:00 PM");
 
     await timezoneInput.expand();
     await timezoneInput.selectRowByName("Europe/Paris");
 
-    assert.strictEqual(fromTime.header().name(), "12:00");
-    assert.strictEqual(toTime.header().name(), "13:00");
+    assert.strictEqual(fromTime.header().name(), "12:00 PM");
+    assert.strictEqual(toTime.header().name(), "1:00 PM");
 
     await click(`${modal} .d-modal__footer .btn-primary`);
 
@@ -95,6 +97,8 @@ acceptance("Post event - composer", function (needs) {
       );
 
       const modal = ".post-event-builder-modal";
+
+      await click(`${modal} .d-modal__footer .advanced-settings`);
 
       // Select the date
       await fillIn(`${modal} .from input[type=date]`, "2022-07-01");

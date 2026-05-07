@@ -146,20 +146,55 @@
     }
   }
 
+  .composer-event__dates {
+    .d-icon-clock {
+      align-self: baseline;
+      margin-top: var(--space-1);
+    }
+  }
+
   .composer-event__description {
     display: grid;
     grid-template-columns: 1fr;
   }
 
   .composer-event__date-range {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr;
     align-items: center;
-    flex-wrap: wrap;
     margin-right: calc(-1 * var(--space-6));
     gap: var(--space-half);
+    width: 100%;
 
-    .composer-event__date-separator {
-      color: var(--primary-medium);
+    &:not(.composer-event__date-range--has-time) {
+      grid-template-columns: auto 1fr;
+    }
+  }
+
+  .composer-event__all-day-toggle {
+    display: flex;
+    margin-bottom: var(--space-1);
+    grid-column: 1 / -1;
+
+    @include viewport.from(sm) {
+      padding-left: 0.5em;
+    }
+  }
+
+  .composer-event__date-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .d-modal__body & {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+
+    textarea,
+    input {
+      background: var(--primary-very-low);
     }
   }
 }
@@ -201,14 +236,14 @@
 
 .composer-event__date-input {
   padding: var(--space-half) var(--space-1);
-  min-height: 2.25rem;
+  height: 2.25rem;
   cursor: pointer;
   color: transparent !important;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   flex: 1;
-  min-width: 0;
+  min-width: 150px; // avoids shift on focus in webkit
   width: 9rem;
 
   &:focus {
@@ -217,6 +252,37 @@
       width: auto;
     }
   }
+}
+
+input.composer-event__time-input[type="time"] {
+  padding-block: var(--space-2);
+  cursor: pointer;
+  width: 6rem;
+  flex: 1 1 auto;
+}
+
+.composer-event__date-input,
+.composer-event__time-input {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  line-height: normal;
+}
+
+// webkit needs special handling to center content vertically in date and time inputs
+.composer-event__date-input::-webkit-datetime-edit,
+.composer-event__time-input::-webkit-datetime-edit {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0;
+}
+
+.composer-event__date-input::-webkit-date-and-time-value,
+.composer-event__time-input::-webkit-date-and-time-value {
+  margin: auto 0;
+  text-align: left;
+  width: 100%;
 }
 
 @include viewport.from(sm) {

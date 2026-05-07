@@ -6,16 +6,26 @@ import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import I18n from "discourse-i18n";
 
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
 }
 
+function uses12HourTime() {
+  return I18n.currentLocale()?.startsWith("en");
+}
+
 function convertMinutesToString(n) {
-  const hoursAndMinutes = convertMinutes(n);
-  return `${hoursAndMinutes.hours
+  const { hours, minutes } = convertMinutes(n);
+  if (uses12HourTime()) {
+    const period = hours >= 12 ? "PM" : "AM";
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
+  }
+  return `${hours.toString().padStart(2, "0")}:${minutes
     .toString()
-    .padStart(2, "0")}:${hoursAndMinutes.minutes.toString().padStart(2, "0")}`;
+    .padStart(2, "0")}`;
 }
 
 function convertMinutesToDurationString(n) {
@@ -157,35 +167,46 @@ export default class TimeInput extends Component {
 
   @action
   onChangeTime(time) {
-    if (isPresent(time) && this.onChange) {
-      if (typeof time === "string" && time.length) {
-        let [hours, minutes] = time.split(":");
-        if (hours && minutes) {
-          if (hours < 0) {
-            hours = 0;
-          }
-          if (hours > 23) {
-            hours = 23;
-          }
-          if (minutes < 0) {
-            minutes = 0;
-          }
-          if (minutes > 59) {
-            minutes = 59;
-          }
+    if (!isPresent(time) || !this.onChange) {
+      return;
+    }
 
-          this.onChange({
-            hours: parseInt(hours, 10),
-            minutes: parseInt(minutes, 10),
-          });
+    if (typeof time === "string" && time.length) {
+      const ampmMatch = time.match(/^\s*(\d{1,2}):(\d{2})\s*(am|pm)\s*$/i);
+      let hours;
+      let minutes;
+      if (ampmMatch) {
+        hours = parseInt(ampmMatch[1], 10);
+        minutes = parseInt(ampmMatch[2], 10);
+        const isPm = ampmMatch[3].toLowerCase() === "pm";
+        if (isPm && hours !== 12) {
+          hours += 12;
+        } else if (!isPm && hours === 12) {
+          hours = 0;
         }
       } else {
-        this.onChange({
-          hours: convertMinutes(time).hours,
-          minutes: convertMinutes(time).minutes,
-        });
+        const [h, m] = time.split(":");
+        if (!h || !m) {
+          return;
+        }
+        hours = parseInt(h, 10);
+        minutes = parseInt(m, 10);
       }
+
+      if (!Number.isFinite(hours) || !Number.isFinite(minutes)) {
+        return;
+      }
+
+      hours = Math.max(0, Math.min(23, hours));
+      minutes = Math.max(0, Math.min(59, minutes));
+      this.onChange({ hours, minutes });
+      return;
     }
+
+    this.onChange({
+      hours: convertMinutes(time).hours,
+      minutes: convertMinutes(time).minutes,
+    });
   }
 
   <template>

@@ -115,7 +115,8 @@ const extension = {
         eventMarkdown = `[event ${userInput}]\n[/event]`;
       } else {
         const now = moment.tz(moment(), timezone);
-        const defaults = `start="${now.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}"`;
+        const endsAt = now.clone().add(1, "hour");
+        const defaults = `start="${now.format("YYYY-MM-DD HH:mm")}" end="${endsAt.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}"`;
         eventMarkdown = `[event ${defaults}]\n[/event]`;
       }
 

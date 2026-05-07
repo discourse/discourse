@@ -5,16 +5,25 @@ import PostEventBuilder from "../components/modal/post-event-builder";
 function initializeEventBuilder(api) {
   const currentUser = api.getCurrentUser();
   const modal = api.container.lookup("service:modal");
+  const siteSettings = api.container.lookup("service:site-settings");
 
   api.addComposerToolbarPopupMenuOption({
     action: (toolbarEvent) => {
       const userTz = currentUser?.user_option?.timezone;
       const timezone = userTz || moment.tz.guess();
-      const now = moment.tz(moment(), timezone);
+      const start = moment.tz(moment(), timezone);
+      const end = start.clone().add(1, "hour");
+
+      if (siteSettings.rich_editor && currentUser.useRichEditor) {
+        const params = `start="${start.format("YYYY-MM-DD HH:mm")}" end="${end.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}"`;
+        toolbarEvent.addText(`[event ${params}]\n[/event]`);
+        return;
+      }
 
       const event = DiscoursePostEventEvent.create({
         status: "public",
-        starts_at: now,
+        starts_at: start,
+        ends_at: end,
         timezone,
       });
 
