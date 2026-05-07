@@ -1527,14 +1527,12 @@ User.reopenClass({
 
     const shouldCreate = await applyValueTransformer(
       "before-create-account",
-      Promise.resolve(true), // plugins might want to make external API calls to validate the data before account creation, so we return a promise here
+      Promise.resolve({ success: true }), // plugins might want to make external API calls to validate the data before account creation, so we return a promise here
       { data }
     );
 
-    if (!shouldCreate) {
-      return Promise.reject(
-        new Error("Account creation blocked by plugin validation")
-      );
+    if (!shouldCreate.success) {
+      return Promise.reject(new Error(shouldCreate.errorMessage));
     }
 
     return ajax(userPath(), {

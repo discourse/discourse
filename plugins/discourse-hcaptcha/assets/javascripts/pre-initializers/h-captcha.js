@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { i18n } from "discourse-i18n";
 
 function captchaSelector(siteSettings) {
   if (siteSettings.discourse_captcha_provider !== "none") {
@@ -19,12 +20,20 @@ function initializeHCaptcha(api, container) {
     return;
   }
 
-  api.registerValueTransformer("before-create-account", async () => {
+  api.registerValueTransformer("before-create-account", async ({ value }) => {
+    const previousResult = await value;
+    if (!previousResult.success) {
+      return previousResult;
+    }
+
     const captchaService = container.lookup("service:captcha-service");
     captchaService.submitted = true;
 
     if (captchaService.invalid) {
-      return false;
+      return {
+        success: false,
+        errorMessage: i18n("discourse_captcha.missing_token"),
+      };
     }
 
     const captchaRoute = captchaSelector(siteSettings);
@@ -34,10 +43,14 @@ function initializeHCaptcha(api, container) {
         data: { token: captchaService.token },
         type: "POST",
       });
-      return true;
+      captchaService.reset();
+      return { success: true };
     } catch {
       captchaService.reset();
-      return false;
+      return {
+        success: false,
+        errorMessage: i18n("discourse_captcha.verification_failed"),
+      };
     }
   });
 }

@@ -47,9 +47,7 @@ RSpec.describe ProblemCheck::HcaptchaConfiguration do
   end
 
   context "when discourse_captcha_provider siteSetting is HCaptcha" do
-    before do
-      SiteSetting.discourse_captcha_provider == DiscourseHcaptcha::CaptchaProvider::HCAPTCHA
-    end
+    before { SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::HCAPTCHA }
 
     describe "`hcaptcha_site_key` is not set" do
       before { SiteSetting.hcaptcha_secret_key = "just a string" }
