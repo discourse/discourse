@@ -6960,9 +6960,7 @@ en:
             count:
               one: "%{formattedCount} pageview %{periodDescriptor}"
               other: "%{formattedCount} pageviews %{periodDescriptor}"
-            count_with_trend:
-              one: "%{formattedCount} pageview %{periodDescriptor} — %{direction} %{delta}%"
-              other: "%{formattedCount} pageviews %{periodDescriptor} — %{direction} %{delta}%"
+            trend_phrase: "%{direction} %{delta}%"
             direction_up: "up"
             direction_down: "down"
           period_descriptor:

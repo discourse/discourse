@@ -64,15 +64,11 @@
     line-height: 1.3;
   }
 
-  &__headline--down &__headline-text {
-    color: var(--primary);
-
-    // Negative trend cue: red on the trend portion only would require markup
-    // surgery; for the prototype we tint the whole line subtly.
-    .admin-dashboard-site-traffic__trend-down,
-    & {
-      // no-op placeholder — keep readable color, distinguish via emphasis later
-    }
+  // Negative trends are colored with `--danger` so the cue is visible without
+  // having to read the word "down". `--danger` meets WCAG AA contrast against
+  // the section card background in both light and dark themes.
+  &__trend--down {
+    color: var(--danger);
   }
 
   &__kpi-row {
@@ -146,20 +142,33 @@
   }
 
   &__chart {
+    position: relative;
     min-height: 320px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-
-    .admin-report-chart {
-      height: 320px;
-    }
   }
 
-  &__empty {
-    text-align: center;
+  // Sized container so Chart.js's responsive sizing has a fixed parent box
+  // to fill. The canvas inside expands to 100% of these dimensions.
+  &__chart-canvas {
+    position: relative;
+    height: 320px;
+    width: 100%;
+  }
+
+  // Empty-period overlay: the chart still renders its axes underneath; this
+  // overlay sits on top with a translucent backdrop so the message reads
+  // clearly without hiding the axis lines.
+  &__empty-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--primary-medium);
-    padding: 2em 1em;
+    background: color-mix(in srgb, var(--secondary) 70%, transparent);
+    pointer-events: none;
   }
 
   &__error {
