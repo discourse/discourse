@@ -632,6 +632,83 @@ RSpec.configure do |config|
     Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
     Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
 
+    # The default `Capybara::Playwright::Driver#reset!` closes every browser
+    # context, which means each system spec pays for spinning up a fresh
+    # context (and its first page) on its first interaction. CDP's
+    # `Storage.clearDataForOrigin` wipes cookies, localStorage, sessionStorage,
+    # IndexedDB, service workers, and cache storage for every origin without
+    # tearing the context down, so we can keep the existing context + pages
+    # alive between examples and skip the per-example context recreation cost.
+    module CapybaraPlaywrightDriverSoftResetPatch
+      def reset!
+        if callback_on_save_screenshot?
+          raw_screenshot = @browser&.raw_screenshot
+          callback_on_save_screenshot(raw_screenshot) if raw_screenshot
+        end
+
+        video_path = @browser&.video_path
+
+        @browser&.soft_reset_browser_state
+
+        callback_on_save_screenrecord(video_path) if video_path
+      end
+    end
+
+    module CapybaraPlaywrightBrowserSoftResetPatch
+      def soft_reset_browser_state
+        # Tracing requires the full context lifecycle to flush a trace zip;
+        # fall back to the original close-all-contexts behaviour in that case.
+        if @callback_on_save_trace
+          @playwright_browser.contexts.each do |browser_context|
+            filename = SecureRandom.hex(8)
+            zip_path = File.join(tmpdir, "#{filename}.zip")
+            browser_context.tracing.stop(path: zip_path)
+            @callback_on_save_trace.call(zip_path)
+          end
+          @playwright_browser.contexts.each(&:close)
+          return
+        end
+
+        @playwright_browser.contexts.each do |ctx|
+          pages = ctx.pages
+          first_page = pages.first
+
+          if first_page
+            begin
+              cdp = ctx.new_cdp_session(first_page)
+              cdp.send_message(
+                "Storage.clearDataForOrigin",
+                params: {
+                  origin: "*",
+                  storageTypes: "all",
+                },
+              )
+              cdp.detach
+            rescue Playwright::Error
+              # Page or context already closed; nothing to clear.
+            end
+          end
+
+          # Navigate every page (including extra tabs the test may have
+          # opened via `open_new_window`) to about:blank so each one drops
+          # its previous origin's in-memory JS state.
+          pages.each do |pg|
+            pg.goto("about:blank", timeout: 5000)
+          rescue Playwright::Error
+            # Page closed mid-reset.
+          end
+
+          begin
+            ctx.clear_cookies
+          rescue Playwright::Error
+          end
+        end
+      end
+    end
+
+    Capybara::Playwright::Driver.prepend(CapybaraPlaywrightDriverSoftResetPatch)
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserSoftResetPatch)
+
     module PlaywrightErrorPatch
       def message
         msg = super
