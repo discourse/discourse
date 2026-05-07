@@ -8,6 +8,9 @@ en:
           other: "Edit page (%{count} outlets)"
       chrome:
         exit: "Exit editor"
+        undo: "Undo"
+        redo: "Redo"
+        reset: "Reset"
         panel_outline: "Outline"
         panel_palette: "Palette"
         panel_inspector: "Inspector"
