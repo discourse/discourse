@@ -250,6 +250,10 @@ export default class AdminReportStackedChart extends Component {
           x: {
             stacked: true,
             display: true,
+            // Add edge padding so the first and last bars aren't clipped
+            // at the chart edges. Opt-in so other reports keep Chart.js's
+            // default tight-to-data fit.
+            offset: chartOptions.xOffset ?? false,
 
             grid: { display: false },
             type: "category",

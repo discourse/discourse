@@ -71,17 +71,10 @@ function bucketingForLength(days) {
   return "monthly";
 }
 
-function makeXTicksCallback({ bucketing, startMs, endMs, syntheticMs }) {
+function makeXTicksCallback({ bucketing, startMs, endMs }) {
   const spansYears = moment.utc(startMs).year() !== moment.utc(endMs).year();
 
   return function (value) {
-    // Suppress the label for the synthetic spacer tick we add at the
-    // end of the data to extend the axis (so the rightmost real bar
-    // has visual breathing room).
-    if (syntheticMs && value === syntheticMs) {
-      return "";
-    }
-
     if (bucketing === "monthly") {
       return moment.utc(value).format("MMM YYYY");
     }
@@ -386,34 +379,20 @@ export default class AdminDashboardSiteTraffic extends Component {
     }
     const startFmt = ymd(this.modelStartDate);
     const endFmt = ymd(this.modelEndDate);
-    const xMaxBoundFmt = ymd(this.xMaxBound);
-    const filledSeries = this.visibleSeries.map((series) => {
-      const filled = fillMissingDates(
+    const filledSeries = this.visibleSeries.map((series) => ({
+      req: series.req,
+      label: series.label,
+      color: SERIES_COLORS[series.req] || series.color,
+      data: fillMissingDates(
         JSON.parse(JSON.stringify(series.data)),
         startFmt,
         endFmt
-      );
-      // Append a synthetic 0-y entry at xMaxBound so the data x range
-      // extends past the last real bucket. Chart.js fits the x-axis to
-      // the data extents, and without this the rightmost real bar
-      // (current week / month / today) renders clipped at the chart
-      // edge. The synthetic bar is 0-height (invisible) and its tick
-      // label is suppressed via makeXTicksCallback's syntheticMs check,
-      // so admins don't see a phantom future label.
-      if (xMaxBoundFmt > endFmt) {
-        filled.push({ x: xMaxBoundFmt, y: 0 });
-      }
-      return {
-        req: series.req,
-        label: series.label,
-        color: SERIES_COLORS[series.req] || series.color,
-        data: filled,
-      };
-    });
+      ),
+    }));
     return {
       modes: this.model.modes,
       start_date: startFmt,
-      end_date: xMaxBoundFmt,
+      end_date: endFmt,
       data: filledSeries,
       chartData: filledSeries,
     };
@@ -488,22 +467,6 @@ export default class AdminDashboardSiteTraffic extends Component {
     return pickRoundStep(this.maxStackHeight, 6);
   }
 
-  // Right edge of the chart's x-axis. Chart.js centers bars on their x
-  // value, so the rightmost bar (e.g., today, the current week, or the
-  // current month) needs the axis to extend past the bucket's start by
-  // a full bucket width — otherwise the right half of that bar is
-  // clipped.
-  get xMaxBound() {
-    const end = this.modelEndDate;
-    if (this.bucketing === "daily") {
-      return end.clone().add(1, "day");
-    }
-    if (this.bucketing === "weekly") {
-      return weeklyBucketStart(end).clone().add(7, "days");
-    }
-    return end.clone().startOf("month").add(1, "month");
-  }
-
   get chartOptions() {
     const bucketing = this.bucketing;
     const hidden = [];
@@ -518,9 +481,9 @@ export default class AdminDashboardSiteTraffic extends Component {
         bucketing,
         startMs: this.modelStartDate.valueOf(),
         endMs: this.modelEndDate.valueOf(),
-        syntheticMs: this.xMaxBound.valueOf(),
       }),
       xTickColorCallback: makeXTickColorCallback({ bucketing }),
+      xOffset: true,
       showEmptyTooltip: true,
       tooltipTitleCallback: makeTooltipTitleCallback({ bucketing }),
       yStepSize: this.yStepSize,
