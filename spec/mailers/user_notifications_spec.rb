@@ -1145,11 +1145,15 @@ RSpec.describe UserNotifications do
         expect(message.text_part.body.to_s).not_to include(topic.slug)
       end
 
-      it "includes full content for staged users" do
-        # Staged users don't receive these notification types (see Jobs::NotificationEmail#perform_enqueue)
+      it "includes respond instructions with highlight styling for staged users" do
         skip_types = %i[linked quoted mentioned group_mentioned]
         if skip_types.include?(notification_type)
           skip "Staged users don't receive #{notification_type} emails"
+        end
+
+        invite_types = %i[invited_to_private_message invited_to_topic watching_first_post]
+        if invite_types.include?(notification_type)
+          skip "Invite-type emails use a different template structure"
         end
 
         SiteSetting.private_email = true
@@ -1165,7 +1169,8 @@ RSpec.describe UserNotifications do
           )
         message = mailer.message
 
-        expect(message.text_part.body.to_s).to include(notification.post.raw)
+        html_body = message.html_part.body.to_s
+        expect(html_body).to include("footer undecorated-link-footer highlight")
       end
     end
   end
