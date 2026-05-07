@@ -622,7 +622,9 @@ class PostAlerter
           bucket_post_number: bucket_post_number,
         )
       else
-        destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, topic)
+        types = COLLAPSED_NOTIFICATION_TYPES
+        types -= [Notification.types[:replied]] if topic.nested_view?
+        destroy_notifications(user, types, topic)
       end
       collapsed = true
     end

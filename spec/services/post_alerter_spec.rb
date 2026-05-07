@@ -2117,6 +2117,42 @@ RSpec.describe PostAlerter do
 
       expect(buckets.sort).to eq([1, 3])
     end
+
+    it "does not let a nested posted notification collapse a bucketed replied notification" do
+      watcher = Fabricate(:user)
+      TopicUser.change(
+        watcher.id,
+        bucket_topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+      Fabricate(:post, topic: bucket_topic, user: watcher, post_number: 2)
+      post_alert(user: bucket_replier, post_number: 3, reply_to: 2)
+
+      post_alert(user: bucket_other_replier, post_number: 4, reply_to: nil)
+
+      notifications = watcher.notifications.where(topic: bucket_topic)
+      expect(notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
+      expect(notifications.where(notification_type: Notification.types[:posted]).count).to eq(1)
+    end
+
+    it "does not let a nested category-watching notification collapse a bucketed replied notification" do
+      category_watcher = Fabricate(:user)
+      CategoryUser.set_notification_level_for_category(
+        category_watcher,
+        CategoryUser.notification_levels[:watching],
+        bucket_topic.category_id,
+      )
+      Fabricate(:post, topic: bucket_topic, user: category_watcher, post_number: 2)
+      post_alert(user: bucket_replier, post_number: 3, reply_to: 2)
+
+      post_alert(user: bucket_other_replier, post_number: 4, reply_to: nil)
+
+      notifications = category_watcher.notifications.where(topic: bucket_topic)
+      expect(notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
+      expect(
+        notifications.where(notification_type: Notification.types[:watching_category_or_tag]).count,
+      ).to eq(1)
+    end
   end
 
   context "with reply consolidation on a flat topic (regression guard)" do
