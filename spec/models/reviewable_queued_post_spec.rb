@@ -441,8 +441,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         end
       end
 
-      context "when status doesn���t change" do
-        it "doesn���t update user stats" do
+      context "when status doesn’t change" do
+        it "doesn’t update user stats" do
           user_stats.expects(:update_pending_posts).never
           reviewable.update!(score: 10)
         end

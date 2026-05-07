@@ -239,7 +239,7 @@ class ReviewableQueuedPost < Reviewable
     Draft.set(
       self.target_created_by,
       draft_key,
-      DraftSequence.next(self.target_created_by, draft_key),
+      DraftSequence.next!(self.target_created_by, draft_key),
       draft_data.to_json,
       nil,
       force_save: true,
