@@ -2909,17 +2909,30 @@ RSpec.describe TopicsController do
     end
 
     it "does not expose links from hidden posts in topic details to non-staff viewers" do
-      visible_post =
-        create_post(topic:, user: post_author1, raw: "[Visible](https://visible-link.example.com)")
-      hidden_post =
-        create_post(topic:, user: post_author1, raw: "[Hidden](https://hidden-link.example.com)")
+      test_topic = Fabricate(:topic, user: post_author1)
+      visible_post = Fabricate(:post, topic: test_topic, user: post_author1)
+      hidden_post = Fabricate(:post, topic: test_topic, user: post_author1)
 
-      topic.topic_links.find_by!(post: visible_post).update!(clicks: 1, title: "Visible title")
-      topic.topic_links.find_by!(post: hidden_post).update!(clicks: 1, title: "Hidden title")
+      Fabricate(
+        :topic_link,
+        post: visible_post,
+        url: "https://visible-link.example.com",
+        domain: "visible-link.example.com",
+        clicks: 1,
+        title: "Visible title",
+      )
+      Fabricate(
+        :topic_link,
+        post: hidden_post,
+        url: "https://hidden-link.example.com",
+        domain: "hidden-link.example.com",
+        clicks: 1,
+        title: "Hidden title",
+      )
 
       hidden_post.hide!(PostActionType.types[:off_topic])
 
-      get "/t/#{topic.slug}/#{topic.id}.json"
+      get "/t/#{test_topic.slug}/#{test_topic.id}.json"
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["details"]["links"]).to contain_exactly(
@@ -2927,7 +2940,7 @@ RSpec.describe TopicsController do
       )
 
       sign_in(moderator)
-      get "/t/#{topic.slug}/#{topic.id}.json"
+      get "/t/#{test_topic.slug}/#{test_topic.id}.json"
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["details"]["links"]).to contain_exactly(
