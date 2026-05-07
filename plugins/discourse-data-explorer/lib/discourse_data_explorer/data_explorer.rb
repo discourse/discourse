@@ -198,6 +198,7 @@ module DiscourseDataExplorer
         column_nums.each { |col_n| ids.merge(pg_result.column_values(col_n)) }
         ids.delete nil
         ids.map! &:to_i
+        ids = ids.take(SiteSetting.data_explorer_query_result_limit)
 
         object_class = support_info[:class]
         all_objs = object_class
@@ -205,12 +206,21 @@ module DiscourseDataExplorer
         all_objs =
           all_objs
             .select(support_info[:fields])
-            .where(id: ids.to_a.sort)
+            .where(id: ids.sort)
             .includes(support_info[:include])
             .order(:id)
 
-        if cls == :post && guardian
-          all_objs = all_objs.select { |post| guardian.can_see_post?(post) }
+        if guardian
+          all_objs =
+            case cls
+            when :post
+              all_objs.select { |post| guardian.can_see_post?(post) }
+            when :topic
+              allowed_topic_ids = guardian.can_see_topic_ids(topic_ids: ids)
+              all_objs.where(id: allowed_topic_ids)
+            else
+              all_objs
+            end
         end
 
         opts = { each_serializer: support_info[:serializer] }

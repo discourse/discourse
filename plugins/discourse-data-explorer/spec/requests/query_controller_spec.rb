@@ -789,8 +789,9 @@ describe DiscourseDataExplorer::QueryController do
             raw: "Ssshh! This hidden data explorer excerpt must not leak.",
           )
         visible_post = Fabricate(:post, raw: "Visible data explorer excerpt may render.")
-        expect(Guardian.new(user).can_see_post?(private_post)).to eq(false)
-        expect(Guardian.new(user).can_see_post?(visible_post)).to eq(true)
+        guardian = user.guardian
+        expect(guardian.can_see_post?(private_post)).to eq(false)
+        expect(guardian.can_see_post?(visible_post)).to eq(true)
 
         query_sql = <<~SQL
           SELECT #{private_post.id} AS post_id
@@ -806,6 +807,33 @@ describe DiscourseDataExplorer::QueryController do
         expect(post_relations).to contain_exactly(include("id" => visible_post.id))
         expect(response.body).to include("Visible data explorer excerpt")
         expect(response.body).not_to include("hidden data explorer excerpt")
+      end
+
+      it "does not include topic relations the user cannot see" do
+        private_topic =
+          Fabricate(
+            :private_message_topic,
+            title: "Ssshh this hidden data explorer topic must not leak",
+          )
+        visible_topic = Fabricate(:topic, title: "Visible data explorer topic may render")
+        guardian = user.guardian
+        expect(guardian.can_see_topic?(private_topic)).to eq(false)
+        expect(guardian.can_see_topic?(visible_topic)).to eq(true)
+
+        query_sql = <<~SQL
+          SELECT #{private_topic.id} AS topic_id
+          UNION ALL
+          SELECT #{visible_topic.id} AS topic_id
+        SQL
+        query = make_query(query_sql, { name: "Topics" }, [group.id.to_s])
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
+
+        expect(response.status).to eq(200)
+        topic_relations = response.parsed_body["relations"]["topic"]
+        expect(topic_relations).to contain_exactly(include("id" => visible_topic.id))
+        expect(response.body).to include("Visible data explorer topic may render")
+        expect(response.body).not_to include("hidden data explorer topic")
       end
 
       it "can accept parameters as a hash" do
