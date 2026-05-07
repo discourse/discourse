@@ -2520,7 +2520,12 @@ files:
     hidden: true
   composer_media_optimization_image_convert_enabled:
     default: false
+    hidden: true
     client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      disallow_enabled_for_groups: true
   composer_media_optimization_gif_conversion_threshold:
     default: 512000
     hidden: true
