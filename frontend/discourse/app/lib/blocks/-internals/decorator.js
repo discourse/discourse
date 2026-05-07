@@ -167,6 +167,34 @@ const BlockComponentManager = new Proxy(
  * @property {boolean} [integer] - Whether number must be an integer
  * @property {Array} [enum] - Allowed values for the argument
  * @property {Array} [itemEnum] - Allowed values for array items
+ * @property {UIHints} [ui] - Optional metadata describing how a visual editor's
+ *   inspector should render this arg. Pure metadata — has no runtime effect on
+ *   the block itself.
+ */
+
+/**
+ * Optional UI hints for the visual editor's inspector. All fields are
+ * advisory — the editor is free to fall back to a sensible default when a
+ * hint is missing. None of these fields affect validation or runtime
+ * behaviour of the block.
+ *
+ * @typedef {Object} UIHints
+ * @property {string} [control] - Override the default inspector control for
+ *   this arg. Valid values are listed in `VALID_UI_CONTROLS` (re-exported
+ *   from `discourse/lib/blocks`); examples include "text", "textarea",
+ *   "color", "icon", "image-upload", "rich-text", and entity pickers like
+ *   "category-select", "tag-select", "user-select", "group-select".
+ * @property {string} [label] - Inspector field label override. Defaults to a
+ *   title-cased form of the arg name.
+ * @property {string} [placeholder] - Placeholder text for text-style controls.
+ * @property {string} [helpText] - Help text shown beneath the control.
+ * @property {string} [group] - Inspector section name (e.g. "Content",
+ *   "Appearance"). Args without a group land under "General".
+ * @property {boolean} [hidden] - When true, the arg is omitted from the
+ *   inspector but kept in the schema (useful for computed args).
+ * @property {{arg: string, equals?: *, notEmpty?: boolean}} [conditional] -
+ *   Show this field only when another arg satisfies the predicate. At least
+ *   one of `equals` or `notEmpty` must be set.
  */
 
 /**
