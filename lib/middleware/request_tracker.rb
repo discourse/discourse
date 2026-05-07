@@ -611,7 +611,6 @@ class Middleware::RequestTracker
     tracking_session_id =
       env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]&.slice(0, MAX_SESSION_ID_LENGTH)
     user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
-    
     # An embedded pageview is either an initial HTML load carrying `?embed_mode=true`,
     # or a subsequent XHR from inside the embed iframe which sets the header below.
     # Use `request.GET` (query-string only) rather than `request.params` so a missing
