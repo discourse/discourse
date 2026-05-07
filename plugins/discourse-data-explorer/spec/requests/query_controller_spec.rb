@@ -805,8 +805,8 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(200)
         post_relations = response.parsed_body["relations"]["post"]
         expect(post_relations).to contain_exactly(include("id" => visible_post.id))
-        expect(response.body).to include("Visible data explorer excerpt")
-        expect(response.body).not_to include("hidden data explorer excerpt")
+        expect(response.body).to include(visible_post.raw)
+        expect(response.body).not_to include(private_post.raw)
       end
 
       it "does not include topic relations the user cannot see" do
@@ -832,8 +832,8 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(200)
         topic_relations = response.parsed_body["relations"]["topic"]
         expect(topic_relations).to contain_exactly(include("id" => visible_topic.id))
-        expect(response.body).to include("Visible data explorer topic may render")
-        expect(response.body).not_to include("hidden data explorer topic")
+        expect(response.body).to include(visible_topic.title)
+        expect(response.body).not_to include(private_topic.title)
       end
 
       it "can accept parameters as a hash" do
