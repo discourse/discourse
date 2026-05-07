@@ -699,6 +699,34 @@ RSpec.configure do |config|
     end
     Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodeSkipStaleEnabledCheckPatch)
 
+    # `Capybara::Playwright::Node#visible?` runs `@element.evaluate(visibilityJs)`
+    # — one Playwright IPC round-trip every call. Stackprof on
+    # `login_spec.rb + about_page_spec.rb` (after the iter-3 patches) shows
+    # `Node#visible?` accounts for ~3.5% of wall time across 301 calls.
+    # Of those, ~94 (~1.1% wall) are the second visit on the same Node:
+    # `Node#visible_text` (used by `Capybara::Node::Element#text`) opens with
+    # `return '' unless visible?` even when the wrapping
+    # `Capybara::Queries::SelectorQuery#matches_visibility_filters?` already
+    # asked the same Node "are you visible?" microseconds earlier. Each
+    # repeat re-runs the JS over the IPC boundary because the gem keeps no
+    # per-instance memo.
+    #
+    # The patch below memoises `visible?` on each `Capybara::Playwright::Node`
+    # instance. The memo lasts for the Node's lifetime — Capybara creates
+    # new `Capybara::Playwright::Node` objects on every `find_css` /
+    # `find_xpath` poll iteration (within a `synchronize` block), so DOM
+    # state changes between polls are still picked up. Within one poll
+    # iteration the gem itself already trusts the Node to be coherent
+    # (the staleness rescue in `assert_element_not_stale` is the only
+    # defence), so there is no behavioural regression — only fewer IPCs.
+    module CapybaraPlaywrightNodeVisibilityCachePatch
+      def visible?
+        return @visible_memo if defined?(@visible_memo)
+        @visible_memo = super
+      end
+    end
+    Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodeVisibilityCachePatch)
+
     module PlaywrightErrorPatch
       def message
         msg = super
