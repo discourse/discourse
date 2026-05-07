@@ -153,6 +153,7 @@ export default class UpsertCategoryModeration extends Component {
       class={{concatClass
         "edit-category-tab"
         "edit-category-tab-moderation"
+        "--full"
         (if (eq @selectedTab "moderation") "active")
       }}
     >
@@ -187,6 +188,7 @@ export default class UpsertCategoryModeration extends Component {
         @name="auto_close_based_on_last_post"
         @title={{i18n "topic.auto_close.based_on_last_post"}}
         @type="checkbox"
+        @format="full"
         as |field|
       >
         <field.Control />

@@ -3065,10 +3065,12 @@ tr_TR:
   test_mailer:
     title: "Test Posta Göndericisi"
     subject_template: "[%{email_prefix}] E-posta Teslim Edilebilirlik Testi"
+    subject_template_improved: "%{email_prefix}: E-posta teslim edilebilirlik testi"
     text_body_template: "Bu, aşağıdaki adresten gelen bir test e-postasıdır:\n\n[**%{base_url}**][0]\n\nBu e-posta teslim edilebilirlik testini sorunsuz bir şekilde aldığınızı umuyoruz!\n\nİşte [e-posta teslimi yapılandırmasını doğrulamak için kullanışlı bir kontrol listesi][1].\n\nİyi şanslar,\n\n[Discourse]'taki arkadaşlarınız \n(https://www.discourse.org)\n\n[0]: %{base_url}\n[1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839\n"
   new_version_mailer:
     title: "Yeni Sürüm Posta Göndericisi"
     subject_template: "[%{email_prefix}] Yeni Discourse sürümü, güncelleme mevcut"
+    subject_template_improved: "%{email_prefix}: Yeni Discourse sürümü, güncelleme mevcut"
     text_body_template: |
       Yaşasın, [Discourse](https://www.discourse.org) için yeni bir sürüm çıktı!
 
@@ -3083,6 +3085,7 @@ tr_TR:
   new_version_mailer_with_notes:
     title: "Notlarla Yeni Sürüm Posta Göndericisi"
     subject_template: "[%{email_prefix}] güncelleme mevcut"
+    subject_template_improved: "%{email_prefix}: Güncelleme mevcut"
     text_body_template: |
       Yaşasın, [Discourse](https://www.discourse.org) için yeni bir sürüm çıktı!
 
@@ -3443,6 +3446,7 @@ tr_TR:
     email_reject_insufficient_trust_level:
       title: "E-posta Reddedildi yetersiz Güven Seviyesi"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Yetersiz Güven Seviyesi"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- güven düzeyi yetersiz"
       text_body_template: |
         Üzgünüz, ancak %{destination} ( %{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3450,6 +3454,7 @@ tr_TR:
     email_reject_user_not_found:
       title: "E-posta Reddedildi Kullanıcı Bulunamadı"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Kullanıcı Bulunamadı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- kullanıcı bulunamadı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3457,12 +3462,15 @@ tr_TR:
     email_reject_screened_email:
       title: "E-posta Reddedildi Taranan E-posta"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Engellenen E-posta"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- engellenen e-posta"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
         Yanıtınız engellenmiş bir e-posta adresinden gönderildi. Başka bir e-posta adresinden göndermeyi deneyin veya [bir personel üyesiyle iletişime geçin](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-posta Reddedildi İzin Verilmeyen E-posta"
+      subject_template: "[%{email_prefix}] E-posta sorunu -- engellenen e-posta"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- engellenen e-posta"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3470,6 +3478,7 @@ tr_TR:
     email_reject_inactive_user:
       title: "E-posta Reddedildi Etkin Olmayan Kullanıcı"
       subject_template: "[%{email_prefix}] E-posta sorunu - Etkin Olmayan Kullanıcı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- etkin olmayan kullanıcı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız işe yaramadı.
 
@@ -3477,6 +3486,7 @@ tr_TR:
     email_reject_silenced_user:
       title: "E-posta Reddedildi Susturulmuş Kullanıcı"
       subject_template: "[%{email_prefix}] E-posta sorunu - Susturulmuş Kullanıcı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- susturulmuş kullanıcı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3484,6 +3494,7 @@ tr_TR:
     email_reject_reply_user_not_matching:
       title: "E-posta Reddedildi Kullanıcı Eşleşmiyor"
       subject_template: "[%{email_prefix}] E-posta sorunu - Beklenmeyen Yanıt Adresi"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- beklenmedik yanıt adresi"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3491,6 +3502,7 @@ tr_TR:
     email_reject_empty:
       title: "E-posta Reddedildi Boş"
       subject_template: "[%{email_prefix}] E-posta sorunu - İçerik Yok"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu — içerik yok"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3500,6 +3512,7 @@ tr_TR:
     email_reject_parsing:
       title: "E-posta Reddedildi Ayrıştırma"
       subject_template: "[%{email_prefix}] E-posta sorunu - İçerik Tanınmadı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- içerik tanınmıyor"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3507,6 +3520,7 @@ tr_TR:
     email_reject_invalid_access:
       title: "E-posta Reddedildi Geçersiz Erişim"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Geçersiz Erişim"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- geçersiz erişim"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3514,6 +3528,7 @@ tr_TR:
     email_reject_strangers_not_allowed:
       title: "E-posta Reddedildi Yabancılara İzin Verilmiyor"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Geçersiz Erişim"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- geçersiz erişim"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız çalışmadı.
 
@@ -3521,6 +3536,7 @@ tr_TR:
     email_reject_invalid_post:
       title: "E-posta Reddedildi Geçersiz Gönderi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Gönderim hatası"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- gönderme hatası"
       text_body_template: |
         Üzgünüz, ancak %{destination} %{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3528,6 +3544,7 @@ tr_TR:
     email_reject_invalid_post_specified:
       title: "E-posta Reddedildi Geçersiz Gönderi Belirtildi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Gönderim hatası"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- gönderme hatası"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3540,6 +3557,7 @@ tr_TR:
     email_reject_post_too_short:
       title: "E-posta Reddedildi Gönderi Çok Kısa"
       subject_template: "[%{email_prefix}] E-posta sorunu - Gönderi çok kısa"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- gönderi çok kısa"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3547,6 +3565,7 @@ tr_TR:
     email_reject_invalid_post_action:
       title: "E-posta Reddedildi Geçersiz Gönderi Eylemi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Geçersiz Gönderi Eylemi"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- geçersiz gönderi işlemi"
       text_body_template: |
         Üzgünüz, ancak %{destination} adresine gönderdiğiniz e-posta mesajı (%{former_title} başlıklı) başarısız oldu.
 
@@ -3554,6 +3573,7 @@ tr_TR:
     email_reject_reply_key:
       title: "E-posta Reddedildi Yanıtlama Anahtarı"
       subject_template: "[%{email_prefix}] E-posta sorunu - Bilinmeyen Yanıt Anahtarı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- bilinmeyen yanıt anahtarı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3561,6 +3581,7 @@ tr_TR:
     email_reject_bad_destination_address:
       title: "E-posta Reddedildi Hatalı Hedef Adresi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Bilinmeyen Kime: Adresi"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- alıcı adresi bilinmiyor"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3576,6 +3597,7 @@ tr_TR:
     email_reject_old_destination:
       title: "E-posta Reddedildi Eski Hedef"
       subject_template: "[%{email_prefix}] E-posta sorunu - Eski bir bildirimi yanıtlamaya çalışıyorsunuz"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu — eski bir bildirime yanıt vermeye çalışıyorsunuz"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3583,6 +3605,7 @@ tr_TR:
     email_reject_topic_not_found:
       title: "E-posta Reddedildi Konu Bulunamadı"
       subject_template: "[%{email_prefix}] E-posta sorunu - Konu Bulunamadı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- konu bulunamadı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3590,6 +3613,7 @@ tr_TR:
     email_reject_topic_closed:
       title: "E-posta Reddedildi Konu Kapatıldı"
       subject_template: "[%{email_prefix}] E-posta sorunu - Konu Kapatıldı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- konu kapatıldı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3597,6 +3621,7 @@ tr_TR:
     email_reject_auto_generated:
       title: "E-posta Reddedildi Otomatik Oluşturulmuş"
       subject_template: "[%{email_prefix}] E-posta sorunu - Otomatik Oluşturulmuş Yanıt"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- otomatik olarak oluşturulan yanıt"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3604,6 +3629,7 @@ tr_TR:
     email_reject_unrecognized_error:
       title: "E-posta Reddedildi Tanınmayan Hata"
       subject_template: "[%{email_prefix}] E-posta sorunu - Tanınmayan Hata"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- tanımlanamayan hata"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3611,6 +3637,7 @@ tr_TR:
     email_reject_attachment:
       title: "E-posta Eki Reddedildi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Ek Reddedildi"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- ek reddedildi"
       text_body_template: |
         Ne yazık ki %{destination} hedefine gönderdiğiniz e-posta mesajınızdaki (%{former_title}başlıklı) bazı ekler reddedildi.
 
@@ -3621,12 +3648,15 @@ tr_TR:
     email_reject_reply_not_allowed:
       title: "E-posta Reddedildi Yanıta İzin Verilmiyor"
       subject_template: "[%{email_prefix}] E-posta sorunu - Yanıta İzin Verilmiyor"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- yanıta izin verilmiyor"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
         Konuya yanıt verme izniniz yok. Bunun bir hata olduğunu düşünüyorsanız [bir personel üyesiyle iletişime geçin](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-posta Reddedildi Özete Yanıt"
+      subject_template: "[%{email_prefix}] E-posta sorunu -- Özetine Yanıtla"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- özetine yanıt ver"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3636,6 +3666,7 @@ tr_TR:
     email_reject_too_many_recipients:
       title: "E-posta Reddedildi Çok Fazla Alıcı"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Çok Fazla Alıcı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu — alıcı sayısı fazla"
       text_body_template: |
         Üzgünüz ancak %{destination} hedefine (%{former_title} başlıklı) e-posta mesajınız gönderilemedi.
 
@@ -3645,6 +3676,7 @@ tr_TR:
     email_error_notification:
       title: "E-posta Hata Bildirimi"
       subject_template: "[%{email_prefix}] E-posta sorunu - POP kimlik doğrulama hatası"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- POP kimlik doğrulama hatası"
       text_body_template: |
         Ne yazık ki, POP sunucusundan postalar yoklanırken bir kimlik doğrulama hatası oluştu.
 
@@ -3772,6 +3804,7 @@ tr_TR:
       text_body_template: "\"Download_remote_images_to_local\" ayarı, \"download_remote_images_threshold\" adresindeki disk alanı sınırına ulaşıldığı için devre dışı bırakıldı."
     new_user_of_the_month:
       title: "Ayın Yeni Kullanıcısısınız!"
+      subject_template: "Bu ayın yeni kullanıcısı sensin!"
       text_body_template: |
         Tebrikler, %{month_year}** için **Ayın Yeni Kullanıcısı ödülünü kazandınız. :trophy:
 
@@ -3871,6 +3904,7 @@ tr_TR:
     user_invited_to_private_message_pm_group:
       title: "Kullanıcı, Grubu Kişisel Mesaja Davet Etti"
       subject_template: "[%{email_prefix}] %{username} @%{group_name} adlı grubu \"%{topic_title}\" başlıklı mesaja davet etti"
+      subject_template_improved: "%{email_prefix}: %{username}, @%{group_name} grubunu '%{topic_title}' başlıklı bir mesaja davet etti"
       text_body_template: |
         %{header_instructions}
 
@@ -3880,6 +3914,7 @@ tr_TR:
     user_invited_to_private_message_pm:
       title: "Kullanıcı Kişisel Mesaja Davet Edildi"
       subject_template: "[%{email_prefix}] %{username} sizi bir mesaja davet etti \"%{topic_title}\""
+      subject_template_improved: "%{email_prefix}: %{username} sizi '%{topic_title}' başlıklı bir mesaja davet etti"
       text_body_template: |
         %{header_instructions}
 
@@ -3889,6 +3924,7 @@ tr_TR:
     user_invited_to_private_message_pm_staged:
       title: "Kullanıcı Kişisel Mesaja Davet Edildi Aşamalı"
       subject_template: "[%{email_prefix}] %{username} sizi bir mesaja davet etti \"%{topic_title}\""
+      subject_template_improved: "%{email_prefix}: %{username} sizi '%{topic_title}' başlıklı bir mesaja davet etti"
       text_body_template: |
         %{header_instructions}
 
@@ -3898,6 +3934,7 @@ tr_TR:
     user_invited_to_topic:
       title: "Kullanıcı Konuya Davet Edildi"
       subject_template: "[%{email_prefix}] %{username} sizi \"%{topic_title}\" başlıklı konuya davet etti"
+      subject_template_improved: "%{email_prefix}: %{username} sizi '%{topic_title}' etkinliğine davet etti"
       text_body_template: |
         %{header_instructions}
 
@@ -3908,6 +3945,7 @@ tr_TR:
       title: "Kullanıcı Yanıtladı"
       preview: "Birisi gönderinize yanıt verdi."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3919,6 +3957,7 @@ tr_TR:
     user_replied_pm:
       title: "Kullanıcı Kişisel Mesajı Yanıtladı"
       subject_template: "[%{email_prefix}] [Kişisel Mesaj] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3931,6 +3970,7 @@ tr_TR:
       title: "Kullanıcı Alıntı yaptı"
       preview: "Birisi bir gönderide sizi alıntıladı."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3943,6 +3983,7 @@ tr_TR:
       title: "Kullanıcı Bağlantı Verdi"
       preview: "Başka bir konuda bağlantısı paylaşılmış gönderi."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3955,6 +3996,7 @@ tr_TR:
       title: "Kullanıcı Bahsetti"
       preview: "Birisi bir gönderide senden bahsetmiş."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3966,6 +4008,7 @@ tr_TR:
     user_mentioned_pm:
       title: "Kullanıcı Kişisel Mesajdan Bahsetti"
       subject_template: "[%{email_prefix}] [Kişisel Mesaj] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3977,6 +4020,7 @@ tr_TR:
     user_group_mentioned:
       title: "Kullanıcı Grubundan Bahsedildi"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3988,6 +4032,7 @@ tr_TR:
     user_group_mentioned_pm:
       title: "Kullanıcı Grubundan Bahsedildi Kişisel Mesaj"
       subject_template: "[%{email_prefix}] [Kişisel Mesaj] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3999,6 +4044,7 @@ tr_TR:
     user_group_mentioned_pm_group:
       title: "Kullanıcı Grubundan Bahsedildi Kişisel Mesaj"
       subject_template: "[%{email_prefix}] [Kişisel Mesaj] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4011,6 +4057,7 @@ tr_TR:
       title: "Kullanıcı Gönderi Yaptı"
       preview: "Birisi izlediğiniz bir konuya yanıt verdi."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4022,6 +4069,7 @@ tr_TR:
     user_watching_category_or_tag:
       title: "Kullanıcı İzleme Kategorisi veya Etiketi"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4033,6 +4081,7 @@ tr_TR:
     user_watching_first_post:
       title: "Kullanıcı İlk Gönderiyi İzliyor"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4045,6 +4094,7 @@ tr_TR:
       title: "Kullanıcı Kişisel Mesaj Gönderdi"
       preview: "Birisi size özel mesaj gönderdi."
       subject_template: "[%{email_prefix}] [Kişisel Mesaj] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4062,6 +4112,7 @@ tr_TR:
     account_suspended:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
+      subject_template_improved: "Hesabınız askıya alınmıştır"
       text_body_template: |
         Forumda %{suspended_till} tarihine kadar askıya alındınız.
 
@@ -4069,6 +4120,7 @@ tr_TR:
     account_suspended_forever:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
+      subject_template_improved: "Hesabınız askıya alınmıştır"
       text_body_template: |
         Forumda askıya alındınız.
 
@@ -4076,6 +4128,7 @@ tr_TR:
     account_silenced:
       title: "Hesap Susturuldu"
       subject_template: "[%{email_prefix}] Hesabınız susturuldu"
+      subject_template_improved: "Hesabınız susturuldu"
       text_body_template: |
         Forumda %{silenced_till} tarihine kadar susturuldunuz.
 
@@ -4083,6 +4136,7 @@ tr_TR:
     account_silenced_forever:
       title: "Hesap Susturuldu"
       subject_template: "[%{email_prefix}] Hesabınız susturuldu"
+      subject_template_improved: "Hesabınız susturuldu"
       text_body_template: |
         Forumda susturuldunuz.
 
@@ -4090,6 +4144,7 @@ tr_TR:
     account_deleted:
       title: "Hesap Silindi"
       subject_template: "[%{email_prefix}] Hesabınız silindi"
+      subject_template_improved: "Hesabınız silindi"
       text_body_template: |
         Merhaba,
 
@@ -4143,6 +4198,7 @@ tr_TR:
       title: "Şifremi Unuttum"
       preview: "Şifrenizi sıfırlayın."
       subject_template: "[%{email_prefix}] Şifre sıfırlama"
+      subject_template_improved: "Şifre sıfırlama"
       text_body_template: |
         Biri [%{site_name}](%{base_url}) şifrenizi sıfırlamak istedi.
 
@@ -4165,6 +4221,8 @@ tr_TR:
     set_password:
       title: "Şifre Belirle"
       preview: "Hesap şifresini ayarlayın."
+      subject_template: "[%{email_prefix}] Şifreyi belirle"
+      subject_template_improved: "Şifre belirle"
       text_body_template: |
         Biri [%{site_name}](%{base_url}) hesabınıza şifre eklemek istedi. Alternatif olarak, bu doğrulanmış e-posta adresiyle ilişkili desteklenen herhangi bir çevrimiçi hizmeti (Google, Facebook, vb.) kullanarak giriş yapabilirsiniz.
 
@@ -4187,6 +4245,8 @@ tr_TR:
     account_created:
       title: "Hesap Oluşturuldu"
       preview: "Sizin için yeni bir hesap oluşturuldu."
+      subject_template: "[%{email_prefix}] Yeni hesabınız"
+      subject_template_improved: "Yeni hesabınız"
       text_body_template: |
         Sizin için %{site_name}'ta yeni bir hesap oluşturuldu
 
@@ -4195,6 +4255,7 @@ tr_TR:
     confirm_new_email:
       title: "Yeni E-postayı Onayla"
       subject_template: "[%{email_prefix}] Yeni e-posta adresinizi onaylayın"
+      subject_template_improved: "Yeni e-posta adresinizi onaylayın"
       text_body_template: |
         Aşağıdaki bağlantıya tıklayarak %{site_name} için yeni e-posta adresinizi onaylayın:
 
@@ -4204,6 +4265,7 @@ tr_TR:
     confirm_new_email_via_admin:
       title: "Yeni E-postayı Onayla"
       subject_template: "[%{email_prefix}] Yeni e-posta adresinizi onaylayın"
+      subject_template_improved: "Yeni e-posta adresinizi onaylayın"
       text_body_template: |
         Aşağıdaki bağlantıya tıklayarak %{site_name} için yeni e-posta adresinizi onaylayın:
 
@@ -4213,6 +4275,7 @@ tr_TR:
     confirm_old_email:
       title: "Eski E-postayı Onayla"
       subject_template: "[%{email_prefix}] Mevcut e-posta adresinizi onaylayın"
+      subject_template_improved: "Mevcut e-posta adresinizi onaylayın"
       text_body_template: |
         E-posta adresinizi değiştirebilmemiz için mevcut e-posta hesabını kontrol ettiğinizi onaylamanız gerekiyor. Bu adımı tamamladıktan sonra yeni e-posta adresini onaylamanızı isteyeceğiz.
 
@@ -4222,11 +4285,13 @@ tr_TR:
     confirm_old_email_add:
       title: "Eski E-postayı Onayla (Ekle)"
       subject_template: "[%{email_prefix}] Mevcut e-posta adresinizi onaylayın"
+      subject_template_improved: "Mevcut e-posta adresinizi onaylayın"
       text_body_template: "Yeni bir e-posta adresi ekleyebilmemiz için mevcut e-posta hesabını kontrol ettiğinizi onaylamanız gerekiyor. Bu adımı tamamladıktan sonra yeni e-posta adresini onaylamanızı isteyeceğiz. \n\nAşağıdaki bağlantıya tıklayarak %{site_name} için mevcut e-posta adresinizi onaylayın: \n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
     notify_old_email:
       title: "Eski E-postaya Bildirim Gönder"
       preview: "E-posta adresi güncellendi."
       subject_template: "[%{email_prefix}] E-posta adresiniz değiştirildi"
+      subject_template_improved: "E-posta adresiniz değiştirildi"
       text_body_template: |
         Bu, %{site_name} için e-posta adresinizin değiştirildiğini bildiren otomatik bir mesajdır. Bu işlem yanlışlıkla yapıldıysa lütfen
         site yöneticisiyle iletişime geçin.
@@ -4237,6 +4302,7 @@ tr_TR:
     notify_old_email_add:
       title: "Eski E-postaya Bildirim Gönder (Ekle)"
       subject_template: "[%{email_prefix}] Yeni bir e-posta adresi eklendi"
+      subject_template_improved: "Yeni bir e-posta adresi eklendi"
       text_body_template: |
         Bu, %{site_name} için bir e-posta adresi eklendiğini bildirmek için gönderilen otomatik bir mesajdır. Bir yanlışlık olduğunu düşünüyorsanız lütfen site yöneticisiyle iletişime geçin.
 
@@ -4259,10 +4325,12 @@ tr_TR:
       title: "Kaydol"
       preview: "Hesabınızı onaylayın."
       subject_template: "[%{email_prefix}] Yeni hesabınızı onaylayın"
+      subject_template_improved: "Yeni hesabınızı onaylayın"
       text_body_template: "%{site_name}'a hoş geldiniz! \n\nYeni hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıya tıklayın: \n%{base_url}/u/activate-account/%{email_token}\n\nYukarıdaki bağlantı tıklanabilir değilse kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin.\n"
     activation_reminder:
       title: "Etkinleştirme Anımsatıcısı"
       subject_template: "[%{email_prefix}] Hesabınızı onaylamanız için anımsatıcı"
+      subject_template_improved: "Hesabınızı onaylamanız gerektiğini hatırlatırız"
       text_body_template: |
         %{site_name}'a hoş geldiniz!
 
@@ -4275,6 +4343,8 @@ tr_TR:
     suspicious_login:
       title: "Yeni Giriş Uyarısı"
       preview: "Cihazınızı doğrulayın."
+      subject_template: "[%{site_name}] %{location} adresinden yeni oturum açma"
+      subject_template_improved: "%{site_name}: %{location} adresinden yeni oturum açıldı"
       text_body_template: |
         Merhaba,
 
@@ -4290,6 +4360,7 @@ tr_TR:
     post_approved:
       title: "Gönderiniz onaylandı"
       subject_template: "[%{site_name}] Gönderiniz onaylandı"
+      subject_template_improved: "%{site_name}: Gönderiniz onaylandı"
       text_body_template: |
         Merhaba,
 

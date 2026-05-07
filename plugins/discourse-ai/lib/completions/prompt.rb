@@ -151,7 +151,12 @@ module DiscourseAi
         tools.present?
       end
 
-      def encoded_uploads(message, allow_documents: false, allowed_attachment_types: nil)
+      def encoded_uploads(
+        message,
+        allow_images: true,
+        allow_documents: false,
+        allowed_attachment_types: nil
+      )
         if message[:content].is_a?(Array)
           upload_ids =
             message[:content]
@@ -160,7 +165,10 @@ module DiscourseAi
               end
               .compact
           if !upload_ids.empty?
-            allowed_kinds = allow_documents ? %i[image document] : %i[image]
+            allowed_kinds =
+              allowed_upload_kinds(allow_images: allow_images, allow_documents: allow_documents)
+            return [] if allowed_kinds.empty?
+
             return(
               UploadEncoder.encode(
                 upload_ids: upload_ids,
@@ -175,8 +183,16 @@ module DiscourseAi
         []
       end
 
-      def encode_upload(upload_id, allow_documents: false, allowed_attachment_types: nil)
-        allowed_kinds = allow_documents ? %i[image document] : %i[image]
+      def encode_upload(
+        upload_id,
+        allow_images: true,
+        allow_documents: false,
+        allowed_attachment_types: nil
+      )
+        allowed_kinds =
+          allowed_upload_kinds(allow_images: allow_images, allow_documents: allow_documents)
+        return if allowed_kinds.empty?
+
         UploadEncoder.encode(
           upload_ids: [upload_id],
           max_pixels: max_pixels,
@@ -187,6 +203,7 @@ module DiscourseAi
 
       def content_with_encoded_uploads(
         content,
+        allow_images: true,
         allow_documents: false,
         allowed_attachment_types: nil
       )
@@ -196,6 +213,7 @@ module DiscourseAi
           if c.is_a?(Hash) && c.key?(:upload_id)
             encode_upload(
               c[:upload_id],
+              allow_images: allow_images,
               allow_documents: allow_documents,
               allowed_attachment_types: allowed_attachment_types,
             )
@@ -221,6 +239,13 @@ module DiscourseAi
       end
 
       private
+
+      def allowed_upload_kinds(allow_images:, allow_documents:)
+        allowed_kinds = []
+        allowed_kinds << :image if allow_images
+        allowed_kinds << :document if allow_documents
+        allowed_kinds
+      end
 
       def validate_message(message)
         valid_types = %i[system user model tool tool_call]

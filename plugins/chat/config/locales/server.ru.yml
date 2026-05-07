@@ -262,6 +262,7 @@ ru:
     actions:
       chat_reply:
         title: Ответ
+        placeholder: Ответить…
   discourse_automation:
     scriptables:
       send_chat_message:

@@ -367,7 +367,7 @@ class QunitRunner
     ensure_pnpm_installed!
     install_node_dependencies!
 
-    @rails_port = next_available_port(60_098)
+    @rails_port = next_available_port(4_566)
     server_env = build_server_environment(@rails_port)
     server_pid = nil
     log_path = File.join(rails_root, "tmp", "test_server_#{@rails_port}.log")
@@ -478,6 +478,8 @@ class QunitRunner
 
       puts "Timed out. Cannot connect to forked server!"
       puts File.read(log_path) if File.exist?(log_path)
+      puts "\n--- Sockets on port #{port} ---"
+      system("ss -tlnp 'sport = :#{port}' 2>/dev/null || ss -tlnp | grep ':#{port} '")
       exit 1
     end
 

@@ -95,11 +95,20 @@ export default class Nested extends Component {
 
       <div class="nested-view__controls">
         <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
-        {{#if this.currentUser.can_toggle_nested_mode}}
-          <a href={{this.flatViewUrl}} class="nested-view__flat-link">{{i18n
-              "nested_replies.view_as_flat"
-            }}</a>
-        {{/if}}
+        <div class="nested-view__controls-right">
+          <DButton
+            class="btn-flat nested-view__activity-link"
+            @action={{@showActivityLog}}
+            @label="nested_replies.activity_log.link"
+          />
+          {{#if this.currentUser.can_toggle_nested_mode}}
+            <DButton
+              class="btn-flat nested-view__flat-link"
+              @href={{this.flatViewUrl}}
+              @label="nested_replies.view_as_flat"
+            />
+          {{/if}}
+        </div>
       </div>
 
       {{#if (gt @newRootPostCount 0)}}

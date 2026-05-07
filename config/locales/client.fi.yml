@@ -7472,7 +7472,6 @@ fi:
           other: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viestiä. (delete_all_posts_max)"
         delete_confirm_title: "Oletko varma, että haluat poistaa tämän käyttäjän? Käyttäjä poistetaan pysyvästi!"
         delete_confirm: "On yleensä parempi anonymisoida käyttäjät poistamisen sijaan; näin vältät sisällön poistamisen olemassa olevista keskusteluista."
-        delete_and_block: "Poista käyttäjä ja estä hänen sähköposti- ja IP-osoitteensa"
         delete_dont_block: "Poista käyttäjä"
         deleting_user: "Poistetaan käyttäjää…"
         deleted: "Käyttäjä poistettiin."

@@ -433,7 +433,9 @@ module BulkImport
       (Etc.nprocessors * @settings[:thread_count_factor] * 2).to_i.times do |index|
         consumer_threads << Thread.new do
           Thread.current.name = "worker-#{index}"
-          fake_upload = OpenStruct.new(url: "")
+          fake_upload =
+            OpenStruct.new(url: "", secure?: SiteSetting.secure_uploads, optimized_images: [])
+          external_store = store.external?
           while (row = queue.pop)
             begin
               upload = JSON.parse(row["upload"])
@@ -441,13 +443,14 @@ module BulkImport
               path = add_multisite_prefix(store.get_path_for_upload(fake_upload))
 
               file_exists =
-                if store.external?
+                if external_store
                   store.object_from_path(path).exists?
                 else
                   File.exist?(File.join(store.public_dir, path))
                 end
 
               if file_exists
+                store.update_upload_access_control(fake_upload) if external_store
                 status_queue << { id: row["id"], upload_id: upload["id"], status: :ok }
               else
                 status_queue << { id: row["id"], upload_id: upload["id"], status: :missing }
@@ -486,10 +489,10 @@ module BulkImport
 
       init_threads << Thread.new do
         sql = <<~SQL
-        SELECT upload_ids
-          FROM posts
-         WHERE upload_ids IS NOT NULL
-      SQL
+          SELECT upload_ids
+            FROM posts
+           WHERE upload_ids IS NOT NULL
+        SQL
         query(sql, @source_db).tap do |result_set|
           result_set.each do |row|
             JSON.parse(row["upload_ids"]).each { |id| post_upload_ids << id }
@@ -500,10 +503,10 @@ module BulkImport
 
       init_threads << Thread.new do
         sql = <<~SQL
-        SELECT avatar_upload_id
-          FROM users
-         WHERE avatar_upload_id IS NOT NULL
-      SQL
+          SELECT avatar_upload_id
+            FROM users
+           WHERE avatar_upload_id IS NOT NULL
+        SQL
         query(sql, @source_db).tap do |result_set|
           result_set.each { |row| avatar_upload_ids << row["avatar_upload_id"] }
           result_set.close
@@ -765,6 +768,9 @@ module BulkImport
       SiteSetting.authorized_extensions = settings[:authorized_extensions]
       SiteSetting.max_attachment_size_kb = settings[:max_attachment_size_kb]
       SiteSetting.max_image_size_kb = settings[:max_image_size_kb]
+      SiteSetting.max_image_megapixels = settings[:max_image_megapixels]
+      SiteSetting.secure_uploads = settings[:secure_uploads]
+      SiteSetting.s3_enable_access_control_tags = settings[:s3_enable_access_control_tags]
 
       if settings[:multisite]
         Rails.configuration.multisite = true

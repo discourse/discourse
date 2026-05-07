@@ -5350,7 +5350,6 @@ ro:
           few: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} postări. (Setarea delete_all_posts_max)"
           other: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} de postări. (Setarea delete_all_posts_max)"
         delete_confirm_title: "Sigur vrei să ștergi acest utilizator? Acest lucru este permanent!"
-        delete_and_block: "Șterge utilizator și blochează adresa de email și IP"
         delete_dont_block: "Șterge utilizator"
         deleted: "Utilizatorul a fost șters."
         delete_failed: "A apărut o eroare la ștergerea utilizatorului. Asigură-te că toate postările sunt șterse înainte de a încerca ștergerea utilizatorului."

@@ -8175,7 +8175,6 @@ es:
           other: "No se pueden eliminar todas las publicaciones porque el usuario tiene más de %{count}. (delete_all_posts_max)"
         delete_confirm_title: "¿Seguro que quieres eliminar este usuario? ¡Esta acción es permanente!"
         delete_confirm: "Normalmente, es mejor anonimizar usuarios en vez de eliminarlos. Así, evitas eliminar contenido de temas existentes."
-        delete_and_block: "Eliminar usuario, bloquear su correo electrónico y dirección IP"
         delete_dont_block: "Eliminar usuario"
         deleting_user: "Eliminando usuario…"
         deleted: "El usuario se eliminó"

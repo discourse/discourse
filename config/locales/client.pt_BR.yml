@@ -8062,7 +8062,6 @@ pt_BR:
           other: "Não é possível remover todas as postagens porque o usuário(a) tem mais de %{count} postagens. (delete_all_posts_max)"
         delete_confirm_title: "Você tem certeza de que deseja excluir este usuário(a)? Essa é uma ação permanente!"
         delete_confirm: "Geralmente, é preferível anonimizar os(as) usuários(as) em vez de excluí-los, evitando assim a remoção de conteúdo das discussões existentes."
-        delete_and_block: "Excluir usuário e bloquear seu e-mail e endereço IP"
         delete_dont_block: "Excluir usuário(a)"
         deleting_user: "Excluindo usuário(a)…"
         deleted: "O(a) usuário(a) foi excluído(a)."

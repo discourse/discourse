@@ -37,6 +37,8 @@ function attachHeaderIcon(api) {
 }
 
 function initializeAIBotReplies(api) {
+  const siteSettings = api.container.lookup("service:site-settings");
+
   initializePauseButton(api);
 
   api.renderInOutlet("topic-area-bottom", AiBotDockedComposer);
@@ -48,7 +50,10 @@ function initializeAIBotReplies(api) {
   // route. Returning an empty tabs array instead keeps the component
   // rendering nothing regardless of transition timing.
   api.registerValueTransformer("more-topics-tabs", ({ value, context }) => {
-    if (context?.topic?.is_bot_pm) {
+    if (
+      siteSettings.ai_bot_enable_docked_composer &&
+      context?.topic?.is_bot_pm
+    ) {
       return [];
     }
     return value;
@@ -64,6 +69,10 @@ function initializeAIBotReplies(api) {
 
       const streamingState = lookupStreamingState(api);
       const topicId = this.model.id;
+
+      if (data?.noop) {
+        return;
+      }
 
       if (data?.done) {
         streamingState?.markFinishedAfterRender(topicId, data?.post_id);
@@ -81,11 +90,17 @@ function initializeAIBotReplies(api) {
         this.model.details.allowed_users &&
         this.model.details.allowed_users.filter(isGPTBot).length >= 1
       ) {
-        // -3 is not obvious, but the implementation in message bus is -2 (last + new), -3 (last 2 + new)
+        // -2 replays only the last message before listening for new ones.
+        // A completed stream always ends with done:true as its final message,
+        // so replaying just the last event is enough to resume an in-progress
+        // stream AND avoids the stale-state bug where replaying an earlier
+        // chunk calls markStarted right before the done message, leaving the
+        // MutationObserver waiting for a .streaming class that never gets
+        // removed (because streamPostText has nothing left to stream).
         this.messageBus.subscribe(
           `discourse-ai/ai-bot/topic/${this.model.id}`,
           this.onAIBotStreamedReply.bind(this),
-          -3
+          -2
         );
       }
     },
@@ -114,7 +129,7 @@ function initializeAIBotReplies(api) {
   // receives is relayed to the docked composer via `composer:insert-block`
   // which our DEditor subscribes to.
   api.onAppEvent("page:compose-reply", (topic) => {
-    if (topic?.is_bot_pm) {
+    if (siteSettings.ai_bot_enable_docked_composer && topic?.is_bot_pm) {
       focusDockedComposer();
     }
   });

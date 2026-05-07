@@ -379,7 +379,15 @@ RSpec.describe GroupsController do
 
         describe "automatic groups" do
           it "should return the right response" do
-            expect_type_to_return_right_groups("automatic", Group::AUTO_GROUP_IDS.keys - [0])
+            expect_type_to_return_right_groups(
+              "automatic",
+              Group::AUTO_GROUP_IDS.keys -
+                [
+                  Group::AUTO_GROUPS[:everyone],
+                  Group::AUTO_GROUPS[:anonymous],
+                  Group::AUTO_GROUPS[:logged_in_users],
+                ],
+            )
           end
         end
 
@@ -490,6 +498,8 @@ RSpec.describe GroupsController do
 
           groups = Group::AUTO_GROUPS.keys
           groups.delete(:everyone)
+          groups.delete(:anonymous)
+          groups.delete(:logged_in_users)
           groups.push(group.name)
 
           expect(body["extras"]["visible_group_names"]).to contain_exactly(*groups.map(&:to_s))
@@ -2749,6 +2759,8 @@ RSpec.describe GroupsController do
 
         expected_ids = Group::AUTO_GROUPS.map { |name, id| id }
         expected_ids.delete(Group::AUTO_GROUPS[:everyone])
+        expected_ids.delete(Group::AUTO_GROUPS[:logged_in_users])
+        expected_ids.delete(Group::AUTO_GROUPS[:anonymous])
         expected_ids << group.id
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(*expected_ids)
@@ -2801,12 +2813,43 @@ RSpec.describe GroupsController do
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(group.id, hidden_group.id)
 
+        get "/groups/search.json"
+
+        expect(response.status).to eq(200)
+        groups = response.parsed_body
+
+        automatic_ids = Group::AUTO_GROUPS.map { |name, id| id }
+
+        expect(groups.map { |group| group["id"] }).to contain_exactly(
+          group.id,
+          hidden_group.id,
+          *(
+            automatic_ids -
+              [
+                Group::AUTO_GROUPS[:everyone],
+                Group::AUTO_GROUPS[:anonymous],
+                Group::AUTO_GROUPS[:logged_in_users],
+              ]
+          ),
+        )
+
         get "/groups/search.json?include_everyone=true"
 
         expect(response.status).to eq(200)
         groups = response.parsed_body
 
         automatic_ids = Group::AUTO_GROUPS.map { |name, id| id }
+
+        expect(groups.map { |group| group["id"] }).to contain_exactly(
+          group.id,
+          hidden_group.id,
+          *(automatic_ids - [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]]),
+        )
+
+        get "/groups/search.json?include_pseudogroups=true"
+
+        expect(response.status).to eq(200)
+        groups = response.parsed_body
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(
           group.id,

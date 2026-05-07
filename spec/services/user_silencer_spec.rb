@@ -49,6 +49,15 @@ RSpec.describe UserSilencer do
       expect(post.hidden).to eq(false)
     end
 
+    it "does not silence or hide posts for staff users" do
+      user.update!(moderator: true)
+
+      expect(UserSilencer.silence(user, admin)).to eq(false)
+      expect(user.reload.silenced?).to eq(false)
+      expect(post.reload.hidden).to eq(false)
+      expect(post.topic.reload.visible).to eq(true)
+    end
+
     it "allows us to silence the user for a particular post" do
       expect(UserSilencer.was_silenced_for?(post)).to eq(false)
       UserSilencer.new(user, Discourse.system_user, post_id: post.id).silence

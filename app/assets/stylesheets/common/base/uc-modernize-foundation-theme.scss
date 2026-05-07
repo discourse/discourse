@@ -58,7 +58,8 @@
       .profile-tab-btn,
       .back-button,
       .composer-actions-btn,
-      .language-switcher-trigger
+      .language-switcher-trigger,
+      .d-multi-select-trigger__expand-btn
     ) {
       padding-block: 0;
       height: var(--d-control-height);
@@ -72,7 +73,8 @@
       .user-menu-tab,
       .user-menu-tab-active,
       .composer-actions-btn,
-      .dropdown-select-box-header
+      .dropdown-select-box-header,
+      .d-multi-select-trigger__expand-btn
     ) {
       width: var(--d-control-height);
     }
@@ -273,6 +275,10 @@
     color: var(--primary);
   }
 
+  .d-multi-select__search-container {
+    padding-block: 0;
+  }
+
   // Header
   .d-header {
     height: 3.25em;
@@ -336,7 +342,6 @@
   .category-boxes .category-box,
   .category-boxes-with-topics .category-box {
     --category-badge-title-color: var(--primary);
-    --category-badge-color: var(--content-border-color) !important;
   }
 
   .category-boxes .category-box-inner,

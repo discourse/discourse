@@ -7529,7 +7529,6 @@ nl:
           other: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} berichten heeft geplaatst. (delete_all_posts_max)"
         delete_confirm_title: "Weet je zeker dat je deze gebruiker wilt verwijderen? Dit is permanent!"
         delete_confirm: "Het verdient over het algemeen de voorkeur om gebruikers te anonimiseren in plaats van ze te verwijderen, om te voorkomen dat inhoud uit bestaande discussies wordt verwijderd."
-        delete_and_block: "Gebruiker verwijderen en diens e-mail- en IP-adres blokkeren"
         delete_dont_block: "Gebruiker verwijderen"
         deleting_user: "Gebruiker verwijderen…"
         deleted: "De gebruiker is verwijderd."

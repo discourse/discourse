@@ -9,6 +9,8 @@ describe "Wizard" do
 
   it "successfully completes the setup wizard" do
     visit("/wizard")
+    screenshot_marker(label: "wizard")
+
     expect(wizard_page).to be_on_step("setup")
     wizard_page.fill_field("text", "title", "My Test Site")
     wizard_page.select_dropdown_option("default-locale", "en")

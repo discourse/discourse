@@ -278,13 +278,13 @@ acceptance(
               { permission_type: 1, group_name: "moderators", group_id: 2 },
             ],
             custom_fields: {},
-            category_types: [
-              {
+            category_types: {
+              discussion: {
                 id: "discussion",
                 name: "Discussion",
                 configuration_schema: {},
               },
-            ],
+            },
             available_category_types: [
               {
                 id: "support",
@@ -311,13 +311,13 @@ acceptance(
               { permission_type: 1, group_name: "moderators", group_id: 2 },
               { permission_type: 1, group_name: "custom_group", group_id: 4 },
             ],
-            category_types: [
-              {
+            category_types: {
+              discussion: {
                 id: "discussion",
                 name: "Discussion",
                 configuration_schema: {},
               },
-            ],
+            },
             available_category_types: [
               {
                 id: "support",
@@ -343,13 +343,13 @@ acceptance(
             group_permissions: [
               { permission_type: 1, group_name: "custom_group", group_id: 4 },
             ],
-            category_types: [
-              {
+            category_types: {
+              support: {
                 id: "support",
                 name: "Support",
                 configuration_schema: {},
               },
-            ],
+            },
             available_category_types: [
               {
                 id: "support",
@@ -375,13 +375,13 @@ acceptance(
             group_permissions: [
               { permission_type: 1, group_name: "everyone", group_id: 0 },
             ],
-            category_types: [
-              {
+            category_types: {
+              support: {
                 id: "support",
                 name: "Support",
                 configuration_schema: {},
               },
-            ],
+            },
             available_category_types: [
               {
                 id: "support",
@@ -412,13 +412,13 @@ acceptance(
               { permission_type: 1, group_name: "staff", group_id: 3 },
             ],
             custom_fields: {},
-            category_types: [
-              {
+            category_types: {
+              discussion: {
                 id: "discussion",
                 name: "Discussion",
                 configuration_schema: {},
               },
-            ],
+            },
             available_category_types: [
               {
                 id: "support",

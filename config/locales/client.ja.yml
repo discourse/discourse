@@ -7563,7 +7563,6 @@ ja:
           other: "すべての投稿を削除することはできませんでした。ユーザーは %{count} 件以上投稿しています。(delete_all_posts_max)"
         delete_confirm_title: "このユーザーを削除してもよろしいですか？永久に削除されます！"
         delete_confirm: "一般に、ユーザーを削除するのではなく、匿名化して既存のディスカッションからコンテンツを削除しないようにするのが推奨されます。"
-        delete_and_block: "ユーザーを削除してそのメールアドレスと IP アドレスを削除する"
         delete_dont_block: "ユーザーを削除"
         deleting_user: "ユーザーを削除中…"
         deleted: "ユーザーが削除されました。"

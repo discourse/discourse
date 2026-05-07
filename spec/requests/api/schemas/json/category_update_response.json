@@ -383,6 +383,9 @@
               "available": {
                 "type": "boolean"
               },
+              "visible": {
+                "type": "boolean"
+              },
               "configuration_schema": {
                 "type": "object"
               }
@@ -394,6 +397,7 @@
               "description",
               "icon",
               "available",
+              "visible",
               "configuration_schema"
             ]
           }

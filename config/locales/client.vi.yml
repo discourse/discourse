@@ -7575,7 +7575,6 @@ vi:
           other: "Không thể xóa tất cả các tút do tài khoản có hơn %{count} tút. (delete_all_posts_max)"
         delete_confirm_title: "Bạn có chắc muốn xóa thành viên này? Việc xóa này là vĩnh viễn!"
         delete_confirm: "Nói chung, việc ẩn danh người dùng thường được ưu tiên hơn là xóa họ, để tránh việc xóa nội dung khỏi các cuộc thảo luận hiện có."
-        delete_and_block: "Xóa người dùng và chặn địa chỉ email và địa chỉ IP của họ"
         delete_dont_block: "Xóa người dùng"
         deleting_user: "Đang xóa người dùng…"
         deleted: "Thành viên này đã bị xóa"

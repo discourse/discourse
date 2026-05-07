@@ -1464,6 +1464,7 @@ el:
     auto_close_topics_create_linked_topic: "Δημιουργήστε ένα νέο συνδεδεμένο θέμα όταν ένα θέμα κλείνει αυτόματα με βάση τη ρύθμιση 'auto close topics post count'"
     code_formatting_style: "Το κουμπί κώδικα στον συνθέτη θα έχει ως αποτέλεσμα αυτό το στυλ μορφοποίησης κώδικα "
     max_allowed_message_recipients: "Μέγιστος αριθμός παραληπτών που επιτρέπονται σε ένα μήνυμα"
+    blur_tl0_flagged_posts_media: "Θόλωμα εικόνων σε αναφερόμενες αναρτήσεις για απόκρυψη πιθανού NSFW περιεχομένου."
     default_email_digest_frequency: "Πόσο συχνά οι χρήστες λαμβάνουν συνοπτικά email από προεπιλογή."
     default_include_tl0_in_digests: "Συμπεριέλαβε αναρτήσεις από νέους χρήστες στα συνοπτικά email από προεπιλογή. Οι χρήστες μπορούν να το αλλάξουν αυτό στις προτιμήσεις τους. "
     default_email_mailing_list_mode: "Στείλε email για κάθε νέα ανάρτηση από προεπιλογή."
@@ -1516,6 +1517,9 @@ el:
       must_include_latest: "Το κορυφαίο μενού πρέπει να περιέχει την καρτέλα 'νεώτερα'."
       invalid_string: "Μη έγκυρη τιμή."
       invalid_string_min_max: "Πρέπει να είναι μεταξύ %{min} και %{max} χαρακτήρες."
+      invalid_string_min:
+        one: "Πρέπει να είναι τουλάχιστον %{count} χαρακτήρας."
+        other: "Πρέπει να είναι τουλάχιστον %{count} χαρακτήρες."
       invalid_reply_by_email_address: "Η αξία πρέπει να περιέχει '%{reply_key}' και να είναι διαφορετική από την ειδοποίηση μέσω email."
       invalid_alternative_reply_by_email_addresses: "Όλες οι αξίες πρέπει να περιέχουν '%{reply_key}' και να είναι διαφορετικές από την ειδοποίηση μέσω email."
       invalid_domain_hostname: "Δεν πρέπει να περιλαμβάνει τους χαρακτήρες * ή ?"
@@ -1681,6 +1685,14 @@ el:
     activated_by_staff: "Ενεργοποιήθηκε από τους συνεργάτες"
     new_user_typed_too_fast: "Ο νέος χρήστης πληκτρολογούσε πολύ γρήγορα"
     username:
+      short:
+        one: "πρέπει να είναι τουλάχιστον %{count} χαρακτήρας"
+        other: "πρέπει να είναι τουλάχιστον %{count} χαρακτήρες"
+      long:
+        one: "δεν πρέπει να είναι περισσότερο από %{count} χαρακτήρα"
+        other: "δεν πρέπει να είναι περισσότερο από %{count} χαρακτήρες"
+      too_long: "είναι πολύ μεγάλο"
+      characters: "πρέπει να περιλαμβάνει μόνο αριθμούς, γράμματα, παύλες, τελείες και κάτω παύλες"
       unique: "πρέπει να είναι μοναδικό"
       blank: "πρέπει να υπάρχει"
       must_begin_with_alphanumeric_or_underscore: "πρέπει να αρχίζει με ένα γράμμα, έναν αριθμό ή μια κάτω παύλα"
@@ -2030,6 +2042,7 @@ el:
     email_reject_reply_key:
       title: "Απόρριψη email Μη Έγκυρο Κλειδί Απάντησης"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Άγνωστο Κλειδί Απάντησης"
+      subject_template_improved: "%{email_prefix}: Ζήτημα email -- άγνωστο κλειδί απάντησης"
       text_body_template: |2
 
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο %{former_title}) απέτυχε.

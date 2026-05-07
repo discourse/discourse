@@ -160,5 +160,42 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
         job.execute(feed_url: authenticated_url, author_username: author.username)
       }.to change { author.topics.count }.by(1)
     end
+
+    context "with user_id" do
+      it "creates a topic when given user_id" do
+        expect { job.execute(feed_url: feed_url, user_id: author.id) }.to change {
+          author.topics.count
+        }.by(1)
+      end
+
+      it "keeps working after the user is renamed" do
+        UsernameChanger.change(author, "renamed_account")
+
+        expect { job.execute(feed_url: feed_url, user_id: author.id) }.to change {
+          author.reload.topics.count
+        }.by(1)
+      end
+
+      it "falls back to the system user and logs when the referenced user no longer exists" do
+        deleted_id = author.id
+        author.destroy!
+
+        Rails.logger.expects(:warn).with(includes("not found")).at_least_once
+
+        expect { job.execute(feed_url: feed_url, user_id: deleted_id) }.to change {
+          Discourse.system_user.topics.count
+        }.by(1)
+      end
+    end
+
+    context "with an unknown author_username (legacy fallback)" do
+      it "falls back to the system user and logs a warning" do
+        Rails.logger.expects(:warn).with(includes("not found")).at_least_once
+
+        expect { job.execute(feed_url: feed_url, author_username: "ghost_user") }.to change {
+          Discourse.system_user.topics.count
+        }.by(1)
+      end
+    end
   end
 end
