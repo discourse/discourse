@@ -78,7 +78,10 @@ export function buildConfig({ devMode } = {}) {
       "media-optimization-bundle": "media-optimization-bundle.js",
       ...(process.env.EMBER_ENV !== "production" ||
       process.env.FORCE_BUILD_TESTS
-        ? { "tests/test-entrypoint": "tests/test-entrypoint.js" }
+        ? {
+            "tests/test-entrypoint": "tests/test-entrypoint.js",
+            "qunit-live-reload": "qunit-live-reload.js",
+          }
         : undefined),
     },
     output: {

@@ -16,6 +16,7 @@
 
       <script nonce="<%= csp_nonce_placeholder %>">
         window._discourseQunitPluginNames = <%= Discourse.plugins.map(&:directory_name).to_json.html_safe %>;
+        window._discourseQunitLiveReloadUrl = "<%= script_asset_path(EmberCli.script_chunks["qunit-live-reload"].first) %>";
       </script>
 
       <%= preload_script "@embroider/virtual/test-support" %>
