@@ -394,24 +394,18 @@ export default class AdminDashboardSiteTraffic extends Component {
 
   get xMaxTicksLimit() {
     if (this.bucketing === "daily") {
-      const days = this.modelEndDate.diff(this.modelStartDate, "days") + 1;
-      if (days > 31) {
-        return 12;
-      }
       // Cross-year daily labels are ~2× wider (have year), so reduce density.
-      return this.spansYears ? 8 : 31;
+      return this.spansYears ? 8 : 12;
     }
     return 60;
   }
 
   get xAutoSkip() {
-    if (this.bucketing !== "daily") {
-      return true;
-    }
-    const days = this.modelEndDate.diff(this.modelStartDate, "days") + 1;
-    // autoSkip when there are too many labels OR when each label is wider
-    // (cross-year periods include the year on every label).
-    return days > 31 || this.spansYears;
+    // Always rely on Chart.js's auto-skip strategy. It picks a density that
+    // fits the available width and respects xMaxTicksLimit; it also keeps
+    // the first and last visible bars labeled via Chart.js's includeBounds
+    // default.
+    return true;
   }
 
   get maxStackHeight() {
