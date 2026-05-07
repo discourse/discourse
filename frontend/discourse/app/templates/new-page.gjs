@@ -59,18 +59,36 @@ const sections = [
   </div>
 
   <div class="db-main">
+
+    <div class="db-section --kpi">
+      <div class="db-section__wrapper --row">
+        <a class="db-section__content-block">
+          <div class="db-kpi__value">1,100</div>
+        </a>
+        <a class="db-section__content-block">
+          <div class="db-kpi__value">1,100</div>
+        </a>
+        <a class="db-section__content-block">
+          <div class="db-kpi__value">1,100</div>
+        </a>
+        <a class="db-section__content-block">
+          <div class="db-kpi__value">1,100</div>
+        </a>
+      </div>
+    </div>
+
     <div class="db-section --kpi">
       <p class="db-section__intro">Your community grew to 1,100 new members this
         month — and resolved 73% of questions without staff. Most growth came
         from a Hacker News spike on Mar 8–9.</p>
-      <div class="db-section__wrapper">
-        <a class="db-kpi">
+      <div class="db-section__wrapper --row">
+        <a class="db-kpi db-section__row-block">
           <div class="db-kpi__value">1,100</div>
           <div class="db-kpi__label">New sign-ups</div>
           <div class="db-delta --pos">+12%</div>
           <span class="db-link-arrow">{{icon "arrow-right"}}</span>
         </a>
-        <a class="db-kpi">
+        <a class="db-kpi db-section__row-block">
           <div class="db-kpi__value-row">
             <div class="db-kpi__value">21%</div>
             <span class="db-pill --pos">stable</span>
@@ -86,7 +104,7 @@ const sections = [
           <div class="db-delta --pos">+0.4pts</div>
           <span class="db-link-arrow">{{icon "arrow-right"}}</span>
         </a>
-        <a class="db-kpi">
+        <a class="db-kpi db-section__row-block">
           <div class="db-kpi__value">374</div>
           <div class="db-kpi__label">
             New contributors
@@ -99,7 +117,7 @@ const sections = [
           <div class="db-delta --pos">+6%</div>
           <span class="db-link-arrow">{{icon "arrow-right"}}</span>
         </a>
-        <a class="db-kpi">
+        <a class="db-kpi db-section__row-block">
           <div class="db-kpi__value">73%</div>
           <div class="db-kpi__label">
             Questions resolved
@@ -115,11 +133,11 @@ const sections = [
       </div>
     </div>
 
-    <div class="db-section --reports">
+    <div class="db-section --reports --no-border">
       <h2 class="db-section__header">Reports
         <button class="btn btn-transparent no-text">{{icon "gear"}}</button>
       </h2>
-      <div class="db-section__wrapper">
+      <div class="db-section__wrapper --grid">
 
         <div class="db-report__card">
           <div class="db-report__header">
@@ -188,7 +206,7 @@ const sections = [
 
     <div class="db-section --traffic">
       <h2 class="db-section__header">Site traffic</h2>
-      <div class="db-section__wrapper">
+      <div class="db-section__wrapper --column">
         <div class="db-section__subheader">
           <div class="db-section__subintro">
             <h3>712k pageviews this month — up 9%</h3>
@@ -228,6 +246,7 @@ const sections = [
         <div class="db-traffic__chart">
           PLACEHOLDER FOR TRAFFIC CHART
         </div>
+
         <div class="db-section__row">
           <div class="db-section__row-block">
             <div class="db-section__row-block-header">
@@ -295,7 +314,7 @@ const sections = [
 
     <div class="db-section --engagement">
       <h2 class="db-section__header">Engagement</h2>
-      <div class="db-section__wrapper">
+      <div class="db-section__wrapper --column">
         <div class="db-section__subheader">
           <div class="db-section__subintro">
             <h3>Members are forming a habit of coming back.</h3>
@@ -326,7 +345,7 @@ const sections = [
           </div>
         </div>
         {{! only needed when adding multiple rows }}
-        <div class="db-section__subwrapper">
+        <div class="db-section__row-group">
           <div class="db-section__row">
             <div class="db-section__row-block">
               <div class="db-section__row-block-header">
@@ -342,13 +361,16 @@ const sections = [
             </div>
 
           </div>
-          <div class="db-section__row --single">
-            <div class="db-section__row-block-header">
-              <h3 class="db-section__row-block-title">Activity by category</h3>
-              <CategorySelector />
-            </div>
-            <div class="db-activity">
-              //table
+          <div class="db-section__row">
+            <div class="db-section__row-block"><div
+                class="db-section__row-block-header"
+              >
+                <h3 class="db-section__row-block-title">Activity by category</h3>
+                <CategorySelector />
+              </div>
+              <div class="db-activity">
+                //table
+              </div>
             </div>
           </div>
         </div>

@@ -176,30 +176,39 @@ h1 {
     font-size: var(--font-down-1-rem);
   }
 
+  &__content-block {
+    .--row & {
+      flex: 1;
+      padding: var(--space-4);
+
+      &:not(:last-child) {
+        border-right: 1px solid var(--primary-low);
+      }
+    }
+
+    .--small & {
+      min-width: 150px;
+    }
+  }
+
   &__row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-wrap: nowrap;
     gap: var(--space-4);
     border-top: 1px solid var(--primary-low);
     margin-inline: calc(var(--space-4) * -1);
-    padding-inline: var(--space-4);
 
-    &.--single {
-      grid-template-columns: auto;
-      border-right: none;
-      padding: var(--space-4);
+    > * {
+      flex: 1;
     }
   }
 
   &__row-block {
-    &:first-of-type {
-      border-right: 1px solid var(--primary-low);
-      padding-right: var(--space-4);
-      padding-block: var(--space-4);
-    }
+    flex: 1;
+    padding: var(--space-4);
 
-    &:last-of-type {
-      padding-block: var(--space-4);
+    &:not(:last-child) {
+      border-right: 1px solid var(--primary-low);
     }
   }
 
@@ -233,26 +242,30 @@ h1 {
   }
 
   &__wrapper {
-    .--kpi & {
-      display: flex;
-      flex-wrap: wrap;
-      border: 1px solid var(--primary-low);
-      border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-border-radius-large);
+    border: 1px solid var(--primary-low);
+
+    .--no-border & {
+      border: none;
+      border-radius: 0;
+      padding: 0;
     }
 
-    .--reports & {
+    &.--grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: var(--space-4);
     }
 
-    .--traffic &,
-    .--engagement & {
+    &.--row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    &.--column {
       display: flex;
       flex-direction: column;
       gap: var(--space-4);
-      border-radius: var(--d-border-radius-large);
-      border: 1px solid var(--primary-low);
       padding: var(--space-4);
       padding-bottom: 0;
     }
@@ -264,13 +277,6 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  flex-basis: 25%;
-  padding: var(--space-4) var(--space-4);
-  box-sizing: border-box;
-
-  &:not(:last-child) {
-    border-right: 1px solid var(--primary-low);
-  }
 
   .db-link-arrow {
     top: var(--space-4);
