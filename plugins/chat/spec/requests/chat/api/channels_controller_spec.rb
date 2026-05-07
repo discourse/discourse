@@ -347,6 +347,27 @@ RSpec.describe Chat::Api::ChannelsController do
       expect(new_channel.chatable_id).to eq(category.id)
     end
 
+    context "when the user cannot post in the category" do
+      fab!(:moderator)
+      fab!(:group)
+      fab!(:private_category) { Fabricate(:private_category, group:) }
+
+      before do
+        sign_in(moderator)
+        params[:channel][:chatable_id] = private_category.id
+      end
+
+      it "does not create a channel or membership" do
+        expect {
+          post "/chat/api/channels", params:, headers: { "ACCEPT" => "application/json" }
+        }.to not_change { Chat::Channel.count }.and not_change {
+                Chat::UserChatChannelMembership.count
+              }
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+      end
+    end
+
     it "creates a channel using the user-provided slug" do
       new_params = params.dup
       new_params[:channel][:slug] = "wow-so-cool"
