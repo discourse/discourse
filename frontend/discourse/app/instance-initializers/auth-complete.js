@@ -97,6 +97,10 @@ export default {
 
             next(() => {
               const site = owner.lookup("service:site");
+              const hasRequiredName =
+                !site.full_name_required_for_signup ||
+                options.name_from_provider;
+
               const props = {
                 accountEmail: options.email,
                 accountUsername: options.username,
@@ -105,8 +109,7 @@ export default {
                 skipConfirmation:
                   siteSettings.auth_skip_create_confirm &&
                   options.username &&
-                  (!site.full_name_required_for_signup ||
-                    options.name_from_provider),
+                  hasRequiredName,
               };
 
               router.transitionTo("signup").then(() => {
