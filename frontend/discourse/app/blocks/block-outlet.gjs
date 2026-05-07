@@ -13,6 +13,7 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
+import { trackedMap, trackedObject } from "@ember/reactive/collections";
 import curryComponent from "ember-curry-component";
 /** @type {import("discourse/lib/blocks/-internals/components/block-layout-wrapper.gjs")} */
 import { wrapBlockLayout } from "discourse/lib/blocks/-internals/components/block-layout-wrapper";
@@ -58,41 +59,73 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
 
 /**
  * Maps outlet names to their registered outlet layouts.
- * Each outlet can have exactly one layout registered.
  *
- * DO NOT EXPORT THIS MAP to prevent layouts bypassing the validation steps
+ * Stored as a `trackedMap` so that mutations (the editor replacing a layout
+ * via `_replaceLayoutForEditor`) trigger `BlockOutlet#validatedLayout` to
+ * re-evaluate, causing the affected outlet to re-render with the new layout.
+ *
+ * DO NOT EXPORT THIS MAP to prevent layouts bypassing the validation steps.
  *
  * @type {Map<string, {validatedLayout: Promise<Array<Object>>}>}
  */
-const outletLayouts = new Map();
+const outletLayouts = trackedMap();
 
 /**
  * Counter for generating stable entry keys.
- * Incremented for each block entry when a layout is registered via `_renderBlocks()`.
+ * Incremented for each block entry that doesn't already carry a `__stableKey`,
+ * either at first registration via `_renderBlocks()` or for newly-inserted
+ * entries during editor-driven replacements via `_replaceLayoutForEditor()`.
  *
  * @type {number}
  */
 let nextEntryKey = 0;
 
 /**
- * Recursively assigns stable keys to all block entries in a layout.
+ * WeakSet of entry args objects we've already wrapped in `trackedObject`,
+ * used to avoid double-wrapping when `_replaceLayoutForEditor` re-runs
+ * `assignStableKeys` over a layout that's already been registered once.
+ *
+ * @type {WeakSet<Object>}
+ */
+const _trackedArgsCache = new WeakSet();
+
+/**
+ * Recursively assigns stable keys to all block entries in a layout, and
+ * wraps each entry's `args` in a `trackedObject` so editor-driven mutations
+ * (e.g. `entry.args.title = "new"`) propagate reactively through the
+ * compute-ref proxy created by `curryComponent` to the rendered block —
+ * no layout swap or component re-curry needed.
  *
  * Each entry receives a `__stableKey` property that remains constant across
  * renders. This is critical for Ember's `{{#each key=}}` to maintain DOM
- * identity when blocks are hidden/shown by conditions.
+ * identity when blocks are hidden/shown by conditions, and for the visual
+ * editor to correlate canvas selections with outline rows across mutations.
  *
  * Keys are assigned at registration time (in `_renderBlocks()`) rather than
  * render time, ensuring they survive the shallow cloning in `BlockOutletRootContainer#preprocessEntries`.
  *
  * @param {Array<Object>} entries - The block entries to process.
+ * @param {Object} [options]
+ * @param {boolean} [options.skipExisting=false] - When true, entries that
+ *   already have a `__stableKey` are left alone. Used by
+ *   `_replaceLayoutForEditor` so editor-driven replacements preserve the
+ *   identity of unchanged entries (selection, DOM identity, render cache).
  */
-function assignStableKeys(entries) {
+function assignStableKeys(entries, { skipExisting = false } = {}) {
   for (const entry of entries) {
-    entry.__stableKey = nextEntryKey++;
+    if (!skipExisting || entry.__stableKey === undefined) {
+      entry.__stableKey = nextEntryKey++;
+    }
+
+    if (entry.args && !_trackedArgsCache.has(entry.args)) {
+      const wrapped = trackedObject({ ...entry.args });
+      _trackedArgsCache.add(wrapped);
+      entry.args = wrapped;
+    }
 
     // Recursively assign keys to children
     if (entry.children?.length) {
-      assignStableKeys(entry.children);
+      assignStableKeys(entry.children, { skipExisting });
     }
   }
 }
@@ -173,22 +206,15 @@ function resolveDecoratorClassNames(metadata, args) {
  *   schema, accessible to the parent but not to the child block itself.
  */
 function createChildBlock(entry, owner, debugContext = {}) {
-  const {
-    block: ComponentClass,
-    args = {},
-    containerArgs,
-    classNames,
-    id,
-  } = entry;
+  const { block: ComponentClass, containerArgs, classNames, id } = entry;
   const blockMeta = getBlockMetadata(ComponentClass);
   const isContainer = blockMeta?.isContainer ?? false;
 
-  // Apply default values from metadata before building args
-  const argsWithDefaults = applyArgDefaults(ComponentClass, args);
-
-  // Create block args with authorization token embedded.
-  // classNames are handled by wrappers, containerPath provides full path for debug logging.
-  const blockArgs = createBlockArgsWithReactiveGetters(argsWithDefaults, {
+  // Build the block's args via reactive getters that read directly from
+  // `entry.args` (a `trackedObject` after registration). Mutations to
+  // `entry.args` then propagate to the rendered block automatically — the
+  // visual editor relies on this for live arg editing.
+  const blockArgs = createBlockArgsWithReactiveGetters(entry, ComponentClass, {
     children: debugContext.processedChildren,
     outletArgs: debugContext.outletArgs,
     outletName: debugContext.outletName,
@@ -201,6 +227,11 @@ function createChildBlock(entry, owner, debugContext = {}) {
   // without knowing its configuration details
   const curried = curryComponent(ComponentClass, blockArgs, owner);
 
+  // For decorator-driven className resolution we still need a snapshot of
+  // current args (a function-form `classNames(args)` shouldn't have to
+  // navigate `trackedObject` itself).
+  const argsSnapshot = applyArgDefaults(ComponentClass, entry.args ?? {});
+
   // All blocks are wrapped for consistent styling
   let wrappedComponent = wrapBlockLayout(
     {
@@ -209,10 +240,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
       outletName: debugContext.outletName,
       isContainer,
       id,
-      decoratorClassNames: resolveDecoratorClassNames(
-        blockMeta,
-        argsWithDefaults
-      ),
+      decoratorClassNames: resolveDecoratorClassNames(blockMeta, argsSnapshot),
       classNames,
       Component: curried,
     },
@@ -232,7 +260,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
         // their own identifier.
         key: debugContext.key,
         Component: wrappedComponent,
-        args: argsWithDefaults,
+        args: argsSnapshot,
         containerArgs,
         conditions: debugContext.conditions,
         conditionsPassed: true,
@@ -267,7 +295,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
         {
           name: blockMeta?.blockName,
           id,
-          args: argsWithDefaults,
+          args: argsSnapshot,
           containerArgs,
           conditions: debugContext.conditions,
           failureReason: reason,
@@ -377,8 +405,79 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
     callSiteError // Error object for source-mapped call site
   ).then(() => layout);
 
-  // Store layout with validation promise for potential future use
-  outletLayouts.set(outletName, { validatedLayout });
+  // Store the layout. `layout` exposes the raw array synchronously (debug
+  // consumers / editor lookups), `validatedLayout` resolves to it after
+  // validation completes.
+  outletLayouts.set(outletName, { validatedLayout, layout });
+
+  return validatedLayout;
+}
+
+/**
+ * Replaces an outlet's layout in place — used by the visual editor to push
+ * mutated layouts back into the render pipeline without going through a full
+ * `_renderBlocks` round-trip (which forbids re-registration).
+ *
+ * Phase 2 stop-gap. When Phase 3 lands the full `replaceLayout` API with a
+ * proper resolution chain (code default → theme override → session draft),
+ * this helper goes away and the editor's session draft becomes the
+ * highest-priority layer instead of a destructive mutation.
+ *
+ * Behaviour notes:
+ * - Existing `__stableKey` values on entries are preserved. New entries
+ *   (those without a key) get fresh keys minted. This keeps editor-side
+ *   selection state, DOM identity, and the leaf-block render cache aligned
+ *   across mutations.
+ * - The outlet must already be a registered Block Outlet (`BLOCK_OUTLETS`
+ *   plus anything `api.registerBlockOutlet` has added). Unlike
+ *   `_renderBlocks`, the "already has a layout" guard is intentionally not
+ *   enforced here — replacement is the whole point.
+ *
+ * @internal Not part of the stable plugin API.
+ * @experimental Will be replaced by `api.replaceLayout` in Phase 3.
+ *
+ * @param {string} outletName
+ * @param {Array<LayoutEntry>} layout
+ * @param {import("@ember/owner").default} [owner]
+ * @param {Error|null} [callSiteError]
+ * @returns {Promise<Array<Object>>} Promise resolving to the validated layout.
+ * @throws {Error} If validation fails or the outlet is unknown.
+ */
+export function _replaceLayoutForEditor(
+  outletName,
+  layout,
+  owner,
+  callSiteError = null
+) {
+  if (!callSiteError) {
+    callSiteError = captureCallSite(_replaceLayoutForEditor);
+  }
+
+  if (!BLOCK_OUTLETS.includes(outletName)) {
+    raiseBlockError(`Unknown block outlet: ${outletName}`);
+  }
+
+  if (!isBlockRegistryFrozen()) {
+    raiseBlockError(
+      `_replaceLayoutForEditor() was called before the block registry was frozen. ` +
+        `Outlet: "${outletName}"`
+    );
+  }
+
+  const blocksService = owner?.lookup("service:blocks");
+
+  // Preserve existing stable keys; mint fresh ones only for newly-added entries.
+  assignStableKeys(layout, { skipExisting: true });
+
+  const validatedLayout = validateLayout(
+    layout,
+    outletName,
+    blocksService,
+    "",
+    callSiteError
+  ).then(() => layout);
+
+  outletLayouts.set(outletName, { validatedLayout, layout });
 
   return validatedLayout;
 }
