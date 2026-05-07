@@ -388,6 +388,7 @@ pt:
       admins: "administradores"
       moderators: "moderadores"
       staff: "pessoal"
+      anonymous: "anónimo"
       trust_level_0: "nivel_de_confianca_0"
       trust_level_1: "nivel_de_confianca_1"
       trust_level_2: "nivel_de_confianca_2"

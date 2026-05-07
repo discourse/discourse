@@ -46,6 +46,7 @@ RSpec.describe Reports::ListQuery do
             page_view_anon_reqs
             page_view_anon_browser_reqs
             page_view_logged_in_browser_reqs
+            page_view_embed_reqs
           ],
         )
       end
@@ -78,6 +79,7 @@ RSpec.describe Reports::ListQuery do
             page_view_anon_browser_reqs
             page_view_logged_in_browser_reqs
             page_view_legacy_total_reqs
+            page_view_embed_reqs
           ],
         )
       end

@@ -81,9 +81,8 @@ body.has-ai-bot-docked-composer {
   }
 }
 
-// Place the resize handle inside the editor box, directly above the toolbar.
-// The handle overlaps 1em into the editor column, which has matching padding-top
-// added below to create exactly that amount of space above the toolbar.
+// Place the resize handle inside the bordered wrapper. The handle overlaps 1em
+// into the wrapper's padding-top zone, above the input area.
 .docked-composer.ai-bot-docked-composer.docked-composer--resizable {
   gap: 0;
 
@@ -99,22 +98,55 @@ body.has-ai-bot-docked-composer {
   }
 }
 
-// Create the 1em slot at the top of the input box that the resize handle fills;
-// use content-border-color to tie the editor box visually to the page chrome
+// Remove default border from the column; the wrapper gets the border instead.
 .docked-composer.ai-bot-docked-composer .d-editor-textarea-column {
+  border: none;
+  background: none;
+  border-radius: 0;
+
+  &:focus-within {
+    outline: none !important;
+    border-color: transparent !important;
+  }
+}
+
+// The textarea-wrapper holds toolbar + input; flip order so input is on top,
+// toolbar below. This wrapper gets the border that wraps everything.
+.docked-composer.ai-bot-docked-composer .d-editor-textarea-wrapper {
+  display: flex;
+  flex-direction: column-reverse;
   padding-top: 1em;
+  border: var(--d-input-border);
   border-color: var(--content-border-color);
+  border-radius: var(--d-input-border-radius);
+  background: var(--d-input-bg-color);
+  transition: border-color 0.15s ease-in-out;
+
+  &.in-focus {
+    border-color: var(--d-input-focused-color) !important;
+    outline: 2px solid var(--d-input-focused-color) !important;
+    outline-offset: -2px;
+  }
 }
 
 .docked-composer.ai-bot-docked-composer .d-editor-input {
-  padding-left: 2.5em;
+  padding-left: 0.75em;
+  padding-right: 3.5em;
 }
 
-// Animate the toolbar in/out for the AI bot composer
+// Toolbar: below input inside the bordered box, separated by a subtle line.
+// Edge-to-edge background with bottom corners matching the wrapper radius.
+// padding-right reserves space for the absolutely-positioned send button.
 .docked-composer.ai-bot-docked-composer .d-editor-button-bar__wrap {
   overflow: hidden;
   max-height: 4em;
   opacity: 1;
+  margin: 0;
+  padding-bottom: var(--space-3);
+  padding-right: 3em;
+  border-top: 1px solid var(--primary-low);
+  border-radius: 0 0 var(--d-input-border-radius) var(--d-input-border-radius);
+  background: var(--primary-very-low);
   transition:
     max-height 0.25s ease,
     opacity 0.2s ease;
@@ -124,16 +156,19 @@ body.has-ai-bot-docked-composer {
   .d-editor-button-bar__wrap {
   max-height: 0;
   opacity: 0;
+  padding-bottom: 0;
+  border-top: none;
   pointer-events: none;
 }
 
-// Toolbar toggle button: mirrors submit-btn chrome but sits at bottom-left
+// Toolbar toggle: top-right inside the bordered input area
 .ai-bot-docked-composer__toolbar-toggle.btn {
   position: absolute;
-  left: 0.5em;
-  right: auto;
-  bottom: 0.5em;
-  z-index: 2;
+  right: 0.5em;
+  top: 0.5em;
+  left: auto;
+  bottom: auto;
+  z-index: 3;
   min-width: auto;
   min-height: auto;
   padding: 0.35em 0.5em;
@@ -153,6 +188,11 @@ body.has-ai-bot-docked-composer {
       color: var(--primary-high) !important;
     }
   }
+}
+
+// Send button: vertically centered with toolbar icons.
+.docked-composer.ai-bot-docked-composer .docked-composer__submit-btn.btn {
+  bottom: var(--space-2);
 }
 
 // Floating scroll indicator: appears above the composer when content is below.
@@ -230,7 +270,7 @@ body.has-ai-bot-docked-composer {
 }
 
 .ai-bot-docked-composer__disclaimer {
-  margin: 0;
+  margin: var(--space-2) 0 var(--space-4);
   text-align: center;
   font-size: var(--font-down-2);
   color: var(--primary-medium);

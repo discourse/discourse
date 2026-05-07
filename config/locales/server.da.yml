@@ -423,6 +423,7 @@ da:
       admins: "admins"
       moderators: "moderatorer"
       staff: "personale"
+      anonymous: "anonym"
       trust_level_0: "tillidsniveau_0"
       trust_level_1: "tillidsniveau_1"
       trust_level_2: "tillidsniveau_2"

@@ -616,6 +616,7 @@ tr_TR:
       admins: "yöneticiler"
       moderators: "moderatörler"
       staff: "personel"
+      anonymous: "anonim"
       trust_level_0: "güven_seviyesi_0"
       trust_level_1: "güven_seviyesi_1"
       trust_level_2: "güven_seviyesi_2"
@@ -2494,7 +2495,6 @@ tr_TR:
     enable_auto_grid_images: "Bestecide 3 veya daha fazla görüntü yüklendiğinde görüntüleri otomatik olarak [grid] etiketlerine sarar."
     enable_new_checkbox_style: "FormKit onay kutuları için yeniden tasarlanan onay kutusu stilini etkinleştirin."
     enable_new_post_reactions_menu: "Sonsuz kaydırma özelliği ve mobil cihazlara özel bir deneyim sunan, yeniden tasarlanan gönderi beğenileri ve tepkileri menüsünü etkinleştirin."
-    impersonate_without_logout: "Yöneticilerin, yönetici hesaplarından çıkış yapmadan bir kullanıcıyı taklit etmelerine izin verin."
     experimental_impersonation_time_limit_minutes: "Taklit oturumu otomatik olarak sonlandırılmadan önce geçen süre."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
     show_user_menu_avatars: "Kullanıcı menüsünde kullanıcı avatarlarını göster"
@@ -2527,7 +2527,6 @@ tr_TR:
     floating_dismiss_topics_on_mobile: "Daha kolay erişim ve konu listesinin üst kısmında yer açmak için mobil cihazlarda konu listesi üzerinde yüzen bir “Kapat...” düğmesi gösterir."
     rename_faq_to_guidelines: "Bu değişiklikle SSS sayfası, Kılavuzlar olarak yeniden adlandırılmıştır. SSS sayfası hala /faq adresinde erişilebilir olacaktır. ‘faq url’ ayarı eskisi gibi çalışmaya devam edecektir."
     enable_simplified_category_creation: "Daha az seçenek ve daha temiz bir arayüz ile basitleştirilmiş kategori oluşturma akışını etkinleştirir."
-    enable_custom_splash_screen: "Yükleme açılış ekranını kendi SVG görüntünüzle özelleştirmenize olanak tanır. ‘Açılış ekranı görüntüsü’ ayarı üzerinden bir görüntü yükleyin. Uyarı: Bu, LCP puanlarını ve Google indekslemesini olumsuz etkileyebilir."
     modernize_foundation_theme: "Bu değişiklik, Discourse'daki Foundation temasına tasarım değişiklikleri getiriyor."
     reporting_improvements: "Discourse'un yönetici raporlarının gezinme, tasarım ve kullanılabilirlik özelliklerinde iyileştirmeler."
     errors:

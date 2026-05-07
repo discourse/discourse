@@ -701,6 +701,7 @@ cs:
       admins: "administratori"
       moderators: "moderatori"
       staff: "redakce"
+      anonymous: "anonymní"
       trust_level_0: "uroven_duvery_0"
       trust_level_1: "uroven_duvery_1"
       trust_level_2: "uroven_duvery_2"

@@ -272,6 +272,11 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
   end
 
   describe "authenticating passkeys" do
+    # Passkey login is initiated without a current_user — the user is identified
+    # via userHandle in the response. This matches the production call site at
+    # SessionController#passkey_login.
+    let(:current_user) { nil }
+    let(:security_key_user) { Fabricate(:user) }
     let(:options) do
       { factor_type: UserSecurityKey.factor_types[:first_factor], session: server_session }
     end

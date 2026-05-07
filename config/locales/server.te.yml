@@ -296,6 +296,7 @@ te:
       admins: "అధికారులు"
       moderators: "నిర్వాహకులు"
       staff: "సిబ్బంది"
+      anonymous: "అనామక"
       trust_level_0: "నమ్మకం_స్థాయి_0"
       trust_level_1: "నమ్మకం_స్థాయి_1"
       trust_level_2: "నమ్మకం_స్థాయి_2"

@@ -309,6 +309,7 @@ zh_TW:
       admins: "管理員"
       moderators: "板主"
       staff: "工作人員"
+      anonymous: "匿名"
       trust_level_0: "信任等級 0"
       trust_level_1: "信任等級 1"
       trust_level_2: "信任等級 2"

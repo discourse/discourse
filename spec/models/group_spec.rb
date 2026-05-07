@@ -1396,13 +1396,14 @@ RSpec.describe Group do
     it "enqueues bulk_grant_trust_level job when group grants trust level" do
       group.update!(grant_trust_level: 2)
 
-      expect_enqueued_with(
-        job: :bulk_grant_trust_level,
-        args: {
-          trust_level: 2,
-          user_ids: [user.id, admin.id],
-        },
-      ) { group.bulk_add([user.id, admin.id]) }
+      expect { group.bulk_add([user.id, admin.id]) }.to change(
+        Jobs::BulkGrantTrustLevel.jobs,
+        :size,
+      ).by(1)
+
+      job_args = Jobs::BulkGrantTrustLevel.jobs.last["args"].first
+      expect(job_args["trust_level"]).to eq(2)
+      expect(job_args["user_ids"]).to contain_exactly(user.id, admin.id)
     end
 
     it "does not enqueue trust level job when grant_trust_level is nil" do

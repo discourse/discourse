@@ -230,6 +230,7 @@ sl:
       admins: "administratorji"
       moderators: "moderatorji"
       staff: "osebje"
+      anonymous: "anonimni"
   education:
     until_posts:
       one: "%{count} prispevek"

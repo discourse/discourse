@@ -983,6 +983,34 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
         expect(tag.reload.name).to eq("user-updated")
       end
+
+      it "does not allow mutating hidden synonyms by ID" do
+        hidden_synonym = Fabricate(:tag, name: "hidden-synonym", target_tag: tag)
+        hidden_tag = Fabricate(:tag, name: "hidden-tag")
+        Fabricate(
+          :tag_group,
+          permissions: {
+            "staff" => 1,
+          },
+          tag_names: [hidden_synonym.name, hidden_tag.name],
+        )
+
+        sign_in(regular_user)
+        put "/tag/#{tag.id}/settings.json",
+            params: {
+              tag_settings: {
+                removed_synonym_ids: [hidden_synonym.id],
+                new_synonyms: [{ id: hidden_tag.id }],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        synonym_names = response.parsed_body.dig("tag_settings", "synonyms").map { |s| s["name"] }
+        expect(synonym_names).to include(hidden_synonym.name)
+        expect(synonym_names).not_to include(hidden_tag.name)
+        expect(hidden_synonym.reload.target_tag_id).to eq(tag.id)
+        expect(hidden_tag.reload.target_tag_id).to be_nil
+      end
     end
   end
 

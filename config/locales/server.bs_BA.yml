@@ -185,6 +185,7 @@ bs_BA:
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
+      anonymous: "anoniman"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"

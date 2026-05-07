@@ -565,6 +565,9 @@ pl_PL:
         max_turn_tokens_help: "Maksymalna łączna liczba tokenów (wejściowych i wyjściowych) zużytych we wszystkich wywołaniach LLM podczas jednej odpowiedzi bota. Po ustawieniu zastępuje stałe limity ukończenia/narzędzi budżetem tokenów, umożliwiając bardziej efektywne działanie agenta. Pozostaw puste, aby zachować domyślne limity."
         compression_threshold: "Próg kompresji"
         compression_threshold_help: "Procent wykorzystania kontekstu (20–99), przy którym włącza się automatyczna kompresja. Niższe wartości powodują szybsze uruchomienie kompresji, co pozwala zachować większy margines bezpieczeństwa."
+        vision_enabled: Dołącz przesyłanie obrazów
+        vision_enabled_help: Jeśli ta opcja jest włączona, agent może uwzględniać obrazy ze wpisów i czatów, jeśli wybrany model obsługuje wprowadzanie obrazów.
+        vision_max_pixels: Maksymalny rozmiar obrazu
         vision_max_pixel_sizes:
           low: Niska jakość - najtańsza (256x256)
           medium: Średnia jakość (512x512)
@@ -873,6 +876,9 @@ pl_PL:
         max_output_tokens: "Maksymalna liczba tokenów wyjściowych"
         url: "Adres URL usługi hostującej model"
         api_key: "Klucz API usługi hostującej model"
+        vision_enabled: "Obsługuje wprowadzanie obrazu"
+        allowed_attachment_types: "Dozwolone załączniki dokumentów"
+        attachment_types_placeholder: "Wybierz lub wpisz rozszerzenia (np. pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "Użytkownik bota AI"
         cost_input: "Koszt wejściowy"
         cost_cached_input: "Koszt buforowanego wejścia"
@@ -962,6 +968,8 @@ pl_PL:
           max_output_tokens: "Maksymalna liczba tokenów, jaką model może wygenerować w jednym żądaniu"
           display_name: "Nazwa używana do odwoływania się do tego modelu w interfejsie Twojej witryny."
           name: "Uwzględniamy to w wywołaniu API, aby określić, którego modelu będziemy używać"
+          vision_enabled: "Czy ten model/dostawca może odbierać i rozumieć obrazy."
+          allowed_attachment_types: "Wybierz typy załączników dokumentów, które można konwertować lub przekazywać dalej. Pozostaw puste pole, aby nie zezwalać na załączanie dokumentów. Obrazy są kontrolowane osobno."
           cost_input: "Koszt wejściowy na 1 mln tokenów dla tego modelu"
           cost_cached_input: "Koszt wejścia w pamięci podręcznej na 1 mln tokenów dla tego modelu (przy odczycie z pamięci podręcznej)"
           cost_cache_write: "Koszt zapisu do pamięci podręcznej na 1 mln tokenów dla tego modelu (podczas zapisu do pamięci podręcznej)"

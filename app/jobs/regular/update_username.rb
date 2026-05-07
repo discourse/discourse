@@ -19,12 +19,13 @@ module Jobs
 
       @quote_rewriter = QuoteRewriter.new(@user_id)
 
+      escaped_old_username = Regexp.escape(@old_username)
       @raw_mention_regex =
         /
         (?:
           (?<![\p{Alnum}\p{M}`])     # make sure there is no preceding letter, number or backtick
         )
-        @#{@old_username}
+        @#{escaped_old_username}
         (?:
           (?![\p{Alnum}\p{M}_\-.`])  # make sure there is no trailing letter, number, underscore, dash, dot or backtick
           |                          # or
@@ -33,9 +34,10 @@ module Jobs
       /ix
 
       cooked_username = PrettyText::Helpers.format_username(@old_username)
-      @cooked_mention_username_regex = /\A@#{cooked_username}\z/i
-      @cooked_mention_user_path_regex =
-        %r{\A/u(?:sers)?/#{UrlHelper.encode_component(cooked_username)}\z}i
+      escaped_cooked_username = Regexp.escape(cooked_username)
+      escaped_encoded_cooked_username = Regexp.escape(UrlHelper.encode_component(cooked_username))
+      @cooked_mention_username_regex = /\A@#{escaped_cooked_username}\z/i
+      @cooked_mention_user_path_regex = %r{\A/u(?:sers)?/#{escaped_encoded_cooked_username}\z}i
 
       update_posts
       update_revisions

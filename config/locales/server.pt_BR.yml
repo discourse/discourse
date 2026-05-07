@@ -613,6 +613,7 @@ pt_BR:
       admins: "administração"
       moderators: "moderadores(as)"
       staff: "equipe"
+      anonymous: "anônimo(a)"
       trust_level_0: "nivel_de_confianca_0"
       trust_level_1: "nivel_de_confianca_1"
       trust_level_2: "nivel_de_confianca_2"
@@ -2460,7 +2461,6 @@ pt_BR:
     show_preview_for_form_templates: "Ativar a pré-visualização para o recurso de modelos de formulário"
     lazy_load_categories_groups: "Carregue informações de forma ociosa apenas para os(as) usuários(as) destes grupos. Melhora o desempenho em sites com várias categorias."
     enable_auto_grid_images: "Envolve automaticamente as imagens em tags [grid] quando três ou mais imagens são carregadas no compositor."
-    impersonate_without_logout: "Permitir que administradores possam personificar um usuário sem precisar sair de sua conta de administrador."
     experimental_impersonation_time_limit_minutes: "Quanto tempo leva para uma sessão de personificação ser encerrada automaticamente?"
     page_loading_indicator: "Configure o indicador de carregamento mostrado durante as navegações da página no Discourse. O \"Controle giratório\" é um indicador de página completo. O \"Controle deslizante\" mostra uma barra estreita no topo da tela."
     show_user_menu_avatars: "Mostrar avatadores de usuário(a) no menu do(a) usuário(a)"
@@ -2486,7 +2486,6 @@ pt_BR:
     floating_dismiss_topics_on_mobile: "Exibe um botão flutuante \"Fechar...\" na lista de tópicos em dispositivos móveis para facilitar o acesso e liberar espaço na parte superior da lista."
     rename_faq_to_guidelines: "Esta alteração renomeia a página de perguntas frequentes para \"Diretrizes\". A página de perguntas frequentes continuará disponível em `/faq`. A configuração \"URL da FAQ\" funciona como antes."
     enable_simplified_category_creation: "Ativa um fluxo de criação de categorias simplificado, com menos opções e uma interface mais limpa."
-    enable_custom_splash_screen: "Permite personalizar a tela de carregamento com sua própria imagem SVG. Faça o upload de uma imagem através da configuração 'splash screen image'. Aviso: Isso pode afetar negativamente as pontuações do LCP e a indexação do Google."
     modernize_foundation_theme: "Essa alteração introduz modificações de design ao tema Foundation no Discourse."
     reporting_improvements: "Melhorias na navegação, design e usabilidade dos relatórios administrativos do Discourse."
     errors:

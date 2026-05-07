@@ -141,6 +141,7 @@ sr:
       admins: "admini"
       moderators: "moderatori"
       staff: "osoblje"
+      anonymous: "anonimno"
     default_descriptions:
       staff: "Automatska grupa koja uključuje administratore i moderatore"
       admins: "Odgovoran je za konfigurisanje i održavanje ovog sajta, sa pristupom svim podacima o članovima i aktivnostima"

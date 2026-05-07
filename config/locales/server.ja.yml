@@ -561,6 +561,7 @@ ja:
       admins: "管理者"
       moderators: "モデレーター"
       staff: "スタッフ"
+      anonymous: "匿名ユーザー"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"

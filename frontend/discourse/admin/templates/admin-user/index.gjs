@@ -807,7 +807,7 @@ export default <template>
               type="ReviewableFlaggedPost"
               status="all"
             }}
-            class="btn"
+            class="btn btn-default"
           >
             {{i18n "admin.user.show_flags_received"}}
           </LinkTo>
@@ -841,7 +841,7 @@ export default <template>
             @route="adminReports.show"
             @model="post_edits"
             @query={{hash filters=@controller.postEditsByEditorFilter}}
-            class="btn btn-icon"
+            class="btn btn-icon btn-default"
           >
             {{icon "far-eye"}}
             {{i18n "admin.user.view_edits"}}

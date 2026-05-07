@@ -12,7 +12,7 @@ import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 
 export default class DiscourseReactionsUsersMenu extends Component {
-  @tracked activeFilter = null;
+  @tracked activeFilter = this.args.data.initialFilter ?? null;
 
   fetchUsers = async (page, pageSize) => {
     const filter = this.activeFilter;

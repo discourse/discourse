@@ -70,7 +70,7 @@ export default <template>
                 @icon="xmark"
                 @action={{@controller.destroyAllExpired}}
                 @label="user.invited.remove_all"
-                class="bulk-remove-expired"
+                class="btn-default bulk-remove-expired"
               />
             {{/if}}
 
@@ -305,7 +305,7 @@ export default <template>
                             @title={{i18n "more_options"}}
                             @icon="ellipsis-vertical"
                             @onRegisterApi={{@controller.onRegisterApi}}
-                            class="btn-small"
+                            class="btn-default btn-small"
                           >
                             <:content>
                               <DropdownMenu as |dropdown|>

@@ -604,6 +604,7 @@ ug:
       admins: "باشقۇرغۇچى"
       moderators: "رىياسەتچى"
       staff: "خىزمەتچىلەر"
+      anonymous: "نامسىز"
       trust_level_0: "ئىشەنچ_دەرىجە_0"
       trust_level_1: "ئىشەنچ_دەرىجە_1"
       trust_level_2: "ئىشەنچ_دەرىجە_2"
