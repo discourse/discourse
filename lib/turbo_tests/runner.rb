@@ -137,6 +137,11 @@ module TurboTests
     end
 
     def start_multisite_subprocess(tests, **opts)
+      # System specs are never `type: :multisite`, so excluding them lets the
+      # multisite subprocess skip loading hundreds of spec files (page objects,
+      # fabricators, support helpers) and short-circuit entirely when only
+      # system specs were requested.
+      tests = tests.reject { |path| path.match?(%r{(?:\A|/)spec/system/}) }
       start_subprocess({}, %w[--tag type:multisite], tests, "multisite", **opts)
     end
 
