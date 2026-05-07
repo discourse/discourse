@@ -658,6 +658,8 @@ bg:
       xaxis: "Ден"
     page_view_logged_in_browser_reqs:
       xaxis: "Ден"
+    page_view_embed_reqs:
+      xaxis: "Ден"
     http_background_reqs:
       title: "Фон"
       xaxis: "Ден"

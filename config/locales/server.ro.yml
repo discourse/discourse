@@ -863,6 +863,8 @@ ro:
       xaxis: "Zi"
     page_view_logged_in_browser_reqs:
       xaxis: "Zi"
+    page_view_embed_reqs:
+      xaxis: "Zi"
     http_background_reqs:
       title: "Fundal"
       xaxis: "Zi"

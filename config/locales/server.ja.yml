@@ -1391,6 +1391,8 @@ ja:
       xaxis: "日"
       yaxis: "ログイン中のブラウザのページビュー"
       description: "実際のブラウザを使用したログイン中の訪問者によるページビュー数。"
+    page_view_embed_reqs:
+      xaxis: "日"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -2356,7 +2358,6 @@ ja:
     welcome_banner_location: "ウェルカムバナーが表示されるページ内の場所を決定します。"
     welcome_banner_page_visibility: "ウェルカムバナーが表示されるページを決定します。"
     welcome_banner_text_color: "上記の「ウェルカムバナーの画像」設定を構成した場合、この設定を使用してバナーを読み取りやすいテキストの色に変更してください。空白のままにするか、画像をアップロードしなかった場合は、アクティブなテーマによって色が設定されます。"
-    splash_screen: "サイトアセットの読み込み中に一時的なローディング画面を表示します"
     navigation_menu: "サイトのメインナビゲーションメニューとして、サイドバーかヘッダーのドロップダウンを指定します。推奨はサイドバーです。"
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"

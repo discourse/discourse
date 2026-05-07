@@ -1477,6 +1477,8 @@ hu:
       xaxis: "Nap"
       yaxis: "Bejelentkezett böngésző oldalmegtekintések"
       description: "Valódi böngészőt használó bejelentkezett látogatók oldalmegtekintéseinek száma."
+    page_view_embed_reqs:
+      xaxis: "Nap"
     http_background_reqs:
       title: "Háttér"
       xaxis: "Nap"
@@ -2454,7 +2456,6 @@ hu:
     welcome_banner_location: "Meghatározza, hogy az oldalon hol jelenjen meg az üdvözlő banner."
     welcome_banner_page_visibility: "Meghatározza, hogy mely oldalakon jelenjen meg az üdvözlő banner."
     welcome_banner_text_color: "Ha az „Üdvözlő bannerkép” beállítás konfigurálva van, ezzel a beállítással módosíthatja a banner szövegének színét, hogy az olvasható maradjon. Ha üresen hagyja, vagy ha nincs feltöltve kép, az aktív sablon szabályozza a színt."
-    splash_screen: "Ideiglenes betöltési képernyőt jelenít meg, amíg az oldal eszközei betöltődnek."
     splash_screen_image: "Az indítóképernyőn megjelenő SVG kép, amely az oldal betöltése közben látható. Az animált SVG-k kizárólag CSS transform vagy opacity animációkat használhatnak. Használjon egyedi neveket a CSS osztályokhoz és a kulcskockákhoz. A téma színeire a var(--primary), var(--secondary) és var(--tertiary) változókkal hivatkozhat."
     navigation_menu: "Adja meg, hogy az oldalsáv vagy a fejléc legördülő menüje legyen az oldal fő navigációs menüje. Az oldalsáv ajánlott."
     default_navigation_menu_categories: "A kiválasztott kategóriák alapértelmezetten megjelennek a Navigációs Menü Kategóriák szekciójában."

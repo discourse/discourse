@@ -1608,6 +1608,8 @@ sk:
       xaxis: "Deň"
       yaxis: "Zobrazenia stránok prihláseného prehliadača"
       description: "Počet zobrazení stránok prihlásenými návštevníkmi, ktorí používajú skutočné prehliadače."
+    page_view_embed_reqs:
+      xaxis: "Deň"
     http_background_reqs:
       title: "Pozadie"
       xaxis: "Deň"
@@ -2530,7 +2532,6 @@ sk:
     show_topic_map_in_topics_without_replies: "Zobrazí mapu témy, aj keď téma nemá žiadne odpovede."
     enable_welcome_banner: "Zobrazenie banneru na hlavných stránkach zoznamu tém, ktorý víta členov a umožňuje im vyhľadávať obsah webu"
     welcome_banner_location: "Určuje, kde sa na stránke zobrazí uvítací banner."
-    splash_screen: "Zobrazí dočasnú obrazovku načítania, kým sa načítajú aktíva webu"
     navigation_menu: "Ako hlavnú navigačnú ponuku na stránke môžete určiť bočný panel alebo rozbaľovaciu ponuku v záhlaví. Odporúča sa bočný panel."
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."

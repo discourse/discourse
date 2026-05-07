@@ -808,6 +808,8 @@ be:
       xaxis: "дзень"
     page_view_logged_in_browser_reqs:
       xaxis: "дзень"
+    page_view_embed_reqs:
+      xaxis: "дзень"
     http_background_reqs:
       title: "фон"
       xaxis: "дзень"

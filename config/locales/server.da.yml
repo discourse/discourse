@@ -1144,6 +1144,8 @@ da:
       xaxis: "Dag"
     page_view_logged_in_browser_reqs:
       xaxis: "Dag"
+    page_view_embed_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Baggrund"
       xaxis: "Dag"

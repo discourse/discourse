@@ -1256,6 +1256,8 @@ sv:
       xaxis: "Dag"
     page_view_logged_in_browser_reqs:
       xaxis: "Dag"
+    page_view_embed_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrund"
       xaxis: "Dag"
@@ -2027,7 +2029,6 @@ sv:
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
-    splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
     default_navigation_menu_categories: "Valda kategorier visas som standard under navigeringsmenyns sektion Kategorier."
     default_navigation_menu_tags: "Valda taggar visas som standard under navigeringsmenyns sektion Taggar."
     page_loading_indicator: "Konfigurera laddningsindikatorn som visas under sidnavigeringar i Discourse. 'Spinnare' är en indikator som tar upp hela sidan. 'Skjutreglage' visar ett smalt fält högst upp på skärmen."

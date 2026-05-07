@@ -1490,6 +1490,8 @@ es:
       xaxis: "Día"
       yaxis: "Páginas vistas del navegador conectado"
       description: "Número de páginas vistas por visitantes registrados que utilizan navegadores reales."
+    page_view_embed_reqs:
+      xaxis: "Día"
     http_background_reqs:
       title: "Background"
       xaxis: "Día"
@@ -2473,7 +2475,6 @@ es:
     welcome_banner_location: "Determina en qué parte de la página aparecerá el banner de bienvenida."
     welcome_banner_page_visibility: "Determina en qué páginas aparecerá el banner de bienvenida."
     welcome_banner_text_color: "Una vez configurada la opción «Welcome banner image», utiliza este ajuste para cambiar el color del texto del banner y garantizar su legibilidad. Si se deja en blanco o no se ha subido ninguna imagen, el tema activo controlará el color."
-    splash_screen: "Muestra una pantalla de carga temporal mientras los archivos de la página se cargan"
     splash_screen_image: "Una imagen SVG para mostrar en la pantalla de bienvenida mientras se carga el sitio. Los SVG animados solo deben usar animaciones de transformación u opacidad CSS. Usa nombres únicos para las clases CSS y los fotogramas clave. Puedes usar var(--primary), var(--secondary) y var(--tertiary) para hacer referencia a los colores del tema."
     navigation_menu: "Especifica la barra lateral o el encabezado desplegable como menú de navegación principal de tu sitio. Se recomienda la barra lateral."
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."

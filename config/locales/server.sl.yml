@@ -663,6 +663,8 @@ sl:
       title: "Anonimni"
     page_view_total_reqs:
       title: "Ogledov strani"
+    page_view_embed_reqs:
+      xaxis: "Dan"
     http_total_reqs:
       title: "Skupaj"
     topics_with_no_response:

@@ -945,6 +945,8 @@ hy:
       xaxis: "Օր"
     page_view_logged_in_browser_reqs:
       xaxis: "Օր"
+    page_view_embed_reqs:
+      xaxis: "Օր"
     http_background_reqs:
       title: "Ֆոն"
       xaxis: "Օր"

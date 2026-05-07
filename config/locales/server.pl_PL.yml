@@ -713,6 +713,7 @@ pl_PL:
       moderators: "moderatorzy"
       staff: "zespół"
       anonymous: "anonimowy"
+      logged_in_users: "zalogowani_użytkownicy"
       trust_level_0: "poziom_zaufania_0"
       trust_level_1: "poziom_zaufania_1"
       trust_level_2: "poziom_zaufania_2"
@@ -721,6 +722,8 @@ pl_PL:
     default_descriptions:
       everyone: "Automatyczna grupa obejmująca wszystkich członków"
       staff: "Automatyczna grupa zawierająca administratorów i moderatorów"
+      anonymous: "Automatyczna pseudogrupa reprezentująca niezweryfikowanych gości"
+      logged_in_users: "Automatyczna pseudogrupa obejmująca każdego zalogowanego użytkownika"
       admins: "Odpowiedzialny za konfigurację i utrzymanie tej strony, z dostępem do wszystkich danych członków i aktywności."
       moderators: "Odpowiada za reagowanie na flagi, moderowanie dyskusji i pomaganie członkom w obsłudze ich kont."
       trust_level_0: "Nowi członkowie o ograniczonych możliwościach, którzy uczą się norm i funkcjonalności społeczności."
@@ -1656,6 +1659,8 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Odsłony zalogowanej przeglądarki"
       description: "Liczba odsłon strony przez zalogowanych użytkowników korzystających z prawdziwych przeglądarek."
+    page_view_embed_reqs:
+      xaxis: "Dzień"
     http_background_reqs:
       title: "Tło"
       xaxis: "Dzień"
@@ -2084,6 +2089,7 @@ pl_PL:
     discourse_connect_allowed_redirect_domains: "Ogranicz do tych domen dla return_paths dostarczanych przez DiscourseConnect (domyślna ścieżka zwrotna musi być na bieżącej stronie). Użyj * aby zezwolić na dowolną domenę dla ścieżki zwrotnej. Własne poddomeny (`*.foobar.com`) są niedozwolone."
     enable_local_logins: "Włącz konta oparte na loginach lokalnych i hasłach. OSTRZEŻENIE: jeśli opcja jest wyłączona, zalogowanie się może nie być możliwe, jeśli wcześniej nie skonfigurowano co najmniej jednej alternatywnej metody logowania."
     enable_local_logins_via_email: "Zezwalaj użytkownikom na żądanie linku logowania do jednego kliknięcia, który zostanie im przesłany pocztą e-mail."
+    allow_passkeys_for_2fa: "Zezwól użytkownikom na użycie klucza dostępu w celu spełnienia wymogów uwierzytelniania dwuskładnikowego podczas potwierdzania poufnej czynności."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
     enable_discourse_id: "Włącz uwierzytelnianie za pomocą Discourse ID – usługi logowania jednokrotnego, która umożliwia użytkownikom logowanie się do wielu witryn Discourse za pomocą jednego konta. Popularni dostawcy logowania społecznościowego, tacy jak Google, Facebook, Apple i GitHub, są obsługiwani bez dodatkowej konfiguracji. Więcej informacji znajdziesz na stronie <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>."
@@ -2646,7 +2652,6 @@ pl_PL:
     welcome_banner_location: "Określa, w którym miejscu strony pojawi się baner powitalny."
     welcome_banner_page_visibility: "Określa, na których stronach będzie wyświetlany baner powitalny."
     welcome_banner_text_color: "Po skonfigurowaniu ustawienia „Obraz baneru powitalnego” użyj tego ustawienia, aby zmienić kolor tekstu baneru i zapewnić jego czytelność. Jeśli pole pozostanie puste lub nie zostanie przesłany żaden obraz, kolor będzie kontrolowany przez aktywny motyw."
-    splash_screen: "Wyświetla tymczasowy ekran ładowania podczas ładowania zasobów witryny"
     splash_screen_image: "Obraz SVG do wyświetlania na ekranie powitalnym podczas ładowania witryny. Animowane pliki SVG powinny wykorzystywać wyłącznie animacje transformacji CSS lub krycia. Używaj unikalnych nazw dla klas CSS i klatek kluczowych. Możesz używać var(--primary), var(--secondary i var(--tertiary) do odwoływania się do kolorów motywu."
     navigation_menu: "Określ pasek boczny lub menu rozwijane nagłówka jako główne menu nawigacyjne witryny. Zalecany jest pasek boczny."
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."

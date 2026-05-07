@@ -1495,6 +1495,8 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Giriş Yapılmış Tarayıcı Sayfa Görüntüleme Sayısı"
       description: "Gerçek tarayıcı kullanan giriş yapmış ziyaretçilerin sayfa görüntüleme sayısı."
+    page_view_embed_reqs:
+      xaxis: "Gün"
     http_background_reqs:
       title: "Arka plan"
       xaxis: "Gün"
@@ -2483,7 +2485,6 @@ tr_TR:
     welcome_banner_location: "Hoş geldiniz banner'ının sayfada nerede görüneceğini belirler."
     welcome_banner_page_visibility: "Hoş geldiniz banner'ının hangi sayfalarda görüneceğini belirler."
     welcome_banner_text_color: "'Hoş geldiniz banner görüntüsü' ayarı yapılandırıldığında, banner metin rengini okunabilir olmasını sağlamak için bu ayarı kullanın. Boş bırakıldığında veya görüntü yüklenmediğinde, aktif tema rengi kontrol eder."
-    splash_screen: "Site varlıkları yüklenirken geçici bir yükleme ekranı gösterir"
     splash_screen_image: "Site yüklenirken açılış ekranında görüntülenecek bir SVG görüntüsü. Animasyonlu SVG'ler yalnızca CSS dönüşümü veya opaklık animasyonları kullanmalıdır. CSS sınıfları ve anahtar kareler için benzersiz adlar kullanın. Tema renklerini belirtmek için var(--primary), var(--secondary) ve var(--tertiary) kullanabilirsiniz."
     navigation_menu: "Siteniz için ana gezinme menüsü olarak kenar çubuğunu veya başlık açılır menüsünü belirleyin. Kenar çubuğu önerilir."
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."

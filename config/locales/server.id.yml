@@ -1097,6 +1097,8 @@ id:
       xaxis: "Hari"
     page_view_logged_in_browser_reqs:
       xaxis: "Hari"
+    page_view_embed_reqs:
+      xaxis: "Hari"
     http_background_reqs:
       title: "Latar Belakang"
       xaxis: "Hari"

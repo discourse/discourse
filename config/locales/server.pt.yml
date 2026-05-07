@@ -903,6 +903,8 @@ pt:
       xaxis: "Dia"
     page_view_logged_in_browser_reqs:
       xaxis: "Dia"
+    page_view_embed_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Fundo"
       xaxis: "Dia"

@@ -563,6 +563,8 @@ bs_BA:
       xaxis: "Day"
     page_view_logged_in_browser_reqs:
       xaxis: "Day"
+    page_view_embed_reqs:
+      xaxis: "Day"
     http_background_reqs:
       xaxis: "Day"
     http_2xx_reqs:

@@ -1212,6 +1212,8 @@ ur:
       xaxis: "دن"
     page_view_logged_in_browser_reqs:
       xaxis: "دن"
+    page_view_embed_reqs:
+      xaxis: "دن"
     http_background_reqs:
       title: "پس منظر"
       xaxis: "دن"

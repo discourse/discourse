@@ -1336,6 +1336,8 @@ fa_IR:
     page_view_logged_in_browser_reqs:
       xaxis: "روز"
       description: "تعداد بازدید از صفحه توسط بازدیدکنندگان وارد شده با استفاده از مرورگرهای واقعی."
+    page_view_embed_reqs:
+      xaxis: "روز"
     http_background_reqs:
       title: "پس زمینه"
       xaxis: "روز"

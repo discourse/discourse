@@ -684,6 +684,8 @@ sw:
       xaxis: "Siku"
     page_view_logged_in_browser_reqs:
       xaxis: "Siku"
+    page_view_embed_reqs:
+      xaxis: "Siku"
     http_background_reqs:
       title: "Mandharinyuma"
       xaxis: "Siku"

@@ -1454,6 +1454,8 @@ it:
       xaxis: "Giorno"
       yaxis: "Visualizzazioni pagina con autenticazione"
       description: "Numero di visualizzazioni pagina da visitatori autenticati che usano browser reali."
+    page_view_embed_reqs:
+      xaxis: "Giorno"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"
@@ -2380,7 +2382,6 @@ it:
     enable_welcome_banner: "Visualizza un banner nelle pagine principali dell'elenco degli argomenti per dare il benvenuto ai membri e consentire loro di cercare nei contenuti del sito"
     welcome_banner_location: "Determina dove nella pagina apparirà il banner di benvenuto."
     welcome_banner_page_visibility: "Determina in quali pagine apparirà il banner di benvenuto."
-    splash_screen: "Visualizza una schermata di caricamento temporanea durante il caricamento delle risorse del sito"
     navigation_menu: "Definisci la collocazione del menu di navigazione principale del tuo sito: barra laterale o elenco a discesa nell'intestazione. È consigliata l'opzione con barra laterale."
     default_navigation_menu_categories: "Le categorie selezionate appariranno, per impostazione predefinita, nella sezione Categorie del menu di navigazione."
     default_navigation_menu_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette del menu di navigazione."

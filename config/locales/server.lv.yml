@@ -368,6 +368,8 @@ lv:
       xaxis: "Diena"
     page_view_logged_in_browser_reqs:
       xaxis: "Diena"
+    page_view_embed_reqs:
+      xaxis: "Diena"
     http_background_reqs:
       xaxis: "Diena"
     http_2xx_reqs:

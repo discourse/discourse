@@ -939,6 +939,8 @@ vi:
       xaxis: "Ngày"
     page_view_logged_in_browser_reqs:
       xaxis: "Ngày"
+    page_view_embed_reqs:
+      xaxis: "Ngày"
     http_background_reqs:
       title: "Hình nền"
       xaxis: "Ngày"

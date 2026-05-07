@@ -1454,6 +1454,8 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de vues par les navigateurs connectés"
       description: "Nombre de vues de pages par des visiteurs connectés utilisant des navigateurs authentiques."
+    page_view_embed_reqs:
+      xaxis: "Jour"
     http_background_reqs:
       title: "Arrière-plan"
       xaxis: "Jour"
@@ -2387,7 +2389,6 @@ fr:
     welcome_banner_image: "Définissez une image à afficher en arrière-plan de la bannière de bienvenue."
     welcome_banner_location: "Détermine l'endroit où la bannière de bienvenue apparaîtra sur la page."
     welcome_banner_page_visibility: "Détermine les pages sur lesquelles la bannière de bienvenue apparaîtra."
-    splash_screen: "Affiche un écran de chargement temporaire pendant le chargement des ressources du site"
     navigation_menu: "Spécifiez la barre latérale ou la liste déroulante d'en-tête comme menu de navigation principal de votre site. La barre latérale est recommandée."
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."

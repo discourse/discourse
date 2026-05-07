@@ -1086,6 +1086,8 @@ hr:
       xaxis: "Dan"
     page_view_logged_in_browser_reqs:
       xaxis: "Dan"
+    page_view_embed_reqs:
+      xaxis: "Dan"
     http_background_reqs:
       title: "Pozadina"
       xaxis: "Dan"
@@ -1482,7 +1484,6 @@ hr:
     create_revision_on_bulk_topic_moves: "Napravite reviziju za prve postove kada se teme skupno premještaju u novu kategoriju."
     allow_changing_staged_user_tracking: "Dopustite korisniku administratoru da promijeni postavke obavijesti o kategorijama i oznakama postupnog korisnika."
     suggest_weekends_in_date_pickers: "Uključite vikende (subota i nedjelja) u prijedloge za odabir datuma (onemogućite ovo ako Discourse koristite samo radnim danima, od ponedjeljka do petka)."
-    splash_screen: "Prikazuje privremeni zaslon za učitavanje dok se sredstva web-mjesta učitavaju"
     errors:
       invalid_css_color: "Nevažeća boja. Unesite naziv boje ili hex vrijednost."
       invalid_email: "Nevažeća adresa e-pošte."

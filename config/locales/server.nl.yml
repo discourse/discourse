@@ -1454,6 +1454,8 @@ nl:
       xaxis: "Dag"
       yaxis: "Paginaweergaven door aangemelde browsers"
       description: "Aantal paginaweergaven door aangemelde bezoekers die echte browsers gebruiken."
+    page_view_embed_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Achtergrond"
       xaxis: "Dag"
@@ -2381,7 +2383,6 @@ nl:
     welcome_banner_image: "Stel een afbeelding in die op de achtergrond van de welkomstbanner wordt weergegeven."
     welcome_banner_location: "Bepaalt waar op de pagina de welkomstbanner wordt weergegeven."
     welcome_banner_page_visibility: "Bepaalt op welke pagina's de welkomstbanner wordt weergegeven."
-    splash_screen: "Geeft een tijdelijk laadscherm weer terwijl website-items worden geladen"
     navigation_menu: "Geef een vervolgkeuzelijst voor de zijbalk of koptekst op als het hoofdnavigatiemenu voor je site. Zijbalk wordt aanbevolen."
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."

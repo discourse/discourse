@@ -1104,6 +1104,8 @@ ko:
       xaxis: "일"
     page_view_logged_in_browser_reqs:
       xaxis: "일"
+    page_view_embed_reqs:
+      xaxis: "일"
     http_background_reqs:
       title: "백그라운드"
       xaxis: "일"

@@ -1489,6 +1489,8 @@ de:
       xaxis: "Tag"
       yaxis: "Seitenaufrufe durch Browser (angemeldet)"
       description: "Anzahl der Seitenaufrufe von angemeldeten Besuchern, die echte Browser verwenden."
+    page_view_embed_reqs:
+      xaxis: "Tag"
     http_background_reqs:
       title: "Hintergrund"
       xaxis: "Tag"
@@ -2470,7 +2472,6 @@ de:
     welcome_banner_location: "Legt fest, wo auf der Seite das Willkommensbanner erscheinen soll."
     welcome_banner_page_visibility: "Legt fest, auf welchen Seiten das Willkommensbanner erscheinen soll."
     welcome_banner_text_color: "Wenn du die Einstellung „Welcome banner image“ konfiguriert hast, kannst du mit dieser Einstellung die Textfarbe des Banners ändern, um sicherzustellen, dass er lesbar bleibt. Wenn du keine Farbe wählst oder kein Hintergrundbild hochgeladen hast, wird die Farbe vom aktiven Theme bestimmt."
-    splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
     splash_screen_image: "Ein SVG-Bild, das auf dem Bildschirm angezeigt wird, während die Website geladen wird. Animierte SVGs sollten nur CSS-Transformations oder -Deckkraftanimationen verwenden. Verwende eindeutige Namen für die CSS-Klassen und Keyframes. Du kannst var(--primary), var(--secondary) und var(--tertiary) verwenden, um auf die Farben des Themes zu verweisen."
     navigation_menu: "Lege die Seitenleiste oder das Kopfzeilen-Drop-down als Hauptnavigationsmenü für deine Website fest. Die Seitenleiste wird empfohlen."
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."

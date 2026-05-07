@@ -1618,6 +1618,8 @@ cs:
       xaxis: "Den"
       yaxis: "Přihlášená zobrazení stránek v prohlížeči"
       description: "Počet zobrazení stránek přihlášenými návštěvníky pomocí skutečných prohlížečů."
+    page_view_embed_reqs:
+      xaxis: "Den"
     http_background_reqs:
       title: "Pozadí"
       xaxis: "Den"

@@ -1454,6 +1454,8 @@ fi:
       xaxis: "Päivä"
       yaxis: "Kirjautuneiden selainten sivukatselut"
       description: "Oikeita selaimia käyttävien kirjautuneiden vierailijoiden sivukatseluiden määrä."
+    page_view_embed_reqs:
+      xaxis: "Päivä"
     http_background_reqs:
       title: "Tausta"
       xaxis: "Päivä"
@@ -2385,7 +2387,6 @@ fi:
     welcome_banner_image: "Aseta kuva näytettäväksi tervetulobannerin taustalla."
     welcome_banner_location: "Määrittää, missä kohdassa sivua tervetulobanneri näkyy."
     welcome_banner_page_visibility: "Määrittää, millä sivuilla tervetulobanneri näkyy."
-    splash_screen: "Näyttää väliaikaisen latausnäytön sivuston resurssien latautuessa"
     navigation_menu: "Määritä sivupalkki tai yläpalkin avattava valikko sivustosi päänavigointivalikoksi. Sivupalkki on suositeltu."
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
