@@ -500,6 +500,7 @@ export default class AdminDashboardSiteTraffic extends Component {
       }),
       xTickColorCallback: makeXTickColorCallback({ bucketing }),
       xMax: ymd(this.xMaxBound),
+      showEmptyTooltip: true,
       tooltipTitleCallback: makeTooltipTitleCallback({ bucketing }),
       yStepSize: this.yStepSize,
       yMaxTicksLimit: 6,

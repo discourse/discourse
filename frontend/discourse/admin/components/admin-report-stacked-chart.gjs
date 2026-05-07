@@ -110,7 +110,14 @@ export default class AdminReportStackedChart extends Component {
     return {
       type: "bar",
       data,
-      plugins: [gradientPlugin, emptyTooltipPlugin],
+      plugins: [
+        gradientPlugin,
+        // emptyTooltipPlugin hides the tooltip on bars where every series
+        // is zero. Some reports (e.g., site traffic with filled-in
+        // missing-data days) want to show "0" on those bars instead, so
+        // the plugin is opt-out via chartOptions.showEmptyTooltip.
+        ...(chartOptions.showEmptyTooltip ? [] : [emptyTooltipPlugin]),
+      ],
       options: {
         responsive: true,
         maintainAspectRatio: false,
