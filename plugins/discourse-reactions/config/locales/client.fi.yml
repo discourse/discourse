@@ -19,8 +19,6 @@ fi:
         react_with: "Reagoi tähän viestiin reaktiolla: %{reaction}"
         cant_remove_reaction: "Et voi enää poistaa reaktiotasi"
         remove_reaction: "Poista tämä reaktio: %{reaction}"
-      users_popup:
-        all: "Kaikki"
       main_reaction:
         add: "Tykkää viestistä"
         remove: "Poista tämä tykkäys"

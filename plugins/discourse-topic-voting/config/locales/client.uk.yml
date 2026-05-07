@@ -5,33 +5,20 @@
 # https://translate.discourse.org/
 
 uk:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_topic_voting: "Голосування за тему"
   js:
     category:
       sort_options:
         votes: "Голоси"
     topic_voting:
-      category_type_ideas:
-        title: "Ідеї"
-        not_ideas_type: "Увага! Ви вимкнули голосування в цій категорії. Щоб знову ввімкнути його, відповідні налаштування можна знайти на вкладці «Налаштування»."
-        remove_ideas_type: "Видалити тип ідей"
-        confirm_remove_ideas_type: "Ви впевнені, що хочете видалити голосування з цієї категорії? Існуючі голоси будуть збережені, але учасники не зможуть голосувати знову."
       notification_label:
         vote_released: "Голос повернуто"
       title: "Голосування за тему"
       reached_limit: "У вас немає голосів, видаліть існуюче голосування!"
       list_votes: "Список своїх голосів"
-      votes_nav_help: "теми з найбільшою кількістю голосів за весь час"
-      hot_nav_help: "найпопулярніші останні теми, включаючи ті, за які нещодавно голосували"
       voted: "Ви проголосували в цій темі"
       allow_topic_voting: "Дозволити користувачам голосувати в темах цієї категорії"
       vote_title: "Голосувати"
       vote_title_plural: "Голоси"
-      voting_closed_description: "Голосування по цій темі закрито"
       see_votes: "У вас залишилося %{count}/%{max} голосів"
       locked: "Заблоковано"
       locked_description: "Підвищіть рівень своєї довіри, щоб проголосувати"
@@ -46,17 +33,11 @@ uk:
         many: "Голоси"
         other: "Голоси"
       remove_vote: "Вилучити голос"
-      watch_topic: "Сповіщати мене про нові публікації"
-      no_votes_yet: "За це ще ніхто не проголосував"
-      and_more_voters: "і більше %{count}..."
-      show_voters: "Покажіть, хто проголосував"
-      vote_count_thousands: "%{count} тис."
       no_votes_title_self: "Ви ще не проголосували за будь-яку тему"
       no_votes_title_others: "%{username} ще не проголосував за будь-яку тему"
     filters:
       votes:
         title: "Голоси"
-        help: "теми з найбільшою кількістю голосів за весь час"
       my_votes:
         title: "Мої голоси"
         help: "теми, за які ви голосували"

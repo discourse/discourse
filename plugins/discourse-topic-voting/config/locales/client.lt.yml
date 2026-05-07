@@ -9,6 +9,3 @@ lt:
     topic_voting:
       vote_title: "Balsuoti"
       remove_vote: "Pašalinti balsą"
-      and_more_voters: "ir %{count} daugiau..."
-      show_voters: "Rodyti, kas balsavo"
-      vote_count_thousands: "%{count}k"

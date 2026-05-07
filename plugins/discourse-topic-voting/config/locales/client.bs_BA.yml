@@ -25,9 +25,6 @@ bs_BA:
         few: "Glasa"
         other: "Glasova"
       remove_vote: "Odstrani glas"
-      and_more_voters: "i %{count} više..."
-      show_voters: "Pokaži ko je glasao"
-      vote_count_thousands: "%{count}k"
     filters:
       votes:
         title: "Glasovi"

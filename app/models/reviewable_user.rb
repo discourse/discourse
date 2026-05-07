@@ -59,7 +59,7 @@ class ReviewableUser < Reviewable
     if args[:send_email] != false && SiteSetting.must_approve_users?
       Jobs.enqueue(:critical_user_email, type: "signup_after_approval", user_id: target.id)
     end
-    StaffActionLogger.new(performed_by).log_user_approve(target)
+    StaffActionLogger.new(performed_by).log_user_approve(target, reviewable_id: self.id)
 
     create_result(:success, :approved)
   end
@@ -126,7 +126,7 @@ class ReviewableUser < Reviewable
         else
           I18n.t("user.destroy_reasons.reviewable_reject")
         end
-        delete_args[:from_reviewable] = true
+        delete_args[:reviewable_id] = self.id
 
         destroyer.destroy(target, delete_args)
       rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess

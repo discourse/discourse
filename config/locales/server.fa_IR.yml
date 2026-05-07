@@ -2068,8 +2068,6 @@ fa_IR:
     email_reject_screened_email:
       title: "ایمیل نمایش داده شده رد می‌شود"
       subject_template: "[%{email_prefix}] مشکل ایمیل -- ایمیل مسدود شد"
-    email_reject_not_allowed_email:
-      subject_template: "[%{email_prefix}] مشکل ایمیل -- ایمیل مسدود شد"
     email_reject_inactive_user:
       title: "ایمیل رد شده کاربر غیر‌فعال"
       subject_template: "[%{email_prefix}] مشکل ایمیل -- کاربر غیر‌فعال"
@@ -2192,7 +2190,6 @@ fa_IR:
       text_body_template: " تنظیم `download_remote_images_to_local` غیرفعال شد زیرا به محدودیت فضای دیسک در `download_remote_images_threshold` رسیده بود."
     new_user_of_the_month:
       title: "شما کاربر جدید ماه هستید!"
-      subject_template: "شما کاربر جدید ماه هستید!"
     queued_posts_reminder:
       title: "یادآور نوشته‌های زمانبندی شده"
       subject_template:
@@ -2410,6 +2407,7 @@ fa_IR:
     account_exists:
       title: "حساب کاربری وحود دارد"
       subject_template: "[%{email_prefix}] حساب کاربری وحود دارد"
+      subject_template_improved: "حساب کاربری وحود دارد"
     digest:
       since_last_visit: "از آخرین بازدید شما"
       new_topics: "موضوع جدید"
@@ -2421,6 +2419,7 @@ fa_IR:
       popular_posts: "نوشته‌های محبوب"
       more_new: "جدید برای شما"
       subject_template: "«%{email_prefix}» خلاصه"
+      subject_template_improved: "خلاصه"
       click_here: "اینجا کلیک کنید"
       from: "%{site_name}"
     forgot_password:
@@ -2435,7 +2434,6 @@ fa_IR:
         %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "تنظیم رمز عبور"
-      subject_template: "[%{email_prefix}] تنظیم رمز عبور"
       text_body_template: |
         فردی درخواست افزودن رمز به حساب‌کاربری شما در [%{site_name}](%{base_url}) را داشته. به جای آن، می‌توانید با حساب کاربری خود در سرویس‌های (گوگل، فیسبوک و...) که دارای ایمیل معتبر هستند نیز وارد شوید.
 
@@ -2446,9 +2444,9 @@ fa_IR:
     admin_login:
       title: "ورود مدیریت"
       subject_template: "[%{email_prefix}] ورود"
+      subject_template_improved: "ورود"
     account_created:
       title: "حساب کاربری ایجاد شد"
-      subject_template: "[%{email_prefix}] حساب کاربری جدید شما"
       text_body_template: |
         یک حساب کاربری در %{site_name} برای شما ساخته شده
 

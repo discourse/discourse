@@ -480,6 +480,7 @@ export default <template>
             @canCheckEmails={{@controller.canCheckEmails}}
             @canDeleteUser={{@controller.canDeleteUser}}
             @adminDelete={{@controller.adminDelete}}
+            @adminDeleteOptions={{@controller.adminDeleteOptions}}
           />
         </div>
       </section>

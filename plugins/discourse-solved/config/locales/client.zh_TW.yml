@@ -10,7 +10,6 @@ zh_TW:
       alt:
         solved:
           accepted_notification: "已接受"
-          topic_solved_notification: "已解決"
     solutions: "解決方案"
     solved:
       title: "已解決"
@@ -38,7 +37,6 @@ zh_TW:
       no_answer:
         title: 您的問題已得到解答嗎？
         description: "在正確的回覆下方按下解答按鈕以突顯解決方案來幫助他人。"
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
     topic_statuses:
       solved:
         help: "這個主題有解決方式"

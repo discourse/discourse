@@ -6,10 +6,6 @@
 
 da:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Data Udforsker"
     errors:
       explorer:
         no_semicolons: "Fjern semikoloner fra forespørgslen."
@@ -23,9 +19,6 @@ da:
       create: "Opret"
       create_placeholder: "Navn på forespørgsel..."
       description_placeholder: "Indtast en beskrivelse her"
-      ai:
-        generate: "Generér"
-        optional: "valgfri"
       import:
         label: "Importer"
       help:

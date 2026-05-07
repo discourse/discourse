@@ -8,7 +8,7 @@ export default function iconOrImage(badge) {
   const image = get(badge, "image");
 
   if (!isEmpty(image)) {
-    return trustHTML(`<img src='${image}'>`);
+    return trustHTML(`<img src='${image}' alt=''>`);
   }
 
   if (isEmpty(icon)) {

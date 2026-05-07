@@ -33,9 +33,6 @@ ru:
         many: "Голоса"
         other: "Голоса"
       remove_vote: "Удалить голос"
-      and_more_voters: "и еще %{count}..."
-      show_voters: "Показывать проголосовавших (не отмечайте, если голосование анонимное)"
-      vote_count_thousands: "%{count} тыс."
       no_votes_title_self: "Вы ещё не проголосовали ни за одну тему"
       no_votes_title_others: "Пользователь %{username} ещё не проголосовал ни за одну тему"
     filters:

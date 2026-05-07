@@ -11,9 +11,14 @@ const DEFAULT_CHOICES = [
   "txt",
   "doc",
   "docx",
+  "odt",
+  "csv",
+  "xls",
+  "xlsx",
+  "ods",
   "rtf",
   "html",
-  "markdown",
+  "md",
 ];
 
 /**

@@ -257,7 +257,7 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, self)
+    PostDestroyer.delete_with_replies(performed_by, post, self.id)
 
     result
   end
@@ -270,7 +270,7 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, self)
+    PostDestroyer.delete_with_replies(performed_by, post, self.id)
     result
   end
 
@@ -345,7 +345,7 @@ class ReviewableFlaggedPost < Reviewable
   private
 
   def destroyer(performed_by, post)
-    PostDestroyer.new(performed_by, post, reviewable: self)
+    PostDestroyer.new(performed_by, post, reviewable_id: self.id)
   end
 
   def notify_poster(performed_by)

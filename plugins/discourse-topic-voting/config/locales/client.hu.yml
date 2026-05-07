@@ -29,9 +29,6 @@ hu:
         one: "Szavazás"
         other: "Szavazás"
       remove_vote: "Szavazat eltávolítása"
-      and_more_voters: "és %{count} további…"
-      show_voters: "Szavazók megjelenítése"
-      vote_count_thousands: "%{count}e"
       no_votes_title_self: "Még nem szavaztál egyetlen témára sem"
       no_votes_title_others: "%{username} még nem szavazott egyetlen témára sem"
     filters:

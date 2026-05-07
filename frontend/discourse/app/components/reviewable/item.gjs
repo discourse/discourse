@@ -562,6 +562,7 @@ export default class ReviewableItem extends Component {
       return adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
+        reviewableId: reviewable.get("id"),
         before: performAction,
       });
     }
@@ -869,14 +870,10 @@ export default class ReviewableItem extends Component {
                 <h3 class="review-item__aside-title">
                   {{#if this.editing}}
                     {{i18n "review.editing_post"}}
-                  {{else if (eq this.reviewable.status PENDING)}}
-                    {{#if this.displayContextQuestion}}
-                      {{this.reviewable.flaggedReviewableContextQuestion}}
-                    {{else if this.reviewable.userReviewableContextQuestion}}
-                      {{this.reviewable.userReviewableContextQuestion}}
-                    {{else}}
-                      {{i18n "review.moderator_actions"}}
-                    {{/if}}
+                  {{else if this.displayContextQuestion}}
+                    {{this.reviewable.flaggedReviewableContextQuestion}}
+                  {{else if this.reviewable.userReviewableContextQuestion}}
+                    {{this.reviewable.userReviewableContextQuestion}}
                   {{else}}
                     {{i18n "review.moderator_actions"}}
                   {{/if}}

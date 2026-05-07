@@ -3,6 +3,7 @@
 class TagGroup < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
   validates :name, uniqueness: { case_sensitive: false }
+  validate :ensure_permissions_not_empty, on: :update
 
   scope :where_name,
         ->(name) do
@@ -104,6 +105,10 @@ class TagGroup < ActiveRecord::Base
       end
       @permissions = nil
     end
+  end
+
+  def ensure_permissions_not_empty
+    errors.add(:base, I18n.t("tags.groups.errors.empty_permissions")) if @permissions&.empty?
   end
 
   def remove_parent_from_group

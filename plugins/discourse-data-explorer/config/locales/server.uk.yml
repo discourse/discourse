@@ -7,23 +7,6 @@
 uk:
   site_settings:
     data_explorer_enabled: "Увімкнути оглядач даних"
-    data_explorer_ai_queries_enabled: "Увімкнути генерацію запитів ШІ в Data Explorer"
-  discourse_ai:
-    ai_bot:
-      agents:
-        ai_query_generator:
-          name: "Генератор запитів Data Explorer"
-          description: "Генерує SQL-запити для Data Explorer з природної мови"
-      tool_help:
-        run_sql: "Запускає SQL-запит і повертає результати"
-      tool_summary:
-        run_sql: "Виконання SQL-запиту"
-      tool_description:
-        run_sql: "Виконав SQL-запит"
-  discourse_data_explorer:
-    ai:
-      error_agent_not_configured: "ШІ-агент не налаштований. Будь ласка, перевірте налаштування функцій ШІ."
-      error_no_sql_returned: "ШІ не повернув правильний SQL-запит. Будь ласка, спробуйте ще раз або напишіть запит вручну."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

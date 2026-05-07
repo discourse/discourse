@@ -10,7 +10,6 @@ et:
       alt:
         solved:
           accepted_notification: "aktsepteeritud"
-          topic_solved_notification: "lahendatud"
     solved:
       title: "Lahendatud"
       has_no_accepted_answer: "Sellel teemal pole lahendust"

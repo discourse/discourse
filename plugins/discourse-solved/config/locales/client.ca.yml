@@ -10,7 +10,6 @@ ca:
       alt:
         solved:
           accepted_notification: "acceptat"
-          topic_solved_notification: "resolt"
     solved:
       title: "Solucionat"
       allow_accepted_answers: "Permet que el propietari del tema i l'equip responsable marquin una resposta com a solució"
@@ -32,7 +31,6 @@ ca:
       move_post_cancel: "Cancel·la"
       confirm_solved_removal_confirm: "Confirma"
       confirm_solved_removal_cancel: "Cancel·la"
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
     topic_statuses:
       solved:
         help: "Aquest tema té una solució"

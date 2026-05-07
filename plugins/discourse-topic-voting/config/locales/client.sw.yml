@@ -19,8 +19,6 @@ sw:
       anonymous_button:
         one: "Piga kura"
         other: "Kura"
-      show_voters: "Onyesha waliopiga kura"
-      vote_count_thousands: "%{count}k"
     filters:
       votes:
         title: "Kura"

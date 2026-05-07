@@ -42,6 +42,10 @@ module PageObjects
         page.has_no_css?("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
       end
 
+      def has_bulk_select_enabled?
+        page.has_css?("#{TOPIC_LIST_ITEM_SELECTOR} input.bulk-select")
+      end
+
       def has_closed_status?(topic)
         page.has_css?("#{topic_list_item_closed(topic)}")
       end
@@ -112,8 +116,12 @@ module PageObjects
         )
       end
 
-      def has_topic_tags?(topic, *tag_names)
-        tag_names.all? { |name| has_topic_tag?(topic, name) }
+      def has_topic_tags?(topic, tags:)
+        tags.all? { |tag| has_topic_tag?(topic, tag.name) } &&
+          page.has_css?(
+            "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
+            count: tags.size,
+          )
       end
 
       def has_no_topic_tags?(topic)

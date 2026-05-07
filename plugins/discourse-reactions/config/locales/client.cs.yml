@@ -19,8 +19,6 @@ cs:
         react_with: "Reagovat na tento příspěvek pomocí: %{reaction}"
         cant_remove_reaction: "Svou reakci již nemůžete odstranit"
         remove_reaction: "Odstranit tuto reakci %{reaction}"
-      users_popup:
-        all: "Vše"
       main_reaction:
         add: "Tento příspěvek se mi líbí"
         remove: "Odeberte toto Líbí se"

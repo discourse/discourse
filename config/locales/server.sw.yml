@@ -1189,7 +1189,6 @@ sw:
         Jibu lako limetumwa kwa kutumia barua pepe iliyozuiliwa. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
     email_reject_not_allowed_email:
       title: "Barua Pepe Kataza Barua Pepe Hairuhusiwi "
-      subject_template: "[%{email_prefix}] Tatizo la Barua -- Barua Pepe Imezuiliwa"
       text_body_template: |
         Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination} (jina la %{former_title}) haujafika.
 
@@ -1364,7 +1363,6 @@ sw:
       title: "Ukumbusho wa Watumiaji Waliosubirishwa"
     new_user_of_the_month:
       title: "Wewe ni Mtumiaji Mpya wa Mwezi!"
-      subject_template: "Wewe ni Mtumiaji Mpya wa Mwezi!"
       text_body_template: |
         Hongera, umepata tunzo ya **Mtumiaji Mpya wa Mwezi wa %{month_year}**. :trophy:
 
@@ -1584,6 +1582,7 @@ sw:
     account_exists:
       title: "Akaunti tayari ipo"
       subject_template: "[%{email_prefix}] Akaunti tayari ipo"
+      subject_template_improved: "Akaunti tayari ipo"
       text_body_template: |
         Umejaribu kutengeneza akaunti kwenye %{site_name}, au umejaribu kubadilisha barua pepe ya akaunti kuwa %{email}. Lakini, hiyo akaunti ya %{email} tayari ipo.
 
@@ -1603,6 +1602,7 @@ sw:
       popular_posts: "Machapisho Maarufu"
       more_new: "Mpya kwako"
       subject_template: "Muhtasari wa [%{email_prefix}]"
+      subject_template_improved: "Muhtasari"
       unsubscribe: "Muhtasari huu umetumwa kutoka kwa %{site_link} kama hatujakuona kwa mda fulani. Badilisha %{email_preferences_link}, au %{unsubscribe_link} kujiengua."
       your_email_settings: "mipangilio yako ya barua pepe"
       click_here: "bofya hapa"
@@ -1620,6 +1620,7 @@ sw:
       title: "Ingia kupitia kiungo"
       preview: "Ingia kupitia kiungo."
       subject_template: "Ingia kupitia kiungo [%{email_prefix}] "
+      subject_template_improved: "Ingia kupitia kiungo"
       text_body_template: |
         Hiki ni kiungo cha kuingia kwenye [%{site_name}](%{base_url}).
 
@@ -1629,7 +1630,6 @@ sw:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Tengeneza Nywila"
-      subject_template: "Weka Nywila [%{email_prefix}]"
       text_body_template: |
         Mtu anataka kutengeneza nywila ya akaunti yako[%{site_name}](%{base_url}). Au unaweza kuingia kwa kutumia njia nyingine (Google, Facebook au njia nyingine) kupitia barua pepe iliyothibitishwa.
 
@@ -1640,9 +1640,9 @@ sw:
     admin_login:
       title: "Ingia Kiongozi"
       subject_template: "[%{email_prefix}] Ingia"
+      subject_template_improved: "Ingia"
     account_created:
       title: "Akaunti Imetengenezwa"
-      subject_template: "[%{email_prefix}] Akaunti Yako Mpya"
       text_body_template: |
         Akaunti yako mpya imetengenezwa kwa ajili yako kwenye %{site_name}
 

@@ -6,10 +6,6 @@
 
 it:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Data Explorer"
     errors:
       explorer:
         no_semicolons: "Rimuovi i punti e virgola dalla query."
@@ -23,9 +19,6 @@ it:
       create: "Crea"
       create_placeholder: "Nome query..."
       description_placeholder: "Inserisci una descrizione qui"
-      ai:
-        generate: "Genera"
-        optional: "opzionale"
       import:
         label: "Importa"
         unparseable_json: "File JSON non analizzabile."

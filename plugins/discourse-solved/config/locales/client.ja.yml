@@ -15,7 +15,6 @@ ja:
       alt:
         solved:
           accepted_notification: "同意"
-          topic_solved_notification: "解決済み"
     solutions: "解決策"
     solved:
       title: "解決済み"
@@ -44,7 +43,6 @@ ja:
       no_answer:
         title: 質問の回答は得られましたか？
         description: "適切な返信の下にある解決策ボタンを使って回答をハイライトし、他のユーザーを助けましょう。"
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "あなたの投稿が解決策としてマークされました"
       category_type_support:

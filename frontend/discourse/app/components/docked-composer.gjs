@@ -45,12 +45,6 @@ export default class DockedComposer extends Component {
   #dragStart = null;
   #rootElement = null;
 
-  #handleInput = (event) => {
-    const value = event?.target?.value ?? "";
-    this.reply = value;
-    this.persistDraft(value);
-  };
-
   #handlePaste = (event) => {
     if (!this.textarea || document.activeElement !== this.textarea) {
       return;
@@ -95,6 +89,14 @@ export default class DockedComposer extends Component {
       }
     }
   };
+
+  get maxResizeOffset() {
+    return this.args.maxResizeOffset ?? null;
+  }
+
+  get resizeAriaMax() {
+    return this.maxResizeOffset ?? 400;
+  }
 
   get show() {
     return this.args.show ?? true;
@@ -161,7 +163,6 @@ export default class DockedComposer extends Component {
       // capture phase so Enter-to-send wins over ItsATrap / smart-list handlers
       this.textarea.addEventListener("keydown", this.#handleKeyDown, true);
       this.textarea.addEventListener("paste", this.#handlePaste);
-      this.textarea.addEventListener("input", this.#handleInput);
     }
   }
 
@@ -211,13 +212,16 @@ export default class DockedComposer extends Component {
         this.uploads.push(upload);
       },
     });
+
+    if (this.fileInputEl) {
+      this.uppyUpload.setup(this.fileInputEl);
+    }
   }
 
   @action
   teardown() {
     this.textarea?.removeEventListener("keydown", this.#handleKeyDown, true);
     this.textarea?.removeEventListener("paste", this.#handlePaste);
-    this.textarea?.removeEventListener("input", this.#handleInput);
     this.uppyUpload?.teardown();
     this.#rootElement = null;
   }
@@ -312,7 +316,9 @@ export default class DockedComposer extends Component {
     }
     // dragging UP should grow the composer, so invert
     const delta = this.#dragStart.clientY - event.clientY;
-    this.dragOffset = Math.max(0, this.#dragStart.offset + delta);
+    const raw = Math.max(0, this.#dragStart.offset + delta);
+    this.dragOffset =
+      this.maxResizeOffset != null ? Math.min(this.maxResizeOffset, raw) : raw;
     this.#rootElement.style.setProperty(
       "--docked-composer-drag-offset",
       `${this.dragOffset}px`
@@ -325,11 +331,11 @@ export default class DockedComposer extends Component {
     // dragOffset state so the keyboard interaction stays in sync with
     // pointer drags.
     const STEP = 16;
-    const MAX_OFFSET = 400;
+    const max = this.maxResizeOffset ?? 400;
     let next = this.dragOffset;
     switch (event.key) {
       case "ArrowUp":
-        next = Math.min(MAX_OFFSET, this.dragOffset + STEP);
+        next = Math.min(max, this.dragOffset + STEP);
         break;
       case "ArrowDown":
         next = Math.max(0, this.dragOffset - STEP);
@@ -338,7 +344,7 @@ export default class DockedComposer extends Component {
         next = 0;
         break;
       case "End":
-        next = MAX_OFFSET;
+        next = max;
         break;
       default:
         return;
@@ -383,7 +389,7 @@ export default class DockedComposer extends Component {
             aria-label={{i18n "composer.resize"}}
             aria-valuenow={{this.dragOffset}}
             aria-valuemin="0"
-            aria-valuemax="400"
+            aria-valuemax={{this.resizeAriaMax}}
             tabindex="0"
             {{! template-lint-disable no-pointer-down-event-binding }}
             {{on "pointerdown" this.onResizeStart}}

@@ -340,11 +340,11 @@ module PageObjects
       # ── Deletion/recovery assertions ─────────────────────────────
 
       def has_deleted_placeholder_for?(post)
-        has_css?("[data-post-number='#{post.post_number}'].nested-post__deleted-placeholder")
+        has_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--deleted")
       end
 
       def has_no_deleted_placeholder_for?(post)
-        has_no_css?("[data-post-number='#{post.post_number}'].nested-post__deleted-placeholder")
+        has_no_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--deleted")
       end
 
       def has_deleted_post_class_for?(post)
@@ -365,11 +365,28 @@ module PageObjects
       end
 
       def has_deleted_content_visible_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post__deleted-content"))
+        has_css?(wrapper_selector(post, ".nested-post__placeholder-reveal"))
       end
 
       def has_no_deleted_content_visible_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post__deleted-content"))
+        has_no_css?(wrapper_selector(post, ".nested-post__placeholder-reveal"))
+      end
+
+      # ── Ignored-user placeholder assertions ──────────────────────
+
+      def has_ignored_placeholder_for?(post)
+        has_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--ignored")
+      end
+
+      def has_no_ignored_placeholder_for?(post)
+        has_no_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--ignored")
+      end
+
+      def click_reveal_ignored(post)
+        find(
+          "button.nested-post__placeholder-avatar--reveal[data-post-number='#{post.post_number}']",
+        ).click
+        self
       end
 
       # ── Post actions ────────────────────────────────────────────

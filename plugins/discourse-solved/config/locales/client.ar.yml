@@ -15,7 +15,6 @@ ar:
       alt:
         solved:
           accepted_notification: "تم القبول"
-          topic_solved_notification: "محلول"
     solutions: "الحلول"
     solved:
       title: "تم الحل"
@@ -69,7 +68,6 @@ ar:
       no_answer:
         title: هل تمت الإجابة على سؤالك؟
         description: "ميِّز الإجابة وساعد الآخرين عن طريق استخدام زر الحل أسفل الرد الصحيح."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "تم وضع علامة \"حل\" على منشورك"
       category_type_support:

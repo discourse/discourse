@@ -1904,6 +1904,7 @@ ro:
     account_second_factor_disabled:
       title: "Autentificarea în doi pași (2FA) este dezactivată"
       subject_template: "[%{email_prefix}] Autentificare în doi pași (2FA) dezactivată"
+      subject_template_improved: "Autentificarea în doi pași (2FA) este dezactivată"
     digest:
       since_last_visit: "De la ultima ta vizită"
       new_topics: "Subiecte noi"
@@ -1913,6 +1914,7 @@ ro:
       popular_topics: "Subiecte notorii"
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
+      subject_template_improved: "Rezumat"
       unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Poți schimba %{email_preferences_link} sau, pentru a te dezabona, %{unsubscribe_link}"
       your_email_settings: "setările de email"
       click_here: "click aici"
@@ -1935,8 +1937,9 @@ ro:
 
         Faceți clic pe următorul link pentru a alege o parolă:
         %{base_url}/u/password-reset/%{email_token}
+    admin_login:
+      subject_template_improved: "Autentificare"
     account_created:
-      subject_template: "[%{email_prefix}] Noul tău cont"
       text_body_template: |
         Un nou cont a fost creat pentru tine la %{site_name}
 

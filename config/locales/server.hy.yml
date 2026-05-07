@@ -1825,7 +1825,6 @@ hy:
         Ձեր պատասխանը ուղարկվել է արգելափակված էլ. հասցեից: Փորձեք ուղարկել մեկ այլ էլ. հասցե կամ [կապվեք անձնակազմի որևէ անդամի հետ](%{base_url}/about):
     email_reject_not_allowed_email:
       title: "Էլ. փոստի Մերժում - Անթույլատրելի Էլ. հասցե"
-      subject_template: "[%{email_prefix}] Էլ. փոստի խնդիր -- Արգելափակված Էլ. հասցե"
       text_body_template: |
         Ցավում ենք, սակայն Ձեր էլ. նամակը %{destination} -ին (%{former_title} վերնագրով) չաշխատեց:
 
@@ -2052,7 +2051,6 @@ hy:
       text_body_template: " `download_remote_images_to_local` կարգավորումը անջատվել է, քանի որ հասել եք `download_remote_images_threshold` -ում դիսկի տարածքի սահմանին:"
     new_user_of_the_month:
       title: "Դուք Ամսվա Նոր Օգտատերն եք !"
-      subject_template: "Դուք Ամսվա Նոր Օգտատերն եք !"
       text_body_template: |
         Շնորհավորում ենք, Դուք վաստակեցիք **Ամսվա լավագույն Նոր Օգտատեր կոչումը %{month_year} ամսվա համար**: :trophy:
 
@@ -2289,6 +2287,7 @@ hy:
     account_exists:
       title: "Հաշիվը արդեն գոյություն ունի"
       subject_template: "[%{email_prefix}] Հաշիվը արդեն գոյություն ունի"
+      subject_template_improved: "Հաշիվը արդեն գոյություն ունի"
       text_body_template: "Դուք հենց նոր փորձել եք ստեղծել հաշիվ %{site_name} -ում կամ փոփոխել հաշվի էլ. հասցեն %{email} -ի: Համենայն դեպս, հաշիվն արդեն գոյություն ունի %{email}-ով:\n\nԵթե մոռացել եք Ձեր գաղտնաբառը, [վերահաստատեք այն հիմա](%{base_url}/գաղտնաբառի-վերահաստատում):\n\nԵթե Դուք չեք փորձել ստեղծել հաշիվ %{email} -ով կամ փոփոխել Ձեր էլ. հասցեն, մի անհանգստացեք - Դուք հանգիստ կարող եք անտեսել այս հաղորդագրությունը: \n\nԵթե ունեք հարցեր, [կապվեք մեր բարեհամբույր անձնակազմի հետ](%{base_url}/մեր մասին):\n"
     digest:
       since_last_visit: "Ձեր վերջին այցելությունից հետո"
@@ -2301,6 +2300,7 @@ hy:
       popular_posts: "Ճանաչված Գրառումներ"
       more_new: "Նոր Ձեր համար"
       subject_template: "[%{email_prefix}] Ամփոփում"
+      subject_template_improved: "Ամփոփումը"
       unsubscribe: "Այս ամփոփումը ուղարկվում է %{site_link} -ից, երբ մենք չենք տեսնում Ձեզ մի որոշ ժամանակ: Փոփոխեք %{email_preferences_link} -ը կամ դուրս եկեք բաժանորդագրումից՝ %{unsubscribe_link} :"
       your_email_settings: "Ձեր էլ. հասցեի կարգավորումները"
       click_here: "սեղմեք այստեղ"
@@ -2318,6 +2318,7 @@ hy:
       title: "Մուտք գործեք հղման միջոցով"
       preview: "Մուտք գործեք հղման միջոցով."
       subject_template: "[%{email_prefix}] Մուտք գործեք հղման միջոցով"
+      subject_template_improved: "Մուտք գործեք հղման միջոցով"
       text_body_template: |
         Ահա Ձեր մուտքի հղումը այստեղ՝ [%{site_name}](%{base_url}).
 
@@ -2327,7 +2328,6 @@ hy:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Սահմանել Գաղտնաբառ"
-      subject_template: "[%{email_prefix}] Սահմանել Գաղտնաբառ"
       text_body_template: |
         Ինչ-որ մեկը խնդրել է ավելացնել գաղտնաբառ [%{site_name}]-ի Ձեր հաշվի համար (%{base_url}): Այլ կերպ, Դուք կարող եք մուտք գործել՝ օգտագործելով ապահովվող ցանկացած օնլայն ծառայություն (Google, Facebook, և այլն) , որը կապված է այս վավերացված էլ. հասցեի հետ:
 
@@ -2338,9 +2338,9 @@ hy:
     admin_login:
       title: "Ադմինի Մուտք"
       subject_template: "[%{email_prefix}] Մուտք"
+      subject_template_improved: "Մուտք"
     account_created:
       title: "Ստեղծված Հաշիվ"
-      subject_template: "[%{email_prefix}] Ձեր Նոր Հաշիվը"
       text_body_template: |
         Ձեր համար ստեղծվել է նոր հաշիվ%{site_name} -ում:
 
@@ -2398,7 +2398,6 @@ hy:
         Եթե վերևի հղումը հնարավոր չէ սեղմել, փորձեք կրկնօրինակել և տեղադրել այն Ձեր վեբ-բրաուզերի հասցեի տողում:
     suspicious_login:
       title: "Նոր Մուտքի Զգուշացում"
-      subject_template: "[%{site_name}] Նոր Մուտք %{location} -ից"
     post_approved:
       title: "Ձեր գրառումը հաստատված է"
   page_not_found:

@@ -10,7 +10,6 @@ hr:
       alt:
         solved:
           accepted_notification: "prihvaćen"
-          topic_solved_notification: "riješeno"
     solved:
       title: "Riješeno"
       allow_accepted_answers: "Dopusti vlasniku teme i osoblju da označi odgovor kao rješenje"

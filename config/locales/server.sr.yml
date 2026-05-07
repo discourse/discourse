@@ -461,10 +461,13 @@ sr:
     digest:
       liked_received: "Primljeno Lajkova"
       new_users: "Novi Korisnici"
+      subject_template_improved: "Rezime"
     forgot_password:
       title: "Zaboravio Šifru"
     set_password:
       title: "Postavi Šifru"
+    admin_login:
+      subject_template_improved: "Prijava"
   page_not_found:
     see_more: "Više"
     search_button: "Pretraži"

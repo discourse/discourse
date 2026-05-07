@@ -15,21 +15,51 @@ export default class DiscourseReactionsUsersMenu extends Component {
   @tracked activeFilter = null;
 
   fetchUsers = async (page, pageSize) => {
+    const filter = this.activeFilter;
+    const offset = page * pageSize;
+    const nextOffset = offset + pageSize;
+    const entry = this.#tabCache.get(filter);
+
+    if (entry) {
+      const cached = entry.users.slice(offset, nextOffset);
+      const fullPage = cached.length === pageSize;
+      const lastPartialPage = !entry.canLoadMore && cached.length > 0;
+      if (fullPage || lastPartialPage) {
+        return {
+          users: cached,
+          canLoadMore: entry.users.length > nextOffset || entry.canLoadMore,
+        };
+      }
+    }
+
     const result = await CustomReaction.fetchReactionsUsersList(
       this.post.id,
       page,
       pageSize,
-      this.activeFilter
+      filter
     );
-
-    const loadedSoFar = page * pageSize + (result.users?.length ?? 0);
+    const users = result.users ?? [];
     const canLoadMore = result.total_rows
-      ? loadedSoFar < result.total_rows
-      : (result.users?.length ?? 0) >= pageSize;
+      ? offset + users.length < result.total_rows
+      : users.length >= pageSize;
 
-    return { users: result.users ?? [], canLoadMore };
+    const existing = entry?.users ?? [];
+    const merged = [...existing.slice(0, offset), ...users];
+    this.#tabCache.set(filter, { users: merged, canLoadMore });
+
+    if (filter === null && !canLoadMore) {
+      for (const reaction of this.reactions) {
+        this.#tabCache.set(reaction.id, {
+          users: merged.filter((u) => u.reaction === reaction.id),
+          canLoadMore: false,
+        });
+      }
+    }
+
+    return { users, canLoadMore };
   };
   #resetCallback = null;
+  #tabCache = new Map();
 
   get post() {
     return this.args.data.post;

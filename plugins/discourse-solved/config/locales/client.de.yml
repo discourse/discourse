@@ -15,11 +15,9 @@ de:
       alt:
         solved:
           accepted_notification: "akzeptiert"
-          topic_solved_notification: "gelöst"
     solutions: "Lösungen"
     solved:
       title: "Gelöst"
-      notify_on_solved: "Benachrichtige mich, wenn ein Thema, das ich verfolge oder beobachte, gelöst wird. Gilt nur für Themen in Kategorien, die Lösungen zulassen."
       allow_accepted_answers: "Erlaube dem Ersteller des Themas und Team-Mitgliedern, eine Antwort als Lösung zu markieren"
       solved_topics_auto_close_hours: "Thema automatisch (n) Stunden nach der letzten Antwort schließen, sobald das Thema als gelöst markiert wurde."
       notify_on_staff_accept_solved: "Benachrichtige den Themenersteller, wenn ein Team-Mitglied eine Lösung auswählt"
@@ -33,7 +31,6 @@ de:
       solution_summary:
         one: "Lösung"
         other: "Lösungen"
-      accepted_answer_solver_info: "von %{user} in %{post}"
       accepted_answer_post_number: "Beitrag %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -43,7 +40,6 @@ de:
       no_solved_topics_title: "Du hast noch keine Themen gelöst"
       no_solved_topics_title_others: "%{username} hat noch keine Themen gelöst"
       no_solved_topics_body: "Wenn du eine hilfreiche Antwort auf ein Thema gibst, kann es sein, dass deine Antwort vom Themenersteller oder einem Team-Mitglied als Lösung ausgewählt wird."
-      marked_solved_by: "akzeptiert von %{user}"
       confirm_move_solution_title: "Lösungsbeitrag verschieben"
       confirm_move_solution:
         one: "Der Beitrag ist als Lösung für dieses Thema ausgewählt. Wenn du ihn verschiebst, wird das Thema wieder als ungelöst markiert."
@@ -60,15 +56,8 @@ de:
       no_answer:
         title: Wurde deine Frage beantwortet?
         description: "Hebe die Antwort hervor und hilf anderen, indem du die Lösungsschaltfläche unter der richtigen Antwort verwendest."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "dein Beitrag wurde als Lösung markiert"
-        topic_solved_title: "Thema gelöst"
-      topic_notifications:
-        tracking:
-          description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ erwähnt, auf deinen Beitrag antwortet oder das Thema gelöst wurde. Die Anzahl neuer Antworten wird für das Thema angezeigt."
-        watching:
-          description: "Du wirst über jeden neuen Beitrag in diesem Thema und wenn es gelöst wurde benachrichtigt. Die Anzahl der neuen Antworten wird für das Thema angezeigt."
       category_type_support:
         title: "Support"
         not_support_type: "Achtung! Du hast die Möglichkeit deaktiviert, Beiträge in dieser Kategorie als Lösungen auszuwählen. Du findest die entsprechenden Einstellungen, um diese Funktion wieder zu aktivieren, im Tab „Einstellungen“."

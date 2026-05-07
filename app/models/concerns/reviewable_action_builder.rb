@@ -82,7 +82,7 @@ module ReviewableActionBuilder
   end
 
   def perform_delete_post(performed_by, _args)
-    PostDestroyer.new(performed_by, target_post, reviewable: self).destroy
+    PostDestroyer.new(performed_by, target_post, reviewable_id: self.id).destroy
     create_result(:success, :rejected, [created_by_id], false)
   end
 
@@ -149,7 +149,7 @@ module ReviewableActionBuilder
   def delete_user(user, delete_options, performed_by)
     email = user.email
 
-    UserDestroyer.new(performed_by).destroy(user, delete_options)
+    UserDestroyer.new(performed_by).destroy(user, delete_options.merge(reviewable_id: self.id))
 
     message = UserNotifications.account_deleted(email, self)
     Email::Sender.new(message, :account_deleted).send

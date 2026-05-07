@@ -329,9 +329,6 @@ pt_BR:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} definiu automaticamente sua presença e convidou para %{eventName}"
         an_event: "um evento"
-      event_description:
-        show_more: "Exibir mais"
-        show_less: "Exibir menos"
       edit_reason: "Evento atualizado"
       edit_reason_closed: "Evento fechado"
       edit_reason_opened: "Evento aberto"

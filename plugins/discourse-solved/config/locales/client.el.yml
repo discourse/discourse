@@ -10,7 +10,6 @@ el:
       alt:
         solved:
           accepted_notification: "αποδεκτό"
-          topic_solved_notification: "λύθηκε"
     solutions: "Λύσεις"
     solved:
       title: "Λύθηκε"
@@ -39,7 +38,6 @@ el:
       no_answer:
         title: Έχει απαντηθεί η ερώτηση σας;
         description: "Επισημάνετε την απάντηση και βοηθήστε άλλους χρησιμοποιώντας το κουμπί λύσης κάτω από τη σωστή απάντηση."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "η ανάρτηση σας σημάνθηκε ως λύση"
       category_type_support:

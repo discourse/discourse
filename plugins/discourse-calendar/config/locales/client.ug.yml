@@ -27,9 +27,6 @@ ug:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      event_description:
-        show_more: "تېخىمۇ كۆپ كۆرسەت"
-        show_less: "ئازراق كۆرسەت"
       show_all: "ھەممىنى كۆرسەت"
       add_to_calendar: "يىلنامەگە قوش"
       created_by: "قۇرغۇچى"

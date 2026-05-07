@@ -1777,11 +1777,14 @@ pt:
       popular_topics: "Tópicos Populares"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
+      subject_template_improved: "Resumo"
       click_here: "clique aqui"
     forgot_password:
       title: "Esqueci a palavra-passe"
     set_password:
       title: "Definir Palavra-passe"
+    admin_login:
+      subject_template_improved: "Login"
     notify_old_email:
       text_body_template: |2
 

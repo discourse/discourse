@@ -10,7 +10,6 @@ da:
       alt:
         solved:
           accepted_notification: "accepteret"
-          topic_solved_notification: "løst"
     solved:
       title: "Løst"
       allow_accepted_answers: "Tillad ejer af emne og stab at markere svar som en løsning"
@@ -37,7 +36,6 @@ da:
       no_answer:
         title: Er dit spørgsmål blevet besvaret?
         description: "Fremhæv svaret og hjælp andre ved at bruge løsningsknappen under det korrekte svar."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "dit indlæg blev markeret som løsning"
     topic_statuses:

@@ -82,7 +82,16 @@ class PostRevisor
     end
   end
 
-  POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type locale]
+  POST_TRACKED_FIELDS = %w[
+    raw
+    cooked
+    edit_reason
+    user_id
+    wiki
+    post_type
+    locale
+    reply_to_post_number
+  ]
 
   # Extensions can inspect revision options via the `:post_edited` event payload.
   attr_reader :category_changed, :post_revision, :opts
@@ -260,6 +269,12 @@ class PostRevisor
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
     @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
     @fields.delete(:tags) if @fields.has_key?(:tags) && @fields[:tags].blank? && @topic.tags.empty?
+
+    if @fields.has_key?(:reply_to_post_number)
+      normalized = @fields[:reply_to_post_number].presence
+      @fields[:reply_to_post_number] = normalized.nil? ? nil : normalized.to_i
+      return false unless resolve_reply_to_change
+    end
 
     # always reset edit_reason unless provided, do not set to nil else
     # previous reasons are lost
@@ -547,6 +562,8 @@ class PostRevisor
       @post.public_send("#{field}=", @fields[field]) if @fields.has_key?(field)
     end
 
+    @post.reply_to_user_id = @new_reply_to_parent&.user_id if @post.reply_to_post_number_changed?
+
     @post.edit_reason = @fields[:edit_reason] if should_create_new_version?
     @post.last_editor_id = @editor.id
     @post.word_count = @fields[:raw].scan(/[[:word:]]+/).size if @fields.has_key?(:raw)
@@ -554,9 +571,18 @@ class PostRevisor
 
     @post.extract_quoted_post_numbers
 
+    previous_reply_to_post_number = @post.reply_to_post_number_was
+
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post.link_post_uploads
-    @post.save_reply_relationships
+
+    if @post_successfully_saved
+      @post.save_reply_relationships
+      cleanup_previous_reply_to_relationship
+      if @post.saved_change_to_reply_to_post_number?
+        @post.nested_replies_apply_reparent(previous_reply_to_post_number)
+      end
+    end
 
     # we don't want to increment post count on user merge
     if @post_successfully_saved && @editor.id != Discourse::SYSTEM_USER_ID
@@ -853,5 +879,60 @@ class PostRevisor
 
   def reviewable_content_changed?
     raw_changed? || topic_title_changed?
+  end
+
+  private
+
+  def resolve_reply_to_change
+    new_post_number = @fields[:reply_to_post_number]
+
+    # Resolve trashed prior parents too — their stale `PostReply` row and
+    # `reply_count` need cleanup on reparent.
+    @old_reply_to_parent =
+      if @post.reply_to_post_number.present?
+        Post.with_deleted.find_by(topic_id: @post.topic_id, post_number: @post.reply_to_post_number)
+      end
+    @new_reply_to_parent = nil
+
+    return true if new_post_number == @post.reply_to_post_number
+
+    if new_post_number.present?
+      @new_reply_to_parent =
+        Post.where(topic_id: @post.topic_id, post_number: new_post_number).first
+
+      unless valid_reply_to_parent?(@new_reply_to_parent)
+        @post.errors.add(:reply_to_post_number, I18n.t("post.errors.invalid_reply_to"))
+        return false
+      end
+    end
+
+    true
+  end
+
+  def valid_reply_to_parent?(parent)
+    return false if parent.blank?
+    return false if parent.id == @post.id
+    return false if @post.post_number.present? && parent.post_number >= @post.post_number
+    return false unless guardian.can_see?(parent)
+    true
+  end
+
+  def cleanup_previous_reply_to_relationship
+    return unless @post.saved_change_to_reply_to_post_number?
+    return if @old_reply_to_parent.blank?
+
+    old_post_number = @old_reply_to_parent.post_number
+    still_referenced =
+      @post.reply_to_post_number == old_post_number ||
+        @post.quoted_post_numbers.include?(old_post_number)
+    return if still_referenced
+
+    deleted = PostReply.where(post_id: @old_reply_to_parent.id, reply_post_id: @post.id).delete_all
+
+    if deleted > 0 && Topic.visible_post_types.include?(@post.post_type)
+      Post.where(id: @old_reply_to_parent.id).update_all(
+        "reply_count = GREATEST(reply_count - 1, 0)",
+      )
+    end
   end
 end

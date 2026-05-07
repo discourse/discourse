@@ -28,15 +28,6 @@ ar:
         react_with: "تفاعل مع هذا المنشور باستخدام: %{reaction}"
         cant_remove_reaction: "لم يعد بإمكانك إزالة تفاعلك"
         remove_reaction: "إزالة هذا التفاعل %{reaction}"
-      users_popup:
-        all: "الكل"
-        title:
-          zero: "%{count} تفاعل"
-          one: "تفاعل واحد (%{count})"
-          two: "تفاعلان (%{count})"
-          few: "%{count} تفاعلات"
-          many: "%{count} تفاعلًا"
-          other: "%{count} تفاعل"
       counter:
         aria_label:
           zero: "%{count} من التفاعل"

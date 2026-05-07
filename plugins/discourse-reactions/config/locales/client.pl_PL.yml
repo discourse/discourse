@@ -22,19 +22,10 @@ pl_PL:
           few: "%{reaction}: %{count} użytkowników"
           many: "%{reaction}: %{count} użytkowników"
           other: "%{reaction}: %{count} użytkowników"
-      reaction:
-        forbidden: "Nie masz prawa reagować ani zmieniać swojej reakcji na ten wpis."
       picker:
         react_with: "Zareaguj na ten post: %{reaction}"
         cant_remove_reaction: "Nie możesz już usunąć swojej reakcji"
         remove_reaction: "Usuń tę reakcję %{reaction}"
-      users_popup:
-        all: "Wszystkie"
-        title:
-          one: "%{count} reakcja"
-          few: "%{count} reakcje"
-          many: "%{count} reakcji"
-          other: "%{count} reakcji"
       counter:
         aria_label:
           one: "%{count} reakcja"

@@ -1700,7 +1700,7 @@ be:
         options:
           ignore: "Ігнараваць"
       sort_options:
-        default: "прадвызначана"
+        default: "Прадвызначаная"
         likes: "Падабайкі"
         views: "Прагляды"
         posts: "Допісы"
@@ -2512,6 +2512,7 @@ be:
         topic_id: "ID тэмы"
         post_id: "ID паведамлення"
         category_id: "ID катэгорыі"
+        reviewable_id: "Разгляд"
         delete: "выдаліць"
         edit: "рэдагаваць"
         save: "захаваць"

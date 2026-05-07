@@ -1936,7 +1936,6 @@ hr:
         Radi promicanja dubljeg razgovora, vrlo kratki odgovori nisu dopušteni. Možete li odgovoriti s najmanje %{count} znakova? Alternativno, možete lajkati objavu putem e-maila tako da odgovorite s "+1".
     new_user_of_the_month:
       title: "Vi ste novi korisnik mjeseca!"
-      subject_template: "Vi ste novi korisnik mjeseca!"
       text_body_template: |
         Čestitamo, zaslužili ste nagradu **Novi korisnik mjeseca za %{month_year}**. :trophy:
 
@@ -2225,6 +2224,7 @@ hr:
     account_exists:
       title: "Korisnički račun već postoji"
       subject_template: "[%{email_prefix}] Korisnički račun već postoji"
+      subject_template_improved: "Korisnički račun već postoji"
       text_body_template: |
         Upravo ste pokušali otvoriti korisnički račun na %{site_name} ili ste pokušali promijeniti e-mail adresu računa u %{email}. Međutim, račun već postoji za %{email}.
 
@@ -2236,6 +2236,7 @@ hr:
     account_second_factor_disabled:
       title: "Dvofaktorska autentikacija onemogućena"
       subject_template: "[%{email_prefix}] Dvofaktorska autentikacija onemogućena"
+      subject_template_improved: "Dvofaktorska autentikacija onemogućena"
     digest:
       since_last_visit: "Od vašeg posljednjeg posjeta"
       new_topics: "Nove teme"
@@ -2248,6 +2249,7 @@ hr:
       popular_posts: "Popularne objave"
       more_new: "Novo za vas"
       subject_template: "[%{email_prefix}] Sažetak"
+      subject_template_improved: "Sažetak"
       unsubscribe: "Ovaj sažetak šalje %{site_link} kada vas nismo vidjeli neko vrijeme. Promijenite %{email_preferences_link} ili %{unsubscribe_link} da biste otkazali pretplatu."
       your_email_settings: "vaše e-mail postavke"
       click_here: "kliknite ovdje"
@@ -2266,6 +2268,7 @@ hr:
       title: "Prijavite se putem poveznice"
       preview: "Prijavite se putem poveznice."
       subject_template: "[%{email_prefix}] Prijavite se putem poveznice"
+      subject_template_improved: "Prijavite se putem poveznice"
       text_body_template: |
         Ovdje je vaša poveznica za prijavu na [%{site_name}](%{base_url}).
 
@@ -2275,7 +2278,6 @@ hr:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Postavite zaporku"
-      subject_template: "[%{email_prefix}] Postavite zaporku"
       text_body_template: |
         Netko je tražio dodavanje zaporke vašem računu na [%{site_name}](%{base_url}). Alternativno, možete se prijaviti pomoću bilo koje podržane online usluge (Google, Facebook, itd.) koja je povezana s ovom potvrđenom email adresom.
 
@@ -2286,6 +2288,7 @@ hr:
     admin_login:
       title: "Administratorska prijava"
       subject_template: "[%{email_prefix}] Prijava"
+      subject_template_improved: "Prijava"
       text_body_template: |
         Netko je tražio da se prijavi na vaš račun na [%{site_name}](%{base_url}).
 
@@ -2295,7 +2298,6 @@ hr:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Korisnički račun stvoren"
-      subject_template: "[%{email_prefix}] Vaš novi korisnički račun"
       text_body_template: |
         Za vas je kreiran novi korisnički račun na %{site_name}
 
@@ -2409,7 +2411,6 @@ hr:
         Ako se na gornju poveznicu ne može kliknuti, pokušajte ju kopirati i zalijepiti u adresnu traku vašeg web preglednika.
     suspicious_login:
       title: "Upozorenje o novoj prijavi"
-      subject_template: "[%{site_name}] Nova prijava iz %{location}"
       text_body_template: |
         Pozdrav,
 

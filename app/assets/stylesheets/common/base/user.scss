@@ -174,15 +174,11 @@
       width: 100%;
       border-top: 1px solid var(--content-border-color);
 
-      .btn {
-        padding: 4px 12px;
-      }
-
       dl {
         margin: 0;
         padding: 0.5em 0;
 
-        div {
+        > div {
           display: inline-flex;
           align-items: baseline;
           margin: 4px 0;
@@ -219,6 +215,12 @@
         color: var(--secondary-medium);
         margin-right: 5px;
         display: inline-block;
+      }
+    }
+
+    .btn-delete-user {
+      .select-kit-body {
+        font-size: var(--font-up-1);
       }
     }
 

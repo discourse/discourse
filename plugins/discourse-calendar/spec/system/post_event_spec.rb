@@ -89,29 +89,21 @@ describe "Post event" do
 
   context "with max attendees" do
     it "updates the going button label from Full after toggling" do
-      title = "My test meetup event"
+      going = I18n.t("js.discourse_post_event.models.invitee.status.going")
+      full = I18n.t("js.discourse_post_event.models.event.full")
       raw = "[event status='public' start='2222-02-22 14:22' max-attendees='1']\n[/event]"
-      post = PostCreator.create(admin, title:, raw:)
+      post = PostCreator.create(admin, title: "My test meetup event", raw:)
 
       visit(post.topic.url)
 
-      # First click: join the event; since max is 1, it reaches capacity and shows Full
+      # Wait for the component to settle before clicking
+      expect(page).to have_css(".going-button", text: going)
       post_event_page.going
-      expect(page).to have_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.event.full"),
-      )
+      expect(page).to have_css(".going-button", text: full)
 
-      # Second click: leave the event; label should no longer be Full
       post_event_page.going
-      expect(page).to have_no_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.event.full"),
-      )
-      expect(page).to have_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.invitee.status.going"),
-      )
+      expect(page).to have_css(".going-button", text: going)
+      expect(page).to have_no_css(".going-button", text: full)
     end
   end
 
@@ -188,8 +180,11 @@ describe "Post event" do
 
     post_event_page.close
     post_event_page.open
-    post_event_page.going.open_more_menu
-    find(".show-all-participants").click
+
+    try_until_success { post_event_page.going }.open_more_menu do
+      locator(".show-all-participants").click
+    end
+
     find(".d-modal input.filter").fill_in(with: user.username)
     find(".d-modal .add-invitee").click
 

@@ -6,10 +6,6 @@
 
 nb_NO:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Datautforsker"
     errors:
       explorer:
         no_semicolons: "Fjern semikolonene fra spørringen."
@@ -21,9 +17,6 @@ nb_NO:
       title: "Datautforsker"
       create: "Opprett"
       create_placeholder: "Spørringsnavn…"
-      ai:
-        generate: "Generer API-nøkkel"
-        optional: "valgfritt"
       import:
         label: "Importer"
       help:

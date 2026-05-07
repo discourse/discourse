@@ -49,6 +49,13 @@ module DiscourseSolved
             DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
           end
 
+          def unconfigure_category(category, guardian:)
+            category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = "false"
+            category.save!
+
+            DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
+          end
+
           def configuration_schema
             {
               general_category_settings: {

@@ -2658,11 +2658,6 @@ te:
         selected_count:
           one: "%{count} ఎంచుకోబడింది"
           other: "%{count} ఎంచుకోబడింది"
-        choose_new_tags: "ఈ విషయాలకి కొత్త ట్యాగ్‌లను ఎంచుకోండి:"
-        changed_tags: "ఆ విషయాల ట్యాగ్‌లు మార్చబడ్డాయి."
-        confirm_remove_tags:
-          one: "ఈ విషయం నుండి అన్ని ట్యాగ్‌లు తీసివేయబడతాయి. ఖచ్చితమనే?"
-          other: "ఈ %{count} విషయాలు నుండి అన్ని ట్యాగ్‌లు తీసివేయబడతాయి. ఖచ్చితమనే?"
         progress:
           one: "పురోగతి: <strong>%{count}</strong> విషయం"
           other: "పురోగతి: <strong>%{count}</strong> విషయాలు"
@@ -2693,10 +2688,6 @@ te:
         name: "ఆర్కైవ్ చెయ్యండి"
       move_messages_to_inbox:
         name: "ఇన్‌బాక్స్‌కి తరలించండి"
-      remove_tags:
-        name: "ట్యాగ్‌లను తీసివేయండి"
-      replace_tags:
-        name: "ట్యాగ్‌లను భర్తీ చేయండి"
       delete_topics:
         name: "తొలగించండి"
       update_category:
@@ -2722,6 +2713,7 @@ te:
         other: "%{count} ప్రత్యుత్తరాలు"
       collapse: "కుదించండి"
       no_replies: "ఇంకా ప్రత్యుత్తరాలు లేవు."
+      ignored_post_placeholder: "[విస్మరించబడిన]"
       pinned_reply: "పిన్ చేయబడింది"
     topic:
       filter_to:
@@ -5459,6 +5451,7 @@ te:
         topic_id: "విషయపు ఐడీ"
         post_id: "పోస్ట్ ఐడీ"
         category_id: "వర్గం ID"
+        reviewable_id: "సమీక్ష"
         delete: "తొలగించండి"
         edit: "సవరించండి"
         save: "సేవ్ చేయండి"

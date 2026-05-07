@@ -2005,8 +2005,10 @@ te:
       title: "ఖాతా నిశ్శబ్దం చేయబడింది"
     account_exists:
       title: "ఖాతా ఇప్పటికే ఉంది"
+      subject_template_improved: "ఖాతా ఇప్పటికే ఉంది"
     account_second_factor_disabled:
       title: "రెండు-కారకాల ప్రమాణీకరణ నిలిపివేయబడింది"
+      subject_template_improved: "రెండు-కారకాల ప్రమాణీకరణ నిలిపివేయబడింది"
     digest:
       since_last_visit: "మీ చివరి సందర్శన నుండి"
       new_topics: "క్రొత్త విషయాలు"
@@ -2018,6 +2020,7 @@ te:
       popular_posts: "ప్రసిద్ధ పోస్ట్‌లు"
       more_new: "మీ కోసం కొత్తది"
       subject_template: "[%{email_prefix}] సారాంశం"
+      subject_template_improved: "సారాంశం"
       your_email_settings: "మీ ఇమెయిల్ సెట్టింగ్‌లు"
       click_here: "ఇక్కడ క్లిక్ చేయండి"
       from: "%{site_name}"
@@ -2026,15 +2029,15 @@ te:
     email_login:
       title: "లింక్ ద్వారా లాగిన్ అవ్వండి"
       subject_template: "[%{email_prefix}] లింక్ ద్వారా లాగిన్ అవ్వండి"
+      subject_template_improved: "లింక్ ద్వారా లాగిన్ అవ్వండి"
     set_password:
       title: "సంకేతపదం అమర్చండి"
-      subject_template: "[%{email_prefix}] పాస్‌వర్డ్‌ని సెట్ చేయండి"
     admin_login:
       title: "అడ్మిన్ లాగిన్"
       subject_template: "[%{email_prefix}] లాగిన్"
+      subject_template_improved: "లాగిన్"
     account_created:
       title: "ఖాతా సృష్టించబడింది"
-      subject_template: "[%{email_prefix}] మీ కొత్త ఖాతా"
     confirm_new_email:
       title: "కొత్త ఇమెయిల్‌ను నిర్ధారించండి"
     confirm_new_email_via_admin:
@@ -2073,7 +2076,6 @@ te:
       title: "యాక్టివేషన్ రిమైండర్"
     suspicious_login:
       title: "కొత్త లాగిన్ హెచ్చరిక"
-      subject_template: "[%{site_name}] %{location} నుండి కొత్త లాగిన్"
     post_approved:
       title: "మీ పోస్ట్ ఆమోదించబడింది"
       subject_template: "[%{site_name}] మీ పోస్ట్ ఆమోదించబడింది"

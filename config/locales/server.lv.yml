@@ -466,8 +466,11 @@ lv:
       liked_received: "Saņemtās atzinības"
       new_users: "Jauni lietotāji"
       join_the_discussion: "Lasīt vairāk"
+      subject_template_improved: "Kopsavilkums"
     set_password:
       title: "Iestatīt paroli"
+    admin_login:
+      subject_template_improved: "Ielogoties"
   page_not_found:
     page_title: "Lapa nav atrasta"
     see_more: "Vairāk"

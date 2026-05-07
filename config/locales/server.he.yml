@@ -3497,7 +3497,6 @@ he:
         התגובה שלך נשלחה מכתובת דוא״ל שנחסמה. אם לדעתך מדובר בטעות, מוטב לשלוח מכתובת דוא״ל אחרת או [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "דחיית דוא״ל עקב כתובת אסורה"
-      subject_template: "[%{email_prefix}] בעיית מייל -- מייל חסום"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3662,7 +3661,6 @@ he:
         אין לך הרשאות להגיב לנושא הזה. אם לדעתך מדובר בטעות, מוטב [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "דחיית דוא״ל תגובה לתקציר"
-      subject_template: "[%{email_prefix}] תקלת דוא״ל -- תגובה לתקציר"
       text_body_template: |
         מחילה אך הודעות הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא עברו.
 
@@ -3790,7 +3788,6 @@ he:
       text_body_template: "האפשרות \"הורדת תמונות מרוחקות\" נוטרלה בגלל שכל שטח האכסון שמוקצה ל\"תמונות שהורדו מרחוק\" נוצל."
     new_user_of_the_month:
       title: "אתם המשתמשים החדשים של החודש!"
-      subject_template: "אתם המשתמשים החדשים של החודש!"
       text_body_template: |
         ברכותינו, זכית בפרס **המשתמש החדש לחודש %{month_year}**. :trophy:
 
@@ -4101,6 +4098,7 @@ he:
     account_exists:
       title: "החשבון כבר קיים"
       subject_template: "[%{email_prefix}] החשבון כבר קיים"
+      subject_template_improved: "החשבון כבר קיים"
       text_body_template: |
         הרגע ניסית ליצור חשבון אצל %{site_name}, או שניסית לשנות כתובת דוא״ל של חשבון לכדי %{email}. למרות שכבר יש חשבון עם הכתובת %{email}.
 
@@ -4112,6 +4110,7 @@ he:
     account_second_factor_disabled:
       title: "אימות דו־שלבי מושבת"
       subject_template: "[%{email_prefix}] אימות דו־שלבי מושבת"
+      subject_template_improved: "אימות דו־שלבי מושבת"
     digest:
       why: "תקציר של %{site_link} מאז %{since}"
       since_last_visit: "מאז הביקור האחרון"
@@ -4125,6 +4124,7 @@ he:
       popular_posts: "פוסטים נפוצים"
       more_new: "חדש בשבילך"
       subject_template: "[%{email_prefix}] סיכום"
+      subject_template_improved: "תקציר"
       unsubscribe: "סיכום זה נשלח ממערכת %{site_link} כאשר לא נרשמת פעילות במשך זה מה. ניתן לשנות את %{email_preferences_link} או %{unsubscribe_link} כדי לבטל את המינוי. "
       your_email_settings: "הגדרות הדוא״ל שלך"
       click_here: "ללחוץ כאן"
@@ -4144,6 +4144,7 @@ he:
       title: "כניסה דרך קישור"
       preview: "כניסה דרך קישור."
       subject_template: "[%{email_prefix}] כניסה דרך קישור"
+      subject_template_improved: "כניסה דרך קישור"
       text_body_template: |
         להלן קישור הכניסה שלך אל [%{site_name}](%{base_url}).
 
@@ -4153,7 +4154,6 @@ he:
         ‎%{base_url}/session/email-login/%{email_token}‎
     set_password:
       title: "קביעת סיסמה"
-      subject_template: "[%{email_prefix}] קביעת סיסמה"
       text_body_template: |
         מישהו ביקש להוסיף סיסמה לחשבון שלך ב־[%{site_name}](%{base_url}). לחלופין, אפשר להיכנס דרך כל שירות מקוון נתמך (Google, פייסבוק, וכד׳) שמקושר עם כתובת דוא״ל זו.
 
@@ -4164,6 +4164,7 @@ he:
     admin_login:
       title: "כניסת הנהלה"
       subject_template: "[%{email_prefix}] כניסה"
+      subject_template_improved: "כניסה"
       text_body_template: |
         התקבלה בקשה להיכנס לחשבון שלך אצל [%{site_name}](%{base_url}).
 
@@ -4173,7 +4174,6 @@ he:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "חשבון נוצר"
-      subject_template: "[%{email_prefix}] החשבון החדש שלך"
       text_body_template: |
         חשבון חדש נוצר עבורך באתר %{site_name}
 
@@ -4286,7 +4286,6 @@ he:
         אם הקישור שלהלן אינו זמין ללחיצה, מוטב לנסות להעתיק ולהדביק אותו לסרגל הכתובות של הדפדפן שלך.
     suspicious_login:
       title: "התראת כניסה חדשה"
-      subject_template: "[%{site_name}] כניסה חדשה מ%{location}"
       text_body_template: |
         שלום,
 

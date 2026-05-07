@@ -10,7 +10,6 @@ th:
       alt:
         solved:
           accepted_notification: "ยอมรับแล้ว"
-          topic_solved_notification: "แก้ไขแล้ว"
     solved:
       title: "แก้ไขแล้ว"
       allow_accepted_answers: "อนุญาตให้เจ้าของกระทู้และทีมงานทำเครื่องหมายการตอบกลับว่าเป็นวิธีแก้ปัญหา"

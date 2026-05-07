@@ -15,7 +15,6 @@ cs:
       alt:
         solved:
           accepted_notification: "přijato"
-          topic_solved_notification: "vyřešeno"
     solutions: "Řešení"
     solved:
       title: "Vyřešeno"
@@ -60,7 +59,6 @@ cs:
       no_answer:
         title: Byla vaše otázka zodpovězena?
         description: "Pomozte ostatním tím, že zvýrazníte odpověď použitím tlačítka Řešení pod správnou odpovědí."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "váš příspěvek byl označen jako řešení"
     topic_statuses:

@@ -325,7 +325,13 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   def secure_reaction_users!(reaction_users)
     builder = DB.build("/*where*/")
     UserAction.apply_common_filters(builder, current_user.id, guardian)
-    reaction_users.where(builder.to_sql.delete_prefix("/*where*/").delete_prefix("WHERE"))
+    sql =
+      builder
+        .to_sql
+        .delete_prefix("/*where*/")
+        .delete_prefix("WHERE")
+        .gsub("a.acting_user_id", "discourse_reactions_reaction_users.user_id")
+    reaction_users.where(sql)
   end
 
   def translate_to_reactions(likes)

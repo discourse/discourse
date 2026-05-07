@@ -392,6 +392,15 @@ RSpec.describe UpcomingChanges do
       UpcomingChanges.clear_caches!
     end
 
+    context "when the change is not registered" do
+      it "raises ArgumentError" do
+        expect { described_class.enabled?(:not_an_upcoming_change) }.to raise_error(
+          ArgumentError,
+          /Unknown upcoming change/,
+        )
+      end
+    end
+
     context "when the setting has no row in the database (admin has not saved it)" do
       before { SiteSetting.remove_override!(setting_name) }
 
@@ -576,6 +585,14 @@ RSpec.describe UpcomingChanges do
 
       described_class.permanent_upcoming_changes
       expect(UpcomingChanges::List).to have_received(:call).twice
+    end
+  end
+
+  describe ".clear_caches!" do
+    it "clears the latest new feature created_at cache" do
+      Discourse.redis.set("latest_new_feature_created_at", Time.zone.now.iso8601)
+      described_class.clear_caches!
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_nil
     end
   end
 

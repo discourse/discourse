@@ -48,6 +48,9 @@ ur:
         direct: '%{username} نے آپ کا تذکرہ "%{channel}" میں کیا'
       direct_message_chat_mention:
         direct: "%{username} نے نجی چیٹ میں آپ کا تذکرہ کیا"
+    actions:
+      chat_reply:
+        title: جواب
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

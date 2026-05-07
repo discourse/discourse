@@ -90,9 +90,6 @@ ko:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      event_description:
-        show_more: "더 보기"
-        show_less: "간략히 보기"
       edit_reason: "이벤트 업데이트됨"
       show_all: "모두 보기"
       add_to_calendar: "캘린더에 추가"

@@ -10,7 +10,6 @@ sl:
       alt:
         solved:
           accepted_notification: "sprejeto"
-          topic_solved_notification: "rešeno"
     solutions: "Rešitve"
     solved:
       title: "Rešeno"
@@ -42,7 +41,6 @@ sl:
       no_answer:
         title: Ste dobili odgovor na vaše vprašanje?
         description: "Z izbiro gumba za potrditev pod ustrezno objavo izpostavite odgovor in s tem pomagajte drugim."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "vaša objava je bila označena kot rešitev"
     topic_statuses:

@@ -10,7 +10,6 @@ sv:
       alt:
         solved:
           accepted_notification: "accepterad"
-          topic_solved_notification: "lösta"
     solutions: "Lösningar"
     solved:
       title: "Löst"
@@ -40,7 +39,6 @@ sv:
       no_answer:
         title: Har din fråga besvarats?
         description: "Markera svaret och hjälp andra genom att använda lösningsknappen under det korrekta svaret."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       category_type_support:
         title: "Stöd"
     topic_statuses:

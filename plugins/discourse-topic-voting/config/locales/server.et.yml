@@ -10,7 +10,3 @@ et:
     topic_voting_show_who_voted: 'Kas lubada kasutajatel näha, kes hindas?'
     topic_voting_show_votes_on_profile: 'Kas lubada kasutajatel näha oma hinnanguid tegevusvoos?'
     topic_voting_alert_votes_left: 'Teavita kasutajate, kui palju hinnangu andmisi tal veel järgi on'
-  topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Näita vastajaid"

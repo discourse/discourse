@@ -29,6 +29,9 @@ class PushNotificationPusher
         url: payload[:post_url]&.sub(/\A#{Discourse.base_path}/, ""),
       }
 
+      message[:actions] = payload[:actions] if payload[:actions].present?
+      message[:action_data] = payload[:action_data] if payload[:action_data].present?
+
       subscriptions(user).each { |subscription| send_notification(user, subscription, message) }
     end
 
@@ -178,6 +181,9 @@ class PushNotificationPusher
     rescue Timeout::Error => e
       handle_generic_error(subscription, e, user, endpoint, message)
     rescue OpenSSL::SSL::SSLError => e
+      handle_generic_error(subscription, e, user, endpoint, message)
+    rescue FinalDestination::SSRFDetector::LookupFailedError,
+           FinalDestination::SSRFDetector::DisallowedIpError => e
       handle_generic_error(subscription, e, user, endpoint, message)
     end
   end

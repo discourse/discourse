@@ -5,7 +5,11 @@ describe "Solved" do
   fab!(:solver, :user)
   fab!(:accepter) { Fabricate(:user, name: "<b>DERP<b>") }
   fab!(:topic) { Fabricate(:post, user: admin).topic }
-  fab!(:solver_post) { Fabricate(:post, topic:, user: solver, cooked: "The answer is 42") }
+  fab!(:solver_post) do
+    long_cooked =
+      "<p>The answer is 42.</p>" + ("<p>Some additional context for the answer.</p>" * 10)
+    Fabricate(:post, topic:, user: solver, cooked: long_cooked)
+  end
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
@@ -54,7 +58,29 @@ describe "Solved" do
     Fabricate(:solved_topic, topic:, answer_post: solver_post, accepter:)
     sign_in(solver)
     visit "/my/activity/solved"
-    expect(page.find(".post-list")).to have_content(solver_post.cooked)
+    expect(page.find(".post-list")).to have_content("The answer is 42")
+  end
+
+  describe "solution excerpt expand toggle" do
+    it "shows the toggle when the answer overflows the preview" do
+      Fabricate(:solved_topic, topic:, answer_post: solver_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_css(QUOTE_TOGGLE_SELECTOR)
+    end
+
+    it "hides the toggle when the answer fits within the preview" do
+      short_post = Fabricate(:post, topic:, user: solver, cooked: "<p>The answer is 42.</p>")
+      Fabricate(:solved_topic, topic:, answer_post: short_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_css(ACCEPTED_ANSWER_QUOTE_SELECTOR)
+      expect(topic_page).to have_no_css(QUOTE_TOGGLE_SELECTOR)
+    end
   end
 
   describe "solution excerpt formatting" do

@@ -43,6 +43,21 @@ describe DiscourseTopicVoting::TopicMerger do
       expect(topic_0.reload.vote_count).to eq(0)
       expect(topic_1.reload.vote_count).to eq(1)
     end
+
+    it "enqueues the backfill badges job for the destination topic when votes move" do
+      topic_0.update_status("closed", true, Discourse.system_user)
+
+      DiscourseTopicVoting::Vote.create!(user: user_0, topic: topic_0)
+      topic_0.update_vote_count
+
+      expect { described_class.merge(topic_0, topic_1) }.to change(
+        Jobs::DiscourseTopicVoting::BackfillBadges.jobs,
+        :size,
+      ).by(1)
+      expect(Jobs::DiscourseTopicVoting::BackfillBadges.jobs.last["args"].first).to include(
+        "topic_id" => topic_1.id,
+      )
+    end
   end
 
   context "when merging topics via move_posts (topic_merged)" do

@@ -3454,7 +3454,6 @@ es:
         Tu respuesta se envió desde una dirección de correo electrónico bloqueada. Trata de enviar la respuesta desde otra dirección de correo electrónico o [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Correo electrónico rechazado. Correo electrónico no permitido"
-      subject_template: "[%{email_prefix}] Problema de correo electrónico -- Correo bloqueado"
       text_body_template: |
         Lo sentimos, pero tu mensaje a %{destination} (con el título%{former_title}) no funcionó.
 
@@ -3619,7 +3618,6 @@ es:
         Tu cuenta no tiene los permisos para responder al tema. Si crees que esto es un error, [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Correo electrónico de rechazo por respuesta al resumen"
-      subject_template: "[%{email_prefix}] Problema de correo electrónico — Responder al resumen"
       text_body_template: |
         Lo sentimos, pero tu mensaje de correo electrónico a %{destination} (titulado %{former_title}) no ha funcionado.
 
@@ -3765,7 +3763,6 @@ es:
       text_body_template: "La opción «download_remote_images_to_local» ha sido desactivada porque se ha llegado al límite de espacio en disco configurado en «download_remote_images_threshold»."
     new_user_of_the_month:
       title: "¡Eres el usuario nuevo del mes!"
-      subject_template: "¡Eres el usuario nuevo del mes!"
       text_body_template: |
         ¡Enhorabuena! Has ganado el **premio de usuario nuevo del mes de %{month_year}**. :trophy:
 
@@ -4095,6 +4092,7 @@ es:
     account_exists:
       title: "Cuenta ya existente"
       subject_template: "[%{email_prefix}] La cuenta ya existe"
+      subject_template_improved: "Cuenta ya existente"
       text_body_template: |
         Intentaste crear una cuenta en %{site_name} o intentaste cambiar el correo electrónico de una cuenta a %{email}. Sin embargo, ya existe una cuenta con la dirección de correo %{email}.
 
@@ -4106,6 +4104,7 @@ es:
     account_second_factor_disabled:
       title: "Autenticación de dos factores desactivada"
       subject_template: "[%{email_prefix}] Autenticación de dos factores desactivada"
+      subject_template_improved: "Autenticación de dos factores desactivada"
       text_body_template: |
         La autenticación de dos factores se ha desactivado en tu cuenta de %{site_name}. Ahora podrás iniciar sesión tan solo con tu contraseña, ya no hace falta que introduzcas tu código de autenticación.
 
@@ -4125,6 +4124,7 @@ es:
       popular_posts: "Publicaciones populares"
       more_new: "Nuevo para ti"
       subject_template: "[%{email_prefix}] Resumen"
+      subject_template_improved: "Resumen"
       unsubscribe: "Este resumen se envía desde %{site_link} cuando no te hemos visto durante cierto tiempo. Cambia %{email_preferences_link} o %{unsubscribe_link} para cancelar tu suscripción."
       your_email_settings: "tus configuraciones de correo electrónico"
       click_here: "haz clic aquí"
@@ -4145,6 +4145,7 @@ es:
       title: "Iniciar sesión con un enlace"
       preview: "Iniciar sesión con un enlace."
       subject_template: "[%{email_prefix}] Iniciar sesión con un enlace"
+      subject_template_improved: "Iniciar sesión con un enlace"
       text_body_template: |
         Aquí tienes tu enlace para iniciar sesión en [%{site_name}](%{base_url}).
 
@@ -4155,7 +4156,6 @@ es:
     set_password:
       title: "Establecer contraseña"
       preview: "Establece la contraseña de la cuenta."
-      subject_template: "[%{email_prefix}] Establecer contraseña"
       text_body_template: |
         Alguien ha solicitado añadir una contraseña a tu cuenta en [%{site_name}](%{base_url}). Alternativamente, puedes iniciar sesión usando cualquier servicio online soportado (como Google, Facebook, etc) que esté asociado con esta dirección de correo electrónico validada.
 
@@ -4167,6 +4167,7 @@ es:
       title: "Inicio de sesión de administrador"
       preview: "Inicio de sesión de administrador solicitado."
       subject_template: "[%{email_prefix}] Inicio de sesión"
+      subject_template_improved: "Inicio de sesión"
       text_body_template: |
         Alguien ha solicitado iniciar sesión en tu cuenta de [%{site_name}](%{base_url}).
 
@@ -4177,7 +4178,6 @@ es:
     account_created:
       title: "Cuenta creada"
       preview: "Se ha creado una nueva cuenta para ti."
-      subject_template: "[%{email_prefix}] Tu nueva cuenta"
       text_body_template: |
         Has creado una nueva cuenta en %{site_name}
 
@@ -4289,7 +4289,6 @@ es:
     suspicious_login:
       title: "Alerta de nuevo inicio de sesión"
       preview: "Verifica tu dispositivo."
-      subject_template: "[%{site_name}] Alerta de nuevo inicio de sesión desde %{location}"
       text_body_template: |
         Hola,
 

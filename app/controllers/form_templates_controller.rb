@@ -24,8 +24,6 @@ class FormTemplatesController < ApplicationController
   private
 
   def ensure_form_templates_enabled
-    unless UpcomingChanges.enabled_for_user?(:enable_form_templates, current_user)
-      raise Discourse::InvalidAccess.new
-    end
+    raise Discourse::InvalidAccess.new unless SiteSetting.enable_form_templates
   end
 end

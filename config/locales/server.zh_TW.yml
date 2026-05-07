@@ -1824,7 +1824,6 @@ zh_TW:
         您的回覆是在黑名單內的電子郵件地址發送的。請重新嘗試用其他Email 地址或 [聯絡管理成員](%{base_url}/about)。
     email_reject_not_allowed_email:
       title: "電子郵件拒絕 不被允許的郵件地址"
-      subject_template: "[%{email_prefix}] 電子郵件錯誤 -- 被封禁的郵件地址"
       text_body_template: |
         我們非常抱歉，但是您發送至 %{destination} （郵件標題為：%{former_title}） 的郵件出問題了。
 
@@ -2062,7 +2061,6 @@ zh_TW:
       text_body_template: "`download_remote_images_to_local` 設定已被禁用，因為已經達到 ``download_remote_images_threshold` 設定中的磁碟空間限制。"
     new_user_of_the_month:
       title: "你是本月最佳新人！"
-      subject_template: "你是本月最佳新人！"
       text_body_template: |
         恭喜，你贏得了**%{month_year} 最佳新人獎**！ :trophy:
 
@@ -2298,6 +2296,7 @@ zh_TW:
     account_exists:
       title: "帳號已存在"
       subject_template: "[%{email_prefix}] 帳號已存在"
+      subject_template_improved: "帳號已存在"
       text_body_template: |
         您剛剛嘗試在%{site_name}建立帳號，或者嘗試將帳戶的電子郵件更改為%{email}。但是，%{email}已存在一個帳戶。
 
@@ -2317,6 +2316,7 @@ zh_TW:
       popular_posts: "熱門貼文"
       more_new: "新內容與你分享"
       subject_template: "[%{email_prefix}] 摘要"
+      subject_template_improved: "摘要"
       unsubscribe: "因為你有一段時間沒有來 %{site_link}，因此為你送上論壇近期摘要郵件。如需取消訂閱，請至 %{email_preferences_link} 或點擊 %{unsubscribe_link}。"
       your_email_settings: "你的電子郵件設定"
       click_here: "點擊此處"
@@ -2335,6 +2335,7 @@ zh_TW:
       title: "透過連結登入"
       preview: "透過連結登入."
       subject_template: "[%{email_prefix}] 透過連結登入"
+      subject_template_improved: "透過連結登入"
       text_body_template: |
         有人嘗試登入你在[%{site_name}](%{base_url})的帳號。
 
@@ -2344,7 +2345,6 @@ zh_TW:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "設定密碼"
-      subject_template: "[%{email_prefix}] 設定密碼"
       text_body_template: |
         有人要求為你在 [%{site_name}](%{base_url}) 的帳號新增密碼。你也可以直接透過任何與此郵件信箱關聯的線上服務登入（例如 Google、Facebook 等）。
 
@@ -2355,9 +2355,9 @@ zh_TW:
     admin_login:
       title: "管理員登入"
       subject_template: "[%{email_prefix}] 登入"
+      subject_template_improved: "登入"
     account_created:
       title: "建立使用者"
-      subject_template: "[%{email_prefix}] 你的新帳號"
       text_body_template: |
         你在 %{site_name} 的新帳號已準備好。
 
@@ -2409,7 +2409,6 @@ zh_TW:
         如果上面的連結無法點擊，請複製該連結，並貼到瀏覽器的網址列中開啟。
     suspicious_login:
       title: "新登入提醒"
-      subject_template: "[%{site_name}] 新登入來自%{location}"
       text_body_template: |
         您好，
 

@@ -70,7 +70,6 @@ module SystemHelpers
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_url = ""
     SiteSetting.enable_user_tips = false
-    SiteSetting.splash_screen = false
     SiteSetting.allowed_internal_hosts =
       (
         SiteSetting.allowed_internal_hosts.to_s.split("|") +
@@ -371,8 +370,24 @@ module SystemHelpers
     element.with_playwright_element_handle do |playwright_element|
       playwright_element.wait_for_element_state("hidden")
     rescue Playwright::Error => e
-      raise e unless e.message.match?(/Element is not attached to the DOM/)
+      raise if !detached_element_error?(e)
     end
+  end
+
+  # Retries the block on "Element is not attached to the DOM" error.
+  # That's usually a `find(...).click` racing a re-render.
+  def with_dom_retry(timeout: Capybara.default_max_wait_time)
+    deadline = Time.current + timeout.seconds
+    begin
+      yield
+    rescue Playwright::Error => e
+      retry if detached_element_error?(e) && Time.current < deadline
+      raise
+    end
+  end
+
+  def detached_element_error?(error)
+    error.is_a?(Playwright::Error) && error.message.include?("Element is not attached to the DOM")
   end
 
   def locator(selector, locator = nil)
@@ -389,5 +404,32 @@ module SystemHelpers
 
   def html_translation_to_text(html_translation)
     Nokogiri.HTML5(html_translation).at("body").inner_text
+  end
+
+  def capture_log_entries(controller:, entries:, action: nil)
+    log = Rails.root.join("log", "#{Rails.env}.log")
+    File.truncate(log, 0) if File.exist?(log)
+
+    yield
+
+    read =
+      lambda do
+        return [] unless File.exist?(log)
+        File.open(log) do |f|
+          f
+            .read
+            .lines
+            .reject { |l| l.strip.empty? }
+            .filter_map do |line|
+              JSON.parse(line)
+            rescue JSON::ParserError
+              nil
+            end
+            .select { |e| e["controller"] == controller && (action.nil? || e["action"] == action) }
+        end
+      end
+
+    try_until_success { raise Capybara::ExpectationNotMet if read.call.size < entries }
+    read.call
   end
 end

@@ -1885,8 +1885,6 @@ lv:
         actions: "Darbības ar vairumu"
         move_messages_to_inbox: "Pārvietot uz iesūtni"
         choose_new_category: "Izvēlēties jaunu sadaļu šīm tēmām:"
-        choose_new_tags: "Izvēlēties jaunus tagus šīm tēmām:"
-        changed_tags: "Šo tēmu tagi tika mainīti."
         error_topic_count:
           zero: "%{count} tēmas"
           one: "%{count} tēma"
@@ -1909,8 +1907,6 @@ lv:
         name: "Arhīvs"
       move_messages_to_inbox:
         name: "Pārvietot uz iesūtni"
-      replace_tags:
-        name: "Aizvietot tagus"
       delete_topics:
         name: "Dzēst"
     nested_replies:
@@ -1929,6 +1925,7 @@ lv:
       collapse: "Sakļaut"
       no_replies: "Vēl nav atbilžu."
       deleted_post_placeholder: "[dzēsts]"
+      ignored_post_placeholder: "[ignorēts]"
       pinned_reply: "Piesprausts"
     topic:
       filter_to:
@@ -2399,7 +2396,7 @@ lv:
           low: "Zems"
           high: "Augsta"
       sort_options:
-        default: "noklusējuma"
+        default: "Noklusējums"
         likes: "Atzinības"
         views: "Skatījumi"
         posts: "Ieraksti"
@@ -3440,6 +3437,7 @@ lv:
         topic_id: "Tēmas ID"
         post_id: "Ieraksta ID"
         category_id: "Kategorijas ID"
+        reviewable_id: "Pārskats"
         delete: "Dzēst"
         edit: "Labot"
         save: "Saglabāt"

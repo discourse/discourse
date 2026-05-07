@@ -128,10 +128,9 @@ Discourse::Application.routes.draw do
           delete "owners" => "groups#remove_owner"
           put "primary" => "groups#set_primary"
         end
-      end
-      resources :groups, only: [:destroy], constraints: AdminConstraint.new do
         collection { put "automatic_membership_count" => "groups#automatic_membership_count" }
       end
+      resources :groups, only: [:destroy], constraints: AdminConstraint.new
 
       resources :users, id: RouteFormat.username, only: %i[index destroy] do
         collection do
@@ -1432,6 +1431,7 @@ Discourse::Application.routes.draw do
       get "/context/:post_number" => "nested_topics#context", :constraints => { post_number: /\d+/ }
       put "/pin" => "nested_topics#pin"
       put "/toggle" => "nested_topics#toggle"
+      get "/activity" => "nested_topics#activity"
       get "/:post_number" => "nested_topics#context", :constraints => { post_number: /\d+/ }
       get "/" => "nested_topics#show"
     end
@@ -1927,8 +1927,6 @@ Discourse::Application.routes.draw do
 
     resources :sidebar_sections, only: %i[index create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
-
-    post "/pageview" => "pageview#index"
 
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"

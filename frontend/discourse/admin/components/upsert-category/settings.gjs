@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -7,7 +6,6 @@ import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import getUrl from "discourse/lib/get-url";
-import ComboBox from "discourse/select-kit/components/combo-box";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -50,6 +48,7 @@ export default class UpsertCategorySettings extends Component {
         @title={{i18n "category.slug"}}
         @format="max"
         @type="input"
+        @validation="required"
         as |field|
       >
         <field.Control
@@ -88,18 +87,16 @@ export default class UpsertCategorySettings extends Component {
         @name="search_priority"
         @title={{i18n "category.search_priority.label"}}
         @format="max"
-        @type="custom"
+        @type="select"
+        @validation="required"
         as |field|
       >
-        <field.Control>
-          <ComboBox
-            @valueProperty="value"
-            @id="category-search-priority"
-            @content={{this.searchPrioritiesOptions}}
-            @value={{field.value}}
-            @onChange={{field.set}}
-            @options={{hash placementStrategy="absolute"}}
-          />
+        <field.Control @includeNone={{false}} as |select|>
+          {{#each this.searchPrioritiesOptions as |searchPriority|}}
+            <select.Option
+              @value={{searchPriority.value}}
+            >{{searchPriority.name}}</select.Option>
+          {{/each}}
         </field.Control>
       </@form.Field>
 

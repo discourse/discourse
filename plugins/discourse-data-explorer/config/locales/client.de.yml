@@ -6,10 +6,6 @@
 
 de:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Daten-Explorer"
     errors:
       explorer:
         no_semicolons: "Entferne die Semikolons aus der Anfrage."
@@ -26,9 +22,6 @@ de:
       create: "Erstellen"
       create_placeholder: "Name der Anfrage …"
       description_placeholder: "Hier bitte eine Beschreibung eingeben"
-      ai:
-        generate: "Erzeugen"
-        optional: "optional"
       import:
         label: "Importieren"
         unparseable_json: "JSON-Datei kann nicht verarbeitet werden."

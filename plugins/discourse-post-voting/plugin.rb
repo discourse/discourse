@@ -16,8 +16,11 @@ module ::PostVoting
   PLUGIN_NAME = "discourse-post-voting"
 end
 
+require_relative "lib/post_voting/engine"
+
 after_initialize do
-  require_relative "lib/post_voting/engine"
+  Discourse::Application.routes.append { mount PostVoting::Engine, at: "post_voting" }
+
   require_relative "lib/post_voting/vote_manager"
   require_relative "lib/post_voting/guardian_extension"
   require_relative "lib/post_voting/comment_creator"
@@ -38,8 +41,7 @@ after_initialize do
   require_relative "app/models/reviewable_post_voting_comment"
   require_relative "app/serializers/basic_voter_serializer"
   require_relative "app/serializers/post_voting_comment_serializer"
-  require_relative "app/serializers/reviewable_post_voting_comments_serializer"
-  require_relative "config/routes"
+  require_relative "app/serializers/reviewable_post_voting_comment_serializer"
 
   register_svg_icon "vote-up"
   register_svg_icon "vote-up-filled"
@@ -110,6 +112,24 @@ after_initialize do
     else
       scope
     end
+  end
+
+  register_html_builder("server:topic-show-crawler-post-end") do |controller, post:|
+    topic_view = controller.instance_variable_get(:@topic_view)
+    next if !topic_view&.topic&.is_post_voting?
+
+    comments = topic_view.comments[post.id]
+    reply_count = post.is_first_post? ? topic_view.filtered_posts.count - 1 : 0
+    next if comments.blank? && reply_count <= 0
+
+    ApplicationController.render(
+      template: "post_voting/crawler_post",
+      layout: false,
+      assigns: {
+        comments: comments,
+        reply_count: reply_count,
+      },
+    )
   end
 
   TopicView.on_preload do |topic_view|

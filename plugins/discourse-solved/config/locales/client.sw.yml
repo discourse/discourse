@@ -10,7 +10,6 @@ sw:
       alt:
         solved:
           accepted_notification: "imeruhusiwa"
-          topic_solved_notification: "imetatuliwa"
     solved:
       title: "Imetatuliwa"
       allow_accepted_answers: "Ruhusu Muanzilishi wa Mada na Wasaidizi kuchagua jibu kama Suluhisho"

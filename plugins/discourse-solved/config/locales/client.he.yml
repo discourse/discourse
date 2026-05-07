@@ -15,7 +15,6 @@ he:
       alt:
         solved:
           accepted_notification: "התקבל"
-          topic_solved_notification: "נפתר"
     solutions: "פתרונות"
     solved:
       title: "נפתר"
@@ -47,7 +46,6 @@ he:
       no_answer:
         title: התשובה שלך נענתה?
         description: "ניתן להדגיש את התשובה ולסייע לאחרים על ידי לחיצה על כפתור הפתרון שלהלן מתחת לתגובה הנכונה."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "הפוסט שלך סומן כפתרון"
       category_type_support:

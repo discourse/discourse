@@ -15,11 +15,9 @@ es:
       alt:
         solved:
           accepted_notification: "aceptado"
-          topic_solved_notification: "solucionado"
     solutions: "Soluciones"
     solved:
       title: "Solucionado"
-      notify_on_solved: "Recibir notificaciones cuando se resuelva un tema que estoy siguiendo o vigilando. Solo se aplica a temas de categorías que permiten soluciones."
       allow_accepted_answers: "Permitir al propietario del tema y al staff marcar una respuesta como la solución"
       solved_topics_auto_close_hours: "Cierre automático del tema (n) horas después de la última respuesta una vez que el tema se haya marcado como solucionado."
       notify_on_staff_accept_solved: "Notificar al creador del tema cuando el personal marque una solución"
@@ -33,7 +31,6 @@ es:
       solution_summary:
         one: "solución"
         other: "soluciones"
-      accepted_answer_solver_info: "por %{user} en %{post}"
       accepted_answer_post_number: "publicación %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -43,7 +40,6 @@ es:
       no_solved_topics_title: "Todavía no has resuelto ningún tema"
       no_solved_topics_title_others: "%{username} no ha resuelto ningún tema todavía"
       no_solved_topics_body: "Cuando proporcionas una respuesta útil a un tema, el propietario del tema o el personal pueden seleccionar tu respuesta como la solución."
-      marked_solved_by: "aceptado por %{user}"
       confirm_move_solution_title: "Mover publicación de solución"
       confirm_move_solution:
         one: "La publicación que has seleccionado está marcada como solución para este tema. Si la mueves, el tema se actualizará a sin resolver."
@@ -60,15 +56,8 @@ es:
       no_answer:
         title: '¿Se ha respondido a tu pregunta?'
         description: "Destaca la respuesta y ayuda a los demás utilizando el botón de solución que hay debajo de la respuesta correcta."
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "tu publicación se ha marcado como solución"
-        topic_solved_title: "Tema resuelto"
-      topic_notifications:
-        tracking:
-          description: "Recibirás una notificación si alguien menciona tu @nombre, te responde o cuando el tema se resuelva. Se mostrará un recuento de las respuestas nuevas de este tema."
-        watching:
-          description: "Recibirás una notificación de cada respuesta nueva de este tema y cuando el tema se resuelva. Se mostrará un recuento de las respuestas nuevas de este tema."
       category_type_support:
         title: "Soporte"
         not_support_type: "¡Atención! Has desactivado la posibilidad de marcar publicaciones como soluciones en esta categoría. Para volver a activarla, encontrarás la configuración correspondiente en la pestaña Ajustes."

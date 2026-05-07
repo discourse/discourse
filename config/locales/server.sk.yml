@@ -3442,7 +3442,6 @@ sk:
         Vaša odpoveď bola odoslaná zo zablokovanej e-mailovej adresy. Skúste odoslať z inej e-mailovej adresy alebo [kontaktujte personál](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-mail odmietnutý: Nepovolená e-mailová adresa"
-      subject_template: "[%{email_prefix}] Problém s e-mailom -- Blokovaný e-mail"
       text_body_template: |
         Je nám ľúto, ale tvoja e-mailová správa pre %{destination} (s názvom %{former_title}) nebola úspešná.
 
@@ -3613,7 +3612,6 @@ sk:
         Nemáte oprávnenie odpovedať na túto tému. Ak sa domnievate, že ide o chybu, [kontaktujte personál](%{base_url}/o).
     email_reject_reply_to_digest:
       title: "E-mail odmietnutý: Odpoveď na súhrnný e-mail nie je povolená"
-      subject_template: "[%{email_prefix}] Problém s e-mailom -- Odpoveď na súhrn"
       text_body_template: |
         Je nám ľúto, ale vaša e-mailová správa na adresu %{destination} (s názvom %{former_title}) nefungovala.
 
@@ -3741,7 +3739,6 @@ sk:
       text_body_template: "Nastavenie `download_remote_images_to_local` bolo vypnuté, pretože bol dosiahnutý limit miesta na disku na úrovni `download_remote_images_threshold`."
     new_user_of_the_month:
       title: "Ste novým používateľom mesiaca!"
-      subject_template: "Ste novým používateľom mesiaca!"
       text_body_template: |
         Gratulujeme, získal si ocenenie **Nový používateľ mesiaca za %{month_year}**. :trophy:
 
@@ -4065,6 +4062,7 @@ sk:
     account_exists:
       title: "Účet už existuje"
       subject_template: "[%{email_prefix}] Účet už existuje"
+      subject_template_improved: "Účet už existuje"
       text_body_template: |
         Práve si sa pokúsil vytvoriť účet na %{site_name}, alebo si sa pokúsil zmeniť e-mail účtu na %{email}. Avšak, účet pre %{email} už existuje.
 
@@ -4076,6 +4074,7 @@ sk:
     account_second_factor_disabled:
       title: "Vypnuté dvojfaktorové overovanie"
       subject_template: "[%{email_prefix}] Dvojfaktorové overovanie vypnuté"
+      subject_template_improved: "Vypnuté dvojfaktorové overovanie"
     digest:
       why: "Stručný prehľad %{site_link} od %{since}"
       since_last_visit: "Od Vašej poslednej návštevy"
@@ -4089,6 +4088,7 @@ sk:
       popular_posts: "Obľúbené príspevky"
       more_new: "Novinka pre vás"
       subject_template: "[%{email_prefix}] Zhrnutie"
+      subject_template_improved: "Zhrnutie"
       unsubscribe: "Tento súhrn sa odosiela z %{site_link} , keď sme vás nejaký čas nevideli. Zmeňte %{email_preferences_link}alebo %{unsubscribe_link} , ak chcete zrušiť odber."
       your_email_settings: "nastavenia vášho e-mailu"
       click_here: "kliknite tu"
@@ -4108,6 +4108,7 @@ sk:
       title: "Prihláste sa prostredníctvom odkazu"
       preview: "Prihláste sa prostredníctvom odkazu."
       subject_template: "[%{email_prefix}] Prihláste sa prostredníctvom odkazu"
+      subject_template_improved: "Prihláste sa prostredníctvom odkazu"
       text_body_template: |
         Tu je váš odkaz na prihlásenie na [%{site_name}](%{base_url}).
 
@@ -4117,7 +4118,6 @@ sk:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Nastavte heslo"
-      subject_template: "[%{email_prefix}] Nastavenie hesla"
       text_body_template: |
         Niekto požiadal o pridanie hesla k vášmu účtu na [%{site_name}](%{base_url}). Prípadne sa môžete prihlásiť pomocou akejkoľvek podporovanej online služby (Google, Facebook atď.), ktorá je spojená s touto overenou e-mailovou adresou.
 
@@ -4128,6 +4128,7 @@ sk:
     admin_login:
       title: "Prihlásenie administrátora"
       subject_template: "[%{email_prefix}] Prihlásenie"
+      subject_template_improved: "Prihlásenie"
       text_body_template: |
         Niekto požiadal o prihlásenie do vášho účtu na [%{site_name}] (%{base_url}).
 
@@ -4137,7 +4138,6 @@ sk:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Účet vytvorený"
-      subject_template: "[%{email_prefix}] Váš nový účet"
       text_body_template: |
         Bol pre teba vytvorený nový účet na %{site_name}.
 
@@ -4246,7 +4246,6 @@ sk:
         /Ak sa na uvedený odkaz nedá kliknúť, skúste ho skopírovať a vložiť do adresného riadku svojho webového prehliadača.
     suspicious_login:
       title: "Nové upozornenie na prihlásenie"
-      subject_template: "[%{site_name}] Nové prihlásenie z %{location}"
       text_body_template: |
         Ahoj,
 

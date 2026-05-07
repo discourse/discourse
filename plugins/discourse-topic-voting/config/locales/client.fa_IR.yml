@@ -22,9 +22,6 @@ fa_IR:
         one: "رای"
         other: "رای‌ها"
       remove_vote: "حذف رای"
-      and_more_voters: "و %{count} نفر دیگر..."
-      show_voters: "نمایش رای دهندگان"
-      vote_count_thousands: "%{count} هزار"
     filters:
       votes:
         title: "رای‌ها"

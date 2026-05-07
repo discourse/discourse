@@ -24,7 +24,29 @@ describe Middleware::CrawlerHooks do
   let(:json_middleware) do
     Middleware::CrawlerHooks.new(
       lambda do |_|
-        [200, { "Content-Type" => "application/json; charset=utf-8" }, ['{ "key": "value" }']]
+        [
+          200,
+          {
+            "Content-Type" => "application/json; charset=utf-8",
+            "X-Discourse-Crawler-View" => "true",
+          },
+          ['{ "key": "value" }'],
+        ]
+      end,
+    )
+  end
+  let(:binary_middleware) do
+    Middleware::CrawlerHooks.new(
+      lambda do |_|
+        [
+          200,
+          {
+            "Content-Type" => "application/zip",
+            "Content-Disposition" => "attachment; filename=\"file.zip\"",
+            "X-Discourse-Crawler-View" => "true",
+          },
+          ["PK\x03\x04binarydata".b],
+        ]
       end,
     )
   end
@@ -71,11 +93,43 @@ describe Middleware::CrawlerHooks do
     end
 
     it "does not modify responses for non-HTML content types" do
-      status, headers, response = json_middleware.call(env("HTTP_USER_AGENT" => crawler_user_agent))
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+
+      status, headers, response =
+        json_middleware.call(
+          env(
+            :path => "https://discourse.site",
+            :params => {
+              Discourse::LOCALE_PARAM => "fr",
+            },
+            "HTTP_USER_AGENT" => crawler_user_agent,
+          ),
+        )
 
       expect(status).to eq(200)
       expect(headers["Content-Type"]).to include("application/json")
       expect(response).to eq(['{ "key": "value" }'])
+    end
+
+    it "does not parse binary file downloads as HTML" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+
+      status, headers, response =
+        binary_middleware.call(
+          env(
+            :path => "https://discourse.site/uploads/short-url/abc.zip",
+            :params => {
+              Discourse::LOCALE_PARAM => "fr",
+            },
+            "HTTP_USER_AGENT" => crawler_user_agent,
+          ),
+        )
+
+      expect(status).to eq(200)
+      expect(headers["Content-Type"]).to eq("application/zip")
+      expect(response).to eq(["PK\x03\x04binarydata".b])
     end
 
     it "does not modify responses for non-200 status codes" do
@@ -174,6 +228,49 @@ describe Middleware::CrawlerHooks do
       expect(status).to eq(200)
       expect(headers["Content-Type"]).to include("text/html")
       expect(response).to eq(html_response)
+    end
+
+    it "does not append the locale param to upload download links" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+
+      base_url = Discourse.base_url
+      html = [
+        "<html><body>" \
+          "<a href=\"/t/topic-slug/123\">Topic</a>" \
+          "<a href=\"/uploads/short-url/abc.zip\">Download</a>" \
+          "<a href=\"#{base_url}/uploads/default/original/1X/abc.png\">Image</a>" \
+          "<a href=\"/secure-uploads/original/1X/def.pdf\">Secure</a>" \
+          "<a href=\"/secure-media-uploads/original/1X/ghi.pdf\">Legacy secure</a>" \
+          "</body></html>",
+      ]
+      def html.body
+        join("")
+      end
+
+      test_env =
+        Rack::MockRequest.env_for(
+          "https://discourse.site/t/topic-slug/123",
+          params: {
+            Discourse::LOCALE_PARAM => "fr",
+          },
+        )
+      request = Rack::Request.new(test_env)
+
+      middleware_instance =
+        Middleware::CrawlerHooks.new(
+          lambda { |_| [200, { "X-Discourse-Crawler-View" => "true" }, []] },
+        )
+
+      transformed_response =
+        middleware_instance.send(:transform_response, request: request, response: html)
+
+      transformed = transformed_response.first
+      expect(transformed).to include("href=\"/t/topic-slug/123?#{Discourse::LOCALE_PARAM}=fr\"")
+      expect(transformed).to include("href=\"/uploads/short-url/abc.zip\"")
+      expect(transformed).to include("href=\"#{base_url}/uploads/default/original/1X/abc.png\"")
+      expect(transformed).to include("href=\"/secure-uploads/original/1X/def.pdf\"")
+      expect(transformed).to include("href=\"/secure-media-uploads/original/1X/ghi.pdf\"")
     end
 
     it "modifies external links that start with the base URL" do

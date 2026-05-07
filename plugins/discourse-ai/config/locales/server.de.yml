@@ -887,10 +887,8 @@ de:
       quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"
       no_query_specified: Der Abfrageparameter ist erforderlich, bitte gib ihn an.
       no_user_for_agent: Der angegebene Agent hat keinen Benutzer, der mit ihm verbunden ist.
-      agent_not_found: "Der angegebene Agent existiert nicht. Überprüfe die Parameter agent_name oder agent_id (bisher: agent_name oder agent_id)."
       no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.
       user_not_found: Der angegebene Benutzer existiert nicht. Überprüfe den Parameter username.
-      agent_disabled: "Der angegebene Agent ist deaktiviert. Überprüfe die Parameter agent_name oder agent_id (bisher: agent_name oder agent_id)."
       no_default_llm: Der Agent muss ein default_llm definiert haben.
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
       invalid_stream_resume_token: Der resume_token ist ungültig oder abgelaufen.

@@ -6,10 +6,6 @@
 
 ar:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "مستكشف البيانات"
     errors:
       explorer:
         no_semicolons: "أزِل الفواصل المنقوطة من الاستعلام."
@@ -26,9 +22,6 @@ ar:
       create: "إنشاء"
       create_placeholder: "اسم الاستعلام..."
       description_placeholder: "أدخِل وصفًا هنا"
-      ai:
-        generate: "إنشاء"
-        optional: "اختياري"
       import:
         label: "استيراد"
         unparseable_json: "ملف JSON غير قابل للتحليل"

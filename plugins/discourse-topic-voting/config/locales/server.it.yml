@@ -16,9 +16,6 @@ it:
     topic_voting_show_votes_on_profile: 'Consentire agli utenti di vedere i propri voti nei feed attività?'
     topic_voting_alert_votes_left: 'Avverti l''utente quando gli rimane questo numero di voti'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Mostra i votanti"
     votes_moved:
       one: "Un voto è stato spostato."
       other: "%{count} voti sono stati spostati. "

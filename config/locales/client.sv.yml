@@ -2689,13 +2689,6 @@ sv:
         selected_count:
           one: "%{count} har valts"
           other: "%{count} har valts"
-        append_tags: "Lägg till taggar"
-        choose_new_tags: "Välj nya taggar för de här ämnena:"
-        choose_append_tags: "Lägg till taggar"
-        changed_tags: "Taggarna för de här ämnena ändrades."
-        confirm_remove_tags:
-          one: "Alla taggar tas bort från det här ämnet. Är du säker?"
-          other: "Alla taggar tas bort från <b>%{count}</b> ämnen. Är du säker?"
         progress:
           one: "Förlopp: <strong>%{count}</strong> ämne"
           other: "Förlopp: <strong>%{count}</strong> ämnen"
@@ -2724,10 +2717,9 @@ sv:
         name: "Arkiv"
       move_messages_to_inbox:
         name: "Flytta till inkorgen"
-      remove_tags:
-        name: "Ta bort taggar"
-      replace_tags:
-        name: "Ersätt taggar"
+      manage_tags:
+        add:
+          title: "Lägg till taggar"
       delete_topics:
         name: "Radera"
       update_category:
@@ -2750,6 +2742,7 @@ sv:
       collapse: "Förminska"
       no_replies: "Inga svar ännu."
       deleted_post_placeholder: "[raderade]"
+      ignored_post_placeholder: "[ignorerade]"
       pinned_reply: "Fäst"
     topic:
       filter_to:
@@ -5506,6 +5499,7 @@ sv:
         topic_id: "Ämnes-ID"
         post_id: "Inläggs-ID"
         category_id: "Kategori-ID"
+        reviewable_id: "Granska"
         delete: "Radera"
         edit: "Redigera"
         save: "Spara"

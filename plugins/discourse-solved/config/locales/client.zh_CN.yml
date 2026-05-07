@@ -15,11 +15,9 @@ zh_CN:
       alt:
         solved:
           accepted_notification: "已被接受"
-          topic_solved_notification: "已解决"
     solutions: "解决方案"
     solved:
       title: "已解决"
-      notify_on_solved: "当我正在追踪或关注的主题被解决时通知我。仅适用于允许提供解答的类别主题。"
       allow_accepted_answers: "允许话题所有者和管理人员将回复标记为解决方案"
       solved_topics_auto_close_hours: "当话题被标记为已解决后，在最后回复 (n) 小时后自动关闭话题。"
       notify_on_staff_accept_solved: "当管理人员标记解决方案时通知话题创建者"
@@ -32,7 +30,6 @@ zh_CN:
       solution: "解决方案"
       solution_summary:
         other: "解决方案"
-      accepted_answer_solver_info: "由 %{user} 在 %{post} 中解决"
       accepted_answer_post_number: "帖子 %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -42,7 +39,6 @@ zh_CN:
       no_solved_topics_title: "您尚未解决任何话题"
       no_solved_topics_title_others: "%{username} 还没有解决任何话题"
       no_solved_topics_body: "当您对某个话题提供有用的回复时，您的回复可能会被话题所有者或管理人员选为解决方案。"
-      marked_solved_by: "已被 %{user} 接受"
       confirm_move_solution_title: "移动解决方案帖子"
       confirm_move_solution:
         other: "您选择的其中一个帖子被标记为此话题的解决方案。如果您将其移动，话题将更新为未解决。"
@@ -57,15 +53,8 @@ zh_CN:
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "您的帖子已被标记为解决方案"
-        topic_solved_title: "话题已解决"
-      topic_notifications:
-        tracking:
-          description: "当有人通过@名称提及您、回复你或主题被解决时，系统会通知你。此话题将显示新回复数量。"
-        watching:
-          description: "您将收到此主题每条新回复的通知，并在该问题得到解决时获得提醒。系统会显示本话题的新回帖数量。"
       category_type_support:
         title: "支持"
         not_support_type: "注意！您已经禁用在此类别中将帖子标记为解决方案的功能。要重新打开，您可以在“设置”选项卡中找到相关设置。"

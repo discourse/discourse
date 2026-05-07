@@ -7,8 +7,6 @@
 sw:
   js:
     discourse_reactions:
-      users_popup:
-        all: "Yote"
       main_reaction:
         add: "Penda chapisho hili"
     notifications:

@@ -30,9 +30,6 @@ lt:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      event_description:
-        show_more: "Rodyti daugiau"
-        show_less: "Rodyti mažiau"
       show_all: "Rodyti viską"
       add_to_calendar: "Pridėti prie kalendoriaus"
       created_by: "Sukurta"

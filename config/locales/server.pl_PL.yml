@@ -944,6 +944,8 @@ pl_PL:
     staff: "Zespół"
     change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}' - jeśli chcesz to zmienić, najpierw zablokuj poziom zaufania temu użytkownikowi."
   post:
+    errors:
+      invalid_reply_to: "Wybrany wpis nie jest prawidłowym celem odpowiedzi. Musi to być wcześniejszy wpis w tym samym temacie."
     image_placeholder:
       broken: "Ten obraz jest uszkodzony"
       blocked_hotlinked_title: "Obraz przechowywany jest w innej witrynie. Kliknij, aby otworzyć nową kartę."
@@ -1330,6 +1332,7 @@ pl_PL:
     logged_in_as: "Zalogowano jako"
     permissions_header: 'Pozwoli to "%{application_name}" na:'
     redirect_warning: "Autoryzacja przekieruje Cię do"
+    write_scope_warning: "Żądano pełnego dostępu do zapisu — ta aplikacja będzie mogła publikować, edytować i usuwać treści. Kontynuuj tylko wtedy, gdy w pełni jej ufasz."
     instructions: 'Wygenerowaliśmy nowy klucz API użytkownika do korzystania z "%{application_name}", skopiuj następujący klucz do swoje aplikacji:'
     copy_key: "Skopiuj klucz"
     copied: "Skopiowano!"
@@ -1916,6 +1919,7 @@ pl_PL:
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "Lista niestandardowych nagłówków wiadomości e-mail"
     email_subject: "Konfigurowalny format tematów standardowych wiadomości e-mail. Zobacz <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
+    simple_email_subject: "Po włączeniu tej opcji tematy wiadomości e-mail będą bardziej zwięzłe i będą zawierać tylko najważniejsze informacje. Ułatwia to użytkownikom szybkie zrozumienie celu wiadomości e-mail na pierwszy rzut oka."
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
     enforce_second_factor: "Wymagaj od użytkowników włączenia uwierzytelniania dwuskładnikowego (2FA) przed uzyskaniem dostępu do interfejsu użytkownika Discourse. To ustawienie nie wpływa na uwierzytelnianie API ani dostawcy DiscourseConnect. Jeśli opcja „execute_second_factor_on_external_auth” jest włączona, użytkownicy nie będą mogli logować się za pomocą zewnętrznych dostawców uwierzytelniania po skonfigurowaniu uwierzytelniania dwuskładnikowego."
     enforce_second_factor_on_external_auth: "Wymagaj od użytkowników stałego korzystania z uwierzytelniania dwuskładnikowego (2FA). Po włączeniu tej opcji użytkownicy nie będą mogli logować się za pomocą zewnętrznych metod uwierzytelniania, takich jak logowanie za pośrednictwem mediów społecznościowych, jeśli mają włączoną funkcję 2FA. Po wyłączeniu tej opcji użytkownicy będą musieli potwierdzić uwierzytelnianie dwuskładnikowe tylko podczas logowania za pomocą nazwy użytkownika i hasła. Zobacz również ustawienie `enforce_second_factor`."
@@ -2488,6 +2492,7 @@ pl_PL:
     allowed_embed_selectors: "Rozdzielana przecinkami lista elementów CSS, które są dozwolone w osadzaniu."
     allowed_href_schemes: "Projekty dozwolone w linkach jako dodatek do http i https."
     embed_full_app: "Włącz tryb pełnej aplikacji dla osadzonych komentarzy. Po włączeniu, osadzone komentarze załadują pełną aplikację Discourse w ramce iframe, umożliwiając użytkownikom bezpośrednią interakcję z tematami."
+    suppress_third_party_analytics_in_embed: "Pomiń renderowanie skryptów analitycznych innych firm (Google Tag Manager, Google Analytics, Adobe Analytics), gdy Discourse jest ładowany w pełnej osadzonej ramce iframe aplikacji. Zapobiega to duplikowaniu wyświetleń stron i uruchamianiu tagów, gdy strona hosta ładuje już te same skrypty."
     embed_post_limit: "Maksymalna liczba wpisów do osadzenia."
     embed_username_required: "W celu stworzenia tematu potrzebna jest nazwa użytkownika."
     notify_about_reviewable_item_after: "Jeśli po tylu godzinach są elementy do przejrzenia, które jeszcze nie zostały sprawdzone, wyślij wiadomość do moderatorów. Ustaw na 0, aby wyłączyć."
@@ -2682,6 +2687,7 @@ pl_PL:
     nested_replies_backfill_batch_size: "Liczba tematów, dla których należy uzupełnić statystyki zagnieżdżonych odpowiedzi na każde zaplanowane uruchomienie."
     nested_replies_cap_nesting_depth: "Ogranicz zagnieżdżanie odpowiedzi do maksymalnej głębokości wizualnej. Po włączeniu tej opcji odpowiedzi na najgłębszym poziomie będą ponownie traktowane jako równorzędne, a nie podrzędne."
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
+    enable_new_defaults_for_trust_level_3_requirements: "Zaktualizowaliśmy domyślne wymagania TL3, aby były bardziej rozsądne dla członków dużych, aktywnych społeczności. Jeśli wcześniej nadpisano te ustawienia, ta nadchodząca zmiana nie będzie miała żadnego wpływu."
     floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
     rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie „faq url” działa jak poprzednio."
     enable_simplified_category_creation: "Umożliwia uproszczony proces tworzenia kategorii z mniejszą liczbą opcji i bardziej przejrzystym interfejsem."
@@ -3255,6 +3261,7 @@ pl_PL:
   download_backup_mailer:
     title: "Ściągnij backup mailer"
     subject_template: "[%{email_prefix}] Ściągnij backup strony"
+    subject_template_improved: "%{email_prefix}: Pobieranie kopii zapasowej witryny"
     text_body_template: |
       Tutaj jest [strona ściągania backupu](%{backup_file_path}), o którą prosiłeś.
 
@@ -3266,6 +3273,7 @@ pl_PL:
   admin_confirmation_mailer:
     title: "Potwierdzenie admina"
     subject_template: "[%{email_prefix}] Potwierdź nowe konto admina"
+    subject_template_improved: "%{email_prefix}: Potwierdź nowe konto administratora"
     text_body_template: |
       Potwierdź, że chcesz dodać **%{target_username} (%{target_email})** jako administratora Twojego forum.
 
@@ -3273,6 +3281,7 @@ pl_PL:
   test_mailer:
     title: "Test Powiadomień"
     subject_template: "[%{email_prefix}] Test dostarczania poczty"
+    subject_template_improved: "%{email_prefix}: Test dostarczalności wiadomości e-mail"
     text_body_template: |
       To jest testowa wiadomość e-mail od
 
@@ -3291,6 +3300,7 @@ pl_PL:
   new_version_mailer:
     title: "Nowa wersja powiadomień"
     subject_template: "[%{email_prefix}] Nowa wersja Discourse jest dostępna"
+    subject_template_improved: "%{email_prefix}: Nowa wersja Discourse, dostępna aktualizacja"
     text_body_template: |
       Hurra, dostępna jest nowa wersja [Discourse](https://www.discourse.org)!
 
@@ -3305,6 +3315,7 @@ pl_PL:
   new_version_mailer_with_notes:
     title: "Nowa wersja powiadomień z uwagami"
     subject_template: "[%{email_prefix}] dostępna aktualizacja"
+    subject_template_improved: "%{email_prefix}: Dostępna aktualizacja"
     text_body_template: |
       Hurra, nowa wersja [Discourse](https://www.discourse.org) jest dostępna!
 
@@ -3673,12 +3684,14 @@ pl_PL:
     email_reject_insufficient_trust_level:
       title: "Odrzucenie emaila niedostateczny poziom zaufania"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - niewystarczający poziom zaufania"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – niewystarczający poziom zaufania"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination} (zatytułowana %{former_title}) nie została wysłana.
         Twoja konto nie posiada wystarczających uprawnień do zamieszczania wpisów w nowych tematach poprzez ten adres. Jeśli wydaję ci się, że jest to błąd, [skontaktuj się z obsługą](%{base_url}/o nas).
     email_reject_user_not_found:
       title: "Email odrzucony Użytkownik nie odnaleziony"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - Użytkownik nie znaleziony"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail — użytkownik nie został znaleziony"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination} (zatytułowana %{former_title}) nie została wysłana.
 
@@ -3686,13 +3699,15 @@ pl_PL:
     email_reject_screened_email:
       title: "Odrzuć sprawdzoną wiadomość e-mail"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - zablokowany email"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – zablokowana poczta e-mail"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
         Twoja odpowiedź została wysłana z zablokowanego adresu email. Spróbuj ją wysłać z innego adresu email, lub [skontaktuj się z obsługą](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-mail odrzucony: niedozwolony e-mail"
-      subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - zablokowany email"
+      subject_template: "[%{email_prefix}] Problem z pocztą e-mail – zablokowana poczta e-mail"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – zablokowana poczta e-mail"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3700,6 +3715,7 @@ pl_PL:
     email_reject_inactive_user:
       title: "Email odrzucony Użytkownik nieaktywny"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - nieaktywny użytkownik"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – nieaktywny użytkownik"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3707,6 +3723,7 @@ pl_PL:
     email_reject_silenced_user:
       title: "E-mail odrzucony: wyciszony użytkownik"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - wyciszony użytkownik"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – wyciszony użytkownik"
       text_body_template: |
         Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (zatytułowana %{former_title}) nie działa.
 
@@ -3714,6 +3731,7 @@ pl_PL:
     email_reject_reply_user_not_matching:
       title: "Email odrzucony Użytkownik nie pasuje"
       subject_template: "[%{email_prefix}] Problem z pocztą - Nieoczekiwany adres odpowiedzi"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – nieoczekiwany adres odpowiedzi"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3721,6 +3739,7 @@ pl_PL:
     email_reject_empty:
       title: "Email odrzucony Pusty"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - brak zawartości"
+      subject_template_improved: "%{email_prefix}: Problem pocztą e-mail – brak treści"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3730,6 +3749,7 @@ pl_PL:
     email_reject_parsing:
       title: "Odrzucenie emaila Rozbiór gramatyczny zdania"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - Nierozpoznana zawartość"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail — nierozpoznana treść"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3737,6 +3757,7 @@ pl_PL:
     email_reject_invalid_access:
       title: "Email odrzucony Nieprawidłowy dostęp"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - nieprawidłowy dostęp"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – nieprawidłowy dostęp"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3744,6 +3765,7 @@ pl_PL:
     email_reject_strangers_not_allowed:
       title: "Odrzucenie emaila Nieznajomi niedozwoleni"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - nieprawidłowy dostęp"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – nieprawidłowy dostęp"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3751,6 +3773,7 @@ pl_PL:
     email_reject_invalid_post:
       title: "Odrzucenia emaila niewłaściwy wpis"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - błąd dodawania"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – błąd wysyłania wpisu"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3758,6 +3781,7 @@ pl_PL:
     email_reject_invalid_post_specified:
       title: "Odrzucenie emaila nieprawidłowy wpis"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - błąd dodawania"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – błąd wysyłania wpisu"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3770,6 +3794,7 @@ pl_PL:
     email_reject_post_too_short:
       title: "E-mail odrzucony: post zbyt krótki"
       subject_template: "[%{email_prefix}] Problem z e-mailem - zbyt krótki post"
+      subject_template_improved: "%{email_prefix}: Problem pocztą e-mail – wpis jest zbyt krótki"
       text_body_template: |
         Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (zatytułowana %{former_title}) nie działa.
 
@@ -3777,6 +3802,7 @@ pl_PL:
     email_reject_invalid_post_action:
       title: "E-mail odrzucony nieprawidłowa akcja wpisu"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - nieprawidłowa akcja wpisu"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – nieprawidłowa akcja wysyłania"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3784,6 +3810,7 @@ pl_PL:
     email_reject_reply_key:
       title: "Odrzucony email klawisz odpowiedzi"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - Nieznany klucz odpowiedzi"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail — nieznany klucz odpowiedzi"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3791,6 +3818,7 @@ pl_PL:
     email_reject_bad_destination_address:
       title: "Odrzucony email zły adres docelowy"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną -- Nieznany: adres"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail -- nieznany do: adres"
       text_body_template: |
         Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (zatytułowana %{former_title}) nie została dostarczona.
 
@@ -3806,6 +3834,7 @@ pl_PL:
     email_reject_old_destination:
       title: "E-mail odrzucony: stare miejsce docelowe"
       subject_template: "[%{email_prefix}] Problem z e-mailem - próbujesz odpowiedzieć na stare powiadomienie"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – próbujesz odpowiedzieć na stare powiadomienie"
       text_body_template: |
         Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (zatytułowana %{former_title}) nie działa.
 
@@ -3813,6 +3842,7 @@ pl_PL:
     email_reject_topic_not_found:
       title: "Odrzucenie emaila nie znaleziono tematu"
       subject_template: "[%{email_prefix}] Problem z e-mailem -- Nie znaleziono tematu"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail — temat nie został znaleziony"
       text_body_template: |
         Przepraszamy, twoja wiadomość email do%{destination}( zatytułowana %{former_title}) nie została wysłana.
 
@@ -3820,6 +3850,7 @@ pl_PL:
     email_reject_topic_closed:
       title: "Email odrzucony Temat zamknięty"
       subject_template: "[%{email_prefix}] Problem z e-mailem -- Temat zamknięty"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – temat zamknięty"
       text_body_template: |
         Przepraszamy, twoja wiadomość email do%{destination}( zatytułowana %{former_title}) nie została wysłana.
 
@@ -3827,6 +3858,7 @@ pl_PL:
     email_reject_auto_generated:
       title: "Odrzucenie email wygenerowane automatycznie"
       subject_template: "[%{email_prefix}] Problem z e-mailem -- Odpowiedź wygenerowana automatycznie"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – automatycznie generowana odpowiedź"
       text_body_template: |
         Przepraszamy, twoja wiadomość email do%{destination}( zatytułowana %{former_title}) nie została wysłana.
 
@@ -3834,6 +3866,7 @@ pl_PL:
     email_reject_unrecognized_error:
       title: "Odrzucony email nierozpoznany błąd"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - Nierozpoznany błąd."
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – nierozpoznany błąd"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
@@ -3841,6 +3874,7 @@ pl_PL:
     email_reject_attachment:
       title: "Załącznik e-mail odrzucony"
       subject_template: "[%{email_prefix}] Problem z e-mailem - załącznik odrzucony"
+      subject_template_improved: "%{email_prefix}: Problem pocztą e-mail – załącznik odrzucony"
       text_body_template: |
         Niestety, niektóre załączniki w Twojej wiadomości e-mail do %{destination} (zatytułowane %{former_title}) zostały odrzucone.
 
@@ -3851,13 +3885,15 @@ pl_PL:
     email_reject_reply_not_allowed:
       title: "E-mail odrzucony: odpowiedź niedozwolona"
       subject_template: "[%{email_prefix}] Problem z e-mailem - odpowiedź nie jest niedozwolona"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – odpowiedź niedozwolona"
       text_body_template: |
         Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (zatytułowana %{former_title}) nie działa.
 
         Nie masz uprawnień, aby odpowiedzieć w temacie. Jeśli uważasz, że to błąd, [skontaktuj się z członkiem personelu](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-mail odrzucony: odpowiedź na podsumowanie"
-      subject_template: "[%{email_prefix}] Problem z e-mailem - odpowiedź na podsumowanie"
+      subject_template: "[%{email_prefix}] Problem z pocztą e-mail – odpowiedz na podsumowanie"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – odpowiedź na podsumowanie"
       text_body_template: |
         Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (zatytułowana %{former_title}) nie działa.
 
@@ -3867,6 +3903,7 @@ pl_PL:
     email_reject_too_many_recipients:
       title: "E-mail odrzucony -- Zbyt wielu odbiorców"
       subject_template: "[%{email_prefix}] Problem z e-mailem -- Zbyt wielu odbiorców"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – zbyt wielu odbiorców"
       text_body_template: |
         Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (tytuł %{former_title}) nie została wysłana.
 
@@ -3876,6 +3913,7 @@ pl_PL:
     email_error_notification:
       title: "Błąd emaila powiadomienie"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - błąd autoryzacji POP"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail — błąd uwierzytelniania POP"
       text_body_template: |
         Niestety, wystąpił błąd autoryzacji podczas odbierania e-maili z serwera POP.
 
@@ -4113,6 +4151,7 @@ pl_PL:
     user_invited_to_private_message_pm_group:
       title: "Użytkownik zaproszony grupy do PW"
       subject_template: "[%{email_prefix}]%{username} zaprosił @%{group_name} do wiadomości '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} zaprosił @%{group_name} do wiadomości '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4122,6 +4161,7 @@ pl_PL:
     user_invited_to_private_message_pm:
       title: "Użytkownik zaprosił do PW"
       subject_template: "[%{email_prefix}]%{username} zaprosił cię do wiadomości '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} zaprosił Cię do wiadomości '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4131,6 +4171,7 @@ pl_PL:
     user_invited_to_private_message_pm_staged:
       title: "Użytkownik zaproszony do stopniowego PM"
       subject_template: "[%{email_prefix}] %{username} zaprasza cię do wiadomości '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} zaprosił Cię do wiadomości '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4140,6 +4181,7 @@ pl_PL:
     user_invited_to_topic:
       title: "Użytkownik zaprosił do Tematu"
       subject_template: "[%{email_prefix}] %{username} zaprasza cię do '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} zaprosił Cię do '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4150,6 +4192,7 @@ pl_PL:
       title: "Użytkownik odpowiedział"
       preview: "Ktoś odpowiedział na Twój wpis."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4161,6 +4204,7 @@ pl_PL:
     user_replied_pm:
       title: "Użytkownik odpowiedział przez PW"
       subject_template: "[%{email_prefix}] [PW] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4173,6 +4217,7 @@ pl_PL:
       title: "Użytkownik zacytował"
       preview: "Ktoś zacytował Cię we wpisie."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4185,6 +4230,7 @@ pl_PL:
       title: "Użytkownik podał link"
       preview: "Wpis powiązany z innym tematem."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4197,6 +4243,7 @@ pl_PL:
       title: "Użytkownik Wspomniany"
       preview: "Ktoś wspomniał o Tobie we wpisie."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4208,6 +4255,7 @@ pl_PL:
     user_mentioned_pm:
       title: "Użytkownik wspomniał(a) PW"
       subject_template: "[%{email_prefix}] [PW] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4219,6 +4267,7 @@ pl_PL:
     user_group_mentioned:
       title: "Grupa Użytkowników Wspomniana"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4230,6 +4279,7 @@ pl_PL:
     user_group_mentioned_pm:
       title: "Wspomniana grupa użytkowników PW"
       subject_template: "[%{email_prefix}] [PW] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4241,6 +4291,7 @@ pl_PL:
     user_group_mentioned_pm_group:
       title: "Wspomniana grupa użytkowników PW"
       subject_template: "[%{email_prefix}] [PW] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4253,6 +4304,7 @@ pl_PL:
       title: "Użytkownik Opublikował"
       preview: "Ktoś odpowiedział na temat, który obserwujesz."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4264,6 +4316,7 @@ pl_PL:
     user_watching_category_or_tag:
       title: "Użytkownik obserwuje kategorię lub tag"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4275,6 +4328,7 @@ pl_PL:
     user_watching_first_post:
       title: "Użytkownik przegląda pierwszy wpis"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4287,6 +4341,7 @@ pl_PL:
       title: "Użytkownik opublikował PW"
       preview: "Ktoś wysłał Ci wiadomość prywatną."
       subject_template: "[%{email_prefix}] [PW] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4304,6 +4359,7 @@ pl_PL:
     account_suspended:
       title: "Konto zawieszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało zawieszone"
+      subject_template_improved: "Twoje konto zostało zawieszone"
       text_body_template: |
         Zostałeś zawieszony na forum do %{suspended_till}.
 
@@ -4311,6 +4367,7 @@ pl_PL:
     account_suspended_forever:
       title: "Konto zawieszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało zawieszone"
+      subject_template_improved: "Twoje konto zostało zawieszone"
       text_body_template: |
         Zostałeś zawieszony na forum.
 
@@ -4318,6 +4375,7 @@ pl_PL:
     account_silenced:
       title: "Konto uciszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało wyciszone"
+      subject_template_improved: "Twoje konto zostało wyciszone"
       text_body_template: |
         Zostałeś wyciszony na forum do %{silenced_till}.
 
@@ -4325,6 +4383,7 @@ pl_PL:
     account_silenced_forever:
       title: "Konto uciszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało wyciszone"
+      subject_template_improved: "Twoje konto zostało wyciszone"
       text_body_template: |
         Zostałeś uciszony na forum.
 
@@ -4332,6 +4391,7 @@ pl_PL:
     account_deleted:
       title: "Konto usunięte"
       subject_template: "[%{email_prefix}] Twoje konto zostało usunięte"
+      subject_template_improved: "Twoje konto zostało usunięte"
       text_body_template: |
         Witaj!
 
@@ -4343,6 +4403,7 @@ pl_PL:
     account_exists:
       title: "Konto już istnieje"
       subject_template: "[%{email_prefix}] Konto już istnieje"
+      subject_template_improved: "Konto już istnieje"
       text_body_template: |
         Właśnie próbowałeś/łaś założyć konto na %{site_name} lub próbowałeś/łaś zmienić adres e-mail aktualnego konta na %{email}. Jednak konto z adresem %{email} już istnieje.
 
@@ -4354,6 +4415,7 @@ pl_PL:
     account_second_factor_disabled:
       title: "Uwierzytelnianie dwuskładnikowe wyłączone"
       subject_template: "[%{email_prefix}] Uwierzytelnianie dwuskładnikowe wyłączone"
+      subject_template_improved: "Uwierzytelnianie dwuskładnikowe wyłączone"
       text_body_template: |
         Uwierzytelnianie dwuskładnikowe zostało wyłączone na Twoim koncie pod adresem %{site_name}. Możesz teraz logować się tylko za pomocą hasła; dodatkowy kod uwierzytelniający nie jest już wymagany.
 
@@ -4373,6 +4435,7 @@ pl_PL:
       popular_posts: "Popularne wpisy"
       more_new: "Nowe dla ciebie"
       subject_template: "[%{email_prefix}] Podsumowanie"
+      subject_template_improved: "Podsumowanie"
       unsubscribe: "To podsumowanie jest wysyłane z %{site_link} gdy nie widzieliśmy Cię od jakiegoś czasu. Zmień %{email_preferences_link} lub %{unsubscribe_link}, aby anulować subskrypcję."
       your_email_settings: "twoje ustawienia e‐mail"
       click_here: "kliknij tutaj"
@@ -4382,6 +4445,7 @@ pl_PL:
       title: "Zapomniane hasło"
       preview: "Zresetuj swoje hasło."
       subject_template: "[%{email_prefix}] Reset hasła"
+      subject_template_improved: "Resetowanie hasła"
       text_body_template: |
         Ktoś poprosił o zresetowanie Twojego hasła na [%{site_name}](%{base_url}).
 
@@ -4393,6 +4457,7 @@ pl_PL:
       title: "Zaloguj za pomocą linku"
       preview: "Zaloguj za pomocą linku."
       subject_template: "[%{email_prefix}] Zaloguj się przez link"
+      subject_template_improved: "Zaloguj za pomocą linku"
       text_body_template: |
         Oto Twój link do logowania się na [%{site_name}](%{base_url}).
 
@@ -4404,6 +4469,7 @@ pl_PL:
       title: "Ustaw hasło"
       preview: "Ustaw hasło do konta."
       subject_template: "[%{email_prefix}] Ustaw hasło"
+      subject_template_improved: "Ustaw hasło"
       text_body_template: |
         Ktoś poprosił o dodanie hasła do twojego konta [%{site_name}](%{base_url}). Możesz się zalogować przy pomocy konta w i innym serwisie (Google, Facebook, itd.) które zostało powiązane z twoim potwierdzonym adresem email.
 
@@ -4415,6 +4481,7 @@ pl_PL:
       title: "Logowanie administratora. "
       preview: "Wymagane zalogowanie administratora."
       subject_template: "[%{email_prefix}] Login"
+      subject_template_improved: "Logowanie"
       text_body_template: |
         Ktoś poprosił o zalogowanie się na Twoje konto na [%{site_name}] (%{base_url}).
 
@@ -4425,7 +4492,8 @@ pl_PL:
     account_created:
       title: "Utworzono Konto"
       preview: "Utworzono dla Ciebie nowe konto."
-      subject_template: "[%{email_prefix}] Twoje Nowe Konto"
+      subject_template: "[%{email_prefix}] Twoje nowe konto"
+      subject_template_improved: "Twoje nowe konto"
       text_body_template: |
         Utworzyliśmy Twoje konto na %{site_name}
 
@@ -4434,6 +4502,7 @@ pl_PL:
     confirm_new_email:
       title: "Potwierdź Nowy Email"
       subject_template: "[%{email_prefix}] Potwierdź swój nowy adres email"
+      subject_template_improved: "Potwierdź swój nowy adres e-mail"
       text_body_template: |
         Potwierdź swój nowy adres e-mail na %{site_name} klikając na poniższy link:
 
@@ -4443,6 +4512,7 @@ pl_PL:
     confirm_new_email_via_admin:
       title: "Potwierdź nowy e-mail"
       subject_template: "[%{email_prefix}] Potwierdź swój nowy adres email"
+      subject_template_improved: "Potwierdź swój nowy adres e-mail"
       text_body_template: |
         Potwierdź swój nowy adres e-mail dla %{site_name} klikając na poniższy link:
 
@@ -4452,6 +4522,7 @@ pl_PL:
     confirm_old_email:
       title: "Potwierdź stary email"
       subject_template: "[%{email_prefix}] Potwierdź aktualny adres email"
+      subject_template_improved: "Potwierdź swój aktualny adres e-mail"
       text_body_template: |
         Zanim będziemy mogli zmienić Twój adres e-mail, musisz potwierdzić, że kontrolujesz
         bieżące konto e-mail. Po wykonaniu tego kroku poprosimy Cię o
@@ -4462,6 +4533,7 @@ pl_PL:
     confirm_old_email_add:
       title: "Potwierdź stary adres e-mail (Dodaj)"
       subject_template: "[%{email_prefix}] Potwierdź aktualny adres email"
+      subject_template_improved: "Potwierdź swój aktualny adres e-mail"
       text_body_template: |
         Zanim będziemy mogli dodać nowy adres e-mail, musisz potwierdzić, że kontrolujesz
         bieżące konto e-mail. Po wykonaniu tego kroku poprosimy Cię o
@@ -4474,6 +4546,7 @@ pl_PL:
       title: "Powiadom Stary Email"
       preview: "Zaktualizowano adres e-mail."
       subject_template: "[%{email_prefix}] Twój adres email został zmieniony"
+      subject_template_improved: "Twój adres e-mail został zmieniony"
       text_body_template: |
         To jest wiadomość automatyczna, aby cię poinformować, że twój adres email na stronie %{site_name}został zmieniony. Jeśli działania te zostały dokonane przez przypadek, proszę skontaktować się z administratorem strony.
 
@@ -4483,6 +4556,7 @@ pl_PL:
     notify_old_email_add:
       title: "Informacja o starym adresie e-mail (Dodaj)"
       subject_template: "[%{email_prefix}] Dodano nowy adres e-mail"
+      subject_template_improved: "Dodano nowy adres e-mail"
       text_body_template: |
         To jest wiadomość automatyczna, aby cię poinformować, że twój adres email na stronie %{site_name} został dodany. Jeśli działania te zostały dokonane przez przypadek, proszę skontaktować się z administratorem strony.
 
@@ -4519,6 +4593,7 @@ pl_PL:
       title: "Podpis"
       preview: "Potwierdź swoje konto."
       subject_template: "[%{email_prefix}] Potwierdź swoje nowe konto"
+      subject_template_improved: "Potwierdź swoje nowe konto"
       text_body_template: |
         Witaj na %{site_name}!
 
@@ -4529,6 +4604,7 @@ pl_PL:
     activation_reminder:
       title: "Przypomnienie o aktywacji"
       subject_template: "[%{email_prefix}] Przypomnienie o potwierdzeniu konta"
+      subject_template_improved: "Przypomnienie o potwierdzeniu konta"
       text_body_template: |
         Witaj na %{site_name}!
 
@@ -4540,6 +4616,7 @@ pl_PL:
       title: "Alert nowego logowania"
       preview: "Zweryfikuj swoje urządzenie."
       subject_template: "[%{site_name}] Nowe logowanie z %{location}"
+      subject_template_improved: "%{site_name}: Nowe logowanie z %{location}"
       text_body_template: |
         Witaj!
 
@@ -4555,6 +4632,7 @@ pl_PL:
     post_approved:
       title: "Twój post został zatwierdzony"
       subject_template: "[%{site_name}] Twój post został zatwierdzony"
+      subject_template_improved: "%{site_name}: Twój wpis został zatwierdzony"
       text_body_template: |
         Witaj!
 
@@ -5297,6 +5375,9 @@ pl_PL:
     initial_topic_title: Raporty wydajności strony
   tags:
     title: "Etykiety"
+    groups:
+      errors:
+        empty_permissions: "Grupa tagów musi mieć co najmniej jedno uprawnienie."
     restricted_tag_disallowed: 'Nie można zastosować tagu "%{tag}”.'
     restricted_tag_remove_disallowed: 'Nie możesz usunąć tagu „%{tag}”.'
     minimum_required_tags:

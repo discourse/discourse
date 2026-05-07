@@ -35,7 +35,6 @@ pt_BR:
       already_voted: "Você só pode votar uma vez por pergunta."
       user_over_limit: "Você não pode exceder o número de votos para seu nível de confiança."
       one_vote_per_post: "Você só pode votar uma vez em cada postagem."
-      toggle_voters: "Exibir quem votou"
     last_answer_lowercase: última resposta
     answer_lowercase:
       one: resposta
@@ -57,8 +56,6 @@ pt_BR:
           edit: "editar"
           cancel: "cancelar"
           add: "Adicione um comentário"
-          actions:
-            delete: "Excluir comentário"
           show:
             one: Mostrar mais %{count} comentário
             other: Mostrar mais %{count} comentários

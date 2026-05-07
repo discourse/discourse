@@ -25,9 +25,6 @@ ja:
       anonymous_button:
         other: "投票"
       remove_vote: "投票を削除"
-      and_more_voters: "および他 %{count} 人..."
-      show_voters: "投票者を表示する"
-      vote_count_thousands: "%{count}k"
       no_votes_title_self: "まだトピックに一度も投票していません。"
       no_votes_title_others: "%{username} はまだトピックに投票していません"
     filters:

@@ -3239,7 +3239,6 @@ fi:
         Vastauksesi lähetettiin estetystä sähköpostiosoitteesta. Kokeile lähettää viesti toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Sähköposti hylätty – osoite ei sallittu"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- estetty sähköpostiosoite"
       text_body_template: |
         Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
@@ -3404,7 +3403,6 @@ fi:
         Sinulla ei ole oikeuksia vastata ketjuun. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Sähköposti hylätty – vastaus yhteenvetoon"
-      subject_template: "%{email_prefix} Sähköpostiongelma – vastaus yhteenvetoon"
       text_body_template: |
         Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
@@ -3530,7 +3528,6 @@ fi:
       text_body_template: "Asetus `download_remote_images_to_local` on poistettu käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
     new_user_of_the_month:
       title: "Olet kuukauden tulokas!"
-      subject_template: "Olet kuukauden tulokas!"
       text_body_template: |
         Onneksi olkoon, olet ansainnut **Kuukauden tulokas -palkinnon kuussa %{month_year}** :trophy:
 
@@ -3848,6 +3845,7 @@ fi:
     account_exists:
       title: "Tili on jo olemassa"
       subject_template: "[%{email_prefix}] TIli on jo olemassa"
+      subject_template_improved: "Tili on jo olemassa"
       text_body_template: |
         Yritit luoda tilin sivustolle %{site_name} tai yritit muuttaa tilin sähköpostiosoitteeksi %{email}. Sähköpostiosoitteella %{email} on kuitenkin jo tili olemassa.
 
@@ -3859,6 +3857,7 @@ fi:
     account_second_factor_disabled:
       title: "Kaksivaiheinen tunnistus poistettu käytöstä"
       subject_template: "[%{email_prefix}] Kaksivaiheinen tunnistus poistettu käytöstä"
+      subject_template_improved: "Kaksivaiheinen tunnistus poistettu käytöstä"
     digest:
       why: "%{site_link} – lyhyt yhteenveto %{since} lähtien"
       since_last_visit: "Viime vierailusi jälkeen"
@@ -3872,6 +3871,7 @@ fi:
       popular_posts: "Suosittuja viestejä"
       more_new: "Uutta sinulle"
       subject_template: "[%{email_prefix}] Yhteenveto"
+      subject_template_improved: "Yhteenveto"
       unsubscribe: "Tämä yhteenveto lähetettiin sivustolta %{site_link}, koska sinua ei ole näkynyt vähään aikaan. Voit perua tilauksen muuttamalla %{email_preferences_link} tai %{unsubscribe_link} peruaksesi tilauksen."
       your_email_settings: "sähköpostiasetuksiasi"
       click_here: "klikkaa tätä"
@@ -3891,6 +3891,7 @@ fi:
       title: "Kirjaudu linkin avulla"
       preview: "Kirjaudu linkin avulla."
       subject_template: "%{email_prefix} Kirjautuminen linkin avulla"
+      subject_template_improved: "Kirjaudu linkin avulla"
       text_body_template: |
         Tässä linkki, jolla voit kirjautua sivustolle [%{site_name}](%{base_url}).
 
@@ -3900,7 +3901,6 @@ fi:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Aseta salasana"
-      subject_template: "[%{email_prefix}] Aseta salasana"
       text_body_template: |
         Joku haluaa lisätä salasanan tilillesi sivustolla [%{site_name}](%{base_url}). Vaihtoehtoisesti, voit kirjautua sisään muiden tuettujen palveluiden (Google, Facebook jne.) tileillä, jotka ovat tämän saman sähköpostiosoitteen alaisia.
 
@@ -3911,6 +3911,7 @@ fi:
     admin_login:
       title: "Ylläpitäjäkirjautuminen"
       subject_template: "[%{email_prefix}] Kirjautuminen"
+      subject_template_improved: "Kirjautuminen"
       text_body_template: |
         Joku haluaa kirjautua tilillesi sivustolla [%{site_name}](%{base_url}).
 
@@ -3920,7 +3921,6 @@ fi:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Tili luotu"
-      subject_template: "[%{email_prefix}] Uusi tilisi"
       text_body_template: |
         Sinulle luotiin tili sivustolle %{site_name}
 
@@ -4029,7 +4029,6 @@ fi:
         Jos linkkiä ei voi klikata, kokeile kopioida ja liittää se verkkoselaimesi osoitekenttään.
     suspicious_login:
       title: "Varoitus uudesta kirjautumisesta"
-      subject_template: "[%{site_name}] Uusi kirjautuminen paikasta %{location}"
       text_body_template: |
         Hei,
 

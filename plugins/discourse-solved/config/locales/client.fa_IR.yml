@@ -10,7 +10,6 @@ fa_IR:
       alt:
         solved:
           accepted_notification: "تایید شده"
-          topic_solved_notification: "حل شده"
     solutions: "راه‌حل‌ها"
     solved:
       title: "حل شده"
@@ -32,7 +31,6 @@ fa_IR:
       move_post_cancel: "لغو"
       confirm_solved_removal_confirm: "تایید"
       confirm_solved_removal_cancel: "لغو"
-      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "نوشته شما به عنوان راه حل مشخص شد"
     topic_statuses:

@@ -3234,7 +3234,6 @@ nl:
         Je antwoord is verzonden vanaf een geblokkeerd e-mailadres. Probeer te verzenden vanaf een ander e-mailadres, of [neem contact op met een medewerker](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-mail geweigerd e-mailadres niet toegestaan"
-      subject_template: "[%{email_prefix}] E-mailprobleem -- geblokkeerd e-mailadres"
       text_body_template: |
         Sorry, je e-mailbericht aan %{destination} (getiteld %{former_title}) werkte niet.
 
@@ -3399,7 +3398,6 @@ nl:
         Je hebt geen toestemming om te antwoorden op het topic. Als je denkt dat dit een fout is, [neem dan contact op met een medewerker](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-mail geweigerd antwoord op samenvatting"
-      subject_template: "[%{email_prefix}] E-mailprobleem -- antwoord op samenvatting"
       text_body_template: |
         Sorry, je e-mailbericht aan %{destination} (getiteld %{former_title}) werkte niet.
 
@@ -3525,7 +3523,6 @@ nl:
       text_body_template: "De instelling 'download_remote_images_to_local' is uitgeschakeld omdat de schijfruimtelimiet van 'download_remote_images_threshold' is bereikt."
     new_user_of_the_month:
       title: "Je bent een nieuwe gebruiker van de maand!"
-      subject_template: "Je bent een nieuwe gebruiker van de maand!"
       text_body_template: |
         Gefeliciteerd, je hebt de de prijs **Nieuwe gebruiker van de maand voor %{month_year}** verdiend. :trophy:
 
@@ -3843,6 +3840,7 @@ nl:
     account_exists:
       title: "Account bestaat al"
       subject_template: "[%{email_prefix}] Account bestaat al"
+      subject_template_improved: "Account bestaat al"
       text_body_template: |
         Je hebt geprobeerd een account te maken op %{site_name}, of je hebt geprobeerd het e-mailadres van een account te wijzigen naar %{email}. Er bestaat echter al een account voor %{email}.
 
@@ -3854,6 +3852,7 @@ nl:
     account_second_factor_disabled:
       title: "Tweeledige verificatie uitgeschakeld"
       subject_template: "[%{email_prefix}] Tweeledige verificatie uitgeschakeld"
+      subject_template_improved: "Tweeledige verificatie uitgeschakeld"
     digest:
       why: "Een kort overzicht van %{site_link} sinds %{since}"
       since_last_visit: "Sinds je laatste bezoek"
@@ -3867,6 +3866,7 @@ nl:
       popular_posts: "Populaire berichten"
       more_new: "Nieuw voor u"
       subject_template: "[%{email_prefix}] Samenvatting"
+      subject_template_improved: "Samenvatting"
       unsubscribe: "Deze samenvatting wordt verzonden van %{site_link} als we je een tijdje niet hebben gezien. Wijzig %{email_preferences_link}, of %{unsubscribe_link} om je af te melden."
       your_email_settings: "uw e-mailinstellingen"
       click_here: "klik hier"
@@ -3886,6 +3886,7 @@ nl:
       title: "Aanmelden via link"
       preview: "Aanmelden via link."
       subject_template: "[%{email_prefix}] Aanmelden via link"
+      subject_template_improved: "Aanmelden via link"
       text_body_template: |
         Dit is je link om je aan te melden bij [%{site_name}](%{base_url}).
 
@@ -3895,7 +3896,6 @@ nl:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Wachtwoord instellen"
-      subject_template: "[%{email_prefix}] Wachtwoord instellen"
       text_body_template: |
         Iemand heeft gevraagd een wachtwoord toe te voegen aan je account op [%{site_name}](%{base_url}). Je kunt je ook aanmelden met elke ondersteunde online service (Google, Facebook, enz.) die aan dit gevalideerde e-mailadres is gekoppeld.
 
@@ -3906,6 +3906,7 @@ nl:
     admin_login:
       title: "Beheerdersaanmelding"
       subject_template: "[%{email_prefix}] Aanmelding"
+      subject_template_improved: "Aanmelden"
       text_body_template: |
         Iemand heeft gevraagd om aanmelding op je account op [%{site_name}](%{base_url}).
 
@@ -3915,7 +3916,6 @@ nl:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Account gemaakt"
-      subject_template: "[%{email_prefix}] Je nieuwe account"
       text_body_template: |
         Er is een nieuw account voor je gemaakt op %{site_name}
 
@@ -4030,7 +4030,6 @@ nl:
         Als je niet op de bovenstaande link kunt klikken, kopieer en plak deze dan in de adresbalk van je webbrowser.
     suspicious_login:
       title: "Waarschuwing voor nieuwe aanmelding"
-      subject_template: "[%{site_name}] Nieuwe aanmelding vanaf %{location}"
       text_body_template: |
         Hallo,
 

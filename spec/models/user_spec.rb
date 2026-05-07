@@ -30,6 +30,23 @@ RSpec.describe User do
       expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
     end
 
+    it "returns true if any of the group IDs are the 'logged_in_users' auto group" do
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
+    end
+
+    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+      Discourse.system_user.reload
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+    end
+
+    it "returns true for the 'anonymous' auto group for anonymous users" do
+      expect(
+        Guardian.new.instance_variable_get(:@user).in_any_groups?([Group::AUTO_GROUPS[:anonymous]]),
+      ).to eq(true)
+    end
+
     it "returns true if the user is in the group" do
       expect(user.in_any_groups?([group.id])).to eq(false)
       group.add(user)

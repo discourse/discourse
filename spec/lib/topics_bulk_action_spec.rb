@@ -906,4 +906,172 @@ RSpec.describe TopicsBulkAction do
       expect(operator.errors).to be_present
     end
   end
+
+  describe "#manage_tags" do
+    fab!(:tag_1, :tag)
+    fab!(:tag_2, :tag)
+    fab!(:tag_3, :tag)
+    fab!(:tag_4, :tag)
+    fab!(:topic_1) { Fabricate(:topic_with_op, user: user, tags: [tag_1, tag_2]) }
+    fab!(:topic_2) { Fabricate(:topic_with_op, user: user, tags: [tag_2, tag_3]) }
+    fab!(:topic_3) { Fabricate(:topic_with_op, user: user, tags: [tag_1]) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+    end
+
+    it "adds tags to each topic on top of its existing tags" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic_1.id, topic_2.id, topic_3.id],
+          type: "manage_tags",
+          add_tag_ids: [tag_3.id, tag_4.id],
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      expect(topic_1.reload.tags).to contain_exactly(tag_1, tag_2, tag_3, tag_4)
+      expect(topic_2.reload.tags).to contain_exactly(tag_2, tag_3, tag_4)
+      expect(topic_3.reload.tags).to contain_exactly(tag_1, tag_3, tag_4)
+    end
+
+    it "removes specific tags only from topics that have them" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic_1.id, topic_2.id, topic_3.id],
+          type: "manage_tags",
+          remove_tag_ids: [tag_1.id, tag_2.id],
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      expect(topic_1.reload.tags).to be_empty
+      expect(topic_2.reload.tags).to contain_exactly(tag_3)
+      expect(topic_3.reload.tags).to be_empty
+    end
+
+    it "replaces tags on topics that have the source tag" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic_1.id, topic_2.id, topic_3.id],
+          type: "manage_tags",
+          replace_tags: [
+            { from_tag_id: tag_2.id, to_tag_id: tag_3.id },
+            { from_tag_id: tag_3.id, to_tag_id: tag_4.id },
+          ],
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic_1.id, topic_2.id)
+      expect(topic_1.reload.tags).to contain_exactly(tag_1, tag_3)
+      expect(topic_2.reload.tags).to contain_exactly(tag_3, tag_4)
+      expect(topic_3.reload.tags).to contain_exactly(tag_1)
+    end
+
+    it "applies remove, then add, then replace in that order" do
+      TopicsBulkAction.new(
+        user,
+        [topic_1.id, topic_2.id, topic_3.id],
+        type: "manage_tags",
+        remove_tag_ids: [tag_1.id, tag_2.id],
+        add_tag_ids: [tag_1.id, tag_3.id],
+        replace_tags: [
+          { from_tag_id: tag_1.id, to_tag_id: tag_4.id },
+          { from_tag_id: tag_3.id, to_tag_id: tag_2.id },
+        ],
+      ).perform!
+
+      expect(topic_1.reload.tags).to contain_exactly(tag_2, tag_4)
+      expect(topic_2.reload.tags).to contain_exactly(tag_2, tag_4)
+      expect(topic_3.reload.tags).to contain_exactly(tag_2, tag_4)
+    end
+
+    it "can clear all tags with remove_all_tags" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic_1.id, topic_2.id, topic_3.id],
+          type: "manage_tags",
+          remove_all_tags: true,
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      expect(topic_1.reload.tags).to be_empty
+      expect(topic_2.reload.tags).to be_empty
+      expect(topic_3.reload.tags).to be_empty
+    end
+
+    it "applies replacements sequentially so the first matching pair wins" do
+      TopicsBulkAction.new(
+        user,
+        [topic_1.id, topic_2.id, topic_3.id],
+        type: "manage_tags",
+        replace_tags: [
+          { from_tag_id: tag_1.id, to_tag_id: tag_2.id },
+          { from_tag_id: tag_1.id, to_tag_id: tag_3.id },
+        ],
+      ).perform!
+
+      expect(topic_1.reload.tags).to contain_exactly(tag_2)
+      expect(topic_2.reload.tags).to contain_exactly(tag_2, tag_3)
+      expect(topic_3.reload.tags).to contain_exactly(tag_2)
+    end
+
+    it "does not bump, revise, or notify watchers" do
+      topic_watcher = Fabricate(:user)
+      Jobs.run_immediately!
+      TopicUser.change(
+        topic_watcher,
+        topic_1.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+      topic_1.update!(bumped_at: 1.week.ago)
+
+      notifications_before = Notification.where(user: topic_watcher).count
+      bumped_at_before = topic_1.bumped_at
+      version_before = topic_1.first_post.version
+
+      TopicsBulkAction.new(
+        Fabricate(:admin),
+        [topic_1.id],
+        type: "manage_tags",
+        add_tag_ids: [tag_4.id],
+      ).perform!
+
+      expect(Notification.where(user: topic_watcher).count).to eq(notifications_before)
+      expect(topic_1.reload.bumped_at).to be_within(1.second).of(bumped_at_before)
+      expect(topic_1.first_post.reload.version).to eq(version_before)
+    end
+
+    it "only updates topics the acting user can edit" do
+      other_user = Fabricate(:user, refresh_auto_groups: true)
+      other_topic = Fabricate(:topic_with_op, user: other_user, tags: [tag_1])
+
+      topic_ids =
+        TopicsBulkAction.new(
+          other_user,
+          [topic_1.id, other_topic.id],
+          type: "manage_tags",
+          add_tag_ids: [tag_4.id],
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(other_topic.id)
+      expect(topic_1.reload.tags).to contain_exactly(tag_1, tag_2)
+      expect(other_topic.reload.tags).to contain_exactly(tag_1, tag_4)
+    end
+
+    it "ignores unknown tag ids" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic_1.id],
+          type: "manage_tags",
+          add_tag_ids: [999_999],
+        ).perform!
+
+      expect(topic_ids).to be_empty
+      expect(topic_1.reload.tags).to contain_exactly(tag_1, tag_2)
+    end
+  end
 end

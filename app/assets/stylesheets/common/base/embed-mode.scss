@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Styles for the full Ember app when rendered in embed mode (iframe)
 // Activated when ?embed_mode=true is in the URL
 body.embed-mode {
@@ -103,6 +105,25 @@ body.embed-mode {
     }
   }
 
+  // prevent horizontal overflow
+  .topic-meta-data {
+    @include viewport.until(sm) {
+      .post-infos {
+        position: relative;
+        overflow: hidden;
+        padding-right: 6px;
+      }
+
+      .read-state {
+        right: 1px;
+
+        svg {
+          right: 0;
+        }
+      }
+    }
+  }
+
   // Hide the docked timeline sidebar (fullscreen timeline still works)
   .timeline-container:not(.timeline-fullscreen) {
     display: none !important;
@@ -154,7 +175,7 @@ body.embed-mode {
   .embed-mode-composer {
     position: sticky;
     bottom: 0;
-    z-index: 50;
+    z-index: z("composer", "content");
     background: var(--secondary);
     padding-inline: 0.5em;
 

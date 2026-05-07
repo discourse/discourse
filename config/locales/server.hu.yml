@@ -3340,7 +3340,6 @@ hu:
         Ha úgy gondolod, hogy ez egy hiba, [lépj kapcsolatba a személyzet tagjaial] (%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-mail elutasítása Nem engedélyezett e-mail"
-      subject_template: "[%{email_prefix}] E-mail probléma -- Blokkolt e-mail"
       text_body_template: |
         Sajnáljuk, de az ide küldött %{destination} e-mail üzeneted (címe %{former_title}) nem ért célba.
 
@@ -3460,7 +3459,6 @@ hu:
         Nincs jogosultságod válaszolni a témára. Ha úgy gondolod, hogy ez egy hiba, [lépj kapcsolatba a személyzet tagjaial] (%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-mail elutasítva Válasz az Összefoglalóra"
-      subject_template: "[%{email_prefix}] E-mail probléma -- Válasz az összefoglalóra"
       text_body_template: |
         Sajnáljuk, de az ide küldött %{destination} e-mail üzeneted (címe %{former_title}) nem ért célba.
 
@@ -3597,7 +3595,6 @@ hu:
       text_body_template: "A `download_remote_images_to_local` beállítás le lett tiltva, mert az erre szánt `download_remote_image_threshold` tárhelykorlát elérésre került."
     new_user_of_the_month:
       title: "Ön a hónap új felhasználója!"
-      subject_template: "Ön a hónap új felhasználója!"
       text_body_template: |
         Elnyerted ** A hónap új felhasználója %{month_year}** díjat. :trophy:
 
@@ -3944,6 +3941,7 @@ hu:
     account_exists:
       title: "A fiók már létezik"
       subject_template: "[%{email_prefix}] A fiók már létezik"
+      subject_template_improved: "A fiók már létezik"
       text_body_template: |
         Most próbáltál létrehozni egy fiókot a %{site_name} oldalon, vagy megpróbáltad megváltoztatni a fiók e-mail címét %{email}. Viszont már létezik fiók ezzel az e-mail címmel: %{email}.
 
@@ -3955,6 +3953,7 @@ hu:
     account_second_factor_disabled:
       title: "Kéttényezős hitelesítés kikapcsolva"
       subject_template: "[%{email_prefix}] A kéttényezős hitelesítés letiltva"
+      subject_template_improved: "Kéttényezős hitelesítés kikapcsolva"
       text_body_template: |
         A kétlépcsős azonosítást kikapcsolták a(z) %{site_name} oldalon használt fiókjában. Mostantól kizárólag a jelszavával is bejelentkezhet; nincs szükség többé további hitelesítési kódra.
 
@@ -3974,6 +3973,7 @@ hu:
       popular_posts: "Népszerű bejegyzések"
       more_new: "Új az Ön számára"
       subject_template: "[%{email_prefix}] Összefoglaló"
+      subject_template_improved: "Összefoglaló"
       unsubscribe: "Ezt az összefoglalót %{site_link} tól küldjük, mert már egy ideje nem látunk. Az %{email_preferences_link} vagy a %{unsubscribe_link} oldalon tudod a beállításokat változtatni vagy leiratkozni."
       your_email_settings: "e-mail beállítások"
       click_here: "kattintson ide"
@@ -3994,6 +3994,7 @@ hu:
       title: "Bejelentkezés a linken keresztül"
       preview: "Bejelentkezés a linken keresztül."
       subject_template: "[%{email_prefix}] Bejelentkezés a linken keresztül"
+      subject_template_improved: "Bejelentkezés a linken keresztül"
       text_body_template: |
         Itt van a link a bejelentkezéshez a [%{site_name}](%{base_url}) címen.
 
@@ -4004,7 +4005,6 @@ hu:
     set_password:
       title: "Állítson be jelszót"
       preview: "Fiókjelszó beállítása."
-      subject_template: "[%{email_prefix}] Jelszó beállítása"
       text_body_template: |
         Valaki szeretne jelszót adni a fiókodhoz a [%{site_name}] (%{base_url}) oldalon. Alternatív megoldásként bejelentkezhetsz bármely támogatott online szolgáltatással (Google, Facebook stb.), amely ehhez az érvényes e-mail címedhez tartozik.
 
@@ -4016,6 +4016,7 @@ hu:
       title: "Admin bejelentkezés"
       preview: "Admin bejelentkezés szükséges."
       subject_template: "[%{email_prefix}] Bejelentkezés"
+      subject_template_improved: "Bejelentkezés"
       text_body_template: |
         Valaki be szeretne jelentkezni a fiókodba a [%{site_name}] (%{base_url}) oldalon.
 
@@ -4026,7 +4027,6 @@ hu:
     account_created:
       title: "Fiók létrehozva"
       preview: "Új fiók létrehozva az Ön számára."
-      subject_template: "[%{email_prefix}] Az új fiókod"
       text_body_template: |
         Egy új fiók készült a számodta a %{site_name}n.
 
@@ -4139,7 +4139,6 @@ hu:
     suspicious_login:
       title: "Új bejelentkezési figyelmeztetés"
       preview: "Ellenőrizze az eszközét."
-      subject_template: "[%{site_name}] Új bejelentkezés innen: %{location}"
       text_body_template: |
         Hello,
 

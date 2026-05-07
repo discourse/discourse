@@ -16,9 +16,6 @@ ro:
     topic_voting_show_votes_on_profile: 'Permiți utilizatorilor să vadă voturile în fluxurile lor de activități?'
     topic_voting_alert_votes_left: 'Avertizează utilizatorii când mai rămân doar atâtea voturi'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Arată cine a votat"
     votes_moved:
       one: "Un vot a fost mutat."
       few: "%{count} voturi au fost mutate."

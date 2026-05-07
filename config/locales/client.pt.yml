@@ -3160,11 +3160,6 @@ pt:
         move_messages_to_inbox: "Mover para a Caixa de Entrada"
         change_notification_level: "Alterar Nível de Notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
-        choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
-        changed_tags: "As etiquetas para esses tópicos foram mudadas."
-        confirm_remove_tags:
-          one: "Todas as etiquetas serão removidas deste tópico. Tem a certeza?"
-          other: "Todas as etiquetas serão removidas de <b>%{count}</b> tópicos. Tem a certeza?"
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
@@ -3191,8 +3186,6 @@ pt:
         name: "Arquivo"
       move_messages_to_inbox:
         name: "Mover para a Caixa de Entrada"
-      replace_tags:
-        name: "Substituir Etiquetas"
       delete_topics:
         name: "Eliminar"
       convert_to_public_topic:
@@ -3217,6 +3210,7 @@ pt:
       collapse: "Colapsar"
       no_replies: "Ainda sem respostas."
       deleted_post_placeholder: "[eliminado]"
+      ignored_post_placeholder: "[ignorados]"
       pinned_reply: "Fixado"
     topic:
       filter_to:
@@ -3969,7 +3963,7 @@ pt:
           low: "Baixa"
           high: "Elevado"
       sort_options:
-        default: "predefinida"
+        default: "Predefinição"
         likes: "Gostos"
         views: "Vistas"
         posts: "Publicações"
@@ -5438,6 +5432,7 @@ pt:
         topic_id: "ID do Tópico"
         post_id: "Id. da Publicação"
         category_id: "ID da Categoria"
+        reviewable_id: "Revisão"
         delete: "Eliminar"
         edit: "Editar"
         save: "Guardar"

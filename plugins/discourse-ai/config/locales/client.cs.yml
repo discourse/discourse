@@ -358,6 +358,7 @@ cs:
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"
           upload_files: "Nahrát soubory"
+          scroll_to_bottom: "Přejít na konec"
       sentiments:
         dashboard:
           title: "Sentiment"

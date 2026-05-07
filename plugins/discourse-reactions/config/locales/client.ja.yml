@@ -19,8 +19,6 @@ ja:
         react_with: "この投稿へのリアクション: %{reaction}"
         cant_remove_reaction: "リアクションを削除できなくなりました"
         remove_reaction: "この %{reaction} リアクションを削除する"
-      users_popup:
-        all: "すべて"
       main_reaction:
         add: "この投稿に「いいね！」する"
         remove: "この「いいね！」を削除する"

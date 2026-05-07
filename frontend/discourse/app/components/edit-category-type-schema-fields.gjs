@@ -28,8 +28,6 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
-      @titleFormat="full"
-      @descriptionFormat="full"
       @format="full"
       @type="custom"
       as |field|
@@ -46,8 +44,6 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
-      @titleFormat="full"
-      @descriptionFormat="full"
       @format="full"
       @type="input-number"
       as |field|
@@ -61,8 +57,7 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
-      @titleFormat="full"
-      @descriptionFormat="full"
+      @labelFormat="full"
       @format="large"
       as |field|
     >

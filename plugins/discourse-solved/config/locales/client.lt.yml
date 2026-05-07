@@ -10,7 +10,6 @@ lt:
       alt:
         solved:
           accepted_notification: "patvirtinta"
-          topic_solved_notification: "išspresta"
     solved:
       title: "Išspresta"
       accepted_answer_post_number: "įrašas %{post_number}"

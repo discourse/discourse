@@ -23,9 +23,6 @@ nl:
         one: "Stem"
         other: "Stemmen"
       remove_vote: "Stem verwijderen"
-      and_more_voters: "en nog %{count}..."
-      show_voters: "Weergeven wie er heeft gestemd"
-      vote_count_thousands: "%{count}k"
       no_votes_title_self: "Je hebt nog niet gestemd op topics"
       no_votes_title_others: "%{username} heeft nog niet gestemd op topics"
     filters:

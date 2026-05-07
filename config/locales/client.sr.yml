@@ -2226,7 +2226,7 @@ sr:
           normal: "Normalno"
           high: "Visoko"
       sort_options:
-        default: "zadato"
+        default: "Подразумевано"
         likes: "Lajkovi"
         views: "Pregledi"
         posts: "Poruka"
@@ -3090,6 +3090,7 @@ sr:
         ip_address: "IP"
         topic_id: "ID Teme"
         post_id: "ID Poruke"
+        reviewable_id: "Pregled"
         delete: "Obriši"
         edit: "Izmeni"
         save: "Sačuvaj"

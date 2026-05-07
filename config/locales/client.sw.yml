@@ -1495,8 +1495,6 @@ sw:
         actions: "Vitendo za Jumla"
         move_messages_to_inbox: "Hamishia kwenye kisanduku-pokezi"
         choose_new_category: "Chagua kategoria mpya kwa ajili ya mada:"
-        choose_new_tags: "Chagua lebo mpya kwa ajili ya hizi mada:"
-        changed_tags: "lebo za hizo mada zilibadilishwa."
         error_topic_count:
           one: "%{count} topiki"
           other: "%{count} Topiki"
@@ -1518,8 +1516,6 @@ sw:
         name: "Nyaraka"
       move_messages_to_inbox:
         name: "Hamisha kwenda Kisanduku pokezi"
-      replace_tags:
-        name: "Badilisha Lebo"
       delete_topics:
         name: "Futa"
       convert_to_private_message:
@@ -1991,7 +1987,7 @@ sw:
           normal: "Kawaida"
           ignore: "Puuzia"
       sort_options:
-        default: "chaguo-msingi"
+        default: "Halisi"
         likes: "Upendo"
         views: "Imeonwa"
         posts: "Machapisho"

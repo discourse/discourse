@@ -172,20 +172,20 @@ RSpec.describe Onebox::Helpers do
     end
 
     describe "cookie handling" do
-      it "naively forwards cookies to the next request" do
+      it "forwards cookies on same-host redirects, stripping attributes" do
         stub_request(:get, "https://httpbin.org/cookies/set/a/b").to_return(
           status: 302,
           headers: {
             location: "/cookies",
-            "set-cookie": "a=b; Path=/",
+            "set-cookie": ["a=b; Path=/; Secure", "c=d; HttpOnly; Max-Age=3600"],
           },
         )
 
         stub_request(:get, "https://httpbin.org/cookies").with(
           headers: {
-            cookie: "a=b; Path=/",
+            cookie: "a=b; c=d",
           },
-        ).to_return(status: 200, body: "success, cookie readback not implemented")
+        ).to_return(status: 200, body: "success")
 
         expect(described_class.fetch_response("https://httpbin.org/cookies/set/a/b")).to match(
           "success",
@@ -193,8 +193,6 @@ RSpec.describe Onebox::Helpers do
       end
 
       it "does not send cookies to the wrong domain" do
-        skip("unimplemented")
-
         stub_request(:get, "https://httpbin.org/cookies/set/a/b").to_return(
           status: 302,
           headers: {
@@ -203,13 +201,13 @@ RSpec.describe Onebox::Helpers do
           },
         )
 
-        stub_request(:get, "https://evil.com/show_cookies").with(
-          headers: {
-            cookie: nil,
-          },
-        ).to_return(status: 200, body: "success, cookie readback not implemented")
+        stub_request(:get, "https://evil.com/show_cookies").to_return(status: 200, body: "ok")
 
         described_class.fetch_response("https://httpbin.org/cookies/set/a/b")
+
+        expect(WebMock).to have_requested(:get, "https://evil.com/show_cookies").with { |req|
+          !req.headers.key?("Cookie")
+        }
       end
     end
   end

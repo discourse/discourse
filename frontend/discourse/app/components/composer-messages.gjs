@@ -21,6 +21,10 @@ import { autoTrackedArray } from "../lib/tracked-tools";
 
 let _messagesCache = {};
 
+export function resetComposerMessagesCache() {
+  _messagesCache = {};
+}
+
 @tagName("")
 export default class ComposerMessages extends Component {
   @tracked showShareModal;

@@ -3157,7 +3157,6 @@ it:
         La tua risposta è stata inviata da un indirizzo email bloccato. Prova a rispondere da un altro indirizzo email, o [contatta un membro dello staff](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Email Rifiuta Email Non Consentita"
-      subject_template: "[%{email_prefix}] Problema email -- Email Bloccata"
       text_body_template: |
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
 
@@ -3310,7 +3309,6 @@ it:
       text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nNon hai le autorizzazioni per rispondere all'argomento. Se ritieni che si tratti di un errore, [contatta un membro dello staff](%{base_url}/about).\n"
     email_reject_reply_to_digest:
       title: "Email di risposta a un messaggio di riepilogo rifiutata"
-      subject_template: "[%{email_prefix}] Problema e-mail - Risposta a un messaggio di riepilogo"
       text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nHai risposto a un'e-mail di riepilogo, e questo non è consentito.\n\nSe ritieni che si tratti di un errore, [contatta un membro dello staff](%{base_url}/about).\n"
     email_reject_too_many_recipients:
       title: "Rifiuto di e-mail con troppi destinatari"
@@ -3413,7 +3411,6 @@ it:
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché è stato raggiunto il limite di spazio su disco definito in `download_remote_images_threshold`."
     new_user_of_the_month:
       title: "Sei il Nuovo Utente del Mese!"
-      subject_template: "Sei il Nuovo Utente del Mese!"
       text_body_template: |
         Congratulazioni, ti sei meritato il premio come **Nuovo Utente del Mese per %{month_year}**. :trophy:
 
@@ -3731,6 +3728,7 @@ it:
     account_exists:
       title: "L'account esiste già"
       subject_template: "[%{email_prefix}] L'account esiste già"
+      subject_template_improved: "L'account esiste già"
       text_body_template: |
         Hai appena cercato di creare un account su %{site_name}, o hai tentato di cambiare l'email di un account su %{email}. Tuttavia, un account esiste già per %{email}.
 
@@ -3742,6 +3740,7 @@ it:
     account_second_factor_disabled:
       title: "Autenticazione a due fattori disabilitata"
       subject_template: "[%{email_prefix}] Autenticazione a due fattori disabilitata"
+      subject_template_improved: "Autenticazione a due fattori disabilitata"
     digest:
       why: "Un breve riepilogo di %{site_link} da %{since}"
       since_last_visit: "Dalla tua ultima visita"
@@ -3755,6 +3754,7 @@ it:
       popular_posts: "Messaggi popolari"
       more_new: "Nuovo per te"
       subject_template: "[%{email_prefix}] Riepilogo"
+      subject_template_improved: "Riepilogo"
       unsubscribe: "Questo riepilogo ti viene inviato da %{site_link} quando sei assente da un po'. Modifica %{email_preferences_link}, o %{unsubscribe_link} per annullare l'iscrizione."
       your_email_settings: "le tue impostazioni email"
       click_here: "clicca qui"
@@ -3774,10 +3774,10 @@ it:
       title: "Accedi tramite collegamento"
       preview: "Accedi tramite collegamento."
       subject_template: "[%{email_prefix}] Accedi tramite collegamento"
+      subject_template_improved: "Accedi tramite collegamento"
       text_body_template: "Ecco il collegamento per accedere a [%{site_name}](%{base_url}). \n\nSe non hai richiesto questo collegamento, puoi tranquillamente ignorare questa email. \n\nClicca sul seguente collegamento per accedere:\n %{base_url}/session/email-login/%{email_token}\n"
     set_password:
       title: "Imposta Password"
-      subject_template: "[%{email_prefix}] Imposta Password"
       text_body_template: |
         Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi accedere usando uno dei servizi online supportati (Google, Facebook, ecc) associato con questo indirizzo email validato.
 
@@ -3788,6 +3788,7 @@ it:
     admin_login:
       title: "Accesso Amministratore"
       subject_template: "[%{email_prefix}] Accesso"
+      subject_template_improved: "Accesso"
       text_body_template: |
         Qualcuno ha richiesto di accedere con il tuo account su [%{site_name}](%{base_url}).
 
@@ -3797,7 +3798,6 @@ it:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Account Creato"
-      subject_template: "[%{email_prefix}] Il Tuo Nuovo Account"
       text_body_template: |
         E' stato creato un nuovo account per te su %{site_name}
 
@@ -3902,7 +3902,6 @@ it:
       text_body_template: "Benvenuto in %{site_name}! \n\nQuesto è un promemoria per l'attivazione del tuo account. \n\nFai clic sul seguente link per confermare e attivare il tuo nuovo account:\n %{base_url}/u/activate-account/%{email_token} \n\nSe il link qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser web.\n"
     suspicious_login:
       title: "Nuovo avviso di accesso"
-      subject_template: "[%{site_name}] Nuovo accesso da %{location}"
       text_body_template: "Ciao, \n\nabbiamo notato un accesso da un dispositivo o da una posizione che non utilizzi abitualmente. Eri tu? \n\n- Posizione: %{location} (%{client_ip}) \n- Browser: %{browser} \n- Dispositivo: %{device} - %{os} \n\nSe eri tu, va benissimo! Non c'è nient'altro da fare. \n\nSe non eri tu, ti preghiamo di [controllare le tue sessioni esistenti](%{base_url}/my/preferences/account) e prendere in considerazione la possibilità di cambiare la tua password.\n"
     post_approved:
       title: "Il tuo messaggio è stato approvato"

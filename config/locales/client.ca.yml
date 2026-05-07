@@ -1963,8 +1963,6 @@ ca:
         actions: "Accions massives"
         move_messages_to_inbox: "Mou a la safata d'entrada"
         choose_new_category: "Seleccioneu la categoria nova per als temes:"
-        choose_new_tags: "Trieu noves etiquetes per a aquests temes:"
-        changed_tags: "Les etiquetes d'aquests temes han estat canviades."
         error_topic_count:
           one: "%{count} tema"
           other: "%{count} temes"
@@ -1986,8 +1984,6 @@ ca:
         name: "Arxiva"
       move_messages_to_inbox:
         name: "Mou a la safata d'entrada"
-      replace_tags:
-        name: "Reemplaça etiquetes"
       delete_topics:
         name: "Suprimeix"
       convert_to_private_message:
@@ -2006,6 +2002,7 @@ ca:
       collapse: "Redueix"
       no_replies: "Encara sense respostes"
       deleted_post_placeholder: "[suprimit]"
+      ignored_post_placeholder: "[ignorat]"
       pinned_reply: "Afixat"
     topic:
       filter_to:
@@ -2576,7 +2573,7 @@ ca:
           low: "Baixa"
           high: "Alta"
       sort_options:
-        default: "per defecte"
+        default: "Per defecte"
         likes: "'M'agrada'"
         views: "Vistes"
         posts: "Publicacions"
@@ -3903,6 +3900,7 @@ ca:
         topic_id: "ID de tema"
         post_id: "ID de publicació"
         category_id: "ID de categoria"
+        reviewable_id: "Revisa"
         delete: "Suprimeix"
         edit: "Edita"
         save: "Desa"

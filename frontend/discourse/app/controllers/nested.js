@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import NestedActivityLog from "discourse/components/modal/nested-activity-log";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -18,8 +19,10 @@ export default class NestedController extends Controller {
   @service dialog;
   @service currentUser;
   @service messageBus;
+  @service modal;
   @service nestedViewCache;
   @service router;
+  @service site;
 
   @tracked topic;
   @tracked opPost;
@@ -281,6 +284,13 @@ export default class NestedController extends Controller {
     this.#topicRoute.showFlags(post);
   }
 
+  @action
+  showActivityLog() {
+    this.modal.show(NestedActivityLog, {
+      model: { topic: this.topic },
+    });
+  }
+
   // editingTopic is @tracked locally because the topic controller's
   // editingTopic is a classic property (not @tracked) — a plain getter
   // aliasing it won't trigger Glimmer re-renders. We sync the flag to
@@ -415,6 +425,10 @@ export default class NestedController extends Controller {
         return;
       }
 
+      if (!this.#isVisibleInTree(postData)) {
+        return;
+      }
+
       const post = this.store.createRecord("post", postData);
       post.topic = this.topic;
 
@@ -439,6 +453,20 @@ export default class NestedController extends Controller {
     } finally {
       this.#pendingPostIds.delete(data.id);
     }
+  }
+
+  // Mirrors the server-side filter in NestedReplies::TreeLoader#apply_visibility:
+  // small_action posts (close/open/etc.) belong in the activity log, not the tree;
+  // whispers with an action_code (e.g. assigns) are likewise activity-log-only.
+  #isVisibleInTree(postData) {
+    const postTypes = this.site.post_types;
+    if (postData.post_type === postTypes.small_action) {
+      return false;
+    }
+    if (postData.post_type === postTypes.whisper && postData.action_code) {
+      return false;
+    }
+    return true;
   }
 
   #isPostKnown(postId) {
