@@ -632,6 +632,73 @@ RSpec.configure do |config|
     Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
     Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
 
+    # `capybara-playwright-driver`'s `Browser#evaluate_async_script` (in
+    # capybara/playwright/browser.rb) wraps the user script in a
+    # `new Promise((resolve) => …)` shim, then calls Playwright's
+    # `evaluate_handle` (which returns a `JSHandle`) followed by
+    # `wrap_node` to dereference the handle into a Ruby value. That's two
+    # Playwright IPC round-trips per call. Playwright's `evaluate`
+    # already awaits a returned Promise and returns the resolved value
+    # serialized, in a single round-trip — and every caller of
+    # `evaluate_async_script` in this repo
+    # (`execute_async_client_settled_script` here, plus the four
+    # clipboard / image helpers in `spec/system/page_objects/cdp.rb`)
+    # only ever resolves with `null` or a primitive `string`, never an
+    # object/element. Substituting `evaluate` for the
+    # `evaluate_handle + wrap_node` pair halves the IPC cost of the
+    # `wait_for_client_settled` call that fires after every patched
+    # Capybara action (click, send_keys, visit, …).
+    module CapybaraPlaywrightBrowserEvaluateAsyncFastPatch
+      def evaluate_async_script(script, *args)
+        assert_page_alive do
+          js = <<~JAVASCRIPT
+          function(_arguments){
+            let args = Array.prototype.slice.call(_arguments);
+            return new Promise((resolve, reject) => {
+              args.push(resolve);
+              (function(){ #{script} }).apply(this, args);
+            });
+          }
+          JAVASCRIPT
+          @playwright_page.capybara_current_frame.evaluate(js, arg: unwrap_node(args))
+        end
+      end
+    end
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserEvaluateAsyncFastPatch)
+
+    # The upstream `capybara-playwright-driver` gem calls `@element.enabled?`
+    # at the top of `assert_element_not_stale` as a defensive pre-check
+    # before every read operation (visible?, visible_text, find_css, [],
+    # value, checked?, etc.). Each call is a Playwright IPC round-trip and
+    # together they account for ~7-17% of wall time on browser-heavy
+    # system specs (measured via stackprof on login_spec.rb / drafts_spec.rb
+    # / about_page_spec.rb). The pre-check is redundant: every operation
+    # the wrapped block performs (text_content, evaluate, query_selector_all)
+    # hits the same CDP channel and raises `Playwright::Error` with the same
+    # "Element is not attached to the DOM" / "Execution context was
+    # destroyed" / etc. messages that the rescue below already converts to
+    # `StaleReferenceError`. Skipping the explicit `enabled?` check keeps
+    # the staleness detection (via the rescue) but cuts one round-trip per
+    # read.
+    module CapybaraPlaywrightNodeSkipStaleEnabledCheckPatch
+      private def assert_element_not_stale(&block)
+        block.call
+      rescue ::Playwright::Error => err
+        case err.message
+        when /Element is not attached to the DOM/,
+             /Execution context was destroyed, most likely because of a navigation/,
+             /Cannot find context with specified id/,
+             /Unable to adopt element handle from a different document/,
+             /error in channel "content::page": exception while running method "adoptNode"/,
+             /(: Shadow DOM element - no XPath :)/
+          raise Capybara::Playwright::Node::StaleReferenceError.new(err)
+        else
+          raise
+        end
+      end
+    end
+    Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodeSkipStaleEnabledCheckPatch)
+
     module PlaywrightErrorPatch
       def message
         msg = super
