@@ -626,6 +626,7 @@ class Middleware::RequestTracker
       deferred_track_view: deferred_track_view,
       implicit_track_view: implicit_track_view,
       browser_page_view: browser_page_view,
+      is_embed: is_embed,
       topic_id: topic_id,
       tracking_url: tracking_url,
       tracking_referrer: tracking_referrer,
