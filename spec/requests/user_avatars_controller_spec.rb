@@ -9,6 +9,7 @@ RSpec.describe UserAvatarsController do
     end
 
     it "returns an avatar if we are allowing the proxy" do
+      described_class.stubs(:skip_proxy).returns(false)
       stub_request(:get, "https://avatars.discourse-cdn.com/v3/letter/a/aaaaaa/360.png").to_return(
         body: "image",
       )

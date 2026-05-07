@@ -50,7 +50,7 @@ class UserAvatarsController < ApplicationController
     params.require(:size)
 
     # Skip the CDN proxy under QUnit; the timeout would block the single worker.
-    return render_blank if ENV["DISCOURSE_QUNIT_SERVER"] == "1"
+    return render_blank if disable_proxy?
 
     hijack do
       begin
@@ -231,5 +231,9 @@ class UserAvatarsController < ApplicationController
 
     upload.get_optimized_image(size, size)
     # TODO decide if we want to detach here
+  end
+
+  def disable_proxy?
+    Rails.env.test?
   end
 end
