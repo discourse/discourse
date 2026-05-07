@@ -338,30 +338,63 @@ export function block(name, options = {}) {
 }
 
 /**
- * Creates the args object for a child block with reactive getters for context args.
+ * Creates the args object for a child block with reactive getters for both
+ * the entry's args and the rendering context.
  *
  * This function embeds the AUTH_TOKEN in the __block$ property, which is how
  * child blocks are authorized to render. The token is not exposed - it's
  * embedded in the returned object.
  *
- * Context args are defined as getters rather than direct properties. This allows
- * `curryComponent` to maintain a stable component identity while enabling reactive
- * updates when the getter values change. Without getters, changing any arg would
- * require creating a new curried component, breaking Ember's identity-based rendering.
+ * Args are defined as reactive getters that read from the LIVE `entry.args`
+ * (which is a `trackedObject` after registration in `block-outlet.gjs`).
+ * Combined with the compute-ref proxy `curryComponent` builds, this means
+ * mutating `entry.args.title = "new"` propagates to the rendered block
+ * without re-currying the component or replacing the layout — Glimmer's
+ * autotracking reaches in through the proxy to invalidate just the readers
+ * of that arg. This is what powers the visual editor's live arg editing.
  *
- * @param {Object} entryArgs - User-provided args from the layout entry.
- * @param {Object} contextArgs - Rendering context to define as reactive getters.
+ * The set of arg KEYS is fixed at curry time (per `curryComponent`'s
+ * contract that keys must be static), so adding new args after curry
+ * requires a layout replacement. Only value mutations of existing keys
+ * propagate reactively.
+ *
+ * @param {Object} entry - The layout entry. Reads track `entry.args[key]`.
+ * @param {Function} ComponentClass - The block's component class. Used to
+ *   look up schema defaults for keys not present in `entry.args`.
+ * @param {Object} contextArgs - Rendering context (children, outletArgs,
+ *   outletName, __hierarchy) defined as static reactive getters.
  * @returns {Object} The merged args object ready for `curryComponent`.
  */
-export function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
-  const blockArgs = {
-    ...entryArgs,
-    __block$: AUTH_TOKEN,
-  };
+export function createBlockArgsWithReactiveGetters(
+  entry,
+  ComponentClass,
+  contextArgs
+) {
+  const blockArgs = { __block$: AUTH_TOKEN };
 
-  // Dynamically define reactive getters for each context arg
+  const schema = blockMetadataMap.get(ComponentClass)?.args ?? {};
+
+  // Union of entry's args and schema keys. The set is frozen at curry time;
+  // mutations to existing keys propagate reactively, but adding a new key
+  // not anticipated here requires a layout replacement.
+  const argKeys = new Set([
+    ...Object.keys(entry.args || {}),
+    ...Object.keys(schema),
+  ]);
+
   /** @type {PropertyDescriptorMap} */
   const propertyDescriptors = {};
+  for (const key of argKeys) {
+    propertyDescriptors[key] = {
+      get() {
+        const live = entry.args?.[key];
+        return live !== undefined ? live : schema[key]?.default;
+      },
+      enumerable: true,
+    };
+  }
+
+  // Reactive getters for context args (children, outletArgs, etc.).
   for (const [key, value] of Object.entries(contextArgs)) {
     propertyDescriptors[key] = {
       get() {
@@ -370,6 +403,7 @@ export function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
       enumerable: true,
     };
   }
+
   Object.defineProperties(blockArgs, propertyDescriptors);
 
   return blockArgs;
