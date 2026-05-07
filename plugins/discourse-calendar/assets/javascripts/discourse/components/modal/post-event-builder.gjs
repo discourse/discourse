@@ -381,6 +381,8 @@ export default class PostEventBuilder extends Component {
         this.previousRsvpStatus = this.event.status;
       }
       this.event.status = "standalone";
+      this.event.maxAttendees = null;
+      this.maxAttendeesInput = "";
       this.event.reminders = (this.event.reminders || []).map((r) =>
         r.type === "notification" ? { ...r, type: "bumpTopic" } : r
       );
