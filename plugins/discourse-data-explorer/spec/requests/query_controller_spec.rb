@@ -782,6 +782,32 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.parsed_body["rows"]).to eq([[1828]])
       end
 
+      it "does not include post relations the user cannot see" do
+        private_post =
+          Fabricate(
+            :private_message_post,
+            raw: "Ssshh! This hidden data explorer excerpt must not leak.",
+          )
+        visible_post = Fabricate(:post, raw: "Visible data explorer excerpt may render.")
+        expect(Guardian.new(user).can_see_post?(private_post)).to eq(false)
+        expect(Guardian.new(user).can_see_post?(visible_post)).to eq(true)
+
+        query_sql = <<~SQL
+          SELECT #{private_post.id} AS post_id
+          UNION ALL
+          SELECT #{visible_post.id} AS post_id
+        SQL
+        query = make_query(query_sql, { name: "Posts" }, [group.id.to_s])
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
+
+        expect(response.status).to eq(200)
+        post_relations = response.parsed_body["relations"]["post"]
+        expect(post_relations).to contain_exactly(include("id" => visible_post.id))
+        expect(response.body).to include("Visible data explorer excerpt")
+        expect(response.body).not_to include("hidden data explorer excerpt")
+      end
+
       it "can accept parameters as a hash" do
         query_string = <<~SQL
         -- [params]

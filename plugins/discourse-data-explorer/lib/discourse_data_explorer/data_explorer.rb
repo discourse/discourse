@@ -110,8 +110,18 @@ module DiscourseDataExplorer
         },
         post: {
           class: Post,
-          fields: %i[id topic_id post_number cooked user_id],
-          include: [:user],
+          fields: %i[
+            id
+            topic_id
+            post_number
+            cooked
+            user_id
+            post_type
+            deleted_at
+            deleted_by_id
+            hidden
+          ],
+          include: [:user, { topic: :category }],
           serializer: SmallPostWithExcerptSerializer,
         },
         topic: {
@@ -151,7 +161,7 @@ module DiscourseDataExplorer
           .compact
     end
 
-    def self.add_extra_data(pg_result)
+    def self.add_extra_data(pg_result, guardian: nil)
       needed_classes = {}
       ret = {}
       col_map = {}
@@ -199,8 +209,13 @@ module DiscourseDataExplorer
             .includes(support_info[:include])
             .order(:id)
 
+        if cls == :post && guardian
+          all_objs = all_objs.select { |post| guardian.can_see_post?(post) }
+        end
+
         opts = { each_serializer: support_info[:serializer] }
         opts[:only] = support_info[:only] if support_info[:only]
+        opts[:scope] = guardian if guardian
         ret[cls] = ActiveModel::ArraySerializer.new(all_objs, **opts)
       end
       [ret, col_map]
