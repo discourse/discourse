@@ -147,7 +147,9 @@ class Middleware::RequestTracker
         trigger_browser_pageview_event(data)
       end
 
-      if data[:topic_id].present? && (!data[:has_auth_cookie] || data[:current_user_id].present?)
+      if data[:topic_id].present? && (!data[:has_auth_cookie] || data[:current_user_id].present?) &&
+           !data[:is_embed]
+
         TopicsController.defer_topic_view(
           data[:topic_id],
           data[:request_remote_ip],
