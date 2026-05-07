@@ -122,7 +122,6 @@ class Middleware::RequestTracker
       if data[:is_beacon]
         if data[:is_embed]
           ApplicationRequest.increment!(:page_view_embed)
-          trigger_beacon_browser_pageview_event(data)
         elsif data[:has_auth_cookie]
           ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
           if data[:is_mobile]
@@ -136,7 +135,6 @@ class Middleware::RequestTracker
       else
         if data[:is_embed]
           ApplicationRequest.increment!(:page_view_embed)
-          trigger_browser_pageview_event(data)
         elsif data[:has_auth_cookie]
           ApplicationRequest.increment!(:page_view_logged_in_browser)
           ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
