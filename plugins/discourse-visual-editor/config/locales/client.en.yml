@@ -1,0 +1,28 @@
+en:
+  js:
+    visual_editor:
+      pill:
+        enter: "Edit page"
+        enter_with_count:
+          one: "Edit page (%{count} outlet)"
+          other: "Edit page (%{count} outlets)"
+      chrome:
+        exit: "Exit editor"
+        panel_outline: "Outline"
+        panel_palette: "Palette"
+        panel_inspector: "Inspector"
+      inspector:
+        empty: "Select a block to inspect."
+        section_metadata: "Metadata"
+        section_args: "Arguments"
+        section_conditions: "Conditions"
+        label_block_name: "Block"
+        label_namespace: "Namespace"
+        label_description: "Description"
+        label_is_container: "Container"
+        label_args_schema: "Args schema"
+        label_no_args: "This block accepts no arguments."
+        label_no_conditions: "No conditions."
+      outline:
+        empty: "No editable outlets on this page."
+        outlet_label: "Outlet"
