@@ -96,13 +96,17 @@ export default {
             }
 
             next(() => {
+              const site = owner.lookup("service:site");
               const props = {
                 accountEmail: options.email,
                 accountUsername: options.username,
                 accountName: options.name,
                 authOptions: EmberObject.create(options),
                 skipConfirmation:
-                  siteSettings.auth_skip_create_confirm && options.username,
+                  siteSettings.auth_skip_create_confirm &&
+                  options.username &&
+                  (!site.full_name_required_for_signup ||
+                    options.name_from_provider),
               };
 
               router.transitionTo("signup").then(() => {
