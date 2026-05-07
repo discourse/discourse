@@ -176,31 +176,12 @@ h1 {
     font-size: var(--font-down-1-rem);
   }
 
-  &__content-block {
-    .--row & {
-      flex: 1;
-      padding: var(--space-4);
-
-      &:not(:last-child) {
-        border-right: 1px solid var(--primary-low);
-      }
-    }
-
-    .--small & {
-      min-width: 150px;
-    }
-  }
-
   &__row {
     display: flex;
     flex-wrap: nowrap;
     gap: var(--space-4);
     border-top: 1px solid var(--primary-low);
     margin-inline: calc(var(--space-4) * -1);
-
-    > * {
-      flex: 1;
-    }
   }
 
   &__row-block {
@@ -231,7 +212,7 @@ h1 {
       margin-left: var(--space-4);
     }
 
-    &:hover {
+    &:is(a):hover {
       color: var(--primary);
 
       .db-link-arrow {
@@ -245,7 +226,7 @@ h1 {
     border-radius: var(--d-border-radius-large);
     border: 1px solid var(--primary-low);
 
-    .--no-border & {
+    &.--no-border {
       border: none;
       border-radius: 0;
       padding: 0;
@@ -259,7 +240,7 @@ h1 {
 
     &.--row {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
     }
 
     &.--column {
@@ -267,7 +248,10 @@ h1 {
       flex-direction: column;
       gap: var(--space-4);
       padding: var(--space-4);
-      padding-bottom: 0;
+
+      &:has(.db-section__row-block) {
+        padding-bottom: 0;
+      }
     }
   }
 }

@@ -60,22 +60,183 @@ const sections = [
 
   <div class="db-main">
 
-    <div class="db-section --kpi">
+    Simple = 1 wrapper which is a row, needs at least 1 row-block
+    <div class="db-section">
       <div class="db-section__wrapper --row">
-        <a class="db-section__content-block">
-          <div class="db-kpi__value">1,100</div>
-        </a>
-        <a class="db-section__content-block">
-          <div class="db-kpi__value">1,100</div>
-        </a>
-        <a class="db-section__content-block">
-          <div class="db-kpi__value">1,100</div>
-        </a>
-        <a class="db-section__content-block">
-          <div class="db-kpi__value">1,100</div>
-        </a>
+        <div class="db-section__row-block">
+          <div>content</div>
+        </div>
+        <div class="db-section__row-block">
+          <div>content</div>
+        </div>
+        <div class="db-section__row-block">
+          <div>content</div>
+        </div>
       </div>
     </div>
+
+    <pre>
+    &lt;div class="db-section"&gt;
+      &lt;div class="db-section__wrapper --row"&gt;
+        &lt;div class="db-section__row-block"&gt;
+          content
+        &lt;/div&gt;
+        …
+      &lt;/div&gt;
+    &lt;/div&gt;
+    </pre>
+
+    or equally simple, the wrapper is a column, with automatic spacing, as used
+    in most sections. doesn't need a row-block directly
+
+    <div class="db-section">
+      <div class="db-section__wrapper --column">
+        <div>content</div><div>content</div><div>content</div>
+      </div>
+    </div>
+
+    <pre>
+      &lt;div class="db-section"&gt;
+        &lt;div class="db-section__wrapper --column"&gt;
+          content
+        &lt;/div&gt;
+        </pre>
+
+    for more complex sections, you can combine rows inside a column wrapper this
+    . type of row is not the same as "wapper --row" since it works with negative
+    margins and needs different border and padding management. these rows will
+    autosize.
+
+    <div class="db-section">
+      <div class="db-section__wrapper --column">
+        <div>content</div>
+        <div>content</div>
+        <div class="db-section__row">
+          <div class="db-section__row-block">
+            <div>content</div>
+          </div>
+          <div class="db-section__row-block">
+            <div>content</div>
+          </div>
+          <div class="db-section__row-block">
+            <div>content</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <pre>
+    &lt;div class="db-section"&gt;
+      &lt;div class="db-section__wrapper --column"&gt;
+        &lt;div&gt;content&lt;/div&gt;
+        &lt;div&gt;content&lt;/div&gt;
+        &lt;div class="db-section__row"&gt;
+          &lt;div class="db-section__row-block"&gt;
+            &lt;div&gt;content&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="db-section__row-block"&gt;
+            &lt;div&gt;content&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="db-section__row-block"&gt;
+            &lt;div&gt;content&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    </pre>
+
+    if there are multiple rows that need internal vertical borders, you need to
+    group them in a wrapper "db-section__row-group" which applies negative
+    margins to the rows to allow borders to be applied without breaking the
+    layout. the row-blocks inside these rows should not have any padding, all
+    spacing should be done at the row level.
+
+    <div class="db-section">
+      <div class="db-section__wrapper --column">
+        <div>content</div>
+        <div>content</div>
+        <div class="db-section__row-group">
+          <div class="db-section__row">
+            <div class="db-section__row-block">
+              <div>content</div>
+            </div>
+            <div class="db-section__row-block">
+              <div>content</div>
+            </div>
+            <div class="db-section__row-block">
+              <div>content</div>
+            </div>
+          </div>
+          <div class="db-section__row">
+            <div class="db-section__row-block">
+              <div>content</div>
+            </div>
+
+            <div class="db-section__row-block">
+              <div>content</div>
+            </div>
+          </div>
+          <div class="db-section__row">
+            <div class="db-section__row-block">
+              <div>content</div>
+            </div>
+            <div class="db-section__row-block">
+              <div>content</div>
+            </div>
+            <div class="db-section__row-block">
+              <div>content</div>
+            </div>
+            <div class="db-section__row-block">
+              <div>content</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <pre>
+    &lt;div class="db-section"&gt;
+      &lt;div class="db-section__wrapper --column"&gt;
+        &lt;div&gt;content&lt;/div&gt;
+        &lt;div&gt;content&lt;/div&gt;
+        &lt;div class="db-section__row-group"&gt;
+          &lt;div class="db-section__row"&gt;
+            &lt;div class="db-section__row-block"&gt;
+              &lt;div&gt;content&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="db-section__row-block"&gt;
+              &lt;div&gt;content&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="db-section__row-block"&gt;
+              &lt;div&gt;content&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="db-section__row"&gt;
+            &lt;div class="db-section__row-block"&gt;
+              &lt;div&gt;content&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="db-section__row-block"&gt;
+              &lt;div&gt;content&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="db-section__row"&gt;
+            &lt;div class="db-section__row-block"&gt;
+              &lt;div&gt;content&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="db-section__row-block"&gt;
+              &lt;div&gt;content&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="db-section__row-block"&gt;
+              &lt;div&gt;content&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="db-section__row-block"&gt;
+              &lt;div&gt;content&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    </pre>
 
     <div class="db-section --kpi">
       <p class="db-section__intro">Your community grew to 1,100 new members this
@@ -133,11 +294,11 @@ const sections = [
       </div>
     </div>
 
-    <div class="db-section --reports --no-border">
+    <div class="db-section --reports">
       <h2 class="db-section__header">Reports
         <button class="btn btn-transparent no-text">{{icon "gear"}}</button>
       </h2>
-      <div class="db-section__wrapper --grid">
+      <div class="db-section__wrapper --grid --no-border">
 
         <div class="db-report__card">
           <div class="db-report__header">
