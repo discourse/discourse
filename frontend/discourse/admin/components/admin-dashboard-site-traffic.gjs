@@ -192,27 +192,6 @@ function tooltipPartialFor(bucketing, bucketStartMs) {
   return null;
 }
 
-function makeTooltipTitleCallback({ bucketing }) {
-  const todayPartial = i18n(
-    "admin.dashboard.site_traffic.chart.tooltip.today_partial"
-  );
-
-  return function (tooltipItems) {
-    const ms = tooltipItems[0].parsed.x;
-    const start = moment.utc(ms);
-
-    if (bucketing === "monthly") {
-      return start.format("MMMM YYYY");
-    }
-
-    let title = start.format("ddd, D MMM YYYY");
-    if (isTodayBucket(start.valueOf())) {
-      title += ` ${todayPartial}`;
-    }
-    return title;
-  };
-}
-
 function pickRoundStep(maxValue, maxTicks) {
   if (!maxValue || maxValue <= 0) {
     return 1;
