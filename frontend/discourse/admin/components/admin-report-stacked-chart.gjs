@@ -262,6 +262,7 @@ export default class AdminReportStackedChart extends Component {
               maxRotation: 50,
               minRotation: 0,
               autoSkip: chartOptions.xAutoSkip ?? false,
+              ...(chartOptions.xPinFirstLast ? { source: "data" } : {}),
               ...(chartOptions.xMaxTicksLimit !== undefined
                 ? { maxTicksLimit: chartOptions.xMaxTicksLimit }
                 : {}),

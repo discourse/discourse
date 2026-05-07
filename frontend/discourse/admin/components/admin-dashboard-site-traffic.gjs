@@ -379,33 +379,20 @@ export default class AdminDashboardSiteTraffic extends Component {
     }
     const startFmt = ymd(this.modelStartDate);
     const endFmt = ymd(this.modelEndDate);
-    const xMaxBoundFmt = ymd(this.xMaxBound);
-    const filledSeries = this.visibleSeries.map((series) => {
-      const filled = fillMissingDates(
+    const filledSeries = this.visibleSeries.map((series) => ({
+      req: series.req,
+      label: series.label,
+      color: SERIES_COLORS[series.req] || series.color,
+      data: fillMissingDates(
         JSON.parse(JSON.stringify(series.data)),
         startFmt,
         endFmt
-      );
-      // Append a synthetic 0-y entry at xMaxBound so the data x range
-      // includes a position past the last real bucket. Chart.js fits the
-      // x-axis to the data's x extents, and without this the rightmost
-      // bar (current week / month) renders clipped at the chart edge.
-      // Report.collapse will create a synthetic empty bucket here that
-      // renders as a 0-height (invisible) bar.
-      if (xMaxBoundFmt > endFmt) {
-        filled.push({ x: xMaxBoundFmt, y: 0 });
-      }
-      return {
-        req: series.req,
-        label: series.label,
-        color: SERIES_COLORS[series.req] || series.color,
-        data: filled,
-      };
-    });
+      ),
+    }));
     return {
       modes: this.model.modes,
       start_date: startFmt,
-      end_date: xMaxBoundFmt,
+      end_date: endFmt,
       data: filledSeries,
       chartData: filledSeries,
     };
@@ -513,6 +500,7 @@ export default class AdminDashboardSiteTraffic extends Component {
       }),
       xTickColorCallback: makeXTickColorCallback({ bucketing }),
       xMax: ymd(this.xMaxBound),
+      xPinFirstLast: true,
       showEmptyTooltip: true,
       tooltipTitleCallback: makeTooltipTitleCallback({ bucketing }),
       yStepSize: this.yStepSize,
