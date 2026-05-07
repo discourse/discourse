@@ -379,20 +379,33 @@ export default class AdminDashboardSiteTraffic extends Component {
     }
     const startFmt = ymd(this.modelStartDate);
     const endFmt = ymd(this.modelEndDate);
-    const filledSeries = this.visibleSeries.map((series) => ({
-      req: series.req,
-      label: series.label,
-      color: SERIES_COLORS[series.req] || series.color,
-      data: fillMissingDates(
+    const xMaxBoundFmt = ymd(this.xMaxBound);
+    const filledSeries = this.visibleSeries.map((series) => {
+      const filled = fillMissingDates(
         JSON.parse(JSON.stringify(series.data)),
         startFmt,
         endFmt
-      ),
-    }));
+      );
+      // Append a synthetic 0-y entry at xMaxBound so the data x range
+      // includes a position past the last real bucket. Chart.js fits the
+      // x-axis to the data's x extents, and without this the rightmost
+      // bar (current week / month) renders clipped at the chart edge.
+      // Report.collapse will create a synthetic empty bucket here that
+      // renders as a 0-height (invisible) bar.
+      if (xMaxBoundFmt > endFmt) {
+        filled.push({ x: xMaxBoundFmt, y: 0 });
+      }
+      return {
+        req: series.req,
+        label: series.label,
+        color: SERIES_COLORS[series.req] || series.color,
+        data: filled,
+      };
+    });
     return {
       modes: this.model.modes,
       start_date: startFmt,
-      end_date: endFmt,
+      end_date: xMaxBoundFmt,
       data: filledSeries,
       chartData: filledSeries,
     };
