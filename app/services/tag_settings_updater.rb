@@ -6,7 +6,6 @@ class TagSettingsUpdater
   def initialize(tag, actor)
     @tag = tag
     @actor = actor
-    @guardian = Guardian.new(actor)
     @errors = []
   end
 
@@ -70,7 +69,7 @@ class TagSettingsUpdater
   end
 
   def editable_synonym_ids(synonyms)
-    synonyms.filter_map { |synonym| synonym.id if @guardian.can_edit_tag?(synonym) }
+    synonyms.filter_map { |synonym| synonym.id if @actor.guardian.can_edit_tag?(synonym) }
   end
 
   def update_localizations(localizations)
