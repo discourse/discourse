@@ -10,10 +10,9 @@ import UserLink from "discourse/components/user-link";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
+import DiscourseURL from "discourse/lib/url";
 import onResize from "discourse/modifiers/on-resize";
 import { i18n } from "discourse-i18n";
-
-const DEFAULT_LINES_DISPLAYED = 6;
 
 export default class PostExcerptAccordionItem extends Component {
   @tracked measured = false;
@@ -42,12 +41,10 @@ export default class PostExcerptAccordionItem extends Component {
     });
   }
 
-  get linesDisplayed() {
-    return this.args.linesDisplayed || DEFAULT_LINES_DISPLAYED;
-  }
-
   get maxHeightStyle() {
-    return trustHTML(`--excerpt-max-lines: ${this.linesDisplayed}`);
+    if (this.args.linesDisplayed) {
+      return trustHTML(`--excerpt-max-lines: ${this.args.linesDisplayed}`);
+    }
   }
 
   get overflowingAttr() {
@@ -60,7 +57,11 @@ export default class PostExcerptAccordionItem extends Component {
       return;
     }
 
-    this.args.onToggleExpanded();
+    if (this.hasContent) {
+      this.args.onToggleExpanded();
+    } else {
+      DiscourseURL.routeTo(this.postPath);
+    }
   }
 
   @action
@@ -129,6 +130,14 @@ export default class PostExcerptAccordionItem extends Component {
                 @ariaLabel={{if @isExpanded "post.collapse" "expand"}}
                 @title={{if @isExpanded "post.collapse" "expand"}}
                 @icon={{if @isExpanded "chevron-up" "chevron-down"}}
+              />
+            {{else}}
+              <DButton
+                class="btn-flat d-post-excerpt-accordion-item__jump"
+                @href={{this.postPath}}
+                @ariaLabel="post.follow_quote"
+                @title="post.follow_quote"
+                @icon="arrow-down"
               />
             {{/if}}
           </div>

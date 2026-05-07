@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseSolved
-  module AcceptedAnswersSerializer
+  module AcceptedAnswersHelper
     def self.serialize(topic, guardian)
       solved = topic.solved
       return [] unless solved&.topic_answers&.any?
@@ -19,8 +19,7 @@ module DiscourseSolved
         .filter_map do |ta|
           next unless ta.post
 
-          serialized =
-            PostExcerptAccordionItemSerializer.new(ta.post, scope: guardian, root: false).as_json
+          serialized = AcceptedAnswerSerializer.new(ta.post, scope: guardian, root: false).as_json
 
           if ta.accepter
             serialized[:accepter_username] = ta.accepter.username
