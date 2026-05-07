@@ -100,15 +100,15 @@ function cssVar(name) {
 function makeXTickColorCallback({ bucketing }) {
   // Always return a callback so all tick labels get a theme-aware color
   // (Chart.js's hardcoded default is a fixed gray that's unreadable in
-  // dark mode). The today indicator (daily buckets only) gets a more
-  // muted color than the default.
+  // dark mode). The today indicator (daily buckets only) is stepped one
+  // tone lighter than the default so it reads as more muted.
   return function (context) {
-    const themeDefault = cssVar("--primary");
+    const themeDefault = cssVar("--primary-medium");
     if (!context.tick) {
       return themeDefault;
     }
     if (bucketing === "daily" && isTodayBucket(context.tick.value)) {
-      return cssVar("--primary-medium");
+      return cssVar("--primary-low");
     }
     return themeDefault;
   };
