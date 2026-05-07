@@ -467,6 +467,22 @@ export default class AdminDashboardSiteTraffic extends Component {
     return pickRoundStep(this.maxStackHeight, 6);
   }
 
+  // Right edge of the chart's x-axis. Chart.js centers bars on their x
+  // value, so the rightmost bar (e.g., today, the current week, or the
+  // current month) needs the axis to extend past the bucket's start by
+  // a full bucket width — otherwise the right half of that bar is
+  // clipped.
+  get xMaxBound() {
+    const end = this.modelEndDate;
+    if (this.bucketing === "daily") {
+      return end.clone().add(1, "day");
+    }
+    if (this.bucketing === "weekly") {
+      return weeklyBucketStart(end).clone().add(7, "days");
+    }
+    return end.clone().startOf("month").add(1, "month");
+  }
+
   get chartOptions() {
     const bucketing = this.bucketing;
     const hidden = [];
@@ -483,7 +499,7 @@ export default class AdminDashboardSiteTraffic extends Component {
         endMs: this.modelEndDate.valueOf(),
       }),
       xTickColorCallback: makeXTickColorCallback({ bucketing }),
-      xMax: ymd(this.modelEndDate),
+      xMax: ymd(this.xMaxBound),
       tooltipTitleCallback: makeTooltipTitleCallback({ bucketing }),
       yStepSize: this.yStepSize,
       yMaxTicksLimit: 6,
