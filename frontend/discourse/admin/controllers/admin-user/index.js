@@ -1,15 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { and, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
+import { deepEqual } from "discourse/lib/object";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation";
@@ -32,17 +32,40 @@ export default class AdminUserIndexController extends Controller {
   ssoLastPayload = null;
   isLoading = false;
 
-  @setting("enable_badges") showBadges;
-  @setting("moderators_view_emails") canModeratorsViewEmails;
-  @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
+  @computed("siteSettings.enable_badges")
+  get showBadges() {
+    return this.siteSettings.enable_badges;
+  }
 
-  @propertyNotEqual("originalPrimaryGroupId", "model.primary_group_id")
-  primaryGroupDirty;
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
 
-  @and("model.second_factor_enabled", "model.can_disable_second_factor")
-  canDisableSecondFactor;
+  @computed("model.manual_locked_trust_level")
+  get hasLockedTrustLevel() {
+    return !isEmpty(this.model?.manual_locked_trust_level);
+  }
 
-  @fmt("model.username_lower", userPath("%@/preferences")) preferencesPath;
+  @computed("originalPrimaryGroupId", "model.primary_group_id")
+  get primaryGroupDirty() {
+    return !deepEqual(
+      this.originalPrimaryGroupId,
+      this.model?.primary_group_id
+    );
+  }
+
+  @computed("model.second_factor_enabled", "model.can_disable_second_factor")
+  get canDisableSecondFactor() {
+    return (
+      this.model?.second_factor_enabled && this.model?.can_disable_second_factor
+    );
+  }
+
+  @computed("model.username_lower")
+  get preferencesPath() {
+    return userPath(`${this.model?.username_lower}/preferences`);
+  }
 
   get customGroupIds() {
     return this.model.customGroups.map((group) => group.id);
@@ -409,13 +432,31 @@ export default class AdminUserIndexController extends Controller {
       .catch(popupAjaxError);
   }
 
+  get deleteUserOptions() {
+    return [
+      {
+        id: "delete_dont_block",
+        label: i18n("admin.user.delete_dont_block"),
+        description: i18n("admin.user.delete_dont_block_description"),
+        icon: "trash-can",
+      },
+      {
+        id: "delete_and_block",
+        label: i18n("admin.user.delete_and_block"),
+        description: i18n("admin.user.delete_and_block_description"),
+        icon: "ban",
+      },
+    ];
+  }
+
   @action
-  destroyUser() {
+  destroyUser(optionId) {
+    const block = optionId === "delete_and_block";
     const postCount = this.get("model.post_count");
     const maxPostCount = this.siteSettings.delete_all_posts_max;
     const location = document.location.pathname;
 
-    const performDestroy = (block) => {
+    const performDestroy = () => {
       this.dialog.notice(i18n("admin.user.deleting_user"));
       let formData = { context: location };
       if (block) {
@@ -444,30 +485,15 @@ export default class AdminUserIndexController extends Controller {
         });
     };
 
-    this.dialog.alert({
+    this.dialog.deleteConfirm({
       title: i18n("admin.user.delete_confirm_title"),
       message: i18n("admin.user.delete_confirm"),
-      class: "delete-user-modal",
-      buttons: [
-        {
-          label: i18n("admin.user.delete_dont_block"),
-          class: "btn-danger delete-dont-block",
-          action: () => {
-            return performDestroy(false);
-          },
-        },
-        {
-          icon: "triangle-exclamation",
-          label: i18n("admin.user.delete_and_block"),
-          class: "btn-danger delete-and-block",
-          action: () => {
-            return performDestroy(true);
-          },
-        },
-        {
-          label: i18n("composer.cancel"),
-        },
-      ],
+      class: `delete-user-modal ${
+        block ? "delete-and-block" : "delete-dont-block"
+      }`,
+      confirmButtonLabel: `admin.user.${optionId}`,
+      confirmButtonIcon: block ? "triangle-exclamation" : "trash-can",
+      didConfirm: performDestroy,
     });
   }
 

@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-Fabricator(:problem_check_tracker) {}
+Fabricator(:problem_check_tracker) { identifier "twitter_login" }

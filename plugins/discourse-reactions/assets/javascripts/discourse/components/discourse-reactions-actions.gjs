@@ -132,6 +132,10 @@ export default class DiscourseReactionsActions extends Component {
 
   containerElement = null;
 
+  get useNewMenu() {
+    return this.siteSettings.enable_new_post_reactions_menu;
+  }
+
   get data() {
     return this.args.post;
   }
@@ -474,8 +478,9 @@ export default class DiscourseReactionsActions extends Component {
     }
     // Trigger re-render for anything autotracking reactions.
     // In future, we should make reactions a deeply-trackable structure.
-    // eslint-disable-next-line no-self-assign
-    this.data.reactions = this.data.reactions;
+    // A new array reference is required because Ember's native trackedObject
+    // skips dirtying when Object.is(oldValue, newValue) is true.
+    this.data.reactions = [...this.data.reactions];
   }
 
   @action
@@ -529,17 +534,16 @@ export default class DiscourseReactionsActions extends Component {
 
     let selector;
     if (
+      !this.useNewMenu &&
       this.data.reactions &&
       this.data.reactions.length === 1 &&
       this.data.reactions[0].id === mainReactionName
     ) {
       selector = `.discourse-reactions-double-button .discourse-reactions-reaction-button .d-icon`;
+    } else if (!attrs.reaction || attrs.reaction === mainReactionName) {
+      selector = `.discourse-reactions-reaction-button .d-icon`;
     } else {
-      if (!attrs.reaction || attrs.reaction === mainReactionName) {
-        selector = `.discourse-reactions-reaction-button .d-icon`;
-      } else {
-        selector = `.discourse-reactions-reaction-button .reaction-button .btn-toggle-reaction-emoji`;
-      }
+      selector = `.discourse-reactions-reaction-button .reaction-button .btn-toggle-reaction-emoji`;
     }
 
     const mainReaction = this.containerElement?.querySelector(selector);
@@ -818,6 +822,10 @@ export default class DiscourseReactionsActions extends Component {
 
         {{#if (eq @position "left")}}
           <components.counter />
+        {{else if this.useNewMenu}}
+          {{#unless this.data.yours}}
+            <components.button />
+          {{/unless}}
         {{else if this.onlyOneMainReaction}}
           <DiscourseReactionsDoubleButton
             @post={{this.data}}

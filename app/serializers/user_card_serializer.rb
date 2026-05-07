@@ -200,7 +200,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def recent_time_read
-    time = object.recent_time_read
+    object.recent_time_read
   end
 
   def primary_group_name

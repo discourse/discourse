@@ -1,5 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import NavItem from "discourse/components/nav-item";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import TopicStatus from "discourse/components/topic-status";
@@ -8,7 +9,7 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <ul class="nav nav-pills reviewable-title">
+  <HorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
     <NavItem @route="review.index" @label="review.view_all" />
     <NavItem @route="review.topics" @label="review.grouped_by_topic" />
     {{#if @controller.currentUser.admin}}
@@ -18,7 +19,7 @@ export default <template>
         @icon="wrench"
       />
     {{/if}}
-  </ul>
+  </HorizontalOverflowNav>
 
   {{#if @controller.reviewableTopics.content}}
     <table class="reviewable-topics">

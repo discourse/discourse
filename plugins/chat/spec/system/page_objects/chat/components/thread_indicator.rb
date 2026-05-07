@@ -13,44 +13,44 @@ module PageObjects
         end
 
         def click
-          find(@context).find(SELECTOR).click
+          find("#{@context} #{SELECTOR}").click
         end
 
         def exists?(**args)
-          find(@context).has_css?(SELECTOR)
+          has_css?("#{@context} #{SELECTOR}")
         end
 
         def does_not_exist?(**args)
-          find(@context).has_no_css?(SELECTOR)
+          has_no_css?("#{@context} #{SELECTOR}")
         end
 
         def has_reply_count?(count)
-          find(@context).has_css?(
-            "#{SELECTOR}__replies-count",
+          has_css?(
+            "#{@context} #{SELECTOR}__replies-count",
             text: I18n.t("js.chat.thread.replies", count: count),
           )
         end
 
         def has_participant?(user)
-          find(@context).has_css?(
-            ".chat-thread-participants__avatar-group .chat-user-avatar[data-username=\"#{user.username}\"] img",
+          has_css?(
+            "#{@context} .chat-thread-participants__avatar-group .chat-user-avatar[data-username=\"#{user.username}\"] img",
           )
         end
 
         def has_no_participants?
-          find(@context).has_no_css?(".chat-thread-participants")
+          has_no_css?("#{@context} .chat-thread-participants")
         end
 
         def has_excerpt?(text)
-          find(@context).find("#{SELECTOR}__last-reply-excerpt", text: text)
+          has_css?("#{@context} #{SELECTOR}__last-reply-excerpt", text: text)
         end
 
         def has_user?(user)
-          find(@context).find("#{SELECTOR}__last-reply-username", text: user.username)
+          has_css?("#{@context} #{SELECTOR}__last-reply-username", text: user.username)
         end
 
         def excerpt
-          find(@context).find("#{SELECTOR}__last-reply-excerpt")
+          find("#{@context} #{SELECTOR}__last-reply-excerpt")
         end
       end
     end

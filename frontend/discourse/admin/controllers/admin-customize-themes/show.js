@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { match } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
@@ -10,7 +9,10 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @service dialog;
   @service router;
 
-  @match("model.remote_theme.remote_url", /^http(s)?:\/\//) sourceIsHttp;
+  @computed("model.remote_theme.remote_url")
+  get sourceIsHttp() {
+    return /^http(s)?:\/\//.test(this.model?.remote_theme?.remote_url);
+  }
 
   @computed("model.remote_theme.remote_url", "model.remote_theme.branch")
   get remoteThemeLink() {

@@ -1,4 +1,4 @@
-plugins:
+discourse_data_explorer:
   data_explorer_enabled:
     default: false
     client: true

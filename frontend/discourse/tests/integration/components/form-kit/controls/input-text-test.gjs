@@ -90,5 +90,30 @@ module(
       assert.dom(".form-kit__control-input").hasClass("has-prefix");
       assert.dom(".form-kit__control-input").hasClass("has-suffix");
     });
+
+    test("disabled, name, and placeholder attributes", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field
+              @type="input"
+              @name="foo"
+              @title="Foo"
+              @disabled={{true}}
+              @placeholder="Enter text"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.dom(".form-kit__control-input").hasAttribute("disabled");
+      assert.dom(".form-kit__control-input").hasAttribute("name", "foo");
+      assert
+        .dom(".form-kit__control-input")
+        .hasAttribute("placeholder", "Enter text");
+    });
   }
 );

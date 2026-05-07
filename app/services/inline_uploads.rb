@@ -199,7 +199,7 @@ class InlineUploads
         has_attachment = node.attributes["class"]&.value
         index = $~.offset(0)[0]
         text = match[2].strip.gsub("\n", "").gsub(/ +/, " ")
-        text = "#{text}|attachment" if has_attachment
+        text = "#{UploadMarkdown.escape_markdown(text)}|attachment" if has_attachment
 
         yield(match[0], href, +"[#{text}](#{PLACEHOLDER})", index) if block_given?
       end
@@ -255,9 +255,9 @@ class InlineUploads
     raw =
       raw.gsub(%r{^(https?://\S+)(\s?)$}) do |match|
         if upload = blk.call(match)
-          filename_modified = upload.original_filename&.gsub(/[\[\]\|]/, "").to_s
+          filename_modified = upload.original_filename.to_s
           filename_modified = File.basename(filename_modified, File.extname(filename_modified))
-          "![#{filename_modified}](#{upload.short_url})"
+          "![#{UploadMarkdown.escape_markdown(filename_modified)}](#{upload.short_url})"
         else
           match
         end

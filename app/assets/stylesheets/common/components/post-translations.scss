@@ -26,8 +26,9 @@
 }
 
 .post-language-selector-trigger {
-  .d-button-label {
+  .toolbar-popup-menu-options__trigger-label {
     margin-left: var(--space-1);
+    font-size: var(--font-down-2);
     text-transform: uppercase;
     color: var(--primary-high);
   }

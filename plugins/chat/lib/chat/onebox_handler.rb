@@ -37,7 +37,7 @@ module Chat
     private
 
     def self.build_args(url, chat_channel)
-      args = {
+      {
         channel_id: chat_channel.id,
         channel_name: chat_channel.name,
         is_category: chat_channel.category_channel?,

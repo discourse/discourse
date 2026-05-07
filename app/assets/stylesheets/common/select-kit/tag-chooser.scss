@@ -9,6 +9,22 @@
       .discourse-tag-count {
         margin-left: 5px;
       }
+
+      &.disabled {
+        opacity: 1;
+        flex-wrap: wrap;
+
+        .discourse-tag {
+          opacity: 0.5;
+        }
+
+        .disabled-reason {
+          width: 100%;
+          font-size: var(--font-down-1);
+          color: var(--primary-medium);
+          font-style: italic;
+        }
+      }
     }
   }
 }

@@ -765,6 +765,49 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
       DiscourseEvent.off(:user_logged_out, &event_handler)
     end
+
+    context "with push subscriptions" do
+      let(:device_a_data) do
+        { endpoint: "https://push.example.com/device-a", keys: { p256dh: "key_a", auth: "auth_a" } }
+      end
+      let(:device_b_data) do
+        { endpoint: "https://push.example.com/device-b", keys: { p256dh: "key_b", auth: "auth_b" } }
+      end
+
+      before do
+        PushSubscription.create!(user: user, data: device_a_data.to_json)
+        PushSubscription.create!(user: user, data: device_b_data.to_json)
+      end
+
+      it "only removes the current device push subscription on normal logout" do
+        user_provider = TestProvider.new(env)
+        user_provider.log_off_user(
+          {},
+          user_provider.cookie_jar,
+          push_subscription: device_a_data.with_indifferent_access,
+        )
+
+        remaining = user.push_subscriptions.reload
+        expect(remaining.size).to eq(1)
+        expect(remaining.first.parsed_data["endpoint"]).to eq("https://push.example.com/device-b")
+      end
+
+      it "preserves all push subscriptions when no push subscription data is provided" do
+        user_provider = TestProvider.new(env)
+        user_provider.log_off_user({}, user_provider.cookie_jar)
+
+        expect(user.push_subscriptions.reload.size).to eq(2)
+      end
+
+      it "clears all push subscriptions on strict logout" do
+        SiteSetting.log_out_strict = true
+
+        user_provider = TestProvider.new(env)
+        user_provider.log_off_user({}, user_provider.cookie_jar)
+
+        expect(user.push_subscriptions.reload.size).to eq(0)
+      end
+    end
   end
 
   describe "first admin user" do

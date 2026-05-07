@@ -26,6 +26,7 @@ export default class AdminNotice extends Component {
       {{#if this.canDismiss}}
         <DButton
           @action={{this.dismiss}}
+          @icon="eye-slash"
           @label="admin.dashboard.dismiss_notice"
           class="btn-default"
         />

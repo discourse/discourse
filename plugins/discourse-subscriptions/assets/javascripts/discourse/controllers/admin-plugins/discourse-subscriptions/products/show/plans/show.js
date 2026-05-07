@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
 
@@ -9,8 +8,24 @@ const ONE_TIME = "one_time";
 
 export default class AdminPluginsDiscourseSubscriptionsProductsShowPlansShowController extends Controller {
   // Also defined in settings.
-  @alias("model.plan.currency") selectedCurrency;
-  @alias("model.plan.interval") selectedInterval;
+
+  @computed("model.plan.currency")
+  get selectedCurrency() {
+    return this.model?.plan?.currency;
+  }
+
+  set selectedCurrency(value) {
+    set(this, "model.plan.currency", value);
+  }
+
+  @computed("model.plan.interval")
+  get selectedInterval() {
+    return this.model?.plan?.interval;
+  }
+
+  set selectedInterval(value) {
+    set(this, "model.plan.interval", value);
+  }
 
   @computed("model.plan.metadata.group_name")
   get selectedGroup() {

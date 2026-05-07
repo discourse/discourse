@@ -46,7 +46,6 @@ class Stylesheet::Manager::Builder
           source_map_file: source_map_url_relative_from_stylesheet,
           color_scheme_id: @color_scheme&.id,
           load_paths: load_paths,
-          strict_deprecations: %i[desktop mobile admin wizard].include?(@target),
         )
       rescue SassC::SyntaxError, SassC::NotRenderedError, AssetProcessor::TranspileError => e
         if Stylesheet::Manager::THEME_REGEX.match?(@target.to_s)

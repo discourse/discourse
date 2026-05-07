@@ -203,11 +203,17 @@ export default class InterpolatedTranslation extends Component {
  * ```
  *
  * @param {String} name - The name of the placeholder this content should fill
+ * @param {String} [class] - Optional CSS class to apply to the placeholder's wrapper element
  */
 class Placeholder extends Component {
   constructor() {
     super(...arguments);
     this.args.markAsRendered(this.args.name);
+    if (this.args.class) {
+      this.args.elements
+        .get(this.args.name)
+        ?.forEach((el) => (el.className = this.args.class));
+    }
   }
 
   /**

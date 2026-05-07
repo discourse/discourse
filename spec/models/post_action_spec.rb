@@ -898,20 +898,34 @@ RSpec.describe PostAction do
       expect(user_notifications.last.topic).to eq(topic)
     end
 
-    skip "should not add a moderator post when post is flagged via private message" do
-      Jobs.run_immediately!
-      user = Fabricate(:user)
-      result = PostActionCreator.create(user, post, :notify_user, message: "WAT")
-      action = result.post_action
-      action.reload.related_post.topic
-      expect(user.notifications.count).to eq(0)
+    %i[agree_and_keep disagree ignore_and_do_nothing].each do |disposition|
+      it "should bump the topic when performing #{disposition}" do
+        SiteSetting.auto_respond_to_flag_actions = true
+        user = Fabricate(:user, refresh_auto_groups: true)
+        result = PostActionCreator.create(user, post, :spam, message: "WAT")
+        topic = result.post_action.related_post.topic
+
+        original_bumped_at = topic.reload.bumped_at
+
+        freeze_time 1.hour.from_now
+
+        result.reviewable.perform(admin, disposition)
+
+        expect(topic.reload.bumped_at).to be > original_bumped_at
+      end
+    end
+
+    it "does not add a moderator post to the notify_user PM topic when an unrelated flag is agreed" do
+      user = Fabricate(:user, refresh_auto_groups: true)
+      notify_result = PostActionCreator.create(user, post, :notify_user, message: "WAT")
+      pm_topic = notify_result.post_action.related_post.topic
+
+      flag_result = PostActionCreator.create(user, post, :spam)
 
       SiteSetting.auto_respond_to_flag_actions = true
-      result.reviewable.perform(admin, :agree_and_keep)
-      expect(user.reload.user_stat.flags_agreed).to eq(0)
+      flag_result.reviewable.perform(admin, :agree_and_keep)
 
-      user_notifications = user.notifications
-      expect(user_notifications.count).to eq(0)
+      expect(pm_topic.reload.posts.count).to eq(1)
     end
   end
 

@@ -1,45 +1,15 @@
-@use "lib/viewport";
-
 .form-kit__control-icon {
-  width: 100% !important;
-  min-width: var(--form-kit-small-input);
-
-  .formatted-selection {
-    display: none !important;
+  .d-icon-grid-picker {
+    width: 100%;
+    min-width: var(--form-kit-small-input);
   }
 
-  .d-icon-angle-down,
-  .d-icon-angle-up {
-    color: var(--primary-medium) !important;
-  }
-
-  .select-kit-header-wrapper .d-icon:first-of-type {
-    color: var(--primary);
-  }
-
-  .select-kit-header {
-    padding-inline: 0.65em !important;
-    height: 2em;
-
-    @include viewport.until(sm) {
-      height: 2.25em;
-    }
-
-    &:hover:not(:disabled) {
-      .discourse-no-touch & {
-        background-color: var(--secondary);
-        color: var(--primary);
-        border: 1px solid var(--tertiary);
-
-        .d-icon {
-          color: inherit;
-        }
-      }
-    }
+  .d-icon-grid-picker__caret {
+    color: var(--primary-medium);
   }
 
   .form-kit__field.has-error & {
-    summary {
+    .fk-d-menu__trigger {
       border-color: var(--danger);
     }
   }

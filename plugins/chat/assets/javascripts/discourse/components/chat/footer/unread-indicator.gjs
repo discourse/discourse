@@ -49,7 +49,7 @@ export default class FooterUnreadIndicator extends Component {
     } else if (this.badgeType === STARRED_TAB) {
       return this.starredChannelsUnreadCount;
     } else if (this.badgeType === THREADS_TAB) {
-      return this.chatTrackingStateManager.hasUnreadThreads ? 1 : 0;
+      return this.chatTrackingStateManager.hasUnreadThreads() ? 1 : 0;
     } else {
       return 0;
     }

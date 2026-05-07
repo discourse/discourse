@@ -35,6 +35,32 @@ describe DiscourseAi::Translation::TopicCandidates do
       expect(DiscourseAi::Translation::TopicCandidates.get).not_to include(topic)
     end
 
+    it "returns banner topics even when older than max_age_days" do
+      banner_topic =
+        Fabricate(
+          :topic,
+          archetype: Archetype.banner,
+          created_at: SiteSetting.ai_translation_backfill_max_age_days.days.ago - 30.days,
+        )
+
+      expect(DiscourseAi::Translation::TopicCandidates.get).to include(banner_topic)
+    end
+
+    it "returns banner topics even when no target categories are set" do
+      SiteSetting.ai_translation_target_categories = ""
+      SiteSetting.ai_translation_personal_messages = "none"
+
+      banner_topic = Fabricate(:topic, archetype: Archetype.banner)
+
+      expect(DiscourseAi::Translation::TopicCandidates.get).to include(banner_topic)
+    end
+
+    it "does not return deleted banner topics" do
+      banner_topic = Fabricate(:topic, archetype: Archetype.banner, deleted_at: Time.now)
+
+      expect(DiscourseAi::Translation::TopicCandidates.get).not_to include(banner_topic)
+    end
+
     it "does not return deleted topics" do
       topic = Fabricate(:topic, deleted_at: Time.now)
       SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
@@ -98,6 +124,79 @@ describe DiscourseAi::Translation::TopicCandidates do
         expect(topics).to include(pm)
         expect(topics).to include(group_pm)
       end
+    end
+  end
+
+  describe ".needs_localization" do
+    fab!(:target_category, :category)
+
+    before do
+      SiteSetting.ai_translation_backfill_max_age_days = 100
+      SiteSetting.content_localization_supported_locales = "en|ja|de"
+      SiteSetting.ai_translation_target_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
+
+    it "returns [topic_id, target_locale] pairs for topics needing localization" do
+      topic = Fabricate(:topic, locale: "es", category: target_category)
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).to include([topic.id, "en"])
+      expect(pairs).to include([topic.id, "ja"])
+      expect(pairs).to include([topic.id, "de"])
+    end
+
+    it "excludes topics without a detected locale" do
+      Fabricate(:topic, locale: nil, category: target_category)
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).to be_empty
+    end
+
+    it "excludes fully translated topics" do
+      topic = Fabricate(:topic, locale: "es", category: target_category)
+      Fabricate(:topic_localization, topic: topic, locale: "en")
+      Fabricate(:topic_localization, topic: topic, locale: "ja")
+      Fabricate(:topic_localization, topic: topic, locale: "de")
+
+      pairs = described_class.needs_localization(limit: 10)
+      topic_ids = pairs.map(&:first)
+      expect(topic_ids).not_to include(topic.id)
+    end
+
+    it "returns only missing locale pairs for partially translated topics" do
+      topic = Fabricate(:topic, locale: "es", category: target_category)
+      Fabricate(:topic_localization, topic: topic, locale: "en")
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).not_to include([topic.id, "en"])
+      expect(pairs).to include([topic.id, "ja"])
+      expect(pairs).to include([topic.id, "de"])
+    end
+
+    it "handles base-locale deduplication (ja_JP localization covers ja target)" do
+      topic = Fabricate(:topic, locale: "es", category: target_category)
+      Fabricate(:topic_localization, topic: topic, locale: "en")
+      Fabricate(:topic_localization, topic: topic, locale: "ja_JP")
+      Fabricate(:topic_localization, topic: topic, locale: "de_DE")
+
+      pairs = described_class.needs_localization(limit: 10)
+      topic_ids = pairs.map(&:first)
+      expect(topic_ids).not_to include(topic.id)
+    end
+
+    it "respects the limit parameter" do
+      3.times { Fabricate(:topic, locale: "es", category: target_category) }
+
+      pairs = described_class.needs_localization(limit: 2)
+      expect(pairs.size).to eq(2)
+    end
+
+    it "returns empty when no locales are configured" do
+      SiteSetting.content_localization_supported_locales = ""
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).to be_empty
     end
   end
 

@@ -26,7 +26,7 @@
         include_unofficial: allow_third_party_plugins?,
         request: request,
         include_admin_asset: staff?
-      }) if ENV["ROLLUP_PLUGIN_COMPILER"] != "0"
+      })
      %>
 
     <%= build_plugin_html 'server:before-script-load' %>
@@ -55,14 +55,6 @@
 
     <%= preload_script "vendor" %>
     <%= preload_script "discourse" %>
-
-    <%= render("layouts/plugin_js", opts: {
-        include_official: allow_plugins?,
-        include_unofficial: allow_third_party_plugins?,
-        request: request,
-        include_admin_asset: staff?
-      }) if ENV["ROLLUP_PLUGIN_COMPILER"] == "0"
-     %>
 
     <%- if staff? %>
       <% EmberCli.script_chunks["chunk.admin"]&.each do |script_name| %>

@@ -62,6 +62,8 @@ class Category < ActiveRecord::Base
            :require_topic_approval,
            :require_topic_approval=,
            :require_topic_approval?,
+           :nested_replies_default,
+           :nested_replies_default=,
            :topic_posting_review_mode,
            :topic_posting_review_mode=,
            :reply_posting_review_mode,
@@ -94,6 +96,7 @@ class Category < ActiveRecord::Base
   validates :num_featured_topics, numericality: { only_integer: true, greater_than: 0 }
   validates :search_priority, inclusion: { in: Searchable::PRIORITIES.values }
 
+  validate :emoji_exists
   validate :parent_category_validator
   validate :email_in_validator
   validate :ensure_slug
@@ -345,6 +348,10 @@ class Category < ActiveRecord::Base
       .flatten(1)
       .map { |setting| setting[:key].to_sym }
       .uniq
+  end
+
+  def emoji_exists
+    errors.add(:emoji, :invalid) if emoji.present? && !Emoji.exists?(emoji)
   end
 
   # Accepts an array of slugs with each item in the array

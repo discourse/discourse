@@ -316,7 +316,7 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.selectable_avatars).to eq([])
       end
 
-      xit "sanitizes integer values" do
+      it "sanitizes integer values" do
         put "/admin/site_settings/suggested_topics.json", params: { suggested_topics: "1,000" }
 
         expect(response.status).to eq(204)

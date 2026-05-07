@@ -2,8 +2,9 @@
 
 RSpec.describe ReviewableActionBuilder do
   fab!(:admin)
-  fab!(:guardian) { Guardian.new(admin) }
   fab!(:user)
+
+  let(:guardian) { Guardian.new(admin) }
 
   describe "#build_action" do
     fab!(:reviewable_user) { ReviewableUser.create_for(user) }

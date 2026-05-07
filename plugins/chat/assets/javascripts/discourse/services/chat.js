@@ -1,14 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
-import { and } from "@ember/object/computed";
-import { cancel, next } from "@ember/runloop";
+import { next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import discourseLater from "discourse/lib/later";
+import EmbedMode from "discourse/lib/embed-mode";
 import {
   onPresenceChange,
   removeOnPresenceChange,
@@ -35,15 +34,13 @@ export default class Chat extends Service {
   presenceChannel = null;
   isNetworkUnreliable = false;
 
-  @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
-
   @tracked _activeMessage = null;
   @tracked _activeChannel = null;
 
   init() {
     super.init(...arguments);
 
-    if (this.userCanChat) {
+    if (this.userCanChat && !EmbedMode.enabled) {
       this.presenceChannel = this.presence.getChannel("/chat/online");
 
       onPresenceChange({
@@ -57,10 +54,17 @@ export default class Chat extends Service {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    if (this.userCanChat) {
+    if (this.userCanChat && !EmbedMode.enabled) {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
       removeOnPresenceChange(this.onPresenceChangeCallback);
     }
+  }
+
+  @computed("currentUser.has_chat_enabled", "siteSettings.chat_enabled")
+  get userCanChat() {
+    return (
+      this.currentUser?.has_chat_enabled && this.siteSettings?.chat_enabled
+    );
   }
 
   get activeChannel() {
@@ -166,26 +170,6 @@ export default class Chat extends Service {
     }
   }
 
-  markNetworkAsUnreliable() {
-    cancel(this._networkCheckHandler);
-
-    this.set("isNetworkUnreliable", true);
-
-    this._networkCheckHandler = discourseLater(() => {
-      if (this.isDestroyed || this.isDestroying) {
-        return;
-      }
-
-      this.markNetworkAsReliable();
-    }, 30000);
-  }
-
-  markNetworkAsReliable() {
-    cancel(this._networkCheckHandler);
-
-    this.set("isNetworkUnreliable", false);
-  }
-
   async loadChannels() {
     // We want to be able to call this method multiple times, but only
     // actually load the channels once. This is because we might call
@@ -259,7 +243,7 @@ export default class Chat extends Service {
 
   getDocumentTitleCount() {
     if (this.currentUser?.user_option?.title_count_mode === "notifications") {
-      return this.chatTrackingStateManager.allChannelUrgentCount;
+      return this.chatTrackingStateManager.allChannelUrgentCount();
     } else {
       return this.chatPanePendingManager.totalPendingMessageCount;
     }

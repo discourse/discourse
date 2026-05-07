@@ -98,10 +98,21 @@ module Categories
         end
 
         # Configure any category-specific settings or custom fields that are
-        # specific to this category type.
+        # specific to this category type, including whatever setting or custom
+        # field values make this category type unique.
         #
         # This SHOULD be overridden by category types.
         def configure_category(category, guardian:, configuration_values: {})
+          raise NotImplementedError
+        end
+
+        # Reverse whatever configure_category does to mark this category as
+        # a specific type. E.g. if there is a custom field that is set to true,
+        # unconfigure_category should set it to false.
+        #
+        # This SHOULD be overridden by category types.
+        def unconfigure_category(category, guardian:)
+          raise NotImplementedError
         end
 
         # Returns a hash describing the configuration schema for this category type.
@@ -163,6 +174,18 @@ module Categories
         # Use +validate_schema!+ to verify a schema conforms to this contract.
         def configuration_schema
           {}
+        end
+
+        # Convenience method to get the setting/custom field names (keys)
+        # for a given schema type.
+        #
+        # Valid values for the +schema_type+ parameter are:
+        # - :general_category_settings
+        # - :site_settings
+        # - :category_custom_fields
+        # - :category_settings
+        def configuration_schema_keys(schema_type)
+          (configuration_schema[schema_type]&.keys || []).map(&:to_sym)
         end
 
         # Validates the hash returned by +configuration_schema+ using JSONSchemer.
@@ -235,7 +258,8 @@ module Categories
         # This SHOULD NOT be overridden by category types.
         def configure_site_settings(category, guardian:, configuration_values: {})
           category_type_settings =
-            configuration_schema[:site_settings]&.map do |setting_name, default_value|
+            configuration_schema[:site_settings]&.map do |setting_name, config|
+              default_value = config.is_a?(Hash) ? config[:default] : config
               {
                 setting_name: setting_name.to_s,
                 value: configuration_values.fetch(setting_name.to_s, default_value),
@@ -270,6 +294,7 @@ module Categories
             description: I18n.t("category_types.#{type_id}.description", default: ""),
             icon:,
             available: available?,
+            visible: visible?,
             configuration_schema: resolved_configuration_schema,
           }.merge(additional_metadata)
         end
@@ -299,18 +324,31 @@ module Categories
           end
 
           schema[:site_settings]&.each do |setting_name, target_value|
+            if target_value.is_a?(Hash)
+              default = target_value[:default]
+              custom_label = target_value[:label]
+            else
+              default = target_value
+              custom_label = nil
+            end
+
             meta = SiteSetting.setting_metadata_hash(setting_name)
-            entries[:site_settings] << {
+            depends_on = SiteSetting.type_supervisor.dependencies[setting_name.to_sym]&.first&.to_s
+            entry = {
               key: setting_name.to_s,
-              default: target_value,
+              default:,
               current: SiteSetting.public_send(setting_name),
               type: meta[:type],
-              label: meta[:humanized_name],
+              label: custom_label || meta[:humanized_name],
               description: meta[:description],
               required: false,
               show_on_create: true,
               show_on_edit: true,
             }
+            entry[:depends_on] = depends_on if depends_on
+            entry[:min] = meta[:min] if meta[:min]
+            entry[:max] = meta[:max] if meta[:max]
+            entries[:site_settings] << entry
           end
 
           schema[:category_settings]&.each do |field_name, config|

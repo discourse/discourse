@@ -353,3 +353,12 @@ $hpad: 0.65em;
     }
   }
 }
+
+@mixin dot-separator($size: 0.35em) {
+  width: $size;
+  height: $size;
+  margin-inline: var(--space-1);
+  border-radius: 6.25em;
+  background: var(--primary-low-mid);
+  flex-shrink: 0;
+}

@@ -102,7 +102,7 @@ module Reports
           ApplicationRequest
             .req_types
             .keys
-            .select { |r| r =~ /\Apage_view_/ && r !~ /mobile/ }
+            .select { |r| r =~ /\Apage_view_/ && r !~ /mobile/ && r !~ /beacon/ }
             .map { |r| r + "_reqs" }
 
       if !SiteSetting.use_legacy_pageviews

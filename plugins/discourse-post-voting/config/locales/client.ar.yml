@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 ar:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: التصويت على المنشورات
   post_voting:
     reviewables:
       comment_already_handled: "شكرًا، لكننا راجعنا هذا التعليق بالفعل وقررنا أنه لا يلزم الإبلاغ عنه مرة أخرى."

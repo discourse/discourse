@@ -4,7 +4,9 @@ RSpec.shared_context "with dummy provider" do
   before(:each) do
     module DiscourseChatIntegration::Provider::DummyProvider
       PROVIDER_NAME = "dummy"
-      PROVIDER_ENABLED_SETTING = :chat_integration_enabled # Tie to main plugin enabled setting
+      # Fake site settings come from the spec/support/dummy_plugin_site_settings.yml file
+      PROVIDER_ENABLED_SETTING = :dummy_provider_enabled
+      POPULARITY_SCORE = 5
       CHANNEL_PARAMETERS = []
 
       @@sent_messages = []
@@ -39,8 +41,10 @@ RSpec.shared_context "with validated dummy provider" do
   before(:each) do
     module DiscourseChatIntegration::Provider::Dummy2Provider
       PROVIDER_NAME = "dummy2"
-      PROVIDER_ENABLED_SETTING = :chat_integration_enabled # Tie to main plugin enabled setting
+      # Fake site settings come from the spec/support/dummy_plugin_site_settings.yml file
+      PROVIDER_ENABLED_SETTING = :other_dummy_provider_enabled
       CHANNEL_IDENTIFIER_KEY = "val"
+      POPULARITY_SCORE = 5
       CHANNEL_PARAMETERS = [{ key: "val", regex: '^\S+$', unique: true }]
 
       @@sent_messages = []

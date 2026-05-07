@@ -277,7 +277,10 @@ module Chat
     private
 
     def group_messages(messages)
-      messages.group_by { |msg| msg.thread_id || msg.id }.values
+      # Namespacing the key prevents collisions between chat_message id and chat_thread id.
+      messages
+        .group_by { |msg| msg.thread_id ? [:thread, msg.thread_id] : [:message, msg.id] }
+        .values
     end
 
     def messages

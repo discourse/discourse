@@ -12,6 +12,12 @@ ar:
         categories:
           discourse_post_event: "حدث Discourse"
           discourse_calendar: "التقويم والأحداث"
+      web_hooks:
+        calendar_event:
+          group_name: "حدث تقويم"
+          calendar_event_created: "تم إنشاء حدث التقويم"
+          calendar_event_updated: "تم تحديث حدث التقويم"
+          calendar_event_destroyed: "تم حذف حدث التقويم"
   js:
     notifications:
       titles:
@@ -28,6 +34,11 @@ ar:
               label: معرِّف الموضوع
     discourse_calendar:
       invite_user_notification: "دعاك %{username} إلى: %{description}"
+      preferences:
+        all_events: "تقويم Discourse - جميع الأحداث"
+        all_events_description: "جميع أحداث المنتدى"
+        my_events: "تقويم Discourse - أحداثي"
+        my_events_description: "الأحداث التي ستحضرها أو المهتم بها"
       on_holiday: "في عطلة"
       disable_holiday: "إيقاف"
       enable_holiday: "تفعيل"
@@ -474,6 +485,9 @@ ar:
         timezone:
           label: المنطقة الزمنية
           remove_timezone: لا توجد منطقة زمنية (UTC)
+        all_day:
+          label: "حدث يستمر طوال اليوم"
+          description: "لن يتضمن الحدث الذي يستمر طوال اليوم أوقاتًا محددة، بل تاريخًا فقط. وسيستمر الحدث من بداية اليوم حتى نهايته."
         reminders:
           label: "التذكيرات"
           types:

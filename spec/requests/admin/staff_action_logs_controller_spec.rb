@@ -128,6 +128,37 @@ RSpec.describe Admin::StaffActionLogsController do
         expect(response.parsed_body["staff_action_logs"].first["details"]).to include(pm.title)
       end
 
+      describe "reviewable_id" do
+        it "is included when the staff action log is linked to a reviewable" do
+          reviewable = Fabricate(:reviewable_queued_post_topic)
+          UserHistory.create!(
+            action: UserHistory.actions[:post_approved],
+            acting_user_id: admin.id,
+            reviewable_id: reviewable.id,
+          )
+
+          get "/admin/logs/staff_action_logs.json",
+              params: {
+                action_id: UserHistory.actions[:post_approved],
+              }
+
+          expect(response.parsed_body["staff_action_logs"].first["reviewable_id"]).to eq(
+            reviewable.id,
+          )
+        end
+
+        it "is omitted when the staff action log has no reviewable" do
+          StaffActionLogger.new(admin).log_site_setting_change("title", "old", "new")
+
+          get "/admin/logs/staff_action_logs.json",
+              params: {
+                action_id: UserHistory.actions[:change_site_setting],
+              }
+
+          expect(response.parsed_body["staff_action_logs"].first).not_to have_key("reviewable_id")
+        end
+      end
+
       context "when staff actions are extended" do
         let(:plugin_extended_action) { :confirmed_ham }
         before { UserHistory.stubs(:staff_actions).returns([plugin_extended_action]) }

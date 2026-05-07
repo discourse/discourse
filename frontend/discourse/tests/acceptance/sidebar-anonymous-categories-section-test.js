@@ -1,5 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import Site from "discourse/models/site";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
@@ -71,6 +72,112 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     assert.dom(categories[1]).hasText("blog");
     assert.dom(categories[2]).hasText("bug");
 
+    assert
+      .dom("a.sidebar-section-link[data-link-name='all-categories']")
+      .exists("all categories link is visible");
+  });
+
+  test("sidebar-anonymous-default-categories value transformer overrides the category IDs used in the sidebar", async function (assert) {
+    this.siteSettings.fixed_category_positions = true;
+    this.siteSettings.default_navigation_menu_categories = "1";
+
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "sidebar-anonymous-default-categories",
+        () => [3, 13]
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id='3']"
+      )
+      .exists("category 3 (from the override) is in the sidebar");
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id='13']"
+      )
+      .exists("category 13 (from the override) is in the sidebar");
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id='1']"
+      )
+      .doesNotExist(
+        "category 1 (from the original setting) is replaced by the override"
+      );
+  });
+
+  test("sidebar-anonymous-default-categories value transformer receives the ids parsed from default_navigation_menu_categories", async function (assert) {
+    this.siteSettings.default_navigation_menu_categories = "1|3";
+
+    let received;
+
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "sidebar-anonymous-default-categories",
+        ({ value }) => {
+          received = value;
+          return value;
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert.deepEqual(received, [1, 3]);
+  });
+
+  test("sidebar-anonymous-default-categories value transformer appends a category to the ids received from default_navigation_menu_categories", async function (assert) {
+    this.siteSettings.default_navigation_menu_categories = "1";
+
+    let received;
+
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "sidebar-anonymous-default-categories",
+        ({ value }) => {
+          received = value;
+          return [...value, 3];
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert.deepEqual(
+      received,
+      [1],
+      "transformer receives the ids parsed from the site setting"
+    );
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id='1']"
+      )
+      .exists("category 1 (from the original setting) is in the sidebar");
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id='3']"
+      )
+      .exists("category 3 (appended by the transformer) is in the sidebar");
+  });
+
+  test("sidebar-anonymous-default-categories value transformer can fall back to top site categories by returning an empty array", async function (assert) {
+    this.siteSettings.default_navigation_menu_categories = "1|3";
+
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "sidebar-anonymous-default-categories",
+        () => []
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(".sidebar-section[data-section-name='categories']")
+      .exists("categories section is still rendered");
     assert
       .dom("a.sidebar-section-link[data-link-name='all-categories']")
       .exists("all categories link is visible");

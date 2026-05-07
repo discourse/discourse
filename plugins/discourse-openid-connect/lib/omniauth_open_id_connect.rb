@@ -155,17 +155,12 @@ module OmniAuth
           begin
             decoded = ::JWT.decode(access_token["id_token"], nil, false).first
             verbose_log("Loaded JWT\n\n#{decoded.to_yaml}")
-            ::JWT::Verify.verify_claims(
+            ::JWT::Claims.verify_payload!(
               decoded,
-              verify_iss: true,
+              :exp,
+              :nbf,
               iss: options[:client_options][:site],
-              verify_aud: true,
               aud: options.client_id,
-              verify_sub: false,
-              verify_expiration: true,
-              verify_not_before: true,
-              verify_iat: false,
-              verify_jti: false,
             )
 
             if decoded["nonce"].nil? || decoded["nonce"].empty? ||

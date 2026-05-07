@@ -24,6 +24,8 @@ export default class FKFieldData extends Component {
    */
   errorId = uniqueId();
 
+  #controlArgs = { field: this };
+
   // Set by legacy controls in their constructor (during render),
   // read by the applyControlType modifier (post-render)
   _legacyControlType;
@@ -108,9 +110,11 @@ export default class FKFieldData extends Component {
    */
   @cached
   get Control() {
-    const { component, args } = resolveFieldControl(this.type);
-
-    return curryComponent(component, { field: this, ...args }, getOwner(this));
+    return curryComponent(
+      resolveFieldControl(this.type, getOwner(this)),
+      this.#controlArgs,
+      getOwner(this)
+    );
   }
 
   /**
@@ -122,19 +126,13 @@ export default class FKFieldData extends Component {
   }
 
   /**
-   * Format of the title.
+   * Format of the title and description (label area). Overrides @format
+   * for the title and description, leaving the field's content area at
+   * @format. Useful when long descriptions need more room than the input.
    * @type {string}
    */
-  get titleFormat() {
-    return this.args.titleFormat || this.format;
-  }
-
-  /**
-   * Format of the description.
-   * @type {string}
-   */
-  get descriptionFormat() {
-    return this.args.descriptionFormat || this.format;
+  get labelFormat() {
+    return this.args.labelFormat;
   }
 
   /**
@@ -163,6 +161,14 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Placeholder text for input fields.
+   * @type {string}
+   */
+  get placeholder() {
+    return this.args.placeholder;
+  }
+
+  /**
    * Help text of the field.
    * @type {string}
    */
@@ -181,6 +187,16 @@ export default class FKFieldData extends Component {
    */
   get showTitle() {
     return this.args.showTitle ?? true;
+  }
+
+  /**
+   * Indicates whether to show the `(optional)` marker next to the title when
+   * the field has no `required` validation rule.
+   * Defaults to `true`.
+   * @type {boolean}
+   */
+  get showOptional() {
+    return this.args.showOptional ?? true;
   }
 
   /**

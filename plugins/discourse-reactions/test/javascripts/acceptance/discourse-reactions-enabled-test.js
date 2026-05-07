@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
 
-acceptance(`Discourse Reactions - Enabled`, function (needs) {
+acceptance("Enabled", function (needs) {
   needs.user();
 
   needs.settings({
@@ -27,7 +27,7 @@ acceptance(`Discourse Reactions - Enabled`, function (needs) {
   });
 });
 
-acceptance(`Discourse Reactions - Enabled | Anonymous user`, function (needs) {
+acceptance("Enabled | Anonymous user", function (needs) {
   needs.settings({
     discourse_reactions_enabled: true,
     discourse_reactions_enabled_reactions: "otter|open_mouth",

@@ -30,6 +30,23 @@ RSpec.describe User do
       expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
     end
 
+    it "returns true if any of the group IDs are the 'logged_in_users' auto group" do
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
+    end
+
+    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+      Discourse.system_user.reload
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+    end
+
+    it "returns true for the 'anonymous' auto group for anonymous users" do
+      expect(
+        Guardian.new.instance_variable_get(:@user).in_any_groups?([Group::AUTO_GROUPS[:anonymous]]),
+      ).to eq(true)
+    end
+
     it "returns true if the user is in the group" do
       expect(user.in_any_groups?([group.id])).to eq(false)
       group.add(user)
@@ -120,6 +137,50 @@ RSpec.describe User do
 
         expect(SidebarSectionLink.exists?(linkable_type: "Category", user_id: user.id)).to eq(true)
         expect(SidebarSectionLink.exists?(linkable_type: "Tag", user_id: user.id)).to eq(false)
+      end
+
+      describe "the :default_navigation_categories modifier" do
+        fab!(:alternate_category, :category)
+
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :default_navigation_categories }
+
+        it "lets plugins override the category ids used to seed the sidebar" do
+          block =
+            Proc.new do |_default_categories, opts|
+              expect(opts[:user]).to be_a(User)
+              [alternate_category.id.to_s]
+            end
+
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &block)
+
+          user = Fabricate(:user)
+
+          expect(
+            SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(
+              :linkable_id,
+            ),
+          ).to contain_exactly(alternate_category.id)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block)
+        end
+
+        it "passes the user to the modifier so plugins can branch on user attributes" do
+          received_users = []
+          block =
+            Proc.new do |default_categories, opts|
+              received_users << opts[:user]
+              default_categories
+            end
+
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &block)
+
+          user = Fabricate(:user)
+
+          expect(received_users).to contain_exactly(user)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block)
+        end
       end
     end
 
@@ -1426,6 +1487,44 @@ RSpec.describe User do
           expect(user.user_visits.count).to eq(2)
         end
       end
+    end
+  end
+
+  describe "#create_visit_record!" do
+    fab!(:user)
+    let(:date) { Date.current }
+
+    it "creates a UserVisit and increments days_visited" do
+      expect { user.create_visit_record!(date) }.to change {
+        user.user_visits.where(visited_at: date).count
+      }.by(1).and change { user.user_stat.reload.days_visited }.by(1)
+    end
+
+    it "does not increment days_visited when the insert raises" do
+      user.create_visit_record!(date)
+
+      expect {
+        expect { user.create_visit_record!(date) }.to raise_error(ActiveRecord::RecordNotUnique)
+      }.not_to change { user.user_stat.reload.days_visited }
+    end
+  end
+
+  describe "#update_visit_record!" do
+    fab!(:user)
+    let(:date) { Date.current }
+
+    it "creates a visit when none exists for the date" do
+      expect { user.update_visit_record!(date) }.to change {
+        user.user_visits.where(visited_at: date).count
+      }.by(1)
+    end
+
+    it "is a no-op when a visit already exists for the date" do
+      user.update_visit_record!(date)
+
+      expect { user.update_visit_record!(date) }.not_to change {
+        user.user_visits.where(visited_at: date).count
+      }
     end
   end
 
@@ -3756,6 +3855,17 @@ RSpec.describe User do
   describe "#silence_reason" do
     before { user.update!(silenced_till: 1.day.from_now) }
 
+    it "returns only the first line when details contain a message body" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "short reason\n\nprivate email body",
+      )
+
+      expect(user.silence_reason).to eq("short reason")
+    end
+
     it "returns sanitized silence reason" do
       Fabricate(
         :user_history,
@@ -3778,6 +3888,37 @@ RSpec.describe User do
       expect(user.silence_reason).to eq(
         "foo <a href=\"https://example.com\" rel=\"noopener nofollow ugc\">link</a> bar",
       )
+    end
+  end
+
+  describe "#full_silence_reason" do
+    before { user.update!(silenced_till: 1.day.from_now) }
+
+    it "returns the full silence reason including message body" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "short reason\n\nprivate email body",
+      )
+
+      expect(user.full_silence_reason).to eq("short reason<br><br>private email body")
+    end
+
+    it "returns sanitized content" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "foo <script>alert('XSS Test')</script> bar",
+      )
+
+      expect(user.full_silence_reason).to eq("foo  bar")
+    end
+
+    it "returns nil when user is not silenced" do
+      user.update!(silenced_till: nil)
+      expect(user.full_silence_reason).to be_nil
     end
   end
 

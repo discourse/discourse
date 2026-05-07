@@ -2,7 +2,6 @@
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { computed } from "@ember/object";
-import { or } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
@@ -15,18 +14,6 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class GroupsFormInteractionFields extends Component {
-  @or(
-    "model.members_visibility_level",
-    "visibilityLevelOptions.firstObject.value"
-  )
-  membersVisibilityLevel;
-
-  @or("model.messageable_level", "aliasLevelOptions.firstObject.value")
-  messageableLevel;
-
-  @or("model.mentionable_level", "aliasLevelOptions.firstObject.value")
-  mentionableLevel;
-
   visibilityLevelOptions = [
     {
       name: i18n("admin.groups.manage.interaction.visibility_levels.public"),
@@ -62,6 +49,33 @@ export default class GroupsFormInteractionFields extends Component {
   ];
 
   watchingNotificationLevel = NotificationLevels.WATCHING;
+
+  @computed(
+    "model.members_visibility_level",
+    "visibilityLevelOptions.firstObject.value"
+  )
+  get membersVisibilityLevel() {
+    return (
+      this.model?.members_visibility_level ||
+      this.visibilityLevelOptions?.firstObject?.value
+    );
+  }
+
+  @computed("model.messageable_level", "aliasLevelOptions.firstObject.value")
+  get messageableLevel() {
+    return (
+      this.model?.messageable_level ||
+      this.aliasLevelOptions?.firstObject?.value
+    );
+  }
+
+  @computed("model.mentionable_level", "aliasLevelOptions.firstObject.value")
+  get mentionableLevel() {
+    return (
+      this.model?.mentionable_level ||
+      this.aliasLevelOptions?.firstObject?.value
+    );
+  }
 
   @computed("model.default_notification_level", "watchingNotificationLevel")
   get defaultNotificationLevel() {

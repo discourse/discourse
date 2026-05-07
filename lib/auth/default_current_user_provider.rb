@@ -335,7 +335,7 @@ class Auth::DefaultCurrentUserProvider
     end
   end
 
-  def log_off_user(session, cookie_jar)
+  def log_off_user(session, cookie_jar, push_subscription: nil)
     user = current_user
 
     if SiteSetting.log_out_strict && user
@@ -346,9 +346,11 @@ class Auth::DefaultCurrentUserProvider
         cookie_jar.delete("__profilin")
       end
 
+      PushNotificationPusher.clear_subscriptions(user)
       user.logged_out
     elsif user && @user_token
       @user_token.destroy
+      PushNotificationPusher.unsubscribe(user, push_subscription) if push_subscription
       DiscourseEvent.trigger(:user_logged_out, user)
     end
 

@@ -46,6 +46,8 @@ export default class ChatNavbarBackButton extends Component {
             <ChatHeaderIconUnreadIndicator
               @urgentCount={{@urgentCount}}
               @unreadCount={{@unreadCount}}
+              @mentionCount={{@mentionCount}}
+              @hasUnreadThreads={{@hasUnreadThreads}}
               @indicatorPreference={{@indicatorPreference}}
             />
           {{/if}}
@@ -65,6 +67,8 @@ export default class ChatNavbarBackButton extends Component {
             <ChatHeaderIconUnreadIndicator
               @urgentCount={{@urgentCount}}
               @unreadCount={{@unreadCount}}
+              @mentionCount={{@mentionCount}}
+              @hasUnreadThreads={{@hasUnreadThreads}}
               @indicatorPreference={{@indicatorPreference}}
             />
           {{/if}}

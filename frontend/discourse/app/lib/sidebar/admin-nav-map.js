@@ -546,6 +546,13 @@ export const ADMIN_NAV_MAP = [
         settings_area: "embedding",
       },
       {
+        name: "admin_problem_checks",
+        route: "adminProblemChecks",
+        label: "admin.config.problem_checks.title",
+        description: "admin.config.problem_checks.header_description",
+        icon: "heart",
+      },
+      {
         name: "admin_rate_limits",
         route: "adminConfig.rate-limits.settings",
         label: "admin.config.rate_limits.title",

@@ -232,6 +232,10 @@ class PostsController < ApplicationController
       locale: params[:post][:locale],
     }
 
+    if params[:post].key?(:reply_to_post_number)
+      changes[:reply_to_post_number] = params[:post][:reply_to_post_number]
+    end
+
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
     # keep `raw_old` for backwards compatibility
@@ -510,6 +514,18 @@ class PostsController < ApplicationController
     render body: nil
   end
 
+  def permanently_delete_check
+    post = find_post_from_params
+    obj = post.is_first_post? ? post.topic : post
+
+    if guardian.can_permanently_delete?(obj)
+      render json: { can_permanently_delete: true }
+    else
+      reason = obj.cannot_permanently_delete_reason(current_user)
+      render json: { can_permanently_delete: false, reason: }
+    end
+  end
+
   def permanently_delete_revisions
     guardian.ensure_can_permanently_delete_post_revisions!
 
@@ -570,7 +586,8 @@ class PostsController < ApplicationController
     guardian.ensure_can_edit!(post)
     if post_revision.modifications["raw"].blank? && post_revision.modifications["title"].blank? &&
          post_revision.modifications["category_id"].blank? &&
-         post_revision.modifications["tags"].blank?
+         post_revision.modifications["tags"].blank? &&
+         post_revision.modifications["reply_to_post_number"].blank?
       return render_json_error(I18n.t("revert_version_same"))
     end
 
@@ -580,6 +597,10 @@ class PostsController < ApplicationController
     changes[:raw] = post_revision.modifications["raw"][0] if post_revision.modifications[
       "raw"
     ].present? && post_revision.modifications["raw"][0] != post.raw
+    if post_revision.modifications["reply_to_post_number"].present? &&
+         post_revision.modifications["reply_to_post_number"][0] != post.reply_to_post_number
+      changes[:reply_to_post_number] = post_revision.modifications["reply_to_post_number"][0]
+    end
     if post.is_first_post?
       changes[:title] = post_revision.modifications["title"][0] if post_revision.modifications[
         "title"

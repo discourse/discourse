@@ -4,6 +4,7 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
   let(:current_user) { Fabricate(:admin) }
   let(:another_user) { Fabricate(:user) }
   let(:score_events) { [] }
+  let!(:leaderboard) { Fabricate(:gamification_leaderboard, created_by_id: current_user.id) }
 
   before do
     SiteSetting.discourse_gamification_enabled = true
@@ -26,7 +27,9 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
       points: 27,
     )
 
-    DiscourseGamification::GamificationScore.calculate_scores(since_date: 10.days.ago.midnight)
+    DiscourseGamification::GamificationLeaderboardScore.calculate_all(
+      since_date: 10.days.ago.midnight,
+    )
     sign_in(current_user)
   end
 
@@ -74,9 +77,14 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
            }
       expect(response.status).to eq(200)
 
-      DiscourseGamification::GamificationScore.calculate_scores(since_date: 10.days.ago.midnight)
+      DiscourseGamification::GamificationLeaderboardScore.calculate_all(
+        since_date: 10.days.ago.midnight,
+      )
       user_score =
-        DiscourseGamification::GamificationScore.where(user_id: another_user.id).sum(:score)
+        DiscourseGamification::GamificationLeaderboardScore.where(
+          user_id: another_user.id,
+          leaderboard_id: leaderboard.id,
+        ).sum(:score)
       expect(user_score).to eq(37)
     end
 
@@ -90,10 +98,15 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
           }
       expect(response.status).to eq(200)
 
-      DiscourseGamification::GamificationScore.calculate_scores(since_date: 10.days.ago.midnight)
+      DiscourseGamification::GamificationLeaderboardScore.calculate_all(
+        since_date: 10.days.ago.midnight,
+      )
 
       user_score =
-        DiscourseGamification::GamificationScore.where(user_id: another_user.id).sum(:score)
+        DiscourseGamification::GamificationLeaderboardScore.where(
+          user_id: another_user.id,
+          leaderboard_id: leaderboard.id,
+        ).sum(:score)
       expect(user_score).to eq(13)
     end
   end

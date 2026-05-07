@@ -77,13 +77,13 @@ export default class DashboardNewFeatures extends Component {
   get emptyLabel() {
     if (this.feedError) {
       return i18n("admin.dashboard.new_features.no_new_features_error", {
-        url: "https://meta.discourse.org/tags/c/announcements/67/release-notes",
+        url: "https://releases.discourse.org/",
       });
     }
 
     if (this.groupedNewFeatures.length === 0) {
       return i18n("admin.dashboard.new_features.no_new_features_found", {
-        url: "https://meta.discourse.org/tags/c/announcements/67/release-notes",
+        url: "https://releases.discourse.org/",
       });
     }
 

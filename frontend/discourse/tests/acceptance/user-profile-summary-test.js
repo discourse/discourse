@@ -3,6 +3,7 @@ import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 let deleteAndBlock;
@@ -169,21 +170,32 @@ acceptance("User Profile - Summary - Admin", function (needs) {
 
   test("Delete only action", async function (assert) {
     await visit("/u/charlie/summary");
-    await click(".btn-delete-user");
-    await click(".dialog-footer .delete-dont-block");
 
-    assert.false(deleteAndBlock, "first button does not block user");
+    const dropdown = selectKit(".btn-delete-user");
+    await dropdown.expand();
+    await dropdown.selectRowByValue("delete_dont_block");
+
+    await click(
+      ".delete-user-modal.delete-dont-block .dialog-footer .btn-danger"
+    );
+
+    assert.false(deleteAndBlock, "first option does not block user");
   });
 
   test("Delete and block", async function (assert) {
     await visit("/u/charlie/summary");
-    await click(".btn-delete-user");
+
+    const dropdown = selectKit(".btn-delete-user");
+    await dropdown.expand();
+    await dropdown.selectRowByValue("delete_and_block");
 
     assert
       .dom("#dialog-title")
       .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
-    await click(".dialog-footer .delete-and-block");
-    assert.true(deleteAndBlock, "second button also block user");
+    await click(
+      ".delete-user-modal.delete-and-block .dialog-footer .btn-danger"
+    );
+    assert.true(deleteAndBlock, "second option also blocks user");
   });
 });

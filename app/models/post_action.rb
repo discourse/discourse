@@ -102,7 +102,7 @@ class PostAction < ActiveRecord::Base
     message_key << "_and_deleted" if delete_post
 
     I18n.with_locale(SiteSetting.default_locale) do
-      related_post.topic.add_moderator_post(moderator, I18n.t(message_key))
+      related_post.topic.add_moderator_post(moderator, I18n.t(message_key), bump: true)
     end
 
     # archive message for moderators

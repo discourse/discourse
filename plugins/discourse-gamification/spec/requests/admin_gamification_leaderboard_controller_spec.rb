@@ -9,8 +9,8 @@ RSpec.describe DiscourseGamification::AdminGamificationLeaderboardController do
   end
 
   describe "#create" do
-    it "creates leaderboard and enqueues generation of positions" do
-      expect(Jobs::GenerateLeaderboardPositions.jobs.size).to eq(0)
+    it "creates leaderboard and enqueues score recalculation" do
+      expect(Jobs::RecalculateLeaderboardScores.jobs.size).to eq(0)
 
       expect do
         post "/admin/plugins/gamification/leaderboard.json",
@@ -23,7 +23,7 @@ RSpec.describe DiscourseGamification::AdminGamificationLeaderboardController do
       expect(response.status).to eq(200)
       expect(response.parsed_body).to include("name" => "Test", "created_by_id" => admin.id)
 
-      job_data = Jobs::GenerateLeaderboardPositions.jobs.first["args"].first
+      job_data = Jobs::RecalculateLeaderboardScores.jobs.first["args"].first
       expect(job_data).to include("leaderboard_id" => response.parsed_body["id"])
     end
   end
@@ -44,6 +44,31 @@ RSpec.describe DiscourseGamification::AdminGamificationLeaderboardController do
 
       job_data = Jobs::RefreshLeaderboardPositions.jobs.first["args"].first
       expect(job_data).to include("leaderboard_id" => leaderboard.id)
+    end
+  end
+
+  describe "#show" do
+    it "returns admin-only scoring configuration" do
+      scorable_category_id = 123
+      leaderboard =
+        Fabricate(
+          :gamification_leaderboard,
+          created_by_id: admin.id,
+          score_overrides: {
+            "like_received" => 10,
+          },
+          scorable_category_ids: [scorable_category_id],
+        )
+
+      get "/admin/plugins/discourse-gamification/leaderboards/#{leaderboard.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["leaderboard"]).to include(
+        "score_overrides" => {
+          "like_received" => 10,
+        },
+        "scorable_category_ids" => [scorable_category_id],
+      )
     end
   end
 

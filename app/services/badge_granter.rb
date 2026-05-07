@@ -570,6 +570,12 @@ class BadgeGranter
     is_old_bronze_badge = badge.badge_type_id == BadgeType::Bronze && granted_at < 2.days.ago
     skip_beginner_badge = skip_new_user_tips && badge.for_beginners?
 
-    is_old_bronze_badge || skip_beginner_badge
+    DiscoursePluginRegistry.apply_modifier(
+      :badge_granter_suppress_notification,
+      is_old_bronze_badge || skip_beginner_badge,
+      badge,
+      granted_at,
+      skip_new_user_tips,
+    )
   end
 end

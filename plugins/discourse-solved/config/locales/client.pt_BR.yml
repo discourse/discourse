@@ -30,7 +30,6 @@ pt_BR:
       solution_summary:
         one: "solução"
         other: "soluções"
-      accepted_answer_solver_info: "Resolvido por %{user} na %{post}"
       accepted_answer_post_number: "postagem %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -40,7 +39,6 @@ pt_BR:
       no_solved_topics_title: "Você ainda não solucionou nenhum tópico"
       no_solved_topics_title_others: "%{username} ainda não respondeu a nenhum tópico"
       no_solved_topics_body: "Quando você fornecer uma resposta útil a um tópico, ela poderá ser selecionada como uma solução pelo(a) proprietário(a) ou equipe do tópico."
-      marked_solved_by: "Marcado como resolvido por %{user}"
       confirm_move_solution_title: "Mover postagem da solução"
       confirm_move_solution:
         one: "A postagem que você selecionou está marcada como solução para este tópico. Se você a mover, o tópico mudará para o estado \"não resolvido\"."

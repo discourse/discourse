@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
 
-acceptance(`Discourse Reactions - Icon Aliases`, function (needs) {
+acceptance("Icon Aliases", function (needs) {
   needs.user();
 
   needs.settings({

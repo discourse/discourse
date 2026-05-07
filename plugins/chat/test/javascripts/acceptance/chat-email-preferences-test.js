@@ -6,7 +6,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("Chat | Email Preferences", function (needs) {
+acceptance("Email Preferences", function (needs) {
   needs.user();
   needs.settings({
     chat_enabled: true,

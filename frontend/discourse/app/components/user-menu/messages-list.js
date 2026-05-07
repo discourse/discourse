@@ -67,6 +67,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
       content.push(
         new UserMenuNotificationItem({
           notification,
+          appEvents: this.appEvents,
           currentUser: this.currentUser,
           siteSettings: this.siteSettings,
           site: this.site,
@@ -103,6 +104,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
         content.push(
           new UserMenuNotificationItem({
             notification: item,
+            appEvents: this.appEvents,
             currentUser: this.currentUser,
             siteSettings: this.siteSettings,
             site: this.site,

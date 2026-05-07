@@ -8,6 +8,7 @@ class CategorySerializer < SiteCategorySerializer
                :num_auto_bump_daily,
                :require_reply_approval,
                :require_topic_approval,
+               :nested_replies_default,
                :topic_posting_review_mode,
                :reply_posting_review_mode
   end
@@ -42,7 +43,8 @@ class CategorySerializer < SiteCategorySerializer
              :style_type,
              :emoji,
              :icon,
-             :category_types
+             :category_types,
+             :available_category_types
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
   has_many :category_localizations, serializer: CategoryLocalizationSerializer, embed: :objects
@@ -158,5 +160,10 @@ class CategorySerializer < SiteCategorySerializer
   def category_types
     return {} if !SiteSetting.enable_simplified_category_creation
     object.category_types
+  end
+
+  def available_category_types
+    return [] if !SiteSetting.enable_simplified_category_creation
+    Categories::TypeRegistry.list(only_visible: true)
   end
 end

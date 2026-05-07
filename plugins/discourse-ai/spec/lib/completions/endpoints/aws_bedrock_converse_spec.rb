@@ -144,6 +144,16 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       options = endpoint.default_options(dialect)
       expect(options[:output_config]).to eq({ effort: "high" })
     end
+
+    it "configures xhigh effort" do
+      model.provider_params["effort"] = "xhigh"
+
+      prompt = DiscourseAi::Completions::Prompt.new("hello")
+      dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
+
+      options = endpoint.default_options(dialect)
+      expect(options[:output_config]).to eq({ effort: "xhigh" })
+    end
   end
 
   describe "non-streaming completion" do

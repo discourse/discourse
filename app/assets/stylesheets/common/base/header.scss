@@ -436,6 +436,12 @@
 
     .discourse-tags {
       display: inline;
+      color: var(--header_primary-high);
+
+      li {
+        flex-wrap: nowrap;
+        max-width: 100%;
+      }
 
       @include ellipsis;
 

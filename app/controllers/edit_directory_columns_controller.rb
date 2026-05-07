@@ -47,12 +47,11 @@ class EditDirectoryColumnsController < ApplicationController
       end
     end
 
-    details = {}
-
     staff_action_logger.log_custom(
       "update_directory_columns",
       { previous_value: previous_values, new_value: new_values },
     )
+
     render json: success_json
   end
 

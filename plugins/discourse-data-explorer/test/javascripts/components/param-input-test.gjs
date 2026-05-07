@@ -149,7 +149,7 @@ const InputTestCases = [
   },
 ];
 
-module("Data Explorer Plugin | Component | param-input", function (hooks) {
+module("Component | param-input", function (hooks) {
   setupRenderingTest(hooks);
 
   for (const testcase of InputTestCases) {

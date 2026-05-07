@@ -8,6 +8,7 @@ id:
   js:
     topic_voting:
       vote_title: "Pilih"
-      voting_closed_title: "Tertutup"
       votes:
         other: "%{count} suara"
+      show_voters: "Tunjukkan siapa yang memilih"
+      vote_count_thousands: "%{count}k"

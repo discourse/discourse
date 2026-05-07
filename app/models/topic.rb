@@ -307,6 +307,7 @@ class Topic < ActiveRecord::Base
   has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
   has_one :linked_topic, dependent: :destroy
+  has_one :nested_topic, dependent: :destroy
 
   belongs_to :image_upload, class_name: "Upload"
   belongs_to :og_image_upload, class_name: "Upload"
@@ -1677,7 +1678,7 @@ class Topic < ActiveRecord::Base
     time,
     by_user: nil,
     based_on_last_post: false,
-    category_id: SiteSetting.uncategorized_category_id,
+    category_id: nil,
     duration_minutes: nil,
     silent: nil
   )
@@ -2127,18 +2128,14 @@ class Topic < ActiveRecord::Base
     ).performed!
   end
 
-  def cannot_permanently_delete_reason(user)
-    all_posts_count =
-      Post
-        .with_deleted
-        .where(topic_id: self.id)
-        .where(
-          post_type: [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]],
-        )
-        .count
+  def deletable_posts_count
+    Post.with_deleted.where(topic_id: self.id).where.not(post_type: Post.types[:small_action]).count
+  end
 
-    if posts_count > 0 || all_posts_count > 1
-      I18n.t("post.cannot_permanently_delete.many_posts")
+  def cannot_permanently_delete_reason(user)
+    remaining = deletable_posts_count - 1
+    if posts_count > 0 || remaining > 0
+      I18n.t("post.cannot_permanently_delete.many_posts", count: remaining)
     elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
       time_left =
         RateLimiter.time_left(

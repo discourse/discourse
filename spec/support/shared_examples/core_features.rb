@@ -113,10 +113,8 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       it "likes a post" do
         click_on(topics.first.title)
-        within(".double-button") do
-          find(".toggle-like").click
-          expect(page).to have_content("1")
-        end
+        find(".toggle-like").click
+        expect(page).to have_css(".post-action-menu__like-count", text: "1")
       end
     end
   end

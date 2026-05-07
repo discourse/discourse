@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DModal from "discourse/components/d-modal";
+import { buildPermanentlyDeleteConfirmDialogArgs } from "discourse/components/dialog-messages/permanently-delete-confirm";
 import Revision from "discourse/components/modal/history/revision";
 import Revisions from "discourse/components/modal/history/revisions";
 import TopicFooter from "discourse/components/modal/history/topic-footer";
@@ -229,6 +230,21 @@ export default class History extends Component {
           await Category.asyncFindById(result.category_id)
         );
       }
+      if (result.post) {
+        // `PostSerializer` omits `reply_to_user` when the user is nil OR
+        // when `suppress_reply_when_quoting` is on and the post quotes its
+        // target. Treat a missing key as "leave alone" — only clear it
+        // when the post number is also cleared.
+        const props = {
+          reply_to_post_number: result.post.reply_to_post_number ?? null,
+        };
+        if ("reply_to_user" in result.post) {
+          props.reply_to_user = result.post.reply_to_user;
+        } else if (result.post.reply_to_post_number == null) {
+          props.reply_to_user = null;
+        }
+        post.setProperties(props);
+      }
       this.args.closeModal();
     } catch (e) {
       if (e.jqXHR.responseJSON?.errors?.[0]) {
@@ -336,14 +352,18 @@ export default class History extends Component {
 
   @action
   permanentlyDeleteVersions() {
-    this.dialog.yesNoConfirm({
-      message: i18n("post.revisions.controls.destroy_confirm"),
-      didConfirm: () => {
-        Post.permanentlyDeleteRevisions(this.postRevision?.post_id).then(() => {
-          this.args.closeModal();
-        });
-      },
-    });
+    const postId = this.postRevision?.post_id;
+    this.args.closeModal();
+
+    this.dialog.confirm(
+      buildPermanentlyDeleteConfirmDialogArgs(
+        i18n("post.revisions.controls.destroy_confirm"),
+        i18n("post.controls.permanently_delete_confirm_phrase"),
+        () => {
+          Post.permanentlyDeleteRevisions(postId);
+        }
+      )
+    );
   }
 
   @action

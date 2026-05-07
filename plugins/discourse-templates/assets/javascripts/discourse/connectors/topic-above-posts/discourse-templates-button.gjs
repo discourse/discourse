@@ -58,7 +58,7 @@ export default class DiscourseTemplatesButton extends Component {
         @action={{this.createNewTopic}}
         @label="templates.new_topic"
         @icon="plus"
-        class="template-new-topic"
+        class="btn-default template-new-topic"
       />
     </div>
   </template>

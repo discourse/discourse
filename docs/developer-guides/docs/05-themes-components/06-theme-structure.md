@@ -49,8 +49,8 @@ locales/{locale}.yml
 stylesheets/{anything}/{anything}/{anything}.scss
 
 javascripts/{anything}.js
+javascripts/{anything}.gjs
 javascripts/{anything}.hbs
-javascripts/{anything}.hbr
 
 assets/{asset_filename}
 

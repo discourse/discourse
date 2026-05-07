@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Post translations" do
-  POST_LANGUAGE_SWITCHER_SELECTOR = "button[data-identifier='post-language-selector']"
+  POST_LANGUAGE_SWITCHER_SELECTOR = ".d-editor-button-bar .post-language-selector-trigger"
 
   fab!(:admin)
   fab!(:topic)
@@ -12,7 +12,10 @@ describe "Post translations" do
     PageObjects::Components::SelectKit.new(".translation-selector-dropdown")
   end
   let(:post_language_selector) do
-    PageObjects::Components::DMenu.new(POST_LANGUAGE_SWITCHER_SELECTOR)
+    PageObjects::Components::DMenu.new(
+      POST_LANGUAGE_SWITCHER_SELECTOR,
+      "toolbar-menu__post-language-selector-trigger",
+    )
   end
   let(:view_translations_modal) { PageObjects::Modals::ViewTranslationsModal.new }
 
@@ -201,7 +204,7 @@ describe "Post translations" do
       visit("/latest")
       page.find("#create-topic").click
       post_language_selector.expand
-      post_language_selector.option(".dropdown-menu__item[data-menu-option-id='fr']").click
+      post_language_selector.option("[data-name='fr']").click
       composer.fill_title("Ceci est un sujet de test 1")
       composer.fill_content("Bonjour le monde")
       composer.submit
@@ -213,7 +216,11 @@ describe "Post translations" do
     it "should not have a locale set by default" do
       visit("/latest")
       page.find("#create-topic").click
-      expect(page.has_no_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label")).to be true
+      expect(
+        page.has_no_css?(
+          "#{POST_LANGUAGE_SWITCHER_SELECTOR} .toolbar-popup-menu-options__trigger-label",
+        ),
+      ).to be true
     end
   end
 

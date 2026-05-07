@@ -101,13 +101,13 @@ module PageObjects
 
       def has_unread_user_threads?
         has_css?(
-          ".sidebar-section-link[data-link-name='user-threads'] .sidebar-section-link-content-badge.icon.unread",
+          ".sidebar-section-link[data-link-name='user-threads'] .sidebar-section-link-suffix.icon.unread",
         )
       end
 
       def has_no_unread_user_threads?
         has_no_css?(
-          ".sidebar-section-link[data-link-name='user-threads'] .sidebar-section-link-content-badge.icon.unread",
+          ".sidebar-section-link[data-link-name='user-threads'] .sidebar-section-link-suffix.icon.unread",
         )
       end
 

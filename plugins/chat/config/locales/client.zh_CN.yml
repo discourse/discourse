@@ -286,7 +286,6 @@ zh_CN:
       retry_staged_message:
         title: "网络错误"
         action: "重新发送？"
-      unreliable_network: "网络不稳定，发送消息和保存草稿可能无法正常工作"
       bookmark_message: "书签"
       bookmark_message_edit: "编辑书签"
       restore: "恢复已删除的消息"

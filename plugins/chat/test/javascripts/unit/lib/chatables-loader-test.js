@@ -7,7 +7,7 @@ import {
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatChatable from "discourse/plugins/chat/discourse/models/chat-chatable";
 
-module("Discourse Chat | Unit | lib | chatables-loader", function () {
+module("Unit | lib | chatables-loader", function () {
   function createUserChatable(
     username,
     { has_chat_enabled = true, match_quality = MATCH_QUALITY_PARTIAL } = {}

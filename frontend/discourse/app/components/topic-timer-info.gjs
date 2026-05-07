@@ -110,13 +110,15 @@ export default class TopicTimerInfo extends Component {
       if (categoryId) {
         const category = Category.findById(categoryId);
 
-        options = Object.assign(
-          {
-            categoryName: category.get("slug"),
-            categoryUrl: category.get("url"),
-          },
-          options
-        );
+        if (category) {
+          options = Object.assign(
+            {
+              categoryName: category.get("slug"),
+              categoryUrl: category.get("url"),
+            },
+            options
+          );
+        }
       }
 
       options = Object.assign(options, this.additionalOpts());

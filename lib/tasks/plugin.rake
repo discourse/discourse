@@ -100,7 +100,7 @@ def update_plugin(plugin)
       `git -C '#{plugin_path}' branch -m master main`
     end
 
-    `git -C '#{plugin_path}' branch -u origin/main main`
+    `git -C '#{plugin_path}' branch -q -u origin/main main`
   end
 
   update_status = system("git -C '#{plugin_path}' pull --quiet --no-rebase")

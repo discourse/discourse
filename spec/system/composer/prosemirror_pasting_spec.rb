@@ -87,13 +87,13 @@ describe "Composer - ProseMirror - Pasting content" do
     )
   end
 
-  xit "ignores text/html content if Files are present" do
+  it "ignores text/html content if Files are present" do
     open_composer
-    paste_and_click_image(cdp)
-    expect(rich).to have_css("img[data-orig-src]", count: 1)
+    paste_and_click_image
+    expect(rich).to have_no_css("img[src^='data:']")
     composer.focus # making sure the toggle click won't be captured as a double click
     composer.toggle_rich_editor
-    expect(composer).to have_value("![image|244x66](upload://hGLky57lMjXvqCWRhcsH31ShzmO.png)")
+    expect(composer).to have_value(%r{\A!\[image\|244x66\]\(upload://\w+\.png\)\z})
   end
 
   it "handles multiple data URI images pasted simultaneously" do
@@ -193,6 +193,57 @@ describe "Composer - ProseMirror - Pasting content" do
     composer.type_content(:left)
     composer.type_content(:backspace)
     expect(rich).to have_css("a", text: "lin")
+  end
+
+  it "continues a bullet list when pasting multi-line text into an empty list item" do
+    cdp.allow_clipboard
+    open_composer
+
+    composer.type_content("* ")
+    cdp.copy_paste("apple\nbanana\ncoconut")
+
+    expect(rich).to have_css("ul li", count: 3)
+    expect(rich).to have_css("ul li", text: "apple")
+    expect(rich).to have_css("ul li", text: "banana")
+    expect(rich).to have_css("ul li", text: "coconut")
+  end
+
+  it "continues an ordered list when pasting multi-line text into an empty list item" do
+    cdp.allow_clipboard
+    open_composer
+
+    composer.type_content("1. ")
+    cdp.copy_paste("apple\nbanana\ncoconut")
+
+    expect(rich).to have_css("ol li", count: 3)
+    expect(rich).to have_css("ol li", text: "apple")
+    expect(rich).to have_css("ol li", text: "banana")
+    expect(rich).to have_css("ol li", text: "coconut")
+  end
+
+  it "skips blank lines when continuing a list from pasted multi-line text" do
+    cdp.allow_clipboard
+    open_composer
+
+    composer.type_content("* ")
+    cdp.copy_paste("apple\n\nbanana")
+
+    expect(rich).to have_css("ul li", count: 2)
+    expect(rich).to have_css("ul li", text: "apple")
+    expect(rich).to have_css("ul li", text: "banana")
+  end
+
+  it "keeps default paste behavior in a non-empty list item" do
+    cdp.allow_clipboard
+    open_composer
+
+    composer.type_content("* existing")
+    cdp.copy_paste("\napple\nbanana")
+
+    expect(rich).to have_css("ul li", count: 1)
+    expect(rich).to have_css("ul li", text: "existing")
+    expect(rich).to have_css("ul li", text: "apple")
+    expect(rich).to have_css("ul li", text: "banana")
   end
 
   it "clears closed marks from stored marks when using markInputRule" do

@@ -5,18 +5,9 @@ class GroupUser < ActiveRecord::Base
   belongs_to :user
 
   before_create :set_notification_level
-  after_destroy :grant_other_available_title
-  after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
-  after_save :update_title
 
-  after_save :set_primary_group
-
-  after_save :grant_trust_level
-  after_save :set_category_notifications
-  after_save :set_tag_notifications
-
-  after_commit :increase_group_user_count, on: [:create]
-  after_commit :decrease_group_user_count, on: [:destroy]
+  after_commit :sync_add_via_manager, on: :create
+  after_commit :sync_remove_via_manager, on: :destroy
 
   def self.notification_levels
     NotificationLevels.all
@@ -88,61 +79,8 @@ class GroupUser < ActiveRecord::Base
     self.notification_level = group&.default_notification_level || 3
   end
 
-  def set_primary_group
-    user.update!(primary_group: group) if group.primary_group
-  end
-
-  def remove_primary_and_flair_group
-    return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to update
-
-    updates = {}
-    updates[:primary_group_id] = nil if user.primary_group_id == group_id
-    updates[:flair_group_id] = nil if user.flair_group_id == group_id
-
-    user.update(updates) if updates.present?
-  end
-
-  def grant_other_available_title
-    if group.title.present? && group.title == user.title
-      user.update_attribute(:title, user.next_best_title)
-    end
-  end
-
-  def update_title
-    if group.title.present?
-      DB.exec(
-        "
-        UPDATE users SET title = :title
-        WHERE (title IS NULL OR title = '') AND id = :id",
-        id: user_id,
-        title: group.title,
-      )
-    end
-  end
-
-  def grant_trust_level
-    return if group.grant_trust_level.nil? || group.grant_trust_level.zero?
-
-    TrustLevelGranter.grant(group.grant_trust_level, user)
-  end
-
-  def recalculate_trust_level
-    return if group.grant_trust_level.nil? || group.grant_trust_level.zero?
-    return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to recalculate
-
-    Promotion.recalculate(user, use_previous_trust_level: true)
-  end
-
-  def set_category_notifications
-    self.class.set_category_notifications(group, user)
-  end
-
   def self.set_category_notifications(group, user)
     bulk_set_category_notifications(group, [user.id])
-  end
-
-  def set_tag_notifications
-    self.class.set_tag_notifications(group, user)
   end
 
   def self.set_tag_notifications(group, user)
@@ -194,12 +132,12 @@ class GroupUser < ActiveRecord::Base
     TagUser.auto_track(user_ids: user_ids)
   end
 
-  def increase_group_user_count
-    Group.increment_counter(:user_count, self.group_id)
+  def sync_add_via_manager
+    GroupManager.new(group).sync_add_side_effects([user.id])
   end
 
-  def decrease_group_user_count
-    Group.decrement_counter(:user_count, self.group_id)
+  def sync_remove_via_manager
+    GroupManager.new(group).sync_removal_side_effects([user.id])
   end
 
   def self.semantically_higher_notification_level_sql(new_col, existing_col)

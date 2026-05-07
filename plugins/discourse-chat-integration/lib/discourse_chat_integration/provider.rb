@@ -19,16 +19,26 @@ module DiscourseChatIntegration
       self.providers.select { |provider| self.is_enabled(provider) }
     end
 
+    def self.disabled_providers
+      self
+        .providers
+        .reject { |provider| self.is_enabled(provider) }
+        .sort_by do |provider|
+          score = defined?(provider::POPULARITY_SCORE) ? provider::POPULARITY_SCORE : 0
+          [-score, provider::PROVIDER_NAME]
+        end
+    end
+
     def self.provider_names
-      self.providers.map! { |x| x::PROVIDER_NAME }
+      self.providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
     end
 
     def self.enabled_provider_names
-      self.enabled_providers.map! { |x| x::PROVIDER_NAME }
+      self.enabled_providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
     end
 
     def self.get_by_name(name)
-      self.providers.find { |p| p::PROVIDER_NAME == name }
+      self.providers.find { |provider_klass| provider_klass::PROVIDER_NAME == name }
     end
 
     def self.is_enabled(provider)
@@ -38,6 +48,14 @@ module DiscourseChatIntegration
         SiteSetting.public_send(provider::PROVIDER_ENABLED_SETTING)
       else
         false
+      end
+    end
+
+    def self.setup(provider_klass, current_user, provider_site_settings)
+      if provider_klass.respond_to?(:setup)
+        provider_klass.setup(current_user, provider_site_settings)
+      else
+        SiteSetting.set_and_log(provider_klass::PROVIDER_ENABLED_SETTING, true, current_user)
       end
     end
 

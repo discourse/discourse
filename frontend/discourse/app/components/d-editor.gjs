@@ -664,7 +664,14 @@ export default class DEditor extends Component {
   }
 
   @action
-  replaceToolbar(toolbarInstance) {
+  replaceToolbar(toolbarInstance, owner) {
+    if (
+      toolbarInstance === null &&
+      owner &&
+      this.replacedToolbarInstance !== owner
+    ) {
+      return;
+    }
     this.replacedToolbarInstance = toolbarInstance;
   }
 

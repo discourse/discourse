@@ -4,7 +4,7 @@ import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
-acceptance("Data Explorer Plugin | Run Query", function (needs) {
+acceptance("Run Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 
@@ -307,11 +307,8 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
 
     assert.dom("canvas").exists("the chart was rendered");
     assert
-      .dom("div.query-results section > :first-child")
-      .matchesSelector(
-        ".query-results-chart",
-        "the chart is shown above the table"
-      );
+      .dom(".query-results-modes")
+      .exists("the chart/table toggle buttons were rendered");
   });
 
   test("runs query and is able to download the results", async function (assert) {

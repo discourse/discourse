@@ -27,6 +27,7 @@ export default class DBreadcrumbsContainer extends Component {
               "d-breadcrumbs__link"
               @additionalLinkClasses
             }}
+            @isLast={{eq index this.lastItemIndex}}
             aria-current={{if (eq index this.lastItemIndex) "page"}}
             class={{concatClass "d-breadcrumbs__item" @additionalItemClasses}}
           />

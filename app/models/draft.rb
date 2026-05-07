@@ -233,7 +233,7 @@ class Draft < ActiveRecord::Base
             0
           )
         SQL
-        .order(updated_at: :desc)
+        .order(updated_at: :desc, id: :desc)
         .offset(offset)
         .limit(limit)
 

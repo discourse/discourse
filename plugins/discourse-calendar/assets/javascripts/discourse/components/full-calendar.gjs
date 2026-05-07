@@ -21,7 +21,8 @@ const PostEventMenu = <template>
     @linkToPost={{true}}
     @event={{@data.event}}
     @onClose={{@data.onClose}}
-    @withDescription={{false}}
+    @withDescription={{true}}
+    @clampDescription={{true}}
   />
 </template>;
 

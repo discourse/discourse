@@ -111,10 +111,12 @@ export default class AdminConfigAreasApiKeysShow extends Component {
             <DButton
               @action={{this.saveDescription}}
               @label="admin.api_keys.save"
+              class="btn-default"
             />
             <DButton
               @action={{this.toggleEditDescription}}
               @label="admin.api_keys.cancel"
+              class="btn-default"
             />
           {{else}}
             <DButton
@@ -164,6 +166,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
             <DButton
               @action={{fn this.undoRevokeKey @apiKey}}
               @label="admin.api.undo_revoke"
+              class="btn-default"
             />
             <DButton
               @action={{fn this.deleteKey @apiKey}}

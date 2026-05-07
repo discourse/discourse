@@ -39,6 +39,7 @@ after_initialize do
   require_relative "jobs/scheduled/update_scores_for_ten_days"
   require_relative "jobs/scheduled/update_scores_for_today"
   require_relative "jobs/regular/recalculate_scores"
+  require_relative "jobs/regular/recalculate_leaderboard_scores"
   require_relative "jobs/regular/generate_leaderboard_positions"
   require_relative "jobs/regular/refresh_leaderboard_positions"
   require_relative "jobs/regular/delete_leaderboard_positions"
@@ -90,9 +91,9 @@ after_initialize do
           .all
           .map { |group| BasicGroupSerializer.new(group, root: false, scope: self.scope).as_json },
       gamification_leaderboards:
-        DiscourseGamification::GamificationLeaderboard.all.map do |leaderboard|
-          LeaderboardSerializer.new(leaderboard, root: false).as_json
-        end,
+        DiscourseGamification::GamificationLeaderboard
+          .order(updated_at: :desc)
+          .map { |leaderboard| AdminLeaderboardSerializer.new(leaderboard, root: false).as_json },
     }
   end
 
@@ -113,6 +114,6 @@ after_initialize do
   end
 
   on(:merging_users) do |source_user, target_user|
-    DiscourseGamification::GamificationScore.merge_scores(source_user, target_user)
+    DiscourseGamification::GamificationLeaderboardScore.merge_scores(source_user, target_user)
   end
 end

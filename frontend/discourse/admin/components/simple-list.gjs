@@ -144,7 +144,7 @@ export default class SimpleList extends Component {
             @action={{fn this.addValue this.newValue}}
             @disabled={{not this.newValue}}
             @icon="plus"
-            class="add-value-btn btn-small"
+            class="add-value-btn btn-default btn-small"
           />
         {{/if}}
       </div>

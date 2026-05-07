@@ -463,8 +463,6 @@ lt:
           other: "Sukurta prieš %{count} metų"
     bookmarked:
       title: "Žymės"
-      edit_bookmark: "Redaguoti žymę"
-      clear_bookmarks: "Pašalinti žymes"
       help:
         bookmark: "Spustelėkite norėdami pažymėti šią temą"
         edit_bookmark: "Spustelėkite, jei norite redaguoti pažymėjimą šios įrašo šioje temoje"
@@ -483,12 +481,12 @@ lt:
       clear_reminder: "Išvalyti priminimą."
       edit: "Redaguoti žymę"
       not_bookmarked: "pažymėkite šį įrašą"
+      topic_bookmark: "Tema"
       remove_reminder_keep_bookmark: "Pašalinkite priminimą ir išsaugokite žymę"
       created_with_reminder: "Jūs pažymėjote šį įrašą priminimu %{date}. %{name}"
       created_with_reminder_generic: "Jūs pažymėjote tai su priminimu %{date}. %{name}"
       delete: "Ištrinti žymę"
       confirm_delete: "Ar tikrai norite ištrinti šią žymę? Priminimas taip pat bus ištrintas."
-      confirm_clear: "Ar tikrai norite išvalyti visas savo žymes iš šios temos?"
       save: "Saugoti"
       no_timezone: 'Jūs dar nenustatėte laiko juostos. Negalėsite nustatyti priminimų. Nustatykite vieną iki <a href="%{basePath}/my/preferences/profile">savo profilyje</a>.'
       invalid_custom_datetime: "Pateikta data ir laikas yra neteisingi, bandykite dar kartą."
@@ -2460,6 +2458,8 @@ lt:
       upload_description: "įveskite čia nuorodos aprašymą"
       list_item: "Įkelti"
       wrap_modal:
+        attribute_key: "Raktas"
+        attribute_value: "Reikšmė"
         apply: "Kandidatuoti"
       help: "Markdown redagavimo pagalba"
       modal_ok: "OK"
@@ -2500,6 +2500,8 @@ lt:
       reload: "Įkelti iš naujo"
       ignore: "Ignoruoti"
       image: "paveikslėlis"
+      onebox_toolbar:
+        copy: "Nukopijuoti nuorodą"
     notifications:
       tooltip:
         regular:
@@ -2761,13 +2763,6 @@ lt:
         move_messages_to_inbox: "Perkelti į Pranešimų dėžutę"
         change_notification_level: "Keisti pranešimo lygį"
         choose_new_category: "Pasirinkti naują kategoriją temoms:"
-        choose_new_tags: "Pasirinkite naujas žymas šioms temoms:"
-        changed_tags: "Šių temų žymos buvo pakeistos."
-        confirm_remove_tags:
-          one: "Visos žymos bus pašalintos iš šios temos. Ar esate tikras?"
-          few: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
-          many: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
-          other: "Visos žymės bus pašalintos iš <b>%{count}</b> temų. Ar esate tikras?"
         error_topic_count:
           one: "%{count} tema"
           few: "%{count} temos"
@@ -2792,10 +2787,30 @@ lt:
         name: "Archyvuoti"
       move_messages_to_inbox:
         name: "Perkelti į Pranešimų dėžutę"
-      replace_tags:
-        name: "Pakeisti žymas"
       delete_topics:
         name: "Pašalinti"
+      convert_to_private_message:
+        name: "Rašykite asmeninę žinutę"
+    nested_replies:
+      sort:
+        label: "Rūšiuoti pagal"
+        top: "Populiarios"
+        new: "Naujas"
+      load_more_children:
+        one: "dar %{count} atsakymas"
+        few: "dar %{count} atsakymai"
+        many: "dar %{count} atsakymų"
+        other: "dar %{count} atsakymų"
+      collapsed_replies:
+        one: "%{count} atsakymas"
+        few: "%{count} atsakymai"
+        many: "%{count} atsakymai"
+        other: "%{count} atsakymai"
+      collapse: "Suskleisti"
+      no_replies: "Jokių atsakymų nerasta."
+      deleted_post_placeholder: "[ištrinta]"
+      ignored_post_placeholder: "[nepaisoma]"
+      pinned_reply: "Prisegta"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"
@@ -3215,6 +3230,12 @@ lt:
         few: "%{count} žmonėms patinka šis įrašas."
         many: "%{count} žmonėms patinka šis įrašas."
         other: "%{count} žmonėms patinka šis įrašas."
+      likes_popup:
+        title:
+          one: "%{count} patinka"
+          few: "%{count} patinka"
+          many: "%{count} patinka"
+          other: "%{count} patinka"
       in_reply_to: "Įkelti pirminį įrašą"
       view_all_posts: "Peržiūrėti visus įrašus"
       localizations:
@@ -3222,8 +3243,6 @@ lt:
           actions: "Veiksmai"
           edit: "Redaguoti"
           delete: "Pašalinti"
-        post_language_selector:
-          none: "Nieko"
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
@@ -3274,8 +3293,6 @@ lt:
           just_the_post: "Ne, tik šį įrašą"
         admin: "įrašo administravimas"
         admin_action: "Administratorius"
-        permanently_delete: "Ištrinti visam laikui"
-        permanently_delete_confirmation: "Ar tikrai norite visam laikui ištrinti šį įrašą? Jūs negalėsite jo susigrąžinti."
         wiki: "Sukurti Wiki"
         unwiki: "Ištrinti Wiki"
         convert_to_moderator: "Pridėk Komandos spalvą"
@@ -3381,6 +3398,7 @@ lt:
       back: "Atgal į kategoriją"
       general: "Bendriniai"
       settings: "Nustatymai"
+      moderation: "Moderavimas"
       tags: "Žymos"
       localization:
         name: "Vardas"
@@ -3448,6 +3466,9 @@ lt:
       review_group_name: "grupės pavadinimas"
       require_topic_approval: "Reikalauti, kad moderatorius patvirtintų visas naujas temas"
       require_reply_approval: "Reikalauti, kad moderatorius patvirtintų visus naujus atsakymus"
+      posting_review_modes:
+        everyone: "Visi"
+      posting_review_groups_placeholder: "Pasirinkite grupes..."
       this_year: "šiais metais"
       position: "Pozicija kategorijų puslapyje:"
       minimum_required_tags: "Minimalus temoje reikalingas žymų skaičius:"
@@ -3482,7 +3503,7 @@ lt:
           low: "Žemas"
           high: "Aukštas"
       sort_options:
-        default: "numatytasis"
+        default: "Numatytasis"
         likes: "Mėgsta"
         views: "Peržiūros"
         posts: "įrašai"
@@ -4157,6 +4178,8 @@ lt:
           admins: "Administratoriai"
           moderators: "Moderatoriai"
           staff: "Personalas"
+        impact_types:
+          other_type: "Kiti"
         filter:
           all: "Visi"
           enabled: "Galimas"
@@ -4229,6 +4252,11 @@ lt:
           sub_pages:
             logs:
               title: "Įrašai"
+        problem_checks:
+          status: "Statusas"
+          ignore: "Ignoruoti"
+          more_options:
+            title: "Daugiau parinkčių"
         reports:
           title: "Pranešimai"
           sub_pages:
@@ -4289,7 +4317,7 @@ lt:
         installed_version: "Įrašyta"
         latest_version: "Naujausia"
         problems_found: "Keletas patarimų, pagrįstų dabartiniais svetainės nustatymais"
-        dismiss_notice: "Praleisti"
+        dismiss_notice: "Ignoruoti"
         new_features:
           learn_more: "Sužinoti daugiau..."
         last_checked: "Paskutinį kartą tikrinta"
@@ -4984,6 +5012,7 @@ lt:
         topic_id: "Temos ID"
         post_id: "Pranešimo ID"
         category_id: "Kategorijos ID"
+        reviewable_id: "Peržiūra"
         delete: "Ištrinti"
         edit: "Redaguoti"
         save: "Išsaugoti"

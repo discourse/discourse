@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
-import EmberObject, { computed } from "@ember/object";
-import { alias, or } from "@ember/object/computed";
+import EmberObject, { computed, set } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
@@ -19,10 +18,21 @@ import { i18n } from "discourse-i18n";
 
 @classNames("title-input")
 export default class ComposerTitle extends Component {
-  @alias("composer.canEditTopicFeaturedLink") watchForLink;
-  @or("composer.loading", "composer.disableTitleInput") disabled;
-
   isTitleFocused = false;
+
+  @computed("composer.canEditTopicFeaturedLink")
+  get watchForLink() {
+    return this.composer?.canEditTopicFeaturedLink;
+  }
+
+  set watchForLink(value) {
+    set(this, "composer.canEditTopicFeaturedLink", value);
+  }
+
+  @computed("composer.loading", "composer.disableTitleInput")
+  get disabled() {
+    return this.composer?.loading || this.composer?.disableTitleInput;
+  }
 
   didInsertElement() {
     super.didInsertElement(...arguments);

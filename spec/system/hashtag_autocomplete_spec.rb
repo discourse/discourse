@@ -49,7 +49,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     )
   end
 
-  it "cooks the selected hashtag clientside in the composer preview with the correct url and icon" do
+  it "cooks the selected category hashtag clientside in the composer preview with the correct url and icon" do
     visit_topic_and_initiate_autocomplete
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
     hashtag_results[0].click
@@ -73,12 +73,15 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
         },
       )
     end
+  end
 
+  it "cooks the selected tag hashtag clientside in the composer preview with the correct url and icon" do
     visit_topic_and_initiate_autocomplete
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
     hashtag_results[1].click
     expect(page).to have_css(".hashtag-cooked")
     cooked_hashtag = page.find(".hashtag-cooked")
+
     expect(cooked_hashtag["outerHTML"]).to have_tag(
       "a",
       with: {

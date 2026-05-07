@@ -71,9 +71,7 @@ RSpec.describe UpcomingChanges::List do
         )
       end
 
-      # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
-      # sample plugin settings loaded in the SiteSetting model.
-      xit "includes the plugin name if the setting is from a plugin" do
+      it "includes the plugin name if the setting is from a plugin" do
         results = result.upcoming_changes
         sample_plugin_setting =
           results.find { |change| change[:setting] == :enable_experimental_sample_plugin_feature }
@@ -87,6 +85,33 @@ RSpec.describe UpcomingChanges::List do
         mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
 
         expect(mock_setting[:groups]).to eq("trust_level_0,trust_level_1")
+      end
+
+      describe "overriding defaults setting" do
+        context "when an upcoming_change_default_override points to the change" do
+          before do
+            mock_upcoming_change_default_overrides(
+              {
+                suggested_topics_max_days_old: {
+                  upcoming_change: :enable_upload_debug_mode,
+                  new_default: 1000,
+                },
+              },
+            )
+          end
+
+          it "includes overriding_defaults as true" do
+            results = result.upcoming_changes
+            mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+            expect(mock_setting[:overriding_defaults]).to eq(true)
+          end
+        end
+
+        it "returns false for overriding_defaults when no upcoming_change_default_override points to the change" do
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :allow_user_locale }
+          expect(mock_setting[:overriding_defaults]).to eq(false)
+        end
       end
 
       describe "enabled_for logic" do

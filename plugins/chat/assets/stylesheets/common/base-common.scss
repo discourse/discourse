@@ -15,7 +15,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   padding-bottom: 0.2rem;
 }
 
-html.ios-device.composer-open body {
+html.ios-device:not(.ipados-device:not(.keyboard-visible)).composer-open body {
   overflow: hidden;
 }
 

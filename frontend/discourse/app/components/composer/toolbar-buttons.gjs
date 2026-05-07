@@ -46,11 +46,13 @@ export default class ComposerToolbarButtons extends Component {
               @title={{button.title}}
               @context={{@data.context}}
               @content={{(button.popupMenu.options)}}
+              @header={{button.popupMenu.header}}
               @onChange={{button.popupMenu.action}}
               @onOpen={{button.action}}
               @tabindex={{this.tabIndex button}}
               @onKeydown={{this.rovingButtonBar}}
               @icon={{button.icon}}
+              @triggerLabel={{button.popupMenu.triggerLabel}}
               @class={{concatClass
                 button.className
                 (if (this.isButtonActive button) "--active")

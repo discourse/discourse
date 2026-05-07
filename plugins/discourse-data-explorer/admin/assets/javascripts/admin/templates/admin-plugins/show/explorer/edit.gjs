@@ -92,13 +92,6 @@ export default class QueriesEdit extends Component {
 
           <div class="clear"></div>
 
-          {{#if @controller.aiGenerating}}
-            <div class="query-ai-generating">
-              <ConditionalLoadingSpinner @condition={{true}} @size="small" />
-              <span>{{i18n "explorer.ai.generating"}}</span>
-            </div>
-          {{/if}}
-
           {{#if @controller.editingQuery}}
             <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
               <div class="panels-flex">
@@ -266,7 +259,6 @@ export default class QueriesEdit extends Component {
                     @action={{@controller.destroyQuery}}
                     @icon="trash-can"
                     @label="explorer.delete"
-                    @disabled={{@controller.aiGenerating}}
                     class="btn-danger"
                   />
                 {{/if}}

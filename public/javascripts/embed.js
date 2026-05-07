@@ -64,6 +64,7 @@
   iframe.scrolling = DE.fullApp ? "yes" : "no";
   if (DE.fullApp) {
     iframe.style.height = DE.embedHeight || "600px";
+    iframe.loading = DE.lazyLoad === false ? "eager" : "lazy";
   }
   iframe.referrerPolicy =
     DE.discourseReferrerPolicy || "no-referrer-when-downgrade";
@@ -97,8 +98,19 @@
     }
 
     if (e.data) {
-      if (e.data.type === "discourse-resize" && e.data.height && !DE.fullApp) {
-        iframe.height = e.data.height + "px";
+      if (e.data.type === "discourse-resize" && e.data.height) {
+        if (DE.fullApp && !DE.dynamicHeight) {
+          return;
+        }
+
+        var height = e.data.height;
+        if (DE.embedMinHeight) {
+          height = Math.max(height, parseInt(DE.embedMinHeight, 10));
+        }
+        if (DE.embedMaxHeight) {
+          height = Math.min(height, parseInt(DE.embedMaxHeight, 10));
+        }
+        iframe.style.height = height + "px";
       }
 
       if (e.data.type === "discourse-scroll" && e.data.top) {

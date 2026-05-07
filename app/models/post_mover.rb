@@ -79,6 +79,15 @@ class PostMover
   def move_posts_to(topic)
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
+
+    # Serialize concurrent moves/merges on the same source topic. Without this
+    # lock, two transactions can each read `ordered_posts.last.post_number` at
+    # the same value, both compute the same `@first_post_number_moved`, and
+    # then collide on the `(topic_id, post_number)` unique index when each
+    # tries to insert the "split_topic" moderator post. The lock is released
+    # on commit/rollback of the surrounding `Topic.transaction`.
+    @original_topic.lock!
+
     ensure_acting_user_is_allowed_in_destination
 
     # when a topic contains some posts after moving posts to another topic we shouldn't close it
@@ -105,9 +114,18 @@ class PostMover
     if @options[:freeze_original]
       # in this case we need to add the moderator post after the last copied post
       if @full_move
-        @first_post_number_moved = @original_topic.ordered_posts.last.post_number + 1
+        # Use max_post_number (which includes soft-deleted posts) so the number
+        # we force via `add_moderator_post` matches what `Topic.next_post_number`
+        # will atomically assign via raw SQL. Otherwise a deleted post at the
+        # tail leaves a tombstone in `index_posts_on_topic_id_and_post_number`
+        # that collides with our `update!(post_number: ...)`.
+        @first_post_number_moved = @original_topic.max_post_number + 1
       else
-        from_posts = @original_topic.ordered_posts.where("post_number > ?", posts.last.post_number)
+        # Same reason: shift all posts above `posts.last.post_number`, including
+        # soft-deleted ones, so the slot at `posts.last.post_number + 1` is
+        # guaranteed free in the unique index.
+        from_posts =
+          @original_topic.posts.with_deleted.where("post_number > ?", posts.last.post_number)
         shift_post_numbers(from_posts)
         @first_post_number_moved = posts.last.post_number + 1
       end

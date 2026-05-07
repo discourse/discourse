@@ -20,8 +20,6 @@ tr_TR:
         reaction_group:
           one: "%{reaction}: %{count} kullanıcı"
           other: "%{reaction}: %{count} kullanıcı"
-      reaction:
-        forbidden: "Bu gönderiye yanıt veremez veya verdiğiniz yanıtı değiştiremezsiniz."
       picker:
         react_with: "Bu gönderiye şununla tepki verin: %{reaction}"
         cant_remove_reaction: "Artık tepkinizi kaldıramazsınız"

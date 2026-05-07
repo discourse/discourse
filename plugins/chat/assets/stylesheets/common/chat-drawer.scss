@@ -1,5 +1,6 @@
-body.composer-open .chat-drawer-outlet-container {
-  bottom: 11px; // prevent height of grippie from obscuring ...is typing indicator
+// Only push the drawer above the composer when JS has confirmed it should be
+.chat-drawer-outlet-container.above-composer {
+  padding-bottom: var(--composer-height, 0);
 }
 
 .chat-drawer-resizer {
@@ -42,14 +43,8 @@ html.rtl {
   pointer-events: none !important;
   bottom: 0;
   box-sizing: border-box;
-  padding-bottom: var(--composer-height, 0);
   transition: all 100ms ease-in;
   transition-property: bottom, padding-bottom;
-
-  .rtl & {
-    left: var(--composer-right, 20px);
-    right: 0;
-  }
 }
 
 .chat-drawer {

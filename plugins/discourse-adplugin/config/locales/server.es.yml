@@ -5,6 +5,27 @@
 # https://translate.discourse.org/
 
 es:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: Impresiones de anuncios internos del plugin de anuncios
+      description: "Informe de impresiones de anuncios internos"
+    ad_plugin_ad_impressions:
+      title: Impresiones de anuncios del plugin de anuncios
+      description: "Informe de impresiones de anuncios"
+    ad_plugin_impressions_by_user:
+      title: Impresiones de plugins de anuncios por usuario
+      description: "Impresiones de anuncios agrupadas por usuario"
+    ad_plugin_click_through_rate:
+      title: Rendimiento de la conversión del plugin de anuncios
+      description: "Informe del rendimiento de los anuncios por anuncio y ubicación"
+    ad_plugin_click_through_rate_by_placement:
+      title: Rendimiento del plugin de anuncios por ubicación
+      description: "Informe del rendimiento de los anuncios por ubicación"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: Rendimiento del plugin de anuncios por tipo de anuncio
+      description: "Informe del rendimiento de los anuncios por tipo de anuncio"
+  errors:
+    already_clicked: "Haz clic en Ya registrado"
   site_settings:
     discourse_adplugin_enabled: Activar discourse-adplugin.
     no_ads_for_personal_messages: "No mostrar publicidad al ver mensajes personales"
@@ -16,6 +37,7 @@ es:
     house_ads_after_nth_post: 'Si se definen anuncios internos «Entre publicaciones», mostrar un anuncio después de cada N publicaciones, donde N es este valor.'
     house_ads_frequency: "Si otras redes publicitarias están configuradas para mostrarse en un espacio publicitario, con qué frecuencia deben mostrarse los anuncios internos, en forma de porcentaje."
     ads_txt: "Contenido del archivo ads.txt. Más información disponible en <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>esta página de ayuda de Google AdSense</a>."
+    ad_plugin_routes_enabled: "Activar la segmentación de rutas para los anuncios internos"
     dfp_publisher_id: "Introduce el código de red de Google Ad Manager (anteriormente llamado DFP), que se encuentra en la configuración de red. NOTA: Deberás actualizar la configuración «src del script de la política de seguridad de contenido». Consulta <a href='https://meta.discourse.org/t/33734' target='_blank'>este tema</a> para obtener las instrucciones más recientes."
     dfp_publisher_id_mobile: "(Opcional) Si quieres utilizar un ID de editor de Ad Manager diferente para la versión móvil del sitio, introdúcelo aquí. Déjalo en blanco para utilizar dfp_publisher_id en el móvil."
     dfp_through_trust_level: "Mostrar tus anuncios a los usuarios en función de los niveles de confianza. Los usuarios con un nivel de confianza superior a este valor no verán los anuncios."

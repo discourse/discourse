@@ -35,7 +35,9 @@ module PageObjects
           component.find("input").value
         when "color"
           component.find("input[type='text']").value
-        when "icon", "multi-select"
+        when "icon"
+          PageObjects::Components::DIconGridPicker.new(component).value
+        when "multi-select"
           picker = PageObjects::Components::SelectKit.new(component)
           picker.value
         when "tag-chooser"
@@ -133,22 +135,22 @@ module PageObjects
       def select(value)
         case control_type
         when "icon"
-          selector = component.find(".form-kit__control-icon")["id"]
-          picker = PageObjects::Components::SelectKit.new("#" + selector)
+          picker = PageObjects::Components::DIconGridPicker.new(component)
           picker.expand
-          picker.search(value)
-          picker.select_row_by_value(value)
+          picker.select_icon(value)
         when "multi-select"
           selector = component.find(".form-kit__control-custom > .multi-select")["id"]
           picker = PageObjects::Components::SelectKit.new("#" + selector)
           picker.expand
           picker.search(value)
           picker.select_row_by_name(value)
+          picker.collapse
         when "tag-chooser"
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.expand
           picker.search(value)
           picker.select_row_by_name(value)
+          picker.collapse
         when "select"
           PageObjects::Components::DSelect.new(component.find(".form-kit__control-select")).select(
             value,

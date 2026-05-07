@@ -493,7 +493,7 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    raise Discourse::NotFound if params[:path] !~ %r{\A[a-zA-Z_\-/]+\z}
+    raise Discourse::NotFound if params[:path] !~ %r{\A[a-zA-Z0-9_\-/]+\z}
 
     if current_user.blank?
       cookies[:destination_url] = path("/my/#{params[:path]}")
@@ -1908,7 +1908,7 @@ class UsersController < ApplicationController
 
   def bookmarks
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
+    guardian.ensure_can_see_bookmarks!(user)
     user_guardian = Guardian.new(user)
 
     respond_to do |format|
@@ -1934,6 +1934,9 @@ class UsersController < ApplicationController
         end
       end
       format.ics do
+        @calendar_name =
+          I18n.t("calendar_subscriptions.bookmarks_feed_name", site_title: SiteSetting.title)
+
         bookmark_query = Bookmark.with_reminders.where(user_id: user.id)
 
         after_param = params[:after].presence || 3.months.ago.iso8601

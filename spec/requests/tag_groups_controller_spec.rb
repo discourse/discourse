@@ -367,6 +367,28 @@ RSpec.describe TagGroupsController do
       expect(tag_group.reload.name).to eq(original_name)
     end
 
+    it "rejects empty permissions on an existing tag group" do
+      group = Fabricate(:group)
+      tag_group.permissions = { group.id => TagGroupPermission.permission_types[:full] }
+      tag_group.save!
+
+      put "/tag_groups/#{tag_group.id}.json",
+          params: {
+            tag_group: {
+              tags: [{ id: tag1.id, name: tag1.name }],
+              permissions: {
+              },
+            },
+          },
+          as: :json
+
+      expect(response.status).to eq(422)
+
+      tag_group.reload
+      permissions = tag_group.tag_group_permissions.pluck(:group_id, :permission_type).to_h
+      expect(permissions).to eq(group.id => TagGroupPermission.permission_types[:full])
+    end
+
     it "does not create a staff action log entry when update fails" do
       Fabricate(:tag_group, name: "existing_name")
 

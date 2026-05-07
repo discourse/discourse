@@ -124,7 +124,7 @@ class TopicCreator
 
       begin
         group.set_message_default_notification_levels!(topic)
-      rescue Group::GroupPmUserLimitExceededError => e
+      rescue Group::GroupPmUserLimitExceededError
         rollback_with!(
           topic,
           :too_large_group,

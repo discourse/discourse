@@ -84,14 +84,6 @@ class ReviewablePostVotingComment < Reviewable
     end
   end
 
-  def perform_no_action_comment(performed_by, args)
-    if comment.deleted_at?
-      create_result(:success, :approved, [created_by_id], true)
-    else
-      create_result(:success, :rejected, [created_by_id], true)
-    end
-  end
-
   def perform_agree_and_keep_comment(performed_by, args)
     agree
   end

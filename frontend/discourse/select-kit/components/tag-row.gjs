@@ -18,6 +18,9 @@ export default class TagRow extends SelectKitRowComponent {
         description=this.item.description
         count=this.item.count
       }}
+      {{#if this.rowDisabled}}
+        <span class="disabled-reason">{{this.title}}</span>
+      {{/if}}
     {{else}}
       <span class="name">{{this.rowName}}</span>
     {{/if}}

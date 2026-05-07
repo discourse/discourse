@@ -8,8 +8,6 @@ lt:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Jokių veiksmų"
         agree_and_suspend:
           title: "Sustabdyti naudotojo"
           description: "Sutinku su vėliavėle ir suspenduoju naudotoją."

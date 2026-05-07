@@ -1,4 +1,9 @@
 en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_login_with_amazon: "Discourse Login with Amazon"
   js:
     login:
       amazon:

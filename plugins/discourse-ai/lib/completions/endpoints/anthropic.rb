@@ -60,7 +60,9 @@ module DiscourseAi
 
           # effort parameter
           effort = llm_model.lookup_custom_param("effort")
-          options[:output_config] = { effort: effort } if %w[low medium high max].include?(effort)
+          options[:output_config] = { effort: effort } if AnthropicShared::EFFORT_VALUES.include?(
+            effort,
+          )
 
           options
         end

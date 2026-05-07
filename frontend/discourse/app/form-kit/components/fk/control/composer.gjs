@@ -26,6 +26,7 @@ export default class FKControlComposer extends FKBaseControl {
       @value={{readonly @field.value}}
       @change={{this.handleInput}}
       @disabled={{@field.disabled}}
+      @forceEditorMode={{@forceEditorMode}}
       class={{concatClass
         "form-kit__control-composer"
         (if @preview "--preview")

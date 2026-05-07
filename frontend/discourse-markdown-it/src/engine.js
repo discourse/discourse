@@ -173,16 +173,35 @@ function audioHTML(token) {
 
 const IMG_SIZE_REGEX =
   /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
+function isKnownImageSuffix(segment) {
+  return (
+    segment === "video" ||
+    segment === "audio" ||
+    segment === "thumbnail" ||
+    IMG_SIZE_REGEX.test(segment) ||
+    !!extractDataAttribute(segment)
+  );
+}
+
 function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   const token = tokens[idx];
   const alt = slf.renderInlineAsText(token.children, options, env);
   const split = alt.split("|");
-  const altSplit = [split[0]];
+
+  // Find where structured suffixes begin by scanning from the right.
+  // Everything before that boundary is alt text (which may contain pipes).
+  let suffixStart = split.length;
+  while (suffixStart > 1 && isKnownImageSuffix(split[suffixStart - 1])) {
+    suffixStart--;
+  }
+
+  const altText = split.slice(0, suffixStart).join("|");
+  const suffixes = split.slice(suffixStart);
 
   // markdown-it supports returning HTML instead of continuing to render the current token
   // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
   // handles |video and |audio alt transformations for image tags
-  if (split[1] === "video") {
+  if (suffixes[0] === "video") {
     if (
       options.discourse.previewing &&
       !options.discourse.limitedSiteSettings.enableDiffhtmlPreview
@@ -197,13 +216,13 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
     } else {
       return videoHTML(token);
     }
-  } else if (split[1] === "audio") {
+  } else if (suffixes[0] === "audio") {
     return audioHTML(token);
   }
 
   // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
-  for (let i = 1, match, data; i < split.length; ++i) {
-    if ((match = split[i].match(IMG_SIZE_REGEX)) && match[1] && match[2]) {
+  for (let i = 0, match, data; i < suffixes.length; ++i) {
+    if ((match = suffixes[i].match(IMG_SIZE_REGEX)) && match[1] && match[2]) {
       let width = match[1];
       let height = match[2];
 
@@ -243,20 +262,17 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
       ) {
         token.attrs.push(["class", "resizable"]);
       }
-    } else if ((data = extractDataAttribute(split[i]))) {
+    } else if ((data = extractDataAttribute(suffixes[i]))) {
       token.attrs.push(data);
-    } else if (split[i] === "thumbnail") {
+    } else if (suffixes[i] === "thumbnail") {
       token.attrs.push(["data-thumbnail", "true"]);
-    } else {
-      altSplit.push(split[i]);
     }
   }
 
-  const altValue = altSplit.join("|").trim();
-  if (altValue === "") {
+  if (altText === "") {
     token.attrSet("role", "presentation");
   } else {
-    token.attrSet("alt", altValue);
+    token.attrSet("alt", altText);
   }
 
   return slf.renderToken(tokens, idx, options);
@@ -274,23 +290,36 @@ export const ATTACHMENT_CSS_CLASS = "attachment";
 
 function renderAttachment(tokens, idx, options, env, slf) {
   const linkToken = tokens[idx];
-  const textToken = tokens[idx + 1];
 
-  const split = textToken.content.split("|");
-  const contentSplit = [];
-
-  for (let i = 0, data; i < split.length; ++i) {
-    if (split[i] === ATTACHMENT_CSS_CLASS) {
-      linkToken.attrs.unshift(["class", split[i]]);
-    } else if ((data = extractDataAttribute(split[i]))) {
-      linkToken.attrs.push(data);
-    } else {
-      contentSplit.push(split[i]);
+  // Link text may span multiple tokens when it contains inline formatting.
+  // Scan forward to find the last text token which holds the |attachment marker.
+  let lastTextToken = null;
+  for (let i = idx + 1; i < tokens.length; i++) {
+    if (tokens[i].type === "link_close") {
+      break;
+    }
+    if (tokens[i].type === "text" && tokens[i].content) {
+      lastTextToken = tokens[i];
     }
   }
 
-  if (contentSplit.length > 0) {
-    textToken.content = contentSplit.join("|");
+  if (lastTextToken) {
+    const split = lastTextToken.content.split("|");
+    const contentSplit = [];
+
+    for (let i = 0, data; i < split.length; ++i) {
+      if (split[i] === ATTACHMENT_CSS_CLASS) {
+        linkToken.attrs.unshift(["class", split[i]]);
+      } else if ((data = extractDataAttribute(split[i]))) {
+        linkToken.attrs.push(data);
+      } else {
+        contentSplit.push(split[i]);
+      }
+    }
+
+    if (contentSplit.length > 0) {
+      lastTextToken.content = contentSplit.join("|");
+    }
   }
 
   return slf.renderToken(tokens, idx, options);

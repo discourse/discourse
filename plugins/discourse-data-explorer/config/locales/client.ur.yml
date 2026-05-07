@@ -6,10 +6,6 @@
 
 ur:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "ڈیٹا ایکسپلورر"
     errors:
       explorer:
         no_semicolons: "کمانڈ سے semicolons ہٹا دیں۔"

@@ -661,7 +661,7 @@ describe Chat::Message do
       expect(message.to_markdown).to eq(<<~MSG.chomp)
       hey friend, what's up?!
 
-      ![test_image.jpg|400x300](#{image.short_url})
+      ![test\\_image.jpg|400x300](#{image.short_url})
       ![meme.jpg|10x10](#{image2.short_url})
       MSG
     end

@@ -531,6 +531,25 @@ RSpec.describe PostDestroyer do
       expect(reviewable.reload).to be_ignored
     end
 
+    it "resolves reviewable when author deletes their post via perform_delete (delete_removed_posts_after = 0)" do
+      SiteSetting.delete_removed_posts_after = 0
+
+      reply = create_post(topic: post.topic)
+      reviewable =
+        ReviewablePost.needs_review!(
+          target: reply,
+          created_by: Discourse.system_user,
+          reviewable_by_moderator: true,
+        )
+
+      expect(reviewable).to be_pending
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.deleted_at).to be_present
+      expect(reviewable.reload).to be_ignored
+    end
+
     it "does not auto-ignore reviewable when author was silenced for the post" do
       reply = create_post(topic: post.topic)
       reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
@@ -699,6 +718,20 @@ RSpec.describe PostDestroyer do
         author.reload
         expect(author.post_count).to eq(post_count - 1)
         expect(UserHistory.count).to eq(history_count + 1)
+      end
+
+      it "links the staff action log to the reviewable when passed via opts" do
+        reply = create_post(topic_id: post.topic_id, user: post.user)
+        reviewable = Fabricate(:reviewable_flagged_post, target: reply)
+
+        expect {
+          PostDestroyer.new(moderator, reply, reviewable_id: reviewable.id).destroy
+        }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:delete_post],
+            reviewable_id: reviewable.id,
+          ).count
+        }.by(1)
       end
     end
 
@@ -1106,7 +1139,7 @@ RSpec.describe PostDestroyer do
 
         it "does not ignore a potentially illegal flag on the reply" do
           expect {
-            PostDestroyer.new(moderator, second_post, reviewable: parent_reviewable).destroy
+            PostDestroyer.new(moderator, second_post, reviewable_id: parent_reviewable.id).destroy
           }.not_to change { reply_reviewable.reload.pending? }
         end
       end
@@ -1124,7 +1157,7 @@ RSpec.describe PostDestroyer do
           is_warning: false,
           flag_topic: true,
         ).perform
-        PostDestroyer.new(moderator, third_post, { reviewable: Reviewable.last }).destroy
+        PostDestroyer.new(moderator, third_post, { reviewable_id: Reviewable.last.id }).destroy
         jobs = Jobs::SendSystemMessage.jobs
         expect(jobs.size).to eq(1)
 

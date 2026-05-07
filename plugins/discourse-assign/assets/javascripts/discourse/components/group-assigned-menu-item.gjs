@@ -5,7 +5,7 @@ import { i18n } from "discourse-i18n";
 const GroupAssignedMenuItem = <template>
   <LinkTo @route="group.assigned">
     {{icon "group-plus" class="glyph"}}{{i18n "discourse_assign.assigned"}}
-    ({{@group.assignment_count}})
+    {{#if @group.assignment_count}}({{@group.assignment_count}}){{/if}}
   </LinkTo>
 </template>;
 

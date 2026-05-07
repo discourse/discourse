@@ -74,6 +74,66 @@ describe OpenIDConnectAuthenticator do
     end
   end
 
+  describe "group syncing" do
+    context "when openid_connect_groups_claim is blank" do
+      it "does not provide groups" do
+        expect(authenticator.provides_groups?).to eq(false)
+      end
+
+      it "does not set associated_groups" do
+        hash[:extra][:raw_info][:groups] = %w[group1 group2]
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to be_nil
+      end
+    end
+
+    context "when openid_connect_groups_claim is set" do
+      before { SiteSetting.openid_connect_groups_claim = "groups" }
+
+      it "provides groups" do
+        expect(authenticator.provides_groups?).to eq(true)
+      end
+
+      it "extracts groups from the claim" do
+        hash[:extra][:raw_info][:groups] = %w[group1 group2]
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "handles an empty groups array" do
+        hash[:extra][:raw_info][:groups] = []
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq([])
+      end
+
+      it "does not set associated_groups when the claim is missing" do
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to be_nil
+      end
+
+      it "logs an error when the claim is not an array" do
+        hash[:extra][:raw_info][:groups] = "not_an_array"
+        Rails.logger.expects(:error).with(includes("not an array"))
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to be_nil
+      end
+    end
+
+    context "with a custom claim name" do
+      before { SiteSetting.openid_connect_groups_claim = "cognito:groups" }
+
+      it "reads from the correct claim" do
+        hash[:extra][:raw_info]["cognito:groups"] = %w[admins editors]
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "admins", name: "admins" }, { id: "editors", name: "editors" }],
+        )
+      end
+    end
+  end
+
   describe "discovery document fetching" do
     let(:document_url) do
       SiteSetting.openid_connect_discovery_document =

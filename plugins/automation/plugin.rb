@@ -161,7 +161,9 @@ after_initialize do
     )
   end
 
-  on(:topic_closed) { |topic| ::DiscourseAutomation::EventHandlers.handle_topic_closed(topic) }
+  on(:topic_closed) do |topic, status|
+    ::DiscourseAutomation::EventHandlers.handle_topic_closed(topic, status)
+  end
 
   on(:post_created) do |post|
     DiscourseAutomation::EventHandlers.handle_post_created_edited(post, :create)

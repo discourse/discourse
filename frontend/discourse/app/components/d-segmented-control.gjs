@@ -3,6 +3,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
+import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -58,12 +59,19 @@ export default class DSegmentedControl extends Component {
       <span class="d-segmented-control__slider"></span>
 
       {{#each @items as |item|}}
-        <label class="d-segmented-control__label">
+        <label
+          class={{concatClass
+            "d-segmented-control__label"
+            item.class
+            (if item.disabled "is-disabled")
+          }}
+        >
           <input
             type="radio"
             name={{@name}}
             value={{item.value}}
             checked={{eq @value item.value}}
+            disabled={{item.disabled}}
             class="d-segmented-control__input"
             {{on "change" (fn this.handleChange item.value)}}
           />

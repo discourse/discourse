@@ -223,6 +223,7 @@ ko:
           today: "오늘"
           last_7_days: "지난 7일"
           last_30_days: "지난 30일"
+          scroll_to_bottom: "맨 아래로 스크롤"
       sentiments:
         sentiment_analysis:
           filter_types:

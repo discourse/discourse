@@ -41,10 +41,10 @@ RSpec.describe "DiscourseAi::Discord::BotController", type: :request do
         allow(SiteSetting).to receive(:ai_discord_allowed_guilds_map).and_return([guild_id])
       end
 
-      xit "enqueues a job to handle the interaction" do
-        expect {
+      it "enqueues a job to handle the interaction" do
+        expect_enqueued_with(job: :stream_discord_reply, args: { interaction: interaction_body }) do
           post "/discourse-ai/discord/interactions", params: interaction_body, headers: headers
-        }.to have_enqueued_job(Jobs::StreamDiscordReply)
+        end
       end
 
       it "responds with a deferred message" do

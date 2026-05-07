@@ -71,6 +71,13 @@
     max-width: 35ch;
   }
 
+  .--post-bookmark {
+    .d-button__suffix-icon {
+      margin-left: auto;
+      color: var(--primary-medium);
+    }
+  }
+
   .bookmark-menu__section-title {
     display: flex;
     align-items: center;

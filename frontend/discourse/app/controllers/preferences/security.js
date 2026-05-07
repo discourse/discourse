@@ -1,13 +1,11 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import AuthTokenModal from "discourse/components/modal/auth-token";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { setting } from "discourse/lib/computed";
 import logout from "discourse/lib/logout";
 import { userPath } from "discourse/lib/url";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
@@ -22,14 +20,19 @@ export default class SecurityController extends Controller {
   @service router;
   @service currentUser;
 
-  @setting("moderators_view_emails") canModeratorsViewEmails;
-
   passwordProgress = null;
   subpageTitle = i18n("user.preferences_nav.security");
   showAllAuthTokens = false;
 
-  @gt("model.user_auth_tokens.length", DEFAULT_AUTH_TOKENS_COUNT)
-  canShowAllAuthTokens;
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
+
+  @computed("model.user_auth_tokens.length")
+  get canShowAllAuthTokens() {
+    return this.model?.user_auth_tokens?.length > DEFAULT_AUTH_TOKENS_COUNT;
+  }
 
   @computed("model.id", "currentUser.id")
   get canCheckEmails() {

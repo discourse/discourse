@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import onResize from "discourse/modifiers/on-resize";
 
 export default class HorizontalOverflowNav extends Component {
@@ -58,20 +59,28 @@ export default class HorizontalOverflowNav extends Component {
     // Check if the content overflows
     this.hasScroll = scrollWidth > offsetWidth;
 
-    // Ensure the right arrow disappears only when fully scrolled
-    if (scrollWidth - scrollLeft - offsetWidth <= 2) {
+    if (!this.hasScroll) {
+      this.hideLeftScroll = true;
       this.hideRightScroll = true;
       clearInterval(this.scrollInterval);
-    } else {
-      this.hideRightScroll = false;
+      return;
     }
 
-    // Ensure the left arrow disappears only when fully scrolled to the start
-    if (scrollLeft <= 2) {
-      this.hideLeftScroll = true;
-      clearInterval(this.scrollInterval);
+    const atStart = Math.abs(scrollLeft) <= 2;
+    const atEnd = scrollWidth - Math.abs(scrollLeft) - offsetWidth <= 2;
+
+    // Buttons stay in physical positions (rtl:ignore in CSS), but in RTL
+    // the scroll direction is reversed, so swap which button hides
+    if (isDocumentRTL()) {
+      this.hideLeftScroll = atEnd;
+      this.hideRightScroll = atStart;
     } else {
-      this.hideLeftScroll = false;
+      this.hideLeftScroll = atStart;
+      this.hideRightScroll = atEnd;
+    }
+
+    if (atStart || atEnd) {
+      clearInterval(this.scrollInterval);
     }
   }
 

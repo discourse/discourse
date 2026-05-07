@@ -109,7 +109,7 @@ export default class WrapAttributesModal extends Component {
                   <object.Field
                     @name="key"
                     @type="input"
-                    @title="Key"
+                    @title={{i18n "composer.wrap_modal.attribute_key"}}
                     @validation="required"
                     as |field|
                   >
@@ -119,7 +119,7 @@ export default class WrapAttributesModal extends Component {
                   <object.Field
                     @name="value"
                     @type="input"
-                    @title="Value"
+                    @title={{i18n "composer.wrap_modal.attribute_value"}}
                     @validation="required"
                     as |field|
                   >

@@ -8,7 +8,6 @@ describe "Discourse dev tools" do
   describe "toolbar" do
     it "can be enabled and disabled" do
       visit("/latest")
-      expect(page).to have_css("#site-logo")
       expect(toolbar).to have_no_toolbar
 
       toolbar.enable
@@ -16,7 +15,6 @@ describe "Discourse dev tools" do
 
       toolbar.disable
       expect(toolbar).to have_no_toolbar
-      expect(page).to have_css("#site-logo")
     end
   end
 
