@@ -2,13 +2,14 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
+import InspectorForm from "./inspector-form";
 
 /**
- * Read-only inspector for the selected block.
+ * Inspector for the selected block.
  *
- * Phase 1 surface: shows block name, namespace, container/leaf, description,
- * args (current values + schema), conditions tree (raw JSON for now). Editing,
- * FormKit-driven controls, and condition builder ship in Phase 2 and Phase 6.
+ * Phase 2 surface: shows block name, namespace, container/leaf, description,
+ * an editable args form (driven by FormKit and `schemaToFields`), and a
+ * read-only conditions JSON for now. The conditions builder ships in Phase 6.
  */
 export default class InspectorPanel extends Component {
   @service visualEditor;
@@ -25,12 +26,19 @@ export default class InspectorPanel extends Component {
     return this.data?.metadata ?? null;
   }
 
-  get hasArgs() {
-    return this.data?.args && Object.keys(this.data.args).length > 0;
-  }
-
+  /**
+   * Whether the inspector should render the editable form. True if either
+   * the block declared an `args` schema OR the layout passes any args at
+   * runtime (in which case `InspectorForm` falls back to an inferred
+   * schema). Blocks with no schema and no args still show "no arguments".
+   */
   get hasArgsSchema() {
-    return this.metadata?.args && Object.keys(this.metadata.args).length > 0;
+    const declaredArgs = this.metadata?.args;
+    if (declaredArgs && Object.keys(declaredArgs).length > 0) {
+      return true;
+    }
+    const liveArgs = this.data?.args;
+    return !!(liveArgs && Object.keys(liveArgs).length > 0);
   }
 
   get hasConditions() {
@@ -39,14 +47,6 @@ export default class InspectorPanel extends Component {
 
   get conditionsJson() {
     return JSON.stringify(this.data.conditions, null, 2);
-  }
-
-  get argsSchemaJson() {
-    return JSON.stringify(this.metadata.args, null, 2);
-  }
-
-  get argsJson() {
-    return JSON.stringify(this.data.args, null, 2);
   }
 
   <template>
@@ -89,20 +89,12 @@ export default class InspectorPanel extends Component {
         <div class="inspector-section__title">
           {{i18n "visual_editor.inspector.section_args"}}
         </div>
-        {{#if this.hasArgs}}
-          <pre>{{this.argsJson}}</pre>
+        {{#if this.hasArgsSchema}}
+          <InspectorForm />
         {{else}}
           <div class="panel-empty">{{i18n
               "visual_editor.inspector.label_no_args"
             }}</div>
-        {{/if}}
-        {{#if this.hasArgsSchema}}
-          <div class="inspector-row">
-            <span class="row-key">{{i18n
-                "visual_editor.inspector.label_args_schema"
-              }}</span>
-          </div>
-          <pre>{{this.argsSchemaJson}}</pre>
         {{/if}}
       </div>
 

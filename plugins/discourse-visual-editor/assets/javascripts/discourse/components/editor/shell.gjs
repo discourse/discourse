@@ -24,6 +24,21 @@ export default class EditorShell extends Component {
     this.visualEditor.exit();
   }
 
+  @action
+  undo() {
+    this.visualEditor.undo();
+  }
+
+  @action
+  redo() {
+    this.visualEditor.redo();
+  }
+
+  @action
+  reset() {
+    this.visualEditor.resetAll();
+  }
+
   <template>
     {{#if this.visualEditor.isActive}}
       <div class="visual-editor-shell">
@@ -33,6 +48,32 @@ export default class EditorShell extends Component {
             <span class="toolbar-title">Visual Editor</span>
           </div>
           <div class="toolbar-right">
+            <button
+              type="button"
+              class="btn btn-default visual-editor-btn-undo"
+              title={{i18n "visual_editor.chrome.undo"}}
+              disabled={{if this.visualEditor.canUndo false true}}
+              {{on "click" this.undo}}
+            >
+              {{icon "arrow-rotate-left"}}
+            </button>
+            <button
+              type="button"
+              class="btn btn-default visual-editor-btn-redo"
+              title={{i18n "visual_editor.chrome.redo"}}
+              disabled={{if this.visualEditor.canRedo false true}}
+              {{on "click" this.redo}}
+            >
+              {{icon "arrow-rotate-right"}}
+            </button>
+            <button
+              type="button"
+              class="btn btn-default visual-editor-btn-reset"
+              disabled={{if this.visualEditor.isDirty false true}}
+              {{on "click" this.reset}}
+            >
+              <span>{{i18n "visual_editor.chrome.reset"}}</span>
+            </button>
             <button
               type="button"
               class="btn btn-default"
