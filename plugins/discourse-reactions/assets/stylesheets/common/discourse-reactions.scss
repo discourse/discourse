@@ -462,13 +462,17 @@ html.discourse-reactions-no-select {
   }
 }
 
+.reactions-actions-summary + .show-replies {
+  margin-right: 0;
+  margin-left: var(--space-2);
+}
+
 .discourse-reactions-counter {
   display: flex;
   align-items: center;
   text-align: center;
   cursor: pointer;
   border-radius: var(--d-button-border-radius);
-  margin-top: var(--space-1);
 
   &:focus-visible {
     outline: none;
