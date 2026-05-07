@@ -197,6 +197,8 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 
 The same rules apply to preset and custom periods of equivalent length.
 
+**Every day in the selected period is represented in the chart**, even if no pageview data exists for that day. Missing-data days are filled in as zero values rather than skipped — so the x-axis spacing stays uniform, daily slots are never collapsed, and partial weeks/months at the start or end of the period still render their bars with whatever data they have.
+
 7.3 On public communities, bars stack: Logged in at the bottom, Anonymous in the middle, Crawlers on top. Each color matches its filter pill.
 
 7.4 On private communities, only the Logged in series renders.
