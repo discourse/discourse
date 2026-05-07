@@ -1,0 +1,4 @@
+en:
+  site_settings:
+    visual_editor_enabled: "Enable the visual editor plugin. The editor lets permitted users compose Block Outlet layouts via drag-and-drop."
+    visual_editor_allowed_groups: "Groups whose members can open the visual editor. Admins always have access."

@@ -1,0 +1,294 @@
+/* Visual editor — Phase 1
+ *
+ * Visual treatment intentionally mirrors core's dev-tools overlay
+ * (frontend/discourse/app/static/dev-tools/styles.css) so admins moving
+ * between dev-tools and the editor get a consistent vocabulary:
+ *   - blocks are orange, dotted-bordered, with a top-left corner badge
+ *   - block outlets are amber, dashed-bordered, with a top-left corner badge
+ * Color tokens are duplicated locally because the dev-tools CSS is loaded
+ * dynamically — we can't rely on its variables being present.
+ */
+
+:root {
+  --visual-editor-block-color: #d97706;
+  --visual-editor-block-hover-color: #b45309;
+  --visual-editor-block-outlet-color: #f59e0b;
+  --visual-editor-block-outlet-hover-color: #d97706;
+  --visual-editor-bg-opacity: 0.05;
+  --visual-editor-badge-font-size: 0.75rem;
+  --visual-editor-badge-padding: 2px 5px;
+  --visual-editor-badge-radius: 0 0 4px 0;
+  --visual-editor-shadow: 1px 1px 2px rgb(0 0 0 / 0.5);
+  --visual-editor-container-margin: 2px;
+}
+
+/* Entry pill */
+.visual-editor-pill {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: z("modal", "content") - 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--secondary);
+  border: 0;
+  font-size: var(--font-down-1);
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+
+  &:hover {
+    background: var(--primary-medium);
+  }
+}
+
+body.visual-editor-active {
+  /* Block boundaries — dotted orange, mirrors .block-debug-info */
+  .visual-editor-block-chrome {
+    position: relative;
+    margin: var(--visual-editor-container-margin);
+    border: 1px dotted var(--visual-editor-block-color);
+    background: rgb(217 119 6 / var(--visual-editor-bg-opacity));
+    padding: 2px;
+
+    &.--container {
+      /* containers stay dotted — same treatment as leaves */
+    }
+
+    &.--selected {
+      border-style: solid;
+      border-color: var(--visual-editor-block-hover-color);
+    }
+  }
+
+  /* Block handle (corner badge) — mirrors .block-debug-badge */
+  .visual-editor-block-handle {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: var(--visual-editor-badge-padding);
+    background: var(--visual-editor-block-color);
+    color: white;
+    font-size: var(--visual-editor-badge-font-size);
+    font-weight: bold;
+    border-radius: var(--visual-editor-badge-radius);
+    text-shadow: var(--visual-editor-shadow);
+    pointer-events: auto;
+
+    .d-icon {
+      color: white !important;
+      font-size: var(--visual-editor-badge-font-size) !important;
+      width: var(--visual-editor-badge-font-size) !important;
+      filter: drop-shadow(var(--visual-editor-shadow));
+    }
+  }
+
+  /* Outlet boundaries — dashed amber, mirrors .block-outlet-debug */
+  .visual-editor-outlet-boundary {
+    position: relative;
+    margin: var(--visual-editor-container-margin);
+    border: 1px dashed var(--visual-editor-block-outlet-color);
+    background: rgb(245 158 11 / var(--visual-editor-bg-opacity));
+    padding: 2px;
+    min-height: 20px;
+  }
+
+  .visual-editor-outlet-boundary__badge {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: var(--visual-editor-badge-padding);
+    background: var(--visual-editor-block-outlet-color);
+    color: white;
+    font-size: var(--visual-editor-badge-font-size);
+    font-weight: bold;
+    border-radius: var(--visual-editor-badge-radius);
+    text-shadow: var(--visual-editor-shadow);
+    pointer-events: auto;
+
+    .d-icon {
+      color: white !important;
+      font-size: var(--visual-editor-badge-font-size) !important;
+      width: var(--visual-editor-badge-font-size) !important;
+      filter: drop-shadow(var(--visual-editor-shadow));
+    }
+  }
+
+  .visual-editor-outlet-boundary__count {
+    opacity: 0.85;
+    font-weight: 400;
+  }
+}
+
+/* Editor chrome (toolbar + 3 panels) */
+.visual-editor-shell {
+  position: fixed;
+  inset: 0;
+  z-index: z("modal", "content") - 200;
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  grid-template-rows: 48px 1fr;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.visual-editor-toolbar {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  background: var(--secondary);
+  border-bottom: 1px solid var(--primary-low);
+
+  .toolbar-left,
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .toolbar-title {
+    font-weight: 600;
+  }
+}
+
+.visual-editor-panel {
+  background: var(--secondary);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+
+  &.--left {
+    grid-column: 1;
+    grid-row: 2;
+    border-right: 1px solid var(--primary-low);
+  }
+
+  &.--right {
+    grid-column: 3;
+    grid-row: 2;
+    border-left: 1px solid var(--primary-low);
+  }
+
+  .panel-header {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  .panel-body {
+    padding: 0.75rem 1rem;
+  }
+
+  .panel-empty {
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+}
+
+.visual-editor-canvas {
+  grid-column: 2;
+  grid-row: 2;
+  pointer-events: none;
+}
+
+body.visual-editor-active {
+  padding-top: 48px;
+  padding-left: 280px;
+  padding-right: 320px;
+  box-sizing: border-box;
+}
+
+/* Outline panel */
+.visual-editor-outline {
+  font-size: var(--font-down-1);
+
+  .outline-outlet {
+    margin-bottom: 0.75rem;
+
+    .outline-outlet__label {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-weight: 600;
+      color: var(--visual-editor-block-outlet-color);
+      margin-bottom: 0.25rem;
+    }
+
+    .outline-block {
+      padding: 0.25rem 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &:hover,
+      &.--selected {
+        color: var(--visual-editor-block-hover-color);
+      }
+    }
+
+    .outline-block__id {
+      opacity: 0.65;
+      font-family: "Courier New", courier, "Lucida Console", monaco, monospace;
+      font-size: var(--font-down-2);
+    }
+
+    .outline-children {
+      padding-left: 1rem;
+      border-left: 1px dashed var(--primary-low);
+    }
+  }
+}
+
+/* Inspector panel */
+.visual-editor-inspector-section {
+  margin-bottom: 1rem;
+
+  .inspector-section__title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    letter-spacing: 0.04em;
+  }
+
+  .inspector-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.25rem 0;
+    border-bottom: 1px dashed var(--primary-low);
+    font-size: var(--font-down-1);
+
+    .row-key {
+      color: var(--primary-medium);
+    }
+  }
+
+  pre {
+    background: var(--primary-very-low);
+    padding: 0.5rem;
+    overflow-x: auto;
+    font-size: var(--font-down-2);
+    font-family: "Courier New", courier, "Lucida Console", monaco, monospace;
+  }
+}
