@@ -1183,5 +1183,49 @@ module("Unit | Lib | block-outlet", function (hooks) {
         /already has a layout registered/
       );
     });
+
+    test("lazy mode: setLayoutLayer returns undefined and defers validation", async function (assert) {
+      const result = _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "lazy" } }],
+        getOwner(this),
+        { themeId: 5, lazy: true }
+      );
+
+      assert.strictEqual(
+        result,
+        undefined,
+        "lazy mode returns nothing — caller doesn't trigger validation"
+      );
+
+      // The layer is published immediately, but validation only fires on
+      // the first read of `validatedLayout`. Reading it now returns the
+      // (now-memoized) Promise.
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "lazy");
+    });
+
+    test("lazy mode: validation Promise is memoized across reads", async function (assert) {
+      _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "memoised" } }],
+        getOwner(this),
+        { themeId: 5, lazy: true }
+      );
+
+      const record = _getOutletLayouts().get("homepage-blocks");
+      const firstRead = record.validatedLayout;
+      const secondRead = record.validatedLayout;
+
+      assert.strictEqual(
+        firstRead,
+        secondRead,
+        "subsequent reads return the same Promise reference"
+      );
+      await firstRead;
+    });
   });
 });

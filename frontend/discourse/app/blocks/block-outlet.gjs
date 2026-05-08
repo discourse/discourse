@@ -484,6 +484,56 @@ function createChildBlock(entry, owner, debugContext = {}) {
 }
 
 /**
+ * Builds a layer entry whose `validatedLayout` is a memoized lazy getter —
+ * validation only kicks off the first time someone reads the property,
+ * and every subsequent read returns the same Promise. This lets callers
+ * choose between eager validation (read immediately, e.g. tests, the
+ * `api.renderBlocks` path) and lazy validation (don't read at publish
+ * time, let `BlockOutlet`'s render path trigger it later).
+ *
+ * Lazy validation matters for the boot-time theme hydration: layouts
+ * loaded from `block_layout` ThemeFields reference blocks by string
+ * name. Validation has to look those names up in the block registry. If
+ * we trigger validation at hydration time, we race theme api-initializers
+ * that register blocks by side-effect of calling `api.renderBlocks(class-
+ * ref)`. Deferring validation until `BlockOutlet` first reads
+ * `validatedLayout` (which happens at render time, after every
+ * initializer has settled) sidesteps the race entirely.
+ */
+function createLayerEntry({
+  layout,
+  outletName,
+  blocksService,
+  callSiteError,
+  themeId,
+}) {
+  /** @type {Promise<Array<LayoutEntry>>|null} */
+  let validationPromise = null;
+  /** @type {LayerEntry} */
+  // @ts-expect-error - validatedLayout is defined below via defineProperty.
+  const entry = { layout };
+  if (themeId !== undefined) {
+    entry.themeId = themeId;
+  }
+  Object.defineProperty(entry, "validatedLayout", {
+    get() {
+      if (!validationPromise) {
+        validationPromise = validateLayout(
+          layout,
+          outletName,
+          blocksService,
+          "",
+          callSiteError
+        ).then(() => layout);
+      }
+      return validationPromise;
+    },
+    enumerable: true,
+  });
+  return entry;
+}
+
+/**
  * Sets the layout for one specific layer of an outlet. Used internally by
  * `_renderBlocks` (the existing `code-default` registration path), the theme-
  * load initializer (the `theme` layer), and the visual editor (the
@@ -494,6 +544,15 @@ function createChildBlock(entry, owner, debugContext = {}) {
  * layout are preserved (`skipExisting: true`); newly-introduced entries
  * receive fresh keys.
  *
+ * Validation is memoized lazily on the layer entry. By default
+ * (`options.lazy` falsy), this function reads the entry's
+ * `validatedLayout` before returning it — which kicks off validation
+ * eagerly, matching the historical behavior of `api.renderBlocks` and
+ * the test suite. Pass `options.lazy: true` to skip the eager read; the
+ * Promise then only materialises when `BlockOutlet` first reads the
+ * entry at render time (used by boot-time theme hydration to avoid
+ * racing theme api-initializers that register blocks).
+ *
  * @internal Not part of the public plugin API. Use `api.setLayoutLayer` from
  *   plugin code.
  *
@@ -503,8 +562,12 @@ function createChildBlock(entry, owner, debugContext = {}) {
  * @param {import("@ember/owner").default} [owner]
  * @param {Object} [options]
  * @param {number} [options.themeId] - Required when layer is "theme".
+ * @param {boolean} [options.lazy=false] - When true, defers validation
+ *   until the entry's `validatedLayout` is first read (typically by
+ *   `BlockOutlet` at render time).
  * @param {Error|null} [options.callSiteError]
- * @returns {Promise<Array<LayoutEntry>>} The validated layout promise.
+ * @returns {Promise<Array<LayoutEntry>>|undefined} The validated layout
+ *   promise (eager mode) or `undefined` (lazy mode).
  * @throws {Error} If validation fails or the layer / outlet is unknown.
  */
 export function _setLayoutLayer(
@@ -543,19 +606,13 @@ export function _setLayoutLayer(
   // republishes don't tear down DOM identity for unchanged entries.
   assignStableKeys(layout, { skipExisting: true });
 
-  const validatedLayout = validateLayout(
+  const layerEntry = createLayerEntry({
     layout,
     outletName,
     blocksService,
-    "",
-    callSiteError
-  ).then(() => layout);
-
-  /** @type {LayerEntry} */
-  const layerEntry = { validatedLayout, layout };
-  if (layer === LAYOUT_LAYERS.THEME) {
-    layerEntry.themeId = options.themeId;
-  }
+    callSiteError,
+    themeId: layer === LAYOUT_LAYERS.THEME ? options.themeId : undefined,
+  });
 
   const existing = outletLayouts.get(outletName) ?? makeEmptyRecord();
   let nextRecord;
@@ -576,7 +633,10 @@ export function _setLayoutLayer(
 
   outletLayouts.set(outletName, nextRecord);
 
-  return validatedLayout;
+  if (options.lazy) {
+    return undefined;
+  }
+  return layerEntry.validatedLayout;
 }
 
 /**
