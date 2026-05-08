@@ -440,7 +440,8 @@ en:
         name_placeholder: "Event name"
         end_date_placeholder: "Set end date"
         location_placeholder: "Add location or URL"
-        max_attendees_placeholder: "Set max attendees"
+        max_attendees_placeholder: "Unlimited attendees"
+        no_rsvps_label: "Not collecting attendance"
         description_placeholder: "Add event description"
         all_day: "All day"
         reminder:
@@ -519,9 +520,11 @@ en:
         max_attendees:
           label: "Maximum attendees"
           placeholder: "No limit"
-        allow_rsvps:
-          label: "RSVPs"
-          description: "Allow people to RSVP to this event"
+        attendance:
+          label: "How many members can attend this event?"
+          unlimited: "Unlimited"
+          up_to: "Up to"
+          none: "Don't collect attendance"
         allow_chat:
           label: "Chat integration"
           checkbox_label: "Create and manage event specific chat channel"
@@ -539,8 +542,14 @@ en:
           placeholder: "Optional, defaults to topic title"
         invitees:
           label: "Invited groups"
-        attendee_type:
-          label: "Attendee type"
+        event_type:
+          label: "Attendance type"
+          public:
+            title: "Public"
+            description: "Anyone can attend."
+          private:
+            title: "Invite-only"
+            description: "Only members of selected groups can attend."
         delete_confirmation_message: "Delete this event?"
         image:
           label: "Event image"

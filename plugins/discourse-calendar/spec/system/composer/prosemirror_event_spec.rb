@@ -183,12 +183,17 @@ describe "Composer - ProseMirror - Event Editor" do
       max_attendees_input.fill_in(with: "25")
       expect(max_attendees_input.value).to eq("25")
 
-      # Invalid input gets cleared
+      # Negative input gets cleared
       max_attendees_input.fill_in(with: "-10")
       expect(max_attendees_input.value).to eq("")
 
+      # Typing 0 disables attendance
       max_attendees_input.fill_in(with: "0")
-      expect(max_attendees_input.value).to eq("")
+      max_attendees_input.send_keys(:tab)
+      expect(rich).to have_css(
+        ".composer-event__max-attendees-display",
+        text: I18n.t("js.discourse_post_event.composer.no_rsvps_label"),
+      )
     end
 
     it "requires start date for event rendering" do

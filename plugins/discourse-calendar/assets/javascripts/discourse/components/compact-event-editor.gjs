@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -13,6 +14,8 @@ import { i18n } from "discourse-i18n";
 
 export default class CompactEventEditor extends Component {
   @service capabilities;
+
+  @tracked _maxAttendeesOverride;
 
   get displayTime() {
     if (!this.args.startsAt) {
@@ -212,12 +215,58 @@ export default class CompactEventEditor extends Component {
     this.args.onUpdateAllDay?.(!this.args.allDay);
   }
 
+  get rsvpsDisabled() {
+    return this.args.status === "standalone";
+  }
+
+  get maxAttendeesPlaceholder() {
+    if (this.rsvpsDisabled) {
+      return "";
+    }
+    return i18n("discourse_post_event.composer.max_attendees_placeholder");
+  }
+
+  get displayMaxAttendees() {
+    if (this._maxAttendeesOverride !== undefined) {
+      return this._maxAttendeesOverride;
+    }
+    return this.args.maxAttendees ?? "";
+  }
+
   @action
   onMaxAttendeesInput(event) {
-    const newMax = parseInt(event.target.value, 10);
-    const validMax = Number.isFinite(newMax) && newMax > 0 ? newMax : null;
-    event.target.value = validMax || "";
-    this.args.onUpdateMaxAttendees?.(validMax);
+    const raw = event.target.value;
+    this._maxAttendeesOverride = raw;
+
+    if (raw === "") {
+      this.args.onUpdateMaxAttendees?.(null);
+      return;
+    }
+    const parsed = parseInt(raw, 10);
+    if (!Number.isFinite(parsed) || parsed < 0) {
+      this._maxAttendeesOverride = "";
+      event.target.value = "";
+      this.args.onUpdateMaxAttendees?.(null);
+      return;
+    }
+    if (parsed === 0) {
+      // keep "0" visible while focused and submit on blur
+      return;
+    }
+    this.args.onUpdateMaxAttendees?.(parsed);
+  }
+
+  @action
+  onMaxAttendeesBlur(event) {
+    const raw = event.target.value;
+    this._maxAttendeesOverride = undefined;
+    if (raw === "") {
+      return;
+    }
+    const parsed = parseInt(raw, 10);
+    if (parsed === 0) {
+      this.args.onUpdateMaxAttendees?.(0);
+    }
   }
 
   get notificationReminders() {
@@ -419,16 +468,19 @@ export default class CompactEventEditor extends Component {
       <input
         type="number"
         inputmode="numeric"
-        min="1"
+        min="0"
         step="1"
-        value={{@maxAttendees}}
-        placeholder={{i18n
-          "discourse_post_event.composer.max_attendees_placeholder"
-        }}
+        value={{this.displayMaxAttendees}}
+        placeholder={{this.maxAttendeesPlaceholder}}
         class="composer-event__max-attendees-input"
         {{on "input" this.onMaxAttendeesInput}}
+        {{on "blur" this.onMaxAttendeesBlur}}
       />
-      {{#if @maxAttendees}}
+      {{#if this.rsvpsDisabled}}
+        <span class="composer-event__max-attendees-display">
+          {{i18n "discourse_post_event.composer.no_rsvps_label"}}
+        </span>
+      {{else if @maxAttendees}}
         <span class="composer-event__max-attendees-display">
           Max
           {{@maxAttendees}}

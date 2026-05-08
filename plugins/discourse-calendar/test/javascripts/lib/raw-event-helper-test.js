@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import {
+  attendanceTransition,
   buildParams,
   defaultReminderFor,
   reconcileDefaultReminder,
@@ -226,6 +227,99 @@ module("Unit | Lib | raw-event-helper", function () {
       "bumpTopic.-30.minutes",
       "serializes an after reminder with negative value"
     );
+  });
+
+  test("attendanceTransition: none captures status + max and flips notifications to bumpTopic", function (assert) {
+    const result = attendanceTransition({
+      mode: "none",
+      status: "private",
+      maxAttendees: 50,
+      reminders: [
+        { type: "notification", value: 15, unit: "minutes", period: "before" },
+      ],
+      previousRsvpStatus: "public",
+      previousMaxAttendees: null,
+    });
+
+    assert.strictEqual(result.status, "standalone");
+    assert.strictEqual(result.maxAttendees, null);
+    assert.strictEqual(result.reminders[0].type, "bumpTopic");
+    assert.strictEqual(result.previousRsvpStatus, "private");
+    assert.strictEqual(result.previousMaxAttendees, 50);
+  });
+
+  test("attendanceTransition: switching from none to unlimited restores prior status and flips reminders", function (assert) {
+    const result = attendanceTransition({
+      mode: "unlimited",
+      status: "standalone",
+      maxAttendees: null,
+      reminders: [
+        { type: "bumpTopic", value: 15, unit: "minutes", period: "before" },
+      ],
+      previousRsvpStatus: "private",
+      previousMaxAttendees: 50,
+    });
+
+    assert.strictEqual(result.status, "private");
+    assert.strictEqual(result.maxAttendees, null);
+    assert.strictEqual(result.reminders[0].type, "notification");
+  });
+
+  test("attendanceTransition: upTo restores previousMaxAttendees", function (assert) {
+    const result = attendanceTransition({
+      mode: "upTo",
+      status: "standalone",
+      maxAttendees: null,
+      reminders: [],
+      previousRsvpStatus: "public",
+      previousMaxAttendees: 25,
+    });
+
+    assert.strictEqual(result.status, "public");
+    assert.strictEqual(result.maxAttendees, 25);
+  });
+
+  test("attendanceTransition: upTo with no previous yields null max", function (assert) {
+    const result = attendanceTransition({
+      mode: "upTo",
+      status: "public",
+      maxAttendees: null,
+      reminders: [],
+      previousRsvpStatus: "public",
+      previousMaxAttendees: null,
+    });
+
+    assert.strictEqual(result.maxAttendees, null);
+    assert.strictEqual(result.status, "public");
+  });
+
+  test("attendanceTransition: unlimited from upTo captures the current max", function (assert) {
+    const result = attendanceTransition({
+      mode: "unlimited",
+      status: "public",
+      maxAttendees: 25,
+      reminders: [],
+      previousRsvpStatus: "public",
+      previousMaxAttendees: null,
+    });
+
+    assert.strictEqual(result.maxAttendees, null);
+    assert.strictEqual(result.previousMaxAttendees, 25);
+  });
+
+  test("attendanceTransition: does not mutate the input reminders array", function (assert) {
+    const reminders = [
+      { type: "notification", value: 15, unit: "minutes", period: "before" },
+    ];
+    attendanceTransition({
+      mode: "none",
+      status: "public",
+      maxAttendees: null,
+      reminders,
+      previousRsvpStatus: "public",
+      previousMaxAttendees: null,
+    });
+    assert.strictEqual(reminders[0].type, "notification");
   });
 
   test("buildParams image handling", function (assert) {

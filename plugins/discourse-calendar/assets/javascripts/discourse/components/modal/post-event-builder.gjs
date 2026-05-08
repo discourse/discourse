@@ -22,6 +22,7 @@ import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
+  attendanceTransition,
   buildParams,
   defaultReminderFor,
   reconcileDefaultReminder,
@@ -45,6 +46,15 @@ export default class PostEventBuilder extends Component {
   @tracked
   previousRsvpStatus =
     this.event.status === "standalone" ? "public" : this.event.status;
+  @tracked previousMaxAttendees = this.event.maxAttendees || null;
+  @tracked attendanceMode = this.#initAttendanceMode();
+
+  #initAttendanceMode() {
+    if (this.event.status === "standalone") {
+      return "none";
+    }
+    return this.event.maxAttendees ? "upTo" : "unlimited";
+  }
 
   #initStartsAt() {
     if (this.event.allDay) {
@@ -230,9 +240,11 @@ export default class PostEventBuilder extends Component {
   }
 
   get statusText() {
-    return i18n(
-      `discourse_post_event.models.event.status.${this.event.status || "public"}.title`
-    );
+    const status =
+      this.event.status === "standalone"
+        ? "public"
+        : this.event.status || "public";
+    return i18n(`discourse_post_event.models.event.status.${status}.title`);
   }
 
   get eventNamePlaceholder() {
@@ -352,8 +364,28 @@ export default class PostEventBuilder extends Component {
 
   @action
   updateMaxAttendees(value) {
-    this.event.maxAttendees = value;
-    this.maxAttendeesInput = value || "";
+    if (value === 0) {
+      this.setAttendanceMode("none");
+      return;
+    }
+    if (value > 0) {
+      if (this.event.status === "standalone") {
+        this.event.status = this.previousRsvpStatus || "public";
+        this.event.reminders = (this.event.reminders || []).map((r) =>
+          r.type === "bumpTopic" ? { ...r, type: "notification" } : r
+        );
+      }
+      if (this.attendanceMode !== "upTo") {
+        this.attendanceMode = "upTo";
+      }
+      this.event.maxAttendees = value;
+      this.maxAttendeesInput = `${value}`;
+      this.previousMaxAttendees = value;
+      return;
+    }
+    // preserve mode, just clear the data
+    this.event.maxAttendees = null;
+    this.maxAttendeesInput = "";
   }
 
   @action
@@ -375,9 +407,16 @@ export default class PostEventBuilder extends Component {
   setMaxAttendees(e) {
     const raw = e.target.value;
     const value = parseInt(raw, 10);
-    this.event.maxAttendees =
-      Number.isFinite(value) && value > 0 ? value : null;
+    if (value === 0) {
+      this.setAttendanceMode("none");
+      return;
+    }
+    const validValue = Number.isFinite(value) && value > 0 ? value : null;
+    this.event.maxAttendees = validValue;
     this.maxAttendeesInput = raw;
+    if (validValue) {
+      this.previousMaxAttendees = validValue;
+    }
   }
 
   @action
@@ -400,6 +439,25 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
+  setAttendanceMode(mode) {
+    this.attendanceMode = mode;
+    const next = attendanceTransition({
+      mode,
+      status: this.event.status,
+      maxAttendees: this.event.maxAttendees,
+      reminders: this.event.reminders,
+      previousRsvpStatus: this.previousRsvpStatus,
+      previousMaxAttendees: this.previousMaxAttendees,
+    });
+    this.event.status = next.status;
+    this.event.maxAttendees = next.maxAttendees;
+    this.event.reminders = next.reminders;
+    this.previousRsvpStatus = next.previousRsvpStatus;
+    this.previousMaxAttendees = next.previousMaxAttendees;
+    this.maxAttendeesInput = next.maxAttendees ? `${next.maxAttendees}` : "";
+  }
+
+  @action
   addReminder() {
     const def = defaultReminderFor({
       startsAt: this.startsAt,
@@ -412,23 +470,6 @@ export default class PostEventBuilder extends Component {
       unit: def.unit,
       period: def.period,
     });
-  }
-
-  @action
-  setAllowRsvps(e) {
-    if (e.target.checked) {
-      this.event.status = this.previousRsvpStatus || "public";
-    } else {
-      if (this.event.status && this.event.status !== "standalone") {
-        this.previousRsvpStatus = this.event.status;
-      }
-      this.event.status = "standalone";
-      this.event.maxAttendees = null;
-      this.maxAttendeesInput = "";
-      this.event.reminders = (this.event.reminders || []).map((r) =>
-        r.type === "notification" ? { ...r, type: "bumpTopic" } : r
-      );
-    }
   }
 
   @action
@@ -711,43 +752,64 @@ export default class PostEventBuilder extends Component {
                 </EventField>
 
                 <EventField
-                  class="allow-rsvps"
-                  @label="discourse_post_event.builder_modal.allow_rsvps.label"
+                  class="attendance"
+                  @label="discourse_post_event.builder_modal.attendance.label"
                 >
-                  <label class="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={{this.allowsRsvps}}
-                      {{on "input" this.setAllowRsvps}}
+                  <label class="radio-label">
+                    <RadioButton
+                      @name="attendance"
+                      @value="unlimited"
+                      @selection={{this.attendanceMode}}
+                      @onChange={{this.setAttendanceMode}}
                     />
                     <span class="message">
                       {{i18n
-                        "discourse_post_event.builder_modal.allow_rsvps.description"
+                        "discourse_post_event.builder_modal.attendance.unlimited"
+                      }}
+                    </span>
+                  </label>
+                  <div class="attendance__up-to">
+                    <label class="radio-label">
+                      <RadioButton
+                        @name="attendance"
+                        @value="upTo"
+                        @selection={{this.attendanceMode}}
+                        @onChange={{this.setAttendanceMode}}
+                      />
+                      <span class="message">
+                        {{i18n
+                          "discourse_post_event.builder_modal.attendance.up_to"
+                        }}
+                      </span>
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={{this.maxAttendeesInput}}
+                      disabled={{not (eq this.attendanceMode "upTo")}}
+                      {{on "input" this.setMaxAttendees}}
+                      class="attendance__up-to-input"
+                    />
+                  </div>
+                  <label class="radio-label">
+                    <RadioButton
+                      @name="attendance"
+                      @value="none"
+                      @selection={{this.attendanceMode}}
+                      @onChange={{this.setAttendanceMode}}
+                    />
+                    <span class="message">
+                      {{i18n
+                        "discourse_post_event.builder_modal.attendance.none"
                       }}
                     </span>
                   </label>
                 </EventField>
 
-                <EventField
-                  class="max-attendees"
-                  @label="discourse_post_event.builder_modal.max_attendees.label"
-                >
-                  <input
-                    type="number"
-                    min="1"
-                    step="1"
-                    value={{this.maxAttendeesInput}}
-                    disabled={{not this.allowsRsvps}}
-                    {{on "input" this.setMaxAttendees}}
-                    placeholder={{i18n
-                      "discourse_post_event.builder_modal.max_attendees.placeholder"
-                    }}
-                  />
-                </EventField>
-
                 {{#if this.allowsRsvps}}
                   <EventField
-                    @label="discourse_post_event.builder_modal.attendee_type.label"
+                    @label="discourse_post_event.builder_modal.event_type.label"
                   >
                     <label class="radio-label">
                       <RadioButton
@@ -759,12 +821,12 @@ export default class PostEventBuilder extends Component {
                       <span class="message">
                         <span class="title">
                           {{i18n
-                            "discourse_post_event.models.event.status.public.title"
+                            "discourse_post_event.builder_modal.event_type.public.title"
                           }}
                         </span>
                         <span class="description">
                           {{i18n
-                            "discourse_post_event.models.event.status.public.description"
+                            "discourse_post_event.builder_modal.event_type.public.description"
                           }}
                         </span>
                       </span>
@@ -779,12 +841,12 @@ export default class PostEventBuilder extends Component {
                       <span class="message">
                         <span class="title">
                           {{i18n
-                            "discourse_post_event.models.event.status.private.title"
+                            "discourse_post_event.builder_modal.event_type.private.title"
                           }}
                         </span>
                         <span class="description">
                           {{i18n
-                            "discourse_post_event.models.event.status.private.description"
+                            "discourse_post_event.builder_modal.event_type.private.description"
                           }}
                         </span>
                       </span>
@@ -1002,6 +1064,7 @@ export default class PostEventBuilder extends Component {
                 @allDay={{this.allDay}}
                 @timezone={{@model.event.timezone}}
                 @userTimezone={{this.userTimezone}}
+                @status={{@model.event.status}}
                 @statusText={{this.statusText}}
                 @namePlaceholder={{this.eventNamePlaceholder}}
                 @onUpdateName={{this.updateName}}

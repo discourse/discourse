@@ -26,6 +26,59 @@ function matchesDefault(reminder, def) {
   );
 }
 
+// compute the next state when transitioning between attendance modes
+export function attendanceTransition({
+  mode,
+  status,
+  maxAttendees,
+  reminders,
+  previousRsvpStatus,
+  previousMaxAttendees,
+}) {
+  let nextStatus = status;
+  let nextMax = maxAttendees;
+  let nextReminders = reminders || [];
+  let nextPrevRsvp = previousRsvpStatus;
+  let nextPrevMax = previousMaxAttendees;
+
+  if (mode === "none") {
+    if (status && status !== "standalone") {
+      nextPrevRsvp = status;
+    }
+    if (maxAttendees) {
+      nextPrevMax = maxAttendees;
+    }
+    nextStatus = "standalone";
+    nextMax = null;
+    nextReminders = nextReminders.map((r) =>
+      r.type === "notification" ? { ...r, type: "bumpTopic" } : r
+    );
+  } else {
+    if (status === "standalone") {
+      nextStatus = previousRsvpStatus || "public";
+      nextReminders = nextReminders.map((r) =>
+        r.type === "bumpTopic" ? { ...r, type: "notification" } : r
+      );
+    }
+    if (mode === "unlimited") {
+      if (maxAttendees) {
+        nextPrevMax = maxAttendees;
+      }
+      nextMax = null;
+    } else if (mode === "upTo") {
+      nextMax = previousMaxAttendees || null;
+    }
+  }
+
+  return {
+    status: nextStatus,
+    maxAttendees: nextMax,
+    reminders: nextReminders,
+    previousRsvpStatus: nextPrevRsvp,
+    previousMaxAttendees: nextPrevMax,
+  };
+}
+
 // if the default is unchanged, swap it out based on the new config
 export function reconcileDefaultReminder(reminders, oldConfig, newConfig) {
   if (!reminders || reminders.length !== 1) {

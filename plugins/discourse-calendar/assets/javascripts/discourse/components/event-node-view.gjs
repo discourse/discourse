@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -19,9 +20,15 @@ export default class EventNodeView extends Component {
   @service modal;
   @service siteSettings;
 
+  @tracked _previousRsvpStatus = "public";
+
   constructor() {
     super(...arguments);
     this.args.onSetup?.(this);
+    const status = this.args.node?.attrs?.status;
+    if (status && status !== "standalone") {
+      this._previousRsvpStatus = status;
+    }
   }
 
   updateNodeAttribute(attributeName, value) {
@@ -117,9 +124,11 @@ export default class EventNodeView extends Component {
   }
 
   get statusText() {
-    return i18n(
-      `discourse_post_event.models.event.status.${this.eventData.status || "public"}.title`
-    );
+    const status =
+      this.eventData.status === "standalone"
+        ? "public"
+        : this.eventData.status || "public";
+    return i18n(`discourse_post_event.models.event.status.${status}.title`);
   }
 
   get allDay() {
@@ -239,15 +248,17 @@ export default class EventNodeView extends Component {
           : updatesOrFn;
       const newAttrs = { ...node.attrs, ...updates };
 
-      const reconciled = reconcileDefaultReminder(
-        this.parseReminders(node.attrs.reminders),
-        this.#configFromAttrs(node.attrs),
-        this.#configFromAttrs(newAttrs)
-      );
-      newAttrs.reminders =
-        reconciled && reconciled.length
-          ? reconciled.map(reminderToBBCode).join(",")
-          : null;
+      if (!("reminders" in updates)) {
+        const reconciled = reconcileDefaultReminder(
+          this.parseReminders(node.attrs.reminders),
+          this.#configFromAttrs(node.attrs),
+          this.#configFromAttrs(newAttrs)
+        );
+        newAttrs.reminders =
+          reconciled && reconciled.length
+            ? reconciled.map(reminderToBBCode).join(",")
+            : null;
+      }
 
       const allKeys = new Set([
         ...Object.keys(node.attrs),
@@ -267,7 +278,38 @@ export default class EventNodeView extends Component {
 
   @action
   updateMaxAttendees(value) {
-    this.updateNodeAttribute("maxAttendees", value);
+    this.#updateAttrsWithReconcile((attrs) => {
+      if (value === 0) {
+        if (attrs.status && attrs.status !== "standalone") {
+          this._previousRsvpStatus = attrs.status;
+        }
+        const flipped = this.parseReminders(attrs.reminders).map((r) =>
+          r.type === "notification" ? { ...r, type: "bumpTopic" } : r
+        );
+        return {
+          maxAttendees: null,
+          status: "standalone",
+          reminders: flipped.length
+            ? flipped.map(reminderToBBCode).join(",")
+            : null,
+        };
+      }
+
+      if (attrs.status === "standalone" && value > 0) {
+        const flipped = this.parseReminders(attrs.reminders).map((r) =>
+          r.type === "bumpTopic" ? { ...r, type: "notification" } : r
+        );
+        return {
+          maxAttendees: value,
+          status: this._previousRsvpStatus || "public",
+          reminders: flipped.length
+            ? flipped.map(reminderToBBCode).join(",")
+            : null,
+        };
+      }
+
+      return { maxAttendees: value };
+    });
   }
 
   get parsedReminders() {
@@ -419,6 +461,7 @@ export default class EventNodeView extends Component {
       @allDay={{this.allDay}}
       @timezone={{this.resolvedTimezone}}
       @userTimezone={{this.userTimezone}}
+      @status={{this.eventData.status}}
       @statusText={{this.statusText}}
       @namePlaceholder={{this.eventNamePlaceholder}}
       @urlTester={{this.testLocationUrl}}

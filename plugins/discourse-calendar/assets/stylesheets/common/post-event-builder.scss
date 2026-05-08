@@ -98,6 +98,27 @@
     }
   }
 
+  .event-field.attendance {
+    .attendance__up-to {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1em;
+      gap: 0.5em;
+
+      .radio-label {
+        margin-bottom: 0;
+      }
+
+      .attendance__up-to-input {
+        width: 6em;
+
+        &:disabled {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+
   .event-field.reminders {
     display: flex;
 
