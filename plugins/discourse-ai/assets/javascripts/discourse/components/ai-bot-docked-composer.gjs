@@ -225,7 +225,7 @@ export default class AiBotDockedComposer extends Component {
     this.#checkScroll();
     window.visualViewport?.addEventListener("resize", this.#onViewportChange);
     window.visualViewport?.addEventListener("scroll", this.#onViewportChange);
-window.addEventListener("resize", this.#onViewportChange);
+    window.addEventListener("resize", this.#onViewportChange);
     this.appEvents.on("topic:edit-post", this, this.handleEditPost);
   }
 
