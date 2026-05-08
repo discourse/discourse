@@ -40,6 +40,7 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
 
     if provides_groups?
       claim = SiteSetting.openid_connect_groups_claim
+      result.associated_groups = []
       groups = auth_token.extra&.dig(:raw_info, claim)
 
       if groups.is_a?(Array)
