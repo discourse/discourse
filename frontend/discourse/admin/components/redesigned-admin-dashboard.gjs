@@ -35,7 +35,9 @@ const sections = [
 ];
 
 export default class RedesignedAdminDashboard extends Component {
+  // eslint-disable-next-line discourse/no-unnecessary-tracked
   @tracked startDate = moment().subtract(30, "days").toDate();
+  // eslint-disable-next-line discourse/no-unnecessary-tracked
   @tracked endDate = moment().toDate();
 
   <template>
