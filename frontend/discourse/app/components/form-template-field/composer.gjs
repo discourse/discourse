@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { next } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DEditor from "discourse/ui-kit/d-editor";
@@ -11,12 +11,38 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FormTemplateFieldComposer extends Component {
   @service composer;
+  @service appEvents;
 
   @tracked composerValue = this.args.value || "";
 
   _boundElement = null;
   _focusTarget = null;
   _claimUploadTarget = null;
+
+  constructor() {
+    super(...arguments);
+    this.appEvents.on("composer:replace-text", this, this.handleReplaceText);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("composer:replace-text", this, this.handleReplaceText);
+  }
+
+  @action
+  handleReplaceText(oldVal, newVal) {
+    if (!this.composerValue?.includes(oldVal)) {
+      return;
+    }
+
+    const escapedOldVal = oldVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escapedOldVal, "g");
+    this.composerValue = this.composerValue.replace(regex, newVal ?? "");
+
+    schedule("afterRender", () => {
+      this.args.onChange?.({ target: { value: this.composerValue } });
+    });
+  }
 
   @action
   handleInput(event) {
