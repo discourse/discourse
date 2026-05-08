@@ -6301,6 +6301,13 @@ es:
         too_many_requests: Has realizado esta acción demasiadas veces. Por favor, espera antes de intentarlo de nuevo.
         not_found_error: Lo sentimos, este informe no existe
         custom_date_range: Rango de fechas personalizado
+        sections:
+          reports:
+            title: "Informes"
+          traffic:
+            title: "Tráfico del sitio"
+          engagement:
+            title: "Interacción"
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el período previo."
           percent_change_tooltip: "%{percent} de cambio."

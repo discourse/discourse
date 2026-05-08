@@ -5741,6 +5741,9 @@ vi:
         too_many_requests: Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi trước khi thử lại.
         not_found_error: Xin lỗi, báo cáo này không tồn tại
         custom_date_range: Khoảng thời gian tùy chỉnh
+        sections:
+          reports:
+            title: "Báo cáo"
         reports:
           trend_title: "%{percent} thay đổi. Hiện tại là %{current}, là %{prev} trong giai đoạn trước."
           percent_change_tooltip: "%{percent} thay đổi."

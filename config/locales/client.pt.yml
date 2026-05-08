@@ -4809,6 +4809,9 @@ pt:
         exception_error: Desculpe, ocorreu um erro ao executar a consulta
         too_many_requests: Você executou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
+        sections:
+          reports:
+            title: "Relatórios"
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
           today: "Hoje"

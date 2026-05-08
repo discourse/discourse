@@ -829,10 +829,29 @@ describe "Request tracking" do
           expect(beacon_forward_event[:referrer]).to eq("#{Discourse.base_url}/")
         end
 
+        it "tracks pageviews via both trackers when sorting a topic list" do
+          visit "/latest"
+          wait_for_beacon_count(1)
+          wait_for_browser_count(1)
+
+          discovery.topic_list_header.click_sort_by("views")
+
+          expect(page).to have_current_path("/latest?ascending=false&order=views")
+          wait_for_beacon_count(2)
+          wait_for_browser_count(2)
+        end
+
         def wait_for_beacon_count(count)
           try_until_success do
             CachedCounting.flush
             expect(ApplicationRequest.stats["page_view_anon_browser_beacon_total"]).to eq(count)
+          end
+        end
+
+        def wait_for_browser_count(count)
+          try_until_success do
+            CachedCounting.flush
+            expect(ApplicationRequest.stats["page_view_anon_browser_total"]).to eq(count)
           end
         end
       end

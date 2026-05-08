@@ -2927,8 +2927,10 @@ uk:
       second_factor_backup_description: "Введіть один із резервних кодів:"
       second_factor: "Увійдіть за допомогою програми Authenticator"
       security_key_description: "Підготувавши фізичний ключ безпеки або сумісний мобільний пристрій, натисніть кнопку Автентифікувати за допомогою ключа безпеки нижче."
+      security_key_or_passkey_description: "Коли ви підготуєте ключ безпеки, пароль або сумісний мобільний пристрій, натисніть кнопку нижче."
       security_key_alternative: "Спробуйте інший спосіб"
       security_key_authenticate: "Автентифікація за допомогою ключа безпеки"
+      security_key_or_passkey_authenticate: "Автентифікація за допомогою ключа безпеки або ключа доступу"
       security_key_not_allowed_error: "Час перевірки автентичності ключа безпеки минув або дію було скасовано."
       security_key_no_matching_credential_error: "У зазначеному ключі безпеки не знайдено відповідних облікових даних."
       security_key_support_missing_error: "Ваше поточний пристрій або оглядач не підтримує використання ключів безпеки. Будь ласка, використовуйте інший метод."
@@ -3500,6 +3502,16 @@ uk:
         few: "%{username} і ще %{count}"
         many: "%{username} і ще %{count}"
         other: "%{username} і ще %{count}"
+      replied_consolidated_in_topic:
+        one: "%{count} нова відповідь у вашій темі"
+        few: "%{count} нові відповіді у вашій темі"
+        many: "%{count} нових відповідей у вашій темі"
+        other: "%{count} нових відповідей у вашій темі"
+      replied_consolidated_to_post:
+        one: "%{count} нова відповідь на ваш пост"
+        few: "%{count} нові відповіді у вашій темі"
+        many: "%{count} нових відповідей у вашій темі"
+        other: "%{count} нових відповідей у вашій темі"
       liked_consolidated_description:
         one: "вподобав(ла) %{count} ваш допис"
         few: "вподобав(ла) %{count} ваших дописи"
@@ -4037,8 +4049,16 @@ uk:
           title: "Видалити теги"
           description: "Видаляється, коли є"
           all_toggle: "Видалити всі теги"
+          all_warning: "<strong>Всі існуючі теги</strong> будуть видалені з вибраних тем. Це не можна скасувати."
         replace:
           title: "Замінити теги"
+          description: "Замінює один тег на інший"
+          add_replacement: "Додати заміну"
+          remove_replacement: "Видалити заміну"
+          from_placeholder: "Тег для заміни"
+          to_placeholder: "Заміна тега"
+          missing_from: "Необхідний тег для джерела"
+          missing_to: "Потрібна заміна етикетки"
       delete_topics:
         name: "Видалити"
         description: "Видалити вибрані теми назавжди. Цю дію не можна скасувати."
@@ -4098,6 +4118,7 @@ uk:
       no_replies: "Ще не написав жодного повідомлення."
       deleted_post_placeholder: "[вилучено]"
       ignored_post_placeholder: "[ігноровано]"
+      toggle_ignored_content: "Показати ігнорований вміст"
       op_badge: "OP"
       pinned_reply: "Закріплені"
       pin_reply: "Закріпити вгорі"
@@ -4105,6 +4126,10 @@ uk:
       topic_admin_menu:
         enable_nested_replies: "Увімкнути вкладені відповіді"
         disable_nested_replies: "Вимкнути вкладені відповіді"
+      activity_log:
+        link: "Журнал дій"
+        title: "Журнал активності теми"
+        empty: "Немає активності в темі для відображення."
       context:
         banner: "Ви переглядаєте одну тему в цій гілці."
         view_full_topic: "Переглянути всю тему"
@@ -4131,6 +4156,7 @@ uk:
         title: "Позначити як непрочитане"
       list: "Теми"
       new: "нова тема"
+      has_new_replies: "нові відповіді з часу вашого останнього візиту"
       unread: "непрочитані"
       new_topics:
         one: "%{count} нова тема"
@@ -4431,6 +4457,7 @@ uk:
         unpin: "Скасувати закріплення цієї теми вгорі розділу %{categoryLink}."
         unpin_until: "Скасувати закріплення цієї теми вгорі розділу %{categoryLink} (станеться автоматично <strong>%{until}</strong>)."
         pin_note: "Користувачі можуть відкріпити тему, кожен сам для себе."
+        pin_until: "Закріпити до"
         pin_validation: "Щоб закріпити цю тему, потрібна дата."
         not_pinned: "У розділі %{categoryLink} немає закріплених тем."
         already_pinned:
@@ -4923,6 +4950,8 @@ uk:
         locale:
           no_locale_set: "Мова не встановлена"
           locale_removed: "Мову вилучено"
+        reply_to:
+          none: "Ціль без відповіді"
         controls:
           first: "Перша версія"
           previous: "Попередня версія"
@@ -5099,6 +5128,8 @@ uk:
       predefined_colors: "Попередньо визначені варіанти кольорів"
       name_placeholder: "Рекомендується одне або два слова"
       category_types: "Типи категорій"
+      unknown_category_type: "Невідомий тип категорії"
+      unknown_category_type_description: "Тип категорії «%{categoryType}» не підтримується або не ввімкнено у цій категорії."
       category_types_no_results: "Інших типів категорій не знайдено"
       color_placeholder: "Будь-який веб-колір"
       delete_confirm: "Ви впевнені, що хочете видалити цей розділ?"
@@ -5226,6 +5257,7 @@ uk:
         created: "Створено"
       sort_ascending: "По зростанню"
       sort_descending: "За зменшенням"
+      sort_direction: "Напрямок сортування"
       subcategory_list_styles:
         rows: "Рядки"
         rows_with_featured_topics: "Рядки з обговорюваних тем"
@@ -6985,6 +7017,13 @@ uk:
         too_many_requests: Ви виконуєте цю дію занадто часто. Будь ласка, зачекайте, перш ніж намагатися знову.
         not_found_error: Вибачте, цього звіту не існує
         custom_date_range: Вибрати дату та час
+        sections:
+          reports:
+            title: "Звіти"
+          traffic:
+            title: "Трафік сайту"
+          engagement:
+            title: "Залучення"
         reports:
           trend_title: "%{percent} зміни. В даний час %{current}, було %{prev} в попередні періоди."
           percent_change_tooltip: "%{percent} змін."
@@ -7840,6 +7879,8 @@ uk:
           beginners_guide_title: "Керівництво для початківців по використанню Discourse Тем"
           developers_guide_title: "Керівництво розробника по темам Discourse"
           browse_themes: "Перегляд Тем спільноти "
+          install_more_themes: "Встановіть більше тем"
+          install_more_themes_description: "Перегляньте популярні теми спільноти або встановіть їх із файлу чи сховища git."
           customize_desc: "Налаштувати:"
           title: "Стилі"
           description: "Теми – це розширені налаштування, що змінюють стиль, що складаються з елементів дизайну вашого форуму, і часто включають додаткові функції переднього плану."
@@ -7950,6 +7991,7 @@ uk:
           public_key: "Надайте доступ до сховища з наступним відкритим ключем:"
           install: "Install"
           installed: "Встановлена"
+          screenshot: "Скріншот %{name}"
           install_popular: "Популярні"
           install_upload: "З вашого пристрою"
           install_git_repo: "Зі сховища git"
@@ -8919,7 +8961,10 @@ uk:
           other: "Неможливо видалити всі дописи, оскільки у користувача більше ніж %{count} дописів. (delete_all_posts_max)"
         delete_confirm_title: "Ви впевнені, що хочете видалити цього користувача? Ця дія є незворотньою!"
         delete_confirm: "Загалом краще анонімізувати користувачів, а не видаляти їх, щоб уникнути видалення вмісту з існуючих обговорень."
+        delete_and_block: "Видалення та блокування користувача"
+        delete_and_block_description: "Видаліть користувача і заблокуйте його електронну пошту та IP-адресу."
         delete_dont_block: "Видалити користувача"
+        delete_dont_block_description: "Видалити користувача без блокування."
         deleting_user: "Видалення користувача…"
         deleted: "Користувача було видалено."
         delete_failed: "Під час видалення цього користувача сталася помилка. Перш ніж намагатися видалити користувача, переконайтеся, що всі дописи видалено."

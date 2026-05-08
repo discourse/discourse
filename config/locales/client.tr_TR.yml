@@ -6389,6 +6389,13 @@ tr_TR:
         too_many_requests: Bu eylemi birçok kez gerçekleştirdiniz. Tekrar denemeden önce lütfen bekleyin.
         not_found_error: Üzgünüz, bu rapor mevcut değil
         custom_date_range: Özel tarih aralığı
+        sections:
+          reports:
+            title: "Rapor"
+          traffic:
+            title: "Site trafiği"
+          engagement:
+            title: "Taahhüt"
         reports:
           trend_title: "%{percent} değişiklik. Şu anda %{current}, önceki periyotta %{prev} idi."
           percent_change_tooltip: "%{percent} değişiklik."

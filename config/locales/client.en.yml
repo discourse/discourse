@@ -724,6 +724,7 @@ en:
       continue_as_guest: "Continue as Guest"
       be_first_to_reply: "Be the first to reply!"
       replying_to: "Replying to %{username}"
+      editing_post: "Editing post"
       reply_placeholder: "Write a reply..."
 
     topic_count_all:
@@ -6812,6 +6813,16 @@ en:
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
+
+        sections:
+          highlights:
+            title: "Highlights"
+          reports:
+            title: "Reports"
+          traffic:
+            title: "Site traffic"
+          engagement:
+            title: "Engagement"
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."

@@ -4,11 +4,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DockedComposer from "discourse/components/docked-composer";
+import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 const DRAFT_KEY_PREFIX = "ai-bot-docked-draft-";
@@ -24,13 +27,17 @@ const DRAFT_KEY_PREFIX = "ai-bot-docked-draft-";
  * generating" icon while the bot is replying.
  */
 export default class AiBotDockedComposer extends Component {
+  @service appEvents;
   @service aiBotDockedSubmit;
   @service aiBotStreamingState;
   @service siteSettings;
+  @service store;
 
   @tracked showToolbar = false;
   @tracked hasContentBelow = false;
+  @tracked editingPost = null;
 
+  #composerApi = null;
   #resizeObserver = null;
   #keyboardOpen = false;
   #composerEl = null;
@@ -132,16 +139,6 @@ export default class AiBotDockedComposer extends Component {
   }
 
   @action
-  async onSubmit({ raw, uploads, inProgressUploadsCount }) {
-    return this.aiBotDockedSubmit.submitReply({
-      topicId: this.topicId,
-      raw,
-      uploads,
-      inProgressUploadsCount,
-    });
-  }
-
-  @action
   toggleToolbar() {
     this.showToolbar = !this.showToolbar;
   }
@@ -155,6 +152,71 @@ export default class AiBotDockedComposer extends Component {
   }
 
   @action
+  registerComposerApi(api) {
+    this.#composerApi = api;
+  }
+
+  @action
+  handleEditPost(event) {
+    if (!this.isBotPm) {
+      return;
+    }
+    event.handled = true;
+    this.#startEditing(event.post);
+  }
+
+  async #startEditing(post) {
+    const fullPost = await this.store.find("post", post.id);
+    this.editingPost = fullPost;
+    this.#composerApi?.setReply(fullPost.raw);
+    schedule("afterRender", () => {
+      this.#composerEl?.querySelector(".d-editor-input")?.focus();
+    });
+  }
+
+  @action
+  cancelEditing() {
+    this.editingPost = null;
+    this.#composerApi?.setReply("");
+  }
+
+  @action
+  async onSubmit({ raw, uploads, inProgressUploadsCount }) {
+    if (this.editingPost) {
+      return this.#submitEdit(raw);
+    }
+    return this.aiBotDockedSubmit.submitReply({
+      topicId: this.topicId,
+      raw,
+      uploads,
+      inProgressUploadsCount,
+    });
+  }
+
+  async #submitEdit(raw) {
+    const post = this.editingPost;
+
+    const result = await ajax(`/posts/${post.id}.json`, {
+      type: "PUT",
+      data: { post: { raw } },
+    });
+
+    const topic = this.topic;
+    const loadedPost = topic?.postStream?.findLoadedPost(post.id);
+    if (loadedPost) {
+      loadedPost.setProperties({
+        raw: result.post.raw,
+        cooked: result.post.cooked,
+        version: result.post.version,
+        updated_at: result.post.updated_at,
+      });
+    }
+
+    this.editingPost = null;
+    return { ok: true };
+  }
+
+  @action
   setupScrollListener(element) {
     this.#composerEl = element;
     window.addEventListener("scroll", this.#checkScroll, { passive: true });
@@ -163,7 +225,8 @@ export default class AiBotDockedComposer extends Component {
     this.#checkScroll();
     window.visualViewport?.addEventListener("resize", this.#onViewportChange);
     window.visualViewport?.addEventListener("scroll", this.#onViewportChange);
-    window.addEventListener("resize", this.#onViewportChange);
+window.addEventListener("resize", this.#onViewportChange);
+    this.appEvents.on("topic:edit-post", this, this.handleEditPost);
   }
 
   @action
@@ -181,6 +244,7 @@ export default class AiBotDockedComposer extends Component {
       this.#onViewportChange
     );
     window.removeEventListener("resize", this.#onViewportChange);
+    this.appEvents.off("topic:edit-post", this, this.handleEditPost);
   }
 
   @action
@@ -205,6 +269,7 @@ export default class AiBotDockedComposer extends Component {
       @submitTitle={{i18n "discourse_ai.ai_bot.conversations.header"}}
       @uploadTitle="discourse_ai.ai_bot.conversations.upload_files"
       @onSubmit={{this.onSubmit}}
+      @onRegisterApi={{this.registerComposerApi}}
       @isSubmitting={{this.aiBotDockedSubmit.loading}}
       @disabled={{this.isStreaming}}
       @autoResize={{true}}
@@ -212,6 +277,21 @@ export default class AiBotDockedComposer extends Component {
       {{didInsert this.setupScrollListener}}
       {{willDestroy this.teardownScrollListener}}
     >
+      <:header>
+        {{#if this.editingPost}}
+          <div class="ai-bot-docked-composer__editing">
+            <span class="ai-bot-docked-composer__editing-text">
+              {{avatar this.editingPost imageSize="tiny"}}
+              {{i18n "discourse_ai.ai_bot.conversations.editing_post"}}
+            </span>
+            <DButton
+              @icon="xmark"
+              @action={{this.cancelEditing}}
+              class="btn-transparent ai-bot-docked-composer__editing-dismiss"
+            />
+          </div>
+        {{/if}}
+      </:header>
       <:submit as |ctx|>
         <DButton
           @icon={{if this.showToolbar "xmark" "plus"}}

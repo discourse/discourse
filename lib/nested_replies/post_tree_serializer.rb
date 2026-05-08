@@ -19,6 +19,7 @@ module NestedReplies
     def serialize_topic
       serializer = TopicViewSerializer.new(@topic_view, scope: @guardian, root: false)
       json = serializer.as_json
+      json[:has_activity_log] = activity_log_present?
       json.except(:post_stream, :timeline_lookup, :user_badges, *SUGGESTED_AND_RELATED_KEYS)
     end
 
@@ -78,6 +79,28 @@ module NestedReplies
         serialize_tree(child, children_map, reply_counts, descendant_counts)
       end
       node
+    end
+
+    private
+
+    # Filters mirror Guardian#can_see_post? so the boolean does not leak
+    # the existence of small_actions/whispers the user cannot see.
+    def activity_log_present?
+      post_types = [Post.types[:small_action]]
+      post_types << Post.types[:whisper] if @guardian.user&.whisperer?
+
+      scope = @topic.posts.where(post_type: post_types).where.not(action_code: [nil, ""])
+      scope = scope.where(hidden: false) unless can_see_hidden_posts?
+      scope.exists?
+    end
+
+    def can_see_hidden_posts?
+      return true if @guardian.is_staff?
+      if SiteSetting.hidden_post_visible_groups_map.include?(Group::AUTO_GROUPS[:everyone])
+        return true
+      end
+      return false if @guardian.anonymous?
+      @guardian.user.in_any_groups?(SiteSetting.hidden_post_visible_groups_map)
     end
   end
 end

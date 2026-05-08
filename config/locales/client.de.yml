@@ -6308,6 +6308,13 @@ de:
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         custom_date_range: Benutzerdefinierter Datumsbereich
+        sections:
+          reports:
+            title: "Berichte"
+          traffic:
+            title: "Website-Traffic"
+          engagement:
+            title: "Aktivität & Wachstum"
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           percent_change_tooltip: "Änderung von %{percent}."

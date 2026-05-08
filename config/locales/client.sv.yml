@@ -4606,6 +4606,9 @@ sv:
         too_many_requests: Du har utfört denna åtgärd för många gånger. Vänta innan du försöker igen.
         not_found_error: Tyvärr finns denna rapport inte
         custom_date_range: Anpassat datumintervall
+        sections:
+          reports:
+            title: "Rapporter"
         reports:
           trend_title: "%{percent} förändring. Nuvarande %{current}, var %{prev} i tidigare perioden."
           today: "Idag"

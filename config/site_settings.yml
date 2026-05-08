@@ -1071,6 +1071,10 @@ users:
     client: true
     default: true
     area: "users"
+  directory_hourly_refresh_max_users:
+    default: 100
+    hidden: true
+    area: "users"
   allow_anonymous_mode:
     default: false
     client: true

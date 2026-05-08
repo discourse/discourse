@@ -6487,6 +6487,11 @@ he:
         too_many_requests: ביצעת את הפעולה הזו פעמים רבות מדי. נא להמתין בטרם ביצוע ניסיון חוזר.
         not_found_error: הדוח אינו קיים, עמך הסליחה
         custom_date_range: טווח תאריכים מותאם אישית
+        sections:
+          reports:
+            title: "דוחות"
+          traffic:
+            title: "תעבורת האתר"
         reports:
           trend_title: "%{percent} שינוי. כרגע הערך עומד על %{current}, היה %{prev} בתקופת הבדיקה הקודמת."
           percent_change_tooltip: "%{percent} שינוי."

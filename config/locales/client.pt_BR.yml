@@ -6188,6 +6188,13 @@ pt_BR:
         too_many_requests: Você realizou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
         custom_date_range: Intervalo de datas personalizado
+        sections:
+          reports:
+            title: "Relatórios"
+          traffic:
+            title: "Tráfego do site"
+          engagement:
+            title: "Engajamento"
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
           percent_change_tooltip: "%{percent} de alteração."

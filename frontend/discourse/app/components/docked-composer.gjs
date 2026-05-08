@@ -218,9 +218,16 @@ export default class DockedComposer extends Component {
   }
 
   @action
+  setReply(value) {
+    this.reply = value ?? "";
+    this.persistDraft(this.reply);
+  }
+
+  @action
   setupContainer(element) {
     this.#rootElement = element;
-    this.updateMaxResizeOffset();
+this.updateMaxResizeOffset();
+    this.args.onRegisterApi?.({ setReply: this.setReply, focus: this.focus });
     this.loadDraft();
 
     this.uppyUpload = new UppyUpload(getOwner(this), {
@@ -456,6 +463,11 @@ export default class DockedComposer extends Component {
             {{on "pointercancel" this.onResizeEnd}}
             {{on "keydown" this.onResizeKeyDown}}
           ></div>
+        {{/if}}
+        {{#if (has-block "header")}}
+          <div class="docked-composer__header">
+            {{yield to="header"}}
+          </div>
         {{/if}}
         <div class="docked-composer__inner">
           <div class="docked-composer__editor">
