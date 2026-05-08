@@ -42,7 +42,7 @@ RSpec.describe Jobs::DirectoryRefresh do
     context "when user count is within the limit" do
       fab!(:user)
 
-      before { SiteSetting.directory_hourly_refresh_max_users = 1_000_000 }
+      before { SiteSetting.directory_hourly_refresh_max_users = 5 }
 
       it "refreshes older periods for a small site" do
         older_periods = DirectoryItem.period_types.keys - [:daily]

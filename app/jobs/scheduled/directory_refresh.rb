@@ -11,7 +11,7 @@ module Jobs
 
       older_periods = DirectoryItem.period_types.keys - [:daily]
 
-      # on smaller site, update all stats hourly, otherwise update daily
+      # on smaller site, update hourly, otherwise update daily
       if small_site? || older_periods_due?
         older_periods.each { |p| DirectoryItem.refresh_period!(p) }
         Discourse.redis.set(OLDER_PERIODS_REFRESH_KEY, Time.zone.now.to_i)
