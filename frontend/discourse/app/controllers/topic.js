@@ -599,6 +599,12 @@ export default class TopicController extends Controller {
         return;
       }
 
+      const quoteEvent = { post, buffer, opts, handled: false };
+      this.appEvents.trigger("topic:quote-post", quoteEvent);
+      if (quoteEvent.handled) {
+        return;
+      }
+
       const composer = this.composer;
       const viewOpen = composer.get("model.viewOpen");
 
