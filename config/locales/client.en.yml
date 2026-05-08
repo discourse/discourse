@@ -6957,6 +6957,7 @@ en:
         site_traffic:
           heading: "Site traffic"
           links_heading: "Links"
+          objectives_link: "Implementation objectives"
           prototype_link: "View headline prototypes"
           headline:
             count:
