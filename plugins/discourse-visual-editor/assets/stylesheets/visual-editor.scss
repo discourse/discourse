@@ -132,14 +132,19 @@ body.visual-editor-active {
   }
 }
 
-/* Editor chrome (toolbar + 3 panels) */
+/* Editor chrome (toolbar + optional error banner + 3 panels) */
 .visual-editor-shell {
   position: fixed;
   inset: 0;
   z-index: z("modal", "content") - 200;
   display: grid;
   grid-template-columns: 280px 1fr 320px;
-  grid-template-rows: 48px 1fr;
+
+  /* Toolbar / error banner / panels.
+     The error banner row collapses to zero height when no error is present
+     because the only thing in it would be the .visual-editor-save-error
+     div, which is not rendered when saveErrorMessage is null. */
+  grid-template-rows: 48px auto 1fr;
   pointer-events: none;
 
   > * {
@@ -169,6 +174,42 @@ body.visual-editor-active {
   }
 }
 
+.visual-editor-save-error {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: var(--danger-low);
+  color: var(--danger);
+  border-bottom: 1px solid var(--danger);
+  font-size: var(--font-down-1);
+
+  .visual-editor-save-error__icon .d-icon {
+    color: var(--danger);
+  }
+
+  .visual-editor-save-error__message {
+    flex: 1;
+    overflow-wrap: anywhere;
+  }
+
+  .visual-editor-save-error__dismiss {
+    flex-shrink: 0;
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+}
+
+.visual-editor-canvas {
+  grid-column: 2;
+  grid-row: 3;
+  pointer-events: none;
+}
+
 .visual-editor-panel {
   background: var(--secondary);
   overflow-y: auto;
@@ -177,13 +218,13 @@ body.visual-editor-active {
 
   &.--left {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 3;
     border-right: 1px solid var(--primary-low);
   }
 
   &.--right {
     grid-column: 3;
-    grid-row: 2;
+    grid-row: 3;
     border-left: 1px solid var(--primary-low);
   }
 
@@ -201,12 +242,6 @@ body.visual-editor-active {
     color: var(--primary-medium);
     font-style: italic;
   }
-}
-
-.visual-editor-canvas {
-  grid-column: 2;
-  grid-row: 2;
-  pointer-events: none;
 }
 
 body.visual-editor-active {

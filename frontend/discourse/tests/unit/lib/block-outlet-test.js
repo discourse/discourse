@@ -4,7 +4,15 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { block } from "discourse/blocks";
-import { _renderBlocks } from "discourse/blocks/block-outlet";
+import {
+  _clearLayoutLayer,
+  _getOutletLayouts,
+  _hasLayout,
+  _renderBlocks,
+  _resetOutletLayoutsForTesting,
+  _setLayoutLayer,
+  LAYOUT_LAYERS,
+} from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -926,6 +934,254 @@ module("Unit | Lib | block-outlet", function (hooks) {
       const result = blocksService.evaluate({ any: [] });
 
       assert.false(result, "empty OR array returns false");
+    });
+  });
+
+  module("layout resolution chain", function (innerHooks) {
+    @block("resolution-chain-block", { args: { label: { type: "string" } } })
+    class ResolutionChainBlock extends Component {}
+
+    innerHooks.afterEach(function () {
+      _resetOutletLayoutsForTesting();
+    });
+
+    test("setLayoutLayer registers a code-default layout", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.CODE_DEFAULT,
+        [{ block: ResolutionChainBlock, args: { label: "code" } }],
+        owner
+      );
+
+      assert.true(_hasLayout("homepage-blocks"));
+      const resolved = _getOutletLayouts().get("homepage-blocks");
+      const layout = await resolved.validatedLayout;
+      assert.strictEqual(layout[0].args.label, "code");
+    });
+
+    test("theme layer overrides code-default", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.CODE_DEFAULT,
+        [{ block: ResolutionChainBlock, args: { label: "code" } }],
+        owner
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5 }
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "theme");
+    });
+
+    test("session-draft layer overrides theme", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: ResolutionChainBlock, args: { label: "draft" } }],
+        owner
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "draft");
+    });
+
+    test("multiple themes — last in stack wins", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "first" } }],
+        owner,
+        { themeId: 3 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "second" } }],
+        owner,
+        { themeId: 7 }
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "second");
+    });
+
+    test("replacing a theme entry with the same themeId keeps stack position", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "a" } }],
+        owner,
+        { themeId: 3 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "b" } }],
+        owner,
+        { themeId: 7 }
+      );
+
+      // Re-register theme 3 with new content. Because theme 3 was added first,
+      // it stays at index 0. Theme 7 stays at index 1 and wins resolution.
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "a-updated" } }],
+        owner,
+        { themeId: 3 }
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "b");
+    });
+
+    test("clearing session-draft falls back to theme", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: ResolutionChainBlock, args: { label: "draft" } }],
+        owner
+      );
+
+      _clearLayoutLayer("homepage-blocks", LAYOUT_LAYERS.SESSION_DRAFT);
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "theme");
+    });
+
+    test("clearing theme by themeId leaves other themes in place", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "first" } }],
+        owner,
+        { themeId: 3 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "second" } }],
+        owner,
+        { themeId: 7 }
+      );
+
+      _clearLayoutLayer("homepage-blocks", LAYOUT_LAYERS.THEME, {
+        themeId: 7,
+      });
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "first");
+    });
+
+    test("clearing all layers removes the outlet entirely", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.CODE_DEFAULT,
+        [{ block: ResolutionChainBlock, args: { label: "code" } }],
+        owner
+      );
+      assert.true(_hasLayout("homepage-blocks"));
+
+      _clearLayoutLayer("homepage-blocks", LAYOUT_LAYERS.CODE_DEFAULT);
+      assert.false(_hasLayout("homepage-blocks"));
+    });
+
+    test("setLayoutLayer rejects unknown layer names", function (assert) {
+      assert.throws(
+        () =>
+          _setLayoutLayer("homepage-blocks", "bogus-layer", [], getOwner(this)),
+        /Unknown layout layer/
+      );
+    });
+
+    test("setLayoutLayer requires themeId for the theme layer", function (assert) {
+      assert.throws(
+        () =>
+          _setLayoutLayer(
+            "homepage-blocks",
+            LAYOUT_LAYERS.THEME,
+            [],
+            getOwner(this)
+          ),
+        /requires options\.themeId/
+      );
+    });
+
+    test("renderBlocks does not throw when a theme layer is already set", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5 }
+      );
+
+      // Calling _renderBlocks (the code-default registration path) on an
+      // outlet that already has a theme layer should succeed — the duplicate
+      // guard is scoped to the code-default layer only.
+      await _renderBlocks(
+        "homepage-blocks",
+        [{ block: ResolutionChainBlock, args: { label: "code" } }],
+        owner
+      );
+
+      // Theme still wins resolution.
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "theme");
+    });
+
+    test("renderBlocks throws on duplicate code-default registration", async function (assert) {
+      const owner = getOwner(this);
+      await _renderBlocks(
+        "homepage-blocks",
+        [{ block: ResolutionChainBlock, args: { label: "first" } }],
+        owner
+      );
+
+      assert.throws(
+        () =>
+          _renderBlocks(
+            "homepage-blocks",
+            [{ block: ResolutionChainBlock, args: { label: "second" } }],
+            owner
+          ),
+        /already has a layout registered/
+      );
     });
   });
 });

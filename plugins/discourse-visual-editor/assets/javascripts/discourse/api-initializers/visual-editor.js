@@ -34,7 +34,52 @@ export default apiInitializer((api) => {
   const editor = api.container.lookup("service:visual-editor");
   installBlockChrome();
   installOutletBoundary(editor);
+  installVeThemeAutoEnter(api, editor);
 });
+
+/**
+ * Reads the `ve_theme` query parameter from the current URL and, when
+ * present, auto-enters the editor bound to that theme id. The "Visual
+ * Editor" admin button (Phase 3f) navigates here with `?ve_theme=<id>`
+ * after the page-picker modal — so the destination page lands with the
+ * editor already open against the right theme.
+ *
+ * Hooks into `api.onPageChange` so navigation between routes (with the
+ * param preserved) keeps the editor active. We rerun the read on every
+ * page change because the SPA's URL changes don't reload the bundle.
+ *
+ * @param {import("discourse/lib/plugin-api").default} api
+ * @param {import("../services/visual-editor").default} editor
+ */
+function installVeThemeAutoEnter(api, editor) {
+  const tryEnter = (url) => {
+    const themeId = readVeThemeParam(url);
+    if (themeId == null) {
+      return;
+    }
+    if (editor.isActive && editor.activeThemeId === themeId) {
+      return;
+    }
+    editor.enter({ themeId });
+  };
+  // Fire once on initial mount in case the page loaded with the param.
+  tryEnter(window.location.href);
+  api.onPageChange(tryEnter);
+}
+
+function readVeThemeParam(url) {
+  try {
+    const parsed = new URL(url, window.location.origin);
+    const raw = parsed.searchParams.get("ve_theme");
+    if (raw == null) {
+      return null;
+    }
+    const parsedInt = parseInt(raw, 10);
+    return Number.isFinite(parsedInt) && parsedInt > 0 ? parsedInt : null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Wires `OUTLET_INFO_COMPONENT` so each `<BlockOutlet>` renders our boundary

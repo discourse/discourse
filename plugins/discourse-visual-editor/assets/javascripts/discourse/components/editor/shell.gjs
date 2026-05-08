@@ -1,5 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -18,6 +19,20 @@ import OutlinePanel from "./outline-panel";
  */
 export default class EditorShell extends Component {
   @service visualEditor;
+  @service visualEditorPersistence;
+
+  /**
+   * In-flight Save state. Toggling this true grays out the Save button so a
+   * user can't double-tap it while we're awaiting the server. Failures are
+   * surfaced as a banner row beneath the toolbar (see `saveErrorMessage`).
+   */
+  @tracked isSaving = false;
+  @tracked saveErrorMessage = null;
+
+  @action
+  dismissSaveError() {
+    this.saveErrorMessage = null;
+  }
 
   @action
   exit() {
@@ -37,6 +52,51 @@ export default class EditorShell extends Component {
   @action
   reset() {
     this.visualEditor.resetAll();
+  }
+
+  /**
+   * Whether the Save button should be enabled. Requires:
+   *   1. The editor to know which theme to write to (`activeThemeId` set).
+   *   2. There to be in-memory edits to save (`isDirty` true) — saving an
+   *      empty draft would be a no-op.
+   *   3. No save currently in flight.
+   *
+   * @returns {boolean}
+   */
+  get canSave() {
+    return (
+      !this.isSaving &&
+      this.visualEditor.isDirty &&
+      this.visualEditor.activeThemeId != null
+    );
+  }
+
+  @action
+  async save() {
+    if (!this.canSave) {
+      return;
+    }
+    this.isSaving = true;
+    this.saveErrorMessage = null;
+    try {
+      const result = await this.visualEditorPersistence.saveAll(
+        this.visualEditor.activeThemeId
+      );
+      if (result.errors.length) {
+        this.saveErrorMessage = result.errors
+          .map((e) => `${e.outlet}: ${e.message}`)
+          .join("; ");
+      }
+      // The save also collapses session-drafts into the theme layer, so
+      // `isDirty` (driven by `_initialSnapshots`) needs to be reset for
+      // the toolbar to reflect "no unsaved changes". Snapshots are tied
+      // to draft-entry references that no longer exist after save.
+      this.visualEditor._initialSnapshots.clear();
+      this.visualEditor._undoStack.length = 0;
+      this.visualEditor._redoStack.length = 0;
+    } finally {
+      this.isSaving = false;
+    }
   }
 
   <template>
@@ -76,6 +136,14 @@ export default class EditorShell extends Component {
             </button>
             <button
               type="button"
+              class="btn btn-primary visual-editor-btn-save"
+              disabled={{if this.canSave false true}}
+              {{on "click" this.save}}
+            >
+              <span>{{i18n "visual_editor.chrome.save"}}</span>
+            </button>
+            <button
+              type="button"
               class="btn btn-default"
               {{on "click" this.exit}}
             >
@@ -84,6 +152,25 @@ export default class EditorShell extends Component {
             </button>
           </div>
         </div>
+
+        {{#if this.saveErrorMessage}}
+          <div class="visual-editor-save-error" role="alert">
+            <span class="visual-editor-save-error__icon">
+              {{icon "triangle-exclamation"}}
+            </span>
+            <span class="visual-editor-save-error__message">
+              {{this.saveErrorMessage}}
+            </span>
+            <button
+              type="button"
+              class="btn btn-flat visual-editor-save-error__dismiss"
+              aria-label={{i18n "visual_editor.chrome.dismiss_error"}}
+              {{on "click" this.dismissSaveError}}
+            >
+              {{icon "xmark"}}
+            </button>
+          </div>
+        {{/if}}
 
         <div class="visual-editor-panel --left">
           <div class="panel-header">{{i18n

@@ -377,8 +377,17 @@ export function createBlockArgsWithReactiveGetters(
   // Union of entry's args and schema keys. The set is frozen at curry time;
   // mutations to existing keys propagate reactively, but adding a new key
   // not anticipated here requires a layout replacement.
+  //
+  // We deliberately read the cached `entry.__argKeys` (snapshot taken when
+  // `assignStableKeys` wrapped the args in a `trackedObject`) instead of
+  // calling `Object.keys(entry.args)`. Going through the Proxy's `ownKeys`
+  // trap consumes the trackedObject's collection tag — which is dirtied on
+  // every `set` (not just add/delete) — and that would invalidate every
+  // container's `processedChildren` computation on every keystroke,
+  // forcing the whole container subtree to re-curry. The cached snapshot
+  // gives us the same key set without opening the dep.
   const argKeys = new Set([
-    ...Object.keys(entry.args || {}),
+    ...(entry.__argKeys ?? Object.keys(entry.args || {})),
     ...Object.keys(schema),
   ]);
 

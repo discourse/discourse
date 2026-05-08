@@ -2,11 +2,17 @@
 /**
  * Layout-mutation helpers for the visual editor.
  *
- * The editor never mutates registered layout entries in place. Instead, it
- * produces a brand-new layout array (with the affected entry's `args`
- * immutably replaced) and pushes it back through `_replaceLayoutForEditor`.
- * The block system's leaf-render cache compares args by value, so the swap
- * triggers a re-curry and the canvas updates.
+ * The editor publishes its in-progress edits as a `session-draft` layer via
+ * `api.setLayoutLayer`. The draft layout is a deep clone of the resolved
+ * layout (preserving `__stableKey` so DOM identity carries over), wrapped at
+ * publish time so each draft entry's `args` lands in its own `trackedObject`.
+ * Subsequent edits mutate those draft args in place — the trackedObject's
+ * compute-ref proxy propagates the change to the rendered block without
+ * re-publishing the layer.
+ *
+ * Drag-drop / palette additions in later phases will use the immutable
+ * `replaceEntryArgs` family to build new layouts and republish via
+ * `setLayoutLayer`.
  *
  * These helpers are pure logic — no Glimmer, no service injection — so the
  * editor service stays small and the helpers stay testable in isolation.
@@ -122,4 +128,77 @@ export function setEntryArg(layout, key, argName, value) {
     ...current,
     [argName]: value,
   }));
+}
+
+/**
+ * Returns a structural deep clone of a layout suitable for publishing as a
+ * `session-draft` layer. The clone preserves each entry's `__stableKey` and
+ * passes through immutable references (block class, conditions, classNames,
+ * containerArgs, id) by reference. Each entry's `args` is copied into a
+ * fresh POJO so that `assignStableKeys` (run by `_setLayoutLayer`) wraps
+ * those POJOs in their own `trackedObject` proxies — keeping draft mutations
+ * isolated from the underlying layer's args.
+ *
+ * @param {Array<Object>} layout
+ * @returns {Array<Object>}
+ */
+export function cloneLayoutForDraft(layout) {
+  return layout.map(cloneEntryForDraft);
+}
+
+function cloneEntryForDraft(entry) {
+  const clone = { ...entry };
+  if (entry.args) {
+    // Spread runs the `trackedObject` proxy's getters, materialising the
+    // current values into a fresh plain object that will be re-wrapped at
+    // publish time.
+    clone.args = { ...entry.args };
+  }
+  if (entry.children?.length) {
+    clone.children = entry.children.map(cloneEntryForDraft);
+  }
+  return clone;
+}
+
+/**
+ * Serializes a layout for transport to the server (the
+ * `block_layout`-shaped JSON the `Themes::SaveBlockLayout` endpoint
+ * expects). Strips internal bookkeeping (`__stableKey`) and resolves any
+ * `entry.block` class references back to their registered names — the
+ * server stores layouts as strings, not class references.
+ *
+ * @param {Array<Object>} layout
+ * @returns {Array<Object>}
+ */
+export function serializeLayoutForSave(layout) {
+  return layout.map(serializeEntryForSave);
+}
+
+function serializeEntryForSave(entry) {
+  const out = {};
+  if (typeof entry.block === "string") {
+    out.block = entry.block;
+  } else if (entry.block) {
+    const blockName = getBlockMetadata(entry.block)?.blockName;
+    out.block = blockName ?? entry.block.name;
+  }
+  if (entry.args && Object.keys(entry.args).length > 0) {
+    out.args = { ...entry.args };
+  }
+  if (entry.id != null) {
+    out.id = entry.id;
+  }
+  if (entry.classNames != null) {
+    out.classNames = entry.classNames;
+  }
+  if (entry.containerArgs != null) {
+    out.containerArgs = { ...entry.containerArgs };
+  }
+  if (entry.conditions != null) {
+    out.conditions = entry.conditions;
+  }
+  if (entry.children?.length) {
+    out.children = entry.children.map(serializeEntryForSave);
+  }
+  return out;
 }
