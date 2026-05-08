@@ -13,7 +13,7 @@
 
   @include viewport.until(sm) {
     .install-theme-items {
-      flex: 0 0 150px;
+      flex: 0 0 110px;
     }
 
     .install-theme-content {
@@ -27,7 +27,7 @@
 }
 
 .install-theme-items {
-  width: 200px;
+  width: 240px;
 }
 
 .install-theme-item {
@@ -90,7 +90,7 @@
 }
 
 .popular-theme-items {
-  height: 70vh;
+  min-height: 60vh;
   overflow: auto;
   padding-right: 20px;
   display: grid;
