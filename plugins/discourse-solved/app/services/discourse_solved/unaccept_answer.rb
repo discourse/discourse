@@ -92,8 +92,7 @@ class DiscourseSolved::UnacceptAnswer
       "/topic/#{topic.id}",
       {
         type: :unaccepted_solution,
-        accepted_answers:
-          DiscourseSolved::AcceptedAnswersSerializer.serialize(topic.reload, guardian),
+        accepted_answers: DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, guardian),
       },
       topic.secure_audience_publish_messages,
     )

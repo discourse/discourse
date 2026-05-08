@@ -189,8 +189,7 @@ class DiscourseSolved::AcceptAnswer
       "/topic/#{topic.id}",
       {
         type: :accepted_solution,
-        accepted_answers:
-          DiscourseSolved::AcceptedAnswersSerializer.serialize(topic.reload, guardian),
+        accepted_answers: DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, guardian),
       },
       topic.secure_audience_publish_messages,
     )

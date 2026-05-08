@@ -8,9 +8,7 @@ class DiscourseSolved::AnswerController < ::ApplicationController
   def accept
     DiscourseSolved::AcceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
       on_success do |topic:|
-        render_json_dump(
-          DiscourseSolved::AcceptedAnswersSerializer.serialize(topic.reload, guardian),
-        )
+        render_json_dump(DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, guardian))
       end
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
@@ -31,9 +29,7 @@ class DiscourseSolved::AnswerController < ::ApplicationController
   def unaccept
     DiscourseSolved::UnacceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
       on_success do |topic:|
-        render_json_dump(
-          DiscourseSolved::AcceptedAnswersSerializer.serialize(topic.reload, guardian),
-        )
+        render_json_dump(DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, guardian))
       end
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
