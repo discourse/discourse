@@ -1636,6 +1636,8 @@ RSpec.describe Report do
       end
 
       it "exposes embedded pageviews as their own series without polluting other series" do
+        Fabricate(:embeddable_host)
+
         2.times { ApplicationRequest.increment!(:page_view_anon) }
         1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
         3.times { ApplicationRequest.increment!(:page_view_logged_in) }
@@ -1648,6 +1650,13 @@ RSpec.describe Report do
 
         expect(embed_series[:data][0][:y]).to eq(4)
         expect(other_series[:data][0][:y]).to eq(2)
+      end
+
+      it "omits the embedded pageviews series when no embeddable host is configured" do
+        4.times { ApplicationRequest.increment!(:page_view_embed) }
+        CachedCounting.flush
+
+        expect(reports.data.map { |r| r[:req] }).not_to include("page_view_embed")
       end
     end
   end
