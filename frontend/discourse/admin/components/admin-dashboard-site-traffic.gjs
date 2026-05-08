@@ -897,6 +897,16 @@ export default class AdminDashboardSiteTraffic extends Component {
         <div>
           <a
             class="admin-dashboard-site-traffic-links__link"
+            href="https://github.com/discourse/discourse/blob/tgxworld/site-traffic-redesign-spike/site-traffic-data-layer-design.md"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {{i18n "admin.dashboard.site_traffic.data_layer_link"}}
+          </a>
+        </div>
+        <div>
+          <a
+            class="admin-dashboard-site-traffic-links__link"
             href="/site-traffic-headline-prototypes.html"
             rel="noopener noreferrer"
             target="_blank"

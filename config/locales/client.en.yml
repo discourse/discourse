@@ -6958,6 +6958,7 @@ en:
           heading: "Site traffic"
           links_heading: "Product-design links"
           objectives_link: "Implementation objectives"
+          data_layer_link: "Data layer design"
           prototype_link: "View headline prototypes"
           headline:
             count:
