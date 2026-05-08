@@ -568,7 +568,7 @@ RSpec.describe CategoriesController do
           expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq(
             [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
           )
-          expect(UserHistory.count).to eq(1)
+          expect(UserHistory.count).to eq(2) # 1 + 1 (bootstrap first admin)
         end
 
         it "creates a category with posting review mode" do
@@ -1011,7 +1011,7 @@ RSpec.describe CategoriesController do
                 },
               }
           expect(response.status).to eq(200)
-          expect(UserHistory.count).to eq(2)
+          expect(UserHistory.count).to eq(3) # 2 + 1 (bootstrap first admin)
         end
 
         it "does not log false permission changes when everyone group name is localized" do

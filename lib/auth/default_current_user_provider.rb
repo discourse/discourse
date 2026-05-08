@@ -339,8 +339,7 @@ class Auth::DefaultCurrentUserProvider
   def bootstrap_first_admin(user)
     return if !user.admin || !user.last_seen_at.nil? || !user.is_singular_admin?
 
-    user.grant_moderation!
-    StaffActionLogger.new(Discourse.system_user).log_grant_moderation(user)
+    Jobs.enqueue(:bootstrap_first_admin, user_id: user.id)
   end
 
   def log_off_user(session, cookie_jar, push_subscription: nil)
