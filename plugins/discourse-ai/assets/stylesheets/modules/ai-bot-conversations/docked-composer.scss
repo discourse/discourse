@@ -81,23 +81,6 @@ body.has-ai-bot-docked-composer {
   }
 }
 
-// Place the resize handle inside the bordered wrapper. The handle overlaps 1em
-// into the wrapper's padding-top zone, above the input area.
-.docked-composer.ai-bot-docked-composer.docked-composer--resizable {
-  gap: 0;
-
-  .docked-composer__resize-handle {
-    height: 1em;
-    position: relative;
-    z-index: 2;
-    margin-bottom: -1em;
-
-    @include viewport.until(sm) {
-      display: none;
-    }
-  }
-}
-
 // Remove default border from the column; the wrapper gets the border instead.
 .docked-composer.ai-bot-docked-composer .d-editor-textarea-column {
   border: none;
