@@ -9,6 +9,14 @@ import PreloadStore from "discourse/lib/preload-store";
  * `api.setLayoutLayer`. Each failure is logged but doesn't halt the others —
  * a single bad theme-shipped layout shouldn't break the rest of the page.
  *
+ * Publishes with `lazy: true`, which defers layout validation to the
+ * moment `BlockOutlet` first reads the entry at render time — by then,
+ * every other initializer (including theme api-initializers that
+ * register blocks as a side-effect of `api.renderBlocks(class-ref)`)
+ * has settled, so string-ref lookups in the JSON-loaded layouts
+ * resolve cleanly. With eager validation we'd race those initializers
+ * and reject before the registry was ready.
+ *
  * Exported separately from the `apiInitializer` callback so it can be unit-
  * tested without going through the full app-boot machinery.
  *
@@ -27,7 +35,10 @@ export function hydrateThemeBlockLayouts(api, layouts) {
     }
 
     try {
-      api.setLayoutLayer(outlet, api.LAYOUT_LAYERS.THEME, layout, { themeId });
+      api.setLayoutLayer(outlet, api.LAYOUT_LAYERS.THEME, layout, {
+        themeId,
+        lazy: true,
+      });
     } catch (error) {
       // Surface the failure in the console without breaking the rest of
       // the boot. A bad theme-shipped layout shouldn't take down the page;
@@ -89,16 +100,14 @@ export function subscribeToBlockLayoutUpdates(api, themeIds) {
  * — one per `block_layout` ThemeField on every theme in the active stack,
  * already ordered by stack position. We hand that list to
  * `hydrateThemeBlockLayouts`, which calls `api.setLayoutLayer(outlet, "theme",
- * layout, { themeId })` for each.
+ * layout, { themeId, lazy: true })` for each.
  *
- * Because we publish in stack order, each outlet's `theme` layer array ends
+ * Publishing in stack order means each outlet's `theme` layer array ends
  * up with the last theme in the stack at the tail — which the resolution
- * chain treats as the winner.
- *
- * This initializer runs at api time (after `freeze-block-registry`), which
- * is exactly the precondition `api.setLayoutLayer` enforces — registering a
- * layout against an outlet that doesn't yet have its blocks frozen would
- * throw.
+ * chain treats as the winner. Validation is deferred to first render
+ * (`lazy: true`), so it doesn't matter whether this initializer runs
+ * before or after a theme api-initializer that registers blocks via
+ * `api.renderBlocks(class-ref)`.
  *
  * Once the initial hydration is in place we also subscribe to the
  * `/block-layouts/<theme_id>` MessageBus channels for every theme that ships
@@ -106,22 +115,13 @@ export function subscribeToBlockLayoutUpdates(api, themeIds) {
  * updates into the `theme` layer as they arrive, no page reload needed.
  */
 export default apiInitializer((api) => {
-  // Defer to a microtask so every other api-initializer (including theme
-  // initializers that call `api.renderBlocks(...)` with class refs)
-  // finishes its synchronous work before we try to publish theme-layer
-  // layouts whose entries reference those blocks by name. Without this,
-  // we race the theme initializers — and if our hydration runs first,
-  // the string-ref lookups fail because the auto-registration in
-  // `assignStableKeys` hasn't happened yet.
-  Promise.resolve().then(() => {
-    const layouts = PreloadStore.get("themeBlockLayouts");
-    hydrateThemeBlockLayouts(api, layouts);
+  const layouts = PreloadStore.get("themeBlockLayouts");
+  hydrateThemeBlockLayouts(api, layouts);
 
-    if (Array.isArray(layouts) && layouts.length > 0) {
-      const themeIds = [...new Set(layouts.map((row) => row.theme_id))].filter(
-        Boolean
-      );
-      subscribeToBlockLayoutUpdates(api, themeIds);
-    }
-  });
+  if (Array.isArray(layouts) && layouts.length > 0) {
+    const themeIds = [...new Set(layouts.map((row) => row.theme_id))].filter(
+      Boolean
+    );
+    subscribeToBlockLayoutUpdates(api, themeIds);
+  }
 });

@@ -3455,10 +3455,18 @@ class _PluginApi {
    * @param {Object} [options]
    * @param {number} [options.themeId] - Required when `layer === "theme"`. The
    *   id of the theme this layout originated from.
-   * @returns {Promise<Array<import("discourse/blocks/block-outlet").LayoutEntry>>}
-   *   Promise resolving to the validated layout array.
-   * @throws {Error} If validation fails, the layer name is unknown, or
-   *   `options.themeId` is missing for the "theme" layer.
+   * @param {boolean} [options.lazy=false] - When true, defers layout
+   *   validation until `BlockOutlet` first reads the entry at render
+   *   time. Use this for boot-time hydration paths where blocks
+   *   referenced by name may be registered later in the same tick by
+   *   other initializers — eager validation would race those
+   *   registrations and reject before the registry settled.
+   * @returns {Promise<Array<import("discourse/blocks/block-outlet").LayoutEntry>>|undefined}
+   *   The validated-layout Promise (eager mode) or `undefined` (lazy mode).
+   * @throws {Error} If the layer name is unknown, or `options.themeId` is
+   *   missing for the "theme" layer. (Validation errors surface
+   *   asynchronously via the returned Promise — or, in lazy mode, when
+   *   `BlockOutlet` first reads the entry.)
    */
   setLayoutLayer(outletName, layer, layout, options = {}) {
     const callSiteError = captureCallSite(this.setLayoutLayer);
