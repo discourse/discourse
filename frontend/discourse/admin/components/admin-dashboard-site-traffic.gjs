@@ -793,7 +793,7 @@ export default class AdminDashboardSiteTraffic extends Component {
       <div>
         <a
           class="admin-dashboard-site-traffic-links__link"
-          href="/site-traffic-implementation-objectives.md"
+          href="https://github.com/discourse/discourse/blob/tgxworld/site-traffic-redesign-spike/site-traffic-implementation-objectives.md"
           rel="noopener noreferrer"
           target="_blank"
         >
