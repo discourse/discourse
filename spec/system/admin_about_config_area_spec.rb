@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin About Config Area Page" do
+describe "Admin About Config Area Page", :full_reset do
   fab!(:admin)
   fab!(:image_upload)
 

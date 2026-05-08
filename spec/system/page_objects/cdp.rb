@@ -13,6 +13,24 @@ module PageObjects
       end
     end
 
+    # Wipes the browser-side HTTP response cache. Needed when a spec
+    # mutates a server-generated asset (e.g. a color-scheme stylesheet)
+    # and asserts the new content under the same URL the browser fetched
+    # before the mutation. The soft-reset in `spec/rails_helper.rb` does
+    # not call this globally because clearing the cache between every
+    # system spec wipes the warm asset cache and adds back ~140s of
+    # asset re-fetch wall-clock to the suite (iter-8 measurement).
+    def clear_browser_cache
+      page.driver.with_playwright_page do |pw_page|
+        cdp_client = pw_page.context.new_cdp_session(pw_page)
+        begin
+          cdp_client.send_message("Network.clearBrowserCache")
+        ensure
+          cdp_client.detach
+        end
+      end
+    end
+
     def read_clipboard
       page.evaluate_async_script("navigator.clipboard.readText().then(arguments[0])")
     end
@@ -71,9 +89,8 @@ module PageObjects
 
     def with_network_disconnected
       page.driver.with_playwright_page do |pw_page|
+        cdp_client = pw_page.context.new_cdp_session(pw_page)
         begin
-          cdp_client = pw_page.context.new_cdp_session(pw_page)
-
           cdp_client.send_message(
             "Network.emulateNetworkConditions",
             params: {
@@ -86,24 +103,36 @@ module PageObjects
 
           yield
         ensure
-          cdp_client.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 0,
-              downloadThroughput: -1,
-              uploadThroughput: -1,
-            },
-          )
+          begin
+            cdp_client.send_message(
+              "Network.emulateNetworkConditions",
+              params: {
+                offline: false,
+                latency: 0,
+                downloadThroughput: -1,
+                uploadThroughput: -1,
+              },
+            )
+          rescue ::Playwright::Error
+          end
+          # The soft-reset in `spec/rails_helper.rb` keeps the
+          # BrowserContext + Page alive between examples, so unattached
+          # CDP sessions persist forward unless we explicitly detach
+          # here. iter-7 named this as a leak vector breaking the
+          # network_disconnected → admin_color_palette_config_area
+          # cross-spec failure on seed 36827.
+          begin
+            cdp_client.detach
+          rescue ::Playwright::Error
+          end
         end
       end
     end
 
     def with_slow_download
       page.driver.with_playwright_page do |pw_page|
+        cdp_client = pw_page.context.new_cdp_session(pw_page)
         begin
-          cdp_client = pw_page.context.new_cdp_session(pw_page)
-
           cdp_client.send_message(
             "Network.emulateNetworkConditions",
             params: {
@@ -116,24 +145,30 @@ module PageObjects
 
           yield
         ensure
-          cdp_client.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 0,
-              downloadThroughput: -1,
-              uploadThroughput: -1,
-            },
-          )
+          begin
+            cdp_client.send_message(
+              "Network.emulateNetworkConditions",
+              params: {
+                offline: false,
+                latency: 0,
+                downloadThroughput: -1,
+                uploadThroughput: -1,
+              },
+            )
+          rescue ::Playwright::Error
+          end
+          begin
+            cdp_client.detach
+          rescue ::Playwright::Error
+          end
         end
       end
     end
 
     def with_slow_upload
       page.driver.with_playwright_page do |pw_page|
+        cdp_client = pw_page.context.new_cdp_session(pw_page)
         begin
-          cdp_client = pw_page.context.new_cdp_session(pw_page)
-
           cdp_client.send_message(
             "Network.emulateNetworkConditions",
             params: {
@@ -146,15 +181,22 @@ module PageObjects
 
           yield
         ensure
-          cdp_client.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 0,
-              downloadThroughput: -1,
-              uploadThroughput: -1,
-            },
-          )
+          begin
+            cdp_client.send_message(
+              "Network.emulateNetworkConditions",
+              params: {
+                offline: false,
+                latency: 0,
+                downloadThroughput: -1,
+                uploadThroughput: -1,
+              },
+            )
+          rescue ::Playwright::Error
+          end
+          begin
+            cdp_client.detach
+          rescue ::Playwright::Error
+          end
         end
       end
     end
