@@ -6813,6 +6813,16 @@ en:
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
 
+        sections:
+          highlights:
+            title: "Highlights"
+          reports:
+            title: "Reports"
+          traffic:
+            title: "Site traffic"
+          engagement:
+            title: "Engagement"
+
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
           percent_change_tooltip: "%{percent} change."
