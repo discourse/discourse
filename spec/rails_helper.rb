@@ -699,6 +699,181 @@ RSpec.configure do |config|
     end
     Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodeSkipStaleEnabledCheckPatch)
 
+    # Replace `Capybara::Playwright::Driver#reset!`'s default
+    # `clear_browser_contexts` (which closes the BrowserContext, nils
+    # `@browser`, and forces the next test to rebuild Browser+Context+
+    # Page from scratch) with a soft-reset that keeps the primary
+    # BrowserContext + primary Page alive between examples and only
+    # wipes per-test state.
+    #
+    # The kept-alive page mechanism alone (iter-6 / iter-9 / iter-12 in
+    # the autoresearch loop) reliably measures -10..-26% CI step time vs
+    # baseline, but every CI run in that family hit unidentified test
+    # failures that did not reproduce in 100-example local validation.
+    # The most defensible "accumulation bound" hypothesis is that some
+    # subset of failures is driven by per-page state that grows over the
+    # ~225 examples each worker handles. To bound that, this revision
+    # forces a periodic hard reset (the upstream
+    # `clear_browser_contexts` path that nils `@browser`) every
+    # `SOFT_RESET_LIMIT` examples per Driver instance. Each hard reset
+    # costs ~250-700 ms (close ctx + lazy-recreate ctx+page on next
+    # test); at limit=20 that's ~10 hard resets per worker × ~500 ms ≈
+    # 5 s of added wall, vs 130-170 s saved by the soft-reset on the
+    # other 215 examples. If the failure mode is accumulation, the
+    # bound caps it. If it's a specific cross-test interaction, this
+    # patch performs identically to iter-12 and produces a clean
+    # negative signal for that hypothesis.
+    #
+    # Per-reset cleanup steps (unchanged from iter-12):
+    #   1. Storage.clearDataForOrigin (storageTypes: "all") for each
+    #      real origin pages in the primary context were last on. Wipes
+    #      cookies, localStorage, sessionStorage, IndexedDB, service
+    #      workers, cache_storage on a per-origin basis.
+    #   2. Close every auxiliary BrowserContext (created by
+    #      `open_new_window(:window)`); typically zero per test.
+    #   3. Close every auxiliary page in the primary context (created
+    #      by `open_new_window(:tab)`), keep the primary page itself
+    #      alive. Typically zero per test, so this is a no-op loop.
+    #   4. Clear context-level permissions (clipboard / notification /
+    #      etc. granted by `cdp.allow_clipboard`) and remaining cookies
+    #      on the primary context.
+    #
+    # Tracing (`:trace` metadata) needs the full BrowserContext
+    # lifecycle to flush a trace zip, so that path falls through to the
+    # upstream `clear_browser_contexts` reset. Any unexpected failure
+    # in the soft-reset path also falls through, so a single broken
+    # reset costs at most one example's full reset rather than
+    # cascading.
+    module CapybaraPlaywrightDriverSoftResetPatch
+      SOFT_RESET_LIMIT = 20
+
+      def reset!
+        if callback_on_save_screenshot?
+          raw_screenshot = @browser&.raw_screenshot
+          callback_on_save_screenshot(raw_screenshot) if raw_screenshot
+        end
+
+        video_path = @browser&.video_path
+
+        @soft_reset_count ||= 0
+        soft_reset_succeeded = false
+        if @browser && @soft_reset_count < SOFT_RESET_LIMIT
+          begin
+            @browser.soft_reset_browser_state
+            @soft_reset_count += 1
+            soft_reset_succeeded = true
+          rescue StandardError
+            # Fall through to the upstream close-everything reset path.
+          end
+        end
+
+        unless soft_reset_succeeded
+          @browser&.clear_browser_contexts
+          @browser = nil
+          @soft_reset_count = 0
+        end
+
+        callback_on_save_screenrecord(video_path) if video_path
+      end
+    end
+
+    module CapybaraPlaywrightBrowserSoftResetPatch
+      class SoftResetFallback < StandardError
+      end
+
+      def soft_reset_browser_state
+        # Trace mode needs the full context lifecycle to flush the zip.
+        raise SoftResetFallback if @callback_on_save_trace
+
+        primary = @playwright_page
+        raise SoftResetFallback if primary.nil? || primary.closed?
+
+        contexts = @playwright_browser.contexts
+        raise SoftResetFallback if contexts.empty?
+
+        primary_ctx = contexts.find { |ctx| ctx.pages.any? { |pg| pg.guid == primary.guid } }
+        raise SoftResetFallback if primary_ctx.nil?
+
+        # Wipe per-origin storage on the surviving primary BrowserContext.
+        # Storage.clearDataForOrigin needs a real origin string, so we
+        # collect unique origins from every page in the primary context.
+        origins = []
+        primary_ctx.pages.each do |pg|
+          page_url =
+            begin
+              pg.url
+            rescue ::Playwright::Error
+              nil
+            end
+          next if page_url.nil? || page_url.empty?
+          next if page_url == "about:blank" || page_url.start_with?("chrome:", "data:")
+
+          begin
+            uri = URI.parse(page_url)
+            next if uri.host.nil? || uri.scheme.nil?
+            port_segment = uri.port && uri.port != uri.default_port ? ":#{uri.port}" : ""
+            origins << "#{uri.scheme}://#{uri.host}#{port_segment}"
+          rescue URI::InvalidURIError
+            # Skip pages with unparseable URLs.
+          end
+        end
+
+        begin
+          cdp = primary_ctx.new_cdp_session(primary)
+          origins.uniq.each do |origin|
+            cdp.send_message(
+              "Storage.clearDataForOrigin",
+              params: {
+                origin: origin,
+                storageTypes: "all",
+              },
+            )
+          end
+          cdp.detach
+        rescue ::Playwright::Error
+          # Page or context torn down mid-reset; the upstream fallback
+          # in Driver#reset! rebuilds from scratch on the next example.
+        end
+
+        # Close every auxiliary BrowserContext (e.g. from
+        # `open_new_window(:window)`). Their pages and any CDP sessions
+        # are torn down with them.
+        contexts.each do |ctx|
+          next if ctx.equal?(primary_ctx)
+          begin
+            ctx.close
+          rescue ::Playwright::Error
+          end
+        end
+
+        # Close every auxiliary page in the primary context (e.g. tabs
+        # opened by `open_new_window(:tab)`). Keep the primary page
+        # alive — that's the dominant perf gain — but drop extra tabs so
+        # `current_window` inventory is reset.
+        primary_ctx.pages.each do |pg|
+          next if pg.guid == primary.guid
+          begin
+            pg.close
+          rescue ::Playwright::Error
+          end
+        end
+
+        # Reset context-level overrides that don't tie to one origin.
+        begin
+          primary_ctx.clear_permissions
+        rescue ::Playwright::Error
+        end
+
+        begin
+          primary_ctx.clear_cookies
+        rescue ::Playwright::Error
+        end
+      end
+    end
+
+    Capybara::Playwright::Driver.prepend(CapybaraPlaywrightDriverSoftResetPatch)
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserSoftResetPatch)
+
     module PlaywrightErrorPatch
       def message
         msg = super
