@@ -344,9 +344,7 @@ describe "Post event" do
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
     find(".d-modal .custom-field-input").fill_in(with: "custom value")
-    dropdown = PageObjects::Components::SelectKit.new(".available-recurrences")
-    dropdown.expand
-    dropdown.select_row_by_value("every_day")
+    form.field("recurrence").select("every_day")
     find(".d-modal .recurrence-until .date-picker").fill_in(with: "#{1.year.from_now.year}-12-30")
     find(".d-modal .btn-primary").click
     composer.submit
