@@ -59,7 +59,7 @@ RSpec.describe Admin::StaffActionLogsController do
           json = response.parsed_body
           expect(response.status).to eq(200)
 
-          expect(json["staff_action_logs"].length).to eq(2)
+          expect(json["staff_action_logs"].length).to eq(3) # 2 + 1 (bootstrap first admin)
           expect(json["staff_action_logs"][0]["action_name"]).to eq("silence_user")
           expect(json["staff_action_logs"][1]["action_name"]).to eq("delete_topic")
         end
@@ -105,7 +105,7 @@ RSpec.describe Admin::StaffActionLogsController do
         expect(response.parsed_body["staff_action_logs"][0]["new_value"]).to eq("value 4")
 
         get "/admin/logs/staff_action_logs.json", params: { limit: 3, page: 1 }
-        expect(response.parsed_body["staff_action_logs"].length).to eq(1)
+        expect(response.parsed_body["staff_action_logs"].length).to eq(2) # 1 + 1 (bootstrap first admin)
         expect(response.parsed_body["staff_action_logs"][0]["new_value"]).to eq("value 1")
       end
 
