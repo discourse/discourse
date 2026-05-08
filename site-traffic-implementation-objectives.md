@@ -27,10 +27,10 @@ Source: post #1 of the [Site Traffic section topic](https://dev.discourse.org/t/
 - Logged-in share KPI (public communities only)
 - Filter pills (Logged in / Anonymous / Crawlers — public communities only)
 - Pageview chart with adaptive bucketing
-- "See details" link to the existing Site Traffic report
 
 **Out of v1 (deferred):**
 
+- "See details" drill-down to the existing Site Traffic report — deferred because the legacy report looks visually different and behaves differently from the redesigned section (different filters, different bucketing, different x-axis style), so a one-click handoff would feel like a context break rather than a continuation. Revisit once the legacy report is reskinned, or once we know what extra detail admins want and can build a dedicated drill-down view.
 - AI-generated insights paragraph
 - Traffic spike callout
 - Average session KPI
@@ -44,7 +44,7 @@ Source: post #1 of the [Site Traffic section topic](https://dev.discourse.org/t/
 
 ## Layout
 
-A single section card. Top-down: section heading → headline + KPI row → filter pills → chart → drill-down link. On private communities, the headline expands full-width since the KPI is hidden. The section is responsive: elements stack on narrow viewports.
+A single section card. Top-down: section heading → headline + KPI row → filter pills → chart. On private communities, the headline expands full-width since the KPI is hidden. The section is responsive: elements stack on narrow viewports.
 
 ## Section heading text
 
@@ -112,7 +112,7 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 
 ### 3. Period selector
 
-3.1 The selector applies to everything in the section: headline, KPI, chart, and drill-down link all reflect the selected period.
+3.1 The selector applies to everything in the section: headline, KPI, and chart all reflect the selected period.
 
 3.2 Admins choose between **Last 7 days**, **Last 30 days**, **Last 90 days**, **Last 12 months**, or a **Custom range**.
 
@@ -162,7 +162,7 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 
 5.5 The KPI label reads "Logged-in share".
 
-5.6 An info icon next to the label opens an explanatory tooltip on hover or focus. The tooltip is keyboard-accessible.
+5.6 An info icon next to the label opens an explanatory tooltip on hover.
 
 5.7 The KPI does not show a period-over-period trend in v1.
 
@@ -182,7 +182,7 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 
 6.6 On private communities, no filter pills are shown (only logged-in traffic exists).
 
-6.7 Pills are keyboard-accessible: focusable, toggleable with Enter/Space, with a clear pressed/unpressed state.
+6.7 Pills have a clear pressed/unpressed state.
 
 6.8 Pill labels are translatable.
 
@@ -252,11 +252,9 @@ The title shape alone identifies the bucket size; no separate "Daily / Weekly / 
 
 8.7 **Period partially predates tracking**: the chart silently starts at the first available date. The headline suppresses the trend phrase if the prior period would extend before tracking began.
 
-### 9. Drill-down
+### 9. Drill-down — deferred
 
-9.1 Below the chart, a "See details" link opens the existing Site Traffic report, scoped to the same period as the section.
-
-9.2 The link text is translatable.
+A "See details" link to the existing `/admin/reports/site_traffic` page was originally planned for v1. It is **deferred** because the legacy report renders with different bucketing, a different x-axis treatment, and a different filter model from the redesigned section, so jumping into it from this section would feel like a context break rather than a continuation. The section ships without a drill-down in v1; admins still reach the legacy report through the existing admin nav. Revisit once the legacy report is reskinned to match, or once we know which extra detail admins actually want and can design a dedicated drill-down view rather than reusing the legacy page as-is.
 
 ### 10. Responsiveness & accessibility
 
@@ -264,13 +262,9 @@ The title shape alone identifies the bucket size; no separate "Daily / Weekly / 
 
 10.2 On narrow viewports, controls stack vertically (KPI below headline, filter pills wrapping, chart resizing) and remain usable.
 
-10.3 Keyboard navigation follows the visual order: heading → period selector → filter pills → drill-down.
+10.3 Chart, KPI tooltip, and filter pills meet WCAG AA contrast standards.
 
-10.4 All interactive controls have visible focus states.
-
-10.5 Chart, KPI tooltip, and filter pills meet WCAG AA contrast standards.
-
-10.6 All visible text is translatable.
+10.4 All visible text is translatable.
 
 ### 11. Responsiveness of interactions
 
