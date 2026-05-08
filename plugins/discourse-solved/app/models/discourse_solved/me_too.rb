@@ -4,8 +4,8 @@ module DiscourseSolved
   class MeToo < ActiveRecord::Base
     self.table_name = "discourse_solved_me_toos"
 
+    belongs_to :user
     belongs_to :topic, -> { with_deleted }
-    belongs_to :user, -> { with_deleted }
 
     validates :topic_id, presence: true, uniqueness: { scope: :user_id }
     validates :user_id, presence: true
@@ -28,6 +28,6 @@ end
 #
 # Indexes
 #
-#  index_discourse_solved_me_toos_on_topic_id              (topic_id)
 #  index_discourse_solved_me_toos_on_topic_id_and_user_id  (topic_id,user_id) UNIQUE
+#  index_discourse_solved_me_toos_on_user_id_and_topic_id  (user_id,topic_id)
 #

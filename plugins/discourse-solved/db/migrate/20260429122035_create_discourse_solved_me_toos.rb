@@ -8,6 +8,6 @@ class CreateDiscourseSolvedMeToos < ActiveRecord::Migration[8.0]
     end
 
     add_index :discourse_solved_me_toos, %i[topic_id user_id], unique: true
-    add_index :discourse_solved_me_toos, :topic_id
+    add_index :discourse_solved_me_toos, %i[user_id topic_id]
   end
 end
