@@ -621,65 +621,11 @@ RSpec.configure do |config|
       private
 
       # `<discourse-assets>` is only present on Ember pages; `ember-application`
-      # is added to the root element (`#main`) once Ember mounts. The previous
-      # implementation issued two Capybara calls (each a Playwright IPC
-      # round-trip): `has_no_css?("discourse-assets", wait: 0)` to detect
-      # non-Discourse pages, then `assert_selector("#main.ember-application")`
-      # to wait for the mount. We collapse the pair into a single Playwright
-      # `evaluate` round-trip: the JS checks both elements synchronously, and
-      # if Ember hasn't mounted yet waits via a MutationObserver — all inside
-      # one IPC. The fast path (Ember already mounted from a prior visit, the
-      # common case for tagged `:soft_reset` specs and within-spec navigation)
-      # returns 'mounted' on the first synchronous check, eliminating a full
-      # round-trip per `visit`/`refresh`/`go_back`/`go_forward`/`resize_window_to`.
+      # is added to the root element (`#main`) once Ember mounts.
       def wait_for_ember_boot
-        pw_page = @playwright_page
-        return if pw_page.nil? || pw_page.closed?
-
-        timeout_ms = Capybara.default_max_wait_time * 1000
-        result =
-          begin
-            pw_page.capybara_current_frame.evaluate(<<~JS)
-              (function () {
-                if (!document.querySelector('discourse-assets')) return 'no_ember';
-                if (document.querySelector('#main.ember-application')) return 'mounted';
-                return new Promise(function (resolve) {
-                  var done = false;
-                  var observer = new MutationObserver(function () {
-                    if (done) return;
-                    if (document.querySelector('#main.ember-application')) {
-                      done = true;
-                      observer.disconnect();
-                      clearTimeout(timer);
-                      resolve('mounted');
-                    }
-                  });
-                  var timer = setTimeout(function () {
-                    if (done) return;
-                    done = true;
-                    observer.disconnect();
-                    resolve('timeout');
-                  }, #{timeout_ms});
-                  observer.observe(document.documentElement, {
-                    subtree: true,
-                    childList: true,
-                    attributes: true
-                  });
-                });
-              })()
-            JS
-          rescue ::Playwright::Error
-            # Page detached or context destroyed mid-call; fall through. The
-            # subsequent `wait_for_client_settled` (or the next Capybara
-            # action) will surface any real navigation failure with its own
-            # error, matching the original code's tolerance for transient
-            # Playwright errors during navigation.
-            nil
-          end
-
-        if result == "timeout"
-          raise Capybara::ElementNotFound, 'Unable to find css "#main.ember-application"'
-        end
+        session = @driver.send(:session)
+        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
+        session.assert_selector("#main.ember-application", visible: :all)
       end
     end
 
