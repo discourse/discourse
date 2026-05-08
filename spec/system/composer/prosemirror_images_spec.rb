@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Images", :soft_reset do
+describe "Composer - ProseMirror - Images" do
   include_context "with prosemirror editor"
 
   describe "image toolbar" do
