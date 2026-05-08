@@ -60,10 +60,10 @@ Indexes:
 
 Notes:
 
-- **Two tables, not one.** Mirrors the two emit points in core middleware (`request_tracker.rb` triggers `:browser_pageview` and `:beacon_browser_pageview` separately). A view consolidates them for queries that need everything.
+- **Two tables, not one.** Mirrors the two emit points in core middleware (`request_tracker.rb` triggers `:browser_pageview` and `:beacon_browser_pageview` separately), but the tables are not combined for dashboard metrics. They represent alternate browser-pageview tracking mechanisms, not additive event streams.
 - **BRIN index on `created_at`.** Append-only event log — BRIN is kilobytes vs. gigabytes for btree, and works perfectly for `WHERE created_at BETWEEN ?` scans.
 - **`inet` type for IP.** Native v4/v6 support; cheap CIDR matching if ever needed.
-- **No `req_type` column.** Logged-in vs. anonymous = `user_id IS NOT NULL`. Sync vs. beacon = which table. Crawler pageviews are not in these tables (crawlers don't fire JS); the chart's crawler series comes from `application_requests` (see "Crawler series", below).
+- **No `req_type` column.** Logged-in vs. anonymous = `user_id IS NOT NULL`. Sync vs. beacon = which table. At rollup time, one table is selected as the authoritative source according to the site's active browser pageview tracking mode. Crawler pageviews are not in these tables (crawlers don't fire JS); the chart's crawler series comes from `application_requests` (see "Crawler series", below).
 - **Raw `referrer` and `url` stored verbatim.** No write-time parsing. Parsing happens at rollup time so changes to parser rules can recompute history.
 
 ### Write path
@@ -78,35 +78,50 @@ Default behavior on existing sites: feature-flag-gated, off by default until the
 
 ## Tier 2: aggregate tables
 
-The dashboard reads here. One day = one or more rows per dimensional combination.
+The dashboard reads here. One day = one or more rows per dimensional combination. Summary tables mirror the event tables: one table for the old/piggyback mechanism and one table for the beacon mechanism.
 
 ```
 pageview_daily_aggregates
   date          date, not null
   country_code  string(2)        -- nullable: lookup miss
-  source_name   string(100)      -- canonical from referer-parser; "Direct" / "(Other)"
+  source_name   string(100)      -- canonical display key; "Direct" / "(Other)"
   is_logged_in  boolean, not null
   count         integer, not null
-  PRIMARY KEY (date, country_code, source_name, is_logged_in)
+
+pageview_daily_aggregates_beacon
+  (same columns)
+
+Indexes on each table:
+  UNIQUE (date, country_code, source_name, is_logged_in) WHERE country_code IS NOT NULL
+  UNIQUE (date, source_name, is_logged_in) WHERE country_code IS NULL
 ```
+
+The prototype dashboard reads human pageviews from `pageview_daily_aggregates_beacon` only. The old-mechanism summary table is kept in parallel so we can compare mechanisms and preserve the one-source-per-mechanism rule.
 
 Cardinality math: ~250 countries × ~100 canonical source names × 2 logged-in values = **~50k rows/day worst case**. In practice 2–5k rows/day. Across years, the table stays small, tightly indexed, sub-second on every dashboard query.
 
-Path-level drill-down (e.g., `reddit.com/r/programming` under "Reddit") needs a separate summary table with `host_path` as a column and top-N + "Other" truncation per `(date, source_name)`. Schema and N parameter deferred.
+`source_name` is intentionally a display/grouping key, not always a bare domain. Most referrers collapse to the canonical domain (`google.com`, `github.com`, `news.ycombinator.com`) to avoid path-cardinality explosions. Selected sources can preserve one meaningful path segment when it improves the top-referrers card without turning the summary table into full URL analytics. The initial exception is Reddit: `reddit.com/r/<subreddit>` is stored as the source key, while non-subreddit Reddit traffic collapses to `reddit.com`.
+
+Full path-level drill-down still needs a separate summary table with `host_path` as a column and top-N + "Other" truncation per `(date, source_name)`. Schema and N parameter deferred.
 
 ### Rollup job
 
-Runs nightly via Sidekiq (`Jobs::Scheduled`), one query per dimensional table:
+Runs nightly via Sidekiq (`Jobs::Scheduled`), one query per dimensional table. The job rolls each browser-pageview mechanism independently:
+
+- `browser_pageview_events` -> `pageview_daily_aggregates`
+- `browser_pageview_events_beacon` -> `pageview_daily_aggregates_beacon`
+
+The rollup must not `UNION` these tables. They are alternate accounting sources for browser pageviews; combining them risks double counting during transitions or experiments.
 
 ```sql
-INSERT INTO pageview_daily_aggregates (date, country_code, source_name, is_logged_in, count)
+INSERT INTO pageview_daily_aggregates_beacon (date, country_code, source_name, is_logged_in, count)
 SELECT
   (created_at AT TIME ZONE 'UTC')::date,
   country_code,
   parse_referrer_source(referrer),
   user_id IS NOT NULL,
   COUNT(*)
-FROM browser_pageview_events  -- plus UNION with the beacon table via a view
+FROM browser_pageview_events_beacon
 WHERE created_at >= :day_start AND created_at < :day_end
 GROUP BY 1, 2, 3, 4
 ON CONFLICT (date, country_code, source_name, is_logged_in)
@@ -115,15 +130,15 @@ DO UPDATE SET count = excluded.count;
 
 Properties:
 
-- **One pass over yesterday's events** populates every dashboard card's data.
+- **One pass over yesterday's events per mechanism** populates that mechanism's summary table.
 - **Idempotent.** Re-runnable any number of times for any day within event retention. Used for backfill, parser changes, bug fixes.
-- **No drift.** Every aggregate row's `count` equals `COUNT(*)` of the same source query. The dashboard's cards always reconcile to the same totals because they're all reads of the same underlying table.
+- **No drift.** Every aggregate row's `count` equals `COUNT(*)` of the same source query. The dashboard's human pageview cards reconcile because they read from one underlying beacon summary table.
 
 ### Today's partial-day data
 
 The nightly rollup writes yesterday and earlier. Today is partial. Two options, decision deferred:
 
-**A. UNION raw events for today.** Dashboard query reads aggregates for past days, raw events for today, in a `UNION ALL`. Always-fresh data, no scheduled work, slightly more SQL.
+**A. Read raw events for today.** Dashboard query reads aggregates for past days and the active raw event table for today. Always-fresh data, no scheduled work, slightly more SQL.
 
 **B. Incremental rollup every 5 minutes.** A scheduled job re-aggregates today from start-of-day with `ON CONFLICT DO UPDATE` (full replace, idempotent). Single read source for the dashboard, freshness lags ≤ 5 min. Adds a job but simplifies the dashboard query.
 
@@ -142,7 +157,10 @@ Done at rollup time so changes to parser rules can rewrite history within retent
 - **Vendor or fork** `github.com/snowplow-referer-parser/ruby-referer-parser` (Ruby gem `referer-parser`). The canonical Ruby implementation is functional but appears unreleased; we'd own its lifecycle.
 - **Pull `referers-latest.yaml`** from Snowplow's S3 weekly via a scheduled job. The YAML is the valuable artifact and is updated daily upstream.
 - **Add `custom_sources.yaml`** in core, version-controlled, for Discourse-specific overrides the upstream YAML doesn't cover.
-- The parser returns `{ source, medium, term }`. We use `source` for the `source_name` column. `medium` (search/social/email) is captured for the future GA4-style "Channels" rollup if/when that's needed.
+- The parser returns `{ source, medium, term, domain }`. We use this as classification input, not as the final dashboard key. A Discourse wrapper converts the parsed result plus the original URL into `source_name`.
+- The default `source_name` is the canonical domain from the parser (`google.com`, `github.com`, etc.). This consolidates noisy provider URLs such as Google search paths into one row.
+- Source-specific policies can override the default when path carries strong product value. Reddit is the first policy: if Snowplow classifies the referrer as Reddit and the URL path starts with `/r/<subreddit>`, `source_name` becomes `reddit.com/r/<subreddit>`. This avoids maintaining an exhaustive Reddit host allowlist, while still preserving the subreddit signal.
+- `medium` (search/social/email) is captured for the future GA4-style "Channels" rollup if/when that's needed.
 
 ## Country derivation
 
@@ -200,7 +218,7 @@ Implications:
 
 ## Open questions for implementation
 
-1. **Today's partial-day reads.** 5-minute rollup (option B) or `UNION ALL` with raw events (option A) — pick during implementation.
+1. **Today's partial-day reads.** 5-minute rollup (option B) or direct active-table reads for today (option A) — pick during implementation.
 2. **Path-level drill-down summary table.** Schema, top-N parameter, "Other" bucket label — design when the top-referrers card is scoped.
 3. **`pg_partman` for `browser_pageview_events`.** If retention windows or growth rate justify it. Available on RDS; would need to bake into the official self-hosted Docker image. Not required for v1; defer.
 4. **`hll` extension** for unique-visitor metrics. Optional; feature degrades to "exact distinct on small windows" if extension absent.

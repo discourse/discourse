@@ -605,6 +605,15 @@ basic:
   trigger_browser_pageview_events:
     default: false
     hidden: true
+  site_traffic_data_layer_enabled:
+    default: false
+    hidden: true
+  site_traffic_event_ip_retention_days:
+    default: 30
+    hidden: true
+  site_traffic_event_retention_days:
+    default: 180
+    hidden: true
   use_beacon_for_browser_page_views:
     default: false
     hidden: true

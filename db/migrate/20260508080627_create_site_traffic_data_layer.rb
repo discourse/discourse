@@ -2,58 +2,15 @@
 
 class CreateSiteTrafficDataLayer < ActiveRecord::Migration[8.0]
   EVENT_TABLES = %i[browser_pageview_events browser_pageview_events_beacon]
+  AGGREGATE_TABLES = %i[pageview_daily_aggregates pageview_daily_aggregates_beacon]
 
   def up
     EVENT_TABLES.each { |table_name| create_event_table(table_name) }
-
-    create_table :pageview_daily_aggregates, id: false do |t|
-      t.date :date, null: false
-      t.string :country_code, limit: 2
-      t.string :source_name, limit: 100, null: false
-      t.boolean :is_logged_in, null: false
-      t.integer :count, null: false
-    end
-
-    execute <<~SQL
-      ALTER TABLE pageview_daily_aggregates
-      ADD PRIMARY KEY (date, country_code, source_name, is_logged_in)
-    SQL
-
-    execute <<~SQL
-      CREATE VIEW browser_pageview_events_combined AS
-        SELECT
-          id,
-          created_at,
-          url,
-          ip_address,
-          referrer,
-          user_agent,
-          session_id,
-          country_code,
-          user_id,
-          topic_id,
-          false AS is_beacon
-        FROM browser_pageview_events
-        UNION ALL
-        SELECT
-          id,
-          created_at,
-          url,
-          ip_address,
-          referrer,
-          user_agent,
-          session_id,
-          country_code,
-          user_id,
-          topic_id,
-          true AS is_beacon
-        FROM browser_pageview_events_beacon
-    SQL
+    AGGREGATE_TABLES.each { |table_name| create_aggregate_table(table_name) }
   end
 
   def down
-    execute "DROP VIEW IF EXISTS browser_pageview_events_combined"
-    drop_table :pageview_daily_aggregates
+    AGGREGATE_TABLES.each { |table_name| drop_table table_name }
     EVENT_TABLES.each { |table_name| drop_table table_name }
   end
 
@@ -75,5 +32,27 @@ class CreateSiteTrafficDataLayer < ActiveRecord::Migration[8.0]
     add_index table_name, :created_at, using: :brin
     add_index table_name, :user_id
     add_index table_name, :topic_id
+  end
+
+  def create_aggregate_table(table_name)
+    create_table table_name, id: false do |t|
+      t.date :date, null: false
+      t.string :country_code, limit: 2
+      t.string :source_name, limit: 100, null: false
+      t.boolean :is_logged_in, null: false
+      t.integer :count, null: false
+    end
+
+    add_index table_name,
+              %i[date country_code source_name is_logged_in],
+              unique: true,
+              name: "#{table_name}_with_country_idx",
+              where: "country_code IS NOT NULL"
+
+    add_index table_name,
+              %i[date source_name is_logged_in],
+              unique: true,
+              name: "#{table_name}_without_country_idx",
+              where: "country_code IS NULL"
   end
 end

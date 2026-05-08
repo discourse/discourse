@@ -6994,6 +6994,12 @@ en:
               pageviews: "Pageviews"
               crawlers: "Crawlers"
               today_partial: "(today, partial)"
+          top_referrers:
+            title: "Top referrers"
+            empty: "No referral data for this period."
+          top_countries:
+            title: "Top countries"
+            empty: "No country data for this period."
           drilldown: "See details →"
           custom_range:
             title: "Pick a custom date range"

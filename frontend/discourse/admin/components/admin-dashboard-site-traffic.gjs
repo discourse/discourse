@@ -226,6 +226,48 @@ function cssVar(name) {
     .trim();
 }
 
+let regionNames;
+
+function regionDisplayName(countryCode) {
+  const code = countryCode?.toUpperCase();
+  if (!code) {
+    return "";
+  }
+
+  if (typeof Intl === "undefined" || !Intl.DisplayNames) {
+    return code;
+  }
+
+  try {
+    regionNames ||= new Intl.DisplayNames(
+      [document.documentElement.lang || "en"],
+      {
+        type: "region",
+      }
+    );
+    return regionNames.of(code) || code;
+  } catch {
+    return code;
+  }
+}
+
+function countryFlag(countryCode) {
+  const code = countryCode?.toUpperCase();
+  if (!/^[A-Z]{2}$/.test(code)) {
+    return "";
+  }
+
+  return [...code]
+    .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
+    .join("");
+}
+
+function countryLabel(countryCode) {
+  const flag = countryFlag(countryCode);
+  const name = regionDisplayName(countryCode);
+  return [flag, name].filter(Boolean).join(" ");
+}
+
 // Reactive Chart.js wrapper: builds the chart on first render and rebuilds
 // from scratch whenever `chartConfig` changes (period swap, filter pill
 // toggle). Chart.js init is fast enough that a full rebuild is fine.
@@ -533,6 +575,30 @@ export default class AdminDashboardSiteTraffic extends Component {
 
   get crawlerTotal() {
     return this.currentTotals?.[SERIES.CRAWLER] || 0;
+  }
+
+  get topReferrers() {
+    return (this.model?.related_data?.top_referrers || []).map((referrer) => ({
+      label: referrer.source_name,
+      count: number(referrer.count),
+      percent: referrer.percent,
+    }));
+  }
+
+  get hasTopReferrers() {
+    return this.topReferrers.length > 0;
+  }
+
+  get topCountries() {
+    return (this.model?.related_data?.top_countries || []).map((country) => ({
+      label: countryLabel(country.country_code),
+      count: number(country.count),
+      percent: country.percent,
+    }));
+  }
+
+  get hasTopCountries() {
+    return this.topCountries.length > 0;
   }
 
   // Build the Chart.js config from scratch in one place. Category x-axis
@@ -878,6 +944,68 @@ export default class AdminDashboardSiteTraffic extends Component {
             </div>
           {{/unless}}
         {{/if}}
+      </div>
+
+      <div class="admin-dashboard-site-traffic__ranked-row">
+        <section class="admin-dashboard-site-traffic__ranked-card">
+          <h3 class="admin-dashboard-site-traffic__ranked-title">
+            {{i18n "admin.dashboard.site_traffic.top_referrers.title"}}
+          </h3>
+
+          {{#if this.hasTopReferrers}}
+            <ol class="admin-dashboard-site-traffic__ranked-list">
+              {{#each this.topReferrers as |referrer|}}
+                <li class="admin-dashboard-site-traffic__ranked-item">
+                  <div class="admin-dashboard-site-traffic__ranked-line">
+                    <span class="admin-dashboard-site-traffic__ranked-name">
+                      {{referrer.label}}
+                    </span>
+                    <span class="admin-dashboard-site-traffic__ranked-value">
+                      {{referrer.percent}}%
+                      <span class="admin-dashboard-site-traffic__ranked-count">
+                        {{referrer.count}}
+                      </span>
+                    </span>
+                  </div>
+                </li>
+              {{/each}}
+            </ol>
+          {{else}}
+            <p class="admin-dashboard-site-traffic__ranked-empty">
+              {{i18n "admin.dashboard.site_traffic.top_referrers.empty"}}
+            </p>
+          {{/if}}
+        </section>
+
+        <section class="admin-dashboard-site-traffic__ranked-card">
+          <h3 class="admin-dashboard-site-traffic__ranked-title">
+            {{i18n "admin.dashboard.site_traffic.top_countries.title"}}
+          </h3>
+
+          {{#if this.hasTopCountries}}
+            <ol class="admin-dashboard-site-traffic__ranked-list">
+              {{#each this.topCountries as |country|}}
+                <li class="admin-dashboard-site-traffic__ranked-item">
+                  <div class="admin-dashboard-site-traffic__ranked-line">
+                    <span class="admin-dashboard-site-traffic__ranked-name">
+                      {{country.label}}
+                    </span>
+                    <span class="admin-dashboard-site-traffic__ranked-value">
+                      {{country.percent}}%
+                      <span class="admin-dashboard-site-traffic__ranked-count">
+                        {{country.count}}
+                      </span>
+                    </span>
+                  </div>
+                </li>
+              {{/each}}
+            </ol>
+          {{else}}
+            <p class="admin-dashboard-site-traffic__ranked-empty">
+              {{i18n "admin.dashboard.site_traffic.top_countries.empty"}}
+            </p>
+          {{/if}}
+        </section>
       </div>
 
       <div class="admin-dashboard-site-traffic-links">

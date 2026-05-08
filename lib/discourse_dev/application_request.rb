@@ -8,6 +8,29 @@ module DiscourseDev
     CRAWLER_MULTIPLIER = 76
     LEGACY_OVERHEAD = 3
 
+    COUNTRY_DISTRIBUTION = [
+      ["US", 42],
+      ["GB", 13],
+      ["DE", 9],
+      ["CA", 8],
+      ["AU", 6],
+      ["FR", 5],
+      ["IN", 4],
+      ["NL", 3],
+    ].freeze
+
+    SOURCE_DISTRIBUTION = [
+      [PageviewDailyAggregate::DIRECT_SOURCE_NAME, 44],
+      ["google.com", 20],
+      ["news.ycombinator.com", 10],
+      ["github.com", 8],
+      ["reddit.com/r/programming", 6],
+      ["reddit.com/r/ruby", 5],
+      ["duckduckgo.com", 3],
+      ["meta.discourse.org", 2],
+      ["reddit.com/r/discourse", 2],
+    ].freeze
+
     WEEKEND_FACTOR = 0.7
     JITTER_RANGE = 0.30
     DRIFT_FLOOR = 0.5
@@ -27,10 +50,22 @@ module DiscourseDev
         raise 'To run this rake task in a production site, set the value of `ALLOW_DEV_POPULATE` environment variable to "1"'
       end
 
-      rows = build_rows
-      puts "Seeding #{rows.size} application_requests rows from #{@start_date} to #{@end_date}"
-      bulk_upsert(rows)
-      rows.size
+      application_request_rows, pageview_daily_aggregate_rows = build_rows
+
+      puts "Seeding #{application_request_rows.size} application_requests rows from #{@start_date} to #{@end_date}"
+      bulk_upsert_application_requests(application_request_rows)
+
+      puts "Seeding #{pageview_daily_aggregate_rows.size} pageview_daily_aggregate rows into each mechanism table"
+      bulk_upsert_pageview_daily_aggregates(
+        :pageview_daily_aggregates,
+        pageview_daily_aggregate_rows,
+      )
+      bulk_upsert_pageview_daily_aggregates(
+        :pageview_daily_aggregates_beacon,
+        pageview_daily_aggregate_rows,
+      )
+
+      application_request_rows.size + (pageview_daily_aggregate_rows.size * 2)
     end
 
     def self.populate!
@@ -42,7 +77,8 @@ module DiscourseDev
     def build_rows
       spike_dates = pick_spike_dates
       total_days = [(@end_date - @start_date).to_i, 1].max
-      rows = []
+      application_request_rows = []
+      pageview_daily_aggregate_rows = []
 
       (@start_date..@end_date).each do |date|
         logged_in_browser = daily_logged_in_browser(date, total_days, spike_dates)
@@ -51,17 +87,78 @@ module DiscourseDev
         logged_in_legacy = (logged_in_browser * LEGACY_OVERHEAD).round
         anon_legacy = (anon_browser * LEGACY_OVERHEAD).round
 
-        rows << [
+        application_request_rows << [
           date,
           ::ApplicationRequest.req_types[:page_view_logged_in_browser],
           logged_in_browser,
         ]
-        rows << [date, ::ApplicationRequest.req_types[:page_view_anon_browser], anon_browser]
-        rows << [date, ::ApplicationRequest.req_types[:page_view_crawler], crawler]
-        rows << [date, ::ApplicationRequest.req_types[:page_view_logged_in], logged_in_legacy]
-        rows << [date, ::ApplicationRequest.req_types[:page_view_anon], anon_legacy]
+        application_request_rows << [
+          date,
+          ::ApplicationRequest.req_types[:page_view_anon_browser],
+          anon_browser,
+        ]
+        application_request_rows << [
+          date,
+          ::ApplicationRequest.req_types[:page_view_crawler],
+          crawler,
+        ]
+        application_request_rows << [
+          date,
+          ::ApplicationRequest.req_types[:page_view_logged_in],
+          logged_in_legacy,
+        ]
+        application_request_rows << [
+          date,
+          ::ApplicationRequest.req_types[:page_view_anon],
+          anon_legacy,
+        ]
+
+        append_pageview_daily_aggregate_rows(
+          pageview_daily_aggregate_rows,
+          date,
+          logged_in_browser,
+          true,
+        )
+        append_pageview_daily_aggregate_rows(
+          pageview_daily_aggregate_rows,
+          date,
+          anon_browser,
+          false,
+        )
       end
-      rows
+
+      [application_request_rows, pageview_daily_aggregate_rows]
+    end
+
+    def append_pageview_daily_aggregate_rows(rows, date, total_count, is_logged_in)
+      weighted_counts(total_count, COUNTRY_DISTRIBUTION).each do |country_code, country_count|
+        weighted_counts(country_count, SOURCE_DISTRIBUTION).each do |source_name, source_count|
+          rows << [date, country_code, source_name, is_logged_in, source_count]
+        end
+      end
+    end
+
+    def weighted_counts(total_count, distribution)
+      total_count = total_count.to_i
+      return [] if total_count <= 0
+
+      total_weight = distribution.sum { |_, weight| weight }
+      remaining = total_count
+
+      distribution
+        .map
+        .with_index do |(key, weight), index|
+          count =
+            if index == distribution.length - 1
+              remaining
+            else
+              [(total_count * weight.to_f / total_weight).round, remaining].min
+            end
+
+          remaining -= count
+          [key, count]
+        end
+        .select { |_, count| count > 0 }
     end
 
     def daily_logged_in_browser(date, total_days, spike_dates)
@@ -92,13 +189,39 @@ module DiscourseDev
       dates
     end
 
-    def bulk_upsert(rows)
+    def bulk_upsert_application_requests(rows)
       return if rows.empty?
       values_sql = rows.map { |d, t, c| "('#{d}', #{t}, #{c})" }.join(",")
       DB.exec(<<~SQL)
         INSERT INTO application_requests (date, req_type, count)
         VALUES #{values_sql}
         ON CONFLICT (date, req_type) DO UPDATE SET count = EXCLUDED.count
+      SQL
+    end
+
+    def bulk_upsert_pageview_daily_aggregates(table_name, rows)
+      return if rows.empty?
+
+      values_sql =
+        rows
+          .map do |date, country_code, source_name, is_logged_in, count|
+            quoted_country_code = ActiveRecord::Base.connection.quote(country_code)
+            quoted_source_name = ActiveRecord::Base.connection.quote(source_name)
+            "('#{date}', #{quoted_country_code}, #{quoted_source_name}, #{is_logged_in}, #{count})"
+          end
+          .join(",")
+
+      DB.exec(
+        "DELETE FROM #{table_name} WHERE date >= :start_date AND date <= :end_date",
+        start_date: @start_date,
+        end_date: @end_date,
+      )
+
+      DB.exec(<<~SQL)
+        INSERT INTO #{table_name} (date, country_code, source_name, is_logged_in, count)
+        VALUES #{values_sql}
+        ON CONFLICT (date, country_code, source_name, is_logged_in) WHERE country_code IS NOT NULL
+        DO UPDATE SET count = EXCLUDED.count
       SQL
     end
   end

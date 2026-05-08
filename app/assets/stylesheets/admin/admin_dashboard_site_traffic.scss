@@ -179,6 +179,66 @@
     align-items: center;
     gap: 0.5em;
   }
+
+  &__ranked-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2em;
+  }
+
+  &__ranked-card {
+    padding: 0.75em 0;
+  }
+
+  &__ranked-title {
+    margin: 0 0 0.85em;
+    font-size: var(--font-0);
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  &__ranked-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65em;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__ranked-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    align-items: baseline;
+  }
+
+  &__ranked-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 500;
+  }
+
+  &__ranked-value {
+    flex: 0 0 auto;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__ranked-count {
+    color: var(--primary-low-mid);
+    margin-left: 0.25em;
+  }
+
+  &__ranked-empty {
+    margin: 0;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
 }
 
 .site-traffic-period-selector__combo {
@@ -334,6 +394,10 @@
     &__kpi-row {
       gap: 1.5em;
       flex-wrap: wrap;
+    }
+
+    &__ranked-row {
+      grid-template-columns: 1fr;
     }
   }
 }
