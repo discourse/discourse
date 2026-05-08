@@ -534,8 +534,9 @@ class SessionController < ApplicationController
         backup_enabled: user.backup_codes_enabled?,
         allowed_methods: challenge[:allowed_methods],
       )
-      passkeys_for_2fa = user.passkeys_for_2fa_enabled?
-      if user.security_keys_enabled? || passkeys_for_2fa
+      security_keys_enabled = user.security_keys_enabled?
+      passkeys_for_2fa = user.passkeys_for_2fa_enabled? && !security_keys_enabled
+      if security_keys_enabled || passkeys_for_2fa
         DiscourseWebauthn.stage_challenge(user, server_session)
         json.merge!(
           DiscourseWebauthn.allowed_credentials(
@@ -544,7 +545,7 @@ class SessionController < ApplicationController
             include_passkeys: passkeys_for_2fa,
           ),
         )
-        json[:security_keys_enabled] = user.security_keys_enabled?
+        json[:security_keys_enabled] = security_keys_enabled
         json[:passkeys_enabled] = passkeys_for_2fa
       else
         json[:security_keys_enabled] = false

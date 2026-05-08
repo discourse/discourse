@@ -177,7 +177,9 @@ module SecondFactorManager
 
   def authenticate_security_key(server_session, security_key_credential)
     factor_types = [UserSecurityKey.factor_types[:second_factor]]
-    factor_types << UserSecurityKey.factor_types[:first_factor] if passkeys_for_2fa_enabled?
+    if passkeys_for_2fa_enabled? && !security_keys_enabled?
+      factor_types << UserSecurityKey.factor_types[:first_factor]
+    end
 
     ::DiscourseWebauthn::AuthenticationService.new(
       self,

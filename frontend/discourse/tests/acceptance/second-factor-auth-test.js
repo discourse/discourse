@@ -1,4 +1,10 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  visit,
+  waitUntil,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -40,6 +46,24 @@ const RESPONSES = {
     security_keys_enabled: true,
     allowed_methods: [BACKUP_CODE],
   },
+  okPasskey: {
+    totp_enabled: false,
+    backup_enabled: false,
+    security_keys_enabled: false,
+    passkeys_enabled: true,
+    allowed_methods: [SECURITY_KEY],
+    allowed_credential_ids: ["Y3JlZGVudGlhbC1pZA=="],
+    challenge: "challenge",
+  },
+  okPasskeyWithSecurityKey: {
+    totp_enabled: false,
+    backup_enabled: false,
+    security_keys_enabled: true,
+    passkeys_enabled: false,
+    allowed_methods: [SECURITY_KEY],
+    allowed_credential_ids: ["Y3JlZGVudGlhbC1pZA=="],
+    challenge: "challenge",
+  },
 };
 
 Object.keys(RESPONSES).forEach((k) => {
@@ -53,6 +77,7 @@ Object.keys(RESPONSES).forEach((k) => {
 });
 const WRONG_TOTP = "124323";
 let callbackCount = 0;
+let secondFactorCredentialId = null;
 
 acceptance("Second Factor Auth Page", function (needs) {
   needs.user();
@@ -66,6 +91,10 @@ acceptance("Second Factor Auth Page", function (needs) {
 
     server.post("/session/2fa", (request) => {
       const params = parsePostData(request.requestBody);
+      secondFactorCredentialId =
+        params.second_factor_token?.credentialId ||
+        params["second_factor_token[credentialId]"];
+
       if (params.second_factor_token === WRONG_TOTP) {
         return response(401, {
           error: "invalid token man",
@@ -89,7 +118,10 @@ acceptance("Second Factor Auth Page", function (needs) {
     });
   });
 
-  needs.hooks.beforeEach(() => (callbackCount = 0));
+  needs.hooks.beforeEach(() => {
+    callbackCount = 0;
+    secondFactorCredentialId = null;
+  });
 
   test("when challenge data fails to load", async function (assert) {
     await visit("/session/2fa?nonce=failed");
@@ -272,6 +304,135 @@ acceptance("Second Factor Auth Page", function (needs) {
       "user has been redirected to the redirect_url"
     );
     assert.strictEqual(callbackCount, 1, "callback request has been performed");
+  });
+
+  test("successful passkey submit from automatic prompt", async function (assert) {
+    const originalPublicKeyCredential = globalThis.PublicKeyCredential;
+    const originalCredentialsDescriptor = Object.getOwnPropertyDescriptor(
+      navigator,
+      "credentials"
+    );
+
+    globalThis.PublicKeyCredential = class {};
+
+    Object.defineProperty(navigator, "credentials", {
+      configurable: true,
+      value: {
+        get: async ({ publicKey }) => {
+          assert.strictEqual(
+            publicKey.userVerification,
+            "required",
+            "passkey authentication requires user verification"
+          );
+
+          assert.strictEqual(
+            publicKey.allowCredentials[0].id.byteLength,
+            13,
+            "credential IDs are passed to the browser request"
+          );
+
+          return {
+            response: {
+              signature: new Uint8Array([1]).buffer,
+              clientDataJSON: new Uint8Array([2]).buffer,
+              authenticatorData: new Uint8Array([3]).buffer,
+              userHandle: new Uint8Array([4]).buffer,
+            },
+            rawId: Uint8Array.from("credential-id", (char) =>
+              char.charCodeAt(0)
+            ).buffer,
+          };
+        },
+      },
+    });
+
+    try {
+      await visit("/session/2fa?nonce=okPasskey");
+      await waitUntil(() => callbackCount === 1);
+
+      assert.strictEqual(
+        secondFactorCredentialId,
+        "Y3JlZGVudGlhbC1pZA==",
+        "the matched credential ID is submitted"
+      );
+      assert.strictEqual(
+        currentURL(),
+        "/",
+        "user has been redirected to the redirect_url"
+      );
+      assert.strictEqual(
+        callbackCount,
+        1,
+        "callback request has been performed"
+      );
+    } finally {
+      globalThis.PublicKeyCredential = originalPublicKeyCredential;
+
+      if (originalCredentialsDescriptor) {
+        Object.defineProperty(
+          navigator,
+          "credentials",
+          originalCredentialsDescriptor
+        );
+      } else {
+        delete navigator.credentials;
+      }
+    }
+  });
+
+  test("security key prompt does not require user verification when passkeys are not advertised", async function (assert) {
+    const originalPublicKeyCredential = globalThis.PublicKeyCredential;
+    const originalCredentialsDescriptor = Object.getOwnPropertyDescriptor(
+      navigator,
+      "credentials"
+    );
+    let requestedUserVerification;
+
+    globalThis.PublicKeyCredential = class {};
+
+    Object.defineProperty(navigator, "credentials", {
+      configurable: true,
+      value: {
+        get: async ({ publicKey }) => {
+          requestedUserVerification = publicKey.userVerification;
+
+          return {
+            response: {
+              signature: new Uint8Array([1]).buffer,
+              clientDataJSON: new Uint8Array([2]).buffer,
+              authenticatorData: new Uint8Array([3]).buffer,
+            },
+            rawId: Uint8Array.from("credential-id", (char) =>
+              char.charCodeAt(0)
+            ).buffer,
+          };
+        },
+      },
+    });
+
+    try {
+      await visit("/session/2fa?nonce=okPasskeyWithSecurityKey");
+      await click("#security-key-authenticate-button");
+      await waitUntil(() => callbackCount === 1);
+
+      assert.strictEqual(
+        requestedUserVerification,
+        "discouraged",
+        "security-key authentication does not require user verification"
+      );
+    } finally {
+      globalThis.PublicKeyCredential = originalPublicKeyCredential;
+
+      if (originalCredentialsDescriptor) {
+        Object.defineProperty(
+          navigator,
+          "credentials",
+          originalCredentialsDescriptor
+        );
+      } else {
+        delete navigator.credentials;
+      }
+    }
   });
 
   test("sidebar is disabled on 2FA route", async function (assert) {

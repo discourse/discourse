@@ -276,7 +276,7 @@ export default class SecondFactorAuthController extends Controller {
           this.displayError(errorMessage);
         }
       },
-      { userVerification: this.passkeysEnabled ? "preferred" : "discouraged" }
+      { userVerification: this.passkeysEnabled ? "required" : "discouraged" }
     );
   }
 

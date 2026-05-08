@@ -14,6 +14,18 @@ export function bufferToBase64(buffer) {
   return btoa(String.fromCharCode(...new Uint8Array(buffer)));
 }
 
+function isArrayBuffer(value) {
+  return Object.prototype.toString.call(value) === "[object ArrayBuffer]";
+}
+
+function isAuthenticatorAssertionResponse(response) {
+  return (
+    isArrayBuffer(response?.signature) &&
+    isArrayBuffer(response?.clientDataJSON) &&
+    isArrayBuffer(response?.authenticatorData)
+  );
+}
+
 export function isWebauthnSupported() {
   return typeof PublicKeyCredential !== "undefined";
 }
@@ -67,16 +79,13 @@ export function getWebauthnCredential(
         challenge: challengeBuffer,
         allowCredentials,
         timeout: 60000, // this is just a hint
-        // "discouraged" for plain 2FA (security keys), "preferred" when passkeys
-        // may be present so the browser prompts for UV on passkey credentials
-        // while still allowing non-UV security keys.
         userVerification,
       },
       signal: WebauthnAbortHandler.signal(),
     })
     .then((credential) => {
-      // 3. If credential.response is not an instance of AuthenticatorAssertionResponse, abort the ceremony.
-      if (!(credential.response instanceof AuthenticatorAssertionResponse)) {
+      // 3. If credential.response is not an AuthenticatorAssertionResponse, abort the ceremony.
+      if (!isAuthenticatorAssertionResponse(credential.response)) {
         return errorCallback(i18n("login.security_key_invalid_response_error"));
       }
 
@@ -85,11 +94,12 @@ export function getWebauthnCredential(
 
       // 5. If options.allowCredentials is not empty, verify that credential.id identifies one of the public key
       // credentials listed in options.allowCredentials.
-      if (
-        !allowedCredentialIds.some(
-          (credentialId) => bufferToBase64(credential.rawId) === credentialId
-        )
-      ) {
+      const credentialId = allowedCredentialIds.find(
+        (allowedCredentialId) =>
+          bufferToBase64(credential.rawId) === allowedCredentialId
+      );
+
+      if (!credentialId) {
         return errorCallback(
           i18n("login.security_key_no_matching_credential_error")
         );
@@ -101,7 +111,7 @@ export function getWebauthnCredential(
         authenticatorData: bufferToBase64(
           credential.response.authenticatorData
         ),
-        credentialId: bufferToBase64(credential.rawId),
+        credentialId,
       };
 
       successCallback(credentialData);

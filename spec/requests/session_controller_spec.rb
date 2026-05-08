@@ -3118,6 +3118,38 @@ RSpec.describe SessionController do
         end
       end
 
+      context "when the user has both a passkey and a second-factor security key" do
+        before { SiteSetting.allow_passkeys_for_2fa = true }
+
+        let!(:passkey) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+          )
+        end
+
+        let!(:security_key) { Fabricate(:user_security_key_with_random_credential, user: user) }
+
+        it "exposes the security key credentials without passkeys" do
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+          get "/session/2fa.json", params: { nonce: nonce }
+
+          expect(response.status).to eq(200)
+          challenge_data = response.parsed_body
+          expect(challenge_data["passkeys_enabled"]).to eq(false)
+          expect(challenge_data["security_keys_enabled"]).to eq(true)
+          expect(challenge_data["allowed_credential_ids"]).to include(security_key.credential_id)
+          expect(challenge_data["allowed_credential_ids"]).not_to include(
+            valid_passkey_data[:credential_id],
+          )
+          expect(challenge_data["challenge"]).to be_present
+        end
+      end
+
       context "when the user has a passkey and allow_passkeys_for_2fa is disabled" do
         before { SiteSetting.allow_passkeys_for_2fa = false }
 
@@ -3330,6 +3362,25 @@ RSpec.describe SessionController do
 
           expect(response.status).to eq(400)
           expect(response.parsed_body["error"]).to eq(I18n.t("webauthn.validation.not_found_error"))
+        end
+
+        it "rejects a passkey assertion when a second-factor security key is enabled" do
+          SiteSetting.allow_passkeys_for_2fa = true
+          simulate_localhost_passkey_challenge
+          Fabricate(:user_security_key_with_random_credential, user: user)
+
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+
+          post "/session/2fa.json",
+               params: {
+                 nonce: nonce,
+                 second_factor_method: UserSecondFactor.methods[:security_key],
+                 second_factor_token: valid_passkey_auth_data,
+               }
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["error"]).to eq(I18n.t("webauthn.validation.ownership_error"))
         end
       end
     end
