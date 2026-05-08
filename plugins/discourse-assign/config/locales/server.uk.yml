@@ -65,6 +65,7 @@ uk:
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} призначив вас за '%{topic_title}'!"
+    subject_template_improved: "%{email_prefix}: %{assignee_name} призначив вам «%{topic_title}»!"
     text_body_template: |
       Вітаю, %{assignee_name} **призначив** вас до обговорення
       > **%{topic_title}**
