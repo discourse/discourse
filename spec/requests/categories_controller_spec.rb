@@ -780,7 +780,7 @@ RSpec.describe CategoriesController do
 
         expect do delete "/categories/#{category.slug}.json" end.to change(Category, :count).by(-1)
         expect(response.status).to eq(200)
-        expect(UserHistory.count).to eq(1)
+        expect(UserHistory.count).to eq(2) # 1 + 1 (bootstrap first admin)
         expect(TopicTimer.where(id: id).exists?).to eq(false)
       end
     end
