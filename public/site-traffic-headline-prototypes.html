@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site traffic headline state boards</title>
+<style>
+  :root,
+  .theme-scope {
+    --primary: #222;
+    --primary-medium: #646464;
+    --primary-low: #ddd;
+    --primary-very-low: #f4f4f4;
+    --secondary: #fff;
+    --secondary-very-high: #f8f8f8;
+    --tertiary: #3568ff;
+    --success: #1f7a3a;
+    --success-low: #e6f4ea;
+    --danger: #b63d2f;
+    --danger-low: #f8e9e6;
+    --neutral-low: #eee;
+    --logged-in: #4b3ce0;
+    --anonymous: #9c8dec;
+    --crawlers: #d5cdf7;
+    --font-down-2: 0.75rem;
+    --font-down-1: 0.875rem;
+    --font-up-1: 1.125rem;
+    --font-up-2: 1.25rem;
+    --font-up-3: 1.5rem;
+    --font-up-4: 2rem;
+    --d-border-radius-large: 8px;
+  }
+
+  .theme-scope[data-theme="dark"] {
+    --primary: #f4f4f4;
+    --primary-medium: #b5b5b5;
+    --primary-low: #3a3a3a;
+    --primary-very-low: #292929;
+    --secondary: #1f1f1f;
+    --secondary-very-high: #181818;
+    --tertiary: #88a2ff;
+    --success: #7ddc93;
+    --success-low: #17371f;
+    --danger: #ff8a7c;
+    --danger-low: #44221e;
+    --neutral-low: #303030;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 8% 0%, #e8edff 0, transparent 28rem),
+      #f8f8f8;
+    color: #222;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.45;
+  }
+
+  .page {
+    width: min(1480px, calc(100vw - 32px));
+    margin: 0 auto;
+    padding: 32px 0 72px;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .tab {
+    margin-bottom: -1px;
+    padding: 0.65rem 1rem;
+    border: 1px solid transparent;
+    border-bottom-color: #ddd;
+    border-radius: 8px 8px 0 0;
+    background: transparent;
+    color: #646464;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 650;
+  }
+
+  .tab[aria-selected="true"] {
+    border-color: #ddd;
+    border-bottom-color: #fff;
+    background: #fff;
+    color: #222;
+  }
+
+  .tab:focus-visible {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+  }
+
+  .option-panel {
+    display: none;
+  }
+
+  .option-panel.is-active {
+    display: block;
+  }
+
+  .state-list {
+    display: grid;
+    grid-template-columns: 8rem 8rem 4.5rem minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .grid-label {
+    display: flex;
+    align-items: center;
+    min-height: 2.35rem;
+    color: #646464;
+    font-size: var(--font-down-2);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .period-label {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.15rem;
+    min-height: 100%;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    border-top: 1px solid #e6e6e6;
+  }
+
+  .period-label--span {
+    grid-row: span 2;
+  }
+
+  .theme-label {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 100%;
+    padding-top: 0.65rem;
+    border-top: 1px solid #e6e6e6;
+    color: #646464;
+    font-size: var(--font-down-2);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .period-label span {
+    color: #222;
+    font-size: var(--font-down-1);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .period-label small {
+    color: #646464;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .mini-site-traffic {
+    min-width: 0;
+    padding: 0.75rem;
+    border: 1px solid var(--primary-low);
+    border-radius: 7px;
+    background: var(--secondary);
+    color: var(--primary);
+  }
+
+  .mini-site-traffic[data-theme="dark"] {
+    background: var(--secondary);
+  }
+
+  .mini-site-traffic__heading {
+    margin: 0 0 0.45rem;
+    color: var(--primary-medium);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .mini-site-traffic__headline {
+    margin: 0;
+    color: var(--primary);
+    font-size: 0.96rem;
+    font-weight: 650;
+    line-height: 1.28;
+  }
+
+  .mini-site-traffic__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: 0.35rem;
+    color: var(--primary-medium);
+    font-size: 0.76rem;
+    font-weight: 500;
+  }
+
+  .mini-site-traffic__comparison {
+    color: var(--primary-medium);
+    font-size: 0.72rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .mini-site-traffic__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 0.65rem;
+    color: var(--primary-medium);
+    font-size: 0.7rem;
+  }
+
+  .mini-site-traffic__chart {
+    position: relative;
+    height: 8.5rem;
+    margin-top: 0.8rem;
+    padding: 0.45rem 0.35rem 1.25rem 2.2rem;
+    border-top: 1px solid var(--primary-very-low);
+  }
+
+  .mini-site-traffic__grid {
+    position: absolute;
+    inset: 0.45rem 0.35rem 1.25rem 2.2rem;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .mini-site-traffic__grid span {
+    border-top: 1px solid var(--primary-very-low);
+  }
+
+  .mini-site-traffic__y-axis {
+    position: absolute;
+    top: 0.25rem;
+    bottom: 1.25rem;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 1.8rem;
+    color: var(--primary-medium);
+    font-size: 0.58rem;
+    text-align: right;
+  }
+
+  .mini-site-traffic__bars {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: end;
+    gap: 0.15rem;
+    height: 100%;
+  }
+
+  .mini-site-traffic__bar {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column-reverse;
+    min-width: 2px;
+    overflow: hidden;
+    border-radius: 2px 2px 0 0;
+  }
+
+  .mini-site-traffic__bar span {
+    min-height: 2px;
+  }
+
+  .mini-site-traffic__bar-logged-in {
+    background: var(--logged-in);
+  }
+
+  .mini-site-traffic__bar-anonymous {
+    background: var(--anonymous);
+  }
+
+  .mini-site-traffic__x-axis {
+    position: absolute;
+    right: 0.35rem;
+    bottom: 0;
+    left: 2.2rem;
+    display: flex;
+    justify-content: space-between;
+    color: var(--primary-medium);
+    font-size: 0.58rem;
+  }
+
+  .mini-site-traffic__empty {
+    position: absolute;
+    inset: 0.45rem 0.35rem 1.25rem 2.2rem;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--secondary) 72%, transparent);
+    color: var(--primary-medium);
+    font-size: 0.68rem;
+    pointer-events: none;
+  }
+
+  .mini-site-traffic__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+  }
+
+  .swatch {
+    width: 0.65rem;
+    height: 0.65rem;
+    border: 1.5px solid transparent;
+    border-radius: 2px;
+  }
+
+  .trend-text--up {
+    color: var(--success);
+  }
+
+  .trend-text--down {
+    color: var(--danger);
+  }
+
+  .trend-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.22em;
+    border-radius: 999px;
+    font-weight: 750;
+    line-height: 1.15;
+    white-space: nowrap;
+    padding: 0.08rem 0.38rem;
+    font-size: 0.72rem;
+  }
+
+  .comparison-text {
+    color: var(--primary-medium);
+    font-size: 0.78em;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .trend-badge--up {
+    background: var(--success-low);
+    color: var(--success);
+  }
+
+  .trend-badge--down {
+    background: var(--danger-low);
+    color: var(--danger);
+  }
+
+  @media (width <= 980px) {
+    .state-list {
+      grid-template-columns: 1fr;
+    }
+
+    .grid-label {
+      display: none;
+    }
+
+    .period-label {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="tabs" role="tablist" aria-label="Headline options" id="tabs"></div>
+  <div id="options"></div>
+</main>
+
+<script>
+  const PERIODS = [
+    {
+      key: "last_7_days",
+      selector: "Last 7 days",
+      descriptor: "in the last 7 days",
+      range: "2 May - 8 May 2026",
+      comparison: "vs prior period, Apr 25 - May 1",
+      bars: 7,
+      labels: ["2 May", "5 May", "8 May"],
+    },
+    {
+      key: "last_30_days",
+      selector: "Last 30 days",
+      descriptor: "in the last 30 days",
+      range: "9 Apr - 8 May 2026",
+      comparison: "vs prior period, Mar 10 - Apr 8",
+      bars: 30,
+      labels: ["9 Apr", "24 Apr", "8 May"],
+    },
+    {
+      key: "last_90_days",
+      selector: "Last 90 days",
+      descriptor: "in the last 90 days",
+      range: "8 Feb - 8 May 2026",
+      comparison: "vs prior period, Nov 10 - Feb 7",
+      bars: 13,
+      labels: ["9 Feb", "30 Mar", "4 May"],
+    },
+    {
+      key: "last_12_months",
+      selector: "Last 12 months",
+      descriptor: "in the last 12 months",
+      range: "9 May 2025 - 8 May 2026",
+      comparison: "vs prior period, May 9 2024 - May 8 2025",
+      bars: 12,
+      labels: ["May 2025", "Nov 2025", "May 2026"],
+    },
+    {
+      key: "custom",
+      selector: "Custom range",
+      descriptor: "in the selected range",
+      range: "17 Mar - 8 May 2026",
+      comparison: "vs prior period, Jan 23 - Mar 16",
+      bars: 8,
+      labels: ["17 Mar", "13 Apr", "8 May"],
+    },
+  ];
+
+  const SCENARIOS = [
+    { key: "up", label: "Up", count: "712k", share: 64, direction: "up", delta: "9%", shape: [42, 48, 54, 63, 70, 79, 88, 96] },
+    { key: "down", label: "Down", count: "512k", share: 59, direction: "down", delta: "12%", shape: [96, 90, 82, 76, 68, 60, 55, 49] },
+    { key: "small", label: "Small delta", count: "84.2k", share: 71, direction: "up", delta: "0.3%", shape: [48, 49, 51, 50, 52, 51, 53, 54] },
+    { key: "none", label: "No comparison", count: "18.6k", share: 82, direction: null, delta: null, shape: [18, 22, 25, 28, 32, 35, 38, 42] },
+    { key: "zero", label: "Zero", count: "0", share: 0, direction: null, delta: null, shape: [0, 0, 0, 0, 0, 0, 0, 0] },
+  ];
+
+  const OPTIONS = [
+    {
+      key: "baseline",
+      title: "Option A",
+    },
+    {
+      key: "inline",
+      title: "Option B",
+    },
+    {
+      key: "badge",
+      title: "Option C",
+    },
+  ];
+
+  function trendText(scenario) {
+    if (!scenario.direction) {
+      return "";
+    }
+    return `${scenario.direction} ${scenario.delta}`;
+  }
+
+  function trendClass(scenario) {
+    return scenario.direction === "down" ? "down" : "up";
+  }
+
+  function pills() {
+    return `
+      <div class="mini-site-traffic__pills">
+        <span class="mini-site-traffic__pill"><span class="swatch" style="background: var(--logged-in); border-color: var(--logged-in)"></span>Logged in</span>
+        <span class="mini-site-traffic__pill"><span class="swatch" style="background: var(--anonymous); border-color: var(--anonymous)"></span>Anonymous</span>
+        <span class="mini-site-traffic__pill"><span class="swatch" style="background: transparent; border-color: var(--crawlers)"></span>Crawlers</span>
+      </div>
+    `;
+  }
+
+  function chart(period, scenario) {
+    const values = Array.from({ length: period.bars }, (_, index) => {
+      const source = scenario.shape[index % scenario.shape.length];
+      if (source === 0) {
+        return 0;
+      }
+      const wave = Math.sin(index / 1.6) * 4;
+      return Math.max(1, Math.round(source + wave));
+    });
+    const max = Math.max(...values, 1);
+    const isEmpty = values.every((value) => value === 0);
+    const topLabel = period.bars > 12 ? "200k" : "40k";
+
+    const bars = values.map((value) => {
+      const height = Math.max(4, Math.round((value / max) * 96));
+      const loggedIn = Math.max(2, Math.round(height * (scenario.share / 100)));
+      const anonymous = Math.max(2, height - loggedIn);
+      return `
+        <div class="mini-site-traffic__bar" style="height: ${height}px">
+          <span class="mini-site-traffic__bar-logged-in" style="height: ${loggedIn}px"></span>
+          <span class="mini-site-traffic__bar-anonymous" style="height: ${anonymous}px"></span>
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="mini-site-traffic__chart" aria-hidden="true">
+        <div class="mini-site-traffic__y-axis"><span>${topLabel}</span><span>${period.bars > 12 ? "100k" : "20k"}</span><span>0</span></div>
+        <div class="mini-site-traffic__grid"><span></span><span></span><span></span></div>
+        <div class="mini-site-traffic__bars">${bars}</div>
+        <div class="mini-site-traffic__x-axis">${period.labels.map((label) => `<span>${label}</span>`).join("")}</div>
+        ${isEmpty ? `<div class="mini-site-traffic__empty">No traffic data for this period.</div>` : ""}
+      </div>
+    `;
+  }
+
+  function headline(option, period, scenario) {
+    const trend = trendText(scenario);
+    const base = `${scenario.count} pageviews ${period.descriptor}`;
+    const trendClassName = trend ? trendClass(scenario) : "";
+    const baseline = trend ? period.comparison : "";
+
+    if (option.key === "badge") {
+      const trendMeta = trend
+        ? `<div class="mini-site-traffic__meta"><span class="trend-badge trend-badge--${trendClassName}">${trend}</span><span class="mini-site-traffic__comparison">${baseline}</span></div>`
+        : "";
+      return `
+        <p class="mini-site-traffic__headline">${scenario.count} pageviews ${period.descriptor}</p>
+        ${trendMeta}
+      `;
+    }
+
+    if (option.key === "inline") {
+      const suffix = trend
+        ? ` - <span class="trend-text--${trendClassName}">${trend}</span> <span class="comparison-text">${baseline}</span>`
+        : "";
+      return `<p class="mini-site-traffic__headline">${base}${suffix}</p>`;
+    }
+
+    const suffix = trend
+      ? ` - <span class="${trendClassName === "down" ? "trend-text--down" : ""}">${trend}</span>`
+      : "";
+    return `<p class="mini-site-traffic__headline">${base}${suffix}</p>`;
+  }
+
+  function stateCell(option, period, scenario, theme) {
+    return `
+      <article class="mini-site-traffic theme-scope" data-theme="${theme}">
+        <p class="mini-site-traffic__heading">Site traffic</p>
+        ${headline(option, period, scenario)}
+        ${pills()}
+        ${chart(period, scenario)}
+      </article>
+    `;
+  }
+
+  function board(option) {
+    const header = `
+      <div class="grid-label">Period</div>
+      <div class="grid-label">Scenario</div>
+      <div class="grid-label">Theme</div>
+      <div class="grid-label">Preview</div>
+    `;
+    const rows = PERIODS.map((period) =>
+      SCENARIOS.map((scenario) => `
+        <div class="period-label period-label--span">
+          <span>${period.selector}</span>
+          <small>${period.range}</small>
+        </div>
+        <div class="period-label period-label--span">
+          <span>${scenario.label}</span>
+          <small>${scenario.direction ? trendText(scenario) : "trend omitted"}</small>
+        </div>
+        <div class="theme-label">Light</div>
+        ${stateCell(option, period, scenario, "light")}
+        <div class="theme-label">Dark</div>
+        ${stateCell(option, period, scenario, "dark")}
+      `).join("")
+    ).join("");
+
+    return `
+      <div class="state-list">${header}${rows}</div>
+    `;
+  }
+
+  function renderOptions() {
+    document.getElementById("tabs").innerHTML = OPTIONS.map((option, index) => `
+      <button
+        class="tab"
+        id="tab-${option.key}"
+        type="button"
+        role="tab"
+        aria-controls="panel-${option.key}"
+        aria-selected="${index === 0}"
+        tabindex="${index === 0 ? "0" : "-1"}"
+        data-option="${option.key}"
+      >${option.title}</button>
+    `).join("");
+
+    document.getElementById("options").innerHTML = OPTIONS.map((option, index) => `
+      <section
+        class="option-panel ${index === 0 ? "is-active" : ""}"
+        id="panel-${option.key}"
+        role="tabpanel"
+        aria-labelledby="tab-${option.key}"
+        ${index === 0 ? "" : "hidden"}
+      >
+        ${board(option)}
+      </section>
+    `).join("");
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => activateTab(tab.dataset.option));
+      tab.addEventListener("keydown", (event) => {
+        const tabs = Array.from(document.querySelectorAll(".tab"));
+        const currentIndex = tabs.indexOf(event.currentTarget);
+        let nextIndex = currentIndex;
+
+        if (event.key === "ArrowRight") {
+          nextIndex = (currentIndex + 1) % tabs.length;
+        } else if (event.key === "ArrowLeft") {
+          nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+        } else {
+          return;
+        }
+
+        event.preventDefault();
+        tabs[nextIndex].focus();
+        activateTab(tabs[nextIndex].dataset.option);
+      });
+    });
+  }
+
+  function activateTab(optionKey) {
+    document.querySelectorAll(".tab").forEach((tab) => {
+      const isActive = tab.dataset.option === optionKey;
+      tab.setAttribute("aria-selected", isActive);
+      tab.tabIndex = isActive ? 0 : -1;
+    });
+
+    document.querySelectorAll(".option-panel").forEach((panel) => {
+      const isActive = panel.id === `panel-${optionKey}`;
+      panel.classList.toggle("is-active", isActive);
+      panel.hidden = !isActive;
+    });
+  }
+
+  renderOptions();
+</script>
+</body>
+</html>
