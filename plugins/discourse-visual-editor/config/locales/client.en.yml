@@ -11,6 +11,8 @@ en:
         undo: "Undo"
         redo: "Redo"
         reset: "Reset"
+        save: "Save"
+        dismiss_error: "Dismiss error"
         panel_outline: "Outline"
         panel_palette: "Palette"
         panel_inspector: "Inspector"
@@ -29,3 +31,13 @@ en:
       outline:
         empty: "No editable outlets on this page."
         outlet_label: "Outlet"
+      theme_admin:
+        open_button: "Visual Editor"
+        open_button_title: "Open the visual editor for this theme"
+      page_picker:
+        title: "Open visual editor"
+        description: "Pick a page to edit with %{theme}."
+        pages:
+          homepage: "Homepage"
+          categories: "Categories"
+          latest: "Latest"

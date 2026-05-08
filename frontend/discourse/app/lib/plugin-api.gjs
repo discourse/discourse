@@ -1,6 +1,11 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
-import { _renderBlocks } from "discourse/blocks/block-outlet";
+import {
+  _clearLayoutLayer,
+  _renderBlocks,
+  _setLayoutLayer,
+  LAYOUT_LAYERS,
+} from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -3422,6 +3427,76 @@ class _PluginApi {
     // points directly to the user's code that called api.renderBlocks().
     const callSiteError = captureCallSite(this.renderBlocks);
     _renderBlocks(outletName, blocks, this.container, callSiteError);
+  }
+
+  /**
+   * Publishes a layout for a specific layer of a block outlet. The block
+   * resolution chain walks layers in fixed precedence order — `session-draft`
+   * first, then `theme` (last entry in the theme stack wins), then
+   * `code-default` — and renders the highest-priority layer that has a
+   * layout set.
+   *
+   * Use this for:
+   * - Hydrating theme-shipped layouts at boot from the active theme stack
+   *   (`layer: "theme"`, with the originating `themeId`).
+   * - Publishing the visual editor's in-progress edits as a session draft
+   *   (`layer: "session-draft"`).
+   *
+   * The existing `api.renderBlocks(...)` continues to write into the
+   * `code-default` layer and is the right call for plugins / core that want
+   * to ship a default layout.
+   *
+   * @experimental This API is under active development and may change or be
+   * removed in future releases without prior notice.
+   *
+   * @param {string} outletName - The block outlet identifier.
+   * @param {"session-draft"|"theme"} layer - The layer to publish to.
+   * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} layout - The layout entries.
+   * @param {Object} [options]
+   * @param {number} [options.themeId] - Required when `layer === "theme"`. The
+   *   id of the theme this layout originated from.
+   * @returns {Promise<Array<import("discourse/blocks/block-outlet").LayoutEntry>>}
+   *   Promise resolving to the validated layout array.
+   * @throws {Error} If validation fails, the layer name is unknown, or
+   *   `options.themeId` is missing for the "theme" layer.
+   */
+  setLayoutLayer(outletName, layer, layout, options = {}) {
+    const callSiteError = captureCallSite(this.setLayoutLayer);
+    return _setLayoutLayer(outletName, layer, layout, this.container, {
+      ...options,
+      callSiteError,
+    });
+  }
+
+  /**
+   * Clears one layer's layout for an outlet. For the `theme` layer, an
+   * optional `options.themeId` targets a specific theme; omitting it clears
+   * every theme's layout for that outlet. If clearing leaves the outlet with
+   * no layouts at any layer, the outlet falls back to "no layout" (the
+   * `<:before>` and `<:after>` slots will yield `hasLayout` as `false`).
+   *
+   * @experimental This API is under active development and may change or be
+   * removed in future releases without prior notice.
+   *
+   * @param {string} outletName - The block outlet identifier.
+   * @param {"session-draft"|"theme"|"code-default"} layer - The layer to clear.
+   * @param {Object} [options]
+   * @param {number} [options.themeId] - When clearing the "theme" layer,
+   *   targets a specific theme. Omit to clear every theme's layout.
+   */
+  clearLayoutLayer(outletName, layer, options = {}) {
+    _clearLayoutLayer(outletName, layer, options);
+  }
+
+  /**
+   * The set of layer names accepted by `api.setLayoutLayer` /
+   * `api.clearLayoutLayer`, exposed as a constant for callers that want to
+   * avoid duplicating the string literals.
+   *
+   * @returns {Readonly<{SESSION_DRAFT: string, THEME: string, CODE_DEFAULT: string}>}
+   */
+  get LAYOUT_LAYERS() {
+    return LAYOUT_LAYERS;
   }
 
   /**

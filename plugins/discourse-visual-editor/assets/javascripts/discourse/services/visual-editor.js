@@ -1,40 +1,74 @@
 // @ts-check
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
+import { getOwner } from "@ember/owner";
+import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
-import { _getOutletLayouts } from "discourse/blocks/block-outlet";
+import {
+  _clearLayoutLayer,
+  _getOutletLayouts,
+  _setLayoutLayer,
+  LAYOUT_LAYERS,
+} from "discourse/blocks/block-outlet";
 import discourseDebounce from "discourse/lib/debounce";
-import { findEntry } from "../lib/mutate-layout";
+import PreloadStore from "discourse/lib/preload-store";
+import { cloneLayoutForDraft, findEntry } from "../lib/mutate-layout";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
 
 const FLUSH_DELAY_MS = 200;
 
 /**
- * Phase 1 + 2 editor service. Holds the editor's session state and mediates
- * the in-memory mutation pipeline.
+ * Phase 1 + 2 + 3 editor service. Holds the editor's session state and
+ * mediates the in-memory mutation pipeline.
  *
  * Reactivity contract: every `@tracked` field on this service is read by the
  * panels and the canvas chrome. Mutating one re-renders the relevant pieces
  * via Glimmer's tracking system without manual notification.
  *
- * Phase 2's mutation pipeline takes advantage of `entry.args` being a
- * `trackedObject` (wrapped in `block-outlet.gjs`'s `assignStableKeys`) and
- * `createBlockArgsWithReactiveGetters` defining reactive getters that read
- * straight from it. Setting `entry.args[name] = value` therefore propagates
- * to the rendered block via Glimmer's autotracking — no layout swap, no
- * component re-curry, no DOM tear-down. The block whose arg changed
- * re-renders the affected getter site; everything else stays put.
+ * Mutation pipeline: at `enter()`, the editor deep-clones every outlet's
+ * resolved layout and publishes those clones as the `session-draft` layer
+ * (highest precedence in the block resolution chain). Edits during the
+ * session mutate the draft entry's `args` (a `trackedObject`) directly —
+ * the curried block reads through reactive getters defined by
+ * `createBlockArgsWithReactiveGetters`, so a single `entry.args.title = "x"`
+ * propagates to that block's specific text node without re-rendering the
+ * layout structure or remounting the inspector form.
  *
- * Persistence and drag-drop remain out of scope until later phases.
+ * Eager-on-enter (rather than lazy-on-first-edit) is the key trick: the
+ * one-time layout-reference swap happens when the user clicks "Edit page",
+ * which is a moment they expect a state transition. After that, no layer
+ * switches happen until exit, so the canvas stays stable through every
+ * keystroke.
+ *
+ * Discard / exit clears every session-draft layer the editor materialised,
+ * leaving the underlying theme / code-default layers intact. Persistence
+ * (Phase 3d) publishes the saved layout to the `theme` layer silently —
+ * the session-draft is still resolved at that point, so the page doesn't
+ * re-render at save time.
  */
 export default class VisualEditorService extends Service {
   @service blocks;
   @service currentUser;
+  @service site;
   @service siteSettings;
 
   @tracked isActive = false;
   @tracked selectedBlockKey = null;
+
+  /**
+   * The id of the theme this editor session is bound to. Set on `enter()`
+   * — explicit `themeId` argument takes precedence; otherwise we fall back
+   * to whichever user-selectable theme is marked default on the site. The
+   * persistence service uses this when posting saves; if it remains null,
+   * the toolbar's Save button stays disabled.
+   *
+   * Phase 3f wires the URL-based theme chooser to set this via
+   * `enter({ themeId })` so admins picking a theme from the admin show page
+   * land here with the right target.
+   *
+   * @type {number|null}
+   */
+  @tracked activeThemeId = null;
 
   /**
    * Snapshot of the selected block populated by either the canvas chrome
@@ -49,6 +83,7 @@ export default class VisualEditorService extends Service {
    * are visible without us re-assigning `selectedBlockData`.
    */
   @tracked selectedBlockData = null;
+
   /**
    * Undo / redo stacks for in-memory edits. Each entry captures one batch of
    * arg mutations: the affected entry, plus a `Map` of `argName → previous
@@ -64,12 +99,16 @@ export default class VisualEditorService extends Service {
 
   /**
    * For each entry we've ever mutated, the `entry.args` snapshot taken
-   * before the first mutation. "Reset" walks this map and writes those
+   * before the first mutation. Reset / exit walk this map and write those
    * snapshots back into `entry.args`.
+   *
+   * Stored as a `trackedMap` so reads of `.size` (used by `isDirty`) open
+   * a tracked dependency on the collection — that's what keeps the toolbar's
+   * Save / Reset buttons reactive to the very first edit.
    *
    * @type {Map<Object, Map<string, *>>}
    */
-  _initialSnapshots = new Map();
+  _initialSnapshots = trackedMap();
 
   /**
    * Pending arg changes for the currently-selected block, accumulated across
@@ -79,6 +118,26 @@ export default class VisualEditorService extends Service {
    * @type {Map<string, *>}
    */
   _pendingArgs = new Map();
+
+  /**
+   * Outlets where this editor session has materialised a `session-draft`
+   * layer. Tracked here (rather than re-derived from the block-outlet
+   * record) so `exit` clears exactly what the editor published without
+   * touching drafts produced elsewhere.
+   *
+   * @type {Set<string>}
+   */
+  _draftedOutlets = new Set();
+
+  /**
+   * Names of every outlet whose draft layer has at least one in-memory
+   * mutation. Persistence iterates this set on Save to know which outlet
+   * layouts to POST. Cleared per-outlet by the persistence service after a
+   * successful save, and wholesale on `exit` / `resetAll`.
+   *
+   * @type {Set<string>}
+   */
+  _editedOutlets = new Set();
 
   /**
    * Whether the current user is allowed to use the editor. Staff are always
@@ -128,23 +187,106 @@ export default class VisualEditorService extends Service {
   }
 
   @action
-  enter() {
+  enter({ themeId } = {}) {
     if (!this.canEdit) {
       return;
     }
     this.isActive = true;
+    this.activeThemeId = themeId ?? this._defaultThemeId();
     document.body.classList.add("visual-editor-active");
+    this._materializeAllDrafts();
+  }
+
+  /**
+   * Picks a default theme id for editor sessions that didn't supply one.
+   * Reads from the `activatedThemes` preload — the server-resolved active
+   * theme stack for this request, ordered parent-first by
+   * `Theme.transform_ids`. The first id is the parent theme (the one the
+   * page is actually rendering against), which is exactly what we want to
+   * save edits to.
+   *
+   * Falls back to the user-selectable themes list when activatedThemes is
+   * unavailable (legacy preload format) or empty. Returns null when no
+   * themes are available, in which case the Save button stays disabled.
+   *
+   * @returns {number|null}
+   */
+  _defaultThemeId() {
+    const activated = PreloadStore.get("activatedThemes");
+    if (activated && typeof activated === "object") {
+      const ids = Object.keys(activated)
+        .map((id) => parseInt(id, 10))
+        .filter((id) => Number.isFinite(id) && id > 0);
+      if (ids.length > 0) {
+        return ids[0];
+      }
+    }
+    const themes = this.site?.user_themes ?? [];
+    return (
+      themes.find((t) => t.default)?.theme_id ?? themes[0]?.theme_id ?? null
+    );
+  }
+
+  /**
+   * Eagerly publishes a `session-draft` layer for every outlet that has a
+   * resolved layout. After this runs, `_getOutletLayouts()` returns draft
+   * entries for those outlets — the rest of the editor session mutates
+   * those drafts in place via `trackedObject`, so no further layer swap
+   * happens during typing.
+   *
+   * Idempotent: running over already-drafted outlets is a no-op (skipped by
+   * the `_draftedOutlets` check). Invoked from `enter()`.
+   */
+  _materializeAllDrafts() {
+    for (const outletName of this.editableOutlets) {
+      if (this._draftedOutlets.has(outletName)) {
+        continue;
+      }
+      const layout = this.readResolvedLayout(outletName);
+      if (!layout) {
+        continue;
+      }
+      const draftLayout = cloneLayoutForDraft(layout);
+      _setLayoutLayer(
+        outletName,
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        draftLayout,
+        getOwner(this)
+      );
+      this._draftedOutlets.add(outletName);
+    }
   }
 
   @action
   exit() {
+    // Roll back any in-memory mutations recorded in initial snapshots. With
+    // session-drafts active, the underlying entries weren't actually
+    // mutated, so this is effectively a no-op for the production path
+    // (we're about to drop the drafts anyway). For test paths that bypass
+    // `enter()` and mutate code-default entries directly, this restores
+    // them so test isolation holds.
+    for (const [entry, snapshot] of this._initialSnapshots) {
+      this._writeArgs(entry, snapshot);
+    }
+
+    // Clear session-drafts. The underlying theme/code-default layer becomes
+    // resolved again, displaying whatever was there before the editor
+    // opened — in-memory mutations live ONLY on draft entries, so dropping
+    // the drafts discards the mutations cleanly.
+    for (const outletName of this._draftedOutlets) {
+      _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
+    }
+    this._draftedOutlets.clear();
+
     this.isActive = false;
+    this.activeThemeId = null;
     this.selectedBlockKey = null;
     this.selectedBlockData = null;
     this._undoStack.length = 0;
     this._redoStack.length = 0;
     this._initialSnapshots.clear();
     this._pendingArgs.clear();
+    this._editedOutlets.clear();
     document.body.classList.remove("visual-editor-active");
   }
 
@@ -188,7 +330,9 @@ export default class VisualEditorService extends Service {
 
     // Bind `args` to the LIVE `entry.args` (a `trackedObject`) so consumers
     // that need a live read (canvas-side, undo restoration, etc.) see
-    // current values.
+    // current values. Walks `_getOutletLayouts()`, which returns the
+    // resolved entry per outlet — so when session-drafts are active, we
+    // bind to the draft entry, not the underlying layer's.
     const liveData = { ...data };
     this._bindLiveArgs(liveData);
 
@@ -226,10 +370,6 @@ export default class VisualEditorService extends Service {
     }
     const layoutMap = _getOutletLayouts();
     for (const [, record] of layoutMap) {
-      // `record.layout` is the raw layout array exposed alongside the
-      // validatedLayout promise — synchronously accessible from the moment
-      // the layout is registered. We don't await `validatedLayout` here so
-      // the click → select path stays fully synchronous.
       const layout = record.layout;
       if (!layout) {
         continue;
@@ -285,10 +425,6 @@ export default class VisualEditorService extends Service {
    * and the curried block reads through reactive getters, the canvas
    * updates without re-rendering anything else.
    *
-   * Phase 2 limitation: walks layouts via `_getOutletLayouts()`, which only
-   * returns the live map in DEBUG builds. In production the mutation is a
-   * no-op until Phase 3 lands the public layout-resolution API.
-   *
    * @param {string} argName
    * @param {*} value
    */
@@ -302,13 +438,14 @@ export default class VisualEditorService extends Service {
   }
 
   /**
-   * Applies every pending arg change in one shot by mutating `entry.args`
-   * directly. The block's reactive getters propagate the change through
-   * Glimmer's autotracking — no layout swap, no DOM tear-down.
+   * Applies every pending arg change in one shot by mutating the resolved
+   * entry's `args` directly. The block's reactive getters propagate the
+   * change through Glimmer's autotracking — no layout swap, no DOM
+   * tear-down, no inspector remount.
    *
-   * Captures both the pre-batch and post-batch arg values for undo / redo,
-   * so undoing rolls back the entire burst rather than replaying keystrokes
-   * one at a time.
+   * Captures the pre-edit snapshot BEFORE applying the mutation so reset /
+   * exit / undo have the original state to restore. Records the affected
+   * outlet in `_editedOutlets` so persistence knows what to POST on Save.
    *
    * @returns {Promise<boolean>} True if the flush touched an entry.
    */
@@ -320,22 +457,30 @@ export default class VisualEditorService extends Service {
     const pending = [...this._pendingArgs.entries()];
     this._pendingArgs.clear();
 
-    const entry = await this._findEntry(key);
-    if (!entry) {
+    const located = await this._findEntryAndOutlet(key);
+    if (!located) {
       return false;
     }
+    const { entry, outletName } = located;
+    this._editedOutlets.add(outletName);
 
     const prev = new Map();
-    const next = new Map();
     for (const [argName] of pending) {
       prev.set(argName, entry.args?.[argName]);
     }
+
+    // Capture the FULL pre-edit snapshot before applying mutations so
+    // reset / exit have a complete picture of what to roll back to. Doing
+    // this after the mutation would capture the post-edit state and make
+    // rollback a no-op.
+    this._captureInitialSnapshot(entry, prev);
+
+    const next = new Map();
     for (const [argName, value] of pending) {
       next.set(argName, value);
       entry.args[argName] = value;
     }
 
-    this._captureInitialSnapshot(entry, prev);
     this._undoStack.push({ entry, prev, next });
     this._redoStack.length = 0;
 
@@ -378,7 +523,9 @@ export default class VisualEditorService extends Service {
 
   /**
    * Restores every touched entry back to its initial (pre-edit) args and
-   * clears history. Used by the toolbar's "Reset" affordance.
+   * clears history. The session-draft layers stay published — the canvas
+   * is reactive on the draft entries, so writing initial args into them is
+   * enough for the user-visible "reset". Drafts get cleared on `exit`.
    *
    * @returns {Promise<boolean>}
    */
@@ -393,6 +540,7 @@ export default class VisualEditorService extends Service {
     this._undoStack.length = 0;
     this._redoStack.length = 0;
     this._initialSnapshots.clear();
+    this._editedOutlets.clear();
     return true;
   }
 
@@ -417,22 +565,22 @@ export default class VisualEditorService extends Service {
   /**
    * Captures an entry's pre-edit args the FIRST time it's about to be
    * mutated, so `resetAll()` has a stable target regardless of how many
-   * later edits we apply on top.
+   * later edits we apply on top. Caller MUST invoke this BEFORE applying
+   * the mutation — otherwise the snapshot captures the post-edit state.
    */
   _captureInitialSnapshot(entry, prev) {
     if (this._initialSnapshots.has(entry)) {
       return;
     }
-    // The `prev` map may not include keys the entry already had but which
-    // we never edited; the snapshot needs ALL of them so reset is a true
-    // round-trip. Take a shallow clone of the full args object.
+    // Snapshot the entire pre-edit args object so reset is a true
+    // round-trip even when later batches edit different keys. The `prev`
+    // map is layered in for any keys it carries that aren't already in
+    // the snapshot — defensive, since `prev` is built from `entry.args`
+    // reads in the same critical section.
     const fullSnapshot = new Map();
     for (const [k, v] of Object.entries(entry.args ?? {})) {
       fullSnapshot.set(k, v);
     }
-    // Layer in the just-captured `prev` for any keys we're now editing
-    // that weren't already in the snapshot (defensive — shouldn't happen
-    // since we read `entry.args[k]` to populate `prev`).
     for (const [k, v] of prev) {
       if (!fullSnapshot.has(k)) {
         fullSnapshot.set(k, v);
@@ -442,24 +590,40 @@ export default class VisualEditorService extends Service {
   }
 
   /**
-   * Walks every registered outlet's layout looking for the entry whose
-   * composite key matches. Returns the live (mutable) layout entry so the
-   * caller can mutate `entry.args` in place.
+   * Walks every registered outlet's resolved layout looking for the entry
+   * whose composite key matches. Returns the live entry plus its containing
+   * outlet name so the caller can both mutate `entry.args` in place AND
+   * tell persistence which outlet just got dirty.
+   *
+   * @param {string} key
+   * @returns {Promise<{entry: Object, outletName: string}|null>}
    */
-  async _findEntry(key) {
+  async _findEntryAndOutlet(key) {
     const layoutMap = _getOutletLayouts();
-    for (const [, entryRecord] of layoutMap) {
+    for (const [outletName, record] of layoutMap) {
       let layout;
       try {
-        layout = await entryRecord.validatedLayout;
+        layout = await record.validatedLayout;
       } catch {
         continue;
       }
       const found = findEntry(layout, key);
       if (found) {
-        return found;
+        return { entry: found, outletName };
       }
     }
     return null;
+  }
+
+  /**
+   * Returns the resolved layout array for an outlet, or null when no layout
+   * is registered. Used by the persistence service to grab the snapshot of
+   * an edited outlet that needs to be POSTed.
+   *
+   * @param {string} outletName
+   * @returns {Array<Object>|null}
+   */
+  readResolvedLayout(outletName) {
+    return _getOutletLayouts().get(outletName)?.layout ?? null;
   }
 }

@@ -766,6 +766,138 @@ RSpec.describe ThemeField do
     end
   end
 
+  describe "block_layout field" do
+    let(:valid_layout) do
+      {
+        schema_version: 1,
+        layout: [
+          { block: "hero-banner", args: { title: "Welcome" } },
+          {
+            block: "block-group",
+            args: {
+              direction: "row",
+            },
+            children: [{ block: "feature-card", args: { icon: "star" } }],
+          },
+        ],
+      }.to_json
+    end
+
+    it "registers block_layout as type_id 9" do
+      expect(ThemeField.types[:block_layout]).to eq(9)
+    end
+
+    it "bakes a valid layout into the canonical JSON form" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: valid_layout,
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to be_nil
+      parsed = JSON.parse(field.value_baked)
+      expect(parsed["schema_version"]).to eq(1)
+      expect(parsed["layout"].length).to eq(2)
+    end
+
+    it "records an error when the JSON is malformed" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: "{not valid json",
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to match(/Invalid block_layout JSON/)
+      expect(field.value_baked).to be_nil
+    end
+
+    it "records an error for an unsupported schema_version" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: { schema_version: 99, layout: [] }.to_json,
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to match(/Unsupported block_layout schema_version/)
+    end
+
+    it "rejects a payload that's missing the layout array" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: { schema_version: 1 }.to_json,
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to match(/requires a "layout" array/)
+    end
+
+    it "rejects an entry without a block reference" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: { schema_version: 1, layout: [{ args: { title: "x" } }] }.to_json,
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to match(/non-empty "block" string/)
+    end
+
+    it "rejects nesting deeper than BLOCK_LAYOUT_MAX_DEPTH" do
+      # Build a chain of nested children one deeper than the limit.
+      max = ThemeField::BLOCK_LAYOUT_MAX_DEPTH
+      tail = { block: "leaf" }
+      (max + 1).times { tail = { block: "container", children: [tail] } }
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: { schema_version: 1, layout: [tail] }.to_json,
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to match(/exceeds maximum nesting depth/)
+    end
+
+    it "exposes a file_path for Git export" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: valid_layout,
+        )
+      theme.save!
+
+      expect(field.file_path).to eq("block_layouts/homepage-blocks.json")
+    end
+
+    it "matches block_layouts/<name>.json on Git import" do
+      opts = ThemeField.opts_from_file_path("block_layouts/homepage-blocks.json")
+      expect(opts).to eq(name: "homepage-blocks", target: :common, type: :block_layout)
+    end
+  end
+
   describe "migration JavaScript field" do
     it "must match a specific format for filename" do
       field = Fabricate(:migration_theme_field, theme: theme)
