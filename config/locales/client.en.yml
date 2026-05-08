@@ -6956,6 +6956,7 @@ en:
 
         site_traffic:
           heading: "Site traffic"
+          prototype_link: "View headline prototypes"
           headline:
             count:
               one: "%{formattedCount} pageview %{periodDescriptor}"

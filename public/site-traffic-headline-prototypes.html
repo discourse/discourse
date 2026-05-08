@@ -535,7 +535,7 @@
     }
 
     const suffix = trend
-      ? ` - <span class="${trendClassName === "down" ? "trend-text--down" : ""}">${trend}</span>`
+      ? ` - <span class="trend-text--${trendClassName}">${trend}</span>`
       : "";
     return `<p class="mini-site-traffic__headline">${base}${suffix}</p>`;
   }

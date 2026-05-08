@@ -134,7 +134,7 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 
 4.2 The headline matches the human-traffic portion of the chart bars exactly. (Crawler bars may render in addition; they don't affect the headline number.)
 
-4.3 Format: `<count> pageviews <period descriptor> — <up|down> <delta>%` (e.g., "712k pageviews in the last 30 days — up 9%"). Counts use locale-aware abbreviations (e.g., 712k, 1.2M).
+4.3 **Option A headline format for the working prototype**: `<count> pageviews <period descriptor> — <up|down> <delta>%` (e.g., "712k pageviews in the last 30 days — up 9%"). Counts use locale-aware abbreviations (e.g., 712k, 1.2M). This is intentionally compact and does **not** include the comparison basis inline; the comparison basis remains an unresolved design question for a future iteration.
 
 4.4 The trend phrase is included when a meaningful comparison can be made and is omitted when:
 - The prior period extends before pageview tracking began (see **Trend coverage** in Key concepts).
@@ -142,11 +142,24 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 - Current and prior values are equal, or differ by less than 0.05% (a "0%" or "0.0%" trend would be visual noise).
 - The prior period had zero pageviews and the current has some (a "new" or arbitrary trend would mislead).
 
+When the trend phrase is omitted, the headline stops after the period descriptor. It should not render a dash, placeholder, "no change", "no comparison", or muted explanatory copy in Option A. Examples:
+
+- "0 pageviews in the last 7 days"
+- "712k pageviews in the last 30 days"
+- "4.2M pageviews in the selected period"
+
 4.4a **Trend precision**: when `|delta|` is at least 1%, the trend shows an integer percent (e.g., "up 9%", "down 12%"). When `|delta|` is less than 1% but at least 0.05%, the trend shows one decimal place (e.g., "up 0.3%", "down 0.7%") so admins still see a meaningful indicator on quiet periods.
 
 4.5 When the prior period had pageviews and the current has zero, the trend reads "down 100%".
 
-4.6 Negative trends are visually distinguishable from positive trends, with the cue meeting accessibility contrast standards.
+4.6 Trend color in Option A:
+
+- Positive trend phrase (`up <delta>%`) is green/success colored.
+- Negative trend phrase (`down <delta>%`) is red/danger colored.
+- The pageview count and period descriptor remain the normal headline text color.
+- Colors must be theme-aware and meet accessibility contrast standards in both light and dark mode.
+
+4.6a The dash between the period descriptor and trend phrase is neutral text color, not trend-colored. Only the words and percentage in the trend phrase carry the trend color.
 
 4.7 The headline is shown on both public and private communities.
 

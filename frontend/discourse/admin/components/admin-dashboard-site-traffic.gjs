@@ -369,9 +369,11 @@ export default class AdminDashboardSiteTraffic extends Component {
       return null;
     }
     const rawPct = ((current - prior) / prior) * 100;
+    if (Math.abs(rawPct) < 0.05) {
+      return null;
+    }
     if (Math.abs(rawPct) < 1) {
-      const oneDecimal = Math.round(rawPct * 10) / 10;
-      return oneDecimal === 0 ? null : oneDecimal;
+      return (Math.sign(rawPct) * Math.round(Math.abs(rawPct) * 10)) / 10;
     }
     return Math.round(rawPct);
   }
@@ -792,13 +794,21 @@ export default class AdminDashboardSiteTraffic extends Component {
         <h2 class="admin-dashboard-site-traffic__heading">
           {{i18n "admin.dashboard.site_traffic.heading"}}
         </h2>
-        <SiteTrafficPeriodSelector
-          @period={{this.period}}
-          @setPeriod={{this.setPeriod}}
-          @setCustomDateRange={{this.setCustomDateRange}}
-          @startDate={{this.startDate}}
-          @endDate={{this.endDate}}
-        />
+        <div class="admin-dashboard-site-traffic__section-actions">
+          <a
+            class="admin-dashboard-site-traffic__prototype-link"
+            href="/site-traffic-headline-prototypes.html"
+          >
+            {{i18n "admin.dashboard.site_traffic.prototype_link"}}
+          </a>
+          <SiteTrafficPeriodSelector
+            @period={{this.period}}
+            @setPeriod={{this.setPeriod}}
+            @setCustomDateRange={{this.setCustomDateRange}}
+            @startDate={{this.startDate}}
+            @endDate={{this.endDate}}
+          />
+        </div>
       </div>
 
       <div class="admin-dashboard-site-traffic__card-wrapper">
