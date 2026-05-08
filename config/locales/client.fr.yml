@@ -5696,6 +5696,11 @@ fr:
         too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de réessayer.
         not_found_error: Nous sommes désolés, ce rapport n'existe pas
         custom_date_range: Plage de dates personnalisée
+        sections:
+          reports:
+            title: "Rapports"
+          traffic:
+            title: "Trafic du site"
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
           percent_change_tooltip: "Changement de %{percent}."

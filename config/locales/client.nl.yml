@@ -5734,6 +5734,11 @@ nl:
         too_many_requests: Je hebt deze actie te vaak uitgevoerd. Wacht voordat je het opnieuw probeert.
         not_found_error: Dit rapport bestaat niet
         custom_date_range: Aangepast datumbereik
+        sections:
+          reports:
+            title: "Rapporten"
+          traffic:
+            title: "Siteverkeer"
         reports:
           trend_title: "%{percent} wijziging. Momenteel %{current}, was %{prev} in voorgaande periode."
           percent_change_tooltip: "%{percent} verandering."

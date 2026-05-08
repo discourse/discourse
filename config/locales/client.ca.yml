@@ -3284,6 +3284,9 @@ ca:
         exception_error: Ho sentim. Hi ha hagut un error en executar la consulta.
         too_many_requests: Heu fet aquesta acció massa vegades. Espereu abans de tornar-ho a intentar.
         not_found_error: Ho sentim. Aquest report no existeix.
+        sections:
+          reports:
+            title: "Reports"
         reports:
           trend_title: "Canvi del %{percent}. Ara %{current}, era %{prev} en el període anterior."
           today: "Avui"

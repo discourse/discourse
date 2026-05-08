@@ -5040,6 +5040,9 @@ zh_TW:
         too_many_requests: 您已重複此動作太多次，請稍後再重試。
         not_found_error: 抱歉，這個報告不存在。
         custom_date_range: 自定義日期範圍
+        sections:
+          reports:
+            title: "報告"
         reports:
           trend_title: "%{percent}更改，最近更改時間是在%{current}。"
           percent_change_tooltip: "%{percent} 更改。"

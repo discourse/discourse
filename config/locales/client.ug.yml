@@ -5947,6 +5947,11 @@ ug:
         too_many_requests: بۇ مەشغۇلاتنى بەك كۆپ قىلدىڭىز. سەل كۈتۈپ ئاندىن قايتا سىناڭ.
         not_found_error: كەچۈرۈڭ، بۇ دوكلات مەۋجۇت ئەمەس
         custom_date_range: ئىختىيارى چېسلا دائىرىسى
+        sections:
+          reports:
+            title: "دوكلات"
+          traffic:
+            title: "بېكەت ئېقىمى"
         reports:
           trend_title: "ئۆزگىرىش %{percent}. نۆۋەتتىكى %{current}، ئالدىنقى مەزگىلدە %{prev}"
           percent_change_tooltip: "%{percent} ئۆزگەردى."

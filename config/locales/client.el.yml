@@ -6069,6 +6069,11 @@ el:
         too_many_requests: Έχετε εκτελέσει αυτήν την ενέργεια πάρα πολλές φορές. Περιμένετε πριν δοκιμάσετε ξανά.
         not_found_error: Λυπάμαι, αυτή η αναφορά δεν υπάρχει
         custom_date_range: Προσαρμοσμένο εύρος ημερομηνιών
+        sections:
+          reports:
+            title: "Αναφορές"
+          traffic:
+            title: "Κίνηση ιστότοπου"
         reports:
           trend_title: "%{percent} αλλαγή. Επί του παρόντος %{current}, ήταν %{prev} στην προηγούμενη περίοδο."
           percent_change_tooltip: "%{percent} αλλαγή."

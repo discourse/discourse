@@ -5670,6 +5670,11 @@ fi:
         too_many_requests: Olet tehnyt tämän toiminnon liian monta kertaa. Odota, ennen kuin yrität uudelleen.
         not_found_error: Raporttia ei ole olemassa
         custom_date_range: Mukautettu päivämääräalue
+        sections:
+          reports:
+            title: "Raportit"
+          traffic:
+            title: "Sivuston liikenne"
         reports:
           trend_title: "%{percent} muutos. Nyt %{current}, viime jaksossa %{prev}."
           percent_change_tooltip: "%{percent}:n muutos."
