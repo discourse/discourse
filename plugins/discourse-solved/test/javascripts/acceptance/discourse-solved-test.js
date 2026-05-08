@@ -12,7 +12,7 @@ acceptance(`Discourse Solved Plugin`, function (needs) {
   const ITEM_SELECTOR = ".d-solved-answers .d-post-excerpt-accordion-item";
   const BODY_SELECTOR = ".d-post-excerpt-accordion-item__body";
   const CONTENT_SELECTOR = ".d-post-excerpt-accordion-item__content";
-  const ACCEPTER_SELECTOR = ".d-solved-answers__accepter";
+  const ACCEPTER_SELECTOR = ".accepter-link";
 
   needs.user();
 

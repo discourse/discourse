@@ -53,7 +53,7 @@ export default class SolvedAccordionItemMetadata extends Component {
           @key="solved.marked_solved_by"
           as |Placeholder|
         >
-          <Placeholder @name="user" @class="d-solved-answers__accepter">
+          <Placeholder @name="user">
 
             <UserLink
               @username={{this.excerptPost.accepter_username}}

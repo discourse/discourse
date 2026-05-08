@@ -15,10 +15,9 @@ module DiscourseSolved
 
       solved
         .topic_answers
-        .sort_by { |ta| ta.post&.created_at }
-        .filter_map do |ta|
-          next unless ta.post
-
+        .select { |ta| ta.post.present? }
+        .sort_by { |ta| ta.post.created_at }
+        .map do |ta|
           AcceptedAnswerSerializer.new(
             ta.post,
             scope: guardian,

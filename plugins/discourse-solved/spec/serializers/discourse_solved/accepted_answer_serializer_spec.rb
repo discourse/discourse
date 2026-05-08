@@ -15,19 +15,33 @@ RSpec.describe DiscourseSolved::AcceptedAnswerSerializer do
     expect(json["topic_id"]).to eq(post.topic_id)
     expect(json["url"]).to eq(post.url)
     expect(json["username"]).to eq(user.username)
-    expect(json["name"]).to eq(user.name)
     expect(json["created_at"]).to eq(post.created_at)
     expect(json["cooked"]).to eq(post.cooked)
+    expect(json).not_to have_key("name")
     expect(json).not_to have_key("accepter_name")
     expect(json).not_to have_key("accepter_username")
+  end
+
+  context "when display_name_on_posts is set" do
+    before { SiteSetting.display_name_on_posts = true }
+    it "also includes the poster's name" do
+      expect(json["name"]).to eq(user.name)
+    end
   end
 
   context "when show_who_marked_solved is enabled" do
     before { SiteSetting.show_who_marked_solved = true }
 
-    it "includes the accepter name and username" do
-      expect(json["accepter_username"]).to eq(accepter.username)
-      expect(json["accepter_name"]).to eq(accepter.name)
+    it "includes the username" do
+      expect(json).not_to have_key("accepter_name")
+    end
+
+    context "when display_name_on_posts is set" do
+      before { SiteSetting.display_name_on_posts = true }
+      it "also includes the accepter name" do
+        expect(json["accepter_username"]).to eq(accepter.username)
+        expect(json["accepter_name"]).to eq(accepter.name)
+      end
     end
   end
 

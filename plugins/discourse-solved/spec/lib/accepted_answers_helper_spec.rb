@@ -137,7 +137,7 @@ RSpec.describe DiscourseSolved::AcceptedAnswersHelper do
           }.not_to raise_error
 
           expect(accepted_answers.length).to eq(2)
-          answer_post.destroy!
+          PostDestroyer.new(Discourse.system_user, answer_post).destroy
 
           expect {
             accepted_answers =
