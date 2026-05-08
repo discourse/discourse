@@ -193,14 +193,11 @@ export default class EventNodeView extends Component {
       const startM = attrs.start ? moment.tz(attrs.start, eventTz) : null;
 
       if (allDay) {
-        const startDateStr = startM ? startM.format("YYYY-MM-DD") : null;
         if (startM) {
-          updates.start = startDateStr;
+          updates.start = startM.format("YYYY-MM-DD");
         }
-        if (attrs.end) {
-          const endDateStr = moment.tz(attrs.end, eventTz).format("YYYY-MM-DD");
-          updates.end = endDateStr === startDateStr ? null : endDateStr;
-        }
+        // always clear the end date when enabling all-day
+        updates.end = null;
       } else if (startM) {
         const nowTime = moment.tz(eventTz);
         const newStart = startM
@@ -424,14 +421,44 @@ export default class EventNodeView extends Component {
             event,
             this.siteSettings
           );
+          const description = params.description ?? "";
+          delete params.description;
 
-          for (const [field, value] of Object.entries(params)) {
-            if (field === "description") {
-              this.updateNodeContent(value);
-            } else {
-              this.updateNodeAttribute(field, value);
+          const customFieldAttrs =
+            this.siteSettings.discourse_post_event_allowed_custom_fields
+              .split("|")
+              .filter(Boolean)
+              .map((f) => camelCase(f));
+          const clearableAttrs = [
+            "end",
+            "maxAttendees",
+            "name",
+            "location",
+            "url",
+            "timezone",
+            "recurrence",
+            "recurrenceUntil",
+            "showLocalTime",
+            "minimal",
+            "chatEnabled",
+            "allDay",
+            "allowedGroups",
+            "reminders",
+            "image",
+            "closed",
+            ...customFieldAttrs,
+          ];
+          for (const attr of clearableAttrs) {
+            if (!(attr in params)) {
+              this.updateNodeAttribute(attr, null);
             }
           }
+
+          for (const [field, value] of Object.entries(params)) {
+            this.updateNodeAttribute(field, value);
+          }
+
+          this.updateNodeContent(description);
         },
       },
     });

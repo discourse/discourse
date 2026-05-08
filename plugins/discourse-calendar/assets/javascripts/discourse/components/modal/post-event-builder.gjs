@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn, get } from "@ember/helper";
@@ -10,14 +9,12 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DateInput from "discourse/components/date-input";
 import DateTimeInputRange from "discourse/components/date-time-input-range";
+import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import RadioButton from "discourse/components/radio-button";
-import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
-import ComboBox from "discourse/select-kit/components/combo-box";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -28,7 +25,6 @@ import {
   reconcileDefaultReminder,
 } from "../../lib/raw-event-helper";
 import CompactEventEditor from "../compact-event-editor";
-import EventField from "../event-field";
 
 export default class PostEventBuilder extends Component {
   @service dialog;
@@ -37,7 +33,6 @@ export default class PostEventBuilder extends Component {
 
   @tracked flash = null;
   @tracked isSaving = false;
-  @tracked maxAttendeesInput = this.args.model.event.maxAttendees;
   @tracked screen = this.args.model.initialScreen || "compact";
 
   @tracked allDay = this.event.allDay || false;
@@ -48,6 +43,13 @@ export default class PostEventBuilder extends Component {
     this.event.status === "standalone" ? "public" : this.event.status;
   @tracked previousMaxAttendees = this.event.maxAttendees || null;
   @tracked attendanceMode = this.#initAttendanceMode();
+
+  // FormKit clones @data once on mount and treats it as immutable. Reading
+  // tracked event properties from a getter would invalidate this on every
+  // mirror-write and reinitialize the form (losing focus mid-keystroke).
+  // Snapshot once at construction; refresh only when toggleAdvanced enters
+  // the advanced screen.
+  formData = this.#snapshotFormData();
 
   #initAttendanceMode() {
     if (this.event.status === "standalone") {
@@ -90,6 +92,165 @@ export default class PostEventBuilder extends Component {
 
   get event() {
     return this.args.model.event;
+  }
+
+  #snapshotFormData() {
+    return {
+      name: this.event.name ?? "",
+      location: this.event.location ?? "",
+      url: this.event.url ?? "",
+      description: this.event.description ?? "",
+      allDay: !!this.event.allDay,
+      showLocalTime: !!this.event.showLocalTime,
+      chatEnabled: !!this.event.chatEnabled,
+      attendanceMode: this.attendanceMode,
+      maxAttendees: this.event.maxAttendees ?? null,
+      eventType:
+        this.event.status === "standalone"
+          ? this.previousRsvpStatus || "public"
+          : this.event.status || "public",
+      rawInvitees: this.event.rawInvitees ?? [],
+      recurrence: this.event.recurrence ?? null,
+      imageUpload: this.event.imageUpload ?? null,
+      timezone: this.event.timezone ?? null,
+      // clone so the form draft owns its own reminders
+      reminders: (this.event.reminders ?? []).map((r) => ({ ...r })),
+    };
+  }
+
+  @action
+  registerForm(api) {
+    this.formApi = api;
+  }
+
+  // mirror and change back to event model to keep compact view synced
+  @action
+  syncFieldToEvent(field, value, { set }) {
+    set(field, value);
+    this.event[field] = value;
+  }
+
+  @action
+  handleAllDayChange(value, { set }) {
+    set("allDay", value);
+    this.updateAllDay(value);
+  }
+
+  @action
+  handleAttendanceModeChange(value, { set }) {
+    set("attendanceMode", value);
+    // setAttendanceMode mirrors the resulting state back to the form
+    this.setAttendanceMode(value);
+  }
+
+  @action
+  handleMaxAttendeesChange(value, { set }) {
+    set("maxAttendees", value);
+    if (value === 0) {
+      this.setAttendanceMode("none");
+      return;
+    }
+    if (value > 0) {
+      this.#applyUpToValue(value);
+      return;
+    }
+    // just clear the data
+    this.event.maxAttendees = null;
+  }
+
+  #applyUpToValue(value) {
+    if (this.event.status === "standalone") {
+      this.event.status = this.previousRsvpStatus || "public";
+      this.event.reminders = (this.event.reminders || []).map((r) =>
+        r.type === "bumpTopic" ? { ...r, type: "notification" } : r
+      );
+      this.#syncRemindersToForm();
+    }
+    this.attendanceMode = "upTo";
+    this.event.maxAttendees = value;
+    this.previousMaxAttendees = value;
+    this.formApi?.setProperties({
+      attendanceMode: "upTo",
+      maxAttendees: value,
+      eventType: this.event.status,
+    });
+  }
+
+  @action
+  handleEventTypeChange(value, { set }) {
+    set("eventType", value);
+    this.onChangeStatus(value);
+  }
+
+  // GroupSelector uses (_, newGroups). Adapt to the form's field setter and
+  // mirror onto event so the BBCode build picks it up.
+  @action
+  handleInviteesChange(_, newInvitees) {
+    this.formApi?.set("rawInvitees", newInvitees);
+    this.event.rawInvitees = newInvitees;
+  }
+
+  @action
+  handleRecurrenceChange(value, { set }) {
+    set("recurrence", value);
+    this.setRecurrence(value);
+  }
+
+  @action
+  handleImageChange(value, { set }) {
+    set("imageUpload", value);
+    this.event.imageUpload = value;
+  }
+
+  @action
+  handleTimezoneChange(value, { set }) {
+    set("timezone", value);
+    // setNewTimezone re-anchors startsAt/endsAt in the new zone.
+    this.setNewTimezone(value);
+  }
+
+  @action
+  handleReminderFieldChange(field, index, value, { set }) {
+    set(field, value);
+    if (!this.event.reminders?.[index]) {
+      return;
+    }
+    this.event.reminders = this.event.reminders.map((r, i) =>
+      i === index ? { ...r, [field]: value } : r
+    );
+  }
+
+  @action
+  handleAddReminder(addItemToCollection) {
+    const def = defaultReminderFor({
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      allDay: this.allDay,
+    });
+    const reminder = {
+      type: this.allowsRsvps ? def.type : "bumpTopic",
+      value: def.value,
+      unit: def.unit,
+      period: def.period,
+    };
+    this.event.addReminder(reminder);
+    addItemToCollection("reminders", { ...reminder });
+  }
+
+  @action
+  handleRemoveReminder(index, collectionRemove) {
+    this.event.reminders.splice(index, 1);
+    collectionRemove(index);
+  }
+
+  #syncRemindersToForm() {
+    if (!this.formApi) {
+      return;
+    }
+    this.formApi.set(
+      "reminders",
+      (this.event.reminders ?? []).map((r) => ({ ...r }))
+    );
   }
 
   get reminderTypes() {
@@ -253,7 +414,16 @@ export default class PostEventBuilder extends Component {
 
   @action
   toggleAdvanced() {
-    this.screen = this.isAdvancedScreen ? "compact" : "advanced";
+    if (this.isAdvancedScreen) {
+      // Leaving advanced — drop the stale form API reference.
+      this.formApi = null;
+      this.screen = "compact";
+    } else {
+      // Entering advanced — re-snapshot from the (possibly compact-edited)
+      // event before the form mounts.
+      this.formData = this.#snapshotFormData();
+      this.screen = "advanced";
+    }
   }
 
   @action
@@ -330,19 +500,11 @@ export default class PostEventBuilder extends Component {
         this.startsAt = snapped;
         this.event.startsAt = snapped;
       }
-      if (this.endsAt) {
-        const snapped = this.endsAt.clone().endOf("day");
-        this.endsAt = snapped;
-        this.event.endsAt = snapped;
-      }
-      if (
-        this.startsAt &&
-        this.endsAt &&
-        this.startsAt.isSame(this.endsAt, "day")
-      ) {
-        this.endsAt = null;
-        this.event.endsAt = null;
-      }
+      // Always clear the end date when enabling all-day so the user opts in
+      // to a multi-day span explicitly rather than inheriting an implicit
+      // same-day end from the prior timed range.
+      this.endsAt = null;
+      this.event.endsAt = null;
     } else if (this.startsAt) {
       const tz = this.event.timezone || "UTC";
       const nowTime = moment.tz(tz);
@@ -362,6 +524,7 @@ export default class PostEventBuilder extends Component {
     this.#reconcileReminder(prev);
   }
 
+  // for the compact view's CompactEventEditor
   @action
   updateMaxAttendees(value) {
     if (value === 0) {
@@ -369,23 +532,10 @@ export default class PostEventBuilder extends Component {
       return;
     }
     if (value > 0) {
-      if (this.event.status === "standalone") {
-        this.event.status = this.previousRsvpStatus || "public";
-        this.event.reminders = (this.event.reminders || []).map((r) =>
-          r.type === "bumpTopic" ? { ...r, type: "notification" } : r
-        );
-      }
-      if (this.attendanceMode !== "upTo") {
-        this.attendanceMode = "upTo";
-      }
-      this.event.maxAttendees = value;
-      this.maxAttendeesInput = `${value}`;
-      this.previousMaxAttendees = value;
+      this.#applyUpToValue(value);
       return;
     }
-    // preserve mode, just clear the data
     this.event.maxAttendees = null;
-    this.maxAttendeesInput = "";
   }
 
   @action
@@ -404,22 +554,6 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  setMaxAttendees(e) {
-    const raw = e.target.value;
-    const value = parseInt(raw, 10);
-    if (value === 0) {
-      this.setAttendanceMode("none");
-      return;
-    }
-    const validValue = Number.isFinite(value) && value > 0 ? value : null;
-    this.event.maxAttendees = validValue;
-    this.maxAttendeesInput = raw;
-    if (validValue) {
-      this.previousMaxAttendees = validValue;
-    }
-  }
-
-  @action
   onChangeDates(dates) {
     const prev = this.#captureConfig();
     this.event.startsAt = dates.from;
@@ -427,11 +561,6 @@ export default class PostEventBuilder extends Component {
     this.startsAt = dates.from;
     this.endsAt = dates.to;
     this.#reconcileReminder(prev);
-  }
-
-  @action
-  setAllDay(e) {
-    this.updateAllDay(e.target.checked);
   }
 
   get allowsRsvps() {
@@ -454,28 +583,22 @@ export default class PostEventBuilder extends Component {
     this.event.reminders = next.reminders;
     this.previousRsvpStatus = next.previousRsvpStatus;
     this.previousMaxAttendees = next.previousMaxAttendees;
-    this.maxAttendeesInput = next.maxAttendees ? `${next.maxAttendees}` : "";
-  }
-
-  @action
-  addReminder() {
-    const def = defaultReminderFor({
-      startsAt: this.startsAt,
-      endsAt: this.endsAt,
-      allDay: this.allDay,
+    this.formApi?.setProperties({
+      attendanceMode: mode,
+      maxAttendees: next.maxAttendees,
+      eventType:
+        next.status === "standalone"
+          ? this.previousRsvpStatus || "public"
+          : next.status,
     });
-    this.event.addReminder({
-      type: this.allowsRsvps ? def.type : "bumpTopic",
-      value: def.value,
-      unit: def.unit,
-      period: def.period,
-    });
+    this.#syncRemindersToForm();
   }
 
   @action
   onChangeStatus(newStatus) {
     this.event.rawInvitees = [];
     this.event.status = newStatus;
+    this.formApi?.set("rawInvitees", []);
   }
 
   @action
@@ -499,11 +622,6 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  setRawInvitees(_, newInvitees) {
-    this.event.rawInvitees = newInvitees;
-  }
-
-  @action
   setNewTimezone(newTz) {
     this.event.timezone = newTz;
     this.event.startsAt = moment.tz(
@@ -517,55 +635,6 @@ export default class PostEventBuilder extends Component {
     this.endsAt = this.event.endsAt
       ? moment(this.event.endsAt).tz(newTz)
       : null;
-  }
-
-  // Native input handlers
-  @action
-  setName(e) {
-    this.event.name = e.target.value;
-  }
-
-  @action
-  setLocation(e) {
-    this.event.location = e.target.value;
-  }
-
-  @action
-  setUrl(e) {
-    this.event.url = e.target.value;
-  }
-
-  @action
-  setDescription(e) {
-    this.event.description = e.target.value;
-  }
-
-  @action
-  setShowLocalTime(e) {
-    this.event.showLocalTime = e.target.checked;
-  }
-
-  @action
-  setImage(upload) {
-    this.event.imageUpload = upload;
-  }
-
-  @action
-  removeImage() {
-    this.event.imageUpload = null;
-  }
-
-  @action
-  setChatEnabled(e) {
-    this.event.chatEnabled = e.target.checked;
-  }
-
-  @action
-  setReminderValue(reminder, e) {
-    const val = e.target.value;
-    // keep numeric when possible
-    const parsed = val === "" ? null : Number(val);
-    reminder.value = Number.isFinite(parsed) ? parsed : val;
   }
 
   @action
@@ -659,13 +728,17 @@ export default class PostEventBuilder extends Component {
       <:body>
         <ConditionalLoadingSection @isLoading={{this.isSaving}}>
           {{#if this.isAdvancedScreen}}
-            <form>
+            <Form
+              @data={{this.formData}}
+              @onRegisterApi={{this.registerForm}}
+              as |form|
+            >
               <PluginOutlet
                 @name="post-event-builder-form"
-                @outletArgs={{lazyHash event=@model.event}}
+                @outletArgs={{lazyHash event=@model.event form=form}}
                 @connectorTagName="div"
               >
-                <EventField>
+                <form.Container @format="full">
                   <DateTimeInputRange
                     @from={{this.startsAt}}
                     @to={{this.endsAt}}
@@ -674,307 +747,396 @@ export default class PostEventBuilder extends Component {
                     @showFromTime={{this.showTime}}
                     @showToTime={{this.showTime}}
                   />
-                </EventField>
+                </form.Container>
 
-                <EventField
-                  @label="discourse_post_event.builder_modal.all_day.label"
-                  class="all-day"
+                <form.Field
+                  @name="allDay"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.all_day.label"
+                  }}
+                  @type="checkbox"
+                  @format="full"
+                  @onSet={{this.handleAllDayChange}}
+                  as |field|
                 >
-                  <label class="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={{this.allDay}}
-                      {{on "input" this.setAllDay}}
-                    />
-                    <span class="message">
-                      {{i18n
-                        "discourse_post_event.builder_modal.all_day.description"
-                      }}
-                    </span>
-                  </label>
-                </EventField>
+                  <field.Control>
+                    {{i18n
+                      "discourse_post_event.builder_modal.all_day.description"
+                    }}
+                  </field.Control>
+                </form.Field>
 
-                <EventField
-                  @label="discourse_post_event.builder_modal.name.label"
-                  class="name"
+                <form.Field
+                  @name="name"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.name.label"
+                  }}
+                  @type="input"
+                  @format="full"
+                  @onSet={{fn this.syncFieldToEvent "name"}}
+                  as |field|
                 >
-                  <input
-                    type="text"
-                    value={{@model.event.name}}
-                    {{on "input" this.setName}}
+                  <field.Control
                     placeholder={{i18n
                       "discourse_post_event.builder_modal.name.placeholder"
                     }}
                   />
-                </EventField>
+                </form.Field>
 
-                <EventField
-                  @label="discourse_post_event.builder_modal.location.label"
-                  class="location"
+                <form.Field
+                  @name="location"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.location.label"
+                  }}
+                  @type="input"
+                  @format="full"
+                  @onSet={{fn this.syncFieldToEvent "location"}}
+                  as |field|
                 >
-                  <input
-                    type="text"
-                    value={{@model.event.location}}
-                    {{on "input" this.setLocation}}
+                  <field.Control
                     placeholder={{i18n
                       "discourse_post_event.builder_modal.location.placeholder"
                     }}
                   />
-                </EventField>
+                </form.Field>
 
                 {{#if this.shouldRenderUrl}}
-                  <EventField
-                    @label="discourse_post_event.builder_modal.url.label"
-                    class="url"
+                  <form.Field
+                    @name="url"
+                    @title={{i18n
+                      "discourse_post_event.builder_modal.url.label"
+                    }}
+                    @type="input-url"
+                    @format="full"
+                    @onSet={{fn this.syncFieldToEvent "url"}}
+                    as |field|
                   >
-                    <input
-                      type="url"
-                      value={{@model.event.url}}
-                      {{on "input" this.setUrl}}
+                    <field.Control
                       placeholder={{i18n
                         "discourse_post_event.builder_modal.url.placeholder"
                       }}
                     />
-                  </EventField>
+                  </form.Field>
                 {{/if}}
 
-                <EventField
-                  @label="discourse_post_event.builder_modal.description.label"
-                  class="description"
+                <form.Field
+                  @name="description"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.description.label"
+                  }}
+                  @type="textarea"
+                  @format="full"
+                  @onSet={{fn this.syncFieldToEvent "description"}}
+                  as |field|
                 >
-                  <textarea
-                    value={{@model.event.description}}
-                    {{on "input" this.setDescription}}
+                  <field.Control
+                    @autoResize={{true}}
                     placeholder={{i18n
                       "discourse_post_event.builder_modal.description.placeholder"
                     }}
-                  ></textarea>
-                </EventField>
+                  />
+                </form.Field>
 
-                <EventField
-                  class="attendance"
-                  @label="discourse_post_event.builder_modal.attendance.label"
+                <form.Field
+                  @name="attendanceMode"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.attendance.label"
+                  }}
+                  @type="radio-group"
+                  @format="full"
+                  @onSet={{this.handleAttendanceModeChange}}
+                  as |field|
                 >
-                  <label class="radio-label">
-                    <RadioButton
-                      @name="attendance"
-                      @value="unlimited"
-                      @selection={{this.attendanceMode}}
-                      @onChange={{this.setAttendanceMode}}
-                    />
-                    <span class="message">
-                      {{i18n
-                        "discourse_post_event.builder_modal.attendance.unlimited"
-                      }}
-                    </span>
-                  </label>
-                  <div class="attendance__up-to">
-                    <label class="radio-label">
-                      <RadioButton
-                        @name="attendance"
-                        @value="upTo"
-                        @selection={{this.attendanceMode}}
-                        @onChange={{this.setAttendanceMode}}
-                      />
-                      <span class="message">
+                  <field.Control as |radioGroup|>
+                    <radioGroup.Radio @value="unlimited" as |radio|>
+                      <radio.Title>
+                        {{i18n
+                          "discourse_post_event.builder_modal.attendance.unlimited"
+                        }}
+                      </radio.Title>
+                    </radioGroup.Radio>
+                    <radioGroup.Radio @value="upTo" as |radio|>
+                      <radio.Title>
                         {{i18n
                           "discourse_post_event.builder_modal.attendance.up_to"
                         }}
-                      </span>
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      value={{this.maxAttendeesInput}}
-                      disabled={{not (eq this.attendanceMode "upTo")}}
-                      {{on "input" this.setMaxAttendees}}
-                      class="attendance__up-to-input"
-                    />
-                  </div>
-                  <label class="radio-label">
-                    <RadioButton
-                      @name="attendance"
-                      @value="none"
-                      @selection={{this.attendanceMode}}
-                      @onChange={{this.setAttendanceMode}}
-                    />
-                    <span class="message">
-                      {{i18n
-                        "discourse_post_event.builder_modal.attendance.none"
-                      }}
-                    </span>
-                  </label>
-                </EventField>
+                      </radio.Title>
+                      <radio.Description>
+                        <form.Field
+                          @name="maxAttendees"
+                          @title={{i18n
+                            "discourse_post_event.builder_modal.max_attendees.label"
+                          }}
+                          @showTitle={{false}}
+                          @type="input-number"
+                          @disabled={{not (eq field.value "upTo")}}
+                          @onSet={{this.handleMaxAttendeesChange}}
+                          as |maxField|
+                        >
+                          <maxField.Control min="0" />
+                        </form.Field>
+                      </radio.Description>
+                    </radioGroup.Radio>
+                    <radioGroup.Radio @value="none" as |radio|>
+                      <radio.Title>
+                        {{i18n
+                          "discourse_post_event.builder_modal.attendance.none"
+                        }}
+                      </radio.Title>
+                    </radioGroup.Radio>
+                  </field.Control>
+                </form.Field>
 
                 {{#if this.allowsRsvps}}
-                  <EventField
-                    @label="discourse_post_event.builder_modal.event_type.label"
+                  <form.Field
+                    @name="eventType"
+                    @title={{i18n
+                      "discourse_post_event.builder_modal.event_type.label"
+                    }}
+                    @type="radio-group"
+                    @format="full"
+                    @onSet={{this.handleEventTypeChange}}
+                    as |field|
                   >
-                    <label class="radio-label">
-                      <RadioButton
-                        @name="status"
-                        @value="public"
-                        @selection={{@model.event.status}}
-                        @onChange={{this.onChangeStatus}}
-                      />
-                      <span class="message">
-                        <span class="title">
+                    <field.Control as |radioGroup|>
+                      <radioGroup.Radio @value="public" as |radio|>
+                        <radio.Title>
                           {{i18n
                             "discourse_post_event.builder_modal.event_type.public.title"
                           }}
-                        </span>
-                        <span class="description">
+                        </radio.Title>
+                        <radio.Description>
                           {{i18n
                             "discourse_post_event.builder_modal.event_type.public.description"
                           }}
-                        </span>
-                      </span>
-                    </label>
-                    <label class="radio-label">
-                      <RadioButton
-                        @name="status"
-                        @value="private"
-                        @selection={{@model.event.status}}
-                        @onChange={{this.onChangeStatus}}
-                      />
-                      <span class="message">
-                        <span class="title">
+                        </radio.Description>
+                      </radioGroup.Radio>
+                      <radioGroup.Radio @value="private" as |radio|>
+                        <radio.Title>
                           {{i18n
                             "discourse_post_event.builder_modal.event_type.private.title"
                           }}
-                        </span>
-                        <span class="description">
+                        </radio.Title>
+                        <radio.Description>
                           {{i18n
                             "discourse_post_event.builder_modal.event_type.private.description"
                           }}
-                        </span>
-                      </span>
-                    </label>
-                  </EventField>
+                        </radio.Description>
+                      </radioGroup.Radio>
+                    </field.Control>
+                  </form.Field>
 
-                  <EventField
-                    @enabled={{eq @model.event.status "private"}}
-                    @label="discourse_post_event.builder_modal.invitees.label"
-                  >
-                    <GroupSelector
-                      @groupFinder={{this.groupFinder}}
-                      @groupNames={{@model.event.rawInvitees}}
-                      @onChangeCallback={{this.setRawInvitees}}
-                      @placeholderKey="topic.invite_private.group_name"
-                    />
-                  </EventField>
+                  {{#if (eq @model.event.status "private")}}
+                    <form.Field
+                      @name="rawInvitees"
+                      @title={{i18n
+                        "discourse_post_event.builder_modal.invitees.label"
+                      }}
+                      @type="custom"
+                      @format="full"
+                      as |field|
+                    >
+                      <field.Control>
+                        <GroupSelector
+                          @groupFinder={{this.groupFinder}}
+                          @groupNames={{field.value}}
+                          @onChangeCallback={{this.handleInviteesChange}}
+                          @placeholderKey="topic.invite_private.group_name"
+                        />
+                      </field.Control>
+                    </form.Field>
+                  {{/if}}
                 {{/if}}
 
-                <EventField
-                  class="timezone"
-                  @label="discourse_post_event.builder_modal.timezone.label"
+                <form.Field
+                  @name="timezone"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.timezone.label"
+                  }}
+                  @type="custom"
+                  @format="full"
+                  @onSet={{this.handleTimezoneChange}}
+                  as |field|
                 >
-                  <TimezoneInput
-                    @value={{@model.event.timezone}}
-                    @onChange={{this.setNewTimezone}}
-                    @none="discourse_post_event.builder_modal.timezone.remove_timezone"
-                  />
-                </EventField>
-
-                <EventField
-                  class="show-local-time"
-                  @label="discourse_post_event.builder_modal.show_local_time.label"
-                >
-                  <label class="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={{@model.event.showLocalTime}}
-                      {{on "input" this.setShowLocalTime}}
+                  <field.Control>
+                    <TimezoneInput
+                      @value={{field.value}}
+                      @onChange={{field.set}}
+                      @none="discourse_post_event.builder_modal.timezone.remove_timezone"
                     />
-                    <span class="message">
-                      {{i18n
-                        "discourse_post_event.builder_modal.show_local_time.description"
-                        timezone=@model.event.timezone
-                      }}
-                    </span>
-                  </label>
-                </EventField>
+                  </field.Control>
+                </form.Field>
 
-                <EventField
-                  class="reminders"
-                  @label="discourse_post_event.builder_modal.reminders.label"
+                <form.Field
+                  @name="showLocalTime"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.show_local_time.label"
+                  }}
+                  @type="checkbox"
+                  @format="full"
+                  @onSet={{fn this.syncFieldToEvent "showLocalTime"}}
+                  as |field|
                 >
-                  <div class="reminders-list">
-                    {{#each @model.event.reminders as |reminder|}}
-                      <div class="reminder-item">
-                        <ComboBox
-                          @value={{reminder.type}}
-                          @nameProperty="name"
-                          @valueProperty="value"
-                          @content={{this.reminderTypes}}
-                          class="reminder-type"
-                        />
+                  <field.Control>
+                    {{i18n
+                      "discourse_post_event.builder_modal.show_local_time.description"
+                      timezone=@model.event.timezone
+                    }}
+                  </field.Control>
+                </form.Field>
 
-                        <input
-                          type="number"
-                          class="reminder-value"
-                          min="0"
-                          step="1"
-                          value={{reminder.value}}
-                          {{on "input" (fn this.setReminderValue reminder)}}
-                          placeholder={{i18n
-                            "discourse_post_event.builder_modal.name.placeholder"
-                          }}
-                        />
+                <form.Container
+                  class="reminders"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.reminders.label"
+                  }}
+                  @format="full"
+                >
+                  <form.Collection
+                    @name="reminders"
+                    class="reminders-list"
+                    as |collection index|
+                  >
+                    <div class="reminder-item">
+                      <collection.Field
+                        @name="type"
+                        @title={{i18n
+                          "discourse_post_event.builder_modal.reminders.types.notification"
+                        }}
+                        @showTitle={{false}}
+                        @type="select"
+                        @onSet={{fn
+                          this.handleReminderFieldChange
+                          "type"
+                          index
+                        }}
+                        class="reminder-type"
+                        as |field|
+                      >
+                        <field.Control as |select|>
+                          {{#each this.reminderTypes as |opt|}}
+                            <select.Option
+                              @value={{opt.value}}
+                            >{{opt.name}}</select.Option>
+                          {{/each}}
+                        </field.Control>
+                      </collection.Field>
 
-                        <ComboBox
-                          @value={{reminder.unit}}
-                          @nameProperty="name"
-                          @valueProperty="value"
-                          @content={{this.reminderUnits}}
-                          class="reminder-unit"
-                        />
+                      <collection.Field
+                        @name="value"
+                        @title={{i18n
+                          "discourse_post_event.builder_modal.reminders.label"
+                        }}
+                        @showTitle={{false}}
+                        @type="input-number"
+                        @onSet={{fn
+                          this.handleReminderFieldChange
+                          "value"
+                          index
+                        }}
+                        class="reminder-value"
+                        as |field|
+                      >
+                        <field.Control min="0" />
+                      </collection.Field>
 
-                        <ComboBox
-                          @value={{reminder.period}}
-                          @nameProperty="name"
-                          @valueProperty="value"
-                          @content={{this.reminderPeriods}}
-                          class="reminder-period"
-                        />
+                      <collection.Field
+                        @name="unit"
+                        @title={{i18n
+                          "discourse_post_event.builder_modal.reminders.units.minutes"
+                        }}
+                        @showTitle={{false}}
+                        @type="select"
+                        @onSet={{fn
+                          this.handleReminderFieldChange
+                          "unit"
+                          index
+                        }}
+                        class="reminder-unit"
+                        as |field|
+                      >
+                        <field.Control as |select|>
+                          {{#each this.reminderUnits as |opt|}}
+                            <select.Option
+                              @value={{opt.value}}
+                            >{{opt.name}}</select.Option>
+                          {{/each}}
+                        </field.Control>
+                      </collection.Field>
 
-                        <DButton
-                          @action={{fn @model.event.removeReminder reminder}}
-                          @icon="xmark"
-                          class="btn-default remove-reminder"
-                        />
-                      </div>
-                    {{/each}}
-                  </div>
+                      <collection.Field
+                        @name="period"
+                        @title={{i18n
+                          "discourse_post_event.builder_modal.reminders.periods.before"
+                        }}
+                        @showTitle={{false}}
+                        @type="select"
+                        @onSet={{fn
+                          this.handleReminderFieldChange
+                          "period"
+                          index
+                        }}
+                        class="reminder-period"
+                        as |field|
+                      >
+                        <field.Control as |select|>
+                          {{#each this.reminderPeriods as |opt|}}
+                            <select.Option
+                              @value={{opt.value}}
+                            >{{opt.name}}</select.Option>
+                          {{/each}}
+                        </field.Control>
+                      </collection.Field>
+
+                      <DButton
+                        @action={{fn
+                          this.handleRemoveReminder
+                          index
+                          collection.remove
+                        }}
+                        @icon="xmark"
+                        class="btn-default remove-reminder"
+                      />
+                    </div>
+                  </form.Collection>
 
                   <DButton
                     @disabled={{this.addReminderDisabled}}
                     @icon="plus"
                     @label="discourse_post_event.builder_modal.add_reminder"
-                    @action={{this.addReminder}}
+                    @action={{fn
+                      this.handleAddReminder
+                      form.addItemToCollection
+                    }}
                     class="btn-default add-reminder"
                   />
-                </EventField>
+                </form.Container>
 
-                <EventField
-                  class="recurrence"
-                  @label="discourse_post_event.builder_modal.recurrence.label"
+                <form.Field
+                  @name="recurrence"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.recurrence.label"
+                  }}
+                  @type="select"
+                  @format="full"
+                  @onSet={{this.handleRecurrenceChange}}
+                  as |field|
                 >
-                  <ComboBox
-                    class="available-recurrences"
-                    @value={{@model.event.recurrence}}
-                    @content={{this.availableRecurrences}}
-                    @onChange={{this.setRecurrence}}
-                    @options={{lazyHash
-                      none="discourse_post_event.builder_modal.recurrence.none"
-                    }}
-                  />
-                </EventField>
+                  <field.Control as |select|>
+                    {{#each this.availableRecurrences as |rec|}}
+                      <select.Option
+                        @value={{rec.id}}
+                      >{{rec.name}}</select.Option>
+                    {{/each}}
+                  </field.Control>
+                </form.Field>
 
                 {{#if @model.event.recurrence}}
-                  <EventField
-                    @label="discourse_post_event.builder_modal.recurrence_until.label"
+                  <form.Container
+                    @title={{i18n
+                      "discourse_post_event.builder_modal.recurrence_until.label"
+                    }}
+                    @format="full"
                     class="recurrence-until"
                   >
                     <DateInput
@@ -982,38 +1144,38 @@ export default class PostEventBuilder extends Component {
                       @onChange={{this.setRecurrenceUntil}}
                       @timezone={{@model.event.timezone}}
                     />
-                  </EventField>
+                  </form.Container>
                 {{/if}}
 
                 {{#if this.showChat}}
-                  <EventField
-                    class="allow-chat"
-                    @label="discourse_post_event.builder_modal.allow_chat.label"
+                  <form.Field
+                    @name="chatEnabled"
+                    @title={{i18n
+                      "discourse_post_event.builder_modal.allow_chat.label"
+                    }}
+                    @type="checkbox"
+                    @format="full"
+                    @onSet={{fn this.syncFieldToEvent "chatEnabled"}}
+                    as |field|
                   >
-                    <label class="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={{@model.event.chatEnabled}}
-                        {{on "input" this.setChatEnabled}}
-                      />
-                      <span class="message">
-                        {{i18n
-                          "discourse_post_event.builder_modal.allow_chat.checkbox_label"
-                        }}
-                      </span>
-                    </label>
-                  </EventField>
+                    <field.Control>
+                      {{i18n
+                        "discourse_post_event.builder_modal.allow_chat.checkbox_label"
+                      }}
+                    </field.Control>
+                  </form.Field>
                 {{/if}}
 
                 {{#if this.allowedCustomFields.length}}
-                  <EventField
-                    @label="discourse_post_event.builder_modal.custom_fields.label"
+                  <form.Container
+                    @title={{i18n
+                      "discourse_post_event.builder_modal.custom_fields.label"
+                    }}
+                    @subtitle={{i18n
+                      "discourse_post_event.builder_modal.custom_fields.description"
+                    }}
+                    @format="full"
                   >
-                    <p class="event-field-description">
-                      {{i18n
-                        "discourse_post_event.builder_modal.custom_fields.description"
-                      }}
-                    </p>
                     {{#each this.allowedCustomFields as |allowedCustomField|}}
                       <span class="label custom-field-label">
                         {{allowedCustomField}}
@@ -1034,23 +1196,23 @@ export default class PostEventBuilder extends Component {
                         }}
                       />
                     {{/each}}
-                  </EventField>
+                  </form.Container>
                 {{/if}}
 
-                <EventField
-                  @label="discourse_post_event.builder_modal.image.label"
-                  class="image"
+                <form.Field
+                  @name="imageUpload"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.image.label"
+                  }}
+                  @type="image"
+                  @format="full"
+                  @onSet={{this.handleImageChange}}
+                  as |field|
                 >
-                  <UppyImageUploader
-                    @id="post-event-image-uploader"
-                    @imageUrl={{this.event.imageUrl}}
-                    @onUploadDone={{this.setImage}}
-                    @onUploadDeleted={{this.removeImage}}
-                    @type="event_image"
-                  />
-                </EventField>
+                  <field.Control @type="event_image" />
+                </form.Field>
               </PluginOutlet>
-            </form>
+            </Form>
           {{else}}
             <div class="composer-event-node">
               <CompactEventEditor

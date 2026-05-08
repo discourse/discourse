@@ -31,7 +31,7 @@ acceptance("Post event - composer", function (needs) {
     await click(`${modal} .d-modal__footer .advanced-settings`);
 
     const timezoneInput = selectKit(
-      `${modal} .event-field.timezone .timezone-input`
+      `${modal} [data-name="timezone"] .timezone-input`
     );
     await timezoneInput.expand();
     await timezoneInput.selectRowByValue("Europe/London");
@@ -105,7 +105,7 @@ acceptance("Post event - composer", function (needs) {
 
       // Select the timezone
       const timezoneInput = selectKit(
-        `${modal} .event-field.timezone .timezone-input`
+        `${modal} [data-name="timezone"] .timezone-input`
       );
       await timezoneInput.expand();
       await timezoneInput.selectRowByValue("Europe/London");

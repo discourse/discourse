@@ -337,7 +337,9 @@ describe "Post event" do
     find(".toolbar-menu__options-trigger").click
     find("button[title='#{I18n.t("js.discourse_post_event.builder_modal.attach")}']").click
     find(".d-modal .d-modal__footer .advanced-settings").click
-    find(".d-modal input[name=status][value=private]").click
+
+    form = PageObjects::Components::FormKit.new(".d-modal form")
+    form.field("eventType").select("private")
     find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
@@ -354,7 +356,8 @@ describe "Post event" do
     post_event_page.edit
     find(".d-modal .d-modal__footer .advanced-settings").click
 
-    expect(find(".d-modal input[name=status][value=private]").checked?).to eq(true)
+    form = PageObjects::Components::FormKit.new(".d-modal form")
+    expect(form.field("eventType")).to have_value("private")
     expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
     expect(find(".d-modal .custom-field-input").value).to eq("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|

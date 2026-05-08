@@ -523,7 +523,7 @@ en:
         attendance:
           label: "How many members can attend this event?"
           unlimited: "Unlimited"
-          up_to: "Up to"
+          up_to: "Up to..."
           none: "Don't collect attendance"
         allow_chat:
           label: "Chat integration"
