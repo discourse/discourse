@@ -2,6 +2,12 @@ import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import {
+  calculatePresetStartDate,
+  DEFAULT_PERIOD,
+  PERIOD_CUSTOM,
+  VALID_PERIODS,
+} from "discourse/admin/components/dashboard/date-range";
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import VersionCheck from "discourse/admin/models/version-check";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
@@ -15,10 +21,59 @@ export default class AdminDashboardController extends Controller {
 
   @tracked loadingProblems = false;
   @tracked problemsFetchedAt;
+  @tracked range = DEFAULT_PERIOD;
+  @tracked from = null;
+  @tracked to = null;
   @autoTrackedArray problems;
+
+  queryParams = ["range", "from", "to"];
 
   isLoading = false;
   dashboardFetchedAt = null;
+
+  get safePeriod() {
+    if (!VALID_PERIODS.includes(this.range)) {
+      return DEFAULT_PERIOD;
+    }
+    if (this.range === PERIOD_CUSTOM && (!this.from || !this.to)) {
+      return DEFAULT_PERIOD;
+    }
+    return this.range;
+  }
+
+  get startDate() {
+    if (this.safePeriod === PERIOD_CUSTOM && this.from) {
+      const parsed = moment(this.from, "YYYY-MM-DD", true);
+      if (parsed.isValid()) {
+        return parsed.startOf("day").toDate();
+      }
+    }
+    return calculatePresetStartDate(this.safePeriod);
+  }
+
+  get endDate() {
+    if (this.safePeriod === PERIOD_CUSTOM && this.to) {
+      const parsed = moment(this.to, "YYYY-MM-DD", true);
+      if (parsed.isValid()) {
+        return parsed.endOf("day").toDate();
+      }
+    }
+    return moment().endOf("day").toDate();
+  }
+
+  @action
+  setPeriod(period) {
+    this.range = period;
+    this.from = null;
+    this.to = null;
+  }
+
+  @action
+  setCustomDateRange(startDate, endDate) {
+    this.range = PERIOD_CUSTOM;
+    this.from = moment(startDate).format("YYYY-MM-DD");
+    this.to = moment(endDate).format("YYYY-MM-DD");
+  }
 
   @computed("siteSettings.version_checks")
   get showVersionChecks() {
