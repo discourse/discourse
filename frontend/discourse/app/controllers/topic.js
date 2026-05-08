@@ -1067,6 +1067,17 @@ export default class TopicController extends Controller {
       return false;
     }
 
+    if (EmbedMode.enabled) {
+      this.appEvents.trigger("embed-composer:edit-post", post);
+      return;
+    }
+
+    const editEvent = { post, handled: false };
+    this.appEvents.trigger("topic:edit-post", editEvent);
+    if (editEvent.handled) {
+      return;
+    }
+
     const topic = this.model;
 
     const editingLocalizedPost =

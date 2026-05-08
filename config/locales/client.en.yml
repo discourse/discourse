@@ -724,6 +724,7 @@ en:
       continue_as_guest: "Continue as Guest"
       be_first_to_reply: "Be the first to reply!"
       replying_to: "Replying to %{username}"
+      editing_post: "Editing post"
       reply_placeholder: "Write a reply..."
 
     topic_count_all:
