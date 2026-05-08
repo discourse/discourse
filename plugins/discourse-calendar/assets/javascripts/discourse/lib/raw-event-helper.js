@@ -1,3 +1,54 @@
+export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {
+  const start = startsAt ? moment(startsAt) : null;
+  const end = endsAt ? moment(endsAt) : null;
+  const isMultiDay = !!(start && end && !start.isSame(end, "day"));
+
+  if (allDay || isMultiDay) {
+    return { type: "notification", value: 1, unit: "days", period: "before" };
+  }
+
+  return { type: "notification", value: 15, unit: "minutes", period: "before" };
+}
+
+export function reminderToBBCode(reminder) {
+  const raw = parseInt(reminder.value, 10);
+  const magnitude = Math.abs(Number.isFinite(raw) ? raw : 0);
+  const value = reminder.period === "after" ? -magnitude : magnitude;
+  return `${reminder.type}.${value}.${reminder.unit}`;
+}
+
+function matchesDefault(reminder, def) {
+  return (
+    reminder &&
+    reminder.value === def.value &&
+    reminder.unit === def.unit &&
+    reminder.period === def.period
+  );
+}
+
+// if the default is unchanged, swap it out based on the new config
+export function reconcileDefaultReminder(reminders, oldConfig, newConfig) {
+  if (!reminders || reminders.length !== 1) {
+    return reminders;
+  }
+  const oldDefault = defaultReminderFor(oldConfig);
+  const newDefault = defaultReminderFor(newConfig);
+  if (matchesDefault(oldDefault, newDefault)) {
+    return reminders;
+  }
+  if (!matchesDefault(reminders[0], oldDefault)) {
+    return reminders;
+  }
+  return [
+    {
+      ...reminders[0],
+      value: newDefault.value,
+      unit: newDefault.unit,
+      period: newDefault.period,
+    },
+  ];
+}
+
 export function buildParams(startsAt, endsAt, event, siteSettings) {
   const params = {};
 

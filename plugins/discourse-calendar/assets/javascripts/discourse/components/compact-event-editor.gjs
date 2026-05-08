@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
@@ -219,6 +220,55 @@ export default class CompactEventEditor extends Component {
     this.args.onUpdateMaxAttendees?.(validMax);
   }
 
+  get notificationReminders() {
+    return (this.args.reminders || [])
+      .map((reminder, index) =>
+        reminder.type === "notification"
+          ? { reminder, index, label: this.#unitLabel(reminder) }
+          : null
+      )
+      .filter(Boolean);
+  }
+
+  #unitLabel(reminder) {
+    const unit = reminder.unit || "minutes";
+    const count = parseInt(reminder.value, 10) || 0;
+    const unitLabel = i18n(
+      `discourse_post_event.composer.reminder.units.${unit}`,
+      { count }
+    );
+    return i18n(
+      `discourse_post_event.composer.reminder.${reminder.period || "before"}`,
+      { unit: unitLabel }
+    );
+  }
+
+  @action
+  onReminderValueInput(index, event) {
+    const parsed = parseInt(event.target.value, 10);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return;
+    }
+    const reminders = this.args.reminders || [];
+    if (!reminders[index] || reminders[index].type !== "notification") {
+      return;
+    }
+    const updated = reminders.map((r, i) =>
+      i === index ? { ...r, value: parsed } : r
+    );
+    this.args.onUpdateReminders?.(updated);
+  }
+
+  @action
+  removeReminder(index) {
+    const reminders = this.args.reminders || [];
+    if (!reminders[index] || reminders[index].type !== "notification") {
+      return;
+    }
+    const updated = reminders.filter((_, i) => i !== index);
+    this.args.onUpdateReminders?.(updated);
+  }
+
   @action
   focusDateInput(event) {
     next(() => event.target.showPicker?.());
@@ -386,6 +436,30 @@ export default class CompactEventEditor extends Component {
         </span>
       {{/if}}
     </section>
+
+    {{#each this.notificationReminders as |entry|}}
+      <section class="composer-event__reminder">
+        {{icon "bell"}}
+        <input
+          type="number"
+          inputmode="numeric"
+          min="1"
+          step="1"
+          value={{entry.reminder.value}}
+          class="composer-event__reminder-value"
+          {{on "input" (fn this.onReminderValueInput entry.index)}}
+        />
+        <span class="composer-event__reminder-unit">
+          {{entry.label}}
+        </span>
+        <DButton
+          @icon="xmark"
+          @action={{fn this.removeReminder entry.index}}
+          @title="discourse_post_event.composer.reminder.remove"
+          class="btn-flat composer-event__reminder-remove"
+        />
+      </section>
+    {{/each}}
 
     <section class="composer-event__description">
       <ExpandingTextArea

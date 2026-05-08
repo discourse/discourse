@@ -79,7 +79,7 @@ describe "Post event" do
       post_event_form_page.fill_description("foo\nbar").fill_timezone(timezone).submit
 
       expect(composer).to have_value <<~EVENT.strip
-        [event start="2025-06-15 14:30" status="public" timezone="#{timezone}" end="2025-06-15 15:30"]
+        [event start="2025-06-15 14:30" status="public" timezone="#{timezone}" end="2025-06-15 15:30" reminders="notification.15.minutes"]
         foo
         bar
         [/event]

@@ -7,6 +7,8 @@ import PostEventBuilder from "discourse/plugins/discourse-calendar/discourse/com
 import {
   buildParams,
   camelCase,
+  reconcileDefaultReminder,
+  reminderToBBCode,
 } from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-calendar/discourse/models/discourse-post-event-event";
 import CompactEventEditor from "./compact-event-editor";
@@ -160,22 +162,65 @@ export default class EventNodeView extends Component {
   updateStart(newMoment) {
     const eventTz = this.resolvedTimezone;
     const m = newMoment ? newMoment.clone().tz(eventTz) : moment().tz(eventTz);
-    this.updateNodeAttribute("start", this.formatForAllDay(m, this.allDay));
+    this.#updateAttrsWithReconcile({
+      start: this.formatForAllDay(m, this.allDay),
+    });
   }
 
   @action
   updateEnd(newMoment) {
-    if (!newMoment) {
-      this.updateNodeAttribute("end", null);
-      return;
-    }
     const eventTz = this.resolvedTimezone;
-    const m = newMoment.clone().tz(eventTz);
-    this.updateNodeAttribute("end", this.formatForAllDay(m, this.allDay));
+    const value = newMoment
+      ? this.formatForAllDay(newMoment.clone().tz(eventTz), this.allDay)
+      : null;
+    this.#updateAttrsWithReconcile({ end: value });
   }
 
   @action
   updateAllDay(allDay) {
+    this.#updateAttrsWithReconcile((attrs) => {
+      const eventTz = attrs.timezone || "UTC";
+      const updates = { allDay: allDay ? "true" : null };
+      const startM = attrs.start ? moment.tz(attrs.start, eventTz) : null;
+
+      if (allDay) {
+        const startDateStr = startM ? startM.format("YYYY-MM-DD") : null;
+        if (startM) {
+          updates.start = startDateStr;
+        }
+        if (attrs.end) {
+          const endDateStr = moment.tz(attrs.end, eventTz).format("YYYY-MM-DD");
+          updates.end = endDateStr === startDateStr ? null : endDateStr;
+        }
+      } else if (startM) {
+        const nowTime = moment.tz(eventTz);
+        const newStart = startM
+          .clone()
+          .hour(nowTime.hour())
+          .minute(nowTime.minute())
+          .second(0)
+          .millisecond(0);
+        updates.start = newStart.format("YYYY-MM-DD HH:mm");
+        updates.end = newStart
+          .clone()
+          .add(1, "hour")
+          .format("YYYY-MM-DD HH:mm");
+      }
+
+      return updates;
+    });
+  }
+
+  #configFromAttrs(attrs) {
+    const eventTz = attrs.timezone || "UTC";
+    return {
+      startsAt: attrs.start ? moment.tz(attrs.start, eventTz) : null,
+      endsAt: attrs.end ? moment.tz(attrs.end, eventTz) : null,
+      allDay: attrs.allDay === "true" || attrs.allDay === true,
+    };
+  }
+
+  #updateAttrsWithReconcile(updatesOrFn) {
     if (!this.args.getPos || !this.args.view) {
       return;
     }
@@ -188,38 +233,31 @@ export default class EventNodeView extends Component {
         return;
       }
 
-      const eventTz = this.resolvedTimezone;
-      const newAttrs = { ...node.attrs };
-      newAttrs.allDay = allDay ? "true" : null;
+      const updates =
+        typeof updatesOrFn === "function"
+          ? updatesOrFn(node.attrs)
+          : updatesOrFn;
+      const newAttrs = { ...node.attrs, ...updates };
 
-      const startM = node.attrs.start
-        ? moment.tz(node.attrs.start, eventTz)
-        : null;
+      const reconciled = reconcileDefaultReminder(
+        this.parseReminders(node.attrs.reminders),
+        this.#configFromAttrs(node.attrs),
+        this.#configFromAttrs(newAttrs)
+      );
+      newAttrs.reminders =
+        reconciled && reconciled.length
+          ? reconciled.map(reminderToBBCode).join(",")
+          : null;
 
-      if (allDay) {
-        const startDateStr = startM ? startM.format("YYYY-MM-DD") : null;
-        if (startM) {
-          newAttrs.start = startDateStr;
-        }
-        if (node.attrs.end) {
-          const endDateStr = moment
-            .tz(node.attrs.end, eventTz)
-            .format("YYYY-MM-DD");
-          newAttrs.end = endDateStr === startDateStr ? null : endDateStr;
-        }
-      } else if (startM) {
-        const nowTime = moment.tz(eventTz);
-        const newStart = startM
-          .clone()
-          .hour(nowTime.hour())
-          .minute(nowTime.minute())
-          .second(0)
-          .millisecond(0);
-        newAttrs.start = newStart.format("YYYY-MM-DD HH:mm");
-        newAttrs.end = newStart
-          .clone()
-          .add(1, "hour")
-          .format("YYYY-MM-DD HH:mm");
+      const allKeys = new Set([
+        ...Object.keys(node.attrs),
+        ...Object.keys(newAttrs),
+      ]);
+      const noChange = [...allKeys].every(
+        (key) => newAttrs[key] === node.attrs[key]
+      );
+      if (noChange) {
+        return;
       }
 
       const tr = view.state.tr.setNodeMarkup(pos, null, newAttrs);
@@ -230,6 +268,19 @@ export default class EventNodeView extends Component {
   @action
   updateMaxAttendees(value) {
     this.updateNodeAttribute("maxAttendees", value);
+  }
+
+  get parsedReminders() {
+    return this.parseReminders(this.eventData.reminders);
+  }
+
+  @action
+  updateReminders(reminders) {
+    const value =
+      reminders && reminders.length
+        ? reminders.map(reminderToBBCode).join(",")
+        : null;
+    this.updateNodeAttribute("reminders", value);
   }
 
   parseReminders(reminders) {
@@ -362,6 +413,7 @@ export default class EventNodeView extends Component {
       @location={{this.eventData.location}}
       @description={{this.eventDescription}}
       @maxAttendees={{this.eventData.maxAttendees}}
+      @reminders={{this.parsedReminders}}
       @startsAt={{this.startsAt}}
       @endsAt={{this.endsAt}}
       @allDay={{this.allDay}}
@@ -377,6 +429,7 @@ export default class EventNodeView extends Component {
       @onUpdateEnd={{this.updateEnd}}
       @onUpdateAllDay={{this.updateAllDay}}
       @onUpdateMaxAttendees={{this.updateMaxAttendees}}
+      @onUpdateReminders={{this.updateReminders}}
       @onOpenAdvanced={{this.openEventBuilder}}
     />
   </template>

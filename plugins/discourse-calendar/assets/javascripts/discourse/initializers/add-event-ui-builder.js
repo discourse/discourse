@@ -1,6 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-calendar/discourse/models/discourse-post-event-event";
 import PostEventBuilder from "../components/modal/post-event-builder";
+import { defaultReminderFor, reminderToBBCode } from "../lib/raw-event-helper";
 
 function initializeEventBuilder(api) {
   const currentUser = api.getCurrentUser();
@@ -13,9 +14,14 @@ function initializeEventBuilder(api) {
       const timezone = userTz || moment.tz.guess();
       const start = moment.tz(moment(), timezone);
       const end = start.clone().add(1, "hour");
+      const reminder = defaultReminderFor({
+        startsAt: start,
+        endsAt: end,
+        allDay: false,
+      });
 
       if (siteSettings.rich_editor && currentUser.useRichEditor) {
-        const params = `start="${start.format("YYYY-MM-DD HH:mm")}" end="${end.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}"`;
+        const params = `start="${start.format("YYYY-MM-DD HH:mm")}" end="${end.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}" reminders="${reminderToBBCode(reminder)}"`;
         toolbarEvent.addText(`[event ${params}]\n[/event]`);
         return;
       }
@@ -25,6 +31,7 @@ function initializeEventBuilder(api) {
         starts_at: start,
         ends_at: end,
         timezone,
+        reminders: [reminder],
       });
 
       modal.show(PostEventBuilder, {

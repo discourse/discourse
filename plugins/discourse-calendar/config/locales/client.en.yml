@@ -443,6 +443,23 @@ en:
         max_attendees_placeholder: "Set max attendees"
         description_placeholder: "Add event description"
         all_day: "All day"
+        reminder:
+          units:
+            minutes:
+              one: "minute"
+              other: "minutes"
+            hours:
+              one: "hour"
+              other: "hours"
+            days:
+              one: "day"
+              other: "days"
+            weeks:
+              one: "week"
+              other: "weeks"
+          before: "%{unit} before"
+          after: "%{unit} after"
+          remove: "Remove reminder"
 
       builder_modal:
         custom_fields:

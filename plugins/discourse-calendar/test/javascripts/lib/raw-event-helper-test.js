@@ -1,9 +1,35 @@
 import { module, test } from "qunit";
 import {
   buildParams,
+  defaultReminderFor,
+  reconcileDefaultReminder,
+  reminderToBBCode,
   removeEvent,
   replaceRaw,
 } from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
+
+const SAME_DAY_CONFIG = {
+  startsAt: "2024-06-15T10:00:00Z",
+  endsAt: "2024-06-15T11:00:00Z",
+  allDay: false,
+};
+const ALL_DAY_CONFIG = {
+  startsAt: "2024-06-15",
+  endsAt: null,
+  allDay: true,
+};
+const SHORT_DEFAULT = {
+  type: "notification",
+  value: 15,
+  unit: "minutes",
+  period: "before",
+};
+const LONG_DEFAULT = {
+  type: "notification",
+  value: 1,
+  unit: "days",
+  period: "before",
+};
 
 module("Unit | Lib | raw-event-helper", function () {
   test("removeEvent", function (assert) {
@@ -74,6 +100,131 @@ module("Unit | Lib | raw-event-helper", function () {
       ),
       '[event location="Berlin"]\n[/event]',
       "omits whitespace-only name parameter"
+    );
+  });
+
+  test("defaultReminderFor", function (assert) {
+    assert.deepEqual(
+      defaultReminderFor({
+        startsAt: "2024-06-15T10:00:00Z",
+        endsAt: "2024-06-15T11:00:00Z",
+        allDay: false,
+      }),
+      { type: "notification", value: 15, unit: "minutes", period: "before" },
+      "uses 15-minute reminder for same-day timed events"
+    );
+
+    assert.deepEqual(
+      defaultReminderFor({
+        startsAt: "2024-06-15T10:00:00Z",
+        endsAt: "2024-06-16T10:00:00Z",
+        allDay: false,
+      }),
+      { type: "notification", value: 1, unit: "days", period: "before" },
+      "uses 1-day reminder for multi-day events"
+    );
+
+    assert.deepEqual(
+      defaultReminderFor({
+        startsAt: "2024-06-15",
+        endsAt: null,
+        allDay: true,
+      }),
+      { type: "notification", value: 1, unit: "days", period: "before" },
+      "uses 1-day reminder for all-day events"
+    );
+  });
+
+  test("reconcileDefaultReminder", function (assert) {
+    assert.deepEqual(
+      reconcileDefaultReminder([], SAME_DAY_CONFIG, ALL_DAY_CONFIG),
+      [],
+      "empty reminders pass through unchanged"
+    );
+
+    const multiple = [
+      SHORT_DEFAULT,
+      { type: "bumpTopic", value: 1, unit: "hours", period: "before" },
+    ];
+    assert.strictEqual(
+      reconcileDefaultReminder(multiple, SAME_DAY_CONFIG, ALL_DAY_CONFIG),
+      multiple,
+      "multi-reminder arrays are left alone"
+    );
+
+    const customized = [
+      { type: "notification", value: 30, unit: "minutes", period: "before" },
+    ];
+    assert.strictEqual(
+      reconcileDefaultReminder(customized, SAME_DAY_CONFIG, ALL_DAY_CONFIG),
+      customized,
+      "user-customized reminder is preserved"
+    );
+
+    const otherSameDay = {
+      startsAt: "2024-07-20T14:00:00Z",
+      endsAt: "2024-07-20T15:00:00Z",
+      allDay: false,
+    };
+    const reminders = [{ ...SHORT_DEFAULT }];
+    assert.strictEqual(
+      reconcileDefaultReminder(reminders, SAME_DAY_CONFIG, otherSameDay),
+      reminders,
+      "no swap when both configs share the same default"
+    );
+
+    assert.deepEqual(
+      reconcileDefaultReminder(
+        [{ ...SHORT_DEFAULT }],
+        SAME_DAY_CONFIG,
+        ALL_DAY_CONFIG
+      ),
+      [LONG_DEFAULT],
+      "swaps short default for long default when going to all-day"
+    );
+
+    assert.deepEqual(
+      reconcileDefaultReminder(
+        [{ ...LONG_DEFAULT }],
+        ALL_DAY_CONFIG,
+        SAME_DAY_CONFIG
+      ),
+      [SHORT_DEFAULT],
+      "swaps long default for short default when going to same-day timed"
+    );
+
+    assert.deepEqual(
+      reconcileDefaultReminder(
+        [{ ...SHORT_DEFAULT, type: "bumpTopic" }],
+        SAME_DAY_CONFIG,
+        ALL_DAY_CONFIG
+      ),
+      [{ ...LONG_DEFAULT, type: "bumpTopic" }],
+      "preserves the original type when swapping default"
+    );
+  });
+
+  test("reminderToBBCode", function (assert) {
+    assert.strictEqual(
+      reminderToBBCode({
+        type: "notification",
+        value: 15,
+        unit: "minutes",
+        period: "before",
+      }),
+      "notification.15.minutes",
+      "serializes a before reminder"
+    );
+
+    assert.strictEqual(
+      reminderToBBCode({
+        type: "bumpTopic",
+        value: 30,
+        unit: "minutes",
+        period: "after",
+      }),
+      "bumpTopic.-30.minutes",
+      "serializes an after reminder with negative value"
     );
   });
 

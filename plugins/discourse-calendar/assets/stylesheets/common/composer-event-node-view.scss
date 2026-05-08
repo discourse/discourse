@@ -127,7 +127,8 @@
 
   .composer-event__dates,
   .composer-event__location,
-  .composer-event__attendees {
+  .composer-event__attendees,
+  .composer-event__reminder {
     position: relative;
     display: grid;
     grid-template-columns: 3em 1fr;
@@ -143,6 +144,20 @@
       color: var(--primary-high);
       margin: 0 auto;
       padding: 0;
+    }
+  }
+
+  .composer-event__reminder {
+    grid-template-columns: 3em auto auto 1fr;
+
+    .composer-event__reminder-value {
+      width: 4em;
+      text-align: left;
+    }
+
+    .composer-event__reminder-unit {
+      color: var(--primary-medium);
+      line-height: var(--line-height-small);
     }
   }
 
@@ -167,7 +182,11 @@
     width: 100%;
 
     &:not(.composer-event__date-range--has-time) {
-      grid-template-columns: auto 1fr;
+      grid-template-columns: auto auto;
+
+      @include viewport.from(sm) {
+        grid-template-columns: auto 1fr;
+      }
     }
   }
 
@@ -185,6 +204,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-1);
+    min-width: 0;
   }
 
   .d-modal__body & {
@@ -217,6 +237,7 @@
 .composer-event__date-wrapper {
   position: relative;
   display: flex;
+  min-width: 0;
 }
 
 .composer-event__date-display {
@@ -243,8 +264,12 @@
   white-space: nowrap;
   overflow: hidden;
   flex: 1;
-  min-width: 150px; // avoids shift on focus in webkit
-  width: 9rem;
+  width: 100%;
+
+  @include viewport.from(sm) {
+    min-width: 150px; // avoids shift on focus in webkit
+    width: 9rem;
+  }
 
   &:focus {
     @include viewport.from(sm) {
@@ -257,8 +282,11 @@
 input.composer-event__time-input[type="time"] {
   padding-block: var(--space-2);
   cursor: pointer;
-  width: 6rem;
   flex: 1 1 auto;
+
+  @include viewport.from(sm) {
+    width: 6rem;
+  }
 }
 
 .composer-event__date-input,

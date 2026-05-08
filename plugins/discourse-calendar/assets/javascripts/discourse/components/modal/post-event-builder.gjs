@@ -21,7 +21,11 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import { buildParams } from "../../lib/raw-event-helper";
+import {
+  buildParams,
+  defaultReminderFor,
+  reconcileDefaultReminder,
+} from "../../lib/raw-event-helper";
 import CompactEventEditor from "../compact-event-editor";
 import EventField from "../event-field";
 
@@ -255,32 +259,57 @@ export default class PostEventBuilder extends Component {
     this.event.description = value;
   }
 
+  #captureConfig() {
+    return {
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      allDay: this.allDay,
+    };
+  }
+
+  #reconcileReminder(prevConfig) {
+    const next = reconcileDefaultReminder(
+      this.event.reminders,
+      prevConfig,
+      this.#captureConfig()
+    );
+    if (next !== this.event.reminders) {
+      this.event.reminders = next;
+    }
+  }
+
   @action
   updateStart(newMoment) {
     if (!newMoment) {
       return;
     }
+    const prev = this.#captureConfig();
     const tz = this.event.timezone || "UTC";
     const m = newMoment.clone().tz(tz);
     this.event.startsAt = m;
     this.startsAt = m;
+    this.#reconcileReminder(prev);
   }
 
   @action
   updateEnd(newMoment) {
+    const prev = this.#captureConfig();
     if (!newMoment) {
       this.event.endsAt = null;
       this.endsAt = null;
+      this.#reconcileReminder(prev);
       return;
     }
     const tz = this.event.timezone || "UTC";
     const m = newMoment.clone().tz(tz);
     this.event.endsAt = m;
     this.endsAt = m;
+    this.#reconcileReminder(prev);
   }
 
   @action
   updateAllDay(allDay) {
+    const prev = this.#captureConfig();
     this.allDay = allDay;
     this.event.allDay = allDay;
     if (allDay) {
@@ -318,12 +347,18 @@ export default class PostEventBuilder extends Component {
       this.endsAt = newEnd;
       this.event.endsAt = newEnd;
     }
+    this.#reconcileReminder(prev);
   }
 
   @action
   updateMaxAttendees(value) {
     this.event.maxAttendees = value;
     this.maxAttendeesInput = value || "";
+  }
+
+  @action
+  updateReminders(reminders) {
+    this.event.reminders = reminders || [];
   }
 
   @action
@@ -347,10 +382,12 @@ export default class PostEventBuilder extends Component {
 
   @action
   onChangeDates(dates) {
+    const prev = this.#captureConfig();
     this.event.startsAt = dates.from;
     this.event.endsAt = dates.to;
     this.startsAt = dates.from;
     this.endsAt = dates.to;
+    this.#reconcileReminder(prev);
   }
 
   @action
@@ -364,11 +401,16 @@ export default class PostEventBuilder extends Component {
 
   @action
   addReminder() {
+    const def = defaultReminderFor({
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      allDay: this.allDay,
+    });
     this.event.addReminder({
-      type: this.allowsRsvps ? "notification" : "bumpTopic",
-      value: 15,
-      unit: "minutes",
-      period: "before",
+      type: this.allowsRsvps ? def.type : "bumpTopic",
+      value: def.value,
+      unit: def.unit,
+      period: def.period,
     });
   }
 
@@ -954,6 +996,7 @@ export default class PostEventBuilder extends Component {
                 @location={{@model.event.location}}
                 @description={{@model.event.description}}
                 @maxAttendees={{@model.event.maxAttendees}}
+                @reminders={{@model.event.reminders}}
                 @startsAt={{this.startsAt}}
                 @endsAt={{this.endsAt}}
                 @allDay={{this.allDay}}
@@ -968,6 +1011,7 @@ export default class PostEventBuilder extends Component {
                 @onUpdateEnd={{this.updateEnd}}
                 @onUpdateAllDay={{this.updateAllDay}}
                 @onUpdateMaxAttendees={{this.updateMaxAttendees}}
+                @onUpdateReminders={{this.updateReminders}}
               />
             </div>
           {{/if}}
