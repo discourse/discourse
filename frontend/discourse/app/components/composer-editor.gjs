@@ -288,6 +288,20 @@ export default class ComposerEditor extends Component {
     }
   }
 
+  @action
+  _composerEditorInitFormTemplate(formEl) {
+    if (this.composer.allowUpload) {
+      this.uppyComposerUpload.setup(formEl);
+    }
+  }
+
+  @action
+  _composerEditorDestroyFormTemplate() {
+    if (this.composer.allowUpload) {
+      this.uppyComposerUpload.teardown();
+    }
+  }
+
   /**
    * Sets up the editor with the given text manipulation instance
    *
@@ -1070,7 +1084,11 @@ export default class ComposerEditor extends Component {
               class="composer-select-form-template"
             />
           {{/if}}
-          <form id="form-template-form">
+          <form
+            id="form-template-form"
+            {{didInsert this._composerEditorInitFormTemplate}}
+            {{willDestroy this._composerEditorDestroyFormTemplate}}
+          >
             <Wrapper
               @id={{this.selectedFormTemplateId}}
               @initialValues={{this.composer.formTemplateInitialValues}}

@@ -1,4 +1,3 @@
-import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { render, settled, triggerEvent, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -8,11 +7,7 @@ import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 function fakeUppy() {
-  return {
-    setup: sinon.spy(),
-    teardown: sinon.spy(),
-    textManipulation: null,
-  };
+  return { textManipulation: null };
 }
 
 module(
@@ -29,7 +24,7 @@ module(
       sinon.stub(composerService, "allowUpload").value(value);
     }
 
-    test("renders a composer with no uppy plumbing when none provided", async function (assert) {
+    test("renders the markdown editor", async function (assert) {
       stubAllowUpload(this, true);
 
       await render(<template><FormComposer @onChange={{noop}} /></template>);
@@ -39,7 +34,7 @@ module(
         .exists("the markdown editor renders");
     });
 
-    test("wires uploads onto the editor when uppyComposerUpload is provided", async function (assert) {
+    test("assigns textManipulation when uppyComposerUpload is provided", async function (assert) {
       stubAllowUpload(this, true);
 
       const uppy = fakeUppy();
@@ -51,22 +46,15 @@ module(
         </template>
       );
 
-      // setup() is called from DEditor's onSetup, which fires after the inner
-      // editor mounts asynchronously.
-      await waitUntil(() => uppy.setup.called);
+      await waitUntil(() => uppy.textManipulation);
 
-      assert.strictEqual(uppy.setup.callCount, 1, "setup is called once");
-      assert.true(
-        uppy.setup.firstCall.firstArg.classList.contains("d-editor"),
-        "setup receives the .d-editor wrapper element"
-      );
       assert.true(
         uppy.textManipulation?.textarea instanceof HTMLTextAreaElement,
-        "textManipulation is set so the upload pipeline can insert markdown"
+        "textManipulation reflects the active editor's text manipulation"
       );
     });
 
-    test("skips wiring when allowUpload is false", async function (assert) {
+    test("does not assign textManipulation when allowUpload is false", async function (assert) {
       stubAllowUpload(this, false);
 
       const uppy = fakeUppy();
@@ -78,7 +66,6 @@ module(
         </template>
       );
 
-      assert.false(uppy.setup.called, "setup is not called");
       assert.strictEqual(
         uppy.textManipulation,
         null,
@@ -98,7 +85,7 @@ module(
         </template>
       );
 
-      await waitUntil(() => uppy.setup.called);
+      await waitUntil(() => uppy.textManipulation);
 
       const initialTextManipulation = uppy.textManipulation;
       uppy.textManipulation = "trampled-by-another-field";
@@ -112,42 +99,7 @@ module(
       );
     });
 
-    test("calls teardown when the field is destroyed", async function (assert) {
-      stubAllowUpload(this, true);
-
-      const uppy = fakeUppy();
-      const state = new (class {
-        @tracked show = true;
-      })();
-      this.set("uppy", uppy);
-      this.set("state", state);
-
-      await render(
-        <template>
-          {{#if this.state.show}}
-            <FormComposer
-              @onChange={{noop}}
-              @uppyComposerUpload={{this.uppy}}
-            />
-          {{/if}}
-        </template>
-      );
-
-      await waitUntil(() => uppy.setup.called);
-      const setupElement = uppy.setup.firstCall.firstArg;
-
-      state.show = false;
-      await settled();
-
-      assert.true(uppy.teardown.called, "teardown runs on destroy");
-      assert.strictEqual(
-        uppy.teardown.firstCall.firstArg,
-        setupElement,
-        "teardown receives the same element setup was called with"
-      );
-    });
-
-    test("multiple fields each set up the shared uppy and route on focus", async function (assert) {
+    test("multiple fields route uploads to the focused field", async function (assert) {
       stubAllowUpload(this, true);
 
       const uppy = fakeUppy();
@@ -160,7 +112,7 @@ module(
         </template>
       );
 
-      await waitUntil(() => uppy.setup.callCount === 2);
+      await waitUntil(() => uppy.textManipulation);
 
       const textareas = document.querySelectorAll(
         "[data-field-type='composer'] .d-editor-input"
@@ -185,6 +137,68 @@ module(
         fieldATextManipulation,
         "focusing field A again restores its textManipulation"
       );
+    });
+
+    test("composer:replace-text replaces in composerValue and fires onChange", async function (assert) {
+      stubAllowUpload(this, true);
+
+      const onChange = sinon.spy();
+      this.set("onChange", onChange);
+      this.set("initialValue", "before ![image|10x10](upload://abc.png) after");
+
+      await render(
+        <template>
+          <FormComposer
+            @id="field-1"
+            @value={{this.initialValue}}
+            @onChange={{this.onChange}}
+          />
+        </template>
+      );
+
+      const appEvents = getOwner(this).lookup("service:app-events");
+      appEvents.trigger(
+        "composer:replace-text",
+        "![image|10x10](upload://abc.png)",
+        "![image|10x10, 75%](upload://abc.png)"
+      );
+
+      await settled();
+
+      assert
+        .dom("input[name='field-1']")
+        .hasValue("before ![image|10x10, 75%](upload://abc.png) after");
+      assert.true(onChange.called, "onChange fires after the replacement");
+    });
+
+    test("composer:replace-text is a no-op when the field does not contain the markdown", async function (assert) {
+      stubAllowUpload(this, true);
+
+      const onChange = sinon.spy();
+      this.set("onChange", onChange);
+      this.set("initialValue", "no images here");
+
+      await render(
+        <template>
+          <FormComposer
+            @id="field-1"
+            @value={{this.initialValue}}
+            @onChange={{this.onChange}}
+          />
+        </template>
+      );
+
+      const appEvents = getOwner(this).lookup("service:app-events");
+      appEvents.trigger(
+        "composer:replace-text",
+        "![image|10x10](upload://abc.png)",
+        "![image|10x10, 75%](upload://abc.png)"
+      );
+
+      await settled();
+
+      assert.dom("input[name='field-1']").hasValue("no images here");
+      assert.false(onChange.called, "onChange does not fire");
     });
   }
 );

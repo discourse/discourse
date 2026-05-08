@@ -1,8 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -15,7 +13,6 @@ export default class FormTemplateFieldComposer extends Component {
 
   @tracked composerValue = this.args.value || "";
 
-  _boundElement = null;
   _focusTarget = null;
   _claimUploadTarget = null;
 
@@ -27,6 +24,12 @@ export default class FormTemplateFieldComposer extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("composer:replace-text", this, this.handleReplaceText);
+
+    if (this._focusTarget && this._claimUploadTarget) {
+      this._focusTarget.removeEventListener("focusin", this._claimUploadTarget);
+      this._focusTarget = null;
+      this._claimUploadTarget = null;
+    }
   }
 
   @action
@@ -40,7 +43,7 @@ export default class FormTemplateFieldComposer extends Component {
     this.composerValue = this.composerValue.replace(regex, newVal ?? "");
 
     schedule("afterRender", () => {
-      this.args.onChange?.({ target: { value: this.composerValue } });
+      this.args.onChange?.();
     });
   }
 
@@ -53,37 +56,8 @@ export default class FormTemplateFieldComposer extends Component {
   }
 
   @action
-  setupUploads(wrapperElement) {
-    if (!this.args.uppyComposerUpload || !this.composer.allowUpload) {
-      return;
-    }
-
-    const dEditor = wrapperElement.querySelector(".d-editor");
-    if (!dEditor) {
-      return;
-    }
-
-    this._boundElement = dEditor;
-    this.args.uppyComposerUpload.setup(dEditor);
-  }
-
-  @action
-  teardownUploads() {
-    if (this._focusTarget && this._claimUploadTarget) {
-      this._focusTarget.removeEventListener("focusin", this._claimUploadTarget);
-      this._focusTarget = null;
-      this._claimUploadTarget = null;
-    }
-
-    if (this._boundElement && this.args.uppyComposerUpload) {
-      this.args.uppyComposerUpload.teardown(this._boundElement);
-      this._boundElement = null;
-    }
-  }
-
-  @action
   onEditorSetup(textManipulation) {
-    if (!this._boundElement || !this.args.uppyComposerUpload) {
+    if (!this.args.uppyComposerUpload || !this.composer.allowUpload) {
       return;
     }
 
@@ -108,12 +82,7 @@ export default class FormTemplateFieldComposer extends Component {
   }
 
   <template>
-    <div
-      class="control-group form-template-field"
-      data-field-type="composer"
-      {{didInsert this.setupUploads}}
-      {{willDestroy this.teardownUploads}}
-    >
+    <div class="control-group form-template-field" data-field-type="composer">
       {{#if @attributes.label}}
         <label class="form-template-field__label">
           {{@attributes.label}}
