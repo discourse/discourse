@@ -9,6 +9,11 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers";
 
 acceptance(`Discourse Solved Plugin`, function (needs) {
+  const ITEM_SELECTOR = ".d-solved-answers .d-post-excerpt-accordion-item";
+  const BODY_SELECTOR = ".d-post-excerpt-accordion-item__body";
+  const CONTENT_SELECTOR = ".d-post-excerpt-accordion-item__content";
+  const ACCEPTER_SELECTOR = ".d-solved-answers__accepter";
+
   needs.user();
 
   test("A topic with an accepted answer shows an excerpt of the answer, if provided", async function (assert) {
@@ -22,15 +27,53 @@ acceptance(`Discourse Solved Plugin`, function (needs) {
 
     await visit("/t/with-excerpt/11");
 
-    assert.dom(".quote.accepted-answer blockquote").exists();
+    assert.dom(`${ITEM_SELECTOR} ${CONTENT_SELECTOR}`).exists();
     assert
-      .dom(".quote.accepted-answer blockquote")
+      .dom(`${ITEM_SELECTOR} ${CONTENT_SELECTOR}`)
       .hasText("this is an excerpt");
 
     await visit("/t/without-excerpt/12");
 
-    assert.dom(".quote.accepted-answer.title-only").exists();
-    assert.dom(".quote.accepted-answer blockquote").doesNotExist();
+    assert.dom(`${ITEM_SELECTOR}.title-only`).exists();
+    assert.dom(`${ITEM_SELECTOR} ${BODY_SELECTOR}`).doesNotExist();
+  });
+
+  test("A topic with an accepted answer shows/hides the accepter based on site setting", async function (assert) {
+    pretender.get("/t/11.json", () =>
+      response(postStreamWithAcceptedAnswerExcerpt("this is an excerpt"))
+    );
+
+    await visit("/t/with-excerpt/11");
+
+    assert.dom(`${ITEM_SELECTOR} ${ACCEPTER_SELECTOR}`).doesNotExist();
+
+    this.siteSettings.show_who_marked_solved = true;
+    await visit("/t/with-excerpt/11");
+
+    assert.dom(`${ITEM_SELECTOR} ${ACCEPTER_SELECTOR}`).exists();
+    assert.dom(`${ITEM_SELECTOR} ${ACCEPTER_SELECTOR}`).hasText("tomtom");
+  });
+
+  test("A topic with an accepted answer shows an excerpt of the answer, if provided", async function (assert) {
+    pretender.get("/t/11.json", () =>
+      response(postStreamWithAcceptedAnswerExcerpt("this is an excerpt"))
+    );
+
+    pretender.get("/t/12.json", () =>
+      response(postStreamWithAcceptedAnswerExcerpt(null))
+    );
+
+    await visit("/t/with-excerpt/11");
+
+    assert.dom(`${ITEM_SELECTOR} ${CONTENT_SELECTOR}`).exists();
+    assert
+      .dom(`${ITEM_SELECTOR} ${CONTENT_SELECTOR}`)
+      .hasText("this is an excerpt");
+
+    await visit("/t/without-excerpt/12");
+
+    assert.dom(`${ITEM_SELECTOR}.title-only`).exists();
+    assert.dom(`${ITEM_SELECTOR} ${BODY_SELECTOR}`).doesNotExist();
   });
 
   test("A topic with multiple accepted answers shows an excerpt for each", async function (assert) {
@@ -39,9 +82,15 @@ acceptance(`Discourse Solved Plugin`, function (needs) {
         postStreamWithAcceptedAnswerExcerpt("this is an excerpt");
 
       postStreamWithMultipleAcceptedAnswers.accepted_answers.push({
-        post_number: 3,
+        id: 22,
+        name: null,
         username: "kzh",
-        excerpt: `<p>another excerpt</p>`,
+        avatar_template: "/letter_avatar_proxy/v2/letter/k/ac91a4/{size}.png",
+        created_at: "2017-08-08T20:12:04.657Z",
+        cooked: "<p>another excerpt</p>",
+        post_number: 3,
+        topic_id: 23,
+        url: "/t/with-excerpt/11/3",
         accepter_username: "tomtom",
         accepter_name: "Tomtom",
       });
@@ -51,12 +100,16 @@ acceptance(`Discourse Solved Plugin`, function (needs) {
 
     await visit("/t/with-excerpt/11");
 
-    assert.dom(".quote.accepted-answer blockquote").exists({ count: 2 });
+    assert.dom(ITEM_SELECTOR).exists({ count: 2 });
     assert
-      .dom("aside.quote.accepted-answer[data-post='2'] blockquote")
+      .dom(
+        `${ITEM_SELECTOR}[data-post='2'] .d-post-excerpt-accordion-item__content`
+      )
       .hasText("this is an excerpt");
     assert
-      .dom("aside.quote.accepted-answer[data-post='3'] blockquote")
+      .dom(
+        `${ITEM_SELECTOR}[data-post='3'] .d-post-excerpt-accordion-item__content`
+      )
       .hasText("another excerpt");
   });
 

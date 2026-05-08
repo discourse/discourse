@@ -143,9 +143,8 @@ export default class PostExcerptAccordionItem extends Component {
           </div>
         </div>
 
-        <div class="d-post-excerpt-accordion-item__body">
-          {{#if this.hasContent}}
-
+        {{#if this.hasContent}}
+          <div class="d-post-excerpt-accordion-item__body">
             <blockquote
               id={{this.quoteId}}
               class="d-post-excerpt-accordion-item__content"
@@ -167,9 +166,8 @@ export default class PostExcerptAccordionItem extends Component {
                 {{i18n "read_more"}}
               </a>
             </div>
-
-          {{/if}}
-        </div>
+          </div>
+        {{/if}}
       </div>
     {{/if}}
   </template>

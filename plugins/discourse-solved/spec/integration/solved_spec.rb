@@ -1048,7 +1048,7 @@ RSpec.describe "Managing Posts solved status" do
       expect(first_accepted_answer[:post_number]).to eq(2)
       expect(first_accepted_answer[:username]).to eq(user.username)
       expect(first_accepted_answer[:name]).to eq(user.name)
-      expect(first_accepted_answer[:excerpt]).to eq(reply.cooked)
+      expect(first_accepted_answer[:cooked]).to eq(reply.cooked)
       expect(first_accepted_answer[:accepter_name]).to eq(admin.name)
       expect(first_accepted_answer[:accepter_username]).to eq(admin.username)
 
