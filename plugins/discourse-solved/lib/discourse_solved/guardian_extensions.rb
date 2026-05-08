@@ -53,23 +53,19 @@ module DiscourseSolved
     end
 
     def can_me_too?(topic)
-      return false unless authenticated?
-      return false unless current_user.upcoming_change_enabled?(:enable_solved_me_too)
-      return false if topic.blank? || topic.private_message?
-      return false if topic.solved.present?
-      return false unless topic_in_support_category?(topic)
+      return false if topic.blank? || !authenticated?
       return false if topic.user_id == current_user.id
+      return false if topic.private_message? || topic.solved.present?
+      return false unless topic_in_support_category?(topic)
+      return false unless current_user.upcoming_change_enabled?(:enable_solved_me_too)
       can_see_topic?(topic)
     end
 
     def me_too_visible?(topic)
-      return false unless SiteSetting.enable_solved_me_too
-      return false if topic.blank? || topic.private_message?
-      return false if topic.solved.present?
+      return false if topic.blank?
+      return false if topic.private_message? || topic.solved.present?
       return false unless topic_in_support_category?(topic)
-      if authenticated?
-        return false unless current_user.upcoming_change_enabled?(:enable_solved_me_too)
-      end
+      return false unless UpcomingChanges.enabled_for_user?(:enable_solved_me_too, current_user)
       true
     end
 
