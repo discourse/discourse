@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import DashboardSection from "discourse/admin/components/dashboard/section";
 import SiteTrafficPeriodSelector, {
   SITE_TRAFFIC_PERIODS,
 } from "discourse/admin/components/site-traffic-period-selector";
@@ -14,7 +15,6 @@ import DButton from "discourse/components/d-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { number } from "discourse/lib/formatter";
-import getURL from "discourse/lib/get-url";
 import loadChartJS from "discourse/lib/load-chart-js";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
@@ -535,12 +535,6 @@ export default class AdminDashboardSiteTraffic extends Component {
     return this.currentTotals?.[SERIES.CRAWLER] || 0;
   }
 
-  get drilldownUrl() {
-    return getURL(
-      `/admin/reports/site_traffic?start_date=${ymd(this.startDate)}&end_date=${ymd(this.endDate)}`
-    );
-  }
-
   // Build the Chart.js config from scratch in one place. Category x-axis
   // means bars at integer indexes 0..N-1, equal-width slots, labels rendered
   // exactly under their bars. No timezone math anywhere — `keys` are opaque
@@ -786,40 +780,13 @@ export default class AdminDashboardSiteTraffic extends Component {
   }
 
   <template>
-    <div class="admin-dashboard-site-traffic-links">
-      <h2 class="admin-dashboard-site-traffic-links__heading">
-        {{i18n "admin.dashboard.site_traffic.links_heading"}}
-      </h2>
-      <div>
-        <a
-          class="admin-dashboard-site-traffic-links__link"
-          href="https://github.com/discourse/discourse/blob/tgxworld/site-traffic-redesign-spike/site-traffic-implementation-objectives.md"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {{i18n "admin.dashboard.site_traffic.objectives_link"}}
-        </a>
-      </div>
-      <div>
-        <a
-          class="admin-dashboard-site-traffic-links__link"
-          href="/site-traffic-headline-prototypes.html"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {{i18n "admin.dashboard.site_traffic.prototype_link"}}
-        </a>
-      </div>
-    </div>
-
-    <section
+    <DashboardSection
+      @title={{i18n "admin.dashboard.site_traffic.heading"}}
+      @layout="column"
       class="admin-dashboard-site-traffic
         {{if this.isLoading 'admin-dashboard-site-traffic--loading'}}"
     >
-      <div class="admin-dashboard-site-traffic__section-header">
-        <h2 class="admin-dashboard-site-traffic__heading">
-          {{i18n "admin.dashboard.site_traffic.heading"}}
-        </h2>
+      <div class="admin-dashboard-site-traffic__period-row">
         <SiteTrafficPeriodSelector
           @period={{this.period}}
           @setPeriod={{this.setPeriod}}
@@ -829,107 +796,115 @@ export default class AdminDashboardSiteTraffic extends Component {
         />
       </div>
 
-      <div class="admin-dashboard-site-traffic__card-wrapper">
-        <div class="admin-dashboard-site-traffic__card">
-          <div class="admin-dashboard-site-traffic__summary">
-            <div class="admin-dashboard-site-traffic__headline">
-              {{#if this.model}}
-                <p class="admin-dashboard-site-traffic__headline-text">
-                  {{this.headlineCountText}}
-                  {{#if this.trendPhraseText}}
-                    —
-                    <span
-                      class="admin-dashboard-site-traffic__trend admin-dashboard-site-traffic__trend--{{this.trendDirection}}"
-                    >{{this.trendPhraseText}}</span>
-                  {{/if}}
-                </p>
+      <div class="admin-dashboard-site-traffic__summary">
+        <div class="admin-dashboard-site-traffic__headline">
+          {{#if this.model}}
+            <p class="admin-dashboard-site-traffic__headline-text">
+              {{this.headlineCountText}}
+              {{#if this.trendPhraseText}}
+                —
+                <span
+                  class="admin-dashboard-site-traffic__trend admin-dashboard-site-traffic__trend--{{this.trendDirection}}"
+                >{{this.trendPhraseText}}</span>
               {{/if}}
-            </div>
-
-            {{#if this.isPublicSite}}
-              <div class="admin-dashboard-site-traffic__kpi-row">
-                <div class="admin-dashboard-site-traffic__kpi">
-                  <div class="admin-dashboard-site-traffic__kpi-value">
-                    {{this.loggedInSharePercent}}%
-                  </div>
-                  <div class="admin-dashboard-site-traffic__kpi-label">
-                    <span>{{i18n
-                        "admin.dashboard.site_traffic.kpi.label"
-                      }}</span>
-                    <DTooltip
-                      @icon="circle-info"
-                      @content={{i18n
-                        "admin.dashboard.site_traffic.kpi.tooltip"
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            {{/if}}
-          </div>
-
-          {{#if this.isPublicSite}}
-            <div
-              class="admin-dashboard-site-traffic__pills"
-              role="group"
-              aria-label={{i18n "admin.dashboard.site_traffic.heading"}}
-            >
-              {{#each this.filterPills as |pill|}}
-                <button
-                  type="button"
-                  class="admin-dashboard-site-traffic__pill
-                    {{if
-                      (this.pillIsActive pill.req)
-                      'admin-dashboard-site-traffic__pill--active'
-                    }}"
-                  aria-pressed={{if
-                    (this.pillIsActive pill.req)
-                    "true"
-                    "false"
-                  }}
-                  {{on "click" (fn this.togglePill pill.req)}}
-                >
-                  <span
-                    class="admin-dashboard-site-traffic__pill-swatch"
-                    style={{this.swatchStyle
-                      pill.color
-                      (this.pillIsActive pill.req)
-                    }}
-                  ></span>
-                  {{pill.label}}
-                </button>
-              {{/each}}
-            </div>
+            </p>
           {{/if}}
+        </div>
 
-          <div class="admin-dashboard-site-traffic__chart">
-            {{#if this.errored}}
-              <div class="admin-dashboard-site-traffic__error">
-                <p>{{i18n "admin.dashboard.site_traffic.chart.error"}}</p>
-                <DButton
-                  @label="admin.dashboard.site_traffic.chart.retry"
-                  @action={{this.fetchReport}}
+        {{#if this.isPublicSite}}
+          <div class="admin-dashboard-site-traffic__kpi-row">
+            <div class="admin-dashboard-site-traffic__kpi">
+              <div class="admin-dashboard-site-traffic__kpi-value">
+                {{this.loggedInSharePercent}}%
+              </div>
+              <div class="admin-dashboard-site-traffic__kpi-label">
+                <span>{{i18n "admin.dashboard.site_traffic.kpi.label"}}</span>
+                <DTooltip
+                  @icon="circle-info"
+                  @content={{i18n "admin.dashboard.site_traffic.kpi.tooltip"}}
                 />
               </div>
-            {{else if this.chartConfig}}
-              <div class="admin-dashboard-site-traffic__chart-canvas">
-                <canvas {{renderChart this.chartConfig}}></canvas>
-              </div>
-              {{#unless this.hasChartData}}
-                <div class="admin-dashboard-site-traffic__empty-overlay">
-                  {{i18n "admin.dashboard.site_traffic.chart.empty"}}
-                </div>
-              {{/unless}}
-            {{/if}}
+            </div>
           </div>
+        {{/if}}
+      </div>
 
-          <div class="admin-dashboard-site-traffic__drilldown">
-            <a href={{this.drilldownUrl}}>
-              {{i18n "admin.dashboard.site_traffic.drilldown"}}
-            </a>
+      {{#if this.isPublicSite}}
+        <div
+          class="admin-dashboard-site-traffic__pills"
+          role="group"
+          aria-label={{i18n "admin.dashboard.site_traffic.heading"}}
+        >
+          {{#each this.filterPills as |pill|}}
+            <button
+              type="button"
+              class="admin-dashboard-site-traffic__pill
+                {{if
+                  (this.pillIsActive pill.req)
+                  'admin-dashboard-site-traffic__pill--active'
+                }}"
+              aria-pressed={{if (this.pillIsActive pill.req) "true" "false"}}
+              {{on "click" (fn this.togglePill pill.req)}}
+            >
+              <span
+                class="admin-dashboard-site-traffic__pill-swatch"
+                style={{this.swatchStyle
+                  pill.color
+                  (this.pillIsActive pill.req)
+                }}
+              ></span>
+              {{pill.label}}
+            </button>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      <div class="admin-dashboard-site-traffic__chart">
+        {{#if this.errored}}
+          <div class="admin-dashboard-site-traffic__error">
+            <p>{{i18n "admin.dashboard.site_traffic.chart.error"}}</p>
+            <DButton
+              @label="admin.dashboard.site_traffic.chart.retry"
+              @action={{this.fetchReport}}
+            />
           </div>
+        {{else if this.chartConfig}}
+          <div class="admin-dashboard-site-traffic__chart-canvas">
+            <canvas {{renderChart this.chartConfig}}></canvas>
+          </div>
+          {{#unless this.hasChartData}}
+            <div class="admin-dashboard-site-traffic__empty-overlay">
+              {{i18n "admin.dashboard.site_traffic.chart.empty"}}
+            </div>
+          {{/unless}}
+        {{/if}}
+      </div>
+
+      <div class="admin-dashboard-site-traffic-links">
+        <h2 class="admin-dashboard-site-traffic-links__heading">
+          {{i18n "admin.dashboard.site_traffic.links_heading"}}
+        </h2>
+        <div>
+          <a
+            class="admin-dashboard-site-traffic-links__link"
+            href="https://github.com/discourse/discourse/blob/tgxworld/site-traffic-redesign-spike/site-traffic-implementation-objectives.md"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {{i18n "admin.dashboard.site_traffic.objectives_link"}}
+          </a>
+        </div>
+        <div>
+          <a
+            class="admin-dashboard-site-traffic-links__link"
+            href="/site-traffic-headline-prototypes.html"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {{i18n "admin.dashboard.site_traffic.prototype_link"}}
+          </a>
         </div>
       </div>
-    </section>
+    </DashboardSection>
   </template>
 }

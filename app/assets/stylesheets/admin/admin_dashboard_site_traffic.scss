@@ -1,7 +1,7 @@
+// Renders inside the site traffic Dashboard::Section body, below the chart.
+// The wrapper's --column layout already provides outer gap, so no margin
+// here.
 .admin-dashboard-site-traffic-links {
-  margin: 0 0 1em;
-  padding: 0 0.25em;
-
   &__heading {
     margin: 0 0 0.35em;
     text-transform: uppercase;
@@ -19,48 +19,24 @@
 }
 
 .admin-dashboard-site-traffic {
-  margin-bottom: 2em;
+  // Outer chrome (border, padding, header, gap) is owned by Dashboard::Section
+  // (`.db-section` and `.db-section__wrapper`). The styles below target our
+  // own body content; the section component handles everything else.
 
-  &__section-header {
+  // Period selector floats top-right inside the body. Future iterations will
+  // hand period control off to the dashboard's toolbar segmented control.
+  &__period-row {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1em;
-    margin-bottom: 0.75em;
-    padding: 0 0.25em;
+    justify-content: flex-end;
   }
 
-  &__heading {
-    margin: 0;
-    text-transform: uppercase;
-    font-size: var(--font-down-1);
-    font-weight: 600;
-    color: var(--primary-medium);
-    letter-spacing: 0.08em;
-  }
-
-  &__card-wrapper {
-    position: relative;
-  }
-
-  &__card {
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-large, 8px);
-    padding: 1.75em 2em;
-    display: grid;
-    gap: 1.5em;
-    transition: opacity 120ms ease-out;
-  }
-
-  // Loading state: dim the card immediately on period change so the click
-  // feels acknowledged. The page-level loading slider (top of the page,
-  // the same indicator Discourse uses for navigation) provides the active
-  // "data is loading" cue; the dim provides "this content is stale" context.
-  // Both fade in and snap back via the base 120ms transition.
-  &--loading &__card {
+  // Loading state: dim the section's wrapper immediately on click so the
+  // action feels acknowledged. The page-level loading slider provides the
+  // active "data is loading" cue; the dim provides "this content is stale"
+  // context. Both fade in and snap back via the base 120ms transition.
+  &--loading .db-section__wrapper {
     opacity: 0.5;
+    transition: opacity 120ms ease-out;
   }
 
   &__summary {
@@ -202,16 +178,6 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5em;
-  }
-
-  &__drilldown {
-    text-align: right;
-    margin-top: 0.25em;
-
-    a {
-      color: var(--tertiary);
-      font-weight: 500;
-    }
   }
 }
 
@@ -360,10 +326,6 @@
 
 @media screen and (width <= 767px) {
   .admin-dashboard-site-traffic {
-    &__card {
-      padding: 1.25em;
-    }
-
     &__summary {
       flex-direction: column;
       align-items: stretch;
