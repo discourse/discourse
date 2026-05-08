@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Reports::StaffLogins
+module Reports::AdminLogins
   extend ActiveSupport::Concern
 
   class_methods do
-    def report_staff_logins(report)
+    def report_admin_logins(report)
       report.modes = [Report::MODES[:table]]
 
       report.data = []
@@ -17,13 +17,13 @@ module Reports::StaffLogins
             id: :user_id,
             avatar: :avatar_template,
           },
-          title: I18n.t("reports.staff_logins.labels.user"),
+          title: I18n.t("reports.admin_logins.labels.user"),
         },
-        { property: :location, title: I18n.t("reports.staff_logins.labels.location") },
+        { property: :location, title: I18n.t("reports.admin_logins.labels.location") },
         {
           property: :created_at,
           type: :precise_date,
-          title: I18n.t("reports.staff_logins.labels.login_at"),
+          title: I18n.t("reports.admin_logins.labels.login_at"),
         },
       ]
 

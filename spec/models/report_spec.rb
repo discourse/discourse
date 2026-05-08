@@ -1352,7 +1352,7 @@ RSpec.describe Report do
     end
   end
 
-  describe "report_staff_logins" do
+  describe "report_admin_logins" do
     let(:joffrey) { Fabricate(:admin, username: "joffrey") }
     let(:robin) { Fabricate(:admin, username: "robin") }
     let(:james) { Fabricate(:user, username: "james") }
@@ -1385,7 +1385,7 @@ RSpec.describe Report do
         )
         UserAuthToken.log(action: "generate", user_id: james.id)
 
-        report = Report.find("staff_logins")
+        report = Report.find("admin_logins")
 
         expect(report.data.length).to eq(3)
         expect(report.data[0][:username]).to eq("joffrey")
