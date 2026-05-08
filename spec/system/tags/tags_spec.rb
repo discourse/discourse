@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tags" do
+describe "Tags", :soft_reset do
   fab!(:user_tl1) { Fabricate(:user, trust_level: TrustLevel[1]) }
   fab!(:user_tl2) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:user_tl3) { Fabricate(:user, trust_level: TrustLevel[3]) }

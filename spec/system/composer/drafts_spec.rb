@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - Drafts" do
+describe "Composer - Drafts", :soft_reset do
   fab!(:topic, :topic_with_op)
   fab!(:current_user, :admin)
 

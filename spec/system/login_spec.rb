@@ -433,7 +433,7 @@ shared_examples "login scenarios" do
   end
 end
 
-describe "Login" do
+describe "Login", :soft_reset do
   context "when desktop" do
     include_examples "login scenarios"
   end

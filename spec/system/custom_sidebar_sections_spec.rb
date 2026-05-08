@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Custom sidebar sections" do
+describe "Custom sidebar sections", :soft_reset do
   fab!(:user)
   fab!(:admin)
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }

@@ -2,7 +2,7 @@
 
 require_relative "../support/nested_replies_helpers"
 
-RSpec.describe "Nested view" do
+RSpec.describe "Nested view", :soft_reset do
   include NestedRepliesHelpers
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }

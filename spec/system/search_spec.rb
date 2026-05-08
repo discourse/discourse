@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Search" do
+describe "Search", :soft_reset do
   let(:search_page) { PageObjects::Pages::Search.new }
   fab!(:topic)
   fab!(:op) { Fabricate(:post, topic: topic) }

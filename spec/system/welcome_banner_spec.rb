@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Welcome banner" do
+describe "Welcome banner", :soft_reset do
   fab!(:current_user) { Fabricate(:user, seen_before: true) }
   let(:banner) { PageObjects::Components::WelcomeBanner.new }
   let(:search_page) { PageObjects::Pages::Search.new }

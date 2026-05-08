@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Editing sidebar categories navigation" do
+RSpec.describe "Editing sidebar categories navigation", :soft_reset do
   fab!(:user)
 
   fab!(:category2) { Fabricate(:category, name: "category 2") }

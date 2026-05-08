@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Request tracking" do
+describe "Request tracking", :soft_reset do
   before do
     ApplicationRequest.delete_all
     ApplicationRequest.enable

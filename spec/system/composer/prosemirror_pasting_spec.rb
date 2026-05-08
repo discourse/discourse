@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Pasting content" do
+describe "Composer - ProseMirror - Pasting content", :soft_reset do
   include_context "with prosemirror editor"
 
   it "creates a mention when pasting an HTML anchor with class mention" do

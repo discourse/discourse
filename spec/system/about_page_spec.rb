@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "About page" do
+describe "About page", :soft_reset do
   fab!(:image_upload)
   fab!(:admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
   fab!(:moderator) { Fabricate(:moderator, last_seen_at: 1.hour.ago) }
