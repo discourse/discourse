@@ -15,6 +15,16 @@ describe "Admin Color Palette Config Area Page" do
   after do
     Stylesheet::Manager.rm_cache_folder
     Stylesheet::Manager.cache.clear
+    # The soft-reset in spec/rails_helper.rb keeps the browser HTTP
+    # cache warm across examples (it lives at the BrowserContext level,
+    # not per-page). This file mutates the shared `color_scheme` between
+    # examples — e.g. one example marks it as the default theme palette
+    # (which causes the browser to fetch and cache that scheme's
+    # stylesheet body) and a later example edits the same scheme's
+    # secondary colour and asserts the rendered `html { background-color }`
+    # reflects the edit. The browser otherwise serves the pre-edit
+    # stylesheet body from its response cache. Wipe that cache here.
+    cdp.clear_browser_cache
   end
 
   it "allows editing the palette name" do
