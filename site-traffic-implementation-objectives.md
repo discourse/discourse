@@ -110,6 +110,8 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 
 2.2 The heading text is translatable.
 
+2.3 The section's outer chrome — frame, border, header row, content padding, and inter-row spacing — is delegated to the shared `Dashboard::Section` component (introduced in #39841) so the section reads visually identical to the other dashboard sections (Highlights, Reports, Engagement). Site Traffic only owns the body content (period selector, headline, KPI, filter pills, chart). Future refinements to the section frame (e.g., header action slot, expand/collapse, drag-to-reorder) come from `Dashboard::Section` rather than being reimplemented here.
+
 ### 3. Period selector
 
 3.1 The selector applies to everything in the section: headline, KPI, and chart all reflect the selected period.
