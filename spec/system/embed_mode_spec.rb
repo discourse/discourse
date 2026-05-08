@@ -134,6 +134,15 @@ describe "Embed mode" do
         expect(page).to have_css(".topic-post", text: "Hello from the docked composer")
       end
 
+      it "shows the standard composer when editing a post" do
+        own_post = Fabricate(:post, topic: topic, user: user)
+        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+        find("#post_#{own_post.post_number} button.edit").click
+
+        expect(page).to have_css("#reply-control.composer-action-edit")
+      end
+
       context "with many replies" do
         before { 15.times { Fabricate(:post, topic: topic) } }
 
