@@ -1,3 +1,23 @@
+.admin-dashboard-site-traffic-links {
+  margin: 0 0 1em;
+  padding: 0 0.25em;
+
+  &__heading {
+    margin: 0 0 0.35em;
+    text-transform: uppercase;
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    color: var(--primary-medium);
+    letter-spacing: 0.08em;
+  }
+
+  &__link {
+    font-size: var(--font-down-1);
+    font-weight: 500;
+    color: var(--tertiary);
+  }
+}
+
 .admin-dashboard-site-traffic {
   margin-bottom: 2em;
 
@@ -18,19 +38,6 @@
     font-weight: 600;
     color: var(--primary-medium);
     letter-spacing: 0.08em;
-  }
-
-  &__section-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.75em;
-  }
-
-  &__prototype-link {
-    font-size: var(--font-down-1);
-    font-weight: 500;
-    color: var(--tertiary);
   }
 
   &__card-wrapper {

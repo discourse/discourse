@@ -786,6 +786,20 @@ export default class AdminDashboardSiteTraffic extends Component {
   }
 
   <template>
+    <div class="admin-dashboard-site-traffic-links">
+      <h2 class="admin-dashboard-site-traffic-links__heading">
+        {{i18n "admin.dashboard.site_traffic.links_heading"}}
+      </h2>
+      <a
+        class="admin-dashboard-site-traffic-links__link"
+        href="/site-traffic-headline-prototypes.html"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        {{i18n "admin.dashboard.site_traffic.prototype_link"}}
+      </a>
+    </div>
+
     <section
       class="admin-dashboard-site-traffic
         {{if this.isLoading 'admin-dashboard-site-traffic--loading'}}"
@@ -794,23 +808,13 @@ export default class AdminDashboardSiteTraffic extends Component {
         <h2 class="admin-dashboard-site-traffic__heading">
           {{i18n "admin.dashboard.site_traffic.heading"}}
         </h2>
-        <div class="admin-dashboard-site-traffic__section-actions">
-          <a
-            class="admin-dashboard-site-traffic__prototype-link"
-            href="/site-traffic-headline-prototypes.html"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {{i18n "admin.dashboard.site_traffic.prototype_link"}}
-          </a>
-          <SiteTrafficPeriodSelector
-            @period={{this.period}}
-            @setPeriod={{this.setPeriod}}
-            @setCustomDateRange={{this.setCustomDateRange}}
-            @startDate={{this.startDate}}
-            @endDate={{this.endDate}}
-          />
-        </div>
+        <SiteTrafficPeriodSelector
+          @period={{this.period}}
+          @setPeriod={{this.setPeriod}}
+          @setCustomDateRange={{this.setCustomDateRange}}
+          @startDate={{this.startDate}}
+          @endDate={{this.endDate}}
+        />
       </div>
 
       <div class="admin-dashboard-site-traffic__card-wrapper">
