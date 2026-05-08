@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing sidebar" do
+describe "Viewing sidebar", :soft_reset do
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   context "as logged in user" do

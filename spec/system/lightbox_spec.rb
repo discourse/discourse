@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Lightbox | Photoswipe" do
+describe "Lightbox | Photoswipe", :soft_reset do
   fab!(:topic)
   fab!(:current_user, :admin)
   fab!(:upload_1) { Fabricate(:image_upload, width: 2400, height: 3600) }

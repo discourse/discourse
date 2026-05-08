@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Uploading files in the composer" do
+describe "Uploading files in the composer", :soft_reset do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
 
   let(:modal) { PageObjects::Modals::Base.new }

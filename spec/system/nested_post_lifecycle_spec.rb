@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Nested view post lifecycle" do
+RSpec.describe "Nested view post lifecycle", :soft_reset do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }

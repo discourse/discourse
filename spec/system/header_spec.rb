@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Glimmer Header" do
+RSpec.describe "Glimmer Header", :soft_reset do
   let(:header) { PageObjects::Pages::Header.new }
   let(:search) { PageObjects::Pages::Search.new }
   fab!(:current_user, :user)
