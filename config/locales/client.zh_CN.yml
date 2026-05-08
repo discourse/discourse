@@ -6073,6 +6073,13 @@ zh_CN:
         too_many_requests: 您执行此操作的次数过多。请稍后再试。
         not_found_error: 抱歉，此报告不存在
         custom_date_range: 自定义日期范围
+        sections:
+          reports:
+            title: "举报"
+          traffic:
+            title: "网站流量"
+          engagement:
+            title: "参与度"
         reports:
           trend_title: "变化 %{percent}。目前为 %{current}，上一个期间为 %{prev}。"
           percent_change_tooltip: "%{percent} 变化。"

@@ -5734,6 +5734,11 @@ ja:
         too_many_requests: この操作の実行回数が多すぎます。しばらくしてからもう一度お試しください。
         not_found_error: このレポートは存在しません
         custom_date_range: カスタムの日付範囲
+        sections:
+          reports:
+            title: "レポート"
+          traffic:
+            title: "サイトトラフィック"
         reports:
           trend_title: "%{percent} 変更。現在 %{current}、前の期間中 %{prev}。"
           percent_change_tooltip: "%{percent} 変化。"

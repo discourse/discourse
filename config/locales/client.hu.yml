@@ -6179,6 +6179,13 @@ hu:
         too_many_requests: Túl sokszor hajtotta végre ezt a műveletet. Az újabb próbálkozás előtt várjon.
         not_found_error: Sajnos ez a jelentés nem létezik
         custom_date_range: Egyéni dátumtartomány
+        sections:
+          reports:
+            title: "Jelentések"
+          traffic:
+            title: "Látogatottság"
+          engagement:
+            title: "Elköteleződés"
         reports:
           trend_title: "%{percent} megváltoztatni. Jelenlegi %{current}, volt %{prev} az előző időszakban"
           percent_change_tooltip: "%{percent} változás."

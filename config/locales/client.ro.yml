@@ -4272,6 +4272,11 @@ ro:
         reports_tab: "Rapoarte"
         report_filter_any: "oricare"
         disabled: Dezactivat
+        sections:
+          reports:
+            title: "Rapoarte"
+          traffic:
+            title: "Trafic site"
         reports:
           percent_change_tooltip_previous_value:
             yesterday:

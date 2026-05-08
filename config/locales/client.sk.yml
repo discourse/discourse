@@ -6074,6 +6074,11 @@ sk:
         too_many_requests: Túto akciu ste vykonali príliš veľakrát. Pred opätovným pokusom počkajte.
         not_found_error: Prepáčte, toto hlásenie neexistuje
         custom_date_range: Vlastný rozsah dátumov
+        sections:
+          reports:
+            title: "Hlásení"
+          traffic:
+            title: "Návštevnosť stránky"
         reports:
           trend_title: "%{percent} zmena. V súčasnosti %{current}, v predchádzajúcom období bola %{prev} ."
           percent_change_tooltip: "%{percent} zmena."

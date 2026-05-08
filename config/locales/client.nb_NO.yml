@@ -4546,6 +4546,9 @@ nb_NO:
         exception_error: Beklager, en feil oppstod under kjøringen av denne spørringen
         too_many_requests: Du har utført denne handlingen for mange ganger. Vennligst vent før du prøver igjen.
         not_found_error: Du har utført denne handlingen for mange ganger. Vennligst vent før du prøver igjen.
+        sections:
+          reports:
+            title: "Rapporter"
         reports:
           trend_title: "%{percent} endring. Nåværende %{current}, var %{prev} i forrige periode."
           today: "I dag"

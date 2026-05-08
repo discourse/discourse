@@ -3497,6 +3497,16 @@ pl_PL:
         few: "%{username} i %{count} inni"
         many: "%{username} i %{count} innych"
         other: "%{username} i %{count} innych"
+      replied_consolidated_in_topic:
+        one: "%{count} nowa odpowiedź w Twoim temacie"
+        few: "%{count} nowe odpowiedzi w Twoim temacie"
+        many: "%{count} nowych odpowiedzi w Twoim temacie"
+        other: "%{count} nowych odpowiedzi w Twoim temacie"
+      replied_consolidated_to_post:
+        one: "%{count} nowa odpowiedź na Twój wpis"
+        few: "%{count} nowe odpowiedzi na Twój wpis"
+        many: "%{count} nowych odpowiedzi na Twój wpis"
+        other: "%{count} nowych odpowiedzi na Twój wpis"
       liked_consolidated_description:
         one: "polubiono %{count} Twój wpis"
         few: "polubił %{count} twoje posty"
@@ -4141,6 +4151,7 @@ pl_PL:
         title: "Oznacz jako nieprzeczytane"
       list: "Tematy"
       new: "nowy temat"
+      has_new_replies: "nowe odpowiedzi od czasu Twojej ostatniej wizyty"
       unread: "nieprzeczytane"
       new_topics:
         one: "%{count} nowy temat"
@@ -6999,6 +7010,13 @@ pl_PL:
         too_many_requests: Wykonałeś/łaś tę akcję zbyt wiele razy. Poczekaj, zanim spróbujesz ponownie.
         not_found_error: Przepraszamy, ten raport nie istnieje.
         custom_date_range: Niestandardowy zakres dat
+        sections:
+          reports:
+            title: "Zgłoszeń"
+          traffic:
+            title: "Ruch w witrynie"
+          engagement:
+            title: "Zaangażowanie"
         reports:
           trend_title: "%{percent} zmian. Obecnie %{current}, w poprzednim okresie było %{prev}."
           percent_change_tooltip: "%{percent} zmiany."
@@ -7854,6 +7872,8 @@ pl_PL:
           beginners_guide_title: "Poradnik początkującego użytkownika motywów Discourse"
           developers_guide_title: "Poradnik kreatora motywów Discourse"
           browse_themes: "Przeglądaj motywy społeczności"
+          install_more_themes: "Zainstaluj więcej motywów"
+          install_more_themes_description: "Przeglądaj popularne motywy społeczności lub zainstaluj jeden z pliku lub repozytorium git."
           customize_desc: "Personalizacja:"
           title: "Motywy"
           description: "Motywy to rozbudowane modyfikacje, które zmieniają wiele elementów stylu twojego forum i często zawierają także dodatkowe funkcje front-endowe."
@@ -7964,6 +7984,7 @@ pl_PL:
           public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
           install: "Zainstaluj"
           installed: "Zainstalowana"
+          screenshot: "Zrzut ekranu %{name}"
           install_popular: "Popularne"
           install_upload: "Z twojego urządzenia"
           install_git_repo: "Z repozytorium git"

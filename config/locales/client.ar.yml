@@ -7393,6 +7393,13 @@ ar:
         too_many_requests: لقد نفَّذت هذا الإجراء مرات كثيرة جدًا. يُرجى الانتظار قليلًا قبل إعادة المحاولة.
         not_found_error: عذرًا، هذا التقرير غير موجود
         custom_date_range: نطاق مخصَّص للتاريخ
+        sections:
+          reports:
+            title: "التقريران"
+          traffic:
+            title: "حركة زيارات الموقع"
+          engagement:
+            title: "التفاعل"
         reports:
           trend_title: "تغيير بنسبة %{percent}. الحالي %{current}، كان %{prev} في فترة سابقة."
           percent_change_tooltip: "تغيير بنسبة %{percent}."

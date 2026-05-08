@@ -6669,6 +6669,11 @@ ru:
         too_many_requests: Вы выполняете это действие слишком часто. Подождите, прежде чем пытаться снова.
         not_found_error: Этого отчёта не существует
         custom_date_range: Свой диапазон дат
+        sections:
+          reports:
+            title: "отчетов"
+          traffic:
+            title: "Посещаемость сайта"
         reports:
           trend_title: "Изменилось на %{percent}. В настоящее время — %{current}, было %{prev} в предыдущий период."
           percent_change_tooltip: "Изменение %{percent}."

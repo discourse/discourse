@@ -6595,6 +6595,11 @@ cs:
         too_many_requests: Tuto akci jste provedli příliš mnohokrát. Počkejte prosím před dalším pokusem.
         not_found_error: Omlouváme se, tato sestava neexistuje
         custom_date_range: Vlastní období
+        sections:
+          reports:
+            title: "Sestav"
+          traffic:
+            title: "Návštěvnost stránek"
         reports:
           trend_title: "%{percent} změna. Nyní %{current}, proti %{prev} v předchozím období."
           percent_change_tooltip: "%{percent} změna."

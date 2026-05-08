@@ -3949,6 +3949,9 @@ sl:
         exception_error: Prišlo je do napake med poizvedbo.
         too_many_requests: To dejanje ste izvedli prevečkrat. Počakajte preden poskusite ponovno.
         not_found_error: To poročilo ne obstaja.
+        sections:
+          reports:
+            title: "Poročila"
         reports:
           trend_title: "%{percent} sprememba. Trenutno %{current}, je bilo %{prev} v prejšnjem obdobju."
           today: "Danes"
