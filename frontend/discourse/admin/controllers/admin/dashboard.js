@@ -22,11 +22,11 @@ export default class AdminDashboardController extends Controller {
   @tracked loadingProblems = false;
   @tracked problemsFetchedAt;
   @tracked range = DEFAULT_PERIOD;
-  @tracked from = null;
-  @tracked to = null;
+  @tracked start_date = null;
+  @tracked end_date = null;
   @autoTrackedArray problems;
 
-  queryParams = ["range", "from", "to"];
+  queryParams = ["range", "start_date", "end_date"];
 
   isLoading = false;
   dashboardFetchedAt = null;
@@ -35,15 +35,15 @@ export default class AdminDashboardController extends Controller {
     if (!VALID_PERIODS.includes(this.range)) {
       return DEFAULT_PERIOD;
     }
-    if (this.range === PERIOD_CUSTOM && (!this.from || !this.to)) {
+    if (this.range === PERIOD_CUSTOM && (!this.start_date || !this.end_date)) {
       return DEFAULT_PERIOD;
     }
     return this.range;
   }
 
   get startDate() {
-    if (this.safePeriod === PERIOD_CUSTOM && this.from) {
-      const parsed = moment(this.from, "YYYY-MM-DD", true);
+    if (this.safePeriod === PERIOD_CUSTOM && this.start_date) {
+      const parsed = moment(this.start_date, "YYYY-MM-DD", true);
       if (parsed.isValid()) {
         return parsed.startOf("day").toDate();
       }
@@ -52,8 +52,8 @@ export default class AdminDashboardController extends Controller {
   }
 
   get endDate() {
-    if (this.safePeriod === PERIOD_CUSTOM && this.to) {
-      const parsed = moment(this.to, "YYYY-MM-DD", true);
+    if (this.safePeriod === PERIOD_CUSTOM && this.end_date) {
+      const parsed = moment(this.end_date, "YYYY-MM-DD", true);
       if (parsed.isValid()) {
         return parsed.endOf("day").toDate();
       }
@@ -64,15 +64,15 @@ export default class AdminDashboardController extends Controller {
   @action
   setPeriod(period) {
     this.range = period;
-    this.from = null;
-    this.to = null;
+    this.start_date = null;
+    this.end_date = null;
   }
 
   @action
   setCustomDateRange(startDate, endDate) {
     this.range = PERIOD_CUSTOM;
-    this.from = moment(startDate).format("YYYY-MM-DD");
-    this.to = moment(endDate).format("YYYY-MM-DD");
+    this.start_date = moment(startDate).format("YYYY-MM-DD");
+    this.end_date = moment(endDate).format("YYYY-MM-DD");
   }
 
   @computed("siteSettings.version_checks")

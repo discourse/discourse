@@ -39,7 +39,7 @@ describe "Admin Dashboard Redesign" do
     end
 
     it "rehydrates a custom range from query params" do
-      page.visit("/admin?range=custom&from=2026-03-01&to=2026-04-28")
+      page.visit("/admin?range=custom&start_date=2026-03-01&end_date=2026-04-28")
 
       expect(dashboard).to have_active_period("custom")
       expect(dashboard).to have_custom_label_text("Mar 1")

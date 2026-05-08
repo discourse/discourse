@@ -1,12 +1,28 @@
 import { tracked } from "@glimmer/tracking";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 
 export default class AdminDashboardTabController extends Controller {
+  @controller("admin.dashboard") dashboardController;
+
   @tracked period = "monthly";
-  @tracked start_date = null;
-  @tracked end_date = null;
-  queryParams = ["period", "start_date", "end_date"];
+  queryParams = ["period"];
+
+  get start_date() {
+    return this.dashboardController.start_date;
+  }
+
+  set start_date(value) {
+    this.dashboardController.start_date = value;
+  }
+
+  get end_date() {
+    return this.dashboardController.end_date;
+  }
+
+  set end_date(value) {
+    this.dashboardController.end_date = value;
+  }
 
   get startDate() {
     if (this.start_date) {
