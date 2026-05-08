@@ -104,11 +104,21 @@ body.has-ai-bot-docked-composer {
   border-radius: var(--d-input-border-radius);
   background: var(--d-input-bg-color);
   transition: border-color 0.15s ease-in-out;
+  position: relative;
 
   &.in-focus {
     border-color: var(--d-input-focused-color) !important;
-    outline: 2px solid var(--d-input-focused-color) !important;
-    outline-offset: -2px;
+    outline: none !important;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      z-index: 1;
+      border: 2px solid var(--d-input-focused-color);
+      border-radius: var(--d-input-border-radius);
+      pointer-events: none;
+    }
   }
 }
 
