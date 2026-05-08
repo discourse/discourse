@@ -798,6 +798,8 @@ export default class AdminDashboardSiteTraffic extends Component {
           <a
             class="admin-dashboard-site-traffic__prototype-link"
             href="/site-traffic-headline-prototypes.html"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             {{i18n "admin.dashboard.site_traffic.prototype_link"}}
           </a>
