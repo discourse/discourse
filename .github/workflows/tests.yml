@@ -315,9 +315,6 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-          RUBY_GC_HEAP_INIT_SLOTS: 400000
-          RUBY_GC_HEAP_GROWTH_MAX_SLOTS: 40000
-          RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR: 1.5
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
