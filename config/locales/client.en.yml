@@ -6824,6 +6824,13 @@ en:
           engagement:
             title: "Engagement"
 
+        period:
+          last_7_days: "Last 7 days"
+          last_30_days: "Last 30 days"
+          last_3_months: "Last 3 months"
+          custom: "Custom"
+          custom_range: "%{start} – %{end}"
+
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
           percent_change_tooltip: "%{percent} change."
