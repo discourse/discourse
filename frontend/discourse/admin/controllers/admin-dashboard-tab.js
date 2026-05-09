@@ -8,32 +8,22 @@ export default class AdminDashboardTabController extends Controller {
   @tracked period = "monthly";
   queryParams = ["period"];
 
-  get start_date() {
-    return this.dashboardController.start_date;
-  }
-
-  set start_date(value) {
-    this.dashboardController.start_date = value;
-  }
-
-  get end_date() {
-    return this.dashboardController.end_date;
-  }
-
-  set end_date(value) {
-    this.dashboardController.end_date = value;
-  }
-
   get startDate() {
-    if (this.start_date) {
-      return moment.utc(this.start_date).locale("en").startOf("day");
+    if (this.dashboardController.start_date) {
+      return moment
+        .utc(this.dashboardController.start_date)
+        .locale("en")
+        .startOf("day");
     }
     return this.#calculateStartDate();
   }
 
   get endDate() {
-    if (this.end_date) {
-      return moment.utc(this.end_date).locale("en").endOf("day");
+    if (this.dashboardController.end_date) {
+      return moment
+        .utc(this.dashboardController.end_date)
+        .locale("en")
+        .endOf("day");
     }
     return moment().locale("en").utc().endOf("day");
   }
@@ -63,14 +53,15 @@ export default class AdminDashboardTabController extends Controller {
   @action
   setCustomDateRange(startDate, endDate) {
     this.period = "custom";
-    this.start_date = moment(startDate).format("YYYY-MM-DD");
-    this.end_date = moment(endDate).format("YYYY-MM-DD");
+    this.dashboardController.start_date =
+      moment(startDate).format("YYYY-MM-DD");
+    this.dashboardController.end_date = moment(endDate).format("YYYY-MM-DD");
   }
 
   @action
   setPeriod(period) {
     this.period = period;
-    this.start_date = null;
-    this.end_date = null;
+    this.dashboardController.start_date = null;
+    this.dashboardController.end_date = null;
   }
 }
