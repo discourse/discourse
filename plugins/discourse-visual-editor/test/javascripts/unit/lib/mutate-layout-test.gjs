@@ -4,6 +4,9 @@ import { block } from "discourse/blocks";
 import {
   entryKey,
   findEntry,
+  insertEntryAt,
+  moveEntry,
+  removeEntry,
   replaceEntryArgs,
   setEntryArg,
 } from "discourse/plugins/discourse-visual-editor/discourse/lib/mutate-layout";
@@ -188,6 +191,270 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
         "Goodbye"
       );
       assert.deepEqual(next[0].args, { title: "Goodbye", subtitle: "World" });
+    });
+  });
+
+  module("removeEntry", function () {
+    test("removes a top-level entry and returns it", function (assert) {
+      const layout = makeLayout();
+      const original = layout[0];
+      const containerOriginal = layout[1];
+
+      const result = removeEntry(layout, "mutate-test:leaf:1");
+
+      assert.true(result.changed);
+      assert.strictEqual(result.removed, original);
+      assert.strictEqual(result.layout.length, 1);
+      assert.strictEqual(
+        result.layout[0],
+        containerOriginal,
+        "untouched sibling keeps identity"
+      );
+    });
+
+    test("removes a nested entry; ancestor is cloned, untouched siblings keep identity", function (assert) {
+      const layout = [
+        ...makeLayout(),
+        {
+          block: "mutate-test:leaf",
+          args: { title: "Trailing" },
+          __stableKey: 99,
+        },
+      ];
+      const trailingOriginal = layout[2];
+      const containerOriginal = layout[1];
+
+      const result = removeEntry(layout, "mutate-test:leaf:3");
+
+      assert.true(result.changed);
+      assert.strictEqual(result.removed, containerOriginal.children[0]);
+      assert.notStrictEqual(
+        result.layout[1],
+        containerOriginal,
+        "ancestor of removed entry is cloned"
+      );
+      assert.strictEqual(
+        result.layout[1].children.length,
+        0,
+        "container no longer holds the removed child"
+      );
+      assert.strictEqual(
+        result.layout[2],
+        trailingOriginal,
+        "untouched trailing sibling keeps identity"
+      );
+    });
+
+    test("returns the same layout reference when the key isn't present", function (assert) {
+      const layout = makeLayout();
+      const result = removeEntry(layout, "absent:0");
+
+      assert.false(result.changed);
+      assert.strictEqual(result.removed, null);
+      assert.strictEqual(result.layout, layout);
+    });
+  });
+
+  module("insertEntryAt", function () {
+    test("inserts before a top-level target", function (assert) {
+      const layout = makeLayout();
+      const newEntry = {
+        block: "mutate-test:leaf",
+        args: { title: "New" },
+        __stableKey: 50,
+      };
+      const result = insertEntryAt(
+        layout,
+        "mutate-test:container:2",
+        newEntry,
+        "before"
+      );
+      assert.true(result.changed);
+      assert.strictEqual(result.layout.length, 3);
+      assert.strictEqual(result.layout[0], layout[0]);
+      assert.strictEqual(result.layout[1], newEntry);
+      assert.strictEqual(result.layout[2], layout[1]);
+    });
+
+    test("inserts after a top-level target", function (assert) {
+      const layout = makeLayout();
+      const newEntry = {
+        block: "mutate-test:leaf",
+        args: { title: "After" },
+        __stableKey: 51,
+      };
+      const result = insertEntryAt(
+        layout,
+        "mutate-test:leaf:1",
+        newEntry,
+        "after"
+      );
+      assert.true(result.changed);
+      assert.strictEqual(result.layout[0], layout[0]);
+      assert.strictEqual(result.layout[1], newEntry);
+      assert.strictEqual(result.layout[2], layout[1]);
+    });
+
+    test("inserts inside a container as the first child", function (assert) {
+      const layout = makeLayout();
+      const newEntry = {
+        block: "mutate-test:leaf",
+        args: { title: "Inside" },
+        __stableKey: 52,
+      };
+      const result = insertEntryAt(
+        layout,
+        "mutate-test:container:2",
+        newEntry,
+        "inside"
+      );
+      assert.true(result.changed);
+      assert.strictEqual(result.layout[1].children.length, 2);
+      assert.strictEqual(result.layout[1].children[0], newEntry);
+      assert.strictEqual(
+        result.layout[1].children[1],
+        layout[1].children[0],
+        "existing child keeps identity"
+      );
+    });
+
+    test("appends to root when targetKey is null", function (assert) {
+      const layout = makeLayout();
+      const newEntry = {
+        block: "mutate-test:leaf",
+        args: { title: "End" },
+        __stableKey: 53,
+      };
+      const result = insertEntryAt(layout, null, newEntry, "after");
+      assert.true(result.changed);
+      assert.strictEqual(result.layout[result.layout.length - 1], newEntry);
+    });
+
+    test("returns changed=false when targetKey isn't present", function (assert) {
+      const layout = makeLayout();
+      const newEntry = {
+        block: "mutate-test:leaf",
+        args: {},
+        __stableKey: 54,
+      };
+      const result = insertEntryAt(layout, "absent:0", newEntry, "after");
+      assert.false(result.changed);
+    });
+  });
+
+  module("moveEntry", function () {
+    test("reorders top-level siblings", function (assert) {
+      const layout = makeLayout();
+      const result = moveEntry(
+        layout,
+        "mutate-test:leaf:1",
+        "mutate-test:container:2",
+        "after"
+      );
+      assert.true(result.changed);
+      assert.strictEqual(result.layout[0], layout[1], "container is now first");
+      assert.strictEqual(
+        result.layout[1].block,
+        "mutate-test:leaf",
+        "leaf is now second"
+      );
+      assert.strictEqual(
+        result.layout[1].__stableKey,
+        1,
+        "moved entry keeps its stable key"
+      );
+    });
+
+    test("moves a top-level entry into a container", function (assert) {
+      const layout = makeLayout();
+      const result = moveEntry(
+        layout,
+        "mutate-test:leaf:1",
+        "mutate-test:container:2",
+        "inside"
+      );
+      assert.true(result.changed);
+      assert.strictEqual(
+        result.layout.length,
+        1,
+        "container is the sole top-level entry"
+      );
+      assert.strictEqual(result.layout[0].children.length, 2);
+      assert.strictEqual(
+        result.layout[0].children[0].__stableKey,
+        1,
+        "moved leaf is the new first child"
+      );
+    });
+
+    test("moves a nested entry up to the root", function (assert) {
+      const layout = makeLayout();
+      const result = moveEntry(
+        layout,
+        "mutate-test:leaf:3",
+        "mutate-test:leaf:1",
+        "before"
+      );
+      assert.true(result.changed);
+      assert.strictEqual(result.layout.length, 3);
+      assert.strictEqual(
+        result.layout[0].__stableKey,
+        3,
+        "moved entry is now at root, before the original first leaf"
+      );
+      assert.strictEqual(
+        result.layout[2].children.length,
+        0,
+        "container no longer holds the moved child"
+      );
+    });
+
+    test("rejects self-targeting moves", function (assert) {
+      const layout = makeLayout();
+      const result = moveEntry(
+        layout,
+        "mutate-test:leaf:1",
+        "mutate-test:leaf:1",
+        "after"
+      );
+      assert.false(result.changed);
+      assert.strictEqual(result.layout, layout);
+    });
+
+    test("rejects moving a container into one of its own descendants", function (assert) {
+      const layout = makeLayout();
+      const result = moveEntry(
+        layout,
+        "mutate-test:container:2",
+        "mutate-test:leaf:3",
+        "before"
+      );
+      assert.false(result.changed, "self-nesting cycle is blocked");
+      assert.strictEqual(result.layout, layout);
+    });
+
+    test("returns changed=false when source key is absent", function (assert) {
+      const layout = makeLayout();
+      const result = moveEntry(
+        layout,
+        "absent:0",
+        "mutate-test:leaf:1",
+        "after"
+      );
+      assert.false(result.changed);
+      assert.strictEqual(result.layout, layout);
+    });
+
+    test("returns changed=false when target key is absent", function (assert) {
+      const layout = makeLayout();
+      const result = moveEntry(
+        layout,
+        "mutate-test:leaf:1",
+        "absent:0",
+        "after"
+      );
+      assert.false(result.changed);
+      assert.strictEqual(result.layout, layout);
     });
   });
 });

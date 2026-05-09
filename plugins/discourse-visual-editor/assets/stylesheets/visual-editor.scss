@@ -65,7 +65,11 @@ body.visual-editor-active {
     }
   }
 
-  /* Block handle (corner badge) — mirrors .block-debug-badge */
+  /* Block handle (corner badge) — also the drag source.
+     The handle is rendered always (so the modifier registration is stable)
+     but visually hidden until the chrome is hovered or selected. We
+     toggle via opacity, not display, to avoid layout shifts on hover. */
+
   .visual-editor-block-handle {
     position: absolute;
     top: -1px;
@@ -82,12 +86,61 @@ body.visual-editor-active {
     border-radius: var(--visual-editor-badge-radius);
     text-shadow: var(--visual-editor-shadow);
     pointer-events: auto;
+    cursor: grab;
+    opacity: 0;
+    transition: opacity 80ms ease-out;
+
+    &:active {
+      cursor: grabbing;
+    }
 
     .d-icon {
       color: white !important;
       font-size: var(--visual-editor-badge-font-size) !important;
       width: var(--visual-editor-badge-font-size) !important;
       filter: drop-shadow(var(--visual-editor-shadow));
+    }
+  }
+
+  .visual-editor-block-chrome:hover > .visual-editor-block-handle,
+  .visual-editor-block-chrome.--selected > .visual-editor-block-handle {
+    opacity: 1;
+  }
+
+  /* Drop zones for drag-and-drop reordering. Always present in layout
+     while the editor is active so HTML5 drag-target hit testing reaches
+     them on the very first dragenter — toggling layout via display: none
+     happens too late and the first drop is missed.
+
+     Zones DO NOT change size on hover. Earlier we resized them on hover
+     for visual feedback, but the resulting layout shift bounced the
+     cursor out of the zone (dragleave fires; the user's release happens
+     mid-bounce; no target is active at drop time). Hover/active state
+     is signalled only by background-color now. */
+
+  .visual-editor-drop-zone {
+    height: 0.5rem;
+    margin: 0;
+    border-radius: 1px;
+    pointer-events: auto;
+    background: transparent;
+    transition: background-color 60ms ease-out;
+    position: relative;
+
+    &.--inside {
+      height: 1.75rem;
+      margin: 0.25rem;
+      border: 1px dashed transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &__label {
+      font-size: var(--font-down-2);
+      color: var(--primary-medium);
+      opacity: 0;
+      transition: opacity 80ms ease-out;
     }
   }
 
@@ -325,5 +378,49 @@ body.visual-editor-active {
     overflow-x: auto;
     font-size: var(--font-down-2);
     font-family: "Courier New", courier, "Lucida Console", monaco, monospace;
+  }
+}
+
+/* Drop-zone visual treatment during an active drag (set by
+   `body.visual-editor-dragging`). The zones are already present in layout
+   and registered as Pragmatic dnd targets — this class only changes how
+   they look. */
+
+body.visual-editor-dragging {
+  .visual-editor-drop-zone {
+    background: var(--primary-very-low);
+
+    &.--inside {
+      border-color: var(--primary-low);
+    }
+
+    .visual-editor-drop-zone__label {
+      opacity: 0.65;
+    }
+
+    /* Hover / active: only change colors. Resizing the zone on hover
+       triggers a layout shift that bounces the cursor outside the zone
+       and cancels the drop — see the comment on `.visual-editor-drop-zone`
+       above. Stable size means a stable hit target. */
+
+    &:hover,
+    &.--active {
+      background: var(--tertiary);
+
+      &.--inside {
+        border-color: var(--tertiary);
+        background: var(--tertiary-low);
+      }
+
+      .visual-editor-drop-zone__label {
+        opacity: 1;
+        color: var(--tertiary);
+      }
+    }
+  }
+
+  /* Outline rows highlight while being dragged to confirm the source. */
+  .outline-block.--dragging {
+    opacity: 0.5;
   }
 }

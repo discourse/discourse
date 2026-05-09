@@ -2,7 +2,11 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { trackedArray, trackedMap } from "@ember/reactive/collections";
+import {
+  trackedArray,
+  trackedMap,
+  trackedSet,
+} from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import {
   _clearLayoutLayer,
@@ -10,9 +14,16 @@ import {
   _setLayoutLayer,
   LAYOUT_LAYERS,
 } from "discourse/blocks/block-outlet";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import discourseDebounce from "discourse/lib/debounce";
 import PreloadStore from "discourse/lib/preload-store";
-import { cloneLayoutForDraft, findEntry } from "../lib/mutate-layout";
+import {
+  cloneLayoutForDraft,
+  findEntry,
+  insertEntryAt,
+  moveEntry,
+  removeEntry,
+} from "../lib/mutate-layout";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
 
 const FLUSH_DELAY_MS = 200;
@@ -85,6 +96,32 @@ export default class VisualEditorService extends Service {
   @tracked selectedBlockData = null;
 
   /**
+   * Monotonically increasing counter bumped on every structural mutation.
+   * Consumers (the outline panel, future condition evaluators) read it to
+   * open a tracked dep that fires *every* mutation — `_structurallyEdited
+   * Outlets.size` only changes on the *first* mutation per outlet, so it
+   * isn't enough on its own.
+   *
+   * @type {number}
+   */
+  @tracked structuralVersion = 0;
+  /**
+   * Drag-and-drop session state. Set when the user grabs a block via
+   * `editor-draggable`; cleared when the drag ends (success or cancel).
+   *
+   * `dragSourceKey` opens body-class `--ve-dragging` so the canvas can
+   * surface drop zones via CSS. `activeDropTarget` carries the most recent
+   * `onDragEnter` payload so the corresponding zone can render its hover
+   * styling without each zone needing its own listener.
+   *
+   * @type {string|null}
+   */
+  @tracked dragSourceKey = null;
+  /** @type {string|null} */
+  @tracked dragSourceOutlet = null;
+  /** @type {{targetKey: string, position: string, outletName: string}|null} */
+  @tracked activeDropTarget = null;
+  /**
    * Undo / redo stacks for in-memory edits. Each entry captures one batch of
    * arg mutations: the affected entry, plus a `Map` of `argName → previous
    * value`. Undo restores by writing the previous values back; redo flips
@@ -138,6 +175,28 @@ export default class VisualEditorService extends Service {
    * @type {Set<string>}
    */
   _editedOutlets = new Set();
+
+  /**
+   * Pristine clones of every drafted outlet's layout, captured at `enter()`
+   * time. Used by `resetAll()` to roll structural mutations (drag/drop,
+   * insert, delete in later phases) back to the page's pre-edit state.
+   *
+   * Stored as a separate clone from the draft itself so subsequent edits
+   * (which mutate the draft in place) never bleed into the snapshot.
+   *
+   * @type {Map<string, Array<Object>>}
+   */
+  _originalLayouts = new Map();
+
+  /**
+   * Outlets whose draft has at least one structural mutation (block moved,
+   * inserted, deleted). A `trackedSet` so the toolbar's `isDirty` getter
+   * reactively responds to the first move — equivalent role to
+   * `_initialSnapshots` for arg edits.
+   *
+   * @type {Set<string>}
+   */
+  _structurallyEditedOutlets = trackedSet();
 
   /**
    * Whether the current user is allowed to use the editor. Staff are always
@@ -247,6 +306,10 @@ export default class VisualEditorService extends Service {
         continue;
       }
       const draftLayout = cloneLayoutForDraft(layout);
+      // Second clone, never published. Held as the rollback target for
+      // `resetAll()` — we can't capture the draft itself because in-place
+      // arg mutations would leak into the snapshot.
+      this._originalLayouts.set(outletName, cloneLayoutForDraft(layout));
       _setLayoutLayer(
         outletName,
         LAYOUT_LAYERS.SESSION_DRAFT,
@@ -282,11 +345,16 @@ export default class VisualEditorService extends Service {
     this.activeThemeId = null;
     this.selectedBlockKey = null;
     this.selectedBlockData = null;
+    this.dragSourceKey = null;
+    this.dragSourceOutlet = null;
+    this.activeDropTarget = null;
     this._undoStack.length = 0;
     this._redoStack.length = 0;
     this._initialSnapshots.clear();
     this._pendingArgs.clear();
     this._editedOutlets.clear();
+    this._originalLayouts.clear();
+    this._structurallyEditedOutlets.clear();
     document.body.classList.remove("visual-editor-active");
   }
 
@@ -302,7 +370,15 @@ export default class VisualEditorService extends Service {
 
   /** @returns {boolean} */
   get isDirty() {
-    return this._initialSnapshots.size > 0;
+    return (
+      this._initialSnapshots.size > 0 ||
+      this._structurallyEditedOutlets.size > 0
+    );
+  }
+
+  /** @returns {boolean} */
+  get isDragging() {
+    return this.dragSourceKey != null;
   }
 
   @action
@@ -522,10 +598,17 @@ export default class VisualEditorService extends Service {
   }
 
   /**
-   * Restores every touched entry back to its initial (pre-edit) args and
-   * clears history. The session-draft layers stay published — the canvas
-   * is reactive on the draft entries, so writing initial args into them is
-   * enough for the user-visible "reset". Drafts get cleared on `exit`.
+   * Restores every touched outlet back to the pristine layout captured at
+   * `enter()` (structural edits) and every touched entry back to its initial
+   * (pre-edit) args (arg edits).
+   *
+   * For outlets that had structural mutations, we re-publish the captured
+   * `_originalLayouts` clone — that's a fresh tree, so the draft layer's
+   * entries get fully replaced. We then skip the per-entry args restoration
+   * for those outlets because the new draft already carries pristine args
+   * (the structurally-reset entries are the ones from `_originalLayouts`,
+   * never mutated). Args-only outlets fall through to the existing
+   * `_initialSnapshots` write-back path.
    *
    * @returns {Promise<boolean>}
    */
@@ -534,14 +617,80 @@ export default class VisualEditorService extends Service {
     if (!this.isDirty) {
       return false;
     }
+
+    // Wholesale re-publish of pristine layouts replaces every draft entry,
+    // invalidating the per-entry references stored in `_initialSnapshots`
+    // for those outlets — drop them so we don't try to mutate stale entries.
+    const structurallyResetOutlets = new Set(this._structurallyEditedOutlets);
+    if (structurallyResetOutlets.size > 0) {
+      for (const outletName of structurallyResetOutlets) {
+        const original = this._originalLayouts.get(outletName);
+        if (!original) {
+          continue;
+        }
+        // Clone again: the snapshot must remain pristine in case the user
+        // mutates and then resets a second time during the same session.
+        _setLayoutLayer(
+          outletName,
+          LAYOUT_LAYERS.SESSION_DRAFT,
+          cloneLayoutForDraft(original),
+          getOwner(this)
+        );
+      }
+      // Drop arg-snapshots whose entries belong to structurally-reset outlets.
+      // Entries elsewhere keep their snapshots so the args path still works.
+      for (const [entry] of this._initialSnapshots) {
+        if (structurallyResetOutlets.has(this._outletForEntry(entry))) {
+          this._initialSnapshots.delete(entry);
+        }
+      }
+    }
+
+    // Args-only restoration for whatever survived the structural pass.
     for (const [entry, snapshot] of this._initialSnapshots) {
       this._writeArgs(entry, snapshot);
     }
     this._undoStack.length = 0;
     this._redoStack.length = 0;
     this._initialSnapshots.clear();
+    this._structurallyEditedOutlets.clear();
     this._editedOutlets.clear();
     return true;
+  }
+
+  /**
+   * Best-effort lookup of the outlet name that owns `entry`. Walks the
+   * currently-resolved layout map; returns null when the entry is no longer
+   * present (e.g. it's been moved out of every published layer). Used by
+   * `resetAll` to decide which arg-snapshots to drop after a structural
+   * rollback.
+   *
+   * @param {Object} entry
+   * @returns {string|null}
+   */
+  _outletForEntry(entry) {
+    const layoutMap = _getOutletLayouts();
+    for (const [outletName, record] of layoutMap) {
+      if (record.layout && this._layoutContainsEntry(record.layout, entry)) {
+        return outletName;
+      }
+    }
+    return null;
+  }
+
+  _layoutContainsEntry(layout, target) {
+    for (const entry of layout) {
+      if (entry === target) {
+        return true;
+      }
+      if (
+        entry.children?.length &&
+        this._layoutContainsEntry(entry.children, target)
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -625,5 +774,261 @@ export default class VisualEditorService extends Service {
    */
   readResolvedLayout(outletName) {
     return _getOutletLayouts().get(outletName)?.layout ?? null;
+  }
+
+  /**
+   * Records the start of a drag. The `editor-draggable` modifier feeds this
+   * via its `onDragStart` callback. The body class lights up the canvas's
+   * drop-zone CSS (zones are `display: none` until the body has the class).
+   *
+   * @param {{blockKey: string, outletName: string}} payload
+   */
+  @action
+  startDrag({ blockKey, outletName }) {
+    this.dragSourceKey = blockKey;
+    this.dragSourceOutlet = outletName;
+    document.body.classList.add("visual-editor-dragging");
+  }
+
+  /**
+   * Resets drag state regardless of whether the drag completed in a drop or
+   * was cancelled. The `editor-draggable` modifier always fires `onDrop`
+   * (Pragmatic dnd's nomenclature — "drop" includes the cancelled case
+   * where `location.current.dropTargets` is empty), so this is the single
+   * cleanup point.
+   */
+  @action
+  endDrag() {
+    this.dragSourceKey = null;
+    this.dragSourceOutlet = null;
+    this.activeDropTarget = null;
+    document.body.classList.remove("visual-editor-dragging");
+  }
+
+  /**
+   * Highlights a drop zone as the dragged block hovers over it. The shell
+   * reads `activeDropTarget` and applies a `--active` class to the matching
+   * zone — keeps the per-zone modifier instances stateless.
+   *
+   * @param {{targetKey: string, position: string, outletName: string}} target
+   */
+  @action
+  setActiveDropTarget(target) {
+    this.activeDropTarget = target;
+  }
+
+  /**
+   * Clears the active drop-zone highlight when the cursor leaves it. We
+   * compare `targetKey` so a stale `dragLeave` from a zone we already moved
+   * away from doesn't wipe the highlight on the *current* zone.
+   *
+   * @param {{targetKey: string, position: string}} target
+   */
+  @action
+  clearActiveDropTarget(target) {
+    if (
+      this.activeDropTarget?.targetKey === target.targetKey &&
+      this.activeDropTarget?.position === target.position
+    ) {
+      this.activeDropTarget = null;
+    }
+  }
+
+  /**
+   * Tells whether dropping the currently-dragged block at `target` is
+   * compatible with the system's authorization rules (`allowedOutlets` /
+   * `deniedOutlets` declared on the block class). Same-outlet moves always
+   * pass; cross-outlet moves consult the block's metadata.
+   *
+   * Returns true when no source key is set (no drag in progress) — keeps
+   * `canDrop` calls cheap during normal operation.
+   *
+   * @param {{targetOutletName: string}} target
+   * @returns {boolean}
+   */
+  canDropAt({ targetOutletName }) {
+    if (!this.dragSourceKey) {
+      return true;
+    }
+    if (!targetOutletName || targetOutletName === this.dragSourceOutlet) {
+      return true;
+    }
+    const sourceEntry = this._findEntryByKey(this.dragSourceKey);
+    if (!sourceEntry) {
+      return false;
+    }
+    const metadata = this._metadataFor(sourceEntry);
+    if (!metadata) {
+      // No metadata = block class isn't registered. Be permissive — the
+      // server-side validator will catch it on save if it really is broken.
+      return true;
+    }
+    if (
+      metadata.deniedOutlets &&
+      metadata.deniedOutlets.includes(targetOutletName)
+    ) {
+      return false;
+    }
+    if (metadata.allowedOutlets?.length > 0) {
+      return metadata.allowedOutlets.includes(targetOutletName);
+    }
+    return true;
+  }
+
+  /**
+   * Moves the entry identified by `sourceKey` to a new position in the
+   * layout, applying the mutation to the relevant draft layer(s) and
+   * recording the affected outlets so the toolbar's `isDirty`/Save and
+   * `resetAll` paths pick the change up.
+   *
+   * Same-outlet moves are a single immutable rebuild via `moveEntry`.
+   * Cross-outlet moves split into `removeEntry` from the source outlet and
+   * `insertEntryAt` on the target. Both paths re-publish via
+   * `_setLayoutLayer`, which preserves entry references where possible —
+   * the dragged block keeps its arg edits across the move.
+   *
+   * Returns true on a successful structural change. Returns false (and
+   * leaves layouts untouched) when the source/target can't be located, the
+   * block isn't allowed in the target outlet, or the move would create a
+   * self-nesting cycle (handled inside `moveEntry`).
+   *
+   * @param {{
+   *   sourceKey: string,
+   *   targetKey: string|null,
+   *   position: "before"|"after"|"inside",
+   *   targetOutletName: string,
+   * }} args
+   * @returns {boolean}
+   */
+  @action
+  moveBlock({ sourceKey, targetKey, position, targetOutletName }) {
+    const source = this._findEntryAndOutletSync(sourceKey);
+    if (!source) {
+      return false;
+    }
+    if (!this.canDropAt({ targetOutletName })) {
+      return false;
+    }
+    if (source.outletName === targetOutletName) {
+      return this._moveWithinOutlet(
+        source.outletName,
+        sourceKey,
+        targetKey,
+        position
+      );
+    }
+    return this._moveAcrossOutlets({
+      sourceOutletName: source.outletName,
+      targetOutletName,
+      sourceEntry: source.entry,
+      sourceKey,
+      targetKey,
+      position,
+    });
+  }
+
+  _moveWithinOutlet(outletName, sourceKey, targetKey, position) {
+    const layout = this.readResolvedLayout(outletName);
+    if (!layout) {
+      return false;
+    }
+    const result = moveEntry(layout, sourceKey, targetKey, position);
+    if (!result.changed) {
+      return false;
+    }
+    this._publishStructuralChange(outletName, result.layout);
+    return true;
+  }
+
+  _moveAcrossOutlets({
+    sourceOutletName,
+    targetOutletName,
+    sourceKey,
+    targetKey,
+    position,
+  }) {
+    const sourceLayout = this.readResolvedLayout(sourceOutletName);
+    const targetLayout = this.readResolvedLayout(targetOutletName);
+    if (!sourceLayout || !targetLayout) {
+      return false;
+    }
+    const removal = removeEntry(sourceLayout, sourceKey);
+    if (!removal.changed || !removal.removed) {
+      return false;
+    }
+    const insertion = insertEntryAt(
+      targetLayout,
+      targetKey,
+      removal.removed,
+      position
+    );
+    if (!insertion.changed) {
+      return false;
+    }
+    // Publish both outlets in one go — the editor service holds both as
+    // session-draft layers, so each `_setLayoutLayer` call only re-resolves
+    // its own outlet's chain.
+    this._publishStructuralChange(sourceOutletName, removal.layout);
+    this._publishStructuralChange(targetOutletName, insertion.layout);
+    return true;
+  }
+
+  /**
+   * Re-publishes a draft layout layer with structural changes applied and
+   * marks the outlet as edited so save/reset/isDirty all pick it up.
+   * Centralised so the same bookkeeping fires for every structural mutation
+   * (move now, insert/delete in later phases).
+   */
+  _publishStructuralChange(outletName, newLayout) {
+    _setLayoutLayer(
+      outletName,
+      LAYOUT_LAYERS.SESSION_DRAFT,
+      newLayout,
+      getOwner(this)
+    );
+    this._editedOutlets.add(outletName);
+    this._structurallyEditedOutlets.add(outletName);
+    this.structuralVersion++;
+  }
+
+  /**
+   * Synchronous variant of `_findEntryAndOutlet` — uses `record.layout`
+   * (already-resolved) instead of awaiting `record.validatedLayout`. Drag
+   * handlers fire after validation has long since completed, so the sync
+   * lookup is safe and avoids forcing every call site to be async.
+   *
+   * @param {string} key
+   * @returns {{entry: Object, outletName: string}|null}
+   */
+  _findEntryAndOutletSync(key) {
+    const layoutMap = _getOutletLayouts();
+    for (const [outletName, record] of layoutMap) {
+      if (!record.layout) {
+        continue;
+      }
+      const found = findEntry(record.layout, key);
+      if (found) {
+        return { entry: found, outletName };
+      }
+    }
+    return null;
+  }
+
+  /** @param {string} key */
+  _findEntryByKey(key) {
+    return this._findEntryAndOutletSync(key)?.entry ?? null;
+  }
+
+  _metadataFor(entry) {
+    if (!entry?.block) {
+      return null;
+    }
+    if (typeof entry.block === "string") {
+      // String-ref blocks (`api.renderBlocks(name, ...)` paths) expose their
+      // metadata via the registered class — looked up through the blocks
+      // service. Skipping for now keeps the perms check simple.
+      return null;
+    }
+    return getBlockMetadata(entry.block) ?? null;
   }
 }
