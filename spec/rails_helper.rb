@@ -612,95 +612,20 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
-          wait_for_navigation_settled(method_name) if html_response_after_navigation?
+          wait_for_ember_boot
+          wait_for_client_settled(method_name)
           result
         end
       end
 
       private
 
-      # Single-IPC replacement for the previous
-      # `wait_for_ember_boot` (1-2 IPCs: `has_no_css?` + `assert_selector`)
-      # plus `wait_for_client_settled` (1 IPC: `evaluate_async_script`).
-      # All three checks happen browser-side in one `evaluate_async_script`:
-      #
-      #   1. Early-out on non-Ember pages (no `<discourse-assets>`).
-      #   2. Poll for `window.clientSettled` to be defined; that initializer
-      #      fires after `discourse-bootstrap`, i.e. once Ember has mounted.
-      #      Polling with `setTimeout(0)` is cheaper than a MutationObserver
-      #      observing the entire document on every DOM change.
-      #   3. Await `window.clientSettled(...)` to drain pending AJAX/DOM events.
-      #
-      # iter-3's `evaluate_async_script` patch already collapses the
-      # `evaluate_handle + wrap_node` pair into a single `evaluate`, so this
-      # is one Playwright round-trip total.
-      def wait_for_navigation_settled(method_name)
+      # `<discourse-assets>` is only present on Ember pages; `ember-application`
+      # is added to the root element (`#main`) once Ember mounts.
+      def wait_for_ember_boot
         session = @driver.send(:session)
-        timeout_ms = Capybara.default_max_wait_time * 1000
-
-        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
-          now = Time.now.to_f
-          puts "[#{now}] #{method_name}: START"
-        end
-
-        result = session.evaluate_async_script(<<~JS)
-          const done = arguments[0];
-          const timeoutMs = #{timeout_ms};
-
-          (async () => {
-            try {
-              if (!document.querySelector('discourse-assets')) {
-                done();
-                return;
-              }
-
-              const start = Date.now();
-              while (!window.clientSettled) {
-                if (Date.now() - start > timeoutMs) {
-                  done(`Timeout waiting for Ember boot after ${timeoutMs}ms`);
-                  return;
-                }
-                await new Promise((r) => setTimeout(r, 0));
-              }
-
-              const remaining = Math.max(timeoutMs - (Date.now() - start), 1000);
-              await window.clientSettled(remaining);
-              done();
-            } catch (error) {
-              done(error.message || String(error));
-            }
-          })();
-        JS
-
-        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
-          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
-        end
-
-        raise result if result.is_a?(String)
-      end
-
-      # Returns true when the last navigation's response was an HTML
-      # document (Discourse's Ember app pages all are). For non-HTML
-      # responses (`text/plain` from `/session/:user/become.json` hit by
-      # every `sign_in`, `application/json` endpoints, etc.) the
-      # navigation-settled wait cannot find an Ember app to wait for; the
-      # JS already early-returns inside `wait_for_navigation_settled`, but
-      # the Playwright IPC roundtrip is still paid. Detecting the non-HTML
-      # case from the cached response headers (no IPC) lets us skip the
-      # wait entirely — saving one round-trip per non-HTML navigation
-      # (sign_in alone fires this ~1280×/suite).
-      #
-      # Defaults to `true` (run the wait) on any error or missing data so
-      # any unexpected response shape behaves identically to the
-      # pre-patch state.
-      def html_response_after_navigation?
-        return true unless @playwright_page
-        headers = @playwright_page.capybara_response_headers
-        content_type = headers["content-type"].to_s.downcase
-        return true if content_type.empty?
-        content_type.include?("html")
-      rescue StandardError
-        true
+        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
+        session.assert_selector("#main.ember-application", visible: :all)
       end
     end
 
