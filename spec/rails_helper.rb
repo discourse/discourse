@@ -883,37 +883,6 @@ RSpec.configure do |config|
     end
     Playwright::Error.prepend(PlaywrightErrorPatch)
 
-    # Skip the playwright-ruby-client gem's per-IPC stack-frame metadata
-    # construction when no tracing is active. The gem's
-    # `Playwright::Channel#with_logging` walks the entire Ruby call stack
-    # via `Kernel#caller_locations` on EVERY Playwright IPC, then maps
-    # each frame into a `{file:, line:, function:}` Hash to build
-    # `metadata[:stack]`. That stack array is consumed only by
-    # `Playwright::Connection#async_send_message_to_server` when
-    # `@tracing_count > 0` (connection.rb:116). Discourse system specs
-    # only set `@tracing_count > 0` for examples with `:trace`
-    # metadata, used only when explicitly debugging a flake — i.e., for
-    # >99% of suite IPCs the metadata is built and immediately
-    # discarded.
-    #
-    # Mechanism: prepend `Channel#with_logging` so that when
-    # `@connection`'s `@tracing_count` is 0, we call the block with
-    # `nil` metadata, skipping the caller_locations walk and Hash array
-    # construction. When tracing IS active, delegate to the original
-    # `with_logging` to preserve full metadata. The playwright server
-    # accepts `metadata: {}` for non-tracing IPCs (error semantics are
-    # unchanged; only diagnostic output is reduced).
-    module PlaywrightChannelSkipMetadataPatch
-      private def with_logging(title = nil, &block)
-        if @connection.instance_variable_get(:@tracing_count) > 0
-          super(title, &block)
-        else
-          block.call(nil)
-        end
-      end
-    end
-    Playwright::Channel.prepend(PlaywrightChannelSkipMetadataPatch)
-
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
       if example.exception.nil? &&
