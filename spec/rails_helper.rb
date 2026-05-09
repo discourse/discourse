@@ -434,24 +434,6 @@ RSpec.configure do |config|
       Capybara.default_max_wait_time = 4
     end
 
-    # Capybara's gem default retry interval is 0.01s (10ms). Every Capybara
-    # operation (find, has_*, assert_*, click, fill_in, etc.) goes through
-    # `Capybara::Node::Base#synchronize`, which on each retry issues an IPC
-    # round-trip to the Playwright server, then `sleep interval`. With the
-    # 10ms default, an assertion that waits ~100ms for an element to appear
-    # spins ~10 polling round-trips on every wait. In CI (slower IPC under
-    # 10-worker contention), each round-trip is 5-15ms; the polling overhead
-    # dominates wall time on assertions that need to wait for async UI
-    # updates (Ember route transitions, AJAX response renders, etc.).
-    #
-    # 50ms cuts the polling round-trip count by ~5x while only adding up to
-    # ~40ms of detection latency on the rare element-appears-faster-than-50ms
-    # case. Element-already-present assertions are unaffected (they succeed
-    # on the first synchronize call without polling). Capybara's
-    # `default_max_wait_time` (20s in CI) is unchanged, so total wait
-    # ceilings are preserved.
-    Capybara.default_retry_interval = 0.05
-
     Capybara.threadsafe = true
     Capybara.disable_animation = true
 
@@ -630,81 +612,20 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
-          wait_for_navigation_settled(method_name)
+          wait_for_ember_boot
+          wait_for_client_settled(method_name)
           result
         end
       end
 
       private
 
-      # Collapses the post-navigation Ember-boot + client-settled waits into
-      # one Playwright IPC. The previous implementation issued three IPC
-      # round-trips per `visit`/`refresh`/`go_back`/`go_forward`/
-      # `resize_window_to`:
-      #
-      #   1. `has_no_css?("discourse-assets", wait: 0)` — non-Ember-page check.
-      #   2. `assert_selector("#main.ember-application")` — wait for Ember mount.
-      #   3. `evaluate_async_script(window.clientSettled(...))` — drain pending
-      #      AJAX/DOM events.
-      #
-      # The ember-mount and pending-events checks both happen entirely
-      # browser-side, so we collapse the three round-trips into a single
-      # `evaluate_async_script` whose JS:
-      #
-      #   - Returns immediately on non-Ember pages (no `<discourse-assets>`).
-      #   - Polls for `window.clientSettled` to be defined; that initializer
-      #     fires after `discourse-bootstrap`, i.e. once Ember has mounted on
-      #     `#main`. Polling with `setTimeout(0)` is cheaper than the
-      #     `MutationObserver(subtree:true, attributes:true)` iter-24 used,
-      #     which observed the entire document on every DOM change.
-      #   - Awaits `window.clientSettled(...)` to drain pending AJAX/DOM events.
-      #
-      # iter-3's `evaluate_async_script` patch already collapses the
-      # `evaluate_handle + wrap_node` pair into a single `evaluate`, so this
-      # IPC is one Playwright round-trip.
-      def wait_for_navigation_settled(method_name)
+      # `<discourse-assets>` is only present on Ember pages; `ember-application`
+      # is added to the root element (`#main`) once Ember mounts.
+      def wait_for_ember_boot
         session = @driver.send(:session)
-        timeout_ms = Capybara.default_max_wait_time * 1000
-
-        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
-          now = Time.now.to_f
-          puts "[#{now}] #{method_name}: START"
-        end
-
-        result = session.evaluate_async_script(<<~JS)
-          const done = arguments[0];
-          const timeoutMs = #{timeout_ms};
-
-          (async () => {
-            try {
-              if (!document.querySelector('discourse-assets')) {
-                done();
-                return;
-              }
-
-              const start = Date.now();
-              while (!window.clientSettled) {
-                if (Date.now() - start > timeoutMs) {
-                  done(`Timeout waiting for Ember boot after ${timeoutMs}ms`);
-                  return;
-                }
-                await new Promise((r) => setTimeout(r, 0));
-              }
-
-              const remaining = Math.max(timeoutMs - (Date.now() - start), 1000);
-              await window.clientSettled(remaining);
-              done();
-            } catch (error) {
-              done(error.message || String(error));
-            }
-          })();
-        JS
-
-        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
-          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
-        end
-
-        raise result if result.is_a?(String)
+        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
+        session.assert_selector("#main.ember-application", visible: :all)
       end
     end
 
