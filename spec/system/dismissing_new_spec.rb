@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Dismissing New", :soft_reset do
+RSpec.describe "Dismissing New" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   let(:discovery) { PageObjects::Pages::Discovery.new }
