@@ -612,19 +612,8 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
-          # Skip Ember-app-specific post-navigation waits when the last
-          # response is not HTML (e.g. `text/plain` for the `become.json`
-          # endpoint hit by every `sign_in` call, ~1280 calls/suite). The
-          # `wait_for_ember_boot` `has_no_css?` IPC and the
-          # `wait_for_client_settled` `evaluate_async_script` IPC both
-          # short-circuit on non-Ember pages anyway, but only after paying
-          # one Playwright roundtrip each. Detecting the non-HTML case from
-          # the cached response headers (no IPC) lets us skip both waits
-          # entirely for those navigations.
-          if html_response_after_navigation?
-            wait_for_ember_boot
-            wait_for_client_settled(method_name)
-          end
+          wait_for_ember_boot
+          wait_for_client_settled(method_name)
           result
         end
       end
@@ -637,22 +626,6 @@ RSpec.configure do |config|
         session = @driver.send(:session)
         return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
         session.assert_selector("#main.ember-application", visible: :all)
-      end
-
-      # Returns true when the last navigation's response was an HTML
-      # document (Discourse's Ember app pages all are). For non-HTML
-      # responses (`text/plain` from `/session/:user/become.json`,
-      # `application/json` endpoints, etc.) the Ember + client-settled
-      # waits cannot find anything to wait for and only pay IPC cost.
-      # Defaults to `true` (run the waits) on any error or missing data.
-      def html_response_after_navigation?
-        return true unless @playwright_page
-        headers = @playwright_page.capybara_response_headers
-        content_type = headers["content-type"].to_s.downcase
-        return true if content_type.empty?
-        content_type.include?("html")
-      rescue StandardError
-        true
       end
     end
 
