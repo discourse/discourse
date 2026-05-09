@@ -1,7 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -10,6 +10,8 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import dragAndDropSource from "discourse/modifiers/drag-and-drop-source";
+import dragAndDropTarget from "discourse/modifiers/drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { walkAllOutlets } from "../../lib/walk-layout";
 
@@ -48,6 +50,18 @@ export default class OutlinePanel extends Component {
   }
 
   /**
+   * Re-walks the outlets whenever a structural mutation lands. Reads the
+   * service's monotonically-bumped `structuralVersion` so every move
+   * triggers a fresh walk — `_structurallyEditedOutlets.size` would only
+   * fire the first time an outlet is touched per session.
+   *
+   * The signal value itself is unused — the dependency is what matters.
+   */
+  get structuralVersion() {
+    return this.visualEditor.structuralVersion;
+  }
+
+  /**
    * @param {string} outletName - The owning outlet's name (the row itself
    *   does not carry it; we read it from the outer group when the user
    *   clicks).
@@ -77,11 +91,52 @@ export default class OutlinePanel extends Component {
     return this._metaIndex.get(blockName) ?? null;
   }
 
+  /**
+   * Adapts the core `draggable-item` modifier's `{data, event}` shape into
+   * the flat `{blockKey, outletName}` argument the editor service expects.
+   */
+  @action
+  handleRowDragStart({ data }) {
+    this.visualEditor.startDrag(data);
+  }
+
+  /**
+   * Drop-target for an outline row. Maps every row drop into a `before`
+   * move — the outline is a flat ordered list, so "drop on row X" reads
+   * as "place above row X". (Modifier keys for after/inside semantics is
+   * a Phase 6 polish item.) The target row reads its own `blockKey` /
+   * `outletName` from the row arg via the `(fn …)` curry at the call
+   * site; the source comes through the core modifier's payload.
+   *
+   * @param {string} outletName
+   * @param {Object} row - Row produced by `walkAllOutlets`.
+   * @param {{ source: { data: { blockKey: string } } }} target
+   */
+  @action
+  applyRowDrop(outletName, row, target) {
+    this.visualEditor.moveBlock({
+      sourceKey: target.source.data.blockKey,
+      targetKey: row.blockKey,
+      position: "before",
+      targetOutletName: outletName,
+    });
+    this.visualEditor.endDrag();
+  }
+
+  @action
+  isRowDragSource(blockKey) {
+    return this.visualEditor.dragSourceKey === blockKey;
+  }
+
   <template>
     <div
       class="visual-editor-outline"
       {{didInsert this.refresh}}
-      {{didUpdate this.refresh this.visualEditor.isActive}}
+      {{didUpdate
+        this.refresh
+        this.visualEditor.isActive
+        this.structuralVersion
+      }}
     >
       {{#if this.outlets.length}}
         {{#each this.outlets as |group|}}
@@ -98,11 +153,23 @@ export default class OutlinePanel extends Component {
                     (this.visualEditor.isBlockSelected row.blockKey)
                     "--selected"
                   )
+                  (if (this.isRowDragSource row.blockKey) "--dragging")
                 }}
                 role="button"
                 tabindex="0"
                 style={{rowPadding row.depth}}
                 {{on "click" (fn this.selectRow group.outletName row)}}
+                {{dragAndDropSource
+                  kind="ve-block"
+                  data=(hash blockKey=row.blockKey outletName=group.outletName)
+                  onDragStart=this.handleRowDragStart
+                  onDragEnd=this.visualEditor.endDrag
+                }}
+                {{dragAndDropTarget
+                  accepts="ve-block"
+                  position="before"
+                  onDrop=(fn this.applyRowDrop group.outletName row)
+                }}
               >
                 {{#if row.hasChildren}}
                   {{icon "folder"}}

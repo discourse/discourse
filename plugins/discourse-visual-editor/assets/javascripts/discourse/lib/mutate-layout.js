@@ -131,6 +131,184 @@ export function setEntryArg(layout, key, argName, value) {
 }
 
 /**
+ * Returns a new layout with the entry matching `key` removed. Preserves the
+ * identity of untouched siblings and ancestor subtrees by returning the input
+ * arrays/entries by reference when nothing in their subtree changed — same
+ * idiom as `replaceEntryArgs`. The removed entry is returned alongside the
+ * mutated layout so callers (e.g. `moveEntry`) can re-insert it elsewhere.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} key
+ * @returns {{layout: Array<Object>, removed: Object|null, changed: boolean}}
+ */
+export function removeEntry(layout, key) {
+  let removed = null;
+
+  function walk(entries) {
+    let subtreeChanged = false;
+    const result = [];
+    for (const entry of entries) {
+      if (entryKey(entry) === key) {
+        removed = entry;
+        subtreeChanged = true;
+        continue;
+      }
+      if (entry.children?.length) {
+        const newChildren = walk(entry.children);
+        if (newChildren !== entry.children) {
+          subtreeChanged = true;
+          result.push({ ...entry, children: newChildren });
+          continue;
+        }
+      }
+      result.push(entry);
+    }
+    return subtreeChanged ? result : entries;
+  }
+
+  const newLayout = walk(layout);
+  return { layout: newLayout, removed, changed: removed != null };
+}
+
+/**
+ * Returns a new layout where `entry` has been spliced into `layout` adjacent
+ * to the entry whose key matches `targetKey`. `position` controls placement
+ * relative to the target:
+ *
+ *   - `"before"` — sibling immediately preceding the target;
+ *   - `"after"`  — sibling immediately following the target;
+ *   - `"inside"` — first child of the target (target must be a container with
+ *     a `children` array — created if absent).
+ *
+ * If `targetKey` is null, `entry` is appended to the root of `layout`. As with
+ * `replaceEntryArgs` and `removeEntry`, untouched subtrees are returned by
+ * reference so DOM identity is preserved in the rendered tree.
+ *
+ * @param {Array<Object>} layout
+ * @param {string|null} targetKey
+ * @param {Object} entry
+ * @param {"before"|"after"|"inside"} position
+ * @returns {{layout: Array<Object>, changed: boolean}}
+ */
+export function insertEntryAt(layout, targetKey, entry, position) {
+  if (targetKey == null) {
+    return { layout: [...layout, entry], changed: true };
+  }
+
+  let inserted = false;
+
+  function walk(entries) {
+    let subtreeChanged = false;
+    const result = [];
+    for (const candidate of entries) {
+      if (!inserted && entryKey(candidate) === targetKey) {
+        inserted = true;
+        if (position === "before") {
+          result.push(entry, candidate);
+          subtreeChanged = true;
+          continue;
+        }
+        if (position === "after") {
+          result.push(candidate, entry);
+          subtreeChanged = true;
+          continue;
+        }
+        if (position === "inside") {
+          // Spread existing children into a new array so we don't mutate the
+          // input. When the container has no children, start a fresh array.
+          const nextChildren = candidate.children
+            ? [entry, ...candidate.children]
+            : [entry];
+          result.push({ ...candidate, children: nextChildren });
+          subtreeChanged = true;
+          continue;
+        }
+      }
+      if (!inserted && candidate.children?.length) {
+        const newChildren = walk(candidate.children);
+        if (newChildren !== candidate.children) {
+          subtreeChanged = true;
+          result.push({ ...candidate, children: newChildren });
+          continue;
+        }
+      }
+      result.push(candidate);
+    }
+    return subtreeChanged ? result : entries;
+  }
+
+  const newLayout = walk(layout);
+  return { layout: newLayout, changed: inserted };
+}
+
+/**
+ * Removes the entry matching `sourceKey` and re-inserts it adjacent to
+ * `targetKey` in a single immutable step. Returns the resulting layout and
+ * a `changed` flag — `false` when either the source wasn't found or the
+ * target wasn't found (in which case `layout` comes back unchanged).
+ *
+ * Self-targeting moves (sourceKey === targetKey) are a no-op. Moving a
+ * container into one of its own descendants is also rejected as a no-op.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} sourceKey
+ * @param {string} targetKey
+ * @param {"before"|"after"|"inside"} position
+ * @returns {{layout: Array<Object>, changed: boolean}}
+ */
+export function moveEntry(layout, sourceKey, targetKey, position) {
+  if (sourceKey === targetKey) {
+    return { layout, changed: false };
+  }
+
+  // Reject moves that would re-parent a container into one of its own
+  // descendants — that produces a cycle and breaks rendering.
+  const sourceEntry = findEntry(layout, sourceKey);
+  if (sourceEntry && containsKey(sourceEntry, targetKey)) {
+    return { layout, changed: false };
+  }
+
+  const removal = removeEntry(layout, sourceKey);
+  if (!removal.changed || !removal.removed) {
+    return { layout, changed: false };
+  }
+  const insertion = insertEntryAt(
+    removal.layout,
+    targetKey,
+    removal.removed,
+    position
+  );
+  if (!insertion.changed) {
+    return { layout, changed: false };
+  }
+  return { layout: insertion.layout, changed: true };
+}
+
+/**
+ * Returns true when `entry`'s subtree (children, grandchildren, ...) contains
+ * an entry whose composite key matches `key`. Used by `moveEntry` to bail on
+ * self-nesting moves.
+ *
+ * @param {Object} entry
+ * @param {string} key
+ * @returns {boolean}
+ */
+function containsKey(entry, key) {
+  if (!entry?.children?.length) {
+    return false;
+  }
+  for (const child of entry.children) {
+    if (entryKey(child) === key) {
+      return true;
+    }
+    if (containsKey(child, key)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Returns a structural deep clone of a layout suitable for publishing as a
  * `session-draft` layer. The clone preserves each entry's `__stableKey` and
  * passes through immutable references (block class, conditions, classNames,

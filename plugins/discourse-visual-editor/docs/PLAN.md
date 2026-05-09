@@ -45,7 +45,7 @@ This is a power-user convenience: an admin spotting something to tweak can fix i
 - The current user is not in `visual_editor_allowed_groups`.
 - The site setting `visual_editor_enabled` is off.
 
-**Tertiary — admin landing entry** (Phase 7).
+**Tertiary — admin landing entry** (Phase 8).
 `/admin/customize/visual-editor` is an index page that lists themes and their editable pages, so admins discover the feature without visiting a theme show page or noticing the pill. Surfaces under `admin → customize → visual editor`, alongside Themes / Color Palettes / Email Styles.
 
 **Permissions**:
@@ -79,7 +79,7 @@ This is a power-user convenience: an admin spotting something to tweak can fix i
 - **Inspector**: FormKit-driven. Schema → form generated from each block's `args` + new optional `ui:` hint. 37 control types already exist in `frontend/discourse/app/form-kit`.
 - **Editor chrome**: piggy-backs on the existing dev-tools patching pattern (`debugHooks.setCallback`, `_setOutletDebugCallback`). Same hook the block-debug overlay uses.
 - **Persona + viewport simulators** in the toolbar — drive condition re-evaluation so admins see who-sees-what without leaving the editor.
-- **Styling**: structured, never raw. Block args expose presentation knobs; the inspector picks colors from the theme palette, never arbitrary; per-instance overrides (Phase 7+) are a bounded "Style" tab over CSS variables, not freeform CSS.
+- **Styling**: structured, never raw. Block args expose presentation knobs; the inspector picks colors from the theme palette, never arbitrary; per-instance overrides (Phase 8+) are a bounded "Style" tab over CSS variables, not freeform CSS.
 
 ---
 
@@ -89,11 +89,11 @@ PR #38703 moves 76 atomic components, 25 helpers, 10 modifiers under `app/ui-kit
 
 1. **Editor UI itself uses ui-kit.** Every panel, button, form control. A stable, named target makes the editor robust to internal refactors.
 2. **Block authors compose blocks from ui-kit atoms.** The kit is the vocabulary for blocks. Block library docs become "use `<DCard>` for a card surface, `<DButton>` for actions" instead of grep-the-codebase.
-3. **A future "primitives" tier in the palette.** Some ui-kit atoms can be auto-block-ified through a generic wrapper so power users have access to atoms when needed — but this is opt-in and Phase 7+ at earliest. The default palette ships only composed blocks.
+3. **A future "primitives" tier in the palette.** Some ui-kit atoms can be auto-block-ified through a generic wrapper so power users have access to atoms when needed — but this is opt-in and Phase 8+ at earliest. The default palette ships only composed blocks.
 
 ui-kit also unlocks **versioning**: a curated kit can be semver'd; community blocks declare which ui-kit version they target. This pays off as the third-party block ecosystem grows.
 
-The visual editor doesn't *block on* the ui-kit PR landing — but every phase benefits proportionally as more components migrate over. Practical recommendation: prioritize the ui-kit consolidation in parallel with Phase 1–2; by Phase 5 (palette + starter blocks) it should be the default substrate for newly-authored blocks.
+The visual editor doesn't *block on* the ui-kit PR landing — but every phase benefits proportionally as more components migrate over. Practical recommendation: prioritize the ui-kit consolidation in parallel with Phase 1–2; by Phase 6 (palette + starter blocks) it should be the default substrate for newly-authored blocks.
 
 ---
 
@@ -105,7 +105,7 @@ The editor is a layout editor, not a CSS editor. Three layers of styling, in ord
 
 2. **Design tokens** — the theme palette (already wired via the existing color palette editor) provides named tokens. The inspector's color/font/spacing pickers select from those tokens, not arbitrary values. Picking a "primary accent" surface-binds the block to whatever the theme defines as primary, so layouts re-skin automatically when the theme changes.
 
-3. **Per-instance overrides (Phase 7+)** — a bounded "Style" tab in the inspector with structured controls for padding, margin, color, border, typography. Generates scoped `block--id-<id>` CSS rules or inline styles, stored on the layout entry. Never raw CSS — the control set is fixed.
+3. **Per-instance overrides (Phase 8+)** — a bounded "Style" tab in the inspector with structured controls for padding, margin, color, border, typography. Generates scoped `block--id-<id>` CSS rules or inline styles, stored on the layout entry. Never raw CSS — the control set is fixed.
 
 What the editor explicitly does **not** do:
 
@@ -113,7 +113,7 @@ What the editor explicitly does **not** do:
 - Selector debugging or specificity workarounds — visual editor users shouldn't see CSS selectors.
 - Theme-wide CSS edits — those live in theme files. The editor edits *layout*, themes own *style*.
 
-Layout-level styling (grid/flex/columns) lives in **container blocks**: `BlockGroup` exposes `direction`, `gap`, `align` as args; new container blocks for grids and columns ship in Phase 5's starter library. Users get powerful layout primitives without writing flexbox.
+Layout-level styling (grid/flex/columns) lives in **container blocks**: `BlockGroup` exposes `direction`, `gap`, `align` as args; new container blocks for grids and columns ship in Phase 6's starter library. Users get powerful layout primitives without writing flexbox.
 
 ---
 
@@ -617,7 +617,7 @@ If the existing theme reload mechanism *forces a page refresh* (which it might f
 <div class="sidebar"> {{#each @children.sidebar as |c|}} <c.Component /> {{/each}} </div>
 ```
 
-**Editor impact** (Phase 6+):
+**Editor impact** (Phase 7+):
 - Drop zones rendered per slot.
 - Inspector for the container shows slot definitions.
 - Block→slot compatibility is determined entirely by the block's own `allowedOutlets`/`deniedOutlets` (treated as also matching slot names of the form `<outlet>:<slot>`, e.g. `homepage-blocks:sidebar`).
@@ -632,7 +632,7 @@ If the existing theme reload mechanism *forces a page refresh* (which it might f
 - **Should slots be position-aware (slot order in JSON matters)?** Yes — within a slot, order is preserved. Across slots, the container template controls placement. Same as today's flat list.
 - **What about dynamic slots?** Out of scope. If a future block needs them, it can structure args differently.
 - **Why no `allowedBlocks` per slot?** Two-way restriction creates maintenance churn (every new block author needs to coordinate with every container that should accept it). The block's own `allowedOutlets`/`deniedOutlets` is the single declaration. Slot-aware patterns (e.g., a "header block" being limited to header slots) are encoded as outlet-name patterns the block opts into, not as container-side whitelists.
-- **Defer to Phase 7?** Ship the metadata fields in Phase 5 (so block authors can declare slots) and switch the rendering path on once at least one slotted container ships in the starter library.
+- **Defer to Phase 8?** Ship the metadata fields in Phase 6 (so block authors can declare slots) and switch the rendering path on once at least one slotted container ships in the starter library.
 
 ---
 
@@ -694,11 +694,29 @@ If the existing theme reload mechanism *forces a page refresh* (which it might f
 **Out of scope**: palette (insertion from outside the canvas), conditions UI, multi-slot containers, outlet-renderer bridge.
 **Why now**: dnd is moderate effort; doing it after persistence means moves *stick*.
 
-### Phase 5 — "Palette: add and remove blocks"
+### Phase 5 — "Tolerant intermediate states"
+**Goal**: The editor's `session-draft` layer accepts every kind of validation failure without crashing the page; invalid blocks ghost-render with hint messages and recovery actions; save proceeds even with warnings.
+
+**Why this is its own phase**: Phase 4 made it possible to drag the only child out of a container and crash the page. Phase 6's palette-driven deletes will hit the same surface from every direction (delete a block, leave its container empty; paste a subtree with a typo; etc.). Phase 8's JSON import multiplies it further. Phase 5 is the foundation that makes 6+ safe.
+
+**Ships**:
+- **Permissive validation mode** in `frontend/discourse/app/lib/blocks/-internals/validation/` — every `raiseBlockError` call site converts to "mark the entry with `__failureType` / `__failureCode` / `__failureReason` and continue". Strict mode (code-default, theme, server-side install paths) is unchanged.
+- New `FAILURE_CODE` enum covering: empty container, missing required arg, type mismatch, allowed/denied-outlets violation, container-args mismatch, cross-arg constraint failure, unknown block (typo), malformed condition, unknown entry key, invalid id, stable-key collision, depth-exceeded, cycle.
+- `_setLayoutLayer({ permissive: true })` wired through `createLayerEntry`'s lazy `validatedLayout` getter; `BlockOutlet.children` resolves with marked entries instead of rejecting.
+- `BlockOutletRootContainer#preprocessEntries` honours `__failureType: "structural-invalid"` and renders ghost blocks (always, when the editor is active — not gated on dev-tools `showGhosts`).
+- New `<UnknownBlockPlaceholder>` core component for the typo case — labelled card showing the bad block name, `Swap` affordance.
+- Editor UX: per-entry inline hint on the canvas, inspector banner with per-`__failureCode` recovery actions (`Remove empty container`, `Swap block`, `Edit conditions`, …), toolbar warnings tally with "Locate" links, first-time-with-warnings save dialog (with "Don't ask again" preference).
+- Server-side: `Themes::SaveBlockLayout` runs validation permissively, persists invalid layouts as-is, logs soft failures.
+
+**Out of scope**: auto-removal of empty containers; pre-validating drag operations to reject mid-flow invalid states; validation-blocking save.
+
+**Why now**: Phase 4 surfaces the problem; Phase 6 amplifies it. The pattern ports cleanly to JSON import (Phase 8). Implementing it once here pays off in every later phase.
+
+### Phase 6 — "Palette: add and remove blocks"
 **Goal**: Drag from a palette into the canvas; delete and copy/paste subtrees.
 **Ships**:
 - **Core changes #2, #4** (block discovery metadata, preview-token authorization).
-- Left-rail palette: search, category filter, drag source. Tabs: `Blocks`, `Patterns` (empty in this phase), `Outlets` (Phase 6).
+- Left-rail palette: search, category filter, drag source. Tabs: `Blocks`, `Patterns` (empty in this phase), `Outlets` (Phase 7).
 - Categorization driven by `metadata.namespaceType` + optional `category` field.
 - Block insertion mutations.
 - Plugin-shipped starter block library (heading, paragraph, image, columns, callout, button-link, recent-topics, badges-grid). All built on ui-kit atoms.
@@ -706,7 +724,7 @@ If the existing theme reload mechanism *forces a page refresh* (which it might f
 **Out of scope**: conditions UI, outlet routing, import/export, patterns.
 **Why now**: this is what makes it *feel* like Puck/Gutenberg. A starter block library proves the editor isn't useless on a vanilla install.
 
-### Phase 6 — "Conditions, persona/viewport simulation, multi-outlet awareness"
+### Phase 7 — "Conditions, persona/viewport simulation, multi-outlet awareness"
 **Goal**: Editors can attach conditions to blocks; preview the page as different personas and viewports; navigate between Block Outlets on a page in one editing session.
 **Ships**:
 - **Core change #5** (Block Outlet enumeration metadata).
@@ -718,7 +736,7 @@ If the existing theme reload mechanism *forces a page refresh* (which it might f
 **Out of scope**: patterns, import/export, multi-slot containers, per-instance Style tab. PluginOutlets remain explicitly out of scope.
 **Why now**: conditions unlock targeting (admin-only banners, mobile-only blocks). Multi-outlet awareness makes editing a "page" rather than a single outlet feel coherent.
 
-### Phase 7 — "Patterns, per-instance styling, import/export, polish"
+### Phase 8 — "Patterns, per-instance styling, import/export, polish"
 **Goal**: Reusable compositions, structured per-instance styling, JSON portability, A11y.
 **Ships**:
 - **Patterns**: select a subtree → save as a named pattern stored as a separate ThemeField type (`block_pattern`). Browseable in palette `Patterns` tab. Shipped with the theme bundle.
@@ -807,14 +825,14 @@ plugins/discourse-visual-editor/
       inspector.gjs                  # right rail (FormKit-driven)
       canvas-overlay.gjs             # selection chrome via debugHooks
       conditions-builder.gjs         # visual AND/OR/NOT editor
-      style-tab.gjs                  # Phase 7
+      style-tab.gjs                  # Phase 8
       history.gjs
     components/fields/                # editor-only FormKit field types not in core
       color-picker.gjs
       icon-picker.gjs
     modifiers/{editor-draggable,editor-droppable}.js
     lib/{dnd-monitor,layout-mutations,serialize,undo-stack}.js
-    routes/admin-visual-editor.js    # Phase 7 — dedicated entry
+    routes/admin-visual-editor.js    # Phase 8 — dedicated entry
   spec/system/visual_editor_spec.rb
   spec/requests/admin/visual_editor_save_spec.rb
   test/javascripts/                  # qunit
@@ -863,9 +881,10 @@ End-to-end success criteria, scoped per phase:
 - **Phase 2**: select a registered block → inspector renders form from schema → change a string arg → canvas updates within 250ms → undo restores. Reload loses the edit (no persistence yet).
 - **Phase 3**: edit args, save → reload → edit persists. Verify a `block_layout` ThemeField was created on the active theme. Save edits against a Git-imported theme → verify a child theme component was auto-created and the field landed there. Two browser tabs: edit + save in tab A → tab B reflects within ~1s via MessageBus. Resolution chain: a code-registered layout is overridden by a saved theme layout.
 - **Phase 4**: drag a block within a container → reorders. Drag across containers when allowed → moves; when disallowed, drop is rejected with a toast. Keyboard: select → `M` → arrow keys → `Enter` confirms move.
-- **Phase 5**: open palette → search → drag a starter block onto the canvas → inserts. Delete via handle. Copy via `Cmd+C` → paste → duplicates.
-- **Phase 6**: switch persona to Anonymous → admin-only blocks ghost out. Switch viewport to Mobile → viewport-mobile blocks materialize. Add a `route` condition via builder → save → block only renders on chosen routes.
-- **Phase 7**: select a subtree → save as pattern → reopen palette → pattern available → drag inserts the subtree. Per-instance Style tab: change padding → reflected in CSS variable → reset returns to default. Export a layout to JSON → reset → import JSON → restored exactly. Change active theme → only the matching layouts apply.
+- **Phase 5**: drag the only child out of a `block-group` → container ghosts with a hint, page doesn't crash; the toolbar shows a "1 issue" tally. Click the inspector's "Remove empty container" → ghost replaced. Corrupt a saved layout's `block` field via the rails console (`hero-banner` → `hero-bannr`) → reload → corrupted entry shows a labelled placeholder; `Swap` action wires through to a real block.
+- **Phase 6**: open palette → search → drag a starter block onto the canvas → inserts. Delete via handle. Copy via `Cmd+C` → paste → duplicates.
+- **Phase 7**: switch persona to Anonymous → admin-only blocks ghost out. Switch viewport to Mobile → viewport-mobile blocks materialize. Add a `route` condition via builder → save → block only renders on chosen routes.
+- **Phase 8**: select a subtree → save as pattern → reopen palette → pattern available → drag inserts the subtree. Per-instance Style tab: change padding → reflected in CSS variable → reset returns to default. Export a layout to JSON → reset → import JSON → restored exactly. Change active theme → only the matching layouts apply.
 
 **Tests strategy**:
 - qunit for editor service mutations, layout-mutation library, undo-stack, schema → form mapping (pure logic).

@@ -424,7 +424,18 @@ function createChildBlock(entry, owner, debugContext = {}) {
         conditionsPassed: true,
       },
       {
+        // `outletName` here is historically the rendered block's display
+        // hierarchy (e.g. `"homepage-blocks/section-1(#hero)"`) — that's
+        // what dev-tools' overlay surfaces as a block's location. Kept
+        // unchanged for backward compatibility.
         outletName: debugContext.displayHierarchy,
+        // The real, registry-level outlet that owns this entry (the same
+        // string the block layer was registered against). Consumers that
+        // need to address the layout — like the visual editor's
+        // `moveBlock` — read this; the `outletName` field above is the
+        // human-readable hierarchy and won't match the registry for
+        // nested blocks.
+        rootOutletName: debugContext.outletName,
         outletArgs: debugContext.outletArgs,
       }
     );

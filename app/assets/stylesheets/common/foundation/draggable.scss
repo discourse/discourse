@@ -1,0 +1,81 @@
+// --------------------------------------------------
+// Foundation styles for the drag-and-drop modifier vocabulary
+// (`{{draggable-item}}` + `{{drop-target}}`).
+//
+// The modifiers toggle these class names on their host elements during a
+// drag. The styles below give every consumer a consistent default look —
+// a 50% opacity source plus a 2px tertiary line indicator above or below
+// the drop target — modelled on the visual treatment used by the
+// discourse-doc-categories index editor (the canonical example).
+//
+// Consumers can raise specificity to override (BEM-style) when they need
+// a different treatment (e.g. coloured highlight, full-row glow).
+// --------------------------------------------------
+.is-dragging {
+  opacity: 0.5;
+}
+
+%drag-line-indicator {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--tertiary);
+  pointer-events: none;
+}
+
+.is-drag-above {
+  position: relative;
+
+  &::before {
+    @extend %drag-line-indicator;
+    top: -1px;
+  }
+}
+
+.is-drag-below {
+  position: relative;
+
+  &::after {
+    @extend %drag-line-indicator;
+    bottom: -1px;
+  }
+}
+
+%drag-line-indicator-vertical {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--tertiary);
+  pointer-events: none;
+}
+
+.is-drag-left {
+  position: relative;
+
+  &::before {
+    @extend %drag-line-indicator-vertical;
+    left: -1px;
+  }
+}
+
+.is-drag-right {
+  position: relative;
+
+  &::after {
+    @extend %drag-line-indicator-vertical;
+    right: -1px;
+  }
+}
+
+// `inside` mode: the cursor is over a container that accepts the dragged
+// item as a child rather than a sibling. We surface that with a soft
+// outlined treatment instead of a single line — matching the visual
+// editor's container drop zone.
+.is-drag-inside {
+  outline: 2px solid var(--tertiary);
+  outline-offset: -2px;
+}

@@ -149,7 +149,15 @@ function installBlockChrome() {
           containerArgs: blockData.containerArgs,
           conditions: blockData.conditions,
           outletArgs: context?.outletArgs,
-          outletName: context?.outletName,
+          // `context.outletName` is the displayHierarchy (a path like
+          // `"homepage-blocks/section-1(#hero)"`) — useful for showing
+          // the block's location in dev tools, but NOT what the layout
+          // registry indexes by. For move operations we need the
+          // registry-level outlet (`rootOutletName`); fall back to
+          // `outletName` so top-level blocks still work if a stack has
+          // an older block-outlet that doesn't supply the new field.
+          outletName: context?.rootOutletName ?? context?.outletName,
+          displayHierarchy: context?.outletName,
           WrappedComponent: wrapped,
         },
         owner
