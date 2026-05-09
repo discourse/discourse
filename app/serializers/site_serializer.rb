@@ -432,7 +432,7 @@ class SiteSerializer < ApplicationSerializer
     DiscoursePluginRegistry.admin_config_login_routes
   end
 
-  def include_admin_config_routes?
+  def include_admin_config_login_routes?
     scope.is_admin?
   end
 

@@ -15,13 +15,10 @@ export default class PluginsExplorerController extends Controller {
   @service appEvents;
   @service router;
   @service store;
-  @service toasts;
 
   @tracked sortByProperty = "last_run_at";
   @tracked sortDescending = true;
   @tracked params;
-  @tracked createFormData = { name: "" };
-  @tracked showCreate;
   @tracked loading = false;
   @tracked searchLoading = false;
 
@@ -38,7 +35,7 @@ export default class PluginsExplorerController extends Controller {
 
   addCreatedRecord(record) {
     this.model.content.push(record);
-    this.router.transitionTo("adminPlugins.show.explorer.details", record.id);
+    this.router.transitionTo("adminPlugins.show.explorer.edit", record.id);
   }
 
   async _importQuery(file) {
@@ -133,17 +130,6 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  displayCreate() {
-    this.showCreate = true;
-    this.createFormData = { name: "" };
-  }
-
-  @action
-  hideCreate() {
-    this.showCreate = false;
-  }
-
-  @action
   onTextFilterChange(event) {
     this._currentFilter = event.target?.value || "";
     this.searchLoading = true;
@@ -228,25 +214,5 @@ export default class PluginsExplorerController extends Controller {
         (query.group_ids || []).map((id) => groupNames[id])
       );
     });
-  }
-
-  @action
-  async create({ name }) {
-    try {
-      this.loading = true;
-      const result = await this.store
-        .createRecord("query", { name: name.trim() })
-        .save();
-      this.toasts.success({
-        data: { message: i18n("explorer.query_created") },
-      });
-      this.showCreate = false;
-      this.createFormData = { name: "" };
-      this.addCreatedRecord(result.target);
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.loading = false;
-    }
   }
 }

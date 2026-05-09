@@ -4,12 +4,20 @@
 RSpec.describe CategoryUser do
   fab!(:user)
 
+  def watching
+    CategoryUser.notification_levels[:watching]
+  end
+
   def tracking
     CategoryUser.notification_levels[:tracking]
   end
 
   def regular
     CategoryUser.notification_levels[:regular]
+  end
+
+  def muted
+    CategoryUser.notification_levels[:muted]
   end
 
   describe "#batch_set" do
@@ -270,6 +278,48 @@ RSpec.describe CategoryUser do
       expect(
         TopicUser.get(post.topic, user).notification_level,
       ).to eq TopicUser.notification_levels[:tracking]
+    end
+
+    it "does not override user's manual topic notification level changes when auto_track runs" do
+      tracked_category = Fabricate(:category)
+      other_category = Fabricate(:category)
+
+      CategoryUser.set_notification_level_for_category(user, tracking, tracked_category.id)
+
+      post = create_post(category: tracked_category)
+      TopicUser.change(user.id, post.topic_id, total_msecs_viewed: 10)
+      expect(TopicUser.get(post.topic, user).notification_level).to eq(tracking)
+
+      TopicUser.change(user.id, post.topic_id, notification_level: regular)
+      tu = TopicUser.get(post.topic, user)
+      expect(tu.notification_level).to eq(regular)
+      expect(tu.notifications_reason_id).to eq(TopicUser.notification_reasons[:user_changed])
+
+      # muting another category triggers auto_track/auto_watch for the user
+      CategoryUser.set_notification_level_for_category(user, muted, other_category.id)
+
+      expect(TopicUser.get(post.topic, user).notification_level).to eq(regular)
+    end
+
+    it "does not override user's manual topic notification level changes when auto_watch runs" do
+      watched_category = Fabricate(:category)
+      other_category = Fabricate(:category)
+
+      CategoryUser.set_notification_level_for_category(user, watching, watched_category.id)
+
+      post = create_post(category: watched_category)
+      TopicUser.change(user.id, post.topic_id, total_msecs_viewed: 10)
+      expect(TopicUser.get(post.topic, user).notification_level).to eq(watching)
+
+      TopicUser.change(user.id, post.topic_id, notification_level: tracking)
+      tu = TopicUser.get(post.topic, user)
+      expect(tu.notification_level).to eq(tracking)
+      expect(tu.notifications_reason_id).to eq(TopicUser.notification_reasons[:user_changed])
+
+      # muting another category triggers auto_track/auto_watch for the user
+      CategoryUser.set_notification_level_for_category(user, muted, other_category.id)
+
+      expect(TopicUser.get(post.topic, user).notification_level).to eq(tracking)
     end
 
     it "is destroyed when a user is deleted" do

@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -10,6 +11,7 @@ import { and, not, or } from "discourse/truth-helpers";
 export default class AdminPostMenu extends Component {
   @service currentUser;
   @service siteSettings;
+  @service router;
   @service adminPostMenuButtons;
 
   get reviewUrl() {
@@ -26,6 +28,34 @@ export default class AdminPostMenu extends Component {
 
   get canChangePostOwner() {
     return this.currentUser?.canChangePostOwner;
+  }
+
+  get nestedPinButton() {
+    if (!this.siteSettings.nested_replies_enabled) {
+      return null;
+    }
+    if (!this.router.currentRouteName?.startsWith("nested")) {
+      return null;
+    }
+
+    const post = this.args.data.post;
+    if (post.post_number === 1) {
+      return null;
+    }
+    if (post.reply_to_post_number && post.reply_to_post_number !== 1) {
+      return null;
+    }
+
+    const nestedController = getOwner(this).lookup("controller:nested");
+    const isPinned = nestedController?.pinnedPostIds?.includes(post.id);
+
+    return {
+      isPinned,
+      label: isPinned
+        ? "nested_replies.unpin_reply"
+        : "nested_replies.pin_reply",
+      action: () => nestedController?.togglePinPost(post),
+    };
   }
 
   @action
@@ -70,6 +100,11 @@ export default class AdminPostMenu extends Component {
               "post.controls.revert_to_regular"
               "post.controls.convert_to_moderator"
             }}
+            @title={{if
+              @data.post.isModeratorAction
+              ""
+              "post.controls.convert_to_moderator_description"
+            }}
             @icon="shield-halved"
             class={{concatClass
               "btn btn-transparent toggle-post-type"
@@ -89,7 +124,7 @@ export default class AdminPostMenu extends Component {
               "post.controls.change_post_notice"
               "post.controls.add_post_notice"
             }}
-            @title="post.controls.unhide"
+            @title="post.controls.add_post_notice_description"
             class={{concatClass
               "btn btn-transparent"
               (if @data.post.notice "change-notice" "add-notice")
@@ -116,7 +151,6 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label="post.controls.change_owner"
             @icon="user"
-            @title="post.controls.lock_post_description"
             class="btn btn-transparent change-owner"
             @action={{fn this.topicAction "changePostOwner"}}
           />
@@ -189,6 +223,7 @@ export default class AdminPostMenu extends Component {
           <dropdown.item>
             <DButton
               @label="post.controls.wiki"
+              @title="post.controls.wiki_description"
               @icon="far-pen-to-square"
               class="btn btn-transparent wiki"
               @action={{fn this.topicAction "toggleWiki"}}
@@ -201,6 +236,7 @@ export default class AdminPostMenu extends Component {
         <dropdown.item>
           <DButton
             @label="post.controls.publish_page"
+            @title="post.controls.publish_page_description"
             @icon="file"
             class="btn btn-transparent publish-page"
             @action={{fn this.topicAction "showPagePublish"}}
@@ -212,9 +248,21 @@ export default class AdminPostMenu extends Component {
         <dropdown.item>
           <DButton
             @label="post.controls.rebake"
+            @title="post.controls.rebake_description"
             @icon="rotate"
             class="btn btn-transparent rebuild-html"
             @action={{fn this.topicAction "rebakePost"}}
+          />
+        </dropdown.item>
+      {{/if}}
+
+      {{#if this.nestedPinButton}}
+        <dropdown.item>
+          <DButton
+            @label={{this.nestedPinButton.label}}
+            @icon="thumbtack"
+            class="btn btn-transparent pin-reply"
+            @action={{fn this.extraAction this.nestedPinButton}}
           />
         </dropdown.item>
       {{/if}}

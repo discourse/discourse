@@ -40,7 +40,7 @@ class CategoryUser < ActiveRecord::Base
     end
 
     if category_ids.present?
-      params = { user_id: user.id, level_num: level_num }
+      params = { user_id: user.id, level_num: }
 
       sql = <<~SQL
         INSERT INTO category_users (user_id, category_id, notification_level)
@@ -65,7 +65,7 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.set_notification_level_for_category(user, level, category_id)
-    record = CategoryUser.where(user: user, category_id: category_id).first
+    record = CategoryUser.where(user:, category_id:).first
 
     return if record && record.notification_level == level
 
@@ -74,7 +74,7 @@ class CategoryUser < ActiveRecord::Base
       record.save!
     else
       begin
-        CategoryUser.create!(user: user, category_id: category_id, notification_level: level)
+        CategoryUser.create!(user:, category_id:, notification_level: level)
       rescue ActiveRecord::RecordNotUnique
         # does not matter
       end
@@ -93,20 +93,21 @@ class CategoryUser < ActiveRecord::Base
       /*where*/
     SQL
 
-    builder.where(
-      "tu.topic_id = t.id AND
-                  cu.category_id = t.category_id AND
-                  cu.user_id = tu.user_id AND
-                  cu.notification_level = :tracking AND
-                  tu.notification_level = :regular",
-    )
+    builder.where <<~SQL
+          tu.topic_id = t.id
+      AND cu.category_id = t.category_id
+      AND cu.user_id = tu.user_id
+      AND cu.notification_level = :tracking
+      AND tu.notification_level = :regular
+      AND COALESCE(tu.notifications_reason_id, 0) != :user_changed
+    SQL
 
     if category_id = opts[:category_id]
-      builder.where("t.category_id = :category_id", category_id: category_id)
+      builder.where("t.category_id = :category_id", category_id:)
     end
 
     if topic_id = opts[:topic_id]
-      builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
+      builder.where("tu.topic_id = :topic_id", topic_id:)
     end
 
     user_ids = opts[:user_ids] || opts[:user_id]
@@ -116,6 +117,7 @@ class CategoryUser < ActiveRecord::Base
       tracking: notification_levels[:tracking],
       regular: notification_levels[:regular],
       auto_track_category: TopicUser.notification_reasons[:auto_track_category],
+      user_changed: TopicUser.notification_reasons[:user_changed],
     )
   end
 
@@ -135,15 +137,8 @@ class CategoryUser < ActiveRecord::Base
       FROM (
         SELECT tu1.topic_id,
                tu1.user_id,
-               CASE WHEN
-                  cu.user_id IS NULL AND tu1.notification_level = :watching AND tu1.notifications_reason_id = :auto_watch_category THEN true
-                    ELSE false
-               END should_track,
-               CASE WHEN
-                  cu.user_id IS NOT NULL AND tu1.notification_level in (:regular, :tracking) THEN true
-                  ELSE false
-               END should_watch
-
+               CASE WHEN cu.user_id IS NULL AND tu1.notification_level = :watching AND tu1.notifications_reason_id = :auto_watch_category THEN true ELSE false END should_track,
+               CASE WHEN cu.user_id IS NOT NULL AND tu1.notification_level in (:regular, :tracking) THEN true ELSE false END should_watch
         FROM topic_users tu1
         JOIN topics t ON t.id = tu1.topic_id
         LEFT JOIN category_users cu ON cu.category_id = t.category_id AND cu.user_id = tu1.user_id AND cu.notification_level = :watching
@@ -155,6 +150,7 @@ class CategoryUser < ActiveRecord::Base
 
     builder.where("X.topic_id = tu.topic_id AND X.user_id = tu.user_id")
     builder.where("should_watch OR should_track")
+    builder.where2("COALESCE(tu1.notifications_reason_id, 0) != :user_changed")
 
     if category_id = opts[:category_id]
       builder.where2("t.category_id = :category_id", category_id: category_id)
@@ -176,6 +172,7 @@ class CategoryUser < ActiveRecord::Base
       tracking: notification_levels[:tracking],
       regular: notification_levels[:regular],
       auto_watch_category: TopicUser.notification_reasons[:auto_watch_category],
+      user_changed: TopicUser.notification_reasons[:user_changed],
     )
   end
 

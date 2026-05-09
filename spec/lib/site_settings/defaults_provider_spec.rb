@@ -151,4 +151,87 @@ RSpec.describe SiteSettings::DefaultsProvider do
       DiscoursePluginRegistry.reset!
     end
   end
+
+  describe "upcoming change default overrides" do
+    before do
+      settings.setting(:suggested_topics_max_days_old, 365)
+      settings.instance_variable_set(
+        :@upcoming_change_default_overrides,
+        {
+          suggested_topics_max_days_old: {
+            new_default: 1000,
+            upcoming_change: :increase_suggested_topics_max_days_old_default,
+          },
+        },
+      )
+    end
+
+    describe ".all" do
+      context "when the upcoming change override is active" do
+        before do
+          settings.defaults.activate_upcoming_change_override(
+            :increase_suggested_topics_max_days_old_default,
+          )
+        end
+
+        it "uses upcoming change default overrides by default" do
+          expect(settings.defaults.all[:suggested_topics_max_days_old]).to eq(1000)
+        end
+
+        context "when include_upcoming_changes_overrides is false" do
+          it "does not use upcoming change default overrides" do
+            expect(
+              settings.defaults.all(include_upcoming_changes_overrides: false)[
+                :suggested_topics_max_days_old
+              ],
+            ).to eq(365)
+          end
+        end
+      end
+
+      context "when the upcoming change override is not active" do
+        before do
+          settings.defaults.deactivate_upcoming_change_override(
+            :increase_suggested_topics_max_days_old_default,
+          )
+        end
+
+        it "does not use upcoming change default overrides" do
+          expect(settings.defaults.all[:suggested_topics_max_days_old]).to eq(365)
+        end
+      end
+    end
+
+    describe ".upcoming_change_override_metadata" do
+      before do
+        settings.defaults.activate_upcoming_change_override(
+          :increase_suggested_topics_max_days_old_default,
+        )
+      end
+
+      it "returns the upcoming change override metadata" do
+        expect(
+          settings.defaults.upcoming_change_override_metadata(:suggested_topics_max_days_old),
+        ).to eq(
+          old_default: "365",
+          new_default: "1000",
+          change_setting_name: :increase_suggested_topics_max_days_old_default,
+        )
+      end
+
+      context "when the upcoming change override is not active" do
+        before do
+          settings.defaults.deactivate_upcoming_change_override(
+            :increase_suggested_topics_max_days_old_default,
+          )
+        end
+
+        it "returns nil" do
+          expect(
+            settings.defaults.upcoming_change_override_metadata(:suggested_topics_max_days_old),
+          ).to be_nil
+        end
+      end
+    end
+  end
 end

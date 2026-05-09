@@ -89,11 +89,119 @@ RSpec.describe Category do
     end
 
     it "destroys category_posting_review_groups when category is destroyed" do
-      category = Fabricate(:category, category_setting_attributes: { require_topic_approval: true })
-
-      expect { category.destroy! }.to change { category.category_posting_review_groups.count }.by(
-        -1,
+      category = Fabricate(:category)
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [Group::AUTO_GROUPS[:everyone]],
       )
+
+      expect { category.destroy! }.to change { CategoryPostingReviewGroup.count }.by(-1)
+    end
+  end
+
+  describe "#topic_posting_review_mode" do
+    fab!(:category)
+    fab!(:group)
+
+    it "sets mode to everyone" do
+      category.update!(topic_posting_review_mode: :everyone)
+      expect(category.reload.topic_posting_review_mode).to eq("everyone")
+    end
+
+    it "saves group associations for everyone_except mode" do
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [group.id],
+      )
+
+      expect(category.topic_posting_review_group_ids).to contain_exactly(group.id)
+    end
+
+    it "saves group associations for no_one_except mode" do
+      category.update!(
+        topic_posting_review_mode: :no_one_except,
+        topic_posting_review_group_ids: [group.id],
+      )
+
+      expect(category.topic_posting_review_group_ids).to contain_exactly(group.id)
+    end
+
+    it "replaces existing groups when updated with new group_ids" do
+      other_group = Fabricate(:group)
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [group.id],
+      )
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [other_group.id],
+      )
+
+      expect(category.topic_posting_review_group_ids).to contain_exactly(other_group.id)
+    end
+
+    it "clears groups when changing from everyone_except to everyone" do
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [group.id],
+      )
+      category.update!(topic_posting_review_mode: :everyone)
+
+      expect(category.topic_posting_review_group_ids).to be_empty
+    end
+
+    it "ignores group_ids for non-group-based modes" do
+      category.update!(
+        topic_posting_review_mode: :everyone,
+        topic_posting_review_group_ids: [group.id],
+      )
+
+      expect(category.reload.topic_posting_review_mode).to eq("everyone")
+      expect(category.topic_posting_review_group_ids).to be_empty
+    end
+
+    it "validates group_ids are present for everyone_except mode" do
+      category.topic_posting_review_mode = :everyone_except
+      expect(category).not_to be_valid
+    end
+
+    it "validates group_ids are present for no_one_except mode" do
+      category.topic_posting_review_mode = :no_one_except
+      expect(category).not_to be_valid
+    end
+  end
+
+  describe "#reply_posting_review_mode" do
+    fab!(:category)
+    fab!(:group)
+
+    it "sets mode to everyone" do
+      category.update!(reply_posting_review_mode: :everyone)
+      expect(category.reload.reply_posting_review_mode).to eq("everyone")
+    end
+
+    it "saves group associations for everyone_except mode" do
+      category.update!(
+        reply_posting_review_mode: :everyone_except,
+        reply_posting_review_group_ids: [group.id],
+      )
+
+      expect(category.reply_posting_review_group_ids).to contain_exactly(group.id)
+    end
+
+    it "clears groups when changing from everyone_except to everyone" do
+      category.update!(
+        reply_posting_review_mode: :everyone_except,
+        reply_posting_review_group_ids: [group.id],
+      )
+      category.update!(reply_posting_review_mode: :everyone)
+
+      expect(category.reply_posting_review_group_ids).to be_empty
+    end
+
+    it "validates group_ids are present for everyone_except mode" do
+      category.reply_posting_review_mode = :everyone_except
+      expect(category).not_to be_valid
     end
   end
 

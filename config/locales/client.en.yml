@@ -291,6 +291,7 @@ en:
       last_item: "and"
 
     action_codes:
+      topic_created: "Created this topic %{when}"
       public_topic: "Made this topic public %{when}"
       open_topic: "Converted this to a topic %{when}"
       private_topic: "Made this topic a personal message %{when}"
@@ -376,6 +377,7 @@ en:
     broken_transformer_alert: "There was an error. Your site may not work properly."
     broken_block_alert: "A block configuration error was detected. Check browser console for details."
     broken_block_factory_alert: "A block failed to load. Some UI elements may not display correctly."
+    on_before_category_types_change_error: "An error occurred while changing the category types. Check the browser console for more information."
 
     critical_deprecation:
       notice: "<b>[Admin Notice]</b> %{source} contains code which needs updating. (id:%{id})"
@@ -610,8 +612,10 @@ en:
 
     bookmarked:
       title: "Bookmark"
-      edit_bookmark: "Edit Bookmark"
-      clear_bookmarks: "Clear Bookmarks"
+      edit_bookmark:
+        one: "Edit bookmark"
+        other: "Edit bookmarks"
+      delete_bookmarks: "Delete all bookmarks"
       help:
         bookmark: "Click to bookmark this topic"
         edit_bookmark: "Click to edit the bookmark on a post in this topic"
@@ -631,12 +635,18 @@ en:
       clear_reminder: "Clear reminder"
       edit: "Edit bookmark"
       not_bookmarked: "bookmark this post"
+      topic_bookmark: "Topic"
+      post_bookmark: "Post #%{post_number}"
+      jump_to_post: "Jump to #%{post_number}"
+      bookmark_topic: "Bookmark topic"
+      edit_topic_bookmark: "Edit topic bookmark"
+      delete_topic_bookmark: "Delete topic bookmark"
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       created_with_reminder_generic: "You've bookmarked this with a reminder %{date}. %{name}"
       delete: "Delete Bookmark"
       confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
-      confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
+      confirm_clear: "Are you sure you want to delete all your bookmarks from this topic?"
       save: "Save"
       no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'
       invalid_custom_datetime: "The date and time you provided is invalid, please try again."
@@ -713,6 +723,9 @@ en:
       allow_access: "Allow Access"
       continue_as_guest: "Continue as Guest"
       be_first_to_reply: "Be the first to reply!"
+      replying_to: "Replying to %{username}"
+      editing_post: "Editing post"
+      reply_placeholder: "Write a reply..."
 
     topic_count_all:
       one: "See %{count} new topic"
@@ -1713,6 +1726,7 @@ en:
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
+      show_original_content: "Show original content instead of translated content. Can also be toggled within topics."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -2844,8 +2858,10 @@ en:
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
       security_key_description: "When you have your physical security key or compatible mobile device prepared press the Authenticate with Security Key button below."
+      security_key_or_passkey_description: "When you have your security key, passkey, or compatible mobile device prepared press the button below."
       security_key_alternative: "Try another way"
       security_key_authenticate: "Authenticate with Security Key"
+      security_key_or_passkey_authenticate: "Authenticate with security key or passkey"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
       security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
@@ -3025,6 +3041,12 @@ en:
         filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
+        tag_category_admin_dropdown:
+          title: "Category and tag settings"
+          edit_category: "Edit category"
+          edit_category_description: "Adjust settings for %{badge}"
+          edit_tag: "Edit tag"
+          edit_tag_description: "Adjust settings for %{badge}"
         bulk_select_topics_dropdown:
           title: "Bulk Actions"
         bulk_select_bookmarks_dropdown:
@@ -3058,6 +3080,20 @@ en:
       medium_dark_tone: Medium dark skin tone
       dark_tone: Dark skin tone
       default: Custom emojis
+
+    filter_input:
+      clear: "Clear filter"
+
+    d_icon_grid_picker:
+      select_icon: "Select icon"
+      search_placeholder: "Search icons..."
+      no_results: "No icons found"
+      results_count:
+        one: "%{count} icon found"
+        other: "%{count} icons found"
+      favorites: "Favorites"
+      selected_icon: "Selected icon: %{iconName}"
+      clear: "Clear icon"
 
     shared_drafts:
       title: "Shared Drafts"
@@ -3101,6 +3137,16 @@ en:
         no_translation_yet: "Start typing to see translation preview..."
         placeholder: "Enter translation for post here..."
         show_raw_markdown: "Show raw"
+
+      change_reply_to:
+        title: "Change reply target"
+        hint: "Scroll the timeline to find the post you'd like to reply to."
+        current_selection: "Selected: post #%{post_number} by @%{username}"
+        invalid_target: "Choose a post earlier than the one you're editing."
+        submit: "Set reply target"
+        open: "Change which post this replies to"
+        open_from_menu: "Reply to another post"
+        remove: "Remove reply target"
 
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
@@ -3160,6 +3206,7 @@ en:
       title: "Or press %{modifier}Enter"
       save_and_close: "Save and close"
       discard: "Discard"
+      cancel_edit: "Cancel edit"
       draft_saved: "Draft saved!"
 
       users_placeholder: "Add users or groups"
@@ -3180,6 +3227,7 @@ en:
       uploading: "Uploading…"
       show_preview: "show preview"
       hide_preview: "hide preview"
+      resize: "Resize composer"
 
       switch_to_markdown: "Switch to standard Markdown editor (%{keyboardShortcut})"
       switch_to_rich_text: "Switch to new rich text editor (%{keyboardShortcut})"
@@ -3224,6 +3272,8 @@ en:
         name_label: "Wrap name"
         attributes_label: "Attributes"
         add_attribute: "Add attribute"
+        attribute_key: "Key"
+        attribute_value: "Value"
         remove_attribute: "Remove attribute"
         apply: "Apply"
         unwrap: "Unwrap"
@@ -3323,6 +3373,14 @@ en:
         remove: "Remove link"
         visit: "Open link in external tab"
         link_copied: "Link copied!"
+        load_preview: "Load preview"
+        preview_failed: "Could not load preview"
+
+      onebox_toolbar:
+        copy: "Copy link"
+        visit: "Open link"
+        remove_preview: "Remove preview"
+        link_copied: "Link copied!"
 
       unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
 
@@ -3368,6 +3426,12 @@ en:
       liked_by_multiple_users:
         one: "%{username} and %{count} other"
         other: "%{username} and %{count} others"
+      replied_consolidated_in_topic:
+        one: "%{count} new reply in your topic"
+        other: "%{count} new replies in your topic"
+      replied_consolidated_to_post:
+        one: "%{count} new reply to your post"
+        other: "%{count} new replies to your post"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
@@ -3619,6 +3683,11 @@ en:
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
     view_all: "view all %{tab}"
+    permanently_delete:
+      title: "Are you absolutely sure?"
+      confirm_instruction: "Please type <b>%{phrase}</b> below to confirm:"
+      controls:
+        delete: "I understand the consequences, permanently delete"
     user_menu:
       generic_no_items: "There are no items in this list."
       sr_menu_tabs: "User menu tabs"
@@ -3680,6 +3749,8 @@ en:
         clear_all: "Clear All"
         unlist_topics: "Unlist topics"
         relist_topics: "Relist topics"
+        pin_topics: "Feature these topics"
+        unpin_topics: "Un-pin topics"
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
         delete: "Delete topics"
@@ -3726,27 +3797,24 @@ en:
         archive_topics: "Archive topics"
         move_messages_to_inbox: "Move to Inbox"
         archive_messages: "Move to Archive"
+        convert_to_public_topic: "Make public topics"
+        convert_to_private_message: "Make personal messages"
         notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
-        selected_sole_category:
-          one: "You have selected <b>%{count}</b> topic from category:"
-          other: "You have selected <b>%{count}</b> topics from category:"
         selected_count:
           one: "%{count} selected"
           other: "%{count} selected"
-        change_tags: "Replace tags"
-        append_tags: "Add tags"
-        choose_new_tags: "Choose new tags for these topics:"
-        choose_append_tags: "Add tags"
-        changed_tags: "The tags of those topics were changed."
-        remove_tags: "Remove tags"
-        confirm_remove_tags:
-          one: "All tags will be removed from this topic. Are you sure?"
-          other: "All tags will be removed from %{count} topics. Are you sure?"
+        manage_tags: "Manage tags"
+        confirm_unpin_topics:
+          one: "Un-pin %{count} topic"
+          other: "Un-pin %{count} topics"
         confirm_update_topics:
           one: "Update %{count} topic"
           other: "Update %{count} topics"
+        confirm_apply_to_topics:
+          one: "Apply to %{count} topic"
+          other: "Apply to %{count} topics"
         confirm_close_topics:
           one: "Close %{count} topic"
           other: "Close %{count} topics"
@@ -3811,36 +3879,52 @@ en:
         name: "Dismiss"
       close_topics:
         name: "Close"
-        description: "Closed topics prevent new replies. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Learn more</a>"
+        description: "Closed topics prevent new replies. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
         note: "Add a note to these topics"
         optional: (optional)
       archive_topics:
         name: "Archive"
-        description: "Archived topics are hidden from search and the latest topic list. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Learn more</a>"
+        description: "Archived topics are hidden from search and the latest topic list. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
       archive_messages:
         name: "Move to Archive"
       move_messages_to_inbox:
         name: "Move to Inbox"
       unlist_topics:
         name: "Unlist"
-        description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Learn more</a>"
+        description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
       relist_topics:
         name: "Relist"
-      remove_tags:
-        name: "Remove Tags"
-        description: "Remove all tags from the selected topics."
-      append_tags:
-        name: "Add Tags"
-        description: "Add the following tags to the selected topics:"
-      replace_tags:
-        name: "Replace Tags"
-        description: "Replace all existing tags on the selected topics with the following:"
+      manage_tags:
+        name: "Manage tags"
+        add:
+          title: "Add tags"
+          description: "Added to all selected topics"
+        remove:
+          title: "Remove tags"
+          description: "Removed whenever present"
+          all_toggle: "Remove all tags"
+          all_warning: "<strong>All existing tags</strong> will be removed from the selected topics. This cannot be undone."
+        replace:
+          title: "Replace tags"
+          description: "Swaps one tag for another"
+          add_replacement: "Add replacement"
+          remove_replacement: "Remove replacement"
+          from_placeholder: "Tag to replace"
+          to_placeholder: "Replacement tag"
+          missing_from: "A source tag is required"
+          missing_to: "A replacement tag is required"
       delete_topics:
         name: "Delete"
         description: "Permanently delete the selected topics. This action cannot be undone."
       update_category:
         name: "Update Category"
         description: "Move all selected topics to the following category:"
+      convert_to_public_topic:
+        name: "Make Public Topic…"
+        description: "Move the selected personal messages into a public topic in the following category:"
+      convert_to_private_message:
+        name: "Make Personal Message"
+        description: "Convert the selected public topics into personal messages."
       reset_bump_dates:
         name: "Reset Bump Dates"
         description: "Do you want to update the bump dates to the last created post date? This may impact their ordering in the topic list."
@@ -3849,7 +3933,56 @@ en:
       update_notifications:
         name: "Update Notifications"
         description: "Update your personal notification level for the selected topics to:"
+      pin_topics:
+        name: "Pin"
+      unpin_topics:
+        name: "Un-pin"
+        description: "Un-pin all the selected topics that are pinned to a category or pinned globally"
 
+    nested_replies:
+      nested_view: "Nested view"
+      flat_view: "Flat view"
+      view_as_nested: "View as nested"
+      view_as_flat: "View as flat"
+      sort:
+        label: "Sort by"
+        top: "Top"
+        new: "New"
+        old: "Old"
+      load_more_children:
+        one: "%{count} more reply"
+        other: "%{count} more replies"
+      load_more_children_generic: "More replies"
+      continue_thread: "Continue this thread"
+      new_replies:
+        one: "%{count} new reply"
+        other: "%{count} new replies"
+      collapsed_replies:
+        one: "%{count} reply"
+        other: "%{count} replies"
+      collapse: "Collapse"
+      collapse_parent: "Collapse parent thread"
+      category_settings:
+        default_nested_view: "Use nested view as default for topics in this category"
+      no_replies: "No replies yet."
+      deleted_post_placeholder: "[deleted]"
+      ignored_post_placeholder: "[ignored]"
+      toggle_ignored_content: "Show ignored content"
+      op_badge: "OP"
+      pinned_reply: "Pinned"
+      pin_reply: "Pin to top"
+      unpin_reply: "Unpin"
+      topic_admin_menu:
+        enable_nested_replies: "Enable nested replies"
+        disable_nested_replies: "Disable nested replies"
+      activity_log:
+        link: "Activity log"
+        title: "Topic activity log"
+        empty: "No topic activity to show."
+      context:
+        banner: "You are viewing a single thread from this topic."
+        view_full_topic: "View full topic"
+        view_parent_context: "View parent context"
     topic:
       filter_to:
         one: "%{count} post in topic"
@@ -3871,6 +4004,7 @@ en:
 
       list: "Topics"
       new: "new topic"
+      has_new_replies: "new replies since your last visit"
       unread: "unread"
       new_topics:
         one: "%{count} new topic"
@@ -3993,6 +4127,7 @@ en:
         publish_to: "Publish To:"
         when: "When:"
         time_frame_required: "Please select a time frame"
+        category_required: "Please select a category"
         min_duration: "Duration must be greater than 0"
         max_duration: "Duration must be less than 20 years"
         duration: "Duration"
@@ -4164,6 +4299,7 @@ en:
         unpin: "Remove this topic from the top of the %{categoryLink} category."
         unpin_until: "Remove this topic from the top of the %{categoryLink} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
+        pin_until: "Pin until"
         pin_validation: "A date is required to pin this topic."
         not_pinned: "There are no topics pinned in %{categoryLink}."
         already_pinned:
@@ -4185,6 +4321,13 @@ en:
         banner_note: "Users can dismiss the banner by closing it. Only one topic can be bannered at any given time."
         no_banner_exists: "There is no banner topic."
         banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
+
+      bulk_feature_topic:
+        pin: "Make these topics appear at the top of the topic's category until"
+        pin_note: "Users can unpin topics individually for themselves."
+        pin_globally: "Make these topics appear at the top of all topic lists until"
+        pin_button: "Pin topics"
+        pin_globally_button: "Pin topics globally"
 
       inviting: "Inviting…"
       automatically_add_to_groups: "This invite also includes access to these groups:"
@@ -4426,6 +4569,11 @@ en:
       sr_post_like_count_button:
         one: "%{count} person liked this post."
         other: "%{count} people liked this post."
+
+      likes_popup:
+        title:
+          one: "%{count} like"
+          other: "%{count} likes"
       sr_post_read_count_button:
         one: "%{count} person read this post."
         other: "%{count} people read this post."
@@ -4460,8 +4608,9 @@ en:
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
         success: "Translations have been updated successfully"
         post_language_selector:
-          title: "Post Language"
-          none: "None"
+          title: "Post language"
+          header: "This post is in…"
+          none: "Not set"
         edit_warning:
           message: "This is a translated post.<br><br>Do you want to edit the original post in %{language} or edit this specific translation?"
           action_original: "Edit original post"
@@ -4487,7 +4636,9 @@ en:
 
       cancel_composer:
         confirm: "Do you want to discard your post?"
+        confirm_edit: "Do you want to discard your changes?"
         discard: "Discard"
+        discard_edit: "Discard changes"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
@@ -4517,6 +4668,7 @@ en:
         delete: "delete this post"
         undelete_action: "Undelete post"
         undelete: "undelete this post"
+        view_deleted: "view deleted post content"
         share_action: "Share"
         share: "share a link to this post"
         copy_action: "Copy link"
@@ -4534,14 +4686,20 @@ en:
           just_the_post: "No, just this post"
         admin: "post admin actions"
         admin_action: "Admin"
-        permanently_delete: "Permanently Delete"
-        permanently_delete_confirmation: "Are you sure you permanently want to delete this post? You will not be able to recover it."
+        permanently_delete: "Permanently delete"
+        permanently_delete_post_confirmation: "This action <b>cannot</b> be undone. This will <b>permanently delete</b> this post and remove it from the database."
+        permanently_delete_topic_confirmation: "This action <b>cannot</b> be undone. This will <b>permanently delete</b> this topic and remove it from the database."
+        permanently_delete_confirm_phrase: "permanently delete"
         wiki: "Make Wiki"
+        wiki_description: "let allowed groups edit this post"
         unwiki: "Remove Wiki"
         convert_to_moderator: "Add Staff Color"
+        convert_to_moderator_description: "highlight the content of this post"
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
+        rebake_description: "reprocess this post to fix formatting or embeds"
         publish_page: "Page Publishing"
+        publish_page_description: "publish this topic as a standalone page"
         unhide: "Unhide"
         change_owner: "Change Ownership…"
         grant_badge: "Grant Badge…"
@@ -4549,6 +4707,7 @@ en:
         lock_post_description: "prevent the poster from editing this post"
         unlock_post: "Unlock Post"
         unlock_post_description: "allow the poster to edit this post"
+        add_post_notice_description: "add highlighted notice above this post"
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
         delete_topic_confirm_modal:
@@ -4603,6 +4762,8 @@ en:
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
+        reply_to:
+          none: "No reply target"
         controls:
           first: "First revision"
           previous: "Previous revision"
@@ -4693,6 +4854,7 @@ en:
       back: "Back to category"
       general: "General"
       settings: "Settings"
+      moderation: "Moderation"
       advanced: "Advanced"
       show_advanced: "Advanced settings"
       topic_template: "Template"
@@ -4751,6 +4913,7 @@ en:
       validations:
         emoji_required: "Select an emoji."
         icon_required: "Select an icon."
+        groups_required: "Select at least one group for this approval mode."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4763,6 +4926,7 @@ en:
       icon: "Icon"
       emoji: "Emoji"
       select_emoji: "Select emoji"
+      select_icon: "Select icon"
       background_color: "Color"
       foreground_color: "Text color"
       color_validations:
@@ -4781,6 +4945,10 @@ en:
       color_used: "Color in use"
       predefined_colors: "Predefined color options"
       name_placeholder: "One or two words recommended"
+      category_types: "Category types"
+      unknown_category_type: "Unknown category type"
+      unknown_category_type_description: "The category type '%{categoryType}' is not supported or not enabled on this category."
+      category_types_no_results: "No other category types found"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
@@ -4835,6 +5003,18 @@ en:
       review_group_name: "group name"
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
+      require_topic_approval_for: "Require moderator approval of new topics for..."
+      require_reply_approval_for: "Require moderator approval of new replies for..."
+      new_topic_approval: "New topic approval"
+      new_reply_approval: "New reply approval"
+      posting_review_modes:
+        no_one: "No one"
+        everyone: "Everyone"
+        everyone_except: "Everyone except selected groups"
+        no_one_except: "No one except selected groups"
+      posting_review_groups_require_approval: "Groups that require approval"
+      posting_review_groups_no_approval: "Groups that do not require approval"
+      posting_review_groups_placeholder: "Select groups..."
       this_year: "this year"
       position: "Position on the categories page:"
       default_position: "Default position"
@@ -4884,7 +5064,7 @@ en:
           high: "High"
           very_high: "Very high"
       sort_options:
-        default: "default"
+        default: "Default"
         likes: "Likes"
         op_likes: "Original post likes"
         views: "Views"
@@ -4895,6 +5075,7 @@ en:
         created: "Created"
       sort_ascending: "Ascending"
       sort_descending: "Descending"
+      sort_direction: "Sort direction"
       subcategory_list_styles:
         rows: "Rows"
         rows_with_featured_topics: "Rows with featured topics"
@@ -6075,6 +6256,8 @@ en:
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."
         no_changes: "There are no upcoming changes at this time."
         preview: "Preview"
+        default_warning: "The default for this setting has changed from %{oldDefaultValue} to %{newDefaultValue} due to an <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>upcoming change</a>."
+        default_warning_short: "The default for this setting has changed, read more about this in the <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>upcoming changes</a> page."
         enabled_for_options:
           no_one: "No one"
           everyone: "Everyone"
@@ -6100,6 +6283,10 @@ en:
           staff: "Staff"
           all_members: "All members"
           developers: "Developers"
+        impact_types:
+          feature_type: "Feature"
+          other_type: "Other"
+          site_setting_default_type: "Setting default"
         filter:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
@@ -6112,6 +6299,7 @@ en:
           impact_type_all: "All impact types"
           impact_type_feature: "Feature"
           impact_type_other: "Other"
+          impact_type_site_setting_default: "Setting default"
           status_all: "All statuses"
           status_conceptual: "Conceptual"
           status_experimental: "Experimental"
@@ -6132,7 +6320,7 @@ en:
           header_description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
         developer:
           title: "Developer"
-          header_description: "Developer settings to control rate limits, multipliers and calculations, safe mode, and other advanced features"
+          header_description: "Developer settings to control safe mode and other advanced features"
         experimental:
           title: "Experimental"
           header_description: "Toggle experimental features on or off for your site, most of these can be controlled on a group basis"
@@ -6382,6 +6570,20 @@ en:
             logs:
               title: "Logs"
               header_description: "View and manage logs for backups, restores, and uploads"
+        problem_checks:
+          title: "Problem checks"
+          header_description: "View all registered problem checks and their current status."
+          identifier: "Check"
+          target: "Target"
+          priority: "Priority"
+          status: "Status"
+          passing: "Passing"
+          failing: "Failing"
+          last_run_at: "Last run"
+          ignore: "Ignore"
+          watch: "Watch"
+          more_options:
+            title: "More options"
         reports:
           title: "Reports"
           header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
@@ -6564,12 +6766,12 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
-        dismiss_notice: "Dismiss"
+        dismiss_notice: "Ignore"
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
-          no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
-          no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
+          no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Releases site</a>."
+          no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Releases site</a>."
           learn_more: "Learn more..."
 
         last_checked: "Last checked"
@@ -6611,6 +6813,23 @@ en:
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
+
+        sections:
+          highlights:
+            title: "Highlights"
+          reports:
+            title: "Reports"
+          traffic:
+            title: "Site traffic"
+          engagement:
+            title: "Engagement"
+
+        period:
+          last_7_days: "Last 7 days"
+          last_30_days: "Last 30 days"
+          last_3_months: "Last 3 months"
+          custom: "Custom"
+          custom_range: "%{start} – %{end}"
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -7463,6 +7682,8 @@ en:
           beginners_guide_title: "Beginner’s guide to using Discourse Themes"
           developers_guide_title: "Developer’s guide to Discourse Themes"
           browse_themes: "Browse community themes"
+          install_more_themes: "Install more themes"
+          install_more_themes_description: "Browse popular community themes or install one from a file or git repository."
           customize_desc: "Customize:"
           title: "Themes"
           description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features."
@@ -7569,6 +7790,7 @@ en:
           public_key: "Grant the following public key access to the repo:"
           install: "Install"
           installed: "Installed"
+          screenshot: "%{name} screenshot"
           install_popular: "Popular"
           install_upload: "From your device"
           install_git_repo: "From a git repository"
@@ -7598,6 +7820,16 @@ en:
           update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
+          change_source:
+            button: "Change source"
+            title: "Change Theme Source"
+            repository_url: "Repository URL"
+            branch: "Branch"
+            updating: "Updating theme source…"
+            update: "Update Source"
+            has_existing_key: "This theme has an existing SSH key configured."
+            generate_new_key: "Generate new SSH key"
+            keep_existing_key: "Keep existing SSH key"
           add: "Add"
           theme_settings: "Custom theme settings"
           theme_site_settings: "Settings the theme can override"
@@ -7899,6 +8131,7 @@ en:
         topic_id: "Topic ID"
         post_id: "Post ID"
         category_id: "Category ID"
+        reviewable_id: "Review"
         delete: "Delete"
         edit: "Edit"
         save: "Save"
@@ -8527,8 +8760,10 @@ en:
           other: "Can't delete all posts because the user has more than %{count} posts. (delete_all_posts_max)"
         delete_confirm_title: "Are you sure you want to delete this user? This is permanent!"
         delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions."
-        delete_and_block: "Delete user and block their email and IP address"
+        delete_and_block: "Delete and block user"
+        delete_and_block_description: "Delete the user and block their email and IP address."
         delete_dont_block: "Delete user"
+        delete_dont_block_description: "Delete the user without blocking."
         deleting_user: "Deleting user…"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
@@ -8720,6 +8955,9 @@ en:
       site_settings:
         title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
+        depends_on_notice:
+          one: "This setting is only applied when %{dependencyLinks} is enabled."
+          other: "This setting is only applied when %{dependencyLinks} are enabled."
         discard:
           one: "Discard change"
           other: "Discard changes"
@@ -8787,6 +9025,7 @@ en:
           groups: "Groups"
           dashboard: "Dashboard"
           navigation: "Navigation"
+          nested_replies: "Nested replies"
           experimental: "Experimental"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
@@ -8829,6 +9068,9 @@ en:
           clean_up_inactive_users_after_days:
             prompt: "Setting this value to anything other than 0 will cause users who are no longer active for that many days to be permanently deleted. Are you sure you want to proceed?"
             confirm: "Yes, I understand that inactive users will be permanently deleted unless I set this value to 0"
+          can_permanently_delete:
+            prompt: "Enabling this allows admins to permanently destroy posts, topics, and post revisions. Permanently deleted data cannot be recovered. This may also affect data integrity and break existing links."
+            confirm: "I understand"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

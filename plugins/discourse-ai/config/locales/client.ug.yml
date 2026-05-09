@@ -231,6 +231,7 @@ ug:
           copy: "كۆچۈر"
         conversations:
           today: "بۈگۈن"
+          scroll_to_bottom: "ئەڭ ئاستىغا دومىلات"
       sentiments:
         sentiment_analysis:
           filter_types:

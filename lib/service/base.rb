@@ -174,6 +174,28 @@
 #     #     step :update_post
 #     #     step :log_post_update
 #     #   end
+#
+#     # @!scope class
+#     # @!method each(collection_name, as: nil, persist: nil, &block)
+#     # @param collection_name [Symbol] the name of the context key holding the collection
+#     # @param as [Symbol] override the singularized item name
+#     # @param persist [Hash, Array, Symbol] keys that accumulate across iterations
+#     # @param block [Proc] a block containing steps to run for each item
+#     # Iterates over a collection and runs nested steps for each item.
+#     # The singularized item name and +index+ are provided as keyword
+#     # arguments. Iteration stops on first failure. Variables set inside
+#     # the loop are isolated unless listed in +persist+.
+#     #
+#     # @example basic iteration
+#     #   each :users do
+#     #     policy :can_delete
+#     #     step :destroy
+#     #   end
+#     #
+#     # @example accumulating results
+#     #   each :tag_names, persist: { results: -> { [] } } do
+#     #     step :create_tag
+#     #   end
 #   end
 
 module Service

@@ -124,6 +124,7 @@
   .user-notifications-filter {
     display: block;
     width: 100%;
+    padding-bottom: var(--space-2);
     border-bottom: 0.5px solid var(--content-border-color);
   }
 }
@@ -173,15 +174,11 @@
       width: 100%;
       border-top: 1px solid var(--content-border-color);
 
-      .btn {
-        padding: 4px 12px;
-      }
-
       dl {
         margin: 0;
         padding: 0.5em 0;
 
-        div {
+        > div {
           display: inline-flex;
           align-items: baseline;
           margin: 4px 0;
@@ -218,6 +215,12 @@
         color: var(--secondary-medium);
         margin-right: 5px;
         display: inline-block;
+      }
+    }
+
+    .btn-delete-user {
+      .select-kit-body {
+        font-size: var(--font-up-1);
       }
     }
 
@@ -1072,6 +1075,11 @@
 
   .pref-second-factor {
     margin-top: 0.5em;
+  }
+
+  .pref-show-original-content {
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-4);
   }
 }
 

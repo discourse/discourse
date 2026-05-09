@@ -67,6 +67,15 @@ export default class Item extends Component {
     });
   }
 
+  get #transformerContext() {
+    return {
+      topic: this.args.topic,
+      index: this.args.index,
+      listContext: this.args.listContext,
+      category: this.args.category,
+    };
+  }
+
   get expandPinned() {
     let expandPinned;
     if (
@@ -84,7 +93,7 @@ export default class Item extends Component {
     return applyValueTransformer(
       "topic-list-item-expand-pinned",
       expandPinned,
-      { topic: this.args.topic, mobileView: this.useMobileLayout }
+      { ...this.#transformerContext, mobileView: this.useMobileLayout }
     );
   }
 
@@ -236,24 +245,24 @@ export default class Item extends Component {
     return applyValueTransformer(
       "topic-list-item-mobile-layout",
       this.site.mobileView,
-      { topic: this.args.topic, listContext: this.args.listContext }
+      this.#transformerContext
     );
   }
 
   get additionalClasses() {
-    return applyValueTransformer("topic-list-item-class", [], {
-      topic: this.args.topic,
-      index: this.args.index,
-      listContext: this.args.listContext,
-    });
+    return applyValueTransformer(
+      "topic-list-item-class",
+      [],
+      this.#transformerContext
+    );
   }
 
   get style() {
-    const parts = applyValueTransformer("topic-list-item-style", [], {
-      topic: this.args.topic,
-      index: this.args.index,
-      listContext: this.args.listContext,
-    });
+    const parts = applyValueTransformer(
+      "topic-list-item-style",
+      [],
+      this.#transformerContext
+    );
 
     const safeParts = parts.filter(Boolean).filter((part) => {
       if (isHTMLSafe(part)) {

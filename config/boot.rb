@@ -33,8 +33,6 @@ if ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
 
   port = 10_000 + n
 
-  STDERR.puts "Setting up parallel test mode - starting Redis #{n} on port #{port}"
-
   `rm -rf tmp/test_data_#{n} && mkdir -p tmp/test_data_#{n}/redis`
   pid =
     Process.spawn("redis-server --dir tmp/test_data_#{n}/redis --port #{port}", out: "/dev/null")

@@ -1,9 +1,20 @@
-import { gt, not } from "@ember/object/computed";
-import { propertyEqual } from "discourse/lib/computed";
+import { computed } from "@ember/object";
+import { deepEqual } from "discourse/lib/object";
 import RestModel from "discourse/models/rest";
 
 export default class Archetype extends RestModel {
-  @gt("options.length", 0) hasOptions;
-  @propertyEqual("id", "site.default_archetype") isDefault;
-  @not("isDefault") notDefault;
+  @computed("options.length")
+  get hasOptions() {
+    return this.options?.length > 0;
+  }
+
+  @computed("id", "site.default_archetype")
+  get isDefault() {
+    return deepEqual(this.id, this.site?.default_archetype);
+  }
+
+  @computed("isDefault")
+  get notDefault() {
+    return !this.isDefault;
+  }
 }

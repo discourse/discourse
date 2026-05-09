@@ -206,6 +206,7 @@ zh_TW:
           today: "今天"
           last_7_days: "過去 7 天"
           last_30_days: "過去 30 天"
+          scroll_to_bottom: "捲動到底部"
       sentiments:
         sentiment_analysis:
           filter_types:

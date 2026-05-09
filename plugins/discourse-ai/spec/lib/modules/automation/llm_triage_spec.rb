@@ -361,6 +361,31 @@ describe DiscourseAi::Automation::LlmTriage do
     end
   end
 
+  it "includes document uploads when triaging even if image uploads are disabled" do
+    ai_agent.update!(vision_enabled: false)
+    llm_model.update!(allowed_attachment_types: ["txt"])
+    SiteSetting.authorized_extensions = "*"
+    image_upload = Fabricate(:image_upload, posts: [post])
+    document_upload = Fabricate(:upload, original_filename: "notes.txt", extension: "txt")
+    UploadReference.create!(target: post, upload: document_upload)
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post.reload,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        automation: nil,
+      )
+
+      triage_prompt = DiscourseAi::Completions::Llm.prompts.last
+      content = triage_prompt.messages.last[:content]
+
+      expect(content).to include({ upload_id: document_upload.id })
+      expect(content).not_to include({ upload_id: image_upload.id })
+    end
+  end
+
   it "includes stop_sequences in the completion call" do
     sequences = %w[GOOD BAD]
 

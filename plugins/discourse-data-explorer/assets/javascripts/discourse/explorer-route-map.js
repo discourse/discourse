@@ -3,7 +3,8 @@ export default {
   path: "/plugins",
   map() {
     this.route("explorer", { path: "queries" }, function () {
-      this.route("details", { path: "/:query_id" });
+      this.route("new");
+      this.route("edit", { path: "/:query_id" });
     });
   },
 };

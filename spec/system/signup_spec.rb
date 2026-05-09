@@ -20,6 +20,8 @@ shared_examples "signup scenarios" do
         .fill_password("supersecurepassword")
       expect(signup_page).to have_valid_fields
 
+      screenshot_marker(label: "signup")
+
       signup_page.click_create_account
 
       expect(page).to have_current_path("/u/account-created")
@@ -41,6 +43,8 @@ shared_examples "signup scenarios" do
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
       visit activation_link
+
+      screenshot_marker(label: "signup-activation")
 
       activate_account.click_activate_account
       activate_account.click_continue

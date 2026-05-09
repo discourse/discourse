@@ -2578,4 +2578,63 @@ RSpec.describe Post do
       expect(post.reload.locale).to eq(nil)
     end
   end
+
+  describe "#reply_notification_target" do
+    fab!(:op_user, :user)
+    fab!(:topic) { Fabricate(:topic, user: op_user) }
+    fab!(:first_post) { Fabricate(:post, topic: topic, user: op_user, post_number: 1) }
+
+    it "returns the parent post's user when reply_to_post_number is set" do
+      replier = Fabricate(:user)
+      target_user = Fabricate(:user)
+      target_post = Fabricate(:post, topic: topic, user: target_user, post_number: 2)
+      reply = Fabricate(:post, topic: topic, user: replier, reply_to_post_number: 2)
+
+      expect(reply.reply_notification_target).to eq(target_user)
+    end
+
+    it "returns nil for a root post in a flat topic" do
+      replier = Fabricate(:user)
+      root = Fabricate(:post, topic: topic, user: replier, reply_to_post_number: nil)
+
+      expect(root.reply_notification_target).to be_nil
+    end
+
+    context "when the topic is in nested view" do
+      before do
+        SiteSetting.nested_replies_enabled = true
+        Fabricate(:nested_topic, topic: topic)
+      end
+
+      it "redirects a root post to the topic's first-post author" do
+        replier = Fabricate(:user)
+        root = Fabricate(:post, topic: topic, user: replier, reply_to_post_number: nil)
+
+        expect(root.reply_notification_target).to eq(op_user)
+      end
+
+      it "returns nil when the OP posts a root themselves" do
+        root = Fabricate(:post, topic: topic, user: op_user, reply_to_post_number: nil)
+
+        expect(root.reply_notification_target).to be_nil
+      end
+
+      it "still resolves to the parent author for a non-root reply" do
+        replier = Fabricate(:user)
+        target_user = Fabricate(:user)
+        Fabricate(:post, topic: topic, user: target_user, post_number: 2)
+        reply = Fabricate(:post, topic: topic, user: replier, reply_to_post_number: 2)
+
+        expect(reply.reply_notification_target).to eq(target_user)
+      end
+
+      it "returns nil when the first post has been deleted" do
+        first_post.trash!
+        replier = Fabricate(:user)
+        root = Fabricate(:post, topic: topic, user: replier, reply_to_post_number: nil)
+
+        expect(root.reply_notification_target).to be_nil
+      end
+    end
+  end
 end

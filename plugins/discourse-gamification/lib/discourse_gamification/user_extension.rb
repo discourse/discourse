@@ -5,8 +5,8 @@ module DiscourseGamification
     extend ActiveSupport::Concern
 
     prepended do
-      has_many :gamification_scores,
-               class_name: "DiscourseGamification::GamificationScore",
+      has_many :gamification_leaderboard_scores,
+               class_name: "DiscourseGamification::GamificationLeaderboardScore",
                dependent: :destroy
     end
 

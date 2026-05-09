@@ -1,11 +1,9 @@
 import Controller from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
-import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { compare, isEmpty } from "@ember/utils";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { setting } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
@@ -17,20 +15,67 @@ export default class UserController extends Controller {
   @service dialog;
   @optionalService adminTools;
 
-  @setting("moderators_view_emails") canModeratorsViewEmails;
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
 
-  @equal("router.currentRouteName", "user.summary") isSummaryRoute;
-  @or("model.can_ignore_user", "model.can_mute_user") canMuteOrIgnoreUser;
-  @gt("model.number_of_flags_given", 0) hasGivenFlags;
-  @gt("model.number_of_flags", 0) hasFlags;
-  @gt("model.number_of_deleted_posts", 0) hasDeletedPosts;
-  @gt("model.number_of_silencings", 0) hasBeenSilenced;
-  @gt("model.number_of_suspensions", 0) hasBeenSuspended;
-  @gt("model.warnings_received_count", 0) hasReceivedWarnings;
-  @gt("model.number_of_rejected_posts", 0) hasRejectedPosts;
-  @equal("model.trust_level", 0) isTrustLevelZero;
-  @or("isTrustLevelZero", "model.trust_level") hasTrustLevel;
-  @or(
+  @computed("router.currentRouteName")
+  get isSummaryRoute() {
+    return this.router?.currentRouteName === "user.summary";
+  }
+
+  @computed("model.can_ignore_user", "model.can_mute_user")
+  get canMuteOrIgnoreUser() {
+    return this.model?.can_ignore_user || this.model?.can_mute_user;
+  }
+
+  @computed("model.number_of_flags_given")
+  get hasGivenFlags() {
+    return this.model?.number_of_flags_given > 0;
+  }
+
+  @computed("model.number_of_flags")
+  get hasFlags() {
+    return this.model?.number_of_flags > 0;
+  }
+
+  @computed("model.number_of_deleted_posts")
+  get hasDeletedPosts() {
+    return this.model?.number_of_deleted_posts > 0;
+  }
+
+  @computed("model.number_of_silencings")
+  get hasBeenSilenced() {
+    return this.model?.number_of_silencings > 0;
+  }
+
+  @computed("model.number_of_suspensions")
+  get hasBeenSuspended() {
+    return this.model?.number_of_suspensions > 0;
+  }
+
+  @computed("model.warnings_received_count")
+  get hasReceivedWarnings() {
+    return this.model?.warnings_received_count > 0;
+  }
+
+  @computed("model.number_of_rejected_posts")
+  get hasRejectedPosts() {
+    return this.model?.number_of_rejected_posts > 0;
+  }
+
+  @computed("model.trust_level")
+  get isTrustLevelZero() {
+    return this.model?.trust_level === 0;
+  }
+
+  @computed("isTrustLevelZero", "model.trust_level")
+  get hasTrustLevel() {
+    return this.isTrustLevelZero || this.model?.trust_level;
+  }
+
+  @computed(
     "hasGivenFlags",
     "hasFlags",
     "hasDeletedPosts",
@@ -39,15 +84,43 @@ export default class UserController extends Controller {
     "hasReceivedWarnings",
     "hasRejectedPosts"
   )
-  showStaffCounters;
-  @and(
+  get showStaffCounters() {
+    return (
+      this.hasGivenFlags ||
+      this.hasFlags ||
+      this.hasDeletedPosts ||
+      this.hasBeenSilenced ||
+      this.hasBeenSuspended ||
+      this.hasReceivedWarnings ||
+      this.hasRejectedPosts
+    );
+  }
+
+  @computed(
     "model.featured_topic",
     "siteSettings.allow_featured_topic_on_user_profiles"
   )
-  showFeaturedTopic;
-  @not("model.isBasic") linkWebsite;
-  @and("model.can_be_deleted", "model.can_delete_all_posts") canDeleteUser;
-  @readOnly("router.currentRoute.parent.name") currentParentRoute;
+  get showFeaturedTopic() {
+    return (
+      this.model?.featured_topic &&
+      this.siteSettings?.allow_featured_topic_on_user_profiles
+    );
+  }
+
+  @computed("model.isBasic")
+  get linkWebsite() {
+    return !this.model?.isBasic;
+  }
+
+  @computed("model.can_be_deleted", "model.can_delete_all_posts")
+  get canDeleteUser() {
+    return this.model?.can_be_deleted && this.model?.can_delete_all_posts;
+  }
+
+  @computed("router.currentRoute.parent.name")
+  get currentParentRoute() {
+    return this.router?.currentRoute?.parent?.name;
+  }
 
   @computed("model.username")
   get viewingSelf() {
@@ -159,9 +232,12 @@ export default class UserController extends Controller {
     return this.siteSettings.enable_badges && this.model?.badge_count > 0;
   }
 
-  @computed()
+  @computed("model.profile_hidden")
   get canInviteToForum() {
-    return this.currentUser?.get("can_invite_to_forum");
+    return (
+      this.currentUser?.get("can_invite_to_forum") &&
+      !this.model?.profile_hidden
+    );
   }
 
   @computed("model.user_fields.@each.value")
@@ -245,12 +321,30 @@ export default class UserController extends Controller {
     this.toggleProperty("forceExpand");
   }
 
+  get adminDeleteOptions() {
+    return [
+      {
+        id: "delete_dont_block",
+        label: i18n("admin.user.delete_dont_block"),
+        description: i18n("admin.user.delete_dont_block_description"),
+        icon: "trash-can",
+      },
+      {
+        id: "delete_and_block",
+        label: i18n("admin.user.delete_and_block"),
+        description: i18n("admin.user.delete_and_block_description"),
+        icon: "ban",
+      },
+    ];
+  }
+
   @action
-  adminDelete() {
+  adminDelete(optionId) {
+    const block = optionId === "delete_and_block";
     const userId = this.get("model.id");
     const location = document.location.pathname;
 
-    const performDestroy = (block) => {
+    const performDestroy = () => {
       this.dialog.notice(i18n("admin.user.deleting_user"));
       let formData = { context: location };
       if (block) {
@@ -272,30 +366,15 @@ export default class UserController extends Controller {
         .catch(() => this.dialog.alert(i18n("admin.user.delete_failed")));
     };
 
-    this.dialog.alert({
+    this.dialog.deleteConfirm({
       title: i18n("admin.user.delete_confirm_title"),
       message: i18n("admin.user.delete_confirm"),
-      class: "delete-user-modal",
-      buttons: [
-        {
-          label: i18n("admin.user.delete_dont_block"),
-          class: "btn-danger delete-dont-block",
-          action: () => {
-            return performDestroy(false);
-          },
-        },
-        {
-          icon: "triangle-exclamation",
-          label: i18n("admin.user.delete_and_block"),
-          class: "btn-danger delete-and-block",
-          action: () => {
-            return performDestroy(true);
-          },
-        },
-        {
-          label: i18n("composer.cancel"),
-        },
-      ],
+      class: `delete-user-modal ${
+        block ? "delete-and-block" : "delete-dont-block"
+      }`,
+      confirmButtonLabel: `admin.user.${optionId}`,
+      confirmButtonIcon: block ? "triangle-exclamation" : "trash-can",
+      didConfirm: performDestroy,
     });
   }
 

@@ -45,11 +45,17 @@ export default class AssignedToFirstPost extends Component {
     });
   }
 
+  get hasIndirectAssignments() {
+    return this.indirectlyAssignedTo
+      ? Object.keys(this.indirectlyAssignedTo).length > 0
+      : false;
+  }
+
   get isAssigned() {
     return !!(
       this.assignedToUser ||
       this.assignedToGroup ||
-      this.args.post?.topic?.indirectly_assigned_to
+      this.hasIndirectAssignments
     );
   }
 
@@ -112,7 +118,7 @@ export default class AssignedToFirstPost extends Component {
             {{i18n "discourse_assign.assigned"}}
           </span>
         {{/if}}
-        {{#if this.indirectlyAssignedTo}}
+        {{#if this.hasIndirectAssignments}}
           {{#each
             this.indirectAssignments key="postId"
             as |indirectAssignment|

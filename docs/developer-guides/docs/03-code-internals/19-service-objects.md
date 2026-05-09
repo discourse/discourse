@@ -148,6 +148,14 @@ This step is another special one, as it’s similar to a contract (without the v
 
 This step will only run the steps defined in its block if the provided condition is true. That’s another step that can’t fail by itself.
 
+### `each`
+
+This step iterates over a collection from the context and runs the steps defined in its block for each item. The item is provided under its singularized name (e.g., `each :users` provides `user:`) along with `index:`. If any nested step fails, iteration stops immediately and the service fails with the failing item and index available in context.
+
+An empty collection is silently skipped.
+
+A `persist:` option allows values to accumulate across iterations and survive the loop’s variable isolation. This is useful for collecting results during bulk operations.
+
 ### Steps arguments
 
 Each step is called with the service context. To access a value in it, just provide its key as a keyword argument.
@@ -411,6 +419,41 @@ For example, if the provided key is `user_id` and its value is `1`, then the res
 This step wraps other steps. If the condition is not met (meaning the related method returns a falsy value), the steps inside its block will be skipped but the execution flow won’t be halted.
 
 That step is very useful when you have several steps depending on the same condition to be run, as it allows to keep all the error handling provided by steps like `model`, `policy`, etc.
+
+### `each(collection_name, as: nil, persist: nil, &block)`
+
+**Arguments**
+
+- _collection_name_: the name of the context key holding the collection to iterate over.
+- _as_: override the singularized item name. For example, `each :users, as: :member` provides `member:` instead of `user:`.
+- _persist_: keys that should accumulate across iterations and survive the loop's variable isolation. Accepts a hash where values are lambdas or method symbols used to initialize the key, or an array of symbols for keys without initialization.
+- _block_: a block containing other steps.
+
+This step iterates over a collection and runs the steps defined in its block for each item. Each iteration receives the singularized item name (e.g., `user:` for `each :users`) and `index:` as keyword arguments.
+
+By default, variables set inside the loop are isolated: they don't leak to the outer context. The `persist:` option allows specific keys to survive the isolation. This is particularly useful for accumulating results during bulk operations.
+
+If any nested step fails (a policy returns falsy, a model is not found, or `fail!` is called), iteration stops immediately and the service fails. The failing item and index remain available in context for error reporting, and existing matchers (`on_failed_policy`, `on_model_not_found`, etc.) work as expected.
+
+An empty collection is silently skipped.
+
+```rb
+# Fail-fast iteration
+each :users do
+  policy :can_delete
+  step :destroy
+end
+
+# Accumulating results across iterations
+each :tag_names, persist: { results: -> { { created: [], failed: [] } } } do
+  step :create_tag
+end
+
+# Custom item name
+each :users, as: :target_user do
+  step :process
+end
+```
 
 ### `step(name)`
 

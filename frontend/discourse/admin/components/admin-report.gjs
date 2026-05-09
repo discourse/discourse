@@ -323,6 +323,15 @@ export default class AdminReport extends Component {
     });
   }
 
+  get chartGroupingSegmentItems() {
+    return this.chartGroupings.map((g) => ({
+      value: g.id,
+      label: i18n(g.label),
+      disabled: g.disabled,
+      class: `chart-grouping ${g.id}`,
+    }));
+  }
+
   @action
   onChangeDateRange(range) {
     this.userHasCustomDates = true;

@@ -132,6 +132,8 @@ en_GB:
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
   user_notifications:
+    digest:
+      subject_template_improved: "Summary"
     signup_after_approval:
       text_body_template: |
         Welcome to %{site_name}!

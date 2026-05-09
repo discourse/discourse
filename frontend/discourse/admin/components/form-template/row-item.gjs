@@ -59,13 +59,13 @@ export default class FormTemplateRowItem extends Component {
           @title="admin.form_templates.list_table.actions.view"
           @icon="far-eye"
           @action={{fn (mut this.showViewTemplateModal) true}}
-          class="btn-view-template"
+          class="btn-default btn-view-template"
         />
         <DButton
           @title="admin.form_templates.list_table.actions.edit"
           @icon="pencil"
           @action={{this.editTemplate}}
-          class="btn-edit-template"
+          class="btn-default btn-edit-template"
         />
         <DButton
           @title="admin.form_templates.list_table.actions.delete"

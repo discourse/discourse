@@ -15,6 +15,7 @@ he:
       alt:
         solved:
           accepted_notification: "התקבל"
+          topic_solved_notification: "נפתר"
     solutions: "פתרונות"
     solved:
       title: "נפתר"
@@ -31,7 +32,6 @@ he:
         two: "פתרונות"
         many: "פתרונות"
         other: "פתרונות"
-      accepted_answer_solver_info: "נפתר על ידי %{user} ב־%{post}"
       accepted_answer_post_number: "פוסט %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -41,15 +41,17 @@ he:
       no_solved_topics_title: "עדיין לא פתרת אף נושא"
       no_solved_topics_title_others: "אין נושאים שנפתרו על ידי %{username} עדיין"
       no_solved_topics_body: "לאחר שכתבת תגובה מועילה לנושא, התגובה שלך עשויה להיבחר כפתרון על ידי בעלי הנושא או הסגל."
-      marked_solved_by: "סומן כפתור על ידי %{user}"
       move_post_cancel: "ביטול"
       confirm_solved_removal_confirm: "אישור"
       confirm_solved_removal_cancel: "ביטול"
       no_answer:
         title: התשובה שלך נענתה?
         description: "ניתן להדגיש את התשובה ולסייע לאחרים על ידי לחיצה על כפתור הפתרון שלהלן מתחת לתגובה הנכונה."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "הפוסט שלך סומן כפתרון"
+      category_type_support:
+        title: "תמיכה"
     topic_statuses:
       solved:
         help: "לנושא הזה יש פתרון"

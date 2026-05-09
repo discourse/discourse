@@ -162,6 +162,15 @@ export default class ToolbarPopupMenuOptions extends Component {
     return config.icon;
   }
 
+  get triggerLabel() {
+    const label = this.args.triggerLabel;
+    if (typeof label === "function") {
+      return label({ state: this.textManipulationState });
+    }
+
+    return label;
+  }
+
   <template>
     <DMenu
       @identifier={{concat "toolbar-menu__" @class}}
@@ -180,9 +189,17 @@ export default class ToolbarPopupMenuOptions extends Component {
     >
       <:trigger>
         {{icon (this.getIcon this.args)}}
+        {{#if this.triggerLabel}}
+          <span class="toolbar-popup-menu-options__trigger-label">
+            {{this.triggerLabel}}
+          </span>
+        {{/if}}
       </:trigger>
       <:content>
         <DropdownMenu {{this.trackScrollability}} as |dropdown|>
+          {{#if @header}}
+            <li class="dropdown-menu__header">{{@header}}</li>
+          {{/if}}
           {{#each this.convertedContent as |option|}}
             <dropdown.item>
               <DButton

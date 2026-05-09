@@ -540,9 +540,7 @@ RSpec.describe RemoteTheme do
         expect(theme.theme_site_settings.count).to eq(0)
       end
 
-      # TODO (martin) Hard to test this without a better example...we don't have any
-      # theme site settings that are an enum with > 2 values.
-      xit "does not override user modified theme site settings" do
+      it "does not override user modified theme site settings" do
         add_to_git_repo(
           initial_repo,
           "about.json" =>
@@ -557,14 +555,7 @@ RSpec.describe RemoteTheme do
 
         theme.theme_site_settings.first.update!(value: "search_icon")
 
-        add_to_git_repo(
-          initial_repo,
-          "about.json" =>
-            JSON
-              .parse(about_json)
-              .merge("theme_site_settings" => { "search_experience" => "search_field" })
-              .to_json,
-        )
+        add_to_git_repo(initial_repo, "common/header.html" => "a new header")
 
         theme.remote_theme.update_from_remote
         theme.reload

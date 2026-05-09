@@ -205,9 +205,6 @@ fr:
               description: "Facultatif, limitez le déclenchement aux seules publications dotées de ces caractéristiques"
           created: Créé
           edited: Modifié
-          topics: Tous les sujets
-          personal_messages: Messages privés
-          public_topics: Sujets publics (exclure toutes les catégories sécurisées)
           with_images: Images
           with_links: Liens
           with_code: Code

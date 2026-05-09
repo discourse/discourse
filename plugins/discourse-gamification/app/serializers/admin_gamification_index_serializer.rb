@@ -2,7 +2,7 @@
 
 class AdminGamificationIndexSerializer < ApplicationSerializer
   attribute :gamification_recalculate_scores_remaining
-  has_many :gamification_leaderboards, serializer: LeaderboardSerializer, embed: :objects
+  has_many :gamification_leaderboards, serializer: AdminLeaderboardSerializer, embed: :objects
   has_many :gamification_groups, serializer: BasicGroupSerializer, embed: :object
 
   def gamification_leaderboards

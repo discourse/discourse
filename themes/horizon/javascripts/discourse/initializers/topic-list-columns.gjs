@@ -18,10 +18,10 @@ const TOPIC_CARD_CONTEXTS = [
 
 const SIMPLE_CARD_CONTEXTS = ["suggested", "related"];
 
-const isTopicCardContext = (listContext) =>
-  TOPIC_CARD_CONTEXTS.includes(listContext);
+const isTopicCardContext = ({ listContext, category }) =>
+  TOPIC_CARD_CONTEXTS.includes(listContext) && !category?.doc_index_topic_id;
 
-const isSimpleCardContext = (listContext) =>
+const isSimpleCardContext = ({ listContext }) =>
   SIMPLE_CARD_CONTEXTS.includes(listContext);
 
 const TopicActivity = <template>
@@ -115,7 +115,7 @@ export default {
       api.registerValueTransformer(
         "topic-list-class",
         ({ value: classes, context }) => {
-          if (isTopicCardContext(context.listContext)) {
+          if (isTopicCardContext(context)) {
             classes.push("--d-topic-cards");
           }
           return classes;
@@ -125,11 +125,11 @@ export default {
       api.registerValueTransformer(
         "topic-list-columns",
         ({ value: columns, context }) => {
-          if (!isTopicCardContext(context.listContext)) {
+          if (!isTopicCardContext(context)) {
             return columns;
           }
 
-          isHighContext && !isSimpleCardContext(context.listContext)
+          isHighContext && !isSimpleCardContext(context)
             ? applyHighContextLayout(columns)
             : applySimpleLayout(columns);
 
@@ -140,11 +140,11 @@ export default {
       api.registerValueTransformer(
         "topic-list-item-class",
         ({ value: classes, context }) => {
-          if (!isTopicCardContext(context.listContext)) {
+          if (!isTopicCardContext(context)) {
             return classes;
           }
 
-          if (isHighContext && !isSimpleCardContext(context.listContext)) {
+          if (isHighContext && !isSimpleCardContext(context)) {
             classes.push("--high-context");
           }
 
@@ -168,7 +168,7 @@ export default {
       api.registerValueTransformer(
         "topic-list-item-mobile-layout",
         ({ value, context }) => {
-          if (isTopicCardContext(context.listContext)) {
+          if (isTopicCardContext(context)) {
             return false;
           }
           return value;
@@ -177,8 +177,15 @@ export default {
 
       api.registerBehaviorTransformer(
         "topic-list-item-click",
-        ({ context: { event, listContext }, next }) => {
-          if (!isTopicCardContext(listContext)) {
+        ({ context, next }) => {
+          const { event, topic, listContext } = context;
+
+          if (
+            !isTopicCardContext({
+              listContext,
+              category: topic?.category,
+            })
+          ) {
             return next();
           }
 

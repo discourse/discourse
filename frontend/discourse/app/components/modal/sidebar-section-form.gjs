@@ -394,7 +394,7 @@ export default class SidebarSectionForm extends Component {
   @afterRender
   focusNewRowInput(id) {
     document
-      .querySelector(`[data-row-id="${id}"] .icon-picker summary`)
+      .querySelector(`[data-row-id="${id}"] .d-icon-grid-picker-trigger`)
       .focus();
   }
 

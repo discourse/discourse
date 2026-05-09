@@ -41,6 +41,10 @@ module PageObjects
         end
       end
 
+      def remove_selected_option(title)
+        find(".d-multi-select-trigger__selected-item", text: title).click
+      end
+
       def option(selector, match = nil)
         params = {}
         params[:match] = match if match

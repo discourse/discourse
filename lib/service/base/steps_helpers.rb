@@ -49,6 +49,10 @@ module Service
       def only_if(name, &block)
         steps << OnlyIfStep.new(name, &block)
       end
+
+      def each(collection_name, as: nil, persist: nil, &block)
+        steps << EachStep.new(collection_name, as:, persist:, &block)
+      end
     end
   end
 end

@@ -2,7 +2,7 @@
 
 RSpec.describe "Assign | Group assigned" do
   fab!(:admin)
-  fab!(:group)
+  fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone]) }
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -15,11 +15,18 @@ RSpec.describe "Assign | Group assigned" do
     group.add(admin)
     SiteSetting.assign_enabled = true
     SiteSetting.assign_allowed_on_groups = group.id.to_s
-    Assigner.new(topic, Discourse.system_user).assign(admin)
     sign_in(admin)
   end
 
+  it "shows empty state when group has no assignments" do
+    visit "/g/#{group.name}/assigned/everyone"
+
+    expect(page).to have_css(".empty-state")
+    expect(page).to have_css(".empty-state__title")
+  end
+
   it "allows to bulk select assigned topics" do
+    Assigner.new(topic, Discourse.system_user).assign(admin)
     visit "/g/#{group.name}/assigned/everyone"
 
     topic_list_header.click_bulk_select_button

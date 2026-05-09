@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .form-kit__row {
   display: flex;
   flex-wrap: wrap;
@@ -26,7 +28,11 @@
   }
 
   .form-kit__button {
-    height: 2em;
+    height: 2.25em;
+
+    @include viewport.from(sm) {
+      height: 2em;
+    }
   }
 
   .form-kit__container-title {

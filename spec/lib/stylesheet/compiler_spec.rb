@@ -9,6 +9,9 @@ RSpec.describe Stylesheet::Compiler do
 
       path = File.basename(path, ".scss")
 
+      # mobile.scss and mobile_rtl.scss are intentionally empty stubs
+      next if path.start_with?("mobile")
+
       it "can compile '#{path}' css" do
         css, _map = Stylesheet::Compiler.compile_asset(path)
         expect(css.length).to be > 500

@@ -8,7 +8,7 @@ export function lookupCachedUploadUrl(shortUrl) {
   return _cache[shortUrl] || {};
 }
 
-const MISSING = "missing";
+export const MISSING = "missing";
 
 export function lookupUncachedUploadUrls(urls, ajax) {
   urls = urls.filter(Boolean);

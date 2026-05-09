@@ -12,9 +12,17 @@ module PageObjects
         self
       end
 
-      def select_bundled_action(reviewable, value)
+      def select_bundled_action(reviewable, value, bundle_index: nil)
         within(reviewable_by_id(reviewable.id)) do
-          reviewable_action_dropdown.select_row_by_value(value)
+          dropdown =
+            if bundle_index
+              PageObjects::Components::SelectKit.new(
+                "#{REVIEWABLE_ACTION_DROPDOWN}:nth-of-type(#{bundle_index})",
+              )
+            else
+              reviewable_action_dropdown
+            end
+          dropdown.select_row_by_value(value)
         end
       end
 
@@ -141,6 +149,12 @@ module PageObjects
       def has_context_question?(reviewable, text)
         within(reviewable_by_id(reviewable.id)) do
           page.has_css?(".review-item__aside-title", text: text)
+        end
+      end
+
+      def has_no_context_question?(reviewable, text)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_no_css?(".review-item__aside-title", text: text)
         end
       end
 

@@ -11,6 +11,7 @@ class Post < ActiveRecord::Base
   include LimitedEdit
   include Localizable
   include HasPostUploadReferences
+  include HasNestedReplyStats
 
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
   self.plugin_permitted_create_params = {}
@@ -517,12 +518,18 @@ class Post < ActiveRecord::Base
       )
   end
 
+  # In a nested-view topic, a "root" reply (no reply_to_post_number) is
+  # treated as targeting post 1, so the OP gets the :replied notification.
+  # New callers that don't want this behavior should branch on the topic
+  # type before calling.
   def reply_notification_target
-    return if reply_to_post_number.blank?
+    target_post_number = reply_to_post_number
+    target_post_number = 1 if target_post_number.blank? && topic&.nested_view?
+    return if target_post_number.blank?
     Post.find_by(
       "topic_id = :topic_id AND post_number = :post_number AND user_id <> :user_id",
       topic_id: topic_id,
-      post_number: reply_to_post_number,
+      post_number: target_post_number,
       user_id: user_id,
     ).try(:user)
   end

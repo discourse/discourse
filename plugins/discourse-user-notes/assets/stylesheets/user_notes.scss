@@ -3,6 +3,11 @@
     width: 100%;
   }
 
+  .form-kit__control-textarea {
+    max-width: 100%;
+    min-width: 100%;
+  }
+
   .posted-by {
     width: 40px;
     float: left;
@@ -45,6 +50,10 @@
 
   .show-reviewable {
     margin-right: 0.5em;
+  }
+
+  .show-post {
+    margin-bottom: var(--space-4);
   }
 }
 

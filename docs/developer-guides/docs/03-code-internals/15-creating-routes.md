@@ -54,16 +54,18 @@ Of course, as you build your feature to add more complexity you likely wouldn’
 
 ### The Client Side (Ember.js)
 
-If you open up your browser and visit `/admin/snack` (without the .json) you’ll see that Discourse says “Oops! That page doesn’t exist.” — that’s because there’s nothing in our front end Ember application to respond to the route. Let’s add a [handlebars template](https://guides.emberjs.com/v1.10.0/templates/handlebars-basics/) to show our snack:
+If you open up your browser and visit `/admin/snack` (without the .json) you’ll see that Discourse says “Oops! That page doesn’t exist.” — that’s because there’s nothing in our front end Ember application to respond to the route. Let’s add a `.gjs` template to show our snack:
 
-**app/assets/javascripts/admin/templates/snack.hbs**
+**app/assets/javascripts/admin/templates/snack.gjs**
 
-```hbs
-<h1>{{model.name}}</h1>
+```gjs
+<template>
+  <h1>{{@controller.model.name}}</h1>
 
-<hr />
+  <hr />
 
-<p>{{model.description}}</p>
+  <p>{{@controller.model.description}}</p>
+</template>
 ```
 
 And, like on the Rails API side we need to wire up the route. Open the file `app/assets/javascripts/admin/routes/admin-route-map.js` and look for the `export default function()` method. Add the following line:
@@ -72,7 +74,7 @@ And, like on the Rails API side we need to wire up the route. Open the file `app
 this.route("snack");
 ```
 
-We have one final thing left to do in Ember land, and that’s to have the Ember application perform an AJAX request to fetch our JSON from the server. Let’s create one last file. This will be an [Ember Route](https://guides.emberjs.com/v1.10.0/routing/specifying-a-routes-model/). Its `model()` function will be called when the route is entered, so we’ll make our `ajax` call in there:
+We have one final thing left to do in Ember land, and that’s to have the Ember application perform an AJAX request to fetch our JSON from the server. Let’s create one last file. This will be an [Ember Route](https://guides.emberjs.com/release/routing/specifying-a-routes-model/). Its `model()` function will be called when the route is entered, so we’ll make our `ajax` call in there:
 
 **app/assets/javascripts/admin/routes/admin-snack.js**
 
@@ -100,7 +102,7 @@ Now, you can open your browser to `/admin/snack` and you should see the details 
 
 - The `admin_snack_controller` returns JSON
 
-- The Ember application gets the JSON and renders the Handlebars template
+- The Ember application gets the JSON and renders the `.gjs` template
 
 ### Where to go from here
 

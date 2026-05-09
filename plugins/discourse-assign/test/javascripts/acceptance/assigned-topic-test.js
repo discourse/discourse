@@ -81,7 +81,7 @@ function assignNewUserToTopic(needs) {
   });
 }
 
-acceptance(`Discourse Assign | Assigned topic`, function (needs) {
+acceptance("Assigned topic", function (needs) {
   needs.user();
   needs.settings({
     assign_enabled: true,
@@ -196,7 +196,7 @@ acceptance(`Discourse Assign | Assigned topic`, function (needs) {
   });
 });
 
-acceptance(`Discourse Assign | Reassign topic`, function (needs) {
+acceptance("Reassign topic", function (needs) {
   needs.user();
   needs.settings({
     assign_enabled: true,
@@ -219,7 +219,7 @@ acceptance(`Discourse Assign | Reassign topic`, function (needs) {
   });
 });
 
-acceptance(`Discourse Assign | Reassign topic | mobile`, function (needs) {
+acceptance("Reassign topic | mobile", function (needs) {
   needs.user();
   needs.mobileView();
   needs.settings({
@@ -242,7 +242,7 @@ acceptance(`Discourse Assign | Reassign topic | mobile`, function (needs) {
   });
 });
 
-acceptance(`Discourse Assign | Reassign topic conditionals`, function (needs) {
+acceptance("Reassign topic conditionals", function (needs) {
   needs.user();
   needs.settings({
     assign_enabled: true,
@@ -263,7 +263,7 @@ acceptance(`Discourse Assign | Reassign topic conditionals`, function (needs) {
   });
 });
 
-acceptance(`Discourse Assign | Assignee name XSS escaping`, function (needs) {
+acceptance("Assignee name XSS escaping", function (needs) {
   const XSS_PAYLOAD = '<img src="xss-test">';
 
   needs.user();

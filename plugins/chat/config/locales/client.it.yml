@@ -277,7 +277,6 @@ it:
       retry_staged_message:
         title: "Errore di rete"
         action: "Inviare di nuovo?"
-      unreliable_network: "La rete non è affidabile, l'invio di messaggi e il salvataggio della bozza potrebbero non funzionare"
       bookmark_message: "Aggiungi ai segnalibri"
       bookmark_message_edit: "Modifica segnalibri"
       restore: "Ripristina messaggio eliminato"

@@ -15,8 +15,6 @@ cs:
       reactions_title: "Reakce"
       state_panel:
         more_users: "%{count} navíc..."
-      reaction:
-        forbidden: "Tato reakce byla vytvořena již před příliš dlouhou dobou, nelze ji dále měnit ani odstraňovat."
       picker:
         react_with: "Reagovat na tento příspěvek pomocí: %{reaction}"
         cant_remove_reaction: "Svou reakci již nemůžete odstranit"

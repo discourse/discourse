@@ -24,8 +24,6 @@ class MiniSchedulerLongRunningJobLogger
   def start
     @thread ||=
       Thread.new do
-        hostname = Discourse.os_hostname
-
         loop do
           break if self.stop_requested?
 

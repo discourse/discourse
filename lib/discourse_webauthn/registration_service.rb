@@ -154,7 +154,7 @@ module DiscourseWebauthn
 
       # see https://w3c.github.io/webauthn/#attested-credential-data for lengths
       # of data for extraction
-      aa_guid = attested_credential_data[0..15]
+      # aa_guid = attested_credential_data[0..15]
       credential_id_length = attested_credential_data[16..17].unpack("n*")[0]
       credential_id = attested_credential_data[18..(18 + credential_id_length - 1)]
 

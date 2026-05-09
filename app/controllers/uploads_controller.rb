@@ -386,7 +386,7 @@ class UploadsController < ApplicationController
     response.headers["Content-Security-Policy"] = "sandbox;"
 
     file_path = Discourse.store.path_for(upload)
-    return render_404 unless file_path
+    return render_404 unless file_path && File.exist?(file_path)
 
     send_file(file_path, opts)
   end

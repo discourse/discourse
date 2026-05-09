@@ -72,6 +72,12 @@ module PageObjects
         save_setting(setting)
       end
 
+      def toggle_bool_setting(setting_name)
+        setting = find_setting(setting_name)
+        setting.find(".setting-value input[type='checkbox']").click
+        save_setting(setting)
+      end
+
       def change_number_setting(setting_name, value, save_changes = true)
         setting = find_setting(setting_name)
         setting.fill_in(with: value)
@@ -152,6 +158,15 @@ module PageObjects
         find_setting(setting_name).find(".setting-theme-warning__text").has_text?(theme_name) &&
           find_setting(setting_name).find(".setting-theme-warning__text").has_link?(
             href: "/admin/customize/themes/#{theme_id}",
+          )
+      end
+
+      def has_upcoming_change_default_warning?(setting_name, old_default:, new_default:)
+        find_setting(setting_name).find(".setting-upcoming-change-warning__text").has_text?(
+          "The default for this setting has changed from #{old_default} to #{new_default}",
+        ) &&
+          find_setting(setting_name).find(".setting-upcoming-change-warning__text").has_link?(
+            href: "/admin/config/upcoming-changes?changeNamesFilter=enable_upload_debug_mode",
           )
       end
 

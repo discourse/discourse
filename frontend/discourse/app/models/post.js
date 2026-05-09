@@ -1,20 +1,20 @@
 import { cached, tracked } from "@glimmer/tracking";
-import EmberObject, { computed, get } from "@ember/object";
-import { alias, and, equal, not, or } from "@ember/object/computed";
+import EmberObject, { computed, get, set } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { propertyEqual } from "discourse/lib/computed";
+import getURL from "discourse/lib/get-url";
+import { deepEqual } from "discourse/lib/object";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import {
   defineTrackedProperty,
   enumerateTrackedKeys,
 } from "discourse/lib/tracked-tools";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
@@ -155,6 +155,7 @@ export default class Post extends RestModel {
   @tracked customShare = null;
   @tracked deleted_at;
   @tracked deleted_by;
+  @tracked deleted_post_placeholder;
   @tracked excerpt;
   @tracked expandedExcerpt;
   @tracked group_moderator;
@@ -199,16 +200,10 @@ export default class Post extends RestModel {
   @tracked via_email;
   @tracked wiki;
   @tracked yours;
-
-  @alias("can_edit") canEdit; // for compatibility with existing code
-  @equal("trust_level", 0) new_user;
-  @equal("post_number", 1) firstPost;
-  @and("firstPost", "topic.deleted_at") deletedViaTopic; // mark fist post as deleted if topic was deleted
-  @or("deleted_at", "deletedViaTopic") deleted; // post is either highlighted as deleted or hidden/removed from the post stream
-  @not("deleted") notDeleted;
-  @or("deleted_at", "user_deleted") recoverable; // post or content still can be recovered
-  @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
-  @alias("topic.details.created_by.id") topicCreatedById;
+  // for compatibility with existing code
+  // mark fist post as deleted if topic was deleted
+  // post is either highlighted as deleted or hidden/removed from the post stream
+  // post or content still can be recovered
 
   constructor() {
     super(...arguments);
@@ -219,9 +214,61 @@ export default class Post extends RestModel {
     });
   }
 
+  @dependentKeyCompat
+  get canEdit() {
+    return this.can_edit;
+  }
+
+  set canEdit(value) {
+    this.can_edit = value;
+  }
+
+  @dependentKeyCompat
+  get new_user() {
+    return this.trust_level === 0;
+  }
+
+  @dependentKeyCompat
+  get firstPost() {
+    return this.post_number === 1;
+  }
+
+  @computed("firstPost", "topic.deleted_at")
+  get deletedViaTopic() {
+    return this.firstPost && this.topic?.deleted_at;
+  }
+
+  @computed("deleted_at", "deletedViaTopic")
+  get deleted() {
+    return this.deleted_at || this.deletedViaTopic;
+  }
+
+  @computed("deleted")
+  get notDeleted() {
+    return !this.deleted;
+  }
+
+  @dependentKeyCompat
+  get recoverable() {
+    return this.deleted_at || this.user_deleted;
+  }
+
+  @computed("topic.details.created_by.id", "user_id")
+  get topicOwner() {
+    return deepEqual(this.topic?.details?.created_by?.id, this.user_id);
+  }
+
+  @computed("topic.details.created_by.id")
+  get topicCreatedById() {
+    return this.topic?.details?.created_by?.id;
+  }
+
+  set topicCreatedById(value) {
+    set(this, "topic.details.created_by.id", value);
+  }
+
   get shareUrl() {
-    const url = this.customShare || resolveShareUrl(this.url, this.currentUser);
-    return applyValueTransformer("post-share-url", url, { post: this });
+    return this.customShare || resolveShareUrl(this.url, this.currentUser);
   }
 
   @computed("name", "username")
@@ -241,8 +288,19 @@ export default class Post extends RestModel {
     return this.firstPost ? this.topic?.deleted_at : this.deleted_at;
   }
 
-  @computed("post_number", "topic_id", "topic.slug")
+  @computed(
+    "post_number",
+    "topic_id",
+    "topic.slug",
+    "topic.is_nested_view",
+    "topic._forcedFlat"
+  )
   get url() {
+    if (this.topic?.is_nested_view && !this.topic?._forcedFlat) {
+      const slug = this.topic.slug || "topic";
+      const topicId = this.topic_id || this.topic.id;
+      return getURL(`/n/${slug}/${topicId}/${this.post_number}`);
+    }
     return postUrl(
       this.topic?.slug || this.topic_slug,
       this.topic_id || this.get("topic.id"),

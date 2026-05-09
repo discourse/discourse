@@ -108,9 +108,6 @@ ro:
               label: Caracteristici postare
               description: "Opțional, limitează declanșarea numai la postările cu aceste caracteristici"
           created: Creat
-          topics: Toate subiectele
-          personal_messages: Mesaje personale
-          public_topics: Subiecte publice (exclude toate categoriile securizate)
           with_images: Imagini
           with_links: Legături
           with_code: Cod

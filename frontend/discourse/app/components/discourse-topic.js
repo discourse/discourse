@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -22,9 +22,6 @@ import { highlightPost } from "discourse/lib/utilities";
 export default class DiscourseTopic extends Component {
   @service scrollManager;
 
-  @alias("topic.userFilters") userFilters;
-  @alias("topic.postStream") postStream;
-
   menuVisible = true;
   SHORT_POST = 1200;
   dockAt = 0;
@@ -41,6 +38,24 @@ export default class DiscourseTopic extends Component {
     // this happens after route exit, stuff could have trickled in
     this.appEvents.off("discourse:focus-changed", this, "gotFocus");
     this.appEvents.off("post:highlight", this, "_highlightPost");
+  }
+
+  @computed("topic.userFilters")
+  get userFilters() {
+    return this.topic?.userFilters;
+  }
+
+  set userFilters(value) {
+    set(this, "topic.userFilters", value);
+  }
+
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
   }
 
   @observes("enteredAt")

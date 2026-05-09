@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import AdminSiteSettingsFilterControls from "discourse/admin/components/admin-site-settings-filter-controls";
 import SiteSetting from "discourse/admin/components/site-setting";
@@ -12,7 +13,10 @@ import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
 
 export default class AdminFilteredSiteSettings extends Component {
-  @tracked visibleSettings;
+  @service adminSiteSettingStore;
+
+  @tracked matchedSettings;
+  @tracked activeFilter = "";
   @tracked loading = true;
 
   siteSettingFilter = new SiteSettingFilter(this.args.settings);
@@ -25,6 +29,12 @@ export default class AdminFilteredSiteSettings extends Component {
   @action
   filterChanged(filterData) {
     this._debouncedOnChangeFilter(filterData);
+  }
+
+  get visibleSettings() {
+    return this.matchedSettings?.filter((setting) =>
+      this.adminSiteSettingStore.isVisible(setting, this.activeFilter)
+    );
   }
 
   get noResults() {
@@ -43,7 +53,8 @@ export default class AdminFilteredSiteSettings extends Component {
 
   filterSettings(filterData) {
     this.args.onFilterChanged(filterData);
-    this.visibleSettings = this.siteSettingFilter.filterSettings(
+    this.activeFilter = filterData.filter ?? "";
+    this.matchedSettings = this.siteSettingFilter.filterSettings(
       filterData.filter,
       {
         includeAllCategory: false,

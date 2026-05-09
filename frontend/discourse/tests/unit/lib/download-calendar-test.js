@@ -190,6 +190,30 @@ module("Unit | Utility | download-calendar", function (hooks) {
     );
   });
 
+  test("correct url for Google when recurring event with DTSTART prefix", function (assert) {
+    downloadGoogle(
+      "event",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+        },
+      ],
+      {
+        rrule:
+          "DTSTART:20211012T150000Z\nRRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR",
+      }
+    );
+    assert.true(
+      window.open.calledWith(
+        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z&recur=RRULE%3AFREQ%3DDAILY%3BBYDAY%3DMO%2CTU%2CWE%2CTH%2CFR",
+        "_blank",
+        "noopener",
+        "noreferrer"
+      )
+    );
+  });
+
   test("correct location for Google when location given", function (assert) {
     downloadGoogle(
       "event",

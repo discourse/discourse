@@ -6,6 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import onResize from "discourse/modifiers/on-resize";
 
 export default class ToolbarScrollContainer extends Component {
@@ -32,9 +33,19 @@ export default class ToolbarScrollContainer extends Component {
   checkScroll(element) {
     const { scrollWidth, scrollLeft, offsetWidth } = element;
     const hasOverflow = scrollWidth > offsetWidth;
-    this.hasLeftScroll = hasOverflow && scrollLeft > 2;
-    this.hasRightScroll =
-      hasOverflow && scrollWidth - scrollLeft - offsetWidth > 2;
+    const canScrollBack = hasOverflow && Math.abs(scrollLeft) > 2;
+    const canScrollForward =
+      hasOverflow && scrollWidth - Math.abs(scrollLeft) - offsetWidth > 2;
+
+    // Buttons stay in physical positions (rtl:ignore in CSS), but in RTL
+    // the scroll direction is reversed, so swap which button shows
+    if (isDocumentRTL()) {
+      this.hasLeftScroll = canScrollForward;
+      this.hasRightScroll = canScrollBack;
+    } else {
+      this.hasLeftScroll = canScrollBack;
+      this.hasRightScroll = canScrollForward;
+    }
   }
 
   @action

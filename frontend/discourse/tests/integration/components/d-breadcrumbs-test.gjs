@@ -46,6 +46,20 @@ module(
         .exists();
     });
 
+    test("separator is rendered on every item except the last", async function (assert) {
+      await render(
+        <template>
+          <DBreadcrumbsContainer />
+          <DBreadcrumbsItem @path="/admin" @label="Admin" />
+          <DBreadcrumbsItem @path="/admin/backups" @label="Backups" />
+          <DBreadcrumbsItem @path="/admin/backups/logs" @label="Logs" />
+        </template>
+      );
+
+      assert.dom(".d-breadcrumbs li .separator").exists({ count: 2 });
+      assert.dom(".d-breadcrumbs li:last-child .separator").doesNotExist();
+    });
+
     test("it renders multiple DBreadcrumbsContainer elements with the same DBreadcrumbsItem links", async function (assert) {
       await render(
         <template>

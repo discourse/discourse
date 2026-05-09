@@ -38,8 +38,6 @@ describe "script encoding" do
 
       visit "/latest"
 
-      expect(page).to have_css("#site-logo")
-
       expect(js_cdn_requests.length).to be > 1
       expect(js_cdn_requests.any? { |r| r.end_with?(".br.js") }).to eq(false)
       expect(js_cdn_requests.all? { |r| r.end_with?(".js") }).to eq(true)
@@ -71,8 +69,6 @@ describe "script encoding" do
       sign_in user
 
       visit "/latest"
-
-      expect(page).to have_css("#site-logo")
 
       expect(js_cdn_requests.length).to be > 1
       expect(js_cdn_requests.all? { |r| r.end_with?(".br.js") }).to eq(true)

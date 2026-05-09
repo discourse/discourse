@@ -11,6 +11,7 @@ import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
+import { i18n } from "discourse-i18n";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 
 export default class GroupReportsShowController extends Controller {
@@ -38,8 +39,8 @@ export default class GroupReportsShowController extends Controller {
 
   get bookmarkLabel() {
     return this.queryGroupBookmark
-      ? "bookmarked.edit_bookmark"
-      : "bookmarked.title";
+      ? i18n("bookmarked.edit_bookmark", { count: 1 })
+      : i18n("bookmarked.title");
   }
 
   get bookmarkIcon() {

@@ -65,7 +65,7 @@ pl_PL:
         title: Post utworzony/edytowany
         description: Gdy zostanie edytowany lub utworzony prawidłowy post, zostanie uruchomiona automatyzacja
       pm_created:
-        title: Utworzono osobistą wiadomość
+        title: Utworzono prywatną wiadomość
         description: Po utworzeniu poprawnej wiadomości automatyzacja zostanie uruchomiona
       topic_tags_changed:
         title: Zmieniono tagi tematu

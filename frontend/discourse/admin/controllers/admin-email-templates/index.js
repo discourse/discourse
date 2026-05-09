@@ -1,13 +1,20 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { sort } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
+import { arraySortedByProperties } from "discourse/lib/array-tools";
 
 export default class AdminEmailTemplatesIndexController extends Controller {
   @tracked showOverridenOnly = false;
 
   titleSorting = ["title"];
-  @sort("emailTemplates.content", "titleSorting") sortedTemplates;
+
+  @computed("emailTemplates.content", "titleSorting")
+  get sortedTemplates() {
+    return arraySortedByProperties(
+      this.emailTemplates?.content,
+      this.titleSorting
+    );
+  }
 
   get shownTemplates() {
     if (this.showOverridenOnly) {

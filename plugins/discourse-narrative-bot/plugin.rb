@@ -38,7 +38,7 @@ after_initialize do
   RailsMultisite::ConnectionManagement.safe_each_connection do
     if SiteSetting.discourse_narrative_bot_enabled
       # Disable welcome message because that is what the bot is supposed to replace.
-      SiteSetting.send_welcome_message = false
+      SiteSetting.send_welcome_message = false if SiteSetting.send_welcome_message
 
       certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
       if !SiteSetting.allowed_iframes.include?(certificate_path)

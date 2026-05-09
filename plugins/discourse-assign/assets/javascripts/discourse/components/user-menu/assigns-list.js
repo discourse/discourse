@@ -1,6 +1,8 @@
+import { tracked } from "@glimmer/tracking";
 import { set } from "@ember/object";
-import { sort } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
+import { arraySortedByProperties } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import UserMenuAssignsListEmptyState from "./assigns-list-empty-state";
 
@@ -58,15 +60,20 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
 }
 
 class SortedItems {
+  @tracked items;
+  @tracked
   itemsSorting = [
     "notification.read",
     "notification.data.message:desc",
     "notification.created_at:desc",
   ];
 
-  @sort("items", "itemsSorting") sortedItems;
-
   constructor(items) {
     set(this, "items", items);
+  }
+
+  @dependentKeyCompat
+  get sortedItems() {
+    return arraySortedByProperties(this.items, this.itemsSorting);
   }
 }

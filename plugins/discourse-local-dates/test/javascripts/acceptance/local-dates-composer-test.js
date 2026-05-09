@@ -6,7 +6,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("Local Dates - composer", function (needs) {
+acceptance("composer", function (needs) {
   needs.user();
   needs.settings({
     discourse_local_dates_enabled: true,

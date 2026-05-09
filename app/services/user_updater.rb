@@ -59,6 +59,7 @@ class UserUpdater
     watched_precedence_over_muted
     topics_unread_when_closed
     composition_mode
+    show_original_content
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
@@ -258,7 +259,7 @@ class UserUpdater
         )
       end
       DiscourseEvent.trigger(:within_user_updater_transaction, user, attributes)
-    rescue Addressable::URI::InvalidURIError => e
+    rescue Addressable::URI::InvalidURIError
       # Prevent 500 for crazy url input
       return saved
     end

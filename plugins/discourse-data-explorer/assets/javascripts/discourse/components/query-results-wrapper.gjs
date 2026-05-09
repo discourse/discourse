@@ -4,7 +4,12 @@ const QueryResultsWrapper = <template>
   {{#if @results}}
     <div class="query-results">
       {{#if @showResults}}
-        <QueryResult @query={{@query}} @content={{@results}} />
+        <QueryResult
+          @query={{@query}}
+          @content={{@results}}
+          @cachedAt={{@cachedAt}}
+          @showDownloads={{@showDownloads}}
+        />
       {{else}}
         {{#each @results.errors as |err|}}
           <pre class="query-error"><code>{{~err}}</code></pre>

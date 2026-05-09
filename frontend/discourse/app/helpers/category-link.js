@@ -71,6 +71,7 @@ export function categoryBadgeHTML(category, opts) {
       .map((c) => {
         return categoryBadgeHTML(c, {
           ...newOpts,
+          ...(c !== category ? { topicCount: undefined } : {}),
           ...(readOnly && c === category ? { readOnly } : {}),
         });
       })

@@ -1,6 +1,7 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { not } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import CategoryPermissionRow from "discourse/components/category-permission-row";
@@ -16,9 +17,12 @@ export default class EditCategorySecurity extends buildCategoryPanel(
 ) {
   @service site;
 
-  selectedGroup = null;
+  @tracked selectedGroup = null;
 
-  @not("selectedGroup") noGroupSelected;
+  @dependentKeyCompat
+  get noGroupSelected() {
+    return !this.selectedGroup;
+  }
 
   get everyonePermission() {
     return this.category.permissions.find(

@@ -68,7 +68,7 @@ export default class TopicMapSummary extends Component {
   }
 
   get topRepliesSummaryEnabled() {
-    return this.args.postStream.summary;
+    return this.args.postStream?.summary;
   }
 
   get topRepliesTitle() {
@@ -148,13 +148,13 @@ export default class TopicMapSummary extends Component {
 
   @action
   showTopReplies() {
-    this.args.postStream.showTopReplies();
+    this.args.postStream?.showTopReplies();
   }
 
   @action
   cancelFilter() {
-    this.args.postStream.cancelFilter();
-    this.args.postStream.refresh();
+    this.args.postStream?.cancelFilter();
+    this.args.postStream?.refresh();
   }
 
   @action

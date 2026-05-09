@@ -66,7 +66,7 @@ describe "User preferences | Profile" do
     it "client-side redirects to the profile page to fill up required fields" do
       visit("/faq")
 
-      expect(page).to have_current_path("/faq")
+      expect(page).to have_current_path("/guidelines")
 
       click_logo
 

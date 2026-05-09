@@ -187,6 +187,25 @@ class Service::StepsInspector
     end
   end
 
+  # @!visibility private
+  class Each < OnlyIf
+    def inspect
+      "#{"  " * nesting_level}\e[#{ansi_color}m[#{inspect_type}] #{name} (#{iteration_info})#{runtime}\e[0m #{skipped_emoji}".rstrip
+    end
+
+    private
+
+    def iteration_info
+      return "empty collection" if skipped?
+      "#{result[:index].to_i + 1}/#{step_result[:total].to_i}"
+    end
+
+    def skipped_emoji
+      return unless skipped?
+      emoji
+    end
+  end
+
   attr_reader :steps, :result
 
   def initialize(result)

@@ -122,7 +122,6 @@ module ImportExport
     end
 
     def export_category_groups
-      groups = []
       group_names = []
       auto_group_names = Group::AUTO_GROUPS.keys.map(&:to_s)
 

@@ -1,7 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
-import { gte, reads } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
-import { setting } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
 import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import {
@@ -18,12 +17,32 @@ import { i18n } from "discourse-i18n";
 })
 @pluginApiIdentifiers("group-dropdown")
 export default class GroupDropdown extends ComboBoxComponent {
-  @reads("groupsWithShortcut") content;
-  @gte("content.length", 10) hasManyGroups;
-  @setting("enable_group_directory") enableGroupDirectory;
-
   valueProperty = null;
   nameProperty = null;
+
+  @tracked _contentOverride;
+
+  @computed("groupsWithShortcut")
+  get content() {
+    if (this._contentOverride !== undefined) {
+      return this._contentOverride;
+    }
+    return this.groupsWithShortcut;
+  }
+
+  set content(value) {
+    this._contentOverride = value;
+  }
+
+  @computed("content.length")
+  get hasManyGroups() {
+    return this.content?.length >= 10;
+  }
+
+  @computed("siteSettings.enable_group_directory")
+  get enableGroupDirectory() {
+    return this.siteSettings.enable_group_directory;
+  }
 
   @computed("groups.[]")
   get groupsWithShortcut() {

@@ -105,6 +105,25 @@ export function subscribe(callback, applicationServerKey) {
   });
 }
 
+export async function getCurrentPushSubscription() {
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+    return null;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (!registration) {
+      return null;
+    }
+    const subscription = await registration.pushManager.getSubscription();
+    return subscription ? subscription.toJSON() : null;
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+    return null;
+  }
+}
+
 export function unsubscribe(user, callback) {
   if (!isPushNotificationsSupported()) {
     return;

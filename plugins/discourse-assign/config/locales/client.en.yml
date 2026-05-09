@@ -30,6 +30,8 @@ en:
       topic_search_placeholder: "Search topics by title or post content"
       sidebar_name_filter_placeholder: "Name/Username"
       assigned: "Assigned"
+      group_no_assignments_title: "No assignments"
+      group_no_assignments_body: "There are currently no active assignments for this group."
       group_everyone: "Everyone"
       assigned_to: "Assigned to"
       assigned_topic_to: "Assigned topic to <a href='%{path}'>%{username}</a>"

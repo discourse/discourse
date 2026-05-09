@@ -44,7 +44,7 @@ describe DiscourseAi::Translation::BaseTranslator do
 
       mock_bot = instance_double(DiscourseAi::Agents::Bot)
       allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(mock_bot)
-      allow(mock_bot).to receive(:reply).and_yield(llm_response)
+      allow(mock_bot).to receive(:reply).and_yield(llm_response, nil, nil)
 
       post_translator.translate
 

@@ -2389,9 +2389,23 @@ RSpec.describe Topic do
           TopicTimer.types[:publish_to_category],
           72,
           by_user: admin,
+          category_id: Fabricate(:category).id,
         )
 
       expect(topic_timer.execute_at).to eq_time(3.days.from_now)
+    end
+
+    it "raises an error for publish_to_category when category_id is not provided" do
+      freeze_time
+      persisted_topic = Fabricate(:topic)
+
+      expect {
+        persisted_topic.set_or_create_timer(
+          TopicTimer.types[:publish_to_category],
+          72,
+          by_user: admin,
+        )
+      }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "does not update topic's topic status created_at it was already set to close" do
@@ -3727,12 +3741,12 @@ RSpec.describe Topic do
 
       PostDestroyer.new(admin, post).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(
-        I18n.t("post.cannot_permanently_delete.many_posts"),
+        I18n.t("post.cannot_permanently_delete.many_posts", count: 1),
       )
 
       PostDestroyer.new(admin, post_2.reload).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(
-        I18n.t("post.cannot_permanently_delete.many_posts"),
+        I18n.t("post.cannot_permanently_delete.many_posts", count: 1),
       )
 
       PostDestroyer.new(admin, post_2.reload, force_destroy: true).destroy
@@ -3901,6 +3915,36 @@ RSpec.describe Topic do
 
       topic.update!(locale: "es")
       expect(topic.in_user_locale?).to eq(false)
+    end
+  end
+
+  describe "#nested_view?" do
+    fab!(:topic)
+
+    it "returns false when nested_replies_enabled is off" do
+      SiteSetting.nested_replies_enabled = false
+      SiteSetting.nested_replies_default = true
+      Fabricate(:nested_topic, topic: topic)
+      expect(topic.reload.nested_view?).to eq(false)
+    end
+
+    it "returns true when the topic has a nested_topic record and the feature is enabled" do
+      SiteSetting.nested_replies_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      expect(topic.reload.nested_view?).to eq(true)
+    end
+
+    it "returns true when nested_replies_default is on, even without a nested_topic record" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+      expect(topic.nested_view?).to eq(true)
+    end
+
+    it "returns false for private messages even when defaults are on" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+      pm = Fabricate(:private_message_topic)
+      expect(pm.nested_view?).to eq(false)
     end
   end
 end

@@ -265,7 +265,11 @@ ko:
   deleted_topic: "이 주제는 삭제되었으며 더는 사용할 수 없습니다."
   delete_topic_failed: "이 주제를 삭제하는 중에 오류가 발생했습니다. 사이트 관리자에게 문의하세요."
   reading_time: "읽은 시간"
+  reading_time_minutes:
+    other: "%{count}분 🕑"
   likes: "좋아요"
+  likes_count:
+    other: "%{count} ❤"
   too_many_replies:
     other: "신규 사용자는 일시적으로 동일 주제에 %{count}개까지만 댓글을 달 수 있습니다."
   max_consecutive_replies:
@@ -399,6 +403,7 @@ ko:
       admins: "관리자"
       moderators: "운영자"
       staff: "운영진"
+      anonymous: "익명"
       trust_level_0: "회원등급 0"
       trust_level_1: "회원등급 1"
       trust_level_2: "회원등급 2"
@@ -1098,6 +1103,8 @@ ko:
     page_view_anon_browser_reqs:
       xaxis: "일"
     page_view_logged_in_browser_reqs:
+      xaxis: "일"
+    page_view_embed_reqs:
       xaxis: "일"
     http_background_reqs:
       title: "백그라운드"
@@ -1921,7 +1928,6 @@ ko:
     not_available: "사용할 수 없습니다. %{suggestion} 아이디는 어떠세요?"
     something_already_taken: "문제가 발생했습니다. 아이디 또는 이메일이 이미 등록되어 있을 수 있습니다. 비밀번호 찾기 링크를 시도해 보세요."
     omniauth_error_unknown: "로그인을 처리하는 중에 문제가 발생했습니다. 다시 시도하세요."
-    omniauth_confirm_title: "%{provider} 로그인"
     omniauth_confirm_button: "계속"
     authenticator_error_no_valid_email: "%{account} 계정과 연결된 이메일 주소는 허용되지 않습니다. 다른 이메일 주소로 계정을 환경설정해야 할 수도 있습니다."
     new_registrations_disabled: "지금은 새 계정을 등록할 수 없습니다."
@@ -2346,7 +2352,6 @@ ko:
         차단된 이메일 주소를 사용하여 보낸 답장입니다. 다른 이메일 주소로 보내거나 [운영진에게 문의하세요](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "이메일 거부, 허용되지 않는 이메일"
-      subject_template: "[%{email_prefix}] 이메일 문제 -- 차단된 이메일"
       text_body_template: |
         %{destination}(제목: %{former_title})에 보낸 이메일 메시지가 거부되었습니다.
 
@@ -2504,7 +2509,6 @@ ko:
         주제에 댓글을 달 권한이 없습니다. 오류라고 생각되면 [운영진에게 문의하세요](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "이메일 거부, 요약에 답장"
-      subject_template: "[%{email_prefix}] 이메일 문제 -- 요약에 답장"
       text_body_template: |
         %{destination}(제목: %{former_title})에 보낸 이메일 메시지가 거부되었습니다.
 
@@ -2620,7 +2624,6 @@ ko:
       text_body_template: "`download_remote_images_threshold` 디스크 용량 한도에 도달하여 `download_remote_images_to_local` 설정이 비활성화되었습니다."
     new_user_of_the_month:
       title: "이달의 신규 사용자로 선정되었습니다!"
-      subject_template: "이달의 신규 사용자로 선정되었습니다!"
       text_body_template: |
         축하합니다. **%{month_year}의 신규 사용자** 로 선정되었습니다. :trophy:
 
@@ -2927,6 +2930,7 @@ ko:
     account_exists:
       title: "계정이 이미 존재함"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
+      subject_template_improved: "계정이 이미 존재합니다"
       text_body_template: |
         %{site_name}에서 계정을 만들려고 했거나 계정의 이메일을 %{email} 이메일로 변경하려고 시도했으나 %{email}의 계정이 이미 존재합니다.
 
@@ -2938,6 +2942,7 @@ ko:
     account_second_factor_disabled:
       title: "2단계 인증 비활성화됨"
       subject_template: "[%{email_prefix}] 2단계 인증 비활성화됨"
+      subject_template_improved: "2단계 인증 사용 안 함"
     digest:
       since_last_visit: "마지막 방문 이후"
       new_topics: "새 주제"
@@ -2950,6 +2955,7 @@ ko:
       popular_posts: "인기 게시물"
       more_new: "맞춤 신규 항목"
       subject_template: "[%{email_prefix}] 요약"
+      subject_template_improved: "요약"
       unsubscribe: "이 요약은 한동안 방문하지 않은 경우 %{site_link}에서 전송됩니다. %{email_preferences_link}에서 변경하거나 %{unsubscribe_link}에서 구독 해제할 수 있습니다."
       your_email_settings: "이메일 설정"
       click_here: "여기를 클릭"
@@ -2968,6 +2974,7 @@ ko:
       title: "링크를 통해 로그인"
       preview: "링크를 통해 로그인."
       subject_template: "[%{email_prefix}] 링크를 통해 로그인"
+      subject_template_improved: "링크를 통해 로그인"
       text_body_template: |
         다음은 [%{site_name}](%{base_url})에 로그인할 수 있는 링크입니다.
 
@@ -2977,7 +2984,6 @@ ko:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "비밀번호 설정"
-      subject_template: "[%{email_prefix}] 비밀번호 설정"
       text_body_template: |
         누군가가 [%{site_name}](%{base_url}) 계정에 비밀번호를 추가하도록 요청했습니다. 대안으로 검증된 이 이메일 주소와 연결된 지원되는 온라인 서비스(Google, Facebook 등)를 사용하여 로그인할 수 있습니다.
 
@@ -2988,6 +2994,7 @@ ko:
     admin_login:
       title: "관리자 로그인"
       subject_template: "[%{email_prefix}] 로그인"
+      subject_template_improved: "로그인"
       text_body_template: |
         누군가가 [%{site_name}](%{base_url}) 계정에 로그인하도록 요청했습니다.
 
@@ -2997,7 +3004,6 @@ ko:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "계정 생성됨"
-      subject_template: "[%{email_prefix}] 새 계정"
       text_body_template: |
         %{site_name}에서 새 계정이 생성되었습니다.
 
@@ -3107,7 +3113,6 @@ ko:
         위 링크를 클릭할 수 없으면 웹 브라우저의 주소 표시줄에 복사하여 붙여 넣으세요.
     suspicious_login:
       title: "새 로그인 알림"
-      subject_template: "[%{site_name}] %{location}에서 새 로그인 발생"
     post_approved:
       title: "게시물 승인됨"
       subject_template: "[%{site_name}] 게시물이 승인되었습니다"
@@ -3494,7 +3499,6 @@ ko:
       in_this_category: '이 카테고리에서는 ''%{tag_name}'' 태그를 사용할 수 없습니다'
       restricted_to:
         other: '''%{tag_name}'' 태그는 다음 카테고리로 제한됩니다. %{category_names}'
-      synonym: '동의어는 허용되지 않습니다. 대신 ''%{tag_name}'' 태그를 사용하세요.'
       has_synonyms: '''%{tag_name}''에는 동의어가 있으므로 사용할 수 없습니다.'
     required_tags_from_group:
       other: "최소 %{count}개의 %{tag_group_name} 태그를 포함해야 합니다. 이 그룹의 태그는 %{tags}입니다. %{tags}."

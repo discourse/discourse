@@ -77,6 +77,14 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           value: "other",
           filterFn: (change) => change.upcoming_change.impact_type === "other",
         },
+        {
+          label: i18n(
+            "admin.upcoming_changes.filter.impact_type_site_setting_default"
+          ),
+          value: "site_setting_default",
+          filterFn: (change) =>
+            change.upcoming_change.impact_type === "site_setting_default",
+        },
       ],
       impactRole: [
         {

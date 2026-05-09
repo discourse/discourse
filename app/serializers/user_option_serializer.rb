@@ -47,7 +47,8 @@ class UserOptionSerializer < ApplicationSerializer
              :watched_precedence_over_muted,
              :topics_unread_when_closed,
              :composition_mode,
-             :interface_color_mode
+             :interface_color_mode,
+             :show_original_content
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

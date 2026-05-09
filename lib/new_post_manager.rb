@@ -129,15 +129,18 @@ class NewPostManager
   end
 
   def self.post_needs_approval_in_its_category?(manager)
-    if manager.args[:topic_id].present?
-      cat = Category.joins(:topics).find_by(topics: { id: manager.args[:topic_id] })
-      return false unless cat
+    guardian = manager.user.guardian
 
-      topic = Topic.find(manager.args[:topic_id])
-      cat.require_reply_approval? && !manager.user.guardian.can_review_topic?(topic)
+    if manager.args[:topic_id].present?
+      topic = Topic.find_by(id: manager.args[:topic_id])
+      return false unless topic&.category
+
+      guardian.reply_posting_review_required?(topic.category) && !guardian.can_review_topic?(topic)
     elsif manager.args[:category].present?
-      cat = Category.find(manager.args[:category])
-      cat.require_topic_approval? && !manager.user.guardian.is_category_group_moderator?(cat)
+      category = Category.find(manager.args[:category])
+
+      guardian.topic_posting_review_required?(category) &&
+        !guardian.is_category_group_moderator?(category)
     else
       false
     end

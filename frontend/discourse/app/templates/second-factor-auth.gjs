@@ -23,7 +23,7 @@ export default <template>
         <DButton
           @action={{@controller.authenticateSecurityKey}}
           @icon="key"
-          @label="login.security_key_authenticate"
+          @label={{@controller.securityKeyAuthenticateLabel}}
           id="security-key-authenticate-button"
           class="btn-large btn-primary"
         />

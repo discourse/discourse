@@ -68,6 +68,22 @@ RSpec.describe Onebox::Engine::GithubFolderOnebox do
     end
   end
 
+  context "without opengraph tags" do
+    before do
+      @link = "https://github.com/organization/repo-foobar/tree/main/models"
+      @uri = "https://github.com/organization/repo-foobar/tree/main/models"
+
+      stub_request(:get, @uri).to_return(status: 200, body: onebox_response("githubfolder-no-og"))
+      @onebox = described_class.new(@link)
+    end
+
+    it "falls back to URL-derived title and path" do
+      html = @onebox.to_html
+      expect(html).to include("organization/repo-foobar")
+      expect(html).to include("main/models")
+    end
+  end
+
   describe ".===" do
     it "matches valid GitHub tree URL" do
       valid_url = URI("https://github.com/username/repository/tree/main")

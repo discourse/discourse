@@ -226,13 +226,6 @@ export default function setupTests(config) {
     );
   };
 
-  sinon.config = {
-    injectIntoThis: false,
-    injectInto: null,
-    properties: ["spy", "stub", "mock", "clock", "sandbox"],
-    useFakeTimers: true,
-  };
-
   // Stop the message bus so we don't get ajax calls
   MessageBus.stop();
 
@@ -396,14 +389,8 @@ export default function setupTests(config) {
 
   // core tests run without loading plugins or themes
   const isCoreTest = !hasPluginJs && !hasThemeJs;
-  const isPreinstalledPluginTest = !!(
-    document.querySelector(
-      // TODO (ROLLUP_PLUGIN_COMPILER): drop this legacy script tag check
-      `script[data-plugin-name="${CSS.escape(target)}"][data-preinstalled="true"]`
-    ) ||
-    document.querySelector(
-      `link[rel=modulepreload][data-plugin-name="${CSS.escape(target)}"][data-preinstalled="true"]`
-    )
+  const isPreinstalledPluginTest = !!document.querySelector(
+    `link[rel=modulepreload][data-plugin-name="${CSS.escape(target)}"][data-preinstalled="true"]`
   );
 
   if (

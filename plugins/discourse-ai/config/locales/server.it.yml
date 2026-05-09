@@ -104,88 +104,88 @@ it:
       xaxis: "Positività(%)"
       yaxis: "Data"
     emotion_admiration:
-      title: "\U0001F929 Ammirazione"
+      title: "🤩 Ammirazione"
       description: "Messaggi classificati con l'emozione ammirazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
-      title: "\U0001F604 Divertimento"
+      title: "😄 Divertimento"
       description: "Messaggi classificati con l'emozione divertimento tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
-      title: "\U0001F620 Rabbia"
+      title: "😠 Rabbia"
       description: "Messaggi classificati con l'emozione rabbia tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
-      title: "\U0001F612 Fastidio"
+      title: "😒 Fastidio"
       description: "Messaggi classificati con l'emozione fastidio tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
-      title: "\U0001F44D Approvazione"
+      title: "👍 Approvazione"
       description: "Messaggi classificati con l'emozione approvazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
-      title: "\U0001F917 Premura"
+      title: "🤗 Premura"
       description: "Messaggi classificati con l'emozione premuroso tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
-      title: "\U0001F615 Confusione"
+      title: "😕 Confusione"
       description: "Messaggi classificati con l'emozione confusione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
-      title: "\U0001F914 Curiosità"
+      title: "🤔 Curiosità"
       description: "Messaggi classificati con l'emozione curiosità tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
-      title: "\U0001F60D Desiderio"
+      title: "😍 Desiderio"
       description: "Messaggi classificati con l'emozione desiderio tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
-      title: "\U0001F61E Delusione"
+      title: "😞 Delusione"
       description: "Messaggi classificati con l'emozione delusione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
-      title: "\U0001F44E Disapprovazione"
+      title: "👎 Disapprovazione"
       description: "Messaggi classificati con l'emozione disapprovazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
-      title: "\U0001F922 Disgusto"
+      title: "🤢 Disgusto"
       description: "Messaggi classificati con l'emozione disgusto tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
-      title: "\U0001F633 Imbarazzo"
+      title: "😳 Imbarazzo"
       description: "Messaggi classificati con l'emozione imbarazzo tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
-      title: "\U0001F92A Eccitazione"
+      title: "🤪 Eccitazione"
       description: "Messaggi classificati con l'emozione eccitazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
-      title: "\U0001F628 Paura"
+      title: "😨 Paura"
       description: "Messaggi classificati con l'emozione paura tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
-      title: "\U0001F64F Gratitudine"
+      title: "🙏 Gratitudine"
       description: "Messaggi classificati con l'emozione gratitudine tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
-      title: "\U0001F622 Dolore"
+      title: "😢 Dolore"
       description: "Messaggi classificati con l'emozione dolore tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
-      title: "\U0001F60A Gioia"
+      title: "😊 Gioia"
       description: "Messaggi classificati con l'emozione gioia tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_love:
       title: '❤️ Amore'
       description: "Messaggi classificati con l'emozione amore tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
-      title: "\U0001F630 Nervosismo"
+      title: "😰 Nervosismo"
       description: "Messaggi classificati con l'emozione nervosismo tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
-      title: "\U0001F610 Neutralità"
+      title: "😐 Neutralità"
       description: "Messaggi classificati con l'emozione neutrale tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
-      title: "\U0001F31F Ottimismo"
+      title: "🌟 Ottimismo"
       description: "Messaggi classificati con l'emozione ottimismo tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
-      title: "\U0001F981 Orgoglio"
+      title: "🦁 Orgoglio"
       description: "Messaggi classificati con l'emozione orgoglio tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_realization:
-      title: "\U0001F4A1 Realizzazione"
+      title: "💡 Realizzazione"
       description: "Messaggi classificati con l'emozione realizzazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
-      title: "\U0001F60C Sollievo"
+      title: "😌 Sollievo"
       description: "Messaggi classificati con l'emozione sollievo tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_remorse:
-      title: "\U0001F614 Rimorso"
+      title: "😔 Rimorso"
       description: "Messaggi classificati con l'emozione rimorso tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_sadness:
-      title: "\U0001F62D Tristezza"
+      title: "😭 Tristezza"
       description: "Messaggi classificati con l'emozione tristezza tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_surprise:
-      title: "\U0001F632 Sorpresa"
+      title: "😲 Sorpresa"
       description: "Messaggi classificati con l'emozione sorpresa tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
@@ -537,13 +537,13 @@ it:
       reports:
         overall_sentiment: "Sentimento generale (positivo - negativo)"
         post_emotion:
-          sadness: "Tristezza \U0001F622"
-          surprise: "Sorpresa \U0001F631"
-          neutral: "Neutralità \U0001F610"
-          fear: "Paura \U0001F628"
-          anger: "Rabbia \U0001F621"
-          joy: "Gioia \U0001F600"
-          disgust: "Disgusto \U0001F922"
+          sadness: "Tristezza 😢"
+          surprise: "Sorpresa 😱"
+          neutral: "Neutralità 😐"
+          fear: "Paura 😨"
+          anger: "Rabbia 😡"
+          joy: "Gioia 😀"
+          disgust: "Disgusto 🤢"
         sentiment_analysis:
           positive: "Positivo"
           negative: "Negativo"

@@ -9,7 +9,8 @@ RSpec.shared_examples "Scorable Type" do
 
   describe "#{described_class} updates gamification score" do
     it "has correct total score" do
-      DiscourseGamification::GamificationScore.calculate_scores(
+      DiscourseGamification::GamificationLeaderboardScore.calculate_scores(
+        leaderboard,
         since_date: "2022-1-1",
         only_subclass: described_class,
       )
@@ -37,7 +38,10 @@ RSpec.shared_examples "Category Scoped Scorable Type" do
     it "#{described_class} updates scores for action in the category configured" do
       expect(user.gamification_score).to eq(0)
       SiteSetting.scorable_categories = category_allowed.id.to_s
-      DiscourseGamification::GamificationScore.calculate_scores(only_subclass: described_class)
+      DiscourseGamification::GamificationLeaderboardScore.calculate_scores(
+        leaderboard,
+        only_subclass: described_class,
+      )
       DiscourseGamification::LeaderboardCachedView.refresh_all
       expect(user.gamification_score).to eq(expected_score)
     end
@@ -45,7 +49,10 @@ RSpec.shared_examples "Category Scoped Scorable Type" do
     it "#{described_class} doesn't updates scores for action in the category configured" do
       expect(user_2.gamification_score).to eq(0)
       SiteSetting.scorable_categories = category_not_allowed.id.to_s
-      DiscourseGamification::GamificationScore.calculate_scores(only_subclass: described_class)
+      DiscourseGamification::GamificationLeaderboardScore.calculate_scores(
+        leaderboard,
+        only_subclass: described_class,
+      )
       DiscourseGamification::LeaderboardCachedView.refresh_all
       expect(user_2.gamification_score).to eq(0)
     end
@@ -70,7 +77,8 @@ RSpec.shared_examples "No Score Value" do
     let!(:trigger_after_create_hook) { after_create_hook }
 
     it "does not increase user gamification score" do
-      DiscourseGamification::GamificationScore.calculate_scores(
+      DiscourseGamification::GamificationLeaderboardScore.calculate_scores(
+        leaderboard,
         since_date: "2022-1-1",
         only_subclass: described_class,
       )

@@ -117,7 +117,7 @@ export default class PostEventInviteesModal extends Component {
 
                   {{#if @model.event.canActOnDiscoursePostEvent}}
                     <DButton
-                      class="remove-invitee"
+                      class="btn-transparent btn-danger remove-invitee"
                       @icon="trash-can"
                       @action={{fn this.removeInvitee invitee}}
                       title={{i18n
@@ -136,7 +136,7 @@ export default class PostEventInviteesModal extends Component {
 
                     {{#if @model.event.canActOnDiscoursePostEvent}}
                       <DButton
-                        class="add-invitee"
+                        class="btn-default add-invitee"
                         @icon="plus"
                         @action={{fn this.addInvitee user}}
                         title={{i18n

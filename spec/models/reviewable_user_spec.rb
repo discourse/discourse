@@ -92,6 +92,15 @@ RSpec.describe ReviewableUser, type: :model do
         expect(reviewable.target.approved_at).to be_present
         expect(reviewable.version > 0).to eq(true)
       end
+
+      it "logs a staff action linked to the reviewable" do
+        expect { reviewable.perform(moderator, :approve_user) }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:approve_user],
+            reviewable_id: reviewable.id,
+          ).count
+        }.by(1)
+      end
     end
 
     context "when rejecting" do
@@ -188,6 +197,17 @@ RSpec.describe ReviewableUser, type: :model do
         reviewable.reload
         expect(reviewable.target).to be_present
         expect(reviewable.target.approved).to eq(false)
+      end
+
+      it "logs a staff action linked to the reviewable" do
+        expect {
+          reviewable.perform(moderator, :delete_user, reject_reason: "reject reason")
+        }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:delete_user],
+            reviewable_id: reviewable.id,
+          ).count
+        }.by(1)
       end
     end
   end

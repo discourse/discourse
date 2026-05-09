@@ -238,6 +238,9 @@ lt:
             few: "%{count} pranešimai"
             many: "%{count} pranešimų"
             other: "%{count} pranešimų"
+        theme_translations:
+          translate:
+            label: "Versti"
       spam:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"

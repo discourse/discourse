@@ -1,17 +1,15 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat, hash } from "@ember/helper";
-import { computed } from "@ember/object";
-import { alias, or } from "@ember/object/computed";
-import { getOwner } from "@ember/owner";
+import { computed, set } from "@ember/object";
 import { compare } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import BookmarkMenu from "discourse/components/bookmark-menu";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import PinnedButton from "discourse/components/pinned-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
+import TopicBookmarksMenu from "discourse/components/topic-bookmarks-menu";
 import UserTip from "discourse/components/user-tip";
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
@@ -20,7 +18,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
-import TopicBookmarkManager from "discourse/lib/topic-bookmark-manager";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
 import { eq, gt } from "discourse/truth-helpers";
@@ -32,10 +29,37 @@ function bind(fn, context) {
 
 @tagName("")
 export default class TopicFooterButtons extends Component {
-  @alias("currentUser.can_send_private_messages") canSendPms;
-  @alias("topic.details.can_invite_to") canInviteTo;
-  @alias("currentUser.user_option.enable_defer") canDefer;
-  @or("topic.archived", "topic.closed", "topic.deleted") inviteDisabled;
+  @computed("currentUser.can_send_private_messages")
+  get canSendPms() {
+    return this.currentUser?.can_send_private_messages;
+  }
+
+  set canSendPms(value) {
+    set(this, "currentUser.can_send_private_messages", value);
+  }
+
+  @computed("topic.details.can_invite_to")
+  get canInviteTo() {
+    return this.topic?.details?.can_invite_to;
+  }
+
+  set canInviteTo(value) {
+    set(this, "topic.details.can_invite_to", value);
+  }
+
+  @computed("currentUser.user_option.enable_defer")
+  get canDefer() {
+    return this.currentUser?.user_option?.enable_defer;
+  }
+
+  set canDefer(value) {
+    set(this, "currentUser.user_option.enable_defer", value);
+  }
+
+  @computed("topic.archived", "topic.closed", "topic.deleted")
+  get inviteDisabled() {
+    return this.topic?.archived || this.topic?.closed || this.topic?.deleted;
+  }
 
   get inlineButtons() {
     return getTopicFooterButtons(this);
@@ -63,11 +87,6 @@ export default class TopicFooterButtons extends Component {
         // we want to show the most recently added item first
         .reverse()
     );
-  }
-
-  @computed("topic.bookmarked")
-  get topicBookmarkManager() {
-    return new TopicBookmarkManager(getOwner(this), this.topic);
   }
 
   get dropdownButtons() {
@@ -145,9 +164,9 @@ export default class TopicFooterButtons extends Component {
           {{#each this.inlineActionables key="id" as |actionable|}}
             {{#if (eq actionable.type "inline-button")}}
               {{#if (eq actionable.id "bookmark")}}
-                <BookmarkMenu
+                <TopicBookmarksMenu
+                  @topic={{this.topic}}
                   @showLabel={{this.showBookmarkLabel}}
-                  @bookmarkManager={{this.topicBookmarkManager}}
                   @buttonClasses="btn-default topic-footer-button"
                 />
               {{else}}

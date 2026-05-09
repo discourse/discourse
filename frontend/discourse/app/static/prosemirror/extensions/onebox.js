@@ -3,13 +3,33 @@ import {
   cachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
 import { load } from "pretty-text/oneboxer";
+import { PluginKey } from "prosemirror-state";
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import {
   getLinkify,
   isWhiteSpace,
 } from "discourse/static/prosemirror/lib/markdown-it";
+import { i18n } from "discourse-i18n";
 import { isTopLevel } from "discourse-markdown-it/features/onebox";
+
+export const oneboxPluginKey = new PluginKey("onebox");
+
+/**
+ * Returns "full" if the link at `pos` is alone on its line at the document
+ * root (renders as a block preview), "inline" otherwise (title-only preview).
+ */
+export function oneboxTypeAtPos(doc, pos) {
+  const $pos = doc.resolve(pos);
+  const parent = $pos.parent;
+  const index = $pos.index();
+  const prev = index > 0 ? parent.child(index - 1) : null;
+  const next = index < parent.childCount - 1 ? parent.child(index + 1) : null;
+  const isAlone =
+    (!prev || prev.type.name === "hard_break") &&
+    (!next || next.type.name === "hard_break");
+  return $pos.depth === 1 && isAlone ? "full" : "inline";
+}
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -96,13 +116,64 @@ const extension = {
   }) {
     const failedUrls = { full: new Set(), inline: new Set() };
 
+    // Scans for linkified URLs and creates onebox loading decorations.
+    // `forceUrl` bypasses selection/topLevel/failed checks for that URL.
+    function scanForOneboxLinks(doc, decoSet, tr, forceUrl) {
+      const decorations = [];
+      doc.descendants((node, pos) => {
+        const link = node.marks.find((mark) => mark.type.name === "link");
+
+        if (
+          link?.attrs.markup === "linkify" &&
+          getLinkify().test(node.text) &&
+          decoSet.find(pos, pos + node.nodeSize).length === 0
+        ) {
+          const isForced = forceUrl === link.attrs.href;
+
+          if (!isForced && !isOutsideSelection(pos, node.nodeSize, tr)) {
+            return;
+          }
+
+          const oneboxType = oneboxTypeAtPos(doc, pos);
+
+          if (
+            !isForced &&
+            isTopLevel(link.attrs.href) &&
+            oneboxType === "inline"
+          ) {
+            return;
+          }
+
+          if (!isForced && failedUrls[oneboxType].has(link.attrs.href)) {
+            return;
+          }
+
+          decorations.push(
+            Decoration.inline(
+              pos,
+              pos + node.nodeSize,
+              { class: "onebox-loading", nodeName: "span" },
+              {
+                oneboxUrl: link.attrs.href,
+                oneboxType,
+                forceRetry: isForced,
+              }
+            )
+          );
+        }
+      });
+      return decorations;
+    }
+
     const plugin = new Plugin({
+      key: oneboxPluginKey,
       state: {
         init() {
           return DecorationSet.empty;
         },
         apply(tr, set) {
           const meta = tr.getMeta(plugin);
+
           if (meta?.removeDecorations) {
             set = set.remove(meta.removeDecorations);
           }
@@ -130,6 +201,7 @@ const extension = {
                     oneboxType: decoration.spec.oneboxType,
                     oneboxTitle: meta.inlineOneboxes[decoration.spec.oneboxUrl],
                     oneboxDataLoaded: true,
+                    forceRetry: decoration.spec.forceRetry,
                   }
                 )
               );
@@ -163,53 +235,17 @@ const extension = {
               set = set.remove(decosToUpdate).add(tr.doc, newDecorations);
             }
 
-            return set;
+            if (!meta?.forceOneboxUrl) {
+              return set;
+            }
           }
 
-          const decorations = [];
-          tr.doc.descendants((node, pos) => {
-            const link = node.marks.find((mark) => mark.type.name === "link");
-
-            if (
-              link?.attrs.markup === "linkify" &&
-              // Excludes watched word links
-              getLinkify().test(node.text) &&
-              set.find(pos, pos + node.nodeSize).length === 0 &&
-              isOutsideSelection(pos, node.nodeSize, tr)
-            ) {
-              const resolvedPos = tr.doc.resolve(pos);
-              const isAtRoot = resolvedPos.depth === 1;
-              const parent = resolvedPos.parent;
-              const index = resolvedPos.index();
-              const prev = index > 0 ? parent.child(index - 1) : null;
-              const next =
-                index < parent.childCount - 1 ? parent.child(index + 1) : null;
-              const isAlone =
-                (!prev || prev.type.name === "hard_break") &&
-                (!next || next.type.name === "hard_break");
-              const isInline = !isAtRoot || !isAlone;
-
-              const oneboxType = isInline ? "inline" : "full";
-
-              // inline oneboxes should not be created for top-level links
-              if (isTopLevel(link.attrs.href) && isInline) {
-                return;
-              }
-
-              if (failedUrls[oneboxType].has(link.attrs.href)) {
-                return;
-              }
-
-              decorations.push(
-                Decoration.inline(
-                  pos,
-                  pos + node.nodeSize,
-                  { class: "onebox-loading", nodeName: "span" },
-                  { oneboxUrl: link.attrs.href, oneboxType }
-                )
-              );
-            }
-          });
+          const decorations = scanForOneboxLinks(
+            tr.doc,
+            set,
+            tr,
+            meta?.forceOneboxUrl
+          );
 
           return set.add(tr.doc, decorations);
         },
@@ -242,7 +278,10 @@ const extension = {
             );
 
             for (const dec of decorations) {
-              if (failedUrls[dec.spec.oneboxType].has(dec.spec.oneboxUrl)) {
+              if (
+                !dec.spec.forceRetry &&
+                failedUrls[dec.spec.oneboxType].has(dec.spec.oneboxUrl)
+              ) {
                 continue;
               }
 
@@ -250,21 +289,35 @@ const extension = {
 
               // Full onebox, one by one
               if (dec.spec.oneboxType === "full") {
-                const { oneboxUrl } = dec.spec;
-                pendingUrls.full.add(oneboxUrl);
+                const { oneboxUrl, forceRetry } = dec.spec;
 
-                processOnebox(oneboxUrl, getContext()).then((html) => {
-                  pendingUrls.full.delete(oneboxUrl);
-                  if (html) {
-                    view.dispatch(
-                      view.state.tr.setMeta(plugin, {
-                        oneboxContent: { url: oneboxUrl, html },
-                      })
-                    );
-                  } else {
+                if (forceRetry) {
+                  failedUrls.full.delete(oneboxUrl);
+                }
+
+                processOnebox(oneboxUrl, getContext(), { refresh: forceRetry })
+                  .then((html) => {
+                    pendingUrls.full.delete(oneboxUrl);
+                    if (html) {
+                      view.dispatch(
+                        view.state.tr.setMeta(plugin, {
+                          oneboxContent: { url: oneboxUrl, html },
+                        })
+                      );
+                    } else {
+                      failedUrls.full.add(oneboxUrl);
+                      if (forceRetry) {
+                        showPreviewFailedToast();
+                      }
+                    }
+                  })
+                  .catch(() => {
+                    pendingUrls.full.delete(oneboxUrl);
                     failedUrls.full.add(oneboxUrl);
-                  }
-                });
+                    if (forceRetry) {
+                      showPreviewFailedToast();
+                    }
+                  });
               }
             }
 
@@ -324,6 +377,9 @@ const extension = {
                   tr.replaceWith(decoration.from, decoration.to, oneboxNode);
                 } else {
                   failedUrls.inline.add(decoration.spec.oneboxUrl);
+                  if (decoration.spec.forceRetry) {
+                    showPreviewFailedToast();
+                  }
                 }
               } else if (decoration.spec.oneboxType === "full") {
                 if (decoration.spec.oneboxHtml) {
@@ -358,6 +414,15 @@ const extension = {
         };
       },
     });
+
+    function showPreviewFailedToast() {
+      getContext().toasts.default({
+        duration: "short",
+        data: {
+          message: i18n("composer.link_toolbar.preview_failed"),
+        },
+      });
+    }
 
     return plugin;
   },
@@ -418,7 +483,7 @@ async function loadInlineOneboxes(urls, { categoryId, topicId }) {
   return oneboxes;
 }
 
-async function processOnebox(href, { topicId, categoryId }) {
+async function processOnebox(href, { topicId, categoryId }, opts = {}) {
   const html = await new Promise((onResolve) => {
     load({
       topicId,
@@ -426,7 +491,7 @@ async function processOnebox(href, { topicId, categoryId }) {
       elem: { ...dummyElement, href },
       onResolve,
       ajax,
-      refresh: false,
+      refresh: opts.refresh ?? false,
     });
   });
 

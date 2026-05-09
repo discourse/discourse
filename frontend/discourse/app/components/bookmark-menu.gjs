@@ -116,7 +116,7 @@ export default class BookmarkMenu extends Component {
     }
 
     if (this.existingBookmark) {
-      return i18n("bookmarked.edit_bookmark");
+      return i18n("bookmarked.edit_bookmark", { count: 1 });
     } else {
       return i18n("bookmarked.title");
     }

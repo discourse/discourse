@@ -104,6 +104,44 @@ export default class Revisions extends Component {
             {{@model.user_changes.current.username}}
           </div>
         {{/if}}
+        {{#if @model.reply_to_post_number_changes}}
+          <div class="row reply-to-changes">
+            {{icon "share"}}
+            {{#if @model.reply_to_post_number_changes.previous}}
+              #{{@model.reply_to_post_number_changes.previous.post_number}}
+              {{#if
+                @model.reply_to_post_number_changes.previous.avatar_template
+              }}
+                {{Avatar
+                  @model.reply_to_post_number_changes.previous.avatar_template
+                  "small"
+                }}
+                {{@model.reply_to_post_number_changes.previous.username}}
+              {{/if}}
+            {{else}}
+              <span class="diff-del">{{i18n
+                  "post.revisions.reply_to.none"
+                }}</span>
+            {{/if}}
+            &rarr;
+            {{#if @model.reply_to_post_number_changes.current}}
+              #{{@model.reply_to_post_number_changes.current.post_number}}
+              {{#if
+                @model.reply_to_post_number_changes.current.avatar_template
+              }}
+                {{Avatar
+                  @model.reply_to_post_number_changes.current.avatar_template
+                  "small"
+                }}
+                {{@model.reply_to_post_number_changes.current.username}}
+              {{/if}}
+            {{else}}
+              <span class="diff-ins">{{i18n
+                  "post.revisions.reply_to.none"
+                }}</span>
+            {{/if}}
+          </div>
+        {{/if}}
         {{#if @model.wiki_changes}}
           <div class="row">
             {{icon

@@ -4,7 +4,7 @@ import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
-acceptance("Data Explorer Plugin | Run Query", function (needs) {
+acceptance("Run Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 
@@ -305,13 +305,10 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       .dom("div.query-results table tbody tr")
       .exists({ count: 2 }, "the table with query results was rendered");
 
-    assert
-      .dom("div.result-info button:nth-child(3) span")
-      .hasText(i18n("explorer.show_graph"), "the chart button was rendered");
-
-    await click("div.result-info button:nth-child(3)");
-
     assert.dom("canvas").exists("the chart was rendered");
+    assert
+      .dom(".query-results-modes")
+      .exists("the chart/table toggle buttons were rendered");
   });
 
   test("runs query and is able to download the results", async function (assert) {
@@ -360,7 +357,9 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         }
       });
 
-    await click("div.result-info button:nth-child(1)");
+    await click(
+      ".query-run-actions__right .query-result-download-buttons button:nth-child(1)"
+    );
 
     await finishedForm;
 

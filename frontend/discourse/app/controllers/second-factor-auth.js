@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { equal, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
@@ -22,14 +21,57 @@ export default class SecondFactorAuthController extends Controller {
   userSelectedMethod = null;
   isLoading = false;
 
-  @readOnly("model.totp_enabled") totpEnabled;
-  @readOnly("model.backup_enabled") backupCodesEnabled;
-  @readOnly("model.security_keys_enabled") securityKeysEnabled;
-  @readOnly("model.allowed_methods") allowedMethods;
-  @readOnly("model.description") customDescription;
-  @equal("shownSecondFactorMethod", TOTP) showTotpForm;
-  @equal("shownSecondFactorMethod", SECURITY_KEY) showSecurityKeyForm;
-  @equal("shownSecondFactorMethod", BACKUP_CODE) showBackupCodesForm;
+  @computed("model.totp_enabled")
+  get totpEnabled() {
+    return this.model?.totp_enabled;
+  }
+
+  @computed("model.backup_enabled")
+  get backupCodesEnabled() {
+    return this.model?.backup_enabled;
+  }
+
+  @computed("model.security_keys_enabled", "model.passkeys_enabled")
+  get securityKeysEnabled() {
+    return this.model?.security_keys_enabled || this.model?.passkeys_enabled;
+  }
+
+  @computed("model.passkeys_enabled")
+  get passkeysEnabled() {
+    return this.model?.passkeys_enabled;
+  }
+
+  @computed("passkeysEnabled")
+  get securityKeyAuthenticateLabel() {
+    return this.passkeysEnabled
+      ? "login.security_key_or_passkey_authenticate"
+      : "login.security_key_authenticate";
+  }
+
+  @computed("model.allowed_methods")
+  get allowedMethods() {
+    return this.model?.allowed_methods;
+  }
+
+  @computed("model.description")
+  get customDescription() {
+    return this.model?.description;
+  }
+
+  @computed("shownSecondFactorMethod")
+  get showTotpForm() {
+    return this.shownSecondFactorMethod === TOTP;
+  }
+
+  @computed("shownSecondFactorMethod")
+  get showSecurityKeyForm() {
+    return this.shownSecondFactorMethod === SECURITY_KEY;
+  }
+
+  @computed("shownSecondFactorMethod")
+  get showBackupCodesForm() {
+    return this.shownSecondFactorMethod === BACKUP_CODE;
+  }
 
   @computed("allowedMethods.[]", "totpEnabled")
   get totpAvailable() {
@@ -123,13 +165,15 @@ export default class SecondFactorAuthController extends Controller {
     }
   }
 
-  @computed("shownSecondFactorMethod")
+  @computed("shownSecondFactorMethod", "passkeysEnabled")
   get secondFactorDescription() {
     switch (this.shownSecondFactorMethod) {
       case TOTP:
         return i18n("login.second_factor_description");
       case SECURITY_KEY:
-        return i18n("login.security_key_description");
+        return this.passkeysEnabled
+          ? i18n("login.security_key_or_passkey_description")
+          : i18n("login.security_key_description");
       case BACKUP_CODE:
         return i18n("login.second_factor_backup_description");
     }
@@ -159,6 +203,14 @@ export default class SecondFactorAuthController extends Controller {
     this.set("secondFactorToken", null);
     this.set("userSelectedMethod", null);
     this.set("loadError", false);
+    this.set("autoTriggeredPasskey", false);
+  }
+
+  maybeAutoTriggerPasskey() {
+    if (this.passkeysEnabled && !this.autoTriggeredPasskey) {
+      this.set("autoTriggeredPasskey", true);
+      this.authenticateSecurityKey({ silent: true });
+    }
   }
 
   displayError(message) {
@@ -211,7 +263,8 @@ export default class SecondFactorAuthController extends Controller {
   }
 
   @action
-  authenticateSecurityKey() {
+  authenticateSecurityKey(options = {}) {
+    const silent = options?.silent === true;
     getWebauthnCredential(
       this.model.challenge,
       this.model.allowed_credential_ids,
@@ -219,8 +272,11 @@ export default class SecondFactorAuthController extends Controller {
         this.verifySecondFactor({ second_factor_token: credentialData });
       },
       (errorMessage) => {
-        this.displayError(errorMessage);
-      }
+        if (!silent) {
+          this.displayError(errorMessage);
+        }
+      },
+      { userVerification: this.passkeysEnabled ? "preferred" : "discouraged" }
     );
   }
 

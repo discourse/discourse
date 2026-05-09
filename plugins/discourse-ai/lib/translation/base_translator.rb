@@ -50,9 +50,16 @@ module DiscourseAi
           )
         llm_args = { max_tokens: model.max_output_tokens }
 
+        structured_output = nil
         result = +""
-        bot.reply(context, llm_args:) { |partial| result << partial }
-        result
+        bot.reply(context, llm_args:) do |partial, _, type|
+          if type == :structured_output
+            structured_output = partial
+          else
+            result << partial
+          end
+        end
+        structured_output&.read_buffered_property(:output) || result
       end
 
       def agent_setting

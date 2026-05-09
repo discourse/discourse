@@ -14,6 +14,9 @@ describe "Group" do
     context "when there are no existing users matching the auto e-mail domains" do
       it "creates a new group" do
         group_index_page.visit
+
+        screenshot_marker(label: "groups")
+
         group_index_page.click_new_group
 
         group_form_page.fill_in("name", with: "illuminati")

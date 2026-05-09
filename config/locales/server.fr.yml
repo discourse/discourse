@@ -433,7 +433,13 @@ fr:
   deleted_topic: "Ce sujet a été supprimé et n'est plus disponible."
   delete_topic_failed: "Une erreur est survenue pendant la suppression de ce sujet. Veuillez contacter l'administrateur du site."
   reading_time: "Temps de lecture"
+  reading_time_minutes:
+    one: "%{count} minute 🕑"
+    other: "%{count} minutes 🕑"
   likes: "J'aime"
+  likes_count:
+    one: "%{count}  ❤"
+    other: "%{count}  ❤"
   action_already_performed: "Oups ! Vous avez déjà effectué cette action. Pouvez-vous essayer d'actualiser la page ?"
   too_many_replies:
     one: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à %{count} réponse par sujet."
@@ -598,6 +604,7 @@ fr:
       admins: "administrateurs"
       moderators: "modérateurs"
       staff: "responsables"
+      anonymous: "anonymes"
       trust_level_0: "niveau_confiance_0"
       trust_level_1: "niveau_confiance_1"
       trust_level_2: "niveau_confiance_2"
@@ -822,7 +829,6 @@ fr:
       one: "%{count} « J'aime »"
       other: "%{count} « J'aime »"
     cannot_permanently_delete:
-      many_posts: "Ce sujet contient des messages non supprimés. Veuillez les supprimer définitivement avant de supprimer définitivement le sujet."
       wait_or_different_admin: "Vous devez attendre %{time_left} avant de supprimer définitivement ce message ou demander à un autre administrateur de le faire."
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, veuillez réessayer plus tard."
@@ -1448,6 +1454,8 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de vues par les navigateurs connectés"
       description: "Nombre de vues de pages par des visiteurs connectés utilisant des navigateurs authentiques."
+    page_view_embed_reqs:
+      xaxis: "Jour"
     http_background_reqs:
       title: "Arrière-plan"
       xaxis: "Jour"
@@ -2374,7 +2382,6 @@ fr:
     create_revision_on_bulk_topic_moves: "Créer une révision des premières publications lorsque des sujets sont déplacés en bloc vers une nouvelle catégorie."
     allow_changing_staged_user_tracking: "Permettre aux administrateurs de modifier les préférences de notification relatives aux catégories et aux étiquettes, pour les comptes d'utilisateurs distants."
     use_email_for_username_and_name_suggestions: "Utilisez la première partie des adresses e-mail pour suggérer des noms d'utilisateur et des noms de famille. Attention : cela peut faciliter la découverte de l'adresse e-mail de vos membres par des personnes malintentionnées (car de nombreuses personnes utilisent des fournisseurs de messagerie courants comme « gmail.com »)."
-    use_name_for_username_suggestions: "Utiliser le nom complet d'un utilisateur lorsque vous suggérez des noms d'utilisateur."
     suggest_weekends_in_date_pickers: "Inclure les week-ends dans les suggestions du sélectionneur de date (désactivez ce paramètre si vous n'utilisez Discourse que les jours de semaine)."
     show_bottom_topic_map: "Affiche la carte du sujet en bas du sujet lorsqu'il contient 10 réponses ou plus."
     show_topic_map_in_topics_without_replies: "Affiche la carte du sujet même si le sujet ne comprend aucune réponse."
@@ -2382,7 +2389,6 @@ fr:
     welcome_banner_image: "Définissez une image à afficher en arrière-plan de la bannière de bienvenue."
     welcome_banner_location: "Détermine l'endroit où la bannière de bienvenue apparaîtra sur la page."
     welcome_banner_page_visibility: "Détermine les pages sur lesquelles la bannière de bienvenue apparaîtra."
-    splash_screen: "Affiche un écran de chargement temporaire pendant le chargement des ressources du site"
     navigation_menu: "Spécifiez la barre latérale ou la liste déroulante d'en-tête comme menu de navigation principal de votre site. La barre latérale est recommandée."
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
@@ -2689,7 +2695,6 @@ fr:
       request_error: "Une erreur s'est produite lors du démarrage de l'autorisation. Veuillez réessayer."
       invalid_iat: "Nous ne sommes pas en mesure de vérifier le jeton d'autorisation en raison de différences d'horloge du serveur. Veuillez réessayer."
     omniauth_error_unknown: "Un problème est survenu lors de votre connexion. Veuillez réessayer."
-    omniauth_confirm_title: "Connectez-vous à l'aide de %{provider}"
     omniauth_confirm_button: "Continuer"
     authenticator_error_no_valid_email: "Aucune adresse e-mail associée à %{account} n'est autorisée. Vous devrez peut-être configurer votre compte avec une autre adresse."
     new_registrations_disabled: "La création de nouveaux comptes n'est pas autorisée pour le moment."
@@ -2978,47 +2983,9 @@ fr:
     reviewable_queued_post_revise_and_reject:
       title: "Commentaires sur votre message"
       subject_template: "Commentaires sur votre message dans %{topic_title}"
-      text_body_template: |
-        Bonjour %{username},
-
-        Nous avons examiné votre message dans [%{topic_title}] (%{topic_url}) et avons quelques commentaires à vous faire.
-
-        Motif : %{reason}
-
-        Commentaire : %{feedback}
-
-        Vous pouvez modifier votre message d'origine ci-dessous et le soumettre à nouveau pour apporter les modifications suggérées, ou répondre à ce message si vous avez des questions.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Merci,
-        Modérateurs %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Commentaires sur votre sujet"
       subject_template: 'Commentaires sur le nouveau sujet intitulé « %{topic_title} »'
-      text_body_template: |
-        Bonjour %{username},
-
-        Nous avons examiné votre nouveau sujet intitulé « %{topic_title} » et avons quelques commentaires à vous faire.
-
-        Motif : %{reason}
-
-        Commentaires : %{feedback}
-
-        Vous pouvez modifier le message original de votre sujet ci-dessous et le soumettre à nouveau pour apporter les modifications suggérées, ou répondre à ce message si vous avez des questions.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Merci,
-        Modérateurs %{site_name}
     post_hidden_again:
       title: "Message masqué à nouveau"
       subject_template: "Message masqué suite à des signalements de la communauté, responsables avertis"
@@ -3287,7 +3254,6 @@ fr:
         Votre réponse a été envoyée depuis une adresse bloquée. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-mail rejeté - E-mail non autorisé"
-      subject_template: "[%{email_prefix}] Problème d'e-mail - E-mail bloqué"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre e-mail à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -3452,7 +3418,6 @@ fr:
         Vous n'êtes pas autorisé(e) à répondre au sujet. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-mail rejeté - Réponse au résumé"
-      subject_template: "[%{email_prefix}] Problème d'e-mail - Réponse au résumé"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre e-mail à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -3571,7 +3536,6 @@ fr:
       text_body_template: "Le paramètre « download_remote_images_to_local » a été désactivé car la limite (« download_remote_images_threshold ») d'espace disque utilisé par les images vient d'être dépassée."
     new_user_of_the_month:
       title: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"
-      subject_template: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"
       text_body_template: |
         Félicitations, vous avez reçu le prix du **nouveau membre du mois de %{month_year}**. :trophy:
 
@@ -3889,6 +3853,7 @@ fr:
     account_exists:
       title: "Le compte existe déjà"
       subject_template: "[%{email_prefix}] Le compte existe déjà"
+      subject_template_improved: "Le compte existe déjà"
       text_body_template: |
         Vous venez d'essayer de créer un compte sur %{site_name}, ou d'essayer de changer l'adresse e-mail d'un compte vers %{email}. Cependant, un compte existe déjà pour %{email}.
 
@@ -3900,6 +3865,7 @@ fr:
     account_second_factor_disabled:
       title: "Authentification à deux facteurs désactivée"
       subject_template: "[%{email_prefix}] Authentification à deux facteurs désactivée"
+      subject_template_improved: "Authentification à deux facteurs désactivée"
     digest:
       why: "Un bref résumé de %{site_link} depuis %{since}"
       since_last_visit: "Depuis votre dernière visite"
@@ -3913,6 +3879,7 @@ fr:
       popular_posts: "Messages populaires"
       more_new: "Nouveau pour vous"
       subject_template: "[%{email_prefix}] Résumé"
+      subject_template_improved: "Résumé"
       unsubscribe: "Ce résumé vous est envoyé par %{site_link} lorsque vous ne vous connectez pas pendant un moment. Vous pouvez %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
       your_email_settings: "vos préférences d'e-mail"
       click_here: "cliquez ici"
@@ -3933,6 +3900,7 @@ fr:
       title: "Se connecter avec un lien"
       preview: "Se connecter avec un lien."
       subject_template: "[%{email_prefix}] Se connecter avec un lien"
+      subject_template_improved: "Se connecter avec un lien"
       text_body_template: |
         Voici votre lien pour vous connecter à [%{site_name}](%{base_url}).
 
@@ -3943,7 +3911,6 @@ fr:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Définir le mot de passe"
-      subject_template: "[%{email_prefix}] Définir le mot de passe"
       text_body_template: |
         Quelqu'un a demandé un mot de passe pour votre compte sur [%{site_name}](%{base_url}). Vous pouvez vous identifier en utilisant un service en ligne pris en charge (Google, Facebook, etc.) qui est associé avec cette adresse e-mail.
 
@@ -3955,6 +3922,7 @@ fr:
     admin_login:
       title: "Connexion administrateur"
       subject_template: "[%{email_prefix}] Connexion"
+      subject_template_improved: "Connexion"
       text_body_template: |
         Quelqu'un a demandé à se connecter sur votre compte sur [%{site_name}](%{base_url}).
 
@@ -3965,7 +3933,6 @@ fr:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Compte créé"
-      subject_template: "[%{email_prefix}] Votre nouveau compte"
       text_body_template: |
         Un nouveau compte a été créé pour vous sur %{site_name}
 
@@ -4078,7 +4045,6 @@ fr:
         Si le lien n'est pas cliquable, essayez de le copier-coller dans la barre d'adresse de votre navigateur.
     suspicious_login:
       title: "Notification de nouvelle connexion"
-      subject_template: "[%{site_name}] Nouvelle connexion depuis %{location}"
       text_body_template: |
         Bonjour,
 
@@ -4834,7 +4800,6 @@ fr:
       restricted_to:
         one: 'L''étiquette « %{tag_name} » est réservée à la catégorie « %{category_names} »'
         other: 'L''étiquette « %{tag_name} » est réservée aux catégories suivantes : %{category_names}'
-      synonym: 'Les synonymes ne sont pas autorisés. Utilisez « %{tag_name} ».'
       has_synonyms: 'L''étiquette « %{tag_name} » ne peut pas être utilisée car elle a des synonymes.'
       restricted_tags_cannot_be_used_in_category:
         one: 'L''étiquette « %{tags} » ne peut pas être utilisée dans la catégorie « %{category} ». Veuillez la supprimer.'

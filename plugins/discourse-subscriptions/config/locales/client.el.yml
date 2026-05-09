@@ -5,7 +5,13 @@
 # https://translate.discourse.org/
 
 el:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Συνδρομές Discourse"
   site_settings:
+    discourse_subscriptions_enabled: Ενεργοποιήστε το πρόσθετο Συνδρομές Discourse.
     discourse_subscriptions_enable_verbose_logging: Ενεργοποιεί πιο λεπτομερή καταγραφή για να βοηθήσει στην αποσφαλμάτωση. Παρακαλούμε μην την αφήνετε μόνιμα ενεργοποιημένη στην παραγωγή.
   js:
     filters:

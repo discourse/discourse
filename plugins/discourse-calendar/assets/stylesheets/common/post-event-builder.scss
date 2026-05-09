@@ -100,12 +100,12 @@
     .reminders-list {
       display: flex;
       flex-direction: column;
-      margin-bottom: 1em;
 
       .reminder-item {
         display: flex;
         flex: 1 0 auto;
         padding: 0.25em 0;
+        margin-bottom: var(--space-2);
 
         .select-kit-header {
           height: 100%;

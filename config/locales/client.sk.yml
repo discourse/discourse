@@ -485,8 +485,6 @@ sk:
           other: "Vytvorené pred %{count} rokmi"
     bookmarked:
       title: "Záložka"
-      edit_bookmark: "Upraviť záložku"
-      clear_bookmarks: "Odstrániť záložku"
       help:
         bookmark: "Kliknutím uložíte túto tému medzi záložky"
         edit_bookmark: "Kliknutím upravíte záložku príspevku v tejto téme"
@@ -505,12 +503,12 @@ sk:
       clear_reminder: "Vymazať pripomienku"
       edit: "Upraviť záložku"
       not_bookmarked: "Vytvor záložku na tento príspevok"
+      topic_bookmark: "Téma"
       remove_reminder_keep_bookmark: "Odstráňte pripomenutie a ponechajte záložku"
       created_with_reminder: "Tento príspevok ste si uložili ako záložku s pripomenutím %{date}. %{name}"
       created_with_reminder_generic: "Tento príspevok ste si uložili ako záložku s pripomenutím %{date}. %{name}"
       delete: "Odstrániť záložku"
       confirm_delete: "Naozaj chcete odstrániť túto záložku? Pripomienka bude tiež vymazaná."
-      confirm_clear: "Ste si istý, že chcete odstrániť všetky záložky z tejto témy?"
       save: "Uložiť"
       no_timezone: 'Zatiaľ ste nenastavili časové pásmo. Nebudete môcť nastaviť pripomenutia. Nastavte si ju na <a href="%{basePath}/my/preferences/profile">vo svojom profile</a>.'
       invalid_custom_datetime: "Zadaný dátum a čas je neplatný, skúste to prosím znova."
@@ -2815,6 +2813,8 @@ sk:
       medium_dark_tone: Stredne tmavý tón pleti
       dark_tone: Tmavý tón pleti
       default: Vlastné emotikony
+    filter_input:
+      clear: "Vymazať filter"
     shared_drafts:
       title: "Zdieľané návrhy"
       notice: "Táto téma je viditeľná len pre tých, ktorí môžu zverejňovať zdieľané návrhy."
@@ -2969,6 +2969,8 @@ sk:
       upload_description: "tu zadajte popis uploadu"
       list_item: "Položka zoznamu"
       wrap_modal:
+        attribute_key: "Kľúč"
+        attribute_value: "Hodnota"
         apply: "Použi"
       help: "Nápoveda úprav pre Markdown"
       exit_fullscreen_prompt: "Stlačením <kbd>ESC</kbd> ukončíte celú obrazovku"
@@ -3036,6 +3038,9 @@ sk:
         copy: "Kopírovať odkaz"
         remove: "Odstrániť odkaz"
         visit: "Otvoriť odkaz na externej karte"
+        link_copied: "Odkaz skopírovaný!"
+      onebox_toolbar:
+        copy: "Kopírovať odkaz"
         link_copied: "Odkaz skopírovaný!"
     notifications:
       tooltip:
@@ -3456,23 +3461,11 @@ sk:
         archive_messages: "Presunúť do archívu"
         change_notification_level: "Zmena úrovne oznámení"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
-        selected_sole_category:
-          one: "Vybrali ste <b>%{count}</b> tému z kategórie:"
-          few: "Vybrali ste <b>%{count}</b> tém z kategórie:"
-          many: "Vybrali ste <b>%{count}</b> tém z kategórie:"
-          other: "Vybrali ste <b>%{count}</b> témy z kategórie:"
         selected_count:
           one: "%{count} vybrané"
           few: "%{count} vybrané"
           many: "%{count} vybrané"
           other: "%{count} vybrané"
-        choose_new_tags: "Vyberte si nové značky pre tieto témy:"
-        changed_tags: "Značky týchto tém boli zmenené."
-        confirm_remove_tags:
-          one: "Všetky značky budú z tejto témy odstránené. Ste si istí?"
-          few: "Všetky značky budú odstránené z %{count} tém. Ste si istý/á?"
-          many: "Všetky značky budú odstránené z %{count} tém. Ste si istý/á?"
-          other: "Všetky značky budú odstránené z %{count} tém. Ste si istý/á?"
         progress:
           one: "Pokrok: <strong>%{count}</strong> téma"
           few: "Pokrok: <strong>%{count}</strong> tém"
@@ -3518,20 +3511,39 @@ sk:
         name: "Zrušiť zoznam"
       relist_topics:
         name: "Opätovné zaradenie do zoznamu"
-      remove_tags:
-        name: "Odstrániť značky"
-      replace_tags:
-        name: "Nahradiť značky"
       delete_topics:
         name: "Odstrániť"
       update_category:
         name: "Aktualizovať kategóriu"
+      convert_to_public_topic:
+        name: "Zverejnenie témy…"
+      convert_to_private_message:
+        name: "Vytvorte osobnú správu"
       reset_bump_dates:
         name: "Obnovenie dátumov zvýraznenia"
       defer:
         name: "Označiť ako neprečítané"
       update_notifications:
         name: "Aktualizovať upozornenia"
+    nested_replies:
+      sort:
+        label: "Zoradiť podľa"
+        top: "Najlepšie"
+        new: "Nový"
+      load_more_children:
+        one: "%{count} ďalšia odpoveď"
+        few: "%{count} ďalšie odpovede"
+        many: "%{count} ďalších odpovedí"
+        other: "%{count} ďalších odpovedí"
+      collapsed_replies:
+        one: "%{count} odpoveď"
+        few: "%{count} odpovede"
+        many: "%{count} odpovedí"
+        other: "%{count} odpovedí"
+      collapse: "Zbaliť"
+      no_replies: "Zatiaľ žiadne odpovede."
+      ignored_post_placeholder: "[ignorovať]"
+      pinned_reply: "Pripnutý"
     topic:
       filter_to:
         one: "%{count} príspevok k téme"
@@ -4086,6 +4098,12 @@ sk:
         few: "Tento príspevok sa páčil %{count} ľuďom."
         many: "Tento príspevok sa páčil %{count} ľuďom."
         other: "Tento príspevok sa páčil %{count} ľuďom."
+      likes_popup:
+        title:
+          one: "%{count} lajk"
+          few: "%{count} lajkov"
+          many: "%{count} lajky"
+          other: "%{count} lajky"
       sr_post_read_count_button:
         one: "%{count} osoba prečítala tento príspevok."
         few: "Tento príspevok si prečítalo %{count} ľudí."
@@ -4121,7 +4139,7 @@ sk:
           confirm_delete: "Ste si istí, že chcete odstrániť preklady pre '%{languageCode}'?"
         success: "Preklady boli úspešne aktualizované"
         post_language_selector:
-          none: "Žiadny"
+          none: "Nie je nastavené"
         edit_warning:
           action_original: "Upraviť pôvodný príspevok"
           action_translation: "Upraviť tento preklad"
@@ -4146,6 +4164,7 @@ sk:
         attachment_download_requires_login: "Ľutujeme, pre stiahnutie príloh musíte byť prihlásený."
       cancel_composer:
         discard: "Zahodiť"
+        discard_edit: "Zahodenie zmien"
       via_email: "tento príspevok prišiel emailom"
       via_auto_generated_email: "tento príspevok prišiel prostredníctvom automaticky generovaného e-mailu"
       whisper: "tento príspevok je súkromným šepotom pre moderátorov"
@@ -4193,7 +4212,7 @@ sk:
         admin: "akcie administrátora príspevku"
         admin_action: "Admin"
         permanently_delete: "Natrvalo odstrániť"
-        permanently_delete_confirmation: "Naozaj chcete natrvalo odstrániť tento príspevok? Nebudete ho môcť obnoviť."
+        permanently_delete_confirm_phrase: "natrvalo odstrániť"
         wiki: "Spraviť Wiki"
         unwiki: "Odstrániť Wiki"
         convert_to_moderator: "Pridať farbu personálu"
@@ -4352,6 +4371,7 @@ sk:
       back: "Späť na kategóriu"
       general: "Všeobecné"
       settings: "Nastavenia"
+      moderation: "Moderovanie"
       advanced: "Pokročilé"
       topic_template: "Šablóna"
       tags: "Značky"
@@ -4446,6 +4466,8 @@ sk:
       review_group_name: "názov skupiny"
       require_topic_approval: "Vyžadovať schválenie všetkých nových tém moderátorom"
       require_reply_approval: "Vyžadovať schválenie všetkých nových odpovedí moderátorom"
+      posting_review_modes:
+        everyone: "Každý"
       this_year: "tento rok"
       position: "Pozícia na stránke kategórií:"
       position_disabled: "Kategórie sa zobrazia v poradí podľa aktivity. Ak chcete kontrolovať poradie kategórií v zoznamoch, povoľte nastavenie <a href='%{url}'>\"pevné pozície kategórií</a> \"."
@@ -4482,7 +4504,7 @@ sk:
           low: "Nízka"
           high: "Vysoká"
       sort_options:
-        default: "predvolené"
+        default: "Predvolené"
         likes: "Páči sa mi"
         views: "Zobrazenia"
         posts: "Príspevky"
@@ -5613,6 +5635,9 @@ sk:
           admins: "Administrátori"
           moderators: "Moderátori"
           staff: "Personál"
+        impact_types:
+          feature_type: "Funkcia"
+          other_type: "Ostatné"
         filter:
           all: "Všetky"
           enabled: "Povolené"
@@ -5629,7 +5654,6 @@ sk:
           header_description: "Uveďte tu informácie o tejto stránke a vašom tíme, aby sa ľudia dozvedeli, o čom je vaša komunita, kto za ňou stojí a ako vás môžu kontaktovať v prípade problému. Zobrazuje sa na <a href='%{basePath}/about'>stránke O</a> vašej lokalite."
         developer:
           title: "Vývojár"
-          header_description: "Nastavenia vývojára na ovládanie limitov rýchlosti, násobiteľov a výpočtov, bezpečného režimu a ďalších pokročilých funkcií"
         experimental:
           title: "Experimentálne"
           header_description: "Zapínanie alebo vypínanie experimentálnych funkcií na vašom webe, väčšinu z nich možno ovládať skupinovo."
@@ -5822,6 +5846,13 @@ sk:
             logs:
               title: "Logy"
               header_description: "Zobrazenie a správa protokolov pre zálohovanie, obnovenie a odosielanie"
+        problem_checks:
+          priority: "Priorita"
+          status: "Stav"
+          last_run_at: "Posledný beh"
+          ignore: "Ignorovať"
+          more_options:
+            title: "Ďalšie možnosti"
         reports:
           title: "Hlásenia"
           header_description: "Správy sú účinným nástrojom, ktorý vám pomôže pochopiť, čo sa deje na vašom webe. Pomôžu vám identifikovať trendy, odhaliť problémy a prijímať rozhodnutia na základe údajov."
@@ -5997,7 +6028,7 @@ sk:
         installed_version: "Nainštalované"
         latest_version: "Najnovšie"
         problems_found: "Niekoľko rád na základe aktuálnych nastavení vášho webu"
-        dismiss_notice: "Zahodiť"
+        dismiss_notice: "Ignorovať"
         new_features:
           title: "Čo je nové?"
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
@@ -6043,6 +6074,11 @@ sk:
         too_many_requests: Túto akciu ste vykonali príliš veľakrát. Pred opätovným pokusom počkajte.
         not_found_error: Prepáčte, toto hlásenie neexistuje
         custom_date_range: Vlastný rozsah dátumov
+        sections:
+          reports:
+            title: "Hlásení"
+          traffic:
+            title: "Návštevnosť stránky"
         reports:
           trend_title: "%{percent} zmena. V súčasnosti %{current}, v predchádzajúcom období bola %{prev} ."
           percent_change_tooltip: "%{percent} zmena."
@@ -7300,6 +7336,7 @@ sk:
         topic_id: "ID témy"
         post_id: "ID príspevku"
         category_id: "ID kategórie"
+        reviewable_id: "Recenzia"
         delete: "Odstrániť"
         edit: "Upraviť"
         save: "Uložiť"
@@ -7886,7 +7923,6 @@ sk:
           other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov. (delete_all_posts_max)"
         delete_confirm_title: "Ste si istí, že chcete odstrániť tohto používateľa? Je to natrvalo!"
         delete_confirm: "Vo všeobecnosti sa uprednostňuje anonymizácia používateľov pred ich vymazaním, aby sa zabránilo odstráneniu obsahu existujúcich diskusií."
-        delete_and_block: "Odstrániť používateľa a zablokovať jeho e-mail a IP adresu"
         delete_dont_block: "Odstránenie používateľa"
         deleting_user: "Odstránenie používateľa…"
         deleted: "Používateľ bol vymazaný."

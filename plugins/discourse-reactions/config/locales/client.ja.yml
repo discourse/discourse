@@ -15,8 +15,6 @@ ja:
       reactions_title: "リアクション"
       state_panel:
         more_users: "および他 %{count} 人..."
-      reaction:
-        forbidden: "そのリアクションはかなり前に作成されました。変更または削除できなくなっています。"
       picker:
         react_with: "この投稿へのリアクション: %{reaction}"
         cant_remove_reaction: "リアクションを削除できなくなりました"

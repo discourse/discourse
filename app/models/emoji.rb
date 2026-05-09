@@ -13,7 +13,7 @@ class Emoji
 
   include ActiveModel::SerializerSupport
 
-  attr_accessor :name, :url, :tonable, :group, :search_aliases, :created_by
+  attr_accessor :name, :url, :tonable, :group, :created_by
 
   def self.global_emoji_cache
     @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
@@ -45,6 +45,12 @@ class Emoji
 
   def self.search_aliases
     search_aliases_db
+  end
+
+  def self.locale_search_aliases(locale)
+    locale = locale.to_s
+    @locale_search_aliases ||= {}
+    @locale_search_aliases[locale] ||= load_locale_search_aliases(locale)
   end
 
   def self.translations
@@ -112,7 +118,6 @@ class Emoji
       e.tonable = Emoji.tonable_emojis.include?(name)
       e.url = Emoji.url_for(filename)
       e.group = group
-      e.search_aliases = search_aliases[name] || []
     end
   end
 
@@ -140,6 +145,7 @@ class Emoji
     end
     global_emoji_cache.clear
     site_emoji_cache.clear
+    @locale_search_aliases = nil
   end
 
   def self.groups_file
@@ -213,6 +219,19 @@ class Emoji
   def self.search_aliases_db
     @search_aliases_db ||= Emoji.parse_emoji_file(search_aliases_db_file)
   end
+
+  def self.locale_search_aliases_dir
+    @locale_search_aliases_dir ||= DiscourseEmojis.paths[:locale_search_aliases]
+  end
+
+  def self.load_locale_search_aliases(locale)
+    dir = locale_search_aliases_dir
+    return nil if dir.nil?
+    file = File.join(dir, "#{locale}.json")
+    return nil unless File.exist?(file)
+    Emoji.parse_emoji_file(file)
+  end
+  private_class_method :load_locale_search_aliases
 
   def self.load_standard
     emojis_db.map { |e| Emoji.create_from_db_item(e) }.compact
@@ -377,20 +396,38 @@ class Emoji
   def self.codes_to_img(str)
     return if str.blank?
 
-    str =
-      str.gsub(EMOJI_CODE_REGEXP) do |name|
-        code = $1
+    result = +""
+    last_index = 0
 
-        if code && Emoji.custom?(code)
-          emoji = Emoji[code]
-          "<img src=\"#{emoji.url}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
-        elsif code && Emoji.exists?(code)
-          "<img src=\"#{Emoji.url_for(code)}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
-        else
-          name
-        end
+    str.scan(EMOJI_CODE_REGEXP) do
+      match = Regexp.last_match
+      code = match[1]
+
+      result << ERB::Util.html_escape(str[last_index...match.begin(0)])
+
+      result << if code && Emoji.custom?(code)
+        emoji = Emoji[code]
+        emoji_img_tag(emoji.url, code)
+      elsif code && Emoji.exists?(code)
+        emoji_img_tag(Emoji.url_for(code), code)
+      else
+        ERB::Util.html_escape(match[0])
       end
+
+      last_index = match.end(0)
+    end
+
+    result << ERB::Util.html_escape(str[last_index..])
+    result
   end
+
+  def self.emoji_img_tag(url, code)
+    escaped_url = ERB::Util.html_escape(url)
+    escaped_code = ERB::Util.html_escape(code)
+
+    "<img src=\"#{escaped_url}\" title=\"#{escaped_code}\" class=\"emoji\" alt=\"#{escaped_code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
+  end
+  private_class_method :emoji_img_tag
 
   def self.sanitize_emoji_name(name)
     name.gsub(/[^a-z0-9\+\-]+/i, "_").gsub(/_{2,}/, "_").downcase

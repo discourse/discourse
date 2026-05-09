@@ -91,6 +91,8 @@ en:
           title: "More Topics"
         post_menu:
           title: "Post Menu"
+        docked_composer:
+          title: "Docked Composer"
         modal:
           title: "Modal"
           header: "Modal Title"

@@ -93,6 +93,27 @@ export default class BulkSelectTopicsDropdown extends Component {
         name: i18n("topic_bulk_actions.close_topics.name"),
       },
       {
+        id: "manage-tags",
+        icon: "tag",
+        name: i18n("topic_bulk_actions.manage_tags.name"),
+        visible: ({ currentUser, siteSettings }) =>
+          siteSettings.tagging_enabled && currentUser.canManageTopic,
+      },
+      {
+        id: "pin-topics",
+        icon: "thumbtack",
+        name: i18n("topic_bulk_actions.pin_topics.name"),
+        visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
+      },
+      {
+        id: "unpin-topics",
+        icon: "thumbtack",
+        name: i18n("topic_bulk_actions.unpin_topics.name"),
+        visible: ({ topics }) =>
+          topics.some((t) => t.pinned || t.unpinned) &&
+          !topics.some((t) => t.isPrivateMessage),
+      },
+      {
         id: "archive-topics",
         icon: "folder",
         name: i18n("topic_bulk_actions.archive_topics.name"),
@@ -111,6 +132,20 @@ export default class BulkSelectTopicsDropdown extends Component {
         visible: ({ topics }) => topics.every((t) => t.isPrivateMessage),
       },
       {
+        id: "convert-to-public-topic",
+        icon: "comments",
+        name: i18n("topic_bulk_actions.convert_to_public_topic.name"),
+        visible: ({ topics, currentUser }) =>
+          currentUser.staff && topics.every((t) => t.isPrivateMessage),
+      },
+      {
+        id: "convert-to-private-message",
+        icon: "envelope",
+        name: i18n("topic_bulk_actions.convert_to_private_message.name"),
+        visible: ({ topics, currentUser }) =>
+          currentUser.staff && topics.every((t) => !t.isPrivateMessage),
+      },
+      {
         id: "unlist-topics",
         icon: "far-eye-slash",
         name: i18n("topic_bulk_actions.unlist_topics.name"),
@@ -125,27 +160,6 @@ export default class BulkSelectTopicsDropdown extends Component {
         visible: ({ topics }) =>
           topics.some((t) => !t.visible) &&
           !topics.some((t) => t.isPrivateMessage),
-      },
-      {
-        id: "append-tags",
-        icon: "tag",
-        name: i18n("topic_bulk_actions.append_tags.name"),
-        visible: ({ currentUser, siteSettings }) =>
-          siteSettings.tagging_enabled && currentUser.canManageTopic,
-      },
-      {
-        id: "replace-tags",
-        icon: "tag",
-        name: i18n("topic_bulk_actions.replace_tags.name"),
-        visible: ({ currentUser, siteSettings }) =>
-          siteSettings.tagging_enabled && currentUser.canManageTopic,
-      },
-      {
-        id: "remove-tags",
-        icon: "tag",
-        name: i18n("topic_bulk_actions.remove_tags.name"),
-        visible: ({ currentUser, siteSettings }) =>
-          siteSettings.tagging_enabled && currentUser.canManageTopic,
       },
       {
         id: "delete-topics",
@@ -218,6 +232,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         allowSilent,
         initialAction,
         initialActionLabel,
+        showFooter: opts.showFooter !== false,
       },
     });
   }
@@ -281,6 +296,15 @@ export default class BulkSelectTopicsDropdown extends Component {
           }
         );
         break;
+      case "convert-to-public-topic":
+      case "convert-to-private-message":
+        const actionName = actionId.replaceAll("-", "_");
+        this.showBulkTopicActionsModal(actionId, actionName, {
+          allowSilent: true,
+          description: i18n(`topic_bulk_actions.${actionName}.description`),
+          confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
+        });
+        break;
       case "unlist-topics":
         this.showBulkTopicActionsModal("unlist", "unlist_topics", {
           description: i18n(`topic_bulk_actions.unlist_topics.description`),
@@ -292,22 +316,9 @@ export default class BulkSelectTopicsDropdown extends Component {
           confirmButtonTranslationKey: "topics.bulk.confirm_relist_topics",
         });
         break;
-      case "append-tags":
-        this.showBulkTopicActionsModal(actionId, "append_tags", {
-          description: i18n(`topic_bulk_actions.append_tags.description`),
-          confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
-        });
-        break;
-      case "replace-tags":
-        this.showBulkTopicActionsModal(actionId, "change_tags", {
-          description: i18n(`topic_bulk_actions.replace_tags.description`),
-          confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
-        });
-        break;
-      case "remove-tags":
-        this.showBulkTopicActionsModal(actionId, "remove_tags", {
-          description: i18n(`topic_bulk_actions.remove_tags.description`),
-          confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
+      case "manage-tags":
+        this.showBulkTopicActionsModal(actionId, "manage_tags", {
+          confirmButtonTranslationKey: "topics.bulk.confirm_apply_to_topics",
         });
         break;
       case "delete-topics":
@@ -320,6 +331,17 @@ export default class BulkSelectTopicsDropdown extends Component {
         this.showBulkTopicActionsModal(actionId, "reset_bump_dates", {
           description: i18n(`topic_bulk_actions.reset_bump_dates.description`),
           confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
+        });
+        break;
+      case "pin-topics":
+        this.showBulkTopicActionsModal("pin", "pin_topics", {
+          showFooter: false,
+        });
+        break;
+      case "unpin-topics":
+        this.showBulkTopicActionsModal("unpin", "unpin_topics", {
+          description: i18n("topic_bulk_actions.unpin_topics.description"),
+          confirmButtonTranslationKey: "topics.bulk.confirm_unpin_topics",
         });
         break;
       case "defer":

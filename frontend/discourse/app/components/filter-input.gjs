@@ -8,6 +8,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import noop from "discourse/helpers/noop";
 import { and } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 
 export default class FilterInput extends Component {
   @tracked isFocused = false;
@@ -67,6 +68,8 @@ export default class FilterInput extends Component {
         <DButton
           @icon="xmark"
           @action={{this.onClearInput}}
+          @title={{i18n "filter_input.clear"}}
+          aria-label={{i18n "filter_input.clear"}}
           class="btn-small btn-transparent filter-input-clear-btn"
         />
       {{/if}}

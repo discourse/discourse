@@ -2,6 +2,7 @@
 
 describe "Topic list" do
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
+  fab!(:admin)
 
   before_all do
     sidebar_url = Fabricate(:sidebar_url, name: "my topic link", value: "/t/#{topics[4].id}")
@@ -87,7 +88,7 @@ describe "Topic list" do
   end
 
   it "refocusses properly when there are multiple pages of topics" do
-    extra_topics = Fabricate.times(25, :post).map(&:topic)
+    Fabricate.times(25, :post).map(&:topic)
     oldest_topic = Fabricate(:post).topic
     oldest_topic.update(bumped_at: 1.day.ago)
 
@@ -116,5 +117,41 @@ describe "Topic list" do
       window_opened_by { discovery.topic_list.send_keys_to_topic(topics[5], %i[meta return]) }
 
     within_window(new_window) { expect(topic).to have_topic_title(topics[5].title) }
+  end
+
+  it "shows a topic list" do
+    sign_in(admin)
+
+    users =
+      8.times.map do
+        Fabricate(:user, username: Faker::Internet.username(specifier: 6..15, separators: %w[_ .]))
+      end
+
+    categories = 5.times.map { Fabricate(:category) }
+
+    25.times do
+      views = rand(80..8_000)
+      topic =
+        Fabricate(
+          :topic,
+          title: Faker::Lorem.sentence(word_count: rand(3..12)).chomp("."),
+          category: categories.sample,
+        )
+      Fabricate(:post, topic: topic)
+      rand(2..5).times { Fabricate(:post, topic: topic, user: users.sample) }
+      topic.feature_topic_users
+      topic.update!(views: views, like_count: rand(views / 100..views / 4))
+    end
+
+    visit("/latest")
+    expect(discovery.topic_list).to have_topics
+    screenshot_marker(label: "topic-list")
+
+    visit "/categories"
+    screenshot_marker(label: "categories")
+
+    find("#create-topic").click
+    expect(page).to have_css("#reply-control.open")
+    screenshot_marker(label: "composer-new-topic")
   end
 end

@@ -1,8 +1,7 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export const ORDER_BY_ACTIVITY_FILTER = "activity";
@@ -42,46 +41,64 @@ export default class PostVotingAnswerHeader extends Component {
     );
   }
 
+  get votesUrl() {
+    return this.post.topic.url;
+  }
+
+  get activityUrl() {
+    return `${this.post.topic.url}?filter=${ORDER_BY_ACTIVITY_FILTER}`;
+  }
+
   @action
-  async orderByVotes() {
+  async orderByVotes(event) {
+    event.preventDefault();
     await this.post.topic.postStream.orderStreamByVotes();
     this.args.outletArgs.actions.updateTopicPageQueryParams();
   }
 
   @action
-  async orderByActivity() {
+  async orderByActivity(event) {
+    event.preventDefault();
     await this.post.topic.postStream.orderStreamByActivity();
     this.args.outletArgs.actions.updateTopicPageQueryParams();
   }
 
   <template>
-    <div class="post-voting-answers-header small-action">
-      <span class="post-voting-answers-headers-count">
+    <nav
+      class="post-voting-answers-header"
+      aria-label={{i18n "post_voting.topic.sort_by"}}
+    >
+      <h5 class="post-voting-answers-header__count">
         {{i18n "post_voting.topic.answer_count" count=this.answersCount}}
-      </span>
-      <span class="post-voting-answers-headers-sort">
-        <span>
-          {{i18n "post_voting.topic.activity"}}
-        </span>
-        <DButton
-          class={{concatClass
-            "post-voting-answers-headers-sort-votes"
-            (unless this.sortedByActivity "active")
-          }}
-          @disabled={{not this.sortedByActivity}}
-          @label="post_voting.topic.votes"
-          @action={{this.orderByVotes}}
-        />
-        <DButton
-          class={{concatClass
-            "post-voting-answers-headers-sort-activity"
-            (if this.sortedByActivity "active")
-          }}
-          @disabled={{this.sortedByActivity}}
-          @label="post_voting.topic.activity"
-          @action={{this.orderByActivity}}
-        />
-      </span>
-    </div>
+      </h5>
+      <ul class="nav-pills post-voting-answers-header__sort">
+        <li>
+          <a
+            href={{this.votesUrl}}
+            class={{concatClass
+              "--votes"
+              (unless this.sortedByActivity "active")
+            }}
+            aria-current={{unless this.sortedByActivity "true"}}
+            {{on "click" this.orderByVotes}}
+          >
+            {{i18n "post_voting.topic.votes"}}
+          </a>
+        </li>
+        <li>
+          <a
+            href={{this.activityUrl}}
+            class={{concatClass
+              "--activity"
+              (if this.sortedByActivity "active")
+            }}
+            aria-current={{if this.sortedByActivity "true"}}
+            {{on "click" this.orderByActivity}}
+          >
+            {{i18n "post_voting.topic.activity"}}
+          </a>
+        </li>
+      </ul>
+    </nav>
   </template>
 }

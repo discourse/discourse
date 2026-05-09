@@ -11,7 +11,6 @@ import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-man
 export default class AiBotHeaderIcon extends Component {
   @service appEvents;
   @service currentUser;
-  @service navigationMenu;
   @service sidebarState;
   @service siteSettings;
   @service aiConversationsSidebarManager;
@@ -44,10 +43,7 @@ export default class AiBotHeaderIcon extends Component {
   }
 
   get clickShouldRouteOutOfConversations() {
-    return (
-      !this.navigationMenu.isHeaderDropdownMode &&
-      this.sidebarState.currentPanel?.key === AI_CONVERSATIONS_PANEL
-    );
+    return this.sidebarState.currentPanel?.key === AI_CONVERSATIONS_PANEL;
   }
 
   get href() {

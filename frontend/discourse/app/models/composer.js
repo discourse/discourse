@@ -2,7 +2,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isHTMLSafe } from "@ember/template";
@@ -13,6 +12,7 @@ import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
+import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
@@ -108,6 +108,8 @@ const CLOSED = "closed",
     original_title: "originalTitle",
     original_tags: "originalTags",
     locale: "locale",
+    reply_to_post_number: "reply_to_post_number",
+    reply_to_user: "reply_to_user",
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -210,6 +212,8 @@ export default class Composer extends RestModel {
   @tracked post;
   @tracked reply;
   @tracked whisper;
+  @tracked reply_to_post_number = null;
+  @tracked reply_to_user = null;
   @tracked
   locale = this.siteSettings.content_localization_enabled
     ? this.post?.locale
@@ -220,32 +224,106 @@ export default class Composer extends RestModel {
   draftSaving = false;
   draftForceSave = false;
   showFullScreenExitPrompt = false;
-  @reads("site.archetypes") archetypes;
-  @equal("action", CREATE_SHARED_DRAFT) sharedDraft;
-  @equal("action", CREATE_TOPIC) creatingTopic;
-  @equal("action", CREATE_SHARED_DRAFT) creatingSharedDraft;
-  @equal("action", PRIVATE_MESSAGE) creatingPrivateMessage;
-  @not("creatingPrivateMessage") notCreatingPrivateMessage;
-  @not("privateMessage") notPrivateMessage;
-  @or("creatingTopic", "editingFirstPost") topicFirstPost;
-  @equal("composeState", OPEN) viewOpen;
-  @equal("composeState", DRAFT) viewDraft;
-  @equal("composeState", FULLSCREEN) viewFullscreen;
-  @or("viewOpen", "viewFullscreen") viewOpenOrFullscreen;
-  @and("editingPost", "post.firstPost") editingFirstPost;
 
-  @or(
+  @tracked _categoryId = null;
+
+  @tracked _archetypesOverride;
+
+  @computed("site.archetypes")
+  get archetypes() {
+    if (this._archetypesOverride !== undefined) {
+      return this._archetypesOverride;
+    }
+    return this.site?.archetypes;
+  }
+
+  set archetypes(value) {
+    this._archetypesOverride = value;
+  }
+
+  @computed("action")
+  get sharedDraft() {
+    return this.action === CREATE_SHARED_DRAFT;
+  }
+
+  @computed("action")
+  get creatingTopic() {
+    return this.action === CREATE_TOPIC;
+  }
+
+  @computed("action")
+  get creatingSharedDraft() {
+    return this.action === CREATE_SHARED_DRAFT;
+  }
+
+  @computed("action")
+  get creatingPrivateMessage() {
+    return this.action === PRIVATE_MESSAGE;
+  }
+
+  @computed("creatingPrivateMessage")
+  get notCreatingPrivateMessage() {
+    return !this.creatingPrivateMessage;
+  }
+
+  @computed("privateMessage")
+  get notPrivateMessage() {
+    return !this.privateMessage;
+  }
+
+  @computed("creatingTopic", "editingFirstPost")
+  get topicFirstPost() {
+    return this.creatingTopic || this.editingFirstPost;
+  }
+
+  @computed("composeState")
+  get viewOpen() {
+    return this.composeState === OPEN;
+  }
+
+  @computed("composeState")
+  get viewDraft() {
+    return this.composeState === DRAFT;
+  }
+
+  @computed("composeState")
+  get viewFullscreen() {
+    return this.composeState === FULLSCREEN;
+  }
+
+  @computed("viewOpen", "viewFullscreen")
+  get viewOpenOrFullscreen() {
+    return this.viewOpen || this.viewFullscreen;
+  }
+
+  @computed("editingPost", "post.firstPost")
+  get editingFirstPost() {
+    return this.editingPost && this.post?.firstPost;
+  }
+
+  @computed(
     "creatingTopic",
     "creatingPrivateMessage",
     "editingFirstPost",
     "creatingSharedDraft"
   )
-  canEditTitle;
+  get canEditTitle() {
+    return (
+      this.creatingTopic ||
+      this.creatingPrivateMessage ||
+      this.editingFirstPost ||
+      this.creatingSharedDraft
+    );
+  }
 
-  @and("canEditTitle", "notCreatingPrivateMessage", "notPrivateMessage")
-  canCategorize;
-
-  @tracked _categoryId = null;
+  @computed("canEditTitle", "notCreatingPrivateMessage", "notPrivateMessage")
+  get canCategorize() {
+    return (
+      this.canEditTitle &&
+      this.notCreatingPrivateMessage &&
+      this.notPrivateMessage
+    );
+  }
 
   @computed("reply", "originalText")
   get replyDirty() {
@@ -257,9 +335,13 @@ export default class Composer extends RestModel {
     return (this.title || "").trim() !== (this.originalTitle || "").trim();
   }
 
-  @computed("replyDirty", "titleDirty", "hasMetaData")
+  @computed("replyDirty", "titleDirty", "canEditTitle", "hasMetaData")
   get anyDirty() {
-    return this.replyDirty || this.titleDirty || this.hasMetaData;
+    return (
+      this.replyDirty ||
+      (this.canEditTitle && this.titleDirty) ||
+      this.hasMetaData
+    );
   }
 
   @dependentKeyCompat
@@ -455,7 +537,7 @@ export default class Composer extends RestModel {
     return this.category?.topic_title_placeholder || null;
   }
 
-  @computed("action", "post", "topic", "topic.title")
+  @computed("action", "post", "topic", "topic.title", "reply_to_user")
   get replyOptions() {
     const options = {
       userLink: null,
@@ -482,10 +564,8 @@ export default class Composer extends RestModel {
       options.userAvatar = tinyAvatar(avatarTemplate);
 
       if (this.site.desktopView) {
-        const originalUserName = this.post.get("reply_to_user.username");
-        const originalUserAvatar = this.post.get(
-          "reply_to_user.avatar_template"
-        );
+        const originalUserName = this.reply_to_user?.username;
+        const originalUserAvatar = this.reply_to_user?.avatar_template;
         if (originalUserName && originalUserAvatar && isEdit(this.action)) {
           options.originalUser = {
             username: originalUserName,
@@ -627,7 +707,7 @@ export default class Composer extends RestModel {
 
   @computed("metaData")
   get hasMetaData() {
-    return this.metaData ? isEmpty(Object.keys(this.metaData)) : false;
+    return this.metaData ? !isEmpty(Object.keys(this.metaData)) : false;
   }
 
   @computed("minimumTitleLength", "titleLength")
@@ -985,15 +1065,43 @@ export default class Composer extends RestModel {
 
       promise = promise.then(async () => {
         const post = await this.store.find("post", opts.post.id);
+        // When a draft is being restored, `opts` already carries the
+        // composer's saved `reply_to_*` state (see `_draft_serializer`).
+        // Prefer those values so pending reply-target changes survive a
+        // reload or navigation; fall back to the post's stored state
+        // otherwise. `undefined` means the key wasn't in the draft at all.
+        //
+        // `post.reply_to_user` is a rich `User` model instance with
+        // circular back-refs (via `statusManager`), so we extract a plain
+        // snapshot — otherwise `JSON.stringify` during periodic draft saves
+        // throws "Converting circular structure to JSON".
+        const replyToPostNumber =
+          opts.reply_to_post_number !== undefined
+            ? opts.reply_to_post_number
+            : (post.reply_to_post_number ?? null);
+        const postReplyToUser = post.reply_to_user;
+        const replyToUser =
+          opts.reply_to_user !== undefined
+            ? opts.reply_to_user
+            : postReplyToUser
+              ? {
+                  id: postReplyToUser.id,
+                  username: postReplyToUser.username,
+                  name: postReplyToUser.name,
+                  avatar_template: postReplyToUser.avatar_template,
+                }
+              : null;
         this.setProperties({
           post,
           reply: post.raw,
           originalText: post.raw,
+          originalTitle: this.topic.title,
+          reply_to_post_number: replyToPostNumber,
+          reply_to_user: replyToUser,
         });
 
         if (post.post_number === 1 && this.canEditTitle) {
           this.setProperties({
-            originalTitle: this.topic.title,
             originalTags: this.topic.tags,
           });
         }
@@ -1065,6 +1173,15 @@ export default class Composer extends RestModel {
       featuredLink: null,
       noBump: false,
       editConflict: false,
+      reply_to_post_number: null,
+      reply_to_user: null,
+    });
+  }
+
+  setReplyTo(postNumber, user) {
+    this.setProperties({
+      reply_to_post_number: postNumber ?? null,
+      reply_to_user: postNumber ? (user ?? null) : null,
     });
   }
 
@@ -1110,6 +1227,12 @@ export default class Composer extends RestModel {
 
     this.serialize(_update_serializer, props);
 
+    // Only send when changed; otherwise a stale composer value could
+    // clobber a concurrent reply-target change by another editor.
+    if (this.reply_to_post_number !== (post?.reply_to_post_number ?? null)) {
+      props.reply_to_post_number = this.reply_to_post_number;
+    }
+
     // user clicked "overwrite edits" button
     if (this.editConflict) {
       delete props.original_text;
@@ -1118,7 +1241,7 @@ export default class Composer extends RestModel {
     }
 
     const rollback = throwAjaxError((error) => {
-      post.setProperties("cooked", oldCooked);
+      post.setProperties({ cooked: oldCooked });
       this.set("composeState", OPEN);
       if (error.jqXHR && error.jqXHR.status === 409) {
         this.set("editConflict", true);
@@ -1131,6 +1254,14 @@ export default class Composer extends RestModel {
     return promise
       .then(() => {
         return post.save(props).then((result) => {
+          // The server omits `reply_to_user` from the response when it's
+          // nil, so the post's in-memory value isn't overwritten when the
+          // target is cleared. Mirror the composer's final state onto the
+          // post so reply indicators update without a refresh.
+          post.setProperties({
+            reply_to_post_number: this.reply_to_post_number,
+            reply_to_user: this.reply_to_user,
+          });
           this.clearState();
           return result;
         });
@@ -1147,10 +1278,7 @@ export default class Composer extends RestModel {
       let val = this.get(serializer[f]);
       if (typeof val !== "undefined") {
         if (f === "tags" && Array.isArray(val)) {
-          // extract tag names from objects for backend compatibility
-          if (val.some((t) => typeof t === "object" && t !== null)) {
-            val = val.map((t) => (typeof t === "object" ? t.name : t));
-          }
+          val = serializeTags(val);
         }
         set(dest, f, val);
       }
@@ -1347,6 +1475,10 @@ export default class Composer extends RestModel {
     return true;
   }
 
+  serializeDraftData() {
+    return this.serialize(_draft_serializer);
+  }
+
   saveDraft() {
     if (!this.canSaveDraft) {
       return Promise.reject();
@@ -1354,15 +1486,13 @@ export default class Composer extends RestModel {
 
     this.set("draftSaving", true);
 
-    const data = this.serialize(_draft_serializer);
-
     const draftSequence = this.draftSequence;
     this.set("draftSequence", this.draftSequence + 1);
 
     return Draft.save(
       this.draftKey,
       draftSequence,
-      data,
+      this.serializeDraftData(),
       this.messageBus.clientId,
       { forceSave: this.draftForceSave }
     )

@@ -11,6 +11,8 @@ es:
     login_with_amazon_client_secret: "Iniciar sesión con el secreto de cliente de Amazon"
     login_with_amazon_scope: "Iniciar sesión con los ámbitos de Amazon OAuth2 (separados por espacio)"
     login_with_amazon_overrides_email: "Reemplaza la dirección de correo electrónico en la cuenta de usuario de Discourse."
+    login_with_amazon_user_can_connect: "Permitir que los usuarios existentes conecten su cuenta de Amazon en las preferencias."
+    login_with_amazon_user_can_revoke: "Permitir que los usuarios revoquen su cuenta de Amazon asociada en las preferencias."
     errors:
       login_with_amazon_client_id_is_blank: "Debes configurar «iniciar sesión con el ID de cliente de Amazon» antes de habilitar esta configuración."
       login_with_amazon_client_secret_is_blank: "Debes configurar «iniciar sesión con el secreto de cliente de Amazon» antes de habilitar esta configuración."

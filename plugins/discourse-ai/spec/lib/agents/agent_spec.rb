@@ -1,5 +1,35 @@
 #frozen_string_literal: true
 
+module FakeExternalPlugin
+  class FakeExternalTool < DiscourseAi::Agents::Tools::Tool
+    def self.signature
+      { name: "fake_external_tool", description: "A fake tool", parameters: [] }
+    end
+
+    def self.custom?
+      true
+    end
+
+    def self.name
+      "fake_external_tool"
+    end
+
+    def invoke
+      { result: "ok" }
+    end
+  end
+end
+
+class FakeExternalAgent < DiscourseAi::Agents::Agent
+  def tools
+    [FakeExternalPlugin::FakeExternalTool]
+  end
+
+  def system_prompt
+    "Test agent"
+  end
+end
+
 class TestAgent < DiscourseAi::Agents::Agent
   def tools
     [
@@ -253,7 +283,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
           .map(&:superclass)
           .reject { |klass| klass == DiscourseAi::Agents::Agent }
 
-      expect(system_agent_classes).to contain_exactly(
+      expect(system_agent_classes).to include(
         DiscourseAi::Agents::General,
         DiscourseAi::Agents::SqlHelper,
         DiscourseAi::Agents::SettingsExplorer,
@@ -282,6 +312,112 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Discover,
         DiscourseAi::Agents::GithubHelper,
       )
+    end
+  end
+
+  describe ".sync_external_registry!" do
+    fab!(:fake_plugin) do
+      plugin = Plugin::Instance.new
+      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin
+    end
+
+    def register_fake_feature(module_name: :test_module, feature: :test_feature)
+      DiscoursePluginRegistry.register_external_ai_feature(
+        {
+          module_name: module_name,
+          feature: feature,
+          agent_klass: FakeExternalAgent,
+          enabled_by_setting: nil,
+        },
+        fake_plugin,
+      )
+    end
+
+    def reset_external_registry!
+      described_class.instance_variable_set(:@external_registry_signature, nil)
+      described_class.instance_variable_set(:@system_agents, nil)
+      described_class.instance_variable_set(:@system_agents_by_id, nil)
+      described_class.instance_variable_set(:@external_tools_by_name, nil)
+    end
+
+    before do
+      # reset cache so sync runs fresh
+      reset_external_registry!
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
+        entry[:value][:module_name] == :test_module
+      end
+      # remove fake entries from the registry
+      reset_external_registry!
+    end
+
+    it "adds the external agent to system_agents" do
+      register_fake_feature
+
+      expected_id = described_class.external_agent_id(FakeExternalAgent)
+      expect(described_class.system_agents[FakeExternalAgent]).to eq(expected_id)
+    end
+
+    it "makes the external agent discoverable by ID" do
+      register_fake_feature
+
+      expected_id = described_class.external_agent_id(FakeExternalAgent)
+      expect(described_class.system_agents_by_id[expected_id]).to eq(FakeExternalAgent)
+    end
+
+    it "registers external tools for name-based lookup" do
+      register_fake_feature
+
+      expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
+        FakeExternalPlugin::FakeExternalTool,
+      )
+    end
+
+    it "includes external tools in the agent's available_tools" do
+      register_fake_feature
+
+      instance = FakeExternalAgent.new
+      tool_names = instance.available_tools.map { |t| t.signature[:name] }
+      expect(tool_names).to include("fake_external_tool")
+    end
+
+    it "produces one agent entry when two features share the same agent_klass" do
+      register_fake_feature(feature: :feature_one)
+      register_fake_feature(feature: :feature_two)
+
+      matching = described_class.system_agents.select { |klass, _| klass == FakeExternalAgent }
+      expect(matching.size).to eq(1)
+    end
+
+    it "does not overwrite a builtin agent when registered as an external agent_klass" do
+      builtin_id = described_class.system_agents[DiscourseAi::Agents::SqlHelper]
+
+      DiscoursePluginRegistry.register_external_ai_feature(
+        {
+          module_name: :test_module,
+          feature: :sql_feature,
+          agent_klass: DiscourseAi::Agents::SqlHelper,
+          enabled_by_setting: nil,
+        },
+        fake_plugin,
+      )
+      reset_external_registry!
+
+      expect(described_class.system_agents[DiscourseAi::Agents::SqlHelper]).to eq(builtin_id)
+    end
+
+    it "keeps the external agent in system_agents even when the plugin is disabled" do
+      register_fake_feature
+
+      expect(described_class.system_agents).to have_key(FakeExternalAgent)
+
+      fake_plugin.stubs(:enabled?).returns(false)
+      reset_external_registry!
+
+      expect(described_class.system_agents).to have_key(FakeExternalAgent)
     end
   end
 

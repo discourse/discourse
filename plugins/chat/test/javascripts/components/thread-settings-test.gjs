@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatModalThreadSettings from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Component | <ThreadSettings />", function (hooks) {
+module("Component | <ThreadSettings />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("discourse-ai - admin", async function (assert) {

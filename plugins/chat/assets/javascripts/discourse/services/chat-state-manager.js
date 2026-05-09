@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
+import { withoutPrefix } from "discourse/lib/get-url";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
@@ -184,13 +185,13 @@ export default class ChatStateManager extends Service {
   }
 
   get lastKnownAppURL() {
-    const url = this._appURL;
+    let url = this._appURL;
 
-    if (url && url !== "/") {
-      return url;
+    if (!url || url === "/") {
+      url = this.router.urlFor(`discovery.${defaultHomepage()}`);
     }
 
-    return this.router.urlFor(`discovery.${defaultHomepage()}`);
+    return withoutPrefix(url);
   }
 
   get lastKnownChatURL() {

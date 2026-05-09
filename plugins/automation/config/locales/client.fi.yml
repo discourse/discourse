@@ -205,9 +205,6 @@ fi:
               description: "Valinnainen, rajoita käynnistäminen vain viesteihin, joissa on nämä ominaisuudet"
           created: Luotu
           edited: Muokattu
-          topics: Kaikki aiheet
-          personal_messages: Henkilökohtaiset viestit
-          public_topics: Julkiset aiheet (pois lukien kaikki suojatut alueet)
           with_images: Kuvat
           with_links: Linkit
           with_code: Koodi

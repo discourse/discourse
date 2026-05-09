@@ -1,12 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { on } from "@ember/modifier";
+import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import PostLanguageSelector from "discourse/components/post-language-selector";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
@@ -31,14 +30,43 @@ const TITLES = {
 
 @tagName("")
 export default class ComposerActionTitle extends Component {
-  @service currentUser;
-  @service siteSettings;
-
-  @alias("model.replyOptions") options;
-  @alias("model.action") action;
-
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
+
+  @service composer;
+
+  @computed("model.replyOptions")
+  get options() {
+    return this.model?.replyOptions;
+  }
+
+  set options(value) {
+    set(this, "model.replyOptions", value);
+  }
+
+  @computed("model.action")
+  get action() {
+    return this.model?.action;
+  }
+
+  set action(value) {
+    set(this, "model.action", value);
+  }
+
+  @computed("action", "model.post.can_edit", "model.topic")
+  get canEditReplyTo() {
+    return (
+      this.action === EDIT &&
+      !!this.model?.post?.can_edit &&
+      !!this.model?.topic
+    );
+  }
+
+  @action
+  openChangeReplyToModal() {
+    this.composer.openChangeReplyToModal();
+  }
+
   @computed("options", "action", "model.tags", "model.category")
   get actionTitle() {
     const result = this.model.customizationFor("actionTitle");
@@ -70,39 +98,31 @@ export default class ComposerActionTitle extends Component {
         return this._formatEditUserPost(
           this.options.userAvatar,
           this.options.userLink,
-          this.options.postLink,
-          this.options.originalUser
+          this.options.postLink
         );
       }
     }
   }
 
-  @computed("action")
-  get showPostLanguageSelector() {
-    const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
-    return (
-      this.currentUser &&
-      this.siteSettings.content_localization_enabled &&
-      allowedActions.includes(this.action)
+  @computed("options.originalUser")
+  get replyTargetSegment() {
+    const originalUser = this.options?.originalUser;
+    if (!originalUser) {
+      return null;
+    }
+    return trustHTML(
+      `${iconHTML("share", { class: "reply-to-glyph" })}
+       ${originalUser.avatar}
+       <span class="original-username">${escape(originalUser.username)}</span>`
     );
   }
 
-  _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
-    let editTitle = `
+  _formatEditUserPost(userAvatar, userLink, postLink) {
+    return trustHTML(`
       <a class="post-link" href="${postLink.href}">${postLink.anchor}</a>
       ${userAvatar}
       <span class="username">${escape(userLink.anchor)}</span>
-    `;
-
-    if (originalUser) {
-      editTitle += `
-        ${iconHTML("share", { class: "reply-to-glyph" })}
-        ${originalUser.avatar}
-        <span class="original-username">${escape(originalUser.username)}</span>
-      `;
-    }
-
-    return trustHTML(editTitle);
+    `);
   }
 
   _formatReplyToTopic(link) {
@@ -138,14 +158,19 @@ export default class ComposerActionTitle extends Component {
 
       <span class="action-title" role="heading" aria-level="1">
         {{this.actionTitle}}
+        {{#if this.replyTargetSegment}}
+          {{#if this.canEditReplyTo}}
+            <button
+              type="button"
+              class="composer-edit-reply-to"
+              title={{i18n "composer.change_reply_to.open"}}
+              {{on "click" this.openChangeReplyToModal}}
+            >{{this.replyTargetSegment}}</button>
+          {{else}}
+            {{this.replyTargetSegment}}
+          {{/if}}
+        {{/if}}
       </span>
-
-      {{#if this.showPostLanguageSelector}}
-        <PostLanguageSelector
-          @composerModel={{this.model}}
-          @selectedLanguage={{this.model.locale}}
-        />
-      {{/if}}
     </div>
   </template>
 }

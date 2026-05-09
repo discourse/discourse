@@ -6,6 +6,7 @@ import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import icon from "discourse/helpers/d-icon";
+import { ajax } from "discourse/lib/ajax";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -20,7 +21,11 @@ export default class LanguageSwitcher extends Component {
   async changeLocale(locale) {
     if (this.currentUser) {
       this.currentUser.set("locale", locale);
-      await this.currentUser.save(["locale"]);
+      this.currentUser.set("user_option.show_original_content", false);
+      await ajax(`/u/${this.currentUser.username}.json`, {
+        type: "PUT",
+        data: { locale, show_original_content: false },
+      });
     } else {
       cookie("locale", locale, { path: "/" });
     }

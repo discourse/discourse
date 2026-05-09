@@ -4,7 +4,7 @@ module Service
   module Base
     # Simple structure to hold the context of the service during its whole lifecycle.
     class Context
-      delegate :slice, :dig, to: :store
+      delegate :slice, :dig, :merge!, to: :store
 
       def self.build(context = {})
         self === context ? context : new(context)
@@ -23,7 +23,15 @@ module Service
       end
 
       def to_h
-        store.dup
+        store.deep_dup
+      end
+
+      def with_isolation(persist_keys: [])
+        @isolated_store = to_h
+        yield
+      ensure
+        @store.merge!(@isolated_store.slice(*persist_keys, *step_result_keys))
+        @isolated_store = nil
       end
 
       # @return [Boolean] returns +true+ if the context is set as successful (default)
@@ -65,7 +73,13 @@ module Service
 
       private
 
-      attr_reader :store
+      def store
+        @isolated_store || @store
+      end
+
+      def step_result_keys
+        store.keys.select { it.start_with?("result.") }
+      end
 
       def method_missing(method_name, *args, &block)
         return super if args.present?

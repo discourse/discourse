@@ -15,5 +15,6 @@ module IcalEncoder
       .gsub(";", "\\;")
       .gsub("\r\n", "\\n")
       .gsub("\n", "\\n")
+      .html_safe
   end
 end

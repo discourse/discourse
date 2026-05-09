@@ -27,6 +27,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :no_password,
              :can_delete_account,
              :can_post_anonymously,
+             :can_toggle_nested_mode,
              :can_ignore_users,
              :can_edit_tags,
              :can_delete_all_posts_and_topics,
@@ -188,15 +189,22 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def has_new_upcoming_changes
     last_visited = object.custom_fields["last_visited_upcoming_changes_at"]
-
-    scope = UpcomingChangeEvent.added
-    scope = scope.where("created_at > ?", Time.zone.parse(last_visited)) if last_visited.present?
-    scope.exists?
+    return false if last_visited.blank? && object.created_at < Discourse.site_creation_date + 1.hour
+    cutoff = last_visited.present? ? Time.zone.parse(last_visited) : object.created_at
+    UpcomingChangeEvent.added.where("created_at > ?", cutoff).exists?
   end
 
   def can_post_anonymously
     SiteSetting.allow_anonymous_mode &&
       (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
+  end
+
+  def can_toggle_nested_mode
+    object.in_any_groups?(SiteSetting.nested_replies_toggle_mode_groups_map)
+  end
+
+  def include_can_toggle_nested_mode?
+    SiteSetting.nested_replies_enabled
   end
 
   def can_ignore_users

@@ -133,7 +133,13 @@ sq:
   not_in_group:
     join_group: "Bashkoju grupit"
   reading_time: "Koha e leximit"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} mins 🕑"
   likes: "Pëlqime"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   embed:
     start_discussion: "Fillo Diskutim"
     continue: "Vazhdo Diskutimin"
@@ -184,6 +190,7 @@ sq:
       admins: "admins"
       moderators: "moderatorët"
       staff: "stafi"
+      anonymous: "anonim"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -577,6 +584,8 @@ sq:
       xaxis: "Dit"
     page_view_logged_in_browser_reqs:
       xaxis: "Dit"
+    page_view_embed_reqs:
+      xaxis: "Day"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -1141,11 +1150,14 @@ sq:
       new_users: "Përdorues të rinj"
       join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
+      subject_template_improved: "Përmbledhja"
       click_here: "klikoni këtu"
     forgot_password:
       title: "Harruat Fjalëkalimin"
     set_password:
       title: "Vendos Fjalëkalim"
+    admin_login:
+      subject_template_improved: "Identifikohu"
     confirm_new_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
     confirm_new_email_via_admin:

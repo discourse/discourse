@@ -290,6 +290,43 @@ describe "Admin Customize Themes" do
     end
   end
 
+  describe "changing theme source" do
+    fab!(:git_theme) do
+      theme = Fabricate(:theme, name: "Git Theme")
+      theme.remote_theme =
+        RemoteTheme.create!(
+          remote_url: "https://github.com/discourse/example-theme.git",
+          branch: "main",
+          local_version: "abc123",
+          remote_version: "abc123",
+          commits_behind: 0,
+        )
+      theme.save!
+      theme
+    end
+
+    it "shows the change source button for git themes" do
+      theme_page.visit(git_theme)
+      expect(page).to have_button(I18n.t("admin_js.admin.customize.theme.change_source.button"))
+    end
+
+    it "opens the change source modal with pre-filled values" do
+      theme_page.visit(git_theme)
+      find("button", text: I18n.t("admin_js.admin.customize.theme.change_source.button")).click
+
+      expect(page).to have_css(".admin-change-theme-source-modal")
+      expect(find(".admin-change-theme-source-modal input.repo-url").value).to eq(
+        "https://github.com/discourse/example-theme.git",
+      )
+      expect(find(".admin-change-theme-source-modal input.branch").value).to eq("main")
+    end
+
+    it "does not show the change source button for local themes" do
+      theme_page.visit(theme)
+      expect(page).to have_no_button(I18n.t("admin_js.admin.customize.theme.change_source.button"))
+    end
+  end
+
   describe "editing theme site settings" do
     it "shows all themeable site settings and allows editing values" do
       theme_page.visit(theme.id)
@@ -344,6 +381,15 @@ describe "Admin Customize Themes" do
       sign_in(other_user)
       visit("/")
       expect(banner).to be_visible
+
+      # Wait for the `/client_settings` subscription's first poll finish.
+      try_until_success do
+        expect(
+          page.evaluate_script(
+            "window.MessageBus.callbacks.find(c => c.channel === '/client_settings')?.last_id",
+          ),
+        ).not_to eq(-1)
+      end
 
       using_session(:admin) do
         sign_in(admin)

@@ -86,8 +86,8 @@ module DiscourseAi
         PROMPT
       end
 
-      def temperature
-        0.3
+      def response_format
+        [{ "key" => "output", "type" => "string" }]
       end
     end
   end

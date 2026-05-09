@@ -1,5 +1,5 @@
-import { click, currentURL, find, settled, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { click, currentURL, find, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
@@ -12,6 +12,7 @@ import {
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
@@ -181,31 +182,33 @@ acceptance("Topic Discovery", function (needs) {
 });
 
 acceptance("Topic Discovery | Footer", function (needs) {
-  needs.hooks.beforeEach(function () {
-    enableLoadMoreObserver();
-  });
-
-  needs.hooks.afterEach(function () {
-    disableLoadMoreObserver();
-  });
-
   needs.pretender((server, helper) => {
     server.get("/c/dev/7/l/latest.json", (request) => {
       const json = cloneJSON(discoveryFixtures["/c/dev/7/l/latest.json"]);
-      if (!request.queryParams.page) {
+      if (request.queryParams.page) {
+        delete json.topic_list.more_topics_url;
+      } else {
         json.topic_list.more_topics_url = "/c/dev/7/l/latest.json?page=2";
       }
       return helper.response(json);
     });
   });
 
-  // TODO: Needs scroll support in tests
-  skip("No footer, then shows footer when all loaded", async function (assert) {
-    await visit("/c/dev");
-    assert.dom(".custom-footer-content").doesNotExist();
+  test("No footer, then shows footer when all loaded", async function (assert) {
+    enableLoadMoreObserver();
+    const observations = stubIntersectionObserver();
 
-    document.querySelector("#ember-testing-container").scrollTop = 100000; // scroll to bottom
-    await settled();
-    assert.dom(".custom-footer-content").exists();
+    try {
+      await visit("/c/dev");
+      assert.dom(".custom-footer-content").doesNotExist();
+
+      await observations
+        .find(({ element }) => element.classList.contains("load-more-sentinel"))
+        .trigger();
+
+      assert.dom(".custom-footer-content").exists();
+    } finally {
+      disableLoadMoreObserver();
+    }
   });
 });

@@ -130,6 +130,8 @@ module DiscourseAutomation
           new_context["_serialized_#{k}"] = { "class" => "Symbol", "value" => v.to_s }
         elsif v.is_a?(ActiveRecord::Base)
           new_context["_serialized_#{k}"] = { "class" => v.class.name, "id" => v.id }
+        elsif v.is_a?(Date) || v.is_a?(Time)
+          new_context[k] = v.iso8601
         else
           new_context[k] = v
         end

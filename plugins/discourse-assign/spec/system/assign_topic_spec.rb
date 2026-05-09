@@ -78,9 +78,7 @@ describe "Assign | Assigning topics" do
 
       it "show the user's username if there is no name" do
         visit "/t/#{topic.id}"
-        admin2.name = nil
-        admin2.save!
-        admin2.reload
+        admin2.update!(name: nil)
 
         topic_page.click_assign_topic
         assign_modal.assignee = admin2
@@ -163,7 +161,6 @@ describe "Assign | Assigning topics" do
         before { SiteSetting.reassign_on_open = true }
 
         it "reassigns the topic on open" do
-          skip_on_ci!("Flaky test - reassigning topic on open")
           visit "/t/#{topic.id}"
 
           topic_page.click_assign_topic
@@ -189,10 +186,7 @@ describe "Assign | Assigning topics" do
             I18n.t("js.action_codes.closed.disabled", when: "just now"),
           )
           expect(page).to have_no_css("#post_5")
-
-          try_until_success(reason: "Relies on MessageBus updates") do
-            expect(find("#topic .assigned-to")).to have_content(admin2.username)
-          end
+          expect(find("#topic .assigned-to")).to have_content(admin2.username)
         end
       end
     end

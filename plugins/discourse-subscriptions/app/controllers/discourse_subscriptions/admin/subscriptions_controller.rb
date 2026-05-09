@@ -100,7 +100,8 @@ module DiscourseSubscriptions
             stripe_request_opts,
           ) if subscription[:latest_invoice]
         payment_intent = invoice[:payment_intent] if invoice[:payment_intent]
-        refund = ::Stripe::Refund.create({ payment_intent: payment_intent }, stripe_request_opts)
+
+        ::Stripe::Refund.create({ payment_intent: payment_intent }, stripe_request_opts)
       end
     end
   end

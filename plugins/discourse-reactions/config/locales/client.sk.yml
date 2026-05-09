@@ -15,8 +15,6 @@ sk:
       reactions_title: "Reakcie"
       state_panel:
         more_users: "a %{count} ďalšie..."
-      reaction:
-        forbidden: "Táto reakcia vznikla príliš dávno. Už sa nedá upraviť ani odstrániť."
       picker:
         react_with: "Reagujte na tento príspevok pomocou: %{reaction}"
         cant_remove_reaction: "Už nemôžete odstrániť svoju reakciu"

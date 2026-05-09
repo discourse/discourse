@@ -47,26 +47,23 @@ export default class PostVotingCommentsMenuComposer extends Component {
   }
 
   <template>
-    <div class="post-voting-comments-menu-composer">
-      <PostVotingCommentComposer
-        @onInput={{this.updateValue}}
-        @onKeyDown={{this.onKeyDown}}
-      />
+    <PostVotingCommentComposer
+      @onInput={{this.updateValue}}
+      @onKeyDown={{this.onKeyDown}}
+    />
 
-      <DButton
-        @action={{this.saveComment}}
-        @disabled={{this.submitDisabled}}
-        @icon="reply"
-        @label="post_voting.post.post_voting_comment.submit"
-        class="btn-primary post-voting-comments-menu-composer-submit"
-      />
+    <DButton
+      @action={{this.saveComment}}
+      @disabled={{this.submitDisabled}}
+      @icon="reply"
+      @label="post_voting.post.post_voting_comment.submit"
+      class="btn-primary btn-small post-voting-comments__composer-submit"
+    />
 
-      <DButton
-        @display="link"
-        @action={{@onCancel}}
-        @label="post_voting.post.post_voting_comment.cancel"
-        class="post-voting-comments-menu-composer-cancel"
-      />
-    </div>
+    <DButton
+      @action={{@onCancel}}
+      @label="post_voting.post.post_voting_comment.cancel"
+      class="btn-transparent btn-small post-voting-comments__composer-cancel"
+    />
   </template>
 }

@@ -58,6 +58,10 @@ ko:
         other: "회원 %{count}명"
     transcript:
       default_thread_title: "스레드"
+  discourse_push_notifications:
+    actions:
+      chat_reply:
+        title: 댓글쓰기
   discourse_automation:
     scriptables:
       send_chat_message:

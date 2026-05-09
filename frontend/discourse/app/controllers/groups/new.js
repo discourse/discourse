@@ -5,6 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class GroupsNewController extends Controller {
   @service router;
+  @service site;
   @service groupAutomaticMembersDialog;
 
   saving = null;
@@ -41,6 +42,14 @@ export default class GroupsNewController extends Controller {
     group
       .create()
       .then(() => {
+        this.site.groups.push({
+          id: group.id,
+          name: group.name,
+          flair_url: group.flair_url,
+          flair_bg_color: group.flair_bg_color,
+          flair_color: group.flair_color,
+          automatic: false,
+        });
         this.router.transitionTo("group.members", group.name);
       })
       .catch(popupAjaxError)

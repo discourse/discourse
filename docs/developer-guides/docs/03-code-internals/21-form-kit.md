@@ -564,13 +564,9 @@ Additionally, the following CSS variables are provided to customize these defaul
 - medium: `--form-kit-medium-input`
 - large: `--form-kit-large-input`
 
-## @titleFormat
+## @labelFormat
 
-Allows to override `@format` for the title. See `@format` for details.
-
-## @descriptionFormat
-
-Allows to override `@format` for the description. See `@format` for details.
+Overrides the width of the title and description (the label area) independently of `@format`. Useful when long descriptions need more room than the input itself — e.g. `@format="small"` with `@labelFormat="full"` keeps a small input but lets the description span the form. Only emit it when the label area should differ from the field; otherwise both inherit from `@format`. See `@format` for the available values.
 
 ## Checkbox
 
@@ -1078,6 +1074,25 @@ Sets the height of the textarea.
     <field.Control @height={{120}} />
   </form.Field>
 </Form>
+```
+
+### @autoResize
+
+Grows the textarea with its content (renders via `<ExpandingTextArea>`). Bounds can be set via the `--expanding-text-area-min-height` (default `auto`) and `--expanding-text-area-max-height` (default `none`) custom properties on any ancestor.
+
+**Example**
+
+```hbs
+<form.Field @name="description" @type="textarea" as |field|>
+  <field.Control @autoResize={{true}} />
+</form.Field>
+```
+
+```css
+[data-name="description"] {
+  --expanding-text-area-min-height: 10rem;
+  --expanding-text-area-max-height: 50rem;
+}
 ```
 
 ## Toggle
@@ -1947,10 +1962,12 @@ FormKit works seamlessly with `<PluginOutlet />`. You can use plugin outlets ins
 
 Then, in your connector, you can use the outlet arguments to add custom fields:
 
-```hbs title="connectors/above-foo-form/bar-input.hbs"
-<@outletArgs.form.Field @name="bar" @title="Bar" @type="input" as |field|>
-  <field.Control />
-</@outletArgs.form.Field>
+```gjs title="connectors/above-foo-form/bar-input.gjs"
+<template>
+  <@outletArgs.form.Field @name="bar" @title="Bar" @type="input" as |field|>
+    <field.Control />
+  </@outletArgs.form.Field>
+</template>
 ```
 
 ## Styling

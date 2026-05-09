@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Löse eine Automatisierung über die API aus"
   js:
     admin:
       logs:
@@ -208,9 +215,6 @@ de:
               description: "Optional, beschränke die Auslösung auf Beiträge mit diesen Merkmalen"
           created: Erstellt
           edited: Bearbeitet
-          topics: Alle Themen
-          personal_messages: Persönliche Nachrichten
-          public_topics: Öffentliche Themen (alle sicheren Kategorien ausschließen)
           with_images: Bilder
           with_links: Links
           with_code: Code

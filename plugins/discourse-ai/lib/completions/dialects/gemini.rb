@@ -133,6 +133,8 @@ module DiscourseAi
         end
 
         def upload_node(details)
+          return { text: details[:text] } if details[:text].present?
+
           image_node(details)
         end
 

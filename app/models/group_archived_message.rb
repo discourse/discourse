@@ -6,10 +6,13 @@ class GroupArchivedMessage < ActiveRecord::Base
 
   def self.move_to_inbox!(group_id, topic, opts = {})
     topic_id = topic.id
-    destroyed = GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
+
+    GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
+
     trigger(:move_to_inbox, group_id, topic_id)
     MessageBus.publish("/topic/#{topic_id}", { type: "move_to_inbox" }, group_ids: [group_id])
     publish_topic_tracking_state(topic, group_id, opts[:acting_user_id])
+
     Jobs.enqueue(
       :group_pm_update_summary,
       group_id: group_id,
@@ -20,11 +23,14 @@ class GroupArchivedMessage < ActiveRecord::Base
 
   def self.archive!(group_id, topic, opts = {})
     topic_id = topic.id
-    destroyed = GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
+
+    GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
     GroupArchivedMessage.create!(group_id: group_id, topic_id: topic_id)
+
     trigger(:archive_message, group_id, topic_id)
     MessageBus.publish("/topic/#{topic_id}", { type: "archived" }, group_ids: [group_id])
     publish_topic_tracking_state(topic, group_id, opts[:acting_user_id])
+
     Jobs.enqueue(
       :group_pm_update_summary,
       group_id: group_id,
