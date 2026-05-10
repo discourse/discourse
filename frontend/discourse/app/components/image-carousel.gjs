@@ -9,6 +9,7 @@ import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -50,6 +51,7 @@ export default class ImageCarousel extends Component {
     this.#trackElement = element;
     this.#trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
+    this.#useScrollEnd = "onscrollend" in window && !isTesting();
 
     // Skip past the leading clone so the real first slide is centered. rAF
     // gives child slide modifiers a chance to register before we look one up.
@@ -58,69 +60,25 @@ export default class ImageCarousel extends Component {
         return;
       }
 
-      const firstSlide = this.#slides.get(0);
-      firstSlide?.scrollIntoView({
+      this.#slides.get(0)?.scrollIntoView({
         behavior: "instant",
         block: "nearest",
         inline: "center",
       });
     });
 
-    const updateIndex = () => {
-      // While a programmatic scroll is in flight, the current scroll position
-      // is still near the previous slide and would clobber the target index.
-      if (this.#programmaticScroll) {
-        return;
-      }
-
-      const newIndex = this.#nearestRealIndex(element);
-      if (newIndex !== this.currentIndex) {
-        this.currentIndex = newIndex;
-      }
-    };
-
-    const onScrollSettled = () => {
-      // Don't fight an in-flight rAF: the browser can fire scrollend
-      // mid-animation and our teleport here would trip its external-scroll
-      // abort. The rAF's finish branch handles the wrap teleport itself.
-      if (this.#animationFrame !== null) {
-        return;
-      }
-
-      this.#programmaticScroll = false;
-      this.#teleportFromWrapZone();
-      updateIndex();
-    };
-
-    const useScrollEnd = "onscrollend" in window && !isTesting();
-    let scrollStopTimer;
-
-    const onScroll = () => {
-      // Optimistic update while scrolling for real-time dot feedback
-      if (!isTesting()) {
-        throttle(this, updateIndex, SCROLL_THROTTLE_MS);
-      }
-
-      // Fallback for browsers without scrollend support (Safari < 17.4)
-      if (!useScrollEnd) {
-        clearTimeout(scrollStopTimer);
-        scrollStopTimer = setTimeout(onScrollSettled, 150);
-      }
-    };
-
-    element.addEventListener("scroll", onScroll, { passive: true });
-
-    if (useScrollEnd) {
-      element.addEventListener("scrollend", onScrollSettled);
+    element.addEventListener("scroll", this.onScroll, { passive: true });
+    if (this.#useScrollEnd) {
+      element.addEventListener("scrollend", this.onScrollSettled);
     }
 
     return () => {
-      element.removeEventListener("scroll", onScroll);
-      if (useScrollEnd) {
-        element.removeEventListener("scrollend", onScrollSettled);
+      element.removeEventListener("scroll", this.onScroll);
+      if (this.#useScrollEnd) {
+        element.removeEventListener("scrollend", this.onScrollSettled);
       }
 
-      clearTimeout(scrollStopTimer);
+      clearTimeout(this.#scrollStopTimer);
       cancelAnimationFrame(initialScroll);
       this.#cancelAnimation();
       this.#trackElement = null;
@@ -134,6 +92,50 @@ export default class ImageCarousel extends Component {
   #clones = new Map();
   #animationFrame = null;
   #animationTarget = null;
+  #useScrollEnd = false;
+  #scrollStopTimer = null;
+
+  @bind
+  updateIndex() {
+    // While a programmatic scroll is in flight, the current scroll position
+    // is still near the previous slide and would clobber the target index.
+    if (this.#programmaticScroll) {
+      return;
+    }
+
+    const newIndex = this.#nearestRealIndex(this.#trackElement);
+    if (newIndex !== this.currentIndex) {
+      this.currentIndex = newIndex;
+    }
+  }
+
+  @bind
+  onScrollSettled() {
+    // Don't fight an in-flight rAF: the browser can fire scrollend
+    // mid-animation and our teleport here would trip its external-scroll
+    // abort. The rAF's finish branch handles the wrap teleport itself.
+    if (this.#animationFrame !== null) {
+      return;
+    }
+
+    this.#programmaticScroll = false;
+    this.#teleportFromWrapZone();
+    this.updateIndex();
+  }
+
+  @bind
+  onScroll() {
+    // Optimistic update while scrolling for real-time dot feedback
+    if (!isTesting()) {
+      throttle(this, this.updateIndex, SCROLL_THROTTLE_MS);
+    }
+
+    // Fallback for browsers without scrollend support (Safari < 17.4)
+    if (!this.#useScrollEnd) {
+      clearTimeout(this.#scrollStopTimer);
+      this.#scrollStopTimer = setTimeout(this.onScrollSettled, 150);
+    }
+  }
 
   // Returns the real-slide index nearest to the viewport center. Clones map
   // to the real slide they visually represent, so a manual drag onto a clone
