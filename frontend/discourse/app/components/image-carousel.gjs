@@ -22,11 +22,11 @@ const ANIMATION_APPROACH_RATE = 0.1;
 const ANIMATION_FINISH_THRESHOLD = 0.5;
 const EXTERNAL_SCROLL_TOLERANCE_PX = 2;
 
-function plusOne([val]) {
+function plusOne(val) {
   return val + 1;
 }
 
-function getAspectRatio([width, height]) {
+function getAspectRatio(width, height) {
   const w = parseInt(width, 10) || 1;
   const h = parseInt(height, 10) || 1;
   return trustHTML(`aspect-ratio: ${w} / ${h}`);
@@ -75,6 +75,7 @@ export default class ImageCarousel extends Component {
     });
     element.addEventListener("touchend", this.onTouchEnd, { passive: true });
     element.addEventListener("touchcancel", this.onTouchEnd, { passive: true });
+
     if (this.#useScrollEnd) {
       element.addEventListener("scrollend", this.onScrollSettled);
     }
@@ -84,6 +85,7 @@ export default class ImageCarousel extends Component {
       element.removeEventListener("touchstart", this.onTouchStart);
       element.removeEventListener("touchend", this.onTouchEnd);
       element.removeEventListener("touchcancel", this.onTouchEnd);
+
       if (this.#useScrollEnd) {
         element.removeEventListener("scrollend", this.onScrollSettled);
       }
