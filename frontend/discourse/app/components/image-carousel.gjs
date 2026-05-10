@@ -23,7 +23,7 @@ const getAspectRatio = helper(([width, height]) => {
 
 const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
 const SCROLL_THROTTLE_MS = 50;
-const MAX_DOTS = 10;
+const MAX_DOTS = 8;
 // Per-frame fraction of remaining distance to cover. Higher = snappier, lower
 // = smoother. 0.10 ≈ ~800ms to fully converge for any single retarget.
 const ANIMATION_APPROACH_RATE = 0.1;
