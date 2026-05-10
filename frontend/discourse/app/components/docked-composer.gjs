@@ -22,13 +22,13 @@ import { clipboardHelpers } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 // Reusable chat-style "docked" composer. There is deliberately no
-// markdown-preview toggle ��� users who want to see rendered output
+// markdown-preview toggle — users who want to see rendered output
 // switch to the rich editor via the toolbar's RTE toggle, which is
 // effectively a live preview. Skipping preview also avoids the
 // cook-on-change CPU cost on every keystroke.
 //
 // @onSubmit is required; all other args are optional. See the
-// styleguide entry (/styleguide ��� Organisms ��� Docked Composer) for
+// styleguide entry (/styleguide → Organisms → Docked Composer) for
 // the live API surface.
 export default class DockedComposer extends Component {
   @service capabilities;
@@ -313,7 +313,7 @@ export default class DockedComposer extends Component {
         uploads: this.uploads,
         inProgressUploadsCount: this.inProgressUploads.length,
       });
-      // Falsy return ��� don't clear; consumer can short-circuit on
+      // Falsy return → don't clear; consumer can short-circuit on
       // validation failure without losing the user's input.
       if (!result) {
         return;
