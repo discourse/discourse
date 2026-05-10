@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { helper } from "@ember/component/helper";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -14,13 +13,6 @@ import { isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-const plusOne = helper(([val]) => val + 1);
-const getAspectRatio = helper(([width, height]) => {
-  const w = parseInt(width, 10) || 1;
-  const h = parseInt(height, 10) || 1;
-  return trustHTML(`aspect-ratio: ${w} / ${h}`);
-});
-
 const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
 const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 8;
@@ -29,6 +21,16 @@ const MAX_DOTS = 8;
 const ANIMATION_APPROACH_RATE = 0.1;
 const ANIMATION_FINISH_THRESHOLD = 0.5;
 const EXTERNAL_SCROLL_TOLERANCE_PX = 2;
+
+function plusOne([val]) {
+  return val + 1;
+}
+
+function getAspectRatio([width, height]) {
+  const w = parseInt(width, 10) || 1;
+  const h = parseInt(height, 10) || 1;
+  return trustHTML(`aspect-ratio: ${w} / ${h}`);
+}
 
 export default class ImageCarousel extends Component {
   @tracked currentIndex = 0;
