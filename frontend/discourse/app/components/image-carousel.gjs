@@ -37,16 +37,12 @@ export default class ImageCarousel extends Component {
 
   registerSlide = modifier((element, [index]) => {
     this.#slides.set(index, element);
-    return () => {
-      this.#slides.delete(index);
-    };
+    return () => this.#slides.delete(index);
   });
 
   registerClone = modifier((element, [which]) => {
     this.#clones.set(which, element);
-    return () => {
-      this.#clones.delete(which);
-    };
+    return () => this.#clones.delete(which);
   });
 
   setupTrack = modifier((element) => {
