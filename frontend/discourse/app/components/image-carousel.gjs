@@ -17,8 +17,8 @@ const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
 const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 8;
 // Per-frame fraction of remaining distance to cover. Higher = snappier, lower
-// = smoother. 0.10 ≈ ~800ms to fully converge for any single retarget.
-const ANIMATION_APPROACH_RATE = 0.1;
+// = smoother. 0.07 ≈ ~1.3s to fully converge for any single retarget.
+const ANIMATION_APPROACH_RATE = 0.07;
 const ANIMATION_FINISH_THRESHOLD = 0.5;
 const EXTERNAL_SCROLL_TOLERANCE_PX = 2;
 
