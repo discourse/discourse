@@ -12,6 +12,7 @@ import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
+import { buildQuote } from "discourse/lib/quote";
 import { i18n } from "discourse-i18n";
 
 const DRAFT_KEY_PREFIX = "ai-bot-docked-draft-";
@@ -160,6 +161,18 @@ export default class AiBotDockedComposer extends Component {
     this.#startEditing(event.post);
   }
 
+  @action
+  handleQuotePost(event) {
+    if (!this.isBotPm) {
+      return;
+    }
+    event.handled = true;
+    const quotedText = buildQuote(event.post, event.buffer, event.opts);
+    if (quotedText?.trim()) {
+      this.appEvents.trigger("composer:insert-block", quotedText);
+    }
+  }
+
   async #startEditing(post) {
     const fullPost = await this.store.find("post", post.id);
     this.editingPost = fullPost;
@@ -221,6 +234,7 @@ export default class AiBotDockedComposer extends Component {
     window.visualViewport?.addEventListener("resize", this.#onViewportChange);
     window.visualViewport?.addEventListener("scroll", this.#onViewportChange);
     this.appEvents.on("topic:edit-post", this, this.handleEditPost);
+    this.appEvents.on("topic:quote-post", this, this.handleQuotePost);
   }
 
   @action
@@ -238,6 +252,7 @@ export default class AiBotDockedComposer extends Component {
       this.#onViewportChange
     );
     this.appEvents.off("topic:edit-post", this, this.handleEditPost);
+    this.appEvents.off("topic:quote-post", this, this.handleQuotePost);
   }
 
   @action
