@@ -429,18 +429,18 @@ export default class ImageCarousel extends Component {
       }}
     >
       <div
-        class="d-image-carousel__track"
-        tabindex="0"
         {{this.setupTrack}}
         {{on "keydown" this.onKeyDown}}
+        tabindex="0"
+        class="d-image-carousel__track"
       >
         {{#unless this.isSingle}}
           <div
-            class="d-image-carousel__slide d-image-carousel__slide--clone"
-            aria-hidden="true"
-            inert
-            style={{getAspectRatio this.lastItem.width this.lastItem.height}}
             {{this.registerClone "last"}}
+            inert
+            aria-hidden="true"
+            style={{getAspectRatio this.lastItem.width this.lastItem.height}}
+            class="d-image-carousel__slide d-image-carousel__slide--clone"
           >
             {{this.lastCloneNode}}
           </div>
@@ -448,13 +448,13 @@ export default class ImageCarousel extends Component {
 
         {{#each this.items as |item index|}}
           <div
+            {{this.registerSlide index}}
+            data-index={{index}}
+            style={{getAspectRatio item.width item.height}}
             class={{concatClass
               "d-image-carousel__slide"
               (if (eq this.currentIndex index) "is-active")
             }}
-            data-index={{index}}
-            style={{getAspectRatio item.width item.height}}
-            {{this.registerSlide index}}
           >
             {{item.element}}
           </div>
@@ -462,11 +462,11 @@ export default class ImageCarousel extends Component {
 
         {{#unless this.isSingle}}
           <div
-            class="d-image-carousel__slide d-image-carousel__slide--clone"
-            aria-hidden="true"
-            inert
-            style={{getAspectRatio this.firstItem.width this.firstItem.height}}
             {{this.registerClone "first"}}
+            inert
+            aria-hidden="true"
+            style={{getAspectRatio this.firstItem.width this.firstItem.height}}
+            class="d-image-carousel__slide d-image-carousel__slide--clone"
           >
             {{this.firstCloneNode}}
           </div>
@@ -487,17 +487,17 @@ export default class ImageCarousel extends Component {
             <div class="d-image-carousel__dots">
               {{#each this.items as |_item index|}}
                 <button
+                  {{on "click" (fn this.scrollToIndex index)}}
                   type="button"
-                  class={{concatClass
-                    "d-image-carousel__dot"
-                    (if (eq this.currentIndex index) "active")
-                  }}
+                  aria-current={{if (eq this.currentIndex index) "true"}}
                   aria-label={{i18n
                     "carousel.go_to_slide"
                     index=(plusOne index)
                   }}
-                  aria-current={{if (eq this.currentIndex index) "true"}}
-                  {{on "click" (fn this.scrollToIndex index)}}
+                  class={{concatClass
+                    "d-image-carousel__dot"
+                    (if (eq this.currentIndex index) "active")
+                  }}
                 ></button>
               {{/each}}
             </div>
