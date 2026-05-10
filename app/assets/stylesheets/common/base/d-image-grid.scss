@@ -118,6 +118,10 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 
+    &:focus {
+      outline: none;
+    }
+
     &::-webkit-scrollbar {
       display: none;
     }
