@@ -42,7 +42,11 @@ export default class ImageCarousel extends Component {
 
   registerClone = modifier((element, [which]) => {
     this.#clones.set(which, element);
-    return () => this.#clones.delete(which);
+    this.#cloneObserver?.observe(element);
+    return () => {
+      this.#cloneObserver?.unobserve(element);
+      this.#clones.delete(which);
+    };
   });
 
   setupTrack = modifier((element) => {
@@ -65,27 +69,54 @@ export default class ImageCarousel extends Component {
       });
     });
 
-    element.addEventListener("scroll", this.onScroll, { passive: true });
-    element.addEventListener("touchstart", this.onTouchStart, {
-      passive: true,
-    });
-    element.addEventListener("touchend", this.onTouchEnd, { passive: true });
-    element.addEventListener("touchcancel", this.onTouchEnd, { passive: true });
+    // Fires the moment a clone becomes 100% visible in the viewport — which
+    // is the exact moment the snap-to-clone animation finishes (and the
+    // moment the clone is centered, since slides are viewport-width). Using
+    // a lower threshold would fire mid-animation, while a sliver of the
+    // adjacent real slide is still showing on screen, and teleporting then
+    // causes that sliver to vanish abruptly and the in-flight snap animation
+    // to be perturbed.
+    this.#cloneObserver = new IntersectionObserver(
+      (entries) => {
+        // Don't fight an in-flight rAF wrap; its own finish branch handles
+        // the teleport. Perturbing scrollLeft here would trip the rAF's
+        // external-scroll abort and cause a snap-back glitch.
+        if (this.#animationFrame !== null) {
+          return;
+        }
+        for (const entry of entries) {
+          if (!entry.isIntersecting) {
+            continue;
+          }
+          const realIndex =
+            entry.target === this.#clones.get("first") ? 0 : this.lastIndex;
+          const realSlide = this.#slides.get(realIndex);
+          if (realSlide) {
+            element.scrollTo({
+              left: this.#computeTargetScrollLeft(realSlide),
+              behavior: "instant",
+            });
+          }
+          return;
+        }
+      },
+      { root: element, threshold: 1 }
+    );
+    this.#clones.forEach((clone) => this.#cloneObserver.observe(clone));
 
+    element.addEventListener("scroll", this.onScroll, { passive: true });
     if (this.#useScrollEnd) {
       element.addEventListener("scrollend", this.onScrollSettled);
     }
 
     return () => {
       element.removeEventListener("scroll", this.onScroll);
-      element.removeEventListener("touchstart", this.onTouchStart);
-      element.removeEventListener("touchend", this.onTouchEnd);
-      element.removeEventListener("touchcancel", this.onTouchEnd);
-
       if (this.#useScrollEnd) {
         element.removeEventListener("scrollend", this.onScrollSettled);
       }
 
+      this.#cloneObserver?.disconnect();
+      this.#cloneObserver = null;
       clearTimeout(this.#scrollStopTimer);
       cancelAnimationFrame(initialScroll);
       this.#cancelAnimation();
@@ -102,7 +133,7 @@ export default class ImageCarousel extends Component {
   #animationTarget = null;
   #useScrollEnd = false;
   #scrollStopTimer = null;
-  #userActiveScroll = false;
+  #cloneObserver = null;
 
   @bind
   updateIndex() {
@@ -134,16 +165,6 @@ export default class ImageCarousel extends Component {
 
   @bind
   onScroll() {
-    // During an active touch drag, teleport across the wrap zone as soon as
-    // we enter it. Lets a continuous drag wrap around the strip indefinitely
-    // instead of hitting the boundary one slide past the wrap. Gated on
-    // active drag because the browser's post-release snap animation has a
-    // fixed target — teleporting during it would cause a long backward
-    // scroll toward the original target.
-    if (this.#userActiveScroll) {
-      this.#teleportFromWrapZone();
-    }
-
     // Optimistic update while scrolling for real-time dot feedback
     if (!isTesting()) {
       throttle(this, this.updateIndex, SCROLL_THROTTLE_MS);
@@ -154,16 +175,6 @@ export default class ImageCarousel extends Component {
       clearTimeout(this.#scrollStopTimer);
       this.#scrollStopTimer = setTimeout(this.onScrollSettled, 150);
     }
-  }
-
-  @bind
-  onTouchStart() {
-    this.#userActiveScroll = true;
-  }
-
-  @bind
-  onTouchEnd() {
-    this.#userActiveScroll = false;
   }
 
   // Returns the real-slide index nearest to the viewport center. Clones map
