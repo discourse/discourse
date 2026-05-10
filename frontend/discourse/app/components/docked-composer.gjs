@@ -7,6 +7,7 @@ import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -39,14 +40,14 @@ export default class DockedComposer extends Component {
   @tracked reply = "";
   @tracked uploads = trackedArray();
 
-  textarea = null;
+  inputElement = null;
   uppyUpload = null;
   fileInputEl = null;
   #dragStart = null;
   #rootElement = null;
 
   #handlePaste = (event) => {
-    if (!this.textarea || document.activeElement !== this.textarea) {
+    if (!this.inputElement || document.activeElement !== this.inputElement) {
       return;
     }
     const { canUpload, canPasteHtml, types } = clipboardHelpers(event, {
@@ -89,6 +90,14 @@ export default class DockedComposer extends Component {
       }
     }
   };
+
+  get autoResize() {
+    return this.args.autoResize ?? false;
+  }
+
+  get resizable() {
+    return (this.args.resizable ?? false) && !this.autoResize;
+  }
 
   get maxResizeOffset() {
     return this.args.maxResizeOffset ?? null;
@@ -153,16 +162,24 @@ export default class DockedComposer extends Component {
 
   @action
   setupEditor(textManipulation) {
-    this.textarea =
+    this.inputElement?.removeEventListener(
+      "keydown",
+      this.#handleKeyDown,
+      true
+    );
+    this.inputElement?.removeEventListener("paste", this.#handlePaste);
+
+    this.inputElement =
       textManipulation?.textarea ??
       // Scope the fallback to this instance's root so multiple docked
       // composers on the same page can't cross-wire.
       this.#rootElement?.querySelector(".d-editor-input") ??
       null;
-    if (this.textarea) {
+    if (this.inputElement) {
       // capture phase so Enter-to-send wins over ItsATrap / smart-list handlers
-      this.textarea.addEventListener("keydown", this.#handleKeyDown, true);
-      this.textarea.addEventListener("paste", this.#handlePaste);
+      this.inputElement.addEventListener("keydown", this.#handleKeyDown, true);
+      this.inputElement.addEventListener("paste", this.#handlePaste);
+      this.syncAutoResizeHeight();
     }
   }
 
@@ -171,6 +188,7 @@ export default class DockedComposer extends Component {
     const saved = this.keyValueStore.get(this.draftKey);
     if (saved) {
       this.reply = saved;
+      this.syncAutoResizeHeight();
     }
   }
 
@@ -188,6 +206,15 @@ export default class DockedComposer extends Component {
     const value = event?.target?.value ?? "";
     this.reply = value;
     this.persistDraft(value);
+    this.syncAutoResizeHeight();
+  }
+
+  @action
+  updateMaxResizeOffset() {
+    this.#rootElement?.style.setProperty(
+      "--docked-composer-max-resize-offset",
+      `${this.maxResizeOffset ?? 400}px`
+    );
   }
 
   @action
@@ -199,6 +226,7 @@ export default class DockedComposer extends Component {
   @action
   setupContainer(element) {
     this.#rootElement = element;
+    this.updateMaxResizeOffset();
     this.args.onRegisterApi?.({ setReply: this.setReply, focus: this.focus });
     this.loadDraft();
 
@@ -227,8 +255,12 @@ export default class DockedComposer extends Component {
 
   @action
   teardown() {
-    this.textarea?.removeEventListener("keydown", this.#handleKeyDown, true);
-    this.textarea?.removeEventListener("paste", this.#handlePaste);
+    this.inputElement?.removeEventListener(
+      "keydown",
+      this.#handleKeyDown,
+      true
+    );
+    this.inputElement?.removeEventListener("paste", this.#handlePaste);
     this.uppyUpload?.teardown();
     this.#rootElement = null;
   }
@@ -289,7 +321,8 @@ export default class DockedComposer extends Component {
       this.reply = "";
       this.uploads = trackedArray();
       this.persistDraft("");
-      schedule("afterRender", () => this.textarea?.focus());
+      this.syncAutoResizeHeight();
+      schedule("afterRender", () => this.inputElement?.focus());
     } catch (error) {
       // Consumers can opt into custom error handling; otherwise we
       // fall back to the generic ajax-error popup for network failures.
@@ -303,7 +336,30 @@ export default class DockedComposer extends Component {
 
   @action
   focus() {
-    this.textarea?.focus();
+    this.inputElement?.focus();
+  }
+
+  @action
+  syncAutoResizeHeight() {
+    if (!this.autoResize || this.inputElement?.tagName !== "TEXTAREA") {
+      return;
+    }
+
+    schedule("afterRender", () => {
+      if (!this.inputElement?.isConnected) {
+        return;
+      }
+
+      // CSS `field-sizing: content` handles modern browsers using the same
+      // mechanism as ExpandingTextArea. This fallback keeps older browsers
+      // usable without affecting the RTE, which naturally grows with content.
+      if (globalThis.CSS?.supports?.("field-sizing", "content")) {
+        return;
+      }
+
+      this.inputElement.style.height = "auto";
+      this.inputElement.style.height = `${this.inputElement.scrollHeight}px`;
+    });
   }
 
   @action
@@ -381,14 +437,16 @@ export default class DockedComposer extends Component {
       <div
         class={{concatClass
           "docked-composer"
-          (if @resizable "docked-composer--resizable")
+          (if this.resizable "docked-composer--resizable")
+          (if this.autoResize "docked-composer--auto-resize")
           @class
         }}
         ...attributes
         {{didInsert this.setupContainer}}
+        {{didUpdate this.updateMaxResizeOffset this.maxResizeOffset}}
         {{willDestroy this.teardown}}
       >
-        {{#if @resizable}}
+        {{#if this.resizable}}
           <div
             class="docked-composer__resize-handle"
             role="separator"

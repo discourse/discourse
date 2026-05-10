@@ -56,15 +56,20 @@ export default class AiBotDockedComposer extends Component {
   };
 
   #onViewportChange = () => {
-    if (!window.visualViewport) {
-      return;
-    }
-    const keyboardOffset = window.innerHeight - window.visualViewport.height;
     const composerEl = this.#composerEl;
     if (!composerEl) {
       return;
     }
 
+    composerEl.style.setProperty(
+      "--docked-composer-max-resize-offset",
+      `${this.maxResizeOffset}px`
+    );
+
+    if (!window.visualViewport) {
+      return;
+    }
+    const keyboardOffset = window.innerHeight - window.visualViewport.height;
     if (keyboardOffset > 100) {
       if (!this.#keyboardOpen) {
         this.#keyboardOpen = true;
@@ -233,6 +238,7 @@ export default class AiBotDockedComposer extends Component {
     this.#checkScroll();
     window.visualViewport?.addEventListener("resize", this.#onViewportChange);
     window.visualViewport?.addEventListener("scroll", this.#onViewportChange);
+    window.addEventListener("resize", this.#onViewportChange);
     this.appEvents.on("topic:edit-post", this, this.handleEditPost);
     this.appEvents.on("topic:quote-post", this, this.handleQuotePost);
   }
@@ -251,6 +257,7 @@ export default class AiBotDockedComposer extends Component {
       "scroll",
       this.#onViewportChange
     );
+    window.removeEventListener("resize", this.#onViewportChange);
     this.appEvents.off("topic:edit-post", this, this.handleEditPost);
     this.appEvents.off("topic:quote-post", this, this.handleQuotePost);
   }
@@ -280,7 +287,7 @@ export default class AiBotDockedComposer extends Component {
       @onRegisterApi={{this.registerComposerApi}}
       @isSubmitting={{this.aiBotDockedSubmit.loading}}
       @disabled={{this.isStreaming}}
-      @resizable={{true}}
+      @autoResize={{true}}
       @maxResizeOffset={{this.maxResizeOffset}}
       {{didInsert this.setupScrollListener}}
       {{willDestroy this.teardownScrollListener}}
