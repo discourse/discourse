@@ -172,9 +172,10 @@
   &__controls {
     display: flex;
     align-items: center;
+    align-self: center;
     justify-content: center;
-    gap: var(--space-2);
-    padding-block: var(--space-2);
+    gap: var(--space-1);
+    margin-top: var(--space-2);
   }
 
   &__nav {
@@ -236,10 +237,7 @@
   }
 
   &__counter {
-    min-width: 7ch;
-    padding: 0.5rem 0.75rem;
-    background: var(--primary-very-low);
-    border-radius: 1rem;
+    min-width: 5ch;
     font-size: var(--font-down-1);
     line-height: var(--line-height-medium);
     color: var(--primary-medium);
