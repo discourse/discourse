@@ -105,12 +105,16 @@ export default class ImageCarousel extends Component {
     this.#clones.forEach((clone) => this.#cloneObserver.observe(clone));
 
     element.addEventListener("scroll", this.onScroll, { passive: true });
+    element.addEventListener("touchstart", this.focusTrack, { passive: true });
+    element.addEventListener("wheel", this.focusTrack, { passive: true });
     if (this.#useScrollEnd) {
       element.addEventListener("scrollend", this.onScrollSettled);
     }
 
     return () => {
       element.removeEventListener("scroll", this.onScroll);
+      element.removeEventListener("touchstart", this.focusTrack);
+      element.removeEventListener("wheel", this.focusTrack);
       if (this.#useScrollEnd) {
         element.removeEventListener("scrollend", this.onScrollSettled);
       }
@@ -146,6 +150,17 @@ export default class ImageCarousel extends Component {
     const newIndex = this.#nearestRealIndex(this.#trackElement);
     if (newIndex !== this.currentIndex) {
       this.currentIndex = newIndex;
+    }
+  }
+
+  // Focus the track on touchstart / wheel so the user can switch between
+  // swipe/trackpad and arrow-key navigation without an extra Tab press.
+  // preventScroll keeps the browser from scrolling the page if the carousel
+  // happens to be partially off-screen when focus moves.
+  @bind
+  focusTrack() {
+    if (document.activeElement !== this.#trackElement) {
+      this.#trackElement?.focus({ preventScroll: true });
     }
   }
 
