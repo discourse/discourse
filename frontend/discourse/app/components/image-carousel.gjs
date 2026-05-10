@@ -7,8 +7,8 @@ import { action } from "@ember/object";
 import { throttle } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
@@ -475,15 +475,13 @@ export default class ImageCarousel extends Component {
 
       {{#unless this.isSingle}}
         <div class="d-image-carousel__controls">
-          <button
-            type="button"
-            class="d-image-carousel__nav d-image-carousel__nav--prev"
-            title={{i18n "carousel.previous"}}
+          <DButton
+            @action={{fn this.scrollToIndex this.prevIndex "prev"}}
+            @icon="chevron-left"
+            @title="carousel.previous"
             aria-label={{i18n "carousel.previous"}}
-            {{on "click" (fn this.scrollToIndex this.prevIndex "prev")}}
-          >
-            {{icon "chevron-left"}}
-          </button>
+            class="btn-flat d-image-carousel__nav d-image-carousel__nav--prev"
+          />
 
           {{#if this.showDots}}
             <div class="d-image-carousel__dots">
@@ -507,15 +505,13 @@ export default class ImageCarousel extends Component {
             <span class="d-image-carousel__counter">{{this.counterText}}</span>
           {{/if}}
 
-          <button
-            type="button"
-            class="d-image-carousel__nav d-image-carousel__nav--next"
-            title={{i18n "carousel.next"}}
+          <DButton
+            @action={{fn this.scrollToIndex this.nextIndex "next"}}
+            @icon="chevron-right"
+            @title="carousel.next"
             aria-label={{i18n "carousel.next"}}
-            {{on "click" (fn this.scrollToIndex this.nextIndex "next")}}
-          >
-            {{icon "chevron-right"}}
-          </button>
+            class="btn-flat d-image-carousel__nav d-image-carousel__nav--next"
+          />
         </div>
       {{/unless}}
     </div>
