@@ -35,14 +35,25 @@ export default class ImageCarousel extends Component {
   });
 
   setupTrack = modifier((element) => {
+    this.#trackElement = element;
     this.#trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
 
     const updateIndex = () => {
+      // While a programmatic scroll is in flight, the current scroll position
+      // is still near the previous slide and would clobber the target index.
+      if (this.#programmaticScroll) {
+        return;
+      }
       const newIndex = this.#calculateNearestIndex(element);
       if (newIndex !== this.currentIndex) {
         this.currentIndex = newIndex;
       }
+    };
+
+    const onScrollSettled = () => {
+      this.#programmaticScroll = false;
+      updateIndex();
     };
 
     const supportsScrollEnd = "onscrollend" in window;
@@ -57,26 +68,29 @@ export default class ImageCarousel extends Component {
       // Fallback for browsers without scrollend support (Safari < 17.4)
       if (!supportsScrollEnd) {
         clearTimeout(scrollStopTimer);
-        scrollStopTimer = setTimeout(updateIndex, 150);
+        scrollStopTimer = setTimeout(onScrollSettled, 150);
       }
     };
 
     element.addEventListener("scroll", onScroll, { passive: true });
 
     if (supportsScrollEnd && !isTesting()) {
-      element.addEventListener("scrollend", updateIndex);
+      element.addEventListener("scrollend", onScrollSettled);
     }
 
     return () => {
       element.removeEventListener("scroll", onScroll);
       if (supportsScrollEnd && !isTesting()) {
-        element.removeEventListener("scrollend", updateIndex);
+        element.removeEventListener("scrollend", onScrollSettled);
       }
       clearTimeout(scrollStopTimer);
+      this.#trackElement = null;
     };
   });
 
   #trackDirection = 1;
+  #trackElement = null;
+  #programmaticScroll = false;
   #slides = new Map();
 
   #calculateNearestIndex(track) {
@@ -137,14 +151,28 @@ export default class ImageCarousel extends Component {
   @action
   scrollToIndex(index) {
     const slide = this.#slides.get(index);
-    if (slide) {
-      this.currentIndex = index;
-      slide.scrollIntoView({
-        behavior: this.#scrollBehavior,
-        block: "nearest",
-        inline: "center",
-      });
+    if (!slide) {
+      return;
     }
+
+    this.currentIndex = index;
+
+    // Skip the lock if we're already centered on the target — no scroll event
+    // would fire to release it.
+    const track = this.#trackElement;
+    if (track) {
+      const trackCenter = track.scrollLeft + track.clientWidth / 2;
+      const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+      if (Math.abs(slideCenter - trackCenter) >= 1) {
+        this.#programmaticScroll = true;
+      }
+    }
+
+    slide.scrollIntoView({
+      behavior: this.#scrollBehavior,
+      block: "nearest",
+      inline: "center",
+    });
   }
 
   #navigateByKey(direction) {
