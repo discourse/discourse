@@ -236,13 +236,13 @@
   }
 
   &__counter {
+    min-width: 7ch;
     padding: 0.5rem 0.75rem;
     background: var(--primary-very-low);
     border-radius: 1rem;
     font-size: var(--font-down-1);
     line-height: var(--line-height-small);
     color: var(--primary-medium);
-    font-variant-numeric: tabular-nums;
     text-align: center;
   }
 
