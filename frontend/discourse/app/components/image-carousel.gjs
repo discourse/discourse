@@ -57,6 +57,7 @@ export default class ImageCarousel extends Component {
       if (this.isSingle || !element.isConnected) {
         return;
       }
+
       const firstSlide = this.#slides.get(0);
       firstSlide?.scrollIntoView({
         behavior: "instant",
@@ -71,6 +72,7 @@ export default class ImageCarousel extends Component {
       if (this.#programmaticScroll) {
         return;
       }
+
       const newIndex = this.#nearestRealIndex(element);
       if (newIndex !== this.currentIndex) {
         this.currentIndex = newIndex;
@@ -84,12 +86,13 @@ export default class ImageCarousel extends Component {
       if (this.#animationFrame !== null) {
         return;
       }
+
       this.#programmaticScroll = false;
       this.#teleportFromWrapZone();
       updateIndex();
     };
 
-    const supportsScrollEnd = "onscrollend" in window;
+    const useScrollEnd = "onscrollend" in window && !isTesting();
     let scrollStopTimer;
 
     const onScroll = () => {
@@ -99,7 +102,7 @@ export default class ImageCarousel extends Component {
       }
 
       // Fallback for browsers without scrollend support (Safari < 17.4)
-      if (!supportsScrollEnd) {
+      if (!useScrollEnd) {
         clearTimeout(scrollStopTimer);
         scrollStopTimer = setTimeout(onScrollSettled, 150);
       }
@@ -107,15 +110,16 @@ export default class ImageCarousel extends Component {
 
     element.addEventListener("scroll", onScroll, { passive: true });
 
-    if (supportsScrollEnd && !isTesting()) {
+    if (useScrollEnd) {
       element.addEventListener("scrollend", onScrollSettled);
     }
 
     return () => {
       element.removeEventListener("scroll", onScroll);
-      if (supportsScrollEnd && !isTesting()) {
+      if (useScrollEnd) {
         element.removeEventListener("scrollend", onScrollSettled);
       }
+
       clearTimeout(scrollStopTimer);
       cancelAnimationFrame(initialScroll);
       this.#cancelAnimation();
@@ -184,9 +188,11 @@ export default class ImageCarousel extends Component {
     if (this.isSingle || !slideWidth) {
       return false;
     }
+
     const wrapDistance = this.items.length * slideWidth;
     const sl = track.scrollLeft;
     let teleportTarget;
+
     if (sl > wrapDistance) {
       teleportTarget = sl - wrapDistance;
     } else if (sl < slideWidth) {
@@ -194,6 +200,7 @@ export default class ImageCarousel extends Component {
     } else {
       return false;
     }
+
     // scrollTo with behavior: "instant" bypasses CSS scroll-behavior: smooth;
     // otherwise this would be a visible animation across the entire strip.
     track.scrollTo({ left: teleportTarget, behavior: "instant" });
@@ -279,20 +286,18 @@ export default class ImageCarousel extends Component {
 
   #suspendNativeScrollEffects() {
     const track = this.#trackElement;
-    if (!track) {
-      return;
+    if (track) {
+      track.style.scrollSnapType = "none";
+      track.style.scrollBehavior = "auto";
     }
-    track.style.scrollSnapType = "none";
-    track.style.scrollBehavior = "auto";
   }
 
   #restoreNativeScrollEffects() {
     const track = this.#trackElement;
-    if (!track) {
-      return;
+    if (track) {
+      track.style.scrollSnapType = "";
+      track.style.scrollBehavior = "";
     }
-    track.style.scrollSnapType = "";
-    track.style.scrollBehavior = "";
   }
 
   #cancelAnimation() {
@@ -300,6 +305,7 @@ export default class ImageCarousel extends Component {
       cancelAnimationFrame(this.#animationFrame);
       this.#animationFrame = null;
     }
+
     this.#restoreNativeScrollEffects();
     this.#programmaticScroll = false;
   }
@@ -362,6 +368,7 @@ export default class ImageCarousel extends Component {
     ) {
       return this.#clones.get("first");
     }
+
     if (
       direction === "prev" &&
       this.currentIndex === 0 &&
@@ -369,6 +376,7 @@ export default class ImageCarousel extends Component {
     ) {
       return this.#clones.get("last");
     }
+
     return null;
   }
 
