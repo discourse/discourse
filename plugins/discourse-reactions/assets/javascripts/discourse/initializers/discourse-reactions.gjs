@@ -12,8 +12,8 @@ import ReactionsActionSummary from "../components/discourse-reactions-actions-su
 
 replaceIcon("notification.reaction", "bell");
 
-function initializeDiscourseReactions(api) {
-  customizePostMenu(api);
+function initializeDiscourseReactions(api, siteSettings) {
+  customizePostMenu(api, siteSettings);
 
   api.addKeyboardShortcut("l", null, {
     click: ".topic-post.selected .discourse-reactions-reaction-button",
@@ -157,14 +157,18 @@ function initializeDiscourseReactions(api) {
   }
 }
 
-function customizePostMenu(api) {
+function customizePostMenu(api, siteSettings) {
   api.registerValueTransformer(
     "post-menu-buttons",
     ({ value: dag, context: { buttonKeys } }) => {
       dag.replace(buttonKeys.LIKE, ReactionsActionButton);
-      dag.add("discourse-reactions-actions", ReactionsActionSummary, {
-        after: buttonKeys.REPLIES,
-      });
+      dag.add(
+        "discourse-reactions-actions",
+        ReactionsActionSummary,
+        siteSettings.enable_new_post_reply_count_position
+          ? { before: buttonKeys.REPLIES }
+          : { after: buttonKeys.REPLIES }
+      );
     }
   );
 }
@@ -176,7 +180,7 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     if (siteSettings.discourse_reactions_enabled) {
-      withPluginApi(initializeDiscourseReactions);
+      withPluginApi((api) => initializeDiscourseReactions(api, siteSettings));
     }
   },
 

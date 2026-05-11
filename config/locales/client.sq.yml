@@ -4122,6 +4122,8 @@ sq:
         general_tab: "Karakteristika të përgjithshme"
         security_tab: "Siguria"
         report_filter_any: "ndonjë"
+        period:
+          custom: "Grupet e krijuara"
         reports:
           today: "Sot"
           yesterday: "Dje"

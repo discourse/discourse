@@ -19,4 +19,11 @@ RSpec.describe "Nested activity log" do
     expect(page).to have_css(".nested-activity-log-modal")
     expect(page).to have_css(".nested-activity-log-modal__item", count: 2)
   end
+
+  it "hides the activity log link on a topic with no small actions" do
+    page.visit("/n/#{topic.slug}/#{topic.id}")
+
+    expect(page).to have_css(".nested-view__controls")
+    expect(page).to have_no_css(".nested-view__activity-link")
+  end
 end

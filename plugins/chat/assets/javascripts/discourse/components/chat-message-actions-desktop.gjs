@@ -17,10 +17,10 @@ import {
   shift,
 } from "@floating-ui/dom";
 import BookmarkIcon from "discourse/components/bookmark-icon";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import chatMessageContainer from "discourse/plugins/chat/discourse/lib/chat-message-container";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
@@ -145,7 +145,7 @@ export default class ChatMessageActionsDesktop extends Component {
       <div
         {{didInsert this.setup}}
         {{didUpdate this.setup this.chat.activeMessage.model.id}}
-        class={{concatClass
+        class={{dConcatClass
           "chat-message-actions-container"
           (concat "is-size-" this.size)
         }}
@@ -153,7 +153,7 @@ export default class ChatMessageActionsDesktop extends Component {
         {{on "wheel" this.redirectScroll}}
       >
         <div
-          class={{concatClass
+          class={{dConcatClass
             "chat-message-actions"
             (unless
               this.messageInteractor.secondaryActions.length

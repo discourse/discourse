@@ -2,11 +2,11 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { durationTextFromSeconds } from "discourse/helpers/slow-mode";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Topic from "discourse/models/topic";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -33,7 +33,7 @@ export default class SlowModeInfo extends Component {
       <div class="topic-status-info">
         <h3 class="slow-mode-heading">
           <span>
-            {{icon "hourglass-start"}}
+            {{dIcon "hourglass-start"}}
             {{i18n
               "topic.slow_mode_notice.duration"
               duration=this.durationText

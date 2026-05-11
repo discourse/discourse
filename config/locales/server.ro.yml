@@ -327,6 +327,7 @@ ro:
       admins: "administratori"
       moderators: "moderatori"
       staff: "personal"
+      anonymous: "anonimi"
       trust_level_0: "nivel_de_încredere_0"
       trust_level_1: "nivel_de_încredere_1"
       trust_level_2: "nivel_de_încredere_2"
@@ -862,6 +863,8 @@ ro:
       xaxis: "Zi"
     page_view_logged_in_browser_reqs:
       xaxis: "Zi"
+    page_view_embed_reqs:
+      xaxis: "Zi"
     http_background_reqs:
       title: "Fundal"
       xaxis: "Zi"
@@ -907,7 +910,7 @@ ro:
       labels:
         user: Utilizator
         location: Locație
-    staff_logins:
+    admin_logins:
       labels:
         user: Utilizator
         location: Locație

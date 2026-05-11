@@ -5,11 +5,11 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 import Blurb from "discourse/components/search-menu/results/blurb";
 import TopicStatus from "discourse/components/topic-status";
-import categoryLink from "discourse/helpers/category-link";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { and } from "discourse/truth-helpers";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class Results extends Component {
   @service siteSettings;
@@ -36,7 +36,7 @@ export default class Results extends Component {
             )
           }}
             <a href={{if @withTopicUrl @result.url}}>
-              {{replaceEmoji (trustHTML @result.topic_title_headline)}}
+              {{dReplaceEmoji (trustHTML @result.topic_title_headline)}}
             </a>
           {{else}}
             <a href={{if @withTopicUrl @result.url}}>
@@ -50,12 +50,12 @@ export default class Results extends Component {
         </span>
       </span>
       <span class="second-line">
-        {{categoryLink
+        {{dCategoryLink
           @result.topic.category
           link=(if @withTopicUrl true false)
         }}
         {{#if this.siteSettings.tagging_enabled}}
-          {{discourseTags @result.topic tagName="span"}}
+          {{dDiscourseTags @result.topic tagName="span"}}
         {{/if}}
       </span>
     </span>

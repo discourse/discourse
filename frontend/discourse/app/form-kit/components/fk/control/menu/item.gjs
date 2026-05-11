@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class FKControlMenuItem extends Component {
   @action

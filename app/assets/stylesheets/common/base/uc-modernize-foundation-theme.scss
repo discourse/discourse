@@ -275,6 +275,10 @@
     color: var(--primary);
   }
 
+  .select-kit .select-kit-header.btn-default {
+    border: var(--d-button-default-border);
+  }
+
   .d-multi-select__search-container {
     padding-block: 0;
   }
@@ -296,9 +300,6 @@
 
   .extra-info-wrapper .title-wrapper {
     font-size: var(--font-down-1);
-
-    --category-badge-title-color: var(--primary-800);
-    --tag-text-color: var(--primary-800);
   }
 
   .header-sidebar-toggle button,

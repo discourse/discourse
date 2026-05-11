@@ -1425,6 +1425,7 @@ en:
         page_view_anon_browser: "Pageviews (anonymous)"
         page_view_logged_in_browser: "Pageviews (logged in)"
         page_view_crawler: "Known crawlers"
+        page_view_embed: "Embedded pageviews"
         page_view_other: "Other traffic"
       yaxis: "Day"
       description: "Pageviews for logged in users, anonymous users, known crawlers and other traffic."
@@ -1604,6 +1605,11 @@ en:
       xaxis: "Day"
       yaxis: "Logged In Browser Pageviews"
       description: "Number of pageviews by logged-in visitors using real browsers."
+    page_view_embed_reqs:
+      title: "Embedded pageviews"
+      xaxis: "Day"
+      yaxis: "Embedded pageviews"
+      description: "Number of pageviews served inside the full app embed iframe."
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -1665,7 +1671,7 @@ en:
         os: Operating System
         login_time: Login Time
       description: "Details of new logins that differ suspiciously from previous logins."
-    staff_logins:
+    admin_logins:
       title: "Admin Logins"
       labels:
         user: User
@@ -2191,6 +2197,8 @@ en:
     composer_media_optimization_image_resize_dimensions_threshold: "Minimum image width to trigger client-side resize"
     composer_media_optimization_image_resize_width_target: "Images with widths larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
+    composer_media_optimization_image_convert_enabled: "Enables client-side conversion of JXL, HEIC, and animated GIF images before upload. JXL and HEIC are converted to JPEG, animated GIFs larger than the threshold are converted to animated WEBP."
+    composer_media_optimization_gif_conversion_threshold: "Minimum GIF file size in bytes to trigger client-side conversion to animated WEBP."
 
     video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."
     video_conversion_service: "The video conversion service to use for processing uploaded videos."
@@ -2598,6 +2606,7 @@ en:
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
+    enable_gifs: "Adds a button to easily search and insert GIFs in posts."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_allowed_groups: "Posts created by users not in these groups must be approved. Posts created by admins and moderators are always approved."

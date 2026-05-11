@@ -23,6 +23,7 @@ class ApplicationRequest < ActiveRecord::Base
          page_view_anon_browser_mobile_beacon: 18,
          page_view_logged_in_browser_beacon: 19,
          page_view_logged_in_browser_mobile_beacon: 20,
+         page_view_embed: 21,
        }
 
   include CachedCounting

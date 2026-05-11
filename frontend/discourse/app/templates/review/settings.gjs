@@ -1,22 +1,22 @@
 import { fn } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import NavItem from "discourse/components/nav-item";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DNavItem from "discourse/ui-kit/d-nav-item";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <HorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
-    <NavItem @route="review.index" @label="review.view_all" />
-    <NavItem @route="review.topics" @label="review.grouped_by_topic" />
+  <DHorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
+    <DNavItem @route="review.index" @label="review.view_all" />
+    <DNavItem @route="review.topics" @label="review.grouped_by_topic" />
     {{#if @controller.currentUser.admin}}
-      <NavItem
+      <DNavItem
         @route="review.settings"
         @label="review.settings.title"
         @icon="wrench"
       />
     {{/if}}
-  </HorizontalOverflowNav>
+  </DHorizontalOverflowNav>
 
   <div class="reviewable-settings">
     <h4>{{i18n "review.settings.priorities.title"}}</h4>

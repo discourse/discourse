@@ -1044,12 +1044,14 @@ class User < ActiveRecord::Base
   end
 
   def create_visit_record!(date, opts = {})
+    visit =
+      user_visits.create!(
+        visited_at: date,
+        posts_read: opts[:posts_read] || 0,
+        mobile: opts[:mobile] || false,
+      )
     user_stat.update_column(:days_visited, user_stat.days_visited + 1)
-    user_visits.create!(
-      visited_at: date,
-      posts_read: opts[:posts_read] || 0,
-      mobile: opts[:mobile] || false,
-    )
+    visit
   end
 
   def visit_record_for(date)
@@ -1058,6 +1060,8 @@ class User < ActiveRecord::Base
 
   def update_visit_record!(date)
     create_visit_record!(date) unless visit_record_for(date)
+  rescue ActiveRecord::RecordNotUnique
+    # concurrent "Updating Last Seen" defer block already inserted
   end
 
   def update_timezone_if_missing(timezone)

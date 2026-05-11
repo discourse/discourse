@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import concatClass from "discourse/helpers/concat-class";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryTags extends Component {
@@ -35,7 +35,7 @@ export default class UpsertCategoryTags extends Component {
 
   <template>
     <@form.Section
-      class={{concatClass
+      class={{dConcatClass
         "edit-category-tab"
         "edit-category-tab-tags"
         (if (eq @selectedTab "tags") "active")

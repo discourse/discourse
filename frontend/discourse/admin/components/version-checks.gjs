@@ -1,8 +1,8 @@
-import CustomHtml from "discourse/components/custom-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import dashIfEmpty from "discourse/helpers/dash-if-empty";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DCustomHtml from "discourse/ui-kit/d-custom-html";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const VersionChecks = <template>
@@ -49,7 +49,7 @@ const VersionChecks = <template>
       <div class="version-status">
         <div class="face">
           <span class="icon critical-updates-available">
-            {{icon "far-face-frown"}}
+            {{dIcon "far-face-frown"}}
           </span>
         </div>
         <div class="version-notes">
@@ -73,11 +73,11 @@ const VersionChecks = <template>
         <div class="face">
           {{#if @versionCheck.version_check_pending}}
             <span class="icon up-to-date">
-              {{icon "far-face-smile"}}
+              {{dIcon "far-face-smile"}}
             </span>
           {{else}}
             <span class="icon critical-updates-available">
-              {{icon "far-face-frown"}}
+              {{dIcon "far-face-frown"}}
             </span>
           {{/if}}
         </div>
@@ -104,7 +104,7 @@ const VersionChecks = <template>
         <div class="face">
           {{#if @versionCheck.upToDate}}
             <span class="icon up-to-date">
-              {{icon "far-face-smile"}}
+              {{dIcon "far-face-smile"}}
             </span>
           {{else}}
             <span
@@ -116,9 +116,9 @@ const VersionChecks = <template>
                 }}"
             >
               {{#if @versionCheck.behindByOneVersion}}
-                {{icon "far-face-meh"}}
+                {{dIcon "far-face-meh"}}
               {{else}}
-                {{icon "far-face-frown"}}
+                {{dIcon "far-face-frown"}}
               {{/if}}
             </span>
           {{/if}}
@@ -139,7 +139,7 @@ const VersionChecks = <template>
       </div>
     {{/if}}
 
-    <CustomHtml @name="update-header" class="update-header" />
+    <DCustomHtml @name="update-header" class="update-header" />
 
     <PluginOutlet
       @name="admin-upgrade-header"

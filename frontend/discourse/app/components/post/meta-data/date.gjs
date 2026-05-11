@@ -3,9 +3,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ShareTopicModal from "discourse/components/modal/share-topic";
-import RelativeDate from "discourse/components/relative-date";
-import concatClass from "discourse/helpers/concat-class";
 import { and } from "discourse/truth-helpers";
+import DRelativeDate from "discourse/ui-kit/d-relative-date";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataDate extends Component {
@@ -26,7 +26,7 @@ export default class PostMetaDataDate extends Component {
   <template>
     <div class="post-info post-date">
       <a
-        class={{concatClass
+        class={{dConcatClass
           "post-date"
           (if (and @post.wiki @post.last_wiki_edit) "last-wiki-edit")
         }}
@@ -34,7 +34,7 @@ export default class PostMetaDataDate extends Component {
         title={{i18n "post.sr_date"}}
         {{on "click" this.showShareModal}}
       >
-        <RelativeDate @date={{@post.displayDate}} />
+        <DRelativeDate @date={{@post.displayDate}} />
       </a>
     </div>
   </template>

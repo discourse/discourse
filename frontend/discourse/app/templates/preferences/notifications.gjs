@@ -2,10 +2,10 @@ import { fn } from "@ember/helper";
 import DesktopNotificationConfig from "discourse/components/desktop-notification-config";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
 import UserNotificationSchedule from "discourse/components/user-notification-schedule";
 import lazyHash from "discourse/helpers/lazy-hash";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -77,7 +77,7 @@ export default <template>
     />
   </span>
 
-  <SaveControls
+  <DSaveControls
     @model={{@controller.model}}
     @action={{@controller.save}}
     @saved={{@controller.saved}}

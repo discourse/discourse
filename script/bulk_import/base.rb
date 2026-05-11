@@ -238,12 +238,22 @@ class BulkImport::Base
   def load_index(type)
     map = {}
 
-    @raw_connection.send_query(
-      "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id NOT LIKE '%:%'",
-    )
-    @raw_connection.set_single_row_mode
-
-    @raw_connection.get_result.stream_each { |row| map[row["original_id"]] = row["discourse_id"] }
+    if @import_prefix
+      @raw_connection.send_query(
+        "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id LIKE '#{@import_prefix}:%'",
+      )
+      @raw_connection.set_single_row_mode
+      prefix_length = @import_prefix.length + 1
+      @raw_connection.get_result.stream_each do |row|
+        map[row["original_id"][prefix_length..]] = row["discourse_id"]
+      end
+    else
+      @raw_connection.send_query(
+        "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id NOT LIKE '%:%'",
+      )
+      @raw_connection.set_single_row_mode
+      @raw_connection.get_result.stream_each { |row| map[row["original_id"]] = row["discourse_id"] }
+    end
 
     @raw_connection.get_result
 

@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-jquery */
 import { run } from "@ember/runloop";
 import $ from "jquery";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
@@ -122,6 +123,10 @@ export function ajax() {
     if (_trackView && (!args.type || args.type === "GET")) {
       _trackView = false;
       args.headers["Discourse-Track-View"] = "true";
+
+      if (EmbedMode.enabled) {
+        args.headers["Discourse-Track-View-Embed"] = "true";
+      }
 
       if (_trackingSessionId) {
         args.headers["Discourse-Track-View-Session-Id"] = _trackingSessionId;

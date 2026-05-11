@@ -3,9 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicMap from "discourse/components/topic-map";
@@ -13,6 +10,9 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { gt, includes } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 import NestedFloatingActions from "./nested/floating-actions";
 import NestedHeader from "./nested/header";
@@ -96,11 +96,13 @@ export default class Nested extends Component {
       <div class="nested-view__controls">
         <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
         <div class="nested-view__controls-right">
-          <DButton
-            class="btn-flat nested-view__activity-link"
-            @action={{@showActivityLog}}
-            @label="nested_replies.activity_log.link"
-          />
+          {{#if @topic.has_activity_log}}
+            <DButton
+              class="btn-flat nested-view__activity-link"
+              @action={{@showActivityLog}}
+              @label="nested_replies.activity_log.link"
+            />
+          {{/if}}
           {{#if this.currentUser.can_toggle_nested_mode}}
             <DButton
               class="btn-flat nested-view__flat-link"
@@ -146,6 +148,7 @@ export default class Nested extends Component {
             @getCloakingData={{this.viewportTracker.getCloakingData}}
             @cloakAbove={{this.cloakAbove}}
             @cloakBelow={{this.cloakBelow}}
+            @collapseFromDepth={{if @collapseReplies 0}}
           />
         {{else}}
           <div class="nested-view__empty">
@@ -154,9 +157,9 @@ export default class Nested extends Component {
         {{/each}}
       </div>
 
-      <ConditionalLoadingSpinner @condition={{@loadingMore}} />
+      <DConditionalLoadingSpinner @condition={{@loadingMore}} />
 
-      <LoadMore
+      <DLoadMore
         @action={{@loadMoreRoots}}
         @enabled={{@hasMoreRoots}}
         @isLoading={{@loadingMore}}

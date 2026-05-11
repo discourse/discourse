@@ -2,25 +2,25 @@ import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ResponsiveTable from "discourse/components/responsive-table";
-import TableHeaderToggle from "discourse/components/table-header-toggle";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import formatDuration from "discourse/helpers/format-duration";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
 import lazyHash from "discourse/helpers/lazy-hash";
-import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
 import { eq, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DResponsiveTable from "discourse/ui-kit/d-responsive-table";
+import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -67,11 +67,11 @@ export default <template>
             <span class="d-button-label">
               {{i18n "admin.users.bulk_actions.title"}}
             </span>
-            {{icon "angle-down"}}
+            {{dIcon "angle-down"}}
           </:trigger>
 
           <:content>
-            <DropdownMenu as |dropdown|>
+            <DDropdownMenu as |dropdown|>
               <dropdown.item>
                 <DButton
                   @translatedLabel={{i18n
@@ -82,16 +82,16 @@ export default <template>
                   class="bulk-delete btn-danger"
                 />
               </dropdown.item>
-            </DropdownMenu>
+            </DDropdownMenu>
           </:content>
         </DMenu>
       </div>
     {{/if}}
   </div>
-  <LoadMore @action={{@controller.loadMore}} class="users-list-container">
+  <DLoadMore @action={{@controller.loadMore}} class="users-list-container">
     {{#if @controller.users}}
-      <ResponsiveTable
-        @className={{concatClass "users-list" @controller.query}}
+      <DResponsiveTable
+        @className={{dConcatClass "users-list" @controller.query}}
         @ariaLabel={{@controller.title}}
         @style={{trustHTML
           (concat
@@ -108,7 +108,7 @@ export default <template>
               @icon="list-check"
               @action={{@controller.toggleBulkSelect}}
             />
-            <TableHeaderToggle
+            <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @field="username"
               @labelKey="username"
@@ -118,7 +118,7 @@ export default <template>
               class="directory-table__column-header--username"
             />
           </div>
-          <TableHeaderToggle
+          <DTableHeaderToggle
             @onToggle={{@controller.updateOrder}}
             @field="email"
             @labelKey="email"
@@ -131,7 +131,7 @@ export default <template>
               "hidden"
             }}
           />
-          <TableHeaderToggle
+          <DTableHeaderToggle
             @onToggle={{@controller.updateOrder}}
             @field="last_emailed"
             @labelKey="admin.users.last_emailed"
@@ -139,7 +139,7 @@ export default <template>
             @asc={{@controller.asc}}
             @automatic={{true}}
           />
-          <TableHeaderToggle
+          <DTableHeaderToggle
             @onToggle={{@controller.updateOrder}}
             @field="seen"
             @labelKey="last_seen"
@@ -148,7 +148,7 @@ export default <template>
             @automatic={{true}}
           />
           {{#unless @controller.showSilenceReason}}
-            <TableHeaderToggle
+            <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @field="topics_viewed"
               @labelKey="admin.user.topics_entered"
@@ -157,7 +157,7 @@ export default <template>
               @automatic={{true}}
             />
           {{/unless}}
-          <TableHeaderToggle
+          <DTableHeaderToggle
             @onToggle={{@controller.updateOrder}}
             @field="posts_read"
             @labelKey="admin.user.posts_read_count"
@@ -165,7 +165,7 @@ export default <template>
             @asc={{@controller.asc}}
             @automatic={{true}}
           />
-          <TableHeaderToggle
+          <DTableHeaderToggle
             @onToggle={{@controller.updateOrder}}
             @field="read_time"
             @labelKey="admin.user.time_read"
@@ -173,7 +173,7 @@ export default <template>
             @asc={{@controller.asc}}
             @automatic={{true}}
           />
-          <TableHeaderToggle
+          <DTableHeaderToggle
             @onToggle={{@controller.updateOrder}}
             @field="created"
             @labelKey="created"
@@ -182,7 +182,7 @@ export default <template>
             @automatic={{true}}
           />
           {{#if @controller.showSilenceReason}}
-            <TableHeaderToggle
+            <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @field="silence_reason"
               @labelKey="admin.users.silence_reason"
@@ -262,13 +262,13 @@ export default <template>
                   href={{user.path}}
                   data-user-card={{user.username}}
                 >
-                  {{avatar user imageSize="small"}}
+                  {{dAvatar user imageSize="small"}}
                 </a>
                 <LinkTo @route="adminUser" @model={{user}}>
                   {{user.username}}
                 </LinkTo>
                 {{#if user.staged}}
-                  {{icon "far-envelope" title="user.staged"}}
+                  {{dIcon "far-envelope" title="user.staged"}}
                 {{/if}}
               </div>
               <div
@@ -289,7 +289,7 @@ export default <template>
                     <span>{{i18n "admin.users.last_emailed"}}</span>
                   </span>
                   <span class="directory-table__value">
-                    {{formatDuration user.last_emailed_age}}
+                    {{dFormatDuration user.last_emailed_age}}
                   </span>
                 </div>
               {{else}}
@@ -298,7 +298,7 @@ export default <template>
                     <span>{{i18n "admin.users.last_emailed"}}</span>
                   </span>
                   <span class="directory-table__value">
-                    {{formatDuration user.last_emailed_age}}
+                    {{dFormatDuration user.last_emailed_age}}
                   </span>
                 </div>
               {{/if}}
@@ -311,7 +311,7 @@ export default <template>
                   <span>{{i18n "last_seen"}}</span>
                 </span>
                 <span class="directory-table__value">
-                  {{formatDuration user.last_seen_age}}
+                  {{dFormatDuration user.last_seen_age}}
                 </span>
               </div>
 
@@ -321,7 +321,7 @@ export default <template>
                     <span>{{i18n "admin.user.topics_entered"}}</span>
                   </span>
                   <span class="directory-table__value">
-                    {{number user.topics_entered}}
+                    {{dNumber user.topics_entered}}
                   </span>
                 </div>
               {{/unless}}
@@ -330,7 +330,7 @@ export default <template>
                   <span>{{i18n "admin.user.posts_read_count"}}</span>
                 </span>
                 <span class="directory-table__value">
-                  {{number user.posts_read_count}}
+                  {{dNumber user.posts_read_count}}
                 </span>
               </div>
               <div class="directory-table__cell time-read">
@@ -338,7 +338,7 @@ export default <template>
                   <span>{{i18n "admin.user.time_read"}}</span>
                 </span>
                 <span class="directory-table__value">
-                  {{formatDuration user.time_read}}
+                  {{dFormatDuration user.time_read}}
                 </span>
               </div>
               <div
@@ -349,7 +349,7 @@ export default <template>
                   <span>{{i18n "created"}}</span>
                 </span>
                 <span class="directory-table__value">
-                  {{formatDuration user.created_at_age}}
+                  {{dFormatDuration user.created_at_age}}
                 </span>
               </div>
 
@@ -384,7 +384,7 @@ export default <template>
               {{/if}}
 
               <div
-                class={{concatClass
+                class={{dConcatClass
                   "directory-table__cell"
                   "user-role"
                   (if
@@ -400,13 +400,13 @@ export default <template>
                 </span>
                 <span class="directory-table__value">
                   {{#if user.admin}}
-                    {{icon "shield-halved" title="admin.title"}}
+                    {{dIcon "shield-halved" title="admin.title"}}
                   {{/if}}
                   {{#if user.moderator}}
-                    {{icon "shield-halved" title="admin.moderator"}}
+                    {{dIcon "shield-halved" title="admin.moderator"}}
                   {{/if}}
                   {{#if user.second_factor_enabled}}
-                    {{icon "lock" title="admin.user.second_factor_enabled"}}
+                    {{dIcon "lock" title="admin.user.second_factor_enabled"}}
                   {{/if}}
                 </span>
                 <PluginOutlet
@@ -418,10 +418,10 @@ export default <template>
             </div>
           {{/each}}
         </:body>
-      </ResponsiveTable>
+      </DResponsiveTable>
     {{else if (not @controller.refreshing)}}
       <p>{{i18n "search.no_results"}}</p>
     {{/if}}
-    <ConditionalLoadingSpinner @condition={{@controller.refreshing}} />
-  </LoadMore>
+    <DConditionalLoadingSpinner @condition={{@controller.refreshing}} />
+  </DLoadMore>
 </template>

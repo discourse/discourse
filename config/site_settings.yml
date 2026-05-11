@@ -1071,6 +1071,10 @@ users:
     client: true
     default: true
     area: "users"
+  directory_hourly_refresh_max_users:
+    default: 100
+    hidden: true
+    area: "users"
   allow_anonymous_mode:
     default: false
     client: true
@@ -1602,6 +1606,10 @@ posting:
     client: true
     refresh: true
     area: "emojis"
+  enable_gifs:
+    default: false
+    client: true
+    hidden: true
   approve_post_count:
     default: 0
     area: "posts_and_topics"
@@ -1965,7 +1973,7 @@ email:
     client: true
     hidden: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       disallow_enabled_for_groups: true
       learn_more_url: "https://meta.discourse.org/t/-/395927"
@@ -2249,7 +2257,7 @@ files:
     list_type: file_types
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg"
+    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg|jxl"
     refresh: true
     type: list
     list_type: file_types
@@ -2518,6 +2526,18 @@ files:
     default: 0
     client: true
     hidden: true
+  composer_media_optimization_image_convert_enabled:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      disallow_enabled_for_groups: true
+  composer_media_optimization_gif_conversion_threshold:
+    default: 512000
+    hidden: true
+    client: true
   composer_media_optimization_debug_mode:
     default: false
     client: true

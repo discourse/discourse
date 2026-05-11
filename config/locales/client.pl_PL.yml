@@ -774,6 +774,7 @@ pl_PL:
       continue_as_guest: "Kontynuuj jako gość"
       be_first_to_reply: "Bądź pierwszą osobą, która odpowie!"
       replying_to: "W odpowiedzi do %{username}"
+      editing_post: "Edycja wpisu"
       reply_placeholder: "Napisz odpowiedź..."
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
@@ -2922,8 +2923,10 @@ pl_PL:
       second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
       second_factor: "Zaloguj się przy użyciu aplikacji Authenticator"
       security_key_description: "Gdy masz przygotowany fizyczny klucz bezpieczeństwa lub kompatybilne urządzenie mobilne, naciśnij znajdujący się poniżej przycisk Uwierzytelnij za pomocą klucza bezpieczeństwa."
+      security_key_or_passkey_description: "Gdy już przygotujesz klucz bezpieczeństwa, klucz dostępu lub kompatybilne urządzenie mobilne, naciśnij poniższy przycisk."
       security_key_alternative: "Spróbuj w inny sposób"
       security_key_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa"
+      security_key_or_passkey_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa lub klucza dostępu"
       security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
       security_key_no_matching_credential_error: "W podanym kluczu zabezpieczeń nie znaleziono zgodnych poświadczeń."
       security_key_support_missing_error: "Twoje obecne urządzenie lub przeglądarka nie obsługuje używania kluczy bezpieczeństwa. Proszę użyć innej metody."
@@ -3495,6 +3498,16 @@ pl_PL:
         few: "%{username} i %{count} inni"
         many: "%{username} i %{count} innych"
         other: "%{username} i %{count} innych"
+      replied_consolidated_in_topic:
+        one: "%{count} nowa odpowiedź w Twoim temacie"
+        few: "%{count} nowe odpowiedzi w Twoim temacie"
+        many: "%{count} nowych odpowiedzi w Twoim temacie"
+        other: "%{count} nowych odpowiedzi w Twoim temacie"
+      replied_consolidated_to_post:
+        one: "%{count} nowa odpowiedź na Twój wpis"
+        few: "%{count} nowe odpowiedzi na Twój wpis"
+        many: "%{count} nowych odpowiedzi na Twój wpis"
+        other: "%{count} nowych odpowiedzi na Twój wpis"
       liked_consolidated_description:
         one: "polubiono %{count} Twój wpis"
         few: "polubił %{count} twoje posty"
@@ -4139,6 +4152,7 @@ pl_PL:
         title: "Oznacz jako nieprzeczytane"
       list: "Tematy"
       new: "nowy temat"
+      has_new_replies: "nowe odpowiedzi od czasu Twojej ostatniej wizyty"
       unread: "nieprzeczytane"
       new_topics:
         one: "%{count} nowy temat"
@@ -5110,6 +5124,8 @@ pl_PL:
       predefined_colors: "Predefiniowane opcje kolorów"
       name_placeholder: "Zalecane jedno lub dwa słowa"
       category_types: "Typy kategorii"
+      unknown_category_type: "Nieznany typ kategorii"
+      unknown_category_type_description: "Typ kategorii '%{categoryType}' nie jest obsługiwany lub wyłączony w tej kategorii."
       category_types_no_results: "Nie znaleziono innych typów kategorii"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
@@ -6995,6 +7011,21 @@ pl_PL:
         too_many_requests: Wykonałeś/łaś tę akcję zbyt wiele razy. Poczekaj, zanim spróbujesz ponownie.
         not_found_error: Przepraszamy, ten raport nie istnieje.
         custom_date_range: Niestandardowy zakres dat
+        sections:
+          highlights:
+            title: "Najważniejsze wydarzenia"
+          reports:
+            title: "Zgłoszenia"
+          traffic:
+            title: "Ruch w witrynie"
+          engagement:
+            title: "Zaangażowanie"
+        period:
+          last_7_days: "Ostatnie 7 dni"
+          last_30_days: "Ostatnie 30 dni"
+          last_3_months: "Ostatnie 3 miesiące"
+          custom: "Niestandardowy"
+          custom_range: "%{start} — %{end}"
         reports:
           trend_title: "%{percent} zmian. Obecnie %{current}, w poprzednim okresie było %{prev}."
           percent_change_tooltip: "%{percent} zmiany."
@@ -7850,6 +7881,8 @@ pl_PL:
           beginners_guide_title: "Poradnik początkującego użytkownika motywów Discourse"
           developers_guide_title: "Poradnik kreatora motywów Discourse"
           browse_themes: "Przeglądaj motywy społeczności"
+          install_more_themes: "Zainstaluj więcej motywów"
+          install_more_themes_description: "Przeglądaj popularne motywy społeczności lub zainstaluj jeden z pliku lub repozytorium git."
           customize_desc: "Personalizacja:"
           title: "Motywy"
           description: "Motywy to rozbudowane modyfikacje, które zmieniają wiele elementów stylu twojego forum i często zawierają także dodatkowe funkcje front-endowe."
@@ -7960,6 +7993,7 @@ pl_PL:
           public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
           install: "Zainstaluj"
           installed: "Zainstalowana"
+          screenshot: "Zrzut ekranu %{name}"
           install_popular: "Popularne"
           install_upload: "Z twojego urządzenia"
           install_git_repo: "Z repozytorium git"

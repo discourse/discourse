@@ -1,7 +1,7 @@
-import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsContainer from "discourse/ui-kit/d-breadcrumbs-container";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DNavItem from "discourse/ui-kit/d-nav-item";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -19,11 +19,11 @@ export default <template>
         @label={{i18n "admin.config.plugins.title"}}
       />
       <div class="d-nav-submenu">
-        <HorizontalOverflowNav class="main-nav nav plugin-nav">
-          <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
+        <DHorizontalOverflowNav class="main-nav nav plugin-nav">
+          <DNavItem @route="adminPlugins.index" @label="admin.plugins.title" />
           {{#each @controller.adminRoutes as |route|}}
             {{#if route.use_new_show_route}}
-              <NavItem
+              <DNavItem
                 @route={{route.full_location}}
                 @label={{route.label}}
                 @routeParam={{route.location}}
@@ -31,7 +31,7 @@ export default <template>
                 data-plugin-nav-tab-id={{route.plugin_id}}
               />
             {{else}}
-              <NavItem
+              <DNavItem
                 @route={{route.full_location}}
                 @label={{route.label}}
                 @class="admin-plugin-tab-nav-item"
@@ -39,7 +39,7 @@ export default <template>
               />
             {{/if}}
           {{/each}}
-        </HorizontalOverflowNav>
+        </DHorizontalOverflowNav>
       </div>
     </div>
   {{/if}}
