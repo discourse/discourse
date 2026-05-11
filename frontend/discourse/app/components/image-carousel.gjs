@@ -65,7 +65,7 @@ export default class ImageCarousel extends Component {
     // Skip past the leading clone so the real first slide is centered. rAF
     // gives child slide modifiers a chance to register before we look one up.
     const initialScroll = requestAnimationFrame(() => {
-      if (this.isSingle || !element.isConnected) {
+      if (!element.isConnected) {
         return;
       }
 
@@ -266,7 +266,7 @@ export default class ImageCarousel extends Component {
   #teleportFromWrapZone() {
     const track = this.#trackElement;
     const slideWidth = track?.clientWidth;
-    if (this.isSingle || !slideWidth) {
+    if (!slideWidth) {
       return false;
     }
 
@@ -395,10 +395,6 @@ export default class ImageCarousel extends Component {
     return this.args.data.items || [];
   }
 
-  get isSingle() {
-    return this.items.length < 2;
-  }
-
   get prevIndex() {
     return this.currentIndex === 0 ? this.lastIndex : this.currentIndex - 1;
   }
@@ -512,21 +508,19 @@ export default class ImageCarousel extends Component {
   }
 
   <template>
-    <div
-      {{this.setupCarousel}}
-      {{on "keydown" this.onKeyDown}}
-      tabindex="0"
-      class={{concatClass
-        "d-image-carousel"
-        (if @data.mode (concat "d-image-carousel--" @data.mode))
-        (if this.isSingle "d-image-carousel--single")
-      }}
-    >
+    {{#if (eq this.items.length 1)}}
+      {{this.firstItem.element}}
+    {{else if this.items.length}}
       <div
-        {{this.setupTrack}}
-        class="d-image-carousel__track"
+        {{this.setupCarousel}}
+        {{on "keydown" this.onKeyDown}}
+        tabindex="0"
+        class={{concatClass
+          "d-image-carousel"
+          (if @data.mode (concat "d-image-carousel--" @data.mode))
+        }}
       >
-        {{#unless this.isSingle}}
+        <div {{this.setupTrack}} class="d-image-carousel__track">
           <div
             {{this.registerClone "last"}}
             inert
@@ -536,23 +530,21 @@ export default class ImageCarousel extends Component {
           >
             {{this.lastCloneNode}}
           </div>
-        {{/unless}}
 
-        {{#each this.items as |item index|}}
-          <div
-            {{this.registerSlide index}}
-            data-index={{index}}
-            style={{getAspectRatio item.width item.height}}
-            class={{concatClass
-              "d-image-carousel__slide"
-              (if (eq this.currentIndex index) "is-active")
-            }}
-          >
-            {{item.element}}
-          </div>
-        {{/each}}
+          {{#each this.items as |item index|}}
+            <div
+              {{this.registerSlide index}}
+              data-index={{index}}
+              style={{getAspectRatio item.width item.height}}
+              class={{concatClass
+                "d-image-carousel__slide"
+                (if (eq this.currentIndex index) "is-active")
+              }}
+            >
+              {{item.element}}
+            </div>
+          {{/each}}
 
-        {{#unless this.isSingle}}
           <div
             {{this.registerClone "first"}}
             inert
@@ -562,10 +554,8 @@ export default class ImageCarousel extends Component {
           >
             {{this.firstCloneNode}}
           </div>
-        {{/unless}}
-      </div>
+        </div>
 
-      {{#unless this.isSingle}}
         <div class="d-image-carousel__controls">
           <DButton
             @action={{fn this.scrollToIndex this.prevIndex "prev"}}
@@ -605,7 +595,7 @@ export default class ImageCarousel extends Component {
             class="btn-flat d-image-carousel__nav d-image-carousel__nav--next"
           />
         </div>
-      {{/unless}}
-    </div>
+      </div>
+    {{/if}}
   </template>
 }
