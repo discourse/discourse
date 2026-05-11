@@ -18,8 +18,7 @@ const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
 const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 8;
 const USE_SCROLLEND = !isTesting() && "onscrollend" in window;
-// Approximate scroll animation duration (~99% of the distance covered).
-const ANIMATION_DURATION_MS = 1250;
+const ANIMATION_DURATION_MS = 800;
 
 function plusOne(val) {
   return val + 1;
@@ -265,8 +264,9 @@ export default class ImageCarousel extends Component {
       }
 
       const distance = this.animationTarget - current;
-      // Sub-pixel: snap to target.
-      if (Math.abs(distance) < 0.5) {
+      // Within a couple of pixels: snap to target. Exponential approach
+      // crawls in sub-pixel land otherwise and reads as an fps stutter.
+      if (Math.abs(distance) < 2) {
         t.scrollLeft = this.animationTarget;
         // If we landed on a wrap slot, return the element to its slide and
         // teleport. currentIndex was already set by scrollToIndex.
