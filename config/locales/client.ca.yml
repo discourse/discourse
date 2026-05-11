@@ -3287,6 +3287,10 @@ ca:
         sections:
           reports:
             title: "Reports"
+        period:
+          last_7_days: "Els darrers 7 dies"
+          last_30_days: "Els darrers 30 dies"
+          custom: "Personalitzat"
         reports:
           trend_title: "Canvi del %{percent}. Ara %{current}, era %{prev} en el període anterior."
           today: "Avui"

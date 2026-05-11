@@ -4812,6 +4812,10 @@ pt:
         sections:
           reports:
             title: "Relatórios"
+        period:
+          last_7_days: "Últimos 7 Dias"
+          last_30_days: "Últimos 30 Dias"
+          custom: "Personalizar"
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
           today: "Hoje"

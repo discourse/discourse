@@ -778,6 +778,7 @@ uk:
       continue_as_guest: "Продовжити як гість"
       be_first_to_reply: "Будьте першим, хто відповість!"
       replying_to: "Відповідь %{username}"
+      editing_post: "Редагування допису"
       reply_placeholder: "Написати відповідь..."
     topic_count_all:
       one: "Переглянути %{count} нову тему"
@@ -7024,6 +7025,11 @@ uk:
             title: "Трафік сайту"
           engagement:
             title: "Залучення"
+        period:
+          last_7_days: "Останні 7 днів"
+          last_30_days: "Останні 30 днів"
+          last_3_months: "Останні 3 місяців"
+          custom: "Користувацька"
         reports:
           trend_title: "%{percent} зміни. В даний час %{current}, було %{prev} в попередні періоди."
           percent_change_tooltip: "%{percent} змін."

@@ -1140,7 +1140,7 @@ lt:
         device: Įrenginys
         os: Operacinė sistema
         login_time: Prisijungimo laikas
-    staff_logins:
+    admin_logins:
       title: "Administratoriaus prisijungimai"
       labels:
         user: Narys

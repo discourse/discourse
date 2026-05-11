@@ -627,7 +627,7 @@ sq:
       labels:
         user: User
         location: Vendndodhja
-    staff_logins:
+    admin_logins:
       labels:
         user: User
         location: Vendndodhja

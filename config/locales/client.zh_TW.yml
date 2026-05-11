@@ -5043,6 +5043,11 @@ zh_TW:
         sections:
           reports:
             title: "報告"
+        period:
+          last_7_days: "過去 7 天"
+          last_30_days: "過去 30 天"
+          last_3_months: "過去 3 個月"
+          custom: "客製"
         reports:
           trend_title: "%{percent}更改，最近更改時間是在%{current}。"
           percent_change_tooltip: "%{percent} 更改。"

@@ -4645,6 +4645,11 @@ da:
             title: "Rapporter"
           traffic:
             title: "Webstedstrafik"
+        period:
+          last_7_days: "Seneste 7 dage"
+          last_30_days: "Seneste 30 dage"
+          last_3_months: "Seneste 3 måneder"
+          custom: "Tilpasset"
         reports:
           trend_title: "%{percent} ændring. I øjeblikket %{current}, var %{prev} i forrige periode."
           percent_change_tooltip: "%{percent} ændring."

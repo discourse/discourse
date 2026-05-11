@@ -1489,11 +1489,11 @@ zh_CN:
         os: 操作系统
         login_time: 登录时间
       description: "与以前的登录有可疑不同的新登录的详细信息。"
-    staff_logins:
+    admin_logins:
       title: "管理员登录"
       labels:
         user: 用户
-        location: 地点
+        location: 位置
         login_at: 登录时间
       description: "带有位置的管理员登录时间列表。"
     top_uploads:

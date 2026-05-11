@@ -674,6 +674,7 @@ tr_TR:
       continue_as_guest: "Misafir olarak devam et"
       be_first_to_reply: "İlk yanıtı siz verin!"
       replying_to: "%{username}'e yanıt veriliyor"
+      editing_post: "Gönderi düzenleniyor"
       reply_placeholder: "Yanıt yaz..."
     topic_count_all:
       one: "%{count} yeni konuya bakın"
@@ -6396,6 +6397,11 @@ tr_TR:
             title: "Site trafiği"
           engagement:
             title: "Taahhüt"
+        period:
+          last_7_days: "Son 7 gün"
+          last_30_days: "Son 30 gün"
+          last_3_months: "Son 3 ay"
+          custom: "Özel"
         reports:
           trend_title: "%{percent} değişiklik. Şu anda %{current}, önceki periyotta %{prev} idi."
           percent_change_tooltip: "%{percent} değişiklik."

@@ -4027,6 +4027,11 @@ ko:
         sections:
           reports:
             title: "보고서"
+        period:
+          last_7_days: "지난 7일"
+          last_30_days: "지난 30일"
+          last_3_months: "지난 3개월"
+          custom: "사용자 정의"
         reports:
           trend_title: "%{percent} 변경. 현재 %{current}이며, 이전 기간의 %{prev}입니다."
           today: "오늘"

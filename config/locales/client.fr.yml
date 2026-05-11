@@ -5701,6 +5701,11 @@ fr:
             title: "Rapports"
           traffic:
             title: "Trafic du site"
+        period:
+          last_7_days: "Ces 7 derniers jours"
+          last_30_days: "30 derniers jours"
+          last_3_months: "3 derniers mois"
+          custom: "Personnalisé"
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
           percent_change_tooltip: "Changement de %{percent}."
