@@ -6155,6 +6155,23 @@ RSpec.describe TopicsController do
         expect(response.parsed_body["error_type"]).to eq("invalid_access")
       end
 
+      it "raises an error when publishing a private message to a category" do
+        sign_in(trust_level_4)
+
+        pm_topic = Fabricate(:private_message_topic, user: trust_level_4)
+
+        post "/t/#{pm_topic.id}/timer.json",
+             params: {
+               time: 24,
+               status_type: "publish_to_category",
+               category_id: category.id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(pm_topic.reload.public_topic_timer).to eq(nil)
+      end
+
       it "allows a category moderator to create a delete timer" do
         user.update!(trust_level: TrustLevel[4])
         Group.user_trust_level_change!(user.id, user.trust_level)
