@@ -27,7 +27,7 @@ const POSITION_CLASSES = Object.freeze({
  * element's midpoint:
  *
  * ```hbs
- * <li {{dragAndDropTarget
+ * <li {{dDragAndDropTarget
  *   accepts="sidebar-link"
  *   onDrop=this.reorder
  * }}>...</li>
@@ -38,7 +38,7 @@ const POSITION_CLASSES = Object.freeze({
  * geometry, not by the cursor:
  *
  * ```hbs
- * <div {{dragAndDropTarget
+ * <div {{dDragAndDropTarget
  *   accepts="ve-block"
  *   position="inside"
  *   onDrop=this.applyMove
@@ -56,7 +56,7 @@ const POSITION_CLASSES = Object.freeze({
  * it just doesn't claim the *drop*. This lets a section highlight while
  * a link inside it is being hovered, for example.
  */
-export default class DragAndDropTargetModifier extends Modifier {
+export default class DDragAndDropTargetModifier extends Modifier {
   @service dragAndDrop;
 
   element;

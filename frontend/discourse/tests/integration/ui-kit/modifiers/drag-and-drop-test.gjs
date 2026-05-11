@@ -1,9 +1,9 @@
 import { hash } from "@ember/helper";
 import { render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import dragAndDropSource from "discourse/modifiers/drag-and-drop-source";
-import dragAndDropTarget from "discourse/modifiers/drag-and-drop-target";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 
 /**
  * Drives a full HTML5 drag/drop cycle between a source and a target
@@ -17,7 +17,7 @@ async function dragFromTo(sourceSelector, targetSelector, { dataTransfer }) {
   await triggerEvent(sourceSelector, "dragend", { dataTransfer });
 }
 
-module("Integration | Modifier | drag-and-drop", function (hooks) {
+module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   setupRenderingTest(hooks);
 
   test("source + target handshake fires onDrop with source data", async function (assert) {
@@ -28,11 +28,11 @@ module("Integration | Modifier | drag-and-drop", function (hooks) {
       <template>
         <div
           id="src"
-          {{dragAndDropSource kind="row" data=(hash id=1)}}
+          {{dDragAndDropSource kind="row" data=(hash id=1)}}
         >src</div>
         <div
           id="tgt"
-          {{dragAndDropTarget accepts="row" position="before" onDrop=onDrop}}
+          {{dDragAndDropTarget accepts="row" position="before" onDrop=onDrop}}
         >tgt</div>
       </template>
     );
@@ -56,11 +56,11 @@ module("Integration | Modifier | drag-and-drop", function (hooks) {
       <template>
         <div
           id="src"
-          {{dragAndDropSource kind="row" data=(hash id=1)}}
+          {{dDragAndDropSource kind="row" data=(hash id=1)}}
         >src</div>
         <div
           id="tgt"
-          {{dragAndDropTarget accepts="card" onDrop=onDrop}}
+          {{dDragAndDropTarget accepts="card" onDrop=onDrop}}
         >tgt</div>
       </template>
     );
@@ -76,7 +76,7 @@ module("Integration | Modifier | drag-and-drop", function (hooks) {
       <template>
         <div
           id="src"
-          {{dragAndDropSource kind="row" data=(hash id=1)}}
+          {{dDragAndDropSource kind="row" data=(hash id=1)}}
         >src</div>
       </template>
     );
@@ -96,12 +96,12 @@ module("Integration | Modifier | drag-and-drop", function (hooks) {
       <template>
         <div
           id="src"
-          {{dragAndDropSource kind="row" data=(hash id=1)}}
+          {{dDragAndDropSource kind="row" data=(hash id=1)}}
         >src</div>
         <div
           id="tgt"
           style="height: 100px"
-          {{dragAndDropTarget accepts="row" onDrop=onDrop}}
+          {{dDragAndDropTarget accepts="row" onDrop=onDrop}}
         >tgt</div>
       </template>
     );
@@ -156,11 +156,11 @@ module("Integration | Modifier | drag-and-drop", function (hooks) {
       <template>
         <div
           id="src"
-          {{dragAndDropSource kind="row" data=(hash id=1)}}
+          {{dDragAndDropSource kind="row" data=(hash id=1)}}
         >src</div>
         <div
           id="outer"
-          {{dragAndDropTarget
+          {{dDragAndDropTarget
             accepts="row"
             position="inside"
             onDrop=onOuterDrop
@@ -169,7 +169,7 @@ module("Integration | Modifier | drag-and-drop", function (hooks) {
           outer
           <div
             id="inner"
-            {{dragAndDropTarget
+            {{dDragAndDropTarget
               accepts="row"
               position="before"
               onDrop=onInnerDrop

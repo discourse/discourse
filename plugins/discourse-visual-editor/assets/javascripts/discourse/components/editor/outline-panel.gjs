@@ -8,10 +8,10 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import dragAndDropSource from "discourse/modifiers/drag-and-drop-source";
-import dragAndDropTarget from "discourse/modifiers/drag-and-drop-target";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { walkAllOutlets } from "../../lib/walk-layout";
 
@@ -159,13 +159,13 @@ export default class OutlinePanel extends Component {
                 tabindex="0"
                 style={{rowPadding row.depth}}
                 {{on "click" (fn this.selectRow group.outletName row)}}
-                {{dragAndDropSource
+                {{dDragAndDropSource
                   kind="ve-block"
                   data=(hash blockKey=row.blockKey outletName=group.outletName)
                   onDragStart=this.handleRowDragStart
                   onDragEnd=this.visualEditor.endDrag
                 }}
-                {{dragAndDropTarget
+                {{dDragAndDropTarget
                   accepts="ve-block"
                   position="before"
                   onDrop=(fn this.applyRowDrop group.outletName row)
