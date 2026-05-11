@@ -349,8 +349,17 @@ class Middleware::RequestTracker
 
     env["discourse.request_tracker"] = self
 
-    if self.class.is_beacon_tracking_request?(request) ||
-         self.class.is_pageview_tracking_request?(request)
+    if self.class.is_beacon_tracking_request?(request)
+      if self.class.same_origin_beacon_request?(request)
+        result = [204, {}, []]
+      else
+        env["discourse.request_tracker.skip"] = true
+        result = [403, {}, []]
+      end
+      return result
+    end
+
+    if self.class.is_pageview_tracking_request?(request)
       result = [204, {}, []]
       return result
     end
@@ -646,6 +655,19 @@ class Middleware::RequestTracker
   def self.is_beacon_tracking_request?(request)
     SiteSetting.use_beacon_for_browser_page_views && request.post? &&
       request.path == Discourse.beacon_pv_tracking_path
+  end
+
+  def self.same_origin_beacon_request?(request)
+    origin = request.get_header("HTTP_ORIGIN").presence || request.referer.presence
+    return false if origin.blank?
+
+    canonical_uri = URI.parse(Discourse.base_url_no_prefix)
+    origin_uri = URI.parse(origin)
+
+    canonical_uri.scheme == origin_uri.scheme && canonical_uri.host == origin_uri.host &&
+      canonical_uri.port == origin_uri.port
+  rescue URI::Error
+    false
   end
 
   def self.is_pageview_tracking_request?(request)
