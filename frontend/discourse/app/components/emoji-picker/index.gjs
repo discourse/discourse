@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import EmojiPickerContent from "discourse/components/emoji-picker/content";
@@ -8,13 +9,15 @@ import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 
 export default class EmojiPicker extends Component {
+  @tracked menu = null;
+
   @action
   onRegisterMenu(api) {
     this.menu = api;
   }
 
   get icon() {
-    return this.args.icon ?? "far-face-smile";
+    return this.args.icon === undefined ? "far-face-smile" : this.args.icon;
   }
 
   get context() {
@@ -25,9 +28,27 @@ export default class EmojiPicker extends Component {
     return this.args.modalForMobile ?? true;
   }
 
+  get triggerLabel() {
+    if (this.args.label !== undefined) {
+      return this.args.label;
+    }
+    if (this.args.emoji && this.args.showSelectedName) {
+      return this.args.emoji;
+    }
+    return null;
+  }
+
+  get caretIcon() {
+    return this.menu?.expanded ? "angle-up" : "angle-down";
+  }
+
+  get hasLabel() {
+    return this.args.emoji && this.triggerLabel;
+  }
+
   <template>
     <DMenu
-      @triggerClass={{concatClass @btnClass}}
+      @triggerClass={{concatClass @btnClass (if this.hasLabel "--has-label")}}
       @onRegisterApi={{this.onRegisterMenu}}
       @identifier="emoji-picker"
       @groupIdentifier="emoji-picker"
@@ -41,14 +62,18 @@ export default class EmojiPicker extends Component {
       <:trigger>
         {{#if @emoji}}
           {{replaceEmoji (concat ":" @emoji ":")}}
-        {{else}}
+        {{else if this.icon}}
           {{icon this.icon}}
         {{/if}}
 
-        {{#if @label}}
-          <span class="d-button-label">{{@label}}</span>
+        {{#if this.triggerLabel}}
+          <span class="d-button-label">{{this.triggerLabel}}</span>
         {{else}}
           &#8203;
+        {{/if}}
+
+        {{#if @showCaret}}
+          {{icon this.caretIcon class="emoji-picker__caret"}}
         {{/if}}
       </:trigger>
 

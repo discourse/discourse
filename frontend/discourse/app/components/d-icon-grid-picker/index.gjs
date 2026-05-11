@@ -73,6 +73,10 @@ export default class DIconGridPicker extends Component {
     return this.args.allowClear && this.args.value;
   }
 
+  get hasLabel() {
+    return this.args.value && this.triggerLabel;
+  }
+
   get triggerTitle() {
     if (!this.args.value) {
       return null;
@@ -91,6 +95,9 @@ export default class DIconGridPicker extends Component {
     }
     if (!this.args.value) {
       return i18n("d_icon_grid_picker.select_icon");
+    }
+    if (this.args.showSelectedName) {
+      return this.args.value;
     }
     return null;
   }
@@ -150,6 +157,7 @@ export default class DIconGridPicker extends Component {
       class={{concatClass
         "d-icon-grid-picker"
         (if this.showClearButton "--has-clear")
+        (if this.hasLabel "--has-label")
       }}
       data-value={{@value}}
       style={{this.iconColorStyle}}
