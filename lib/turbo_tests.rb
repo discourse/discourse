@@ -6,48 +6,16 @@ require "open3"
 require "fileutils"
 require "json"
 require "rspec"
-
-# The master process orchestrates worker subprocesses; it does not run examples
-# itself. Booting the full Rails app (`require "./config/environment"`) costs
-# ~3s on the dev box (similar on CI under bootsnap), all on the critical path
-# before workers can be spawned. Skipping it shaves ~2.5s of master boot wall —
-# measurable in `step_sec` because workers can't start `bundle exec rspec`
-# until master returns from `check_for_migrations`. The few Rails-coupled
-# pieces in master are handled in their respective files: the formatters use
-# `Dir.pwd` (correct because `bin/turbo_rspec` always runs from the Discourse
-# project root), and the migration check is opt-out via
-# `DISCOURSE_TURBO_SKIP_MIGRATION_CHECK=1` (set in
-# `.github/workflows/tests.yml` because CI runs `bin/rake parallel:migrate`
-# before tests start). Local `bin/turbo_rspec` invocations still load Rails
-# lazily inside `check_for_migrations` so the developer-friendly "pending
-# migrations" diagnostic is preserved when the env var is unset.
-#
-# We still need `ActiveSupport::CoreExt` for `.present?`/`.blank?` /
-# `.symbolize_keys` calls in the formatters and runner; that's a 0.3s require
-# vs Rails' full 3s app boot.
-require "active_support"
-require "active_support/core_ext/object/blank"
-require "active_support/core_ext/hash/keys"
+require "rails"
+require File.expand_path("../../config/environment", __FILE__)
 
 require "parallel_tests"
 require "parallel_tests/rspec/runner"
 
-# Without `require "./config/environment"` above, Zeitwerk autoload is
-# unavailable, so each TurboTests file must be required explicitly. Order
-# matters: BaseFormatter must come before its subclasses (Documentation,
-# Progress); JsonExample is referenced by JsonRowsFormatter; Flaky::Manager
-# is referenced by FailuresLoggerFormatter.
 require "./lib/turbo_tests/reporter"
-require "./lib/turbo_tests/json_example"
-require "./lib/turbo_tests/base_formatter"
-require "./lib/turbo_tests/progress_formatter"
-require "./lib/turbo_tests/documentation_formatter"
-require "./lib/turbo_tests/json_rows_formatter"
-require "./lib/turbo_tests/flaky/manager"
-require "./lib/turbo_tests/flaky/failed_example"
-require "./lib/turbo_tests/flaky/failures_logger_formatter"
-require "./lib/turbo_tests/flaky/flaky_detector_formatter"
 require "./lib/turbo_tests/runner"
+require "./lib/turbo_tests/json_rows_formatter"
+require "./lib/turbo_tests/documentation_formatter"
 
 RSpec.configure do |config|
   # this is an unusual config option because it is used by the formatter, not just the runner
