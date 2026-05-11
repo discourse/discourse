@@ -10,6 +10,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import { eq, lte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -25,9 +26,7 @@ function plusOne(val) {
 }
 
 function aspectRatioStyle(width, height) {
-  const w = parseInt(width, 10) || 1;
-  const h = parseInt(height, 10) || 1;
-  return trustHTML(`aspect-ratio: ${w} / ${h}`);
+  return trustHTML(`aspect-ratio: ${width} / ${height}`);
 }
 
 export default class ImageCarousel extends Component {
@@ -36,7 +35,6 @@ export default class ImageCarousel extends Component {
 
   slides = new Map();
   wrapSlots = new Map();
-  trackDirection = 1;
   suppressDragWrap = false;
   /** @type {?{ element: HTMLElement, destSlide: HTMLElement }} */
   wrapMove = null;
@@ -68,8 +66,6 @@ export default class ImageCarousel extends Component {
 
   setupTrack = modifier((element) => {
     this.trackElement = element;
-    this.trackDirection =
-      getComputedStyle(element).direction === "rtl" ? -1 : 1;
 
     // rAF defers until child slide modifiers register, then centers slide 0
     // past the leading wrap slot.
@@ -363,8 +359,7 @@ export default class ImageCarousel extends Component {
   }
 
   navigateByKey(direction) {
-    const ltr = this.trackDirection === 1;
-    const goNext = (direction === "right") === ltr;
+    const goNext = (direction === "right") !== isDocumentRTL();
     if (goNext) {
       this.next();
     } else {
