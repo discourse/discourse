@@ -686,13 +686,13 @@ GEM
       prettier_print (>= 1.2.0)
     test-prof (1.6.1)
     thor (1.5.0)
-    tiktoken_ruby (0.0.15.1-aarch64-linux)
-    tiktoken_ruby (0.0.15.1-aarch64-linux-musl)
-    tiktoken_ruby (0.0.15.1-arm-linux)
-    tiktoken_ruby (0.0.15.1-arm64-darwin)
-    tiktoken_ruby (0.0.15.1-x86_64-darwin)
-    tiktoken_ruby (0.0.15.1-x86_64-linux)
-    tiktoken_ruby (0.0.15.1-x86_64-linux-musl)
+    tiktoken_ruby (0.0.16-aarch64-linux)
+    tiktoken_ruby (0.0.16-aarch64-linux-musl)
+    tiktoken_ruby (0.0.16-arm-linux)
+    tiktoken_ruby (0.0.16-arm64-darwin)
+    tiktoken_ruby (0.0.16-x86_64-darwin)
+    tiktoken_ruby (0.0.16-x86_64-linux)
+    tiktoken_ruby (0.0.16-x86_64-linux-musl)
     timeout (0.6.1)
     tokenizers (0.6.4)
       rb_sys
@@ -1247,13 +1247,13 @@ CHECKSUMS
   syntax_tree (6.3.0) sha256=56e25a9692c798ec94c5442fe94c5e94af76bef91edc8bb02052cbdecf35f13d
   test-prof (1.6.1) sha256=0332d9c39a7c118ed942b2db582f055d9f24964d150004ec6b964d2fa262499e
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
-  tiktoken_ruby (0.0.15.1-aarch64-linux) sha256=e2c5d00b20c10bd220a103a271011bfa828e159cfba3b99d2c4029069bbb9198
-  tiktoken_ruby (0.0.15.1-aarch64-linux-musl) sha256=2b58d9f2b0615d876a767b756c117b1438e68354513aff3d540b665b8eb6559c
-  tiktoken_ruby (0.0.15.1-arm-linux) sha256=078faa950c93ec0929d6f70acc7f7374b044cb2561ee74fccf8ffbaf71068ed9
-  tiktoken_ruby (0.0.15.1-arm64-darwin) sha256=942d15acdaa6de172e9c72644c8acb115f601152b81dc765957e10c526204a48
-  tiktoken_ruby (0.0.15.1-x86_64-darwin) sha256=e7978a186e548c7c81ac5183f5ed2b57c69924aeec5d0a1ce2222892628fdab1
-  tiktoken_ruby (0.0.15.1-x86_64-linux) sha256=cc53f9c43e8a4d434831b5a5b10d94d4eb07ad15d0582d568e0e9c8293447dfc
-  tiktoken_ruby (0.0.15.1-x86_64-linux-musl) sha256=84c8fe1a94732cb241a3f353d2c191df56c6242614237d2433e510d8fab3ee26
+  tiktoken_ruby (0.0.16-aarch64-linux) sha256=014e5ba44b99158916ff57db61d2cb3fdbc6d176644d3f6bbf36a7d36ef9467d
+  tiktoken_ruby (0.0.16-aarch64-linux-musl) sha256=0519bb7eed1ebe0202c302103e9edf8754e4ea3029f63573c0d0a24649f701aa
+  tiktoken_ruby (0.0.16-arm-linux) sha256=bce44f0e1882631748e59223be7cc529fe891304b7a044e58bc8f9bb3d56dd14
+  tiktoken_ruby (0.0.16-arm64-darwin) sha256=3da6fe850bf920d08c7eb736673f50bc9d08e8f2e17d34904ad3185a73fc9da7
+  tiktoken_ruby (0.0.16-x86_64-darwin) sha256=4776d9f6d2f00ec4386260f3ef379347fd2dc375361c750fef7e96b57364c5be
+  tiktoken_ruby (0.0.16-x86_64-linux) sha256=4d970b8e68a86972ec81799306116480b33a558c06bb4fe0092852280a4b76b2
+  tiktoken_ruby (0.0.16-x86_64-linux-musl) sha256=6a0400a7aba9da6146b30af5d7e4375167c5e5a291853ce47768985916c4d183
   timeout (0.6.1) sha256=78f57368a7e7bbadec56971f78a3f5ecbcfb59b7fcbb0a3ed6ddc08a5094accb
   tokenizers (0.6.4) sha256=7881f2afee7e605dec6be0c382d4bd138622b77263a67ca66f4ef3156e8e8f47
   tokenizers (0.6.4-aarch64-linux) sha256=4898a86c726106967a929a318ffaacb7fa99a6cba5b50e3957f80151c0d7789a
