@@ -10,7 +10,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
-import { eq } from "discourse/truth-helpers";
+import { eq, lte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
@@ -394,14 +394,6 @@ export default class ImageCarousel extends Component {
     return this.items.length - 1;
   }
 
-  get showDots() {
-    return this.items.length <= MAX_DOTS;
-  }
-
-  get counterText() {
-    return `${this.currentIndex + 1} / ${this.items.length}`;
-  }
-
   get firstItem() {
     return this.items[0];
   }
@@ -551,7 +543,7 @@ export default class ImageCarousel extends Component {
             class="btn-flat d-image-carousel__nav d-image-carousel__nav--prev"
           />
 
-          {{#if this.showDots}}
+          {{#if (lte this.items.length MAX_DOTS)}}
             <div class="d-image-carousel__dots">
               {{#each this.items as |_item index|}}
                 <button
@@ -570,7 +562,11 @@ export default class ImageCarousel extends Component {
               {{/each}}
             </div>
           {{else}}
-            <span class="d-image-carousel__counter">{{this.counterText}}</span>
+            <span class="d-image-carousel__counter">
+              {{plusOne this.currentIndex}}
+              /
+              {{this.items.length}}
+            </span>
           {{/if}}
 
           <DButton
