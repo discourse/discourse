@@ -15,6 +15,27 @@ module PageObjects
         self
       end
 
+      # In-app navigation via DiscourseURL.routeTo — exercises the same
+      # routing code path a notification or in-page link click would,
+      # rather than doing a full page reload like visit_nested_context.
+      # Use this when the test needs to verify behavior that depends on
+      # the existing nested controller/components staying mounted across
+      # the transition.
+      def route_to(path)
+        page.execute_script(%(require("discourse/lib/url").default.routeTo(#{path.to_json});))
+        self
+      end
+
+      def route_to_nested_context(topic, post_number:, query: nil)
+        path = "/n/#{topic.slug}/#{topic.id}/#{post_number}"
+        path += "?#{query}" if query
+        route_to(path)
+      end
+
+      def route_to_topic_post(topic, post_number:)
+        route_to("/t/#{topic.slug}/#{topic.id}/#{post_number}")
+      end
+
       # ── Root view assertions ──────────────────────────────────────
 
       def has_nested_view?

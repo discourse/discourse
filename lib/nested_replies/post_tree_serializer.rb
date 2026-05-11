@@ -17,19 +17,19 @@ module NestedReplies
     ].freeze
 
     def serialize_topic
-      serializer = TopicViewSerializer.new(@topic_view, scope: @guardian, root: false)
-      json = serializer.as_json
-      json[:has_activity_log] = activity_log_present?
-      json.except(:post_stream, :timeline_lookup, :user_badges, *SUGGESTED_AND_RELATED_KEYS)
+      topic_view_json.merge(has_activity_log: activity_log_present?).except(
+        :post_stream,
+        :timeline_lookup,
+        :user_badges,
+        *SUGGESTED_AND_RELATED_KEYS,
+      )
     end
 
     # Produces the suggested/related payload we piggyback on whichever
     # response has has_more_roots=false — mirroring how the flat view
     # ships suggested_topics on the final /t/:id/posts.json chunk.
     def serialize_suggested_and_related
-      serializer = TopicViewSerializer.new(@topic_view, scope: @guardian, root: false)
-      json = serializer.as_json
-      json.slice(*SUGGESTED_AND_RELATED_KEYS)
+      topic_view_json.slice(*SUGGESTED_AND_RELATED_KEYS)
     end
 
     def serialize_post(post, reply_counts, descendant_counts = {})
@@ -82,6 +82,11 @@ module NestedReplies
     end
 
     private
+
+    def topic_view_json
+      @topic_view_json ||=
+        TopicViewSerializer.new(@topic_view, scope: @guardian, root: false).as_json
+    end
 
     # Filters mirror Guardian#can_see_post? so the boolean does not leak
     # the existence of small_actions/whispers the user cannot see.
