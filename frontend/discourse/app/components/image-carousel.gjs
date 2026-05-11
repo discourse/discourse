@@ -480,15 +480,13 @@ export default class ImageCarousel extends Component {
     if (document.activeElement !== this.carouselElement) {
       this.carouselElement?.focus({ preventScroll: true });
     }
-    this.preMoveAtBoundary();
-  }
 
-  // At a boundary, pre-move the wrap item into its slot on input (one frame
-  // earlier than the first scroll event) to avoid an empty-slot flash.
-  preMoveAtBoundary() {
     if (this.movedElement || this.suppressDragWrap) {
       return;
     }
+
+    // At a boundary, pre-move the wrap item into its slot on input (one frame
+    // earlier than the first scroll event) to avoid an empty-slot flash.
     if (this.currentIndex === 0) {
       this.ensureMovedTo(
         "leading",
