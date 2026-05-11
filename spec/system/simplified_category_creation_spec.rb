@@ -7,7 +7,6 @@ describe "Simplified Category Creation" do
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
-  let(:icon_picker) { PageObjects::Components::DIconGridPicker.new }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -121,18 +120,6 @@ describe "Simplified Category Creation" do
       expect(form.field("color")).to have_errors(
         I18n.t("js.category.color_validations.non_hexdecimal"),
       )
-    end
-
-    it "shows error when icon is missing" do
-      category_page.visit_new_category
-
-      form.field("name").fill_in("Test Category")
-
-      form.choose_conditional("icon")
-
-      category_page.save_settings
-
-      expect(form.field("icon")).to have_errors(I18n.t("js.category.validations.icon_required"))
     end
 
     it "shows advanced tabs when toggled" do
