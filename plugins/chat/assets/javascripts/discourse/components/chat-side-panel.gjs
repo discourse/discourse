@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
-import resizableNode from "../modifiers/chat/resizable-node";
+import resizableNode from "discourse/modifiers/resizable-node";
 import ChatSidePanelResizer from "./chat-side-panel-resizer";
 
 const MIN_PANEL_WIDTH = 250;

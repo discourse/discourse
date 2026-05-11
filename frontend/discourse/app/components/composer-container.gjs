@@ -35,6 +35,7 @@ import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-b
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import resizableNode from "../modifiers/resizable-node";
 
 export default class ComposerContainer extends Component {
   @service composer;
@@ -43,6 +44,7 @@ export default class ComposerContainer extends Component {
   @service siteSettings;
   @service appEvents;
   @service keyValueStore;
+  @service capabilities;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -96,6 +98,13 @@ export default class ComposerContainer extends Component {
     }
   }
 
+  /**
+   * @type {boolean}
+   */
+  get shouldShowHorizontalResizer() {
+    return this.site.desktopView && !this.capabilities.viewport.xl;
+  }
+
   @bind
   onResizeDragStart() {
     this.appEvents.trigger("composer:resize-started");
@@ -134,6 +143,32 @@ export default class ComposerContainer extends Component {
     this.appEvents.trigger("composer:resized");
   }
 
+  @bind
+  onHorizontalResizeDragStart() {
+    // Could add event triggering here if needed
+  }
+
+  @bind
+  onHorizontalResizeDrag(element, { width }) {
+    if (!width) {
+      return;
+    }
+
+    this.keyValueStore.set({
+      key: "composerWidth",
+      value: `${width}px`,
+    });
+    document.documentElement.style.setProperty(
+      "--composer-width",
+      `${width}px`
+    );
+  }
+
+  @bind
+  onHorizontalResizeDragEnd() {
+    // Could add event triggering here if needed
+  }
+
   <template>
     <ComposerBody
       @composer={{this.composer.model}}
@@ -142,6 +177,21 @@ export default class ComposerContainer extends Component {
       @typed={{this.composer.typed}}
       @cancelled={{this.composer.cancelled}}
       @save={{this.composer.saveAction}}
+      {{(if
+        this.shouldShowHorizontalResizer
+        (modifier
+          resizableNode
+          ".composer-resizer"
+          this.onHorizontalResizeDrag
+          (hash
+            horizontal=true
+            vertical=false
+            position=false
+            mutate=true
+            resetOnWindowResize=true
+          )
+        )
+      )}}
     >
       <div
         class="grippie"
@@ -155,6 +205,9 @@ export default class ComposerContainer extends Component {
           )
         }}
       ></div>
+      {{#if this.shouldShowHorizontalResizer}}
+        <div class="composer-resizer"></div>
+      {{/if}}
       {{#if this.composer.visible}}
         {{htmlClass (if this.composer.isPreviewVisible "composer-has-preview")}}
 
