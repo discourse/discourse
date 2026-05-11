@@ -115,6 +115,13 @@ export default class ImageCarousel extends Component {
       element.addEventListener("scrollend", this.onScrollSettled, { signal });
     }
 
+    // Sync to fullscreen lightbox slide changes (photoswipe).
+    element.addEventListener(
+      "discourse-lightbox-change",
+      this.onLightboxSlideChange,
+      { signal }
+    );
+
     return () => {
       controller.abort();
 
@@ -411,17 +418,8 @@ export default class ImageCarousel extends Component {
       ) {
         this.returnMovedElement();
       }
-      // Suspend snap + smooth around the teleport, otherwise the snap engine
-      // smooth-scrolls back to the pre-teleport target.
-      track.style.scrollSnapType = "none";
-      track.style.scrollBehavior = "auto";
-      track.scrollTo({
-        left: this.computeTargetScrollLeft(destSlide),
-        behavior: "instant",
-      });
       this.currentIndex = destIndex;
-      this.suppressDragWrap = true;
-      requestAnimationFrame(() => this.restoreScrollStyles());
+      this.teleportToSlide(destSlide);
       return;
     }
   }
@@ -567,6 +565,47 @@ export default class ImageCarousel extends Component {
     }
 
     this.animateScrollTo(target);
+  }
+
+  // Suspend snap + smooth, scroll instantly to a slide's centered position,
+  // then schedule restoration. Without the suspend the snap engine would
+  // smooth-scroll back to its pre-teleport target.
+  teleportToSlide(slide) {
+    const track = this.trackElement;
+    if (!track) {
+      return;
+    }
+    track.style.scrollSnapType = "none";
+    track.style.scrollBehavior = "auto";
+    track.scrollTo({
+      left: this.computeTargetScrollLeft(slide),
+      behavior: "instant",
+    });
+    this.suppressDragWrap = true;
+    requestAnimationFrame(() => this.restoreScrollStyles());
+  }
+
+  // Instant (no-animation) navigation. Used to sync the carousel underneath
+  // the fullscreen lightbox when the user swipes through it.
+  instantNavigateTo(index) {
+    const slide = this.slides.get(index);
+    if (!slide || index === this.currentIndex) {
+      return;
+    }
+    this.cancelAnimation();
+    this.returnMovedElement();
+    this.currentIndex = index;
+    this.teleportToSlide(slide);
+  }
+
+  @bind
+  onLightboxSlideChange(event) {
+    const idx = this.items.findIndex((item) =>
+      item.element.contains(event.target)
+    );
+    if (idx !== -1) {
+      this.instantNavigateTo(idx);
+    }
   }
 
   @action

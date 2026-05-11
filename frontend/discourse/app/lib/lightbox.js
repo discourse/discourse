@@ -92,6 +92,14 @@ async function initLightbox(elem, additionalData = {}) {
     lightboxEl.pswp.element.addEventListener("keydown", (event) =>
       keyDownHandler(event)
     );
+
+    // Notify any ancestor (e.g. the image carousel) when photoswipe swaps
+    // to a different slide so they can sync their state.
+    lightboxEl.pswp.on("change", () => {
+      lightboxEl.pswp.currSlide?.data?.element?.dispatchEvent(
+        new CustomEvent("discourse-lightbox-change", { bubbles: true })
+      );
+    });
   });
 
   lightboxEl.on("close", function () {
