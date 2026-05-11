@@ -22,7 +22,7 @@ RSpec.describe DiscourseSolved::MeToo::Toggle do
 
     before do
       SiteSetting.solved_enabled = true
-      SiteSetting.enable_solved_me_too = true
+      SiteSetting.enable_solved_shared_issues = true
       DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
     end
 
@@ -40,7 +40,7 @@ RSpec.describe DiscourseSolved::MeToo::Toggle do
 
     context "when user cannot me-too the topic" do
       context "when the feature flag is disabled" do
-        before { SiteSetting.enable_solved_me_too = false }
+        before { SiteSetting.enable_solved_shared_issues = false }
 
         it { is_expected.to fail_a_policy(:can_me_too) }
       end

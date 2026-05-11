@@ -22,7 +22,7 @@ describe "Solved | Me too button" do
 
   before do
     SiteSetting.solved_enabled = true
-    SiteSetting.enable_solved_me_too = true
+    SiteSetting.enable_solved_solved_shared_issues = true
     DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
   end
 
@@ -57,7 +57,7 @@ describe "Solved | Me too button" do
   end
 
   it "hides the button when the upcoming change is disabled" do
-    SiteSetting.enable_solved_me_too = false
+    SiteSetting.enable_solved_solved_shared_issues = false
 
     sign_in(member)
     topic_page.visit_topic(topic)

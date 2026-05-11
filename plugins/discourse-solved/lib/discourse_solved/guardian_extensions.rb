@@ -57,7 +57,7 @@ module DiscourseSolved
       return false if topic.user_id == current_user.id
       return false if topic.private_message? || topic.solved.present?
       return false unless topic_in_support_category?(topic)
-      return false unless current_user.upcoming_change_enabled?(:enable_solved_me_too)
+      return false unless current_user.upcoming_change_enabled?(:enable_solved_shared_issues)
       can_see_topic?(topic)
     end
 
@@ -65,7 +65,9 @@ module DiscourseSolved
       return false if topic.blank?
       return false if topic.private_message? || topic.solved.present?
       return false unless topic_in_support_category?(topic)
-      return false unless UpcomingChanges.enabled_for_user?(:enable_solved_me_too, current_user)
+      unless UpcomingChanges.enabled_for_user?(:enable_solved_shared_issues, current_user)
+        return false
+      end
       true
     end
 

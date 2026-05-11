@@ -13,7 +13,7 @@ RSpec.describe DiscourseSolved::MeTooController do
 
   before do
     SiteSetting.solved_enabled = true
-    SiteSetting.enable_solved_me_too = true
+    SiteSetting.enable_solved_shared_issues = true
     DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
   end
 
@@ -45,7 +45,7 @@ RSpec.describe DiscourseSolved::MeTooController do
       end
 
       it "rejects when the policy fails" do
-        SiteSetting.enable_solved_me_too = false
+        SiteSetting.enable_solved_shared_issues = false
         post "/solution/me_too.json", params: { topic_id: topic.id }
         expect(response.status).to eq(403)
       end

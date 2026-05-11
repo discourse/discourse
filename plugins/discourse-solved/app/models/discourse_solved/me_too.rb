@@ -2,7 +2,7 @@
 
 module DiscourseSolved
   class MeToo < ActiveRecord::Base
-    self.table_name = "discourse_solved_me_toos"
+    self.table_name = "discourse_solved_shared_issues"
 
     belongs_to :user
     belongs_to :topic, -> { with_deleted }
@@ -18,7 +18,7 @@ end
 
 # == Schema Information
 #
-# Table name: discourse_solved_me_toos
+# Table name: discourse_solved_shared_issues
 #
 #  id         :bigint           not null, primary key
 #  created_at :datetime         not null
@@ -28,6 +28,6 @@ end
 #
 # Indexes
 #
-#  index_discourse_solved_me_toos_on_topic_id_and_user_id  (topic_id,user_id) UNIQUE
-#  index_discourse_solved_me_toos_on_user_id_and_topic_id  (user_id,topic_id)
+#  index_discourse_solved_shared_issues_on_topic_id_and_user_id  (topic_id,user_id) UNIQUE
+#  index_discourse_solved_shared_issues_on_user_id_and_topic_id  (user_id,topic_id)
 #

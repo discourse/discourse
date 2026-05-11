@@ -4,6 +4,8 @@ module DiscourseSolved::UserExtension
   extend ActiveSupport::Concern
 
   prepended do
-    has_many :discourse_solved_me_toos, class_name: "DiscourseSolved::MeToo", dependent: :delete_all
+    has_many :discourse_solved_shared_issues,
+             class_name: "DiscourseSolved::MeToo",
+             dependent: :delete_all
   end
 end
