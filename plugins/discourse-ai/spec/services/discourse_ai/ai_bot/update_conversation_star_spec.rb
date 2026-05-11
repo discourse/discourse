@@ -3,7 +3,19 @@
 RSpec.describe DiscourseAi::AiBot::UpdateConversationStar do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:topic_id) }
-    it { is_expected.to validate_inclusion_of(:starred).in_array([true, false]) }
+
+    it "requires starred to be true or false" do
+      expect(described_class.new(topic_id: 1, starred: true)).to be_valid
+      expect(described_class.new(topic_id: 1, starred: false)).to be_valid
+      expect(described_class.new(topic_id: 1, starred: nil)).not_to be_valid
+    end
+
+    it "rejects values that are not explicit booleans" do
+      contract = described_class.new(topic_id: 1, starred: "wat")
+
+      expect(contract).not_to be_valid
+      expect(contract.errors[:starred]).to be_present
+    end
   end
 
   describe ".call" do
@@ -112,7 +124,7 @@ RSpec.describe DiscourseAi::AiBot::UpdateConversationStar do
         stub_const(DiscourseAi::AiBot::ConversationStar, :MAX_STARS_PER_USER, 1) do
           DiscourseAi::AiBot::ConversationStar.create!(user: current_user, topic: Fabricate(:topic))
 
-          expect(result).to fail_a_step(:update_star)
+          expect(result).to fail_a_step(:ensure_user_can_star_more_conversations)
         end
       end
 

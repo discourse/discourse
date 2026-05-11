@@ -10,17 +10,30 @@ module DiscourseAi
 
       def index
         ListConversations.call(service_params) do
-          on_success do |conversations:, starred_conversations:, starred_enabled:, starred_at_by_topic_id:, meta:|
-            payload = {
-              conversations: serialized_conversations(conversations, starred_at_by_topic_id),
-              meta: meta,
-            }
+          on_success do |conversations:, meta:, starred_conversations:|
+            serialized_conversations = conversations.records
+            starred_at_by_topic_id =
+              if SiteSetting.enable_ai_bot_starred_conversations
+                ConversationStar.starred_at_by_topic_id(
+                  current_user,
+                  serialized_conversations + Array(starred_conversations),
+                )
+              else
+                {}
+              end
+            serialize_topic = ->(topic) do
+              ConversationListTopicSerializer.new(
+                topic,
+                scope: guardian,
+                root: false,
+                starred_at_by_topic_id: starred_at_by_topic_id,
+              ).as_json
+            end
 
-            if starred_enabled
-              payload[:starred_conversations] = serialized_conversations(
-                starred_conversations,
-                starred_at_by_topic_id,
-              )
+            payload = { conversations: serialized_conversations.map(&serialize_topic), meta: meta }
+
+            if SiteSetting.enable_ai_bot_starred_conversations
+              payload[:starred_conversations] = Array(starred_conversations).map(&serialize_topic)
             end
 
             render json: payload
@@ -40,14 +53,8 @@ module DiscourseAi
           return render(json: failed_json, status: :not_found)
         end
 
-        unless valid_starred_param?
-          return(
-            render(json: failed_json.merge(errors: ["starred is invalid"]), status: :bad_request)
-          )
-        end
-
         UpdateConversationStar.call(star_service_params) do
-          on_success { render json: success_json.merge(starred: normalized_starred) }
+          on_success { |params:| render json: success_json.merge(starred: params.starred) }
           on_model_not_found(:topic) { raise Discourse::NotFound }
           on_failed_policy(:feature_enabled) { raise Discourse::NotFound }
           on_failed_policy(:can_access_conversation) { raise Discourse::NotFound }
@@ -63,34 +70,8 @@ module DiscourseAi
 
       private
 
-      def valid_starred_param?
-        [true, false, "true", "false"].include?(params[:starred])
-      end
-
-      def normalized_starred
-        ActiveModel::Type::Boolean.new.cast(params[:starred])
-      end
-
       def star_service_params
-        service_params.deep_merge(
-          params: {
-            topic_id: params[:topic_id],
-            starred: normalized_starred,
-          },
-        )
-      end
-
-      def serialized_conversations(topics, starred_at_by_topic_id)
-        serialized = serialize_data(topics, ListableTopicSerializer)
-
-        serialized.each do |topic|
-          topic_id = topic[:id] || topic["id"]
-          starred_at = starred_at_by_topic_id[topic_id]
-          topic[:ai_conversation_starred] = starred_at.present?
-          topic[:ai_conversation_starred_at] = starred_at&.iso8601
-        end
-
-        serialized
+        service_params.deep_merge(params: { topic_id: params[:topic_id] })
       end
     end
   end

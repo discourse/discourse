@@ -14,6 +14,10 @@ module DiscourseAi
 
       has_many :inferred_concept_topics
       has_many :inferred_concepts, through: :inferred_concept_topics
+
+      has_many :ai_conversation_stars,
+               class_name: "DiscourseAi::AiBot::ConversationStar",
+               foreign_key: :topic_id
     end
   end
 end

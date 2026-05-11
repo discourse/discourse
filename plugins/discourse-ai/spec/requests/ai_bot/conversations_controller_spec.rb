@@ -69,7 +69,7 @@ RSpec.describe DiscourseAi::AiBot::ConversationsController do
           topic
         end
 
-      stub_const(DiscourseAi::AiBot::ListConversations, :STARRED_CONVERSATIONS_LIMIT, 2) do
+      stub_const(DiscourseAi::AiBot::ConversationStar, :MAX_STARS_PER_USER, 2) do
         get "/discourse-ai/ai-bot/conversations.json"
       end
 
@@ -88,6 +88,8 @@ RSpec.describe DiscourseAi::AiBot::ConversationsController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json).not_to have_key("starred_conversations")
+      starred_topic = json["conversations"].find { |topic| topic["id"] == starred_conversation.id }
+      expect(starred_topic["ai_conversation_starred"]).to eq(false)
       expect(json["conversations"].map { |topic| topic["id"] }).to include(starred_conversation.id)
     end
   end

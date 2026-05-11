@@ -5,7 +5,6 @@ module DiscourseAi
     class ListConversations
       include Service::Base
 
-      STARRED_CONVERSATIONS_LIMIT = ConversationStar::MAX_STARS_PER_USER
       DEFAULT_PER_PAGE = 40
       MAX_PER_PAGE = 100
 
@@ -17,102 +16,59 @@ module DiscourseAi
         validates :per_page, numericality: { greater_than: 0, less_than_or_equal_to: MAX_PER_PAGE }
       end
 
-      step :list_conversations
+      model :conversations
 
-      def self.base_query_for(user)
-        Topic
-          .private_messages_for_user(user)
-          .where(user: user) # Only show PMs where the current user is the author
-          .joins(
-            "INNER JOIN topic_custom_fields tcf ON tcf.topic_id = topics.id
-                 AND tcf.name = '#{DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD}'
-                 AND tcf.value = 't'",
-          )
-          .distinct
+      only_if :starred_enabled? do
+        model :starred_conversations, optional: true
       end
+
+      only_if :starred_disabled? do
+        model :starred_conversations, :fetch_empty_starred_conversations, optional: true
+      end
+
+      step :build_meta
 
       private
 
-      def list_conversations(params:, guardian:)
-        if !SiteSetting.enable_ai_bot_starred_conversations
-          conversations, has_more =
-            paginated_conversations(
-              self.class.base_query_for(guardian.user).order(last_posted_at: :desc),
-              params.page,
-              params.per_page,
-            )
+      def fetch_conversations(params:, guardian:)
+        relation =
+          if starred_enabled?
+            ConversationStar.unstarred_conversations_for(guardian.user)
+          else
+            ConversationStar.conversations_query_for(guardian.user)
+          end
 
-          context[:conversations] = conversations
-          context[:starred_conversations] = []
-          context[:starred_enabled] = false
-          context[:starred_at_by_topic_id] = {}
-          context[:meta] = meta(params, has_more)
-          return
-        end
-
-        starred_conversations =
-          self
-            .class
-            .base_query_for(guardian.user)
-            .distinct(false)
-            .joins(star_join_sql(guardian.user, "INNER JOIN"))
-            .order("ai_stars.created_at DESC")
-            .limit(STARRED_CONVERSATIONS_LIMIT)
-            .to_a
-
-        unstarred_conversations =
-          self
-            .class
-            .base_query_for(guardian.user)
-            .joins(star_join_sql(guardian.user, "LEFT JOIN"))
-            .where("ai_stars.id IS NULL")
-            .distinct
-
-        conversations, has_more =
-          paginated_conversations(
-            unstarred_conversations.order(last_posted_at: :desc),
-            params.page,
-            params.per_page,
-          )
-
-        context[:conversations] = conversations
-        context[:starred_conversations] = params.page == 0 ? starred_conversations : []
-        context[:starred_enabled] = true
-        context[:starred_at_by_topic_id] = starred_at_by_topic_id(
-          guardian.user,
-          conversations + context[:starred_conversations],
+        ConversationStar.paginated_conversations(
+          relation.order(last_posted_at: :desc),
+          page: params.page,
+          per_page: params.per_page,
         )
-        context[:meta] = meta(params, has_more)
       end
 
-      def paginated_conversations(relation, page, per_page)
-        records = relation.offset(page * per_page).limit(per_page + 1).to_a
-        has_more = records.length > per_page
-        records = records.first(per_page) if has_more
+      def fetch_starred_conversations(params:, guardian:)
+        return [] if params.page > 0
 
-        [records, has_more]
+        ConversationStar.starred_conversations_for(guardian.user).to_a
       end
 
-      def star_join_sql(user, join_type)
-        user_id = user.id.to_i
-        <<~SQL.squish
-          #{join_type} discourse_ai_ai_bot_conversation_stars ai_stars
-            ON ai_stars.topic_id = topics.id AND ai_stars.user_id = #{user_id}
-        SQL
+      def fetch_empty_starred_conversations
+        []
       end
 
-      def starred_at_by_topic_id(user, topics)
-        topic_ids = topics.map(&:id)
-        return {} if topic_ids.blank?
-
-        ConversationStar
-          .where(user_id: user.id, topic_id: topic_ids)
-          .pluck(:topic_id, :created_at)
-          .to_h
+      def build_meta(params:, conversations:)
+        context[:meta] = {
+          page: params.page,
+          per_page: params.per_page,
+          has_more: conversations.has_more,
+        }
       end
 
-      def meta(params, has_more)
-        { page: params.page, per_page: params.per_page, has_more: has_more }
+      def starred_enabled?
+        SiteSetting.enable_ai_bot_starred_conversations
+      end
+
+      def starred_disabled?
+        !starred_enabled?
       end
     end
   end

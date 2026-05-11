@@ -5,31 +5,55 @@ module DiscourseAi
     class UpdateConversationStar
       include Service::Base
 
-      def self.base_query_for(user)
-        ListConversations.base_query_for(user)
-      end
-
       params do
         attribute :topic_id, :integer
         attribute :starred, :boolean
 
         validates :topic_id, presence: true
         validates :starred, inclusion: { in: [true, false] }
+        validate :starred_value_is_boolean
+
+        def starred_value_is_boolean
+          raw_starred =
+            raw_attributes.key?("starred") ? raw_attributes["starred"] : raw_attributes[:starred]
+          return if [true, false, "true", "false"].include?(raw_starred)
+
+          errors.add(:starred, :inclusion)
+        end
       end
 
-      model :topic
       policy :feature_enabled
+      model :user, :fetch_user
+      model :topic
       policy :can_access_conversation
-      transaction { step :update_star }
+
+      only_if :star_conversation_requested do
+        lock :user do
+          only_if :conversation_not_already_starred do
+            transaction do
+              step :ensure_user_can_star_more_conversations
+              model :conversation_star, :create_conversation_star
+            end
+          end
+        end
+      end
+
+      only_if :unstar_conversation_requested do
+        step :unstar_conversation
+      end
 
       private
 
-      def fetch_topic(params:, guardian:)
-        self.class.base_query_for(guardian.user).find_by(id: params.topic_id)
-      end
-
       def feature_enabled
         SiteSetting.enable_ai_bot_starred_conversations
+      end
+
+      def fetch_user(guardian:)
+        guardian.user
+      end
+
+      def fetch_topic(params:, guardian:)
+        ConversationStar.conversations_query_for(guardian.user).find_by(id: params.topic_id)
       end
 
       def can_access_conversation(topic:, guardian:)
@@ -37,28 +61,30 @@ module DiscourseAi
           topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] == "t"
       end
 
-      def update_star(topic:, params:, guardian:)
-        if params.starred
-          begin
-            if DiscourseAi::AiBot::ConversationStar.where(user: guardian.user, topic: topic).exists?
-              return
-            end
+      def star_conversation_requested(params:)
+        params.starred
+      end
 
-            if DiscourseAi::AiBot::ConversationStar.where(user: guardian.user).count >=
-                 DiscourseAi::AiBot::ConversationStar::MAX_STARS_PER_USER
-              fail!("maximum starred conversations reached")
-            end
+      def unstar_conversation_requested(params:)
+        !params.starred
+      end
 
-            DiscourseAi::AiBot::ConversationStar.find_or_create_by!(
-              user: guardian.user,
-              topic: topic,
-            )
-          rescue ActiveRecord::RecordNotUnique
-            retry
-          end
-        else
-          DiscourseAi::AiBot::ConversationStar.where(user: guardian.user, topic: topic).delete_all
+      def conversation_not_already_starred(user:, topic:)
+        !ConversationStar.exists?(user:, topic:)
+      end
+
+      def ensure_user_can_star_more_conversations(user:)
+        if ConversationStar.user_reached_star_limit?(user)
+          fail!("maximum starred conversations reached")
         end
+      end
+
+      def create_conversation_star(user:, topic:)
+        ConversationStar.create_or_find_by(user:, topic:)
+      end
+
+      def unstar_conversation(user:, topic:)
+        ConversationStar.where(user:, topic:).delete_all
       end
     end
   end
