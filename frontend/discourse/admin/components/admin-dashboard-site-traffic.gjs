@@ -518,13 +518,19 @@ export default class AdminDashboardSiteTraffic extends Component {
     return this.buckets.map((b) => b.start);
   }
 
+  get visibleSeriesReqs() {
+    return Array.from(this.bucketsBySeries.keys()).filter(
+      (req) => !this.hiddenSeries.has(req)
+    );
+  }
+
   get hasChartData() {
     if (this.bucketsBySeries.size === 0) {
       return false;
     }
     for (const buckets of this.bucketsBySeries.values()) {
-      for (const b of buckets) {
-        if (b.total > 0) {
+      for (const bucket of buckets) {
+        if (bucket.total > 0) {
           return true;
         }
       }
@@ -532,15 +538,14 @@ export default class AdminDashboardSiteTraffic extends Component {
     return false;
   }
 
+  get showEmptyState() {
+    return Boolean(this.model) && !this.hasChartData;
+  }
+
   // Max stack height across all visible (non-hidden) buckets. Used to pick
   // a clean y-axis step.
   get visibleStackHeight() {
-    const visibleReqs = [];
-    for (const req of this.bucketsBySeries.keys()) {
-      if (!this.hiddenSeries.has(req)) {
-        visibleReqs.push(req);
-      }
-    }
+    const visibleReqs = this.visibleSeriesReqs;
     if (visibleReqs.length === 0) {
       return 0;
     }
@@ -827,6 +832,14 @@ export default class AdminDashboardSiteTraffic extends Component {
       model.setProperties(json.report);
       this.model = model;
       this.modelPeriod = fetchPeriod;
+
+      if (
+        this.isPublicSite &&
+        this.humanTotal(this.currentTotals) === 0 &&
+        this.crawlerTotal > 0
+      ) {
+        this.hiddenSeries.delete(SERIES.CRAWLER);
+      }
     } catch {
       if (mySeq !== this._requestSeq) {
         return;
@@ -938,11 +951,39 @@ export default class AdminDashboardSiteTraffic extends Component {
           <div class="admin-dashboard-site-traffic__chart-canvas">
             <canvas {{renderChart this.chartConfig}}></canvas>
           </div>
-          {{#unless this.hasChartData}}
+          {{#if this.showEmptyState}}
             <div class="admin-dashboard-site-traffic__empty-overlay">
-              {{i18n "admin.dashboard.site_traffic.chart.empty"}}
+              <div class="admin-dashboard-site-traffic__empty-state">
+                <span
+                  class="admin-dashboard-site-traffic__empty-indicator"
+                  aria-hidden="true"
+                >
+                  <span
+                    class="admin-dashboard-site-traffic__empty-indicator-bar"
+                  ></span>
+                </span>
+                <span class="admin-dashboard-site-traffic__empty-text">
+                  {{i18n "admin.dashboard.site_traffic.chart.empty"}}
+                </span>
+              </div>
             </div>
-          {{/unless}}
+          {{/if}}
+        {{else if this.showEmptyState}}
+          <div class="admin-dashboard-site-traffic__empty-overlay">
+            <div class="admin-dashboard-site-traffic__empty-state">
+              <span
+                class="admin-dashboard-site-traffic__empty-indicator"
+                aria-hidden="true"
+              >
+                <span
+                  class="admin-dashboard-site-traffic__empty-indicator-bar"
+                ></span>
+              </span>
+              <span class="admin-dashboard-site-traffic__empty-text">
+                {{i18n "admin.dashboard.site_traffic.chart.empty"}}
+              </span>
+            </div>
+          </div>
         {{/if}}
       </div>
 
