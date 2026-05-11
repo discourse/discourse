@@ -348,7 +348,8 @@ export default class ImageCarousel extends Component {
   }
 
   navigateByKey(direction) {
-    const goNext = (direction === "right") === (this.trackDirection === 1);
+    const ltr = this.trackDirection === 1;
+    const goNext = (direction === "right") === ltr;
     this.scrollToIndex(
       goNext ? this.nextIndex : this.prevIndex,
       goNext ? "next" : "prev"
