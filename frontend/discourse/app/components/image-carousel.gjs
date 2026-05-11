@@ -32,7 +32,6 @@ export default class ImageCarousel extends Component {
   /** @type {?{ element: HTMLElement, destSlide: HTMLElement }} */
   wrapMove = null;
   animationFrame = null;
-  pendingKeyDirection = null;
   carouselElement;
   trackElement;
   wrapSlotObserver;
@@ -515,12 +514,6 @@ export default class ImageCarousel extends Component {
     }
 
     this.updateIndex();
-
-    if (this.pendingKeyDirection) {
-      const direction = this.pendingKeyDirection;
-      this.pendingKeyDirection = null;
-      this.navigateByKey(direction);
-    }
   }
 
   @bind
@@ -616,15 +609,11 @@ export default class ImageCarousel extends Component {
 
     const direction = event.key === "ArrowLeft" ? "left" : "right";
 
-    // Queue the nav for scrollend if a browser-driven scroll is in flight —
-    // starting an rAF now would just be aborted. (Our own rAF is handled by
-    // animateScrollTo's retarget path.)
-    if (this.isScrolling && this.animationFrame === null) {
-      this.pendingKeyDirection = direction;
-      return;
+    if (KEYBOARD_THROTTLE_MS) {
+      throttle(this, this.navigateByKey, direction, KEYBOARD_THROTTLE_MS);
+    } else {
+      this.navigateByKey(direction);
     }
-
-    throttle(this, this.navigateByKey, direction, KEYBOARD_THROTTLE_MS);
   }
 
   <template>
