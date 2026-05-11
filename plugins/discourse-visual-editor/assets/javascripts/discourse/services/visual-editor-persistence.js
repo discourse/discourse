@@ -101,12 +101,20 @@ export default class VisualEditorPersistenceService extends Service {
     // Clone so the theme layer's entries don't share `args` with the still-
     // mutable session-draft entries — a future edit shouldn't accidentally
     // bleed through into the "saved" state.
+    // Permissive matches the session-draft layer the user just saved
+    // *from*. After save, the editor is still active and the session-
+    // draft (also permissive) wins resolution; when the user exits the
+    // editor or reloads, this theme entry takes over. If the saved
+    // layout had `Save anyway` warnings, strict validation here would
+    // re-throw and crash the page on exit/reload — defeating the whole
+    // point of letting the user save a partial state. Permissive on the
+    // theme layer keeps the round-trip viable.
     _setLayoutLayer(
       outlet,
       LAYOUT_LAYERS.THEME,
       cloneLayoutForDraft(layout),
       getOwner(this),
-      { themeId: targetThemeId }
+      { themeId: targetThemeId, permissive: true }
     );
   }
 

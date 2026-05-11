@@ -314,7 +314,14 @@ export default class VisualEditorService extends Service {
         outletName,
         LAYOUT_LAYERS.SESSION_DRAFT,
         draftLayout,
-        getOwner(this)
+        getOwner(this),
+        // Permissive validation: while the editor is open the user may
+        // produce intermediate invalid states (an empty container after
+        // a drag, a typo, a missing required arg). Strict validation
+        // would throw and crash the page; permissive marks the
+        // validation as warned and keeps the layout rendering. See
+        // `plugins/discourse-visual-editor/docs/PLAN.md` Phase 5.
+        { permissive: true }
       );
       this._draftedOutlets.add(outletName);
     }
@@ -379,6 +386,99 @@ export default class VisualEditorService extends Service {
   /** @returns {boolean} */
   get isDragging() {
     return this.dragSourceKey != null;
+  }
+
+  /**
+   * Validation warnings captured by `_setLayoutLayer({permissive: true})`
+   * across every outlet that the editor is currently drafting. Walks the
+   * resolved layer entries, harvests each entry's `validationWarnings`,
+   * and returns a flat list keyed by outlet for the toolbar / save-dialog
+   * UX.
+   *
+   * Reactivity: reads `structuralVersion` (bumped on every structural
+   * mutation) so a fresh draft publish causes the toolbar to re-evaluate.
+   * Validation itself is async (the layer entry's `validatedLayout` is a
+   * lazy Promise that resolves after `BlockOutlet` first reads it). On the
+   * very first render after a publish the warnings array may not yet be
+   * populated; the next `structuralVersion` tick or a subsequent re-read
+   * surfaces them. This is acceptable for a status indicator — the page
+   * doesn't crash either way.
+   *
+   * @returns {Array<{outletName: string, message: string}>}
+   */
+  get validationWarnings() {
+    // Open the tracked dep so structural mutations re-run this getter.
+    void this.structuralVersion;
+    const layoutMap = _getOutletLayouts();
+    const warnings = [];
+    for (const [outletName, record] of layoutMap) {
+      for (const w of record?.validationWarnings ?? []) {
+        warnings.push({ outletName, message: w.message });
+      }
+    }
+    return warnings;
+  }
+
+  /** @returns {boolean} */
+  get hasValidationWarnings() {
+    return this.validationWarnings.length > 0;
+  }
+
+  /**
+   * Soft-failure metadata for the currently-selected block, or `null` if
+   * the selection is healthy (or nothing is selected). Reads
+   * `__failureType` / `__failureReason` written by the validator when
+   * running in permissive mode — far more accurate than text-matching
+   * the whole-outlet warning list against the selected block's name.
+   *
+   * @returns {{failureType: string, failureReason: string}|null}
+   */
+  get selectedBlockFailure() {
+    void this.structuralVersion;
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return null;
+    }
+    const located = this._findEntryAndOutletSync(key);
+    const entry = located?.entry;
+    if (!entry?.__failureType) {
+      return null;
+    }
+    return {
+      failureType: entry.__failureType,
+      failureReason: entry.__failureReason ?? "",
+    };
+  }
+
+  /**
+   * Removes the block matching `blockKey` from whichever outlet currently
+   * holds it. Used by the inspector's recovery actions (e.g. "Remove
+   * empty container") and by future delete affordances. Routes through
+   * `_publishStructuralChange` so the bookkeeping (edited-outlets,
+   * structural-version, isDirty signal) matches a drag-driven move.
+   *
+   * @param {string} blockKey
+   * @returns {boolean} true on success
+   */
+  @action
+  removeBlock(blockKey) {
+    const located = this._findEntryAndOutletSync(blockKey);
+    if (!located) {
+      return false;
+    }
+    const layout = this.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return false;
+    }
+    const result = removeEntry(layout, blockKey);
+    if (!result.changed) {
+      return false;
+    }
+    if (this.selectedBlockKey === blockKey) {
+      this.selectBlock(null);
+    }
+    this._publishStructuralChange(located.outletName, result.layout);
+    return true;
   }
 
   @action
@@ -630,11 +730,14 @@ export default class VisualEditorService extends Service {
         }
         // Clone again: the snapshot must remain pristine in case the user
         // mutates and then resets a second time during the same session.
+        // Permissive matches the original publish in `_materializeAllDrafts`
+        // — same session-draft layer, same tolerance contract.
         _setLayoutLayer(
           outletName,
           LAYOUT_LAYERS.SESSION_DRAFT,
           cloneLayoutForDraft(original),
-          getOwner(this)
+          getOwner(this),
+          { permissive: true }
         );
       }
       // Drop arg-snapshots whose entries belong to structurally-reset outlets.
@@ -984,7 +1087,12 @@ export default class VisualEditorService extends Service {
       outletName,
       LAYOUT_LAYERS.SESSION_DRAFT,
       newLayout,
-      getOwner(this)
+      getOwner(this),
+      // Permissive matches the initial draft publish — see comment on
+      // `_materializeAllDrafts`. Without this, dragging the only child
+      // out of a container produces an "EMPTY_CONTAINER" validation
+      // failure which would crash the page.
+      { permissive: true }
     );
     this._editedOutlets.add(outletName);
     this._structurallyEditedOutlets.add(outletName);

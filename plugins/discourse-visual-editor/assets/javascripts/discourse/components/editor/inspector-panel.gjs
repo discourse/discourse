@@ -1,6 +1,9 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import InspectorForm from "./inspector-form";
 
@@ -49,8 +52,53 @@ export default class InspectorPanel extends Component {
     return JSON.stringify(this.data.conditions, null, 2);
   }
 
+  /**
+   * The selected block's soft-failure marker, read directly from the
+   * entry's `__failureType` / `__failureReason` (set by the validator
+   * when running in permissive mode). Drives the inline warning banner
+   * and recovery action buttons.
+   *
+   * @returns {{failureType: string, failureReason: string}|null}
+   */
+  get failure() {
+    return this.visualEditor.selectedBlockFailure;
+  }
+
+  @action
+  removeSelectedBlock() {
+    if (this.data?.key) {
+      this.visualEditor.removeBlock(this.data.key);
+    }
+  }
+
   <template>
     {{#if this.hasSelection}}
+      {{#if this.failure}}
+        <div class="visual-editor-inspector-warning" role="alert">
+          <span class="visual-editor-inspector-warning__header">
+            {{icon "triangle-exclamation"}}
+            <span>{{i18n "visual_editor.inspector.warning_header"}}</span>
+          </span>
+          {{#if this.failure.failureReason}}
+            <p class="visual-editor-inspector-warning__reason">
+              {{this.failure.failureReason}}
+            </p>
+          {{/if}}
+          <div class="visual-editor-inspector-warning__actions">
+            <button
+              type="button"
+              class="btn btn-danger"
+              {{on "click" this.removeSelectedBlock}}
+            >
+              {{icon "trash-can"}}
+              <span>{{i18n
+                  "visual_editor.inspector.remove_block_action"
+                }}</span>
+            </button>
+          </div>
+        </div>
+      {{/if}}
+
       <div class="visual-editor-inspector-section">
         <div class="inspector-section__title">
           {{i18n "visual_editor.inspector.section_metadata"}}

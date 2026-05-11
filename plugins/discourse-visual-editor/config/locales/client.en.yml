@@ -12,6 +12,14 @@ en:
         redo: "Redo"
         reset: "Reset"
         save: "Save"
+        save_anyway: "Save anyway"
+        save_with_warnings_confirm:
+          one: "%{count} block has structural issues and won't render until you fix it. Save anyway?"
+          other: "%{count} blocks have structural issues and won't render until you fix them. Save anyway?"
+        warnings_button_title: "Show validation warnings"
+        warnings_panel_title:
+          one: "%{count} block has issues"
+          other: "%{count} blocks have issues"
         dismiss_error: "Dismiss error"
         panel_outline: "Outline"
         panel_palette: "Palette"
@@ -28,6 +36,8 @@ en:
         label_args_schema: "Args schema"
         label_no_args: "This block accepts no arguments."
         label_no_conditions: "No conditions."
+        warning_header: "This block has structural issues:"
+        remove_block_action: "Remove this block"
       outline:
         empty: "No editable outlets on this page."
         outlet_label: "Outlet"

@@ -3525,6 +3525,15 @@ class _PluginApi {
    *   referenced by name may be registered later in the same tick by
    *   other initializers — eager validation would race those
    *   registrations and reject before the registry settled.
+   * @param {boolean} [options.permissive=false] - When true, validation
+   *   errors don't reject the resolved-layout Promise. The error is
+   *   captured on the layer entry's `validationWarnings` array and the
+   *   layout is returned as-is. Use this for layers fed by user
+   *   authoring (the visual editor's `session-draft` layer, theme-
+   *   shipped block layouts that may contain typos, etc.) where a
+   *   structural failure shouldn't crash the page. Code-default layers
+   *   should generally stay strict — those are author-controlled and
+   *   strict validation surfaces install-time mistakes.
    * @returns {Promise<Array<import("discourse/blocks/block-outlet").LayoutEntry>>|undefined}
    *   The validated-layout Promise (eager mode) or `undefined` (lazy mode).
    * @throws {Error} If the layer name is unknown, or `options.themeId` is

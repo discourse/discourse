@@ -203,6 +203,49 @@ export function handleOptionalMissingBlock({
 }
 
 /**
+ * Handles an unknown / unresolvable block reference (typo or
+ * not-yet-installed plugin block, NOT the `?` opt-in optional-missing
+ * case). In strict rendering this entry is silently skipped. When
+ * `showGhosts` is enabled (e.g. the visual editor is active or
+ * dev-tools' overlay is on) the block renders as a labelled placeholder
+ * via the existing ghost-block component so the author can see the
+ * reference and replace it.
+ *
+ * @param {Object} options
+ * @param {string} options.blockName - The unresolved name (the string the
+ *   author typed, or `"(unknown)"` when the entry's `block` was a
+ *   non-string value).
+ * @param {Object} options.entry
+ * @param {string} options.hierarchy
+ * @param {boolean} options.showGhosts
+ * @param {string} options.key - Stable unique key for this entry.
+ * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult|null}
+ */
+export function handleUnknownBlock({
+  blockName,
+  entry,
+  hierarchy,
+  showGhosts,
+  key,
+}) {
+  if (!showGhosts) {
+    return null;
+  }
+  const ghostData = createDebugGhost(
+    {
+      name: blockName,
+      id: entry.id,
+      args: entry.args,
+      conditions: entry.conditions,
+      failureType: FAILURE_TYPE.UNKNOWN_BLOCK,
+      failureReason: `Block "${blockName}" is not registered.`,
+    },
+    { outletName: hierarchy }
+  );
+  return ghostData ? { ...ghostData, key } : null;
+}
+
+/**
  * Builds a container path for nested containers.
  *
  * Maintains a count map to ensure unique indices for containers of the same type.

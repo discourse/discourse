@@ -16,6 +16,7 @@ import {
   buildContainerPath,
   createGhostBlock,
   handleOptionalMissingBlock,
+  handleUnknownBlock,
 } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { isOptionalMissing } from "discourse/lib/blocks/-internals/patterns";
@@ -166,10 +167,29 @@ export function processBlockEntries({
       continue;
     }
 
-    // Skip blocks that haven't resolved yet. Block factories may be resolving
-    // asynchronously (e.g., lazy-loaded plugins). The component will automatically
-    // re-render when the factory resolves (via TrackedMap reactivity).
+    // Block didn't resolve. Two flavours of this:
+    //   1. Async factory still resolving — common at boot, the trackedMap
+    //      will re-evaluate this getter once the factory lands.
+    //   2. Truly unknown block (typo in a saved layout, plugin not
+    //      installed, etc.). Strict rendering silently skips these. The
+    //      visual editor turns on `showGhosts` so the author sees a
+    //      labelled placeholder and can swap or remove the entry.
     if (!resolvedBlock) {
+      if (showGhosts) {
+        const blockName =
+          typeof entry.block === "string" ? entry.block : "(unknown)";
+        const stableKey = entry.__stableKey ?? "no-key";
+        const ghostData = handleUnknownBlock({
+          blockName,
+          entry,
+          hierarchy: baseHierarchy,
+          showGhosts,
+          key: `unknown-block:${blockName}:${stableKey}`,
+        });
+        if (ghostData) {
+          result.push(ghostData);
+        }
+      }
       continue;
     }
 

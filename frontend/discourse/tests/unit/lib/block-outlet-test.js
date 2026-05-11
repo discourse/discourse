@@ -1227,5 +1227,65 @@ module("Unit | Lib | block-outlet", function (hooks) {
       );
       await firstRead;
     });
+
+    test("permissive mode: empty container resolves with warnings instead of rejecting", async function (assert) {
+      // Strict mode (no `permissive` flag) rejects with the existing
+      // BlockError — preserved as a regression check below.
+      await assert.rejects(
+        _setLayoutLayer(
+          "homepage-blocks",
+          LAYOUT_LAYERS.SESSION_DRAFT,
+          [{ block: BlockGroup }],
+          getOwner(this)
+        ),
+        /must have children/,
+        "strict mode still rejects"
+      );
+
+      _resetOutletLayoutsForTesting();
+
+      // Permissive mode: same invalid layout, but the layer accepts it,
+      // captures the validation message on `validationWarnings`, and
+      // resolves with the layout for the renderer.
+      const result = _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: BlockGroup }],
+        getOwner(this),
+        { permissive: true }
+      );
+
+      const resolved = await result;
+      assert.deepEqual(
+        resolved.map((e) => e.block),
+        [BlockGroup],
+        "permissive mode resolves with the layout"
+      );
+
+      const record = _getOutletLayouts().get("homepage-blocks");
+      assert.strictEqual(
+        record.validationWarnings.length,
+        1,
+        "warning captured on the layer entry"
+      );
+      assert.true(
+        /must have children/.test(record.validationWarnings[0].message),
+        "warning message describes the validation failure"
+      );
+    });
+
+    test("permissive mode: valid layout still resolves cleanly with no warnings", async function (assert) {
+      const resolved = await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: ResolutionChainBlock, args: { label: "ok" } }],
+        getOwner(this),
+        { permissive: true }
+      );
+      assert.strictEqual(resolved[0].args.label, "ok");
+
+      const record = _getOutletLayouts().get("homepage-blocks");
+      assert.strictEqual(record.validationWarnings.length, 0);
+    });
   });
 });

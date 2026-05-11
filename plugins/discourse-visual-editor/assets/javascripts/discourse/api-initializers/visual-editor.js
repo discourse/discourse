@@ -34,8 +34,31 @@ export default apiInitializer((api) => {
   const editor = api.container.lookup("service:visual-editor");
   installBlockChrome();
   installOutletBoundary(editor);
+  installGhostBlocksWhileEditing(editor);
   installVeThemeAutoEnter(api, editor);
 });
+
+/**
+ * While the editor is active, force the block-rendering pipeline's
+ * `showGhosts` flag on so structurally invalid entries (typos in block
+ * names, conditions hiding a block) render as labelled placeholders the
+ * author can act on instead of disappearing silently. The dev-tools'
+ * existing GHOST_BLOCKS callback is preserved via the save-and-OR
+ * pattern, so toggling dev-tools off doesn't kill ghost rendering for
+ * editor users, and toggling the editor off doesn't kill it for dev-
+ * tools users.
+ *
+ * @param {import("../services/visual-editor").default} editor
+ */
+function installGhostBlocksWhileEditing(editor) {
+  const previous = debugHooks.getCallback(DEBUG_CALLBACK.GHOST_BLOCKS);
+  debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => {
+    if (editor.isActive) {
+      return true;
+    }
+    return previous ? previous() : false;
+  });
+}
 
 /**
  * Reads the `ve_theme` query parameter from the current URL and, when

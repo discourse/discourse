@@ -38,6 +38,13 @@ export function hydrateThemeBlockLayouts(api, layouts) {
       api.setLayoutLayer(outlet, api.LAYOUT_LAYERS.THEME, layout, {
         themeId,
         lazy: true,
+        // Theme-shipped layouts may have authoring errors (typos in
+        // block names, container with no children, etc.) — those
+        // shouldn't crash the page on boot. Permissive validation
+        // captures the error on the layer entry's `validationWarnings`
+        // and lets the renderer skip / ghost invalid entries instead
+        // of rejecting the whole layout.
+        permissive: true,
       });
     } catch (error) {
       // Surface the failure in the console without breaking the rest of
