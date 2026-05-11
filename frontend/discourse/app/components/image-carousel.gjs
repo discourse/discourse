@@ -339,41 +339,49 @@ export default class ImageCarousel extends Component {
     }
   }
 
-  // Returns the slide or wrap slot to scroll to. For wrap-crossing nav, parks
-  // the destination item in the adjacent slot as a side effect (mutates
-  // wrapMove); finishWrap moves it back and teleports afterwards.
-  prepareScrollTarget(index, direction) {
-    const wrapNext =
-      direction === "next" &&
-      this.currentIndex === this.lastIndex &&
-      index === 0;
-    const wrapPrev =
-      direction === "prev" &&
-      this.currentIndex === 0 &&
-      index === this.lastIndex;
+  // Returns the slide or wrap slot to scroll to. When `wrap` is true and the
+  // move crosses a boundary, parks the destination item in the adjacent slot
+  // as a side effect (mutates wrapMove); finishWrap moves it back and
+  // teleports afterwards.
+  prepareScrollTarget(index, wrap) {
+    if (wrap) {
+      const wrapNext = this.currentIndex === this.lastIndex && index === 0;
+      const wrapPrev = this.currentIndex === 0 && index === this.lastIndex;
 
-    if (wrapNext || wrapPrev) {
-      const slot = this.wrapSlots.get(wrapNext ? "trailing" : "leading");
-      const destSlide = this.slides.get(index);
-      const item = wrapNext ? this.firstItem : this.lastItem;
+      if (wrapNext || wrapPrev) {
+        const slot = this.wrapSlots.get(wrapNext ? "trailing" : "leading");
+        const destSlide = this.slides.get(index);
+        const item = wrapNext ? this.firstItem : this.lastItem;
 
-      if (slot && destSlide && item?.element) {
-        slot.appendChild(item.element);
-        this.wrapMove = { element: item.element, destSlide };
-        return slot;
+        if (slot && destSlide && item?.element) {
+          slot.appendChild(item.element);
+          this.wrapMove = { element: item.element, destSlide };
+          return slot;
+        }
       }
     }
 
     return this.slides.get(index);
   }
 
+  @action
+  next() {
+    this.scrollToIndex(this.nextIndex, { wrap: true });
+  }
+
+  @action
+  prev() {
+    this.scrollToIndex(this.prevIndex, { wrap: true });
+  }
+
   navigateByKey(direction) {
     const ltr = this.trackDirection === 1;
     const goNext = (direction === "right") === ltr;
-    this.scrollToIndex(
-      goNext ? this.nextIndex : this.prevIndex,
-      goNext ? "next" : "prev"
-    );
+    if (goNext) {
+      this.next();
+    } else {
+      this.prev();
+    }
   }
 
   // True iff scrollLeft has come to rest at a wrap slot's centered position.
@@ -562,9 +570,9 @@ export default class ImageCarousel extends Component {
   }
 
   @action
-  scrollToIndex(index, direction = null) {
+  scrollToIndex(index, { wrap = false } = {}) {
     this.settleInFlightWrap();
-    const element = this.prepareScrollTarget(index, direction);
+    const element = this.prepareScrollTarget(index, wrap);
     const track = this.trackElement;
     if (!element || !track) {
       return;
@@ -689,7 +697,7 @@ export default class ImageCarousel extends Component {
 
         <div class="d-image-carousel__controls">
           <DButton
-            @action={{fn this.scrollToIndex this.prevIndex "prev"}}
+            @action={{this.prev}}
             @icon="chevron-left"
             @title="carousel.previous"
             aria-label={{i18n "carousel.previous"}}
@@ -723,7 +731,7 @@ export default class ImageCarousel extends Component {
           {{/if}}
 
           <DButton
-            @action={{fn this.scrollToIndex this.nextIndex "next"}}
+            @action={{this.next}}
             @icon="chevron-right"
             @title="carousel.next"
             aria-label={{i18n "carousel.next"}}
