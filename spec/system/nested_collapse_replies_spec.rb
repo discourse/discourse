@@ -62,5 +62,23 @@ RSpec.describe "Nested view collapse_replies URL param" do
       # button on the depth-1 reply.
       expect(nested_view).to have_no_post(reply_to_reply)
     end
+
+    # collapse_replies is a "consolidated bucket parent" affordance: it
+    # makes sense when the chain root IS the target (hide bucketed
+    # replies behind a button). When the target is *below* the chain
+    # root, applying collapseFromDepth=1 would hide the target itself,
+    # defeating the whole point of the context view. The
+    # effectiveCollapseFromDepth getter in context-view.gjs ignores
+    # collapse_replies in that case.
+    it "ignores collapse_replies and shows the target when the chain has ancestors" do
+      page.visit("/n/#{topic.slug}/#{topic.id}/#{reply_to_reply.post_number}?collapse_replies=true")
+
+      expect(nested_view).to have_context_view
+
+      # Full chain renders: root → reply_to_root → reply_to_reply (target).
+      expect(nested_view).to have_post(root_post)
+      expect(nested_view).to have_post(reply_to_root)
+      expect(nested_view).to have_post(reply_to_reply)
+    end
   end
 end
