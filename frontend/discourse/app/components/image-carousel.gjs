@@ -502,7 +502,6 @@ export default class ImageCarousel extends Component {
           <div
             {{this.registerClone "last"}}
             inert
-            aria-hidden="true"
             style={{getAspectRatio this.lastItem.width this.lastItem.height}}
             class="d-image-carousel__slide d-image-carousel__slide--clone"
           >
@@ -526,7 +525,6 @@ export default class ImageCarousel extends Component {
           <div
             {{this.registerClone "first"}}
             inert
-            aria-hidden="true"
             style={{getAspectRatio this.firstItem.width this.firstItem.height}}
             class="d-image-carousel__slide d-image-carousel__slide--clone"
           >
