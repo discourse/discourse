@@ -212,6 +212,7 @@
   }
 
   &__dot {
+    position: relative;
     height: 0.66rem;
     width: 0.66rem;
     padding: 0;
@@ -224,6 +225,16 @@
       background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.15s ease-out;
     touch-action: manipulation;
+
+    // Expand the click target across the wrapper's vertical padding (0.5rem)
+    // and half the inter-dot gap (0.75rem / 2) on each side. Invisible;
+    // doesn't affect the visual dot's layout.
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block: -0.5rem;
+      inset-inline: -0.375rem;
+    }
 
     &:hover {
       background: var(--primary-900);
