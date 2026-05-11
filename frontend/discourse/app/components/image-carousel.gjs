@@ -180,6 +180,7 @@ export default class ImageCarousel extends Component {
       const distance = Math.abs(
         element.offsetLeft + element.offsetWidth / 2 - trackCenter
       );
+
       if (distance < minDistance) {
         minDistance = distance;
         best = index;
@@ -207,6 +208,7 @@ export default class ImageCarousel extends Component {
     if (!this.movedElement || !this.movedToSlide) {
       return false;
     }
+
     this.movedToSlide.appendChild(this.movedElement);
     this.movedElement = null;
     this.movedToSlide = null;
@@ -220,11 +222,13 @@ export default class ImageCarousel extends Component {
     if (!dest || !this.returnMovedElement() || !this.trackElement) {
       return false;
     }
+
     // "instant" bypasses CSS scroll-behavior: smooth.
     this.trackElement.scrollTo({
       left: this.computeTargetScrollLeft(dest),
       behavior: "instant",
     });
+
     return true;
   }
 
@@ -284,6 +288,7 @@ export default class ImageCarousel extends Component {
         if (!this.finishWrap()) {
           t.scrollLeft = this.animationTarget;
         }
+
         // Defer style restore one frame: snap still has the pre-teleport
         // target committed and would smooth-scroll back toward it.
         cancelAnimationFrame(this.animationFrame);
@@ -309,6 +314,7 @@ export default class ImageCarousel extends Component {
       cancelAnimationFrame(this.animationFrame);
       this.animationFrame = null;
     }
+
     this.restoreScrollStyles();
   }
 
@@ -347,6 +353,7 @@ export default class ImageCarousel extends Component {
       const slot = this.wrapSlots.get(wrapNext ? "trailing" : "leading");
       const destSlide = this.slides.get(index);
       const item = wrapNext ? this.firstItem : this.lastItem;
+
       if (slot && destSlide && item?.element) {
         slot.appendChild(item.element);
         this.movedElement = item.element;
@@ -373,11 +380,13 @@ export default class ImageCarousel extends Component {
     if (!track) {
       return false;
     }
+
     for (const slot of this.wrapSlots.values()) {
       if (Math.abs(this.computeTargetScrollLeft(slot) - track.scrollLeft) < 1) {
         return true;
       }
     }
+
     return false;
   }
 
@@ -385,10 +394,7 @@ export default class ImageCarousel extends Component {
   onWrapSlotIntersect(entries) {
     // rAF finish handles its own teleport; perturbing scrollLeft would trip
     // its external-scroll abort.
-    if (this.animationFrame !== null) {
-      return;
-    }
-    if (this.suppressDragWrap) {
+    if (this.animationFrame !== null || this.suppressDragWrap) {
       return;
     }
 
@@ -396,6 +402,7 @@ export default class ImageCarousel extends Component {
       if (!entry.isIntersecting) {
         continue;
       }
+
       const isTrailing = entry.target === this.wrapSlots.get("trailing");
       const destIndex = isTrailing ? 0 : this.lastIndex;
       const destSlide = this.slides.get(destIndex);
@@ -403,6 +410,7 @@ export default class ImageCarousel extends Component {
       if (!destSlide || !track) {
         return;
       }
+
       // IO entries can be stale by callback time (e.g. rAF-finish briefly
       // touched the slot then teleported away). Verify current position.
       if (
@@ -412,12 +420,14 @@ export default class ImageCarousel extends Component {
       ) {
         continue;
       }
+
       if (
         this.movedElement &&
         this.movedElement.parentElement === entry.target
       ) {
         this.returnMovedElement();
       }
+
       this.currentIndex = destIndex;
       this.teleportToSlide(destSlide);
       return;
@@ -428,6 +438,7 @@ export default class ImageCarousel extends Component {
     if (this.suppressDragWrap) {
       return;
     }
+
     const track = this.trackElement;
     const firstSlide = this.slides.get(0);
     const lastSlide = this.slides.get(this.lastIndex);
@@ -454,6 +465,7 @@ export default class ImageCarousel extends Component {
     if (this.movedElement === item?.element) {
       return;
     }
+
     this.returnMovedElement();
     const slot = this.wrapSlots.get(slotName);
     if (slot && destSlide && item?.element) {
@@ -519,6 +531,7 @@ export default class ImageCarousel extends Component {
     } else {
       this.returnMovedElement();
     }
+
     this.updateIndex();
 
     if (this.pendingKeyDirection) {
@@ -575,6 +588,7 @@ export default class ImageCarousel extends Component {
     if (!track) {
       return;
     }
+
     track.style.scrollSnapType = "none";
     track.style.scrollBehavior = "auto";
     track.scrollTo({
@@ -592,6 +606,7 @@ export default class ImageCarousel extends Component {
     if (!slide || index === this.currentIndex) {
       return;
     }
+
     this.cancelAnimation();
     this.returnMovedElement();
     this.currentIndex = index;
