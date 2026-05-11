@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { throttle } from "@ember/runloop";
@@ -23,10 +23,6 @@ const ANIMATION_DURATION_MS = 800;
 
 function plusOne(val) {
   return val + 1;
-}
-
-function aspectRatioStyle(width, height) {
-  return trustHTML(`aspect-ratio: ${width} / ${height}`);
 }
 
 export default class ImageCarousel extends Component {
@@ -661,7 +657,9 @@ export default class ImageCarousel extends Component {
             <div
               {{this.registerSlide index}}
               data-index={{index}}
-              style={{aspectRatioStyle item.width item.height}}
+              style={{trustHTML
+                (concat "aspect-ratio: " item.width " / " item.height)
+              }}
               class={{concatClass
                 "d-image-carousel__slide"
                 (if (eq this.currentIndex index) "is-active")
