@@ -330,6 +330,7 @@ ca:
       admins: "administradors"
       moderators: "moderadors"
       staff: "equip responsable"
+      anonymous: "anònim"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -996,6 +997,8 @@ ca:
       xaxis: "Dia"
     page_view_logged_in_browser_reqs:
       xaxis: "Dia"
+    page_view_embed_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Fons"
       xaxis: "Dia"
@@ -1053,7 +1056,7 @@ ca:
         os: Sistema operatiu
         login_time: Hora d'inici de sessió
       description: "Detalls de nous inicis de sessió que difereixen sospitosament de connexions anteriors."
-    staff_logins:
+    admin_logins:
       title: "Inicis de sessió d'administradors"
       labels:
         user: Usuari

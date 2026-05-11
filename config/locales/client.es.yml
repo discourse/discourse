@@ -671,6 +671,7 @@ es:
       allow_access: "Permitir acceso"
       continue_as_guest: "Continuar sin iniciar sesión"
       be_first_to_reply: "¡Sé la primera persona en responder!"
+      editing_post: "Editando publicación"
     topic_count_all:
       one: "Ver %{count} tema nuevo"
       other: "Ver %{count} temas nuevos"
@@ -6301,6 +6302,18 @@ es:
         too_many_requests: Has realizado esta acción demasiadas veces. Por favor, espera antes de intentarlo de nuevo.
         not_found_error: Lo sentimos, este informe no existe
         custom_date_range: Rango de fechas personalizado
+        sections:
+          reports:
+            title: "Informes"
+          traffic:
+            title: "Tráfico del sitio"
+          engagement:
+            title: "Interacción"
+        period:
+          last_7_days: "Últimos 7 días"
+          last_30_days: "Últimos 30 días"
+          last_3_months: "Últimos 3 meses"
+          custom: "Personalizado"
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el período previo."
           percent_change_tooltip: "%{percent} de cambio."
@@ -8175,7 +8188,6 @@ es:
           other: "No se pueden eliminar todas las publicaciones porque el usuario tiene más de %{count}. (delete_all_posts_max)"
         delete_confirm_title: "¿Seguro que quieres eliminar este usuario? ¡Esta acción es permanente!"
         delete_confirm: "Normalmente, es mejor anonimizar usuarios en vez de eliminarlos. Así, evitas eliminar contenido de temas existentes."
-        delete_and_block: "Eliminar usuario, bloquear su correo electrónico y dirección IP"
         delete_dont_block: "Eliminar usuario"
         deleting_user: "Eliminando usuario…"
         deleted: "El usuario se eliminó"

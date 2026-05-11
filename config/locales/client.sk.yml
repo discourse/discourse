@@ -6074,6 +6074,16 @@ sk:
         too_many_requests: Túto akciu ste vykonali príliš veľakrát. Pred opätovným pokusom počkajte.
         not_found_error: Prepáčte, toto hlásenie neexistuje
         custom_date_range: Vlastný rozsah dátumov
+        sections:
+          reports:
+            title: "Hlásení"
+          traffic:
+            title: "Návštevnosť stránky"
+        period:
+          last_7_days: "Posledných 7 dní"
+          last_30_days: "Posledných 30 dní"
+          last_3_months: "Posledných 3 mesiacov"
+          custom: "Vlastné"
         reports:
           trend_title: "%{percent} zmena. V súčasnosti %{current}, v predchádzajúcom období bola %{prev} ."
           percent_change_tooltip: "%{percent} zmena."
@@ -7918,7 +7928,6 @@ sk:
           other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov. (delete_all_posts_max)"
         delete_confirm_title: "Ste si istí, že chcete odstrániť tohto používateľa? Je to natrvalo!"
         delete_confirm: "Vo všeobecnosti sa uprednostňuje anonymizácia používateľov pred ich vymazaním, aby sa zabránilo odstráneniu obsahu existujúcich diskusií."
-        delete_and_block: "Odstrániť používateľa a zablokovať jeho e-mail a IP adresu"
         delete_dont_block: "Odstránenie používateľa"
         deleting_user: "Odstránenie používateľa…"
         deleted: "Používateľ bol vymazaný."

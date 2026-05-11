@@ -221,6 +221,9 @@ RSpec.describe Admin::ReportsController do
                 topics: {
                   limit: 10,
                 },
+                admin_logins: {
+                  limit: 10,
+                },
                 top_uploads: {
                   limit: 10,
                 },
@@ -228,9 +231,10 @@ RSpec.describe Admin::ReportsController do
             }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["reports"].count).to eq(2)
+        expect(response.parsed_body["reports"].count).to eq(3)
         expect(response.parsed_body["reports"][0]["type"]).to eq("topics")
         expect(response.parsed_body["reports"][1]).to include("error" => "not_found", "data" => nil)
+        expect(response.parsed_body["reports"][2]).to include("error" => "not_found", "data" => nil)
       end
     end
 
@@ -422,10 +426,12 @@ RSpec.describe Admin::ReportsController do
       end
 
       it "does not allow accessing admin-only reports" do
-        get "/admin/reports/top_uploads.json"
+        Report::ADMIN_ONLY_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
 
-        expect(response.status).to eq(404)
-        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        end
       end
     end
 

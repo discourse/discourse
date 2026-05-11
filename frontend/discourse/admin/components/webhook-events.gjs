@@ -230,6 +230,7 @@ export default class WebhookEvents extends Component {
           @label="admin.web_hooks.events.redeliver_failed"
           @action={{this.redeliverFailed}}
           @disabled={{not this.redeliverEnabled}}
+          class="btn-default"
         />
 
         <DButton
@@ -237,7 +238,7 @@ export default class WebhookEvents extends Component {
           @label="admin.web_hooks.events.ping"
           @action={{this.ping}}
           @disabled={{not this.pingEnabled}}
-          class="webhook-events__ping-button"
+          class="btn-default webhook-events__ping-button"
         />
       </div>
 

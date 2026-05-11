@@ -26,6 +26,7 @@ class UserSilencer
   end
 
   def silence
+    return false if @user.staff?
     hide_posts unless @opts[:keep_posts]
     return false if @user.silenced_till.present?
     @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now

@@ -12,18 +12,7 @@ export default class AiBotDockedSubmit extends Service {
   @tracked loading = false;
 
   async submitReply({ topicId, raw, uploads, inProgressUploadsCount }) {
-    if (!topicId || !raw) {
-      return null;
-    }
-
-    const minLength = this.siteSettings.min_personal_message_post_length;
-    if (raw.trim().length < minLength) {
-      this.dialog.alert({
-        message: i18n(
-          "discourse_ai.ai_bot.conversations.min_input_length_message",
-          { count: minLength }
-        ),
-      });
+    if (!topicId) {
       return null;
     }
 
@@ -34,9 +23,28 @@ export default class AiBotDockedSubmit extends Service {
       return null;
     }
 
-    let rawContent = raw;
-    if (uploads?.length) {
-      rawContent += "\n\n";
+    const hasUploads = uploads?.length > 0;
+
+    if (!raw && !hasUploads) {
+      return null;
+    }
+
+    const minLength = this.siteSettings.min_personal_message_post_length;
+    if (!hasUploads && raw.trim().length < minLength) {
+      this.dialog.alert({
+        message: i18n(
+          "discourse_ai.ai_bot.conversations.min_input_length_message",
+          { count: minLength }
+        ),
+      });
+      return null;
+    }
+
+    let rawContent = raw || "";
+    if (hasUploads) {
+      if (rawContent.length) {
+        rawContent += "\n\n";
+      }
       uploads.forEach((upload) => {
         rawContent += getUploadMarkdown(upload) + "\n";
       });

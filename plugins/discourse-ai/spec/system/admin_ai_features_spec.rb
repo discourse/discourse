@@ -44,6 +44,8 @@ RSpec.describe "Admin AI features configuration" do
     ai_features_page.toggle_unconfigured
 
     expect(ai_features_page).to have_listed_modules(all_modules.size - configured_count)
+
+    screenshot_marker(label: "ai-admin-features")
   end
 
   it "lists the agent used for the corresponding AI feature" do

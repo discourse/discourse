@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActionList from "discourse/components/topic-list/action-list";
+import NewRepliesDot from "discourse/components/topic-list/new-replies-dot";
 import ParticipantGroups from "discourse/components/topic-list/participant-groups";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
@@ -74,7 +75,11 @@ export default class TopicCell extends Component {
           />
           {{~! no whitespace ~}}
           <UnreadIndicator @topic={{@topic}} />
-          {{~#if @showTopicPostBadges~}}
+          {{~#if @topic.is_nested_view~}}
+            {{~#if @topic.has_new_replies~}}
+              <NewRepliesDot @topic={{@topic}} />
+            {{~/if~}}
+          {{~else if @showTopicPostBadges~}}
             <TopicPostBadges
               @unreadPosts={{@topic.unread_posts}}
               @unseen={{@topic.unseen}}

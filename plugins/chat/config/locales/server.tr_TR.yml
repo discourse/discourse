@@ -263,23 +263,43 @@ tr_TR:
         private_email:
           one: "[%{site_name}] Yeni mesaj"
           other: "[%{site_name}] Yeni mesajlar"
+        private_email_improved:
+          one: "Yeni İleti"
+          other: "Yeni İletiler"
         watched_thread:
           one: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajı"
           other: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajları"
+        watched_thread_improved:
+          one: "%{channel} kanalında yeni konu mesajı"
+          other: "%{channel} kanalında yeni konu mesajları"
         watched_threads:
           one: "[%{site_name}] %{channel} ve %{count} diğer kanalda yeni mesajlar"
           other: "[%{site_name}] %{channel} ve %{count} diğer kanalda yeni mesajlar"
+        watched_threads_improved:
+          one: "%{channel} kanalındaki yeni konu mesajları ve diğer %{count} kanalda"
+          other: "%{channel} kanalında ve diğer %{count} kanalda yeni konu mesajları"
         chat_dm_1:
           one: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesaj"
           other: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesajlar"
+        chat_dm_1_improved:
+          one: "%{name}'den yeni mesaj"
+          other: "%{name}'den yeni mesajlar"
         chat_dm_2: "[%{site_name}] %{name_1} ve %{name_2} kişiden daha yeni mesajlar"
+        chat_dm_2_improved: "%{name_1} ve %{name_2}'den yeni mesajlar"
         chat_dm_3_or_more: "[%{site_name}] %{name} ve %{count} diğer doğrudan mesaj kanallarından yeni mesajlar"
+        chat_dm_3_or_more_improved: "%{name} ve diğer %{count} özel mesaj kanalından gelen yeni mesajlar"
         chat_channel_1:
           one: "[%{site_name}] %{channel} adlı kanalda yeni mesaj"
           other: "[%{site_name}] %{channel} adlı kanalda yeni mesajlar"
+        chat_channel_1_improved:
+          one: "%{channel} kanalında yeni mesaj"
+          other: "%{channel} kanalında yeni mesajlar"
         chat_channel_2: "[%{site_name}] %{channel_1} ve %{channel_2} kanallarında yeni mesajlar"
+        chat_channel_2_improved: "%{channel_1} ve %{channel_2} kanallarında yeni mesajlar var"
         chat_channel_3_or_more: "[%{site_name}] %{channel} ve %{count} diğer kanalda yeni mesajlar var."
+        chat_channel_3_or_more_improved: "%{channel} kanalında yeni mesajlar ve diğer %{count} kanalda"
         chat_channel_and_dm: "[%{site_name}] %{channel} adlı kanalda ve %{name} adlı kişiden yeni mesajlar"
+        chat_channel_and_dm_improved: "%{channel} kanalında ve %{name}'den gelen yeni mesajlar"
       unsubscribe: "Bu sohbet özeti siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin veya abonelikten çıkmak için %{unsubscribe_link} bağlantısını kullanın."
       unsubscribe_no_link: "Bu sohbet özeti, siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin."
       view_messages:

@@ -1888,6 +1888,330 @@ RSpec.describe PostAlerter do
     end
   end
 
+  context "with replies in a nested topic" do
+    fab!(:op, :user)
+    fab!(:replier, :user)
+    fab!(:third_party, :user)
+    fab!(:nested_topic_record) { Fabricate(:topic, user: op) }
+    fab!(:nested_first_post) do
+      Fabricate(:post, topic: nested_topic_record, user: op, post_number: 1)
+    end
+
+    before do
+      SiteSetting.nested_replies_enabled = true
+      Fabricate(:nested_topic, topic: nested_topic_record)
+    end
+
+    it "notifies the OP via :replied for a root post (no reply_to_post_number)" do
+      root = Fabricate(:post, topic: nested_topic_record, user: replier, reply_to_post_number: nil)
+
+      PostAlerter.post_created(root)
+
+      expect(op.notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
+    end
+
+    it "does not notify the OP about replies between third parties on someone else's post" do
+      other_root_user = Fabricate(:user)
+      other_root =
+        Fabricate(
+          :post,
+          topic: nested_topic_record,
+          user: other_root_user,
+          post_number: 2,
+          reply_to_post_number: nil,
+        )
+      PostAlerter.post_created(other_root)
+      op.notifications.destroy_all
+
+      deep_reply =
+        Fabricate(
+          :post,
+          topic: nested_topic_record,
+          user: third_party,
+          post_number: 3,
+          reply_to_post_number: 2,
+        )
+      PostAlerter.post_created(deep_reply)
+
+      expect(op.notifications.where(notification_type: Notification.types[:replied]).count).to eq(0)
+    end
+
+    it "does not notify the OP when they post a root themselves" do
+      own_root = Fabricate(:post, topic: nested_topic_record, user: op, reply_to_post_number: nil)
+
+      PostAlerter.post_created(own_root)
+
+      expect(op.notifications.where(notification_type: Notification.types[:replied]).count).to eq(0)
+    end
+
+    it "still notifies a parent-post author when someone replies directly to them" do
+      parent_user = Fabricate(:user)
+      Fabricate(
+        :post,
+        topic: nested_topic_record,
+        user: parent_user,
+        post_number: 2,
+        reply_to_post_number: nil,
+      )
+      reply =
+        Fabricate(
+          :post,
+          topic: nested_topic_record,
+          user: third_party,
+          post_number: 3,
+          reply_to_post_number: 2,
+        )
+
+      PostAlerter.post_created(reply)
+
+      expect(
+        parent_user.notifications.where(notification_type: Notification.types[:replied]).count,
+      ).to eq(1)
+    end
+
+    it "does not generate a :replied notification for a whispered root" do
+      whispered_root =
+        Fabricate(
+          :post,
+          topic: nested_topic_record,
+          user: replier,
+          post_type: Post.types[:whisper],
+          reply_to_post_number: nil,
+        )
+
+      PostAlerter.post_created(whispered_root)
+
+      expect(op.notifications.where(notification_type: Notification.types[:replied]).count).to eq(0)
+    end
+
+    it "starts redirecting only after a flat topic is converted to nested mid-life" do
+      flat_topic = Fabricate(:topic, user: op)
+      Fabricate(:post, topic: flat_topic, user: op, post_number: 1)
+
+      flat_root =
+        Fabricate(
+          :post,
+          topic: flat_topic,
+          user: replier,
+          post_number: 2,
+          reply_to_post_number: nil,
+        )
+      PostAlerter.post_created(flat_root)
+      expect(op.notifications.where(notification_type: Notification.types[:replied]).count).to eq(0)
+
+      Fabricate(:nested_topic, topic: flat_topic)
+
+      nested_root =
+        Fabricate(
+          :post,
+          topic: flat_topic,
+          user: third_party,
+          post_number: 3,
+          reply_to_post_number: nil,
+        )
+      PostAlerter.post_created(nested_root)
+      expect(op.notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
+    end
+
+    it "still emits :posted notifications for users explicitly Watching the nested topic" do
+      watcher = Fabricate(:user)
+      TopicUser.change(
+        watcher.id,
+        nested_topic_record.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+
+      root = Fabricate(:post, topic: nested_topic_record, user: replier, reply_to_post_number: nil)
+      PostAlerter.post_created(root)
+
+      expect(
+        watcher.notifications.where(notification_type: Notification.types[:posted]).count,
+      ).to eq(1)
+    end
+  end
+
+  context "with reply consolidation in a nested topic" do
+    fab!(:bucket_op, :user)
+    fab!(:bucket_replier, :user)
+    fab!(:bucket_other_replier, :user)
+    fab!(:bucket_topic) { Fabricate(:topic, user: bucket_op) }
+    fab!(:bucket_first_post) do
+      Fabricate(:post, topic: bucket_topic, user: bucket_op, post_number: 1)
+    end
+
+    before do
+      SiteSetting.nested_replies_enabled = true
+      Fabricate(:nested_topic, topic: bucket_topic)
+    end
+
+    def post_alert(user:, post_number:, reply_to: nil)
+      post =
+        Fabricate(
+          :post,
+          topic: bucket_topic,
+          user: user,
+          post_number: post_number,
+          reply_to_post_number: reply_to,
+        )
+      PostAlerter.post_created(post)
+      post
+    end
+
+    it "stores the resolved reply_to_post_number in notification.data for root posts" do
+      post_alert(user: bucket_replier, post_number: 2, reply_to: nil)
+
+      notification =
+        bucket_op.notifications.find_by(notification_type: Notification.types[:replied])
+      expect(notification.data_hash["reply_to_post_number"]).to eq(1)
+    end
+
+    it "stores the parent post number in notification.data for non-root replies" do
+      Fabricate(:post, topic: bucket_topic, user: bucket_op, post_number: 2)
+      post_alert(user: bucket_replier, post_number: 3, reply_to: 2)
+
+      notification =
+        bucket_op.notifications.find_by(notification_type: Notification.types[:replied])
+      expect(notification.data_hash["reply_to_post_number"]).to eq(2)
+    end
+
+    it "consolidates replies that share a bucket into one notification" do
+      post_alert(user: bucket_replier, post_number: 2, reply_to: nil)
+      post_alert(user: bucket_other_replier, post_number: 3, reply_to: nil)
+
+      notifications = bucket_op.notifications.where(notification_type: Notification.types[:replied])
+      expect(notifications.count).to eq(1)
+      expect(notifications.first.data_hash["reply_to_post_number"]).to eq(1)
+      expect(notifications.first.data_hash["display_username"]).to eq(
+        I18n.t("embed.replies", count: 2),
+      )
+      expect(notifications.first.data_hash["consolidated_count"]).to eq(2)
+    end
+
+    it "keeps separate notifications for replies in different buckets" do
+      Fabricate(:post, topic: bucket_topic, user: bucket_op, post_number: 2)
+      Fabricate(:post, topic: bucket_topic, user: bucket_op, post_number: 3)
+
+      post_alert(user: bucket_replier, post_number: 4, reply_to: 2)
+      post_alert(user: bucket_other_replier, post_number: 5, reply_to: 3)
+
+      buckets =
+        bucket_op
+          .notifications
+          .where(notification_type: Notification.types[:replied])
+          .map { |n| n.data_hash["reply_to_post_number"] }
+
+      expect(buckets.sort).to eq([2, 3])
+    end
+
+    it "does not let a non-root bucket reply collapse a root bucket notification" do
+      post_alert(user: bucket_replier, post_number: 2, reply_to: nil)
+
+      parent_post = Fabricate(:post, topic: bucket_topic, user: bucket_op, post_number: 3)
+      post_alert(user: bucket_other_replier, post_number: 4, reply_to: 3)
+
+      buckets =
+        bucket_op
+          .notifications
+          .where(notification_type: Notification.types[:replied])
+          .map { |n| n.data_hash["reply_to_post_number"] }
+
+      expect(buckets.sort).to eq([1, 3])
+    end
+
+    it "does not let a nested posted notification collapse a bucketed replied notification" do
+      watcher = Fabricate(:user)
+      TopicUser.change(
+        watcher.id,
+        bucket_topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+      Fabricate(:post, topic: bucket_topic, user: watcher, post_number: 2)
+      post_alert(user: bucket_replier, post_number: 3, reply_to: 2)
+
+      post_alert(user: bucket_other_replier, post_number: 4, reply_to: nil)
+
+      notifications = watcher.notifications.where(topic: bucket_topic)
+      expect(notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
+      expect(notifications.where(notification_type: Notification.types[:posted]).count).to eq(1)
+    end
+
+    it "does not let a nested category-watching notification collapse a bucketed replied notification" do
+      category_watcher = Fabricate(:user)
+      CategoryUser.set_notification_level_for_category(
+        category_watcher,
+        CategoryUser.notification_levels[:watching],
+        bucket_topic.category_id,
+      )
+      Fabricate(:post, topic: bucket_topic, user: category_watcher, post_number: 2)
+      post_alert(user: bucket_replier, post_number: 3, reply_to: 2)
+
+      post_alert(user: bucket_other_replier, post_number: 4, reply_to: nil)
+
+      notifications = category_watcher.notifications.where(topic: bucket_topic)
+      expect(notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
+      expect(
+        notifications.where(notification_type: Notification.types[:watching_category_or_tag]).count,
+      ).to eq(1)
+    end
+  end
+
+  context "with reply consolidation on a flat topic (regression guard)" do
+    fab!(:flat_op, :user)
+    fab!(:flat_replier_a, :user)
+    fab!(:flat_replier_b, :user)
+    fab!(:flat_topic) { Fabricate(:topic, user: flat_op) }
+    fab!(:flat_first_post) { Fabricate(:post, topic: flat_topic, user: flat_op, post_number: 1) }
+
+    # Flat topics must not pick up the new bucket fields. The frontend
+    # Replied handler keys on data.reply_to_post_number to render the
+    # nested-only "X new replies in your topic" / "to your post" copy
+    # and to append ?sort=new — flat topics must keep the legacy shape.
+
+    it "does not store reply_to_post_number or consolidated_count for a flat consolidated reply" do
+      Fabricate(:post, topic: flat_topic, user: flat_op, post_number: 2)
+      reply1 =
+        Fabricate(
+          :post,
+          topic: flat_topic,
+          user: flat_replier_a,
+          post_number: 3,
+          reply_to_post_number: 2,
+        )
+      PostAlerter.post_created(reply1)
+      reply2 =
+        Fabricate(
+          :post,
+          topic: flat_topic,
+          user: flat_replier_b,
+          post_number: 4,
+          reply_to_post_number: 2,
+        )
+      PostAlerter.post_created(reply2)
+
+      notifications = flat_op.notifications.where(notification_type: Notification.types[:replied])
+      expect(notifications.count).to eq(1)
+      data = notifications.first.data_hash
+      expect(data.key?("reply_to_post_number")).to eq(false)
+      expect(data.key?("consolidated_count")).to eq(false)
+      expect(data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
+    end
+
+    it "does not store reply_to_post_number for a flat singular reply either" do
+      reply =
+        Fabricate(
+          :post,
+          topic: flat_topic,
+          user: flat_replier_a,
+          post_number: 2,
+          reply_to_post_number: 1,
+        )
+      PostAlerter.post_created(reply)
+
+      notification = flat_op.notifications.find_by(notification_type: Notification.types[:replied])
+      expect(notification.data_hash.key?("reply_to_post_number")).to eq(false)
+    end
+  end
+
   context "with category" do
     context "with watching" do
       it "triggers :before_create_notifications_for_users" do

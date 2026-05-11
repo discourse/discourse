@@ -612,6 +612,8 @@ ug:
         other_drafts:
           one: "+%{count} باشقا دەسلەپكى نۇسخا"
           other: "+%{count} باشقا دەسلەپكى نۇسخا"
+    embed_mode:
+      editing_post: "يازما تەھرىرلىنىۋاتىدۇ"
     topic_count_all:
       one: "%{count} يېڭى تېمىنى كۆرۈڭ"
       other: "%{count} يېڭى تېمىنى كۆرۈڭ"
@@ -5947,6 +5949,14 @@ ug:
         too_many_requests: بۇ مەشغۇلاتنى بەك كۆپ قىلدىڭىز. سەل كۈتۈپ ئاندىن قايتا سىناڭ.
         not_found_error: كەچۈرۈڭ، بۇ دوكلات مەۋجۇت ئەمەس
         custom_date_range: ئىختىيارى چېسلا دائىرىسى
+        sections:
+          reports:
+            title: "دوكلات"
+          traffic:
+            title: "بېكەت ئېقىمى"
+        period:
+          last_3_months: "ئۆتكەن 3 ئاي"
+          custom: "ئىختىيارى"
         reports:
           trend_title: "ئۆزگىرىش %{percent}. نۆۋەتتىكى %{current}، ئالدىنقى مەزگىلدە %{prev}"
           percent_change_tooltip: "%{percent} ئۆزگەردى."
@@ -7769,7 +7779,6 @@ ug:
           other: "ھەممە يازمىنى ئۆچۈرەلمەيدۇ چۈنكى ئىشلەتكۈچىنىڭ %{count} كۆپ يازمىسى بار. (delete_all_posts_max)"
         delete_confirm_title: "بۇ ئىشلەتكۈچىنى راستتىنلا ئۆچۈرەمسىز؟ بۇ مەڭگۈلۈك!"
         delete_confirm: "ئىشلەتكۈچىنى ئۆچۈرۈۋەتمەي نامسىزلاشتۇرغان تېخىمۇ ياخشى، شۇنداق بولغاندا مەۋجۇت سۆھبەتتىكى مەزمۇننى يۆتكەشتىن ساقلانغىلى بولىدۇ."
-        delete_and_block: "بۇ ئىشلەتكۈچىنى ئۆچۈرۈپ ۋە ئۇلارنىڭ ئېلخەت ۋە IP ئادرېسىنى توسىدۇ"
         delete_dont_block: "ئىشلەتكۈچى ئۆچۈر"
         deleting_user: "ئىشلەتكۈچى ئۆچۈرۈۋاتىدۇ…"
         deleted: "ئىشلەتكۈچى ئۆچۈرۈلگەن."

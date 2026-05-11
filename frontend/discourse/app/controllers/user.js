@@ -232,9 +232,12 @@ export default class UserController extends Controller {
     return this.siteSettings.enable_badges && this.model?.badge_count > 0;
   }
 
-  @computed()
+  @computed("model.profile_hidden")
   get canInviteToForum() {
-    return this.currentUser?.get("can_invite_to_forum");
+    return (
+      this.currentUser?.get("can_invite_to_forum") &&
+      !this.model?.profile_hidden
+    );
   }
 
   @computed("model.user_fields.@each.value")

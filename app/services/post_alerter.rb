@@ -378,12 +378,46 @@ class PostAlerter
     unread_posts(user, topic).count
   end
 
-  def destroy_notifications(user, types, topic)
+  # Bucket membership is the scope here — we don't re-apply the watching/reply_to
+  # filters that #unread_posts uses, since a recipient is by definition the
+  # parent author (or OP for bucket 1).
+  def unread_posts_in_bucket(user, topic, bucket_post_number)
+    last_read =
+      TopicUser.where(user_id: user.id, topic_id: topic.id).pick(:last_read_post_number) || 0
+
+    scope =
+      Post.secured(Guardian.new(user)).where(topic_id: topic.id).where("post_number > ?", last_read)
+
+    if bucket_post_number == Notification::TOPIC_ROOT_BUCKET
+      # Post 1 is the root itself, not a reply to it.
+      scope.where("reply_to_post_number IS NULL OR reply_to_post_number = 1").where(
+        "post_number > 1",
+      )
+    else
+      scope.where(reply_to_post_number: bucket_post_number)
+    end
+  end
+
+  def first_unread_post_in_bucket(user, topic, bucket_post_number)
+    unread_posts_in_bucket(user, topic, bucket_post_number).order("post_number").first
+  end
+
+  def unread_count_in_bucket(user, topic, bucket_post_number)
+    unread_posts_in_bucket(user, topic, bucket_post_number).count
+  end
+
+  def destroy_notifications(user, types, topic, bucket_post_number: nil)
     return if user.blank?
     return unless Guardian.new(user).can_see?(topic)
 
     User.transaction do
-      user.notifications.where(notification_type: types, topic_id: topic.id).destroy_all
+      scope = user.notifications.where(notification_type: types, topic_id: topic.id)
+      if bucket_post_number
+        # Compare as text — `data` is stored as text and a future malformed
+        # value (e.g. empty string) would raise on a `::int` cast.
+        scope = scope.where("data::jsonb ->> 'reply_to_post_number' = ?", bucket_post_number.to_s)
+      end
+      scope.destroy_all
 
       # Reload so notification counts sync up correctly
       user.reload
@@ -543,6 +577,9 @@ class PostAlerter
       end
     end
 
+    # Keyed on the *incoming* post's number. A consolidated nested-bucket row
+    # stores the bucket's first-unread post number, so it won't collide here —
+    # the COLLAPSED branch below destroys + recreates the bucket row.
     existing_notifications =
       user
         .notifications
@@ -572,9 +609,23 @@ class PostAlerter
     end
 
     collapsed = false
+    bucket_post_number = nil
+    consolidated_count = nil
 
     if COLLAPSED_NOTIFICATION_TYPES.include?(type)
-      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, topic)
+      if type == Notification.types[:replied] && topic.nested_view?
+        bucket_post_number = post.reply_to_post_number || Notification::TOPIC_ROOT_BUCKET
+        destroy_notifications(
+          user,
+          [Notification.types[:replied]],
+          topic,
+          bucket_post_number: bucket_post_number,
+        )
+      else
+        types = COLLAPSED_NOTIFICATION_TYPES
+        types -= [Notification.types[:replied]] if topic.nested_view?
+        destroy_notifications(user, types, topic)
+      end
       collapsed = true
     end
 
@@ -582,9 +633,15 @@ class PostAlerter
     original_username = opts[:display_username].presence || post.username
 
     if collapsed
-      post = first_unread_post(user, topic) || post
-      count = unread_count(user, topic)
+      if bucket_post_number
+        post = first_unread_post_in_bucket(user, topic, bucket_post_number) || post
+        count = unread_count_in_bucket(user, topic, bucket_post_number)
+      else
+        post = first_unread_post(user, topic) || post
+        count = unread_count(user, topic)
+      end
       if count > 1
+        consolidated_count = count
         I18n.with_locale(user.effective_locale) do
           opts[:display_username] = I18n.t("embed.replies", count: count)
         end
@@ -609,6 +666,11 @@ class PostAlerter
       revision_number: opts[:revision_number],
       display_username: opts[:display_username] || post.user.username,
     }
+
+    if bucket_post_number
+      notification_data[:reply_to_post_number] = bucket_post_number
+      notification_data[:consolidated_count] = consolidated_count if consolidated_count
+    end
 
     if display_name = opts[:display_name] || post.user.name
       notification_data[:display_name] = display_name

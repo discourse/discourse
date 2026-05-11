@@ -587,6 +587,7 @@ fa_IR:
       admins: "مدیران ارشد"
       moderators: "مدیران"
       staff: "همکاران"
+      anonymous: "ناشناس"
       trust_level_0: "سطح اعتماد 0"
       trust_level_1: "سطح اعتماد 1"
       trust_level_2: "سطح اعتماد 2"
@@ -1335,6 +1336,8 @@ fa_IR:
     page_view_logged_in_browser_reqs:
       xaxis: "روز"
       description: "تعداد بازدید از صفحه توسط بازدیدکنندگان وارد شده با استفاده از مرورگرهای واقعی."
+    page_view_embed_reqs:
+      xaxis: "روز"
     http_background_reqs:
       title: "پس زمینه"
       xaxis: "روز"
@@ -1392,7 +1395,7 @@ fa_IR:
         os: سیستم‌عامل
         login_time: زمان ورود
       description: "جزئیات ورودهای جدید که به طور مشکوکی با ورودهای قبلی متفاوت است."
-    staff_logins:
+    admin_logins:
       title: "ورود مدیریت"
       labels:
         user: کاربر

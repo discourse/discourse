@@ -544,9 +544,21 @@ class User < ActiveRecord::Base
   end
 
   def in_any_groups?(group_ids)
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
-      (is_system_user? && (Group.auto_groups_between(:admins, :trust_level_4) & group_ids).any?) ||
-      (group_ids & belonging_to_group_ids).any?
+    # We can avoid looking up the user's actual groups
+    # for these global pseudogroups. In Guardian::AnonymousUser#in_any_groups?,
+    # we only return true if group_ids include the :anonymous auto group.
+    if group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+         group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+      return true
+    end
+
+    # Sometimes the system user doesn't have their auto groups
+    # from some strange edge case, this handles it.
+    if (is_system_user? && ((Group.auto_groups_between(:admins, :trust_level_4)) & group_ids).any?)
+      return true
+    end
+
+    (group_ids & belonging_to_group_ids).any?
   end
 
   def belonging_to_group_ids
@@ -1032,12 +1044,14 @@ class User < ActiveRecord::Base
   end
 
   def create_visit_record!(date, opts = {})
+    visit =
+      user_visits.create!(
+        visited_at: date,
+        posts_read: opts[:posts_read] || 0,
+        mobile: opts[:mobile] || false,
+      )
     user_stat.update_column(:days_visited, user_stat.days_visited + 1)
-    user_visits.create!(
-      visited_at: date,
-      posts_read: opts[:posts_read] || 0,
-      mobile: opts[:mobile] || false,
-    )
+    visit
   end
 
   def visit_record_for(date)
@@ -1046,6 +1060,8 @@ class User < ActiveRecord::Base
 
   def update_visit_record!(date)
     create_visit_record!(date) unless visit_record_for(date)
+  rescue ActiveRecord::RecordNotUnique
+    # concurrent "Updating Last Seen" defer block already inserted
   end
 
   def update_timezone_if_missing(timezone)

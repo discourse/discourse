@@ -99,6 +99,7 @@ class BulkImport::Generic < BulkImport::Base
     update_category_read_restricted
 
     import_topics
+    import_topic_custom_fields
     import_posts
     import_post_custom_fields
 
@@ -863,6 +864,32 @@ class BulkImport::Generic < BulkImport::Base
     topics.close
   end
 
+  def import_topic_custom_fields
+    puts "", "Importing topic custom fields..."
+
+    topic_custom_fields = query(<<~SQL)
+      SELECT *
+      FROM topic_custom_fields
+      ORDER BY topic_id, name
+    SQL
+
+    field_names =
+      query("SELECT DISTINCT name FROM topic_custom_fields") { it.map { |row| row["name"] } }
+    existing_topic_custom_fields =
+      TopicCustomField.where(name: field_names).pluck(:topic_id, :name).to_set
+
+    create_topic_custom_fields(topic_custom_fields) do |row|
+      topic_id = topic_id_from_imported_id(row["topic_id"])
+      next if topic_id.nil?
+
+      next unless existing_topic_custom_fields.add?([topic_id, row["name"]])
+
+      { topic_id: topic_id, name: row["name"], value: row["value"] }
+    end
+
+    topic_custom_fields.close
+  end
+
   def import_topic_allowed_users
     puts "", "Importing topic_allowed_users..."
 
@@ -1268,7 +1295,7 @@ class BulkImport::Generic < BulkImport::Base
         original_id: row["id"],
         post_id: post_id,
         name: poll_name(row),
-        closed_at: to_datetime(row["closed_at"]),
+        closed_at: to_datetime(row["close_at"]),
         type: row["type"],
         status: row["status"],
         results: row["results"],
@@ -1334,7 +1361,7 @@ class BulkImport::Generic < BulkImport::Base
       next unless poll_id
 
       option_ids = row["option_ids"].split(",")
-      option_ids.each { |option_id| next if poll_option_id_from_original_id(option_id).present? }
+      next if option_ids.all? { |oid| poll_option_id_from_original_id(oid).present? }
 
       {
         original_ids: option_ids,
@@ -3117,6 +3144,7 @@ class BulkImport::Generic < BulkImport::Base
       channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
       original_message_user_id = user_id_from_imported_id(row["original_message_user_id"])
 
+      next if chat_thread_id_from_original_id(row["id"]).present?
       next if channel_id.blank? || original_message_user_id.blank?
 
       # Messages aren't imported yet. Use a placeholder `original_message_id` for now.
@@ -3192,6 +3220,7 @@ class BulkImport::Generic < BulkImport::Base
       channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
       user_id = user_id_from_imported_id(row["user_id"])
 
+      next if chat_message_id_from_original_id(row["id"]).present?
       next if channel_id.blank? || user_id.blank?
       next if row["message"].blank? && row["upload_ids"].blank?
 

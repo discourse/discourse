@@ -136,6 +136,7 @@ module DiscourseAi
           if strip_upload_markdown_mode != :none
             messages = strip_upload_markdown(messages, strip_mode: strip_upload_markdown_mode)
           end
+          messages = expand_text_document_uploads(messages)
           messages = trim_messages(messages)
           last_message = messages.last
           inject_done_on_last_tool_call = false
@@ -204,7 +205,6 @@ module DiscourseAi
 
           prompt_limit = max_prompt_tokens
           current_token_count = 0
-          message_step_size = (prompt_limit / 25).to_i * -1
 
           trimmed_messages = []
 
@@ -246,13 +246,16 @@ module DiscourseAi
             end
 
             # Trimming content to make sure we respect token limit.
-            while dupped_msg[:content].present? &&
-                    message_tokens + current_token_count + per_message_overhead > prompt_limit
-              dupped_msg[:content] = dupped_msg[:content][0..message_step_size] || ""
+            available_tokens = prompt_limit - current_token_count - per_message_overhead
+            if message_tokens > available_tokens
+              dupped_msg[:content] = truncate_content_to_token_budget(
+                dupped_msg[:content],
+                available_tokens,
+              )
               message_tokens = calculate_message_token(dupped_msg)
             end
 
-            next if dupped_msg[:content].blank?
+            next if content_blank?(dupped_msg[:content])
 
             current_token_count += message_tokens + per_message_overhead
 
@@ -268,8 +271,117 @@ module DiscourseAi
           0
         end
 
+        def expand_text_document_uploads(messages)
+          messages.map do |message|
+            content = message[:content]
+            next message if !content.is_a?(Array)
+
+            expanded_content =
+              content.map do |part|
+                next part if !part.is_a?(Hash) || !part.key?(:upload_id)
+
+                encoded =
+                  prompt.encode_upload(
+                    part[:upload_id],
+                    allow_images: false,
+                    allow_documents: true,
+                    allowed_attachment_types: llm_model.allowed_attachment_types,
+                  )
+
+                if encoded&.dig(:kind) == :document && encoded[:text].present? &&
+                     document_allowed?(encoded)
+                  { encoded_upload: encoded }
+                else
+                  part
+                end
+              end
+
+            message.merge(content: expanded_content)
+          end
+        end
+
+        def truncate_content_to_token_budget(content, token_budget)
+          return "" if token_budget <= 0
+
+          case content
+          when Array
+            truncate_array_content_to_token_budget(content, token_budget)
+          when Hash
+            truncate_hash_content_to_token_budget(content, token_budget)
+          else
+            tokenizer.truncate(
+              content.to_s,
+              token_budget,
+              strict: SiteSetting.ai_strict_token_counting,
+            )
+          end
+        end
+
+        def truncate_array_content_to_token_budget(content, token_budget)
+          remaining_tokens = token_budget
+          truncated = []
+
+          content.each do |part|
+            part_tokens = calculate_content_token(part)
+            if part_tokens <= remaining_tokens
+              truncated << part
+              remaining_tokens -= part_tokens
+            elsif part.is_a?(String) || (part.is_a?(Hash) && part.key?(:encoded_upload))
+              truncated_part = truncate_content_to_token_budget(part, remaining_tokens)
+              truncated << truncated_part if !content_blank?(truncated_part)
+              break
+            else
+              break
+            end
+          end
+
+          truncated
+        end
+
+        def truncate_hash_content_to_token_budget(content, token_budget)
+          return "" if !content.key?(:encoded_upload)
+
+          encoded = content[:encoded_upload].dup
+          encoded[:text] = tokenizer.truncate(
+            encoded[:text].to_s,
+            token_budget,
+            strict: SiteSetting.ai_strict_token_counting,
+          )
+          encoded[:text].present? ? { encoded_upload: encoded } : ""
+        end
+
+        def content_blank?(content)
+          case content
+          when Array
+            content.all? { |part| content_blank?(part) }
+          when Hash
+            content.key?(:encoded_upload) ? content[:encoded_upload][:text].blank? : content.blank?
+          else
+            content.blank?
+          end
+        end
+
         def calculate_message_token(msg)
-          llm_model.tokenizer_class.size(msg[:content].to_s)
+          calculate_content_token(msg[:content])
+        end
+
+        def calculate_content_token(content)
+          case content
+          when Array
+            content.sum { |part| calculate_content_token(part) }
+          when Hash
+            if content.key?(:encoded_upload)
+              calculate_content_token(content[:encoded_upload][:text].to_s)
+            else
+              tokenizer.size(content.to_s)
+            end
+          else
+            tokenizer.size(content.to_s)
+          end
+        end
+
+        def tokenizer
+          llm_model.tokenizer_class
         end
 
         def tools_dialect
@@ -318,15 +430,20 @@ module DiscourseAi
           content.each do |c|
             if c.is_a?(String)
               current_string << c
-            elsif c.is_a?(Hash) && c.key?(:upload_id)
+            elsif c.is_a?(Hash) && (c.key?(:upload_id) || c.key?(:encoded_upload))
               next if !allow_images && !allow_documents
 
               encoded =
-                prompt.encode_upload(
-                  c[:upload_id],
-                  allow_documents: allow_documents,
-                  allowed_attachment_types: allowed_attachment_types,
-                )
+                if c.key?(:encoded_upload)
+                  c[:encoded_upload]
+                else
+                  prompt.encode_upload(
+                    c[:upload_id],
+                    allow_images: allow_images,
+                    allow_documents: allow_documents,
+                    allowed_attachment_types: allowed_attachment_types,
+                  )
+                end
               next if encoded.blank?
 
               is_image = encoded[:kind] == :image
@@ -341,7 +458,8 @@ module DiscourseAi
                 current_string = +""
               end
 
-              result << upload_encoder.call(encoded)
+              encoded_upload = upload_encoder.call(encoded)
+              result << encoded_upload if encoded_upload
             elsif other_encoder
               encoded = other_encoder.call(c)
               result << encoded if encoded
@@ -352,28 +470,16 @@ module DiscourseAi
           result
         end
 
-        def attachment_type_for(encoded)
-          ext = File.extname(encoded[:filename].to_s).delete_prefix(".").downcase
-          mime = encoded[:mime_type].to_s
-
-          return "pdf" if ext == "pdf" || mime.include?("pdf")
-          return "docx" if ext == "docx"
-          return "doc" if ext == "doc"
-          return "txt" if ext == "txt" || mime.include?("text/plain")
-          return "rtf" if ext == "rtf"
-          return "html" if %w[html htm].include?(ext) || mime.include?("html")
-          return "markdown" if %w[md markdown].include?(ext) || mime.include?("markdown")
-
-          "file"
-        end
-
         def document_allowed?(encoded)
           return true if encoded[:kind] != :document
 
           allowed_types = llm_model.allowed_attachment_types
           return false if allowed_types.blank?
 
-          allowed_types.include?(attachment_type_for(encoded))
+          ext = File.extname(encoded[:filename].to_s).delete_prefix(".")
+          allowed_types.include?(
+            DiscourseAi::Completions::UploadEncoder.attachment_type_for(ext, encoded[:mime_type]),
+          )
         end
       end
     end

@@ -5162,6 +5162,15 @@ fa_IR:
         too_many_requests: شما این عمل را بارها انجام داده‌اید. لطفا قبل از تلاش مجدد صبر کنید.
         not_found_error: متأسفم، چنین گزارشی وجود ندارد
         custom_date_range: محدوده تاریخ سفارشی
+        sections:
+          reports:
+            title: "گزارش"
+          traffic:
+            title: "ترافیک سایت"
+        period:
+          last_7_days: "۷ روز گذشته"
+          last_30_days: "۳۰ روز گذشته"
+          custom: "سفارشی"
         reports:
           percent_change_tooltip: "%{percent} تغییر."
           percent_change_tooltip_previous_value:
@@ -6759,7 +6768,6 @@ fa_IR:
           one: "نمی توان همه نوشته ها را خذف کرد. چون تعداد کاربران از %{count} تعداد نوشته ها بیشتر است.(delete_all_posts_max)"
           other: "نمی توان همه نوشته ها را خذف کرد. چون تعداد کاربران از %{count} تعداد نوشته ها بیشتر است.(delete_all_posts_max)"
         delete_confirm_title: "آیا مطمئن هستید که می خواهید این کاربر را حذف کنید؟ این عمل دائمی است!"
-        delete_and_block: "حذف کاربر و مسدود کردن ایمیل و آدرس IP او"
         delete_dont_block: "حذف کاربر"
         deleting_user: "درحال حذف کاربر…"
         deleted: "کاربر حذف شد."

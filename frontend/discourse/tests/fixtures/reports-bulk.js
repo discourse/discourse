@@ -154,10 +154,10 @@ const page_view_total_reqs = {
   total: 921672,
 };
 
-const staff_logins = JSON.parse(JSON.stringify(page_view_total_reqs));
-staff_logins.type = "staff_logins";
-staff_logins.modes = ["table"];
-staff_logins.report_key = `reports:staff_logins:start:end:[:prev_period]:50:${SCHEMA_VERSION}`;
+const admin_logins = JSON.parse(JSON.stringify(page_view_total_reqs));
+admin_logins.type = "admin_logins";
+admin_logins.modes = ["table"];
+admin_logins.report_key = `reports:admin_logins:start:end:[:prev_period]:50:${SCHEMA_VERSION}`;
 
 const reportsBulkFixtures = {
   "/admin/reports/bulk": {
@@ -168,7 +168,7 @@ const reportsBulkFixtures = {
       signups_exception,
       signups_timeout,
       page_view_total_reqs,
-      staff_logins,
+      admin_logins,
     ],
   },
 };

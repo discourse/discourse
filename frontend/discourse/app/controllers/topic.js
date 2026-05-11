@@ -599,6 +599,12 @@ export default class TopicController extends Controller {
         return;
       }
 
+      const quoteEvent = { post, buffer, opts, handled: false };
+      this.appEvents.trigger("topic:quote-post", quoteEvent);
+      if (quoteEvent.handled) {
+        return;
+      }
+
       const composer = this.composer;
       const viewOpen = composer.get("model.viewOpen");
 
@@ -1065,6 +1071,17 @@ export default class TopicController extends Controller {
       return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     } else if (!post.can_edit) {
       return false;
+    }
+
+    if (EmbedMode.enabled) {
+      this.appEvents.trigger("embed-composer:edit-post", post);
+      return;
+    }
+
+    const editEvent = { post, handled: false };
+    this.appEvents.trigger("topic:edit-post", editEvent);
+    if (editEvent.handled) {
+      return;
     }
 
     const topic = this.model;

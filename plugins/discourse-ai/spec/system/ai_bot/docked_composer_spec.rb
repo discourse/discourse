@@ -118,6 +118,22 @@ RSpec.describe "AI Bot docked composer" do
     expect(find(".ai-bot-docked-composer .d-editor-input").value).to eq("")
   end
 
+  it "edits a post through the docked composer" do
+    topic_page.visit_topic(pm)
+
+    find("#post_1 button.edit").click
+
+    expect(page).to have_css(".ai-bot-docked-composer__editing")
+    expect(page).to have_no_css("#reply-control.composer-action-edit")
+    expect(find(".ai-bot-docked-composer .d-editor-input").value).to eq("Hello bot")
+
+    find(".ai-bot-docked-composer .d-editor-input").fill_in(with: "Edited bot message")
+    find(".ai-bot-docked-composer .docked-composer__submit-btn").click
+
+    expect(page).to have_no_css(".ai-bot-docked-composer__editing")
+    expect(page).to have_css("#post_1", text: "Edited bot message")
+  end
+
   it "falls back to the standard composer when the docked composer is disabled" do
     SiteSetting.ai_bot_enable_docked_composer = false
     topic_page.visit_topic(pm)

@@ -1928,8 +1928,6 @@ Discourse::Application.routes.draw do
     resources :sidebar_sections, only: %i[index create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
 
-    post "/pageview" => "pageview#index"
-
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"
 

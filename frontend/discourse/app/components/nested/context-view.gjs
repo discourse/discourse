@@ -2,10 +2,15 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import MoreTopics from "discourse/components/more-topics";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { or } from "discourse/truth-helpers";
@@ -17,6 +22,7 @@ import NestedPost from "./post";
 import NestedSortSelector from "./sort-selector";
 
 export default class NestedContextView extends Component {
+  @service appEvents;
   @service currentUser;
   @service header;
   @service screenTrack;
@@ -33,9 +39,7 @@ export default class NestedContextView extends Component {
 
   constructor() {
     super(...arguments);
-    // Use next() so this runs after RouteScrollManager's next() callback,
-    // which otherwise resets scroll position on route transitions.
-    this.#nextTimer = next(this, this.#scrollToTarget);
+    this.appEvents.on("nested:scroll-to-target", this, this.scheduleScroll);
   }
 
   willDestroy() {
@@ -44,7 +48,19 @@ export default class NestedContextView extends Component {
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
     clearTimeout(this.#highlightTimer);
+    this.appEvents.off("nested:scroll-to-target", this, this.scheduleScroll);
     this.viewportTracker.destroy();
+  }
+
+  // next() runs after RouteScrollManager's own next() callback, so our
+  // scroll wins. Fresh attempt counter per invocation.
+  @action
+  scheduleScroll() {
+    cancel(this.#nextTimer);
+    cancel(this.#retryTimer);
+    clearTimeout(this.#highlightTimer);
+    this.#scrollAttempts = 0;
+    this.#nextTimer = next(this, this.#scrollToTarget);
   }
 
   get flatViewUrl() {
@@ -76,8 +92,7 @@ export default class NestedContextView extends Component {
       }
       target.scrollIntoView({ behavior: "smooth", block: "center" });
     } else if (this.#scrollAttempts < this.#maxScrollAttempts) {
-      // Element may not be in the DOM yet (async child rendering).
-      // Retry after the next render cycle.
+      // Target may not be in the DOM yet (async child rendering).
       this.#scrollAttempts++;
       this.#retryTimer = schedule("afterRender", this, this.#scrollToTarget);
     }
@@ -89,9 +104,25 @@ export default class NestedContextView extends Component {
     this.cloakBelow = below;
   }
 
+  // Only collapse when the chain is just the target — otherwise the target
+  // is the chain leaf and collapsing would hide the very thing the context
+  // view exists to surface.
+  get effectiveCollapseFromDepth() {
+    if (!this.args.collapseReplies) {
+      return null;
+    }
+    const chainRootPostNumber = this.args.contextChain?.post?.post_number;
+    if (chainRootPostNumber !== this.args.targetPostNumber) {
+      return null;
+    }
+    return 1;
+  }
+
   <template>
     <div
       class="nested-view nested-context-view"
+      {{didInsert this.scheduleScroll}}
+      {{didUpdate this.scheduleScroll @targetPostNumber @contextChain.post.id}}
       {{this.viewportTracker.setup
         eyeline=false
         headerOffset=this.header.headerOffset
@@ -125,11 +156,13 @@ export default class NestedContextView extends Component {
       <div class="nested-view__controls">
         <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
         <div class="nested-view__controls-right">
-          <DButton
-            class="btn-flat nested-view__activity-link"
-            @action={{@showActivityLog}}
-            @label="nested_replies.activity_log.link"
-          />
+          {{#if @topic.has_activity_log}}
+            <DButton
+              class="btn-flat nested-view__activity-link"
+              @action={{@showActivityLog}}
+              @label="nested_replies.activity_log.link"
+            />
+          {{/if}}
           {{#if this.currentUser.can_toggle_nested_mode}}
             <DButton
               class="btn-flat nested-view__flat-link"
@@ -169,9 +202,9 @@ export default class NestedContextView extends Component {
 
       {{#if @contextChain}}
         <div class="nested-context-view__chain">
-          {{! Use each+key to force full component recreation when the chain root changes,
-              e.g. navigating from context=0 to full ancestor view }}
-          {{#each (array @contextChain) key="post.id" as |chainRoot|}}
+          {{! _renderKey changes every fetch — forces NestedPost rebuild
+              when chains share a root. See routes/nested.js. }}
+          {{#each (array @contextChain) key="_renderKey" as |chainRoot|}}
             <NestedPost
               @post={{chainRoot.post}}
               @children={{chainRoot.children}}
@@ -191,10 +224,25 @@ export default class NestedContextView extends Component {
               @getCloakingData={{this.viewportTracker.getCloakingData}}
               @cloakAbove={{this.cloakAbove}}
               @cloakBelow={{this.cloakBelow}}
+              @collapseFromDepth={{this.effectiveCollapseFromDepth}}
             />
           {{/each}}
         </div>
       {{/if}}
+
+      <PluginOutlet
+        @name="topic-above-suggested"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash model=@topic}}
+      />
+
+      <MoreTopics @topic={{@topic}} />
+
+      <PluginOutlet
+        @name="topic-below-suggested"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash model=@topic}}
+      />
 
       <NestedFloatingActions
         @topic={{@topic}}

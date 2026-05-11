@@ -24,7 +24,7 @@ RSpec.describe Reports::ListQuery do
     it "sorts reports by title" do
       expect(result.map { |r| r[:title] }[0..5]).to eq(
         [
-          I18n.t("reports.staff_logins.title"),
+          I18n.t("reports.admin_logins.title"),
           I18n.t("reports.page_view_anon_browser_reqs.title"),
           I18n.t("reports.associated_accounts_by_provider.title"),
           I18n.t("reports.bookmarks.title"),
@@ -46,6 +46,7 @@ RSpec.describe Reports::ListQuery do
             page_view_anon_reqs
             page_view_anon_browser_reqs
             page_view_logged_in_browser_reqs
+            page_view_embed_reqs
           ],
         )
       end
@@ -78,6 +79,7 @@ RSpec.describe Reports::ListQuery do
             page_view_anon_browser_reqs
             page_view_logged_in_browser_reqs
             page_view_legacy_total_reqs
+            page_view_embed_reqs
           ],
         )
       end
@@ -105,7 +107,7 @@ RSpec.describe Reports::ListQuery do
       it "sorts reports by title" do
         expect(result.map { |r| r[:title] }[0..4]).to eq(
           [
-            I18n.t("reports.staff_logins.title"),
+            I18n.t("reports.admin_logins.title"),
             I18n.t("reports.page_view_anon_browser_reqs.title"),
             I18n.t("reports.dau_by_mau.title"),
             I18n.t("reports.daily_engaged_users.title"),

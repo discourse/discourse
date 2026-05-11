@@ -289,6 +289,7 @@ nb_NO:
       admins: "administratorer"
       moderators: "moderatorer"
       staff: "stab"
+      anonymous: "anonym"
       trust_level_0: "tillitsnivå_0"
       trust_level_1: "tillitsnivå_1"
       trust_level_2: "tillitsnivå_2"
@@ -835,6 +836,8 @@ nb_NO:
       xaxis: "Dag"
     page_view_logged_in_browser_reqs:
       xaxis: "Dag"
+    page_view_embed_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrunn"
       xaxis: "Dag"
@@ -881,7 +884,7 @@ nb_NO:
       labels:
         user: Bruker
         location: Sted
-    staff_logins:
+    admin_logins:
       labels:
         user: Bruker
         location: Sted

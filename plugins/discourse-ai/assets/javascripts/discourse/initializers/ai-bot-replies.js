@@ -70,22 +70,14 @@ function initializeAIBotReplies(api) {
       const streamingState = lookupStreamingState(api);
       const topicId = this.model.id;
 
+      if (data?.noop) {
+        return;
+      }
+
       if (data?.done) {
         streamingState?.markFinishedAfterRender(topicId, data?.post_id);
       } else {
-        const postId = data?.post_id;
-        // If the post is already rendered and has no .streaming class, this
-        // chunk is a stale replay of a stream that already finished. Calling
-        // markStarted would wrongly show the stop button until the 15-s idle
-        // timer fires. Clear any leftover state and bail out instead.
-        if (postId) {
-          const postEl = document.querySelector(`[data-post-id="${postId}"]`);
-          if (postEl && !postEl.classList.contains("streaming")) {
-            streamingState?.markFinished(topicId);
-            return;
-          }
-        }
-        streamingState?.markStarted(topicId, postId);
+        streamingState?.markStarted(topicId, data?.post_id);
       }
 
       streamPostText(this.model.postStream, data);

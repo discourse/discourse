@@ -64,10 +64,22 @@ export default class NestedPost extends Component {
       this.expanded = cached.expanded;
       this.collapsed = cached.collapsed;
     } else {
-      this.expanded =
+      const wouldExpand =
         (this.args.children?.length ?? 0) > 0 ||
         this.args.post.deleted_post_placeholder === true ||
         this.args.post.ignored_post_placeholder === true;
+
+      // collapseFromDepth is the URL-driven cutoff (set by the parent view —
+      // 0 for root view, 1 for context view). At/below it, the post renders
+      // but its children start hidden behind an "Expand X replies" button.
+      if (
+        this.args.collapseFromDepth != null &&
+        this.args.depth >= this.args.collapseFromDepth
+      ) {
+        this.expanded = false;
+      } else {
+        this.expanded = wouldExpand;
+      }
       this.collapsed = false;
     }
 
@@ -593,6 +605,7 @@ export default class NestedPost extends Component {
               @fetchedChildrenCache={{@fetchedChildrenCache}}
               @scrollAnchor={{@scrollAnchor}}
               @registerPost={{@registerPost}}
+              @collapseFromDepth={{@collapseFromDepth}}
             />
           {{/if}}
         </div>

@@ -87,7 +87,10 @@ RSpec.describe Admin::StaffActionLogsController do
     end
 
     context "when logged in as an admin" do
-      before { sign_in(admin) }
+      before do
+        admin.update!(last_seen_at: 1.day.ago)
+        sign_in(admin)
+      end
 
       include_examples "staff action logs accessible"
 
@@ -408,7 +411,10 @@ RSpec.describe Admin::StaffActionLogsController do
     end
 
     context "when logged in as an admin" do
-      before { sign_in(admin) }
+      before do
+        admin.update!(last_seen_at: 1.day.ago)
+        sign_in(admin)
+      end
 
       include_examples "theme diffs accessible"
       include_examples "tag_group diffs accessible"

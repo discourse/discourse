@@ -5696,6 +5696,16 @@ fr:
         too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de réessayer.
         not_found_error: Nous sommes désolés, ce rapport n'existe pas
         custom_date_range: Plage de dates personnalisée
+        sections:
+          reports:
+            title: "Rapports"
+          traffic:
+            title: "Trafic du site"
+        period:
+          last_7_days: "Ces 7 derniers jours"
+          last_30_days: "30 derniers jours"
+          last_3_months: "3 derniers mois"
+          custom: "Personnalisé"
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
           percent_change_tooltip: "Changement de %{percent}."
@@ -7491,7 +7501,6 @@ fr:
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
         delete_confirm_title: "Voulez-vous vraiment supprimer cet utilisateur ? Cette action est définitive !"
         delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes."
-        delete_and_block: "Supprimer l'utilisateur et bloquer son adresse e-mail et son adresse IP"
         delete_dont_block: "Supprimer l'utilisateur"
         deleting_user: "Suppression de l'utilisateur…"
         deleted: "L'utilisateur a été supprimé."

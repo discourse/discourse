@@ -663,6 +663,7 @@ pt_BR:
       allow_access: "Permitir acesso"
       continue_as_guest: "Continuar como convidado"
       be_first_to_reply: "Seja o primeiro a responder!"
+      editing_post: "Editando postagem"
     topic_count_all:
       one: "Veja %{count} novo tópico"
       other: "Veja %{count} novos tópicos"
@@ -6188,6 +6189,17 @@ pt_BR:
         too_many_requests: Você realizou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
         custom_date_range: Intervalo de datas personalizado
+        sections:
+          reports:
+            title: "Relatórios"
+          traffic:
+            title: "Tráfego do site"
+          engagement:
+            title: "Engajamento"
+        period:
+          last_7_days: "Últimos sete dias"
+          last_30_days: "Últimos 30 dias"
+          custom: "Personalizadas"
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
           percent_change_tooltip: "%{percent} de alteração."
@@ -8062,7 +8074,6 @@ pt_BR:
           other: "Não é possível remover todas as postagens porque o usuário(a) tem mais de %{count} postagens. (delete_all_posts_max)"
         delete_confirm_title: "Você tem certeza de que deseja excluir este usuário(a)? Essa é uma ação permanente!"
         delete_confirm: "Geralmente, é preferível anonimizar os(as) usuários(as) em vez de excluí-los, evitando assim a remoção de conteúdo das discussões existentes."
-        delete_and_block: "Excluir usuário e bloquear seu e-mail e endereço IP"
         delete_dont_block: "Excluir usuário(a)"
         deleting_user: "Excluindo usuário(a)…"
         deleted: "O(a) usuário(a) foi excluído(a)."

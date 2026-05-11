@@ -15,6 +15,7 @@ sk:
       alt:
         solved:
           accepted_notification: "prijať"
+          topic_solved_notification: "vyriešené"
     solutions: "Riešenia"
     solved:
       title: "Vyriešené"
@@ -46,6 +47,7 @@ sk:
       no_answer:
         title: Bola vaša otázka zodpovedaná?
         description: "Zvýraznite odpoveď a pomôžte ostatným pomocou tlačidla riešenia pod správnou odpoveďou."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "Váš príspevok bol označený ako riešenie"
     topic_statuses:

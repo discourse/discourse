@@ -6487,6 +6487,15 @@ he:
         too_many_requests: ביצעת את הפעולה הזו פעמים רבות מדי. נא להמתין בטרם ביצוע ניסיון חוזר.
         not_found_error: הדוח אינו קיים, עמך הסליחה
         custom_date_range: טווח תאריכים מותאם אישית
+        sections:
+          reports:
+            title: "דוחות"
+          traffic:
+            title: "תעבורת האתר"
+        period:
+          last_7_days: "7 הימים האחרונים"
+          last_30_days: "30 הימים האחרונים"
+          custom: "מותאם"
         reports:
           trend_title: "%{percent} שינוי. כרגע הערך עומד על %{current}, היה %{prev} בתקופת הבדיקה הקודמת."
           percent_change_tooltip: "%{percent} שינוי."
@@ -8367,7 +8376,6 @@ he:
           other: "לא ניתן להסיר את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
         delete_confirm_title: "למחוק את המשתמש הזה? המחיקה היא לצמיתות!"
         delete_confirm: "עדיף להפוך משתמשים לאלמוניים במקום למחוק אותם כדי להימנע מהסרת תוכן מדיונים קיימים."
-        delete_and_block: "מחיקה של המשתמש ומחיקת כתובת הדוא״ל וה־IP הזה"
         delete_dont_block: "מחיקת משתמש"
         deleting_user: "משתמש נמחק…"
         deleted: "המשתמש נמחק."

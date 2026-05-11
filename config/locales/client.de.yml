@@ -671,6 +671,7 @@ de:
       allow_access: "Zugriff erlauben"
       continue_as_guest: "Als Gast fortfahren"
       be_first_to_reply: "Schreib die erste Antwort!"
+      editing_post: "Beitrag wird bearbeitet "
     topic_count_all:
       one: "Zeige %{count} neues Thema"
       other: "Zeige %{count} neue Themen"
@@ -6308,6 +6309,18 @@ de:
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         custom_date_range: Benutzerdefinierter Datumsbereich
+        sections:
+          reports:
+            title: "Berichte"
+          traffic:
+            title: "Website-Traffic"
+          engagement:
+            title: "Aktivität & Wachstum"
+        period:
+          last_7_days: "Letzte 7 Tage"
+          last_30_days: "Letzte 30 Tage"
+          last_3_months: "Letzte 3 Monate"
+          custom: "Benutzerdefiniert"
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           percent_change_tooltip: "Änderung von %{percent}."
@@ -8183,7 +8196,6 @@ de:
           other: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Siehe die Einstellung „delete_all_posts_max“.)"
         delete_confirm_title: "Bist du sicher, dass du diesen Benutzer löschen möchtest? Dies kann nicht rückgängig gemacht werden!"
         delete_confirm: "Im Allgemeinen ist es besser, Benutzer zu anonymisieren, als sie zu löschen, um zu vermeiden, dass Inhalte aus bestehenden Diskussionen entfernt werden."
-        delete_and_block: "Benutzer löschen und seine E-Mail- und IP-Adresse blockieren"
         delete_dont_block: "Benutzer löschen"
         deleting_user: "Benutzer wird gelöscht …"
         deleted: "Der Benutzer wurde gelöscht."

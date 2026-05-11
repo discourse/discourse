@@ -792,7 +792,7 @@ export default class UpsertCategoryGeneral extends Component {
         >
           <@form.Container
             @title={{i18n "category.description"}}
-            class="edit-category-description-container"
+            class="edit-category-description-container --full"
           >
             <div
               class={{concatClass

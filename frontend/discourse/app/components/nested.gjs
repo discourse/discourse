@@ -96,11 +96,13 @@ export default class Nested extends Component {
       <div class="nested-view__controls">
         <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
         <div class="nested-view__controls-right">
-          <DButton
-            class="btn-flat nested-view__activity-link"
-            @action={{@showActivityLog}}
-            @label="nested_replies.activity_log.link"
-          />
+          {{#if @topic.has_activity_log}}
+            <DButton
+              class="btn-flat nested-view__activity-link"
+              @action={{@showActivityLog}}
+              @label="nested_replies.activity_log.link"
+            />
+          {{/if}}
           {{#if this.currentUser.can_toggle_nested_mode}}
             <DButton
               class="btn-flat nested-view__flat-link"
@@ -146,6 +148,7 @@ export default class Nested extends Component {
             @getCloakingData={{this.viewportTracker.getCloakingData}}
             @cloakAbove={{this.cloakAbove}}
             @cloakBelow={{this.cloakBelow}}
+            @collapseFromDepth={{if @collapseReplies 0}}
           />
         {{else}}
           <div class="nested-view__empty">

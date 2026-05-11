@@ -152,6 +152,29 @@ RSpec.describe UserGuardian do
     end
   end
 
+  describe "#can_see_bookmarks?" do
+    fab!(:target_user, :user)
+    fab!(:other_user, :user)
+    fab!(:bookmark_moderator, :moderator)
+    fab!(:bookmark_admin, :admin)
+
+    it "allows only the target user and admins" do
+      aggregate_failures do
+        expect(Guardian.new(target_user).can_see_bookmarks?(target_user)).to eq(true)
+        expect(Guardian.new(bookmark_admin).can_see_bookmarks?(target_user)).to eq(true)
+        expect(Guardian.new(other_user).can_see_bookmarks?(target_user)).to eq(false)
+        expect(Guardian.new(bookmark_moderator).can_see_bookmarks?(target_user)).to eq(false)
+        expect(Guardian.new.can_see_bookmarks?(target_user)).to eq(false)
+      end
+    end
+
+    it "raises when the viewer cannot see bookmarks" do
+      expect {
+        Guardian.new(bookmark_moderator).ensure_can_see_bookmarks!(target_user)
+      }.to raise_error(Discourse::InvalidAccess)
+    end
+  end
+
   describe "#can_see_profile?" do
     fab!(:tl0_user) { Fabricate(:user, trust_level: 0) }
     fab!(:tl1_user) { Fabricate(:user, trust_level: 1) }

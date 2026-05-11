@@ -18,6 +18,7 @@ export default <template>
     <DButton
       @action={{@controller.run}}
       @label="admin.email.advanced_test.run"
+      class="btn-default"
     />
   </div>
 

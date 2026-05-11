@@ -35,6 +35,7 @@ export default class FeatureVotingSettingsUpsert extends Component {
             @title={{i18n "topic_voting.allow_topic_voting"}}
             @onSet={{this.onToggleTopicVoting}}
             @type="checkbox"
+            @format="full"
             as |field|
           >
             <field.Control checked={{this.enableTopicVoting}} />

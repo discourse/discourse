@@ -3512,6 +3512,7 @@ ar:
       title: "أو اضغط على %{modifier}Enter"
       save_and_close: "حفظ وإغلاق"
       discard: "تجاهل"
+      cancel_edit: "ألغِ تعديل"
       draft_saved: "حُفظت المسودة!"
       users_placeholder: "إضافة مستخدمين أو مجموعات"
       title_placeholder: "ما موضوع هذه المناقشة في جملة واحدة مختصرة؟"
@@ -7349,6 +7350,8 @@ ar:
         new_features:
           title: "ما الجديد؟"
           subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
+          no_new_features_found: "لا توجد عناصر في الموجز أو أن عامل التصفية الذي اخترته لم يُظهر أي نتائج. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة على <a href='%{url}' target='_blank'>موقع إصدارات Discourse</a>."
+          no_new_features_error: "حدث خطأ أثناء تحميل الموجز. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة في <a href='%{url}' target='_blank'>موقع إصدارات Discourse</a>."
           learn_more: "معرفة المزيد..."
         last_checked: "تاريخ آخر تحقُّق"
         refresh_problems: "تحديث"
@@ -7393,6 +7396,18 @@ ar:
         too_many_requests: لقد نفَّذت هذا الإجراء مرات كثيرة جدًا. يُرجى الانتظار قليلًا قبل إعادة المحاولة.
         not_found_error: عذرًا، هذا التقرير غير موجود
         custom_date_range: نطاق مخصَّص للتاريخ
+        sections:
+          reports:
+            title: "التقريران"
+          traffic:
+            title: "حركة زيارات الموقع"
+          engagement:
+            title: "التفاعل"
+        period:
+          last_7_days: "آخر 7 أيام"
+          last_30_days: "آخر 30 يومًا"
+          last_3_months: "آخر 3 أشهر"
+          custom: "مخصَّصة"
         reports:
           trend_title: "تغيير بنسبة %{percent}. الحالي %{current}، كان %{prev} في فترة سابقة."
           percent_change_tooltip: "تغيير بنسبة %{percent}."
@@ -8415,8 +8430,10 @@ ar:
             button: "غيّر المصدر"
             title: "غيّر مصدر السمة"
             repository_url: "رابط المستودع"
+            branch: "الفرع"
             updating: "يحدث مصدر القالب…"
             update: "تحديث المصدر"
+            has_existing_key: "هذه السمة تحتوي على مفتاح SSH حالٍ تم تكوينه."
             generate_new_key: "ولّد مفتاح SSH جديد"
             keep_existing_key: "احتفظ بمفتاح SSH الحالي"
           add: "إضافة"
@@ -9374,7 +9391,6 @@ ar:
           other: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشور. (delete_all_posts_max)"
         delete_confirm_title: "هل تريد بالتأكيد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء!"
         delete_confirm: "يُفضَّل عامةً إخفاء هوية المستخدمين بدلًا من حذفهم؛ لتجنُّب إزالة المحتوى من المناقشات الحالية."
-        delete_and_block: "حذف المستخدم وحظر بريده الإلكتروني وعنوان IP الخاص به"
         delete_dont_block: "حذف المستخدم"
         deleting_user: "جارٍ حذف المستخدم…"
         deleted: "تم حذف المستخدم."
@@ -9570,6 +9586,13 @@ ar:
       site_settings:
         title: "إعدادات الموقع"
         description: "قم بتكوين الإعدادات لموقع Discourse الخاص بك لتخصيص مظهره ووظائفه وتجربة المستخدم."
+        depends_on_notice:
+          zero: "لا يُطبق هذا الإعداد إلا عند تمكين %{dependencyLinks}."
+          one: "لا يُطبق هذا الإعداد إلا عند تمكين %{dependencyLinks}."
+          two: "لا يُطبق هذا الإعداد إلا عند تمكين %{dependencyLinks}."
+          few: "لا يُطبق هذا الإعداد إلا عند تمكين %{dependencyLinks}."
+          many: "لا يُطبق هذا الإعداد إلا عند تمكين %{dependencyLinks}."
+          other: "لا يُطبق هذا الإعداد إلا عند تمكين %{dependencyLinks}."
         discard:
           zero: "تجاهل التغييرات"
           one: "تجاهل التغيير"
@@ -9653,6 +9676,7 @@ ar:
           groups: "المجموعات"
           dashboard: "لوحة المعلومات"
           navigation: "التنقل"
+          nested_replies: "الردود المتداخلة"
           experimental: "تجريبي"
         secret_list:
           invalid_input: "لا يمكن ترك حقول الإدخال فارغة أو أن تتضمَّن شريطًا عموديًا."

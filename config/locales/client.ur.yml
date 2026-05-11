@@ -9,6 +9,8 @@ ur:
     blocks:
       ghost:
         status: "سٹیٹس"
+        conditions: "شرائط"
+        arguments: "دلائل"
         in_location: "میں"
         hidden: "مخفی"
         failed: "ناکامی"
@@ -598,6 +600,8 @@ ur:
         other_drafts:
           one: "+%{count} دیگر مسودہ"
           other: "+%{count} دیگر مسودے"
+    embed_mode:
+      editing_post: "پوسٹ میں ترمیم جاری"
     topic_count_all:
       one: "%{count} نیا موضوع دیکھیں"
       other: "%{count} نئے موضوعات دیکھیں"
@@ -5833,6 +5837,14 @@ ur:
         too_many_requests: آپ نے یہ کارروائی بہت زیادہ دفعہ کی ہے۔ براہ کرم دوبارہ کوشش کرنے سے قبل انتظار کریں۔
         not_found_error: معذرت، یہ رپورٹ موجود نہیں
         custom_date_range: حسبِ ضرورت تاریخ کی حد
+        sections:
+          reports:
+            title: "گزارشات"
+        period:
+          last_7_days: "پچھلے 7 دن"
+          last_30_days: "پچھلے 30 دن"
+          last_3_months: "گزشتہ 3 ماہ"
+          custom: "اپنی مرضی کا"
         reports:
           trend_title: "%{percent} تبدیلی۔ فی الحال %{current}، پچھلے عرصے میں %{prev} تھا۔"
           percent_change_tooltip: "تبدیلی: %{percent}"
@@ -6722,6 +6734,7 @@ ur:
             error: "یہ تِھیم خود کار طریقے سے غیر فعال کر دی گئی ہے کیونکہ یہ ڈِسکورس کے اِس ورژن کیلئے ناموافق ہے۔"
             minimum: "ڈِسکورس ورژن %{version} یا اُس سے اوپر ضروری ہے۔"
             maximum: "ڈِسکورس ورژن %{version} یا اُس سے نیچے ضروری ہے۔"
+          check_for_updates: "اپ ڈیٹس کے لیے چیک کریں"
           updating: "اپڈیٹ ہو رہا ہے۔۔۔"
           up_to_date: "تِھیم اَپ ڈَیٹ ہے، آخری دفعہ چَیک کیا:"
           has_overwritten_history: "موجودہ تھیم ورژن اب موجود نہیں ہے کیونکہ گٹ ہسٹری کو زبردستی دھکا لگا کر اوور رائٹ کر دیا گیا ہے۔"
