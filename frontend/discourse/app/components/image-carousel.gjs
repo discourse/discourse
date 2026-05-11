@@ -34,6 +34,19 @@ function getAspectRatio(width, height) {
 export default class ImageCarousel extends Component {
   @tracked currentIndex = 0;
 
+  trackDirection = 1;
+  trackElement = null;
+  carouselElement = null;
+  programmaticScroll = false;
+  slides = new Map();
+  clones = new Map();
+  animationFrame = null;
+  animationTarget = null;
+  scrollStopTimer = null;
+  cloneObserver = null;
+  isScrolling = false;
+  pendingKeyDirection = null;
+
   registerSlide = modifier((element, [index]) => {
     this.slides.set(index, element);
     return () => this.slides.delete(index);
@@ -108,19 +121,6 @@ export default class ImageCarousel extends Component {
       this.trackElement = null;
     };
   });
-
-  trackDirection = 1;
-  trackElement = null;
-  carouselElement = null;
-  programmaticScroll = false;
-  slides = new Map();
-  clones = new Map();
-  animationFrame = null;
-  animationTarget = null;
-  scrollStopTimer = null;
-  cloneObserver = null;
-  isScrolling = false;
-  pendingKeyDirection = null;
 
   get items() {
     return this.args.data.items || [];
