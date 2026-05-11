@@ -18,24 +18,24 @@ function sendSubscriptionToServer(subscription, sendConfirmation) {
   });
 }
 
-export function isPushNotificationsSupported() {
-  let caps = helperContext().capabilities;
-  if (
-    !(
-      "serviceWorker" in navigator &&
-      typeof ServiceWorkerRegistration !== "undefined" &&
-      typeof Notification !== "undefined" &&
-      "showNotification" in ServiceWorkerRegistration.prototype &&
-      "PushManager" in window &&
-      !caps.isAppWebview &&
-      navigator.serviceWorker.controller &&
-      navigator.serviceWorker.controller.state === "activated"
-    )
-  ) {
-    return false;
-  }
+export function canSubscribeToPushNotifications() {
+  const caps = helperContext().capabilities;
+  return (
+    "serviceWorker" in navigator &&
+    typeof ServiceWorkerRegistration !== "undefined" &&
+    typeof Notification !== "undefined" &&
+    "showNotification" in ServiceWorkerRegistration.prototype &&
+    "PushManager" in window &&
+    !caps.isAppWebview
+  );
+}
 
-  return true;
+export function isPushNotificationsSupported() {
+  return (
+    canSubscribeToPushNotifications() &&
+    navigator.serviceWorker.controller !== null &&
+    navigator.serviceWorker.controller.state === "activated"
+  );
 }
 
 export function isPushNotificationsEnabled(user) {
@@ -80,7 +80,7 @@ export function register(user, router, appEvents) {
 }
 
 export function subscribe(callback, applicationServerKey) {
-  if (!isPushNotificationsSupported()) {
+  if (!canSubscribeToPushNotifications()) {
     return;
   }
 

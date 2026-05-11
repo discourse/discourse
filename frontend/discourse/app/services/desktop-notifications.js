@@ -8,7 +8,7 @@ import {
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import KeyValueStore from "discourse/lib/key-value-store";
 import {
-  isPushNotificationsSupported,
+  canSubscribeToPushNotifications,
   keyValueStore as pushNotificationKeyValueStore,
   subscribe as subscribePushNotification,
   unsubscribe as unsubscribePushNotification,
@@ -84,7 +84,7 @@ export default class DesktopNotificationsService extends Service {
     return (
       (this.site.mobileView ||
         this.siteSettings.enable_desktop_push_notifications) &&
-      isPushNotificationsSupported()
+      canSubscribeToPushNotifications()
     );
   }
 
