@@ -46,13 +46,15 @@ module Chat
     end
 
     def self.build_channel_badge(chat_channel)
-      return "" unless chat_channel.category_channel?
+      return Emoji.codes_to_img(":#{chat_channel.emoji}:") if chat_channel.emoji.present?
 
-      if chat_channel.emoji.present?
-        Emoji.codes_to_img(":#{chat_channel.emoji}:")
-      else
+      if chat_channel.category_channel?
         color = chat_channel.chatable.color
         %(<span class="category-chat-badge" style="color: ##{color}"><svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg></span>)
+      elsif chat_channel.direct_message_channel?
+        %(<svg class="fa d-icon d-icon-users svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#users"></use></svg>)
+      else
+        ""
       end
     end
 
