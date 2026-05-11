@@ -27,7 +27,7 @@ module PageObjects
       end
 
       def has_read_only?
-        within_post { has_css?("#{SELECTOR}.is-read-only[disabled]") }
+        within_post { has_css?("#{SELECTOR}.disabled") }
       end
 
       def has_count?(count)
