@@ -137,6 +137,17 @@ table.group-reports {
         &.sensitive {
           color: var(--danger);
         }
+
+        &.deprecated {
+          .column-name {
+            text-decoration: line-through;
+          }
+
+          .extra-info {
+            color: var(--primary-medium);
+            font-style: italic;
+          }
+        }
       }
 
       dd {

@@ -1,7 +1,9 @@
 /* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
@@ -41,13 +43,27 @@ export default class OneTable extends Component {
             {{#each @table.columns as |col|}}
               <div>
                 <dt
-                  class={{if col.sensitive "sensitive"}}
-                  title={{if col.sensitive (i18n "explorer.schema.sensitive")}}
+                  class={{concatClass
+                    (if col.sensitive "sensitive")
+                    (if col.is_deprecated "deprecated")
+                  }}
+                  title={{concat
+                    (if col.sensitive (i18n "explorer.schema.sensitive"))
+                    (if col.is_deprecated col.deprecation_message)
+                  }}
                 >
                   {{#if col.sensitive}}
                     {{icon "triangle-exclamation"}}
                   {{/if}}
-                  {{col.column_name}}
+                  {{#if col.is_deprecated}}
+                    {{icon "triangle-exclamation"}}
+                  {{/if}}
+                  <span class="column-name">{{col.column_name}}</span>
+                  {{#if col.is_deprecated}}
+                    <span class="extra-info">{{i18n
+                        "explorer.schema.deprecated"
+                      }}</span>
+                  {{/if}}
                 </dt>
                 <dd>
                   {{col.data_type}}

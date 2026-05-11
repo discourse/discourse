@@ -11,6 +11,7 @@ module Discourse
   DB_POST_MIGRATE_PATH = "db/post_migrate"
   MAX_METADATA_FILE_SIZE = 64.kilobytes
   LOCALE_PARAM = "tl"
+  DEPRECATED_COLUMNS = []
 
   class Utils
     URI_REGEXP = URI.regexp(%w[http https])
@@ -179,6 +180,25 @@ module Discourse
 
         stdout
       end
+    end
+  end
+
+  def self.deprecated_columns
+    DEPRECATED_COLUMNS.concat(ignored_columns)
+  end
+
+  def self.ignored_columns
+    ActiveRecord::Base.descendants.filter_map do |model|
+      model
+        .ignored_columns
+        .map do |column_name|
+          HasDeprecatedColumns::DeprecatedColumn.new(
+            model.table_name,
+            column_name,
+            "column `#{column_name}` is deprecated.",
+          )
+        end
+        .presence
     end
   end
 
