@@ -17,6 +17,7 @@ import { i18n } from "discourse-i18n";
 const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
 const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 8;
+const USE_SCROLLEND = !isTesting() && "onscrollend" in window;
 // Per-frame fraction of remaining distance to cover. Higher = snappier, lower
 // = smoother. 0.06 ≈ ~1.5s to fully converge for any single retarget.
 const ANIMATION_APPROACH_RATE = 0.06;
@@ -61,7 +62,6 @@ export default class ImageCarousel extends Component {
     this.trackElement = element;
     this.trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
-    this.useScrollEnd = "onscrollend" in window && !isTesting();
 
     // Skip past the leading clone so the real first slide is centered. rAF
     // gives child slide modifiers a chance to register before we look one up.
@@ -117,7 +117,7 @@ export default class ImageCarousel extends Component {
       passive: true,
     });
     element.addEventListener("wheel", this.focusCarousel, { passive: true });
-    if (this.useScrollEnd) {
+    if (USE_SCROLLEND) {
       element.addEventListener("scrollend", this.onScrollSettled);
     }
 
@@ -125,7 +125,7 @@ export default class ImageCarousel extends Component {
       element.removeEventListener("scroll", this.onScroll);
       element.removeEventListener("touchstart", this.focusCarousel);
       element.removeEventListener("wheel", this.focusCarousel);
-      if (this.useScrollEnd) {
+      if (USE_SCROLLEND) {
         element.removeEventListener("scrollend", this.onScrollSettled);
       }
 
@@ -146,7 +146,6 @@ export default class ImageCarousel extends Component {
   clones = new Map();
   animationFrame = null;
   animationTarget = null;
-  useScrollEnd = false;
   scrollStopTimer = null;
   cloneObserver = null;
   isScrolling = false;
@@ -438,7 +437,7 @@ export default class ImageCarousel extends Component {
     }
 
     // Fallback for browsers without scrollend support (Safari < 17.4)
-    if (!this.useScrollEnd) {
+    if (!USE_SCROLLEND) {
       clearTimeout(this.scrollStopTimer);
       this.scrollStopTimer = setTimeout(this.onScrollSettled, 150);
     }
