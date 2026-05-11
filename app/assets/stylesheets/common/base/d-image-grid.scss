@@ -123,6 +123,12 @@
     &::-webkit-scrollbar {
       display: none;
     }
+
+    // Disable hover/click on slide contents while a scroll is in flight so
+    // the user can't trigger lightboxes or hover states mid-animation.
+    &.is-scrolling .d-image-carousel__slide {
+      pointer-events: none;
+    }
   }
 
   &__slide {

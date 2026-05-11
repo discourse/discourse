@@ -32,6 +32,7 @@ function aspectRatioStyle(width, height) {
 
 export default class ImageCarousel extends Component {
   @tracked currentIndex = 0;
+  @tracked isScrolling = false;
 
   trackDirection = 1;
   trackElement = null;
@@ -45,7 +46,6 @@ export default class ImageCarousel extends Component {
   animationFrame = null;
   animationTarget = null;
   scrollStopTimer = null;
-  isScrolling = false;
   pendingKeyDirection = null;
   suppressDragWrap = false;
 
@@ -235,6 +235,7 @@ export default class ImageCarousel extends Component {
     track.style.scrollSnapType = "none";
     track.style.scrollBehavior = "auto";
 
+    this.isScrolling = true;
     this.animationTarget = target;
     if (this.animationFrame !== null) {
       return;
@@ -595,7 +596,13 @@ export default class ImageCarousel extends Component {
         tabindex="0"
         class="d-image-carousel"
       >
-        <div {{this.setupTrack}} class="d-image-carousel__track">
+        <div
+          {{this.setupTrack}}
+          class={{concatClass
+            "d-image-carousel__track"
+            (if this.isScrolling "is-scrolling")
+          }}
+        >
           <div
             {{this.registerWrapSlot "leading"}}
             inert
