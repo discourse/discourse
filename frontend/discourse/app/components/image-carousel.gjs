@@ -151,69 +151,38 @@ export default class ImageCarousel extends Component {
   isScrolling = false;
   pendingKeyDirection = null;
 
-  @bind
-  updateIndex() {
-    // While a programmatic scroll is in flight, the current scroll position
-    // is still near the previous slide and would clobber the target index.
-    if (this.programmaticScroll) {
-      return;
-    }
-
-    const newIndex = this.nearestRealIndex(this.trackElement);
-    if (newIndex !== this.currentIndex) {
-      this.currentIndex = newIndex;
-    }
+  get items() {
+    return this.args.data.items || [];
   }
 
-  // Focus the outer carousel element on touchstart / wheel so the user can
-  // switch between swipe/trackpad and arrow-key navigation without an extra
-  // Tab press. preventScroll keeps the browser from scrolling the page if
-  // the carousel happens to be partially off-screen when focus moves.
-  @bind
-  focusCarousel() {
-    if (document.activeElement !== this.carouselElement) {
-      this.carouselElement?.focus({ preventScroll: true });
-    }
+  get prevIndex() {
+    return this.currentIndex === 0 ? this.lastIndex : this.currentIndex - 1;
   }
 
-  @bind
-  onScrollSettled() {
-    // Don't fight an in-flight rAF: the browser can fire scrollend
-    // mid-animation and our teleport here would trip its external-scroll
-    // abort. The rAF's finish branch handles the wrap teleport itself.
-    if (this.animationFrame !== null) {
-      return;
-    }
-
-    this.isScrolling = false;
-    this.programmaticScroll = false;
-    this.teleportFromWrapZone();
-    this.updateIndex();
-
-    // Run any keyboard navigation that arrived while a browser-driven
-    // scroll was in flight. Direction is recomputed against the now-settled
-    // currentIndex.
-    if (this.pendingKeyDirection) {
-      const direction = this.pendingKeyDirection;
-      this.pendingKeyDirection = null;
-      this.navigateByKey(direction);
-    }
+  get nextIndex() {
+    return this.currentIndex === this.lastIndex ? 0 : this.currentIndex + 1;
   }
 
-  @bind
-  onScroll() {
-    this.isScrolling = true;
+  get lastIndex() {
+    return this.items.length - 1;
+  }
 
-    // Optimistic update while scrolling for real-time dot feedback
-    if (!isTesting()) {
-      throttle(this, this.updateIndex, SCROLL_THROTTLE_MS);
-    }
+  get firstItem() {
+    return this.items[0];
+  }
 
-    // Fallback for browsers without scrollend support (Safari < 17.4)
-    if (!this.useScrollEnd) {
-      clearTimeout(this.scrollStopTimer);
-      this.scrollStopTimer = setTimeout(this.onScrollSettled, 150);
-    }
+  get lastItem() {
+    return this.items[this.lastIndex];
+  }
+
+  @cached
+  get firstCloneNode() {
+    return this.firstItem?.element?.cloneNode(true);
+  }
+
+  @cached
+  get lastCloneNode() {
+    return this.lastItem?.element?.cloneNode(true);
   }
 
   // Returns the real-slide index nearest to the viewport center. Clones map
@@ -378,40 +347,6 @@ export default class ImageCarousel extends Component {
     this.programmaticScroll = false;
   }
 
-  get items() {
-    return this.args.data.items || [];
-  }
-
-  get prevIndex() {
-    return this.currentIndex === 0 ? this.lastIndex : this.currentIndex - 1;
-  }
-
-  get nextIndex() {
-    return this.currentIndex === this.lastIndex ? 0 : this.currentIndex + 1;
-  }
-
-  get lastIndex() {
-    return this.items.length - 1;
-  }
-
-  get firstItem() {
-    return this.items[0];
-  }
-
-  get lastItem() {
-    return this.items[this.lastIndex];
-  }
-
-  @cached
-  get firstCloneNode() {
-    return this.firstItem?.element?.cloneNode(true);
-  }
-
-  @cached
-  get lastCloneNode() {
-    return this.lastItem?.element?.cloneNode(true);
-  }
-
   // For directional navigation (prev/next button, arrow key) that crosses the
   // wrap boundary, return the adjacent clone instead of the real destination
   // slide so the carousel animates one slide-width to it. The rAF's finish
@@ -436,6 +371,79 @@ export default class ImageCarousel extends Component {
     return this.slides.get(index);
   }
 
+  navigateByKey(direction) {
+    const goNext = (direction === "right") === (this.trackDirection === 1);
+    this.scrollToIndex(
+      goNext ? this.nextIndex : this.prevIndex,
+      goNext ? "next" : "prev"
+    );
+  }
+
+  @bind
+  updateIndex() {
+    // While a programmatic scroll is in flight, the current scroll position
+    // is still near the previous slide and would clobber the target index.
+    if (this.programmaticScroll) {
+      return;
+    }
+
+    const newIndex = this.nearestRealIndex(this.trackElement);
+    if (newIndex !== this.currentIndex) {
+      this.currentIndex = newIndex;
+    }
+  }
+
+  // Focus the outer carousel element on touchstart / wheel so the user can
+  // switch between swipe/trackpad and arrow-key navigation without an extra
+  // Tab press. preventScroll keeps the browser from scrolling the page if
+  // the carousel happens to be partially off-screen when focus moves.
+  @bind
+  focusCarousel() {
+    if (document.activeElement !== this.carouselElement) {
+      this.carouselElement?.focus({ preventScroll: true });
+    }
+  }
+
+  @bind
+  onScrollSettled() {
+    // Don't fight an in-flight rAF: the browser can fire scrollend
+    // mid-animation and our teleport here would trip its external-scroll
+    // abort. The rAF's finish branch handles the wrap teleport itself.
+    if (this.animationFrame !== null) {
+      return;
+    }
+
+    this.isScrolling = false;
+    this.programmaticScroll = false;
+    this.teleportFromWrapZone();
+    this.updateIndex();
+
+    // Run any keyboard navigation that arrived while a browser-driven
+    // scroll was in flight. Direction is recomputed against the now-settled
+    // currentIndex.
+    if (this.pendingKeyDirection) {
+      const direction = this.pendingKeyDirection;
+      this.pendingKeyDirection = null;
+      this.navigateByKey(direction);
+    }
+  }
+
+  @bind
+  onScroll() {
+    this.isScrolling = true;
+
+    // Optimistic update while scrolling for real-time dot feedback
+    if (!isTesting()) {
+      throttle(this, this.updateIndex, SCROLL_THROTTLE_MS);
+    }
+
+    // Fallback for browsers without scrollend support (Safari < 17.4)
+    if (!this.useScrollEnd) {
+      clearTimeout(this.scrollStopTimer);
+      this.scrollStopTimer = setTimeout(this.onScrollSettled, 150);
+    }
+  }
+
   @action
   scrollToIndex(index, direction = null) {
     const element = this.scrollTargetFor(index, direction);
@@ -452,14 +460,6 @@ export default class ImageCarousel extends Component {
 
     this.programmaticScroll = true;
     this.animateScrollTo(target);
-  }
-
-  navigateByKey(direction) {
-    const goNext = (direction === "right") === (this.trackDirection === 1);
-    this.scrollToIndex(
-      goNext ? this.nextIndex : this.prevIndex,
-      goNext ? "next" : "prev"
-    );
   }
 
   @action
