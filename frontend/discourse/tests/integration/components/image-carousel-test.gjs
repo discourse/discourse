@@ -1,7 +1,7 @@
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { setupRenderingTest } from "ember-qunit";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
+import ImageCarousel from "discourse/components/image-carousel";
 
 module("Integration | Component | image-carousel", function (hooks) {
   setupRenderingTest(hooks);
@@ -27,10 +27,10 @@ module("Integration | Component | image-carousel", function (hooks) {
     },
   ];
 
-  test("it renders and navigates via buttons", async function (assert) {
-    this.set("data", { items, mode: "carousel" });
+  test("renders and navigates via buttons", async function (assert) {
+    const data = { items };
 
-    await render(hbs`<ImageCarousel @data={{this.data}} />`);
+    await render(<template><ImageCarousel @data={{data}} /></template>);
 
     assert
       .dom(".d-image-carousel__slide[data-index='0']")
@@ -47,10 +47,10 @@ module("Integration | Component | image-carousel", function (hooks) {
       .hasClass("is-active");
   });
 
-  test("it wraps around in carousel mode", async function (assert) {
-    this.set("data", { items, mode: "carousel" });
+  test("wraps around", async function (assert) {
+    const data = { items };
 
-    await render(hbs`<ImageCarousel @data={{this.data}} />`);
+    await render(<template><ImageCarousel @data={{data}} /></template>);
 
     assert
       .dom(".d-image-carousel__slide[data-index='0']")
@@ -67,10 +67,10 @@ module("Integration | Component | image-carousel", function (hooks) {
       .hasClass("is-active");
   });
 
-  test("it handles keyboard navigation", async function (assert) {
-    this.set("data", { items, mode: "carousel" });
+  test("handles keyboard navigation", async function (assert) {
+    const data = { items };
 
-    await render(hbs`<ImageCarousel @data={{this.data}} />`);
+    await render(<template><ImageCarousel @data={{data}} /></template>);
 
     assert
       .dom(".d-image-carousel__slide[data-index='0']")
