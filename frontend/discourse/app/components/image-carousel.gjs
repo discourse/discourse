@@ -255,10 +255,9 @@ export default class ImageCarousel extends Component {
       const current = t.scrollLeft;
 
       // Abort if external interaction (drag/swipe/wheel) perturbed position.
+      // Leave any wrap-moved element parked; updateDragWrapContent /
+      // onScrollSettled clean up based on where the user ends up.
       if (Math.abs(current - lastSet) > 2) {
-        // Hand the moved element back to its slide without teleporting so
-        // the user's drag continues from wherever they took us.
-        this.returnMovedElement();
         this.cancelAnimation();
         return;
       }
@@ -267,10 +266,14 @@ export default class ImageCarousel extends Component {
       // Within a couple of pixels: snap to target. Exponential approach
       // crawls in sub-pixel land otherwise and reads as an fps stutter.
       if (Math.abs(distance) < 2) {
-        t.scrollLeft = this.animationTarget;
-        // If we landed on a wrap slot, return the element to its slide and
-        // teleport. currentIndex was already set by scrollToIndex.
-        this.finishWrap();
+        // For a wrap, finishWrap teleports directly to the destination slide
+        // — skip the intermediate scrollLeft = animationTarget assignment so
+        // the browser's snap engine never observes the wrap slot's center as
+        // a committed scroll target. For non-wraps it returns false and we
+        // snap to animationTarget here.
+        if (!this.finishWrap()) {
+          t.scrollLeft = this.animationTarget;
+        }
         // Inline cleanup (not cancelAnimation): defer the snap/smooth-scroll
         // restore to the next frame. Otherwise the snap engine, which still
         // has its pre-teleport target committed, smooth-scrolls scrollLeft
@@ -401,6 +404,18 @@ export default class ImageCarousel extends Component {
       if (!destSlide || !track) {
         return;
       }
+      // IO entries reflect the intersection state at the time it was recorded,
+      // not at callback time. If a rAF-finish briefly set scrollLeft to the
+      // slot's center before teleporting away, the entry says "intersecting"
+      // even though we're no longer there. Verify against current scrollLeft
+      // before acting on it.
+      if (
+        Math.abs(
+          this.computeTargetScrollLeft(entry.target) - track.scrollLeft
+        ) > 1
+      ) {
+        continue;
+      }
       // If a drag-wrap parked the element here, hand it back to its slide.
       if (
         this.movedElement &&
@@ -484,6 +499,24 @@ export default class ImageCarousel extends Component {
   focusCarousel() {
     if (document.activeElement !== this.carouselElement) {
       this.carouselElement?.focus({ preventScroll: true });
+    }
+    this.preMoveAtBoundary();
+  }
+
+  // At a boundary, pre-move the wrap item into its slot on input (one frame
+  // earlier than the first scroll event) to avoid an empty-slot flash.
+  preMoveAtBoundary() {
+    if (this.movedElement || this.suppressDragWrap) {
+      return;
+    }
+    if (this.currentIndex === 0) {
+      this.ensureMovedTo(
+        "leading",
+        this.lastItem,
+        this.slides.get(this.lastIndex)
+      );
+    } else if (this.currentIndex === this.lastIndex) {
+      this.ensureMovedTo("trailing", this.firstItem, this.slides.get(0));
     }
   }
 
