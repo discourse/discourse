@@ -130,10 +130,10 @@ RSpec.describe Admin::ImpersonateController do
       expect(session[:current_user_id]).to eq(admin.id)
     end
 
-    it "does not pass routing constraint when current user is not impersonating" do
+    it "does nothing and returns success if not impersonating" do
       delete "/admin/impersonate.json"
 
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(200)
     end
 
     it "stops impersonating" do
