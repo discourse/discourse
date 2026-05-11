@@ -96,29 +96,38 @@ export default class ImageCarousel extends Component {
     });
     this.wrapSlots.forEach((slot) => this.wrapSlotObserver.observe(slot));
 
-    element.addEventListener("scroll", this.onScroll, { passive: true });
+    const controller = new AbortController();
+    const { signal } = controller;
+    element.addEventListener("scroll", this.onScroll, {
+      passive: true,
+      signal,
+    });
     element.addEventListener("touchstart", this.focusCarousel, {
       passive: true,
+      signal,
     });
-    element.addEventListener("wheel", this.focusCarousel, { passive: true });
+    element.addEventListener("wheel", this.focusCarousel, {
+      passive: true,
+      signal,
+    });
+
     if (USE_SCROLLEND) {
-      element.addEventListener("scrollend", this.onScrollSettled);
+      element.addEventListener("scrollend", this.onScrollSettled, { signal });
     }
 
     return () => {
-      element.removeEventListener("scroll", this.onScroll);
-      element.removeEventListener("touchstart", this.focusCarousel);
-      element.removeEventListener("wheel", this.focusCarousel);
-      if (USE_SCROLLEND) {
-        element.removeEventListener("scrollend", this.onScrollSettled);
-      }
+      controller.abort();
 
       this.wrapSlotObserver?.disconnect();
       this.wrapSlotObserver = null;
+
       clearTimeout(this.scrollStopTimer);
+
       cancelAnimationFrame(initialScroll);
       this.cancelAnimation();
+
       this.returnMovedElement();
+
       this.trackElement = null;
     };
   });
