@@ -4,8 +4,10 @@
   align-items: center;
   background: var(--primary-very-low);
   gap: var(--space-2);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-border-radius);
   padding: var(--space-1) var(--space-2);
+  height: var(--space-9);
+  box-sizing: border-box;
 
   &__legend {
     position: absolute;
@@ -23,10 +25,10 @@
     top: var(--space-1);
     left: 0;
     width: var(--slider-width, 0);
-    height: var(--space-9);
+    height: calc(100% - var(--space-2));
     transform: translateX(var(--slider-x, 0));
     background: var(--secondary);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-border-radius);
     box-shadow: 0 1px 6px rgb(0, 0, 0, 0.1);
     pointer-events: none;
 
@@ -59,9 +61,9 @@
     font-weight: normal;
     padding: var(--space-1) var(--space-4);
     margin: 0;
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-border-radius);
     color: var(--primary-high);
-    height: var(--space-7);
+    height: var(--space-5);
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
