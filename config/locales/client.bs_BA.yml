@@ -3372,6 +3372,8 @@ bs_BA:
         sections:
           reports:
             title: "Izvještaji"
+        period:
+          custom: "Custom"
         reports:
           trend_title: "%{percent} change. Trenutno je %{current}, u prethodnom periodu bio %{prev}."
           today: "Today"

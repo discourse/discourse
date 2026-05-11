@@ -1855,7 +1855,7 @@ ar:
         os: نظام التشغيل
         login_time: وقت تسجيل الدخول
       description: "تفاصيل عمليات تسجيل الدخول الجديدة التي تختلف بشكلٍٍ مريب عن عمليات تسجيل الدخول السابقة"
-    staff_logins:
+    admin_logins:
       title: "عمليات تسجيل دخول المسؤول"
       labels:
         user: المستخدم
@@ -3470,6 +3470,7 @@ ar:
   new_version_mailer_with_notes:
     title: "رسالة الإصدار الجديد مع الملاحظات"
     subject_template: "يتوفَّر تحديث [%{email_prefix}]"
+    subject_template_improved: "%{email_prefix}: ثمة تحديث متوفر"
     text_body_template: |
       يا له من خبر رائع! إصدار جديد من [Discourse](https://www.discourse.org) متاح الآن!
 

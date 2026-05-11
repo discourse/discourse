@@ -6492,6 +6492,10 @@ he:
             title: "דוחות"
           traffic:
             title: "תעבורת האתר"
+        period:
+          last_7_days: "7 הימים האחרונים"
+          last_30_days: "30 הימים האחרונים"
+          custom: "מותאם"
         reports:
           trend_title: "%{percent} שינוי. כרגע הערך עומד על %{current}, היה %{prev} בתקופת הבדיקה הקודמת."
           percent_change_tooltip: "%{percent} שינוי."

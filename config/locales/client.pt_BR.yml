@@ -663,6 +663,7 @@ pt_BR:
       allow_access: "Permitir acesso"
       continue_as_guest: "Continuar como convidado"
       be_first_to_reply: "Seja o primeiro a responder!"
+      editing_post: "Editando postagem"
     topic_count_all:
       one: "Veja %{count} novo tópico"
       other: "Veja %{count} novos tópicos"
@@ -6195,6 +6196,10 @@ pt_BR:
             title: "Tráfego do site"
           engagement:
             title: "Engajamento"
+        period:
+          last_7_days: "Últimos sete dias"
+          last_30_days: "Últimos 30 dias"
+          custom: "Personalizadas"
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
           percent_change_tooltip: "%{percent} de alteração."

@@ -12,6 +12,7 @@ import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
+import { buildQuote } from "discourse/lib/quote";
 import { i18n } from "discourse-i18n";
 
 const DRAFT_KEY_PREFIX = "ai-bot-docked-draft-";
@@ -55,15 +56,20 @@ export default class AiBotDockedComposer extends Component {
   };
 
   #onViewportChange = () => {
-    if (!window.visualViewport) {
-      return;
-    }
-    const keyboardOffset = window.innerHeight - window.visualViewport.height;
     const composerEl = this.#composerEl;
     if (!composerEl) {
       return;
     }
 
+    composerEl.style.setProperty(
+      "--docked-composer-max-resize-offset",
+      `${this.maxResizeOffset}px`
+    );
+
+    if (!window.visualViewport) {
+      return;
+    }
+    const keyboardOffset = window.innerHeight - window.visualViewport.height;
     if (keyboardOffset > 100) {
       if (!this.#keyboardOpen) {
         this.#keyboardOpen = true;
@@ -160,6 +166,18 @@ export default class AiBotDockedComposer extends Component {
     this.#startEditing(event.post);
   }
 
+  @action
+  handleQuotePost(event) {
+    if (!this.isBotPm) {
+      return;
+    }
+    event.handled = true;
+    const quotedText = buildQuote(event.post, event.buffer, event.opts);
+    if (quotedText?.trim()) {
+      this.appEvents.trigger("composer:insert-block", quotedText);
+    }
+  }
+
   async #startEditing(post) {
     const fullPost = await this.store.find("post", post.id);
     this.editingPost = fullPost;
@@ -220,7 +238,9 @@ export default class AiBotDockedComposer extends Component {
     this.#checkScroll();
     window.visualViewport?.addEventListener("resize", this.#onViewportChange);
     window.visualViewport?.addEventListener("scroll", this.#onViewportChange);
+    window.addEventListener("resize", this.#onViewportChange);
     this.appEvents.on("topic:edit-post", this, this.handleEditPost);
+    this.appEvents.on("topic:quote-post", this, this.handleQuotePost);
   }
 
   @action
@@ -237,7 +257,9 @@ export default class AiBotDockedComposer extends Component {
       "scroll",
       this.#onViewportChange
     );
+    window.removeEventListener("resize", this.#onViewportChange);
     this.appEvents.off("topic:edit-post", this, this.handleEditPost);
+    this.appEvents.off("topic:quote-post", this, this.handleQuotePost);
   }
 
   @action
@@ -265,7 +287,7 @@ export default class AiBotDockedComposer extends Component {
       @onRegisterApi={{this.registerComposerApi}}
       @isSubmitting={{this.aiBotDockedSubmit.loading}}
       @disabled={{this.isStreaming}}
-      @resizable={{true}}
+      @autoResize={{true}}
       @maxResizeOffset={{this.maxResizeOffset}}
       {{didInsert this.setupScrollListener}}
       {{willDestroy this.teardownScrollListener}}

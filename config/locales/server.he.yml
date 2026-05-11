@@ -1678,7 +1678,7 @@ he:
         os: מערכת הפעלה
         login_time: מועד כניסה
       description: "פרטים על כניסות חדשות ושונות באופן מהותי מכניסות קודמות."
-    staff_logins:
+    admin_logins:
       title: "כניסות מנהלים"
       labels:
         user: משתמש

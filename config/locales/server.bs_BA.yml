@@ -596,7 +596,7 @@ bs_BA:
       labels:
         user: User
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: User
         location: Lokacija

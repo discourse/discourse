@@ -1671,7 +1671,7 @@ en:
         os: Operating System
         login_time: Login Time
       description: "Details of new logins that differ suspiciously from previous logins."
-    staff_logins:
+    admin_logins:
       title: "Admin Logins"
       labels:
         user: User
@@ -2604,6 +2604,7 @@ en:
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
+    enable_gifs: "Adds a button to easily search and insert GIFs in posts."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_allowed_groups: "Posts created by users not in these groups must be approved. Posts created by admins and moderators are always approved."

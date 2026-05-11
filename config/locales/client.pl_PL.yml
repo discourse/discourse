@@ -774,6 +774,7 @@ pl_PL:
       continue_as_guest: "Kontynuuj jako gość"
       be_first_to_reply: "Bądź pierwszą osobą, która odpowie!"
       replying_to: "W odpowiedzi do %{username}"
+      editing_post: "Edycja wpisu"
       reply_placeholder: "Napisz odpowiedź..."
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
@@ -7011,12 +7012,20 @@ pl_PL:
         not_found_error: Przepraszamy, ten raport nie istnieje.
         custom_date_range: Niestandardowy zakres dat
         sections:
+          highlights:
+            title: "Najważniejsze wydarzenia"
           reports:
-            title: "Zgłoszeń"
+            title: "Zgłoszenia"
           traffic:
             title: "Ruch w witrynie"
           engagement:
             title: "Zaangażowanie"
+        period:
+          last_7_days: "Ostatnie 7 dni"
+          last_30_days: "Ostatnie 30 dni"
+          last_3_months: "Ostatnie 3 miesiące"
+          custom: "Niestandardowy"
+          custom_range: "%{start} — %{end}"
         reports:
           trend_title: "%{percent} zmian. Obecnie %{current}, w poprzednim okresie było %{prev}."
           percent_change_tooltip: "%{percent} zmiany."

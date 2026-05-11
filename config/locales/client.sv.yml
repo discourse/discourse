@@ -4609,6 +4609,11 @@ sv:
         sections:
           reports:
             title: "Rapporter"
+        period:
+          last_7_days: "Senaste 7 dagarna"
+          last_30_days: "Senaste 30 dagarna"
+          last_3_months: "Senaste 3 månaderna"
+          custom: "Anpassad"
         reports:
           trend_title: "%{percent} förändring. Nuvarande %{current}, var %{prev} i tidigare perioden."
           today: "Idag"

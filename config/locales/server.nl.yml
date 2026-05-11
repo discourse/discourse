@@ -1517,7 +1517,7 @@ nl:
         os: Besturingssysteem
         login_time: Tijd van aanmelding
       description: "Details over nieuwe aanmeldingen die op een verdachte manier afwijken t.o.v. eerdere aanmeldingen."
-    staff_logins:
+    admin_logins:
       title: "Beheerdersaanmeldingen"
       labels:
         user: Gebruiker

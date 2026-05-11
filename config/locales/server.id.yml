@@ -1142,7 +1142,7 @@ id:
         device: Perangkat
         os: Sistem operasi
         login_time: Waktu Masuk
-    staff_logins:
+    admin_logins:
       labels:
         user: Pengguna
         location: Lokasi

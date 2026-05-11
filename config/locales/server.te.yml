@@ -933,7 +933,7 @@ te:
         device: పరికరం
         os: ఆపరేటింగ్ సిస్టమ్
         login_time: లాగిన్ సమయం
-    staff_logins:
+    admin_logins:
       title: "అడ్మిన్ లాగిన్‌లు"
       labels:
         user: సభ్యుడు

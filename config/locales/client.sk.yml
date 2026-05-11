@@ -6079,6 +6079,11 @@ sk:
             title: "Hlásení"
           traffic:
             title: "Návštevnosť stránky"
+        period:
+          last_7_days: "Posledných 7 dní"
+          last_30_days: "Posledných 30 dní"
+          last_3_months: "Posledných 3 mesiacov"
+          custom: "Vlastné"
         reports:
           trend_title: "%{percent} zmena. V súčasnosti %{current}, v predchádzajúcom období bola %{prev} ."
           percent_change_tooltip: "%{percent} zmena."
