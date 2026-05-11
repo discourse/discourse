@@ -142,10 +142,6 @@
     align-items: center;
   }
 
-  .sidebar-section-link-wrapper .sidebar-section-link-prefix .prefix-square {
-    border-radius: calc(var(--d-border-radius) / 2);
-  }
-
   .sidebar-more-section-content .sidebar-row {
     padding-block: 0;
   }
@@ -322,7 +318,6 @@
   // Category
 
   --category-boxes-text-alignment: left;
-  --category-badge-border-radius: calc(var(--d-border-radius) / 2);
   --category-boxes-description-text-color: var(--primary-700);
   --d-category-boxes-gap: var(--space-4);
   --d-category-border-box-width: 1px;
