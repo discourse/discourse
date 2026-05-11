@@ -8,10 +8,10 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import dragAndDropSource from "discourse/modifiers/drag-and-drop-source";
 import dragAndDropTarget from "discourse/modifiers/drag-and-drop-target";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { walkAllOutlets } from "../../lib/walk-layout";
 
@@ -142,12 +142,12 @@ export default class OutlinePanel extends Component {
         {{#each this.outlets as |group|}}
           <div class="outline-outlet">
             <div class="outline-outlet__label">
-              {{icon "cube"}}
+              {{dIcon "cube"}}
               <span>{{group.outletName}}</span>
             </div>
             {{#each group.rows as |row|}}
               <div
-                class={{concatClass
+                class={{dConcatClass
                   "outline-block"
                   (if
                     (this.visualEditor.isBlockSelected row.blockKey)
@@ -172,9 +172,9 @@ export default class OutlinePanel extends Component {
                 }}
               >
                 {{#if row.hasChildren}}
-                  {{icon "folder"}}
+                  {{dIcon "folder"}}
                 {{else}}
-                  {{icon "circle"}}
+                  {{dIcon "circle"}}
                 {{/if}}
                 <span>{{row.blockName}}</span>
                 {{#if row.blockId}}
