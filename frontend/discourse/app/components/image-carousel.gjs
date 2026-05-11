@@ -77,39 +77,15 @@ export default class ImageCarousel extends Component {
       });
     });
 
-    // Fires the moment a clone becomes 100% visible in the viewport — which
-    // is the exact moment the snap-to-clone animation finishes (and the
-    // moment the clone is centered, since slides are viewport-width). Using
-    // a lower threshold would fire mid-animation, while a sliver of the
-    // adjacent real slide is still showing on screen, and teleporting then
-    // causes that sliver to vanish abruptly and the in-flight snap animation
-    // to be perturbed.
-    this.cloneObserver = new IntersectionObserver(
-      (entries) => {
-        // Don't fight an in-flight rAF wrap; its own finish branch handles
-        // the teleport. Perturbing scrollLeft here would trip the rAF's
-        // external-scroll abort and cause a snap-back glitch.
-        if (this.animationFrame !== null) {
-          return;
-        }
-        for (const entry of entries) {
-          if (!entry.isIntersecting) {
-            continue;
-          }
-          const realIndex =
-            entry.target === this.clones.get("first") ? 0 : this.lastIndex;
-          const realSlide = this.slides.get(realIndex);
-          if (realSlide) {
-            element.scrollTo({
-              left: this.computeTargetScrollLeft(realSlide),
-              behavior: "instant",
-            });
-          }
-          return;
-        }
-      },
-      { root: element, threshold: 1 }
-    );
+    // threshold: 1 fires the moment a clone becomes 100% visible — exactly
+    // when the snap-to-clone animation finishes and the clone is centered
+    // (slides are viewport-width). A lower threshold would fire mid-animation
+    // while a sliver of the adjacent real slide is still on screen, causing
+    // that sliver to vanish abruptly and perturbing the in-flight snap.
+    this.cloneObserver = new IntersectionObserver(this.onCloneIntersect, {
+      root: element,
+      threshold: 1,
+    });
     this.clones.forEach((clone) => this.cloneObserver.observe(clone));
 
     element.addEventListener("scroll", this.onScroll, { passive: true });
@@ -377,6 +353,32 @@ export default class ImageCarousel extends Component {
       goNext ? this.nextIndex : this.prevIndex,
       goNext ? "next" : "prev"
     );
+  }
+
+  @bind
+  onCloneIntersect(entries) {
+    // Don't fight an in-flight rAF wrap; its own finish branch handles the
+    // teleport. Perturbing scrollLeft here would trip the rAF's
+    // external-scroll abort and cause a snap-back glitch.
+    if (this.animationFrame !== null) {
+      return;
+    }
+
+    for (const entry of entries) {
+      if (!entry.isIntersecting) {
+        continue;
+      }
+      const realIndex =
+        entry.target === this.clones.get("first") ? 0 : this.lastIndex;
+      const realSlide = this.slides.get(realIndex);
+      if (realSlide) {
+        this.trackElement?.scrollTo({
+          left: this.computeTargetScrollLeft(realSlide),
+          behavior: "instant",
+        });
+      }
+      return;
+    }
   }
 
   @bind
