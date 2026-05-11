@@ -338,6 +338,31 @@ body.visual-editor-active {
     border-bottom: 1px solid var(--primary-low);
   }
 
+  .panel-header--tabs {
+    padding: 0;
+    display: flex;
+
+    .panel-tab {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-weight: 600;
+      color: var(--primary-medium);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary);
+      }
+
+      &.--active {
+        color: var(--primary);
+        border-bottom-color: var(--tertiary);
+      }
+    }
+  }
+
   .panel-body {
     padding: 0.75rem 1rem;
   }
@@ -345,6 +370,83 @@ body.visual-editor-active {
   .panel-empty {
     color: var(--primary-medium);
     font-style: italic;
+  }
+}
+
+/* Palette panel */
+.visual-editor-palette {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__search {
+    width: 100%;
+    margin: 0;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  &__chip {
+    padding: 0.15rem 0.5rem;
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: 999px;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+      color: var(--tertiary);
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
+
+.visual-editor-palette-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--primary-low);
+  border-radius: 4px;
+  background: var(--secondary);
+  cursor: grab;
+  font-size: var(--font-down-1);
+
+  &:hover {
+    background: var(--primary-very-low);
+    border-color: var(--primary-low-mid);
+  }
+
+  &.is-dragging {
+    opacity: 0.5;
+  }
+
+  &__icon {
+    color: var(--primary-medium);
+    flex-shrink: 0;
+  }
+
+  &__label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 

@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -9,6 +10,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import InspectorPanel from "./inspector-panel";
 import OutlinePanel from "./outline-panel";
+import PalettePanel from "./palette-panel";
 
 /**
  * The 3-pane editor chrome (toolbar + outline + canvas + inspector).
@@ -31,6 +33,14 @@ export default class EditorShell extends Component {
   @tracked isSaving = false;
   @tracked saveErrorMessage = null;
   @tracked warningsPanelOpen = false;
+  @tracked leftPanelTab = "palette";
+
+  isLeftPanelTabActive = (tab) => this.leftPanelTab === tab;
+
+  @action
+  setLeftPanelTab(tab) {
+    this.leftPanelTab = tab;
+  }
 
   @action
   dismissSaveError() {
@@ -233,11 +243,34 @@ export default class EditorShell extends Component {
         {{/if}}
 
         <div class="visual-editor-panel --left">
-          <div class="panel-header">{{i18n
-              "visual_editor.chrome.panel_outline"
-            }}</div>
+          <div class="panel-header panel-header--tabs">
+            <button
+              type="button"
+              class={{dConcatClass
+                "panel-tab"
+                (if (this.isLeftPanelTabActive "palette") "--active")
+              }}
+              {{on "click" (fn this.setLeftPanelTab "palette")}}
+            >
+              {{i18n "visual_editor.chrome.tab_palette"}}
+            </button>
+            <button
+              type="button"
+              class={{dConcatClass
+                "panel-tab"
+                (if (this.isLeftPanelTabActive "outline") "--active")
+              }}
+              {{on "click" (fn this.setLeftPanelTab "outline")}}
+            >
+              {{i18n "visual_editor.chrome.tab_outline"}}
+            </button>
+          </div>
           <div class="panel-body">
-            <OutlinePanel />
+            {{#if (this.isLeftPanelTabActive "palette")}}
+              <PalettePanel />
+            {{else}}
+              <OutlinePanel />
+            {{/if}}
           </div>
         </div>
 
