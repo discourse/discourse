@@ -237,6 +237,25 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       }.to change(Jobs::AiSpamScan.jobs, :size).by(1)
     end
 
+    it "passes the editor id in the job args without persisting it on the post" do
+      editor = Fabricate(:user, trust_level: TrustLevel[0])
+      post.update!(last_editor_id: editor.id)
+      PostRevision.create!(
+        post: post,
+        user: editor,
+        modifications: {
+          raw: ["old content", "completely new content"],
+        },
+      )
+
+      described_class.edited_post(post)
+      described_class.after_cooked_post(post)
+
+      job_args = Jobs::AiSpamScan.jobs.last["args"].first
+      expect(post.reload.custom_fields).not_to have_key("discourse_ai_spam_scan_triggering_user_id")
+      expect(job_args["triggering_user_id"]).to eq(editor.id)
+    end
+
     it "does nothing when staff is the last revisor" do
       expect {
         PostRevisor.new(post).revise!(moderator, title: "#{post.topic.title} spam spam")
@@ -398,6 +417,29 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       expect(post.reload.hidden?).to eq(false)
       expect(post.topic.reload.visible).to eq(true)
       expect(post.user.reload.silenced?).to eq(false)
+    end
+
+    it "does not silence the author when another user adds spam to a wiki post" do
+      wiki_editor = Fabricate(:user, trust_level: TrustLevel[0])
+      wiki_post = Fabricate(:post, user: user, wiki: true, raw: "Helpful community wiki content")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) do
+        PostRevisor.new(wiki_post).revise!(
+          wiki_editor,
+          raw: "Buy questionable products from this completely different wiki content",
+        )
+        wiki_post.rebake!
+      end
+
+      log = AiSpamLog.find_by(post: wiki_post)
+
+      expect(log.reviewable).to be_present
+      expect(wiki_post.user.reload).not_to be_silenced
+      expect(
+        UserHistory.where(action: UserHistory.actions[:silence_user], target_user_id: user.id),
+      ).to be_blank
     end
 
     it "does not silence the user or hide the post when a flag cannot be created" do
