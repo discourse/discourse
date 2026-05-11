@@ -327,11 +327,9 @@ export default class ImageCarousel extends Component {
     }
   }
 
-  // For wrap-crossing nav, park the destination item in the adjacent slot so
-  // the scroll only spans one slide-width; finishWrap teleports afterwards.
-  scrollTargetFor(index, direction) {
-    // If a wrap rAF is in flight, snap it home so the new animation starts
-    // clean (otherwise the old rAF's divergence check trips its abort).
+  // Snap any in-flight wrap home so the next nav starts from a clean position.
+  // Otherwise the old rAF's divergence check would trip its abort branch.
+  settleInFlightWrap() {
     if (this.wrapMove && this.animationFrame !== null) {
       this.finishWrap();
       cancelAnimationFrame(this.animationFrame);
@@ -339,7 +337,12 @@ export default class ImageCarousel extends Component {
     } else {
       this.returnMovedElement();
     }
+  }
 
+  // Returns the slide or wrap slot to scroll to. For wrap-crossing nav, parks
+  // the destination item in the adjacent slot as a side effect (mutates
+  // wrapMove); finishWrap moves it back and teleports afterwards.
+  prepareScrollTarget(index, direction) {
     const wrapNext =
       direction === "next" &&
       this.currentIndex === this.lastIndex &&
@@ -560,7 +563,8 @@ export default class ImageCarousel extends Component {
 
   @action
   scrollToIndex(index, direction = null) {
-    const element = this.scrollTargetFor(index, direction);
+    this.settleInFlightWrap();
+    const element = this.prepareScrollTarget(index, direction);
     const track = this.trackElement;
     if (!element || !track) {
       return;
