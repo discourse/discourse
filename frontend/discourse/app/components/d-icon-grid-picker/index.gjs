@@ -23,8 +23,9 @@ import { i18n } from "discourse-i18n";
  * @property {string} Args.value - The currently selected icon ID.
  * @property {Function} Args.onChange - Called with the selected icon ID when an icon is picked.
  * @property {string[]} [Args.favorites] - Icon IDs to display in a pinned favorites row above the grid.
- * @property {boolean} [Args.showSelectedName] - When true, the selected favorite chip also displays
- *   the icon name alongside the icon.
+ * @property {boolean} [Args.showSelectedName] - When true, the selected icon's name is shown
+ *   alongside the icon in both the trigger button and the favorites chip. Adds a
+ *   `--has-label` modifier to the root element when the trigger renders the name.
  * @property {string} [Args.btnClass] - CSS class(es) for the trigger button. Defaults to "btn-default".
  * @property {string} [Args.label] - Optional text label shown next to the icon in the trigger button.
  * @property {boolean} [Args.allowClear] - When true, shows a clear button next to the trigger
