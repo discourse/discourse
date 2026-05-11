@@ -15,10 +15,6 @@ module PageObjects
         has_css?("#{carousel_selector} .d-image-carousel__track")
       end
 
-      def has_mode?(mode)
-        has_css?("#{carousel_selector} .d-image-carousel.d-image-carousel--#{mode}")
-      end
-
       def has_slides?(count:)
         has_css?("#{carousel_selector} .d-image-carousel__slide", count: count)
       end

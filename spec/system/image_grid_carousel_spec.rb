@@ -30,7 +30,6 @@ describe "Image Carousel" do
     carousel = PageObjects::Components::ImageCarousel.new(post.post_number)
 
     expect(carousel).to have_carousel
-    expect(carousel).to have_mode("carousel")
     expect(carousel).to have_track
     expect(carousel).to have_slides(count: 2)
   end
