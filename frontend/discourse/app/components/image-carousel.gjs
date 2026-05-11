@@ -29,7 +29,7 @@ export default class ImageCarousel extends Component {
   slides = new Map();
   wrapSlots = new Map();
   suppressDragWrap = false;
-  /** @type {?{ element: HTMLElement, destSlide: HTMLElement }} */
+  /** @type {{ element: HTMLElement, destSlide: HTMLElement } | null} */
   wrapMove = null;
   animationFrame = null;
   carouselElement;
@@ -214,7 +214,6 @@ export default class ImageCarousel extends Component {
 
     if (prefersReducedMotion()) {
       this.cancelAnimation();
-      // finishWrap teleports to the destination if a wrap is set up.
       if (!this.finishWrap()) {
         track.scrollTo({ left: target, behavior: "instant" });
       }
@@ -338,11 +337,7 @@ export default class ImageCarousel extends Component {
 
   navigateByKey(direction) {
     const goNext = (direction === "right") !== isDocumentRTL();
-    if (goNext) {
-      this.next();
-    } else {
-      this.prev();
-    }
+    return goNext ? this.next() : this.prev();
   }
 
   // True iff scrollLeft has come to rest at a wrap slot's centered position.
