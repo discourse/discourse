@@ -128,9 +128,7 @@ describe "Simplified Category Creation" do
 
       form.field("name").fill_in("Test Category")
 
-      icon_picker.expand
-      icon_picker.select_first_icon
-      icon_picker.clear
+      form.choose_conditional("icon")
 
       category_page.save_settings
 
