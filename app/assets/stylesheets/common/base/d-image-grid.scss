@@ -207,16 +207,15 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.5rem 0.75rem;
-    background: var(--primary-very-low);
+    padding: 0.5rem;
     border-radius: 1rem;
   }
 
   &__dot {
-    height: 0.6rem;
-    width: 0.6rem;
+    height: 0.66rem;
+    width: 0.66rem;
     padding: 0;
-    background: var(--primary-low-mid);
+    background: var(--primary-300);
     border: none;
     border-radius: 1rem;
     cursor: pointer;
@@ -227,12 +226,18 @@
     touch-action: manipulation;
 
     &:hover {
-      transform: scale(1.2);
+      background: var(--primary-900);
+      transform: scale(1.25);
     }
 
     &.active {
-      background: var(--primary-medium);
+      background: var(--primary-600);
+      cursor: default;
       width: 1.4rem;
+    }
+
+    &.active:hover {
+      transform: scale(1);
     }
   }
 
@@ -243,12 +248,6 @@
     color: var(--primary-medium);
     text-align: center;
     cursor: default;
-  }
-
-  &--single {
-    .d-image-carousel__controls {
-      display: none;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
