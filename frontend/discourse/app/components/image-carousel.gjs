@@ -34,20 +34,19 @@ export default class ImageCarousel extends Component {
   @tracked currentIndex = 0;
   @tracked isScrolling = false;
 
-  trackDirection = 1;
-  trackElement = null;
-  carouselElement = null;
   slides = new Map();
   wrapSlots = new Map();
-  wrapSlotObserver = null;
-  // Active wrap-move: { element, destSlide } when an item has been parked in
-  // a wrap slot, null otherwise. Bundled so the two facts can't drift apart.
+  trackDirection = 1;
+  suppressDragWrap = false;
+  /** @type {?{ element: HTMLElement, destSlide: HTMLElement }} */
   wrapMove = null;
+  trackElement = null;
+  carouselElement = null;
+  wrapSlotObserver = null;
   animationFrame = null;
   animationTarget = null;
   scrollStopTimer = null;
   pendingKeyDirection = null;
-  suppressDragWrap = false;
 
   registerSlide = modifier((element, [index]) => {
     this.slides.set(index, element);
