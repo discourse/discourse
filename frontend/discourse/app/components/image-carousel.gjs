@@ -18,8 +18,7 @@ const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
 const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 8;
 const USE_SCROLLEND = !isTesting() && "onscrollend" in window;
-// Per-frame fraction of remaining distance to cover. Higher = snappier, lower
-// = smoother. 0.06 ≈ ~1.5s to fully converge for any single retarget.
+// Per-frame fraction of remaining distance. 0.06 ≈ 1.5s to converge.
 const ANIMATION_APPROACH_RATE = 0.06;
 const ANIMATION_FINISH_THRESHOLD = 0.5;
 const EXTERNAL_SCROLL_TOLERANCE_PX = 2;
@@ -63,8 +62,8 @@ export default class ImageCarousel extends Component {
     this.trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
 
-    // Skip past the leading clone so the real first slide is centered. rAF
-    // gives child slide modifiers a chance to register before we look one up.
+    // rAF defers until child slide modifiers register, then centers slide 0
+    // past the leading clone.
     const initialScroll = requestAnimationFrame(() => {
       if (!element.isConnected) {
         return;
@@ -77,11 +76,9 @@ export default class ImageCarousel extends Component {
       });
     });
 
-    // threshold: 1 fires the moment a clone becomes 100% visible — exactly
-    // when the snap-to-clone animation finishes and the clone is centered
-    // (slides are viewport-width). A lower threshold would fire mid-animation
-    // while a sliver of the adjacent real slide is still on screen, causing
-    // that sliver to vanish abruptly and perturbing the in-flight snap.
+    // threshold: 1 fires only when a clone is fully visible — exactly when
+    // the snap-to-clone animation completes. A lower threshold would fire
+    // mid-animation and perturb the in-flight snap.
     this.cloneObserver = new IntersectionObserver(this.onCloneIntersect, {
       root: element,
       threshold: 1,
@@ -161,9 +158,8 @@ export default class ImageCarousel extends Component {
     return this.lastItem?.element?.cloneNode(true);
   }
 
-  // Returns the real-slide index nearest to the viewport center. Clones map
-  // to the real slide they visually represent, so a manual drag onto a clone
-  // reads the same as being on the real slide it duplicates.
+  // Real-slide index nearest the viewport center. Clones report the index
+  // of the slide they duplicate.
   nearestRealIndex() {
     const track = this.trackElement;
     if (!track) {
@@ -200,11 +196,9 @@ export default class ImageCarousel extends Component {
     );
   }
 
-  // If scrollLeft is in a clone wrap zone (past slide N-1, or before slide 0),
-  // shift it by ±(N * slideWidth) to the equivalent position on the real
-  // strip. Invisible because the clone shows the same content as the real
-  // slide on the other side of the strip; used so that follow-up animations
-  // take the short path instead of scrolling backwards across the strip.
+  // If scrolled into a clone wrap zone, jump by (N * slideWidth) to the
+  // equivalent real-strip position. Invisible since clones mirror their real
+  // counterparts; lets follow-up animations take the short path.
   teleportFromWrapZone() {
     const track = this.trackElement;
     const slideWidth = track?.clientWidth;
@@ -224,16 +218,13 @@ export default class ImageCarousel extends Component {
       return false;
     }
 
-    // scrollTo with behavior: "instant" bypasses CSS scroll-behavior: smooth;
-    // otherwise this would be a visible animation across the entire strip.
+    // "instant" bypasses CSS scroll-behavior: smooth — otherwise this would
+    // visibly animate across the entire strip.
     track.scrollTo({ left: teleportTarget, behavior: "instant" });
     return true;
   }
 
-  // Custom rAF-driven animation. Multiple rapid retargets just update
-  // animationTarget — the running rAF loop redirects smoothly toward the new
-  // target instead of restarting (which is what native scrollIntoView smooth
-  // would do, causing the per-click stutter).
+  // rAF-driven scroll. Rapid retargets update animationTarget.
   animateScrollTo(target) {
     const track = this.trackElement;
     if (!track) {
@@ -243,24 +234,20 @@ export default class ImageCarousel extends Component {
     if (prefersReducedMotion()) {
       this.cancelAnimation();
       this.teleportFromWrapZone();
-      // behavior: "instant" overrides CSS scroll-behavior: smooth — without
-      // it a reduce-motion user would still see a smooth animation.
+      // "instant" overrides CSS scroll-behavior: smooth.
       track.scrollTo({ left: target, behavior: "instant" });
       return;
     }
 
-    // Suspend mandatory snap and CSS smooth-scroll for the rAF's lifetime.
-    // Smooth would re-animate every scrollLeft assignment over ~300ms (and
-    // the next tick would abort on the divergence); snap would yank
-    // intermediate non-snap-point positions to the nearest snap. Idempotent
-    // if already suspended by an in-flight rAF.
+    // Suspend snap + CSS smooth-scroll for the rAF's lifetime: smooth would
+    // re-animate each scrollLeft assignment (tripping the divergence abort);
+    // snap would yank intermediate positions to snap points. Idempotent.
     track.style.scrollSnapType = "none";
     track.style.scrollBehavior = "auto";
 
-    // If we're in a clone wrap zone (e.g., an earlier wrap is still mid-flight
-    // when the user clicks again), teleport to the real-strip equivalent. If
-    // an rAF was running, cancel it — its lastSet now diverges from the
-    // post-teleport scrollLeft and the next tick would otherwise abort.
+    // Rapid re-click while a previous wrap is mid-flight: teleport to the
+    // real-strip equivalent and cancel the rAF — its lastSet would otherwise
+    // diverge from the post-teleport scrollLeft and trigger the abort below.
     if (this.teleportFromWrapZone() && this.animationFrame !== null) {
       cancelAnimationFrame(this.animationFrame);
       this.animationFrame = null;
@@ -291,9 +278,8 @@ export default class ImageCarousel extends Component {
       const distance = this.animationTarget - current;
       if (Math.abs(distance) < ANIMATION_FINISH_THRESHOLD) {
         t.scrollLeft = this.animationTarget;
-        // If we landed on a clone (wrap animation), silently teleport to its
-        // real counterpart. currentIndex was set to the wrap target by
-        // scrollToIndex, so it already matches.
+        // If we landed on a clone, silently teleport to its real counterpart.
+        // currentIndex was already set to the wrap target by scrollToIndex.
         this.teleportFromWrapZone();
         this.cancelAnimation();
         return;
@@ -323,10 +309,8 @@ export default class ImageCarousel extends Component {
     this.programmaticScroll = false;
   }
 
-  // For directional navigation (prev/next button, arrow key) that crosses the
-  // wrap boundary, return the adjacent clone instead of the real destination
-  // slide so the carousel animates one slide-width to it. The rAF's finish
-  // branch teleports to the real counterpart afterwards.
+  // For wrap-crossing nav, return the adjacent clone so the scroll animates
+  // one slide-width. The rAF finish branch teleports to the real counterpart.
   scrollTargetFor(index, direction) {
     if (
       direction === "next" &&
@@ -358,9 +342,9 @@ export default class ImageCarousel extends Component {
 
   @bind
   onCloneIntersect(entries) {
-    // Don't fight an in-flight rAF wrap; its own finish branch handles the
-    // teleport. Perturbing scrollLeft here would trip the rAF's
-    // external-scroll abort and cause a snap-back glitch.
+    // Don't fight an in-flight rAF wrap; perturbing scrollLeft would trip
+    // its external-scroll abort. The rAF's own finish branch handles the
+    // teleport.
     if (this.animationFrame !== null) {
       return;
     }
@@ -384,8 +368,8 @@ export default class ImageCarousel extends Component {
 
   @bind
   updateIndex() {
-    // While a programmatic scroll is in flight, the current scroll position
-    // is still near the previous slide and would clobber the target index.
+    // During a programmatic scroll the position is still near the previous
+    // slide and would clobber the target index.
     if (this.programmaticScroll) {
       return;
     }
@@ -396,10 +380,9 @@ export default class ImageCarousel extends Component {
     }
   }
 
-  // Focus the outer carousel element on touchstart / wheel so the user can
-  // switch between swipe/trackpad and arrow-key navigation without an extra
-  // Tab press. preventScroll keeps the browser from scrolling the page if
-  // the carousel happens to be partially off-screen when focus moves.
+  // Focus on touch/wheel so arrow keys work without a Tab press.
+  // preventScroll keeps the page from jumping if the carousel is partially
+  // off-screen.
   @bind
   focusCarousel() {
     if (document.activeElement !== this.carouselElement) {
@@ -409,9 +392,8 @@ export default class ImageCarousel extends Component {
 
   @bind
   onScrollSettled() {
-    // Don't fight an in-flight rAF: the browser can fire scrollend
-    // mid-animation and our teleport here would trip its external-scroll
-    // abort. The rAF's finish branch handles the wrap teleport itself.
+    // Browser can fire scrollend mid-rAF; teleporting here would trip its
+    // external-scroll abort. The rAF's own finish branch handles the wrap.
     if (this.animationFrame !== null) {
       return;
     }
@@ -421,9 +403,8 @@ export default class ImageCarousel extends Component {
     this.teleportFromWrapZone();
     this.updateIndex();
 
-    // Run any keyboard navigation that arrived while a browser-driven
-    // scroll was in flight. Direction is recomputed against the now-settled
-    // currentIndex.
+    // Run any keyboard nav queued during the browser scroll; direction
+    // re-resolves against the settled currentIndex.
     if (this.pendingKeyDirection) {
       const direction = this.pendingKeyDirection;
       this.pendingKeyDirection = null;
@@ -475,11 +456,9 @@ export default class ImageCarousel extends Component {
 
     const direction = event.key === "ArrowLeft" ? "left" : "right";
 
-    // If a browser-driven scroll (touch/wheel) is currently in flight,
-    // queue the navigation for after it settles instead of starting an
-    // rAF that the in-flight scroll would just abort. Our own rAF
-    // (animationFrame !== null) is handled by the retarget path inside
-    // animateScrollTo, so we run normally in that case.
+    // Queue the nav for scrollend if a browser-driven scroll is in flight —
+    // starting an rAF now would just be aborted. (Our own rAF is handled by
+    // animateScrollTo's retarget path.)
     if (this.isScrolling && this.animationFrame === null) {
       this.pendingKeyDirection = direction;
       return;
