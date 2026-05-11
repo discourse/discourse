@@ -885,6 +885,71 @@ RSpec.describe Middleware::RequestTracker do
           expect(events.length).to eq(0)
         end
       end
+
+      context "when SiteSetting.persist_browser_pageview_events is true" do
+        before { SiteSetting.persist_browser_pageview_events = true }
+
+        it "creates a BrowserPageviewEvent row and does not fire the :browser_pageview event" do
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+          DiscourseIpInfo.stubs(:get).returns(country_code: "AU")
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+                "action_dispatch.remote_ip" => "1.2.3.4",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          events =
+            DiscourseEvent.track_events(:browser_pageview) do
+              expect { Middleware::RequestTracker.log_request(data) }.to change {
+                BrowserPageviewEvent.count
+              }.by(1)
+            end
+
+          expect(events).to be_empty
+
+          event = BrowserPageviewEvent.last
+          expect(event.session_id).to eq(session_id)
+          expect(event.url).to eq("https://discourse.org")
+          expect(event.referrer).to eq("https://example.com")
+          expect(event.country_code).to eq("AU")
+          expect(event.user_agent).to be_present
+          expect(event.ip_address.to_s).to eq("1.2.3.4")
+        end
+
+        it "takes precedence even when trigger_browser_pageview_events is also true" do
+          SiteSetting.trigger_browser_pageview_events = true
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "action_dispatch.remote_ip" => "1.2.3.4",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          events =
+            DiscourseEvent.track_events(:browser_pageview) do
+              expect { Middleware::RequestTracker.log_request(data) }.to change {
+                BrowserPageviewEvent.count
+              }.by(1)
+            end
+
+          expect(events).to be_empty
+        end
+      end
     end
   end
 

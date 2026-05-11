@@ -603,6 +603,12 @@ basic:
     default: false
     hidden: true
     client: true
+  persist_browser_pageview_events:
+    default: false
+    hidden: true
+  clean_up_browser_pageview_events:
+    default: false
+    hidden: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"
