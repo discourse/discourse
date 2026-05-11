@@ -3,7 +3,7 @@
 module TurboTests
   module Flaky
     class Manager
-      PATH = Rails.root.join("tmp/turbo_rspec_flaky_tests.json")
+      PATH = File.join(Dir.pwd, "tmp/turbo_rspec_flaky_tests.json")
 
       def self.potential_flaky_tests
         JSON

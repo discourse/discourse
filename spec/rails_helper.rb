@@ -612,20 +612,81 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
-          wait_for_ember_boot
-          wait_for_client_settled(method_name)
+          wait_for_navigation_settled(method_name)
           result
         end
       end
 
       private
 
-      # `<discourse-assets>` is only present on Ember pages; `ember-application`
-      # is added to the root element (`#main`) once Ember mounts.
-      def wait_for_ember_boot
+      # Collapses the post-navigation Ember-boot + client-settled waits into
+      # one Playwright IPC. The previous implementation issued three IPC
+      # round-trips per `visit`/`refresh`/`go_back`/`go_forward`/
+      # `resize_window_to`:
+      #
+      #   1. `has_no_css?("discourse-assets", wait: 0)` — non-Ember-page check.
+      #   2. `assert_selector("#main.ember-application")` — wait for Ember mount.
+      #   3. `evaluate_async_script(window.clientSettled(...))` — drain pending
+      #      AJAX/DOM events.
+      #
+      # The ember-mount and pending-events checks both happen entirely
+      # browser-side, so we collapse the three round-trips into a single
+      # `evaluate_async_script` whose JS:
+      #
+      #   - Returns immediately on non-Ember pages (no `<discourse-assets>`).
+      #   - Polls for `window.clientSettled` to be defined; that initializer
+      #     fires after `discourse-bootstrap`, i.e. once Ember has mounted on
+      #     `#main`. Polling with `setTimeout(0)` is cheaper than the
+      #     `MutationObserver(subtree:true, attributes:true)` iter-24 used,
+      #     which observed the entire document on every DOM change.
+      #   - Awaits `window.clientSettled(...)` to drain pending AJAX/DOM events.
+      #
+      # iter-3's `evaluate_async_script` patch already collapses the
+      # `evaluate_handle + wrap_node` pair into a single `evaluate`, so this
+      # IPC is one Playwright round-trip.
+      def wait_for_navigation_settled(method_name)
         session = @driver.send(:session)
-        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
-        session.assert_selector("#main.ember-application", visible: :all)
+        timeout_ms = Capybara.default_max_wait_time * 1000
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+          now = Time.now.to_f
+          puts "[#{now}] #{method_name}: START"
+        end
+
+        result = session.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          const timeoutMs = #{timeout_ms};
+
+          (async () => {
+            try {
+              if (!document.querySelector('discourse-assets')) {
+                done();
+                return;
+              }
+
+              const start = Date.now();
+              while (!window.clientSettled) {
+                if (Date.now() - start > timeoutMs) {
+                  done(`Timeout waiting for Ember boot after ${timeoutMs}ms`);
+                  return;
+                }
+                await new Promise((r) => setTimeout(r, 0));
+              }
+
+              const remaining = Math.max(timeoutMs - (Date.now() - start), 1000);
+              await window.clientSettled(remaining);
+              done();
+            } catch (error) {
+              done(error.message || String(error));
+            }
+          })();
+        JS
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
+        end
+
+        raise result if result.is_a?(String)
       end
     end
 
@@ -950,6 +1011,12 @@ RSpec.configure do |config|
 
     mutex = Mutex.new
     condition_variable = ConditionVariable.new
+    # Signalled by the backtrace_logger thread once it has re-entered
+    # `condition_variable.wait` and is ready for the next example. Replaces a
+    # `sleep 0.01 while !is_waiting` spin-wait that paid ~10ms per example on
+    # the critical path of the around-hook ensure (≈2s wall per worker × 8
+    # workers ≈ 0.5% step_sec).
+    ready_condition_variable = ConditionVariable.new
     test_running = false
     is_waiting = false
 
@@ -958,6 +1025,7 @@ RSpec.configure do |config|
         loop do
           mutex.synchronize do
             is_waiting = true
+            ready_condition_variable.signal
             condition_variable.wait(mutex)
             is_waiting = false
           end
@@ -999,7 +1067,7 @@ RSpec.configure do |config|
       ensure
         mutex.synchronize { test_running = false }
         backtrace_logger.wakeup
-        sleep 0.01 while !mutex.synchronize { is_waiting }
+        mutex.synchronize { ready_condition_variable.wait(mutex) until is_waiting }
       end
     end
 
