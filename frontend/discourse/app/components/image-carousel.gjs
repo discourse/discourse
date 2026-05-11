@@ -56,7 +56,6 @@ export default class ImageCarousel extends Component {
 
   setupCarousel = modifier((element) => {
     this.carouselElement = element;
-    return () => (this.carouselElement = null);
   });
 
   registerWrapSlot = modifier((element, [which]) => {
@@ -125,18 +124,10 @@ export default class ImageCarousel extends Component {
 
     return () => {
       controller.abort();
-
       this.wrapSlotObserver?.disconnect();
-      this.wrapSlotObserver = null;
-
       clearTimeout(this.scrollStopTimer);
-
       cancelAnimationFrame(initialScroll);
       this.cancelAnimation();
-
-      this.returnMovedElement();
-
-      this.trackElement = null;
     };
   });
 
