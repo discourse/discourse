@@ -82,7 +82,15 @@ module DiscourseAi
           log = nil
 
           sdk_params = build_converse_params(prompt, model_params, dialect)
-          request_body = sdk_params.to_json
+          # Image bytes in sdk_params are raw binary (ASCII-8BIT) and cannot be
+          # encoded as UTF-8 JSON for logging. Fall back to a placeholder so the
+          # request can still proceed when binary payloads are present.
+          request_body =
+            begin
+              sdk_params.to_json
+            rescue EncodingError
+              "[converse params contained binary payload, omitted from log]"
+            end
 
           log =
             start_log(
