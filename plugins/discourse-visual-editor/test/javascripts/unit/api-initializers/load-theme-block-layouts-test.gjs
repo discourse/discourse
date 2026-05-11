@@ -13,7 +13,7 @@ import {
   subscribeToBlockLayoutUpdates,
 } from "discourse/plugins/discourse-visual-editor/discourse/api-initializers/load-theme-block-layouts";
 
-@block("ve-hydrate-test:tile", { args: { label: { type: "string" } } })
+@block("ve:hydrate-test-tile", { args: { label: { type: "string" } } })
 class HydrateTile extends Component {
   <template>
     <div>{{@label}}</div>

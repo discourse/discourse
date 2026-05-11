@@ -11,12 +11,12 @@ import {
   setEntryArg,
 } from "discourse/plugins/discourse-visual-editor/discourse/lib/mutate-layout";
 
-@block("mutate-test:leaf")
+@block("ve:mutate-test-leaf")
 class LeafBlock extends Component {
   <template>leaf</template>
 }
 
-@block("mutate-test:container", { container: true })
+@block("ve:mutate-test-container", { container: true })
 class ContainerBlock extends Component {
   <template>
     <div class="container">{{yield}}</div>
@@ -26,7 +26,7 @@ class ContainerBlock extends Component {
 function makeLayout() {
   return [
     {
-      block: "mutate-test:leaf",
+      block: "ve:mutate-test-leaf",
       args: { title: "First" },
       __stableKey: 1,
     },
@@ -48,13 +48,13 @@ function makeLayout() {
 module("Unit | Discourse Visual Editor | mutate-layout", function () {
   module("entryKey", function () {
     test("returns the composite key for string-referenced entries", function (assert) {
-      const entry = { block: "mutate-test:leaf", __stableKey: 7 };
-      assert.strictEqual(entryKey(entry), "mutate-test:leaf:7");
+      const entry = { block: "ve:mutate-test-leaf", __stableKey: 7 };
+      assert.strictEqual(entryKey(entry), "ve:mutate-test-leaf:7");
     });
 
     test("returns the composite key for class-referenced entries", function (assert) {
       const entry = { block: LeafBlock, __stableKey: 9 };
-      assert.strictEqual(entryKey(entry), "mutate-test:leaf:9");
+      assert.strictEqual(entryKey(entry), "ve:mutate-test-leaf:9");
     });
 
     test("returns null when the entry has no stableKey", function (assert) {
@@ -71,19 +71,19 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
   module("findEntry", function () {
     test("finds a top-level entry by composite key", function (assert) {
       const layout = makeLayout();
-      const found = findEntry(layout, "mutate-test:leaf:1");
+      const found = findEntry(layout, "ve:mutate-test-leaf:1");
       assert.strictEqual(found, layout[0]);
     });
 
     test("finds a nested entry by composite key", function (assert) {
       const layout = makeLayout();
-      const found = findEntry(layout, "mutate-test:leaf:3");
+      const found = findEntry(layout, "ve:mutate-test-leaf:3");
       assert.strictEqual(found, layout[1].children[0]);
     });
 
     test("returns null when the key isn't present", function (assert) {
       const layout = makeLayout();
-      assert.strictEqual(findEntry(layout, "mutate-test:leaf:999"), null);
+      assert.strictEqual(findEntry(layout, "ve:mutate-test-leaf:999"), null);
     });
 
     test("returns null for null/undefined layouts", function (assert) {
@@ -101,7 +101,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
 
       const { layout: next, changed } = replaceEntryArgs(
         layout,
-        "mutate-test:leaf:1",
+        "ve:mutate-test-leaf:1",
         (current) => ({ ...current, title: "Updated" })
       );
 
@@ -135,7 +135,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
 
       const { layout: next, changed } = replaceEntryArgs(
         layout,
-        "mutate-test:leaf:3",
+        "ve:mutate-test-leaf:3",
         () => ({ title: "Replaced" })
       );
 
@@ -167,7 +167,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const layout = makeLayout();
       const { layout: next, changed } = setEntryArg(
         layout,
-        "mutate-test:container:2",
+        "ve:mutate-test-container:2",
         "gap",
         16
       );
@@ -186,7 +186,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       ];
       const { layout: next } = setEntryArg(
         layout,
-        "mutate-test:leaf:42",
+        "ve:mutate-test-leaf:42",
         "title",
         "Goodbye"
       );
@@ -200,7 +200,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const original = layout[0];
       const containerOriginal = layout[1];
 
-      const result = removeEntry(layout, "mutate-test:leaf:1");
+      const result = removeEntry(layout, "ve:mutate-test-leaf:1");
 
       assert.true(result.changed);
       assert.strictEqual(result.removed, original);
@@ -216,7 +216,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const layout = [
         ...makeLayout(),
         {
-          block: "mutate-test:leaf",
+          block: "ve:mutate-test-leaf",
           args: { title: "Trailing" },
           __stableKey: 99,
         },
@@ -224,7 +224,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const trailingOriginal = layout[2];
       const containerOriginal = layout[1];
 
-      const result = removeEntry(layout, "mutate-test:leaf:3");
+      const result = removeEntry(layout, "ve:mutate-test-leaf:3");
 
       assert.true(result.changed);
       assert.strictEqual(result.removed, containerOriginal.children[0]);
@@ -259,13 +259,13 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
     test("inserts before a top-level target", function (assert) {
       const layout = makeLayout();
       const newEntry = {
-        block: "mutate-test:leaf",
+        block: "ve:mutate-test-leaf",
         args: { title: "New" },
         __stableKey: 50,
       };
       const result = insertEntryAt(
         layout,
-        "mutate-test:container:2",
+        "ve:mutate-test-container:2",
         newEntry,
         "before"
       );
@@ -279,13 +279,13 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
     test("inserts after a top-level target", function (assert) {
       const layout = makeLayout();
       const newEntry = {
-        block: "mutate-test:leaf",
+        block: "ve:mutate-test-leaf",
         args: { title: "After" },
         __stableKey: 51,
       };
       const result = insertEntryAt(
         layout,
-        "mutate-test:leaf:1",
+        "ve:mutate-test-leaf:1",
         newEntry,
         "after"
       );
@@ -298,13 +298,13 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
     test("inserts inside a container as the first child", function (assert) {
       const layout = makeLayout();
       const newEntry = {
-        block: "mutate-test:leaf",
+        block: "ve:mutate-test-leaf",
         args: { title: "Inside" },
         __stableKey: 52,
       };
       const result = insertEntryAt(
         layout,
-        "mutate-test:container:2",
+        "ve:mutate-test-container:2",
         newEntry,
         "inside"
       );
@@ -321,7 +321,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
     test("appends to root when targetKey is null", function (assert) {
       const layout = makeLayout();
       const newEntry = {
-        block: "mutate-test:leaf",
+        block: "ve:mutate-test-leaf",
         args: { title: "End" },
         __stableKey: 53,
       };
@@ -333,7 +333,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
     test("returns changed=false when targetKey isn't present", function (assert) {
       const layout = makeLayout();
       const newEntry = {
-        block: "mutate-test:leaf",
+        block: "ve:mutate-test-leaf",
         args: {},
         __stableKey: 54,
       };
@@ -347,15 +347,15 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const layout = makeLayout();
       const result = moveEntry(
         layout,
-        "mutate-test:leaf:1",
-        "mutate-test:container:2",
+        "ve:mutate-test-leaf:1",
+        "ve:mutate-test-container:2",
         "after"
       );
       assert.true(result.changed);
       assert.strictEqual(result.layout[0], layout[1], "container is now first");
       assert.strictEqual(
         result.layout[1].block,
-        "mutate-test:leaf",
+        "ve:mutate-test-leaf",
         "leaf is now second"
       );
       assert.strictEqual(
@@ -369,8 +369,8 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const layout = makeLayout();
       const result = moveEntry(
         layout,
-        "mutate-test:leaf:1",
-        "mutate-test:container:2",
+        "ve:mutate-test-leaf:1",
+        "ve:mutate-test-container:2",
         "inside"
       );
       assert.true(result.changed);
@@ -391,8 +391,8 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const layout = makeLayout();
       const result = moveEntry(
         layout,
-        "mutate-test:leaf:3",
-        "mutate-test:leaf:1",
+        "ve:mutate-test-leaf:3",
+        "ve:mutate-test-leaf:1",
         "before"
       );
       assert.true(result.changed);
@@ -413,8 +413,8 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const layout = makeLayout();
       const result = moveEntry(
         layout,
-        "mutate-test:leaf:1",
-        "mutate-test:leaf:1",
+        "ve:mutate-test-leaf:1",
+        "ve:mutate-test-leaf:1",
         "after"
       );
       assert.false(result.changed);
@@ -425,8 +425,8 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const layout = makeLayout();
       const result = moveEntry(
         layout,
-        "mutate-test:container:2",
-        "mutate-test:leaf:3",
+        "ve:mutate-test-container:2",
+        "ve:mutate-test-leaf:3",
         "before"
       );
       assert.false(result.changed, "self-nesting cycle is blocked");
@@ -438,7 +438,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const result = moveEntry(
         layout,
         "absent:0",
-        "mutate-test:leaf:1",
+        "ve:mutate-test-leaf:1",
         "after"
       );
       assert.false(result.changed);
@@ -449,7 +449,7 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       const layout = makeLayout();
       const result = moveEntry(
         layout,
-        "mutate-test:leaf:1",
+        "ve:mutate-test-leaf:1",
         "absent:0",
         "after"
       );

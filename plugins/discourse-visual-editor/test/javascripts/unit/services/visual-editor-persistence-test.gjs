@@ -18,7 +18,7 @@ import pretender, {
   response,
 } from "discourse/tests/helpers/create-pretender";
 
-@block("ve-persist-test:tile", { args: { title: { type: "string" } } })
+@block("ve:persist-test-tile", { args: { title: { type: "string" } } })
 class PersistTile extends Component {
   <template>
     <div class="tile">{{@title}}</div>
@@ -61,8 +61,8 @@ module(
       const stableKey = layout[0].__stableKey;
 
       this.editor.selectBlock({
-        key: `ve-persist-test:tile:${stableKey}`,
-        name: "ve-persist-test:tile",
+        key: `ve:persist-test-tile:${stableKey}`,
+        name: "ve:persist-test-tile",
         args: { title: "Original" },
         metadata: { args: { title: { type: "string" } } },
       });
@@ -74,7 +74,7 @@ module(
         assert.strictEqual(body.outlet_name, "homepage-blocks");
         const payload = JSON.parse(body.layout_json);
         assert.strictEqual(payload.schema_version, 1);
-        assert.strictEqual(payload.layout[0].block, "ve-persist-test:tile");
+        assert.strictEqual(payload.layout[0].block, "ve:persist-test-tile");
         assert.strictEqual(payload.layout[0].args.title, "Edited");
         assert.step("posted");
         return response({
@@ -98,8 +98,8 @@ module(
       const stableKey = layout[0].__stableKey;
 
       this.editor.selectBlock({
-        key: `ve-persist-test:tile:${stableKey}`,
-        name: "ve-persist-test:tile",
+        key: `ve:persist-test-tile:${stableKey}`,
+        name: "ve:persist-test-tile",
         args: { title: "Original" },
         metadata: { args: { title: { type: "string" } } },
       });
@@ -146,8 +146,8 @@ module(
       const stableKey = layout[0].__stableKey;
 
       this.editor.selectBlock({
-        key: `ve-persist-test:tile:${stableKey}`,
-        name: "ve-persist-test:tile",
+        key: `ve:persist-test-tile:${stableKey}`,
+        name: "ve:persist-test-tile",
         args: { title: "Original" },
         metadata: { args: { title: { type: "string" } } },
       });
