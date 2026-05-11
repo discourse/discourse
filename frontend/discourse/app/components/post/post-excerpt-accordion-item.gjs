@@ -101,7 +101,7 @@ export default class PostExcerptAccordionItem extends Component {
           {{on "click" this.onClickHeader}}
         >
           <div class="d-post-excerpt-accordion-item__metadata">
-            {{#if (has-block "itemMetadata")}}
+            {{#if @hasItemMetadataBlock}}
               {{yield this.excerptPost to="itemMetadata"}}
             {{else}}
               <UserLink
@@ -150,8 +150,8 @@ export default class PostExcerptAccordionItem extends Component {
               class="d-post-excerpt-accordion-item__content"
               {{onResize this.checkOverflow}}
             >
-              {{#if (has-block "beforeItemContent")}}
-                {{yield this.excerptPost to="beforeAccordionItemContent"}}
+              {{#if @hasBeforeItemContentBlock}}
+                {{yield this.excerptPost to="beforeItemContent"}}
               {{/if}}
 
               <PostCookedHtml
@@ -162,7 +162,7 @@ export default class PostExcerptAccordionItem extends Component {
             </blockquote>
 
             <div class="d-post-excerpt-accordion-item__read-more">
-              <a href={{this.excerptPost.post_url}} class="read-more-link">
+              <a href={{this.excerptPost.url}} class="read-more-link">
                 {{i18n "read_more"}}
               </a>
             </div>
