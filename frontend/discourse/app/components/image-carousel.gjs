@@ -222,18 +222,16 @@ export default class ImageCarousel extends Component {
 
     if (prefersReducedMotion()) {
       this.cancelAnimation();
-      // If a wrap was just set up, finishWrap teleports to the destination
-      // slide and overrides the slot target. Otherwise teleport directly.
+      // finishWrap teleports to the destination if a wrap is set up.
       if (!this.finishWrap()) {
-        // "instant" overrides CSS scroll-behavior: smooth.
         track.scrollTo({ left: target, behavior: "instant" });
       }
       return;
     }
 
-    // Suspend snap + CSS smooth-scroll for the rAF's lifetime: smooth would
-    // re-animate each scrollLeft assignment (tripping the divergence abort);
-    // snap would yank intermediate positions to snap points. Idempotent.
+    // Suspend snap + smooth-scroll for the rAF's lifetime: smooth would
+    // re-animate each assignment (tripping the divergence abort); snap would
+    // yank intermediate positions to snap points.
     track.style.scrollSnapType = "none";
     track.style.scrollBehavior = "auto";
 
@@ -254,31 +252,24 @@ export default class ImageCarousel extends Component {
 
       const current = t.scrollLeft;
 
-      // Abort if external interaction (drag/swipe/wheel) perturbed position.
-      // Leave any wrap-moved element parked; updateDragWrapContent /
-      // onScrollSettled clean up based on where the user ends up.
+      // External interaction (drag/swipe/wheel) perturbed position: abort
+      // and leave any wrap-moved element parked for the gesture handlers.
       if (Math.abs(current - lastSet) > 2) {
         this.cancelAnimation();
         return;
       }
 
       const distance = this.animationTarget - current;
-      // Within a couple of pixels: snap to target. Exponential approach
-      // crawls in sub-pixel land otherwise and reads as an fps stutter.
+      // Snap to target near the end — exponential approach crawls in
+      // sub-pixel land and reads as an fps stutter.
       if (Math.abs(distance) < 2) {
-        // For a wrap, finishWrap teleports directly to the destination slide
-        // — skip the intermediate scrollLeft = animationTarget assignment so
-        // the browser's snap engine never observes the wrap slot's center as
-        // a committed scroll target. For non-wraps it returns false and we
-        // snap to animationTarget here.
+        // For a wrap, finishWrap teleports directly to the destination so
+        // the snap engine never sees the slot's center as committed.
         if (!this.finishWrap()) {
           t.scrollLeft = this.animationTarget;
         }
-        // Inline cleanup (not cancelAnimation): defer the snap/smooth-scroll
-        // restore to the next frame. Otherwise the snap engine, which still
-        // has its pre-teleport target committed, smooth-scrolls scrollLeft
-        // back toward it and (with scroll-snap-stop: always) lands at the
-        // first snap point along the way.
+        // Defer style restore one frame: snap still has the pre-teleport
+        // target committed and would smooth-scroll back toward it.
         cancelAnimationFrame(this.animationFrame);
         this.animationFrame = null;
         this.programmaticScroll = false;
@@ -286,7 +277,6 @@ export default class ImageCarousel extends Component {
         return;
       }
 
-      // Frame-rate-independent exponential approach.
       const dt = lastFrameTime === null ? 1000 / 60 : now - lastFrameTime;
       lastFrameTime = now;
       const rate = 1 - 0.01 ** (dt / ANIMATION_DURATION_MS);
@@ -317,15 +307,11 @@ export default class ImageCarousel extends Component {
     }
   }
 
-  // For wrap-crossing nav, move the destination item's element into the
-  // adjacent (initially empty) wrap slot so the scroll animates a single
-  // slide-width to it. finishWrap moves it back and teleports afterwards.
+  // For wrap-crossing nav, park the destination item in the adjacent slot so
+  // the scroll only spans one slide-width; finishWrap teleports afterwards.
   scrollTargetFor(index, direction) {
-    // Clean up any prior wrap state before deciding a new target. If a wrap
-    // is mid-flight (rAF running), teleport to its destination so the next
-    // animation starts from a clean position, and cancel the rAF so the new
-    // animateScrollTo starts fresh (otherwise the old rAF's lastSet would
-    // diverge and trigger its abort instead of redirecting smoothly).
+    // If a wrap rAF is in flight, snap it home so the new animation starts
+    // clean (otherwise the old rAF's divergence check trips its abort).
     if (this.movedElement && this.animationFrame !== null) {
       this.finishWrap();
       cancelAnimationFrame(this.animationFrame);
@@ -383,9 +369,8 @@ export default class ImageCarousel extends Component {
 
   @bind
   onWrapSlotIntersect(entries) {
-    // Don't fight an in-flight click-wrap rAF; its own finish branch handles
-    // the teleport. Perturbing scrollLeft would trip the rAF's external-
-    // scroll abort.
+    // rAF finish handles its own teleport; perturbing scrollLeft would trip
+    // its external-scroll abort.
     if (this.animationFrame !== null) {
       return;
     }
@@ -404,11 +389,8 @@ export default class ImageCarousel extends Component {
       if (!destSlide || !track) {
         return;
       }
-      // IO entries reflect the intersection state at the time it was recorded,
-      // not at callback time. If a rAF-finish briefly set scrollLeft to the
-      // slot's center before teleporting away, the entry says "intersecting"
-      // even though we're no longer there. Verify against current scrollLeft
-      // before acting on it.
+      // IO entries can be stale by callback time (e.g. rAF-finish briefly
+      // touched the slot then teleported away). Verify current position.
       if (
         Math.abs(
           this.computeTargetScrollLeft(entry.target) - track.scrollLeft
@@ -416,16 +398,14 @@ export default class ImageCarousel extends Component {
       ) {
         continue;
       }
-      // If a drag-wrap parked the element here, hand it back to its slide.
       if (
         this.movedElement &&
         this.movedElement.parentElement === entry.target
       ) {
         this.returnMovedElement();
       }
-      // Disable snap + smooth around the teleport. Without this, the snap
-      // engine remembers its pre-teleport target (the wrap slot) and
-      // smooth-scrolls back to it after we jump away.
+      // Suspend snap + smooth around the teleport, otherwise the snap engine
+      // smooth-scrolls back to the pre-teleport target.
       track.style.scrollSnapType = "none";
       track.style.scrollBehavior = "auto";
       track.scrollTo({
@@ -522,9 +502,7 @@ export default class ImageCarousel extends Component {
 
   @bind
   onScrollSettled() {
-    // Browser can fire scrollend mid-rAF; finishing the wrap here would
-    // trip the rAF's external-scroll abort. The rAF's finish branch handles
-    // its own wrap.
+    // scrollend can fire mid-rAF; let its finish branch handle the wrap.
     if (this.animationFrame !== null) {
       return;
     }
@@ -532,10 +510,8 @@ export default class ImageCarousel extends Component {
     this.isScrolling = false;
     this.programmaticScroll = false;
     this.suppressDragWrap = false;
-    // Only teleport (finishWrap) if scroll actually came to rest at a wrap
-    // slot. If updateDragWrapContent set movedElement on a momentum
-    // overshoot but snap pulled us back to a real slide, just return the
-    // moved element silently — don't yank scrollLeft to a different slide.
+    // Only teleport if we actually rest in a wrap slot — otherwise a momentum
+    // overshoot that snapped back to a real slide would yank scrollLeft.
     if (this.atWrapSlot()) {
       this.finishWrap();
     } else {
@@ -543,8 +519,6 @@ export default class ImageCarousel extends Component {
     }
     this.updateIndex();
 
-    // Run any keyboard nav queued during the browser scroll; direction
-    // re-resolves against the settled currentIndex.
     if (this.pendingKeyDirection) {
       const direction = this.pendingKeyDirection;
       this.pendingKeyDirection = null;
@@ -556,21 +530,19 @@ export default class ImageCarousel extends Component {
   onScroll() {
     this.isScrolling = true;
 
-    // Optimistic update while scrolling for real-time dot feedback
+    // Optimistic update for real-time dot feedback.
     if (!isTesting()) {
       throttle(this, this.updateIndex, SCROLL_THROTTLE_MS);
     }
 
-    // Fallback for browsers without scrollend support (Safari < 17.4)
+    // Fallback for browsers without scrollend (Safari < 17.4).
     if (!USE_SCROLLEND) {
       clearTimeout(this.scrollStopTimer);
       this.scrollStopTimer = setTimeout(this.onScrollSettled, 150);
     }
 
-    // While the user is drag-scrolling past the strip's ends, move the
-    // wrap-around item's element into the adjacent slot so they see real
-    // content instead of an empty slot. Click-wrap animations skip this —
-    // they manage moves themselves.
+    // During a user drag past the ends, park the wrap item in the adjacent
+    // slot. Click-wrap rAFs manage their own moves.
     if (!this.programmaticScroll) {
       this.updateDragWrapContent();
     }
