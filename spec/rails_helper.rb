@@ -612,81 +612,20 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
-          wait_for_navigation_settled(method_name)
+          wait_for_ember_boot
+          wait_for_client_settled(method_name)
           result
         end
       end
 
       private
 
-      # Collapses the post-navigation Ember-boot + client-settled waits into
-      # one Playwright IPC. The previous implementation issued three IPC
-      # round-trips per `visit`/`refresh`/`go_back`/`go_forward`/
-      # `resize_window_to`:
-      #
-      #   1. `has_no_css?("discourse-assets", wait: 0)` — non-Ember-page check.
-      #   2. `assert_selector("#main.ember-application")` — wait for Ember mount.
-      #   3. `evaluate_async_script(window.clientSettled(...))` — drain pending
-      #      AJAX/DOM events.
-      #
-      # The ember-mount and pending-events checks both happen entirely
-      # browser-side, so we collapse the three round-trips into a single
-      # `evaluate_async_script` whose JS:
-      #
-      #   - Returns immediately on non-Ember pages (no `<discourse-assets>`).
-      #   - Polls for `window.clientSettled` to be defined; that initializer
-      #     fires after `discourse-bootstrap`, i.e. once Ember has mounted on
-      #     `#main`. Polling with `setTimeout(0)` is cheaper than the
-      #     `MutationObserver(subtree:true, attributes:true)` iter-24 used,
-      #     which observed the entire document on every DOM change.
-      #   - Awaits `window.clientSettled(...)` to drain pending AJAX/DOM events.
-      #
-      # iter-3's `evaluate_async_script` patch already collapses the
-      # `evaluate_handle + wrap_node` pair into a single `evaluate`, so this
-      # IPC is one Playwright round-trip.
-      def wait_for_navigation_settled(method_name)
+      # `<discourse-assets>` is only present on Ember pages; `ember-application`
+      # is added to the root element (`#main`) once Ember mounts.
+      def wait_for_ember_boot
         session = @driver.send(:session)
-        timeout_ms = Capybara.default_max_wait_time * 1000
-
-        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
-          now = Time.now.to_f
-          puts "[#{now}] #{method_name}: START"
-        end
-
-        result = session.evaluate_async_script(<<~JS)
-          const done = arguments[0];
-          const timeoutMs = #{timeout_ms};
-
-          (async () => {
-            try {
-              if (!document.querySelector('discourse-assets')) {
-                done();
-                return;
-              }
-
-              const start = Date.now();
-              while (!window.clientSettled) {
-                if (Date.now() - start > timeoutMs) {
-                  done(`Timeout waiting for Ember boot after ${timeoutMs}ms`);
-                  return;
-                }
-                await new Promise((r) => setTimeout(r, 0));
-              }
-
-              const remaining = Math.max(timeoutMs - (Date.now() - start), 1000);
-              await window.clientSettled(remaining);
-              done();
-            } catch (error) {
-              done(error.message || String(error));
-            }
-          })();
-        JS
-
-        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
-          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
-        end
-
-        raise result if result.is_a?(String)
+        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
+        session.assert_selector("#main.ember-application", visible: :all)
       end
     end
 
@@ -943,37 +882,6 @@ RSpec.configure do |config|
       end
     end
     Playwright::Error.prepend(PlaywrightErrorPatch)
-
-    # Skip the playwright-ruby-client gem's per-IPC stack-frame metadata
-    # construction when no tracing is active. The gem's
-    # `Playwright::Channel#with_logging` walks the entire Ruby call stack
-    # via `Kernel#caller_locations` on EVERY Playwright IPC, then maps
-    # each frame into a `{file:, line:, function:}` Hash to build
-    # `metadata[:stack]`. That stack array is consumed only by
-    # `Playwright::Connection#async_send_message_to_server` when
-    # `@tracing_count > 0` (connection.rb:116). Discourse system specs
-    # only set `@tracing_count > 0` for examples with `:trace`
-    # metadata, used only when explicitly debugging a flake — i.e., for
-    # >99% of suite IPCs the metadata is built and immediately
-    # discarded.
-    #
-    # Mechanism: prepend `Channel#with_logging` so that when
-    # `@connection`'s `@tracing_count` is 0, we call the block with
-    # `nil` metadata, skipping the caller_locations walk and Hash array
-    # construction. When tracing IS active, delegate to the original
-    # `with_logging` to preserve full metadata. The playwright server
-    # accepts `metadata: {}` for non-tracing IPCs (error semantics are
-    # unchanged; only diagnostic output is reduced).
-    module PlaywrightChannelSkipMetadataPatch
-      private def with_logging(title = nil, &block)
-        if @connection.instance_variable_get(:@tracing_count) > 0
-          super(title, &block)
-        else
-          block.call(nil)
-        end
-      end
-    end
-    Playwright::Channel.prepend(PlaywrightChannelSkipMetadataPatch)
 
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
