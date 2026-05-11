@@ -3636,6 +3636,8 @@ gl:
         sections:
           reports:
             title: "Informes"
+        period:
+          custom: "Personalizado"
         reports:
           trend_title: "Cambio do %{percent}. Actualmente %{current}, era %{prev} no período anterior."
           today: "Hoxe"

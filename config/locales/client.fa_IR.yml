@@ -5167,6 +5167,10 @@ fa_IR:
             title: "گزارش"
           traffic:
             title: "ترافیک سایت"
+        period:
+          last_7_days: "۷ روز گذشته"
+          last_30_days: "۳۰ روز گذشته"
+          custom: "سفارشی"
         reports:
           percent_change_tooltip: "%{percent} تغییر."
           percent_change_tooltip_previous_value:

@@ -600,6 +600,8 @@ ur:
         other_drafts:
           one: "+%{count} دیگر مسودہ"
           other: "+%{count} دیگر مسودے"
+    embed_mode:
+      editing_post: "پوسٹ میں ترمیم جاری"
     topic_count_all:
       one: "%{count} نیا موضوع دیکھیں"
       other: "%{count} نئے موضوعات دیکھیں"
@@ -5838,6 +5840,11 @@ ur:
         sections:
           reports:
             title: "گزارشات"
+        period:
+          last_7_days: "پچھلے 7 دن"
+          last_30_days: "پچھلے 30 دن"
+          last_3_months: "گزشتہ 3 ماہ"
+          custom: "اپنی مرضی کا"
         reports:
           trend_title: "%{percent} تبدیلی۔ فی الحال %{current}، پچھلے عرصے میں %{prev} تھا۔"
           percent_change_tooltip: "تبدیلی: %{percent}"

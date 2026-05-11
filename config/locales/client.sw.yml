@@ -2576,6 +2576,8 @@ sw:
         security_tab: "Ulinzi"
         report_filter_any: "yoyote"
         disabled: Imezuiwa
+        period:
+          custom: "Binafsi"
         reports:
           today: "Leo"
           yesterday: "Jana"

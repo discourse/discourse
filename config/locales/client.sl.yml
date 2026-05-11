@@ -3952,6 +3952,10 @@ sl:
         sections:
           reports:
             title: "Poročila"
+        period:
+          last_7_days: "Zadnjih 7 dni"
+          last_30_days: "Zadnjih 30 dni"
+          custom: "Po meri"
         reports:
           trend_title: "%{percent} sprememba. Trenutno %{current}, je bilo %{prev} v prejšnjem obdobju."
           today: "Danes"

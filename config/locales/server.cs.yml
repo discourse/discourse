@@ -1681,7 +1681,7 @@ cs:
         os: Operační systém
         login_time: Čas přihlášení
       description: "Podrobnosti o nových přihlášeních, které se podezřele liší od předchozích přihlášení."
-    staff_logins:
+    admin_logins:
       title: "Přihlášení správců"
       labels:
         user: Uživatel

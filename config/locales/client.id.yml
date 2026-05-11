@@ -2433,6 +2433,9 @@ id:
         report_filter_any: "apa saja"
         disabled: Dinonaktifkan
         custom_date_range: Rentang tanggal tertentu
+        period:
+          last_7_days: "7 hari terakhir"
+          last_30_days: "30 hari terakhir"
         reports:
           last_7_days: "7 terakhir"
           last_30_days: "30 terakhir"

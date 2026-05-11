@@ -949,7 +949,7 @@ pt:
       labels:
         user: Utilizador
         location: Localização
-    staff_logins:
+    admin_logins:
       labels:
         user: Utilizador
         location: Localização

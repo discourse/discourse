@@ -1111,7 +1111,7 @@ el:
         device: Συσκευή
         os: Λειτουργικό Σύστημα
         login_time: Ώρα Σύνδεσης
-    staff_logins:
+    admin_logins:
       title: "Σύνδεση Διαχειριστή"
       labels:
         user: Χρήστης

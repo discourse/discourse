@@ -5672,6 +5672,11 @@ it:
             title: "Report"
           traffic:
             title: "Traffico del sito"
+        period:
+          last_7_days: "Ultimi 7 giorni"
+          last_30_days: "Ultimi 30 giorni"
+          last_3_months: "Ultimi 3 mesi"
+          custom: "Personalizzato"
         reports:
           trend_title: "Variazione del %{percent}. Attualmente %{current}, era %{prev} nel periodo precedente."
           percent_change_tooltip: "%{percent} di modifica."

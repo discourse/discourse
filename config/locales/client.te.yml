@@ -4566,6 +4566,9 @@ te:
         sections:
           reports:
             title: "నివేదికలు"
+        period:
+          last_3_months: "గత 3 నెలలు"
+          custom: "అనురూప"
         reports:
           trend_title: "%{percent} మార్పు. ప్రస్తుతం %{current}, మునుపటి వ్యవధిలో %{prev} ."
           today: "ఈరోజు"

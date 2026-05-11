@@ -5739,6 +5739,11 @@ nl:
             title: "Rapporten"
           traffic:
             title: "Siteverkeer"
+        period:
+          last_7_days: "Afgelopen 7 dagen"
+          last_30_days: "Afgelopen 30 dagen"
+          last_3_months: "Afgelopen 3 maanden"
+          custom: "Aangepast"
         reports:
           trend_title: "%{percent} wijziging. Momenteel %{current}, was %{prev} in voorgaande periode."
           percent_change_tooltip: "%{percent} verandering."

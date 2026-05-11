@@ -701,7 +701,7 @@ bg:
       labels:
         user: Потребител
         location: Локация
-    staff_logins:
+    admin_logins:
       labels:
         user: Потребител
         location: Локация

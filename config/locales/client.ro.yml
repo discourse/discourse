@@ -4277,6 +4277,10 @@ ro:
             title: "Rapoarte"
           traffic:
             title: "Trafic site"
+        period:
+          last_7_days: "Ultimele 7 zile"
+          last_30_days: "Ultimele 30 de zile"
+          custom: "Personalizat"
         reports:
           percent_change_tooltip_previous_value:
             yesterday:

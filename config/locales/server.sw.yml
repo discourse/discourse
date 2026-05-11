@@ -730,7 +730,7 @@ sw:
       labels:
         user: Mtumiaji
         location: Sehemu
-    staff_logins:
+    admin_logins:
       labels:
         user: Mtumiaji
         location: Sehemu

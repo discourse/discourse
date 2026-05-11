@@ -757,6 +757,7 @@ ru:
       allow_access: "Разрешить доступ"
       continue_as_guest: "Продолжить как Гость"
       be_first_to_reply: "Будь первым, кто ответит!"
+      editing_post: "Редактирование поста"
     topic_count_all:
       one: "Посмотреть %{count} новую тему"
       few: "Посмотреть %{count} новые темы"
@@ -6674,6 +6675,11 @@ ru:
             title: "отчетов"
           traffic:
             title: "Посещаемость сайта"
+        period:
+          last_7_days: "За последние 7 дней"
+          last_30_days: "За последние 30 дней"
+          last_3_months: "За последние 3 месяцев"
+          custom: "Другое"
         reports:
           trend_title: "Изменилось на %{percent}. В настоящее время — %{current}, было %{prev} в предыдущий период."
           percent_change_tooltip: "Изменение %{percent}."

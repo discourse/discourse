@@ -363,7 +363,7 @@ sr:
       labels:
         user: Korisnik
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: Korisnik
         location: Lokacija

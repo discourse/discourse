@@ -1140,7 +1140,7 @@ hr:
         user: Korisnik
         client_ip: IP klijenta
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: Korisnik
         location: Lokacija
