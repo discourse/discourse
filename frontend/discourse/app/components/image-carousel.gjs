@@ -188,7 +188,8 @@ export default class ImageCarousel extends Component {
   // Returns the real-slide index nearest to the viewport center. Clones map
   // to the real slide they visually represent, so a manual drag onto a clone
   // reads the same as being on the real slide it duplicates.
-  nearestRealIndex(track) {
+  nearestRealIndex() {
+    const track = this.trackElement;
     if (!track) {
       return this.currentIndex;
     }
@@ -386,7 +387,7 @@ export default class ImageCarousel extends Component {
       return;
     }
 
-    const newIndex = this.nearestRealIndex(this.trackElement);
+    const newIndex = this.nearestRealIndex();
     if (newIndex !== this.currentIndex) {
       this.currentIndex = newIndex;
     }
