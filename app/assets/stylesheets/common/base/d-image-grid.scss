@@ -175,6 +175,7 @@
     align-self: center;
     justify-content: center;
     gap: var(--space-1);
+    user-select: none;
   }
 
   &__nav {
@@ -241,6 +242,7 @@
     line-height: var(--line-height-medium);
     color: var(--primary-medium);
     text-align: center;
+    cursor: default;
   }
 
   &--single {
