@@ -54,6 +54,11 @@ export default class ImageCarousel extends Component {
     return () => this.slides.delete(index);
   });
 
+  setupCarousel = modifier((element) => {
+    this.carouselElement = element;
+    return () => (this.carouselElement = null);
+  });
+
   registerWrapSlot = modifier((element, [which]) => {
     this.wrapSlots.set(which, element);
     this.wrapSlotObserver?.observe(element);
@@ -61,11 +66,6 @@ export default class ImageCarousel extends Component {
       this.wrapSlotObserver?.unobserve(element);
       this.wrapSlots.delete(which);
     };
-  });
-
-  setupCarousel = modifier((element) => {
-    this.carouselElement = element;
-    return () => (this.carouselElement = null);
   });
 
   setupTrack = modifier((element) => {
