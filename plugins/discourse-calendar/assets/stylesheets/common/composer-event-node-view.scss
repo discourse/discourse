@@ -205,6 +205,25 @@
     align-items: center;
     gap: var(--space-1);
     min-width: 0;
+
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+
+      .composer-event__date-arrow {
+        margin: 0 auto;
+      }
+
+      &:not(.--multi-day) {
+        .composer-event__date-wrapper {
+          grid-column: 1 / -1;
+        }
+      }
+
+      &.--multi-day {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
   }
 
   .composer-event__date-arrow {

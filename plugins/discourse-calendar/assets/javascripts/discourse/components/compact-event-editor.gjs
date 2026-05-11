@@ -35,6 +35,20 @@ export default class CompactEventEditor extends Component {
     return !!this.args.endsAt;
   }
 
+  get isMultiDay() {
+    const start = this.formattedStartDate;
+    const end = this.formattedEndDate;
+    return !!start && !!end && start !== end;
+  }
+
+  get showInlineEndTime() {
+    return !this.args.allDay && !this.isMultiDay;
+  }
+
+  get showEndDateRow() {
+    return this.args.allDay || this.isMultiDay;
+  }
+
   get formattedStartDisplay() {
     if (!this.displayTime) {
       return "";
@@ -160,6 +174,13 @@ export default class CompactEventEditor extends Component {
       return;
     }
     this.args.onUpdateStart?.(m);
+
+    if (this.showInlineEndTime) {
+      this.args.onUpdateEnd?.(
+        this.combineDateTime(dateStr, this.endTimeForDate())
+      );
+      return;
+    }
 
     const endDateStr = this.formattedEndDate;
     if (endDateStr && dateStr > endDateStr) {
@@ -383,7 +404,12 @@ export default class CompactEventEditor extends Component {
           />
         </div>
 
-        <div class="composer-event__date-row">
+        <div
+          class={{concatClass
+            "composer-event__date-row"
+            (if this.showEndDateRow (unless @allDay "--multi-day"))
+          }}
+        >
           <div class="composer-event__date-wrapper">
             <input
               type="date"
@@ -404,39 +430,54 @@ export default class CompactEventEditor extends Component {
               {{on "change" this.onStartTimeChange}}
             />
           {{/unless}}
-        </div>
-
-        {{#if @allDay}}
-          {{icon "arrow-right" class="composer-event__date-arrow"}}
-        {{/if}}
-
-        <div class="composer-event__date-row">
-          <div class="composer-event__date-wrapper">
-            <input
-              type="date"
-              value={{this.formattedEndDate}}
-              class="composer-event__date-input"
-              {{on "change" this.onEndDateChange}}
-              {{on "focus" this.focusDateInput}}
-            />
-            <span
-              class={{concatClass
-                "composer-event__date-display"
-                (unless this.hasEndDate "--empty")
-              }}
-            >
-              {{this.formattedEndDisplay}}
-            </span>
-          </div>
-          {{#unless @allDay}}
+          {{#if this.showInlineEndTime}}
+            {{icon "arrow-right" class="composer-event__date-arrow"}}
             <input
               type="time"
               value={{this.formattedEndTime}}
               class="composer-event__time-input"
               {{on "change" this.onEndTimeChange}}
             />
-          {{/unless}}
+          {{/if}}
         </div>
+
+        {{#if this.showEndDateRow}}
+          {{#if @allDay}}
+            {{icon "arrow-right" class="composer-event__date-arrow"}}
+          {{/if}}
+          <div
+            class={{concatClass
+              "composer-event__date-row"
+              (unless @allDay "--multi-day")
+            }}
+          >
+            <div class="composer-event__date-wrapper">
+              <input
+                type="date"
+                value={{this.formattedEndDate}}
+                class="composer-event__date-input"
+                {{on "change" this.onEndDateChange}}
+                {{on "focus" this.focusDateInput}}
+              />
+              <span
+                class={{concatClass
+                  "composer-event__date-display"
+                  (unless this.hasEndDate "--empty")
+                }}
+              >
+                {{this.formattedEndDisplay}}
+              </span>
+            </div>
+            {{#unless @allDay}}
+              <input
+                type="time"
+                value={{this.formattedEndTime}}
+                class="composer-event__time-input"
+                {{on "change" this.onEndTimeChange}}
+              />
+            {{/unless}}
+          </div>
+        {{/if}}
       </div>
     </section>
 
