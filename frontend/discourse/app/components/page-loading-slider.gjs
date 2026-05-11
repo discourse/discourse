@@ -5,9 +5,9 @@ import { action } from "@ember/object";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class PageLoadingSlider extends Component {
   @service loadingSlider;
@@ -79,7 +79,7 @@ export default class PageLoadingSlider extends Component {
       <div
         {{on "transitionend" this.onContainerTransitionEnd}}
         style={{this.containerStyle}}
-        class={{concatClass
+        class={{dConcatClass
           "loading-indicator-container"
           this.state
           (if this.capabilities.isAppWebview "discourse-hub-webview")

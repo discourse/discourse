@@ -6,14 +6,14 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
 import AiUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/ai-usage";
@@ -294,7 +294,7 @@ export default class Rewind extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "rewind-container"
         (if this.fullScreen "--fullscreen")
       }}
@@ -390,7 +390,7 @@ export default class Rewind extends Component {
                 as |ReportComponent|
               }}
                 {{#if ReportComponent}}
-                  <div class={{concatClass "rewind-report" report.identifier}}>
+                  <div class={{dConcatClass "rewind-report" report.identifier}}>
                     <ReportComponent
                       @report={{report}}
                       @user={{@user}}

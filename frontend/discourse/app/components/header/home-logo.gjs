@@ -3,12 +3,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import HomeLogoContents from "./home-logo-contents";
 
 export default class HomeLogo extends Component {
@@ -93,7 +93,7 @@ export default class HomeLogo extends Component {
       @name="home-logo"
       @outletArgs={{lazyHash minimized=@minimized}}
     >
-      <div class={{concatClass (if @minimized "title--minimized") "title"}}>
+      <div class={{dConcatClass (if @minimized "title--minimized") "title"}}>
         <a href={{this.href}} {{on "click" this.click}}>
           <PluginOutlet
             @name="home-logo-contents"

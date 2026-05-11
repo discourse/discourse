@@ -307,6 +307,7 @@ el:
           last_7_days: "Τελευταίες 7 ημέρες"
           last_30_days: "Τελευταίες 30 ημέρες"
           scroll_to_bottom: "Κύλιση προς τα κάτω"
+          editing_post: "Γίνεται επεξεργασία ανάρτησης"
       sentiments:
         sentiment_analysis:
           filter_types:

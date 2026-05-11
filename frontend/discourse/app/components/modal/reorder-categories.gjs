@@ -5,13 +5,13 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import categoryBadge from "discourse/helpers/category-badge";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import { i18n } from "discourse-i18n";
 
 class Entry {
@@ -212,7 +212,7 @@ export default class ReorderCategories extends Component {
               >
                 <td>
                   <div class={{concat "reorder-categories-depth-" entry.depth}}>
-                    {{categoryBadge entry.category allowUncategorized="true"}}
+                    {{dCategoryBadge entry.category allowUncategorized="true"}}
                   </div>
                 </td>
 

@@ -70,19 +70,23 @@ module Reports::SiteTraffic
           color: report.colors[:purple],
           data: data.map { |row| { x: row.date, y: row.page_view_crawler } },
         },
-        {
+      ]
+
+      if EmbeddableHost.exists?
+        report.data << {
           req: "page_view_embed",
           label: I18n.t("reports.site_traffic.xaxis.page_view_embed"),
           color: report.colors[:yellow],
           data: data.map { |row| { x: row.date, y: row.page_view_embed } },
-        },
-        {
-          req: "page_view_other",
-          label: I18n.t("reports.site_traffic.xaxis.page_view_other"),
-          color: report.colors[:magenta],
-          data: data.map { |row| { x: row.date, y: row.page_view_other } },
-        },
-      ]
+        }
+      end
+
+      report.data << {
+        req: "page_view_other",
+        label: I18n.t("reports.site_traffic.xaxis.page_view_other"),
+        color: report.colors[:magenta],
+        data: data.map { |row| { x: row.date, y: row.page_view_other } },
+      }
     end
   end
 end

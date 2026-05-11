@@ -1,8 +1,8 @@
-import LightDarkImg from "discourse/components/light-dark-img";
+import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 
 const CategoryLogo = <template>
   <div class="category-logo aspect-image" ...attributes>
-    <LightDarkImg
+    <DLightDarkImg
       @lightImg={{@category.uploaded_logo}}
       @darkImg={{@category.uploaded_logo_dark}}
     />

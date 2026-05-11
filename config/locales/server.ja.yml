@@ -1454,7 +1454,7 @@ ja:
         os: オペレーティングシステム
         login_time: ログイン時間
       description: "以前のログインとは異なる疑いのある新しいログインの詳細。"
-    staff_logins:
+    admin_logins:
       title: "管理者ログイン"
       labels:
         user: ユーザー

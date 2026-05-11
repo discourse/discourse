@@ -1552,11 +1552,11 @@ de:
         os: Betriebssystem
         login_time: Anmeldezeitpunkt
       description: "Details neuer Anmeldungen, die verdächtig von vorherigen Anmeldungen abweichen."
-    staff_logins:
+    admin_logins:
       title: "Administrator-Anmeldungen"
       labels:
-        user: Benutzer
-        location: Standort
+        user: Nutzer
+        location: Ort
         login_at: Anmeldung um
       description: "Liste der Anmeldungen von Administratoren mit Standort."
     top_uploads:

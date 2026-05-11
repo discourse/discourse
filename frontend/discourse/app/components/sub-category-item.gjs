@@ -2,8 +2,8 @@ import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import CategoryUnread from "discourse/components/category-unread";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import categoryLink from "discourse/helpers/category-link";
 import lazyHash from "discourse/helpers/lazy-hash";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 
 export default class SubCategoryItem extends CategoryListItem {
   <template>
@@ -19,11 +19,11 @@ export default class SubCategoryItem extends CategoryListItem {
     >
       {{#unless this.isMuted}}
         {{#if this.site.mobileView}}
-          {{categoryLink this.category}}
+          {{dCategoryLink this.category}}
         {{else}}
           <span class="subcategory">
             <CategoryTitleBefore @category={{this.category}} />
-            {{categoryLink this.category hideParent="true"}}
+            {{dCategoryLink this.category hideParent="true"}}
             {{#unless this.hideUnread}}
               <CategoryUnread
                 @category={{this.category}}

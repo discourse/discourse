@@ -1016,6 +1016,7 @@ ru:
           upload_files: "Загрузить файлы"
           uploads_in_progress: "Невозможно отправить, пока идет загрузка"
           scroll_to_bottom: "Прокрутка вниз"
+          editing_post: "Редактирование поста"
       sentiments:
         dashboard:
           title: "Настроение"

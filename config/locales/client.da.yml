@@ -4640,6 +4640,16 @@ da:
         exception_error: Beklager, der opstod en fejl under udførelsen af forespørgslen
         too_many_requests: Du har udført denne handling for mange gange. Vent venligst, før du prøver igen.
         not_found_error: Beklager, denne rapport findes ikke
+        sections:
+          reports:
+            title: "Rapporter"
+          traffic:
+            title: "Webstedstrafik"
+        period:
+          last_7_days: "Seneste 7 dage"
+          last_30_days: "Seneste 30 dage"
+          last_3_months: "Seneste 3 måneder"
+          custom: "Tilpasset"
         reports:
           trend_title: "%{percent} ændring. I øjeblikket %{current}, var %{prev} i forrige periode."
           percent_change_tooltip: "%{percent} ændring."

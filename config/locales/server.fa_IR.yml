@@ -1395,7 +1395,7 @@ fa_IR:
         os: سیستم‌عامل
         login_time: زمان ورود
       description: "جزئیات ورودهای جدید که به طور مشکوکی با ورودهای قبلی متفاوت است."
-    staff_logins:
+    admin_logins:
       title: "ورود مدیریت"
       labels:
         user: کاربر

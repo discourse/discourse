@@ -278,7 +278,7 @@ th:
       labels:
         user: ผู้ใช้
         location: ที่อยู่
-    staff_logins:
+    admin_logins:
       labels:
         user: ผู้ใช้
         location: ที่อยู่

@@ -1481,6 +1481,7 @@ pl_PL:
         page_view_anon_browser: "Odsłony (anonimowe)"
         page_view_logged_in_browser: "Odsłony (zalogowani)"
         page_view_crawler: "Znane roboty internetowe"
+        page_view_embed: "Osadzone wyświetlenia stron"
         page_view_other: "Inny ruch"
       yaxis: "Dzień"
       description: "Odsłony dla zalogowanych użytkowników, użytkowników anonimowych, znanych robotów indeksujących i innego ruchu."
@@ -1660,7 +1661,10 @@ pl_PL:
       yaxis: "Odsłony zalogowanej przeglądarki"
       description: "Liczba odsłon strony przez zalogowanych użytkowników korzystających z prawdziwych przeglądarek."
     page_view_embed_reqs:
+      title: "Osadzone wyświetlenia stron"
       xaxis: "Dzień"
+      yaxis: "Osadzone wyświetlenia stron"
+      description: "Liczba wyświetleń strony w pełnej osadzonej ramce aplikacji."
     http_background_reqs:
       title: "Tło"
       xaxis: "Dzień"
@@ -1722,7 +1726,7 @@ pl_PL:
         os: System operacyjny
         login_time: Czas zalogowania
       description: "Szczegóły nowych logowań, które różnią się podejrzanie od poprzednich logowań."
-    staff_logins:
+    admin_logins:
       title: "Zalogowania administratora"
       labels:
         user: Użytkownik

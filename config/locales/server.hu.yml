@@ -1540,7 +1540,7 @@ hu:
         os: Operációs rendszer
         login_time: Bejelentkezési idő
       description: "Az új bejelentkezések adatai, amelyek gyanúsan különböznek a korábbi bejelentkezésektől."
-    staff_logins:
+    admin_logins:
       title: "Admin bejelentkezések"
       labels:
         user: Felhasználó

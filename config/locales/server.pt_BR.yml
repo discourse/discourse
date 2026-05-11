@@ -1537,11 +1537,11 @@ pt_BR:
         os: Sistema operacional
         login_time: Hora do login
       description: "Detalhes de novas entradas com conta que diferem de forma suspeita das anteriores."
-    staff_logins:
+    admin_logins:
       title: "Entradas com conta de administrador(a)"
       labels:
         user: Usuário(a)
-        location: Localização
+        location: Local
         login_at: Entrada com conta em
       description: "Lista de hora de entradas com conta de administrador(a) com as localizações."
     top_uploads:

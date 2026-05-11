@@ -1,4 +1,4 @@
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const ParticipantGroups = <template>
@@ -14,7 +14,7 @@ const ParticipantGroups = <template>
           data-group-card={{group.name}}
           class="user-group trigger-group-card"
         >
-          {{icon "users"}}
+          {{dIcon "users"}}
           {{group.name}}
         </a>
       </div>

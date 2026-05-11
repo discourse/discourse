@@ -122,12 +122,14 @@
     font-weight: dark-light-choose(normal, bold);
   }
 
-  &.new-topic {
+  &.new-topic,
+  &.new-replies {
     background-color: transparent;
     padding-left: 0.15em;
   }
 
-  &.new-topic::before {
+  &.new-topic::before,
+  &.new-replies::before {
     content: "";
     background: var(--tertiary-med-or-tertiary);
     display: inline-block;

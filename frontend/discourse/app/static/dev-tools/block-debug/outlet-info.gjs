@@ -3,9 +3,9 @@ import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
 /** @type {import("discourse/float-kit/components/d-tooltip.gjs").default} */
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 /** @type {import("../shared/args-table.gjs").default} */
 import ArgsTable from "../shared/args-table";
 
@@ -71,7 +71,7 @@ export default class OutletInfo extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "block-outlet-debug"
         (if @error "--validation-failed")
       }}
@@ -90,7 +90,7 @@ export default class OutletInfo extends Component {
       >
         <:trigger>
           <span class="block-outlet-debug__badge {{if @error '--error'}}">
-            {{icon "cubes"}}
+            {{dIcon "cubes"}}
             {{@outletName}}
           </span>
         </:trigger>
@@ -101,7 +101,7 @@ export default class OutletInfo extends Component {
                 {{if @error '--error' '--block-outlet'}}"
             >
               <span class="title">
-                {{icon "cubes"}}
+                {{dIcon "cubes"}}
                 {{@outletName}}
               </span>
               {{#if @error}}
@@ -113,7 +113,7 @@ export default class OutletInfo extends Component {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Find on GitHub"
-              >{{icon "fab-github"}}</a>
+              >{{dIcon "fab-github"}}</a>
             </div>
             <div class="outlet-info__content">
               {{#if @error}}
@@ -127,7 +127,7 @@ export default class OutletInfo extends Component {
                 <div class="outlet-info__section">
                   <div class="outlet-info__section-title">Blocks Registered</div>
                   <div class="outlet-info__stat">
-                    {{icon "cube"}}
+                    {{dIcon "cube"}}
                     <span>{{this.blockLabel}}</span>
                   </div>
                 </div>

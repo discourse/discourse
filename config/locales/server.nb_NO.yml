@@ -884,7 +884,7 @@ nb_NO:
       labels:
         user: Bruker
         location: Sted
-    staff_logins:
+    admin_logins:
       labels:
         user: Bruker
         location: Sted

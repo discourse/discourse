@@ -2173,6 +2173,9 @@ be:
         reports_tab: "Справаздачы"
         report_filter_any: "любы"
         disabled: Адключана
+        sections:
+          reports:
+            title: "Справаздачы"
         reports:
           today: "сёння"
           yesterday: "учора"

@@ -69,7 +69,8 @@ class TopicCreator
     process_private_message(topic)
     save_topic(topic)
     create_warning(topic)
-    watch_topic(topic)
+    set_author_notification_level(topic)
+    apply_pm_recipient_notification_levels(topic)
     create_shared_draft(topic)
     UserActionManager.topic_created(topic)
 
@@ -111,15 +112,25 @@ class TopicCreator
     UserWarning.create(topic: topic, user: @added_users.first, created_by: @user)
   end
 
-  def watch_topic(topic)
-    topic.notifier.watch_topic!(topic.user_id) unless @opts[:auto_track] == false
+  def set_author_notification_level(topic)
+    return if @opts[:auto_track] == false
+
+    if topic.nested_view?
+      topic.notifier.track_topic!(topic.user_id)
+    else
+      topic.notifier.watch_topic!(topic.user_id)
+    end
+  end
+
+  def apply_pm_recipient_notification_levels(topic)
+    return unless topic.private_message?
 
     topic.reload.topic_allowed_users.each do |tau|
       next if tau.user_id == -1 || tau.user_id == topic.user_id
       topic.notifier.watch!(tau.user_id)
     end
 
-    topic.reload.topic_allowed_groups.each do |topic_allowed_group|
+    topic.topic_allowed_groups.each do |topic_allowed_group|
       group = topic_allowed_group.group
 
       begin
