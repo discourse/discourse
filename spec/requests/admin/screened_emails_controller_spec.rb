@@ -32,12 +32,15 @@ RSpec.describe Admin::ScreenedEmailsController do
       include_examples "screened emails accessible"
 
       it "does not include IP addresses without permission to view IPs" do
+        Fabricate(:screened_email, email: "test@example.com")
         SiteSetting.moderators_view_ips = false
 
         get "/admin/logs/screened_emails.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body.first).not_to have_key("ip_address")
+        email = response.parsed_body.find { |e| e["email"] == "test@example.com" }
+        expect(email).to be_present
+        expect(email).not_to have_key("ip_address")
       end
     end
 
