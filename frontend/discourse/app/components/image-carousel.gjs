@@ -10,13 +10,13 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import inc from "discourse/helpers/inc";
 import { bind } from "discourse/lib/decorators";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import { eq, lte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
+const KEYBOARD_THROTTLE_MS = isTesting() || isRailsTesting() ? 0 : 150;
 const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 8;
 const USE_SCROLLEND = !isTesting() && "onscrollend" in window;

@@ -57,7 +57,6 @@ describe "Image Carousel" do
       send_keys(:left)
       expect(carousel).to have_active_slide_index(2)
 
-      wait_for_timeout(150) # let the prior animation settle before the next key
       send_keys(:right)
       expect(carousel).to have_active_slide_index(0)
     end
