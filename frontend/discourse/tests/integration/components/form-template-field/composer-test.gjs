@@ -165,10 +165,43 @@ module(
 
       await settled();
 
-      assert
-        .dom("input[name='field-1']")
-        .hasValue("before ![image|10x10, 75%](upload://abc.png) after");
+      const expected = "before ![image|10x10, 75%](upload://abc.png) after";
+      assert.dom("input[name='field-1']").hasValue(expected);
+      assert.dom(".d-editor-input").hasValue(expected);
       assert.true(onChange.called, "onChange fires after the replacement");
+    });
+
+    test("composer:replace-text only replaces the first occurrence", async function (assert) {
+      stubAllowUpload(this, true);
+
+      this.set(
+        "initialValue",
+        "![image|10x10](upload://abc.png) and ![image|10x10](upload://abc.png)"
+      );
+
+      await render(
+        <template>
+          <FormComposer
+            @id="field-1"
+            @value={{this.initialValue}}
+            @onChange={{noop}}
+          />
+        </template>
+      );
+
+      const appEvents = getOwner(this).lookup("service:app-events");
+      appEvents.trigger(
+        "composer:replace-text",
+        "![image|10x10](upload://abc.png)",
+        "![image|10x10, 75%](upload://abc.png)"
+      );
+
+      await settled();
+
+      const expected =
+        "![image|10x10, 75%](upload://abc.png) and ![image|10x10](upload://abc.png)";
+      assert.dom("input[name='field-1']").hasValue(expected);
+      assert.dom(".d-editor-input").hasValue(expected);
     });
 
     test("composer:replace-text is a no-op when the field does not contain the markdown", async function (assert) {
@@ -198,6 +231,7 @@ module(
       await settled();
 
       assert.dom("input[name='field-1']").hasValue("no images here");
+      assert.dom(".d-editor-input").hasValue("no images here");
       assert.false(onChange.called, "onChange does not fire");
     });
   }
