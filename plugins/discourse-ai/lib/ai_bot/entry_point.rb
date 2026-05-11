@@ -71,6 +71,55 @@ module DiscourseAi
 
         plugin.register_topic_custom_field_type(TOPIC_AI_BOT_PM_FIELD, :string)
 
+        # Hide bot PMs from the personal inbox queries (Latest, New, Unread)
+        # so human conversations are not buried under bot replies. Sent and
+        # Archive are intentionally untouched.
+        plugin.register_modifier(:private_messages_personal_inbox_query) do |list, _user|
+          next list unless SiteSetting.ai_bot_enabled
+
+          list.where(<<~SQL, field: TOPIC_AI_BOT_PM_FIELD)
+            NOT EXISTS (
+              SELECT 1 FROM topic_custom_fields tcf_pm_inbox
+              WHERE tcf_pm_inbox.topic_id = topics.id
+              AND tcf_pm_inbox.name = :field
+              AND tcf_pm_inbox.value = 't'
+            )
+          SQL
+        end
+
+        plugin.add_to_class(:list_controller, :private_messages_ai_bot) do
+          target_user =
+            fetch_user_from_params(
+              { include_inactive: current_user.try(:staff?) },
+              %i[user_stat user_option],
+            )
+
+          raise Discourse::NotFound if target_user.id != current_user.id
+          guardian.ensure_can_see_private_messages!(target_user.id)
+
+          list_opts = build_topic_list_options
+          list = generate_list_for("private_messages_ai_bot", target_user, list_opts)
+          list.more_topics_url = construct_url_with(:next, list_opts, "topics")
+          list.prev_topics_url = construct_url_with(:prev, list_opts, "topics")
+          respond_with_list(list)
+        end
+
+        TopicQuery::PrivateMessageLists.module_eval do
+          unless method_defined?(:list_private_messages_ai_bot)
+            define_method(:list_private_messages_ai_bot) do |user|
+              list = send(:user_personal_private_messages, user)
+              list = send(:not_archived, list, user)
+              list = list.joins(<<~SQL)
+                  INNER JOIN topic_custom_fields tcf_ai_bot
+                  ON tcf_ai_bot.topic_id = topics.id
+                  AND tcf_ai_bot.name = #{ActiveRecord::Base.connection.quote(DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD)}
+                  AND tcf_ai_bot.value = 't'
+                SQL
+              create_list(:private_messages, {}, list)
+            end
+          end
+        end
+
         plugin.on(:topic_created) do |topic|
           next if !topic.private_message?
           creator = topic.user
