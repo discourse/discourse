@@ -36,31 +36,31 @@ export default class ImageCarousel extends Component {
   @tracked currentIndex = 0;
 
   registerSlide = modifier((element, [index]) => {
-    this.#slides.set(index, element);
-    return () => this.#slides.delete(index);
+    this.slides.set(index, element);
+    return () => this.slides.delete(index);
   });
 
   registerClone = modifier((element, [which]) => {
-    this.#clones.set(which, element);
-    this.#cloneObserver?.observe(element);
+    this.clones.set(which, element);
+    this.cloneObserver?.observe(element);
     return () => {
-      this.#cloneObserver?.unobserve(element);
-      this.#clones.delete(which);
+      this.cloneObserver?.unobserve(element);
+      this.clones.delete(which);
     };
   });
 
   setupCarousel = modifier((element) => {
-    this.#carouselElement = element;
+    this.carouselElement = element;
     return () => {
-      this.#carouselElement = null;
+      this.carouselElement = null;
     };
   });
 
   setupTrack = modifier((element) => {
-    this.#trackElement = element;
-    this.#trackDirection =
+    this.trackElement = element;
+    this.trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
-    this.#useScrollEnd = "onscrollend" in window && !isTesting();
+    this.useScrollEnd = "onscrollend" in window && !isTesting();
 
     // Skip past the leading clone so the real first slide is centered. rAF
     // gives child slide modifiers a chance to register before we look one up.
@@ -69,7 +69,7 @@ export default class ImageCarousel extends Component {
         return;
       }
 
-      this.#slides.get(0)?.scrollIntoView({
+      this.slides.get(0)?.scrollIntoView({
         behavior: "instant",
         block: "nearest",
         inline: "center",
@@ -83,12 +83,12 @@ export default class ImageCarousel extends Component {
     // adjacent real slide is still showing on screen, and teleporting then
     // causes that sliver to vanish abruptly and the in-flight snap animation
     // to be perturbed.
-    this.#cloneObserver = new IntersectionObserver(
+    this.cloneObserver = new IntersectionObserver(
       (entries) => {
         // Don't fight an in-flight rAF wrap; its own finish branch handles
         // the teleport. Perturbing scrollLeft here would trip the rAF's
         // external-scroll abort and cause a snap-back glitch.
-        if (this.#animationFrame !== null) {
+        if (this.animationFrame !== null) {
           return;
         }
         for (const entry of entries) {
@@ -96,11 +96,11 @@ export default class ImageCarousel extends Component {
             continue;
           }
           const realIndex =
-            entry.target === this.#clones.get("first") ? 0 : this.lastIndex;
-          const realSlide = this.#slides.get(realIndex);
+            entry.target === this.clones.get("first") ? 0 : this.lastIndex;
+          const realSlide = this.slides.get(realIndex);
           if (realSlide) {
             element.scrollTo({
-              left: this.#computeTargetScrollLeft(realSlide),
+              left: this.computeTargetScrollLeft(realSlide),
               behavior: "instant",
             });
           }
@@ -109,14 +109,14 @@ export default class ImageCarousel extends Component {
       },
       { root: element, threshold: 1 }
     );
-    this.#clones.forEach((clone) => this.#cloneObserver.observe(clone));
+    this.clones.forEach((clone) => this.cloneObserver.observe(clone));
 
     element.addEventListener("scroll", this.onScroll, { passive: true });
     element.addEventListener("touchstart", this.focusCarousel, {
       passive: true,
     });
     element.addEventListener("wheel", this.focusCarousel, { passive: true });
-    if (this.#useScrollEnd) {
+    if (this.useScrollEnd) {
       element.addEventListener("scrollend", this.onScrollSettled);
     }
 
@@ -124,42 +124,42 @@ export default class ImageCarousel extends Component {
       element.removeEventListener("scroll", this.onScroll);
       element.removeEventListener("touchstart", this.focusCarousel);
       element.removeEventListener("wheel", this.focusCarousel);
-      if (this.#useScrollEnd) {
+      if (this.useScrollEnd) {
         element.removeEventListener("scrollend", this.onScrollSettled);
       }
 
-      this.#cloneObserver?.disconnect();
-      this.#cloneObserver = null;
-      clearTimeout(this.#scrollStopTimer);
+      this.cloneObserver?.disconnect();
+      this.cloneObserver = null;
+      clearTimeout(this.scrollStopTimer);
       cancelAnimationFrame(initialScroll);
-      this.#cancelAnimation();
-      this.#trackElement = null;
+      this.cancelAnimation();
+      this.trackElement = null;
     };
   });
 
-  #trackDirection = 1;
-  #trackElement = null;
-  #carouselElement = null;
-  #programmaticScroll = false;
-  #slides = new Map();
-  #clones = new Map();
-  #animationFrame = null;
-  #animationTarget = null;
-  #useScrollEnd = false;
-  #scrollStopTimer = null;
-  #cloneObserver = null;
-  #isScrolling = false;
-  #pendingKeyDirection = null;
+  trackDirection = 1;
+  trackElement = null;
+  carouselElement = null;
+  programmaticScroll = false;
+  slides = new Map();
+  clones = new Map();
+  animationFrame = null;
+  animationTarget = null;
+  useScrollEnd = false;
+  scrollStopTimer = null;
+  cloneObserver = null;
+  isScrolling = false;
+  pendingKeyDirection = null;
 
   @bind
   updateIndex() {
     // While a programmatic scroll is in flight, the current scroll position
     // is still near the previous slide and would clobber the target index.
-    if (this.#programmaticScroll) {
+    if (this.programmaticScroll) {
       return;
     }
 
-    const newIndex = this.#nearestRealIndex(this.#trackElement);
+    const newIndex = this.nearestRealIndex(this.trackElement);
     if (newIndex !== this.currentIndex) {
       this.currentIndex = newIndex;
     }
@@ -171,8 +171,8 @@ export default class ImageCarousel extends Component {
   // the carousel happens to be partially off-screen when focus moves.
   @bind
   focusCarousel() {
-    if (document.activeElement !== this.#carouselElement) {
-      this.#carouselElement?.focus({ preventScroll: true });
+    if (document.activeElement !== this.carouselElement) {
+      this.carouselElement?.focus({ preventScroll: true });
     }
   }
 
@@ -181,28 +181,28 @@ export default class ImageCarousel extends Component {
     // Don't fight an in-flight rAF: the browser can fire scrollend
     // mid-animation and our teleport here would trip its external-scroll
     // abort. The rAF's finish branch handles the wrap teleport itself.
-    if (this.#animationFrame !== null) {
+    if (this.animationFrame !== null) {
       return;
     }
 
-    this.#isScrolling = false;
-    this.#programmaticScroll = false;
-    this.#teleportFromWrapZone();
+    this.isScrolling = false;
+    this.programmaticScroll = false;
+    this.teleportFromWrapZone();
     this.updateIndex();
 
     // Run any keyboard navigation that arrived while a browser-driven
     // scroll was in flight. Direction is recomputed against the now-settled
     // currentIndex.
-    if (this.#pendingKeyDirection) {
-      const direction = this.#pendingKeyDirection;
-      this.#pendingKeyDirection = null;
-      this.#navigateByKey(direction);
+    if (this.pendingKeyDirection) {
+      const direction = this.pendingKeyDirection;
+      this.pendingKeyDirection = null;
+      this.navigateByKey(direction);
     }
   }
 
   @bind
   onScroll() {
-    this.#isScrolling = true;
+    this.isScrolling = true;
 
     // Optimistic update while scrolling for real-time dot feedback
     if (!isTesting()) {
@@ -210,16 +210,16 @@ export default class ImageCarousel extends Component {
     }
 
     // Fallback for browsers without scrollend support (Safari < 17.4)
-    if (!this.#useScrollEnd) {
-      clearTimeout(this.#scrollStopTimer);
-      this.#scrollStopTimer = setTimeout(this.onScrollSettled, 150);
+    if (!this.useScrollEnd) {
+      clearTimeout(this.scrollStopTimer);
+      this.scrollStopTimer = setTimeout(this.onScrollSettled, 150);
     }
   }
 
   // Returns the real-slide index nearest to the viewport center. Clones map
   // to the real slide they visually represent, so a manual drag onto a clone
   // reads the same as being on the real slide it duplicates.
-  #nearestRealIndex(track) {
+  nearestRealIndex(track) {
     if (!track) {
       return this.currentIndex;
     }
@@ -238,19 +238,19 @@ export default class ImageCarousel extends Component {
       }
     };
 
-    this.#slides.forEach(consider);
-    this.#clones.forEach((el, which) =>
+    this.slides.forEach(consider);
+    this.clones.forEach((el, which) =>
       consider(el, which === "first" ? 0 : this.lastIndex)
     );
 
     return best;
   }
 
-  #computeTargetScrollLeft(slideElement) {
+  computeTargetScrollLeft(slideElement) {
     return (
       slideElement.offsetLeft +
       slideElement.offsetWidth / 2 -
-      this.#trackElement.clientWidth / 2
+      this.trackElement.clientWidth / 2
     );
   }
 
@@ -259,8 +259,8 @@ export default class ImageCarousel extends Component {
   // strip. Invisible because the clone shows the same content as the real
   // slide on the other side of the strip; used so that follow-up animations
   // take the short path instead of scrolling backwards across the strip.
-  #teleportFromWrapZone() {
-    const track = this.#trackElement;
+  teleportFromWrapZone() {
+    const track = this.trackElement;
     const slideWidth = track?.clientWidth;
     if (!slideWidth) {
       return false;
@@ -285,19 +285,19 @@ export default class ImageCarousel extends Component {
   }
 
   // Custom rAF-driven animation. Multiple rapid retargets just update
-  // #animationTarget — the running rAF loop redirects smoothly toward the new
+  // animationTarget — the running rAF loop redirects smoothly toward the new
   // target instead of restarting (which is what native scrollIntoView smooth
   // would do, causing the per-click stutter).
-  #animateScrollTo(target) {
-    const track = this.#trackElement;
+  animateScrollTo(target) {
+    const track = this.trackElement;
     if (!track) {
       return;
     }
 
     // honor reduce-motion preference
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
-      this.#cancelAnimation();
-      this.#teleportFromWrapZone();
+      this.cancelAnimation();
+      this.teleportFromWrapZone();
       // behavior: "instant" overrides CSS scroll-behavior: smooth — without
       // it a reduce-motion user would still see a smooth animation.
       track.scrollTo({ left: target, behavior: "instant" });
@@ -316,22 +316,22 @@ export default class ImageCarousel extends Component {
     // when the user clicks again), teleport to the real-strip equivalent. If
     // an rAF was running, cancel it — its lastSet now diverges from the
     // post-teleport scrollLeft and the next tick would otherwise abort.
-    if (this.#teleportFromWrapZone() && this.#animationFrame !== null) {
-      cancelAnimationFrame(this.#animationFrame);
-      this.#animationFrame = null;
+    if (this.teleportFromWrapZone() && this.animationFrame !== null) {
+      cancelAnimationFrame(this.animationFrame);
+      this.animationFrame = null;
     }
 
-    this.#animationTarget = target;
-    if (this.#animationFrame !== null) {
+    this.animationTarget = target;
+    if (this.animationFrame !== null) {
       return;
     }
 
     let lastSet = track.scrollLeft;
 
     const tick = () => {
-      const t = this.#trackElement;
+      const t = this.trackElement;
       if (!t) {
-        this.#animationFrame = null;
+        this.animationFrame = null;
         return;
       }
 
@@ -339,43 +339,43 @@ export default class ImageCarousel extends Component {
 
       // Abort if external interaction (drag/swipe/wheel) perturbed position.
       if (Math.abs(current - lastSet) > EXTERNAL_SCROLL_TOLERANCE_PX) {
-        this.#cancelAnimation();
+        this.cancelAnimation();
         return;
       }
 
-      const distance = this.#animationTarget - current;
+      const distance = this.animationTarget - current;
       if (Math.abs(distance) < ANIMATION_FINISH_THRESHOLD) {
-        t.scrollLeft = this.#animationTarget;
+        t.scrollLeft = this.animationTarget;
         // If we landed on a clone (wrap animation), silently teleport to its
         // real counterpart. currentIndex was set to the wrap target by
         // scrollToIndex, so it already matches.
-        this.#teleportFromWrapZone();
-        this.#cancelAnimation();
+        this.teleportFromWrapZone();
+        this.cancelAnimation();
         return;
       }
 
       const next = current + distance * ANIMATION_APPROACH_RATE;
       t.scrollLeft = next;
       lastSet = next;
-      this.#animationFrame = requestAnimationFrame(tick);
+      this.animationFrame = requestAnimationFrame(tick);
     };
 
-    this.#animationFrame = requestAnimationFrame(tick);
+    this.animationFrame = requestAnimationFrame(tick);
   }
 
-  #cancelAnimation() {
-    if (this.#animationFrame !== null) {
-      cancelAnimationFrame(this.#animationFrame);
-      this.#animationFrame = null;
+  cancelAnimation() {
+    if (this.animationFrame !== null) {
+      cancelAnimationFrame(this.animationFrame);
+      this.animationFrame = null;
     }
 
     // restore native snap + smooth-scroll
-    const track = this.#trackElement;
+    const track = this.trackElement;
     if (track) {
       track.style.scrollSnapType = "";
       track.style.scrollBehavior = "";
     }
-    this.#programmaticScroll = false;
+    this.programmaticScroll = false;
   }
 
   get items() {
@@ -424,13 +424,13 @@ export default class ImageCarousel extends Component {
   // wrap boundary, return the adjacent clone instead of the real destination
   // slide so the carousel animates one slide-width to it. The rAF's finish
   // branch teleports to the real counterpart afterwards.
-  #scrollTargetFor(index, direction) {
+  scrollTargetFor(index, direction) {
     if (
       direction === "next" &&
       this.currentIndex === this.lastIndex &&
       index === 0
     ) {
-      return this.#clones.get("first");
+      return this.clones.get("first");
     }
 
     if (
@@ -438,32 +438,32 @@ export default class ImageCarousel extends Component {
       this.currentIndex === 0 &&
       index === this.lastIndex
     ) {
-      return this.#clones.get("last");
+      return this.clones.get("last");
     }
 
-    return this.#slides.get(index);
+    return this.slides.get(index);
   }
 
   @action
   scrollToIndex(index, direction = null) {
-    const element = this.#scrollTargetFor(index, direction);
-    const track = this.#trackElement;
+    const element = this.scrollTargetFor(index, direction);
+    const track = this.trackElement;
     if (!element || !track) {
       return;
     }
 
     this.currentIndex = index;
-    const target = this.#computeTargetScrollLeft(element);
+    const target = this.computeTargetScrollLeft(element);
     if (Math.abs(track.scrollLeft - target) < 1) {
       return;
     }
 
-    this.#programmaticScroll = true;
-    this.#animateScrollTo(target);
+    this.programmaticScroll = true;
+    this.animateScrollTo(target);
   }
 
-  #navigateByKey(direction) {
-    const goNext = (direction === "right") === (this.#trackDirection === 1);
+  navigateByKey(direction) {
+    const goNext = (direction === "right") === (this.trackDirection === 1);
     this.scrollToIndex(
       goNext ? this.nextIndex : this.prevIndex,
       goNext ? "next" : "prev"
@@ -485,12 +485,12 @@ export default class ImageCarousel extends Component {
     // rAF that the in-flight scroll would just abort. Our own rAF
     // (animationFrame !== null) is handled by the retarget path inside
     // animateScrollTo, so we run normally in that case.
-    if (this.#isScrolling && this.#animationFrame === null) {
-      this.#pendingKeyDirection = direction;
+    if (this.isScrolling && this.animationFrame === null) {
+      this.pendingKeyDirection = direction;
       return;
     }
 
-    throttle(this, this.#navigateByKey, direction, KEYBOARD_THROTTLE_MS);
+    throttle(this, this.navigateByKey, direction, KEYBOARD_THROTTLE_MS);
   }
 
   <template>
