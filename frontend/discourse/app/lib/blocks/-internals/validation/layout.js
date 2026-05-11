@@ -654,87 +654,156 @@ export async function validateLayout(
     );
   }
 
-  // Use Promise.all for parallel validation (faster in dev when resolving factories)
+  // Per-entry validation. In strict mode, the first entry's failure
+  // bubbles up and rejects the whole layout (the historical contract).
+  // In permissive mode, each entry's validation is wrapped in try/catch
+  // so a failure marks JUST that entry (`__failureType` /
+  // `__failureReason` set on the entry itself, message pushed to
+  // `context.warnings`) and the next entry's validation continues. The
+  // recursion to children inherits `context`, so granularity is per-
+  // entry at every nesting level — a typo three levels deep marks that
+  // descendant without invalidating its ancestors.
   const validationPromises = layout.map(async (entry, index) => {
     const currentPath = `${parentPath}[${index}]`;
-
-    // Check ID uniqueness across the entire layout using shared context
-    if (entry.id) {
-      if (context.seenIds.has(entry.id)) {
-        const first = context.seenIds.get(entry.id);
-        raiseBlockError(
-          `Duplicate block id "${entry.id}" in outlet "${outletName}". ` +
-            `Found at ${first.path} and ${currentPath}. Block IDs must be unique per layout.`,
-          {
-            ...createValidationContext({
-              outletName,
-              path: currentPath,
-              entry,
-              callSiteError,
-              rootLayout: effectiveRootLayout,
-            }),
-            errorPath: `${currentPath}.id`,
-          }
-        );
+    try {
+      await validateOneEntry({
+        entry,
+        index,
+        currentPath,
+        outletName,
+        blocksService,
+        callSiteError,
+        effectiveRootLayout,
+        parentChildArgsSchema,
+        parentBlockName,
+        depth,
+        context,
+      });
+    } catch (err) {
+      if (context.permissive && err?.name === "BlockError") {
+        markEntrySoftFailure(entry, err);
+        context.warnings?.push({
+          message: err.message,
+          path: currentPath,
+          error: err,
+        });
+        return;
       }
-      context.seenIds.set(entry.id, { path: currentPath });
+      throw err;
     }
+  });
 
-    // Validate the block entry itself (whether it has children or not)
-    // Returns the block's childArgsSchema if it's a container with childArgs
-    const childArgsSchema = await validateEntry(
-      entry,
-      outletName,
-      blocksService,
-      currentPath,
-      callSiteError,
-      effectiveRootLayout,
-      parentChildArgsSchema,
-      parentBlockName
-    );
+  await Promise.all(validationPromises);
+}
 
-    // Recursively validate nested children
-    if (entry.children) {
-      // Get the block name for error messages when passing childArgs to children
-      let blockName = null;
-      if (childArgsSchema) {
-        // We need the block name for error messages - resolve it
-        const resolved = await resolveBlockForValidation(
-          entry.block,
-          outletName,
-          createValidationContext({
+/**
+ * Marks a layout entry as softly invalid. Adopts the same `__failureType`
+ * / `__failureReason` shape that `BlockOutletRootContainer#preprocessEntries`
+ * already uses for condition-failed and no-visible-children, so the
+ * existing ghost-rendering path picks the entry up without further
+ * plumbing.
+ *
+ * @param {Object} entry
+ * @param {Error} err
+ */
+function markEntrySoftFailure(entry, err) {
+  entry.__visible = false;
+  entry.__failureType = "structural-invalid";
+  entry.__failureReason = err.message;
+}
+
+/**
+ * The per-entry validation body, extracted so the outer per-entry
+ * try/catch in `validateLayout` is the single boundary between "this
+ * entry blew up" and "everything else keeps going". Pure orchestration
+ * — same calls validateLayout used to make inline.
+ */
+async function validateOneEntry({
+  entry,
+  currentPath,
+  outletName,
+  blocksService,
+  callSiteError,
+  effectiveRootLayout,
+  parentChildArgsSchema,
+  parentBlockName,
+  depth,
+  context,
+}) {
+  // Check ID uniqueness across the entire layout using shared context
+  if (entry.id) {
+    if (context.seenIds.has(entry.id)) {
+      const first = context.seenIds.get(entry.id);
+      raiseBlockError(
+        `Duplicate block id "${entry.id}" in outlet "${outletName}". ` +
+          `Found at ${first.path} and ${currentPath}. Block IDs must be unique per layout.`,
+        {
+          ...createValidationContext({
             outletName,
             path: currentPath,
             entry,
             callSiteError,
             rootLayout: effectiveRootLayout,
-          })
-        );
-        if (
-          resolved &&
-          typeof resolved !== "string" &&
-          !resolved[OPTIONAL_MISSING]
-        ) {
-          blockName = getBlockMetadata(resolved)?.blockName;
+          }),
+          errorPath: `${currentPath}.id`,
         }
-      }
-
-      await validateLayout(
-        entry.children,
-        outletName,
-        blocksService,
-        `${currentPath}.children`,
-        callSiteError,
-        effectiveRootLayout,
-        childArgsSchema,
-        blockName,
-        depth + 1,
-        context
       );
     }
-  });
+    context.seenIds.set(entry.id, { path: currentPath });
+  }
 
-  await Promise.all(validationPromises);
+  // Validate the block entry itself (whether it has children or not)
+  // Returns the block's childArgsSchema if it's a container with childArgs
+  const childArgsSchema = await validateEntry(
+    entry,
+    outletName,
+    blocksService,
+    currentPath,
+    callSiteError,
+    effectiveRootLayout,
+    parentChildArgsSchema,
+    parentBlockName
+  );
+
+  // Recursively validate nested children
+  if (entry.children) {
+    // Get the block name for error messages when passing childArgs to children
+    let blockName = null;
+    if (childArgsSchema) {
+      // We need the block name for error messages - resolve it
+      const resolved = await resolveBlockForValidation(
+        entry.block,
+        outletName,
+        createValidationContext({
+          outletName,
+          path: currentPath,
+          entry,
+          callSiteError,
+          rootLayout: effectiveRootLayout,
+        })
+      );
+      if (
+        resolved &&
+        typeof resolved !== "string" &&
+        !resolved[OPTIONAL_MISSING]
+      ) {
+        blockName = getBlockMetadata(resolved)?.blockName;
+      }
+    }
+
+    await validateLayout(
+      entry.children,
+      outletName,
+      blocksService,
+      `${currentPath}.children`,
+      callSiteError,
+      effectiveRootLayout,
+      childArgsSchema,
+      blockName,
+      depth + 1,
+      context
+    );
+  }
 }
 
 /**

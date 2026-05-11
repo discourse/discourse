@@ -14,7 +14,11 @@ import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import { untrack } from "@glimmer/validator";
-import { trackedMap, trackedObject } from "@ember/reactive/collections";
+import {
+  trackedArray,
+  trackedMap,
+  trackedObject,
+} from "@ember/reactive/collections";
 import curryComponent from "ember-curry-component";
 /** @type {import("discourse/components/async-content.gjs")} */
 import AsyncContent from "discourse/components/async-content";
@@ -517,25 +521,62 @@ function createLayerEntry({
   blocksService,
   callSiteError,
   themeId,
+  permissive = false,
 }) {
   /** @type {Promise<Array<LayoutEntry>>|null} */
   let validationPromise = null;
   /** @type {LayerEntry} */
   // @ts-expect-error - validatedLayout is defined below via defineProperty.
-  const entry = { layout };
+  // `validationWarnings` is `trackedArray` so consumers (the visual editor's
+  // toolbar tally, future inspector banners) re-render when validation
+  // completes async — without it the array would mutate after the toolbar
+  // has already evaluated, leaving stale "0 warnings" until the next
+  // structural change.
+  const entry = { layout, validationWarnings: trackedArray() };
   if (themeId !== undefined) {
     entry.themeId = themeId;
   }
   Object.defineProperty(entry, "validatedLayout", {
     get() {
       if (!validationPromise) {
-        validationPromise = validateLayout(
-          layout,
-          outletName,
-          blocksService,
-          "",
-          callSiteError
-        ).then(() => layout);
+        if (permissive) {
+          // Per-entry isolation: validateLayout's per-entry try/catch
+          // marks each failing entry with `__failureType` /
+          // `__failureReason` and continues to the next entry. The
+          // collected messages land on `entry.validationWarnings`
+          // (trackedArray, so the editor's toolbar / inspector update
+          // reactively when validation resolves async).
+          const validationContext = {
+            seenIds: new Map(),
+            permissive: true,
+            warnings: [],
+          };
+          validationPromise = validateLayout(
+            layout,
+            outletName,
+            blocksService,
+            "",
+            callSiteError,
+            null,
+            null,
+            null,
+            0,
+            validationContext
+          ).then(() => {
+            for (const w of validationContext.warnings) {
+              entry.validationWarnings.push(w);
+            }
+            return layout;
+          });
+        } else {
+          validationPromise = validateLayout(
+            layout,
+            outletName,
+            blocksService,
+            "",
+            callSiteError
+          ).then(() => layout);
+        }
       }
       return validationPromise;
     },
@@ -576,10 +617,19 @@ function createLayerEntry({
  * @param {boolean} [options.lazy=false] - When true, defers validation
  *   until the entry's `validatedLayout` is first read (typically by
  *   `BlockOutlet` at render time).
+ * @param {boolean} [options.permissive=false] - When true, validation
+ *   errors don't reject the `validatedLayout` promise. Instead the error
+ *   is captured on the layer entry's `validationWarnings` and the layout
+ *   is returned as-is. Used by the visual editor's `session-draft` layer
+ *   so legitimate mid-edit invalid states (empty container after a drag,
+ *   typo in a block name, etc.) don't crash the page. Code-default and
+ *   theme layers are not permissive — they represent committed state
+ *   that should be valid; a failure there really is a malformed install.
  * @param {Error|null} [options.callSiteError]
  * @returns {Promise<Array<LayoutEntry>>|undefined} The validated layout
  *   promise (eager mode) or `undefined` (lazy mode).
- * @throws {Error} If validation fails or the layer / outlet is unknown.
+ * @throws {Error} If validation fails (in strict mode) or the layer /
+ *   outlet is unknown.
  */
 export function _setLayoutLayer(
   outletName,
@@ -623,6 +673,7 @@ export function _setLayoutLayer(
     blocksService,
     callSiteError,
     themeId: layer === LAYOUT_LAYERS.THEME ? options.themeId : undefined,
+    permissive: options.permissive ?? false,
   });
 
   const existing = outletLayouts.get(outletName) ?? makeEmptyRecord();

@@ -12,12 +12,14 @@ en:
         hidden: "hidden"
         not_registered: "not registered"
         no_visible_children: "no visible children"
+        unknown_block: "unknown block"
         failed: "failed"
       ghost_reasons:
         # Longer hint messages shown at bottom of ghost tooltip
         optional_missing_hint: "This optional block is not rendered because it's not registered."
         no_visible_children_hint: "This container block is not rendered because none of its children are visible."
         condition_failed_hint: "This block is not rendered because its conditions failed."
+        unknown_block_hint: "This block reference is not registered. Likely a typo or a missing plugin — check the block name."
         head_hidden_tail_hint: "This block is not rendered because another block was rendered first in the `head` container."
     carousel:
       go_to_slide: "Go to slide %{index}"

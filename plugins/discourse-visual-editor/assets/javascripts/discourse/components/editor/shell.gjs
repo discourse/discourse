@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import InspectorPanel from "./inspector-panel";
@@ -18,6 +19,7 @@ import OutlinePanel from "./outline-panel";
  * receive editor input.
  */
 export default class EditorShell extends Component {
+  @service dialog;
   @service visualEditor;
   @service visualEditorPersistence;
 
@@ -28,10 +30,16 @@ export default class EditorShell extends Component {
    */
   @tracked isSaving = false;
   @tracked saveErrorMessage = null;
+  @tracked warningsPanelOpen = false;
 
   @action
   dismissSaveError() {
     this.saveErrorMessage = null;
+  }
+
+  @action
+  toggleWarningsPanel() {
+    this.warningsPanelOpen = !this.warningsPanelOpen;
   }
 
   @action
@@ -72,10 +80,28 @@ export default class EditorShell extends Component {
   }
 
   @action
-  async save() {
+  save() {
     if (!this.canSave) {
       return;
     }
+    if (this.visualEditor.hasValidationWarnings) {
+      // Warnings on the session-draft layer are by design (mid-edit
+      // invalid states are tolerated, not blocked). The user might still
+      // want to save and come back later — confirm before posting so they
+      // don't ship a half-finished layout by accident.
+      this.dialog.confirm({
+        message: i18n("visual_editor.chrome.save_with_warnings_confirm", {
+          count: this.visualEditor.validationWarnings.length,
+        }),
+        confirmButtonLabel: "visual_editor.chrome.save_anyway",
+        didConfirm: () => this._performSave(),
+      });
+      return;
+    }
+    this._performSave();
+  }
+
+  async _performSave() {
     this.isSaving = true;
     this.saveErrorMessage = null;
     try {
@@ -108,6 +134,20 @@ export default class EditorShell extends Component {
             <span class="toolbar-title">Visual Editor</span>
           </div>
           <div class="toolbar-right">
+            {{#if this.visualEditor.hasValidationWarnings}}
+              <button
+                type="button"
+                class={{concatClass
+                  "btn btn-flat visual-editor-btn-warnings"
+                  (if this.warningsPanelOpen "--open")
+                }}
+                title={{i18n "visual_editor.chrome.warnings_button_title"}}
+                {{on "click" this.toggleWarningsPanel}}
+              >
+                {{icon "triangle-exclamation"}}
+                <span>{{this.visualEditor.validationWarnings.length}}</span>
+              </button>
+            {{/if}}
             <button
               type="button"
               class="btn btn-default visual-editor-btn-undo"
@@ -169,6 +209,26 @@ export default class EditorShell extends Component {
             >
               {{icon "xmark"}}
             </button>
+          </div>
+        {{/if}}
+
+        {{#if this.warningsPanelOpen}}
+          <div class="visual-editor-warnings-panel" role="region">
+            <div class="visual-editor-warnings-panel__header">
+              {{icon "triangle-exclamation"}}
+              <span>{{i18n
+                  "visual_editor.chrome.warnings_panel_title"
+                  count=this.visualEditor.validationWarnings.length
+                }}</span>
+            </div>
+            <ul class="visual-editor-warnings-panel__list">
+              {{#each this.visualEditor.validationWarnings as |w|}}
+                <li>
+                  <code>{{w.outletName}}</code>
+                  <span>{{w.message}}</span>
+                </li>
+              {{/each}}
+            </ul>
           </div>
         {{/if}}
 
