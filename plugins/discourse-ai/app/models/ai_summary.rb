@@ -6,7 +6,7 @@ class AiSummary < ActiveRecord::Base
   enum :summary_type, { complete: 0, gist: 1 }
   enum :origin, { human: 0, system: 1 }
 
-  def self.store!(strategy, llm_model, summary, og_content, human:)
+  def self.store!(strategy, llm_model, summary, og_content, human:, locale: "")
     content_ids = og_content.map { |c| c[:id] }
 
     AiSummary
@@ -20,8 +20,9 @@ class AiSummary < ActiveRecord::Base
           original_content_sha: build_sha(content_ids.join),
           summary_type: strategy.type,
           origin: !!human ? origins[:human] : origins[:system],
+          locale: locale.to_s,
         },
-        unique_by: %i[target_id target_type summary_type],
+        unique_by: %i[target_id target_type summary_type locale],
         update_only: %i[
           summarized_text
           original_content_sha
@@ -62,9 +63,10 @@ end
 #  summary_type          :integer          default("complete"), not null
 #  origin                :integer
 #  highest_target_number :integer          default(1), not null
+#  locale                :string           default(""), not null
 #
 # Indexes
 #
-#  idx_on_target_id_target_type_summary_type_3355609fbb  (target_id,target_type,summary_type) UNIQUE
-#  index_ai_summaries_on_target_type_and_target_id       (target_type,target_id)
+#  idx_ai_summaries_on_target_type_id_summary_type_locale  (target_id,target_type,summary_type,locale) UNIQUE
+#  index_ai_summaries_on_target_type_and_target_id         (target_type,target_id)
 #

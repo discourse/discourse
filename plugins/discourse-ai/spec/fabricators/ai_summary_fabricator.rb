@@ -8,6 +8,7 @@ Fabricator(:ai_summary) do
   summary_type AiSummary.summary_types[:complete]
   origin AiSummary.origins[:human]
   highest_target_number 1
+  locale ""
 end
 
 Fabricator(:topic_ai_gist, from: :ai_summary) do

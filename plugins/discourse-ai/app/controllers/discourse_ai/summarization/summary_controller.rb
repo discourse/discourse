@@ -22,6 +22,9 @@ module DiscourseAi
         opts = params.permit(:skip_age_check)
         skip_age_check = opts[:skip_age_check] == "true"
 
+        locale = current_user&.effective_locale || SiteSetting.default_locale
+        summarization_service = DiscourseAi::TopicSummarization.for(topic, current_user, locale:)
+        cached_summary = summarization_service.cached_summary
         if params[:stream] && current_user
           if cached_summary && !skip_age_check
             render_serialized(cached_summary, AiTopicSummarySerializer)
@@ -33,6 +36,7 @@ module DiscourseAi
             topic_id: topic.id,
             user_id: current_user.id,
             skip_age_check: skip_age_check,
+            locale:,
           )
 
           render json: success_json
