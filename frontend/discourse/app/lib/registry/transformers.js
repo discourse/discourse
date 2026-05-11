@@ -52,6 +52,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-service-cannot-submit-post",
   "composer-toggles-class",
   "create-topic-button-class",
+  "create-topic-button-draft-menu-class",
   "create-topic-label",
   "flag-button-disabled-state",
   "flag-button-dynamic-class",
