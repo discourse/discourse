@@ -938,6 +938,50 @@ export default class VisualEditorService extends Service {
   }
 
   /**
+   * Resolves the metadata for a registered block by name. Returns null
+   * for unknown names or when the registry entry is a factory the block
+   * service hasn't materialised yet — same permissive contract as
+   * `_metadataFor` for moves.
+   *
+   * @param {string} blockName
+   * @returns {Object|null}
+   */
+  _metadataForName(blockName) {
+    const klass = this.blocks.getBlock(blockName);
+    if (!klass || typeof klass !== "function") {
+      return null;
+    }
+    return getBlockMetadata(klass);
+  }
+
+  /**
+   * Tells whether inserting a fresh entry of `blockName` into
+   * `targetOutletName` is compatible with the block class's outlet
+   * restrictions. Same shape as `canDropAt` but for the insert path,
+   * where there's no in-flight drag-source key to consult.
+   *
+   * @param {{blockName: string, targetOutletName: string}} target
+   * @returns {boolean}
+   */
+  canInsertBlockAt({ blockName, targetOutletName }) {
+    if (!blockName || !targetOutletName) {
+      return false;
+    }
+    const metadata = this._metadataForName(blockName);
+    if (!metadata) {
+      // Unknown block — be permissive; the validator will catch it on save.
+      return true;
+    }
+    if (metadata.deniedOutlets?.includes(targetOutletName)) {
+      return false;
+    }
+    if (metadata.allowedOutlets?.length > 0) {
+      return metadata.allowedOutlets.includes(targetOutletName);
+    }
+    return true;
+  }
+
+  /**
    * Tells whether dropping the currently-dragged block at `target` is
    * compatible with the system's authorization rules (`allowedOutlets` /
    * `deniedOutlets` declared on the block class). Same-outlet moves always
@@ -1028,6 +1072,57 @@ export default class VisualEditorService extends Service {
       targetKey,
       position,
     });
+  }
+
+  /**
+   * Inserts a freshly-synthesised entry at the given position in the
+   * target outlet. Mirrors `moveBlock`'s shape but takes a `blockName`
+   * (and a defaultArgs payload from the palette) instead of a source key,
+   * since there's no existing entry to lift from elsewhere.
+   *
+   * The new entry is minted as a plain `{block: blockName, args}` POJO;
+   * `assignStableKeys` (invoked by `_setLayoutLayer` inside
+   * `_publishStructuralChange`) stamps a `__stableKey` when the draft
+   * layer is published, so the rest of the editor (selection, drag,
+   * outline) can address it by key from the next render onwards.
+   *
+   * Returns false (and leaves the layout untouched) when the target
+   * outlet doesn't have a resolvable layout, the block isn't allowed in
+   * that outlet, or the insert otherwise no-ops.
+   *
+   * @param {{
+   *   blockName: string,
+   *   defaultArgs?: Object,
+   *   targetKey: string|null,
+   *   position: "before"|"after"|"inside",
+   *   targetOutletName: string,
+   * }} args
+   * @returns {boolean}
+   */
+  @action
+  insertBlock({
+    blockName,
+    defaultArgs = {},
+    targetKey,
+    position,
+    targetOutletName,
+  }) {
+    if (!this.canInsertBlockAt({ blockName, targetOutletName })) {
+      return false;
+    }
+    const layout = this.readResolvedLayout(targetOutletName);
+    if (!layout) {
+      return false;
+    }
+    // Mint a fresh entry. Spread the defaults so future mutations don't
+    // bleed back into the palette's `previewArgs` object.
+    const entry = { block: blockName, args: { ...defaultArgs } };
+    const insertion = insertEntryAt(layout, targetKey, entry, position);
+    if (!insertion.changed) {
+      return false;
+    }
+    this._publishStructuralChange(targetOutletName, insertion.layout);
+    return true;
   }
 
   _moveWithinOutlet(outletName, sourceKey, targetKey, position) {

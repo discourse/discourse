@@ -304,5 +304,153 @@ module(
         );
       });
     });
+
+    module("insertBlock", function (innerHooks) {
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        this.layout = await _renderBlocks(
+          "homepage-blocks",
+          [{ block: TestTile, args: { title: "Existing" } }],
+          getOwner(this)
+        );
+        this.editor.siteSettings.visual_editor_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:visual-editor");
+        this.editor.enter();
+      });
+
+      test("inserts a freshly-minted entry after the target", function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const targetKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+
+        const ok = this.editor.insertBlock({
+          blockName: "ve-svc-test:tile",
+          defaultArgs: { title: "Inserted" },
+          targetKey,
+          position: "after",
+          targetOutletName: "homepage-blocks",
+        });
+
+        assert.true(ok);
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after.length, 2);
+        assert.strictEqual(after[0].args.title, "Existing");
+        assert.strictEqual(after[1].args.title, "Inserted");
+      });
+
+      test("appends to the outlet root when targetKey is null", function (assert) {
+        const ok = this.editor.insertBlock({
+          blockName: "ve-svc-test:tile",
+          defaultArgs: { title: "Appended" },
+          targetKey: null,
+          position: "after",
+          targetOutletName: "homepage-blocks",
+        });
+
+        assert.true(ok);
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after.at(-1).args.title, "Appended");
+      });
+
+      test("isDirty flips on after an insert", function (assert) {
+        assert.false(this.editor.isDirty);
+        this.editor.insertBlock({
+          blockName: "ve-svc-test:tile",
+          targetKey: null,
+          position: "after",
+          targetOutletName: "homepage-blocks",
+        });
+        assert.true(this.editor.isDirty);
+      });
+
+      test("resetAll restores the pre-insert layout", async function (assert) {
+        this.editor.insertBlock({
+          blockName: "ve-svc-test:tile",
+          defaultArgs: { title: "Throwaway" },
+          targetKey: null,
+          position: "after",
+          targetOutletName: "homepage-blocks",
+        });
+
+        const ok = await this.editor.resetAll();
+        assert.true(ok);
+        const restored = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(restored.length, 1);
+        assert.strictEqual(restored[0].args.title, "Existing");
+        assert.false(this.editor.isDirty);
+      });
+
+      test("default args don't bleed back into the source object", function (assert) {
+        const defaults = { title: "Shared" };
+
+        this.editor.insertBlock({
+          blockName: "ve-svc-test:tile",
+          defaultArgs: defaults,
+          targetKey: null,
+          position: "after",
+          targetOutletName: "homepage-blocks",
+        });
+
+        // Future mutations on the rendered entry must not reach back into
+        // the defaults payload the palette passed in.
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        const inserted = after.at(-1);
+        inserted.args.title = "Mutated";
+        assert.strictEqual(defaults.title, "Shared");
+      });
+    });
+
+    module("canInsertBlockAt", function () {
+      test("permits inserts for blocks with no outlet restrictions", function (assert) {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        assert.true(
+          this.editor.canInsertBlockAt({
+            blockName: "ve-svc-test:tile",
+            targetOutletName: "homepage-blocks",
+          })
+        );
+      });
+
+      test("refuses inserts for unknown outlets when allowedOutlets is set", function (assert) {
+        @block("ve-svc-test:restricted", { allowedOutlets: ["other-outlet"] })
+        class RestrictedTile extends Component {}
+
+        withTestBlockRegistration(() => registerBlock(RestrictedTile));
+        assert.false(
+          this.editor.canInsertBlockAt({
+            blockName: "ve-svc-test:restricted",
+            targetOutletName: "homepage-blocks",
+          })
+        );
+        assert.true(
+          this.editor.canInsertBlockAt({
+            blockName: "ve-svc-test:restricted",
+            targetOutletName: "other-outlet",
+          })
+        );
+      });
+
+      test("refuses inserts for outlets in deniedOutlets", function (assert) {
+        @block("ve-svc-test:denied", { deniedOutlets: ["homepage-blocks"] })
+        class DeniedTile extends Component {}
+
+        withTestBlockRegistration(() => registerBlock(DeniedTile));
+        assert.false(
+          this.editor.canInsertBlockAt({
+            blockName: "ve-svc-test:denied",
+            targetOutletName: "homepage-blocks",
+          })
+        );
+      });
+
+      test("is permissive for unknown block names (validator catches on save)", function (assert) {
+        assert.true(
+          this.editor.canInsertBlockAt({
+            blockName: "ve-svc-test:unknown",
+            targetOutletName: "homepage-blocks",
+          })
+        );
+      });
+    });
   }
 );

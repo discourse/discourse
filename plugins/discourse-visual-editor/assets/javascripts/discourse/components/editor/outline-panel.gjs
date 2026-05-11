@@ -39,6 +39,8 @@ export default class OutlinePanel extends Component {
 
   @tracked outlets = [];
 
+  acceptedDragKinds = ["ve-block", "ve-palette-block"];
+
   // Lazy `blockName -> metadata` index built on first selection. Since each
   // BlockChrome instance does the same lookup, a future Phase could promote
   // this to a shared service-level cache to avoid repeated registry walks.
@@ -101,25 +103,35 @@ export default class OutlinePanel extends Component {
   }
 
   /**
-   * Drop-target for an outline row. Maps every row drop into a `before`
-   * move — the outline is a flat ordered list, so "drop on row X" reads
-   * as "place above row X". (Modifier keys for after/inside semantics is
-   * a Phase 6 polish item.) The target row reads its own `blockKey` /
-   * `outletName` from the row arg via the `(fn …)` curry at the call
-   * site; the source comes through the core modifier's payload.
+   * Drop-target for an outline row. Maps every drop into a `before`
+   * action — the outline is a flat ordered list, so "drop on row X"
+   * reads as "place above row X". Branches on `source.kind` to support
+   * both moves (existing block dragged within the tree) and inserts
+   * (palette block dropped onto an outline row).
    *
    * @param {string} outletName
    * @param {Object} row - Row produced by `walkAllOutlets`.
-   * @param {{ source: { data: { blockKey: string } } }} target
+   * @param {{ source: { kind: string, data: Object } }} target
    */
   @action
   applyRowDrop(outletName, row, target) {
-    this.visualEditor.moveBlock({
-      sourceKey: target.source.data.blockKey,
-      targetKey: row.blockKey,
-      position: "before",
-      targetOutletName: outletName,
-    });
+    const { source } = target;
+    if (source?.kind === "ve-palette-block") {
+      this.visualEditor.insertBlock({
+        blockName: source.data.blockName,
+        defaultArgs: source.data.defaultArgs,
+        targetKey: row.blockKey,
+        position: "before",
+        targetOutletName: outletName,
+      });
+    } else {
+      this.visualEditor.moveBlock({
+        sourceKey: source.data.blockKey,
+        targetKey: row.blockKey,
+        position: "before",
+        targetOutletName: outletName,
+      });
+    }
     this.visualEditor.endDrag();
   }
 
@@ -166,7 +178,7 @@ export default class OutlinePanel extends Component {
                   onDragEnd=this.visualEditor.endDrag
                 }}
                 {{dDragAndDropTarget
-                  accepts="ve-block"
+                  accepts=this.acceptedDragKinds
                   position="before"
                   onDrop=(fn this.applyRowDrop group.outletName row)
                 }}
