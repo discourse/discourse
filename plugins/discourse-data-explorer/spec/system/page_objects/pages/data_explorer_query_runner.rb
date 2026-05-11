@@ -106,6 +106,46 @@ module PageObjects
       def has_chart?
         page.has_css?(".query-results .chart-canvas-container")
       end
+
+      def has_edit_name_button?
+        page.has_css?(".edit-query-name")
+      end
+
+      def has_no_edit_name_button?
+        page.has_no_css?(".edit-query-name")
+      end
+
+      def has_edit_query_button?
+        page.has_css?(".btn-edit-query")
+      end
+
+      def has_no_edit_query_button?
+        page.has_no_css?(".btn-edit-query")
+      end
+
+      def has_run_button?
+        page.has_css?(".query-run .query-run__submit:not([disabled])")
+      end
+
+      def has_disabled_run_button?
+        page.has_css?(".query-run .query-run__submit[disabled]")
+      end
+
+      def has_delete_button?
+        page.has_css?(".query-run-actions__right .btn-danger")
+      end
+
+      def has_no_delete_button?
+        page.has_no_css?(".query-run-actions__right .btn-danger")
+      end
+
+      def has_groups_section?
+        page.has_css?(".query-edit .groups")
+      end
+
+      def has_no_groups_section?
+        page.has_no_css?(".query-edit .groups")
+      end
     end
   end
 end

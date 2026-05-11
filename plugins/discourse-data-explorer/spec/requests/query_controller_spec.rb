@@ -706,6 +706,77 @@ describe DiscourseDataExplorer::QueryController do
     end
   end
 
+  describe "mode access" do
+    fab!(:admin)
+    fab!(:user)
+    fab!(:group) { Fabricate(:group, users: [user]) }
+
+    describe "when mode is disabled" do
+      before do
+        SiteSetting.data_explorer_mode = "disabled"
+        sign_in(admin)
+      end
+
+      it "allows index" do
+        get "/admin/plugins/discourse-data-explorer/queries.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "blocks show, create, update, destroy, run, and schema" do
+        query = make_query("SELECT 1 as value")
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(403)
+
+        post "/admin/plugins/discourse-data-explorer/queries.json",
+             params: {
+               query: {
+                 name: "New",
+                 sql: "SELECT 1",
+               },
+             }
+        expect(response.status).to eq(403)
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                name: "Updated",
+                sql: query.sql,
+              },
+            }
+        expect(response.status).to eq(403)
+
+        delete "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(403)
+
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               params: {}.to_json,
+             }
+        expect(response.status).to eq(403)
+
+        get "/admin/plugins/discourse-data-explorer/schema.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "blocks group_reports_run" do
+        sign_in(user)
+        query = make_query("SELECT 1 as value", {}, [group.id.to_s])
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "blocks public_run" do
+        sign_in(user)
+        query = make_query("SELECT 1 as value", {}, [group.id.to_s])
+
+        get "/data-explorer/queries/#{query.id}/run.json"
+        expect(response.status).to eq(403)
+      end
+    end
+  end
+
   describe "Non-Admin" do
     fab!(:user)
     fab!(:group) { Fabricate(:group, users: [user]) }
