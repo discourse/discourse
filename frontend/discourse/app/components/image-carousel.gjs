@@ -40,13 +40,13 @@ export default class ImageCarousel extends Component {
   suppressDragWrap = false;
   /** @type {?{ element: HTMLElement, destSlide: HTMLElement }} */
   wrapMove = null;
-  trackElement = null;
-  carouselElement = null;
-  wrapSlotObserver = null;
   animationFrame = null;
-  animationTarget = null;
-  scrollStopTimer = null;
   pendingKeyDirection = null;
+  carouselElement;
+  trackElement;
+  wrapSlotObserver;
+  animationTarget;
+  scrollStopTimer;
 
   registerSlide = modifier((element, [index]) => {
     this.slides.set(index, element);
