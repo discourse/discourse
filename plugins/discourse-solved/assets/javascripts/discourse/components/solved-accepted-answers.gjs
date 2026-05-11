@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import PostExcerptAccordion from "discourse/components/post/post-excerpt-accordion";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import SolvedAccordionItemMetadata from "./solved-accordion-item-metadata";
 
@@ -53,7 +53,7 @@ export default class SolvedAcceptedAnswers extends Component {
         <h3 class="d-solved-answers__title">
 
           {{#if this.hasAnswer}}
-            {{icon "far-square-check"}}
+            {{dIcon "far-square-check"}}
           {{/if}}
 
           {{i18n "solved.title"}}

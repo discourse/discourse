@@ -1,10 +1,9 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
-//import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedSet } from "@ember/reactive/collections";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import PostExcerptAccordionItem from "./post-excerpt-accordion-item";
 
 export default class PostExcerptAccordion extends Component {
@@ -75,7 +74,7 @@ export default class PostExcerptAccordion extends Component {
 
   <template>
     <aside
-      class={{concatClass "d-post-excerpt-accordion"}}
+      class={{dConcatClass "d-post-excerpt-accordion"}}
       data-topic={{@post.topic.id}}
       ...attributes
       {{didUpdate this.resetExpandedIds this.excerptPosts}}

@@ -5,13 +5,13 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
-import RelativeDate from "discourse/components/relative-date";
-import UserLink from "discourse/components/user-link";
-import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
-import concatClass from "discourse/helpers/concat-class";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import DiscourseURL from "discourse/lib/url";
-import onResize from "discourse/modifiers/on-resize";
+import DRelativeDate from "discourse/ui-kit/d-relative-date";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
 export default class PostExcerptAccordionItem extends Component {
@@ -83,7 +83,7 @@ export default class PostExcerptAccordionItem extends Component {
   <template>
     {{#if this.excerptPost}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "quote d-post-excerpt-accordion-item"
           (if this.hasContent "d-post-excerpt-accordion-item--has-excerpt")
           (unless this.hasContent "title-only")
@@ -104,19 +104,19 @@ export default class PostExcerptAccordionItem extends Component {
             {{#if @hasItemMetadataBlock}}
               {{yield this.excerptPost to="itemMetadata"}}
             {{else}}
-              <UserLink
+              <DUserLink
                 @username={{this.excerptPost.username}}
                 class="user-link"
               >
-                {{boundAvatarTemplate this.excerptPost.avatar_template "tiny"}}
+                {{dBoundAvatarTemplate this.excerptPost.avatar_template "tiny"}}
                 <span>{{this.userDisplayName}}</span>
-              </UserLink>
+              </DUserLink>
               <span class="dot-separator"></span>
               <a
                 href={{this.excerptPost.post_url}}
                 title={{i18n "post.sr_date"}}
               >
-                <RelativeDate @date={{this.excerptPost.created_at}} />
+                <DRelativeDate @date={{this.excerptPost.created_at}} />
               </a>
             {{/if}}
           </div>
@@ -148,7 +148,7 @@ export default class PostExcerptAccordionItem extends Component {
             <blockquote
               id={{this.quoteId}}
               class="d-post-excerpt-accordion-item__content"
-              {{onResize this.checkOverflow}}
+              {{dOnResize this.checkOverflow}}
             >
               {{#if @hasBeforeItemContentBlock}}
                 {{yield this.excerptPost to="beforeItemContent"}}
