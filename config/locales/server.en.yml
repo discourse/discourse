@@ -1671,7 +1671,7 @@ en:
         os: Operating System
         login_time: Login Time
       description: "Details of new logins that differ suspiciously from previous logins."
-    staff_logins:
+    admin_logins:
       title: "Admin Logins"
       labels:
         user: User
