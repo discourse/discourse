@@ -20,8 +20,6 @@ const MAX_DOTS = 8;
 const USE_SCROLLEND = !isTesting() && "onscrollend" in window;
 // Approximate scroll animation duration (~99% of the distance covered).
 const ANIMATION_DURATION_MS = 1250;
-const ANIMATION_FINISH_THRESHOLD = 0.5;
-const EXTERNAL_SCROLL_TOLERANCE_PX = 2;
 
 function plusOne(val) {
   return val + 1;
@@ -271,13 +269,14 @@ export default class ImageCarousel extends Component {
       const current = t.scrollLeft;
 
       // Abort if external interaction (drag/swipe/wheel) perturbed position.
-      if (Math.abs(current - lastSet) > EXTERNAL_SCROLL_TOLERANCE_PX) {
+      if (Math.abs(current - lastSet) > 2) {
         this.cancelAnimation();
         return;
       }
 
       const distance = this.animationTarget - current;
-      if (Math.abs(distance) < ANIMATION_FINISH_THRESHOLD) {
+      // Sub-pixel: snap to target.
+      if (Math.abs(distance) < 0.5) {
         t.scrollLeft = this.animationTarget;
         // If we landed on a clone, silently teleport to its real counterpart.
         // currentIndex was already set to the wrap target by scrollToIndex.
