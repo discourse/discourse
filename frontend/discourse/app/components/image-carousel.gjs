@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -25,7 +25,7 @@ function plusOne(val) {
   return val + 1;
 }
 
-function getAspectRatio(width, height) {
+function aspectRatioStyle(width, height) {
   const w = parseInt(width, 10) || 1;
   const h = parseInt(height, 10) || 1;
   return trustHTML(`aspect-ratio: ${w} / ${h}`);
@@ -39,25 +39,28 @@ export default class ImageCarousel extends Component {
   carouselElement = null;
   programmaticScroll = false;
   slides = new Map();
-  clones = new Map();
+  wrapSlots = new Map();
+  wrapSlotObserver = null;
+  movedElement = null;
+  movedToSlide = null;
   animationFrame = null;
   animationTarget = null;
   scrollStopTimer = null;
-  cloneObserver = null;
   isScrolling = false;
   pendingKeyDirection = null;
+  suppressDragWrap = false;
 
   registerSlide = modifier((element, [index]) => {
     this.slides.set(index, element);
     return () => this.slides.delete(index);
   });
 
-  registerClone = modifier((element, [which]) => {
-    this.clones.set(which, element);
-    this.cloneObserver?.observe(element);
+  registerWrapSlot = modifier((element, [which]) => {
+    this.wrapSlots.set(which, element);
+    this.wrapSlotObserver?.observe(element);
     return () => {
-      this.cloneObserver?.unobserve(element);
-      this.clones.delete(which);
+      this.wrapSlotObserver?.unobserve(element);
+      this.wrapSlots.delete(which);
     };
   });
 
@@ -72,7 +75,7 @@ export default class ImageCarousel extends Component {
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
 
     // rAF defers until child slide modifiers register, then centers slide 0
-    // past the leading clone.
+    // past the leading wrap slot.
     const initialScroll = requestAnimationFrame(() => {
       if (!element.isConnected) {
         return;
@@ -85,14 +88,15 @@ export default class ImageCarousel extends Component {
       });
     });
 
-    // threshold: 1 fires only when a clone is fully visible — exactly when
-    // the snap-to-clone animation completes. A lower threshold would fire
-    // mid-animation and perturb the in-flight snap.
-    this.cloneObserver = new IntersectionObserver(this.onCloneIntersect, {
+    // threshold: 1 fires exactly when a wrap slot is fully visible — the
+    // instant a drag-scroll reaches it. Teleporting here (rather than
+    // waiting for scrollend) lets continuous trackpad momentum carry through
+    // the wrap without a forced stop.
+    this.wrapSlotObserver = new IntersectionObserver(this.onWrapSlotIntersect, {
       root: element,
       threshold: 1,
     });
-    this.clones.forEach((clone) => this.cloneObserver.observe(clone));
+    this.wrapSlots.forEach((slot) => this.wrapSlotObserver.observe(slot));
 
     element.addEventListener("scroll", this.onScroll, { passive: true });
     element.addEventListener("touchstart", this.focusCarousel, {
@@ -111,11 +115,12 @@ export default class ImageCarousel extends Component {
         element.removeEventListener("scrollend", this.onScrollSettled);
       }
 
-      this.cloneObserver?.disconnect();
-      this.cloneObserver = null;
+      this.wrapSlotObserver?.disconnect();
+      this.wrapSlotObserver = null;
       clearTimeout(this.scrollStopTimer);
       cancelAnimationFrame(initialScroll);
       this.cancelAnimation();
+      this.returnMovedElement();
       this.trackElement = null;
     };
   });
@@ -144,18 +149,9 @@ export default class ImageCarousel extends Component {
     return this.items[this.lastIndex];
   }
 
-  @cached
-  get firstCloneNode() {
-    return this.firstItem?.element?.cloneNode(true);
-  }
-
-  @cached
-  get lastCloneNode() {
-    return this.lastItem?.element?.cloneNode(true);
-  }
-
-  // Real-slide index nearest the viewport center. Clones report the index
-  // of the slide they duplicate.
+  // Real-slide index nearest the viewport center. Wrap slots map to the
+  // index of the slide they're standing in for (trailing → 0, leading →
+  // lastIndex), so dragging into a wrap slot reads as "at the destination".
   nearestRealIndex() {
     const track = this.trackElement;
     if (!track) {
@@ -177,8 +173,8 @@ export default class ImageCarousel extends Component {
     };
 
     this.slides.forEach(consider);
-    this.clones.forEach((el, which) =>
-      consider(el, which === "first" ? 0 : this.lastIndex)
+    this.wrapSlots.forEach((element, which) =>
+      consider(element, which === "trailing" ? 0 : this.lastIndex)
     );
 
     return best;
@@ -192,31 +188,29 @@ export default class ImageCarousel extends Component {
     );
   }
 
-  // If scrolled into a clone wrap zone, jump by (N * slideWidth) to the
-  // equivalent real-strip position. Invisible since clones mirror their real
-  // counterparts; lets follow-up animations take the short path.
-  teleportFromWrapZone() {
-    const track = this.trackElement;
-    const slideWidth = track?.clientWidth;
-    if (!slideWidth) {
+  // Put the moved element back into its destination slide. No scroll change.
+  returnMovedElement() {
+    if (!this.movedElement || !this.movedToSlide) {
       return false;
     }
+    this.movedToSlide.appendChild(this.movedElement);
+    this.movedElement = null;
+    this.movedToSlide = null;
+    return true;
+  }
 
-    const wrapDistance = this.items.length * slideWidth;
-    const sl = track.scrollLeft;
-    let teleportTarget;
-
-    if (sl > wrapDistance) {
-      teleportTarget = sl - wrapDistance;
-    } else if (sl < slideWidth) {
-      teleportTarget = sl + wrapDistance;
-    } else {
+  // Finish a wrap: return the moved element to its destination slide and
+  // teleport scrollLeft from the wrap slot to that slide's centered position.
+  finishWrap() {
+    const dest = this.movedToSlide;
+    if (!dest || !this.returnMovedElement() || !this.trackElement) {
       return false;
     }
-
-    // "instant" bypasses CSS scroll-behavior: smooth — otherwise this would
-    // visibly animate across the entire strip.
-    track.scrollTo({ left: teleportTarget, behavior: "instant" });
+    // "instant" bypasses CSS scroll-behavior: smooth.
+    this.trackElement.scrollTo({
+      left: this.computeTargetScrollLeft(dest),
+      behavior: "instant",
+    });
     return true;
   }
 
@@ -229,9 +223,12 @@ export default class ImageCarousel extends Component {
 
     if (prefersReducedMotion()) {
       this.cancelAnimation();
-      this.teleportFromWrapZone();
-      // "instant" overrides CSS scroll-behavior: smooth.
-      track.scrollTo({ left: target, behavior: "instant" });
+      // If a wrap was just set up, finishWrap teleports to the destination
+      // slide and overrides the slot target. Otherwise teleport directly.
+      if (!this.finishWrap()) {
+        // "instant" overrides CSS scroll-behavior: smooth.
+        track.scrollTo({ left: target, behavior: "instant" });
+      }
       return;
     }
 
@@ -240,14 +237,6 @@ export default class ImageCarousel extends Component {
     // snap would yank intermediate positions to snap points. Idempotent.
     track.style.scrollSnapType = "none";
     track.style.scrollBehavior = "auto";
-
-    // Rapid re-click while a previous wrap is mid-flight: teleport to the
-    // real-strip equivalent and cancel the rAF — its lastSet would otherwise
-    // diverge from the post-teleport scrollLeft and trigger the abort below.
-    if (this.teleportFromWrapZone() && this.animationFrame !== null) {
-      cancelAnimationFrame(this.animationFrame);
-      this.animationFrame = null;
-    }
 
     this.animationTarget = target;
     if (this.animationFrame !== null) {
@@ -268,6 +257,9 @@ export default class ImageCarousel extends Component {
 
       // Abort if external interaction (drag/swipe/wheel) perturbed position.
       if (Math.abs(current - lastSet) > 2) {
+        // Hand the moved element back to its slide without teleporting so
+        // the user's drag continues from wherever they took us.
+        this.returnMovedElement();
         this.cancelAnimation();
         return;
       }
@@ -276,10 +268,18 @@ export default class ImageCarousel extends Component {
       // Sub-pixel: snap to target.
       if (Math.abs(distance) < 0.5) {
         t.scrollLeft = this.animationTarget;
-        // If we landed on a clone, silently teleport to its real counterpart.
-        // currentIndex was already set to the wrap target by scrollToIndex.
-        this.teleportFromWrapZone();
-        this.cancelAnimation();
+        // If we landed on a wrap slot, return the element to its slide and
+        // teleport. currentIndex was already set by scrollToIndex.
+        this.finishWrap();
+        // Inline cleanup (not cancelAnimation): defer the snap/smooth-scroll
+        // restore to the next frame. Otherwise the snap engine, which still
+        // has its pre-teleport target committed, smooth-scrolls scrollLeft
+        // back toward it and (with scroll-snap-stop: always) lands at the
+        // first snap point along the way.
+        cancelAnimationFrame(this.animationFrame);
+        this.animationFrame = null;
+        this.programmaticScroll = false;
+        requestAnimationFrame(() => this.restoreScrollStyles());
         return;
       }
 
@@ -301,33 +301,55 @@ export default class ImageCarousel extends Component {
       cancelAnimationFrame(this.animationFrame);
       this.animationFrame = null;
     }
-
-    // restore native snap + smooth-scroll
-    const track = this.trackElement;
-    if (track) {
-      track.style.scrollSnapType = "";
-      track.style.scrollBehavior = "";
-    }
+    this.restoreScrollStyles();
     this.programmaticScroll = false;
   }
 
-  // For wrap-crossing nav, return the adjacent clone so the scroll animates
-  // one slide-width. The rAF finish branch teleports to the real counterpart.
+  // Restore the native snap + smooth-scroll CSS overrides set during a
+  // programmatic teleport or rAF animation.
+  restoreScrollStyles() {
+    if (this.trackElement) {
+      this.trackElement.style.scrollSnapType = "";
+      this.trackElement.style.scrollBehavior = "";
+    }
+  }
+
+  // For wrap-crossing nav, move the destination item's element into the
+  // adjacent (initially empty) wrap slot so the scroll animates a single
+  // slide-width to it. finishWrap moves it back and teleports afterwards.
   scrollTargetFor(index, direction) {
-    if (
-      direction === "next" &&
-      this.currentIndex === this.lastIndex &&
-      index === 0
-    ) {
-      return this.clones.get("first");
+    // Clean up any prior wrap state before deciding a new target. If a wrap
+    // is mid-flight (rAF running), teleport to its destination so the next
+    // animation starts from a clean position, and cancel the rAF so the new
+    // animateScrollTo starts fresh (otherwise the old rAF's lastSet would
+    // diverge and trigger its abort instead of redirecting smoothly).
+    if (this.movedElement && this.animationFrame !== null) {
+      this.finishWrap();
+      cancelAnimationFrame(this.animationFrame);
+      this.animationFrame = null;
+    } else {
+      this.returnMovedElement();
     }
 
-    if (
+    const wrapNext =
+      direction === "next" &&
+      this.currentIndex === this.lastIndex &&
+      index === 0;
+    const wrapPrev =
       direction === "prev" &&
       this.currentIndex === 0 &&
-      index === this.lastIndex
-    ) {
-      return this.clones.get("last");
+      index === this.lastIndex;
+
+    if (wrapNext || wrapPrev) {
+      const slot = this.wrapSlots.get(wrapNext ? "trailing" : "leading");
+      const destSlide = this.slides.get(index);
+      const item = wrapNext ? this.firstItem : this.lastItem;
+      if (slot && destSlide && item?.element) {
+        slot.appendChild(item.element);
+        this.movedElement = item.element;
+        this.movedToSlide = destSlide;
+        return slot;
+      }
     }
 
     return this.slides.get(index);
@@ -342,12 +364,29 @@ export default class ImageCarousel extends Component {
     );
   }
 
+  // True iff scrollLeft has come to rest at a wrap slot's centered position.
+  atWrapSlot() {
+    const track = this.trackElement;
+    if (!track) {
+      return false;
+    }
+    for (const slot of this.wrapSlots.values()) {
+      if (Math.abs(this.computeTargetScrollLeft(slot) - track.scrollLeft) < 1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @bind
-  onCloneIntersect(entries) {
-    // Don't fight an in-flight rAF wrap; perturbing scrollLeft would trip
-    // its external-scroll abort. The rAF's own finish branch handles the
-    // teleport.
+  onWrapSlotIntersect(entries) {
+    // Don't fight an in-flight click-wrap rAF; its own finish branch handles
+    // the teleport. Perturbing scrollLeft would trip the rAF's external-
+    // scroll abort.
     if (this.animationFrame !== null) {
+      return;
+    }
+    if (this.suppressDragWrap) {
       return;
     }
 
@@ -355,16 +394,72 @@ export default class ImageCarousel extends Component {
       if (!entry.isIntersecting) {
         continue;
       }
-      const realIndex =
-        entry.target === this.clones.get("first") ? 0 : this.lastIndex;
-      const realSlide = this.slides.get(realIndex);
-      if (realSlide) {
-        this.trackElement?.scrollTo({
-          left: this.computeTargetScrollLeft(realSlide),
-          behavior: "instant",
-        });
+      const isTrailing = entry.target === this.wrapSlots.get("trailing");
+      const destIndex = isTrailing ? 0 : this.lastIndex;
+      const destSlide = this.slides.get(destIndex);
+      const track = this.trackElement;
+      if (!destSlide || !track) {
+        return;
       }
+      // If a drag-wrap parked the element here, hand it back to its slide.
+      if (
+        this.movedElement &&
+        this.movedElement.parentElement === entry.target
+      ) {
+        this.returnMovedElement();
+      }
+      // Disable snap + smooth around the teleport. Without this, the snap
+      // engine remembers its pre-teleport target (the wrap slot) and
+      // smooth-scrolls back to it after we jump away.
+      track.style.scrollSnapType = "none";
+      track.style.scrollBehavior = "auto";
+      track.scrollTo({
+        left: this.computeTargetScrollLeft(destSlide),
+        behavior: "instant",
+      });
+      this.currentIndex = destIndex;
+      this.suppressDragWrap = true;
+      requestAnimationFrame(() => this.restoreScrollStyles());
       return;
+    }
+  }
+
+  updateDragWrapContent() {
+    if (this.suppressDragWrap) {
+      return;
+    }
+    const track = this.trackElement;
+    const firstSlide = this.slides.get(0);
+    const lastSlide = this.slides.get(this.lastIndex);
+    if (!track || !firstSlide || !lastSlide) {
+      return;
+    }
+
+    // Move the wrap content the instant its slot starts entering the
+    // viewport (not once it's already half-visible).
+    const sl = track.scrollLeft;
+    const pastLast = sl > lastSlide.offsetLeft;
+    const beforeFirst = sl < firstSlide.offsetLeft;
+
+    if (pastLast) {
+      this.ensureMovedTo("trailing", this.firstItem, firstSlide);
+    } else if (beforeFirst) {
+      this.ensureMovedTo("leading", this.lastItem, lastSlide);
+    } else if (this.movedElement) {
+      this.returnMovedElement();
+    }
+  }
+
+  ensureMovedTo(slotName, item, destSlide) {
+    if (this.movedElement === item?.element) {
+      return;
+    }
+    this.returnMovedElement();
+    const slot = this.wrapSlots.get(slotName);
+    if (slot && destSlide && item?.element) {
+      slot.appendChild(item.element);
+      this.movedElement = item.element;
+      this.movedToSlide = destSlide;
     }
   }
 
@@ -394,15 +489,25 @@ export default class ImageCarousel extends Component {
 
   @bind
   onScrollSettled() {
-    // Browser can fire scrollend mid-rAF; teleporting here would trip its
-    // external-scroll abort. The rAF's own finish branch handles the wrap.
+    // Browser can fire scrollend mid-rAF; finishing the wrap here would
+    // trip the rAF's external-scroll abort. The rAF's finish branch handles
+    // its own wrap.
     if (this.animationFrame !== null) {
       return;
     }
 
     this.isScrolling = false;
     this.programmaticScroll = false;
-    this.teleportFromWrapZone();
+    this.suppressDragWrap = false;
+    // Only teleport (finishWrap) if scroll actually came to rest at a wrap
+    // slot. If updateDragWrapContent set movedElement on a momentum
+    // overshoot but snap pulled us back to a real slide, just return the
+    // moved element silently — don't yank scrollLeft to a different slide.
+    if (this.atWrapSlot()) {
+      this.finishWrap();
+    } else {
+      this.returnMovedElement();
+    }
     this.updateIndex();
 
     // Run any keyboard nav queued during the browser scroll; direction
@@ -427,6 +532,14 @@ export default class ImageCarousel extends Component {
     if (!USE_SCROLLEND) {
       clearTimeout(this.scrollStopTimer);
       this.scrollStopTimer = setTimeout(this.onScrollSettled, 150);
+    }
+
+    // While the user is drag-scrolling past the strip's ends, move the
+    // wrap-around item's element into the adjacent slot so they see real
+    // content instead of an empty slot. Click-wrap animations skip this —
+    // they manage moves themselves.
+    if (!this.programmaticScroll) {
+      this.updateDragWrapContent();
     }
   }
 
@@ -481,19 +594,16 @@ export default class ImageCarousel extends Component {
       >
         <div {{this.setupTrack}} class="d-image-carousel__track">
           <div
-            {{this.registerClone "last"}}
+            {{this.registerWrapSlot "leading"}}
             inert
-            style={{getAspectRatio this.lastItem.width this.lastItem.height}}
-            class="d-image-carousel__slide d-image-carousel__slide--clone"
-          >
-            {{this.lastCloneNode}}
-          </div>
+            class="d-image-carousel__slide d-image-carousel__slide--wrap-slot"
+          ></div>
 
           {{#each this.items as |item index|}}
             <div
               {{this.registerSlide index}}
               data-index={{index}}
-              style={{getAspectRatio item.width item.height}}
+              style={{aspectRatioStyle item.width item.height}}
               class={{concatClass
                 "d-image-carousel__slide"
                 (if (eq this.currentIndex index) "is-active")
@@ -504,13 +614,10 @@ export default class ImageCarousel extends Component {
           {{/each}}
 
           <div
-            {{this.registerClone "first"}}
+            {{this.registerWrapSlot "trailing"}}
             inert
-            style={{getAspectRatio this.firstItem.width this.firstItem.height}}
-            class="d-image-carousel__slide d-image-carousel__slide--clone"
-          >
-            {{this.firstCloneNode}}
-          </div>
+            class="d-image-carousel__slide d-image-carousel__slide--wrap-slot"
+          ></div>
         </div>
 
         <div class="d-image-carousel__controls">
