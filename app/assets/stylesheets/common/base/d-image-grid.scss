@@ -107,6 +107,10 @@
   flex-direction: column;
   gap: var(--space-2);
 
+  &:focus {
+    outline: none;
+  }
+
   &__track {
     display: flex;
     width: 100%;
@@ -117,10 +121,6 @@
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-
-    &:focus {
-      outline: none;
-    }
 
     &::-webkit-scrollbar {
       display: none;
