@@ -18,8 +18,8 @@ const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
 const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 8;
 const USE_SCROLLEND = !isTesting() && "onscrollend" in window;
-// Per-frame fraction of remaining distance. 0.06 ≈ 1.5s to converge.
-const ANIMATION_APPROACH_RATE = 0.06;
+// Approximate scroll animation duration (~99% of the distance covered).
+const ANIMATION_DURATION_MS = 1250;
 const ANIMATION_FINISH_THRESHOLD = 0.5;
 const EXTERNAL_SCROLL_TOLERANCE_PX = 2;
 
@@ -259,8 +259,9 @@ export default class ImageCarousel extends Component {
     }
 
     let lastSet = track.scrollLeft;
+    let lastFrameTime = null;
 
-    const tick = () => {
+    const tick = (now) => {
       const t = this.trackElement;
       if (!t) {
         this.animationFrame = null;
@@ -285,7 +286,11 @@ export default class ImageCarousel extends Component {
         return;
       }
 
-      const next = current + distance * ANIMATION_APPROACH_RATE;
+      // Frame-rate-independent exponential approach.
+      const dt = lastFrameTime === null ? 1000 / 60 : now - lastFrameTime;
+      lastFrameTime = now;
+      const rate = 1 - 0.01 ** (dt / ANIMATION_DURATION_MS);
+      const next = current + distance * rate;
       t.scrollLeft = next;
       lastSet = next;
       this.animationFrame = requestAnimationFrame(tick);
