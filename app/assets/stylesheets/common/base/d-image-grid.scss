@@ -207,8 +207,6 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.5rem;
-    border-radius: 1rem;
   }
 
   &__dot {
@@ -216,7 +214,7 @@
     height: 0.66rem;
     width: 0.66rem;
     padding: 0;
-    background: var(--primary-300);
+    background: var(--primary-low-mid);
     border: none;
     border-radius: 1rem;
     cursor: pointer;
@@ -237,12 +235,12 @@
     }
 
     &:hover {
-      background: var(--primary-900);
+      background: var(--primary);
       transform: scale(1.25);
     }
 
     &.active {
-      background: var(--primary-600);
+      background: var(--primary-high);
       cursor: default;
       width: 1.4rem;
     }
