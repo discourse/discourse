@@ -37,7 +37,6 @@ export default class ImageCarousel extends Component {
   trackDirection = 1;
   trackElement = null;
   carouselElement = null;
-  programmaticScroll = false;
   slides = new Map();
   wrapSlots = new Map();
   wrapSlotObserver = null;
@@ -273,7 +272,6 @@ export default class ImageCarousel extends Component {
         // target committed and would smooth-scroll back toward it.
         cancelAnimationFrame(this.animationFrame);
         this.animationFrame = null;
-        this.programmaticScroll = false;
         requestAnimationFrame(() => this.restoreScrollStyles());
         return;
       }
@@ -296,7 +294,6 @@ export default class ImageCarousel extends Component {
       this.animationFrame = null;
     }
     this.restoreScrollStyles();
-    this.programmaticScroll = false;
   }
 
   // Restore the native snap + smooth-scroll CSS overrides set during a
@@ -461,9 +458,9 @@ export default class ImageCarousel extends Component {
 
   @bind
   updateIndex() {
-    // During a programmatic scroll the position is still near the previous
-    // slide and would clobber the target index.
-    if (this.programmaticScroll) {
+    // During our own rAF, scrollLeft is mid-transit; the nearest-slide read
+    // would clobber the synchronously-set currentIndex.
+    if (this.animationFrame !== null) {
       return;
     }
 
@@ -507,7 +504,6 @@ export default class ImageCarousel extends Component {
     }
 
     this.isScrolling = false;
-    this.programmaticScroll = false;
     this.suppressDragWrap = false;
     // Only teleport if we actually rest in a wrap slot — otherwise a momentum
     // overshoot that snapped back to a real slide would yank scrollLeft.
@@ -542,7 +538,7 @@ export default class ImageCarousel extends Component {
 
     // During a user drag past the ends, park the wrap item in the adjacent
     // slot. Click-wrap rAFs manage their own moves.
-    if (!this.programmaticScroll) {
+    if (this.animationFrame === null) {
       this.updateDragWrapContent();
     }
   }
@@ -561,7 +557,6 @@ export default class ImageCarousel extends Component {
       return;
     }
 
-    this.programmaticScroll = true;
     this.animateScrollTo(target);
   }
 
