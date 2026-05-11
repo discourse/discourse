@@ -138,6 +138,8 @@ export default class ImageCarousel extends Component {
   #useScrollEnd = false;
   #scrollStopTimer = null;
   #cloneObserver = null;
+  #isScrolling = false;
+  #pendingKeyDirection = null;
 
   @bind
   updateIndex() {
@@ -173,13 +175,25 @@ export default class ImageCarousel extends Component {
       return;
     }
 
+    this.#isScrolling = false;
     this.#programmaticScroll = false;
     this.#teleportFromWrapZone();
     this.updateIndex();
+
+    // Run any keyboard navigation that arrived while a browser-driven
+    // scroll was in flight. Direction is recomputed against the now-settled
+    // currentIndex.
+    if (this.#pendingKeyDirection) {
+      const direction = this.#pendingKeyDirection;
+      this.#pendingKeyDirection = null;
+      this.#navigateByKey(direction);
+    }
   }
 
   @bind
   onScroll() {
+    this.#isScrolling = true;
+
     // Optimistic update while scrolling for real-time dot feedback
     if (!isTesting()) {
       throttle(this, this.updateIndex, SCROLL_THROTTLE_MS);
@@ -471,7 +485,19 @@ export default class ImageCarousel extends Component {
     }
 
     event.preventDefault();
+
     const direction = event.key === "ArrowLeft" ? "left" : "right";
+
+    // If a browser-driven scroll (touch/wheel) is currently in flight,
+    // queue the navigation for after it settles instead of starting an
+    // rAF that the in-flight scroll would just abort. Our own rAF
+    // (animationFrame !== null) is handled by the retarget path inside
+    // animateScrollTo, so we run normally in that case.
+    if (this.#isScrolling && this.#animationFrame === null) {
+      this.#pendingKeyDirection = direction;
+      return;
+    }
+
     throttle(this, this.#navigateByKey, direction, KEYBOARD_THROTTLE_MS);
   }
 
