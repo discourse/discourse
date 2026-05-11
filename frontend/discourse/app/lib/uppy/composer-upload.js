@@ -135,6 +135,10 @@ export default class UppyComposerUpload {
   }
 
   setup(element) {
+    if (this.#uploadTargetBound) {
+      this.teardown();
+    }
+
     this.#editorEl = element;
     this.#fileInputEl = document.getElementById(this.fileUploadElementId);
 

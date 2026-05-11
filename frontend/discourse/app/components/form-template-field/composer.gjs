@@ -38,9 +38,7 @@ export default class FormTemplateFieldComposer extends Component {
       return;
     }
 
-    const escapedOldVal = oldVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp(escapedOldVal, "g");
-    this.composerValue = this.composerValue.replace(regex, newVal ?? "");
+    this.composerValue = this.composerValue.replace(oldVal, newVal ?? "");
 
     schedule("afterRender", () => {
       this.args.onChange?.();
