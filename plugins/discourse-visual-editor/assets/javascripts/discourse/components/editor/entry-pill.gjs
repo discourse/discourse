@@ -3,7 +3,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -45,7 +45,7 @@ export default class EntryPill extends Component {
         class="visual-editor-pill"
         {{on "click" this.enter}}
       >
-        {{icon "wand-magic-sparkles"}}
+        {{dIcon "wand-magic-sparkles"}}
         <span>{{this.label}}</span>
       </button>
     {{/if}}

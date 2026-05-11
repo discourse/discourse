@@ -1,5 +1,5 @@
 // @ts-check
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 /**
  * Outlet boundary chrome rendered around each `<BlockOutlet>` when the editor
@@ -12,7 +12,7 @@ import icon from "discourse/helpers/d-icon";
 const OutletBoundary = <template>
   <div class="visual-editor-outlet-boundary" data-outlet-name={{@outletName}}>
     <span class="visual-editor-outlet-boundary__badge">
-      {{icon "cubes"}}
+      {{dIcon "cubes"}}
       <span>{{@outletName}}</span>
       {{#if @blockCount}}
         <span class="visual-editor-outlet-boundary__count">·

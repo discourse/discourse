@@ -5,10 +5,10 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import dragAndDropSource from "discourse/modifiers/drag-and-drop-source";
 import dragAndDropTarget from "discourse/modifiers/drag-and-drop-target";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -187,7 +187,7 @@ export default class BlockChrome extends Component {
         the frame, signalling "place as the container's first child". }}
       <div class="visual-editor-block-chrome-wrapper">
         <div
-          class={{concatClass
+          class={{dConcatClass
             "visual-editor-drop-zone --before"
             (if (this.isDropZoneActive "before") "--active")
           }}
@@ -203,7 +203,7 @@ export default class BlockChrome extends Component {
         ></div>
 
         <div
-          class={{concatClass
+          class={{dConcatClass
             "visual-editor-block-chrome"
             (if this.isSelected "--selected")
             (if this.isContainer "--container")
@@ -227,7 +227,7 @@ export default class BlockChrome extends Component {
               onDragEnd=this.visualEditor.endDrag
             }}
           >
-            {{icon "grip-lines"}}
+            {{dIcon "grip-lines"}}
             <span>{{this.displayName}}</span>
           </span>
 
@@ -235,7 +235,7 @@ export default class BlockChrome extends Component {
 
           {{#if this.isContainer}}
             <div
-              class={{concatClass
+              class={{dConcatClass
                 "visual-editor-drop-zone --inside"
                 (if (this.isDropZoneActive "inside") "--active")
               }}
@@ -257,7 +257,7 @@ export default class BlockChrome extends Component {
         </div>
 
         <div
-          class={{concatClass
+          class={{dConcatClass
             "visual-editor-drop-zone --after"
             (if (this.isDropZoneActive "after") "--active")
           }}

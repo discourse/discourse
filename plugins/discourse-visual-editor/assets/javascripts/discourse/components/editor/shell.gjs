@@ -4,8 +4,8 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import InspectorPanel from "./inspector-panel";
 import OutlinePanel from "./outline-panel";
@@ -130,21 +130,21 @@ export default class EditorShell extends Component {
       <div class="visual-editor-shell">
         <div class="visual-editor-toolbar">
           <div class="toolbar-left">
-            {{icon "wand-magic-sparkles"}}
+            {{dIcon "wand-magic-sparkles"}}
             <span class="toolbar-title">Visual Editor</span>
           </div>
           <div class="toolbar-right">
             {{#if this.visualEditor.hasValidationWarnings}}
               <button
                 type="button"
-                class={{concatClass
+                class={{dConcatClass
                   "btn btn-flat visual-editor-btn-warnings"
                   (if this.warningsPanelOpen "--open")
                 }}
                 title={{i18n "visual_editor.chrome.warnings_button_title"}}
                 {{on "click" this.toggleWarningsPanel}}
               >
-                {{icon "triangle-exclamation"}}
+                {{dIcon "triangle-exclamation"}}
                 <span>{{this.visualEditor.validationWarnings.length}}</span>
               </button>
             {{/if}}
@@ -155,7 +155,7 @@ export default class EditorShell extends Component {
               disabled={{if this.visualEditor.canUndo false true}}
               {{on "click" this.undo}}
             >
-              {{icon "arrow-rotate-left"}}
+              {{dIcon "arrow-rotate-left"}}
             </button>
             <button
               type="button"
@@ -164,7 +164,7 @@ export default class EditorShell extends Component {
               disabled={{if this.visualEditor.canRedo false true}}
               {{on "click" this.redo}}
             >
-              {{icon "arrow-rotate-right"}}
+              {{dIcon "arrow-rotate-right"}}
             </button>
             <button
               type="button"
@@ -187,7 +187,7 @@ export default class EditorShell extends Component {
               class="btn btn-default"
               {{on "click" this.exit}}
             >
-              {{icon "xmark"}}
+              {{dIcon "xmark"}}
               <span>{{i18n "visual_editor.chrome.exit"}}</span>
             </button>
           </div>
@@ -196,7 +196,7 @@ export default class EditorShell extends Component {
         {{#if this.saveErrorMessage}}
           <div class="visual-editor-save-error" role="alert">
             <span class="visual-editor-save-error__icon">
-              {{icon "triangle-exclamation"}}
+              {{dIcon "triangle-exclamation"}}
             </span>
             <span class="visual-editor-save-error__message">
               {{this.saveErrorMessage}}
@@ -207,7 +207,7 @@ export default class EditorShell extends Component {
               aria-label={{i18n "visual_editor.chrome.dismiss_error"}}
               {{on "click" this.dismissSaveError}}
             >
-              {{icon "xmark"}}
+              {{dIcon "xmark"}}
             </button>
           </div>
         {{/if}}
@@ -215,7 +215,7 @@ export default class EditorShell extends Component {
         {{#if this.warningsPanelOpen}}
           <div class="visual-editor-warnings-panel" role="region">
             <div class="visual-editor-warnings-panel__header">
-              {{icon "triangle-exclamation"}}
+              {{dIcon "triangle-exclamation"}}
               <span>{{i18n
                   "visual_editor.chrome.warnings_panel_title"
                   count=this.visualEditor.validationWarnings.length
