@@ -400,6 +400,138 @@ module(
       });
     });
 
+    module("clipboard (copy / cut / paste)", function (innerHooks) {
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        this.layout = await _renderBlocks(
+          "homepage-blocks",
+          [
+            { block: TestTile, args: { title: "First" } },
+            { block: TestTile, args: { title: "Second" } },
+          ],
+          getOwner(this)
+        );
+        this.editor.siteSettings.visual_editor_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:visual-editor");
+        this.editor.enter();
+      });
+
+      test("copySelected stores a clone with mode='copy'", function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        this.editor.selectBlock({
+          key: firstKey,
+          name: "ve-svc-test:tile",
+        });
+
+        assert.true(this.editor.copySelected());
+        assert.true(this.editor.hasClipboardEntry);
+        assert.strictEqual(this.editor._clipboard.mode, "copy");
+        assert.strictEqual(this.editor._clipboard.entry.args.title, "First");
+        assert.strictEqual(
+          this.editor._clipboard.entry.__stableKey,
+          undefined,
+          "clipboard entry strips __stableKey so paste mints a fresh one"
+        );
+      });
+
+      test("copySelected returns false when nothing is selected", function (assert) {
+        assert.false(this.editor.copySelected());
+        assert.false(this.editor.hasClipboardEntry);
+      });
+
+      test("cutSelected stores the entry and removes it from the canvas", function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        this.editor.selectBlock({
+          key: firstKey,
+          name: "ve-svc-test:tile",
+        });
+
+        assert.true(this.editor.cutSelected());
+        assert.strictEqual(this.editor._clipboard.mode, "cut");
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after.length, 1);
+        assert.strictEqual(after[0].args.title, "Second");
+      });
+
+      test("pasteFromClipboard inserts a fresh clone after the selection", function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        this.editor.selectBlock({
+          key: firstKey,
+          name: "ve-svc-test:tile",
+        });
+        this.editor.copySelected();
+        assert.true(this.editor.pasteFromClipboard());
+
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after.length, 3);
+        assert.strictEqual(after[0].args.title, "First");
+        assert.strictEqual(
+          after[1].args.title,
+          "First",
+          "paste lands immediately after the selection"
+        );
+        assert.strictEqual(after[2].args.title, "Second");
+      });
+
+      test("pasteFromClipboard mints a fresh stable key for the paste", function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        this.editor.selectBlock({
+          key: firstKey,
+          name: "ve-svc-test:tile",
+        });
+        this.editor.copySelected();
+        this.editor.pasteFromClipboard();
+
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        const sourceKey = after[0].__stableKey;
+        const pastedKey = after[1].__stableKey;
+        assert.notStrictEqual(sourceKey, pastedKey);
+      });
+
+      test("multiple pastes insert independent subtrees", function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        this.editor.selectBlock({
+          key: firstKey,
+          name: "ve-svc-test:tile",
+        });
+        this.editor.copySelected();
+        this.editor.pasteFromClipboard();
+        this.editor.pasteFromClipboard();
+
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after.length, 4);
+      });
+
+      test("pasteFromClipboard returns false when clipboard is empty", function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        this.editor.selectBlock({
+          key: firstKey,
+          name: "ve-svc-test:tile",
+        });
+        assert.false(this.editor.pasteFromClipboard());
+      });
+
+      test("pasteFromClipboard returns false when no block is selected", function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        this.editor.selectBlock({
+          key: firstKey,
+          name: "ve-svc-test:tile",
+        });
+        this.editor.copySelected();
+        this.editor.selectBlock(null);
+
+        assert.false(this.editor.pasteFromClipboard());
+      });
+    });
+
     module("canInsertBlockAt", function () {
       test("permits inserts for blocks with no outlet restrictions", function (assert) {
         withTestBlockRegistration(() => registerBlock(TestTile));

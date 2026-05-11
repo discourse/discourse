@@ -10,6 +10,7 @@ import BlockChrome from "../components/editor/block-chrome";
 import EntryPill from "../components/editor/entry-pill";
 import OutletBoundary from "../components/editor/outlet-boundary";
 import EditorShell from "../components/editor/shell";
+import { attachEditorShortcuts } from "../lib/editor-shortcuts";
 
 /**
  * Wires the Phase 1 read-only visual editor:
@@ -36,6 +37,9 @@ export default apiInitializer((api) => {
   installOutletBoundary(editor);
   installGhostBlocksWhileEditing(editor);
   installVeThemeAutoEnter(api, editor);
+  // The shortcut listener self-gates on `editor.isActive`, so we can
+  // install it once at boot — no need to attach/detach on editor enter.
+  attachEditorShortcuts(editor);
 });
 
 /**

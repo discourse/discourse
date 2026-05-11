@@ -175,6 +175,18 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * Deletes the block this chrome wraps. Wired to the trash button on
+   * the handle for selected blocks; the inspector's recovery banner
+   * uses the same service method.
+   */
+  @action
+  deleteBlock(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.visualEditor.removeBlock(this.args.blockKey);
+  }
+
+  /**
    * Translates a drop-zone payload into either a move (existing
    * chrome-to-chrome drag) or an insert (palette-driven drag). The
    * branch reads from `source.kind`, set by the originating modifier
@@ -254,6 +266,22 @@ export default class BlockChrome extends Component {
           >
             {{dIcon "grip-lines"}}
             <span>{{this.displayName}}</span>
+            {{#if this.isSelected}}
+              {{! template-lint-disable no-nested-interactive }}
+              {{! The chrome wrapper itself is role="button" for select-on-click;
+                  the delete button is a different action surfaced only when
+                  selected, so nesting is intentional. Click events on the
+                  button stop propagation so they don't double-fire as a
+                  selection event. }}
+              <button
+                type="button"
+                class="visual-editor-block-handle__delete"
+                title={{i18n "visual_editor.canvas.delete_block_title"}}
+                {{on "click" this.deleteBlock}}
+              >
+                {{dIcon "trash-can"}}
+              </button>
+            {{/if}}
           </span>
 
           <@WrappedComponent />
