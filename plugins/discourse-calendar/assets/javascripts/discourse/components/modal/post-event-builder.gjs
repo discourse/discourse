@@ -883,6 +883,7 @@ export default class PostEventBuilder extends Component {
                   }}
                   @type="radio-group"
                   @format="full"
+                  @validation="required"
                   @onSet={{this.handleAttendanceModeChange}}
                   as |field|
                 >
@@ -934,6 +935,7 @@ export default class PostEventBuilder extends Component {
                     }}
                     @type="radio-group"
                     @format="full"
+                    @validation="required"
                     @onSet={{this.handleEventTypeChange}}
                     as |field|
                   >
@@ -994,6 +996,7 @@ export default class PostEventBuilder extends Component {
                   }}
                   @type="custom"
                   @format="full"
+                  @validation="required"
                   @onSet={{this.handleTimezoneChange}}
                   as |field|
                 >
@@ -1030,6 +1033,7 @@ export default class PostEventBuilder extends Component {
                     "discourse_post_event.builder_modal.reminders.label"
                   }}
                   @format="full"
+                  @optional={{true}}
                 >
                   <form.Collection
                     @name="reminders"
