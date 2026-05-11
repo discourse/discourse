@@ -24,6 +24,14 @@ en:
         panel_outline: "Outline"
         panel_palette: "Palette"
         panel_inspector: "Inspector"
+        tab_palette: "Palette"
+        tab_outline: "Outline"
+      palette:
+        search_placeholder: "Search blocks"
+        empty: "No blocks match your filter."
+        category_core: "Core"
+        category_plugin: "Plugin"
+        category_theme: "Theme"
       inspector:
         empty: "Select a block to inspect."
         section_metadata: "Metadata"
