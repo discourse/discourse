@@ -424,7 +424,7 @@ export default class ImageCarousel extends Component {
   // wrap boundary, return the adjacent clone instead of the real destination
   // slide so the carousel animates one slide-width to it. The rAF's finish
   // branch teleports to the real counterpart afterwards.
-  #wrapClone(index, direction) {
+  #scrollTargetFor(index, direction) {
     if (
       direction === "next" &&
       this.currentIndex === this.lastIndex &&
@@ -441,13 +441,12 @@ export default class ImageCarousel extends Component {
       return this.#clones.get("last");
     }
 
-    return null;
+    return this.#slides.get(index);
   }
 
   @action
   scrollToIndex(index, direction = null) {
-    const element =
-      this.#wrapClone(index, direction) || this.#slides.get(index);
+    const element = this.#scrollTargetFor(index, direction);
     const track = this.#trackElement;
     if (!element || !track) {
       return;
