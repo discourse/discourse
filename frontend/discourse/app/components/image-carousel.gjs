@@ -10,6 +10,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 import { eq, lte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -263,8 +264,7 @@ export default class ImageCarousel extends Component {
       return;
     }
 
-    // honor reduce-motion preference
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
+    if (prefersReducedMotion()) {
       this.cancelAnimation();
       this.teleportFromWrapZone();
       // behavior: "instant" overrides CSS scroll-behavior: smooth — without
