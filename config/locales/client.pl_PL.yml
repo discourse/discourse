@@ -325,6 +325,7 @@ pl_PL:
       comma: ", "
       last_item: "i"
     action_codes:
+      topic_created: "Utworzono ten temat %{when}"
       public_topic: "Upublicznij ten temat %{when}"
       open_topic: "Przekonwertowano to na temat %{when}"
       private_topic: "Przekształcił(a) ten temat w prywatną wiadomość %{when}"
@@ -397,6 +398,7 @@ pl_PL:
     broken_transformer_alert: "Wystąpił błąd. Twoja witryna może nie działać prawidłowo."
     broken_block_alert: "Wykryto błąd konfiguracji bloku. Szczegóły znajdziesz w konsoli przeglądarki."
     broken_block_factory_alert: "Nie udało się załadować bloku. Niektóre elementy interfejsu użytkownika mogą nie wyświetlać się poprawnie."
+    on_before_category_types_change_error: "Wystąpił błąd podczas zmiany typów kategorii. Więcej informacji znajdziesz w konsoli przeglądarki."
     critical_deprecation:
       notice: "<b>[Uwaga administratora]</b> %{source} zawiera kod, który wymaga aktualizacji. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>dowiedz się więcej</em></a>)"
@@ -772,6 +774,7 @@ pl_PL:
       continue_as_guest: "Kontynuuj jako gość"
       be_first_to_reply: "Bądź pierwszą osobą, która odpowie!"
       replying_to: "W odpowiedzi do %{username}"
+      editing_post: "Edycja wpisu"
       reply_placeholder: "Napisz odpowiedź..."
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
@@ -2920,8 +2923,10 @@ pl_PL:
       second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
       second_factor: "Zaloguj się przy użyciu aplikacji Authenticator"
       security_key_description: "Gdy masz przygotowany fizyczny klucz bezpieczeństwa lub kompatybilne urządzenie mobilne, naciśnij znajdujący się poniżej przycisk Uwierzytelnij za pomocą klucza bezpieczeństwa."
+      security_key_or_passkey_description: "Gdy już przygotujesz klucz bezpieczeństwa, klucz dostępu lub kompatybilne urządzenie mobilne, naciśnij poniższy przycisk."
       security_key_alternative: "Spróbuj w inny sposób"
       security_key_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa"
+      security_key_or_passkey_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa lub klucza dostępu"
       security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
       security_key_no_matching_credential_error: "W podanym kluczu zabezpieczeń nie znaleziono zgodnych poświadczeń."
       security_key_support_missing_error: "Twoje obecne urządzenie lub przeglądarka nie obsługuje używania kluczy bezpieczeństwa. Proszę użyć innej metody."
@@ -3190,6 +3195,15 @@ pl_PL:
         no_translation_yet: "Zacznij pisać, aby zobaczyć podgląd tłumaczenia..."
         placeholder: "Tutaj wprowadź tłumaczenie wpisu..."
         show_raw_markdown: "Pokaż surowe"
+      change_reply_to:
+        title: "Zmień cel odpowiedzi"
+        hint: "Przewiń oś czasu, aby znaleźć wpis, na który chcesz odpowiedzieć."
+        current_selection: "Wybrano: wpis nr %{post_number} autorstwa @%{username}"
+        invalid_target: "Wybierz wpis wcześniejszy niż ten, który edytujesz."
+        submit: "Ustaw cel odpowiedzi"
+        open: "Zmień wpis, na który odpowiada"
+        open_from_menu: "Odpowiedz na inny wpis"
+        remove: "Usuń cel odpowiedzi"
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
         few: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
@@ -3484,6 +3498,16 @@ pl_PL:
         few: "%{username} i %{count} inni"
         many: "%{username} i %{count} innych"
         other: "%{username} i %{count} innych"
+      replied_consolidated_in_topic:
+        one: "%{count} nowa odpowiedź w Twoim temacie"
+        few: "%{count} nowe odpowiedzi w Twoim temacie"
+        many: "%{count} nowych odpowiedzi w Twoim temacie"
+        other: "%{count} nowych odpowiedzi w Twoim temacie"
+      replied_consolidated_to_post:
+        one: "%{count} nowa odpowiedź na Twój wpis"
+        few: "%{count} nowe odpowiedzi na Twój wpis"
+        many: "%{count} nowych odpowiedzi na Twój wpis"
+        other: "%{count} nowych odpowiedzi na Twój wpis"
       liked_consolidated_description:
         one: "polubiono %{count} Twój wpis"
         few: "polubił %{count} twoje posty"
@@ -3890,27 +3914,12 @@ pl_PL:
         notification_level: "Aktualizuj powiadomienia"
         change_notification_level: "Zmień poziom powiadomień"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
-        selected_sole_category:
-          one: "Wybrano <b>%{count}</b> temat z kategorii:"
-          few: "Wybrano <b>%{count}</b> tematy z kategorii:"
-          many: "Wybrano <b>%{count}</b> tematów z kategorii:"
-          other: "Wybrano <b>%{count}</b> tematów z kategorii:"
         selected_count:
           one: "%{count} wybrano"
           few: "%{count} wybrano"
           many: "%{count} wybrano"
           other: "%{count} wybrano"
-        change_tags: "Zmień tagi"
-        append_tags: "Dodaj tagi"
-        choose_new_tags: "Wybierz nowe tagi dla tych tematów:"
-        choose_append_tags: "Dodaj tagi"
-        changed_tags: "Tagi tych tematów były zmieniane."
-        remove_tags: "Usuń tagi"
-        confirm_remove_tags:
-          one: "Wszystkie tagi zostaną usunięte z tego tematu. Jesteś pewny?"
-          few: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
-          many: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
-          other: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
+        manage_tags: "Zarządzaj tagami"
         confirm_unpin_topics:
           one: "Odepnij %{count} temat"
           few: "Odepnij %{count} tematy"
@@ -3921,6 +3930,11 @@ pl_PL:
           few: "Zaktualizuj %{count} tematy"
           many: "Zaktualizuj %{count} tematów"
           other: "Zaktualizuj %{count} tematów"
+        confirm_apply_to_topics:
+          one: "Zastosuj do %{count} tematu"
+          few: "Zastosuj do %{count} tematów"
+          many: "Zastosuj do %{count} tematów"
+          other: "Zastosuj do %{count} tematów"
         confirm_close_topics:
           one: "Zamknij %{count} temat"
           few: "Zamknij %{count} tematy"
@@ -4022,15 +4036,25 @@ pl_PL:
         description: "Tematy niewymienione na liście są ukryte, ale nadal można uzyskać do nich dostęp za pomocą bezpośredniego linku. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Dowiedz się więcej</a>"
       relist_topics:
         name: "Dodaj do listy"
-      remove_tags:
-        name: "Usuń tagi"
-        description: "Usuń wszystkie tagi z wybranych tematów."
-      append_tags:
-        name: "Dodaj tagi"
-        description: "Dodaj następujące tagi do wybranych tematów:"
-      replace_tags:
-        name: "Zmień tagi"
-        description: "Zastąp wszystkie istniejące tagi w wybranych tematach następującymi:"
+      manage_tags:
+        name: "Zarządzaj tagami"
+        add:
+          title: "Dodaj tagi"
+          description: "Dodano do wszystkich wybranych tematów"
+        remove:
+          title: "Usuń tagi"
+          description: "Usunięte, jeśli są obecne"
+          all_toggle: "Usuń wszystkie tagi"
+          all_warning: "<strong>Wszystkie istniejące tagi</strong> zostaną usunięte z wybranych tematów. Tej operacji nie można cofnąć."
+        replace:
+          title: "Zmień tagi"
+          description: "Zamienia jeden tag na inny"
+          add_replacement: "Dodaj zamiennik"
+          remove_replacement: "Usuń zamiennik"
+          from_placeholder: "Tag do zastąpienia"
+          to_placeholder: "Tag zastępczy"
+          missing_from: "Wymagany jest tag źródłowy"
+          missing_to: "Wymagany jest tag zastępczy"
       delete_topics:
         name: "Usuń"
         description: "Trwale usuń wybrane tematy. Tej czynności nie można cofnąć."
@@ -4089,6 +4113,8 @@ pl_PL:
         default_nested_view: "Użyj widoku zagnieżdżonego jako domyślnego dla tematów w tej kategorii"
       no_replies: "Nie ma jeszcze odpowiedzi."
       deleted_post_placeholder: "[usunięty]"
+      ignored_post_placeholder: "[zignorowano]"
+      toggle_ignored_content: "Pokaż zignorowaną treść"
       op_badge: "OP"
       pinned_reply: "Przypięty"
       pin_reply: "Przypnij na górę"
@@ -4096,6 +4122,10 @@ pl_PL:
       topic_admin_menu:
         enable_nested_replies: "Włącz zagnieżdżone odpowiedzi"
         disable_nested_replies: "Wyłącz zagnieżdżone odpowiedzi"
+      activity_log:
+        link: "Dziennik aktywności"
+        title: "Dziennik aktywności tematu"
+        empty: "Brak aktywności tematu do wyświetlenia."
       context:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"
@@ -4122,6 +4152,7 @@ pl_PL:
         title: "Oznacz jako nieprzeczytane"
       list: "Tematy"
       new: "nowy temat"
+      has_new_replies: "nowe odpowiedzi od czasu Twojej ostatniej wizyty"
       unread: "nieprzeczytane"
       new_topics:
         one: "%{count} nowy temat"
@@ -4422,6 +4453,7 @@ pl_PL:
         unpin: "Odepnij ten temat z początku kategorii %{categoryLink}."
         unpin_until: "Odepnij ten temat z początku kategorii %{categoryLink} lub poczekaj do <strong>%{until}</strong>."
         pin_note: "Każdy użytkownik może samodzielnie usunąć przypięcie dla samego siebie."
+        pin_until: "Przypnij aż do"
         pin_validation: "Przypięcie tego tematu wymaga podania daty."
         not_pinned: "Brak przypiętych tematów w %{categoryLink}."
         already_pinned:
@@ -4914,6 +4946,8 @@ pl_PL:
         locale:
           no_locale_set: "Nie ustawiono języka"
           locale_removed: "Język usunięty"
+        reply_to:
+          none: "Brak celu odpowiedzi"
         controls:
           first: "Pierwsza wersja"
           previous: "Poprzednia wersja"
@@ -5089,6 +5123,10 @@ pl_PL:
       color_used: "Kolor w użyciu"
       predefined_colors: "Predefiniowane opcje kolorów"
       name_placeholder: "Zalecane jedno lub dwa słowa"
+      category_types: "Typy kategorii"
+      unknown_category_type: "Nieznany typ kategorii"
+      unknown_category_type_description: "Typ kategorii '%{categoryType}' nie jest obsługiwany lub wyłączony w tej kategorii."
+      category_types_no_results: "Nie znaleziono innych typów kategorii"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
       delete_error: "Podczas próby usunięcia tej kategorii wystąpił błąd."
@@ -5204,7 +5242,7 @@ pl_PL:
           high: "Wysoki"
           very_high: "Bardzo wysoki"
       sort_options:
-        default: "domyślny"
+        default: "Domyślny"
         likes: "Polubienia"
         op_likes: "Polubienia pierwszego wpisu"
         views: "Odsłony"
@@ -5215,6 +5253,7 @@ pl_PL:
         created: "Utworzony"
       sort_ascending: "Rosnąco"
       sort_descending: "Malejąco"
+      sort_direction: "Kierunek sortowania"
       subcategory_list_styles:
         rows: "Rzędy"
         rows_with_featured_topics: "Rzędy z wybranymi tematami"
@@ -6972,6 +7011,21 @@ pl_PL:
         too_many_requests: Wykonałeś/łaś tę akcję zbyt wiele razy. Poczekaj, zanim spróbujesz ponownie.
         not_found_error: Przepraszamy, ten raport nie istnieje.
         custom_date_range: Niestandardowy zakres dat
+        sections:
+          highlights:
+            title: "Najważniejsze wydarzenia"
+          reports:
+            title: "Zgłoszenia"
+          traffic:
+            title: "Ruch w witrynie"
+          engagement:
+            title: "Zaangażowanie"
+        period:
+          last_7_days: "Ostatnie 7 dni"
+          last_30_days: "Ostatnie 30 dni"
+          last_3_months: "Ostatnie 3 miesiące"
+          custom: "Niestandardowy"
+          custom_range: "%{start} — %{end}"
         reports:
           trend_title: "%{percent} zmian. Obecnie %{current}, w poprzednim okresie było %{prev}."
           percent_change_tooltip: "%{percent} zmiany."
@@ -7827,6 +7881,8 @@ pl_PL:
           beginners_guide_title: "Poradnik początkującego użytkownika motywów Discourse"
           developers_guide_title: "Poradnik kreatora motywów Discourse"
           browse_themes: "Przeglądaj motywy społeczności"
+          install_more_themes: "Zainstaluj więcej motywów"
+          install_more_themes_description: "Przeglądaj popularne motywy społeczności lub zainstaluj jeden z pliku lub repozytorium git."
           customize_desc: "Personalizacja:"
           title: "Motywy"
           description: "Motywy to rozbudowane modyfikacje, które zmieniają wiele elementów stylu twojego forum i często zawierają także dodatkowe funkcje front-endowe."
@@ -7937,6 +7993,7 @@ pl_PL:
           public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
           install: "Zainstaluj"
           installed: "Zainstalowana"
+          screenshot: "Zrzut ekranu %{name}"
           install_popular: "Popularne"
           install_upload: "Z twojego urządzenia"
           install_git_repo: "Z repozytorium git"
@@ -8283,6 +8340,7 @@ pl_PL:
         topic_id: "ID tematu"
         post_id: "ID wpisu"
         category_id: "ID kategorii"
+        reviewable_id: "Przejrzyj"
         delete: "Usuń"
         edit: "Edytuj"
         save: "Zapisz"
@@ -8905,8 +8963,10 @@ pl_PL:
           other: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
         delete_confirm_title: "Czy na pewno chcesz usunąć tego użytkownika? To jest trwałe!"
         delete_confirm: "Zasadniczo lepiej jest anonimizować użytkowników niż ich usuwać, aby uniknąć usuwania treści z istniejących dyskusji."
-        delete_and_block: "Usuń użytkownika i zablokuj jego adres e-mail oraz adres IP."
+        delete_and_block: "Usuń i zablokuj użytkownika"
+        delete_and_block_description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP."
         delete_dont_block: "Usuń użytkownika"
+        delete_dont_block_description: "Usuń użytkownika bez blokowania."
         deleting_user: "Usuwanie użytkownika…"
         deleted: "Użytkownik został usunięty."
         delete_failed: "Wystąpił błąd podczas usuwania użytkownika. Upewnij się, że wszystkie wpisy zostały usunięte przed przystąpieniem do usuwania użytkownika."

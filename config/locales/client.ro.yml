@@ -2545,12 +2545,6 @@ ro:
         actions: "Acțiuni multiple"
         move_messages_to_inbox: "Mută în „Primite”"
         choose_new_category: "Alege o nouă categorie pentru acest subiect"
-        selected_sole_category:
-          one: "Ai selectat <b>%{count}</b> subiect din categoria:"
-          few: "Ai selectat <b>%{count}</b> subiecte din categoria:"
-          other: "Ai selectat <b>%{count}</b> de subiecte din categoria:"
-        choose_new_tags: "Alege etichete noi pentru aceste subiecte:"
-        changed_tags: "Etichetele pentru aceste subiecte au fost schimbate."
         notify: "Notifică utilizatorii despre această modificare"
         performing: "Se efectuează operațiuni în masă, te rugăm să aștepți…"
         completed: "Operațiunile în masă s-au finalizat cu succes!"
@@ -2581,10 +2575,6 @@ ro:
         name: "Arhivă"
       move_messages_to_inbox:
         name: "Mută în Primite"
-      remove_tags:
-        name: "Înlătură etichete"
-      replace_tags:
-        name: "Înlocuiește etichete"
       delete_topics:
         name: "Șterge"
       convert_to_private_message:
@@ -2609,6 +2599,7 @@ ro:
       collapse: "Colaps"
       no_replies: "Nici un răspuns încă."
       deleted_post_placeholder: "[șters]"
+      ignored_post_placeholder: "[ignorat]"
       pinned_reply: "Fixat"
     topic:
       filter_to:
@@ -3247,7 +3238,7 @@ ro:
           low: "Scăzut"
           high: "Ridicată"
       sort_options:
-        default: "implicit"
+        default: "Implicit"
         likes: "Aprecieri"
         views: "Vizualizări"
         posts: "Postări"
@@ -4281,6 +4272,15 @@ ro:
         reports_tab: "Rapoarte"
         report_filter_any: "oricare"
         disabled: Dezactivat
+        sections:
+          reports:
+            title: "Rapoarte"
+          traffic:
+            title: "Trafic site"
+        period:
+          last_7_days: "Ultimele 7 zile"
+          last_30_days: "Ultimele 30 de zile"
+          custom: "Personalizat"
         reports:
           percent_change_tooltip_previous_value:
             yesterday:
@@ -5038,6 +5038,7 @@ ro:
         topic_id: "ID Subiect"
         post_id: "ID Mesaj"
         category_id: "ID categorie"
+        reviewable_id: "Revizuire"
         delete: "Șterge"
         edit: "Editează"
         save: "Salvează"
@@ -5358,7 +5359,6 @@ ro:
           few: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} postări. (Setarea delete_all_posts_max)"
           other: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} de postări. (Setarea delete_all_posts_max)"
         delete_confirm_title: "Sigur vrei să ștergi acest utilizator? Acest lucru este permanent!"
-        delete_and_block: "Șterge utilizator și blochează adresa de email și IP"
         delete_dont_block: "Șterge utilizator"
         deleted: "Utilizatorul a fost șters."
         delete_failed: "A apărut o eroare la ștergerea utilizatorului. Asigură-te că toate postările sunt șterse înainte de a încerca ștergerea utilizatorului."

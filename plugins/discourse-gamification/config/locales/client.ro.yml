@@ -12,12 +12,7 @@ ro:
         link_to_settings: "Setări"
         refresh: "Reîmprospătează"
         name: "Nume"
-        section:
-          groups: "Grupuri"
         excluded_groups: "Grupuri excluse"
-        weight:
-          post_created: "A fost creată postarea"
-          solution: "Soluție"
         period:
           all_time: "Dintotdeauna"
           yearly: "Anual"

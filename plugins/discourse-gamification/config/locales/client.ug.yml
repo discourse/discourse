@@ -12,11 +12,7 @@ ug:
         refresh: "يېڭىلا"
         name: "ئىسمى"
         name_placeholder: "ئىسمى…"
-        section:
-          groups: "گۇرۇپپا"
         excluded_groups: "مۇستەسنا گۇرۇپپا"
-        weight:
-          post_created: "يازما قۇرۇلدى"
         period:
           all_time: "ھەممە ۋاقىت"
           yearly: "يىللىق"

@@ -67,9 +67,6 @@ zh_CN:
     sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
     calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
   discourse_calendar:
-    calendar_subscriptions:
-      all_events_feed_name: "%{site_title} - 所有事件"
-      my_events_feed_name: "%{site_title} -我的事件"
     invite_user_notification: "%{username} 邀请您加入：%{description}"
     calendar_must_be_in_first_post: "日历标签仅可用于话题的第一个帖子。"
     more_than_one_calendar: "一个帖子中不能有多个日历。"

@@ -114,7 +114,7 @@ ALWAYS lint any changes you make
 - XSS: use `{{}}` (escaped) not `{{{ }}}`, sanitize with `sanitize`/`cook`, no `innerHTML`, careful with `@html`
 - Auth: Guardian classes (`lib/guardian.rb`), POST/PUT/DELETE for state changes, CSRF tokens, `protect_from_forgery`
 - Input: validate client+server, strong parameters, length limits, don't trust client-only validation
-- Authorization: Guardian classes, route+action permissions, scope limiting, `can_see?`/`can_edit?` patterns
+- Authorization: Guardian classes, route+action permissions, scope limiting, `can_see?`/`can_edit?` patterns. Use user.guardian shorthand not Guardian.new(user)
 
 ## Knowledge Sharing
 - ALWAYS persist information for ALL developers (no conversational-only memory)

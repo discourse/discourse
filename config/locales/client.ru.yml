@@ -325,6 +325,7 @@ ru:
       comma: ", "
       last_item: "и"
     action_codes:
+      topic_created: "Эта тема создана %{when}"
       public_topic: "Сделал(а) тему публичной %{when}"
       open_topic: "Преобразовал(а) это в тему %{when}"
       private_topic: "Сделал(а) тему личным сообщением %{when}"
@@ -397,6 +398,7 @@ ru:
     broken_transformer_alert: "Произошла ошибка. Ваш сайт может работать некорректно."
     broken_block_alert: "Обнаружена ошибка конфигурации блока. Подробности см. в консоли браузера."
     broken_block_factory_alert: "Не удалось загрузить блок. Некоторые элементы пользовательского интерфейса могут отображаться некорректно."
+    on_before_category_types_change_error: "Произошла ошибка при изменении типов категорий. Для получения дополнительной информации проверьте консоль браузера."
     critical_deprecation:
       notice: "<b>[Уведомление администратора]</b> %{source} содержит код, который необходимо обновить. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>узнать больше</em></a>)"
@@ -653,6 +655,7 @@ ru:
           other: "Создано %{count} года назад"
     bookmarked:
       title: "Закладки"
+      delete_bookmarks: "Удалить все закладки"
       help:
         bookmark: "Добавить тему в закладки"
         edit_bookmark: "Изменить закладку для сообщения в этой теме"
@@ -754,6 +757,7 @@ ru:
       allow_access: "Разрешить доступ"
       continue_as_guest: "Продолжить как Гость"
       be_first_to_reply: "Будь первым, кто ответит!"
+      editing_post: "Редактирование поста"
     topic_count_all:
       one: "Посмотреть %{count} новую тему"
       few: "Посмотреть %{count} новые темы"
@@ -3125,6 +3129,9 @@ ru:
         translation: "Перевод"
         no_translation_yet: "Начните вводить текст, чтобы увидеть предварительный просмотр перевода..."
         placeholder: "Введите перевод публикации здесь..."
+      change_reply_to:
+        hint: "Прокрутите ленту, чтобы найти сообщение, на которое вы хотите ответить."
+        current_selection: "Ответить на сообщение #%{post_number} от пользователя @%{username}"
       group_mentioned_limit:
         one: "<b>Внимание!</b> Вы упомянули <a href='%{group_link}'>%{group}</a>, в которой больше участников, чем установленный администратором лимит упоминаний на %{count} пользователя. Никто не получит уведомление."
         few: "<b>Внимание!</b> Вы упомянули <a href='%{group_link}'>%{group}</a>, в которой больше участников, чем установленный администратором лимит упоминаний на %{count} пользователей. Никто не получит уведомление."
@@ -3662,6 +3669,9 @@ ru:
     not_logged_in_user: "страница пользователя с историей его последней активности и настроек"
     current_user: "перейти на вашу страницу пользователя"
     view_all: "Просмотреть все %{tab}"
+    permanently_delete:
+      title: "Вы абсолютно уверены?"
+      confirm_instruction: "Пожалуйста, введите ниже <b>%{phrase}</b> для подтверждения:"
     user_menu:
       generic_no_items: "Нет элементов в списке."
       sr_menu_tabs: "Вкладки меню пользователя"
@@ -3789,27 +3799,11 @@ ru:
         notification_level: "Уведомления об обновлении"
         change_notification_level: "Изменить уровень уведомлений"
         choose_new_category: "Выберите новую категорию для этих тем:"
-        selected_sole_category:
-          one: "Вы выбрали <b>%{count}</b> тему из этой категории:"
-          few: "Вы выбрали <b>%{count}</b> темы из этой категории:"
-          many: "Вы выбрали <b>%{count}</b> тем из этой категории:"
-          other: "Вы выбрали <b>%{count}</b> темы из этой категории:"
         selected_count:
           one: "Выбрано %{count}"
           few: "Выбрано %{count}"
           many: "Выбрано %{count}"
           other: "Выбрано %{count}"
-        change_tags: "Заменить теги"
-        append_tags: "Добавить теги"
-        choose_new_tags: "Выберите новые теги для этих тем:"
-        choose_append_tags: "Добавить теги"
-        changed_tags: "Теги этих тем изменены."
-        remove_tags: "Удалить теги"
-        confirm_remove_tags:
-          one: "Все теги будут удалены из этой темы. Продолжить?"
-          few: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
-          many: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
-          other: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
         progress:
           one: "Выполнено: <strong>%{count}</strong> тема"
           few: "Выполнено: <strong>%{count}</strong> темы"
@@ -3861,15 +3855,13 @@ ru:
         description: "Темы, не указанные в списке, скрыты, но к ним по-прежнему можно получить доступ по прямой ссылке. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Узнать больше</a>"
       relist_topics:
         name: "Показать повторно"
-      remove_tags:
-        name: "Удалить теги"
-        description: "Удалите все теги из выбранных тем."
-      append_tags:
-        name: "Добавить теги"
-        description: "Добавьте следующие теги к выбранным темам:"
-      replace_tags:
-        name: "Заменить теги"
-        description: "Замените все существующие теги для выбранных тем следующими:"
+      manage_tags:
+        add:
+          title: "Добавить теги"
+        remove:
+          title: "Удалить теги"
+        replace:
+          title: "Заменить теги"
       delete_topics:
         name: "Удалить"
         description: "Удалить выбранные темы безвозвратно. Это действие необратимо."
@@ -3888,6 +3880,10 @@ ru:
       update_notifications:
         name: "Обновить уведомления"
         description: "Измените свой персональный уровень уведомлений для выбранных тем следующим образом:"
+      pin_topics:
+        name: "Закрепить"
+      unpin_topics:
+        name: "Открепить"
     nested_replies:
       sort:
         label: "Сортировать по"
@@ -3906,7 +3902,10 @@ ru:
       collapse: "Свернуть"
       no_replies: "Ответов пока нет."
       deleted_post_placeholder: "[удалённые]"
+      ignored_post_placeholder: "[игнорировать]"
       pinned_reply: "Закреплена"
+      pin_reply: "Закрепить вверху"
+      unpin_reply: "Открепить"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4967,7 +4966,7 @@ ru:
           high: "Высокий"
           very_high: "Очень высокий"
       sort_options:
-        default: "по умолчанию"
+        default: "Домашнюю страницу"
         likes: "Количество лайков"
         views: "Количество просмотров"
         posts: "Количество сообщений"
@@ -6671,6 +6670,16 @@ ru:
         too_many_requests: Вы выполняете это действие слишком часто. Подождите, прежде чем пытаться снова.
         not_found_error: Этого отчёта не существует
         custom_date_range: Свой диапазон дат
+        sections:
+          reports:
+            title: "отчетов"
+          traffic:
+            title: "Посещаемость сайта"
+        period:
+          last_7_days: "За последние 7 дней"
+          last_30_days: "За последние 30 дней"
+          last_3_months: "За последние 3 месяцев"
+          custom: "Другое"
         reports:
           trend_title: "Изменилось на %{percent}. В настоящее время — %{current}, было %{prev} в предыдущий период."
           percent_change_tooltip: "Изменение %{percent}."
@@ -7972,6 +7981,7 @@ ru:
         topic_id: "ID темы"
         post_id: "ID сообщения"
         category_id: "ID категории"
+        reviewable_id: "Очередь проверки"
         delete: "Удалить"
         edit: "Изменить"
         save: "Сохранить"
@@ -8598,7 +8608,6 @@ ru:
           other: "Не удается удалить все сообщения: у пользователя более %{count} сообщения. (Параметр «delete_all_posts_max».)"
         delete_confirm_title: "Действительно удалить пользователя? Это действие безвозвратно!"
         delete_confirm: "Как правило, предпочтительнее анонимизировать пользователей, а не удалять их, чтобы избежать удаления контента из существующих обсуждений."
-        delete_and_block: "Удалить пользователя и заблокировать его адрес электронной почты и IP-адрес"
         delete_dont_block: "Удалить пользователя"
         deleting_user: "Удаление пользователя…"
         deleted: "Пользователь удалён."

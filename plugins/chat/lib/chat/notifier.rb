@@ -37,6 +37,38 @@ module Chat
         "#{Discourse.current_hostname}-chat-#{type}-#{chat_channel_id}"
       end
 
+      # Builds the `actions`/`action_data` fields that enable a "Reply"
+      # quick-action button on web push notifications for a chat message.
+      # The chat plugin's service worker dispatches on the "chat-reply"
+      # action name (see plugins/chat/assets/service-worker/chat-service-worker-extensions.js).
+      def push_notification_reply_action(chat_message, user)
+        I18n.with_locale(user.effective_locale) do
+          {
+            actions: [
+              {
+                action: "chat-reply",
+                title: I18n.t("discourse_push_notifications.actions.chat_reply.title"),
+                placeholder: I18n.t("discourse_push_notifications.actions.chat_reply.placeholder"),
+                type: "text",
+                icon:
+                  ActionController::Base.helpers.image_url("push-notifications/inline_reply.png"),
+              },
+            ],
+            action_data: {
+              channel_id: chat_message.chat_channel_id,
+              message_id: chat_message.id,
+              thread_id: chat_message.thread_id,
+            }.compact,
+          }
+        end
+      rescue => e
+        # Never let a quick-reply payload failure abort the notify job —
+        # the job creates DB notifications before sending alerts, and a
+        # Sidekiq retry would re-create them.
+        Discourse.warn_exception(e, message: "Failed to build chat push notification reply action")
+        {}
+      end
+
       def notify_edit(chat_message:, timestamp:)
         Jobs.enqueue(
           Jobs::Chat::SendMessageNotifications,

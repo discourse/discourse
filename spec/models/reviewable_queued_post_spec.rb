@@ -102,6 +102,15 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           result = reviewable.perform(moderator, :approve_post)
           expect(result.success?).to eq(true)
         end
+
+        it "logs a staff action linked to the reviewable" do
+          expect { reviewable.perform(moderator, :approve_post) }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:post_approved],
+              reviewable_id: reviewable.id,
+            ).count
+          }.by(1)
+        end
       end
 
       context "with reject_post" do
@@ -123,6 +132,15 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect { reviewable.perform(moderator, :reject_post) }.to raise_error(
             Reviewable::InvalidAction,
           )
+        end
+
+        it "logs a staff action linked to the reviewable" do
+          expect { reviewable.perform(moderator, :reject_post) }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:post_rejected],
+              reviewable_id: reviewable.id,
+            ).count
+          }.by(1)
         end
       end
 

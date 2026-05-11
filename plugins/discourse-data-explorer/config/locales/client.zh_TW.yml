@@ -10,9 +10,6 @@ zh_TW:
       default_query: "預設"
       or: "或"
       create: "創建"
-      ai:
-        generate: "產生"
-        optional: "可選"
       import:
         label: "匯入"
       help:

@@ -6,10 +6,6 @@
 
 sw:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Utafiti wa Taarifa"
     errors:
       explorer:
         no_semicolons: "Ondoa alama ya mkato kwenye swali."
@@ -22,9 +18,6 @@ sw:
       create: "Tengeneza"
       create_placeholder: "Jina la ulizo..."
       description_placeholder: "Andika maelezo hapa"
-      ai:
-        generate: "Tengeneza"
-        optional: "sio Muhimu"
       import:
         label: "Imeingizwa kutoka sehemu nyingine"
       help:

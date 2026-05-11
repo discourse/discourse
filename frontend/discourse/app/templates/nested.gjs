@@ -42,6 +42,8 @@ export default <template>
       @expansionState={{@controller.expansionState}}
       @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
       @scrollAnchor={{@controller.scrollAnchor}}
+      @showActivityLog={{@controller.showActivityLog}}
+      @collapseReplies={{@controller.collapseReplies}}
     />
   {{else}}
     <Nested
@@ -76,6 +78,8 @@ export default <template>
       @expansionState={{@controller.expansionState}}
       @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
       @scrollAnchor={{@controller.scrollAnchor}}
+      @showActivityLog={{@controller.showActivityLog}}
+      @collapseReplies={{@controller.collapseReplies}}
     />
   {{/if}}
 </template>

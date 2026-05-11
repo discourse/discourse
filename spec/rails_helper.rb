@@ -29,7 +29,7 @@ CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127
 
 class RspecErrorTracker
   def self.exceptions
-    @exceptions ||= {}
+    @exceptions ||= []
   end
 
   def self.clear_exceptions
@@ -37,7 +37,7 @@ class RspecErrorTracker
   end
 
   def self.report_exception(path, exception)
-    exceptions[path] = exception
+    exceptions << [path, exception]
   end
 
   def initialize(app, config = {})
@@ -55,6 +55,16 @@ class RspecErrorTracker
       RspecErrorTracker.report_exception(env["PATH_INFO"], e)
       raise e
     end
+  end
+end
+
+# Some errors are caught by `Discourse.warn_exception` and don't reach
+# `RspecErrorTracker`, for example errors in hijacked responses.
+module RspecWarnExceptionCapture
+  def warn_exception(e, message: "", env: nil)
+    path = env&.[]("PATH_INFO") || "(no request path)"
+    RspecErrorTracker.report_exception(path, e)
+    super
   end
 end
 
@@ -91,7 +101,9 @@ class PlaywrightLogger
 end
 
 ENV["RAILS_ENV"] ||= "test"
+ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
+Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
@@ -256,6 +268,7 @@ RSpec.configure do |config|
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
   config.include SystemHelpers, type: :system
+  config.include ThemeScreenshotMarker, type: :system
   config.include DiscourseWebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers
@@ -599,9 +612,20 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
+          wait_for_ember_boot
           wait_for_client_settled(method_name)
           result
         end
+      end
+
+      private
+
+      # `<discourse-assets>` is only present on Ember pages; `ember-application`
+      # is added to the root element (`#main`) once Ember mounts.
+      def wait_for_ember_boot
+        session = @driver.send(:session)
+        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
+        session.assert_selector("#main.ember-application", visible: :all)
       end
     end
 
@@ -1029,10 +1053,13 @@ RSpec.configure do |config|
 
     expect(deprecation_error).to be_nil, deprecation_error
 
+    expected_deprecations = RSpec.current_example.metadata[:expected_js_deprecations] || []
+
     $playwright_logger&.logs&.each do |log|
       next if log[:level] != "count"
       deprecation_id = log[:message][/^deprecation_id:(.+?):\s*\d+$/, 1]
       next if deprecation_id.nil?
+      next if expected_deprecations.include?(deprecation_id)
 
       deprecations = RSpec.current_example.metadata[:js_deprecations] ||= Hash.new(0)
       deprecations[deprecation_id] += 1

@@ -517,6 +517,10 @@ ug:
           other: "%{count} يىل ئىلگىرى قۇرۇلغان"
     bookmarked:
       title: "خەتكۈچ"
+      edit_bookmark:
+        one: "خەتكۈچ تەھرىر"
+        other: "خەتكۈچ تەھرىر"
+      delete_bookmarks: "ھەممە خەتكۈچنى ئۆچۈر"
       help:
         bookmark: "چېكىلسە بۇ تېمىنى خەتكۈچكە قوشىدۇ"
         edit_bookmark: "چېكىلسە بۇ تېمىدىكى يازمىنىڭ خەتكۈچىنى تەھرىرلەيدۇ"
@@ -608,6 +612,8 @@ ug:
         other_drafts:
           one: "+%{count} باشقا دەسلەپكى نۇسخا"
           other: "+%{count} باشقا دەسلەپكى نۇسخا"
+    embed_mode:
+      editing_post: "يازما تەھرىرلىنىۋاتىدۇ"
     topic_count_all:
       one: "%{count} يېڭى تېمىنى كۆرۈڭ"
       other: "%{count} يېڭى تېمىنى كۆرۈڭ"
@@ -3380,17 +3386,9 @@ ug:
         archive_messages: "ئارخىپقا يۆتكە"
         change_notification_level: "ئۇقتۇرۇش دەرىجىسىنى ئۆزگەرت"
         choose_new_category: "تېمىغا يېڭى سەھىپە تاللىنىدۇ:"
-        selected_sole_category:
-          one: "سەھىپىدىنن <b>%{count}</b> تېما تاللىدىڭىز:"
-          other: "سەھىپىدىنن <b>%{count}</b> تېما تاللىدىڭىز:"
         selected_count:
           one: "%{count} تاللاندى"
           other: "%{count} تاللاندى"
-        choose_new_tags: "بۇ تېمىغا يېڭى بەلگە تاللىنىدۇ:"
-        changed_tags: "بۇ تېمىلارنىڭ بەلگىسى ئۆزگەرتىلگەن."
-        confirm_remove_tags:
-          one: "ھەممە بەلگە بۇ تېمىدىن چىقىرىۋېتىلىدۇ. راستتىنلا شۇنداق قىلامسىز؟"
-          other: "ھەممە بەلگە %{count} تېمىدىن چىقىرىۋېتىلىدۇ. راستتىنلا شۇنداق قىلامسىز؟"
         progress:
           one: "ئىلگىرىلىشى: <strong>%{count}</strong> تېما"
           other: "ئىلگىرىلىشى: <strong>%{count}</strong> تېما"
@@ -3433,10 +3431,6 @@ ug:
         name: "تىزىمدىن چىقىرىۋەت"
       relist_topics:
         name: "تىزىمغا قايتا قوش"
-      remove_tags:
-        name: "بەلگىنى چىقىرىۋەت"
-      replace_tags:
-        name: "بەلگە ئالماشتۇر"
       delete_topics:
         name: "ئۆچۈر"
       update_category:
@@ -3464,6 +3458,7 @@ ug:
         other: "%{count} جاۋاب"
       collapse: "يىغ"
       no_replies: "تېخى جاۋاب يوق."
+      ignored_post_placeholder: "[پەرۋا قىلمايدىغان]"
       pinned_reply: "چوققىلاندى"
     topic:
       filter_to:
@@ -5954,6 +5949,14 @@ ug:
         too_many_requests: بۇ مەشغۇلاتنى بەك كۆپ قىلدىڭىز. سەل كۈتۈپ ئاندىن قايتا سىناڭ.
         not_found_error: كەچۈرۈڭ، بۇ دوكلات مەۋجۇت ئەمەس
         custom_date_range: ئىختىيارى چېسلا دائىرىسى
+        sections:
+          reports:
+            title: "دوكلات"
+          traffic:
+            title: "بېكەت ئېقىمى"
+        period:
+          last_3_months: "ئۆتكەن 3 ئاي"
+          custom: "ئىختىيارى"
         reports:
           trend_title: "ئۆزگىرىش %{percent}. نۆۋەتتىكى %{current}، ئالدىنقى مەزگىلدە %{prev}"
           percent_change_tooltip: "%{percent} ئۆزگەردى."
@@ -7198,6 +7201,7 @@ ug:
         topic_id: "تېما كىملىكى"
         post_id: "يازما كىملىكى"
         category_id: "سەھىپە كىملىكى"
+        reviewable_id: "تەستىقلا"
         delete: "ئۆچۈر"
         edit: "تەھرىر"
         save: "ساقلا"
@@ -7775,7 +7779,6 @@ ug:
           other: "ھەممە يازمىنى ئۆچۈرەلمەيدۇ چۈنكى ئىشلەتكۈچىنىڭ %{count} كۆپ يازمىسى بار. (delete_all_posts_max)"
         delete_confirm_title: "بۇ ئىشلەتكۈچىنى راستتىنلا ئۆچۈرەمسىز؟ بۇ مەڭگۈلۈك!"
         delete_confirm: "ئىشلەتكۈچىنى ئۆچۈرۈۋەتمەي نامسىزلاشتۇرغان تېخىمۇ ياخشى، شۇنداق بولغاندا مەۋجۇت سۆھبەتتىكى مەزمۇننى يۆتكەشتىن ساقلانغىلى بولىدۇ."
-        delete_and_block: "بۇ ئىشلەتكۈچىنى ئۆچۈرۈپ ۋە ئۇلارنىڭ ئېلخەت ۋە IP ئادرېسىنى توسىدۇ"
         delete_dont_block: "ئىشلەتكۈچى ئۆچۈر"
         deleting_user: "ئىشلەتكۈچى ئۆچۈرۈۋاتىدۇ…"
         deleted: "ئىشلەتكۈچى ئۆچۈرۈلگەن."

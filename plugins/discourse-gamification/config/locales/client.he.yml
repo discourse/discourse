@@ -32,8 +32,6 @@ he:
         cta: "יצירת לוח התוצאות הראשון שלך"
         none: "לא נוצרו עדיין לוחות תוצאות."
         confirm_destroy: "למחוק את לוח התוצאות הזה?"
-        section:
-          groups: "קבוצות"
         date:
           range: "טווח תאריך מ/עד"
           from: "מתאריך"
@@ -48,9 +46,6 @@ he:
         default_period: "פרק זמן כברירת מחדל"
         default_period_help: "להגדיר את פרק הזמן כברירת המחדל כדי להציג ללוח התוצאות הזה."
         period_filter_disabled: "השבתת מסנן פרק זמן"
-        weight:
-          post_created: "פוסט נוצר"
-          solution: "פתרון"
         period:
           all_time: "מאז ומתמיד"
           yearly: "שנתי"

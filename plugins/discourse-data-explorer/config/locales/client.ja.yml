@@ -6,10 +6,6 @@
 
 ja:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "データエクスプローラー"
     errors:
       explorer:
         no_semicolons: "クエリからセミコロンを削除します。"
@@ -23,9 +19,6 @@ ja:
       create: "作成"
       create_placeholder: "クエリ名..."
       description_placeholder: "説明をここに入力"
-      ai:
-        generate: "生成"
-        optional: "オプション"
       import:
         label: "インポート"
         unparseable_json: "解析不能な JSON ファイルです。"

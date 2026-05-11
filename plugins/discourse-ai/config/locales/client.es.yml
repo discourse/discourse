@@ -536,9 +536,6 @@ es:
         max_turn_tokens_help: "Máximo total de tokens (entrada + salida) consumidos en todas las llamadas LLM durante una única respuesta del bot. Cuando se establece, sustituye los límites fijos de finalización/herramienta por un presupuesto de tokens, permitiendo un comportamiento más agéntico. Déjalo vacío para que permanezcan los límites por defecto."
         compression_threshold: "Umbral de compresión"
         compression_threshold_help: "Porcentaje de uso del contexto (20-99) a partir del cual se activa la compresión automática. Los valores más bajos activan la compresión antes, preservando más espacio libre."
-        vision_enabled: Visión activada
-        vision_enabled_help: Si está activada, la IA intentará comprender las imágenes que los usuarios publiquen en el tema, depende del modelo que se utilice para soportar la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI.
-        vision_max_pixels: Tamaño de imagen admitido
         vision_max_pixel_sizes:
           low: 'Baja calidad: más barato (256x256)'
           medium: Calidad media (512x512)
@@ -834,9 +831,6 @@ es:
         max_output_tokens: "Máximo de tokens de salida"
         url: "URL del servicio que aloja el modelo"
         api_key: "Clave API del servicio que aloja el modelo"
-        vision_enabled: "Visión activada"
-        allowed_attachment_types: "Archivos adjuntos permitidos"
-        attachment_types_placeholder: "Selecciona o escribe extensiones (por ejemplo, pdf, txt, docx)"
         ai_bot_user: "Usuario de bot de IA"
         cost_input: "Coste de entrada"
         cost_cached_input: "Coste de entrada en caché"
@@ -890,17 +884,11 @@ es:
           anthropic-claude-opus-4-7: "El modelo antrópico más inteligente"
           anthropic-claude-sonnet-4-6: "Equilibrio óptimo entre velocidad y coste"
           anthropic-claude-haiku-4-5: "Rápido y rentable"
-          google-gemini-3-pro: "El modelo de Google más inteligente"
+          google-gemini-3-1-pro: "El modelo de Google más inteligente"
           google-gemini-3-flash: "Rápido y rentable con razonamiento multimodal"
           open_ai-gpt-5-4: "El modelo estrella de OpenAI. Es ideal para la resolución de problemas en todos los dominios."
-          open_ai-gpt-5-4-mini: "Proporciona un equilibrio entre inteligencia, velocidad y coste."
-          open_ai-gpt-5-nano: "El modelo GPT-5 más rápido y rentable"
-          open_router-deepseek-deepseek-v3-2: "El último modelo de alto rendimiento de DeepSeek"
-          open_router-moonshotai-kimi-k2-5: "Modelo multimodal de Moonshot con capacidades de visión"
-          open_router-x-ai-grok-4-fast: "El modelo estrella de xAI con visión"
-          open_router-minimax-minimax-m2-7: "Modelo multimodal de MiniMax con contexto amplio"
-          open_router-z-ai-glm-5-1: "Modelo multimodal de Z-AI con visión"
-          open_router-arcee-ai-trinity-large-preview-free: "Modelo gratuito de código abierto de Arcee AI"
+          open_ai-gpt-5-4-nano: "El modelo GPT-5 más rápido y rentable"
+          open_router-moonshotai-kimi-k2-6: "Modelo multimodal de Moonshot con capacidades de visión"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:
           title: "LLM configurados"
@@ -924,8 +912,6 @@ es:
           max_output_tokens: "El número máximo de tokens que el modelo puede generar en una sola solicitud"
           display_name: "El nombre utilizado para hacer referencia a este modelo en la interfaz de tu sitio."
           name: "Incluimos esto en la llamada a la API para especificar qué modelo utilizaremos"
-          vision_enabled: "Si está activada, la IA intentará comprender las imágenes. Depende del modelo utilizado que soporte la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI."
-          allowed_attachment_types: "Selecciona qué tipos de archivos adjuntos se enviarán al modelo. Déjalo en blanco para no permitir archivos adjuntos. Las imágenes se controlan mediante visión."
           cost_input: "El coste de entrada por cada millón de tokens para este modelo"
           cost_cached_input: "El coste de entrada en caché por 1 M de tokens para este modelo (al leer de la caché de prompts)"
           cost_cache_write: "El coste de escritura en caché por 1 M de tokens para este modelo (al escribir en la caché de prompts)"
@@ -1187,6 +1173,8 @@ es:
           last_30_days: "Últimos 30 días"
           upload_files: "Subir archivos"
           uploads_in_progress: "No se puede enviar mientras se están subiendo archivos"
+          scroll_to_bottom: "Desplazar hacia abajo"
+          editing_post: "Editando publicación"
       sentiments:
         dashboard:
           title: "Sentimiento"

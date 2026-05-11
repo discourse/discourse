@@ -6,10 +6,6 @@
 
 ko:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "데이터 탐색기"
     errors:
       explorer:
         no_semicolons: "쿼리에서 세미콜론을 제거하십시오."
@@ -23,9 +19,6 @@ ko:
       create: "만들기"
       create_placeholder: "검색어 이름 ..."
       description_placeholder: "여기에 설명을 입력하세요"
-      ai:
-        generate: "API 키 생성"
-        optional: "선택 사항"
       import:
         label: "가져오기"
       help:

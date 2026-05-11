@@ -95,8 +95,6 @@ tr_TR:
           title: "Daha Fazla Konu"
         post_menu:
           title: "Gönderi Menüsü"
-        docked_composer:
-          title: "Docked Composer"
         modal:
           title: "Kalıcı"
           header: "Kalıcı Başlık"

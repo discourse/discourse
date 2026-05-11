@@ -23,9 +23,6 @@ sr:
         week: "Nedelja"
         year: "Godina"
     discourse_post_event:
-      event_description:
-        show_more: "Pokaži više"
-        show_less: "Pokaži manje"
       upcoming_events:
         status: "Status"
       models:

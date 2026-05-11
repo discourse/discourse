@@ -434,6 +434,7 @@ id:
       admins: "admin"
       moderators: "moderator"
       staff: "staff"
+      anonymous: "anonim"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -1096,6 +1097,8 @@ id:
       xaxis: "Hari"
     page_view_logged_in_browser_reqs:
       xaxis: "Hari"
+    page_view_embed_reqs:
+      xaxis: "Hari"
     http_background_reqs:
       title: "Latar Belakang"
       xaxis: "Hari"
@@ -1139,7 +1142,7 @@ id:
         device: Perangkat
         os: Sistem operasi
         login_time: Waktu Masuk
-    staff_logins:
+    admin_logins:
       labels:
         user: Pengguna
         location: Lokasi
@@ -1318,6 +1321,7 @@ id:
       why: "Ringkasan singkat %{site_link} sejak %{since}"
       liked_received: "Likes Diterima"
       new_users: "Pengguna Baru"
+      subject_template_improved: "Ringkasan"
       from: "%{site_name}"
       preheader: "Ringkasan singkat sejak %{since}"
     forgot_password:

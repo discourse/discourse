@@ -561,6 +561,7 @@ ja:
       admins: "管理者"
       moderators: "モデレーター"
       staff: "スタッフ"
+      anonymous: "匿名ユーザー"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -1390,6 +1391,8 @@ ja:
       xaxis: "日"
       yaxis: "ログイン中のブラウザのページビュー"
       description: "実際のブラウザを使用したログイン中の訪問者によるページビュー数。"
+    page_view_embed_reqs:
+      xaxis: "日"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -1451,7 +1454,7 @@ ja:
         os: オペレーティングシステム
         login_time: ログイン時間
       description: "以前のログインとは異なる疑いのある新しいログインの詳細。"
-    staff_logins:
+    admin_logins:
       title: "管理者ログイン"
       labels:
         user: ユーザー
@@ -2355,7 +2358,6 @@ ja:
     welcome_banner_location: "ウェルカムバナーが表示されるページ内の場所を決定します。"
     welcome_banner_page_visibility: "ウェルカムバナーが表示されるページを決定します。"
     welcome_banner_text_color: "上記の「ウェルカムバナーの画像」設定を構成した場合、この設定を使用してバナーを読み取りやすいテキストの色に変更してください。空白のままにするか、画像をアップロードしなかった場合は、アクティブなテーマによって色が設定されます。"
-    splash_screen: "サイトアセットの読み込み中に一時的なローディング画面を表示します"
     navigation_menu: "サイトのメインナビゲーションメニューとして、サイドバーかヘッダーのドロップダウンを指定します。推奨はサイドバーです。"
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
@@ -3216,7 +3218,6 @@ ja:
         あなたの返信はブロックされているメールアドレスから送信されています。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_not_allowed_email:
       title: "メールの拒否 - 許可されていないメール"
-      subject_template: "[%{email_prefix}] メールの問題 -- メールがブロックされています"
       text_body_template: |
         %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
 
@@ -3381,7 +3382,6 @@ ja:
         トピックに返信する権限がありません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_reply_to_digest:
       title: "メールの拒否 - 要約への返信"
-      subject_template: "[%{email_prefix}] メールの問題 -- 要約への返信"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
@@ -3526,7 +3526,6 @@ ja:
       text_body_template: "`download_remote_images_threshold` のディスク空き容量制限に達したため、`download_remote_images_to_local` 設定は無効になりました。"
     new_user_of_the_month:
       title: "あなたは今月の新規ユーザーです！"
-      subject_template: "あなたは今月の新規ユーザーです！"
       text_body_template: |
         おめでとうございます。**%{month_year}の「今月の新規ユーザー」アワード**を獲得しました。:trophy:
 
@@ -3852,6 +3851,7 @@ ja:
     account_exists:
       title: "アカウントはすでに存在します"
       subject_template: "[%{email_prefix}] アカウントはすでに存在します"
+      subject_template_improved: "アカウントはすでに存在します"
       text_body_template: |
         %{site_name} にアカウントを作成しようとしたか、アカウントのメールを %{email} に変更しようとしましたが、%{email} のアカウントはすでに存在します。
 
@@ -3863,6 +3863,7 @@ ja:
     account_second_factor_disabled:
       title: "二要素認証が無効です"
       subject_template: "[%{email_prefix}] 二要素認証が無効です"
+      subject_template_improved: "二要素認証が無効です"
       text_body_template: |
         %{site_name} のアカウントの二要素認証が無効になったため、パスワードのみでログインできるようになりました。今後、追加の認証コードは不要です。
 
@@ -3882,6 +3883,7 @@ ja:
       popular_posts: "人気の投稿"
       more_new: "あなたへの新着情報"
       subject_template: "[%{email_prefix}] 要約"
+      subject_template_improved: "要約"
       unsubscribe: "この要約は、しばらくアクセスがなかった場合に %{site_link} から送信されます。%{email_preferences_link} を変更するか、%{unsubscribe_link} で購読を解除できます。"
       your_email_settings: "メール設定"
       click_here: "こちらをクリック"
@@ -3902,6 +3904,7 @@ ja:
       title: "リンク経由のログイン"
       preview: "リンク経由のログイン."
       subject_template: "[%{email_prefix}] リンク経由のログイン"
+      subject_template_improved: "リンク経由のログイン"
       text_body_template: |
         これは、[%{site_name}](%{base_url}) にログインするためのリンクです。
 
@@ -3912,7 +3915,6 @@ ja:
     set_password:
       title: "パスワードを設定"
       preview: "アカウントのパスワードを設定してください。"
-      subject_template: "[%{email_prefix}] パスワードを設定してください"
       text_body_template: |
         誰かが [%{site_name}](%{base_url}) のあなたのアカウントにパスワードを追加するよう依頼しました。または、この検証済みのメールアドレスに関連付けられている対応のオンラインサービス (Google、Facebook など) を使用してログインすることもできます。
 
@@ -3924,6 +3926,7 @@ ja:
       title: "管理者ログイン"
       preview: "管理者ログインがリクエストされました。"
       subject_template: "[%{email_prefix}] ログイン"
+      subject_template_improved: "ログイン"
       text_body_template: |
         誰かが [%{site_name}](%{base_url}) のアカウントにログインしようとしています。
 
@@ -3934,7 +3937,6 @@ ja:
     account_created:
       title: "アカウントが作成されました"
       preview: "あなたの新しいアカウントが作成されました。"
-      subject_template: "[%{email_prefix}] 新しいアカウント"
       text_body_template: |
         あなたの新規アカウントが %{site_name} で作成されました
 
@@ -4037,7 +4039,6 @@ ja:
     suspicious_login:
       title: "新しいログインのアラート"
       preview: "デバイスを認証してください。"
-      subject_template: "[%{site_name}] %{location} からの新しいログイン"
       text_body_template: |
         こんにちは
 

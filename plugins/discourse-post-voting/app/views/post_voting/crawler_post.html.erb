@@ -1,0 +1,24 @@
+<% if @comments.present? %>
+  <div class="post-voting-comments">
+    <% @comments.each do |comment| %>
+      <% next if comment.user.blank? %>
+      <div class="post-voting-comments__comment" itemprop="comment" itemscope itemtype="http://schema.org/Comment">
+        <span class="post-voting-comments__comment-cooked" itemprop="text"><%= comment.cooked.html_safe %></span>
+        <span class="post-voting-comments__separator">–</span>
+        <span class="post-voting-comments__comment-creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <a rel="nofollow" itemprop="url" href="<%= comment.user.full_url %>"><span itemprop="name"><%= comment.user.username %></span></a>
+        </span>
+        <time itemprop="datePublished" datetime="<%= comment.created_at.iso8601 %>" class="post-voting-comments__comment-time">
+          (<%= l comment.created_at, format: :long %>)
+        </time>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @reply_count > 0 %>
+  <div class="post-voting-answer-count">
+    <h2><%= t("topic.post_voting.answer_count", count: @reply_count) %></h2>
+    <span class="post-voting-answer-count__value"><%= @reply_count %></span>
+  </div>
+<% end %>

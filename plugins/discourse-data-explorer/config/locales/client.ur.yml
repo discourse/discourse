@@ -6,10 +6,6 @@
 
 ur:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "ڈیٹا ایکسپلورر"
     errors:
       explorer:
         no_semicolons: "کمانڈ سے semicolons ہٹا دیں۔"
@@ -22,9 +18,6 @@ ur:
       create: "بنائیں"
       create_placeholder: "ڈیٹا کمانڈ کا نام..."
       description_placeholder: "یہاں تفصیل درج کریں"
-      ai:
-        generate: "تخلیق کریں"
-        optional: "اختیاری"
       import:
         label: "درآمد"
       help:

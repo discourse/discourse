@@ -565,9 +565,9 @@ pl_PL:
         max_turn_tokens_help: "Maksymalna łączna liczba tokenów (wejściowych i wyjściowych) zużytych we wszystkich wywołaniach LLM podczas jednej odpowiedzi bota. Po ustawieniu zastępuje stałe limity ukończenia/narzędzi budżetem tokenów, umożliwiając bardziej efektywne działanie agenta. Pozostaw puste, aby zachować domyślne limity."
         compression_threshold: "Próg kompresji"
         compression_threshold_help: "Procent wykorzystania kontekstu (20–99), przy którym włącza się automatyczna kompresja. Niższe wartości powodują szybsze uruchomienie kompresji, co pozwala zachować większy margines bezpieczeństwa."
-        vision_enabled: Wizja włączona
-        vision_enabled_help: Jeśli jest włączona, sztuczna inteligencja będzie próbowała zrozumieć obrazy publikowane przez użytkowników w temacie, w zależności od używanego modelu wspierającego widzenie. Obsługiwane przez najnowsze modele Anthropic, Google i OpenAI.
-        vision_max_pixels: Obsługiwany rozmiar obrazu
+        vision_enabled: Dołącz przesyłanie obrazów
+        vision_enabled_help: Jeśli ta opcja jest włączona, agent może uwzględniać obrazy ze wpisów i czatów, jeśli wybrany model obsługuje wprowadzanie obrazów.
+        vision_max_pixels: Maksymalny rozmiar obrazu
         vision_max_pixel_sizes:
           low: Niska jakość - najtańsza (256x256)
           medium: Średnia jakość (512x512)
@@ -876,9 +876,9 @@ pl_PL:
         max_output_tokens: "Maksymalna liczba tokenów wyjściowych"
         url: "Adres URL usługi hostującej model"
         api_key: "Klucz API usługi hostującej model"
-        vision_enabled: "Wizja włączona"
-        allowed_attachment_types: "Dozwolone załączniki"
-        attachment_types_placeholder: "Wybierz lub wpisz rozszerzenia (np. pdf, txt, docx)"
+        vision_enabled: "Obsługuje wprowadzanie obrazu"
+        allowed_attachment_types: "Dozwolone załączniki dokumentów"
+        attachment_types_placeholder: "Wybierz lub wpisz rozszerzenia (np. pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "Użytkownik bota AI"
         cost_input: "Koszt wejściowy"
         cost_cached_input: "Koszt buforowanego wejścia"
@@ -934,17 +934,17 @@ pl_PL:
           anthropic-claude-opus-4-7: "Najbardziej inteligentny model Anthropic"
           anthropic-claude-sonnet-4-6: "Optymalna równowaga między szybkością a kosztami"
           anthropic-claude-haiku-4-5: "Szybki i opłacalny"
-          google-gemini-3-pro: "Najinteligentniejszy model Google"
+          google-gemini-3-1-pro: "Najinteligentniejszy model Google"
           google-gemini-3-flash: "Szybki i ekonomiczny dzięki rozumowaniu multimodalnemu"
+          open_ai-gpt-5-5: "Najbardziej zaawansowany model OpenAI z rozszerzonym kontekstem"
           open_ai-gpt-5-4: "Flagowy model OpenAI, doskonale nadający się do rozwiązywania problemów w różnych domenach"
-          open_ai-gpt-5-4-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami"
-          open_ai-gpt-5-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5"
-          open_router-deepseek-deepseek-v3-2: "Najnowszy, wysokowydajny model firmy DeepSeek"
-          open_router-moonshotai-kimi-k2-5: "Multimodalny model Moonshot z funkcjami wizyjnymi"
-          open_router-x-ai-grok-4-fast: "Flagowy model xAI z wizją"
-          open_router-minimax-minimax-m2-7: "Multimodalny model MiniMax z dużym kontekstem"
-          open_router-z-ai-glm-5-1: "Multimodalny model Z-AI z wizją"
-          open_router-arcee-ai-trinity-large-preview-free: "Darmowy model open-source od Arcee AI"
+          open_ai-gpt-5-4-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5"
+          open_router-moonshotai-kimi-k2-6: "Multimodalny model Moonshot z funkcjami wizyjnymi"
+          open_router-deepseek-deepseek-v4-flash: "Najnowszy, wysokowydajny model DeepSeek z kontekstem 1M"
+          open_router-minimax-minimax-m2-7: "Model MiniMax z dużym kontekstem"
+          open_router-x-ai-grok-4-1-fast: "Szybki multimodalny model xAI z bardzo dużym kontekstem"
+          open_router-z-ai-glm-5-1: "Model Z-AI skoncentrowany na rozumowaniu"
+          open_router-qwen-qwen3-6-plus: "Multimodalny model Qwena z kontekstem 1M"
         preseeded_model_description: "Wstępnie skonfigurowany model open-source wykorzystujący %{model}"
         configured:
           title: "Skonfigurowane LLM"
@@ -968,8 +968,8 @@ pl_PL:
           max_output_tokens: "Maksymalna liczba tokenów, jaką model może wygenerować w jednym żądaniu"
           display_name: "Nazwa używana do odwoływania się do tego modelu w interfejsie Twojej witryny."
           name: "Uwzględniamy to w wywołaniu API, aby określić, którego modelu będziemy używać"
-          vision_enabled: "Po włączeniu tej opcji, sztuczna inteligencja będzie próbować interpretować obrazy. Zależy to od używanego modelu obsługującego widzenie. Obsługiwane są najnowsze modele firm Anthropic, Google i OpenAI."
-          allowed_attachment_types: "Wybierz typy załączników, które mają być przesyłane do modelu. Pozostaw puste, aby zablokować możliwość dodawania załączników. Obrazy są kontrolowane za pomocą wizji."
+          vision_enabled: "Czy ten model/dostawca może odbierać i rozumieć obrazy."
+          allowed_attachment_types: "Wybierz typy załączników dokumentów, które można konwertować lub przekazywać dalej. Pozostaw puste pole, aby nie zezwalać na załączanie dokumentów. Obrazy są kontrolowane osobno."
           cost_input: "Koszt wejściowy na 1 mln tokenów dla tego modelu"
           cost_cached_input: "Koszt wejścia w pamięci podręcznej na 1 mln tokenów dla tego modelu (przy odczycie z pamięci podręcznej)"
           cost_cache_write: "Koszt zapisu do pamięci podręcznej na 1 mln tokenów dla tego modelu (podczas zapisu do pamięci podręcznej)"
@@ -1243,6 +1243,11 @@ pl_PL:
           last_30_days: "Ostatnie 30 dni"
           upload_files: "Prześlij pliki"
           uploads_in_progress: "Nie można przesłać, gdy trwa przesyłanie"
+          show_toolbar: "Pokaż pasek narzędzi formatowania"
+          hide_toolbar: "Ukryj pasek narzędzi formatowania"
+          scroll_to_bottom: "Przewiń na dół"
+          streaming_below: "Nowa treść poniżej"
+          editing_post: "Edycja wpisu"
       sentiments:
         dashboard:
           title: "Sentiment"

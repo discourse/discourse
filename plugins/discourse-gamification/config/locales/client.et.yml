@@ -12,10 +12,6 @@ et:
         link_to_settings: "Seaded"
         refresh: "Värskenda"
         name: "Nimi"
-        section:
-          groups: "Rühmad"
-        weight:
-          solution: "Lahendus"
         period:
           all_time: "Alates algusest"
           yearly: "Iga-aastaselt"

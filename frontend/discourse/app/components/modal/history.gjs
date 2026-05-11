@@ -230,6 +230,21 @@ export default class History extends Component {
           await Category.asyncFindById(result.category_id)
         );
       }
+      if (result.post) {
+        // `PostSerializer` omits `reply_to_user` when the user is nil OR
+        // when `suppress_reply_when_quoting` is on and the post quotes its
+        // target. Treat a missing key as "leave alone" — only clear it
+        // when the post number is also cleared.
+        const props = {
+          reply_to_post_number: result.post.reply_to_post_number ?? null,
+        };
+        if ("reply_to_user" in result.post) {
+          props.reply_to_user = result.post.reply_to_user;
+        } else if (result.post.reply_to_post_number == null) {
+          props.reply_to_user = null;
+        }
+        post.setProperties(props);
+      }
       this.args.closeModal();
     } catch (e) {
       if (e.jqXHR.responseJSON?.errors?.[0]) {

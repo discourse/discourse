@@ -38,6 +38,7 @@ register_asset "stylesheets/modules/ai-bot/common/ai-discobot-discoveries.scss"
 register_asset "stylesheets/modules/ai-bot/mobile/ai-agent.scss", :mobile
 
 register_asset "stylesheets/modules/ai-bot-conversations/common.scss"
+register_asset "stylesheets/modules/ai-bot-conversations/docked-composer.scss"
 
 register_asset "stylesheets/modules/embeddings/common/semantic-related-topics.scss"
 register_asset "stylesheets/modules/embeddings/common/semantic-search.scss"

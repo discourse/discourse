@@ -542,6 +542,8 @@ lt:
         title: "Atidarykite naujausių juodraščių meniu"
         untitled: "Be pavadinimo juodraštis"
         view_all: "peržiūrėti visus įrašus"
+    embed_mode:
+      editing_post: "Redaguojamas įrašas"
     topic_count_all:
       one: "Pamatyk %{count} naują temą"
       few: "Pamatyk %{count} naujas temas"
@@ -2763,13 +2765,6 @@ lt:
         move_messages_to_inbox: "Perkelti į Pranešimų dėžutę"
         change_notification_level: "Keisti pranešimo lygį"
         choose_new_category: "Pasirinkti naują kategoriją temoms:"
-        choose_new_tags: "Pasirinkite naujas žymas šioms temoms:"
-        changed_tags: "Šių temų žymos buvo pakeistos."
-        confirm_remove_tags:
-          one: "Visos žymos bus pašalintos iš šios temos. Ar esate tikras?"
-          few: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
-          many: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
-          other: "Visos žymės bus pašalintos iš <b>%{count}</b> temų. Ar esate tikras?"
         error_topic_count:
           one: "%{count} tema"
           few: "%{count} temos"
@@ -2794,8 +2789,6 @@ lt:
         name: "Archyvuoti"
       move_messages_to_inbox:
         name: "Perkelti į Pranešimų dėžutę"
-      replace_tags:
-        name: "Pakeisti žymas"
       delete_topics:
         name: "Pašalinti"
       convert_to_private_message:
@@ -2818,6 +2811,7 @@ lt:
       collapse: "Suskleisti"
       no_replies: "Jokių atsakymų nerasta."
       deleted_post_placeholder: "[ištrinta]"
+      ignored_post_placeholder: "[nepaisoma]"
       pinned_reply: "Prisegta"
     topic:
       filter_to:
@@ -3511,7 +3505,7 @@ lt:
           low: "Žemas"
           high: "Aukštas"
       sort_options:
-        default: "numatytasis"
+        default: "Numatytasis"
         likes: "Mėgsta"
         views: "Peržiūros"
         posts: "įrašai"
@@ -4363,6 +4357,14 @@ lt:
         exception_error: Atsiprašome, vykdant užklausą įvyko klaida
         too_many_requests: Jūs atlikote šį veiksmą per daug kartų. Prašome palaukti prieš bandydami dar kartą.
         not_found_error: Atsiprašome, ši ataskaita neegzistuoja
+        sections:
+          reports:
+            title: "Pranešimai"
+        period:
+          last_7_days: "Paskutinės 7 dienos"
+          last_30_days: "Paskutinės 30 dienų"
+          last_3_months: "Paskutiniai 3 mėnesiai"
+          custom: "Išskirtinės"
         reports:
           trend_title: "%{percent} pokytis. Šiuo metu %{current}, buvo %{prev} ankstesniame laikotarpyje."
           today: "Šiandien"
@@ -5020,6 +5022,7 @@ lt:
         topic_id: "Temos ID"
         post_id: "Pranešimo ID"
         category_id: "Kategorijos ID"
+        reviewable_id: "Peržiūra"
         delete: "Ištrinti"
         edit: "Redaguoti"
         save: "Išsaugoti"

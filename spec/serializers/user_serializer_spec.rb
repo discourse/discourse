@@ -514,6 +514,72 @@ RSpec.describe UserSerializer do
     end
   end
 
+  context "with no_password" do
+    fab!(:passwordless_user) { Fabricate(:user, password: nil) }
+
+    it "is not included for anonymous viewers" do
+      json = UserSerializer.new(passwordless_user, scope: Guardian.new, root: false).as_json
+
+      expect(json).not_to have_key(:no_password)
+    end
+
+    it "is not included when viewed by another non-staff user" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(Fabricate(:user)),
+          root: false,
+        ).as_json
+
+      expect(json).not_to have_key(:no_password)
+    end
+
+    it "is included when viewed by an admin" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(Fabricate(:admin)),
+          root: false,
+        ).as_json
+
+      expect(json[:no_password]).to eq(true)
+    end
+
+    it "is included when viewed by a moderator" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(Fabricate(:moderator)),
+          root: false,
+        ).as_json
+
+      expect(json[:no_password]).to eq(true)
+    end
+
+    it "is included when the user views their own profile and has no password" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(passwordless_user),
+          root: false,
+        ).as_json
+
+      expect(json[:no_password]).to eq(true)
+    end
+
+    it "is not included when the user views their own profile but has a password" do
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      expect(json).not_to have_key(:no_password)
+    end
+
+    it "is not included for staff when the target user has a password" do
+      json = UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+
+      expect(json).not_to have_key(:no_password)
+    end
+  end
+
   context "for user sidebar attributes" do
     include_examples "User Sidebar Serializer Attributes", described_class
 

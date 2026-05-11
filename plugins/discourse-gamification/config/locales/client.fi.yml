@@ -32,8 +32,6 @@ fi:
         cta: "Tee ensimmäinen tulostaulukkosi"
         none: "Tulostaulukoita ei ole vielä luotu."
         confirm_destroy: "Oletko varma, että haluat poistaa tämän tulostaulukon?"
-        section:
-          groups: "Ryhmät"
         date:
           range: "Päivämääräalue (alkaen/päättyen)"
           from: "Alkamispäivä"
@@ -48,9 +46,6 @@ fi:
         default_period: "Oletusjakso"
         default_period_help: "Aseta näytettävä oletusaika tälle tulostaulukolle."
         period_filter_disabled: "Poista ajanjaksosuodatin käytöstä"
-        weight:
-          post_created: "Viesti luotu"
-          solution: "Ratkaisu"
         period:
           all_time: "Kaikilta ajoilta"
           yearly: "Vuosittainen"

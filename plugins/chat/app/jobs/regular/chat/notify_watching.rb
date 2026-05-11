@@ -82,7 +82,7 @@ module Jobs
           excerpt: @chat_message.push_notification_excerpt,
           channel_id: @chat_channel.id,
           is_direct_message_channel: @is_direct_message_channel,
-        }
+        }.merge(::Chat::Notifier.push_notification_reply_action(@chat_message, user))
 
         if @chat_message.in_thread? && !membership.muted?
           thread_membership =

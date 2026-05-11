@@ -78,6 +78,7 @@ export default class GroupManageLogsRow extends Component {
           <DButton
             @action={{this.toggleDetails}}
             @icon={{if this.expandDetails "angle-up" "angle-down"}}
+            class="btn-default"
           />
         {{/if}}
       </td>

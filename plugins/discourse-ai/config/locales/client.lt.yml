@@ -413,6 +413,7 @@ lt:
           today: "Šandien"
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"
+          editing_post: "Redaguojamas įrašas"
       sentiments:
         sentiment_analysis:
           filter_types:

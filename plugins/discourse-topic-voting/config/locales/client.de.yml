@@ -10,6 +10,8 @@ de:
       sort_options:
         votes: "Stimmen"
     topic_voting:
+      category_type_ideas:
+        title: "Ideen"
       notification_label:
         vote_released: "Stimme zurückgegeben"
       title: "Themenabstimmung"

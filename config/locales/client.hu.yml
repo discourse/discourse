@@ -658,6 +658,7 @@ hu:
       storage_access_prompt: "Már van %{site_name} fiókod? Engedélyezd a hozzáférést a munkamenetedhez, hogy saját nevedben hozzászólhass."
       allow_access: "Hozzáférés engedélyezése"
       continue_as_guest: "Folytatás vendégként"
+      editing_post: "Bejegyzés szerkesztése"
     topic_count_all:
       one: "%{count} új téma megtekintése"
       other: "%{count} új téma megtekintése"
@@ -3465,19 +3466,9 @@ hu:
         archive_messages: "Áthelyezés az archívumba"
         change_notification_level: "Értesítési szint módosítása"
         choose_new_category: "Válassza ki az új kategóriát a témákhoz:"
-        selected_sole_category:
-          one: "<b>%{count}</b> témát választott ki a következő kategóriából:"
-          other: "<b>%{count}</b> témát választott ki a következő kategóriából:"
         selected_count:
           one: "%{count} kiválasztva"
           other: "%{count} kiválasztva"
-        append_tags: "Címkék hozzáadása"
-        choose_new_tags: "Válasszon új címkéket ezekhez a témákhoz:"
-        choose_append_tags: "Címkék hozzáadása"
-        changed_tags: "Azon témák címkéi megváltoztak."
-        confirm_remove_tags:
-          one: "Az összes címke eltávolításra kerül erről a témáról. Biztos benne?"
-          other: "Az összes címke eltávolításra kerül <b>%{count}</b> témáról. Biztos benne?"
         progress:
           one: "Folyamat: <strong>%{count}</strong> téma"
           other: "Folyamat: <strong>%{count}</strong> téma"
@@ -3530,10 +3521,9 @@ hu:
         name: "Levétel a listáról"
       relist_topics:
         name: "Felvétel a listára"
-      remove_tags:
-        name: "Címkék eltávolítása"
-      replace_tags:
-        name: "Címkék cseréje"
+      manage_tags:
+        add:
+          title: "Címkék hozzáadása"
       delete_topics:
         name: "Törlés"
       update_category:
@@ -3562,6 +3552,7 @@ hu:
       collapse: "Összecsukás"
       no_replies: "Még nincsenek hozzászólások."
       deleted_post_placeholder: "[törölve]"
+      ignored_post_placeholder: "[figyelmen kívül hagyott]"
       pinned_reply: "Kiemelt"
     topic:
       filter_to:
@@ -4532,7 +4523,7 @@ hu:
           high: "Magas"
           very_high: "Nagyon magas"
       sort_options:
-        default: "alapértelmezett"
+        default: "Alapértelmezett"
         likes: "Kedvelések"
         op_likes: "Eredeti bejegyzés kedvelései"
         views: "Megtekintések"
@@ -6189,6 +6180,18 @@ hu:
         too_many_requests: Túl sokszor hajtotta végre ezt a műveletet. Az újabb próbálkozás előtt várjon.
         not_found_error: Sajnos ez a jelentés nem létezik
         custom_date_range: Egyéni dátumtartomány
+        sections:
+          reports:
+            title: "Jelentések"
+          traffic:
+            title: "Látogatottság"
+          engagement:
+            title: "Elköteleződés"
+        period:
+          last_7_days: "Elmúlt 7 nap"
+          last_30_days: "Elmúlt 30 nap"
+          last_3_months: "Elmúlt 3 hónap"
+          custom: "Egyéni"
         reports:
           trend_title: "%{percent} megváltoztatni. Jelenlegi %{current}, volt %{prev} az előző időszakban"
           percent_change_tooltip: "%{percent} változás."
@@ -7453,6 +7456,7 @@ hu:
         topic_id: "Témakör azonosító"
         post_id: "Bejegyzés azonosító"
         category_id: "Kategória ID"
+        reviewable_id: "Áttekintés"
         delete: "Törlés"
         edit: "Szerkesztés"
         save: "Mentés"
@@ -8057,7 +8061,6 @@ hu:
           other: "Nem lehet törölni az összes hozzászólást, mert a felhasználónak több mint %{count} hozzászólása van. (delete_all_posts_max)"
         delete_confirm_title: "Biztosan törli ezt a felhasználót? Ez végleges!"
         delete_confirm: "Általában előnyösebb a felhasználók anonimizálása, mint a törlésük, hogy elkerüljük a meglévő viták tartalmának eltávolítását."
-        delete_and_block: "Törölje a felhasználót, és blokkolja az e-mail- és IP-címét"
         delete_dont_block: "Felhasználó törlése"
         deleting_user: "Felhasználó törlése"
         deleted: "A felhasználó el lett távolítva"

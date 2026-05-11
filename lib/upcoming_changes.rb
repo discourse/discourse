@@ -117,6 +117,10 @@ module UpcomingChanges
   def self.enabled?(change_setting_name)
     change_setting_name = change_setting_name.to_sym
 
+    if !exists?(change_setting_name)
+      raise ArgumentError, "Unknown upcoming change: #{change_setting_name}"
+    end
+
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes
     # is false.

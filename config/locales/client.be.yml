@@ -1700,7 +1700,7 @@ be:
         options:
           ignore: "Ігнараваць"
       sort_options:
-        default: "прадвызначана"
+        default: "Прадвызначаная"
         likes: "Падабайкі"
         views: "Прагляды"
         posts: "Допісы"
@@ -2173,6 +2173,9 @@ be:
         reports_tab: "Справаздачы"
         report_filter_any: "любы"
         disabled: Адключана
+        sections:
+          reports:
+            title: "Справаздачы"
         reports:
           today: "сёння"
           yesterday: "учора"
@@ -2512,6 +2515,7 @@ be:
         topic_id: "ID тэмы"
         post_id: "ID паведамлення"
         category_id: "ID катэгорыі"
+        reviewable_id: "Разгляд"
         delete: "выдаліць"
         edit: "рэдагаваць"
         save: "захаваць"

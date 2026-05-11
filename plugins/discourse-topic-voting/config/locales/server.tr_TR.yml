@@ -5,13 +5,7 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  category_types:
-    ideas:
-      name: "Fikirler"
-      title: "fikirler"
-      description: "Üyelerin fikirlerini paylaşabileceği ve en çok istedikleri fikirler için oy verebileceği bir platform."
   site_settings:
-    enable_ideas_category_type_setup: "Kategori oluşturma ayarları sırasında \"Fikirler\" kategori türü seçeneğini etkinleştirir. Bunun geçerli olabilmesi için \"basitleştirilmiş kategori oluşturma\" seçeneğinin etkinleştirilmiş olması gerektiğini unutmayın."
     topic_voting_enabled: 'Kullanıcıların konularda oy kullanmasına izin verilsin mi?'
     topic_voting_enable_vote_limits: 'Güven düzeyine bağlı olarak kullanıcı başına oy sayısını sınırlayın.'
     topic_voting_tl0_vote_limit: 'GS0 kullanıcılara kaç aktif oy izni veriliyor?'
@@ -23,25 +17,6 @@ tr_TR:
     topic_voting_show_votes_on_profile: 'Kullanıcıların oylarını aktivite akışlarında görmelerine izin verilsin mi?'
     topic_voting_alert_votes_left: 'Şu kadar oy kaldığında kullanıcıyı uyar:'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Oy verenleri göster"
-      show_votes_on_profile:
-        label: "Profilde oyları göster"
-      enable_vote_limits:
-        label: "Üye oylarını sınırla"
-      tl0_vote_limit:
-        label: "TL0 oy sınırı"
-      tl1_vote_limit:
-        label: "TL1 oy sınırı"
-      tl2_vote_limit:
-        label: "TL2 oy sınırı"
-      tl3_vote_limit:
-        label: "TL3 oy sınırı"
-      tl4_vote_limit:
-        label: "TL4 oy sınırı"
-      alert_votes_left:
-        label: "Kalan oy sayısı konusunda uyarı"
     votes_moved:
       one: "Bir oy taşındı."
       other: "%{count} oy taşındı."

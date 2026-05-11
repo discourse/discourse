@@ -85,6 +85,13 @@ module NestedReplies
     def apply_visibility(scope)
       scope = scope.unscope(where: :deleted_at)
       scope = scope.where(post_type: visible_post_types)
+      if guardian.user&.whisperer?
+        scope =
+          scope.where(
+            "post_type != :whisper OR action_code IS NULL OR action_code = ''",
+            whisper: Post.types[:whisper],
+          )
+      end
       scope
     end
 

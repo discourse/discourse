@@ -389,6 +389,7 @@ vi:
       admins: "quản trị"
       moderators: "điều hành"
       staff: "nhân viên"
+      anonymous: "ẩn danh"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -938,6 +939,8 @@ vi:
       xaxis: "Ngày"
     page_view_logged_in_browser_reqs:
       xaxis: "Ngày"
+    page_view_embed_reqs:
+      xaxis: "Ngày"
     http_background_reqs:
       title: "Hình nền"
       xaxis: "Ngày"
@@ -986,10 +989,10 @@ vi:
         user: Thành viên
         location: Vị trí
       description: "Chi tiết về thông tin đăng nhập mới khác biệt đáng ngờ với thông tin đăng nhập trước đó."
-    staff_logins:
+    admin_logins:
       title: "Đăng nhập quản trị viên"
       labels:
-        user: Thành viên
+        user: Người dùng
         location: Vị trí
         login_at: Đăng nhập lúc
       description: "Danh sách thời gian đăng nhập của quản trị viên với các địa điểm."
@@ -1815,7 +1818,6 @@ vi:
       text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
     new_user_of_the_month:
       title: "Bạn là thành viên mới của tháng!"
-      subject_template: "Bạn là một thành viên mới của tháng!"
       text_body_template: |
         Xin chúc mừng, bạn đã giành được giải thưởng ** Người dùng mới của tháng với giá %{month_year}**. :trophy:
 
@@ -1950,6 +1952,7 @@ vi:
     account_second_factor_disabled:
       title: "Xác thực hai yếu tố bị vô hiệu hóa"
       subject_template: "[%{email_prefix}] Đã tắt Xác thực hai yếu tố"
+      subject_template_improved: "Xác thực hai yếu tố bị vô hiệu hóa"
     digest:
       since_last_visit: "Kể từ lần truy cập cuối của bạn"
       new_topics: "Chủ đề mới"
@@ -1958,6 +1961,7 @@ vi:
       popular_topics: "Những chủ đề phổ biến"
       join_the_discussion: "Đọc Tiếp"
       more_new: "Mới cho bạn"
+      subject_template_improved: "Tóm tắt"
       unsubscribe: "Tóm tắt này được gửi từ %{site_link} khi chúng tôi không gặp bạn trong một thời gian. Thay đổi %{email_preferences_link}hoặc %{unsubscribe_link} để hủy đăng ký."
       click_here: "bấm vào đây"
     forgot_password:
@@ -1971,6 +1975,8 @@ vi:
 
         Nhấp vào liên kết sau để chọn mật khẩu:
         %{base_url}/u/password-reset/%{email_token}
+    admin_login:
+      subject_template_improved: "Đăng nhập"
     confirm_new_email_via_admin:
       text_body_template: |
         Xác nhận địa chỉ email mới của bạn cho %{site_name} bằng cách nhấp vào liên kết sau:
@@ -1988,8 +1994,6 @@ vi:
         %{new_email}
     signup_after_approval:
       subject_template: "Bạn đã được kiểm duyệt ở %{site_name}!"
-    suspicious_login:
-      subject_template: "[%{site_name}] Đăng nhập mới từ %{location}"
     post_approved:
       title: "Tút của bạn đã được phê duyệt"
       subject_template: "[%{site_name}] Tút của bạn đã được phê duyệt"

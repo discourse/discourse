@@ -51,6 +51,7 @@ export default class AdminToolsService extends Service {
         penaltyType: type,
         postId: opts.postId,
         postEdit: opts.postEdit,
+        reviewableId: opts.reviewableId,
         user: loadedUser,
         before: opts.before,
         successCallback: async (result) => {

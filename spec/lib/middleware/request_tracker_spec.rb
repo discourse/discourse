@@ -267,6 +267,130 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
     end
 
+    describe "embed mode pageviews" do
+      it "does not leak the initial embed HTML load into the legacy page_view_anon counter" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(path: "/t/topic-slug/1?embed_mode=true"),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        CachedCounting.flush
+
+        expect(ApplicationRequest.page_view_anon.sum(:count)).to eq(0)
+        expect(ApplicationRequest.page_view_embed.sum(:count)).to eq(0)
+      end
+
+      it "counts deferred pageview with embed header as page_view_embed" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              :path => "/message-bus/abcde/poll",
+              "HTTP_DISCOURSE_TRACK_VIEW_DEFERRED" => "1",
+              "HTTP_DISCOURSE_TRACK_VIEW_EMBED" => "true",
+            ),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        CachedCounting.flush
+
+        expect(ApplicationRequest.page_view_embed.first.count).to eq(1)
+        expect(ApplicationRequest.page_view_anon_browser.sum(:count)).to eq(0)
+      end
+
+      it "counts explicit XHR pageview with embed header only once as page_view_embed" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_DISCOURSE_TRACK_VIEW" => "1", "HTTP_DISCOURSE_TRACK_VIEW_EMBED" => "true"),
+            ["200", {}],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        CachedCounting.flush
+
+        expect(ApplicationRequest.page_view_embed.first.count).to eq(1)
+        expect(ApplicationRequest.page_view_anon.sum(:count)).to eq(0)
+        expect(ApplicationRequest.page_view_anon_browser.sum(:count)).to eq(0)
+      end
+
+      it "does not defer a topic view for embed browser pageviews" do
+        TopicsController.expects(:defer_topic_view).never
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_TRACK_VIEW_EMBED" => "true",
+              "HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID" => "42",
+            ),
+            ["200", {}],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+      end
+
+      it "counts beacon pageview with embed flag as page_view_embed" do
+        SiteSetting.use_beacon_for_browser_page_views = true
+        body = {
+          session_id: "abc",
+          url: "https://example.com/t/slug/1",
+          referrer: "https://host.example/page",
+          embed: true,
+        }.to_json
+
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "REQUEST_METHOD" => "POST",
+              :path => Discourse.beacon_pv_tracking_path,
+              "rack.input" => StringIO.new(body),
+            ),
+            ["204", {}],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        CachedCounting.flush
+
+        expect(data[:is_embed]).to eq(true)
+        expect(ApplicationRequest.page_view_embed.first.count).to eq(1)
+        expect(ApplicationRequest.page_view_anon_browser_beacon.sum(:count)).to eq(0)
+      end
+
+      it "survives requests with a missing or unreadable body" do
+        # POST without a rack.input must not raise while detecting `is_embed` —
+        # we only care about the query string, not the body.
+        expect {
+          Middleware::RequestTracker.get_data(
+            env(
+              "REQUEST_METHOD" => "POST",
+              :path => "/srv/something?embed_mode=true",
+              "rack.input" => nil,
+            ),
+            ["200", {}],
+            0.1,
+          )
+        }.not_to raise_error
+      end
+
+      it "still counts crawlers as page_view_crawler even on embed URLs" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              :path => "/t/topic-slug/1?embed_mode=true",
+              "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)",
+            ),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        CachedCounting.flush
+
+        expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
+        expect(ApplicationRequest.page_view_embed.sum(:count)).to eq(0)
+      end
+    end
+
     it "logs API requests correctly" do
       data =
         Middleware::RequestTracker.get_data(
@@ -597,6 +721,7 @@ RSpec.describe Middleware::RequestTracker do
         before { SiteSetting.trigger_browser_pageview_events = true }
         it "triggers event for anonymous user page views when `login_required` site setting is false" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+          DiscourseIpInfo.stubs(:get).returns(country_code: "AU")
 
           data =
             Middleware::RequestTracker.get_data(
@@ -622,6 +747,7 @@ RSpec.describe Middleware::RequestTracker do
           expect(event[:url]).to eq("https://discourse.org")
           expect(event[:referrer]).to eq("https://example.com")
           expect(event).to have_key(:ip_address)
+          expect(event[:country_code]).to eq("AU")
           expect(event[:user_agent]).to be_present
         end
 
@@ -681,6 +807,7 @@ RSpec.describe Middleware::RequestTracker do
 
         it "triggers event for logged-in user page views" do
           user = Fabricate(:user, active: true)
+          DiscourseIpInfo.stubs(:get).returns(country_code: "DE")
           token = UserAuthToken.generate!(user_id: user.id)
           cookie =
             create_auth_cookie(
@@ -713,6 +840,7 @@ RSpec.describe Middleware::RequestTracker do
           expect(event[:url]).to eq("https://discourse.org")
           expect(event[:referrer]).to eq("https://example.com")
           expect(event).to have_key(:ip_address)
+          expect(event[:country_code]).to eq("DE")
           expect(event[:user_agent]).to be_present
         end
 
@@ -819,6 +947,7 @@ RSpec.describe Middleware::RequestTracker do
 
     it "increments beacon-specific counters and fires beacon event with correct data" do
       SiteSetting.trigger_browser_pageview_events = true
+      DiscourseIpInfo.stubs(:get).returns(country_code: "US")
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
 
       events =
@@ -846,6 +975,7 @@ RSpec.describe Middleware::RequestTracker do
       expect(event[:referrer]).to eq("https://test.com/")
       expect(event[:session_id]).to eq("abc123")
       expect(event[:topic_id]).to eq(123)
+      expect(event[:country_code]).to eq("US")
       expect(event[:user_agent]).to eq(
         "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       )
@@ -1558,8 +1688,9 @@ RSpec.describe Middleware::RequestTracker do
       app = lambda { |env| raise RateLimiter::LimitExceeded, 1 }
       tracker = Middleware::RequestTracker.new(app)
       expect { tracker.call(env) }.to raise_error(RateLimiter::LimitExceeded)
+
       CachedCounting.flush
-      expect(ApplicationRequest.stats).to include("http_total_total" => 1)
+      expect(ApplicationRequest.stats["http_total_total"]).to eq(1)
       expect(fake_logger.warnings).to be_empty
     end
   end

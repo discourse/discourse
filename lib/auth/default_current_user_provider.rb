@@ -275,6 +275,7 @@ class Auth::DefaultCurrentUserProvider
     user.unstage!
 
     make_developer_admin(user)
+    bootstrap_first_admin(user)
 
     UserAuthToken.enforce_session_count_limit!(user.id)
 
@@ -333,6 +334,13 @@ class Auth::DefaultCurrentUserProvider
       user.save
       Group.refresh_automatic_groups!(:staff, :admins)
     end
+  end
+
+  def bootstrap_first_admin(user)
+    return if !user.admin || user.moderator || !user.last_seen_at.nil? || !user.is_singular_admin?
+
+    user.grant_moderation!
+    StaffActionLogger.new(Discourse.system_user).log_grant_moderation(user)
   end
 
   def log_off_user(session, cookie_jar, push_subscription: nil)

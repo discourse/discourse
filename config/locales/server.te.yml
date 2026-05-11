@@ -296,6 +296,7 @@ te:
       admins: "అధికారులు"
       moderators: "నిర్వాహకులు"
       staff: "సిబ్బంది"
+      anonymous: "అనామక"
       trust_level_0: "నమ్మకం_స్థాయి_0"
       trust_level_1: "నమ్మకం_స్థాయి_1"
       trust_level_2: "నమ్మకం_స్థాయి_2"
@@ -878,6 +879,8 @@ te:
       xaxis: "రోజు"
     page_view_logged_in_browser_reqs:
       xaxis: "రోజు"
+    page_view_embed_reqs:
+      xaxis: "రోజు"
     http_background_reqs:
       title: "వెనుతలం"
       xaxis: "రోజు"
@@ -930,7 +933,7 @@ te:
         device: పరికరం
         os: ఆపరేటింగ్ సిస్టమ్
         login_time: లాగిన్ సమయం
-    staff_logins:
+    admin_logins:
       title: "అడ్మిన్ లాగిన్‌లు"
       labels:
         user: సభ్యుడు
@@ -1610,7 +1613,6 @@ te:
     create_revision_on_bulk_topic_moves: "టాపిక్‌లు పెద్దమొత్తంలో కొత్త వర్గానికి తరలించబడినప్పుడు మొదటి పోస్ట్‌ల కోసం పునర్విమర్శను సృష్టించండి."
     allow_changing_staged_user_tracking: "నిర్వాహక వినియోగదారు ద్వారా దశలవారీ వినియోగదారు వర్గం మరియు ట్యాగ్ నోటిఫికేషన్ ప్రాధాన్యతలను మార్చడానికి అనుమతించండి."
     suggest_weekends_in_date_pickers: "తేదీ పికర్ సూచనలలో వారాంతాలను (శనివారం మరియు ఆదివారం) చేర్చండి (మీరు వారాంతపు రోజులలో, సోమవారం నుండి శుక్రవారం వరకు మాత్రమే ప్రసంగాన్ని ఉపయోగిస్తే దీన్ని నిలిపివేయండి)."
-    splash_screen: "సైట్ ఆస్తులు లోడ్ అవుతున్నప్పుడు తాత్కాలిక లోడింగ్ స్క్రీన్‌ని ప్రదర్శిస్తుంది"
     default_navigation_menu_categories: "ఎంచుకున్న వర్గాలు డిఫాల్ట్‌గా నావిగేషన్ మెనూ యొక్క కేటగిరీల విభాగంలో ప్రదర్శించబడతాయి."
     default_navigation_menu_tags: "ఎంచుకున్న ట్యాగ్‌లు డిఫాల్ట్‌గా నావిగేషన్ మెనూ ట్యాగ్‌ల విభాగంలో ప్రదర్శించబడతాయి."
     page_loading_indicator: "డిస్కోర్స్‌లో పేజీ నావిగేషన్‌ల సమయంలో కనిపించే లోడింగ్ సూచికను కాన్ఫిగర్ చేయండి. 'స్పిన్నర్' అనేది పూర్తి పేజీ సూచిక. 'స్లైడర్' స్క్రీన్ పైభాగంలో ఇరుకైన పట్టీని చూపుతుంది."
@@ -2005,8 +2007,10 @@ te:
       title: "ఖాతా నిశ్శబ్దం చేయబడింది"
     account_exists:
       title: "ఖాతా ఇప్పటికే ఉంది"
+      subject_template_improved: "ఖాతా ఇప్పటికే ఉంది"
     account_second_factor_disabled:
       title: "రెండు-కారకాల ప్రమాణీకరణ నిలిపివేయబడింది"
+      subject_template_improved: "రెండు-కారకాల ప్రమాణీకరణ నిలిపివేయబడింది"
     digest:
       since_last_visit: "మీ చివరి సందర్శన నుండి"
       new_topics: "క్రొత్త విషయాలు"
@@ -2018,6 +2022,7 @@ te:
       popular_posts: "ప్రసిద్ధ పోస్ట్‌లు"
       more_new: "మీ కోసం కొత్తది"
       subject_template: "[%{email_prefix}] సారాంశం"
+      subject_template_improved: "సారాంశం"
       your_email_settings: "మీ ఇమెయిల్ సెట్టింగ్‌లు"
       click_here: "ఇక్కడ క్లిక్ చేయండి"
       from: "%{site_name}"
@@ -2026,15 +2031,15 @@ te:
     email_login:
       title: "లింక్ ద్వారా లాగిన్ అవ్వండి"
       subject_template: "[%{email_prefix}] లింక్ ద్వారా లాగిన్ అవ్వండి"
+      subject_template_improved: "లింక్ ద్వారా లాగిన్ అవ్వండి"
     set_password:
       title: "సంకేతపదం అమర్చండి"
-      subject_template: "[%{email_prefix}] పాస్‌వర్డ్‌ని సెట్ చేయండి"
     admin_login:
       title: "అడ్మిన్ లాగిన్"
       subject_template: "[%{email_prefix}] లాగిన్"
+      subject_template_improved: "లాగిన్"
     account_created:
       title: "ఖాతా సృష్టించబడింది"
-      subject_template: "[%{email_prefix}] మీ కొత్త ఖాతా"
     confirm_new_email:
       title: "కొత్త ఇమెయిల్‌ను నిర్ధారించండి"
     confirm_new_email_via_admin:
@@ -2073,7 +2078,6 @@ te:
       title: "యాక్టివేషన్ రిమైండర్"
     suspicious_login:
       title: "కొత్త లాగిన్ హెచ్చరిక"
-      subject_template: "[%{site_name}] %{location} నుండి కొత్త లాగిన్"
     post_approved:
       title: "మీ పోస్ట్ ఆమోదించబడింది"
       subject_template: "[%{site_name}] మీ పోస్ట్ ఆమోదించబడింది"

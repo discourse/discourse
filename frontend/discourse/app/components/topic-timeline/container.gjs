@@ -107,10 +107,14 @@ export default class TopicTimelineScrollArea extends Component {
       }
     });
 
+    // The timeline is usually rendered on a topic page where both of these
+    // anchors exist. When it's rendered outside of that context (for example,
+    // a modal opened from a floating composer on a non-topic route), they
+    // may be absent — skip observing rather than crashing.
     const elements = [
       document.querySelector(".container.posts"),
       document.querySelector("#topic-bottom"),
-    ];
+    ].filter(Boolean);
 
     for (let i = 0; i < elements.length; i++) {
       this.intersectionObserver.observe(elements[i]);

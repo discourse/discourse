@@ -43,12 +43,14 @@ export default <template>
         {{/if}}
         <section class="user-invite-buttons">
           {{#if @controller.model.invites}}
-            <DButton
-              @icon="plus"
-              @action={{@controller.createInvite}}
-              @label="user.invited.create"
-              class="btn-default invite-button"
-            />
+            {{#if @controller.canCreateInvite}}
+              <DButton
+                @icon="plus"
+                @action={{@controller.createInvite}}
+                @label="user.invited.create"
+                class="btn-default invite-button"
+              />
+            {{/if}}
             {{#if @controller.canBulkInvite}}
               {{#if @controller.siteSettings.allow_bulk_invite}}
                 {{#if @controller.site.desktopView}}
@@ -68,7 +70,7 @@ export default <template>
                 @icon="xmark"
                 @action={{@controller.destroyAllExpired}}
                 @label="user.invited.remove_all"
-                class="bulk-remove-expired"
+                class="btn-default bulk-remove-expired"
               />
             {{/if}}
 
@@ -303,7 +305,7 @@ export default <template>
                             @title={{i18n "more_options"}}
                             @icon="ellipsis-vertical"
                             @onRegisterApi={{@controller.onRegisterApi}}
-                            class="btn-small"
+                            class="btn-default btn-small"
                           >
                             <:content>
                               <DropdownMenu as |dropdown|>
@@ -342,8 +344,14 @@ export default <template>
             @identifier="empty-channels-list"
             @svgContent={{SvgEnvelopeZero}}
             @title={{i18n "user.invited.none.title"}}
-            @ctaLabel={{i18n "user.invited.none.cta"}}
-            @ctaAction={{@controller.createInvite}}
+            @ctaLabel={{if
+              @controller.canCreateInvite
+              (i18n "user.invited.none.cta")
+            }}
+            @ctaAction={{if
+              @controller.canCreateInvite
+              @controller.createInvite
+            }}
             @tipIcon={{if @controller.canBulkInvite "upload"}}
           >
             <:tip>

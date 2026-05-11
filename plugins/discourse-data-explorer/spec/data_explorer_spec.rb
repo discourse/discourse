@@ -139,6 +139,21 @@ describe DiscourseDataExplorer::DataExplorer do
         expect(colrender).to eq({ 1 => "json" })
       end
 
+      it "limits relation resolution to the query result limit per relation type" do
+        SiteSetting.data_explorer_query_result_limit = 2
+        topics = Fabricate.times(4, :topic)
+        query = DiscourseDataExplorer::Query.create!(name: "some query", sql: <<~SQL)
+              SELECT #{topics[0].id} AS topic_id, #{topics[2].id} AS related_topic_id
+              UNION ALL
+              SELECT #{topics[1].id} AS topic_id, #{topics[3].id} AS related_topic_id
+            SQL
+
+        pg_result = described_class.run_query(query)[:pg_result]
+        relations, _ = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result)
+
+        expect(relations[:topic].as_json.size).to eq(2)
+      end
+
       describe "serializing models to serializer" do
         it "serializes correctly to BasicTopicSerializer for topic relations" do
           topic = Fabricate(:topic, locale: "ja")

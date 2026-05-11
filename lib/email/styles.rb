@@ -339,7 +339,12 @@ module Email
       plugin_styles
       dark_mode_styles
 
-      style(".post-excerpt img", "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;")
+      style(
+        ".post-excerpt img:not(.emoji)",
+        "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;",
+      )
+
+      style(".post-excerpt img.emoji", "max-height: 20px; vertical-align: middle;")
 
       format_custom
     end

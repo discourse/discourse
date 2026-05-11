@@ -31,8 +31,6 @@ el:
         remove_as_post_voting:
           label: "Αφαίρεση ψήφισης αναρτήσεων"
           desc: "Το θέμα θα δημιουργηθεί σε κανονική μορφή"
-    vote:
-      toggle_voters: "Προβολή ψηφοφόρων."
     last_answer_lowercase: τελευταία απάντηση
     answer_lowercase:
       one: απάντηση
@@ -54,8 +52,6 @@ el:
           edit: "επεξεργασία"
           cancel: "ακύρωση"
           add: "Προσθήκη σχολίου"
-          actions:
-            delete: "Διαγραφή σχολίου"
           show:
             one: Εμφάνιση %{count} ακόμα σχολίου
             other: Εμφάνιση %{count} ακόμα σχολίων

@@ -150,7 +150,9 @@ export default class FKField extends Component {
                 >
                   <span>{{field.title}}</span>
 
-                  <FKOptional @field={{field}} />
+                  {{#if field.showOptional}}
+                    <FKOptional @field={{field}} />
+                  {{/if}}
                   <FKTooltip @field={{field}} />
                 </FKLabel>
               {{/if}}

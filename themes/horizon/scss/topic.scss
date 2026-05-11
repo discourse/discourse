@@ -133,9 +133,3 @@ nav.post-controls .actions button {
     }
   }
 }
-
-@include viewport.until(md) {
-  #category-events-calendar {
-    padding: var(--space-4);
-  }
-}

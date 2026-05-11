@@ -36,8 +36,6 @@ de:
       topic_search_placeholder: "Themen nach Titel oder Beitragsinhalt suchen"
       sidebar_name_filter_placeholder: "Name/Benutzername"
       assigned: "Zugeordnet"
-      group_no_assignments_title: "Keine Zuordnungen"
-      group_no_assignments_body: "Derzeit gibt es keine aktiven Zuordnungen für diese Gruppe."
       group_everyone: "Jeder"
       assigned_to: "Zugeordnet zu"
       assigned_topic_to: "Thema zugeordnet zu <a href='%{path}'>%{username}</a>"

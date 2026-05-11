@@ -34,6 +34,13 @@ export default class DiscourseReactionsCounter extends Component {
     }`;
   }
 
+  get hasOpenMenuForThisPost() {
+    const menu = this.menu.getByIdentifier(MENU_IDENTIFIER);
+    return (
+      !!menu?.expanded && menu.options.data?.post?.id === this.args.post.id
+    );
+  }
+
   reactionsChanged(data) {
     uniqueItemsFromArray(data.reactions).forEach((reaction) => {
       this.getUsers(reaction);
@@ -56,6 +63,17 @@ export default class DiscourseReactionsCounter extends Component {
   @action
   mouseDown(event) {
     event.stopImmediatePropagation();
+  }
+
+  @action
+  pointerDown(event) {
+    if (!this.useNewMenu) {
+      return;
+    }
+
+    if (this.hasOpenMenuForThisPost) {
+      event.stopPropagation();
+    }
   }
 
   @action
@@ -96,7 +114,17 @@ export default class DiscourseReactionsCounter extends Component {
 
       event.stopPropagation();
       event.preventDefault();
-      this.#toggleMenu(event.currentTarget);
+      const reactionEl = event.target.closest(
+        ".discourse-reactions-list-emoji[data-reaction-id]"
+      );
+      const reactionId = reactionEl?.dataset.reactionId;
+
+      if (this.hasOpenMenuForThisPost) {
+        this.#switchMenuFilter(reactionId ?? "all");
+        return;
+      }
+
+      this.#toggleMenu(event.currentTarget, reactionId);
       return;
     }
 
@@ -222,7 +250,15 @@ export default class DiscourseReactionsCounter extends Component {
     );
   }
 
-  #toggleMenu(trigger) {
+  #switchMenuFilter(filter) {
+    document
+      .querySelector(
+        `[data-identifier="${MENU_IDENTIFIER}"] [data-reaction-filter="${filter}"]`
+      )
+      ?.click();
+  }
+
+  #toggleMenu(trigger, initialFilter = null) {
     const virtualElement = {
       getBoundingClientRect: () => trigger.getBoundingClientRect(),
     };
@@ -235,7 +271,7 @@ export default class DiscourseReactionsCounter extends Component {
       arrow: true,
       placement: "bottom",
       offset: 15,
-      data: { post: this.args.post },
+      data: { post: this.args.post, initialFilter },
     });
   }
 
@@ -250,6 +286,7 @@ export default class DiscourseReactionsCounter extends Component {
         aria-label={{this.counterAriaLabel}}
         {{on "mousedown" this.mouseDown}}
         {{on "mouseup" this.mouseUp}}
+        {{on "pointerdown" this.pointerDown}}
         {{on "click" this.click}}
         {{on "keydown" this.keyDown}}
       >

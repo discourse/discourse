@@ -124,11 +124,22 @@ export default class NestedContextView extends Component {
 
       <div class="nested-view__controls">
         <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
-        {{#if this.currentUser.can_toggle_nested_mode}}
-          <a href={{this.flatViewUrl}} class="nested-view__flat-link">{{i18n
-              "nested_replies.view_as_flat"
-            }}</a>
-        {{/if}}
+        <div class="nested-view__controls-right">
+          {{#if @topic.has_activity_log}}
+            <DButton
+              class="btn-flat nested-view__activity-link"
+              @action={{@showActivityLog}}
+              @label="nested_replies.activity_log.link"
+            />
+          {{/if}}
+          {{#if this.currentUser.can_toggle_nested_mode}}
+            <DButton
+              class="btn-flat nested-view__flat-link"
+              @href={{this.flatViewUrl}}
+              @label="nested_replies.view_as_flat"
+            />
+          {{/if}}
+        </div>
       </div>
 
       <div class="nested-context-view__banner">
@@ -182,6 +193,7 @@ export default class NestedContextView extends Component {
               @getCloakingData={{this.viewportTracker.getCloakingData}}
               @cloakAbove={{this.cloakAbove}}
               @cloakBelow={{this.cloakBelow}}
+              @collapseFromDepth={{if @collapseReplies 1}}
             />
           {{/each}}
         </div>

@@ -21,7 +21,6 @@ tr_TR:
     openid_connect_authorize_parameters: "auth/oidc'den IDP'nin yetkilendirme uç noktasına yönlendirmeye dahil edilecek URL parametreleri"
     openid_connect_overrides_email: "Her oturum açma işleminde, openid-connect değerini kullanarak kullanıcının e-postasını geçersiz kılın. \"auth_overrides_email\" ayarıyla aynı şekilde çalışır, ancak OpenID Connect girişlerine özeldir."
     openid_connect_claims: "Kapsamlara dayalı olarak verileri geri iletmeyen sağlayıcılarla kullanım için talepleri açıkça tanımlayın. (JSON)"
-    openid_connect_groups_claim: "OIDC belirtecinde, kullanıcının gruplarını bir dize dizisi olarak içeren iddianın adı. Grup senkronizasyonunu devre dışı bırakmak için bu alanı boş bırakın."
     openid_connect_match_by_email: "OpenID Connect kimlik doğrulamalarını mevcut Discourse kullanıcı hesaplarıyla eşleştirmek için e-posta adresini kullanın."
     openid_connect_use_pkce: "OpenID Connect kimlik doğrulaması için Kod Değişimi Kanıt Anahtarını (PKCE) etkinleştirin."
   login:

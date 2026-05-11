@@ -178,6 +178,21 @@
     margin-top: auto;
   }
 
+  &__install-more-icon {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--content-border-color);
+    background: var(--primary-very-low);
+    color: var(--primary-medium);
+
+    .d-icon {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+
   &__button.--set-default {
     position: absolute;
     top: 4px;
@@ -266,6 +281,10 @@
   .admin-config-area-card__header-wrapper {
     flex: none;
   }
+}
+
+.admin-config-area-card.theme-card.--install-more {
+  border-style: dashed;
 }
 
 .admin-config-area-card.theme-install-card {

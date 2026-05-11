@@ -5,18 +5,7 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_data_explorer: "Discourse Veri Gezgini"
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Veri Gezgini"
-          description: "Data Explorer için yapay zeka destekli sorgu oluşturma"
-          query_generation: "Sorgu Oluşturma"
     errors:
       explorer:
         no_semicolons: "Noktalı virgülleri sorgudan kaldırın."
@@ -33,19 +22,6 @@ tr_TR:
       create: "Oluştur"
       create_placeholder: "Sorgu adı ..."
       description_placeholder: "Buraya bir açıklama girin"
-      ai:
-        description_title: "AI ile oluştur"
-        description_hint: "Ne istediğinizi basit bir dille açıklayın. SQL sorgusunu, adı ve açıklamayı sizin için biz oluşturacağız."
-        description_placeholder: "Örneğin: Zaman içindeki kayıtları göster"
-        generate: "Oluştur"
-        regenerate: "Yeniden oluştur"
-        generating: "AI ile sorgu oluşturuluyor..."
-        generation_timeout: "AI sorgu oluşturma işlemi zaman aşımına uğradı. SQL sorgusunu manuel olarak yazabilirsiniz."
-        generation_error: "Sorgu oluşturulurken bir hata oluştu."
-        save_query: "Sorguyu kaydet"
-        write_manually: "SQL'i elle yazın"
-        sql_label: "SQL"
-        optional: "i̇steğe bağlı"
       import:
         label: "İçe Aktar"
         unparseable_json: "Ayrıştırılamayan JSON dosyası."
@@ -82,7 +58,6 @@ tr_TR:
       show_graph: "Grafik"
       others_dirty: "Sorgu üzerinde yaptığınız değişiklikleri kaydetmezseniz bağlantınızın kopması durumunda yapılan değişiklikler kaybolur."
       run_time: "Sorgu %{value} ms'de tamamlandı."
-      cached_result_notice: "%{relative_time} tarihinden itibaren önbelleğe alınmış sonuçlar gösteriliyor."
       result_count:
         one: "%{count} sonuç."
         other: "%{count} sonuç."

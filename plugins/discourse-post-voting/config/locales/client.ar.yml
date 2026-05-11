@@ -35,7 +35,6 @@ ar:
       already_voted: "يمكنك التصويت مرة واحدة فقط لكل سؤال."
       user_over_limit: "لا يمكنك تجاوز عدد الأصوات لمستوى ثقتك."
       one_vote_per_post: "يمكنك التصويت مرة واحدة فقط لكل منشور."
-      toggle_voters: "عرض أسماء المصوِّتين"
     last_answer_lowercase: الإجابة الأخيرة
     answer_lowercase:
       zero: إجابات
@@ -73,8 +72,6 @@ ar:
           edit: "تعديل"
           cancel: "إلغاء"
           add: "إضافة تعليق"
-          actions:
-            delete: "حذف التعليق"
           show:
             zero: عرض %{count} تعليقًا إضافيًا
             one: عرض تعليق واحد (%{count}) إضافي

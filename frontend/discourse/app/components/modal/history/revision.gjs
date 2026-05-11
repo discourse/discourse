@@ -61,6 +61,47 @@ export default class Revision extends Component {
               {{@model.user_changes.current.username}}
             {{/if}}
 
+            {{#if @model.reply_to_post_number_changes}}
+              <span class="reply-to-changes">
+                {{icon "share"}}
+                {{#if @model.reply_to_post_number_changes.previous}}
+                  <span
+                  >#{{@model.reply_to_post_number_changes.previous.post_number}}</span>
+                  {{#if
+                    @model.reply_to_post_number_changes.previous.avatar_template
+                  }}
+                    {{boundAvatarTemplate
+                      @model.reply_to_post_number_changes.previous.avatar_template
+                      "small"
+                    }}
+                    {{@model.reply_to_post_number_changes.previous.username}}
+                  {{/if}}
+                {{else}}
+                  <span class="diff-del">{{i18n
+                      "post.revisions.reply_to.none"
+                    }}</span>
+                {{/if}}
+                &rarr;
+                {{#if @model.reply_to_post_number_changes.current}}
+                  <span
+                  >#{{@model.reply_to_post_number_changes.current.post_number}}</span>
+                  {{#if
+                    @model.reply_to_post_number_changes.current.avatar_template
+                  }}
+                    {{boundAvatarTemplate
+                      @model.reply_to_post_number_changes.current.avatar_template
+                      "small"
+                    }}
+                    {{@model.reply_to_post_number_changes.current.username}}
+                  {{/if}}
+                {{else}}
+                  <span class="diff-ins">{{i18n
+                      "post.revisions.reply_to.none"
+                    }}</span>
+                {{/if}}
+              </span>
+            {{/if}}
+
             {{#if @model.wiki_changes}}
               {{icon
                 "far-pen-to-square"

@@ -66,11 +66,11 @@ module SystemHelpers
   def setup_system_test
     SiteSetting.login_required = false
     SiteSetting.has_login_hint = false
+    SiteSetting.global_notice = ""
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_url = ""
     SiteSetting.enable_user_tips = false
-    SiteSetting.splash_screen = false
     SiteSetting.allowed_internal_hosts =
       (
         SiteSetting.allowed_internal_hosts.to_s.split("|") +
@@ -405,5 +405,32 @@ module SystemHelpers
 
   def html_translation_to_text(html_translation)
     Nokogiri.HTML5(html_translation).at("body").inner_text
+  end
+
+  def capture_log_entries(controller:, entries:, action: nil)
+    log = Rails.root.join("log", "#{Rails.env}.log")
+    File.truncate(log, 0) if File.exist?(log)
+
+    yield
+
+    read =
+      lambda do
+        return [] unless File.exist?(log)
+        File.open(log) do |f|
+          f
+            .read
+            .lines
+            .reject { |l| l.strip.empty? }
+            .filter_map do |line|
+              JSON.parse(line)
+            rescue JSON::ParserError
+              nil
+            end
+            .select { |e| e["controller"] == controller && (action.nil? || e["action"] == action) }
+        end
+      end
+
+    try_until_success { raise Capybara::ExpectationNotMet if read.call.size < entries }
+    read.call
   end
 end

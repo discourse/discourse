@@ -45,7 +45,7 @@ class TestComponent extends Component {
   </template>
 }
 
-module("Integration | Component | d-multi-select", function (hooks) {
+module("Integration | Component | DMultiSelect", function (hooks) {
   setupRenderingTest(hooks);
 
   test("filter", async function (assert) {
@@ -246,6 +246,44 @@ module("Integration | Component | d-multi-select", function (hooks) {
     // The dropdown should still be open and show the unselected item
     assert.dom(".d-multi-select__result").exists({ count: 1 });
     assert.dom(".d-multi-select__result:nth-child(1)").hasText("foo");
+  });
+
+  test("prevents removal of selected item with preventRemoval", async function (assert) {
+    const selection = [
+      { id: 1, name: "foo", preventRemoval: true },
+      { id: 2, name: "bar" },
+    ];
+    await render(
+      <template><TestComponent @selection={{selection}} /></template>
+    );
+
+    // Both items are selected
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(1)")
+      .hasText("foo");
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(2)")
+      .hasText("bar");
+    assert.dom(".d-multi-select__result").doesNotExist();
+
+    // Clicking the first selected item should not remove it
+    await click(".d-multi-select-trigger__selected-item:nth-child(1)");
+
+    // Clicking the second selected item should remove it
+    await click(".d-multi-select-trigger__selected-item:nth-child(2)");
+
+    // Only the first item should be selected
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(1)")
+      .hasText("foo");
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(2)")
+      .doesNotExist();
+
+    // The other item can now be re-selected in the results
+    await click(".d-multi-select-trigger");
+    assert.dom(".d-multi-select__result").exists({ count: 1 });
+    assert.dom(".d-multi-select__result:nth-child(1)").hasText("bar");
   });
 
   test("preselect item", async function (assert) {

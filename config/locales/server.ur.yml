@@ -458,6 +458,7 @@ ur:
       admins: "منتظمین"
       moderators: "نگرانوں"
       staff: "عملہ"
+      anonymous: "گمنام"
       trust_level_0: "فعالیت_کا_درجہ_0"
       trust_level_1: "فعالیت_کا_درجہ_1"
       trust_level_2: "فعالیت_کا_درجہ_2"
@@ -1211,6 +1212,8 @@ ur:
       xaxis: "دن"
     page_view_logged_in_browser_reqs:
       xaxis: "دن"
+    page_view_embed_reqs:
+      xaxis: "دن"
     http_background_reqs:
       title: "پس منظر"
       xaxis: "دن"
@@ -1268,10 +1271,10 @@ ur:
         os: آپریٹنگ سسٹم
         login_time: لاگ اِن وقت
       description: "نئے لاگ اِن کی تفصیلات جو گزشتہ لاگ اِن سے مشکوک حد تک اختلاف کرتے ہیں۔"
-    staff_logins:
+    admin_logins:
       title: "منتظم لاگ اِن"
       labels:
-        user: صارف
+        user: رکن
         location: محل وقوع
         login_at: پر لاگ ان
       description: "محل وقوع کے ساتھ منتظم لاگ ان اوقات کی فہرست۔"
@@ -2186,9 +2189,37 @@ ur:
   new_version_mailer:
     title: "نیا ورژن مَیلر"
     subject_template: "[%{email_prefix}] نیا ڈِسکورس ورژن، اَپ ڈیٹ دستیاب ہے"
+    subject_template_improved: "%{email_prefix}: نیا ڈسکورس ورژن، اپ ڈیٹ دستیاب ہے۔"
+    text_body_template: |
+      واہ! [Discourse](https://www.discourse.org) کا نیا ورژن دستیاب ہے!
+
+      آپ کا ورژن: %{installed_version}
+      نیا ورژن: **%{new_version}**
+
+      - ہمارے آسان **[ایک کلک براؤزر اپ ڈیٹ](%{base_url}/admin/update)** کے ذریعے اپ ڈیٹ کریں
+
+      - [ریلیز نوٹس](https://releases.discourse.org/changelog/%{new_version}) میں دیکھیں کہ نیا کیا ہے
+
+      - خبروں، بحث اور ڈسکورس کی معاونت کے لیے [meta.discourse.org](https://meta.discourse.org) ملاحظہ کریں
   new_version_mailer_with_notes:
     title: "نوٹس کے ساتھ نیا ورژن مَیلر"
     subject_template: "[%{email_prefix}] اَپ ڈیٹ دستیاب ہے"
+    subject_template_improved: "%{email_prefix}: اپ ڈیٹ دستیاب ہے۔"
+    text_body_template: |
+      واہ، [Discourse](https://www.discourse.org) کا نیا ورژن دستیاب ہے!
+
+      آپ کا ورژن: %{installed_version}
+      نیا ورژن: **%{new_version}**
+
+      - ہمارے آسان **[ایک کلک براؤزر اپ ڈیٹ](%{base_url}/admin/update)** کے ذریعے اپ ڈیٹ کریں
+
+      - دیکھیں کہ [ریلیز نوٹس](https://releases.discourse.org/changelog/%{new_version}) میں کیا نیا ہے
+
+      - خبروں، بحث اور ڈسکورس کی معاونت کے لیے [meta.discourse.org](https://meta.discourse.org) ملاحظہ کریں
+
+      ### ریلیز نوٹس
+
+      %{notes}
   flag_reasons:
     off_topic: "آپ کی پوسٹ کو **موضوع سے ہٹ کر** کے طور پر فلَیگ کیا گیا تھا: کمیونٹی سمجھتی ہے کہ یہ ٹاپک کیلئے اچھی فِٹ نہیں ہے، جیسا کہ عنوان اور پہلی پوسٹ کی طرف سے فی الحال بیان کیا گیا ہے۔"
     spam: "آپ کی پوسٹ کو **سپَیم** کے طور پر فلَیگ کیا گیا تھا: کمیونٹی سمجھتی ہے کہ یہ ایک اشتہار ہے، ایسی چیز جو کہ بجائے توقع کے مطابق مفید یا موضوع سے متعلقہ ہونے، کے فطرت میں زیادہ تر پرَومَوشنل ہے۔"
@@ -2399,7 +2430,6 @@ ur:
         آپ کا جواب ایک بلاک شدہ ای میل ایڈریس سے بھیجا گیا تھا۔ کسی دوسرے ای میل ایڈریس سے بھیجنے کی کوشش کریں، یا [ایک سٹاف ممبر سے رابطہ کریں](%{base_url}/about)۔
     email_reject_not_allowed_email:
       title: "ای میل مسترد غیر اجازت یافتہ ای میل"
-      subject_template: "[%{email_prefix}] ای میل مسئلہ -- بلاک کردہ ای میل"
       text_body_template: |
         ہمیں افسوس ہے، لیکن آپ کا %{destination} پر ای میل پیغام (عنوان %{former_title}) کام نہیں کیا۔
 
@@ -2651,7 +2681,6 @@ ur:
       text_body_template: "`download_remote_images_to_local` ترتیب غیر فعال کر دی گئی تھی کیونکہ` download_remote_images_threshold` پر ڈِسک میں جگہ کی حد تک پہنچ گئے تھے۔"
     new_user_of_the_month:
       title: "ماہ کے سب سے زیادہ قابل قدر نئے رکن!"
-      subject_template: "آپ مہینہ کے سب سے زیادہ قابل قدر نئے صارف ہیں!"
       text_body_template: |
         مبارک ہو، آپ نے %{month_year}** کے لیے **ماہ کے نئے رکن کا ایوارڈ حاصل کر لیا ہے۔ :trophy:
 
@@ -2911,6 +2940,7 @@ ur:
     account_exists:
       title: "اکاؤنٹ پہلے سے موجود"
       subject_template: "[%{email_prefix}] اکاؤنٹ پہلے سے ہی موجود ہے"
+      subject_template_improved: "اکاؤنٹ پہلے سے موجود"
       text_body_template: |
         آپ نے ابھی %{site_name} پر ایک اکاؤنٹ بنانے کی کوشش کی، یا ایک اکاؤنٹ کی ای میل کو %{email} پر تبدیل کرنے کی کوشش کی۔ تاہم، %{email} کیلئے ایک اکاؤنٹ پہلے سے ہی موجود ہے۔
 
@@ -2922,6 +2952,7 @@ ur:
     account_second_factor_disabled:
       title: "دو عنصری تصدیق کو غیر فعال کر دیا گیا۔"
       subject_template: "[%{email_prefix}] دو عنصری تصدیق کو غیر فعال کر دیا گیا۔"
+      subject_template_improved: "دو عنصری تصدیق کو غیر فعال کر دیا گیا۔"
     digest:
       since_last_visit: "آپ کے آخری دورے کے بعد سے"
       new_topics: "نئے ٹاپک"
@@ -2933,6 +2964,7 @@ ur:
       popular_posts: "مقبول دھاگے"
       more_new: "آپ کے لیے نیا"
       subject_template: "[%{email_prefix}] خلاصہ"
+      subject_template_improved: "Summary"
       unsubscribe: "یہ خلاصہ %{site_link} کی طرف سے بھیجا گیا کیونکہ کچھ دیر سے آپ کو نہیں دیکھا گیا۔ %{email_preferences_link} کو تبدیل کریں، یا ان سبسکرائب کرنے کیلئے %{unsubscribe_link}۔"
       your_email_settings: "آپ کی ای میل ترتیبات"
       click_here: "یہاں کلِک کریں"
@@ -2950,6 +2982,7 @@ ur:
       title: "بذریعہ لِنک لاگ اِن کریں"
       preview: "بذریعہ لِنک لاگ اِن کریں."
       subject_template: "[%{email_prefix}] بذریعہ لِنک لاگ اِن کریں"
+      subject_template_improved: "بذریعہ لِنک لاگ اِن کریں"
       text_body_template: |
         [%{site_name}](%{base_url}) پر لاگ اِن کرنے کیلئے آپ کا لِنک یہ ہے۔
 
@@ -2959,7 +2992,6 @@ ur:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "پاسوَرڈ مقرر"
-      subject_template: "[%{email_prefix}] پاسوَرڈ مقرر کریں"
       text_body_template: |
         کسی نے [%{site_name}](%{base_url}) پر آپ کے اکاؤنٹ پر پاسوَرڈ مقرر کرنے کیلئے کہا۔ متبادل طور پر، آپ اِس تصدیق کردہ ای میل ایڈریس سے منسلک کسی بھی قابل آن لائن سروس (گُوگل، فَیس بُک، وغیرہ) کا استعمال کرتے ہوئے لاگ اِن کرسکتے ہیں۔
 
@@ -2970,9 +3002,9 @@ ur:
     admin_login:
       title: "منتظم لاگ اِن"
       subject_template: "[%{email_prefix}] لاگ اِن"
+      subject_template_improved: "لاگ ان"
     account_created:
       title: "اکاؤنٹ تشکیل"
-      subject_template: "[%{email_prefix}] آپ کا نیا اکاؤنٹ"
       text_body_template: |
         %{site_name} پر آپ کیلئے ایک نیا اکاؤنٹ بنایا گیا تھا
 
@@ -3042,7 +3074,6 @@ ur:
         اگر اوپر والا لِنک کلک نہیں ہوتا ہو، تو اپنے ویب براؤزر کے ایڈریس بار میں کاپی اور پَیسٹ کرنے کی کوشش کریں۔
     suspicious_login:
       title: "نیا لاگ اِن انتباہ"
-      subject_template: "[%{site_name}] %{location}سے نیا لاگ ان"
     post_approved:
       title: "آپ کی پوسٹ منظور ہو گئی تھی"
   page_not_found:

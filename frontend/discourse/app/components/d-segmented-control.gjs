@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -44,6 +45,11 @@ export default class DSegmentedControl extends Component {
     this.args.onSelect?.(value);
   }
 
+  @action
+  handleClick(value) {
+    this.args.onClickItem?.(value);
+  }
+
   <template>
     <fieldset
       class="d-segmented-control"
@@ -65,6 +71,7 @@ export default class DSegmentedControl extends Component {
             item.class
             (if item.disabled "is-disabled")
           }}
+          {{on "click" (fn this.handleClick item.value)}}
         >
           <input
             type="radio"
@@ -75,7 +82,10 @@ export default class DSegmentedControl extends Component {
             class="d-segmented-control__input"
             {{on "change" (fn this.handleChange item.value)}}
           />
-          <span class="d-segmented-control__text">{{item.label}}</span>
+          <span class="d-segmented-control__text">
+            {{#if item.icon}}{{icon item.icon}}{{/if}}
+            {{item.label}}
+          </span>
         </label>
       {{/each}}
     </fieldset>

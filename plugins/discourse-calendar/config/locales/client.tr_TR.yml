@@ -340,9 +340,6 @@ tr_TR:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username}, katılımınızı otomatik olarak ayarladı ve sizi %{eventName} adlı etkinliğe davet etti"
         an_event: "bir etkinlik"
-      event_description:
-        show_more: "Daha fazla göster"
-        show_less: "Daha az göster"
       edit_reason: "Etkinlik güncellendi"
       edit_reason_closed: "Etkinlik kapatıldı"
       edit_reason_opened: "Etkinlik açıldı"
@@ -521,8 +518,6 @@ tr_TR:
         status:
           label: "Durum"
         delete_confirmation_message: "Bu etkinliği silmek ister misiniz?"
-        image:
-          label: "Etkinlik görseli"
       invite_user_or_group:
         title: "Kullanıcıları veya grupları bilgilendir"
         invite: "Gönder"

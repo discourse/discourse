@@ -325,6 +325,7 @@ uk:
       comma: ", "
       last_item: "та"
     action_codes:
+      topic_created: "Створено цю тему %{when}"
       public_topic: "Робить цю тему публічною %{when}"
       open_topic: "Перетворив це на тему %{when}"
       private_topic: "Зробив цю тему особистим повідомленням %{when}"
@@ -397,6 +398,7 @@ uk:
     broken_transformer_alert: "Сталася помилка. Ваш сайт може працювати неправильно."
     broken_block_alert: "Виявлено помилку конфігурації блоку. Перегляньте консоль браузера для отримання детальної інформації."
     broken_block_factory_alert: "Не вдалося завантажити блок. Деякі елементи інтерфейсу можуть відображатися неправильно."
+    on_before_category_types_change_error: "Виникла помилка при зміні типів категорій. Перевірте консоль браузера для отримання додаткової інформації."
     critical_deprecation:
       notice: "<b>[Повідомлення адміністратора]</b> %{source} містить код, який потребує оновлення. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>дізнатися більше</em></a>)"
@@ -776,6 +778,7 @@ uk:
       continue_as_guest: "Продовжити як гість"
       be_first_to_reply: "Будьте першим, хто відповість!"
       replying_to: "Відповідь %{username}"
+      editing_post: "Редагування допису"
       reply_placeholder: "Написати відповідь..."
     topic_count_all:
       one: "Переглянути %{count} нову тему"
@@ -2925,8 +2928,10 @@ uk:
       second_factor_backup_description: "Введіть один із резервних кодів:"
       second_factor: "Увійдіть за допомогою програми Authenticator"
       security_key_description: "Підготувавши фізичний ключ безпеки або сумісний мобільний пристрій, натисніть кнопку Автентифікувати за допомогою ключа безпеки нижче."
+      security_key_or_passkey_description: "Коли ви підготуєте ключ безпеки, пароль або сумісний мобільний пристрій, натисніть кнопку нижче."
       security_key_alternative: "Спробуйте інший спосіб"
       security_key_authenticate: "Автентифікація за допомогою ключа безпеки"
+      security_key_or_passkey_authenticate: "Автентифікація за допомогою ключа безпеки або ключа доступу"
       security_key_not_allowed_error: "Час перевірки автентичності ключа безпеки минув або дію було скасовано."
       security_key_no_matching_credential_error: "У зазначеному ключі безпеки не знайдено відповідних облікових даних."
       security_key_support_missing_error: "Ваше поточний пристрій або оглядач не підтримує використання ключів безпеки. Будь ласка, використовуйте інший метод."
@@ -3195,6 +3200,15 @@ uk:
         no_translation_yet: "Почніть вводити текст, щоб побачити попередній перегляд перекладу..."
         placeholder: "Введіть переклад для повідомлення тут..."
         show_raw_markdown: "Показати необроблені дані"
+      change_reply_to:
+        title: "Змінити ціль відповіді"
+        hint: "Прокрутіть часову шкалу, щоб знайти публікацію, на яку ви хочете відповісти."
+        current_selection: "Вибрано: публікація №%{post_number} від @%{username}"
+        invalid_target: "Оберіть допис раніше, ніж той, який ви редагуєте."
+        submit: "Встановити ціль відповіді"
+        open: "Змінити, на яку публікацію відповідає"
+        open_from_menu: "Відповісти на інший пост"
+        remove: "Видалити ціль відповіді"
       group_mentioned_limit:
         one: "<b>Увага!</b> Ви згадали <a href='%{group_link}'>%{group}</a>, в якій більше учасників, ніж встановлений адміністратором ліміт згадок на %{count} користувачів. Ніхто не отримає сповіщення."
         few: "<b>Увага!</b> Ви згадали <a href='%{group_link}'>%{group}</a>, в якій більше учасників, ніж встановлений адміністратором ліміт згадок на %{count} користувачів. Ніхто не отримає сповіщення."
@@ -3489,6 +3503,16 @@ uk:
         few: "%{username} і ще %{count}"
         many: "%{username} і ще %{count}"
         other: "%{username} і ще %{count}"
+      replied_consolidated_in_topic:
+        one: "%{count} нова відповідь у вашій темі"
+        few: "%{count} нові відповіді у вашій темі"
+        many: "%{count} нових відповідей у вашій темі"
+        other: "%{count} нових відповідей у вашій темі"
+      replied_consolidated_to_post:
+        one: "%{count} нова відповідь на ваш пост"
+        few: "%{count} нові відповіді у вашій темі"
+        many: "%{count} нових відповідей у вашій темі"
+        other: "%{count} нових відповідей у вашій темі"
       liked_consolidated_description:
         one: "вподобав(ла) %{count} ваш допис"
         few: "вподобав(ла) %{count} ваших дописи"
@@ -3895,27 +3919,12 @@ uk:
         notification_level: "Сповіщення про оновлення"
         change_notification_level: "Змінити рівень сповіщень"
         choose_new_category: "Виберіть новий розділ для цих тем:"
-        selected_sole_category:
-          one: "Ви вибрали <b>%{count}</b> тему з категорії:"
-          few: "Ви вибрали <b>%{count}</b> теми з категорії:"
-          many: "Ви вибрали <b>%{count}</b> тем з категорії:"
-          other: "Ви вибрали <b>%{count}</b> тем з категорії:"
         selected_count:
           one: "%{count} вибрано"
           few: "%{count} вибрано"
           many: "%{count} вибрано"
           other: "%{count} вибрано"
-        change_tags: "Замінити теги"
-        append_tags: "Додати теґи"
-        choose_new_tags: "Виберіть нові теґи для цих тем:"
-        choose_append_tags: "Додати теґи"
-        changed_tags: "Теґи цих тем було змінено."
-        remove_tags: "Видалити теги"
-        confirm_remove_tags:
-          one: "Усі теґи будуть видалені з цієї теми. Ви впевнені"
-          few: "Усі теґи будуть видалені з <b>%{count}</b> тем. Ви впевнені?"
-          many: "Усі теґи будуть видалені з <b>%{count}</b> тем. Ви впевнені?"
-          other: "Усі теґи буде видалено з <b>%{count}</b> тем. Ви впевнені?"
+        manage_tags: "Керування тегами"
         confirm_unpin_topics:
           one: "Відкріпити %{count} тему"
           few: "Відкріпити %{count} теми"
@@ -3926,6 +3935,11 @@ uk:
           few: "Оновити %{count} теми"
           many: "Оновити %{count} тем"
           other: "Оновити %{count} тем"
+        confirm_apply_to_topics:
+          one: "Застосувати до %{count} теми"
+          few: "Застосувати до %{count} тем"
+          many: "Застосувати до %{count} тем"
+          other: "Застосувати до %{count} тем"
         confirm_close_topics:
           one: "Закрити %{count} тему"
           few: "Закрити %{count} теми"
@@ -4027,15 +4041,25 @@ uk:
         description: "Непублічні теми приховані у списку тем, але до них все ще можна отримати доступ за прямим посиланням. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Дізнатися більше</a>"
       relist_topics:
         name: "Вставити повторно"
-      remove_tags:
-        name: "Видалити теги"
-        description: "Видалити всі теги з вибраних тем."
-      append_tags:
-        name: "Додати теги"
-        description: "Додати наступні теги до вибраних тем:"
-      replace_tags:
-        name: "Замінити теґи"
-        description: "Замінити всі існуючі теги на вибрані теми наступним:"
+      manage_tags:
+        name: "Керування тегами"
+        add:
+          title: "Додати теґи"
+          description: "Додано до всіх вибраних тем"
+        remove:
+          title: "Видалити теги"
+          description: "Видаляється, коли є"
+          all_toggle: "Видалити всі теги"
+          all_warning: "<strong>Всі існуючі теги</strong> будуть видалені з вибраних тем. Це не можна скасувати."
+        replace:
+          title: "Замінити теги"
+          description: "Замінює один тег на інший"
+          add_replacement: "Додати заміну"
+          remove_replacement: "Видалити заміну"
+          from_placeholder: "Тег для заміни"
+          to_placeholder: "Заміна тега"
+          missing_from: "Необхідний тег для джерела"
+          missing_to: "Потрібна заміна етикетки"
       delete_topics:
         name: "Видалити"
         description: "Видалити вибрані теми назавжди. Цю дію не можна скасувати."
@@ -4094,6 +4118,8 @@ uk:
         default_nested_view: "Використовувати вкладений вигляд за замовчуванням для тем цієї категорії"
       no_replies: "Ще не написав жодного повідомлення."
       deleted_post_placeholder: "[вилучено]"
+      ignored_post_placeholder: "[ігноровано]"
+      toggle_ignored_content: "Показати ігнорований вміст"
       op_badge: "OP"
       pinned_reply: "Закріплені"
       pin_reply: "Закріпити вгорі"
@@ -4101,6 +4127,10 @@ uk:
       topic_admin_menu:
         enable_nested_replies: "Увімкнути вкладені відповіді"
         disable_nested_replies: "Вимкнути вкладені відповіді"
+      activity_log:
+        link: "Журнал дій"
+        title: "Журнал активності теми"
+        empty: "Немає активності в темі для відображення."
       context:
         banner: "Ви переглядаєте одну тему в цій гілці."
         view_full_topic: "Переглянути всю тему"
@@ -4127,6 +4157,7 @@ uk:
         title: "Позначити як непрочитане"
       list: "Теми"
       new: "нова тема"
+      has_new_replies: "нові відповіді з часу вашого останнього візиту"
       unread: "непрочитані"
       new_topics:
         one: "%{count} нова тема"
@@ -4427,6 +4458,7 @@ uk:
         unpin: "Скасувати закріплення цієї теми вгорі розділу %{categoryLink}."
         unpin_until: "Скасувати закріплення цієї теми вгорі розділу %{categoryLink} (станеться автоматично <strong>%{until}</strong>)."
         pin_note: "Користувачі можуть відкріпити тему, кожен сам для себе."
+        pin_until: "Закріпити до"
         pin_validation: "Щоб закріпити цю тему, потрібна дата."
         not_pinned: "У розділі %{categoryLink} немає закріплених тем."
         already_pinned:
@@ -4919,6 +4951,8 @@ uk:
         locale:
           no_locale_set: "Мова не встановлена"
           locale_removed: "Мову вилучено"
+        reply_to:
+          none: "Ціль без відповіді"
         controls:
           first: "Перша версія"
           previous: "Попередня версія"
@@ -5094,6 +5128,10 @@ uk:
       color_used: "Колір використовується"
       predefined_colors: "Попередньо визначені варіанти кольорів"
       name_placeholder: "Рекомендується одне або два слова"
+      category_types: "Типи категорій"
+      unknown_category_type: "Невідомий тип категорії"
+      unknown_category_type_description: "Тип категорії «%{categoryType}» не підтримується або не ввімкнено у цій категорії."
+      category_types_no_results: "Інших типів категорій не знайдено"
       color_placeholder: "Будь-який веб-колір"
       delete_confirm: "Ви впевнені, що хочете видалити цей розділ?"
       delete_error: "Під час видалення розділу сталася помилка."
@@ -5209,7 +5247,7 @@ uk:
           high: "Високий"
           very_high: "Дуже високий"
       sort_options:
-        default: "типово"
+        default: "Стандартна"
         likes: "Вподобання"
         op_likes: "Вподобання оригінального допису"
         views: "Перегляди"
@@ -5220,6 +5258,7 @@ uk:
         created: "Створено"
       sort_ascending: "По зростанню"
       sort_descending: "За зменшенням"
+      sort_direction: "Напрямок сортування"
       subcategory_list_styles:
         rows: "Рядки"
         rows_with_featured_topics: "Рядки з обговорюваних тем"
@@ -6979,6 +7018,18 @@ uk:
         too_many_requests: Ви виконуєте цю дію занадто часто. Будь ласка, зачекайте, перш ніж намагатися знову.
         not_found_error: Вибачте, цього звіту не існує
         custom_date_range: Вибрати дату та час
+        sections:
+          reports:
+            title: "Звіти"
+          traffic:
+            title: "Трафік сайту"
+          engagement:
+            title: "Залучення"
+        period:
+          last_7_days: "Останні 7 днів"
+          last_30_days: "Останні 30 днів"
+          last_3_months: "Останні 3 місяців"
+          custom: "Користувацька"
         reports:
           trend_title: "%{percent} зміни. В даний час %{current}, було %{prev} в попередні періоди."
           percent_change_tooltip: "%{percent} змін."
@@ -7834,6 +7885,8 @@ uk:
           beginners_guide_title: "Керівництво для початківців по використанню Discourse Тем"
           developers_guide_title: "Керівництво розробника по темам Discourse"
           browse_themes: "Перегляд Тем спільноти "
+          install_more_themes: "Встановіть більше тем"
+          install_more_themes_description: "Перегляньте популярні теми спільноти або встановіть їх із файлу чи сховища git."
           customize_desc: "Налаштувати:"
           title: "Стилі"
           description: "Теми – це розширені налаштування, що змінюють стиль, що складаються з елементів дизайну вашого форуму, і часто включають додаткові функції переднього плану."
@@ -7944,6 +7997,7 @@ uk:
           public_key: "Надайте доступ до сховища з наступним відкритим ключем:"
           install: "Install"
           installed: "Встановлена"
+          screenshot: "Скріншот %{name}"
           install_popular: "Популярні"
           install_upload: "З вашого пристрою"
           install_git_repo: "Зі сховища git"
@@ -8290,6 +8344,7 @@ uk:
         topic_id: "ID теми"
         post_id: "ID допису"
         category_id: "ID розділу"
+        reviewable_id: "Розглянути"
         delete: "Видалити"
         edit: "Редагувати"
         save: "Зберегти"
@@ -8912,8 +8967,10 @@ uk:
           other: "Неможливо видалити всі дописи, оскільки у користувача більше ніж %{count} дописів. (delete_all_posts_max)"
         delete_confirm_title: "Ви впевнені, що хочете видалити цього користувача? Ця дія є незворотньою!"
         delete_confirm: "Загалом краще анонімізувати користувачів, а не видаляти їх, щоб уникнути видалення вмісту з існуючих обговорень."
-        delete_and_block: "Видалити користувача та заблокувати його електронну пошту та IP-адресу"
+        delete_and_block: "Видалення та блокування користувача"
+        delete_and_block_description: "Видаліть користувача і заблокуйте його електронну пошту та IP-адресу."
         delete_dont_block: "Видалити користувача"
+        delete_dont_block_description: "Видалити користувача без блокування."
         deleting_user: "Видалення користувача…"
         deleted: "Користувача було видалено."
         delete_failed: "Під час видалення цього користувача сталася помилка. Перш ніж намагатися видалити користувача, переконайтеся, що всі дописи видалено."

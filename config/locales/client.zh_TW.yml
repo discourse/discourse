@@ -2922,16 +2922,8 @@ zh_TW:
         archive_messages: "移至封存"
         change_notification_level: "變更通知層級"
         choose_new_category: "為話題選擇新類別："
-        selected_sole_category:
-          other: "您已從以下類別中選擇 <b>%{count}</b> 個話題。"
         selected_count:
           other: "已選擇 %{count} 個"
-        append_tags: "新增標記"
-        choose_new_tags: "為話題選擇新標籤"
-        choose_append_tags: "新增標記"
-        changed_tags: "話題的標籤已修改"
-        confirm_remove_tags:
-          other: "所有標記將從 <b>%{count}</b> 個話題中移除。確定嗎？"
         progress:
           other: "進度： <strong>%{count}</strong> 個主題"
         performing: "正在執行批量作業，請稍候…"
@@ -2966,10 +2958,9 @@ zh_TW:
         name: "取消公開"
       relist_topics:
         name: "重新公開"
-      remove_tags:
-        name: "移除標記"
-      replace_tags:
-        name: "取代標記"
+      manage_tags:
+        add:
+          title: "新增標記"
       delete_topics:
         name: "刪除"
       update_category:
@@ -2996,6 +2987,7 @@ zh_TW:
       collapse: "收起"
       no_replies: "暫無回覆。"
       deleted_post_placeholder: "[刪除]"
+      ignored_post_placeholder: "[已忽略]"
       pinned_reply: "已釘選"
     topic:
       filter_to:
@@ -5048,6 +5040,14 @@ zh_TW:
         too_many_requests: 您已重複此動作太多次，請稍後再重試。
         not_found_error: 抱歉，這個報告不存在。
         custom_date_range: 自定義日期範圍
+        sections:
+          reports:
+            title: "報告"
+        period:
+          last_7_days: "過去 7 天"
+          last_30_days: "過去 30 天"
+          last_3_months: "過去 3 個月"
+          custom: "客製"
         reports:
           trend_title: "%{percent}更改，最近更改時間是在%{current}。"
           percent_change_tooltip: "%{percent} 更改。"
@@ -6160,6 +6160,7 @@ zh_TW:
         topic_id: "話題 ID"
         post_id: "貼文 ID"
         category_id: "分類 ID"
+        reviewable_id: "審核"
         delete: "刪除"
         edit: "編輯"
         save: "儲存"
@@ -6708,7 +6709,6 @@ zh_TW:
           other: "無法刪除所有貼文，因為此使用者擁有超過 %{count} 篇貼文。( delete_all_posts_max )"
         delete_confirm_title: "確定要刪除此使用者嗎？此操作無法撤銷！"
         delete_confirm: "通常最好將使用者匿名而不是刪除他們，以避免從現有討論中移除內容。"
-        delete_and_block: "刪除使用者並禁止其電子郵件和 IP 地址"
         delete_dont_block: "刪除使用者"
         deleting_user: "正在刪除使用者..."
         deleted: "此使用者已刪除。"

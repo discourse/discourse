@@ -19,8 +19,6 @@ el:
         react_with: "Αντέδρασε σε αυτή την ανάρτηση με: %{reaction}"
         cant_remove_reaction: "Δεν μπορείς πια να αφαιρέσεις την αντίδραση σου"
         remove_reaction: "Αφαίρεσε την %{reaction} αντίδραση"
-      users_popup:
-        all: "Όλα"
       main_reaction:
         add: "Μου αρέσει η ανάρτηση"
         remove: "Αφαίρεσε το \"Μου αρέσει\""

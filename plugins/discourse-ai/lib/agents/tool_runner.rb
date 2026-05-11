@@ -67,6 +67,39 @@ module DiscourseAi
         @system_guardian ||= Guardian.new(::Discourse.system_user)
       end
 
+      def resolve_user(username)
+        if username.present?
+          User.find_by(username: username)
+        else
+          @bot_user || ::Discourse.system_user
+        end
+      end
+
+      def resolve_guardian(username)
+        user = resolve_user(username)
+        return nil, nil if user.nil?
+        guardian =
+          if user.staged?
+            @context.guardian || system_guardian
+          else
+            Guardian.new(user)
+          end
+
+        [user, guardian]
+      end
+
+      def resolve_category(category_id_or_name)
+        if category_id_or_name.is_a?(Integer) ||
+             category_id_or_name.to_i.to_s == category_id_or_name.to_s
+          Category.find_by(id: category_id_or_name.to_i)
+        else
+          Category
+            .where(name: category_id_or_name)
+            .or(Category.where(slug: category_id_or_name))
+            .first
+        end
+      end
+
       def mini_racer_context
         @mini_racer_context ||=
           begin

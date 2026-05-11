@@ -56,9 +56,8 @@ class SessionController < ApplicationController
     if result.second_factor_auth_skipped?
       data = result.data
       if data[:logout]
-        params[:return_url] = data[:return_sso_url]
         PushNotificationPusher.clear_subscriptions(current_user) if current_user
-        destroy
+        destroy(trusted_return_url: data[:return_sso_url])
         return
       end
 
@@ -535,12 +534,21 @@ class SessionController < ApplicationController
         backup_enabled: user.backup_codes_enabled?,
         allowed_methods: challenge[:allowed_methods],
       )
-      if user.security_keys_enabled?
+      passkeys_for_2fa = user.passkeys_for_2fa_enabled?
+      if user.security_keys_enabled? || passkeys_for_2fa
         DiscourseWebauthn.stage_challenge(user, server_session)
-        json.merge!(DiscourseWebauthn.allowed_credentials(user, server_session))
-        json[:security_keys_enabled] = true
+        json.merge!(
+          DiscourseWebauthn.allowed_credentials(
+            user,
+            server_session,
+            include_passkeys: passkeys_for_2fa,
+          ),
+        )
+        json[:security_keys_enabled] = user.security_keys_enabled?
+        json[:passkeys_enabled] = passkeys_for_2fa
       else
         json[:security_keys_enabled] = false
+        json[:passkeys_enabled] = false
       end
       json[:description] = challenge[:description] if challenge[:description]
     else
@@ -677,8 +685,18 @@ class SessionController < ApplicationController
     end
   end
 
-  def destroy
-    redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
+  def destroy(trusted_return_url: nil)
+    return_url = params[:return_url].presence
+    if return_url
+      begin
+        uri = URI(return_url)
+        return_url = nil if uri.host.present? || uri.scheme.present? || !uri.path&.start_with?("/")
+      rescue URI::Error, ArgumentError
+        return_url = nil
+      end
+    end
+
+    redirect_url = trusted_return_url || return_url || SiteSetting.logout_redirect.presence
 
     redirect_url ||=
       if SiteSetting.login_required

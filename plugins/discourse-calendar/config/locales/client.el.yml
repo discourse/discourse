@@ -236,9 +236,6 @@ el:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "Ο/Η %{username} έχει ορίσει αυτόματα την παρουσία σας και σας έχει προσκαλέσει στο %{eventName}"
         an_event: "μια εκδήλωση"
-      event_description:
-        show_more: "Δείτε περισσότερα"
-        show_less: "Δείξε λιγότερα"
       edit_reason: "Η εκδήλωση ενημερώθηκε"
       edit_reason_closed: "Η εκδήλωση έκλεισε"
       edit_reason_opened: "Η εκδήλωση άνοιξε"

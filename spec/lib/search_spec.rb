@@ -2,7 +2,7 @@
 
 RSpec.describe Search do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:topic)
+  fab!(:topic) { Fabricate(:topic, title: "This is a sample topic") }
 
   before do
     SearchIndexer.enable

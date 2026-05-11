@@ -9,7 +9,6 @@ pl_PL:
     user_notes:
       title: "Uwagi o użytkowniku"
       attach: "Dodaj uwagę o użytkowniku"
-      attach_note_description: "dodaj notatkę o tym użytkowniku, którą może zobaczyć tylko personel"
       remove: "Usuń uwagę o użytkowniku"
       show: "Uwagi o użytkowniku (%{count})"
       delete_confirm: "Czy na pewno chcesz usunąć tę uwagę o użytkowniku?"

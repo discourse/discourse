@@ -7,7 +7,3 @@
 fa_IR:
   site_settings:
     topic_voting_enabled: 'به کاربران اجازه رأی در نظرسنجی موضوعات داده شود؟'
-  topic_voting:
-    category_type:
-      show_who_voted:
-        label: "نمایش رای دهندگان"

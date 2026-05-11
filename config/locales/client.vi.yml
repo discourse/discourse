@@ -546,6 +546,8 @@ vi:
         view_all: "Xem tất cả bản nháp"
         other_drafts:
           other: "+%{count} bản nháp khác"
+    embed_mode:
+      editing_post: "Đang chỉnh sửa tút"
     topic_count_all:
       other: "Xem %{count} chủ đề mới"
     topic_count_categories:
@@ -3198,14 +3200,8 @@ vi:
         archive_messages: "Di chuyển đến Lưu trữ"
         change_notification_level: "Thay đổi mức thông báo"
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
-        selected_sole_category:
-          other: "Bạn đã chọn <b>%{count}</b> chủ đề từ chuyên mục:"
         selected_count:
           other: "%{count} được chọn"
-        choose_new_tags: "Chọn thẻ mới cho các chuyên mục sau:"
-        changed_tags: "Các thẻ của các chủ đề đó đã được thay đổi."
-        confirm_remove_tags:
-          other: "Tất cả các thẻ sẽ bị xóa khỏi <b>%{count}</b> chủ đề. Bạn có chắc không?"
         progress:
           other: "Tiến độ: <strong>%{count}</strong> chủ đề"
         notify: "Thông báo cho người dùng về thay đổi này"
@@ -3247,10 +3243,6 @@ vi:
         name: "Bỏ công khai"
       relist_topics:
         name: "Công khai lại"
-      remove_tags:
-        name: "Xóa thẻ"
-      replace_tags:
-        name: "Thay thế thẻ"
       delete_topics:
         name: "Xóa"
       update_category:
@@ -3277,6 +3269,7 @@ vi:
       collapse: "Thu gọn"
       no_replies: "Chưa có trả lời."
       deleted_post_placeholder: "[đã xóa]"
+      ignored_post_placeholder: "[đã bỏ qua]"
       pinned_reply: "Đã ghim"
     topic:
       filter_to:
@@ -4178,7 +4171,7 @@ vi:
           high: "Cao"
           very_high: "Rất cao"
       sort_options:
-        default: "mặc định"
+        default: "Mặc định"
         likes: "Thích"
         op_likes: "Lượt thích tút gốc"
         views: "Xem"
@@ -5750,6 +5743,14 @@ vi:
         too_many_requests: Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi trước khi thử lại.
         not_found_error: Xin lỗi, báo cáo này không tồn tại
         custom_date_range: Khoảng thời gian tùy chỉnh
+        sections:
+          reports:
+            title: "Báo cáo"
+        period:
+          last_7_days: "7 ngày qua"
+          last_30_days: "30 ngày qua"
+          last_3_months: "3 tháng qua"
+          custom: "Tùy biến"
         reports:
           trend_title: "%{percent} thay đổi. Hiện tại là %{current}, là %{prev} trong giai đoạn trước."
           percent_change_tooltip: "%{percent} thay đổi."
@@ -6994,6 +6995,7 @@ vi:
         topic_id: "ID Chủ đề"
         post_id: "ID Tút"
         category_id: "ID Chuyên mục"
+        reviewable_id: "Review"
         delete: "Xóa"
         edit: "Sửa"
         save: "Lưu"
@@ -7583,7 +7585,6 @@ vi:
           other: "Không thể xóa tất cả các tút do tài khoản có hơn %{count} tút. (delete_all_posts_max)"
         delete_confirm_title: "Bạn có chắc muốn xóa thành viên này? Việc xóa này là vĩnh viễn!"
         delete_confirm: "Nói chung, việc ẩn danh người dùng thường được ưu tiên hơn là xóa họ, để tránh việc xóa nội dung khỏi các cuộc thảo luận hiện có."
-        delete_and_block: "Xóa người dùng và chặn địa chỉ email và địa chỉ IP của họ"
         delete_dont_block: "Xóa người dùng"
         deleting_user: "Đang xóa người dùng…"
         deleted: "Thành viên này đã bị xóa"

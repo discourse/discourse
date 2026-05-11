@@ -1635,8 +1635,6 @@ th:
         actions: "การดำเนินการจำนวนมาก"
         move_messages_to_inbox: "ย้ายไปกล่องขาเข้า"
         choose_new_category: "เลือกหมวดหมู่ใหม่ให้กระทู้"
-        choose_new_tags: "เลือกแท็กใหม่เพื่อกระทู้เหล่านี้:"
-        changed_tags: "แท็กของกระทู้เหล่านี้ถูกเปลี่ยนแปลง"
         error_topic_count:
           other: "%{count}กระทู้"
       none:
@@ -1657,8 +1655,6 @@ th:
         name: "คลัง"
       move_messages_to_inbox:
         name: "ย้ายไปกล่องขาเข้า"
-      replace_tags:
-        name: "แทนที่แท็ก"
       delete_topics:
         name: "ลบ"
       convert_to_private_message:
@@ -1673,6 +1669,7 @@ th:
       collapse: "ย่อ"
       no_replies: "ยังไม่มีคำตอบ"
       deleted_post_placeholder: "[ลบ]"
+      ignored_post_placeholder: "[ละเว้นแล้ว]"
       pinned_reply: "ปักหมุดแล้ว"
     topic:
       filter_to:
@@ -2712,6 +2709,9 @@ th:
         security_tab: "ความปลอดภัย"
         report_filter_any: "ใดๆ"
         disabled: ปิดใช้งานแล้ว
+        period:
+          last_7_days: "7 วันที่ผ่านมา"
+          last_30_days: "30 วันที่ผ่านมา"
         reports:
           today: "วันนี้"
           yesterday: "เมื่อวาน"
@@ -3070,6 +3070,7 @@ th:
         topic_id: "หมายเลขกระทู้"
         post_id: "หมายเลขโพสต์"
         category_id: "หมายเลขหมวดหมู่"
+        reviewable_id: "รีวิว"
         delete: "ลบ"
         edit: "แก้ไข"
         save: "บันทึก"

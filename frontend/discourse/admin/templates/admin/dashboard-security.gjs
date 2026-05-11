@@ -14,10 +14,12 @@ export default <template>
         @filters={{@controller.lastWeekFilters}}
       />
 
-      <AdminReport
-        @dataSourceName="staff_logins"
-        @filters={{@controller.lastWeekFilters}}
-      />
+      {{#if @controller.currentUser.admin}}
+        <AdminReport
+          @dataSourceName="admin_logins"
+          @filters={{@controller.lastWeekFilters}}
+        />
+      {{/if}}
 
       <PluginOutlet
         @name="admin-dashboard-security-bottom"

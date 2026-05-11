@@ -36,14 +36,6 @@ Overriding route templates (i.e. all the non-component templates under [`templat
 
 :electric_plug: `{plugin}/assets/javascripts/discourse/templates/discovery.hbs`
 
-## Overriding 'Raw' Templates (`.hbr`)
-
-Discourse's "raw" template system will soon be replaced by regular Ember components. But in the meantime, overriding raw templates works in the same way as Ember templates. For example, to override `topic-list-item.hbr` in core, you could create a file like:
-
-:art: `{theme}/javascripts/discourse/templates/list/topic-list-item.hbr`
-
-:electric_plug: `{plugin}/assets/javascripts/discourse/templates/list/topic-list-item.hbr`
-
 ## Interaction between multiple themes / plugins
 
 If multiple installed themes/plugins override the same template, the 'winner' is the one with the lowest-numbered ranking in this list:
