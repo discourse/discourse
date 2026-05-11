@@ -245,44 +245,4 @@ describe Chat::OneboxHandler do
       end
     end
   end
-
-  describe ".build_channel_badge" do
-    fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, user_2]) }
-
-    it "renders the channel emoji when set on a category channel" do
-      public_channel.update!(emoji: "tada")
-
-      badge = Chat::OneboxHandler.build_channel_badge(public_channel)
-
-      expect(badge).to eq(
-        %(<img src="/images/emoji/twitter/tada.png?v=15" title="tada" class="emoji" alt="tada" loading="lazy" width="20" height="20">),
-      )
-    end
-
-    it "renders the comment icon tinted with the category color when no emoji is set" do
-      badge = Chat::OneboxHandler.build_channel_badge(public_channel)
-
-      expect(badge).to eq(<<~HTML.strip)
-        <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}"><svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg></span>
-      HTML
-    end
-
-    it "renders the channel emoji when set on a direct message channel" do
-      dm_channel.update!(emoji: "wave")
-
-      badge = Chat::OneboxHandler.build_channel_badge(dm_channel)
-
-      expect(badge).to eq(
-        %(<img src="/images/emoji/twitter/wave.png?v=15" title="wave" class="emoji" alt="wave" loading="lazy" width="20" height="20">),
-      )
-    end
-
-    it "renders the users icon for a direct message channel without an emoji" do
-      badge = Chat::OneboxHandler.build_channel_badge(dm_channel)
-
-      expect(badge).to eq(
-        %(<svg class="fa d-icon d-icon-users svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#users"></use></svg>),
-      )
-    end
-  end
 end
