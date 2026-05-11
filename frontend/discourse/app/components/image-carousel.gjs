@@ -8,6 +8,7 @@ import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import inc from "discourse/helpers/inc";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { isDocumentRTL } from "discourse/lib/text-direction";
@@ -20,10 +21,6 @@ const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 8;
 const USE_SCROLLEND = !isTesting() && "onscrollend" in window;
 const ANIMATION_DURATION_MS = 800;
-
-function plusOne(val) {
-  return val + 1;
-}
 
 export default class ImageCarousel extends Component {
   @tracked currentIndex = 0;
@@ -694,7 +691,7 @@ export default class ImageCarousel extends Component {
                   aria-current={{if (eq this.currentIndex index) "true"}}
                   aria-label={{i18n
                     "carousel.go_to_slide"
-                    index=(plusOne index)
+                    index=(inc index)
                   }}
                   class={{concatClass
                     "d-image-carousel__dot"
@@ -705,7 +702,7 @@ export default class ImageCarousel extends Component {
             </div>
           {{else}}
             <span class="d-image-carousel__counter">
-              {{plusOne this.currentIndex}}
+              {{inc this.currentIndex}}
               /
               {{this.items.length}}
             </span>
