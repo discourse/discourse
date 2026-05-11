@@ -63,9 +63,7 @@ export default class ImageCarousel extends Component {
 
   setupCarousel = modifier((element) => {
     this.carouselElement = element;
-    return () => {
-      this.carouselElement = null;
-    };
+    return () => (this.carouselElement = null);
   });
 
   setupTrack = modifier((element) => {
