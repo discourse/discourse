@@ -185,7 +185,7 @@
       grid-template-columns: auto auto;
 
       @include viewport.from(sm) {
-        grid-template-columns: auto 1fr;
+        grid-template-columns: auto auto 1fr;
       }
     }
   }
@@ -205,6 +205,12 @@
     align-items: center;
     gap: var(--space-1);
     min-width: 0;
+  }
+
+  .composer-event__date-arrow {
+    color: var(--primary-low-mid);
+    justify-self: start;
+    margin-inline: var(--space-2);
   }
 
   .d-modal__body & {

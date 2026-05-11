@@ -480,16 +480,13 @@ export default class PostEventBuilder extends Component {
     this.allDay = allDay;
     this.event.allDay = allDay;
     if (allDay) {
-      if (this.startsAt) {
-        const snapped = this.startsAt.clone().startOf("day");
-        this.startsAt = snapped;
-        this.event.startsAt = snapped;
-      }
-      // Always clear the end date when enabling all-day so the user opts in
-      // to a multi-day span explicitly rather than inheriting an implicit
-      // same-day end from the prior timed range.
-      this.endsAt = null;
-      this.event.endsAt = null;
+      const snapped = (this.startsAt ?? moment.tz(this.event.timezone || "UTC"))
+        .clone()
+        .startOf("day");
+      this.startsAt = snapped;
+      this.event.startsAt = snapped;
+      this.endsAt = snapped.clone();
+      this.event.endsAt = snapped.clone();
     } else if (this.startsAt) {
       const tz = this.event.timezone || "UTC";
       const nowTime = moment.tz(tz);
@@ -772,7 +769,7 @@ export default class PostEventBuilder extends Component {
                   @title={{i18n
                     "discourse_post_event.builder_modal.ends_at.label"
                   }}
-                  @validation={{unless this.allDay "required"}}
+                  @validation="required"
                   as |field|
                 >
                   <field.Control>

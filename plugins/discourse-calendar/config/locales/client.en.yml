@@ -439,7 +439,6 @@ en:
       composer:
         name_placeholder: "Event name"
         end_date_placeholder: "End date"
-        end_date_placeholder_optional: "Optional end date"
         location_placeholder: "Add location or URL"
         max_attendees_placeholder: "Unlimited attendees"
         no_rsvps_label: "Not collecting attendance"

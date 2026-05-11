@@ -44,11 +44,7 @@ export default class CompactEventEditor extends Component {
 
   get formattedEndDisplay() {
     if (!this.displayEndTime) {
-      return i18n(
-        this.args.allDay
-          ? "discourse_post_event.composer.end_date_placeholder_optional"
-          : "discourse_post_event.composer.end_date_placeholder"
-      );
+      return i18n("discourse_post_event.composer.end_date_placeholder");
     }
     return this.displayEndTime.format(i18n("dates.long_no_year_no_time"));
   }
@@ -409,6 +405,10 @@ export default class CompactEventEditor extends Component {
             />
           {{/unless}}
         </div>
+
+        {{#if @allDay}}
+          {{icon "arrow-right" class="composer-event__date-arrow"}}
+        {{/if}}
 
         <div class="composer-event__date-row">
           <div class="composer-event__date-wrapper">

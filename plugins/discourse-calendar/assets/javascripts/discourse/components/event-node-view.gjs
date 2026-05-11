@@ -193,11 +193,9 @@ export default class EventNodeView extends Component {
       const startM = attrs.start ? moment.tz(attrs.start, eventTz) : null;
 
       if (allDay) {
-        if (startM) {
-          updates.start = startM.format("YYYY-MM-DD");
-        }
-        // always clear the end date when enabling all-day
-        updates.end = null;
+        const startDate = (startM ?? moment.tz(eventTz)).format("YYYY-MM-DD");
+        updates.start = startDate;
+        updates.end = startDate;
       } else if (startM) {
         const nowTime = moment.tz(eventTz);
         const newStart = startM
