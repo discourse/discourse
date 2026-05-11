@@ -15,6 +15,8 @@ describe "Request tracking" do
     CachedCounting.disable
   end
 
+  let(:pageview_tracking) { PageObjects::Pages::PageviewTracking.new }
+
   describe "pageviews" do
     it "tracks an anonymous visit correctly" do
       events =
@@ -44,7 +46,7 @@ describe "Request tracking" do
       expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
       expect(event[:ip_address]).to eq("::1")
       expect(event[:referrer]).to be_blank
-      expect(event[:session_id]).to be_present
+      expect(event[:session_id]).to eq(pageview_tracking.session_id)
 
       events =
         DiscourseEvent.track_events(:browser_pageview) do
