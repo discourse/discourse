@@ -5,6 +5,9 @@ export default function setAcceptedSolutions(topic, acceptedAnswers) {
 
   const topicHasAcceptedAnswer = acceptedPostNumbers.size > 0;
 
+  topic.accepted_answers = acceptedAnswers;
+  topic.has_accepted_answer = topicHasAcceptedAnswer;
+
   topic.postStream?.posts?.forEach((post) => {
     if (post.post_number === 1) {
       return;
@@ -15,7 +18,4 @@ export default function setAcceptedSolutions(topic, acceptedAnswers) {
       topic_accepted_answer: topicHasAcceptedAnswer,
     });
   });
-
-  topic.accepted_answers = acceptedAnswers;
-  topic.has_accepted_answer = topicHasAcceptedAnswer;
 }

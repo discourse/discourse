@@ -3,6 +3,7 @@ import { fn } from "@ember/helper";
 //import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedSet } from "@ember/reactive/collections";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import concatClass from "discourse/helpers/concat-class";
 import PostExcerptAccordionItem from "./post-excerpt-accordion-item";
 
@@ -15,6 +16,7 @@ export default class PostExcerptAccordion extends Component {
     this.resetExpandedIds();
   }
 
+  @action
   resetExpandedIds() {
     const defaultExpanded = this.args.defaultExpanded;
 
@@ -76,14 +78,13 @@ export default class PostExcerptAccordion extends Component {
       class={{concatClass "d-post-excerpt-accordion"}}
       data-topic={{@post.topic.id}}
       ...attributes
+      {{didUpdate this.resetExpandedIds this.excerptPosts}}
     >
-      {{!-- <a {{on "click" this.toggleAllExpanded}}> --}}
       <div class="d-post-excerpt-accordion__header">
         {{#if (has-block "header")}}
           {{yield this.excerptPosts to="header"}}
         {{/if}}
       </div>
-      {{! </a> }}
 
       {{#each this.excerptPosts as |excerptPost|}}
         <PostExcerptAccordionItem
