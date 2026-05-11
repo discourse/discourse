@@ -66,10 +66,10 @@ export default class SolvedMeTooButton extends Component {
   <template>
     <DButton
       class={{concatClass
-        "btn-flat"
+        "btn-default"
         "post-action-menu__solved-me-too"
         (if this.hasMeToo "has-me-too")
-        (if this.isTopicAuthor "is-read-only")
+        (if this.isTopicAuthor "disabled")
       }}
       ...attributes
       @action={{this.toggle}}
