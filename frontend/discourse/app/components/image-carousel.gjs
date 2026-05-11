@@ -40,8 +40,9 @@ export default class ImageCarousel extends Component {
   slides = new Map();
   wrapSlots = new Map();
   wrapSlotObserver = null;
-  movedElement = null;
-  movedToSlide = null;
+  // Active wrap-move: { element, destSlide } when an item has been parked in
+  // a wrap slot, null otherwise. Bundled so the two facts can't drift apart.
+  wrapMove = null;
   animationFrame = null;
   animationTarget = null;
   scrollStopTimer = null;
@@ -205,20 +206,19 @@ export default class ImageCarousel extends Component {
 
   // Put the moved element back into its destination slide. No scroll change.
   returnMovedElement() {
-    if (!this.movedElement || !this.movedToSlide) {
+    if (!this.wrapMove) {
       return false;
     }
 
-    this.movedToSlide.appendChild(this.movedElement);
-    this.movedElement = null;
-    this.movedToSlide = null;
+    this.wrapMove.destSlide.appendChild(this.wrapMove.element);
+    this.wrapMove = null;
     return true;
   }
 
   // Finish a wrap: return the moved element to its destination slide and
   // teleport scrollLeft from the wrap slot to that slide's centered position.
   finishWrap() {
-    const dest = this.movedToSlide;
+    const dest = this.wrapMove?.destSlide;
     if (!dest || !this.returnMovedElement() || !this.trackElement) {
       return false;
     }
@@ -332,7 +332,7 @@ export default class ImageCarousel extends Component {
   scrollTargetFor(index, direction) {
     // If a wrap rAF is in flight, snap it home so the new animation starts
     // clean (otherwise the old rAF's divergence check trips its abort).
-    if (this.movedElement && this.animationFrame !== null) {
+    if (this.wrapMove && this.animationFrame !== null) {
       this.finishWrap();
       cancelAnimationFrame(this.animationFrame);
       this.animationFrame = null;
@@ -356,8 +356,7 @@ export default class ImageCarousel extends Component {
 
       if (slot && destSlide && item?.element) {
         slot.appendChild(item.element);
-        this.movedElement = item.element;
-        this.movedToSlide = destSlide;
+        this.wrapMove = { element: item.element, destSlide };
         return slot;
       }
     }
@@ -421,10 +420,7 @@ export default class ImageCarousel extends Component {
         continue;
       }
 
-      if (
-        this.movedElement &&
-        this.movedElement.parentElement === entry.target
-      ) {
+      if (this.wrapMove?.element.parentElement === entry.target) {
         this.returnMovedElement();
       }
 
@@ -456,13 +452,13 @@ export default class ImageCarousel extends Component {
       this.ensureMovedTo("trailing", this.firstItem, firstSlide);
     } else if (beforeFirst) {
       this.ensureMovedTo("leading", this.lastItem, lastSlide);
-    } else if (this.movedElement) {
+    } else {
       this.returnMovedElement();
     }
   }
 
   ensureMovedTo(slotName, item, destSlide) {
-    if (this.movedElement === item?.element) {
+    if (this.wrapMove?.element === item?.element) {
       return;
     }
 
@@ -470,8 +466,7 @@ export default class ImageCarousel extends Component {
     const slot = this.wrapSlots.get(slotName);
     if (slot && destSlide && item?.element) {
       slot.appendChild(item.element);
-      this.movedElement = item.element;
-      this.movedToSlide = destSlide;
+      this.wrapMove = { element: item.element, destSlide };
     }
   }
 
@@ -498,7 +493,7 @@ export default class ImageCarousel extends Component {
       this.carouselElement?.focus({ preventScroll: true });
     }
 
-    if (this.movedElement || this.suppressDragWrap) {
+    if (this.wrapMove || this.suppressDragWrap) {
       return;
     }
 
