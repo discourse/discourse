@@ -97,6 +97,11 @@ module("Unit | Lib | block-outlet", function (hooks) {
       assert.strictEqual(meta.validate, null);
       assert.strictEqual(meta.allowedOutlets, null);
       assert.strictEqual(meta.deniedOutlets, null);
+      assert.strictEqual(meta.displayName, null);
+      assert.strictEqual(meta.icon, null);
+      assert.strictEqual(meta.category, null);
+      assert.strictEqual(meta.previewArgs, null);
+      assert.strictEqual(meta.thumbnail, null);
     });
 
     test("sets blockMetadata with description", function (assert) {
@@ -142,6 +147,82 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       assert.true(Object.isFrozen(getBlockMetadata(MetadataFrozenBlock)));
       assert.true(Object.isFrozen(getBlockMetadata(MetadataFrozenBlock).args));
+    });
+
+    test("stores displayName, icon, category, previewArgs, thumbnail", function (assert) {
+      @block("metadata-palette", {
+        displayName: "Hero Banner",
+        icon: "image",
+        category: "Content",
+        previewArgs: { title: "Sample title" },
+        thumbnail: "/uploads/preview.png",
+      })
+      class MetadataPaletteBlock extends Component {}
+
+      const meta = getBlockMetadata(MetadataPaletteBlock);
+      assert.strictEqual(meta.displayName, "Hero Banner");
+      assert.strictEqual(meta.icon, "image");
+      assert.strictEqual(meta.category, "Content");
+      assert.deepEqual(meta.previewArgs, { title: "Sample title" });
+      assert.strictEqual(meta.thumbnail, "/uploads/preview.png");
+    });
+
+    test("freezes previewArgs object", function (assert) {
+      @block("metadata-preview-frozen", {
+        previewArgs: { title: "Sample" },
+      })
+      class MetadataPreviewFrozenBlock extends Component {}
+
+      assert.true(
+        Object.isFrozen(
+          getBlockMetadata(MetadataPreviewFrozenBlock).previewArgs
+        )
+      );
+    });
+
+    test("throws for empty displayName", function (assert) {
+      assert.throws(() => {
+        @block("metadata-empty-display-name", { displayName: "  " })
+        class EmptyDisplayNameBlock extends Component {}
+
+        return EmptyDisplayNameBlock;
+      }, /"displayName" must be a non-empty string/);
+    });
+
+    test("throws for non-string icon", function (assert) {
+      assert.throws(() => {
+        @block("metadata-bad-icon", { icon: 42 })
+        class BadIconBlock extends Component {}
+
+        return BadIconBlock;
+      }, /"icon" must be a non-empty string/);
+    });
+
+    test("throws for non-object previewArgs", function (assert) {
+      assert.throws(() => {
+        @block("metadata-bad-preview", { previewArgs: "not-an-object" })
+        class BadPreviewBlock extends Component {}
+
+        return BadPreviewBlock;
+      }, /"previewArgs" must be a plain object/);
+    });
+
+    test("throws for array previewArgs", function (assert) {
+      assert.throws(() => {
+        @block("metadata-array-preview", { previewArgs: [1, 2, 3] })
+        class ArrayPreviewBlock extends Component {}
+
+        return ArrayPreviewBlock;
+      }, /"previewArgs" must be a plain object/);
+    });
+
+    test("throws for non-string thumbnail", function (assert) {
+      assert.throws(() => {
+        @block("metadata-bad-thumbnail", { thumbnail: 123 })
+        class BadThumbnailBlock extends Component {}
+
+        return BadThumbnailBlock;
+      }, /"thumbnail" must be a string/);
     });
 
     test("sets blockMetadata with allowedOutlets", function (assert) {

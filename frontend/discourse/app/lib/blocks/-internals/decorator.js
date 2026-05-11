@@ -27,6 +27,7 @@ import {
 import {
   validateAndParseBlockName,
   validateBlockOptions,
+  validateDisplayMetadata,
   validateOutletRestrictions,
 } from "discourse/lib/blocks/-internals/validation/block-decorator";
 import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/validation/constraints";
@@ -70,6 +71,19 @@ const AUTH_TOKEN = Symbol("block-auth-token");
  * @property {Function|null} validate - Custom validation function.
  * @property {readonly string[]|null} allowedOutlets - Allowed outlet patterns.
  * @property {readonly string[]|null} deniedOutlets - Denied outlet patterns.
+ * @property {string|null} displayName - Human-readable name shown in the
+ *   visual editor's palette and outline. Falls back to a Title Case of
+ *   `shortName` when unset (see `getBlockDisplayMetadata`).
+ * @property {string|null} icon - FontAwesome icon ID rendered next to the
+ *   block in the palette. Falls back to `"cube"` when unset.
+ * @property {string|null} category - Category label used to group the
+ *   block in the palette (e.g. "Content", "Layout"). Falls back to
+ *   `"Misc"` when unset.
+ * @property {Readonly<Object>|null} previewArgs - Optional sample args used
+ *   when the palette renders a preview thumbnail of the block. Frozen
+ *   shallowly. Falls back to defaults derived from `args` when unset.
+ * @property {string|null} thumbnail - Optional URL of a static thumbnail
+ *   image shown in the palette instead of the icon.
  */
 
 /**
@@ -235,6 +249,22 @@ const BlockComponentManager = new Proxy(
  *
  * @param {string[]} [options.deniedOutlets] - Glob patterns for denied outlets.
  *
+ * @param {string} [options.displayName] - Human-readable name shown in the
+ *   visual editor's palette. Defaults to a Title Case of `shortName`.
+ *
+ * @param {string} [options.icon] - FontAwesome icon ID for the palette
+ *   entry. Defaults to `"cube"`.
+ *
+ * @param {string} [options.category] - Category label for grouping in the
+ *   palette (e.g. `"Content"`, `"Layout"`). Defaults to `"Misc"`.
+ *
+ * @param {Object} [options.previewArgs] - Sample args used when the palette
+ *   renders a preview of the block. Defaults to a shallow object built
+ *   from each arg schema's `default` field.
+ *
+ * @param {string} [options.thumbnail] - URL of a static thumbnail image
+ *   shown in the palette instead of the icon.
+ *
  * @returns {Function} Decorator function that returns the decorated class
  *
  * @example
@@ -264,6 +294,11 @@ export function block(name, options = {}) {
     validate: validateFn = null,
     allowedOutlets = null,
     deniedOutlets = null,
+    displayName = null,
+    icon = null,
+    category = null,
+    previewArgs = null,
+    thumbnail = null,
   } = options;
 
   // Validate arg schema structure and types
@@ -304,6 +339,10 @@ export function block(name, options = {}) {
   // Validate outlet restriction patterns
   validateOutletRestrictions(name, allowedOutlets, deniedOutlets);
 
+  // Shallow type-check the optional display-metadata fields used by the
+  // visual editor's palette.
+  validateDisplayMetadata(name, options);
+
   return function (target) {
     setInternalComponentManager(BlockComponentManager, target);
 
@@ -319,15 +358,20 @@ export function block(name, options = {}) {
         : null,
       args: argsSchema ? Object.freeze(argsSchema) : null,
       blockName: name,
+      category,
       childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
       constraints: constraints ? Object.freeze(constraints) : null,
       decoratorClassNames,
       deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
       description,
+      displayName,
+      icon,
       isContainer,
       namespace: parsed.namespace,
       namespaceType: parsed.type,
+      previewArgs: previewArgs ? Object.freeze({ ...previewArgs }) : null,
       shortName: parsed.name,
+      thumbnail,
       validate: validateFn,
     });
 
@@ -435,6 +479,11 @@ export function createBlockArgsWithReactiveGetters(
  * - `validate` - Custom validation function
  * - `allowedOutlets` - Allowed outlet patterns
  * - `deniedOutlets` - Denied outlet patterns
+ * - `displayName` - Palette display name (or `null` if not provided)
+ * - `icon` - Palette icon ID (or `null` if not provided)
+ * - `category` - Palette category label (or `null` if not provided)
+ * - `previewArgs` - Sample args for the palette preview (or `null`)
+ * - `thumbnail` - Palette thumbnail URL (or `null`)
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
