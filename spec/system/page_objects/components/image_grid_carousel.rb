@@ -16,7 +16,10 @@ module PageObjects
       end
 
       def has_slides?(count:)
-        has_css?("#{carousel_selector} .d-image-carousel__slide", count: count)
+        has_css?(
+          "#{carousel_selector} .d-image-carousel__slide:not(.d-image-carousel__slide--wrap-slot)",
+          count: count,
+        )
       end
 
       def has_active_slide?
