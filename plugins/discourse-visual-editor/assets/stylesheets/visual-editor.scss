@@ -100,6 +100,23 @@ body.visual-editor-active {
       width: var(--visual-editor-badge-font-size) !important;
       filter: drop-shadow(var(--visual-editor-shadow));
     }
+
+    &__delete {
+      background: transparent;
+      border: none;
+      padding: 0 0 0 4px;
+      margin: 0;
+      color: white;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      border-left: 1px solid rgb(255, 255, 255, 0.4);
+      margin-left: 4px;
+
+      &:hover {
+        color: var(--danger-low);
+      }
+    }
   }
 
   .visual-editor-block-chrome:hover > .visual-editor-block-handle,

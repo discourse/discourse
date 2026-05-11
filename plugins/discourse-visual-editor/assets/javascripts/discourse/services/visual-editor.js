@@ -18,6 +18,7 @@ import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import discourseDebounce from "discourse/lib/debounce";
 import PreloadStore from "discourse/lib/preload-store";
 import {
+  cloneEntryForPaste,
   cloneLayoutForDraft,
   findEntry,
   insertEntryAt,
@@ -121,6 +122,17 @@ export default class VisualEditorService extends Service {
   @tracked dragSourceOutlet = null;
   /** @type {{targetKey: string, position: string, outletName: string}|null} */
   @tracked activeDropTarget = null;
+  /**
+   * Clipboard slot for the Cmd/Ctrl-C/X/V cycle and the future "duplicate"
+   * action. `mode: "copy"` lets paste re-clone the entry on every Cmd-V,
+   * while `mode: "cut"` is currently equivalent at paste time (the cut
+   * already removed the source). The distinction lets future polish
+   * surface different UI affordances (e.g. visually grey-out the cut
+   * source until paste fires).
+   *
+   * @type {{entry: Object, mode: "copy"|"cut"}|null}
+   */
+  @tracked _clipboard = null;
   /**
    * Undo / redo stacks for in-memory edits. Each entry captures one batch of
    * arg mutations: the affected entry, plus a `Map` of `argName → previous
@@ -478,6 +490,110 @@ export default class VisualEditorService extends Service {
       this.selectBlock(null);
     }
     this._publishStructuralChange(located.outletName, result.layout);
+    return true;
+  }
+
+  /**
+   * Indicates whether the clipboard currently holds anything that
+   * `pasteFromClipboard` could insert. Reactivity comes from `_clipboard`
+   * being tracked.
+   *
+   * @returns {boolean}
+   */
+  get hasClipboardEntry() {
+    return this._clipboard != null;
+  }
+
+  /**
+   * Captures the currently-selected block onto the clipboard for later
+   * paste. The captured entry is a fresh deep clone with stable keys
+   * stripped, so subsequent mutations on the canvas don't leak into the
+   * clipboard payload.
+   *
+   * @returns {boolean} true on success, false when no block is selected
+   */
+  @action
+  copySelected() {
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return false;
+    }
+    const located = this._findEntryAndOutletSync(key);
+    if (!located) {
+      return false;
+    }
+    this._clipboard = {
+      entry: cloneEntryForPaste(located.entry),
+      mode: "copy",
+    };
+    return true;
+  }
+
+  /**
+   * Captures the currently-selected block onto the clipboard AND removes
+   * it from the canvas. The clipboard mode is `"cut"` so callers can
+   * differentiate from a pure copy if they want different UI
+   * affordances; at paste time the two modes behave identically (the
+   * source is already gone).
+   *
+   * @returns {boolean} true on success, false when no block is selected
+   */
+  @action
+  cutSelected() {
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return false;
+    }
+    const located = this._findEntryAndOutletSync(key);
+    if (!located) {
+      return false;
+    }
+    this._clipboard = {
+      entry: cloneEntryForPaste(located.entry),
+      mode: "cut",
+    };
+    return this.removeBlock(key);
+  }
+
+  /**
+   * Inserts a fresh clone of the clipboard entry adjacent to the current
+   * selection (after it, in the selected block's outlet). Each paste
+   * re-clones the clipboard payload, so multiple `Cmd+V` taps insert
+   * independent subtrees rather than aliasing the same node.
+   *
+   * Requires a selection. Returns false when there's nothing on the
+   * clipboard, no block is currently selected, or the insert otherwise
+   * no-ops (e.g. the selected block isn't locatable in the live layout).
+   *
+   * @returns {boolean}
+   */
+  @action
+  pasteFromClipboard() {
+    if (!this._clipboard) {
+      return false;
+    }
+    const targetKey = this.selectedBlockKey;
+    if (!targetKey) {
+      return false;
+    }
+    const located = this._findEntryAndOutletSync(targetKey);
+    if (!located) {
+      return false;
+    }
+    const layout = this.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return false;
+    }
+    const insertion = insertEntryAt(
+      layout,
+      targetKey,
+      cloneEntryForPaste(this._clipboard.entry),
+      "after"
+    );
+    if (!insertion.changed) {
+      return false;
+    }
+    this._publishStructuralChange(located.outletName, insertion.layout);
     return true;
   }
 

@@ -339,6 +339,29 @@ function cloneEntryForDraft(entry) {
 }
 
 /**
+ * Deep-clones an entry for paste-style insertion: structurally identical
+ * to `cloneEntryForDraft`, but strips `__stableKey` recursively so the
+ * pasted subtree gets fresh keys minted at publish time. Without this,
+ * the clipboard payload would re-use the source's keys and any
+ * subsequent move of the original would also re-target the paste (they'd
+ * be addressed by the same key).
+ *
+ * @param {Object} entry
+ * @returns {Object}
+ */
+export function cloneEntryForPaste(entry) {
+  const clone = { ...entry };
+  delete clone.__stableKey;
+  if (entry.args) {
+    clone.args = { ...entry.args };
+  }
+  if (entry.children?.length) {
+    clone.children = entry.children.map(cloneEntryForPaste);
+  }
+  return clone;
+}
+
+/**
  * Serializes a layout for transport to the server (the
  * `block_layout`-shaped JSON the `Themes::SaveBlockLayout` endpoint
  * expects). Strips internal bookkeeping (`__stableKey`) and resolves any
