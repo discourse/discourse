@@ -30,6 +30,10 @@ class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
     first_post.cooked
   end
 
+  def post_item_excerpt_post
+    first_post
+  end
+
   def bookmarkable_user
     @bookmarkable_user ||= first_post.user
   end
