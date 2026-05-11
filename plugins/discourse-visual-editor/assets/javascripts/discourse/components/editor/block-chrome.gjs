@@ -5,10 +5,10 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import dragAndDropSource from "discourse/modifiers/drag-and-drop-source";
-import dragAndDropTarget from "discourse/modifiers/drag-and-drop-target";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -192,7 +192,7 @@ export default class BlockChrome extends Component {
             (if (this.isDropZoneActive "before") "--active")
           }}
           data-ve-position="before"
-          {{dragAndDropTarget
+          {{dDragAndDropTarget
             accepts="ve-block"
             position="before"
             canDrop=this.canDropOnThisBlock
@@ -220,7 +220,7 @@ export default class BlockChrome extends Component {
           <span
             class="visual-editor-block-handle"
             title={{i18n "visual_editor.canvas.drag_handle_title"}}
-            {{dragAndDropSource
+            {{dDragAndDropSource
               kind="ve-block"
               data=(hash blockKey=@blockKey outletName=@outletName)
               onDragStart=this.handleDragStart
@@ -240,7 +240,7 @@ export default class BlockChrome extends Component {
                 (if (this.isDropZoneActive "inside") "--active")
               }}
               data-ve-position="inside"
-              {{dragAndDropTarget
+              {{dDragAndDropTarget
                 accepts="ve-block"
                 position="inside"
                 canDrop=this.canDropOnThisBlock
@@ -262,7 +262,7 @@ export default class BlockChrome extends Component {
             (if (this.isDropZoneActive "after") "--active")
           }}
           data-ve-position="after"
-          {{dragAndDropTarget
+          {{dDragAndDropTarget
             accepts="ve-block"
             position="after"
             canDrop=this.canDropOnThisBlock

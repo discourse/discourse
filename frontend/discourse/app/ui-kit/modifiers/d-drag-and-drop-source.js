@@ -13,7 +13,7 @@ const DND_MIME_PREFIX = "application/x-discourse-dnd";
  * HTML5 drag-and-drop.
  *
  * ```hbs
- * <li {{dragAndDropSource
+ * <li {{dDragAndDropSource
  *   kind="sidebar-link"
  *   data=this.link
  *   onDragStart=this.handleDragStart
@@ -32,7 +32,7 @@ const DND_MIME_PREFIX = "application/x-discourse-dnd";
  * matching the foundation styles in
  * `app/assets/stylesheets/common/foundation/draggable.scss`.
  */
-export default class DragAndDropSourceModifier extends Modifier {
+export default class DDragAndDropSourceModifier extends Modifier {
   @service dragAndDrop;
 
   element;
