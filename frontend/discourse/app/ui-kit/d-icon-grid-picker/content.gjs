@@ -6,14 +6,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-/** @type {import("discourse/components/async-content.gjs")} */
-import AsyncContent from "discourse/components/async-content";
-import FilterInput from "discourse/components/filter-input";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { eq } from "discourse/truth-helpers";
+/** @type {import("discourse/ui-kit/d-async-content.gjs")} */
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 /* Module-level cache for the unfiltered icon list, keyed by onlyAvailable flag */
@@ -291,7 +291,7 @@ export default class DIconGridPickerContent extends Component {
       {{on "keydown" this.onKeyDown}}
     >
       <div class="d-icon-grid-picker__filter-container">
-        <FilterInput
+        <DFilterInput
           {{! @glint-expect-error: FilterInput lacks Element type declaration }}
           aria-label={{i18n "d_icon_grid_picker.search_placeholder"}}
           aria-controls="d-icon-grid-picker-listbox"
@@ -324,7 +324,7 @@ export default class DIconGridPickerContent extends Component {
                   role="option"
                   aria-label={{favIcon}}
                   aria-selected="true"
-                  class={{concatClass
+                  class={{dConcatClass
                     "d-icon-grid-picker__icon --selected"
                     (if @showSelectedName "d-icon-grid-picker__selected-chip")
                   }}
@@ -333,7 +333,7 @@ export default class DIconGridPickerContent extends Component {
                   {{this.snapToGrid}}
                   {{on "click" (fn @onSelect favIcon)}}
                 >
-                  {{icon favIcon}}
+                  {{dIcon favIcon}}
                   {{#if @showSelectedName}}
                     <span
                       class="d-icon-grid-picker__selected-name"
@@ -352,7 +352,7 @@ export default class DIconGridPickerContent extends Component {
                   {{this.registerIconTooltip}}
                   {{on "click" (fn @onSelect favIcon)}}
                 >
-                  {{icon favIcon}}
+                  {{dIcon favIcon}}
                 </button>
               {{/if}}
             {{/each}}
@@ -360,7 +360,7 @@ export default class DIconGridPickerContent extends Component {
         {{/if}}
 
         <div class="d-icon-grid-picker__grid" role="presentation">
-          <AsyncContent
+          <DAsyncContent
             @asyncData={{this.fetchIcons}}
             @context={{this.filter}}
             @debounce={{true}}
@@ -378,7 +378,7 @@ export default class DIconGridPickerContent extends Component {
                   role="option"
                   aria-label={{item.id}}
                   aria-selected={{if (eq item.id @value) "true" "false"}}
-                  class={{concatClass
+                  class={{dConcatClass
                     "d-icon-grid-picker__icon"
                     (if (eq item.id @value) "--selected")
                   }}
@@ -386,7 +386,7 @@ export default class DIconGridPickerContent extends Component {
                   {{this.registerIconTooltip}}
                   {{on "click" (fn @onSelect item.id)}}
                 >
-                  {{icon item.id}}
+                  {{dIcon item.id}}
                 </button>
               {{/each}}
             </:content>
@@ -395,7 +395,7 @@ export default class DIconGridPickerContent extends Component {
                 {{i18n "d_icon_grid_picker.no_results"}}
               </div>
             </:empty>
-          </AsyncContent>
+          </DAsyncContent>
         </div>
       </div>
       <div class="sr-only" aria-live="polite" role="status">

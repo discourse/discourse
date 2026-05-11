@@ -1,10 +1,10 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 const DPageHeaderActionsTestComponent = <template>
@@ -108,7 +108,7 @@ module("Integration | ui-kit | DPageHeader", function (hooks) {
       <template>
         <DPageHeader>
           <:tabs>
-            <NavItem
+            <DNavItem
               @route="admin.backups.settings"
               @label="settings"
               class="d-backups-tabs__settings"

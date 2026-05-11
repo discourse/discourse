@@ -6,13 +6,13 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DockedComposer from "discourse/components/docked-composer";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { buildQuote } from "discourse/lib/quote";
+import DButton from "discourse/ui-kit/d-button";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const DRAFT_KEY_PREFIX = "ai-bot-docked-draft-";
@@ -296,7 +296,7 @@ export default class AiBotDockedComposer extends Component {
         {{#if this.editingPost}}
           <div class="ai-bot-docked-composer__editing">
             <span class="ai-bot-docked-composer__editing-text">
-              {{avatar this.editingPost imageSize="tiny"}}
+              {{dAvatar this.editingPost imageSize="tiny"}}
               {{i18n "discourse_ai.ai_bot.conversations.editing_post"}}
             </span>
             <DButton
@@ -345,7 +345,7 @@ export default class AiBotDockedComposer extends Component {
               (i18n "discourse_ai.ai_bot.conversations.streaming_below")
               (i18n "discourse_ai.ai_bot.conversations.scroll_to_bottom")
             }}
-            class={{concatClass
+            class={{dConcatClass
               "ai-bot-scroll-indicator"
               (if this.isStreaming "ai-bot-scroll-indicator--streaming")
             }}
@@ -358,7 +358,7 @@ export default class AiBotDockedComposer extends Component {
                 ></span><span class="ai-bot-scroll-indicator__dot"></span>
               </span>
             {{else}}
-              {{icon "chevron-down"}}
+              {{dIcon "chevron-down"}}
             {{/if}}
           </button>
         {{/if}}

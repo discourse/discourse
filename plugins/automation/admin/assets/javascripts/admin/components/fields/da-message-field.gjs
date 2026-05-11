@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import TextArea from "discourse/components/d-textarea";
+import DTextarea from "discourse/ui-kit/d-textarea";
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
@@ -13,7 +13,7 @@ export default class MessageField extends BaseField {
 
         <div class="controls">
           <div class="field-wrapper">
-            <TextArea
+            <DTextarea
               @value={{@field.metadata.value}}
               @input={{this.updateValue}}
               @disabled={{@field.isDisabled}}

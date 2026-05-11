@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { convertIconClass } from "discourse/lib/icon-library";
 import { escapeExpression } from "discourse/lib/utilities";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class DAvatarFlair extends Component {
   get icon() {
@@ -43,7 +43,7 @@ export default class DAvatarFlair extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "avatar-flair"
         (concat "avatar-flair-" @flairName)
         (if @flairBgColor "rounded")
@@ -53,7 +53,7 @@ export default class DAvatarFlair extends Component {
       title={{this.title}}
     >
       {{#if this.isIcon}}
-        {{icon this.icon}}
+        {{dIcon this.icon}}
       {{/if}}
     </div>
   </template>

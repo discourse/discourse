@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { optionalRequire } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import ChatModalCreateChannel from "discourse/plugins/chat/discourse/components/chat/modal/create-channel";
 
 const Row = optionalRequire(

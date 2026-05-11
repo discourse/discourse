@@ -20,7 +20,7 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -990,7 +990,7 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    return DAutocompleteModifier.setupAutocomplete(
+    return dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.textarea,
       this.autocompleteHandler,

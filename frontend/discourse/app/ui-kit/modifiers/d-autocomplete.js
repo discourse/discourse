@@ -4,11 +4,11 @@ import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";
-import DAutocompleteResults from "discourse/components/d-autocomplete-results";
 import { VISIBILITY_OPTIMIZERS } from "discourse/float-kit/lib/constants";
 import { extractError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import DAutocompleteResults from "discourse/ui-kit/d-autocomplete-results";
 
 export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";

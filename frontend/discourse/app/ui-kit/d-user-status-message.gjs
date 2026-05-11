@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import emoji from "discourse/helpers/emoji";
 import { until } from "discourse/lib/formatter";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 
 export default class DUserStatusMessage extends Component {
   @service currentUser;
@@ -27,7 +27,7 @@ export default class DUserStatusMessage extends Component {
         ...attributes
       >
         <:trigger>
-          {{emoji @status.emoji skipTitle=true}}
+          {{dEmoji @status.emoji skipTitle=true}}
           {{#if @showDescription}}
             <span class="user-status-message-description">
               {{@status.description}}
@@ -35,7 +35,7 @@ export default class DUserStatusMessage extends Component {
           {{/if}}
         </:trigger>
         <:content>
-          {{emoji @status.emoji skipTitle=true}}
+          {{dEmoji @status.emoji skipTitle=true}}
           <div class="user-status-tooltip-wrapper">
             <span class="user-status-tooltip-description">
               {{@status.description}}

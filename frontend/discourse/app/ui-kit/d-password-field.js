@@ -1,10 +1,10 @@
-import TextField from "discourse/components/text-field";
+import DTextField from "discourse/ui-kit/d-text-field";
 
 /**
   Same as text-field, but with special features for a password input.
   Be sure to test on a variety of browsers and operating systems when changing this logic.
 **/
-export default class DPasswordField extends TextField {
+export default class DPasswordField extends DTextField {
   canToggle = false;
 
   keyPress(e) {

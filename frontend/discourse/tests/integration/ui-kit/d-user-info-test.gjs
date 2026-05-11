@@ -1,8 +1,8 @@
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import UserInfo from "discourse/components/user-info";
 import DTooltips from "discourse/float-kit/components/d-tooltips";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DUserInfo from "discourse/ui-kit/d-user-info";
 
 module("Integration | ui-kit | DUserInfo", function (hooks) {
   setupRenderingTest(hooks);
@@ -11,7 +11,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
     this.siteSettings.prioritize_username_in_ux = false;
     this.currentUser.name = "Evil Trout";
 
-    await render(<template><UserInfo @user={{this.currentUser}} /></template>);
+    await render(<template><DUserInfo @user={{this.currentUser}} /></template>);
 
     assert.dom(".name").hasText("Evil Trout");
     assert.dom(".username").hasText("eviltrout");
@@ -21,7 +21,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
     this.siteSettings.prioritize_username_in_ux = true;
     this.currentUser.name = "Evil Trout";
 
-    await render(<template><UserInfo @user={{this.currentUser}} /></template>);
+    await render(<template><DUserInfo @user={{this.currentUser}} /></template>);
 
     assert.dom(".username").hasText("eviltrout");
     assert.dom(".name").hasText("Evil Trout");
@@ -30,7 +30,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
   test("includeLink", async function (assert) {
     await render(
       <template>
-        <UserInfo
+        <DUserInfo
           @user={{this.currentUser}}
           @includeLink={{this.includeLink}}
         />
@@ -49,7 +49,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
   test("includeAvatar", async function (assert) {
     await render(
       <template>
-        <UserInfo
+        <DUserInfo
           @user={{this.currentUser}}
           @includeAvatar={{this.includeAvatar}}
         />
@@ -69,7 +69,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <UserInfo @user={{this.currentUser}} @showStatus={{true}} />
+        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} />
       </template>
     );
 
@@ -81,7 +81,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <UserInfo @user={{this.currentUser}} @showStatus={{true}} />
+        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} />
       </template>
     );
 
@@ -94,7 +94,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <UserInfo @user={{this.currentUser}} @showStatus={{false}} />
+        <DUserInfo @user={{this.currentUser}} @showStatus={{false}} />
       </template>
     );
 
@@ -105,7 +105,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
-    await render(<template><UserInfo @user={{this.currentUser}} /></template>);
+    await render(<template><DUserInfo @user={{this.currentUser}} /></template>);
 
     assert.dom(".user-status-message").doesNotExist();
   });
@@ -116,7 +116,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <UserInfo @user={{this.currentUser}} @showStatus={{true}} />
+        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} />
       </template>
     );
 
@@ -131,7 +131,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <UserInfo
+        <DUserInfo
           @user={{this.currentUser}}
           @showStatus={{true}}
           @showStatusDescription={{true}}
@@ -150,7 +150,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <UserInfo @user={{this.currentUser}} @showStatus={{true}} /><DTooltips
+        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} /><DTooltips
         />
       </template>
     );

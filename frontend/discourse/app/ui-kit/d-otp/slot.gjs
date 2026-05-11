@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { isBlank } from "@ember/utils";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const PLACEHOLDER_CHAR = "-";
 
@@ -27,7 +27,7 @@ export default class Slot extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "d-otp-slot"
         (if @isFocused "--is-focused")
         (if this.showCursor "--show-cursor")

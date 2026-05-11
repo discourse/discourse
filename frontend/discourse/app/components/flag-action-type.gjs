@@ -5,9 +5,9 @@ import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -128,7 +128,7 @@ export default class FlagActionType extends Component {
                   @value={{this.message}}
                 />
                 <div
-                  class={{concatClass
+                  class={{dConcatClass
                     "custom-message-length"
                     this.customMessageLengthClasses
                   }}
@@ -167,7 +167,7 @@ export default class FlagActionType extends Component {
                   @value={{this.message}}
                 />
                 <div
-                  class={{concatClass
+                  class={{dConcatClass
                     "custom-message-length"
                     this.customMessageLengthClasses
                   }}

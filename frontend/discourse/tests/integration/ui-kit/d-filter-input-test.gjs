@@ -1,15 +1,15 @@
 import { hash } from "@ember/helper";
 import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import FilterInput from "discourse/components/filter-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
 
 module("Integration | ui-kit | DFilterInput", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Left icon", async function (assert) {
     await render(
-      <template><FilterInput @icons={{hash left="bell"}} /></template>
+      <template><DFilterInput @icons={{hash left="bell"}} /></template>
     );
 
     assert.dom(".d-icon-bell.-left").exists();
@@ -17,21 +17,21 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
 
   test("Right icon", async function (assert) {
     await render(
-      <template><FilterInput @icons={{hash right="bell"}} /></template>
+      <template><DFilterInput @icons={{hash right="bell"}} /></template>
     );
 
     assert.dom(".d-icon-bell.-right").exists();
   });
 
   test("containerClass argument", async function (assert) {
-    await render(<template><FilterInput @containerClass="foo" /></template>);
+    await render(<template><DFilterInput @containerClass="foo" /></template>);
 
     assert.dom(".filter-input-container.foo").exists();
   });
 
   test("Html attributes", async function (assert) {
     await render(
-      <template><FilterInput data-foo="1" placeholder="bar" /></template>
+      <template><DFilterInput data-foo="1" placeholder="bar" /></template>
     );
 
     assert.dom('.filter-input[data-foo="1"]').exists();
@@ -44,7 +44,7 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
       this.set("value", event.target.value);
     });
     await render(
-      <template><FilterInput @filterAction={{this.action}} /></template>
+      <template><DFilterInput @filterAction={{this.action}} /></template>
     );
     await fillIn(".filter-input", "foo");
 
@@ -53,7 +53,7 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
 
   test("Focused state", async function (assert) {
     await render(
-      <template><FilterInput @filterAction={{this.action}} /></template>
+      <template><DFilterInput @filterAction={{this.action}} /></template>
     );
     await triggerEvent(".filter-input", "focusin");
 
@@ -69,7 +69,10 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
     this.set("value", "test");
     await render(
       <template>
-        <FilterInput @onClearInput={{this.clearAction}} @value={{this.value}} />
+        <DFilterInput
+          @onClearInput={{this.clearAction}}
+          @value={{this.value}}
+        />
       </template>
     );
 
@@ -87,7 +90,7 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
     });
     await render(
       <template>
-        <FilterInput @onClearInput={{this.clearAction}} @value="test" />
+        <DFilterInput @onClearInput={{this.clearAction}} @value="test" />
       </template>
     );
     await click(".filter-input-clear-btn");
@@ -99,7 +102,7 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
     this.set("clearAction", () => {});
     await render(
       <template>
-        <FilterInput @onClearInput={{this.clearAction}} @value="test" />
+        <DFilterInput @onClearInput={{this.clearAction}} @value="test" />
       </template>
     );
     await click(".filter-input-clear-btn");

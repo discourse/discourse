@@ -1,5 +1,5 @@
 import DashboardSection from "discourse/admin/components/dashboard/section";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 <template>
@@ -20,7 +20,9 @@ import { i18n } from "discourse-i18n";
           <div class="db-section__metric-number">38%</div>
           <div class="db-section__metric-label">
             Logged-in share
-            <span class="db-section__info">{{icon "far-circle-question"}}</span>
+            <span class="db-section__info">{{dIcon
+                "far-circle-question"
+              }}</span>
           </div>
         </div>
         <div class="db-section__metric">
@@ -31,7 +33,9 @@ import { i18n } from "discourse-i18n";
         <div class="db-section__metric">
           <div class="db-section__metric-number">52%</div>
           <div class="db-section__metric-label">Bounce rate
-            <span class="db-section__info">{{icon "far-circle-question"}}</span>
+            <span class="db-section__info">{{dIcon
+                "far-circle-question"
+              }}</span>
           </div>
         </div>
       </div>
@@ -49,7 +53,7 @@ import { i18n } from "discourse-i18n";
         <div class="db-section__row-block-header">
           <a class="db-section__row-block-title">Top referrers<span
               class="db-link-arrow"
-            >{{icon "arrow-right"}}</span></a>
+            >{{dIcon "arrow-right"}}</span></a>
         </div>
         <ul class="db-traffic__list">
           <li class="db-traffic__list-row">

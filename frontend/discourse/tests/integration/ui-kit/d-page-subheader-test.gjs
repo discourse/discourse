@@ -1,8 +1,8 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DPageSubheader from "discourse/components/d-page-subheader";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 module("Integration | ui-kit | DPageSubheader", function (hooks) {

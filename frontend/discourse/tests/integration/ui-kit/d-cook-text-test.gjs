@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { resetCache } from "pretty-text/upload-short-url";
 import { module, test } from "qunit";
-import CookText from "discourse/components/cook-text";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import DCookText from "discourse/ui-kit/d-cook-text";
 
 module("Integration | ui-kit | DCookText", function (hooks) {
   setupRenderingTest(hooks);
@@ -14,7 +14,7 @@ module("Integration | ui-kit | DCookText", function (hooks) {
 
   test("renders markdown", async function (assert) {
     await render(
-      <template><CookText @rawText="_foo_" class="post-body" /></template>
+      <template><DCookText @rawText="_foo_" class="post-body" /></template>
     );
 
     assert.dom(".post-body").hasHtml("<p><em>foo</em></p>");
@@ -33,7 +33,7 @@ module("Integration | ui-kit | DCookText", function (hooks) {
 
     await render(
       <template>
-        <CookText @rawText="![an image](upload://a.png)" class="post-body" />
+        <DCookText @rawText="![an image](upload://a.png)" class="post-body" />
       </template>
     );
 

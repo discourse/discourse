@@ -1,13 +1,13 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 
 module("Integration | ui-kit | DDropdownMenu", function (hooks) {
   setupRenderingTest(hooks);
 
   test("dropdown menu", async function (assert) {
-    await render(<template><DropdownMenu class="test" /></template>);
+    await render(<template><DDropdownMenu class="test" /></template>);
 
     assert
       .dom("ul.dropdown-menu.test")
@@ -17,9 +17,9 @@ module("Integration | ui-kit | DDropdownMenu", function (hooks) {
   test("dropdown menu item", async function (assert) {
     await render(
       <template>
-        <DropdownMenu as |dm|><dm.item
+        <DDropdownMenu as |dm|><dm.item
             class="test"
-          >test</dm.item></DropdownMenu>
+          >test</dm.item></DDropdownMenu>
       </template>
     );
 
@@ -32,7 +32,7 @@ module("Integration | ui-kit | DDropdownMenu", function (hooks) {
   test("dropdown menu divider", async function (assert) {
     await render(
       <template>
-        <DropdownMenu as |dm|><dm.divider class="test" /></DropdownMenu>
+        <DDropdownMenu as |dm|><dm.divider class="test" /></DDropdownMenu>
       </template>
     );
 

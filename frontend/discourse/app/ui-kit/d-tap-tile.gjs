@@ -7,8 +7,8 @@ import {
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import { deepEqual } from "discourse/lib/object";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("tap-tile")
 @classNameBindings("active")
@@ -54,7 +54,7 @@ export default class DTapTile extends Component {
 
   <template>
     {{#if this.icon}}
-      {{icon this.icon}}
+      {{dIcon this.icon}}
     {{/if}}
     {{yield}}
   </template>

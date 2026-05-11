@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 // TODO (saquetim) the pattern <a>{{avatar ...}}</a> is used a lot. Should we replace it with this component to ensure consistency???
 export default class DUserAvatar extends Component {
@@ -30,22 +30,22 @@ export default class DUserAvatar extends Component {
   }
 
   <template>
-    <UserLink
+    <DUserLink
       ...attributes
       @ariaHidden={{@ariaHidden}}
       @ariaLabel={{@ariaLabel}}
       @href={{@href}}
       @user={{@user}}
     >
-      {{avatar
+      {{dAvatar
         @user
-        extraClasses=(concatClass
+        extraClasses=(dConcatClass
           @avatarClasses (if this.hideFromAnonUser "non-clickable")
         )
         imageSize=@size
         hideTitle=@hideTitle
         loading=(if @lazy "lazy")
       }}
-    </UserLink>
+    </DUserLink>
   </template>
 }

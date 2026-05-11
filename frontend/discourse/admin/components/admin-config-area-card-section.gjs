@@ -3,8 +3,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class AdminConfigAreaCardSection extends Component {
   @tracked collapsed = this.args.collapsed;
@@ -24,7 +24,7 @@ export default class AdminConfigAreaCardSection extends Component {
   <template>
     <section class="admin-config-area-card-section" ...attributes>
       <div
-        class={{concatClass
+        class={{dConcatClass
           "admin-config-area-card-section__header-wrapper"
           (if @collapsable "collapsable")
         }}
@@ -33,7 +33,7 @@ export default class AdminConfigAreaCardSection extends Component {
       >
         <h4 class="admin-config-area-card-section__title">{{@heading}}</h4>
         {{#if @collapsable}}
-          {{icon this.headerCaretIcon}}
+          {{dIcon this.headerCaretIcon}}
         {{/if}}
       </div>
       {{#unless this.collapsed}}

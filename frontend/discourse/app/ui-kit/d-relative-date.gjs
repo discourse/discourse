@@ -1,5 +1,5 @@
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 
-const DRelativeDate = <template>{{ageWithTooltip @date}}</template>;
+const DRelativeDate = <template>{{dAgeWithTooltip @date}}</template>;
 
 export default DRelativeDate;

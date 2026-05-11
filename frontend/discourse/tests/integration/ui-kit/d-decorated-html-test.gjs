@@ -4,10 +4,10 @@ import { trustHTML } from "@ember/template";
 import { render, settled } from "@ember/test-helpers";
 import curryComponent from "ember-curry-component";
 import { module, test } from "qunit";
-import DecoratedHtml, {
-  registerHtmlDecorator,
-} from "discourse/components/decorated-html";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DDecoratedHtml, {
+  registerHtmlDecorator,
+} from "discourse/ui-kit/d-decorated-html";
 
 module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
   setupRenderingTest(hooks);
@@ -17,7 +17,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
       @tracked html = trustHTML("<h1>Initial</h1>");
     })();
 
-    await render(<template><DecoratedHtml @html={{state.html}} /></template>);
+    await render(<template><DDecoratedHtml @html={{state.html}} /></template>);
 
     assert.dom("h1").hasText("Initial");
 
@@ -44,7 +44,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
 
     await render(
       <template>
-        <DecoratedHtml @html={{state.html}} @decorate={{decorate}} />
+        <DDecoratedHtml @html={{state.html}} @decorate={{decorate}} />
       </template>
     );
 
@@ -74,7 +74,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
 
     await render(
       <template>
-        <DecoratedHtml @html={{state.html}} @decorate={{decorate}} />
+        <DDecoratedHtml @html={{state.html}} @decorate={{decorate}} />
       </template>
     );
 
@@ -92,7 +92,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
 
     await render(
       <template>
-        <DecoratedHtml @html={{trustHTML "<div>Content</div>"}} />
+        <DDecoratedHtml @html={{trustHTML "<div>Content</div>"}} />
       </template>
     );
 
@@ -114,7 +114,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
 
     await render(
       <template>
-        <DecoratedHtml
+        <DDecoratedHtml
           @html={{trustHTML "<div>Content</div>"}}
           @decorate={{customDecorator}}
         />

@@ -1,8 +1,8 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -12,7 +12,7 @@ export default class AdminFormRow extends Component {
       <div class="form-element label-area">
         {{#if this.label}}
           <label
-            class={{concatClass (if (eq @type "checkbox") "checkbox-label")}}
+            class={{dConcatClass (if (eq @type "checkbox") "checkbox-label")}}
           >{{i18n this.label}}</label>
         {{else}}
           &nbsp;
@@ -21,7 +21,7 @@ export default class AdminFormRow extends Component {
       <div class="form-element input-area">
         {{#if this.wrapLabel}}
           <label
-            class={{concatClass (if (eq @type "checkbox") "checkbox-label")}}
+            class={{dConcatClass (if (eq @type "checkbox") "checkbox-label")}}
           >{{yield}}</label>
         {{else}}
           {{yield}}

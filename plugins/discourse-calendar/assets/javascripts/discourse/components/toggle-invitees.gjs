@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const ToggleInvitees = <template>
@@ -9,7 +9,7 @@ const ToggleInvitees = <template>
     <li>
       <button
         type="button"
-        class={{concatClass
+        class={{dConcatClass
           "toggle-going"
           (if (eq @viewType "going") "active")
         }}
@@ -21,7 +21,7 @@ const ToggleInvitees = <template>
     <li>
       <button
         type="button"
-        class={{concatClass
+        class={{dConcatClass
           "toggle-interested"
           (if (eq @viewType "interested") "active")
         }}
@@ -33,7 +33,7 @@ const ToggleInvitees = <template>
     <li>
       <button
         type="button"
-        class={{concatClass
+        class={{dConcatClass
           "toggle-not-going"
           (if (eq @viewType "not_going") "active")
         }}

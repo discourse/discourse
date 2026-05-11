@@ -1,14 +1,14 @@
 import { array } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import concatClass from "discourse/helpers/concat-class";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 module("Integration | ui-kit | Helper | dConcatClass", function (hooks) {
   setupRenderingTest(hooks);
 
   test("One class given", async function (assert) {
-    await render(<template><button class={{concatClass "foo"}} /></template>);
+    await render(<template><button class={{dConcatClass "foo"}} /></template>);
 
     assert.dom("button").hasAttribute("class", "foo");
   });
@@ -17,7 +17,7 @@ module("Integration | ui-kit | Helper | dConcatClass", function (hooks) {
     const bar = "bar";
 
     await render(
-      <template><button class={{concatClass "foo" bar}} /></template>
+      <template><button class={{dConcatClass "foo" bar}} /></template>
     );
 
     assert.dom("button").hasAttribute("class", "foo bar");
@@ -25,7 +25,7 @@ module("Integration | ui-kit | Helper | dConcatClass", function (hooks) {
 
   test("One undefined class given", async function (assert) {
     await render(
-      <template><button class={{concatClass "foo" undefined}} /></template>
+      <template><button class={{dConcatClass "foo" undefined}} /></template>
     );
 
     assert.dom("button").hasAttribute("class", "foo");
@@ -35,7 +35,7 @@ module("Integration | ui-kit | Helper | dConcatClass", function (hooks) {
     const bar = null;
 
     await render(
-      <template><button class={{concatClass null bar}} /></template>
+      <template><button class={{dConcatClass null bar}} /></template>
     );
 
     assert.dom("button").doesNotHaveAttribute("class");
@@ -44,7 +44,7 @@ module("Integration | ui-kit | Helper | dConcatClass", function (hooks) {
   test("Helpers used", async function (assert) {
     await render(
       <template>
-        <button class={{concatClass (if true "foo") (if true "bar")}} />
+        <button class={{dConcatClass (if true "foo") (if true "bar")}} />
       </template>
     );
 
@@ -55,7 +55,7 @@ module("Integration | ui-kit | Helper | dConcatClass", function (hooks) {
     await render(
       <template>
         <button
-          class={{concatClass (array) (array "foo" "bar") (array null)}}
+          class={{dConcatClass (array) (array "foo" "bar") (array null)}}
         />
       </template>
     );

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class ThumbnailSuggestionItem extends Component {
   @tracked selected = false;

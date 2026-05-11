@@ -2,9 +2,9 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import CharCounter from "discourse/components/char-counter";
 import withEventValue from "discourse/helpers/with-event-value";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DCharCounter from "discourse/ui-kit/d-char-counter";
 
 module("Integration | ui-kit | DCharCounter", function (hooks) {
   setupRenderingTest(hooks);
@@ -15,7 +15,7 @@ module("Integration | ui-kit | DCharCounter", function (hooks) {
 
     await render(
       <template>
-        <CharCounter @value={{this.value}} @max={{this.max}} />
+        <DCharCounter @value={{this.value}} @max={{this.max}} />
       </template>
     );
 
@@ -27,11 +27,11 @@ module("Integration | ui-kit | DCharCounter", function (hooks) {
 
     await render(
       <template>
-        <CharCounter @value={{this.charCounterContent}} @max={{this.max}}>
+        <DCharCounter @value={{this.charCounterContent}} @max={{this.max}}>
           <textarea
             {{on "input" (withEventValue (fn (mut this.charCounterContent)))}}
           ></textarea>
-        </CharCounter>
+        </DCharCounter>
       </template>
     );
 
@@ -52,7 +52,7 @@ module("Integration | ui-kit | DCharCounter", function (hooks) {
 
     await render(
       <template>
-        <CharCounter @value={{this.value}} @max={{this.max}} />
+        <DCharCounter @value={{this.value}} @max={{this.max}} />
       </template>
     );
 

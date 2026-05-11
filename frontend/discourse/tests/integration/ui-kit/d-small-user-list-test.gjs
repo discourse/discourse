@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import SmallUserList from "discourse/components/small-user-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DSmallUserList from "discourse/ui-kit/d-small-user-list";
 
 module("Integration | ui-kit | DSmallUserList", function (hooks) {
   setupRenderingTest(hooks);
@@ -12,7 +12,7 @@ module("Integration | ui-kit | DSmallUserList", function (hooks) {
       { id: 457, username: "someone", unknown: true },
     ];
 
-    await render(<template><SmallUserList @users={{users}} /></template>);
+    await render(<template><DSmallUserList @users={{users}} /></template>);
 
     assert.dom(".small-user-list").exists();
     assert.dom('[data-user-card="eviltrout"]').exists({ count: 1 });

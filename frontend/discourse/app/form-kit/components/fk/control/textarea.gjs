@@ -1,10 +1,10 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import element from "discourse/helpers/element";
 import { escapeExpression } from "discourse/lib/utilities";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
+import dElement from "discourse/ui-kit/helpers/d-element";
 
 export default class FKControlTextarea extends FKBaseControl {
   static controlType = "textarea";
@@ -43,7 +43,7 @@ export default class FKControlTextarea extends FKBaseControl {
   }
 
   get textareaElement() {
-    return this.args.autoResize ? ExpandingTextArea : element("textarea");
+    return this.args.autoResize ? DExpandingTextArea : dElement("textarea");
   }
 
   <template>

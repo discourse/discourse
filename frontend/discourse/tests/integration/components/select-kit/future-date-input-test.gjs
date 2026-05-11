@@ -1,10 +1,10 @@
 import { fn, hash } from "@ember/helper";
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import FutureDateInput from "discourse/components/future-date-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import { i18n } from "discourse-i18n";
 
 function getOptions() {
@@ -31,7 +31,7 @@ module(
     test("rendering and expanding", async function (assert) {
       await render(
         <template>
-          <FutureDateInput
+          <DFutureDateInput
             @options={{hash none="time_shortcut.select_timeframe"}}
           />
         </template>
@@ -60,7 +60,7 @@ module(
         true
       );
 
-      await render(<template><FutureDateInput /></template>);
+      await render(<template><DFutureDateInput /></template>);
 
       await this.subject.expand();
       const options = getOptions();
@@ -84,7 +84,7 @@ module(
     });
 
     test("shows 'Custom date and time' by default", async function (assert) {
-      await render(<template><FutureDateInput /></template>);
+      await render(<template><DFutureDateInput /></template>);
 
       await this.subject.expand();
       const options = getOptions();
@@ -95,7 +95,7 @@ module(
 
     test("doesn't show 'Custom date and time' if disabled", async function (assert) {
       await render(
-        <template><FutureDateInput @includeDateTime={{false}} /></template>
+        <template><DFutureDateInput @includeDateTime={{false}} /></template>
       );
 
       await this.subject.expand();
@@ -107,7 +107,7 @@ module(
 
     test("shows the now option if enabled", async function (assert) {
       await render(
-        <template><FutureDateInput @includeNow={{true}} /></template>
+        <template><DFutureDateInput @includeNow={{true}} /></template>
       );
 
       await this.subject.expand();
@@ -122,7 +122,7 @@ module(
 
       await render(
         <template>
-          <FutureDateInput
+          <DFutureDateInput
             @input={{this.input}}
             @onChangeInput={{fn (mut this.input)}}
           />

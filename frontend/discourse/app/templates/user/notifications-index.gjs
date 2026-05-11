@@ -1,10 +1,10 @@
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MenuItem from "discourse/components/user-menu/menu-item";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import NotificationsFilter from "discourse/select-kit/components/notifications-filter";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,7 +18,7 @@ export default <template>
     </div>
   {{else if @controller.doesNotHaveNotifications}}
     <PluginOutlet @name="user-notifications-empty-state">
-      <EmptyState
+      <DEmptyState
         @title={{i18n "user.no_notifications_page_title"}}
         @body={{@controller.emptyStateBody}}
       />
@@ -40,7 +40,7 @@ export default <template>
       <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
     {{else}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "user-notifications-list"
           (if @controller.siteSettings.show_user_menu_avatars "show-avatars")
         }}
@@ -48,7 +48,7 @@ export default <template>
         {{#each @controller.items as |item|}}
           <MenuItem @item={{item}} />
         {{/each}}
-        <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+        <DConditionalLoadingSpinner @condition={{@controller.loading}} />
         <PluginOutlet
           @name="user-notifications-list-bottom"
           @outletArgs={{lazyHash controller=@controller}}

@@ -1,7 +1,7 @@
 import { concat } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const DEmptyState = <template>
   <div
@@ -42,7 +42,7 @@ const DEmptyState = <template>
       {{#if (or @tipText (has-block "tip"))}}
         <div class="empty-state__tip">
           {{#if @tipIcon}}
-            {{icon @tipIcon}}
+            {{dIcon @tipIcon}}
           {{/if}}
           {{#if (has-block "tip")}}
             {{yield to="tip"}}

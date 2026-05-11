@@ -1,7 +1,7 @@
 import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DateTimeInput from "discourse/components/date-time-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 
 const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
 
@@ -11,7 +11,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   test("default", async function (assert) {
     this.setProperties({ date: DEFAULT_DATE_TIME });
 
-    await render(<template><DateTimeInput @date={{this.date}} /></template>);
+    await render(<template><DDateTimeInput @date={{this.date}} /></template>);
 
     assert.dom(".date-picker").hasValue("2019-01-29");
     assert
@@ -22,7 +22,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   test("prevents mutations", async function (assert) {
     this.setProperties({ date: DEFAULT_DATE_TIME });
 
-    await render(<template><DateTimeInput @date={{this.date}} /></template>);
+    await render(<template><DDateTimeInput @date={{this.date}} /></template>);
 
     await fillIn(".date-picker", "2019-01-02");
 
@@ -35,7 +35,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
 
     await render(
       <template>
-        <DateTimeInput @date={{this.date}} @onChange={{this.onChange}} />
+        <DDateTimeInput @date={{this.date}} @onChange={{this.onChange}} />
       </template>
     );
 
@@ -50,7 +50,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
 
     await render(
       <template>
-        <DateTimeInput @date={{this.date}} @showTime={{false}} />
+        <DDateTimeInput @date={{this.date}} @showTime={{false}} />
       </template>
     );
 
@@ -66,7 +66,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
 
     await render(
       <template>
-        <DateTimeInput
+        <DDateTimeInput
           @date={{this.date}}
           @timezone={{this.timezone}}
           @onChange={{this.onChange}}

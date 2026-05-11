@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import HighlightedCode from "discourse/components/highlighted-code";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
 
 module("Integration | ui-kit | DHighlightedCode", function (hooks) {
   setupRenderingTest(hooks);
@@ -10,7 +10,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
   test("highlighting code", async function (assert) {
     await render(
       <template>
-        <HighlightedCode @lang="ruby" @code="def test; end" />
+        <DHighlightedCode @lang="ruby" @code="def test; end" />
       </template>
     );
 
@@ -22,7 +22,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
 
     await render(
       <template>
-        <HighlightedCode @lang="ruby" @code={{longCodeBlock}} />
+        <DHighlightedCode @lang="ruby" @code={{longCodeBlock}} />
       </template>
     );
 
@@ -32,7 +32,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
   test("highlighting code with lang=auto", async function (assert) {
     await render(
       <template>
-        <HighlightedCode @lang="auto" @code="def test; end" />
+        <DHighlightedCode @lang="auto" @code="def test; end" />
       </template>
     );
 
@@ -56,7 +56,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
 
     await render(
       <template>
-        <HighlightedCode @lang="ruby" @code={{testState.code}} />
+        <DHighlightedCode @lang="ruby" @code={{testState.code}} />
         {{testState.code}}
       </template>
     );

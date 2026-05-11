@@ -3,11 +3,11 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import TextArea from "discourse/components/d-textarea";
-import icon from "discourse/helpers/d-icon";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { not } from "discourse/truth-helpers";
+import DTextarea from "discourse/ui-kit/d-textarea";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class Assignment extends Component {
@@ -98,7 +98,7 @@ export default class Assignment extends Component {
 
       {{#if this.showAssigneeIeEmptyError}}
         <span class="error-label">
-          {{icon "triangle-exclamation"}}
+          {{dIcon "triangle-exclamation"}}
           {{i18n "discourse_assign.assign_modal.choose_assignee"}}
         </span>
       {{/if}}
@@ -123,7 +123,7 @@ export default class Assignment extends Component {
         >{{i18n "discourse_assign.assign_modal.optional_label"}}</span>
       </label>
 
-      <TextArea
+      <DTextarea
         id="assign-modal-note"
         @value={{@assignment.note}}
         {{on "keydown" this.handleTextAreaKeydown}}

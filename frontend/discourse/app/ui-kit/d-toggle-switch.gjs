@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DToggleSwitch extends Component {
@@ -23,7 +23,7 @@ export default class DToggleSwitch extends Component {
 
         <span class="d-toggle-switch__checkbox-slider">
           {{#if @state}}
-            {{icon "check"}}
+            {{dIcon "check"}}
           {{/if}}
         </span>
       </label>

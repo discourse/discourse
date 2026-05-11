@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import BadgeButton from "discourse/components/badge-button";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DBadgeButton from "discourse/ui-kit/d-badge-button";
 
 module("Integration | ui-kit | DBadgeButton", function (hooks) {
   setupRenderingTest(hooks);
@@ -9,7 +9,7 @@ module("Integration | ui-kit | DBadgeButton", function (hooks) {
   test("disabled badge", async function (assert) {
     const badge = { enabled: false };
 
-    await render(<template><BadgeButton @badge={{badge}} /></template>);
+    await render(<template><DBadgeButton @badge={{badge}} /></template>);
 
     assert.dom(".user-badge.disabled").exists();
   });
@@ -17,7 +17,7 @@ module("Integration | ui-kit | DBadgeButton", function (hooks) {
   test("enabled badge", async function (assert) {
     const badge = { enabled: true };
 
-    await render(<template><BadgeButton @badge={{badge}} /></template>);
+    await render(<template><DBadgeButton @badge={{badge}} /></template>);
 
     assert.dom(".user-badge.disabled").doesNotExist();
   });
@@ -25,7 +25,7 @@ module("Integration | ui-kit | DBadgeButton", function (hooks) {
   test("data-badge-name", async function (assert) {
     const badge = { name: "foo" };
 
-    await render(<template><BadgeButton @badge={{badge}} /></template>);
+    await render(<template><DBadgeButton @badge={{badge}} /></template>);
 
     assert.dom('.user-badge[data-badge-name="foo"]').exists();
   });
@@ -33,7 +33,7 @@ module("Integration | ui-kit | DBadgeButton", function (hooks) {
   test("title", async function (assert) {
     this.set("badge", { description: "a <a href>good</a> run" });
 
-    await render(<template><BadgeButton @badge={{this.badge}} /></template>);
+    await render(<template><DBadgeButton @badge={{this.badge}} /></template>);
 
     assert
       .dom(".user-badge")
@@ -53,7 +53,7 @@ module("Integration | ui-kit | DBadgeButton", function (hooks) {
   test("icon", async function (assert) {
     const badge = { icon: "xmark" };
 
-    await render(<template><BadgeButton @badge={{badge}} /></template>);
+    await render(<template><DBadgeButton @badge={{badge}} /></template>);
 
     assert.dom(".d-icon.d-icon-xmark").exists();
   });
@@ -63,9 +63,9 @@ module("Integration | ui-kit | DBadgeButton", function (hooks) {
 
     await render(
       <template>
-        <BadgeButton @badge={{badge}}>
+        <DBadgeButton @badge={{badge}}>
           <span class="test"></span>
-        </BadgeButton>
+        </DBadgeButton>
       </template>
     );
 
@@ -75,7 +75,7 @@ module("Integration | ui-kit | DBadgeButton", function (hooks) {
   test("badgeTypeClassName", async function (assert) {
     const badge = { badgeTypeClassName: "foo" };
 
-    await render(<template><BadgeButton @badge={{badge}} /></template>);
+    await render(<template><DBadgeButton @badge={{badge}} /></template>);
 
     assert.dom(".user-badge.foo").exists();
   });
@@ -84,7 +84,7 @@ module("Integration | ui-kit | DBadgeButton", function (hooks) {
     const badge = { name: "foo" };
 
     await render(
-      <template><BadgeButton @badge={{badge}} @showName={{false}} /></template>
+      <template><DBadgeButton @badge={{badge}} @showName={{false}} /></template>
     );
 
     assert.dom(".badge-display-name").doesNotExist();
@@ -93,7 +93,7 @@ module("Integration | ui-kit | DBadgeButton", function (hooks) {
   test("showName defaults to true", async function (assert) {
     const badge = { name: "foo" };
 
-    await render(<template><BadgeButton @badge={{badge}} /></template>);
+    await render(<template><DBadgeButton @badge={{badge}} /></template>);
 
     assert.dom(".badge-display-name").exists();
   });

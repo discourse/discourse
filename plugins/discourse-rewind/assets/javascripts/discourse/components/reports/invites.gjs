@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import avatar from "discourse/helpers/bound-avatar-template";
-import number from "discourse/helpers/number";
 import getURL from "discourse/lib/get-url";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
@@ -48,7 +48,7 @@ export default class Invites extends Component {
                 }}
               </div>
               <div class="guest-book__entry-value">
-                {{number @report.data.total_invites}}
+                {{dNumber @report.data.total_invites}}
               </div>
             </div>
 
@@ -57,7 +57,7 @@ export default class Invites extends Component {
                 {{i18n "discourse_rewind.reports.invites.label_guests_joined"}}
               </div>
               <div class="guest-book__entry-value">
-                {{number @report.data.redeemed_count}}
+                {{dNumber @report.data.redeemed_count}}
               </div>
             </div>
 
@@ -83,7 +83,7 @@ export default class Invites extends Component {
                 {{i18n "discourse_rewind.reports.invites.label_posts_written"}}
               </div>
               <div class="guest-book__entry-value">
-                {{number @report.data.invitee_post_count}}
+                {{dNumber @report.data.invitee_post_count}}
               </div>
             </div>
 
@@ -92,7 +92,7 @@ export default class Invites extends Component {
                 {{i18n "discourse_rewind.reports.invites.label_topics_started"}}
               </div>
               <div class="guest-book__entry-value">
-                {{number @report.data.invitee_topic_count}}
+                {{dNumber @report.data.invitee_topic_count}}
               </div>
             </div>
 
@@ -101,7 +101,7 @@ export default class Invites extends Component {
                 {{i18n "discourse_rewind.reports.invites.label_likes_given"}}
               </div>
               <div class="guest-book__entry-value">
-                {{number @report.data.invitee_like_count}}
+                {{dNumber @report.data.invitee_like_count}}
               </div>
             </div>
 
@@ -116,7 +116,7 @@ export default class Invites extends Component {
                 href={{getURL (concat "/u/" this.mostActiveInvitee.username)}}
                 class="guest-book__signature"
               >
-                {{avatar
+                {{dBoundAvatarTemplate
                   this.mostActiveInvitee.avatar_template
                   "large"
                   username=this.mostActiveInvitee.username

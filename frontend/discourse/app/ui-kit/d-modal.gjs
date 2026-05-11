@@ -7,18 +7,18 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { modifier as modifierFn } from "ember-modifier";
-import ConditionalInElement from "discourse/components/conditional-in-element";
-import DButton from "discourse/components/d-button";
-import FlashMessage from "discourse/components/flash-message";
-import concatClass from "discourse/helpers/concat-class";
-import element from "discourse/helpers/element";
 import htmlClass from "discourse/helpers/html-class";
 import { waitForAnimationEnd } from "discourse/lib/animation-utils";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
-import swipe from "discourse/modifiers/swipe";
-import trapTab from "discourse/modifiers/trap-tab";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
+import DFlashMessage from "discourse/ui-kit/d-flash-message";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dElement from "discourse/ui-kit/helpers/d-element";
+import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
+import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
@@ -273,7 +273,7 @@ export default class DModal extends Component {
       throw `@tagName must be form or div`;
     }
 
-    return element(tagName);
+    return dElement(tagName);
   }
 
   #animateBackdropOpacity(position) {
@@ -327,7 +327,7 @@ export default class DModal extends Component {
   <template>
     {{! template-lint-disable no-invalid-interactive }}
 
-    <ConditionalInElement
+    <DConditionalInElement
       @element={{this.modal.containerElement}}
       @inline={{@inline}}
       @append={{true}}
@@ -336,7 +336,7 @@ export default class DModal extends Component {
         {{htmlClass "modal-open"}}
       {{/unless}}
       <this.dynamicElement
-        class={{concatClass
+        class={{dConcatClass
           "modal"
           "d-modal"
           (if @inline "-inline")
@@ -349,7 +349,7 @@ export default class DModal extends Component {
         ...attributes
         {{didInsert this.setupModal}}
         {{willDestroy this.cleanupModal}}
-        {{trapTab preventScroll=false autofocus=this.autofocus}}
+        {{dTrapTab preventScroll=false autofocus=this.autofocus}}
       >
         <div class="d-modal__container" {{this.registerModalContainer}}>
           {{yield to="aboveHeader"}}
@@ -366,7 +366,7 @@ export default class DModal extends Component {
             )
           }}
             <div
-              class={{concatClass
+              class={{dConcatClass
                 "d-modal__header"
                 (if
                   (and this.mobileDismissable (has-block "headerPrimaryAction"))
@@ -374,7 +374,7 @@ export default class DModal extends Component {
                 )
                 @headerClass
               }}
-              {{swipe
+              {{dSwipe
                 onDidSwipe=this.handleSwipe
                 onDidEndSwipe=this.handleSwipeEnded
                 enabled=this.dismissable
@@ -430,7 +430,7 @@ export default class DModal extends Component {
 
           {{yield to="belowHeader"}}
 
-          <FlashMessage
+          <DFlashMessage
             id="modal-alert"
             role="alert"
             @flash={{@flash}}
@@ -438,7 +438,7 @@ export default class DModal extends Component {
           />
 
           <div
-            class={{concatClass "d-modal__body" @bodyClass}}
+            class={{dConcatClass "d-modal__body" @bodyClass}}
             tabindex="-1"
             {{this.setupModalBody}}
           >
@@ -461,7 +461,7 @@ export default class DModal extends Component {
       {{#unless @inline}}
         <div
           class="d-modal__backdrop"
-          {{swipe
+          {{dSwipe
             onDidSwipe=this.handleSwipe
             onDidEndSwipe=this.handleSwipeEnded
             enabled=this.dismissable
@@ -471,6 +471,6 @@ export default class DModal extends Component {
           {{on "pointerdown" this.handleWrapperPointerDown}}
         ></div>
       {{/unless}}
-    </ConditionalInElement>
+    </DConditionalInElement>
   </template>
 }

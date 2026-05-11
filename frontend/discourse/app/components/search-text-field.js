@@ -3,11 +3,11 @@ import { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
-import TextField from "discourse/components/text-field";
 import { applySearchAutocomplete } from "discourse/lib/search";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
-export default class SearchTextField extends TextField {
+export default class SearchTextField extends DTextField {
   autocomplete = "off";
   enterkeyhint = "search";
   autocapitalize = "none";

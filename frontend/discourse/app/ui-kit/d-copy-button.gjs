@@ -2,9 +2,9 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import DButton from "discourse/ui-kit/d-button";
 
 @tagName("")
 export default class DCopyButton extends Component {

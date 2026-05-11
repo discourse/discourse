@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class UserTipContainer extends Component {
   @service userTips;

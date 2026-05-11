@@ -1,7 +1,7 @@
 import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DateInput from "discourse/components/date-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DDateInput from "discourse/ui-kit/d-date-input";
 
 const DEFAULT_DATE = moment("2019-01-29");
 
@@ -11,7 +11,7 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
   test("default", async function (assert) {
     this.setProperties({ date: DEFAULT_DATE });
 
-    await render(<template><DateInput @date={{this.date}} /></template>);
+    await render(<template><DDateInput @date={{this.date}} /></template>);
 
     assert.dom(".date-picker").hasValue("2019-01-29");
   });
@@ -22,7 +22,7 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
 
     await render(
       <template>
-        <DateInput @date={{this.date}} @onChange={{this.onChange}} />
+        <DDateInput @date={{this.date}} @onChange={{this.onChange}} />
       </template>
     );
 
@@ -38,7 +38,7 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
 
     await render(
       <template>
-        <DateInput @date={{this.date}} @onChange={{this.onChange}} />
+        <DDateInput @date={{this.date}} @onChange={{this.onChange}} />
       </template>
     );
 
@@ -55,7 +55,7 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
 
     await render(
       <template>
-        <DateInput @date={{this.date}} @onChange={{this.onChange}} />
+        <DDateInput @date={{this.date}} @onChange={{this.onChange}} />
       </template>
     );
     assert.dom(".date-picker").hasValue("2023-05-05");

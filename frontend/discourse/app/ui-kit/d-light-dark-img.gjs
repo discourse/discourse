@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import CdnImg from "discourse/components/cdn-img";
 import { getURLWithCDN } from "discourse/lib/get-url";
+import DCdnImg from "discourse/ui-kit/d-cdn-img";
 
 export default class DLightDarkImg extends Component {
   @service session;
@@ -48,7 +48,7 @@ export default class DLightDarkImg extends Component {
           height={{@darkImg.height}}
           media={{this.darkMediaQuery}}
         />
-        <CdnImg
+        <DCdnImg
           ...attributes
           @src={{this.defaultImg.url}}
           @width={{this.defaultImg.width}}
@@ -56,7 +56,7 @@ export default class DLightDarkImg extends Component {
         />
       </picture>
     {{else if @lightImg.url}}
-      <CdnImg
+      <DCdnImg
         ...attributes
         @src={{@lightImg.url}}
         @width={{@lightImg.width}}

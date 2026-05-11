@@ -1,7 +1,7 @@
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const DConditionalLoadingSpinner = <template>
   <PluginOutlet
@@ -10,7 +10,7 @@ const DConditionalLoadingSpinner = <template>
     @outletArgs={{lazyHash condition=@condition size=@size}}
   >
     <div
-      class={{concatClass
+      class={{dConcatClass
         "loading-container"
         (if @condition "visible")
         (if (eq @size "small") "inline-spinner")

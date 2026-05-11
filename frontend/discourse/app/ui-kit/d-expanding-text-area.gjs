@@ -1,10 +1,10 @@
 import { on } from "@ember/modifier";
-import autoFocus from "discourse/modifiers/auto-focus";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 
 const DExpandingTextArea = <template>
   <div class="expanding-text-area" data-replicated-value={{@value}}>
     <textarea
-      {{(if @autoFocus autoFocus)}}
+      {{(if @autoFocus dAutoFocus)}}
       {{! deprecated args: }}
       autocorrect={{@autocorrect}}
       class={{@class}}

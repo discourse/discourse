@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import element from "discourse/helpers/element";
 import discourseDebounce from "discourse/lib/debounce";
-import observeIntersection from "discourse/modifiers/observe-intersection";
+import dElement from "discourse/ui-kit/helpers/d-element";
+import dObserveIntersection from "discourse/ui-kit/modifiers/d-observe-intersection";
 
 let ENABLE_LOAD_MORE_OBSERVER = true;
 
@@ -92,11 +92,11 @@ export default class DLoadMore extends Component {
   }
 
   <template>
-    {{#let (element (if (has-block) "div" "")) as |Wrapper|}}
+    {{#let (dElement (if (has-block) "div" "")) as |Wrapper|}}
       <Wrapper ...attributes>
         {{yield}}
         <div
-          {{observeIntersection
+          {{dObserveIntersection
             this.onIntersection
             threshold=this.threshold
             rootMargin=this.rootMargin

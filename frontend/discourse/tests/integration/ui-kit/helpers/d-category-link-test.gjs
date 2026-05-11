@@ -1,14 +1,14 @@
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import categoryLink from "discourse/helpers/category-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 
 module("Integration | ui-kit | Helper | dCategoryLink", function (hooks) {
   setupRenderingTest(hooks);
 
   test("name", async function (assert) {
-    await render(<template>{{categoryLink (hash name="foo")}}</template>);
+    await render(<template>{{dCategoryLink (hash name="foo")}}</template>);
 
     assert.dom(".badge-category__name").hasText("foo");
   });
@@ -16,7 +16,7 @@ module("Integration | ui-kit | Helper | dCategoryLink", function (hooks) {
   test("description_text", async function (assert) {
     await render(
       <template>
-        {{categoryLink (hash name="foo" description_text="bar")}}
+        {{dCategoryLink (hash name="foo" description_text="bar")}}
       </template>
     );
 
@@ -26,7 +26,7 @@ module("Integration | ui-kit | Helper | dCategoryLink", function (hooks) {
   test("styleType option", async function (assert) {
     await render(
       <template>
-        {{categoryLink (hash name="test-cat") styleType="icon" icon="user"}}
+        {{dCategoryLink (hash name="test-cat") styleType="icon" icon="user"}}
       </template>
     );
 
@@ -37,7 +37,7 @@ module("Integration | ui-kit | Helper | dCategoryLink", function (hooks) {
   test("category.style_type auto-detection", async function (assert) {
     await render(
       <template>
-        {{categoryLink (hash name="icon-cat" style_type="icon" icon="user")}}
+        {{dCategoryLink (hash name="icon-cat" style_type="icon" icon="user")}}
       </template>
     );
 
@@ -47,7 +47,7 @@ module("Integration | ui-kit | Helper | dCategoryLink", function (hooks) {
 
   test("style falls back to square", async function (assert) {
     await render(
-      <template>{{categoryLink (hash name="square-cat")}}</template>
+      <template>{{dCategoryLink (hash name="square-cat")}}</template>
     );
 
     assert.dom(".badge-category").hasClass("--style-square");

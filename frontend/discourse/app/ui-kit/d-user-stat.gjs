@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
-import formatDuration from "discourse/helpers/format-duration";
-import number from "discourse/helpers/number";
+import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default class DUserStat extends Component {
@@ -22,15 +22,15 @@ export default class DUserStat extends Component {
     <div class="user-stat">
       <span class="value" title={{@rawTitle}}>
         {{#if this.isNumber}}
-          {{number @value}}
+          {{dNumber @value}}
         {{else if this.isDuration}}
-          {{formatDuration @value}}
+          {{dFormatDuration @value}}
         {{else}}
           {{@value}}
         {{/if}}
       </span>
       <span class="label">
-        {{#if @icon}}{{icon @icon}}{{/if}}
+        {{#if @icon}}{{dIcon @icon}}{{/if}}
         {{trustHTML (i18n @label count=@value)}}
       </span>
     </div>

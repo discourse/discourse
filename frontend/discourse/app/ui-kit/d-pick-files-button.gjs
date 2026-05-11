@@ -5,8 +5,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import noop from "discourse/helpers/noop";
 import { bind } from "discourse/lib/decorators";
 import {
@@ -14,6 +12,8 @@ import {
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 // This picker is intended to be used with UppyUploadMixin or with
@@ -132,7 +132,7 @@ export default class DPickFilesButton extends Component {
         @action={{this.openSystemFilePicker}}
         @label={{this.label}}
         @icon={{this.icon}}
-        class={{concatClass this.class "btn-default"}}
+        class={{dConcatClass this.class "btn-default"}}
       />
     {{/if}}
     {{#if this.acceptsAllFormats}}

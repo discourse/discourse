@@ -1,11 +1,11 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import LoadMore, {
-  disableLoadMoreObserver,
-  enableLoadMoreObserver,
-} from "discourse/components/load-more";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
+import DLoadMore, {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
 
 module("Integration | ui-kit | DLoadMore", function (hooks) {
   setupRenderingTest(hooks);
@@ -27,13 +27,13 @@ module("Integration | ui-kit | DLoadMore", function (hooks) {
 
     await render(
       <template>
-        <LoadMore @action={{performLoadMore}}>
+        <DLoadMore @action={{performLoadMore}}>
           <table class="numbers">
             <tbody>
               <tr />
             </tbody>
           </table>
-        </LoadMore>
+        </DLoadMore>
       </template>
     );
 
@@ -50,13 +50,13 @@ module("Integration | ui-kit | DLoadMore", function (hooks) {
 
     await render(
       <template>
-        <LoadMore @action={{performLoadMore}} @enabled={{false}}>
+        <DLoadMore @action={{performLoadMore}} @enabled={{false}}>
           <table class="numbers">
             <tbody>
               <tr />
             </tbody>
           </table>
-        </LoadMore>
+        </DLoadMore>
       </template>
     );
 
@@ -71,13 +71,13 @@ module("Integration | ui-kit | DLoadMore", function (hooks) {
 
     await render(
       <template>
-        <LoadMore @action={{loadMore}} @isLoading={{true}}>
+        <DLoadMore @action={{loadMore}} @isLoading={{true}}>
           <table class="numbers">
             <tbody>
               <tr />
             </tbody>
           </table>
-        </LoadMore>
+        </DLoadMore>
       </template>
     );
 

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const FLASH_TYPES = ["success", "error", "warning", "info"];
 
@@ -13,7 +13,7 @@ export default class DFlashMessage extends Component {
 
   <template>
     {{#if @flash}}
-      <div class={{concatClass "alert" this.flashClass}} ...attributes>
+      <div class={{dConcatClass "alert" this.flashClass}} ...attributes>
         {{~@flash~}}
       </div>
     {{/if}}

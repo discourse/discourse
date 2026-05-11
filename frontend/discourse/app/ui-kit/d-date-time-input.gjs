@@ -2,9 +2,9 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import DateInput from "discourse/components/date-input";
-import TimeInput from "discourse/components/time-input";
+import DButton from "discourse/ui-kit/d-button";
+import DDateInput from "discourse/ui-kit/d-date-input";
+import DTimeInput from "discourse/ui-kit/d-time-input";
 
 @tagName("")
 export default class DDateTimeInput extends Component {
@@ -81,7 +81,7 @@ export default class DDateTimeInput extends Component {
   <template>
     <div class="d-date-time-input" ...attributes>
       {{#unless this.timeFirst}}
-        <DateInput
+        <DDateInput
           @date={{this.date}}
           @placeholder={{this.placeholder}}
           @relativeDate={{this.relativeDate}}
@@ -91,7 +91,7 @@ export default class DDateTimeInput extends Component {
       {{/unless}}
 
       {{#if this.showTime}}
-        <TimeInput
+        <DTimeInput
           @date={{this.date}}
           @relativeDate={{this.relativeDate}}
           @onChange={{this.onChangeTime}}
@@ -99,7 +99,7 @@ export default class DDateTimeInput extends Component {
       {{/if}}
 
       {{#if this.timeFirst}}
-        <DateInput
+        <DDateInput
           @date={{this.date}}
           @placeholder={{this.placeholder}}
           @relativeDate={{this.relativeDate}}

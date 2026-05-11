@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
-import uniqueId from "discourse/helpers/unique-id";
 import { isProduction } from "discourse/lib/environment";
+import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
 
 /**
@@ -73,7 +73,7 @@ export default class DInterpolatedTranslation extends Component {
     placeholderAppearance.forEach((placeholderAppearances, placeholderName) => {
       placeholderKeys.set(
         placeholderName,
-        `__PLACEHOLDER__${placeholderName}__${uniqueId()}__`
+        `__PLACEHOLDER__${placeholderName}__${dUniqueId()}__`
       );
       placeholderElements.set(
         placeholderName,

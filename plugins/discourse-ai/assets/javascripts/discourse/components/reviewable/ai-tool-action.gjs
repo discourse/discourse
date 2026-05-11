@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import DecoratedHtml from "discourse/components/decorated-html";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewableAiToolAction extends Component {
@@ -46,7 +46,7 @@ export default class ReviewableAiToolAction extends Component {
     {{#if @reviewable.cooked}}
       <div class="review-item__post">
         <div class="review-item__post-content-wrapper">
-          <DecoratedHtml
+          <DDecoratedHtml
             @className="review-item__post-content"
             @html={{trustHTML @reviewable.cooked}}
             @model={{@reviewable}}

@@ -1,26 +1,26 @@
 import { next } from "@ember/runloop";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DOTP from "discourse/components/d-otp";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DOtp from "discourse/ui-kit/d-otp";
 
 module("Integration | ui-kit | DOtp", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders 6 slots by default", async function (assert) {
-    await render(<template><DOTP /></template>);
+    await render(<template><DOtp /></template>);
 
     assert.dom(".d-otp-slot").exists({ count: 6 });
   });
 
   test("renders custom number of slots", async function (assert) {
-    await render(<template><DOTP @slots={{8}} /></template>);
+    await render(<template><DOtp @slots={{8}} /></template>);
 
     assert.dom(".d-otp-slot").exists({ count: 8 });
   });
 
   test("accepts input and fills slots", async function (assert) {
-    await render(<template><DOTP /></template>);
+    await render(<template><DOtp /></template>);
 
     const input = this.element.querySelector(".d-otp-input");
     input.value = "123456";
@@ -42,7 +42,7 @@ module("Integration | ui-kit | DOtp", function (hooks) {
       this.set("filledValue", value);
     };
 
-    await render(<template><DOTP @onFill={{this.onFillCallback}} /></template>);
+    await render(<template><DOtp @onFill={{this.onFillCallback}} /></template>);
 
     const input = this.element.querySelector(".d-otp-input");
     input.value = "123456";
@@ -61,7 +61,7 @@ module("Integration | ui-kit | DOtp", function (hooks) {
     };
 
     await render(
-      <template><DOTP @onChange={{this.onChangeCallback}} /></template>
+      <template><DOtp @onChange={{this.onChangeCallback}} /></template>
     );
 
     const input = this.element.querySelector(".d-otp-input");
@@ -81,17 +81,17 @@ module("Integration | ui-kit | DOtp", function (hooks) {
   });
 
   test("@autoFocus", async function (assert) {
-    await render(<template><DOTP /></template>);
+    await render(<template><DOtp /></template>);
 
     assert.dom(".d-otp-slot[data-index='0'].--is-focused").exists();
 
-    await render(<template><DOTP @autoFocus={{false}} /></template>);
+    await render(<template><DOtp @autoFocus={{false}} /></template>);
 
     assert.dom(".d-otp-slot[data-index='0'].--is-focused").doesNotExist();
   });
 
   test("shows placeholder dashes for empty slots", async function (assert) {
-    await render(<template><DOTP /></template>);
+    await render(<template><DOtp /></template>);
 
     assert.dom(".d-otp-slot:nth-child(1)").hasText("​");
     assert.dom(".d-otp-slot:nth-child(2)").hasText("​ -");
@@ -102,7 +102,7 @@ module("Integration | ui-kit | DOtp", function (hooks) {
   });
 
   test("handles paste with spaces correctly", async function (assert) {
-    await render(<template><DOTP /></template>);
+    await render(<template><DOtp /></template>);
 
     const input = this.element.querySelector(".d-otp-input");
 
@@ -124,7 +124,7 @@ module("Integration | ui-kit | DOtp", function (hooks) {
   });
 
   test("removes non-digit characters from paste", async function (assert) {
-    await render(<template><DOTP /></template>);
+    await render(<template><DOtp /></template>);
 
     const input = this.element.querySelector(".d-otp-input");
 
@@ -145,7 +145,7 @@ module("Integration | ui-kit | DOtp", function (hooks) {
   });
 
   test("removes all content when all is selected and backspace is pressed", async function (assert) {
-    await render(<template><DOTP /></template>);
+    await render(<template><DOtp /></template>);
 
     const input = this.element.querySelector(".d-otp-input");
     input.value = "123456";

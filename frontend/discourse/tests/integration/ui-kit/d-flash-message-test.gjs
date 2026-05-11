@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import FlashMessage from "discourse/components/flash-message";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DFlashMessage from "discourse/ui-kit/d-flash-message";
 
 module("Integration | ui-kit | DFlashMessage", function (hooks) {
   setupRenderingTest(hooks);
@@ -11,7 +11,7 @@ module("Integration | ui-kit | DFlashMessage", function (hooks) {
     const type = "success";
 
     await render(
-      <template><FlashMessage @flash={{flash}} @type={{type}} /></template>
+      <template><DFlashMessage @flash={{flash}} @type={{type}} /></template>
     );
 
     assert.dom(".alert.alert-success").hasText(flash);
@@ -23,7 +23,7 @@ module("Integration | ui-kit | DFlashMessage", function (hooks) {
     const type = "error";
 
     await render(
-      <template><FlashMessage @flash={{flash}} @type={{type}} /></template>
+      <template><DFlashMessage @flash={{flash}} @type={{type}} /></template>
     );
 
     assert.dom(".alert.alert-error").hasText(flash);
@@ -35,7 +35,7 @@ module("Integration | ui-kit | DFlashMessage", function (hooks) {
     const type = "warning";
 
     await render(
-      <template><FlashMessage @flash={{flash}} @type={{type}} /></template>
+      <template><DFlashMessage @flash={{flash}} @type={{type}} /></template>
     );
 
     assert.dom(".alert.alert-warning").hasText(flash);
@@ -47,7 +47,7 @@ module("Integration | ui-kit | DFlashMessage", function (hooks) {
     const type = "info";
 
     await render(
-      <template><FlashMessage @flash={{flash}} @type={{type}} /></template>
+      <template><DFlashMessage @flash={{flash}} @type={{type}} /></template>
     );
 
     assert.dom(".alert.alert-info").hasText(flash);
@@ -55,7 +55,7 @@ module("Integration | ui-kit | DFlashMessage", function (hooks) {
   });
 
   test("it does not render anything when flash is not provided", async function (assert) {
-    await render(<template><FlashMessage /></template>);
+    await render(<template><DFlashMessage /></template>);
 
     assert.dom(".alert").doesNotExist();
   });
