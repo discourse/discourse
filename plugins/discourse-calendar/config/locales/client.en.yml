@@ -438,7 +438,8 @@ en:
               description: "A private event can only be joined by invited users."
       composer:
         name_placeholder: "Event name"
-        end_date_placeholder: "Set end date"
+        end_date_placeholder: "End date"
+        end_date_placeholder_optional: "Optional end date"
         location_placeholder: "Add location or URL"
         max_attendees_placeholder: "Unlimited attendees"
         no_rsvps_label: "Not collecting attendance"
@@ -484,6 +485,10 @@ en:
         timezone:
           label: Timezone
           remove_timezone: No timezone (UTC)
+        starts_at:
+          label: "Start date"
+        ends_at:
+          label: "End date"
         all_day:
           label: "All day event"
           description: "An all-day event will not have specific times, just a date. The event will run from the start of the day to the end of the day."
@@ -521,10 +526,10 @@ en:
           label: "Maximum attendees"
           placeholder: "No limit"
         attendance:
-          label: "How many members can attend this event?"
+          label: "How many members can RSVP to this event?"
           unlimited: "Unlimited"
           up_to: "Up to..."
-          none: "Don't collect attendance"
+          none: "None"
         allow_chat:
           label: "Chat integration"
           checkbox_label: "Create and manage event specific chat channel"

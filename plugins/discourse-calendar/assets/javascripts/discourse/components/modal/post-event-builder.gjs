@@ -8,7 +8,7 @@ import ConditionalLoadingSection from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DateInput from "discourse/components/date-input";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
+import DateTimeInput from "discourse/components/date-time-input";
 import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -100,6 +100,8 @@ export default class PostEventBuilder extends Component {
       location: this.event.location ?? "",
       url: this.event.url ?? "",
       description: this.event.description ?? "",
+      startsAt: this.startsAt ?? null,
+      endsAt: this.endsAt ?? null,
       allDay: !!this.event.allDay,
       showLocalTime: !!this.event.showLocalTime,
       chatEnabled: !!this.event.chatEnabled,
@@ -292,23 +294,6 @@ export default class PostEventBuilder extends Component {
       {
         value: "weeks",
         name: i18n("discourse_post_event.builder_modal.reminders.units.weeks"),
-      },
-    ];
-  }
-
-  get reminderPeriods() {
-    return [
-      {
-        value: "before",
-        name: i18n(
-          "discourse_post_event.builder_modal.reminders.periods.before"
-        ),
-      },
-      {
-        value: "after",
-        name: i18n(
-          "discourse_post_event.builder_modal.reminders.periods.after"
-        ),
       },
     ];
   }
@@ -563,6 +548,26 @@ export default class PostEventBuilder extends Component {
     this.#reconcileReminder(prev);
   }
 
+  @action
+  onChangeStartsAt(set, value) {
+    const to =
+      value && this.endsAt && value.isAfter(this.endsAt)
+        ? value.clone().add(1, "hour")
+        : this.endsAt;
+    this.onChangeDates({ from: value, to });
+    set(value);
+  }
+
+  @action
+  onChangeEndsAt(set, value) {
+    const to =
+      value && this.startsAt && value.isBefore(this.startsAt)
+        ? this.startsAt.clone().add(1, "hour")
+        : value;
+    this.onChangeDates({ from: this.startsAt, to });
+    set(to);
+  }
+
   get allowsRsvps() {
     return this.event.status !== "standalone";
   }
@@ -738,16 +743,50 @@ export default class PostEventBuilder extends Component {
                 @outletArgs={{lazyHash event=@model.event form=form}}
                 @connectorTagName="div"
               >
-                <form.Container @format="full">
-                  <DateTimeInputRange
-                    @from={{this.startsAt}}
-                    @to={{this.endsAt}}
-                    @timezone={{@model.event.timezone}}
-                    @onChange={{this.onChangeDates}}
-                    @showFromTime={{this.showTime}}
-                    @showToTime={{this.showTime}}
-                  />
-                </form.Container>
+                <form.Field
+                  @name="startsAt"
+                  @type="custom"
+                  @format="full"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.starts_at.label"
+                  }}
+                  @validation="required"
+                  as |field|
+                >
+                  <field.Control>
+                    <DateTimeInput
+                      @date={{this.startsAt}}
+                      @onChange={{fn this.onChangeStartsAt field.set}}
+                      @showTime={{this.showTime}}
+                      @timezone={{@model.event.timezone}}
+                      @placeholder={{i18n "dates.from_placeholder"}}
+                      class="from"
+                    />
+                  </field.Control>
+                </form.Field>
+
+                <form.Field
+                  @name="endsAt"
+                  @type="custom"
+                  @format="full"
+                  @title={{i18n
+                    "discourse_post_event.builder_modal.ends_at.label"
+                  }}
+                  @validation={{unless this.allDay "required"}}
+                  as |field|
+                >
+                  <field.Control>
+                    <DateTimeInput
+                      @date={{this.endsAt}}
+                      @relativeDate={{this.startsAt}}
+                      @onChange={{fn this.onChangeEndsAt field.set}}
+                      @showTime={{this.showTime}}
+                      @timezone={{@model.event.timezone}}
+                      @placeholder={{i18n "dates.to_placeholder"}}
+                      class="to"
+                    />
+                  </field.Control>
+                </form.Field>
 
                 <form.Field
                   @name="allDay"
@@ -1005,6 +1044,7 @@ export default class PostEventBuilder extends Component {
                         }}
                         @showTitle={{false}}
                         @type="select"
+                        @validation="required"
                         @onSet={{fn
                           this.handleReminderFieldChange
                           "type"
@@ -1047,6 +1087,7 @@ export default class PostEventBuilder extends Component {
                         }}
                         @showTitle={{false}}
                         @type="select"
+                        @validation="required"
                         @onSet={{fn
                           this.handleReminderFieldChange
                           "unit"
@@ -1064,39 +1105,21 @@ export default class PostEventBuilder extends Component {
                         </field.Control>
                       </collection.Field>
 
-                      <collection.Field
-                        @name="period"
-                        @title={{i18n
+                      <div class="reminder-period">
+                        {{i18n
                           "discourse_post_event.builder_modal.reminders.periods.before"
                         }}
-                        @showTitle={{false}}
-                        @type="select"
-                        @onSet={{fn
-                          this.handleReminderFieldChange
-                          "period"
-                          index
-                        }}
-                        class="reminder-period"
-                        as |field|
-                      >
-                        <field.Control as |select|>
-                          {{#each this.reminderPeriods as |opt|}}
-                            <select.Option
-                              @value={{opt.value}}
-                            >{{opt.name}}</select.Option>
-                          {{/each}}
-                        </field.Control>
-                      </collection.Field>
 
-                      <DButton
-                        @action={{fn
-                          this.handleRemoveReminder
-                          index
-                          collection.remove
-                        }}
-                        @icon="xmark"
-                        class="btn-default remove-reminder"
-                      />
+                        <DButton
+                          @action={{fn
+                            this.handleRemoveReminder
+                            index
+                            collection.remove
+                          }}
+                          @icon="xmark"
+                          class="btn-default remove-reminder"
+                        />
+                      </div>
                     </div>
                   </form.Collection>
 

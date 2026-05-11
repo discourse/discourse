@@ -45,47 +45,48 @@
       flex-wrap: wrap;
     }
 
-    .reminders-list {
+    .reminder-item {
       display: flex;
-      flex-direction: column;
-      width: 100%;
+      align-items: center;
+      flex: 1 0 auto;
+      padding: 0.25em 0;
+      gap: var(--space-1);
+      margin-bottom: var(--space-2);
 
-      .reminder-item {
+      @include viewport.until(sm) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      input {
+        margin-bottom: 0;
+      }
+
+      .select-kit-header {
+        height: 100%;
+      }
+
+      .reminder-type {
+        width: 320px;
+      }
+
+      .reminder-value {
+        width: 60px;
+      }
+
+      .reminder-unit {
+        width: 140px;
+      }
+
+      .reminder-period {
         display: flex;
-        flex: 1 0 auto;
-        padding: 0.25em 0;
-        margin-bottom: var(--space-2);
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
+      }
 
-        input {
-          margin-bottom: 0;
-        }
-
-        .select-kit-header {
-          height: 100%;
-        }
-
-        .reminder-type {
-          width: 320px;
-          margin-right: 0.5em;
-        }
-
-        .reminder-value {
-          width: 60px;
-          margin-right: 0.5em;
-        }
-
-        .reminder-unit {
-          width: 140px;
-          margin-right: 0.5em;
-        }
-
-        .reminder-period {
-          margin-right: 0.5em;
-        }
-
-        .remove-reminder {
-          margin-left: auto;
-        }
+      .remove-reminder {
+        margin-left: auto;
       }
     }
 
@@ -104,7 +105,7 @@
     width: 100%;
   }
 
-  .d-date-time-input-range {
+  .d-date-time-input {
     width: 100%;
   }
 }
