@@ -98,17 +98,7 @@ export default function setupImageGridCarousel(grid, helper) {
   grid.dataset.carouselInitialized = "true";
   grid.classList.add("d-image-grid--carousel");
 
-  const mode = grid.dataset.mode || "carousel";
-
-  helper.renderGlimmer(
-    grid,
-    ImageCarousel,
-    {
-      items,
-      mode,
-    },
-    { append: false }
-  );
+  helper.renderGlimmer(grid, ImageCarousel, { items }, { append: false });
 
   return true;
 }

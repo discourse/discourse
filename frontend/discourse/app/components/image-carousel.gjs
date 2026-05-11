@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { throttle } from "@ember/runloop";
@@ -493,10 +493,7 @@ export default class ImageCarousel extends Component {
         {{this.setupCarousel}}
         {{on "keydown" this.onKeyDown}}
         tabindex="0"
-        class={{concatClass
-          "d-image-carousel"
-          (if @data.mode (concat "d-image-carousel--" @data.mode))
-        }}
+        class="d-image-carousel"
       >
         <div {{this.setupTrack}} class="d-image-carousel__track">
           <div
