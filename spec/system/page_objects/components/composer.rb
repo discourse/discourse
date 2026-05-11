@@ -48,6 +48,12 @@ module PageObjects
         self
       end
 
+      def click_toolbar_options_item(name)
+        find("#{@composer_id} .toolbar__button.options").click
+        find(".toolbar-popup-menu-options [data-name='#{name}']").click
+        self
+      end
+
       def heading_menu
         PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.heading"))
       end

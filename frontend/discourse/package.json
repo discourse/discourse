@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
+    "@fellow/prosemirror-recreate-transform": "^1.2.3",
     "@fullcalendar/core": "^6.1.20",
     "@fullcalendar/daygrid": "^6.1.20",
     "@fullcalendar/list": "^6.1.20",
@@ -61,6 +62,7 @@
     "picomatch": "^4.0.4",
     "pikaday": "^1.8.2",
     "pretty-text": "workspace:1.0.0",
+    "prosemirror-changeset": "^2.4.1",
     "prosemirror-codemark": "^0.4.2",
     "prosemirror-commands": "^1.7.1",
     "prosemirror-dropcursor": "^1.8.2",

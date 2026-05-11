@@ -12,6 +12,7 @@ import heading from "./heading";
 import htmlBlock from "./html-block";
 import htmlInline from "./html-inline";
 import image from "./image";
+import inlineDiff from "./inline-diff";
 import link from "./link";
 import linkToolbar from "./link-toolbar";
 import markdownPaste from "./markdown-paste";
@@ -38,6 +39,7 @@ import wrap from "./wrap";
 const defaultExtensions = [
   emoji,
   image,
+  inlineDiff,
   onebox,
   oneboxToolbar,
   code,

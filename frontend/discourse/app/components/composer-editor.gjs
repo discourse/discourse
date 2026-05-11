@@ -133,6 +133,21 @@ export default class ComposerEditor extends Component {
     return this.composer.get("model.topic");
   }
 
+  // Read on demand. The inline-diff plugin reads this once at mount via
+  // getContext() and again when `composer:reply-reloaded` fires (draft
+  // restore), so this getter does not need to track `post.raw` changes.
+  get originalRaw() {
+    const model = this.composer?.model;
+    if (!model) {
+      return null;
+    }
+    // `originalText` is null after draft restore; fall back to post.raw once it arrives.
+    if (model.originalText) {
+      return model.originalText;
+    }
+    return model.editingPost ? (model.post?.raw ?? null) : null;
+  }
+
   @computed(
     "composer.model.requiredCategoryMissing",
     "currentUser.useRichEditor"
@@ -1161,6 +1176,8 @@ export default class ComposerEditor extends Component {
         }}
         @topicId={{this.composer.model.topic.id}}
         @categoryId={{this.composer.model.category.id}}
+        @originalRaw={{this.originalRaw}}
+        @inlineDiffEnabled={{this.composer.inlineDiffEnabled}}
         @replyingToUserId={{this.composer.replyingToUserId}}
         @onSetup={{this.setupEditor}}
         @disableSubmit={{this.composer.disableSubmit}}

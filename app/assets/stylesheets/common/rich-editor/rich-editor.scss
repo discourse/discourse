@@ -99,6 +99,10 @@
       color: var(--primary-400);
       line-height: 1.1;
     }
+
+    &:has(.diff-deleted-node)::before {
+      display: none;
+    }
   }
 
   del {
@@ -107,6 +111,97 @@
 
   ins {
     background-color: var(--success-low);
+  }
+
+  .diff-added {
+    background-color: var(--success-low);
+  }
+
+  .diff-deleted {
+    background-color: var(--danger-low);
+    color: var(--primary-medium);
+    text-decoration: line-through;
+    text-decoration-color: var(--danger-medium);
+
+    // override styles of inline children (mentions, hashtags, marks, etc.)
+    // so they blend into the deleted appearance
+    :where(a, span, strong, em, code, del, ins, mark, sub, sup) {
+      color: inherit;
+      background: none;
+      text-decoration: inherit;
+    }
+  }
+
+  .diff-deleted-node {
+    position: relative;
+    background-color: var(--danger-low);
+    color: var(--primary-medium);
+    text-decoration: line-through;
+    border-left: 2px solid var(--danger-medium);
+    pointer-events: none;
+    user-select: none;
+
+    .diff-revert-button {
+      pointer-events: auto;
+    }
+  }
+
+  .diff-revert-button {
+    appearance: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    position: absolute;
+    z-index: 1;
+    right: 0.25em;
+    top: 0.25em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4em;
+    height: 1.4em;
+    border-radius: var(--d-border-radius);
+    background: var(--tertiary-low);
+    color: var(--tertiary);
+    font-size: 0.75em;
+
+    .d-icon {
+      width: 0.9em;
+      height: 0.9em;
+    }
+
+    &:hover {
+      background: var(--tertiary);
+      color: var(--secondary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 1px;
+    }
+
+    // Inline variant sits next to its change in document flow — used for
+    // word-level edits and standalone block-additions. Uses the primary text
+    // color so it stays legible on every background (editor surface,
+    // diff-added, diff-deleted) across light and dark themes.
+    &--inline {
+      position: static;
+      display: inline-flex;
+      vertical-align: baseline;
+      width: 1.1em;
+      height: 1.1em;
+      margin: 0 0.1em;
+      font-size: 0.75em;
+      background: transparent;
+      color: var(--primary);
+      opacity: 0.7;
+
+      &:hover,
+      &:focus-visible {
+        opacity: 1;
+      }
+    }
   }
 
   mark {

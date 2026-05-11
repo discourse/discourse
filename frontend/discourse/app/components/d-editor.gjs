@@ -646,6 +646,11 @@ export default class DEditor extends Component {
     // optimistically set the preference
     this.currentUser.set("user_option.composition_mode", preference);
 
+    this.appEvents.trigger(
+      "composer:rich-editor-toggled",
+      this.isRichEditorEnabled
+    );
+
     this.#debounceSaveRichEditorPreference(preference);
   }
 
@@ -727,7 +732,15 @@ export default class DEditor extends Component {
       this.appEvents.on("composer:replace-toolbar", replaceToolbar);
       this.appEvents.on("composer:reset-toolbar", this, "resetToolbar");
 
+      const requestRichEditor = () => {
+        if (!this.isRichEditorEnabled) {
+          this.toggleRichEditor();
+        }
+      };
+      this.appEvents.on("composer:request-rich-editor", requestRichEditor);
+
       return () => {
+        this.appEvents.off("composer:request-rich-editor", requestRichEditor);
         this.appEvents.off("composer:replace-toolbar", replaceToolbar);
         this.appEvents.off("composer:reset-toolbar", this, "resetToolbar");
 
@@ -840,6 +853,8 @@ export default class DEditor extends Component {
             @categoryId={{@categoryId}}
             @topicId={{@topicId}}
             @id={{this.textAreaId}}
+            @originalRaw={{@originalRaw}}
+            @inlineDiffEnabled={{@inlineDiffEnabled}}
             @replaceToolbar={{this.replaceToolbar}}
             @toggleRichEditor={{this.toggleRichEditor}}
           />
