@@ -310,6 +310,13 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/bot"
+  enable_ai_bot_starred_conversations:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
   ai_bot_enabled_llms:
     default: ""
     client: true

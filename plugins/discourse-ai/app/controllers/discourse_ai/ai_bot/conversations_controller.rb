@@ -9,32 +9,88 @@ module DiscourseAi
       requires_login
 
       def index
-        page = params[:page].to_i
-        per_page = params[:per_page]&.to_i || 40
+        ListConversations.call(service_params) do
+          on_success do |conversations:, starred_conversations:, starred_enabled:, starred_at_by_topic_id:, meta:|
+            payload = {
+              conversations: serialized_conversations(conversations, starred_at_by_topic_id),
+              meta: meta,
+            }
 
-        base_query =
-          Topic
-            .private_messages_for_user(current_user)
-            .where(user: current_user) # Only show PMs where the current user is the author
-            .joins(
-              "INNER JOIN topic_custom_fields tcf ON tcf.topic_id = topics.id
-                   AND tcf.name = '#{DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD}'
-                   AND tcf.value = 't'",
+            if starred_enabled
+              payload[:starred_conversations] = serialized_conversations(
+                starred_conversations,
+                starred_at_by_topic_id,
+              )
+            end
+
+            render json: payload
+          end
+          on_failed_contract do |contract|
+            render(
+              json: failed_json.merge(errors: contract.errors.full_messages),
+              status: :bad_request,
             )
-            .distinct
+          end
+          on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        end
+      end
 
-        total = base_query.count
-        pms = base_query.order(last_posted_at: :desc).offset(page * per_page).limit(per_page)
+      def update_starred
+        unless SiteSetting.enable_ai_bot_starred_conversations
+          return render(json: failed_json, status: :not_found)
+        end
 
-        render json: {
-                 conversations: serialize_data(pms, ListableTopicSerializer),
-                 meta: {
-                   total: total,
-                   page: page,
-                   per_page: per_page,
-                   has_more: total > (page + 1) * per_page,
-                 },
-               }
+        unless valid_starred_param?
+          return(
+            render(json: failed_json.merge(errors: ["starred is invalid"]), status: :bad_request)
+          )
+        end
+
+        UpdateConversationStar.call(star_service_params) do
+          on_success { render json: success_json.merge(starred: normalized_starred) }
+          on_model_not_found(:topic) { raise Discourse::NotFound }
+          on_failed_policy(:feature_enabled) { raise Discourse::NotFound }
+          on_failed_policy(:can_access_conversation) { raise Discourse::NotFound }
+          on_failed_contract do |contract|
+            render(
+              json: failed_json.merge(errors: contract.errors.full_messages),
+              status: :bad_request,
+            )
+          end
+          on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        end
+      end
+
+      private
+
+      def valid_starred_param?
+        [true, false, "true", "false"].include?(params[:starred])
+      end
+
+      def normalized_starred
+        ActiveModel::Type::Boolean.new.cast(params[:starred])
+      end
+
+      def star_service_params
+        service_params.deep_merge(
+          params: {
+            topic_id: params[:topic_id],
+            starred: normalized_starred,
+          },
+        )
+      end
+
+      def serialized_conversations(topics, starred_at_by_topic_id)
+        serialized = serialize_data(topics, ListableTopicSerializer)
+
+        serialized.each do |topic|
+          topic_id = topic[:id] || topic["id"]
+          starred_at = starred_at_by_topic_id[topic_id]
+          topic[:ai_conversation_starred] = starred_at.present?
+          topic[:ai_conversation_starred_at] = starred_at&.iso8601
+        end
+
+        serialized
       end
     end
   end
