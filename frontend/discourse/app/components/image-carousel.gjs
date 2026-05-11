@@ -59,8 +59,7 @@ export default class ImageCarousel extends Component {
   setupTrack = modifier((element) => {
     this.trackElement = element;
 
-    // rAF defers until child slide modifiers register, then centers slide 0
-    // past the leading wrap slot.
+    // Defer until child slide modifiers have registered.
     const initialScroll = requestAnimationFrame(() => {
       if (element.isConnected) {
         this.slides.get(0)?.scrollIntoView({
@@ -71,10 +70,8 @@ export default class ImageCarousel extends Component {
       }
     });
 
-    // threshold: 1 fires exactly when a wrap slot is fully visible — the
-    // instant a drag-scroll reaches it. Teleporting here (rather than
-    // waiting for scrollend) lets continuous trackpad momentum carry through
-    // the wrap without a forced stop.
+    // threshold: 1 fires when a wrap slot is fully visible, letting trackpad
+    // momentum carry through the wrap without waiting for scrollend.
     this.wrapSlotObserver = new IntersectionObserver(this.onWrapSlotIntersect, {
       root: element,
       threshold: 1,
@@ -224,9 +221,8 @@ export default class ImageCarousel extends Component {
       return;
     }
 
-    // Suspend snap + smooth-scroll for the rAF's lifetime: smooth would
-    // re-animate each assignment (tripping the divergence abort); snap would
-    // yank intermediate positions to snap points.
+    // Suspend snap + smooth for the rAF's lifetime; both fight the per-tick
+    // scrollLeft writes (smooth trips divergence-abort, snap yanks ticks).
     track.style.scrollSnapType = "none";
     track.style.scrollBehavior = "auto";
 
