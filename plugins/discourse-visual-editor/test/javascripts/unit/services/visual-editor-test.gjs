@@ -13,7 +13,7 @@ import {
 } from "discourse/tests/helpers/block-testing";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
-@block("ve-svc-test:tile", { args: { title: { type: "string" } } })
+@block("ve:svc-test-tile", { args: { title: { type: "string" } } })
 class TestTile extends Component {
   <template>
     <div class="tile">{{@title}}</div>
@@ -54,13 +54,13 @@ module(
     module("selectBlock / isBlockSelected", function () {
       test("selectBlock stores the key and the snapshot", function (assert) {
         this.editor.selectBlock({
-          key: "ve-svc-test:tile:1",
-          name: "ve-svc-test:tile",
+          key: "ve:svc-test-tile:1",
+          name: "ve:svc-test-tile",
         });
-        assert.strictEqual(this.editor.selectedBlockKey, "ve-svc-test:tile:1");
+        assert.strictEqual(this.editor.selectedBlockKey, "ve:svc-test-tile:1");
         assert.strictEqual(
           this.editor.selectedBlockData.name,
-          "ve-svc-test:tile"
+          "ve:svc-test-tile"
         );
       });
 
@@ -73,11 +73,11 @@ module(
 
       test("isBlockSelected matches the stored key only", function (assert) {
         this.editor.selectBlock({
-          key: "ve-svc-test:tile:7",
-          name: "ve-svc-test:tile",
+          key: "ve:svc-test-tile:7",
+          name: "ve:svc-test-tile",
         });
-        assert.true(this.editor.isBlockSelected("ve-svc-test:tile:7"));
-        assert.false(this.editor.isBlockSelected("ve-svc-test:tile:8"));
+        assert.true(this.editor.isBlockSelected("ve:svc-test-tile:7"));
+        assert.false(this.editor.isBlockSelected("ve:svc-test-tile:8"));
         assert.false(this.editor.isBlockSelected(null));
       });
     });
@@ -91,8 +91,8 @@ module(
         // can't hardcode the suffix — read it back from the layout.
         const stableKey = layout[0].__stableKey;
         this.editor.selectBlock({
-          key: `ve-svc-test:tile:${stableKey}`,
-          name: "ve-svc-test:tile",
+          key: `ve:svc-test-tile:${stableKey}`,
+          name: "ve:svc-test-tile",
           args: { title: "Original" },
           metadata: { args: { title: { type: "string" } } },
         });
@@ -188,8 +188,8 @@ module(
         // Read keys after enter() — drafts get fresh stable keys minted by
         // _setLayoutLayer's assignStableKeys pass.
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
-        const secondKey = `ve-svc-test:tile:${draft[1].__stableKey}`;
+        const firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
+        const secondKey = `ve:svc-test-tile:${draft[1].__stableKey}`;
 
         const ok = this.editor.moveBlock({
           sourceKey: firstKey,
@@ -206,8 +206,8 @@ module(
 
       test("isDirty flips on after a move", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
-        const secondKey = `ve-svc-test:tile:${draft[1].__stableKey}`;
+        const firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
+        const secondKey = `ve:svc-test-tile:${draft[1].__stableKey}`;
 
         assert.false(this.editor.isDirty);
         this.editor.moveBlock({
@@ -221,8 +221,8 @@ module(
 
       test("resetAll restores the pre-edit layout after a move", async function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
-        const secondKey = `ve-svc-test:tile:${draft[1].__stableKey}`;
+        const firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
+        const secondKey = `ve:svc-test-tile:${draft[1].__stableKey}`;
 
         this.editor.moveBlock({
           sourceKey: firstKey,
@@ -241,7 +241,7 @@ module(
 
       test("rejects moves with an unknown source key", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const realKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        const realKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
 
         const ok = this.editor.moveBlock({
           sourceKey: "absent:0",
@@ -255,7 +255,7 @@ module(
       test("dragging state toggles via startDrag/endDrag", function (assert) {
         assert.false(this.editor.isDragging);
         this.editor.startDrag({
-          blockKey: "ve-svc-test:tile:1",
+          blockKey: "ve:svc-test-tile:1",
           outletName: "homepage-blocks",
         });
         assert.true(this.editor.isDragging);
@@ -274,7 +274,7 @@ module(
       test("setActiveDropTarget / clearActiveDropTarget round-trips", function (assert) {
         assert.strictEqual(this.editor.activeDropTarget, null);
         const target = {
-          targetKey: "ve-svc-test:tile:1",
+          targetKey: "ve:svc-test-tile:1",
           position: "before",
           outletName: "homepage-blocks",
         };
@@ -321,10 +321,10 @@ module(
 
       test("inserts a freshly-minted entry after the target", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const targetKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        const targetKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
 
         const ok = this.editor.insertBlock({
-          blockName: "ve-svc-test:tile",
+          blockName: "ve:svc-test-tile",
           defaultArgs: { title: "Inserted" },
           targetKey,
           position: "after",
@@ -340,7 +340,7 @@ module(
 
       test("appends to the outlet root when targetKey is null", function (assert) {
         const ok = this.editor.insertBlock({
-          blockName: "ve-svc-test:tile",
+          blockName: "ve:svc-test-tile",
           defaultArgs: { title: "Appended" },
           targetKey: null,
           position: "after",
@@ -355,7 +355,7 @@ module(
       test("isDirty flips on after an insert", function (assert) {
         assert.false(this.editor.isDirty);
         this.editor.insertBlock({
-          blockName: "ve-svc-test:tile",
+          blockName: "ve:svc-test-tile",
           targetKey: null,
           position: "after",
           targetOutletName: "homepage-blocks",
@@ -365,7 +365,7 @@ module(
 
       test("resetAll restores the pre-insert layout", async function (assert) {
         this.editor.insertBlock({
-          blockName: "ve-svc-test:tile",
+          blockName: "ve:svc-test-tile",
           defaultArgs: { title: "Throwaway" },
           targetKey: null,
           position: "after",
@@ -384,7 +384,7 @@ module(
         const defaults = { title: "Shared" };
 
         this.editor.insertBlock({
-          blockName: "ve-svc-test:tile",
+          blockName: "ve:svc-test-tile",
           defaultArgs: defaults,
           targetKey: null,
           position: "after",
@@ -419,10 +419,10 @@ module(
 
       test("copySelected stores a clone with mode='copy'", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        const firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
         this.editor.selectBlock({
           key: firstKey,
-          name: "ve-svc-test:tile",
+          name: "ve:svc-test-tile",
         });
 
         assert.true(this.editor.copySelected());
@@ -443,10 +443,10 @@ module(
 
       test("cutSelected stores the entry and removes it from the canvas", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        const firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
         this.editor.selectBlock({
           key: firstKey,
-          name: "ve-svc-test:tile",
+          name: "ve:svc-test-tile",
         });
 
         assert.true(this.editor.cutSelected());
@@ -458,10 +458,10 @@ module(
 
       test("pasteFromClipboard inserts a fresh clone after the selection", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        const firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
         this.editor.selectBlock({
           key: firstKey,
-          name: "ve-svc-test:tile",
+          name: "ve:svc-test-tile",
         });
         this.editor.copySelected();
         assert.true(this.editor.pasteFromClipboard());
@@ -479,10 +479,10 @@ module(
 
       test("pasteFromClipboard mints a fresh stable key for the paste", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        const firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
         this.editor.selectBlock({
           key: firstKey,
-          name: "ve-svc-test:tile",
+          name: "ve:svc-test-tile",
         });
         this.editor.copySelected();
         this.editor.pasteFromClipboard();
@@ -495,10 +495,10 @@ module(
 
       test("multiple pastes insert independent subtrees", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        const firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
         this.editor.selectBlock({
           key: firstKey,
-          name: "ve-svc-test:tile",
+          name: "ve:svc-test-tile",
         });
         this.editor.copySelected();
         this.editor.pasteFromClipboard();
@@ -510,20 +510,20 @@ module(
 
       test("pasteFromClipboard returns false when clipboard is empty", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        const firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
         this.editor.selectBlock({
           key: firstKey,
-          name: "ve-svc-test:tile",
+          name: "ve:svc-test-tile",
         });
         assert.false(this.editor.pasteFromClipboard());
       });
 
       test("pasteFromClipboard returns false when no block is selected", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const firstKey = `ve-svc-test:tile:${draft[0].__stableKey}`;
+        const firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
         this.editor.selectBlock({
           key: firstKey,
-          name: "ve-svc-test:tile",
+          name: "ve:svc-test-tile",
         });
         this.editor.copySelected();
         this.editor.selectBlock(null);
@@ -537,39 +537,39 @@ module(
         withTestBlockRegistration(() => registerBlock(TestTile));
         assert.true(
           this.editor.canInsertBlockAt({
-            blockName: "ve-svc-test:tile",
+            blockName: "ve:svc-test-tile",
             targetOutletName: "homepage-blocks",
           })
         );
       });
 
       test("refuses inserts for unknown outlets when allowedOutlets is set", function (assert) {
-        @block("ve-svc-test:restricted", { allowedOutlets: ["other-outlet"] })
+        @block("ve:svc-test-restricted", { allowedOutlets: ["other-outlet"] })
         class RestrictedTile extends Component {}
 
         withTestBlockRegistration(() => registerBlock(RestrictedTile));
         assert.false(
           this.editor.canInsertBlockAt({
-            blockName: "ve-svc-test:restricted",
+            blockName: "ve:svc-test-restricted",
             targetOutletName: "homepage-blocks",
           })
         );
         assert.true(
           this.editor.canInsertBlockAt({
-            blockName: "ve-svc-test:restricted",
+            blockName: "ve:svc-test-restricted",
             targetOutletName: "other-outlet",
           })
         );
       });
 
       test("refuses inserts for outlets in deniedOutlets", function (assert) {
-        @block("ve-svc-test:denied", { deniedOutlets: ["homepage-blocks"] })
+        @block("ve:svc-test-denied", { deniedOutlets: ["homepage-blocks"] })
         class DeniedTile extends Component {}
 
         withTestBlockRegistration(() => registerBlock(DeniedTile));
         assert.false(
           this.editor.canInsertBlockAt({
-            blockName: "ve-svc-test:denied",
+            blockName: "ve:svc-test-denied",
             targetOutletName: "homepage-blocks",
           })
         );
@@ -578,7 +578,7 @@ module(
       test("is permissive for unknown block names (validator catches on save)", function (assert) {
         assert.true(
           this.editor.canInsertBlockAt({
-            blockName: "ve-svc-test:unknown",
+            blockName: "ve:svc-test-unknown",
             targetOutletName: "homepage-blocks",
           })
         );
