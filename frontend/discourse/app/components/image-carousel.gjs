@@ -246,10 +246,6 @@ export default class ImageCarousel extends Component {
     return best;
   }
 
-  get #shouldReduceMotion() {
-    return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-  }
-
   #computeTargetScrollLeft(slideElement) {
     return (
       slideElement.offsetLeft +
@@ -298,7 +294,8 @@ export default class ImageCarousel extends Component {
       return;
     }
 
-    if (this.#shouldReduceMotion) {
+    // honor reduce-motion preference
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
       this.#cancelAnimation();
       this.#teleportFromWrapZone();
       // behavior: "instant" overrides CSS scroll-behavior: smooth — without
@@ -312,7 +309,8 @@ export default class ImageCarousel extends Component {
     // the next tick would abort on the divergence); snap would yank
     // intermediate non-snap-point positions to the nearest snap. Idempotent
     // if already suspended by an in-flight rAF.
-    this.#suspendNativeScrollEffects();
+    track.style.scrollSnapType = "none";
+    track.style.scrollBehavior = "auto";
 
     // If we're in a clone wrap zone (e.g., an earlier wrap is still mid-flight
     // when the user clicks again), teleport to the real-strip equivalent. If
@@ -365,29 +363,18 @@ export default class ImageCarousel extends Component {
     this.#animationFrame = requestAnimationFrame(tick);
   }
 
-  #suspendNativeScrollEffects() {
-    const track = this.#trackElement;
-    if (track) {
-      track.style.scrollSnapType = "none";
-      track.style.scrollBehavior = "auto";
-    }
-  }
-
-  #restoreNativeScrollEffects() {
-    const track = this.#trackElement;
-    if (track) {
-      track.style.scrollSnapType = "";
-      track.style.scrollBehavior = "";
-    }
-  }
-
   #cancelAnimation() {
     if (this.#animationFrame !== null) {
       cancelAnimationFrame(this.#animationFrame);
       this.#animationFrame = null;
     }
 
-    this.#restoreNativeScrollEffects();
+    // restore native snap + smooth-scroll
+    const track = this.#trackElement;
+    if (track) {
+      track.style.scrollSnapType = "";
+      track.style.scrollBehavior = "";
+    }
     this.#programmaticScroll = false;
   }
 
