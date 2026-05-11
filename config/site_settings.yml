@@ -1549,6 +1549,10 @@ posting:
     client: true
     default: false
     area: "posts_and_topics"
+  hide_disabled_create_topic_button:
+    client: true
+    default: false
+    area: "posts_and_topics"
   show_pinned_excerpt_mobile:
     client: true
     default: true
