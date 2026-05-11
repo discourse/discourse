@@ -37,6 +37,8 @@ export default class BlockChrome extends Component {
   @service blocks;
   @service visualEditor;
 
+  acceptedDragKinds = ["ve-block", "ve-palette-block"];
+
   /**
    * Block metadata (description, namespace, isContainer, args schema, etc.)
    * for the wrapped block, or `null` if the registry has no entry for this
@@ -112,11 +114,22 @@ export default class BlockChrome extends Component {
   /**
    * Drop-target gate — rejects drops that would re-insert a block onto its
    * own zones (a no-op anyway) and consults the editor service for outlet-
-   * level allowed/denied checks. The modifier already filters drags whose
-   * `kind` isn't `"ve-block"`, so this fires only for our own payloads.
+   * level allowed/denied checks. The modifier filters drags whose `kind`
+   * isn't `"ve-block"` or `"ve-palette-block"`, so this only fires for
+   * our own payloads.
+   *
+   * Move drags (`ve-block`) consult `canDropAt` against the active drag
+   * source; palette inserts (`ve-palette-block`) consult
+   * `canInsertBlockAt` against the source's `blockName`.
    */
   @action
   canDropOnThisBlock({ source }) {
+    if (source?.kind === "ve-palette-block") {
+      return this.visualEditor.canInsertBlockAt({
+        blockName: source.data?.blockName,
+        targetOutletName: this.args.outletName,
+      });
+    }
     if (source?.data?.blockKey === this.args.blockKey) {
       return false;
     }
@@ -162,18 +175,30 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Translates a drop-zone payload into a `moveBlock` call. `position`
-   * comes from the modifier (matches what we passed in via the `position`
-   * arg); the dragged block's key lives at `source.data.blockKey`.
+   * Translates a drop-zone payload into either a move (existing
+   * chrome-to-chrome drag) or an insert (palette-driven drag). The
+   * branch reads from `source.kind`, set by the originating modifier
+   * call site — `"ve-block"` for moves, `"ve-palette-block"` for
+   * palette inserts.
    */
   @action
   applyDrop({ source, position }) {
-    this.visualEditor.moveBlock({
-      sourceKey: source.data.blockKey,
-      targetKey: this.args.blockKey,
-      position,
-      targetOutletName: this.args.outletName,
-    });
+    if (source?.kind === "ve-palette-block") {
+      this.visualEditor.insertBlock({
+        blockName: source.data.blockName,
+        defaultArgs: source.data.defaultArgs,
+        targetKey: this.args.blockKey,
+        position,
+        targetOutletName: this.args.outletName,
+      });
+    } else {
+      this.visualEditor.moveBlock({
+        sourceKey: source.data.blockKey,
+        targetKey: this.args.blockKey,
+        position,
+        targetOutletName: this.args.outletName,
+      });
+    }
     this.visualEditor.endDrag();
   }
 
@@ -193,7 +218,7 @@ export default class BlockChrome extends Component {
           }}
           data-ve-position="before"
           {{dDragAndDropTarget
-            accepts="ve-block"
+            accepts=this.acceptedDragKinds
             position="before"
             canDrop=this.canDropOnThisBlock
             onDragEnter=this.handleZoneDragEnter
@@ -241,7 +266,7 @@ export default class BlockChrome extends Component {
               }}
               data-ve-position="inside"
               {{dDragAndDropTarget
-                accepts="ve-block"
+                accepts=this.acceptedDragKinds
                 position="inside"
                 canDrop=this.canDropOnThisBlock
                 onDragEnter=this.handleZoneDragEnter
@@ -263,7 +288,7 @@ export default class BlockChrome extends Component {
           }}
           data-ve-position="after"
           {{dDragAndDropTarget
-            accepts="ve-block"
+            accepts=this.acceptedDragKinds
             position="after"
             canDrop=this.canDropOnThisBlock
             onDragEnter=this.handleZoneDragEnter
