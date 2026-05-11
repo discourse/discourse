@@ -2,6 +2,7 @@ import "./setup-deprecation-workflow";
 import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader-shims";
+import "./ui-kit-shims";
 import "./discourse-common-loader-shims";
 import "./global-compat";
 import dialogHolderCompatModules from "discourse/dialog-holder/dialog-holder-compat-modules";

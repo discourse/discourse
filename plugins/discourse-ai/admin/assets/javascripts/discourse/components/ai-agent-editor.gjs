@@ -10,10 +10,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AdminUser from "discourse/admin/models/admin-user";
 import BackButton from "discourse/components/back-button";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
-import Avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
@@ -24,6 +21,9 @@ import getURL from "discourse/lib/get-url";
 import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, eq, gt, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiAgentMcpToolSelectorModal from "../components/modal/ai-agent-mcp-tool-selector-modal";
 import AiAgentResponseFormatEditor from "../components/modal/ai-agent-response-format-editor";
@@ -899,7 +899,7 @@ export default class AgentEditor extends Component {
                           totalSelectedToolTokens
                         }}
                       >
-                        {{icon "caret-down"}}
+                        {{dIcon "caret-down"}}
                       </span>
                       <span
                         class="ai-agent-editor__tool-context-cost-bar-indicator --count"
@@ -907,14 +907,14 @@ export default class AgentEditor extends Component {
                           totalSelectedToolCount
                         }}
                       >
-                        {{icon "caret-up"}}
+                        {{dIcon "caret-up"}}
                       </span>
                     </div>
                     <span class="ai-agent-editor__tool-context-cost-legend">
                       <span
                         class="ai-agent-editor__tool-context-cost-legend-item --token"
                       >
-                        {{icon "caret-down"}}
+                        {{dIcon "caret-down"}}
                         {{i18n "discourse_ai.ai_agent.token_usage"}}:
                         <span
                           class="ai-agent-editor__tool-context-cost-value
@@ -929,7 +929,7 @@ export default class AgentEditor extends Component {
                       <span
                         class="ai-agent-editor__tool-context-cost-legend-item --count"
                       >
-                        {{icon "caret-up"}}
+                        {{dIcon "caret-up"}}
                         {{i18n "discourse_ai.ai_agent.tool_count"}}:
                         <span
                           class="ai-agent-editor__tool-context-cost-value
@@ -1190,7 +1190,7 @@ export default class AgentEditor extends Component {
                   href={{data.user.path}}
                   data-user-card={{data.user.username}}
                 >
-                  {{Avatar data.user.avatar_template "small"}}
+                  {{dBoundAvatarTemplate data.user.avatar_template "small"}}
                 </a>
                 <LinkTo @route="adminUser" @model={{this.adminUser}}>
                   {{data.user.username}}

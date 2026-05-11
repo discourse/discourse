@@ -7,10 +7,10 @@ import { trustHTML } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function entranceDate(dt, showTime) {
@@ -213,7 +213,7 @@ export default class TopicEntrance extends Component {
       title={{i18n "topic_entrance.jump_top_button_title"}}
       class="btn-default full jump-top"
     >
-      {{icon "backward-step"}}
+      {{dIcon "backward-step"}}
       {{trustHTML this.topDate}}
     </DButton>
 
@@ -227,7 +227,7 @@ export default class TopicEntrance extends Component {
       class="btn-default full jump-bottom"
     >
       {{trustHTML this.bottomDate}}
-      {{icon "forward-step"}}
+      {{dIcon "forward-step"}}
     </DButton>
   </template>
 }

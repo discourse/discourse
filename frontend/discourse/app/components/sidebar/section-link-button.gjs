@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const MORE_MENU = "sidebar-more-section";
 
@@ -37,7 +37,7 @@ export default class SidebarSectionLinkButton extends Component {
         data-list-item-name={{@text}}
       >
         <span class="sidebar-section-link-prefix icon">
-          {{icon @icon}}
+          {{dIcon @icon}}
         </span>
 
         <span class="sidebar-section-link-content-text">

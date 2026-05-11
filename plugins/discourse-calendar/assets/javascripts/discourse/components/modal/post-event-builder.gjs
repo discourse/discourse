@@ -5,14 +5,8 @@ import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DateInput from "discourse/components/date-input";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import RadioButton from "discourse/components/radio-button";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
@@ -20,6 +14,12 @@ import Group from "discourse/models/group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DDateInput from "discourse/ui-kit/d-date-input";
+import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DModal from "discourse/ui-kit/d-modal";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
 import { i18n } from "discourse-i18n";
 import { buildParams } from "../../lib/raw-event-helper";
 import EventField from "../event-field";
@@ -414,7 +414,7 @@ export default class PostEventBuilder extends Component {
       class="post-event-builder-modal"
     >
       <:body>
-        <ConditionalLoadingSection @isLoading={{this.isSaving}}>
+        <DConditionalLoadingSection @isLoading={{this.isSaving}}>
           <form>
             <PluginOutlet
               @name="post-event-builder-form"
@@ -422,7 +422,7 @@ export default class PostEventBuilder extends Component {
               @connectorTagName="div"
             >
               <EventField>
-                <DateTimeInputRange
+                <DDateTimeInputRange
                   @from={{this.startsAt}}
                   @to={{this.endsAt}}
                   @timezone={{@model.event.timezone}}
@@ -557,7 +557,7 @@ export default class PostEventBuilder extends Component {
                 @label="discourse_post_event.builder_modal.status.label"
               >
                 <label class="radio-label">
-                  <RadioButton
+                  <DRadioButton
                     @name="status"
                     @value="public"
                     @selection={{@model.event.status}}
@@ -577,7 +577,7 @@ export default class PostEventBuilder extends Component {
                   </span>
                 </label>
                 <label class="radio-label">
-                  <RadioButton
+                  <DRadioButton
                     @name="status"
                     @value="private"
                     @selection={{@model.event.status}}
@@ -597,7 +597,7 @@ export default class PostEventBuilder extends Component {
                   </span>
                 </label>
                 <label class="radio-label">
-                  <RadioButton
+                  <DRadioButton
                     @name="status"
                     @value="standalone"
                     @selection={{@model.event.status}}
@@ -724,7 +724,7 @@ export default class PostEventBuilder extends Component {
                   @label="discourse_post_event.builder_modal.recurrence_until.label"
                   class="recurrence-until"
                 >
-                  <DateInput
+                  <DDateInput
                     @date={{this.recurrenceUntil}}
                     @onChange={{this.setRecurrenceUntil}}
                     @timezone={{@model.event.timezone}}
@@ -797,7 +797,7 @@ export default class PostEventBuilder extends Component {
               {{/if}}
             </PluginOutlet>
           </form>
-        </ConditionalLoadingSection>
+        </DConditionalLoadingSection>
       </:body>
       <:footer>
         {{#if @model.onUpdate}}

@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import HashtagTypeBase from "discourse/lib/hashtag-types/base";
 import { iconHTML } from "discourse/lib/icon-library";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class ChannelHashtagType extends HashtagTypeBase {
   @service chatChannelsManager;
@@ -33,7 +33,7 @@ export default class ChannelHashtagType extends HashtagTypeBase {
     hashtag.colors ? this.onLoad(hashtag) : this.load(hashtag.id);
 
     if (hashtag.emoji) {
-      return String(replaceEmoji(`:${hashtag.emoji}:`));
+      return String(dReplaceEmoji(`:${hashtag.emoji}:`));
     } else {
       return iconHTML(hashtag.icon, {
         class: `hashtag-color--${this.type}-${hashtag.id}`,

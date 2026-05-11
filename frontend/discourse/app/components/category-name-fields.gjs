@@ -2,8 +2,8 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -18,7 +18,7 @@ export default class CategoryNameFields extends Component {
           {{#unless this.category.isUncategorizedCategory}}
             <section class="field-item">
               <label>{{i18n "category.name"}}</label>
-              <TextField
+              <DTextField
                 @value={{this.category.name}}
                 @placeholderKey="category.name_placeholder"
                 @maxlength="50"
@@ -28,7 +28,7 @@ export default class CategoryNameFields extends Component {
           {{/unless}}
           <section class="field-item">
             <label>{{i18n "category.slug"}}</label>
-            <TextField
+            <DTextField
               @value={{this.category.slug}}
               @placeholderKey="category.slug_placeholder"
               @maxlength="255"

@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
-import avatar from "discourse/helpers/bound-avatar-template";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import VoteCountTrigger from "./vote-count-trigger";
 
@@ -86,7 +86,7 @@ export default class VoteCount extends Component {
         @onShow={{this.loadVoters}}
         @modalForMobile={{true}}
         @placement="right"
-        class={{concatClass
+        class={{dConcatClass
           "voting-wrapper__count"
           (if (eq @topic.vote_count 0) "no-votes")
         }}
@@ -111,7 +111,7 @@ export default class VoteCount extends Component {
                   data-user-card={{voter.username}}
                   title={{voter.username}}
                 >
-                  {{avatar voter.template "small"}}
+                  {{dBoundAvatarTemplate voter.template "small"}}
                 </a>
               {{/each}}
               {{#if this.hasOverflowVoters}}
@@ -128,7 +128,7 @@ export default class VoteCount extends Component {
       </DMenu>
     {{else}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "voting-wrapper__count"
           (if (eq @topic.vote_count 0) "no-votes")
         }}

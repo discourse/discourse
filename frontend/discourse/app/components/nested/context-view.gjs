@@ -6,14 +6,14 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import NestedFloatingActions from "./floating-actions";
 import NestedHeader from "./header";
@@ -174,7 +174,7 @@ export default class NestedContextView extends Component {
       </div>
 
       <div class="nested-context-view__banner">
-        <span class="nested-context-view__banner-icon">{{icon
+        <span class="nested-context-view__banner-icon">{{dIcon
             "nested-thread"
           }}</span>
         <span class="nested-context-view__banner-text">{{i18n

@@ -4,10 +4,10 @@ import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
 import { or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ArgsTable from "../shared/args-table";
 import devToolsState from "../state";
@@ -133,7 +133,7 @@ export default class OutletInfoComponent extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "plugin-outlet-debug"
         (if this.partOfWrapper "--wrapper")
         (if this.isHidden "hidden")
@@ -157,7 +157,7 @@ export default class OutletInfoComponent extends Component {
                 this.displayName
               }}&gt;
             {{else}}
-              {{icon "plug"}}
+              {{dIcon "plug"}}
               {{if this.showName this.displayName}}
             {{/if}}
           </span>
@@ -165,10 +165,10 @@ export default class OutletInfoComponent extends Component {
         <:content>
           <div class="outlet-info__wrapper">
             <div
-              class={{concatClass "outlet-info__heading" this.headingModifier}}
+              class={{dConcatClass "outlet-info__heading" this.headingModifier}}
             >
               <span class="title">
-                {{icon "plug"}}
+                {{dIcon "plug"}}
                 {{this.displayName}}
                 {{#if this.partOfWrapper}}
                   {{i18n "js.dev_tools.plugin_outlet_debug.wrapper"}}
@@ -180,12 +180,12 @@ export default class OutletInfoComponent extends Component {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={{i18n "js.dev_tools.plugin_outlet_debug.find_on_github"}}
-              >{{icon "fab-github"}}</a>
+              >{{dIcon "fab-github"}}</a>
             </div>
             <div class="outlet-info__content">
               {{#if this.isDeprecated}}
                 <div class="outlet-info__deprecation-banner">
-                  {{icon "triangle-exclamation"}}
+                  {{dIcon "triangle-exclamation"}}
                   <span>
                     {{or
                       @deprecated.message
@@ -216,7 +216,7 @@ export default class OutletInfoComponent extends Component {
                         <code>{{alias.name}}</code>
                         {{#if alias.deprecated}}
                           <span class="outlet-info__alias-deprecated">
-                            {{icon "triangle-exclamation"}}
+                            {{dIcon "triangle-exclamation"}}
                             {{i18n
                               "js.dev_tools.plugin_outlet_debug.deprecated"
                             }}
