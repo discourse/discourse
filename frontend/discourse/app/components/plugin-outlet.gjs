@@ -128,10 +128,10 @@ export function normalizeAlias(alias) {
  *
  * Create a template file in the `connectors/<outlet-name>/` directory:
  *
- * `plugins/my-plugin/assets/javascripts/discourse/connectors/evil-trout/hello.hbs`
+ * `plugins/my-plugin/assets/javascripts/discourse/connectors/evil-trout/hello.gjs`
  *
- * ```handlebars
- * <b>Hello World</b>
+ * ```gjs
+ * <template><b>Hello World</b></template>
  * ```
  *
  * This will render `<b>Hello World</b>` in every `<PluginOutlet @name="evil-trout" />`.
@@ -139,52 +139,21 @@ export function normalizeAlias(alias) {
  * For wrapper outlets, use the `__before` and `__after` suffixes in the
  * connector directory name:
  *
- * `plugins/my-plugin/assets/javascripts/discourse/connectors/discovery-list-area__before/my-connector.hbs`
- * `plugins/my-plugin/assets/javascripts/discourse/connectors/discovery-list-area__after/my-connector.hbs`
+ * `plugins/my-plugin/assets/javascripts/discourse/connectors/discovery-list-area__before/my-connector.gjs`
+ * `plugins/my-plugin/assets/javascripts/discourse/connectors/discovery-list-area__after/my-connector.gjs`
  *
  * ## Args
  *
- * @param {string} name - The outlet identifier. Connectors registered under this name
- *   will be rendered here.
- * @param {Object} [outletArgs] - Arguments passed to connectors rendered in this outlet.
- * @param {Object} [deprecatedArgs] - Deprecated args with per-access deprecation warnings.
- *   Use `deprecatedOutletArgument()` helper to create entries.
- * @param {Array<string|Object>} [aliases] - Alternative outlet names that this outlet
- *   also resolves connectors from. Useful for renaming or merging outlets without breaking
- *   existing customizations. Each entry can be:
- *   - A plain string for a non-deprecated alias
- *   - An object with properties described below for deprecated or position-targeted aliases
- * @param {Object} [deprecated] - Marks this outlet itself as deprecated. When set, a
- *   deprecation warning is emitted if any connectors are registered for this outlet.
+ * See {@link PluginOutletSignature} for the full list of accepted args.
  *
- * ## Alias object properties
- *
- * When an alias entry is an object, it supports the following properties:
- *
- * | Property             | Type    | Required | Description |
- * |----------------------|---------|----------|-------------|
- * | `name`               | string  | yes      | The alias outlet name |
- * | `deprecated`         | boolean | no       | Marks this alias as deprecated |
- * | `position`           | string  | no       | Routes alias to a wrapper sub-outlet: `"before"` or `"after"` |
- * | `since`              | string  | no       | Discourse version when deprecation was introduced |
- * | `message`            | string  | no       | Custom deprecation message |
- * | `id`                 | string  | no       | Deprecation ID for silencing (auto-generated if omitted) |
- * | `url`                | string  | no       | URL with more detail about the deprecation |
- * | `raiseError`         | boolean | no       | Whether to throw instead of warn |
- * | `connectorTagName`   | string  | no       | HTML tag for legacy file-based connector wrapper (e.g. `"div"`, `"span"`). Only relevant for position-targeted aliases merging standalone outlets that had `@connectorTagName`. |
- *
- * Note: `since`, `message`, `id`, `url`, and `raiseError` are only valid when
- * `deprecated` is `true`. A DEBUG-only assertion will fire if they are set without it.
- *
- * ## Deprecated hash properties (for `@deprecated` arg)
- *
- * | Property     | Type    | Description |
- * |--------------|---------|-------------|
- * | `since`      | string  | Version when the outlet was deprecated |
- * | `message`    | string  | Custom deprecation message |
- * | `id`         | string  | Deprecation ID (auto-generated: `discourse.plugin-outlet.deprecated.<name>`) |
- * | `url`        | string  | URL for details |
- * | `raiseError` | boolean | Whether to throw instead of warn |
+ * Notes:
+ * - Use `deprecatedOutletArgument()` to build entries for `@deprecatedArgs`.
+ * - For `@aliases`, an entry may be a plain string (non-deprecated alias)
+ *   or a {@link PluginOutletAlias} object. Properties other than `name`,
+ *   `position`, and `deprecated` are only valid when `deprecated` is true —
+ *   a DEBUG-only assertion fires otherwise.
+ * - The `id` on a {@link PluginOutletDeprecated} defaults to
+ *   `discourse.plugin-outlet.deprecated.<name>` if omitted.
  *
  * ## Examples
  *
@@ -212,11 +181,12 @@ export function normalizeAlias(alias) {
  * />
  * ```
  *
- * ### Merging a standalone outlet into a wrapper outlet's after slot
+ * ### Merging a standalone outlet into a wrapper outlet's sub-outlet
  *
  * When a standalone outlet (e.g., `below-topic-list-item`) is being replaced by
- * a wrapper outlet, use `position="after"` to route connectors from the old
- * standalone outlet to the wrapper's `__after` sub-outlet:
+ * a wrapper outlet, use `position="after"` (or `"before"`) to route connectors
+ * from the old standalone outlet to the wrapper's `__after`/`__before`
+ * sub-outlet:
  *
  * ```handlebars
  * <PluginOutlet
@@ -236,7 +206,31 @@ export function normalizeAlias(alias) {
  *
  * Without `position`, alias connectors render in the main outlet (replacing
  * wrapped content). With `position="after"`, they render in the `__after`
- * sub-outlet instead, preserving the wrapped content.
+ * sub-outlet instead, preserving the wrapped content. `position="before"`
+ * works the same way for the `__before` sub-outlet.
+ *
+ * If the original standalone outlet declared a `@connectorTagName` (so that
+ * legacy `.hbs` connectors received an automatic wrapper element), preserve
+ * that behavior on the alias so existing connectors keep their wrapper:
+ *
+ * ```handlebars
+ * <PluginOutlet
+ *   @name="latest-topic-list-item__post-count"
+ *   @aliases={{array
+ *     (hash
+ *       name="above-latest-topic-list-item-post-count"
+ *       position="before"
+ *       connectorTagName="div"
+ *       deprecated=true
+ *       since="2026.3.0"
+ *     )
+ *   }}
+ * />
+ * ```
+ *
+ * `connectorTagName` only applies to legacy file-based connectors registered
+ * under the aliased name. Modern `.gjs` connectors control their own DOM and
+ * ignore it.
  *
  * ### Deprecating an outlet entirely
  *
@@ -245,6 +239,30 @@ export function normalizeAlias(alias) {
  *   @name="doomed-outlet"
  *   @deprecated={{hash since="2026.3.0" message="Use the Block API instead."}}
  * />
+ * ```
+ *
+ * ### Deprecating an individual outlet argument
+ *
+ * Use `@deprecatedArgs` with `deprecatedOutletArgument()` to warn when a
+ * specific arg is read by a connector, while keeping it functional until
+ * connectors are migrated:
+ *
+ * ```gjs
+ * import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+ *
+ * <template>
+ *   <PluginOutlet
+ *     @name="my-outlet"
+ *     @outletArgs={{lazyHash newName=this.newName}}
+ *     @deprecatedArgs={{lazyHash
+ *       oldName=(deprecatedOutletArgument
+ *         value=this.newName
+ *         message="`oldName` is deprecated, use `newName` instead."
+ *         since="2026.3.0"
+ *       )
+ *     }}
+ *   />
+ * </template>
  * ```
  *
  * ## Wrapper outlet alias behavior
@@ -260,6 +278,71 @@ export function normalizeAlias(alias) {
  * a wrapper outlet's before or after slot.
  */
 
+/**
+ * @typedef PluginOutletAlias
+ *
+ * @property {string} name The alias outlet name.
+ * @property {boolean} [deprecated] Marks this alias as deprecated.
+ * @property {"before"|"after"} [position] Routes the alias to a wrapper sub-outlet.
+ * @property {string} [since] Discourse version when the deprecation was introduced.
+ * @property {string} [message] Custom deprecation message.
+ * @property {string} [id] Deprecation ID for silencing (auto-generated if omitted).
+ * @property {string} [url] URL with more detail about the deprecation.
+ * @property {boolean} [raiseError] Whether to throw instead of warn.
+ * @property {string} [connectorTagName] HTML tag for legacy file-based connector
+ *   wrapper (e.g. `"div"`, `"span"`). Only relevant for position-targeted aliases
+ *   merging standalone outlets that had `@connectorTagName`.
+ */
+
+/**
+ * @typedef PluginOutletDeprecated
+ *
+ * @property {string} [since] Version when the outlet was deprecated.
+ * @property {string} [message] Custom deprecation message.
+ * @property {string} [id] Deprecation ID.
+ * @property {string} [url] URL with more detail about the deprecation.
+ * @property {boolean} [raiseError] Whether to throw instead of warn.
+ */
+
+/**
+ * @typedef PluginOutletSignature
+ *
+ * @property {object} Args
+ *
+ * // Identity
+ * @property {string} Args.name The outlet identifier. Connectors registered
+ *   under this name will be rendered here.
+ *
+ * // Args passed to connectors
+ * @property {object} [Args.outletArgs] Arguments passed to connectors rendered
+ *   in this outlet.
+ * @property {object} [Args.deprecatedArgs] Args with per-access deprecation
+ *   warnings. Build entries with `deprecatedOutletArgument()`.
+ * @property {object} [Args.args] Deprecated legacy alias for `outletArgs`.
+ *
+ * // Aliases & deprecation
+ * @property {Array<string|PluginOutletAlias>} [Args.aliases] Alternative outlet
+ *   names that this outlet also resolves connectors from. Useful for renaming
+ *   or merging outlets without breaking existing customizations.
+ * @property {PluginOutletDeprecated} [Args.deprecated] Marks this outlet itself
+ *   as deprecated. When set, a deprecation warning is emitted if any connectors
+ *   are registered for this outlet.
+ *
+ * // Legacy file-based connector rendering
+ * @property {string} [Args.tagName] HTML tag for the wrapper element rendered
+ *   around legacy file-based connectors.
+ * @property {string} [Args.connectorTagName] HTML tag for legacy file-based
+ *   connector wrappers (e.g. `"div"`, `"span"`).
+ * @property {boolean} [Args.defaultGlimmer] When true, file-based connectors
+ *   are rendered as template-only Glimmer components (no `this` context).
+ *
+ * // Optional wrapped content (wrapper outlets)
+ * @property {object} Blocks
+ * @property {[]} Blocks.default Default content rendered when no connector
+ *   replaces it.
+ */
+
+/** @extends {Component<PluginOutletSignature>} */
 export default class PluginOutlet extends Component {
   @service clientErrorHandler;
 

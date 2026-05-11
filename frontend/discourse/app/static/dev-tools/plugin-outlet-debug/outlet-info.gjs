@@ -7,6 +7,7 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ArgsTable from "../shared/args-table";
 import devToolsState from "../state";
@@ -186,8 +187,7 @@ export default class OutletInfoComponent extends Component {
                 <div class="outlet-info__deprecation-banner">
                   {{icon "triangle-exclamation"}}
                   <span>
-                    {{if
-                      @deprecated.message
+                    {{or
                       @deprecated.message
                       (i18n
                         "js.dev_tools.plugin_outlet_debug.deprecated_outlet"
