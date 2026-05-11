@@ -74,15 +74,13 @@ export default class ImageCarousel extends Component {
     // rAF defers until child slide modifiers register, then centers slide 0
     // past the leading wrap slot.
     const initialScroll = requestAnimationFrame(() => {
-      if (!element.isConnected) {
-        return;
+      if (element.isConnected) {
+        this.slides.get(0)?.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+          inline: "center",
+        });
       }
-
-      this.slides.get(0)?.scrollIntoView({
-        behavior: "instant",
-        block: "nearest",
-        inline: "center",
-      });
     });
 
     // threshold: 1 fires exactly when a wrap slot is fully visible — the
