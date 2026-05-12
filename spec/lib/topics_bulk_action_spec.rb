@@ -1157,4 +1157,99 @@ RSpec.describe TopicsBulkAction do
       expect(topic_1.reload.tags).to contain_exactly(tag_1, tag_2)
     end
   end
+
+  describe "#enable_nested_view" do
+    fab!(:admin)
+    fab!(:topic_2, :topic)
+
+    before { SiteSetting.nested_replies_enabled = true }
+
+    it "creates NestedTopic records for selected topics when user is staff" do
+      topic_ids =
+        TopicsBulkAction.new(admin, [topic.id, topic_2.id], type: "enable_nested_view").perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(NestedTopic.where(topic_id: [topic.id, topic_2.id]).count).to eq(2)
+    end
+
+    it "is idempotent when a NestedTopic already exists" do
+      Fabricate(:nested_topic, topic: topic)
+
+      expect {
+        TopicsBulkAction.new(admin, [topic.id], type: "enable_nested_view").perform!
+      }.not_to change { NestedTopic.count }
+    end
+
+    it "skips private messages" do
+      pm = Fabricate(:private_message_topic)
+
+      topic_ids = TopicsBulkAction.new(admin, [pm.id], type: "enable_nested_view").perform!
+
+      expect(topic_ids).to be_empty
+      expect(NestedTopic.where(topic_id: pm.id)).not_to exist
+    end
+
+    it "does nothing when user is not staff" do
+      topic_ids =
+        TopicsBulkAction.new(user, [topic.id, topic_2.id], type: "enable_nested_view").perform!
+
+      expect(topic_ids).to be_empty
+      expect(NestedTopic.where(topic_id: [topic.id, topic_2.id])).not_to exist
+    end
+
+    it "does nothing when nested_replies_enabled is off" do
+      SiteSetting.nested_replies_enabled = false
+
+      topic_ids =
+        TopicsBulkAction.new(admin, [topic.id, topic_2.id], type: "enable_nested_view").perform!
+
+      expect(topic_ids).to be_empty
+      expect(NestedTopic.count).to eq(0)
+    end
+
+    it "does nothing when nested_replies_default is on" do
+      SiteSetting.nested_replies_default = true
+
+      topic_ids =
+        TopicsBulkAction.new(admin, [topic.id, topic_2.id], type: "enable_nested_view").perform!
+
+      expect(topic_ids).to be_empty
+      expect(NestedTopic.count).to eq(0)
+    end
+  end
+
+  describe "#disable_nested_view" do
+    fab!(:admin)
+    fab!(:topic_2, :topic)
+
+    before do
+      SiteSetting.nested_replies_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      Fabricate(:nested_topic, topic: topic_2)
+    end
+
+    it "destroys NestedTopic records for selected topics when user is staff" do
+      topic_ids =
+        TopicsBulkAction.new(admin, [topic.id, topic_2.id], type: "disable_nested_view").perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(NestedTopic.where(topic_id: [topic.id, topic_2.id])).not_to exist
+    end
+
+    it "is a no-op for topics without a NestedTopic record" do
+      topic_3 = Fabricate(:topic)
+
+      topic_ids = TopicsBulkAction.new(admin, [topic_3.id], type: "disable_nested_view").perform!
+
+      expect(topic_ids).to eq([topic_3.id])
+    end
+
+    it "does nothing when user is not staff" do
+      topic_ids =
+        TopicsBulkAction.new(user, [topic.id, topic_2.id], type: "disable_nested_view").perform!
+
+      expect(topic_ids).to be_empty
+      expect(NestedTopic.where(topic_id: [topic.id, topic_2.id]).count).to eq(2)
+    end
+  end
 end
