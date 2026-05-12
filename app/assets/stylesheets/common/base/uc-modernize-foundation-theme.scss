@@ -321,25 +321,11 @@
   --category-boxes-description-text-color: var(--primary-700);
   --d-category-boxes-gap: var(--space-4);
   --d-category-border-box-width: 1px;
-  --d-category-border-accent-width: 0px;
-
-  div.edit-category .edit-category-title-bar {
-    background-color: transparent;
-  }
-
-  .badge-category__wrapper .badge-category {
-    align-items: center;
-  }
+  --d-category-border-accent-width: 3px;
 
   .category-boxes .category-box,
   .category-boxes-with-topics .category-box {
     --category-badge-title-color: var(--primary);
-  }
-
-  .category-boxes .category-box-inner,
-  .category-boxes-with-topics .category-box-inner {
-    border: var(--d-category-border-box-width) solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
   }
 
   // Full Calendar
