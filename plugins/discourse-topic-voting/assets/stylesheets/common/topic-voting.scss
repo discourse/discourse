@@ -127,7 +127,7 @@
     padding: var(--space-1);
 
     .d-header .extra-info-wrapper & {
-      .d-icon {
+      .d-icon:not(.d-icon-vote-up-filled) {
         color: var(--d-header-icon-color);
       }
     }
