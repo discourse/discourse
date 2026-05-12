@@ -49,6 +49,8 @@ module PageObjects
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
           PageObjects::Components::DSelect.new(component.find("select")).value
+        when "radio-group"
+          component.find("input[type='radio']:checked", visible: :all).value
         when "composer", "textarea"
           component.find("textarea").value
         when "image"
