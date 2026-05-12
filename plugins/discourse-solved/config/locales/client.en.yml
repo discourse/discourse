@@ -53,7 +53,7 @@ en:
       confirm_solved_removal_confirm: "Confirm"
       confirm_solved_removal_cancel: "Cancel"
 
-      me_too:
+      shared_issue:
         label:
           one: "Me too (%{count})"
           other: "Me too (%{count})"

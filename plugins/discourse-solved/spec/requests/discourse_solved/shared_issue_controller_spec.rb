@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseSolved::MeTooController do
+RSpec.describe DiscourseSolved::SharedIssueController do
   fab!(:author, :user)
   fab!(:acting_user, :user)
   fab!(:category) do
@@ -17,47 +17,47 @@ RSpec.describe DiscourseSolved::MeTooController do
     DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
   end
 
-  describe "POST /solution/me_too" do
+  describe "POST /solution/shared_issue" do
     it "requires login" do
-      post "/solution/me_too.json", params: { topic_id: topic.id }
+      post "/solution/shared_issue.json", params: { topic_id: topic.id }
       expect(response.status).to eq(403)
     end
 
     context "when logged in" do
       before { sign_in(acting_user) }
 
-      it "creates a me-too record and returns updated counts" do
-        expect { post "/solution/me_too.json", params: { topic_id: topic.id } }.to change {
-          DiscourseSolved::MeToo.count
+      it "creates a shared issue record and returns updated counts" do
+        expect { post "/solution/shared_issue.json", params: { topic_id: topic.id } }.to change {
+          DiscourseSolved::SharedIssue.count
         }.by(1)
         expect(response.status).to eq(200)
         body = response.parsed_body
         expect(body["count"]).to eq(2)
-        expect(body["user_did_me_too"]).to eq(true)
+        expect(body["user_created_shared_issue"]).to eq(true)
       end
 
-      it "toggles the me-too off when called twice" do
-        post "/solution/me_too.json", params: { topic_id: topic.id }
-        expect { post "/solution/me_too.json", params: { topic_id: topic.id } }.to change {
-          DiscourseSolved::MeToo.count
+      it "toggles the shared issue off when called twice" do
+        post "/solution/shared_issue.json", params: { topic_id: topic.id }
+        expect { post "/solution/shared_issue.json", params: { topic_id: topic.id } }.to change {
+          DiscourseSolved::SharedIssue.count
         }.by(-1)
-        expect(response.parsed_body["user_did_me_too"]).to eq(false)
+        expect(response.parsed_body["user_created_shared_issue"]).to eq(false)
       end
 
       it "rejects when the policy fails" do
         SiteSetting.enable_solved_shared_issues = false
-        post "/solution/me_too.json", params: { topic_id: topic.id }
+        post "/solution/shared_issue.json", params: { topic_id: topic.id }
         expect(response.status).to eq(403)
       end
 
       it "rejects when the topic is not in a support category" do
         other_topic = Fabricate(:topic, user: author)
-        post "/solution/me_too.json", params: { topic_id: other_topic.id }
+        post "/solution/shared_issue.json", params: { topic_id: other_topic.id }
         expect(response.status).to eq(403)
       end
 
       it "returns 404 for unknown topic" do
-        post "/solution/me_too.json", params: { topic_id: -1 }
+        post "/solution/shared_issue.json", params: { topic_id: -1 }
         expect(response.status).to eq(404)
       end
     end

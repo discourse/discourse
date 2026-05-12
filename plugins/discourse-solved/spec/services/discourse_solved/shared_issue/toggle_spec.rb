@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseSolved::MeToo::Toggle do
+RSpec.describe DiscourseSolved::SharedIssue::Toggle do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:topic_id) }
   end
@@ -38,11 +38,11 @@ RSpec.describe DiscourseSolved::MeToo::Toggle do
       it { is_expected.to fail_to_find_a_model(:topic) }
     end
 
-    context "when user cannot me-too the topic" do
+    context "when user cannot create a shared issue for the topic" do
       context "when the feature flag is disabled" do
         before { SiteSetting.enable_solved_shared_issues = false }
 
-        it { is_expected.to fail_a_policy(:can_me_too) }
+        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
       end
 
       context "when the topic is already solved" do
@@ -50,26 +50,26 @@ RSpec.describe DiscourseSolved::MeToo::Toggle do
 
         before { Fabricate(:solved_topic, topic:, answer_post:, accepter: author) }
 
-        it { is_expected.to fail_a_policy(:can_me_too) }
+        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
       end
 
       context "when the acting user is the topic author" do
         fab!(:acting_user) { author }
 
-        it { is_expected.to fail_a_policy(:can_me_too) }
+        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
       end
 
       context "when the topic is a private message" do
         fab!(:topic) { Fabricate(:private_message_topic, user: author) }
 
-        it { is_expected.to fail_a_policy(:can_me_too) }
+        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
       end
 
       context "when the topic is not in a support category" do
         fab!(:other_category, :category)
         fab!(:topic) { Fabricate(:topic_with_op, category: other_category, user: author) }
 
-        it { is_expected.to fail_a_policy(:can_me_too) }
+        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
       end
 
       context "when allow_solved_on_all_topics is enabled but the category is not a support category" do
@@ -78,24 +78,24 @@ RSpec.describe DiscourseSolved::MeToo::Toggle do
 
         before { SiteSetting.allow_solved_on_all_topics = true }
 
-        it { is_expected.to fail_a_policy(:can_me_too) }
+        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
       end
 
       context "when the guardian is anonymous" do
         let(:dependencies) { { guardian: Guardian.new } }
 
-        it { is_expected.to fail_a_policy(:can_me_too) }
+        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
       end
     end
 
-    context "when no me-too has been recorded yet" do
+    context "when no shared issue has been recorded yet" do
       let(:messages) { MessageBus.track_publish("/topic/#{topic.id}") { result } }
 
       it { is_expected.to run_successfully }
 
-      it "creates a me-too record" do
+      it "creates a shared issue record" do
         expect { result }.to change {
-          DiscourseSolved::MeToo.where(topic:, user: acting_user).count
+          DiscourseSolved::SharedIssue.where(topic:, user: acting_user).count
         }.by(1)
       end
 
@@ -133,25 +133,25 @@ RSpec.describe DiscourseSolved::MeToo::Toggle do
         end
       end
 
-      it "publishes a me-too message indicating the user did me-too" do
+      it "publishes a shared issue message indicating the user created a shared issue" do
         expect(messages).to include(
           an_object_having_attributes(
-            data: a_hash_including(type: :me_too, count: 2, user_did_me_too: true),
+            data: a_hash_including(type: :shared_issue, count: 2, user_created_shared_issue: true),
           ),
         )
       end
     end
 
-    context "when the user has already recorded a me-too" do
+    context "when the user has already recorded a shared issue" do
       let(:messages) { MessageBus.track_publish("/topic/#{topic.id}") { result } }
 
-      before { Fabricate(:me_too, topic:, user: acting_user) }
+      before { Fabricate(:shared_issue, topic:, user: acting_user) }
 
       it { is_expected.to run_successfully }
 
-      it "removes the me-too record" do
+      it "removes the shared issue record" do
         expect { result }.to change {
-          DiscourseSolved::MeToo.where(topic:, user: acting_user).count
+          DiscourseSolved::SharedIssue.where(topic:, user: acting_user).count
         }.by(-1)
       end
 
@@ -169,10 +169,10 @@ RSpec.describe DiscourseSolved::MeToo::Toggle do
         end
       end
 
-      it "publishes a me-too message indicating the user withdrew their me-too" do
+      it "publishes a shared issue message indicating the user withdrew their shared issue" do
         expect(messages).to include(
           an_object_having_attributes(
-            data: a_hash_including(type: :me_too, count: 1, user_did_me_too: false),
+            data: a_hash_including(type: :shared_issue, count: 1, user_created_shared_issue: false),
           ),
         )
       end

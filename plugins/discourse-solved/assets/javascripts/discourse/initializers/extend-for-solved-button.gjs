@@ -5,7 +5,7 @@ import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import SolvedAcceptAnswerButton from "../components/solved-accept-answer-button";
 import SolvedAcceptedAnswer from "../components/solved-accepted-answer";
-import SolvedMeTooButton from "../components/solved-me-too-button";
+import SolvedSharedIssueButton from "../components/solved-shared-issue-button";
 import SolvedUnacceptAnswerButton from "../components/solved-unaccept-answer-button";
 import setAcceptedSolution from "../lib/set-accepted-solution";
 
@@ -43,9 +43,9 @@ function initializeWithApi(api) {
   api.addTrackedTopicProperties(
     "accepted_answer",
     "has_accepted_answer",
-    "me_too_count",
-    "user_did_me_too",
-    "me_too_visible"
+    "shared_issue_count",
+    "user_created_shared_issue",
+    "shared_issue_visible"
   );
 }
 
@@ -141,14 +141,14 @@ function customizePostMenu(api) {
       static shouldRender(args) {
         return (
           args.post?.post_number === 1 &&
-          args.post?.topic?.me_too_visible &&
+          args.post?.topic?.shared_issue_visible &&
           !args.post?.topic?.accepted_answer
         );
       }
 
       <template>
-        <div class="solved-me-too-row">
-          <SolvedMeTooButton @post={{@post}} />
+        <div class="solved-shared-issue-row">
+          <SolvedSharedIssueButton @post={{@post}} />
         </div>
       </template>
     }
@@ -167,13 +167,16 @@ function handleMessages(api) {
   api.registerCustomPostMessageCallback("accepted_solution", callback);
   api.registerCustomPostMessageCallback("unaccepted_solution", callback);
 
-  api.registerCustomPostMessageCallback("me_too", (controller, message) => {
-    const topic = controller.model;
-    if (!topic) {
-      return;
+  api.registerCustomPostMessageCallback(
+    "shared_issue",
+    (controller, message) => {
+      const topic = controller.model;
+      if (!topic) {
+        return;
+      }
+      topic.set("shared_issue_count", message.count);
     }
-    topic.set("me_too_count", message.count);
-  });
+  );
 }
 
 export default {

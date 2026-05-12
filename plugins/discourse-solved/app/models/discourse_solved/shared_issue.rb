@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseSolved
-  class MeToo < ActiveRecord::Base
+  class SharedIssue < ActiveRecord::Base
     self.table_name = "discourse_solved_shared_issues"
 
     belongs_to :user

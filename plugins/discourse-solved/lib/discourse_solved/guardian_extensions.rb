@@ -52,7 +52,7 @@ module DiscourseSolved
       can_accept_answer?(topic, post) || (is_staff? && topic&.solved.present?)
     end
 
-    def can_me_too?(topic)
+    def can_create_shared_issue?(topic)
       return false if topic.blank? || !authenticated?
       return false if topic.user_id == current_user.id
       return false if topic.private_message? || topic.solved.present?
@@ -61,7 +61,7 @@ module DiscourseSolved
       can_see_topic?(topic)
     end
 
-    def me_too_visible?(topic)
+    def shared_issue_visible?(topic)
       return false if topic.blank?
       return false if topic.private_message? || topic.solved.present?
       return false unless topic_in_support_category?(topic)

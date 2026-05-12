@@ -202,16 +202,20 @@ after_initialize do
 
   add_to_serializer(
     :topic_view,
-    :me_too_count,
-    include_condition: -> { scope.me_too_visible?(object.topic) },
-  ) { DiscourseSolved::MeToo.count_for(object.topic) }
+    :shared_issue_count,
+    include_condition: -> { scope.shared_issue_visible?(object.topic) },
+  ) { DiscourseSolved::SharedIssue.count_for(object.topic) }
   add_to_serializer(
     :topic_view,
-    :user_did_me_too,
-    include_condition: -> { scope.me_too_visible?(object.topic) && scope.user.present? },
-  ) { DiscourseSolved::MeToo.exists?(topic_id: object.topic.id, user_id: scope.user.id) }
-  add_to_serializer(:topic_view, :can_me_too) { scope.can_me_too?(object.topic) }
-  add_to_serializer(:topic_view, :me_too_visible) { scope.me_too_visible?(object.topic) }
+    :user_created_shared_issue,
+    include_condition: -> { scope.shared_issue_visible?(object.topic) && scope.user.present? },
+  ) { DiscourseSolved::SharedIssue.exists?(topic_id: object.topic.id, user_id: scope.user.id) }
+  add_to_serializer(:topic_view, :can_create_shared_issue) do
+    scope.can_create_shared_issue?(object.topic)
+  end
+  add_to_serializer(:topic_view, :shared_issue_visible) do
+    scope.shared_issue_visible?(object.topic)
+  end
 
   on(:post_destroyed) do |post|
     DiscourseSolved::UnacceptAnswer.call(

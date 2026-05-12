@@ -2,8 +2,8 @@
 
 module PageObjects
   module Components
-    class PostMeTooButton < PageObjects::Components::Base
-      SELECTOR = ".post-action-menu__solved-me-too"
+    class PostSharedIssueButton < PageObjects::Components::Base
+      SELECTOR = ".post-action-menu__solved-shared-issue"
 
       def initialize(post)
         @post = post
@@ -14,16 +14,16 @@ module PageObjects
         self
       end
 
-      def has_me_too_button?
+      def has_shared_issue_button?
         within_post { has_css?(SELECTOR) }
       end
 
-      def has_no_me_too_button?
+      def has_no_shared_issue_button?
         within_post { has_no_css?(SELECTOR) }
       end
 
       def has_active?
-        within_post { has_css?("#{SELECTOR}.has-me-too") }
+        within_post { has_css?("#{SELECTOR}.has-shared-issue") }
       end
 
       def has_read_only?

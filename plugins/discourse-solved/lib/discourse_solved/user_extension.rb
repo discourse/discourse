@@ -5,7 +5,7 @@ module DiscourseSolved::UserExtension
 
   prepended do
     has_many :discourse_solved_shared_issues,
-             class_name: "DiscourseSolved::MeToo",
+             class_name: "DiscourseSolved::SharedIssue",
              dependent: :delete_all
   end
 end

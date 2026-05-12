@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Solved | Me too button" do
+describe "Solved | Shared issue button" do
   fab!(:author, :user)
   fab!(:member, :user)
   fab!(:support_category) do
@@ -18,7 +18,7 @@ describe "Solved | Me too button" do
   fab!(:op) { topic.first_post }
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
-  let(:me_too_button) { PageObjects::Components::PostMeTooButton.new(op) }
+  let(:shared_issue_button) { PageObjects::Components::PostSharedIssueButton.new(op) }
 
   before do
     SiteSetting.solved_enabled = true
@@ -26,24 +26,24 @@ describe "Solved | Me too button" do
     DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
   end
 
-  it "lets a member toggle me too on and off" do
+  it "lets a member toggle the shared issue on and off" do
     sign_in(member)
     topic_page.visit_topic(topic)
 
-    expect(me_too_button).to have_me_too_button
-    expect(me_too_button).to have_count(1)
+    expect(shared_issue_button).to have_shared_issue_button
+    expect(shared_issue_button).to have_count(1)
 
-    me_too_button.click
-    expect(me_too_button).to have_count(2)
-    expect(me_too_button).to have_active
+    shared_issue_button.click
+    expect(shared_issue_button).to have_count(2)
+    expect(shared_issue_button).to have_active
 
     expect(TopicUser.get(topic, member).notification_level).to eq(
       TopicUser.notification_levels[:tracking],
     )
 
-    me_too_button.click
-    expect(me_too_button).to have_count(1)
-    expect(me_too_button).to have_no_css(".has-me-too")
+    shared_issue_button.click
+    expect(shared_issue_button).to have_count(1)
+    expect(shared_issue_button).to have_no_css(".has-shared-issue")
   end
 
   it "hides the button once the topic is solved" do
@@ -53,7 +53,7 @@ describe "Solved | Me too button" do
     sign_in(member)
     topic_page.visit_topic(topic)
 
-    expect(me_too_button).to have_no_me_too_button
+    expect(shared_issue_button).to have_no_shared_issue_button
   end
 
   it "hides the button when the upcoming change is disabled" do
@@ -62,14 +62,14 @@ describe "Solved | Me too button" do
     sign_in(member)
     topic_page.visit_topic(topic)
 
-    expect(me_too_button).to have_no_me_too_button
+    expect(shared_issue_button).to have_no_shared_issue_button
   end
 
   it "prompts anonymous visitors to log in" do
     topic_page.visit_topic(topic)
 
-    expect(me_too_button).to have_me_too_button
-    me_too_button.click
+    expect(shared_issue_button).to have_shared_issue_button
+    shared_issue_button.click
 
     expect(page).to have_current_path(%r{/login})
   end
@@ -80,15 +80,15 @@ describe "Solved | Me too button" do
     sign_in(member)
     topic_page.visit_topic(other_topic)
 
-    expect(me_too_button).to have_no_me_too_button
+    expect(shared_issue_button).to have_no_shared_issue_button
   end
 
   it "shows the button as read-only for the topic author" do
     sign_in(author)
     topic_page.visit_topic(topic)
 
-    expect(me_too_button).to have_me_too_button
-    expect(me_too_button).to have_read_only
-    expect(me_too_button).to have_count(1)
+    expect(shared_issue_button).to have_shared_issue_button
+    expect(shared_issue_button).to have_read_only
+    expect(shared_issue_button).to have_count(1)
   end
 end

@@ -4,7 +4,7 @@ DiscourseSolved::Engine.routes.draw do
   post "/accept" => "answer#accept"
   post "/unaccept" => "answer#unaccept"
 
-  post "/me_too" => "me_too#create"
+  post "/shared_issue" => "shared_issue#create"
 
   get "/by_user" => "solved_topics#by_user"
 end

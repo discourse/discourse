@@ -8,18 +8,18 @@ import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
-export default class SolvedMeTooButton extends Component {
+export default class SolvedSharedIssueButton extends Component {
   @service currentUser;
   @service router;
 
   @tracked saving = false;
 
   get count() {
-    return this.args.post.topic.me_too_count ?? 1;
+    return this.args.post.topic.shared_issue_count ?? 1;
   }
 
-  get hasMeToo() {
-    return this.args.post.topic.user_did_me_too;
+  get hasSharedIssue() {
+    return this.args.post.topic.user_created_shared_issue;
   }
 
   get isTopicAuthor() {
@@ -31,7 +31,7 @@ export default class SolvedMeTooButton extends Component {
   }
 
   get label() {
-    return i18n("solved.me_too.label", { count: this.count });
+    return i18n("solved.shared_issue.label", { count: this.count });
   }
 
   @action
@@ -49,13 +49,13 @@ export default class SolvedMeTooButton extends Component {
     this.saving = true;
 
     try {
-      const result = await ajax("/solution/me_too", {
+      const result = await ajax("/solution/shared_issue", {
         type: "POST",
         data: { topic_id: topic.id },
       });
 
-      topic.set("me_too_count", result.count);
-      topic.set("user_did_me_too", result.user_did_me_too);
+      topic.set("shared_issue_count", result.count);
+      topic.set("user_created_shared_issue", result.user_created_shared_issue);
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -67,8 +67,8 @@ export default class SolvedMeTooButton extends Component {
     <DButton
       class={{dConcatClass
         "btn-default"
-        "post-action-menu__solved-me-too"
-        (if this.hasMeToo "has-me-too")
+        "post-action-menu__solved-shared-issue"
+        (if this.hasSharedIssue "has-shared-issue")
         (if this.isTopicAuthor "disabled")
       }}
       ...attributes
@@ -78,8 +78,8 @@ export default class SolvedMeTooButton extends Component {
       @translatedLabel={{this.label}}
       @title={{if
         this.isTopicAuthor
-        "solved.me_too.author_title"
-        "solved.me_too.title"
+        "solved.shared_issue.author_title"
+        "solved.shared_issue.title"
       }}
     />
   </template>

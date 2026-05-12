@@ -241,14 +241,14 @@ $solved-color: var(--success);
   }
 }
 
-.solved-me-too-row {
+.solved-shared-issue-row {
   display: flex;
   justify-content: flex-end;
   margin-top: 1.5em;
 }
 
-.solved-me-too-row .post-action-menu__solved-me-too {
-  &.has-me-too {
+.solved-shared-issue-row .post-action-menu__solved-shared-issue {
+  &.has-shared-issue {
     --d-button-default-icon-color: var(--tertiary);
   }
 }
