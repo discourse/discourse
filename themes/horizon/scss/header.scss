@@ -4,6 +4,13 @@
   box-shadow: none;
 }
 
+.d-header-wrap {
+  .has-sidebar-page & {
+    width: calc(100vw - var(--d-sidebar-width));
+    margin-left: auto;
+  }
+}
+
 #site-logo {
   height: inherit;
 }

@@ -6,11 +6,22 @@
   --d-logo-height: 2.667em;
 }
 
+.admin-area .sidebar-wrapper .admin-panel {
+  --d-sidebar-highlight-background: var(--d-selected);
+  --d-sidebar-link-icon-color: var(--d-sidebar-link-color);
+}
+
+.sidebar-footer-wrapper {
+  @include viewport.until(sm) {
+    --d-sidebar-footer-fade: var(--secondary);
+    --d-sidebar-background: var(--secondary);
+  }
+}
+
 .sidebar-wrapper {
   margin-top: calc(var(--header-offset) * -1);
   top: 0;
   height: 100vh;
-  z-index: z("header") + 1;
 }
 
 .sidebar-home-logo {
@@ -131,11 +142,6 @@ body.has-full-page-chat .sidebar-wrapper,
       z-index: z("modal", "overlay");
     }
   }
-}
-
-.admin-area .sidebar-wrapper .admin-panel {
-  --d-sidebar-highlight-background: var(--d-selected);
-  --d-sidebar-link-icon-color: var(--d-sidebar-link-color);
 }
 
 .sidebar-theme-toggle__wrapper {

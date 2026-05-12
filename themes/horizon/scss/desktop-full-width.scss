@@ -117,7 +117,7 @@ $sidebar-width: 17em;
         // we want the panel to be the same width as the sidebar
         // this way we can get more accurate centering
         grid-template-columns:
-          calc(var(--d-sidebar-width) - 11px) // 11px is wrap padding
+          auto
           1fr
           minmax(0, calc(var(--d-max-width)))
           1fr
@@ -129,7 +129,7 @@ $sidebar-width: 17em;
         // which allows the title to take up the remaining width
         @media screen and (width <= 1400px) {
           grid-template-columns:
-            calc(var(--d-sidebar-width) - 11px)
+            auto
             1fr
             minmax(0, calc(var(--d-max-width)))
             1fr
