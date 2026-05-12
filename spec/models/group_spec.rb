@@ -296,7 +296,7 @@ RSpec.describe Group do
       ).to contain_exactly(10, 11, 12, 13)
     end
 
-    it "excludes the undefined groups between staff and TL0" do
+    it "excludes the undefined and pseudo groups between staff and TL0" do
       expect(described_class.auto_groups_between(:admins, :trust_level_0)).to contain_exactly(
         1,
         2,
