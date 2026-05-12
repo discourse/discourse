@@ -48,7 +48,7 @@
     {
       "label": "dev/server",
       "type": "shell",
-      "command": "bin/ember-cli -u",
+      "command": "bin/dev",
       "options": {
         "env":{
           "DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE": "1"
