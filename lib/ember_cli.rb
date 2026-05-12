@@ -194,10 +194,9 @@ class EmberCli < ActiveSupport::CurrentAttributes
     FileUtils.mkdir_p("#{dist_dir}/manifest")
     Listen
       .to("#{dist_dir}/manifest") do |modified, added, removed|
-        # if [*modified, *added, *removed].any? { |path| path.end_with?("manifest.json") }
-        puts "refreshing"
+        next if modified.size == 0 && added.size == 0
+        next if read_build_status["status"] == "building"
         MessageBus.publish("/file-change", ["refresh"])
-        # end
       end
       .start
   end
