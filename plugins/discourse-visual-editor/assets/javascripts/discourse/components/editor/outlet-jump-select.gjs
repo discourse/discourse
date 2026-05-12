@@ -34,10 +34,17 @@ export default class OutletJumpSelect extends Component {
   @action
   async refresh() {
     const walked = await walkAllOutlets({ blocksService: this.blocks });
-    const mounted = new Set(walked.map((g) => g.outletName));
+    // walkAllOutlets already filters to outlets mounted on the current
+    // page; we further filter to outlets that have at least one block
+    // (a zero-block outlet shows only its boundary badge, and jumping
+    // to it lands the user on an empty strip that reads as a no-op).
+    // Empty outlets are reachable through the outline tab instead.
+    const populated = new Set(
+      walked.filter((g) => g.rows.length > 0).map((g) => g.outletName)
+    );
     const all = this.blocks.listOutletsWithMetadata();
     this._options = all
-      .filter((entry) => mounted.has(entry.name))
+      .filter((entry) => populated.has(entry.name))
       .sort((a, b) => a.displayName.localeCompare(b.displayName));
   }
 

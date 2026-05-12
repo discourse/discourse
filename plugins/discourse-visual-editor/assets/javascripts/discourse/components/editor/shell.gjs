@@ -4,13 +4,15 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import BlockBreadcrumb from "./block-breadcrumb";
+import ConditionsFloatingPanel from "./conditions-floating-panel";
 import InspectorPanel from "./inspector-panel";
 import OutletJumpSelect from "./outlet-jump-select";
-import OutletsPanel from "./outlets-panel";
 import OutlinePanel from "./outline-panel";
 import PalettePanel from "./palette-panel";
 import SimulationControls from "./simulation-controls";
@@ -37,12 +39,67 @@ export default class EditorShell extends Component {
   @tracked saveErrorMessage = null;
   @tracked warningsPanelOpen = false;
   @tracked leftPanelTab = "palette";
+  @tracked leftCollapsed = readBoolStorage("ve.leftCollapsed");
+  @tracked rightCollapsed = readBoolStorage("ve.rightCollapsed");
 
   isLeftPanelTabActive = (tab) => this.leftPanelTab === tab;
 
   @action
   setLeftPanelTab(tab) {
     this.leftPanelTab = tab;
+  }
+
+  @action
+  toggleLeftCollapsed() {
+    this.leftCollapsed = !this.leftCollapsed;
+    writeBoolStorage("ve.leftCollapsed", this.leftCollapsed);
+    this._syncBodyClasses();
+  }
+
+  @action
+  toggleRightCollapsed() {
+    this.rightCollapsed = !this.rightCollapsed;
+    writeBoolStorage("ve.rightCollapsed", this.rightCollapsed);
+    this._syncBodyClasses();
+  }
+
+  /**
+   * Mirrors the collapsed-rail state onto `body` so the underlying
+   * page's `padding-left` / `padding-right` (set by
+   * `body.visual-editor-active`) can shrink to match. Driven by
+   * `body.visual-editor-active.--left-collapsed` / `.--right-collapsed`
+   * CSS rules.
+   */
+  @action
+  setupBodyClasses() {
+    this._syncBodyClasses();
+  }
+
+  _syncBodyClasses() {
+    document.body.classList.toggle(
+      "visual-editor-active--left-collapsed",
+      this.leftCollapsed
+    );
+    document.body.classList.toggle(
+      "visual-editor-active--right-collapsed",
+      this.rightCollapsed
+    );
+  }
+
+  /**
+   * CSS classes for the shell that drive the canvas grid template
+   * (`--left-collapsed` / `--right-collapsed` from
+   * `visual-editor.scss` adjust `grid-template-columns`).
+   */
+  get shellClasses() {
+    const classes = ["visual-editor-shell"];
+    if (this.leftCollapsed) {
+      classes.push("--left-collapsed");
+    }
+    if (this.rightCollapsed) {
+      classes.push("--right-collapsed");
+    }
+    return classes.join(" ");
   }
 
   @action
@@ -140,7 +197,7 @@ export default class EditorShell extends Component {
 
   <template>
     {{#if this.visualEditor.isActive}}
-      <div class="visual-editor-shell">
+      <div class={{this.shellClasses}} {{didInsert this.setupBodyClasses}}>
         <div class="visual-editor-toolbar">
           <div class="toolbar-left">
             {{dIcon "wand-magic-sparkles"}}
@@ -247,61 +304,147 @@ export default class EditorShell extends Component {
           </div>
         {{/if}}
 
-        <div class="visual-editor-panel --left">
+        <div
+          class={{dConcatClass
+            "visual-editor-panel"
+            "--left"
+            (if this.leftCollapsed "--collapsed")
+          }}
+        >
           <div class="panel-header panel-header--tabs">
+            {{#unless this.leftCollapsed}}
+              <button
+                type="button"
+                class={{dConcatClass
+                  "panel-tab"
+                  (if (this.isLeftPanelTabActive "palette") "--active")
+                }}
+                {{on "click" (fn this.setLeftPanelTab "palette")}}
+              >
+                {{i18n "visual_editor.chrome.tab_palette"}}
+              </button>
+              <button
+                type="button"
+                class={{dConcatClass
+                  "panel-tab"
+                  (if (this.isLeftPanelTabActive "outline") "--active")
+                }}
+                {{on "click" (fn this.setLeftPanelTab "outline")}}
+              >
+                {{i18n "visual_editor.chrome.tab_outline"}}
+              </button>
+            {{/unless}}
             <button
               type="button"
-              class={{dConcatClass
-                "panel-tab"
-                (if (this.isLeftPanelTabActive "palette") "--active")
+              class="panel-collapse-toggle"
+              title={{i18n
+                (if
+                  this.leftCollapsed
+                  "visual_editor.chrome.expand_panel"
+                  "visual_editor.chrome.collapse_panel"
+                )
               }}
-              {{on "click" (fn this.setLeftPanelTab "palette")}}
-            >
-              {{i18n "visual_editor.chrome.tab_palette"}}
-            </button>
-            <button
-              type="button"
-              class={{dConcatClass
-                "panel-tab"
-                (if (this.isLeftPanelTabActive "outline") "--active")
+              aria-label={{i18n
+                (if
+                  this.leftCollapsed
+                  "visual_editor.chrome.expand_panel"
+                  "visual_editor.chrome.collapse_panel"
+                )
               }}
-              {{on "click" (fn this.setLeftPanelTab "outline")}}
+              {{on "click" this.toggleLeftCollapsed}}
             >
-              {{i18n "visual_editor.chrome.tab_outline"}}
-            </button>
-            <button
-              type="button"
-              class={{dConcatClass
-                "panel-tab"
-                (if (this.isLeftPanelTabActive "outlets") "--active")
-              }}
-              {{on "click" (fn this.setLeftPanelTab "outlets")}}
-            >
-              {{i18n "visual_editor.chrome.tab_outlets"}}
+              {{dIcon (if this.leftCollapsed "chevron-right" "chevron-left")}}
             </button>
           </div>
-          <div class="panel-body">
-            {{#if (this.isLeftPanelTabActive "palette")}}
-              <PalettePanel />
-            {{else if (this.isLeftPanelTabActive "outline")}}
-              <OutlinePanel />
-            {{else}}
-              <OutletsPanel />
-            {{/if}}
-          </div>
+          {{#unless this.leftCollapsed}}
+            <div class="panel-body">
+              {{#if (this.isLeftPanelTabActive "palette")}}
+                <PalettePanel />
+              {{else}}
+                <OutlinePanel />
+              {{/if}}
+            </div>
+          {{/unless}}
         </div>
 
-        <div class="visual-editor-canvas"></div>
+        <div class="visual-editor-canvas">
+          <BlockBreadcrumb />
+        </div>
 
-        <div class="visual-editor-panel --right">
-          <div class="panel-header">{{i18n
-              "visual_editor.chrome.panel_inspector"
-            }}</div>
-          <div class="panel-body">
-            <InspectorPanel />
+        <div
+          class={{dConcatClass
+            "visual-editor-panel"
+            "--right"
+            (if this.rightCollapsed "--collapsed")
+          }}
+        >
+          <div class="panel-header">
+            <button
+              type="button"
+              class="panel-collapse-toggle"
+              title={{i18n
+                (if
+                  this.rightCollapsed
+                  "visual_editor.chrome.expand_panel"
+                  "visual_editor.chrome.collapse_panel"
+                )
+              }}
+              aria-label={{i18n
+                (if
+                  this.rightCollapsed
+                  "visual_editor.chrome.expand_panel"
+                  "visual_editor.chrome.collapse_panel"
+                )
+              }}
+              {{on "click" this.toggleRightCollapsed}}
+            >
+              {{dIcon (if this.rightCollapsed "chevron-left" "chevron-right")}}
+            </button>
+            {{#unless this.rightCollapsed}}
+              <span>{{i18n "visual_editor.chrome.panel_inspector"}}</span>
+            {{/unless}}
           </div>
+          {{#unless this.rightCollapsed}}
+            <div class="panel-body">
+              <InspectorPanel />
+            </div>
+          {{/unless}}
         </div>
       </div>
+
+      <ConditionsFloatingPanel />
     {{/if}}
   </template>
+}
+
+/**
+ * Reads a boolean preference from `localStorage`. Swallows access
+ * exceptions (private browsing, strict cookie settings) and returns
+ * `false`, so the editor degrades to "expanded" when storage isn't
+ * usable.
+ *
+ * @param {string} key
+ * @returns {boolean}
+ */
+function readBoolStorage(key) {
+  try {
+    return localStorage.getItem(key) === "true";
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Persists a boolean preference. Same swallow-and-no-op fallback as
+ * the reader.
+ *
+ * @param {string} key
+ * @param {boolean} value
+ */
+function writeBoolStorage(key, value) {
+  try {
+    localStorage.setItem(key, value ? "true" : "false");
+  } catch {
+    /* no-op */
+  }
 }

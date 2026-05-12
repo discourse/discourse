@@ -5,13 +5,17 @@ import { block } from "discourse/blocks";
 
 const VALID_COUNTS = [2, 3, 4];
 
+// Deprecated as of Phase 7p.7. Use `ve:layout` with `mode: "grid"`
+// instead. Kept registered (and `paletteHidden`) so existing saved
+// layouts continue to resolve. Will be removed in a later release.
 @block("ve:columns", {
   container: true,
-  displayName: "Columns",
+  displayName: "Columns (deprecated — use Layout)",
   icon: "table-columns",
   category: "Layout",
   description:
-    "A CSS Grid container. Drop blocks inside to populate the columns.",
+    "Deprecated alias for Layout (mode=grid). Use the Layout block instead.",
+  paletteHidden: true,
   args: {
     count: {
       type: "number",

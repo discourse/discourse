@@ -1,22 +1,29 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ConditionBuilder from "./condition-builder";
+import ConditionsTree from "./conditions-tree";
 import InspectorForm from "./inspector-form";
+import InspectorRawJson from "./inspector-raw-json";
 
 /**
- * Inspector for the selected block.
- *
- * Phase 2 surface: shows block name, namespace, container/leaf, description,
- * an editable args form (driven by FormKit and `schemaToFields`), and a
- * read-only conditions JSON for now. The conditions builder ships in Phase 6.
+ * Inspector for the selected block. Phase 7p.5 reshape: replaces the
+ * stacked-sections layout with a tab strip (Args / Conditions / Raw
+ * JSON). Metadata moves to a small `ⓘ` button next to the block name,
+ * surfacing via a tooltip — it's reference info, not edit info, and
+ * doesn't deserve its own pane.
  */
 export default class InspectorPanel extends Component {
   @service visualEditor;
+
+  isTabActive = (tab) => this._activeTab === tab;
+  @tracked _activeTab = "args";
 
   get hasSelection() {
     return this.visualEditor.selectedBlockData != null;
@@ -57,11 +64,44 @@ export default class InspectorPanel extends Component {
     return this.visualEditor.selectedBlockFailure;
   }
 
+  /**
+   * Combined block-info string shown in the metadata tooltip. Keeps
+   * three-line trivia (namespace, description, container flag) out of
+   * the main pane.
+   */
+  get metadataTooltip() {
+    const parts = [];
+    if (this.metadata?.namespace) {
+      parts.push(
+        `${i18n("visual_editor.inspector.label_namespace")}: ${this.metadata.namespace}`
+      );
+    }
+    if (this.metadata?.description) {
+      parts.push(this.metadata.description);
+    }
+    parts.push(
+      `${i18n("visual_editor.inspector.label_is_container")}: ${
+        this.metadata?.isContainer ? "yes" : "no"
+      }`
+    );
+    return parts.join("\n");
+  }
+
+  @action
+  setTab(tab) {
+    this._activeTab = tab;
+  }
+
   @action
   removeSelectedBlock() {
     if (this.data?.key) {
       this.visualEditor.removeBlock(this.data.key);
     }
+  }
+
+  @action
+  toggleDetachConditions() {
+    this.visualEditor.toggleConditionsDetached();
   }
 
   <template>
@@ -92,58 +132,92 @@ export default class InspectorPanel extends Component {
         </div>
       {{/if}}
 
-      <div class="visual-editor-inspector-section">
-        <div class="inspector-section__title">
-          {{i18n "visual_editor.inspector.section_metadata"}}
-        </div>
-        <div class="inspector-row">
-          <span class="row-key">{{i18n
-              "visual_editor.inspector.label_block_name"
-            }}</span>
-          <span>{{this.data.name}}</span>
-        </div>
-        {{#if this.metadata.namespace}}
-          <div class="inspector-row">
-            <span class="row-key">{{i18n
-                "visual_editor.inspector.label_namespace"
-              }}</span>
-            <span>{{this.metadata.namespace}}</span>
-          </div>
-        {{/if}}
-        {{#if this.metadata.description}}
-          <div class="inspector-row">
-            <span class="row-key">{{i18n
-                "visual_editor.inspector.label_description"
-              }}</span>
-            <span>{{this.metadata.description}}</span>
-          </div>
-        {{/if}}
-        <div class="inspector-row">
-          <span class="row-key">{{i18n
-              "visual_editor.inspector.label_is_container"
-            }}</span>
-          <span>{{if this.metadata.isContainer "yes" "no"}}</span>
-        </div>
+      <div class="visual-editor-inspector__header">
+        <span class="visual-editor-inspector__block-name">
+          {{this.data.name}}
+        </span>
+        <span
+          class="visual-editor-inspector__metadata-info"
+          title={{this.metadataTooltip}}
+          aria-label={{this.metadataTooltip}}
+        >
+          {{dIcon "circle-info"}}
+        </span>
       </div>
 
-      <div class="visual-editor-inspector-section">
-        <div class="inspector-section__title">
-          {{i18n "visual_editor.inspector.section_args"}}
-        </div>
-        {{#if this.hasArgsSchema}}
-          <InspectorForm />
+      <div class="visual-editor-inspector__tabs" role="tablist">
+        <button
+          type="button"
+          class={{dConcatClass
+            "visual-editor-inspector__tab"
+            (if (this.isTabActive "args") "--active")
+          }}
+          {{on "click" (fn this.setTab "args")}}
+        >
+          {{i18n "visual_editor.inspector.tab_args"}}
+        </button>
+        <button
+          type="button"
+          class={{dConcatClass
+            "visual-editor-inspector__tab"
+            (if (this.isTabActive "conditions") "--active")
+          }}
+          {{on "click" (fn this.setTab "conditions")}}
+        >
+          {{i18n "visual_editor.inspector.tab_conditions"}}
+        </button>
+        <button
+          type="button"
+          class={{dConcatClass
+            "visual-editor-inspector__tab"
+            (if (this.isTabActive "raw") "--active")
+          }}
+          {{on "click" (fn this.setTab "raw")}}
+        >
+          {{i18n "visual_editor.inspector.tab_raw"}}
+        </button>
+      </div>
+
+      <div class="visual-editor-inspector__body">
+        {{#if (this.isTabActive "args")}}
+          {{#if this.hasArgsSchema}}
+            <InspectorForm />
+          {{else}}
+            <div class="panel-empty">
+              {{i18n "visual_editor.inspector.label_no_args"}}
+            </div>
+          {{/if}}
+        {{else if (this.isTabActive "conditions")}}
+          <div class="visual-editor-inspector__conditions-header">
+            <button
+              type="button"
+              class="visual-editor-inspector__detach-btn"
+              title={{i18n "visual_editor.inspector.conditions.detach_panel"}}
+              {{on "click" this.toggleDetachConditions}}
+            >
+              {{#if this.visualEditor.conditionsDetached}}
+                {{dIcon "down-left-and-up-right-to-center"}}
+                <span>{{i18n
+                    "visual_editor.inspector.conditions.redock_panel"
+                  }}</span>
+              {{else}}
+                {{dIcon "up-right-and-down-left-from-center"}}
+                <span>{{i18n
+                    "visual_editor.inspector.conditions.detach_panel"
+                  }}</span>
+              {{/if}}
+            </button>
+          </div>
+          {{#if this.visualEditor.conditionsDetached}}
+            <p class="visual-editor-inspector__conditions-stub">
+              {{i18n "visual_editor.inspector.conditions.detached_stub"}}
+            </p>
+          {{else}}
+            <ConditionsTree />
+          {{/if}}
         {{else}}
-          <div class="panel-empty">{{i18n
-              "visual_editor.inspector.label_no_args"
-            }}</div>
+          <InspectorRawJson />
         {{/if}}
-      </div>
-
-      <div class="visual-editor-inspector-section">
-        <div class="inspector-section__title">
-          {{i18n "visual_editor.inspector.section_conditions"}}
-        </div>
-        <ConditionBuilder />
       </div>
     {{else}}
       <div class="panel-empty">{{i18n "visual_editor.inspector.empty"}}</div>

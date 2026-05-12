@@ -207,6 +207,11 @@ function installBlockChrome() {
           blockArgs: blockData.args,
           containerArgs: blockData.containerArgs,
           conditions: blockData.conditions,
+          // Surfaces the live child count so container chrome can render a
+          // visible "Drag a block here" hint when the container is empty —
+          // otherwise empty containers collapse to zero height and authors
+          // can't see (or aim at) the inside-drop target.
+          childCount: blockData.children?.length ?? 0,
           outletArgs: context?.outletArgs,
           // `context.outletName` is the displayHierarchy (a path like
           // `"homepage-blocks/section-1(#hero)"`) — useful for showing

@@ -1,0 +1,196 @@
+// @ts-check
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
+import { iconForConditionType } from "../../lib/condition-icons";
+import { summarizeLeaf } from "../../lib/condition-summary";
+import OutletArgConditionEditor from "./condition-editors/outlet-arg-condition-editor";
+import RouteConditionEditor from "./condition-editors/route-condition-editor";
+import SettingConditionEditor from "./condition-editors/setting-condition-editor";
+import UserConditionEditor from "./condition-editors/user-condition-editor";
+import ViewportConditionEditor from "./condition-editors/viewport-condition-editor";
+import ConditionLeafArgs from "./condition-leaf-args";
+
+/**
+ * One leaf row in the conditions tree. Renders a compact summary line
+ * that expands in-place to reveal the per-type editor — no popover,
+ * so the body grows the column rather than fighting z-index. The row
+ * is a self-toggling disclosure: clicking the header (icon / label /
+ * summary / chevron) flips `_expanded` and reveals the inline editor.
+ *
+ * Args:
+ *  - `@node` — the leaf condition (`{type, ...args}`).
+ *  - `@typeMeta` — registry entry for the leaf's type. When unknown,
+ *     the parent passes a stub.
+ *  - `@conditionTypes` — registry list, used by the type-switch
+ *     dropdown inside the editor body.
+ *  - `@onUpdate(nextLeaf)` — bubble an arg edit up. The parent
+ *     converts this into a tree-level write.
+ *  - `@onChangeType(typeId)` — switch the leaf's type. Resets the
+ *     args because they're type-specific.
+ *  - `@onRemove()` — delete this leaf from its containing group.
+ *  - `@startExpanded` — when true, the row mounts in the expanded
+ *     state. The parent sets this for freshly-added rules so the
+ *     author immediately sees the editor.
+ */
+export default class ConditionRule extends Component {
+  isTypeSelected = (typeId) => this.args.node?.type === typeId;
+  @tracked _expanded;
+
+  constructor() {
+    super(...arguments);
+    this._expanded = this.args.startExpanded ?? false;
+  }
+
+  get icon() {
+    return iconForConditionType(this.args.node?.type);
+  }
+
+  get summary() {
+    return summarizeLeaf(this.args.node);
+  }
+
+  /**
+   * Picks the bespoke editor component for the leaf's type. All five
+   * built-in types have a dedicated editor; anything else falls back
+   * to the generic `<ConditionLeafArgs>` so unregistered conditions
+   * still get *some* editing surface.
+   *
+   * @returns {*}
+   */
+  get editorComponent() {
+    switch (this.args.node?.type) {
+      case "user":
+        return UserConditionEditor;
+      case "viewport":
+        return ViewportConditionEditor;
+      case "route":
+        return RouteConditionEditor;
+      case "setting":
+        return SettingConditionEditor;
+      case "outlet-arg":
+        return OutletArgConditionEditor;
+      default:
+        return null;
+    }
+  }
+
+  @action
+  toggleExpanded(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this._expanded = !this._expanded;
+  }
+
+  @action
+  onArgChange(name, value) {
+    const next = { ...this.args.node, [name]: value };
+    if (value === undefined) {
+      delete next[name];
+    }
+    this.args.onUpdate(next);
+  }
+
+  @action
+  onLeafChange(nextLeaf) {
+    this.args.onUpdate(nextLeaf);
+  }
+
+  @action
+  remove(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.args.onRemove();
+  }
+
+  @action
+  changeType(event) {
+    const typeId = event.target.value;
+    if (typeId) {
+      this.args.onChangeType(typeId);
+    }
+  }
+
+  <template>
+    <div
+      class={{dConcatClass
+        "visual-editor-condition-rule"
+        (if this._expanded "--expanded")
+      }}
+    >
+      <button
+        type="button"
+        class="visual-editor-condition-rule__header"
+        aria-expanded={{this._expanded}}
+        {{on "click" this.toggleExpanded}}
+      >
+        <span class="visual-editor-condition-rule__chevron">
+          {{dIcon "chevron-right"}}
+        </span>
+        <span
+          class="visual-editor-condition-rule__icon"
+          aria-hidden="true"
+        >{{dIcon this.icon}}</span>
+        <span class="visual-editor-condition-rule__label">
+          {{@typeMeta.displayName}}
+        </span>
+        <span class="visual-editor-condition-rule__sep" aria-hidden="true">
+          —
+        </span>
+        <span class="visual-editor-condition-rule__summary">
+          {{this.summary}}
+        </span>
+      </button>
+
+      {{! template-lint-disable no-nested-interactive }}
+      {{! The remove button sits inside the row but outside the header
+        disclosure button. It's a sibling at the DOM level (the header
+        button doesn't wrap it), so it's not a nested-interactive even
+        though the linter can't tell with this layout. }}
+      <button
+        type="button"
+        class="visual-editor-condition-rule__remove"
+        title={{i18n "visual_editor.inspector.conditions.remove_condition"}}
+        {{on "click" this.remove}}
+      >
+        {{dIcon "xmark"}}
+      </button>
+
+      {{#if this._expanded}}
+        <div class="visual-editor-condition-rule__body">
+          <label class="visual-editor-condition-rule__type-row">
+            <span>{{i18n
+                "visual_editor.inspector.conditions.type_label"
+              }}</span>
+            <select {{on "change" this.changeType}}>
+              {{#each @conditionTypes as |typeMeta|}}
+                <option
+                  value={{typeMeta.type}}
+                  selected={{this.isTypeSelected typeMeta.type}}
+                >{{typeMeta.displayName}}</option>
+              {{/each}}
+            </select>
+          </label>
+
+          {{#if this.editorComponent}}
+            <this.editorComponent
+              @leaf={{@node}}
+              @typeMeta={{@typeMeta}}
+              @onChange={{this.onLeafChange}}
+            />
+          {{else}}
+            <ConditionLeafArgs
+              @node={{@node}}
+              @typeMeta={{@typeMeta}}
+              @onChange={{this.onArgChange}}
+            />
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+  </template>
+}

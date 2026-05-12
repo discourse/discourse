@@ -21,10 +21,13 @@
  *     for re-locating the entry from the layout root in future phases that
  *     mutate layouts.
  *
- * Phase 1 limitation: walks every outlet that `services/blocks` reports as
- * having a layout, regardless of whether a `<BlockOutlet>` is actually
- * mounted on the current page. Multi-outlet awareness with proper mount
- * tracking ships in Phase 6.
+ * Phase 7p filter: outlets registered site-wide but not mounted on the
+ * current page would otherwise show up as dead rows. The walker filters
+ * to outlets whose `<OutletBoundary>` is actually in the DOM (the editor
+ * always mounts the boundary for active outlets via the
+ * OUTLET_INFO_COMPONENT callback — see `api-initializers/visual-editor.js`).
+ * Falls back to the unfiltered list during tests / SSR where `document`
+ * isn't a meaningful DOM source.
  */
 import { _getOutletLayouts } from "discourse/blocks/block-outlet";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
@@ -53,6 +56,36 @@ function resolveBlockName(blockRef) {
 }
 
 /**
+ * Returns the set of outlet names whose `<OutletBoundary>` is currently
+ * mounted in the DOM. Filters the walker to those outlets so layouts
+ * registered for off-page outlets don't show as dead rows.
+ *
+ * Returns `null` when `document` isn't usable (Node-side / SSR / some
+ * test environments) so callers can fall back to the full list.
+ *
+ * @returns {Set<string>|null}
+ */
+function mountedOutletNames() {
+  if (typeof document === "undefined") {
+    return null;
+  }
+  const nodes = document.querySelectorAll(
+    ".visual-editor-outlet-boundary[data-outlet-name]"
+  );
+  if (nodes.length === 0) {
+    return null;
+  }
+  const names = new Set();
+  for (const node of nodes) {
+    const name = node.getAttribute("data-outlet-name");
+    if (name) {
+      names.add(name);
+    }
+  }
+  return names;
+}
+
+/**
  * @param {{ blocksService: any }} options
  * @returns {Promise<Array<{outletName: string, rows: Array<Object>}>>}
  */
@@ -60,9 +93,16 @@ export async function walkAllOutlets({ blocksService }) {
   const result = [];
   const outlets = blocksService.listOutlets();
   const layoutMap = _getOutletLayouts();
+  const mounted = mountedOutletNames();
 
   for (const outletName of outlets) {
     if (!blocksService.hasLayout(outletName)) {
+      continue;
+    }
+    // Filter to outlets actually rendered on this page when we can tell
+    // (mounted is null only in environments where the DOM query can't
+    // resolve — tests, SSR — at which point we walk everything).
+    if (mounted && !mounted.has(outletName)) {
       continue;
     }
     const entry = layoutMap.get(outletName);

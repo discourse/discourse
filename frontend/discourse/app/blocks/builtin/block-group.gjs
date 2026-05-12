@@ -17,6 +17,12 @@ import { block } from "discourse/blocks";
 @block("group", {
   container: true,
   description: "Groups multiple children blocks together",
+  // Infrastructure block: hidden from the visual editor's palette so
+  // authors don't drop it directly. They use `ve:layout` (which offers
+  // stack / row / grid modes) for user-facing grouping; `group` stays
+  // as the low-level container the rendering pipeline assembles when
+  // building children arrays.
+  paletteHidden: true,
 })
 export default class GroupedBlocks extends Component {
   <template>

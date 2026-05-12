@@ -85,8 +85,10 @@ export default class PalettePanel extends Component {
           previewArgs: display.previewArgs,
           description: metadata?.description ?? "",
           namespaceType: metadata?.namespaceType ?? "core",
+          paletteHidden: display.paletteHidden === true,
         };
       })
+      .filter((row) => !row.paletteHidden)
       .sort((a, b) => a.displayName.localeCompare(b.displayName));
   }
 
@@ -140,6 +142,37 @@ export default class PalettePanel extends Component {
     });
   }
 
+  /**
+   * Same rows as `filteredRows`, but grouped into category sections
+   * for the list-with-headers view. Each section is
+   * `{category, rows}`; category order follows the same Core / Plugin
+   * / Theme / alphabetical convention as the chips. Within a section,
+   * rows are sorted by displayName (already true via `rows` sort).
+   *
+   * @returns {Array<{category: string, rows: PaletteRow[]}>}
+   */
+  get filteredRowsByCategory() {
+    const groups = new Map();
+    for (const row of this.filteredRows) {
+      const key = row.category || "Misc";
+      const bucket = groups.get(key) ?? [];
+      bucket.push(row);
+      groups.set(key, bucket);
+    }
+    const order = ["Content", "Layout", "Navigation", "Data"];
+    const sorted = [];
+    for (const cat of order) {
+      if (groups.has(cat)) {
+        sorted.push({ category: cat, rows: groups.get(cat) });
+        groups.delete(cat);
+      }
+    }
+    for (const [category, rows] of [...groups.entries()].sort()) {
+      sorted.push({ category, rows });
+    }
+    return sorted;
+  }
+
   @action
   updateSearchTerm(event) {
     this.searchTerm = event.target.value;
@@ -182,8 +215,15 @@ export default class PalettePanel extends Component {
       </div>
 
       <div class="visual-editor-palette__list">
-        {{#each this.filteredRows as |row|}}
-          <PaletteEntry @entry={{row}} />
+        {{#each this.filteredRowsByCategory as |section|}}
+          <div class="visual-editor-palette__section">
+            <div class="visual-editor-palette__section-header">
+              {{section.category}}
+            </div>
+            {{#each section.rows as |row|}}
+              <PaletteEntry @entry={{row}} />
+            {{/each}}
+          </div>
         {{else}}
           <div class="panel-empty">
             {{i18n "visual_editor.palette.empty"}}

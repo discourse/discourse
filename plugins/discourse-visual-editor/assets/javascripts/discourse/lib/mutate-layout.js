@@ -115,6 +115,113 @@ export function replaceEntryArgs(layout, key, updater) {
 }
 
 /**
+ * Replaces the entry matching `key` with a wholly new entry object.
+ * Used by the inspector's Raw JSON tab, which lets the author edit
+ * the entry's serialised form and commit the parsed result.
+ *
+ * Preserves the matched entry's `__stableKey` so the rendered block
+ * keeps its DOM identity across the swap — author edits shouldn't
+ * remount the block.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} key
+ * @param {Object} newEntry
+ * @returns {{layout: Array<Object>, changed: boolean}}
+ */
+export function replaceEntryInPlace(layout, key, newEntry) {
+  let changed = false;
+
+  function walk(entries) {
+    let subtreeChanged = false;
+    const result = entries.map((entry) => {
+      if (entryKey(entry) === key) {
+        changed = true;
+        subtreeChanged = true;
+        return {
+          ...newEntry,
+          __stableKey: entry.__stableKey,
+        };
+      }
+      if (entry.children?.length) {
+        const newChildren = walk(entry.children);
+        if (newChildren !== entry.children) {
+          subtreeChanged = true;
+          return { ...entry, children: newChildren };
+        }
+      }
+      return entry;
+    });
+    return subtreeChanged ? result : entries;
+  }
+
+  const newLayout = walk(layout);
+  return { layout: newLayout, changed };
+}
+
+/**
+ * Returns the ancestor chain from the layout root down to (and
+ * including) the entry matching `key`. Each element is the matching
+ * entry object itself — not a wrapper. `null` is returned when no
+ * entry matches.
+ *
+ * Used by the editor's breadcrumb component (Phase 7p.2) to render
+ * the ancestry of the selected block.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} key
+ * @returns {Array<Object>|null}
+ */
+export function findAncestryPath(layout, key) {
+  function walk(entries, trail) {
+    for (const entry of entries) {
+      const here = [...trail, entry];
+      if (entryKey(entry) === key) {
+        return here;
+      }
+      if (entry.children?.length) {
+        const found = walk(entry.children, here);
+        if (found) {
+          return found;
+        }
+      }
+    }
+    return null;
+  }
+  return walk(layout, []);
+}
+
+/**
+ * Locates the matched entry's siblings (i.e. the children array of its
+ * direct parent) and the entry's index within that array. Used by the
+ * editor's "move up / move down" affordances and any future
+ * sibling-relative mutation.
+ *
+ * Returns `null` when no matching entry exists.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} key
+ * @returns {{siblings: Array<Object>, index: number}|null}
+ */
+export function findEntrySiblings(layout, key) {
+  function walk(entries) {
+    const index = entries.findIndex((entry) => entryKey(entry) === key);
+    if (index !== -1) {
+      return { siblings: entries, index };
+    }
+    for (const entry of entries) {
+      if (entry.children?.length) {
+        const found = walk(entry.children);
+        if (found) {
+          return found;
+        }
+      }
+    }
+    return null;
+  }
+  return walk(layout);
+}
+
+/**
  * Replaces the `conditions` field on a matched entry. Mirrors
  * `replaceEntryArgs` but targets the entry's condition tree (the
  * visibility predicate) rather than the rendered args.
@@ -424,7 +531,16 @@ export function serializeLayoutForSave(layout) {
   return layout.map(serializeEntryForSave);
 }
 
-function serializeEntryForSave(entry) {
+/**
+ * Serialises a single entry into the same JSON-safe shape
+ * `serializeLayoutForSave` emits, but exported separately so callers
+ * (e.g. the inspector's Raw JSON tab) can produce a clean view of one
+ * entry without having to walk a whole layout.
+ *
+ * @param {Object} entry
+ * @returns {Object}
+ */
+export function serializeEntryForSave(entry) {
   const out = {};
   if (typeof entry.block === "string") {
     out.block = entry.block;

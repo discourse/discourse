@@ -38,11 +38,14 @@ export default class OutlinePanel extends Component {
   @service visualEditor;
 
   @tracked outlets = [];
-
   acceptedDragKinds = ["ve-block", "ve-palette-block"];
+  // BlockChrome instance does the same lookup, a future Phase could promote
+  isViewMode = (mode) => this._viewMode === mode;
+  /** "tree" — flat per-block view (default); "outlets" — per-outlet summary. */
+  @tracked _viewMode = "tree";
 
   // Lazy `blockName -> metadata` index built on first selection. Since each
-  // BlockChrome instance does the same lookup, a future Phase could promote
+
   // this to a shared service-level cache to avoid repeated registry walks.
   _metaIndex = null;
 
@@ -140,6 +143,42 @@ export default class OutlinePanel extends Component {
     return this.visualEditor.dragSourceKey === blockKey;
   }
 
+  /**
+   * Decorated per-outlet entries for the "Outlets" view mode — joins
+   * `walkAllOutlets`'s row counts with `listOutletsWithMetadata()`
+   * display info. Mounted-outlet filtering already happens inside
+   * `walkAllOutlets`, so any outlet here is on the current page.
+   */
+  get outletsWithMetadata() {
+    const meta = new Map(
+      this.blocks.listOutletsWithMetadata().map((entry) => [entry.name, entry])
+    );
+    return this.outlets.map((group) => {
+      const m = meta.get(group.outletName);
+      return {
+        name: group.outletName,
+        displayName: m?.displayName ?? group.outletName,
+        description: m?.description ?? null,
+        blockCount: group.rows.length,
+      };
+    });
+  }
+
+  @action
+  setViewMode(mode) {
+    this._viewMode = mode;
+  }
+
+  @action
+  jumpToOutlet(outletName) {
+    const el = document.querySelector(
+      `.visual-editor-outlet-boundary[data-outlet-name="${outletName}"]`
+    );
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
   <template>
     <div
       class="visual-editor-outline"
@@ -150,7 +189,58 @@ export default class OutlinePanel extends Component {
         this.structuralVersion
       }}
     >
-      {{#if this.outlets.length}}
+      <div class="visual-editor-outline__view-switch" role="tablist">
+        <button
+          type="button"
+          class={{dConcatClass
+            "visual-editor-outline__view-tab"
+            (if (this.isViewMode "tree") "--active")
+          }}
+          {{on "click" (fn this.setViewMode "tree")}}
+        >
+          {{i18n "visual_editor.outline.view_tree"}}
+        </button>
+        <button
+          type="button"
+          class={{dConcatClass
+            "visual-editor-outline__view-tab"
+            (if (this.isViewMode "outlets") "--active")
+          }}
+          {{on "click" (fn this.setViewMode "outlets")}}
+        >
+          {{i18n "visual_editor.outline.view_outlets"}}
+        </button>
+      </div>
+
+      {{#if (this.isViewMode "outlets")}}
+        {{#if this.outletsWithMetadata.length}}
+          <div class="visual-editor-outline__outlets">
+            {{#each this.outletsWithMetadata as |entry|}}
+              <button
+                type="button"
+                class="visual-editor-outline__outlet-row"
+                title={{entry.description}}
+                {{on "click" (fn this.jumpToOutlet entry.name)}}
+              >
+                <span class="visual-editor-outline__outlet-name">
+                  {{dIcon "cubes"}}
+                  <span>{{entry.displayName}}</span>
+                </span>
+                <span class="visual-editor-outline__outlet-meta">
+                  {{entry.name}}
+                  ·
+                  {{i18n
+                    "visual_editor.outlets.block_count"
+                    count=entry.blockCount
+                  }}
+                </span>
+              </button>
+            {{/each}}
+          </div>
+        {{else}}
+          <div class="panel-empty">{{i18n "visual_editor.outline.empty"}}</div>
+        {{/if}}
+      {{else if this.outlets.length}}
         {{#each this.outlets as |group|}}
           <div class="outline-outlet">
             <div class="outline-outlet__label">
