@@ -521,6 +521,8 @@ de:
         status:
           label: "Status"
         delete_confirmation_message: "Dieses Ereignis löschen?"
+        image:
+          label: "Ereignisbild"
       invite_user_or_group:
         title: "Benachrichtige Benutzer oder Gruppe(n)"
         invite: "Senden"

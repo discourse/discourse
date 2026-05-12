@@ -385,6 +385,8 @@ ar:
         description: "تمكين الترجمة التلقائية لجميع محتويات المنتدى وفقًا للغة المفضلة لدى كل مستخدم"
         supported_locales: "اللغات المدعومة"
         supported_locales_description: "يتيح هذا الإعداد أيضًا للزوار المساهمة بترجمة المنشورات."
+        translatable_categories: "الفئات القابلة للترجمة"
+        translatable_categories_description: "سيتم ترجمة المحتوى الموجود في الفئات المحددة فقط. يجب إضافة الفئات الفرعية بشكل منفصل."
         admin_actions:
           translation_settings: "إعدادات الترجمة"
           localization_settings: "إعدادات التوطين"
@@ -428,6 +430,9 @@ ar:
         theme_translations:
           translate:
             label: "ترجم"
+            title: "ترجمة إلى جميع اللغات المدعومة باستخدام اللغة المحددة كلغة مصدر"
+            queued: "وضع مهمة الترجمة في قائمة الانتظار"
+            failed: "فشل في وضع الترجمة في قائمة الانتظار"
         translations_menu:
           translate:
             label: "ترجمة المنشور"
@@ -826,6 +831,17 @@ ar:
         oauth_client_id: "معرّف عميل OAuth"
         oauth_client_secret: "سر عميل OAuth"
         oauth_scopes: "مجالات OAuth"
+        oauth_authorization_params: "معلمات مصادقة OAuth"
+        oauth_authorization_params_help: "تم دمج كائن JSON اختياري في طلب المصادقة. استخدم null لإزالة معلمة افتراضية."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "معلمات رمز OAuth"
+        oauth_token_params_help: "تم دمج كائن JSON اختياري في طلبات الرمز. استخدم null لإزالة معلمة افتراضية."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "يتطلب رمز تحديث"
+        oauth_require_refresh_token_help: "فشل اتصال OAuth إذا لم يُرجع مقدِّم الخدمة رمز التحديث."
+        oauth_json_object_required: "يجب أن يكون %{field} كائن JSON."
+        oauth_show_advanced_options: "إظهار الخيارات المتقدمة"
+        oauth_hide_advanced_options: "إخفاء الخيارات المتقدمة"
         oauth_connection: "اتصال OAuth"
         oauth_status: "حالة OAuth"
         oauth_statuses:
@@ -1211,6 +1227,12 @@ ar:
           title: "عرض تفاعل الذكاء الاصطناعي"
           copy_request: "طلب النسخة"
           copy_response: "رد النسخة"
+          this_turn: "هذا التفاعل:"
+          whole_conversation: "المحادثة:"
+          tokens_summary: "%{request_tokens} مدخلات ← %{response_tokens} مخرجات"
+          cache_both: "(ذاكرة تخزين مؤقت: %{read} قراءة، %{write} كتابة)"
+          cache_read_only: "(ذاكرة تخزين مؤقت: %{read} قراءة)"
+          cache_write_only: "(ذاكرة تخزين مؤقت: %{write} كتابة)"
           request: "طلب"
           response: "الرد"
           next_log: "التالي"

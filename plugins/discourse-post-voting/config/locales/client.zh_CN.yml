@@ -41,9 +41,9 @@ zh_CN:
       user_over_limit: "您不能超过您的信任级别对应的投票数。"
       one_vote_per_post: "您只能为每个帖子投一次票。"
       button:
-        upvote: "赞成票"
+        upvote: "赞成"
         remove_upvote: "移除赞成票"
-        downvote: "反对票"
+        downvote: "反对"
         remove_downvote: "移除反对票"
       toggle_voters: "显示投票人"
       upvotes: "赞成票"
