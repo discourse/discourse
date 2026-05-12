@@ -456,6 +456,15 @@ RSpec.describe TagsController do
       )
     end
 
+    it "returns tag info for an encoded period tag name" do
+      Fabricate(:tag, name: "node.js")
+
+      get "/tag/node%2Ejs/info.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tag_info"]["name"]).to eq("node.js")
+    end
+
     it "should handle invalid tags" do
       get "/tag/%2ftest%2f"
       expect(response.status).to eq(404)

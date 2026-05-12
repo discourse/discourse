@@ -1851,7 +1851,7 @@ RSpec.describe DiscourseTagging do
         Tag.new(name: "math=fun").save(validate: false)
         expect(
           described_class.tags_for_saving(%w[math=fun fun*2@gmail.com], guardian).try(:sort),
-        ).to eq(%w[math=fun fun2gmailcom].sort)
+        ).to eq(%w[math=fun fun2gmail.com].sort)
       end
     end
 
