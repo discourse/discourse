@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import DButton from "discourse/ui-kit/d-button";
 
 const DTogglePasswordMask = <template>

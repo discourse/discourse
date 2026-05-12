@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import Modifier from "ember-modifier";
 
 export default class DAutoFocusModifier extends Modifier {

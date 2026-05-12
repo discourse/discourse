@@ -7,6 +7,16 @@ import I18n, { i18n } from "discourse-i18n";
 module("Integration | ui-kit | DToggleSwitch", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("renders the root element with the switch role", async function (assert) {
+    await render(<template><DToggleSwitch /></template>);
+
+    assert.dom(".d-toggle-switch").exists();
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .hasAttribute("role", "switch")
+      .hasAria("checked", "false");
+  });
+
   test("it renders a toggle button in a disabled state", async function (assert) {
     await render(<template><DToggleSwitch @state={{false}} /></template>);
 
@@ -51,5 +61,24 @@ module("Integration | ui-kit | DToggleSwitch", function (hooks) {
     });
 
     assert.dom(".d-toggle-switch__checkbox-label").hasText("bar");
+  });
+
+  test("HTML attributes are forwarded onto the inner switch button", async function (assert) {
+    await render(
+      <template>
+        <DToggleSwitch
+          @state={{false}}
+          id="notifications-toggle"
+          data-test-toggle="x"
+          aria-describedby="notifications-help"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .hasAttribute("id", "notifications-toggle")
+      .hasAttribute("data-test-toggle", "x")
+      .hasAria("describedby", "notifications-help");
   });
 });

@@ -1,21 +1,27 @@
+// @ts-check
 /* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
+/** @type {import("discourse/float-kit/components/d-menu.gjs")} */
 import DMenu from "discourse/float-kit/components/d-menu";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import { eq } from "discourse/truth-helpers";
+/** @type {import("discourse/ui-kit/d-button.gjs").default} */
 import DButton from "discourse/ui-kit/d-button";
+/** @type {import("discourse/ui-kit/d-dropdown-menu.gjs").default} */
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DTextField from "discourse/ui-kit/d-text-field";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+/** @type {import("discourse/ui-kit/helpers/d-element.gjs").default} */
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dScrollIntoView from "discourse/ui-kit/modifiers/d-scroll-into-view";
@@ -34,6 +40,69 @@ class Skeleton extends Component {
   </template>
 }
 
+/**
+ * A typeahead picker that lets the user build up a selection from an
+ * asynchronously-loaded list. The component owns the search box, the
+ * keyboard navigation (`ArrowUp` / `ArrowDown` / `Enter`), and the
+ * loading/error/no-results states; the consumer owns the data fetch and the
+ * selection state.
+ *
+ * The picker is **controlled**: `@selection` is the source of truth, and
+ * `@onChange` is invoked with the new array whenever the user adds or
+ * removes an item. The component does not maintain its own selection state.
+ *
+ * Items are compared by `id` by default. Override with `@compareFn` when
+ * items are matched on a different key.
+ *
+ * Three named blocks let the consumer render their own data:
+ * - `<:selection>` — how each selected pill displays
+ * - `<:result>` — how each dropdown row displays
+ * - `<:error>` — how a failed `@loadFn` is shown
+ *
+ * @example
+ * <DMultiSelect
+ *   @selection={{this.tags}}
+ *   @onChange={{this.updateTags}}
+ *   @loadFn={{this.searchTags}}
+ * >
+ *   <:selection as |tag|>{{tag.name}}</:selection>
+ *   <:result as |tag|>{{tag.name}}</:result>
+ *   <:error as |err|>{{err.message}}</:error>
+ * </DMultiSelect>
+ */
+
+/**
+ * @typedef DMultiSelectSignature
+ *
+ * @property {object} Args
+ *
+ * @property {Array<object>} [Args.selection] Currently-selected items. The component compares against this array to filter out already-selected results.
+ * @property {(newSelection: Array<object>) => void} [Args.onChange] Invoked with the new full selection array whenever an item is added or removed.
+ * @property {(searchTerm: string) => Promise<Array<object>>} Args.loadFn Required. Fetches the candidate options for a given search term. Called (debounced) every time the search input changes.
+ * @property {(a: object, b: object) => boolean} [Args.compareFn] Custom equality check for items. Defaults to comparing the `id` field.
+ * @property {string} [Args.label] Trigger text shown when no items are selected. Defaults to the i18n string `multi_select.label`.
+ * @property {string} [Args.noResultsLabel] Empty-state text shown inside the dropdown when the search returns no items. Defaults to the i18n string `multi_select.no_results`.
+ * @property {string} [Args.contentClass] Extra classes joined onto the dropdown menu wrapper.
+ *
+ * DMenu pass-through (see `DMenu` for the full semantics).
+ *
+ * @property {boolean} [Args.visibilityOptimizer]
+ * @property {string} [Args.placement]
+ * @property {Array<string>} [Args.allowedPlacements]
+ * @property {number} [Args.offset]
+ * @property {boolean} [Args.matchTriggerMinWidth]
+ * @property {boolean} [Args.matchTriggerWidth]
+ * @property {Function} [Args.onRegisterDMenuApi] Called with the DMenu instance once mounted. Use to programmatically open/close the menu from the consumer.
+ *
+ * @property {HTMLDivElement} Element The DMenu trigger wrapper (`<div class="d-multi-select-trigger">`).
+ *
+ * @property {object} Blocks
+ * @property {[object]} Blocks.selection Renders one selected-item pill. Receives the item.
+ * @property {[object]} Blocks.result Renders one dropdown row. Receives the item.
+ * @property {[unknown]} Blocks.error Renders the error state when `@loadFn` rejects. Receives the error.
+ */
+
+/** @extends {Component<DMultiSelectSignature>} */
 export default class DMultiSelect extends Component {
   @tracked searchTerm = "";
 
@@ -41,6 +110,15 @@ export default class DMultiSelect extends Component {
 
   compareKey = "id";
   #promise = null;
+
+  constructor(owner, args) {
+    super(owner, args);
+
+    assert(
+      "[d-multi-select] @loadFn is required",
+      typeof this.args.loadFn === "function"
+    );
+  }
 
   get hasSelection() {
     return this.args.selection?.length > 0;
@@ -108,7 +186,7 @@ export default class DMultiSelect extends Component {
 
   @action
   focus(input) {
-    // Reset preselection on dropdown open to prevent unwanted scrolling
+    // Reset preselection on dropdown open to prevent unwanted scrolling.
     this.preselectedItem = null;
     input.focus({ preventScroll: true });
   }
@@ -123,7 +201,8 @@ export default class DMultiSelect extends Component {
       event.preventDefault();
       event.stopPropagation();
 
-      // Only toggle if we have a preselected item and it's in the available options
+      // Only toggle when there's a preselected item that's still in the
+      // available options (it may have been removed by a concurrent change).
       if (
         this.preselectedItem &&
         this.availableOptions?.some((item) =>
@@ -183,7 +262,7 @@ export default class DMultiSelect extends Component {
       return;
     }
 
-    // Reset preselected item since the available options will change
+    // Reset preselected item since the available options will change.
     this.preselectedItem = null;
 
     this.args.onChange?.(
@@ -197,12 +276,12 @@ export default class DMultiSelect extends Component {
 
     const currentSelection = makeArray(this.args.selection);
 
-    // Check if item is already selected
+    // Don't add duplicates.
     if (currentSelection.some((item) => this.compare(item, result))) {
-      return; // Don't add duplicates
+      return;
     }
 
-    // Reset preselected item since the available options will change
+    // Reset preselected item since the available options will change.
     this.preselectedItem = null;
 
     this.args.onChange?.(currentSelection.concat(result));
@@ -233,6 +312,7 @@ export default class DMultiSelect extends Component {
   }
 
   <template>
+    {{! @glint-nocheck: integrates classic DTextField with `readonly` helper and a curried DMenu trigger that isn't fully reflected in the JSDoc Signature }}
     <DMenu
       @identifier="d-multi-select"
       @triggerComponent={{dElement "div"}}

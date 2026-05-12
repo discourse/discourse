@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import Component from "@glimmer/component";
 import domFromString from "discourse/lib/dom-from-string";
 import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";

@@ -19,6 +19,21 @@ module("Integration | ui-kit | DLoadMore", function (hooks) {
     disableLoadMoreObserver();
   });
 
+  test("renders the sentinel element and the yielded block", async function (assert) {
+    const noop = () => {};
+    await render(
+      <template>
+        <DLoadMore @action={{noop}} class="my-list">
+          <div class="my-content">content</div>
+        </DLoadMore>
+      </template>
+    );
+
+    assert.dom("div.my-list .my-content").exists();
+    assert.dom("div.my-list .load-more-sentinel").exists();
+    assert.dom(".load-more-sentinel").hasAria("hidden", "true");
+  });
+
   test("calls loadMore action when intersection occurs", async function (assert) {
     let actionCalled = 0;
     const performLoadMore = () => {

@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, local/require-ts-check */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { tagName } from "@ember-decorators/component";

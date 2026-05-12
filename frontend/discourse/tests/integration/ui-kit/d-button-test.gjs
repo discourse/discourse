@@ -1,4 +1,4 @@
-import { click, render, triggerKeyEvent } from "@ember/test-helpers";
+import { click, find, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DButton from "discourse/ui-kit/d-button";
@@ -6,6 +6,13 @@ import I18n, { i18n } from "discourse-i18n";
 
 module("Integration | ui-kit | DButton", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("renders a button with default classes when given no args", async function (assert) {
+    await render(<template><DButton /></template>);
+
+    assert.dom("button.btn").exists();
+    assert.dom("button").hasAttribute("type", "button");
+  });
 
   test("icon only button", async function (assert) {
     await render(<template><DButton @icon="plus" tabindex="3" /></template>);
@@ -264,5 +271,137 @@ module("Integration | ui-kit | DButton", function (hooks) {
     assert
       .dom("button .d-button__suffix-icon .d-icon-angle-right")
       .exists("has the suffix icon");
+  });
+
+  test("@href renders an anchor instead of a button", async function (assert) {
+    await render(
+      <template>
+        <DButton @href="https://example.com" @translatedLabel="Open" />
+      </template>
+    );
+
+    assert.dom("a.btn").exists();
+    assert.dom("a").hasAttribute("href", "https://example.com");
+    assert.dom("button").doesNotExist();
+  });
+
+  test("@actionParam is passed to the action", async function (assert) {
+    this.set("received", null);
+    this.set("action", (param) => {
+      this.set("received", param);
+    });
+
+    await render(
+      <template>
+        <DButton @action={{this.action}} @actionParam="hello" />
+      </template>
+    );
+
+    await click(".btn");
+    assert.strictEqual(this.received, "hello");
+  });
+
+  test("@forwardEvent passes the event as a second argument", async function (assert) {
+    this.set("event", null);
+    this.set("action", (_param, event) => {
+      this.set("event", event);
+    });
+
+    await render(
+      <template>
+        <DButton
+          @action={{this.action}}
+          @actionParam="x"
+          @forwardEvent={{true}}
+        />
+      </template>
+    );
+
+    await click(".btn");
+    assert.true(this.event instanceof Event, "the original event is forwarded");
+  });
+
+  test("@preventFocus prevents focus on mousedown", async function (assert) {
+    await render(<template><DButton @preventFocus={{true}} /></template>);
+
+    const button = find("button");
+    let prevented = false;
+    button.addEventListener("mousedown", (e) => {
+      prevented = e.defaultPrevented;
+    });
+    button.dispatchEvent(new MouseEvent("mousedown", { cancelable: true }));
+
+    assert.true(prevented, "mousedown default is prevented");
+  });
+
+  test("aria-pressed", async function (assert) {
+    await render(
+      <template><DButton @ariaPressed={{this.ariaPressed}} /></template>
+    );
+
+    assert.dom("button").doesNotHaveAria("pressed");
+
+    this.set("ariaPressed", true);
+    assert.dom("button").hasAria("pressed", "true");
+
+    this.set("ariaPressed", false);
+    assert.dom("button").hasAria("pressed", "false");
+  });
+
+  test("@ariaHidden wraps the icon in an aria-hidden span", async function (assert) {
+    await render(
+      <template><DButton @icon="plus" @ariaHidden={{true}} /></template>
+    );
+
+    assert
+      .dom('button > span[aria-hidden="true"] .d-icon-plus')
+      .exists("the icon is wrapped in an aria-hidden span");
+  });
+
+  test("@type accepts submit and reset", async function (assert) {
+    await render(<template><DButton @type="submit" /></template>);
+    assert.dom("button").hasAttribute("type", "submit");
+  });
+
+  test("@id flows through to the button", async function (assert) {
+    await render(
+      <template><DButton @id="save-button" @translatedLabel="Save" /></template>
+    );
+    assert.dom("button#save-button").exists();
+  });
+
+  test("classes passed via attributes are joined onto the button", async function (assert) {
+    await render(
+      <template>
+        <DButton class="my-button extra" @translatedLabel="x" />
+      </template>
+    );
+    assert.dom("button.btn.my-button.extra").exists();
+  });
+
+  test("yielded block content renders alongside the label", async function (assert) {
+    await render(
+      <template>
+        <DButton @translatedLabel="Hello">
+          <span class="extra-yield">more</span>
+        </DButton>
+      </template>
+    );
+
+    assert.dom("button .d-button-label").hasText("Hello");
+    assert.dom("button .extra-yield").hasText("more");
+  });
+
+  test("yielded block content stands in for the label when no @label is given", async function (assert) {
+    await render(
+      <template>
+        <DButton>
+          <span class="custom-content">just yield</span>
+        </DButton>
+      </template>
+    );
+
+    assert.dom("button .d-button-label").doesNotExist();
+    assert.dom("button .custom-content").hasText("just yield");
   });
 });

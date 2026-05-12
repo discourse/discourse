@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { modifier } from "ember-modifier";
 
 export default modifier(

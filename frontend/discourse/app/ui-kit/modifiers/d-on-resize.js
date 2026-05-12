@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { registerDestructor } from "@ember/destroyable";
 import { cancel, throttle } from "@ember/runloop";
 import Modifier from "ember-modifier";

@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import curryComponent from "ember-curry-component";

@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { getURLWithCDN } from "discourse/lib/get-url";

@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import DTextField from "discourse/ui-kit/d-text-field";
 
 /**

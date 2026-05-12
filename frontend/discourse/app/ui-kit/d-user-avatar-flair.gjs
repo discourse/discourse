@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";

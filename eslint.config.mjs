@@ -1,10 +1,24 @@
 import DiscourseRecommended from "@discourse/lint-configs/eslint";
+import requireTsCheck from "./eslint-rules/require-ts-check.mjs";
+
+const localPlugin = {
+  rules: {
+    "require-ts-check": requireTsCheck,
+  },
+};
 
 export default [
   ...DiscourseRecommended,
   {
     rules: {},
     // custom overrides go here
+  },
+  {
+    files: ["frontend/discourse/app/ui-kit/**/*.{js,gjs}"],
+    plugins: { local: localPlugin },
+    rules: {
+      "local/require-ts-check": "error",
+    },
   },
   {
     ignores: [

@@ -19,6 +19,11 @@ function renderComponent(flairArgs) {
 module("Integration | ui-kit | DAvatarFlair", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("renders the root element with the avatar-flair class", async function (assert) {
+    await renderComponent({ flair_url: "bars" });
+    assert.dom(".avatar-flair").exists();
+  });
+
   test("avatar flair with an icon", async function (assert) {
     const flairArgs = {
       flair_url: "bars",
@@ -61,5 +66,37 @@ module("Integration | ui-kit | DAvatarFlair", function (hooks) {
         "the title attribute is set correctly"
       );
     assert.dom("svg").doesNotExist("does not have an svg icon");
+  });
+
+  test("adds the avatar-flair-<flairName> class hook", async function (assert) {
+    await renderComponent({ flair_url: "bars", flair_name: "staff" });
+    assert.dom(".avatar-flair.avatar-flair-staff").exists();
+  });
+
+  test("adds the rounded class when @flairBgColor is present", async function (assert) {
+    await renderComponent({ flair_url: "bars", flair_bg_color: "CC0000" });
+    assert.dom(".avatar-flair.rounded").exists();
+  });
+
+  test("does not add the rounded class when @flairBgColor is absent", async function (assert) {
+    await renderComponent({ flair_url: "bars" });
+    assert.dom(".avatar-flair").doesNotHaveClass("rounded");
+  });
+
+  test("adds the avatar-flair-image class for image URLs", async function (assert) {
+    await renderComponent({ flair_url: "/images/avatar.png" });
+    assert.dom(".avatar-flair.avatar-flair-image").exists();
+  });
+
+  test("does not add the avatar-flair-image class for icon names", async function (assert) {
+    await renderComponent({ flair_url: "bars" });
+    assert.dom(".avatar-flair").doesNotHaveClass("avatar-flair-image");
+  });
+
+  test("sets background-image as the URL for image flairs", async function (assert) {
+    await renderComponent({ flair_url: "/images/avatar.png" });
+    assert
+      .dom(".avatar-flair")
+      .hasStyle({ backgroundImage: 'url("/images/avatar.png")' });
   });
 });

@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import withEventValue from "discourse/helpers/with-event-value";

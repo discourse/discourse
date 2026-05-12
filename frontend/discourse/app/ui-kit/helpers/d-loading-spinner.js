@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { trustHTML } from "@ember/template";
 
 export function renderSpinner(cssClass) {

@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 /* You might be looking for navigation-item. */
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";

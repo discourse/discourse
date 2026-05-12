@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 const DConditionalInElement = <template>
   {{#if @inline}}
     {{yield}}

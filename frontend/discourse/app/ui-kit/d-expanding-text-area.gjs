@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { on } from "@ember/modifier";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 

@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import DTooltip from "discourse/float-kit/components/d-tooltip";

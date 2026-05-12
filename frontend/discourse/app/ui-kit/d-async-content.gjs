@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";

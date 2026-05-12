@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { trustHTML } from "@ember/template";
 import { helperContext } from "discourse/lib/helpers";
 import { escapeExpression } from "discourse/lib/utilities";

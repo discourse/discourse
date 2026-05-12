@@ -1,5 +1,7 @@
+// @ts-check
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -16,6 +18,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+/** @type {import("discourse/ui-kit/helpers/d-element.gjs").default} */
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
@@ -26,8 +29,85 @@ export const CLOSE_INITIATED_BY_CLICK_OUTSIDE = "initiatedByClickOut";
 export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
 export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 
+const ALLOWED_TAG_NAMES = ["div", "form"];
+
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 
+/**
+ * The standard modal dialog. Renders an absolute-positioned dialog with a
+ * backdrop, a header (optional close button, title, subtitle), a body slot,
+ * and a footer slot. Handles focus trapping, body-scroll locking on mobile,
+ * Escape-to-close, Enter-to-submit, click-outside dismissal, and swipe-down
+ * dismissal on touch devices.
+ *
+ * Most consumers go through `service modal` which mounts a modal component
+ * for them; `DModal` itself is the building block that those modal
+ * components yield from their template.
+ *
+ * `@closeModal` is the single close callback — it fires with one argument
+ * `{ initiatedBy: "<reason>" }` where the reason is one of the exported
+ * `CLOSE_INITIATED_BY_*` constants. Provide `@beforeClose` to veto specific
+ * close attempts (e.g. unsaved changes prompt).
+ *
+ * @example
+ * <DModal @closeModal={{@closeModal}} @title="Confirm delete">
+ *   <:body>Are you sure?</:body>
+ *   <:footer>
+ *     <DButton @label="cancel" @action={{@closeModal}} />
+ *     <DButton @label="delete" class="btn-danger" @action={{this.confirm}} />
+ *   </:footer>
+ * </DModal>
+ */
+
+/**
+ * @typedef DModalSignature
+ *
+ * @property {object} Args
+ *
+ * Identity and content
+ *
+ * @property {string} [Args.title] Translated dialog title rendered in the header. Drives `aria-labelledby`.
+ * @property {string} [Args.subtitle] Translated subtitle rendered below the title.
+ * @property {"div"|"form"} [Args.tagName] Root tag. Use `"form"` when the dialog wraps form submission. Defaults to `"div"`.
+ *
+ * Close lifecycle
+ *
+ * @property {(payload: {initiatedBy: string}) => void} [Args.closeModal] Invoked when the modal should close. Receives a payload with the trigger reason. Omitting this disables all dismiss mechanisms.
+ * @property {(payload: {initiatedBy: string}) => boolean | Promise<boolean>} [Args.beforeClose] Invoked before each close attempt. Return (or resolve to) `false` to veto.
+ * @property {boolean} [Args.dismissable] Whether the user can dismiss the modal (close button, Escape, click-outside, swipe). Defaults to `true` when `@closeModal` is set.
+ * @property {boolean} [Args.submitOnEnter] When `true` (the default), pressing Enter outside form/textarea/select-kit focus triggers the footer's primary button.
+ *
+ * Layout
+ *
+ * @property {boolean} [Args.inline] When `true`, the modal renders inline at its call-site rather than being teleported to the modal container. Used for in-page sub-dialogs.
+ * @property {boolean} [Args.autofocus] When `true` (the default), focus is moved into the modal on mount.
+ * @property {boolean} [Args.hidden] When `true`, document-level keyboard handlers are bypassed. Used by the modal service when stacking modals.
+ * @property {boolean} [Args.hideHeader] Hides the header block entirely (no title, no close button).
+ * @property {boolean} [Args.hideFooter] Hides the `<:footer>` block region even if the consumer yields it.
+ * @property {string} [Args.headerClass] Extra classes joined onto the `.d-modal__header` element.
+ * @property {string} [Args.bodyClass] Extra classes joined onto the `.d-modal__body` element.
+ *
+ * Flash
+ *
+ * @property {string} [Args.flash] Inline flash message rendered between header and body.
+ * @property {"success"|"error"|"warning"|"info"} [Args.flashType] Flash variant.
+ *
+ * @property {HTMLDivElement | HTMLFormElement} Element The root dialog element. Type depends on `@tagName`.
+ *
+ * @property {object} Blocks
+ * @property {[]} Blocks.default Body content when no `<:body>` named block is provided.
+ * @property {[]} Blocks.aboveHeader Rendered above the header. Use sparingly — most callers should put content in `<:body>`.
+ * @property {[]} Blocks.headerAboveTitle Rendered inside the header, above the title row.
+ * @property {[]} Blocks.belowModalTitle Rendered inside the title block, after the subtitle.
+ * @property {[]} Blocks.headerBelowTitle Rendered inside the header, below the title row.
+ * @property {[]} Blocks.headerPrimaryAction Rendered on the right edge of the header on mobile. On desktop the dismiss button takes this slot; on mobile this block replaces it.
+ * @property {[]} Blocks.belowHeader Rendered between the header and the flash region.
+ * @property {[]} Blocks.body Main content area. When omitted, the default block is used instead.
+ * @property {[]} Blocks.footer Footer content. The footer is only rendered when this block is present.
+ * @property {[]} Blocks.belowFooter Rendered after the footer.
+ */
+
+/** @extends {Component<DModalSignature>} */
 export default class DModal extends Component {
   @service appEvents;
   @service capabilities;
@@ -37,8 +117,11 @@ export default class DModal extends Component {
   @tracked wrapperElement;
   @tracked animating = false;
 
+  /** @type {HTMLElement} */
+  modalContainer;
+
   registerModalContainer = modifierFn((el) => {
-    this.modalContainer = el;
+    this.modalContainer = /** @type {HTMLElement} */ (el);
   });
 
   setupModalBody = modifierFn((el) => {
@@ -70,11 +153,24 @@ export default class DModal extends Component {
     };
   });
 
+  constructor(owner, args) {
+    super(owner, args);
+
+    assert(
+      "[d-modal] @closeModal must be a function when provided",
+      !this.args.closeModal || typeof this.args.closeModal === "function"
+    );
+    assert(
+      "[d-modal] @beforeClose must be a function when provided",
+      !this.args.beforeClose || typeof this.args.beforeClose === "function"
+    );
+  }
+
   @action
   resetDocumentScrollOnIOS(visible) {
-    // iOS scrolls the page to the focused input when the keyboard opens
-    // as a result when an input is within a dropdown within a modal, the modal is scrolled out of view.
-    // This forces the modal back to the correct visible position.
+    // iOS scrolls the page to the focused input when the keyboard opens.
+    // When an input is inside a dropdown inside a modal, that scroll pushes
+    // the modal off-screen. This forces the page back to its locked position.
     if (!visible) {
       return;
     }
@@ -132,7 +228,8 @@ export default class DModal extends Component {
       return false;
     }
 
-    // skip when in a form, textarea, or select-kit element
+    // Skip Enter-to-submit when focus is inside a form, textarea, or
+    // select-kit — those have their own Enter semantics.
     if (
       event.target.closest("form") ||
       document.activeElement?.closest("form") ||
@@ -159,8 +256,8 @@ export default class DModal extends Component {
   @action
   async handleSwipeEnded(swipeEvent) {
     if (this.animating) {
-      // if the modal is animating we don't want to risk resetting the position
-      // as the user releases the swipe at the same time
+      // If the modal is animating we don't want to risk resetting the
+      // position as the user releases the swipe at the same time.
       return;
     }
 
@@ -177,7 +274,8 @@ export default class DModal extends Component {
 
   @action
   handleWrapperPointerDown(e) {
-    // prevents hamburger menu to close on modal backdrop click
+    // Prevent the hamburger menu from closing when the modal backdrop is
+    // clicked — the click bubbles through the portal otherwise.
     e.stopPropagation();
   }
 
@@ -264,12 +362,12 @@ export default class DModal extends Component {
     this.closeModal(CLOSE_INITIATED_BY_BUTTON);
   }
 
-  // Could be optimised to remove classic component once RFC389 is implemented
-  // https://rfcs.emberjs.com/id/0389-dynamic-tag-names
+  // Could be optimised to remove the classic component path once RFC389
+  // (dynamic tag names) ships: https://rfcs.emberjs.com/id/0389-dynamic-tag-names
   @cached
   get dynamicElement() {
     const tagName = this.args.tagName || "div";
-    if (!["div", "form"].includes(tagName)) {
+    if (!ALLOWED_TAG_NAMES.includes(tagName)) {
       throw `@tagName must be form or div`;
     }
 
@@ -326,6 +424,7 @@ export default class DModal extends Component {
 
   <template>
     {{! template-lint-disable no-invalid-interactive }}
+    {{! @glint-nocheck: complex template — render-modifier and dSwipe signatures don't match Glint's stricter typing }}
 
     <DConditionalInElement
       @element={{this.modal.containerElement}}

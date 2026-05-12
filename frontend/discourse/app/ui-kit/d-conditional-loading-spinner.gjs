@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { eq } from "discourse/truth-helpers";

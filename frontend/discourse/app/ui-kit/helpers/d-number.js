@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { trustHTML } from "@ember/template";
 import { number as numberFormatter } from "discourse/lib/formatter";
 import { escapeExpression } from "discourse/lib/utilities";

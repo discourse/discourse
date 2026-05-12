@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { hash } from "@ember/helper";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { number } from "discourse/lib/formatter";
