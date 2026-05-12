@@ -403,6 +403,7 @@ RSpec.describe UserApiKeysController do
           params: otp_args.merge(auth_redirect: "https://evil.example.com/callback")
 
       expect(response.status).to eq(403)
+    end
 
     it "rejects a non-RSA public key with 400" do
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
