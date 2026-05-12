@@ -24,6 +24,12 @@ module PageObjects
         post.find(".show-replies").click
       end
 
+      def jump_to_reply(reply)
+        find(
+          "#embedded-posts__bottom--#{@post_number} .reply[data-post-id='#{reply.id}'] a.post-info.arrow",
+        ).click
+      end
+
       def load_more_replies
         find("#embedded-posts__bottom--#{@post_number} .load-more-replies").click
       end
