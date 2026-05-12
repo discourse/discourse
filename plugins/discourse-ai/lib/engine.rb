@@ -63,18 +63,16 @@ module DiscourseAi
     plugin.register_site_setting_area(area)
 
     setting_name = "#{module_name}_#{feature}_agent"
-    if !SiteSetting.has_setting?(setting_name)
-      SiteSetting.send(
-        :setting,
-        setting_name.to_sym,
-        DiscourseAi::Agents::Agent.external_agent_id(agent_klass).to_s,
-        type: "enum",
-        enum: "DiscourseAi::Configuration::AgentEnumerator",
-        depends_on: %w[discourse_ai_enabled],
-        depends_behavior: "hidden",
-        area: area,
-      )
-    end
+    SiteSetting.send(
+      :setting,
+      setting_name.to_sym,
+      DiscourseAi::Agents::Agent.external_agent_id(agent_klass).to_s,
+      type: "enum",
+      enum: "DiscourseAi::Configuration::AgentEnumerator",
+      depends_on: %w[discourse_ai_enabled],
+      depends_behavior: "hidden",
+      area: area,
+    )
 
     if enabled_by_setting.present?
       key = enabled_by_setting.to_sym
