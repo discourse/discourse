@@ -1,13 +1,5 @@
 @use "lib/viewport";
 
-// Full width layout. Ported from the Discourse Full Width theme component here
-// https://meta.discourse.org/t/discourse-full-width-component/292496, which we
-// intend to move into core over time.
-//
-// We are copying this here so we can continue to iterate on Horizon with full
-// width without having to include the theme component as a dependency, we
-// need to remove this once full width is in core.
-
 $sidebar-width: 17em;
 
 .wrap {
@@ -105,9 +97,7 @@ $sidebar-width: 17em;
       }
 
       .has-sidebar-page & {
-        // at wide widths, when 1fr > 0
-        // we want the panel to be the same width as the sidebar
-        // this way we can get more accurate centering
+        // deviated here from the TC for full height sidebar
         grid-template-columns:
           auto
           1fr
@@ -120,6 +110,7 @@ $sidebar-width: 17em;
         // we can center without matching the sidebar's width
         // which allows the title to take up the remaining width
         @media screen and (width <= 1400px) {
+          // deviated here from the TC for full height sidebar
           grid-template-columns:
             auto
             1fr
