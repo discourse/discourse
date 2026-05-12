@@ -885,6 +885,71 @@ RSpec.describe Middleware::RequestTracker do
           expect(events.length).to eq(0)
         end
       end
+
+      context "when SiteSetting.persist_browser_pageview_events is true" do
+        before { SiteSetting.persist_browser_pageview_events = true }
+
+        it "creates a BrowserPageviewEvent row and does not fire the :browser_pageview event" do
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+          DiscourseIpInfo.stubs(:get).returns(country_code: "AU")
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+                "action_dispatch.remote_ip" => "1.2.3.4",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          events =
+            DiscourseEvent.track_events(:browser_pageview) do
+              expect { Middleware::RequestTracker.log_request(data) }.to change {
+                BrowserPageviewEvent.count
+              }.by(1)
+            end
+
+          expect(events).to be_empty
+
+          event = BrowserPageviewEvent.last
+          expect(event.session_id).to eq(session_id)
+          expect(event.url).to eq("https://discourse.org")
+          expect(event.referrer).to eq("https://example.com")
+          expect(event.country_code).to eq("AU")
+          expect(event.user_agent).to be_present
+          expect(event.ip_address.to_s).to eq("1.2.3.4")
+        end
+
+        it "takes precedence even when trigger_browser_pageview_events is also true" do
+          SiteSetting.trigger_browser_pageview_events = true
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "action_dispatch.remote_ip" => "1.2.3.4",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          events =
+            DiscourseEvent.track_events(:browser_pageview) do
+              expect { Middleware::RequestTracker.log_request(data) }.to change {
+                BrowserPageviewEvent.count
+              }.by(1)
+            end
+
+          expect(events).to be_empty
+        end
+      end
     end
   end
 
@@ -900,12 +965,15 @@ RSpec.describe Middleware::RequestTracker do
       env(
         {
           :path => "/srv/pv",
+          "HTTP_HOST" => "test.localhost",
           "REQUEST_METHOD" => "POST",
           "CONTENT_TYPE" => "application/json",
           "rack.input" => StringIO.new(json_body),
         }.merge(extra),
       )
     end
+
+    let(:same_origin) { { "HTTP_ORIGIN" => "http://test.localhost" } }
 
     it "returns 204 and does not call the app" do
       app_called = false
@@ -916,7 +984,7 @@ RSpec.describe Middleware::RequestTracker do
             [200, {}, ["OK"]]
           end,
         )
-      status, = middleware.call(beacon_env({}))
+      status, = middleware.call(beacon_env({}, same_origin))
 
       expect(status).to eq(204)
       expect(app_called).to eq(false)
@@ -925,7 +993,7 @@ RSpec.describe Middleware::RequestTracker do
     it "returns 204 for beacon requests in a subfolder setup" do
       set_subfolder "/forum"
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      status, = middleware.call(beacon_env({}, { path: "/forum/srv/pv" }))
+      status, = middleware.call(beacon_env({}, same_origin.merge(path: "/forum/srv/pv")))
 
       expect(status).to eq(204)
     end
@@ -936,6 +1004,8 @@ RSpec.describe Middleware::RequestTracker do
         middleware.call(
           env(
             :path => "/srv/pv",
+            "HTTP_HOST" => "test.localhost",
+            "HTTP_ORIGIN" => "http://test.localhost",
             "REQUEST_METHOD" => "POST",
             "CONTENT_TYPE" => "application/json",
             "rack.input" => StringIO.new("not json"),
@@ -960,6 +1030,7 @@ RSpec.describe Middleware::RequestTracker do
                 session_id: "abc123",
                 topic_id: 123,
               },
+              same_origin,
             ),
           )
         end
@@ -995,7 +1066,7 @@ RSpec.describe Middleware::RequestTracker do
     it "skips beacon page view when the remote IP resolves to a crawler ASN" do
       DiscourseIpInfo.stubs(:get).returns({ asn: SiteSetting.crawler_asns_map.first.to_i })
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      middleware.call(beacon_env({}, { "action_dispatch.remote_ip" => "1.2.3.4" }))
+      middleware.call(beacon_env({}, same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4")))
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
@@ -1004,10 +1075,49 @@ RSpec.describe Middleware::RequestTracker do
     it "counts beacon page view when the remote IP is not a crawler ASN" do
       DiscourseIpInfo.stubs(:get).returns({ asn: 1 })
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      middleware.call(beacon_env({}, { "action_dispatch.remote_ip" => "1.2.3.4" }))
+      middleware.call(beacon_env({}, same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4")))
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon_browser_beacon.first.count).to eq(1)
+    end
+
+    it "returns 403 for cross-origin beacon requests" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, = middleware.call(beacon_env({}, { "HTTP_ORIGIN" => "https://evil.example" }))
+      CachedCounting.flush
+
+      expect(status).to eq(403)
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
+    end
+
+    it "returns 403 when Origin and Referer are both absent" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, = middleware.call(beacon_env({}))
+      CachedCounting.flush
+
+      expect(status).to eq(403)
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
+    end
+
+    it "returns 403 when Origin matches the request Host but differs from the canonical hostname" do
+      SiteSetting.force_hostname = "canonical.example"
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, =
+        middleware.call(
+          beacon_env({}, { "HTTP_HOST" => "evil.example", "HTTP_ORIGIN" => "http://evil.example" }),
+        )
+      CachedCounting.flush
+
+      expect(status).to eq(403)
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
+    end
+
+    it "accepts beacon when Origin is absent but Referer is same-origin" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, =
+        middleware.call(beacon_env({}, { "HTTP_REFERER" => "http://test.localhost/some/page" }))
+
+      expect(status).to eq(204)
     end
 
     context "when SiteSetting.use_beacon_for_browser_page_views is false" do

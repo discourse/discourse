@@ -1,7 +1,7 @@
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import ComboBoxHeaderComponent from "discourse/select-kit/components/combo-box/combo-box-header";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("future-date-input-selector-header")
 export default class FutureDateInputSelectorHeader extends ComboBoxHeaderComponent {
@@ -9,7 +9,7 @@ export default class FutureDateInputSelectorHeader extends ComboBoxHeaderCompone
     <div class="select-kit-header-wrapper">
       {{#if this.icons}}
         <div class="future-date-input-selector-icons">
-          {{#each this.icons as |iconName|}} {{icon iconName}} {{/each}}
+          {{#each this.icons as |iconName|}} {{dIcon iconName}} {{/each}}
         </div>
       {{/if}}
 
@@ -30,7 +30,7 @@ export default class FutureDateInputSelectorHeader extends ComboBoxHeaderCompone
         </span>
       {{/if}}
 
-      {{icon this.caretIcon class="angle-icon"}}
+      {{dIcon this.caretIcon class="angle-icon"}}
     </div>
   </template>
 }

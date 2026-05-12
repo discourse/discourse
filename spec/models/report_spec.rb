@@ -1352,7 +1352,7 @@ RSpec.describe Report do
     end
   end
 
-  describe "report_staff_logins" do
+  describe "report_admin_logins" do
     let(:joffrey) { Fabricate(:admin, username: "joffrey") }
     let(:robin) { Fabricate(:admin, username: "robin") }
     let(:james) { Fabricate(:user, username: "james") }
@@ -1385,7 +1385,7 @@ RSpec.describe Report do
         )
         UserAuthToken.log(action: "generate", user_id: james.id)
 
-        report = Report.find("staff_logins")
+        report = Report.find("admin_logins")
 
         expect(report.data.length).to eq(3)
         expect(report.data[0][:username]).to eq("joffrey")
@@ -1636,6 +1636,8 @@ RSpec.describe Report do
       end
 
       it "exposes embedded pageviews as their own series without polluting other series" do
+        Fabricate(:embeddable_host)
+
         2.times { ApplicationRequest.increment!(:page_view_anon) }
         1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
         3.times { ApplicationRequest.increment!(:page_view_logged_in) }
@@ -1648,6 +1650,13 @@ RSpec.describe Report do
 
         expect(embed_series[:data][0][:y]).to eq(4)
         expect(other_series[:data][0][:y]).to eq(2)
+      end
+
+      it "omits the embedded pageviews series when no embeddable host is configured" do
+        4.times { ApplicationRequest.increment!(:page_view_embed) }
+        CachedCounting.flush
+
+        expect(reports.data.map { |r| r[:req] }).not_to include("page_view_embed")
       end
     end
   end

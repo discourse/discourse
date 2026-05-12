@@ -1056,7 +1056,7 @@ ca:
         os: Sistema operatiu
         login_time: Hora d'inici de sessió
       description: "Detalls de nous inicis de sessió que difereixen sospitosament de connexions anteriors."
-    staff_logins:
+    admin_logins:
       title: "Inicis de sessió d'administradors"
       labels:
         user: Usuari

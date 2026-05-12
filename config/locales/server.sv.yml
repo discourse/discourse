@@ -1315,7 +1315,7 @@ sv:
         os: Operativsystem
         login_time: Inloggningstid
       description: "Detaljer om nya inloggningar som skiljer sig misstänksamt från tidigare inloggningar."
-    staff_logins:
+    admin_logins:
       title: "Administratörsinloggningar"
       labels:
         user: Användare

@@ -16,6 +16,70 @@ module DiscourseAi
           ::Search.word_to_date(str)
         end
 
+        def self.category_ids_from_param(category_param)
+          category_param
+            .to_s
+            .split(",")
+            .map(&:strip)
+            .reject(&:blank?)
+            .flat_map { |category_value| category_ids_from_value(category_value) }
+            .uniq
+        end
+
+        def self.category_ids_from_value(category_value)
+          exact = category_value.start_with?("=")
+          category_value = category_value[1..] if exact
+          category_value = strip_surrounding_quotes(category_value.strip)
+
+          category = find_category(category_value)
+          return [] if category.blank?
+
+          category_ids = [category.id]
+          category_ids.concat(Category.subcategory_ids(category.id)) if !exact
+          category_ids
+        end
+
+        def self.find_category(category_value)
+          parent_value, child_value = category_value.split(%r{[/:]}, 2)
+
+          if child_value.present?
+            parent_category_ids = matching_categories(parent_value).select(:id)
+
+            matching_categories(child_value)
+              .where(parent_category_id: parent_category_ids)
+              .order("case when parent_category_id is null then 0 else 1 end")
+              .first
+          else
+            matching_categories(category_value).order(
+              "case when parent_category_id is null then 0 else 1 end",
+            ).first
+          end
+        end
+
+        def self.matching_categories(category_value)
+          categories =
+            Category.where(
+              "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")} OR " \
+                "#{Category.normalize_sql("name")} = #{Category.normalize_sql("?")}",
+              category_value,
+              category_value,
+            )
+
+          if category_value.match?(/\A\d{1,10}\z/)
+            categories = categories.or(Category.where(id: category_value.to_i))
+          end
+
+          categories
+        end
+
+        def self.strip_surrounding_quotes(value)
+          if value.length >= 2 && value.start_with?("\"") && value.end_with?("\"")
+            value[1...-1]
+          else
+            value
+          end
+        end
+
         attr_reader :term, :filters, :order, :guardian, :limit, :offset, :invalid_filters
 
         register_filter(/\Astatus:open\z/i) do |relation, _, _|
@@ -132,24 +196,12 @@ module DiscourseAi
         end
 
         register_filter(/\A(?:categories?|category):(.*)\z/i) do |relation, category_param, _|
-          if category_param.include?(",")
-            category_names = category_param.split(",").map(&:strip)
+          category_ids = Filter.category_ids_from_param(category_param)
 
-            found_category_ids = []
-            category_names.each do |name|
-              category = Category.find_by(slug: name) || Category.find_by(name: name)
-              found_category_ids << category.id if category
-            end
-
-            return relation.where("1 = 0") if found_category_ids.empty?
-            relation.where(topic_id: Topic.where(category_id: found_category_ids).select(:id))
+          if category_ids.empty?
+            relation.where("1 = 0")
           else
-            if category =
-                 Category.find_by(slug: category_param) || Category.find_by(name: category_param)
-              relation.where(topic_id: Topic.where(category_id: category.id).select(:id))
-            else
-              relation.where("1 = 0")
-            end
+            relation.where(topic_id: Topic.where(category_id: category_ids).select(:id))
           end
         end
 

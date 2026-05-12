@@ -17,13 +17,11 @@ import {
 } from "pretty-text/emoji";
 import { replacements, translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
-import DTextarea from "discourse/components/d-textarea";
 import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
@@ -40,12 +38,12 @@ import {
 import { optionalRequire } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
-import DAutocompleteModifier, {
-  SKIP,
-} from "discourse/modifiers/d-autocomplete";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { not, or } from "discourse/truth-helpers";
+import DTextarea from "discourse/ui-kit/d-textarea";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dAutocomplete, { SKIP } from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import DButton from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";
@@ -123,7 +121,7 @@ export default class ChatComposer extends Component {
 
   applyAutocomplete(textarea, options) {
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    return DAutocompleteModifier.setupAutocomplete(
+    return dAutocomplete.setupAutocomplete(
       getOwner(this),
       textarea,
       autocompleteHandler,
@@ -738,7 +736,7 @@ export default class ChatComposer extends Component {
       <div
         role="region"
         aria-label={{i18n "chat.aria_roles.composer"}}
-        class={{concatClass
+        class={{dConcatClass
           "chat-composer"
           (if this.isFocused "is-focused")
           (if this.pane.sending "is-sending")

@@ -1,5 +1,5 @@
-import SaveControls from "discourse/components/save-controls";
 import Tags from "discourse/components/user-preferences/tags";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
 
 export default <template>
   <Tags
@@ -9,7 +9,7 @@ export default <template>
     @siteSettings={{@controller.siteSettings}}
   />
 
-  <SaveControls
+  <DSaveControls
     @model={{@controller.model}}
     @action={{@controller.save}}
     @saved={{@controller.saved}}

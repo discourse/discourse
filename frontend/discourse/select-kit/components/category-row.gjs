@@ -6,10 +6,10 @@ import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty, isNone } from "@ember/utils";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import dirSpan from "discourse/helpers/dir-span";
 import Category from "discourse/models/category";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryRow extends Component {
@@ -277,7 +277,7 @@ export default class CategoryRow extends Component {
   <template>
     {{! template-lint-disable no-pointer-down-event-binding }}
     <div
-      class={{concatClass
+      class={{dConcatClass
         "category-row"
         "select-kit-row"
         (if this.isSelected "is-selected")
@@ -307,7 +307,7 @@ export default class CategoryRow extends Component {
 
         {{#if this.shouldDisplayDescription}}
           <div class="category-desc" aria-hidden="true">
-            {{dirSpan this.descriptionText htmlSafe="true"}}
+            {{dDirSpan this.descriptionText htmlSafe="true"}}
           </div>
         {{/if}}
       {{else}}

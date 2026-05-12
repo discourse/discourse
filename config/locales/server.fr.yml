@@ -1517,11 +1517,11 @@ fr:
         os: Système d'exploitation
         login_time: Heure de connexion
       description: "Détails des nouvelles connexions qui diffèrent de manière suspecte des connexions précédentes."
-    staff_logins:
+    admin_logins:
       title: "Connexions des administrateurs"
       labels:
         user: Utilisateur
-        location: Localisation
+        location: Emplacement
         login_at: Heure de connexion
       description: "Liste des heures et localisations des connexions des administrateurs."
     top_uploads:

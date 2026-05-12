@@ -4563,6 +4563,12 @@ te:
         too_many_requests: మీరు ఈ చర్యను చాలా సార్లు చేసారు. దయచేసి మళ్లీ ప్రయత్నించే ముందు వేచి ఉండండి.
         not_found_error: క్షమించండి, ఈ నివేదిక ఉనికిలో లేదు
         custom_date_range: అనుకూల తేదీ పరిధి
+        sections:
+          reports:
+            title: "నివేదికలు"
+        period:
+          last_3_months: "గత 3 నెలలు"
+          custom: "అనురూప"
         reports:
           trend_title: "%{percent} మార్పు. ప్రస్తుతం %{current}, మునుపటి వ్యవధిలో %{prev} ."
           today: "ఈరోజు"

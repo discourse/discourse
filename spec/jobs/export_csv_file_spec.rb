@@ -218,7 +218,7 @@ RSpec.describe Jobs::ExportCsvFile do
         client_ip: "1.1.1.1",
         created_at: "2010-01-01",
       )
-      exporter.extra["name"] = "staff_logins"
+      exporter.extra["name"] = "admin_logins"
 
       report = export_report
 

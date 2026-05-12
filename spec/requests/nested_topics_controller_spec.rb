@@ -182,6 +182,92 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json["page"]).to eq(1)
     end
 
+    describe "topic.has_activity_log" do
+      it "is false when the topic has no small actions or whispers with action codes" do
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(false)
+      end
+
+      it "is true when the topic has a visible small_action post" do
+        topic.add_small_action(admin, "closed.enabled")
+
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
+      end
+
+      it "ignores whisper action-code posts for non-whisperers" do
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        topic.add_moderator_post(
+          admin,
+          nil,
+          post_type: Post.types[:whisper],
+          action_code: "assigned",
+          custom_fields: {
+            "action_code_who" => user.username,
+          },
+        )
+
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(false)
+      end
+
+      it "is true when whisperers have a whisper action-code post" do
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        topic.add_moderator_post(
+          admin,
+          nil,
+          post_type: Post.types[:whisper],
+          action_code: "assigned",
+          custom_fields: {
+            "action_code_who" => user.username,
+          },
+        )
+
+        sign_in(admin)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
+      end
+
+      it "does not leak the existence of hidden small_actions to non-staff" do
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "closed.enabled",
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(false)
+      end
+
+      it "is true for staff when the only small_action is hidden" do
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "closed.enabled",
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+        sign_in(admin)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
+      end
+    end
+
     it "paginates with has_more_roots" do
       NestedReplies::TreeLoader::ROOTS_PER_PAGE.times do
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)

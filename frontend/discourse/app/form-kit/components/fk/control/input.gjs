@@ -1,7 +1,7 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const SUPPORTED_TYPES = [
   "color",
@@ -99,7 +99,7 @@ export default class FKControlInput extends FKBaseControl {
       <input
         type={{this.type}}
         value={{this.displayValue}}
-        class={{concatClass
+        class={{dConcatClass
           "form-kit__control-input"
           (if @before "has-prefix")
           (if @after "has-suffix")

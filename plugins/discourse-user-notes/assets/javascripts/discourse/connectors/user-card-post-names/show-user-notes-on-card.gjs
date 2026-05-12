@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
+import DButton from "discourse/ui-kit/d-button";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { showUserNotes } from "../../lib/user-notes";
 
@@ -38,9 +38,9 @@ export default class extends Component {
           class="btn-flat"
         >
           {{#if this.siteSettings.enable_emoji}}
-            {{emoji "memo"}}
+            {{dEmoji "memo"}}
           {{else}}
-            {{icon "pen-to-square"}}
+            {{dIcon "pen-to-square"}}
           {{/if}}
         </DButton>
       {{/if}}

@@ -1,8 +1,8 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 
 @tagName("")
 export default class AdminReportInlineTable extends Component {
@@ -13,12 +13,12 @@ export default class AdminReportInlineTable extends Component {
           <a class="table-cell user-{{data.key}}" href={{data.url}}>
             <span class="label">
               {{#if data.icon}}
-                {{icon data.icon}}
+                {{dIcon data.icon}}
               {{/if}}
               {{data.x}}
             </span>
             <span class="value">
-              {{number data.y}}
+              {{dNumber data.y}}
             </span>
           </a>
         {{/each}}

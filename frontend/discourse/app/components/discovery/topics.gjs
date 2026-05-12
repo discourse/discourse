@@ -3,23 +3,23 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import CountI18n from "discourse/components/count-i18n";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
 import EmptyTopicFilter from "discourse/components/empty-topic-filter";
-import LoadMore from "discourse/components/load-more";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import List from "discourse/components/topic-list/list";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import { or } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCountI18n from "discourse/ui-kit/d-count-i18n";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 
 export default class DiscoveryTopics extends Component {
   @service documentTitle;
@@ -228,7 +228,7 @@ export default class DiscoveryTopics extends Component {
               class="alert alert-info clickable
                 {{if @model.loadingBefore 'loading'}}"
             >
-              <CountI18n
+              <DCountI18n
                 @key="topic_count_"
                 @suffix={{this.topicTrackingState.filter}}
                 @count={{or
@@ -237,7 +237,7 @@ export default class DiscoveryTopics extends Component {
                 }}
               />
               {{#if @model.loadingBefore}}
-                {{loadingSpinner size="small"}}
+                {{dLoadingSpinner size="small"}}
               {{/if}}
             </a>
           </div>
@@ -274,7 +274,7 @@ export default class DiscoveryTopics extends Component {
           @listContext="discovery"
         />
 
-        <LoadMore @action={{this.loadMore}} />
+        <DLoadMore @action={{this.loadMore}} />
       {{/if}}
 
       <span class="after-topic-list-plugin-outlet-wrapper">
@@ -293,7 +293,7 @@ export default class DiscoveryTopics extends Component {
     </DiscoveryTopicsList>
 
     <footer class="topic-list-bottom">
-      <ConditionalLoadingSpinner @condition={{@model.loadingMore}} />
+      <DConditionalLoadingSpinner @condition={{@model.loadingMore}} />
       {{#if this.allLoaded}}
         <PluginOutlet
           @name="topic-list-bottom"

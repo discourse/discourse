@@ -1517,7 +1517,7 @@ it:
         os: Sistema Operativo
         login_time: Ora di Accesso
       description: "Dettagli suoi nuovi accessi che differiscono in modo sospetto da precedenti accessi."
-    staff_logins:
+    admin_logins:
       title: "Accessi Amministratore"
       labels:
         user: Utente

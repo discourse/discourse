@@ -1517,7 +1517,7 @@ fi:
         os: Käyttöjärjestelmä
         login_time: Kirjautumisaika
       description: "Tiedot uusista kirjautumisista, jotka poikkesivat epäilyttävällä tavalla aiemmista kirjautumisista."
-    staff_logins:
+    admin_logins:
       title: "Ylläpitäjien kirjautumiset"
       labels:
         user: Käyttäjä

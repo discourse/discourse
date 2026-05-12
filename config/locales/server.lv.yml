@@ -399,7 +399,7 @@ lv:
       labels:
         user: Lietotājs
         location: Atrašanās vieta
-    staff_logins:
+    admin_logins:
       labels:
         user: Lietotājs
         location: Atrašanās vieta

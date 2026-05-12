@@ -931,6 +931,7 @@ ja:
           upload_files: "ファイルをアップロード"
           uploads_in_progress: "アップロード中は送信できません"
           scroll_to_bottom: "一番下にスクロール"
+          editing_post: "投稿を編集中"
       sentiments:
         dashboard:
           title: "センチメント"

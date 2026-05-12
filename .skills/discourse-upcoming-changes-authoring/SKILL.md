@@ -22,6 +22,8 @@ Key methods to understand:
 - `stats_for_user(user:, acting_guardian:)` — Returns per-change status for a user including *why* they have/don't have access (the `user_enabled_reasons` enum).
 - `current_statuses` / `permanent_upcoming_changes` — Cached lookups keyed by git version (one-time cost per deploy). Cleared by `clear_caches!` and automatically when `TrackNotifyStatusChanges` detects changes.
 
+**`UpcomingChanges::ConditionalDisplay`** (defined inside `lib/upcoming_changes.rb`) — Hides individual upcoming changes from the admin UI when they don't make sense in the current context (e.g. a Horizon-related change on a site without Horizon installed). Define a `should_display_<upcoming_change_name>?` class method on it to gate a specific change; if no method is defined, the change is always displayed. See [Conditional Display](#conditional-display) below.
+
 **`app/models/upcoming_change_event.rb`** — Audit trail. Every lifecycle event (added, removed, status change, manual toggle, admin notification) is recorded here. Has unique indexes to prevent duplicate events of specific types per change.
 
 **`lib/site_setting_extension.rb`** — Where `upcoming_change:` metadata in `site_settings.yml` gets parsed. When a setting is registered with this metadata, it stores the parsed result in `@upcoming_change_metadata` and defines a `{name}_groups_map` method. The `impact` string is split into `impact_type` and `impact_role`. Also handles `upcoming_change_default_override:` metadata — see [Default Overrides](#default-overrides) below.
@@ -36,7 +38,7 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 
 | Service | Purpose |
 |---------|---------|
-| `List` | Admin-only, fetches all changes with metadata, group data, and images |
+| `List` | Admin-only, fetches all changes with metadata, group data, and images. Filters out changes whose `ConditionalDisplay.should_display?` returns false. |
 | `Toggle` | Admin enable/disable — updates SiteSetting, clears groups if `disallow_enabled_for_groups`, logs staff action, fires DiscourseEvent |
 | `Track` | Orchestrator called by the scheduled job — delegates to three action sub-services |
 | `TrackNotifyAddedChanges` | Compares current settings against event history, creates `added` events |
@@ -128,6 +130,22 @@ When `increase_suggested_topics_max_days_old_default` is enabled (either manuall
 - **Reversible**: Disabling the upcoming change deactivates the override and restores the original default.
 - **Default-locale only**: Overrides currently only apply on the default locale.
 
+### Conditional Display
+
+Some upcoming changes only make sense to show admins under certain conditions — for example, a Horizon-themed change is irrelevant if Horizon isn't installed, or a change might only apply when another setting is enabled. `UpcomingChanges::ConditionalDisplay` (in `lib/upcoming_changes.rb`) lets the framework hide a change from the admin UI without removing it from `site_settings.yml`.
+
+#### How It Works
+
+1. **Filtering** — `UpcomingChanges::List#fetch_upcoming_changes` calls `UpcomingChanges::ConditionalDisplay.should_display?(setting_name)` on every change after the status filter, before group/image enrichment. Changes that return `false` are dropped from the result entirely.
+2. **Resolution** — `should_display?` checks for a class method named `should_display_<upcoming_change_name>?` on `ConditionalDisplay`. If defined, its return value is used; otherwise the change is always displayed (returns `true`).
+3. **Definition site** — Add the gating method directly to the `ConditionalDisplay` class, typically next to (or inside) the relevant subsystem's code — e.g. a Horizon-specific gate can live with the Horizon code as long as `UpcomingChanges::ConditionalDisplay` is reopened to define it. Group related gates together for discoverability.
+
+#### Key Behaviors
+
+- **Display-only**: This affects whether the change appears in the admin UI list, not whether it's enabled. `enabled?` / `enabled_for_user?` still resolve normally — code paths gated on the change continue to work.
+- **N+1 by design**: `should_display?` is called once per change in the loop. If a gating method does expensive work (DB queries, plugin lookups), memoize inside the method to avoid repeated cost.
+- **Notifications still fire**: Conditional display only filters the `List` service result. `TrackNotifyAddedChanges`, `NotifyPromotions`, etc. do not consult `ConditionalDisplay`, so admins may still receive notifications about a hidden change. Consider this when designing the gate — usually the gate should reflect a long-lived condition (plugin missing, theme not installed) rather than transient state.
+
 ## Key Design Decisions
 
 ### Caching Strategy
@@ -178,6 +196,25 @@ The three main components to know:
 - **User view** (`admin-user-upcoming-changes.gjs`) — Read-only per-user view
 
 State is managed via `trackedObject` for reactivity. API calls go through `ajax()` directly in the item component.
+
+### Adding a Conditional Display Rule
+
+To hide an upcoming change from the admin UI under certain conditions:
+
+1. Reopen `UpcomingChanges::ConditionalDisplay` and define a class method named `should_display_<upcoming_change_name>?` that returns a boolean:
+   ```ruby
+   module UpcomingChanges
+     class ConditionalDisplay
+       def self.should_display_enable_horizon_blah?
+         Discourse.plugins_by_name["horizon"].present?
+       end
+     end
+   end
+   ```
+2. Place the reopen near the related subsystem (e.g. inside the Horizon plugin) so the gate lives with the code that owns the condition.
+3. If the check is expensive, memoize inside the method — `List` calls `should_display?` once per change.
+4. No registration step is needed; `should_display?` finds the method dynamically via `respond_to?`.
+5. Test by stubbing the predicate — see [Testing Conditional Display](#testing-conditional-display).
 
 ### Adding a Default Override
 
@@ -250,6 +287,35 @@ SiteSetting.refresh!
 # Override is not applied — admin's explicit choice is preserved
 expect(SiteSetting.suggested_topics_max_days_old).to eq(730)
 ```
+
+### Testing Conditional Display
+
+Stub the predicate method directly on `UpcomingChanges::ConditionalDisplay` rather than redefining it — this avoids leaking method definitions across examples:
+
+```ruby
+UpcomingChanges::ConditionalDisplay
+  .stubs(:should_display_enable_upload_debug_mode?)
+  .returns(false)
+```
+
+For unit tests of `ConditionalDisplay` itself (where you need to verify dispatch), use `define_singleton_method` in `before` and `remove_method` in `after` to clean up:
+
+```ruby
+before do
+  UpcomingChanges::ConditionalDisplay.define_singleton_method(
+    :should_display_enable_upload_debug_mode?,
+  ) { false }
+end
+
+after do
+  UpcomingChanges::ConditionalDisplay.singleton_class.send(
+    :remove_method,
+    :should_display_enable_upload_debug_mode?,
+  )
+end
+```
+
+When testing `UpcomingChanges::List`, assert the change is/isn't present in `result.upcoming_changes` by `:setting` key.
 
 ### Cache Clearing in Tests
 

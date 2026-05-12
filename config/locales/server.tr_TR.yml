@@ -1558,7 +1558,7 @@ tr_TR:
         os: İşletim Sistemi
         login_time: Giriş Zamanı
       description: "Önceki girişlerden şüpheli bir şekilde farklı olan yeni girişlerin ayrıntıları."
-    staff_logins:
+    admin_logins:
       title: "Yönetici Girişleri"
       labels:
         user: Kullanıcı

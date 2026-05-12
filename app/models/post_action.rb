@@ -37,6 +37,23 @@ class PostAction < ActiveRecord::Base
     user_actions
   end
 
+  def self.ignored_user_like_counts_for(posts, user)
+    return {} if posts.blank? || user.blank?
+
+    ignored_ids = user.ignored_user_ids
+    return {} if ignored_ids.empty?
+
+    PostAction
+      .where(
+        post_id: posts.map(&:id),
+        user_id: ignored_ids,
+        post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+        deleted_at: nil,
+      )
+      .group(:post_id)
+      .count
+  end
+
   def self.lookup_for(user, topics, post_action_type_id)
     return if topics.blank?
     # in critical path 2x faster than AR

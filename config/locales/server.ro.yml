@@ -910,7 +910,7 @@ ro:
       labels:
         user: Utilizator
         location: Locație
-    staff_logins:
+    admin_logins:
       labels:
         user: Utilizator
         location: Locație

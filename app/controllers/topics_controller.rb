@@ -650,6 +650,9 @@ class TopicsController < ApplicationController
       category = Category.find_by(id: params[:category_id])
       raise Discourse::NotFound if !category
       raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
+      if topic.private_message? && !guardian.can_convert_topic?(topic)
+        raise Discourse::InvalidAccess
+      end
     end
 
     options = { by_user: current_user, based_on_last_post: based_on_last_post }

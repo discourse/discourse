@@ -992,7 +992,7 @@ zh_TW:
         os: 運行系統
         login_time: 登入時間
       description: "與先前登入不同的新登入的詳細資訊"
-    staff_logins:
+    admin_logins:
       title: "管理員登入次數"
       labels:
         user: 使用者

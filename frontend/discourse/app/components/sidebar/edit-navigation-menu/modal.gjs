@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SidebarEditNavigationMenuModal extends Component {
@@ -70,7 +70,7 @@ export default class SidebarEditNavigationMenuModal extends Component {
       <:belowHeader>
         <div class="sidebar__edit-navigation-menu__filter">
           <div class="sidebar__edit-navigation-menu__filter-input">
-            {{icon
+            {{dIcon
               "magnifying-glass"
               class="sidebar__edit-navigation-menu__filter-input-icon"
             }}

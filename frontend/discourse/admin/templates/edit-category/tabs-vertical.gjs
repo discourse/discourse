@@ -1,7 +1,7 @@
 import EditCategoryTab from "discourse/admin/components/edit-category-tab";
 import BreadCrumbs from "discourse/components/bread-crumbs";
-import DButton from "discourse/components/d-button";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 
 const EditCategoryTabsVerticalTemplate = <template>
   <div class="edit-category-title-bar">

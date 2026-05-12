@@ -31,3 +31,11 @@ discourse_reactions:
     default: false
     client: true
     area: "emojis"
+  enable_new_post_reply_count_position:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"

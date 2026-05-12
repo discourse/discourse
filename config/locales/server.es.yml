@@ -1553,7 +1553,7 @@ es:
         os: Sistema operativo
         login_time: Fecha y hora de inicio de sesión
       description: "Detalles de nuevos inicios de sesión marcados como sospechosos."
-    staff_logins:
+    admin_logins:
       title: "Inicios de sesión de administradores"
       labels:
         user: Usuario

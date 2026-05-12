@@ -1247,6 +1247,7 @@ pl_PL:
           hide_toolbar: "Ukryj pasek narzędzi formatowania"
           scroll_to_bottom: "Przewiń na dół"
           streaming_below: "Nowa treść poniżej"
+          editing_post: "Edycja wpisu"
       sentiments:
         dashboard:
           title: "Sentiment"

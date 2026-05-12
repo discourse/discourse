@@ -2760,6 +2760,10 @@ sr:
         backups: "Sigurnosne kopije"
         general_tab: "Opšti"
         security_tab: "Sigurnost"
+        period:
+          last_7_days: "Последњих 7 дана"
+          last_30_days: "Последњих 30 дана"
+          custom: "Posebna"
         reports:
           today: "Danas"
           yesterday: "Juče"

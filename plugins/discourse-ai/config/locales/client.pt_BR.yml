@@ -977,6 +977,7 @@ pt_BR:
           upload_files: "Enviar arquivos"
           uploads_in_progress: "Não é possível enviar enquanto houver envios em andamento"
           scroll_to_bottom: "Rolar para a parte inferior"
+          editing_post: "Editando postagem"
       sentiments:
         dashboard:
           title: "Sentimento"

@@ -4,10 +4,10 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DModal from "discourse/components/d-modal";
-import FilterInput from "discourse/components/filter-input";
 import { translateModKey } from "discourse/lib/utilities";
 import { extraKeyboardShortcutsHelp } from "discourse/services/keyboard-shortcuts";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const KEY = "keyboard_shortcuts_help";
@@ -461,7 +461,7 @@ export default class KeyboardShortcutsHelp extends Component {
       <:body>
         <div id="keyboard-shortcuts-help">
 
-          <FilterInput
+          <DFilterInput
             @filterAction={{this.filterShortcuts}}
             @value={{this.searchTerm}}
             placeholder={{i18n "keyboard_shortcuts_help.search_placeholder"}}

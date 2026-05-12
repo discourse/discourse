@@ -10,6 +10,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 // This route is used for retrieving a topic based on params
 export default class TopicFromParams extends DiscourseRoute {
+  @service appEvents;
   @service composer;
   @service header;
   @service router;
@@ -62,7 +63,16 @@ export default class TopicFromParams extends DiscourseRoute {
         topic.set("_forcedFlat", true);
       } else {
         const postNumber = model.nearPost;
-        if (postNumber && postNumber > 1) {
+        const targetsPost = postNumber && postNumber > 1;
+        const alreadyOnTarget = this.#alreadyOnNestedTarget(topic, postNumber);
+
+        // Re-route into the nested view. When alreadyOnTarget is true
+        // this is a no-op transition that keeps the URL where it is;
+        // when false it becomes a real route change. Either way we
+        // must call it so we don't end up landing on /t/... — leaving
+        // afterModel without a redirect would let the topic route's
+        // setupController run.
+        if (targetsPost) {
           this.router.replaceWith(
             "nestedPost",
             topic.slug,
@@ -71,6 +81,12 @@ export default class TopicFromParams extends DiscourseRoute {
           );
         } else {
           this.router.replaceWith("nested", topic.slug, topic.id);
+        }
+
+        if (alreadyOnTarget) {
+          // No transition will fire — nudge the context view to
+          // re-scroll/highlight the target post.
+          this.appEvents.trigger("nested:scroll-to-target");
         }
         return;
       }
@@ -151,6 +167,21 @@ export default class TopicFromParams extends DiscourseRoute {
         topic,
       });
     }
+  }
+
+  #alreadyOnNestedTarget(topic, postNumber) {
+    const currentParams = this.router.currentRoute?.params;
+    if (!currentParams || String(currentParams.topic_id) !== String(topic.id)) {
+      return false;
+    }
+    const currentRoute = this.router.currentRouteName;
+    if (postNumber && postNumber > 1) {
+      return (
+        currentRoute === "nestedPost" &&
+        String(currentParams.post_number) === String(postNumber)
+      );
+    }
+    return currentRoute === "nested";
   }
 
   @action

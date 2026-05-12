@@ -3022,6 +3022,9 @@ lv:
         security_tab: "Drošība"
         report_filter_any: "jebkura"
         disabled: Atslēgt
+        period:
+          last_7_days: "Pēdējās 7 dienas"
+          last_30_days: "Pēdējās 30 dienas"
         reports:
           today: "Šodien"
           yesterday: "Vakar"

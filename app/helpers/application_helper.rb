@@ -71,6 +71,12 @@ module ApplicationHelper
     ContentSecurityPolicy.nonce_placeholder(response.headers)
   end
 
+  def track_view_session_id_placeholder
+    response.headers[
+      ::Middleware::TrackViewSessionIdInjector::PLACEHOLDER_HEADER
+    ] ||= "[[track_view_session_id_placeholder_#{SecureRandom.hex}]]"
+  end
+
   def shared_session_key
     if SiteSetting.long_polling_base_url != "/" && current_user
       sk = "shared_session_key"
@@ -429,12 +435,16 @@ module ApplicationHelper
 
   def discourse_pageview_tracking_meta_tags
     if !SiteSetting.trigger_browser_pageview_events &&
-         !SiteSetting.use_beacon_for_browser_page_views
+         !SiteSetting.use_beacon_for_browser_page_views &&
+         !SiteSetting.persist_browser_pageview_events
       return ""
     end
 
     tags = +""
-    tags << tag.meta(name: "discourse-track-view-session-id", content: SecureRandom.base64(32))
+    tags << tag.meta(
+      name: "discourse-track-view-session-id",
+      content: track_view_session_id_placeholder,
+    )
     if SiteSetting.use_beacon_for_browser_page_views
       tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
     end

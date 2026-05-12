@@ -1174,6 +1174,7 @@ es:
           upload_files: "Subir archivos"
           uploads_in_progress: "No se puede enviar mientras se están subiendo archivos"
           scroll_to_bottom: "Desplazar hacia abajo"
+          editing_post: "Editando publicación"
       sentiments:
         dashboard:
           title: "Sentimiento"

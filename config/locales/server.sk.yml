@@ -1671,7 +1671,7 @@ sk:
         os: Operačný systém
         login_time: Čas prihlásenia
       description: "Podrobnosti o nových prihláseniach, ktoré sa podozrivo líšia od predchádzajúcich prihlásení."
-    staff_logins:
+    admin_logins:
       title: "Prihlásenie správcu"
       labels:
         user: Používateľ
