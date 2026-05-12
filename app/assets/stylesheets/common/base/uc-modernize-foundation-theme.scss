@@ -44,6 +44,7 @@
   #topic-progress-wrapper {
     &:not(
       .topic-voting-menu-trigger,
+      .voting-wrapper__button,
       .sidebar-footer-actions-button,
       #search-button,
       .btn-sidebar-toggle,
@@ -70,6 +71,7 @@
   .btn.no-text.btn-icon {
     &:not(
       .topic-voting-menu-trigger,
+      .voting-wrapper__button,
       .user-menu-tab,
       .user-menu-tab-active,
       .composer-actions-btn,
@@ -359,4 +361,9 @@
     height: 100%;
     align-items: center;
   }
+}
+
+.header-title-voting,
+.voting-wrapper {
+  margin-top: 0 !important;
 }
