@@ -61,10 +61,6 @@ $sidebar-width: 17em;
     margin: 0 auto;
     max-width: var(--d-max-width);
     width: 100%;
-
-    body.has-full-page-chat & {
-      max-width: unset;
-    }
   }
 }
 
