@@ -724,16 +724,19 @@ If the existing theme reload mechanism *forces a page refresh* (which it might f
 **Out of scope**: conditions UI, outlet routing, import/export, patterns.
 **Why now**: this is what makes it *feel* like Puck/Gutenberg. A starter block library proves the editor isn't useless on a vanilla install.
 
-### Phase 7 — "Conditions, persona/viewport simulation, multi-outlet awareness"
-**Goal**: Editors can attach conditions to blocks; preview the page as different personas and viewports; navigate between Block Outlets on a page in one editing session.
+### Phase 7 — "Conditions, condition-only simulation, multi-outlet awareness"
+**Goal**: Editors can attach conditions to blocks; preview how condition-gated blocks render under a different persona or viewport; navigate between Block Outlets on a page in one editing session.
 **Ships**:
-- **Core change #5** (Block Outlet enumeration metadata).
-- Visual condition builder UI in inspector (interactive version of `dev-tools/block-debug/conditions-tree.gjs`).
-- Persona switcher (Anonymous / TL0–TL4 / Admin / Custom) + viewport switcher (Mobile/Tablet/Desktop) in toolbar; condition evaluator extended to honor simulated identity.
-- Greyed-out "ghost" rendering for condition-failed blocks (reuses `dev-tools/block-debug/ghost-block.gjs`).
-- Multi-outlet outline tree: a single editing session covers all `<BlockOutlet>`s mounted on the current page; the topbar `Outlet ▼` dropdown is a jump-to-outlet convenience.
+- **Core change #5** (Block Outlet enumeration metadata) — outlets carry `displayName`, `description`, `category` in addition to the name. `services/blocks.js#listOutletsWithMetadata()` exposes the unified shape for both core + custom outlets.
+- **Condition-type discovery**: `services/blocks.js#listConditionTypes()` returns every condition class with its `displayName`, `description`, and `argsSchema`, sourced from a new `displayName` / `description` field on the `@blockCondition` decorator.
+- Visual condition builder UI in the inspector (an editable cousin of `dev-tools/block-debug/conditions-tree.gjs`) — AND / OR / NOT combinators with per-leaf arg inputs driven by the discovered schema.
+- Persona switcher (Real / Anonymous / TL0–TL4 / Admin) + viewport switcher (Real / Mobile / Tablet / Desktop) in the toolbar, threaded through the condition evaluator via a new `context.simulation` field. `user.js` and `viewport.js` honor it; other condition types are unchanged.
+- Greyed-out "ghost" rendering for condition-failed blocks during sim (reuses Phase 5's GHOST_BLOCKS callback path — no new code).
+- Outlets tab in the left rail + an outlet jump dropdown in the toolbar — both fed by `listOutletsWithMetadata()`.
 
-**Out of scope**: patterns, import/export, multi-slot containers, per-instance Style tab. PluginOutlets remain explicitly out of scope.
+**Scope decision** (condition-only simulation): the persona/viewport toolbar swaps the evaluator's identity inputs, but block *bodies* still render with the real user's data. A `"Welcome, {{username}}"` block keeps the real username under sim mode. Verifying condition-driven visibility is what authors most need to preview; full-fidelity preview (service shadowing so block bodies see the simulated user) is deferred to a later phase since it has a much bigger blast radius across core.
+
+**Out of scope**: full-fidelity preview (deferred), patterns, import/export, multi-slot containers, per-instance Style tab, route / setting simulation. PluginOutlets remain explicitly out of scope project-wide.
 **Why now**: conditions unlock targeting (admin-only banners, mobile-only blocks). Multi-outlet awareness makes editing a "page" rather than a single outlet feel coherent.
 
 ### Phase 8 — "Patterns, per-instance styling, import/export, polish"

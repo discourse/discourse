@@ -36,11 +36,43 @@ export default apiInitializer((api) => {
   installBlockChrome();
   installOutletBoundary(editor);
   installGhostBlocksWhileEditing(editor);
+  installSimulationContext(editor);
   installVeThemeAutoEnter(api, editor);
   // The shortcut listener self-gates on `editor.isActive`, so we can
   // install it once at boot — no need to attach/detach on editor enter.
   attachEditorShortcuts(editor);
 });
+
+/**
+ * Wires the visual editor's `simulation` slot into the condition
+ * evaluator's per-block context via the `EVAL_CONTEXT` debug hook.
+ *
+ * The callback reads `editor.simulation` (a `@tracked` field) on every
+ * invocation, so flipping the persona / viewport in the toolbar marks
+ * the preprocessor's tracked getter dirty and triggers a re-evaluation
+ * across the page. Returning `null` (when no simulation is active)
+ * means the evaluator falls back to its real-service reads — no
+ * overhead when sim mode is off.
+ *
+ * Coexists with any pre-existing EVAL_CONTEXT callback by merging the
+ * upstream payload with the editor's. Visual editor wins on collisions
+ * (the user explicitly enabled sim mode).
+ *
+ * @param {import("../services/visual-editor").default} editor
+ */
+function installSimulationContext(editor) {
+  const previous = debugHooks.getCallback(DEBUG_CALLBACK.EVAL_CONTEXT);
+  debugHooks.setCallback(DEBUG_CALLBACK.EVAL_CONTEXT, () => {
+    const upstream = previous?.() ?? null;
+    if (!editor.isSimulating) {
+      return upstream;
+    }
+    return {
+      ...(upstream ?? {}),
+      simulation: editor.simulation,
+    };
+  });
+}
 
 /**
  * While the editor is active, force the block-rendering pipeline's

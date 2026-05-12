@@ -24,6 +24,7 @@ import {
   insertEntryAt,
   moveEntry,
   removeEntry,
+  replaceEntryConditions,
 } from "../lib/mutate-layout";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
 
@@ -123,6 +124,18 @@ export default class VisualEditorService extends Service {
   /** @type {{targetKey: string, position: string, outletName: string}|null} */
   @tracked activeDropTarget = null;
   /**
+   * Phase 7 simulation slot. When non-null, threads through the condition
+   * evaluator's context (via the `EVAL_CONTEXT` debug hook) so
+   * condition-gated blocks render as if the simulated user / viewport
+   * were active. Block bodies themselves still render with the real
+   * user's data — simulation is condition-only.
+   *
+   * Shape: `{ user, viewport }` — each is null for "use the real value".
+   *
+   * @type {{user: Object|null, viewport: {viewport: Object, touch: boolean}|null}|null}
+   */
+  @tracked simulation = null;
+  /**
    * Clipboard slot for the Cmd/Ctrl-C/X/V cycle and the future "duplicate"
    * action. `mode: "copy"` lets paste re-clone the entry on every Cmd-V,
    * while `mode: "cut"` is currently equivalent at paste time (the cut
@@ -133,6 +146,7 @@ export default class VisualEditorService extends Service {
    * @type {{entry: Object, mode: "copy"|"cut"}|null}
    */
   @tracked _clipboard = null;
+
   /**
    * Undo / redo stacks for in-memory edits. Each entry captures one batch of
    * arg mutations: the affected entry, plus a `Map` of `argName → previous
@@ -494,6 +508,76 @@ export default class VisualEditorService extends Service {
   }
 
   /**
+   * Replaces the `conditions` tree on the currently-selected block.
+   * Used by the visual condition builder in the inspector to push edits
+   * back to the layout. Pass `null` to clear all conditions.
+   *
+   * Conditions affect *whether* a block renders, so this is a structural
+   * change — routes through `_publishStructuralChange` to keep
+   * `isDirty`, `structuralVersion`, and the outline's row count in
+   * lockstep with the canvas.
+   *
+   * NOTE: we deliberately do NOT reassign `selectedBlockData` here. The
+   * inspector's args form (`<InspectorForm>`) reads
+   * `selectedBlockData.argsSnapshot` as `<Form @data>`; spreading into a
+   * new object would force FormKit to remount and re-register its
+   * fields, hitting "name already in use" duplicate-registration errors.
+   * Instead, callers that need the freshest conditions tree read
+   * through `selectedBlockConditions` — a live getter that resolves the
+   * latest entry on every read.
+   *
+   * @param {Array|Object|null} newConditions
+   * @returns {boolean} true on success, false when no block is selected
+   *   or the selection isn't locatable in the live layout.
+   */
+  @action
+  updateSelectedConditions(newConditions) {
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return false;
+    }
+    const located = this._findEntryAndOutletSync(key);
+    if (!located) {
+      return false;
+    }
+    const layout = this.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return false;
+    }
+    const result = replaceEntryConditions(layout, key, newConditions);
+    if (!result.changed) {
+      return false;
+    }
+    this._publishStructuralChange(located.outletName, result.layout);
+    return true;
+  }
+
+  /**
+   * Live conditions tree for the currently-selected block. Re-resolves
+   * the entry on every read so structural changes (publishes from
+   * `updateSelectedConditions`, moves, etc.) are picked up automatically
+   * by the condition builder's `@cached get tree()` via the
+   * `structuralVersion` tracked dep.
+   *
+   * @returns {Array|Object|null}
+   */
+  get selectedBlockConditions() {
+    // Force a tracked read so consumers re-render when structural
+    // mutations re-publish.
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.structuralVersion;
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return null;
+    }
+    const located = this._findEntryAndOutletSync(key);
+    if (!located) {
+      return this.selectedBlockData?.conditions ?? null;
+    }
+    return located.entry.conditions ?? null;
+  }
+
+  /**
    * Indicates whether the clipboard currently holds anything that
    * `pasteFromClipboard` could insert. Reactivity comes from `_clipboard`
    * being tracked.
@@ -595,6 +679,92 @@ export default class VisualEditorService extends Service {
     }
     this._publishStructuralChange(located.outletName, insertion.layout);
     return true;
+  }
+
+  /**
+   * Whether simulation mode is currently active. True when either the
+   * persona or the viewport slot has been deliberately set (a slot
+   * holding `null` means "explicitly anonymous / explicitly real"
+   * rather than "unset"; absence of the key means "unset").
+   */
+  get isSimulating() {
+    return this.simulation != null;
+  }
+
+  /**
+   * Sets the persona portion of the simulation.
+   *
+   * Three states:
+   *   - `undefined` → clears the persona slot (real `currentUser` is used).
+   *   - `null` → simulates an anonymous viewer.
+   *   - `{...}` → simulates that specific user object.
+   *
+   * @param {Object|null|undefined} user
+   */
+  @action
+  setSimulatedUser(user) {
+    this.simulation = this._patchSimulation(this.simulation, "user", user);
+    this._bumpStructuralVersion();
+  }
+
+  /**
+   * Sets the viewport portion of the simulation. Pass `undefined` to
+   * clear it and fall back to the real `capabilities` service.
+   *
+   * @param {{viewport: Object, touch: boolean}|null|undefined} viewport
+   */
+  @action
+  setSimulatedViewport(viewport) {
+    this.simulation = this._patchSimulation(
+      this.simulation,
+      "viewport",
+      viewport
+    );
+    this._bumpStructuralVersion();
+  }
+
+  /**
+   * Clears both the persona and viewport slots, exiting simulation mode.
+   */
+  @action
+  clearSimulation() {
+    this.simulation = null;
+    this._bumpStructuralVersion();
+  }
+
+  /**
+   * Internal: applies a single-key patch to the simulation slot. Treats
+   * `undefined` as "delete the key" (since `null` is the meaningful
+   * sentinel for anonymous / real). When every slot is unset, returns
+   * `null` so `isSimulating` flips to `false` cleanly.
+   *
+   * @param {Object|null} current
+   * @param {string} key
+   * @param {*} value
+   * @returns {Object|null}
+   */
+  _patchSimulation(current, key, value) {
+    const next = { ...(current ?? {}) };
+    if (value === undefined) {
+      delete next[key];
+    } else {
+      next[key] = value;
+    }
+    if (!("user" in next) && !("viewport" in next)) {
+      return null;
+    }
+    return next;
+  }
+
+  /**
+   * Internal: bumps `structuralVersion` so any consumer subscribed to it
+   * (outline panel, outlets panel, etc.) re-renders against the new
+   * simulation. The condition evaluator itself reads the live
+   * `this.simulation` getter via the EVAL_CONTEXT callback, so its
+   * re-evaluation is also automatic via tracked reads.
+   */
+  _bumpStructuralVersion() {
+    this.structuralVersion = this.structuralVersion + 1;
   }
 
   @action

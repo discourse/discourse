@@ -9,8 +9,11 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import InspectorPanel from "./inspector-panel";
+import OutletJumpSelect from "./outlet-jump-select";
+import OutletsPanel from "./outlets-panel";
 import OutlinePanel from "./outline-panel";
 import PalettePanel from "./palette-panel";
+import SimulationControls from "./simulation-controls";
 
 /**
  * The 3-pane editor chrome (toolbar + outline + canvas + inspector).
@@ -142,8 +145,10 @@ export default class EditorShell extends Component {
           <div class="toolbar-left">
             {{dIcon "wand-magic-sparkles"}}
             <span class="toolbar-title">Visual Editor</span>
+            <OutletJumpSelect />
           </div>
           <div class="toolbar-right">
+            <SimulationControls />
             {{#if this.visualEditor.hasValidationWarnings}}
               <button
                 type="button"
@@ -264,12 +269,24 @@ export default class EditorShell extends Component {
             >
               {{i18n "visual_editor.chrome.tab_outline"}}
             </button>
+            <button
+              type="button"
+              class={{dConcatClass
+                "panel-tab"
+                (if (this.isLeftPanelTabActive "outlets") "--active")
+              }}
+              {{on "click" (fn this.setLeftPanelTab "outlets")}}
+            >
+              {{i18n "visual_editor.chrome.tab_outlets"}}
+            </button>
           </div>
           <div class="panel-body">
             {{#if (this.isLeftPanelTabActive "palette")}}
               <PalettePanel />
-            {{else}}
+            {{else if (this.isLeftPanelTabActive "outline")}}
               <OutlinePanel />
+            {{else}}
+              <OutletsPanel />
             {{/if}}
           </div>
         </div>
