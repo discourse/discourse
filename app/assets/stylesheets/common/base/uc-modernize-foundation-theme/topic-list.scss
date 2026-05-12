@@ -1,0 +1,19 @@
+.uc-modernize-foundation-theme {
+  --d-table-border-top-height: 1px;
+  --d-topic-list-data-font-size: var(--font-down-1);
+  --d-topic-list-header-text-color: var(--primary-900);
+  --metadata-color: var(--primary-900);
+
+  .topic-list button.bulk-select .d-icon {
+    color: var(--d-topic-list-header-text-color);
+  }
+
+  .topic-list .num .badge-posts,
+  .topic-list .heatmap-high {
+    font-weight: 500;
+  }
+
+  .topic-list-header .topic-list-data:first-of-type {
+    font-size: var(--d-topic-list-data-font-size);
+  }
+}
