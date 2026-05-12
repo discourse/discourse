@@ -26,10 +26,10 @@
   border-bottom: 1px solid var(--content-border-color);
   display: flex;
   align-items: center;
+  gap: var(--space-4);
 
   .topic-poster {
     position: relative;
-    width: 60px;
 
     .avatar-flair {
       position: absolute;
