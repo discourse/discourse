@@ -59,12 +59,11 @@ These define what numbers mean across the section. They are referenced by the ob
 - **Pageview total** is the count of *human* pageviews — logged-in members and anonymous visitors. Crawler traffic is **not** counted in the headline number; it's shown separately in the chart for context.
 - **On private communities**, the pageview total is logged-in pageviews only. (Anonymous and crawler traffic on a private site is incidental — login-page hits and similar — and is excluded.)
 - **The logged-in share KPI** is the percentage of human pageviews that came from logged-in members. It excludes crawlers by definition; it's about people, not bots.
-- **All dates use UTC for now.** Dates are inclusive on both ends. Today is included in any range that ends today, even though today's count is partial-by-design. This matches the legacy dashboard's behavior for preset periods (the legacy dashboard's preset boundaries are also computed in UTC) and how Discourse buckets pageview counts internally. Viewer-locale-aware date handling is a possible future iteration; for the v1 section, UTC keeps the new section consistent with the rest of the platform.
+- **Date range behavior comes from `db-date-range`.** Site Traffic does not define its own preset boundaries, timezone handling, or custom-range picker behavior. It consumes the start and end dates produced by the shared redesigned-dashboard date range control.
 - **Period presets**:
-  - Last 7 days = today and the 6 prior days (7 days total).
-  - Last 30 days = today and the 29 prior days.
-  - Last 90 days = today and the 89 prior days.
-  - Last 12 months = today and the 364 prior days.
+  - Last 7 days = the shared `db-date-range` Last 7 days preset.
+  - Last 30 days = the shared `db-date-range` Last 30 days preset.
+  - Last 3 months = the shared `db-date-range` Last 3 months preset.
   - Custom range = whatever the admin picks.
 - **Prior equivalent period** = the comparison window used to compute the headline's trend phrase ("up 9%" / "down 3%"). It's a window the same length as the current selection, immediately preceding it. Concretely, if today is May 6 and the admin selects "Last 30 days" (the window April 7 → May 6), the prior equivalent period is March 8 → April 6 — the 30 days that came before. The trend is `(current_total − prior_total) / prior_total` expressed as a percentage.
 - **Period descriptors** are the human-readable phrases in the headline copy that name the time window — e.g., the "**in the last 30 days**" portion of *"712k pageviews in the last 30 days — up 9%"*. The section deliberately avoids calendar phrasing like "this month" or "this week", because rolling windows rarely line up with calendar boundaries. On May 6, "Last 30 days" spans April 7 → May 6 — across two calendar months, not "this month". Saying "this month" in the headline would be misleading; "in the last 30 days" describes the actual window.
@@ -92,17 +91,15 @@ The section's data is admin-only. Access is enforced wherever the data flows, no
 
 1a.4 The same authorization checks apply whether the section is visible (feature on) or not (feature off).
 
-### 1b. Date validation
+### 1b. Date inputs
 
-Date inputs are sanity-checked everywhere admins can supply them — both in the date picker and on direct requests.
+Date input behavior is owned by the shared dashboard date range control and the dashboard controller.
 
-1b.1 Inverted ranges (start after end) are rejected with a clear message.
+1b.1 Site Traffic does not add its own date validation UI.
 
-1b.2 End dates beyond today are rejected or clamped to today, consistently.
+1b.2 Direct requests to the Site Traffic report still use the report endpoint's normal request validation and authorization.
 
-1b.3 Ranges longer than 5 years are rejected.
-
-1b.4 Malformed date inputs are rejected with a clear message.
+1b.3 If `db-date-range` behavior changes, Site Traffic follows that behavior without a section-specific override.
 
 ### 2. Section header
 
@@ -110,25 +107,27 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 
 2.2 The heading text is translatable.
 
-2.3 The section's outer chrome — frame, border, header row, content padding, and inter-row spacing — is delegated to the shared `Dashboard::Section` component (introduced in #39841) so the section reads visually identical to the other dashboard sections (Highlights, Reports, Engagement). Site Traffic only owns the body content (period selector, headline, KPI, filter pills, chart). Future refinements to the section frame (e.g., header action slot, expand/collapse, drag-to-reorder) come from `Dashboard::Section` rather than being reimplemented here.
+2.3 The section's outer chrome — frame, border, header row, content padding, and inter-row spacing — is delegated to the shared `Dashboard::Section` component (introduced in #39841) so the section reads visually identical to the other dashboard sections (Highlights, Reports, Engagement). Site Traffic only owns the body content (headline, KPI, filter pills, chart). Future refinements to the section frame (e.g., header action slot, expand/collapse, drag-to-reorder) come from `Dashboard::Section` rather than being reimplemented here.
 
-### 3. Period selector
+### 3. Dashboard date range
 
-3.1 The selector applies to everything in the section: headline, KPI, and chart all reflect the selected period.
+3.1 Site Traffic does **not** render its own date selector. It relies on the dashboard-level `db-date-range` control shared by the redesigned dashboard.
 
-3.2 Admins choose between **Last 7 days**, **Last 30 days**, **Last 90 days**, **Last 12 months**, or a **Custom range**.
+3.2 The dashboard-level selector applies to everything in the section: headline, KPI, and chart all reflect the selected period.
 
-3.3 First load defaults to **Last 30 days**.
+3.3 Admins choose between the periods supported by `db-date-range`: **Last 7 days**, **Last 30 days**, **Last 3 months**, or a **Custom range**.
 
-3.4 All period labels are translatable.
+3.4 First load defaults to **Last 30 days**.
 
-3.5 Custom range opens a date-range picker. The picker rejects inverted ranges and dates beyond today.
+3.5 All period labels are translatable through the shared dashboard date-range component.
 
-3.6 Switching periods updates all dependent UI together. **The chart's x-axis range and bucketing stay anchored to the currently displayed data until the new fetch lands** — admins do not see the chart's date range expand, contract, or re-bucket ahead of the new bars. The transition is atomic: when new data arrives, the axis range, bucketing, headline, KPI, and bars all swap to the new period together.
+3.6 Custom range opens the shared dashboard date-range picker.
 
-3.7 **Rapid changes show the latest selection.** When admins cycle quickly through periods, the data displayed always reflects their most recent choice — slower in-flight responses for older selections never overwrite newer ones.
+3.7 Switching periods updates all dependent UI together. **The chart's x-axis range and bucketing stay anchored to the currently displayed data until the new fetch lands** — admins do not see the chart's date range expand, contract, or re-bucket ahead of the new bars. The transition is atomic: when new data arrives, the axis range, bucketing, headline, KPI, and bars all swap to the new period together.
 
-3.8 Boundary edge cases — midnight UTC, daylight saving transitions in the viewer's locale, leap days — behave correctly.
+3.8 **Rapid changes show the latest selection.** When admins cycle quickly through periods, the data displayed always reflects their most recent choice — slower in-flight responses for older selections never overwrite newer ones.
+
+3.9 Boundary edge cases — midnight, daylight saving transitions, leap days — follow the shared `db-date-range` behavior.
 
 ### 4. Headline summary
 
@@ -209,8 +208,8 @@ When the trend phrase is omitted, the headline stops after the period descriptor
 
 7.2 Bars are aggregated based on the period's length, so the chart stays readable at any range:
 - **Up to one month (≤ 31 days)**: one bar per day. Covers the Last 7 days and Last 30 days presets and short custom ranges.
-- **More than one month, less than one year (32–364 days)**: one bar per week. Covers the Last 90 days preset and equivalent custom ranges. **Weeks always run Monday → Sunday** regardless of the viewer's locale week-start preference, so admins on different locales see consistent week boundaries. The x-axis label for each weekly bar is the bucket's start date (the Monday) and sits centered under the bar.
-- **One year or more (≥ 365 days)**: one bar per month. Covers the Last 12 months preset and longer custom ranges.
+- **More than one month, less than one year (32–364 days)**: one bar per week. Covers the Last 3 months preset and equivalent custom ranges. **Weeks always run Monday → Sunday** regardless of the viewer's locale week-start preference, so admins on different locales see consistent week boundaries. The x-axis label for each weekly bar is the bucket's start date (the Monday) and sits centered under the bar.
+- **One year or more (≥ 365 days)**: one bar per month. Covers longer custom ranges.
 
 The same rules apply to preset and custom periods of equivalent length.
 
@@ -225,7 +224,7 @@ The same rules apply to preset and custom periods of equivalent length.
 7.5 **X-axis labels stay readable across all periods**:
 - The label format is appropriate to the bucket type: a day + month for daily and weekly bucketing (the weekly label is the **first day of data in that bucket** — bucket Monday for full weeks, period start for the leftmost partial week), a month name for monthly.
 - **Unified year rule**: when a period spans calendar boundaries, **every** label includes the year (e.g., `22 Dec 2025`, `23 Dec 2025`, …, `1 Jan 2026`, …). When a period stays within one calendar year, no labels include the year (e.g., `8 Mar`, `15 Mar`). This produces a consistent axis format across the period — no asymmetric mix of short and long labels.
-- **Monthly bucketing** always includes the year on every label, regardless of whether it spans years, since the year-or-longer scale at this bucket size almost always crosses calendar boundaries and the small label count (≤12 in the Last 12 months preset) leaves room for the extra characters.
+- **Monthly bucketing** always includes the year on every label, regardless of whether it spans years, since the year-or-longer scale at this bucket size almost always crosses calendar boundaries and the small label count leaves room for the extra characters.
 - **Density is automatic, not pinned**: the chart picks how many labels fit at the current width rather than forcing every bar to be labeled. Even short ranges like Last 7 days and Last 30 days do not label every single bar — labels thin to a comfortable density. Cross-year daily ranges show fewer labels than same-year daily ranges of equal length because each cross-year label is wider.
 - **The first and last bars are always labeled**, regardless of any density thinning that the chart engine applies in between. Even if the auto-density algorithm would normally skip them — e.g., because the labels would crowd the chart edges — the first and last positions are pinned so admins always see the start and end of their selection on the x-axis.
 
@@ -251,7 +250,7 @@ The title shape alone identifies the bucket size; no separate "Daily / Weekly / 
 
 7.10a **Empty-day tooltip**: hovering a bar whose visible series all have a value of 0 (e.g., a day or week with no recorded pageviews — including today before any traffic has been counted) still shows the tooltip with "0" values for each visible series and a "Total: 0". Admins can confirm a day or bucket is genuinely zero rather than missing.
 
-7.10b **Each bar describes its actual data span.** The bar's x-axis label and tooltip both anchor to the **first day of data in that bucket** — bucket Monday for full weeks, period start for the leftmost partial week, first-of-month for full months, period start for the leftmost partial month. The tooltip end is the **last day of data in the bucket** — bucket Sunday / last-of-month for full buckets, period end for the rightmost partial bucket. So x-axis label and tooltip start always agree, and the tooltip never projects beyond data we have. Examples for a weekly Last 90 days period starting Saturday Feb 7 and ending today (May 7): the leftmost bar's x-axis label is "7 Feb" and its tooltip reads "7 Feb – 8 Feb 2026"; the rightmost bar's label is "4 May" and its tooltip reads "4 May – 7 May 2026"; middle bars show the full bucket Monday → Sunday. When the data span reduces to a single day the tooltip shows that day alone. Monthly partial buckets keep the month + year title since clamping doesn't add information beyond what the title already implies.
+7.10b **Each bar describes its actual data span.** The bar's x-axis label and tooltip both anchor to the **first day of data in that bucket** — bucket Monday for full weeks, period start for the leftmost partial week, first-of-month for full months, period start for the leftmost partial month. The tooltip end is the **last day of data in the bucket** — bucket Sunday / last-of-month for full buckets, period end for the rightmost partial bucket. So x-axis label and tooltip start always agree, and the tooltip never projects beyond data we have. Examples for a weekly Last 3 months period starting Saturday Feb 7 and ending today (May 7): the leftmost bar's x-axis label is "7 Feb" and its tooltip reads "7 Feb – 8 Feb 2026"; the rightmost bar's label is "4 May" and its tooltip reads "4 May – 7 May 2026"; middle bars show the full bucket Monday → Sunday. When the data span reduces to a single day the tooltip shows that day alone. Monthly partial buckets keep the month + year title since clamping doesn't add information beyond what the title already implies.
 
 ### 8. Graph state handling
 

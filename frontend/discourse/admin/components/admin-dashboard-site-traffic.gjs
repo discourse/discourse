@@ -3,13 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DashboardSection from "discourse/admin/components/dashboard/section";
-import SiteTrafficPeriodSelector, {
-  SITE_TRAFFIC_PERIODS,
-} from "discourse/admin/components/site-traffic-period-selector";
 import Report from "discourse/admin/models/report";
 import DButton from "discourse/components/d-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
@@ -33,32 +31,12 @@ const SERIES_COLORS = {
   [SERIES.CRAWLER]: "#D5CDF7",
 };
 
-const PRESET_DAYS_BACK = {
-  [SITE_TRAFFIC_PERIODS.LAST_7_DAYS]: 6,
-  [SITE_TRAFFIC_PERIODS.LAST_30_DAYS]: 29,
-  [SITE_TRAFFIC_PERIODS.LAST_90_DAYS]: 89,
-  [SITE_TRAFFIC_PERIODS.LAST_12_MONTHS]: 364,
-};
-
 function ymd(date) {
   return moment.utc(date).format("YYYY-MM-DD");
 }
 
-function periodToDateRange(period, customStart, customEnd) {
-  const today = moment.utc().startOf("day");
-  if (period === SITE_TRAFFIC_PERIODS.CUSTOM) {
-    return {
-      startDate: moment.utc(customStart).startOf("day"),
-      endDate: moment.utc(customEnd).startOf("day"),
-    };
-  }
-  const daysBack =
-    PRESET_DAYS_BACK[period] ??
-    PRESET_DAYS_BACK[SITE_TRAFFIC_PERIODS.LAST_30_DAYS];
-  return {
-    startDate: today.clone().subtract(daysBack, "days"),
-    endDate: today,
-  };
+function dashboardDateToUtcDay(date) {
+  return moment.utc(moment(date).format("YYYY-MM-DD"), "YYYY-MM-DD");
 }
 
 function bucketingForLength(days) {
@@ -293,9 +271,6 @@ export default class AdminDashboardSiteTraffic extends Component {
   @service siteSettings;
   @service loadingSlider;
 
-  @tracked period = SITE_TRAFFIC_PERIODS.LAST_30_DAYS;
-  @tracked customStart = null;
-  @tracked customEnd = null;
   @tracked model = null;
   @tracked modelPeriod = null;
   @tracked isLoading = false;
@@ -320,23 +295,19 @@ export default class AdminDashboardSiteTraffic extends Component {
     return !this.siteSettings.login_required;
   }
 
-  get range() {
-    return periodToDateRange(this.period, this.customStart, this.customEnd);
-  }
-
   get startDate() {
-    return this.range.startDate;
+    return dashboardDateToUtcDay(this.args.startDate).startOf("day");
   }
 
   get endDate() {
-    return this.range.endDate;
+    return dashboardDateToUtcDay(this.args.endDate).startOf("day");
   }
 
   get periodDescriptor() {
     // Anchor the descriptor to the period the *displayed model* came from so
     // the headline doesn't briefly mix a new period descriptor with stale
     // counts during a fetch (§3.6).
-    const period = this.modelPeriod ?? this.period;
+    const period = this.modelPeriod ?? this.args.period;
     return i18n(`admin.dashboard.site_traffic.period_descriptor.${period}`);
   }
 
@@ -772,22 +743,6 @@ export default class AdminDashboardSiteTraffic extends Component {
   }
 
   @action
-  setPeriod(period) {
-    this.period = period;
-    this.customStart = null;
-    this.customEnd = null;
-    this.fetchReport();
-  }
-
-  @action
-  setCustomDateRange(start, end) {
-    this.period = SITE_TRAFFIC_PERIODS.CUSTOM;
-    this.customStart = start;
-    this.customEnd = end;
-    this.fetchReport();
-  }
-
-  @action
   togglePill(req, event) {
     if (event?.altKey) {
       this.soloPill(req);
@@ -829,7 +784,7 @@ export default class AdminDashboardSiteTraffic extends Component {
   async fetchReport() {
     this._requestSeq += 1;
     const mySeq = this._requestSeq;
-    const fetchPeriod = this.period;
+    const fetchPeriod = this.args.period;
     this.isLoading = true;
     this.errored = false;
     try {
@@ -885,17 +840,8 @@ export default class AdminDashboardSiteTraffic extends Component {
       @layout="column"
       class="admin-dashboard-site-traffic
         {{if this.isLoading 'admin-dashboard-site-traffic--loading'}}"
+      {{didUpdate this.fetchReport @startDate @endDate @period}}
     >
-      <div class="admin-dashboard-site-traffic__period-row">
-        <SiteTrafficPeriodSelector
-          @period={{this.period}}
-          @setPeriod={{this.setPeriod}}
-          @setCustomDateRange={{this.setCustomDateRange}}
-          @startDate={{this.startDate}}
-          @endDate={{this.endDate}}
-        />
-      </div>
-
       <div class="admin-dashboard-site-traffic__summary">
         <div class="admin-dashboard-site-traffic__headline">
           {{#if this.model}}

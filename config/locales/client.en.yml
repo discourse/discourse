@@ -6971,15 +6971,8 @@ en:
           period_descriptor:
             last_7_days: "in the last 7 days"
             last_30_days: "in the last 30 days"
-            last_90_days: "in the last 90 days"
-            last_12_months: "in the last 12 months"
+            last_3_months: "in the last 3 months"
             custom: "in the selected range"
-          periods:
-            last_7_days: "Last 7 days"
-            last_30_days: "Last 30 days"
-            last_90_days: "Last 90 days"
-            last_12_months: "Last 12 months"
-            custom: "Custom range"
           kpi:
             label: "Logged-in share"
             tooltip: "The share of pageviews from logged-in members."
@@ -7002,14 +6995,6 @@ en:
             title: "Top countries"
             empty: "No country data for this period."
           drilldown: "See details →"
-          custom_range:
-            title: "Pick a custom date range"
-            pick_start: "Pick a start date"
-            pick_end: "Pick an end date (started %{start})"
-            range: "%{start} – %{end}"
-            apply: "Apply"
-            cancel: "Cancel"
-
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
           percent_change_tooltip: "%{percent} change."
