@@ -186,7 +186,7 @@ globalThis.convert = async function (
   } else if (/hei[cf]$/i.test(fileType)) {
     imageData = await decodeHeic(fileBuffer);
   } else if (/jpe?g$/i.test(fileType)) {
-    imageData = await decodeJpeg(fileBuffer);
+    imageData = await decodeJpeg(fileBuffer, { preserveOrientation: true });
   } else if (/png$/i.test(fileType)) {
     imageData = await decodePng(fileBuffer);
   } else {
