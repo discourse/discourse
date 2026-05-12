@@ -8,7 +8,7 @@ import ChatMessageInteractor, {
 } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Chat | Unit | Utility | plugin-api", function (hooks) {
+module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
 
   test("#sendChatMessage", async function (assert) {

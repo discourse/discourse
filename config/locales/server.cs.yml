@@ -492,7 +492,17 @@ cs:
   deleted_topic: "Jejda! Toto téma bylo smazáno a již není k dispozici."
   delete_topic_failed: "Při mazání tohoto tématu došlo k chybě. Obraťte se prosím na správce webu."
   reading_time: "Čas čtení"
+  reading_time_minutes:
+    one: "%{count} minuta 🕑"
+    few: "%{count} minuty 🕑"
+    many: "%{count} minut 🕑"
+    other: "%{count} minut 🕑"
   likes: "Líbí se"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    many: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Jejda! Tuto akci jste již provedli. Můžete zkusit obnovit stránku?"
   too_many_replies:
     one: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpověď v tématu."
@@ -691,6 +701,7 @@ cs:
       admins: "administratori"
       moderators: "moderatori"
       staff: "redakce"
+      anonymous: "anonymní"
       trust_level_0: "uroven_duvery_0"
       trust_level_1: "uroven_duvery_1"
       trust_level_2: "uroven_duvery_2"
@@ -930,7 +941,6 @@ cs:
       many: "%{count} Líbí se"
       other: "%{count} Líbí se"
     cannot_permanently_delete:
-      many_posts: "Toto téma obsahuje obnovené příspěvky. Před trvalým odstraněním tohoto tématu je prosím trvale smažte."
       wait_or_different_admin: "Před trvalým smazáním tohoto příspěvku musíte počkat %{time_left} nebo to musí udělat jiný administrátor."
   rate_limiter:
     slow_down: "Tuto akci jste provedli příliš mnohokrát, zkuste to prosím znovu později."
@@ -1608,6 +1618,8 @@ cs:
       xaxis: "Den"
       yaxis: "Přihlášená zobrazení stránek v prohlížeči"
       description: "Počet zobrazení stránek přihlášenými návštěvníky pomocí skutečných prohlížečů."
+    page_view_embed_reqs:
+      xaxis: "Den"
     http_background_reqs:
       title: "Pozadí"
       xaxis: "Den"
@@ -1669,7 +1681,7 @@ cs:
         os: Operační systém
         login_time: Čas přihlášení
       description: "Podrobnosti o nových přihlášeních, které se podezřele liší od předchozích přihlášení."
-    staff_logins:
+    admin_logins:
       title: "Přihlášení správců"
       labels:
         user: Uživatel
@@ -2315,7 +2327,6 @@ cs:
     gravatar_login_url: "URL relativní k `gravatar_base_url`, která uživateli poskytuje přihlášení ke službě Gravatar."
     allow_changing_staged_user_tracking: "Umožnit administrátorovi změnit předvolby oznámení o kategoriích a štítcích u předběžně založeného uživatele.."
     use_email_for_username_and_name_suggestions: "Pro návrhy uživatelského jména a jména použijte první část e-mailové adresy. Upozornění: To může usnadnit zjištění e-mailové adresy vašich členů útočníky (protože mnoho lidí používá běžné poskytovatele e-mailu, jako je `gmail.com`)."
-    use_name_for_username_suggestions: "Při navrhování uživatelských jmen použít celé jméno uživatele."
     adobe_analytics_tags_url: "Adresa URL tagů Adobe Analytics (`https://assets.adobedtm.com/...`)"
     errors:
       invalid_email: "Neplatná emailová adresa."
@@ -2563,7 +2574,6 @@ cs:
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
     omniauth_error_unknown: "Něco se pokazilo při zpracování vašeho přihlášení, zkuste to prosím znovu."
-    omniauth_confirm_title: "Přihlásit pomocí %{provider}"
     omniauth_confirm_button: "Pokračovat"
     authenticator_error_no_valid_email: "Nejsou povoleny žádné e-mailové adresy spojené s %{account} . Možná bude nutné nakonfigurovat účet s jinou e-mailovou adresou."
     new_registrations_disabled: "Registrace nových účtů nejsou v tuto chvíli povoleny."
@@ -3088,7 +3098,6 @@ cs:
         Vaše odpověď byla odeslána ze zablokované e-mailové adresy. Zkuste odeslat z jiné e-mailové adresy nebo [kontaktujte redakci](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Odmítnutí e-mailu: Nepovolená adresa"
-      subject_template: "[%{email_prefix}] Problém s e-mailem -- Blokovaná adresa"
       text_body_template: |
         Je nám líto, ale vaše e-mailová zpráva na adresu %{destination} (s názvem %{former_title}) nefungovala.
 
@@ -3575,6 +3584,7 @@ cs:
     account_exists:
       title: "Účet již existuje"
       subject_template: "[%{email_prefix}] Účet již existuje"
+      subject_template_improved: "Účet již existuje"
       text_body_template: |
         Právě jste se pokusili vytvořit účet na %{site_name}, nebo jste se pokusili změnit e-mail účtu na %{email}. Účet pro %{email} však již existuje.
 
@@ -3596,6 +3606,7 @@ cs:
       popular_posts: "Populární příspěvky"
       more_new: "Novinky pro vás"
       subject_template: "[%{email_prefix}] Shrnutí"
+      subject_template_improved: "Souhrn"
       unsubscribe: "Tento souhrn je odeslán z %{site_link} poté, co jsme vás už nějakou dobu neviděli. Změňte %{email_preferences_link} nebo %{unsubscribe_link} pro odhlášení odběru."
       your_email_settings: "vaše nastavení e-mailů"
       click_here: "klikněte zde"
@@ -3613,6 +3624,7 @@ cs:
       title: "Přihlášení pomocí odkazu"
       preview: "Přihlášení pomocí odkazu."
       subject_template: "[%{email_prefix}] Přihlášení pomocí odkazu"
+      subject_template_improved: "Přihlášení pomocí odkazu"
       text_body_template: |
         Zde je Váš odkaz pro přihlášení na [%{site_name}](%{base_url}).
 
@@ -3622,7 +3634,6 @@ cs:
         %{base_url}/session/email-login/%{email_token}.
     set_password:
       title: "Nastavit heslo"
-      subject_template: "[%{email_prefix}] Nastavení hesla"
       text_body_template: |
         Někdo požádal o přidání hesla k vašemu účtu na [%{site_name}](%{base_url}). Případně se můžete přihlásit pomocí jakékoli podporované online služby (Google, Facebook atd.), která je spojena s touto ověřenou e-mailovou adresou.
 
@@ -3633,6 +3644,7 @@ cs:
     admin_login:
       title: "Přihlášení správce"
       subject_template: "[%{email_prefix}] Přihlášení"
+      subject_template_improved: "Login"
       text_body_template: |
         Někdo požádal o přihlášení k vašemu účtu na [%{site_name}](%{base_url}).
 
@@ -3747,7 +3759,6 @@ cs:
         Pokud na výše uvedený odkaz nelze kliknout, zkuste jej zkopírovat a vložit do adresního řádku vašeho webového prohlížeče.
     suspicious_login:
       title: "Upozornění na nové přihlášení"
-      subject_template: "[%{site_name}] Nové přihlášení z %{location}"
       text_body_template: |
         Dobrý den,
 
@@ -4323,7 +4334,6 @@ cs:
         few: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
         many: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
         other: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-      synonym: 'Synonyma nejsou povolena. Místo toho použijte "%{tag_name}".'
       has_synonyms: '"%{tag_name}" nelze použít, protože má synonyma.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Štítek "%{tags}" nelze použít v kategorii "%{category}". Odstraňte jej prosím.'

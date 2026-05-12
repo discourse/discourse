@@ -277,7 +277,6 @@ nl:
       retry_staged_message:
         title: "Netwerkfout"
         action: "Opnieuw sturen?"
-      unreliable_network: "Netwerk is onbetrouwbaar, het verzenden van berichten en het opslaan van concepten werkt mogelijk niet"
       bookmark_message: "Bladwijzer maken"
       bookmark_message_edit: "Bladwijzer bewerken"
       restore: "Verwijderd bericht herstellen"

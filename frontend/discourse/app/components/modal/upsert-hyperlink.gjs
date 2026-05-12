@@ -4,17 +4,17 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import TopicStatus from "discourse/components/topic-status";
-import categoryLink from "discourse/helpers/category-link";
-import discourseTags from "discourse/helpers/discourse-tags";
-import loadingSpinner from "discourse/helpers/loading-spinner";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import discourseDebounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
 import { prefixProtocol } from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertHyperlink extends Component {
@@ -238,7 +238,7 @@ export default class UpsertHyperlink extends Component {
             </form.Field>
 
             {{#if this.searchLoading}}
-              {{loadingSpinner}}
+              {{dLoadingSpinner}}
             {{/if}}
 
             {{#if this.searchResults}}
@@ -251,13 +251,13 @@ export default class UpsertHyperlink extends Component {
                     class="search-link"
                   >
                     <TopicStatus @topic={{result}} @disableActions={{true}} />
-                    {{replaceEmoji result.title}}
+                    {{dReplaceEmoji result.title}}
                     <div class="search-category">
                       {{#if result.category.parentCategory}}
-                        {{categoryLink result.category.parentCategory}}
+                        {{dCategoryLink result.category.parentCategory}}
                       {{/if}}
-                      {{categoryLink result.category hideParent=true}}
-                      {{discourseTags result}}
+                      {{dCategoryLink result.category hideParent=true}}
+                      {{dDiscourseTags result}}
                     </div>
                   </a>
                 {{/each}}

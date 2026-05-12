@@ -161,7 +161,7 @@ class Stylesheet::Manager
   private_class_method :manifest_full_path
 
   def self.use_file_hash_for_cachebuster?
-    Rails.env.production?
+    Rails.env.production? || Rails.env.test?
   end
   private_class_method :use_file_hash_for_cachebuster?
 

@@ -3,14 +3,14 @@ import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import getTagName from "../../lib/get-tag-name";
+import getTagName from "../../lib/utilities";
 import ChannelData from "../channel-data";
 
 export default class EditRule extends Component {

@@ -7,9 +7,7 @@
 # authors: Alan Tan
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-post-voting
 
-%i[common mobile desktop].each do |type|
-  register_asset "stylesheets/#{type}/post-voting.scss", type
-end
+register_asset "stylesheets/common/post-voting.scss"
 register_asset "stylesheets/common/post-voting-crawler.scss"
 
 enabled_site_setting :post_voting_enabled
@@ -18,8 +16,11 @@ module ::PostVoting
   PLUGIN_NAME = "discourse-post-voting"
 end
 
+require_relative "lib/post_voting/engine"
+
 after_initialize do
-  require_relative "lib/post_voting/engine"
+  Discourse::Application.routes.append { mount PostVoting::Engine, at: "post_voting" }
+
   require_relative "lib/post_voting/vote_manager"
   require_relative "lib/post_voting/guardian_extension"
   require_relative "lib/post_voting/comment_creator"
@@ -40,10 +41,10 @@ after_initialize do
   require_relative "app/models/reviewable_post_voting_comment"
   require_relative "app/serializers/basic_voter_serializer"
   require_relative "app/serializers/post_voting_comment_serializer"
-  require_relative "app/serializers/reviewable_post_voting_comments_serializer"
-  require_relative "config/routes"
+  require_relative "app/serializers/reviewable_post_voting_comment_serializer"
 
-  register_svg_icon "angle-up"
+  register_svg_icon "vote-up"
+  register_svg_icon "vote-up-filled"
   register_svg_icon "info"
 
   register_post_custom_field_type("vote_history", :json)
@@ -113,8 +114,32 @@ after_initialize do
     end
   end
 
+  register_html_builder("server:topic-show-crawler-post-end") do |controller, post:|
+    topic_view = controller.instance_variable_get(:@topic_view)
+    next if !topic_view&.topic&.is_post_voting?
+
+    comments = topic_view.comments[post.id]
+    reply_count = post.is_first_post? ? topic_view.filtered_posts.count - 1 : 0
+    next if comments.blank? && reply_count <= 0
+
+    ApplicationController.render(
+      template: "post_voting/crawler_post",
+      layout: false,
+      assigns: {
+        comments: comments,
+        reply_count: reply_count,
+      },
+    )
+  end
+
   TopicView.on_preload do |topic_view|
     next if !topic_view.topic.is_post_voting?
+
+    topic_view.comments = {}
+    topic_view.comments_counts = {}
+    topic_view.posts_user_voted = {}
+    topic_view.comments_user_voted = {}
+    topic_view.posts_voted_on = []
 
     post_ids = topic_view.posts.pluck(:id)
     next if post_ids.blank?
@@ -142,7 +167,6 @@ after_initialize do
     AND post_voting_comments.deleted_at IS NULL
     SQL
 
-    topic_view.comments = {}
     PostVotingComment
       .includes(:user)
       .where("id IN (#{comment_ids_sql})")
@@ -153,9 +177,6 @@ after_initialize do
       end
 
     topic_view.comments_counts = PostVotingComment.where(post_id: post_ids).group(:post_id).count
-
-    topic_view.posts_user_voted = {}
-    topic_view.comments_user_voted = {}
 
     if topic_view.guardian.user
       PostVotingVote

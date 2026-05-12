@@ -8,8 +8,6 @@ hy:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Առանց գործողության"
         agree_and_suspend:
           description: "Ընդունել դրոշակավորումը և սառեցնել օգտատիրոջը:"
         agree_and_silence:

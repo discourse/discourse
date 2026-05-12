@@ -92,13 +92,16 @@ module DiscourseWebauthn
     server_session.delete(session_challenge_key(user))
   end
 
-  def self.allowed_credentials(user, server_session)
-    return {} if !user.security_keys_enabled?
+  def self.allowed_credentials(user, server_session, include_passkeys: false)
+    has_security_keys = user.security_keys_enabled?
+    has_passkeys = include_passkeys && user.passkeys_for_2fa_enabled?
+    return {} if !has_security_keys && !has_passkeys
 
-    {
-      allowed_credential_ids: user.second_factor_security_key_credential_ids,
-      challenge: challenge(user, server_session),
-    }
+    credential_ids = []
+    credential_ids.concat(user.second_factor_security_key_credential_ids) if has_security_keys
+    credential_ids.concat(user.passkey_credential_ids) if has_passkeys
+
+    { allowed_credential_ids: credential_ids, challenge: challenge(user, server_session) }
   end
 
   def self.challenge(user, server_session)

@@ -109,7 +109,8 @@ const extension = {
           processMentionNodes(view) {
             const mentionNames = [];
             const mentionNodes = [];
-            const hereMention = getContext().siteSettings.here_mention;
+            const hereMention =
+              getContext().siteSettings.here_mention.toLowerCase();
 
             if (this._processingMentionNodes) {
               return;
@@ -136,7 +137,11 @@ const extension = {
               for (const mentionNode of mentionNodes) {
                 const { name, node, pos } = mentionNode;
 
-                if (VALID_MENTIONS.has(name) || hereMention === name) {
+                const lowerName = name.toLowerCase();
+                if (
+                  VALID_MENTIONS.has(lowerName) ||
+                  hereMention === lowerName
+                ) {
                   continue;
                 }
 
@@ -161,7 +166,8 @@ const extension = {
 async function fetchMentions(names, context) {
   // only fetch new mentions that are not already validated
   names = uniqueItemsFromArray(names).filter((name) => {
-    return !VALID_MENTIONS.has(name) && !INVALID_MENTIONS.has(name);
+    const lower = name.toLowerCase();
+    return !VALID_MENTIONS.has(lower) && !INVALID_MENTIONS.has(lower);
   });
 
   if (!names.length) {
@@ -172,20 +178,13 @@ async function fetchMentions(names, context) {
     data: { names, topic_id: context.topicId },
   });
 
-  const lowerGroupNames = Object.keys(response.groups).map((groupName) =>
-    groupName.toLowerCase()
-  );
-
   names.forEach((name) => {
     const lowerName = name.toLowerCase();
 
-    if (
-      response.users.includes(lowerName) ||
-      lowerGroupNames.includes(lowerName)
-    ) {
-      VALID_MENTIONS.add(name);
+    if (response.users.includes(lowerName) || response.groups[lowerName]) {
+      VALID_MENTIONS.add(lowerName);
     } else {
-      INVALID_MENTIONS.add(name);
+      INVALID_MENTIONS.add(lowerName);
     }
 
     checkMentionWarning(name, response, context);
@@ -198,6 +197,8 @@ function checkMentionWarning(name, response, context) {
     response?.max_users_notified_per_group_mention,
     10
   );
+  const lowerName = name.toLowerCase();
+  const group = response.groups[lowerName];
 
   let reason;
   let body;
@@ -207,18 +208,18 @@ function checkMentionWarning(name, response, context) {
       here: context.siteSettings.here_mention,
       count: hereCount,
     });
-  } else if (response.users.includes(name)) {
-    reason = response.user_reasons?.[name];
+  } else if (response.users.includes(lowerName)) {
+    reason = response.user_reasons?.[lowerName];
 
     if (reason) {
       body = i18n(`composer.cannot_see_mention.${reason}`, {
         username: name,
       });
     }
-  } else if (response.groups[name]) {
-    const userCount = response.groups[name]?.user_count || 0;
-    const notifiedCount = response.groups[name]?.notified_count || 0;
-    reason = response.group_reasons?.[name];
+  } else if (group) {
+    const userCount = group.user_count || 0;
+    const notifiedCount = group.notified_count || 0;
+    reason = response.group_reasons?.[lowerName];
 
     const groupLink = getURL(`/g/${name}/members`);
 

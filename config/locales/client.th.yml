@@ -1436,6 +1436,7 @@ th:
       upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
       list_item: "รายการ"
       wrap_modal:
+        attribute_value: "ค่า"
         apply: "นำไปใช้"
       help: "ช่วยเหลือการจัดรูปแบบ"
       modal_ok: "ตกลง"
@@ -1634,8 +1635,6 @@ th:
         actions: "การดำเนินการจำนวนมาก"
         move_messages_to_inbox: "ย้ายไปกล่องขาเข้า"
         choose_new_category: "เลือกหมวดหมู่ใหม่ให้กระทู้"
-        choose_new_tags: "เลือกแท็กใหม่เพื่อกระทู้เหล่านี้:"
-        changed_tags: "แท็กของกระทู้เหล่านี้ถูกเปลี่ยนแปลง"
         error_topic_count:
           other: "%{count}กระทู้"
       none:
@@ -1656,10 +1655,22 @@ th:
         name: "คลัง"
       move_messages_to_inbox:
         name: "ย้ายไปกล่องขาเข้า"
-      replace_tags:
-        name: "แทนที่แท็ก"
       delete_topics:
         name: "ลบ"
+      convert_to_private_message:
+        name: "สร้างข้อความส่วนตัว"
+    nested_replies:
+      sort:
+        label: "เรียงโดย"
+        top: "บน"
+        new: "ใหม่"
+      collapsed_replies:
+        other: "%{count} ตอบ"
+      collapse: "ย่อ"
+      no_replies: "ยังไม่มีคำตอบ"
+      deleted_post_placeholder: "[ลบ]"
+      ignored_post_placeholder: "[ละเว้นแล้ว]"
+      pinned_reply: "ปักหมุดแล้ว"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"
@@ -1965,8 +1976,6 @@ th:
           actions: "การกระทำ"
           edit: "แก้ไข"
           delete: "ลบ"
-        post_language_selector:
-          none: "ไม่มี"
       errors:
         create: "ขออภัย เกิดความผิดพลาดขณะกำลังสร้างโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
         edit: "ขออภัย เกิดความผิดพลาดขณะกำลังแก้ไขโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
@@ -2580,6 +2589,8 @@ th:
           admins: "แอดมิน"
           moderators: "ผู้ดูแลระบบ"
           staff: "ทีมงาน"
+        impact_types:
+          other_type: "อื่นๆ"
         filter:
           all: "ทั้งหมด"
           disabled: "ปิดใช้งานแล้ว"
@@ -2633,6 +2644,9 @@ th:
           title: "กลุ่ม"
         backups:
           title: "สำรอง"
+        problem_checks:
+          status: "สถานะ"
+          ignore: "ไม่สนใจ"
         reports:
           sub_pages:
             settings:
@@ -2673,7 +2687,7 @@ th:
         updates_available: "มีการอัปเดต"
         installed_version: "ติดตั้งแล้ว"
         latest_version: "ล่าสุด"
-        dismiss_notice: "ซ่อน"
+        dismiss_notice: "ไม่สนใจ"
         new_features:
           learn_more: "เรียนรู้เพิ่มเติม..."
         last_checked: "ตรวจล่าสุด"
@@ -2695,6 +2709,9 @@ th:
         security_tab: "ความปลอดภัย"
         report_filter_any: "ใดๆ"
         disabled: ปิดใช้งานแล้ว
+        period:
+          last_7_days: "7 วันที่ผ่านมา"
+          last_30_days: "30 วันที่ผ่านมา"
         reports:
           today: "วันนี้"
           yesterday: "เมื่อวาน"
@@ -3053,6 +3070,7 @@ th:
         topic_id: "หมายเลขกระทู้"
         post_id: "หมายเลขโพสต์"
         category_id: "หมายเลขหมวดหมู่"
+        reviewable_id: "รีวิว"
         delete: "ลบ"
         edit: "แก้ไข"
         save: "บันทึก"

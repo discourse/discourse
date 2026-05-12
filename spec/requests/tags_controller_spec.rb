@@ -626,6 +626,28 @@ RSpec.describe TagsController do
       )
     end
 
+    context "when a synonym is hidden from the current user" do
+      fab!(:hidden_synonym) do
+        Fabricate(
+          :tag,
+          name: "hidden-synonym",
+          description: "private synonym description",
+          target_tag: tag,
+        )
+      end
+      fab!(:hidden_tag_group) do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [hidden_synonym])
+      end
+
+      it "does not expose the synonym" do
+        get "/tag/#{tag.name}/info.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "synonyms")).to be_empty
+        expect(response.body).not_to include(hidden_synonym.name)
+        expect(response.body).not_to include(hidden_synonym.description)
+      end
+    end
+
     it "returns 404 if tag is staff-only" do
       _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
       get "/tag/test/info.json"
@@ -960,6 +982,34 @@ RSpec.describe TagsController do
         put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: "user-updated" } }
         expect(response.status).to eq(200)
         expect(tag.reload.name).to eq("user-updated")
+      end
+
+      it "does not allow mutating hidden synonyms by ID" do
+        hidden_synonym = Fabricate(:tag, name: "hidden-synonym", target_tag: tag)
+        hidden_tag = Fabricate(:tag, name: "hidden-tag")
+        Fabricate(
+          :tag_group,
+          permissions: {
+            "staff" => 1,
+          },
+          tag_names: [hidden_synonym.name, hidden_tag.name],
+        )
+
+        sign_in(regular_user)
+        put "/tag/#{tag.id}/settings.json",
+            params: {
+              tag_settings: {
+                removed_synonym_ids: [hidden_synonym.id],
+                new_synonyms: [{ id: hidden_tag.id }],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        synonym_names = response.parsed_body.dig("tag_settings", "synonyms").map { |s| s["name"] }
+        expect(synonym_names).to include(hidden_synonym.name)
+        expect(synonym_names).not_to include(hidden_tag.name)
+        expect(hidden_synonym.reload.target_tag_id).to eq(tag.id)
+        expect(hidden_tag.reload.target_tag_id).to be_nil
       end
     end
   end
@@ -1453,6 +1503,52 @@ RSpec.describe TagsController do
           result = response.parsed_body["results"].find { |t| t["name"] == yup.name }
           expect(result).to be_present
           expect(result["disabled"]).to eq(true)
+        end
+
+        it "truncates category names when tag is restricted to many categories" do
+          categories = [category] + (1..4).map { |i| Fabricate(:category, tags: [yup]) }
+
+          get "/tags/filter/search.json",
+              params: {
+                q: yup.name,
+                filterForInput: true,
+                categoryId: Fabricate(:category).id,
+              }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == yup.name }
+          expect(result).to be_present
+          expect(result["disabled"]).to eq(true)
+
+          sorted_names = categories.map(&:name).sort
+          expect(result["title"]).to eq(
+            I18n.t(
+              "tags.forbidden.restricted_to_truncated",
+              tag_name: yup.name,
+              category_names: sorted_names.first(3).join(", "),
+              more_count: 2,
+            ),
+          )
+        end
+
+        it "truncates category names in forbidden_message when restricted to many categories" do
+          categories = [category] + (1..4).map { |i| Fabricate(:category, tags: [yup]) }
+
+          get "/tags/filter/search.json",
+              params: {
+                q: yup.name,
+                categoryId: Fabricate(:category).id,
+              }
+
+          sorted_names = categories.map(&:name).sort
+          expect(response.parsed_body["forbidden_message"]).to eq(
+            I18n.t(
+              "tags.forbidden.restricted_to_truncated",
+              tag_name: yup.name,
+              category_names: sorted_names.first(3).join(", "),
+              more_count: 2,
+            ),
+          )
         end
 
         it "can filter on category without q param" do
@@ -2143,7 +2239,9 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["watched_tags"]).to eq([])
       expect(response.parsed_body["watching_first_post_tags"]).to eq([])
-      expect(response.parsed_body["tracked_tags"]).to eq([{ "id" => tag.id, "name" => tag.name }])
+      expect(response.parsed_body["tracked_tags"]).to eq(
+        [{ "id" => tag.id, "name" => tag.name, "slug" => tag.slug }],
+      )
       expect(response.parsed_body["muted_tags"]).to eq([])
       expect(response.parsed_body["regular_tags"]).to eq([])
 
@@ -2164,7 +2262,9 @@ RSpec.describe TagsController do
         expect(response.parsed_body["watched_tags"]).to eq([])
         expect(response.parsed_body["watching_first_post_tags"]).to eq([])
         expect(response.parsed_body["tracked_tags"]).to eq([])
-        expect(response.parsed_body["muted_tags"]).to eq([{ "id" => tag.id, "name" => tag.name }])
+        expect(response.parsed_body["muted_tags"]).to eq(
+          [{ "id" => tag.id, "name" => tag.name, "slug" => tag.name }],
+        )
         expect(response.parsed_body["regular_tags"]).to eq([])
       end.to change { user.tag_users.count }.by(1)
 

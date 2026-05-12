@@ -37,9 +37,15 @@ describe ContentLocalization do
       expect(ContentLocalization.show_original?(scope)).to be false
     end
 
-    it "returns true when user preference is not set but cookie is present" do
+    it "returns false when user preference is not set but cookie is present for a logged-in user" do
       user = Fabricate(:user)
       scope = create_scope(user: user, cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
+
+      expect(ContentLocalization.show_original?(scope)).to be false
+    end
+
+    it "returns true when cookie is present for an anonymous user" do
+      scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
 
       expect(ContentLocalization.show_original?(scope)).to be true
     end

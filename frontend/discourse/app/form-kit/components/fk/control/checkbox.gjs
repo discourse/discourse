@@ -5,8 +5,8 @@ import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKRequired from "discourse/form-kit/components/fk/required";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
-import icon from "discourse/helpers/d-icon";
 import { eq, or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FKControlCheckbox extends FKBaseControl {
   static controlType = "checkbox";
@@ -32,7 +32,7 @@ export default class FKControlCheckbox extends FKBaseControl {
         {{on "change" this.handleInput}}
       />
       {{#if this.siteSettings.enable_new_checkbox_style}}
-        <span class="form-kit__control-checkbox-checkmark">{{icon
+        <span class="form-kit__control-checkbox-checkmark">{{dIcon
             "check"
           }}</span>
       {{/if}}

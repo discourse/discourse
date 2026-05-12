@@ -11,22 +11,11 @@ class GroupManager
     added_user_ids = bulk_add_transaction(user_ids)
     return [] if added_user_ids.blank?
 
-    if @group.grant_trust_level.present? && !@group.grant_trust_level.zero?
-      Jobs.enqueue(
-        :bulk_grant_trust_level,
-        user_ids: added_user_ids,
-        trust_level: @group.grant_trust_level,
-      )
-    end
-
-    GroupUser.bulk_set_category_notifications(@group, added_user_ids)
-    GroupUser.bulk_set_tag_notifications(@group, added_user_ids)
+    bulk_publish_category_updates(added_user_ids)
 
     User
       .where(id: added_user_ids)
       .find_each { |user| @group.trigger_user_added_event(user, automatic) }
-
-    bulk_publish_category_updates(added_user_ids)
 
     added_user_ids
   end
@@ -37,22 +26,42 @@ class GroupManager
     group_users_to_remove = @group.group_users.where(user_id: user_ids)
     return [] if group_users_to_remove.empty?
 
-    removed_user_ids = group_users_to_remove.pluck(:user_id)
-
     webhook_payloads = build_user_removed_webhook_payloads(group_users_to_remove)
 
+    removed_user_ids = group_users_to_remove.pluck(:user_id)
     bulk_remove_transaction(removed_user_ids)
 
-    if @group.grant_trust_level.present? && !@group.grant_trust_level.zero?
-      Jobs.enqueue(:bulk_grant_trust_level, user_ids: removed_user_ids, recalculate: true)
-    end
-
+    recalculate_trust_level(removed_user_ids)
     bulk_publish_category_updates(removed_user_ids)
 
     User.where(id: removed_user_ids).find_each { |user| @group.trigger_user_removed_event(user) }
     enqueue_user_removed_webhook_events(webhook_payloads)
 
     removed_user_ids
+  end
+
+  def sync_add_side_effects(added_user_ids)
+    update_title(added_user_ids)
+    set_primary_group_and_update_flair(added_user_ids)
+    grant_trust_level(added_user_ids)
+    GroupUser.bulk_set_category_notifications(@group, added_user_ids)
+    GroupUser.bulk_set_tag_notifications(@group, added_user_ids)
+    increase_group_user_count(added_user_ids)
+  end
+
+  def sync_removal_side_effects(removed_user_ids)
+    decrease_group_user_count(removed_user_ids)
+
+    removed_user_id = removed_user_ids.first
+    return unless User.exists?(removed_user_id)
+
+    grant_other_available_title(removed_user_ids)
+    remove_primary_and_flair_group(removed_user_ids)
+    sync_recalculate_trust_level(removed_user_id)
+  end
+
+  def decrease_group_user_count(removed_user_ids)
+    Group.update_counters(@group.id, user_count: -removed_user_ids.size)
   end
 
   private
@@ -91,32 +100,7 @@ class GroupManager
 
       return added_user_ids if added_user_ids.blank?
 
-      if @group.primary_group?
-        User
-          .where(id: added_user_ids)
-          .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
-          .update_all(flair_group_id: @group.id)
-
-        DB.exec(<<~SQL, user_ids: added_user_ids, new_title: @group.title)
-            UPDATE users u
-            SET title = :new_title
-            WHERE u.id IN (:user_ids)
-              AND u.primary_group_id IS NOT NULL
-              AND EXISTS (
-                SELECT 1 FROM groups g
-                WHERE g.id = u.primary_group_id
-                  AND g.title = u.title
-              )
-          SQL
-
-        User.where(id: added_user_ids).update_all(primary_group_id: @group.id)
-      end
-
-      if @group.title.present?
-        User.where(id: added_user_ids, title: [nil, ""]).update_all(title: @group.title)
-      end
-
-      Group.update_counters(@group.id, user_count: added_user_ids.size)
+      sync_add_side_effects(added_user_ids)
     end
 
     added_user_ids
@@ -126,37 +110,10 @@ class GroupManager
     Group.transaction do
       @group.group_users.where(user_id: removed_user_ids).delete_all
 
-      User.where(primary_group_id: @group.id, id: removed_user_ids).update_all(
-        primary_group_id: nil,
-      )
-      User.where(flair_group_id: @group.id, id: removed_user_ids).update_all(flair_group_id: nil)
+      remove_primary_and_flair_group(removed_user_ids)
+      grant_other_available_title(removed_user_ids)
 
-      if @group.title.present?
-        DB.exec(<<~SQL, user_ids: removed_user_ids, title: @group.title)
-            UPDATE users u
-            SET title = NULL
-            WHERE u.id IN (:user_ids)
-              AND u.title = :title
-              AND NOT EXISTS (
-                SELECT 1 FROM group_users gu
-                JOIN groups g ON g.id = gu.group_id
-                WHERE gu.user_id = u.id
-                  AND g.title IS NOT NULL AND g.title <> ''
-              )
-              AND NOT EXISTS (
-                SELECT 1 FROM user_badges ub
-                JOIN badges b ON b.id = ub.badge_id
-                WHERE ub.user_id = u.id
-                  AND b.allow_title = true
-              )
-          SQL
-
-        User
-          .where(id: removed_user_ids, title: @group.title)
-          .find_each { |user| user.update_column(:title, user.next_best_title) }
-      end
-
-      Group.update_counters(@group.id, user_count: -removed_user_ids.size)
+      decrease_group_user_count(removed_user_ids)
     end
   end
 
@@ -215,5 +172,98 @@ class GroupManager
         group_ids: [@group.id],
       )
     end
+  end
+
+  def update_title(added_user_ids)
+    if @group.title.present?
+      User.where(id: added_user_ids, title: [nil, ""]).update_all(title: @group.title)
+    end
+  end
+
+  def set_primary_group_and_update_flair(added_user_ids)
+    return unless @group.primary_group?
+
+    User
+      .where(id: added_user_ids)
+      .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
+      .update_all(flair_group_id: @group.id)
+
+    DB.exec(<<~SQL, user_ids: added_user_ids, new_title: @group.title)
+        UPDATE users u
+        SET title = :new_title
+        WHERE u.id IN (:user_ids)
+          AND u.primary_group_id IS NOT NULL
+          AND EXISTS (
+            SELECT 1 FROM groups g
+            WHERE g.id = u.primary_group_id
+              AND g.title = u.title
+          )
+      SQL
+
+    User.where(id: added_user_ids).update_all(primary_group_id: @group.id)
+  end
+
+  def grant_trust_level(added_user_ids)
+    return if @group.grant_trust_level.nil? || @group.grant_trust_level.zero?
+
+    if added_user_ids.size == 1
+      user = User.find(added_user_ids.first)
+      TrustLevelGranter.grant(@group.grant_trust_level, user)
+    else
+      Jobs.enqueue(
+        :bulk_grant_trust_level,
+        user_ids: added_user_ids,
+        trust_level: @group.grant_trust_level,
+      )
+    end
+  end
+
+  def increase_group_user_count(added_user_ids)
+    Group.update_counters(@group.id, user_count: added_user_ids.size)
+  end
+
+  def grant_other_available_title(removed_user_ids)
+    if @group.title.present?
+      DB.exec(<<~SQL, user_ids: removed_user_ids, title: @group.title)
+          UPDATE users u
+          SET title = NULL
+          WHERE u.id IN (:user_ids)
+            AND u.title = :title
+            AND NOT EXISTS (
+              SELECT 1 FROM group_users gu
+              JOIN groups g ON g.id = gu.group_id
+              WHERE gu.user_id = u.id
+                AND g.title IS NOT NULL AND g.title <> ''
+            )
+            AND NOT EXISTS (
+              SELECT 1 FROM user_badges ub
+              JOIN badges b ON b.id = ub.badge_id
+              WHERE ub.user_id = u.id
+                AND b.allow_title = true
+            )
+        SQL
+
+      User
+        .where(id: removed_user_ids, title: @group.title)
+        .find_each { |user| user.update_column(:title, user.next_best_title) }
+    end
+  end
+
+  def remove_primary_and_flair_group(removed_user_ids)
+    User.where(primary_group_id: @group.id, id: removed_user_ids).update_all(primary_group_id: nil)
+    User.where(flair_group_id: @group.id, id: removed_user_ids).update_all(flair_group_id: nil)
+  end
+
+  def recalculate_trust_level(removed_user_ids)
+    return if @group.grant_trust_level.nil? || @group.grant_trust_level.zero?
+
+    Jobs.enqueue(:bulk_grant_trust_level, user_ids: removed_user_ids, recalculate: true)
+  end
+
+  def sync_recalculate_trust_level(removed_user_id)
+    return if @group.grant_trust_level.nil? || @group.grant_trust_level.zero?
+
+    user = User.find(removed_user_id)
+    Promotion.recalculate(user, use_previous_trust_level: true)
   end
 end

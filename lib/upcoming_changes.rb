@@ -1,6 +1,29 @@
 # frozen_string_literal: true
 
 module UpcomingChanges
+  # Some upcoming changes make no sense to display to admins,
+  # for example ones related to Horizon theme makes no sense to
+  # display if Horizon is not installed or is disabled, a change
+  # might modify how site behavior works if another setting is enabled,
+  # and so on.
+  #
+  # You can define any should_display_<upcoming_change_name>? method to control
+  # whether an upcoming change should be displayed to admins, and if the
+  # method is undefined the change will always be displayed.
+  #
+  # Keep in mind this is called from UpcomingChanges::List service,
+  # which loops over every change in an N1 depending on the filters admins
+  # have selected, so caching may be appropriate at times.
+  class ConditionalDisplay
+    def self.should_display?(upcoming_change_name)
+      if respond_to?("should_display_#{upcoming_change_name}?")
+        return public_send("should_display_#{upcoming_change_name}?")
+      end
+
+      true
+    end
+  end
+
   def self.user_enabled_reasons
     @user_enabled_reasons ||=
       ::Enum.new(
@@ -116,6 +139,10 @@ module UpcomingChanges
   # @return [Boolean]
   def self.enabled?(change_setting_name)
     change_setting_name = change_setting_name.to_sym
+
+    if !exists?(change_setting_name)
+      raise ArgumentError, "Unknown upcoming change: #{change_setting_name}"
+    end
 
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes
@@ -288,6 +315,7 @@ module UpcomingChanges
   def self.clear_caches!
     Discourse.cache.delete(current_statuses_cache_key)
     Discourse.cache.delete(permanent_upcoming_changes_cache_key)
+    DiscourseUpdates.clear_latest_new_feature_created_at_cache
   end
 
   def self.current_statuses_cache_key
@@ -371,16 +399,5 @@ module UpcomingChanges
   # This is done via depends_on and depends_behavior: hidden in site_settings.yml.
   def self.find_dependents_for_change(change_setting_name)
     settings_provider.type_supervisor.dependencies.dependents(change_setting_name.to_s)
-  end
-
-  # Some upcoming changes when enabled will override the default value
-  # of another setting.
-  #
-  # This is done via upcoming_change_default_override in site_settings.yml.
-  def self.find_related_default_override_for_change(change_setting_name)
-    settings_provider
-      .upcoming_change_default_overrides
-      .find { |_, override| override[:upcoming_change] == change_setting_name.to_sym }
-      &.first
   end
 end

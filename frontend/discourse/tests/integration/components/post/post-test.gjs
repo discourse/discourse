@@ -486,6 +486,47 @@ module("Integration | Component | Post", function (hooks) {
       .doesNotExist("clicking outside clears the popup");
   });
 
+  test("plugin post admin buttons render their tooltips", async function (assert) {
+    this.currentUser.admin = true;
+
+    withPluginApi((api) => {
+      api.addPostAdminMenuButton(() => {
+        return {
+          className: "extra-button-title",
+          icon: "heart",
+          translatedLabel: "Button with title",
+          title: "post.controls.rebake_description",
+          action: () => {},
+        };
+      });
+
+      api.addPostAdminMenuButton(() => {
+        return {
+          className: "extra-button-translated-title",
+          icon: "star",
+          translatedLabel: "Button with translated title",
+          translatedTitle: "A translated tooltip",
+          action: () => {},
+        };
+      });
+    });
+
+    await renderComponent(this.post);
+
+    await click(".post-menu-area .show-post-admin-menu");
+
+    assert
+      .dom(
+        "[data-content][data-identifier='admin-post-menu'] .extra-button-title"
+      )
+      .hasAttribute("title", i18n("post.controls.rebake_description"));
+    assert
+      .dom(
+        "[data-content][data-identifier='admin-post-menu'] .extra-button-translated-title"
+      )
+      .hasAttribute("title", "A translated tooltip");
+  });
+
   test("permanently delete topic", async function (assert) {
     this.currentUser.admin = true;
 

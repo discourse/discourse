@@ -91,9 +91,19 @@ after_initialize do
     DiscourseSolved::SchemaUtils.post_schema(post, topic) || schema
   end
 
+  register_modifier(:topic_crawler_skip_post) do |default, post, topic|
+    DiscourseSolved::SchemaUtils.qa_page_schema?(topic) &&
+      post.post_type == Post.types[:small_action]
+  end
+
   register_html_builder("server:topic-main-entity-meta-crawler") do |controller|
     topic_view = controller.instance_variable_get(:@topic_view)
-    DiscourseSolved::SchemaUtils.main_entity_meta(topic_view&.topic)
+    DiscourseSolved::SchemaUtils.main_entity_meta(topic_view&.topic, topic_view&.crawler_posts)
+  end
+
+  register_html_builder("server:topic-show-crawler-post-end") do |controller, post:|
+    topic = controller.instance_variable_get(:@topic_view)&.topic
+    DiscourseSolved::SchemaUtils.post_answer_meta(post, topic) if topic
   end
 
   register_html_builder("server:before-head-close-crawler") do |controller|
@@ -156,7 +166,39 @@ after_initialize do
         .where("discourse_solved_solved_topics.created_at >= ?", report.start_date - 30.days)
         .where("discourse_solved_solved_topics.created_at <= ?", report.start_date)
         .count
+
+    if report.facets.include?(:prev_period)
+      report.prev_period =
+        accepted_solutions
+          .where("discourse_solved_solved_topics.created_at >= ?", report.prev_start_date)
+          .where("discourse_solved_solved_topics.created_at < ?", report.prev_end_date)
+          .count
+    end
   end
+
+  register_admin_dashboard_highlight_kpi(
+    type: :accepted_solutions,
+    report: "accepted_solutions",
+    enabled: -> do
+      next true if SiteSetting.allow_solved_on_all_topics
+
+      Discourse
+        .cache
+        .fetch("solved_admin_dashboard_kpi_enabled", expires_in: 5.minutes) do
+          Category
+            .joins(
+              "INNER JOIN category_custom_fields ON category_custom_fields.category_id = categories.id",
+            )
+            .where(
+              category_custom_fields: {
+                name: DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+                value: "true",
+              },
+            )
+            .exists?
+        end
+    end,
+  )
 
   register_modifier(:search_rank_sort_priorities) do |priorities, _search|
     if SiteSetting.prioritize_solved_topics_in_search

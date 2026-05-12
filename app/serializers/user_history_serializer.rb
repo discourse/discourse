@@ -13,6 +13,7 @@ class UserHistorySerializer < ApplicationSerializer
              :topic_id,
              :post_id,
              :category_id,
+             :reviewable_id,
              :action,
              :custom_type,
              :id
@@ -54,6 +55,10 @@ class UserHistorySerializer < ApplicationSerializer
   def ip_address
     return nil unless scope.can_see_ip?
     object.ip_address.try(:to_s)
+  end
+
+  def include_reviewable_id?
+    object.reviewable_id.present?
   end
 
   private

@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import ChildTree from "discourse/admin/components/schema-setting/editor/child-tree";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { gt } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class SchemaSettingNewEditorTreeNode extends Component {
   @tracked text;
@@ -51,7 +51,7 @@ export default class SchemaSettingNewEditorTreeNode extends Component {
     <li
       {{on "click" @onClick}}
       role="link"
-      class={{concatClass
+      class={{dConcatClass
         "schema-setting-editor__tree-node --parent"
         (if @active "--active")
       }}
@@ -60,9 +60,9 @@ export default class SchemaSettingNewEditorTreeNode extends Component {
         <span>{{this.text}}</span>
 
         {{#if (gt this.childObjectsProperties.length 0)}}
-          {{icon (if @active "chevron-down" "chevron-right")}}
+          {{dIcon (if @active "chevron-down" "chevron-right")}}
         {{else}}
-          {{icon "chevron-right"}}
+          {{dIcon "chevron-right"}}
         {{/if}}
       </div>
 

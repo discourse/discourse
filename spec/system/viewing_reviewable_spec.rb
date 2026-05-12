@@ -319,8 +319,11 @@ describe "Viewing reviewable item" do
     end
 
     it "shows context question for rejected queued post" do
+      reviewable_queued_post.update!(status: Reviewable.statuses[:rejected])
+
       review_page.visit_reviewable(reviewable_queued_post)
 
+      expect(review_page).to have_reviewable_with_rejected_status(reviewable_queued_post)
       expect(review_page).to have_context_question(
         reviewable_queued_post,
         I18n.t("js.review.context_question.approve_post"),
@@ -355,6 +358,11 @@ describe "Viewing reviewable item" do
       expect(review_page).to have_reviewable_with_rejected_status(reviewable)
 
       expect(page).to have_text(user.name)
+
+      expect(review_page).to have_no_context_question(
+        reviewable,
+        I18n.t("js.review.context_question.approve_user"),
+      )
 
       review_page.click_scrub_user_button
 

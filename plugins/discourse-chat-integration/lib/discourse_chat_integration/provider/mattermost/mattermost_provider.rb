@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module MattermostProvider
       PROVIDER_NAME = "mattermost"
+      POPULARITY_SCORE = 80
       PROVIDER_ENABLED_SETTING = :chat_integration_mattermost_enabled
       CHANNEL_IDENTIFIER_KEY = "identifier"
       CHANNEL_PARAMETERS = [{ key: "identifier", regex: '^[@#]\S*$', unique: true }]

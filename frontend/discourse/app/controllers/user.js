@@ -232,9 +232,12 @@ export default class UserController extends Controller {
     return this.siteSettings.enable_badges && this.model?.badge_count > 0;
   }
 
-  @computed()
+  @computed("model.profile_hidden")
   get canInviteToForum() {
-    return this.currentUser?.get("can_invite_to_forum");
+    return (
+      this.currentUser?.get("can_invite_to_forum") &&
+      !this.model?.profile_hidden
+    );
   }
 
   @computed("model.user_fields.@each.value")
@@ -318,12 +321,30 @@ export default class UserController extends Controller {
     this.toggleProperty("forceExpand");
   }
 
+  get adminDeleteOptions() {
+    return [
+      {
+        id: "delete_dont_block",
+        label: i18n("admin.user.delete_dont_block"),
+        description: i18n("admin.user.delete_dont_block_description"),
+        icon: "trash-can",
+      },
+      {
+        id: "delete_and_block",
+        label: i18n("admin.user.delete_and_block"),
+        description: i18n("admin.user.delete_and_block_description"),
+        icon: "ban",
+      },
+    ];
+  }
+
   @action
-  adminDelete() {
+  adminDelete(optionId) {
+    const block = optionId === "delete_and_block";
     const userId = this.get("model.id");
     const location = document.location.pathname;
 
-    const performDestroy = (block) => {
+    const performDestroy = () => {
       this.dialog.notice(i18n("admin.user.deleting_user"));
       let formData = { context: location };
       if (block) {
@@ -345,30 +366,15 @@ export default class UserController extends Controller {
         .catch(() => this.dialog.alert(i18n("admin.user.delete_failed")));
     };
 
-    this.dialog.alert({
+    this.dialog.deleteConfirm({
       title: i18n("admin.user.delete_confirm_title"),
       message: i18n("admin.user.delete_confirm"),
-      class: "delete-user-modal",
-      buttons: [
-        {
-          label: i18n("admin.user.delete_dont_block"),
-          class: "btn-danger delete-dont-block",
-          action: () => {
-            return performDestroy(false);
-          },
-        },
-        {
-          icon: "triangle-exclamation",
-          label: i18n("admin.user.delete_and_block"),
-          class: "btn-danger delete-and-block",
-          action: () => {
-            return performDestroy(true);
-          },
-        },
-        {
-          label: i18n("composer.cancel"),
-        },
-      ],
+      class: `delete-user-modal ${
+        block ? "delete-and-block" : "delete-dont-block"
+      }`,
+      confirmButtonLabel: `admin.user.${optionId}`,
+      confirmButtonIcon: block ? "triangle-exclamation" : "trash-can",
+      didConfirm: performDestroy,
     });
   }
 

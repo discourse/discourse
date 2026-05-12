@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 ru:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: Голосование по публикациям
   post_voting:
     reviewables:
       comment_already_handled: "Спасибо, но мы уже просмотрели этот комментарий и решили, что на него не нужно снова отправлять жалобу."

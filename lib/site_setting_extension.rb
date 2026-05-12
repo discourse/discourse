@@ -375,20 +375,11 @@ module SiteSettingExtension
     defaults
       .all(default_locale)
       .reject do |setting_name, _|
-        plugins[setting_name] && !Discourse.plugins_by_name[plugins[setting_name]].configurable?
+        plugin_name = plugins[setting_name]
+        plugin_name && !Discourse.plugins_by_name[plugin_name].configurable?
       end
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
-
-        if !is_hidden && type_supervisor.dependencies[setting_name].present? &&
-             type_supervisor.dependencies.behaviors[setting_name] == :hidden
-          # Hidden if any of the dependent settings are not true. Use the getter so upcoming
-          # change settings use their resolved value (promotion status, admin override, etc.).
-          is_hidden =
-            !type_supervisor.dependencies[setting_name].all? do |dependency|
-              respond_to?(dependency) && public_send(dependency)
-            end
-        end
 
         next true if !is_hidden
         next false if !include_hidden
@@ -496,8 +487,13 @@ module SiteSettingExtension
             requires_confirmation: requires_confirmation_settings[s],
             upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
-            depends_on: type_supervisor.dependencies[s],
           }
+
+          if depends_on = type_supervisor.dependencies[s]
+            opts_data[:depends_on] = depends_on
+            opts_data[:depends_on_humanized_names] = depends_on.map { |dep| humanized_names(dep) }
+            opts_data[:depends_behavior] = type_supervisor.dependencies.behaviors[s]
+          end
 
           if upcoming_change_default_override_metadata
             opts_data[
@@ -572,11 +568,23 @@ module SiteSettingExtension
         # store site settings. In this case, we should not consider this
         # setting to be modified.
         #
-        # The only exception is for upcoming changes, which have automatic
-        # promotion systems, and admins need to be able to manually opt out
-        # even if the default itself isn't changing.
+        # There are two exceptions, both tied to upcoming changes:
+        #
+        # 1. Upcoming change settings themselves — admins need to be able
+        #    to manually opt out of an auto-promoted change even when the
+        #    DB value matches the YAML default.
+        #
+        # 2. Target settings of an upcoming_change_default_override — the
+        #    "clean" defaults_view here is computed without overrides
+        #    applied, so it still reports the original YAML default.
+        #
+        #    When an override is active, the *effective* default is different,
+        #    and the admin's explicit DB value (even if it equals the
+        #    original default) is a deliberate opt-out that must survive
+        #    refresh!. Without this exception, the override loop below
+        #    would re-clobber the admin's choice.
         new_modified.reject! do |name, val|
-          if UpcomingChanges.exists?(name)
+          if UpcomingChanges.exists?(name) || upcoming_change_default_overrides.key?(name)
             false
           else
             val.to_s == defaults_view[name].to_s
@@ -1121,9 +1129,31 @@ module SiteSettingExtension
     # Any group_list or category_list setting will have a getter defined with _map
     # on the end, e.g. personal_message_enabled_groups_map, to avoid having to
     # manually split and convert to integer for these settings.
-    if %i[group_list category_list].include?(type_supervisor.get_type(name))
+    #
+    # For group_list settings, while the granular_anonymous_and_logged_in_groups_permissions
+    # upcoming change is enabled, stored `0` (the `:everyone` pseudogroup) is swapped to
+    # `5` (the `:logged_in_users` pseudogroup) at read time. This preserves admins' intent
+    # ("allow everyone logged in") without mutating the stored value, so disabling the
+    # flag is a perfect revert. When the change graduates to stable, a data migration will
+    # rewrite stored values and this swap can be removed.
+    setting_type = type_supervisor.get_type(name)
+    if setting_type == :category_list
       define_singleton_method("#{clean_name}_map") do
         self.public_send(clean_name).to_s.split("|").map(&:to_i)
+      end
+    elsif setting_type == :group_list
+      define_singleton_method("#{clean_name}_map") do
+        ids = self.public_send(clean_name).to_s.split("|").map(&:to_i)
+        if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
+             ids.include?(Group::AUTO_GROUPS[:everyone])
+          ids =
+            ids
+              .map do |id|
+                id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:logged_in_users] : id
+              end
+              .uniq
+        end
+        ids
       end
     end
 

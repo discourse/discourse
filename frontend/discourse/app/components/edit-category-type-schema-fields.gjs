@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { get } from "@ember/helper";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
+import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 import { i18n } from "discourse-i18n";
 
 // NOTE: In future we may want to use FormKit versions of site setting components
@@ -28,13 +28,11 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
-      @titleFormat="full"
-      @descriptionFormat="full"
       @format="full"
       @type="custom"
       as |field|
     >
-      <RelativeTimePicker
+      <DRelativeTimePicker
         @durationHours={{field.value}}
         @durationOutputUnit="hours"
         @onChange={{field.set}}
@@ -46,8 +44,6 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
-      @titleFormat="full"
-      @descriptionFormat="full"
       @format="full"
       @type="input-number"
       as |field|
@@ -61,8 +57,7 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
-      @titleFormat="full"
-      @descriptionFormat="full"
+      @labelFormat="full"
       @format="large"
       as |field|
     >

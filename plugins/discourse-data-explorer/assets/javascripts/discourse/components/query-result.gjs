@@ -1,13 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
 import moment from "moment";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import KeyValueStore from "discourse/lib/key-value-store";
 import Badge from "discourse/models/badge";
 import Category from "discourse/models/category";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 import { isNumericColumn, looksLikeDate } from "../lib/chart-helpers";
 import DataExplorerChart from "./data-explorer-chart";
@@ -25,6 +27,8 @@ import TextViewComponent from "./result-types/text";
 import TopicViewComponent from "./result-types/topic";
 import UrlViewComponent from "./result-types/url";
 import UserViewComponent from "./result-types/user";
+
+const store = new KeyValueStore("discourse_data_explorer_");
 
 const VIEW_COMPONENTS = {
   topic: TopicViewComponent,
@@ -44,17 +48,57 @@ const VIEW_COMPONENTS = {
 export default class QueryResult extends Component {
   @service site;
 
-  @tracked showChart = true;
-  @tracked showTable = true;
+  @tracked showChart;
+  @tracked showTable;
+  @tracked tableExpanded = false;
+  @tracked hasOverflow = false;
+
+  constructor() {
+    super(...arguments);
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      this.showChart = store.get(`showChart_${queryId}`) !== "false";
+      this.showTable = store.get(`showTable_${queryId}`) !== "false";
+    } else {
+      this.showChart = true;
+      this.showTable = true;
+    }
+  }
 
   @action
   toggleChart() {
     this.showChart = !this.showChart;
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      store.set({ key: `showChart_${queryId}`, value: this.showChart });
+    }
   }
 
   @action
   toggleTable() {
     this.showTable = !this.showTable;
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      store.set({ key: `showTable_${queryId}`, value: this.showTable });
+    }
+  }
+
+  get showExpandButton() {
+    return this.hasOverflow && !this.tableExpanded;
+  }
+
+  @action
+  checkOverflow(element) {
+    if (!this.chartVisible) {
+      this.tableExpanded = true;
+      return;
+    }
+    this.hasOverflow = element.scrollHeight > element.clientHeight;
+  }
+
+  @action
+  expandTable() {
+    this.tableExpanded = true;
   }
 
   get chartVisible() {
@@ -293,7 +337,7 @@ export default class QueryResult extends Component {
   }
 
   _cutChartLabel(label) {
-    const labelString = label.toString();
+    const labelString = String(label ?? "NULL");
     if (labelString.length > 25) {
       return `${labelString.substring(0, 25)}...`;
     } else {
@@ -321,7 +365,7 @@ export default class QueryResult extends Component {
           </div>
           {{#if this.cachedResultNotice}}
             <div class="cached-result-notice">
-              {{icon "clock-rotate-left"}}
+              {{dIcon "clock-rotate-left"}}
               {{this.cachedResultNotice}}
             </div>
           {{/if}}
@@ -343,13 +387,15 @@ export default class QueryResult extends Component {
               @action={{this.toggleChart}}
               @icon="signal"
               @translatedTitle={{i18n "explorer.show_graph"}}
-              class={{if this.showChart "btn-primary" "btn-default"}}
+              class="btn-toggle-chart
+                {{if this.showChart 'btn-primary' 'btn-default'}}"
             />
             <DButton
               @action={{this.toggleTable}}
               @icon="table"
               @translatedTitle={{i18n "explorer.show_table"}}
-              class={{if this.showTable "btn-primary" "btn-default"}}
+              class="btn-toggle-table
+                {{if this.showTable 'btn-primary' 'btn-default'}}"
             />
           </div>
         {{/if}}
@@ -366,7 +412,11 @@ export default class QueryResult extends Component {
         {{/if}}
 
         {{#if this.showTable}}
-          <div class="query-results-table-wrapper">
+          <div
+            class="query-results-table-wrapper
+              {{if this.tableExpanded '--expanded'}}"
+            {{didInsert this.checkOverflow}}
+          >
             <table class="query-results-table">
               <thead>
                 <tr class="headers">
@@ -399,7 +449,16 @@ export default class QueryResult extends Component {
               </tbody>
             </table>
           </div>
+          {{#if this.showExpandButton}}
+            <DButton
+              @action={{this.expandTable}}
+              @icon="chevron-down"
+              @translatedTitle={{i18n "show_more"}}
+              class="btn-flat query-results-expand-btn"
+            />
+          {{/if}}
         {{/if}}
+
       </section>
     </article>
   </template>

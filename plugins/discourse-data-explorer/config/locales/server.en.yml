@@ -9,17 +9,13 @@ en:
           name: "Data Explorer Query Generator"
           description: "Generates SQL queries for Data Explorer from natural language"
       tool_help:
-        validate_sql: "Validates a SQL query for use in Data Explorer"
         run_sql: "Runs a SQL query and returns results"
       tool_summary:
-        validate_sql: "Validating SQL query"
         run_sql: "Running SQL query"
       tool_description:
-        validate_sql: "Validated SQL query"
         run_sql: "Ran SQL query"
   discourse_data_explorer:
     ai:
-      generating_name: "Generating..."
       error_agent_not_configured: "AI agent is not configured. Please check the AI features settings."
       error_no_sql_returned: "AI did not return a valid SQL query. Please try again or write the query manually."
   discourse_automation:

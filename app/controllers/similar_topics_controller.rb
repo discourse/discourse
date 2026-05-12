@@ -22,6 +22,7 @@ class SimilarTopicsController < ApplicationController
     end
 
     topics = Topic.similar_to(title, raw, current_user).to_a
+    ActiveRecord::Associations::Preloader.new(records: topics, associations: [:nested_topic]).call
     topics.map! { |t| SimilarTopic.new(t) }
     render_serialized(topics, SimilarTopicSerializer, root: :similar_topics, rest_serializer: true)
   end

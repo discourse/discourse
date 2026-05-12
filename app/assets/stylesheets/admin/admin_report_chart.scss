@@ -73,33 +73,8 @@ body.uc-reporting-improvements .admin-contents:not(.dashboard) .chart {
     }
 
     .chart-groupings {
-      display: flex;
-      gap: var(--space-2);
-      background-color: var(--primary-very-low);
-      border-radius: var(--d-border-radius-large);
-      padding: var(--space-1) var(--space-2);
-
       @include viewport.from(sm) {
         margin-right: auto;
-      }
-
-      .chart-grouping {
-        border-radius: var(--d-border-radius-large);
-        background: transparent;
-
-        @include viewport.until(sm) {
-          flex-grow: 1;
-        }
-
-        &:hover {
-          background: transparent;
-          color: var(--primary);
-        }
-
-        &.active {
-          background: var(--secondary);
-          box-shadow: var(--shadow-card);
-        }
       }
     }
   }

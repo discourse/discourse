@@ -433,7 +433,13 @@ fi:
   deleted_topic: "Ketju on poistettu eikä ole enää saatavilla."
   delete_topic_failed: "Ketjun poistaminen epäonnistui. Ota yhteyttä sivuston ylläpitoon."
   reading_time: "Lukuaika"
+  reading_time_minutes:
+    one: "%{count} minuutti 🕑"
+    other: "%{count} minuuttia 🕑"
   likes: "Tykkäykset"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Olet jo suorittanut tämän toiminnon. Voitko kokeilla päivittää sivun?"
   too_many_replies:
     one: "Uudet käyttäjät voivat tilapäisesti kirjoittaa vain %{count} vastauksen samaan ketjuun."
@@ -598,6 +604,7 @@ fi:
       admins: "ylläpitäjät"
       moderators: "valvojat"
       staff: "henkilökunta"
+      anonymous: "anonyymeja"
       trust_level_0: "luottamustaso_0"
       trust_level_1: "luottamustaso_1"
       trust_level_2: "luottamustaso_2"
@@ -822,7 +829,6 @@ fi:
       one: "%{count} tykkäys"
       other: "%{count} tykkäystä"
     cannot_permanently_delete:
-      many_posts: "Tässä ketjussa on poistamattomia viestejä. Poista ne pysyvästi ennen kuin poistat ketjun pysyvästi."
       wait_or_different_admin: "Sinun täytyy odottaa %{time_left} ennen kuin poistat tämän viestin pysyvästi, tai toisen järjestelmänvalvojan on tehtävä se."
   rate_limiter:
     slow_down: "Olet suorittanut toiminnon liian monta kertaa. Kokeile myöhemmin uudelleen."
@@ -1448,6 +1454,8 @@ fi:
       xaxis: "Päivä"
       yaxis: "Kirjautuneiden selainten sivukatselut"
       description: "Oikeita selaimia käyttävien kirjautuneiden vierailijoiden sivukatseluiden määrä."
+    page_view_embed_reqs:
+      xaxis: "Päivä"
     http_background_reqs:
       title: "Tausta"
       xaxis: "Päivä"
@@ -1509,7 +1517,7 @@ fi:
         os: Käyttöjärjestelmä
         login_time: Kirjautumisaika
       description: "Tiedot uusista kirjautumisista, jotka poikkesivat epäilyttävällä tavalla aiemmista kirjautumisista."
-    staff_logins:
+    admin_logins:
       title: "Ylläpitäjien kirjautumiset"
       labels:
         user: Käyttäjä
@@ -2372,7 +2380,6 @@ fi:
     create_revision_on_bulk_topic_moves: "Luo revisio ensimmäisille viesteille, kun ketjut siirretään uuteen alueeseen joukkona."
     allow_changing_staged_user_tracking: "Salli ylläpitäjäkäyttäjän muuttaa esikäyttäjän alue- ja tunnisteilmoitusasetuksia."
     use_email_for_username_and_name_suggestions: "Käytä sähköpostiosoitteiden alkuosaa käyttäjätunnus- ja nimiehdotuksia varten. Varoitus: Tämä voi helpottaa pahantekijöitä saamaan selville jäsentesi sähköpostiosoitteet (koska monet ihmiset käyttävät yleisiä sähköpostipalveluntarjoajia, kuten gmail.comia)."
-    use_name_for_username_suggestions: "Käytä käyttäjän koko nimeä käyttäjätunnusten ehdottamiseen."
     suggest_weekends_in_date_pickers: "Sisällytä viikonloput (lauantai ja sunnuntai) päivämäärävalitsimen ehdotuksiin (poista tämä käytöstä, jos käytät Discoursea vain arkipäivisin maanantaista perjantaihin)."
     show_bottom_topic_map: "Näyttää ketjukartan ketjun alaosassa, kun siinä on vähintään 10 vastausta."
     show_topic_map_in_topics_without_replies: "Näyttää ketjukartan, vaikka ketjussa ei olisi vastauksia."
@@ -2380,7 +2387,6 @@ fi:
     welcome_banner_image: "Aseta kuva näytettäväksi tervetulobannerin taustalla."
     welcome_banner_location: "Määrittää, missä kohdassa sivua tervetulobanneri näkyy."
     welcome_banner_page_visibility: "Määrittää, millä sivuilla tervetulobanneri näkyy."
-    splash_screen: "Näyttää väliaikaisen latausnäytön sivuston resurssien latautuessa"
     navigation_menu: "Määritä sivupalkki tai yläpalkin avattava valikko sivustosi päänavigointivalikoksi. Sivupalkki on suositeltu."
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
@@ -2687,7 +2693,6 @@ fi:
       request_error: "Todennuksen aloittamisessa tapahtui virhe. Yritä uudelleen."
       invalid_iat: "Todennustunnuksen vahvistaminen ei onnistu palvelimen aikaeron takia. Yritä uudelleen."
     omniauth_error_unknown: "Jokin meni vikaan kirjautumisesi käsittelyssä, yritä uudelleen."
-    omniauth_confirm_title: "Kirjaudu tavalla %{provider}"
     omniauth_confirm_button: "Jatka"
     authenticator_error_no_valid_email: "Mikään tiliin %{account} liittyvistä sähköpostiosoitteista ei ole sallittu. Voit joutua määrittämään tilisi eri sähköpostiosoitteella."
     new_registrations_disabled: "Uusien tilien luonti ei ole tällä hetkellä sallittu."
@@ -3236,7 +3241,6 @@ fi:
         Vastauksesi lähetettiin estetystä sähköpostiosoitteesta. Kokeile lähettää viesti toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Sähköposti hylätty – osoite ei sallittu"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- estetty sähköpostiosoite"
       text_body_template: |
         Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
@@ -3401,7 +3405,6 @@ fi:
         Sinulla ei ole oikeuksia vastata ketjuun. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Sähköposti hylätty – vastaus yhteenvetoon"
-      subject_template: "%{email_prefix} Sähköpostiongelma – vastaus yhteenvetoon"
       text_body_template: |
         Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
@@ -3527,7 +3530,6 @@ fi:
       text_body_template: "Asetus `download_remote_images_to_local` on poistettu käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
     new_user_of_the_month:
       title: "Olet kuukauden tulokas!"
-      subject_template: "Olet kuukauden tulokas!"
       text_body_template: |
         Onneksi olkoon, olet ansainnut **Kuukauden tulokas -palkinnon kuussa %{month_year}** :trophy:
 
@@ -3845,6 +3847,7 @@ fi:
     account_exists:
       title: "Tili on jo olemassa"
       subject_template: "[%{email_prefix}] TIli on jo olemassa"
+      subject_template_improved: "Tili on jo olemassa"
       text_body_template: |
         Yritit luoda tilin sivustolle %{site_name} tai yritit muuttaa tilin sähköpostiosoitteeksi %{email}. Sähköpostiosoitteella %{email} on kuitenkin jo tili olemassa.
 
@@ -3856,6 +3859,7 @@ fi:
     account_second_factor_disabled:
       title: "Kaksivaiheinen tunnistus poistettu käytöstä"
       subject_template: "[%{email_prefix}] Kaksivaiheinen tunnistus poistettu käytöstä"
+      subject_template_improved: "Kaksivaiheinen tunnistus poistettu käytöstä"
     digest:
       why: "%{site_link} – lyhyt yhteenveto %{since} lähtien"
       since_last_visit: "Viime vierailusi jälkeen"
@@ -3869,6 +3873,7 @@ fi:
       popular_posts: "Suosittuja viestejä"
       more_new: "Uutta sinulle"
       subject_template: "[%{email_prefix}] Yhteenveto"
+      subject_template_improved: "Yhteenveto"
       unsubscribe: "Tämä yhteenveto lähetettiin sivustolta %{site_link}, koska sinua ei ole näkynyt vähään aikaan. Voit perua tilauksen muuttamalla %{email_preferences_link} tai %{unsubscribe_link} peruaksesi tilauksen."
       your_email_settings: "sähköpostiasetuksiasi"
       click_here: "klikkaa tätä"
@@ -3888,6 +3893,7 @@ fi:
       title: "Kirjaudu linkin avulla"
       preview: "Kirjaudu linkin avulla."
       subject_template: "%{email_prefix} Kirjautuminen linkin avulla"
+      subject_template_improved: "Kirjaudu linkin avulla"
       text_body_template: |
         Tässä linkki, jolla voit kirjautua sivustolle [%{site_name}](%{base_url}).
 
@@ -3897,7 +3903,6 @@ fi:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Aseta salasana"
-      subject_template: "[%{email_prefix}] Aseta salasana"
       text_body_template: |
         Joku haluaa lisätä salasanan tilillesi sivustolla [%{site_name}](%{base_url}). Vaihtoehtoisesti, voit kirjautua sisään muiden tuettujen palveluiden (Google, Facebook jne.) tileillä, jotka ovat tämän saman sähköpostiosoitteen alaisia.
 
@@ -3908,6 +3913,7 @@ fi:
     admin_login:
       title: "Ylläpitäjäkirjautuminen"
       subject_template: "[%{email_prefix}] Kirjautuminen"
+      subject_template_improved: "Kirjautuminen"
       text_body_template: |
         Joku haluaa kirjautua tilillesi sivustolla [%{site_name}](%{base_url}).
 
@@ -3917,7 +3923,6 @@ fi:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Tili luotu"
-      subject_template: "[%{email_prefix}] Uusi tilisi"
       text_body_template: |
         Sinulle luotiin tili sivustolle %{site_name}
 
@@ -4026,7 +4031,6 @@ fi:
         Jos linkkiä ei voi klikata, kokeile kopioida ja liittää se verkkoselaimesi osoitekenttään.
     suspicious_login:
       title: "Varoitus uudesta kirjautumisesta"
-      subject_template: "[%{site_name}] Uusi kirjautuminen paikasta %{location}"
       text_body_template: |
         Hei,
 
@@ -4691,7 +4695,6 @@ fi:
       restricted_to:
         one: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan alueella %{category_names}'
         other: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan seuraavilla alueilla: %{category_names}'
-      synonym: 'Synonyymit kielletty. Käytä sen sijaan tunnistetta "%{tag_name}".'
       has_synonyms: 'Tunnistetta "%{tag_name}" ei voi käyttää, koska sillä on synonyymejä.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Tunnistetta "%{tags}" ei voi käyttää alueella "%{category}". Poista se.'

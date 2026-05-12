@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import onResize from "discourse/modifiers/on-resize";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 
 export default class ToolbarScrollContainer extends Component {
   @tracked hasLeftScroll = false;
@@ -80,15 +80,15 @@ export default class ToolbarScrollContainer extends Component {
           {{on "mousedown" this.preventFocusGrab}}
           {{on "click" this.scrollLeft}}
         >
-          {{icon "chevron-left"}}
+          {{dIcon "chevron-left"}}
         </button>
       {{/if}}
 
       <div
-        class={{concatClass "d-editor-button-bar" @class}}
+        class={{dConcatClass "d-editor-button-bar" @class}}
         role="toolbar"
         {{didInsert this.setup}}
-        {{onResize this.onResize}}
+        {{dOnResize this.onResize}}
         {{on "scroll" this.onScroll}}
       >
         {{yield}}
@@ -103,7 +103,7 @@ export default class ToolbarScrollContainer extends Component {
           {{on "mousedown" this.preventFocusGrab}}
           {{on "click" this.scrollRight}}
         >
-          {{icon "chevron-right"}}
+          {{dIcon "chevron-right"}}
         </button>
       {{/if}}
     </div>

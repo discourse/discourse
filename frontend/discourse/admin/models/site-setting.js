@@ -10,6 +10,16 @@ import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
+/**
+ * `true` when a value is the *enabled* state of a bool site setting: boolean
+ * `true`, the string `"true"`, or any value whose `String()` is exactly `"true"`.
+ * This is not general JS truthiness: `"false"` is not enabled, and is safe
+ * for `null` / `undefined` (unlike calling `.toString()` on the value).
+ */
+export function isSettingValueTrue(value) {
+  return String(value) === "true";
+}
+
 const AUTO_REFRESH_ON_SAVE = [
   "logo",
   "mobile_logo",
@@ -144,10 +154,16 @@ export default class SiteSetting extends EmberObject {
   }
 
   get requiresConfirmation() {
-    return (
-      this.requires_confirmation ===
-      SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple
-    );
+    switch (this.requires_confirmation) {
+      case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple:
+        return true;
+      case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple_on_enable: {
+        const val = this.buffered?.get("value");
+        return isSettingValueTrue(val);
+      }
+      default:
+        return false;
+    }
   }
 
   get requiresReload() {

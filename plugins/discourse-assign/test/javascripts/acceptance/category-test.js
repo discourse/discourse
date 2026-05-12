@@ -25,82 +25,70 @@ function stubCategory(needs, customFields) {
   });
 }
 
-acceptance(
-  "Discourse Assign | Categories for users that can assign",
-  function (needs) {
-    needs.user({ can_assign: true });
-    needs.settings({
-      assign_enabled: true,
-      assigns_user_url_path: "/",
-      assigns_public: false,
-    });
-    stubCategory(needs, { enable_unassigned_filter: "true" });
+acceptance("Categories for users that can assign", function (needs) {
+  needs.user({ can_assign: true });
+  needs.settings({
+    assign_enabled: true,
+    assigns_user_url_path: "/",
+    assigns_public: false,
+  });
+  stubCategory(needs, { enable_unassigned_filter: "true" });
 
-    test("can see Unassigned button", async function (assert) {
-      await visit("/c/test");
+  test("can see Unassigned button", async function (assert) {
+    await visit("/c/test");
 
-      const title = i18n("filters.unassigned.help");
-      assert.dom(`#navigation-bar li[title='${title}']`).exists();
-    });
-  }
-);
+    const title = i18n("filters.unassigned.help");
+    assert.dom(`#navigation-bar li[title='${title}']`).exists();
+  });
+});
 
-acceptance(
-  "Discourse Assign | Categories without enable_unassigned_filter",
-  function (needs) {
-    needs.user();
-    needs.settings({
-      assign_enabled: true,
-      assigns_user_url_path: "/",
-      assigns_public: false,
-    });
-    stubCategory(needs, { enable_unassigned_filter: "false" });
+acceptance("Categories without enable_unassigned_filter", function (needs) {
+  needs.user();
+  needs.settings({
+    assign_enabled: true,
+    assigns_user_url_path: "/",
+    assigns_public: false,
+  });
+  stubCategory(needs, { enable_unassigned_filter: "false" });
 
-    test("cannot see Unassigned button", async function (assert) {
-      await visit("/c/test");
+  test("cannot see Unassigned button", async function (assert) {
+    await visit("/c/test");
 
-      const title = i18n("filters.unassigned.help");
-      assert.dom(`#navigation-bar li[title='${title}']`).doesNotExist();
-    });
-  }
-);
+    const title = i18n("filters.unassigned.help");
+    assert.dom(`#navigation-bar li[title='${title}']`).doesNotExist();
+  });
+});
 
-acceptance(
-  "Discourse Assign | Categories when assigns are public",
-  function (needs) {
-    needs.user();
-    needs.settings({
-      assign_enabled: true,
-      assigns_user_url_path: "/",
-      assigns_public: true,
-    });
-    stubCategory(needs, { enable_unassigned_filter: "true" });
+acceptance("Categories when assigns are public", function (needs) {
+  needs.user();
+  needs.settings({
+    assign_enabled: true,
+    assigns_user_url_path: "/",
+    assigns_public: true,
+  });
+  stubCategory(needs, { enable_unassigned_filter: "true" });
 
-    test("can see Unassigned button", async function (assert) {
-      await visit("/c/test");
+  test("can see Unassigned button", async function (assert) {
+    await visit("/c/test");
 
-      const title = i18n("filters.unassigned.help");
-      assert.dom(`#navigation-bar li[title='${title}']`).exists();
-    });
-  }
-);
+    const title = i18n("filters.unassigned.help");
+    assert.dom(`#navigation-bar li[title='${title}']`).exists();
+  });
+});
 
-acceptance(
-  "Discourse Assign | Categories when assigns are private",
-  function (needs) {
-    needs.user();
-    needs.settings({
-      assign_enabled: true,
-      assigns_user_url_path: "/",
-      assigns_public: false,
-    });
-    stubCategory(needs, { enable_unassigned_filter: "true" });
+acceptance("Categories when assigns are private", function (needs) {
+  needs.user();
+  needs.settings({
+    assign_enabled: true,
+    assigns_user_url_path: "/",
+    assigns_public: false,
+  });
+  stubCategory(needs, { enable_unassigned_filter: "true" });
 
-    test("cannot see Unassigned button", async function (assert) {
-      await visit("/c/test");
+  test("cannot see Unassigned button", async function (assert) {
+    await visit("/c/test");
 
-      const title = i18n("filters.unassigned.help");
-      assert.dom(`#navigation-bar li[title='${title}']`).doesNotExist();
-    });
-  }
-);
+    const title = i18n("filters.unassigned.help");
+    assert.dom(`#navigation-bar li[title='${title}']`).doesNotExist();
+  });
+});

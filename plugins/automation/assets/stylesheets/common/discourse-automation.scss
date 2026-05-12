@@ -71,6 +71,8 @@
 
       @include viewport.until(md) {
         order: 6;
+        position: initial;
+        justify-content: space-between;
       }
     }
   }

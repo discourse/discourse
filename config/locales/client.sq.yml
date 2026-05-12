@@ -2524,6 +2524,7 @@ sq:
       upload_description: "shkruaj përshkrimin e skedarit të ngarkuar këtu"
       list_item: "Element liste"
       wrap_modal:
+        attribute_value: "Vlera"
         apply: "Apliko"
       help: "Ndihmë mbi Markdown"
       exit_fullscreen_prompt: "Shtypni <kbd>ESC</kbd> për të dalë nga ekrani i plotë"
@@ -2579,6 +2580,9 @@ sq:
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit
       link_toolbar:
+        copy: "Kopjoni lidhjen"
+        link_copied: "Lidhja u kopjua!"
+      onebox_toolbar:
         copy: "Kopjoni lidhjen"
         link_copied: "Lidhja u kopjua!"
     notifications:
@@ -2933,17 +2937,9 @@ sq:
         archive_messages: "Kaloni te Arkivi"
         change_notification_level: "Ndrysho nivelin e njoftimit"
         choose_new_category: "Zgjidhni kategorinë e re për temat: "
-        selected_sole_category:
-          one: "Keni zgjedhur <b>%{count}</b> temë:"
-          other: "Keni zgjedhur <b>%{count}</b> tema:"
         selected_count:
           one: "%{count} zgjedhur"
           other: "%{count} zgjedhur"
-        choose_new_tags: "Zgjidh etiketa të reja për këto tema:"
-        changed_tags: "Etiketat e temave u ndryshuan. "
-        confirm_remove_tags:
-          one: "Të gjitha etiketat do të hiqen nga kjo temë. A jeni të sigurt?"
-          other: "Të gjitha etiketat do të hiqen nga temat %{count} . A jeni të sigurt?"
         progress:
           one: "Progresi: <strong>%{count}</strong> temë"
           other: "Progresi: <strong>%{count}</strong> tema"
@@ -2980,20 +2976,35 @@ sq:
         name: "Çlistimi"
       relist_topics:
         name: "Relistoni"
-      remove_tags:
-        name: "Hiqni etiketat"
-      replace_tags:
-        name: "Zëvendësoni etiketat"
       delete_topics:
         name: "Fshij"
       update_category:
         name: "Përditëso kategorinë"
+      convert_to_public_topic:
+        name: "Bëni temën publike…"
+      convert_to_private_message:
+        name: "Bëni një mesazh personal"
       reset_bump_dates:
         name: "Rivendos datat e përplasjes"
       defer:
         name: "Shënoni të palexuar"
       update_notifications:
         name: "Përditëso Njoftimet"
+    nested_replies:
+      sort:
+        label: "Rendit sipas"
+        top: "Popullore"
+        new: "I Ri"
+      load_more_children:
+        one: "edhe %{count} përgjigje "
+        other: "janë %{count} përgjigje"
+      collapsed_replies:
+        one: "%{count} përgjigje"
+        other: "%{count} përgjigje"
+      collapse: "Zvogëloni"
+      no_replies: "Nuk ka ende përgjigje."
+      ignored_post_placeholder: "[injoruar]"
+      pinned_reply: "E përzgjedhur"
     topic:
       filter_to:
         one: "%{count} postim në temë"
@@ -3369,7 +3380,7 @@ sq:
           edit: "Redaktoni"
           delete: "Fshij"
         post_language_selector:
-          none: "Asnjë"
+          none: "Nuk është vendosur"
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
@@ -3521,7 +3532,7 @@ sq:
         options:
           normal: "Normal"
       sort_options:
-        default: "paracaktuar"
+        default: "Paracaktuar"
         likes: "Pëlqime"
         views: "Shikimet"
         posts: "Postime"
@@ -3969,6 +3980,8 @@ sq:
           admins: "Administratorët"
           moderators: "Moderatorë"
           staff: "Stafi"
+        impact_types:
+          other_type: "Të tjerë"
         filter:
           all: "Të gjitha"
           enabled: "Aktivizuar"
@@ -4032,6 +4045,11 @@ sq:
           sub_pages:
             logs:
               title: "Ditari"
+        problem_checks:
+          status: "Status"
+          ignore: "Injoroni"
+          more_options:
+            title: "Më shumë mundësi"
         reports:
           sub_pages:
             settings:
@@ -4085,7 +4103,7 @@ sq:
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
         installed_version: "Instaluar"
         latest_version: "Të fundit"
-        dismiss_notice: "Hiqe"
+        dismiss_notice: "Injoroni"
         new_features:
           learn_more: "Mëso më shumë..."
         last_checked: "Verifikimi i fundit"
@@ -4104,6 +4122,8 @@ sq:
         general_tab: "Karakteristika të përgjithshme"
         security_tab: "Siguria"
         report_filter_any: "ndonjë"
+        period:
+          custom: "Grupet e krijuara"
         reports:
           today: "Sot"
           yesterday: "Dje"
@@ -4493,6 +4513,7 @@ sq:
         topic_id: "ID e temës"
         post_id: "ID e postimit"
         category_id: "ID e kategorisë"
+        reviewable_id: "Shqyrtuar"
         delete: "Fshij"
         edit: "Redakto"
         save: "Ruaj"

@@ -2812,6 +2812,8 @@ fr:
       list_item: "Élément"
       toggle_direction: "Basculer la section"
       wrap_modal:
+        attribute_key: "Clé"
+        attribute_value: "Valeur"
         apply: "Appliquer"
       help: "Aide à l'édition Markdown"
       exit_fullscreen_prompt: "Appuyez sur <kbd>ÉCHAP</kbd> pour quitter le mode plein écran"
@@ -2880,6 +2882,9 @@ fr:
         copy: "Copier le lien"
         remove: "Supprimer le lien"
         visit: "Ouvrir le lien dans un onglet externe"
+        link_copied: "Lien copié !"
+      onebox_toolbar:
+        copy: "Copier le lien"
         link_copied: "Lien copié !"
     notifications:
       tooltip:
@@ -3242,19 +3247,9 @@ fr:
         archive_messages: "Déplacer vers les archives"
         change_notification_level: "Modifier le niveau de notification"
         choose_new_category: "Choisissez la nouvelle catégorie pour ces sujets :"
-        selected_sole_category:
-          one: "Vous avez sélectionné <b>%{count}</b> sujet de la catégorie :"
-          other: "Vous avez sélectionné <b>%{count}</b> sujets de la catégorie :"
         selected_count:
           one: "Sélection : %{count}"
           other: "Sélection : %{count}"
-        append_tags: "Ajouter des étiquettes"
-        choose_new_tags: "Choisissez de nouvelles étiquettes pour ces sujets :"
-        choose_append_tags: "Ajouter des étiquettes"
-        changed_tags: "Les étiquettes de ces sujets ont été modifiées."
-        confirm_remove_tags:
-          one: "Toutes les étiquettes seront supprimées de ce sujet. Voulez-vous continuer ?"
-          other: "Toutes les étiquettes seront supprimées des <b>%{count}</b> sujets. Voulez-vous continuer ?"
         progress:
           one: "Progression : <strong>%{count}</strong> sujet"
           other: "Progression : <strong>%{count}</strong> sujets"
@@ -3296,20 +3291,39 @@ fr:
         name: "Retirer de la liste"
       relist_topics:
         name: "Remettre dans la liste"
-      remove_tags:
-        name: "Supprimer des étiquettes"
-      replace_tags:
-        name: "Remplacer des étiquettes"
+      manage_tags:
+        add:
+          title: "Ajouter des étiquettes"
       delete_topics:
         name: "Supprimer"
       update_category:
         name: "Mettre à jour la catégorie"
+      convert_to_public_topic:
+        name: "Rendre le sujet public…"
+      convert_to_private_message:
+        name: "Transformer en message direct"
       reset_bump_dates:
         name: "Réinitialiser la date d'actualisation"
       defer:
         name: "Marquer comme non lu"
       update_notifications:
         name: "Mettre à jour les notifications"
+    nested_replies:
+      sort:
+        label: "Trier par"
+        top: "Top"
+        new: "Nouveau"
+      load_more_children:
+        one: "%{count} réponse supplémentaire"
+        other: "%{count} réponses supplémentaires"
+      collapsed_replies:
+        one: "%{count} réponse"
+        other: "%{count} réponses"
+      collapse: "Réduire"
+      no_replies: "Pas encore de réponse."
+      deleted_post_placeholder: "[supprimés]"
+      ignored_post_placeholder: "[ignoré]"
+      pinned_reply: "Épinglé"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -3821,6 +3835,10 @@ fr:
       sr_post_like_count_button:
         one: "%{count} personne a aimé cette publication."
         other: "%{count} personnes ont aimé cette publication."
+      likes_popup:
+        title:
+          one: "%{count} « J'aime »"
+          other: "%{count} « J'aime »"
       sr_post_read_count_button:
         one: "%{count} personne a lu cette publication."
         other: "%{count} personnes ont lu cette publication."
@@ -3848,7 +3866,7 @@ fr:
           confirm_delete: "Voulez-vous vraiment supprimer les traductions de « %{languageCode} » ?"
         success: "Les traductions ont été mises à jour avec succès"
         post_language_selector:
-          none: "Aucune"
+          none: "Non défini"
         edit_warning:
           action_original: "Modifier la publication originale"
           action_translation: "Modifier cette traduction"
@@ -3871,6 +3889,7 @@ fr:
         attachment_download_requires_login: "Nous sommes désolés, vous devez être connecté(e) pour télécharger une pièce jointe."
       cancel_composer:
         discard: "Abandonner"
+        discard_edit: "Annuler les modifications"
       via_email: "ce message est arrivé par e-mail"
       via_auto_generated_email: "ce message est arrivé via un e-mail généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
@@ -3914,7 +3933,7 @@ fr:
         admin: "actions d'administration sur le message"
         admin_action: "Administrateur"
         permanently_delete: "Supprimer définitivement"
-        permanently_delete_confirmation: "Voulez-vous vraiment supprimer définitivement ce message ? Vous ne pourrez plus le récupérer."
+        permanently_delete_confirm_phrase: "supprimer définitivement"
         wiki: "Basculer en mode wiki"
         unwiki: "Retirer le mode wiki"
         convert_to_moderator: "Ajouter la couleur modérateur"
@@ -4059,6 +4078,7 @@ fr:
       back: "Retour à la catégorie"
       general: "Général"
       settings: "Paramètres"
+      moderation: "Modération"
       advanced: "Avancé"
       topic_template: "Modèle"
       tags: "Étiquettes"
@@ -4195,7 +4215,7 @@ fr:
           low: "Faible"
           high: "Élevée"
       sort_options:
-        default: "par défaut"
+        default: "Par défaut"
         likes: "« J'aime »"
         views: "Vues"
         posts: "Messages"
@@ -5239,6 +5259,9 @@ fr:
           admins: "Administrateurs "
           moderators: "Modérateurs"
           staff: "Responsable"
+        impact_types:
+          feature_type: "Fonctionnalité"
+          other_type: "Autre"
         filter:
           all: "Tout"
           enabled: "Activé"
@@ -5255,7 +5278,6 @@ fr:
           header_description: "Fournissez ici des informations sur ce site et votre équipe afin que les visiteurs puissent savoir en quoi consiste votre communauté, qui la soutient et comment vous contacter en cas de problème. Ce contenu est affiché sur la page <a href='%{basePath}/about'>À propos</a> de votre site."
         developer:
           title: "Développeur"
-          header_description: "Paramètres du développeur pour contrôler les limites de débit, les multiplicateurs et les calculs, le mode sans échec et d'autres fonctionnalités avancées"
         experimental:
           title: "Expérimental"
           header_description: "Activez ou désactivez les fonctionnalités expérimentales de votre site. La plupart d'entre elles peuvent être contrôlées par groupe."
@@ -5450,6 +5472,13 @@ fr:
             logs:
               title: "Journaux"
               header_description: "Affichez et gérez les journaux pour les sauvegardes, les restaurations et les téléversements"
+        problem_checks:
+          priority: "Priorité"
+          status: "Statut"
+          last_run_at: "Dernière exécution"
+          ignore: "Ignorer"
+          more_options:
+            title: "Plus d'options"
         reports:
           title: "Rapports"
           header_description: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
@@ -5623,7 +5652,7 @@ fr:
         installed_version: "Installée"
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
-        dismiss_notice: "Rejeter"
+        dismiss_notice: "Ignorer"
         new_features:
           title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
@@ -5667,6 +5696,16 @@ fr:
         too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de réessayer.
         not_found_error: Nous sommes désolés, ce rapport n'existe pas
         custom_date_range: Plage de dates personnalisée
+        sections:
+          reports:
+            title: "Rapports"
+          traffic:
+            title: "Trafic du site"
+        period:
+          last_7_days: "Ces 7 derniers jours"
+          last_30_days: "30 derniers jours"
+          last_3_months: "3 derniers mois"
+          custom: "Personnalisé"
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
           percent_change_tooltip: "Changement de %{percent}."
@@ -6898,6 +6937,7 @@ fr:
         topic_id: "Identifiant du sujet"
         post_id: "Identifiant du message"
         category_id: "Identifiant de la catégorie"
+        reviewable_id: "À examiner"
         delete: "Supprimer"
         edit: "Modifier"
         save: "Enregistrer"
@@ -7461,7 +7501,6 @@ fr:
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
         delete_confirm_title: "Voulez-vous vraiment supprimer cet utilisateur ? Cette action est définitive !"
         delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes."
-        delete_and_block: "Supprimer l'utilisateur et bloquer son adresse e-mail et son adresse IP"
         delete_dont_block: "Supprimer l'utilisateur"
         deleting_user: "Suppression de l'utilisateur…"
         deleted: "L'utilisateur a été supprimé."

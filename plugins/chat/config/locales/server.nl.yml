@@ -212,6 +212,9 @@ nl:
         other_type: "%{username} heeft %{identifier} genoemd in een privéchat"
       new_chat_message: '%{username} heeft een bericht gestuurd in "%{channel}"'
       new_direct_chat_message: "%{username} heeft een bericht gestuurd in een privéchat"
+    actions:
+      chat_reply:
+        title: Antwoord
   discourse_automation:
     scriptables:
       send_chat_message:

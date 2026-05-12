@@ -9,7 +9,7 @@ ug:
     overall_sentiment:
       yaxis: "چېسلا"
     emotion_neutral:
-      title: "\U0001F610 بىتەرەپ"
+      title: "😐 بىتەرەپ"
   discourse_ai:
     tools:
       presets:
@@ -91,6 +91,10 @@ ug:
       unlist_topic:
         errors:
           not_found: "تېما تېپىلمىدى."
+      lock_post:
+        errors:
+          not_found: "يازما تېپىلمىدى."
+          not_allowed: "بۇ يازمىنى قۇلۇپلاش ياكى قۇلۇپىنى ئېچىش ئىجازىتىڭىز يوق."
       delete_topic:
         errors:
           not_found: "تېما تېپىلمىدى."
@@ -125,7 +129,7 @@ ug:
     sentiment:
       reports:
         post_emotion:
-          neutral: "بىتەرەپ \U0001F610"
+          neutral: "بىتەرەپ 😐"
         sentiment_analysis:
           positive: "ئىجابىي"
           negative: "سەلبىي"

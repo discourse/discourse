@@ -48,6 +48,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/organisms/basic-topic-list", title: "Basic Topic List" },
       { href: "/organisms/categories-list", title: "Categories List" },
       { href: "/organisms/chat", title: "Chat" },
+      { href: "/organisms/docked-composer", title: "Docked Composer" },
       { href: "/organisms/modal", title: "Modal" },
       { href: "/organisms/navigation", title: "Navigation" },
       { href: "/organisms/site-header", title: "Site Header" },
@@ -113,9 +114,6 @@ RSpec.describe "Styleguide Smoke Test" do
     sections.each do |section, items|
       items.each do |item|
         it "renders the #{section}: #{item[:title]} page correctly" do
-          # TODO: fix more-topics page flake
-          skip "Skipping smoke test for more-topics page" if item[:href] == "/organisms/more-topics"
-
           visit "/styleguide/#{item[:href]}"
 
           expect(page).to have_css(".styleguide-contents h1.section-title", text: item[:title])

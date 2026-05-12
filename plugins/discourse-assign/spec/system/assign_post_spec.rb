@@ -13,9 +13,8 @@ describe "Assign | Assigning posts" do
     SiteSetting.assign_enabled = true
     SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     SiteSetting.prioritize_full_name_in_ux = false
-    # The system tests in this file are flaky and auth token related so turning this on
-    SiteSetting.verbose_auth_token_logging = true
 
+    admin.update!(last_seen_at: 1.day.ago)
     sign_in(admin)
   end
 
@@ -74,9 +73,7 @@ describe "Assign | Assigning posts" do
 
       it "show the user's username if there is no name" do
         visit "/t/#{topic.id}"
-        staff_user.name = nil
-        staff_user.save
-        staff_user.reload
+        staff_user.update!(name: nil)
 
         assign_post(post2, staff_user)
 

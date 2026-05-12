@@ -307,6 +307,7 @@ class Topic < ActiveRecord::Base
   has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
   has_one :linked_topic, dependent: :destroy
+  has_one :nested_topic, dependent: :destroy
 
   belongs_to :image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
@@ -701,6 +702,20 @@ class Topic < ActiveRecord::Base
 
   def regular?
     self.archetype == Archetype.default
+  end
+
+  # Single source of truth for "this topic renders as nested." Both
+  # TopicListItemSerializer and TopicViewSerializer delegate here.
+  #
+  # NOTE: does not consider category.nested_replies_default. The category
+  # override is honored at *creation time* by the initializer in
+  # config/initializers/300-nested-replies.rb (which materializes a
+  # NestedTopic record). Topics created before a category was switched on
+  # therefore won't be nested unless the site-wide default is also on.
+  def nested_view?
+    return false unless SiteSetting.nested_replies_enabled
+    return false if private_message?
+    nested_topic.present? || SiteSetting.nested_replies_default
   end
 
   def open?
@@ -2117,18 +2132,14 @@ class Topic < ActiveRecord::Base
     ).performed!
   end
 
-  def cannot_permanently_delete_reason(user)
-    all_posts_count =
-      Post
-        .with_deleted
-        .where(topic_id: self.id)
-        .where(
-          post_type: [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]],
-        )
-        .count
+  def deletable_posts_count
+    Post.with_deleted.where(topic_id: self.id).where.not(post_type: Post.types[:small_action]).count
+  end
 
-    if posts_count > 0 || all_posts_count > 1
-      I18n.t("post.cannot_permanently_delete.many_posts")
+  def cannot_permanently_delete_reason(user)
+    remaining = deletable_posts_count - 1
+    if posts_count > 0 || remaining > 0
+      I18n.t("post.cannot_permanently_delete.many_posts", count: remaining)
     elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
       time_left =
         RateLimiter.time_left(

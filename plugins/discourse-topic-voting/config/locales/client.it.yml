@@ -12,14 +12,10 @@ it:
     topic_voting:
       reached_limit: "Hai terminato i voti, rimuovi un voto esistente!"
       list_votes: "Elenca i tuoi voti"
-      votes_nav_help: "argomenti con il maggior numero di voti"
       voted: "Hai votato su questo argomento"
       allow_topic_voting: "Permetti agli utenti di votare gli argomenti in questa categoria"
       vote_title: "Vota"
       vote_title_plural: "Voti"
-      voted_title: "Votato"
-      voting_closed_title: "Chiuso"
-      voting_limit: "Limite"
       votes:
         one: "%{count} voto"
         other: "%{count} voti"
@@ -27,12 +23,14 @@ it:
         one: "Voto"
         other: "Voti"
       remove_vote: "Rimuovi voto"
+      and_more_voters: "e altre %{count}..."
+      show_voters: "Mostra i votanti"
+      vote_count_thousands: "%{count}k"
       no_votes_title_self: "Non hai ancora votato per nessun argomento"
       no_votes_title_others: "%{username} non ha ancora votato per nessun argomento"
     filters:
       votes:
         title: "Voti"
-        help: "argomenti con il maggior numero di voti"
       my_votes:
         title: "I miei voti"
         help: "argomenti su cui hai votato"

@@ -13,8 +13,6 @@ fa_IR:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "هیچ اقدامی"
         agree_and_suspend:
           title: "کاربر تعلیق شده"
         ignore:

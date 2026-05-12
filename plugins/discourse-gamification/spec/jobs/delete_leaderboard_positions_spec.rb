@@ -2,7 +2,13 @@
 
 describe Jobs::DeleteLeaderboardPositions do
   fab!(:leaderboard, :gamification_leaderboard)
-  fab!(:score) { Fabricate(:gamification_score, user_id: leaderboard.created_by_id) }
+  fab!(:score) do
+    Fabricate(
+      :gamification_leaderboard_score,
+      leaderboard_id: leaderboard.id,
+      user_id: leaderboard.created_by_id,
+    )
+  end
   let(:leaderboard_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard) }
 
   before { leaderboard_positions.create }

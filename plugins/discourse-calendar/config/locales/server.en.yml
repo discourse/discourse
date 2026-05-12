@@ -63,6 +63,7 @@ en:
     event_participation_buttons: "List of event participation buttons users can use."
     sidebar_show_upcoming_events: "Show upcoming events link in the sidebar under 'More'."
     calendar_first_day_of_week: "Set the first day of the week for calendar display. Options are Saturday, Sunday, or Monday."
+    enable_events_category_type_setup: "Enables the Events category type option during category creation setup. Note that 'enable simplified category creation' must be enabled for this to take effect."
 
   discourse_calendar:
     calendar_subscriptions:

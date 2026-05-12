@@ -2,14 +2,14 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { and, eq, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class VoteBox extends Component {
@@ -152,7 +152,7 @@ export default class VoteBox extends Component {
           <DButton
             @icon={{this.buttonIcon}}
             @disabled={{true}}
-            @ariaLabel={{this.ariaLabel}}
+            @translatedAriaLabel={{this.ariaLabel}}
             class={{this.buttonClasses}}
           />
         </:trigger>
@@ -172,7 +172,7 @@ export default class VoteBox extends Component {
         @placement="right"
       >
         <:content>
-          <DropdownMenu as |dropdown|>
+          <DDropdownMenu as |dropdown|>
             {{#if this.showVotedMenu}}
               <dropdown.item class="topic-voting-menu__votes-left">
                 <DButton
@@ -204,7 +204,7 @@ export default class VoteBox extends Component {
               </dropdown.item>
             {{else if (eq this.currentUser.vote_limit 0)}}
               <dropdown.item class="topic-voting-menu__title --locked">
-                {{icon "lock"}}
+                {{dIcon "lock"}}
                 <span>{{i18n "topic_voting.locked_description"}}</span>
               </dropdown.item>
             {{else if
@@ -254,14 +254,14 @@ export default class VoteBox extends Component {
                 </dropdown.item>
               {{/if}}
             {{/if}}
-          </DropdownMenu>
+          </DDropdownMenu>
         </:content>
       </DMenu>
     {{else}}
       <DButton
         @icon={{this.buttonIcon}}
         @action={{this.onShowMenu}}
-        @ariaLabel={{this.ariaLabel}}
+        @translatedAriaLabel={{this.ariaLabel}}
         class={{this.buttonClasses}}
       />
     {{/if}}

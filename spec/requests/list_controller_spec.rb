@@ -2001,6 +2001,7 @@ RSpec.describe ListController do
       end
 
       before do
+        SiteSetting.set_locale_from_param = true
         topic.update!(locale: "en")
         topic.category.update!(locale: "en")
       end

@@ -268,13 +268,11 @@ The same pattern works for plugin migrations — just adjust the `require` path 
 
 ## Running annotations
 
-After any migration that alters table schema (add/remove/rename columns, create tables), run:
+After a schema-altering migration (columns, tables, indexes), `bin/rake db:migrate` then annotate the affected models by path — core or plugin, same command:
 
 ```bash
-bin/annotate --models
+bin/annotaterb models app/models/widget.rb plugins/my-plugin/app/models/gadget.rb
 ```
-
-This updates the schema comments at the top of model files to reflect the current database schema.
 
 ## Review checklist
 
@@ -290,4 +288,4 @@ This updates the schema comments at the top of model files to reflect the curren
 10. No foreign keys unless strong justification
 11. No application code (models, `SiteSetting`) — query DB directly
 12. `execute` for SQL; `DB.exec`/`DB.query` only when param binding or return values needed
-13. Run `bin/annotate --models` after schema-altering migrations
+13. Run `bin/annotaterb models <paths>` on affected model files after schema-altering migrations

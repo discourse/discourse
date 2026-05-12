@@ -10,8 +10,6 @@ hr:
       default_query: "Zadano"
       or: "ili"
       create: "Stvorite"
-      ai:
-        generate: "Generiraj"
       help:
         label: "Pomoć"
       schema:

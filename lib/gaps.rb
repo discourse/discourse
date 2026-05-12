@@ -27,7 +27,6 @@ class Gaps
     return if @subset.nil? || @original.nil?
 
     i = j = 0
-    gaps = {}
     current_gap = []
 
     while e1 = @subset[i]

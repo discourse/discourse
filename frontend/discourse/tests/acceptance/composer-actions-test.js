@@ -88,7 +88,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-far-eye-slash")
       .doesNotExist("whisper icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
 
     await composerActions.expand();
@@ -98,7 +98,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-far-eye-slash")
       .exists("whisper icon is visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .doesNotExist("reply icon is not visible");
   });
 
@@ -246,7 +246,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
 
     await composerActions.expand();
@@ -256,7 +256,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-anchor")
       .exists("no-bump icon is visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .doesNotExist("reply icon is not visible");
 
     await composerActions.expand();
@@ -266,7 +266,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
   });
 
@@ -283,7 +283,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".reply-details .whisper .d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
 
     await composerActions.expand();
@@ -298,7 +298,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".reply-details .no-bump .d-icon-anchor")
       .exists("no-bump icon is visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .doesNotExist("reply icon is not visible");
   });
 

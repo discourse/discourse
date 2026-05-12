@@ -15,8 +15,8 @@ import ChangePostNoticeModal from "discourse/components/modal/change-post-notice
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 import JumpToPost from "discourse/components/modal/jump-to-post";
+import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summary";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -27,6 +27,7 @@ import {
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { bind } from "discourse/lib/decorators";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
@@ -47,6 +48,7 @@ import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicLocalization from "discourse/models/topic-localization";
 import TopicTimer from "discourse/models/topic-timer";
+import { spinnerHTML } from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 let customPostMessageCallbacks = {};
@@ -92,7 +94,12 @@ export default class TopicController extends Controller {
   @autoTrackedArray bookmarks = [];
   @autoTrackedArray selectedPostIds = [];
 
-  queryParams = ["filter", "username_filters", "replies_to_post_number"];
+  queryParams = [
+    "filter",
+    "username_filters",
+    "replies_to_post_number",
+    "flat",
+  ];
 
   editingTopic = false;
   enteredAt = null;
@@ -102,6 +109,7 @@ export default class TopicController extends Controller {
   username_filters = null;
   replies_to_post_number = null;
   filter = null;
+  flat = null;
   quoteState = new QuoteState();
   currentPostId = null;
   userLastReadPostNumber = null;
@@ -582,6 +590,21 @@ export default class TopicController extends Controller {
       : this.get("model.postStream").loadPost(postId);
 
     return promise.then(async (post) => {
+      if (EmbedMode.enabled) {
+        const quotedText = buildQuote(post, buffer, opts);
+        this.appEvents.trigger("embed-composer:reply-to-post", post);
+        if (quotedText?.trim()) {
+          this.appEvents.trigger("composer:insert-block", quotedText);
+        }
+        return;
+      }
+
+      const quoteEvent = { post, buffer, opts, handled: false };
+      this.appEvents.trigger("topic:quote-post", quoteEvent);
+      if (quoteEvent.handled) {
+        return;
+      }
+
       const composer = this.composer;
       const viewOpen = composer.get("model.viewOpen");
 
@@ -825,7 +848,6 @@ export default class TopicController extends Controller {
   // Post related methods
   @action
   async replyToPost(post) {
-    const composerController = this.composer;
     const topic = post ? post.get("topic") : this.model;
     const quoteState = this.quoteState;
     const postStream = this.get("model.postStream");
@@ -836,6 +858,23 @@ export default class TopicController extends Controller {
       return;
     }
 
+    if (EmbedMode.enabled) {
+      const quotedPost = postStream.findLoadedPost(quoteState.postId);
+      const quotedText = buildQuote(
+        quotedPost,
+        quoteState.buffer,
+        quoteState.opts
+      );
+      quoteState.clear();
+
+      this.appEvents.trigger("embed-composer:reply-to-post", post);
+      if (quotedText?.trim()) {
+        this.appEvents.trigger("composer:insert-block", quotedText.trim());
+      }
+      return false;
+    }
+
+    const composerController = this.composer;
     const quotedPost = postStream.findLoadedPost(quoteState.postId);
     const quotedText = buildQuote(
       quotedPost,
@@ -999,11 +1038,29 @@ export default class TopicController extends Controller {
   }
 
   @action
-  permanentlyDeletePost(post) {
-    return this.dialog.yesNoConfirm({
-      message: i18n("post.controls.permanently_delete_confirmation"),
-      didConfirm: () => {
-        this.send("deletePost", post, { force_destroy: true });
+  async permanentlyDeletePost(post) {
+    let result;
+    try {
+      result = await ajax(`/posts/${post.id}/permanently_delete_check.json`);
+    } catch (error) {
+      return popupAjaxError(error);
+    }
+
+    if (!result.can_permanently_delete) {
+      return this.dialog.alert(result.reason);
+    }
+
+    const message = post.firstPost
+      ? i18n("post.controls.permanently_delete_topic_confirmation")
+      : i18n("post.controls.permanently_delete_post_confirmation");
+
+    return this.modal.show(PermanentlyDeleteConfirmModal, {
+      model: {
+        message,
+        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
+        didConfirm: () => {
+          this.send("deletePost", post, { force_destroy: true });
+        },
       },
     });
   }
@@ -1014,6 +1071,17 @@ export default class TopicController extends Controller {
       return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     } else if (!post.can_edit) {
       return false;
+    }
+
+    if (EmbedMode.enabled) {
+      this.appEvents.trigger("embed-composer:edit-post", post);
+      return;
+    }
+
+    const editEvent = { post, handled: false };
+    this.appEvents.trigger("topic:edit-post", editEvent);
+    if (editEvent.handled) {
+      return;
     }
 
     const topic = this.model;

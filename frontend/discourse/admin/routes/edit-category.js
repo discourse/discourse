@@ -5,6 +5,7 @@ import { i18n } from "discourse-i18n";
 
 export default class EditCategory extends DiscourseRoute {
   @service router;
+  @service categoryTypeChooser;
 
   model(params) {
     return this.site.lazy_load_categories
@@ -26,6 +27,10 @@ export default class EditCategory extends DiscourseRoute {
         const updatedParent = this.site.updateCategory(result.category);
         updatedParent.setupGroupsAndPermissions();
       }
+    }
+
+    if (model.available_category_types) {
+      this.categoryTypeChooser.allTypes = model.available_category_types;
     }
   }
 

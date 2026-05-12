@@ -10,8 +10,6 @@ ug:
       default_query: "كۆڭۈلدىكى"
       or: "ياكى"
       create: "قۇر"
-      ai:
-        generate: "ھاسىللا"
       help:
         label: "ياردەم"
       types:

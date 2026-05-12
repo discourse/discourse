@@ -1735,6 +1735,8 @@ bs_BA:
       upload_description: "unesi opis učitanog"
       list_item: "Listaj predmet"
       wrap_modal:
+        attribute_key: "Ključ"
+        attribute_value: "Value"
         apply: "Snimi"
       help: "Pomoć za Markdown"
       modal_ok: "OK"
@@ -1966,8 +1968,6 @@ bs_BA:
         actions: "Masovno odrađene akcije"
         move_messages_to_inbox: "Idi u inbox"
         choose_new_category: "Izaberi novu kategoriju za temu:"
-        choose_new_tags: "Odaberi nove tagove za ove teme:"
-        changed_tags: "Tagovi ovih tema su izmijenjeni."
         error_topic_count:
           one: "%{count} tema"
           few: "%{count} teme"
@@ -1990,10 +1990,28 @@ bs_BA:
         name: "Arhiva"
       move_messages_to_inbox:
         name: "Premjesti u Sanduče"
-      replace_tags:
-        name: "Zamijeni oznake"
       delete_topics:
         name: "Delete"
+      convert_to_private_message:
+        name: "Pretvori u privatnu poruku"
+    nested_replies:
+      sort:
+        label: "Sortiraj po"
+        top: "Top teme"
+        new: "Novo"
+      load_more_children:
+        one: "još %{count} odgovor"
+        few: "još %{count} odgovora"
+        other: "još %{count} odgovora"
+      collapsed_replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
+      collapse: "Spusti"
+      no_replies: "Bez odgovora."
+      deleted_post_placeholder: "[isbrisano]"
+      ignored_post_placeholder: "[ignorisano]"
+      pinned_reply: "Zakačena"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -2359,8 +2377,6 @@ bs_BA:
           actions: "Akcije"
           edit: "Edit"
           delete: "Delete"
-        post_language_selector:
-          none: "Ništa"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -2499,6 +2515,7 @@ bs_BA:
       view: "View Topics in Category"
       general: "General"
       settings: "Postavke"
+      moderation: "Moderacija"
       tags: "Oznake"
       localization:
         name: "Ime"
@@ -2583,7 +2600,7 @@ bs_BA:
           low: "Nisko"
           high: "Visoko"
       sort_options:
-        default: "obićno"
+        default: "Uobičajen"
         likes: "Sviđanja"
         views: "Pogledano"
         posts: "Objava"
@@ -3177,6 +3194,8 @@ bs_BA:
           admins: "Admins"
           moderators: "Moderators"
           staff: "Staff"
+        impact_types:
+          other_type: "Other"
         filter:
           all: "Sve"
           enabled: "Omogućen"
@@ -3240,6 +3259,9 @@ bs_BA:
           sub_pages:
             logs:
               title: "Logs"
+        problem_checks:
+          status: "Status"
+          ignore: "Zanemari"
         reports:
           title: "Izvještaji"
           sub_pages:
@@ -3305,7 +3327,7 @@ bs_BA:
         installed_version: "Installed"
         latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
-        dismiss_notice: "Odbaci"
+        dismiss_notice: "Zanemari"
         new_features:
           learn_more: "Saznaj više..."
         last_checked: "Zadnje pogledani"
@@ -3347,6 +3369,11 @@ bs_BA:
         exception_error: Žao nam je, došlo je do pogreške prilikom izvršavanja upita
         too_many_requests: Izveli ste ovu akciju previše puta. Pričekajte prije ponovnog pokušaja.
         not_found_error: Izvinite, ovaj izveštaj ne postoji
+        sections:
+          reports:
+            title: "Izvještaji"
+        period:
+          custom: "Custom"
         reports:
           trend_title: "%{percent} change. Trenutno je %{current}, u prethodnom periodu bio %{prev}."
           today: "Today"
@@ -3950,6 +3977,7 @@ bs_BA:
         topic_id: "Topic ID"
         post_id: "Post ID"
         category_id: "ID kategorije"
+        reviewable_id: "Pregled"
         delete: "Delete"
         edit: "Edit"
         save: "Save"

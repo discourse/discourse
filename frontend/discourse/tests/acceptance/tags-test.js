@@ -360,6 +360,7 @@ acceptance("Tag info", function (needs) {
               name: "planters",
               slug: "planters",
               topic_count: 1,
+              description: "A tag about planters",
             },
           ],
           topics: [],
@@ -456,6 +457,18 @@ acceptance("Tag info", function (needs) {
         ],
       });
     });
+  });
+
+  test("tag model includes description from topic list", async function (assert) {
+    await visit("/tag/planters/12");
+
+    const router = this.owner.lookup("service:router");
+    const tag = router.currentRoute.attributes.tag;
+    assert.strictEqual(
+      tag.description,
+      "A tag about planters",
+      "tag model has the description from topic list tags"
+    );
   });
 
   test("can filter tags page by category", async function (assert) {

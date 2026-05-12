@@ -782,6 +782,60 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.parsed_body["rows"]).to eq([[1828]])
       end
 
+      it "does not include post relations the user cannot see" do
+        private_post =
+          Fabricate(
+            :private_message_post,
+            raw: "Ssshh! This hidden data explorer excerpt must not leak.",
+          )
+        visible_post = Fabricate(:post, raw: "Visible data explorer excerpt may render.")
+        guardian = user.guardian
+        expect(guardian.can_see_post?(private_post)).to eq(false)
+        expect(guardian.can_see_post?(visible_post)).to eq(true)
+
+        query_sql = <<~SQL
+          SELECT #{private_post.id} AS post_id
+          UNION ALL
+          SELECT #{visible_post.id} AS post_id
+        SQL
+        query = make_query(query_sql, { name: "Posts" }, [group.id.to_s])
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
+
+        expect(response.status).to eq(200)
+        post_relations = response.parsed_body["relations"]["post"]
+        expect(post_relations).to contain_exactly(include("id" => visible_post.id))
+        expect(response.body).to include(visible_post.raw)
+        expect(response.body).not_to include(private_post.raw)
+      end
+
+      it "does not include topic relations the user cannot see" do
+        private_topic =
+          Fabricate(
+            :private_message_topic,
+            title: "Ssshh this hidden data explorer topic must not leak",
+          )
+        visible_topic = Fabricate(:topic, title: "Visible data explorer topic may render")
+        guardian = user.guardian
+        expect(guardian.can_see_topic?(private_topic)).to eq(false)
+        expect(guardian.can_see_topic?(visible_topic)).to eq(true)
+
+        query_sql = <<~SQL
+          SELECT #{private_topic.id} AS topic_id
+          UNION ALL
+          SELECT #{visible_topic.id} AS topic_id
+        SQL
+        query = make_query(query_sql, { name: "Topics" }, [group.id.to_s])
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
+
+        expect(response.status).to eq(200)
+        topic_relations = response.parsed_body["relations"]["topic"]
+        expect(topic_relations).to contain_exactly(include("id" => visible_topic.id))
+        expect(response.body).to include(visible_topic.title)
+        expect(response.body).not_to include(private_topic.title)
+      end
+
       it "can accept parameters as a hash" do
         query_string = <<~SQL
         -- [params]
@@ -966,6 +1020,85 @@ describe DiscourseDataExplorer::QueryController do
       expect(response.parsed_body["success"]).to eq(true)
       expect(response.parsed_body["columns"]).to eq(["legacy_value"])
       expect(response.parsed_body["rows"]).to eq([[42]])
+    end
+  end
+
+  describe "Admin" do
+    fab!(:admin)
+
+    before do
+      sign_in(admin)
+      SiteSetting.data_explorer_enabled = true
+    end
+
+    describe "#generate_with_ai" do
+      before { SiteSetting.data_explorer_ai_queries_enabled = true }
+
+      it "returns 404 when AI queries are disabled" do
+        SiteSetting.data_explorer_ai_queries_enabled = false
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "show me users",
+             }
+        expect(response.status).to eq(404)
+      end
+
+      it "requires ai_description parameter" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json"
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects ai_description over 2000 characters" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "a" * 2001,
+             }
+        expect(response.status).to eq(400)
+      end
+
+      it "enqueues a generation job and returns generation_id" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "show me users",
+             }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        generation_id = json["generation_id"]
+        expect(generation_id).to be_present
+        expect(json["status"]).to eq("generating")
+
+        job = Jobs::GenerateDeQueryWithAi.jobs.last
+        expect(job["args"].first["generation_id"]).to eq(generation_id)
+        expect(job["args"].first["user_id"]).to eq(admin.id)
+        expect(job["args"].first["ai_description"]).to eq("show me users")
+      end
+
+      it "passes existing_sql when provided" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "refine this query",
+               existing_sql: "SELECT 1",
+             }
+
+        expect(response.status).to eq(200)
+
+        job = Jobs::GenerateDeQueryWithAi.jobs.last
+        expect(job["args"].first["existing_sql"]).to eq("SELECT 1")
+      end
+
+      it "rate limits requests" do
+        RateLimiter.enable
+
+        11.times do
+          post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+               params: {
+                 ai_description: "show me users",
+               }
+        end
+
+        expect(response.status).to eq(429)
+      end
     end
   end
 end

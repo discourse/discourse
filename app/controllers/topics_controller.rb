@@ -181,6 +181,17 @@ class TopicsController < ApplicationController
       return
     end
 
+    if !request.format.json? && !use_crawler_layout? && SiteSetting.nested_replies_enabled &&
+         !@topic_view.topic.private_message? &&
+         (@topic_view.topic.nested_topic.present? || SiteSetting.nested_replies_default) &&
+         params[:flat] != "1"
+      url = "/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
+      post_number = opts[:post_number].to_i
+      url << "/#{post_number}" if post_number > 0
+      redirect_to url, status: :found
+      return
+    end
+
     track_visit_to_topic
 
     if should_track_visit_to_topic?
@@ -633,10 +644,15 @@ class TopicsController < ApplicationController
 
     guardian.ensure_can_delete!(topic) if TopicTimer.destructive_types.values.include?(status_type)
 
-    if status_type == TopicTimer.types[:publish_to_category] && params[:time].present?
+    creating_timer = params[:time].present? || params[:duration_minutes].present?
+
+    if status_type == TopicTimer.types[:publish_to_category] && creating_timer
       category = Category.find_by(id: params[:category_id])
       raise Discourse::NotFound if !category
       raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
+      if topic.private_message? && !guardian.can_convert_topic?(topic)
+        raise Discourse::InvalidAccess
+      end
     end
 
     options = { by_user: current_user, based_on_last_post: based_on_last_post }
@@ -1128,14 +1144,18 @@ class TopicsController < ApplicationController
           :silent,
           :pinned_globally,
           :pinned_until,
+          :remove_all_tags,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
           tag_ids: [],
           tags: [],
+          add_tag_ids: [],
+          remove_tag_ids: [],
+          replace_tags: %i[from_tag_id to_tag_id],
         )
         .to_h
-        .symbolize_keys
+        .deep_symbolize_keys
 
-    %i[silent pinned_globally].each do |key|
+    %i[silent pinned_globally remove_all_tags].each do |key|
       operation[key] = ActiveModel::Type::Boolean.new.cast(operation[key]) if operation.has_key?(
         key,
       )
@@ -1278,7 +1298,7 @@ class TopicsController < ApplicationController
         topic.convert_to_private_message(current_user)
       end
 
-    topic.valid? ? render_topic_changes(topic) : render_json_error(topic)
+    topic.errors.present? ? render_json_error(topic) : render_topic_changes(topic)
   end
 
   def reset_bump_date
@@ -1421,7 +1441,6 @@ class TopicsController < ApplicationController
 
   def track_visit_to_topic
     topic_id = @topic_view.topic.id
-    ip = request.remote_ip
     user_id = (current_user.id if current_user)
 
     if !request.format.json?

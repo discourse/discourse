@@ -4204,6 +4204,11 @@ RSpec.describe UsersController do
         get "/my/messages/group/#{group.name}"
         expect(response).to redirect_to("/u/#{user1.username}/messages/group/#{group.name}")
       end
+
+      it "works with alphanumeric params" do
+        get "/my/messages/tags/example-123"
+        expect(response).to redirect_to("/u/#{user1.username}/messages/tags/example-123")
+      end
     end
   end
 
@@ -7371,6 +7376,33 @@ RSpec.describe UsersController do
       ICS
     end
 
+    it "excludes bookmark reminders for topics the user cannot see from .ics feed" do
+      Bookmark.where(user: user1).destroy_all
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic_with_op, category: private_category)
+      Fabricate(
+        :bookmark,
+        name: nil,
+        user: user1,
+        bookmarkable: private_topic,
+        reminder_at: 1.day.from_now,
+      )
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+
+      expect(response.status).to eq(200)
+      calendar_name =
+        I18n.t("calendar_subscriptions.bookmarks_feed_name", site_title: SiteSetting.title)
+      expect(response.body).to eq(<<~ICS)
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Discourse//#{Discourse.current_hostname}//#{Discourse.full_version}//EN
+        X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}
+        END:VCALENDAR
+      ICS
+    end
+
     it "excludes bookmark reminders older than 3 months from .ics feed" do
       bookmark1.update_columns(name: nil, reminder_at: 4.months.ago)
       bookmark2.update!(name: "Recent reminder", reminder_at: 1.day.from_now)
@@ -7402,6 +7434,23 @@ RSpec.describe UsersController do
       sign_in(Fabricate(:user))
       get "/u/#{bookmark3.user.username}/bookmarks.json"
       expect(response.status).to eq(403)
+    end
+
+    it "does not allow moderators to view another user's private bookmarks" do
+      private_post =
+        Fabricate(:private_message_post, user: user1, raw: "Private bookmarked message content")
+      TopicUser.change(user1.id, private_post.topic, total_msecs_viewed: 1)
+      private_bookmark =
+        Fabricate(:bookmark, user: user1, bookmarkable: private_post, name: "Private bookmark note")
+
+      sign_in(moderator)
+      get "/u/#{user1.username}/bookmarks.json"
+
+      aggregate_failures do
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(private_bookmark.name)
+        expect(response.body).not_to include(private_post.raw)
+      end
     end
 
     it "shows a helpful message if no bookmarks are found" do

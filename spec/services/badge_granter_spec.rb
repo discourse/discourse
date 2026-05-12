@@ -874,4 +874,28 @@ RSpec.describe BadgeGranter do
       end
     end
   end
+
+  describe ".suppress_notification?" do
+    fab!(:silver_badge) { Fabricate(:badge, badge_type_id: BadgeType::Silver) }
+
+    it "does not suppress for a fresh silver badge by default" do
+      expect(BadgeGranter.suppress_notification?(silver_badge, 1.hour.ago, false)).to eq(false)
+    end
+
+    it "lets a plugin override via the :badge_granter_suppress_notification modifier" do
+      plugin_instance = Plugin::Instance.new
+      modifier_block =
+        Proc.new { |suppress, _badge, granted_at, _| suppress || granted_at < 1.day.ago }
+      plugin_instance.register_modifier(:badge_granter_suppress_notification, &modifier_block)
+
+      expect(BadgeGranter.suppress_notification?(silver_badge, 2.days.ago, false)).to eq(true)
+      expect(BadgeGranter.suppress_notification?(silver_badge, 1.hour.ago, false)).to eq(false)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :badge_granter_suppress_notification,
+        &modifier_block
+      )
+    end
+  end
 end

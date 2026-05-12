@@ -1,12 +1,12 @@
 import { hash } from "@ember/helper";
 import Editor from "discourse/admin/components/schema-setting/editor";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="customize-show-schema__header row">
     <a href={{@model.goBackUrl}}>
-      {{icon "arrow-left"}}
+      {{dIcon "arrow-left"}}
     </a>
     <h2>
       {{i18n "admin.customize.schema.title" (hash name=@model.settingName)}}

@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { and, eq, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class DiscoursePostEventStatus extends Component {
   @service appEvents;
@@ -111,7 +111,7 @@ export default class DiscoursePostEventStatus extends Component {
 
   <template>
     <section
-      class={{concatClass
+      class={{dConcatClass
         "event__section event-actions event-status"
         (if
           this.watchingInviteeStatus
@@ -133,7 +133,7 @@ export default class DiscoursePostEventStatus extends Component {
               }}
             >
               <DButton
-                class="going-button"
+                class="btn-default going-button"
                 @disabled={{and
                   @event.atCapacity
                   (not (eq this.watchingInviteeStatus "going"))
@@ -161,7 +161,7 @@ export default class DiscoursePostEventStatus extends Component {
             }}
           >
             <DButton
-              class="interested-button"
+              class="btn-default interested-button"
               @icon="star"
               @label="discourse_post_event.models.invitee.status.interested"
               @action={{fn this.changeWatchingInviteeStatus "interested"}}
@@ -179,7 +179,7 @@ export default class DiscoursePostEventStatus extends Component {
               }}
             >
               <DButton
-                class="not-going-button"
+                class="btn-default not-going-button"
                 @icon="xmark"
                 @label="discourse_post_event.models.invitee.status.not_going"
                 @action={{fn this.changeWatchingInviteeStatus "not_going"}}

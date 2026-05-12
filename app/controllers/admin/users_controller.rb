@@ -341,7 +341,8 @@ class Admin::UsersController < Admin::StaffController
         render_json_dump(
           silence: {
             silenced: true,
-            silence_reason: full_reason,
+            silence_reason: user.silence_reason,
+            full_silence_reason: full_reason,
             silenced_till: user.silenced_till,
             silenced_at: user.silenced_at,
             silenced_by:
@@ -372,6 +373,7 @@ class Admin::UsersController < Admin::StaffController
       unsilence: {
         silenced: false,
         silence_reason: nil,
+        full_silence_reason: nil,
         silenced_till: nil,
         silenced_at: nil,
       },

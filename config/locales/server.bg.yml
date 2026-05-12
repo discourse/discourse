@@ -145,7 +145,13 @@ bg:
   not_in_group:
     join_group: "Присъедини се към група"
   reading_time: "Време за четене"
+  reading_time_minutes:
+    one: "%{count} минута 🕑"
+    other: "%{count} минути 🕑"
   likes: "Харесвания"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговор във същата публикация."
     other: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговори в същата публикация."
@@ -235,6 +241,7 @@ bg:
       admins: "админи"
       moderators: "модератори"
       staff: "персонал"
+      anonymous: "анонимен"
       trust_level_0: "trust_level_0 "
       trust_level_1: "trust_level_1 "
       trust_level_2: "trust_level_2 "
@@ -651,6 +658,8 @@ bg:
       xaxis: "Ден"
     page_view_logged_in_browser_reqs:
       xaxis: "Ден"
+    page_view_embed_reqs:
+      xaxis: "Ден"
     http_background_reqs:
       title: "Фон"
       xaxis: "Ден"
@@ -692,7 +701,7 @@ bg:
       labels:
         user: Потребител
         location: Локация
-    staff_logins:
+    admin_logins:
       labels:
         user: Потребител
         location: Локация
@@ -1135,11 +1144,14 @@ bg:
       liked_received: "Получени харесвания"
       new_users: "Нови потребители"
       join_the_discussion: "Прочетете повече"
+      subject_template_improved: "Сумарно"
       click_here: "кликнете тук"
     forgot_password:
       title: "Забравена парола"
     set_password:
       title: "Задайте парола"
+    admin_login:
+      subject_template_improved: "Логване"
     signup_after_approval:
       subject_template: "Вие бяхте одобрени на %{site_name}!"
   page_not_found:

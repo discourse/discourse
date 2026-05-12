@@ -35,8 +35,6 @@ it:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Nessuna azione"
         agree_and_keep_comment:
           title: "Mantieni il commento"
           description: "Accetta la segnalazione e mantieni invariato il commento."

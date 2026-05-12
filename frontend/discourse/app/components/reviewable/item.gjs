@@ -9,8 +9,6 @@ import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import { tagName } from "@ember-decorators/component";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
-import DButton from "discourse/components/d-button";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
@@ -21,11 +19,7 @@ import ReviewableTimeline from "discourse/components/reviewable/timeline";
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import dasherizeHelper from "discourse/helpers/dasherize";
 import editableValue from "discourse/helpers/editable-value";
-import formatDate from "discourse/helpers/format-date";
 import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -39,6 +33,12 @@ import Composer from "discourse/models/composer";
 import { PENDING } from "discourse/models/reviewable";
 import Topic from "discourse/models/topic";
 import { eq, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 let _components = {};
@@ -562,6 +562,7 @@ export default class ReviewableItem extends Component {
       return adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
+        reviewableId: reviewable.get("id"),
         before: performAction,
       });
     }
@@ -764,7 +765,7 @@ export default class ReviewableItem extends Component {
                 title={{i18n "review.copy_permalink_title"}}
                 class="btn btn-transparent reviewable-permalink-copy"
               >
-                {{icon "d-post-share"}}
+                {{dIcon "d-post-share"}}
               </button>
 
               {{newReviewableStatus
@@ -773,14 +774,14 @@ export default class ReviewableItem extends Component {
               }}
 
               <span class="reviewable-created-date">
-                {{formatDate this.reviewable.created_at format="tiny"}}
+                {{dFormatDate this.reviewable.created_at format="tiny"}}
               </span>
 
             </div>
             {{#if this.editing}}
               <div class="editable-fields">
                 {{#each this.reviewable.editable_fields as |f|}}
-                  <div class="editable-field {{dasherizeHelper f.id}}">
+                  <div class="editable-field {{dDasherize f.id}}">
                     {{#let
                       (lookupComponent this (concat "reviewable-field-" f.type))
                       as |FieldComponent|
@@ -812,12 +813,12 @@ export default class ReviewableItem extends Component {
 
           <div class="review-item__insights">
             <div class="d-nav-submenu">
-              <HorizontalOverflowNav
+              <DHorizontalOverflowNav
                 @ariaLabel="Review tabs"
                 class="d-nav-submenu__tabs"
               >
                 <li
-                  class={{concatClass
+                  class={{dConcatClass
                     "timeline"
                     (if (eq this.activeTab "timeline") "active")
                   }}
@@ -831,7 +832,7 @@ export default class ReviewableItem extends Component {
                   </a>
                 </li>
                 <li
-                  class={{concatClass
+                  class={{dConcatClass
                     "insights"
                     (if (eq this.activeTab "insights") "active")
                   }}
@@ -844,7 +845,7 @@ export default class ReviewableItem extends Component {
                     {{i18n "review.insights.title"}}
                   </a>
                 </li>
-              </HorizontalOverflowNav>
+              </DHorizontalOverflowNav>
             </div>
 
             {{#if this.insightsOpened}}
@@ -869,14 +870,10 @@ export default class ReviewableItem extends Component {
                 <h3 class="review-item__aside-title">
                   {{#if this.editing}}
                     {{i18n "review.editing_post"}}
-                  {{else if (eq this.reviewable.status PENDING)}}
-                    {{#if this.displayContextQuestion}}
-                      {{this.reviewable.flaggedReviewableContextQuestion}}
-                    {{else if this.reviewable.userReviewableContextQuestion}}
-                      {{this.reviewable.userReviewableContextQuestion}}
-                    {{else}}
-                      {{i18n "review.moderator_actions"}}
-                    {{/if}}
+                  {{else if this.displayContextQuestion}}
+                    {{this.reviewable.flaggedReviewableContextQuestion}}
+                  {{else if this.reviewable.userReviewableContextQuestion}}
+                    {{this.reviewable.userReviewableContextQuestion}}
                   {{else}}
                     {{i18n "review.moderator_actions"}}
                   {{/if}}
@@ -922,7 +919,7 @@ export default class ReviewableItem extends Component {
             <div class="review-item__moderator-actions --extra">
               {{#if this.reviewable.claimed_by}}
                 <div class="review-item__assigned">
-                  {{icon "user-plus"}}
+                  {{dIcon "user-plus"}}
                   <ReviewableCreatedBy
                     @showUsername={{true}}
                     @avatarSize="small"

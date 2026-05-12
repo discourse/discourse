@@ -195,7 +195,6 @@ el:
       retry_staged_message:
         title: "Σφάλμα δικτύου"
         action: "Αποστολή ξανά;"
-      unreliable_network: "Το δίκτυο είναι αναξιόπιστο, η αποστολή μηνυμάτων και η αποθήκευση προσχεδίου ενδέχεται να μην λειτουργήσουν"
       bookmark_message: "Σελιδοδείκτης"
       bookmark_message_edit: "Επεξεργασία σελιδοδείκτη"
       restore: "Επαναφορά διαγραμμένου μηνύματος"
@@ -566,6 +565,10 @@ el:
         chat_invitation: "Προσκλήθηκες σε κανάλι συνομιλίας"
         chat_quoted: "Παράθεση μηνύματος συνομιλίας"
         chat_watched_thread: "Νήμα παρακολουθούμενης συνομιλίας"
+    action_codes:
+      chat:
+        enabled: '%{who} ενεργοποίησε τη <button class="btn-link open-chat">συνομιλία</button> %{when}'
+        disabled: "%{who} έκλεισε τη συνομιλία %{when}"
     discourse_automation:
       scriptables:
         send_chat_message:

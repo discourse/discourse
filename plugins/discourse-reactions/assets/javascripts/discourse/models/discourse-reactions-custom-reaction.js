@@ -92,16 +92,32 @@ export default class CustomReaction extends RestModel {
     });
   }
 
-  static findReactionUsers(postId, opts) {
-    opts = opts || {};
-    const data = {};
-
-    if (opts.reactionValue) {
-      data.reaction_value = opts.reactionValue;
+  static fetchReactionsUsersList(postId, page, limit, reactionValue) {
+    const data = { page, limit };
+    if (reactionValue) {
+      data.reaction_value = reactionValue;
     }
+    return ajax(
+      `/discourse-reactions/posts/${postId}/reactions-users-list.json`,
+      { data }
+    );
+  }
 
-    return ajax(`/discourse-reactions/posts/${postId}/reactions-users.json`, {
-      data,
+  static findReactionUsers(postId, options = {}) {
+    let url = `/discourse-reactions/posts/${postId}/reactions-users.json`;
+    if (options.reactionValue) {
+      url += `?reaction_value=${options.reactionValue}`;
+    }
+    return ajax(url, {
+      type: "GET",
+    }).then((result) => {
+      const reactionUsers = result.reaction_users.map((reactionUser) => {
+        reactionUser.users = reactionUser.users.map((user) =>
+          User.create(user)
+        );
+        return reactionUser;
+      });
+      return { reaction_users: reactionUsers };
     });
   }
 

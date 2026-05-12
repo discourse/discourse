@@ -12,12 +12,9 @@ module PageObjects
       end
 
       def has_open_thread?(thread = nil)
-        if thread
-          has_css?(".chat-side-panel .chat-thread[data-id='#{thread.id}']")
-        else
-          has_css?(".chat-side-panel .chat-thread")
-        end
-        PageObjects::Pages::ChatThread.new.has_no_loading_skeleton?
+        selector = ".chat-side-panel .chat-thread.--loaded"
+        selector += "[data-id='#{thread.id}']" if thread
+        has_css?(selector)
       end
 
       def has_no_open_thread?

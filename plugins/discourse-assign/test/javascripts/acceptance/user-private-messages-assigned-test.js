@@ -8,7 +8,7 @@ import {
 import { i18n } from "discourse-i18n";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 
-acceptance("Discourse Assign | User Private Messages", function (needs) {
+acceptance("User Private Messages", function (needs) {
   needs.user({
     can_assign: true,
   });

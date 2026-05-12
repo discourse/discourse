@@ -2,10 +2,22 @@
 
 class Admin::DashboardController < Admin::StaffController
   def index
-    data = AdminDashboardIndexData.fetch_cached_stats
+    if SiteSetting.dashboard_improvements
+      data = {
+        sections: {
+          highlights:
+            AdminDashboardHighlights.build(
+              start_date: params[:start_date],
+              end_date: params[:end_date],
+            ),
+        },
+      }
+    else
+      data = AdminDashboardIndexData.fetch_cached_stats
 
-    if SiteSetting.version_checks?
-      data.merge!(version_check: DiscourseUpdates.check_version.as_json)
+      if SiteSetting.version_checks?
+        data.merge!(version_check: DiscourseUpdates.check_version.as_json)
+      end
     end
 
     render json: data

@@ -29,10 +29,10 @@ module Jobs
     private
 
     def persistent_problems?
-      ProblemCheckTracker.where(
-        "last_problem_at > last_success_at AND last_success_at < ?",
-        2.days.ago,
-      ).exists?
+      ProblemCheckTracker
+        .watched
+        .where("last_problem_at > last_success_at AND last_success_at < ?", 2.days.ago)
+        .exists?
     end
   end
 end
