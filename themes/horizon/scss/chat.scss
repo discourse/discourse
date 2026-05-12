@@ -24,6 +24,20 @@ body.has-full-page-chat {
     background-color: var(--background-color);
   }
 
+  &:not(.has-sidebar-page) {
+    .d-header {
+      background-color: var(--background-color);
+    }
+
+    #main-outlet-wrapper {
+      gap: var(--main-grid-gap);
+
+      @include viewport.until(lg) {
+        gap: 0;
+      }
+    }
+  }
+
   #main-outlet-wrapper {
     @media screen and (width < 87rem) {
       // ideal width just slightly larger than our xl viewport variable

@@ -31,20 +31,6 @@ body {
   }
 }
 
-body.has-full-page-chat:not(.has-sidebar-page) {
-  .d-header {
-    background-color: var(--background-color);
-  }
-
-  #main-outlet-wrapper {
-    gap: var(--main-grid-gap);
-
-    @include viewport.until(lg) {
-      gap: 0;
-    }
-  }
-}
-
 body.has-sidebar-page #main-outlet-wrapper {
   padding: 0;
 

@@ -22,6 +22,10 @@
   margin-top: calc(var(--header-offset) * -1);
   top: 0;
   height: 100vh;
+
+  .select-kit .select-kit-row.is-highlighted {
+    background-color: var(--d-sidebar-highlight-background);
+  }
 }
 
 .sidebar-home-logo {
@@ -62,22 +66,8 @@
 body.has-full-page-chat .sidebar-wrapper,
 .sidebar-wrapper,
 .sidebar-hamburger-dropdown {
-  .has-full-page-chat &,
-  .has-full-page-chat & .sidebar-footer-wrapper {
-    background: transparent;
-  }
-
   .sidebar-container {
     border-right: none;
-  }
-
-  .sidebar-section-link {
-    transition: none;
-    border-radius: var(--d-border-radius);
-  }
-
-  .dropdown-menu__item .sidebar-section-link {
-    border-radius: 0;
   }
 }
 
