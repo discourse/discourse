@@ -362,6 +362,9 @@ en:
 
     impersonation:
       notice: "You are impersonating %{username}"
+      time_left:
+        one: "(%{count} minute left)"
+        other: "(%{count} minutes left)"
       stop: "Stop impersonating"
 
     themes:
