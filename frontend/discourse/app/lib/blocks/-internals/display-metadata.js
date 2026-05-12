@@ -6,14 +6,16 @@ const DEFAULT_CATEGORY = "Misc";
 
 /**
  * Converts a kebab-case `shortName` (e.g. `"hero-banner"`) into a
- * Title Case display string (e.g. `"Hero Banner"`).
+ * Title Case display string (e.g. `"Hero Banner"`). Splits on
+ * hyphens AND colons so namespaced names (`"chat:thread-actions"`)
+ * also render meaningfully.
  *
  * @param {string} shortName
  * @returns {string}
  */
-function titleCase(shortName) {
+export function titleCase(shortName) {
   return shortName
-    .split("-")
+    .split(/[-:]/)
     .filter(Boolean)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");

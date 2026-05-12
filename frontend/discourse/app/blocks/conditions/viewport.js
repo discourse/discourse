@@ -51,6 +51,8 @@ const BREAKPOINTS = Object.freeze(["sm", "md", "lg", "xl", "2xl"]);
  */
 @blockCondition({
   type: "viewport",
+  displayName: "Viewport",
+  description: "Match by screen-size breakpoint or touch capability.",
   args: {
     min: { type: "string", enum: BREAKPOINTS },
     max: { type: "string", enum: BREAKPOINTS },
@@ -82,21 +84,52 @@ export default class BlockViewportCondition extends BlockCondition {
   @service capabilities;
 
   /**
+   * Returns the boolean source object the condition checks against. By
+   * default this is the live `capabilities` service (so its
+   * `capabilities.viewport.{sm|md|lg|xl|2xl}` getters and `capabilities.touch`
+   * are read on every evaluation), but when the visual editor's persona
+   * toolbar sets `context.simulation.viewport`, the simulated shape replaces
+   * the service entirely.
+   *
+   * The simulated payload is expected to expose the same surface
+   * (`{ viewport: {<breakpoint>: boolean, ...}, touch: boolean }`); we
+   * recommend deriving it from a single breakpoint pick via
+   * `buildSimulatedViewport()` below so the matrix stays self-consistent.
+   *
+   * @param {Object} [context] - Evaluation context.
+   * @returns {{viewport: Object, touch: boolean}}
+   */
+  capabilitiesSource(context) {
+    // Use `in` so an explicit `null` viewport (a sim slot the author may
+    // set to mean "fall back to real, but persona is still simulated")
+    // still falls back here cleanly.
+    if (context?.simulation && "viewport" in context.simulation) {
+      const sim = context.simulation.viewport;
+      if (sim) {
+        return sim;
+      }
+    }
+    return this.capabilities;
+  }
+
+  /**
    * Evaluates whether the viewport condition passes.
    *
    * @param {Object} args - The condition arguments.
+   * @param {Object} [context] - Evaluation context.
    * @returns {boolean} True if the condition passes.
    */
-  evaluate(args) {
+  evaluate(args, context) {
     const { min, max, touch } = args;
+    const caps = this.capabilitiesSource(context);
 
     // Check touch capability
-    if (touch !== undefined && touch !== this.capabilities.touch) {
+    if (touch !== undefined && touch !== caps.touch) {
       return false;
     }
 
     // Check minimum breakpoint (viewport must be at least this size)
-    if (min && !this.capabilities.viewport[min]) {
+    if (min && !caps.viewport[min]) {
       return false;
     }
 
@@ -109,11 +142,32 @@ export default class BlockViewportCondition extends BlockCondition {
       const maxIndex = BREAKPOINTS.indexOf(max);
       const nextBreakpoint = BREAKPOINTS[maxIndex + 1];
 
-      if (nextBreakpoint && this.capabilities.viewport[nextBreakpoint]) {
+      if (nextBreakpoint && caps.viewport[nextBreakpoint]) {
         return false;
       }
     }
 
     return true;
   }
+}
+
+/**
+ * Builds a `{viewport, touch}` payload suitable for
+ * `context.simulation.viewport`. Derives the per-breakpoint booleans
+ * from a single chosen breakpoint (the "current" simulated size) — every
+ * breakpoint at-or-below the chosen size resolves to `true`, every
+ * larger one to `false`. Keeps the simulated state self-consistent
+ * with the real `capabilities.viewport` semantics (which return `true`
+ * when the viewport is AT LEAST that size).
+ *
+ * @param {{ breakpoint: "sm"|"md"|"lg"|"xl"|"2xl", touch?: boolean }} pick
+ * @returns {{ viewport: Object, touch: boolean }}
+ */
+export function buildSimulatedViewport({ breakpoint, touch = false }) {
+  const idx = BREAKPOINTS.indexOf(breakpoint);
+  const viewport = {};
+  BREAKPOINTS.forEach((bp, i) => {
+    viewport[bp] = i <= idx;
+  });
+  return { viewport, touch };
 }
