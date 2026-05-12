@@ -11,29 +11,19 @@ module DiscourseAi
 
         validates :topic_id, presence: true
         validates :starred, inclusion: { in: [true, false] }
-        validate :starred_value_is_boolean
-
-        def starred_value_is_boolean
-          raw_starred =
-            raw_attributes.key?("starred") ? raw_attributes["starred"] : raw_attributes[:starred]
-          return if [true, false, "true", "false"].include?(raw_starred)
-
-          errors.add(:starred, :inclusion)
-        end
       end
 
       policy :feature_enabled
       model :user, :fetch_user
       model :topic
       policy :can_access_conversation
+      policy :not_already_starred, if: :star_conversation_requested
 
       only_if :star_conversation_requested do
         lock :user do
-          only_if :conversation_not_already_starred do
-            transaction do
-              step :ensure_user_can_star_more_conversations
-              model :conversation_star, :create_conversation_star
-            end
+          transaction do
+            step :ensure_user_can_star_more_conversations
+            model :conversation_star, :create_conversation_star
           end
         end
       end
@@ -69,7 +59,7 @@ module DiscourseAi
         !params.starred
       end
 
-      def conversation_not_already_starred(user:, topic:)
+      def not_already_starred(user:, topic:)
         !ConversationStar.exists?(user:, topic:)
       end
 

@@ -16,59 +16,32 @@ module DiscourseAi
         validates :per_page, numericality: { greater_than: 0, less_than_or_equal_to: MAX_PER_PAGE }
       end
 
-      model :conversations
-
-      only_if :starred_enabled? do
-        model :starred_conversations, optional: true
-      end
-
-      only_if :starred_disabled? do
-        model :starred_conversations, :fetch_empty_starred_conversations, optional: true
-      end
-
-      step :build_meta
+      model :list_result, :fetch_list_result
+      model :conversations, :fetch_conversations
+      model :starred_conversations, :fetch_starred_conversations
+      model :meta, :fetch_meta
+      model :starred_at_by_topic_id, :fetch_starred_at_by_topic_id
 
       private
 
-      def fetch_conversations(params:, guardian:)
-        relation =
-          if starred_enabled?
-            ConversationStar.unstarred_conversations_for(guardian.user)
-          else
-            ConversationStar.conversations_query_for(guardian.user)
-          end
-
-        ConversationStar.paginated_conversations(
-          relation.order(last_posted_at: :desc),
-          page: params.page,
-          per_page: params.per_page,
-        )
+      def fetch_list_result(params:, guardian:)
+        ConversationStar.list(guardian.user, page: params.page, per_page: params.per_page)
       end
 
-      def fetch_starred_conversations(params:, guardian:)
-        return [] if params.page > 0
-
-        ConversationStar.starred_conversations_for(guardian.user).to_a
+      def fetch_conversations(list_result:)
+        list_result[:conversations]
       end
 
-      def fetch_empty_starred_conversations
-        []
+      def fetch_starred_conversations(list_result:)
+        list_result[:starred_conversations]
       end
 
-      def build_meta(params:, conversations:)
-        context[:meta] = {
-          page: params.page,
-          per_page: params.per_page,
-          has_more: conversations.has_more,
-        }
+      def fetch_meta(list_result:)
+        list_result[:meta]
       end
 
-      def starred_enabled?
-        SiteSetting.enable_ai_bot_starred_conversations
-      end
-
-      def starred_disabled?
-        !starred_enabled?
+      def fetch_starred_at_by_topic_id(list_result:)
+        list_result[:starred_at_by_topic_id]
       end
     end
   end

@@ -4,7 +4,16 @@ module DiscourseAi
   module AiBot
     class ConversationStar < ActiveRecord::Base
       MAX_STARS_PER_USER = 200
-      ConversationPage = Data.define(:records, :has_more)
+      ConversationPage =
+        Data.define(:records, :has_more) do
+          def self.paginate(relation, page:, per_page:)
+            records = relation.offset(page * per_page).limit(per_page + 1).to_a
+            has_more = records.length > per_page
+            records = records.first(per_page) if has_more
+
+            new(records:, has_more:)
+          end
+        end
 
       self.table_name = "discourse_ai_ai_bot_conversation_stars"
 
@@ -18,7 +27,7 @@ module DiscourseAi
         Topic
           .private_messages_for_user(user)
           .where(user: user)
-          .joins(ai_conversation_custom_field_join_sql)
+          .joins(Topic.ai_conversation_custom_field_join_sql)
           .distinct
       end
 
@@ -36,12 +45,34 @@ module DiscourseAi
         conversations_query_for(user).where.not(id: starred_topic_ids)
       end
 
-      def self.paginated_conversations(relation, page:, per_page:)
-        records = relation.offset(page * per_page).limit(per_page + 1).to_a
-        has_more = records.length > per_page
-        records = records.first(per_page) if has_more
+      def self.list(user, page: 0, per_page: 40)
+        starred = []
+        if SiteSetting.enable_ai_bot_starred_conversations
+          starred = page == 0 ? starred_conversations_for(user).to_a : []
+          unstarred_relation = unstarred_conversations_for(user)
+        else
+          unstarred_relation = conversations_query_for(user)
+        end
 
-        ConversationPage.new(records:, has_more:)
+        unstarred_page =
+          ConversationPage.paginate(
+            unstarred_relation.order(last_posted_at: :desc),
+            page: page,
+            per_page: per_page,
+          )
+
+        all_topics = starred + unstarred_page.records
+
+        {
+          conversations: unstarred_page,
+          starred_conversations: starred,
+          meta: {
+            page: page,
+            per_page: per_page,
+            has_more: unstarred_page.has_more,
+          },
+          starred_at_by_topic_id: starred_at_by_topic_id(user, all_topics),
+        }
       end
 
       def self.starred_at_by_topic_id(user, topics)
@@ -55,14 +86,7 @@ module DiscourseAi
         where(user: user).count >= MAX_STARS_PER_USER
       end
 
-      def self.ai_conversation_custom_field_join_sql
-        <<~SQL.squish
-          INNER JOIN topic_custom_fields tcf ON tcf.topic_id = topics.id
-            AND tcf.name = #{connection.quote(DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD)}
-            AND tcf.value = 't'
-        SQL
-      end
-      private_class_method :ai_conversation_custom_field_join_sql
+
     end
   end
 end
