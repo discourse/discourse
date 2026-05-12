@@ -3369,6 +3369,11 @@ bs_BA:
         exception_error: Žao nam je, došlo je do pogreške prilikom izvršavanja upita
         too_many_requests: Izveli ste ovu akciju previše puta. Pričekajte prije ponovnog pokušaja.
         not_found_error: Izvinite, ovaj izveštaj ne postoji
+        sections:
+          reports:
+            title: "Izvještaji"
+        period:
+          custom: "Custom"
         reports:
           trend_title: "%{percent} change. Trenutno je %{current}, u prethodnom periodu bio %{prev}."
           today: "Today"

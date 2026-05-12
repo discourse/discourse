@@ -4,10 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DecoratedHtml from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import categoryBadge from "discourse/helpers/category-badge";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import {
@@ -18,6 +15,9 @@ import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { eq } from "discourse/truth-helpers";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategoryGeneral extends Component {
@@ -286,14 +286,14 @@ export default class EditCategoryGeneral extends Component {
       {{#if this.subCategories}}
         <@form.Container @title={{i18n "categories.subcategories"}}>
           {{#each this.subCategories as |s|}}
-            {{categoryBadge s hideParent="true"}}
+            {{dCategoryBadge s hideParent="true"}}
           {{/each}}
         </@form.Container>
       {{/if}}
 
       {{#if this.showDescription}}
         <@form.Section @title={{i18n "category.description"}}>
-          <DecoratedHtml
+          <DDecoratedHtml
             @html={{this.categoryDescription}}
             @className="readonly-field"
           />

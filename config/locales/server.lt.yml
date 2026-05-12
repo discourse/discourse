@@ -1085,6 +1085,8 @@ lt:
       xaxis: "Diena"
     page_view_logged_in_browser_reqs:
       xaxis: "Diena"
+    page_view_embed_reqs:
+      xaxis: "Diena"
     http_background_reqs:
       title: "Fonas"
       xaxis: "Diena"
@@ -1138,7 +1140,7 @@ lt:
         device: Įrenginys
         os: Operacinė sistema
         login_time: Prisijungimo laikas
-    staff_logins:
+    admin_logins:
       title: "Administratoriaus prisijungimai"
       labels:
         user: Narys

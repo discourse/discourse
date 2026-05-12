@@ -151,6 +151,37 @@
   border: 1px solid var(--primary-low);
   margin-block: var(--space-4);
 
+  .policy-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    font-size: var(--font-up-1);
+    font-weight: 700;
+  }
+
+  .policy-node-edit-button {
+    padding: var(--space-1);
+  }
+
+  .policy-attrs {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-1) var(--space-2);
+    margin: var(--space-2) 0;
+    padding: var(--space-2);
+    background: var(--primary-very-low);
+
+    dt {
+      font-weight: 700;
+    }
+
+    dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+
   .policy-preview {
     font-size: var(--font-up-1);
     font-weight: 700;

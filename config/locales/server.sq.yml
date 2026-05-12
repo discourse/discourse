@@ -584,6 +584,8 @@ sq:
       xaxis: "Dit"
     page_view_logged_in_browser_reqs:
       xaxis: "Dit"
+    page_view_embed_reqs:
+      xaxis: "Day"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -625,7 +627,7 @@ sq:
       labels:
         user: User
         location: Vendndodhja
-    staff_logins:
+    admin_logins:
       labels:
         user: User
         location: Vendndodhja

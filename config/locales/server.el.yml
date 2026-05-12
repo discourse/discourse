@@ -1055,6 +1055,8 @@ el:
       xaxis: "Ημέρα"
     page_view_logged_in_browser_reqs:
       xaxis: "Ημέρα"
+    page_view_embed_reqs:
+      xaxis: "Ημέρα"
     http_background_reqs:
       title: "Φόντο"
       xaxis: "Ημέρα"
@@ -1109,7 +1111,7 @@ el:
         device: Συσκευή
         os: Λειτουργικό Σύστημα
         login_time: Ώρα Σύνδεσης
-    staff_logins:
+    admin_logins:
       title: "Σύνδεση Διαχειριστή"
       labels:
         user: Χρήστης

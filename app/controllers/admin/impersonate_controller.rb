@@ -21,11 +21,11 @@ class Admin::ImpersonateController < Admin::AdminController
   end
 
   def destroy
-    raise Discourse::InvalidAccess unless current_user.is_impersonating
-
-    impersonated_user = current_user
-    stop_impersonating_user
-    StaffActionLogger.new(current_user).log_stop_impersonation(impersonated_user)
+    if current_user.is_impersonating
+      impersonated_user = current_user
+      stop_impersonating_user
+      StaffActionLogger.new(current_user).log_stop_impersonation(impersonated_user)
+    end
 
     render body: nil
   end

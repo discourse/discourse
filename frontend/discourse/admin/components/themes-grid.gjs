@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ThemesGridCard from "./themes-grid-card";
 
@@ -78,7 +78,7 @@ export default class ThemesGrid extends Component {
             <AdminConfigAreaCard class="theme-card --install-more">
               <:content>
                 <div class="theme-card__install-more-icon">
-                  {{icon "plus"}}
+                  {{dIcon "plus"}}
                 </div>
                 <div class="theme-card__content">
                   <h3 class="theme-card__title">

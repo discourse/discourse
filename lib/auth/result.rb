@@ -172,6 +172,7 @@ class Auth::Result
 
     if SiteSetting.enable_names?
       result[:name] = name.presence
+      result[:name_from_provider] = name.present?
       result[:name] ||= User.suggest_name(username || email) if can_edit_name
     end
 

@@ -7,6 +7,7 @@ import "./setup-deprecation-workflow";
 import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader-shims";
+import "./ui-kit-shims";
 import "./module-shims";
 import "./discourse-common-loader-shims";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";

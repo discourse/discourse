@@ -5867,6 +5867,14 @@ hr:
         exception_error: Nažalost, dogodila se pogreška prilikom izvršavanja upita
         too_many_requests: Ovu ste radnju izvršili previše puta. Pričekajte prije ponovnog pokušaja.
         not_found_error: Nažalost, ovo izvješće ne postoji
+        sections:
+          reports:
+            title: "Izvještaji"
+        period:
+          last_7_days: "Zadnjih 7 dana"
+          last_30_days: "Zadnjih 30 dana"
+          last_3_months: "Posljednjih 3 mjeseci"
+          custom: "Posebna"
         reports:
           trend_title: "%{percent} promjena. Trenutno %{current}, bilo je %{prev} u prethodnom razdoblju."
           today: "Danas"

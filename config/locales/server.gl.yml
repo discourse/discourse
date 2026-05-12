@@ -1090,6 +1090,8 @@ gl:
       xaxis: "Día"
     page_view_logged_in_browser_reqs:
       xaxis: "Día"
+    page_view_embed_reqs:
+      xaxis: "Día"
     http_background_reqs:
       title: "Fondo"
       xaxis: "Día"
@@ -1147,7 +1149,7 @@ gl:
         os: Sistema operativo
         login_time: Data e hora do inicio de sesión
       description: "Detalles de novos inicios de sesión que difiren sospeitosamente doutros anteriores."
-    staff_logins:
+    admin_logins:
       title: "Inicios de sesión de administradores"
       labels:
         user: Usuario

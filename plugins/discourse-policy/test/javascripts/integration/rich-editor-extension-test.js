@@ -24,7 +24,7 @@ module(
     });
 
     test("policy with all attributes", async function (assert) {
-      const markdown = `[policy group="staff" version="1" accept="true" revoke="false" reminder="daily" renew-start="2023-01-01" private="true"]\nComplex policy\n\n[/policy]\n\n`;
+      const markdown = `[policy group="staff" version="1" accept="true" revoke="false" reminder="daily" renew="30" renew-start="2023-01-01" add-users-to-group="members" private="true"]\nComplex policy\n\n[/policy]\n\n`;
       const [{ value }] = await setupRichEditor(assert, markdown);
 
       const policyElement = document.querySelector(".ProseMirror .policy");
@@ -33,8 +33,15 @@ module(
       assert.dom(policyElement).hasAttribute("data-accept", "true");
       assert.dom(policyElement).hasAttribute("data-revoke", "false");
       assert.dom(policyElement).hasAttribute("data-reminder", "daily");
+      assert.dom(policyElement).hasAttribute("data-renew", "30");
       assert.dom(policyElement).hasAttribute("data-renew-start", "2023-01-01");
+      assert
+        .dom(policyElement)
+        .hasAttribute("data-add-users-to-group", "members");
       assert.dom(policyElement).hasAttribute("data-private", "true");
+      assert.dom(".policy-node-edit-button", policyElement).exists();
+      assert.dom(".policy-attrs dt", policyElement).exists({ count: 9 });
+      assert.dom(".policy-attrs dd", policyElement).exists({ count: 9 });
       assert.dom("p", policyElement).hasText("Complex policy");
 
       assert.strictEqual(value, markdown);

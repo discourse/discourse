@@ -1,4 +1,4 @@
-import SaveControls from "discourse/components/save-controls";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 import SubscribeCard from "../../../../components/subscribe-card";
 
@@ -16,7 +16,7 @@ export default <template>
       />
     </div>
 
-    <SaveControls
+    <DSaveControls
       @action={{@controller.updatePaymentMethod}}
       @saved={{@controller.saved}}
       @saveDisabled={{@controller.loading}}

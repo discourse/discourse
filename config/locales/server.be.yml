@@ -808,6 +808,8 @@ be:
       xaxis: "дзень"
     page_view_logged_in_browser_reqs:
       xaxis: "дзень"
+    page_view_embed_reqs:
+      xaxis: "дзень"
     http_background_reqs:
       title: "фон"
       xaxis: "дзень"
@@ -864,11 +866,11 @@ be:
         os: Аперацыйная сістэма
         login_time: увайсці Час
       description: "Звесткі аб новых лагінаў, якія падазрона адрозніваюцца ад папярэдніх уваходаў у сістэму."
-    staff_logins:
+    admin_logins:
       title: "лагіны адміністратара"
       labels:
-        user: карыстальнік
-        location: размяшчэнне
+        user: Карыстальнік
+        location: Месцазнаходжанне
         login_at: Уваход у
       description: "Спіс часу адміністратара для ўваходу з месцам."
     top_uploads:

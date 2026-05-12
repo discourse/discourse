@@ -689,4 +689,56 @@ RSpec.describe UpcomingChanges do
       expect(settings).to include(:enable_upload_debug_mode)
     end
   end
+
+  describe "conditional display" do
+    it "returns true when the conditional display method is undefined for an upcoming change" do
+      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
+        true,
+      )
+    end
+
+    context "when the conditional display method is defined for an upcoming change" do
+      context "when the conditional display method returns true" do
+        before do
+          UpcomingChanges::ConditionalDisplay.define_singleton_method(
+            :should_display_enable_upload_debug_mode?,
+          ) { true }
+        end
+
+        after do
+          UpcomingChanges::ConditionalDisplay.singleton_class.send(
+            :remove_method,
+            :should_display_enable_upload_debug_mode?,
+          )
+        end
+
+        it "returns true" do
+          expect(
+            UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode),
+          ).to eq(true)
+        end
+      end
+
+      context "when the conditional display method returns false" do
+        before do
+          UpcomingChanges::ConditionalDisplay.define_singleton_method(
+            :should_display_enable_upload_debug_mode?,
+          ) { false }
+        end
+
+        after do
+          UpcomingChanges::ConditionalDisplay.singleton_class.send(
+            :remove_method,
+            :should_display_enable_upload_debug_mode?,
+          )
+        end
+
+        it "returns false" do
+          expect(
+            UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode),
+          ).to eq(false)
+        end
+      end
+    end
+  end
 end

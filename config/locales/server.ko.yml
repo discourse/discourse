@@ -1104,6 +1104,8 @@ ko:
       xaxis: "일"
     page_view_logged_in_browser_reqs:
       xaxis: "일"
+    page_view_embed_reqs:
+      xaxis: "일"
     http_background_reqs:
       title: "백그라운드"
       xaxis: "일"
@@ -1161,13 +1163,13 @@ ko:
         os: 운영체제
         login_time: 로그인 시간
       description: "이전 로그인과 다른 의심스러운 새 로그인의 상세 정보입니다."
-    staff_logins:
+    admin_logins:
       title: "관리자 로그인"
       labels:
         user: 사용자
         location: 위치
-        login_at: 로그인 시간
-      description: "위치가 있는 관리자 로그인 시간 목록입니다."
+        login_at: 에 로그인
+      description: "위치가있는 관리자 로그인 시간 목록"
     top_uploads:
       title: "주요 업로드"
       labels:

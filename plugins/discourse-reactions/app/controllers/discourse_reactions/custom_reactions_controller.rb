@@ -96,6 +96,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
         .joins(:reaction)
         .where(post_id: post_ids)
         .where.not(discourse_reactions_reactions: { reaction_users_count: nil })
+    reaction_users =
+      DiscourseReactions::PostReactionsQuery.apply_ignored_users_filter(
+        reaction_users,
+        user_column: "discourse_reactions_reaction_users.user_id",
+        current_user_id: current_user.id,
+      )
 
     # Guarantee backwards compatibility if someone was calling this endpoint with the old param.
     # TODO(roman): Remove after the 2.9 release.
@@ -135,6 +141,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           .where("discourse_reactions_reaction_users.id IS NULL")
           .order(created_at: :desc)
           .limit(PAGE_SIZE)
+      likes =
+        DiscourseReactions::PostReactionsQuery.apply_ignored_users_filter(
+          likes,
+          user_column: "post_actions.user_id",
+          current_user_id: current_user.id,
+        )
 
       if params[:before_like_id]
         likes = likes.where("post_actions.id < ?", params[:before_like_id].to_i)
@@ -162,6 +174,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
         reaction_filter: params[:reaction_value],
         limit: limit,
         offset: page * limit,
+        current_user_id: current_user&.id,
       )
 
     users =
@@ -186,8 +199,10 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     raise Discourse::InvalidParameters if !post
 
     reaction_users = []
+    main_reaction_id = DiscourseReactions::Reaction.main_reaction_id
+    main_reaction = nil
 
-    if !reaction_value || reaction_value == DiscourseReactions::Reaction.main_reaction_id
+    if !reaction_value || reaction_value == main_reaction_id
       # We only want to get likes that don't have an associated ReactionUser
       # record, which count as a like or there will be double ups for main_reaction_id.
       likes =
@@ -214,14 +229,36 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           )
 
       likes = likes.where.not(id: historical_reaction_likes.select(:id))
+      likes =
+        DiscourseReactions::PostReactionsQuery.apply_ignored_users_filter(
+          likes,
+          user_column: "post_actions.user_id",
+          current_user_id: current_user&.id,
+        )
+
+      main_reaction =
+        DiscourseReactions::Reaction.find_by(reaction_value: main_reaction_id, post_id: post.id)
     end
 
+    reactions =
+      if !reaction_value
+        post.reactions.select do |reaction|
+          reaction[:reaction_users_count] && reaction[:reaction_value] != main_reaction_id
+        end
+      elsif reaction_value != main_reaction_id
+        post
+          .reactions
+          .where(reaction_value: reaction_value)
+          .select { |reaction| reaction[:reaction_users_count] }
+      else
+        []
+      end
+
+    reactions_for_counts = reactions.dup
+    reactions_for_counts << main_reaction if main_reaction&.[](:reaction_users_count)
+    reaction_user_counts = filtered_reaction_users_counts(reactions_for_counts)
+
     if likes.present?
-      main_reaction =
-        DiscourseReactions::Reaction.find_by(
-          reaction_value: DiscourseReactions::Reaction.main_reaction_id,
-          post_id: post.id,
-        )
       count = likes.length
       users = format_likes_users(likes)
 
@@ -231,30 +268,18 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       if main_reaction && main_reaction[:reaction_users_count]
         (users << get_users(main_reaction)).flatten!
         users.sort_by! { |user| user[:created_at] }
-        count += main_reaction.reaction_users_count.to_i
+        count += reaction_user_counts[main_reaction.id].to_i
       end
 
       reaction_users << {
-        id: DiscourseReactions::Reaction.main_reaction_id,
+        id: main_reaction_id,
         count: count,
         users: users.reverse.slice(0, MAX_USERS_COUNT + 1),
       }
     end
 
-    if !reaction_value
-      post
-        .reactions
-        .select do |reaction|
-          reaction[:reaction_users_count] &&
-            reaction[:reaction_value] != DiscourseReactions::Reaction.main_reaction_id
-        end
-        .each { |reaction| reaction_users << format_reaction_user(reaction) }
-    elsif reaction_value != DiscourseReactions::Reaction.main_reaction_id
-      post
-        .reactions
-        .where(reaction_value: reaction_value)
-        .select { |reaction| reaction[:reaction_users_count] }
-        .each { |reaction| reaction_users << format_reaction_user(reaction) }
+    reactions.each do |reaction|
+      reaction_users << format_reaction_user(reaction, count: reaction_user_counts[reaction.id])
     end
 
     render_json_dump(reaction_users: reaction_users)
@@ -263,8 +288,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   private
 
   def get_users(reaction)
-    reaction
-      .reaction_users
+    DiscourseReactions::PostReactionsQuery
+      .apply_ignored_users_filter(
+        reaction.reaction_users,
+        user_column: "discourse_reactions_reaction_users.user_id",
+        current_user_id: current_user&.id,
+      )
       .includes(:user)
       .order("discourse_reactions_reaction_users.created_at desc")
       .limit(MAX_USERS_COUNT + 1)
@@ -279,12 +308,30 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       end
   end
 
-  def format_reaction_user(reaction)
-    {
-      id: reaction.reaction_value,
-      count: reaction.reaction_users_count.to_i,
-      users: get_users(reaction),
-    }
+  def format_reaction_user(reaction, count:)
+    { id: reaction.reaction_value, count: count.to_i, users: get_users(reaction) }
+  end
+
+  def filtered_reaction_users_counts(reactions)
+    reactions = reactions.compact
+    return {} if reactions.blank?
+
+    if current_user.blank? || current_user.ignored_user_ids.empty?
+      return(
+        reactions.each_with_object({}) do |reaction, counts|
+          counts[reaction.id] = reaction.reaction_users_count.to_i
+        end
+      )
+    end
+
+    DiscourseReactions::PostReactionsQuery
+      .apply_ignored_users_filter(
+        DiscourseReactions::ReactionUser.where(reaction_id: reactions.map(&:id)),
+        user_column: "discourse_reactions_reaction_users.user_id",
+        current_user_id: current_user.id,
+      )
+      .group(:reaction_id)
+      .count
   end
 
   def format_like_user(like)

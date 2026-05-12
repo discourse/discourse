@@ -4,7 +4,6 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -12,6 +11,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import AssociatedGroup from "discourse/models/associated-group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import ListSetting from "discourse/select-kit/components/list-setting";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -151,7 +151,7 @@ export default class GroupsFormMembershipFields extends Component {
               {{i18n "groups.membership_request_template"}}
             </label>
 
-            <ExpandingTextArea
+            <DExpandingTextArea
               {{on
                 "input"
                 (withEventValue

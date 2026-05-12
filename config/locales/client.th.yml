@@ -2709,6 +2709,9 @@ th:
         security_tab: "ความปลอดภัย"
         report_filter_any: "ใดๆ"
         disabled: ปิดใช้งานแล้ว
+        period:
+          last_7_days: "7 วันที่ผ่านมา"
+          last_30_days: "30 วันที่ผ่านมา"
         reports:
           today: "วันนี้"
           yesterday: "เมื่อวาน"

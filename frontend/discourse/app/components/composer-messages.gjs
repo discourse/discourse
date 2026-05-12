@@ -7,7 +7,6 @@ import { schedule } from "@ember/runloop";
 import { tagName } from "@ember-decorators/component";
 import ComposerMessage from "discourse/components/composer-message";
 import ShareTopic from "discourse/components/modal/share-topic";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -16,6 +15,7 @@ import {
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import { autoTrackedArray } from "../lib/tracked-tools";
 
@@ -357,7 +357,10 @@ export default class ComposerMessages extends Component {
 
   <template>
     <div
-      class={{concatClass "composer-popup-container" (if this.hidden "hidden")}}
+      class={{dConcatClass
+        "composer-popup-container"
+        (if this.hidden "hidden")
+      }}
       ...attributes
     >
       {{#each this.messages as |message|}}

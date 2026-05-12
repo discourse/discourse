@@ -23,8 +23,6 @@ import {
 } from "discourse/components/composer-editor";
 import { resetComposerMessagesCache } from "discourse/components/composer-messages";
 import { clearPluginDocumentTitleCounters } from "discourse/components/d-document";
-import { clearToolbarCallbacks } from "discourse/components/d-editor";
-import { resetHtmlDecorators } from "discourse/components/decorated-html";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
 import { clearRegisteredTabs } from "discourse/components/more-topics";
@@ -112,6 +110,8 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
+import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
+import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";

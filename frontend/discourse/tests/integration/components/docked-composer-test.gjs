@@ -113,6 +113,29 @@ module("Integration | Component | docked-composer", function (hooks) {
     assert.true(submitted, "Meta+Enter submits when submitOnEnter is false");
   });
 
+  test("auto resize does not render the manual resize handle", async function (assert) {
+    await render(
+      <template>
+        <DockedComposer
+          @autoResize={{true}}
+          @resizable={{true}}
+          @maxResizeOffset={{200}}
+          @composerEvents={{false}}
+          @draftKey="test-auto-resize"
+        />
+      </template>
+    );
+
+    assert.dom(".docked-composer").hasClass("docked-composer--auto-resize");
+    assert.dom(".docked-composer__resize-handle").doesNotExist();
+    assert.strictEqual(
+      document
+        .querySelector(".docked-composer")
+        .style.getPropertyValue("--docked-composer-max-resize-offset"),
+      "200px"
+    );
+  });
+
   test("keyboard End key respects @maxResizeOffset when provided", async function (assert) {
     await render(
       <template>

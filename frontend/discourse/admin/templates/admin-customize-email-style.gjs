@@ -1,6 +1,6 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -19,12 +19,12 @@ export default <template>
       />
     </:breadcrumbs>
     <:tabs>
-      <NavItem
+      <DNavItem
         @label="admin.customize.email_style.html"
         @route="adminCustomizeEmailStyle.edit"
         @routeParam="html"
       />
-      <NavItem
+      <DNavItem
         @label="admin.customize.email_style.css"
         @route="adminCustomizeEmailStyle.edit"
         @routeParam="css"

@@ -612,6 +612,8 @@ ug:
         other_drafts:
           one: "+%{count} باشقا دەسلەپكى نۇسخا"
           other: "+%{count} باشقا دەسلەپكى نۇسخا"
+    embed_mode:
+      editing_post: "يازما تەھرىرلىنىۋاتىدۇ"
     topic_count_all:
       one: "%{count} يېڭى تېمىنى كۆرۈڭ"
       other: "%{count} يېڭى تېمىنى كۆرۈڭ"
@@ -5947,6 +5949,14 @@ ug:
         too_many_requests: بۇ مەشغۇلاتنى بەك كۆپ قىلدىڭىز. سەل كۈتۈپ ئاندىن قايتا سىناڭ.
         not_found_error: كەچۈرۈڭ، بۇ دوكلات مەۋجۇت ئەمەس
         custom_date_range: ئىختىيارى چېسلا دائىرىسى
+        sections:
+          reports:
+            title: "دوكلات"
+          traffic:
+            title: "بېكەت ئېقىمى"
+        period:
+          last_3_months: "ئۆتكەن 3 ئاي"
+          custom: "ئىختىيارى"
         reports:
           trend_title: "ئۆزگىرىش %{percent}. نۆۋەتتىكى %{current}، ئالدىنقى مەزگىلدە %{prev}"
           percent_change_tooltip: "%{percent} ئۆزگەردى."
