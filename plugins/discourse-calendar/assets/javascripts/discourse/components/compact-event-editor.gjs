@@ -5,11 +5,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class CompactEventEditor extends Component {
@@ -361,7 +361,7 @@ export default class CompactEventEditor extends Component {
       </div>
 
       <div class="composer-event__info">
-        <ExpandingTextArea
+        <DExpandingTextArea
           rows="1"
           value={{@name}}
           class="composer-event__name-input"
@@ -388,9 +388,9 @@ export default class CompactEventEditor extends Component {
     </header>
 
     <section class="composer-event__dates">
-      {{icon "clock"}}
+      {{dIcon "clock"}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "composer-event__date-range"
           (unless @allDay "composer-event__date-range--has-time")
         }}
@@ -405,7 +405,7 @@ export default class CompactEventEditor extends Component {
         </div>
 
         <div
-          class={{concatClass
+          class={{dConcatClass
             "composer-event__date-row"
             (if this.showEndDateRow (unless @allDay "--multi-day"))
           }}
@@ -431,7 +431,7 @@ export default class CompactEventEditor extends Component {
             />
           {{/unless}}
           {{#if this.showInlineEndTime}}
-            {{icon "arrow-right" class="composer-event__date-arrow"}}
+            {{dIcon "arrow-right" class="composer-event__date-arrow"}}
             <input
               type="time"
               value={{this.formattedEndTime}}
@@ -443,10 +443,10 @@ export default class CompactEventEditor extends Component {
 
         {{#if this.showEndDateRow}}
           {{#if @allDay}}
-            {{icon "arrow-right" class="composer-event__date-arrow"}}
+            {{dIcon "arrow-right" class="composer-event__date-arrow"}}
           {{/if}}
           <div
-            class={{concatClass
+            class={{dConcatClass
               "composer-event__date-row"
               (unless @allDay "--multi-day")
             }}
@@ -460,7 +460,7 @@ export default class CompactEventEditor extends Component {
                 {{on "focus" this.focusDateInput}}
               />
               <span
-                class={{concatClass
+                class={{dConcatClass
                   "composer-event__date-display"
                   (unless this.hasEndDate "--empty")
                 }}
@@ -482,7 +482,7 @@ export default class CompactEventEditor extends Component {
     </section>
 
     <section class="composer-event__location">
-      {{icon this.locationIcon}}
+      {{dIcon this.locationIcon}}
       <div class="composer-event__location-content">
         <input
           type="text"
@@ -502,14 +502,14 @@ export default class CompactEventEditor extends Component {
             rel="noopener noreferrer"
             title="Visit {{@location}}"
           >
-            {{icon "up-right-from-square"}}
+            {{dIcon "up-right-from-square"}}
           </a>
         {{/if}}
       </div>
     </section>
 
     <section class="composer-event__attendees">
-      {{icon "users"}}
+      {{dIcon "users"}}
       <input
         type="number"
         inputmode="numeric"
@@ -536,7 +536,7 @@ export default class CompactEventEditor extends Component {
 
     {{#each this.notificationReminders as |entry|}}
       <section class="composer-event__reminder">
-        {{icon "bell"}}
+        {{dIcon "bell"}}
         <input
           type="number"
           inputmode="numeric"
@@ -559,7 +559,7 @@ export default class CompactEventEditor extends Component {
     {{/each}}
 
     <section class="composer-event__description">
-      <ExpandingTextArea
+      <DExpandingTextArea
         class="composer-event__description-textarea"
         placeholder={{i18n
           "discourse_post_event.composer.description_placeholder"

@@ -4,11 +4,6 @@ import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DateInput from "discourse/components/date-input";
-import DateTimeInput from "discourse/components/date-time-input";
 import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -17,6 +12,11 @@ import { extractError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { eq, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DDateInput from "discourse/ui-kit/d-date-input";
+import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import {
   attendanceTransition,
@@ -728,7 +728,7 @@ export default class PostEventBuilder extends Component {
         {{if this.isAdvancedScreen 'is-advanced' 'is-compact'}}"
     >
       <:body>
-        <ConditionalLoadingSection @isLoading={{this.isSaving}}>
+        <DConditionalLoadingSection @isLoading={{this.isSaving}}>
           {{#if this.isAdvancedScreen}}
             <Form
               @data={{this.formData}}
@@ -751,7 +751,7 @@ export default class PostEventBuilder extends Component {
                   as |field|
                 >
                   <field.Control>
-                    <DateTimeInput
+                    <DDateTimeInput
                       @date={{this.startsAt}}
                       @onChange={{fn this.onChangeStartsAt field.set}}
                       @showTime={{this.showTime}}
@@ -773,7 +773,7 @@ export default class PostEventBuilder extends Component {
                   as |field|
                 >
                   <field.Control>
-                    <DateTimeInput
+                    <DDateTimeInput
                       @date={{this.endsAt}}
                       @relativeDate={{this.startsAt}}
                       @onChange={{fn this.onChangeEndsAt field.set}}
@@ -1163,7 +1163,7 @@ export default class PostEventBuilder extends Component {
                     @format="full"
                     class="recurrence-until"
                   >
-                    <DateInput
+                    <DDateInput
                       @date={{this.recurrenceUntil}}
                       @onChange={{this.setRecurrenceUntil}}
                       @timezone={{@model.event.timezone}}
@@ -1264,7 +1264,7 @@ export default class PostEventBuilder extends Component {
               />
             </div>
           {{/if}}
-        </ConditionalLoadingSection>
+        </DConditionalLoadingSection>
       </:body>
       <:footer>
         {{#if @model.onUpdate}}
