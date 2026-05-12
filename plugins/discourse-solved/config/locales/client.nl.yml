@@ -10,6 +10,11 @@ nl:
       site_settings:
         categories:
           discourse_solved: "Discourse opgelost"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Geaccepteerde oplossingen"
   js:
     notifications:
       alt:

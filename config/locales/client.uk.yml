@@ -7019,6 +7019,8 @@ uk:
         not_found_error: Вибачте, цього звіту не існує
         custom_date_range: Вибрати дату та час
         sections:
+          highlights:
+            title: "Основні моменти"
           reports:
             title: "Звіти"
           traffic:
@@ -7030,6 +7032,7 @@ uk:
           last_30_days: "Останні 30 днів"
           last_3_months: "Останні 3 місяців"
           custom: "Користувацька"
+          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "%{percent} зміни. В даний час %{current}, було %{prev} в попередні періоди."
           percent_change_tooltip: "%{percent} змін."
