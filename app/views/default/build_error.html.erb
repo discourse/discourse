@@ -43,8 +43,40 @@
         <pre><%= error["message"] %></pre>
       <% end %>
 
-      <script>
-        setTimeout(() => window.location.reload(), 2000);
+      <script nonce="<%= csp_nonce_placeholder %>">
+        const clientId = crypto.randomUUID();
+        const SEP = "\r\n|\r\n";
+        let lastId = -1;
+
+        (async function poll() {
+          try {
+            const res = await fetch(`/message-bus/${clientId}/poll`, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({ "/file-change": String(lastId) }),
+            });
+            const decoder = new TextDecoder();
+            let buffer = "";
+            for await (const chunk of res.body) {
+              buffer += decoder.decode(chunk, { stream: true });
+              let sep;
+              while ((sep = buffer.indexOf(SEP)) !== -1) {
+                const batch = JSON.parse(buffer.slice(0, sep));
+                buffer = buffer.slice(sep + SEP.length);
+                for (const m of batch) {
+                  if (m.channel === "/file-change") {
+                    return window.location.reload();
+                  } else if (m.channel === "/__status") {
+                    lastId = m.data["/file-change"] ?? lastId;
+                  }
+                }
+              }
+            }
+          } catch {
+            await new Promise((r) => setTimeout(r, 1000));
+          }
+          poll();
+        })();
       </script>
     </main>
   </body>
