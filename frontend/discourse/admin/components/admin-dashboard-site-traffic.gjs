@@ -15,12 +15,12 @@ import {
 } from "discourse/admin/components/dashboard/date-range";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import Report from "discourse/admin/models/report";
-import DButton from "discourse/components/d-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { number } from "discourse/lib/formatter";
 import loadChartJS from "discourse/lib/load-chart-js";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const REPORT_TYPE = "site_traffic_summary";
