@@ -79,25 +79,56 @@ class EmberCli < ActiveSupport::CurrentAttributes
     preloads
   end
 
+  BUILD_WAIT_TIMEOUT = 20.0
+  BUILD_POLL_INTERVAL = 0.05
+
   def self.build_error
     return nil unless Rails.env.local?
     return cache[:build_error] if cache.key?(:build_error)
 
-    cache[:build_error] = parse_build_status
+    cache[:build_error] = wait_for_build
   end
 
-  def self.parse_build_status
-    data = JSON.parse(File.read("#{dist_dir}/manifest/build.json"))
-    return nil unless data.is_a?(Hash)
+  # Polls dist/manifest/build.json until the rolldown dev server reports a
+  # final state (ok / error / crashed), the dev process dies, or we hit
+  # BUILD_WAIT_TIMEOUT. Returns nil when everything is fine; returns an error
+  # payload otherwise.
+  def self.wait_for_build
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + BUILD_WAIT_TIMEOUT
+    loop do
+      data = read_build_status
+      return nil if data.nil?
 
-    if %w[error crashed].include?(data["status"])
-      data
-    elsif data["pid"] && !pid_alive?(data["pid"])
-      data.merge("status" => "crashed", "error" => plain_error(<<~MSG))
-        Rolldown dev process (pid #{data["pid"]}) is no longer running.
-        Start it with `pnpm --dir frontend/discourse start`.
-      MSG
+      if data["pid"] && !pid_alive?(data["pid"])
+        return data.merge("status" => "crashed", "error" => plain_error(<<~MSG))
+          Rolldown dev process (pid #{data["pid"]}) is no longer running.
+          Start it with `pnpm --dir frontend/discourse start`.
+        MSG
+      end
+
+      case data["status"]
+      when "error", "crashed"
+        return data
+      when "building"
+        if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+          return(
+            data.merge(
+              "status" => "crashed",
+              "error" =>
+                plain_error("Frontend build did not complete within #{BUILD_WAIT_TIMEOUT.to_i}s."),
+            )
+          )
+        end
+        sleep BUILD_POLL_INTERVAL
+      else
+        return nil
+      end
     end
+  end
+
+  def self.read_build_status
+    data = JSON.parse(File.read("#{dist_dir}/manifest/build.json"))
+    data.is_a?(Hash) ? data : nil
   rescue Errno::ENOENT, JSON::ParserError
     nil
   end
