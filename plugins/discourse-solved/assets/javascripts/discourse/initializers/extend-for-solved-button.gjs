@@ -136,7 +136,7 @@ function customizePostMenu(api) {
   );
 
   api.renderAfterWrapperOutlet(
-    "post-menu",
+    "post-content-cooked-html",
     class extends Component {
       static shouldRender(args) {
         return (
