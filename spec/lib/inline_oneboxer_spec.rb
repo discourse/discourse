@@ -435,17 +435,77 @@ RSpec.describe InlineOneboxer do
     end
   end
 
-  it "returns engine-supplied title and css_class" do
-    url = "https://example.com/foo"
-    allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(
-      title: "Engine title",
-      css_class: "--engine-class",
-    )
+  describe "engine-supplied inline data" do
+    let(:url) { "https://example.com/foo" }
+    let(:engine_data) { { title: "Engine title", css_class: "--engine-class" } }
 
-    expect(InlineOneboxer.lookup(url, skip_cache: true)).to eq(
-      url: url,
-      title: "Engine title",
-      css_class: "--engine-class",
-    )
+    it "returns engine-supplied title and css_class when domain is allowed" do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
+      SiteSetting.allowed_inline_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(engine_data)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to eq(
+        url: url,
+        title: "Engine title",
+        css_class: "--engine-class",
+      )
+    end
+
+    it "returns engine-supplied data under enable_inline_onebox_on_all_domains" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(engine_data)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to eq(
+        url: url,
+        title: "Engine title",
+        css_class: "--engine-class",
+      )
+    end
+
+    it "does not call the engine when no inline-onebox policy permits the domain" do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
+      SiteSetting.allowed_inline_onebox_domains = ""
+      allow(Oneboxer).to receive(:inline_data_for)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to be_nil
+      expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+
+    it "does not call the engine when the domain is not in allowed_inline_onebox_domains" do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
+      SiteSetting.allowed_inline_onebox_domains = "other.com"
+      allow(Oneboxer).to receive(:inline_data_for)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to be_nil
+      expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+
+    it "does not call the engine when the domain is in blocked_onebox_domains" do
+      SiteSetting.allowed_inline_onebox_domains = "example.com"
+      SiteSetting.blocked_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to be_nil
+      expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+
+    it "does not call the engine when blocked_onebox_domains matches under enable_inline_onebox_on_all_domains" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      SiteSetting.blocked_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to be_nil
+      expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+
+    it "does not call the engine when blocked_onebox_domains matches a parent domain" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      SiteSetting.blocked_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for)
+
+      subdomain_url = "https://api.example.com/foo"
+      expect(InlineOneboxer.lookup(subdomain_url, skip_cache: true)).to be_nil
+      expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
   end
 end

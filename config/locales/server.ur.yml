@@ -458,6 +458,7 @@ ur:
       admins: "منتظمین"
       moderators: "نگرانوں"
       staff: "عملہ"
+      anonymous: "گمنام"
       trust_level_0: "فعالیت_کا_درجہ_0"
       trust_level_1: "فعالیت_کا_درجہ_1"
       trust_level_2: "فعالیت_کا_درجہ_2"
@@ -1211,6 +1212,8 @@ ur:
       xaxis: "دن"
     page_view_logged_in_browser_reqs:
       xaxis: "دن"
+    page_view_embed_reqs:
+      xaxis: "دن"
     http_background_reqs:
       title: "پس منظر"
       xaxis: "دن"
@@ -1268,10 +1271,10 @@ ur:
         os: آپریٹنگ سسٹم
         login_time: لاگ اِن وقت
       description: "نئے لاگ اِن کی تفصیلات جو گزشتہ لاگ اِن سے مشکوک حد تک اختلاف کرتے ہیں۔"
-    staff_logins:
+    admin_logins:
       title: "منتظم لاگ اِن"
       labels:
-        user: صارف
+        user: رکن
         location: محل وقوع
         login_at: پر لاگ ان
       description: "محل وقوع کے ساتھ منتظم لاگ ان اوقات کی فہرست۔"

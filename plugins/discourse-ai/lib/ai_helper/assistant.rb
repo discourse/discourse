@@ -287,6 +287,15 @@ module DiscourseAi
         raw_caption.delete("|").squish.truncate_words(IMAGE_CAPTION_MAX_WORDS)
       end
 
+      def ensure_mode_access!(helper_mode, user)
+        ai_agent = ai_agent_for_mode(helper_mode)
+        return if ai_agent.nil?
+
+        raise Discourse::InvalidAccess if !user.in_any_groups?(ai_agent.allowed_group_ids.to_a)
+
+        ai_agent
+      end
+
       private
 
       def agent_has_image_generation_tool?(agent)
@@ -298,11 +307,18 @@ module DiscourseAi
         false
       end
 
-      def build_bot(helper_mode, user)
+      def ai_agent_for_mode(helper_mode)
         agent_id = agents_prompt_map(include_image_caption: true).invert[helper_mode]
         raise Discourse::InvalidParameters.new(:mode) if agent_id.blank?
 
-        agent_klass = AiAgent.find_by(id: agent_id)&.class_instance
+        AiAgent.find_by(id: agent_id)
+      end
+
+      def build_bot(helper_mode, user)
+        ai_agent = ensure_mode_access!(helper_mode, user)
+        return if ai_agent.nil?
+
+        agent_klass = ai_agent.class_instance
         return if agent_klass.nil?
 
         llm_model = find_ai_helper_model(helper_mode, agent_klass)

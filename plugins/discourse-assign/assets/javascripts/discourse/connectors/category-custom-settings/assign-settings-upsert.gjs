@@ -28,6 +28,7 @@ export default class AssignSettingsUpsert extends Component {
             @title={{i18n "discourse_assign.add_unassigned_filter"}}
             @onSet={{this.onToggleUnassignedFilter}}
             @type="checkbox"
+            @format="full"
             as |field|
           >
             <field.Control checked={{this.enableUnassignedFilter}} />

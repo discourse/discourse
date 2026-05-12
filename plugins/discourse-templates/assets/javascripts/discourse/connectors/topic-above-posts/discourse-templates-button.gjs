@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class DiscourseTemplatesButton extends Component {
   static shouldRender(outletArgs, helper) {
@@ -48,7 +48,7 @@ export default class DiscourseTemplatesButton extends Component {
         @icon={{if this.copyConfirm "check" "copy"}}
         @action={{this.copy}}
         @label="templates.copy"
-        class={{concatClass
+        class={{dConcatClass
           "btn-default"
           "template-copy"
           (if this.copyConfirm "ok")

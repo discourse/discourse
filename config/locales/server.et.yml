@@ -239,6 +239,7 @@ et:
       admins: "adminid"
       moderators: "moderaatorid"
       staff: "meeskond"
+      anonymous: "anonüümne"
       trust_level_0: "usaldustase_0"
       trust_level_1: "usaldustase_1"
       trust_level_2: "usaldustase_2"
@@ -702,6 +703,8 @@ et:
       xaxis: "Päev"
     page_view_logged_in_browser_reqs:
       xaxis: "Päev"
+    page_view_embed_reqs:
+      xaxis: "Päev"
     http_background_reqs:
       title: "Taustal"
       xaxis: "Päev"
@@ -736,7 +739,7 @@ et:
       labels:
         user: Kasutaja
         location: Asukoht
-    staff_logins:
+    admin_logins:
       labels:
         user: Kasutaja
         location: Asukoht

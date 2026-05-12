@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const MAX_UNREAD_COUNT = 99;
 
@@ -46,7 +46,7 @@ export default class ChatChannelUnreadIndicator extends Component {
   <template>
     {{#if this.showUnreadIndicator}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "chat-channel-unread-indicator"
           (if this.isUrgent "-urgent")
         }}

@@ -1,22 +1,22 @@
-import DNavigationItem from "discourse/components/d-navigation-item";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DNavigationItem from "discourse/ui-kit/d-navigation-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   {{bodyClass "user-preferences-page"}}
 
   <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav @ariaLabel="User secondary - preferences">
+    <DHorizontalOverflowNav @ariaLabel="User secondary - preferences">
       <DNavigationItem
         @route="preferences.account"
         @ariaCurrentContext="subNav"
         class="user-nav__preferences-account"
       >
-        {{icon "circle-user"}}
+        {{dIcon "circle-user"}}
         <span>{{i18n "user.preferences_nav.account"}}</span>
       </DNavigationItem>
 
@@ -25,7 +25,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__preferences-security"
       >
-        {{icon "lock"}}
+        {{dIcon "lock"}}
         <span>{{i18n "user.preferences_nav.security"}}</span>
       </DNavigationItem>
 
@@ -34,7 +34,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__preferences-profile"
       >
-        {{icon "address-card"}}
+        {{dIcon "address-card"}}
         <span>{{i18n "user.preferences_nav.profile"}}</span>
       </DNavigationItem>
 
@@ -43,7 +43,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__preferences-emails"
       >
-        {{icon "envelope"}}
+        {{dIcon "envelope"}}
         <span>{{i18n "user.preferences_nav.emails"}}</span>
       </DNavigationItem>
 
@@ -52,7 +52,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__preferences-notifications"
       >
-        {{icon "bell"}}
+        {{dIcon "bell"}}
         <span>{{i18n "user.preferences_nav.notifications"}}</span>
       </DNavigationItem>
 
@@ -62,7 +62,7 @@ export default <template>
           @ariaCurrentContext="subNav"
           class="user-nav__preferences-tracking"
         >
-          {{icon "plus"}}
+          {{dIcon "plus"}}
           <span>{{i18n "user.preferences_nav.tracking"}}</span>
         </DNavigationItem>
       {{/if}}
@@ -72,7 +72,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__preferences-users"
       >
-        {{icon "users"}}
+        {{dIcon "users"}}
         <span>{{i18n "user.preferences_nav.users"}}</span>
       </DNavigationItem>
 
@@ -81,7 +81,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__preferences-interface"
       >
-        {{icon "desktop"}}
+        {{dIcon "desktop"}}
         <span>{{i18n "user.preferences_nav.interface"}}</span>
       </DNavigationItem>
 
@@ -90,7 +90,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__preferences-navigation-menu"
       >
-        {{icon "bars"}}
+        {{dIcon "bars"}}
         <span>{{i18n "user.preferences_nav.navigation_menu"}}</span>
       </DNavigationItem>
 
@@ -99,7 +99,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__preferences-calendar-subscriptions"
       >
-        {{icon "calendar-days"}}
+        {{dIcon "calendar-days"}}
         <span>{{i18n "user.preferences_nav.calendar_subscriptions"}}</span>
       </DNavigationItem>
 
@@ -113,7 +113,7 @@ export default <template>
         @connectorTagName="li"
         @outletArgs={{lazyHash model=@controller.model}}
       />
-    </HorizontalOverflowNav>
+    </DHorizontalOverflowNav>
   </div>
 
   <section class="user-content user-preferences" id="user-content">

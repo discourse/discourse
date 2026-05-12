@@ -8,16 +8,9 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DIconGridPicker from "discourse/components/d-icon-grid-picker";
-import DMultiSelect from "discourse/components/d-multi-select";
-import DecoratedHtml from "discourse/components/decorated-html";
 import EmojiPicker from "discourse/components/emoji-picker";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -32,6 +25,13 @@ import PermissionType from "discourse/models/permission-type";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq, or } from "discourse/truth-helpers";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
+import DMultiSelect from "discourse/ui-kit/d-multi-select";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const DISCUSSION_TYPE_ID = "discussion";
@@ -610,7 +610,7 @@ export default class UpsertCategoryGeneral extends Component {
           >
             <:result as |type|>
               <div
-                class={{concatClass
+                class={{dConcatClass
                   "category-type-selector__result"
                   (unless type.available "--unavailable")
                   (concat "--category-type-" type.id)
@@ -618,7 +618,7 @@ export default class UpsertCategoryGeneral extends Component {
               >
                 <div class="category-type-selector__name">
                   <span class="category-type-selector__icon">
-                    {{emoji type.icon}}
+                    {{dEmoji type.icon}}
                   </span>
 
                   {{type.name}}
@@ -646,7 +646,7 @@ export default class UpsertCategoryGeneral extends Component {
     {{/if}}
 
     <@form.Section
-      class={{concatClass
+      class={{dConcatClass
         "edit-category-tab"
         "edit-category-tab-general"
         (if (eq @selectedTab "general") "active")
@@ -775,7 +775,7 @@ export default class UpsertCategoryGeneral extends Component {
 
               <Content @name="square">
                 {{trustHTML
-                  (categoryBadge
+                  (dCategoryBadge
                     (this.buildTransientModel @transientData) styleType="square"
                   )
                 }}
@@ -792,10 +792,10 @@ export default class UpsertCategoryGeneral extends Component {
         >
           <@form.Container
             @title={{i18n "category.description"}}
-            class="edit-category-description-container"
+            class="edit-category-description-container --full"
           >
             <div
-              class={{concatClass
+              class={{dConcatClass
                 "description-content"
                 (unless this.descriptionExpanded "--collapsed")
                 (if this.descriptionOverflows "--overflowing")
@@ -806,7 +806,7 @@ export default class UpsertCategoryGeneral extends Component {
                 this.categoryDescription
               }}
             >
-              <DecoratedHtml
+              <DDecoratedHtml
                 @html={{this.categoryDescription}}
                 @className="readonly-field"
               />
@@ -889,19 +889,19 @@ export default class UpsertCategoryGeneral extends Component {
               >
                 <:trigger>
                   <Condition @name="public" @disabled={{true}}>
-                    {{icon "ban"}}
+                    {{dIcon "ban"}}
                     {{i18n this.publicVisibilityLabel}}
                   </Condition>
                 </:trigger>
               </DTooltip>
             {{else}}
               <Condition @name="public">
-                {{icon "check"}}
+                {{dIcon "check"}}
                 {{i18n this.publicVisibilityLabel}}
               </Condition>
             {{/if}}
             <Condition @name="group_restricted">
-              {{icon "check"}}
+              {{dIcon "check"}}
               {{i18n "category.visibility.group_restricted"}}
             </Condition>
           </cc.Conditions>

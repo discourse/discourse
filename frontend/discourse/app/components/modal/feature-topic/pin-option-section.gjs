@@ -3,11 +3,11 @@ import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
-import FutureDateInput from "discourse/components/future-date-input";
-import icon from "discourse/helpers/d-icon";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export const MAX_GLOBALLY_PINNED_TOPICS = 4;
@@ -59,15 +59,15 @@ export default class PinOptionSection extends Component {
       <div class="feature-section__description">
         {{#if @statsMessage}}
           <p>
-            <ConditionalLoadingSpinner @size="small" @condition={{@loading}}>
+            <DConditionalLoadingSpinner @size="small" @condition={{@loading}}>
               {{trustHTML @statsMessage}}
-            </ConditionalLoadingSpinner>
+            </DConditionalLoadingSpinner>
           </p>
         {{/if}}
 
         <p>{{@noteMessage}}</p>
         <p class="feature-section__pin-message">{{trustHTML @pinMessage}}
-          {{icon "far-clock"}}</p>
+          {{dIcon "far-clock"}}</p>
 
         <form.Field
           @name="pinUntil"
@@ -79,7 +79,7 @@ export default class PinOptionSection extends Component {
           as |field|
         >
           <field.Control>
-            <FutureDateInput
+            <DFutureDateInput
               class="pin-until"
               @clearable={{true}}
               @input={{field.value}}

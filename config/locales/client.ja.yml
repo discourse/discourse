@@ -547,6 +547,8 @@ ja:
         view_all: "すべての下書きを表示"
         other_drafts:
           other: "他 %{count} 件の下書き"
+    embed_mode:
+      editing_post: "投稿を編集中"
     topic_count_all:
       other: "%{count} 件の新規トピックを見る"
     topic_count_categories:
@@ -5734,6 +5736,16 @@ ja:
         too_many_requests: この操作の実行回数が多すぎます。しばらくしてからもう一度お試しください。
         not_found_error: このレポートは存在しません
         custom_date_range: カスタムの日付範囲
+        sections:
+          reports:
+            title: "レポート"
+          traffic:
+            title: "サイトトラフィック"
+        period:
+          last_7_days: "過去 7 日間"
+          last_30_days: "過去 30 日間"
+          last_3_months: "過去 3 か月"
+          custom: "カスタム"
         reports:
           trend_title: "%{percent} 変更。現在 %{current}、前の期間中 %{prev}。"
           percent_change_tooltip: "%{percent} 変化。"

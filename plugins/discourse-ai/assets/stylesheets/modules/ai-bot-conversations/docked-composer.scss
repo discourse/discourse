@@ -2,11 +2,10 @@
 
 body.has-ai-bot-docked-composer {
   // hide the floating composer on bot PMs — the docked composer has
-  // replaced it. Scoped to the body class, which is only present while
-  // the DockedComposer component is rendered (cleared on unmount), so
-  // navigating to a non-bot-PM topic restores the popup composer.
-  // Allow it to show when editing a post (composer-action-edit class).
-  #reply-control:not(.composer-action-edit) {
+  // replaced it (including edits). Scoped to the body class, which is
+  // only present while the DockedComposer component is rendered (cleared
+  // on unmount), so navigating away restores the popup composer.
+  #reply-control {
     display: none !important;
   }
 
@@ -81,23 +80,6 @@ body.has-ai-bot-docked-composer {
   }
 }
 
-// Place the resize handle inside the bordered wrapper. The handle overlaps 1em
-// into the wrapper's padding-top zone, above the input area.
-.docked-composer.ai-bot-docked-composer.docked-composer--resizable {
-  gap: 0;
-
-  .docked-composer__resize-handle {
-    height: 1em;
-    position: relative;
-    z-index: 2;
-    margin-bottom: -1em;
-
-    @include viewport.until(sm) {
-      display: none;
-    }
-  }
-}
-
 // Remove default border from the column; the wrapper gets the border instead.
 .docked-composer.ai-bot-docked-composer .d-editor-textarea-column {
   border: none;
@@ -121,11 +103,21 @@ body.has-ai-bot-docked-composer {
   border-radius: var(--d-input-border-radius);
   background: var(--d-input-bg-color);
   transition: border-color 0.15s ease-in-out;
+  position: relative;
 
   &.in-focus {
     border-color: var(--d-input-focused-color) !important;
-    outline: 2px solid var(--d-input-focused-color) !important;
-    outline-offset: -2px;
+    outline: none !important;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      z-index: 1;
+      border: 2px solid var(--d-input-focused-color);
+      border-radius: var(--d-input-border-radius);
+      pointer-events: none;
+    }
   }
 }
 
@@ -193,6 +185,28 @@ body.has-ai-bot-docked-composer {
 // Send button: vertically centered with toolbar icons.
 .docked-composer.ai-bot-docked-composer .docked-composer__submit-btn.btn {
   bottom: var(--space-2);
+}
+
+.docked-composer.ai-bot-docked-composer .ai-bot-docked-composer__editing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5em 0.75em;
+  border-top: 1px solid var(--primary-low);
+  box-sizing: border-box;
+  font-size: var(--font-down-1);
+  color: var(--primary-medium);
+}
+
+.ai-bot-docked-composer__editing-text {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.ai-bot-docked-composer__editing-dismiss {
+  padding: 0.25em;
 }
 
 // Floating scroll indicator: appears above the composer when content is below.

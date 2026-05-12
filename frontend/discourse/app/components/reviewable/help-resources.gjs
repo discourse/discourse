@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
-import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class HelpResources extends Component {
@@ -21,7 +21,7 @@ export default class HelpResources extends Component {
         {{#if this.moderatorGuideUrl}}
           <li class="review-resources__item">
             <span class="review-resources__icon">
-              {{icon "book"}}
+              {{dIcon "book"}}
             </span>
             <a href={{this.moderatorGuideUrl}} class="review-resources__link">
               {{i18n "review.help.community_moderation_guide"}}
@@ -30,7 +30,7 @@ export default class HelpResources extends Component {
         {{/if}}
         <li class="review-resources__item">
           <span class="review-resources__icon">
-            {{icon "book"}}
+            {{dIcon "book"}}
           </span>
           <a
             href="https://meta.discourse.org/t/-/63116"
@@ -41,7 +41,7 @@ export default class HelpResources extends Component {
         </li>
         <li class="review-resources__item">
           <span class="review-resources__icon">
-            {{icon "book"}}
+            {{dIcon "book"}}
           </span>
           <a
             href="https://meta.discourse.org/t/-/123464"
@@ -52,7 +52,7 @@ export default class HelpResources extends Component {
         </li>
         <li class="review-resources__item">
           <span class="review-resources__icon">
-            {{icon "book"}}
+            {{dIcon "book"}}
           </span>
           <a
             href="https://meta.discourse.org/t/-/343541"

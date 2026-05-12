@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import DButton from "discourse/components/d-button";
 import TopicFooterButtons from "discourse/components/topic-footer-buttons";
+import DButton from "discourse/ui-kit/d-button";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class TopicFooterButtonsOrganism extends Component {

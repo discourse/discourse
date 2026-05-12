@@ -312,6 +312,7 @@ hy:
       admins: "ադմինները"
       moderators: "մոդերատորներ"
       staff: "անձնակազմ"
+      anonymous: "անանուն"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -944,6 +945,8 @@ hy:
       xaxis: "Օր"
     page_view_logged_in_browser_reqs:
       xaxis: "Օր"
+    page_view_embed_reqs:
+      xaxis: "Օր"
     http_background_reqs:
       title: "Ֆոն"
       xaxis: "Օր"
@@ -1000,7 +1003,7 @@ hy:
         os: Օպերացիոն Համակարգ
         login_time: Մուտքի Ժամանակ
       description: "Նախորդ մուտքերից կասկածելիորեն տարբերվող նոր մուտքերի մանրամասներ"
-    staff_logins:
+    admin_logins:
       title: "Ադմինի Մուտքեր"
       labels:
         user: Օգտատեր

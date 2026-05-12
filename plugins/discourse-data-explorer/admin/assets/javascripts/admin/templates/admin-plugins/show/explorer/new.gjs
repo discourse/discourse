@@ -1,12 +1,12 @@
 import { on } from "@ember/modifier";
 import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DTextarea from "discourse/components/d-textarea";
 import Form from "discourse/components/form";
-import TextField from "discourse/components/text-field";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DTextField from "discourse/ui-kit/d-text-field";
+import DTextarea from "discourse/ui-kit/d-textarea";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -22,7 +22,7 @@ export default <template>
           <div class="query-new__ai-section">
             <label class="query-new__ai-label">
               <span>{{i18n "explorer.ai.description_title"}}</span>
-              {{icon "discourse-sparkles"}}
+              {{dIcon "discourse-sparkles"}}
             </label>
 
             <p class="query-new__ai-hint">
@@ -63,7 +63,7 @@ export default <template>
 
               {{#if @controller.aiGenerating}}
                 <span class="query-new__generating-indicator">
-                  <ConditionalLoadingSpinner
+                  <DConditionalLoadingSpinner
                     @condition={{true}}
                     @size="small"
                   />
@@ -91,7 +91,7 @@ export default <template>
               <label class="query-new__field-label">
                 {{i18n "explorer.query_name"}}
               </label>
-              <TextField
+              <DTextField
                 @value={{@controller.generatedName}}
                 @onChange={{@controller.updateName}}
                 class="query-new__name-input"

@@ -7,6 +7,7 @@ class TopicView
   include PostDependentCache
 
   memoize_for_posts :all_post_actions
+  memoize_for_posts :ignored_user_like_counts
   memoize_for_posts :reviewable_counts
   memoize_for_posts :post_custom_fields
   memoize_for_posts :user_custom_fields
@@ -680,6 +681,10 @@ class TopicView
 
   def links
     @links ||= TopicLink.topic_map(@guardian, @topic.id)
+  end
+
+  def ignored_user_like_counts
+    PostAction.ignored_user_like_counts_for(@posts, @user)
   end
 
   def reviewable_counts

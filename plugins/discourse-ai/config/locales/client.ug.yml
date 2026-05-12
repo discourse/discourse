@@ -232,6 +232,7 @@ ug:
         conversations:
           today: "بۈگۈن"
           scroll_to_bottom: "ئەڭ ئاستىغا دومىلات"
+          editing_post: "يازما تەھرىرلىنىۋاتىدۇ"
       sentiments:
         sentiment_analysis:
           filter_types:

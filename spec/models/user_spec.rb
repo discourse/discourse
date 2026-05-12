@@ -1490,6 +1490,44 @@ RSpec.describe User do
     end
   end
 
+  describe "#create_visit_record!" do
+    fab!(:user)
+    let(:date) { Date.current }
+
+    it "creates a UserVisit and increments days_visited" do
+      expect { user.create_visit_record!(date) }.to change {
+        user.user_visits.where(visited_at: date).count
+      }.by(1).and change { user.user_stat.reload.days_visited }.by(1)
+    end
+
+    it "does not increment days_visited when the insert raises" do
+      user.create_visit_record!(date)
+
+      expect {
+        expect { user.create_visit_record!(date) }.to raise_error(ActiveRecord::RecordNotUnique)
+      }.not_to change { user.user_stat.reload.days_visited }
+    end
+  end
+
+  describe "#update_visit_record!" do
+    fab!(:user)
+    let(:date) { Date.current }
+
+    it "creates a visit when none exists for the date" do
+      expect { user.update_visit_record!(date) }.to change {
+        user.user_visits.where(visited_at: date).count
+      }.by(1)
+    end
+
+    it "is a no-op when a visit already exists for the date" do
+      user.update_visit_record!(date)
+
+      expect { user.update_visit_record!(date) }.not_to change {
+        user.user_visits.where(visited_at: date).count
+      }
+    end
+  end
+
   describe "email_confirmed?" do
     fab!(:user)
 

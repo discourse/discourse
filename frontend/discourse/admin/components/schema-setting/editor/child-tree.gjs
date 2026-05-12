@@ -4,8 +4,8 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import ChildTreeNode from "discourse/admin/components/schema-setting/editor/child-tree-node";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class SchemaSettingNewEditorChildTree extends Component {
   @tracked expanded = true;
@@ -32,7 +32,7 @@ export default class SchemaSettingNewEditorChildTree extends Component {
       {{on "click" this.toggleVisibility}}
     >
       {{@name}}
-      {{icon (if this.expanded "chevron-down" "chevron-right")}}
+      {{dIcon (if this.expanded "chevron-down" "chevron-right")}}
     </div>
 
     {{#if this.expanded}}

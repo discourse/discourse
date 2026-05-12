@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class PostVotingButton extends Component {
   get buttonClasses() {
@@ -55,7 +55,7 @@ export default class PostVotingButton extends Component {
       @icon={{this.iconName}}
       @title={{this.ariaLabel}}
       @ariaLabel={{this.ariaLabel}}
-      class={{concatClass
+      class={{dConcatClass
         "btn-transparent post-voting-button"
         this.buttonClasses
       }}

@@ -423,6 +423,7 @@ da:
       admins: "admins"
       moderators: "moderatorer"
       staff: "personale"
+      anonymous: "anonym"
       trust_level_0: "tillidsniveau_0"
       trust_level_1: "tillidsniveau_1"
       trust_level_2: "tillidsniveau_2"
@@ -1143,6 +1144,8 @@ da:
       xaxis: "Dag"
     page_view_logged_in_browser_reqs:
       xaxis: "Dag"
+    page_view_embed_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Baggrund"
       xaxis: "Dag"
@@ -1199,7 +1202,7 @@ da:
         os: Operativsystem
         login_time: Login Tid
       description: "Detaljer om nye logins, der afviger mistænkeligt fra tidligere logins."
-    staff_logins:
+    admin_logins:
       title: "Admin Logins"
       labels:
         user: Bruger

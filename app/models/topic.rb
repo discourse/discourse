@@ -704,6 +704,20 @@ class Topic < ActiveRecord::Base
     self.archetype == Archetype.default
   end
 
+  # Single source of truth for "this topic renders as nested." Both
+  # TopicListItemSerializer and TopicViewSerializer delegate here.
+  #
+  # NOTE: does not consider category.nested_replies_default. The category
+  # override is honored at *creation time* by the initializer in
+  # config/initializers/300-nested-replies.rb (which materializes a
+  # NestedTopic record). Topics created before a category was switched on
+  # therefore won't be nested unless the site-wide default is also on.
+  def nested_view?
+    return false unless SiteSetting.nested_replies_enabled
+    return false if private_message?
+    nested_topic.present? || SiteSetting.nested_replies_default
+  end
+
   def open?
     !self.closed?
   end

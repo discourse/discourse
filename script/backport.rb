@@ -26,7 +26,7 @@ pr = JSON.parse(gh("pr", "view", pr_number, "--json", "title,body,baseRefName,me
 pr_title = pr["title"]
 pr_body = pr["body"] || ""
 base_branch = pr["baseRefName"]
-merge_commit = pr["mergeCommit"]["oid"]
+merge_commit = pr.dig("mergeCommit", "oid")
 
 puts "PR ##{pr_number}: #{pr_title}"
 puts "Base branch: #{base_branch}"

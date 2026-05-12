@@ -2914,6 +2914,8 @@ et:
         security_tab: "Turve"
         report_filter_any: "iga"
         disabled: Välja lülitatud
+        period:
+          custom: "Individuaalne"
         reports:
           today: "Täna"
           yesterday: "Eile"

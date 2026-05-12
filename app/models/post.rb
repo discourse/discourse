@@ -518,12 +518,18 @@ class Post < ActiveRecord::Base
       )
   end
 
+  # In a nested-view topic, a "root" reply (no reply_to_post_number) is
+  # treated as targeting post 1, so the OP gets the :replied notification.
+  # New callers that don't want this behavior should branch on the topic
+  # type before calling.
   def reply_notification_target
-    return if reply_to_post_number.blank?
+    target_post_number = reply_to_post_number
+    target_post_number = 1 if target_post_number.blank? && topic&.nested_view?
+    return if target_post_number.blank?
     Post.find_by(
       "topic_id = :topic_id AND post_number = :post_number AND user_id <> :user_id",
       topic_id: topic_id,
-      post_number: reply_to_post_number,
+      post_number: target_post_number,
       user_id: user_id,
     ).try(:user)
   end
@@ -558,6 +564,29 @@ class Post < ActiveRecord::Base
 
   def is_category_description?
     topic.present? && topic.is_category_topic? && is_first_post?
+  end
+
+  def sync_first_post_caches
+    return if post_number > 1
+    topic&.update_excerpt(excerpt_for_topic)
+    sync_category_description
+  end
+
+  def sync_category_description(category = nil)
+    category ||= Category.find_by(topic_id:)
+    return unless category
+
+    doc = Nokogiri::HTML5.fragment(cooked)
+    doc.css("img").remove
+
+    if (html = doc.css("p").first&.inner_html&.strip)
+      new_description = html unless html.starts_with?(Category.post_template[..50])
+      return category if category.description == new_description
+      category.update_column(:description, new_description)
+      category.publish_category
+      Site.clear_cache
+      category
+    end
   end
 
   def is_reply_by_email?
@@ -841,7 +870,7 @@ class Post < ActiveRecord::Base
 
     update_columns(cooked: new_cooked, baked_at: Time.zone.now, baked_version: BAKED_VERSION)
 
-    topic&.update_excerpt(excerpt_for_topic) if is_first_post?
+    sync_first_post_caches
 
     if invalidate_broken_images
       post_hotlinked_media.download_failed.destroy_all

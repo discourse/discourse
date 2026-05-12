@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
-import discourseTags from "discourse/helpers/discourse-tags";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const TopicLabelButton = <template>
   <DButton @action={{@action}} ...attributes>
@@ -14,25 +14,25 @@ const TopicLabelButton = <template>
         <span class="topic-statuses">
           {{#if (eq @topic.archetype "private_message")}}
             <span class="topic-status --private-message">
-              {{icon "envelope"}}
+              {{dIcon "envelope"}}
             </span>
           {{/if}}
 
           {{#if @topic.bookmarked}}
             <span class="topic-status --bookmarked">
-              {{icon "bookmark"}}
+              {{dIcon "bookmark"}}
             </span>
           {{/if}}
 
           {{#if @topic.closed}}
             <span class="topic-status --closed">
-              {{icon "topic.closed"}}
+              {{dIcon "topic.closed"}}
             </span>
           {{/if}}
 
           {{#if @topic.pinned}}
             <span class="topic-status --pinned">
-              {{icon "thumbtack"}}
+              {{dIcon "thumbtack"}}
             </span>
           {{/if}}
 
@@ -43,7 +43,7 @@ const TopicLabelButton = <template>
       </div>
       <div class="topic-title__bottom-line">
         {{categoryLinkHTML @topic.category (hash link=false)}}
-        {{discourseTags @topic}}
+        {{dDiscourseTags @topic}}
       </div>
     </div>
   </DButton>

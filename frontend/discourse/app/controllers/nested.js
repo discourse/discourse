@@ -42,7 +42,13 @@ export default class NestedController extends Controller {
   @tracked newRootPostIds = [];
   @tracked editingTopic = false;
   @tracked pinnedPostIds = [];
-  queryParams = ["sort", "context"];
+  // Persisted in the URL across in-topic navigation by design — once a
+  // user lands via a consolidated reply notification, browsing within
+  // the topic keeps the collapsed view, and the URL is shareable in that
+  // state. If we ever want to scope it to entry-only, clear after the
+  // initial render in the route.
+  @tracked collapseReplies = false;
+  queryParams = ["sort", "context", { collapseReplies: "collapse_replies" }];
 
   // Externalized expansion state: postNumber → { expanded, collapsed }
   // Components read on construction, write on toggle.

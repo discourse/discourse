@@ -5,8 +5,8 @@ import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import ParentCategoryRow from "discourse/components/parent-category-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -119,7 +119,7 @@ export default class CategoriesOnly extends Component {
                   "categories.muted"
                 }}</h3>
               {{#if this.mutedToggleIcon}}
-                {{icon this.mutedToggleIcon}}
+                {{dIcon this.mutedToggleIcon}}
               {{/if}}
             </a>
             {{#if this.site.mobileView}}

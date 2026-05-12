@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import PoweredByDiscourse from "discourse/components/powered-by-discourse";
-import icon from "discourse/helpers/d-icon";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class EmbedTopicFooter extends Component {
@@ -91,7 +91,7 @@ export default class EmbedTopicFooter extends Component {
       <div class="embed-topic-footer" {{this.trackFooterVisibility}}>
         {{#if this.showFirstReplyMessage}}
           <div class="embed-topic-footer__first-reply">
-            {{icon "comment"}}
+            {{dIcon "comment"}}
             <span>{{i18n "embed_mode.be_first_to_reply"}}</span>
             <DButton
               @action={{this.handleReply}}

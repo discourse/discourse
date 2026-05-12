@@ -1165,6 +1165,7 @@ zh_CN:
           hide_toolbar: "隐藏工具栏"
           scroll_to_bottom: "滚动到底部"
           streaming_below: "下方新增内容"
+          editing_post: "正在编辑帖子"
       sentiments:
         dashboard:
           title: "情绪"

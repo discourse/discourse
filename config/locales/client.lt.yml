@@ -542,6 +542,8 @@ lt:
         title: "Atidarykite naujausių juodraščių meniu"
         untitled: "Be pavadinimo juodraštis"
         view_all: "peržiūrėti visus įrašus"
+    embed_mode:
+      editing_post: "Redaguojamas įrašas"
     topic_count_all:
       one: "Pamatyk %{count} naują temą"
       few: "Pamatyk %{count} naujas temas"
@@ -4355,6 +4357,14 @@ lt:
         exception_error: Atsiprašome, vykdant užklausą įvyko klaida
         too_many_requests: Jūs atlikote šį veiksmą per daug kartų. Prašome palaukti prieš bandydami dar kartą.
         not_found_error: Atsiprašome, ši ataskaita neegzistuoja
+        sections:
+          reports:
+            title: "Pranešimai"
+        period:
+          last_7_days: "Paskutinės 7 dienos"
+          last_30_days: "Paskutinės 30 dienų"
+          last_3_months: "Paskutiniai 3 mėnesiai"
+          custom: "Išskirtinės"
         reports:
           trend_title: "%{percent} pokytis. Šiuo metu %{current}, buvo %{prev} ankstesniame laikotarpyje."
           today: "Šiandien"

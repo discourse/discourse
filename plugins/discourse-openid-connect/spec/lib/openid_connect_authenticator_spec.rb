@@ -108,16 +108,16 @@ describe OpenIDConnectAuthenticator do
         expect(result.associated_groups).to eq([])
       end
 
-      it "does not set associated_groups when the claim is missing" do
+      it "treats a missing claim as an empty groups list" do
         result = authenticator.after_authenticate(hash)
-        expect(result.associated_groups).to be_nil
+        expect(result.associated_groups).to eq([])
       end
 
-      it "logs an error when the claim is not an array" do
+      it "logs an error and clears groups when the claim is not an array" do
         hash[:extra][:raw_info][:groups] = "not_an_array"
         Rails.logger.expects(:error).with(includes("not an array"))
         result = authenticator.after_authenticate(hash)
-        expect(result.associated_groups).to be_nil
+        expect(result.associated_groups).to eq([])
       end
     end
 

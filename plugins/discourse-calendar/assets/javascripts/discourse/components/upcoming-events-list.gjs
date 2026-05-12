@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
 
@@ -238,7 +238,7 @@ export default class UpcomingEventsList extends Component {
       </h3>
 
       <div class="upcoming-events-list__container">
-        <ConditionalLoadingSpinner @condition={{this.isLoading}} />
+        <DConditionalLoadingSpinner @condition={{this.isLoading}} />
 
         {{#if this.hasEmptyResponse}}
           <div class="upcoming-events-list__empty-message">
@@ -276,7 +276,7 @@ export default class UpcomingEventsList extends Component {
                         title={{or event.name event.post.topic.title}}
                       >
                         {{#if event.recurrence}}
-                          {{icon "arrows-rotate"}}
+                          {{dIcon "arrows-rotate"}}
                         {{/if}}
                         {{or event.name event.post.topic.title}}
                       </span>
