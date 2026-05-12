@@ -164,7 +164,6 @@ globalThis.convert = async function (
   originalFileSize,
   settings
 ) {
-
   logIfDebug(`Converting ${fileName} (${fileType}, ${originalFileSize} bytes)`);
 
   let imageData;
@@ -223,7 +222,6 @@ globalThis.convertAnimated = async function (
   originalFileSize,
   settings
 ) {
-
   logIfDebug(
     `Converting animated ${fileName} (${originalFileSize} bytes) to animated WEBP`
   );
