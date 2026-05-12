@@ -68,7 +68,6 @@ export default function buildOptions(state) {
       : null,
     // Only allow urls with at least 3 slashes. Ex: 'https://example.com/'.
     allowedIframes: (
-      allowedIframes ??
       siteSettings.allowed_iframes?.split("|") ??
       []
     ).filter((str) => (str.match(/\//g) || []).length >= 3),
