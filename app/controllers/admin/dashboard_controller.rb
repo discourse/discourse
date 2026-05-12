@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Admin::DashboardController < Admin::StaffController
+  BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
+
+  before_action :ensure_dashboard_improvements_enabled, only: %i[bulk_reports]
+
   def index
     if SiteSetting.dashboard_improvements
       visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
@@ -90,6 +94,16 @@ class Admin::DashboardController < Admin::StaffController
     end
   end
 
+  def bulk_reports
+    items = parse_items
+    filters = parse_filters
+
+    hijack do
+      results = collect_results(items, filters)
+      render_json_dump(items: results)
+    end
+  end
+
   private
 
   def section_data(id)
@@ -98,10 +112,57 @@ class Admin::DashboardController < Admin::StaffController
       AdminDashboardHighlights.build(start_date: params[:start_date], end_date: params[:end_date])
     when "traffic"
       AdminDashboardSiteTraffic.build(start_date: params[:start_date], end_date: params[:end_date])
+    when "reports"
+      AdminDashboardReportsSection.build(guardian: guardian)
     end
   end
 
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
+  end
+
+  def ensure_dashboard_improvements_enabled
+    raise Discourse::NotFound if !SiteSetting.dashboard_improvements
+  end
+
+  def parse_items
+    raise Discourse::InvalidParameters.new(:items) if !params[:items].is_a?(Array)
+    if params[:items].size > AdminDashboardReport::VISIBLE_CAP
+      raise Discourse::InvalidParameters.new(:items)
+    end
+
+    entries = params.permit(items: %i[source identifier]).fetch(:items, [])
+    entries.map do |entry|
+      source = entry[:source]
+      identifier = entry[:identifier]
+      raise Discourse::InvalidParameters.new(:items) if source.blank? || identifier.blank?
+      { source: source.to_s, identifier: identifier.to_s }
+    end
+  end
+
+  def parse_filters
+    permitted = params.permit(filters: BULK_REPORTS_FILTER_KEYS).fetch(:filters, nil)
+    permitted.present? ? permitted.to_h.symbolize_keys : {}
+  end
+
+  def collect_results(items, filters)
+    per_source =
+      items
+        .group_by { |i| i[:source] }
+        .each_with_object({}) do |(source, group), hash|
+          provider = AdminDashboard::Reports::Registry.provider_for(source)
+          next if provider.nil?
+
+          identifiers = group.map { |i| i[:identifier] }
+          hash[source] = provider.fetch_many(identifiers, guardian:, filters:)
+        end
+
+    items.map do |item|
+      {
+        source: item[:source],
+        identifier: item[:identifier],
+        data: per_source.dig(item[:source], item[:identifier]),
+      }
+    end
   end
 end

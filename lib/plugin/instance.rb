@@ -1336,6 +1336,16 @@ class Plugin::Instance
   end
 
   ##
+  # Register a class that implements [AdminDashboard::Reports::SourceProvider],
+  # exposing a kind of report (built-in, Data Explorer query, etc.) for the
+  # customisable Reports section on the new admin dashboard. The class must
+  # respond to `.source_name`, `.resolve_many`, `.fetch_many`, and
+  # `.available_for`; see the base class for the full contract.
+  def register_admin_dashboard_report_source(provider_class)
+    DiscoursePluginRegistry.register_admin_dashboard_report_source(provider_class, self)
+  end
+
+  ##
   # Register an object that inherits from [Summarization::Base], which provides a way
   # to summarize content. Staff can select which strategy to use
   # through the `summarization_strategy` setting.

@@ -4539,3 +4539,6 @@ experimental:
     upcoming_change:
       status: "conceptual"
       impact: "feature,admins"
+  admin_dashboard_reports_seeded:
+    default: false
+    hidden: true
