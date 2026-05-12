@@ -12,7 +12,10 @@ function initializeEventBuilder(api) {
     action: (toolbarEvent) => {
       const userTz = currentUser?.user_option?.timezone;
       const timezone = userTz || moment.tz.guess();
-      const start = moment.tz(moment(), timezone);
+      const start = moment
+        .tz(moment(), timezone)
+        .startOf("hour")
+        .add(1, "hour");
       const end = start.clone().add(1, "hour");
       const reminder = defaultReminderFor({
         startsAt: start,

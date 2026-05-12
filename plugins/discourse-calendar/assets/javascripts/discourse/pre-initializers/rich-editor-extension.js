@@ -115,7 +115,10 @@ const extension = {
       if (userInput) {
         eventMarkdown = `[event ${userInput}]\n[/event]`;
       } else {
-        const now = moment.tz(moment(), timezone);
+        const now = moment
+          .tz(moment(), timezone)
+          .startOf("hour")
+          .add(1, "hour");
         const endsAt = now.clone().add(1, "hour");
         const reminder = defaultReminderFor({
           startsAt: now,
