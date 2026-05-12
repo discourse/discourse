@@ -96,7 +96,7 @@ zh_CN:
         post_menu:
           title: "帖子菜单"
         docked_composer:
-          title: "Docked Composer"
+          title: "停靠的编辑器"
         modal:
           title: "模式窗口"
           header: "模式窗口标题"

@@ -5,11 +5,18 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "مستكشف بيانات Discourse"
   js:
     discourse_ai:
       features:
         data_explorer:
           name: "مستكشف البيانات"
+          description: "إنشاء استعلامات مدعومة بالذكاء الاصطناعي لمستكشف البيانات"
+          query_generation: "إنشاء الاستعلام"
     errors:
       explorer:
         no_semicolons: "أزِل الفواصل المنقوطة من الاستعلام."
@@ -27,7 +34,17 @@ ar:
       create_placeholder: "اسم الاستعلام..."
       description_placeholder: "أدخِل وصفًا هنا"
       ai:
+        description_title: "إنشاء باستخدام الذكاء الاصطناعي"
+        description_hint: "صف ما تريد بلغة بسيطة، وسيتم إنشاء استعلام SQL والاسم والوصف تلقائيًا."
+        description_placeholder: "مثال: عرض عمليات التسجيل عبر الزمن"
         generate: "إنشاء"
+        regenerate: "إعادة الإنشاء"
+        generating: "جاري إنشاء الاستعلام باستخدام الذكاء الاصطناعي…"
+        generation_timeout: "انتهت مهلة إنشاء الاستعلام بالذكاء الاصطناعي. يمكنك كتابة SQL يدويًا."
+        generation_error: "حدث خطأ أثناء إنشاء الاستعلام."
+        save_query: "حفظ الاستعلام"
+        write_manually: "كتابة SQL يدويًا"
+        sql_label: "SQL"
         optional: "اختياري"
       import:
         label: "استيراد"
@@ -65,6 +82,7 @@ ar:
       show_graph: "رسم بياني"
       others_dirty: "يحتوي الاستعلام على تغييرات غير محفوظة سيتم فقدها إذا انتقلت بعيدًا."
       run_time: "اكتمل الاستعلام في %{value} مللي ثانية."
+      cached_result_notice: "عرض النتائج المخزنة مؤقتًا منذ %{relative_time}"
       result_count:
         zero: "%{count} من النتائج."
         one: "نتيجة واحدة (%{count})."

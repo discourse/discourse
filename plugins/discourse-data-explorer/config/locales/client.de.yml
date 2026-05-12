@@ -5,11 +5,18 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Discourse Daten-Explorer"
   js:
     discourse_ai:
       features:
         data_explorer:
           name: "Daten-Explorer"
+          description: "KI-gestützte Abfrageerstellung für den Daten-Explorer"
+          query_generation: "Generierung von Abfragen"
     errors:
       explorer:
         no_semicolons: "Entferne die Semikolons aus der Anfrage."
@@ -27,7 +34,17 @@ de:
       create_placeholder: "Name der Anfrage …"
       description_placeholder: "Hier bitte eine Beschreibung eingeben"
       ai:
+        description_title: "Mit KI generieren"
+        description_hint: "Beschreibe in einfachen Worten, was du möchtest. Wir erstellen dann die SQL-Anweisung, den Namen und die Beschreibung für dich."
+        description_placeholder: "z. B. Zeig mir die Registrierungen im Zeitverlauf"
         generate: "Erzeugen"
+        regenerate: "Neu generieren"
+        generating: "Abfrage wird mit KI generiert …"
+        generation_timeout: "Eine Zeitüberschreitung ist bei der Generierung der KI-Abfrage aufgetreten. Du kannst die SQL-Abfrage manuell eingeben."
+        generation_error: "Beim Erstellen der Abfrage ist etwas schiefgelaufen."
+        save_query: "Abfrage speichern"
+        write_manually: "SQL manuell eingeben"
+        sql_label: "SQL"
         optional: "optional"
       import:
         label: "Importieren"
@@ -65,6 +82,7 @@ de:
       show_graph: "Diagramm"
       others_dirty: "Eine Anfrage hat nicht gespeicherte Änderungen, die verloren gehen, wenn du woanders hin navigierst."
       run_time: "Anfrage in %{value} ms abgeschlossen."
+      cached_result_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
       result_count:
         one: "%{count} Ergebnis."
         other: "%{count} Ergebnisse."

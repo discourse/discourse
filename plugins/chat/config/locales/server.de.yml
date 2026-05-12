@@ -260,23 +260,43 @@ de:
         private_email:
           one: "[%{site_name}] Neue Nachricht"
           other: "[%{site_name}] Neue Nachrichten"
+        private_email_improved:
+          one: "Neue Nachricht"
+          other: "Neue Nachrichten"
         watched_thread:
           one: "[%{site_name}] Neue Thread-Nachricht in %{channel}"
           other: "[%{site_name}] Neue Thread-Nachrichten in %{channel}"
+        watched_thread_improved:
+          one: "Neue Thread-Nachricht in %{channel}"
+          other: "Neue Thread-Nachrichten in %{channel}"
         watched_threads:
           one: "[%{site_name}] Neue Thread-Nachrichten in %{channel} und %{count} anderen Kanal"
           other: "[%{site_name}] Neue Thread-Nachrichten in %{channel} und %{count} anderen Kanälen"
+        watched_threads_improved:
+          one: "Neue Thread-Nachrichten in %{channel} und %{count} weiteren Kanal"
+          other: "Neue Thread-Nachrichten in %{channel} und %{count} weiteren Kanälen"
         chat_dm_1:
           one: "[%{site_name}] Neue Nachricht von %{name}"
           other: "[%{site_name}] Neue Nachrichten von %{name}"
+        chat_dm_1_improved:
+          one: "Neue Nachricht von %{name}"
+          other: "Neue Nachrichten von %{name}"
         chat_dm_2: "[%{site_name}] Neue Nachrichten von %{name_1} und %{name_2}"
+        chat_dm_2_improved: "Neue Nachrichten von %{name_1} und %{name_2}"
         chat_dm_3_or_more: "[%{site_name}] Neue Nachrichten von %{name} und in %{count} anderen Direktnachrichtenkanälen"
+        chat_dm_3_or_more_improved: "Neue Nachrichten von %{name} und %{count} weiteren Direktnachrichtenkanälen"
         chat_channel_1:
           one: "[%{site_name}] Neue Nachricht in %{channel}"
           other: "[%{site_name}] Neue Nachrichten in %{channel}"
+        chat_channel_1_improved:
+          one: "Neue Nachricht in %{channel}"
+          other: "Neue Nachrichten in %{channel}"
         chat_channel_2: "[%{site_name}] Neue Nachrichten in %{channel_1} und %{channel_2}"
+        chat_channel_2_improved: "Neue Nachrichten in %{channel_1} und %{channel_2}"
         chat_channel_3_or_more: "[%{site_name}] Neue Nachrichten in %{channel} und %{count} anderen Kanälen"
+        chat_channel_3_or_more_improved: "Neue Nachrichten in %{channel} und %{count} weiteren Kanälen"
         chat_channel_and_dm: "[%{site_name}] Neue Nachrichten in %{channel} und von %{name}"
+        chat_channel_and_dm_improved: "Neue Nachrichten in %{channel} und von %{name}"
       unsubscribe: "Diese Chat-Zusammenfassung wird dir von %{site_link} gesendet, wenn du abwesend bist. Ändere deine %{email_preferences_link} oder %{unsubscribe_link}, um dich abzumelden."
       unsubscribe_no_link: "Diese Chat-Zusammenfassung wird dir von %{site_link} gesendet, wenn du abwesend bist. Ändere deine %{email_preferences_link}."
       view_messages:

@@ -79,9 +79,9 @@ zh_CN:
       added: "添加了 %{added}"
       removed: "移除了 %{removed}"
     errors:
-      provider_already_enabled: "提供程序“%{name}”已启用"
-      provider_not_found: "未找到提供商“%{name}”。"
-      setting_update_failed: "设置更新失败： %{errors}"
+      provider_already_enabled: "提供商 '%{name}' 已启用"
+      provider_not_found: "找不到提供商 '%{name}'"
+      setting_update_failed: "无法更新设置：%{errors}"
     provider:
       slack:
         status:

@@ -24,6 +24,8 @@ ar:
           few: "%{reaction}: %{count} مستخدمين"
           many: "%{reaction}: %{count} مستخدمًا"
           other: "%{reaction}: %{count} مستخدم"
+      reaction:
+        forbidden: "لا يُسمح لك بالتفاعل أو تغيير تفاعلك مع هذا المنشور."
       picker:
         react_with: "تفاعل مع هذا المنشور باستخدام: %{reaction}"
         cant_remove_reaction: "لم يعد بإمكانك إزالة تفاعلك"

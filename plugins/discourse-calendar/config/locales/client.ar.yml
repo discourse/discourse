@@ -541,6 +541,8 @@ ar:
         status:
           label: "الحالة"
         delete_confirmation_message: "هل تريد حذف هذا الحدث؟"
+        image:
+          label: "صورة الحدث"
       invite_user_or_group:
         title: "إرسال إشعار إلى المستخدمين أو المجموعات"
         invite: "إرسال"

@@ -540,6 +540,8 @@ ar:
   not_logged_in: "عليك تسجيل الدخول لإجراء ذلك."
   not_found: "تعذَّر العثور على عنوان URL أو المورد المطلوب."
   invalid_access: "غير مسموح لك بعرض المورد المطلوب."
+  topic_converter:
+    too_many_recipients: "لا يمكن التحويل: يحتوي هذا الموضوع على عدد مشاركين يتجاوز الحد الأقصى المسموح به (%{max})."
   authenticator_not_found: "طريقة المصادقة غير موجودة، أو تم إيقافها."
   authenticator_no_connect: "لا يسمح موفِّر المصادقة هذا بالاتصال بحساب موجود على المنتدى."
   invalid_api_credentials: "غير مسموح لك بعرض الموارد المطلوبة. اسم مستخدم API أو المفتاح غير صالح."
@@ -1003,6 +1005,7 @@ ar:
       invalid_email_in: "'%{email}' ليس عنوان بريد إلكتروني صالحًا."
       email_already_used_in_group: "'%{email}' مُستخدَم بالفعل بواسطة المجموعه '%{group_name}'."
       email_already_used_in_category: "'%{email}' مُستخدَم بالفعل بواسطة الفئة '%{category_name}'."
+      groups_required_for_mode: "يجب تحديد مجموعة واحدة على الأقل لإعداد %{setting}."
       description_incomplete: "يجب أن يتضمَّن منشور وصف الفئة فقرة واحدة على الأقل."
       description_too_long:
         zero: "الوصف طويل جدًا (الحد الأقصى هو %{count} حرف)."
@@ -1461,6 +1464,7 @@ ar:
       every_six_months: "كل ستة اشهر"
   calendar_subscriptions:
     application_name: "اشتراكات التقويم"
+    bookmarks_feed_name: "%{site_title} - تذكيرات الإشارات المرجعية"
   user_api_key:
     title: 'تفويض "%{application_name}"'
     authorize: "السماح"
@@ -1471,6 +1475,7 @@ ar:
     permissions_header: 'سيسمح هذا لـ "%{application_name}" بما يلي:'
     redirect_warning: "سيؤدي التفويض إلى إعادة توجيهك إلى"
     instructions: 'لقد أنشأنا للتو مفتاح API جديد للمستخدم لتستخدمه مع "%{application_name}"، يُرجى لصق المفتاح التالي في تطبيقك:'
+    copy_key: "نسخ المفتاح"
     copied: "تم النسخ!"
     otp_description: 'هل ترغب في السماح للتطبيق "%{application_name}" بالوصول إلى هذا الموقع؟'
     otp_confirmation:
@@ -2057,6 +2062,7 @@ ar:
     notification_email: "عنوان البريد الإلكتروني المُستخدَم في حقل \"من:\" عند إرسال جميع رسائل النظام الأساسية. يجب تعيين سجلات SPF وDKIM وreverse PTR للنطاق المحدَّد هنا بشكلٍٍ صحيح لتصل الرسالة الإلكترونية."
     email_custom_headers: "قائمة برؤوس البريد الإلكتروني المخصصة"
     email_subject: "صيغة الموضوع القابلة للتخصيص للبريد الإلكتروني القياسي. راجع <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
+    simple_email_subject: "عند التفعيل، ستصبح عناوين رسائل البريد الإلكتروني أكثر اختصارًا، بحيث تحتوي فقط على المعلومات الأساسية. ما يسهّل على المستخدمين فهم الغرض من الرسالة بسرعة بمجرد الاطلاع عليها."
     detailed_404: "يوفِّر مزيدًا من التفاصيل للمستخدمين بشأن سبب عدم تمكُّنهم من الوصول إلى موضوع معيَّن. ملاحظة: هذا الإعداد أقل أمانًا لأن المستخدمين سيعرفون إذا كان عنوان URL مرتبطًا بموضوع صالح."
     enforce_second_factor: "مطالبة المستخدمين بتفعيل المصادقة الثنائية (2FA) قبل أن يتمكنوا من الوصول إلى واجهة مستخدم Discourse. لا يؤثر هذا الإعداد على المصادقة عبر واجهة برمجة التطبيقات (API) أو مقدمي المصادقة من نوع \"DiscourseConnect\". إذا تم تفعيل الخيار enforce_second_factor_on_external_auth، فلن يتمكن المستخدمون من تسجيل الدخول باستخدام مقدمي المصادقة الخارجيين بعد إعداد المصادقة الثنائية."
     enforce_second_factor_on_external_auth: "مطالبة المستخدمين باستخدام المصادقة الثنائية (2FA) في جميع الأوقات. عند تفعيل هذا الإعداد، سيتم منع المستخدمين من تسجيل الدخول عبر طرق المصادقة الخارجية مثل تسجيل الدخول بحساب تواصل اجتماعي إذا تم تفعيل المصادقة الثنائية لديهم. عند تعطيله، سيحتاج المستخدمون فقط لتأكيد المصادقة الثنائية عند تسجيل الدخول باستخدام اسم المستخدم وكلمة المرور. راجع أيضًا إعداد enforce_second_factor."
@@ -2139,6 +2145,7 @@ ar:
     content_security_policy_frame_ancestors: "تقييد من يمكنه تضمين هذا الموقع في iframes عبر سياسة أمان المحتوى. يمكن التحكُّم في المضيفات المسموح بها في <a href='%{base_path}/admin/customize/embedding'>التضمين</a>"
     content_security_policy_script_src: "مصادر البرامج النصية المسموح بها الإضافية. يتم تضمين المضيف الحالي وCDN بشكلٍ افتراضي. راجع <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>تخفيف هجمات XSS باستخدام سياسة أمان المحتوى.</a> (CSP). يتم تجاهل مصادر المضيف الأخرى عند تفعيل strict-dynamic."
     invalidate_inactive_admin_email_after_days: "ستحتاج حسابات المسؤولين الذين لم يزوروا الموقع في هذا العدد من الأيام إلى إعادة التحقُّق من صحة عنوان بريدهم الإلكتروني قبل تسجيل الدخول. اضبط القيمة على 0 للإيقاف."
+    can_permanently_delete: "يُتيح هذا الخيار للمسؤولين حذف المنشورات والموضوعات ومراجعات المنشورات نهائيًا. تُزال البيانات المحذوفة بشكل دائم بالكامل من قاعدة البيانات، ولا يمكن استعادتها بعد ذلك."
     suppress_secured_categories_from_admin: "منع الموضوعات الخاصة والرسائل الشخصية في بعض أجزاء واجهة المستخدم للمسؤولين. سيظل المحتوى مرئيًا في بعض الأماكن. هذه ليست ميزة أمان: يمكن للمسؤولين دائمًا الوصول إلى كل المحتوى على الموقع."
     include_secure_categories_in_tag_counts: "عند التفعيل، سيتضمن عدد الموضوعات تحت وسمٍ ما الموضوعات الموجودة في الفئات المقيدة القراءة لجميع المستخدمين. وعند الإيقاف، لن يظهر للمستخدمين العاديين سوى عدد الموضوعات تحت وسمٍ ما حيث تكون جميع الموضوعات في الفئات العامة."
     display_personal_messages_tag_counts: "عند التفعيل، سيتم عرض عدد الرسائل الشخصية تحت وسمٍ معيَّن."
@@ -2304,6 +2311,8 @@ ar:
     s3_upload_bucket: "اسم حاوية Amazon S3 التي سيتم تحميل الملفات إليها. تحذير: يجب كتابة الاسم بأحرف صغيرة بلا نقاط أو شرطات سفلية."
     s3_access_key_id: "معرِّف مفتاح وصول خدمة Amazon S3 الذي سيتم استخدامه لتحميل الصور والمرفقات والنسخ الاحتياطية"
     s3_secret_access_key: "مفتاح الوصول السري لخدمة Amazon S3 الذي سيتم استخدامه لتحميل الصور والمرفقات والنسخ الاحتياطية"
+    s3_role_arn: "معرّف ARN الخاص بدور IAM المُستخدم لعمليات S3. عند تعيينه إلى جانب مفاتيح الوصول، سيستخدم Discourse خدمة STS AssumeRole للحصول على بيانات اعتماد مؤقتة."
+    s3_role_session_name: "يُستخدم اسم جلسة اختياري عند تولّي دور IAM لعمليات S3. يظهر في سجلات CloudTrail لأغراض التدقيق والمراجعة. يُستخدم اسم مضيف الخادم تلقائيًا إذا تُرك الحقل فارغًا."
     s3_region: "اسم منطقة خدمة Amazon S3 الذي سيتم استخدامه لتحميل الصور والنسخ الاحتياطية"
     s3_cdn_url: "عنوان URL لشبكة توصيل المحتوى (CDN) الذي سيتم استخدامه لجميع أصول s3 (على سبيل المثال: https://cdn.somewhere.com). تحذير: بعد تغيير هذا الإعداد، يجب عليك إعادة إنشاء جميع المنشورات القديمة."
     s3_use_cdn_url_for_all_uploads: "استخدم عنوان URL لشبكة CDN لجميع الملفات التي تم تحميلها إلى s3 بدلًا من استخدامه للصور فقط."
@@ -2390,6 +2399,7 @@ ar:
     max_here_mentioned: "الحد الأقصى لعدد الأشخاص المُشار إليهم بواسطة @here."
     here_mention_allowed_groups: "المجموعات المسموح لها بالإشارة @هنا. يمكن للمسؤولين والمشرفين دائمًا الإشارة إلى @هنا."
     create_thumbnails: "إنشاء صور مصغَّرة وصور مبسَّطة أكبر من أن تلائم المنشور"
+    animated_topic_thumbnails: "استخدام الصورة المتحركة الأصلية كصورة مصغّرة للموضوع بدلًا من إنشاء صورة ثابتة."
     email_time_window_mins: "الانتظار (n) دقيقة قبل إرسال أي إشعارات عبر البريد الإلكتروني لمنح المستخدمين فرصة لتعديل منشوراتهم والانتهاء منها"
     personal_email_time_window_seconds: "الانتظار (n) ثانية قبل إرسال أي إشعارات عبر البريد الإلكتروني بالرسائل الخاصة لمنح المستخدمين فرصة لتعديل رسائلهم والانتهاء منها"
     email_posts_context: "عدد الردود السابقة التي سيتم تضمينها كسياق في إشعارات البريد الإلكتروني"
@@ -2624,6 +2634,8 @@ ar:
     embed_support_markdown: "دعم تنسيق Markdown للمنشورات المضمَّنة"
     allowed_embed_selectors: "قائمة مفصولة بفاصلات لعناصر CSS المسموح بها في التضمينات"
     allowed_href_schemes: "الأنظمة المسموح بها في الروابط بالإضافة إلى http وhttps"
+    embed_full_app: "تفعيل وضع التطبيق الكامل للتعليقات المضمّنة. عند التفعيل، يُحمَّل تطبيق Discourse الكامل داخل إطار iframe، ما يتيح للمستخدمين التفاعل مع الموضوعات مباشرةً."
+    suppress_third_party_analytics_in_embed: "تخطي تنفيذ البرامج النصية الخاصة بأدوات التحليلات الخارجية (مثل Google Tag Manager وGoogle Analytics وAdobe Analytics) عند تحميل Discourse داخل إطار iframe في وضع التطبيق الكامل. يساعد ذلك على منع تكرار مشاهدات الصفحات وتشغيل الوسوم عندما تكون الصفحة المضيفة تحمل البرامج النصية نفسها بالفعل."
     embed_post_limit: "الحد الأقصى لعدد المنشورات التي سيتم تضمينها"
     embed_username_required: "اسم المستخدم مطلوب لإنشاء الموضوع"
     notify_about_reviewable_item_after: "إرسال رسالة شخصية إلى المشرفين إذا كانت هناك عناصر قابلة للمراجعة لم يتم التعامل معها بعد هذا العدد من الساعات. اضبط القيمة على 0 للإيقاف."
@@ -2765,6 +2777,7 @@ ar:
     create_revision_on_bulk_topic_moves: "إنشاء مراجعة للمنشورات الأولى عند نقل الموضوعات إلى فئة جديدة بشكلٍٍ مجمَّع"
     allow_changing_staged_user_tracking: "السماح بتغيير تفضيلات إشعارات الفئة والوسم لمستخدم مؤقت بواسطة مستخدم مسؤول."
     use_email_for_username_and_name_suggestions: "استخدام الجزء الأول من عناوين البريد الإلكتروني لتقديم اقتراحات لأسماء المستخدمين والأسماء. تحذير: قد يُسهّل ذلك على الجهات الضارة معرفة عنوان البريد الإلكتروني لأعضاء المجتمع (نظرًا لأن العديد من المستخدمين يعتمدون على مقدمي خدمة بريد إلكتروني شائعين مثل gmail.com)."
+    use_name_for_username_suggestions: "استخدم الاسم الكامل للمستخدم عند اقتراح أسماء المستخدمين أثناء عمليات تسجيل الدخول الموحد (SSO) وتسجيل OAuth."
     suggest_weekends_in_date_pickers: "تضمين عطلات نهاية الأسبوع (السبت والأحد) في اقتراحات منتقي التاريخ (يمكنك إيقاف هذا الإعداد إذا كنت تستخدم Discouse في أيام الأسبوع فقط؛ أي من الاثنين إلى الجمعة)."
     show_bottom_topic_map: "يظهر خريطة الموضوع أسفل الموضوع عندما يحتوي على 10 ردود أو أكثر."
     show_topic_map_in_topics_without_replies: "يظهر خريطة الموضوع حتى إذا كان الموضوع لا يحتوي على ردود."
@@ -2786,6 +2799,7 @@ ar:
     lazy_load_categories_groups: "التحميل البطيء لمعلومات الفئة لمستخدمي هذه المجموعات فقط. يؤدي هذا إلى تحسين الأداء على المواقع ذات الفئات المتعددة."
     enable_auto_grid_images: "يُغلف النظام تلقائيًا الصور ضمن وسوم [grid] عند تحميل 3 صور أو أكثر في أداة الإنشاء."
     enable_new_checkbox_style: "تفعيل نمط مربع الاختيار المُعاد تصميمه لمربعات اختيار FormKit."
+    enable_new_post_reactions_menu: "تفعيل القائمة المُعاد تصميمها للإعجابات والتفاعلات على المنشورات، مع تمرير غير محدود وتجربة محسّنة للهواتف المحمولة."
     impersonate_without_logout: "السماح للمسؤولين بانتحال شخصية مستخدم آخر دون الحاجة إلى تسجيل الخروج من حساب المسؤول."
     experimental_impersonation_time_limit_minutes: "المدة الزمنية قبل إنهاء جلسة انتحال الشخصية تلقائيًا."
     page_loading_indicator: "إعداد مؤشر التحميل الذي يظهر في أثناء التنقل في الصفحة داخل Discourse. يكون 'Spinner' مؤشرًا لصفحة كاملة، بينما يعرض 'Slider' شريطًا ضيقًا أعلى الشاشة."
@@ -2808,6 +2822,13 @@ ar:
     content_localization_crawler_param: "تقديم المحتوى المترجم لزواحف الويب عند تفعيل خيار \"تمكين توطين المحتوى\" وخيار \"تعيين اللغة من المعامل\". يتم تحديد قائمة اللغات المدعومة في إعداد \"اللغات المدعومة لتوطين المحتوى\"."
     content_localization_use_default_locale_when_unsupported: "تقديم المحتوى المترجم بلغة الموقع الافتراضية للمستخدمين الذين لا توجد لغتهم المفضلة ضمن \"اللغات المدعومة لتوطين المحتوى\"."
     content_localization_allow_author_localization: "السماح للمؤلفين بتحديث الترجمات المحلية لموضوعاتهم ومنشوراتهم الخاصة عبر قائمة المنشور."
+    nested_replies_enabled: "تفعيل عرض الردود المتداخلة للموضوعات."
+    nested_replies_default: "استخدام الردود المتداخلة كعرض افتراضي لجميع الموضوعات."
+    nested_replies_default_sort: "خوارزمية الفرز الافتراضية لعرض الردود المتداخلة."
+    nested_replies_max_depth: "الحد الأقصى للعمق البصري لتداخل الردود في سلسلة الدردشة. تظهر المنشورات التي تتجاوز هذا العمق رابطًا بعنوان \"متابعة هذه السلسلة\"."
+    nested_replies_toggle_mode_groups: "المجموعات التي يمكنها التبديل بين العرض المتداخل والعرض المسطح."
+    nested_replies_backfill_batch_size: "عدد الموضوعات التي تُحدَّث إحصائيات الردود المتداخلة لها في كل عملية تشغيل مجدولة."
+    nested_replies_cap_nesting_depth: "تقييد تداخل الردود عند الحد الأقصى للعمق البصري؛ عند تفعيل هذا الخيار، تُعرض الردود في أعمق مستوى كردود شقيقة في نفس المستوى بدلًا من إدراجها كفروع تابعة."
     fake_upcoming_change: "هذا التغيير الوهمي مزيف ويُستخدم لأغراض الاختبار فقط. لا داعي لترجمة هذه العبارة."
     floating_dismiss_topics_on_mobile: "يعرض زرًا عائمًا باسم \"رفض...\" في نسخة الهاتف المحمول لقائمة الموضوعات، ما يسهل الوصول إليه ويحرر مساحة في الجزء العلوي من قائمة الموضوعات."
     rename_faq_to_guidelines: "يعيد هذا التغيير تسمية صفحة الأسئلة الشائعة إلى \"الإرشادات\". ستظل صفحة الأسئلة الشائعة متاحة على الرابط /faq. ويستمر إعداد \"رابط الأسئلة الشائعة\" في العمل كما هو."
@@ -3221,7 +3242,11 @@ ar:
       invalid_iat: "عذرًا، لا يمكننا التحقق من رمز التفويض بسبب اختلاف توقيت الخادم. يُرجى إعادة المحاولة."
       unauthorized: "عذرًا، لم يقم مزود خدمة تسجيل الدخول بالمصادقة على طلبك؛ يُرجى المحاولة مرةً أخرى أو التواصل مع المسؤول."
     omniauth_error_unknown: "حدث خطأ ما في أثناء عملية تسجيل الدخول، يُرجى إعادة المحاولة."
+    omniauth_confirm_title: "تسجيل الدخول باستخدام %{provider}"
     omniauth_confirm_button: "متابعة"
+    omniauth_confirm_description: "سيتم تحويلك إلى %{provider} لتسجيل الدخول"
+    omniauth_confirm_provider_description: "مصادقة آمنة"
+    omniauth_confirm_footer_html: "سيتم تسجيل دخولك إلى %{site}"
     authenticator_error_no_valid_email: "غير مسموح بعناوين البريد الإلكتروني المرتبطة بحساب %{account}. قد تحتاج إلى إعداد حسابك بعنوان بريد إلكتروني مختلف."
     new_registrations_disabled: "عمليات تسجيل الحسابات الجديدة غير مسموح بها في الوقت الحالي."
     new_registrations_disabled_discourse_connect: "لا يُسمَح بتسجيل حسابات جديدة إلا من خلال Discourse Connect."
@@ -3420,6 +3445,7 @@ ar:
   download_backup_mailer:
     title: "رسالة تنزيل النسخة الاحتياطية"
     subject_template: "[%{email_prefix}] تنزيل نسخة احتياطية للموقع"
+    subject_template_improved: "%{email_prefix}: تنزيل نسخة احتياطية للموقع"
     text_body_template: |
       إليك [رابط تنزيل النسخة الاحتياطية للموقع](%{backup_file_path}) الذي طلبته.
 
@@ -3431,6 +3457,7 @@ ar:
   admin_confirmation_mailer:
     title: "تأكيد المسؤول"
     subject_template: "[%{email_prefix}] تأكيد حساب مسؤول جديد"
+    subject_template_improved: "%{email_prefix}: تأكيد حساب المسؤول الجديد"
     text_body_template: |
       يُرجى تأكيد رغبتك في إضافة **%{target_username} (%{target_email}) ** كمسؤول عن منتداك.
 
@@ -3438,6 +3465,7 @@ ar:
   test_mailer:
     title: "رسالة الاختبار"
     subject_template: "[%{email_prefix}] اختبار تسليم الرسالة الإلكترونية"
+    subject_template_improved: "%{email_prefix}: اختبار قابلية تسليم البريد الإلكتروني"
     text_body_template: |
       هذه رسالة بريد إلكتروني تجريبية من
 
@@ -3456,6 +3484,7 @@ ar:
   new_version_mailer:
     title: "رسالة الإصدار الجديد"
     subject_template: "[%{email_prefix}] إصدار جديد من Discourse، يتوفَّر تحديث"
+    subject_template_improved: "%{email_prefix}: إصدار جديد من Discourse، يتوفر تحديث"
     text_body_template: |
       يا له من خبر رائع! إصدار جديد من [Discourse](https://www.discourse.org) متاح الآن!
 
@@ -3542,12 +3571,54 @@ ar:
         ومع ذلك، إذا تم إخفاء المنشور بواسطة المجتمع للمرة الثانية، فسيظل مخفيًا حتى يتم التعامل معه بواسطة فريق العمل.
 
         للحصول على إرشادات إضافية، يُرجى الرجوع إلى [إرشادات المجتمع](%{base_url}/guidelines).
+    reviewable_queued_post_revise_and_reject_edit_post: "يمكنك تعديل منشورك الأصلي أدناه وإعادة إرساله لاعتماد التعديلات المقترحة، أو الرد على هذه الرسالة إذا كانت لديك أي استفسارات."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "يمكنك تعديل منشورك الأصلي أدناه وإعادة إرساله لاعتماد التعديلات المقترحة."
+    reviewable_queued_post_revise_and_reject_edit_topic: "يمكنك تعديل المنشور الأصلي لموضوعك أدناه وإعادة إرساله لاعتماد التعديلات المقترحة، أو الرد على هذه الرسالة إذا كانت لديك أي استفسارات."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "يمكنك تعديل المنشور الأصلي لموضوعك أدناه وإعادة إرساله لاعتماد التعديلات المقترحة."
     reviewable_queued_post_revise_and_reject:
       title: "الملاحظات على منشورك"
       subject_template: "الملاحظات على منشورك في %{topic_title}"
+      text_body_template: |
+        مرحبًا %{username}،
+
+        لقد راجعنا منشورك في [%{topic_title}](%{topic_url}) ولدينا بعض الملاحظات لك.
+
+        السبب: %{reason}
+
+        الملاحظات: %{feedback}
+
+        %{edit_instructions}
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        شكرًا،
+        مشرفو %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "الملاحظات على موضوعك"
       subject_template: 'الملاحظات على موضوع جديد بعنوان "%{topic_title}"'
+      text_body_template: |
+        مرحبًا %{username}،
+
+        لقد راجعنا موضوعك الجديد بعنوان "%{topic_title}" ولدينا بعض الملاحظات لك.
+
+        السبب: %{reason}
+
+        الملاحظات: %{feedback}
+
+        %{edit_instructions}
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        شكرًا،
+        مشرفو %{site_name}
     post_hidden_again:
       title: "تم إخفاء المنشور مرة أخرى"
       preview: "تم إخفاء المنشور مرة أخرى بواسطة أعضاء المجتمع."
@@ -3797,6 +3868,7 @@ ar:
     email_reject_insufficient_trust_level:
       title: "تم رفض الرسالة الإلكترونية لأن مستوى الثقة غير كافٍ"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - مستوى الثقة غير كافٍ"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - مستوى الثقة غير كافٍ"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3804,6 +3876,7 @@ ar:
     email_reject_user_not_found:
       title: "تم رفض الرسالة الإلكترونية لأن المستخدم غير موجود"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - لم يتم العثور على المستخدم"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - المستخدم غير موجود"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3811,12 +3884,15 @@ ar:
     email_reject_screened_email:
       title: "تم رفض الرسالة الإلكترونية لأن عنوان البريد الإلكتروني خاضع للمراقبة"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - عنوان البريد الإلكتروني محظور"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - البريد الإلكتروني محظور"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
         تم إرسال ردك من عنوان بريد إلكتروني محظور. جرِّب الإرسال من عنوان بريد إلكتروني آخر أو [تواصل مع أحد أعضاء فريق العمل](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "تم رفض الرسالة الإلكترونية لأن عنوان البريد الإلكتروني غير مسموح به"
+      subject_template: "[%{email_prefix}]: مشكلة في البريد الإلكتروني - البريد الإلكتروني محظور"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - البريد الإلكتروني محظور"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3824,6 +3900,7 @@ ar:
     email_reject_inactive_user:
       title: "تم رفض الرسالة الإلكترونية لأن المستخدم غير نشط"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - المستخدم غير نشط"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - مستخدم غير نشط"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3831,6 +3908,7 @@ ar:
     email_reject_silenced_user:
       title: "تم رفض الرسالة الإلكترونية لأن المستخدم مكتوم"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - المستخدم مكتوم"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - مستخدم مكتوم"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3838,6 +3916,7 @@ ar:
     email_reject_reply_user_not_matching:
       title: "تم رفض الرسالة الإلكترونية لأن المستخدم غير متطابق"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - عنوان الرد غير متوقَّع"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - عنوان رد غير متوقع"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3845,6 +3924,7 @@ ar:
     email_reject_empty:
       title: "تم رفض الرسالة الإلكترونية لأنها فارغة"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - لا يوجد محتوى"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - لا يوجد محتوى"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3854,6 +3934,7 @@ ar:
     email_reject_parsing:
       title: "تم رفض الرسالة الإلكترونية لأنه قد خطأ في التحليل"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - لم يتم التعرُّف على المحتوى"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - محتوى غير معروف"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3861,6 +3942,7 @@ ar:
     email_reject_invalid_access:
       title: "تم رفض الرسالة الإلكترونية لأن الوصول غير صالح"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - الوصول غير صالح"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - صلاحية وصول غير صحيحة"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3868,6 +3950,7 @@ ar:
     email_reject_strangers_not_allowed:
       title: "تم رفض الرسالة الإلكترونية لأن الغرباء غير مسموح بهم"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - الوصول غير صالح"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - صلاحية وصول غير صحيحة"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3875,6 +3958,7 @@ ar:
     email_reject_invalid_post:
       title: "تم رفض الرسالة الإلكترونية لأن المنشور غير صالح"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - خطأ في النشر"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - خطأ في النشر"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3882,11 +3966,13 @@ ar:
     email_reject_invalid_post_specified:
       title: "تم رفض الرسالة الإلكترونية لأنه قد تم تحديد منشور غير صالح"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - خطأ في النشر"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - خطأ في النشر"
       text_body_template: "عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.\n \nالسبب:\n\n%{post_error}\n\nإذا كان بإمكانك تصحيح المشكلة، يُرجى إعادة المحاولة.\n"
       date_invalid: "لم يتم العثور على تاريخ إنشاء المنشور. هل تفتقد الرسالة الإلكترونية الرأس \"التاريخ:\"؟"
     email_reject_post_too_short:
       title: "تم رفض الرسالة الإلكترونية لأن المنشور قصير جدًا"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - المنشور قصير جدًا"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني -- المنشور قصير جدًا"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3894,6 +3980,7 @@ ar:
     email_reject_invalid_post_action:
       title: "تم رفض الرسالة الإلكترونية لأن إجراء المنشور غير صالح"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - إجراء المنشور غير صالح"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - إجراء نشر غير صالح"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3901,6 +3988,7 @@ ar:
     email_reject_reply_key:
       title: "تم رفض الرسالة الإلكترونية لأن مفتاح الرد غير معروف"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - مفتاح الرد غير معروف"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - مفتاح رد غير معروف"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3908,6 +3996,7 @@ ar:
     email_reject_bad_destination_address:
       title: "تم رفض الرسالة الإلكترونية لأن عنوان الوجهة غير معروف"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - عنوان \"إلى:\" غير معروف"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - عنوان “إلى” غير معروف"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3923,6 +4012,7 @@ ar:
     email_reject_old_destination:
       title: "تم رفض الرسالة الإلكترونية لأن عنوان الوجهة قديم"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - أنت تحاول الرد على إشعار قديم"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - تحاول الرد على إشعار قديم"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3930,6 +4020,7 @@ ar:
     email_reject_topic_not_found:
       title: "تم رفض الرسالة الإلكترونية لأن الموضوع غير موجود"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - الموضوع غير موجود"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - الموضوع غير موجود"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3937,6 +4028,7 @@ ar:
     email_reject_topic_closed:
       title: "تم رفض الرسالة الإلكترونية لأنه قد تم إغلاق الموضوع"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - تم إغلاق الموضوع"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - الموضوع مغلق"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3944,6 +4036,7 @@ ar:
     email_reject_auto_generated:
       title: "تم رفض الرسالة الإلكترونية لأن الرد قد تم إنشاؤه تلقائيًا"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - تم إنشاء الرد تلقائيًا"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - رد تم إنشاؤه تلقائيًا"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3951,6 +4044,7 @@ ar:
     email_reject_unrecognized_error:
       title: "تم رفض الرسالة الإلكترونية لأنه قد حدث خطأ غير معروف"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - خطأ غير معروف"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - خطأ غير معروف"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3958,6 +4052,7 @@ ar:
     email_reject_attachment:
       title: "تم رفض الرسالة الإلكترونية لأنه قد تم رفض المرفقات"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - تم رفض المرفقات"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - تم رفض المرفق"
       text_body_template: |
         تم رفض بعض المرفقات في رسالتك إلى %{destination} (بعنوان %{former_title}).
 
@@ -3968,12 +4063,15 @@ ar:
     email_reject_reply_not_allowed:
       title: "تم رفض الرسالة الإلكترونية لأنه غير مسموح بالرد"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - غير مسموح بالرد"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - غير مسموح بالرد"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
         ليس لديك الأذونات اللازمة للرد على هذا الموضوع، إذا كنت تعتقد أن هذا خطأ، [فتواصل مع أحد أعضاء فريق العمل](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "تم رفض الرسالة الإلكترونية لأنه قد تم الرد على ملخص"
+      subject_template: "[%{email_prefix}] مشكلة في البريد الإلكتروني - الرد على الملخص"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - الرد على الملخص"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3981,6 +4079,7 @@ ar:
     email_reject_too_many_recipients:
       title: "تم رفض الرسالة الإلكترونية بسبب كثيرة عدد المستلمين"
       subject_template: "[%{email_prefix}] مشكلة في الرسالة الإلكترونية -- عدد المستلمين كبير جدًا"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - عدد كبير جدًا من المستلمين"
       text_body_template: |
         عذرًا، لكن رسالتك الإلكترونية إلى %{destination} (بعنوان %{former_title}) لم تنجح.
 
@@ -3990,6 +4089,7 @@ ar:
     email_error_notification:
       title: "إشعار بخطأ في الرسالة الإلكترونية"
       subject_template: "مشكلة في الرسالة الإلكترونية [%{email_prefix}] - خطأ في مصادقة POP"
+      subject_template_improved: "%{email_prefix}: مشكلة في البريد الإلكتروني - خطأ في مصادقة POP"
       text_body_template: |
         للأسف، حدث خطأ في المصادقة في أثناء استقصاء الرسائل الإلكترونية من خادم POP.
 
@@ -4121,6 +4221,7 @@ ar:
       text_body_template: "تم إيقاف الإعداد \"download_remote_images_to_local\" بسبب الوصول إلى حد مساحة القرص في \"download_remote_images_threshold\"."
     new_user_of_the_month:
       title: "أنت المستخدم الجديد لهذا الشهر!"
+      subject_template: "أنت مستخدم جديد لهذا الشهر!"
       text_body_template: |
         تهانينا، لقد ربحت **جائزة المستخدم الجديد لهذا الشهر عن شهر %{month_year}**. :trophy:
 
@@ -4236,6 +4337,7 @@ ar:
     user_invited_to_private_message_pm_group:
       title: "دعا مستخدم المجموعة إلى رسالة خاصة"
       subject_template: "دعا المستخدم [%{email_prefix}] %{username} المجموعة @%{group_name} إلى رسالة \"%{topic_title}\""
+      subject_template_improved: "%{email_prefix}: دعا %{username} مجموعة @%{group_name} للانضمام إلى رسالة بعنوان \"%{topic_title}\""
       text_body_template: |
         %{header_instructions}
 
@@ -4245,6 +4347,7 @@ ar:
     user_invited_to_private_message_pm:
       title: "دعاك مستخدم إلى رسالة خاصة"
       subject_template: "دعاك المستخدم [%{email_prefix}] %{username} إلى رسالة \"%{topic_title}\""
+      subject_template_improved: "%{email_prefix}: دعاك %{username} إلى رسالة بعنوان \"%{topic_title}\""
       text_body_template: |
         %{header_instructions}
 
@@ -4254,6 +4357,7 @@ ar:
     user_invited_to_private_message_pm_staged:
       title: "دعاك مستخدم مؤقت إلى رسالة خاصة"
       subject_template: "دعاك المستخدم [%{email_prefix}] %{username} إلى رسالة \"%{topic_title}\""
+      subject_template_improved: "%{email_prefix}: دعاك %{username} إلى رسالة بعنوان \"%{topic_title}\""
       text_body_template: |
         %{header_instructions}
 
@@ -4263,6 +4367,7 @@ ar:
     user_invited_to_topic:
       title: "دعاك مستخدم إلى موضوع"
       subject_template: "دعاك المستخدم [%{email_prefix}] %{username} إلى \"%{topic_title}\""
+      subject_template_improved: "%{email_prefix}: دعاك %{username} إلى \"%{topic_title}\""
       text_body_template: |
         %{header_instructions}
 
@@ -4273,6 +4378,7 @@ ar:
       title: "ردَّ مستخدم عليك"
       preview: "لقد رد أحد المستخدمين على منشورك."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4284,6 +4390,7 @@ ar:
     user_replied_pm:
       title: "ردَّ مستخدم عليك في رسالة خاصة"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4296,6 +4403,7 @@ ar:
       title: "اقتبس مستخدم منك"
       preview: "لقد اقتبس أحد المستخدمين كلامك في منشور."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4308,6 +4416,7 @@ ar:
       title: "وضع مستخدم رابطًا إلى موضوعك"
       preview: "تم ربط هذا المنشور بموضوع آخر."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4320,6 +4429,7 @@ ar:
       title: "أشار مستخدم إليك"
       preview: "لقد ذكرك أحد المستخدمين في منشور."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4331,6 +4441,7 @@ ar:
     user_mentioned_pm:
       title: "أشار مستخدم إليك في رسالة خاصة"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4342,6 +4453,7 @@ ar:
     user_group_mentioned:
       title: "أشار مستخدم إلى مجموعتك"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4353,6 +4465,7 @@ ar:
     user_group_mentioned_pm:
       title: "تمت الإشارة إلى مجموعة المستخدم في رسالة خاصة"
       subject_template: "[%{email_prefix}] [رسالة شخصية] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4364,6 +4477,7 @@ ar:
     user_group_mentioned_pm_group:
       title: "تمت الإشارة إلى مجموعة المستخدم في رسالة خاصة"
       subject_template: "[%{email_prefix}] [رسالة شخصية] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4376,6 +4490,7 @@ ar:
       title: "نشر مستخدم في موضوعك"
       preview: "لقد رد أحد المستخدمين على موضوع تتابعه."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4387,6 +4502,7 @@ ar:
     user_watching_category_or_tag:
       title: "فئة أو وسم مراقبة المستخدم"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4398,6 +4514,7 @@ ar:
     user_watching_first_post:
       title: "راقب مستخدم أول منشور لك"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4410,6 +4527,7 @@ ar:
       title: "نشر مستخدم موضوعك في رسالة خاصة"
       preview: "لقد أرسل لك أحد المستخدمين رسالة خاصة."
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4427,6 +4545,7 @@ ar:
     account_suspended:
       title: "تم تعليق الحساب"
       subject_template: "[%{email_prefix}] تم تعليق حسابك"
+      subject_template_improved: "تم تعليق حسابك"
       text_body_template: |
         لقد تم تعليقك من المنتدى حتى %{suspended_till}.
 
@@ -4434,6 +4553,7 @@ ar:
     account_suspended_forever:
       title: "تم تعليق الحساب"
       subject_template: "[%{email_prefix}] تم تعليق حسابك"
+      subject_template_improved: "تم تعليق حسابك"
       text_body_template: |
         تم تعليق حسابك من المنتدى.
 
@@ -4441,6 +4561,7 @@ ar:
     account_silenced:
       title: "تم كتم الحساب"
       subject_template: "[%{email_prefix}] تم كتم حسابك"
+      subject_template_improved: "تم كتم حسابك"
       text_body_template: |
         تم كتمك من المنتدى حتى %{silenced_till}.
 
@@ -4448,6 +4569,7 @@ ar:
     account_silenced_forever:
       title: "تم كتم الحساب"
       subject_template: "[%{email_prefix}] تم كتم حسابك"
+      subject_template_improved: "تم كتم حسابك"
       text_body_template: |
         تم كتمك من المنتدى.
 
@@ -4455,6 +4577,7 @@ ar:
     account_deleted:
       title: "حُذِف الحساب"
       subject_template: "[%{email_prefix}] حُذِف الحساب"
+      subject_template_improved: "تم حذف حسابك"
       text_body_template: |
         مرحبًا،
 
@@ -4508,6 +4631,7 @@ ar:
       title: "نسيت كلمة المرور"
       preview: "إعادة تعيين كلمة المرور."
       subject_template: "[%{email_prefix}] إعادة تعيين كلمة المرور"
+      subject_template_improved: "إعادة تعيين كلمة المرور"
       text_body_template: |
         طلب شخص ما إعادة تعيين كلمة مرورك على [%{site_name}](%{base_url}).
 
@@ -4530,6 +4654,8 @@ ar:
     set_password:
       title: "تعيين كلمة المرور"
       preview: "تعيين كلمة المرور الخاصة بالحساب"
+      subject_template: "[%{email_prefix}] تعيين كلمة المرور"
+      subject_template_improved: "تعيين كلمة المرور"
       text_body_template: |
         طلب شخص ما إضافة كلمة مرور إلى حسابك على [%{site_name}](%{base_url}). بدلًا من ذلك، يمكنك تسجيل الدخول باستخدام أي خدمة مدعومة عبر الإنترنت (Google ،Facebook، إلى آخره) مرتبطة بعنوان البريد الإلكتروني الذي تم التحقُّق منه.
 
@@ -4552,6 +4678,8 @@ ar:
     account_created:
       title: "تم إنشاء الحساب"
       preview: "تم إنشاء حساب جديد لك."
+      subject_template: "[%{email_prefix}] حسابك الجديد"
+      subject_template_improved: "حسابك الجديد"
       text_body_template: |
         تم إنشاء حساب جديد لك على %{site_name}
 
@@ -4560,6 +4688,7 @@ ar:
     confirm_new_email:
       title: "تأكيد عنوان البريد الإلكتروني الجديد"
       subject_template: "[%{email_prefix}] تأكيد عنوان بريدك الإلكتروني الجديد"
+      subject_template_improved: "تأكيد عنوان بريدك الإلكتروني الجديد"
       text_body_template: |
         أكِّد عنوان بريدك الإلكتروني الجديد للموقع %{site_name} من خلال النقر على الرابط التالي:
 
@@ -4569,6 +4698,7 @@ ar:
     confirm_new_email_via_admin:
       title: "تأكيد عنوان البريد الإلكتروني الجديد"
       subject_template: "[%{email_prefix}] تأكيد عنوان بريدك الإلكتروني الجديد"
+      subject_template_improved: "تأكيد عنوان بريدك الإلكتروني الجديد"
       text_body_template: |
         أكِّد عنوان بريدك الإلكتروني الجديد للموقع %{site_name} من خلال النقر على الرابط التالي:
 
@@ -4578,10 +4708,12 @@ ar:
     confirm_old_email:
       title: "تأكيد عنوان البريد الإلكتروني القديم"
       subject_template: "[%{email_prefix}] تأكيد عنوان بريدك الإلكتروني الحالي"
+      subject_template_improved: "تأكيد عنوان بريدك الإلكتروني الحالي"
       text_body_template: "قبل أن نتمكن من تغيير عنوان بريدك الإلكتروني، نحتاج منك إلى تأكيد أنك تتحكَّم في \nحساب البريد الإلكتروني الحالي. بعد إكمال هذه الخطوة، سنطلب منك تأكيد \nعنوان البريد الإلكتروني الجديد.\n\nأكِّد عنوان بريدك الإلكتروني الحالي للموقع %{site_name} من خلال النقر على الرابط التالي:\n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
     confirm_old_email_add:
       title: "تأكيد عنوان البريد الإلكتروني القديم (إضافة)"
       subject_template: "[%{email_prefix}] تأكيد عنوان بريدك الإلكتروني الحالي"
+      subject_template_improved: "تأكيد عنوان بريدك الإلكتروني الحالي"
       text_body_template: |
         قبل أن نتمكن من إضافة عنوان بريد إلكتروني جديد، نحتاج منك إلى تأكيد أنك تتحكم في
         حساب البريد الإلكتروني الحالي. بعد إكمال هذه الخطوة، سنطلب منك تأكيد
@@ -4594,6 +4726,7 @@ ar:
       title: "إرسال إشعار بشأن عنوان البريد الإلكتروني القديم"
       preview: "تم تحديث عنوان البريد الإلكتروني."
       subject_template: "[%{email_prefix}] تم تغيير عنوان بريدك الإلكتروني"
+      subject_template_improved: "تم تغيير عنوان بريدك الإلكتروني"
       text_body_template: |
         هذه رسالة تلقائية لإعلامك بأنه قد تم تغيير عنوان بريدك الإلكتروني للموقع
         %{site_name}. إذا تم ذلك عن طريق الخطأ، يُرجى التواصل مع
@@ -4605,6 +4738,7 @@ ar:
     notify_old_email_add:
       title: "إرسال إشعار بشأن عنوان البريد الإلكتروني القديم (إضافة)"
       subject_template: "[%{email_prefix}] تمت إضافة عنوان بريد إلكتروني جديد"
+      subject_template_improved: "تمت إضافة عنوان بريد إلكتروني جديد"
       text_body_template: |
         هذه رسالة تلقائية لإعلامك بأنه قد تمت إضافة عنوان بريدك الإلكتروني للموقع
         %{site_name}. إذا تم ذلك عن طريق الخطأ، يُرجى التواصل مع
@@ -4643,6 +4777,7 @@ ar:
       title: "الاشتراك"
       preview: "يرجى تأكيد حسابك."
       subject_template: "[%{email_prefix}] تأكيد حسابك الجديد"
+      subject_template_improved: "تأكيد حسابك الجديد"
       text_body_template: |
         مرحبًا بك في %{site_name}!
 
@@ -4653,6 +4788,7 @@ ar:
     activation_reminder:
       title: "تذكير بالتنشيط"
       subject_template: "[%{email_prefix}] تذكير بتأكيد حسابك"
+      subject_template_improved: "تذكير بتأكيد حسابك"
       text_body_template: |
         مرحبًا بك في %{site_name}!
 
@@ -4665,10 +4801,13 @@ ar:
     suspicious_login:
       title: "تنبيه بعملية تسجيل دخول جديدة"
       preview: "تحقق من جهازك."
+      subject_template: "[%{site_name}] تسجيل دخول جديد من %{location}"
+      subject_template_improved: "%{site_name}: تسجيل دخول جديد من %{location}"
       text_body_template: "مرحبًا،\n\nلاحظنا عملية تسجيل دخول من جهاز أو موقع لا تستخدمه عادةً. هل كان هذا أنت؟\n\n - الموقع: %{location} (%{client_ip}) \n - المتصفح: %{browser}\n - الجهاز: %{device} - %{os}\n\nإذا كان هذا أنت، رائع! لا يوجد شيء آخر عليك القيام به.\n\nإذا لم يكن هذا أنت، يُرجى [مراجعة جلساتك الحالية](%{base_url}/my/preferences/security) والتفكير في تغيير كلمة مرورك.\n"
     post_approved:
       title: "تمت الموافقة على منشورك"
       subject_template: "[%{site_name}] تمت الموافقة على منشورك"
+      subject_template_improved: "%{site_name}: تمت الموافقة على منشورك"
       text_body_template: |
         مرحبًا،
 
@@ -5457,7 +5596,11 @@ ar:
         few: '"%{tag_name}" مقصور على الفئات التالية: %{category_names}'
         many: '"%{tag_name}" مقصور على الفئات التالية: %{category_names}'
         other: '"%{tag_name}" مقصور على الفئات التالية: %{category_names}'
+      restricted_to_truncated: 'يقتصر استخدام الوسم "%{tag_name}" على الفئات التالية: %{category_names}، بالإضافة إلى %{more_count} من الفئات الأخرى'
+      synonym: 'هذا الوسم مرادف لـ "%{tag_name}"؛ يُرجى استخدام "%{tag_name}" بدلاً منه.'
       has_synonyms: 'لا يمكن استخدام "%{tag_name}" لأنه يحتوي على مرادفات.'
+      one_tag_per_topic_group: 'يسمح باستخدام وسم واحد فقط من مجموعة "%{tag_group_name}" لكل موضوع'
+      missing_parent_tag: 'يتطلب استخدام وسم "%{parent_tag_name}" لاستخدام الوسوم من مجموعة "%{tag_group_name}"'
       restricted_tags_cannot_be_used_in_category:
         zero: 'لا يمكن استخدام الوسم "%{tags}" في فئة "%{category}". يُرجى إزالته.'
         one: 'لا يمكن استخدام الوسم "%{tags}" في فئة "%{category}". يُرجى إزالته.'
