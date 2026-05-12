@@ -425,6 +425,46 @@ RSpec.describe TagsController do
       expect(topic_list["tags"].map { |t| t["id"] }).to contain_exactly(tag.id)
     end
 
+    it "shows tags with periods by canonical id URL and encoded legacy URL" do
+      node = Fabricate(:tag, name: "node.js")
+      node_topic = Fabricate(:topic, tags: [node])
+
+      get "/tag/#{node.slug}/#{node.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        node_topic.id,
+      )
+
+      get "/tag/node%2Ejs.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        node_topic.id,
+      )
+    end
+
+    it "shows tag intersections with encoded period tag names" do
+      node = Fabricate(:tag, name: "node.js")
+      other = Fabricate(:tag, name: "other")
+      matching_topic = Fabricate(:topic, tags: [node, other])
+      Fabricate(:topic, tags: [node])
+
+      get "/tags/intersection/node%2Ejs/other.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        matching_topic.id,
+      )
+    end
+
+    it "returns tag info for an encoded period tag name" do
+      Fabricate(:tag, name: "node.js")
+
+      get "/tag/node%2Ejs/info.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tag_info"]["name"]).to eq("node.js")
+    end
+
     it "should handle invalid tags" do
       get "/tag/%2ftest%2f"
       expect(response.status).to eq(404)
