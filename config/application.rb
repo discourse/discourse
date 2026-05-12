@@ -167,6 +167,9 @@ module Discourse
     require "middleware/csp_script_nonce_injector"
     config.middleware.insert_after(ActionDispatch::Flash, Middleware::CspScriptNonceInjector)
 
+    require "middleware/track_view_session_id_injector"
+    config.middleware.insert_after(ActionDispatch::Flash, Middleware::TrackViewSessionIdInjector)
+
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
