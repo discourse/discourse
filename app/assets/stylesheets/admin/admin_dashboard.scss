@@ -211,8 +211,8 @@ h1 {
 
     .db-link-arrow {
       top: 0;
-      right: calc(var(--space-6) * -1);
-      margin-left: var(--space-4);
+      inset-inline-end: calc(var(--space-6) * -1);
+      margin-inline-start: var(--space-4);
     }
 
     &:is(a):hover {
@@ -259,6 +259,25 @@ h1 {
   }
 }
 
+.db-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  &__comparison {
+    align-self: flex-end;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+  }
+
+  &__error {
+    flex: 1;
+    padding: var(--space-4);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+  }
+}
+
 .db-kpi {
   position: relative;
   display: flex;
@@ -267,7 +286,7 @@ h1 {
 
   .db-link-arrow {
     top: var(--space-4);
-    right: var(--space-4);
+    inset-inline-end: var(--space-4);
   }
 
   &:hover {

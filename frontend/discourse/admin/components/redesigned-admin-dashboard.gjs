@@ -3,9 +3,9 @@ import DashboardEngagement from "discourse/admin/components/dashboard/engagement
 import DashboardHighlights from "discourse/admin/components/dashboard/highlights";
 import DashboardReports from "discourse/admin/components/dashboard/reports";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const sections = [
@@ -56,7 +56,7 @@ const RedesignedAdminDashboard = <template>
             <ul class="db-customise__list">
               {{#each sections as |s|}}
                 <li class="db-customise__row">
-                  <span class="db-customise__drag-handle">{{icon
+                  <span class="db-customise__drag-handle">{{dIcon
                       "grip-vertical"
                     }}</span>
                   <span class="db-customise__section-name">{{i18n
@@ -73,7 +73,14 @@ const RedesignedAdminDashboard = <template>
   </div>
 
   <div class="db-main">
-    <DashboardHighlights @startDate={{@startDate}} @endDate={{@endDate}} />
+    <DashboardHighlights
+      @highlights={{@sections.highlights}}
+      @period={{@period}}
+      @loading={{@loadingSections}}
+      @fetchError={{@sectionsFetchError}}
+      @startDate={{@startDate}}
+      @endDate={{@endDate}}
+    />
     <DashboardReports @startDate={{@startDate}} @endDate={{@endDate}} />
     <DashboardTraffic @startDate={{@startDate}} @endDate={{@endDate}} />
     <DashboardEngagement @startDate={{@startDate}} @endDate={{@endDate}} />

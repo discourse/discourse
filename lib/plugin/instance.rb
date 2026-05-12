@@ -1225,6 +1225,23 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_stat(stat, self)
   end
 
+  # Registers a KPI tile in the admin dashboard "Highlights" section
+  # (gated by SiteSetting.dashboard_improvements). The KPI is rendered as a
+  # tile linking to /admin/reports/:report.
+  #
+  # @param type [Symbol] unique identifier for the KPI. Used as the i18n key
+  #   (admin.dashboard.highlights.kpi.<type>.label / .tooltip) and to
+  #   namespace the percentage-formatting client-side.
+  # @param report [String] the underlying Report.find type.
+  # @param enabled [Proc] optional gate evaluated on every dashboard build.
+  #   Return false to omit the KPI without disabling the plugin entirely.
+  def register_admin_dashboard_highlight_kpi(type:, report:, enabled: nil)
+    DiscoursePluginRegistry.register_admin_dashboard_highlight_kpi(
+      { type: type, report: report, enabled: enabled },
+      self,
+    )
+  end
+
   ##
   # Used to register data sources for HashtagAutocompleteService to look
   # up results based on a #hashtag string.

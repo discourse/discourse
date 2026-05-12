@@ -7,10 +7,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import { formatUsername } from "discourse/lib/utilities";
-import scrollIntoView from "discourse/modifiers/scroll-into-view";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dScrollIntoView from "discourse/ui-kit/modifiers/d-scroll-into-view";
 
 /**
  * @typedef {import("discourse/lib/types/d-autocomplete").UserEmailGroupResult} UserEmailGroupResult
@@ -113,7 +113,7 @@ export default class UserAutocompleteResults extends Component {
         {{#each @results as |result index|}}
           <li
             data-index={{result.index}}
-            {{scrollIntoView (this.shouldScroll index)}}
+            {{dScrollIntoView (this.shouldScroll index)}}
           >
             <a
               href
@@ -122,7 +122,7 @@ export default class UserAutocompleteResults extends Component {
               {{on "click" (fn this.handleResultClick result index)}}
             >
               {{#if result.isUser}}
-                {{avatar result imageSize="tiny"}}
+                {{dAvatar result imageSize="tiny"}}
                 <span class="text-content">
                   <span class="username">{{formatUsername
                       result.username
@@ -135,12 +135,12 @@ export default class UserAutocompleteResults extends Component {
                   <span class="user-status"></span>
                 {{/if}}
               {{else if result.isEmail}}
-                {{icon "envelope"}}
+                {{dIcon "envelope"}}
                 <span class="text-content username">{{formatUsername
                     result.username
                   }}</span>
               {{else if result.isGroup}}
-                {{icon "users"}}
+                {{dIcon "users"}}
                 <span class="text-content">
                   <span class="username">{{result.name}}</span>
                   <span class="name">{{result.full_name}}</span>

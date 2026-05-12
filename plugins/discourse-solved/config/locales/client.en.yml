@@ -4,6 +4,12 @@ en:
       site_settings:
         categories:
           discourse_solved: "Discourse Solved"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Accepted solutions"
+              tooltip: "The number of topics that had a post marked as the solution in this period."
   js:
     notifications:
       alt:

@@ -1,8 +1,8 @@
 import { fn } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import CategorySelector from "discourse/select-kit/components/category-selector";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const Categories = <template>
@@ -12,7 +12,7 @@ const Categories = <template>
     <div
       class="controls tracking-controls tracking-controls__watched-categories"
     >
-      <label>{{icon "d-watching"}} {{i18n "user.watched_categories"}}</label>
+      <label>{{dIcon "d-watching"}} {{i18n "user.watched_categories"}}</label>
       {{#if @canSee}}
         <a class="show-tracking" href={{@model.watchingTopicsPath}}>{{i18n
             "user.tracked_topics_link"
@@ -31,7 +31,7 @@ const Categories = <template>
     <div
       class="controls tracking-controls tracking-controls__tracked-categories"
     >
-      <label>{{icon "d-tracking"}} {{i18n "user.tracked_categories"}}</label>
+      <label>{{dIcon "d-tracking"}} {{i18n "user.tracked_categories"}}</label>
       {{#if @canSee}}
         <a class="show-tracking" href={{@model.trackingTopicsPath}}>{{i18n
             "user.tracked_topics_link"
@@ -50,7 +50,7 @@ const Categories = <template>
     <div
       class="controls tracking-controls tracking-controls__watched-first-categories"
     >
-      <label>{{icon "d-watching-first"}}
+      <label>{{dIcon "d-watching-first"}}
         {{i18n "user.watched_first_post_categories"}}</label>
       <CategorySelector
         @categories={{@model.watchedFirstPostCategories}}
@@ -66,7 +66,7 @@ const Categories = <template>
       <div
         class="controls tracking-controls tracking-controls__regular-categories"
       >
-        <label>{{icon "d-regular"}} {{i18n "user.regular_categories"}}</label>
+        <label>{{dIcon "d-regular"}} {{i18n "user.regular_categories"}}</label>
         <CategorySelector
           @categories={{@model.regularCategories}}
           @blockedCategories={{@selectedCategories}}
@@ -80,7 +80,7 @@ const Categories = <template>
       <div
         class="controls tracking-controls tracking-controls__muted-categories"
       >
-        <label>{{icon "d-muted"}} {{i18n "user.muted_categories"}}</label>
+        <label>{{dIcon "d-muted"}} {{i18n "user.muted_categories"}}</label>
 
         {{#if @canSee}}
           <a class="show-tracking" href={{@model.mutedTopicsPath}}>{{i18n

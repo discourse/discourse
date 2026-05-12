@@ -7,7 +7,7 @@ import {
 } from "@ember-decorators/component";
 import $ from "jquery";
 import TopicPostBadges from "discourse/components/topic-post-badges";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import TopicStatus from "./topic-status";
 
 @classNameBindings(":featured-topic")
@@ -34,7 +34,7 @@ export default class FeaturedTopic extends Component {
       @url={{this.topic.lastUnreadUrl}}
     />
 
-    <a href={{this.topic.lastPostUrl}} class="last-posted-at">{{ageWithTooltip
+    <a href={{this.topic.lastPostUrl}} class="last-posted-at">{{dAgeWithTooltip
         this.topic.last_posted_at
       }}</a>
   </template>

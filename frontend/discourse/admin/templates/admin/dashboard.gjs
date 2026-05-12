@@ -2,9 +2,9 @@ import { LinkTo } from "@ember/routing";
 import DashboardProblems from "discourse/admin/components/dashboard-problems";
 import RedesignedAdminDashboard from "discourse/admin/components/redesigned-admin-dashboard";
 import VersionChecks from "discourse/admin/components/version-checks";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -15,6 +15,9 @@ export default <template>
       @endDate={{@controller.endDate}}
       @setPeriod={{@controller.setPeriod}}
       @setCustomDateRange={{@controller.setCustomDateRange}}
+      @sections={{@controller.sections}}
+      @loadingSections={{@controller.loadingSections}}
+      @sectionsFetchError={{@controller.sectionsFetchError}}
     />
   {{else}}
     <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />

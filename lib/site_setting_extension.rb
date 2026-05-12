@@ -1128,9 +1128,31 @@ module SiteSettingExtension
     # Any group_list or category_list setting will have a getter defined with _map
     # on the end, e.g. personal_message_enabled_groups_map, to avoid having to
     # manually split and convert to integer for these settings.
-    if %i[group_list category_list].include?(type_supervisor.get_type(name))
+    #
+    # For group_list settings, while the granular_anonymous_and_logged_in_groups_permissions
+    # upcoming change is enabled, stored `0` (the `:everyone` pseudogroup) is swapped to
+    # `5` (the `:logged_in_users` pseudogroup) at read time. This preserves admins' intent
+    # ("allow everyone logged in") without mutating the stored value, so disabling the
+    # flag is a perfect revert. When the change graduates to stable, a data migration will
+    # rewrite stored values and this swap can be removed.
+    setting_type = type_supervisor.get_type(name)
+    if setting_type == :category_list
       define_singleton_method("#{clean_name}_map") do
         self.public_send(clean_name).to_s.split("|").map(&:to_i)
+      end
+    elsif setting_type == :group_list
+      define_singleton_method("#{clean_name}_map") do
+        ids = self.public_send(clean_name).to_s.split("|").map(&:to_i)
+        if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
+             ids.include?(Group::AUTO_GROUPS[:everyone])
+          ids =
+            ids
+              .map do |id|
+                id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:logged_in_users] : id
+              end
+              .uniq
+        end
+        ids
       end
     end
 

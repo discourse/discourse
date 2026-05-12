@@ -6,18 +6,18 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DStatTiles from "discourse/components/d-stat-tiles";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DStatTiles from "discourse/ui-kit/d-stat-tiles";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import SpamTestModal from "./modal/spam-test-modal";
 
@@ -222,7 +222,7 @@ export default class AiSpam extends Component {
         <div class="ai-spam__errors">
           {{#each this.errors as |e|}}
             <div class="alert alert-error">
-              {{icon "triangle-exclamation"}}
+              {{dIcon "triangle-exclamation"}}
               <p>{{e.message}}</p>
               <DButton
                 @action={{e.button.action}}

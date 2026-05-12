@@ -6,12 +6,12 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { buildWaiter } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const WAITER = buildWaiter("ace-editor");
@@ -273,7 +273,7 @@ export default class AceEditor extends Component {
 
   <template>
     <div class="ace-wrapper">
-      <ConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
+      <DConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
         <div
           {{didInsert this.setupAce}}
           {{this.setContent}}
@@ -281,7 +281,7 @@ export default class AceEditor extends Component {
           {{didUpdate this.modeChanged @mode}}
           {{didUpdate this.placeholderChanged @placeholder}}
           {{didUpdate this.changeDisabledState @disabled}}
-          class={{concatClass this.cssClasses}}
+          class={{dConcatClass this.cssClasses}}
           ...attributes
         >
         </div>
@@ -295,7 +295,7 @@ export default class AceEditor extends Component {
             }}
           ></div>
         {{/if}}
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </div>
   </template>
 }

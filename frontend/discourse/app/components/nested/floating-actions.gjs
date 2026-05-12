@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class NestedFloatingActions extends Component {
@@ -22,7 +22,7 @@ export default class NestedFloatingActions extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "nested-view__floating-actions"
         (if this.composer.visible "--hidden")
       }}

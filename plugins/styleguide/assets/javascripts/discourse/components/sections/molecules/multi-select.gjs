@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DMultiSelect from "discourse/components/d-multi-select";
+import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import StyleguideComponent from "../../styleguide/component";
 import StyleguideExample from "../../styleguide-example";
 

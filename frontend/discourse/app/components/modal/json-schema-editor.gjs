@@ -5,9 +5,9 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { waitForPromise } from "@ember/test-waiters";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { iconElement } from "discourse/lib/icon-library";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class JsonSchemaEditorModal extends Component {

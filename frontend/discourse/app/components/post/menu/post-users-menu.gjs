@@ -5,11 +5,11 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
-import UserAvatar from "discourse/components/user-avatar";
-import UserLink from "discourse/components/user-link";
-import icon from "discourse/helpers/d-icon";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const PAGE_SIZE = 30;
 
@@ -94,7 +94,7 @@ export default class PostUsersMenu extends Component {
         style={{this.bodyStyle}}
         {{didInsert this.loadInitial}}
       >
-        <LoadMore
+        <DLoadMore
           @action={{this.loadMore}}
           @enabled={{this.canLoadMore}}
           @isLoading={{this.loading}}
@@ -105,36 +105,36 @@ export default class PostUsersMenu extends Component {
               {{#if (has-block "avatar")}}
                 {{yield user to="avatar"}}
               {{else}}
-                <UserAvatar @user={{user}} @size="small" />
+                <DUserAvatar @user={{user}} @size="small" />
               {{/if}}
               <div class="post-users-popup__user-info">
-                <UserLink
+                <DUserLink
                   @username={{user.username}}
                   class="post-users-popup__name"
                 >
                   {{this.displayName user}}
-                </UserLink>
+                </DUserLink>
                 {{#unless this.siteSettings.prioritize_username_in_ux}}
-                  <UserLink
+                  <DUserLink
                     @username={{user.username}}
                     class="post-users-popup__username"
                   >
                     @{{user.username}}
-                  </UserLink>
+                  </DUserLink>
                 {{/unless}}
               </div>
               {{#if (has-block "reaction")}}
                 {{yield user to="reaction"}}
               {{else}}
-                {{icon "d-liked" class="post-users-popup__reaction"}}
+                {{dIcon "d-liked" class="post-users-popup__reaction"}}
               {{/if}}
             </div>
           {{/each}}
-          <ConditionalLoadingSpinner
+          <DConditionalLoadingSpinner
             @condition={{this.loading}}
             @size="small"
           />
-        </LoadMore>
+        </DLoadMore>
       </div>
     </div>
   </template>

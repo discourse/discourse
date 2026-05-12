@@ -4,8 +4,8 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicCategory from "discourse/components/topic-category";
 import TopicMetadata from "discourse/components/topic-metadata";
 import TopicTitleEditor from "discourse/components/topic-title-editor";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 <template>
   <div class="nested-view__header">
@@ -39,7 +39,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
           {{trustHTML @topic.fancyTitle~}}
           {{~#if @topic.details.can_edit~}}
             <span class="edit-topic__wrapper">
-              {{icon "pencil" class="edit-topic"}}
+              {{dIcon "pencil" class="edit-topic"}}
             </span>
           {{~/if}}
         </a>

@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { escapeExpression } from "discourse/lib/utilities";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import ThreadUnreadIndicator from "discourse/plugins/chat/discourse/components/thread-unread-indicator";
 
 export default class ChatThreadTitle extends Component {
@@ -11,9 +11,9 @@ export default class ChatThreadTitle extends Component {
 
   get title() {
     if (this.args.thread.title) {
-      return replaceEmoji(trustHTML(escapeExpression(this.args.thread.title)));
+      return dReplaceEmoji(trustHTML(escapeExpression(this.args.thread.title)));
     } else {
-      return replaceEmoji(trustHTML(this.args.thread.originalMessage.excerpt));
+      return dReplaceEmoji(trustHTML(this.args.thread.originalMessage.excerpt));
     }
   }
 

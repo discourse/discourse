@@ -3,14 +3,14 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import PostCookedHtml from "discourse/components/post/cooked-html";
-import UserLink from "discourse/components/user-link";
-import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import onResize from "discourse/modifiers/on-resize";
+import DButton from "discourse/ui-kit/d-button";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
 const CHARS_PER_LINE = 90;
@@ -134,7 +134,7 @@ export default class SolvedAcceptedAnswer extends Component {
     {{! template-lint-disable no-unnecessary-concat }}
     {{#if this.acceptedAnswer}}
       <aside
-        class={{concatClass
+        class={{dConcatClass
           "quote accepted-answer d-solved-answer"
           (if this.hasExcerpt "accepted-answer--has-excerpt")
           (unless this.content "title-only")
@@ -148,7 +148,7 @@ export default class SolvedAcceptedAnswer extends Component {
       >
         <div class="d-solved-answer__header">
           <h3 class="d-solved-answer__title">
-            {{icon "far-square-check"}}
+            {{dIcon "far-square-check"}}
             {{i18n "solved.title"}}</h3>
           <div class="d-solved-answer__controls">
             {{#if this.showToggle}}
@@ -173,7 +173,7 @@ export default class SolvedAcceptedAnswer extends Component {
         </div>
 
         {{#if this.content}}
-          <blockquote id={{this.quoteId}} {{onResize this.checkOverflow}}>
+          <blockquote id={{this.quoteId}} {{dOnResize this.checkOverflow}}>
             <PostCookedHtml
               @post={{@post}}
               @cooked={{this.content}}
@@ -184,10 +184,13 @@ export default class SolvedAcceptedAnswer extends Component {
 
         <div class="d-solved-answer__footer">
           {{#if this.showSolvedBy}}
-            <UserLink @username={{this.solverUsername}}>
-              {{boundAvatarTemplate this.acceptedAnswer.avatar_template "tiny"}}
-            </UserLink>
-            <InterpolatedTranslation
+            <DUserLink @username={{this.solverUsername}}>
+              {{dBoundAvatarTemplate
+                this.acceptedAnswer.avatar_template
+                "tiny"
+              }}
+            </DUserLink>
+            <DInterpolatedTranslation
               @key="solved.accepted_answer_solver_info"
               as |Placeholder|
             >
@@ -200,19 +203,19 @@ export default class SolvedAcceptedAnswer extends Component {
                   href={{this.postPath}}
                 >{{this.postNumber}}</a>
               </Placeholder>
-            </InterpolatedTranslation>
+            </DInterpolatedTranslation>
           {{/if}}
           {{#if this.showMarkedBy}}
             <span class="dot-separator"></span>
 
-            <InterpolatedTranslation
+            <DInterpolatedTranslation
               @key="solved.marked_solved_by"
               as |Placeholder|
             >
               <Placeholder @name="user" @class="d-solved-answer__accepter">
                 {{this.accepterDisplayName}}
               </Placeholder>
-            </InterpolatedTranslation>
+            </DInterpolatedTranslation>
 
           {{/if}}
         </div>
