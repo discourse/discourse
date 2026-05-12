@@ -36,6 +36,17 @@ export const DEBUG_CALLBACK = Object.freeze({
   END_GROUP: "endGroup",
   LOGGER_INTERFACE: "loggerInterface",
   GHOST_CHILDREN_CREATOR: "ghostChildrenCreator",
+  /**
+   * Returns an object whose fields are merged into the condition
+   * evaluator's per-block context. Lets external code (e.g. the visual
+   * editor's persona/viewport simulation) inject extra context without
+   * coupling the blocks service to those consumers. Read by the root
+   * container's preprocessor on every visibility evaluation, so a
+   * tracked source inside the callback propagates re-renders.
+   *
+   * Example payload: `{ simulation: { user, viewport } }`.
+   */
+  EVAL_CONTEXT: "evalContext",
 });
 
 /**

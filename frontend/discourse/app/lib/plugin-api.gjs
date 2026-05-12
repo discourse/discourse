@@ -3645,13 +3645,20 @@ class _PluginApi {
    *
    * @param {string} outletName - The outlet name (must follow naming conventions).
    * @param {Object} [options] - Outlet configuration options.
-   * @param {string} [options.description] - Human-readable description of the outlet.
+   * @param {string} [options.displayName] - Human-readable label shown in
+   *   the visual editor's outlet inventory. Defaults to the outlet name.
+   * @param {string} [options.description] - One-line summary of where the
+   *   outlet renders.
+   * @param {string} [options.category] - Optional free-form grouping label
+   *   for the visual editor's outlet inventory (e.g. `"Layout"`).
    *
    * @example
    * ```javascript
    * // In a pre-initializer
    * api.registerBlockOutlet("chat:message-actions", {
+   *   displayName: "Chat message actions",
    *   description: "Actions displayed below chat messages",
+   *   category: "Chat",
    * });
    *
    * // Later, in an api-initializer

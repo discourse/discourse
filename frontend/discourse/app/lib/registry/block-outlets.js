@@ -35,6 +35,44 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks";
  *
  * @constant {ReadonlyArray<string>} BLOCK_OUTLETS - An immutable array of core block outlet identifiers
  */
+/**
+ * Display-metadata sidecar for the core outlets. Keys mirror `BLOCK_OUTLETS`;
+ * the visual editor and other introspection UIs read this map via
+ * `services/blocks.js#listOutletsWithMetadata()`.
+ *
+ * Splitting the metadata from `BLOCK_OUTLETS` keeps the array a pure list of
+ * names (back-compat for `.includes(name)` consumers) while letting us
+ * surface display-friendly fields without a breaking schema change.
+ *
+ * Adding a new core outlet here? Add the name to `BLOCK_OUTLETS` AND a
+ * matching entry below. The DEBUG block at the bottom fails the boot if
+ * the two diverge.
+ *
+ * @type {Readonly<Record<string, { displayName: string, description: string, category?: string }>>}
+ */
+export const CORE_OUTLET_METADATA = Object.freeze({
+  "hero-blocks": Object.freeze({
+    displayName: "Hero",
+    description: "The page-level hero area above the main content.",
+  }),
+  "homepage-blocks": Object.freeze({
+    displayName: "Homepage",
+    description: "The main content area of the site homepage.",
+  }),
+  "main-outlet-blocks": Object.freeze({
+    displayName: "Main outlet",
+    description: "The primary content area shared across most pages.",
+  }),
+  "sidebar-blocks": Object.freeze({
+    displayName: "Sidebar",
+    description: "The site-wide sidebar.",
+  }),
+  "sidebar-discovery": Object.freeze({
+    displayName: "Sidebar (discovery)",
+    description: "The sidebar slot for topic-discovery pages.",
+  }),
+});
+
 // eslint-discourse keep-array-sorted
 export const BLOCK_OUTLETS = Object.freeze([
   "hero-blocks",
@@ -44,13 +82,26 @@ export const BLOCK_OUTLETS = Object.freeze([
   "sidebar-discovery",
 ]);
 
-// Validate outlet names follow the kebab-case pattern.
+// Validate outlet names follow the kebab-case pattern and that
+// `CORE_OUTLET_METADATA` stays in sync with `BLOCK_OUTLETS`.
 if (DEBUG) {
   BLOCK_OUTLETS.forEach((name) => {
     if (!VALID_BLOCK_NAME_PATTERN.test(name)) {
       throw new Error(
         `Block outlet name "${name}" is invalid. ` +
           `Names must be kebab-case: lowercase letters, numbers, and hyphens, starting with a letter.`
+      );
+    }
+    if (!CORE_OUTLET_METADATA[name]) {
+      throw new Error(
+        `Block outlet "${name}" is missing an entry in CORE_OUTLET_METADATA.`
+      );
+    }
+  });
+  Object.keys(CORE_OUTLET_METADATA).forEach((name) => {
+    if (!BLOCK_OUTLETS.includes(name)) {
+      throw new Error(
+        `CORE_OUTLET_METADATA has entry for "${name}" but it isn't in BLOCK_OUTLETS.`
       );
     }
   });

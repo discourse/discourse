@@ -25,6 +25,8 @@ const VALID_CONFIG_KEYS = Object.freeze([
   "args",
   "constraints",
   "validate",
+  "displayName",
+  "description",
 ]);
 
 /**
@@ -114,6 +116,8 @@ export function blockCondition(config) {
     args: argsSchema = {},
     constraints,
     validate: validateFn,
+    displayName,
+    description,
   } = config;
 
   // Validate config at decoration time
@@ -181,6 +185,21 @@ export function blockCondition(config) {
     );
   }
 
+  // Shallow type-check the display-metadata fields. These are presentation
+  // hints consumed by the visual editor's condition builder; they have no
+  // runtime effect on evaluation.
+  if (
+    displayName !== undefined &&
+    (typeof displayName !== "string" || displayName.trim() === "")
+  ) {
+    throw new Error(
+      `blockCondition: "displayName" must be a non-empty string.`
+    );
+  }
+  if (description !== undefined && typeof description !== "string") {
+    throw new Error(`blockCondition: "description" must be a string.`);
+  }
+
   // Freeze schema and compute derived validArgKeys
   const frozenSchema = Object.freeze({ ...argsSchema });
   const frozenConstraints = constraints
@@ -209,6 +228,11 @@ export function blockCondition(config) {
       validateFn: { get: () => validateFn, configurable: false },
       // validArgKeys combines argsSchema keys with "source" when sourceType !== "none".
       validArgKeys: { get: () => allKeys, configurable: false },
+      // Display-metadata fields consumed by the visual editor's condition
+      // builder. Both default to `null` so the consumer can fall back to a
+      // titleCased `type` or no description.
+      displayName: { get: () => displayName ?? null, configurable: false },
+      description: { get: () => description ?? null, configurable: false },
     });
 
     // Track as decorated so Blocks service can verify

@@ -134,6 +134,62 @@ module("Unit | Service | blocks", function (hooks) {
       assert.true(types.includes("setting"));
       assert.true(types.includes("viewport"));
     });
+
+    test("listConditionTypes returns full metadata for each built-in", function (assert) {
+      const all = this.blocks.listConditionTypes();
+      const byType = new Map(all.map((entry) => [entry.type, entry]));
+
+      const user = byType.get("user");
+      assert.notStrictEqual(user, undefined, "user condition is listed");
+      assert.strictEqual(user.displayName, "User");
+      assert.strictEqual(typeof user.description, "string");
+      assert.strictEqual(user.namespaceType, "core");
+      assert.strictEqual(user.sourceType, "outletArgs");
+      assert.notStrictEqual(
+        user.argsSchema.loggedIn,
+        undefined,
+        "argsSchema includes declared args"
+      );
+
+      const viewport = byType.get("viewport");
+      assert.strictEqual(viewport.displayName, "Viewport");
+
+      const route = byType.get("route");
+      assert.strictEqual(route.displayName, "Route");
+
+      const setting = byType.get("setting");
+      assert.strictEqual(setting.displayName, "Setting");
+      assert.strictEqual(setting.sourceType, "object");
+
+      const outletArg = byType.get("outlet-arg");
+      assert.strictEqual(outletArg.displayName, "Outlet argument");
+    });
+
+    test("listConditionTypes falls back displayName to titleCase of type", function (assert) {
+      @blockCondition({
+        type: "plugin-side:weather-check",
+        args: {},
+      })
+      class WeatherCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      withTestConditionRegistration(() => {
+        registerConditionType(WeatherCondition);
+      });
+
+      const all = this.blocks.listConditionTypes();
+      const weather = all.find((c) => c.type === "plugin-side:weather-check");
+      assert.notStrictEqual(weather, undefined, "custom condition is listed");
+      assert.strictEqual(
+        weather.displayName,
+        "Plugin Side Weather Check",
+        "displayName defaults to a titleCase of the type ID"
+      );
+      assert.strictEqual(weather.description, null);
+    });
   });
 
   module("_registerConditionType", function () {
