@@ -120,5 +120,31 @@ module(
           "title is wrapped in an anchor pointing to result.url"
         );
     });
+
+    test("bookmark status icon is not an anchor in the search dropdown", async function (assert) {
+      const store = getOwner(this).lookup("service:store");
+      const bookmarkedTopic = store.createRecord("topic", {
+        id: 6,
+        title: "Bookmarked Topic",
+        bookmarked: true,
+      });
+
+      await render(
+        <template>
+          <TopicResultComponent
+            @result={{hash topic=bookmarkedTopic url="/t/foo/6"}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".topic-status.--bookmarked")
+        .exists("bookmark icon renders for bookmarked topic");
+      assert
+        .dom("a.topic-status.--bookmarked")
+        .doesNotExist(
+          "bookmark icon is not an anchor when actions are disabled"
+        );
+    });
   }
 );
