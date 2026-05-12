@@ -337,7 +337,7 @@ export default class QueryResult extends Component {
   }
 
   _cutChartLabel(label) {
-    const labelString = label.toString();
+    const labelString = String(label ?? "NULL");
     if (labelString.length > 25) {
       return `${labelString.substring(0, 25)}...`;
     } else {
