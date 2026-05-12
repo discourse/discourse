@@ -49,7 +49,7 @@ export default class DUserAvatar extends Component {
   @service siteSettings;
 
   get ariaHidden() {
-    if (this.args.ariaHidden !== null) {
+    if (this.args.ariaHidden !== undefined) {
       return this.args.ariaHidden;
     }
 
@@ -59,7 +59,7 @@ export default class DUserAvatar extends Component {
 
     // often avatars are paired with usernames, making them redundant for screen readers so we hide the avatar from
     // screen readers by default
-    return this.args.ariaHidden ?? true;
+    return true;
   }
 
   get hideFromAnonUser() {
@@ -71,7 +71,7 @@ export default class DUserAvatar extends Component {
   <template>
     <DUserLink
       ...attributes
-      @ariaHidden={{@ariaHidden}}
+      @ariaHidden={{this.ariaHidden}}
       @ariaLabel={{@ariaLabel}}
       @href={{@href}}
       @user={{@user}}

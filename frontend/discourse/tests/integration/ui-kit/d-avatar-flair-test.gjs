@@ -97,6 +97,9 @@ module("Integration | ui-kit | DAvatarFlair", function (hooks) {
     await renderComponent({ flair_url: "/images/avatar.png" });
     assert
       .dom(".avatar-flair")
-      .hasStyle({ backgroundImage: 'url("/images/avatar.png")' });
+      .hasAttribute(
+        "style",
+        /background-image:\s*url\(\/images\/avatar\.png\)/
+      );
   });
 });

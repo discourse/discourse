@@ -23,9 +23,12 @@ const BUTTON_TYPES = ["button", "submit", "reset"];
  * `DButton` instead of writing `<button class="btn">` so loading, disabled,
  * icon, and accessibility states stay consistent across the app.
  *
- * Click behavior comes from exactly one of `@action`, `@route`, or `@href` —
- * passing more than one is a contract violation. `@action` runs inside `next()`
- * on non-iOS to optimise INP; pass `@forwardEvent` if your handler needs the
+ * Click behavior comes from `@action`, `@route`, or `@href`. `@action` and
+ * `@route` are mutually exclusive (passing both silently drops `@route`),
+ * but `@href` can combine with either — for example, `@action` alongside
+ * `@href` renders an `<a>` so middle-click opens in a new tab while a
+ * regular click runs the handler. `@action` runs inside `next()` on
+ * non-iOS to optimise INP; pass `@forwardEvent` if your handler needs the
  * original event.
  *
  * @example
@@ -49,12 +52,12 @@ const BUTTON_TYPES = ["button", "submit", "reset"];
  *
  * Actions and navigation
  *
- * @property {Function|{value: Function}} [Args.action] Click handler. Accepts a plain function or an Ember action descriptor (`{ value: Function }`). Mutually exclusive with `@route` and `@href`.
+ * @property {Function|{value: Function}} [Args.action] Click handler. Accepts a plain function or an Ember action descriptor (`{ value: Function }`). Mutually exclusive with `@route`.
  * @property {any} [Args.actionParam] Value passed as the first argument to `@action` when it fires.
  * @property {boolean} [Args.forwardEvent] When true, the original click event is passed as the second argument to `@action`.
  * @property {(event: KeyboardEvent) => void} [Args.onKeyDown] Custom keydown handler. When set, the default Enter-triggers-click behavior is suppressed and your handler receives every keydown.
- * @property {string} [Args.href] Renders an `<a href="...">` instead of `<button>`. Use for true links (external URLs, anchor jumps). Mutually exclusive with `@action` and `@route`.
- * @property {string} [Args.route] Ember route name to transition to on click. Mutually exclusive with `@action` and `@href`.
+ * @property {string} [Args.href] Renders an `<a href="...">` instead of `<button>`. Pair with `@action` or `@route` to handle the click in JS while still exposing a real URL for middle-click and copy-link.
+ * @property {string} [Args.route] Ember route name to transition to on click. Mutually exclusive with `@action`.
  * @property {object|object[]} [Args.routeModels] Models passed to `router.transitionTo` alongside `@route`. Accepts a single model or an array.
  *
  * State
@@ -114,8 +117,8 @@ export default class DButton extends Component {
       !(args.ariaLabel && args.translatedAriaLabel)
     );
     assert(
-      "[d-button] @action, @route, and @href are mutually exclusive — pick one",
-      [args.action, args.route, args.href].filter(Boolean).length <= 1
+      "[d-button] pass either @action or @route, not both",
+      !(args.action && args.route)
     );
     assert(
       `[d-button] @type must be one of ${BUTTON_TYPES.join(", ")}`,
