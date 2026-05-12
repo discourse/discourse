@@ -4396,3 +4396,11 @@ experimental:
       impact: "feature,all_members"
       status: "beta"
       learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
+  enable_horizon_updates:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "other,all_members"

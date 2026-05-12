@@ -97,22 +97,23 @@ $sidebar-width: 17em;
       }
 
       .has-sidebar-page & {
-        // deviated here from the TC for full height sidebar
+        // at wide widths, when 1fr > 0
+        // we want the panel to be the same width as the sidebar
+        // this way we can get more accurate centering
         grid-template-columns:
-          auto
+          calc(var(--d-sidebar-width) - 11px) // 11px is wrap padding
           1fr
           minmax(0, calc(var(--d-max-width)))
           1fr
-          minmax(0, calc(var(--d-sidebar-width) - 11px));
+          auto;
         gap: 1em;
 
         // at narrower widths, when 1fr = 0
         // we can center without matching the sidebar's width
         // which allows the title to take up the remaining width
         @media screen and (width <= 1400px) {
-          // deviated here from the TC for full height sidebar
           grid-template-columns:
-            auto
+            calc(var(--d-sidebar-width) - 11px)
             1fr
             minmax(0, calc(var(--d-max-width)))
             1fr
@@ -247,5 +248,25 @@ body.sidebar-animate {
     .d-header .panel {
       grid-column-start: -4;
     }
+  }
+}
+
+// deviated from the TC for full height sidebar: the sidebar-matching column
+// moves from the logo side (left) to the panel side (right)
+body.uc-enable-horizon-updates.has-sidebar-page .d-header > .wrap .contents {
+  grid-template-columns:
+    auto
+    1fr
+    minmax(0, calc(var(--d-max-width)))
+    1fr
+    minmax(0, calc(var(--d-sidebar-width) - 11px));
+
+  @media screen and (width <= 1400px) {
+    grid-template-columns:
+      auto
+      1fr
+      minmax(0, calc(var(--d-max-width)))
+      1fr
+      auto;
   }
 }

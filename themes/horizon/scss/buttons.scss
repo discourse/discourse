@@ -1,6 +1,10 @@
 @use "lib/viewport";
 
 :root {
+  --d-button-border-radius: 6.25rem;
+}
+
+body.uc-enable-horizon-updates {
   --d-button-border-radius: 0.65rem;
 }
 

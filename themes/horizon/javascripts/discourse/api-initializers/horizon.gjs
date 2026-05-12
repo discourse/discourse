@@ -3,6 +3,11 @@ import SidebarHomeLogo from "../components/sidebar-home-logo";
 import UserColorPaletteSelector from "../components/user-color-palette-selector";
 
 export default apiInitializer((api) => {
-  api.renderInOutlet("before-sidebar-sections", SidebarHomeLogo);
+  const siteSettings = api.container.lookup("service:site-settings");
+
+  if (siteSettings.enable_horizon_updates) {
+    api.renderInOutlet("before-sidebar-sections", SidebarHomeLogo);
+  }
+
   api.renderInOutlet("sidebar-footer-actions", UserColorPaletteSelector);
 });

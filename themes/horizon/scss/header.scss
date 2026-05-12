@@ -4,18 +4,18 @@
   box-shadow: none;
 }
 
-.d-header-wrap {
-  .has-sidebar-page & {
-    width: calc(100vw - var(--d-sidebar-width));
-    margin-left: auto;
+body:not(.uc-enable-horizon-updates) .d-header {
+  @include viewport.from(sm) {
+    background: var(--background-color);
   }
 }
 
-#site-logo {
-  height: inherit;
+body.has-sidebar-page.uc-enable-horizon-updates .d-header-wrap {
+  width: calc(100vw - var(--d-sidebar-width));
+  margin-left: auto;
 }
 
-body.has-sidebar-page .d-header {
+body.has-sidebar-page.uc-enable-horizon-updates .d-header {
   .home-logo-wrapper-outlet,
   .header-sidebar-toggle {
     display: none;
