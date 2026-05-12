@@ -71,10 +71,17 @@ async function runWorker() {
   const resolvedConfig = buildConfig({ devMode: true });
   const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
     onHmrUpdates: (result) => {
-      if (!(result instanceof Error)) {
-        console.log("Changed files:", result.changedFiles);
-        buildStart = Date.now();
+      if (result instanceof Error) {
+        console.error("Build error:", result.message);
+        writeBuildStatus({
+          status: "error",
+          error: serializeError(result),
+        });
+        return;
       }
+
+      console.log("Changed files:", result.changedFiles);
+      buildStart = Date.now();
     },
     onOutput: (result) => {
       if (result instanceof Error) {
