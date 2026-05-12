@@ -435,7 +435,8 @@ module ApplicationHelper
 
   def discourse_pageview_tracking_meta_tags
     if !SiteSetting.trigger_browser_pageview_events &&
-         !SiteSetting.use_beacon_for_browser_page_views
+         !SiteSetting.use_beacon_for_browser_page_views &&
+         !SiteSetting.persist_browser_pageview_events
       return ""
     end
 

@@ -709,11 +709,37 @@ class Middleware::RequestTracker
   private_class_method :extract_beacon_view_tracking_data
 
   def self.trigger_browser_pageview_event(data)
-    if SiteSetting.trigger_browser_pageview_events
+    if SiteSetting.persist_browser_pageview_events
+      persist_browser_pageview_event(build_browser_pageview_event_payload(data))
+    elsif SiteSetting.trigger_browser_pageview_events
       DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
     end
   end
   private_class_method :trigger_browser_pageview_event
+
+  def self.persist_browser_pageview_event(payload)
+    Scheduler::Defer.later "Create BrowserPageviewEvent" do
+      BrowserPageviewEvent.create!(
+        url: payload[:url],
+        ip_address: payload[:ip_address],
+        country_code: payload[:country_code],
+        referrer: payload[:referrer],
+        user_agent: payload[:user_agent],
+        session_id: payload[:session_id],
+        user_id: payload[:user_id],
+        topic_id: payload[:topic_id],
+        created_at: payload[:occurred_at],
+      )
+    rescue ActiveRecord::StatementInvalid => e
+      raise unless e.cause.is_a?(PG::NotNullViolation) && e.cause.message.include?("ip_address")
+      Rails.logger.debug("Discarding BrowserPageviewEvent: invalid IP #{payload[:ip_address]}")
+    rescue => e
+      Rails.logger.error(
+        "Failed to create BrowserPageviewEvent with payload #{payload}: #{e.message}",
+      )
+    end
+  end
+  private_class_method :persist_browser_pageview_event
 
   def self.trigger_beacon_browser_pageview_event(data)
     if SiteSetting.trigger_browser_pageview_events
