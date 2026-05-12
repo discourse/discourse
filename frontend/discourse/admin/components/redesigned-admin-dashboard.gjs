@@ -73,7 +73,14 @@ const RedesignedAdminDashboard = <template>
   </div>
 
   <div class="db-main">
-    <DashboardHighlights @startDate={{@startDate}} @endDate={{@endDate}} />
+    <DashboardHighlights
+      @highlights={{@sections.highlights}}
+      @period={{@period}}
+      @loading={{@loadingSections}}
+      @fetchError={{@sectionsFetchError}}
+      @startDate={{@startDate}}
+      @endDate={{@endDate}}
+    />
     <DashboardReports @startDate={{@startDate}} @endDate={{@endDate}} />
     <DashboardTraffic @startDate={{@startDate}} @endDate={{@endDate}} />
     <DashboardEngagement @startDate={{@startDate}} @endDate={{@endDate}} />
