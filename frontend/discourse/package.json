@@ -127,6 +127,7 @@
     "babel-plugin-ember-template-compilation": "^4.0.0",
     "broccoli-asset-rev": "^3.0.0",
     "broccoli-merge-files": "^0.8.0",
+    "chokidar": "^5.0.0",
     "deepmerge": "^4.3.1",
     "deprecation-silencer": "workspace:1.0.0",
     "discourse-i18n": "workspace:*",

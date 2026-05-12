@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 
+import AnsiToHtml from "ansi-to-html";
 import { spawn } from "child_process";
+import chokidar from "chokidar";
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
-import AnsiToHtml from "ansi-to-html";
 
 const ansiConverter = new AnsiToHtml({ newline: true, escapeXML: true });
 
@@ -19,7 +20,8 @@ function ansiToHtml(str) {
 const CHILD_ENV_FLAG = "DISCOURSE_ROLLDOWN_DEV_CHILD";
 const MANIFEST_DIR = path.resolve("./dist/manifest");
 const BUILD_STATUS_FILE = path.join(MANIFEST_DIR, "build.json");
-const RESTART_DELAY_MS = 5000;
+const HEALTHY_RUN_MS = 20_000;
+const WATCH_DIR = "./app";
 
 function writeBuildStatus(status) {
   fs.mkdirSync(MANIFEST_DIR, { recursive: true });
@@ -129,7 +131,11 @@ async function runSupervisor() {
   process.on("SIGTERM", () => forwardSignal("SIGTERM"));
   process.on("SIGHUP", () => forwardSignal("SIGHUP"));
 
+  const isShuttingDown = () => shuttingDown;
+  let previousRunWasShortLived = false;
+
   while (!shuttingDown) {
+    const startedAt = Date.now();
     const proc = spawn(process.execPath, [scriptPath], {
       env: { ...process.env, [CHILD_ENV_FLAG]: "1" },
       stdio: "inherit",
@@ -148,10 +154,57 @@ async function runSupervisor() {
     const reason = signal
       ? `terminated by signal ${signal}`
       : `exited with code ${code}`;
-    console.error(
-      `\n[rolldown-dev] Rolldown dev process ${reason}. Restarting in ${RESTART_DELAY_MS / 1000}s...`
-    );
+    const ranFor = Date.now() - startedAt;
+    const wasShortLived = ranFor < HEALTHY_RUN_MS;
 
-    await new Promise((r) => setTimeout(r, RESTART_DELAY_MS));
+    if (wasShortLived && previousRunWasShortLived) {
+      console.error(
+        `\n[rolldown-dev] Rolldown dev process ${reason} after ${(ranFor / 1000).toFixed(1)}s (second short-lived run in a row). Waiting for a file change in ${WATCH_DIR} before restarting...`
+      );
+      const changed = await waitForFileChange(WATCH_DIR, isShuttingDown);
+      if (!changed || shuttingDown) {
+        process.exit(code ?? 1);
+      }
+      console.error("[rolldown-dev] File change detected. Restarting...");
+    } else {
+      console.error(
+        `\n[rolldown-dev] Rolldown dev process ${reason}. Restarting...`
+      );
+    }
+
+    previousRunWasShortLived = wasShortLived;
   }
+}
+
+// Watches `dir` recursively for any change. Resolves to `true` on the first
+// change, or `false` if `isCancelled()` becomes truthy while we're waiting.
+// Uses chokidar so this works uniformly on macOS, Linux, and Windows.
+async function waitForFileChange(dir, isCancelled) {
+  return await new Promise((resolve) => {
+    const watcher = chokidar.watch(dir, {
+      ignoreInitial: true,
+      ignored: (p) => p.includes("/node_modules/"),
+    });
+
+    const cleanup = () => {
+      clearInterval(cancelCheck);
+      watcher.close();
+    };
+
+    const cancelCheck = setInterval(() => {
+      if (isCancelled()) {
+        cleanup();
+        resolve(false);
+      }
+    }, 100);
+
+    watcher.on("all", () => {
+      cleanup();
+      resolve(true);
+    });
+    watcher.on("error", () => {
+      cleanup();
+      resolve(true);
+    });
+  });
 }

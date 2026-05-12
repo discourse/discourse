@@ -529,6 +529,9 @@ importers:
       broccoli-merge-files:
         specifier: ^0.8.0
         version: 0.8.0
+      chokidar:
+        specifier: ^5.0.0
+        version: 5.0.0
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
