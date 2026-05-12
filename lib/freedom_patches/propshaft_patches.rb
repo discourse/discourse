@@ -20,6 +20,7 @@ Propshaft::Helper.prepend(
           Rails.application.assets.load_path.send(:clear_cache)
           attempts += 1
           retry if attempts < 3
+          raise e
         elsif Rails.env.test?
           # Assets might not be compiled in test mode. Just return a fake path
           "/assets/#{path.sub(".", "-aaaaaaaa.")}"
