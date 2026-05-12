@@ -1,5 +1,13 @@
 'use strict';
 
+self.addEventListener('install', function() {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(self.clients.claim());
+});
+
 // Plugins (and core features) can register handlers for notification action
 // buttons by calling self.registerNotificationActionHandler(action, handler).
 //

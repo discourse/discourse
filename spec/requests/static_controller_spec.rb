@@ -577,6 +577,12 @@ RSpec.describe StaticController do
       expect(response.content_type).to start_with("text/javascript")
       expect(response.body).to include("addEventListener")
     end
+
+    it "includes skipWaiting and clients.claim to take immediate control of all clients" do
+      get "/service-worker.js"
+      expect(response.body).to include("skipWaiting")
+      expect(response.body).to include("clients.claim")
+    end
   end
 
   describe "#llms_txt" do
