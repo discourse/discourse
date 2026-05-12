@@ -833,4 +833,55 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
     end
   end
+
+  describe "bootstrap first admin" do
+    let(:admin) { Fabricate(:admin, last_seen_at: nil) }
+
+    it "grants moderation and logs the staff action on the singular admin's first login" do
+      @provider = provider("/")
+      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+
+      expect(admin.reload.moderator).to eq(true)
+      log = UserHistory.where(action: UserHistory.actions[:grant_moderation]).last
+      expect(log.target_user_id).to eq(admin.id)
+      expect(log.acting_user_id).to eq(Discourse.system_user.id)
+    end
+
+    it "is idempotent: a second login does not re-log grant_moderation" do
+      @provider = provider("/")
+      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+      admin.update!(last_seen_at: nil)
+
+      expect {
+        @provider = provider("/")
+        @provider.log_on_user(admin.reload, {}, @provider.cookie_jar)
+      }.to_not change { UserHistory.where(action: UserHistory.actions[:grant_moderation]).count }
+    end
+
+    it "does not grant moderation when another admin already exists" do
+      Fabricate(:admin)
+
+      @provider = provider("/")
+      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+
+      expect(admin.reload.moderator).to eq(false)
+      expect(UserHistory.where(action: UserHistory.actions[:grant_moderation]).count).to eq(0)
+    end
+
+    it "does not grant moderation when the admin has logged in before" do
+      admin.update!(last_seen_at: 1.day.ago)
+
+      @provider = provider("/")
+      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+
+      expect(admin.reload.moderator).to eq(false)
+    end
+
+    it "does not grant moderation to non-admin users" do
+      @provider = provider("/")
+      @provider.log_on_user(user, {}, @provider.cookie_jar)
+
+      expect(user.reload.moderator).to eq(false)
+    end
+  end
 end

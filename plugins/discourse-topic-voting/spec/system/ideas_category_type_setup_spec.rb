@@ -102,19 +102,6 @@ RSpec.describe "Ideas Category Type Setup" do
       expect(page).to have_no_field("category_type_site_settings.topic_voting_tl0_vote_limit")
       expect(page).to have_no_field("category_type_site_settings.topic_voting_alert_votes_left")
     end
-
-    it "can remove the ideas type from the category" do
-      visit("/c/#{category.slug}/edit/ideas")
-      page.find(".ideas-category--danger-zone .ideas-category__remove-type").click
-      expect(dialog).to have_content(
-        I18n.t("js.topic_voting.category_type_ideas.confirm_remove_ideas_type"),
-      )
-      dialog.click_yes
-      expect(toast).to have_success(I18n.t("js.saved"))
-      expect(page).to have_css(".edit-category-general.active")
-      expect(page).to have_current_path("/c/#{category.slug}/edit/general")
-      expect(Category.can_vote?(category.reload.id)).to eq(false)
-    end
   end
 
   context "when visiting the Ideas tab for a non-ideas category" do
@@ -122,7 +109,9 @@ RSpec.describe "Ideas Category Type Setup" do
 
     it "shows the not ideas type message" do
       visit("/c/#{category.slug}/edit/ideas")
-      expect(page).to have_content(I18n.t("js.topic_voting.category_type_ideas.not_ideas_type"))
+      expect(page).to have_content(
+        I18n.t("js.category.unknown_category_type_description", categoryType: "ideas"),
+      )
     end
   end
 end

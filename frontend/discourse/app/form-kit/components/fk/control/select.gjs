@@ -1,7 +1,7 @@
 import { hash } from "@ember/helper";
 import { isBlank } from "@ember/utils";
-import DSelect, { DSelectOption } from "discourse/components/d-select";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
+import DSelect, { DSelectOption } from "discourse/ui-kit/d-select";
 
 const SelectOption = <template>
   <DSelectOption
@@ -33,6 +33,7 @@ export default class FKControlSelect extends FKBaseControl {
       @value={{@field.value}}
       @onChange={{@field.set}}
       @includeNone={{this.includeNone}}
+      @nonePlaceholder={{@nonePlaceholder}}
       id={{@field.id}}
       name={{@field.name}}
       aria-invalid={{if @field.error "true"}}

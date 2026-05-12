@@ -1,19 +1,25 @@
 import { getOwner } from "@ember/owner";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
+import EmbedMode from "discourse/lib/embed-mode";
 import PreloadStore from "discourse/lib/preload-store";
+import Draft from "discourse/models/draft";
 import processNode from "../lib/process-node";
 
 export default class NestedRoute extends Route {
+  @service composer;
   @service nestedViewCache;
   @service screenTrack;
+  @service site;
   @service siteSettings;
   @service store;
 
   queryParams = {
     sort: { refreshModel: true },
     context: { refreshModel: true },
+    collapseReplies: { refreshModel: false },
   };
 
   buildRouteInfoMetadata() {
@@ -99,6 +105,16 @@ export default class NestedRoute extends Route {
     }
 
     this.screenTrack.start(model.topic.id, controller);
+
+    if (!isEmpty(model.topic.draft) && !EmbedMode.enabled) {
+      this.composer.open({
+        draft: Draft.getLocal(model.topic.draft_key, model.topic.draft),
+        draftKey: model.topic.draft_key,
+        draftSequence: model.topic.draft_sequence,
+        ignoreIfChanged: true,
+        topic: model.topic,
+      });
+    }
   }
 
   deactivate() {
@@ -168,8 +184,28 @@ export default class NestedRoute extends Route {
   }
 
   _processResponse(data, params) {
+    // Match Topic.find: seed the site category store from the topic
+    // payload so lazy_load_categories installs can resolve category
+    // badges on the topic itself and on piggybacked suggested/related
+    // rows that only carry category_id.
+    data.topic?.categories?.forEach((c) => this.site.updateCategory(c));
+
     const topic = this.store.createRecord("topic", data.topic);
     topic.set("is_nested_view", true);
+
+    // Suggested/related are piggybacked at top-level on whichever
+    // response has has_more_roots=false — here, a short topic that
+    // fits in one page; otherwise they arrive via loadMoreRoots.
+    for (const key of [
+      "suggested_topics",
+      "related_topics",
+      "related_messages",
+      "suggested_group_name",
+    ]) {
+      if (data[key] !== undefined) {
+        topic[key] = data[key];
+      }
+    }
 
     const assignTopic = (postData) => {
       const post = this.store.createRecord("post", postData);
@@ -205,8 +241,21 @@ export default class NestedRoute extends Route {
   }
 
   _processContextResponse(data, params, sort) {
+    data.topic?.categories?.forEach((c) => this.site.updateCategory(c));
+
     const topic = this.store.createRecord("topic", data.topic);
     topic.set("is_nested_view", true);
+
+    for (const key of [
+      "suggested_topics",
+      "related_topics",
+      "related_messages",
+      "suggested_group_name",
+    ]) {
+      if (data[key] !== undefined) {
+        topic[key] = data[key];
+      }
+    }
 
     const assignTopic = (postData) => {
       const post = this.store.createRecord("post", postData);
@@ -222,12 +271,17 @@ export default class NestedRoute extends Route {
     const hasParentContext = targetReplyTo && targetReplyTo !== 1;
     const noAncestors = ancestors.length === 0 && hasParentContext;
 
-    // Build nested chain: ancestor[0] -> ancestor[1] -> ... -> target
-    // When context=0 (no ancestors), target becomes the chain root at depth 0.
+    // Nest ancestors outermost-first so target ends up as the chain leaf.
     let chainTip = targetNode;
     for (let i = ancestors.length - 1; i >= 0; i--) {
       chainTip = { post: ancestors[i], children: [chainTip] };
     }
+
+    // Force full NestedPost rebuild on every fetch: NestedPostChildren reads
+    // @preloadedChildren only in its constructor, so without a fresh key the
+    // inner cascade keeps rendering the previous target when two context
+    // views share a chain root.
+    chainTip._renderKey = crypto.randomUUID();
 
     return {
       topic,

@@ -646,4 +646,23 @@ describe UserNotifications do
       end
     end
   end
+
+  describe "when SiteSetting.simple_email_subject is enabled" do
+    before do
+      SiteSetting.simple_email_subject = true
+      followed_channel.add(user)
+      create_message(followed_channel, "hello @#{user.username}", Chat::UserMention)
+    end
+
+    it "uses the improved chat summary subject" do
+      expect(chat_summary_email.subject).to eq(
+        I18n.t(
+          "user_notifications.chat_summary.subject.chat_channel_1_improved",
+          site_name:,
+          channel: followed_channel.name,
+          count: 1,
+        ),
+      )
+    end
+  end
 end

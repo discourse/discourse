@@ -20,6 +20,7 @@ class NestedTopic::ListRoots
   step :prepare_posts
   step :serialize_roots
   only_if(:initial_page) { step :enrich_with_topic_metadata }
+  only_if(:final_page) { step :attach_suggested_and_related }
 
   private
 
@@ -46,6 +47,10 @@ class NestedTopic::ListRoots
 
   def initial_page(params:)
     params.page == 0
+  end
+
+  def final_page(has_more_roots:)
+    !has_more_roots
   end
 
   def load_roots(params:, loader:, topic_view:)
@@ -112,12 +117,34 @@ class NestedTopic::ListRoots
     reply_counts:,
     descendant_counts:,
     response:,
-    pinned_post_ids:
+    pinned_post_ids:,
+    has_more_roots:
   )
+    suppress_suggested_and_related_queries(topic_view) if has_more_roots
     response[:topic] = serializer.serialize_topic
     response[:op_post] = serializer.serialize_post(loader.op_post, reply_counts, descendant_counts)
     response[:sort] = params.sort
     response[:message_bus_last_id] = topic_view.message_bus_last_id
     response[:pinned_post_ids] = pinned_post_ids if pinned_post_ids.present?
+  end
+
+  def attach_suggested_and_related(serializer:, response:)
+    response.merge!(serializer.serialize_suggested_and_related)
+  end
+
+  # Match flat view behavior: don't run the suggested/related queries
+  # when there are more pages of roots coming. The core suggested/related
+  # queries honor these include_* flags. The discourse-ai plugin's
+  # `related_topics` serializer attribute gates on `object.next_page.nil?`
+  # (plugins/discourse-ai/lib/embeddings/entry_point.rb), and also uses
+  # `related_topics` in its `TopicView#categories` override to preload
+  # category badges on lazy_load_categories sites — so we set @next_page
+  # to a non-nil value here, which both short-circuits the AI serializer
+  # gate and lets the categories override continue to run unchanged.
+  # TopicView's skip_post_loading: true otherwise leaves next_page nil.
+  def suppress_suggested_and_related_queries(topic_view)
+    topic_view.include_suggested = false
+    topic_view.include_related = false
+    topic_view.instance_variable_set(:@next_page, topic_view.page + 1)
   end
 end

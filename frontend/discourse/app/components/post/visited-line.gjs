@@ -1,11 +1,11 @@
 import { concat } from "@ember/helper";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const PostVisitedLine = <template>
   <div class="small-action topic-post-visited">
     <div
-      class={{concatClass
+      class={{dConcatClass
         "topic-post-visited-line"
         (concat "post-" @post.post_number)
       }}

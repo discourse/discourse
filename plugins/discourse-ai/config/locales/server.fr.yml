@@ -104,88 +104,88 @@ fr:
       xaxis: "Positif (%)"
       yaxis: "Date"
     emotion_admiration:
-      title: "\U0001F929 Admiration"
+      title: "🤩 Admiration"
       description: "Publications classées selon l'émotion d'admiration via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_amusement:
-      title: "\U0001F604 Amusement"
+      title: "😄 Amusement"
       description: "Publications classées selon l'émotion d'amusement via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_anger:
-      title: "\U0001F620 Colère"
+      title: "😠 Colère"
       description: "Publications classées selon l'émotion de colère via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_annoyance:
-      title: "\U0001F612 Agacement"
+      title: "😒 Agacement"
       description: "Publications classées selon l'émotion d'agacement via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_approval:
-      title: "\U0001F44D Approbation"
+      title: "👍 Approbation"
       description: "Publications classées selon l'émotion d'approbation via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_caring:
-      title: "\U0001F917 Bienveillance"
+      title: "🤗 Bienveillance"
       description: "Publications classées selon l'émotion de bienveillance via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_confusion:
-      title: "\U0001F615 Confusion"
+      title: "😕 Confusion"
       description: "Publications classées selon l'émotion de confusion via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_curiosity:
-      title: "\U0001F914 Curiosité"
+      title: "🤔 Curiosité"
       description: "Publications classées selon l'émotion de curiosité via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_desire:
-      title: "\U0001F60D Désir"
+      title: "😍 Désir"
       description: "Publications classées selon l'émotion de désir via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_disappointment:
-      title: "\U0001F61E Déception"
+      title: "😞 Déception"
       description: "Publications classées selon l'émotion de déception via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_disapproval:
-      title: "\U0001F44E Désapprobation"
+      title: "👎 Désapprobation"
       description: "Publications classées selon l'émotion de désapprobation via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_disgust:
-      title: "\U0001F922 Dégoût"
+      title: "🤢 Dégoût"
       description: "Publications classées selon l'émotion de dégoût via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_embarrassment:
-      title: "\U0001F633 Embarras"
+      title: "😳 Embarras"
       description: "Publications classées selon l'émotion d'embarras via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_excitement:
-      title: "\U0001F92A Excitation"
+      title: "🤪 Excitation"
       description: "Publications classées selon l'émotion d'excitation via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_fear:
-      title: "\U0001F628 Peur"
+      title: "😨 Peur"
       description: "Publications classées selon l'émotion de peur via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_gratitude:
-      title: "\U0001F64F Gratitude"
+      title: "🙏 Gratitude"
       description: "Publications classées selon l'émotion de gratitude via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_grief:
-      title: "\U0001F622 Chagrin"
+      title: "😢 Chagrin"
       description: "Publications classées selon l'émotion de chagrin via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_joy:
-      title: "\U0001F60A Joie"
+      title: "😊 Joie"
       description: "Publications classées selon l'émotion de joie via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_love:
       title: '❤️ Amour'
       description: "Publications classées selon l'émotion d'amour via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_nervousness:
-      title: "\U0001F630 Nervosité"
+      title: "😰 Nervosité"
       description: "Publications classées selon l'émotion de nervosité via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_neutral:
-      title: "\U0001F610 Neutre"
+      title: "😐 Neutre"
       description: "Publications classées selon l'émotion de neutralité via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_optimism:
-      title: "\U0001F31F Optimisme"
+      title: "🌟 Optimisme"
       description: "Publications classées selon l'émotion d'optimisme via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_pride:
-      title: "\U0001F981 Fierté"
+      title: "🦁 Fierté"
       description: "Publications classées selon l'émotion de fierté via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_realization:
-      title: "\U0001F4A1 Réalisation"
+      title: "💡 Réalisation"
       description: "Publications classées selon l'émotion de réalisation via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_relief:
-      title: "\U0001F60C Soulagement"
+      title: "😌 Soulagement"
       description: "Publications classées selon l'émotion de soulagement via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_remorse:
-      title: "\U0001F614 Remords"
+      title: "😔 Remords"
       description: "Publications classées selon l'émotion de remords via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_sadness:
-      title: "\U0001F62D Tristesse"
+      title: "😭 Tristesse"
       description: "Publications classées selon l'émotion de tristesse via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
     emotion_surprise:
-      title: "\U0001F632 Surprise"
+      title: "😲 Surprise"
       description: "Publications classées selon l'émotion de surprise via l'IA, en utilisant le modèle « Samlowe/Roberta-Base-Go_Emotions »."
   discourse_ai:
     ai_artifact:
@@ -537,13 +537,13 @@ fr:
       reports:
         overall_sentiment: "Sentiment général (positif - négatif)"
         post_emotion:
-          sadness: "Tristesse \U0001F622"
-          surprise: "Surprise \U0001F631"
-          neutral: "Neutre \U0001F610"
-          fear: "Peur \U0001F628"
-          anger: "Colère \U0001F621"
-          joy: "Joie \U0001F600"
-          disgust: "Dégoût \U0001F922"
+          sadness: "Tristesse 😢"
+          surprise: "Surprise 😱"
+          neutral: "Neutre 😐"
+          fear: "Peur 😨"
+          anger: "Colère 😡"
+          joy: "Joie 😀"
+          disgust: "Dégoût 🤢"
         sentiment_analysis:
           positive: "Positif"
           negative: "Négatif"

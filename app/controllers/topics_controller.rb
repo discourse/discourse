@@ -644,10 +644,15 @@ class TopicsController < ApplicationController
 
     guardian.ensure_can_delete!(topic) if TopicTimer.destructive_types.values.include?(status_type)
 
-    if status_type == TopicTimer.types[:publish_to_category] && params[:time].present?
+    creating_timer = params[:time].present? || params[:duration_minutes].present?
+
+    if status_type == TopicTimer.types[:publish_to_category] && creating_timer
       category = Category.find_by(id: params[:category_id])
       raise Discourse::NotFound if !category
       raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
+      if topic.private_message? && !guardian.can_convert_topic?(topic)
+        raise Discourse::InvalidAccess
+      end
     end
 
     options = { by_user: current_user, based_on_last_post: based_on_last_post }
@@ -1139,14 +1144,18 @@ class TopicsController < ApplicationController
           :silent,
           :pinned_globally,
           :pinned_until,
+          :remove_all_tags,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
           tag_ids: [],
           tags: [],
+          add_tag_ids: [],
+          remove_tag_ids: [],
+          replace_tags: %i[from_tag_id to_tag_id],
         )
         .to_h
-        .symbolize_keys
+        .deep_symbolize_keys
 
-    %i[silent pinned_globally].each do |key|
+    %i[silent pinned_globally remove_all_tags].each do |key|
       operation[key] = ActiveModel::Type::Boolean.new.cast(operation[key]) if operation.has_key?(
         key,
       )

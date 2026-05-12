@@ -9,7 +9,7 @@ da:
     overall_sentiment:
       yaxis: "Dato"
     emotion_neutral:
-      title: "\U0001F610 Neutral"
+      title: "😐 Neutral"
   discourse_ai:
     tools:
       presets:
@@ -59,7 +59,7 @@ da:
     sentiment:
       reports:
         post_emotion:
-          neutral: "Neutral \U0001F610"
+          neutral: "Neutral 😐"
         sentiment_analysis:
           neutral: "Neutral"
     ai_staff_action_logger:

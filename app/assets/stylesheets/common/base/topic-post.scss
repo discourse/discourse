@@ -111,7 +111,7 @@
 .cooked,
 .d-editor-preview {
   overflow-wrap: break-word;
-  line-height: 1.5;
+  line-height: var(--cooked-line-height);
 
   video {
     max-width: 100%;
@@ -429,12 +429,12 @@ nav.post-controls {
         }
       }
 
-      &__like-count {
-        color: var(--d-post-control-text-color) !important;
-        gap: var(--space-2);
-
-        &.has-liked .d-icon {
-          color: var(--danger);
+      &__double-button {
+        .discourse-no-touch & {
+          &:not(.has-liked):hover {
+            --d-post-control-background--hover: var(--love-low);
+            --d-button-flat-icon-color--hover: var(--love);
+          }
         }
       }
     }
@@ -581,6 +581,17 @@ nav.post-controls {
           color: var(--d-post-control-create-icon-color);
         }
       }
+    }
+  }
+
+  .post-action-menu__like-count {
+    display: inline-flex;
+    align-items: center;
+    color: var(--d-post-control-text-color) !important;
+    gap: var(--space-2);
+
+    &.has-liked .d-icon {
+      color: var(--danger);
     }
   }
 
@@ -988,6 +999,11 @@ aside.quote {
   .buttons {
     display: flex;
     flex-wrap: wrap;
+
+    .btn,
+    .ai-post-helper {
+      border-radius: 0;
+    }
 
     @media screen and (width <= 420px) {
       flex-direction: column;

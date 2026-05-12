@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "阅读日历事件 feed"
   reports:
     currently_away:
       title: 用户目前离开

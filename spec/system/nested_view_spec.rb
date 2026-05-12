@@ -283,6 +283,18 @@ RSpec.describe "Nested view" do
     end
   end
 
+  describe "suggested topics" do
+    fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "A reply") }
+    fab!(:other_topic) { Fabricate(:post).topic }
+
+    it "renders suggested topics at the end of the nested view" do
+      nested_view.visit_nested(topic)
+
+      expect(nested_view).to have_suggested_topics
+      expect(nested_view).to have_suggested_topic(other_topic)
+    end
+  end
+
   describe "plugin disabled" do
     it "returns 404 when plugin is disabled" do
       SiteSetting.nested_replies_enabled = false

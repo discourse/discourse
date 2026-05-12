@@ -84,6 +84,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :effective_locale,
              :can_see_ip,
              :is_impersonating,
+             :impersonation_expires_at,
              :can_change_post_owner,
              :show_site_owner_onboarding
 
@@ -107,6 +108,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def is_impersonating
     !!object.is_impersonating
+  end
+
+  def impersonation_expires_at
+    object.impersonation_expires_at
   end
 
   def include_can_change_post_owner?
@@ -189,10 +194,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def has_new_upcoming_changes
     last_visited = object.custom_fields["last_visited_upcoming_changes_at"]
-
-    scope = UpcomingChangeEvent.added
-    scope = scope.where("created_at > ?", Time.zone.parse(last_visited)) if last_visited.present?
-    scope.exists?
+    return false if last_visited.blank? && object.created_at < Discourse.site_creation_date + 1.hour
+    cutoff = last_visited.present? ? Time.zone.parse(last_visited) : object.created_at
+    UpcomingChangeEvent.added.where("created_at > ?", cutoff).exists?
   end
 
   def can_post_anonymously

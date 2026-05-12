@@ -2,14 +2,14 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { translateModKey } from "discourse/lib/utilities";
-import autoFocus from "discourse/modifiers/auto-focus";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
+import DButton from "discourse/ui-kit/d-button";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class FastEdit extends Component {
@@ -78,7 +78,7 @@ export default class FastEdit extends Component {
         {{on "input" this.updateValue}}
         id="fast-edit-input"
         {{preventScrollOnFocus}}
-        {{autoFocus}}
+        {{dAutoFocus}}
       >{{this.value}}</textarea>
 
       <div class="fast-edit-container__footer">

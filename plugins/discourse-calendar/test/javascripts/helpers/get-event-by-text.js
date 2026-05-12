@@ -1,6 +1,9 @@
 export default function getEventByText(text) {
-  const events = [...document.querySelectorAll(".fc-day-grid-event")].filter(
-    (event) => event.textContent.includes(text)
+  const events = [
+    ...document.querySelectorAll(".fc-daygrid-event-harness"),
+  ].filter(
+    (event) =>
+      event.querySelector(".fc-event-title")?.textContent.trim() === text
   );
 
   switch (events.length) {

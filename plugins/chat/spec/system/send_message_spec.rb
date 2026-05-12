@@ -109,20 +109,18 @@ RSpec.describe "Send message" do
 
     it "has topic context" do
       tested_context = {}
-      blk = Proc.new { |message, channel, user, context| tested_context = context }
+      blk = ->(*, context) { tested_context = context }
+      DiscourseEvent.on(:chat_message_created, &blk)
 
-      begin
-        DiscourseEvent.on(:chat_message_created, &blk)
-        topic_page.visit_topic(post_1.topic)
-        chat_page.open_from_header
-        drawer_page.open_channel(channel_1)
-        channel_page.send_message
+      topic_page.visit_topic(post_1.topic)
+      chat_page.open_from_header
+      drawer_page.open_channel(channel_1)
+      channel_page.send_message
 
-        expect(tested_context.dig(:context, :post_ids)).to eq([post_1.id, post_2.id])
-        expect(tested_context.dig(:context, :topic_id)).to eq(post_1.topic_id)
-      ensure
-        DiscourseEvent.off(:chat_message_created, &blk)
-      end
+      expect(tested_context.dig(:context, :post_ids)).to eq([post_1.id, post_2.id])
+      expect(tested_context.dig(:context, :topic_id)).to eq(post_1.topic_id)
+    ensure
+      DiscourseEvent.off(:chat_message_created, &blk)
     end
   end
 end

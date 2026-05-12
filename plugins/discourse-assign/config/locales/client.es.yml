@@ -129,6 +129,8 @@ es:
       web_hooks:
         assign_event:
           group_name: "Asignar eventos"
+          assigned: "Cuando un usuario asigna un tema"
+          unassigned: "Cuando un usuario anula la asignación de un tema"
     search:
       advanced:
         in:
@@ -136,6 +138,18 @@ es:
           unassigned: "están sin asignar"
         assigned:
           label: "Asignado a"
+    topics:
+      bulk:
+        unassign: "Anular asignación de temas"
+        assign: "Asignar temas"
+        assign_description: "Asigna todos los temas seleccionados a la siguiente categoría:"
+        unassign_description: "¿Quieres anular la selección de los temas seleccionados?"
+        confirm_assign_topics:
+          one: "Asginar %{count} tema"
+          other: "Asginar %{count} temas"
+        confirm_unassign_topics:
+          one: "Anular asignación de %{count} tema"
+          other: "Anular asignación de %{count} temas"
     discourse_automation:
       scriptables:
         random_assign:

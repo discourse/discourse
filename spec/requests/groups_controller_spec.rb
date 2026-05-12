@@ -379,7 +379,15 @@ RSpec.describe GroupsController do
 
         describe "automatic groups" do
           it "should return the right response" do
-            expect_type_to_return_right_groups("automatic", Group::AUTO_GROUP_IDS.keys - [0])
+            expect_type_to_return_right_groups(
+              "automatic",
+              Group::AUTO_GROUP_IDS.keys -
+                [
+                  Group::AUTO_GROUPS[:everyone],
+                  Group::AUTO_GROUPS[:anonymous],
+                  Group::AUTO_GROUPS[:logged_in_users],
+                ],
+            )
           end
         end
 
@@ -490,6 +498,8 @@ RSpec.describe GroupsController do
 
           groups = Group::AUTO_GROUPS.keys
           groups.delete(:everyone)
+          groups.delete(:anonymous)
+          groups.delete(:logged_in_users)
           groups.push(group.name)
 
           expect(body["extras"]["visible_group_names"]).to contain_exactly(*groups.map(&:to_s))
@@ -534,6 +544,22 @@ RSpec.describe GroupsController do
 
     describe "when accessing by id" do
       include_examples "group show behavior", "/groups/by-id", :id
+    end
+
+    context "as a moderator with moderators_manage_groups enabled" do
+      before { SiteSetting.moderators_manage_groups = true }
+
+      it "includes automatic_membership_email_domains in the response" do
+        group.update!(automatic_membership_email_domains: "test.org")
+        sign_in(moderator)
+
+        get "/groups/#{group.name}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["group"]["automatic_membership_email_domains"]).to eq(
+          "test.org",
+        )
+      end
     end
   end
 
@@ -1103,6 +1129,26 @@ RSpec.describe GroupsController do
         group.reload
         expect(group.title).to eq("Original Title")
         expect(group.flair_bg_color).to eq("FFF")
+      end
+
+      it "should not clear automatic_membership_email_domains when moderator owner updates group" do
+        SiteSetting.moderators_manage_groups = false
+        user.update!(moderator: true)
+        group.update!(automatic_membership_email_domains: "test.org")
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                bio_raw: "updated bio",
+                automatic_membership_email_domains: "",
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.automatic_membership_email_domains).to eq("test.org")
+        expect(group.bio_raw).to eq("updated bio")
       end
 
       it "should not be allowed to update automatic groups" do
@@ -2713,6 +2759,8 @@ RSpec.describe GroupsController do
 
         expected_ids = Group::AUTO_GROUPS.map { |name, id| id }
         expected_ids.delete(Group::AUTO_GROUPS[:everyone])
+        expected_ids.delete(Group::AUTO_GROUPS[:logged_in_users])
+        expected_ids.delete(Group::AUTO_GROUPS[:anonymous])
         expected_ids << group.id
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(*expected_ids)
@@ -2765,12 +2813,43 @@ RSpec.describe GroupsController do
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(group.id, hidden_group.id)
 
+        get "/groups/search.json"
+
+        expect(response.status).to eq(200)
+        groups = response.parsed_body
+
+        automatic_ids = Group::AUTO_GROUPS.map { |name, id| id }
+
+        expect(groups.map { |group| group["id"] }).to contain_exactly(
+          group.id,
+          hidden_group.id,
+          *(
+            automatic_ids -
+              [
+                Group::AUTO_GROUPS[:everyone],
+                Group::AUTO_GROUPS[:anonymous],
+                Group::AUTO_GROUPS[:logged_in_users],
+              ]
+          ),
+        )
+
         get "/groups/search.json?include_everyone=true"
 
         expect(response.status).to eq(200)
         groups = response.parsed_body
 
         automatic_ids = Group::AUTO_GROUPS.map { |name, id| id }
+
+        expect(groups.map { |group| group["id"] }).to contain_exactly(
+          group.id,
+          hidden_group.id,
+          *(automatic_ids - [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]]),
+        )
+
+        get "/groups/search.json?include_pseudogroups=true"
+
+        expect(response.status).to eq(200)
+        groups = response.parsed_body
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(
           group.id,

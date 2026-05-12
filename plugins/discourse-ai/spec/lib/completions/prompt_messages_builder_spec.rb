@@ -13,8 +13,14 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   fab!(:image_upload2) do
     Fabricate(:upload, user: user, original_filename: "image.png", extension: "png")
   end
+  let(:document_upload) do
+    Fabricate(:upload, user: user, original_filename: "notes.txt", extension: "txt")
+  end
 
-  before { enable_current_plugin }
+  before do
+    enable_current_plugin
+    SiteSetting.authorized_extensions = "*"
+  end
 
   it "correctly merges user messages with uploads" do
     builder.push(type: :user, content: "Hello", id: "Alice", upload_ids: [1])
@@ -142,7 +148,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     end
 
     it "includes uploads from context posts when include_uploads is true" do
-      upload = Fabricate(:upload, user: user)
+      upload = Fabricate(:upload, user: user, original_filename: "image.png", extension: "png")
       UploadReference.create!(target: post1, upload: upload)
 
       context =
@@ -273,6 +279,67 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       expect(message[:upload_ids]).to be_nil
     end
 
+    it "can include document uploads while excluding image uploads" do
+      message_with_mixed_uploads =
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_channel,
+          user: user,
+          message: "Check these files",
+          upload_ids: [image_upload1.id, document_upload.id],
+        )
+
+      context =
+        described_class.messages_from_chat(
+          message_with_mixed_uploads,
+          channel: dm_channel,
+          context_post_ids: nil,
+          max_messages: 10,
+          include_image_uploads: false,
+          include_document_uploads: true,
+          allowed_attachment_types: ["txt"],
+          bot_user_ids: [bot_user.id],
+          instruction_message: nil,
+        )
+
+      expect(context.first[:content]).to eq(
+        [
+          "Check these files -- uploaded(#{image_upload1.short_url}, #{document_upload.short_url})",
+          { upload_id: document_upload.id },
+        ],
+      )
+    end
+
+    it "can include image uploads while excluding document uploads" do
+      message_with_mixed_uploads =
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_channel,
+          user: user,
+          message: "Check these files",
+          upload_ids: [image_upload1.id, document_upload.id],
+        )
+
+      context =
+        described_class.messages_from_chat(
+          message_with_mixed_uploads,
+          channel: dm_channel,
+          context_post_ids: nil,
+          max_messages: 10,
+          include_image_uploads: true,
+          include_document_uploads: false,
+          bot_user_ids: [bot_user.id],
+          instruction_message: nil,
+        )
+
+      expect(context.first[:content]).to eq(
+        [
+          "Check these files -- uploaded(#{image_upload1.short_url}, #{document_upload.short_url})",
+          { upload_id: image_upload1.id },
+        ],
+      )
+    end
+
     it "properly handles uploads in public channels with multiple users" do
       _first_message =
         Fabricate(:chat_message, chat_channel: public_channel, user: user, message: "First message")
@@ -373,6 +440,51 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       actual_upload_ids = upload_hashes.map { |h| h[:upload_id] }
       expect(actual_upload_ids).to match_array(expected_upload_ids)
     end
+
+    it "filters disallowed documents before applying upload limits" do
+      allowed_upload =
+        Fabricate(:upload, user: test_user, original_filename: "notes.txt", extension: "txt")
+      disallowed_uploads =
+        described_class::MAX_CHAT_UPLOADS.times.map do |i|
+          Fabricate(
+            :upload,
+            user: test_user,
+            original_filename: "archive#{i}.zip",
+            extension: "zip",
+          )
+        end
+      mixed_uploads = [allowed_upload, *disallowed_uploads]
+
+      messages =
+        mixed_uploads.map do |upload|
+          Fabricate(
+            :chat_message,
+            chat_channel: test_channel,
+            user: test_user,
+            message: "Message with upload #{upload.id}",
+          ).tap do |msg|
+            UploadReference.create!(target: msg, upload: upload)
+            msg.update!(upload_ids: [upload.id])
+          end
+        end
+
+      context =
+        described_class.messages_from_chat(
+          messages.last,
+          channel: test_channel,
+          context_post_ids: nil,
+          max_messages: messages.size,
+          include_image_uploads: false,
+          include_document_uploads: true,
+          allowed_attachment_types: ["txt"],
+          bot_user_ids: [],
+          instruction_message: nil,
+        )
+
+      upload_hashes = context.first[:content].select { |item| item.is_a?(Hash) && item[:upload_id] }
+
+      expect(upload_hashes).to eq([{ upload_id: allowed_upload.id }])
+    end
   end
 
   describe ".messages_from_post" do
@@ -437,6 +549,51 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
 
       # I am mixed on asserting everything cause the test
       # will be brittle, but open to changing this
+    end
+
+    it "includes document post uploads independently from image uploads" do
+      UploadReference.create!(target: third_post, upload: image_upload1)
+      UploadReference.create!(target: third_post, upload: document_upload)
+
+      context =
+        described_class.messages_from_post(
+          third_post,
+          max_posts: 1,
+          bot_usernames: [bot_user.username],
+          include_image_uploads: false,
+          include_document_uploads: true,
+          allowed_attachment_types: ["txt"],
+        )
+
+      expect(context).to contain_exactly(
+        {
+          type: :user,
+          id: user.username,
+          content: [third_post.raw, { upload_id: document_upload.id }],
+        },
+      )
+    end
+
+    it "includes image post uploads independently from document uploads" do
+      UploadReference.create!(target: third_post, upload: image_upload1)
+      UploadReference.create!(target: third_post, upload: document_upload)
+
+      context =
+        described_class.messages_from_post(
+          third_post,
+          max_posts: 1,
+          bot_usernames: [bot_user.username],
+          include_image_uploads: true,
+          include_document_uploads: false,
+        )
+
+      expect(context).to contain_exactly(
+        {
+          type: :user,
+          id: user.username,
+          content: [third_post.raw, { upload_id: image_upload1.id }],
+        },
+      )
     end
 
     it "handles uploads correctly in topic style messages (and times)" do

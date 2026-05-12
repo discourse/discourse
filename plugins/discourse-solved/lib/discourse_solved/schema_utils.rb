@@ -82,7 +82,7 @@ module DiscourseSolved
 
     private_class_method def self.eligible_answer?(post)
       !post.is_first_post? && post.post_type == Post.types[:regular] && !post.hidden &&
-        post.excerpt(nil, keep_onebox_body: true, keep_quotes: true).present?
+        post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
     end
   end
 end

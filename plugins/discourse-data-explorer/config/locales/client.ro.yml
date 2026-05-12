@@ -10,8 +10,6 @@ ro:
       default_query: "Implicit"
       or: "sau"
       create: "Creează"
-      ai:
-        generate: "Generare"
       import:
         label: "Importă"
       help:

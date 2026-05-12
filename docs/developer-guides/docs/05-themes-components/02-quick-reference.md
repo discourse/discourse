@@ -39,7 +39,7 @@ assets/
 stylesheets/
   (arbitrarily named files, can be imported from each other, and common/desktop/mobile.scss)
 javascripts/
-  (arbitrarily named files. Supports .js .hbs and .raw.hbs)
+  (arbitrarily named files. Supports .js, .gjs and .hbs)
 ```
 
 ### about.json <small>[structure info](https://meta.discourse.org/t/structure-of-themes-and-theme-components/60848), [available metadata](https://meta.discourse.org/t/adding-metadata-to-a-theme/119205)</small>

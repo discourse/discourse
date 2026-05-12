@@ -83,6 +83,12 @@ RSpec.describe UpcomingChanges::Action::TrackNotifyStatusChanges do
       end
     end
 
+    it "clears the latest new feature created_at cache" do
+      Discourse.redis.set("latest_new_feature_created_at", Time.zone.now.iso8601)
+      result
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_nil
+    end
+
     context "when there are added changes in the same run" do
       let(:added_changes) { [:enable_upload_debug_mode] }
 

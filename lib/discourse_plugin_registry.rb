@@ -119,6 +119,7 @@ class DiscoursePluginRegistry
   define_filtered_register :search_handlers
 
   define_filtered_register :stats
+  define_filtered_register :admin_dashboard_highlight_kpis
   define_filtered_register :bookmarkables
 
   define_filtered_register :list_suggested_for_providers

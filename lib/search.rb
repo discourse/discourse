@@ -952,14 +952,15 @@ class Search
       )
     else
       tags = resolve_tag_synonyms(match.split(","))
+      tag_ids = Tag.where_name(tags).pluck(:id)
+      return positive ? posts.none : posts if tag_ids.empty?
 
       posts.where(
-        "topics.id #{modifier} IN (
-        SELECT DISTINCT(tt.topic_id)
-        FROM topic_tags tt, tags
-        WHERE tt.tag_id = tags.id AND lower(tags.name) IN (?)
+        "#{modifier} EXISTS (
+        SELECT 1 FROM topic_tags tt
+        WHERE tt.topic_id = topics.id AND tt.tag_id IN (?)
       )",
-        tags,
+        tag_ids,
       )
     end
   end

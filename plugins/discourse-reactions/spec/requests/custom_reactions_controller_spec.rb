@@ -456,6 +456,22 @@ describe DiscourseReactions::CustomReactionsController do
       expect(parsed[0]["post"]["user"]["id"]).to eq(user_1.id)
       expect(parsed[0]["reaction"]["id"]).to eq(like.id)
     end
+
+    it "does not include reactions or likes from ignored users" do
+      sign_in(user_1)
+      Fabricate(:ignored_user, user: user_1, ignored_user: user_3)
+      Fabricate(:ignored_user, user: user_1, ignored_user: user_5)
+
+      get "/discourse-reactions/posts/reactions-received.json",
+          params: {
+            username: user_1.username,
+            include_likes: true,
+          }
+
+      usernames = response.parsed_body.map { |reaction| reaction["user"]["username"] }
+      expect(usernames).not_to include(user_3.username, user_5.username)
+      expect(usernames).to include(user_2.username, user_4.username)
+    end
   end
 
   describe "#reactions_users_list" do
@@ -501,6 +517,195 @@ describe DiscourseReactions::CustomReactionsController do
       user_4_rows = response.parsed_body["users"].select { |u| u["username"] == user_4.username }
       expect(user_4_rows.size).to eq(1)
       expect(user_4_rows.first["reaction"]).to eq("hugs")
+    end
+
+    context "with ignored users" do
+      it "hides reactions and likes from users the current user has ignored" do
+        sign_in(user_1)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_3)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_5)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
+
+        expect(response.status).to eq(200)
+        usernames = response.parsed_body["users"].map { |u| u["username"] }
+        expect(usernames).not_to include(user_3.username, user_5.username)
+        expect(usernames).to include(user_2.username, user_4.username)
+        expect(response.parsed_body["total_rows"]).to eq(usernames.size)
+      end
+
+      it "still shows reactions to anonymous viewers" do
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_3)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
+
+        expect(response.status).to eq(200)
+        usernames = response.parsed_body["users"].map { |u| u["username"] }
+        expect(usernames).to include(user_3.username)
+      end
+    end
+  end
+
+  describe "#post_reactions_users" do
+    it "return reaction_users of post when theres no parameters" do
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+      parsed = response.parsed_body
+
+      expect(response.status).to eq(200)
+      expect(parsed["reaction_users"][0]["users"][0]["username"]).to eq(user_5.username)
+      expect(parsed["reaction_users"][0]["users"][0]["name"]).to eq(user_5.name)
+      expect(parsed["reaction_users"][0]["users"][0]["avatar_template"]).to eq(
+        user_5.avatar_template,
+      )
+    end
+
+    it "return reaction_users of reaction when there are parameters" do
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json?reaction_value=#{laughing_reaction.reaction_value}"
+      parsed = response.parsed_body
+
+      expect(response.status).to eq(200)
+      expect(parsed["reaction_users"][0]["users"][0]["username"]).to eq(user_1.username)
+      expect(parsed["reaction_users"][0]["users"][0]["name"]).to eq(user_1.name)
+      expect(parsed["reaction_users"][0]["users"][0]["avatar_template"]).to eq(
+        user_1.avatar_template,
+      )
+    end
+
+    it "gives 404 ERROR when the post_id OR reaction_value is invalid" do
+      get "/discourse-reactions/posts/1000000/reactions-users.json"
+      expect(response.status).to eq(404)
+
+      get "/discourse-reactions/posts/1000000/reactions-users.json?reaction_value=test"
+      expect(response.status).to eq(404)
+    end
+
+    it "merges matching custom reaction into likes" do
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json?reaction_value=#{DiscourseReactions::Reaction.main_reaction_id}"
+      parsed = response.parsed_body
+      like_count = parsed["reaction_users"][0]["count"].to_i
+      expect(like_count).to eq(1)
+
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json?reaction_value=laughing"
+      parsed = response.parsed_body
+      reaction_count = parsed["reaction_users"][0]["count"].to_i
+      expect(reaction_count).to eq(2)
+
+      SiteSetting.discourse_reactions_reaction_for_like = "laughing"
+
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json?reaction_value=#{DiscourseReactions::Reaction.main_reaction_id}"
+      parsed = response.parsed_body
+      expect(parsed["reaction_users"][0]["count"]).to eq(like_count + reaction_count)
+    end
+
+    it "does not show reaction_users on PMs without permission" do
+      get "/discourse-reactions/posts/#{private_post.id}/reactions-users.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "shows reaction_users on PMs with permission" do
+      sign_in(user_2)
+      get "/discourse-reactions/posts/#{private_post.id}/reactions-users.json"
+      expect(response.status).to eq(200)
+    end
+
+    context "with ignored users" do
+      it "hides ignored users from reactions and likes" do
+        sign_in(user_1)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_2)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_5)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+
+        expect(response.status).to eq(200)
+        usernames =
+          response.parsed_body["reaction_users"].flat_map do |entry|
+            entry["users"].map { |u| u["username"] }
+          end
+        expect(usernames).not_to include(user_2.username, user_5.username)
+        expect(usernames).to include(user_1.username, user_3.username, user_4.username)
+      end
+
+      it "hides ignored users when filtering by main_reaction (heart)" do
+        sign_in(user_1)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_5)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json?reaction_value=#{DiscourseReactions::Reaction.main_reaction_id}"
+
+        expect(response.status).to eq(200)
+        usernames =
+          response.parsed_body["reaction_users"].flat_map do |entry|
+            entry["users"].map { |u| u["username"] }
+          end
+        expect(usernames).not_to include(user_5.username)
+      end
+
+      it "still shows reactions to anonymous viewers" do
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_5)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+
+        expect(response.status).to eq(200)
+        usernames =
+          response.parsed_body["reaction_users"].flat_map do |entry|
+            entry["users"].map { |u| u["username"] }
+          end
+        expect(usernames).to include(user_5.username)
+      end
+
+      it "keeps reaction count consistent with the filtered users list" do
+        sign_in(user_1)
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_2)
+
+        get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+
+        expect(response.status).to eq(200)
+        response.parsed_body["reaction_users"].each do |entry|
+          expect(entry["users"].length).to eq(entry["count"]),
+          "expected count #{entry["count"]} to match #{entry["users"].length} users for #{entry["id"]}"
+        end
+      end
+    end
+
+    it "does not double up reactions which also count as likes if the reaction is no longer enabled" do
+      post_for_enabled_reactions = Fabricate(:post, user: user_2)
+      new_reaction_1 =
+        Fabricate(:reaction, post: post_for_enabled_reactions, reaction_value: "laughing")
+      Fabricate(
+        :reaction_user,
+        user: user_5,
+        reaction: new_reaction_1,
+        post: post_for_enabled_reactions,
+      )
+      Fabricate(
+        :post_action,
+        post: post_for_enabled_reactions,
+        user: user_4,
+        post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+      )
+
+      get "/discourse-reactions/posts/#{post_for_enabled_reactions.id}/reactions-users.json"
+      parsed = response.parsed_body
+
+      expect(response.status).to eq(200)
+      expect(
+        parsed["reaction_users"].find { |reaction| reaction["id"] == "laughing" }["count"],
+      ).to eq(1)
+      expect(parsed["reaction_users"].find { |reaction| reaction["id"] == "heart" }["count"]).to eq(
+        1,
+      )
+
+      SiteSetting.discourse_reactions_enabled_reactions = "+1"
+
+      get "/discourse-reactions/posts/#{post_for_enabled_reactions.id}/reactions-users.json"
+      parsed = response.parsed_body
+
+      expect(response.status).to eq(200)
+      expect(
+        parsed["reaction_users"].find { |reaction| reaction["id"] == "laughing" }["count"],
+      ).to eq(1)
+      expect(parsed["reaction_users"].find { |reaction| reaction["id"] == "heart" }["count"]).to eq(
+        1,
+      )
     end
   end
 

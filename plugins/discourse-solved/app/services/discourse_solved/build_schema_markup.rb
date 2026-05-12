@@ -38,7 +38,7 @@ class DiscourseSolved::BuildSchemaMarkup
   def fetch_accepted_answer(topic:)
     post = topic.solved&.answer_post
     return unless post.present? && Guardian.new.can_see_post?(post)
-    post if post.excerpt(nil, keep_onebox_body: true, keep_quotes: true).present?
+    post if post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
   end
 
   def fetch_suggested_answers(params:, topic:, accepted_answer:)
@@ -50,7 +50,7 @@ class DiscourseSolved::BuildSchemaMarkup
       .where(post_type: Post.types[:regular], hidden: false)
       .order(:post_number)
       .to_a
-      .select { |p| p.excerpt(nil, keep_onebox_body: true, keep_quotes: true).present? }
+      .select { |p| p.cooked.present? && Nokogiri::HTML5.fragment(p.cooked).text.strip.present? }
   end
 
   def fetch_html(topic:, accepted_answer:, suggested_answers:)

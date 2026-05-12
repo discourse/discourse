@@ -110,8 +110,18 @@ module DiscourseDataExplorer
         },
         post: {
           class: Post,
-          fields: %i[id topic_id post_number cooked user_id],
-          include: [:user],
+          fields: %i[
+            id
+            topic_id
+            post_number
+            cooked
+            user_id
+            post_type
+            deleted_at
+            deleted_by_id
+            hidden
+          ],
+          include: [:user, { topic: :category }],
           serializer: SmallPostWithExcerptSerializer,
         },
         topic: {
@@ -151,7 +161,7 @@ module DiscourseDataExplorer
           .compact
     end
 
-    def self.add_extra_data(pg_result)
+    def self.add_extra_data(pg_result, guardian: nil)
       needed_classes = {}
       ret = {}
       col_map = {}
@@ -188,6 +198,7 @@ module DiscourseDataExplorer
         column_nums.each { |col_n| ids.merge(pg_result.column_values(col_n)) }
         ids.delete nil
         ids.map! &:to_i
+        ids = ids.take(SiteSetting.data_explorer_query_result_limit)
 
         object_class = support_info[:class]
         all_objs = object_class
@@ -195,12 +206,26 @@ module DiscourseDataExplorer
         all_objs =
           all_objs
             .select(support_info[:fields])
-            .where(id: ids.to_a.sort)
+            .where(id: ids.sort)
             .includes(support_info[:include])
             .order(:id)
 
+        if guardian
+          all_objs =
+            case cls
+            when :post
+              all_objs.select { |post| guardian.can_see_post?(post) }
+            when :topic
+              allowed_topic_ids = guardian.can_see_topic_ids(topic_ids: ids)
+              all_objs.where(id: allowed_topic_ids)
+            else
+              all_objs
+            end
+        end
+
         opts = { each_serializer: support_info[:serializer] }
         opts[:only] = support_info[:only] if support_info[:only]
+        opts[:scope] = guardian if guardian
         ret[cls] = ActiveModel::ArraySerializer.new(all_objs, **opts)
       end
       [ret, col_map]

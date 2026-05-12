@@ -100,7 +100,7 @@
     }
 
     &.active {
-      color: var(--primary);
+      color: var(--d-selected-text-color);
       background-color: var(--d-selected);
       font-weight: bold;
       font-weight: var(--d-sidebar-active-font-weight);

@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AssignedToPost extends Component {
@@ -31,9 +31,9 @@ export default class AssignedToPost extends Component {
 
   <template>
     {{#if @assignedToUser}}
-      {{icon "user-plus"}}
+      {{dIcon "user-plus"}}
     {{else}}
-      {{icon "group-plus"}}
+      {{dIcon "group-plus"}}
     {{/if}}
 
     <span class="assign-text">
@@ -54,7 +54,7 @@ export default class AssignedToPost extends Component {
       class="btn-flat more-button"
       @autofocus={{true}}
     >
-      <DropdownMenu as |dropdown|>
+      <DDropdownMenu as |dropdown|>
         <dropdown.item>
           <DButton
             @action={{this.unassign}}
@@ -71,7 +71,7 @@ export default class AssignedToPost extends Component {
             class="btn-transparent edit-assignment-btn"
           />
         </dropdown.item>
-      </DropdownMenu>
+      </DDropdownMenu>
     </DMenu>
   </template>
 }

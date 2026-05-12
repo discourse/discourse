@@ -118,6 +118,10 @@ RSpec.describe DiscourseTopicVoting::Votes::Remove do
       it "does not enqueue the unvote webhook when not configured" do
         expect { result }.not_to change(Jobs::EmitWebHookEvent.jobs, :size)
       end
+
+      it "does not enqueue the backfill badges job" do
+        expect { result }.not_to change(Jobs::DiscourseTopicVoting::BackfillBadges.jobs, :size)
+      end
     end
   end
 end

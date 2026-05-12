@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 ar:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "قراءة خلاصة أحداث التقويم"
   reports:
     currently_away:
       title: المستخدمون الغائبون حاليًا

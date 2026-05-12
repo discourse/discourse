@@ -8,8 +8,7 @@ module Jobs
       def execute(args)
         return unless SiteSetting.rss_polling_enabled
 
-        @author = User.find_by_username(args[:author_username])
-        return if @author.nil?
+        @author = resolve_author(args)
 
         @discourse_category_id = args[:discourse_category_id]
         return if @discourse_category_id.present? && !Category.exists?(@discourse_category_id)
@@ -24,6 +23,26 @@ module Jobs
       private
 
       attr_reader :feed_url, :author, :discourse_category_id, :discourse_tags, :feed_category_filter
+
+      def resolve_author(args)
+        if args[:user_id]
+          user = User.find_by(id: args[:user_id])
+          return user if user
+
+          Rails.logger.warn(
+            "RSS Polling: user_id #{args[:user_id]} not found for feed #{args[:feed_url]}, falling back to system user",
+          )
+        elsif args[:author_username].present?
+          user = User.find_by_username(args[:author_username])
+          return user if user
+
+          Rails.logger.warn(
+            "RSS Polling: username '#{args[:author_username]}' not found for feed #{args[:feed_url]}, falling back to system user",
+          )
+        end
+
+        Discourse.system_user
+      end
 
       def feed_key
         "rss-polling-feed-polled:#{Digest::SHA1.hexdigest(feed_url)}"

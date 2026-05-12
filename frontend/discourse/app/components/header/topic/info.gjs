@@ -5,14 +5,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import TopicStatus from "discourse/components/topic-status";
-import categoryLink from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import renderTags from "discourse/lib/render-tags";
 import DiscourseURL from "discourse/lib/url";
 import { and, gt, not, or } from "discourse/truth-helpers";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PluginOutlet from "../../plugin-outlet";
 import FeaturedLink from "./featured-link";
@@ -86,13 +86,13 @@ export default class Info extends Component {
 
   <template>
     <div
-      class={{concatClass (if this.twoRows "two-rows") "extra-info-wrapper"}}
+      class={{dConcatClass (if this.twoRows "two-rows") "extra-info-wrapper"}}
     >
       <PluginOutlet
         @name="header-topic-info__before"
         @outletArgs={{lazyHash topic=@topicInfo}}
       />
-      <div class={{concatClass (if this.twoRows "two-rows") "extra-info"}}>
+      <div class={{dConcatClass (if this.twoRows "two-rows") "extra-info"}}>
         <div class="title-wrapper">
           <h1 class="header-title">
             {{#if this.showPM}}
@@ -101,7 +101,7 @@ export default class Info extends Component {
                 href={{this.pmHref}}
                 aria-label={{i18n "user.messages.inbox"}}
               >
-                {{icon "envelope" class="private-message-glyph"}}
+                {{dIcon "envelope" class="private-message-glyph"}}
               </a>
             {{/if}}
 
@@ -152,18 +152,18 @@ export default class Info extends Component {
                         this.site.desktopView
                       )
                     }}
-                      {{categoryLink
+                      {{dCategoryLink
                         @topicInfo.category.parentCategory.parentCategory
                         (hash hideParent="true")
                       }}
                     {{/if}}
 
-                    {{categoryLink
+                    {{dCategoryLink
                       @topicInfo.category.parentCategory
                       (hash hideParent="true")
                     }}
                   {{/if}}
-                  {{categoryLink @topicInfo.category (hash hideParent="true")}}
+                  {{dCategoryLink @topicInfo.category (hash hideParent="true")}}
                 </PluginOutlet>
               </div>
             {{/if}}

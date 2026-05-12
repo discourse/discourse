@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
 import { QUERY_RESULT_MAX_LIMIT } from "discourse/plugins/discourse-data-explorer/discourse/lib/constants";
 
 export default class QueryResultDownloadButtons extends Component {

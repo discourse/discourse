@@ -102,10 +102,7 @@ export default {
   },
 
   handleRouteDidChange(transition) {
-    if (
-      transition.isAborted ||
-      (transition.urlMethod === "replace" && transition.queryParamsOnly)
-    ) {
+    if (transition.isAborted) {
       return;
     }
 
@@ -132,6 +129,8 @@ export default {
       referrer: referrerUrl,
       topicId,
     });
+
+    _preNavigationUrl = window.location.href;
   },
 
   handleRouteWillChange(transition) {
@@ -171,7 +170,6 @@ export default {
       trackingUrl = new URL(path, window.location.origin).href;
       trackingReferrer = window.location.href;
     }
-    _preNavigationUrl = window.location.href;
     trackNextAjaxAsPageview(trackingSessionId, trackingUrl, trackingReferrer);
 
     if (

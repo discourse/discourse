@@ -2797,6 +2797,8 @@ fi:
       list_item: "Luettelokohde"
       toggle_direction: "Vaihda suuntaa"
       wrap_modal:
+        attribute_key: "Avain"
+        attribute_value: "Arvo"
         apply: "Käytä"
       help: "Markdown-muokkausohje"
       exit_fullscreen_prompt: "Poistu koko näytön tilasta painamalla <kbd>Esc</kbd>-näppäintä"
@@ -2865,6 +2867,9 @@ fi:
         copy: "Kopioi linkki"
         remove: "Poista linkki"
         visit: "Avaa linkki ulkoisessa välilehdessä"
+        link_copied: "Linkki kopioitu!"
+      onebox_toolbar:
+        copy: "Kopioi linkki"
         link_copied: "Linkki kopioitu!"
     notifications:
       tooltip:
@@ -3227,19 +3232,9 @@ fi:
         archive_messages: "Siirrä arkistoon"
         change_notification_level: "Muuta ilmoitustasoa"
         choose_new_category: "Valitse uusi alue ketjuille:"
-        selected_sole_category:
-          one: "Olet valinnut <b>%{count}</b> ketjun alueelta:"
-          other: "Olet valinnut <b>%{count}</b> ketjua alueelta:"
         selected_count:
           one: "%{count} valittu"
           other: "%{count} valittu"
-        append_tags: "Lisää tunnisteita"
-        choose_new_tags: "Valitse tunnisteet näille ketjuille:"
-        choose_append_tags: "Lisää tunnisteita"
-        changed_tags: "Ketjujen tunnisteet muutettiin."
-        confirm_remove_tags:
-          one: "Kaikki tunnisteet poistetaan tästä ketjusta. Oletko varma?"
-          other: "Kaikki tunnisteet poistetaan <b>%{count}</b> ketjusta. Oletko varma?"
         progress:
           one: "Edetty: <strong>%{count}</strong> ketju"
           other: "Edetty: <strong>%{count}</strong> ketjua"
@@ -3281,20 +3276,39 @@ fi:
         name: "Poista listaus"
       relist_topics:
         name: "Lisää luetteloon uudelleen"
-      remove_tags:
-        name: "Poista tunnisteita"
-      replace_tags:
-        name: "Korvaa tunnisteet"
+      manage_tags:
+        add:
+          title: "Lisää tunnisteita"
       delete_topics:
         name: "Poista"
       update_category:
         name: "Päivitä alue"
+      convert_to_public_topic:
+        name: "Tee ketjusta julkinen…"
+      convert_to_private_message:
+        name: "Muuta henkilökohtaiseksi viestiksi"
       reset_bump_dates:
         name: "Nollaa nostopäivät"
       defer:
         name: "Merkitse lukemattomaksi"
       update_notifications:
         name: "Päivitä ilmoitukset"
+    nested_replies:
+      sort:
+        label: "Järjestys"
+        top: "Suositut"
+        new: "Uudet"
+      load_more_children:
+        one: "%{count} muu kommentti"
+        other: "%{count} muuta kommenttia"
+      collapsed_replies:
+        one: "%{count} vastaus"
+        other: "%{count} vastausta"
+      collapse: "Kutista"
+      no_replies: "Ei vielä vastauksia."
+      deleted_post_placeholder: "[poistettu]"
+      ignored_post_placeholder: "[sivuutettu]"
+      pinned_reply: "Kiinnitetty"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"
@@ -3795,6 +3809,10 @@ fi:
       sr_post_like_count_button:
         one: "%{count} käyttäjä tykkäsi tästä viestistä."
         other: "%{count} käyttäjää tykkäsi tästä viestistä."
+      likes_popup:
+        title:
+          one: "%{count} tykkäys"
+          other: "%{count} tykkäystä"
       sr_post_read_count_button:
         one: "%{count} henkilö luki tämän viestin."
         other: "%{count} henkilöä luki tämän viestin."
@@ -3822,7 +3840,7 @@ fi:
           confirm_delete: "Oletko varma, että haluat poistaa käännökset kielelle '%{languageCode}'?"
         success: "Käännökset on päivitetty onnistuneesti"
         post_language_selector:
-          none: "Ei valittu"
+          none: "Ei asetettu"
         edit_warning:
           action_original: "Muokkaa alkuperäistä viestiä"
           action_translation: "Muokkaa tätä käännöstä"
@@ -3845,6 +3863,7 @@ fi:
         attachment_download_requires_login: "Sinun täytyy kirjautua sisään, jotta voit ladata liitetiedostoja."
       cancel_composer:
         discard: "Hylkää"
+        discard_edit: "Hylkää muutokset"
       via_email: "tämä viesti lähetettiin sähköpostitse"
       via_auto_generated_email: "tämä viesti saapui automaattisesti luotuna sähköpostina"
       whisper: "tämä viesti on yksityinen kuiskaus valvojille"
@@ -3888,7 +3907,7 @@ fi:
         admin: "viestin ylläpitotoimet"
         admin_action: "Ylläpitäjä"
         permanently_delete: "Poista pysyvästi"
-        permanently_delete_confirmation: "Haluatko varmasti poistaa tämän viestin pysyvästi? Et voi palauttaa sitä."
+        permanently_delete_confirm_phrase: "poista pysyvästi"
         wiki: "Tee wiki"
         unwiki: "Poista wiki"
         convert_to_moderator: "Lisää henkilökunnan taustaväri"
@@ -4033,6 +4052,7 @@ fi:
       back: "Takaisin alueelle"
       general: "Yleistä"
       settings: "Asetukset"
+      moderation: "Valvonta"
       advanced: "Lisäasetukset"
       topic_template: "Malli"
       tags: "Tunnisteet"
@@ -4169,7 +4189,7 @@ fi:
           low: "Matala"
           high: "Korkea"
       sort_options:
-        default: "oletus"
+        default: "Oletus"
         likes: "Tykkäykset"
         views: "Katselut"
         posts: "Viestit"
@@ -5213,6 +5233,9 @@ fi:
           admins: "Ylläpitäjät"
           moderators: "Valvojat"
           staff: "Henkilökunta"
+        impact_types:
+          feature_type: "Ominaisuus"
+          other_type: "Muut"
         filter:
           all: "Kaikki"
           enabled: "Käytössä"
@@ -5229,7 +5252,6 @@ fi:
           header_description: "Anna tässä tietoja tästä sivustosta ja tiimistäsi, jotta ihmiset voivat oppia, mistä yhteisöstäsi on kyse, kuka sen takana on ja miten sinuun voi ottaa yhteyttä ongelmatilanteissa. Näytetään sivustosi <a href='%{basePath}/about'>Tietoa-sivulla</a>."
         developer:
           title: "Kehittäjä"
-          header_description: "Kehittäjäasetukset, joilla voi hallita nopeusrajoja, kertoimia ja laskelmia, vikasietotilaa ja muita edistyneitä ominaisuuksia"
         experimental:
           title: "Kokeellinen"
           header_description: "Ota sivustosi kokeellisia ominaisuukssia käyttöön tai poista niitä käytöstä. Useimpia niistä voi hallita ryhmäkohtaisesti."
@@ -5424,6 +5446,13 @@ fi:
             logs:
               title: "Lokit"
               header_description: "Tarkastele ja hallinnoi varmuuskopioiden, palautusten ja latausten lokeja"
+        problem_checks:
+          priority: "Prioriteetti"
+          status: "Tila"
+          last_run_at: "Viimeisin suoritus"
+          ignore: "Ohita"
+          more_options:
+            title: "Lisää vaihtoehtoja"
         reports:
           title: "Raportit"
           header_description: "Raportit ovat tehokas työkalu, joka auttaa sinua ymmärtämään, mitä sivustollasi tapahtuu. Niiden avulla voit tunnistaa trendejä, havaita ongelmia ja tehdä päätöksiä tietojen perusteella."
@@ -5597,7 +5626,7 @@ fi:
         installed_version: "Asennettu"
         latest_version: "Uusin"
         problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"
-        dismiss_notice: "Selvä"
+        dismiss_notice: "Ohita"
         new_features:
           title: "Mitä uutta?"
           subtitle: "Julkaisemme jatkuvasti uusia ominaisuuksia ja parannuksia. Tämä sivu kattaa kohokohdat, mutta voit katsoa kattavat julkaisutiedot napsauttamalla Lisätietoja."
@@ -5641,6 +5670,16 @@ fi:
         too_many_requests: Olet tehnyt tämän toiminnon liian monta kertaa. Odota, ennen kuin yrität uudelleen.
         not_found_error: Raporttia ei ole olemassa
         custom_date_range: Mukautettu päivämääräalue
+        sections:
+          reports:
+            title: "Raportit"
+          traffic:
+            title: "Sivuston liikenne"
+        period:
+          last_7_days: "Viimeiset 7 päivää"
+          last_30_days: "Viimeiset 30 päivää"
+          last_3_months: "Viimeiset 3 kuukautta"
+          custom: "Mukautettu"
         reports:
           trend_title: "%{percent} muutos. Nyt %{current}, viime jaksossa %{prev}."
           percent_change_tooltip: "%{percent}:n muutos."
@@ -6879,6 +6918,7 @@ fi:
         topic_id: "Ketjun tunnus"
         post_id: "Viestin tunnus"
         category_id: "Alueen tunnus"
+        reviewable_id: "Käsittele"
         delete: "Poista"
         edit: "Muokkaa"
         save: "Tallenna"
@@ -7442,7 +7482,6 @@ fi:
           other: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viestiä. (delete_all_posts_max)"
         delete_confirm_title: "Oletko varma, että haluat poistaa tämän käyttäjän? Käyttäjä poistetaan pysyvästi!"
         delete_confirm: "On yleensä parempi anonymisoida käyttäjät poistamisen sijaan; näin vältät sisällön poistamisen olemassa olevista keskusteluista."
-        delete_and_block: "Poista käyttäjä ja estä hänen sähköposti- ja IP-osoitteensa"
         delete_dont_block: "Poista käyttäjä"
         deleting_user: "Poistetaan käyttäjää…"
         deleted: "Käyttäjä poistettiin."

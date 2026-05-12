@@ -244,6 +244,7 @@
     &.is-selected,
     &.is-selected.is-highlighted {
       background: var(--d-selected);
+      color: var(--d-selected-text-color);
     }
 
     .discourse-tag,

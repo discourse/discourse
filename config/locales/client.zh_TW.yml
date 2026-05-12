@@ -2528,6 +2528,8 @@ zh_TW:
       upload_description: "在此輸入上傳的描述"
       list_item: "清單項目"
       wrap_modal:
+        attribute_key: "金鑰"
+        attribute_value: "價值"
         apply: "套用"
       help: "Markdown 編輯說明"
       exit_fullscreen_prompt: "按<kbd>ESC</kbd>離開全螢幕"
@@ -2586,6 +2588,9 @@ zh_TW:
       delete_image_button: 刪除圖片
       toggle_image_grid: 切換影像網格
       link_toolbar:
+        copy: "複製連結"
+        link_copied: "連結已複製！"
+      onebox_toolbar:
         copy: "複製連結"
         link_copied: "連結已複製！"
     notifications:
@@ -2917,16 +2922,8 @@ zh_TW:
         archive_messages: "移至封存"
         change_notification_level: "變更通知層級"
         choose_new_category: "為話題選擇新類別："
-        selected_sole_category:
-          other: "您已從以下類別中選擇 <b>%{count}</b> 個話題。"
         selected_count:
           other: "已選擇 %{count} 個"
-        append_tags: "新增標記"
-        choose_new_tags: "為話題選擇新標籤"
-        choose_append_tags: "新增標記"
-        changed_tags: "話題的標籤已修改"
-        confirm_remove_tags:
-          other: "所有標記將從 <b>%{count}</b> 個話題中移除。確定嗎？"
         progress:
           other: "進度： <strong>%{count}</strong> 個主題"
         performing: "正在執行批量作業，請稍候…"
@@ -2961,20 +2958,37 @@ zh_TW:
         name: "取消公開"
       relist_topics:
         name: "重新公開"
-      remove_tags:
-        name: "移除標記"
-      replace_tags:
-        name: "取代標記"
+      manage_tags:
+        add:
+          title: "新增標記"
       delete_topics:
         name: "刪除"
       update_category:
         name: "更新分類"
+      convert_to_public_topic:
+        name: "設置為公共話題"
+      convert_to_private_message:
+        name: "設置為私訊"
       reset_bump_dates:
         name: "重設上浮日期"
       defer:
         name: "標註為未讀"
       update_notifications:
         name: "更新通知"
+    nested_replies:
+      sort:
+        label: "排序"
+        top: "精選"
+        new: "新使用者"
+      load_more_children:
+        other: "%{count} 個更多回覆"
+      collapsed_replies:
+        other: "%{count}個回覆"
+      collapse: "收起"
+      no_replies: "暫無回覆。"
+      deleted_post_placeholder: "[刪除]"
+      ignored_post_placeholder: "[已忽略]"
+      pinned_reply: "已釘選"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -3441,6 +3455,9 @@ zh_TW:
         other: "你和其他 %{count} 人讚了該貼"
       sr_post_like_count_button:
         other: "%{count} 個使用者對此貼文讚好."
+      likes_popup:
+        title:
+          other: "%{count}個讚"
       sr_post_read_count_button:
         other: "%{count} 人閱讀了這篇文章。"
       filtered_replies_hint:
@@ -3456,7 +3473,7 @@ zh_TW:
           edit: "編輯"
           delete: "刪除"
         post_language_selector:
-          none: "無"
+          none: "未設定"
       errors:
         create: "抱歉，建立你的貼文時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的貼文時發生錯誤，請再試一次。"
@@ -3516,7 +3533,7 @@ zh_TW:
         admin: "貼文管理動作"
         admin_action: "管理員"
         permanently_delete: "永久刪除"
-        permanently_delete_confirmation: "您確定要永久刪除此貼文嗎？您將無法恢復它。"
+        permanently_delete_confirm_phrase: "永久刪除"
         wiki: "做為共筆"
         unwiki: "取消共筆"
         convert_to_moderator: "增加工作人員顏色"
@@ -3649,6 +3666,7 @@ zh_TW:
       back: "回到類別"
       general: "一般"
       settings: "設定"
+      moderation: "管理"
       advanced: "進階"
       topic_template: "範本"
       tags: "標記"
@@ -4679,6 +4697,8 @@ zh_TW:
         impact_roles:
           moderators: "板主"
           staff: "管理員"
+        impact_types:
+          other_type: "其他"
         filter:
           all: "全部"
           enabled: "啟用"
@@ -4693,7 +4713,6 @@ zh_TW:
           header_description: "在這裡提供有關此網站和您團隊的資訊，以便人們可以了解您的社區、幕後人員，以及在出現問題時如何聯絡您。顯示在您網站的<a href='%{basePath}/about'>「關於」頁面</a>上。"
         developer:
           title: "開發人員"
-          header_description: "控制速率限制、乘數和計算、安全模式和其他進階功能的開發人員設定"
         experimental:
           title: "實驗性"
           header_description: "切換網站的實驗性功能，其中大部分功能可按組進行控制"
@@ -4853,6 +4872,11 @@ zh_TW:
             logs:
               title: "紀錄"
               header_description: "檢視和管理備份、還原和上傳的日誌"
+        problem_checks:
+          status: "狀態"
+          ignore: "忽略"
+          more_options:
+            title: "更多選項"
         reports:
           title: "報告"
           header_description: "報告是幫助您了解網站上所發生事情的有力工具。它們可以幫助您了解趨勢、發現問題並根據數據做出決策。"
@@ -5016,6 +5040,14 @@ zh_TW:
         too_many_requests: 您已重複此動作太多次，請稍後再重試。
         not_found_error: 抱歉，這個報告不存在。
         custom_date_range: 自定義日期範圍
+        sections:
+          reports:
+            title: "報告"
+        period:
+          last_7_days: "過去 7 天"
+          last_30_days: "過去 30 天"
+          last_3_months: "過去 3 個月"
+          custom: "客製"
         reports:
           trend_title: "%{percent}更改，最近更改時間是在%{current}。"
           percent_change_tooltip: "%{percent} 更改。"
@@ -6128,6 +6160,7 @@ zh_TW:
         topic_id: "話題 ID"
         post_id: "貼文 ID"
         category_id: "分類 ID"
+        reviewable_id: "審核"
         delete: "刪除"
         edit: "編輯"
         save: "儲存"
@@ -6676,7 +6709,6 @@ zh_TW:
           other: "無法刪除所有貼文，因為此使用者擁有超過 %{count} 篇貼文。( delete_all_posts_max )"
         delete_confirm_title: "確定要刪除此使用者嗎？此操作無法撤銷！"
         delete_confirm: "通常最好將使用者匿名而不是刪除他們，以避免從現有討論中移除內容。"
-        delete_and_block: "刪除使用者並禁止其電子郵件和 IP 地址"
         delete_dont_block: "刪除使用者"
         deleting_user: "正在刪除使用者..."
         deleted: "此使用者已刪除。"

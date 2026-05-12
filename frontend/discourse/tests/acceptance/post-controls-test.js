@@ -3,7 +3,9 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
-acceptance(`Post controls`, function () {
+acceptance(`Post controls`, function (needs) {
+  needs.settings({ enable_new_post_reactions_menu: true });
+
   test("popup with likes is shown when clicking on like count", async function (assert) {
     await visit("/t/internationalization-localization/280");
 

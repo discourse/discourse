@@ -10,8 +10,6 @@ lv:
       default_query: "Noklusējums"
       or: "vai"
       create: "Izveidot"
-      ai:
-        generate: "Radīt"
       import:
         label: "Importēt"
       help:

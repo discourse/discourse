@@ -538,7 +538,15 @@ table.group-reports {
 
   .query-results-table-wrapper {
     overflow: auto;
-    max-height: 300px;
+    max-height: 350px;
+
+    &.--expanded {
+      max-height: none;
+    }
+  }
+
+  .query-results-expand-btn {
+    width: 100%;
   }
 
   .query-results-modes {

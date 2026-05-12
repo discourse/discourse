@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
-import { cancel, next } from "@ember/runloop";
+import { next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -8,7 +8,6 @@ import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
-import discourseLater from "discourse/lib/later";
 import {
   onPresenceChange,
   removeOnPresenceChange,
@@ -169,26 +168,6 @@ export default class Chat extends Service {
         });
       });
     }
-  }
-
-  markNetworkAsUnreliable() {
-    cancel(this._networkCheckHandler);
-
-    this.set("isNetworkUnreliable", true);
-
-    this._networkCheckHandler = discourseLater(() => {
-      if (this.isDestroyed || this.isDestroying) {
-        return;
-      }
-
-      this.markNetworkAsReliable();
-    }, 30000);
-  }
-
-  markNetworkAsReliable() {
-    cancel(this._networkCheckHandler);
-
-    this.set("isNetworkUnreliable", false);
   }
 
   async loadChannels() {

@@ -15,6 +15,7 @@ import Session from "discourse/models/session";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
+const NESTED_URL_REGEXP = /^\/n\/([^\/]+)\/(\d+)(?:\/(\d+))?/;
 
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
@@ -286,6 +287,14 @@ class DiscourseURL extends EmberObject {
     }
 
     if (this.navigatedToPost(oldPath, path, opts)) {
+      return;
+    }
+
+    if (oldPath === path && NESTED_URL_REGEXP.test(path)) {
+      // The nested context view caches its scroll target in the
+      // component's lifecycle, so a plain refresh() wouldn't re-trigger
+      // it. Fire an event the view listens for instead.
+      this.appEvents.trigger("nested:scroll-to-target");
       return;
     }
 

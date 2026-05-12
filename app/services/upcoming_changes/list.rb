@@ -34,6 +34,7 @@ class UpcomingChanges::List
           true
         end
       end
+      .select { |setting| UpcomingChanges::ConditionalDisplay.should_display?(setting[:setting]) }
       .each do |setting|
         setting[:value] = setting[:value] == "true"
 
@@ -61,7 +62,10 @@ class UpcomingChanges::List
           :plugin,
         ).merge(
           dependents: UpcomingChanges.find_dependents_for_change(setting[:setting]),
-          related: UpcomingChanges.find_related_default_override_for_change(setting[:setting]),
+          overriding_defaults:
+            SiteSetting.upcoming_change_default_overrides.values.any? do |override|
+              override[:upcoming_change] == setting[:setting]
+            end,
         )
       end
   end

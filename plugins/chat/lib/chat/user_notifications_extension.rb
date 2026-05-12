@@ -81,7 +81,10 @@ module Chat
     end
 
     def subject(type, **args)
-      I18n.t("user_notifications.chat_summary.subject.#{type}", { site_name: @site_name, **args })
+      key = "user_notifications.chat_summary.subject.#{type}"
+      key += "_improved" if SiteSetting.simple_email_subject && I18n.exists?("#{key}_improved")
+
+      I18n.t(key, { site_name: @site_name, **args })
     end
 
     def chat_summary_subject(grouped_channels, grouped_dms, grouped_threads, count)

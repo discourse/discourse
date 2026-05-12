@@ -52,6 +52,7 @@ module Chat
     end
 
     model :category
+    policy :can_create_channel_in_category
     policy :category_channel_does_not_exist
 
     transaction do
@@ -73,6 +74,10 @@ module Chat
 
     def fetch_category(params:)
       Category.find_by(id: params.category_id)
+    end
+
+    def can_create_channel_in_category(guardian:, category:)
+      guardian.can_post_in_category?(category)
     end
 
     def category_channel_does_not_exist(category:, params:)

@@ -8,7 +8,6 @@ body > noscript {
     padding-top: var(--space-4);
 
     &__comment {
-      display: flex;
       border-top: 1px solid var(--primary-low);
       padding: var(--space-1) 0;
     }
@@ -21,6 +20,10 @@ body > noscript {
     &__separator {
       display: inline;
       margin: 0 var(--space-1);
+    }
+
+    &__comment-time {
+      margin-left: var(--space-1);
     }
   }
 

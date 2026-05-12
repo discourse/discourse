@@ -46,6 +46,7 @@ class TopicLink < ActiveRecord::Base
              MIN(ftl.user_id) AS user_id,
              SUM(clicks) AS clicks
       FROM topic_links AS ftl
+      JOIN posts AS source_posts ON ftl.post_id = source_posts.id
       LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
       LEFT JOIN categories AS c ON c.id = ft.category_id
       LEFT JOIN posts AS target_posts ON ftl.link_post_id = target_posts.id
@@ -56,6 +57,7 @@ class TopicLink < ActiveRecord::Base
     SQL
 
     builder.where("ftl.topic_id = :topic_id", topic_id: topic_id)
+    apply_source_post_visibility_filters(builder, guardian, source_post: "source_posts")
     apply_link_visibility_filters(
       builder,
       link: "ftl",
@@ -208,6 +210,16 @@ class TopicLink < ActiveRecord::Base
     SQL
   end
   private_class_method :apply_link_visibility_filters
+
+  def self.apply_source_post_visibility_filters(builder, guardian, source_post:)
+    builder.where("#{source_post}.deleted_at IS NULL")
+    builder.where(
+      "#{source_post}.post_type IN (:visible_post_types)",
+      visible_post_types: Topic.visible_post_types(guardian.user),
+    )
+    builder.where("#{source_post}.hidden = false") unless guardian.is_staff?
+  end
+  private_class_method :apply_source_post_visibility_filters
 
   private
 

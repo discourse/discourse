@@ -9,7 +9,7 @@ ur:
     overall_sentiment:
       yaxis: "تاریخ"
     emotion_neutral:
-      title: "\U0001F610 نیوٹرل"
+      title: "😐 نیوٹرل"
   discourse_ai:
     tools:
       presets:
@@ -71,7 +71,7 @@ ur:
     sentiment:
       reports:
         post_emotion:
-          neutral: "نیوٹرل \U0001F610"
+          neutral: "نیوٹرل 😐"
         sentiment_analysis:
           neutral: "نیوٹرل"
     ai_staff_action_logger:

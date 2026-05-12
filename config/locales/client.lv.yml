@@ -1712,6 +1712,7 @@ lv:
       upload_description: "pievienojiet faila aprakstu"
       list_item: "Saraksta punkts"
       wrap_modal:
+        attribute_value: "Vērtība"
         apply: "Pielietot"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
       modal_ok: "Labi"
@@ -1884,8 +1885,6 @@ lv:
         actions: "Darbības ar vairumu"
         move_messages_to_inbox: "Pārvietot uz iesūtni"
         choose_new_category: "Izvēlēties jaunu sadaļu šīm tēmām:"
-        choose_new_tags: "Izvēlēties jaunus tagus šīm tēmām:"
-        changed_tags: "Šo tēmu tagi tika mainīti."
         error_topic_count:
           zero: "%{count} tēmas"
           one: "%{count} tēma"
@@ -1908,10 +1907,26 @@ lv:
         name: "Arhīvs"
       move_messages_to_inbox:
         name: "Pārvietot uz iesūtni"
-      replace_tags:
-        name: "Aizvietot tagus"
       delete_topics:
         name: "Dzēst"
+    nested_replies:
+      sort:
+        label: "Kārtot pēc"
+        top: "Populārākās"
+        new: "Jauns"
+      load_more_children:
+        zero: "vel %{count} atbildes"
+        one: "vel %{count} atbilde"
+        other: "vel %{count} atbildes"
+      collapsed_replies:
+        zero: "%{count} atbildes"
+        one: "%{count} atbilde"
+        other: "%{count} atbildes"
+      collapse: "Sakļaut"
+      no_replies: "Vēl nav atbilžu."
+      deleted_post_placeholder: "[dzēsts]"
+      ignored_post_placeholder: "[ignorēts]"
+      pinned_reply: "Piesprausts"
     topic:
       filter_to:
         zero: "tēmā ziņu nav"
@@ -2224,8 +2239,6 @@ lv:
           actions: "Darbības"
           edit: "Rediģēt"
           delete: "Dzēst"
-        post_language_selector:
-          none: "Nav"
       errors:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
@@ -2383,7 +2396,7 @@ lv:
           low: "Zems"
           high: "Augsta"
       sort_options:
-        default: "noklusējuma"
+        default: "Noklusējums"
         likes: "Atzinības"
         views: "Skatījumi"
         posts: "Ieraksti"
@@ -2866,6 +2879,8 @@ lv:
           admins: "Administratori"
           moderators: "Moderātori"
           staff: "Personāls"
+        impact_types:
+          other_type: "Citi"
         filter:
           all: "Visi"
           enabled: "Ieslēgts"
@@ -2927,6 +2942,9 @@ lv:
           sub_pages:
             logs:
               title: "Žurnāls"
+        problem_checks:
+          status: "Statuss"
+          ignore: "Ignorēt"
         reports:
           sub_pages:
             settings:
@@ -2982,7 +3000,7 @@ lv:
         stale_data: "Pēdējā laikā nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."
         installed_version: "Uzinstalēts"
         latest_version: "Pēdējais"
-        dismiss_notice: "Nerādīt"
+        dismiss_notice: "Ignorēt"
         new_features:
           learn_more: "Uzzināt vairāk..."
         last_checked: "Pēdējā pārbaude"
@@ -3004,6 +3022,9 @@ lv:
         security_tab: "Drošība"
         report_filter_any: "jebkura"
         disabled: Atslēgt
+        period:
+          last_7_days: "Pēdējās 7 dienas"
+          last_30_days: "Pēdējās 30 dienas"
         reports:
           today: "Šodien"
           yesterday: "Vakar"
@@ -3419,6 +3440,7 @@ lv:
         topic_id: "Tēmas ID"
         post_id: "Ieraksta ID"
         category_id: "Kategorijas ID"
+        reviewable_id: "Pārskats"
         delete: "Dzēst"
         edit: "Labot"
         save: "Saglabāt"

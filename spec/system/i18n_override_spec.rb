@@ -41,7 +41,6 @@ describe "I18n translation overrides" do
 
     it "applies overrides to js and admin_js keys" do
       visit("/latest")
-      expect(page).to have_css("#site-logo")
 
       js_result = page.evaluate_script("I18n.t('dates.tiny.half_a_minute')")
       expect(js_result).to eq("override for js key")
@@ -63,7 +62,6 @@ describe "I18n translation overrides" do
     it "applies override from user locale and prefers user locale translation over fallback override" do
       sign_in(user)
       visit("/latest")
-      expect(page).to have_css("#site-logo")
 
       # Override in user's locale is applied
       de_override = page.evaluate_script("I18n.t('dates.tiny.half_a_minute')")

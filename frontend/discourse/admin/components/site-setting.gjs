@@ -13,12 +13,11 @@ import { isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import Description from "discourse/admin/components/site-settings/description";
 import JobStatus from "discourse/admin/components/site-settings/job-status";
-import SiteSetting from "discourse/admin/models/site-setting";
-import DButton from "discourse/components/d-button";
+import SiteSetting, {
+  isSettingValueTrue,
+} from "discourse/admin/models/site-setting";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import basePath from "discourse/helpers/base-path";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
@@ -26,6 +25,9 @@ import { deepEqual } from "discourse/lib/object";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const CUSTOM_TYPES = [
@@ -62,6 +64,7 @@ const CUSTOM_TYPES = [
 export default class SiteSettingComponent extends Component {
   @service modal;
   @service router;
+  @service adminSiteSettingStore;
   @service siteSettingChangeTracker;
   @service messageBus;
   @service site;
@@ -158,7 +161,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get dependsOnNoticeText() {
-    const path = basePath();
+    const path = dBasePath();
     const links = this.setting.depends_on
       .map((name, index) => {
         const label = sanitize(
@@ -180,7 +183,7 @@ export default class SiteSettingComponent extends Component {
   get themeSiteSettingWarningText() {
     return trustHTML(
       i18n("admin.theme_site_settings.site_setting_warning", {
-        basePath,
+        basePath: dBasePath,
         defaultThemeName: sanitize(this.defaultTheme.name),
         defaultThemeId: this.defaultTheme.theme_id,
       })
@@ -204,7 +207,7 @@ export default class SiteSettingComponent extends Component {
     ) {
       return trustHTML(
         i18n("admin.upcoming_changes.default_warning", {
-          basePath,
+          basePath: dBasePath,
           changeNamesFilter:
             this.setting.upcoming_change_default_override_metadata
               .change_setting_name,
@@ -218,7 +221,7 @@ export default class SiteSettingComponent extends Component {
 
     return trustHTML(
       i18n("admin.upcoming_changes.default_warning_short", {
-        basePath,
+        basePath: dBasePath,
         changeNamesFilter:
           this.setting.upcoming_change_default_override_metadata
             .change_setting_name,
@@ -361,7 +364,23 @@ export default class SiteSettingComponent extends Component {
   }
 
   get isDisabled() {
-    return this.setting.themeable || this.setting.disabled;
+    return (
+      this.setting.themeable ||
+      this.setting.disabled ||
+      this.isDisabledByDependency
+    );
+  }
+
+  get isDisabledByDependency() {
+    if (this.setting.depends_behavior !== "hidden") {
+      return false;
+    }
+    return (
+      this.setting.depends_on?.some((name) => {
+        const parent = this.adminSiteSettingStore.get(name);
+        return parent && !isSettingValueTrue(parent.buffered.get("value"));
+      }) ?? false
+    );
   }
 
   get canUpdate() {
@@ -433,6 +452,9 @@ export default class SiteSettingComponent extends Component {
   @action
   changeValueCallback(value) {
     this.buffered.set("value", value);
+    if (isSettingValueTrue(value)) {
+      this.adminSiteSettingStore.reveal(this.setting.setting);
+    }
   }
 
   @action
@@ -450,6 +472,9 @@ export default class SiteSettingComponent extends Component {
   resetDefault() {
     this.buffered.set("value", this.setting.default);
     this.setting.validationMessage = null;
+    if (isSettingValueTrue(this.setting.default)) {
+      this.adminSiteSettingStore.reveal(this.setting.setting);
+    }
   }
 
   @action
@@ -493,7 +518,8 @@ export default class SiteSettingComponent extends Component {
       class="row setting
         {{this.typeClass}}
         {{if this.overridden 'overridden'}}
-        {{if this.isDisabled 'disabled'}}"
+        {{if this.isDisabled 'disabled'}}
+        {{if this.isDisabledByDependency 'disabled-by-dependency'}}"
       ...attributes
     >
       <div class="setting-label">
@@ -508,7 +534,7 @@ export default class SiteSettingComponent extends Component {
               title={{i18n "admin.settings.history"}}
             >
               <span class="history-icon">
-                {{icon "clock-rotate-left"}}
+                {{dIcon "clock-rotate-left"}}
               </span>
             </LinkTo>
           {{/if}}
@@ -565,7 +591,7 @@ export default class SiteSettingComponent extends Component {
           {{#if this.showThemeSiteSettingWarning}}
             <div class="setting-override-warning setting-theme-warning">
               <p class="setting-theme-warning__text">
-                {{icon "paintbrush"}}
+                {{dIcon "paintbrush"}}
                 {{this.themeSiteSettingWarningText}}
               </p>
             </div>
@@ -575,7 +601,7 @@ export default class SiteSettingComponent extends Component {
               class="setting-override-warning setting-upcoming-change-warning"
             >
               <p class="setting-upcoming-change-warning__text">
-                {{icon "flask"}}
+                {{dIcon "flask"}}
                 {{this.upcomingChangeDefaultWarningText}}
               </p>
             </div>
@@ -583,7 +609,7 @@ export default class SiteSettingComponent extends Component {
           {{#if this.showDependsOnNotice}}
             <div class="setting-override-warning setting-depends-on-notice">
               <p class="setting-depends-on-notice__text">
-                {{icon "link"}}
+                {{dIcon "link"}}
                 {{this.dependsOnNoticeText}}
               </p>
             </div>

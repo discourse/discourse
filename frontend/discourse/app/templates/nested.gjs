@@ -1,5 +1,5 @@
-import NestedContextView from "discourse/components/nested-context-view";
-import NestedView from "discourse/components/nested-view";
+import Nested from "discourse/components/nested";
+import NestedContextView from "discourse/components/nested/context-view";
 import PostTextSelection from "discourse/components/post-text-selection";
 
 export default <template>
@@ -42,9 +42,11 @@ export default <template>
       @expansionState={{@controller.expansionState}}
       @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
       @scrollAnchor={{@controller.scrollAnchor}}
+      @showActivityLog={{@controller.showActivityLog}}
+      @collapseReplies={{@controller.collapseReplies}}
     />
   {{else}}
-    <NestedView
+    <Nested
       @topic={{@controller.topic}}
       @opPost={{@controller.opPost}}
       @rootNodes={{@controller.rootNodes}}
@@ -76,6 +78,8 @@ export default <template>
       @expansionState={{@controller.expansionState}}
       @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
       @scrollAnchor={{@controller.scrollAnchor}}
+      @showActivityLog={{@controller.showActivityLog}}
+      @collapseReplies={{@controller.collapseReplies}}
     />
   {{/if}}
 </template>

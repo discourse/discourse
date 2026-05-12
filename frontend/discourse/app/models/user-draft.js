@@ -1,6 +1,5 @@
 import { computed } from "@ember/object";
 import { service } from "@ember/service";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import {
@@ -9,13 +8,14 @@ import {
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class UserDraft extends RestModel {
   @service currentUser;
 
   get titleHtml() {
-    return replaceEmoji(this.get("title"));
+    return dReplaceEmoji(this.get("title"));
   }
 
   @computed("draft_username")

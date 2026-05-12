@@ -7,6 +7,7 @@ class TopicView
   include PostDependentCache
 
   memoize_for_posts :all_post_actions
+  memoize_for_posts :ignored_user_like_counts
   memoize_for_posts :reviewable_counts
   memoize_for_posts :post_custom_fields
   memoize_for_posts :user_custom_fields
@@ -682,6 +683,10 @@ class TopicView
     @links ||= TopicLink.topic_map(@guardian, @topic.id)
   end
 
+  def ignored_user_like_counts
+    PostAction.ignored_user_like_counts_for(@posts, @user)
+  end
+
   def reviewable_counts
     @reviewable_counts ||=
       begin
@@ -1050,17 +1055,7 @@ class TopicView
     @filtered_posts = unfiltered_posts
 
     if @user
-      sql = <<~SQL
-        SELECT ignored_user_id
-        FROM ignored_users as ig
-        INNER JOIN users as u ON u.id = ig.ignored_user_id
-        WHERE ig.user_id = :current_user_id
-          AND ig.ignored_user_id <> :current_user_id
-          AND NOT u.admin
-          AND NOT u.moderator
-      SQL
-
-      ignored_user_ids = DB.query_single(sql, current_user_id: @user.id)
+      ignored_user_ids = IgnoredUser.ignored_ids_for(@user)
 
       if ignored_user_ids.present?
         @filtered_posts =

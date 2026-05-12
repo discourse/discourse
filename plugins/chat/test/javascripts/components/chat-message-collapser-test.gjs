@@ -1,5 +1,5 @@
 import { click, render, settled, waitFor } from "@ember/test-helpers";
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import ChatMessageCollapser from "discourse/plugins/chat/discourse/components/chat-message-collapser";
@@ -428,27 +428,6 @@ module(
 
 module("Component | chat message collapser images", function (hooks) {
   setupRenderingTest(hooks);
-
-  skip("escapes link", async function (assert) {
-    this.set(
-      "cooked",
-      imageCooked
-        .replace("shows alt", evilString)
-        .replace("/images/d-logo-sketch-small.png", evilString)
-    );
-    await render(
-      <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
-    );
-
-    const links = [
-      ...document.querySelectorAll(".chat-message-collapser-link-small"),
-    ];
-
-    assert.dom(links[0]).includesHtml(evilStringEscaped);
-    assert
-      .dom(links[1])
-      .includesHtml("&lt;script&gt;someeviltitle&lt;/script&gt;");
-  });
 
   test("shows alt or links (if no alt) for linked image", async function (assert) {
     this.set("cooked", imageCooked);

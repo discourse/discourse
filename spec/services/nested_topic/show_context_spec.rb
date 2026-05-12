@@ -45,6 +45,18 @@ RSpec.describe NestedTopic::ShowContext do
       it { is_expected.to fail_to_find_a_model(:target_post) }
     end
 
+    context "when target post is soft-deleted" do
+      before { PostDestroyer.new(Discourse.system_user, target, context: "spec").destroy }
+
+      it { is_expected.to run_successfully }
+
+      it "resolves the deleted post and serializes it via the placeholder path" do
+        response = result[:response]
+        expect(response[:target_post][:id]).to eq(target.id)
+        expect(response[:target_post][:deleted_post_placeholder]).to eq(true)
+      end
+    end
+
     context "when target is a root post" do
       it { is_expected.to run_successfully }
 
@@ -57,6 +69,19 @@ RSpec.describe NestedTopic::ShowContext do
         expect(response[:siblings]).to be_a(Hash)
         expect(response[:target_post][:id]).to eq(target.id)
         expect(response[:message_bus_last_id]).to be_an(Integer)
+      end
+    end
+
+    context "with suggested/related payload" do
+      # The context view has no pagination, so the suggested/related keys
+      # must always ride along with the response — mirrors the final-page
+      # behavior in NestedTopic::ListRoots.
+      fab!(:other_topic) { Fabricate(:post).topic }
+
+      it "attaches suggested/related keys to the response" do
+        response = result[:response]
+        expect(response).to include(:suggested_topics)
+        expect(response[:suggested_topics].map(&:id)).to include(other_topic.id)
       end
     end
 

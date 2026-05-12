@@ -119,6 +119,7 @@ task "multisite:migrate" => %w[
        environment
        set_locale
        assets:precompile:asset_processor
+       db:migrate
      ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",
@@ -129,7 +130,9 @@ task "multisite:migrate" => %w[
 
     puts "Multisite migrator is running using #{concurrency} processes"
 
-    databases = RailsMultisite::ConnectionManagement.all_dbs
+    # `db:migrate` prereq already migrated the default database.
+    databases =
+      RailsMultisite::ConnectionManagement.all_dbs - [RailsMultisite::ConnectionManagement::DEFAULT]
 
     puts "Running migrations and seeds for #{databases.join(", ")} database(s)"
 

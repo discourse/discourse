@@ -23,6 +23,10 @@ es:
           filters:
             ad_type:
               label: "Tipo de anuncio"
+            house_ad_name:
+              label: "Nombre del anuncio interno"
+            ad_placement:
+              label: "Colocación de anuncios"
             user_type:
               label: "Tipo de usuario"
       adplugin:
@@ -33,20 +37,27 @@ es:
           new_name: "Nueva publicidad interna"
           save: "Guardar"
           delete: "Eliminar"
+          confirm_delete: "¿Seguro que quieres eliminar este anuncio?"
           html: "HTML"
           categories: "Categorías"
+          routes: "Rutas"
           groups: "Grupos"
+          description: "Crea y gestiona tus propios anuncios para mostrarlos en tu sitio web en varias posiciones."
+          get_started: "Aún no se han creado anuncios internos."
           filter_placeholder: "Seleccionar anuncios..."
           more_settings: "Más ajustes"
           show_to_anons: "Mostrar a usuarios anónimos"
           show_to_logged_in_users: "Mostrar a los usuarios que han iniciado sesión"
           category_chooser_description: "Elige las categorías en las que debe mostrarse este anuncio o déjalo vacío para mostrar el anuncio en todas partes. El ajuste del sitio «no_ads_for_categories» tiene prioridad sobre este ajuste."
+          category_chooser_description_with_routes: "Elige las categorías en las que debe mostrarse este anuncio o deja esta opción y las selecciones de ruta vacías para mostrar el anuncio en todas partes. El ajuste del sitio «no_ads_for_categories» tiene prioridad sobre este ajuste."
+          route_chooser_description: "Elige las páginas/rutas en las que debe mostrarse este anuncio. Deja esta opción y la de categoría vacías para mostrar el anuncio en todas partes."
           group_chooser_description: "Elige los grupos que pueden ver este anuncio o déjalo vacío para mostrar el anuncio a todos los usuarios registrados."
           preview: "Vista previa"
-          back: "Publicidad interna"
+          back: "Anuncios internos"
           name: "Nombre"
           edit: "Editar"
           tabs:
+            ads: "Anuncios"
             settings: "Ajustes"
           topic_list_top:
             title: "Anuncios destacados de la lista de temas"

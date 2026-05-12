@@ -230,48 +230,17 @@ class CategoriesController < ApplicationController
       category_params.delete(:position)
 
       old_custom_fields = cat.custom_fields.dup
-      category_params[:custom_fields]&.each do |key, value|
-        if value.nil? || value == ""
-          cat.custom_fields.delete(key)
-        else
-          cat.custom_fields[key] = if value.is_a?(TrueClass) || value.is_a?(FalseClass)
-            value.to_s
-          else
-            value
-          end
-        end
-      end
+      pending_custom_fields = category_params[:custom_fields]
       category_params.delete(:custom_fields)
 
-      if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user) &&
-           params[:category_type_site_settings].present?
-        # NOTE: The code in this block is pretty similar to what we are doing in
-        # configure_site_settings in Categories::Types::Base, however here we
-        # need to be able to update site settings across all category types for
-        # the category and it's best to do this in one query rather than
-        # multiple.
-        #
-        # Maybe in future we do something different, but this is a good starting point.
-        category_type_settings =
-          params[:category_type_site_settings].permit!.to_h.map do |name, value|
-            { setting_name: name, value: }
-          end
-
-        # We do this because we want to allow updating hidden settings for the
-        # category type, but not other settings. The configuration schema for a
-        # category type defines which settings it wants to change, so that's a
-        # good source to use as an allowlist here.
-        allowed_setting_names = cat.category_type_site_setting_names
-        SiteSetting::Update.call(
-          guardian:,
-          options: {
-            allow_changing_hidden: allowed_setting_names,
-          },
-          params: {
-            settings: category_type_settings,
-          },
-        )
+      # Handles adding or removing category types registered by plugins
+      # based on the multi-type selector in the General tab for categories.
+      if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
+        manage_category_types(cat, pending_custom_fields || {})
+        cat.reload
       end
+
+      merge_pending_custom_fields!(cat, pending_custom_fields)
 
       # properly null the value so the database constraint doesn't catch us
       category_params[:email_in] = nil if category_params[:email_in]&.blank?
@@ -546,6 +515,105 @@ class CategoriesController < ApplicationController
   end
 
   private
+
+  def merge_pending_custom_fields!(category, pending_custom_fields)
+    pending_custom_fields&.each do |key, value|
+      if value.nil? || value == ""
+        category.custom_fields.delete(key)
+      else
+        category.custom_fields[key] = if value.is_a?(TrueClass) || value.is_a?(FalseClass)
+          value.to_s
+        else
+          value
+        end
+      end
+    end
+  end
+
+  def manage_category_types(category, pending_custom_fields)
+    # NOTE: The code in this block is pretty similar to what we are doing in
+    # configure_site_settings in Categories::Types::Base, however here we
+    # need to be able to update site settings across all category types for
+    # the category and it's best to do this in one query rather than
+    # multiple.
+    #
+    # Maybe in future we do something different, but this is a good starting point.
+    if params[:category_type_site_settings].present?
+      category_type_settings =
+        params[:category_type_site_settings].permit!.to_h.map do |name, value|
+          { setting_name: name, value: }
+        end
+
+      # We do this because we want to allow updating hidden settings for the
+      # category type, but not other settings. The configuration schema for a
+      # category type defines which settings it wants to change, so that's a
+      # good source to use as an allowlist here.
+      allowed_setting_names = category.category_type_site_setting_names
+      SiteSetting::Update.call(
+        guardian:,
+        options: {
+          allow_changing_hidden: allowed_setting_names,
+        },
+        params: {
+          settings: category_type_settings,
+        },
+      )
+    end
+
+    if params.has_key?(:category_types)
+      # Discussion can never be removed as a category type, so we always add it back.
+      new_category_types =
+        Array(params[:category_types]).compact_blank.map(&:to_sym) + [:discussion]
+      current_category_types = category.category_types.keys
+      removed_category_types = current_category_types - new_category_types
+      added_category_types = new_category_types - current_category_types
+
+      # Some category custom fields (like
+      # DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD) control whether
+      # the type is enabled or not, so we need to remove them from the pending
+      # custom fields to avoid turning the type back on/off again.
+      (added_category_types + removed_category_types).each do |category_type|
+        Categories::TypeRegistry
+          .get(category_type)
+          .configuration_schema_keys(:category_custom_fields)
+          .each { |custom_field_key| pending_custom_fields.delete(custom_field_key) }
+      end
+
+      removed_category_types.each do |category_type|
+        Categories::Unconfigure.call(
+          guardian:,
+          params: {
+            category_id: category.id,
+            category_type:,
+          },
+        )
+      end
+
+      added_category_types.each do |category_type|
+        Categories::Configure.call(
+          guardian:,
+          params: {
+            category_id: category.id,
+            category_type:,
+          },
+        ) do |result|
+          on_failed_policy(:type_is_available) do
+            return(
+              render json: {
+                       errors: [
+                         I18n.t(
+                           "category_types.not_available",
+                           type_name: category_type.capitalize,
+                         ),
+                       ],
+                     },
+                     status: :unprocessable_entity
+            )
+          end
+        end
+      end
+    end
+  end
 
   def topics_per_page
     return SiteSetting.categories_topics if SiteSetting.categories_topics > 0

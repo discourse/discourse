@@ -15,6 +15,27 @@ module PageObjects
         self
       end
 
+      # In-app navigation via DiscourseURL.routeTo — exercises the same
+      # routing code path a notification or in-page link click would,
+      # rather than doing a full page reload like visit_nested_context.
+      # Use this when the test needs to verify behavior that depends on
+      # the existing nested controller/components staying mounted across
+      # the transition.
+      def route_to(path)
+        page.execute_script(%(require("discourse/lib/url").default.routeTo(#{path.to_json});))
+        self
+      end
+
+      def route_to_nested_context(topic, post_number:, query: nil)
+        path = "/n/#{topic.slug}/#{topic.id}/#{post_number}"
+        path += "?#{query}" if query
+        route_to(path)
+      end
+
+      def route_to_topic_post(topic, post_number:)
+        route_to("/t/#{topic.slug}/#{topic.id}/#{post_number}")
+      end
+
       # ── Root view assertions ──────────────────────────────────────
 
       def has_nested_view?
@@ -155,7 +176,7 @@ module PageObjects
 
       def has_sort_active?(sort)
         has_css?(
-          ".nested-sort-selector__option--active",
+          ".nested-sort-selector button.active",
           text: I18n.t("js.nested_replies.sort.#{sort}"),
         )
       end
@@ -333,18 +354,18 @@ module PageObjects
       end
 
       def click_sort(sort)
-        find(".nested-sort-selector__option", text: I18n.t("js.nested_replies.sort.#{sort}")).click
+        find(".nested-sort-selector button", text: I18n.t("js.nested_replies.sort.#{sort}")).click
         self
       end
 
       # ── Deletion/recovery assertions ─────────────────────────────
 
       def has_deleted_placeholder_for?(post)
-        has_css?("[data-post-number='#{post.post_number}'].nested-post__deleted-placeholder")
+        has_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--deleted")
       end
 
       def has_no_deleted_placeholder_for?(post)
-        has_no_css?("[data-post-number='#{post.post_number}'].nested-post__deleted-placeholder")
+        has_no_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--deleted")
       end
 
       def has_deleted_post_class_for?(post)
@@ -365,11 +386,28 @@ module PageObjects
       end
 
       def has_deleted_content_visible_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post__deleted-content"))
+        has_css?(wrapper_selector(post, ".nested-post__placeholder-reveal"))
       end
 
       def has_no_deleted_content_visible_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post__deleted-content"))
+        has_no_css?(wrapper_selector(post, ".nested-post__placeholder-reveal"))
+      end
+
+      # ── Ignored-user placeholder assertions ──────────────────────
+
+      def has_ignored_placeholder_for?(post)
+        has_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--ignored")
+      end
+
+      def has_no_ignored_placeholder_for?(post)
+        has_no_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--ignored")
+      end
+
+      def click_reveal_ignored(post)
+        find(
+          "button.nested-post__placeholder-avatar--reveal[data-post-number='#{post.post_number}']",
+        ).click
+        self
       end
 
       # ── Post actions ────────────────────────────────────────────
@@ -433,6 +471,20 @@ module PageObjects
       def has_uncloaked_root_for?(post)
         has_no_css?(".nested-post--cloaked [data-post-number='#{post.post_number}']") &&
           has_css?("[data-post-number='#{post.post_number}']")
+      end
+
+      # ── Suggested topics ──────────────────────────────────────────
+
+      def has_suggested_topics?
+        has_css?("#suggested-topics")
+      end
+
+      def has_no_suggested_topics?
+        has_no_css?("#suggested-topics")
+      end
+
+      def has_suggested_topic?(topic)
+        has_css?("#suggested-topics .topic-list-item[data-topic-id='#{topic.id}']")
       end
 
       private

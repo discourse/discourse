@@ -21,7 +21,7 @@ class ReviewablePostVotingComment < Reviewable
   end
 
   def post
-    nil
+    @post ||= comment&.post
   end
 
   def comment
@@ -97,11 +97,11 @@ class ReviewablePostVotingComment < Reviewable
   end
 
   def perform_disagree_and_restore(performed_by, args)
-    disagree { comment.recover! }
+    disagree(performed_by) { comment.recover! }
   end
 
   def perform_disagree(performed_by, args)
-    disagree
+    disagree(performed_by)
   end
 
   def perform_ignore(performed_by, args)
@@ -122,10 +122,10 @@ class ReviewablePostVotingComment < Reviewable
     end
   end
 
-  def disagree
+  def disagree(performed_by)
     yield if block_given?
 
-    UserSilencer.unsilence(comment_creator)
+    UserSilencer.unsilence(comment_creator, performed_by) if UserSilencer.was_silenced_for?(post)
 
     create_result(:success, :rejected) do |result|
       result.update_flag_stats = { status: :disagreed, user_ids: flagged_by_user_ids }

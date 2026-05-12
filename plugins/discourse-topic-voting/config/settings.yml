@@ -1,4 +1,4 @@
-plugins:
+discourse_topic_voting:
   topic_voting_enabled:
     default: true
     client: true
@@ -52,6 +52,6 @@ plugins:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/399365"

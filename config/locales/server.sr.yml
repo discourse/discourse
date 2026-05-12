@@ -89,7 +89,15 @@ sr:
   not_found: "Zatraženi URL ili resurs nije pronađen."
   read_only_mode_enabled: "Sajt je u čitaj samo modu. Interakcije su isključene."
   reading_time: "Vreme za čitanje"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    few: "%{count} min 🕑"
+    other: "%{count} min 🕑"
   likes: "Lajkovi"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    other: "%{count} ❤"
   embed:
     start_discussion: "Započnite diskusiju"
     continue: "Nastavite diskusiju"
@@ -133,6 +141,7 @@ sr:
       admins: "admini"
       moderators: "moderatori"
       staff: "osoblje"
+      anonymous: "anonimno"
     default_descriptions:
       staff: "Automatska grupa koja uključuje administratore i moderatore"
       admins: "Odgovoran je za konfigurisanje i održavanje ovog sajta, sa pristupom svim podacima o članovima i aktivnostima"
@@ -354,7 +363,7 @@ sr:
       labels:
         user: Korisnik
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: Korisnik
         location: Lokacija
@@ -453,10 +462,13 @@ sr:
     digest:
       liked_received: "Primljeno Lajkova"
       new_users: "Novi Korisnici"
+      subject_template_improved: "Rezime"
     forgot_password:
       title: "Zaboravio Šifru"
     set_password:
       title: "Postavi Šifru"
+    admin_login:
+      subject_template_improved: "Prijava"
   page_not_found:
     see_more: "Više"
     search_button: "Pretraži"

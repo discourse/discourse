@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import avatar from "discourse/helpers/avatar";
 import { emojiUrlFor } from "discourse/lib/text";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 
 export default class DiscourseReactionsReactionEmoji extends Component {
   get emojiUrl() {
@@ -17,7 +17,7 @@ export default class DiscourseReactionsReactionEmoji extends Component {
           data-user-card={{@reaction.user.username}}
           class="avatar-link"
         >
-          {{avatar
+          {{dAvatar
             @reaction.user
             imageSize="tiny"
             extraClasses="actor"

@@ -168,37 +168,39 @@ module DiscourseGamification
 
         scores AS (
           SELECT
-            gs.*
+            gls.*
           FROM
-            gamification_scores gs
+            gamification_leaderboard_scores gls
           CROSS JOIN
             leaderboard lb
           WHERE
+            gls.leaderboard_id = :leaderboard_id
+          AND
             (CASE
               -- Leaderboard with both "to_date" and "from_date" configured.
               -- Filter scores within the configured date range AND
               -- the relative period window
               WHEN lb.from_date IS NOT NULL AND lb.to_date IS NOT NULL THEN
-                gs.date BETWEEN GREATEST(lb.from_date, #{period_start_sql(period)}) AND lb.to_date
+                gls.date BETWEEN GREATEST(lb.from_date, #{period_start_sql(period)}) AND lb.to_date
 
               -- Leaderboard with only "from_date" configured.
               -- Filter scores starting from the later of leaderboard's "from_date"
               -- and the relative period start date
               WHEN lb.from_date IS NOT NULL AND lb.to_date IS NULL THEN
-                gs.date >= GREATEST(lb.from_date, #{period_start_sql(period)})
+                gls.date >= GREATEST(lb.from_date, #{period_start_sql(period)})
 
               -- Leaderboard with only "to_date" configured.
               -- Filter scores up to leaderboard's "to_date" starting from
               -- the relative period start date
               WHEN lb.from_date IS NULL AND lb.to_date IS NOT NULL THEN
-                gs.date >= COALESCE(#{period_start_sql(period)}, gs.date) AND gs.date <= lb.to_date
+                gls.date >= COALESCE(#{period_start_sql(period)}, gls.date) AND gls.date <= lb.to_date
 
               -- Leaderboard with no "from_date" and "to_date" configured.
               -- Filter scores within the relative period window only
               ELSE
-                gs.date >= COALESCE(#{period_start_sql(period)}, gs.date)
+                gls.date >= COALESCE(#{period_start_sql(period)}, gls.date)
             END)
-            AND gs.date <= CURRENT_DATE -- Ensure scores are not from the future
+            AND gls.date <= CURRENT_DATE -- Ensure scores are not from the future
         )
 
         SELECT

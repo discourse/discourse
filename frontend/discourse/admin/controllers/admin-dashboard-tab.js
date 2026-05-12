@@ -1,23 +1,29 @@
 import { tracked } from "@glimmer/tracking";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 
 export default class AdminDashboardTabController extends Controller {
+  @controller("admin.dashboard") dashboardController;
+
   @tracked period = "monthly";
-  @tracked start_date = null;
-  @tracked end_date = null;
-  queryParams = ["period", "start_date", "end_date"];
+  queryParams = ["period"];
 
   get startDate() {
-    if (this.start_date) {
-      return moment.utc(this.start_date).locale("en").startOf("day");
+    if (this.dashboardController.start_date) {
+      return moment
+        .utc(this.dashboardController.start_date)
+        .locale("en")
+        .startOf("day");
     }
     return this.#calculateStartDate();
   }
 
   get endDate() {
-    if (this.end_date) {
-      return moment.utc(this.end_date).locale("en").endOf("day");
+    if (this.dashboardController.end_date) {
+      return moment
+        .utc(this.dashboardController.end_date)
+        .locale("en")
+        .endOf("day");
     }
     return moment().locale("en").utc().endOf("day");
   }
@@ -47,14 +53,15 @@ export default class AdminDashboardTabController extends Controller {
   @action
   setCustomDateRange(startDate, endDate) {
     this.period = "custom";
-    this.start_date = moment(startDate).format("YYYY-MM-DD");
-    this.end_date = moment(endDate).format("YYYY-MM-DD");
+    this.dashboardController.start_date =
+      moment(startDate).format("YYYY-MM-DD");
+    this.dashboardController.end_date = moment(endDate).format("YYYY-MM-DD");
   }
 
   @action
   setPeriod(period) {
     this.period = period;
-    this.start_date = null;
-    this.end_date = null;
+    this.dashboardController.start_date = null;
+    this.dashboardController.end_date = null;
   }
 }

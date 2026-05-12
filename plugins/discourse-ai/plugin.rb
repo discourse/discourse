@@ -38,6 +38,7 @@ register_asset "stylesheets/modules/ai-bot/common/ai-discobot-discoveries.scss"
 register_asset "stylesheets/modules/ai-bot/mobile/ai-agent.scss", :mobile
 
 register_asset "stylesheets/modules/ai-bot-conversations/common.scss"
+register_asset "stylesheets/modules/ai-bot-conversations/docked-composer.scss"
 
 register_asset "stylesheets/modules/embeddings/common/semantic-related-topics.scss"
 register_asset "stylesheets/modules/embeddings/common/semantic-search.scss"
@@ -86,6 +87,13 @@ after_initialize do
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
   end
 
+  # Avoid a mini_sql warning ("no type cast defined") by registering a halfvec text decoder.
+  if !GlobalSetting.skip_db?
+    if halfvec_oid = DB.query_single("SELECT oid FROM pg_type WHERE typname = 'halfvec'").first
+      DB.type_map.add_coder(PG::TextDecoder::String.new(oid: halfvec_oid))
+    end
+  end
+
   # do not autoload this cause we may have no namespace
   require_relative "discourse_automation/llm_triage"
   require_relative "discourse_automation/llm_report"
@@ -123,7 +131,10 @@ after_initialize do
     end
   end
 
-  require_relative "spec/support/embeddings_generation_stubs" if Rails.env.test?
+  if Rails.env.test?
+    require_relative "spec/support/embeddings_generation_stubs"
+    require_relative "spec/support/fake_external_agent"
+  end
 
   reloadable_patch do |plugin|
     Guardian.prepend DiscourseAi::GuardianExtensions

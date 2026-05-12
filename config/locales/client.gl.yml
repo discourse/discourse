@@ -1862,6 +1862,8 @@ gl:
       upload_description: "introducir a descrición da carga aquí"
       list_item: "Elemento da listaxe"
       wrap_modal:
+        attribute_key: "Chave"
+        attribute_value: "Valor"
         apply: "Aplicar"
       help: "Axuda para a edición con Markdown"
       modal_ok: "De acordo"
@@ -2120,11 +2122,6 @@ gl:
         move_messages_to_inbox: "Mover á caixa de entrada"
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
-        choose_new_tags: "Seleccione novas etiquetas para estes temas:"
-        changed_tags: "As etiquetas deses temas cambiaron."
-        confirm_remove_tags:
-          one: "Retiraranse todas as etiquetas deste tema. Está seguro?"
-          other: "Retiraranse todas as etiquetas destes <b>%{count}</b> temas. Está seguro?"
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
@@ -2150,12 +2147,26 @@ gl:
         name: "Arquivo"
       move_messages_to_inbox:
         name: "Mover á caixa de entrada"
-      remove_tags:
-        name: "Retirar etiquetas"
-      replace_tags:
-        name: "Substituír etiquetas"
       delete_topics:
         name: "Eliminar"
+      convert_to_private_message:
+        name: "Facer privada a mensaxe"
+    nested_replies:
+      sort:
+        label: "Ordenar por"
+        top: "Destacados"
+        new: "Novo"
+      load_more_children:
+        one: "%{count} resposta máis"
+        other: "%{count} respostas máis"
+      collapsed_replies:
+        one: "%{count} resposta"
+        other: "%{count} repostas"
+      collapse: "Pregar"
+      no_replies: "Aínda sen respostas."
+      deleted_post_placeholder: "[eliminado]"
+      ignored_post_placeholder: "[ignorado]"
+      pinned_reply: "Fixado"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -2554,6 +2565,10 @@ gl:
       sr_post_like_count_button:
         one: "A %{count} persoa gustoulle esta publicación."
         other: "A %{count} persoas gustoulles esta publicación."
+      likes_popup:
+        title:
+          one: "%{count} gústame"
+          other: "%{count} gústame"
       filtered_replies_hint:
         one: "Ver esta publicación e a súa resposta"
         other: "Ver esta publicación e as súas %{count} respostas"
@@ -2567,8 +2582,6 @@ gl:
           actions: "Accións"
           edit: "Editar"
           delete: "Eliminar"
-        post_language_selector:
-          none: "Ningunha"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."
@@ -2617,7 +2630,6 @@ gl:
           just_the_post: "Non, só esta publicación"
         admin: "accións admin. nas publicacións"
         admin_action: "Administrador"
-        permanently_delete: "Eliminar definitivamente"
         wiki: "Crear wiki"
         unwiki: "Eliminar wiki"
         convert_to_moderator: "Engadir cor do equipo"
@@ -2733,6 +2745,7 @@ gl:
       back: "Volver á categoría"
       general: "Xeral"
       settings: "Configuración"
+      moderation: "Moderación"
       tags: "Etiquetas"
       localization:
         name: "Nome"
@@ -2834,7 +2847,7 @@ gl:
           low: "Baixa"
           high: "Alta"
       sort_options:
-        default: "predeterminado"
+        default: "Predeterminado"
         likes: "Gústames"
         views: "Vistas"
         posts: "Publicacións"
@@ -3434,6 +3447,8 @@ gl:
           admins: "Administradores"
           moderators: "Moderadores"
           staff: "Equipo"
+        impact_types:
+          other_type: "Outro"
         filter:
           all: "Todas"
           enabled: "Activado"
@@ -3507,6 +3522,9 @@ gl:
           sub_pages:
             logs:
               title: "Rexistros"
+        problem_checks:
+          status: "Estado"
+          ignore: "Ignorar"
         reports:
           title: "Informes"
           sub_pages:
@@ -3574,7 +3592,7 @@ gl:
         installed_version: "Instalado"
         latest_version: "Últimos"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
-        dismiss_notice: "Desbotar"
+        dismiss_notice: "Ignorar"
         new_features:
           learn_more: "Saber máis..."
         last_checked: "Última comprobación"
@@ -3615,6 +3633,11 @@ gl:
         exception_error: Sentímolo pero produciuse un erro ao executar a consulta
         too_many_requests: Executou esta acción demasiadas veces. Agarde antes de volvelo tentar.
         not_found_error: Sentímolo pero o informe non existe
+        sections:
+          reports:
+            title: "Informes"
+        period:
+          custom: "Personalizado"
         reports:
           trend_title: "Cambio do %{percent}. Actualmente %{current}, era %{prev} no período anterior."
           today: "Hoxe"
@@ -4308,6 +4331,7 @@ gl:
         topic_id: "ID do tema"
         post_id: "ID da publicación"
         category_id: "ID da categoría"
+        reviewable_id: "Revisar"
         delete: "Eliminar"
         edit: "Editar"
         save: "Gardar"

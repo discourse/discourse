@@ -10,8 +10,6 @@ gl:
       default_query: "Predeterminado"
       or: "ou"
       create: "Crear"
-      ai:
-        generate: "Xerar"
       import:
         label: "Importar"
       help:

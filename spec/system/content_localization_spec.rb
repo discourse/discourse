@@ -240,6 +240,31 @@ describe "Content Localization" do
       end
     end
 
+    context "when transitioning from anonymous to logged-in" do
+      let(:language_switcher) { PageObjects::Components::LanguageSwitcher.new }
+
+      before do
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.content_localization_language_switcher = "all"
+      end
+
+      it "ignores the show-original cookie for logged-in users" do
+        visit("/")
+        language_switcher.select_language("ja")
+
+        visit("/t/#{topic.id}")
+        expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
+
+        page.find(toggle_localize_button_selector).click
+        expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+
+        sign_in(japanese_user)
+
+        visit("/t/#{topic.id}")
+        expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
+      end
+    end
+
     context "when editing" do
       let(:edit_localized_post_dialog) { PageObjects::Components::Dialog.new }
       let(:fast_editor) { PageObjects::Components::FastEditor.new }

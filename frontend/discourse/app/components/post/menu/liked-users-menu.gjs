@@ -1,5 +1,8 @@
 import Component from "@glimmer/component";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import { i18n } from "discourse-i18n";
 import PostUsersMenu from "./post-users-menu";
 
@@ -36,6 +39,15 @@ export default class PostLikedUsersMenu extends Component {
     <PostUsersMenu
       @fetchUsers={{this.fetchUsers}}
       @titleText={{this.titleText}}
-    />
+    >
+      <:avatar as |user|>
+        <PluginOutlet
+          @name="liked-users-list-avatar"
+          @outletArgs={{lazyHash user=user post=this.post}}
+        >
+          <DUserAvatar class="trigger-user-card" @user={{user}} @size="small" />
+        </PluginOutlet>
+      </:avatar>
+    </PostUsersMenu>
   </template>
 }

@@ -1,17 +1,5 @@
 # frozen_string_literal: true
 
-unless defined?(FakeExternalAgent)
-  class FakeExternalAgent < DiscourseAi::Agents::Agent
-    def tools
-      []
-    end
-
-    def system_prompt
-      "Test agent"
-    end
-  end
-end
-
 RSpec.describe "Admin AI features configuration" do
   fab!(:admin)
   fab!(:llm_model)
@@ -44,6 +32,8 @@ RSpec.describe "Admin AI features configuration" do
     ai_features_page.toggle_unconfigured
 
     expect(ai_features_page).to have_listed_modules(all_modules.size - configured_count)
+
+    screenshot_marker(label: "ai-admin-features")
   end
 
   it "lists the agent used for the corresponding AI feature" do
@@ -116,14 +106,11 @@ RSpec.describe "Admin AI features configuration" do
     end
 
     before do
-      DiscoursePluginRegistry.register_external_ai_feature(
-        {
-          module_name: :test_external,
-          feature: :test_feature,
-          agent_klass: FakeExternalAgent,
-          enabled_by_setting: nil,
-        },
-        fake_plugin,
+      DiscourseAi.register_feature(
+        module_name: :test_external,
+        feature: :test_feature,
+        agent_klass: DiscourseAi::TestHelpers::FakeExternalAgent,
+        plugin: fake_plugin,
       )
     end
 

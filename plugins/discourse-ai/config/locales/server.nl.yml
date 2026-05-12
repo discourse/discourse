@@ -104,88 +104,88 @@ nl:
       xaxis: "Positief (%)"
       yaxis: "Datum"
     emotion_admiration:
-      title: "\U0001F929 Bewondering"
+      title: "🤩 Bewondering"
       description: "Berichten geclassificeerd met de emotie bewondering via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
-      title: "\U0001F604 Geamuseerd"
+      title: "😄 Geamuseerd"
       description: "Berichten geclassificeerd met de emotie geamuseerd via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
-      title: "\U0001F620 Boosheid"
+      title: "😠 Boosheid"
       description: "Berichten geclassificeerd met de emotie woede via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
-      title: "\U0001F612 Ergernis"
+      title: "😒 Ergernis"
       description: "Berichten geclassificeerd met de emotie ergernis via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
-      title: "\U0001F44D Goedkeuring"
+      title: "👍 Goedkeuring"
       description: "Berichten geclassificeerd met de emotie goedkeuring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
-      title: "\U0001F917 Zorgzaam"
+      title: "🤗 Zorgzaam"
       description: "Berichten geclassificeerd met de emotie zorgzaam via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
-      title: "\U0001F615 Verwarring"
+      title: "😕 Verwarring"
       description: "Berichten geclassificeerd met de emotie verwarring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
-      title: "\U0001F914 Nieuwsgierigheid"
+      title: "🤔 Nieuwsgierigheid"
       description: "Berichten geclassificeerd met de emotie nieuwsgierigheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
-      title: "\U0001F60D Verlangen"
+      title: "😍 Verlangen"
       description: "Berichten geclassificeerd met de emotie verlangen via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
-      title: "\U0001F61E Teleurstelling"
+      title: "😞 Teleurstelling"
       description: "Berichten geclassificeerd met de emotie teleurstelling via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
-      title: "\U0001F44E Afkeuring"
+      title: "👎 Afkeuring"
       description: "Berichten geclassificeerd met de emotie afkeuring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
-      title: "\U0001F922 Afschuw"
+      title: "🤢 Afschuw"
       description: "Berichten geclassificeerd met de emotie afschuw via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
-      title: "\U0001F633 Schaamte"
+      title: "😳 Schaamte"
       description: "Berichten geclassificeerd met de emotie schaamte via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
-      title: "\U0001F92A Opwinding"
+      title: "🤪 Opwinding"
       description: "Berichten geclassificeerd met de emotie opwinding via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
-      title: "\U0001F628 Angst"
+      title: "😨 Angst"
       description: "Berichten geclassificeerd met de emotie angst via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
-      title: "\U0001F64F Dankbaarheid"
+      title: "🙏 Dankbaarheid"
       description: "Berichten geclassificeerd met de emotie dankbaarheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
-      title: "\U0001F622 Verdriet"
+      title: "😢 Verdriet"
       description: "Berichten geclassificeerd met de emotie verdriet via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
-      title: "\U0001F60A Vreugde"
+      title: "😊 Vreugde"
       description: "Berichten geclassificeerd met de emotie vreugde via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_love:
       title: '❤️ Liefde'
       description: "Berichten geclassificeerd met de emotie liefde via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
-      title: "\U0001F630 Nervositeit"
+      title: "😰 Nervositeit"
       description: "Berichten geclassificeerd met de emotie nervositeit via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
-      title: "\U0001F610 Neutraal"
+      title: "😐 Neutraal"
       description: "Berichten geclassificeerd met de emotie neutraal via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
-      title: "\U0001F31F Optimisme"
+      title: "🌟 Optimisme"
       description: "Berichten geclassificeerd met de emotie optimisme via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
-      title: "\U0001F981 Trots"
+      title: "🦁 Trots"
       description: "Berichten geclassificeerd met de emotie trots via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_realization:
-      title: "\U0001F4A1 Besef"
+      title: "💡 Besef"
       description: "Berichten geclassificeerd met de emotie besef via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
-      title: "\U0001F60C Opluchting"
+      title: "😌 Opluchting"
       description: "Berichten geclassificeerd met de emotie oplichting via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_remorse:
-      title: "\U0001F614 Spijt"
+      title: "😔 Spijt"
       description: "Berichten geclassificeerd met de emotie spijt via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_sadness:
-      title: "\U0001F62D Droefheid"
+      title: "😭 Droefheid"
       description: "Berichten geclassificeerd met de emotie droefheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_surprise:
-      title: "\U0001F632 Verrassing"
+      title: "😲 Verrassing"
       description: "Berichten geclassificeerd met de emotie verrassing via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
@@ -537,13 +537,13 @@ nl:
       reports:
         overall_sentiment: "Algeheel sentiment (positief - negatief)"
         post_emotion:
-          sadness: "Droefheid \U0001F622"
-          surprise: "Verrassing \U0001F631"
-          neutral: "Neutraal \U0001F610"
-          fear: "Angst \U0001F628"
-          anger: "Boosheid \U0001F621"
-          joy: "Vreugde \U0001F600"
-          disgust: "Afschuw \U0001F922"
+          sadness: "Droefheid 😢"
+          surprise: "Verrassing 😱"
+          neutral: "Neutraal 😐"
+          fear: "Angst 😨"
+          anger: "Boosheid 😡"
+          joy: "Vreugde 😀"
+          disgust: "Afschuw 🤢"
         sentiment_analysis:
           positive: "Positief"
           negative: "Negatief"

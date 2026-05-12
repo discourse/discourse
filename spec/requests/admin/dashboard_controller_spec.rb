@@ -95,6 +95,109 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
       end
     end
+
+    describe "sections.highlights payload" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        AdminDashboardData.unstub(:fetch_cached_stats)
+        AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
+        Discourse.cache.clear
+        sign_in(admin)
+      end
+
+      it "is omitted when dashboard_improvements is disabled" do
+        SiteSetting.dashboard_improvements = false
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_nil
+      end
+
+      it "includes a highlights section with kpis" do
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        highlights = response.parsed_body["sections"]["highlights"]
+        expect(highlights).to be_present
+        expect(highlights["kpis"]).to be_an(Array)
+      end
+
+      it "returns the documented payload shape for new_signups" do
+        freeze_time(Time.utc(2026, 4, 28, 12, 0, 0)) do
+          Fabricate(:user, created_at: 5.days.ago)
+          get "/admin/dashboard.json", params: { start_date: "2026-03-01", end_date: "2026-04-28" }
+
+          kpis = response.parsed_body["sections"]["highlights"]["kpis"]
+          signups = kpis.find { |k| k["type"] == "new_signups" }
+
+          expect(signups).to include(
+            "type" => "new_signups",
+            "report_type" => "signups",
+            "report_query" => {
+              "start_date" => "2026-03-01",
+              "end_date" => "2026-04-28",
+            },
+          )
+          expect(signups["value"]).to be >= 1
+          expect(signups).to have_key("previous_value")
+          expect(signups).to have_key("percent_change")
+        end
+      end
+
+      it "honours start_date and end_date query params" do
+        Fabricate(:user, created_at: 2.days.ago)
+        get "/admin/dashboard.json",
+            params: {
+              start_date: 7.days.ago.strftime("%Y-%m-%d"),
+              end_date: Date.current.strftime("%Y-%m-%d"),
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]["highlights"]["kpis"]).to be_an(Array)
+      end
+
+      it "ignores malformed date params and falls back to defaults" do
+        get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]["highlights"]).to be_present
+      end
+
+      it "denies non-staff users" do
+        sign_in(user)
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "allows moderators and returns the highlights payload" do
+        sign_in(moderator)
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]["highlights"]).to be_present
+      end
+
+      it "omits version_check when the flag is on" do
+        SiteSetting.version_checks = true
+        DiscourseUpdates.expects(:check_version).never
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to have_key("version_check")
+      end
+
+      it "still includes version_check when the flag is off" do
+        SiteSetting.dashboard_improvements = false
+        SiteSetting.version_checks = true
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to have_key("version_check")
+      end
+    end
   end
 
   describe "#problems" do
@@ -158,6 +261,8 @@ RSpec.describe Admin::DashboardController do
 
   describe "#new_features" do
     after { DiscourseUpdates.clean_state }
+
+    before { UpcomingChanges.stubs(:permanent_upcoming_changes).returns([]) }
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -281,16 +386,22 @@ RSpec.describe Admin::DashboardController do
 
       context "when a permanent upcoming change exists and the feed is empty" do
         before do
-          mock_upcoming_change_metadata(
-            {
-              enable_upload_debug_mode: {
-                impact: "other,developers",
-                status: :permanent,
-                impact_type: "other",
-                impact_role: "developers",
-                learn_more_url: "https://meta.discourse.org/t/-/1234",
+          UpcomingChanges.unstub(:permanent_upcoming_changes)
+          UpcomingChanges.stubs(:permanent_upcoming_changes).returns(
+            [
+              {
+                setting: :enable_upload_debug_mode,
+                humanized_name: SiteSetting.humanized_names(:enable_upload_debug_mode),
+                description: SiteSetting.description(:enable_upload_debug_mode),
+                upcoming_change: {
+                  learn_more_url: "https://meta.discourse.org/t/-/1234",
+                  image: {
+                    url:
+                      "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+                  },
+                },
               },
-            },
+            ],
           )
           UpcomingChanges.stubs(:image_exists?).returns(true)
           UpcomingChanges.stubs(:image_data).returns(

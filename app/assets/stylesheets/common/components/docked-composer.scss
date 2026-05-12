@@ -64,6 +64,14 @@
     }
   }
 
+  &__header {
+    width: 100%;
+    max-width: var(--docked-composer-max-width);
+    padding-left: var(--docked-composer-content-offset);
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
   &__inner {
     display: flex;
     align-items: flex-end;
@@ -144,6 +152,40 @@
     }
   }
 
+  &--auto-resize {
+    --docked-composer-auto-resize-max-height: min(
+      70vh,
+      calc(
+        var(--docked-composer-input-min-height) +
+          var(--docked-composer-max-resize-offset, 400px)
+      )
+    );
+  }
+
+  &--auto-resize &__editor {
+    .d-editor-input {
+      flex: none;
+      height: auto;
+      max-height: var(--docked-composer-auto-resize-max-height);
+      min-height: var(--docked-composer-input-min-height);
+      overflow-y: auto;
+    }
+
+    textarea.d-editor-input {
+      field-sizing: content;
+    }
+
+    .ProseMirror-container {
+      height: auto;
+      max-height: var(--docked-composer-auto-resize-max-height);
+    }
+
+    .ProseMirror.d-editor-input {
+      flex: none;
+      overflow-y: visible;
+    }
+  }
+
   // submit button yielded into DEditor's textarea column, positioned in
   // the bottom-right corner of the input box (ChatGPT-style) — icon only.
   // Consumers overriding the `<:submit>` block should reuse this class so
@@ -189,6 +231,7 @@
     gap: 0.5em;
     width: 100%;
     max-width: var(--docked-composer-max-width);
+    padding-block: 1rem;
     padding-left: var(--docked-composer-content-offset);
     margin: 0 auto;
     box-sizing: border-box;
