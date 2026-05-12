@@ -55,12 +55,6 @@ function serializeError(err) {
   return base(String(err));
 }
 
-if (process.env[CHILD_ENV_FLAG] === "1") {
-  await runWorker();
-} else {
-  await runSupervisor();
-}
-
 async function runWorker() {
   const { dev } = await import("rolldown/experimental");
   const { buildConfig } = await import("./rolldown.config.mjs");
@@ -207,4 +201,10 @@ async function waitForFileChange(dir, isCancelled) {
       resolve(true);
     });
   });
+}
+
+if (process.env[CHILD_ENV_FLAG] === "1") {
+  await runWorker();
+} else {
+  await runSupervisor();
 }
