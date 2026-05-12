@@ -375,7 +375,8 @@ module SiteSettingExtension
     defaults
       .all(default_locale)
       .reject do |setting_name, _|
-        plugins[setting_name] && !Discourse.plugins_by_name[plugins[setting_name]].configurable?
+        plugin_name = plugins[setting_name]
+        plugin_name && !Discourse.plugins_by_name[plugin_name].configurable?
       end
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
