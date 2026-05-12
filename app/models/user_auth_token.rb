@@ -43,7 +43,10 @@ class UserAuthToken < ActiveRecord::Base
 
     return if !guardian.can_impersonate?(puppet)
 
-    puppet.tap { |u| u.is_impersonating = true }
+    puppet.tap do |user|
+      user.is_impersonating = true
+      user.impersonation_expires_at = impersonation_expires_at
+    end
   end
 
   def self.log(info)

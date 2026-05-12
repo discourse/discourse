@@ -1,11 +1,11 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import DButton from "discourse/ui-kit/d-button";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
 
 const CollapsedInfo = <template>
@@ -20,7 +20,7 @@ const CollapsedInfo = <template>
           <div>
             <dt class="created-at">{{i18n "user.created"}}</dt>
             <dd class="created-at">
-              {{ageWithTooltip @model.created_at format="medium"}}
+              {{dAgeWithTooltip @model.created_at format="medium"}}
             </dd>
           </div>
         {{/if}}
@@ -28,7 +28,7 @@ const CollapsedInfo = <template>
           <div>
             <dt class="last-posted-at">{{i18n "user.last_posted"}}</dt>
             <dd class="last-posted-at">
-              {{ageWithTooltip @model.last_posted_at format="medium"}}
+              {{dAgeWithTooltip @model.last_posted_at format="medium"}}
             </dd>
           </div>
         {{/if}}
@@ -36,7 +36,7 @@ const CollapsedInfo = <template>
           <div>
             <dt class="last-seen-at">{{i18n "user.last_seen"}}</dt>
             <dd class="last-seen-at">
-              {{ageWithTooltip @model.last_seen_at format="medium"}}
+              {{dAgeWithTooltip @model.last_seen_at format="medium"}}
             </dd>
           </div>
         {{/if}}

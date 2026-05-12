@@ -21,7 +21,7 @@ import { resetSettings as resetThemeSettings } from "discourse/lib/theme-setting
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
-} from "discourse/components/load-more";
+} from "discourse/ui-kit/d-load-more";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import { resetCategoryCache } from "discourse/models/category";

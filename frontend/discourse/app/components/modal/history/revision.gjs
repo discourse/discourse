@@ -4,12 +4,12 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and, eq, not } from "discourse/truth-helpers";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class Revision extends Component {
@@ -19,13 +19,13 @@ export default class Revision extends Component {
   <template>
     <div id="revision">
       <div id="revision-details">
-        {{icon "pencil"}}
+        {{dIcon "pencil"}}
         <LinkTo
           @route="user"
           @model={{@model.username}}
           class="revision-details__user"
         >
-          {{boundAvatarTemplate @model.avatar_template "small"}}
+          {{dBoundAvatarTemplate @model.avatar_template "small"}}
           {{#if this.siteSettings.prioritize_full_name_in_ux}}
             {{@model.acting_user_name}}
           {{else}}
@@ -38,7 +38,7 @@ export default class Revision extends Component {
         />
 
         <span class="date">
-          {{ageWithTooltip @model.created_at format="medium"}}
+          {{dAgeWithTooltip @model.created_at format="medium"}}
         </span>
 
         {{#if @model.edit_reason}}
@@ -48,13 +48,13 @@ export default class Revision extends Component {
         {{#if this.site.desktopView}}
           <span>
             {{#if @model.user_changes}}
-              {{boundAvatarTemplate
+              {{dBoundAvatarTemplate
                 @model.user_changes.previous.avatar_template
                 "small"
               }}
               {{@model.user_changes.previous.username}}
               &rarr;
-              {{boundAvatarTemplate
+              {{dBoundAvatarTemplate
                 @model.user_changes.current.avatar_template
                 "small"
               }}
@@ -63,14 +63,14 @@ export default class Revision extends Component {
 
             {{#if @model.reply_to_post_number_changes}}
               <span class="reply-to-changes">
-                {{icon "share"}}
+                {{dIcon "share"}}
                 {{#if @model.reply_to_post_number_changes.previous}}
                   <span
                   >#{{@model.reply_to_post_number_changes.previous.post_number}}</span>
                   {{#if
                     @model.reply_to_post_number_changes.previous.avatar_template
                   }}
-                    {{boundAvatarTemplate
+                    {{dBoundAvatarTemplate
                       @model.reply_to_post_number_changes.previous.avatar_template
                       "small"
                     }}
@@ -88,7 +88,7 @@ export default class Revision extends Component {
                   {{#if
                     @model.reply_to_post_number_changes.current.avatar_template
                   }}
-                    {{boundAvatarTemplate
+                    {{dBoundAvatarTemplate
                       @model.reply_to_post_number_changes.current.avatar_template
                       "small"
                     }}
@@ -103,14 +103,14 @@ export default class Revision extends Component {
             {{/if}}
 
             {{#if @model.wiki_changes}}
-              {{icon
+              {{dIcon
                 "far-pen-to-square"
                 class=(if @model.wiki_changes.current "diff-ins" "diff-del")
               }}
             {{/if}}
 
             {{#if @model.post_type_changes}}
-              {{icon
+              {{dIcon
                 "shield-halved"
                 class=(if
                   (eq
@@ -124,7 +124,7 @@ export default class Revision extends Component {
             {{/if}}
 
             {{#if @model.archetype_changes}}
-              {{icon
+              {{dIcon
                 (if
                   (eq @model.archetype_changes.current "private_message")
                   "envelope"
@@ -139,13 +139,13 @@ export default class Revision extends Component {
               {{#if @previousCategory}}
                 {{trustHTML @previousCategory}}
               {{else}}
-                {{icon "far-eye-slash" class="diff-del"}}
+                {{dIcon "far-eye-slash" class="diff-del"}}
               {{/if}}
               &rarr;
               {{#if @currentCategory}}
                 {{trustHTML @currentCategory}}
               {{else}}
-                {{icon "far-eye-slash" class="diff-ins"}}
+                {{dIcon "far-eye-slash" class="diff-ins"}}
               {{/if}}
             {{/if}}
           </span>
@@ -158,7 +158,7 @@ export default class Revision extends Component {
             <li>
               <a
                 href
-                class={{concatClass
+                class={{dConcatClass
                   "inline-mode"
                   (if (eq @viewMode "inline") "active")
                 }}
@@ -166,14 +166,14 @@ export default class Revision extends Component {
                 title={{i18n "post.revisions.displays.inline.title"}}
                 aria-label={{i18n "post.revisions.displays.inline.title"}}
               >
-                {{icon "far-square"}}
+                {{dIcon "far-square"}}
                 {{i18n "post.revisions.displays.inline.button"}}
               </a>
             </li>
             <li>
               <a
                 href
-                class={{concatClass
+                class={{dConcatClass
                   "side-by-side-mode"
                   (if (eq @viewMode "side_by_side") "active")
                 }}
@@ -181,14 +181,14 @@ export default class Revision extends Component {
                 title={{i18n "post.revisions.displays.side_by_side.title"}}
                 aria-label={{i18n "post.revisions.displays.side_by_side.title"}}
               >
-                {{icon "table-columns"}}
+                {{dIcon "table-columns"}}
                 {{i18n "post.revisions.displays.side_by_side.button"}}
               </a>
             </li>
             <li>
               <a
                 href
-                class={{concatClass
+                class={{dConcatClass
                   "side-by-side-markdown-mode"
                   (if (eq @viewMode "side_by_side_markdown") "active")
                 }}
@@ -200,7 +200,7 @@ export default class Revision extends Component {
                   "post.revisions.displays.side_by_side_markdown.title"
                 }}
               >
-                {{icon "table-columns"}}
+                {{dIcon "table-columns"}}
                 {{i18n "post.revisions.displays.side_by_side_markdown.button"}}
               </a>
             </li>

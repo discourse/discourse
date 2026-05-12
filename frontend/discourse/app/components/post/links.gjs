@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { gt } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 const MAX_COLLAPSED_LINKS = 5;
@@ -55,8 +55,8 @@ export default class PostLinks extends Component {
                 data-clicks={{if (gt link.clicks 0) link.clicks}}
                 href={{link.url}}
               >
-                {{icon "link"}}
-                <span> {{replaceEmoji link.title}}</span>
+                {{dIcon "link"}}
+                <span> {{dReplaceEmoji link.title}}</span>
               </a>
             </li>
           {{/each}}

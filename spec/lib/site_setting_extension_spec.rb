@@ -1749,6 +1749,43 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])
       expect(SiteSetting.exclude_rel_nofollow_domains_map).to eq([])
     end
+
+    describe "granular_anonymous_and_logged_in_groups_permissions read-time swap" do
+      let(:everyone_id) { Group::AUTO_GROUPS[:everyone] }
+      let(:logged_in_id) { Group::AUTO_GROUPS[:logged_in_users] }
+
+      it "returns the stored ids unchanged when the upcoming change is disabled" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
+        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([everyone_id, 11])
+      end
+
+      it "swaps 0 for logged_in_users when the upcoming change is enabled" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
+        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([logged_in_id, 11])
+      end
+
+      it "dedups when logged_in_users is already stored alongside everyone" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|#{logged_in_id}|1"
+        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([logged_in_id, 1])
+      end
+
+      it "leaves the stored database value untouched" do
+        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+        SiteSetting.experimental_new_new_view_groups_map # trigger getter
+
+        expect(SiteSetting.experimental_new_new_view_groups).to eq("#{everyone_id}|11")
+      end
+
+      it "does not affect category_list settings" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+        SiteSetting.digest_suppress_categories = "#{everyone_id}|4"
+        expect(SiteSetting.digest_suppress_categories_map).to eq([everyone_id, 4])
+      end
+    end
   end
 
   describe "keywords" do

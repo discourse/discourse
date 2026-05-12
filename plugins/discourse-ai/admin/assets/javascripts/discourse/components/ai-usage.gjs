@@ -10,20 +10,20 @@ import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import Chart from "discourse/admin/components/chart";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DStatTiles from "discourse/components/d-stat-tiles";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { eq, gt } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DStatTiles from "discourse/ui-kit/d-stat-tiles";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiCreditBar from "./ai-credit-bar";
 
@@ -557,7 +557,7 @@ export default class AiUsage extends Component {
           {{#if this.isCustomDateActive}}
             <div class="ai-usage__custom-date-pickers">
 
-              <DateTimeInputRange
+              <DDateTimeInputRange
                 @from={{this.fromDate}}
                 @to={{this.toDate}}
                 @onChange={{this.onChangeDateRange}}
@@ -588,7 +588,7 @@ export default class AiUsage extends Component {
           />
         </div>
 
-        <ConditionalLoadingSpinner @condition={{this.loadingData}}>
+        <DConditionalLoadingSpinner @condition={{this.loadingData}}>
           <AdminConfigAreaCard
             @heading="discourse_ai.usage.summary"
             class="ai-usage__summary"
@@ -699,7 +699,7 @@ export default class AiUsage extends Component {
                                   @maxWidth={{600}}
                                 >
                                   <:trigger>
-                                    {{icon
+                                    {{dIcon
                                       "circle-question"
                                       class="ai-usage__info-icon"
                                     }}
@@ -955,7 +955,7 @@ export default class AiUsage extends Component {
 
                 {{#if this.data.users.length}}
                   <div
-                    class={{concatClass
+                    class={{dConcatClass
                       "ai-usage__users-table-wrapper"
                       (if (gt this.data.users.length 24) "-multi-column")
                     }}
@@ -984,7 +984,7 @@ export default class AiUsage extends Component {
                                   @model={{user.username}}
                                   class="username"
                                 >
-                                  {{avatar user imageSize="tiny"}}
+                                  {{dAvatar user imageSize="tiny"}}
                                   {{user.username}}
                                 </LinkTo>
                               </div></td>
@@ -1050,7 +1050,7 @@ export default class AiUsage extends Component {
                                     @model={{user.username}}
                                     class="username"
                                   >
-                                    {{avatar user imageSize="tiny"}}
+                                    {{dAvatar user imageSize="tiny"}}
                                     {{user.username}}
                                   </LinkTo>
                                 </div></td>
@@ -1092,7 +1092,7 @@ export default class AiUsage extends Component {
               </:content>
             </AdminConfigAreaCard>
           </div>
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </div>
     </div>
   </template>

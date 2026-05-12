@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatHeaderIconUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/header/icon/unread-indicator";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
@@ -100,10 +100,10 @@ export default class ChatHeaderIcon extends Component {
           @action={{this.openChat}}
           @href={{this.href}}
           tabindex="0"
-          class={{concatClass "icon" "btn-flat" (if this.isActive "active")}}
+          class={{dConcatClass "icon" "btn-flat" (if this.isActive "active")}}
           title={{this.title}}
         >
-          {{~icon this.icon~}}
+          {{~dIcon this.icon~}}
           {{#if this.showUnreadIndicator}}
             <ChatHeaderIconUnreadIndicator
               @urgentCount={{@urgentCount}}

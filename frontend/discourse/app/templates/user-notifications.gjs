@@ -1,13 +1,13 @@
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DNavigationItem from "discourse/components/d-navigation-item";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DNavigationItem from "discourse/ui-kit/d-navigation-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,13 +18,13 @@ export default <template>
   {{bodyClass "user-notifications-page"}}
 
   <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav @ariaLabel="User secondary - notifications">
+    <DHorizontalOverflowNav @ariaLabel="User secondary - notifications">
       <DNavigationItem
         @route="userNotifications.index"
         @ariaCurrentContext="subNav"
         class="user-nav__notifications-all"
       >
-        {{icon "bell"}}
+        {{dIcon "bell"}}
         <span>{{i18n "user.filters.all"}}</span>
       </DNavigationItem>
 
@@ -33,7 +33,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__notifications-responses"
       >
-        {{icon "reply"}}
+        {{dIcon "reply"}}
         <span>{{i18n "user_action_groups.5"}}</span>
       </DNavigationItem>
 
@@ -42,7 +42,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__notifications-likes"
       >
-        {{icon "heart"}}
+        {{dIcon "heart"}}
         <span>{{i18n "user_action_groups.2"}}</span>
       </DNavigationItem>
 
@@ -52,7 +52,7 @@ export default <template>
           @ariaCurrentContext="subNav"
           class="user-nav__notifications-mentions"
         >
-          {{icon "at"}}
+          {{dIcon "at"}}
           <span>{{i18n "user_action_groups.7"}}</span>
         </DNavigationItem>
       {{/if}}
@@ -62,7 +62,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__notifications-edits"
       >
-        {{icon "pencil"}}
+        {{dIcon "pencil"}}
         <span>{{i18n "user_action_groups.11"}}</span>
       </DNavigationItem>
 
@@ -71,7 +71,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__notifications-links"
       >
-        {{icon "link"}}
+        {{dIcon "link"}}
         <span>{{i18n "user_action_groups.17"}}</span>
       </DNavigationItem>
 
@@ -81,7 +81,7 @@ export default <template>
         @outletArgs={{lazyHash model=@controller.model}}
       />
 
-    </HorizontalOverflowNav>
+    </DHorizontalOverflowNav>
 
     {{#if @controller.model.content}}
       <div class="navigation-controls">
@@ -98,12 +98,14 @@ export default <template>
   </div>
 
   <section class="user-content" id="user-content">
-    <LoadMore
+    <DLoadMore
       @action={{@controller.loadMore}}
       class="notification-history user-stream"
     >
       {{outlet}}
-      <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
-    </LoadMore>
+      <DConditionalLoadingSpinner
+        @condition={{@controller.model.loadingMore}}
+      />
+    </DLoadMore>
   </section>
 </template>

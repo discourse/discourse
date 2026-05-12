@@ -30,6 +30,7 @@ class NestedTopic::ShowContext
   step :expand_reply_trees
   step :prepare_posts
   step :serialize_context
+  step :attach_suggested_and_related
 
   private
 
@@ -157,5 +158,12 @@ class NestedTopic::ShowContext
         serializer.serialize_tree(target_post, children_map, reply_counts, descendant_counts),
       message_bus_last_id: topic_view.message_bus_last_id,
     }
+  end
+
+  # Context view has no pagination, so this always runs — parallel to the
+  # final page in NestedTopic::ListRoots, where the same step is gated on
+  # has_more_roots=false.
+  def attach_suggested_and_related(serializer:, response:)
+    response.merge!(serializer.serialize_suggested_and_related)
   end
 end

@@ -4,9 +4,9 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import EmojiPickerContent from "discourse/components/emoji-picker/content";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class EmojiPicker extends Component {
   @tracked menu = null;
@@ -48,7 +48,7 @@ export default class EmojiPicker extends Component {
 
   <template>
     <DMenu
-      @triggerClass={{concatClass @btnClass (if this.hasLabel "--has-label")}}
+      @triggerClass={{dConcatClass @btnClass (if this.hasLabel "--has-label")}}
       @onRegisterApi={{this.onRegisterMenu}}
       @identifier="emoji-picker"
       @groupIdentifier="emoji-picker"
@@ -61,9 +61,9 @@ export default class EmojiPicker extends Component {
     >
       <:trigger>
         {{#if @emoji}}
-          {{replaceEmoji (concat ":" @emoji ":")}}
+          {{dReplaceEmoji (concat ":" @emoji ":")}}
         {{else if this.icon}}
-          {{icon this.icon}}
+          {{dIcon this.icon}}
         {{/if}}
 
         {{#if this.triggerLabel}}
@@ -73,7 +73,7 @@ export default class EmojiPicker extends Component {
         {{/if}}
 
         {{#if @showCaret}}
-          {{icon this.caretIcon class="emoji-picker__caret"}}
+          {{dIcon this.caretIcon class="emoji-picker__caret"}}
         {{/if}}
       </:trigger>
 

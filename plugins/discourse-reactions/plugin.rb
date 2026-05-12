@@ -63,48 +63,49 @@ after_initialize do
 
   Discourse::Application.routes.append { mount DiscourseReactions::Engine, at: "/" }
 
-  TopicView.on_preload do |topic_view|
-    next unless SiteSetting.discourse_reactions_enabled
+  module ReactionsSerializerHelpers
+    def self.preload_post_reactions(posts, user)
+      posts = Array(posts).compact
+      return { reactions: {}, reaction_users_count: {} } if posts.blank?
 
-    posts = topic_view.posts
-    next if posts.blank?
+      ActiveRecord::Associations::Preloader.new(
+        records: posts,
+        associations: [:post_actions, { reactions: { reaction_users: :user } }],
+      ).call
 
-    ActiveRecord::Associations::Preloader.new(
-      records: posts,
-      associations: [:post_actions, { reactions: { reaction_users: :user } }],
-    ).call
+      post_ids = posts.map(&:id).uniq
+      ignored_user_ids = user&.ignored_user_ids || []
+      ignored_user_ids_set = ignored_user_ids.to_set
 
-    post_ids = posts.map(&:id).uniq
+      reaction_users_count_map =
+        TopicViewSerializer.posts_reaction_users_count(post_ids, ignored_user_ids: ignored_user_ids)
+      post_actions_with_reaction_users =
+        DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
+          post_ids,
+        )
 
-    reaction_users_count_map = TopicViewSerializer.posts_reaction_users_count(post_ids)
-    post_actions_with_reaction_users =
-      DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-        post_ids,
-      )
+      main_reaction = DiscourseReactions::Reaction.main_reaction_id
+      excluded = DiscourseReactions::Reaction.reactions_excluded_from_like
 
-    main_reaction = DiscourseReactions::Reaction.main_reaction_id
-    excluded = DiscourseReactions::Reaction.reactions_excluded_from_like
+      excluded_filter = excluded.present? ? "AND dr.reaction_value NOT IN (:excluded)" : ""
+      ignored_users_filter =
+        ignored_user_ids.present? ? "AND pa.user_id NOT IN (:ignored_user_ids)" : ""
 
-    excluded_filter =
-      if excluded.present?
-        "AND dr.reaction_value NOT IN (:excluded)"
-      else
-        ""
-      end
+      sql_params = {
+        post_ids: post_ids,
+        like_type: PostActionType::LIKE_POST_ACTION_ID,
+        main_reaction: main_reaction,
+      }
+      sql_params[:excluded] = excluded if excluded.present?
+      sql_params[:ignored_user_ids] = ignored_user_ids if ignored_user_ids.present?
 
-    sql_params = {
-      post_ids: post_ids,
-      like_type: PostActionType::LIKE_POST_ACTION_ID,
-      main_reaction: main_reaction,
-    }
-    sql_params[:excluded] = excluded if excluded.present?
-
-    likes_rows = DB.query(<<~SQL, **sql_params)
+      likes_rows = DB.query(<<~SQL, **sql_params)
         SELECT pa.post_id, COUNT(*) as likes_count
         FROM post_actions pa
         WHERE pa.deleted_at IS NULL
           AND pa.post_id IN (:post_ids)
           AND pa.post_action_type_id = :like_type
+          #{ignored_users_filter}
           AND NOT EXISTS (
             SELECT 1 FROM discourse_reactions_reaction_users dru
             JOIN discourse_reactions_reactions dr ON dr.id = dru.reaction_id
@@ -123,46 +124,96 @@ after_initialize do
         GROUP BY pa.post_id
       SQL
 
-    likes_map = likes_rows.each_with_object({}) { |row, h| h[row.post_id] = row.likes_count }
+      likes_map =
+        likes_rows.each_with_object({}) { |row, hash| hash[row.post_id] = row.likes_count }
+      precomputed_reactions_map = {}
 
-    precomputed_reactions_map = {}
+      posts.each do |post|
+        post.reaction_users_count = reaction_users_count_map[post.id].to_i
+        post.post_actions_with_reaction_users = post_actions_with_reaction_users[post.id] || {}
 
-    posts.each do |post|
-      post.reaction_users_count = reaction_users_count_map[post.id].to_i
-      post.post_actions_with_reaction_users = post_actions_with_reaction_users[post.id] || {}
+        reactions =
+          post
+            .emoji_reactions
+            .select { |reaction| reaction.reaction_users_count.to_i > 0 }
+            .filter_map do |reaction|
+              count =
+                if ignored_user_ids_set.present?
+                  reaction.reaction_users.count { |ru| !ignored_user_ids_set.include?(ru.user_id) }
+                else
+                  reaction.reaction_users_count
+                end
 
-      emoji_reactions = post.emoji_reactions.select { |r| r.reaction_users_count.to_i > 0 }
+              next if count.to_i.zero?
 
-      reactions =
-        emoji_reactions.map do |reaction|
-          {
-            id: reaction.reaction_value,
-            type: reaction.reaction_type.to_sym,
-            count: reaction.reaction_users_count,
+              { id: reaction.reaction_value, type: reaction.reaction_type.to_sym, count: count }
+            end
+
+        likes = likes_map[post.id] || 0
+
+        if likes > 0
+          reaction_likes, reactions =
+            reactions.partition { |reaction| reaction[:id] == main_reaction }
+          reactions << {
+            id: main_reaction,
+            type: :emoji,
+            count: likes + reaction_likes.sum { |reaction| reaction[:count] },
           }
         end
 
-      likes = likes_map[post.id] || 0
-
-      if likes > 0
-        reaction_likes, reactions = reactions.partition { |r| r[:id] == main_reaction }
-        reactions << {
-          id: main_reaction,
-          type: :emoji,
-          count: likes + reaction_likes.sum { |r| r[:count] },
-        }
+        precomputed_reactions_map[post.id] = reactions.sort_by do |reaction|
+          [-reaction[:count].to_i, reaction[:id]]
+        end
+        post.precomputed_reactions = precomputed_reactions_map[post.id]
       end
 
-      precomputed_reactions_map[post.id] = reactions.sort_by { |r| [-r[:count].to_i, r[:id]] }
+      { reactions: precomputed_reactions_map, reaction_users_count: reaction_users_count_map }
     end
+  end
 
-    topic_view.set_preloaded_post_data(:reactions, precomputed_reactions_map)
-    topic_view.set_preloaded_post_data(:reaction_users_count, reaction_users_count_map)
+  TopicView.on_preload do |topic_view|
+    next unless SiteSetting.discourse_reactions_enabled
+
+    posts = topic_view.posts
+    next if posts.blank?
+
+    preloaded = ReactionsSerializerHelpers.preload_post_reactions(posts, topic_view.guardian.user)
+
+    topic_view.set_preloaded_post_data(:reactions, preloaded[:reactions])
+    topic_view.set_preloaded_post_data(:reaction_users_count, preloaded[:reaction_users_count])
+  end
+
+  TopicList.on_preload do |topics, topic_list|
+    next unless SiteSetting.discourse_reactions_enabled
+    next if topics.blank?
+
+    should_preload =
+      if topic_list.filter == :suggested
+        DiscoursePluginRegistry.apply_modifier(
+          :include_discourse_reactions_data_on_suggested_topics,
+          false,
+          topic_list.current_user,
+        )
+      else
+        DiscoursePluginRegistry.apply_modifier(
+          :include_discourse_reactions_data_on_topic_list,
+          false,
+          topic_list.current_user,
+        )
+      end
+
+    next unless should_preload
+
+    posts = topics.filter_map { |topic| topic.first_post if topic.association(:first_post).loaded? }
+    ReactionsSerializerHelpers.preload_post_reactions(posts, topic_list.current_user)
   end
 
   # Helper module for shared reactions serialization logic
   module ReactionsSerializerHelpers
-    def self.reactions_for_post(post)
+    def self.reactions_for_post(post, scope = nil)
+      return post.precomputed_reactions unless post.precomputed_reactions.nil?
+
+      ignored_ids = scope&.user&.ignored_user_ids || []
       reactions = []
       reaction_users_counting_as_like = Set.new
 
@@ -170,10 +221,17 @@ after_initialize do
         .emoji_reactions
         .select { |reaction| reaction[:reaction_users_count] }
         .each do |reaction|
+          count =
+            if ignored_ids.any?
+              reaction.reaction_users.count { |ru| !ignored_ids.include?(ru.user_id) }
+            else
+              reaction.reaction_users_count
+            end
+          next if count.to_i.zero?
           reactions << {
             id: reaction.reaction_value,
             type: reaction.reaction_type.to_sym,
-            count: reaction.reaction_users_count,
+            count: count,
           }
 
           # NOTE: It does not matter if the reaction is currently an enabled one,
@@ -187,6 +245,8 @@ after_initialize do
 
       likes_query =
         post.post_actions.where(post_action_type_id: PostActionType::LIKE_POST_ACTION_ID)
+
+      likes_query = likes_query.where.not(user_id: ignored_ids) if ignored_ids.any?
 
       # Get rid of any PostAction records that match up to a ReactionUser
       # that is NOT main_reaction_id and is NOT excluded, otherwise we double
@@ -275,9 +335,46 @@ after_initialize do
       }
     end
 
-    def self.reaction_users_count_for_post(post)
+    def self.reaction_users_count_for_post(post, scope = nil)
       return post.reaction_users_count unless post.reaction_users_count.nil?
-      TopicViewSerializer.posts_reaction_users_count(post.id)[post.id]
+
+      ignored_ids = scope&.user&.ignored_user_ids || []
+
+      return TopicViewSerializer.posts_reaction_users_count(post.id)[post.id] if ignored_ids.empty?
+
+      DB.query_single(
+        <<~SQL,
+        SELECT COUNT(DISTINCT user_id) FROM (
+          SELECT user_id FROM post_actions
+            WHERE post_id = :post_id AND post_action_type_id = :like_id
+              AND deleted_at IS NULL AND user_id NOT IN (:ignored_ids)
+          UNION
+          SELECT drru.user_id FROM discourse_reactions_reaction_users drru
+            INNER JOIN discourse_reactions_reactions dr ON dr.id = drru.reaction_id
+            WHERE dr.post_id = :post_id AND drru.user_id NOT IN (:ignored_ids)
+        ) sub
+      SQL
+        post_id: post.id,
+        ignored_ids: ignored_ids,
+        like_id: PostActionType::LIKE_POST_ACTION_ID,
+      ).first
+    end
+
+    def self.like_action_for_post(post, scope)
+      return nil if scope.user.blank?
+
+      if !post.precomputed_reactions.nil? && post.association(:post_actions).loaded?
+        post.post_actions.find do |post_action|
+          post_action.post_action_type_id == PostActionType.types[:like] &&
+            post_action.user_id == scope.user.id && !post_action.trashed?
+        end
+      else
+        PostAction.find_by(
+          user_id: scope.user.id,
+          post_id: post.id,
+          post_action_type_id: PostActionType.types[:like],
+        )
+      end
     end
 
     def self.current_user_used_main_reaction_for_post(post, scope)
@@ -310,27 +407,16 @@ after_initialize do
       return nil unless topic.first_post
 
       post = topic.first_post
-      like_action =
-        (
-          if scope.user
-            PostAction.find_by(
-              user_id: scope.user.id,
-              post_id: post.id,
-              post_action_type_id: PostActionType.types[:like],
-            )
-          else
-            nil
-          end
-        )
+      like_action = like_action_for_post(post, scope)
 
       {
         id: post.id,
         user_id: post.user_id,
         yours: post.user_id == scope.current_user&.id,
-        reactions: reactions_for_post(post),
+        reactions: reactions_for_post(post, scope),
         current_user_reaction: current_user_reaction_for_post(post, scope),
         current_user_used_main_reaction: current_user_used_main_reaction_for_post(post, scope),
-        reaction_users_count: reaction_users_count_for_post(post) || 0,
+        reaction_users_count: reaction_users_count_for_post(post, scope) || 0,
         likeAction: {
           canToggle: like_action ? scope.can_delete_post_action?(like_action) : true,
         },
@@ -343,7 +429,7 @@ after_initialize do
     if map && map.key?(object.id)
       map[object.id]
     else
-      ReactionsSerializerHelpers.reactions_for_post(object)
+      ReactionsSerializerHelpers.reactions_for_post(object, scope)
     end
   end
 
@@ -356,7 +442,7 @@ after_initialize do
     if map && map.key?(object.id)
       map[object.id].to_i
     else
-      ReactionsSerializerHelpers.reaction_users_count_for_post(object)
+      ReactionsSerializerHelpers.reaction_users_count_for_post(object, scope).to_i
     end
   end
 

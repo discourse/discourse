@@ -3,9 +3,9 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DSegmentedControl extends Component {
@@ -66,7 +66,7 @@ export default class DSegmentedControl extends Component {
 
       {{#each @items as |item|}}
         <label
-          class={{concatClass
+          class={{dConcatClass
             "d-segmented-control__label"
             item.class
             (if item.disabled "is-disabled")
@@ -83,7 +83,7 @@ export default class DSegmentedControl extends Component {
             {{on "change" (fn this.handleChange item.value)}}
           />
           <span class="d-segmented-control__text">
-            {{#if item.icon}}{{icon item.icon}}{{/if}}
+            {{#if item.icon}}{{dIcon item.icon}}{{/if}}
             {{item.label}}
           </span>
         </label>

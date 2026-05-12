@@ -4,11 +4,11 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import DockedComposer from "discourse/components/docked-composer";
-import avatar from "discourse/helpers/avatar";
 import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
+import DButton from "discourse/ui-kit/d-button";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 export default class EmbedModeComposer extends Component {
@@ -264,7 +264,7 @@ export default class EmbedModeComposer extends Component {
         {{#if this.editingPost}}
           <div class="embed-mode-composer__editing">
             <span class="embed-mode-composer__editing-text">
-              {{avatar this.editingPost imageSize="tiny"}}
+              {{dAvatar this.editingPost imageSize="tiny"}}
               {{i18n "embed_mode.editing_post"}}
             </span>
             <DButton
@@ -276,7 +276,7 @@ export default class EmbedModeComposer extends Component {
         {{else if this.replyingToPost}}
           <div class="embed-mode-composer__replying-to">
             <span class="embed-mode-composer__replying-to-text">
-              {{avatar this.replyingToPost imageSize="tiny"}}
+              {{dAvatar this.replyingToPost imageSize="tiny"}}
               {{i18n
                 "embed_mode.replying_to"
                 username=this.replyingToPost.username

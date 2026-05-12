@@ -2197,6 +2197,8 @@ en:
     composer_media_optimization_image_resize_dimensions_threshold: "Minimum image width to trigger client-side resize"
     composer_media_optimization_image_resize_width_target: "Images with widths larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
+    composer_media_optimization_image_convert_enabled: "Enables client-side conversion of JXL, HEIC, and animated GIF images before upload. JXL and HEIC are converted to JPEG, animated GIFs larger than the threshold are converted to animated WEBP."
+    composer_media_optimization_gif_conversion_threshold: "Minimum GIF file size in bytes to trigger client-side conversion to animated WEBP."
 
     video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."
     video_conversion_service: "The video conversion service to use for processing uploaded videos."
@@ -2818,6 +2820,7 @@ en:
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
+    granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
     dashboard_improvements: "Improvements to navigation, design, and usability for the Discourse admin dashboard."
 
     errors:

@@ -8,12 +8,8 @@ import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isBlank, isPresent } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -22,6 +18,10 @@ import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const DEFAULT_HINT = trustHTML(
@@ -303,7 +303,7 @@ export default class ChatModalCreateChannel extends Component {
           <label for="slug" class="chat-modal-create-channel__label">
             {{i18n "chat.create_channel.slug"}}&nbsp;
             <span>
-              {{icon "circle-info"}}
+              {{dIcon "circle-info"}}
               <DTooltip>
                 {{i18n "chat.channel_edit_name_slug_modal.slug_description"}}
               </DTooltip>
@@ -345,7 +345,7 @@ export default class ChatModalCreateChannel extends Component {
 
           {{#if this.categoryPermissionsHint}}
             <div
-              class={{concatClass
+              class={{dConcatClass
                 "chat-modal-create-channel__hint"
                 (if this.loadingPermissionHint "loading-permissions")
               }}

@@ -1,6 +1,29 @@
 # frozen_string_literal: true
 
 module UpcomingChanges
+  # Some upcoming changes make no sense to display to admins,
+  # for example ones related to Horizon theme makes no sense to
+  # display if Horizon is not installed or is disabled, a change
+  # might modify how site behavior works if another setting is enabled,
+  # and so on.
+  #
+  # You can define any should_display_<upcoming_change_name>? method to control
+  # whether an upcoming change should be displayed to admins, and if the
+  # method is undefined the change will always be displayed.
+  #
+  # Keep in mind this is called from UpcomingChanges::List service,
+  # which loops over every change in an N1 depending on the filters admins
+  # have selected, so caching may be appropriate at times.
+  class ConditionalDisplay
+    def self.should_display?(upcoming_change_name)
+      if respond_to?("should_display_#{upcoming_change_name}?")
+        return public_send("should_display_#{upcoming_change_name}?")
+      end
+
+      true
+    end
+  end
+
   def self.user_enabled_reasons
     @user_enabled_reasons ||=
       ::Enum.new(

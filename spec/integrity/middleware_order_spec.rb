@@ -27,6 +27,7 @@ RSpec.describe "Middleware order" do
       Discourse::Cors,
       ActionDispatch::Flash,
       RspecErrorTracker,
+      Middleware::TrackViewSessionIdInjector,
       Middleware::CspScriptNonceInjector,
       Middleware::AnonymousCache,
       ContentSecurityPolicy::Middleware,

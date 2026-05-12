@@ -34,6 +34,7 @@ class UpcomingChanges::List
           true
         end
       end
+      .select { |setting| UpcomingChanges::ConditionalDisplay.should_display?(setting[:setting]) }
       .each do |setting|
         setting[:value] = setting[:value] == "true"
 

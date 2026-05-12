@@ -603,6 +603,12 @@ basic:
     default: false
     hidden: true
     client: true
+  persist_browser_pageview_events:
+    default: false
+    hidden: true
+  clean_up_browser_pageview_events:
+    default: false
+    hidden: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"
@@ -2257,7 +2263,7 @@ files:
     list_type: file_types
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg"
+    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg|jxl"
     refresh: true
     type: list
     list_type: file_types
@@ -2526,6 +2532,18 @@ files:
     default: 0
     client: true
     hidden: true
+  composer_media_optimization_image_convert_enabled:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      disallow_enabled_for_groups: true
+  composer_media_optimization_gif_conversion_threshold:
+    default: 512000
+    hidden: true
+    client: true
   composer_media_optimization_debug_mode:
     default: false
     client: true
@@ -4436,7 +4454,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397098"
       disallow_enabled_for_groups: true
@@ -4451,7 +4469,17 @@ experimental:
     upcoming_change:
       impact: "feature,all_members"
       status: "beta"
-      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
+      learn_more_url: "https://meta.discourse.org/t/-/395331"
+  granular_anonymous_and_logged_in_groups_permissions:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402273"
+      disallow_enabled_for_groups: true
   dashboard_improvements:
     default: false
     hidden: true
