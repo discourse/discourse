@@ -145,6 +145,30 @@ module UpcomingChanges
     end
   end
 
+  # The `allow_enabled_for` metadata for an upcoming change, or nil if unset.
+  # When nil, every "Enabled for" dropdown option is permitted. Otherwise it
+  # is an array containing any subset of [:everyone, :staff, :specific_groups].
+  def self.allow_enabled_for(change_setting_name)
+    change_metadata(change_setting_name)[:allow_enabled_for]
+  end
+
+  # Whether a setting's `allow_enabled_for` permits a given dropdown target.
+  # `:no_one` is always allowed. Returns true when the metadata is absent.
+  def self.target_allowed?(change_setting_name, target)
+    return true if target.to_sym == :no_one
+    allow = allow_enabled_for(change_setting_name)
+    return true if allow.nil?
+    allow.include?(target.to_sym)
+  end
+
+  # True when the setting's `allow_enabled_for` permits any group-based target
+  # (`:staff` or `:specific_groups`). When metadata is absent, groups are allowed.
+  def self.groups_target_allowed?(change_setting_name)
+    allow = allow_enabled_for(change_setting_name)
+    return true if allow.nil?
+    allow.include?(:staff) || allow.include?(:specific_groups)
+  end
+
   def self.has_groups?(change_setting_name)
     group_ids_for(change_setting_name).present?
   end
@@ -276,7 +300,21 @@ module UpcomingChanges
       if !setting_value
         "no_one"
       elsif setting_groups.blank?
-        "everyone"
+        # When `allow_enabled_for` excludes `:everyone` and the change is enabled
+        # without an admin-configured scope (typically because it was auto-promoted
+        # past the promotion threshold) we surface the broadest allowed target as
+        # the dropdown's selected value, since `"everyone"` is no longer a valid
+        # option. Backend access (`enabled_for_user?`) is unchanged — until the
+        # admin picks a scope, the change is still effectively on for everyone.
+        allow = allow_enabled_for(setting_name)
+        if allow.nil? || allow.include?(:everyone)
+          "everyone"
+        elsif allow.include?(:staff)
+          # Have to do this because the staff auto group name is localized
+          upcoming_change_selected_groups[Group::AUTO_GROUPS[:staff]]
+        else
+          "groups"
+        end
       else
         if group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
           # Have to do this because the staff auto group name is localized

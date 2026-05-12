@@ -206,6 +206,62 @@ describe "Admin upcoming changes" do
     expect(SiteSetting.enable_upload_debug_mode).to be_truthy
   end
 
+  describe "allow_enabled_for restrictions" do
+    def mock_with_allow(allow)
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+            allow_enabled_for: allow,
+          },
+        },
+      )
+    end
+
+    it "shows only No one and Everyone when allow_enabled_for is [everyone]" do
+      mock_with_allow([:everyone])
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item.enabled_for_options).to contain_exactly("no_one", "everyone")
+    end
+
+    it "shows only No one and Staff when allow_enabled_for is [staff]" do
+      mock_with_allow([:staff])
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item.enabled_for_options).to contain_exactly("no_one", "staff")
+    end
+
+    it "shows No one, Staff, and Specific group(s) when allow_enabled_for is [staff, specific_groups]" do
+      mock_with_allow(%i[staff specific_groups])
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item.enabled_for_options).to contain_exactly("no_one", "staff", "groups")
+    end
+
+    it "shows all four options when allow_enabled_for is omitted" do
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item.enabled_for_options).to contain_exactly("no_one", "everyone", "staff", "groups")
+    end
+
+    it "displays the broadest allowed target when an auto-promoted change has no admin scope" do
+      mock_with_allow(%i[staff specific_groups])
+      # Simulate the post-promotion state: setting is enabled globally but the
+      # admin has not configured a SiteSettingGroup. "Everyone" is no longer an
+      # allowed dropdown target, so the row should display "staff" as the
+      # broadest allowed scope.
+      SiteSetting.enable_upload_debug_mode = true
+
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item.enabled_for).to eq("staff")
+    end
+  end
+
   it "can filter by name, description, plugin, status, impact type, or enabled/disabled" do
     upcoming_changes_page.visit
 

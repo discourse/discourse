@@ -31,8 +31,14 @@
 #                          - status: experimental | alpha | beta | stable
 #                          - impact: two parts separated by comma - feature|other|site_setting_default , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
-#                          - disallow_enabled_for_groups: true (optional) - restricts "Enabled for"
-#                            to only "Everyone" and "No One", removing group-based options.
+#                          - allow_enabled_for: (optional array) restricts which "Enabled for"
+#                            dropdown options the admin can pick for this upcoming change.
+#                            Valid values: everyone, staff, specific_groups.
+#
+#                            "No one" is always present and cannot be removed. If `everyone` is included it must be
+#                            the only value (it cannot combine with staff or specific_groups).
+#                            Omit the key to allow all four options (the default permissive
+#                            behavior).
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
 # depends_behavior      - The behavior of the dependent setting. Only currently supported behaviour is "hidden"
 #                         to hide the setting if the dependent setting is false. If left blank, no special behavior
@@ -1981,7 +1987,8 @@ email:
     upcoming_change:
       status: "alpha"
       impact: "feature,all_members"
-      disallow_enabled_for_groups: true
+      allow_enabled_for:
+        - everyone
       learn_more_url: "https://meta.discourse.org/t/-/395927"
   reply_by_email_enabled:
     default: false
@@ -2539,7 +2546,8 @@ files:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-      disallow_enabled_for_groups: true
+      allow_enabled_for:
+        - everyone
   composer_media_optimization_gif_conversion_threshold:
     default: 512000
     hidden: true
@@ -4375,7 +4383,9 @@ experimental:
       status: "alpha"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/395768"
-      disallow_enabled_for_groups: true
+      allow_enabled_for:
+        - staff
+        - specific_groups
   enable_auto_grid_images:
     default: true
     client: true
@@ -4457,7 +4467,8 @@ experimental:
       status: "beta"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397098"
-      disallow_enabled_for_groups: true
+      allow_enabled_for:
+        - everyone
   experimental_topic_category_change_notification:
     default: false
     hidden: true
@@ -4479,7 +4490,8 @@ experimental:
       status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402273"
-      disallow_enabled_for_groups: true
+      allow_enabled_for:
+        - everyone
   dashboard_improvements:
     default: false
     hidden: true
