@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { buildPermanentlyDeleteConfirmDialogArgs } from "discourse/components/dialog-messages/permanently-delete-confirm";
 import Revision from "discourse/components/modal/history/revision";
 import Revisions from "discourse/components/modal/history/revisions";
 import TopicFooter from "discourse/components/modal/history/topic-footer";
+import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import { iconHTML } from "discourse/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
@@ -29,6 +29,7 @@ function customTagArray(val) {
 
 export default class History extends Component {
   @service dialog;
+  @service modal;
   @service site;
   @service currentUser;
   @service siteSettings;
@@ -355,15 +356,15 @@ export default class History extends Component {
     const postId = this.postRevision?.post_id;
     this.args.closeModal();
 
-    this.dialog.confirm(
-      buildPermanentlyDeleteConfirmDialogArgs(
-        i18n("post.revisions.controls.destroy_confirm"),
-        i18n("post.controls.permanently_delete_confirm_phrase"),
-        () => {
+    this.modal.show(PermanentlyDeleteConfirmModal, {
+      model: {
+        message: i18n("post.revisions.controls.destroy_confirm"),
+        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
+        didConfirm: () => {
           Post.permanentlyDeleteRevisions(postId);
-        }
-      )
-    );
+        },
+      },
+    });
   }
 
   @action

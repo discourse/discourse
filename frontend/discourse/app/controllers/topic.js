@@ -10,12 +10,12 @@ import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
-import { buildPermanentlyDeleteConfirmDialogArgs } from "discourse/components/dialog-messages/permanently-delete-confirm";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 import JumpToPost from "discourse/components/modal/jump-to-post";
+import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summary";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -1054,15 +1054,15 @@ export default class TopicController extends Controller {
       ? i18n("post.controls.permanently_delete_topic_confirmation")
       : i18n("post.controls.permanently_delete_post_confirmation");
 
-    return this.dialog.confirm(
-      buildPermanentlyDeleteConfirmDialogArgs(
+    return this.modal.show(PermanentlyDeleteConfirmModal, {
+      model: {
         message,
-        i18n("post.controls.permanently_delete_confirm_phrase"),
-        () => {
+        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
+        didConfirm: () => {
           this.send("deletePost", post, { force_destroy: true });
-        }
-      )
-    );
+        },
+      },
+    });
   }
 
   @action
