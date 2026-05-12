@@ -43,7 +43,6 @@ after_initialize do
   end
 
   register_modifier(:pretty_text_allowed_iframes) do |list|
-    next list unless SiteSetting.discourse_narrative_bot_enabled
     certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
     list.include?(certificate_path) ? list : list + [certificate_path]
   end
