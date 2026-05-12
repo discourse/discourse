@@ -125,6 +125,12 @@
   .voting-wrapper__button {
     width: 100%;
     padding: var(--space-1);
+
+    .d-header .extra-info-wrapper & {
+      .d-icon {
+        color: var(--d-header-icon-color);
+      }
+    }
   }
 }
 
