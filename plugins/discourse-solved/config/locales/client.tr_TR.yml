@@ -10,6 +10,11 @@ tr_TR:
       site_settings:
         categories:
           discourse_solved: "Discourse Çözüldü"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Kabul edilen çözümler"
   js:
     notifications:
       alt:

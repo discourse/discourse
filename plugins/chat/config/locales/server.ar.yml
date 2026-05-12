@@ -288,6 +288,7 @@ ar:
     actions:
       chat_reply:
         title: الرد
+        placeholder: الرد…
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -345,7 +346,9 @@ ar:
           many: "‎[%{site_name}] ‎ رسائل جديدة من ‎ %{name}"
           other: "‎ [%{site_name}] ‎رسائل جديدة من ‎ %{name}"
         chat_dm_2: "‎ [%{site_name}]رسائل جديدة من‎ %{name_1} ‎و‎%{name_2}"
+        chat_dm_2_improved: "رسائل جديدة من %{name_1} و%{name_2}"
         chat_dm_3_or_more: "‎[%{site_name}] ‎ رسائل جديدة من‎ %{name} ‎ومن %{count} ‎من قنوات الرسائل المباشرة الأخرى"
+        chat_dm_3_or_more_improved: "رسائل جديدة من %{name} و%{count} من قنوات الرسائل الخاصة الأخرى"
         chat_channel_1:
           zero: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
           one: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
@@ -354,8 +357,11 @@ ar:
           many: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
           other: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
         chat_channel_2: "‎[%{site_name}]‎ رسائل جديدة في‎ %{channel_1} ‎و‎%{channel_2}"
+        chat_channel_2_improved: "رسائل جديدة في %{channel_1} و%{channel_2}"
         chat_channel_3_or_more: "‎[%{site_name}] رسائل جديدة في‎ %{channel} ‎و‎%{count} ‎ من القنوات الأخرى"
+        chat_channel_3_or_more_improved: "رسائل جديدة في‎ %{channel} ‎و‎%{count} ‎ من القنوات الأخرى"
         chat_channel_and_dm: "‎[%{site_name}] رسائل جديدة في‎ %{channel} ‎ومن‎ %{name}"
+        chat_channel_and_dm_improved: "رسائل جديدة في %{channel} ومن %{name}"
       unsubscribe: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} أو %{unsubscribe_link} لإلغاء الاشتراك."
       unsubscribe_no_link: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} لديك."
       view_messages:

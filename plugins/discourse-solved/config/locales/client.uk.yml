@@ -10,6 +10,11 @@ uk:
       site_settings:
         categories:
           discourse_solved: "Вирішено для Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Прийняті рішення"
   js:
     notifications:
       alt:

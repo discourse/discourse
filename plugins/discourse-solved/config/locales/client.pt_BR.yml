@@ -10,6 +10,11 @@ pt_BR:
       site_settings:
         categories:
           discourse_solved: "Solucionado no Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Soluções aceitas"
   js:
     notifications:
       alt:
