@@ -25,11 +25,8 @@ describe "Horizon theme | High level" do
   end
 
   def run_all_high_level_tests
-    expect(page).to have_css(".experimental-screen")
-
     expect(sidebar).to have_categories_section
     expect(sidebar).to have_section_link(category.name)
-
     expect(topic_list).to have_topic(topic_1)
 
     # Ensure the topic list columns are in the correct order via 'topic-list-columns' valueTransformer

@@ -82,6 +82,7 @@ body:not(.has-full-page-chat, .wizard) {
     #main-outlet {
       width: 100%;
       max-width: unset;
+      padding-top: 0; // now we have a header that is the same as the page, the padding isnt needed
       padding-bottom: var(--space-6);
       background-color: var(--d-content-background);
 
@@ -94,11 +95,19 @@ body:not(.has-full-page-chat, .wizard) {
       }
 
       @include viewport.from(sm) {
-        > *:not(.experimental-screen, .activate-account, .kanban-board-viewer) {
+        > *:not(.activate-account, .kanban-board-viewer) {
           box-sizing: border-box;
           max-width: 1000px;
           margin-inline: auto;
           padding-inline: var(--space-6);
+        }
+      }
+
+      #topic-title {
+        @include viewport.from(sm) {
+          padding-top: var(
+            --space-4
+          ); // to compensate solely for topic pages for lack of padding of line 85
         }
       }
     }
