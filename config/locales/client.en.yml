@@ -6959,7 +6959,7 @@ en:
           links_heading: "Product-design links"
           objectives_link: "Implementation objectives"
           data_layer_link: "Data layer design"
-          prototype_link: "View headline prototypes"
+          prototype_link: "View headline prototypes (done)"
           headline:
             count:
               one: "%{formattedCount} pageview %{periodDescriptor}"
@@ -6967,6 +6967,7 @@ en:
             trend_phrase: "%{direction} %{delta}%"
             direction_up: "up"
             direction_down: "down"
+            trend_tooltip: "Compared with the previous period (%{range})"
           period_descriptor:
             last_7_days: "in the last 7 days"
             last_30_days: "in the last 30 days"

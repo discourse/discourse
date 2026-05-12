@@ -449,6 +449,27 @@ export default class AdminDashboardSiteTraffic extends Component {
     });
   }
 
+  // Tooltip shown when admins hover the `?` icon next to the trend phrase.
+  // Names the prior period the trend is being compared against (§4.4c) so
+  // "up 9%" / "down 12%" isn't a bare claim — admins can verify which
+  // window the comparison uses.
+  get trendComparisonTooltip() {
+    const priorStart = this.model?.related_data?.prior_start_date;
+    const priorEnd = this.model?.related_data?.prior_end_date;
+    if (!priorStart || !priorEnd) {
+      return null;
+    }
+    const start = moment.utc(priorStart, "YYYY-MM-DD");
+    const end = moment.utc(priorEnd, "YYYY-MM-DD");
+    const sameYear = start.year() === end.year();
+    const range = sameYear
+      ? `${start.format("D MMM")} – ${end.format("D MMM YYYY")}`
+      : `${start.format("D MMM YYYY")} – ${end.format("D MMM YYYY")}`;
+    return i18n("admin.dashboard.site_traffic.headline.trend_tooltip", {
+      range,
+    });
+  }
+
   get loggedInSharePercent() {
     if (!this.currentTotals) {
       return 0;
@@ -885,6 +906,13 @@ export default class AdminDashboardSiteTraffic extends Component {
                 <span
                   class="admin-dashboard-site-traffic__trend admin-dashboard-site-traffic__trend--{{this.trendDirection}}"
                 >{{this.trendPhraseText}}</span>
+                {{#if this.trendComparisonTooltip}}
+                  <DTooltip
+                    class="admin-dashboard-site-traffic__trend-info"
+                    @icon="far-circle-question"
+                    @content={{this.trendComparisonTooltip}}
+                  />
+                {{/if}}
               {{/if}}
             </p>
           {{/if}}
@@ -899,7 +927,7 @@ export default class AdminDashboardSiteTraffic extends Component {
               <div class="admin-dashboard-site-traffic__kpi-label">
                 <span>{{i18n "admin.dashboard.site_traffic.kpi.label"}}</span>
                 <DTooltip
-                  @icon="circle-info"
+                  @icon="far-circle-question"
                   @content={{i18n "admin.dashboard.site_traffic.kpi.tooltip"}}
                 />
               </div>

@@ -331,6 +331,72 @@
     color: var(--danger);
   }
 
+  /* Question-mark info icon used in Option A headlines. Renders as a small
+     circle next to the trend phrase; hovering or focusing reveals a
+     tooltip naming the comparison period. */
+  .info-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 0.95em;
+    height: 0.95em;
+    margin-left: 0.32em;
+    padding: 0;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--primary-medium);
+    font-size: 0.78em;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: 0.05em;
+    cursor: help;
+  }
+
+  .info-icon:focus-visible {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+  }
+
+  .info-icon::before {
+    content: "?";
+    font-size: 0.78em;
+  }
+
+  .info-tooltip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 0.5em);
+    transform: translateX(-50%);
+    display: none;
+    padding: 0.42em 0.7em;
+    border-radius: 6px;
+    background: var(--primary);
+    color: var(--secondary);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.35;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .info-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -4px;
+    border: 4px solid transparent;
+    border-top-color: var(--primary);
+  }
+
+  .info-icon:hover .info-tooltip,
+  .info-icon:focus-visible .info-tooltip {
+    display: block;
+  }
+
   .trend-badge {
     display: inline-flex;
     align-items: center;
@@ -390,6 +456,7 @@
       descriptor: "in the last 7 days",
       range: "2 May - 8 May 2026",
       comparison: "vs prior period, Apr 25 - May 1",
+      priorRange: "Apr 25 – May 1, 2026",
       bars: 7,
       labels: ["2 May", "5 May", "8 May"],
     },
@@ -399,6 +466,7 @@
       descriptor: "in the last 30 days",
       range: "9 Apr - 8 May 2026",
       comparison: "vs prior period, Mar 10 - Apr 8",
+      priorRange: "Mar 10 – Apr 8, 2026",
       bars: 30,
       labels: ["9 Apr", "24 Apr", "8 May"],
     },
@@ -408,6 +476,7 @@
       descriptor: "in the last 90 days",
       range: "8 Feb - 8 May 2026",
       comparison: "vs prior period, Nov 10 - Feb 7",
+      priorRange: "Nov 10, 2025 – Feb 7, 2026",
       bars: 13,
       labels: ["9 Feb", "30 Mar", "4 May"],
     },
@@ -417,6 +486,7 @@
       descriptor: "in the last 12 months",
       range: "9 May 2025 - 8 May 2026",
       comparison: "vs prior period, May 9 2024 - May 8 2025",
+      priorRange: "May 9, 2024 – May 8, 2025",
       bars: 12,
       labels: ["May 2025", "Nov 2025", "May 2026"],
     },
@@ -426,6 +496,7 @@
       descriptor: "in the selected range",
       range: "17 Mar - 8 May 2026",
       comparison: "vs prior period, Jan 23 - Mar 16",
+      priorRange: "Jan 23 – Mar 16, 2026",
       bars: 8,
       labels: ["17 Mar", "13 Apr", "8 May"],
     },
@@ -534,10 +605,15 @@
       return `<p class="mini-site-traffic__headline">${base}${suffix}</p>`;
     }
 
-    const suffix = trend
-      ? ` - <span class="trend-text--${trendClassName}">${trend}</span>`
-      : "";
-    return `<p class="mini-site-traffic__headline">${base}${suffix}</p>`;
+    // Option A (baseline): trend phrase + a question-mark info icon that
+    // names the comparison period on hover. The icon is suppressed when
+    // there is no trend (No comparison / Zero scenarios) since there is
+    // nothing to compare.
+    if (trend) {
+      const tooltipText = `Compared with the previous period (${period.priorRange})`;
+      return `<p class="mini-site-traffic__headline">${base} - <span class="trend-text--${trendClassName}">${trend}</span><span class="info-icon" tabindex="0" role="button" aria-label="${tooltipText}"><span class="info-tooltip" role="tooltip">${tooltipText}</span></span></p>`;
+    }
+    return `<p class="mini-site-traffic__headline">${base}</p>`;
   }
 
   function stateCell(option, period, scenario, theme) {

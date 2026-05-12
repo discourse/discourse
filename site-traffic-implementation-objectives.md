@@ -136,7 +136,7 @@ Date inputs are sanity-checked everywhere admins can supply them — both in the
 
 4.2 The headline matches the human-traffic portion of the chart bars exactly. (Crawler bars may render in addition; they don't affect the headline number.)
 
-4.3 **Option A headline format for the working prototype**: `<count> pageviews <period descriptor> — <up|down> <delta>%` (e.g., "712k pageviews in the last 30 days — up 9%"). Counts use locale-aware abbreviations (e.g., 712k, 1.2M). This is intentionally compact and does **not** include the comparison basis inline; the comparison basis remains an unresolved design question for a future iteration.
+4.3 **Headline format**: `<count> pageviews <period descriptor> — <up|down> <delta>% (?)` (e.g., "712k pageviews in the last 30 days — up 9% (?)"). Counts use locale-aware abbreviations (e.g., 712k, 1.2M). The `(?)` is a question-mark info icon rendered immediately after the trend phrase; it reveals a tooltip naming the comparison period on hover or keyboard focus (§4.4c). The headline copy itself stays compact and does **not** include the comparison basis inline — the tooltip carries that detail so the line reads cleanly when scanning the dashboard.
 
 4.4 The trend phrase is included when a meaningful comparison can be made and is omitted when:
 - The prior period extends before pageview tracking began (see **Trend coverage** in Key concepts).
@@ -151,6 +151,8 @@ When the trend phrase is omitted, the headline stops after the period descriptor
 - "4.2M pageviews in the selected period"
 
 4.4a **Trend precision**: when `|delta|` is at least 1%, the trend shows an integer percent (e.g., "up 9%", "down 12%"). When `|delta|` is less than 1% but at least 0.05%, the trend shows one decimal place (e.g., "up 0.3%", "down 0.7%") so admins still see a meaningful indicator on quiet periods.
+
+4.4c **Comparison-period info icon.** A small Font Awesome `far-circle-question` (outline question mark) icon renders immediately after the trend phrase whenever the trend phrase is shown. The icon is rendered in the muted axis-label color and slightly smaller than body text so it doesn't compete with the headline copy. Hovering or keyboard-focusing the icon reveals a tooltip that names the prior period the trend is being compared against — e.g., `Compared with the previous period (Mar 10 – Apr 8, 2026)` for a Last 30 days view on May 8, 2026. The tooltip uses Discourse's existing `DTooltip` component for parity with other info-icon tooltips in the admin UI. When the trend phrase is omitted (per §4.4) the icon is omitted too — there is nothing to compare. The tooltip text is translatable; the date range follows the UTC-everywhere rule and uses cross-year formatting only when the prior period spans calendar years.
 
 4.5 When the prior period had pageviews and the current has zero, the trend reads "down 100%".
 
@@ -177,7 +179,7 @@ When the trend phrase is omitted, the headline stops after the period descriptor
 
 5.5 The KPI label reads "Logged-in share".
 
-5.6 An info icon next to the label opens an explanatory tooltip on hover.
+5.6 An info icon next to the label opens an explanatory tooltip on hover. The icon is the same `far-circle-question` (outline question mark) used for the trend's comparison-period tooltip (§4.4c) so all info icons in the section read as one family.
 
 5.7 The KPI does not show a period-over-period trend in v1.
 
