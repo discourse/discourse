@@ -141,6 +141,12 @@ class ApplicationController < ActionController::Base
     with_resolved_locale { render "default/empty" }
   end
 
+  rescue_from EmberCli::BuildError do |e|
+    @build_error = e.details
+    response.headers["Cache-Control"] = "no-store"
+    render "default/build_error", layout: false, status: :service_unavailable
+  end
+
   rescue_from ArgumentError do |e|
     if e.message == "string contains null byte"
       raise Discourse::InvalidParameters, e.message

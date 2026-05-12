@@ -4,20 +4,32 @@ class EmberCli < ActiveSupport::CurrentAttributes
   # Cache which persists for the duration of a request
   attribute :request_cache
 
+  class BuildError < StandardError
+    attr_reader :details
+
+    def initialize(details)
+      @details = details
+      super(details.dig("error", "message") || "Frontend build failed")
+    end
+  end
+
   def self.dist_dir
     "#{Rails.root}/frontend/discourse/dist"
   end
 
   def self.assets
+    raise_if_build_error!
     cache[:assets] ||= Dir.glob("**/*.{js,map,txt,css}", base: "#{dist_dir}/assets")
   end
 
-  def self.script_chunks
+  def self.script_chunks(exception: true)
+    raise_if_build_error! if exception
     return cache[:script_chunks] if cache[:script_chunks]
 
     entrypoints = {}
 
-    manifest = JSON.parse(File.read("#{dist_dir}/manifest/manifest.json"))
+    manifest = read_manifest!(exception: exception)
+    return {} if manifest.nil?
 
     manifest.each do |key, value|
       next unless value["isEntry"]
@@ -29,12 +41,12 @@ class EmberCli < ActiveSupport::CurrentAttributes
     entrypoints["@embroider/virtual/test-support"] = ["test-support"]
 
     cache[:script_chunks] = entrypoints
-  rescue Errno::ENOENT
-    {}
   end
 
   def self.route_bundles
-    manifest = JSON.parse(File.read("#{dist_dir}/manifest/manifest.json"))
+    raise_if_build_error!
+    manifest = read_manifest!(exception: true)
+    return {} if manifest.nil?
 
     route_bundles = {}
 
@@ -65,6 +77,64 @@ class EmberCli < ActiveSupport::CurrentAttributes
     end
 
     preloads
+  end
+
+  def self.build_error
+    return nil unless Rails.env.local?
+    return cache[:build_error] if cache.key?(:build_error)
+
+    cache[:build_error] = parse_build_status
+  end
+
+  def self.parse_build_status
+    data = JSON.parse(File.read("#{dist_dir}/manifest/build.json"))
+    return nil unless data.is_a?(Hash)
+
+    if %w[error crashed].include?(data["status"])
+      data
+    elsif data["pid"] && !pid_alive?(data["pid"])
+      data.merge("status" => "crashed", "error" => plain_error(<<~MSG))
+        Rolldown dev process (pid #{data["pid"]}) is no longer running.
+        Start it with `pnpm --dir frontend/discourse start`.
+      MSG
+    end
+  rescue Errno::ENOENT, JSON::ParserError
+    nil
+  end
+
+  def self.pid_alive?(pid)
+    Process.kill(0, pid.to_i)
+    true
+  rescue Errno::ESRCH, Errno::EPERM, ArgumentError, RangeError
+    false
+  end
+
+  def self.raise_if_build_error!
+    if (details = build_error)
+      raise BuildError.new(details)
+    end
+  end
+
+  # Reads the rolldown manifest. Returns the parsed hash, or nil when the
+  # caller has opted out of raising. When `exception:` is true and the manifest
+  # is missing, raises BuildError so the dev error page is shown.
+  def self.read_manifest!(exception:)
+    JSON.parse(File.read("#{dist_dir}/manifest/manifest.json"))
+  rescue Errno::ENOENT
+    if exception && Rails.env.local?
+      raise BuildError.new("status" => "missing", "error" => plain_error(<<~MSG))
+              No frontend build found at #{dist_dir}/manifest/manifest.json.
+              Start the dev server with `pnpm --dir frontend/discourse start`.
+            MSG
+    end
+    nil
+  end
+
+  # Build an error payload from plain text, populating both `message` (used in
+  # the raised exception's message) and `messageHtml` (rendered in the dev
+  # error view, HTML-escaped here since there are no ANSI codes to convert).
+  def self.plain_error(text)
+    { "message" => text, "messageHtml" => ERB::Util.html_escape(text) }
   end
 
   def self.is_ember_cli_asset?(name)
