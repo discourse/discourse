@@ -27,6 +27,7 @@ RSpec.describe "AI Bot docked composer" do
       :private_message_topic,
       title: "A bot conversation",
       user: user,
+      subtype: DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE,
       last_posted_at: Time.zone.now,
       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: user),

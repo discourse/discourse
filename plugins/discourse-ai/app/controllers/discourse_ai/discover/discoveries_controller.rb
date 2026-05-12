@@ -54,6 +54,7 @@ module DiscourseAi
                 context: context,
               ),
             archetype: Archetype.private_message,
+            subtype: DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE,
             target_usernames: bot_username,
             skip_validations: true,
           )

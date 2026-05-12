@@ -12,6 +12,60 @@ module DiscourseAi
           .concat(LlmModel.where(id: LlmModel.enabled_chat_bot_ids).pluck(:user_id).compact)
       end
 
+      def self.ai_bot_pm_args?(user, args)
+        return false if user.blank? || args[:topic_id].present?
+        return false if args[:archetype] != Archetype.private_message
+        return false if DiscourseAi::AiBot::Playground.is_bot_user_id?(user.id)
+        return false if args[:target_emails].present? || args[:target_group_names].present?
+
+        recipient_ids = intended_user_recipient_ids(args)
+        return false if recipient_ids.blank?
+
+        recipient_ids -= [user.id]
+        recipient_ids.length == 1 && all_bot_ids.include?(recipient_ids.first)
+      end
+
+      def self.ai_bot_pm_topic?(topic)
+        return false if !topic.private_message?
+        return false if topic.topic_allowed_groups.exists?
+
+        creator = topic.user
+        return false if creator.blank?
+        return false if DiscourseAi::AiBot::Playground.is_bot_user_id?(creator.id)
+
+        recipients = topic.topic_allowed_users.pluck(:user_id) - [creator.id]
+        recipients.length == 1 && all_bot_ids.include?(recipients.first)
+      end
+
+      def self.intended_user_recipient_ids(args)
+        return if args[:target_user_ids].present? && args[:target_usernames].present?
+
+        if args[:target_user_ids].present?
+          return Array
+            .wrap(args[:target_user_ids])
+            .flat_map { |user_id| user_id.to_s.split(",") }
+            .map(&:to_i)
+            .uniq
+        end
+
+        return if args[:target_usernames].blank?
+
+        usernames =
+          Array
+            .wrap(args[:target_usernames])
+            .flat_map { |username| username.to_s.split(",") }
+            .map { |username| username.strip.downcase }
+            .reject(&:blank?)
+            .uniq
+
+        return if usernames.blank?
+
+        user_ids = User.where(username_lower: usernames).pluck(:id)
+        return if user_ids.length != usernames.length
+
+        user_ids
+      end
+
       def self.find_participant_in(participant_ids)
         model = LlmModel.includes(:user).where(user_id: participant_ids).last
         return if model.nil?
@@ -70,31 +124,30 @@ module DiscourseAi
         TopicView.default_post_custom_fields << POST_AI_LLM_NAME_FIELD
 
         plugin.register_topic_custom_field_type(TOPIC_AI_BOT_PM_FIELD, :string)
+        TopicSubtype.register(DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE)
+
+        NewPostManager.add_handler do |manager|
+          if DiscourseAi::AiBot::EntryPoint.ai_bot_pm_args?(manager.user, manager.args)
+            manager.args[:subtype] = DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE
+          end
+
+          false
+        end
 
         plugin.on(:topic_created) do |topic|
-          next if !topic.private_message?
-          creator = topic.user
+          next if !DiscourseAi::AiBot::EntryPoint.ai_bot_pm_topic?(topic)
 
-          # Only process if creator is not a bot or system user
-          next if DiscourseAi::AiBot::Playground.is_bot_user_id?(creator.id)
-
-          # Get all bot user IDs defined by the discourse-ai plugin
-          bot_ids = DiscourseAi::AiBot::EntryPoint.all_bot_ids
-
-          # Check if the only recipients are bots
-          recipients = topic.topic_allowed_users.pluck(:user_id)
-
-          # Remove creator from recipients for checking
-          recipients -= [creator.id]
-
-          # If all remaining recipients are AI bots and there's exactly one recipient
-          if recipients.length == 1 && (recipients - bot_ids).empty?
-            # The only recipient is an AI bot - add the custom field to the topic
-            topic.custom_fields[TOPIC_AI_BOT_PM_FIELD] = true
-
-            # Save the custom fields
-            topic.save_custom_fields
+          if topic.subtype != DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE
+            topic.update_column(:subtype, DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE)
+            UserAction.where(
+              target_topic_id: topic.id,
+              action_type: [UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE],
+            ).delete_all
           end
+
+          # The custom field remains during the transition from the old marker to subtype.
+          topic.custom_fields[TOPIC_AI_BOT_PM_FIELD] = true
+          topic.save_custom_fields
         end
 
         plugin.register_modifier(:chat_allowed_bot_user_ids) do |user_ids, guardian|
@@ -141,7 +194,10 @@ module DiscourseAi
           :is_bot_pm,
           include_condition: -> do
             object.topic && object.topic.private_message? &&
-              object.topic.custom_fields[TOPIC_AI_BOT_PM_FIELD]
+              (
+                object.topic.subtype == DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE ||
+                  object.topic.custom_fields[TOPIC_AI_BOT_PM_FIELD]
+              )
           end,
         ) { true }
 

@@ -32,6 +32,15 @@ RSpec.describe PrivateMessageTopicTrackingState do
     ).topic
   end
 
+  fab!(:custom_private_message) do
+    create_post(
+      user: user,
+      target_usernames: [user_2.username],
+      archetype: Archetype.private_message,
+      subtype: "custom_personal_message",
+    ).topic
+  end
+
   describe ".report" do
     it "returns the right tracking state" do
       TopicUser.find_by(user: user_2, topic: group_message).update!(last_read_post_number: 1)
@@ -134,6 +143,12 @@ RSpec.describe PrivateMessageTopicTrackingState do
       expect(data["payload"]["group_ids"]).to eq([group.id])
       expect(data["payload"]["created_by_user_id"]).to eq(group_message.user_id)
     end
+
+    it "does not publish message_bus messages for non-normal private messages" do
+      messages = MessageBus.track_publish { described_class.publish_new(custom_private_message) }
+
+      expect(messages).to eq([])
+    end
   end
 
   describe ".publish_unread" do
@@ -152,6 +167,13 @@ RSpec.describe PrivateMessageTopicTrackingState do
       expect(data["payload"]["created_by_user_id"]).to eq(private_message.first_post.user_id)
       expect(data["payload"]["notification_level"]).to eq(NotificationLevels.all[:watching])
       expect(data["payload"]["group_ids"]).to eq([])
+    end
+
+    it "does not publish message_bus messages for non-normal private messages" do
+      messages =
+        MessageBus.track_publish { described_class.publish_unread(custom_private_message.first_post) }
+
+      expect(messages).to eq([])
     end
 
     it "does not publish message_bus message if post in topic is not new for user" do

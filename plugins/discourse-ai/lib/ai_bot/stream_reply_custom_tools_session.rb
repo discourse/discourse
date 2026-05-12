@@ -89,6 +89,7 @@ module DiscourseAi
         else
           post_params[:title] = I18n.t("discourse_ai.ai_bot.default_pm_prefix")
           post_params[:archetype] = Archetype.private_message
+          post_params[:subtype] = DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE
           post_params[:target_usernames] = "#{@user.username},#{@agent.user.username}"
         end
 

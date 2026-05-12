@@ -90,6 +90,7 @@ class PrivateMessageTopicTrackingState
       #{skip_new ? "" : "LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id.to_i}"}
       WHERE (tau.topic_id IS NOT NULL OR tag.topic_id IS NOT NULL) AND
         topics.archetype = 'private_message' AND
+        #{Topic.normal_personal_message_subtype_sql} AND
         ((#{unread}) OR (#{new})) AND
         topics.deleted_at IS NULL
         #{user.staff? ? "" : "AND topics.visible"}
@@ -98,7 +99,7 @@ class PrivateMessageTopicTrackingState
 
   def self.publish_unread(post)
     topic = post.topic
-    return unless topic.private_message?
+    return unless topic&.normal_personal_message?
 
     scope = TopicUser.tracking(post.topic_id).includes(user: %i[user_stat user_option])
 
@@ -152,7 +153,7 @@ class PrivateMessageTopicTrackingState
   end
 
   def self.publish_new(topic)
-    return unless topic.private_message?
+    return unless topic.normal_personal_message?
 
     message = {
       message_type: NEW_MESSAGE_TYPE,
@@ -182,7 +183,7 @@ class PrivateMessageTopicTrackingState
   end
 
   def self.publish_group_archived(topic:, group_id:, acting_user_id: nil)
-    return unless topic.private_message?
+    return unless topic.normal_personal_message?
 
     message = {
       message_type: GROUP_ARCHIVE_MESSAGE_TYPE,

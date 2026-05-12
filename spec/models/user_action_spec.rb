@@ -8,6 +8,50 @@ RSpec.describe UserAction do
   it { is_expected.to validate_presence_of :action_type }
   it { is_expected.to validate_presence_of :user_id }
 
+  it "does not log private message actions for non-normal PM subtypes" do
+    sender = Fabricate(:user, refresh_auto_groups: true)
+    recipient = Fabricate(:user, refresh_auto_groups: true)
+
+    first_post =
+      create_post(
+        user: sender,
+        target_usernames: [recipient.username],
+        archetype: Archetype.private_message,
+        subtype: "custom_personal_message",
+      )
+    create_post(user: recipient, topic_id: first_post.topic_id)
+
+    expect(
+      UserAction.where(
+        target_topic_id: first_post.topic_id,
+        action_type: [UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE],
+      ),
+    ).to be_empty
+  end
+
+  describe ".private_messages_stats" do
+    it "counts only normal personal message subtypes" do
+      recipient = Fabricate(:user, refresh_auto_groups: true)
+      sender = Fabricate(:user, refresh_auto_groups: true)
+
+      create_post(
+        user: sender,
+        target_usernames: [recipient.username],
+        archetype: Archetype.private_message,
+      )
+      create_post(
+        user: sender,
+        target_usernames: [recipient.username],
+        archetype: Archetype.private_message,
+        subtype: "custom_personal_message",
+      )
+
+      stats = described_class.private_messages_stats(recipient.id, recipient.guardian)
+
+      expect(stats).to include(all: 1, mine: 0, unread: 1)
+    end
+  end
+
   describe "#stream" do
     fab!(:public_post, :post)
     let(:public_topic) { public_post.topic }

@@ -113,6 +113,21 @@ RSpec.describe PostAlerter do
       expect(Notification.where(user_id: pm.user_id).count).to eq(1)
     end
 
+    it "does not create private message notifications for non-normal PM subtypes" do
+      sender = Fabricate(:user, refresh_auto_groups: true)
+      recipient = Fabricate(:user, refresh_auto_groups: true)
+      post =
+        create_post(
+          user: sender,
+          target_usernames: [recipient.username],
+          archetype: Archetype.private_message,
+          raw: "hello @#{recipient.username}",
+          subtype: "custom_personal_message",
+        )
+
+      expect { PostAlerter.post_created(post) }.not_to change { recipient.notifications.count }
+    end
+
     it "prioritises 'private_message' type even if direct mention" do
       pm = Fabricate(:topic, archetype: "private_message", category_id: nil)
       op =
@@ -171,6 +186,14 @@ RSpec.describe PostAlerter do
           user2.id,
           pm.id,
           notification_level: TopicUser.notification_levels[:tracking],
+        )
+
+        Fabricate(
+          :topic,
+          archetype: "private_message",
+          category_id: nil,
+          subtype: "custom_personal_message",
+          allowed_groups: [group],
         )
 
         PostAlerter.post_created(op)

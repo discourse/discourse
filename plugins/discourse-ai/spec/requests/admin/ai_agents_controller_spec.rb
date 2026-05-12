@@ -1420,6 +1420,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           user,
           title: "Parallel Tool Topic",
           archetype: Archetype.private_message,
+          subtype: DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE,
           target_usernames: ai_agent.user.username,
           raw: "Initial context message",
           custom_fields: {
@@ -1761,6 +1762,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           user,
           title: "Multi Round Tool Topic",
           archetype: Archetype.private_message,
+          subtype: DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE,
           target_usernames: ai_agent.user.username,
           raw: "Initial context message",
           custom_fields: {

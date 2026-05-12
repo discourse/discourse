@@ -72,7 +72,8 @@ RSpec.describe DiscourseAi::Discover::DiscoveriesController do
         }.to change(Topic, :count).by(1)
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_id"]).to be_present
+        topic = Topic.find(response.parsed_body["topic_id"])
+        expect(topic.subtype).to eq(DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE)
       end
 
       it "returns invalid parameters if the context is missing" do

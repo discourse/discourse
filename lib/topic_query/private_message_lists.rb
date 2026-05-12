@@ -256,7 +256,7 @@ class TopicQuery
 
       result =
         Topic
-          .private_messages
+          .normal_personal_messages
           .includes(:allowed_users)
           .includes(:allowed_groups)
           .joins(

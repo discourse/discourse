@@ -46,6 +46,29 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(topics).to contain_exactly(private_message)
     end
 
+    it "includes only normal personal message subtypes" do
+      normal_subtype_topics =
+        TopicSubtype.normal_personal_message_subtypes.map do |subtype|
+          create_post(
+            user: user,
+            target_usernames: [user_2.username],
+            archetype: Archetype.private_message,
+            subtype: subtype,
+          ).topic
+        end
+
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message,
+        subtype: "custom_personal_message",
+      )
+
+      topics = TopicQuery.new(nil).list_private_messages(user_2).topics
+
+      expect(topics).to contain_exactly(private_message, *normal_subtype_topics)
+    end
+
     it "includes topics with moderator posts" do
       pm = Fabricate(:private_message_post, user: user_4).topic
 
@@ -189,9 +212,18 @@ RSpec.describe TopicQuery::PrivateMessageLists do
     end
 
     it "returns a list of private messages with unread posts that user is at least tracking" do
+      custom_pm =
+        create_post(
+          user: user,
+          target_usernames: [user_2.username],
+          archetype: Archetype.private_message,
+          subtype: "custom_personal_message",
+        ).topic
+
       freeze_time 1.minute.from_now do
         create_post(user: user_2, topic_id: pm.id)
         create_post(user: user_2, topic_id: pm_3.id)
+        create_post(user: user_2, topic_id: custom_pm.id)
       end
 
       TopicUser.find_by(user: user, topic: pm_3).update!(
@@ -223,6 +255,13 @@ RSpec.describe TopicQuery::PrivateMessageLists do
     end
 
     it "returns a list of new private messages" do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message,
+        subtype: "custom_personal_message",
+      )
+
       expect(TopicQuery.new(user_2).list_private_messages_new(user_2).topics).to contain_exactly(
         pm,
         pm_2,

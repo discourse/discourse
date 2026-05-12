@@ -1119,11 +1119,19 @@ RSpec.describe ListController do
     it "succeeds when the user can see private messages" do
       pm = Fabricate(:private_message_topic, user: Fabricate(:user))
       pm.topic_allowed_users.create!(user: user)
+      custom_pm =
+        Fabricate(
+          :private_message_topic,
+          user: Fabricate(:user),
+          subtype: "custom_personal_message",
+        )
+      custom_pm.topic_allowed_users.create!(user: user)
+
       sign_in(user)
       get "/topics/private-messages/#{user.username}.json"
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["topic_list"]["topics"].size).to eq(1)
+      expect(json["topic_list"]["topics"].map { |topic| topic["id"] }).to contain_exactly(pm.id)
     end
 
     it "sorts private messages by activity" do

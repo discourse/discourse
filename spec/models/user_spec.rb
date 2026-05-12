@@ -2641,12 +2641,10 @@ RSpec.describe User do
           read: false,
           user: user,
         )
-        Fabricate(
-          :notification,
-          user: user,
-          notification_type: Notification.types[:private_message],
-          read: false,
-        )
+        pm_sender = Fabricate(:user)
+        pm_topic = Fabricate(:private_message_topic, user: pm_sender, recipient: user)
+        pm_post = Fabricate(:post, topic: pm_topic, user: pm_sender)
+        Fabricate(:private_message_notification, user: user, topic: pm_topic, post: pm_post)
 
         messages =
           MessageBus.track_publish("/notification/#{user.id}") { user.publish_notifications_state }
@@ -2770,6 +2768,28 @@ RSpec.describe User do
       )
 
       expect(user.unread_high_priority_notifications).to eq(2)
+    end
+
+    it "excludes private_message notifications for non-normal PM subtypes" do
+      sender = Fabricate(:user)
+      custom_pm_topic =
+        Fabricate(
+          :private_message_topic,
+          user: sender,
+          recipient: user,
+          subtype: "custom_personal_message",
+        )
+      custom_pm_post = Fabricate(:post, topic: custom_pm_topic, user: sender)
+
+      Fabricate(
+        :private_message_notification,
+        user: user,
+        topic: custom_pm_topic,
+        post: custom_pm_post,
+        read: false,
+      )
+
+      expect(user.unread_high_priority_notifications).to eq(0)
     end
   end
 
@@ -3596,6 +3616,35 @@ RSpec.describe User do
 
       expect(user.all_unread_notifications_count).to eq(0)
     end
+
+    it "excludes private_message notifications for non-normal PM subtypes" do
+      sender = Fabricate(:user)
+      custom_pm_topic =
+        Fabricate(
+          :private_message_topic,
+          user: sender,
+          recipient: user,
+          subtype: "custom_personal_message",
+        )
+      custom_pm_post = Fabricate(:post, topic: custom_pm_topic, user: sender)
+
+      Fabricate(
+        :private_message_notification,
+        user: user,
+        topic: custom_pm_topic,
+        post: custom_pm_post,
+        read: false,
+      )
+      Fabricate(
+        :notification,
+        user: user,
+        topic: custom_pm_topic,
+        notification_type: Notification.types[:mentioned],
+        read: false,
+      )
+
+      expect(user.all_unread_notifications_count).to eq(0)
+    end
   end
 
   describe "#bump_last_seen_reviewable!" do
@@ -3746,35 +3795,41 @@ RSpec.describe User do
 
       Fabricate(:notification, user: user, read: false)
 
+      normal_pm_topic = Fabricate(:private_message_topic, user: another_user, recipient: user)
+      normal_pm_post = Fabricate(:post, topic: normal_pm_topic, user: another_user)
       last_seen_id =
         Fabricate(
-          :notification,
+          :private_message_notification,
           user: user,
+          topic: normal_pm_topic,
+          post: normal_pm_post,
           read: false,
-          notification_type: Notification.types[:private_message],
         ).id
 
       expect(user.new_personal_messages_notifications_count).to eq(1)
 
       Fabricate(
-        :notification,
+        :private_message_notification,
         user: user,
+        topic: normal_pm_topic,
+        post: normal_pm_post,
         read: false,
-        notification_type: Notification.types[:private_message],
       )
 
       Fabricate(
-        :notification,
+        :private_message_notification,
         user: another_user,
+        topic: normal_pm_topic,
+        post: normal_pm_post,
         read: false,
-        notification_type: Notification.types[:private_message],
       )
 
       Fabricate(
-        :notification,
+        :private_message_notification,
         user: user,
+        topic: normal_pm_topic,
+        post: normal_pm_post,
         read: true,
-        notification_type: Notification.types[:private_message],
       )
 
       Fabricate(
@@ -3782,6 +3837,22 @@ RSpec.describe User do
         user: user,
         read: false,
         notification_type: Notification.types[:replied],
+      )
+
+      custom_pm_topic =
+        Fabricate(
+          :private_message_topic,
+          user: another_user,
+          recipient: user,
+          subtype: "custom_personal_message",
+        )
+      custom_pm_post = Fabricate(:post, topic: custom_pm_topic, user: another_user)
+      Fabricate(
+        :private_message_notification,
+        user: user,
+        topic: custom_pm_topic,
+        post: custom_pm_post,
+        read: false,
       )
 
       user.update!(seen_notification_id: last_seen_id)

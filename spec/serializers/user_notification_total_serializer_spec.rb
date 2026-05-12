@@ -4,11 +4,14 @@ RSpec.describe UserNotificationTotalSerializer do
   fab!(:user) { Fabricate(:user, trust_level: 3) }
 
   fab!(:notification) { Fabricate(:notification, user: user, read: false) }
+  fab!(:pm_sender, :user)
+  fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_sender, recipient: user) }
+  fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_sender) }
   fab!(:pm_notification) do
-    Fabricate(:notification, user: user, notification_type: Notification.types[:private_message])
+    Fabricate(:private_message_notification, user: user, topic: pm_topic, post: pm_post)
   end
   fab!(:pm_notification2) do
-    Fabricate(:notification, user: user, notification_type: Notification.types[:private_message])
+    Fabricate(:private_message_notification, user: user, topic: pm_topic, post: pm_post)
   end
   fab!(:group_message_notification) do
     Fabricate(
@@ -30,6 +33,28 @@ RSpec.describe UserNotificationTotalSerializer do
 
   it "includes the user's unread private messages count" do
     expect(serialized_data[:unread_personal_messages]).to eq(2)
+  end
+
+  it "excludes non-normal PM subtypes from notification totals" do
+    sender = Fabricate(:user)
+    custom_pm_topic =
+      Fabricate(
+        :private_message_topic,
+        user: sender,
+        recipient: user,
+        subtype: "custom_personal_message",
+      )
+    custom_pm_post = Fabricate(:post, topic: custom_pm_topic, user: sender)
+
+    Fabricate(
+      :private_message_notification,
+      user: user,
+      topic: custom_pm_topic,
+      post: custom_pm_post,
+      read: false,
+    )
+
+    expect(serialized_data).to include(unread_notifications: 2, unread_personal_messages: 2)
   end
 
   context "when the user has PMs disabled" do

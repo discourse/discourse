@@ -272,11 +272,30 @@ RSpec.describe CurrentUserSerializer do
 
   describe "#new_personal_messages_notifications_count" do
     fab!(:notification) do
+      sender = Fabricate(:user)
+      pm_topic = Fabricate(:private_message_topic, user: sender, recipient: user)
+      pm_post = Fabricate(:post, topic: pm_topic, user: sender)
+
+      Fabricate(:private_message_notification, user: user, topic: pm_topic, post: pm_post, read: false)
+    end
+
+    fab!(:custom_pm_notification) do
+      sender = Fabricate(:user)
+      custom_pm_topic =
+        Fabricate(
+          :private_message_topic,
+          user: sender,
+          recipient: user,
+          subtype: "custom_personal_message",
+        )
+      custom_pm_post = Fabricate(:post, topic: custom_pm_topic, user: sender)
+
       Fabricate(
-        :notification,
+        :private_message_notification,
         user: user,
+        topic: custom_pm_topic,
+        post: custom_pm_post,
         read: false,
-        notification_type: Notification.types[:private_message],
       )
     end
 

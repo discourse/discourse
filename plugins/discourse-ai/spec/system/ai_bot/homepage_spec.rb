@@ -51,6 +51,7 @@ RSpec.describe "AI Bot - Homepage" do
       :private_message_topic,
       title: "This is my special PM",
       user: user,
+      subtype: DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE,
       last_posted_at: Time.zone.now,
       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: user),

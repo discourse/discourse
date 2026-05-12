@@ -43,6 +43,17 @@ class TopicSubtype
     "pending_users"
   end
 
+  def self.normal_personal_message_subtypes
+    @normal_personal_message_subtypes ||= [
+      user_to_user,
+      system_message,
+      moderator_warning,
+      notify_moderators,
+      notify_user,
+      pending_users_reminder,
+    ].freeze
+  end
+
   def self.register(name, options = {})
     @subtypes ||= {}
     @subtypes[name] = TopicSubtype.new(name, options)

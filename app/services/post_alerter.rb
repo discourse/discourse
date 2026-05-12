@@ -139,6 +139,8 @@ class PostAlerter
   end
 
   def after_save_post(post, new_record = false)
+    return if post.topic&.private_message? && !post.topic.normal_personal_message?
+
     notified = [post.user, post.last_editor].uniq
 
     DiscourseEvent.trigger(:post_alerter_before_mentions, post, new_record, notified)
@@ -250,7 +252,7 @@ class PostAlerter
     if new_record && post.post_number == 1
       topic = post.topic
 
-      if topic.present?
+      if topic.present? && (!topic.private_message? || topic.normal_personal_message?)
         watchers = category_watchers(topic) + tag_watchers(topic) + group_watchers(topic)
         # Notify only users who can see the topic
         watchers &= topic.all_allowed_users.pluck(:id) if post.topic.private_message?
@@ -445,6 +447,7 @@ class PostAlerter
       JOIN topic_allowed_groups g ON g.group_id = :group_id AND g.topic_id = t.id
       LEFT JOIN group_archived_messages a ON a.topic_id = t.id AND a.group_id = g.group_id
       WHERE a.id IS NULL AND t.deleted_at is NULL AND t.archetype = 'private_message'
+        AND #{Topic.normal_personal_message_subtype_sql("t")}
     SQL
 
     topic.allowed_groups.map do |g|
@@ -846,6 +849,7 @@ class PostAlerter
 
   def notify_pm_users(post, reply_to_user, quoted_users, notified, new_record = false)
     return [] unless post.topic
+    return [] unless post.topic.normal_personal_message?
 
     warn_if_not_sidekiq
 

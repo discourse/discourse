@@ -390,6 +390,22 @@ class Topic < ActiveRecord::Base
 
   scope :with_subtype, ->(subtype) { where("topics.subtype = ?", subtype) }
 
+  scope :normal_personal_messages,
+        -> { private_messages.where(Topic.normal_personal_message_subtype_sql) }
+
+  def self.normal_personal_message_subtype_sql(table_name = "topics")
+    subtype_column = "#{table_name}.subtype"
+
+    sanitize_sql_array(
+      [
+        "(CASE WHEN #{subtype_column} IS NULL OR #{subtype_column} ~ ? THEN ? ELSE #{subtype_column} END) IN (?)",
+        "^\\s*$",
+        TopicSubtype.user_to_user,
+        TopicSubtype.normal_personal_message_subtypes,
+      ],
+    )
+  end
+
   attr_accessor :ignore_category_auto_close
   attr_accessor :skip_callbacks
   attr_accessor :advance_draft
@@ -698,6 +714,13 @@ class Topic < ActiveRecord::Base
 
   def private_message?
     self.archetype == Archetype.private_message
+  end
+
+  def normal_personal_message?
+    private_message? &&
+      TopicSubtype.normal_personal_message_subtypes.include?(
+        subtype.presence || TopicSubtype.user_to_user,
+      )
   end
 
   def regular?

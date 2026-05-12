@@ -113,6 +113,7 @@ class UserAction < ActiveRecord::Base
    LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = :user_id
        WHERE t.deleted_at IS NULL
          AND t.archetype = 'private_message'
+         AND #{Topic.normal_personal_message_subtype_sql("t")}
          AND t.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = :user_id)
     SQL
 
@@ -127,6 +128,7 @@ class UserAction < ActiveRecord::Base
         JOIN groups g ON g.id = gu.group_id
        WHERE deleted_at IS NULL
          AND archetype = 'private_message'
+         AND #{Topic.normal_personal_message_subtype_sql("t")}
        GROUP BY g.name
     SQL
 
@@ -448,6 +450,12 @@ class UserAction < ActiveRecord::Base
         )
       end
     end
+
+    builder.where(
+      "(t.archetype <> :normal_pm_archetype OR #{Topic.normal_personal_message_subtype_sql("t")})",
+      normal_pm_archetype: Archetype.private_message,
+    )
+
     builder
   end
 

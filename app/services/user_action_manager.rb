@@ -26,6 +26,7 @@ class UserActionManager
     # no action to log here, this can happen if a user is deleted
     # then topic has no user_id
     return [] unless topic.user_id
+    return [] if topic.private_message? && !topic.normal_personal_message?
 
     row = {
       action_type: topic.private_message? ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC,
@@ -62,6 +63,7 @@ class UserActionManager
   def self.post_rows(post)
     # first post gets nada or if the author has been deleted
     return [] if post.is_first_post? || post.topic.blank? || post.user.blank?
+    return [] if post.topic.private_message? && !post.topic.normal_personal_message?
 
     row = {
       action_type: UserAction::REPLY,

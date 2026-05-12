@@ -10,6 +10,24 @@ RSpec.describe "AI Bot Post Serializer" do
     sign_in(current_user)
   end
 
+  describe "is_bot_pm in topic_view serializer" do
+    it "is included when the PM has the AI bot subtype" do
+      pm_topic =
+        Fabricate(
+          :private_message_topic,
+          user: current_user,
+          recipient: bot_user,
+          subtype: DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE,
+        )
+      Fabricate(:post, topic: pm_topic, user: current_user)
+
+      get "/t/#{pm_topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["is_bot_pm"]).to eq(true)
+    end
+  end
+
   describe "llm_name in post serializer" do
     it "includes llm_name when custom field is set in a PM" do
       pm_topic = Fabricate(:private_message_topic, user: current_user)

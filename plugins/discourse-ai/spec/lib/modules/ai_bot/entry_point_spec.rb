@@ -37,17 +37,44 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
         expect(serializer[:current_user][:can_debug_ai_bot_conversations]).to eq(true)
       end
 
-      describe "adding TOPIC_AI_BOT_PM_FIELD to topic custom fields" do
-        it "is added when user PMs a single bot" do
-          topic = PostCreator.create!(admin, post_args).topic
-          expect(topic.reload.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD]).to eq("t")
+      describe "marking AI bot PM topics" do
+        it "marks the topic when user PMs a single bot" do
+          topic = PostCreator.create!(admin, post_args).topic.reload
+
+          expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD]).to eq("t")
+          expect(topic.subtype).to eq(DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE)
+          expect(
+            UserAction.where(
+              target_topic_id: topic.id,
+              action_type: [UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE],
+            ),
+          ).to be_empty
         end
 
-        it "is not added when user PMs a bot and another user" do
+        it "marks the topic before creation through NewPostManager" do
+          result = NewPostManager.new(admin, post_args).perform
+
+          expect(result.post.topic.subtype).to eq(DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE)
+        end
+
+        it "does not mark the topic when user PMs a bot and another user" do
           user = Fabricate(:user)
           post_args[:target_usernames] = [gpt_bot.username, user.username].join(",")
-          topic = PostCreator.create!(admin, post_args).topic
-          expect(topic.reload.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD]).to be_nil
+          topic = PostCreator.create!(admin, post_args).topic.reload
+
+          expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD]).to be_nil
+          expect(topic.subtype).not_to eq(DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE)
+        end
+
+        it "does not mark the topic when user PMs a bot and a group" do
+          group = Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
+          post_args[:target_usernames] = gpt_bot.username
+          post_args[:target_group_names] = group.name
+
+          topic = PostCreator.create!(admin, post_args).topic.reload
+
+          expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD]).to be_nil
+          expect(topic.subtype).not_to eq(DiscourseAi::AiBot::TOPIC_AI_BOT_PM_SUBTYPE)
         end
       end
 

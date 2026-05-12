@@ -669,6 +669,22 @@ class User < ActiveRecord::Base
     @muted_user_ids ||= muted_users.pluck(:id)
   end
 
+  def self.exclude_non_normal_pm_notification_sql(topic_table = "t")
+    <<~SQL
+      AND (
+        #{topic_table}.archetype IS DISTINCT FROM :private_message_archetype
+        OR #{Topic.normal_personal_message_subtype_sql(topic_table)}
+      )
+    SQL
+  end
+
+  def self.exclude_non_normal_pm_notification_sql_params
+    {
+      private_message_notification_type: Notification.types[:private_message],
+      private_message_archetype: Archetype.private_message,
+    }
+  end
+
   def unread_notifications_of_type(notification_type, since: nil)
     # perf critical, much more efficient than AR
     sql = <<~SQL
@@ -676,14 +692,22 @@ class User < ActiveRecord::Base
           FROM notifications n
      LEFT JOIN topics t ON t.id = n.topic_id
          WHERE t.deleted_at IS NULL
-           AND n.notification_type = :notification_type
-           AND n.user_id = :user_id
-           AND NOT read
-           #{since ? "AND n.created_at > :since" : ""}
+            AND n.notification_type = :notification_type
+            AND n.user_id = :user_id
+            AND NOT read
+            #{self.class.exclude_non_normal_pm_notification_sql}
+            #{since ? "AND n.created_at > :since" : ""}
     SQL
 
     # to avoid coalesce we do to_i
-    DB.query_single(sql, user_id: id, notification_type: notification_type, since: since)[0].to_i
+    DB.query_single(
+      sql,
+      self.class.exclude_non_normal_pm_notification_sql_params.merge(
+        user_id: id,
+        notification_type: notification_type,
+        since: since,
+      ),
+    )[0].to_i
   end
 
   def unread_notifications_of_priority(high_priority:)
@@ -696,26 +720,41 @@ class User < ActiveRecord::Base
            AND n.high_priority = :high_priority
            AND n.user_id = :user_id
            AND NOT read
+           #{self.class.exclude_non_normal_pm_notification_sql}
     SQL
 
     # to avoid coalesce we do to_i
-    DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
+    DB.query_single(
+      sql,
+      self.class.exclude_non_normal_pm_notification_sql_params.merge(
+        user_id: id,
+        high_priority: high_priority,
+      ),
+    )[0].to_i
   end
 
   MAX_UNREAD_BACKLOG = 400
   def grouped_unread_notifications
-    results = DB.query(<<~SQL, user_id: self.id, limit: MAX_UNREAD_BACKLOG)
-      SELECT X.notification_type AS type, COUNT(*) FROM (
-        SELECT n.notification_type
-        FROM notifications n
-        LEFT JOIN topics t ON t.id = n.topic_id
-        WHERE t.deleted_at IS NULL
-          AND n.user_id = :user_id
-          AND NOT n.read
-        LIMIT :limit
-      ) AS X
-      GROUP BY X.notification_type
-    SQL
+    results =
+      DB.query(
+        <<~SQL,
+          SELECT X.notification_type AS type, COUNT(*) FROM (
+            SELECT n.notification_type
+            FROM notifications n
+            LEFT JOIN topics t ON t.id = n.topic_id
+            WHERE t.deleted_at IS NULL
+              AND n.user_id = :user_id
+              AND NOT n.read
+              #{self.class.exclude_non_normal_pm_notification_sql}
+            LIMIT :limit
+          ) AS X
+          GROUP BY X.notification_type
+        SQL
+        self.class.exclude_non_normal_pm_notification_sql_params.merge(
+          user_id: self.id,
+          limit: MAX_UNREAD_BACKLOG,
+        ),
+      )
     results.map! { |row| [row.type, row.count] }
     results.to_h
   end
@@ -725,19 +764,23 @@ class User < ActiveRecord::Base
   end
 
   def new_personal_messages_notifications_count
-    args = {
-      user_id: self.id,
-      seen_notification_id: self.seen_notification_id,
-      private_message: Notification.types[:private_message],
-    }
+    args =
+      self.class.exclude_non_normal_pm_notification_sql_params.merge(
+        user_id: self.id,
+        seen_notification_id: self.seen_notification_id,
+      )
 
     DB.query_single(<<~SQL, args).first
       SELECT COUNT(*)
       FROM notifications
-      WHERE user_id = :user_id
-      AND id > :seen_notification_id
-      AND NOT read
-      AND notification_type = :private_message
+      LEFT JOIN topics t ON t.id = notifications.topic_id
+      WHERE notifications.user_id = :user_id
+      AND notifications.id > :seen_notification_id
+      AND NOT notifications.read
+      AND notifications.notification_type = :private_message_notification_type
+      AND t.deleted_at IS NULL
+      AND t.archetype = :private_message_archetype
+      AND #{Topic.normal_personal_message_subtype_sql("t")}
     SQL
   end
 
@@ -768,15 +811,18 @@ class User < ActiveRecord::Base
             n.user_id = :user_id AND
             n.id > :seen_notification_id AND
             NOT read
+            #{self.class.exclude_non_normal_pm_notification_sql}
           LIMIT :limit
         ) AS X
       SQL
 
         DB.query_single(
           sql,
-          user_id: id,
-          seen_notification_id: seen_notification_id,
-          limit: User.max_unread_notifications,
+          self.class.exclude_non_normal_pm_notification_sql_params.merge(
+            user_id: id,
+            seen_notification_id: seen_notification_id,
+            limit: User.max_unread_notifications,
+          ),
         )[
           0
         ].to_i
@@ -795,15 +841,18 @@ class User < ActiveRecord::Base
             n.user_id = :user_id AND
             n.id > :seen_notification_id AND
             NOT read
+            #{self.class.exclude_non_normal_pm_notification_sql}
           LIMIT :limit
         ) AS X
       SQL
 
         DB.query_single(
           sql,
-          user_id: id,
-          seen_notification_id: seen_notification_id,
-          limit: User.max_unread_notifications,
+          self.class.exclude_non_normal_pm_notification_sql_params.merge(
+            user_id: id,
+            seen_notification_id: seen_notification_id,
+            limit: User.max_unread_notifications,
+          ),
         )[
           0
         ].to_i
