@@ -7500,7 +7500,7 @@ RSpec.describe UsersController do
         Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Hola Mundo")
       end
       fab!(:topic_localization_ja) do
-        Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "こんにちは世界")
+        Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "���������������������")
       end
 
       before do
@@ -7581,9 +7581,11 @@ RSpec.describe UsersController do
       expect(hidden_post_response).to be_present
       expect(hidden_post_response).not_to have_key("excerpt")
       expect(hidden_post_response).not_to have_key("truncated")
+      expect(hidden_post_response).not_to have_key("cooked")
       expect(hidden_topic_response).to be_present
       expect(hidden_topic_response).not_to have_key("excerpt")
       expect(hidden_topic_response).not_to have_key("truncated")
+      expect(hidden_topic_response).not_to have_key("cooked")
       expect(response.body).not_to include("hidden post bookmark secret")
       expect(response.body).not_to include("hidden topic bookmark secret")
     end
@@ -7906,7 +7908,7 @@ RSpec.describe UsersController do
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
       end
 
-      it "doesn’t show unread notifications when the bookmark has been deleted" do
+      it "doesn���t show unread notifications when the bookmark has been deleted" do
         bookmark_with_reminder.destroy!
 
         get "/u/#{user.username}/user-menu-bookmarks"

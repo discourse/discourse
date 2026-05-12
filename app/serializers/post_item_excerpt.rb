@@ -19,6 +19,10 @@ module PostItemExcerpt
     can_see_post_item_excerpt?
   end
 
+  def include_cooked?
+    can_see_post_item_excerpt?
+  end
+
   def truncated
     true
   end
@@ -30,6 +34,7 @@ module PostItemExcerpt
   private
 
   def can_see_post_item_excerpt?
+    return true if !respond_to?(:post_item_excerpt_post) || post_item_excerpt_post.blank?
     scope&.can_see_post?(post_item_excerpt_post)
   end
 end
