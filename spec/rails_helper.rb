@@ -505,7 +505,7 @@ RSpec.configure do |config|
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
     config.before(:each) do |example|
-      EmberCli.stubs(:build_error).returns(nil) if example.metadata[:type] != :system
+      EmberCli.stubs(:read_manifest!).returns(nil) if example.metadata[:type] != :system
     end
 
     config.before(:each, type: :system) do |example|
