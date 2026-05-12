@@ -69,7 +69,7 @@ module DiscourseAi
       DiscourseAi::Agents::Agent.external_agent_id(agent_klass).to_s,
       type: "enum",
       enum: "DiscourseAi::Configuration::AgentEnumerator",
-      depends_on: %w[discourse_ai_enabled],
+      depends_on: ["discourse_ai_enabled", enabled_by_setting].compact,
       depends_behavior: "hidden",
       area: area,
     )
