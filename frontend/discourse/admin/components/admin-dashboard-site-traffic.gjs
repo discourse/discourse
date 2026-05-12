@@ -252,6 +252,12 @@ function countryLabel(countryCode) {
   return [flag, name].filter(Boolean).join(" ");
 }
 
+function rankedCountLabel(count) {
+  return i18n("admin.dashboard.site_traffic.ranked_count", {
+    count: number(count),
+  });
+}
+
 // Reactive Chart.js wrapper: builds the chart on first render and rebuilds
 // from scratch whenever `chartConfig` changes (period swap, filter pill
 // toggle). Chart.js init is fast enough that a full rebuild is fine.
@@ -617,7 +623,7 @@ export default class AdminDashboardSiteTraffic extends Component {
   get topReferrers() {
     return (this.model?.related_data?.top_referrers || []).map((referrer) => ({
       label: referrer.source_name,
-      count: number(referrer.count),
+      countLabel: rankedCountLabel(referrer.count),
       percent: referrer.percent,
     }));
   }
@@ -629,7 +635,7 @@ export default class AdminDashboardSiteTraffic extends Component {
   get topCountries() {
     return (this.model?.related_data?.top_countries || []).map((country) => ({
       label: countryLabel(country.country_code),
-      count: number(country.count),
+      countLabel: rankedCountLabel(country.count),
       percent: country.percent,
     }));
   }
@@ -1019,7 +1025,7 @@ export default class AdminDashboardSiteTraffic extends Component {
                     <span class="admin-dashboard-site-traffic__ranked-value">
                       {{referrer.percent}}%
                       <span class="admin-dashboard-site-traffic__ranked-count">
-                        {{referrer.count}}
+                        {{referrer.countLabel}}
                       </span>
                     </span>
                   </div>
@@ -1049,7 +1055,7 @@ export default class AdminDashboardSiteTraffic extends Component {
                     <span class="admin-dashboard-site-traffic__ranked-value">
                       {{country.percent}}%
                       <span class="admin-dashboard-site-traffic__ranked-count">
-                        {{country.count}}
+                        {{country.countLabel}}
                       </span>
                     </span>
                   </div>

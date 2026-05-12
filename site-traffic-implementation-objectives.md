@@ -46,6 +46,8 @@ Source: post #1 of the [Site Traffic section topic](https://dev.discourse.org/t/
 
 A single section card. Top-down: section heading → headline + KPI row → filter pills → chart. On private communities, the headline expands full-width since the KPI is hidden. The section is responsive: elements stack on narrow viewports.
 
+The Top referrers and Top countries cards show each row's share first, followed by the pageview count in brackets, e.g., `42% (12.3k)`.
+
 ## Section heading text
 
 The section is titled "Site traffic", rendered in a section-header style.

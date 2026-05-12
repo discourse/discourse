@@ -6996,6 +6996,7 @@ en:
               pageviews: "Pageviews"
               crawlers: "Crawlers"
               today_partial: "(today, partial)"
+          ranked_count: "(%{count})"
           top_referrers:
             title: "Top referrers"
             empty: "No referral data for this period."
