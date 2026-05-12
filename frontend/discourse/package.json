@@ -55,7 +55,7 @@
     "ember-source": "~6.10.0",
     "ember-tracked-storage-polyfill": "^1.0.0",
     "highlight.js": "11.11.1",
-    "immer": "^11.1.4",
+    "immer": "^11.1.6",
     "jspreadsheet-ce": "^5.0.4",
     "moment": "2.30.1",
     "moment-timezone": "0.6.2",
