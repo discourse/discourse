@@ -7,6 +7,12 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import {
+  PERIOD_CUSTOM,
+  PERIOD_LAST_3_MONTHS,
+  PERIOD_LAST_7_DAYS,
+  PERIOD_LAST_30_DAYS,
+} from "discourse/admin/components/dashboard/date-range";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import Report from "discourse/admin/models/report";
 import DButton from "discourse/components/d-button";
@@ -420,6 +426,33 @@ export default class AdminDashboardSiteTraffic extends Component {
     });
   }
 
+  get trendComparisonDuration() {
+    const period = this.modelPeriod ?? this.args.period;
+    if (period === PERIOD_LAST_7_DAYS) {
+      return i18n("admin.dashboard.site_traffic.headline.duration.last_7_days");
+    }
+    if (period === PERIOD_LAST_30_DAYS) {
+      return i18n(
+        "admin.dashboard.site_traffic.headline.duration.last_30_days"
+      );
+    }
+    if (period === PERIOD_LAST_3_MONTHS) {
+      return i18n(
+        "admin.dashboard.site_traffic.headline.duration.last_3_months"
+      );
+    }
+    if (period === PERIOD_CUSTOM && this.modelStartDate && this.modelEndDate) {
+      const days = this.modelEndDate.diff(this.modelStartDate, "days") + 1;
+      if (days === 1) {
+        return null;
+      }
+      return i18n("admin.dashboard.site_traffic.headline.duration.days", {
+        count: days,
+      });
+    }
+    return null;
+  }
+
   // Tooltip shown when admins hover the `?` icon next to the trend phrase.
   // Names the prior period the trend is being compared against (§4.4c) so
   // "up 9%" / "down 12%" isn't a bare claim — admins can verify which
@@ -436,7 +469,14 @@ export default class AdminDashboardSiteTraffic extends Component {
     const range = sameYear
       ? `${start.format("D MMM")} – ${end.format("D MMM YYYY")}`
       : `${start.format("D MMM YYYY")} – ${end.format("D MMM YYYY")}`;
+    if (this.modelPeriod === PERIOD_CUSTOM && !this.trendComparisonDuration) {
+      return i18n(
+        "admin.dashboard.site_traffic.headline.trend_tooltip_previous_day",
+        { range }
+      );
+    }
     return i18n("admin.dashboard.site_traffic.headline.trend_tooltip", {
+      duration: this.trendComparisonDuration,
       range,
     });
   }
@@ -856,8 +896,9 @@ export default class AdminDashboardSiteTraffic extends Component {
                   <DTooltip
                     class="admin-dashboard-site-traffic__trend-info"
                     @icon="far-circle-question"
-                    @content={{this.trendComparisonTooltip}}
-                  />
+                  >
+                    <:content>{{this.trendComparisonTooltip}}</:content>
+                  </DTooltip>
                 {{/if}}
               {{/if}}
             </p>

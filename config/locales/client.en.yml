@@ -6967,7 +6967,15 @@ en:
             trend_phrase: "%{direction} %{delta}%"
             direction_up: "up"
             direction_down: "down"
-            trend_tooltip: "Compared with the previous period (%{range})"
+            trend_tooltip: "Compared with the previous %{duration} (%{range})"
+            trend_tooltip_previous_day: "Compared with the previous day (%{range})"
+            duration:
+              last_7_days: "7 days"
+              last_30_days: "30 days"
+              last_3_months: "3 months"
+              days:
+                one: "%{count} day"
+                other: "%{count} days"
           period_descriptor:
             last_7_days: "in the last 7 days"
             last_30_days: "in the last 30 days"
