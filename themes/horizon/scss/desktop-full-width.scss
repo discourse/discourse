@@ -49,10 +49,6 @@ $sidebar-width: 17em;
     }
   }
 
-  body.has-full-page-chat & {
-    gap: 0;
-  }
-
   .sidebar-wrapper {
     width: 100%; // safari has issues without this
   }

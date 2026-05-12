@@ -28,18 +28,6 @@ body {
 #main-outlet-wrapper {
   @include viewport.from(lg) {
     gap: var(--main-grid-gap);
-
-    .has-sidebar-page & {
-      padding-left: 0;
-    }
-  }
-}
-
-body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
-  background-color: var(--background-color);
-
-  @include viewport.until(lg) {
-    background-color: var(--secondary);
   }
 }
 
@@ -65,7 +53,6 @@ body.has-sidebar-page #main-outlet-wrapper {
   }
 
   @include viewport.from(lg) {
-    gap: var(--main-grid-gap);
     padding-right: var(--main-grid-gap);
   }
 }
