@@ -115,6 +115,55 @@ export function replaceEntryArgs(layout, key, updater) {
 }
 
 /**
+ * Replaces the `conditions` field on a matched entry. Mirrors
+ * `replaceEntryArgs` but targets the entry's condition tree (the
+ * visibility predicate) rather than the rendered args.
+ *
+ * Accepts `null` to clear the conditions entirely. Untouched subtrees
+ * keep their array identity so downstream consumers (block-outlet
+ * reactivity) can short-circuit re-renders.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} key
+ * @param {Array|Object|null} newConditions
+ * @returns {{layout: Array<Object>, changed: boolean}}
+ */
+export function replaceEntryConditions(layout, key, newConditions) {
+  let changed = false;
+
+  function walk(entries) {
+    let subtreeChanged = false;
+    const result = entries.map((entry) => {
+      if (entryKey(entry) === key) {
+        changed = true;
+        subtreeChanged = true;
+        // Drop the `conditions` field entirely when clearing; persist
+        // serialisation downstream skips falsy conditions anyway, but
+        // omitting them keeps the in-memory shape tidy.
+        if (newConditions == null) {
+          // eslint-disable-next-line no-unused-vars
+          const { conditions, ...rest } = entry;
+          return rest;
+        }
+        return { ...entry, conditions: newConditions };
+      }
+      if (entry.children?.length) {
+        const newChildren = walk(entry.children);
+        if (newChildren !== entry.children) {
+          subtreeChanged = true;
+          return { ...entry, children: newChildren };
+        }
+      }
+      return entry;
+    });
+    return subtreeChanged ? result : entries;
+  }
+
+  const newLayout = walk(layout);
+  return { layout: newLayout, changed };
+}
+
+/**
  * Convenience wrapper that immutably sets a single arg on the matched entry.
  *
  * @param {Array<Object>} layout

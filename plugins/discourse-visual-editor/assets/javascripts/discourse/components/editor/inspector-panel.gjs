@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ConditionBuilder from "./condition-builder";
 import InspectorForm from "./inspector-form";
 
 /**
@@ -42,14 +43,6 @@ export default class InspectorPanel extends Component {
     }
     const liveArgs = this.data?.args;
     return !!(liveArgs && Object.keys(liveArgs).length > 0);
-  }
-
-  get hasConditions() {
-    return this.data?.conditions != null;
-  }
-
-  get conditionsJson() {
-    return JSON.stringify(this.data.conditions, null, 2);
   }
 
   /**
@@ -150,13 +143,7 @@ export default class InspectorPanel extends Component {
         <div class="inspector-section__title">
           {{i18n "visual_editor.inspector.section_conditions"}}
         </div>
-        {{#if this.hasConditions}}
-          <pre>{{this.conditionsJson}}</pre>
-        {{else}}
-          <div class="panel-empty">{{i18n
-              "visual_editor.inspector.label_no_conditions"
-            }}</div>
-        {{/if}}
+        <ConditionBuilder />
       </div>
     {{else}}
       <div class="panel-empty">{{i18n "visual_editor.inspector.empty"}}</div>

@@ -584,5 +584,128 @@ module(
         );
       });
     });
+
+    module("updateSelectedConditions", function (innerHooks) {
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        await _renderBlocks(
+          "homepage-blocks",
+          [{ block: TestTile, args: { title: "First" } }],
+          getOwner(this)
+        );
+        this.editor.siteSettings.visual_editor_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:visual-editor");
+        this.editor.enter();
+
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const key = `ve:svc-test-tile:${draft[0].__stableKey}`;
+        this.editor.selectBlock({ key, name: "ve:svc-test-tile" });
+        this.firstKey = key;
+      });
+
+      test("commits a fresh condition tree on the selected block", function (assert) {
+        const next = { type: "user", loggedIn: true };
+        assert.true(this.editor.updateSelectedConditions(next));
+
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        assert.deepEqual(draft[0].conditions, next);
+        assert.true(this.editor.isDirty);
+      });
+
+      test("clears conditions when passed null", function (assert) {
+        this.editor.updateSelectedConditions({ type: "user", loggedIn: true });
+        assert.true(this.editor.updateSelectedConditions(null));
+
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(draft[0].conditions, undefined);
+      });
+
+      test("returns false when no block is selected", function (assert) {
+        this.editor.selectBlock(null);
+        assert.false(
+          this.editor.updateSelectedConditions({ type: "user", loggedIn: true })
+        );
+      });
+
+      test("selectedBlockConditions live-resolves the latest tree", function (assert) {
+        const next = { type: "user", admin: true };
+        this.editor.updateSelectedConditions(next);
+        assert.deepEqual(this.editor.selectedBlockConditions, next);
+      });
+
+      test("selectedBlockConditions returns null when no selection", function (assert) {
+        this.editor.selectBlock(null);
+        assert.strictEqual(this.editor.selectedBlockConditions, null);
+      });
+    });
+
+    module("simulation", function (innerHooks) {
+      innerHooks.beforeEach(function () {
+        // The simulation slot is editor-session-state and survives without
+        // an active editor session; we still test from a clean state.
+      });
+
+      innerHooks.afterEach(function () {
+        this.editor.clearSimulation();
+      });
+
+      test("isSimulating is false by default", function (assert) {
+        assert.false(this.editor.isSimulating);
+        assert.strictEqual(this.editor.simulation, null);
+      });
+
+      test("setSimulatedUser with a persona object marks isSimulating true", function (assert) {
+        this.editor.setSimulatedUser({ trust_level: 2, admin: false });
+        assert.true(this.editor.isSimulating);
+        assert.strictEqual(this.editor.simulation.user.trust_level, 2);
+      });
+
+      test("setSimulatedUser(null) means anonymous, still isSimulating", function (assert) {
+        this.editor.setSimulatedUser(null);
+        assert.true(this.editor.isSimulating);
+        assert.true("user" in this.editor.simulation);
+        assert.strictEqual(this.editor.simulation.user, null);
+      });
+
+      test("setSimulatedUser(undefined) clears the persona slot", function (assert) {
+        this.editor.setSimulatedUser({ trust_level: 4 });
+        this.editor.setSimulatedUser(undefined);
+        assert.false(this.editor.isSimulating);
+      });
+
+      test("setSimulatedViewport(undefined) clears viewport but keeps persona", function (assert) {
+        this.editor.setSimulatedUser({ trust_level: 2 });
+        this.editor.setSimulatedViewport({
+          viewport: { sm: true },
+          touch: true,
+        });
+        assert.true(this.editor.isSimulating);
+
+        this.editor.setSimulatedViewport(undefined);
+        assert.true(
+          this.editor.isSimulating,
+          "persona-only sim is still active"
+        );
+        assert.false("viewport" in this.editor.simulation);
+      });
+
+      test("clearSimulation resets everything to null", function (assert) {
+        this.editor.setSimulatedUser({ trust_level: 4 });
+        this.editor.setSimulatedViewport({
+          viewport: { sm: true },
+          touch: true,
+        });
+        this.editor.clearSimulation();
+        assert.false(this.editor.isSimulating);
+        assert.strictEqual(this.editor.simulation, null);
+      });
+
+      test("each sim change bumps structuralVersion (re-renders consumers)", function (assert) {
+        const before = this.editor.structuralVersion;
+        this.editor.setSimulatedUser({ trust_level: 2 });
+        assert.true(this.editor.structuralVersion > before);
+      });
+    });
   }
 );
