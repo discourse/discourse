@@ -4,16 +4,24 @@ import VEBadgesGrid from "../blocks/ve-badges-grid";
 import VEButtonLink from "../blocks/ve-button-link";
 import VECallout from "../blocks/ve-callout";
 import VEColumns from "../blocks/ve-columns";
+import VEDivider from "../blocks/ve-divider";
 import VEHeading from "../blocks/ve-heading";
 import VEImage from "../blocks/ve-image";
+import VELayout from "../blocks/ve-layout";
 import VEParagraph from "../blocks/ve-paragraph";
 import VERecentTopics from "../blocks/ve-recent-topics";
+import VESpacer from "../blocks/ve-spacer";
 
 const STARTER_BLOCKS = [
   VEHeading,
   VEParagraph,
   VEImage,
   VEButtonLink,
+  VELayout,
+  VESpacer,
+  VEDivider,
+  // ve:columns stays registered (paletteHidden) so existing layouts
+  // referencing it continue to resolve. Authors should use ve:layout.
   VEColumns,
   VECallout,
   VERecentTopics,

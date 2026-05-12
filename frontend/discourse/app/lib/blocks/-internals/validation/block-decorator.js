@@ -36,6 +36,7 @@ export const VALID_BLOCK_OPTIONS = Object.freeze([
   "category",
   "previewArgs",
   "thumbnail",
+  "paletteHidden",
 ]);
 
 /**

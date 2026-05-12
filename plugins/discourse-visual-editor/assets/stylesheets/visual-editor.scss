@@ -59,9 +59,49 @@ body.visual-editor-active {
       /* containers stay dotted — same treatment as leaves */
     }
 
+    /* Empty container chrome needs a baseline height so the inside drop
+       zone has somewhere to live; block-level layouts collapse to zero
+       height when they render no children, leaving the chrome's empty
+       hint with nothing to anchor to. */
+
+    &.--empty-container {
+      min-height: 4rem;
+    }
+
     &.--selected {
       border-style: solid;
       border-color: var(--visual-editor-block-hover-color);
+    }
+
+    /* The chrome wrapper itself is always clickable so its selection
+       handler fires for clicks anywhere inside the block area. The
+       `pointer-events: auto` is restated here (it's the CSS default)
+       to make sure inherited `none` from an ancestor wrapper doesn't
+       leak in via the per-block descendant rule below. */
+    pointer-events: auto;
+
+    /* While the editor is active, in-block interactive elements
+       (links, buttons inside the wrapped block) must not respond to
+       clicks — clicking a block should always select it, not fire its
+       internal action. Gutenberg uses the same pattern.
+
+       We disable pointer events on every direct child of the chrome
+       EXCEPT the chrome's own structural pieces (handle, drag source,
+       drop zones, toolbar). The wrapped block component lives among
+       the disabled children, so its links / buttons go inert.
+
+       Container blocks render child block chrome wrappers inside the
+       wrapped component; CSS inheritance would make those non-
+       interactive too. We re-enable on every descendant chrome via
+       the `.visual-editor-block-chrome` rule's `pointer-events: auto`
+       above. */
+
+    > *:not(
+        .visual-editor-block-handle,
+        .visual-editor-block-toolbar,
+        .visual-editor-drop-zone
+      ) {
+      pointer-events: none;
     }
   }
 
@@ -141,8 +181,20 @@ body.visual-editor-active {
     border-radius: 1px;
     pointer-events: auto;
     background: transparent;
-    transition: background-color 60ms ease-out;
+    transition:
+      background-color 60ms ease-out,
+      box-shadow 60ms ease-out;
     position: relative;
+
+    /* Drop indicator: when active (cursor is hovering over the zone
+       during a drag), light up with a tertiary highlight + a subtle
+       dotted outline so the landing position reads clearly even on
+       light backgrounds. */
+
+    &.--active {
+      background: var(--tertiary-low);
+      box-shadow: 0 0 0 1px var(--tertiary);
+    }
 
     &.--inside {
       height: 1.75rem;
@@ -151,6 +203,23 @@ body.visual-editor-active {
       display: flex;
       align-items: center;
       justify-content: center;
+
+      &.--active {
+        border-color: var(--tertiary);
+        background: var(--tertiary-low);
+      }
+
+      /* Empty containers swap the invisible "drop inside" hint for a
+         persistent "Drag a block here" affordance so authors can see (and
+         aim at) the otherwise-zero-height target. Reads as an empty-state
+         hint rather than a hover-only indicator. */
+
+      &.--empty {
+        height: auto;
+        min-height: 3.5rem;
+        border-color: var(--primary-low-mid);
+        background: var(--primary-very-low);
+      }
     }
 
     &__label {
@@ -159,6 +228,69 @@ body.visual-editor-active {
       opacity: 0;
       transition: opacity 80ms ease-out;
     }
+
+    &.--inside.--active .visual-editor-drop-zone__label {
+      opacity: 1;
+      color: var(--tertiary);
+    }
+
+    &.--inside.--empty .visual-editor-drop-zone__label {
+      opacity: 1;
+      color: var(--primary-medium);
+    }
+  }
+
+  /* Floating block toolbar (Phase 7p.2). Mounted inside a selected
+     chrome, anchors above the block. Quick actions: move up / move
+     down / duplicate / delete. Replaces the corner-badge delete
+     button from Phase 6d. */
+
+  .visual-editor-block-toolbar {
+    position: absolute;
+    top: -34px;
+    left: 0;
+    z-index: 1100;
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    padding: 2px;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    box-shadow: var(--shadow-card);
+    pointer-events: auto;
+
+    &__btn {
+      padding: 4px 6px;
+      min-width: 28px;
+      color: var(--primary);
+
+      &[disabled] {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      &--danger:hover:not([disabled]) {
+        color: var(--danger);
+      }
+
+      .d-icon {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  /* Ghost block softening (Phase 7p.9).
+     Dev-tools renders condition-failed / unknown blocks with a bold
+     red treatment that reads as an error to authors. In the editor's
+     context, ghosts are an expected outcome of conditions / sim mode
+     / mid-edit invalid state — they should read as muted placeholders
+     instead. We override only while the editor is active; dev-tools
+     keeps its harsh red when used standalone. */
+
+  .block-debug-ghost {
+    opacity: 0.6;
+    filter: grayscale(1);
   }
 
   /* Outlet boundaries — dashed amber, mirrors .block-outlet-debug */
@@ -169,6 +301,45 @@ body.visual-editor-active {
     background: rgb(245 158 11 / var(--visual-editor-bg-opacity));
     padding: 2px;
     min-height: 20px;
+  }
+
+  /* Empty-outlet drop zone (Phase 7p.1). Rendered inside the outlet
+     boundary when the outlet has no children — gives the palette a
+     drop target so users can populate empty outlets. */
+
+  .visual-editor-empty-outlet-drop-zone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 64px;
+    margin: 1.5rem 0.25rem 0.25rem;
+    padding: 1rem;
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: 6px;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    background: rgb(0 0 0 / 0.02);
+    transition:
+      background-color 80ms ease-out,
+      border-color 80ms ease-out;
+    pointer-events: auto;
+
+    &.is-drag-above,
+    &.is-drag-below {
+      border-color: var(--tertiary);
+      background: var(--tertiary-low);
+      color: var(--tertiary);
+    }
+
+    &__icon {
+      display: inline-flex;
+      align-items: center;
+
+      .d-icon {
+        font-size: 1.25rem;
+      }
+    }
   }
 
   .visual-editor-outlet-boundary__badge {
@@ -204,11 +375,37 @@ body.visual-editor-active {
 
 /* Editor chrome (toolbar + optional error banner + 3 panels) */
 .visual-editor-shell {
+  /* Phase 7p.10 design tokens — scoped to the editor shell so they
+     don't leak into the host page. New surfaces should reach for
+     these rather than ad-hoc paddings / radii. */
+  --ve-radius: 4px;
+  --ve-radius-lg: 6px;
+  --ve-gap-tight: 0.25rem;
+  --ve-gap: 0.5rem;
+  --ve-gap-loose: 0.75rem;
+  --ve-selection-color: var(--tertiary);
+  --ve-hover-color: var(--primary-low-mid);
+  --ve-overlay-tint: rgb(0 0 0 / 0.04);
   position: fixed;
   inset: 0;
   z-index: z("modal", "content") - 200;
   display: grid;
   grid-template-columns: 280px 1fr 320px;
+
+  /* Per-rail collapse states (Phase 7p.8): shrink the affected column
+     to a slim icon strip so the canvas reclaims the space. */
+
+  &.--left-collapsed {
+    grid-template-columns: 40px 1fr 320px;
+  }
+
+  &.--right-collapsed {
+    grid-template-columns: 280px 1fr 40px;
+  }
+
+  &.--left-collapsed.--right-collapsed {
+    grid-template-columns: 40px 1fr 40px;
+  }
 
   /* Toolbar / error banner / panels.
      The error banner row collapses to zero height when no error is present
@@ -329,6 +526,58 @@ body.visual-editor-active {
   grid-column: 2;
   grid-row: 3;
   pointer-events: none;
+  position: relative;
+}
+
+/* Sticky breadcrumb pinned to the bottom of the canvas (Phase 7p.2).
+   Shows the outlet → … → selected-block ancestry. Hidden when nothing
+   is selected. */
+
+.visual-editor-breadcrumb {
+  position: fixed;
+  left: var(--ve-left-rail, 280px);
+  right: var(--ve-right-rail, 320px);
+  bottom: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--secondary);
+  border-top: 1px solid var(--primary-low);
+  font-size: var(--font-down-1);
+  pointer-events: auto;
+  overflow-x: auto;
+  white-space: nowrap;
+
+  &__segment {
+    background: transparent;
+    border: none;
+    color: var(--primary-medium);
+    padding: 2px 4px;
+    cursor: pointer;
+    border-radius: 3px;
+
+    &:hover {
+      background: var(--primary-very-low);
+      color: var(--primary);
+    }
+
+    &:last-child {
+      color: var(--primary);
+      font-weight: 600;
+    }
+  }
+
+  &__separator {
+    color: var(--primary-low-mid);
+    display: inline-flex;
+    align-items: center;
+
+    .d-icon {
+      font-size: 0.65rem;
+    }
+  }
 }
 
 .visual-editor-panel {
@@ -349,10 +598,41 @@ body.visual-editor-active {
     border-left: 1px solid var(--primary-low);
   }
 
+  /* Collapsed-rail variant (Phase 7p.8): the panel body is removed by
+     the template; the header keeps just the collapse-toggle button. */
+
+  &.--collapsed {
+    overflow: hidden;
+
+    .panel-header {
+      padding: 0.5rem;
+      justify-content: center;
+      border-bottom: 0;
+    }
+  }
+
   .panel-header {
     padding: 0.75rem 1rem;
     font-weight: 600;
     border-bottom: 1px solid var(--primary-low);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .panel-collapse-toggle {
+    background: transparent;
+    border: none;
+    padding: 0.25rem;
+    cursor: pointer;
+    color: var(--primary-medium);
+    display: inline-flex;
+    align-items: center;
+
+    &:hover {
+      color: var(--primary);
+    }
   }
 
   .panel-header--tabs {
@@ -430,13 +710,33 @@ body.visual-editor-active {
   &__list {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
     gap: 0.25rem;
+  }
+
+  &__section-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--secondary);
+    padding: 0.25rem 0.15rem;
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary-medium);
+    font-weight: 600;
+    border-bottom: 1px solid var(--primary-low);
   }
 }
 
 .visual-editor-palette-entry {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--primary-low);
@@ -457,10 +757,29 @@ body.visual-editor-active {
   &__icon {
     color: var(--primary-medium);
     flex-shrink: 0;
+
+    /* Vertical-center on the label even when there's a second line. */
+    margin-top: 0.15rem;
+  }
+
+  &__text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    overflow: hidden;
   }
 
   &__label {
-    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  &__description {
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -468,15 +787,92 @@ body.visual-editor-active {
 }
 
 body.visual-editor-active {
+  /* Rail widths exposed as custom properties so fixed-position editor
+     chrome (breadcrumb, future floating UI) can position itself
+     correctly when the user collapses one or both rails. */
+  --ve-left-rail: 280px;
+  --ve-right-rail: 320px;
   padding-top: 48px;
-  padding-left: 280px;
-  padding-right: 320px;
+  padding-left: var(--ve-left-rail);
+  padding-right: var(--ve-right-rail);
   box-sizing: border-box;
+
+  &.visual-editor-active--left-collapsed {
+    --ve-left-rail: 40px;
+  }
+
+  &.visual-editor-active--right-collapsed {
+    --ve-right-rail: 40px;
+  }
 }
 
 /* Outline panel */
 .visual-editor-outline {
   font-size: var(--font-down-1);
+
+  &__view-switch {
+    display: flex;
+    margin-bottom: 0.5rem;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    padding: 2px;
+  }
+
+  &__view-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+    color: var(--primary-medium);
+    border-radius: 3px;
+    font-size: var(--font-down-1);
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--secondary);
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+    }
+  }
+
+  &__outlets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__outlet-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    background: var(--secondary);
+    text-align: left;
+    cursor: pointer;
+    color: var(--primary);
+
+    &:hover {
+      background: var(--primary-very-low);
+      border-color: var(--primary-low-mid);
+    }
+  }
+
+  &__outlet-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__outlet-meta {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
 
   .outline-outlet {
     margin-bottom: 0.75rem;
@@ -547,6 +943,101 @@ body.visual-editor-active {
     display: flex;
     gap: 0.5rem;
     margin-top: 0.5rem;
+  }
+}
+
+/* Tab-based inspector layout (Phase 7p.5). Replaces the stacked
+   Metadata / Args / Conditions sections from earlier phases. */
+
+.visual-editor-inspector__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--primary-low);
+  margin-bottom: 0.5rem;
+}
+
+.visual-editor-inspector__block-name {
+  font-weight: 600;
+}
+
+.visual-editor-inspector__metadata-info {
+  color: var(--primary-medium);
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  white-space: pre-line;
+}
+
+.visual-editor-inspector__tabs {
+  display: flex;
+  gap: 0;
+  background: var(--primary-very-low);
+  border-radius: 4px;
+  padding: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.visual-editor-inspector__tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+  color: var(--primary-medium);
+  border-radius: 3px;
+  font-size: var(--font-down-1);
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  &.--active {
+    background: var(--secondary);
+    color: var(--primary);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+  }
+}
+
+.visual-editor-inspector__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.visual-editor-inspector-raw-json {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__textarea {
+    width: 100%;
+    min-height: 240px;
+    font-family: "Courier New", courier, monospace;
+    font-size: var(--font-down-2);
+    padding: 0.5rem;
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    background: var(--secondary);
+    resize: vertical;
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--danger-low);
+    color: var(--danger);
+    border-radius: 4px;
+    font-size: var(--font-down-1);
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
   }
 }
 
@@ -750,65 +1241,129 @@ body.visual-editor-dragging {
   max-width: 200px;
 }
 
-/* Outlets panel (Phase 7d) */
-.visual-editor-outlets {
+/* Inline-expand conditions surface (Phase 7r). Each rule is a row
+   that toggles open in-flow to reveal its per-type editor — no
+   popovers, so we don't fight z-index against the editor shell. The
+   combinator selector is a chip-toggle, not a dropdown, so authors
+   can see and switch combinators in one click. Group nesting is
+   communicated via a left-bar accent in a colour that matches the
+   group's combinator. */
+
+/* Inspector Conditions tab header — hosts the detach button. */
+.visual-editor-inspector__conditions-header {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-bottom: 0.35rem;
+}
 
-  &__group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
+.visual-editor-inspector__detach-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 0.2rem 0.45rem;
+  color: var(--primary-medium);
+  font-size: var(--font-down-2);
+  cursor: pointer;
 
-  &__group-label {
-    font-size: var(--font-down-2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--primary-medium);
-    font-weight: 600;
-  }
-
-  &__row {
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--primary-low);
-    border-radius: 4px;
-    background: var(--secondary);
-    text-align: left;
-    cursor: pointer;
-    font-size: var(--font-down-1);
+  &:hover {
     color: var(--primary);
-
-    &:hover {
-      background: var(--primary-very-low);
-      border-color: var(--primary-low-mid);
-    }
-
-    &.--unmounted {
-      color: var(--primary-medium);
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
+    border-color: var(--primary-low-mid);
+    background: var(--primary-very-low);
   }
 
-  &__row-name {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  &__row-meta {
-    color: var(--primary-medium);
-    font-size: var(--font-down-2);
+  .d-icon {
+    font-size: 0.75rem;
   }
 }
 
-/* Condition builder (Phase 7c) */
-.visual-editor-condition-builder {
+.visual-editor-inspector__conditions-stub {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  font-style: italic;
+  padding: 1rem 0.5rem;
+  margin: 0;
+  text-align: center;
+  background: var(--primary-very-low);
+  border: 1px dashed var(--primary-low-mid);
+  border-radius: 4px;
+}
+
+/* Detached conditions floating panel — draggable + resizable, lives
+   above the editor shell (which sits at z("modal", "content") -
+   200 = 1100). The header bar is the drag surface; the corner grip
+   uses `resize: both` on the host element. */
+
+.visual-editor-conditions-floating {
+  position: fixed;
+  z-index: z("modal", "popover");
+  min-width: 320px;
+  min-height: 280px;
+  background: var(--secondary);
+  border: 1px solid var(--primary-low-mid);
+  border-radius: 6px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  resize: both;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--primary-very-low);
+    border-bottom: 1px solid var(--primary-low);
+    cursor: move;
+    user-select: none;
+    flex: 0 0 auto;
+  }
+
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--primary-medium);
+      font-size: 0.85rem;
+    }
+  }
+
+  &__actions {
+    display: inline-flex;
+    gap: 0.25rem;
+  }
+
+  &__btn {
+    background: transparent;
+    border: none;
+    padding: 0.25rem 0.4rem;
+    color: var(--primary-medium);
+    cursor: pointer;
+    border-radius: 3px;
+
+    &:hover {
+      color: var(--primary);
+      background: var(--primary-low);
+    }
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 0.75rem;
+  }
+}
+
+.visual-editor-conditions-tree {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -817,86 +1372,578 @@ body.visual-editor-dragging {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0.5rem 0;
   }
 
   &__hint {
-    color: var(--primary-medium);
     margin: 0;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    line-height: 1.4;
   }
 
-  &__type-grid {
-    display: flex;
-    flex-wrap: wrap;
+  &__seed-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 0.25rem;
   }
 
-  &__type-pick {
-    flex: 0 1 auto;
+  &__seed-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.6rem;
+    background: var(--primary-very-low);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    text-align: left;
+
+    &:hover {
+      background: var(--primary-low);
+      border-color: var(--primary-low-mid);
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+      font-size: 0.85rem;
+    }
+  }
+
+  &__leaf-root {
+    display: flex;
   }
 
   &__footer {
     display: flex;
     justify-content: flex-end;
   }
+
+  &__clear {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    &:hover {
+      color: var(--danger);
+    }
+  }
 }
 
-.visual-editor-condition-row {
+.visual-editor-condition-group {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  border: 1px solid var(--primary-low);
-  border-radius: 4px;
-  background: var(--secondary);
+  gap: 0.35rem;
 
-  &.--and,
-  &.--or,
-  &.--not {
-    border-left: 4px solid var(--tertiary);
+  &:not(.--root) {
+    padding: 0.4rem 0 0.4rem 0.75rem;
+    border-left: 2px solid var(--primary-low);
+    margin-left: 0.25rem;
+  }
+
+  /* Per-combinator left-bar tint so nesting depth + combinator are
+     legible at a glance. Subtle on purpose — we don't want to scream
+     "warning" at the author for using NOT. */
+
+  &.--and:not(.--root) {
+    border-left-color: var(--tertiary);
+  }
+
+  &.--or:not(.--root) {
+    border-left-color: var(--love);
+  }
+
+  &.--not:not(.--root) {
+    border-left-color: var(--primary-medium);
   }
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-weight: 600;
-    color: var(--primary-medium);
+    gap: 0.5rem;
   }
 
-  &__children {
+  &__combinator-toggle {
+    display: inline-flex;
+    background: var(--primary-very-low);
+    border-radius: 999px;
+    padding: 2px;
+    gap: 1px;
+  }
+
+  &__combinator-chip {
+    background: transparent;
+    border: none;
+    padding: 0.2rem 0.65rem;
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    color: var(--primary-medium);
+    border-radius: 999px;
+    cursor: pointer;
+    line-height: 1.2;
+
+    &:hover:not(.--active) {
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--secondary);
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+  }
+
+  &__remove {
+    background: transparent;
+    border: none;
+    padding: 0.15rem;
+    color: var(--primary-medium);
+    cursor: pointer;
+    border-radius: 3px;
+
+    &:hover {
+      color: var(--danger);
+      background: var(--primary-very-low);
+    }
+  }
+
+  &__body {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    padding-left: 0.5rem;
+    gap: 0.35rem;
+  }
+
+  &__empty-hint {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    margin: 0;
+    font-style: italic;
+    padding: 0.25rem 0;
   }
 
   &__add {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    margin-top: 0.25rem;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 0.15rem;
+  }
 
-    select {
-      flex: 1 1 auto;
-      margin: 0;
+  &__add-actions {
+    display: inline-flex;
+    gap: 0.35rem;
+  }
+
+  &__add-rule,
+  &__add-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: transparent;
+    border: 1px dashed var(--primary-low-mid);
+    border-radius: 4px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+
+    &:hover {
+      color: var(--primary);
+      border-color: var(--primary-medium);
+      background: var(--primary-very-low);
+    }
+
+    .d-icon {
+      font-size: 0.7rem;
     }
   }
 
-  &__leaf {
+  &__add-rule.--active {
+    color: var(--tertiary);
+    border-color: var(--tertiary);
+    background: var(--tertiary-low);
+  }
+
+  &__type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+  }
+
+  &__type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    padding: 0.4rem 0.5rem;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: var(--font-down-2);
+    text-align: left;
+
+    &:hover {
+      background: var(--primary-low);
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.visual-editor-condition-rule {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "header remove"
+    "body body";
+  align-items: center;
+  border-radius: 4px;
+  background: var(--secondary);
+  border: 1px solid var(--primary-low);
+  transition: border-color 80ms ease-out;
+
+  &:hover {
+    border-color: var(--primary-low-mid);
+  }
+
+  &.--expanded {
+    background: var(--primary-very-low);
+    border-color: var(--primary-low-mid);
+  }
+
+  &__header {
+    grid-area: header;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    padding: 0.4rem 0.5rem;
+    min-width: 0;
+  }
+
+  &__chevron {
+    color: var(--primary-medium);
+    display: inline-flex;
+    align-items: center;
+    transition: transform 120ms ease-out;
+
+    .d-icon {
+      font-size: 0.7rem;
+    }
+  }
+
+  &.--expanded &__chevron {
+    transform: rotate(90deg);
+  }
+
+  &__icon {
+    color: var(--primary-medium);
+    display: inline-flex;
+    align-items: center;
+
+    .d-icon {
+      font-size: 0.85rem;
+    }
+  }
+
+  &__label {
+    font-weight: 600;
+    color: var(--primary);
+    flex: 0 0 auto;
+  }
+
+  &__sep {
+    color: var(--primary-medium);
+    flex: 0 0 auto;
+  }
+
+  &__summary {
+    color: var(--primary-medium);
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__remove {
+    grid-area: remove;
+    background: transparent;
+    border: none;
+    padding: 0.4rem 0.5rem;
+    color: var(--primary-medium);
+    cursor: pointer;
+    border-radius: 3px;
+    align-self: center;
+
+    &:hover {
+      color: var(--danger);
+    }
+  }
+
+  &__body {
+    grid-area: body;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem 0.6rem;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__type-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: var(--font-down-1);
+
+    > span {
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    select {
+      margin: 0;
+    }
+  }
+}
+
+/* Per-type editor surface (Phase 7r). Renders inline inside a rule's
+   expanded body — no popover/portal, so the controls live in normal
+   document flow and grow the inspector column naturally. The styling
+   leans on segmented chips + light borders for an authoring feel
+   rather than form-y radio lists. */
+
+.visual-editor-condition-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  font-size: var(--font-down-1);
+
+  &__field {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
   }
 
-  &__leaf-head {
+  &__legend {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  /* Segmented control: a chip-toggle for short mutually-exclusive
+     options. Mirrors the group-header combinator chips so the visual
+     language is consistent across the conditions surface. */
+
+  &__segmented {
+    display: inline-flex;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    padding: 2px;
+    gap: 1px;
+    align-self: flex-start;
+  }
+
+  &__segment {
+    background: transparent;
+    border: none;
+    padding: 0.25rem 0.6rem;
+    font-size: var(--font-down-2);
+    font-weight: 500;
+    color: var(--primary-medium);
+    border-radius: 3px;
+    cursor: pointer;
+
+    &:hover:not(.--active) {
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--secondary);
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+  }
+
+  /* Checkbox row: a horizontal strip of `<label><checkbox> Text</label>`
+     for OR-combined boolean flags (role checkboxes, etc). */
+
+  &__check-row {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  &__check {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.25rem;
+    gap: 0.35rem;
+    cursor: pointer;
+
+    input {
+      margin: 0;
+    }
+  }
+
+  /* Pair row: two side-by-side labelled controls. Used for the trust
+     min / max selects. */
+
+  &__pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  &__pair-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: var(--font-down-1);
+
+    > span {
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+    }
 
     select {
-      flex: 1 1 auto;
       margin: 0;
+    }
+  }
+
+  /* Chip grid: a wrap-aware grid of toggle chips. Used by the route
+     editor's page-type picker (8-9 options, multi-select). */
+
+  &__chip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.55rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: var(--font-down-1);
+    color: var(--primary);
+    text-align: left;
+
+    &:hover:not(.--active) {
+      background: var(--primary-very-low);
+      border-color: var(--primary-low-mid);
+    }
+
+    &.--active {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+      color: var(--tertiary);
+    }
+  }
+
+  /* Textarea variant for multi-line input (URL patterns, JSON, list
+     values). Monospace modifier for JSON-shape fields where alignment
+     reads as structure. */
+
+  &__textarea {
+    margin: 0;
+    font-size: var(--font-down-1);
+    line-height: 1.4;
+    resize: vertical;
+
+    &.--mono {
+      font-family: var(--d-font-family--monospace);
+      font-size: var(--font-down-2);
+    }
+  }
+
+  /* Inline help text — small grey caption below a control. */
+  &__help {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    font-style: italic;
+  }
+
+  /* Inline JSON-parse error surfaced from the route editor's params
+     fields. Same slot as the help text but red. */
+
+  &__error {
+    color: var(--danger);
+    font-size: var(--font-down-2);
+    font-family: var(--d-font-family--monospace);
+  }
+
+  /* "Advanced ▾" disclosure toggle below the primary controls. */
+  &__advanced-toggle {
+    align-self: flex-start;
+    background: transparent;
+    border: none;
+    padding: 0.25rem 0;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  /* Viewport quick-pick chips — 2x2 grid of icon + label chips. */
+  &__viewport-chips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+  }
+
+  &__viewport-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.55rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: var(--font-down-1);
+    color: var(--primary);
+    text-align: left;
+
+    &:hover:not(.--active) {
+      background: var(--primary-very-low);
+      border-color: var(--primary-low-mid);
+    }
+
+    &.--active {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+      color: var(--tertiary);
+    }
+
+    .d-icon {
+      font-size: 0.85rem;
+      color: inherit;
     }
   }
 }

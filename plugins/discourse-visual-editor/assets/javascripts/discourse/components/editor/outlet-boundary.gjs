@@ -1,5 +1,6 @@
 // @ts-check
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import EditorEmptyOutletDropZone from "./editor-empty-outlet-drop-zone";
 
 /**
  * Outlet boundary chrome rendered around each `<BlockOutlet>` when the editor
@@ -8,6 +9,11 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
  * The host BlockOutlet curries this component with `{ outletName, blockCount,
  * outletArgs, error }` and renders it; we add a small label badge above the
  * outlet content and yield the children unchanged.
+ *
+ * When `blockCount === 0`, the `BlockOutletRootContainer` renders nothing, so
+ * there's no `<BlockChrome>` to host a drop zone. Render an inline
+ * `<EditorEmptyOutletDropZone>` instead so the palette can populate the
+ * outlet.
  */
 const OutletBoundary = <template>
   <div class="visual-editor-outlet-boundary" data-outlet-name={{@outletName}}>
@@ -20,6 +26,9 @@ const OutletBoundary = <template>
       {{/if}}
     </span>
     {{yield}}
+    {{#unless @blockCount}}
+      <EditorEmptyOutletDropZone @outletName={{@outletName}} />
+    {{/unless}}
   </div>
 </template>;
 

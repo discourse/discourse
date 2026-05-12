@@ -59,7 +59,7 @@ function previewArgsFromSchema(argsSchema) {
  *
  * @param {Function} component - A class decorated with `@block`.
  * @returns {{displayName: string, icon: string, category: string,
- *   previewArgs: Object, thumbnail: string|null}|null}
+ *   previewArgs: Object, thumbnail: string|null, paletteHidden: boolean}|null}
  *   The fully-resolved display metadata, or `null` if the component is
  *   not a registered block.
  */
@@ -75,5 +75,6 @@ export function getBlockDisplayMetadata(component) {
     category: metadata.category ?? DEFAULT_CATEGORY,
     previewArgs: metadata.previewArgs ?? previewArgsFromSchema(metadata.args),
     thumbnail: metadata.thumbnail ?? null,
+    paletteHidden: metadata.paletteHidden === true,
   };
 }

@@ -265,6 +265,12 @@ const BlockComponentManager = new Proxy(
  * @param {string} [options.thumbnail] - URL of a static thumbnail image
  *   shown in the palette instead of the icon.
  *
+ * @param {boolean} [options.paletteHidden=false] - When true, the visual
+ *   editor's palette omits this block. The block is still registered
+ *   and renderable from layouts that reference it — this hides it from
+ *   user-facing inserts only, useful for infrastructure blocks (e.g.
+ *   the built-in `group`) and deprecated aliases.
+ *
  * @returns {Function} Decorator function that returns the decorated class
  *
  * @example
@@ -299,6 +305,7 @@ export function block(name, options = {}) {
     category = null,
     previewArgs = null,
     thumbnail = null,
+    paletteHidden = false,
   } = options;
 
   // Validate arg schema structure and types
@@ -369,6 +376,7 @@ export function block(name, options = {}) {
       isContainer,
       namespace: parsed.namespace,
       namespaceType: parsed.type,
+      paletteHidden: paletteHidden === true,
       previewArgs: previewArgs ? Object.freeze({ ...previewArgs }) : null,
       shortName: parsed.name,
       thumbnail,

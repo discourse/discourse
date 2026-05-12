@@ -20,11 +20,16 @@ import PreloadStore from "discourse/lib/preload-store";
 import {
   cloneEntryForPaste,
   cloneLayoutForDraft,
+  entryKey,
+  findAncestryPath,
   findEntry,
+  findEntrySiblings,
   insertEntryAt,
   moveEntry,
   removeEntry,
   replaceEntryConditions,
+  replaceEntryInPlace,
+  serializeEntryForSave,
 } from "../lib/mutate-layout";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
 
@@ -136,6 +141,24 @@ export default class VisualEditorService extends Service {
    */
   @tracked simulation = null;
   /**
+   * Whether the inspector's conditions surface is detached from the
+   * right rail and rendered in a floating panel (Phase 7r). Toggled
+   * by the inspector's `↗` button and the panel's `↙` redock button.
+   * Persisted to localStorage so the preference survives reloads.
+   *
+   * @type {boolean}
+   */
+  @tracked conditionsDetached = false;
+  /**
+   * Floating-panel rect (`{x, y, width, height}`) for the detached
+   * conditions surface. Updated by the panel's drag and resize
+   * handlers and persisted to localStorage. Null while no rect has
+   * been chosen yet — the panel renders centred on first open.
+   *
+   * @type {{x: number, y: number, width: number, height: number}|null}
+   */
+  @tracked conditionsPanelRect = null;
+  /**
    * Clipboard slot for the Cmd/Ctrl-C/X/V cycle and the future "duplicate"
    * action. `mode: "copy"` lets paste re-clone the entry on every Cmd-V,
    * while `mode: "cut"` is currently equivalent at paste time (the cut
@@ -148,16 +171,25 @@ export default class VisualEditorService extends Service {
   @tracked _clipboard = null;
 
   /**
-   * Undo / redo stacks for in-memory edits. Each entry captures one batch of
-   * arg mutations: the affected entry, plus a `Map` of `argName → previous
-   * value`. Undo restores by writing the previous values back; redo flips
-   * back to the post-batch values.
+   * Undo / redo stacks for in-memory edits. Entries are discriminated by
+   * `kind`:
    *
-   * @type {Array<{entry: Object, prev: Map<string, *>, next: Map<string, *>}>}
+   * - `{kind: "args", entry, prev, next}` — one batch of arg mutations on a
+   *   specific entry. Undo writes `prev` back into `entry.args`, redo flips
+   *   to `next`.
+   * - `{kind: "structural", changes, prevSelection, nextSelection}` — a
+   *   structural mutation (insert / remove / move / duplicate / paste /
+   *   conditions / raw-json edit). `changes` is an array of
+   *   `{outletName, prevLayout, nextLayout}` pairs. Undo re-publishes the
+   *   `prev` layouts; redo re-publishes `next`. Selection is restored
+   *   alongside because structural changes can delete or relocate the
+   *   selected block.
+   *
+   * @type {Array<Object>}
    */
   _undoStack = trackedArray();
 
-  /** @type {Array<{entry: Object, prev: Map<string, *>, next: Map<string, *>}>} */
+  /** @type {Array<Object>} */
   _redoStack = trackedArray();
 
   /**
@@ -223,6 +255,71 @@ export default class VisualEditorService extends Service {
    * @type {Set<string>}
    */
   _structurallyEditedOutlets = trackedSet();
+
+  constructor() {
+    super(...arguments);
+    this._loadConditionsPanelState();
+  }
+
+  /**
+   * Toggles the conditions detach state. Reads / writes localStorage
+   * so the preference survives reloads.
+   */
+  @action
+  toggleConditionsDetached() {
+    this.conditionsDetached = !this.conditionsDetached;
+    this._persistConditionsPanelState();
+  }
+
+  @action
+  closeConditionsPanel() {
+    this.conditionsDetached = false;
+    this._persistConditionsPanelState();
+  }
+
+  @action
+  updateConditionsPanelRect(rect) {
+    this.conditionsPanelRect = rect;
+    this._persistConditionsPanelState();
+  }
+
+  /**
+   * Hydrates the conditions panel state from localStorage on service
+   * init. Tolerates missing / malformed entries by leaving the
+   * defaults in place.
+   */
+  _loadConditionsPanelState() {
+    try {
+      const raw = localStorage.getItem("visual-editor.conditions-panel");
+      if (!raw) {
+        return;
+      }
+      const parsed = JSON.parse(raw);
+      if (typeof parsed?.detached === "boolean") {
+        this.conditionsDetached = parsed.detached;
+      }
+      if (parsed?.rect && typeof parsed.rect === "object") {
+        this.conditionsPanelRect = parsed.rect;
+      }
+    } catch {
+      // Corrupt JSON in localStorage — ignore, keep defaults.
+    }
+  }
+
+  _persistConditionsPanelState() {
+    try {
+      localStorage.setItem(
+        "visual-editor.conditions-panel",
+        JSON.stringify({
+          detached: this.conditionsDetached,
+          rect: this.conditionsPanelRect,
+        })
+      );
+    } catch {
+      // QuotaExceeded / disabled storage — non-fatal, the preference
+      // just won't survive the session.
+    }
+  }
 
   /**
    * Whether the current user is allowed to use the editor. Staff are always
@@ -351,6 +448,38 @@ export default class VisualEditorService extends Service {
       );
       this._draftedOutlets.add(outletName);
     }
+  }
+
+  /**
+   * Ensures a session-draft layer exists for `outletName`. Used by
+   * mutation actions that target outlets the user is populating from
+   * scratch — those outlets have no published layout (so
+   * `_materializeAllDrafts` skips them on `enter()`), but the
+   * editor's empty-outlet drop zone (Phase 7p.1) lets authors add
+   * the first block. We mint an empty draft `[]` here so the
+   * subsequent `_publishStructuralChange` has somewhere to land.
+   *
+   * Idempotent: bails when a draft already exists.
+   *
+   * @param {string} outletName
+   * @returns {Array<Object>} the layout array (existing or freshly minted).
+   */
+  _ensureDraft(outletName) {
+    const existing = this.readResolvedLayout(outletName);
+    if (existing) {
+      return existing;
+    }
+    const emptyDraft = [];
+    this._originalLayouts.set(outletName, []);
+    _setLayoutLayer(
+      outletName,
+      LAYOUT_LAYERS.SESSION_DRAFT,
+      emptyDraft,
+      getOwner(this),
+      { permissive: true }
+    );
+    this._draftedOutlets.add(outletName);
+    return this.readResolvedLayout(outletName) ?? emptyDraft;
   }
 
   @action
@@ -486,8 +615,20 @@ export default class VisualEditorService extends Service {
    * @param {string} blockKey
    * @returns {boolean} true on success
    */
+  /**
+   * Sibling-relative move helpers used by the floating block toolbar
+   * (Phase 7p.2). Each looks up the selected entry's siblings and
+   * computes a `moveBlock` call against the previous / next sibling.
+   *
+   * Returns `false` (no-op) when the block is already first / last in
+   * its parent, when no block is selected, or when the move would
+   * otherwise be rejected.
+   *
+   * @param {string} blockKey
+   * @returns {boolean}
+   */
   @action
-  removeBlock(blockKey) {
+  moveBlockUp(blockKey) {
     const located = this._findEntryAndOutletSync(blockKey);
     if (!located) {
       return false;
@@ -496,15 +637,207 @@ export default class VisualEditorService extends Service {
     if (!layout) {
       return false;
     }
-    const result = removeEntry(layout, blockKey);
-    if (!result.changed) {
+    const sibs = findEntrySiblings(layout, blockKey);
+    if (!sibs || sibs.index === 0) {
       return false;
     }
-    if (this.selectedBlockKey === blockKey) {
-      this.selectBlock(null);
+    const previousKey = entryKey(sibs.siblings[sibs.index - 1]);
+    return this.moveBlock({
+      sourceKey: blockKey,
+      targetKey: previousKey,
+      position: "before",
+      targetOutletName: located.outletName,
+    });
+  }
+
+  /**
+   * @param {string} blockKey
+   * @returns {boolean}
+   */
+  @action
+  moveBlockDown(blockKey) {
+    const located = this._findEntryAndOutletSync(blockKey);
+    if (!located) {
+      return false;
     }
-    this._publishStructuralChange(located.outletName, result.layout);
-    return true;
+    const layout = this.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return false;
+    }
+    const sibs = findEntrySiblings(layout, blockKey);
+    if (!sibs || sibs.index >= sibs.siblings.length - 1) {
+      return false;
+    }
+    const nextKey = entryKey(sibs.siblings[sibs.index + 1]);
+    return this.moveBlock({
+      sourceKey: blockKey,
+      targetKey: nextKey,
+      position: "after",
+      targetOutletName: located.outletName,
+    });
+  }
+
+  /**
+   * Whether the selected block has a sibling above it. Drives the
+   * `Move up` toolbar button's disabled state.
+   *
+   * @returns {boolean}
+   */
+  get canMoveSelectedUp() {
+    return this._selectionSiblingIndex() > 0;
+  }
+
+  /**
+   * Whether the selected block has a sibling below it. Drives the
+   * `Move down` toolbar button's disabled state.
+   *
+   * @returns {boolean}
+   */
+  get canMoveSelectedDown() {
+    const idx = this._selectionSiblingIndex();
+    if (idx < 0) {
+      return false;
+    }
+    const located = this._findEntryAndOutletSync(this.selectedBlockKey);
+    if (!located) {
+      return false;
+    }
+    const layout = this.readResolvedLayout(located.outletName);
+    const sibs = findEntrySiblings(layout, this.selectedBlockKey);
+    return sibs ? idx < sibs.siblings.length - 1 : false;
+  }
+
+  /**
+   * Path of ancestor segments from the outlet root down to the
+   * selected block. Used by the canvas-bottom breadcrumb. Each segment
+   * carries `{key, blockName, displayName, isOutlet, outletName}`.
+   * Outlet segment is first (`isOutlet: true`, `key: null`), nested
+   * containers follow, selected block is last.
+   *
+   * @returns {Array<{key: string|null, blockName: string|null, displayName: string, isOutlet: boolean, outletName: string|null}>}
+   */
+  get selectedBlockAncestry() {
+    // Read structuralVersion so this re-evaluates after every mutation.
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.structuralVersion;
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return [];
+    }
+    const located = this._findEntryAndOutletSync(key);
+    if (!located) {
+      return [];
+    }
+    const layout = this.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return [];
+    }
+    const path = findAncestryPath(layout, key);
+    if (!path) {
+      return [];
+    }
+    return [
+      {
+        key: null,
+        blockName: null,
+        displayName: located.outletName,
+        isOutlet: true,
+        outletName: located.outletName,
+      },
+      ...path.map((entry) => {
+        const meta = this._metadataFor(entry);
+        const blockName =
+          meta?.blockName ??
+          (typeof entry.block === "string" ? entry.block : "(block)");
+        return {
+          key: entryKey(entry),
+          blockName,
+          displayName: meta?.shortName ?? blockName,
+          isOutlet: false,
+          outletName: located.outletName,
+        };
+      }),
+    ];
+  }
+
+  /**
+   * @returns {number} the selected block's index among its siblings, or
+   *   `-1` when nothing is selected / locatable.
+   */
+  _selectionSiblingIndex() {
+    // Read `structuralVersion` so this getter re-evaluates after every
+    // structural mutation — keeps the toolbar's move buttons reactive.
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.structuralVersion;
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return -1;
+    }
+    const located = this._findEntryAndOutletSync(key);
+    if (!located) {
+      return -1;
+    }
+    const layout = this.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return -1;
+    }
+    const sibs = findEntrySiblings(layout, key);
+    return sibs?.index ?? -1;
+  }
+
+  /**
+   * Inserts a fresh clone of the given block immediately after it in
+   * the layout. Used by the block toolbar's `Duplicate` button.
+   *
+   * @param {string} blockKey
+   * @returns {boolean}
+   */
+  @action
+  duplicateBlock(blockKey) {
+    const located = this._findEntryAndOutletSync(blockKey);
+    if (!located) {
+      return false;
+    }
+    return this._recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const insertion = insertEntryAt(
+        layout,
+        blockKey,
+        cloneEntryForPaste(located.entry),
+        "after"
+      );
+      if (!insertion.changed) {
+        return false;
+      }
+      this._publishStructuralChange(located.outletName, insertion.layout);
+      return true;
+    });
+  }
+
+  @action
+  removeBlock(blockKey) {
+    const located = this._findEntryAndOutletSync(blockKey);
+    if (!located) {
+      return false;
+    }
+    return this._recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = removeEntry(layout, blockKey);
+      if (!result.changed) {
+        return false;
+      }
+      if (this.selectedBlockKey === blockKey) {
+        this.selectBlock(null);
+      }
+      this._publishStructuralChange(located.outletName, result.layout);
+      return true;
+    });
   }
 
   /**
@@ -540,16 +873,81 @@ export default class VisualEditorService extends Service {
     if (!located) {
       return false;
     }
-    const layout = this.readResolvedLayout(located.outletName);
-    if (!layout) {
+    return this._recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = replaceEntryConditions(layout, key, newConditions);
+      if (!result.changed) {
+        return false;
+      }
+      this._publishStructuralChange(located.outletName, result.layout);
+      return true;
+    });
+  }
+
+  /**
+   * Replaces the selected entry with a wholly new entry object. Used
+   * by the inspector's Raw JSON tab — the author edits the entry's
+   * serialised form and commits the parsed result.
+   *
+   * Routes through `_publishStructuralChange` because changes can
+   * touch any field (args / conditions / classNames / id), and the
+   * outline / canvas need to refresh.
+   *
+   * @param {Object} parsed - The parsed JSON, already validated by
+   *   the caller (`InspectorRawJson` rejects invalid JSON without
+   *   calling us).
+   * @returns {boolean}
+   */
+  @action
+  replaceSelectedEntryRaw(parsed) {
+    const key = this.selectedBlockKey;
+    if (!key) {
       return false;
     }
-    const result = replaceEntryConditions(layout, key, newConditions);
-    if (!result.changed) {
+    const located = this._findEntryAndOutletSync(key);
+    if (!located) {
       return false;
     }
-    this._publishStructuralChange(located.outletName, result.layout);
-    return true;
+    return this._recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = replaceEntryInPlace(layout, key, parsed);
+      if (!result.changed) {
+        return false;
+      }
+      this._publishStructuralChange(located.outletName, result.layout);
+      return true;
+    });
+  }
+
+  /**
+   * The selected entry's current serialised form, for the Raw JSON
+   * inspector tab. Uses the same `serializeEntryForSave` that
+   * `persistance` uses for the wire format — so what you see in the
+   * Raw JSON tab matches what gets saved. Class references on
+   * `entry.block` are normalised to their registered name strings,
+   * and runtime-only fields (`__stableKey`, `__visible`, ...) are
+   * dropped. Reads `structuralVersion` to refresh on every mutation.
+   *
+   * @returns {Object|null}
+   */
+  get selectedBlockRawEntry() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.structuralVersion;
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return null;
+    }
+    const located = this._findEntryAndOutletSync(key);
+    if (!located) {
+      return null;
+    }
+    return serializeEntryForSave(located.entry);
   }
 
   /**
@@ -664,21 +1062,23 @@ export default class VisualEditorService extends Service {
     if (!located) {
       return false;
     }
-    const layout = this.readResolvedLayout(located.outletName);
-    if (!layout) {
-      return false;
-    }
-    const insertion = insertEntryAt(
-      layout,
-      targetKey,
-      cloneEntryForPaste(this._clipboard.entry),
-      "after"
-    );
-    if (!insertion.changed) {
-      return false;
-    }
-    this._publishStructuralChange(located.outletName, insertion.layout);
-    return true;
+    return this._recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const insertion = insertEntryAt(
+        layout,
+        targetKey,
+        cloneEntryForPaste(this._clipboard.entry),
+        "after"
+      );
+      if (!insertion.changed) {
+        return false;
+      }
+      this._publishStructuralChange(located.outletName, insertion.layout);
+      return true;
+    });
   }
 
   /**
@@ -943,16 +1343,17 @@ export default class VisualEditorService extends Service {
       entry.args[argName] = value;
     }
 
-    this._undoStack.push({ entry, prev, next });
+    this._undoStack.push({ kind: "args", entry, prev, next });
     this._redoStack.length = 0;
 
     return true;
   }
 
   /**
-   * Reverts the most recent mutation by writing the captured `prev` values
-   * back into `entry.args`. The redo stack picks up the post-batch state so
-   * a subsequent `redo()` can re-apply the burst.
+   * Reverts the most recent mutation. For `args` batches, writes the
+   * captured `prev` values back into `entry.args`. For `structural`
+   * batches, re-publishes the captured `prevLayout` on each affected
+   * outlet and restores the pre-mutation selection.
    *
    * @returns {Promise<boolean>}
    */
@@ -962,7 +1363,12 @@ export default class VisualEditorService extends Service {
       return false;
     }
     const batch = this._undoStack.pop();
-    this._writeArgs(batch.entry, batch.prev);
+    if (batch.kind === "structural") {
+      this._applyStructuralChanges(batch.changes, "prev");
+      this._restoreSelection(batch.prevSelection);
+    } else {
+      this._writeArgs(batch.entry, batch.prev);
+    }
     this._redoStack.push(batch);
     return true;
   }
@@ -978,9 +1384,156 @@ export default class VisualEditorService extends Service {
       return false;
     }
     const batch = this._redoStack.pop();
-    this._writeArgs(batch.entry, batch.next);
+    if (batch.kind === "structural") {
+      this._applyStructuralChanges(batch.changes, "next");
+      this._restoreSelection(batch.nextSelection);
+    } else {
+      this._writeArgs(batch.entry, batch.next);
+    }
     this._undoStack.push(batch);
     return true;
+  }
+
+  /**
+   * Captures a deep clone of `outletName`'s currently-resolved layout, or
+   * `null` when the outlet has no published layout yet (the latter happens
+   * when the editor is about to mint a fresh draft for an empty outlet).
+   * Used as the before/after snapshot in structural undo entries.
+   *
+   * @param {string} outletName
+   * @returns {Array<Object>|null}
+   */
+  _snapshotLayout(outletName) {
+    const layout = this.readResolvedLayout(outletName);
+    return layout ? cloneLayoutForDraft(layout) : null;
+  }
+
+  /**
+   * Wraps a structural mutation so that it pushes an undo entry capturing
+   * the pre/post layouts for every outlet it touches, plus the
+   * pre/post selection. The caller passes the list of outlets that
+   * `mutateFn` may write to; cross-outlet moves pass both source and
+   * target so undo restores them in lockstep.
+   *
+   * If `mutateFn` returns a falsy value (i.e. the mutation no-op'd), no
+   * undo entry is recorded and the falsy result propagates to the caller.
+   *
+   * @template T
+   * @param {string[]} outletNames
+   * @param {() => T} mutateFn
+   * @returns {T}
+   */
+  _recordStructural(outletNames, mutateFn) {
+    const prevLayouts = new Map();
+    for (const name of outletNames) {
+      prevLayouts.set(name, this._snapshotLayout(name));
+    }
+    const prevSelection = this.selectedBlockKey;
+    const result = mutateFn();
+    if (!result) {
+      return result;
+    }
+    const changes = [];
+    for (const [name, prevLayout] of prevLayouts) {
+      changes.push({
+        outletName: name,
+        prevLayout,
+        nextLayout: this._snapshotLayout(name),
+      });
+    }
+    this._undoStack.push({
+      kind: "structural",
+      changes,
+      prevSelection,
+      nextSelection: this.selectedBlockKey,
+    });
+    this._redoStack.length = 0;
+    return result;
+  }
+
+  /**
+   * Republishes a list of `{outletName, prevLayout, nextLayout}` changes in
+   * the given direction. When the target snapshot is `null` (i.e. the
+   * outlet had no draft before the mutation), the SESSION_DRAFT layer is
+   * cleared instead of re-published, restoring the resolved layout chain
+   * to whatever lower layers (theme / code-default) carry.
+   *
+   * @param {Array<{outletName: string, prevLayout: Array<Object>|null, nextLayout: Array<Object>|null}>} changes
+   * @param {"prev"|"next"} direction
+   */
+  _applyStructuralChanges(changes, direction) {
+    for (const change of changes) {
+      const layout =
+        direction === "prev" ? change.prevLayout : change.nextLayout;
+      if (layout == null) {
+        _clearLayoutLayer(change.outletName, LAYOUT_LAYERS.SESSION_DRAFT);
+        // The outlet returns to its un-drafted state — drop bookkeeping
+        // so isDirty / save no longer flag it.
+        this._draftedOutlets.delete(change.outletName);
+        this._structurallyEditedOutlets.delete(change.outletName);
+        this._editedOutlets.delete(change.outletName);
+        continue;
+      }
+      _setLayoutLayer(
+        change.outletName,
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        cloneLayoutForDraft(layout),
+        getOwner(this),
+        { permissive: true }
+      );
+      this._draftedOutlets.add(change.outletName);
+      this._editedOutlets.add(change.outletName);
+      this._structurallyEditedOutlets.add(change.outletName);
+    }
+    this.structuralVersion++;
+  }
+
+  /**
+   * Re-resolves the given block key against the current layout and rebinds
+   * `selectedBlockKey` / `selectedBlockData`. If the key no longer exists,
+   * clears the selection. Used after structural undo / redo to follow the
+   * selection across layout snapshots.
+   *
+   * @param {string|null} blockKey
+   */
+  _restoreSelection(blockKey) {
+    if (!blockKey) {
+      this.selectBlock(null);
+      return;
+    }
+    const located = this._findEntryAndOutletSync(blockKey);
+    if (!located) {
+      this.selectBlock(null);
+      return;
+    }
+    const blockName = this._blockNameOf(located.entry);
+    const metadata = blockName ? this._metadataForName(blockName) : null;
+    this.selectBlock({
+      key: blockKey,
+      name: blockName,
+      args: located.entry.args,
+      metadata,
+      outletName: located.outletName,
+      conditions: located.entry.conditions ?? null,
+    });
+  }
+
+  /**
+   * Resolves an entry's block name. `entry.block` is either a class
+   * reference (decorated blocks) or a string-ref (api.renderBlocks
+   * factories) — this helper smooths over the two shapes.
+   *
+   * @param {Object} entry
+   * @returns {string|null}
+   */
+  _blockNameOf(entry) {
+    if (!entry?.block) {
+      return null;
+    }
+    if (typeof entry.block === "string") {
+      return entry.block;
+    }
+    return this._metadataFor(entry)?.blockName ?? null;
   }
 
   /**
@@ -1342,21 +1895,27 @@ export default class VisualEditorService extends Service {
     if (!this.canDropAt({ targetOutletName })) {
       return false;
     }
-    if (source.outletName === targetOutletName) {
-      return this._moveWithinOutlet(
-        source.outletName,
+    const outletsAffected =
+      source.outletName === targetOutletName
+        ? [source.outletName]
+        : [source.outletName, targetOutletName];
+    return this._recordStructural(outletsAffected, () => {
+      if (source.outletName === targetOutletName) {
+        return this._moveWithinOutlet(
+          source.outletName,
+          sourceKey,
+          targetKey,
+          position
+        );
+      }
+      return this._moveAcrossOutlets({
+        sourceOutletName: source.outletName,
+        targetOutletName,
+        sourceEntry: source.entry,
         sourceKey,
         targetKey,
-        position
-      );
-    }
-    return this._moveAcrossOutlets({
-      sourceOutletName: source.outletName,
-      targetOutletName,
-      sourceEntry: source.entry,
-      sourceKey,
-      targetKey,
-      position,
+        position,
+      });
     });
   }
 
@@ -1396,19 +1955,24 @@ export default class VisualEditorService extends Service {
     if (!this.canInsertBlockAt({ blockName, targetOutletName })) {
       return false;
     }
-    const layout = this.readResolvedLayout(targetOutletName);
-    if (!layout) {
-      return false;
-    }
-    // Mint a fresh entry. Spread the defaults so future mutations don't
-    // bleed back into the palette's `previewArgs` object.
-    const entry = { block: blockName, args: { ...defaultArgs } };
-    const insertion = insertEntryAt(layout, targetKey, entry, position);
-    if (!insertion.changed) {
-      return false;
-    }
-    this._publishStructuralChange(targetOutletName, insertion.layout);
-    return true;
+    return this._recordStructural([targetOutletName], () => {
+      // Mint a draft on the fly for outlets the user is populating from
+      // scratch (no published layout → `_materializeAllDrafts` skipped
+      // them on `enter()`). The empty-outlet drop zone needs this.
+      const layout = this._ensureDraft(targetOutletName);
+      if (!layout) {
+        return false;
+      }
+      // Mint a fresh entry. Spread the defaults so future mutations don't
+      // bleed back into the palette's `previewArgs` object.
+      const entry = { block: blockName, args: { ...defaultArgs } };
+      const insertion = insertEntryAt(layout, targetKey, entry, position);
+      if (!insertion.changed) {
+        return false;
+      }
+      this._publishStructuralChange(targetOutletName, insertion.layout);
+      return true;
+    });
   }
 
   _moveWithinOutlet(outletName, sourceKey, targetKey, position) {
@@ -1432,7 +1996,10 @@ export default class VisualEditorService extends Service {
     position,
   }) {
     const sourceLayout = this.readResolvedLayout(sourceOutletName);
-    const targetLayout = this.readResolvedLayout(targetOutletName);
+    // Mint a draft for the target outlet if it doesn't have one yet —
+    // the user may be dragging an existing block into a previously
+    // empty outlet (via the empty-outlet drop zone from Phase 7p.1).
+    const targetLayout = this._ensureDraft(targetOutletName);
     if (!sourceLayout || !targetLayout) {
       return false;
     }

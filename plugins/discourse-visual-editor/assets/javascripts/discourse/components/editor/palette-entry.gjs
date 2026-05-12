@@ -42,9 +42,16 @@ export default class PaletteEntry extends Component {
       <span class="visual-editor-palette-entry__icon">
         {{dIcon @entry.icon}}
       </span>
-      <span class="visual-editor-palette-entry__label">
-        {{@entry.displayName}}
-      </span>
+      <div class="visual-editor-palette-entry__text">
+        <span class="visual-editor-palette-entry__label">
+          {{@entry.displayName}}
+        </span>
+        {{#if @entry.description}}
+          <span class="visual-editor-palette-entry__description">
+            {{@entry.description}}
+          </span>
+        {{/if}}
+      </div>
     </div>
   </template>
 }

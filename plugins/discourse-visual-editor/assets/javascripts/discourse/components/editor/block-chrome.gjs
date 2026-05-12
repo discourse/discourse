@@ -10,6 +10,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
+import BlockToolbar from "./block-toolbar";
 
 /**
  * Wraps every rendered block while the editor is active so the canvas can
@@ -64,6 +65,19 @@ export default class BlockChrome extends Component {
   /** @returns {boolean} */
   get isContainer() {
     return this.metadata?.isContainer ?? false;
+  }
+
+  /**
+   * Whether the wrapped block is a container with no children. Containers
+   * normally render via `{{#each @children}}` so an empty one produces
+   * zero DOM and the inside-drop zone collapses to nothing visible.
+   * When this flips true, the template renders a labelled empty-state
+   * hint so authors can see (and aim at) the drop target.
+   *
+   * @returns {boolean}
+   */
+  get isEmptyContainer() {
+    return this.isContainer && (this.args.childCount ?? 0) === 0;
   }
 
   /** @returns {string} */
@@ -244,16 +258,24 @@ export default class BlockChrome extends Component {
             "visual-editor-block-chrome"
             (if this.isSelected "--selected")
             (if this.isContainer "--container")
+            (if this.isEmptyContainer "--empty-container")
           }}
           data-ve-block-name={{@blockName}}
           data-ve-block-key={{@blockKey}}
+          data-ve-empty={{this.isEmptyContainer}}
           {{on "click" this.onClick}}
           role="button"
           tabindex="0"
         >
+          {{#if this.isSelected}}
+            <BlockToolbar @blockKey={{@blockKey}} />
+          {{/if}}
+
           {{! The handle is the ONLY drag source. Always rendered (CSS hides
-            it until the chrome is hovered or selected) so the modifier's
-            registration is stable across hover transitions. }}
+            it until the chrome is hovered) so the modifier's
+            registration is stable across hover transitions. When selected,
+            the floating toolbar (above) takes over quick-action duty;
+            the handle stays as the drag affordance only. }}
           <span
             class="visual-editor-block-handle"
             title={{i18n "visual_editor.canvas.drag_handle_title"}}
@@ -266,22 +288,6 @@ export default class BlockChrome extends Component {
           >
             {{dIcon "grip-lines"}}
             <span>{{this.displayName}}</span>
-            {{#if this.isSelected}}
-              {{! template-lint-disable no-nested-interactive }}
-              {{! The chrome wrapper itself is role="button" for select-on-click;
-                  the delete button is a different action surfaced only when
-                  selected, so nesting is intentional. Click events on the
-                  button stop propagation so they don't double-fire as a
-                  selection event. }}
-              <button
-                type="button"
-                class="visual-editor-block-handle__delete"
-                title={{i18n "visual_editor.canvas.delete_block_title"}}
-                {{on "click" this.deleteBlock}}
-              >
-                {{dIcon "trash-can"}}
-              </button>
-            {{/if}}
           </span>
 
           <@WrappedComponent />
@@ -290,6 +296,7 @@ export default class BlockChrome extends Component {
             <div
               class={{dConcatClass
                 "visual-editor-drop-zone --inside"
+                (if this.isEmptyContainer "--empty")
                 (if (this.isDropZoneActive "inside") "--active")
               }}
               data-ve-position="inside"
@@ -302,9 +309,13 @@ export default class BlockChrome extends Component {
                 onDrop=this.applyDrop
               }}
             >
-              <span class="visual-editor-drop-zone__label">{{i18n
-                  "visual_editor.canvas.drop_inside"
-                }}</span>
+              <span class="visual-editor-drop-zone__label">
+                {{#if this.isEmptyContainer}}
+                  {{i18n "visual_editor.canvas.empty_container_hint"}}
+                {{else}}
+                  {{i18n "visual_editor.canvas.drop_inside"}}
+                {{/if}}
+              </span>
             </div>
           {{/if}}
         </div>

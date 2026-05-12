@@ -640,6 +640,134 @@ module(
       });
     });
 
+    module("structural undo / redo", function (innerHooks) {
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        await _renderBlocks(
+          "homepage-blocks",
+          [
+            { block: TestTile, args: { title: "First" } },
+            { block: TestTile, args: { title: "Second" } },
+          ],
+          getOwner(this)
+        );
+        this.editor.siteSettings.visual_editor_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:visual-editor");
+        this.editor.enter();
+
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        this.firstKey = `ve:svc-test-tile:${draft[0].__stableKey}`;
+        this.secondKey = `ve:svc-test-tile:${draft[1].__stableKey}`;
+      });
+
+      test("moveBlock pushes an undoable structural entry", async function (assert) {
+        this.editor.moveBlock({
+          sourceKey: this.firstKey,
+          targetKey: this.secondKey,
+          position: "after",
+          targetOutletName: "homepage-blocks",
+        });
+        assert.true(this.editor.canUndo, "undo stack is populated");
+
+        const moved = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(moved[0].args.title, "Second");
+
+        const undone = await this.editor.undo();
+        assert.true(undone);
+
+        const restored = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(restored[0].args.title, "First");
+        assert.strictEqual(restored[1].args.title, "Second");
+      });
+
+      test("redo re-applies a structural move", async function (assert) {
+        this.editor.moveBlock({
+          sourceKey: this.firstKey,
+          targetKey: this.secondKey,
+          position: "after",
+          targetOutletName: "homepage-blocks",
+        });
+        await this.editor.undo();
+        const redone = await this.editor.redo();
+        assert.true(redone);
+
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after[0].args.title, "Second");
+        assert.strictEqual(after[1].args.title, "First");
+      });
+
+      test("insertBlock can be undone, removing the inserted entry", async function (assert) {
+        this.editor.insertBlock({
+          blockName: "ve:svc-test-tile",
+          defaultArgs: { title: "Inserted" },
+          targetKey: this.secondKey,
+          position: "after",
+          targetOutletName: "homepage-blocks",
+        });
+        const afterInsert = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(afterInsert.length, 3);
+
+        await this.editor.undo();
+        const restored = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(restored.length, 2);
+        assert.strictEqual(restored[0].args.title, "First");
+        assert.strictEqual(restored[1].args.title, "Second");
+      });
+
+      test("removeBlock can be undone, restoring the deleted entry", async function (assert) {
+        this.editor.selectBlock({
+          key: this.secondKey,
+          name: "ve:svc-test-tile",
+        });
+        this.editor.removeBlock(this.secondKey);
+        let after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after.length, 1);
+
+        await this.editor.undo();
+        after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after.length, 2);
+        assert.strictEqual(after[1].args.title, "Second");
+      });
+
+      test("duplicateBlock can be undone", async function (assert) {
+        this.editor.duplicateBlock(this.firstKey);
+        let after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after.length, 3);
+
+        await this.editor.undo();
+        after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after.length, 2);
+      });
+
+      test("updateSelectedConditions feeds the undo stack", async function (assert) {
+        this.editor.selectBlock({
+          key: this.firstKey,
+          name: "ve:svc-test-tile",
+        });
+        const next = { type: "user", admin: true };
+        assert.true(this.editor.updateSelectedConditions(next));
+
+        const undone = await this.editor.undo();
+        assert.true(undone);
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after[0].conditions, undefined);
+      });
+
+      test("a fresh structural mutation clears the redo stack", function (assert) {
+        this.editor.moveBlock({
+          sourceKey: this.firstKey,
+          targetKey: this.secondKey,
+          position: "after",
+          targetOutletName: "homepage-blocks",
+        });
+        this.editor.undo();
+        assert.true(this.editor.canRedo);
+        this.editor.duplicateBlock(this.firstKey);
+        assert.false(this.editor.canRedo);
+      });
+    });
+
     module("simulation", function (innerHooks) {
       innerHooks.beforeEach(function () {
         // The simulation slot is editor-session-state and survives without
