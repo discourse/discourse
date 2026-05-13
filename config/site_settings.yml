@@ -4347,6 +4347,7 @@ dashboard:
       - traffic
       - engagement
     area: "reports"
+    hidden: true
   dashboard_general_tab_activity_metrics:
     client: true
     type: list

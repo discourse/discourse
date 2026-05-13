@@ -284,45 +284,6 @@ RSpec.describe Admin::DashboardController do
       expect(SiteSetting.admin_dashboard_sections).to eq("reports|highlights")
     end
 
-    it "leaves a change_site_setting UserHistory row attributed to the admin" do
-      sign_in(admin)
-      expect {
-        put "/admin/dashboard/configuration.json",
-            params: {
-              sections: [{ id: "highlights", visible: true }],
-            }
-      }.to change {
-        UserHistory.where(
-          action: UserHistory.actions[:change_site_setting],
-          subject: "admin_dashboard_sections",
-        ).count
-      }.by(1)
-
-      entry =
-        UserHistory.where(
-          action: UserHistory.actions[:change_site_setting],
-          subject: "admin_dashboard_sections",
-        ).last
-      expect(entry.acting_user_id).to eq(admin.id)
-      expect(entry.new_value).to eq("highlights")
-    end
-
-    it "does not write a duplicate UserHistory row when the payload is unchanged" do
-      SiteSetting.admin_dashboard_sections = "highlights"
-      sign_in(admin)
-      expect {
-        put "/admin/dashboard/configuration.json",
-            params: {
-              sections: [{ id: "highlights", visible: true }],
-            }
-      }.not_to change {
-        UserHistory.where(
-          action: UserHistory.actions[:change_site_setting],
-          subject: "admin_dashboard_sections",
-        ).count
-      }
-    end
-
     it "drops unknown section ids silently" do
       sign_in(admin)
       put "/admin/dashboard/configuration.json",

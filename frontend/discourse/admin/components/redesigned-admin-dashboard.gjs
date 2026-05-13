@@ -10,23 +10,12 @@ import DashboardReports from "discourse/admin/components/dashboard/reports";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { deepEqual } from "discourse/lib/object";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 function buildPending(committed) {
   return committed?.map((s) => ({ ...s })) ?? [];
-}
-
-function sectionsEqual(a, b) {
-  if (a.length !== b.length) {
-    return false;
-  }
-  for (let i = 0; i < a.length; i++) {
-    if (a[i].id !== b[i].id || !!a[i].visible !== !!b[i].visible) {
-      return false;
-    }
-  }
-  return true;
 }
 
 export default class RedesignedAdminDashboard extends Component {
@@ -72,7 +61,7 @@ export default class RedesignedAdminDashboard extends Component {
     if (this._saving || !this._opened) {
       return;
     }
-    if (sectionsEqual(this.pendingSections, this.committedSections)) {
+    if (deepEqual(this.pendingSections, this.committedSections)) {
       return;
     }
 

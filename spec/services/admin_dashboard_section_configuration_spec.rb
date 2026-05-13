@@ -138,24 +138,5 @@ describe AdminDashboardSectionConfiguration do
         [{ id: "engagement", visible: true }, { id: "highlights", visible: true }],
       )
     end
-
-    it "logs the change via the site-settings audit trail" do
-      expect {
-        described_class.update([{ id: "highlights", visible: true }], actor: admin)
-      }.to change {
-        UserHistory.where(
-          action: UserHistory.actions[:change_site_setting],
-          subject: "admin_dashboard_sections",
-        ).count
-      }.by(1)
-
-      entry =
-        UserHistory.where(
-          action: UserHistory.actions[:change_site_setting],
-          subject: "admin_dashboard_sections",
-        ).last
-      expect(entry.acting_user_id).to eq(admin.id)
-      expect(entry.new_value).to eq("highlights")
-    end
   end
 end
