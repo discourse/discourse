@@ -3481,6 +3481,8 @@ de:
         relist_topics: "Themen wieder auflisten"
         pin_topics: "Diese Themen hervorheben"
         unpin_topics: "Themen loslösen"
+        enable_nested_replies: "Verschachtelte Antworten aktivieren"
+        disable_nested_replies: "Verschachtelte Antworten deaktivieren"
         reset_bump_dates: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
         defer: "Als ungelesen markieren"
         delete: "Themen löschen"
@@ -3650,6 +3652,10 @@ de:
       unpin_topics:
         name: "Loslösen"
         description: "Alle ausgewählten Themen, die in einer Kategorie oder global angeheftet sind, loslösen"
+      enable_nested_replies:
+        name: "Verschachtelte Antworten aktivieren"
+      disable_nested_replies:
+        name: "Verschachtelte Antworten deaktivieren"
     nested_replies:
       nested_view: "Verschachtelte Ansicht"
       flat_view: "Flache Ansicht"

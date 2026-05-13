@@ -3404,6 +3404,8 @@ el:
         clear_all: "Καθαρισμός Όλων"
         pin_topics: "Ανέδειξε αυτά τα θέματα"
         unpin_topics: "Ξεκαρφίτσωμα θεμάτων"
+        enable_nested_replies: "Ενεργοποίηση ένθετων απαντήσεων"
+        disable_nested_replies: "Απενεργοποίηση ένθετων απαντήσεων"
         defer: "Σήμανση ως αδιάβαστα"
         delete: "Διαγραφή θεμάτων"
         delete_topics_count:
@@ -3554,6 +3556,10 @@ el:
       unpin_topics:
         name: "Ξεκαρφίτσωμα"
         description: "Ξεκαρφίτσωμα όλων των επιλεγμένων θεμάτων που είναι καρφιτσωμένα σε μια κατηγορία ή καρφιτσωμένα καθολικά"
+      enable_nested_replies:
+        name: "Ενεργοποίηση ένθετων απαντήσεων"
+      disable_nested_replies:
+        name: "Απενεργοποίηση ένθετων απαντήσεων"
     nested_replies:
       nested_view: "Ένθετη προβολή"
       flat_view: "Επίπεδη προβολή"

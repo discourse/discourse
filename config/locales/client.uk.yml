@@ -3852,6 +3852,8 @@ uk:
         relist_topics: "Перебудувати список тем"
         pin_topics: "Виділити ці теми"
         unpin_topics: "Відкріпити теми"
+        enable_nested_replies: "Увімкнути вкладені відповіді"
+        disable_nested_replies: "Вимкнути вкладені відповіді"
         reset_bump_dates: "Скинути дату підняття"
         defer: "Позначити як непрочитане"
         delete: "Видалити теми"
@@ -4085,6 +4087,10 @@ uk:
       unpin_topics:
         name: "Відкріпити"
         description: "Відкріпити всі вибрані теми, закріплені в категорії або закріплені глобально"
+      enable_nested_replies:
+        name: "Увімкнути вкладені відповіді"
+      disable_nested_replies:
+        name: "Вимкнути вкладені відповіді"
     nested_replies:
       nested_view: "Вкладений вигляд"
       flat_view: "Плоский вигляд"

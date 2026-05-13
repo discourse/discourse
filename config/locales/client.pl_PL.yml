@@ -3861,6 +3861,8 @@ pl_PL:
         relist_topics: "Zamieść ponownie tematy"
         pin_topics: "Wyróżnij te tematy"
         unpin_topics: "Odepnij tematy"
+        enable_nested_replies: "Włącz zagnieżdżone odpowiedzi"
+        disable_nested_replies: "Wyłącz zagnieżdżone odpowiedzi"
         reset_bump_dates: "Zresetuj datę podbicia"
         defer: "Oznacz jako nieprzeczytany"
         delete: "Usuń tematy"
@@ -3939,6 +3941,16 @@ pl_PL:
           few: "Odepnij %{count} tematy"
           many: "Odepnij %{count} tematów"
           other: "Odepnij %{count} tematów"
+        confirm_enable_nested_replies:
+          one: "Włącz zagnieżdżone odpowiedzi w %{count} temacie"
+          few: "Włącz zagnieżdżone odpowiedzi w %{count} tematach"
+          many: "Włącz zagnieżdżone odpowiedzi w %{count} tematach"
+          other: "Włącz zagnieżdżone odpowiedzi w %{count} tematach"
+        confirm_disable_nested_replies:
+          one: "Wyłącz zagnieżdżone odpowiedzi w %{count} temacie"
+          few: "Wyłącz zagnieżdżone odpowiedzi w %{count} tematach"
+          many: "Wyłącz zagnieżdżone odpowiedzi w %{count} tematach"
+          other: "Wyłącz zagnieżdżone odpowiedzi w %{count} tematach"
         confirm_update_topics:
           one: "Zaktualizuj %{count} temat"
           few: "Zaktualizuj %{count} tematy"
@@ -4094,6 +4106,12 @@ pl_PL:
       unpin_topics:
         name: "Odepnij"
         description: "Odepnij wszystkie wybrane tematy, które są przypięte do kategorii lub przypięte globalnie"
+      enable_nested_replies:
+        name: "Włącz zagnieżdżone odpowiedzi"
+        description: "Przełącz wybrane tematy do widoku zagnieżdżonego. Odpowiedzi będą wyświetlane jako wątki."
+      disable_nested_replies:
+        name: "Wyłącz zagnieżdżone odpowiedzi"
+        description: "Przełącz wybrane tematy z powrotem do widoku płaskiego."
     nested_replies:
       nested_view: "Widok zagnieżdżony"
       flat_view: "Widok płaski"
