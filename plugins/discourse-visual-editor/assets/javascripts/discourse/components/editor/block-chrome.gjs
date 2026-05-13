@@ -93,22 +93,12 @@ export default class BlockChrome extends Component {
   /**
    * Tracks the active dragover listener so we can detach it cleanly on
    * leave / drop. Whole-slot highlights don't communicate WHICH zone
-   * the user is targeting; this listener updates a per-zone class
-   * (`--drop-zone-{center|replace|left|right|up|down}`) as the cursor
-   * moves within the slot, so the visual feedback names the action.
+   * the user is targeting; this listener feeds a drop-preview
+   * descriptor into the parent grid overlay so the single overlay
+   * element repositions / re-shapes as the cursor moves through the
+   * slot's 5 zones (center + 4 edges).
    */
   _slotDragOverHandler = null;
-
-  /**
-   * The most recent zone+modifier observed during dragover, captured
-   * so the drop dispatch matches the visual feedback the user just
-   * saw. Recomputing from the drop event's coordinates is unreliable —
-   * the cursor can jitter between the last dragover and the release,
-   * so we honour what the user was looking at instead of what the
-   * browser reported at the millisecond of drop.
-   */
-  _lastDropZone = null;
-  _lastDropShift = false;
 
   /**
    * Block metadata (description, namespace, isContainer, args schema, etc.)
@@ -556,40 +546,31 @@ export default class BlockChrome extends Component {
   }
 
   @action
-  handleSlotDragEnter({ element, event }) {
+  handleSlotDragEnter({ element, event, source }) {
     if (!this._slotDragOverHandler) {
-      this._slotDragOverHandler = (e) => this._updateDropZone(e, element);
+      this._slotDragOverHandler = (e) =>
+        this._updateSlotPreview(e, element, source);
       element.addEventListener("dragover", this._slotDragOverHandler);
     }
-    this._updateDropZone(event, element);
+    this._updateSlotPreview(event, element, source);
   }
 
   @action
   handleSlotDragLeave({ element }) {
     this._detachDragOverListener(element);
-    this._clearDropZone(element);
-    this._lastDropZone = null;
-    this._lastDropShift = false;
+    const gridKey = this._parentGridKey();
+    if (gridKey) {
+      this.visualEditor.clearDropPreview(gridKey);
+    }
   }
 
-  _updateDropZone(event, element) {
+  _updateSlotPreview(event, element, source) {
     const zone = this._computeDropZone(event, element);
     const shift = !!event.shiftKey;
-    this._lastDropZone = zone;
-    this._lastDropShift = shift;
-    const cls = zone === "center" && shift ? "replace" : zone;
-    this._clearDropZone(element);
-    element.classList.add(`--drop-zone-${cls}`);
-  }
-
-  _clearDropZone(element) {
-    if (!element) {
-      return;
-    }
-    for (const cls of [...element.classList]) {
-      if (cls.startsWith("--drop-zone-")) {
-        element.classList.remove(cls);
-      }
+    const descriptor = this._slotDescriptorForZone({ zone, shift, source });
+    const gridKey = this._parentGridKey();
+    if (gridKey) {
+      this.visualEditor.setDropPreview(gridKey, descriptor);
     }
   }
 
@@ -601,59 +582,156 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Dispatches a drop onto the slot wrapper. Zone math: cursor in the
-   * inner 60% rect = center (swap / replace); outer 20% bands on each
-   * side = edge insert-with-shift in that direction. Corners resolve
-   * to the nearer side.
+   * Resolves the slot's parent grid layout block key. The slot
+   * wrapper IS the cell, so its parent is always the `ve:layout` in
+   * grid mode. Returns `null` only when this chrome is wrapping a
+   * non-slot or the slot has been detached (a transient state during
+   * drag teardown).
    */
-  @action
-  applySlotDrop({ source, element, event }) {
-    this._clearDropZone(element);
-    this._detachDragOverListener(element);
+  _parentGridKey() {
+    const parent = this.visualEditor._findEntryParent(this.args.blockKey);
+    return parent ? entryKey(parent) : null;
+  }
 
-    // Use the LAST zone we saw during dragover, not a fresh recompute
-    // from the drop event. The drop event's coords can jitter slightly
-    // off whatever zone the user was looking at when they released,
-    // which would dispatch the wrong action (e.g. a center-zone swap
-    // when the user clearly hovered the left edge for a shift).
-    const zone = this._lastDropZone ?? this._computeDropZone(event, element);
-    const shiftHeld = this._lastDropShift || event.shiftKey;
-    this._lastDropZone = null;
-    this._lastDropShift = false;
+  /**
+   * The slot's resolved cell rectangle as a placement
+   * `{column:{start,end}, row:{start,end}}` — used by line / rect
+   * descriptors so they know which lines / cells to render against.
+   *
+   * Defaults `auto` placement to a 1×1 cell at column 1 / row 1
+   * which keeps the math defensive when a slot hasn't been placed
+   * yet (rare; a fresh slot always has explicit column / row).
+   */
+  _slotPlacementRect() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.visualEditor.structuralVersion;
+    const entry = this.visualEditor._findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
+    const placement = parseSlotPlacement(entry?.args ?? {});
+    const colStart = placement.column.start ?? 1;
+    const colEnd = placement.column.end ?? colStart + 1;
+    const rowStart = placement.row.start ?? 1;
+    const rowEnd = placement.row.end ?? rowStart + 1;
+    return {
+      column: { start: colStart, end: colEnd },
+      row: { start: rowStart, end: rowEnd },
+    };
+  }
 
-    const targetSlotKey = this.args.blockKey;
-    const gridParent = this.visualEditor._findEntryParent(targetSlotKey);
-    const gridKey = gridParent ? entryKey(gridParent) : null;
-
+  /**
+   * Translates a 5-zone hit-test result for a slot wrapper into a
+   * drop-preview descriptor. Center maps to a rect ("swap" by
+   * default, "replace" when Shift is held — or null if the source
+   * is a palette block, which can't land on an occupied slot's
+   * center). Edges map to a thin line in the grid gap adjacent to
+   * the slot — column lines for left/right, row lines for up/down.
+   */
+  _slotDescriptorForZone({ zone, shift, source }) {
+    const placement = this._slotPlacementRect();
     if (zone === "center") {
       if (source?.kind !== "ve-block") {
-        // Palette → center is rejected; the canDrop gate could enforce
-        // this but doing it here keeps the per-zone dispatch in one
-        // spot.
-        this.visualEditor.endDrag?.();
-        return;
+        return null;
       }
-      const sourceSlotKey = source.data?.blockKey;
-      if (!sourceSlotKey) {
-        this.visualEditor.endDrag?.();
-        return;
-      }
-      if (shiftHeld) {
-        this.visualEditor.replaceSlot({
-          targetSlotKey,
-          sourceSlotKey,
-        });
-      } else {
-        this.visualEditor.swapSlotPlacements({
-          slotKeyA: targetSlotKey,
-          slotKeyB: sourceSlotKey,
-        });
-      }
-    } else if (gridKey) {
+      return {
+        kind: "rect",
+        column: placement.column,
+        row: placement.row,
+        variant: shift ? "replace" : "swap",
+      };
+    }
+    if (zone === "left") {
+      return {
+        kind: "line-column",
+        line: placement.column.start,
+        row: placement.row,
+        variant: "insert",
+      };
+    }
+    if (zone === "right") {
+      return {
+        kind: "line-column",
+        line: placement.column.end,
+        row: placement.row,
+        variant: "insert",
+      };
+    }
+    if (zone === "up") {
+      return {
+        kind: "line-row",
+        line: placement.row.start,
+        column: placement.column,
+        variant: "insert",
+      };
+    }
+    if (zone === "down") {
+      return {
+        kind: "line-row",
+        line: placement.row.end,
+        column: placement.column,
+        variant: "insert",
+      };
+    }
+    return null;
+  }
+
+  /**
+   * Dispatches a drop onto the slot wrapper. Reads the last
+   * descriptor set by `_updateSlotPreview` (rather than re-running
+   * zone math at drop time, which is unreliable — the cursor can
+   * jitter between dragover and release, leaving the user looking
+   * at the edge line one frame and the center rect the next).
+   */
+  @action
+  applySlotDrop({ source, element }) {
+    this._detachDragOverListener(element);
+
+    const gridKey = this._parentGridKey();
+    const descriptor = gridKey
+      ? this.visualEditor.getLastDropPreview(gridKey)
+      : null;
+    if (gridKey) {
+      this.visualEditor.clearDropPreview(gridKey);
+    }
+
+    const targetSlotKey = this.args.blockKey;
+
+    if (descriptor?.kind === "rect" && descriptor.variant === "replace") {
+      this.visualEditor.replaceSlot({
+        targetSlotKey,
+        sourceSlotKey: source.data?.blockKey,
+      });
+    } else if (descriptor?.kind === "rect" && descriptor.variant === "swap") {
+      this.visualEditor.swapSlotPlacements({
+        slotKeyA: targetSlotKey,
+        slotKeyB: source.data?.blockKey,
+      });
+    } else if (descriptor?.kind === "line-column" && gridKey) {
+      // Column-line drops translate to insert-with-shift cascading
+      // RIGHT, with the source landing at the line's column. The
+      // descriptor's `row` carries the slot's row span so the cascade
+      // operates on the right row.
       this.visualEditor.insertWithShift({
         gridKey,
-        dropSlotKey: targetSlotKey,
-        direction: zone,
+        dropCell: {
+          column: descriptor.line,
+          row: descriptor.row?.start ?? 1,
+        },
+        direction: "left",
+        sourceKey: source?.kind === "ve-block" ? source.data?.blockKey : null,
+        paletteBlockName:
+          source?.kind === "ve-palette-block" ? source.data?.blockName : null,
+        paletteDefaultArgs:
+          source?.kind === "ve-palette-block" ? source.data?.defaultArgs : null,
+      });
+    } else if (descriptor?.kind === "line-row" && gridKey) {
+      this.visualEditor.insertWithShift({
+        gridKey,
+        dropCell: {
+          column: descriptor.column?.start ?? 1,
+          row: descriptor.line,
+        },
+        direction: "up",
         sourceKey: source?.kind === "ve-block" ? source.data?.blockKey : null,
         paletteBlockName:
           source?.kind === "ve-palette-block" ? source.data?.blockName : null,

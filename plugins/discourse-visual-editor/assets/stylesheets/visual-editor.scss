@@ -1170,55 +1170,24 @@ body.visual-editor-active {
       }
     }
 
-    /* Zone-specific drop feedback. The cursor's position within the
-       slot determines which class is set during dragover; the class
-       names the action that would commit on drop. Five zones:
-       `center` (swap), `replace` (center + Shift held), and
-       `left` / `right` / `up` / `down` (edge insert-with-shift).
-       Only one zone class is set at a time. */
+    /* Per-zone drop feedback is no longer painted on the slot itself.
+       During a drag, the grid overlay paints a single rectangle / line
+       (`.visual-editor-grid-drop-overlay`) at the cell or grid-gap
+       position the cursor is targeting. The slot wrapper keeps its
+       normal idle styling so the active edge isn't competing with the
+       slot's own 4-side outline.
 
-    &.--drop-zone-center {
-      border-color: var(--tertiary);
-      border-style: solid;
-      background: var(--tertiary-low);
-      box-shadow: 0 0 0 1px var(--tertiary);
-    }
+       The shared `dDragAndDropTarget` modifier still toggles
+       `is-drag-above`/`-below`/`-left`/`-right` classes whose default
+       foundation styling paints a 2px line via `::before`/`::after`.
+       Null out those pseudo-elements here so the only drop indicator
+       is the grid overlay. */
 
-    &.--drop-zone-replace {
-      border-color: var(--danger);
-      border-style: solid;
-      background: rgb(220 53 69 / 0.15);
-      box-shadow: 0 0 0 1px var(--danger);
-    }
-
-    /* Edge zones: hide the normal dotted border so the existing 4-side
-       outline doesn't read as "all edges highlighted", and replace it
-       with a single tertiary strip on the active edge. The other three
-       sides become invisible during the drag, making the active edge
-       unambiguous. */
-
-    &.--drop-zone-left,
-    &.--drop-zone-right,
-    &.--drop-zone-up,
-    &.--drop-zone-down {
-      border-color: transparent;
-      background: var(--tertiary-very-low);
-    }
-
-    &.--drop-zone-left {
-      box-shadow: inset 8px 0 0 var(--tertiary);
-    }
-
-    &.--drop-zone-right {
-      box-shadow: inset -8px 0 0 var(--tertiary);
-    }
-
-    &.--drop-zone-up {
-      box-shadow: inset 0 8px 0 var(--tertiary);
-    }
-
-    &.--drop-zone-down {
-      box-shadow: inset 0 -8px 0 var(--tertiary);
+    &.is-drag-above::before,
+    &.is-drag-below::after,
+    &.is-drag-left::before,
+    &.is-drag-right::after {
+      content: none;
     }
 
     /* The inner block's chrome inside a slot must NOT add its own
@@ -1307,42 +1276,21 @@ body.visual-editor-active
     border-color: var(--visual-editor-block-hover-color);
   }
 
-  /* Per-zone drop feedback on empty cells. Mirrors the slot wrapper's
-     treatment so authors get a consistent edge-aware mental model on
-     both placeholders and occupied slots. */
+  /* Per-zone drop feedback is no longer painted on the cell itself.
+     During a drag the grid overlay element paints a single rect or
+     line at the cursor's target position. The cell keeps its idle
+     dashed border so the empty space stays scannable.
 
-  &.--drop-zone-center {
-    border-color: var(--tertiary);
-    border-style: solid;
-    background: var(--tertiary-low);
-  }
+     Suppress the foundation `is-drag-*` pseudo-element indicators
+     (a 2px tertiary line above/below/left/right that the shared drop
+     modifier toggles by default) so the overlay is the sole feedback
+     surface during a drag. */
 
-  /* Edge zones: hide the normal dashed border (which otherwise reads
-     as "all sides highlighted") and show only the active edge as a
-     thick tertiary strip. */
-
-  &.--drop-zone-left,
-  &.--drop-zone-right,
-  &.--drop-zone-up,
-  &.--drop-zone-down {
-    border-color: transparent;
-    background: var(--tertiary-very-low);
-  }
-
-  &.--drop-zone-left {
-    box-shadow: inset 8px 0 0 var(--tertiary);
-  }
-
-  &.--drop-zone-right {
-    box-shadow: inset -8px 0 0 var(--tertiary);
-  }
-
-  &.--drop-zone-up {
-    box-shadow: inset 0 8px 0 var(--tertiary);
-  }
-
-  &.--drop-zone-down {
-    box-shadow: inset 0 -8px 0 var(--tertiary);
+  &.is-drag-above::before,
+  &.is-drag-below::after,
+  &.is-drag-left::before,
+  &.is-drag-right::after {
+    content: none;
   }
 
   &__plus {
@@ -1508,6 +1456,59 @@ body.visual-editor-active
 
   &.--visible {
     opacity: 1;
+  }
+}
+
+/* Drop-preview overlay — one element per grid that the editor
+   repositions during a drag to mark the proposed drop target. Two
+   shapes:
+   - `--rect-*` variants are rectangles over a cell (swap / replace /
+     move). The rect's tint names the action.
+   - `--line-*` variants are 4px strips drawn midway in a grid gap,
+     i.e. "insert between adjacent cells". The same line is produced
+     from the right edge of one cell AND the left edge of its
+     neighbour, so the visual stays put as the cursor crosses the
+     boundary between sibling drop targets.
+
+   Positioned absolutely against the grid container (which carries
+   `position: relative` for this purpose). CSS transitions on
+   `top/left/width/height` give a smooth glide between adjacent
+   candidates. */
+
+.visual-editor-grid-drop-overlay {
+  position: absolute;
+  pointer-events: none;
+  z-index: 4;
+  border-radius: 3px;
+  opacity: 0;
+  transition:
+    top 120ms ease,
+    left 120ms ease,
+    width 120ms ease,
+    height 120ms ease,
+    opacity 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease;
+
+  &.--rect-swap {
+    border: 2px solid var(--tertiary);
+    background: rgb(0 123 255 / 0.08);
+  }
+
+  &.--rect-replace {
+    border: 2px solid var(--danger);
+    background: rgb(220 53 69 / 0.08);
+  }
+
+  &.--rect-move {
+    border: 2px dashed var(--visual-editor-block-hover-color);
+    background: rgb(217 119 6 / 0.08);
+  }
+
+  &.--line-column,
+  &.--line-row {
+    background: var(--tertiary);
+    border-radius: 2px;
   }
 }
 
