@@ -37,7 +37,6 @@ function readPendingFiles() {
 async function waitForFileChange() {
   const watcher = chokidar.watch(WATCH_DIR, {
     ignoreInitial: true,
-    ignored: (p) => p.includes("/node_modules/"),
   });
   try {
     await once(watcher, "all", { signal: shutdown.signal });
