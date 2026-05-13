@@ -16,6 +16,10 @@ let shuttingDown = false;
 let child = null;
 let immediateRetryUsed = false;
 
+function isShuttingDown() {
+  return shuttingDown;
+}
+
 function forwardSignal(signal) {
   shuttingDown = true;
   if (child) {
@@ -25,10 +29,6 @@ function forwardSignal(signal) {
       // ignore
     }
   }
-}
-
-function isShuttingDown() {
-  return shuttingDown;
 }
 
 function readPendingFiles() {
