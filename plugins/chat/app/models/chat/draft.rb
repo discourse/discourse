@@ -21,10 +21,10 @@ end
 # Table name: chat_drafts
 #
 #  id              :bigint           not null, primary key
-#  user_id         :integer          not null
-#  chat_channel_id :bigint           not null
 #  data            :text             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  chat_channel_id :bigint           not null
 #  thread_id       :bigint
+#  user_id         :integer          not null
 #

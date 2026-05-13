@@ -277,10 +277,10 @@ end
 # Table name: category_users
 #
 #  id                 :integer          not null, primary key
+#  last_seen_at       :datetime
+#  notification_level :integer          not null
 #  category_id        :integer          not null
 #  user_id            :integer          not null
-#  notification_level :integer          not null
-#  last_seen_at       :datetime
 #
 # Indexes
 #

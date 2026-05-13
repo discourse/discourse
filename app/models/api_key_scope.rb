@@ -358,12 +358,12 @@ end
 # Table name: api_key_scopes
 #
 #  id                 :bigint           not null, primary key
-#  api_key_id         :integer          not null
-#  resource           :string           not null
 #  action             :string           not null
 #  allowed_parameters :json
+#  resource           :string           not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  api_key_id         :integer          not null
 #
 # Indexes
 #

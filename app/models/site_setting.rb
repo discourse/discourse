@@ -415,8 +415,8 @@ end
 # Table name: site_settings
 #
 #  id         :integer          not null, primary key
-#  name       :string           not null
 #  data_type  :integer          not null
+#  name       :string           not null
 #  value      :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

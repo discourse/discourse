@@ -37,12 +37,12 @@ end
 # Table name: discourse_solved_solved_topics
 #
 #  id               :bigint           not null, primary key
-#  topic_id         :integer          not null
-#  answer_post_id   :integer          not null
-#  accepter_user_id :integer          not null
-#  topic_timer_id   :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  accepter_user_id :integer          not null
+#  answer_post_id   :integer          not null
+#  topic_id         :integer          not null
+#  topic_timer_id   :integer
 #
 # Indexes
 #

@@ -58,12 +58,12 @@ end
 # Table name: discourse_reactions_reactions
 #
 #  id                   :bigint           not null, primary key
-#  post_id              :integer
 #  reaction_type        :integer
-#  reaction_value       :string
 #  reaction_users_count :integer
+#  reaction_value       :string
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  post_id              :integer
 #
 # Indexes
 #
