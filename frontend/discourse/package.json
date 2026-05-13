@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "rolldown -c rolldown.config.mjs",
-    "start": "./rolldown-dev.mjs"
+    "start": "./rolldown.mjs"
   },
   "dependencies": {
     "@discourse/gif": "^1.0.0",

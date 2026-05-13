@@ -59,7 +59,7 @@ const { result } = concurrently(
     },
     {
       name: "rolldown",
-      command: "./rolldown-dev.mjs",
+      command: "./rolldown.mjs",
       cwd: path.join(RAILS_ROOT, "frontend/discourse"),
       prefixColor: "magenta",
     },

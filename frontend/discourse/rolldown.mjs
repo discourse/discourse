@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 
 const WORKER_PATH = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
-  "rolldown-dev-worker.mjs"
+  "rolldown-worker.mjs"
 );
 const WATCH_DIR = "./app";
 
@@ -49,14 +49,14 @@ while (!shuttingDown) {
     ? `terminated by signal ${signal}`
     : `exited with code ${code}`;
   console.error(
-    `\n[rolldown-dev] Rolldown dev process ${reason}. Waiting for a file change in ${WATCH_DIR} before restarting...`
+    `\n[rolldown] Worker ${reason}. Waiting for a file change in ${WATCH_DIR} before restarting...`
   );
 
   const changed = await waitForFileChange(WATCH_DIR, isShuttingDown);
   if (!changed || shuttingDown) {
     process.exit(code ?? 1);
   }
-  console.error("[rolldown-dev] File change detected. Restarting...");
+  console.error("[rolldown] File change detected. Restarting...");
 }
 
 // Watches `dir` recursively for any change. Resolves to `true` on the first

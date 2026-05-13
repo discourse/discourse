@@ -89,10 +89,9 @@ class EmberCli < ActiveSupport::CurrentAttributes
     cache[:build_error] = wait_for_build
   end
 
-  # Polls dist/manifest/build.json until the rolldown dev server reports a
-  # final state (ok / error / crashed), the dev process dies, or we hit
-  # BUILD_WAIT_TIMEOUT. Returns nil when everything is fine; returns an error
-  # payload otherwise.
+  # Polls dist/manifest/build.json until the rolldown server reports a final
+  # state (ok/error/crashed), the process dies, or we hit BUILD_WAIT_TIMEOUT.
+  # Returns nil when everything is fine; returns an error payload otherwise.
   def self.wait_for_build
     deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + BUILD_WAIT_TIMEOUT
     loop do
@@ -101,7 +100,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
 
       if data["pid"] && !pid_alive?(data["pid"])
         return data.merge("status" => "crashed", "error" => plain_error(<<~MSG))
-          Rolldown dev process (pid #{data["pid"]}) is no longer running.
+          Rolldown process (pid #{data["pid"]}) is no longer running.
           Start it with `pnpm --dir frontend/discourse start`.
         MSG
       end
