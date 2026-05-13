@@ -98,14 +98,11 @@ describe "Category calendar" do
 
     it "prefers category defaultView over calendar_category_default_view" do
       SiteSetting.calendar_category_default_view = "month"
-      SiteSetting.calendar_categories =
-        "categoryId=#{category.id};defaultView=week"
+      SiteSetting.calendar_categories = "categoryId=#{category.id};defaultView=week"
 
       category_page.visit(category)
 
-      expect(category_page).to have_selector(
-        "#category-events-calendar .fc-timeGridWeek-view",
-      )
+      expect(category_page).to have_selector("#category-events-calendar .fc-timeGridWeek-view")
     end
   end
 
