@@ -121,13 +121,10 @@ describe "Admin Onboarding Banner" do
 
       expect(theme_picker_modal).to be_open
 
-      selected_theme_name = theme_picker_modal.select_first_selectable_theme
+      theme_picker_modal.select_first_selectable_theme
 
-      expected_message =
-        I18n.t("js.admin_onboarding_banner.select_theme.theme_set", theme: selected_theme_name)
-      expect(toasts).to have_success(expected_message)
-
-      visit("/")
+      # Page reloads after theme selection; wait for it to complete
+      expect(page).to have_css(".admin-onboarding-banner")
       expect(banner.step_completed?("select_theme")).to eq(true)
     end
   end
@@ -154,6 +151,7 @@ describe "Admin Onboarding Banner" do
       expect(theme_picker_modal).to be_open
       theme_picker_modal.select_first_selectable_theme
 
+      # Page reloads after theme selection; banner disappears when all steps complete
       expect(banner).to be_not_visible
       expect(SiteSetting.enable_site_owner_onboarding).to eq(false)
     end
