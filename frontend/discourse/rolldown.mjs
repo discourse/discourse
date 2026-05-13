@@ -74,7 +74,7 @@ while (!shutdown.signal.aborted) {
       ? `rebuilding ${pendingFiles.join(", ")}`
       : "an in-flight rebuild";
     console.error(
-      `\nWorker ${reason} while ${what}. Waiting for a file change in ${WATCH_DIR} before restarting...`
+      `\nWorker ${reason} while ${what}. Waiting for a file change before restarting...`
     );
     const changed = await waitForFileChange();
     if (!changed) {
@@ -84,13 +84,13 @@ while (!shutdown.signal.aborted) {
   } else {
     if (immediateRetryUsed) {
       console.error(
-        `\nWorker ${reason} with no in-flight rebuild. Already retried once — exiting.`
+        `\nWorker ${reason}. Already retried once — exiting.`
       );
       process.exit(code ?? 1);
     }
     immediateRetryUsed = true;
     console.error(
-      `\nWorker ${reason} with no in-flight rebuild. Restarting immediately...`
+      `\nWorker ${reason}. Restarting immediately...`
     );
   }
 }
