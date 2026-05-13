@@ -66,6 +66,7 @@ const { result } = concurrently(
   {
     killOthersOn: ["success", "failure"],
     killSignal: "SIGTERM",
+    padPrefix: true,
   }
 );
 
