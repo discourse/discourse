@@ -5,7 +5,7 @@ module PageObjects
     class AdminDashboard < PageObjects::Pages::Base
       def visit
         page.visit("/admin")
-        has_css?(".db-main__section, .db-main__empty, .legacy-dashboard")
+        has_css?(".db-main__section, .db-main__empty, .nav-pills")
         self
       end
 
