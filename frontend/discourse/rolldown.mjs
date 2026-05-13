@@ -8,24 +8,18 @@ import * as fs from "fs";
 const WORKER_PATH = "./rolldown-worker.mjs";
 const REBUILD_IN_FLIGHT_FILE = "./dist/manifest/.rebuild-in-flight";
 const WATCH_DIR = "./app";
+const shutdown = new AbortController();
 
-let shuttingDown = false;
 let child = null;
 let immediateRetryUsed = false;
 
-function isShuttingDown() {
-  return shuttingDown;
+for (const sig of ["SIGINT", "SIGTERM", "SIGHUP"]) {
+  process.on(sig, () => handleSignal(sig));
 }
 
-function forwardSignal(signal) {
-  shuttingDown = true;
-  if (child) {
-    try {
-      child.kill(signal);
-    } catch {
-      // ignore
-    }
-  }
+function handleSignal(sig) {
+  shutdown.abort();
+  child?.kill(sig);
 }
 
 function readPendingFiles() {
@@ -39,43 +33,32 @@ function readPendingFiles() {
 }
 
 // Watches `dir` recursively for any change. Resolves to `true` on the first
-// change, or `false` if `isCancelled()` becomes truthy while we're waiting.
+// change, or `false` if `signal` is aborted while we're waiting.
 // Uses chokidar so this works uniformly on macOS, Linux, and Windows.
-async function waitForFileChange(dir, isCancelled) {
+async function waitForFileChange(dir, signal) {
+  if (signal.aborted) {
+    return false;
+  }
   return new Promise((resolve) => {
     const watcher = chokidar.watch(dir, {
       ignoreInitial: true,
       ignored: (p) => p.includes("/node_modules/"),
     });
 
-    const cleanup = () => {
-      clearInterval(cancelCheck);
+    const done = (value) => {
+      signal.removeEventListener("abort", onAbort);
       watcher.close();
+      resolve(value);
     };
+    const onAbort = () => done(false);
 
-    const cancelCheck = setInterval(() => {
-      if (isCancelled()) {
-        cleanup();
-        resolve(false);
-      }
-    }, 100);
-
-    watcher.on("all", () => {
-      cleanup();
-      resolve(true);
-    });
-    watcher.on("error", () => {
-      cleanup();
-      resolve(true);
-    });
+    signal.addEventListener("abort", onAbort);
+    watcher.on("all", () => done(true));
+    watcher.on("error", () => done(true));
   });
 }
 
-process.on("SIGINT", () => forwardSignal("SIGINT"));
-process.on("SIGTERM", () => forwardSignal("SIGTERM"));
-process.on("SIGHUP", () => forwardSignal("SIGHUP"));
-
-while (!shuttingDown) {
+while (!shutdown.signal.aborted) {
   fs.rmSync(REBUILD_IN_FLIGHT_FILE, { force: true });
 
   const proc = spawn(process.execPath, [WORKER_PATH], { stdio: "inherit" });
@@ -86,7 +69,7 @@ while (!shuttingDown) {
   });
   child = null;
 
-  if (shuttingDown) {
+  if (shutdown.signal.aborted) {
     process.exit(code ?? 1);
   }
 
@@ -103,8 +86,8 @@ while (!shuttingDown) {
     console.error(
       `\n[rolldown] Worker ${reason} while ${what}. Waiting for a file change in ${WATCH_DIR} before restarting...`
     );
-    const changed = await waitForFileChange(WATCH_DIR, isShuttingDown);
-    if (!changed || shuttingDown) {
+    const changed = await waitForFileChange(WATCH_DIR, shutdown.signal);
+    if (!changed || shutdown.signal.aborted) {
       process.exit(code ?? 1);
     }
     console.error("[rolldown] File change detected. Restarting...");
