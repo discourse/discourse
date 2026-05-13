@@ -966,6 +966,18 @@ eviltrout</p>
       '<p><a href="https://discourse.org/path" data-bbcode="true"><span class="bbcode-b">discourse.org/path</span></a></p>',
       "paths are correctly handled"
     );
+
+    assert.cooked(
+      `[url='http://example.com/path?a=1']single quoted[/url]`,
+      '<p><a href="http://example.com/path?a=1" data-bbcode="true">single quoted</a></p>',
+      "single-quoted attributes are parsed correctly"
+    );
+
+    assert.cooked(
+      `[url='http://example.com/"test"']url with double quotes[/url]`,
+      '<p><a href="http://example.com/&quot;test&quot;" data-bbcode="true">url with double quotes</a></p>',
+      "single-quoted attributes can contain double quotes"
+    );
   });
 
   test("images", function (assert) {

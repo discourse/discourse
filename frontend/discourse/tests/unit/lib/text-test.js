@@ -1,7 +1,14 @@
 import { setupTest } from "ember-qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
-import { cook, excerpt, parseAsync, parseMentions } from "discourse/lib/text";
+import {
+  buildBBCodeAttrs,
+  cook,
+  excerpt,
+  parseAsync,
+  parseMentions,
+  serializeBBCodeAttr,
+} from "discourse/lib/text";
 
 module("Unit | Utility | text", function (hooks) {
   setupTest(hooks);
@@ -72,5 +79,94 @@ module("Unit | Utility | text | parseMentions", function (hooks) {
     `;
     const mentions = await parseMentions(markdown);
     assert.strictEqual(mentions.length, 0);
+  });
+});
+
+module("Unit | Utility | text | serializeBBCodeAttr", function () {
+  test("returns empty string for falsy values", function (assert) {
+    assert.strictEqual(serializeBBCodeAttr(null, "name"), "");
+    assert.strictEqual(serializeBBCodeAttr(undefined, "name"), "");
+    assert.strictEqual(serializeBBCodeAttr("", "name"), "");
+  });
+
+  test("serializes simple values without quotes", function (assert) {
+    assert.strictEqual(serializeBBCodeAttr("value", "name"), " name=value");
+    assert.strictEqual(
+      serializeBBCodeAttr("12:00:00", "time"),
+      " time=12:00:00"
+    );
+  });
+
+  test("serializes values with whitespace using double quotes", function (assert) {
+    assert.strictEqual(
+      serializeBBCodeAttr("hello world", "name"),
+      ' name="hello world"'
+    );
+  });
+
+  test("serializes values with ] using quotes", function (assert) {
+    assert.strictEqual(
+      serializeBBCodeAttr("value]test", "name"),
+      ' name="value]test"'
+    );
+  });
+
+  test("uses single quotes when value contains double quotes", function (assert) {
+    assert.strictEqual(
+      serializeBBCodeAttr('Design "Gems" Discussion', "channel"),
+      " channel='Design \"Gems\" Discussion'"
+    );
+  });
+
+  test("uses double quotes when value contains single quotes", function (assert) {
+    assert.strictEqual(
+      serializeBBCodeAttr("it's great", "title"),
+      ' title="it\'s great"'
+    );
+  });
+
+  test("strips double quotes when both quote types present", function (assert) {
+    assert.strictEqual(
+      serializeBBCodeAttr(`it's "great"`, "title"),
+      ' title="it\'s great"'
+    );
+  });
+
+  test("returns empty when stripping leaves empty value", function (assert) {
+    // Edge case: value with whitespace that becomes empty after stripping "
+    assert.strictEqual(serializeBBCodeAttr(`"' "`, "name"), ` name="' "`);
+  });
+});
+
+module("Unit | Utility | text | buildBBCodeAttrs", function () {
+  test("builds attributes string from object", function (assert) {
+    const attrs = { foo: "bar", baz: "qux" };
+    assert.strictEqual(buildBBCodeAttrs(attrs), "foo=bar baz=qux");
+  });
+
+  test("skips null and undefined values", function (assert) {
+    const attrs = { foo: "bar", skip: null, also: undefined, baz: "qux" };
+    assert.strictEqual(buildBBCodeAttrs(attrs), "foo=bar baz=qux");
+  });
+
+  test("skips specified attributes", function (assert) {
+    const attrs = { foo: "bar", skip: "this", baz: "qux" };
+    assert.strictEqual(
+      buildBBCodeAttrs(attrs, { skipAttrs: ["skip"] }),
+      "foo=bar baz=qux"
+    );
+  });
+
+  test("quotes values with whitespace", function (assert) {
+    const attrs = { name: "hello world" };
+    assert.strictEqual(buildBBCodeAttrs(attrs), 'name="hello world"');
+  });
+
+  test("switches to single quotes for values with double quotes", function (assert) {
+    const attrs = { channel: 'Design "Gems" :tada:' };
+    assert.strictEqual(
+      buildBBCodeAttrs(attrs),
+      "channel='Design \"Gems\" :tada:'"
+    );
   });
 });
