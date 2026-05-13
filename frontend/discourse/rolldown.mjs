@@ -3,12 +3,16 @@
 
 import { spawn } from "child_process";
 import chokidar from "chokidar";
+import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 
 const WORKER_PATH = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
   "rolldown-worker.mjs"
+);
+const REBUILD_IN_FLIGHT_FILE = path.resolve(
+  "./dist/manifest/.rebuild-in-flight"
 );
 const WATCH_DIR = "./app";
 
@@ -31,8 +35,11 @@ process.on("SIGTERM", () => forwardSignal("SIGTERM"));
 process.on("SIGHUP", () => forwardSignal("SIGHUP"));
 
 const isShuttingDown = () => shuttingDown;
+let immediateRetryUsed = false;
 
 while (!shuttingDown) {
+  fs.rmSync(REBUILD_IN_FLIGHT_FILE, { force: true });
+
   const proc = spawn(process.execPath, [WORKER_PATH], { stdio: "inherit" });
   child = proc;
 
@@ -48,15 +55,43 @@ while (!shuttingDown) {
   const reason = signal
     ? `terminated by signal ${signal}`
     : `exited with code ${code}`;
-  console.error(
-    `\n[rolldown] Worker ${reason}. Waiting for a file change in ${WATCH_DIR} before restarting...`
-  );
+  const pendingFiles = readPendingFiles();
 
-  const changed = await waitForFileChange(WATCH_DIR, isShuttingDown);
-  if (!changed || shuttingDown) {
-    process.exit(code ?? 1);
+  if (pendingFiles) {
+    immediateRetryUsed = false;
+    const what = pendingFiles.length
+      ? `rebuilding ${pendingFiles.join(", ")}`
+      : "an in-flight rebuild";
+    console.error(
+      `\n[rolldown] Worker ${reason} while ${what}. Waiting for a file change in ${WATCH_DIR} before restarting...`
+    );
+    const changed = await waitForFileChange(WATCH_DIR, isShuttingDown);
+    if (!changed || shuttingDown) {
+      process.exit(code ?? 1);
+    }
+    console.error("[rolldown] File change detected. Restarting...");
+  } else {
+    if (immediateRetryUsed) {
+      console.error(
+        `\n[rolldown] Worker ${reason} with no in-flight rebuild. Already retried once — exiting.`
+      );
+      process.exit(code ?? 1);
+    }
+    immediateRetryUsed = true;
+    console.error(
+      `\n[rolldown] Worker ${reason} with no in-flight rebuild. Restarting immediately...`
+    );
   }
-  console.error("[rolldown] File change detected. Restarting...");
+}
+
+function readPendingFiles() {
+  try {
+    const raw = fs.readFileSync(REBUILD_IN_FLIGHT_FILE, "utf8");
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return null;
+  }
 }
 
 // Watches `dir` recursively for any change. Resolves to `true` on the first

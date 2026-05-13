@@ -14,6 +14,7 @@ function ansiToHtml(str) {
 
 const MANIFEST_DIR = path.resolve("./dist/manifest");
 const BUILD_STATUS_FILE = path.join(MANIFEST_DIR, "build.json");
+const REBUILD_IN_FLIGHT_FILE = path.join(MANIFEST_DIR, ".rebuild-in-flight");
 
 function writeBuildStatus(status) {
   fs.mkdirSync(MANIFEST_DIR, { recursive: true });
@@ -64,6 +65,9 @@ const resolvedConfig = buildConfig({ devMode: true });
 const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
   onHmrUpdates: (result) => {
     if (result instanceof Error) {
+      if (!fs.existsSync(REBUILD_IN_FLIGHT_FILE)) {
+        fs.writeFileSync(REBUILD_IN_FLIGHT_FILE, "[]");
+      }
       console.error("Build error:", result.message);
       writeBuildStatus({
         status: "error",
@@ -74,6 +78,10 @@ const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
       return;
     }
 
+    fs.writeFileSync(
+      REBUILD_IN_FLIGHT_FILE,
+      JSON.stringify(result.changedFiles)
+    );
     console.log("Changed files:", result.changedFiles);
     hasError = false;
     buildStart = Date.now();
@@ -100,6 +108,7 @@ const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
       console.log(`Rebuild complete in ${(Date.now() - buildStart) / 1000.0}s`);
     }
     writeBuildStatus({ status: "ok" });
+    fs.rmSync(REBUILD_IN_FLIGHT_FILE, { force: true });
   },
   rebuildStrategy: "always",
   watch: {},
