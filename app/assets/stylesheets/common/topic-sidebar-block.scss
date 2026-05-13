@@ -1,0 +1,7 @@
+:root {
+  --topic-sidebar-block-width: 30em;
+}
+
+.topic-sidebar-block {
+  width: var(--topic-sidebar-block-width);
+}

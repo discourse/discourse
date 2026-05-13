@@ -156,9 +156,7 @@ export default <template>
       {{/if}}
 
       {{#unless @controller.isCurrentAdminRoute}}
-        <div id="sidebar-right" class="sidebar-right">
-          <BlockOutlet @name="sidebar-right" />
-        </div>
+        <BlockOutlet @name="sidebar-right" />
       {{/unless}}
     </div>
 
