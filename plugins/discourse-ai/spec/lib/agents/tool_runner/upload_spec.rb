@@ -23,6 +23,12 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
 
   describe "upload operations" do
     describe "upload base64 encoding" do
+      let(:base64_script) { <<~JS }
+        function invoke(params) {
+          return upload.getBase64(params.upload_id, params.max_pixels);
+        }
+      JS
+
       it "can get base64 data from upload ID and short URL" do
         upload = UploadCreator.new(jpg, "1x1.jpg").create_for(Discourse.system_user.id)
 
@@ -75,6 +81,66 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
         result_invalid = runner.invoke
 
         expect(result_invalid).to be_nil
+      end
+
+      context "with secure uploads" do
+        fab!(:invoking_user, :user)
+        fab!(:upload_owner, :user)
+        fab!(:private_group, :group)
+        fab!(:private_category) { Fabricate(:private_category, group: private_group) }
+        fab!(:private_topic) { Fabricate(:topic, category: private_category, user: upload_owner) }
+        fab!(:private_post) { Fabricate(:post, topic: private_topic, user: upload_owner) }
+        let(:secure_upload) do
+          upload = UploadCreator.new(jpg, "1x1.jpg").create_for(upload_owner.id)
+          upload.update!(secure: true, access_control_post_id: private_post.id)
+          upload
+        end
+
+        it "returns nil for a secure upload the guardian cannot see" do
+          tool = create_tool(script: base64_script)
+
+          runner =
+            tool.runner(
+              { "upload_id" => secure_upload.id },
+              llm: nil,
+              bot_user: nil,
+              context: DiscourseAi::Agents::BotContext.new(user: invoking_user),
+            )
+
+          expect(runner.invoke).to be_nil
+        end
+
+        it "returns base64 when the guardian can see the access_control_post" do
+          private_group.add(invoking_user)
+
+          tool = create_tool(script: base64_script)
+
+          runner =
+            tool.runner(
+              { "upload_id" => secure_upload.id, "max_pixels" => 1_000_000 },
+              llm: nil,
+              bot_user: nil,
+              context: DiscourseAi::Agents::BotContext.new(user: invoking_user),
+            )
+
+          expect(runner.invoke).to be_a(String)
+        end
+
+        it "returns base64 when the context is built with only a user and the user can see the access_control_post" do
+          private_group.add(invoking_user)
+
+          tool = create_tool(script: base64_script)
+
+          runner =
+            tool.runner(
+              { "upload_id" => secure_upload.id, "max_pixels" => 1_000_000 },
+              llm: nil,
+              bot_user: nil,
+              context: DiscourseAi::Agents::BotContext.new(user: invoking_user),
+            )
+
+          expect(runner.invoke).to be_present
+        end
       end
     end
 
