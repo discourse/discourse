@@ -46,14 +46,14 @@ end
 # Table name: user_second_factors
 #
 #  id         :bigint           not null, primary key
-#  user_id    :integer          not null
-#  method     :integer          not null
 #  data       :string           not null
 #  enabled    :boolean          default(FALSE), not null
 #  last_used  :datetime
+#  method     :integer          not null
+#  name       :string(300)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  name       :string(300)
+#  user_id    :integer          not null
 #
 # Indexes
 #

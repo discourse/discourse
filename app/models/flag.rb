@@ -76,16 +76,16 @@ end
 # Table name: flags
 #
 #  id               :bigint           not null, primary key
+#  applies_to       :string           not null, is an Array
+#  auto_action_type :boolean          default(FALSE), not null
+#  description      :text
+#  enabled          :boolean          default(TRUE), not null
 #  name             :string
 #  name_key         :string
-#  description      :text
 #  notify_type      :boolean          default(FALSE), not null
-#  auto_action_type :boolean          default(FALSE), not null
-#  require_message  :boolean          default(FALSE), not null
-#  applies_to       :string           not null, is an Array
 #  position         :integer          not null
-#  enabled          :boolean          default(TRUE), not null
+#  require_message  :boolean          default(FALSE), not null
+#  score_type       :boolean          default(FALSE), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  score_type       :boolean          default(FALSE), not null
 #

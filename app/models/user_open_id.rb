@@ -21,12 +21,12 @@ end
 # Table name: user_open_ids
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer          not null
+#  active     :boolean          not null
 #  email      :string           not null
 #  url        :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  active     :boolean          not null
+#  user_id    :integer          not null
 #
 # Indexes
 #

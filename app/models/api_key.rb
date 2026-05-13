@@ -132,18 +132,18 @@ end
 # Table name: api_keys
 #
 #  id            :integer          not null, primary key
-#  user_id       :integer
-#  created_by_id :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
 #  allowed_ips   :inet             is an Array
+#  description   :text
 #  hidden        :boolean          default(FALSE), not null
+#  key_hash      :string           not null
 #  last_used_at  :datetime
 #  revoked_at    :datetime
-#  description   :text
-#  key_hash      :string           not null
-#  truncated_key :string           not null
 #  scope_mode    :integer
+#  truncated_key :string           not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  created_by_id :integer
+#  user_id       :integer
 #
 # Indexes
 #

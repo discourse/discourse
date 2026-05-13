@@ -72,10 +72,10 @@ end
 # Table name: user_profile_views
 #
 #  id              :integer          not null, primary key
-#  user_profile_id :integer          not null
-#  viewed_at       :datetime         not null
 #  ip_address      :inet
+#  viewed_at       :datetime         not null
 #  user_id         :integer
+#  user_profile_id :integer          not null
 #
 # Indexes
 #

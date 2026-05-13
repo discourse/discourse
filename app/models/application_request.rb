@@ -83,9 +83,9 @@ end
 # Table name: application_requests
 #
 #  id       :integer          not null, primary key
+#  count    :integer          default(0), not null
 #  date     :date             not null
 #  req_type :integer          not null
-#  count    :integer          default(0), not null
 #
 # Indexes
 #

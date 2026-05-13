@@ -470,23 +470,23 @@ end
 #
 #  id             :integer          not null, primary key
 #  action         :integer          not null
-#  acting_user_id :integer
-#  target_user_id :integer
+#  admin_only     :boolean          default(FALSE)
+#  context        :string
+#  custom_type    :string
 #  details        :text
+#  email          :string
+#  ip_address     :string
+#  new_value      :text
+#  previous_value :text
+#  subject        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  context        :string
-#  ip_address     :string
-#  email          :string
-#  subject        :text
-#  previous_value :text
-#  new_value      :text
-#  topic_id       :integer
-#  admin_only     :boolean          default(FALSE)
-#  post_id        :integer
-#  custom_type    :string
+#  acting_user_id :integer
 #  category_id    :integer
+#  post_id        :integer
 #  reviewable_id  :bigint
+#  target_user_id :integer
+#  topic_id       :integer
 #
 # Indexes
 #

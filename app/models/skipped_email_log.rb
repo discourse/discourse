@@ -78,14 +78,14 @@ end
 # Table name: skipped_email_logs
 #
 #  id            :bigint           not null, primary key
-#  email_type    :string           not null
-#  to_address    :string           not null
-#  user_id       :integer
-#  post_id       :integer
-#  reason_type   :integer          not null
 #  custom_reason :text
+#  email_type    :string           not null
+#  reason_type   :integer          not null
+#  to_address    :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  post_id       :integer
+#  user_id       :integer
 #
 # Indexes
 #

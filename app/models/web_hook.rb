@@ -168,14 +168,14 @@ end
 # Table name: web_hooks
 #
 #  id                   :integer          not null, primary key
-#  payload_url          :string           not null
+#  active               :boolean          default(FALSE), not null
 #  content_type         :integer          default(1), not null
 #  last_delivery_status :integer          default(1), not null
-#  status               :integer          default(1), not null
+#  payload_url          :string           not null
 #  secret               :string           default("")
-#  wildcard_web_hook    :boolean          default(FALSE), not null
+#  status               :integer          default(1), not null
 #  verify_certificate   :boolean          default(TRUE), not null
-#  active               :boolean          default(FALSE), not null
+#  wildcard_web_hook    :boolean          default(FALSE), not null
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #
