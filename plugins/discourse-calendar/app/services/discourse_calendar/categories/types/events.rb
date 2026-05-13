@@ -17,7 +17,7 @@ module DiscourseCalendar
           end
 
           def category_matches?(category)
-            events_calendar_category_ids.include?(category.id.to_s)
+            events_calendar_category_ids.include?(category.id)
           end
 
           def find_matches
@@ -191,18 +191,18 @@ module DiscourseCalendar
           private
 
           def events_calendar_category_ids
-            SiteSetting.events_calendar_categories.split("|")
+            SiteSetting.events_calendar_categories_map
           end
 
           def add_to_events_calendar_categories(category)
             ids = events_calendar_category_ids
-            return if ids.include?(category.id.to_s)
+            return if ids.include?(category.id)
 
-            SiteSetting.events_calendar_categories = (ids << category.id.to_s).join("|")
+            SiteSetting.events_calendar_categories = (ids << category.id).join("|")
           end
 
           def remove_from_events_calendar_categories(category)
-            ids = events_calendar_category_ids - [category.id.to_s]
+            ids = events_calendar_category_ids - [category.id]
             SiteSetting.events_calendar_categories = ids.join("|")
           end
 
