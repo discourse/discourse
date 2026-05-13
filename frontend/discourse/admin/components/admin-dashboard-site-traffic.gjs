@@ -901,7 +901,7 @@ export default class AdminDashboardSiteTraffic extends Component {
                 {{#if this.trendComparisonTooltip}}
                   <DTooltip
                     class="admin-dashboard-site-traffic__trend-info"
-                    @icon="far-circle-question"
+                    @icon="circle-info"
                   >
                     <:content>{{this.trendComparisonTooltip}}</:content>
                   </DTooltip>
@@ -920,7 +920,7 @@ export default class AdminDashboardSiteTraffic extends Component {
               <div class="admin-dashboard-site-traffic__kpi-label">
                 <span>{{i18n "admin.dashboard.site_traffic.kpi.label"}}</span>
                 <DTooltip
-                  @icon="far-circle-question"
+                  @icon="circle-info"
                   @content={{i18n "admin.dashboard.site_traffic.kpi.tooltip"}}
                 />
               </div>
