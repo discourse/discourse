@@ -14,6 +14,13 @@ export default class SolvedSharedIssueButton extends Component {
 
   @tracked saving = false;
 
+  get show() {
+    return (
+      this.args.post.topic.shared_issue_visible &&
+      !this.args.post.topic.accepted_answer
+    );
+  }
+
   get count() {
     return this.args.post.topic.shared_issue_count ?? 1;
   }
@@ -64,23 +71,27 @@ export default class SolvedSharedIssueButton extends Component {
   }
 
   <template>
-    <DButton
-      class={{dConcatClass
-        "btn-default"
-        "post-action-menu__solved-shared-issue"
-        (if this.hasSharedIssue "has-shared-issue")
-        (if this.isTopicAuthor "disabled")
-      }}
-      ...attributes
-      @action={{this.toggle}}
-      @disabled={{this.disabled}}
-      @icon="hand"
-      @translatedLabel={{this.label}}
-      @title={{if
-        this.isTopicAuthor
-        "solved.shared_issue.author_title"
-        "solved.shared_issue.title"
-      }}
-    />
+    {{#if this.show}}
+      <div class="solved-shared-issue-row">
+        <DButton
+          class={{dConcatClass
+            "btn-default"
+            "post-action-menu__solved-shared-issue"
+            (if this.hasSharedIssue "has-shared-issue")
+            (if this.isTopicAuthor "disabled")
+          }}
+          ...attributes
+          @action={{this.toggle}}
+          @disabled={{this.disabled}}
+          @icon="hand"
+          @translatedLabel={{this.label}}
+          @title={{if
+            this.isTopicAuthor
+            "solved.shared_issue.author_title"
+            "solved.shared_issue.title"
+          }}
+        />
+      </div>
+    {{/if}}
   </template>
 }

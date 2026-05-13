@@ -63,7 +63,7 @@ module DiscourseSolved
 
     def shared_issue_visible?(topic)
       return false if topic.blank?
-      return false if topic.private_message? || topic.solved.present?
+      return false if topic.private_message?
       return false unless topic_in_support_category?(topic)
       unless UpcomingChanges.enabled_for_user?(:enable_solved_shared_issues, current_user)
         return false

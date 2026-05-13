@@ -56,6 +56,25 @@ describe "Solved | Shared issue button" do
     expect(shared_issue_button).to have_no_shared_issue_button
   end
 
+  it "re-shows the button after a solution is accepted then unaccepted" do
+    answer_post = Fabricate(:post, topic:)
+
+    sign_in(author)
+    topic_page.visit_topic(topic)
+
+    expect(shared_issue_button).to have_shared_issue_button
+
+    within("#post_#{answer_post.post_number}") do
+      find(".post-action-menu__solved-unaccepted").click
+    end
+    expect(page).to have_css(".accepted-answer")
+    expect(shared_issue_button).to have_no_shared_issue_button
+
+    within("#post_#{answer_post.post_number}") { find(".post-action-menu__solved-accepted").click }
+    expect(page).to have_no_css(".accepted-answer")
+    expect(shared_issue_button).to have_shared_issue_button
+  end
+
   it "hides the button when the upcoming change is disabled" do
     SiteSetting.enable_solved_shared_issues = false
 

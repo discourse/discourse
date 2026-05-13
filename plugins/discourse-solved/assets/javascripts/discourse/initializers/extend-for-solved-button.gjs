@@ -139,18 +139,10 @@ function customizePostMenu(api) {
     "post-content-cooked-html",
     class extends Component {
       static shouldRender(args) {
-        return (
-          args.post?.post_number === 1 &&
-          args.post?.topic?.shared_issue_visible &&
-          !args.post?.topic?.accepted_answer
-        );
+        return args.post?.post_number === 1;
       }
 
-      <template>
-        <div class="solved-shared-issue-row">
-          <SolvedSharedIssueButton @post={{@post}} />
-        </div>
-      </template>
+      <template><SolvedSharedIssueButton @post={{@post}} /></template>
     }
   );
 }
