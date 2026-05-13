@@ -19,26 +19,23 @@ module Chat
   end
 
   def self.message_onebox_template
-    @message_onebox_template ||=
-      begin
-        path = "#{Rails.root}/plugins/chat/lib/onebox/templates/discourse_chat_message.mustache"
-        File.read(path)
-      end
+    path = "#{Rails.root}/plugins/chat/lib/onebox/templates/discourse_chat_message.mustache"
+    return File.read(path) if Rails.env.development?
+
+    @message_onebox_template ||= File.read(path)
   end
 
   def self.channel_onebox_template
-    @channel_onebox_template ||=
-      begin
-        path = "#{Rails.root}/plugins/chat/lib/onebox/templates/discourse_chat_channel.mustache"
-        File.read(path)
-      end
+    path = "#{Rails.root}/plugins/chat/lib/onebox/templates/discourse_chat_channel.mustache"
+    return File.read(path) if Rails.env.development?
+
+    @channel_onebox_template ||= File.read(path)
   end
 
   def self.thread_onebox_template
-    @thread_onebox_template ||=
-      begin
-        path = "#{Rails.root}/plugins/chat/lib/onebox/templates/discourse_chat_thread.mustache"
-        File.read(path)
-      end
+    path = "#{Rails.root}/plugins/chat/lib/onebox/templates/discourse_chat_thread.mustache"
+    return File.read(path) if Rails.env.development?
+
+    @thread_onebox_template ||= File.read(path)
   end
 end
