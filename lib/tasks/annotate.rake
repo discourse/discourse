@@ -40,10 +40,17 @@ end
 
 desc "regenerate core model annotations using a temporary database"
 task "annotate:clean" => :environment do |task, args|
-  load_plugins = ENV["LOAD_PLUGINS"].presence || "0"
+  load_plugins = ENV["LOAD_PLUGINS"].presence || bundled_plugins_list
   model_dir = ENV["MODEL_DIR"].presence || "app/models"
   annotate_in_temp_db(load_plugins: load_plugins, annotaterb_args: ["--model-dir", model_dir])
   STDERR.puts "Annotate executed successfully"
+end
+
+def bundled_plugins_list
+  require "open3"
+  output, status = Open3.capture2("script/list_bundled_plugins")
+  raise "script/list_bundled_plugins failed (#{status.exitstatus})" unless status.success?
+  output.split("\n").map { |p| File.basename(p.strip) }.reject(&:empty?).join(",")
 end
 
 desc "regenerate plugin model annotations using a temporary database"
