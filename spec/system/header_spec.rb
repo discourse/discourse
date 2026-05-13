@@ -134,7 +134,14 @@ RSpec.describe "Glimmer Header" do
   end
 
   it "prioritizes new personal messages bubble over unseen reviewables and regular notifications bubbles" do
-    Fabricate(:private_message_notification, user: current_user)
+    sender = Fabricate(:user)
+    pm_post = Fabricate(:private_message_post, user: sender, recipient: current_user)
+    Fabricate(
+      :private_message_notification,
+      user: current_user,
+      topic: pm_post.topic,
+      post: pm_post,
+    )
     Fabricate(
       :notification,
       user: current_user,
