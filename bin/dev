@@ -42,10 +42,9 @@ const serverEnv = { ...process.env };
 serverEnv.UNICORN_PORT ||= "3000";
 
 if (process.env.CODESPACE_NAME) {
-  const port = process.env.UNICORN_PORT || "3000";
   serverEnv.DISCOURSE_PORT = "443";
   serverEnv.DISCOURSE_FORCE_HTTPS = "1";
-  serverEnv.DISCOURSE_FORCE_HOSTNAME = `${process.env.CODESPACE_NAME}-${port}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
+  serverEnv.DISCOURSE_FORCE_HOSTNAME = `${process.env.CODESPACE_NAME}-${serverEnv.UNICORN_PORT}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
 }
 
 const { result } = concurrently(
