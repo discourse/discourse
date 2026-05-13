@@ -400,14 +400,14 @@ module(
       });
     });
 
-    module("wrap-on-insert (free-grid)", function (innerHooks) {
+    module("wrap-on-insert (grid)", function (innerHooks) {
       innerHooks.beforeEach(async function () {
         withTestBlockRegistration(() => registerBlock(TestTile));
         // The starter library registers ve:layout + ve:slot via the
         // pre-initializer; force-load it here so the registry has them
         // for the assertions below.
         await import("discourse/plugins/discourse-visual-editor/discourse/pre-initializers/register-starter-blocks");
-        // Seed an outlet with a free-grid layout block (containing one
+        // Seed an outlet with a grid layout block (containing one
         // pre-existing tile so the strict validator accepts it as
         // non-empty) into which we'll insert more content.
         this.layout = await _renderBlocks(
@@ -415,7 +415,7 @@ module(
           [
             {
               block: "ve:layout",
-              args: { mode: "free-grid", columns: 4, rows: 2 },
+              args: { mode: "grid", columns: 4, rows: 2 },
               children: [{ block: TestTile, args: { title: "Seed" } }],
             },
           ],
@@ -427,7 +427,7 @@ module(
         this.editor.enter();
       });
 
-      test("inserts into a free-grid layout wrap the entry in ve:slot", function (assert) {
+      test("inserts into a grid layout wrap the entry in ve:slot", function (assert) {
         const draft = this.editor.readResolvedLayout("homepage-blocks");
         const gridKey = `ve:layout:${draft[0].__stableKey}`;
 
@@ -515,7 +515,7 @@ module(
       });
 
       test("inserts into a non-grid container do NOT wrap in ve:slot", function (assert) {
-        // The outlet root isn't a free-grid; inserting at root level should
+        // The outlet root isn't a grid; inserting at root level should
         // pass through unwrapped.
         const ok = this.editor.insertBlock({
           blockName: "ve:svc-test-tile",

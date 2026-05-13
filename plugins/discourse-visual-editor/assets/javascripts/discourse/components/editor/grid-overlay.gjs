@@ -14,7 +14,7 @@ import { i18n } from "discourse-i18n";
 import { computeOccupation, unoccupiedCells } from "../../lib/grid-math";
 
 /**
- * Edit-mode affordances for a selected `ve:layout` in free-grid mode.
+ * Edit-mode affordances for a selected `ve:layout` in grid mode.
  *
  * Rather than render a separate grid that sits ON TOP of the layout
  * (which fought alignment endlessly because the two grids resolve row
@@ -138,9 +138,8 @@ export default class GridOverlay extends Component {
     // the chrome wrapper. Walk up to chrome and find the layout div so
     // `{{#in-element}}` below mounts cells / ghost as direct grid
     // children.
-    this._gridElement = element.parentElement?.querySelector(
-      ".ve-layout--free-grid"
-    );
+    this._gridElement =
+      element.parentElement?.querySelector(".ve-layout--grid");
   }
 
   @action

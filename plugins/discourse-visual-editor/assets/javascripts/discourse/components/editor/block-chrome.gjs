@@ -55,7 +55,7 @@ export default class BlockChrome extends Component {
    */
   getChromeEl = () => this._chromeEl;
   /**
-   * Locates the parent free-grid layout's grid `<div>` element so the
+   * Locates the parent grid layout's grid `<div>` element so the
    * resize modifier can measure cell sizes. Walks up from this chrome's
    * own element through the DOM until it finds the grid container.
    *
@@ -65,7 +65,7 @@ export default class BlockChrome extends Component {
     if (!this._chromeEl) {
       return null;
     }
-    return this._chromeEl.closest(".ve-layout--free-grid");
+    return this._chromeEl.closest(".ve-layout--grid");
   };
   /**
    * Returns the ghost element rendered inside the parent grid by the
@@ -173,18 +173,22 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Whether the wrapped block is a `ve:layout` in `free-grid` mode.
-   * Reads the LIVE entry args via the editor service rather than the
-   * curried `@blockArgs` snapshot (which doesn't reactively update when
-   * the inspector mutates the layout's `mode` — the user can flip to
-   * Free grid and the grid overlay would stay un-mounted otherwise).
+   * Whether the wrapped block is a `ve:layout` in `grid` mode (the
+   * per-cell editor target). Reads the LIVE entry args via the editor
+   * service rather than the curried `@blockArgs` snapshot — that
+   * snapshot doesn't reactively update when the inspector mutates the
+   * layout's `mode`, so flipping to Grid would otherwise leave the
+   * overlay un-mounted.
+   *
+   * Accepts the legacy `"free-grid"` mode value as an alias for
+   * `"grid"` so existing saved layouts keep working.
    *
    * Opens a tracked dep on `structuralVersion` so this re-evaluates
    * every time the layout changes.
    *
    * @returns {boolean}
    */
-  get isFreeGridLayout() {
+  get isGridLayout() {
     if (this.args.blockName !== "ve:layout") {
       return false;
     }
@@ -194,29 +198,29 @@ export default class BlockChrome extends Component {
       this.args.blockKey
     )?.entry;
     const mode = entry?.args?.mode ?? this.args.blockArgs?.mode ?? "stack";
-    return mode === "free-grid";
+    return mode === "grid" || mode === "free-grid";
   }
 
   /**
    * Whether to mount the grid overlay (cell placeholders + drag ghost).
    * Always mounts while the editor is active and the block is a
-   * free-grid `ve:layout` — gating on selection meant the cells
+   * `ve:layout` in grid mode — gating on selection meant the cells
    * disappeared as soon as the user clicked into a slot's content,
    * AND meant existing grids on page load showed no cells at all
    * until the author hunted for and clicked the layout. The cell
    * placeholders share the chrome's visual language so showing them
-   * for every free-grid is consistent with how the editor surfaces
+   * for every grid layout is consistent with how the editor surfaces
    * other block boundaries.
    *
    * @returns {boolean}
    */
   get showsGridOverlay() {
-    return this.isFreeGridLayout;
+    return this.isGridLayout;
   }
 
   /**
    * Whether this block sits directly inside a `ve:slot` (which only
-   * exists inside a free-grid `ve:layout`). Drives the resize-handle
+   * exists inside a `ve:layout` in grid mode). Drives the resize-handle
    * affordance — the inner block's chrome is the visible "cell", so
    * authors resize from there.
    *
@@ -260,7 +264,7 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Columns count of the free-grid layout containing this slot.
+   * Columns count of the grid layout containing this slot.
    * (`ve:slot`'s parent is always the `ve:layout`.) Drives the resize
    * modifier's snap math.
    *
@@ -283,7 +287,7 @@ export default class BlockChrome extends Component {
 
   /**
    * Whether this slot's cell rectangle overlaps a sibling slot in the
-   * same free-grid layout. Drives the `--overlapping` class on the
+   * same grid layout. Drives the `--overlapping` class on the
    * slot wrapper (transparent path). Only checked for the slot's own
    * chrome — inner-block chromes inside a slot have their decoration
    * suppressed via SCSS, so they don't need their own overlap state.
@@ -362,13 +366,13 @@ export default class BlockChrome extends Component {
    * @returns {boolean}
    */
   get showsInsideDropZone() {
-    return this.isContainer && !this.isFreeGridLayout;
+    return this.isContainer && !this.isGridLayout;
   }
 
   /**
    * Whether to render the before/after sibling drop zones around this
    * chrome. In a stack/row/auto-grid layout they let authors drop
-   * blocks adjacent to existing siblings; inside a free-grid slot
+   * blocks adjacent to existing siblings; inside a grid slot
    * there's no "before/after" — placement is by cell coordinate — so
    * the zones are meaningless and (because they take real flow space)
    * actively misalign the chrome with the grid cell. Skip them.
@@ -404,7 +408,7 @@ export default class BlockChrome extends Component {
     // generic "Drag a block here" hint would be redundant (and would
     // sit at the wrong position visually, below the grid). Skip the
     // empty-container path for them.
-    if (this.isFreeGridLayout) {
+    if (this.isGridLayout) {
       return false;
     }
     // Open a tracked dep on structuralVersion so this re-evaluates
@@ -612,7 +616,7 @@ export default class BlockChrome extends Component {
     {{#if this.isTransparent}}
       {{! Transparent blocks (`ve:slot`) get a positioned wrapper but
         no chrome decoration. The wrapper IS the direct child of the
-        parent (e.g. a free-grid layout) and carries grid-column /
+        parent (e.g. a grid layout) and carries grid-column /
         grid-row from the wrapped block's args, so CSS Grid honours
         placement regardless of what's inside the slot. }}
       {{! Slot wrapper IS the cell. The wrapper renders ALWAYS so the
@@ -770,7 +774,7 @@ export default class BlockChrome extends Component {
             <GridOverlay @gridKey={{@blockKey}} @outletName={{@outletName}} />
           {{/if}}
 
-          {{! Resize handle for blocks inside free-grid slots lives on
+          {{! Resize handle for blocks inside grid slots lives on
             the slot wrapper itself (transparent path above), not on
             the inner chrome — that's where it aligns with the cell
             outline and corner. Nothing rendered here. }}

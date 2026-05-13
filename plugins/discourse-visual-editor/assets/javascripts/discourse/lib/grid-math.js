@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- * Pure helpers for the free-grid editor (Phase 7s). All functions
+ * Pure helpers for the grid editor (Phase 7s). All functions
  * operate on plain data — no DOM access — so they're trivially
  * unit-testable.
  *
@@ -100,7 +100,7 @@ export function formatTrack(track) {
  * to surface "+" placeholders only where authors haven't already
  * placed content.
  *
- * @param {Array<Object>} slots - Child entries of a free-grid layout
+ * @param {Array<Object>} slots - Child entries of a grid layout
  *   (typically `ve:slot` blocks). Reads `slot.args.column` / `.row`.
  * @param {number} columns
  * @param {number} rows

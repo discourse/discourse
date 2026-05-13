@@ -22,7 +22,7 @@ import { cellAt, parseSlotPlacement } from "../lib/grid-math";
  *
  * Arguments (positional):
  *   1. `getGridElement` — function returning the actual grid container
- *      (the `ve-layout--free-grid` `<div>`), used to measure the current
+ *      (the `ve-layout--grid` `<div>`), used to measure the current
  *      viewport rect on pointerdown and convert pointer coordinates →
  *      cell. Passed as a getter (not a direct element) so the modifier
  *      resolves the reference on pointerdown — by which time the
@@ -57,7 +57,7 @@ export default modifier(
       }
       // Resize handles live in two places: the grid overlay (`__tile-resize`,
       // for tile-overlay-based editing) and the block chrome itself
-      // (`__resize-handle`, for the chrome-driven free-grid editor). Either
+      // (`__resize-handle`, for the chrome-driven grid editor). Either
       // matches and puts the modifier into resize mode; anywhere else is
       // treated as a move grab on the tile body.
       const isResize = event.target.closest(
