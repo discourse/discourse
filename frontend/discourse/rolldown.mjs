@@ -74,23 +74,23 @@ while (!shutdown.signal.aborted) {
       ? `rebuilding ${pendingFiles.join(", ")}`
       : "an in-flight rebuild";
     console.error(
-      `\n[rolldown] Worker ${reason} while ${what}. Waiting for a file change in ${WATCH_DIR} before restarting...`
+      `\nWorker ${reason} while ${what}. Waiting for a file change in ${WATCH_DIR} before restarting...`
     );
     const changed = await waitForFileChange();
     if (!changed) {
       process.exit(code ?? 1);
     }
-    console.error("[rolldown] File change detected. Restarting...");
+    console.error("File change detected. Restarting...");
   } else {
     if (immediateRetryUsed) {
       console.error(
-        `\n[rolldown] Worker ${reason} with no in-flight rebuild. Already retried once — exiting.`
+        `\nWorker ${reason} with no in-flight rebuild. Already retried once — exiting.`
       );
       process.exit(code ?? 1);
     }
     immediateRetryUsed = true;
     console.error(
-      `\n[rolldown] Worker ${reason} with no in-flight rebuild. Restarting immediately...`
+      `\nWorker ${reason} with no in-flight rebuild. Restarting immediately...`
     );
   }
 }
