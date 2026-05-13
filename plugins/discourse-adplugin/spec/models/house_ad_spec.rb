@@ -357,6 +357,16 @@ describe AdPlugin::HouseAd do
   describe "destroying with associated impressions" do
     let!(:ad) { AdPlugin::HouseAd.create!(valid_attrs) }
 
+    it "does not bypass impression destroy callbacks or dependent cleanup" do
+      dependent_associations =
+        AdPlugin::AdImpression.reflect_on_all_associations.select do |reflection|
+          reflection.options[:dependent].present?
+        end
+
+      expect(AdPlugin::AdImpression._destroy_callbacks.map(&:filter)).to be_empty
+      expect(dependent_associations.map(&:name)).to be_empty
+    end
+
     it "deletes impressions when the ad is destroyed" do
       Fabricate(:anonymous_house_ad_impression, house_ad: ad)
       Fabricate(:anonymous_house_ad_impression, house_ad: ad)
