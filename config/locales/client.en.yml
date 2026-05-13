@@ -6989,7 +6989,6 @@ en:
             anonymous: "Anonymous"
             crawlers: "Crawlers"
           chart:
-            empty: "No traffic data for this period."
             error: "We couldn’t load traffic data."
             retry: "Retry"
             tooltip:

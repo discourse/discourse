@@ -562,24 +562,6 @@ export default class AdminDashboardSiteTraffic extends Component {
     );
   }
 
-  get hasChartData() {
-    if (this.bucketsBySeries.size === 0) {
-      return false;
-    }
-    for (const buckets of this.bucketsBySeries.values()) {
-      for (const bucket of buckets) {
-        if (bucket.total > 0) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  get showEmptyState() {
-    return Boolean(this.model) && !this.hasChartData;
-  }
-
   // Max stack height across all visible (non-hidden) buckets. Used to pick
   // a clean y-axis step.
   get visibleStackHeight() {
@@ -959,39 +941,6 @@ export default class AdminDashboardSiteTraffic extends Component {
         {{else if this.chartConfig}}
           <div class="admin-dashboard-site-traffic__chart-canvas">
             <canvas {{renderChart this.chartConfig}}></canvas>
-          </div>
-          {{#if this.showEmptyState}}
-            <div class="admin-dashboard-site-traffic__empty-overlay">
-              <div class="admin-dashboard-site-traffic__empty-state">
-                <span
-                  class="admin-dashboard-site-traffic__empty-indicator"
-                  aria-hidden="true"
-                >
-                  <span
-                    class="admin-dashboard-site-traffic__empty-indicator-bar"
-                  ></span>
-                </span>
-                <span class="admin-dashboard-site-traffic__empty-text">
-                  {{i18n "admin.dashboard.site_traffic.chart.empty"}}
-                </span>
-              </div>
-            </div>
-          {{/if}}
-        {{else if this.showEmptyState}}
-          <div class="admin-dashboard-site-traffic__empty-overlay">
-            <div class="admin-dashboard-site-traffic__empty-state">
-              <span
-                class="admin-dashboard-site-traffic__empty-indicator"
-                aria-hidden="true"
-              >
-                <span
-                  class="admin-dashboard-site-traffic__empty-indicator-bar"
-                ></span>
-              </span>
-              <span class="admin-dashboard-site-traffic__empty-text">
-                {{i18n "admin.dashboard.site_traffic.chart.empty"}}
-              </span>
-            </div>
           </div>
         {{/if}}
       </div>

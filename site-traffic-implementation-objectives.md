@@ -260,13 +260,13 @@ The title shape alone identifies the bucket size; no separate "Daily / Weekly / 
 
 8.1 **Loading state — page-level slider plus immediate section dim**: the section reuses Discourse's existing **page loading slider** (the thin animated bar at the top of the page that Discourse uses during navigation, controlled by the `page_loading_indicator` site setting). When data is being fetched (period change, custom-range update, retry), the section triggers the page-level slider just like a navigation event would, so admins see a familiar "loading" affordance at the top of the page. In addition, the section card dims to a reduced opacity **immediately on click** so the admin gets explicit visual confirmation that their action was registered — there is no delay before the dim starts. When new data arrives, the card snaps back to full opacity and the slider completes its animation. Throughout the dim, the previous period's headline, KPI, filter pills, and chart stay visible (faded) so the admin sees the old context until the new data lands. The period selector stays outside the dim and remains interactive. Initial first load also triggers the slider and dims the (initially empty) card.
 
-8.2 **Empty (no human pageviews in the period)**: the chart still renders its axes; an overlay reads "No traffic data for this period". The headline still reads "0 pageviews ...". Filter pills still render on public communities.
+8.2 **Empty (no human pageviews in the period)**: the chart renders normally with every bucket at zero — the per-bucket minimum visible bar height from §7.6a keeps every slot visible. There is no separate empty-state overlay or message. The headline still reads "0 pageviews ...". Filter pills still render on public communities.
 
-8.3 A period with zero human pageviews but some crawler traffic is considered empty on first load because Crawlers is off by default (§6.2). The chart shows the empty overlay until an admin explicitly turns on the Crawlers filter.
+8.3 A period with zero human pageviews but some crawler traffic is treated the same way on first load because Crawlers is off by default (§6.2): the chart shows zero-height bars for the human series until an admin turns on the Crawlers filter.
 
-8.4 **Brand-new community** (no tracked traffic yet): the empty state renders cleanly — no broken layout, no stuck spinner.
+8.4 **Brand-new community** (no tracked traffic yet): the chart renders cleanly as all-zero bars — no broken layout, no stuck spinner, no empty-state overlay.
 
-8.5 **Custom range entirely before tracking started**: the empty state renders cleanly.
+8.5 **Custom range entirely before tracking started**: the chart renders cleanly as all-zero bars.
 
 8.6 **Error**: when fetching fails, the chart area shows an error state with a retry control. The section heading and period selector remain interactive.
 
