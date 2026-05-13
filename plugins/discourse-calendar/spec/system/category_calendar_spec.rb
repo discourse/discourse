@@ -95,6 +95,15 @@ describe "Category calendar" do
       expect(page).to have_current_path("#{category.relative_url}/l/latest")
       expect(category_page).to have_selector("#category-events-calendar .fc")
     end
+    
+    it "prefers category defaultView over calendar_category_default_view" do
+        SiteSetting.calendar_category_default_view = "month"
+        SiteSetting.calendar_categories = "categoryId=#{category.id};defaultView=week"
+
+        category_page.visit(category)
+
+        expect(category_page).to have_selector("#category-events-calendar .fc-timeGridWeek-view")
+    end
   end
 
   context "with color mapping", time: Time.utc(2026, 6, 2, 19, 00) do
@@ -155,14 +164,6 @@ describe "Category calendar" do
         expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq(
           "rgb(46, 204, 113)",
         )
-      end
-      it "prefers category defaultView over calendar_category_default_view" do
-        SiteSetting.calendar_category_default_view = "month"
-        SiteSetting.calendar_categories = "categoryId=#{category.id};defaultView=week"
-
-        category_page.visit(category)
-
-        expect(category_page).to have_selector("#category-events-calendar .fc-timeGridWeek-view")
       end
     end
   end
