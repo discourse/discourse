@@ -14,10 +14,12 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
   async beforeModel(transition) {
     const params = this.paramsFor(this.routeName);
     const recipients = params.recipients?.split(",");
-    const channelIdentifier = params.channel_id || params.channel;
 
-    if (channelIdentifier) {
-      const channel = await this.#findChannel(channelIdentifier);
+    if (params.channel_id || params.channel) {
+      const channel = await this.#findChannel({
+        channelId: params.channel_id,
+        channelSlug: params.channel,
+      });
 
       if (!channel) {
         transition.abort();
@@ -65,20 +67,17 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
     );
   }
 
-  async #findChannel(identifier) {
+  async #findChannel({ channelId, channelSlug }) {
     await this.chat.loadChannels();
 
-    if (/^\d+$/.test(String(identifier))) {
-      const byId = await this.chatChannelsManager.find(identifier, {
+    if (channelId) {
+      return this.chatChannelsManager.find(channelId, {
         fetchIfNotFound: false,
       });
-      if (byId) {
-        return byId;
-      }
     }
 
     return this.chatChannelsManager.channels.find(
-      (channel) => channel.slug === identifier
+      (channel) => channel.slug === channelSlug
     );
   }
 }
