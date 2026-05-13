@@ -169,10 +169,14 @@ export default class VELayout extends Component {
         rowTemplate.length === 0 && rowHeight === "minmax(0, 1fr)";
       const minHeight = useFlexRows ? `min-height: ${rows * 80}px; ` : "";
 
+      // `position: relative` anchors the editor's drop-preview overlay
+      // (rendered inside the grid by `GridOverlay` and positioned with
+      // absolute pixel coordinates for line-shape variants).
       return trustHTML(
         `display: grid; grid-template-columns: ${gridTemplateColumns}; ` +
           `grid-template-rows: ${gridTemplateRows}; ` +
           `gap: ${gap}rem; align-items: ${align}; ` +
+          `position: relative; ` +
           minHeight +
           `transition: grid-template-columns 180ms ease, ` +
           `grid-template-rows 180ms ease, gap 180ms ease;`
