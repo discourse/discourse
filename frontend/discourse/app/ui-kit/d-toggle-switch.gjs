@@ -1,5 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
+import { cached } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -37,13 +39,15 @@ import { i18n } from "discourse-i18n";
 
 /** @extends {Component<DToggleSwitchSignature>} */
 export default class DToggleSwitch extends Component {
-  constructor(owner, args) {
-    super(owner, args);
-
-    assert(
-      "[d-toggle-switch] pass either @label or @translatedLabel, not both",
-      !(this.args.label && this.args.translatedLabel)
-    );
+  @cached
+  get validateArgs() {
+    if (DEBUG) {
+      assert(
+        "[d-toggle-switch] pass either @label or @translatedLabel, not both",
+        !(this.args.label && this.args.translatedLabel)
+      );
+    }
+    return null;
   }
 
   get computedLabel() {
@@ -54,6 +58,7 @@ export default class DToggleSwitch extends Component {
   }
 
   <template>
+    {{this.validateArgs}}
     <div class="d-toggle-switch">
       <label class="d-toggle-switch__label">
         <button

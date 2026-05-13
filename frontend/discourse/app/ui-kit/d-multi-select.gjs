@@ -1,6 +1,7 @@
 // @ts-check
 /* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
 import { cached, tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { fn } from "@ember/helper";
@@ -111,13 +112,15 @@ export default class DMultiSelect extends Component {
   compareKey = "id";
   #promise = null;
 
-  constructor(owner, args) {
-    super(owner, args);
-
-    assert(
-      "[d-multi-select] @loadFn is required",
-      typeof this.args.loadFn === "function"
-    );
+  @cached
+  get validateArgs() {
+    if (DEBUG) {
+      assert(
+        "[d-multi-select] @loadFn is required",
+        typeof this.args.loadFn === "function"
+      );
+    }
+    return null;
   }
 
   get hasSelection() {
@@ -313,6 +316,7 @@ export default class DMultiSelect extends Component {
 
   <template>
     {{! @glint-nocheck: integrates classic DTextField with `readonly` helper and a curried DMenu trigger that isn't fully reflected in the JSDoc Signature }}
+    {{this.validateArgs}}
     <DMenu
       @identifier="d-multi-select"
       @triggerComponent={{dElement "div"}}

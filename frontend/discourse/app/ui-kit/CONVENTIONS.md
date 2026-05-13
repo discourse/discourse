@@ -114,33 +114,47 @@ The component-level block describes the component as a whole. Per-arg notes belo
 
 Use Ember's `assert` from `@ember/debug`. These messages are stripped from production builds by `ember-cli-terser`, so they're free at runtime in prod and loud during development.
 
+**Validate args from a getter the template reads — not from the constructor.** Glimmer's args proxy resolves each `args.X` read via `valueForRef`, which wraps the compute in its own internal `track()` frame. In DEBUG mode that frame calls `markTagAsConsumed` for everything the reference's compute touches. If a consumer ever passes the arg as a curried template expression like `@action={{this.handler item.id}}` inside an `{{#each}}`, the compute reads the parent's `this` and the iteration value, marking those upstream tags consumed. When something later mutates one of those tags during the same render transaction — most visibly the router's `targetState` during a transition — `assertTagNotConsumed` throws *"you attempted to update X, but it had already been used previously in the same computation"*. You can't tell at authoring time whether a future call site will use a curried form, so the rule is uniform: don't read args in the constructor for assertion purposes. (`untrack()` from `@glimmer/validator` does **not** sidestep this — it only suppresses the outer `consumeTag`; the marking inside `valueForRef`'s inner track frame still runs.)
+
+Validating inside a getter the template invokes puts the read in the render's own tracking frame, which is the frame that legitimately depends on that arg.
+
+Add a `@cached get validateArgs()` and reference it once from the template:
+
 ```js
+import { DEBUG } from "@glimmer/env";
+import { cached } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 
-// Required arg
-assert("[d-text-field] @value is required", this.args.value !== undefined);
-
-// Enum arg
 const FLASH_TYPES = ["success", "error", "warning", "info"];
-assert(
-  `[d-flash-message] @type must be one of ${FLASH_TYPES.join(", ")}`,
-  !this.args.type || FLASH_TYPES.includes(this.args.type)
-);
 
-// Mutually exclusive args
-assert(
-  "[d-button] pass either @label or @translatedLabel, not both",
-  !(this.args.label && this.args.translatedLabel)
-);
+@cached
+get validateArgs() {
+  if (DEBUG) {
+    assert(
+      "[d-load-more] @action is required",
+      typeof this.args.action === "function"
+    );
+    assert(
+      "[d-load-more] @onChange must be a function when provided",
+      !this.args.onChange || typeof this.args.onChange === "function"
+    );
+    assert(
+      `[d-flash-message] @type must be one of ${FLASH_TYPES.join(", ")}`,
+      !this.args.type || FLASH_TYPES.includes(this.args.type)
+    );
+  }
+  return null;
+}
 
-// Type narrowing on callbacks
-assert(
-  "[d-toggle-switch] @onChange must be a function",
-  !this.args.onChange || typeof this.args.onChange === "function"
-);
+<template>
+  {{this.validateArgs}}
+  ...
+</template>
 ```
 
-Message format: `\`[<component-name>] <what's wrong>\``. The bracketed prefix makes asserts grep-able and tells the developer immediately which component is unhappy.
+The getter runs purely for the assert side effect; the `null` return renders nothing. `@cached` keeps it from re-running on unrelated re-renders, so the asserts evaluate once per relevant arg change instead of on every template read. Wrapping the body in `if (DEBUG)` ensures the entire validation block is stripped from production builds — `assert` calls are already no-ops in prod, but the surrounding arg reads, `typeof` checks, and string allocations are not. Keep the getter declaration and the `return null;` outside the `if`; the template still invokes it, the body just becomes a trivial `return null` in prod. `return null;` (rather than no return) is required because `@ts-check` enforces TS2378 — getters must always return a value.
+
+Message format: `[<component-name>] <what's wrong>`. The bracketed prefix makes asserts grep-able and tells the developer immediately which component is unhappy.
 
 **Prefer `assert` over `throw`** for contract violations. Use `throw` only when the failure must propagate to production (rare in UI components).
 

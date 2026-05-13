@@ -50,11 +50,7 @@ module("Integration | ui-kit | DUserAvatar", function (hooks) {
     const user = buildUser();
     await render(
       <template>
-        <DUserAvatar
-          @user={{user}}
-          @ariaHidden={{false}}
-          @ariaLabel="View profile"
-        />
+        <DUserAvatar @user={{user}} @ariaLabel="View profile" />
       </template>
     );
 

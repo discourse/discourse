@@ -1,5 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
+import { cached } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -98,13 +100,15 @@ export class DSelectOption extends Component {
 
 /** @extends {Component<DSelectSignature>} */
 export default class DSelect extends Component {
-  constructor(owner, args) {
-    super(owner, args);
-
-    assert(
-      "[d-select] @onChange must be a function when provided",
-      !this.args.onChange || typeof this.args.onChange === "function"
-    );
+  @cached
+  get validateArgs() {
+    if (DEBUG) {
+      assert(
+        "[d-select] @onChange must be a function when provided",
+        !this.args.onChange || typeof this.args.onChange === "function"
+      );
+    }
+    return null;
   }
 
   get htmlSelectValue() {
@@ -137,6 +141,7 @@ export default class DSelect extends Component {
   }
 
   <template>
+    {{this.validateArgs}}
     <select
       value={{this.htmlSelectValue}}
       ...attributes

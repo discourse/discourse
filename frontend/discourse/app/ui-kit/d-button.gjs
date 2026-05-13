@@ -1,5 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
+import { cached } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
@@ -23,11 +25,11 @@ const BUTTON_TYPES = ["button", "submit", "reset"];
  * `DButton` instead of writing `<button class="btn">` so loading, disabled,
  * icon, and accessibility states stay consistent across the app.
  *
- * Click behavior comes from `@action`, `@route`, or `@href`. `@action` and
- * `@route` are mutually exclusive (passing both silently drops `@route`),
- * but `@href` can combine with either — for example, `@action` alongside
- * `@href` renders an `<a>` so middle-click opens in a new tab while a
- * regular click runs the handler. `@action` runs inside `next()` on
+ * Click behavior comes from `@action`, `@route`, or `@href`. They can be
+ * combined — for example, passing `@action` alongside `@href` renders an
+ * `<a>` so middle-click opens in a new tab while a regular click runs the
+ * handler. When both `@action` and `@route` are passed, `@action` wins
+ * and `@route` is silently dropped. `@action` runs inside `next()` on
  * non-iOS to optimise INP; pass `@forwardEvent` if your handler needs the
  * original event.
  *
@@ -52,12 +54,12 @@ const BUTTON_TYPES = ["button", "submit", "reset"];
  *
  * Actions and navigation
  *
- * @property {Function|{value: Function}} [Args.action] Click handler. Accepts a plain function or an Ember action descriptor (`{ value: Function }`). Mutually exclusive with `@route`.
+ * @property {Function|{value: Function}} [Args.action] Click handler. Accepts a plain function or an Ember action descriptor (`{ value: Function }`). Wins over `@route` when both are passed.
  * @property {any} [Args.actionParam] Value passed as the first argument to `@action` when it fires.
  * @property {boolean} [Args.forwardEvent] When true, the original click event is passed as the second argument to `@action`.
  * @property {(event: KeyboardEvent) => void} [Args.onKeyDown] Custom keydown handler. When set, the default Enter-triggers-click behavior is suppressed and your handler receives every keydown.
  * @property {string} [Args.href] Renders an `<a href="...">` instead of `<button>`. Pair with `@action` or `@route` to handle the click in JS while still exposing a real URL for middle-click and copy-link.
- * @property {string} [Args.route] Ember route name to transition to on click. Mutually exclusive with `@action`.
+ * @property {string} [Args.route] Ember route name to transition to on click. Silently dropped when `@action` is also passed.
  * @property {object|object[]} [Args.routeModels] Models passed to `router.transitionTo` alongside `@route`. Accepts a single model or an array.
  *
  * State
@@ -101,29 +103,27 @@ export default class DButton extends Component {
   @service router;
   @service capabilities;
 
-  constructor(owner, args) {
-    super(owner, args);
-
-    assert(
-      "[d-button] pass either @label or @translatedLabel, not both",
-      !(args.label && args.translatedLabel)
-    );
-    assert(
-      "[d-button] pass either @title or @translatedTitle, not both",
-      !(args.title && args.translatedTitle)
-    );
-    assert(
-      "[d-button] pass either @ariaLabel or @translatedAriaLabel, not both",
-      !(args.ariaLabel && args.translatedAriaLabel)
-    );
-    assert(
-      "[d-button] pass either @action or @route, not both",
-      !(args.action && args.route)
-    );
-    assert(
-      `[d-button] @type must be one of ${BUTTON_TYPES.join(", ")}`,
-      !args.type || BUTTON_TYPES.includes(args.type)
-    );
+  @cached
+  get validateArgs() {
+    if (DEBUG) {
+      assert(
+        "[d-button] pass either @label or @translatedLabel, not both",
+        !(this.args.label && this.args.translatedLabel)
+      );
+      assert(
+        "[d-button] pass either @title or @translatedTitle, not both",
+        !(this.args.title && this.args.translatedTitle)
+      );
+      assert(
+        "[d-button] pass either @ariaLabel or @translatedAriaLabel, not both",
+        !(this.args.ariaLabel && this.args.translatedAriaLabel)
+      );
+      assert(
+        `[d-button] @type must be one of ${BUTTON_TYPES.join(", ")}`,
+        !this.args.type || BUTTON_TYPES.includes(this.args.type)
+      );
+    }
+    return null;
   }
 
   @computed("args.icon")
@@ -280,6 +280,7 @@ export default class DButton extends Component {
   <template>
     {{! template-lint-disable no-pointer-down-event-binding }}
     {{! @glint-nocheck: dynamic `<this.wrapperElement>` root types the element as `unknown`, which interferes with attribute checks }}
+    {{this.validateArgs}}
     <this.wrapperElement
       href={{@href}}
       type={{unless @href (or @type "button")}}

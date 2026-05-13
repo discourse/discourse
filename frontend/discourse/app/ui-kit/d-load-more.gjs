@@ -1,5 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
+import { cached } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { action } from "@ember/object";
 import discourseDebounce from "discourse/lib/debounce";
@@ -76,13 +78,15 @@ export default class DLoadMore extends Component {
   rootMargin = this.args.rootMargin || "0px 0px 0px 0px";
   threshold = this.args.threshold || 0.0;
 
-  constructor(owner, args) {
-    super(owner, args);
-
-    assert(
-      "[d-load-more] @action is required",
-      typeof this.args.action === "function"
-    );
+  @cached
+  get validateArgs() {
+    if (DEBUG) {
+      assert(
+        "[d-load-more] @action is required",
+        typeof this.args.action === "function"
+      );
+    }
+    return null;
   }
 
   get enabled() {
@@ -97,6 +101,7 @@ export default class DLoadMore extends Component {
   }
 
   <template>
+    {{this.validateArgs}}
     {{#let (dElement (if (has-block) "div" "")) as |Wrapper|}}
       <Wrapper ...attributes>
         {{yield}}

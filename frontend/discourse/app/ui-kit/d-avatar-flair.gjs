@@ -1,5 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
+import { cached } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
@@ -43,13 +45,15 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 /** @extends {Component<DAvatarFlairSignature>} */
 export default class DAvatarFlair extends Component {
-  constructor(owner, args) {
-    super(owner, args);
-
-    assert(
-      "[d-avatar-flair] @flairUrl is required",
-      this.args.flairUrl != null
-    );
+  @cached
+  get validateArgs() {
+    if (DEBUG) {
+      assert(
+        "[d-avatar-flair] @flairUrl is required",
+        this.args.flairUrl != null
+      );
+    }
+    return null;
   }
 
   get icon() {
@@ -87,6 +91,7 @@ export default class DAvatarFlair extends Component {
   }
 
   <template>
+    {{this.validateArgs}}
     <div
       class={{dConcatClass
         "avatar-flair"

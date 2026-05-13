@@ -1,5 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
 import { cached, tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
@@ -153,17 +154,19 @@ export default class DModal extends Component {
     };
   });
 
-  constructor(owner, args) {
-    super(owner, args);
-
-    assert(
-      "[d-modal] @closeModal must be a function when provided",
-      !this.args.closeModal || typeof this.args.closeModal === "function"
-    );
-    assert(
-      "[d-modal] @beforeClose must be a function when provided",
-      !this.args.beforeClose || typeof this.args.beforeClose === "function"
-    );
+  @cached
+  get validateArgs() {
+    if (DEBUG) {
+      assert(
+        "[d-modal] @closeModal must be a function when provided",
+        !this.args.closeModal || typeof this.args.closeModal === "function"
+      );
+      assert(
+        "[d-modal] @beforeClose must be a function when provided",
+        !this.args.beforeClose || typeof this.args.beforeClose === "function"
+      );
+    }
+    return null;
   }
 
   @action
@@ -425,6 +428,7 @@ export default class DModal extends Component {
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     {{! @glint-nocheck: complex template — render-modifier and dSwipe signatures don't match Glint's stricter typing }}
+    {{this.validateArgs}}
 
     <DConditionalInElement
       @element={{this.modal.containerElement}}
