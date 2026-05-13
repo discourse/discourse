@@ -135,8 +135,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(postcss@8.5.13)
       '@rollup/browser':
-        specifier: ^4.60.2
-        version: 4.60.2
+        specifier: ^4.60.3
+        version: 4.60.3
       '@rollup/plugin-babel':
         specifier: ^7.0.0
         version: 7.0.0(@babel/core@7.29.0)(rollup@4.59.0)
@@ -2729,8 +2729,8 @@ packages:
     peerDependencies:
       prettier: 3.x
 
-  '@rollup/browser@4.60.2':
-    resolution: {integrity: sha512-M1cfIGGDCv5dGaUhq8eWz+LcEsmyS6lMc/89KzwO+xKbNFTvRGEJ2niQfZ9Wv7w5siYWR+/RMI/Ud0IqpX/YXQ==}
+  '@rollup/browser@4.60.3':
+    resolution: {integrity: sha512-9EEq6JTs8UYuy/R+rZzyQlSEvg5IdFKY4Kt998nIULBoCE1R2pw8s4J4kN3uhrhG8U8lpypMs98bdYldFne0GQ==}
 
   '@rollup/plugin-babel@7.0.0':
     resolution: {integrity: sha512-NS2+P7v80N3MQqehZEjgpaFb9UyX3URNMW/zvoECKGo4PY4DvJfQusTI7BX/Ks+CPvtTfk3TqcR6S9VYBi/C+A==}
@@ -3074,6 +3074,9 @@ packages:
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
+
+  '@types/estree@1.0.9':
+    resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
 
   '@types/express-serve-static-core@4.19.7':
     resolution: {integrity: sha512-FvPtiIf1LfhzsaIXhv/PHan/2FeQBbtBDtfX2QfvPxdUelMDEckK08SM6nqo1MIZY3RUlfA+HV8+hFUSio78qg==}
@@ -11600,7 +11603,7 @@ snapshots:
       prettier: 3.8.1
       rxjs: 6.6.7
 
-  '@rollup/browser@4.60.2':
+  '@rollup/browser@4.60.3':
     dependencies:
       '@types/estree': 1.0.8
 
@@ -11616,7 +11619,7 @@ snapshots:
 
   '@rollup/pluginutils@5.3.0(rollup@4.59.0)':
     dependencies:
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
       estree-walker: 2.0.2
       picomatch: 4.0.4
     optionalDependencies:
@@ -11862,19 +11865,21 @@ snapshots:
   '@types/eslint-scope@3.7.7':
     dependencies:
       '@types/eslint': 9.6.1
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
 
   '@types/eslint@8.56.12':
     dependencies:
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
       '@types/json-schema': 7.0.15
 
   '@types/eslint@9.6.1':
     dependencies:
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
       '@types/json-schema': 7.0.15
 
   '@types/estree@1.0.8': {}
+
+  '@types/estree@1.0.9': {}
 
   '@types/express-serve-static-core@4.19.7':
     dependencies:
@@ -14752,7 +14757,7 @@ snapshots:
       '@humanfs/node': 0.16.7
       '@humanwhocodes/module-importer': 1.0.1
       '@humanwhocodes/retry': 0.4.3
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
       ajv: 6.14.0
       chalk: 4.1.2
       cross-spawn: 7.0.6
@@ -14808,7 +14813,7 @@ snapshots:
 
   estree-walker@3.0.3:
     dependencies:
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
 
   esutils@2.0.3: {}
 
@@ -19423,7 +19428,7 @@ snapshots:
   webpack@5.99.9(@swc/core@1.15.33)(esbuild@0.28.0):
     dependencies:
       '@types/eslint-scope': 3.7.7
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
       '@types/json-schema': 7.0.15
       '@webassemblyjs/ast': 1.14.1
       '@webassemblyjs/wasm-edit': 1.14.1
