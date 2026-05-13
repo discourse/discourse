@@ -91,16 +91,6 @@ export default class BlockChrome extends Component {
   @tracked _chromeEl = null;
 
   /**
-   * Tracks the active dragover listener so we can detach it cleanly on
-   * leave / drop. Whole-slot highlights don't communicate WHICH zone
-   * the user is targeting; this listener feeds a drop-preview
-   * descriptor into the parent grid overlay so the single overlay
-   * element repositions / re-shapes as the cursor moves through the
-   * slot's 5 zones (center + 4 edges).
-   */
-  _slotDragOverHandler = null;
-
-  /**
    * Block metadata (description, namespace, isContainer, args schema, etc.)
    * for the wrapped block, or `null` if the registry has no entry for this
    * block name.
@@ -545,247 +535,37 @@ export default class BlockChrome extends Component {
     return source.data.blockKey !== this.args.blockKey;
   }
 
-  @action
-  handleSlotDragEnter({ element, event, source }) {
-    if (!this._slotDragOverHandler) {
-      this._slotDragOverHandler = (e) =>
-        this._updateSlotPreview(e, element, source);
-      element.addEventListener("dragover", this._slotDragOverHandler);
-    }
-    this._updateSlotPreview(event, element, source);
-  }
-
-  @action
-  handleSlotDragLeave({ element }) {
-    this._detachDragOverListener(element);
-    const gridKey = this._parentGridKey();
-    if (gridKey) {
-      this.visualEditor.clearDropPreview(gridKey);
-    }
-  }
-
-  _updateSlotPreview(event, element, source) {
-    const zone = this._computeDropZone(event, element);
-    const shift = !!event.shiftKey;
-    const descriptor = this._slotDescriptorForZone({ zone, shift, source });
-    const gridKey = this._parentGridKey();
-    if (gridKey) {
-      this.visualEditor.setDropPreview(gridKey, descriptor);
-    }
-  }
-
-  _detachDragOverListener(element) {
-    if (this._slotDragOverHandler && element) {
-      element.removeEventListener("dragover", this._slotDragOverHandler);
-    }
-    this._slotDragOverHandler = null;
-  }
-
   /**
-   * Resolves the slot's parent grid layout block key. The slot
-   * wrapper IS the cell, so its parent is always the `ve:layout` in
-   * grid mode. Returns `null` only when this chrome is wrapping a
-   * non-slot or the slot has been detached (a transient state during
-   * drag teardown).
-   */
-  _parentGridKey() {
-    const parent = this.visualEditor._findEntryParent(this.args.blockKey);
-    return parent ? entryKey(parent) : null;
-  }
-
-  /**
-   * The slot's resolved cell rectangle as a placement
-   * `{column:{start,end}, row:{start,end}}` — used by line / rect
-   * descriptors so they know which lines / cells to render against.
+   * Drop handler for the slot wrapper. Delegates to the parent
+   * grid's `GridOverlay.applySlotDrop` — the grid-level dragover
+   * listener has been setting the descriptor for this slot all
+   * along, so dispatch reads the descriptor and acts on it without
+   * needing slot-specific zone math here.
    *
-   * Defaults `auto` placement to a 1×1 cell at column 1 / row 1
-   * which keeps the math defensive when a slot hasn't been placed
-   * yet (rare; a fresh slot always has explicit column / row).
-   */
-  _slotPlacementRect() {
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.visualEditor.structuralVersion;
-    const entry = this.visualEditor._findEntryAndOutletSync(
-      this.args.blockKey
-    )?.entry;
-    const placement = parseSlotPlacement(entry?.args ?? {});
-    const colStart = placement.column.start ?? 1;
-    const colEnd = placement.column.end ?? colStart + 1;
-    const rowStart = placement.row.start ?? 1;
-    const rowEnd = placement.row.end ?? rowStart + 1;
-    return {
-      column: { start: colStart, end: colEnd },
-      row: { start: rowStart, end: rowEnd },
-    };
-  }
-
-  /**
-   * Translates a 5-zone hit-test result for a slot wrapper into a
-   * drop-preview descriptor. Center maps to a rect ("swap" by
-   * default, "replace" when Shift is held — or null if the source
-   * is a palette block, which can't land on an occupied slot's
-   * center). Edges map to a thin line in the grid gap adjacent to
-   * the slot — column lines for left/right, row lines for up/down.
-   */
-  _slotDescriptorForZone({ zone, shift, source }) {
-    const placement = this._slotPlacementRect();
-    if (zone === "center") {
-      if (source?.kind !== "ve-block") {
-        return null;
-      }
-      return {
-        kind: "rect",
-        column: placement.column,
-        row: placement.row,
-        variant: shift ? "replace" : "swap",
-      };
-    }
-    if (zone === "left") {
-      return {
-        kind: "line-column",
-        line: placement.column.start,
-        row: placement.row,
-        variant: "insert",
-      };
-    }
-    if (zone === "right") {
-      return {
-        kind: "line-column",
-        line: placement.column.end,
-        row: placement.row,
-        variant: "insert",
-      };
-    }
-    if (zone === "up") {
-      return {
-        kind: "line-row",
-        line: placement.row.start,
-        column: placement.column,
-        variant: "insert",
-      };
-    }
-    if (zone === "down") {
-      return {
-        kind: "line-row",
-        line: placement.row.end,
-        column: placement.column,
-        variant: "insert",
-      };
-    }
-    return null;
-  }
-
-  /**
-   * Dispatches a drop onto the slot wrapper. Reads the last
-   * descriptor set by `_updateSlotPreview` (rather than re-running
-   * zone math at drop time, which is unreliable — the cursor can
-   * jitter between dragover and release, leaving the user looking
-   * at the edge line one frame and the center rect the next).
+   * Passes the slot's own cell as `fallbackCell` so the dispatcher
+   * has somewhere to land the block when the descriptor is missing
+   * (drag started directly on this slot with no prior dragover).
    */
   @action
-  applySlotDrop({ source, element }) {
-    this._detachDragOverListener(element);
-
-    const gridKey = this._parentGridKey();
-    const descriptor = gridKey
-      ? this.visualEditor.getLastDropPreview(gridKey)
+  applySlotDrop({ source }) {
+    const parent = this.visualEditor._findEntryParent(this.args.blockKey);
+    const gridKey = parent ? entryKey(parent) : null;
+    const overlay = gridKey
+      ? this.visualEditor._gridOverlays.get(gridKey)
       : null;
-    if (gridKey) {
-      this.visualEditor.clearDropPreview(gridKey);
+    if (!overlay) {
+      this.visualEditor.endDrag?.();
+      return;
     }
-
-    const targetSlotKey = this.args.blockKey;
-
-    if (descriptor?.kind === "rect" && descriptor.variant === "replace") {
-      this.visualEditor.replaceSlot({
-        targetSlotKey,
-        sourceSlotKey: source.data?.blockKey,
-      });
-    } else if (descriptor?.kind === "rect" && descriptor.variant === "swap") {
-      this.visualEditor.swapSlotPlacements({
-        slotKeyA: targetSlotKey,
-        slotKeyB: source.data?.blockKey,
-      });
-    } else if (descriptor?.kind === "line-column" && gridKey) {
-      // Column-line drops translate to insert-with-shift cascading
-      // RIGHT, with the source landing at the line's column. The
-      // descriptor's `row` carries the slot's row span so the cascade
-      // operates on the right row.
-      this.visualEditor.insertWithShift({
-        gridKey,
-        dropCell: {
-          column: descriptor.line,
-          row: descriptor.row?.start ?? 1,
-        },
-        direction: "left",
-        sourceKey: source?.kind === "ve-block" ? source.data?.blockKey : null,
-        paletteBlockName:
-          source?.kind === "ve-palette-block" ? source.data?.blockName : null,
-        paletteDefaultArgs:
-          source?.kind === "ve-palette-block" ? source.data?.defaultArgs : null,
-      });
-    } else if (descriptor?.kind === "line-row" && gridKey) {
-      this.visualEditor.insertWithShift({
-        gridKey,
-        dropCell: {
-          column: descriptor.column?.start ?? 1,
-          row: descriptor.line,
-        },
-        direction: "up",
-        sourceKey: source?.kind === "ve-block" ? source.data?.blockKey : null,
-        paletteBlockName:
-          source?.kind === "ve-palette-block" ? source.data?.blockName : null,
-        paletteDefaultArgs:
-          source?.kind === "ve-palette-block" ? source.data?.defaultArgs : null,
-      });
-    }
-    this.visualEditor.endDrag?.();
-  }
-
-  /**
-   * Maps a cursor position within the slot's rect to a drop zone:
-   * `"center"` (inner 60%), or one of `"left"`/`"right"`/`"up"`/
-   * `"down"` (outer 20% bands). Corner regions tie-break by which
-   * outer edge the cursor is closer to.
-   */
-  _computeDropZone(event, element) {
-    const rect = element.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const w = rect.width;
-    const h = rect.height;
-    const edge = 0.2;
-
-    const inLeft = x < w * edge;
-    const inRight = x > w * (1 - edge);
-    const inTop = y < h * edge;
-    const inBottom = y > h * (1 - edge);
-
-    if (inLeft && inTop) {
-      return x < y ? "left" : "up";
-    }
-    if (inRight && inTop) {
-      return w - x < y ? "right" : "up";
-    }
-    if (inLeft && inBottom) {
-      return x < h - y ? "left" : "down";
-    }
-    if (inRight && inBottom) {
-      return w - x < h - y ? "right" : "down";
-    }
-    if (inLeft) {
-      return "left";
-    }
-    if (inRight) {
-      return "right";
-    }
-    if (inTop) {
-      return "up";
-    }
-    if (inBottom) {
-      return "down";
-    }
-    return "center";
+    const placement = parseSlotPlacement(
+      this.visualEditor._findEntryAndOutletSync(this.args.blockKey)?.entry
+        ?.args ?? {}
+    );
+    const fallbackCell = {
+      column: placement.column.start ?? 1,
+      row: placement.row.start ?? 1,
+    };
+    overlay.applySlotDrop({ source, fallbackCell });
   }
 
   /**
@@ -983,8 +763,6 @@ export default class BlockChrome extends Component {
         {{dDragAndDropTarget
           accepts=this.acceptedDragKinds
           canDrop=this.canDropOnSlot
-          onDragEnter=this.handleSlotDragEnter
-          onDragLeave=this.handleSlotDragLeave
           onDrop=this.applySlotDrop
         }}
       >

@@ -11,7 +11,12 @@ import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
-import { computeOccupation, unoccupiedCells } from "../../lib/grid-math";
+import {
+  computeOccupation,
+  parseSlotPlacement,
+  unoccupiedCells,
+} from "../../lib/grid-math";
+import { entryKey } from "../../lib/mutate-layout";
 
 /**
  * Edit-mode affordances for a selected `ve:layout` in grid mode.
@@ -53,6 +58,7 @@ import { computeOccupation, unoccupiedCells } from "../../lib/grid-math";
 export default class GridOverlay extends Component {
   @service visualEditor;
   @service blocks;
+  @service dragAndDrop;
 
   /**
    * Active drop-preview descriptor — drives the overlay element's
@@ -125,17 +131,29 @@ export default class GridOverlay extends Component {
   _lastDropPreview = null;
 
   /**
-   * Map from cell element to the per-cell `dragover` listener
-   * installed on entry. The shared drag-and-drop modifier only
-   * surfaces `onDragEnter`/`onDragLeave`/`onDrop`; we need
-   * continuous cursor updates inside the cell to swap between
-   * edge / center zones, so we install our own listener on enter
-   * and remove it on leave / drop.
+   * Lazily-installed dragover / dragleave handlers attached to the
+   * grid container itself (not to per-cell children). Captured here
+   * so `willDestroy` can detach them.
    */
-  _cellDragOverHandlers = new WeakMap();
+  _gridDragOverHandler = null;
+  _gridDragLeaveHandler = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
+    if (this._gridElement && this._gridDragOverHandler) {
+      this._gridElement.removeEventListener(
+        "dragover",
+        this._gridDragOverHandler,
+        true
+      );
+    }
+    if (this._gridElement && this._gridDragLeaveHandler) {
+      this._gridElement.removeEventListener(
+        "dragleave",
+        this._gridDragLeaveHandler,
+        true
+      );
+    }
     this.visualEditor.unregisterGridOverlay(this.args.gridKey, this);
   }
 
@@ -260,8 +278,28 @@ export default class GridOverlay extends Component {
     // the chrome wrapper. Walk up to chrome and find the layout div so
     // `{{#in-element}}` below mounts cells / overlay as direct grid
     // children.
-    this._gridElement =
-      element.parentElement?.querySelector(".ve-layout--grid");
+    const gridEl = element.parentElement?.querySelector(".ve-layout--grid");
+    this._gridElement = gridEl;
+    if (!gridEl) {
+      return;
+    }
+    // Drive the overlay descriptor from a single grid-level dragover
+    // listener so the overlay appears as soon as the cursor enters the
+    // grid — not only when it's over a specific cell or slot. The
+    // cursor's pixel position resolves to a cell coordinate via the
+    // grid's resolved track sizes, then to a zone within that cell. A
+    // line variant in the gap between two cells stays positioned in
+    // that gap even when the cursor is mid-traverse between cells.
+    //
+    // Capture phase: the per-cell `dDragAndDropTarget` modifier calls
+    // `event.stopPropagation()` in its own dragover handler, which
+    // would suppress this listener if we attached on the bubble phase.
+    // Using `capture: true` ensures we observe the event before the
+    // modifier sees (and stops) it.
+    this._gridDragOverHandler = (e) => this._handleGridDragOver(e);
+    this._gridDragLeaveHandler = (e) => this._handleGridDragLeave(e);
+    gridEl.addEventListener("dragover", this._gridDragOverHandler, true);
+    gridEl.addEventListener("dragleave", this._gridDragLeaveHandler, true);
   }
 
   @action
@@ -282,76 +320,380 @@ export default class GridOverlay extends Component {
    *     `moveBlockToCell`, which preserves slot identity for same-grid
    *     drags).
    */
+  /**
+   * Drop handler for empty cells. The descriptor — set by the
+   * grid-level dragover listener — carries everything the dispatch
+   * needs (target cell coords / line / row / column / variant). The
+   * `cell` arg is the drop-target's own coords, used only as a
+   * fallback when the descriptor is missing.
+   */
   @action
-  applyCellDrop(cell, { source, element }) {
-    // Capture the last descriptor BEFORE we clear it — cleanup happens
-    // first so the overlay disappears immediately on drop.
+  applyCellDrop(cell, { source }) {
     const descriptor = this._lastDropPreview;
-    this._detachCellDragOverListener(element);
     this.setDropPreview(null);
     this._lastDropPreview = null;
-
-    if (descriptor?.kind === "line-column") {
-      this._dispatchInsertWithShift({
-        dropCell: { column: descriptor.line, row: cell.row },
-        direction: "left",
-        source,
-      });
-    } else if (descriptor?.kind === "line-row") {
-      this._dispatchInsertWithShift({
-        dropCell: { column: cell.column, row: descriptor.line },
-        direction: "up",
-        source,
-      });
-    } else {
-      // Default to the cell's center semantics — drop onto the cell.
-      if (source?.kind === "ve-palette-block") {
-        this.visualEditor.insertBlockAtCell({
-          gridKey: this.args.gridKey,
-          blockName: source.data.blockName,
-          defaultArgs: source.data.defaultArgs,
-          column: cell.column,
-          row: cell.row,
-        });
-      } else if (source?.kind === "ve-block") {
-        this.visualEditor.moveBlockToCell({
-          gridKey: this.args.gridKey,
-          sourceKey: source.data.blockKey,
-          column: cell.column,
-          row: cell.row,
-        });
-      }
-    }
+    this._dispatchDrop({ descriptor, source, fallbackCell: cell });
     this.visualEditor.endDrag?.();
   }
 
+  /**
+   * Drop handler for slot wrappers in `BlockChrome`. Same dispatch
+   * path as `applyCellDrop` — the descriptor is the source of truth;
+   * the slot's own cell is used only as a fallback.
+   */
   @action
-  onCellDragEnter(cell, { element, event }) {
-    if (!this._cellDragOverHandlers.has(element)) {
-      const handler = (e) => this._updateCellPreview(cell, e, element);
-      this._cellDragOverHandlers.set(element, handler);
-      element.addEventListener("dragover", handler);
-    }
-    this._updateCellPreview(cell, event, element);
+  applySlotDrop({ source, fallbackCell }) {
+    const descriptor = this._lastDropPreview;
+    this.setDropPreview(null);
+    this._lastDropPreview = null;
+    this._dispatchDrop({ descriptor, source, fallbackCell });
+    this.visualEditor.endDrag?.();
   }
 
-  @action
-  onCellDragLeave(_cell, { element }) {
-    this._detachCellDragOverListener(element);
+  /**
+   * Single dispatch path shared between cell and slot drops — the
+   * descriptor knows what variant / line / cell is being targeted,
+   * so the source element type doesn't matter for routing.
+   */
+  _dispatchDrop({ descriptor, source, fallbackCell }) {
+    if (descriptor?.kind === "line-column") {
+      this._dispatchInsertWithShift({
+        dropCell: {
+          column: descriptor.line,
+          row: descriptor.row?.start ?? fallbackCell?.row ?? 1,
+        },
+        direction: "left",
+        source,
+      });
+      return;
+    }
+    if (descriptor?.kind === "line-row") {
+      this._dispatchInsertWithShift({
+        dropCell: {
+          column: descriptor.column?.start ?? fallbackCell?.column ?? 1,
+          row: descriptor.line,
+        },
+        direction: "up",
+        source,
+      });
+      return;
+    }
+    if (descriptor?.kind === "rect" && descriptor.variant === "swap") {
+      this.visualEditor.swapSlotPlacements({
+        slotKeyA: this._slotKeyAtPlacement(descriptor),
+        slotKeyB: source?.data?.blockKey,
+      });
+      return;
+    }
+    if (descriptor?.kind === "rect" && descriptor.variant === "replace") {
+      this.visualEditor.replaceSlot({
+        targetSlotKey: this._slotKeyAtPlacement(descriptor),
+        sourceSlotKey: source?.data?.blockKey,
+      });
+      return;
+    }
+    // Default / variant === "move": land on the descriptor's column/row
+    // start (or the drop element's own cell as fallback).
+    const column = descriptor?.column?.start ?? fallbackCell?.column ?? null;
+    const row = descriptor?.row?.start ?? fallbackCell?.row ?? null;
+    if (column == null || row == null) {
+      return;
+    }
+    if (source?.kind === "ve-palette-block") {
+      this.visualEditor.insertBlockAtCell({
+        gridKey: this.args.gridKey,
+        blockName: source.data.blockName,
+        defaultArgs: source.data.defaultArgs,
+        column,
+        row,
+      });
+    } else if (source?.kind === "ve-block") {
+      this.visualEditor.moveBlockToCell({
+        gridKey: this.args.gridKey,
+        sourceKey: source.data.blockKey,
+        column,
+        row,
+      });
+    }
+  }
+
+  /**
+   * Finds the slot whose placement matches the rect-descriptor's
+   * `column`/`row` (the slot being swapped / replaced). Returns its
+   * block key, or `null` if no slot covers that rectangle.
+   */
+  _slotKeyAtPlacement(descriptor) {
+    if (!descriptor?.column || !descriptor?.row) {
+      return null;
+    }
+    const slot = this._slotAtCell({
+      column: descriptor.column.start,
+      row: descriptor.row.start,
+    });
+    return slot ? entryKey(slot) : null;
+  }
+
+  /**
+   * Grid-level dragover handler. Fires on every mouse move while a
+   * compatible drag is in flight and the cursor is anywhere inside
+   * the grid (gaps between cells included). Computes a descriptor
+   * from the cursor's pixel position via the grid's resolved tracks,
+   * so the overlay tracks the cursor continuously rather than
+   * waiting for it to enter a child element.
+   */
+  _handleGridDragOver(event) {
+    const source = this.dragAndDrop.currentDrag;
+    if (
+      !source ||
+      (source.kind !== "ve-block" && source.kind !== "ve-palette-block")
+    ) {
+      return;
+    }
+    const descriptor = this._descriptorFromCursor(event, source);
+    this.setDropPreview(descriptor);
+  }
+
+  /**
+   * Clears the overlay when the cursor leaves the grid entirely.
+   * `dragleave` ALSO fires when the cursor crosses from the grid
+   * into a child; suppress that case by checking whether the
+   * `relatedTarget` (the element the cursor moved INTO) is still
+   * inside the grid.
+   */
+  _handleGridDragLeave(event) {
+    const rt = event.relatedTarget;
+    if (rt && this._gridElement?.contains(rt)) {
+      return;
+    }
     this.setDropPreview(null);
   }
 
-  _detachCellDragOverListener(element) {
-    const handler = this._cellDragOverHandlers.get(element);
-    if (handler) {
-      element.removeEventListener("dragover", handler);
-      this._cellDragOverHandlers.delete(element);
+  /**
+   * Translates the cursor's pixel coordinates within the grid into a
+   * drop-preview descriptor. Algorithm:
+   *  1. Read resolved track widths / heights / gaps via
+   *     `getComputedStyle`.
+   *  2. Map cursor x → column-index, cursor y → row-index by walking
+   *     the track positions cumulatively.
+   *  3. Compute the cell's pixel bounds and the cursor's position
+   *     INSIDE that bounding box → 5-zone hit test (center / left /
+   *     right / up / down).
+   *  4. If the cell is occupied by a slot, produce a slot-level
+   *     descriptor (swap / replace / insert). Otherwise produce an
+   *     empty-cell descriptor (move / insert).
+   *
+   * Returns `null` (overlay hidden) when the cursor is outside the
+   * resolved track range or the source can't drop on the resolved
+   * target (e.g. palette block onto an occupied slot's center).
+   */
+  _descriptorFromCursor(event, source) {
+    // The source can never be dropped onto itself or into any of its
+    // own descendants — that would create a cycle. Hide the overlay
+    // entirely when the cursor is hovering THIS grid and the source
+    // either IS this grid's layout or an ancestor of it.
+    const sourceKey =
+      source?.kind === "ve-block" ? source.data?.blockKey : null;
+    if (sourceKey && this._sourceCoversTarget(sourceKey, this.args.gridKey)) {
+      return null;
     }
+
+    const tracks = this._readGridTracks();
+    if (!tracks) {
+      return null;
+    }
+    const gridRect = this._gridElement.getBoundingClientRect();
+    const x = event.clientX - gridRect.left;
+    const y = event.clientY - gridRect.top;
+
+    const cell = this._cursorToCell(x, y, tracks);
+    if (!cell) {
+      return null;
+    }
+    const bounds = this._cellBounds(cell, tracks);
+    const zone = this._computeZone(
+      x - bounds.left,
+      y - bounds.top,
+      bounds.width,
+      bounds.height
+    );
+
+    const slot = this._slotAtCell(cell);
+    if (slot) {
+      // Same check at the slot level — never preview a drop onto the
+      // source slot itself or any slot nested inside the source.
+      const slotKey = entryKey(slot);
+      if (sourceKey && this._sourceCoversTarget(sourceKey, slotKey)) {
+        return null;
+      }
+      return this._slotDescriptorForZone({
+        slot,
+        zone,
+        shift: event.shiftKey,
+        source,
+      });
+    }
+    return this._cellDescriptorForZone(cell, zone);
   }
 
-  _updateCellPreview(cell, event, element) {
-    const zone = this._computeCellDropZone(event, element);
-    this.setDropPreview(this._cellDescriptorForZone(cell, zone));
+  /**
+   * Returns `true` if `targetKey` IS `sourceKey` or is one of its
+   * descendants. Used to block the drop preview on illegal targets
+   * (a block dropped into itself or its own subtree would form a
+   * cycle in the layout tree).
+   */
+  _sourceCoversTarget(sourceKey, targetKey) {
+    if (!sourceKey || !targetKey) {
+      return false;
+    }
+    if (sourceKey === targetKey) {
+      return true;
+    }
+    return this.visualEditor._isAncestorOf(sourceKey, targetKey);
+  }
+
+  /**
+   * Maps a pixel position (relative to the grid's top-left) to a
+   * 1-indexed `(column, row)` cell. Pixels falling in a column gap
+   * snap to the column whose nearest edge is closer (i.e. the gap
+   * is split halfway). Returns `null` when the position falls outside
+   * the grid's resolved track range.
+   */
+  _cursorToCell(x, y, tracks) {
+    const col = this._findTrackIndex(x, tracks.colWidths, tracks.colGap);
+    const row = this._findTrackIndex(y, tracks.rowHeights, tracks.rowGap);
+    if (col == null || row == null) {
+      return null;
+    }
+    return { column: col, row };
+  }
+
+  /**
+   * 1-indexed track lookup. Walks the cumulative track positions
+   * (track width + gap, ad infinitum) and returns the index of the
+   * track whose right edge — including half the trailing gap — the
+   * cursor hasn't passed yet. Past the last track, returns the last
+   * track's index.
+   */
+  _findTrackIndex(pos, sizes, gap) {
+    if (pos < 0) {
+      return null;
+    }
+    let acc = 0;
+    for (let i = 0; i < sizes.length; i++) {
+      const trackEnd = acc + sizes[i];
+      if (pos <= trackEnd + gap / 2) {
+        return i + 1;
+      }
+      acc = trackEnd + gap;
+    }
+    return sizes.length;
+  }
+
+  /**
+   * Pixel rectangle for a `(column, row)` cell, computed from the
+   * grid's resolved tracks. Used to compute the cursor's position
+   * within the cell for zone detection.
+   */
+  _cellBounds(cell, tracks) {
+    const left = this._trackStart(cell.column, tracks.colWidths, tracks.colGap);
+    const right = this._trackEnd(
+      cell.column + 1,
+      tracks.colWidths,
+      tracks.colGap
+    );
+    const top = this._trackStart(cell.row, tracks.rowHeights, tracks.rowGap);
+    const bottom = this._trackEnd(
+      cell.row + 1,
+      tracks.rowHeights,
+      tracks.rowGap
+    );
+    return {
+      left,
+      top,
+      width: right - left,
+      height: bottom - top,
+    };
+  }
+
+  /**
+   * Finds the slot whose placement covers `(cell.column, cell.row)`.
+   * Auto-placed slots (no explicit column / row) are ignored — for
+   * descriptor purposes we treat their cells as empty.
+   */
+  _slotAtCell(cell) {
+    for (const slot of this.slots) {
+      const placement = parseSlotPlacement(slot.args ?? {});
+      if (placement.column.start == null || placement.row.start == null) {
+        continue;
+      }
+      if (
+        cell.column >= placement.column.start &&
+        cell.column < placement.column.end &&
+        cell.row >= placement.row.start &&
+        cell.row < placement.row.end
+      ) {
+        return slot;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Slot-level descriptor for a given zone. Center maps to a rect
+   * (swap / replace if Shift, or null when the source is a palette
+   * block — palette blocks can't land on an occupied cell's center).
+   * Edges map to thin lines in the gap on the slot's outer perimeter.
+   */
+  _slotDescriptorForZone({ slot, zone, shift, source }) {
+    const placement = parseSlotPlacement(slot.args ?? {});
+    const slotKey = entryKey(slot);
+    if (zone === "center") {
+      if (source?.kind !== "ve-block") {
+        return null;
+      }
+      if (source.data?.blockKey === slotKey) {
+        return null;
+      }
+      return {
+        kind: "rect",
+        column: placement.column,
+        row: placement.row,
+        variant: shift ? "replace" : "swap",
+      };
+    }
+    if (zone === "left") {
+      return {
+        kind: "line-column",
+        line: placement.column.start,
+        row: placement.row,
+        variant: "insert",
+      };
+    }
+    if (zone === "right") {
+      return {
+        kind: "line-column",
+        line: placement.column.end,
+        row: placement.row,
+        variant: "insert",
+      };
+    }
+    if (zone === "up") {
+      return {
+        kind: "line-row",
+        line: placement.row.start,
+        column: placement.column,
+        variant: "insert",
+      };
+    }
+    if (zone === "down") {
+      return {
+        kind: "line-row",
+        line: placement.row.end,
+        column: placement.column,
+        variant: "insert",
+      };
+    }
+    return null;
   }
 
   /**
@@ -417,49 +759,35 @@ export default class GridOverlay extends Component {
   }
 
   /**
-   * Five-zone hit test inside an empty cell, matching the slot
-   * wrapper's `_computeDropZone`. Returns `"center"` for the inner
-   * 60% rect, otherwise one of `"left"`/`"right"`/`"up"`/`"down"`.
-   * Corners resolve to the nearer edge.
+   * Five-zone hit test inside a cell. Returns `"center"` for the
+   * inner 60% rect, otherwise one of `"left"`/`"right"`/`"up"`/
+   * `"down"` (outer 20% bands). Corners resolve to whichever edge
+   * the cursor is RELATIVELY closer to — `x/w` vs `y/h` rather than
+   * absolute pixels — so a hover on the left edge of a tall narrow
+   * cell stays "left" instead of biasing toward "up"/"down" near
+   * corners.
    */
-  _computeCellDropZone(event, element) {
-    const rect = element.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const w = rect.width;
-    const h = rect.height;
+  _computeZone(x, y, w, h) {
     const edge = 0.2;
+    const fromLeft = x / w;
+    const fromRight = (w - x) / w;
+    const fromTop = y / h;
+    const fromBottom = (h - y) / h;
+    const minFromEdge = Math.min(fromLeft, fromRight, fromTop, fromBottom);
 
-    const inLeft = x < w * edge;
-    const inRight = x > w * (1 - edge);
-    const inTop = y < h * edge;
-    const inBottom = y > h * (1 - edge);
-
-    if (inLeft && inTop) {
-      return x < y ? "left" : "up";
+    if (minFromEdge > edge) {
+      return "center";
     }
-    if (inRight && inTop) {
-      return w - x < y ? "right" : "up";
-    }
-    if (inLeft && inBottom) {
-      return x < h - y ? "left" : "down";
-    }
-    if (inRight && inBottom) {
-      return w - x < h - y ? "right" : "down";
-    }
-    if (inLeft) {
+    if (minFromEdge === fromLeft) {
       return "left";
     }
-    if (inRight) {
+    if (minFromEdge === fromRight) {
       return "right";
     }
-    if (inTop) {
+    if (minFromEdge === fromTop) {
       return "up";
     }
-    if (inBottom) {
-      return "down";
-    }
-    return "center";
+    return "down";
   }
 
   /**
@@ -680,8 +1008,6 @@ export default class GridOverlay extends Component {
             style={{this.cellStyle cell}}
             {{dDragAndDropTarget
               accepts=this.acceptedDropKinds
-              onDragEnter=(fn this.onCellDragEnter cell)
-              onDragLeave=(fn this.onCellDragLeave cell)
               onDrop=(fn this.applyCellDrop cell)
             }}
           >
