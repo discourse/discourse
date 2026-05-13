@@ -185,6 +185,12 @@ module TestSetup
 
     I18n.locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
 
+    # Flush I18n cache if there were any TranslationOverrides created.
+    overrides_by_site = I18n.instance_variable_get(:@overrides_by_site)
+    if overrides_by_site&.any? { |_, by_locale| by_locale&.any? { |_, kv| kv.present? } }
+      I18n.reload!
+    end
+
     RspecErrorTracker.clear_exceptions
 
     if $test_cleanup_callbacks
