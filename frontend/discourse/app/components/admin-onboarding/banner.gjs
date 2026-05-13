@@ -7,16 +7,30 @@ import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
 import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
 import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
+import ThemePickerModal from "discourse/components/admin-onboarding/modal/theme-picker";
 import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
 import CreateInvite from "discourse/components/modal/create-invite";
-import { getAbsoluteURL } from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
+import { defaultHomepage } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const STEPS = [
+  class SelectTheme extends OnboardingStep {
+    static name = "select_theme";
+
+    @service modal;
+
+    icon = "paintbrush";
+
+    @action
+    performAction() {
+      this.modal.show(ThemePickerModal, {
+        model: { onThemeSelected: () => this.markAsCompleted() },
+      });
+    }
+  },
   class InviteCollaborators extends OnboardingStep {
     static name = "invite_collaborators";
 
@@ -111,27 +125,6 @@ const STEPS = [
     @action
     async performAction() {
       this.showStartPostingOptions();
-    }
-  },
-  class SpreadTheWord extends OnboardingStep {
-    static name = "spread_the_word";
-    @service toasts;
-
-    @tracked icon = "copy";
-
-    @action
-    performAction() {
-      clipboardCopy(getAbsoluteURL("/"));
-
-      this.toasts.success({
-        data: {
-          message: i18n(
-            "admin_onboarding_banner.spread_the_word.copied_to_clipboard"
-          ),
-        },
-      });
-
-      this.markAsCompleted();
     }
   },
 ];
