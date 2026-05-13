@@ -4,17 +4,23 @@ import AnsiToHtml from "ansi-to-html";
 import * as fs from "fs";
 import * as path from "path";
 
+const { dev } = await import("rolldown/experimental");
+const { buildConfig } = await import("./rolldown.config.mjs");
+
 const ansiConverter = new AnsiToHtml({ newline: true, escapeXML: true });
+const MANIFEST_DIR = path.resolve("./dist/manifest");
+const BUILD_STATUS_FILE = path.join(MANIFEST_DIR, "build.json");
+const REBUILD_IN_FLIGHT_FILE = path.join(MANIFEST_DIR, ".rebuild-in-flight");
+
+let buildStart = Date.now();
+let initialBuild = true;
+let hasError = false;
 
 function ansiToHtml(str) {
   if (str != null) {
     return ansiConverter.toHtml(str);
   }
 }
-
-const MANIFEST_DIR = path.resolve("./dist/manifest");
-const BUILD_STATUS_FILE = path.join(MANIFEST_DIR, "build.json");
-const REBUILD_IN_FLIGHT_FILE = path.join(MANIFEST_DIR, ".rebuild-in-flight");
 
 function writeBuildStatus(status) {
   fs.mkdirSync(MANIFEST_DIR, { recursive: true });
@@ -48,18 +54,11 @@ function serializeError(err) {
   return base(String(err));
 }
 
-const { dev } = await import("rolldown/experimental");
-const { buildConfig } = await import("./rolldown.config.mjs");
-
 fs.rmSync("./dist", { recursive: true, force: true });
 fs.mkdirSync("./dist");
 writeBuildStatus({ status: "building" });
 
 console.log("Starting dev server...");
-
-let buildStart = Date.now();
-let initialBuild = true;
-let hasError = false;
 
 const resolvedConfig = buildConfig({ devMode: true });
 const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
