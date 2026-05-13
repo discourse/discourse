@@ -60,7 +60,10 @@ console.log("Starting dev server...");
 
 const resolvedConfig = buildConfig({ devMode: true });
 const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
-  onHmrUpdates: (result) => {
+  rebuildStrategy: "always",
+  watch: {},
+
+  onHmrUpdates(result) {
     if (result instanceof Error) {
       if (!fs.existsSync(REBUILD_IN_FLIGHT_FILE)) {
         fs.writeFileSync(REBUILD_IN_FLIGHT_FILE, "[]");
@@ -83,7 +86,8 @@ const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
     hasError = false;
     buildStart = Date.now();
   },
-  onOutput: (result) => {
+
+  onOutput(result) {
     if (hasError) {
       return;
     } else if (result instanceof Error) {
@@ -107,8 +111,6 @@ const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
     writeBuildStatus({ status: "ok" });
     fs.rmSync(REBUILD_IN_FLIGHT_FILE, { force: true });
   },
-  rebuildStrategy: "always",
-  watch: {},
 });
 
 await devEngine.run();
