@@ -57,7 +57,7 @@ const { result } = concurrently(
       prefixColor: "#22c4f1",
     },
     {
-      name: "rolldown",
+      name: "ember",
       command: "./rolldown.mjs",
       cwd: path.join(RAILS_ROOT, "frontend/discourse"),
       prefixColor: "#f27a21",
@@ -66,7 +66,6 @@ const { result } = concurrently(
   {
     killOthersOn: ["success", "failure"],
     killSignal: "SIGTERM",
-    padPrefix: true,
   }
 );
 
