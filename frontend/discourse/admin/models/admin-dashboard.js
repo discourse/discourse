@@ -23,6 +23,7 @@ export default class AdminDashboard extends EmberObject {
     model.setProperties({
       version_check: json.version_check,
       sections: json.sections,
+      configuration: json.configuration,
     });
 
     return model;

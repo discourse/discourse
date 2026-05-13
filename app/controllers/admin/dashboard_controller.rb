@@ -3,15 +3,11 @@
 class Admin::DashboardController < Admin::StaffController
   def index
     if SiteSetting.dashboard_improvements
-      data = {
-        sections: {
-          highlights:
-            AdminDashboardHighlights.build(
-              start_date: params[:start_date],
-              end_date: params[:end_date],
-            ),
-        },
-      }
+      visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
+      data = { sections: visible_ids.map { |id| { id: id, data: section_data(id) } } }
+      if current_user.admin?
+        data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }
+      end
     else
       data = AdminDashboardIndexData.fetch_cached_stats
 
@@ -21,6 +17,12 @@ class Admin::DashboardController < Admin::StaffController
     end
 
     render json: data
+  end
+
+  def update_configuration
+    sections = params.permit(sections: %i[id visible])[:sections] || []
+    AdminDashboardSectionConfiguration.update(sections, actor: current_user)
+    head :no_content
   end
 
   def moderation
@@ -89,6 +91,13 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   private
+
+  def section_data(id)
+    case id
+    when "highlights"
+      AdminDashboardHighlights.build(start_date: params[:start_date], end_date: params[:end_date])
+    end
+  end
 
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)

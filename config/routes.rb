@@ -333,6 +333,8 @@ Discourse::Application.routes.draw do
       get "version_check" => "versions#show"
 
       get "dashboard" => "dashboard#index"
+      put "dashboard/configuration" => "dashboard#update_configuration",
+          :constraints => AdminConstraint.new
       get "dashboard/general" => "dashboard#general"
       get "dashboard/moderation" => "dashboard#moderation"
       get "dashboard/security" => "dashboard#security"
