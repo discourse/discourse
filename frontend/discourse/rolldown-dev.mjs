@@ -19,7 +19,6 @@ function ansiToHtml(str) {
 const CHILD_ENV_FLAG = "DISCOURSE_ROLLDOWN_DEV_CHILD";
 const MANIFEST_DIR = path.resolve("./dist/manifest");
 const BUILD_STATUS_FILE = path.join(MANIFEST_DIR, "build.json");
-const HEALTHY_RUN_MS = 20_000;
 const WATCH_DIR = "./app";
 
 function writeBuildStatus(status) {
@@ -139,10 +138,8 @@ async function runSupervisor() {
   process.on("SIGHUP", () => forwardSignal("SIGHUP"));
 
   const isShuttingDown = () => shuttingDown;
-  let previousRunWasShortLived = false;
 
   while (!shuttingDown) {
-    const startedAt = Date.now();
     const proc = spawn(process.execPath, [scriptPath], {
       env: { ...process.env, [CHILD_ENV_FLAG]: "1" },
       stdio: "inherit",
@@ -161,25 +158,15 @@ async function runSupervisor() {
     const reason = signal
       ? `terminated by signal ${signal}`
       : `exited with code ${code}`;
-    const ranFor = Date.now() - startedAt;
-    const wasShortLived = ranFor < HEALTHY_RUN_MS;
+    console.error(
+      `\n[rolldown-dev] Rolldown dev process ${reason}. Waiting for a file change in ${WATCH_DIR} before restarting...`
+    );
 
-    if (wasShortLived && previousRunWasShortLived) {
-      console.error(
-        `\n[rolldown-dev] Rolldown dev process ${reason} after ${(ranFor / 1000).toFixed(1)}s (second short-lived run in a row). Waiting for a file change in ${WATCH_DIR} before restarting...`
-      );
-      const changed = await waitForFileChange(WATCH_DIR, isShuttingDown);
-      if (!changed || shuttingDown) {
-        process.exit(code ?? 1);
-      }
-      console.error("[rolldown-dev] File change detected. Restarting...");
-    } else {
-      console.error(
-        `\n[rolldown-dev] Rolldown dev process ${reason}. Restarting...`
-      );
+    const changed = await waitForFileChange(WATCH_DIR, isShuttingDown);
+    if (!changed || shuttingDown) {
+      process.exit(code ?? 1);
     }
-
-    previousRunWasShortLived = wasShortLived;
+    console.error("[rolldown-dev] File change detected. Restarting...");
   }
 }
 
