@@ -55,13 +55,13 @@ const { result } = concurrently(
       command: path.join(RAILS_ROOT, "bin/pitchfork"),
       cwd: RAILS_ROOT,
       env: serverEnv,
-      prefixColor: "blue",
+      prefixColor: "#22c4f1",
     },
     {
       name: "rolldown",
       command: "./rolldown.mjs",
       cwd: path.join(RAILS_ROOT, "frontend/discourse"),
-      prefixColor: "magenta",
+      prefixColor: "#f27a21",
     },
   ],
   {
