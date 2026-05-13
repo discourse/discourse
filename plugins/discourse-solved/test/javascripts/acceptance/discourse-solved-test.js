@@ -9,7 +9,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers";
 
 acceptance(`Discourse Solved Plugin`, function (needs) {
-  const ITEM_SELECTOR = ".d-solved-answers .d-post-excerpt-accordion-item";
+  const ITEM_SELECTOR = ".accepted-answers .d-post-excerpt-accordion-item";
   const BODY_SELECTOR = ".d-post-excerpt-accordion-item__body";
   const CONTENT_SELECTOR = ".d-post-excerpt-accordion-item__content";
   const ACCEPTER_SELECTOR = ".accepter-link";

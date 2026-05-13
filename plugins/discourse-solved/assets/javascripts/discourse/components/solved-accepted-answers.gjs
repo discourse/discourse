@@ -47,10 +47,10 @@ export default class SolvedAcceptedAnswers extends Component {
       @excerptPosts={{this.acceptedAnswers}}
       @decoratorState={{@decoratorState}}
       @linesDisplayed={{this.linesDisplayed}}
-      class="d-solved-answers"
+      class="accepted-answers"
     >
       <:header>
-        <h3 class="d-solved-answers__title">
+        <h3 class="accepted-answers__title">
 
           {{#if this.hasAnswer}}
             {{dIcon "far-square-check"}}
@@ -60,7 +60,7 @@ export default class SolvedAcceptedAnswers extends Component {
         </h3>
 
         {{#if this.hasMultipleAnswers}}
-          <span class="d-solved-answers__solution_count">
+          <span class="accepted-answers__solution_count">
             {{this.acceptedAnswers.length}}
             {{i18n "solved.solution_summary" count=this.acceptedAnswers.length}}
           </span>

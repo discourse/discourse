@@ -42,7 +42,7 @@ function initializeWithApi(api) {
 
   api.addTrackedTopicProperties(
     "accepted_answers",
-    "has_accepted_answers",
+    "has_accepted_answer",
     "shared_issue_count",
     "user_created_shared_issue",
     "shared_issue_visible"

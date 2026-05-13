@@ -17,7 +17,7 @@ export default class SolvedSharedIssueButton extends Component {
   get show() {
     return (
       this.args.post.topic.shared_issue_visible &&
-      !this.args.post.topic.accepted_answer
+      !this.args?.post?.topic?.accepted_answers?.length
     );
   }
 

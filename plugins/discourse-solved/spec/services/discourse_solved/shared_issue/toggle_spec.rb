@@ -48,7 +48,10 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
       context "when the topic is already solved" do
         fab!(:answer_post) { Fabricate(:post, topic:) }
 
-        before { Fabricate(:solved_topic, topic:, answer_post:, accepter: author) }
+        before do
+          solved_topic = Fabricate(:solved_topic, topic:)
+          Fabricate(:topic_answer, solved_topic:, post: answer_post, accepter: author)
+        end
 
         it { is_expected.to fail_a_policy(:can_create_shared_issue) }
       end

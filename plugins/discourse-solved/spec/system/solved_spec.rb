@@ -15,7 +15,7 @@ describe "Solved" do
 
   UNACCEPTED_BUTTON_SELECTOR = ".post-action-menu__solved-unaccepted"
   ACCEPTED_BUTTON_SELECTOR = ".post-action-menu__solved-accepted"
-  ACCEPTED_ANSWER_SELECTOR = ".d-solved-answers .d-post-excerpt-accordion-item"
+  ACCEPTED_ANSWER_SELECTOR = ".accepted-answers .d-post-excerpt-accordion-item"
   ACCEPTED_ANSWER_CONTENT_SELECTOR = ".d-post-excerpt-accordion-item__content"
   SOLVER_SELECTOR = ".d-post-excerpt-accordion-item__metadata .user-link"
   ACCEPTER_SELECTOR = ".d-post-excerpt-accordion-item__metadata .accepter-link"
