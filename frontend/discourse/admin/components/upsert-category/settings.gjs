@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import getUrl from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategorySettings extends Component {
@@ -37,7 +37,7 @@ export default class UpsertCategorySettings extends Component {
 
   <template>
     <@form.Section
-      class={{concatClass
+      class={{dConcatClass
         "edit-category-tab"
         "edit-category-tab-settings"
         (if (eq @selectedTab "settings") "active")

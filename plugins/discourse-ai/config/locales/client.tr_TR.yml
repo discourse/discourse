@@ -1185,6 +1185,7 @@ tr_TR:
           upload_files: "Dosya yükle"
           uploads_in_progress: "Yüklemeler devam ederken gönderilemiyor"
           scroll_to_bottom: "En alta kaydır"
+          editing_post: "Gönderi düzenleniyor"
       sentiments:
         dashboard:
           title: "Duyarlılık"

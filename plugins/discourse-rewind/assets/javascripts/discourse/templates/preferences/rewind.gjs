@@ -1,5 +1,5 @@
 import { Input } from "@ember/component";
-import SaveControls from "discourse/components/save-controls";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -37,7 +37,7 @@ export default <template>
     </label>
   </div>
 
-  <SaveControls
+  <DSaveControls
     @model={{@controller.model}}
     @action={{@controller.save}}
     @saved={{@controller.saved}}

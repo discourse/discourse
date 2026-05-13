@@ -1,18 +1,18 @@
-import AvatarFlair from "discourse/components/avatar-flair";
-import icon from "discourse/helpers/d-icon";
 import { or } from "discourse/truth-helpers";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const Group = <template>
   <div class="group-result {{if @result.flairUrl '--with-flair'}}">
     {{#if @result.flairUrl}}
-      <AvatarFlair
+      <DAvatarFlair
         @flairName={{@result.name}}
         @flairUrl={{@result.flairUrl}}
         @flairBgColor={{@result.flairBgColor}}
         @flairColor={{@result.flairColor}}
       />
     {{else}}
-      {{icon "users"}}
+      {{dIcon "users"}}
     {{/if}}
     <div class="group-names {{if @result.fullName '--group-with-slug'}}">
       <span class="name">{{or @result.fullName @result.name}}</span>

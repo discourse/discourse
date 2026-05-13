@@ -4,12 +4,12 @@ import { service } from "@ember/service";
 import { isNone } from "@ember/utils";
 import UpsertCategoryPermissionRow from "discourse/admin/components/upsert-category/permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategorySecurity extends Component {
@@ -163,7 +163,7 @@ export default class UpsertCategorySecurity extends Component {
 
   <template>
     <@form.Section
-      class={{concatClass
+      class={{dConcatClass
         "edit-category-tab"
         "edit-category-tab-security"
         (if (eq @selectedTab "security") "active")
@@ -200,7 +200,7 @@ export default class UpsertCategorySecurity extends Component {
       </@form.Alert>
 
       {{#unless @category.is_special}}
-        <@form.Container>
+        <@form.Container @format="full">
           <div class="category-permissions-table">
             <div class="permission-row row-header">
               <span class="group-name">{{i18n

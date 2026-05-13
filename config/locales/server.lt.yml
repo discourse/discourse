@@ -354,6 +354,7 @@ lt:
       admins: "administratoriai"
       moderators: "moderatoriai"
       staff: "personalas"
+      anonymous: "anonimas"
       trust_level_0: "pasitikėjimo_lygis_0"
       trust_level_1: "pasitikėjimo_lygis_1"
       trust_level_2: "pasitikėjimo_lygis_2"
@@ -1084,6 +1085,8 @@ lt:
       xaxis: "Diena"
     page_view_logged_in_browser_reqs:
       xaxis: "Diena"
+    page_view_embed_reqs:
+      xaxis: "Diena"
     http_background_reqs:
       title: "Fonas"
       xaxis: "Diena"
@@ -1137,7 +1140,7 @@ lt:
         device: Įrenginys
         os: Operacinė sistema
         login_time: Prisijungimo laikas
-    staff_logins:
+    admin_logins:
       title: "Administratoriaus prisijungimai"
       labels:
         user: Narys

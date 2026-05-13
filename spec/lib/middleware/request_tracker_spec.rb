@@ -267,6 +267,130 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
     end
 
+    describe "embed mode pageviews" do
+      it "does not leak the initial embed HTML load into the legacy page_view_anon counter" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(path: "/t/topic-slug/1?embed_mode=true"),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        CachedCounting.flush
+
+        expect(ApplicationRequest.page_view_anon.sum(:count)).to eq(0)
+        expect(ApplicationRequest.page_view_embed.sum(:count)).to eq(0)
+      end
+
+      it "counts deferred pageview with embed header as page_view_embed" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              :path => "/message-bus/abcde/poll",
+              "HTTP_DISCOURSE_TRACK_VIEW_DEFERRED" => "1",
+              "HTTP_DISCOURSE_TRACK_VIEW_EMBED" => "true",
+            ),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        CachedCounting.flush
+
+        expect(ApplicationRequest.page_view_embed.first.count).to eq(1)
+        expect(ApplicationRequest.page_view_anon_browser.sum(:count)).to eq(0)
+      end
+
+      it "counts explicit XHR pageview with embed header only once as page_view_embed" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_DISCOURSE_TRACK_VIEW" => "1", "HTTP_DISCOURSE_TRACK_VIEW_EMBED" => "true"),
+            ["200", {}],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        CachedCounting.flush
+
+        expect(ApplicationRequest.page_view_embed.first.count).to eq(1)
+        expect(ApplicationRequest.page_view_anon.sum(:count)).to eq(0)
+        expect(ApplicationRequest.page_view_anon_browser.sum(:count)).to eq(0)
+      end
+
+      it "does not defer a topic view for embed browser pageviews" do
+        TopicsController.expects(:defer_topic_view).never
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_TRACK_VIEW_EMBED" => "true",
+              "HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID" => "42",
+            ),
+            ["200", {}],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+      end
+
+      it "counts beacon pageview with embed flag as page_view_embed" do
+        SiteSetting.use_beacon_for_browser_page_views = true
+        body = {
+          session_id: "abc",
+          url: "https://example.com/t/slug/1",
+          referrer: "https://host.example/page",
+          embed: true,
+        }.to_json
+
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "REQUEST_METHOD" => "POST",
+              :path => Discourse.beacon_pv_tracking_path,
+              "rack.input" => StringIO.new(body),
+            ),
+            ["204", {}],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        CachedCounting.flush
+
+        expect(data[:is_embed]).to eq(true)
+        expect(ApplicationRequest.page_view_embed.first.count).to eq(1)
+        expect(ApplicationRequest.page_view_anon_browser_beacon.sum(:count)).to eq(0)
+      end
+
+      it "survives requests with a missing or unreadable body" do
+        # POST without a rack.input must not raise while detecting `is_embed` —
+        # we only care about the query string, not the body.
+        expect {
+          Middleware::RequestTracker.get_data(
+            env(
+              "REQUEST_METHOD" => "POST",
+              :path => "/srv/something?embed_mode=true",
+              "rack.input" => nil,
+            ),
+            ["200", {}],
+            0.1,
+          )
+        }.not_to raise_error
+      end
+
+      it "still counts crawlers as page_view_crawler even on embed URLs" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              :path => "/t/topic-slug/1?embed_mode=true",
+              "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)",
+            ),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        CachedCounting.flush
+
+        expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
+        expect(ApplicationRequest.page_view_embed.sum(:count)).to eq(0)
+      end
+    end
+
     it "logs API requests correctly" do
       data =
         Middleware::RequestTracker.get_data(
@@ -776,12 +900,15 @@ RSpec.describe Middleware::RequestTracker do
       env(
         {
           :path => "/srv/pv",
+          "HTTP_HOST" => "test.localhost",
           "REQUEST_METHOD" => "POST",
           "CONTENT_TYPE" => "application/json",
           "rack.input" => StringIO.new(json_body),
         }.merge(extra),
       )
     end
+
+    let(:same_origin) { { "HTTP_ORIGIN" => "http://test.localhost" } }
 
     it "returns 204 and does not call the app" do
       app_called = false
@@ -792,7 +919,7 @@ RSpec.describe Middleware::RequestTracker do
             [200, {}, ["OK"]]
           end,
         )
-      status, = middleware.call(beacon_env({}))
+      status, = middleware.call(beacon_env({}, same_origin))
 
       expect(status).to eq(204)
       expect(app_called).to eq(false)
@@ -801,7 +928,7 @@ RSpec.describe Middleware::RequestTracker do
     it "returns 204 for beacon requests in a subfolder setup" do
       set_subfolder "/forum"
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      status, = middleware.call(beacon_env({}, { path: "/forum/srv/pv" }))
+      status, = middleware.call(beacon_env({}, same_origin.merge(path: "/forum/srv/pv")))
 
       expect(status).to eq(204)
     end
@@ -812,6 +939,8 @@ RSpec.describe Middleware::RequestTracker do
         middleware.call(
           env(
             :path => "/srv/pv",
+            "HTTP_HOST" => "test.localhost",
+            "HTTP_ORIGIN" => "http://test.localhost",
             "REQUEST_METHOD" => "POST",
             "CONTENT_TYPE" => "application/json",
             "rack.input" => StringIO.new("not json"),
@@ -836,6 +965,7 @@ RSpec.describe Middleware::RequestTracker do
                 session_id: "abc123",
                 topic_id: 123,
               },
+              same_origin,
             ),
           )
         end
@@ -871,7 +1001,7 @@ RSpec.describe Middleware::RequestTracker do
     it "skips beacon page view when the remote IP resolves to a crawler ASN" do
       DiscourseIpInfo.stubs(:get).returns({ asn: SiteSetting.crawler_asns_map.first.to_i })
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      middleware.call(beacon_env({}, { "action_dispatch.remote_ip" => "1.2.3.4" }))
+      middleware.call(beacon_env({}, same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4")))
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
@@ -880,10 +1010,49 @@ RSpec.describe Middleware::RequestTracker do
     it "counts beacon page view when the remote IP is not a crawler ASN" do
       DiscourseIpInfo.stubs(:get).returns({ asn: 1 })
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      middleware.call(beacon_env({}, { "action_dispatch.remote_ip" => "1.2.3.4" }))
+      middleware.call(beacon_env({}, same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4")))
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon_browser_beacon.first.count).to eq(1)
+    end
+
+    it "returns 403 for cross-origin beacon requests" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, = middleware.call(beacon_env({}, { "HTTP_ORIGIN" => "https://evil.example" }))
+      CachedCounting.flush
+
+      expect(status).to eq(403)
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
+    end
+
+    it "returns 403 when Origin and Referer are both absent" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, = middleware.call(beacon_env({}))
+      CachedCounting.flush
+
+      expect(status).to eq(403)
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
+    end
+
+    it "returns 403 when Origin matches the request Host but differs from the canonical hostname" do
+      SiteSetting.force_hostname = "canonical.example"
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, =
+        middleware.call(
+          beacon_env({}, { "HTTP_HOST" => "evil.example", "HTTP_ORIGIN" => "http://evil.example" }),
+        )
+      CachedCounting.flush
+
+      expect(status).to eq(403)
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
+    end
+
+    it "accepts beacon when Origin is absent but Referer is same-origin" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, =
+        middleware.call(beacon_env({}, { "HTTP_REFERER" => "http://test.localhost/some/page" }))
+
+      expect(status).to eq(204)
     end
 
     context "when SiteSetting.use_beacon_for_browser_page_views is false" do

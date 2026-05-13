@@ -230,6 +230,7 @@ sl:
       admins: "administratorji"
       moderators: "moderatorji"
       staff: "osebje"
+      anonymous: "anonimni"
   education:
     until_posts:
       one: "%{count} prispevek"
@@ -662,6 +663,8 @@ sl:
       title: "Anonimni"
     page_view_total_reqs:
       title: "Ogledov strani"
+    page_view_embed_reqs:
+      xaxis: "Dan"
     http_total_reqs:
       title: "Skupaj"
     topics_with_no_response:
@@ -673,7 +676,7 @@ sl:
       labels:
         user: Uporabnik
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: Uporabnik
         location: Lokacija

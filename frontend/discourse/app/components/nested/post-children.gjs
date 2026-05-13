@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import processNode from "../../lib/process-node";
 import NestedPost from "./post";
@@ -209,7 +209,7 @@ export default class NestedPostChildren extends Component {
 
   <template>
     <div class="nested-post-children">
-      <ConditionalLoadingSpinner @condition={{this.loading}}>
+      <DConditionalLoadingSpinner @condition={{this.loading}}>
         {{#each this.childNodes key="post.id" as |node|}}
           <NestedPost
             @post={{node.post}}
@@ -231,12 +231,13 @@ export default class NestedPostChildren extends Component {
             @fetchedChildrenCache={{@fetchedChildrenCache}}
             @scrollAnchor={{@scrollAnchor}}
             @registerPost={{@registerPost}}
+            @collapseFromDepth={{@collapseFromDepth}}
           />
         {{/each}}
 
         {{#if this.hasMore}}
           <DButton
-            class={{concatClass
+            class={{dConcatClass
               "btn-flat"
               "nested-post-children__load-more"
               (if @parentLineHighlighted "--parent-line-highlighted")
@@ -246,7 +247,7 @@ export default class NestedPostChildren extends Component {
             @translatedLabel={{this.loadMoreLabel}}
           />
         {{/if}}
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </div>
   </template>
 }

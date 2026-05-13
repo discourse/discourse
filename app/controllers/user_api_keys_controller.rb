@@ -245,6 +245,8 @@ class UserApiKeysController < ApplicationController
 
   def parsed_public_key
     @parsed_public_key ||= OpenSSL::PKey::RSA.new(public_key_str)
+  rescue OpenSSL::PKey::RSAError
+    raise Discourse::InvalidParameters.new(:public_key)
   end
 
   def meets_tl?

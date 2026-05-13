@@ -389,6 +389,7 @@ vi:
       admins: "quản trị"
       moderators: "điều hành"
       staff: "nhân viên"
+      anonymous: "ẩn danh"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -938,6 +939,8 @@ vi:
       xaxis: "Ngày"
     page_view_logged_in_browser_reqs:
       xaxis: "Ngày"
+    page_view_embed_reqs:
+      xaxis: "Ngày"
     http_background_reqs:
       title: "Hình nền"
       xaxis: "Ngày"
@@ -986,10 +989,10 @@ vi:
         user: Thành viên
         location: Vị trí
       description: "Chi tiết về thông tin đăng nhập mới khác biệt đáng ngờ với thông tin đăng nhập trước đó."
-    staff_logins:
+    admin_logins:
       title: "Đăng nhập quản trị viên"
       labels:
-        user: Thành viên
+        user: Người dùng
         location: Vị trí
         login_at: Đăng nhập lúc
       description: "Danh sách thời gian đăng nhập của quản trị viên với các địa điểm."

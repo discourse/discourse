@@ -15,6 +15,7 @@ ar:
       alt:
         solved:
           accepted_notification: "تم القبول"
+          topic_solved_notification: "محلول"
     solutions: "الحلول"
     solved:
       title: "تم الحل"
@@ -68,13 +69,11 @@ ar:
       no_answer:
         title: هل تمت الإجابة على سؤالك؟
         description: "ميِّز الإجابة وساعد الآخرين عن طريق استخدام زر الحل أسفل الرد الصحيح."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "تم وضع علامة \"حل\" على منشورك"
       category_type_support:
         title: "الدعم"
-        not_support_type: "تنبيه! لقد عطّلت خاصية تحديد المنشورات كحلول في هذه الفئة. لإعادة تفعيلها، ستجد الإعدادات ذات الصلة في تبويب الإعدادات."
-        remove_support_type: "إزالة نوع الدعم"
-        confirm_remove_support_type: "هل أنت متأكد من رغبتك في إزالة خاصية تحديد المنشورات كحلول في هذه الفئة؟ يمكنك إعادة تفعيلها لاحقًا من علامة تبويب الإعدادات."
     topic_statuses:
       solved:
         help: "هناك حل لهذا الموضوع"

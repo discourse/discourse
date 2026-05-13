@@ -1,5 +1,5 @@
 import Components from "discourse/admin/components/admin-config-areas/components";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import { i18n } from "discourse-i18n";
 
 export default <template>

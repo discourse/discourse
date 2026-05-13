@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import {
   UnreadChannelsIndicator,
@@ -66,7 +66,7 @@ export default class ChatFooter extends Component {
             @label="chat.starred"
             aria-label={{i18n "chat.starred"}}
             id="c-footer-starred"
-            class={{concatClass
+            class={{dConcatClass
               "btn-transparent"
               "c-footer__item"
               (if (eq this.currentRouteName "chat.starred-channels") "--active")
@@ -82,7 +82,7 @@ export default class ChatFooter extends Component {
           @label="chat.channel_list.title"
           aria-label={{i18n "chat.channel_list.aria_label"}}
           id="c-footer-channels"
-          class={{concatClass
+          class={{dConcatClass
             "btn-transparent"
             "c-footer__item"
             (if (eq this.currentRouteName "chat.channels") "--active")
@@ -98,7 +98,7 @@ export default class ChatFooter extends Component {
             @label="chat.direct_messages.title"
             aria-label={{i18n "chat.direct_messages.aria_label"}}
             id="c-footer-direct-messages"
-            class={{concatClass
+            class={{dConcatClass
               "btn-transparent"
               "c-footer__item"
               (if (eq this.currentRouteName "chat.direct-messages") "--active")
@@ -115,7 +115,7 @@ export default class ChatFooter extends Component {
             @label="chat.my_threads.title"
             aria-label={{i18n "chat.my_threads.aria_label"}}
             id="c-footer-threads"
-            class={{concatClass
+            class={{dConcatClass
               "btn-transparent"
               "c-footer__item"
               (if (eq this.currentRouteName "chat.threads") "--active")
@@ -132,7 +132,7 @@ export default class ChatFooter extends Component {
             @label="chat.search.short_title"
             aria-label={{i18n "chat.search.aria_label"}}
             id="c-footer-search"
-            class={{concatClass
+            class={{dConcatClass
               "btn-transparent"
               "c-footer__item"
               (if (eq this.currentRouteName "chat.search") "--active")

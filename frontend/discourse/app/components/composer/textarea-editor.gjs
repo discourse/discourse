@@ -3,12 +3,12 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
 import { modifier } from "ember-modifier";
-import DTextarea from "discourse/components/d-textarea";
-import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
+import DTextarea from "discourse/ui-kit/d-textarea";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class TextareaEditor extends Component {
   @service currentUser;
@@ -113,7 +113,7 @@ export default class TextareaEditor extends Component {
       @input={{@change}}
       @focusIn={{@focusIn}}
       @focusOut={{@focusOut}}
-      class={{concatClass
+      class={{dConcatClass
         @class
         (if
           this.currentUser.user_option.enable_markdown_monospace_font

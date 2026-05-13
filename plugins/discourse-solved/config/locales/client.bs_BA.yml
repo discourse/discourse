@@ -10,6 +10,7 @@ bs_BA:
       alt:
         solved:
           accepted_notification: "prihvaćeno"
+          topic_solved_notification: "riješeno"
     solved:
       title: "Riješeno"
       allow_accepted_answers: "Dopustite vlasniku teme i osoblju da označe odgovor kao rješenje"

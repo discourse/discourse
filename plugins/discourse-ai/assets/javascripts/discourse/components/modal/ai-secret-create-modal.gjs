@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class AiSecretCreateModal extends Component {

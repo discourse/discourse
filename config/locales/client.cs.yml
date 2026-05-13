@@ -703,6 +703,8 @@ cs:
           few: "+%{count} další koncepty"
           many: "+%{count} dalších konceptů"
           other: "+%{count} dalších konceptů"
+    embed_mode:
+      editing_post: "Příspěvek je upravován"
     topic_count_all:
       one: "Zobrazit %{count} nové téma"
       few: "Zobrazit %{count} nová témata"
@@ -6595,6 +6597,16 @@ cs:
         too_many_requests: Tuto akci jste provedli příliš mnohokrát. Počkejte prosím před dalším pokusem.
         not_found_error: Omlouváme se, tato sestava neexistuje
         custom_date_range: Vlastní období
+        sections:
+          reports:
+            title: "Sestav"
+          traffic:
+            title: "Návštěvnost stránek"
+        period:
+          last_7_days: "Posledních 7 dní"
+          last_30_days: "Posledních 30 dní"
+          last_3_months: "Posledních 3 měsíců"
+          custom: "Přizpůsobené"
         reports:
           trend_title: "%{percent} změna. Nyní %{current}, proti %{prev} v předchozím období."
           percent_change_tooltip: "%{percent} změna."

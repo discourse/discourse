@@ -3602,6 +3602,10 @@ bg:
         security_tab: "Сигурност"
         report_filter_any: "всеки"
         disabled: Деактивирани
+        period:
+          last_7_days: "Последните 7 дни"
+          last_30_days: "Последните 30 дни"
+          custom: "По избор"
         reports:
           today: "Днес"
           yesterday: "Вчера"

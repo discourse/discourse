@@ -4,10 +4,11 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import DockedComposer from "discourse/components/docked-composer";
-import avatar from "discourse/helpers/avatar";
+import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
+import DButton from "discourse/ui-kit/d-button";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 export default class EmbedModeComposer extends Component {
@@ -17,6 +18,7 @@ export default class EmbedModeComposer extends Component {
   @service store;
 
   @tracked replyingToPost = null;
+  @tracked editingPost = null;
   @tracked isSubmitting = false;
   @tracked footerVisible = true;
 
@@ -27,6 +29,7 @@ export default class EmbedModeComposer extends Component {
       this,
       this.handleReplyToPost
     );
+    this.appEvents.on("embed-composer:edit-post", this, this.handleEditPost);
     this.appEvents.on("embed-composer:focus", this, this.handleFocus);
 
     const footerButtons = document.querySelector("#topic-footer-buttons");
@@ -58,9 +61,12 @@ export default class EmbedModeComposer extends Component {
         this,
         this.handleReplyToPost
       );
+      this.appEvents.off("embed-composer:edit-post", this, this.handleEditPost);
       this.appEvents.off("embed-composer:focus", this, this.handleFocus);
     };
   });
+
+  #composerApi = null;
   #footerObserver = null;
   #rootElement = null;
 
@@ -85,6 +91,10 @@ export default class EmbedModeComposer extends Component {
 
   @action
   handleReplyToPost(post) {
+    if (this.editingPost) {
+      this.editingPost = null;
+      this.#composerApi?.setReply("");
+    }
     if (post && post.post_number !== 1) {
       this.replyingToPost = post;
     } else {
@@ -111,7 +121,66 @@ export default class EmbedModeComposer extends Component {
   }
 
   @action
+  registerComposerApi(api) {
+    this.#composerApi = api;
+  }
+
+  @action
+  async handleEditPost(post) {
+    this.replyingToPost = null;
+    const fullPost = await this.store.find("post", post.id);
+    this.editingPost = fullPost;
+    this.#composerApi?.setReply(fullPost.raw);
+    schedule("afterRender", () => {
+      this.#rootElement?.querySelector(".d-editor-input")?.focus();
+    });
+  }
+
+  @action
+  cancelEditing() {
+    this.editingPost = null;
+    this.#composerApi?.setReply("");
+  }
+
+  @action
   async handleSubmit({ raw }) {
+    if (this.editingPost) {
+      return this.#submitEdit(raw);
+    }
+    return this.#submitReply(raw);
+  }
+
+  async #submitEdit(raw) {
+    const post = this.editingPost;
+    this.isSubmitting = true;
+
+    try {
+      const result = await ajax(`/posts/${post.id}.json`, {
+        type: "PUT",
+        data: { post: { raw } },
+      });
+
+      const postStream = this.args.topic.postStream;
+      const loadedPost = postStream.findLoadedPost(post.id);
+      if (loadedPost) {
+        loadedPost.setProperties({
+          raw: result.post.raw,
+          cooked: result.post.cooked,
+          version: result.post.version,
+          updated_at: result.post.updated_at,
+        });
+      }
+
+      this.editingPost = null;
+      this.isSubmitting = false;
+      return { ok: true };
+    } catch (error) {
+      this.isSubmitting = false;
+      throw error;
+    }
+  }
+
+  async #submitReply(raw) {
     const topic = this.args.topic;
     const postStream = topic.postStream;
     const user = this.currentUser;
@@ -192,10 +261,22 @@ export default class EmbedModeComposer extends Component {
             />
           </div>
         {{/if}}
-        {{#if this.replyingToPost}}
+        {{#if this.editingPost}}
+          <div class="embed-mode-composer__editing">
+            <span class="embed-mode-composer__editing-text">
+              {{dAvatar this.editingPost imageSize="tiny"}}
+              {{i18n "embed_mode.editing_post"}}
+            </span>
+            <DButton
+              @icon="xmark"
+              @action={{this.cancelEditing}}
+              class="btn-transparent embed-mode-composer__editing-dismiss"
+            />
+          </div>
+        {{else if this.replyingToPost}}
           <div class="embed-mode-composer__replying-to">
             <span class="embed-mode-composer__replying-to-text">
-              {{avatar this.replyingToPost imageSize="tiny"}}
+              {{dAvatar this.replyingToPost imageSize="tiny"}}
               {{i18n
                 "embed_mode.replying_to"
                 username=this.replyingToPost.username
@@ -212,6 +293,7 @@ export default class EmbedModeComposer extends Component {
           @topicId={{@topic.id}}
           @categoryId={{@topic.category.id}}
           @onSubmit={{this.handleSubmit}}
+          @onRegisterApi={{this.registerComposerApi}}
           @isSubmitting={{this.isSubmitting}}
           @resizable={{true}}
           @placeholder={{this.placeholder}}

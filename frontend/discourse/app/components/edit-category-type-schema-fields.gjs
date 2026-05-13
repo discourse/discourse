@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { fn, get } from "@ember/helper";
 import { service } from "@ember/service";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { bind } from "discourse/lib/decorators";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq } from "discourse/truth-helpers";
+import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 import { i18n } from "discourse-i18n";
 
 // NOTE: In future we may want to use FormKit versions of site setting components
@@ -56,7 +56,7 @@ class SchemaFormField extends Component {
         @type="custom"
         as |field|
       >
-        <RelativeTimePicker
+        <DRelativeTimePicker
           @durationHours={{field.value}}
           @durationOutputUnit="hours"
           @onChange={{field.set}}

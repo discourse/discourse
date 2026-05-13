@@ -395,6 +395,15 @@ en:
         visual_overlay: "Visual overlay"
         ghost_blocks: "Ghost blocks"
         condition_debugging: "Condition debugging"
+      plugin_outlet_debug:
+        find_on_github: "Find on GitHub"
+        wrapper: "(wrapper)"
+        outlet_args: "Outlet args"
+        no_outlet_args: "No outlet args passed to this outlet"
+        aliases: "Aliases"
+        deprecated: "deprecated"
+        deprecated_outlet: "This outlet is deprecated and will be removed."
+        since: "(since %{version})"
       toggle_safe_mode: "Toggle safe mode"
       toggle_verbose_localization: "Toggle verbose localization"
       toggle_mobile_view: "Toggle mobile view"
@@ -724,6 +733,7 @@ en:
       continue_as_guest: "Continue as Guest"
       be_first_to_reply: "Be the first to reply!"
       replying_to: "Replying to %{username}"
+      editing_post: "Editing post"
       reply_placeholder: "Write a reply..."
 
     topic_count_all:
@@ -2857,8 +2867,10 @@ en:
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
       security_key_description: "When you have your physical security key or compatible mobile device prepared press the Authenticate with Security Key button below."
+      security_key_or_passkey_description: "When you have your security key, passkey, or compatible mobile device prepared press the button below."
       security_key_alternative: "Try another way"
       security_key_authenticate: "Authenticate with Security Key"
+      security_key_or_passkey_authenticate: "Authenticate with security key or passkey"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
       security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
@@ -3423,6 +3435,12 @@ en:
       liked_by_multiple_users:
         one: "%{username} and %{count} other"
         other: "%{username} and %{count} others"
+      replied_consolidated_in_topic:
+        one: "%{count} new reply in your topic"
+        other: "%{count} new replies in your topic"
+      replied_consolidated_to_post:
+        one: "%{count} new reply to your post"
+        other: "%{count} new replies to your post"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
@@ -3995,6 +4013,7 @@ en:
 
       list: "Topics"
       new: "new topic"
+      has_new_replies: "new replies since your last visit"
       unread: "unread"
       new_topics:
         one: "%{count} new topic"
@@ -6804,6 +6823,23 @@ en:
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
 
+        sections:
+          highlights:
+            title: "Highlights"
+          reports:
+            title: "Reports"
+          traffic:
+            title: "Site traffic"
+          engagement:
+            title: "Engagement"
+
+        period:
+          last_7_days: "Last 7 days"
+          last_30_days: "Last 30 days"
+          last_3_months: "Last 3 months"
+          custom: "Custom"
+          custom_range: "%{start} – %{end}"
+
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
           percent_change_tooltip: "%{percent} change."
@@ -7655,6 +7691,8 @@ en:
           beginners_guide_title: "Beginner’s guide to using Discourse Themes"
           developers_guide_title: "Developer’s guide to Discourse Themes"
           browse_themes: "Browse community themes"
+          install_more_themes: "Install more themes"
+          install_more_themes_description: "Browse popular community themes or install one from a file or git repository."
           customize_desc: "Customize:"
           title: "Themes"
           description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features."
@@ -7761,6 +7799,7 @@ en:
           public_key: "Grant the following public key access to the repo:"
           install: "Install"
           installed: "Installed"
+          screenshot: "%{name} screenshot"
           install_popular: "Popular"
           install_upload: "From your device"
           install_git_repo: "From a git repository"

@@ -7376,6 +7376,33 @@ RSpec.describe UsersController do
       ICS
     end
 
+    it "excludes bookmark reminders for topics the user cannot see from .ics feed" do
+      Bookmark.where(user: user1).destroy_all
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic_with_op, category: private_category)
+      Fabricate(
+        :bookmark,
+        name: nil,
+        user: user1,
+        bookmarkable: private_topic,
+        reminder_at: 1.day.from_now,
+      )
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+
+      expect(response.status).to eq(200)
+      calendar_name =
+        I18n.t("calendar_subscriptions.bookmarks_feed_name", site_title: SiteSetting.title)
+      expect(response.body).to eq(<<~ICS)
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Discourse//#{Discourse.current_hostname}//#{Discourse.full_version}//EN
+        X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}
+        END:VCALENDAR
+      ICS
+    end
+
     it "excludes bookmark reminders older than 3 months from .ics feed" do
       bookmark1.update_columns(name: nil, reminder_at: 4.months.ago)
       bookmark2.update!(name: "Recent reminder", reminder_at: 1.day.from_now)

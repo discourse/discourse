@@ -1,11 +1,11 @@
 import { fn, hash } from "@ember/helper";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import BackButton from "discourse/components/back-button";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 import AutomationEnabledToggle from "discourse/plugins/automation/admin/components/automation-enabled-toggle";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
@@ -51,7 +51,7 @@ export default <template>
               </label>
 
               <div class="controls">
-                <TextField
+                <DTextField
                   @value={{@controller.automationForm.name}}
                   @type="text"
                   @autofocus={{true}}

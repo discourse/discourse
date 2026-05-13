@@ -3,7 +3,7 @@ import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ManageTagsForm extends Component {
@@ -233,7 +233,7 @@ export default class ManageTagsForm extends Component {
             </row.Col>
 
             <row.Col @size={{1}} class="manage-tags-form__replace-arrow">
-              {{icon "arrow-right"}}
+              {{dIcon "arrow-right"}}
             </row.Col>
 
             <row.Col @size={{5}}>

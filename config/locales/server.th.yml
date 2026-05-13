@@ -103,6 +103,7 @@ th:
       admins: "ผู้ดูแลระบบ"
       moderators: "ผู้ดูแล"
       staff: "ทีมงาน"
+      anonymous: "ไม่ระบุชื่อ"
   education:
     until_posts:
       other: "%{count} โพส"
@@ -277,7 +278,7 @@ th:
       labels:
         user: ผู้ใช้
         location: ที่อยู่
-    staff_logins:
+    admin_logins:
       labels:
         user: ผู้ใช้
         location: ที่อยู่
