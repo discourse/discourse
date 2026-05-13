@@ -233,7 +233,12 @@
     opacity: 0;
     transition: opacity 0.15s ease;
 
-    .theme-picker-modal__screenshot:hover & {
+    .theme-picker-modal__screenshot:hover &,
+    .theme-picker-modal__screenshot:focus-within & {
+      opacity: 1;
+    }
+
+    @media (hover: none), (pointer: coarse) {
       opacity: 1;
     }
 
@@ -295,10 +300,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgb(0 0 0 / 0.6);
-    cursor: zoom-out;
 
     img {
+      position: relative;
+      z-index: 1;
       max-width: 90vw;
       max-height: 90vh;
       object-fit: contain;
@@ -306,8 +311,19 @@
     }
   }
 
+  &__lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: rgb(0 0 0 / 0.6);
+    cursor: zoom-out;
+  }
+
   &__lightbox-close {
     position: absolute;
+    z-index: 2;
     top: var(--space-4);
     right: var(--space-4);
     color: var(--secondary);

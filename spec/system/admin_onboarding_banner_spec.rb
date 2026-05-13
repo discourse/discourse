@@ -7,12 +7,14 @@ describe "Admin Onboarding Banner" do
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
   let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }
+  let(:theme_picker_modal) { PageObjects::Modals::AdminOnboardingThemePicker.new }
   let(:create_invite_modal) { PageObjects::Modals::CreateInvite.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
     SiteSetting.enable_site_owner_onboarding = true
+    SiteSetting.default_theme_id = Theme.foundation_theme.id
 
     sign_in(admin)
   end
@@ -109,41 +111,31 @@ describe "Admin Onboarding Banner" do
 
       banner.click_step_action("select_theme")
 
-      expect(page).to have_css(".theme-picker-modal")
-      expect(page).to have_css(".theme-picker-modal__card", minimum: 1)
+      expect(theme_picker_modal).to be_open
+      expect(theme_picker_modal).to have_theme_cards(minimum: 1)
     end
 
     it "sets a theme as default and marks step complete" do
       visit("/")
       banner.click_step_action("select_theme")
 
-      expect(page).to have_css(".theme-picker-modal")
+      expect(theme_picker_modal).to be_open
 
-      non_default_card =
-        find(".theme-picker-modal__card:not(.--active) .btn-primary", match: :first)
-      non_default_card.click
+      selected_theme_name = theme_picker_modal.select_first_selectable_theme
 
-      expect(toasts).to have_success(
-        I18n.t("js.admin_onboarding_banner.select_theme.theme_set", theme: "Foundation"),
-      )
+      expected_message =
+        I18n.t("js.admin_onboarding_banner.select_theme.theme_set", theme: selected_theme_name)
+      expect(toasts).to have_success(expected_message)
+
+      visit("/")
+      expect(banner.step_completed?("select_theme")).to eq(true)
     end
   end
 
   describe "completing all steps" do
-    it "disables onboarding when all steps are complete" do
+    it "disables onboarding when select theme is completed last" do
       visit("/")
 
-      # Complete select_theme
-      banner.click_step_action("select_theme")
-      expect(page).to have_css(".theme-picker-modal")
-      non_default_card =
-        find(".theme-picker-modal__card:not(.--active) .btn-primary", match: :first)
-      non_default_card.click
-
-      visit("/")
-      expect(banner.step_completed?("select_theme")).to eq(true)
-
-      # Complete start_posting
       banner.click_step_action("start_posting")
       predefined_topics_modal.select_topic(0)
       composer.create
@@ -151,13 +143,17 @@ describe "Admin Onboarding Banner" do
 
       expect(banner.step_completed?("start_posting")).to eq(true)
 
-      # Complete invite_collaborators
       banner.click_step_action("invite_collaborators")
       create_invite_modal.save_button.click
       expect(create_invite_modal).to have_copy_button
       create_invite_modal.close
 
-      # banner is hidden after all steps are complete
+      expect(banner.step_completed?("invite_collaborators")).to eq(true)
+
+      banner.click_step_action("select_theme")
+      expect(theme_picker_modal).to be_open
+      theme_picker_modal.select_first_selectable_theme
+
       expect(banner).to be_not_visible
       expect(SiteSetting.enable_site_owner_onboarding).to eq(false)
     end

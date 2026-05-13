@@ -517,6 +517,10 @@ en:
         current: "Current"
         theme_set: "%{theme} is now your default theme"
         browse_all: "Browse all themes"
+        show_light_screenshot: "Show light screenshot"
+        show_dark_screenshot: "Show dark screenshot"
+        expand_preview: "Expand preview"
+        close_preview: "Close preview"
       invite_collaborators:
         title: "Invite Collaborators"
         description: "Early members help bring your community to life"

@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
 import {
   FOUNDATION_THEME_ID,
   HORIZON_THEME_ID,
@@ -28,13 +29,21 @@ class ThemeCard extends Component {
   @tracked previewExpanded = false;
 
   get currentScreenshotUrl() {
+    const { screenshot_dark_url, screenshot_light_url } = this.args.theme;
+
     return this.showingDarkScreenshot
-      ? this.args.theme.screenshot_dark_url
-      : this.args.theme.screenshot_light_url;
+      ? screenshot_dark_url || screenshot_light_url
+      : screenshot_light_url || screenshot_dark_url;
   }
 
   get screenshotToggleIcon() {
     return this.showingDarkScreenshot ? "sun" : "moon";
+  }
+
+  get screenshotToggleLabel() {
+    return this.showingDarkScreenshot
+      ? "admin_onboarding_banner.select_theme.show_light_screenshot"
+      : "admin_onboarding_banner.select_theme.show_dark_screenshot";
   }
 
   get hasBothScreenshots() {
@@ -76,15 +85,19 @@ class ThemeCard extends Component {
             {{#if this.hasBothScreenshots}}
               <DButton
                 @action={{this.toggleScreenshot}}
+                @ariaLabel={{this.screenshotToggleLabel}}
                 @icon={{this.screenshotToggleIcon}}
                 @preventFocus={{true}}
+                @title={{this.screenshotToggleLabel}}
                 class="btn-flat btn-small"
               />
             {{/if}}
             <DButton
               @action={{this.expandPreview}}
+              @ariaLabel="admin_onboarding_banner.select_theme.expand_preview"
               @icon="expand"
               @preventFocus={{true}}
+              @title="admin_onboarding_banner.select_theme.expand_preview"
               class="btn-flat btn-small"
             />
           </div>
@@ -110,17 +123,22 @@ class ThemeCard extends Component {
       {{/unless}}
     </div>
     {{#if this.previewExpanded}}
-      {{! template-lint-disable no-invalid-interactive }}
-      <div
-        class="theme-picker-modal__lightbox"
-        {{on "click" this.collapsePreview}}
-        role="button"
-        tabindex="0"
-      >
+      <div class="theme-picker-modal__lightbox">
+        <button
+          aria-label={{i18n
+            "admin_onboarding_banner.select_theme.close_preview"
+          }}
+          class="theme-picker-modal__lightbox-backdrop"
+          title={{i18n "admin_onboarding_banner.select_theme.close_preview"}}
+          type="button"
+          {{on "click" this.collapsePreview}}
+        ></button>
         <img src={{this.currentScreenshotUrl}} alt={{@theme.name}} />
         <DButton
           @action={{this.collapsePreview}}
+          @ariaLabel="admin_onboarding_banner.select_theme.close_preview"
           @icon="xmark"
+          @title="admin_onboarding_banner.select_theme.close_preview"
           class="btn-flat theme-picker-modal__lightbox-close"
         />
       </div>
@@ -177,7 +195,7 @@ export default class ThemePickerModal extends Component {
         },
       });
 
-      this.args.model.onThemeSelected?.();
+      await this.args.model?.onThemeSelected?.();
       this.args.closeModal();
       window.location.reload();
     } catch (error) {
@@ -206,7 +224,7 @@ export default class ThemePickerModal extends Component {
           </div>
           <PluginOutlet @name="theme-picker-modal-below-themes">
             <p class="theme-picker-modal__browse-all">
-              <a href="/admin/config/customize/themes">
+              <a href={{getURL "/admin/config/customize/themes"}}>
                 {{i18n "admin_onboarding_banner.select_theme.browse_all"}}
               </a>
             </p>

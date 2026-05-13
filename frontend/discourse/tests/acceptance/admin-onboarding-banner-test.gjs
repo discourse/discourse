@@ -225,7 +225,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     step.isChecked();
   });
 
-  test("it can complete `select_theme` step", async function (assert) {
+  test("it can open `select_theme` step", async function (assert) {
     const step = withStep("select_theme", assert);
 
     await visit("/");

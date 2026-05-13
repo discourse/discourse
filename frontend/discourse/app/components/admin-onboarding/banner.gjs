@@ -89,7 +89,7 @@ const STEPS = [
     }
 
     completeStep() {
-      this.markAsCompleted();
+      return this.markAsCompleted();
     }
 
     showStartPostingOptions() {
@@ -131,30 +131,11 @@ const STEPS = [
 
 export default class AdminOnboardingBanner extends Component {
   @service currentUser;
-  @service appEvents;
   @service keyValueStore;
   @service router;
   @service toasts;
 
   @tracked dismissed = false;
-
-  constructor() {
-    super(...arguments);
-    this.appEvents.on(
-      "onboarding-step:completed",
-      this,
-      this.checkIfOnboardingIsComplete
-    );
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.appEvents.off(
-      "onboarding-step:completed",
-      this,
-      this.checkIfOnboardingIsComplete
-    );
-  }
 
   get shouldDisplay() {
     if (this.dismissed) {
@@ -169,13 +150,14 @@ export default class AdminOnboardingBanner extends Component {
     return currentRouteName === `discovery.${defaultHomepage()}`;
   }
 
-  checkIfOnboardingIsComplete() {
+  @action
+  async checkIfOnboardingIsComplete() {
     const allStepsAreDone = STEPS.every(
       (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
     );
 
     if (allStepsAreDone) {
-      this.endOnboarding({ skipped: false });
+      await this.endOnboarding({ skipped: false });
     }
   }
 
@@ -216,7 +198,7 @@ export default class AdminOnboardingBanner extends Component {
           <div class="admin-onboarding-banner__content">
             <div class="admin-onboarding-banner__steps">
               {{#each STEPS as |Step|}}
-                <Step />
+                <Step @onCompleted={{this.checkIfOnboardingIsComplete}} />
               {{/each}}
             </div>
           </div>
