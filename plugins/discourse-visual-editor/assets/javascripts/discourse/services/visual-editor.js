@@ -17,6 +17,7 @@ import {
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import discourseDebounce from "discourse/lib/debounce";
 import PreloadStore from "discourse/lib/preload-store";
+import { parseSlotPlacement } from "../lib/grid-math";
 import {
   cloneEntryForPaste,
   cloneLayoutForDraft,
@@ -2063,6 +2064,121 @@ export default class VisualEditorService extends Service {
       this._publishStructuralChange(located.outletName, result.layout);
       return true;
     });
+  }
+
+  /**
+   * Returns the slot children of a grid `ve:layout` whose explicit
+   * column / row placements would fall outside the given bounds. Each
+   * entry yields the slot's composite key and the offending placement
+   * for diagnostic / clamping callers.
+   *
+   * Auto-placed slots (no explicit column / row) are excluded — CSS
+   * Grid auto-flow handles them regardless of the bounds change.
+   *
+   * @param {string} gridKey
+   * @param {number} maxColumns
+   * @param {number} maxRows
+   * @returns {Array<{slotKey: string, column: string, row: string}>}
+   */
+  outOfBoundsSlotsIn(gridKey, maxColumns, maxRows) {
+    const located = this._findEntryAndOutletSync(gridKey);
+    if (!located || !this._isGridContainer(located.entry)) {
+      return [];
+    }
+    const offenders = [];
+    for (const slot of located.entry.children ?? []) {
+      if (!this._isSlotEntry(slot)) {
+        continue;
+      }
+      const placement = parseSlotPlacement(slot.args ?? {});
+      const colExceeds =
+        placement.column.start != null &&
+        placement.column.end != null &&
+        placement.column.end > maxColumns + 1;
+      const rowExceeds =
+        placement.row.start != null &&
+        placement.row.end != null &&
+        placement.row.end > maxRows + 1;
+      if (colExceeds || rowExceeds) {
+        offenders.push({
+          slotKey: entryKey(slot),
+          column: slot.args?.column ?? "auto",
+          row: slot.args?.row ?? "auto",
+        });
+      }
+    }
+    return offenders;
+  }
+
+  /**
+   * Clamps every slot in a grid layout so its placement fits inside
+   * the given bounds. Slots whose end lines exceed the new max get
+   * their spans truncated; slots whose start lines exceed it get
+   * snapped back to the last valid cell with span 1.
+   *
+   * Runs as a single structural-undo entry so the whole clamp can be
+   * reverted with one Cmd+Z (e.g. after a "Reduce columns" confirm).
+   *
+   * @param {{gridKey: string, maxColumns: number, maxRows: number}} args
+   * @returns {boolean}
+   */
+  @action
+  clampGridSlotPlacements({ gridKey, maxColumns, maxRows }) {
+    const located = this._findEntryAndOutletSync(gridKey);
+    if (!located || !this._isGridContainer(located.entry)) {
+      return false;
+    }
+    const offenders = this.outOfBoundsSlotsIn(gridKey, maxColumns, maxRows);
+    if (offenders.length === 0) {
+      return false;
+    }
+    return this._recordStructural([located.outletName], () => {
+      for (const slot of located.entry.children ?? []) {
+        if (!this._isSlotEntry(slot)) {
+          continue;
+        }
+        const placement = parseSlotPlacement(slot.args ?? {});
+        const newColumn = this._clampTrack(placement.column, maxColumns);
+        const newRow = this._clampTrack(placement.row, maxRows);
+        if (newColumn == null && newRow == null) {
+          continue;
+        }
+        const layout = this.readResolvedLayout(located.outletName);
+        const result = replaceEntryArgs(layout, entryKey(slot), (current) => ({
+          ...current,
+          ...(newColumn != null && { column: newColumn }),
+          ...(newRow != null && { row: newRow }),
+        }));
+        if (!result.changed) {
+          continue;
+        }
+        this._publishStructuralChange(located.outletName, result.layout);
+      }
+      return true;
+    });
+  }
+
+  /**
+   * Returns a clamped CSS Grid track shorthand, or `null` if the track
+   * is already within bounds (so callers can skip writing it). Auto
+   * placements pass through unchanged.
+   *
+   * @param {{start: number|null, end: number|null}} track
+   * @param {number} max
+   * @returns {string|null}
+   */
+  _clampTrack(track, max) {
+    if (track.start == null) {
+      return null;
+    }
+    const lastLine = max + 1;
+    const start = Math.min(track.start, max);
+    const end = track.end == null ? start + 1 : Math.min(track.end, lastLine);
+    const safeEnd = Math.max(end, start + 1);
+    if (start === track.start && safeEnd === track.end) {
+      return null;
+    }
+    return safeEnd <= start + 1 ? `${start}` : `${start} / ${safeEnd}`;
   }
 
   /**

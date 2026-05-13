@@ -9,6 +9,26 @@
 register_asset "stylesheets/visual-editor.scss"
 enabled_site_setting :visual_editor_enabled
 
+# Icons used by block-metadata `icon:` fields and inspector UI that
+# aren't in the default SVG subset. Without these the rendered icon
+# is replaced by a placeholder square and the console logs a warning
+# per missing glyph.
+register_svg_icon "arrow-line-left"
+register_svg_icon "arrows-up-down"
+register_svg_icon "border-none"
+register_svg_icon "cube"
+register_svg_icon "cubes"
+register_svg_icon "down-left-and-up-right-to-center"
+register_svg_icon "grip-lines"
+register_svg_icon "heading"
+register_svg_icon "object-group"
+register_svg_icon "paragraph"
+register_svg_icon "table-cells-large"
+register_svg_icon "table-columns"
+register_svg_icon "triangle-exclamation"
+register_svg_icon "up-right-and-down-left-from-center"
+register_svg_icon "wand-magic-sparkles"
+
 module ::DiscourseVisualEditor
   PLUGIN_NAME = "discourse-visual-editor"
 end
