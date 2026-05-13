@@ -76,5 +76,6 @@ export function getBlockDisplayMetadata(component) {
     previewArgs: metadata.previewArgs ?? previewArgsFromSchema(metadata.args),
     thumbnail: metadata.thumbnail ?? null,
     paletteHidden: metadata.paletteHidden === true,
+    transparent: metadata.transparent === true,
   };
 }

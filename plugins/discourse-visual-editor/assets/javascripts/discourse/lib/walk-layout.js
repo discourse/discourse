@@ -56,6 +56,31 @@ function resolveBlockName(blockRef) {
 }
 
 /**
+ * Whether the entry's block is marked `transparent`. Transparent blocks
+ * (e.g. `ve:slot`) shouldn't appear as their own outline rows — their
+ * children render at the slot's depth instead. Resolves the class via
+ * `blocksService` for string-ref entries so the flag works regardless
+ * of how the entry was registered.
+ *
+ * @param {Object} entry
+ * @param {{ getBlock: (name: string) => Function|null }} blocksService
+ * @returns {boolean}
+ */
+function isTransparentEntry(entry, blocksService) {
+  if (!entry?.block) {
+    return false;
+  }
+  const klass =
+    typeof entry.block === "string"
+      ? blocksService.getBlock(entry.block)
+      : entry.block;
+  if (!klass) {
+    return false;
+  }
+  return getBlockMetadata(klass)?.transparent === true;
+}
+
+/**
  * Returns the set of outlet names whose `<OutletBoundary>` is currently
  * mounted in the DOM. Filters the walker to those outlets so layouts
  * registered for off-page outlets don't show as dead rows.
@@ -119,15 +144,33 @@ export async function walkAllOutlets({ blocksService }) {
       continue;
     }
     const rows = [];
-    walkEntries(layout, 0, [], rows);
+    walkEntries(layout, 0, [], rows, blocksService);
     result.push({ outletName, rows });
   }
   return result;
 }
 
-function walkEntries(entries, depth, path, rows) {
+function walkEntries(entries, depth, path, rows, blocksService) {
   entries.forEach((entry, index) => {
     const entryPath = [...path, index];
+
+    // Transparent blocks (e.g. ve:slot) are scaffolding — render their
+    // children at the slot's depth instead of pushing a row for the
+    // slot itself. Empty transparent blocks contribute nothing to the
+    // outline (the grid overlay surfaces empty cells on the canvas).
+    if (isTransparentEntry(entry, blocksService)) {
+      if (entry.children?.length) {
+        walkEntries(
+          entry.children,
+          depth,
+          [...entryPath, "children"],
+          rows,
+          blocksService
+        );
+      }
+      return;
+    }
+
     const blockName = resolveBlockName(entry.block);
     // Composite key matching the form minted in entry-processing.js (the
     // BLOCK_DEBUG callback receives the same value), so outline ↔ canvas
@@ -144,7 +187,13 @@ function walkEntries(entries, depth, path, rows) {
       path: entryPath,
     });
     if (entry.children?.length) {
-      walkEntries(entry.children, depth + 1, [...entryPath, "children"], rows);
+      walkEntries(
+        entry.children,
+        depth + 1,
+        [...entryPath, "children"],
+        rows,
+        blocksService
+      );
     }
   });
 }

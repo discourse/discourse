@@ -400,6 +400,144 @@ module(
       });
     });
 
+    module("wrap-on-insert (free-grid)", function (innerHooks) {
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        // The starter library registers ve:layout + ve:slot via the
+        // pre-initializer; force-load it here so the registry has them
+        // for the assertions below.
+        await import("discourse/plugins/discourse-visual-editor/discourse/pre-initializers/register-starter-blocks");
+        // Seed an outlet with a free-grid layout block (containing one
+        // pre-existing tile so the strict validator accepts it as
+        // non-empty) into which we'll insert more content.
+        this.layout = await _renderBlocks(
+          "homepage-blocks",
+          [
+            {
+              block: "ve:layout",
+              args: { mode: "free-grid", columns: 4, rows: 2 },
+              children: [{ block: TestTile, args: { title: "Seed" } }],
+            },
+          ],
+          getOwner(this)
+        );
+        this.editor.siteSettings.visual_editor_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:visual-editor");
+        this.editor.enter();
+      });
+
+      test("inserts into a free-grid layout wrap the entry in ve:slot", function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const gridKey = `ve:layout:${draft[0].__stableKey}`;
+
+        const ok = this.editor.insertBlock({
+          blockName: "ve:svc-test-tile",
+          defaultArgs: { title: "In grid" },
+          targetKey: gridKey,
+          position: "inside",
+          targetOutletName: "homepage-blocks",
+        });
+
+        assert.true(ok);
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        const gridChildren = after[0].children ?? [];
+        assert.strictEqual(
+          gridChildren.length,
+          2,
+          "the seed tile plus one new slot"
+        );
+
+        // insertEntryAt(_, _, _, "inside") prepends, so the new slot is
+        // first in the children list.
+        const slot = gridChildren[0];
+        const slotName =
+          typeof slot.block === "string"
+            ? slot.block
+            : slot.block?.prototype?.constructor?.name;
+        assert.strictEqual(
+          slotName,
+          "ve:slot",
+          "the inserted entry is a ve:slot"
+        );
+        assert.strictEqual(slot.args.column, "auto");
+        assert.strictEqual(slot.args.row, "auto");
+        assert.strictEqual(slot.children.length, 1);
+        assert.strictEqual(
+          slot.children[0].args.title,
+          "In grid",
+          "the content block sits inside the slot"
+        );
+      });
+
+      test("setSlotPlacement updates a slot's column/row and is undoable", async function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const gridKey = `ve:layout:${draft[0].__stableKey}`;
+
+        // Seed a placed tile via insertBlockAtCell so we have a slot to
+        // reposition.
+        this.editor.insertBlockAtCell({
+          gridKey,
+          blockName: "ve:svc-test-tile",
+          defaultArgs: { title: "Movable" },
+          column: 2,
+          row: 1,
+        });
+        const afterInsert = this.editor.readResolvedLayout("homepage-blocks");
+        const slot = afterInsert[0].children.find(
+          (c) => c.args?.title === undefined
+        );
+        const slotKey = `ve:slot:${slot.__stableKey}`;
+        assert.strictEqual(slot.args.column, "2");
+
+        const ok = this.editor.setSlotPlacement({
+          slotKey,
+          column: "3",
+          row: "2",
+        });
+        assert.true(ok);
+
+        const afterMove = this.editor.readResolvedLayout("homepage-blocks");
+        const movedSlot = afterMove[0].children.find(
+          (c) => c.__stableKey === slot.__stableKey
+        );
+        assert.strictEqual(movedSlot.args.column, "3");
+        assert.strictEqual(movedSlot.args.row, "2");
+
+        // Undo: back to the previous placement.
+        await this.editor.undo();
+        const undone = this.editor.readResolvedLayout("homepage-blocks");
+        const undoneSlot = undone[0].children.find(
+          (c) => c.__stableKey === slot.__stableKey
+        );
+        assert.strictEqual(undoneSlot.args.column, "2");
+        assert.strictEqual(undoneSlot.args.row, "1");
+      });
+
+      test("inserts into a non-grid container do NOT wrap in ve:slot", function (assert) {
+        // The outlet root isn't a free-grid; inserting at root level should
+        // pass through unwrapped.
+        const ok = this.editor.insertBlock({
+          blockName: "ve:svc-test-tile",
+          defaultArgs: { title: "At root" },
+          targetKey: null,
+          position: "after",
+          targetOutletName: "homepage-blocks",
+        });
+
+        assert.true(ok);
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        const lastEntry = after.at(-1);
+        const name =
+          typeof lastEntry.block === "string" ? lastEntry.block : null;
+        assert.notStrictEqual(
+          name,
+          "ve:slot",
+          "root-level inserts stay unwrapped"
+        );
+      });
+    });
+
     module("clipboard (copy / cut / paste)", function (innerHooks) {
       innerHooks.beforeEach(async function () {
         withTestBlockRegistration(() => registerBlock(TestTile));

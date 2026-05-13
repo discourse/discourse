@@ -271,6 +271,16 @@ const BlockComponentManager = new Proxy(
  *   user-facing inserts only, useful for infrastructure blocks (e.g.
  *   the built-in `group`) and deprecated aliases.
  *
+ * @param {boolean} [options.transparent=false] - When true, the block is
+ *   treated as scaffolding: the visual editor's outline panel expands
+ *   it inline (rendering its children at its own level) and the block
+ *   chrome wrapper skips its standard border / handle / toolbar. Used
+ *   for slot-style wrappers that exist solely to attach metadata
+ *   (e.g. `ve:slot` carrying CSS Grid placement) without showing up as
+ *   first-class blocks in the authoring UI. Implies — but does not
+ *   auto-set — `paletteHidden`; transparent blocks are typically not
+ *   user-pickable.
+ *
  * @returns {Function} Decorator function that returns the decorated class
  *
  * @example
@@ -306,6 +316,7 @@ export function block(name, options = {}) {
     previewArgs = null,
     thumbnail = null,
     paletteHidden = false,
+    transparent = false,
   } = options;
 
   // Validate arg schema structure and types
@@ -380,6 +391,7 @@ export function block(name, options = {}) {
       previewArgs: previewArgs ? Object.freeze({ ...previewArgs }) : null,
       shortName: parsed.name,
       thumbnail,
+      transparent: transparent === true,
       validate: validateFn,
     });
 

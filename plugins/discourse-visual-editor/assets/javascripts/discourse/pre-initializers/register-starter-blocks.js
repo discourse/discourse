@@ -10,6 +10,7 @@ import VEImage from "../blocks/ve-image";
 import VELayout from "../blocks/ve-layout";
 import VEParagraph from "../blocks/ve-paragraph";
 import VERecentTopics from "../blocks/ve-recent-topics";
+import VESlot from "../blocks/ve-slot";
 import VESpacer from "../blocks/ve-spacer";
 
 const STARTER_BLOCKS = [
@@ -26,6 +27,10 @@ const STARTER_BLOCKS = [
   VECallout,
   VERecentTopics,
   VEBadgesGrid,
+  // ve:slot is the auto-managed grid-cell wrapper (Phase 7s). Hidden
+  // from the palette + outline; instantiated by the editor when an
+  // author drops a block into a free-grid layout.
+  VESlot,
 ];
 
 /**
