@@ -171,7 +171,9 @@ RSpec.describe PrivateMessageTopicTrackingState do
 
     it "does not publish message_bus messages for non-normal private messages" do
       messages =
-        MessageBus.track_publish { described_class.publish_unread(custom_private_message.first_post) }
+        MessageBus.track_publish do
+          described_class.publish_unread(custom_private_message.first_post)
+        end
 
       expect(messages).to eq([])
     end

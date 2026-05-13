@@ -276,7 +276,13 @@ RSpec.describe CurrentUserSerializer do
       pm_topic = Fabricate(:private_message_topic, user: sender, recipient: user)
       pm_post = Fabricate(:post, topic: pm_topic, user: sender)
 
-      Fabricate(:private_message_notification, user: user, topic: pm_topic, post: pm_post, read: false)
+      Fabricate(
+        :private_message_notification,
+        user: user,
+        topic: pm_topic,
+        post: pm_post,
+        read: false,
+      )
     end
 
     fab!(:custom_pm_notification) do

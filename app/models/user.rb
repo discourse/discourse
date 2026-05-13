@@ -700,14 +700,17 @@ class User < ActiveRecord::Base
     SQL
 
     # to avoid coalesce we do to_i
-    DB.query_single(
-      sql,
-      self.class.exclude_non_normal_pm_notification_sql_params.merge(
-        user_id: id,
-        notification_type: notification_type,
-        since: since,
-      ),
-    )[0].to_i
+    DB
+      .query_single(
+        sql,
+        self.class.exclude_non_normal_pm_notification_sql_params.merge(
+          user_id: id,
+          notification_type: notification_type,
+          since: since,
+        ),
+      )
+      .first
+      .to_i
   end
 
   def unread_notifications_of_priority(high_priority:)
@@ -724,13 +727,16 @@ class User < ActiveRecord::Base
     SQL
 
     # to avoid coalesce we do to_i
-    DB.query_single(
-      sql,
-      self.class.exclude_non_normal_pm_notification_sql_params.merge(
-        user_id: id,
-        high_priority: high_priority,
-      ),
-    )[0].to_i
+    DB
+      .query_single(
+        sql,
+        self.class.exclude_non_normal_pm_notification_sql_params.merge(
+          user_id: id,
+          high_priority: high_priority,
+        ),
+      )
+      .first
+      .to_i
   end
 
   MAX_UNREAD_BACKLOG = 400

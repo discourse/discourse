@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require Rails.root.join(
-          "plugins/discourse-ai/db/migrate/20260512042219_backfill_ai_bot_pm_subtype",
-        )
+require Rails.root.join("plugins/discourse-ai/db/migrate/20260512042219_backfill_ai_bot_pm_subtype")
 
 RSpec.describe BackfillAiBotPmSubtype do
   fab!(:user)

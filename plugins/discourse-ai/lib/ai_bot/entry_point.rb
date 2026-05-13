@@ -41,11 +41,13 @@ module DiscourseAi
         return if args[:target_user_ids].present? && args[:target_usernames].present?
 
         if args[:target_user_ids].present?
-          return Array
-            .wrap(args[:target_user_ids])
-            .flat_map { |user_id| user_id.to_s.split(",") }
-            .map(&:to_i)
-            .uniq
+          return(
+            Array
+              .wrap(args[:target_user_ids])
+              .flat_map { |user_id| user_id.to_s.split(",") }
+              .map(&:to_i)
+              .uniq
+          )
         end
 
         return if args[:target_usernames].blank?

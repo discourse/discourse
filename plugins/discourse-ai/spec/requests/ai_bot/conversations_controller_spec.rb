@@ -8,13 +8,7 @@ RSpec.describe DiscourseAi::AiBot::ConversationsController do
   before { enable_current_plugin }
 
   def fabricate_pm(user:, recipient:, subtype: TopicSubtype.user_to_user, custom_fields: {})
-    topic =
-      Fabricate(
-        :private_message_topic,
-        user: user,
-        recipient: recipient,
-        subtype: subtype,
-      )
+    topic = Fabricate(:private_message_topic, user: user, recipient: recipient, subtype: subtype)
     Fabricate(:post, topic: topic, user: user)
     custom_fields.each { |name, value| topic.custom_fields[name] = value }
     topic.save_custom_fields if custom_fields.present?
