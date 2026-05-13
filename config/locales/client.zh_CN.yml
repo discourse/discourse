@@ -330,6 +330,8 @@ zh_CN:
         visual_overlay: "视觉叠加"
         ghost_blocks: "幽灵块"
         condition_debugging: "条件调试"
+      plugin_outlet_debug:
+        find_on_github: "在 GitHub 上查找"
       toggle_safe_mode: "切换安全模式"
       toggle_verbose_localization: "切换详细本地化"
       toggle_mobile_view: "切换移动视图"
@@ -3310,6 +3312,8 @@ zh_CN:
         relist_topics: "重新公开话题"
         pin_topics: "将这些话题设为精选"
         unpin_topics: "取消置顶话题"
+        enable_nested_replies: "启用嵌套回复"
+        disable_nested_replies: "禁用嵌套回复"
         reset_bump_dates: "重置顶帖日期"
         defer: "标记为未读"
         delete: "删除话题"
@@ -3358,6 +3362,10 @@ zh_CN:
         manage_tags: "管理标签"
         confirm_unpin_topics:
           other: "取消置顶 %{count} 个话题"
+        confirm_enable_nested_replies:
+          other: "在 %{count} 主题上启用嵌套回复"
+        confirm_disable_nested_replies:
+          other: "在 %{count} 主题上禁用嵌套回复"
         confirm_update_topics:
           other: "更新 %{count} 个话题"
         confirm_close_topics:
@@ -3460,6 +3468,10 @@ zh_CN:
       unpin_topics:
         name: "取消置顶"
         description: "取消置顶所有被置顶到一个类别或全局置顶的所选话题"
+      enable_nested_replies:
+        name: "启用嵌套回复"
+      disable_nested_replies:
+        name: "禁用嵌套回复"
     nested_replies:
       nested_view: "嵌套视图"
       flat_view: "平面视图"
