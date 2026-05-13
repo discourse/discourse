@@ -14,16 +14,21 @@
 
     td,
     th {
-      padding: 12px 5px;
-      color: var(--primary-med-or-secondary-high);
+      color: var(--d-topic-list-header-text-color);
+      font-size: var(--d-topic-list-data-font-size);
+
+      &:first-of-type {
+        padding-inline-start: var(--d-topic-list-data-padding-inline-start);
+      }
+
+      &:last-of-type {
+        padding-inline-end: var(--d-topic-list-data-padding-inline-end);
+      }
     }
 
     td {
-      vertical-align: top;
-
-      &:first-of-type {
-        padding-left: 10px;
-      }
+      padding: var(--d-topic-list-data-padding-y)
+        var(--d-topic-list-data-padding-x);
     }
 
     th {
