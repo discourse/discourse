@@ -2,6 +2,7 @@
 
 import AnsiToHtml from "ansi-to-html";
 import * as fs from "fs";
+import * as path from "path";
 import { dev } from "rolldown/experimental";
 import { buildConfig } from "./rolldown.config.mjs";
 
@@ -23,7 +24,8 @@ function ansiToHtml(str) {
 }
 
 function stripCwd(file) {
-  return file.startsWith(CWD_PREFIX) ? file.slice(CWD_PREFIX.length) : file;
+  const relative = path.relative(CWD_PREFIX, file);
+  return relative;
 }
 
 function writeBuildStatus(status) {
