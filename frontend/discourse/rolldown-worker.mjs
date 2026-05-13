@@ -61,7 +61,6 @@ console.log("Starting dev server...");
 const resolvedConfig = buildConfig({ devMode: true });
 const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
   rebuildStrategy: "always",
-  watch: {},
 
   onHmrUpdates(result) {
     if (result instanceof Error) {
