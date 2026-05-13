@@ -150,7 +150,7 @@
     "pretender": "^3.4.7",
     "qunit": "^2.25.0",
     "qunit-dom": "^3.5.1",
-    "sinon": "^21.1.2",
+    "sinon": "^22.0.0",
     "source-map": "^0.7.6",
     "terser": "^5.46.2",
     "testem": "^3.20.0",
