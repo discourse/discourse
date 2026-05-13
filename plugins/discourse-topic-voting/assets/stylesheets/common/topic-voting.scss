@@ -124,6 +124,7 @@
   }
 
   .voting-wrapper__button {
+    --primary-very-low: var(--header_background);
     width: 100%;
     padding: var(--space-1);
   }
