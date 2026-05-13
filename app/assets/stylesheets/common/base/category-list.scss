@@ -29,6 +29,7 @@
     td {
       padding: var(--d-topic-list-data-padding-y)
         var(--d-topic-list-data-padding-x);
+      vertical-align: top;
     }
 
     th {
@@ -108,13 +109,8 @@
     }
 
     .featured-topic {
-      margin: 10px 0 0;
       display: flex;
       align-items: baseline;
-
-      &:first-of-type {
-        margin-top: 13px;
-      }
 
       a.last-posted-at,
       a.last-posted-at:visited {
