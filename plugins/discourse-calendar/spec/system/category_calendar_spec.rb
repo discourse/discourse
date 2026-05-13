@@ -95,14 +95,16 @@ describe "Category calendar" do
       expect(page).to have_current_path("#{category.relative_url}/l/latest")
       expect(category_page).to have_selector("#category-events-calendar .fc")
     end
-    
+
     it "prefers category defaultView over calendar_category_default_view" do
-        SiteSetting.calendar_category_default_view = "month"
-        SiteSetting.calendar_categories = "categoryId=#{category.id};defaultView=week"
+      SiteSetting.calendar_category_default_view = "month"
+      SiteSetting.calendar_categories = "categoryId=#{category.id};defaultView=week"
 
-        category_page.visit(category)
+      category_page.visit(category)
 
-        expect(category_page).to have_selector("#category-events-calendar .fc-timeGridWeek-view")
+      expect(category_page).to have_selector(
+        "#category-events-calendar .fc-timeGridWeek-view",
+      )
     end
   end
 
