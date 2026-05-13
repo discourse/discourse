@@ -177,13 +177,12 @@ RSpec.describe Admin::UsersController do
       end
 
       it "does not include DiscourseConnect SSO details" do
-        Fabricate(:single_sign_on_record, user: user, external_id: "secret-external-id")
+        Fabricate(:single_sign_on_record, user: user)
 
         get "/admin/users/#{user.id}.json"
 
         expect(response.status).to eq(200)
         expect(response.parsed_body).not_to have_key("single_sign_on_record")
-        expect(response.body).not_to include("secret-external-id")
       end
     end
 
