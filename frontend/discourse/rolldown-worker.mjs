@@ -64,7 +64,7 @@ fs.rmSync("./dist", { recursive: true, force: true });
 fs.mkdirSync("./dist");
 writeBuildStatus({ status: "building" });
 
-console.log("Starting dev server...");
+console.log("Starting rolldown dev server...");
 
 const resolvedConfig = buildConfig({ devMode: true });
 const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
