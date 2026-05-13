@@ -2,9 +2,8 @@
 
 import AnsiToHtml from "ansi-to-html";
 import * as fs from "fs";
-
-const { dev } = await import("rolldown/experimental");
-const { buildConfig } = await import("./rolldown.config.mjs");
+import { dev } from "rolldown/experimental";
+import { buildConfig } from "./rolldown.config.mjs";
 
 const ansiConverter = new AnsiToHtml({ newline: true, escapeXML: true });
 const MANIFEST_DIR = "./dist/manifest";
