@@ -378,7 +378,8 @@ describe "Request tracking" do
             end
           end
 
-        beacon_event = all_events.find { |e| e[:event_name] == :beacon_browser_pageview }[:params].last
+        beacon_event =
+          all_events.find { |e| e[:event_name] == :beacon_browser_pageview }[:params].last
         non_beacon_event = all_events.find { |e| e[:event_name] == :browser_pageview }[:params].last
 
         [beacon_event, non_beacon_event].each do |event|
@@ -463,7 +464,8 @@ describe "Request tracking" do
             end
           end
 
-        beacon_event = all_events.find { |e| e[:event_name] == :beacon_browser_pageview }[:params].last
+        beacon_event =
+          all_events.find { |e| e[:event_name] == :beacon_browser_pageview }[:params].last
         non_beacon_event = all_events.find { |e| e[:event_name] == :browser_pageview }[:params].last
 
         [beacon_event, non_beacon_event].each do |event|
