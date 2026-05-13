@@ -2470,6 +2470,53 @@ RSpec.describe TopicsController do
 
               expect(response.status).to eq(200)
             end
+
+            it "returns canonical tags in the response when synonyms are submitted" do
+              canonical = Fabricate(:tag, name: "apple-inc")
+              Fabricate(:tag, name: "aapl", target_tag: canonical)
+              Fabricate(:tag, name: "appl", target_tag: canonical)
+
+              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: %w[aapl appl apple-inc] }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+                "apple-inc",
+              )
+              expect(topic.reload.tags.pluck(:name)).to contain_exactly("apple-inc")
+            end
+
+            it "does not include tags in the response when tags were not part of the update" do
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    title: "This is a new title for the topic",
+                  }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body).not_to have_key("tags")
+            end
+
+            it "does not create a revision when only synonyms of existing tags are submitted" do
+              canonical = Fabricate(:tag, name: "apple-inc")
+              aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+              appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+              topic.tags << canonical
+
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json",
+                    params: {
+                      tags: [
+                        { id: aapl.id, name: "aapl" },
+                        { id: appl.id, name: "appl" },
+                        { id: canonical.id, name: "apple-inc" },
+                      ],
+                    }
+              end.not_to change { topic.reload.first_post.revisions.count }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+                "apple-inc",
+              )
+            end
           end
 
           it "returns success when updating with empty tags on a topic with no tags" do
@@ -2516,6 +2563,29 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(200)
             expect(topic.reload.tags.pluck(:name)).to contain_exactly("brand-new")
+          end
+
+          it "returns canonical tags and skips revision when only synonyms are submitted" do
+            canonical = Fabricate(:tag, name: "apple-inc")
+            aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+            appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+            topic.tags << canonical
+
+            expect do
+              put "/t/#{topic.id}/tags.json",
+                  params: {
+                    tags: [
+                      { id: aapl.id, name: "aapl" },
+                      { id: appl.id, name: "appl" },
+                      { id: canonical.id, name: "apple-inc" },
+                    ],
+                  }
+            end.not_to change { topic.reload.first_post.revisions.count }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+              "apple-inc",
+            )
           end
 
           it "does not remove tag if no params is given" do

@@ -5633,6 +5633,7 @@ en:
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
       synonyms_inline: "These synonyms will be replaced with %{base_tag_name}:"
+      synonym_hint: "→ %{tag_name}"
       save: "Save name and description of the tag"
       tag_groups_info:
         one: 'This tag belongs to the group "%{tag_groups}".'
