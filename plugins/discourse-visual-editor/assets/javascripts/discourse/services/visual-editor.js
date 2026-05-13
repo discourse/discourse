@@ -1968,7 +1968,7 @@ export default class VisualEditorService extends Service {
       // bleed back into the palette's `previewArgs` object.
       const fresh = { block: blockName, args: { ...defaultArgs } };
       // Auto-wrap in a `ve:slot` when the destination parent is a
-      // free-grid `ve:layout`. The slot carries CSS Grid placement so
+      // `ve:layout` in grid mode. The slot carries CSS Grid placement so
       // the actual content block stays unaware it's in a grid. See
       // Phase 7s.3.
       const entry = this._wrapForGridIfNeeded({
@@ -1983,7 +1983,7 @@ export default class VisualEditorService extends Service {
       }
       this._publishStructuralChange(targetOutletName, insertion.layout);
       // Auto-select the freshly inserted block so the inspector immediately
-      // shows its form (and, for a free-grid `ve:layout`, the grid overlay
+      // shows its form (and, for a `ve:layout` in grid mode, the grid overlay
       // mounts without the author having to click first). `_publishStructuralChange`
       // has just run `assignStableKeys`, so `fresh.__stableKey` is set on
       // the original entry reference. We select the inner block (`fresh`)
@@ -2012,8 +2012,7 @@ export default class VisualEditorService extends Service {
   }
 
   /**
-   * Inserts a fresh content block at a specific cell of a free-grid
-   * layout. Wraps the content in a `ve:slot` with the chosen
+   * Inserts a fresh content block at a specific cell of a grid layout. Wraps the content in a `ve:slot` with the chosen
    * `column` / `row` so CSS Grid places it at the right cell —
    * regardless of insertion order.
    *
@@ -2032,8 +2031,7 @@ export default class VisualEditorService extends Service {
    * @returns {boolean}
    */
   /**
-   * Updates the `column` / `row` placement of a slot inside a free-grid
-   * layout. Used by the grid overlay's pointer-drag handlers
+   * Updates the `column` / `row` placement of a slot inside a grid layout. Used by the grid overlay's pointer-drag handlers
    * (Phase 7s.6) to commit a new placement on drop.
    *
    * Routes through `_recordStructural` so the placement change rides
@@ -2074,7 +2072,7 @@ export default class VisualEditorService extends Service {
    *
    * Used by chrome decoration to determine context — e.g. showing a
    * resize handle only when the block's parent is a `ve:slot` (which
-   * means we're inside a free-grid layout).
+   * means we're inside a grid layout).
    *
    * @param {string} blockKey
    * @returns {Object|null}
@@ -2127,7 +2125,7 @@ export default class VisualEditorService extends Service {
   }
 
   /**
-   * Moves an existing block to a specific cell of a free-grid layout.
+   * Moves an existing block to a specific cell of a grid layout.
    *
    * Three cases:
    *  - Source is already a `ve:slot` directly inside the target grid →
@@ -2152,7 +2150,7 @@ export default class VisualEditorService extends Service {
   @action
   moveBlockToCell({ gridKey, sourceKey, column, row }) {
     const grid = this._findEntryAndOutletSync(gridKey);
-    if (!grid || !this._isFreeGridContainer(grid.entry)) {
+    if (!grid || !this._isGridContainer(grid.entry)) {
       return false;
     }
     const sourceLocated = this._findEntryAndOutletSync(sourceKey);
@@ -2197,7 +2195,7 @@ export default class VisualEditorService extends Service {
   @action
   insertBlockAtCell({ gridKey, blockName, defaultArgs = {}, column, row }) {
     const located = this._findEntryAndOutletSync(gridKey);
-    if (!located || !this._isFreeGridContainer(located.entry)) {
+    if (!located || !this._isGridContainer(located.entry)) {
       return false;
     }
     if (
@@ -2281,8 +2279,8 @@ export default class VisualEditorService extends Service {
     if (!layout) {
       return false;
     }
-    // Same-outlet move: if the entry is heading into a free-grid
-    // (destination parent is `ve:layout` in free-grid mode) AND the
+    // Same-outlet move: if the entry is heading into a grid layout
+    // (destination parent is `ve:layout` in grid mode) AND the
     // entry isn't already a slot, wrap it. The wrap happens on the
     // entry-in-place via a transform pass before `moveEntry`. See
     // Phase 7s.3.
@@ -2353,7 +2351,7 @@ export default class VisualEditorService extends Service {
       return false;
     }
     // Wrap the moved entry in a `ve:slot` if the destination parent
-    // is a free-grid layout. See Phase 7s.3.
+    // is a grid layout. See Phase 7s.3.
     const entryToInsert = this._wrapForGridIfNeeded({
       entry: removal.removed,
       layout: targetLayout,
@@ -2379,13 +2377,13 @@ export default class VisualEditorService extends Service {
 
   /**
    * Wraps a fresh / moved entry in a `ve:slot` when its destination
-   * parent is a `ve:layout` in `free-grid` mode. The slot carries CSS
+   * parent is a `ve:layout` in `grid` mode. The slot carries CSS
    * Grid placement (`column` / `row`) so the inner content block stays
    * unaware it's in a grid; the visual editor's grid overlay
    * (Phase 7s.5–6) interacts with slots directly.
    *
    * Returns the entry to insert. When no wrap is needed (destination
-   * isn't a free-grid, or the entry is already a slot) returns the
+   * isn't a grid, or the entry is already a slot) returns the
    * original entry unchanged.
    *
    * New slots default to `auto` placement so CSS Grid auto-places into
@@ -2405,7 +2403,7 @@ export default class VisualEditorService extends Service {
       targetKey,
       position,
     });
-    if (!this._isFreeGridContainer(parent)) {
+    if (!this._isGridContainer(parent)) {
       return entry;
     }
     return {
@@ -2439,14 +2437,19 @@ export default class VisualEditorService extends Service {
   }
 
   /**
+   * Whether the entry is a `ve:layout` in per-cell `grid` mode. Accepts
+   * the legacy `"free-grid"` mode value as an alias so existing saved
+   * layouts (pre-rename) keep working.
+   *
    * @param {Object|null} entry
    * @returns {boolean}
    */
-  _isFreeGridContainer(entry) {
+  _isGridContainer(entry) {
     if (this._blockNameOf(entry) !== "ve:layout") {
       return false;
     }
-    return entry?.args?.mode === "free-grid";
+    const mode = entry?.args?.mode;
+    return mode === "grid" || mode === "free-grid";
   }
 
   /** @param {Object|null} entry */

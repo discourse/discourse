@@ -73,7 +73,7 @@ body.visual-editor-active {
       border-color: var(--visual-editor-block-hover-color);
     }
 
-    /* When the chrome sits inside a `ve:slot` (free-grid cell), zero
+    /* When the chrome sits inside a `ve:slot` (grid cell), zero
        out the margin and the inner padding so the chrome's border
        lands exactly on the cell's edges. Without this, the chrome
        reads as 2px smaller than the empty cell placeholders and the
@@ -1145,7 +1145,7 @@ body.visual-editor-active {
   }
 }
 
-/* When a free-grid layout is selected, tone down the inner block
+/* When a grid layout is selected, tone down the inner block
    chromes so the grid overlay's tile / `+` handles are the
    dominant authoring surface. Without this, every nested callout /
    heading shows its own orange dotted chrome which adds visual
@@ -1165,7 +1165,7 @@ body.visual-editor-active
 }
 
 /* Grid editor affordances (cells / tiles / ghost). Rendered INTO the
-   selected free-grid layout's grid `<div>` via `{{#in-element}}` so
+   selected grid layout's grid `<div>` via `{{#in-element}}` so
    they share the layout's CSS Grid context — guaranteeing alignment
    without a parallel grid container.
 
@@ -1319,7 +1319,7 @@ body.visual-editor-active
 }
 
 /* Resize handle — rendered on the chrome of a selected block whose
-   parent is a `ve:slot` (i.e. inside a free-grid layout). Pointer-drag
+   parent is a `ve:slot` (i.e. inside a grid layout). Pointer-drag
    expands / shrinks the slot's `column` / `row` span. Diagonal-stripe
    square in the bottom-right corner, cssgridgenerator convention. Only
    the handle itself catches pointer events so the rest of the chrome

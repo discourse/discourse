@@ -14,14 +14,14 @@
  *  - `i18nKey` — locale path under
  *    `visual_editor.inspector.layout.templates.*`.
  *  - `args` — the `ve:layout` args to write (mode is always
- *    `free-grid` here).
+ *    `grid` here).
  */
 export const GRID_TEMPLATES = Object.freeze([
   {
     id: "twelve-col",
     i18nKey: "twelve_col",
     args: {
-      mode: "free-grid",
+      mode: "grid",
       columns: 12,
       rows: 1,
       gap: 1,
@@ -34,7 +34,7 @@ export const GRID_TEMPLATES = Object.freeze([
     id: "hero-plus-three",
     i18nKey: "hero_plus_three",
     args: {
-      mode: "free-grid",
+      mode: "grid",
       columns: 3,
       rows: 2,
       gap: 1,
@@ -42,12 +42,23 @@ export const GRID_TEMPLATES = Object.freeze([
       columnTemplate: "",
       rowTemplate: "",
     },
+    // The literal "hero + 3" shape: one wide block spanning the full
+    // top row, three separate blocks across the bottom. Used by the
+    // inspector's template thumbnail so authors can recognise the
+    // layout at a glance — applied data still just sets the grid frame
+    // (3×2 canvas) without auto-creating slots.
+    previewShape: [
+      { column: "1 / 4", row: "1" },
+      { column: "1", row: "2" },
+      { column: "2", row: "2" },
+      { column: "3", row: "2" },
+    ],
   },
   {
     id: "sidebar-main",
     i18nKey: "sidebar_main",
     args: {
-      mode: "free-grid",
+      mode: "grid",
       columns: 2,
       rows: 1,
       gap: 1,
@@ -60,25 +71,12 @@ export const GRID_TEMPLATES = Object.freeze([
     id: "three-tile",
     i18nKey: "three_tile",
     args: {
-      mode: "free-grid",
+      mode: "grid",
       columns: 3,
       rows: 1,
       gap: 1,
       align: "stretch",
       columnTemplate: "",
-      rowTemplate: "",
-    },
-  },
-  {
-    id: "asymmetric",
-    i18nKey: "asymmetric",
-    args: {
-      mode: "free-grid",
-      columns: 2,
-      rows: 1,
-      gap: 1,
-      align: "stretch",
-      columnTemplate: "1fr 2fr",
       rowTemplate: "",
     },
   },

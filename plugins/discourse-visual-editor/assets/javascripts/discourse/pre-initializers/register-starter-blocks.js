@@ -29,7 +29,7 @@ const STARTER_BLOCKS = [
   VEBadgesGrid,
   // ve:slot is the auto-managed grid-cell wrapper (Phase 7s). Hidden
   // from the palette + outline; instantiated by the editor when an
-  // author drops a block into a free-grid layout.
+  // author drops a block into a grid layout.
   VESlot,
 ];
 

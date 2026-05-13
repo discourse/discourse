@@ -7,7 +7,7 @@ const VALID_AXIS_ALIGN = ["start", "center", "end", "stretch"];
 
 /**
  * Slot wrapper for grid-positioned children inside a `ve:layout` in
- * free-grid mode. Carries CSS Grid placement as its own args so the
+ * grid mode. Carries CSS Grid placement as its own args so the
  * underlying content block (Heading, Image, etc.) doesn't need to
  * know it's inside a grid.
  *
@@ -37,7 +37,7 @@ const VALID_AXIS_ALIGN = ["start", "center", "end", "stretch"];
   icon: "border-none",
   category: "Layout",
   description:
-    "Positioning wrapper for a child of a free-grid layout. Auto-managed by the editor; not user-pickable.",
+    "Positioning wrapper for a child of a grid layout. Auto-managed by the editor; not user-pickable.",
   args: {
     column: {
       type: "string",

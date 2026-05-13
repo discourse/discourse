@@ -13,7 +13,7 @@ import { GRID_TEMPLATES } from "../../lib/grid-templates";
 
 /**
  * Custom inspector form for the `ve:layout` block. The generic
- * FormKit form would show a bag of fields (mode, count, columns,
+ * FormKit form would show a bag of fields (mode, columns,
  * gap, ...) where most aren't relevant for the current mode. This
  * form swaps in mode-specific controls and uses richer affordances
  * (segmented selectors, steppers, sliders) instead of bare inputs.
@@ -25,8 +25,7 @@ import { GRID_TEMPLATES } from "../../lib/grid-templates";
 const MODES = [
   { id: "stack", labelKey: "mode_stack", icon: "arrow-down" },
   { id: "row", labelKey: "mode_row", icon: "arrow-right" },
-  { id: "grid", labelKey: "mode_grid", icon: "grip" },
-  { id: "free-grid", labelKey: "mode_free_grid", icon: "table-cells-large" },
+  { id: "grid", labelKey: "mode_grid", icon: "table-cells-large" },
 ];
 
 const ALIGNMENTS = ["start", "center", "end", "stretch"];
@@ -47,14 +46,14 @@ export default class InspectorLayoutForm extends Component {
   }
 
   get mode() {
-    return this.args_.mode ?? "stack";
+    // Coerce the legacy `"free-grid"` mode value to `"grid"` so the
+    // segmented control highlights the right segment and the rest of
+    // the form behaves consistently with the new naming.
+    const raw = this.args_.mode ?? "stack";
+    return raw === "free-grid" ? "grid" : raw;
   }
 
-  get isFreeGrid() {
-    return this.mode === "free-grid";
-  }
-
-  get isAutoGrid() {
+  get isGrid() {
     return this.mode === "grid";
   }
 
@@ -72,10 +71,6 @@ export default class InspectorLayoutForm extends Component {
 
   get align() {
     return this.args_.align ?? "stretch";
-  }
-
-  get count() {
-    return this.args_.count ?? 2;
   }
 
   get columnTemplate() {
@@ -110,12 +105,6 @@ export default class InspectorLayoutForm extends Component {
   bumpRows(delta) {
     const next = clamp(this.rows + delta, ROWS_MIN, ROWS_MAX);
     this.set("rows", next);
-  }
-
-  @action
-  bumpCount(delta) {
-    const next = clamp(this.count + delta, 2, 4);
-    this.set("count", next);
   }
 
   @action
@@ -156,11 +145,9 @@ export default class InspectorLayoutForm extends Component {
     if (!data?.key) {
       return;
     }
-    if (data.argsSnapshot?.mode === "free-grid") {
-      // Switching templates while authoring a free-grid is the common
-      // case. Confirm only when there's existing content so we don't
-      // nag on every template-pick during an empty start.
-    }
+    // Templates always switch the layout into `grid` mode — applying
+    // one to a stack/row layout is the natural way to "convert" it.
+    // The service handles the args overwrite atomically.
     this.visualEditor.applyGridTemplate({
       gridKey: data.key,
       template,
@@ -197,7 +184,7 @@ export default class InspectorLayoutForm extends Component {
         </div>
       </div>
 
-      {{#if this.isFreeGrid}}
+      {{#if this.isGrid}}
         <div class="visual-editor-layout-form__pair">
           <Stepper
             @label={{i18n "visual_editor.inspector.layout.columns"}}
@@ -212,16 +199,6 @@ export default class InspectorLayoutForm extends Component {
             @min={{ROWS_MIN}}
             @max={{ROWS_MAX}}
             @onBump={{this.bumpRows}}
-          />
-        </div>
-      {{else if this.isAutoGrid}}
-        <div class="visual-editor-layout-form__pair">
-          <Stepper
-            @label={{i18n "visual_editor.inspector.layout.count"}}
-            @value={{this.count}}
-            @min={{2}}
-            @max={{4}}
-            @onBump={{this.bumpCount}}
           />
         </div>
       {{/if}}
@@ -267,7 +244,7 @@ export default class InspectorLayoutForm extends Component {
         </div>
       </div>
 
-      {{#if this.isFreeGrid}}
+      {{#if this.isGrid}}
         <div class="visual-editor-layout-form__field">
           <span class="visual-editor-layout-form__legend">
             {{i18n "visual_editor.inspector.layout.templates_legend"}}
@@ -360,7 +337,7 @@ export default class InspectorLayoutForm extends Component {
 
 /**
  * Inline stepper helper. Renders a label + ◀ / value / ▶. Used for
- * the integer args (columns, rows, count).
+ * the integer args (columns, rows).
  */
 class Stepper extends Component {
   @action
@@ -410,10 +387,12 @@ class Stepper extends Component {
 }
 
 /**
- * Tiny SVG mock of a template's grid layout — renders the template's
- * args.columns × args.rows as a grid of small rectangles, with the
- * preset's slots overlaid as solid tiles. Used in the template-chip
- * thumbnails so authors can preview a layout before applying it.
+ * Mini representation of a template's grid layout. Renders one tile
+ * per cell of the `columns × rows` grid, using the template's
+ * `columnTemplate` / `rowTemplate` when set so unequal-column presets
+ * (sidebar-main, asymmetric) read at their true proportions. Used in
+ * the template-chip thumbnails so authors can preview a shape before
+ * applying it.
  */
 class TemplatePreview extends Component {
   get gridStyle() {
@@ -424,29 +403,34 @@ class TemplatePreview extends Component {
       (args.rowTemplate ?? "").trim() || `repeat(${args.rows ?? 1}, 1fr)`;
     return trustHTML(
       `display: grid; grid-template-columns: ${columns}; ` +
-        `grid-template-rows: ${rows}; gap: 1px;`
+        `grid-template-rows: ${rows}; gap: 2px;`
     );
   }
 
   get tiles() {
-    const slots = this.args.template.slots ?? [];
-    if (slots.length === 0) {
-      // 12-col baseline — render a single full-width strip so the
-      // preview isn't empty.
-      const args = this.args.template.args;
-      return [
-        {
-          style: trustHTML(
-            `grid-column: 1 / ${(args.columns ?? 12) + 1}; grid-row: 1;`
-          ),
-        },
-      ];
+    // A template may declare its own `previewShape` — a list of slot
+    // rectangles — when the cell-by-cell rendering doesn't communicate
+    // the layout's intent (e.g. "Hero + 3" wants one wide top block,
+    // not six equal cells). Otherwise fall back to one tile per cell
+    // of the grid.
+    const shape = this.args.template.previewShape;
+    if (Array.isArray(shape) && shape.length > 0) {
+      return shape.map((cell) => ({
+        style: trustHTML(`grid-column: ${cell.column}; grid-row: ${cell.row};`),
+      }));
     }
-    return slots.map((slot) => ({
-      style: trustHTML(
-        `grid-column: ${slot.args.column}; grid-row: ${slot.args.row};`
-      ),
-    }));
+    const args = this.args.template.args;
+    const cols = Math.max(1, Number(args.columns ?? 1));
+    const rows = Math.max(1, Number(args.rows ?? 1));
+    const tiles = [];
+    for (let r = 1; r <= rows; r++) {
+      for (let c = 1; c <= cols; c++) {
+        tiles.push({
+          style: trustHTML(`grid-column: ${c}; grid-row: ${r};`),
+        });
+      }
+    }
+    return tiles;
   }
 
   <template>

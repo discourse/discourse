@@ -89,10 +89,8 @@ en:
           mode_stack: "Stack"
           mode_row: "Row"
           mode_grid: "Grid"
-          mode_free_grid: "Free grid"
           columns: "Columns"
           rows: "Rows"
-          count: "Columns"
           gap_legend: "Gap"
           align_legend: "Alignment"
           align_start: "Start"
@@ -109,7 +107,6 @@ en:
             hero_plus_three: "Hero + 3"
             sidebar_main: "Sidebar + main"
             three_tile: "3 tiles"
-            asymmetric: "Asymmetric"
         conditions:
           empty_hint: "Pick a condition to control when this block renders."
           clear_all: "Remove all conditions"
