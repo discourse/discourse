@@ -2470,7 +2470,7 @@ files:
   image_quality:
     enum: "ImageQualitySetting"
     client: true
-    default: 70
+    default: 90
   png_to_jpg_quality:
     default: 0
     min: 0
