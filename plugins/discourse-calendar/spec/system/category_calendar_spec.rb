@@ -156,6 +156,14 @@ describe "Category calendar" do
           "rgb(46, 204, 113)",
         )
       end
+      it "prefers category defaultView over calendar_category_default_view" do
+        SiteSetting.calendar_category_default_view = "month"
+        SiteSetting.calendar_categories = "categoryId=#{category.id};defaultView=week"
+
+        category_page.visit(category)
+
+        expect(category_page).to have_selector("#category-events-calendar .fc-timeGridWeek-view")
+      end
     end
   end
 end
