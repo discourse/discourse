@@ -91,9 +91,10 @@ module NestedReplies
       def method_missing(name, *args, **kwargs, &block)
         relation = Post.none
         if relation.respond_to?(name)
+          caller_frame = caller_locations(1, 1)&.first
           Rails.logger.warn(
             "NestedReplies::PostsArray falling back to DB query for .#{name} — " \
-              "consider adding an explicit handler",
+              "consider adding an explicit handler (called from #{caller_frame})",
           )
           Post.where(id: map(&:id)).public_send(name, *args, **kwargs, &block)
         else
