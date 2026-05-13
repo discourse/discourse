@@ -6,8 +6,16 @@ RSpec.describe DiscourseAi::Utils::TextSummary do
       expect(described_class.truncate("hello", max: 10)).to eq("hello")
     end
 
+    it "returns the original text when it is exactly max characters" do
+      expect(described_class.truncate("hello", max: 5)).to eq("hello")
+    end
+
     it "truncates text longer than max" do
       expect(described_class.truncate("hello world", max: 5)).to eq("hello …")
+    end
+
+    it "strips trailing whitespace before appending an ellipsis" do
+      expect(described_class.truncate("hello   world", max: 8)).to eq("hello …")
     end
 
     it "returns nil for nil input" do

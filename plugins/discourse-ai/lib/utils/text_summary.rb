@@ -8,7 +8,6 @@ module DiscourseAi
     class TextSummary
       DEFAULT_MAX_CHARS = 1_000
 
-
       # Returns the text truncated to `max` characters with an ellipsis
       # appended, or the original text if it already fits.
       #
@@ -16,9 +15,8 @@ module DiscourseAi
       def self.truncate(text, max: DEFAULT_MAX_CHARS)
         return nil if text.nil?
         return text if text.length <= max
-        "#{text[0, max]} …"
+        "#{text[0, max].rstrip} …"
       end
-
 
       def self.word_count(text)
         return 0 if text.nil? || text.empty?
