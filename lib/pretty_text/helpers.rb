@@ -104,14 +104,9 @@ module PrettyText
     end
 
     def hashtag_lookup(slug, cooking_user_id, types_in_priority_order)
-      # NOTE: This is _somewhat_ expected since we need to be able to cook posts
-      # etc. without a user sometimes, but it is still an edge case.
-      #
-      # The Discourse.system_user is usually an admin with access to _all_
-      # categories, however if the suppress_secured_categories_from_admin
-      # site setting is activated then this user will not be able to access
-      # secure categories, so hashtags that are secure will not render.
-      cooking_user = User.find_by(id: cooking_user_id) || Discourse.system_user
+      # Missing or invalid user IDs cook with anonymous permissions. Callers that
+      # need wider access must pass an explicit trusted user_id.
+      cooking_user = User.find_by(id: cooking_user_id)
 
       types_in_priority_order =
         types_in_priority_order.select do |type|
