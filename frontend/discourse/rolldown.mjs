@@ -4,12 +4,9 @@
 import { spawn } from "child_process";
 import chokidar from "chokidar";
 import * as fs from "fs";
-import * as path from "path";
 
 const WORKER_PATH = "./rolldown-worker.mjs";
-const REBUILD_IN_FLIGHT_FILE = path.resolve(
-  "./dist/manifest/.rebuild-in-flight"
-);
+const REBUILD_IN_FLIGHT_FILE = "./dist/manifest/.rebuild-in-flight";
 const WATCH_DIR = "./app";
 
 let shuttingDown = false;
