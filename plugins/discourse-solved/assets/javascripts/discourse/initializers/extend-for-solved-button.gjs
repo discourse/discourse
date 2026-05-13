@@ -1,9 +1,11 @@
+import Component from "@glimmer/component";
 import { helperContext } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import SolvedAcceptAnswerButton from "../components/solved-accept-answer-button";
 import SolvedAcceptedAnswers from "../components/solved-accepted-answers";
+import SolvedSharedIssueButton from "../components/solved-shared-issue-button";
 import SolvedUnacceptAnswerButton from "../components/solved-unaccept-answer-button";
 import setAcceptedSolutions from "../lib/set-accepted-solutions";
 
@@ -38,7 +40,13 @@ function initializeWithApi(api) {
     api.addDiscoveryQueryParam("solved", { replace: true, refreshModel: true });
   }
 
-  api.addTrackedTopicProperties("accepted_answers", "has_accepted_answer");
+  api.addTrackedTopicProperties(
+    "accepted_answers",
+    "has_accepted_answers",
+    "shared_issue_count",
+    "user_created_shared_issue",
+    "shared_issue_visible"
+  );
 }
 
 function customizeNotificationDescriptions(api) {
@@ -123,6 +131,17 @@ function customizePostMenu(api) {
       );
     }
   );
+
+  api.renderAfterWrapperOutlet(
+    "post-content-cooked-html",
+    class extends Component {
+      static shouldRender(args) {
+        return args.post?.post_number === 1;
+      }
+
+      <template><SolvedSharedIssueButton @post={{@post}} /></template>
+    }
+  );
 }
 
 function handleMessages(api) {
@@ -136,6 +155,17 @@ function handleMessages(api) {
 
   api.registerCustomPostMessageCallback("accepted_solution", callback);
   api.registerCustomPostMessageCallback("unaccepted_solution", callback);
+
+  api.registerCustomPostMessageCallback(
+    "shared_issue",
+    (controller, message) => {
+      const topic = controller.model;
+      if (!topic) {
+        return;
+      }
+      topic.set("shared_issue_count", message.count);
+    }
+  );
 }
 
 export default {

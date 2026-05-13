@@ -31,8 +31,14 @@
 #                          - status: experimental | alpha | beta | stable
 #                          - impact: two parts separated by comma - feature|other|site_setting_default , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
-#                          - disallow_enabled_for_groups: true (optional) - restricts "Enabled for"
-#                            to only "Everyone" and "No One", removing group-based options.
+#                          - allow_enabled_for: (optional array) restricts which "Enabled for"
+#                            dropdown options the admin can pick for this upcoming change.
+#                            Valid values: everyone, staff, specific_groups.
+#
+#                            "No one" is always present and cannot be removed. If `everyone` is included it must be
+#                            the only value (it cannot combine with staff or specific_groups).
+#                            Omit the key to allow all four options (the default permissive
+#                            behavior).
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
 # depends_behavior      - The behavior of the dependent setting. Only currently supported behaviour is "hidden"
 #                         to hide the setting if the dependent setting is false. If left blank, no special behavior
@@ -603,6 +609,12 @@ basic:
     default: false
     hidden: true
     client: true
+  persist_browser_pageview_events:
+    default: false
+    hidden: true
+  clean_up_browser_pageview_events:
+    default: false
+    hidden: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"
@@ -1075,6 +1087,9 @@ users:
     default: 100
     hidden: true
     area: "users"
+  directory_columns_seeded:
+    default: false
+    hidden: true
   allow_anonymous_mode:
     default: false
     client: true
@@ -1832,7 +1847,6 @@ nested_replies:
     default: false
     client: true
     area: "posts_and_topics"
-    hidden: true
   nested_replies_default:
     default: false
     client: true
@@ -1840,7 +1854,6 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
-    hidden: true
   nested_replies_default_sort:
     default: "top"
     client: true
@@ -1853,7 +1866,6 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
-    hidden: true
   nested_replies_max_depth:
     default: 10
     client: true
@@ -1864,7 +1876,6 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
-    hidden: true
   nested_replies_cap_nesting_depth:
     default: false
     client: true
@@ -1872,7 +1883,6 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
-    hidden: true
   nested_replies_backfill_batch_size:
     default: 100
     type: integer
@@ -1890,7 +1900,6 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
-    hidden: true
 
 email:
   email_time_window_mins:
@@ -1975,7 +1984,8 @@ email:
     upcoming_change:
       status: "alpha"
       impact: "feature,all_members"
-      disallow_enabled_for_groups: true
+      allow_enabled_for:
+        - everyone
       learn_more_url: "https://meta.discourse.org/t/-/395927"
   reply_by_email_enabled:
     default: false
@@ -2463,7 +2473,7 @@ files:
   image_quality:
     enum: "ImageQualitySetting"
     client: true
-    default: 70
+    default: 90
   png_to_jpg_quality:
     default: 0
     min: 0
@@ -2533,7 +2543,8 @@ files:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-      disallow_enabled_for_groups: true
+      allow_enabled_for:
+        - everyone
   composer_media_optimization_gif_conversion_threshold:
     default: 512000
     hidden: true
@@ -3342,6 +3353,9 @@ navigation:
       - "top"
       - "bottom"
     area: "navigation"
+  sidebar_seeded:
+    default: false
+    hidden: true
 
 embedding:
   embed_full_app:
@@ -4330,6 +4344,18 @@ dashboard:
       - reports
       - features
     area: "reports"
+  admin_dashboard_sections:
+    type: list
+    list_type: compact
+    default: "highlights|reports|traffic|engagement"
+    allow_any: false
+    choices:
+      - highlights
+      - reports
+      - traffic
+      - engagement
+    area: "reports"
+    hidden: true
   dashboard_general_tab_activity_metrics:
     client: true
     type: list
@@ -4369,7 +4395,9 @@ experimental:
       status: "alpha"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/395768"
-      disallow_enabled_for_groups: true
+      allow_enabled_for:
+        - staff
+        - specific_groups
   enable_auto_grid_images:
     default: true
     client: true
@@ -4448,10 +4476,11 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397098"
-      disallow_enabled_for_groups: true
+      allow_enabled_for:
+        - everyone
   experimental_topic_category_change_notification:
     default: false
     hidden: true
@@ -4463,7 +4492,18 @@ experimental:
     upcoming_change:
       impact: "feature,all_members"
       status: "beta"
-      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
+      learn_more_url: "https://meta.discourse.org/t/-/395331"
+  granular_anonymous_and_logged_in_groups_permissions:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402273"
+      allow_enabled_for:
+        - everyone
   dashboard_improvements:
     default: false
     hidden: true

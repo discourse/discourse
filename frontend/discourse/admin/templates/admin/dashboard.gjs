@@ -15,6 +15,11 @@ export default <template>
       @endDate={{@controller.endDate}}
       @setPeriod={{@controller.setPeriod}}
       @setCustomDateRange={{@controller.setCustomDateRange}}
+      @sections={{@controller.sections}}
+      @configuration={{@controller.configuration}}
+      @updateConfiguration={{@controller.updateConfiguration}}
+      @loadingSections={{@controller.loadingSections}}
+      @sectionsFetchError={{@controller.sectionsFetchError}}
     />
   {{else}}
     <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />

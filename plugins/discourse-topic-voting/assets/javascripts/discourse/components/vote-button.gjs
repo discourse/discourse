@@ -152,7 +152,7 @@ export default class VoteBox extends Component {
           <DButton
             @icon={{this.buttonIcon}}
             @disabled={{true}}
-            @ariaLabel={{this.ariaLabel}}
+            @translatedAriaLabel={{this.ariaLabel}}
             class={{this.buttonClasses}}
           />
         </:trigger>
@@ -261,7 +261,7 @@ export default class VoteBox extends Component {
       <DButton
         @icon={{this.buttonIcon}}
         @action={{this.onShowMenu}}
-        @ariaLabel={{this.ariaLabel}}
+        @translatedAriaLabel={{this.ariaLabel}}
         class={{this.buttonClasses}}
       />
     {{/if}}

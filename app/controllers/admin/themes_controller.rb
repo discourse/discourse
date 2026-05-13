@@ -397,28 +397,28 @@ class Admin::ThemesController < Admin::AdminController
 
         theme = Theme.include_relations.find(theme_id)
         remote_theme = theme.remote_theme
-        original_url = remote_theme.remote_url
-        original_branch = remote_theme.branch
-        original_private_key = remote_theme.private_key
 
-        remote_theme.remote_url = remote_url
-        remote_theme.branch = params[:branch].presence
-        remote_theme.private_key = private_key if private_key.present?
-        remote_theme.local_version = nil
-        remote_theme.remote_version = nil
-        remote_theme.commits_behind = nil
-        remote_theme.save!
+        remote_theme.transaction do
+          remote_theme.remote_url = remote_url
+          remote_theme.branch = params[:branch].presence
+          remote_theme.private_key = private_key if private_key.present?
+          remote_theme.local_version = nil
+          remote_theme.remote_version = nil
+          remote_theme.commits_behind = nil
 
-        remote_theme.update_from_remote
+          remote_theme.update_from_remote(already_in_transaction: true)
+
+          if remote_theme.last_error_text.present?
+            raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
+          end
+        end
 
         log_theme_change(nil, theme.reload)
         render json: serialize_data(theme, ThemeSerializer), status: :ok
-      rescue RemoteTheme::ImportError, ActiveRecord::RecordInvalid => e
-        remote_theme.update!(
-          remote_url: original_url,
-          branch: original_branch,
-          private_key: original_private_key,
-        )
+      rescue RemoteTheme::ImportError,
+             ActiveRecord::RecordInvalid,
+             Theme::SettingsMigrationError => e
+        remote_theme.reload
         render_json_error e.message
       end
     end

@@ -650,6 +650,9 @@ class TopicsController < ApplicationController
       category = Category.find_by(id: params[:category_id])
       raise Discourse::NotFound if !category
       raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
+      if topic.private_message? && !guardian.can_convert_topic?(topic)
+        raise Discourse::InvalidAccess
+      end
     end
 
     options = { by_user: current_user, based_on_last_post: based_on_last_post }
@@ -1295,7 +1298,7 @@ class TopicsController < ApplicationController
         topic.convert_to_private_message(current_user)
       end
 
-    topic.valid? ? render_topic_changes(topic) : render_json_error(topic)
+    topic.errors.present? ? render_json_error(topic) : render_topic_changes(topic)
   end
 
   def reset_bump_date

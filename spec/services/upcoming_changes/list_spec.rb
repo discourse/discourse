@@ -114,6 +114,36 @@ RSpec.describe UpcomingChanges::List do
         end
       end
 
+      describe "conditional display" do
+        context "when the upcoming change should display" do
+          before do
+            UpcomingChanges::ConditionalDisplay.stubs(
+              :should_display_enable_upload_debug_mode?,
+            ).returns(true)
+          end
+
+          it "returns true" do
+            results = result.upcoming_changes
+            mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+            expect(mock_setting).to be_present
+          end
+        end
+
+        context "when the upcoming change should not display" do
+          before do
+            UpcomingChanges::ConditionalDisplay.stubs(
+              :should_display_enable_upload_debug_mode?,
+            ).returns(false)
+          end
+
+          it "returns false" do
+            results = result.upcoming_changes
+            mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+            expect(mock_setting).not_to be_present
+          end
+        end
+      end
+
       describe "enabled_for logic" do
         it "sets enabled_for to 'no_one' when setting value is false" do
           SiteSetting.enable_upload_debug_mode = false

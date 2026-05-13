@@ -64,6 +64,30 @@ RSpec.describe AboutController do
       expect(response.parsed_body["about"].keys).not_to include("stats")
     end
 
+    context "with a granular API key" do
+      fab!(:admin)
+      fab!(:user)
+      fab!(:api_key, refind: false) do
+        Fabricate(
+          :api_key,
+          api_key_scopes: [Fabricate.build(:api_key_scope, resource: "about", action: "read")],
+        )
+      end
+
+      before do
+        SiteSetting.hide_user_profiles_from_public = true
+        SiteSetting.login_required = true
+      end
+
+      it "uses the supplied API username for about requests" do
+        get "/about.json", headers: { "Api-Key": api_key.key, "Api-Username": user.username }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("about", "title")).to eq(SiteSetting.title)
+        expect(response.parsed_body.dig("about", "admin_ids") || []).to include(admin.id)
+      end
+    end
+
     context "with profile visibility controls" do
       fab!(:admin)
       fab!(:moderator)

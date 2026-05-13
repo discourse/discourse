@@ -741,7 +741,8 @@ export default class UpsertCategoryGeneral extends Component {
                     <DIconGridPicker
                       @value={{field.value}}
                       @onChange={{field.set}}
-                      @allowClear={{true}}
+                      @showCaret={{true}}
+                      @showSelectedName={{true}}
                       @iconColor={{concat "#" @transientData.color}}
                     />
                   </field.Control>
@@ -764,6 +765,9 @@ export default class UpsertCategoryGeneral extends Component {
                       @didSelectEmoji={{field.set}}
                       @modalForMobile={{false}}
                       @btnClass="btn-default btn-emoji"
+                      @icon={{null}}
+                      @showCaret={{true}}
+                      @showSelectedName={{true}}
                       @label={{unless
                         field.value
                         (i18n "category.select_emoji")

@@ -4,6 +4,12 @@ en:
       site_settings:
         categories:
           discourse_solved: "Discourse Solved"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Accepted solutions"
+              tooltip: "The number of topics that had a post marked as the solution in this period."
   js:
     notifications:
       alt:
@@ -52,6 +58,13 @@ en:
       confirm_solved_removal: "This change will disable solutions for this topic and remove the accepted solution."
       confirm_solved_removal_confirm: "Confirm"
       confirm_solved_removal_cancel: "Cancel"
+
+      shared_issue:
+        label:
+          one: "Me too (%{count})"
+          other: "Me too (%{count})"
+        title: "I am also experiencing this issue"
+        author_title: "You started this topic"
 
       no_answer:
         title: Has your question been answered?

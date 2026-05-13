@@ -27,6 +27,17 @@ RSpec.describe Admin::SiteSettingsController do
           response.parsed_body["site_settings"].find { |s| s["setting"] == "max_category_nesting" },
         ).to be_nil
       end
+
+      it "does not return settings from non-configurable plugins" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+        get "/admin/site_settings.json"
+
+        expect(response.status).to eq(200)
+        site_setting_names =
+          response.parsed_body["site_settings"].map { |setting| setting["setting"] }
+        expect(site_setting_names).not_to include("plugin_setting")
+      end
     end
 
     shared_examples "site settings inaccessible" do

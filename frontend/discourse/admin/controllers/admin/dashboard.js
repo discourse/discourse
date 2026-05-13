@@ -10,6 +10,7 @@ import {
 } from "discourse/admin/components/dashboard/date-range";
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import VersionCheck from "discourse/admin/models/version-check";
+import { ajax } from "discourse/lib/ajax";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
 const PROBLEMS_CHECK_MINUTES = 1;
@@ -24,12 +25,17 @@ export default class AdminDashboardController extends Controller {
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
+  @tracked sections = null;
+  @tracked configuration = null;
+  @tracked loadingSections = false;
+  @tracked sectionsFetchError = false;
   @autoTrackedArray problems;
 
   queryParams = ["range", "start_date", "end_date"];
 
   isLoading = false;
   dashboardFetchedAt = null;
+  _sectionsLoadId = 0;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -66,6 +72,7 @@ export default class AdminDashboardController extends Controller {
     this.range = period;
     this.start_date = null;
     this.end_date = null;
+    this.fetchSections();
   }
 
   @action
@@ -73,6 +80,44 @@ export default class AdminDashboardController extends Controller {
     this.range = PERIOD_CUSTOM;
     this.start_date = moment(startDate).format("YYYY-MM-DD");
     this.end_date = moment(endDate).format("YYYY-MM-DD");
+    this.fetchSections();
+  }
+
+  @action
+  async updateConfiguration(sections) {
+    await ajax("/admin/dashboard/configuration.json", {
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({ sections }),
+    });
+    await this.fetchSections();
+  }
+
+  async fetchSections() {
+    const id = ++this._sectionsLoadId;
+    this.loadingSections = true;
+    this.sectionsFetchError = false;
+
+    try {
+      const model = await AdminDashboard.fetch({
+        startDate: this.startDate,
+        endDate: this.endDate,
+      });
+      if (id !== this._sectionsLoadId) {
+        return;
+      }
+      this.sections = model.sections;
+      this.configuration = model.configuration;
+    } catch {
+      if (id !== this._sectionsLoadId) {
+        return;
+      }
+      this.sectionsFetchError = true;
+    } finally {
+      if (id === this._sectionsLoadId) {
+        this.loadingSections = false;
+      }
+    }
   }
 
   @computed("siteSettings.version_checks")

@@ -45,7 +45,7 @@ RSpec.describe "upcoming change metadata integrity checks" do
 
     it "#{label} is valid" do
       metadata = setting[:upcoming_change]
-      allowed_keys = %i[status impact learn_more_url disallow_enabled_for_groups]
+      allowed_keys = %i[status impact learn_more_url allow_enabled_for]
       required_keys = %i[status impact]
       unsupported_keys = metadata.keys - allowed_keys
       missing_keys = required_keys - metadata.keys
@@ -79,9 +79,22 @@ RSpec.describe "upcoming change metadata integrity checks" do
           "#{label} has invalid upcoming_change impact role #{impact_role.inspect}. Valid roles: #{valid_upcoming_change_impact_roles.join(", ")}"
         end
 
-        if metadata.key?(:disallow_enabled_for_groups)
-          expect(metadata[:disallow_enabled_for_groups]).to eq(true),
-          "#{label} should omit `upcoming_change.disallow_enabled_for_groups` unless it is `true`"
+        if metadata.key?(:allow_enabled_for)
+          allow = metadata[:allow_enabled_for]
+          valid_values = %w[everyone staff specific_groups]
+          allow_strings = Array(allow).map(&:to_s)
+
+          expect(allow).to be_an(Array),
+          "#{label} `upcoming_change.allow_enabled_for` must be an array"
+          expect(allow_strings).not_to be_empty,
+          "#{label} `upcoming_change.allow_enabled_for` must not be empty"
+          expect(allow_strings - valid_values).to be_empty,
+          "#{label} `upcoming_change.allow_enabled_for` contains invalid values: #{(allow_strings - valid_values).join(", ")}. Valid values: #{valid_values.join(", ")}"
+
+          if allow_strings.include?("everyone")
+            expect(allow_strings).to eq(["everyone"]),
+            "#{label} `upcoming_change.allow_enabled_for` may not combine `everyone` with other values"
+          end
         end
       end
     end

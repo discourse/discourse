@@ -1109,6 +1109,47 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe "browser pageview tracking session id" do
+    it "doesn't reuse session ids between requests served from the anon cache" do
+      global_setting :anon_cache_store_threshold, 1
+      Middleware::AnonymousCache.enable_anon_cache
+      Middleware::AnonymousCache.clear_all_cache!
+
+      SiteSetting.trigger_browser_pageview_events = true
+
+      get "/latest"
+
+      expect(response.headers["X-Discourse-Cached"]).to eq("store")
+      expect(response.headers).not_to include(
+        Middleware::TrackViewSessionIdInjector::PLACEHOLDER_HEADER,
+      )
+
+      session_id_format = /\A[A-Za-z0-9]{#{Middleware::RequestTracker::MAX_SESSION_ID_LENGTH}}\z/
+
+      first_session_id = extract_session_id_from_body(response.body)
+      expect(first_session_id).to match(session_id_format)
+
+      get "/latest"
+
+      expect(response.headers["X-Discourse-Cached"]).to eq("true")
+      expect(response.headers).not_to include(
+        Middleware::TrackViewSessionIdInjector::PLACEHOLDER_HEADER,
+      )
+
+      second_session_id = extract_session_id_from_body(response.body)
+      expect(second_session_id).to match(session_id_format)
+
+      expect(first_session_id).not_to eq(second_session_id)
+    end
+
+    def extract_session_id_from_body(body)
+      meta_tag =
+        Nokogiri::HTML5.fragment(body).css("meta[name='discourse-track-view-session-id']").first
+      expect(meta_tag).to be_present
+      meta_tag["content"]
+    end
+  end
+
   it "can respond to a request with */* accept header" do
     get "/", headers: { HTTP_ACCEPT: "*/*" }
     expect(response.status).to eq(200)

@@ -1946,7 +1946,9 @@ class UsersController < ApplicationController
         @bookmark_reminders =
           bookmark_query
             .order(:reminder_at)
-            .map do |bookmark|
+            .filter_map do |bookmark|
+              next if !bookmark.registered_bookmarkable.can_see?(user_guardian, bookmark)
+
               bookmark.registered_bookmarkable.serializer.new(
                 bookmark,
                 scope: user_guardian,

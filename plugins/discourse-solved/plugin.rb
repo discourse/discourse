@@ -50,6 +50,7 @@ after_initialize do
     ::WebHook.prepend(DiscourseSolved::WebHookExtension)
     ::TopicViewSerializer.prepend(DiscourseSolved::TopicViewSerializerExtension)
     ::Topic.prepend(DiscourseSolved::TopicExtension)
+    ::User.prepend(DiscourseSolved::UserExtension)
     ::Category.prepend(DiscourseSolved::CategoryExtension)
     ::PostSerializer.prepend(DiscourseSolved::PostSerializerExtension)
     ::PostMover.prepend(DiscourseSolved::PostMoverExtension)
@@ -181,7 +182,39 @@ after_initialize do
         .where("discourse_solved_solved_topics.created_at >= ?", report.start_date - 30.days)
         .where("discourse_solved_solved_topics.created_at <= ?", report.start_date)
         .count
+
+    if report.facets.include?(:prev_period)
+      report.prev_period =
+        accepted_solutions
+          .where("discourse_solved_solved_topics.created_at >= ?", report.prev_start_date)
+          .where("discourse_solved_solved_topics.created_at < ?", report.prev_end_date)
+          .count
+    end
   end
+
+  register_admin_dashboard_highlight_kpi(
+    type: :accepted_solutions,
+    report: "accepted_solutions",
+    enabled: -> do
+      next true if SiteSetting.allow_solved_on_all_topics
+
+      Discourse
+        .cache
+        .fetch("solved_admin_dashboard_kpi_enabled", expires_in: 5.minutes) do
+          Category
+            .joins(
+              "INNER JOIN category_custom_fields ON category_custom_fields.category_id = categories.id",
+            )
+            .where(
+              category_custom_fields: {
+                name: DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+                value: "true",
+              },
+            )
+            .exists?
+        end
+    end,
+  )
 
   register_modifier(:search_rank_sort_priorities) do |priorities, _search|
     if SiteSetting.prioritize_solved_topics_in_search
@@ -215,6 +248,23 @@ after_initialize do
     topic&.solved&.topic_answers&.exists?(answer_post_id: object.id)
   end
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
+
+  add_to_serializer(
+    :topic_view,
+    :shared_issue_count,
+    include_condition: -> { scope.shared_issue_visible?(object.topic) },
+  ) { DiscourseSolved::SharedIssue.count_for(object.topic) }
+  add_to_serializer(
+    :topic_view,
+    :user_created_shared_issue,
+    include_condition: -> { scope.shared_issue_visible?(object.topic) && scope.user.present? },
+  ) { DiscourseSolved::SharedIssue.exists?(topic_id: object.topic.id, user_id: scope.user.id) }
+  add_to_serializer(:topic_view, :can_create_shared_issue) do
+    scope.can_create_shared_issue?(object.topic)
+  end
+  add_to_serializer(:topic_view, :shared_issue_visible) do
+    scope.shared_issue_visible?(object.topic)
+  end
 
   on(:post_destroyed) do |post|
     DiscourseSolved::UnacceptAnswer.call(

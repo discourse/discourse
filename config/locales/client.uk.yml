@@ -3852,6 +3852,8 @@ uk:
         relist_topics: "Перебудувати список тем"
         pin_topics: "Виділити ці теми"
         unpin_topics: "Відкріпити теми"
+        enable_nested_replies: "Увімкнути вкладені відповіді"
+        disable_nested_replies: "Вимкнути вкладені відповіді"
         reset_bump_dates: "Скинути дату підняття"
         defer: "Позначити як непрочитане"
         delete: "Видалити теми"
@@ -4085,6 +4087,10 @@ uk:
       unpin_topics:
         name: "Відкріпити"
         description: "Відкріпити всі вибрані теми, закріплені в категорії або закріплені глобально"
+      enable_nested_replies:
+        name: "Увімкнути вкладені відповіді"
+      disable_nested_replies:
+        name: "Вимкнути вкладені відповіді"
     nested_replies:
       nested_view: "Вкладений вигляд"
       flat_view: "Плоский вигляд"
@@ -7019,6 +7025,8 @@ uk:
         not_found_error: Вибачте, цього звіту не існує
         custom_date_range: Вибрати дату та час
         sections:
+          highlights:
+            title: "Основні моменти"
           reports:
             title: "Звіти"
           traffic:
@@ -7030,6 +7038,7 @@ uk:
           last_30_days: "Останні 30 днів"
           last_3_months: "Останні 3 місяців"
           custom: "Користувацька"
+          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "%{percent} зміни. В даний час %{current}, було %{prev} в попередні періоди."
           percent_change_tooltip: "%{percent} змін."
