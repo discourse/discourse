@@ -167,6 +167,43 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       expect(upload_hashes).to be_present
       expect(upload_hashes.first[:upload_id]).to eq(upload.id)
     end
+
+    context "with a secure upload the chat guardian cannot see" do
+      fab!(:secure_upload) do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_topic = Fabricate(:topic, category: private_category)
+        private_post = Fabricate(:post, topic: private_topic)
+        Fabricate(
+          :secure_upload,
+          original_filename: "secure.png",
+          extension: "png",
+          access_control_post: private_post,
+        )
+      end
+
+      it "drops the upload from the chat context" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:everyone]
+
+        post_with_secure_upload =
+          create_post(
+            topic_id: topic.id,
+            user: user,
+            raw: "Look at this ![image](#{secure_upload.short_url})",
+          )
+
+        builder = described_class.new
+        builder.set_chat_context_posts(
+          [post_with_secure_upload.id],
+          Guardian.new(user),
+          include_image_uploads: true,
+          include_document_uploads: false,
+        )
+
+        upload_hashes =
+          builder.chat_context_posts.select { |item| item.is_a?(Hash) && item[:upload_id] }
+        expect(upload_hashes).to be_empty
+      end
+    end
   end
 
   describe ".messages_from_chat" do
@@ -338,6 +375,46 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
           { upload_id: image_upload1.id },
         ],
       )
+    end
+
+    context "with a secure upload attached to a message the chat guardian cannot see" do
+      fab!(:secure_upload) do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_topic = Fabricate(:topic, category: private_category)
+        private_post = Fabricate(:post, topic: private_topic)
+        Fabricate(
+          :secure_upload,
+          original_filename: "secure.png",
+          extension: "png",
+          access_control_post: private_post,
+        )
+      end
+      fab!(:message_with_secure_upload) do
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_channel,
+          user: user,
+          message: "Look at this",
+          upload_ids: [secure_upload.id],
+        )
+      end
+
+      it "drops the upload from the prompt" do
+        context =
+          described_class.messages_from_chat(
+            message_with_secure_upload,
+            channel: dm_channel,
+            context_post_ids: nil,
+            max_messages: 10,
+            include_uploads: true,
+            bot_user_ids: [bot_user.id],
+            instruction_message: nil,
+          )
+
+        content = Array(context.first[:content])
+        upload_hashes = content.select { |item| item.is_a?(Hash) && item[:upload_id] }
+        expect(upload_hashes).to be_empty
+      end
     end
 
     it "properly handles uploads in public channels with multiple users" do
@@ -761,6 +838,44 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       expect(context).to eq(
         [{ type: :user, content: "This is a second reply by the user", id: user.username }],
       )
+    end
+
+    context "with a secure upload not visible to the triggering user" do
+      fab!(:secure_upload) do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_topic = Fabricate(:topic, category: private_category)
+        private_post = Fabricate(:post, topic: private_topic)
+        Fabricate(
+          :secure_upload,
+          original_filename: "secret.png",
+          extension: "png",
+          access_control_post: private_post,
+        )
+      end
+
+      before { SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+
+      it "drops the upload from the prompt" do
+        post_with_secure_upload =
+          create_post(
+            topic_id: pm.id,
+            user: user,
+            raw: "Look at this ![image](#{secure_upload.short_url})",
+          )
+
+        context =
+          described_class.messages_from_post(
+            post_with_secure_upload,
+            max_posts: 1,
+            bot_usernames: [bot_user.username],
+            include_image_uploads: true,
+            include_document_uploads: false,
+          )
+
+        expect(context).to contain_exactly(
+          { type: :user, id: user.username, content: post_with_secure_upload.raw },
+        )
+      end
     end
 
     context "with custom prompts" do

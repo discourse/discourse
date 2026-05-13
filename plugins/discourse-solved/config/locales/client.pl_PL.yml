@@ -10,6 +10,12 @@ pl_PL:
       site_settings:
         categories:
           discourse_solved: "Rozwiązanie Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Zaakceptowane rozwiązania"
+              tooltip: "Liczba tematów, w których w tym okresie znajdował się wpis oznaczony jako rozwiązanie."
   js:
     notifications:
       alt:

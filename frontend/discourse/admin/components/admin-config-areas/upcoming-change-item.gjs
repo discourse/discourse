@@ -45,30 +45,40 @@ export default class UpcomingChangeItem extends Component {
   }
 
   get enabledForOptions() {
+    const allow = this.args.change.upcoming_change.allow_enabled_for ?? [
+      "everyone",
+      "staff",
+      "specific_groups",
+    ];
+
     const options = [
       {
         label: i18n("admin.upcoming_changes.enabled_for_options.no_one"),
         value: "no_one",
       },
-      {
-        label: i18n("admin.upcoming_changes.enabled_for_options.everyone"),
-        value: "everyone",
-      },
     ];
 
-    if (!this.args.change.upcoming_change.disallow_enabled_for_groups) {
-      options.push(
-        {
-          label: capitalize(this.staffGroupName),
-          value: this.staffGroupName,
-        },
-        {
-          label: i18n(
-            "admin.upcoming_changes.enabled_for_options.specific_groups"
-          ),
-          value: "groups",
-        }
-      );
+    if (allow.includes("everyone")) {
+      options.push({
+        label: i18n("admin.upcoming_changes.enabled_for_options.everyone"),
+        value: "everyone",
+      });
+    }
+
+    if (allow.includes("staff")) {
+      options.push({
+        label: capitalize(this.staffGroupName),
+        value: this.staffGroupName,
+      });
+    }
+
+    if (allow.includes("specific_groups")) {
+      options.push({
+        label: i18n(
+          "admin.upcoming_changes.enabled_for_options.specific_groups"
+        ),
+        value: "groups",
+      });
     }
 
     return options;

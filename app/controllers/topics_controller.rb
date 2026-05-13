@@ -1298,7 +1298,7 @@ class TopicsController < ApplicationController
         topic.convert_to_private_message(current_user)
       end
 
-    topic.valid? ? render_topic_changes(topic) : render_json_error(topic)
+    topic.errors.present? ? render_json_error(topic) : render_topic_changes(topic)
   end
 
   def reset_bump_date

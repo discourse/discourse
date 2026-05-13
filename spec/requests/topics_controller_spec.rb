@@ -4739,7 +4739,7 @@ RSpec.describe TopicsController do
       end
 
       it "includes errors in the response when operations partially fail" do
-        sign_in(Fabricate(:admin))
+        sign_in(Fabricate(:moderator))
 
         restricted_tag = Fabricate(:tag, name: "restricted-tag")
         source_category = Fabricate(:category, tags: [restricted_tag])
@@ -5793,6 +5793,27 @@ RSpec.describe TopicsController do
         sign_in(user)
         put "/t/#{topic.id}/convert-topic/private.json"
         expect(response).to be_forbidden
+      end
+
+      context "when the PM recipient cap would be exceeded" do
+        fab!(:reply_1) { Fabricate(:post, topic: topic, user: post_author1, post_number: 2) }
+        fab!(:reply_2) { Fabricate(:post, topic: topic, user: post_author2, post_number: 3) }
+
+        before { SiteSetting.max_allowed_message_recipients = 2 }
+
+        it "returns an error" do
+          sign_in(admin)
+          put "/t/#{topic.id}/convert-topic/private.json"
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to contain_exactly(
+            I18n.t(
+              "topic_converter.too_many_recipients",
+              max: SiteSetting.max_allowed_message_recipients,
+            ),
+          )
+          expect(topic.reload.archetype).to eq(Archetype.default)
+        end
       end
 
       context "with success" do

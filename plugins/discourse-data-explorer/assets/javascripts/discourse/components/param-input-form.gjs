@@ -49,6 +49,8 @@ export const ERRORS = {
   INVALID_TIME: (time) => i18n("explorer.form.errors.invalid_time", { time }),
 };
 
+const DATE_FORMATS = ["YYYY-MM-DD", "D MMM YYYY", "D MMMM YYYY"];
+
 function digitalizeCategoryId(value) {
   value = String(value || "");
   const isPositiveInt = /^\d+$/.test(value);
@@ -248,17 +250,17 @@ export default class ParamInputForm extends Component {
         }
         return value;
       case "date":
-        const m = value && moment(value, "YYYY-MM-DD", true);
-        if (m?.isValid()) {
-          return m.format("YYYY-MM-DD");
-        } else {
-          return this.formatMoment(
-            info,
-            value,
-            "YYYY-MM-DD",
-            ERRORS.INVALID_DATE
-          );
+        if (!value) {
+          return null;
         }
+
+        const date = moment(value, DATE_FORMATS, true);
+        if (date.isValid()) {
+          return date.format("YYYY-MM-DD");
+        }
+
+        this.addError(info.identifier, ERRORS.INVALID_DATE(String(value)));
+        return null;
       case "time":
         return this.formatMoment(
           info,

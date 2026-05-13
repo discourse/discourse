@@ -386,6 +386,11 @@ pl_PL:
       search_placeholder: "Szukaj"
     impersonation:
       notice: "Podszywasz się pod %{username}"
+      time_left:
+        one: "(pozostała %{count} minuta)"
+        few: "(pozostały %{count} minuty)"
+        many: "(pozostało %{count} minut)"
+        other: "(pozostało %{count} minut)"
       stop: "Przestań się podszywać"
     themes:
       default_description: "Domyślny"
@@ -414,6 +419,15 @@ pl_PL:
         visual_overlay: "Nakładka wizualna"
         ghost_blocks: "Bloki duchów"
         condition_debugging: "Debugowanie warunków"
+      plugin_outlet_debug:
+        find_on_github: "Znajdź na GitHubie"
+        wrapper: "(wrapper)"
+        outlet_args: "Argumenty wyjścia"
+        no_outlet_args: "Do tego wyjścia nie przekazano żadnych argumentów wyjścia"
+        aliases: "Aliasy"
+        deprecated: "przestarzałe"
+        deprecated_outlet: "Ten wyjście jest przestarzałe i zostanie usunięte."
+        since: "(od %{version})"
       toggle_safe_mode: "Przełącz tryb awaryjny"
       toggle_verbose_localization: "Przełącz szczegółową lokalizację"
       toggle_mobile_view: "Przełącz widok mobilny"
@@ -3847,6 +3861,8 @@ pl_PL:
         relist_topics: "Zamieść ponownie tematy"
         pin_topics: "Wyróżnij te tematy"
         unpin_topics: "Odepnij tematy"
+        enable_nested_replies: "Włącz zagnieżdżone odpowiedzi"
+        disable_nested_replies: "Wyłącz zagnieżdżone odpowiedzi"
         reset_bump_dates: "Zresetuj datę podbicia"
         defer: "Oznacz jako nieprzeczytany"
         delete: "Usuń tematy"
@@ -3925,6 +3941,16 @@ pl_PL:
           few: "Odepnij %{count} tematy"
           many: "Odepnij %{count} tematów"
           other: "Odepnij %{count} tematów"
+        confirm_enable_nested_replies:
+          one: "Włącz zagnieżdżone odpowiedzi w %{count} temacie"
+          few: "Włącz zagnieżdżone odpowiedzi w %{count} tematach"
+          many: "Włącz zagnieżdżone odpowiedzi w %{count} tematach"
+          other: "Włącz zagnieżdżone odpowiedzi w %{count} tematach"
+        confirm_disable_nested_replies:
+          one: "Wyłącz zagnieżdżone odpowiedzi w %{count} temacie"
+          few: "Wyłącz zagnieżdżone odpowiedzi w %{count} tematach"
+          many: "Wyłącz zagnieżdżone odpowiedzi w %{count} tematach"
+          other: "Wyłącz zagnieżdżone odpowiedzi w %{count} tematach"
         confirm_update_topics:
           one: "Zaktualizuj %{count} temat"
           few: "Zaktualizuj %{count} tematy"
@@ -4080,6 +4106,12 @@ pl_PL:
       unpin_topics:
         name: "Odepnij"
         description: "Odepnij wszystkie wybrane tematy, które są przypięte do kategorii lub przypięte globalnie"
+      enable_nested_replies:
+        name: "Włącz zagnieżdżone odpowiedzi"
+        description: "Przełącz wybrane tematy do widoku zagnieżdżonego. Odpowiedzi będą wyświetlane jako wątki."
+      disable_nested_replies:
+        name: "Wyłącz zagnieżdżone odpowiedzi"
+        description: "Przełącz wybrane tematy z powrotem do widoku płaskiego."
     nested_replies:
       nested_view: "Widok zagnieżdżony"
       flat_view: "Widok płaski"
@@ -7020,6 +7052,23 @@ pl_PL:
             title: "Ruch w witrynie"
           engagement:
             title: "Zaangażowanie"
+        highlights:
+          fetch_error: "Nie udało się załadować najważniejszych elementów. Spróbuj odświeżyć stronę."
+          kpi:
+            new_signups:
+              label: "Nowe rejestracje"
+              tooltip: "Konta utworzone w tym okresie, wliczając w to konta nieaktywowane i tymczasowe."
+            dau_mau:
+              label: "Lepkość DAU / MAU"
+              tooltip: 'Odsetek aktywnych użytkowników miesięcznie, którzy powrócili do społeczności w ciągu ostatniego dnia. Pokazuje, jak „lepka” jest Twoja społeczność na podstawie częstotliwości powracania.'
+            new_contributors:
+              label: "Nowi współtwórcy"
+              tooltip: "Liczba członków, którzy zamieścili swój pierwszy wpis w tym okresie."
+          comparison:
+            last_7_days: "w porównaniu z ostatnimi 7 dniami"
+            last_30_days: "w porównaniu z ostatnimi 30 dniami"
+            last_3_months: "w porównaniu z ostatnimi 3 miesiącami"
+            previous_period: "w porównaniu z poprzednim okresem"
         period:
           last_7_days: "Ostatnie 7 dni"
           last_30_days: "Ostatnie 30 dni"

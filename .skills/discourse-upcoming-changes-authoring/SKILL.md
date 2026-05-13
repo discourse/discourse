@@ -39,7 +39,7 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 | Service | Purpose |
 |---------|---------|
 | `List` | Admin-only, fetches all changes with metadata, group data, and images. Filters out changes whose `ConditionalDisplay.should_display?` returns false. |
-| `Toggle` | Admin enable/disable — updates SiteSetting, clears groups if `disallow_enabled_for_groups`, logs staff action, fires DiscourseEvent |
+| `Toggle` | Admin enable/disable — updates SiteSetting, clears groups when neither `staff` nor `specific_groups` is in `allow_enabled_for`, validates the requested target against `allow_enabled_for`, logs staff action, fires DiscourseEvent |
 | `Track` | Orchestrator called by the scheduled job — delegates to three action sub-services |
 | `TrackNotifyAddedChanges` | Compares current settings against event history, creates `added` events |
 | `TrackRemovedChanges` | Creates `removed` events for settings no longer present |
@@ -166,7 +166,11 @@ Notifications for `added` and `promoted` changes are skipped on new sites (deter
 
 ### Group-Based Access
 
-Group restrictions use a separate `SiteSettingGroup` model rather than storing groups on the setting itself. This allows the caching layer (`site_setting_group_ids`) to work independently. When `disallow_enabled_for_groups` is set in metadata, the UI only shows Everyone/No One options. Group IDs are pipe-separated in the DB for efficient single-row storage.
+Group restrictions use a separate `SiteSettingGroup` model rather than storing groups on the setting itself. This allows the caching layer (`site_setting_group_ids`) to work independently. Group IDs are pipe-separated in the DB for efficient single-row storage.
+
+The `allow_enabled_for` metadata key on an upcoming change restricts which "Enabled for" dropdown options the admin sees. It accepts an array of any subset of `[everyone, staff, specific_groups]`; the `No one` option is always present and cannot be removed. When the key is omitted, all four options are shown (the permissive default). Rule: if `everyone` is present it must be the only value — `everyone` cannot combine with `staff` or `specific_groups`. The integrity spec enforces these rules. Server-side enforcement lives in `UpcomingChanges::Toggle` (validates the target when no groups are configured) and `SiteSetting::UpsertGroups` (validates group selection: a `[staff]`-only selection needs `staff` allowed; any other selection needs `specific_groups` allowed). When neither `staff` nor `specific_groups` is in the allow list, `Toggle` also clears any stale `SiteSettingGroup` records.
+
+**Auto-promoted display:** When `allow_enabled_for` excludes `:everyone` and a change is enabled without an explicit admin selection (typically because it reached the promotion threshold), `enabled_for_with_groups` returns the broadest allowed display target — the staff group name if `:staff` is permitted, otherwise `"groups"`. This is display-only; `enabled_for_user?` is unchanged and still treats the change as on for all users until the admin scopes it via the dropdown.
 
 ### Event Idempotency
 
@@ -196,6 +200,35 @@ The three main components to know:
 - **User view** (`admin-user-upcoming-changes.gjs`) — Read-only per-user view
 
 State is managed via `trackedObject` for reactivity. API calls go through `ajax()` directly in the item component.
+
+### Restricting "Enabled for" options
+
+To constrain which dropdown options an admin can pick for a change, add `allow_enabled_for` to its `upcoming_change:` metadata:
+
+```yaml
+my_upcoming_change_setting:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: experimental
+    impact: feature,all_members
+    allow_enabled_for:
+      - staff
+      - specific_groups
+```
+
+Valid value sets:
+
+| `allow_enabled_for` | Dropdown options shown |
+|---|---|
+| *(omitted)* | No one, Everyone, Staff, Specific group(s) |
+| `[everyone]` | No one, Everyone |
+| `[staff]` | No one, Staff |
+| `[specific_groups]` | No one, Specific group(s) |
+| `[staff, specific_groups]` | No one, Staff, Specific group(s) |
+
+`everyone` cannot be combined with `staff` or `specific_groups` — when present, it must be the only value. `No one` is always available. The integrity spec rejects invalid combinations.
 
 ### Adding a Conditional Display Rule
 

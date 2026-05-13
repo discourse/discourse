@@ -3763,6 +3763,8 @@ en:
         relist_topics: "Relist topics"
         pin_topics: "Feature these topics"
         unpin_topics: "Un-pin topics"
+        enable_nested_replies: "Enable nested replies"
+        disable_nested_replies: "Disable nested replies"
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
         delete: "Delete topics"
@@ -3821,6 +3823,12 @@ en:
         confirm_unpin_topics:
           one: "Un-pin %{count} topic"
           other: "Un-pin %{count} topics"
+        confirm_enable_nested_replies:
+          one: "Enable nested replies on %{count} topic"
+          other: "Enable nested replies on %{count} topics"
+        confirm_disable_nested_replies:
+          one: "Disable nested replies on %{count} topic"
+          other: "Disable nested replies on %{count} topics"
         confirm_update_topics:
           one: "Update %{count} topic"
           other: "Update %{count} topics"
@@ -3950,6 +3958,12 @@ en:
       unpin_topics:
         name: "Un-pin"
         description: "Un-pin all the selected topics that are pinned to a category or pinned globally"
+      enable_nested_replies:
+        name: "Enable nested replies"
+        description: "Switch the selected topics to nested view. Replies will be displayed as threads."
+      disable_nested_replies:
+        name: "Disable nested replies"
+        description: "Switch the selected topics back to flat view."
 
     nested_replies:
       nested_view: "Nested view"
