@@ -169,8 +169,14 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
   });
 
   module("nested view navigation", function (nestedHooks) {
-    // Builds a minimal nested-view DOM with three root posts. Each root has
-    // an inner subtree the navigation should ignore.
+    // Builds a minimal nested-view DOM:
+    //
+    //   r1
+    //     r1-child
+    //   r2
+    //   r3
+    //
+    // Navigation walks every visible .nested-post in document order.
     function buildNestedView() {
       const view = document.createElement("div");
       view.className = "nested-view";
@@ -179,17 +185,16 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
       roots.className = "nested-view__roots";
       view.appendChild(roots);
 
-      ["r1", "r2", "r3"].forEach((id) => {
-        const root = document.createElement("div");
-        root.className = "nested-post";
-        root.id = id;
-        // A descendant .nested-post that root-only navigation must NOT pick up.
-        const child = document.createElement("div");
-        child.className = "nested-post";
-        child.id = `${id}-child`;
-        root.appendChild(child);
-        roots.appendChild(root);
-      });
+      const makePost = (id) => {
+        const post = document.createElement("div");
+        post.className = "nested-post";
+        post.id = id;
+        return post;
+      };
+
+      const r1 = makePost("r1");
+      r1.appendChild(makePost("r1-child"));
+      roots.append(r1, makePost("r2"), makePost("r3"));
 
       document.body.appendChild(view);
       return view;
@@ -201,7 +206,7 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
         .forEach((el) => el.remove());
     });
 
-    test("selectDown seeds the first root when nothing is selected", function (assert) {
+    test("selectDown seeds the first post when nothing is selected", function (assert) {
       buildNestedView();
       const ks = this.owner.lookup("service:keyboard-shortcuts");
 
@@ -213,39 +218,63 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
       );
     });
 
-    test("selectDown / selectUp walk root replies only, ignoring deeper posts", function (assert) {
+    test("selectDown / selectUp walk every visible post in DOM order regardless of depth", function (assert) {
       buildNestedView();
       const ks = this.owner.lookup("service:keyboard-shortcuts");
 
       ks.selectDown(); // r1
-      ks.selectDown(); // r2
+      ks.selectDown(); // r1-child
       assert.strictEqual(
         document.querySelector("[data-keyboard-selected]")?.id,
-        "r2",
-        "skips r1's descendant and lands on the next root"
+        "r1-child",
+        "j descends into r1's child"
       );
 
+      ks.selectDown(); // r2
       ks.selectDown(); // r3
-      ks.selectDown(); // no-op past the last root
+      ks.selectDown(); // no-op past the last post
       assert.strictEqual(
         document.querySelector("[data-keyboard-selected]")?.id,
         "r3",
-        "no wrap-around past last root"
+        "no wrap-around past the last post"
       );
 
       ks.selectUp(); // r2
-      ks.selectUp(); // r1
+      ks.selectUp(); // r1-child
       assert.strictEqual(
         document.querySelector("[data-keyboard-selected]")?.id,
-        "r1"
+        "r1-child"
       );
 
-      ks.selectUp(); // no-op before the first root
+      ks.selectUp(); // r1
+      ks.selectUp(); // no-op before the first post
       assert.strictEqual(
         document.querySelector("[data-keyboard-selected]")?.id,
         "r1",
-        "no wrap-around past first root"
+        "no wrap-around past the first post"
       );
+    });
+
+    test("keyboard:move-selection fires with the selected post and the full post list", function (assert) {
+      buildNestedView();
+      const ks = this.owner.lookup("service:keyboard-shortcuts");
+      const appEvents = this.owner.lookup("service:app-events");
+
+      let payload;
+      const handler = (data) => (payload = data);
+      appEvents.on("keyboard:move-selection", handler);
+
+      try {
+        ks.selectDown(); // r1
+        assert.strictEqual(payload?.selectedArticle?.id, "r1");
+        assert.deepEqual(
+          payload.articles.map((a) => a.id),
+          ["r1", "r1-child", "r2", "r3"],
+          "payload mirrors the flat post-stream shape so Nested can detect boundary"
+        );
+      } finally {
+        appEvents.off("keyboard:move-selection", handler);
+      }
     });
 
     test("selectDown outside the nested view delegates to _moveSelection", function (assert) {

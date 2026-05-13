@@ -454,7 +454,7 @@ export default class KeyboardShortcutLib extends Service {
 
   selectDown() {
     if (document.querySelector(".nested-view")) {
-      this._moveAmongNestedRoots(1);
+      this._moveAmongNestedPosts(1);
       return;
     }
     this._moveSelection({ direction: 1, scrollWithinPosts: true });
@@ -462,77 +462,121 @@ export default class KeyboardShortcutLib extends Service {
 
   selectUp() {
     if (document.querySelector(".nested-view")) {
-      this._moveAmongNestedRoots(-1);
+      this._moveAmongNestedPosts(-1);
       return;
     }
     this._moveSelection({ direction: -1, scrollWithinPosts: true });
   }
 
-  _moveAmongNestedRoots(direction) {
-    const roots = Array.from(
-      document.querySelectorAll(".nested-view__roots > .nested-post")
+  _moveAmongNestedPosts(direction) {
+    // Mirrors _moveSelection; uses each post's content element for height/offset
+    // since the .nested-post wrapper extends through the whole subtree.
+    const now = +new Date();
+    const fast =
+      this._lastMoveTime && now - this._lastMoveTime < 1.5 * animationDuration;
+    this._lastMoveTime = now;
+
+    const posts = Array.from(
+      document.querySelectorAll(".nested-view .nested-post")
     );
-    if (!roots.length) {
+    if (!posts.length) {
       return;
     }
+    const contentOf = (post) =>
+      post.querySelector(
+        ".nested-post__article, .nested-post__collapsed-bar, .nested-post__placeholder"
+      ) || post;
 
-    let selected = roots.find((r) => r.hasAttribute("data-keyboard-selected"));
+    let selected = posts.find((p) => p.hasAttribute("data-keyboard-selected"));
 
-    // Drop selection if it has scrolled out of view, matching _moveSelection.
-    if (selected) {
-      const rect = selected.getBoundingClientRect();
+    if (selected && !fast) {
+      const rect = contentOf(selected).getBoundingClientRect();
       if (rect.bottom < headerOffset() || rect.top > window.innerHeight) {
         selected = null;
       }
     }
 
-    let next;
-    if (selected) {
-      next = roots[roots.indexOf(selected) + direction];
-    } else {
-      // Seed from the first root visible in the move direction; the press
-      // brings the selection on-screen without also advancing past it.
+    if (!selected) {
       const offset = headerOffset();
-      next =
-        roots.find((r) =>
-          direction > 0
-            ? r.getBoundingClientRect().top >= offset
-            : r.getBoundingClientRect().bottom >= offset
-        ) || roots[0];
-    }
-    if (!next) {
-      return;
+      selected =
+        posts.find((p) => {
+          const rect = contentOf(p).getBoundingClientRect();
+          return direction > 0 ? rect.top >= offset : rect.bottom >= offset;
+        }) || posts[posts.length - 1];
+      direction = 0;
     }
 
-    // Tracked with a data attribute rather than a `.selected` class because
-    // the .nested-post wrapper's class is rebuilt on every tracked-state
-    // change (cloaking, parent-line highlight, etc.) and would wipe an
-    // imperatively-added class.
-    for (const r of roots) {
-      r.removeAttribute("data-keyboard-selected");
-      r.removeAttribute("tabindex");
+    if (!fast && direction !== 0) {
+      const selectedContent = contentOf(selected);
+      const beginContent = domUtils.offset(selectedContent).top;
+      const endContent = beginContent + selectedContent.offsetHeight;
+      const beginScreen = window.scrollY;
+      const endScreen = beginScreen + window.innerHeight;
+
+      if (direction < 0 && beginScreen > beginContent) {
+        return this._scrollTo(
+          Math.max(
+            beginScreen - window.innerHeight + 3 * headerOffset(),
+            beginContent - headerOffset()
+          )
+        );
+      } else if (direction > 0 && endScreen < endContent - headerOffset()) {
+        return this._scrollTo(
+          Math.min(
+            endScreen - 3 * headerOffset(),
+            endContent - window.innerHeight
+          )
+        );
+      }
+    }
+
+    let next = selected;
+    let newIndex = posts.indexOf(selected);
+    while (true) {
+      newIndex += direction;
+      next = posts[newIndex];
+      if (!next) {
+        return;
+      }
+      if (contentOf(next).getBoundingClientRect().height > 0) {
+        break;
+      }
+      if (direction === 0) {
+        break;
+      }
+    }
+
+    // Data attribute, not a class — Ember rebuilds .nested-post's class on cloaking/highlight changes and would wipe it.
+    for (const p of posts) {
+      p.removeAttribute("data-keyboard-selected");
+      p.removeAttribute("tabindex");
     }
     next.setAttribute("data-keyboard-selected", "true");
     next.setAttribute("tabindex", "0");
     next.focus({ preventScroll: true });
 
+    // Subscribed by Nested to trigger boundary load-more on last-post selection.
     this.appEvents.trigger("keyboard:move-selection", {
-      articles: roots,
+      articles: posts,
       selectedArticle: next,
     });
 
-    const articleTop = domUtils.offset(next).top;
-    const articleTopPosition = articleTop - headerOffset();
-    // If the top of the root is already visible, leave the scroll alone —
-    // important for tall roots that exceed the viewport height.
+    const nextContent = contentOf(next);
+    const contentTop = domUtils.offset(nextContent).top;
+    const contentTopPosition = contentTop - headerOffset();
+
+    // k onto a tall post lands at its bottom page so successive k's scroll up through it.
     if (
-      articleTopPosition >= window.pageYOffset &&
-      articleTop < window.pageYOffset + window.innerHeight
+      !fast &&
+      direction < 0 &&
+      nextContent.offsetHeight > window.innerHeight
     ) {
-      return;
+      return this._scrollTo(
+        contentTop + nextContent.offsetHeight - window.innerHeight
+      );
     }
-    const scrollRatio = direction > 0 ? 0.2 : 0.7;
-    this._scrollTo(articleTopPosition - window.innerHeight * scrollRatio);
+
+    this._scrollTo(contentTopPosition);
   }
 
   bulkSelectItem() {
