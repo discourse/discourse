@@ -20,7 +20,7 @@ module DiscourseDev
     ].freeze
 
     SOURCE_DISTRIBUTION = [
-      [PageviewDailyAggregate::DIRECT_SOURCE_NAME, 44],
+      [BrowserPageviewDailyAggregate::DIRECT_SOURCE_NAME, 44],
       ["google.com", 20],
       ["news.ycombinator.com", 10],
       ["github.com", 8],
@@ -55,17 +55,13 @@ module DiscourseDev
       puts "Seeding #{application_request_rows.size} application_requests rows from #{@start_date} to #{@end_date}"
       bulk_upsert_application_requests(application_request_rows)
 
-      puts "Seeding #{pageview_daily_aggregate_rows.size} pageview_daily_aggregate rows into each mechanism table"
+      puts "Seeding #{pageview_daily_aggregate_rows.size} browser_pageview_daily_aggregate rows"
       bulk_upsert_pageview_daily_aggregates(
-        :pageview_daily_aggregates,
-        pageview_daily_aggregate_rows,
-      )
-      bulk_upsert_pageview_daily_aggregates(
-        :pageview_daily_aggregates_beacon,
+        :browser_pageview_daily_aggregates,
         pageview_daily_aggregate_rows,
       )
 
-      application_request_rows.size + (pageview_daily_aggregate_rows.size * 2)
+      application_request_rows.size + pageview_daily_aggregate_rows.size
     end
 
     def self.populate!

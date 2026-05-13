@@ -32,9 +32,11 @@ We considered three alternatives during design:
 
 Two-tier (events + rollup) keeps the dashboard fast, keeps the source of truth flexible, and uses only stock Postgres.
 
-## Tier 1: per-event tables
+## Tier 1: per-event table
 
-Two tables, one per ingestion path (sync vs. beacon):
+Core owns the per-event table. It was introduced by
+`DEV: Add browser pageview events (#39878)` and is gated by the hidden
+`persist_browser_pageview_events` site setting:
 
 ```
 browser_pageview_events
@@ -49,9 +51,6 @@ browser_pageview_events
   user_id      integer
   topic_id     integer
 
-browser_pageview_events_beacon
-  (same columns)
-
 Indexes:
   (created_at) USING brin
   (user_id)
@@ -60,43 +59,38 @@ Indexes:
 
 Notes:
 
-- **Two tables, not one.** Mirrors the two emit points in core middleware (`request_tracker.rb` triggers `:browser_pageview` and `:beacon_browser_pageview` separately), but the tables are not combined for dashboard metrics. They represent alternate browser-pageview tracking mechanisms, not additive event streams.
 - **BRIN index on `created_at`.** Append-only event log — BRIN is kilobytes vs. gigabytes for btree, and works perfectly for `WHERE created_at BETWEEN ?` scans.
 - **`inet` type for IP.** Native v4/v6 support; cheap CIDR matching if ever needed.
-- **No `req_type` column.** Logged-in vs. anonymous = `user_id IS NOT NULL`. Sync vs. beacon = which table. At rollup time, one table is selected as the authoritative source according to the site's active browser pageview tracking mode. Crawler pageviews are not in these tables (crawlers don't fire JS); the chart's crawler series comes from `application_requests` (see "Crawler series", below).
+- **No `req_type` column.** Logged-in vs. anonymous = `user_id IS NOT NULL`. Crawler pageviews are not in this table (crawlers don't fire JS); the chart's crawler series comes from `application_requests` (see "Crawler series", below).
 - **Raw `referrer` and `url` stored verbatim.** No write-time parsing. Parsing happens at rollup time so changes to parser rules can recompute history.
 
 ### Write path
 
-- Core middleware already fires `:browser_pageview` and `:beacon_browser_pageview` `DiscourseEvent`s when `trigger_browser_pageview_events` is enabled.
-- Core subscribers persist a row per event via `Scheduler::Defer.later`, keeping inserts off the request hot path.
-- `country_code` is derived at write time from `ip_address` via `DiscourseIpInfo` (MaxMind GeoLite2). `ZZ`/`XX`/`T1` and lookup misses are stored as `NULL`.
+- Core middleware persists browser pageview rows via `Scheduler::Defer.later` when `persist_browser_pageview_events` is enabled.
+- `country_code` is derived at write time by core from `ip_address` via `DiscourseIpInfo` (MaxMind GeoLite2).
 
 ### Rollout
 
 Default behavior on existing sites: feature-flag-gated, off by default until the new dashboard section is enabled.
 
-## Tier 2: aggregate tables
+## Tier 2: aggregate table
 
-The dashboard reads here. One day = one or more rows per dimensional combination. Summary tables mirror the event tables: one table for the old/piggyback mechanism and one table for the beacon mechanism.
+The dashboard reads here. One day = one or more rows per dimensional combination.
 
 ```
-pageview_daily_aggregates
+browser_pageview_daily_aggregates
   date          date, not null
   country_code  string(2)        -- nullable: lookup miss
   source_name   string(100)      -- canonical display key; "Direct" / "(Other)"
   is_logged_in  boolean, not null
   count         integer, not null
 
-pageview_daily_aggregates_beacon
-  (same columns)
-
-Indexes on each table:
+Indexes:
   UNIQUE (date, country_code, source_name, is_logged_in) WHERE country_code IS NOT NULL
   UNIQUE (date, source_name, is_logged_in) WHERE country_code IS NULL
 ```
 
-The prototype dashboard reads human pageviews from `pageview_daily_aggregates_beacon` only. The old-mechanism summary table is kept in parallel so we can compare mechanisms and preserve the one-source-per-mechanism rule.
+The first iteration dashboard reads human pageviews from `browser_pageview_daily_aggregates`, which is rolled up from core's `browser_pageview_events` table.
 
 Cardinality math: ~250 countries × ~100 canonical source names × 2 logged-in values = **~50k rows/day worst case**. In practice 2–5k rows/day. Across years, the table stays small, tightly indexed, sub-second on every dashboard query.
 
@@ -106,22 +100,19 @@ Full path-level drill-down still needs a separate summary table with `host_path`
 
 ### Rollup job
 
-Runs nightly via Sidekiq (`Jobs::Scheduled`), one query per dimensional table. The job rolls each browser-pageview mechanism independently:
+Runs every 5 minutes via Sidekiq (`Jobs::Scheduled`) when `persist_browser_pageview_events` is enabled. It re-aggregates yesterday and today from core's event table:
 
-- `browser_pageview_events` -> `pageview_daily_aggregates`
-- `browser_pageview_events_beacon` -> `pageview_daily_aggregates_beacon`
-
-The rollup must not `UNION` these tables. They are alternate accounting sources for browser pageviews; combining them risks double counting during transitions or experiments.
+- `browser_pageview_events` -> `browser_pageview_daily_aggregates`
 
 ```sql
-INSERT INTO pageview_daily_aggregates_beacon (date, country_code, source_name, is_logged_in, count)
+INSERT INTO browser_pageview_daily_aggregates (date, country_code, source_name, is_logged_in, count)
 SELECT
   (created_at AT TIME ZONE 'UTC')::date,
   country_code,
   parse_referrer_source(referrer),
   user_id IS NOT NULL,
   COUNT(*)
-FROM browser_pageview_events_beacon
+FROM browser_pageview_events
 WHERE created_at >= :day_start AND created_at < :day_end
 GROUP BY 1, 2, 3, 4
 ON CONFLICT (date, country_code, source_name, is_logged_in)
@@ -130,19 +121,13 @@ DO UPDATE SET count = excluded.count;
 
 Properties:
 
-- **One pass over yesterday's events per mechanism** populates that mechanism's summary table.
+- **One pass over the selected day's events** populates the summary table.
 - **Idempotent.** Re-runnable any number of times for any day within event retention. Used for backfill, parser changes, bug fixes.
-- **No drift.** Every aggregate row's `count` equals `COUNT(*)` of the same source query. The dashboard's human pageview cards reconcile because they read from one underlying beacon summary table.
+- **No drift.** Every aggregate row's `count` equals `COUNT(*)` of the same source query. The dashboard's human pageview cards reconcile because they read from one underlying summary table.
 
 ### Today's partial-day data
 
-The nightly rollup writes yesterday and earlier. Today is partial. Two options, decision deferred:
-
-**A. Read raw events for today.** Dashboard query reads aggregates for past days and the active raw event table for today. Always-fresh data, no scheduled work, slightly more SQL.
-
-**B. Incremental rollup every 5 minutes.** A scheduled job re-aggregates today from start-of-day with `ON CONFLICT DO UPDATE` (full replace, idempotent). Single read source for the dashboard, freshness lags ≤ 5 min. Adds a job but simplifies the dashboard query.
-
-Both are valid. We'll pick during implementation based on whether other features will also want today's aggregate rows.
+The scheduled rollup re-aggregates today every 5 minutes. The dashboard reads only aggregate rows, so today's values can lag live traffic by up to one rollup interval.
 
 ### Crawler series
 
@@ -203,7 +188,7 @@ Implications:
 
 ### v1 (current objectives doc)
 
-- Headline pageview total, logged-in share KPI, chart with daily/monthly bucketing, filter pills — all from `pageview_daily_aggregates` + `application_requests` (crawler series).
+- Headline pageview total, logged-in share KPI, chart with daily/monthly bucketing, filter pills — all from `browser_pageview_daily_aggregates` + `application_requests` (crawler series).
 
 ### v1 deferred / v2
 
@@ -218,12 +203,11 @@ Implications:
 
 ## Open questions for implementation
 
-1. **Today's partial-day reads.** 5-minute rollup (option B) or direct active-table reads for today (option A) — pick during implementation.
-2. **Path-level drill-down summary table.** Schema, top-N parameter, "Other" bucket label — design when the top-referrers card is scoped.
-3. **`pg_partman` for `browser_pageview_events`.** If retention windows or growth rate justify it. Available on RDS; would need to bake into the official self-hosted Docker image. Not required for v1; defer.
-4. **`hll` extension** for unique-visitor metrics. Optional; feature degrades to "exact distinct on small windows" if extension absent.
-5. **Default retention values.** Confirm the 30-day IP / 6-month row / indefinite aggregate defaults with security review.
-6. **Referrer parser packaging.** Vendor `referer-parser` gem, fork it, or rewrite as a thin Ruby parser over the YAML — pick during implementation.
+1. **Path-level drill-down summary table.** Schema, top-N parameter, "Other" bucket label — design when drill-down is scoped.
+2. **`pg_partman` for `browser_pageview_events`.** If retention windows or growth rate justify it. Available on RDS; would need to bake into the official self-hosted Docker image. Not required for v1; defer.
+3. **`hll` extension** for unique-visitor metrics. Optional; feature degrades to "exact distinct on small windows" if extension absent.
+4. **Aggregate retention.** Core owns raw event retention via `clean_up_browser_pageview_events`; confirm whether dashboard aggregate rows are retained indefinitely.
+5. **Referrer parser packaging.** Vendor `referer-parser` gem, fork it, or rewrite as a thin Ruby parser over the YAML — pick during implementation.
 
 ## Non-goals for v1 of this data layer
 

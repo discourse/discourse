@@ -262,7 +262,7 @@ The title shape alone identifies the bucket size; no separate "Daily / Weekly / 
 
 8.2 **Empty (no human pageviews in the period)**: the chart still renders its axes; an overlay reads "No traffic data for this period". The headline still reads "0 pageviews ...". Filter pills still render on public communities.
 
-8.3 A period with zero human pageviews but some crawler traffic is **not** considered empty — the chart shows the crawler bars and the overlay does not appear.
+8.3 A period with zero human pageviews but some crawler traffic is considered empty on first load because Crawlers is off by default (§6.2). The chart shows the empty overlay until an admin explicitly turns on the Crawlers filter.
 
 8.4 **Brand-new community** (no tracked traffic yet): the empty state renders cleanly — no broken layout, no stuck spinner.
 

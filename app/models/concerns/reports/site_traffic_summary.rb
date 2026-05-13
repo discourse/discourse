@@ -12,15 +12,15 @@ module Reports::SiteTrafficSummary
 
       first_browser_pageview_date =
         DB.query_single(<<~SQL, include_anonymous: include_anonymous).first
-          SELECT date FROM pageview_daily_aggregates_beacon
+          SELECT date FROM browser_pageview_daily_aggregates
           WHERE :include_anonymous OR is_logged_in
           ORDER BY date LIMIT 1
         SQL
 
       # Generate one row per day in the selected range, joining against
-      # beacon aggregates for human pageviews and application_requests for
-      # crawlers. Days with no rows return zero counts, so the chart gets a
-      # complete day spine without client-side gap filling.
+      # direct human pageview aggregates and application_requests for crawlers.
+      # Days with no rows return zero counts, so the chart gets a complete day
+      # spine without client-side gap filling.
       data =
         DB.query(
           <<~SQL,
@@ -29,7 +29,7 @@ module Reports::SiteTrafficSummary
                 date,
                 COALESCE(SUM(CASE WHEN is_logged_in THEN count ELSE 0 END), 0) AS page_view_logged_in_browser,
                 COALESCE(SUM(CASE WHEN NOT is_logged_in THEN count ELSE 0 END), 0) AS page_view_anon_browser
-              FROM pageview_daily_aggregates_beacon
+              FROM browser_pageview_daily_aggregates
               WHERE date >= :start_date AND date <= :end_date AND (:include_anonymous OR is_logged_in)
               GROUP BY date
             ),
@@ -68,7 +68,7 @@ module Reports::SiteTrafficSummary
               SELECT
                 COALESCE(SUM(CASE WHEN is_logged_in THEN count ELSE 0 END), 0) AS page_view_logged_in_browser,
                 COALESCE(SUM(CASE WHEN NOT is_logged_in THEN count ELSE 0 END), 0) AS page_view_anon_browser
-              FROM pageview_daily_aggregates_beacon
+              FROM browser_pageview_daily_aggregates
               WHERE date >= :start_date AND date <= :end_date AND (:include_anonymous OR is_logged_in)
             ),
             crawler_pageviews AS (
@@ -125,7 +125,7 @@ module Reports::SiteTrafficSummary
           <<~SQL,
             WITH countries AS (
               SELECT country_code, SUM(count) AS count
-              FROM pageview_daily_aggregates_beacon
+              FROM browser_pageview_daily_aggregates
               WHERE date >= :start_date AND date <= :end_date AND country_code IS NOT NULL AND (:include_anonymous OR is_logged_in)
               GROUP BY country_code
             ),
@@ -153,7 +153,7 @@ module Reports::SiteTrafficSummary
           <<~SQL,
             WITH referrers AS (
               SELECT source_name, SUM(count) AS count
-              FROM pageview_daily_aggregates_beacon
+              FROM browser_pageview_daily_aggregates
               WHERE date >= :start_date AND date <= :end_date AND source_name <> :direct_source_name AND (:include_anonymous OR is_logged_in)
               GROUP BY source_name
             ),
@@ -173,7 +173,7 @@ module Reports::SiteTrafficSummary
           SQL
           start_date: report.start_date,
           end_date: report.end_date,
-          direct_source_name: PageviewDailyAggregate::DIRECT_SOURCE_NAME,
+          direct_source_name: BrowserPageviewDailyAggregate::DIRECT_SOURCE_NAME,
           include_anonymous: include_anonymous,
         )
 

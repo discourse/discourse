@@ -5,12 +5,9 @@ module Jobs
     every 5.minutes
 
     def execute(args = {})
-      return if !SiteSetting.site_traffic_data_layer_enabled
+      return if !SiteSetting.persist_browser_pageview_events
 
-      rollup_dates(args).each do |date|
-        PageviewDailyAggregate.rollup!(date)
-        PageviewDailyAggregateBeacon.rollup!(date)
-      end
+      rollup_dates(args).each { |date| BrowserPageviewDailyAggregate.rollup!(date) }
     end
 
     private

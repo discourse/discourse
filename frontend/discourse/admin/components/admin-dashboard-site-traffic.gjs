@@ -616,10 +616,6 @@ export default class AdminDashboardSiteTraffic extends Component {
     return computeVisibleIndexes(this.buckets.length, this.xMaxLabels);
   }
 
-  get crawlerTotal() {
-    return this.currentTotals?.[SERIES.CRAWLER] || 0;
-  }
-
   get topReferrers() {
     return (this.model?.related_data?.top_referrers || []).map((referrer) => ({
       label: referrer.source_name,
@@ -854,14 +850,6 @@ export default class AdminDashboardSiteTraffic extends Component {
       model.setProperties(json.report);
       this.model = model;
       this.modelPeriod = fetchPeriod;
-
-      if (
-        this.isPublicSite &&
-        this.humanTotal(this.currentTotals) === 0 &&
-        this.crawlerTotal > 0
-      ) {
-        this.hiddenSeries.delete(SERIES.CRAWLER);
-      }
     } catch {
       if (mySeq !== this._requestSeq) {
         return;

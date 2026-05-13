@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PageviewDailyAggregate < ActiveRecord::Base
+class BrowserPageviewDailyAggregate < ActiveRecord::Base
   self.primary_key = nil
 
   DIRECT_SOURCE_NAME = "Direct"
@@ -78,7 +78,7 @@ end
 
 # == Schema Information
 #
-# Table name: pageview_daily_aggregates
+# Table name: browser_pageview_daily_aggregates
 #
 #  count        :integer          not null
 #  country_code :string(2)
@@ -88,6 +88,6 @@ end
 #
 # Indexes
 #
-#  pageview_daily_aggregates_with_country_idx     (date,country_code,source_name,is_logged_in) UNIQUE WHERE (country_code IS NOT NULL)
-#  pageview_daily_aggregates_without_country_idx  (date,source_name,is_logged_in) UNIQUE WHERE (country_code IS NULL)
+#  browser_pageview_daily_aggregates_with_country_idx     (date,country_code,source_name,is_logged_in) UNIQUE WHERE (country_code IS NOT NULL)
+#  browser_pageview_daily_aggregates_without_country_idx  (date,source_name,is_logged_in) UNIQUE WHERE (country_code IS NULL)
 #
