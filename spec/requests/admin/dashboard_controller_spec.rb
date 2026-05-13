@@ -96,13 +96,17 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
-    describe "sections.highlights payload" do
+    describe "sections payload" do
       before do
         SiteSetting.dashboard_improvements = true
-        AdminDashboardData.unstub(:fetch_cached_stats)
-        AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
+        SiteSetting.admin_dashboard_sections = "highlights|reports|traffic|engagement"
         Discourse.cache.clear
         sign_in(admin)
+      end
+
+      def highlights_data
+        sections = response.parsed_body["sections"]
+        sections.find { |s| s["id"] == "highlights" }&.dig("data")
       end
 
       it "is omitted when dashboard_improvements is disabled" do
@@ -111,15 +115,38 @@ RSpec.describe Admin::DashboardController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["sections"]).to be_nil
+        expect(response.parsed_body["configuration"]).to be_nil
       end
 
       it "includes a highlights section with kpis" do
         get "/admin/dashboard.json"
 
         expect(response.status).to eq(200)
-        highlights = response.parsed_body["sections"]["highlights"]
-        expect(highlights).to be_present
-        expect(highlights["kpis"]).to be_an(Array)
+        expect(highlights_data["kpis"]).to be_an(Array)
+      end
+
+      it "returns the sections as an ordered array of {id, data}" do
+        SiteSetting.admin_dashboard_sections = "reports|highlights"
+        get "/admin/dashboard.json"
+
+        ids = response.parsed_body["sections"].map { |s| s["id"] }
+        expect(ids).to eq(%w[reports highlights])
+      end
+
+      it "omits hidden sections from the data payload" do
+        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        get "/admin/dashboard.json"
+
+        ids = response.parsed_body["sections"].map { |s| s["id"] }
+        expect(ids).not_to include("traffic", "engagement")
+      end
+
+      it "leaves data null for sections without a builder yet" do
+        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        get "/admin/dashboard.json"
+
+        reports = response.parsed_body["sections"].find { |s| s["id"] == "reports" }
+        expect(reports["data"]).to be_nil
       end
 
       it "returns the documented payload shape for new_signups" do
@@ -127,7 +154,7 @@ RSpec.describe Admin::DashboardController do
           Fabricate(:user, created_at: 5.days.ago)
           get "/admin/dashboard.json", params: { start_date: "2026-03-01", end_date: "2026-04-28" }
 
-          kpis = response.parsed_body["sections"]["highlights"]["kpis"]
+          kpis = highlights_data["kpis"]
           signups = kpis.find { |k| k["type"] == "new_signups" }
 
           expect(signups).to include(
@@ -153,14 +180,14 @@ RSpec.describe Admin::DashboardController do
             }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]["highlights"]["kpis"]).to be_an(Array)
+        expect(highlights_data["kpis"]).to be_an(Array)
       end
 
       it "ignores malformed date params and falls back to defaults" do
         get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]["highlights"]).to be_present
+        expect(highlights_data).to be_present
       end
 
       it "denies non-staff users" do
@@ -170,12 +197,12 @@ RSpec.describe Admin::DashboardController do
         expect(response.status).to eq(404)
       end
 
-      it "allows moderators and returns the highlights payload" do
+      it "allows moderators and returns the sections payload" do
         sign_in(moderator)
         get "/admin/dashboard.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]["highlights"]).to be_present
+        expect(highlights_data).to be_present
       end
 
       it "omits version_check when the flag is on" do
@@ -197,6 +224,177 @@ RSpec.describe Admin::DashboardController do
         expect(response.status).to eq(200)
         expect(response.parsed_body).to have_key("version_check")
       end
+    end
+
+    describe "configuration payload" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        Discourse.cache.clear
+      end
+
+      it "is included for admins and lists every known section with a visibility flag" do
+        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        sign_in(admin)
+        get "/admin/dashboard.json"
+
+        configuration = response.parsed_body["configuration"]
+        expect(configuration).to be_present
+        ids = configuration["sections"].map { |s| s["id"] }
+        expect(ids).to match_array(%w[highlights reports traffic engagement])
+        visible = configuration["sections"].select { |s| s["visible"] }.map { |s| s["id"] }
+        expect(visible).to eq(%w[highlights reports])
+      end
+
+      it "is omitted for moderators" do
+        sign_in(moderator)
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to have_key("configuration")
+      end
+
+      it "is omitted when dashboard_improvements is disabled" do
+        SiteSetting.dashboard_improvements = false
+        sign_in(admin)
+        get "/admin/dashboard.json"
+
+        expect(response.parsed_body).not_to have_key("configuration")
+      end
+    end
+  end
+
+  describe "#update_configuration" do
+    before do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.admin_dashboard_sections = "highlights|reports|traffic|engagement"
+    end
+
+    it "returns 204 and writes the site setting for admins" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [
+              { id: "reports", visible: true },
+              { id: "highlights", visible: true },
+              { id: "traffic", visible: false },
+            ],
+          }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("reports|highlights")
+    end
+
+    it "leaves a change_site_setting UserHistory row attributed to the admin" do
+      sign_in(admin)
+      expect {
+        put "/admin/dashboard/configuration.json",
+            params: {
+              sections: [{ id: "highlights", visible: true }],
+            }
+      }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:change_site_setting],
+          subject: "admin_dashboard_sections",
+        ).count
+      }.by(1)
+
+      entry =
+        UserHistory.where(
+          action: UserHistory.actions[:change_site_setting],
+          subject: "admin_dashboard_sections",
+        ).last
+      expect(entry.acting_user_id).to eq(admin.id)
+      expect(entry.new_value).to eq("highlights")
+    end
+
+    it "does not write a duplicate UserHistory row when the payload is unchanged" do
+      SiteSetting.admin_dashboard_sections = "highlights"
+      sign_in(admin)
+      expect {
+        put "/admin/dashboard/configuration.json",
+            params: {
+              sections: [{ id: "highlights", visible: true }],
+            }
+      }.not_to change {
+        UserHistory.where(
+          action: UserHistory.actions[:change_site_setting],
+          subject: "admin_dashboard_sections",
+        ).count
+      }
+    end
+
+    it "drops unknown section ids silently" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "frobnitz", visible: true }, { id: "highlights", visible: true }],
+          }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("highlights")
+    end
+
+    it "coerces non-boolean visible values" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [
+              { id: "highlights", visible: "true" },
+              { id: "reports", visible: "false" },
+              { id: "engagement", visible: "1" },
+            ],
+          }
+
+      expect(SiteSetting.admin_dashboard_sections).to eq("highlights|engagement")
+    end
+
+    it "treats an empty sections array as hide-everything" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json", params: { sections: [] }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("")
+    end
+
+    it "treats a missing sections key the same as an empty array" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json"
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("")
+    end
+
+    it "returns 404 for moderators" do
+      sign_in(moderator)
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "highlights", visible: true }],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for anonymous users" do
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "highlights", visible: true }],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "reflects the new configuration for moderators on a subsequent GET" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "highlights", visible: true }],
+          }
+
+      sign_in(moderator)
+      get "/admin/dashboard.json"
+
+      ids = response.parsed_body["sections"].map { |s| s["id"] }
+      expect(ids).to eq(["highlights"])
     end
   end
 

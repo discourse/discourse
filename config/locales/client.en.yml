@@ -6836,6 +6836,17 @@ en:
           engagement:
             title: "Engagement"
 
+        configure:
+          button: "Configure"
+          tooltip: "Configure how this dashboard appears for everyone on this site."
+          menu_title: "Configure dashboard"
+          reorder_up: "Move %{label} up"
+          reorder_down: "Move %{label} down"
+          drag_handle: "Drag to reorder %{label}"
+          toggle_visibility: "Show %{label} on dashboard"
+          empty_state_admin: "No sections to show. Open Configure to enable one."
+          empty_state_moderator: "No sections enabled. Ask an admin to enable one."
+
         highlights:
           fetch_error: "Couldn't load highlights. Try refreshing the page."
           kpi:
