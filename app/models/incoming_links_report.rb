@@ -8,7 +8,8 @@ class IncomingLinksReport
                 :end_date,
                 :limit,
                 :category_id,
-                :include_subcategories
+                :include_subcategories,
+                :current_user
 
   def initialize(type)
     @type = type
@@ -42,6 +43,7 @@ class IncomingLinksReport
     report.limit = _opts[:limit].to_i if _opts[:limit]
     report.category_id = _opts[:category_id] if _opts[:category_id]
     report.include_subcategories = _opts[:include_subcategories] if _opts[:include_subcategories]
+    report.current_user = _opts[:current_user] if _opts[:current_user]
 
     public_send(report_method, report)
     report
@@ -194,16 +196,20 @@ class IncomingLinksReport
 
   def self.report_top_referred_topics(report)
     report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.labels.num_clicks")
+    guardian = report.current_user&.guardian
+
     num_clicks =
       link_count_per_topic(
         start_date: report.start_date,
         end_date: report.end_date,
         category_id: report.category_id,
         include_subcategories: report.include_subcategories,
+        guardian: guardian,
       )
     num_clicks = num_clicks.to_a.sort_by { |x| x[1] }.last(report.limit || 10).reverse
     report.data = []
-    topics = Topic.select("id, slug, title").where("id in (?)", num_clicks.map { |z| z[0] })
+    topics = Topic.select(:id, :slug, :title).where(id: num_clicks.map(&:first))
+    topics = topics.merge(Topic.secured(guardian)) if guardian
     if report.category_id
       topics =
         topics.where(
@@ -231,8 +237,18 @@ class IncomingLinksReport
     report.data
   end
 
-  def self.link_count_per_topic(start_date:, end_date:, category_id:, include_subcategories:)
-    public_incoming_links(category_id: category_id, include_subcategories: include_subcategories)
+  def self.link_count_per_topic(
+    start_date:,
+    end_date:,
+    category_id:,
+    include_subcategories:,
+    guardian: nil
+  )
+    public_incoming_links(
+      category_id: category_id,
+      include_subcategories: include_subcategories,
+      guardian: guardian,
+    )
       .where(
         "incoming_links.created_at > ? AND incoming_links.created_at < ? AND topic_id IS NOT NULL",
         start_date,
@@ -242,8 +258,9 @@ class IncomingLinksReport
       .count
   end
 
-  def self.public_incoming_links(category_id: nil, include_subcategories: nil)
+  def self.public_incoming_links(category_id: nil, include_subcategories: nil, guardian: nil)
     links = IncomingLink.joins(post: :topic).where("topics.archetype = ?", Archetype.default)
+    links = links.merge(Topic.secured(guardian)) if guardian
 
     if category_id
       if include_subcategories
