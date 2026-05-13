@@ -77,6 +77,7 @@ async function runWorker() {
           status: "error",
           error: serializeError(result),
         });
+        setTimeout(() => {}, 1000);
         return;
       }
 
