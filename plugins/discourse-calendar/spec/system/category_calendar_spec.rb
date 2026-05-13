@@ -98,7 +98,8 @@ describe "Category calendar" do
 
     it "prefers category defaultView over calendar_category_default_view" do
       SiteSetting.calendar_category_default_view = "month"
-      SiteSetting.calendar_categories = "categoryId=#{category.id};defaultView=week"
+      SiteSetting.calendar_categories =
+        "categoryId=#{category.id};defaultView=week"
 
       category_page.visit(category)
 
