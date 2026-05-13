@@ -8,6 +8,7 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -37,6 +38,20 @@ export default class ThemeCard extends Component {
       this.isUpdating ? "--updating" : "",
       dasherize(this.args.theme.name),
     ].join(" ");
+  }
+
+  get themeCardControls() {
+    return applyValueTransformer("admin-theme-card-show-full-controls", true, {
+      theme: this.args.theme,
+    });
+  }
+
+  get showControls() {
+    return this.themeCardControls !== false;
+  }
+
+  get showFullControls() {
+    return this.themeCardControls === true;
   }
 
   get themeRouteModels() {
@@ -262,98 +277,104 @@ export default class ThemeCard extends Component {
             {{/if}}
           </div>
 
-          <div class="theme-card__controls">
-            <DButton
-              @translatedLabel={{i18n "admin.customize.theme.edit"}}
-              @route="adminCustomizeThemes.show"
-              @routeModels={{this.themeRouteModels}}
-              class="btn-default theme-card__button edit"
-              @preventFocus={{true}}
-            />
+          {{#if this.showControls}}
+            <div class="theme-card__controls">
+              {{#if this.showFullControls}}
+                <DButton
+                  @translatedLabel={{i18n "admin.customize.theme.edit"}}
+                  @route="adminCustomizeThemes.show"
+                  @routeModels={{this.themeRouteModels}}
+                  class="btn-default theme-card__button edit"
+                  @preventFocus={{true}}
+                />
+              {{/if}}
 
-            <div class="theme-card__footer-actions">
-              <DMenu
-                @identifier="theme-card__footer-menu"
-                @triggerClass="theme-card__footer-menu btn-flat"
-                @onRegisterApi={{this.onRegisterApi}}
-                @modalForMobile={{true}}
-                @icon="ellipsis"
-              >
-                <:content>
-                  <DDropdownMenu as |dropdown|>
-                    {{! TODO: Jordan solutions for broken, disabled states }}
-                    <dropdown.item>
-                      <DButton
-                        @action={{this.setDefault}}
-                        @preventFocus={{true}}
-                        @icon={{if @theme.default "star" "far-star"}}
-                        class="theme-card__button set-default"
-                        @translatedLabel={{i18n
-                          (if
-                            @theme.default
-                            "admin.customize.theme.default_theme"
-                            "admin.customize.theme.set_default_theme"
-                          )
-                        }}
-                        @disabled={{@theme.default}}
-                      />
-                    </dropdown.item>
-                    {{#if @theme.isPendingUpdates}}
+              <div class="theme-card__footer-actions">
+                <DMenu
+                  @identifier="theme-card__footer-menu"
+                  @triggerClass="theme-card__footer-menu btn-flat"
+                  @onRegisterApi={{this.onRegisterApi}}
+                  @modalForMobile={{true}}
+                  @icon="ellipsis"
+                >
+                  <:content>
+                    <DDropdownMenu as |dropdown|>
+                      {{! TODO: Jordan solutions for broken, disabled states }}
                       <dropdown.item>
                         <DButton
-                          @action={{this.updateTheme}}
-                          @icon="cloud-arrow-down"
-                          class="theme-card__button update"
+                          @action={{this.setDefault}}
                           @preventFocus={{true}}
+                          @icon={{if @theme.default "star" "far-star"}}
+                          class="theme-card__button set-default"
                           @translatedLabel={{i18n
-                            "admin.customize.theme.update_to_latest"
+                            (if
+                              @theme.default
+                              "admin.customize.theme.default_theme"
+                              "admin.customize.theme.set_default_theme"
+                            )
                           }}
+                          @disabled={{@theme.default}}
                         />
                       </dropdown.item>
-                    {{/if}}
-                    <dropdown.item>
-                      <DButton
-                        @action={{this.toggleUserSelectable}}
-                        @preventFocus={{true}}
-                        @icon={{if
-                          @theme.user_selectable
-                          "user-xmark"
-                          "user-check"
-                        }}
-                        class="theme-card__button set-selectable"
-                        @translatedLabel={{i18n
-                          (if
-                            @theme.user_selectable
-                            "admin.customize.theme.user_selectable_unavailable_button_label"
-                            "admin.customize.theme.user_selectable_button_label"
-                          )
-                        }}
-                      />
-                    </dropdown.item>
-                    <dropdown.item>
-                      <a
-                        href={{this.themePreviewUrl}}
-                        title={{i18n "admin.customize.explain_preview"}}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                        class="btn btn-transparent theme-card__button preview"
-                      >{{dIcon "eye"}}
-                        {{i18n "admin.customize.theme.preview"}}</a>
-                    </dropdown.item>
-                    <dropdown.item>
-                      <DButton
-                        @action={{this.destroyTheme}}
-                        @label="admin.customize.delete"
-                        @icon="trash-can"
-                        @disabled={{this.destroyDisabled}}
-                        class="theme-card__button btn-transparent --danger delete"
-                      />
-                    </dropdown.item>
-                  </DDropdownMenu>
-                </:content>
-              </DMenu>
+                      {{#if this.showFullControls}}
+                        {{#if @theme.isPendingUpdates}}
+                          <dropdown.item>
+                            <DButton
+                              @action={{this.updateTheme}}
+                              @icon="cloud-arrow-down"
+                              class="theme-card__button update"
+                              @preventFocus={{true}}
+                              @translatedLabel={{i18n
+                                "admin.customize.theme.update_to_latest"
+                              }}
+                            />
+                          </dropdown.item>
+                        {{/if}}
+                        <dropdown.item>
+                          <DButton
+                            @action={{this.toggleUserSelectable}}
+                            @preventFocus={{true}}
+                            @icon={{if
+                              @theme.user_selectable
+                              "user-xmark"
+                              "user-check"
+                            }}
+                            class="theme-card__button set-selectable"
+                            @translatedLabel={{i18n
+                              (if
+                                @theme.user_selectable
+                                "admin.customize.theme.user_selectable_unavailable_button_label"
+                                "admin.customize.theme.user_selectable_button_label"
+                              )
+                            }}
+                          />
+                        </dropdown.item>
+                        <dropdown.item>
+                          <a
+                            href={{this.themePreviewUrl}}
+                            title={{i18n "admin.customize.explain_preview"}}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            class="btn btn-transparent theme-card__button preview"
+                          >{{dIcon "eye"}}
+                            {{i18n "admin.customize.theme.preview"}}</a>
+                        </dropdown.item>
+                        <dropdown.item>
+                          <DButton
+                            @action={{this.destroyTheme}}
+                            @label="admin.customize.delete"
+                            @icon="trash-can"
+                            @disabled={{this.destroyDisabled}}
+                            class="theme-card__button btn-transparent --danger delete"
+                          />
+                        </dropdown.item>
+                      {{/if}}
+                    </DDropdownMenu>
+                  </:content>
+                </DMenu>
+              </div>
             </div>
-          </div>
+          {{/if}}
         </div>
       </:content>
     </AdminConfigAreaCard>

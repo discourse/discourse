@@ -16,10 +16,7 @@ module PageObjects
       end
 
       def first_selectable_theme_name
-        find(
-          "#{CARD_SELECTOR}:not(.--active) #{NAME_SELECTOR}",
-          match: :first,
-        ).text
+        find("#{CARD_SELECTOR}:not(.--active) #{NAME_SELECTOR}", match: :first).text
       end
 
       def select_theme(name)
