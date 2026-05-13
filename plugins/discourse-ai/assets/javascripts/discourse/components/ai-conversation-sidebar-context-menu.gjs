@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 
 export default class AiConversationSidebarContextMenu extends Component {
   @tracked isTogglingStarred = false;
@@ -50,7 +50,7 @@ export default class AiConversationSidebarContextMenu extends Component {
   }
 
   <template>
-    <DropdownMenu class="ai-conversation-sidebar-link-menu" as |dropdown|>
+    <DDropdownMenu class="ai-conversation-sidebar-link-menu" as |dropdown|>
       {{#if this.canStarConversations}}
         <dropdown.item>
           <DButton
@@ -63,6 +63,6 @@ export default class AiConversationSidebarContextMenu extends Component {
           />
         </dropdown.item>
       {{/if}}
-    </DropdownMenu>
+    </DDropdownMenu>
   </template>
 }
