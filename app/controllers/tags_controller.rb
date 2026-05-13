@@ -544,8 +544,8 @@ class TagsController < ::ApplicationController
     return false if request.format.json?
     # intersection routes use tag_name, not tag_slug/tag_id - don't redirect
     return false if params[:additional_tag_names].present?
-    # don't redirect if we found the tag by name (numeric tag name on legacy route)
-    return false if @tag_found_by_name
+    # numeric-name fallback should only suppress redirects on legacy routes without a slug
+    return false if @tag_found_by_name && params[:tag_slug].blank?
 
     if params[:tag_id].present?
       # new format - redirect if slug doesn't match
