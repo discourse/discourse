@@ -80,6 +80,8 @@ export default class AiDefaultLlmSelector extends Component {
           message: i18n("discourse_ai.llm_selector.saved"),
         },
       });
+
+      await this.args.onChange?.();
     } catch (error) {
       this.selectedValue = previousValue;
       popupAjaxError(error);

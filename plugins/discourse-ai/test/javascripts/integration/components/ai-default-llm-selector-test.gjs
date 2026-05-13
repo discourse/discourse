@@ -136,4 +136,26 @@ module("Integration | Component | ai-default-llm-selector", function (hooks) {
 
     assert.strictEqual(savedValue, "1", "saves model ID to backend");
   });
+
+  test("invokes @onChange after a successful save", async function (assert) {
+    pretender.put("/admin/site_settings/ai_default_llm_model", () => {
+      return response({});
+    });
+
+    let onChangeCalls = 0;
+    const onChange = () => {
+      onChangeCalls += 1;
+    };
+
+    await render(
+      <template><AiDefaultLlmSelector @onChange={{onChange}} /></template>
+    );
+
+    const selector = selectKit(".ai-configure-default-llm__setting .combo-box");
+    await selector.expand();
+    await selector.selectRowByValue("1");
+    await settled();
+
+    assert.strictEqual(onChangeCalls, 1, "calls @onChange once after save");
+  });
 });
