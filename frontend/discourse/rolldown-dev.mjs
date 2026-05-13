@@ -11,10 +11,9 @@ import { fileURLToPath } from "url";
 const ansiConverter = new AnsiToHtml({ newline: true, escapeXML: true });
 
 function ansiToHtml(str) {
-  if (str == null) {
-    return null;
+  if (str != null) {
+    return ansiConverter.toHtml(str);
   }
-  return ansiConverter.toHtml(String(str));
 }
 
 const CHILD_ENV_FLAG = "DISCOURSE_ROLLDOWN_DEV_CHILD";
@@ -188,7 +187,7 @@ async function runSupervisor() {
 // change, or `false` if `isCancelled()` becomes truthy while we're waiting.
 // Uses chokidar so this works uniformly on macOS, Linux, and Windows.
 async function waitForFileChange(dir, isCancelled) {
-  return await new Promise((resolve) => {
+  return new Promise((resolve) => {
     const watcher = chokidar.watch(dir, {
       ignoreInitial: true,
       ignored: (p) => p.includes("/node_modules/"),
