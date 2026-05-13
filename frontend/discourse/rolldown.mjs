@@ -3,6 +3,7 @@
 
 import { spawn } from "child_process";
 import chokidar from "chokidar";
+import { once } from "events";
 import * as fs from "fs";
 
 const WORKER_PATH = "./rolldown-worker.mjs";
@@ -32,30 +33,20 @@ function readPendingFiles() {
   }
 }
 
-// Watches `dir` recursively for any change. Resolves to `true` on the first
-// change, or `false` if `signal` is aborted while we're waiting.
-// Uses chokidar so this works uniformly on macOS, Linux, and Windows.
+// Observes WATCH_DIR recursively for any change.
 async function waitForFileChange() {
-  if (shutdown.signal.aborted) {
-    return false;
-  }
-  return new Promise((resolve) => {
-    const watcher = chokidar.watch(WATCH_DIR, {
-      ignoreInitial: true,
-      ignored: (p) => p.includes("/node_modules/"),
-    });
-
-    const done = (value) => {
-      shutdown.signal.removeEventListener("abort", onAbort);
-      watcher.close();
-      resolve(value);
-    };
-    const onAbort = () => done(false);
-
-    shutdown.signal.addEventListener("abort", onAbort);
-    watcher.on("all", () => done(true));
-    watcher.on("error", () => done(true));
+  const watcher = chokidar.watch(WATCH_DIR, {
+    ignoreInitial: true,
+    ignored: (p) => p.includes("/node_modules/"),
   });
+  try {
+    await once(watcher, "all", { signal: shutdown.signal });
+    return true;
+  } catch {
+    return !shutdown.signal.aborted;
+  } finally {
+    await watcher.close();
+  }
 }
 
 while (!shutdown.signal.aborted) {
@@ -87,7 +78,7 @@ while (!shutdown.signal.aborted) {
       `\n[rolldown] Worker ${reason} while ${what}. Waiting for a file change in ${WATCH_DIR} before restarting...`
     );
     const changed = await waitForFileChange();
-    if (!changed || shutdown.signal.aborted) {
+    if (!changed) {
       process.exit(code ?? 1);
     }
     console.error("[rolldown] File change detected. Restarting...");
