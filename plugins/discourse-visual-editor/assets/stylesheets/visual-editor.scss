@@ -1126,6 +1126,24 @@ body.visual-editor-active {
       }
     }
 
+    /* Out-of-bounds slot — placement references column / row lines
+       past the parent grid's `columns` × `rows`. CSS Grid pushes them
+       into auto-sized implicit tracks; the styling here flags them so
+       authors can match the inspector's warning banner to a specific
+       block. Same danger treatment as `--overlapping` — the badge
+       text ("Out of bounds" vs "Overlap") carries the differentiation. */
+
+    &.--out-of-bounds {
+      border-color: var(--danger);
+      border-style: solid;
+      background: rgb(220 53 69 / 0.18);
+      box-shadow: 0 0 0 1px var(--danger);
+
+      &.--selected {
+        border-color: var(--danger);
+      }
+    }
+
     /* The inner block's chrome inside a slot must NOT add its own
        decoration — the slot wrapper IS the visible cell outline.
        Hide border / background / handle so the only visible chrome
@@ -1393,6 +1411,40 @@ body.visual-editor-active
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+  }
+
+  /* Out-of-bounds warning banner — surfaced when the layout loaded
+     with slots whose explicit column/row references fall outside the
+     declared `columns` × `rows`. Danger palette to match the
+     overlap-warning treatment elsewhere; the embedded button routes
+     through `clampGridSlotPlacements` to fix in one click. */
+
+  &__warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--danger);
+    border-radius: 4px;
+    background: rgb(220 53 69 / 0.08);
+
+    .d-icon {
+      color: var(--danger);
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+  }
+
+  &__warning-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: var(--font-down-1);
+
+    p {
+      margin: 0;
+      color: var(--primary);
+    }
   }
 
   &__legend {

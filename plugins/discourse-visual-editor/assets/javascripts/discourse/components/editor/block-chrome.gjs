@@ -329,6 +329,48 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * Whether this slot's explicit placement references column / row
+   * lines outside the parent grid's declared `columns` × `rows`.
+   * Out-of-bounds slots render in implicit (auto-sized) tracks past
+   * the grid's edge, which usually looks wrong — flag them so the
+   * author can see which block matches the inspector's warning
+   * banner. Same danger treatment as the overlap state.
+   *
+   * Auto-placed slots are excluded.
+   *
+   * @returns {boolean}
+   */
+  get isOutOfBounds() {
+    if (!this.isTransparent || this.args.blockName !== "ve:slot") {
+      return false;
+    }
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.visualEditor.structuralVersion;
+    const entry = this.visualEditor._findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
+    if (!entry?.args) {
+      return false;
+    }
+    const grid = this.visualEditor._findEntryParent(this.args.blockKey);
+    if (!grid) {
+      return false;
+    }
+    const maxColumns = Number(grid.args?.columns ?? 6);
+    const maxRows = Number(grid.args?.rows ?? 2);
+    const placement = parseSlotPlacement(entry.args);
+    const colExceeds =
+      placement.column.start != null &&
+      placement.column.end != null &&
+      placement.column.end > maxColumns + 1;
+    const rowExceeds =
+      placement.row.start != null &&
+      placement.row.end != null &&
+      placement.row.end > maxRows + 1;
+    return colExceeds || rowExceeds;
+  }
+
+  /**
    * Whether the block INSIDE this slot is the active selection. Drives
    * the slot wrapper's `--selected` styling (solid border + visible
    * resize handle). Authors click the heading inside a cell; the cell
@@ -629,6 +671,7 @@ export default class BlockChrome extends Component {
           "visual-editor-transparent-slot"
           (if this.isInnerSelected "--selected")
           (if this.hasGridOverlap "--overlapping")
+          (if this.isOutOfBounds "--out-of-bounds")
         }}
         style={{this.transparentWrapperStyle}}
         data-ve-block-name={{@blockName}}
@@ -639,7 +682,15 @@ export default class BlockChrome extends Component {
         {{on "click" this.onClick}}
       >
         {{#if this.visualEditor.isActive}}
-          {{#if this.hasGridOverlap}}
+          {{#if this.isOutOfBounds}}
+            <span
+              class="visual-editor-block-chrome__overlap-badge"
+              title={{i18n "visual_editor.canvas.out_of_bounds_warning"}}
+            >
+              {{dIcon "triangle-exclamation"}}
+              <span>{{i18n "visual_editor.canvas.out_of_bounds_label"}}</span>
+            </span>
+          {{else if this.hasGridOverlap}}
             <span
               class="visual-editor-block-chrome__overlap-badge"
               title={{i18n "visual_editor.canvas.overlap_warning"}}

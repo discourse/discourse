@@ -40,6 +40,36 @@ const GAP_STEP = 0.25;
 
 export default class InspectorLayoutForm extends Component {
   @service visualEditor;
+  @service dialog;
+
+  /**
+   * Slot keys whose placements fall OUTSIDE the current grid's
+   * `columns` × `rows` bounds. Surfaces as a warning inside the form
+   * so authors can spot a layout that loaded with bad data (e.g.
+   * saved at 6 columns, schema later reduced to 3). The user fixes
+   * by either bumping columns/rows back up, or by clicking the
+   * "clamp" button which routes through the service helper.
+   *
+   * @returns {Array<{slotKey: string, column: string, row: string}>}
+   */
+  get outOfBoundsSlots() {
+    if (!this.isGrid) {
+      return [];
+    }
+    const data = this.visualEditor.selectedBlockData;
+    if (!data?.key) {
+      return [];
+    }
+    return this.visualEditor.outOfBoundsSlotsIn(
+      data.key,
+      this.columns,
+      this.rows
+    );
+  }
+
+  get hasOutOfBoundsSlots() {
+    return this.outOfBoundsSlots.length > 0;
+  }
 
   get args_() {
     return this.visualEditor.selectedBlockData?.args ?? {};
@@ -98,13 +128,82 @@ export default class InspectorLayoutForm extends Component {
   @action
   bumpColumns(delta) {
     const next = clamp(this.columns + delta, COLUMNS_MIN, COLUMNS_MAX);
-    this.set("columns", next);
+    this._applyDimensionChange({ columns: next, rows: this.rows });
   }
 
   @action
   bumpRows(delta) {
     const next = clamp(this.rows + delta, ROWS_MIN, ROWS_MAX);
-    this.set("rows", next);
+    this._applyDimensionChange({ columns: this.columns, rows: next });
+  }
+
+  /**
+   * Shared path for `bumpColumns` / `bumpRows`. When the new bounds
+   * would push existing slots out of range, prompt the user before
+   * shrinking. On confirm: clamp slot placements first (one structural
+   * undo entry), then write the new dimension arg (a second entry).
+   * On cancel: do nothing.
+   *
+   * @param {{columns: number, rows: number}} next
+   */
+  _applyDimensionChange({ columns, rows }) {
+    const data = this.visualEditor.selectedBlockData;
+    if (!data?.key) {
+      return;
+    }
+    const offenders = this.visualEditor.outOfBoundsSlotsIn(
+      data.key,
+      columns,
+      rows
+    );
+    if (offenders.length === 0) {
+      this._writeDimensions({ columns, rows });
+      return;
+    }
+    this.dialog.confirm({
+      message: i18n("visual_editor.inspector.layout.clamp_slots_confirm", {
+        count: offenders.length,
+      }),
+      confirmButtonLabel:
+        "visual_editor.inspector.layout.clamp_slots_confirm_action",
+      didConfirm: () => {
+        this.visualEditor.clampGridSlotPlacements({
+          gridKey: data.key,
+          maxColumns: columns,
+          maxRows: rows,
+        });
+        this._writeDimensions({ columns, rows });
+      },
+    });
+  }
+
+  _writeDimensions({ columns, rows }) {
+    if (columns !== this.columns) {
+      this.set("columns", columns);
+    }
+    if (rows !== this.rows) {
+      this.set("rows", rows);
+    }
+  }
+
+  /**
+   * Clamps the already-out-of-bounds slot placements on an existing
+   * layout. Triggered by the warning-banner button surfaced when the
+   * layout loaded with bad data (e.g. someone edited the JSON by hand
+   * or reduced columns in a previous session before the confirm flow
+   * was wired up).
+   */
+  @action
+  fixOutOfBoundsSlots() {
+    const data = this.visualEditor.selectedBlockData;
+    if (!data?.key) {
+      return;
+    }
+    this.visualEditor.clampGridSlotPlacements({
+      gridKey: data.key,
+      maxColumns: this.columns,
+      maxRows: this.rows,
+    });
   }
 
   @action
@@ -201,6 +300,30 @@ export default class InspectorLayoutForm extends Component {
             @onBump={{this.bumpRows}}
           />
         </div>
+
+        {{! Loaded-with-bad-data warning: some slots reference cells
+          outside the current grid. We can't auto-clamp on load (the
+          user might have just opened a saved layout and not yet
+          touched anything), so show a banner with a manual "Fix"
+          action that routes through the same clamp helper. }}
+        {{#if this.hasOutOfBoundsSlots}}
+          <div class="visual-editor-layout-form__warning" role="alert">
+            {{dIcon "triangle-exclamation"}}
+            <div class="visual-editor-layout-form__warning-body">
+              <p>{{i18n
+                  "visual_editor.inspector.layout.out_of_bounds_warning"
+                  count=this.outOfBoundsSlots.length
+                }}</p>
+              <button
+                type="button"
+                class="btn btn-small btn-danger"
+                {{on "click" this.fixOutOfBoundsSlots}}
+              >
+                {{i18n "visual_editor.inspector.layout.out_of_bounds_fix"}}
+              </button>
+            </div>
+          </div>
+        {{/if}}
       {{/if}}
 
       <div class="visual-editor-layout-form__field">

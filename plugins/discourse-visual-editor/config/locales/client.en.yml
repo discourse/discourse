@@ -107,6 +107,14 @@ en:
             hero_plus_three: "Hero + 3"
             sidebar_main: "Sidebar + main"
             three_tile: "3 tiles"
+          clamp_slots_confirm:
+            one: "Reducing this dimension will move %{count} block to fit the new grid. Continue?"
+            other: "Reducing this dimension will move %{count} blocks to fit the new grid. Continue?"
+          clamp_slots_confirm_action: "Reduce and fit"
+          out_of_bounds_warning:
+            one: "%{count} block sits outside this grid's cells and won't render correctly. Increase columns/rows to include it, or click below to snap it into the current bounds."
+            other: "%{count} blocks sit outside this grid's cells and won't render correctly. Increase columns/rows to include them, or click below to snap them into the current bounds."
+          out_of_bounds_fix: "Snap blocks into bounds"
         conditions:
           empty_hint: "Pick a condition to control when this block renders."
           clear_all: "Remove all conditions"
@@ -207,6 +215,8 @@ en:
         resize_handle_title: "Drag to resize across cells"
         overlap_label: "Overlap"
         overlap_warning: "This block's cells overlap another block. CSS Grid will render them stacked — resize back if that wasn't intentional."
+        out_of_bounds_label: "Out of bounds"
+        out_of_bounds_warning: "This block references cells outside the grid's columns or rows. CSS Grid is rendering it in implicit tracks past the grid edge."
         grid_overlay:
           add_at_cell: "Add a block to this cell"
           pick_block: "Pick a block"
