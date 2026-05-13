@@ -99,7 +99,8 @@ body.visual-editor-active {
     > *:not(
         .visual-editor-block-handle,
         .visual-editor-block-toolbar,
-        .visual-editor-drop-zone
+        .visual-editor-drop-zone,
+        .visual-editor-block-chrome__resize-handle
       ) {
       pointer-events: none;
     }
@@ -1004,6 +1005,461 @@ body.visual-editor-active {
 .visual-editor-inspector__body {
   display: flex;
   flex-direction: column;
+}
+
+/* Transparent slot wrappers (Phase 7s). The chrome's transparent
+   branch renders a positioned wrapper around the inner block so the
+   wrapper becomes the direct grid item — its `grid-column` /
+   `grid-row` styles (read from the slot's args) are honoured by
+   CSS Grid regardless of how many Glimmer component boundaries sit
+   inside it. No visible decoration: the wrapper exists purely for
+   layout. */
+
+.visual-editor-transparent-slot {
+  min-width: 0;
+  min-height: 0;
+  transition:
+    grid-column 140ms ease-out,
+    grid-row 140ms ease-out;
+}
+
+/* When a free-grid layout is selected, tone down the inner block
+   chromes so the grid overlay's tile / `+` handles are the
+   dominant authoring surface. Without this, every nested callout /
+   heading shows its own orange dotted chrome which adds visual
+   noise. */
+
+body.visual-editor-active
+  .visual-editor-block-chrome.--selected.--container
+  .visual-editor-transparent-slot
+  .visual-editor-block-chrome {
+  border-style: solid;
+  border-color: var(--primary-low);
+  background: transparent;
+
+  .visual-editor-block-handle {
+    display: none;
+  }
+}
+
+/* Grid editor affordances (cells / tiles / ghost). Rendered INTO the
+   selected free-grid layout's grid `<div>` via `{{#in-element}}` so
+   they share the layout's CSS Grid context — guaranteeing alignment
+   without a parallel grid container.
+
+   The marker `<span>` is a zero-sized sibling of the layout div that
+   only exists to give us a DOM hook from which to find the grid div
+   on insert. */
+
+.visual-editor-grid-edit-marker {
+  display: none;
+}
+
+/* Empty cell placeholder — sits at an unoccupied (column, row) in the
+   layout's grid via inline `grid-column` / `grid-row`. Uses the same
+   amber chrome tokens as the rest of the editor so the cells read as
+   part of the editor's visual language (the chrome of an occupied
+   block IS what the filled cell looks like — the placeholder uses a
+   dashed version of the same border). */
+
+.visual-editor-grid-cell {
+  position: relative;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--visual-editor-block-color);
+  border-radius: 3px;
+  background: rgb(217 119 6 / 0.04);
+  min-height: 40px;
+  transition:
+    background 80ms ease-out,
+    border-color 80ms ease-out;
+
+  &:hover {
+    background: rgb(217 119 6 / 0.1);
+    border-color: var(--visual-editor-block-hover-color);
+  }
+
+  /* Cell currently being hovered during a drag. Brighter than `:hover`
+     so the drop target reads unambiguously even on dense pages. */
+
+  &.--drag-target {
+    background: rgb(217 119 6 / 0.18);
+    border-style: solid;
+    border-color: var(--visual-editor-block-hover-color);
+  }
+
+  &__plus {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid var(--visual-editor-block-color);
+    background: var(--secondary);
+    color: var(--visual-editor-block-color);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.85;
+    transition:
+      opacity 80ms ease-out,
+      background 80ms ease-out,
+      color 80ms ease-out,
+      border-color 80ms ease-out;
+
+    &:hover {
+      opacity: 1;
+      background: var(--visual-editor-block-color);
+      color: white;
+      border-color: var(--visual-editor-block-hover-color);
+    }
+
+    .d-icon {
+      font-size: 0.75rem;
+    }
+  }
+
+  &__picker {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1500;
+    width: 240px;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: 6px;
+    box-shadow: var(--shadow-card);
+    padding: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  &__picker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    padding: 0.1rem 0.2rem;
+  }
+
+  &__picker-close {
+    background: transparent;
+    border: none;
+    padding: 0.15rem;
+    color: var(--primary-medium);
+    cursor: pointer;
+    border-radius: 3px;
+
+    &:hover {
+      color: var(--primary);
+      background: var(--primary-very-low);
+    }
+  }
+
+  &__picker-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.2rem;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  &__picker-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.45rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: var(--font-down-2);
+    text-align: left;
+
+    &:hover {
+      background: var(--primary-very-low);
+      border-color: var(--primary-low-mid);
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+      font-size: 0.8rem;
+    }
+  }
+}
+
+/* Resize handle — rendered on the chrome of a selected block whose
+   parent is a `ve:slot` (i.e. inside a free-grid layout). Pointer-drag
+   expands / shrinks the slot's `column` / `row` span. Diagonal-stripe
+   square in the bottom-right corner, cssgridgenerator convention. Only
+   the handle itself catches pointer events so the rest of the chrome
+   continues to receive clicks normally for selection. */
+
+.visual-editor-block-chrome__resize-handle {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  pointer-events: auto;
+  z-index: 3;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    transparent 50%,
+    var(--visual-editor-block-hover-color) 50%,
+    var(--visual-editor-block-hover-color) 100%
+  );
+  border-bottom-right-radius: 3px;
+  opacity: 0.85;
+  transition: opacity 80ms ease-out;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+/* Drag ghost — invisible until either a cell drop target marks it
+   visible (`--visible`) or the resize modifier writes a grid placement
+   onto it directly. Lives in the same grid as the cells, so its
+   `grid-column` / `grid-row` transitions glide between cells during a
+   drag rather than snapping. Amber palette to match the chrome
+   visuals — the ghost reads as a future block, not a foreign element. */
+
+.visual-editor-grid-ghost {
+  pointer-events: none;
+  border: 2px dashed var(--visual-editor-block-hover-color);
+  background: rgb(217 119 6 / 0.1);
+  border-radius: 3px;
+  opacity: 0;
+  z-index: 3;
+  transition:
+    grid-column 120ms ease-out,
+    grid-row 120ms ease-out;
+
+  &.--visible {
+    opacity: 1;
+  }
+}
+
+/* Custom inspector form for the layout block (Phase 7s.4). Replaces
+   the generic FormKit fields with mode-specific controls: segmented
+   mode picker, integer steppers (columns / rows), gap slider with
+   live value, and an advanced disclosure for column / row templates. */
+
+.visual-editor-layout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  font-size: var(--font-down-1);
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__legend {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  &__segmented {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 1px;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    padding: 2px;
+  }
+
+  &__segment {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    background: transparent;
+    border: none;
+    padding: 0.45rem 0.5rem;
+    font-size: var(--font-down-2);
+    font-weight: 500;
+    color: var(--primary-medium);
+    border-radius: 3px;
+    cursor: pointer;
+
+    .d-icon {
+      font-size: 0.85rem;
+    }
+
+    &:hover:not(.--active) {
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--secondary);
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+  }
+
+  &__pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  &__stepper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__stepper-controls {
+    display: inline-flex;
+    align-items: center;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    overflow: hidden;
+    min-height: 30px;
+  }
+
+  &__stepper-btn {
+    background: transparent;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    color: var(--primary);
+    cursor: pointer;
+
+    &:hover:not([disabled]) {
+      background: var(--primary-low);
+    }
+
+    &[disabled] {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  &__stepper-value {
+    flex: 1 1 auto;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    padding: 0 0.25rem;
+  }
+
+  &__slider-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    input[type="range"] {
+      flex: 1 1 auto;
+      margin: 0;
+    }
+  }
+
+  &__slider-value {
+    min-width: 3rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  &__advanced {
+    summary {
+      cursor: pointer;
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.25rem 0;
+      list-style: none;
+
+      &::before {
+        content: "▸ ";
+      }
+    }
+
+    &[open] summary::before {
+      content: "▾ ";
+    }
+  }
+
+  &__template-row {
+    display: flex;
+    gap: 0.25rem;
+
+    input {
+      flex: 1 1 auto;
+      margin: 0;
+    }
+  }
+
+  /* Template presets (Phase 7s.8). Small chips with a miniature SVG
+     preview of each layout's grid + tile arrangement. Clicking a
+     chip applies the template via the service's `applyGridTemplate`. */
+
+  &__templates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem;
+  }
+
+  &__template-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.45rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: var(--font-down-2);
+    text-align: center;
+
+    &:hover {
+      background: var(--primary-very-low);
+      border-color: var(--primary-low-mid);
+    }
+  }
+
+  &__template-preview {
+    width: 100%;
+    height: 36px;
+  }
+
+  &__preview {
+    width: 100%;
+    height: 100%;
+    background: var(--primary-very-low);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  &__preview-tile {
+    background: var(--tertiary);
+    border-radius: 1px;
+    min-width: 4px;
+    min-height: 4px;
+  }
 }
 
 .visual-editor-inspector-raw-json {

@@ -10,6 +10,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ConditionsTree from "./conditions-tree";
 import InspectorForm from "./inspector-form";
+import InspectorLayoutForm from "./inspector-layout-form";
 import InspectorRawJson from "./inspector-raw-json";
 
 /**
@@ -50,6 +51,19 @@ export default class InspectorPanel extends Component {
     }
     const liveArgs = this.data?.args;
     return !!(liveArgs && Object.keys(liveArgs).length > 0);
+  }
+
+  /**
+   * Whether the selected block deserves a bespoke args form instead of
+   * the generic FormKit one. The `ve:layout` block gets a custom form
+   * (Phase 7s.4) that surfaces mode-specific controls — segmented
+   * mode picker, columns/rows steppers, gap slider, template
+   * disclosure. Other blocks fall through to the generic form.
+   *
+   * @returns {boolean}
+   */
+  get hasCustomLayoutForm() {
+    return this.data?.name === "ve:layout";
   }
 
   /**
@@ -180,7 +194,9 @@ export default class InspectorPanel extends Component {
 
       <div class="visual-editor-inspector__body">
         {{#if (this.isTabActive "args")}}
-          {{#if this.hasArgsSchema}}
+          {{#if this.hasCustomLayoutForm}}
+            <InspectorLayoutForm />
+          {{else if this.hasArgsSchema}}
             <InspectorForm />
           {{else}}
             <div class="panel-empty">

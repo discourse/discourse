@@ -27,6 +27,7 @@ import {
   insertEntryAt,
   moveEntry,
   removeEntry,
+  replaceEntryArgs,
   replaceEntryConditions,
   replaceEntryInPlace,
   serializeEntryForSave,
@@ -1965,12 +1966,312 @@ export default class VisualEditorService extends Service {
       }
       // Mint a fresh entry. Spread the defaults so future mutations don't
       // bleed back into the palette's `previewArgs` object.
-      const entry = { block: blockName, args: { ...defaultArgs } };
+      const fresh = { block: blockName, args: { ...defaultArgs } };
+      // Auto-wrap in a `ve:slot` when the destination parent is a
+      // free-grid `ve:layout`. The slot carries CSS Grid placement so
+      // the actual content block stays unaware it's in a grid. See
+      // Phase 7s.3.
+      const entry = this._wrapForGridIfNeeded({
+        entry: fresh,
+        layout,
+        targetKey,
+        position,
+      });
       const insertion = insertEntryAt(layout, targetKey, entry, position);
       if (!insertion.changed) {
         return false;
       }
       this._publishStructuralChange(targetOutletName, insertion.layout);
+      // Auto-select the freshly inserted block so the inspector immediately
+      // shows its form (and, for a free-grid `ve:layout`, the grid overlay
+      // mounts without the author having to click first). `_publishStructuralChange`
+      // has just run `assignStableKeys`, so `fresh.__stableKey` is set on
+      // the original entry reference. We select the inner block (`fresh`)
+      // rather than the slot wrapper — slots are internal plumbing.
+      this._selectInsertedEntry(fresh);
+      return true;
+    });
+  }
+
+  /**
+   * Looks up the composite key of a freshly inserted entry (after
+   * `_publishStructuralChange` has assigned its `__stableKey`) and routes
+   * through `_restoreSelection` so the editor's selection state — and the
+   * inspector — points at it. No-ops if the entry isn't yet resolvable
+   * (paranoia: the assign should always succeed for a just-inserted entry).
+   *
+   * @param {Object} entry - The original entry reference passed into the
+   *   layout; will have its `__stableKey` set by the publish step.
+   */
+  _selectInsertedEntry(entry) {
+    const key = entryKey(entry);
+    if (!key) {
+      return;
+    }
+    this._restoreSelection(key);
+  }
+
+  /**
+   * Inserts a fresh content block at a specific cell of a free-grid
+   * layout. Wraps the content in a `ve:slot` with the chosen
+   * `column` / `row` so CSS Grid places it at the right cell —
+   * regardless of insertion order.
+   *
+   * Used by the grid overlay's `+` placeholders (Phase 7s.5): the
+   * user clicks an empty cell, picks a block type, and the new tile
+   * lands at exactly that cell. The slot's column/row are written as
+   * single-line shorthand (`"3"`) so the resulting span is 1×1.
+   *
+   * @param {{
+   *   gridKey: string,
+   *   blockName: string,
+   *   defaultArgs?: Object,
+   *   column: number,
+   *   row: number,
+   * }} args
+   * @returns {boolean}
+   */
+  /**
+   * Updates the `column` / `row` placement of a slot inside a free-grid
+   * layout. Used by the grid overlay's pointer-drag handlers
+   * (Phase 7s.6) to commit a new placement on drop.
+   *
+   * Routes through `_recordStructural` so the placement change rides
+   * the same Cmd+Z stack as inserts and removes — undoing a drag
+   * reverts the tile to its previous cell.
+   *
+   * @param {{slotKey: string, column: string, row: string}} args
+   * @returns {boolean}
+   */
+  @action
+  setSlotPlacement({ slotKey, column, row }) {
+    const located = this._findEntryAndOutletSync(slotKey);
+    if (!located || !this._isSlotEntry(located.entry)) {
+      return false;
+    }
+    return this._recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = replaceEntryArgs(layout, slotKey, (current) => ({
+        ...current,
+        column,
+        row,
+      }));
+      if (!result.changed) {
+        return false;
+      }
+      this._publishStructuralChange(located.outletName, result.layout);
+      return true;
+    });
+  }
+
+  /**
+   * Locates the immediate parent entry of `blockKey` by walking the
+   * resolved layout. Returns `null` when the key isn't found or when
+   * the entry sits at the outlet root (no block-level parent).
+   *
+   * Used by chrome decoration to determine context — e.g. showing a
+   * resize handle only when the block's parent is a `ve:slot` (which
+   * means we're inside a free-grid layout).
+   *
+   * @param {string} blockKey
+   * @returns {Object|null}
+   */
+  _findEntryParent(blockKey) {
+    const located = this._findEntryAndOutletSync(blockKey);
+    if (!located) {
+      return null;
+    }
+    const layout = this.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return null;
+    }
+    const path = findAncestryPath(layout, blockKey);
+    if (!path || path.length < 2) {
+      return null;
+    }
+    return path[path.length - 2];
+  }
+
+  /**
+   * Returns `true` when `ancestorKey` appears in `descendantKey`'s
+   * ancestry path. Used by chrome decoration to keep the grid overlay
+   * mounted while the user is editing one of the layout's children
+   * (the layout itself stops being `selectedBlockKey` once the user
+   * clicks into a cell, but the overlay should stay visible until they
+   * navigate fully away).
+   *
+   * @param {string} ancestorKey
+   * @param {string} descendantKey
+   * @returns {boolean}
+   */
+  _isAncestorOf(ancestorKey, descendantKey) {
+    if (!ancestorKey || !descendantKey || ancestorKey === descendantKey) {
+      return false;
+    }
+    const located = this._findEntryAndOutletSync(descendantKey);
+    if (!located) {
+      return false;
+    }
+    const layout = this.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return false;
+    }
+    const path = findAncestryPath(layout, descendantKey);
+    if (!path) {
+      return false;
+    }
+    return path.some((entry) => entryKey(entry) === ancestorKey);
+  }
+
+  /**
+   * Moves an existing block to a specific cell of a free-grid layout.
+   *
+   * Three cases:
+   *  - Source is already a `ve:slot` directly inside the target grid →
+   *    update its `column` / `row` via `setSlotPlacement`. No DOM
+   *    remount of the slot's inner content.
+   *  - Source is the inner content of a slot directly inside the target
+   *    grid → update that slot's placement (same effect).
+   *  - Cross-container source → fall back to standard `moveBlock`
+   *    (which auto-wraps into a fresh `ve:slot` with `auto / auto`
+   *    placement). The user lands in the grid; placing at the exact
+   *    target cell would require a separate follow-up move and is
+   *    deferred.
+   *
+   * @param {{
+   *   gridKey: string,
+   *   sourceKey: string,
+   *   column: number,
+   *   row: number,
+   * }} args
+   * @returns {boolean}
+   */
+  @action
+  moveBlockToCell({ gridKey, sourceKey, column, row }) {
+    const grid = this._findEntryAndOutletSync(gridKey);
+    if (!grid || !this._isFreeGridContainer(grid.entry)) {
+      return false;
+    }
+    const sourceLocated = this._findEntryAndOutletSync(sourceKey);
+    if (!sourceLocated) {
+      return false;
+    }
+    const sourceParent = this._findEntryParent(sourceKey);
+    const sourceParentKey = sourceParent ? entryKey(sourceParent) : null;
+
+    // Source IS a slot, and its parent IS the target grid. Update placement.
+    if (this._isSlotEntry(sourceLocated.entry) && sourceParentKey === gridKey) {
+      return this.setSlotPlacement({
+        slotKey: sourceKey,
+        column: `${column}`,
+        row: `${row}`,
+      });
+    }
+
+    // Source is the inner content of a slot whose parent is the target grid.
+    if (sourceParent && this._isSlotEntry(sourceParent)) {
+      const slotParent = this._findEntryParent(sourceParentKey);
+      if (slotParent && entryKey(slotParent) === gridKey) {
+        return this.setSlotPlacement({
+          slotKey: sourceParentKey,
+          column: `${column}`,
+          row: `${row}`,
+        });
+      }
+    }
+
+    // Cross-container fallback: drop into the grid; placement defaults to
+    // auto/auto via `_wrapForGridIfNeeded`. The author can then drag again
+    // within the grid to land at the exact cell.
+    return this.moveBlock({
+      sourceKey,
+      targetKey: gridKey,
+      position: "inside",
+      targetOutletName: grid.outletName,
+    });
+  }
+
+  @action
+  insertBlockAtCell({ gridKey, blockName, defaultArgs = {}, column, row }) {
+    const located = this._findEntryAndOutletSync(gridKey);
+    if (!located || !this._isFreeGridContainer(located.entry)) {
+      return false;
+    }
+    if (
+      !this.canInsertBlockAt({
+        blockName,
+        targetOutletName: located.outletName,
+      })
+    ) {
+      return false;
+    }
+    return this._recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const innerEntry = { block: blockName, args: { ...defaultArgs } };
+      const slotEntry = {
+        block: "ve:slot",
+        args: { column: `${column}`, row: `${row}` },
+        children: [innerEntry],
+      };
+      // Insert as the first child of the grid. CSS Grid honours the
+      // explicit column / row regardless of DOM order.
+      const insertion = insertEntryAt(layout, gridKey, slotEntry, "inside");
+      if (!insertion.changed) {
+        return false;
+      }
+      this._publishStructuralChange(located.outletName, insertion.layout);
+      // Auto-select the inner block (not the slot wrapper) so the
+      // inspector immediately shows its content args.
+      this._selectInsertedEntry(innerEntry);
+      return true;
+    });
+  }
+
+  /**
+   * Applies a preset grid template to an existing `ve:layout` block.
+   * Overwrites the layout's args (columns / rows / gap / column or
+   * row templates) but PRESERVES its existing children — templates
+   * are layout frames, not content seeds, so applying one to a
+   * populated grid keeps the author's content in place. To start
+   * fresh, the author deletes children first via the overlay.
+   *
+   * Wrapped in a single structural-undo entry so the whole switch
+   * can be reverted with one Cmd+Z.
+   *
+   * @param {{gridKey: string, template: Object}} args
+   * @returns {boolean}
+   */
+  @action
+  applyGridTemplate({ gridKey, template }) {
+    if (!template) {
+      return false;
+    }
+    const located = this._findEntryAndOutletSync(gridKey);
+    if (!located) {
+      return false;
+    }
+    return this._recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = replaceEntryInPlace(layout, gridKey, {
+        ...located.entry,
+        args: { ...located.entry.args, ...template.args },
+        // Children intentionally left untouched — templates only
+        // re-shape the grid frame.
+        children: located.entry.children,
+      });
+      if (!result.changed) {
+        return false;
+      }
+      this._publishStructuralChange(located.outletName, result.layout);
       return true;
     });
   }
@@ -1979,6 +2280,50 @@ export default class VisualEditorService extends Service {
     const layout = this.readResolvedLayout(outletName);
     if (!layout) {
       return false;
+    }
+    // Same-outlet move: if the entry is heading into a free-grid
+    // (destination parent is `ve:layout` in free-grid mode) AND the
+    // entry isn't already a slot, wrap it. The wrap happens on the
+    // entry-in-place via a transform pass before `moveEntry`. See
+    // Phase 7s.3.
+    const sourceEntry = findEntry(layout, sourceKey);
+    const wrappedSource = sourceEntry
+      ? this._wrapForGridIfNeeded({
+          entry: sourceEntry,
+          layout,
+          targetKey,
+          position,
+        })
+      : sourceEntry;
+    // If wrapping is required, do a remove+insert instead of moveEntry
+    // (moveEntry preserves the entry reference; we need to substitute
+    // a fresh slot wrapper around it).
+    if (wrappedSource && wrappedSource !== sourceEntry) {
+      const removal = removeEntry(layout, sourceKey);
+      if (!removal.changed || !removal.removed) {
+        return false;
+      }
+      // The wrapped entry holds the original entry as its single
+      // child — that's what we want to insert. Build a fresh wrapper
+      // around the removed entry to ensure we carry the live `args`
+      // (in case `removal.removed` is the same reference, which it is
+      // by current `removeEntry` semantics).
+      const slotEntry = {
+        block: "ve:slot",
+        args: { column: "auto", row: "auto" },
+        children: [removal.removed],
+      };
+      const insertion = insertEntryAt(
+        removal.layout,
+        targetKey,
+        slotEntry,
+        position
+      );
+      if (!insertion.changed) {
+        return false;
+      }
+      this._publishStructuralChange(outletName, insertion.layout);
+      return true;
     }
     const result = moveEntry(layout, sourceKey, targetKey, position);
     if (!result.changed) {
@@ -2007,10 +2352,18 @@ export default class VisualEditorService extends Service {
     if (!removal.changed || !removal.removed) {
       return false;
     }
+    // Wrap the moved entry in a `ve:slot` if the destination parent
+    // is a free-grid layout. See Phase 7s.3.
+    const entryToInsert = this._wrapForGridIfNeeded({
+      entry: removal.removed,
+      layout: targetLayout,
+      targetKey,
+      position,
+    });
     const insertion = insertEntryAt(
       targetLayout,
       targetKey,
-      removal.removed,
+      entryToInsert,
       position
     );
     if (!insertion.changed) {
@@ -2022,6 +2375,83 @@ export default class VisualEditorService extends Service {
     this._publishStructuralChange(sourceOutletName, removal.layout);
     this._publishStructuralChange(targetOutletName, insertion.layout);
     return true;
+  }
+
+  /**
+   * Wraps a fresh / moved entry in a `ve:slot` when its destination
+   * parent is a `ve:layout` in `free-grid` mode. The slot carries CSS
+   * Grid placement (`column` / `row`) so the inner content block stays
+   * unaware it's in a grid; the visual editor's grid overlay
+   * (Phase 7s.5–6) interacts with slots directly.
+   *
+   * Returns the entry to insert. When no wrap is needed (destination
+   * isn't a free-grid, or the entry is already a slot) returns the
+   * original entry unchanged.
+   *
+   * New slots default to `auto` placement so CSS Grid auto-places into
+   * the next free cell — matches the cssgridgenerator behaviour where
+   * adding an item lands in the next empty slot. Authors reposition
+   * later via the grid overlay.
+   *
+   * @param {{entry: Object, layout: Array<Object>, targetKey: string|null, position: string}} args
+   * @returns {Object}
+   */
+  _wrapForGridIfNeeded({ entry, layout, targetKey, position }) {
+    if (!entry || this._isSlotEntry(entry)) {
+      return entry;
+    }
+    const parent = this._destinationParentEntry({
+      layout,
+      targetKey,
+      position,
+    });
+    if (!this._isFreeGridContainer(parent)) {
+      return entry;
+    }
+    return {
+      block: "ve:slot",
+      args: { column: "auto", row: "auto" },
+      children: [entry],
+    };
+  }
+
+  /**
+   * Resolves the entry that will contain the inserted / moved entry.
+   *
+   *  - "inside" position → `targetKey` is the parent.
+   *  - "before" / "after" → the entry one level above `targetKey`.
+   *  - `targetKey === null` → outlet root (no block-level parent).
+   *
+   * Returns `null` for the outlet-root case.
+   */
+  _destinationParentEntry({ layout, targetKey, position }) {
+    if (!targetKey) {
+      return null;
+    }
+    if (position === "inside") {
+      return findEntry(layout, targetKey);
+    }
+    const path = findAncestryPath(layout, targetKey);
+    if (!path || path.length < 2) {
+      return null;
+    }
+    return path[path.length - 2];
+  }
+
+  /**
+   * @param {Object|null} entry
+   * @returns {boolean}
+   */
+  _isFreeGridContainer(entry) {
+    if (this._blockNameOf(entry) !== "ve:layout") {
+      return false;
+    }
+    return entry?.args?.mode === "free-grid";
+  }
+
+  /** @param {Object|null} entry */
+  _isSlotEntry(entry) {
+    return this._blockNameOf(entry) === "ve:slot";
   }
 
   /**
