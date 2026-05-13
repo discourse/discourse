@@ -742,17 +742,17 @@ end
 # Table name: theme_fields
 #
 #  id               :integer          not null, primary key
-#  theme_id         :integer          not null
-#  target_id        :integer          not null
+#  compiler_version :string(50)       default("0"), not null
+#  error            :string
 #  name             :string(255)      not null
 #  value            :text             not null
 #  value_baked      :text
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  compiler_version :string(50)       default("0"), not null
-#  error            :string
-#  upload_id        :integer
+#  target_id        :integer          not null
+#  theme_id         :integer          not null
 #  type_id          :integer          default(0), not null
+#  upload_id        :integer
 #
 # Indexes
 #

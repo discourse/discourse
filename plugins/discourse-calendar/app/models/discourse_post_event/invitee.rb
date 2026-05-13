@@ -94,12 +94,12 @@ end
 # Table name: discourse_post_event_invitees
 #
 #  id         :bigint           not null, primary key
-#  post_id    :integer          not null
-#  user_id    :integer          not null
+#  notified   :boolean          default(FALSE), not null
 #  status     :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  notified   :boolean          default(FALSE), not null
+#  post_id    :integer          not null
+#  user_id    :integer          not null
 #
 # Indexes
 #

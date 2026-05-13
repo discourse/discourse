@@ -134,12 +134,12 @@ end
 # Table name: theme_site_settings
 #
 #  id         :bigint           not null, primary key
-#  theme_id   :integer          not null
-#  name       :string           not null
 #  data_type  :integer          not null
+#  name       :string           not null
 #  value      :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  theme_id   :integer          not null
 #
 # Indexes
 #

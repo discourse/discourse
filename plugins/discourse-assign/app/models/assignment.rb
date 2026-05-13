@@ -133,17 +133,17 @@ end
 # Table name: assignments
 #
 #  id                  :bigint           not null, primary key
-#  topic_id            :integer          not null
-#  assigned_to_id      :integer          not null
-#  assigned_by_user_id :integer          not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  assigned_to_type    :string           not null
-#  target_id           :integer          not null
-#  target_type         :string           not null
 #  active              :boolean          default(TRUE)
+#  assigned_to_type    :string           not null
 #  note                :string
 #  status              :text
+#  target_type         :string           not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  assigned_by_user_id :integer          not null
+#  assigned_to_id      :integer          not null
+#  target_id           :integer          not null
+#  topic_id            :integer          not null
 #
 # Indexes
 #

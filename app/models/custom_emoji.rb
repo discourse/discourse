@@ -30,11 +30,11 @@ end
 # Table name: custom_emojis
 #
 #  id         :integer          not null, primary key
+#  group      :string(20)
 #  name       :string           not null
-#  upload_id  :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  group      :string(20)
+#  upload_id  :integer          not null
 #  user_id    :integer          default(-1), not null
 #
 # Indexes

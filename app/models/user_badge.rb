@@ -133,16 +133,16 @@ end
 # Table name: user_badges
 #
 #  id              :integer          not null, primary key
-#  badge_id        :integer          not null
-#  user_id         :integer          not null
-#  granted_at      :datetime         not null
-#  granted_by_id   :integer          not null
-#  post_id         :integer
-#  seq             :integer          default(0), not null
 #  featured_rank   :integer
-#  created_at      :datetime         not null
+#  granted_at      :datetime         not null
 #  is_favorite     :boolean
+#  seq             :integer          default(0), not null
+#  created_at      :datetime         not null
+#  badge_id        :integer          not null
+#  granted_by_id   :integer          not null
 #  notification_id :bigint
+#  post_id         :integer
+#  user_id         :integer          not null
 #
 # Indexes
 #

@@ -257,11 +257,11 @@ end
 # Table name: discourse_automation_automations
 #
 #  id                 :bigint           not null, primary key
+#  enabled            :boolean          default(FALSE), not null
 #  name               :string
 #  script             :string           not null
-#  enabled            :boolean          default(FALSE), not null
+#  trigger            :string
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  last_updated_by_id :integer          not null
-#  trigger            :string
 #

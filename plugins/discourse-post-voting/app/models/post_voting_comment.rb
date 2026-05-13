@@ -79,17 +79,17 @@ end
 # Table name: post_voting_comments
 #
 #  id             :bigint           not null, primary key
-#  post_id        :integer          not null
-#  user_id        :integer          not null
-#  raw            :text             not null
 #  cooked         :text             not null
 #  cooked_version :integer
 #  deleted_at     :datetime
-#  deleted_by_id  :integer
+#  qa_vote_count  :integer          default(0)
+#  raw            :text             not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  qa_vote_count  :integer          default(0)
+#  deleted_by_id  :integer
 #  last_editor_id :integer          not null
+#  post_id        :integer          not null
+#  user_id        :integer          not null
 #
 # Indexes
 #

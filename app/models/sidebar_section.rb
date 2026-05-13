@@ -69,12 +69,12 @@ end
 # Table name: sidebar_sections
 #
 #  id           :bigint           not null, primary key
-#  user_id      :integer          not null
+#  public       :boolean          default(FALSE), not null
+#  section_type :integer
 #  title        :string(30)       not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  public       :boolean          default(FALSE), not null
-#  section_type :integer
+#  user_id      :integer          not null
 #
 # Indexes
 #

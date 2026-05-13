@@ -2,14 +2,14 @@
 
 # Runs annotaterb in a TemporaryDb so the seed topics that
 # `annotate:ensure_all_indexes` creates don't leak into the persistent test DB.
-def annotate_in_temp_db(load_plugins:, annotaterb_args: "")
-  env = "RAILS_ENV=test LOAD_PLUGINS=#{load_plugins}"
+def annotate_in_temp_db(load_plugins:, annotaterb_args: [])
+  env = { "RAILS_ENV" => "test", "LOAD_PLUGINS" => load_plugins }
   db = TemporaryDb.new
   db.start
   db.with_env do
-    system("#{env} bin/rails db:migrate", exception: true)
-    system("#{env} bin/rails annotate:ensure_all_indexes", exception: true)
-    system("#{env} bin/annotaterb models #{annotaterb_args}".strip, exception: true)
+    system(env, "bin/rails", "db:migrate", exception: true)
+    system(env, "bin/rails", "annotate:ensure_all_indexes", exception: true)
+    system(env, "bin/annotaterb", "models", "--force", *annotaterb_args, exception: true)
   end
 ensure
   db&.stop
@@ -42,13 +42,16 @@ desc "regenerate core model annotations using a temporary database"
 task "annotate:clean" => :environment do |task, args|
   load_plugins = ENV["LOAD_PLUGINS"].presence || "0"
   model_dir = ENV["MODEL_DIR"].presence || "app/models"
-  annotate_in_temp_db(load_plugins: load_plugins, annotaterb_args: "--model-dir #{model_dir}")
+  annotate_in_temp_db(load_plugins: load_plugins, annotaterb_args: ["--model-dir", model_dir])
   STDERR.puts "Annotate executed successfully"
 end
 
 desc "regenerate plugin model annotations using a temporary database"
 task "annotate:clean:plugins", [:plugin] => :environment do |task, args|
-  specific_plugin = "--model-dir plugins/#{args[:plugin]}/app/models" if args[:plugin].present?
-  annotate_in_temp_db(load_plugins: "1", annotaterb_args: specific_plugin.to_s)
+  annotaterb_args = []
+  if args[:plugin].present?
+    annotaterb_args.push("--model-dir", "plugins/#{args[:plugin]}/app/models")
+  end
+  annotate_in_temp_db(load_plugins: "1", annotaterb_args: annotaterb_args)
   STDERR.puts "Annotate executed successfully"
 end

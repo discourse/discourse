@@ -373,23 +373,23 @@ end
 # Table name: invites
 #
 #  id                      :integer          not null, primary key
-#  invite_key              :string(32)       not null
+#  custom_message          :text
+#  deleted_at              :datetime
+#  description             :string(100)
+#  domain                  :string
 #  email                   :string
-#  invited_by_id           :integer          not null
+#  email_token             :string
+#  emailed_status          :integer
+#  expires_at              :datetime         not null
+#  invalidated_at          :datetime
+#  invite_key              :string(32)       not null
+#  max_redemptions_allowed :integer          default(1), not null
+#  moderator               :boolean          default(FALSE), not null
+#  redemption_count        :integer          default(0), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  deleted_at              :datetime
 #  deleted_by_id           :integer
-#  invalidated_at          :datetime
-#  moderator               :boolean          default(FALSE), not null
-#  custom_message          :text
-#  emailed_status          :integer
-#  max_redemptions_allowed :integer          default(1), not null
-#  redemption_count        :integer          default(0), not null
-#  expires_at              :datetime         not null
-#  email_token             :string
-#  domain                  :string
-#  description             :string(100)
+#  invited_by_id           :integer          not null
 #
 # Indexes
 #

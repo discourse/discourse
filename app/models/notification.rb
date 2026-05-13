@@ -462,17 +462,17 @@ end
 #
 # Table name: notifications
 #
-#  notification_type :integer          not null
-#  user_id           :integer          not null
+#  id                :bigint           not null, primary key
 #  data              :string(1000)     not null
+#  high_priority     :boolean          default(FALSE), not null
+#  notification_type :integer          not null
+#  post_number       :integer
 #  read              :boolean          default(FALSE), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  topic_id          :integer
-#  post_number       :integer
 #  post_action_id    :integer
-#  high_priority     :boolean          default(FALSE), not null
-#  id                :bigint           not null, primary key
+#  topic_id          :integer
+#  user_id           :integer          not null
 #
 # Indexes
 #
