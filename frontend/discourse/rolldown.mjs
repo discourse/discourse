@@ -5,12 +5,8 @@ import { spawn } from "child_process";
 import chokidar from "chokidar";
 import * as fs from "fs";
 import * as path from "path";
-import { fileURLToPath } from "url";
 
-const WORKER_PATH = path.join(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "rolldown-worker.mjs"
-);
+const WORKER_PATH = "./rolldown-worker.mjs";
 const REBUILD_IN_FLIGHT_FILE = path.resolve(
   "./dist/manifest/.rebuild-in-flight"
 );
