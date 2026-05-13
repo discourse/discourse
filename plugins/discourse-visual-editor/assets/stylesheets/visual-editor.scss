@@ -73,6 +73,35 @@ body.visual-editor-active {
       border-color: var(--visual-editor-block-hover-color);
     }
 
+    /* When the chrome sits inside a `ve:slot` (free-grid cell), zero
+       out the margin and the inner padding so the chrome's border
+       lands exactly on the cell's edges. Without this, the chrome
+       reads as 2px smaller than the empty cell placeholders and the
+       grid looks misaligned. The wrapper's before/after drop zones
+       are skipped at the template level for the same reason. */
+
+    &.--in-grid-slot {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Free-grid slot whose cell rectangle overlaps a sibling slot's.
+       Free-grid CSS allows overlap (sometimes intentional — layered
+       designs), but silent overlap looks like a bug. Loud styling:
+       solid danger border + danger-tinted background + corner badge
+       (see `.visual-editor-block-chrome__overlap-badge` below). */
+
+    &.--overlapping {
+      border-color: var(--danger);
+      border-style: solid;
+      background: rgb(220 53 69 / 0.18);
+      box-shadow: 0 0 0 1px var(--danger);
+
+      &.--selected {
+        border-color: var(--danger);
+      }
+    }
+
     /* The chrome wrapper itself is always clickable so its selection
        handler fires for clicks anywhere inside the block area. The
        `pointer-events: auto` is restated here (it's the CSS default)
@@ -100,9 +129,41 @@ body.visual-editor-active {
         .visual-editor-block-handle,
         .visual-editor-block-toolbar,
         .visual-editor-drop-zone,
-        .visual-editor-block-chrome__resize-handle
+        .visual-editor-block-chrome__resize-handle,
+        .visual-editor-block-chrome__overlap-badge
       ) {
       pointer-events: none;
+    }
+  }
+
+  /* Overlap badge — anchored to the chrome's top-right corner, always
+     fully visible (no opacity gating like the handle). Reads "Overlap"
+     with a triangle icon. Matches the handle's badge shape but in
+     danger red so the warning is the loudest element on the block. */
+
+  .visual-editor-block-chrome__overlap-badge {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: var(--visual-editor-badge-padding);
+    background: var(--danger);
+    color: white;
+    font-size: var(--visual-editor-badge-font-size);
+    font-weight: bold;
+    border-radius: 0 0 0 4px;
+    text-shadow: var(--visual-editor-shadow);
+    pointer-events: auto;
+    cursor: help;
+
+    .d-icon {
+      color: white !important;
+      font-size: var(--visual-editor-badge-font-size) !important;
+      width: var(--visual-editor-badge-font-size) !important;
+      filter: drop-shadow(var(--visual-editor-shadow));
     }
   }
 
@@ -1015,12 +1076,73 @@ body.visual-editor-active {
    inside it. No visible decoration: the wrapper exists purely for
    layout. */
 
+/* The slot wrapper renders ALWAYS — it carries the grid placement
+   even when the editor is inactive, so the live page lays out cells
+   correctly. Only positioning rules go here; visible decoration
+   (border, background, handle suppression) is scoped to
+   `body.visual-editor-active` below so the published page stays
+   undecorated. */
+
 .visual-editor-transparent-slot {
   min-width: 0;
   min-height: 0;
   transition:
     grid-column 140ms ease-out,
     grid-row 140ms ease-out;
+}
+
+body.visual-editor-active {
+  .visual-editor-transparent-slot {
+    position: relative;
+
+    /* The slot wrapper IS the cell — outline lives here, not on the
+       inner block's chrome (which is content-height and would draw a
+       border smaller than the cell). Border treatment matches the
+       standard block chrome (dotted amber, solid on selection) so cells
+       in a free-grid read consistently with everything else. */
+    border: 1px dotted var(--visual-editor-block-color);
+    border-radius: 3px;
+    background: rgb(217 119 6 / var(--visual-editor-bg-opacity));
+    pointer-events: auto;
+    transition:
+      grid-column 140ms ease-out,
+      grid-row 140ms ease-out,
+      border-color 80ms ease-out,
+      background 80ms ease-out;
+
+    &.--selected {
+      border-style: solid;
+      border-color: var(--visual-editor-block-hover-color);
+    }
+
+    &.--overlapping {
+      border-color: var(--danger);
+      border-style: solid;
+      background: rgb(220 53 69 / 0.18);
+      box-shadow: 0 0 0 1px var(--danger);
+
+      &.--selected {
+        border-color: var(--danger);
+      }
+    }
+
+    /* The inner block's chrome inside a slot must NOT add its own
+       decoration — the slot wrapper IS the visible cell outline.
+       Hide border / background / handle so the only visible chrome
+       is the slot wrapper's, perfectly aligned to the grid cell. */
+
+    .visual-editor-block-chrome {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .visual-editor-block-chrome > .visual-editor-block-handle {
+      display: none;
+    }
+  }
 }
 
 /* When a free-grid layout is selected, tone down the inner block
@@ -1232,13 +1354,18 @@ body.visual-editor-active
    visible (`--visible`) or the resize modifier writes a grid placement
    onto it directly. Lives in the same grid as the cells, so its
    `grid-column` / `grid-row` transitions glide between cells during a
-   drag rather than snapping. Amber palette to match the chrome
-   visuals — the ghost reads as a future block, not a foreign element. */
+   drag rather than snapping.
+
+   Border treatment EXACTLY mirrors `.visual-editor-grid-cell` (1px
+   dashed amber, 3px radius) so the ghost outline sits on the same
+   pixel positions as a cell would — drop targets and the resize
+   preview read as a brighter version of the cell underneath, not a
+   foreign element offset from the grid. */
 
 .visual-editor-grid-ghost {
   pointer-events: none;
-  border: 2px dashed var(--visual-editor-block-hover-color);
-  background: rgb(217 119 6 / 0.1);
+  border: 1px dashed var(--visual-editor-block-hover-color);
+  background: rgb(217 119 6 / 0.2);
   border-radius: 3px;
   opacity: 0;
   z-index: 3;

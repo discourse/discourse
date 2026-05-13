@@ -7,12 +7,13 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
+import { parseSlotPlacement, placementsOverlap } from "../../lib/grid-math";
+import { entryKey } from "../../lib/mutate-layout";
 import gridTileDrag from "../../modifiers/grid-tile-drag";
 import BlockToolbar from "./block-toolbar";
 import GridOverlay from "./grid-overlay";
@@ -198,28 +199,19 @@ export default class BlockChrome extends Component {
 
   /**
    * Whether to mount the grid overlay (cell placeholders + drag ghost).
-   * Mounts when the block is a free-grid `ve:layout` AND the user has
-   * either the layout itself selected, OR one of its descendants — so
-   * clicking into a slot's content to edit its properties keeps the
-   * cells visible (otherwise the overlay would unmount the moment the
-   * user navigates to edit a block inside a cell).
+   * Always mounts while the editor is active and the block is a
+   * free-grid `ve:layout` — gating on selection meant the cells
+   * disappeared as soon as the user clicked into a slot's content,
+   * AND meant existing grids on page load showed no cells at all
+   * until the author hunted for and clicked the layout. The cell
+   * placeholders share the chrome's visual language so showing them
+   * for every free-grid is consistent with how the editor surfaces
+   * other block boundaries.
    *
    * @returns {boolean}
    */
   get showsGridOverlay() {
-    if (!this.isFreeGridLayout) {
-      return false;
-    }
-    if (this.isSelected) {
-      return true;
-    }
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.visualEditor.structuralVersion;
-    const selected = this.visualEditor.selectedBlockKey;
-    if (!selected) {
-      return false;
-    }
-    return this.visualEditor._isAncestorOf(this.args.blockKey, selected);
+    return this.isFreeGridLayout;
   }
 
   /**
@@ -237,82 +229,127 @@ export default class BlockChrome extends Component {
     if (!parent) {
       return false;
     }
-    const parentName =
-      typeof parent.block === "string"
-        ? parent.block
-        : (parent.block?.name ?? null);
-    return parentName === "ve:slot";
+    // `parent.block` is either a string ref (legacy / theme blocks) or a
+    // class reference (decorated blocks). For decorated `VESlot`, the
+    // class's `.name` is `"VESlot"`, NOT `"ve:slot"` — so we have to ask
+    // the service to resolve the block's registered name via metadata
+    // lookup. Falling back to `.name` was the bug that made every chrome
+    // inside a slot fail the check, leaving the chrome's margin/padding
+    // applied and the cell looking misaligned.
+    return this.visualEditor._blockNameOf(parent) === "ve:slot";
   }
 
   /**
-   * The parent slot's composite key, if `isInFreeGridSlot`. Drives the
-   * resize handle's commit target — resizes operate on the wrapping
-   * slot's `column` / `row`, not the inner block.
-   *
-   * @returns {string|null}
-   */
-  get parentSlotKey() {
-    if (!this.isInFreeGridSlot) {
-      return null;
-    }
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.visualEditor.structuralVersion;
-    const parent = this.visualEditor._findEntryParent(this.args.blockKey);
-    if (!parent || parent.__stableKey === undefined) {
-      return null;
-    }
-    return `ve:slot:${parent.__stableKey}`;
-  }
-
-  /**
-   * Current placement of the parent slot, used by the resize modifier
-   * to compute its origin span. Re-reads through the service for
-   * reactive correctness (the slot's args mutate during drag commits).
+   * The slot's own current placement (`{column, row}`), read live via
+   * the service. Used by the resize modifier mounted on the slot
+   * wrapper itself (transparent path) — the slot IS the cell, so its
+   * own column / row are what we resize.
    *
    * @returns {{column: string, row: string}}
    */
-  get parentSlotPlacement() {
+  get slotPlacement() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.visualEditor.structuralVersion;
-    const parent = this.visualEditor._findEntryParent(this.args.blockKey);
+    const entry = this.visualEditor._findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
     return {
-      column: parent?.args?.column ?? "auto",
-      row: parent?.args?.row ?? "auto",
+      column: entry?.args?.column ?? "auto",
+      row: entry?.args?.row ?? "auto",
     };
   }
 
   /**
-   * Column count of the slot's parent free-grid layout (for the resize
-   * modifier's snap math). Read via the service so it stays reactive
-   * across inspector changes.
+   * Columns count of the free-grid layout containing this slot.
+   * (`ve:slot`'s parent is always the `ve:layout`.) Drives the resize
+   * modifier's snap math.
    *
    * @returns {number}
    */
-  get parentColumns() {
+  get slotGridColumns() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.visualEditor.structuralVersion;
-    const slotKey = this.parentSlotKey;
-    if (!slotKey) {
-      return 6;
-    }
-    const grid = this.visualEditor._findEntryParent(slotKey);
+    const grid = this.visualEditor._findEntryParent(this.args.blockKey);
     return Number(grid?.args?.columns ?? 6);
   }
 
-  /**
-   * Row count of the slot's parent free-grid layout.
-   *
-   * @returns {number}
-   */
-  get parentRows() {
+  /** @returns {number} */
+  get slotGridRows() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.visualEditor.structuralVersion;
-    const slotKey = this.parentSlotKey;
-    if (!slotKey) {
-      return 2;
-    }
-    const grid = this.visualEditor._findEntryParent(slotKey);
+    const grid = this.visualEditor._findEntryParent(this.args.blockKey);
     return Number(grid?.args?.rows ?? 2);
+  }
+
+  /**
+   * Whether this slot's cell rectangle overlaps a sibling slot in the
+   * same free-grid layout. Drives the `--overlapping` class on the
+   * slot wrapper (transparent path). Only checked for the slot's own
+   * chrome — inner-block chromes inside a slot have their decoration
+   * suppressed via SCSS, so they don't need their own overlap state.
+   *
+   * Auto-placed slots are excluded (CSS auto-flow handles them).
+   *
+   * @returns {boolean}
+   */
+  get hasGridOverlap() {
+    if (!this.isTransparent || this.args.blockName !== "ve:slot") {
+      return false;
+    }
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.visualEditor.structuralVersion;
+    const entry = this.visualEditor._findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
+    if (!entry?.args) {
+      return false;
+    }
+    const grid = this.visualEditor._findEntryParent(this.args.blockKey);
+    if (!grid?.children?.length) {
+      return false;
+    }
+    const myPlacement = parseSlotPlacement(entry.args);
+    if (myPlacement.column.start == null || myPlacement.row.start == null) {
+      return false;
+    }
+    for (const sibling of grid.children) {
+      if (entryKey(sibling) === this.args.blockKey) {
+        continue;
+      }
+      const theirPlacement = parseSlotPlacement(sibling.args ?? {});
+      if (placementsOverlap(myPlacement, theirPlacement)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Whether the block INSIDE this slot is the active selection. Drives
+   * the slot wrapper's `--selected` styling (solid border + visible
+   * resize handle). Authors click the heading inside a cell; the cell
+   * outline lights up because of THIS getter, not because the slot
+   * itself is selected.
+   *
+   * @returns {boolean}
+   */
+  get isInnerSelected() {
+    if (!this.isTransparent || this.args.blockName !== "ve:slot") {
+      return false;
+    }
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.visualEditor.structuralVersion;
+    const entry = this.visualEditor._findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
+    if (!entry?.children?.length) {
+      return this.isSelected;
+    }
+    const innerKey = entryKey(entry.children[0]);
+    return (
+      this.isSelected ||
+      (innerKey && this.visualEditor.isBlockSelected(innerKey))
+    );
   }
 
   /**
@@ -326,6 +363,20 @@ export default class BlockChrome extends Component {
    */
   get showsInsideDropZone() {
     return this.isContainer && !this.isFreeGridLayout;
+  }
+
+  /**
+   * Whether to render the before/after sibling drop zones around this
+   * chrome. In a stack/row/auto-grid layout they let authors drop
+   * blocks adjacent to existing siblings; inside a free-grid slot
+   * there's no "before/after" — placement is by cell coordinate — so
+   * the zones are meaningless and (because they take real flow space)
+   * actively misalign the chrome with the grid cell. Skip them.
+   *
+   * @returns {boolean}
+   */
+  get showsSiblingDropZones() {
+    return !this.isInFreeGridSlot;
   }
 
   /**
@@ -377,18 +428,15 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Routes the resize modifier's commit back to the parent slot, not
-   * the inner block. The slot owns column/row; resizing means widening
-   * the slot's span.
+   * Routes the resize modifier's commit back to THIS slot's own args.
+   * The resize handle lives on the slot wrapper (transparent path), so
+   * commits update the slot's column / row in place — the cell border
+   * grows / shrinks but the inner content stays put.
    */
   @action
-  commitResize(placement) {
-    const slotKey = this.parentSlotKey;
-    if (!slotKey) {
-      return;
-    }
+  commitSelfResize(placement) {
     this.visualEditor.setSlotPlacement({
-      slotKey,
+      slotKey: this.args.blockKey,
       column: placement.column,
       row: placement.row,
     });
@@ -398,6 +446,10 @@ export default class BlockChrome extends Component {
    * Captures the click only when editor is active. Stops propagation so the
    * host page's own click handlers (links, buttons inside the block) don't
    * fire while the user is editing.
+   *
+   * For transparent slots, the click routes to the slot's INNER block
+   * instead — the slot is internal plumbing; the user wants to inspect
+   * and edit the heading / image / etc. they actually see in the cell.
    */
   @action
   onClick(event) {
@@ -406,6 +458,25 @@ export default class BlockChrome extends Component {
     }
     event.preventDefault();
     event.stopPropagation();
+    if (this.isTransparent && this.args.blockName === "ve:slot") {
+      const entry = this.visualEditor._findEntryAndOutletSync(
+        this.args.blockKey
+      )?.entry;
+      const inner = entry?.children?.[0];
+      if (inner) {
+        const innerKey = entryKey(inner);
+        const innerName = this.visualEditor._blockNameOf(inner);
+        this.visualEditor.selectBlock({
+          key: innerKey,
+          name: innerName,
+          args: inner.args,
+          outletName: this.args.outletName,
+          conditions: inner.conditions ?? null,
+          metadata: null,
+        });
+        return;
+      }
+    }
     this.visualEditor.selectBlock({
       key: this.args.blockKey,
       name: this.args.blockName,
@@ -544,13 +615,69 @@ export default class BlockChrome extends Component {
         parent (e.g. a free-grid layout) and carries grid-column /
         grid-row from the wrapped block's args, so CSS Grid honours
         placement regardless of what's inside the slot. }}
+      {{! Slot wrapper IS the cell. The wrapper renders ALWAYS so the
+        live page lays out cells correctly; the chrome decoration
+        (border, handle, resize, badge) is only added when the editor
+        is active. SCSS scopes the visible decoration to
+        `body.visual-editor-active` for the same reason. }}
       <div
-        class="visual-editor-transparent-slot"
+        class={{dConcatClass
+          "visual-editor-transparent-slot"
+          (if this.isInnerSelected "--selected")
+          (if this.hasGridOverlap "--overlapping")
+        }}
         style={{this.transparentWrapperStyle}}
         data-ve-block-name={{@blockName}}
         data-ve-block-key={{@blockKey}}
+        role={{if this.visualEditor.isActive "button"}}
+        tabindex={{if this.visualEditor.isActive "0"}}
+        {{didInsert this.captureChromeEl}}
+        {{on "click" this.onClick}}
       >
+        {{#if this.visualEditor.isActive}}
+          {{#if this.hasGridOverlap}}
+            <span
+              class="visual-editor-block-chrome__overlap-badge"
+              title={{i18n "visual_editor.canvas.overlap_warning"}}
+            >
+              {{dIcon "triangle-exclamation"}}
+              <span>{{i18n "visual_editor.canvas.overlap_label"}}</span>
+            </span>
+          {{/if}}
+
+          <span
+            class="visual-editor-block-handle"
+            title={{i18n "visual_editor.canvas.drag_handle_title"}}
+            {{dDragAndDropSource
+              kind="ve-block"
+              data=(hash blockKey=@blockKey outletName=@outletName)
+              dragImage=this._chromeEl
+              onDragStart=this.handleDragStart
+              onDragEnd=this.visualEditor.endDrag
+            }}
+          >
+            {{dIcon "grip-lines"}}
+            <span>{{i18n "visual_editor.canvas.grid_overlay.drag_tile"}}</span>
+          </span>
+        {{/if}}
+
         <@WrappedComponent />
+
+        {{#if this.isInnerSelected}}
+          <span
+            class="visual-editor-block-chrome__resize-handle"
+            title={{i18n "visual_editor.canvas.resize_handle_title"}}
+            aria-hidden="true"
+            {{gridTileDrag
+              this.getResizeGridElement
+              this.slotPlacement
+              this.slotGridColumns
+              this.slotGridRows
+              this.getResizeGhost
+              this.commitSelfResize
+            }}
+          ></span>
+        {{/if}}
       </div>
     {{else if this.visualEditor.isActive}}
       {{! Outer wrapper hosts the sibling drop zones (before/after) and the
@@ -560,21 +687,23 @@ export default class BlockChrome extends Component {
         at the parent's level"). Inside zones (containers only) sit within
         the frame, signalling "place as the container's first child". }}
       <div class="visual-editor-block-chrome-wrapper">
-        <div
-          class={{dConcatClass
-            "visual-editor-drop-zone --before"
-            (if (this.isDropZoneActive "before") "--active")
-          }}
-          data-ve-position="before"
-          {{dDragAndDropTarget
-            accepts=this.acceptedDragKinds
-            position="before"
-            canDrop=this.canDropOnThisBlock
-            onDragEnter=this.handleZoneDragEnter
-            onDragLeave=this.handleZoneDragLeave
-            onDrop=this.applyDrop
-          }}
-        ></div>
+        {{#if this.showsSiblingDropZones}}
+          <div
+            class={{dConcatClass
+              "visual-editor-drop-zone --before"
+              (if (this.isDropZoneActive "before") "--active")
+            }}
+            data-ve-position="before"
+            {{dDragAndDropTarget
+              accepts=this.acceptedDragKinds
+              position="before"
+              canDrop=this.canDropOnThisBlock
+              onDragEnter=this.handleZoneDragEnter
+              onDragLeave=this.handleZoneDragLeave
+              onDrop=this.applyDrop
+            }}
+          ></div>
+        {{/if}}
 
         <div
           class={{dConcatClass
@@ -583,6 +712,7 @@ export default class BlockChrome extends Component {
             (if this.isContainer "--container")
             (if this.isEmptyContainer "--empty-container")
             (if this.isInFreeGridSlot "--in-grid-slot")
+            (if this.hasGridOverlap "--overlapping")
           }}
           data-ve-block-name={{@blockName}}
           data-ve-block-key={{@blockKey}}
@@ -594,6 +724,20 @@ export default class BlockChrome extends Component {
         >
           {{#if this.isSelected}}
             <BlockToolbar @blockKey={{@blockKey}} />
+          {{/if}}
+
+          {{! Overlap warning badge — only visible when this slot's cell
+            rectangle intersects a sibling slot's. Loud on purpose: the
+            chrome's tinted background alone is too easy to miss, and
+            silent overlap was the original complaint. }}
+          {{#if this.hasGridOverlap}}
+            <span
+              class="visual-editor-block-chrome__overlap-badge"
+              title={{i18n "visual_editor.canvas.overlap_warning"}}
+            >
+              {{dIcon "triangle-exclamation"}}
+              <span>{{i18n "visual_editor.canvas.overlap_label"}}</span>
+            </span>
           {{/if}}
 
           {{! The handle is the ONLY drag source. Always rendered (CSS hides
@@ -626,25 +770,10 @@ export default class BlockChrome extends Component {
             <GridOverlay @gridKey={{@blockKey}} @outletName={{@outletName}} />
           {{/if}}
 
-          {{! Resize handle — only when this block sits inside a free-grid
-            slot AND is the active selection. Pointer-drag updates the
-            parent slot's `column` / `row` so the block grows / shrinks
-            into adjacent cells. }}
-          {{#if (and this.isSelected this.isInFreeGridSlot)}}
-            <span
-              class="visual-editor-block-chrome__resize-handle"
-              title={{i18n "visual_editor.canvas.resize_handle_title"}}
-              aria-hidden="true"
-              {{gridTileDrag
-                this.getResizeGridElement
-                this.parentSlotPlacement
-                this.parentColumns
-                this.parentRows
-                this.getResizeGhost
-                this.commitResize
-              }}
-            ></span>
-          {{/if}}
+          {{! Resize handle for blocks inside free-grid slots lives on
+            the slot wrapper itself (transparent path above), not on
+            the inner chrome — that's where it aligns with the cell
+            outline and corner. Nothing rendered here. }}
 
           {{#if this.showsInsideDropZone}}
             <div
@@ -674,21 +803,23 @@ export default class BlockChrome extends Component {
           {{/if}}
         </div>
 
-        <div
-          class={{dConcatClass
-            "visual-editor-drop-zone --after"
-            (if (this.isDropZoneActive "after") "--active")
-          }}
-          data-ve-position="after"
-          {{dDragAndDropTarget
-            accepts=this.acceptedDragKinds
-            position="after"
-            canDrop=this.canDropOnThisBlock
-            onDragEnter=this.handleZoneDragEnter
-            onDragLeave=this.handleZoneDragLeave
-            onDrop=this.applyDrop
-          }}
-        ></div>
+        {{#if this.showsSiblingDropZones}}
+          <div
+            class={{dConcatClass
+              "visual-editor-drop-zone --after"
+              (if (this.isDropZoneActive "after") "--active")
+            }}
+            data-ve-position="after"
+            {{dDragAndDropTarget
+              accepts=this.acceptedDragKinds
+              position="after"
+              canDrop=this.canDropOnThisBlock
+              onDragEnter=this.handleZoneDragEnter
+              onDragLeave=this.handleZoneDragLeave
+              onDrop=this.applyDrop
+            }}
+          ></div>
+        {{/if}}
       </div>
     {{else}}
       <@WrappedComponent />

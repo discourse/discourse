@@ -176,6 +176,36 @@ export function cellAt(event, gridRect, columns, rows) {
   return { column, row };
 }
 
+/**
+ * Returns `true` when two slot placements occupy any shared cells. Both
+ * placements must be EXPLICIT (their `column.start` / `row.start` set);
+ * auto placements report `false` because CSS Grid's auto-flow handles
+ * them without colliding into explicitly-placed neighbours.
+ *
+ * Used by chrome decoration to flag visually-overlapping blocks so the
+ * author notices an accidental resize past a neighbour.
+ *
+ * @param {SlotPlacement} a
+ * @param {SlotPlacement} b
+ * @returns {boolean}
+ */
+export function placementsOverlap(a, b) {
+  if (
+    a?.column?.start == null ||
+    a?.row?.start == null ||
+    b?.column?.start == null ||
+    b?.row?.start == null
+  ) {
+    return false;
+  }
+  return (
+    a.column.start < b.column.end &&
+    b.column.start < a.column.end &&
+    a.row.start < b.row.end &&
+    b.row.start < a.row.end
+  );
+}
+
 function fillRect(occupied, placement, columns, rows) {
   const colStart = clamp(placement.column.start, 1, columns);
   const colEnd = clamp(placement.column.end, colStart + 1, columns + 1);

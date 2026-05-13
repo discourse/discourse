@@ -208,6 +208,8 @@ en:
         empty_outlet_hint: "Drag a block from the palette to fill this outlet"
         empty_container_hint: "Drag a block here"
         resize_handle_title: "Drag to resize across cells"
+        overlap_label: "Overlap"
+        overlap_warning: "This block's cells overlap another block. CSS Grid will render them stacked — resize back if that wasn't intentional."
         grid_overlay:
           add_at_cell: "Add a block to this cell"
           pick_block: "Pick a block"

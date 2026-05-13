@@ -91,17 +91,20 @@ const VALID_ALIGNS = ["start", "center", "end", "stretch"];
         placeholder: "e.g. auto 1fr (overrides Rows)",
       },
     },
-    // Default uses `minmax(60px, auto)` rather than bare `auto` so empty
-    // rows stay visible at a usable height — the editor's grid overlay
-    // sizes itself to the layout's resolved track sizes, and a 0px row
-    // (which `auto` resolves to when the cell has no content yet)
-    // would collapse the overlay and leave nothing to drop into.
+    // `minmax(0, 1fr)` so rows split the container's height equally
+    // regardless of content. `1fr` on its own keeps an auto minimum
+    // (tracks can't shrink below content), which made rows inflate
+    // unevenly when one held a tall heading and another was empty.
+    // Pair with the container's `min-height` floor (set in
+    // `containerStyle`) so the equal distribution has space to work
+    // when the grid is empty. Authors can override to "auto", "120px",
+    // etc. for content-sized rows.
     rowHeight: {
       type: "string",
-      default: "minmax(60px, auto)",
+      default: "minmax(0, 1fr)",
       ui: {
         label: "Row height",
-        placeholder: "auto, 120px, minmax(80px, auto)",
+        placeholder: "minmax(0, 1fr), auto, 120px, minmax(80px, auto)",
       },
     },
   },
@@ -141,19 +144,41 @@ export default class VELayout extends Component {
       const rows = this.args.rows ?? 2;
       const columnTemplate = (this.args.columnTemplate ?? "").trim();
       const rowTemplate = (this.args.rowTemplate ?? "").trim();
-      const rowHeight =
-        (this.args.rowHeight ?? "minmax(60px, auto)").trim() ||
-        "minmax(60px, auto)";
+      let rowHeight =
+        (this.args.rowHeight ?? "minmax(0, 1fr)").trim() || "minmax(0, 1fr)";
+      // Migrate legacy defaults to the equal-rows model. `1fr` (the
+      // previous default) has an auto minimum so rows can't shrink
+      // below their content — a tall heading inflates its row above
+      // any empty rows. `minmax(0, 1fr)` lets every row shrink to 0
+      // and then expand equally into the container's min-height, so
+      // rows END UP truly the same size.
+      if (
+        rowHeight === "minmax(60px, auto)" ||
+        rowHeight === "1fr" ||
+        rowHeight === "minmax(60px,auto)"
+      ) {
+        rowHeight = "minmax(0, 1fr)";
+      }
 
       const gridTemplateColumns =
         columnTemplate.length > 0 ? columnTemplate : `repeat(${columns}, 1fr)`;
       const gridTemplateRows =
         rowTemplate.length > 0 ? rowTemplate : `repeat(${rows}, ${rowHeight})`;
 
+      // For flexible rows, the container's `min-height` is what gives
+      // `minmax(0, 1fr)` something to distribute — without it the rows
+      // would all resolve to 0. 80px per row is enough for typical
+      // heading content (~24px text + padding) without producing visible
+      // overflow.
+      const useFlexRows =
+        rowTemplate.length === 0 && rowHeight === "minmax(0, 1fr)";
+      const minHeight = useFlexRows ? `min-height: ${rows * 80}px; ` : "";
+
       return trustHTML(
         `display: grid; grid-template-columns: ${gridTemplateColumns}; ` +
           `grid-template-rows: ${gridTemplateRows}; ` +
           `gap: ${gap}rem; align-items: ${align}; ` +
+          minHeight +
           `transition: grid-template-columns 180ms ease, ` +
           `grid-template-rows 180ms ease, gap 180ms ease;`
       );
