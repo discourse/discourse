@@ -196,9 +196,13 @@ class ListController < ApplicationController
       )
 
     case action
-    when :private_messages_unread, :private_messages_new, :private_messages_group_new,
-         :private_messages_group_unread
+    when :private_messages_unread, :private_messages_new
       raise Discourse::NotFound if target_user.id != current_user.id
+    when :private_messages_group_new, :private_messages_group_unread
+      raise Discourse::NotFound if target_user.id != current_user.id
+      group = Group.find_by("LOWER(name) = ?", params[:group_name].downcase)
+      raise Discourse::NotFound if !group
+      raise Discourse::NotFound unless guardian.can_see_group_messages?(group)
     when :private_messages_tag
       raise Discourse::NotFound if target_user.id != current_user.id
       raise Discourse::NotFound if !guardian.can_tag_pms?
