@@ -6,7 +6,8 @@
 }
 
 .featured-topic.selected,
-.topic-post.selected {
+.topic-post.selected,
+.nested-post[data-keyboard-selected] {
   box-shadow: -3px 0 0 var(--d-nav-color--active);
 }
 
@@ -16,6 +17,7 @@
 .topic-post,
 .post-stream--cloaked,
 .latest-topic-list-item.selected,
+.nested-post[data-keyboard-selected],
 .search-results .fps-result.selected {
   &:focus-visible {
     outline: none;

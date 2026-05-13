@@ -453,11 +453,86 @@ export default class KeyboardShortcutLib extends Service {
   }
 
   selectDown() {
+    if (document.querySelector(".nested-view")) {
+      this._moveAmongNestedRoots(1);
+      return;
+    }
     this._moveSelection({ direction: 1, scrollWithinPosts: true });
   }
 
   selectUp() {
+    if (document.querySelector(".nested-view")) {
+      this._moveAmongNestedRoots(-1);
+      return;
+    }
     this._moveSelection({ direction: -1, scrollWithinPosts: true });
+  }
+
+  _moveAmongNestedRoots(direction) {
+    const roots = Array.from(
+      document.querySelectorAll(".nested-view__roots > .nested-post")
+    );
+    if (!roots.length) {
+      return;
+    }
+
+    let selected = roots.find((r) => r.hasAttribute("data-keyboard-selected"));
+
+    // Drop selection if it has scrolled out of view, matching _moveSelection.
+    if (selected) {
+      const rect = selected.getBoundingClientRect();
+      if (rect.bottom < headerOffset() || rect.top > window.innerHeight) {
+        selected = null;
+      }
+    }
+
+    let next;
+    if (selected) {
+      next = roots[roots.indexOf(selected) + direction];
+    } else {
+      // Seed from the first root visible in the move direction; the press
+      // brings the selection on-screen without also advancing past it.
+      const offset = headerOffset();
+      next =
+        roots.find((r) =>
+          direction > 0
+            ? r.getBoundingClientRect().top >= offset
+            : r.getBoundingClientRect().bottom >= offset
+        ) || roots[0];
+    }
+    if (!next) {
+      return;
+    }
+
+    // Tracked with a data attribute rather than a `.selected` class because
+    // the .nested-post wrapper's class is rebuilt on every tracked-state
+    // change (cloaking, parent-line highlight, etc.) and would wipe an
+    // imperatively-added class.
+    for (const r of roots) {
+      r.removeAttribute("data-keyboard-selected");
+      r.removeAttribute("tabindex");
+    }
+    next.setAttribute("data-keyboard-selected", "true");
+    next.setAttribute("tabindex", "0");
+    next.focus({ preventScroll: true });
+
+    this.appEvents.trigger("keyboard:move-selection", {
+      articles: roots,
+      selectedArticle: next,
+    });
+
+    const articleTop = domUtils.offset(next).top;
+    const articleTopPosition = articleTop - headerOffset();
+    // If the top of the root is already visible, leave the scroll alone —
+    // important for tall roots that exceed the viewport height.
+    if (
+      articleTopPosition >= window.pageYOffset &&
+      articleTop < window.pageYOffset + window.innerHeight
+    ) {
+      return;
+    }
+    const scrollRatio = direction > 0 ? 0.2 : 0.7;
+    this._scrollTo(articleTopPosition - window.innerHeight * scrollRatio);
   }
 
   bulkSelectItem() {
