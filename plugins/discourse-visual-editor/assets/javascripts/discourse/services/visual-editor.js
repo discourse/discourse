@@ -2459,12 +2459,20 @@ export default class VisualEditorService extends Service {
    * marks the outlet as edited so save/reset/isDirty all pick it up.
    * Centralised so the same bookkeeping fires for every structural mutation
    * (move now, insert/delete in later phases).
+   *
+   * Runs an orphan-slot cleanup pass first: `ve:slot` entries whose inner
+   * block was removed (via direct delete or drag-out) would otherwise
+   * linger as childless wrappers, claiming their cell in the grid math
+   * and preventing a fresh placeholder from rendering. Pruning them here
+   * means every code path that ends in a publish — `removeBlock`,
+   * `moveBlock`, even `applyGridTemplate` — gets the cleanup for free.
    */
   _publishStructuralChange(outletName, newLayout) {
+    const cleaned = this._cleanupOrphanSlots(newLayout);
     _setLayoutLayer(
       outletName,
       LAYOUT_LAYERS.SESSION_DRAFT,
-      newLayout,
+      cleaned,
       getOwner(this),
       // Permissive matches the initial draft publish — see comment on
       // `_materializeAllDrafts`. Without this, dragging the only child
@@ -2475,6 +2483,35 @@ export default class VisualEditorService extends Service {
     this._editedOutlets.add(outletName);
     this._structurallyEditedOutlets.add(outletName);
     this.structuralVersion++;
+  }
+
+  /**
+   * Walks a layout tree and drops any `ve:slot` entries that have no
+   * inner block. Returns the same array reference when nothing changed
+   * so the layout-layer system can short-circuit the publish path.
+   *
+   * @param {Array<Object>} entries
+   * @returns {Array<Object>}
+   */
+  _cleanupOrphanSlots(entries) {
+    let changed = false;
+    const result = [];
+    for (const entry of entries) {
+      if (this._isSlotEntry(entry) && !entry.children?.length) {
+        changed = true;
+        continue;
+      }
+      if (entry.children?.length) {
+        const cleanedChildren = this._cleanupOrphanSlots(entry.children);
+        if (cleanedChildren !== entry.children) {
+          result.push({ ...entry, children: cleanedChildren });
+          changed = true;
+          continue;
+        }
+      }
+      result.push(entry);
+    }
+    return changed ? result : entries;
   }
 
   /**

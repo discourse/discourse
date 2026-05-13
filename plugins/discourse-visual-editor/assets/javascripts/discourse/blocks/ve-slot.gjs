@@ -65,16 +65,15 @@ const VALID_AXIS_ALIGN = ["start", "center", "end", "stretch"];
   previewArgs: { column: "auto", row: "auto" },
 })
 export default class VESlot extends Component {
-  get slotStyle() {
-    const column = this.args.column ?? "auto";
-    const row = this.args.row ?? "auto";
-    const align = this.args.align ?? "stretch";
-    const justify = this.args.justify ?? "stretch";
-    return trustHTML(
-      `grid-column: ${column}; grid-row: ${row}; ` +
-        `align-self: ${align}; justify-self: ${justify};`
-    );
-  }
+  /**
+   * The slot's own `<div>` would otherwise add a redundant box inside
+   * the transparent chrome wrapper (which already carries the slot's
+   * grid placement). `display: contents` makes this div participate
+   * neither in layout nor box rendering — the children render as if
+   * the slot's div weren't there, so the inner block's chrome sits
+   * directly inside the transparent wrapper and aligns to the cell.
+   */
+  slotStyle = trustHTML(`display: contents;`);
 
   <template>
     <div class="ve-slot" style={{this.slotStyle}}>
