@@ -6,6 +6,7 @@ import { dev } from "rolldown/experimental";
 import { buildConfig } from "./rolldown.config.mjs";
 
 const ansiConverter = new AnsiToHtml({ newline: true, escapeXML: true });
+const CWD_PREFIX = `${process.cwd()}/`;
 const MANIFEST_DIR = "./dist/manifest";
 const BUILD_STATUS_FILE = `${MANIFEST_DIR}/build.json`;
 const REBUILD_IN_FLIGHT_FILE = `${MANIFEST_DIR}/.rebuild-in-flight`;
@@ -13,11 +14,16 @@ const REBUILD_IN_FLIGHT_FILE = `${MANIFEST_DIR}/.rebuild-in-flight`;
 let buildStart = Date.now();
 let initialBuild = true;
 let hasError = false;
+let pendingChangedFiles = [];
 
 function ansiToHtml(str) {
   if (str != null) {
     return ansiConverter.toHtml(str);
   }
+}
+
+function stripCwd(file) {
+  return file.startsWith(CWD_PREFIX) ? file.slice(CWD_PREFIX.length) : file;
 }
 
 function writeBuildStatus(status) {
@@ -77,11 +83,11 @@ const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
       return;
     }
 
+    pendingChangedFiles = result.changedFiles.map(stripCwd);
     fs.writeFileSync(
       REBUILD_IN_FLIGHT_FILE,
-      JSON.stringify(result.changedFiles)
+      JSON.stringify(pendingChangedFiles)
     );
-    console.log("Changed files:", result.changedFiles);
     hasError = false;
     buildStart = Date.now();
   },
@@ -98,14 +104,15 @@ const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
       return;
     }
 
-    console.log(`Build complete: ${result.output.length} files`);
+    const elapsed = ((Date.now() - buildStart) / 1000).toFixed(2);
+    const count = result.output.length;
     if (initialBuild) {
       initialBuild = false;
-      console.log(
-        `Initial build complete in ${(Date.now() - buildStart) / 1000.0}s`
-      );
+      console.log(`Initial build complete in ${elapsed}s (${count} files)`);
     } else {
-      console.log(`Rebuild complete in ${(Date.now() - buildStart) / 1000.0}s`);
+      console.log(
+        `Rebuild complete in ${elapsed}s (${count} files): ${pendingChangedFiles.join(", ")}`
+      );
     }
     writeBuildStatus({ status: "ok" });
     fs.rmSync(REBUILD_IN_FLIGHT_FILE, { force: true });
