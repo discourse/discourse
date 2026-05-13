@@ -152,6 +152,9 @@ export default class EmbedAuthFlow extends Service {
         onConfirm: () => {
           this._openSigninPopup(intent);
         },
+        onCancel: () => {
+          this._stopPolling();
+        },
       },
     });
   }
@@ -195,14 +198,14 @@ export default class EmbedAuthFlow extends Service {
 
     const elapsed = Date.now() - this._pollStartedAt;
     if (elapsed > SESSION_POLL_MAX_MS) {
-      this._stopPolling();
+      this._giveUpWaiting();
       return;
     }
 
     if (this._popup?.closed) {
       this._popupClosedAt ??= Date.now();
       if (Date.now() - this._popupClosedAt > POPUP_CLOSED_GRACE_MS) {
-        this._stopPolling();
+        this._giveUpWaiting();
         return;
       }
     }
@@ -229,6 +232,13 @@ export default class EmbedAuthFlow extends Service {
     this._popup = null;
     this._popupClosedAt = null;
     this._pollStartedAt = null;
+  }
+
+  _giveUpWaiting() {
+    // Polling expired without a sign-in — dismiss the waiting modal so the
+    // user isn't left staring at a spinner that's no longer doing anything.
+    this._stopPolling();
+    this.modal.close();
   }
 
   _handleSigninSuccess() {
