@@ -78,6 +78,25 @@ export default class GridOverlay extends Component {
   /** Ghost element ref, captured on its own insert. */
   _ghostElement = null;
 
+  /**
+   * Map from cell element to its installed dragover listener, so the
+   * cleanup path can find and remove the right one on drag-leave / drop.
+   * Empty cells share the same per-zone visual feedback as slot wrappers
+   * (`--drop-zone-{center|left|right|up|down}`) so authors get a
+   * consistent edge-aware mental model regardless of whether they're
+   * hovering over an occupied slot or a placeholder.
+   */
+  _cellDragOverHandlers = new WeakMap();
+
+  /**
+   * Sticky zone observed during the last dragover on each cell. The
+   * drop dispatch reads this rather than recomputing from the drop
+   * event — cursor jitter between dragover and release can otherwise
+   * dispatch the wrong action (e.g. firing a center move when the
+   * user clearly hovered the edge for a shift).
+   */
+  _cellLastDropZones = new WeakMap();
+
   get gridEntry() {
     // Open a tracked dep on structuralVersion so re-renders fire on
     // every layout mutation (slot insertions / removals / placement
@@ -179,37 +198,135 @@ export default class GridOverlay extends Component {
    *     drags).
    */
   @action
-  applyCellDrop(cell, { source }) {
+  applyCellDrop(cell, { source, element }) {
     this.hideDropGhost();
-    if (source?.kind === "ve-palette-block") {
-      this.visualEditor.insertBlockAtCell({
+    const zone = this._cellLastDropZones.get(element) ?? "center";
+    this._detachCellDragOverListener(element);
+    this._clearCellDropZone(element);
+    this._cellLastDropZones.delete(element);
+
+    if (zone === "center") {
+      // Center: plain "land at this cell" semantics.
+      if (source?.kind === "ve-palette-block") {
+        this.visualEditor.insertBlockAtCell({
+          gridKey: this.args.gridKey,
+          blockName: source.data.blockName,
+          defaultArgs: source.data.defaultArgs,
+          column: cell.column,
+          row: cell.row,
+        });
+      } else if (source?.kind === "ve-block") {
+        this.visualEditor.moveBlockToCell({
+          gridKey: this.args.gridKey,
+          sourceKey: source.data.blockKey,
+          column: cell.column,
+          row: cell.row,
+        });
+      }
+    } else {
+      // Edge: ripple-shift semantics. `insertWithShift` treats the
+      // empty cell as a virtual 1×1 drop target and scans for the
+      // first occupied slot in the cascade direction.
+      this.visualEditor.insertWithShift({
         gridKey: this.args.gridKey,
-        blockName: source.data.blockName,
-        defaultArgs: source.data.defaultArgs,
-        column: cell.column,
-        row: cell.row,
-      });
-    } else if (source?.kind === "ve-block") {
-      this.visualEditor.moveBlockToCell({
-        gridKey: this.args.gridKey,
-        sourceKey: source.data.blockKey,
-        column: cell.column,
-        row: cell.row,
+        dropCell: { column: cell.column, row: cell.row },
+        direction: zone,
+        sourceKey: source?.kind === "ve-block" ? source.data?.blockKey : null,
+        paletteBlockName:
+          source?.kind === "ve-palette-block" ? source.data?.blockName : null,
+        paletteDefaultArgs:
+          source?.kind === "ve-palette-block" ? source.data?.defaultArgs : null,
       });
     }
     this.visualEditor.endDrag?.();
   }
 
   @action
-  onCellDragEnter(cell, { element }) {
+  onCellDragEnter(cell, { element, event }) {
     this.showDropGhost(cell);
-    element.classList.add("--drag-target");
+    if (!this._cellDragOverHandlers.has(element)) {
+      const handler = (e) => this._updateCellDropZone(e, element);
+      this._cellDragOverHandlers.set(element, handler);
+      element.addEventListener("dragover", handler);
+    }
+    this._updateCellDropZone(event, element);
   }
 
   @action
   onCellDragLeave(_, { element }) {
     this.hideDropGhost();
-    element.classList.remove("--drag-target");
+    this._detachCellDragOverListener(element);
+    this._clearCellDropZone(element);
+    this._cellLastDropZones.delete(element);
+  }
+
+  _updateCellDropZone(event, element) {
+    const zone = this._computeCellDropZone(event, element);
+    this._cellLastDropZones.set(element, zone);
+    this._clearCellDropZone(element);
+    element.classList.add(`--drop-zone-${zone}`);
+  }
+
+  _clearCellDropZone(element) {
+    for (const cls of [...element.classList]) {
+      if (cls.startsWith("--drop-zone-")) {
+        element.classList.remove(cls);
+      }
+    }
+  }
+
+  _detachCellDragOverListener(element) {
+    const handler = this._cellDragOverHandlers.get(element);
+    if (handler) {
+      element.removeEventListener("dragover", handler);
+      this._cellDragOverHandlers.delete(element);
+    }
+  }
+
+  /**
+   * Five-zone hit test inside an empty cell, matching the slot
+   * wrapper's `_computeDropZone`. Returns `"center"` for the inner
+   * 60% rect, otherwise one of `"left"`/`"right"`/`"up"`/`"down"`.
+   * Corners resolve to the nearer edge.
+   */
+  _computeCellDropZone(event, element) {
+    const rect = element.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const w = rect.width;
+    const h = rect.height;
+    const edge = 0.2;
+
+    const inLeft = x < w * edge;
+    const inRight = x > w * (1 - edge);
+    const inTop = y < h * edge;
+    const inBottom = y > h * (1 - edge);
+
+    if (inLeft && inTop) {
+      return x < y ? "left" : "up";
+    }
+    if (inRight && inTop) {
+      return w - x < y ? "right" : "up";
+    }
+    if (inLeft && inBottom) {
+      return x < h - y ? "left" : "down";
+    }
+    if (inRight && inBottom) {
+      return w - x < h - y ? "right" : "down";
+    }
+    if (inLeft) {
+      return "left";
+    }
+    if (inRight) {
+      return "right";
+    }
+    if (inTop) {
+      return "up";
+    }
+    if (inBottom) {
+      return "down";
+    }
+    return "center";
   }
 
   @action

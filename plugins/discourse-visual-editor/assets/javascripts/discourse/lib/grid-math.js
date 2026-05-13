@@ -206,6 +206,295 @@ export function placementsOverlap(a, b) {
   );
 }
 
+/**
+ * Computes the slot mutations needed to insert a new occupant at an
+ * edge of `dropSlotKey`, cascading existing slots away in the relevant
+ * direction until an empty cell absorbs them. Returns `null` if the
+ * shift can't fit (cascade walks off the grid, or a shifted slot
+ * collides with a non-cascadable neighbour).
+ *
+ * Edge / direction mapping:
+ *
+ *  - `"left"` → source lands at dropSlot's leftmost cell; dropSlot and
+ *     anything past it in the row cascade RIGHT.
+ *  - `"right"` → source lands just past dropSlot's right edge; the slot
+ *     at that cell (if any) cascades RIGHT.
+ *  - `"up"` → source lands at dropSlot's topmost cell; dropSlot
+ *     cascades DOWN.
+ *  - `"down"` → source lands just past dropSlot's bottom edge; the slot
+ *     at that cell (if any) cascades DOWN.
+ *
+ * The source's own cells (if `sourceKey` is non-null and the source is
+ * already in the grid) are treated as vacant during planning — this
+ * is what lets the canonical `A, B, C → C, A, B` rearrange succeed:
+ * C's old cell absorbs B's shift.
+ *
+ * Assumes the source lands as 1×1; multi-span sources from other grids
+ * (or the same grid) land 1×1 here and the author can resize.
+ *
+ * @param {{
+ *   slots: Array<Object>,
+ *   sourceKey: string|null,
+ *   dropSlotKey: string,
+ *   direction: "left"|"right"|"up"|"down",
+ *   gridDims: {columns: number, rows: number}
+ * }} args
+ * @returns {{
+ *   moves: Array<{slotKey: string, column: string, row: string}>,
+ *   sourceLanding: {column: string, row: string}
+ * }|null}
+ */
+export function computeShiftPlan({
+  slots,
+  sourceKey,
+  dropSlotKey,
+  dropCell,
+  direction,
+  gridDims,
+}) {
+  const maxCol = gridDims.columns;
+  const maxRow = gridDims.rows;
+
+  // Build rect index, dropping the source's rect (treated as vacant).
+  const rects = new Map();
+  for (const slot of slots ?? []) {
+    const key = _slotEntryKey(slot);
+    if (!key || key === sourceKey) {
+      continue;
+    }
+    const placement = parseSlotPlacement(slot.args ?? {});
+    if (placement.column.start == null || placement.row.start == null) {
+      continue;
+    }
+    rects.set(key, {
+      colStart: placement.column.start,
+      colEnd: placement.column.end ?? placement.column.start + 1,
+      rowStart: placement.row.start,
+      rowEnd: placement.row.end ?? placement.row.start + 1,
+    });
+  }
+
+  // Drop rect: either an existing slot's rect, or a virtual 1×1 at a
+  // cell coordinate (for empty-cell edge drops). The shift algorithm
+  // doesn't care which — it only needs a rectangle to anchor the
+  // landing position and cascade direction.
+  let dropRect;
+  if (dropSlotKey) {
+    dropRect = rects.get(dropSlotKey);
+    if (!dropRect) {
+      return null;
+    }
+  } else if (dropCell) {
+    dropRect = {
+      colStart: dropCell.column,
+      colEnd: dropCell.column + 1,
+      rowStart: dropCell.row,
+      rowEnd: dropCell.row + 1,
+    };
+  } else {
+    return null;
+  }
+
+  // Landing position and cascade axis.
+  let landingCol, landingRow, axis;
+  if (direction === "left") {
+    landingCol = dropRect.colStart;
+    landingRow = dropRect.rowStart;
+    axis = "column";
+  } else if (direction === "right") {
+    landingCol = dropRect.colEnd;
+    landingRow = dropRect.rowStart;
+    axis = "column";
+  } else if (direction === "up") {
+    landingCol = dropRect.colStart;
+    landingRow = dropRect.rowStart;
+    axis = "row";
+  } else {
+    // "down"
+    landingCol = dropRect.colStart;
+    landingRow = dropRect.rowEnd;
+    axis = "row";
+  }
+
+  if (
+    landingCol < 1 ||
+    landingCol > maxCol ||
+    landingRow < 1 ||
+    landingRow > maxRow
+  ) {
+    return null;
+  }
+
+  // Scan from the landing position in the cascade direction to find
+  // the FIRST occupied cell. For an occupied drop slot this lands
+  // immediately on the slot itself; for an empty drop cell it skips
+  // ahead to the nearest neighbour, which is what the user expects
+  // when dropping on the edge of a placeholder cell next to a row of
+  // slots ("ripple shift everything past me to the right").
+  const firstShifted = _findFirstSlotInDirection(
+    rects,
+    landingCol,
+    landingRow,
+    axis,
+    maxCol,
+    maxRow
+  );
+
+  const moves = [];
+  const shifted = new Set();
+  let cursor = firstShifted;
+
+  while (cursor) {
+    if (shifted.has(cursor)) {
+      return null;
+    }
+    shifted.add(cursor);
+    const rect = rects.get(cursor);
+    if (!rect) {
+      return null;
+    }
+    const newRect = _shiftRect(rect, axis);
+    if (newRect.colEnd > maxCol + 1 || newRect.rowEnd > maxRow + 1) {
+      return null;
+    }
+    moves.push({ slotKey: cursor, newRect });
+    // Find anything in newRect's space that isn't already shifted.
+    let next = null;
+    for (const [key, otherRect] of rects) {
+      if (key === cursor || shifted.has(key)) {
+        continue;
+      }
+      if (_rectsOverlap(newRect, otherRect)) {
+        next = key;
+        break;
+      }
+    }
+    cursor = next;
+  }
+
+  // Validate: replay moves and the source's landing onto a fresh map.
+  const finalRects = new Map(rects);
+  for (const move of moves) {
+    finalRects.set(move.slotKey, move.newRect);
+  }
+  const sourceRect = {
+    colStart: landingCol,
+    colEnd: landingCol + 1,
+    rowStart: landingRow,
+    rowEnd: landingRow + 1,
+  };
+  for (const [, rect] of finalRects) {
+    if (_rectsOverlap(sourceRect, rect)) {
+      return null;
+    }
+  }
+  const keys = [...finalRects.keys()];
+  for (let i = 0; i < keys.length; i++) {
+    for (let j = i + 1; j < keys.length; j++) {
+      if (_rectsOverlap(finalRects.get(keys[i]), finalRects.get(keys[j]))) {
+        return null;
+      }
+    }
+  }
+
+  return {
+    moves: moves.map((m) => ({
+      slotKey: m.slotKey,
+      column: _rectToTrackString(m.newRect.colStart, m.newRect.colEnd),
+      row: _rectToTrackString(m.newRect.rowStart, m.newRect.rowEnd),
+    })),
+    sourceLanding: {
+      column: `${landingCol}`,
+      row: `${landingRow}`,
+    },
+  };
+}
+
+function _slotEntryKey(slot) {
+  if (!slot || slot.__stableKey === undefined) {
+    return null;
+  }
+  return `ve:slot:${slot.__stableKey}`;
+}
+
+function _findSlotAt(rects, col, row) {
+  for (const [key, rect] of rects) {
+    if (
+      col >= rect.colStart &&
+      col < rect.colEnd &&
+      row >= rect.rowStart &&
+      row < rect.rowEnd
+    ) {
+      return key;
+    }
+  }
+  return null;
+}
+
+/**
+ * Scans from `(startCol, startRow)` in the given axis (forward
+ * direction only — column = right, row = down) and returns the first
+ * slot key whose rect covers that cell. Returns `null` if no slot is
+ * found before the grid edge. Used to find the head of the cascade
+ * chain regardless of whether the drop target itself is a slot or
+ * an empty cell.
+ */
+function _findFirstSlotInDirection(
+  rects,
+  startCol,
+  startRow,
+  axis,
+  maxCol,
+  maxRow
+) {
+  if (axis === "column") {
+    for (let c = startCol; c <= maxCol; c++) {
+      const slot = _findSlotAt(rects, c, startRow);
+      if (slot) {
+        return slot;
+      }
+    }
+  } else {
+    for (let r = startRow; r <= maxRow; r++) {
+      const slot = _findSlotAt(rects, startCol, r);
+      if (slot) {
+        return slot;
+      }
+    }
+  }
+  return null;
+}
+
+function _shiftRect(rect, axis) {
+  if (axis === "column") {
+    return {
+      colStart: rect.colStart + 1,
+      colEnd: rect.colEnd + 1,
+      rowStart: rect.rowStart,
+      rowEnd: rect.rowEnd,
+    };
+  }
+  return {
+    colStart: rect.colStart,
+    colEnd: rect.colEnd,
+    rowStart: rect.rowStart + 1,
+    rowEnd: rect.rowEnd + 1,
+  };
+}
+
+function _rectsOverlap(a, b) {
+  return (
+    a.colStart < b.colEnd &&
+    b.colStart < a.colEnd &&
+    a.rowStart < b.rowEnd &&
+    b.rowStart < a.rowEnd
+  );
+}
+
+function _rectToTrackString(start, end) {
+  return end === start + 1 ? `${start}` : `${start} / ${end}`;
+}
+
 function fillRect(occupied, placement, columns, rows) {
   const colStart = clamp(placement.column.start, 1, columns);
   const colEnd = clamp(placement.column.end, colStart + 1, columns + 1);

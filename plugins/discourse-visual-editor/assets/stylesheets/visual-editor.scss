@@ -222,7 +222,9 @@ body.visual-editor-active {
   }
 
   .visual-editor-block-chrome:hover > .visual-editor-block-handle,
-  .visual-editor-block-chrome.--selected > .visual-editor-block-handle {
+  .visual-editor-block-chrome.--selected > .visual-editor-block-handle,
+  .visual-editor-transparent-slot:hover > .visual-editor-block-handle,
+  .visual-editor-transparent-slot.--selected > .visual-editor-block-handle {
     opacity: 1;
   }
 
@@ -299,6 +301,30 @@ body.visual-editor-active {
     &.--inside.--empty .visual-editor-drop-zone__label {
       opacity: 1;
       color: var(--primary-medium);
+    }
+  }
+
+  /* Horizontal-axis layouts (row mode): the wrapper switches to flex-row
+     so the before-chrome-after sequence sits side-by-side, and the
+     before / after drop zones flip from horizontal strips into vertical
+     ones. Without this, dropping in a row-mode layout would land the
+     block above / below its siblings instead of left / right of them. */
+
+  .visual-editor-block-chrome-wrapper.--axis-horizontal {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    > .visual-editor-block-chrome {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    > .visual-editor-drop-zone.--before,
+    > .visual-editor-drop-zone.--after {
+      height: auto;
+      width: 0.5rem;
+      align-self: stretch;
     }
   }
 
@@ -1144,6 +1170,57 @@ body.visual-editor-active {
       }
     }
 
+    /* Zone-specific drop feedback. The cursor's position within the
+       slot determines which class is set during dragover; the class
+       names the action that would commit on drop. Five zones:
+       `center` (swap), `replace` (center + Shift held), and
+       `left` / `right` / `up` / `down` (edge insert-with-shift).
+       Only one zone class is set at a time. */
+
+    &.--drop-zone-center {
+      border-color: var(--tertiary);
+      border-style: solid;
+      background: var(--tertiary-low);
+      box-shadow: 0 0 0 1px var(--tertiary);
+    }
+
+    &.--drop-zone-replace {
+      border-color: var(--danger);
+      border-style: solid;
+      background: rgb(220 53 69 / 0.15);
+      box-shadow: 0 0 0 1px var(--danger);
+    }
+
+    /* Edge zones: hide the normal dotted border so the existing 4-side
+       outline doesn't read as "all edges highlighted", and replace it
+       with a single tertiary strip on the active edge. The other three
+       sides become invisible during the drag, making the active edge
+       unambiguous. */
+
+    &.--drop-zone-left,
+    &.--drop-zone-right,
+    &.--drop-zone-up,
+    &.--drop-zone-down {
+      border-color: transparent;
+      background: var(--tertiary-very-low);
+    }
+
+    &.--drop-zone-left {
+      box-shadow: inset 8px 0 0 var(--tertiary);
+    }
+
+    &.--drop-zone-right {
+      box-shadow: inset -8px 0 0 var(--tertiary);
+    }
+
+    &.--drop-zone-up {
+      box-shadow: inset 0 8px 0 var(--tertiary);
+    }
+
+    &.--drop-zone-down {
+      box-shadow: inset 0 -8px 0 var(--tertiary);
+    }
+
     /* The inner block's chrome inside a slot must NOT add its own
        decoration — the slot wrapper IS the visible cell outline.
        Hide border / background / handle so the only visible chrome
@@ -1228,6 +1305,44 @@ body.visual-editor-active
     background: rgb(217 119 6 / 0.18);
     border-style: solid;
     border-color: var(--visual-editor-block-hover-color);
+  }
+
+  /* Per-zone drop feedback on empty cells. Mirrors the slot wrapper's
+     treatment so authors get a consistent edge-aware mental model on
+     both placeholders and occupied slots. */
+
+  &.--drop-zone-center {
+    border-color: var(--tertiary);
+    border-style: solid;
+    background: var(--tertiary-low);
+  }
+
+  /* Edge zones: hide the normal dashed border (which otherwise reads
+     as "all sides highlighted") and show only the active edge as a
+     thick tertiary strip. */
+
+  &.--drop-zone-left,
+  &.--drop-zone-right,
+  &.--drop-zone-up,
+  &.--drop-zone-down {
+    border-color: transparent;
+    background: var(--tertiary-very-low);
+  }
+
+  &.--drop-zone-left {
+    box-shadow: inset 8px 0 0 var(--tertiary);
+  }
+
+  &.--drop-zone-right {
+    box-shadow: inset -8px 0 0 var(--tertiary);
+  }
+
+  &.--drop-zone-up {
+    box-shadow: inset 0 8px 0 var(--tertiary);
+  }
+
+  &.--drop-zone-down {
+    box-shadow: inset 0 -8px 0 var(--tertiary);
   }
 
   &__plus {
