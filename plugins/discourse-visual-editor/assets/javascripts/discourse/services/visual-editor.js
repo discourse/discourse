@@ -17,7 +17,7 @@ import {
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import discourseDebounce from "discourse/lib/debounce";
 import PreloadStore from "discourse/lib/preload-store";
-import { parseSlotPlacement } from "../lib/grid-math";
+import { computeShiftPlan, parseSlotPlacement } from "../lib/grid-math";
 import {
   cloneEntryForPaste,
   cloneLayoutForDraft,
@@ -2067,6 +2067,290 @@ export default class VisualEditorService extends Service {
   }
 
   /**
+   * Swaps the `column` / `row` args of two slots in the same grid. One
+   * `_recordStructural` entry so swap-then-undo restores both placements
+   * atomically.
+   *
+   * @param {{slotKeyA: string, slotKeyB: string}} args
+   * @returns {boolean}
+   */
+  @action
+  swapSlotPlacements({ slotKeyA, slotKeyB }) {
+    if (!slotKeyA || !slotKeyB || slotKeyA === slotKeyB) {
+      return false;
+    }
+    const a = this._findEntryAndOutletSync(slotKeyA);
+    const b = this._findEntryAndOutletSync(slotKeyB);
+    if (!a || !b || a.outletName !== b.outletName) {
+      return false;
+    }
+    if (!this._isSlotEntry(a.entry) || !this._isSlotEntry(b.entry)) {
+      return false;
+    }
+    const aArgs = {
+      column: a.entry.args?.column ?? "auto",
+      row: a.entry.args?.row ?? "auto",
+    };
+    const bArgs = {
+      column: b.entry.args?.column ?? "auto",
+      row: b.entry.args?.row ?? "auto",
+    };
+    return this._recordStructural([a.outletName], () => {
+      let layout = this.readResolvedLayout(a.outletName);
+      const firstSwap = replaceEntryArgs(layout, slotKeyA, (current) => ({
+        ...current,
+        column: bArgs.column,
+        row: bArgs.row,
+      }));
+      if (!firstSwap.changed) {
+        return false;
+      }
+      layout = firstSwap.layout;
+      const secondSwap = replaceEntryArgs(layout, slotKeyB, (current) => ({
+        ...current,
+        column: aArgs.column,
+        row: aArgs.row,
+      }));
+      if (!secondSwap.changed) {
+        return false;
+      }
+      this._publishStructuralChange(a.outletName, secondSwap.layout);
+      return true;
+    });
+  }
+
+  /**
+   * Removes the target slot (and its inner block) and re-places the
+   * source slot at the target's old cell — atomically, under one
+   * structural-undo entry. Used for the Shift-held "replace" gesture:
+   * target dies, source takes its cell.
+   *
+   * Both slots must live in the same outlet, and both must be
+   * `ve:slot` entries (i.e. the source drag came from a grid block,
+   * not a palette).
+   *
+   * @param {{targetSlotKey: string, sourceSlotKey: string}} args
+   * @returns {boolean}
+   */
+  @action
+  replaceSlot({ targetSlotKey, sourceSlotKey }) {
+    if (!targetSlotKey || !sourceSlotKey || targetSlotKey === sourceSlotKey) {
+      return false;
+    }
+    const target = this._findEntryAndOutletSync(targetSlotKey);
+    const source = this._findEntryAndOutletSync(sourceSlotKey);
+    if (
+      !target ||
+      !source ||
+      target.outletName !== source.outletName ||
+      !this._isSlotEntry(target.entry) ||
+      !this._isSlotEntry(source.entry)
+    ) {
+      return false;
+    }
+    const targetCol = target.entry.args?.column ?? "auto";
+    const targetRow = target.entry.args?.row ?? "auto";
+    return this._recordStructural([target.outletName], () => {
+      let layout = this.readResolvedLayout(target.outletName);
+      const removal = removeEntry(layout, targetSlotKey);
+      if (!removal.changed) {
+        return false;
+      }
+      layout = removal.layout;
+      const moved = replaceEntryArgs(layout, sourceSlotKey, (current) => ({
+        ...current,
+        column: targetCol,
+        row: targetRow,
+      }));
+      if (!moved.changed) {
+        return false;
+      }
+      this._publishStructuralChange(target.outletName, moved.layout);
+      return true;
+    });
+  }
+
+  /**
+   * Inserts a new block at the edge of `dropSlotKey`, cascading existing
+   * slots in the appropriate direction to make room. Wraps the entire
+   * sequence (cascade + insert) into one structural-undo entry.
+   *
+   * The source can be:
+   *  - an existing slot in this grid (`sourceKey` set, `paletteBlockName`
+   *    null) — its cell is freed during planning so it can absorb the
+   *    cascade tail (enables rotations like `A, B, C → C, A, B`).
+   *  - a fresh palette block (`sourceKey` null, `paletteBlockName` /
+   *    `paletteDefaultArgs` set) — a new slot is minted at the landing
+   *    cell with the named block inside.
+   *  - a slot from another grid or container — wrapped/unwrapped via
+   *    the existing `_transformForDestination` path, then re-targeted
+   *    to the landing cell.
+   *
+   * Returns false (no commit) when the shift plan is invalid (cascade
+   * runs off-grid, or shifted slots would overlap a span).
+   *
+   * @param {{
+   *   gridKey: string,
+   *   dropSlotKey: string,
+   *   direction: "left"|"right"|"up"|"down",
+   *   sourceKey: string|null,
+   *   paletteBlockName: string|null,
+   *   paletteDefaultArgs: Object|null,
+   * }} args
+   * @returns {boolean}
+   */
+  @action
+  insertWithShift({
+    gridKey,
+    dropSlotKey = null,
+    dropCell = null,
+    direction,
+    sourceKey = null,
+    paletteBlockName = null,
+    paletteDefaultArgs = null,
+  }) {
+    const grid = this._findEntryAndOutletSync(gridKey);
+    if (!grid || !this._isGridContainer(grid.entry)) {
+      return false;
+    }
+    const sourceLocated = sourceKey
+      ? this._findEntryAndOutletSync(sourceKey)
+      : null;
+    // Resolve the "source-in-this-grid" key for computeShiftPlan's
+    // free-cell credit. Only same-grid sources free a cell; cross-grid
+    // sources count as new arrivals.
+    const sourceInGrid =
+      sourceLocated &&
+      sourceLocated.outletName === grid.outletName &&
+      this._isSlotInGrid(sourceLocated.entry, gridKey)
+        ? sourceKey
+        : null;
+    const plan = computeShiftPlan({
+      slots: grid.entry.children ?? [],
+      sourceKey: sourceInGrid,
+      dropSlotKey,
+      dropCell,
+      direction,
+      gridDims: {
+        columns: Number(grid.entry.args?.columns ?? 6),
+        rows: Number(grid.entry.args?.rows ?? 2),
+      },
+    });
+    if (!plan) {
+      return false;
+    }
+    const outletsAffected =
+      sourceLocated && sourceLocated.outletName !== grid.outletName
+        ? [sourceLocated.outletName, grid.outletName]
+        : [grid.outletName];
+    return this._recordStructural(outletsAffected, () => {
+      // Apply the cascade first so subsequent inserts / placements
+      // see the post-shift occupancy.
+      for (const move of plan.moves) {
+        const layout = this.readResolvedLayout(grid.outletName);
+        const result = replaceEntryArgs(layout, move.slotKey, (current) => ({
+          ...current,
+          column: move.column,
+          row: move.row,
+        }));
+        if (!result.changed) {
+          return false;
+        }
+        this._publishStructuralChange(grid.outletName, result.layout);
+      }
+      // Now place the source at the landing cell.
+      const { column, row } = plan.sourceLanding;
+      if (sourceKey && sourceInGrid) {
+        // Same-grid existing slot: just re-place it.
+        const layout = this.readResolvedLayout(grid.outletName);
+        const result = replaceEntryArgs(layout, sourceKey, (current) => ({
+          ...current,
+          column,
+          row,
+        }));
+        if (!result.changed) {
+          return false;
+        }
+        this._publishStructuralChange(grid.outletName, result.layout);
+      } else if (sourceKey) {
+        // Cross-grid existing slot: move it into the target grid, then
+        // re-place at the landing cell.
+        const moved = this._moveAcrossOutlets({
+          sourceOutletName: sourceLocated.outletName,
+          targetOutletName: grid.outletName,
+          sourceKey,
+          targetKey: gridKey,
+          position: "inside",
+        });
+        if (!moved) {
+          return false;
+        }
+        // Locate the new slot by identity-matching its inner block.
+        const innerRef = this._isSlotEntry(sourceLocated.entry)
+          ? sourceLocated.entry.children?.[0]
+          : sourceLocated.entry;
+        const updatedGrid = this._findEntryAndOutletSync(gridKey)?.entry;
+        const newSlot = updatedGrid?.children?.find(
+          (child) =>
+            this._isSlotEntry(child) && child.children?.[0] === innerRef
+        );
+        if (newSlot) {
+          const layout = this.readResolvedLayout(grid.outletName);
+          const result = replaceEntryArgs(
+            layout,
+            entryKey(newSlot),
+            (current) => ({ ...current, column, row })
+          );
+          if (result.changed) {
+            this._publishStructuralChange(grid.outletName, result.layout);
+          }
+        }
+      } else if (paletteBlockName) {
+        // Palette drop: mint a fresh slot at the landing cell.
+        const layout = this.readResolvedLayout(grid.outletName);
+        if (!layout) {
+          return false;
+        }
+        const innerEntry = {
+          block: paletteBlockName,
+          args: { ...(paletteDefaultArgs ?? {}) },
+        };
+        const slotEntry = {
+          block: "ve:slot",
+          args: { column, row },
+          children: [innerEntry],
+        };
+        const insertion = insertEntryAt(layout, gridKey, slotEntry, "inside");
+        if (!insertion.changed) {
+          return false;
+        }
+        this._publishStructuralChange(grid.outletName, insertion.layout);
+        this._selectInsertedEntry(innerEntry);
+      } else {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  /**
+   * Whether `entry` is a `ve:slot` whose direct parent is the layout
+   * identified by `gridKey`. Used by `insertWithShift` to decide
+   * whether to credit the source's cells as free during planning.
+   *
+   * @param {Object} entry
+   * @param {string} gridKey
+   * @returns {boolean}
+   */
+  _isSlotInGrid(entry, gridKey) {
+    if (!this._isSlotEntry(entry)) {
+      return false;
+    }
+    const parent = this._findEntryParent(entryKey(entry));
+    return parent && entryKey(parent) === gridKey;
+  }
+
+  /**
    * Returns the slot children of a grid `ve:layout` whose explicit
    * column / row placements would fall outside the given bounds. Each
    * entry yields the slot's composite key and the offending placement
@@ -2297,14 +2581,71 @@ export default class VisualEditorService extends Service {
       }
     }
 
-    // Cross-container fallback: drop into the grid; placement defaults to
-    // auto/auto via `_wrapForGridIfNeeded`. The author can then drag again
-    // within the grid to land at the exact cell.
-    return this.moveBlock({
-      sourceKey,
-      targetKey: gridKey,
-      position: "inside",
-      targetOutletName: grid.outletName,
+    // Cross-container case: move into the grid + apply the cell placement
+    // as ONE structural-undo entry so a single Cmd+Z reverts the whole
+    // drag, not just the placement.
+    //
+    // Capture the inner-content reference BEFORE moving so we can locate
+    // the resulting slot afterward — either `sourceLocated.entry` IS the
+    // slot (we preserve its identity via `_transformForDestination`) or
+    // its `children[0]` is the naked content that the wrap step pairs
+    // with a fresh slot.
+    const innerRef = this._isSlotEntry(sourceLocated.entry)
+      ? sourceLocated.entry.children?.[0]
+      : sourceLocated.entry;
+    const outletsAffected =
+      sourceLocated.outletName === grid.outletName
+        ? [grid.outletName]
+        : [sourceLocated.outletName, grid.outletName];
+
+    return this._recordStructural(outletsAffected, () => {
+      // Call the inner movers directly to avoid the nested
+      // `_recordStructural` that `moveBlock` would impose.
+      const moved =
+        sourceLocated.outletName === grid.outletName
+          ? this._moveWithinOutlet(
+              grid.outletName,
+              sourceKey,
+              gridKey,
+              "inside"
+            )
+          : this._moveAcrossOutlets({
+              sourceOutletName: sourceLocated.outletName,
+              targetOutletName: grid.outletName,
+              sourceKey,
+              targetKey: gridKey,
+              position: "inside",
+            });
+      if (!moved) {
+        return false;
+      }
+      // Locate the newly-inserted slot by identity-matching on its
+      // inner block reference (preserved across the move).
+      const updatedGrid = this._findEntryAndOutletSync(gridKey)?.entry;
+      const newSlot = updatedGrid?.children?.find(
+        (child) => this._isSlotEntry(child) && child.children?.[0] === innerRef
+      );
+      if (!newSlot) {
+        // Move succeeded but we couldn't pinpoint the new slot — accept
+        // the auto-placed result rather than rolling back.
+        return true;
+      }
+      // Inline the placement update; calling `setSlotPlacement` would
+      // open a nested `_recordStructural` and double the undo entries.
+      const updatedLayout = this.readResolvedLayout(grid.outletName);
+      const result = replaceEntryArgs(
+        updatedLayout,
+        entryKey(newSlot),
+        (current) => ({
+          ...current,
+          column: `${column}`,
+          row: `${row}`,
+        })
+      );
+      if (result.changed) {
+        this._publishStructuralChange(grid.outletName, result.layout);
+      }
+      return true;
     });
   }
 
@@ -2395,42 +2736,34 @@ export default class VisualEditorService extends Service {
     if (!layout) {
       return false;
     }
-    // Same-outlet move: if the entry is heading into a grid layout
-    // (destination parent is `ve:layout` in grid mode) AND the
-    // entry isn't already a slot, wrap it. The wrap happens on the
-    // entry-in-place via a transform pass before `moveEntry`. See
-    // Phase 7s.3.
     const sourceEntry = findEntry(layout, sourceKey);
-    const wrappedSource = sourceEntry
-      ? this._wrapForGridIfNeeded({
-          entry: sourceEntry,
-          layout,
-          targetKey,
-          position,
-        })
-      : sourceEntry;
-    // If wrapping is required, do a remove+insert instead of moveEntry
-    // (moveEntry preserves the entry reference; we need to substitute
-    // a fresh slot wrapper around it).
-    if (wrappedSource && wrappedSource !== sourceEntry) {
+    if (!sourceEntry) {
+      return false;
+    }
+    // Same-outlet move: the destination may require wrapping (non-slot
+    // entering a grid) OR unwrapping (slot leaving a grid). Both cases
+    // substitute the entry — moveEntry preserves identity, so a
+    // remove+insert is needed when the shape changes.
+    const transformed = this._transformForDestination({
+      entry: sourceEntry,
+      layout,
+      targetKey,
+      position,
+    });
+    if (transformed !== sourceEntry) {
       const removal = removeEntry(layout, sourceKey);
       if (!removal.changed || !removal.removed) {
         return false;
       }
-      // The wrapped entry holds the original entry as its single
-      // child — that's what we want to insert. Build a fresh wrapper
-      // around the removed entry to ensure we carry the live `args`
-      // (in case `removal.removed` is the same reference, which it is
-      // by current `removeEntry` semantics).
-      const slotEntry = {
-        block: "ve:slot",
-        args: { column: "auto", row: "auto" },
-        children: [removal.removed],
-      };
+      // For wrap, the transform already built the slot wrapper around
+      // `sourceEntry` — but `removal.removed` is the same reference,
+      // so the wrapper's inner child is still correct.
+      // For unwrap, the transform returned the inner block directly,
+      // which is also referentially correct.
       const insertion = insertEntryAt(
         removal.layout,
         targetKey,
-        slotEntry,
+        transformed,
         position
       );
       if (!insertion.changed) {
@@ -2466,9 +2799,10 @@ export default class VisualEditorService extends Service {
     if (!removal.changed || !removal.removed) {
       return false;
     }
-    // Wrap the moved entry in a `ve:slot` if the destination parent
-    // is a grid layout. See Phase 7s.3.
-    const entryToInsert = this._wrapForGridIfNeeded({
+    // The moved entry may need to be wrapped (non-slot landing in a
+    // grid) OR unwrapped (slot landing in a non-grid). Both cases
+    // funnel through `_transformForDestination`.
+    const entryToInsert = this._transformForDestination({
       entry: removal.removed,
       layout: targetLayout,
       targetKey,
@@ -2527,6 +2861,63 @@ export default class VisualEditorService extends Service {
       args: { column: "auto", row: "auto" },
       children: [entry],
     };
+  }
+
+  /**
+   * Symmetric inverse of `_wrapForGridIfNeeded`. When the entry IS a
+   * `ve:slot` AND the destination parent is NOT a grid, returns the
+   * slot's inner block (stripping the wrapper and its grid-only
+   * `column` / `row` / `align` / `justify` args). Anywhere else,
+   * returns the entry unchanged.
+   *
+   * Without this, dragging a slot out of a grid into a stack / row
+   * layout (or the outlet root) would leave the slot wrapper behind
+   * as a vestigial container whose grid placement args are
+   * meaningless outside a grid.
+   *
+   * @param {{entry: Object, layout: Array<Object>, targetKey: string|null, position: string}} args
+   * @returns {Object}
+   */
+  _unwrapIfLeavingGrid({ entry, layout, targetKey, position }) {
+    if (!entry || !this._isSlotEntry(entry)) {
+      return entry;
+    }
+    const parent = this._destinationParentEntry({
+      layout,
+      targetKey,
+      position,
+    });
+    if (this._isGridContainer(parent)) {
+      return entry;
+    }
+    const inner = entry.children?.[0];
+    if (!inner) {
+      return entry;
+    }
+    return inner;
+  }
+
+  /**
+   * Single entry point that picks between wrapping and unwrapping
+   * based on the entry's current shape and the destination's parent.
+   * Returns the entry-to-insert; the caller compares it against the
+   * source to decide whether to do a `remove + insert` (transform
+   * substituted the entry) or a `moveEntry` (identity preserved).
+   *
+   * @param {{entry: Object, layout: Array<Object>, targetKey: string|null, position: string}} args
+   * @returns {Object}
+   */
+  _transformForDestination({ entry, layout, targetKey, position }) {
+    const unwrapped = this._unwrapIfLeavingGrid({
+      entry,
+      layout,
+      targetKey,
+      position,
+    });
+    if (unwrapped !== entry) {
+      return unwrapped;
+    }
+    return this._wrapForGridIfNeeded({ entry, layout, targetKey, position });
   }
 
   /**

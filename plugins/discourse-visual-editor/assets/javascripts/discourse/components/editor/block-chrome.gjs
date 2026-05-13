@@ -7,6 +7,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
@@ -88,6 +89,26 @@ export default class BlockChrome extends Component {
    * stale `null`).
    */
   @tracked _chromeEl = null;
+
+  /**
+   * Tracks the active dragover listener so we can detach it cleanly on
+   * leave / drop. Whole-slot highlights don't communicate WHICH zone
+   * the user is targeting; this listener updates a per-zone class
+   * (`--drop-zone-{center|replace|left|right|up|down}`) as the cursor
+   * moves within the slot, so the visual feedback names the action.
+   */
+  _slotDragOverHandler = null;
+
+  /**
+   * The most recent zone+modifier observed during dragover, captured
+   * so the drop dispatch matches the visual feedback the user just
+   * saw. Recomputing from the drop event's coordinates is unreliable —
+   * the cursor can jitter between the last dragover and the release,
+   * so we honour what the user was looking at instead of what the
+   * browser reported at the millisecond of drop.
+   */
+  _lastDropZone = null;
+  _lastDropShift = false;
 
   /**
    * Block metadata (description, namespace, isContainer, args schema, etc.)
@@ -426,6 +447,39 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * The layout axis of this block's parent — `"horizontal"` for a
+   * `ve:layout` in row mode, `"vertical"` for stack mode (the default),
+   * `null` otherwise (outlet root, grid slot, non-layout container).
+   *
+   * Drives the orientation of the `--before` / `--after` sibling drop
+   * zones: horizontal axis = vertical strips on the left/right;
+   * vertical axis = horizontal strips above/below. Without this,
+   * "before / after" in a row layout would render as zones ABOVE / BELOW
+   * the block, which doesn't match where its siblings actually are.
+   *
+   * @returns {"horizontal"|"vertical"|null}
+   */
+  get parentLayoutAxis() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.visualEditor.structuralVersion;
+    const parent = this.visualEditor._findEntryParent(this.args.blockKey);
+    if (!parent) {
+      return null;
+    }
+    if (this.visualEditor._blockNameOf(parent) !== "ve:layout") {
+      return null;
+    }
+    const mode = parent.args?.mode ?? "stack";
+    if (mode === "row") {
+      return "horizontal";
+    }
+    if (mode === "stack") {
+      return "vertical";
+    }
+    return null;
+  }
+
+  /**
    * Whether the wrapped block is a container with no children. Containers
    * normally render via `{{#each @children}}` so an empty one produces
    * zero DOM and the inside-drop zone collapses to nothing visible.
@@ -486,6 +540,174 @@ export default class BlockChrome extends Component {
       column: placement.column,
       row: placement.row,
     });
+  }
+
+  /**
+   * Drop gate for the slot wrapper's `dDragAndDropTarget`. Rejects a
+   * slot dropped onto itself; everything else lets `applySlotDrop`
+   * decide what to do based on the cursor's zone within the slot.
+   */
+  @action
+  canDropOnSlot({ source }) {
+    if (!source?.data?.blockKey) {
+      return true;
+    }
+    return source.data.blockKey !== this.args.blockKey;
+  }
+
+  @action
+  handleSlotDragEnter({ element, event }) {
+    if (!this._slotDragOverHandler) {
+      this._slotDragOverHandler = (e) => this._updateDropZone(e, element);
+      element.addEventListener("dragover", this._slotDragOverHandler);
+    }
+    this._updateDropZone(event, element);
+  }
+
+  @action
+  handleSlotDragLeave({ element }) {
+    this._detachDragOverListener(element);
+    this._clearDropZone(element);
+    this._lastDropZone = null;
+    this._lastDropShift = false;
+  }
+
+  _updateDropZone(event, element) {
+    const zone = this._computeDropZone(event, element);
+    const shift = !!event.shiftKey;
+    this._lastDropZone = zone;
+    this._lastDropShift = shift;
+    const cls = zone === "center" && shift ? "replace" : zone;
+    this._clearDropZone(element);
+    element.classList.add(`--drop-zone-${cls}`);
+  }
+
+  _clearDropZone(element) {
+    if (!element) {
+      return;
+    }
+    for (const cls of [...element.classList]) {
+      if (cls.startsWith("--drop-zone-")) {
+        element.classList.remove(cls);
+      }
+    }
+  }
+
+  _detachDragOverListener(element) {
+    if (this._slotDragOverHandler && element) {
+      element.removeEventListener("dragover", this._slotDragOverHandler);
+    }
+    this._slotDragOverHandler = null;
+  }
+
+  /**
+   * Dispatches a drop onto the slot wrapper. Zone math: cursor in the
+   * inner 60% rect = center (swap / replace); outer 20% bands on each
+   * side = edge insert-with-shift in that direction. Corners resolve
+   * to the nearer side.
+   */
+  @action
+  applySlotDrop({ source, element, event }) {
+    this._clearDropZone(element);
+    this._detachDragOverListener(element);
+
+    // Use the LAST zone we saw during dragover, not a fresh recompute
+    // from the drop event. The drop event's coords can jitter slightly
+    // off whatever zone the user was looking at when they released,
+    // which would dispatch the wrong action (e.g. a center-zone swap
+    // when the user clearly hovered the left edge for a shift).
+    const zone = this._lastDropZone ?? this._computeDropZone(event, element);
+    const shiftHeld = this._lastDropShift || event.shiftKey;
+    this._lastDropZone = null;
+    this._lastDropShift = false;
+
+    const targetSlotKey = this.args.blockKey;
+    const gridParent = this.visualEditor._findEntryParent(targetSlotKey);
+    const gridKey = gridParent ? entryKey(gridParent) : null;
+
+    if (zone === "center") {
+      if (source?.kind !== "ve-block") {
+        // Palette → center is rejected; the canDrop gate could enforce
+        // this but doing it here keeps the per-zone dispatch in one
+        // spot.
+        this.visualEditor.endDrag?.();
+        return;
+      }
+      const sourceSlotKey = source.data?.blockKey;
+      if (!sourceSlotKey) {
+        this.visualEditor.endDrag?.();
+        return;
+      }
+      if (shiftHeld) {
+        this.visualEditor.replaceSlot({
+          targetSlotKey,
+          sourceSlotKey,
+        });
+      } else {
+        this.visualEditor.swapSlotPlacements({
+          slotKeyA: targetSlotKey,
+          slotKeyB: sourceSlotKey,
+        });
+      }
+    } else if (gridKey) {
+      this.visualEditor.insertWithShift({
+        gridKey,
+        dropSlotKey: targetSlotKey,
+        direction: zone,
+        sourceKey: source?.kind === "ve-block" ? source.data?.blockKey : null,
+        paletteBlockName:
+          source?.kind === "ve-palette-block" ? source.data?.blockName : null,
+        paletteDefaultArgs:
+          source?.kind === "ve-palette-block" ? source.data?.defaultArgs : null,
+      });
+    }
+    this.visualEditor.endDrag?.();
+  }
+
+  /**
+   * Maps a cursor position within the slot's rect to a drop zone:
+   * `"center"` (inner 60%), or one of `"left"`/`"right"`/`"up"`/
+   * `"down"` (outer 20% bands). Corner regions tie-break by which
+   * outer edge the cursor is closer to.
+   */
+  _computeDropZone(event, element) {
+    const rect = element.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const w = rect.width;
+    const h = rect.height;
+    const edge = 0.2;
+
+    const inLeft = x < w * edge;
+    const inRight = x > w * (1 - edge);
+    const inTop = y < h * edge;
+    const inBottom = y > h * (1 - edge);
+
+    if (inLeft && inTop) {
+      return x < y ? "left" : "up";
+    }
+    if (inRight && inTop) {
+      return w - x < y ? "right" : "up";
+    }
+    if (inLeft && inBottom) {
+      return x < h - y ? "left" : "down";
+    }
+    if (inRight && inBottom) {
+      return w - x < h - y ? "right" : "down";
+    }
+    if (inLeft) {
+      return "left";
+    }
+    if (inRight) {
+      return "right";
+    }
+    if (inTop) {
+      return "up";
+    }
+    if (inBottom) {
+      return "down";
+    }
+    return "center";
   }
 
   /**
@@ -680,6 +902,13 @@ export default class BlockChrome extends Component {
         tabindex={{if this.visualEditor.isActive "0"}}
         {{didInsert this.captureChromeEl}}
         {{on "click" this.onClick}}
+        {{dDragAndDropTarget
+          accepts=this.acceptedDragKinds
+          canDrop=this.canDropOnSlot
+          onDragEnter=this.handleSlotDragEnter
+          onDragLeave=this.handleSlotDragLeave
+          onDrop=this.applySlotDrop
+        }}
       >
         {{#if this.visualEditor.isActive}}
           {{#if this.isOutOfBounds}}
@@ -741,7 +970,12 @@ export default class BlockChrome extends Component {
         block — matching the move semantics ("place adjacent to this block
         at the parent's level"). Inside zones (containers only) sit within
         the frame, signalling "place as the container's first child". }}
-      <div class="visual-editor-block-chrome-wrapper">
+      <div
+        class={{dConcatClass
+          "visual-editor-block-chrome-wrapper"
+          (if (eq this.parentLayoutAxis "horizontal") "--axis-horizontal")
+        }}
+      >
         {{#if this.showsSiblingDropZones}}
           <div
             class={{dConcatClass
