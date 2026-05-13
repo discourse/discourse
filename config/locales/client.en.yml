@@ -6997,10 +6997,10 @@ en:
               today_partial: "(today, partial)"
           ranked_count: "(%{count})"
           top_referrers:
-            title: "Top referrers"
+            title: "Top referrers (WIP)"
             empty: "No referral data for this period."
           top_countries:
-            title: "Top countries"
+            title: "Top countries (WIP)"
             empty: "No country data for this period."
           drilldown: "See details →"
         reports:
