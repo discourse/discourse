@@ -242,9 +242,7 @@ class DiscoursePluginRegistry
 
   def self.seed_paths
     result = SeedFu.fixture_paths.dup
-    unless Rails.env.test? && ENV["LOAD_PLUGINS"] != "1"
-      seed_path_builders.each { |b| result += b.call }
-    end
+    seed_path_builders.each { |b| result += b.call } if GlobalSetting.load_plugins?
     result.uniq
   end
 
