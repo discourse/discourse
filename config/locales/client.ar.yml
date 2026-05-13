@@ -745,6 +745,13 @@ ar:
           other: "تم إنشاؤه منذ %{count} عام"
     bookmarked:
       title: "وضع إشارة مرجعية"
+      edit_bookmark:
+        zero: "تعديل الإشارات المرجعية"
+        one: "تعديل الإشارة المرجعية"
+        two: "تعديل الإشارتين المرجعيتين"
+        few: "تعديل الإشارات المرجعية"
+        many: "تعديل الإشارات المرجعية"
+        other: "تعديل الإشارات المرجعية"
       delete_bookmarks: "حذف جميع الإشارات المرجعية"
       help:
         bookmark: "انقر لإنشاء إشارة مرجعية لهذا الموضوع"
@@ -3400,6 +3407,13 @@ ar:
       select_icon: "تحديد أيقونة"
       search_placeholder: "بحث عن أيقونات..."
       no_results: "لم يتم العثور على أي أيقونات"
+      results_count:
+        zero: "تم العثور على %{count} من الأيقونات"
+        one: "تم العثور على أيقونة %{count}"
+        two: "تم العثور على أيقونتين %{count}"
+        few: "تم العثور على %{count} أيقونات"
+        many: "تم العثور على %{count} أيقونة"
+        other: "تم العثور على %{count} أيقونة"
       favorites: "المفضلة"
       selected_icon: "الأيقونة المحددة: %{iconName}"
       clear: "إزالة الأيقونة"
@@ -4248,6 +4262,13 @@ ar:
           few: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوعات. هل أنت متأكد؟"
           many: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوعًا. هل أنت متأكد؟"
           other: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوع. هل أنت متأكد؟"
+        confirm_unpin_topics:
+          zero: "إلغاء تثبيت %{count} من الموضوعات"
+          one: "إلغاء تثبيت موضوع %{count}"
+          two: "إلغاء تثبيت موضوعين %{count}"
+          few: "إلغاء تثبيت %{count} موضوعات"
+          many: "إلغاء تثبيت %{count} موضوعًا"
+          other: "إلغاء تثبيت %{count} موضوع"
         confirm_update_topics:
           zero: "تحديث %{count} من الموضوعات"
           one: "تحديث موضوع واحد (%{count})"
@@ -4433,6 +4454,13 @@ ar:
         other: "%{count} رد آخر"
       load_more_children_generic: "المزيد من الردود"
       continue_thread: "متابعة سلسلة الدردشة"
+      new_replies:
+        zero: "%{count} من الردود الجديدة"
+        one: "رد جديد %{count}"
+        two: "ردان جديدان %{count}"
+        few: "%{count} ردود جديدة"
+        many: "%{count} ردًا جديدًا"
+        other: "%{count} رد جديد"
       collapsed_replies:
         zero: "%{count} من الردود"
         one: "رد واحد (%{count})"
