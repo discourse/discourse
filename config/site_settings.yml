@@ -1087,6 +1087,9 @@ users:
     default: 100
     hidden: true
     area: "users"
+  directory_columns_seeded:
+    default: false
+    hidden: true
   allow_anonymous_mode:
     default: false
     client: true
