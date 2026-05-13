@@ -80,17 +80,13 @@ while (!shutdown.signal.aborted) {
     if (!changed) {
       process.exit(code ?? 1);
     }
-    console.error("File change detected. Restarting...");
+    process.stdout.write("File change detected. ");
   } else {
     if (immediateRetryUsed) {
-      console.error(
-        `\nWorker ${reason}. Already retried once — exiting.`
-      );
+      console.error(`\nWorker ${reason}. Already retried once — exiting.`);
       process.exit(code ?? 1);
     }
     immediateRetryUsed = true;
-    console.error(
-      `\nWorker ${reason}. Restarting immediately...`
-    );
+    console.error(`\nWorker ${reason}. Restarting immediately...`);
   }
 }
