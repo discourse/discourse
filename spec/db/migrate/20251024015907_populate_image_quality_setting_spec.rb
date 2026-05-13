@@ -14,6 +14,9 @@ RSpec.describe PopulateImageQualitySetting do
   end
 
   it "is a no-op on fresh installs" do
+    DB.exec("UPDATE schema_migration_details SET created_at = NOW()")
+    Discourse.clear_site_creation_date_cache
+
     expect { PopulateImageQualitySetting.new.up }.not_to change {
       DB.query_single("SELECT count(*) FROM site_settings WHERE name = 'image_quality'").first
     }
