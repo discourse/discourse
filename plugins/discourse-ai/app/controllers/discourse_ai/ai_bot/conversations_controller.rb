@@ -10,13 +10,13 @@ module DiscourseAi
 
       def index
         ListConversations.call(service_params) do
-          on_success do |result|
+          on_success do |list_result:|
             render json:
                      ConversationListSerializer.new(
-                       result,
+                       list_result,
                        scope: guardian,
                        root: false,
-                       starred_at_by_topic_id: result.starred_at_by_topic_id,
+                       starred_at_by_topic_id: list_result.starred_at_by_topic_id,
                      ).as_json
           end
           on_failed_contract do |contract|

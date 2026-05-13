@@ -407,12 +407,15 @@ export default class AiConversationsSidebarManager extends Service {
 
     this.sections = trackedArray(fresh);
 
+    let registeredNewSection = false;
+
     // register each new section once
     for (let sec of fresh) {
       if (this._registered.has(sec.name)) {
         continue;
       }
       this._registered.add(sec.name);
+      registeredNewSection = true;
 
       this.api.addSidebarSection((BaseCustomSidebarSection) => {
         return class extends BaseCustomSidebarSection {
@@ -470,6 +473,13 @@ export default class AiConversationsSidebarManager extends Service {
           }
         };
       }, AI_CONVERSATIONS_PANEL);
+    }
+
+    if (
+      registeredNewSection &&
+      this.sidebarState.currentPanel?.key === AI_CONVERSATIONS_PANEL
+    ) {
+      this.sidebarState.setPanel(AI_CONVERSATIONS_PANEL);
     }
   }
 

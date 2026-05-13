@@ -34,22 +34,18 @@ RSpec.describe DiscourseAi::AiBot::ConversationsController do
       DiscourseAi::AiBot::ConversationStar.create!(user: other_user, topic: other_conversation)
     end
 
-    it "returns starred conversations separately and excludes them from normal conversations" do
+    it "returns starred conversations first" do
       get "/discourse-ai/ai-bot/conversations.json"
 
       expect(response.status).to eq(200)
       json = response.parsed_body
 
-      expect(json["starred_conversations"].map { |topic| topic["id"] }).to contain_exactly(
-        starred_conversation.id,
-      )
-      expect(json["starred_conversations"].first["ai_conversation_starred"]).to eq(true)
+      expect(json).not_to have_key("starred_conversations")
+      expect(json["conversations"].first["id"]).to eq(starred_conversation.id)
+      expect(json["conversations"].first["ai_conversation_starred"]).to eq(true)
       expect(json["conversations"].map { |topic| topic["id"] }).to include(conversation.id)
-      expect(json["conversations"].map { |topic| topic["id"] }).not_to include(
-        starred_conversation.id,
-      )
       expect(json["conversations"].map { |topic| topic["id"] }).not_to include(normal_pm.id)
-      expect(json["starred_conversations"].map { |topic| topic["id"] }).not_to include(
+      expect(json["conversations"].map { |topic| topic["id"] }).not_to include(
         other_conversation.id,
       )
     end
@@ -74,8 +70,10 @@ RSpec.describe DiscourseAi::AiBot::ConversationsController do
       end
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["starred_conversations"].length).to eq(2)
-      expect(response.parsed_body["starred_conversations"].map { |topic| topic["id"] }).to all(
+      starred_records =
+        response.parsed_body["conversations"].select { |topic| topic["ai_conversation_starred"] }
+      expect(starred_records.length).to eq(2)
+      expect(starred_records.map { |topic| topic["id"] }).to all(
         be_in([starred_conversation.id, *extra_starred_conversations.map(&:id)]),
       )
     end
@@ -109,7 +107,6 @@ RSpec.describe DiscourseAi::AiBot::ConversationsController do
           DiscourseAi::AiBot::ConversationStar.exists?(user: current_user, topic: conversation),
         ).to eq(false)
       end
-
       it "returns 404 even when params are invalid" do
         put "/discourse-ai/ai-bot/conversations/#{conversation.id}/starred.json",
             params: {

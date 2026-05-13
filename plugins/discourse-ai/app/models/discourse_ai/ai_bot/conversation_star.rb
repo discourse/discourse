@@ -14,6 +14,7 @@ module DiscourseAi
             new(records:, has_more:)
           end
         end
+      ConversationList = Data.define(:conversations, :meta, :starred_at_by_topic_id)
 
       self.table_name = "discourse_ai_ai_bot_conversation_stars"
 
@@ -63,16 +64,28 @@ module DiscourseAi
 
         all_topics = starred + unstarred_page.records
 
-        {
-          conversations: unstarred_page,
-          starred_conversations: starred,
+        starred_lookup =
+          if SiteSetting.enable_ai_bot_starred_conversations
+            starred_at_by_topic_id(user, all_topics)
+          else
+            {}
+          end
+
+        conversations =
+          ConversationPage.new(
+            records: starred + unstarred_page.records,
+            has_more: unstarred_page.has_more,
+          )
+
+        ConversationList.new(
+          conversations:,
           meta: {
             page: page,
             per_page: per_page,
             has_more: unstarred_page.has_more,
           },
-          starred_at_by_topic_id: starred_at_by_topic_id(user, all_topics),
-        }
+          starred_at_by_topic_id: starred_lookup,
+        )
       end
 
       def self.starred_at_by_topic_id(user, topics)
@@ -85,8 +98,6 @@ module DiscourseAi
       def self.user_reached_star_limit?(user)
         where(user: user).count >= MAX_STARS_PER_USER
       end
-
-
     end
   end
 end

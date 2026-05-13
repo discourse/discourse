@@ -5,21 +5,36 @@ module DiscourseAi
     class UpdateConversationStar
       include Service::Base
 
+      class StrictBoolean < ActiveModel::Type::Boolean
+        def cast(value)
+          case value
+          when true, false
+            value
+          when "true"
+            true
+          when "false"
+            false
+          end
+        end
+      end
+
+      policy :feature_enabled
+
       params do
         attribute :topic_id, :integer
-        attribute :starred, :boolean
+        attribute :starred, StrictBoolean.new
 
         validates :topic_id, presence: true
         validates :starred, inclusion: { in: [true, false] }
       end
 
-      policy :feature_enabled
       model :user, :fetch_user
       model :topic
       policy :can_access_conversation
-      policy :not_already_starred, if: :star_conversation_requested
 
       only_if :star_conversation_requested do
+        policy :not_already_starred
+
         lock :user do
           transaction do
             step :ensure_user_can_star_more_conversations

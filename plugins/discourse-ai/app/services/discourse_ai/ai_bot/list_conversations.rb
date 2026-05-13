@@ -18,9 +18,8 @@ module DiscourseAi
 
       model :list_result, :fetch_list_result
       model :conversations, :fetch_conversations
-      model :starred_conversations, :fetch_starred_conversations
       model :meta, :fetch_meta
-      model :starred_at_by_topic_id, :fetch_starred_at_by_topic_id
+      model :starred_at_by_topic_id, :fetch_starred_at_by_topic_id, optional: true
 
       private
 
@@ -29,19 +28,15 @@ module DiscourseAi
       end
 
       def fetch_conversations(list_result:)
-        list_result[:conversations]
-      end
-
-      def fetch_starred_conversations(list_result:)
-        list_result[:starred_conversations]
+        list_result.conversations
       end
 
       def fetch_meta(list_result:)
-        list_result[:meta]
+        list_result.meta
       end
 
       def fetch_starred_at_by_topic_id(list_result:)
-        list_result[:starred_at_by_topic_id]
+        list_result.starred_at_by_topic_id
       end
     end
   end

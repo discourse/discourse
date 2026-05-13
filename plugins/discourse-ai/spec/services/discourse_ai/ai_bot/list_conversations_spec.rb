@@ -51,7 +51,6 @@ RSpec.describe DiscourseAi::AiBot::ListConversations do
     let(:params) { { page: 0, per_page: 40 } }
     let(:dependencies) { { guardian: current_user.guardian } }
     let(:conversations) { result[:conversations].records }
-    let(:starred_conversations) { result[:starred_conversations] }
 
     before do
       enable_current_plugin
@@ -65,12 +64,11 @@ RSpec.describe DiscourseAi::AiBot::ListConversations do
 
     it { is_expected.to run_successfully }
 
-    it "returns current user's starred conversations separately from unstarred conversations" do
-      expect(starred_conversations).to contain_exactly(starred_conversation)
+    it "returns current user's starred conversations before unstarred conversations" do
+      expect(conversations.first).to eq(starred_conversation)
       expect(conversations).to include(conversation)
-      expect(conversations).not_to include(starred_conversation)
       expect(conversations).not_to include(normal_pm)
-      expect(starred_conversations).not_to include(other_conversation)
+      expect(conversations).not_to include(other_conversation)
       expect(result[:meta]).to eq(page: 0, per_page: 40, has_more: false)
     end
 
@@ -90,10 +88,13 @@ RSpec.describe DiscourseAi::AiBot::ListConversations do
         end
 
       stub_const(DiscourseAi::AiBot::ConversationStar, :MAX_STARS_PER_USER, 2) do
-        expect(starred_conversations.length).to eq(2)
-        expect(starred_conversations).to all(
-          be_in([starred_conversation, *extra_starred_conversations]),
-        )
+        starred_records =
+          conversations.select do |topic|
+            DiscourseAi::AiBot::ConversationStar.exists?(user: current_user, topic: topic)
+          end
+
+        expect(starred_records.length).to eq(2)
+        expect(starred_records).to all(be_in([starred_conversation, *extra_starred_conversations]))
       end
     end
 
@@ -105,7 +106,8 @@ RSpec.describe DiscourseAi::AiBot::ListConversations do
       result = described_class.call(params: { page: 0, per_page: 1 }, **dependencies)
 
       expect(result).to run_successfully
-      expect(result[:conversations].records.length).to eq(1)
+      expect(result[:conversations].records.length).to eq(2)
+      expect(result[:conversations].records).to include(starred_conversation)
       expect(result[:meta]).to eq(page: 0, per_page: 1, has_more: true)
     end
 
@@ -113,7 +115,6 @@ RSpec.describe DiscourseAi::AiBot::ListConversations do
       before { SiteSetting.enable_ai_bot_starred_conversations = false }
 
       it "returns the legacy conversation list" do
-        expect(starred_conversations).to eq([])
         expect(conversations).to include(starred_conversation)
         expect(conversations).to include(conversation)
       end

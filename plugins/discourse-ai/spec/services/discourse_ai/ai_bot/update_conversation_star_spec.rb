@@ -10,6 +10,11 @@ RSpec.describe DiscourseAi::AiBot::UpdateConversationStar do
       expect(described_class.new(topic_id: 1, starred: nil)).not_to be_valid
     end
 
+    it "accepts boolean strings" do
+      expect(described_class.new(topic_id: 1, starred: "true")).to be_valid
+      expect(described_class.new(topic_id: 1, starred: "false")).to be_valid
+    end
+
     it "rejects values that are not explicit booleans" do
       contract = described_class.new(topic_id: 1, starred: "wat")
 
