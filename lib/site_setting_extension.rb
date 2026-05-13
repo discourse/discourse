@@ -161,6 +161,10 @@ module SiteSettingExtension
   #     status: "alpha" (see UpcomingChanges.statuses.keys)
   #     impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
   #     learn_more_url: ""
+  #     allow_enabled_for: (optional) array restricting which "Enabled for" dropdown
+  #       options are shown. Valid values: everyone, staff, specific_groups. "No one"
+  #       is always present. If `everyone` is included it must be the only value.
+  #       Omit to allow all options (the default permissive behavior).
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
   end
@@ -1289,11 +1293,14 @@ module SiteSettingExtension
       if opts[:upcoming_change]
         upcoming_change_metadata[name] ||= {}
         impact_type, impact_role = opts[:upcoming_change][:impact].split(",")
+        allow_enabled_for = opts[:upcoming_change][:allow_enabled_for]
+        allow_enabled_for = Array(allow_enabled_for).map(&:to_sym) if allow_enabled_for
         upcoming_change_metadata[name].merge!(
-          **opts[:upcoming_change].except(:impact),
+          **opts[:upcoming_change].except(:impact, :allow_enabled_for),
           impact_type: impact_type,
           impact_role: impact_role,
           status: opts[:upcoming_change][:status].to_sym,
+          allow_enabled_for: allow_enabled_for,
         )
       end
 
