@@ -39,13 +39,12 @@ after_initialize do
     if SiteSetting.discourse_narrative_bot_enabled
       # Disable welcome message because that is what the bot is supposed to replace.
       SiteSetting.send_welcome_message = false if SiteSetting.send_welcome_message
-
-      certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
-      if !SiteSetting.allowed_iframes.include?(certificate_path)
-        SiteSetting.allowed_iframes =
-          SiteSetting.allowed_iframes.split("|").append(certificate_path).join("|")
-      end
     end
+  end
+
+  register_modifier(:pretty_text_allowed_iframes) do |list|
+    certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
+    list.include?(certificate_path) ? list : list + [certificate_path]
   end
 
   self.add_model_callback(User, :after_destroy) { DiscourseNarrativeBot::Store.remove(self.id) }
