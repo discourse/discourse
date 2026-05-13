@@ -67,6 +67,7 @@ async function runWorker() {
 
   let buildStart = Date.now();
   let initialBuild = true;
+  let hasError = false;
 
   const resolvedConfig = buildConfig({ devMode: true });
   const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
@@ -77,15 +78,19 @@ async function runWorker() {
           status: "error",
           error: serializeError(result),
         });
+        hasError = true;
         setTimeout(() => {}, 1000);
         return;
       }
 
       console.log("Changed files:", result.changedFiles);
+      hasError = false;
       buildStart = Date.now();
     },
     onOutput: (result) => {
-      if (result instanceof Error) {
+      if (hasError) {
+        return;
+      } else if (result instanceof Error) {
         console.error("Build error:", result.message);
         writeBuildStatus({
           status: "error",
@@ -93,6 +98,7 @@ async function runWorker() {
         });
         return;
       }
+
       console.log(`Build complete: ${result.output.length} files`);
       if (initialBuild) {
         initialBuild = false;
