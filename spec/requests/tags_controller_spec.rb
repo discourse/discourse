@@ -569,6 +569,19 @@ RSpec.describe TagsController do
       expect(response.body).not_to include("ActionView::Template::Error")
     end
 
+    it "redirects slug routes for numeric tag names to the canonical slug/id URL" do
+      numeric_tag_name = (Tag.maximum(:id).to_i + 10_000).to_s
+      numeric_tag = Fabricate(:tag, name: numeric_tag_name)
+      Fabricate(:topic, tags: [numeric_tag])
+
+      get "/tag/not-the-slug/#{numeric_tag_name}"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with(
+        "/tag/#{numeric_tag.slug_for_url}/#{numeric_tag.id}",
+      )
+    end
+
     context "with a category in the path" do
       fab!(:topic_in_category) { Fabricate(:topic, tags: [tag], category: category) }
 
