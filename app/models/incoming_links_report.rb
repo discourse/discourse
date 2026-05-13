@@ -53,6 +53,7 @@ class IncomingLinksReport
   def self.report_top_referrers(report)
     report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.num_clicks")
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
+    guardian = Guardian.new(report.current_user)
 
     num_clicks =
       link_count_per_user(
@@ -60,6 +61,7 @@ class IncomingLinksReport
         end_date: report.end_date,
         category_id: report.category_id,
         include_subcategories: report.include_subcategories,
+        guardian: guardian,
       )
     num_topics =
       topic_count_per_user(
@@ -67,6 +69,7 @@ class IncomingLinksReport
         end_date: report.end_date,
         category_id: report.category_id,
         include_subcategories: report.include_subcategories,
+        guardian: guardian,
       )
     user_id_lookup =
       User
@@ -93,8 +96,18 @@ class IncomingLinksReport
     report.data = report.data.sort_by { |x| x[:num_clicks] }.reverse[0, 10]
   end
 
-  def self.per_user(start_date:, end_date:, category_id:, include_subcategories:)
-    public_incoming_links(category_id: category_id, include_subcategories: include_subcategories)
+  def self.per_user(
+    start_date:,
+    end_date:,
+    category_id:,
+    include_subcategories:,
+    guardian: Guardian.new
+  )
+    public_incoming_links(
+      category_id: category_id,
+      include_subcategories: include_subcategories,
+      guardian: guardian,
+    )
       .where(
         "incoming_links.created_at > ? AND incoming_links.created_at < ? AND incoming_links.user_id IS NOT NULL",
         start_date,
@@ -104,21 +117,35 @@ class IncomingLinksReport
       .group("users.username")
   end
 
-  def self.link_count_per_user(start_date:, end_date:, category_id:, include_subcategories:)
+  def self.link_count_per_user(
+    start_date:,
+    end_date:,
+    category_id:,
+    include_subcategories:,
+    guardian: Guardian.new
+  )
     per_user(
       start_date: start_date,
       end_date: end_date,
       category_id: category_id,
       include_subcategories: include_subcategories,
+      guardian: guardian,
     ).count
   end
 
-  def self.topic_count_per_user(start_date:, end_date:, category_id:, include_subcategories:)
+  def self.topic_count_per_user(
+    start_date:,
+    end_date:,
+    category_id:,
+    include_subcategories:,
+    guardian: Guardian.new
+  )
     per_user(
       start_date: start_date,
       end_date: end_date,
       category_id: category_id,
       include_subcategories: include_subcategories,
+      guardian: guardian,
     ).joins(:post).count("DISTINCT posts.topic_id")
   end
 
@@ -127,6 +154,7 @@ class IncomingLinksReport
     report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.num_clicks")
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
     report.y_titles[:num_users] = I18n.t("reports.#{report.type}.num_users")
+    guardian = Guardian.new(report.current_user)
 
     num_clicks =
       link_count_per_domain(
@@ -134,6 +162,7 @@ class IncomingLinksReport
         end_date: report.end_date,
         category_id: report.category_id,
         include_subcategories: report.include_subcategories,
+        guardian: guardian,
       )
     num_topics =
       topic_count_per_domain(
@@ -142,6 +171,7 @@ class IncomingLinksReport
         include_subcategories: report.include_subcategories,
         start_date: report.start_date,
         end_date: report.end_date,
+        guardian: guardian,
       )
     report.data = []
     num_clicks.each_key do |domain|
@@ -159,9 +189,14 @@ class IncomingLinksReport
     start_date:,
     end_date:,
     category_id:,
-    include_subcategories:
+    include_subcategories:,
+    guardian: Guardian.new
   )
-    public_incoming_links(category_id: category_id, include_subcategories: include_subcategories)
+    public_incoming_links(
+      category_id: category_id,
+      include_subcategories: include_subcategories,
+      guardian: guardian,
+    )
       .where(
         "incoming_links.created_at > ? AND incoming_links.created_at < ?",
         start_date,
@@ -178,6 +213,7 @@ class IncomingLinksReport
     public_incoming_links(
       category_id: options[:category_id],
       include_subcategories: options[:include_subcategories],
+      guardian: options[:guardian] || Guardian.new,
     )
       .joins(incoming_referer: :incoming_domain)
       .where(
@@ -196,7 +232,7 @@ class IncomingLinksReport
 
   def self.report_top_referred_topics(report)
     report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.labels.num_clicks")
-    guardian = report.current_user&.guardian
+    guardian = Guardian.new(report.current_user)
 
     num_clicks =
       link_count_per_topic(
@@ -209,7 +245,7 @@ class IncomingLinksReport
     num_clicks = num_clicks.to_a.sort_by { |x| x[1] }.last(report.limit || 10).reverse
     report.data = []
     topics = Topic.select(:id, :slug, :title).where(id: num_clicks.map(&:first))
-    topics = topics.merge(Topic.secured(guardian)) if guardian
+    topics = topics.merge(Topic.secured(guardian))
     if report.category_id
       topics =
         topics.where(
@@ -242,7 +278,7 @@ class IncomingLinksReport
     end_date:,
     category_id:,
     include_subcategories:,
-    guardian: nil
+    guardian: Guardian.new
   )
     public_incoming_links(
       category_id: category_id,
@@ -258,9 +294,17 @@ class IncomingLinksReport
       .count
   end
 
-  def self.public_incoming_links(category_id: nil, include_subcategories: nil, guardian: nil)
-    links = IncomingLink.joins(post: :topic).where("topics.archetype = ?", Archetype.default)
-    links = links.merge(Topic.secured(guardian)) if guardian
+  def self.public_incoming_links(
+    category_id: nil,
+    include_subcategories: nil,
+    guardian: Guardian.new
+  )
+    guardian ||= Guardian.new
+    links =
+      IncomingLink
+        .joins(post: :topic)
+        .where("topics.archetype = ?", Archetype.default)
+        .merge(Topic.secured(guardian))
 
     if category_id
       if include_subcategories
