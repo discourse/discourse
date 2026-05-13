@@ -884,6 +884,7 @@ en:
         disable_modules_first: "You must disable these modules first: %{settings}"
         set_llm_first: "Set %{setting} first"
         model_unreachable: "We couldn't get a response from this model. Check your settings first."
+        empty_response: "The model returned an empty response."
         invalid_seeded_model: "You can't use this model with this feature"
         invalid_agent_response_format: "The selected agent must have a response format with a boolean field names \"spam\""
         must_select_model: "You must select a LLM first"
