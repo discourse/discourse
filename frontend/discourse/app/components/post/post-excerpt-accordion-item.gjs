@@ -91,9 +91,9 @@ export default class PostExcerptAccordionItem extends Component {
         style={{this.maxHeightStyle}}
         data-expanded={{@isExpanded}}
         data-overflowing={{this.overflowingAttr}}
-        data-username={{this.excerptPost.user.username}}
+        data-username={{this.excerptPost.username}}
         data-post={{this.excerptPost.post_number}}
-        data-topic={{this.topic.id}}
+        data-topic={{this.excerptPost.topic_id}}
       >
         {{! template-lint-disable no-invalid-interactive }}
         <div
@@ -114,6 +114,7 @@ export default class PostExcerptAccordionItem extends Component {
               <span class="dot-separator"></span>
               <a
                 href={{this.excerptPost.post_url}}
+                class="date-link"
                 title={{i18n "post.sr_date"}}
               >
                 <DRelativeDate @date={{this.excerptPost.created_at}} />

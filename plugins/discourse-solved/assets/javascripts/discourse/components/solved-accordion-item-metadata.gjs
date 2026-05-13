@@ -41,7 +41,11 @@ export default class SolvedAccordionItemMetadata extends Component {
       <span>{{this.userDisplayName}}</span>
     </DUserLink>
     <span class="dot-separator"></span>
-    <a href={{this.excerptPost.url}} title={{i18n "post.sr_date"}}>
+    <a
+      href={{this.excerptPost.url}}
+      class="date-link"
+      title={{i18n "post.sr_date"}}
+    >
       <DRelativeDate @date={{this.excerptPost.created_at}} />
     </a>
 

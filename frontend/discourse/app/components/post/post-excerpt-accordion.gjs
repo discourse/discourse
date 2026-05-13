@@ -73,39 +73,40 @@ export default class PostExcerptAccordion extends Component {
   }
 
   <template>
-    <aside
-      class={{dConcatClass "d-post-excerpt-accordion"}}
-      data-topic={{@post.topic.id}}
-      ...attributes
-      {{didUpdate this.resetExpandedIds this.excerptPosts}}
-    >
-      <div class="d-post-excerpt-accordion__header">
-        {{#if (has-block "header")}}
-          {{yield this.excerptPosts to="header"}}
-        {{/if}}
-      </div>
+    {{#if this.excerptPosts.length}}
+      <aside
+        class={{dConcatClass "d-post-excerpt-accordion"}}
+        ...attributes
+        {{didUpdate this.resetExpandedIds this.excerptPosts}}
+      >
+        <div class="d-post-excerpt-accordion__header">
+          {{#if (has-block "header")}}
+            {{yield this.excerptPosts to="header"}}
+          {{/if}}
+        </div>
 
-      {{#each this.excerptPosts as |excerptPost|}}
-        <PostExcerptAccordionItem
-          @decoratorState={{@decoratorState}}
-          @excerptPost={{excerptPost}}
-          @isExpanded={{this.itemIsExpanded excerptPost.id}}
-          @onToggleExpanded={{fn this.toggleItemExpanded excerptPost.id}}
-          @linesDisplayed={{@linesDisplayed}}
-          @defaultExpanded="first"
-          @hasItemMetadataBlock={{has-block "itemMetadata"}}
-          @hasBeforeItemContentBlock={{has-block "beforeItemContent"}}
-        >
+        {{#each this.excerptPosts as |excerptPost|}}
+          <PostExcerptAccordionItem
+            @decoratorState={{@decoratorState}}
+            @excerptPost={{excerptPost}}
+            @isExpanded={{this.itemIsExpanded excerptPost.id}}
+            @onToggleExpanded={{fn this.toggleItemExpanded excerptPost.id}}
+            @linesDisplayed={{@linesDisplayed}}
+            @defaultExpanded="first"
+            @hasItemMetadataBlock={{has-block "itemMetadata"}}
+            @hasBeforeItemContentBlock={{has-block "beforeItemContent"}}
+          >
 
-          <:itemMetadata>
-            {{yield excerptPost to="itemMetadata"}}
-          </:itemMetadata>
+            <:itemMetadata>
+              {{yield excerptPost to="itemMetadata"}}
+            </:itemMetadata>
 
-          <:beforeItemContent>
-            {{yield excerptPost to="beforeItemContent"}}
-          </:beforeItemContent>
-        </PostExcerptAccordionItem>
-      {{/each}}
-    </aside>
+            <:beforeItemContent>
+              {{yield excerptPost to="beforeItemContent"}}
+            </:beforeItemContent>
+          </PostExcerptAccordionItem>
+        {{/each}}
+      </aside>
+    {{/if}}
   </template>
 }
