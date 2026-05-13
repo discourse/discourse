@@ -35,24 +35,24 @@ function readPendingFiles() {
 // Watches `dir` recursively for any change. Resolves to `true` on the first
 // change, or `false` if `signal` is aborted while we're waiting.
 // Uses chokidar so this works uniformly on macOS, Linux, and Windows.
-async function waitForFileChange(dir, signal) {
-  if (signal.aborted) {
+async function waitForFileChange() {
+  if (shutdown.signal.aborted) {
     return false;
   }
   return new Promise((resolve) => {
-    const watcher = chokidar.watch(dir, {
+    const watcher = chokidar.watch(WATCH_DIR, {
       ignoreInitial: true,
       ignored: (p) => p.includes("/node_modules/"),
     });
 
     const done = (value) => {
-      signal.removeEventListener("abort", onAbort);
+      shutdown.signal.removeEventListener("abort", onAbort);
       watcher.close();
       resolve(value);
     };
     const onAbort = () => done(false);
 
-    signal.addEventListener("abort", onAbort);
+    shutdown.signal.addEventListener("abort", onAbort);
     watcher.on("all", () => done(true));
     watcher.on("error", () => done(true));
   });
@@ -86,7 +86,7 @@ while (!shutdown.signal.aborted) {
     console.error(
       `\n[rolldown] Worker ${reason} while ${what}. Waiting for a file change in ${WATCH_DIR} before restarting...`
     );
-    const changed = await waitForFileChange(WATCH_DIR, shutdown.signal);
+    const changed = await waitForFileChange();
     if (!changed || shutdown.signal.aborted) {
       process.exit(code ?? 1);
     }
