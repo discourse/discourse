@@ -128,7 +128,7 @@ export const SAVE_ICONS = {
   [EDIT]: "pencil",
   [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
-  [CREATE_TOPIC]: "plus",
+  [CREATE_TOPIC]: "far-pen-to-square",
   [PRIVATE_MESSAGE]: "envelope",
   [CREATE_SHARED_DRAFT]: "far-clipboard",
 };
