@@ -72,7 +72,6 @@ export function buildConfig({ devMode } = {}) {
       ".wasm": "asset",
     },
     input: {
-      discourse: "discourse/app.js",
       vendor: "vendor.js",
       "start-discourse": "start-discourse.js",
       "media-optimization-bundle": "media-optimization-bundle.js",

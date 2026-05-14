@@ -57,7 +57,6 @@
     <%= preload_script 'js/browser-detect' %>
 
     <%= preload_script "vendor", type_module: true %>
-    <%= preload_script "discourse", type_module: true %>
 
     <%- if staff? %>
       <% EmberCli.script_chunks["chunk.admin"]&.each do |script_name| %>
