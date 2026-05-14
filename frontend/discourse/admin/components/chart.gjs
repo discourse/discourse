@@ -5,14 +5,41 @@ import loadChartJS, {
 } from "discourse/lib/load-chart-js";
 
 // args:
-// chartConfig - object
+// chartConfig - object passed to Chart.js
+// rebuildKey - optional value that recreates the Chart.js instance when changed
+// onReady - optional callback invoked with the Chart.js instance after render
 export default class ChartComponent extends Component {
-  renderChart = modifier((element) => {
-    this.loadAndInit(element);
-    return () => this.chart?.destroy();
+  renderChart = modifier((element, [rebuildKey]) => {
+    let chart;
+    let cancelled = false;
+
+    const isCancelled = () => cancelled || rebuildKey !== this.args.rebuildKey;
+
+    this.loadAndInit(element, isCancelled).then((loadedChart) => {
+      if (!loadedChart) {
+        return;
+      }
+
+      if (isCancelled()) {
+        loadedChart.destroy();
+        return;
+      }
+
+      chart = loadedChart;
+      this.args.onReady?.(loadedChart, element);
+    });
+
+    return () => {
+      cancelled = true;
+      chart?.destroy();
+
+      if (this.chart === chart) {
+        this.chart = null;
+      }
+    };
   });
 
-  async loadAndInit(element) {
+  async loadAndInit(element, isCancelled) {
     const chartConfig = { ...this.args.chartConfig };
 
     const Chart = await loadChartJS();
@@ -25,13 +52,19 @@ export default class ChartComponent extends Component {
       ];
     }
 
+    if (isCancelled()) {
+      return;
+    }
+
     this.chart = new Chart(element.getContext("2d"), chartConfig);
+
+    return this.chart;
   }
 
   <template>
     <div ...attributes>
       <div class="chart-canvas-container">
-        <canvas {{this.renderChart}} class="chart-canvas"></canvas>
+        <canvas {{this.renderChart @rebuildKey}} class="chart-canvas"></canvas>
       </div>
     </div>
   </template>

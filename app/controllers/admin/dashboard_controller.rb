@@ -96,6 +96,8 @@ class Admin::DashboardController < Admin::StaffController
     case id
     when "highlights"
       AdminDashboardHighlights.build(start_date: params[:start_date], end_date: params[:end_date])
+    when "traffic"
+      AdminDashboardSiteTraffic.build(start_date: params[:start_date], end_date: params[:end_date])
     end
   end
 
