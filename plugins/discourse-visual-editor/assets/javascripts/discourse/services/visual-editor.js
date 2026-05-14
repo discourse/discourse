@@ -273,6 +273,37 @@ export default class VisualEditorService extends Service {
    */
   _gridOverlays = new Map();
 
+  /**
+   * Document-level click handler that clears the current selection when
+   * the click lands outside any block chrome and outside the editor
+   * shell (toolbar / panels). Block chromes already stop propagation on
+   * their own click handler, so the listener never sees chrome clicks;
+   * shell elements are guarded by an explicit `.closest()` check so
+   * panel inputs, toolbar buttons, etc. don't deselect when activated.
+   *
+   * Bound once in `enter()` and removed in `exit()` so the editor adds
+   * no global handler weight when inactive.
+   *
+   * @param {MouseEvent} event
+   */
+  _onCanvasClickOutside = (event) => {
+    if (!this.isActive || !this.selectedBlockKey) {
+      return;
+    }
+    const target = event.target;
+    if (!(target instanceof Element)) {
+      return;
+    }
+    if (
+      target.closest(".visual-editor-block-chrome") ||
+      target.closest(".visual-editor-shell") ||
+      target.closest(".visual-editor-conditions-floating-panel")
+    ) {
+      return;
+    }
+    this.selectBlock(null);
+  };
+
   constructor() {
     super(...arguments);
     this._loadConditionsPanelState();
@@ -393,6 +424,7 @@ export default class VisualEditorService extends Service {
     this.isActive = true;
     this.activeThemeId = themeId ?? this._defaultThemeId();
     document.body.classList.add("visual-editor-active");
+    document.addEventListener("click", this._onCanvasClickOutside);
     this._materializeAllDrafts();
   }
 
@@ -535,6 +567,7 @@ export default class VisualEditorService extends Service {
     this._originalLayouts.clear();
     this._structurallyEditedOutlets.clear();
     document.body.classList.remove("visual-editor-active");
+    document.removeEventListener("click", this._onCanvasClickOutside);
   }
 
   /** @returns {boolean} */

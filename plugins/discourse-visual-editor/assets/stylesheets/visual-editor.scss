@@ -25,14 +25,20 @@
 
   /* Offset to slide an in-flow badge from its natural position
      (inside the chrome's padding) onto the chrome's outline corner.
-     Used by both block and outlet badges so adjusting padding / border
-     in one place re-aligns every badge. */
+     Used by outlet badges so adjusting padding / border in one place re-aligns every badge. */
   --visual-editor-badge-offset: calc(
     -1 *
       (
         var(--visual-editor-container-padding) +
           var(--visual-editor-container-border-width)
       )
+  );
+
+  /* Offset to slide an in-flow badge from its natural position
+   (inside the chrome's padding) onto the chrome's outline corner.
+   Used by blocks handlers so adjusting padding / border in one place re-aligns every badge. */
+  --visual-editor-handler-offset: calc(
+    -1 * var(--visual-editor-container-border-width)
   );
 }
 
@@ -183,25 +189,21 @@ body.visual-editor-active {
   }
 
   /* Block handle (corner badge) — also the drag source.
-     The handle is rendered always and stays visible at every nesting
-     level, mirroring core's dev-tools overlay (`.block-debug-badge`).
-     A previous version opacity-hid it until hover/select; that left the
-     canvas missing the full block cascade dev-tools shows.
+     Floats over the chrome's top-left corner instead of taking flow
+     space, and only appears when the chrome is hovered or selected.
+     Two reasons: it doesn't push the wrapped block's content down
+     (centered placements read against the cell, not the area below
+     the handle), and the chrome stays visually quiet at idle so a
+     populated canvas isn't a wall of orange badges.
 
-     The badge sits IN FLOW (position: relative) so the wrapped block's
-     content naturally falls below the badge — no overlap. The negative
-     `top` / `left` shift the badge visually onto the chrome's
-     border-box corner (the chrome's `padding: 2px` + `border: 1px`
-     pull the badge 3px inside the corner by default; -3px cancels
-     that). Dev-tools gets away with absolute positioning because its
-     blocks have natural content margins, but the editor's grid cells
-     pack content tight against the border, so an absolute badge ends
-     up on top of the wrapped block. */
+     Outlet badges (`.visual-editor-outlet-boundary__badge`) keep
+     their always-visible treatment so the outlet cascade stays
+     readable at every nesting level. */
 
   .visual-editor-block-handle {
-    position: relative;
-    top: var(--visual-editor-badge-offset);
-    left: var(--visual-editor-badge-offset);
+    position: absolute;
+    top: var(--visual-editor-handler-offset);
+    left: var(--visual-editor-handler-offset);
     z-index: 1000;
     display: inline-flex;
     align-items: center;
@@ -213,8 +215,10 @@ body.visual-editor-active {
     font-weight: bold;
     border-radius: var(--visual-editor-badge-radius);
     text-shadow: var(--visual-editor-shadow);
-    pointer-events: auto;
     cursor: grab;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 80ms ease-out;
 
     &:hover {
       background: var(--visual-editor-block-hover-color);
@@ -247,6 +251,16 @@ body.visual-editor-active {
         color: var(--danger-low);
       }
     }
+  }
+
+  /* Reveal the handle on hover or when the chrome's block is selected.
+     Scoped to the handle's own chrome so a hovered ancestor doesn't
+     also unhide every descendant's handle. */
+
+  .visual-editor-block-chrome:hover > .visual-editor-block-handle,
+  .visual-editor-block-chrome.--selected > .visual-editor-block-handle {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   /* Drop zones for drag-and-drop reordering. Always present in layout
