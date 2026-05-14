@@ -2,7 +2,24 @@
 
 .d-header {
   box-shadow: none;
-  background: var(--background-color);
+}
+
+body:not(.uc-enable-horizon-updates) .d-header {
+  @include viewport.from(sm) {
+    background: var(--background-color);
+  }
+}
+
+body.has-sidebar-page.uc-enable-horizon-updates .d-header-wrap {
+  width: calc(100vw - var(--d-sidebar-width));
+  margin-left: auto;
+}
+
+body.has-sidebar-page.uc-enable-horizon-updates .d-header {
+  .home-logo-wrapper-outlet,
+  .header-sidebar-toggle {
+    display: none;
+  }
 }
 
 .search-menu .search-input,

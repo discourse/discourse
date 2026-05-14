@@ -22,8 +22,8 @@
     "Horizon": {
       "primary": "1A1A1A",
       "secondary": "ffffff",
-      "tertiary": "595bca",
-      "tertiary-med-or-tertiary": "595bca",
+      "tertiary": "7b5fe2",
+      "tertiary-med-or-tertiary": "7b5fe2",
       "selected": "d7dfff",
       "header_background": "ffffff",
       "header_primary": "1A1A1A",
@@ -32,8 +32,8 @@
     "Horizon Dark": {
       "primary": "ffffff",
       "secondary": "1A1A1A",
-      "tertiary": "6568e6",
-      "tertiary-med-or-tertiary": "6568e6",
+      "tertiary": "5739c5",
+      "tertiary-med-or-tertiary": "5739c5",
       "selected": "3b3e56",
       "header_background": "1A1A1A",
       "header_primary": "ffffff",

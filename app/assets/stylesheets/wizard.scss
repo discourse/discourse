@@ -30,13 +30,6 @@
   }
 }
 
-// horizon specific style
-.experimental-screen {
-  .wizard & {
-    display: none;
-  }
-}
-
 html:has(body.wizard) {
   background-color: var(--wizard-bg-color);
 }

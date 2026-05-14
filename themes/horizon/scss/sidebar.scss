@@ -6,9 +6,87 @@
   --d-sidebar-active-background: var(--d-selected);
 }
 
+body.uc-enable-horizon-updates {
+  --d-logo-height: 2.667em;
+}
+
+.admin-area .sidebar-wrapper .admin-panel {
+  --d-sidebar-highlight-background: var(--d-selected);
+  --d-sidebar-link-icon-color: var(--d-sidebar-link-color);
+}
+
+body.uc-enable-horizon-updates .sidebar-footer-wrapper {
+  @include viewport.until(sm) {
+    --d-sidebar-footer-fade: var(--secondary);
+    --d-sidebar-background: var(--secondary);
+  }
+}
+
+.sidebar-wrapper {
+  .select-kit .select-kit-row.is-highlighted {
+    background-color: var(--d-sidebar-highlight-background);
+  }
+}
+
+body.uc-enable-horizon-updates .sidebar-wrapper {
+  margin-top: calc(var(--header-offset) * -1);
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar-home-logo {
+  display: flex;
+  align-items: center;
+  height: var(--header-offset);
+
+  #site-logo {
+    height: inherit;
+  }
+
+  body.uc-enable-horizon-updates & {
+    gap: var(--space-4);
+    padding-inline: var(--space-4);
+    box-sizing: border-box;
+
+    @include viewport.until(lg) {
+      --d-logo-height: 2.25em;
+    }
+
+    .sidebar-hamburger-dropdown & {
+      display: none;
+    }
+
+    .btn-sidebar-toggle {
+      height: auto;
+      width: auto;
+      margin: 0;
+    }
+  }
+
+  .title {
+    height: var(--d-logo-height);
+    display: flex;
+    align-items: center;
+    animation: fadein 0.5s;
+
+    a {
+      min-width: 0;
+      height: inherit;
+    }
+  }
+}
+
 body.has-full-page-chat .sidebar-wrapper,
 .sidebar-wrapper,
 .sidebar-hamburger-dropdown {
+  .sidebar-container {
+    border-right: none;
+  }
+}
+
+body:not(.uc-enable-horizon-updates).has-full-page-chat .sidebar-wrapper,
+body:not(.uc-enable-horizon-updates) .sidebar-wrapper,
+body:not(.uc-enable-horizon-updates) .sidebar-hamburger-dropdown {
   @include viewport.until(lg) {
     background: var(--secondary);
 
@@ -24,10 +102,6 @@ body.has-full-page-chat .sidebar-wrapper,
   .has-full-page-chat &,
   .has-full-page-chat & .sidebar-footer-wrapper {
     background: transparent;
-  }
-
-  .sidebar-container {
-    border-right: none;
   }
 
   .sidebar-section-link {
@@ -101,11 +175,6 @@ body.has-full-page-chat .sidebar-wrapper,
       z-index: z("modal", "overlay");
     }
   }
-}
-
-.admin-area .sidebar-wrapper .admin-panel {
-  --d-sidebar-highlight-background: var(--d-selected);
-  --d-sidebar-link-icon-color: var(--d-sidebar-link-color);
 }
 
 .sidebar-theme-toggle__wrapper {

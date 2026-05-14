@@ -4523,3 +4523,11 @@ experimental:
     upcoming_change:
       status: "conceptual"
       impact: "feature,admins"
+  enable_horizon_updates:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "other,all_members"
