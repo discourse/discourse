@@ -7500,7 +7500,7 @@ RSpec.describe UsersController do
         Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Hola Mundo")
       end
       fab!(:topic_localization_ja) do
-        Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "���������������������")
+        Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "こんにちは世界")
       end
 
       before do
@@ -7908,7 +7908,7 @@ RSpec.describe UsersController do
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
       end
 
-      it "doesn���t show unread notifications when the bookmark has been deleted" do
+      it "doesn't show unread notifications when the bookmark has been deleted" do
         bookmark_with_reminder.destroy!
 
         get "/u/#{user.username}/user-menu-bookmarks"
