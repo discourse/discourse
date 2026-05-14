@@ -94,7 +94,7 @@ The first iteration dashboard reads human pageviews from `browser_pageview_daily
 
 Cardinality math: ~250 countries × ~100 canonical source names × 2 logged-in values = **~50k rows/day worst case**. In practice 2–5k rows/day. Across years, the table stays small, tightly indexed, sub-second on every dashboard query.
 
-`source_name` is intentionally a display/grouping key, not always a bare domain. Most referrers collapse to the canonical domain (`google.com`, `github.com`, `news.ycombinator.com`) to avoid path-cardinality explosions. Selected sources can preserve one meaningful path segment when it improves the top-referrers card without turning the summary table into full URL analytics. The initial exception is Reddit: `reddit.com/r/<subreddit>` is stored as the source key, while non-subreddit Reddit traffic collapses to `reddit.com`.
+`source_name` is intentionally a display/grouping key, not always a bare domain. Most referrers collapse to the canonical domain (`google.com`, `github.com`, `news.ycombinator.com`) to avoid path-cardinality explosions. Same-site referrers collapse to `(Internal)` so they can remain counted in pageview totals while staying out of the top-referrers card. Direct traffic remains a first-class source key because admins need to understand how much traffic landed without a referrer. Selected sources can preserve one meaningful path segment when it improves the top-referrers card without turning the summary table into full URL analytics. The initial exception is Reddit: `reddit.com/r/<subreddit>` is stored as the source key, while non-subreddit Reddit traffic collapses to `reddit.com`.
 
 Full path-level drill-down still needs a separate summary table with `host_path` as a column and top-N + "Other" truncation per `(date, source_name)`. Schema and N parameter deferred.
 
@@ -104,20 +104,10 @@ Runs every 5 minutes via Sidekiq (`Jobs::Scheduled`) when `persist_browser_pagev
 
 - `browser_pageview_events` -> `browser_pageview_daily_aggregates`
 
-```sql
-INSERT INTO browser_pageview_daily_aggregates (date, country_code, source_name, is_logged_in, count)
-SELECT
-  (created_at AT TIME ZONE 'UTC')::date,
-  country_code,
-  parse_referrer_source(referrer),
-  user_id IS NOT NULL,
-  COUNT(*)
-FROM browser_pageview_events
-WHERE created_at >= :day_start AND created_at < :day_end
-GROUP BY 1, 2, 3, 4
-ON CONFLICT (date, country_code, source_name, is_logged_in)
-DO UPDATE SET count = excluded.count;
-```
+The rollup reads raw events for the selected UTC day in batches, derives
+`source_name` in Ruby via `BrowserPageviewReferrerInspector`, groups rows by
+`date`, `country_code`, `source_name`, and `is_logged_in`, then replaces that
+day's aggregate rows in bulk.
 
 Properties:
 
@@ -139,12 +129,13 @@ This is the one place the new section reads from the legacy table. Acceptable be
 
 Done at rollup time so changes to parser rules can rewrite history within retention.
 
-- **Vendor or fork** `github.com/snowplow-referer-parser/ruby-referer-parser` (Ruby gem `referer-parser`). The canonical Ruby implementation is functional but appears unreleased; we'd own its lifecycle.
-- **Pull `referers-latest.yaml`** from Snowplow's S3 weekly via a scheduled job. The YAML is the valuable artifact and is updated daily upstream.
-- **Add `custom_sources.yaml`** in core, version-controlled, for Discourse-specific overrides the upstream YAML doesn't cover.
+- **Vendor Snowplow's `referers-latest.yaml`** in core and parse it directly in Ruby. The YAML is the valuable artifact; the upstream Ruby parser is stale enough that pulling it in as a runtime dependency is not worth it for this spike.
+- **Optionally refresh the vendored YAML** from Snowplow's hosted artifact on a controlled cadence after the first iteration. This should be a developer-maintained update, not a dashboard runtime network dependency.
+- **Add `custom_sources.yaml` later** if Discourse-specific overrides become common enough to justify a second data file.
 - The parser returns `{ source, medium, term, domain }`. We use this as classification input, not as the final dashboard key. A Discourse wrapper converts the parsed result plus the original URL into `source_name`.
 - The default `source_name` is the canonical domain from the parser (`google.com`, `github.com`, etc.). This consolidates noisy provider URLs such as Google search paths into one row.
-- Source-specific policies can override the default when path carries strong product value. Reddit is the first policy: if Snowplow classifies the referrer as Reddit and the URL path starts with `/r/<subreddit>`, `source_name` becomes `reddit.com/r/<subreddit>`. This avoids maintaining an exhaustive Reddit host allowlist, while still preserving the subreddit signal.
+- Unknown external referrers fall back to their normalized host instead of `(Other)`, so organic links from arbitrary sites are still visible in top-referrers. `(Internal)` is reserved for same-site referrers. `(Other)` is reserved for malformed URLs that cannot produce a host.
+- Source-specific policies can override the default when path carries strong product value. Reddit is the first policy: if the URL host resolves to Reddit and the path starts with `/r/<subreddit>`, `source_name` becomes `reddit.com/r/<subreddit>`. Non-subreddit Reddit traffic collapses to `reddit.com`.
 - `medium` (search/social/email) is captured for the future GA4-style "Channels" rollup if/when that's needed.
 
 ## Country derivation
@@ -207,7 +198,6 @@ Implications:
 2. **`pg_partman` for `browser_pageview_events`.** If retention windows or growth rate justify it. Available on RDS; would need to bake into the official self-hosted Docker image. Not required for v1; defer.
 3. **`hll` extension** for unique-visitor metrics. Optional; feature degrades to "exact distinct on small windows" if extension absent.
 4. **Aggregate retention.** Core owns raw event retention via `clean_up_browser_pageview_events`; confirm whether dashboard aggregate rows are retained indefinitely.
-5. **Referrer parser packaging.** Vendor `referer-parser` gem, fork it, or rewrite as a thin Ruby parser over the YAML — pick during implementation.
 
 ## Non-goals for v1 of this data layer
 

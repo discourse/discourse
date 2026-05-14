@@ -120,6 +120,9 @@ module Reports::SiteTrafficSummary
         page_view_crawler: data.sum { |row| row.page_view_crawler.to_i },
       }
 
+      internal_source_name = BrowserPageviewDailyAggregate::INTERNAL_SOURCE_NAME
+      internal_hostname = BrowserPageviewReferrerInspector.internal_source_names.first || ""
+
       top_countries =
         DB.query(
           <<~SQL,
@@ -154,11 +157,17 @@ module Reports::SiteTrafficSummary
             WITH referrers AS (
               SELECT source_name, SUM(count) AS count
               FROM browser_pageview_daily_aggregates
-              WHERE date >= :start_date AND date <= :end_date AND source_name <> :direct_source_name AND (:include_anonymous OR is_logged_in)
+              WHERE
+                date >= :start_date AND
+                date <= :end_date AND
+                source_name NOT IN (:internal_source_name, :other_source_name, :internal_hostname) AND
+                (:include_anonymous OR is_logged_in)
               GROUP BY source_name
             ),
             totals AS (
-              SELECT COALESCE(SUM(count), 0) AS total FROM referrers
+              SELECT COALESCE(SUM(count), 0) AS total
+              FROM browser_pageview_daily_aggregates
+              WHERE date >= :start_date AND date <= :end_date AND (:include_anonymous OR is_logged_in)
             )
             SELECT
               referrers.source_name,
@@ -173,7 +182,9 @@ module Reports::SiteTrafficSummary
           SQL
           start_date: report.start_date,
           end_date: report.end_date,
-          direct_source_name: BrowserPageviewDailyAggregate::DIRECT_SOURCE_NAME,
+          internal_source_name: internal_source_name,
+          other_source_name: BrowserPageviewDailyAggregate::OTHER_SOURCE_NAME,
+          internal_hostname: internal_hostname,
           include_anonymous: include_anonymous,
         )
 

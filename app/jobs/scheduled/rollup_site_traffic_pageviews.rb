@@ -7,7 +7,7 @@ module Jobs
     def execute(args = {})
       return if !SiteSetting.persist_browser_pageview_events
 
-      rollup_dates(args).each { |date| BrowserPageviewDailyAggregate.rollup!(date) }
+      rollup_dates(args).each { |date| BrowserPageviewDailyAggregate::Rollup.call(date) }
     end
 
     private
