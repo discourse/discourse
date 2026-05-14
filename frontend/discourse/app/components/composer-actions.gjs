@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import {
   applyBehaviorTransformer,
   applyValueTransformer,
@@ -21,7 +20,6 @@ import {
 import Draft from "discourse/models/draft";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -176,7 +174,6 @@ export default class ComposerActions extends Component {
     };
   }
 
-
   _computeAvailableActions() {
     let items = [];
 
@@ -193,7 +190,7 @@ export default class ComposerActions extends Component {
       !currentTopic.isPrivateMessage &&
       !this.isEditing &&
       this.currentUser?.can_create_topic &&
-      currentTopic.id 
+      currentTopic.id
     ) {
       const actionObj = {
         name: i18n("composer.composer_actions.reply_as_new_topic.label"),
@@ -477,14 +474,14 @@ export default class ComposerActions extends Component {
                   <div class="composer-actions-btn__icons">
                     {{dIcon availAction.icon}}
                   </div>
-                    <div class="composer-actions-btn__texts">
-                      <span class="composer-actions-btn__label">
-                        {{availAction.name}}
-                      </span>
-                      <span class="composer-actions-btn__description">
-                        {{availAction.description}}
-                      </span>
-                    </div>
+                  <div class="composer-actions-btn__texts">
+                    <span class="composer-actions-btn__label">
+                      {{availAction.name}}
+                    </span>
+                    <span class="composer-actions-btn__description">
+                      {{availAction.description}}
+                    </span>
+                  </div>
                 </DButton>
               </dropdown.item>
             {{/each}}

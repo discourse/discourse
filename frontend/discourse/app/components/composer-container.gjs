@@ -15,10 +15,6 @@ import ComposerSaveButton from "discourse/components/composer-save-button";
 import ComposerTitle from "discourse/components/composer-title";
 import ComposerToggles from "discourse/components/composer-toggles";
 import ComposerUserSelector from "discourse/components/composer-user-selector";
-import DButton from "discourse/components/d-button";
-import DComboButton from "discourse/components/d-combo-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import LinkToInput from "discourse/components/link-to-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import htmlClass from "discourse/helpers/html-class";
@@ -35,8 +31,11 @@ import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-b
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { and, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DComboButton from "discourse/ui-kit/d-combo-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -463,7 +462,7 @@ export default class ComposerContainer extends Component {
                       @label={{this.saveButtonLabel}}
                       @translatedTitle={{this.saveButtonTitle}}
                       @forwardEvent={{true}}
-                      class={{concatClass
+                      class={{dConcatClass
                         "btn-primary create"
                         (if this.composer.disableSubmit "disabled")
                       }}
@@ -475,7 +474,7 @@ export default class ComposerContainer extends Component {
                       @modalForMobile={{true}}
                       class="btn-primary composer-toggles-menu-trigger"
                     >
-                      <DropdownMenu as |dropdown|>
+                      <DDropdownMenu as |dropdown|>
                         {{#if this.canToggleWhisper}}
                           <dropdown.item>
                             {{! template-lint-disable no-invalid-interactive }}
@@ -484,7 +483,7 @@ export default class ComposerContainer extends Component {
                               {{on "click" this.toggleWhisper}}
                             >
                               <span class="composer-toggle-item__info">
-                                {{icon "far-eye-slash"}}
+                                {{dIcon "far-eye-slash"}}
                                 <span class="composer-toggle-item__texts">
                                   <span
                                     class="composer-toggle-item__label"
@@ -513,7 +512,7 @@ export default class ComposerContainer extends Component {
                               {{on "click" this.toggleNoBump}}
                             >
                               <span class="composer-toggle-item__info">
-                                {{icon "anchor"}}
+                                {{dIcon "anchor"}}
                                 <span class="composer-toggle-item__texts">
                                   <span
                                     class="composer-toggle-item__label"
@@ -542,7 +541,7 @@ export default class ComposerContainer extends Component {
                               {{on "click" this.toggleUnlisted}}
                             >
                               <span class="composer-toggle-item__info">
-                                {{icon "far-eye-slash"}}
+                                {{dIcon "far-eye-slash"}}
                                 <span class="composer-toggle-item__texts">
                                   <span
                                     class="composer-toggle-item__label"
@@ -562,7 +561,7 @@ export default class ComposerContainer extends Component {
                             </div>
                           </dropdown.item>
                         {{/if}}
-                      </DropdownMenu>
+                      </DDropdownMenu>
                     </combo.Menu>
                   </DComboButton>
                 {{else}}

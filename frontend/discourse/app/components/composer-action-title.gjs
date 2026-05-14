@@ -7,13 +7,11 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import ComposerActions from "discourse/components/composer-actions";
-import PostLanguageSelector from "discourse/components/post-language-selector";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
   ADD_TRANSLATION,
   CREATE_SHARED_DRAFT,
-  CREATE_TOPIC,
   EDIT,
   EDIT_SHARED_DRAFT,
   REPLY,
