@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -149,6 +150,29 @@ export default class BlockChrome extends Component {
       this.args.blockKey
     )?.entry;
     return entry?.containerArgs?.grid ?? null;
+  }
+
+  /**
+   * Inline style for the chrome's inner `__content` wrapper. That
+   * wrapper is a single-cell sub-grid; its `place-items` positions the
+   * one element it contains (the wrapped block) per the user's
+   * `align` / `justify` choice. The chrome itself always stretches to
+   * fill the grid cell — its border traces the full cell rectangle —
+   * so per-cell alignment lives one level deeper, on the content area.
+   *
+   * @returns {ReturnType<typeof trustHTML>|null}
+   */
+  get contentStyle() {
+    const grid = this.gridPlacement;
+    if (!grid) {
+      return null;
+    }
+    const align = grid.align ?? "stretch";
+    const justify = grid.justify ?? "stretch";
+    return trustHTML(
+      `display: grid; place-items: ${align} ${justify}; ` +
+        `min-width: 0; min-height: 0;`
+    );
   }
 
   /**
@@ -725,7 +749,20 @@ export default class BlockChrome extends Component {
             <span>{{this.displayName}}</span>
           </span>
 
-          <@WrappedComponent />
+          {{#if this.isGridCell}}
+            {{! Grid cells: the chrome always fills the cell rectangle
+              (border traces the full cell), and a single-cell sub-grid
+              inside positions the wrapped block per the user's
+              `align` / `justify` choice. }}
+            <div
+              class="visual-editor-block-chrome__content"
+              style={{this.contentStyle}}
+            >
+              <@WrappedComponent />
+            </div>
+          {{else}}
+            <@WrappedComponent />
+          {{/if}}
 
           {{#if this.showsGridOverlay}}
             <GridOverlay @gridKey={{@blockKey}} @outletName={{@outletName}} />
@@ -794,7 +831,7 @@ export default class BlockChrome extends Component {
         {{/if}}
       </div>
     {{else}}
-      <@WrappedComponent @style={{@style}} />
+      <@WrappedComponent />
     {{/if}}
   </template>
 }

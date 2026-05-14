@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const VALID_MODES = ["stack", "row", "grid"];
@@ -249,38 +250,37 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
 })
 export default class VELayout extends Component {
   /**
-   * Per-child inline style for the wrapper that core's
-   * `WrappedBlockLayout` renders around every block. The wrapper is the
-   * direct DOM child of this layout's container `<div>`, which makes it
-   * the right element to receive CSS Grid placement (or, in future modes,
-   * flexbox per-child overrides). Returns `null` for stack / row modes,
-   * which let flexbox auto-place children.
+   * Inline style for the `.ve-layout__cell` wrapper this layout renders
+   * around each grid-mode child. The cell wrapper IS the grid item, so
+   * it carries CSS Grid placement (`grid-column` / `grid-row`) and acts
+   * as a single-cell sub-grid (`display: grid` + `place-items`) that
+   * positions its content (the rendered block on the live page) within
+   * the cell rectangle.
    *
-   * @param {Object} [containerArgs] - The child entry's `containerArgs`.
+   * In editor mode the chrome wrapper sits inside the cell wrapper and
+   * overrides its `place-items` via SCSS — the chrome always stretches
+   * to fill the cell so its outline traces the full cell rectangle.
+   * The chrome then re-applies the same `align` / `justify` choice to
+   * its own inner `__content` wrapper, which positions the block
+   * inside the chrome.
+   *
+   * @param {Object} [containerArgs]
    * @returns {ReturnType<typeof trustHTML>|null}
    */
-  childStyle = (containerArgs) => {
+  cellStyle = (containerArgs) => {
     if (this.resolvedMode !== "grid") {
       return null;
     }
-    const grid = containerArgs?.grid;
-    if (!grid) {
-      return null;
-    }
-    const parts = [];
-    if (grid.column != null) {
-      parts.push(`grid-column: ${grid.column};`);
-    }
-    if (grid.row != null) {
-      parts.push(`grid-row: ${grid.row};`);
-    }
-    if (grid.align != null) {
-      parts.push(`align-self: ${grid.align};`);
-    }
-    if (grid.justify != null) {
-      parts.push(`justify-self: ${grid.justify};`);
-    }
-    return parts.length ? trustHTML(parts.join(" ")) : null;
+    const grid = containerArgs?.grid ?? {};
+    const column = grid.column ?? "auto";
+    const row = grid.row ?? "auto";
+    const align = grid.align ?? "stretch";
+    const justify = grid.justify ?? "stretch";
+    return trustHTML(
+      `grid-column: ${column}; grid-row: ${row}; ` +
+        `display: grid; place-items: ${align} ${justify}; ` +
+        `min-width: 0; min-height: 0;`
+    );
   };
 
   /**
@@ -386,7 +386,16 @@ export default class VELayout extends Component {
   <template>
     <div class={{this.className}} style={{this.containerStyle}}>
       {{#each @children key="key" as |child|}}
-        <child.Component @style={{this.childStyle child.containerArgs}} />
+        {{#if (eq this.resolvedMode "grid")}}
+          <div
+            class="ve-layout__cell"
+            style={{this.cellStyle child.containerArgs}}
+          >
+            <child.Component />
+          </div>
+        {{else}}
+          <child.Component />
+        {{/if}}
       {{/each}}
     </div>
   </template>
