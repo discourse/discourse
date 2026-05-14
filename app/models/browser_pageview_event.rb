@@ -37,8 +37,8 @@ end
 #
 # Indexes
 #
-#  idx_bpe_anon_ip_ua                           (ip_address,user_agent,created_at) WHERE (user_id IS NULL)
-#  idx_bpe_anon_session                         (session_id,created_at) WHERE (user_id IS NULL)
+#  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
+#  idx_bpe_session_created_at                   (session_id,created_at)
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
 #  index_browser_pageview_events_on_topic_id    (topic_id)
 #  index_browser_pageview_events_on_user_id     (user_id)

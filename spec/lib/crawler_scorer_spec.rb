@@ -16,83 +16,91 @@ RSpec.describe CrawlerScorer do
   end
 
   def score!
-    described_class.score_anonymous!(window_start: 1.hour.ago, window_end: Time.now)
+    described_class.score!(window_start: 1.hour.ago, window_end: Time.now)
   end
 
-  it "scores automation user agents at +50" do
+  it "scores automation user agents at +100" do
     event = make_event(user_agent: "Mozilla/5.0 (X11; Linux x86_64) HeadlessChrome/120.0.0.0")
     score!
-    expect(event.reload.score).to eq(50)
+    expect(event.reload.score).to eq(100)
   end
 
-  it "scores known crawler ASNs at +35" do
+  it "scores known crawler ASNs at +15" do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345)
     score!
-    expect(event.reload.score).to eq(35)
+    expect(event.reload.score).to eq(15)
   end
 
-  it "scores 60+ pageviews per identity in the window at +10" do
-    session_id = "burst-session"
-    base = 30.minutes.ago
-    60.times { |i| make_event(session_id: session_id, created_at: base + (i * 30).seconds) }
+  it "scores pageview velocity at or above VELOCITY_LOW threshold at +10" do
+    stub_const(CrawlerScorer, :VELOCITY_LOW, 10) do
+      session_id = "burst-session"
+      base = 30.minutes.ago
+      10.times { |i| make_event(session_id: session_id, created_at: base + (i * 15).seconds) }
 
-    score!
+      score!
 
-    expect(
-      BrowserPageviewEvent.where(session_id: session_id).pluck(:score).uniq,
-    ).to contain_exactly(10)
+      expect(
+        BrowserPageviewEvent.where(session_id: session_id).pluck(:score).uniq,
+      ).to contain_exactly(10)
+    end
   end
 
   it "scores session churn when one ip+ua spawns many short sessions" do
-    10.times do |i|
-      make_event(ip_address: "9.9.9.9", user_agent: "ScriptyBot/1.0", session_id: "churn-#{i}")
+    stub_const(CrawlerScorer, :CHURN_HIGH_MIN_SESSIONS, 3) do
+      3.times do |i|
+        make_event(ip_address: "9.9.9.9", user_agent: "ScriptyBot/1.0", session_id: "churn-#{i}")
+      end
+
+      score!
+
+      expect(
+        BrowserPageviewEvent.where(ip_address: "9.9.9.9").pluck(:score).uniq,
+      ).to contain_exactly(20)
     end
-
-    score!
-
-    expect(BrowserPageviewEvent.where(ip_address: "9.9.9.9").pluck(:score).uniq).to contain_exactly(
-      20,
-    )
   end
 
-  it "scores rapid navigation when the median gap is under 2 seconds" do
-    session_id = "rapid-session"
-    base = 30.minutes.ago
-    11.times { |i| make_event(session_id: session_id, created_at: base + i.seconds) }
+  it "scores rapid navigation when the median gap is under 5 seconds" do
+    stub_const(CrawlerScorer, :RAPID_NAV_MIN_GAPS, 3) do
+      session_id = "rapid-session"
+      base = 30.minutes.ago
+      4.times { |i| make_event(session_id: session_id, created_at: base + i.seconds) }
 
-    score!
+      score!
 
-    expect(
-      BrowserPageviewEvent.where(session_id: session_id).pluck(:score).uniq,
-    ).to contain_exactly(15)
+      expect(
+        BrowserPageviewEvent.where(session_id: session_id).pluck(:score).uniq,
+      ).to contain_exactly(15)
+    end
   end
 
   it "scores referrer discontinuity when most pageviews have no referrer" do
-    session_id = "ref-session"
-    5.times do
-      make_event(
-        ip_address: "5.5.5.5",
-        user_agent: "RefBot/1.0",
-        session_id: session_id,
-        referrer: nil,
-      )
+    stub_const(CrawlerScorer, :REFERRER_MIN_EVENTS, 2) do
+      session_id = "ref-session"
+      2.times do
+        make_event(
+          ip_address: "5.5.5.5",
+          user_agent: "RefBot/1.0",
+          session_id: session_id,
+          referrer: nil,
+        )
+      end
+
+      score!
+
+      expect(
+        BrowserPageviewEvent.where(ip_address: "5.5.5.5").pluck(:score).uniq,
+      ).to contain_exactly(10)
     end
-
-    score!
-
-    expect(BrowserPageviewEvent.where(ip_address: "5.5.5.5").pluck(:score).uniq).to contain_exactly(
-      10,
-    )
   end
 
-  it "ignores logged-in events" do
+  it "also scores logged-in events" do
     user = Fabricate(:user)
     event = make_event(user_id: user.id, user_agent: "Mozilla/5.0 HeadlessChrome/120.0.0.0")
 
     score!
 
-    expect(event.reload.score).to be_nil
+    expect(event.reload.score).to eq(100)
   end
 
   it "ignores events outside the window" do
@@ -105,10 +113,10 @@ RSpec.describe CrawlerScorer do
 
   it "only updates the score when the new value is higher" do
     event = make_event(user_agent: "Mozilla/5.0 HeadlessChrome/120")
-    event.update!(score: 80)
+    event.update!(score: 120)
 
     score!
 
-    expect(event.reload.score).to eq(80)
+    expect(event.reload.score).to eq(120)
   end
 end

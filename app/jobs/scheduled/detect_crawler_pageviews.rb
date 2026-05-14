@@ -7,10 +7,10 @@ module Jobs
     LOOKBACK = 1.hour
 
     def execute(args)
-      return if !SiteSetting.detect_crawler_pageviews
+      return if !SiteSetting.experimental_detect_crawler_pageviews
 
       now = Time.now
-      CrawlerScorer.score_anonymous!(window_start: now - LOOKBACK, window_end: now)
+      CrawlerScorer.score!(window_start: now - LOOKBACK, window_end: now)
     end
   end
 end

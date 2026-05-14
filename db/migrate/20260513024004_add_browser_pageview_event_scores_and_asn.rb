@@ -7,12 +7,10 @@ class AddBrowserPageviewEventScoresAndAsn < ActiveRecord::Migration[8.0]
 
     add_index :browser_pageview_events,
               %i[session_id created_at],
-              where: "user_id IS NULL",
-              name: "idx_bpe_anon_session"
+              name: "idx_bpe_session_created_at"
 
     add_index :browser_pageview_events,
               %i[ip_address user_agent created_at],
-              where: "user_id IS NULL",
-              name: "idx_bpe_anon_ip_ua"
+              name: "idx_bpe_ip_ua_created_at"
   end
 end

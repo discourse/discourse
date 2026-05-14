@@ -1,7 +1,34 @@
 # frozen_string_literal: true
 
 class CrawlerScorer
-  def self.score_anonymous!(window_start:, window_end:)
+  AUTOMATION_UA_SCORE = 100
+
+  KNOWN_ASN_SCORE = 15
+
+  VELOCITY_LOW = 120
+  VELOCITY_MEDIUM = 300
+  VELOCITY_HIGH = 600
+  VELOCITY_LOW_SCORE = 10
+  VELOCITY_MEDIUM_SCORE = 20
+  VELOCITY_HIGH_SCORE = 35
+
+  CHURN_LOW_MIN_SESSIONS = 5
+  CHURN_HIGH_MIN_SESSIONS = 10
+  CHURN_MAX_AVG_EVENTS = 2
+  CHURN_LOW_SCORE = 10
+  CHURN_HIGH_SCORE = 20
+
+  RAPID_NAV_MIN_GAPS = 10
+  RAPID_NAV_MAX_MEDIAN_SECONDS = 5
+  RAPID_NAV_SCORE = 15
+
+  REFERRER_MIN_EVENTS = 5
+  REFERRER_LOW_RATIO = 0.5
+  REFERRER_HIGH_RATIO = 0.8
+  REFERRER_LOW_SCORE = 5
+  REFERRER_HIGH_SCORE = 10
+
+  def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
 
     ActiveRecord::Base.transaction do
@@ -12,6 +39,27 @@ class CrawlerScorer
         ua_regex: SiteSetting.crawler_automation_user_agents,
         crawler_asns: crawler_asns,
         hostname: Discourse.current_hostname,
+        automation_ua_score: AUTOMATION_UA_SCORE,
+        known_asn_score: KNOWN_ASN_SCORE,
+        velocity_low: VELOCITY_LOW,
+        velocity_medium: VELOCITY_MEDIUM,
+        velocity_high: VELOCITY_HIGH,
+        velocity_low_score: VELOCITY_LOW_SCORE,
+        velocity_medium_score: VELOCITY_MEDIUM_SCORE,
+        velocity_high_score: VELOCITY_HIGH_SCORE,
+        churn_low_min_sessions: CHURN_LOW_MIN_SESSIONS,
+        churn_high_min_sessions: CHURN_HIGH_MIN_SESSIONS,
+        churn_max_avg_events: CHURN_MAX_AVG_EVENTS,
+        churn_low_score: CHURN_LOW_SCORE,
+        churn_high_score: CHURN_HIGH_SCORE,
+        rapid_nav_min_gaps: RAPID_NAV_MIN_GAPS,
+        rapid_nav_max_median_seconds: RAPID_NAV_MAX_MEDIAN_SECONDS,
+        rapid_nav_score: RAPID_NAV_SCORE,
+        referrer_min_events: REFERRER_MIN_EVENTS,
+        referrer_low_ratio: REFERRER_LOW_RATIO,
+        referrer_high_ratio: REFERRER_HIGH_RATIO,
+        referrer_low_score: REFERRER_LOW_SCORE,
+        referrer_high_score: REFERRER_HIGH_SCORE,
       )
     end
   end
@@ -20,8 +68,7 @@ class CrawlerScorer
     WITH events AS (
       SELECT id, session_id, ip_address, user_agent, referrer, asn, created_at
       FROM browser_pageview_events
-      WHERE user_id IS NULL
-        AND created_at >= :window_start
+      WHERE created_at >= :window_start
         AND created_at <  :window_end
     ),
 
@@ -68,33 +115,39 @@ class CrawlerScorer
       SELECT
         e.id,
         CASE
-          WHEN :ua_regex <> '' AND e.user_agent ~* :ua_regex THEN 50
+          WHEN :ua_regex <> '' AND e.user_agent ~* :ua_regex THEN :automation_ua_score
           ELSE 0
         END
         + CASE
-            WHEN e.asn = ANY(ARRAY[:crawler_asns]::int[]) THEN 35
+            WHEN e.asn = ANY(ARRAY[:crawler_asns]::int[]) THEN :known_asn_score
             ELSE 0
           END
         + CASE
-            WHEN iu.pageviews >= 240 THEN 35
-            WHEN iu.pageviews >= 120 THEN 20
-            WHEN iu.pageviews >=  60 THEN 10
+            WHEN iu.pageviews >= :velocity_high   THEN :velocity_high_score
+            WHEN iu.pageviews >= :velocity_medium THEN :velocity_medium_score
+            WHEN iu.pageviews >= :velocity_low    THEN :velocity_low_score
             ELSE 0
           END
         + CASE
-            WHEN iu.distinct_sessions >= 10
-              AND iu.pageviews::float / NULLIF(iu.distinct_sessions, 0) <= 2 THEN 20
-            WHEN iu.distinct_sessions >=  5
-              AND iu.pageviews::float / NULLIF(iu.distinct_sessions, 0) <= 2 THEN 10
+            WHEN iu.distinct_sessions >= :churn_high_min_sessions
+              AND iu.pageviews::float / NULLIF(iu.distinct_sessions, 0) <= :churn_max_avg_events
+              THEN :churn_high_score
+            WHEN iu.distinct_sessions >= :churn_low_min_sessions
+              AND iu.pageviews::float / NULLIF(iu.distinct_sessions, 0) <= :churn_max_avg_events
+              THEN :churn_low_score
             ELSE 0
           END
         + CASE
-            WHEN mg.gap_count >= 10 AND mg.median_gap_seconds < 2 THEN 15
+            WHEN mg.gap_count >= :rapid_nav_min_gaps
+              AND mg.median_gap_seconds < :rapid_nav_max_median_seconds
+              THEN :rapid_nav_score
             ELSE 0
           END
         + CASE
-            WHEN iu.pageviews >= 5 AND iu.bad_referrer_ratio >= 0.8 THEN 10
-            WHEN iu.pageviews >= 5 AND iu.bad_referrer_ratio >= 0.5 THEN  5
+            WHEN iu.pageviews >= :referrer_min_events
+              AND iu.bad_referrer_ratio >= :referrer_high_ratio THEN :referrer_high_score
+            WHEN iu.pageviews >= :referrer_min_events
+              AND iu.bad_referrer_ratio >= :referrer_low_ratio  THEN :referrer_low_score
             ELSE 0
           END
           AS score
