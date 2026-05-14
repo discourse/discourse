@@ -43,42 +43,6 @@ class EmberCli < ActiveSupport::CurrentAttributes
     cache[:script_chunks] = entrypoints
   end
 
-  def self.route_bundles
-    raise_if_build_error!
-    manifest = read_manifest!(exception: true)
-    return {} if manifest.nil?
-
-    route_bundles = {}
-
-    manifest.each do |key, value|
-      next unless route = key[/\Aembroider_virtual:.*:route=(.*)\z/, 1]
-      route_bundles[route] = deep_preloads_for(key)
-    end
-
-    route_bundles
-  rescue Errno::ENOENT
-    {}
-  end
-
-  def self.deep_preloads_for(asset)
-    manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
-
-    preloads = []
-    seen = Set.new
-    seen.add(asset)
-
-    asset = manifest[asset]
-    preloads.push asset["file"].delete_prefix("assets/").delete_suffix(".js")
-
-    asset["imports"]&.each do |import|
-      next if seen.include?(import)
-      seen.add(import)
-      preloads.push(*deep_preloads_for(import))
-    end
-
-    preloads
-  end
-
   BUILD_WAIT_TIMEOUT = 20.0
   BUILD_POLL_INTERVAL = 0.05
 

@@ -74,8 +74,8 @@ export function buildConfig({ devMode } = {}) {
       ".wasm": "asset",
     },
     input: {
-      vendor: "vendor.js",
       discourse: "discourse.js",
+      vendor: "vendor.js",
       "media-optimization-bundle": "media-optimization-bundle.js",
       ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
