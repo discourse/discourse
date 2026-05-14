@@ -104,3 +104,18 @@ task "db:check_structure_dump:assert_no_unexpected_rows" => :environment do
       - #{unexpected.join("\n  - ")}
   MSG
 end
+
+Rake::Task["db:schema:dump"].enhance do
+  filename = ENV["SCHEMA"] || "db/structure.sql"
+  next unless File.exist?(filename)
+
+  contents = File.read(filename)
+
+  # `COMMENT ON EXTENSION` requires extension ownership, which we might not have.
+  # It's not essential - strip it out.
+  contents.gsub!(
+    /^--\n-- Name: EXTENSION [^;]+; Type: COMMENT;[^\n]*\n--\n\nCOMMENT ON EXTENSION [^\n]+\n\n\n/,
+    "",
+  )
+  File.write(filename, contents)
+end
