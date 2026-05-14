@@ -15,7 +15,6 @@ import {
 } from "discourse/lib/theme-selector";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
@@ -26,10 +25,13 @@ const ThemeCard = <template>
     <ThemeCardPreview @theme={{@theme}}>
       <:footer>
         {{#if @theme.default}}
-          <span class="theme-picker-modal__badge">
-            {{dIcon "check"}}
-            {{i18n "admin_onboarding_banner.select_theme.current"}}
-          </span>
+          <DButton
+            @icon="check"
+            @translatedLabel={{i18n
+              "admin_onboarding_banner.select_theme.currently_selected"
+            }}
+            class="btn-transparent theme-picker-modal__current-btn"
+          />
         {{else}}
           <DButton
             @action={{fn @onSelect @theme}}

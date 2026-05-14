@@ -211,17 +211,18 @@
     }
   }
 
-  &__badge {
-    display: flex;
-    align-items: center;
-    gap: var(--space-half);
-    font-size: var(--font-down-1);
-    color: var(--tertiary);
-    padding: var(--space-3) var(--space-4) var(--space-4);
-  }
-
   &__card > .btn {
     margin: var(--space-3) var(--space-4) var(--space-4);
+  }
+
+  &__card .theme-picker-modal__current-btn.btn {
+    color: var(--tertiary);
+    pointer-events: none;
+    cursor: default;
+
+    .d-icon {
+      color: var(--tertiary);
+    }
   }
 
   &__browse-all,

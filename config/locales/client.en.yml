@@ -514,7 +514,7 @@ en:
         action: "Select theme"
         modal_title: "Choose a theme"
         use_theme: "Use this theme"
-        current: "Current"
+        currently_selected: "Currently selected"
         theme_set: "%{theme} is now your default theme"
         browse_all: "Browse all themes"
         show_light_screenshot: "Show light screenshot"
