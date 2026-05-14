@@ -34,16 +34,20 @@ export default class CreateTopicButton extends Component {
     return this.args.btnTypeClass || "btn-default";
   }
 
+  get transformerContext() {
+    return {
+      disabled: this.args.disabled,
+      canCreateTopic: this.args.canCreateTopic,
+      category: this.router.currentRoute?.attributes?.category,
+      tag: this.router.currentRoute?.attributes?.tag,
+    };
+  }
+
   get btnClasses() {
     const additionalClasses = applyValueTransformer(
       "create-topic-button-class",
       [],
-      {
-        disabled: this.args.disabled,
-        canCreateTopic: this.args.canCreateTopic,
-        category: this.router.currentRoute?.attributes?.category,
-        tag: this.router.currentRoute?.attributes?.tag,
-      }
+      this.transformerContext
     );
 
     return dConcatClass(
@@ -53,6 +57,16 @@ export default class CreateTopicButton extends Component {
     );
   }
 
+  get draftMenuClasses() {
+    const additionalClasses = applyValueTransformer(
+      "create-topic-button-draft-menu-class",
+      [],
+      this.transformerContext
+    );
+
+    return concatClass(this.btnTypeClass, ...additionalClasses);
+  }
+
   <template>
     {{#if @canCreateTopic}}
       <TopicDraftsDropdown
@@ -60,7 +74,7 @@ export default class CreateTopicButton extends Component {
         @label={{this.label}}
         @btnId={{this.btnId}}
         @btnClasses={{this.btnClasses}}
-        @btnTypeClass={{this.btnTypeClass}}
+        @draftMenuClasses={{this.draftMenuClasses}}
         @showDrafts={{@showDrafts}}
         ...attributes
       />
