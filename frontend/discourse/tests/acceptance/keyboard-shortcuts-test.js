@@ -7,6 +7,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -379,5 +380,46 @@ acceptance("Keyboard Shortcuts Help Modal - Search", function () {
     assert
       .dom(".shortcut-category-jump_to")
       .doesNotExist("unrelated categories are filtered out");
+  });
+
+  test("alternative key groups don't merge for compact match", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "kj");
+
+    // navigation.up_down is K or J, not K then J. "kj" must not
+    // match it just because both letters appear across the alternative groups.
+    assert
+      .dom(".shortcut-category-navigation")
+      .doesNotExist(
+        "alternative key groups don't false-match the merged compact form"
+      );
+  });
+
+  test("alternative key groups don't satisfy tokens across alternatives", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "ctrl /");
+
+    // application.search has alternatives "/" or Ctrl+Alt+F. "ctrl /" must not
+    // match because "ctrl" lives in one alternative and "/" in the other.
+    assert
+      .dom(".shortcut-category-application tbody")
+      .doesNotIncludeText(description("application.search"));
+  });
+
+  test("plugin-registered shortcut with raw 'esc' key matches escape alias", async function (assert) {
+    withPluginApi((api) => {
+      api.addKeyboardShortcut("shift+esc", () => {}, {
+        help: {
+          category: "esc_test",
+          name: "esc_test.bail",
+          definition: { keys1: ["shift", "esc"] },
+        },
+      });
+    });
+
+    await openHelpModal();
+    await fillIn(".filter-input", "escape");
+
+    assert.dom(".shortcut-category-esc_test tbody tr").exists({ count: 1 });
   });
 });

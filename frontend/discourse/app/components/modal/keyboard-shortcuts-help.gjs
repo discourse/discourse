@@ -25,6 +25,7 @@ const translationForExtraShortcuts = {
   meta: META,
   ctrl: CTRL,
   enter: ENTER,
+  esc: ESC,
   comma: COMMA,
 };
 
@@ -89,20 +90,32 @@ function wrapInSpan(shortcut, delimiter) {
   return `<span class="delimiter-${delimiter}" dir="ltr">${shortcut}</span>`;
 }
 
-function buildShortcut(
-  key,
-  { keys1 = [], keys2 = [], shortcutsDelimiter = "or" }
-) {
-  const shortcutText = [...keys1, ...keys2]
+function buildSearchText(keys) {
+  return keys
     .flatMap((k) => {
       const alias = SEARCH_ALIASES.get(k);
       return alias ? [k, alias] : [k];
     })
     .join(" ");
+}
+
+function buildShortcut(
+  key,
+  { keys1 = [], keys2 = [], shortcutsDelimiter = "or" }
+) {
+  // "space"/"newline" mean keys1 then keys2 are pressed in sequence — one
+  // searchable combination. "or"/"slash" mean alternatives — each group
+  // searched independently so tokens can't span alternatives
+  // (e.g. "ctrl /" must not match a "/ or Ctrl+Alt+F" shortcut).
+  const isSequence =
+    shortcutsDelimiter === "space" || shortcutsDelimiter === "newline";
+  const shortcutTexts = isSequence
+    ? [buildSearchText([...keys1, ...keys2])]
+    : [keys1, keys2].filter((keys) => keys.length > 0).map(buildSearchText);
 
   return {
     shortcut: buildHTML(keys1, keys2, shortcutsDelimiter),
-    shortcutText,
+    shortcutTexts,
     description: i18n(`${KEY}.${key}`, { shortcut: "" }).trim(),
   };
 }
@@ -371,18 +384,23 @@ export default class KeyboardShortcutsHelp extends Component {
         ).reduce((shortcutsAcc, [name, shortcut]) => {
           const nameLower = name.toLowerCase();
           const descriptionLower = shortcut.description.toLowerCase();
-          const shortcutTextLower = shortcut.shortcutText.toLowerCase();
-          const compactShortcutText = shortcutTextLower.replace(/\s+/g, "");
 
+          // For shortcuts with alternative key groups, all tokens must satisfy
+          // within a single group (plus name/description) so that tokens can't
+          // span alternatives.
           const matches =
             searchTokens.length === 0 ||
-            searchTokens.every(
-              (token) =>
-                nameLower.includes(token) ||
-                descriptionLower.includes(token) ||
-                shortcutTextLower.includes(token) ||
-                compactShortcutText.includes(token)
-            );
+            shortcut.shortcutTexts.some((text) => {
+              const lower = text.toLowerCase();
+              const compact = lower.replace(/\s+/g, "");
+              return searchTokens.every(
+                (token) =>
+                  nameLower.includes(token) ||
+                  descriptionLower.includes(token) ||
+                  lower.includes(token) ||
+                  compact.includes(token)
+              );
+            });
 
           if (matches) {
             shortcutsAcc[name] = shortcut;
