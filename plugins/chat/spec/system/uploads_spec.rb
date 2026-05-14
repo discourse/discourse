@@ -81,6 +81,8 @@ describe "Uploading files in chat messages" do
         expect(upload.thumbnail).to be_present
       end
 
+      expect(upload.thumbnail.url).to be_present
+
       # image has src attribute with thumbnail url
       expect(channel_page).to have_css(".chat-uploads img[src$='#{upload.thumbnail.url}']")
 
