@@ -9,7 +9,7 @@ RSpec.describe UserAvatarsController do
     end
 
     it "returns an avatar if we are allowing the proxy" do
-      described_class.stubs(:skip_proxy).returns(false)
+      UserAvatarsController.any_instance.stubs(:disable_proxy?).returns(false)
       stub_request(:get, "https://avatars.discourse-cdn.com/v3/letter/a/aaaaaa/360.png").to_return(
         body: "image",
       )
@@ -21,7 +21,10 @@ RSpec.describe UserAvatarsController do
   describe "#proxy_avatar cache eviction" do
     let(:proxy_path) { UserAvatarsController::PROXY_PATH }
 
-    before { FileUtils.rm_rf(proxy_path) }
+    before do
+      UserAvatarsController.any_instance.stubs(:disable_proxy?).returns(false)
+      FileUtils.rm_rf(proxy_path)
+    end
 
     after { FileUtils.rm_rf(proxy_path) }
 
