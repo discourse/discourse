@@ -80,7 +80,6 @@ loaderShim("ember-route-template", () => importSync("ember-route-template"));
 loaderShim("ember", () => importSync("ember"));
 loaderShim("jquery", () => importSync("jquery"));
 loaderShim("js-yaml", () => importSync("js-yaml"));
-loaderShim("message-bus-client", () => importSync("message-bus-client"));
 loaderShim("moment", () => importSync("moment"));
 loaderShim("rsvp", () => importSync("rsvp"));
 loaderShim("discourse/truth-helpers", () =>

@@ -1,9 +1,7 @@
 import EmberObject from "@ember/object";
-// import MessageBus from "message-bus-client";
-// TODO - message-bus-client module not working properly?
-const MessageBus = window.MessageBus;
-
 import { ajax } from "discourse/lib/ajax";
+
+const MessageBus = window.MessageBus;
 
 export default class Backup extends EmberObject {
   static find() {
