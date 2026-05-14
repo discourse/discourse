@@ -14,7 +14,6 @@ import {
 } from "@ember/test-helpers";
 import $ from "jquery";
 import "message-bus-client";
-const MessageBus = window.MessageBus; // TODO
 import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
@@ -225,7 +224,7 @@ export default function setupTests(config) {
   };
 
   // Stop the message bus so we don't get ajax calls
-  MessageBus.stop();
+  window.MessageBus.stop();
 
   // disable logster error reporting
   if (window.Logster) {
@@ -339,7 +338,7 @@ export default function setupTests(config) {
 
     flushMap();
 
-    MessageBus.unsubscribe("*");
+    window.MessageBus.unsubscribe("*");
     localStorage.clear();
     enableLoadMoreObserver();
 
