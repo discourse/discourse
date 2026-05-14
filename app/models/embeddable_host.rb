@@ -76,11 +76,11 @@ end
 # Table name: embeddable_hosts
 #
 #  id            :integer          not null, primary key
+#  allowed_paths :string
+#  class_name    :string
 #  host          :string           not null
-#  category_id   :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  class_name    :string
-#  allowed_paths :string
+#  category_id   :integer          not null
 #  user_id       :integer
 #

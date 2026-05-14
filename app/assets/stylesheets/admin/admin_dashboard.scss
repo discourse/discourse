@@ -49,7 +49,7 @@ h1 {
   }
 }
 
-.db-customise {
+.db-configure {
   padding: var(--space-4);
 
   &__list {
@@ -69,28 +69,61 @@ h1 {
     display: flex;
     align-items: center;
     gap: var(--space-3);
+    padding: var(--space-1) 0;
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+
+    &.dragging {
+      opacity: 0.5;
+    }
+
+    &.drag-above {
+      border-top-color: var(--tertiary);
+    }
+
+    &.drag-below {
+      border-bottom-color: var(--tertiary);
+    }
   }
 
   &__section-name {
-    margin-right: var(--space-4);
+    margin-right: var(--space-2);
   }
 
   &__drag-handle {
     color: var(--primary-low-mid);
+    cursor: grab;
+
+    @include viewport.until(sm) {
+      display: none;
+    }
+  }
+
+  &__arrows {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__arrow.btn {
+    padding: 0 var(--space-1);
+    min-height: 0;
   }
 
   .d-toggle-switch {
     margin-left: auto;
 
-    @include viewport.from(sm) {
-      --toggle-switch-width: 32px;
-      --toggle-switch-height: 18px;
-    }
-
     .d-icon-check {
       display: none;
     }
   }
+}
+
+.db-main__empty {
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--primary-medium);
+  background: var(--primary-very-low);
+  border-radius: var(--d-border-radius);
 }
 
 .db-link-arrow {

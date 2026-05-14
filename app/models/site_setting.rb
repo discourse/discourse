@@ -133,15 +133,22 @@ class SiteSetting < ActiveRecord::Base
   end
 
   if GlobalSetting.load_plugins?
+    allowed_plugins = GlobalSetting.plugins_to_load
+    plugin_allowed = ->(name) { allowed_plugins.nil? || allowed_plugins.include?(name) }
+
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
-      load_settings(file, plugin: file.split("/")[-3])
+      plugin_name = file.split("/")[-3]
+      load_settings(file, plugin: plugin_name) if plugin_allowed.call(plugin_name)
     end
 
     # Sometimes plugins need to define their own fake site settings for testing
     if Rails.env.test?
       Dir[
         File.join(Rails.root, "plugins", "*", "spec", "support", "dummy_plugin_site_settings.yml")
-      ].each { |file| load_settings(file, plugin: file.split("/")[-4]) }
+      ].each do |file|
+        plugin_name = file.split("/")[-4]
+        load_settings(file, plugin: plugin_name) if plugin_allowed.call(plugin_name)
+      end
     end
   end
 
@@ -415,8 +422,8 @@ end
 # Table name: site_settings
 #
 #  id         :integer          not null, primary key
-#  name       :string           not null
 #  data_type  :integer          not null
+#  name       :string           not null
 #  value      :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

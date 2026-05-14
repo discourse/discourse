@@ -44,7 +44,7 @@ class PostRevisor
     def apply_tag_changes(tag_value)
       return unless guardian.can_tag_topics?
 
-      prev_tags = topic.tags.map(&:name)
+      prev_tags = topic.tags.map(&:name).sort
       return if tag_value.blank? && prev_tags.blank?
 
       success = DiscourseTagging.tag_topic(topic, guardian, tag_value)
@@ -54,8 +54,8 @@ class PostRevisor
         return
       end
 
-      new_tags = topic.tags.map(&:name)
-      return if prev_tags.sort == new_tags.sort
+      new_tags = topic.tags.map(&:name).sort
+      return if prev_tags == new_tags
 
       record_change("tags", prev_tags, new_tags)
       DB.after_commit do

@@ -16,9 +16,6 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
     assert.dom("input[value='last_30_days']").exists("renders Last 30 days");
     assert.dom("input[value='last_3_months']").exists("renders Last 3 months");
     assert.dom("input[value='custom']").exists("renders Custom");
-    assert
-      .dom(".db-date-range__custom .d-icon-calendar-days")
-      .exists("custom item has the calendar icon");
   });
 
   test("checks the input matching @period", async function (assert) {

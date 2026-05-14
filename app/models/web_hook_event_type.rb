@@ -143,6 +143,6 @@ end
 # Table name: web_hook_event_types
 #
 #  id    :integer          not null, primary key
-#  name  :string           not null
 #  group :integer
+#  name  :string           not null
 #

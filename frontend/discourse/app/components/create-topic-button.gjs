@@ -6,9 +6,24 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class CreateTopicButton extends Component {
   @service router;
+  @service site;
 
   get label() {
-    return this.args.label ?? "topic.create";
+    const label = this.args.label ?? "topic.create";
+
+    const sharedDraftsCategoryId = this.site.shared_drafts_category_id;
+    const currentCategoryId =
+      this.router.currentRoute?.attributes?.category?.id;
+
+    if (
+      label === "topic.create" &&
+      sharedDraftsCategoryId &&
+      currentCategoryId === sharedDraftsCategoryId
+    ) {
+      return "topic.create_shared_draft";
+    }
+
+    return label;
   }
 
   get btnId() {

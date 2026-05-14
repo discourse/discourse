@@ -30,17 +30,17 @@ end
 # Table name: chat_channel_archives
 #
 #  id                      :bigint           not null, primary key
-#  chat_channel_id         :bigint           not null
-#  archived_by_id          :integer          not null
-#  destination_topic_id    :integer
-#  destination_topic_title :string
-#  destination_category_id :integer
-#  destination_tags        :string           is an Array
-#  total_messages          :integer          not null
-#  archived_messages       :integer          default(0), not null
 #  archive_error           :string
+#  archived_messages       :integer          default(0), not null
+#  destination_tags        :string           is an Array
+#  destination_topic_title :string
+#  total_messages          :integer          not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  archived_by_id          :integer          not null
+#  chat_channel_id         :bigint           not null
+#  destination_category_id :integer
+#  destination_topic_id    :integer
 #
 # Indexes
 #

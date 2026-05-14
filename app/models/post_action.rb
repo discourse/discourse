@@ -270,22 +270,22 @@ end
 # Table name: post_actions
 #
 #  id                  :integer          not null, primary key
-#  post_id             :integer          not null
-#  user_id             :integer          not null
-#  post_action_type_id :integer          not null
+#  agreed_at           :datetime
+#  deferred_at         :datetime
 #  deleted_at          :datetime
+#  disagreed_at        :datetime
+#  staff_took_action   :boolean          default(FALSE), not null
+#  targets_topic       :boolean          default(FALSE), not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  deleted_by_id       :integer
-#  related_post_id     :integer
-#  staff_took_action   :boolean          default(FALSE), not null
-#  deferred_by_id      :integer
-#  targets_topic       :boolean          default(FALSE), not null
-#  agreed_at           :datetime
 #  agreed_by_id        :integer
-#  deferred_at         :datetime
-#  disagreed_at        :datetime
+#  deferred_by_id      :integer
+#  deleted_by_id       :integer
 #  disagreed_by_id     :integer
+#  post_action_type_id :integer          not null
+#  post_id             :integer          not null
+#  related_post_id     :integer
+#  user_id             :integer          not null
 #
 # Indexes
 #

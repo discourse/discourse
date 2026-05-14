@@ -2690,6 +2690,19 @@ RSpec.describe PostsController do
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(200)
       end
+
+      context "when names are disabled" do
+        before { SiteSetting.enable_names = false }
+
+        it "does not expose the acting user's name" do
+          post_revision.user.update!(name: "Hidden Editor")
+
+          get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["acting_user_name"]).to eq(nil)
+        end
+      end
     end
 
     context "with deleted post" do

@@ -100,7 +100,6 @@ export default class DashboardDateRange extends Component {
         )
         (hash
           value=PERIOD_CUSTOM
-          icon="calendar-days"
           label=this.customLabel
           class="db-date-range__custom"
         )

@@ -27,7 +27,7 @@
     "lint-to-the-future-eslint": "^3.3.0",
     "playwright": "1.59.1",
     "prettier": "3.8.1",
-    "puppeteer-core": "^24.42.0",
+    "puppeteer-core": "^24.43.0",
     "stylelint": "17.4.0",
     "terser": "^5.46.2",
     "typescript": "^5.9.3"
@@ -38,7 +38,7 @@
     "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\"",
     "lint:css": "pnpm stylelint 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') 'themes/**/*.scss'",
     "lint:css:fix": "pnpm stylelint --fix 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') 'themes/**/*.scss'",
-    "lint:js": "eslint ./frontend $(script/list_bundled_plugins) ./themes --cache --no-error-on-unmatched-pattern",
+    "lint:js": "eslint ./frontend $(script/list_bundled_plugins) ./themes --cache --no-error-on-unmatched-pattern --max-warnings 0",
     "lint:js:fix": "eslint --fix ./frontend $(script/list_bundled_plugins) ./themes --no-error-on-unmatched-pattern",
     "lint:hbs": "ember-template-lint 'frontend/**/*.gjs' 'plugins/*/assets/javascripts/**/*.gjs' 'plugins/*/admin/assets/javascripts/**/*.gjs' 'themes/**/*.gjs'",
     "lint:hbs:fix": "ember-template-lint 'frontend/**/*.gjs' 'plugins/*/assets/javascripts/**/*.gjs' 'plugins/*/admin/assets/javascripts/**/*.gjs' 'themes/**/*.gjs' --fix",

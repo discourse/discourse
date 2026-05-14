@@ -527,8 +527,6 @@ RSpec.describe BadgeGranter do
         ).to be_empty
         expect(user.reload.title).to eq(nil)
       end
-
-      after { TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name)) }
     end
   end
 

@@ -57,7 +57,7 @@
     "highlight.js": "11.11.1",
     "html-rewriter-wasm": "^0.4.1",
     "http-proxy": "^1.18.1",
-    "immer": "^11.1.6",
+    "immer": "^11.1.7",
     "jspreadsheet-ce": "^5.0.4",
     "magic-string": "^0.30.21",
     "moment": "2.30.1",

@@ -4014,6 +4014,7 @@ en:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
       create: "New Topic"
+      create_shared_draft: "New Shared Draft"
       create_long: "Create a new topic"
       create_group: "New topic and drafts"
       open_draft: "Open Draft"
@@ -6839,6 +6840,7 @@ en:
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
+        loading: "Loading dashboard…"
 
         sections:
           highlights:
@@ -6849,6 +6851,17 @@ en:
             title: "Site traffic"
           engagement:
             title: "Engagement"
+
+        configure:
+          button: "Configure"
+          tooltip: "Configure how this dashboard appears for everyone on this site."
+          menu_title: "Configure dashboard"
+          reorder_up: "Move %{label} up"
+          reorder_down: "Move %{label} down"
+          drag_handle: "Drag to reorder %{label}"
+          toggle_visibility: "Show %{label} on dashboard"
+          empty_state_admin: "No sections to show. Open Configure to enable one."
+          empty_state_moderator: "No sections enabled. Ask an admin to enable one."
 
         highlights:
           fetch_error: "Couldn't load highlights. Try refreshing the page."

@@ -45,7 +45,7 @@ pre-commit:
         - "frontend/**/*.{js,gjs}"
         - "plugins/**/*.{js,gjs}"
         - "themes/**/*.{js,gjs}"
-      run: pnpm eslint --quiet {staged_files}
+      run: pnpm eslint --max-warnings 0 {staged_files}
     ember-template-lint:
       glob:
         - "frontend/**/*.gjs"

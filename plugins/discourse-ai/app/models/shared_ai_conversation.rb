@@ -221,16 +221,16 @@ end
 # Table name: shared_ai_conversations
 #
 #  id          :bigint           not null, primary key
-#  user_id     :integer          not null
-#  target_id   :integer          not null
+#  context     :jsonb            not null
+#  excerpt     :string           not null
+#  llm_name    :string           not null
+#  share_key   :string           not null
 #  target_type :string           not null
 #  title       :string           not null
-#  llm_name    :string           not null
-#  context     :jsonb            not null
-#  share_key   :string           not null
-#  excerpt     :string           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  target_id   :integer          not null
+#  user_id     :integer          not null
 #
 # Indexes
 #

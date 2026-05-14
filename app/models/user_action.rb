@@ -493,13 +493,13 @@ end
 #
 #  id              :integer          not null, primary key
 #  action_type     :integer          not null
-#  user_id         :integer          not null
-#  target_topic_id :integer
-#  target_post_id  :integer
-#  target_user_id  :integer
-#  acting_user_id  :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  acting_user_id  :integer
+#  target_post_id  :integer
+#  target_topic_id :integer
+#  target_user_id  :integer
+#  user_id         :integer          not null
 #
 # Indexes
 #

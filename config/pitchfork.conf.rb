@@ -181,4 +181,5 @@ if RUBY_PLATFORM.include?("darwin") && ENV["RAILS_ENV"] != "production"
   # macOS doesn't support the default :SOCK_SEQPACKET
   # So we override it to avoid the warning
   Pitchfork.instance_variable_set(:@socket_type, :SOCK_STREAM)
+  require_relative "../lib/freedom_patches/pitchfork_sock_stream"
 end

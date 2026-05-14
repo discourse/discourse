@@ -29,9 +29,9 @@ end
 #
 # Table name: user_statuses
 #
-#  user_id     :integer          not null, primary key
-#  emoji       :string           not null
 #  description :string           not null
-#  set_at      :datetime         not null
+#  emoji       :string           not null
 #  ends_at     :datetime
+#  set_at      :datetime         not null
+#  user_id     :integer          not null, primary key
 #

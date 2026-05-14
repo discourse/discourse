@@ -480,6 +480,23 @@ RSpec.describe ListController do
   end
 
   describe "#private_messages_group" do
+    describe "#private_messages_group_new and #private_messages_group_unread" do
+      before do
+        group.add(user)
+        sign_in(user)
+      end
+
+      it "enforces can_see_group_messages? when personal messages are disabled for the user" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}/new.json"
+        expect(response.status).to eq(404)
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}/unread.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
     describe "when user not in personal_message_enabled_groups group" do
       let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 

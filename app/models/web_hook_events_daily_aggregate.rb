@@ -43,13 +43,13 @@ end
 # Table name: web_hook_events_daily_aggregates
 #
 #  id                     :bigint           not null, primary key
-#  web_hook_id            :bigint           not null
 #  date                   :date
-#  successful_event_count :integer
 #  failed_event_count     :integer
 #  mean_duration          :integer          default(0)
+#  successful_event_count :integer
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  web_hook_id            :bigint           not null
 #
 # Indexes
 #
