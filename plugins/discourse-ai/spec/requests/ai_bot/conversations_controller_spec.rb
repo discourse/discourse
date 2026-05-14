@@ -195,18 +195,6 @@ RSpec.describe DiscourseAi::AiBot::ConversationsController do
       expect(response.status).to eq(400)
     end
 
-    it "rejects an invalid starred param" do
-      put "/discourse-ai/ai-bot/conversations/#{conversation.id}/starred.json",
-          params: {
-            starred: "wat",
-          }
-
-      expect(response.status).to eq(400)
-      expect(
-        DiscourseAi::AiBot::ConversationStar.exists?(user: current_user, topic: conversation),
-      ).to eq(false)
-    end
-
     it "returns 404 for a non-existent topic" do
       put "/discourse-ai/ai-bot/conversations/99999999/starred.json", params: { starred: true }
 

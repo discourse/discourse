@@ -315,7 +315,7 @@ discourse_ai:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
   ai_bot_enabled_llms:
     default: ""

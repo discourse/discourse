@@ -5,24 +5,11 @@ module DiscourseAi
     class UpdateConversationStar
       include Service::Base
 
-      class StrictBoolean < ActiveModel::Type::Boolean
-        def cast(value)
-          case value
-          when true, false
-            value
-          when "true"
-            true
-          when "false"
-            false
-          end
-        end
-      end
-
       policy :feature_enabled
 
       params do
         attribute :topic_id, :integer
-        attribute :starred, StrictBoolean.new
+        attribute :starred, :boolean
 
         validates :topic_id, presence: true
         validates :starred, inclusion: { in: [true, false] }
@@ -37,7 +24,7 @@ module DiscourseAi
 
         lock :user do
           transaction do
-            step :ensure_user_can_star_more_conversations
+            policy :user_can_star_more_conversations
             model :conversation_star, :create_conversation_star
           end
         end
@@ -78,10 +65,8 @@ module DiscourseAi
         !ConversationStar.exists?(user:, topic:)
       end
 
-      def ensure_user_can_star_more_conversations(user:)
-        if ConversationStar.user_reached_star_limit?(user)
-          fail!("maximum starred conversations reached")
-        end
+      def user_can_star_more_conversations(user:)
+        !ConversationStar.user_reached_star_limit?(user)
       end
 
       def create_conversation_star(user:, topic:)
