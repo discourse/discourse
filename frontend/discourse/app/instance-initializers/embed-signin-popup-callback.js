@@ -4,10 +4,9 @@ export default {
   after: "inject-objects",
 
   initialize(owner) {
-    if (!hasOpener()) {
-      return;
-    }
-
+    // The query param is the only reliable signal — Discourse's default COOP
+    // (`same-origin-allow-popups`) mismatches a typical embedding host's
+    // (`unsafe-none`), which severs `window.opener` on the first popup load.
     if (paramPresent()) {
       try {
         sessionStorage.setItem(SESSION_KEY_PENDING, "1");
@@ -33,19 +32,10 @@ export default {
     } catch {}
 
     // The iframe detects sign-in via session polling, so this self-close is
-    // just UX — silently no-ops if window.close() is disallowed (e.g. after
-    // COOP severs the script-opened relationship through an OAuth redirect).
+    // just UX — silently no-ops if window.close() is disallowed.
     window.close();
   },
 };
-
-function hasOpener() {
-  try {
-    return !!window.opener && window.opener !== window;
-  } catch {
-    return false;
-  }
-}
 
 function paramPresent() {
   try {
