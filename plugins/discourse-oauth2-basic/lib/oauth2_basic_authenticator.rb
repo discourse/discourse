@@ -118,6 +118,25 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
     end
   end
 
+  def user_field_values_from(user_json)
+    mappings = JSON.parse(SiteSetting.oauth2_user_field_mappings.presence || "[]")
+    return {} if mappings.blank?
+
+    mappings.each_with_object({}) do |mapping, hash|
+      path = mapping["path"].to_s
+      field_id = mapping["user_field_id"]
+      next if path.blank? || field_id.blank?
+
+      expanded = path.gsub(".[].", ".").gsub(".[", "[")
+      value = walk_path(user_json, parse_segments(expanded))
+      next if value.nil?
+
+      hash[field_id.to_s] = value.is_a?(Array) ? value.join(",") : value.to_s
+    end
+  rescue JSON::ParserError
+    {}
+  end
+
   def parse_segments(path)
     segments = [+""]
     quoted = false
@@ -184,6 +203,8 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
           prop = "extra:#{detail}"
           json_walk(result, user_json, prop, custom_path: detail)
         end
+
+        result[:user_field_values] = user_field_values_from(user_json)
       end
       result
     else
@@ -252,7 +273,9 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
       end
     end
 
-    super(auth, existing_account: existing_account)
+    result = super(auth, existing_account: existing_account)
+    result.user_field_values = fetched_user_details[:user_field_values] if fetched_user_details
+    result
   end
 
   def enabled?
