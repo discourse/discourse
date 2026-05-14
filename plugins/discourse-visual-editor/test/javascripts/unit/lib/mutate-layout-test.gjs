@@ -2,12 +2,15 @@ import Component from "@glimmer/component";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import {
+  cloneEntryForPaste,
+  cloneLayoutForDraft,
   entryKey,
   findEntry,
   insertEntryAt,
   moveEntry,
   removeEntry,
   replaceEntryArgs,
+  replaceEntryContainerArgs,
   setEntryArg,
 } from "discourse/plugins/discourse-visual-editor/discourse/lib/mutate-layout";
 
@@ -159,6 +162,197 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       assert.false(changed);
       assert.strictEqual(next[1], layout[1]);
       assert.strictEqual(next[1].children, layout[1].children);
+    });
+  });
+
+  module("replaceEntryContainerArgs", function () {
+    function makeGridLayout() {
+      return [
+        {
+          block: ContainerBlock,
+          args: { mode: "grid" },
+          __stableKey: 10,
+          children: [
+            {
+              block: LeafBlock,
+              args: { title: "Cell A" },
+              containerArgs: {
+                grid: { column: "1", row: "1", align: "stretch" },
+              },
+              __stableKey: 11,
+            },
+            {
+              block: LeafBlock,
+              args: { title: "Cell B" },
+              containerArgs: {
+                grid: { column: "2", row: "1", align: "stretch" },
+              },
+              __stableKey: 12,
+            },
+          ],
+        },
+      ];
+    }
+
+    test("replaces the named namespace bag wholesale", function (assert) {
+      const layout = makeGridLayout();
+      const { layout: next, changed } = replaceEntryContainerArgs(
+        layout,
+        "ve:mutate-test-leaf:11",
+        "grid",
+        (current) => ({ ...current, column: "3", row: "2" })
+      );
+
+      assert.true(changed);
+      assert.deepEqual(next[0].children[0].containerArgs.grid, {
+        column: "3",
+        row: "2",
+        align: "stretch",
+      });
+    });
+
+    test("preserves sibling namespaces under containerArgs", function (assert) {
+      const layout = [
+        {
+          block: ContainerBlock,
+          args: { mode: "grid" },
+          __stableKey: 20,
+          children: [
+            {
+              block: LeafBlock,
+              args: {},
+              containerArgs: {
+                grid: { column: "1", row: "1" },
+                stack: { order: 5 },
+              },
+              __stableKey: 21,
+            },
+          ],
+        },
+      ];
+
+      const { layout: next } = replaceEntryContainerArgs(
+        layout,
+        "ve:mutate-test-leaf:21",
+        "grid",
+        () => ({ column: "2", row: "2" })
+      );
+
+      assert.deepEqual(next[0].children[0].containerArgs.stack, { order: 5 });
+      assert.deepEqual(next[0].children[0].containerArgs.grid, {
+        column: "2",
+        row: "2",
+      });
+    });
+
+    test("creates the namespace bag if it doesn't exist yet", function (assert) {
+      const layout = [
+        {
+          block: ContainerBlock,
+          args: {},
+          __stableKey: 30,
+          children: [
+            {
+              block: LeafBlock,
+              args: {},
+              __stableKey: 31,
+            },
+          ],
+        },
+      ];
+
+      const { layout: next, changed } = replaceEntryContainerArgs(
+        layout,
+        "ve:mutate-test-leaf:31",
+        "grid",
+        () => ({ column: "1", row: "1" })
+      );
+
+      assert.true(changed);
+      assert.deepEqual(next[0].children[0].containerArgs.grid, {
+        column: "1",
+        row: "1",
+      });
+    });
+
+    test("preserves identity of untouched siblings", function (assert) {
+      const layout = makeGridLayout();
+      const siblingOriginal = layout[0].children[1];
+
+      const { layout: next } = replaceEntryContainerArgs(
+        layout,
+        "ve:mutate-test-leaf:11",
+        "grid",
+        (current) => ({ ...current, column: "3" })
+      );
+
+      assert.strictEqual(
+        next[0].children[1],
+        siblingOriginal,
+        "untouched sibling keeps identity"
+      );
+    });
+
+    test("returns the original layout when no entry matches", function (assert) {
+      const layout = makeGridLayout();
+      const { layout: next, changed } = replaceEntryContainerArgs(
+        layout,
+        "nope:0",
+        "grid",
+        () => ({})
+      );
+
+      assert.false(changed);
+      assert.strictEqual(next, layout);
+    });
+  });
+
+  module("cloneLayoutForDraft / cloneEntryForPaste", function () {
+    test("deep-clones containerArgs so draft mutations don't leak", function (assert) {
+      const layout = [
+        {
+          block: LeafBlock,
+          args: { title: "Hi" },
+          containerArgs: {
+            grid: { column: "1", row: "2" },
+          },
+          __stableKey: 40,
+        },
+      ];
+      const cloned = cloneLayoutForDraft(layout);
+
+      assert.notStrictEqual(
+        cloned[0].containerArgs,
+        layout[0].containerArgs,
+        "containerArgs is a fresh object"
+      );
+      assert.notStrictEqual(
+        cloned[0].containerArgs.grid,
+        layout[0].containerArgs.grid,
+        "each namespace bag is a fresh object"
+      );
+
+      cloned[0].containerArgs.grid.column = "5";
+
+      assert.strictEqual(
+        layout[0].containerArgs.grid.column,
+        "1",
+        "mutating the clone does not affect the source"
+      );
+    });
+
+    test("cloneEntryForPaste also deep-clones containerArgs", function (assert) {
+      const entry = {
+        block: LeafBlock,
+        args: { title: "Hi" },
+        containerArgs: { grid: { column: "3", row: "1" } },
+        __stableKey: 50,
+      };
+      const cloned = cloneEntryForPaste(entry);
+
+      assert.strictEqual(cloned.__stableKey, undefined, "stableKey stripped");
+      cloned.containerArgs.grid.column = "9";
+      assert.strictEqual(entry.containerArgs.grid.column, "3");
     });
   });
 

@@ -115,6 +115,59 @@ export function replaceEntryArgs(layout, key, updater) {
 }
 
 /**
+ * Returns a new layout where the entry matching `key` has its
+ * `containerArgs[namespace]` bag replaced by the result of
+ * `updater(currentBag)`. The placement bag (e.g. `containerArgs.grid`) is
+ * replaced wholesale so the `containerArgs` trackedObject's per-key tag
+ * dirties — that's what triggers the parent container's render to re-read
+ * the bag. In-place mutation of a nested property (`bag.column = "3"`)
+ * would NOT propagate, since the inner bag is a plain object.
+ *
+ * Mirrors `replaceEntryArgs`: ancestor identity is preserved when nothing
+ * in the subtree changed.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} key
+ * @param {string} namespace - The childArgs namespace key (e.g. "grid").
+ * @param {(currentBag: Object) => Object} updater
+ * @returns {{layout: Array<Object>, changed: boolean}}
+ */
+export function replaceEntryContainerArgs(layout, key, namespace, updater) {
+  let changed = false;
+
+  function walk(entries) {
+    let subtreeChanged = false;
+    const result = entries.map((entry) => {
+      if (entryKey(entry) === key) {
+        changed = true;
+        subtreeChanged = true;
+        const currentContainerArgs = entry.containerArgs ?? {};
+        const currentBag = currentContainerArgs[namespace] ?? {};
+        return {
+          ...entry,
+          containerArgs: {
+            ...currentContainerArgs,
+            [namespace]: { ...updater(currentBag) },
+          },
+        };
+      }
+      if (entry.children?.length) {
+        const newChildren = walk(entry.children);
+        if (newChildren !== entry.children) {
+          subtreeChanged = true;
+          return { ...entry, children: newChildren };
+        }
+      }
+      return entry;
+    });
+    return subtreeChanged ? result : entries;
+  }
+
+  const newLayout = walk(layout);
+  return { layout: newLayout, changed };
+}
+
+/**
  * Replaces the entry matching `key` with a wholly new entry object.
  * Used by the inspector's Raw JSON tab, which lets the author edit
  * the entry's serialised form and commit the parsed result.
@@ -467,11 +520,14 @@ function containsKey(entry, key) {
 /**
  * Returns a structural deep clone of a layout suitable for publishing as a
  * `session-draft` layer. The clone preserves each entry's `__stableKey` and
- * passes through immutable references (block class, conditions, classNames,
- * containerArgs, id) by reference. Each entry's `args` is copied into a
- * fresh POJO so that `assignStableKeys` (run by `_setLayoutLayer`) wraps
- * those POJOs in their own `trackedObject` proxies — keeping draft mutations
- * isolated from the underlying layer's args.
+ * passes through immutable references (block class, conditions, id) by
+ * reference. Each entry's `args` is copied into a fresh POJO so that
+ * `assignStableKeys` (run by `_setLayoutLayer`) wraps those POJOs in their
+ * own `trackedObject` proxies — keeping draft mutations isolated from the
+ * underlying layer's args. `containerArgs` is deep-cloned too (one level
+ * for each namespace bag) for the same reason: the inspector mutates
+ * placement on the draft entry and that must not leak back into the
+ * theme / code-default layer.
  *
  * @param {Array<Object>} layout
  * @returns {Array<Object>}
@@ -487,6 +543,9 @@ function cloneEntryForDraft(entry) {
     // current values into a fresh plain object that will be re-wrapped at
     // publish time.
     clone.args = { ...entry.args };
+  }
+  if (entry.containerArgs) {
+    clone.containerArgs = cloneContainerArgs(entry.containerArgs);
   }
   if (entry.children?.length) {
     clone.children = entry.children.map(cloneEntryForDraft);
@@ -511,8 +570,29 @@ export function cloneEntryForPaste(entry) {
   if (entry.args) {
     clone.args = { ...entry.args };
   }
+  if (entry.containerArgs) {
+    clone.containerArgs = cloneContainerArgs(entry.containerArgs);
+  }
   if (entry.children?.length) {
     clone.children = entry.children.map(cloneEntryForPaste);
+  }
+  return clone;
+}
+
+/**
+ * Two-level clone of a `containerArgs` object. The top-level bag and each
+ * namespace's inner object are both fresh references so the draft / paste
+ * layer can mutate them without leaking back to the source.
+ *
+ * @param {Object} containerArgs
+ * @returns {Object}
+ */
+function cloneContainerArgs(containerArgs) {
+  const clone = {};
+  for (const namespace of Object.keys(containerArgs)) {
+    const bag = containerArgs[namespace];
+    clone[namespace] =
+      bag !== null && typeof bag === "object" ? { ...bag } : bag;
   }
   return clone;
 }

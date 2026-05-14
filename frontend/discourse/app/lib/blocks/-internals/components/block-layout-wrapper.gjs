@@ -28,6 +28,12 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * @property {CurriedComponent} Component - The curried block component to render.
  * @property {string} [classNames] - Additional CSS classes from layout entry.
  * @property {string} [decoratorClassNames] - Extra CSS classes from the @block decorator.
+ * @property {*} [style] - Optional inline style applied to the wrapper's
+ *   outer `<div>`. Parent containers pass this in at the invocation site
+ *   (`<child.Component @style={{...}} />`) when they need to position
+ *   their children — e.g. CSS Grid placement, flexbox per-child overrides.
+ *   The wrapper itself is layout-agnostic; it just applies whatever style
+ *   the parent computes.
  */
 
 /**
@@ -97,6 +103,7 @@ class WrappedBlockLayout extends Component {
         @decoratorClassNames
         @classNames
       }}
+      style={{@style}}
       data-block-id={{@id}}
       data-block-name={{@name}}
       data-block-namespace={{@namespace}}

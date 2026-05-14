@@ -334,8 +334,8 @@ function validateEnumArray({
  * @param {string} [options.entityType="Block"] - The entity type for error messages.
  */
 export function validateCommonSchemaProperties(argDef, argName, options = {}) {
-  const { entityName, entityType = "Block" } = options;
-  const context = { entityName, entityType };
+  const { entityName, entityType = "Block", validProperties } = options;
+  const context = { entityName, entityType, validProperties };
 
   // Validate schema properties using declarative rules (type restrictions + value checks)
   for (const prop of Object.keys(SCHEMA_PROPERTY_RULES)) {
@@ -396,7 +396,13 @@ export function validateCommonSchemaProperties(argDef, argName, options = {}) {
         `${entityType} "${entityName}": arg "${argName}" has invalid "properties" value. Must be an object.`
       );
     } else {
-      // Recursively validate each property schema
+      // Recursively validate each property schema. We inherit the caller's
+      // `validProperties` so nested fields keep the same metadata vocabulary
+      // as the outer schema — e.g. a childArgs entry with `type: "object"`
+      // can declare per-property `ui` hints, which the visual editor uses to
+      // label each field inside a namespaced placement bag.
+      const nestedValidProperties =
+        context.validProperties ?? VALID_ARG_SCHEMA_PROPERTIES;
       for (const [propName, propDef] of Object.entries(argDef.properties)) {
         validateArgName(propName, {
           ...context,
@@ -407,7 +413,7 @@ export function validateCommonSchemaProperties(argDef, argName, options = {}) {
         const nestedArgName = `${argName}.properties.${propName}`;
         validateArgSchemaEntry(propDef, nestedArgName, {
           ...context,
-          validProperties: VALID_ARG_SCHEMA_PROPERTIES,
+          validProperties: nestedValidProperties,
           allowAnyType: false,
           argLabel: "property",
         });
@@ -592,8 +598,15 @@ export function validateArgSchemaEntry(argDef, argName, options) {
     return false;
   }
 
-  // Validate common schema properties
-  validateCommonSchemaProperties(argDef, argName, { entityName, entityType });
+  // Validate common schema properties. Forward `validProperties` so the
+  // recursive call inside (for nested `type: "object"` schemas) can pass
+  // the same vocabulary into the child fields — keeping e.g. `ui` allowed
+  // on nested properties of a childArgs entry.
+  validateCommonSchemaProperties(argDef, argName, {
+    entityName,
+    entityType,
+    validProperties,
+  });
 
   return true;
 }

@@ -9,6 +9,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ConditionsTree from "./conditions-tree";
+import InspectorContainerArgsForm from "./inspector-container-args-form";
 import InspectorForm from "./inspector-form";
 import InspectorLayoutForm from "./inspector-layout-form";
 import InspectorRawJson from "./inspector-raw-json";
@@ -64,6 +65,19 @@ export default class InspectorPanel extends Component {
    */
   get hasCustomLayoutForm() {
     return this.data?.name === "ve:layout";
+  }
+
+  /**
+   * Whether the selected entry should render a placement form. True when
+   * its parent declares a `childArgs` schema — for the current visual
+   * editor that's the `ve:layout` block, so direct children of a grid /
+   * stack / row layout get an extra inspector section to edit their
+   * `containerArgs.<mode>` placement hints.
+   *
+   * @returns {boolean}
+   */
+  get hasContainerArgsForm() {
+    return this.data?.parentChildArgsSchema != null;
   }
 
   /**
@@ -202,6 +216,9 @@ export default class InspectorPanel extends Component {
             <div class="panel-empty">
               {{i18n "visual_editor.inspector.label_no_args"}}
             </div>
+          {{/if}}
+          {{#if this.hasContainerArgsForm}}
+            <InspectorContainerArgsForm />
           {{/if}}
         {{else if (this.isTabActive "conditions")}}
           <div class="visual-editor-inspector__conditions-header">

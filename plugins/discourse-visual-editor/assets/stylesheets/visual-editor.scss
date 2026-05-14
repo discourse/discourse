@@ -349,6 +349,26 @@ body.visual-editor-active {
     }
   }
 
+  /* Grid-cell chrome wrappers ARE the grid items in editor-active
+     mode (the chrome's outer `<div>` is the outermost element returned
+     by the curry the parent layout renders, and receives the parent's
+     `@style` placement directly). `min-width: 0` / `min-height: 0`
+     keep the cell from inflating past its declared track sizes when
+     content has an intrinsic minimum. The chrome inside fills the
+     wrapper so its border reads as the full cell rectangle. */
+
+  .visual-editor-block-chrome-wrapper.--in-grid-cell {
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+
+    > .visual-editor-block-chrome {
+      height: 100%;
+      box-sizing: border-box;
+      margin: 0;
+    }
+  }
+
   /* Floating block toolbar (Phase 7p.2). Mounted inside a selected
      chrome, anchors above the block. Quick actions: move up / move
      down / duplicate / delete. Replaces the corner-badge delete

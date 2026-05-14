@@ -63,11 +63,18 @@ function getOrCreateLeafBlockComponent(
 
   // Only cache leaf blocks (no children). Container blocks are always recreated
   // to ensure their children reflect current visibility state.
+  //
+  // `containerArgs` is included in the cache match because it's destructured
+  // into the `ChildBlockResult` at curry time and read by the parent
+  // container as a one-shot snapshot — a replaced `containerArgs` reference
+  // (e.g. a grid placement edit) must produce a fresh result, otherwise the
+  // parent keeps reading the stale namespace bag.
   if (
     !hasChildren &&
     cachedEntry &&
     cachedEntry.ComponentClass === resolvedBlock &&
-    shallowArgsEqual(cachedEntry.args, entry.args)
+    shallowArgsEqual(cachedEntry.args, entry.args) &&
+    cachedEntry.containerArgs === entry.containerArgs
   ) {
     return cachedEntry.result;
   }
@@ -84,6 +91,7 @@ function getOrCreateLeafBlockComponent(
     cache.set(key, {
       ComponentClass: resolvedBlock,
       args: entry.args,
+      containerArgs: entry.containerArgs,
       result,
     });
   }

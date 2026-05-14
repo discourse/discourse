@@ -6,14 +6,13 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { trustHTML } from "@ember/template";
-import { eq } from "discourse/truth-helpers";
+import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
-import { parseSlotPlacement, placementsOverlap } from "../../lib/grid-math";
+import { parsePlacement, placementsOverlap } from "../../lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
 import gridTileDrag from "../../modifiers/grid-tile-drag";
 import BlockToolbar from "./block-toolbar";
@@ -118,59 +117,38 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Whether the wrapped block is marked `transparent` (e.g. `ve:slot`).
-   * Transparent blocks skip the standard chrome decoration (border /
-   * handle / drop zones / toolbar) but the chrome STILL renders a
-   * positioned wrapper around the inner component. The wrapper
-   * carries inline grid styles read from the block's args so the
-   * placement still anchors to the chrome wrapper — which is what
-   * CSS Grid sees as the direct child of the parent container.
+   * Whether the wrapped block is a grid cell occupant — i.e. its entry
+   * carries `containerArgs.grid` (a direct child of a `ve:layout` in
+   * grid mode). The chrome reads this to drive cell-specific UX:
+   * resize handle visibility, suppression of sibling drop zones, and
+   * overlap / out-of-bounds warning badges.
    *
-   * Without this wrapper, Glimmer's component-boundary semantics
-   * combined with the chrome curry chain made `grid-column` /
-   * `grid-row` styles on the slot's inner `<div>` invisible to the
-   * parent grid (the chrome's mere presence as a wrapping component
-   * shifted the slot's div out of "direct child" position for the
-   * grid).
+   * The placement style itself is applied higher up by core's
+   * `WrappedBlockLayout` from the same `containerArgs.grid` bag — the
+   * chrome stays out of layout concerns.
    *
    * @returns {boolean}
    */
-  get isTransparent() {
-    return this.metadata?.transparent === true;
+  get isGridCell() {
+    return this.gridPlacement != null;
   }
 
   /**
-   * Inline grid placement style for the transparent chrome wrapper.
-   * Reads `column` / `row` / `align` / `justify` from the LIVE entry
-   * args via the visualEditor service. The curried `@blockArgs` arg
-   * is a snapshot taken at chrome-curry time and does NOT update
-   * reactively when `setSlotPlacement` writes new placement — so the
-   * resize / move pointer commits would update the slot data but
-   * never re-render the wrapper. Reading through the service opens
-   * a tracked dep on `structuralVersion` (bumped by every
-   * placement commit) so the wrapper re-paints on the next render.
+   * Live `containerArgs.grid` for this block, or `null` when the block
+   * doesn't sit in a grid. Reads through the visualEditor service
+   * (opens a tracked dep on `structuralVersion`) so placement commits
+   * trigger re-evaluation; the curried `@blockArgs` snapshot taken at
+   * chrome-curry time wouldn't pick up the change.
    *
-   * Defaults to `auto` for any arg the block doesn't carry, so non-
-   * grid contexts (a transparent block inside a stack / row) ignore
-   * these styles harmlessly.
-   *
-   * @returns {ReturnType<typeof trustHTML>}
+   * @returns {Object|null}
    */
-  get transparentWrapperStyle() {
+  get gridPlacement() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.visualEditor.structuralVersion;
     const entry = this.visualEditor._findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
-    const args = entry?.args ?? this.args.blockArgs ?? {};
-    const column = args.column ?? "auto";
-    const row = args.row ?? "auto";
-    const alignSelf = args.align ?? "stretch";
-    const justifySelf = args.justify ?? "stretch";
-    return trustHTML(
-      `grid-column: ${column}; grid-row: ${row}; ` +
-        `align-self: ${alignSelf}; justify-self: ${justifySelf};`
-    );
+    return entry?.containerArgs?.grid ?? null;
   }
 
   /**
@@ -220,53 +198,21 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Whether this block sits directly inside a `ve:slot` (which only
-   * exists inside a `ve:layout` in grid mode). Drives the resize-handle
-   * affordance — the inner block's chrome is the visible "cell", so
-   * authors resize from there.
-   *
-   * @returns {boolean}
-   */
-  get isInFreeGridSlot() {
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.visualEditor.structuralVersion;
-    const parent = this.visualEditor._findEntryParent(this.args.blockKey);
-    if (!parent) {
-      return false;
-    }
-    // `parent.block` is either a string ref (legacy / theme blocks) or a
-    // class reference (decorated blocks). For decorated `VESlot`, the
-    // class's `.name` is `"VESlot"`, NOT `"ve:slot"` — so we have to ask
-    // the service to resolve the block's registered name via metadata
-    // lookup. Falling back to `.name` was the bug that made every chrome
-    // inside a slot fail the check, leaving the chrome's margin/padding
-    // applied and the cell looking misaligned.
-    return this.visualEditor._blockNameOf(parent) === "ve:slot";
-  }
-
-  /**
-   * The slot's own current placement (`{column, row}`), read live via
-   * the service. Used by the resize modifier mounted on the slot
-   * wrapper itself (transparent path) — the slot IS the cell, so its
-   * own column / row are what we resize.
+   * Current placement (`{column, row}`) of this block when it sits in a
+   * grid. Drives the resize modifier mounted on the chrome wrapper.
    *
    * @returns {{column: string, row: string}}
    */
   get slotPlacement() {
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.visualEditor.structuralVersion;
-    const entry = this.visualEditor._findEntryAndOutletSync(
-      this.args.blockKey
-    )?.entry;
+    const placement = this.gridPlacement ?? {};
     return {
-      column: entry?.args?.column ?? "auto",
-      row: entry?.args?.row ?? "auto",
+      column: placement.column ?? "auto",
+      row: placement.row ?? "auto",
     };
   }
 
   /**
-   * Columns count of the grid layout containing this slot.
-   * (`ve:slot`'s parent is always the `ve:layout`.) Drives the resize
+   * Columns count of the parent grid layout. Drives the resize
    * modifier's snap math.
    *
    * @returns {number}
@@ -287,41 +233,34 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Whether this slot's cell rectangle overlaps a sibling slot in the
-   * same grid layout. Drives the `--overlapping` class on the
-   * slot wrapper (transparent path). Only checked for the slot's own
-   * chrome — inner-block chromes inside a slot have their decoration
-   * suppressed via SCSS, so they don't need their own overlap state.
+   * Whether this cell's rectangle overlaps a sibling cell in the same
+   * grid layout. Drives the `--overlapping` class so the author sees
+   * an accidental collision after a resize past a neighbour.
    *
-   * Auto-placed slots are excluded (CSS auto-flow handles them).
+   * Auto-placed cells are excluded (CSS auto-flow handles them).
    *
    * @returns {boolean}
    */
   get hasGridOverlap() {
-    if (!this.isTransparent || this.args.blockName !== "ve:slot") {
+    if (!this.isGridCell) {
       return false;
     }
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.visualEditor.structuralVersion;
-    const entry = this.visualEditor._findEntryAndOutletSync(
-      this.args.blockKey
-    )?.entry;
-    if (!entry?.args) {
+    const myPlacement = parsePlacement(
+      this.visualEditor._findEntryAndOutletSync(this.args.blockKey)?.entry
+        ?.containerArgs
+    );
+    if (myPlacement.column.start == null || myPlacement.row.start == null) {
       return false;
     }
     const grid = this.visualEditor._findEntryParent(this.args.blockKey);
     if (!grid?.children?.length) {
       return false;
     }
-    const myPlacement = parseSlotPlacement(entry.args);
-    if (myPlacement.column.start == null || myPlacement.row.start == null) {
-      return false;
-    }
     for (const sibling of grid.children) {
       if (entryKey(sibling) === this.args.blockKey) {
         continue;
       }
-      const theirPlacement = parseSlotPlacement(sibling.args ?? {});
+      const theirPlacement = parsePlacement(sibling.containerArgs);
       if (placementsOverlap(myPlacement, theirPlacement)) {
         return true;
       }
@@ -330,27 +269,19 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Whether this slot's explicit placement references column / row
+   * Whether this cell's explicit placement references column / row
    * lines outside the parent grid's declared `columns` × `rows`.
-   * Out-of-bounds slots render in implicit (auto-sized) tracks past
+   * Out-of-bounds cells render in implicit (auto-sized) tracks past
    * the grid's edge, which usually looks wrong — flag them so the
    * author can see which block matches the inspector's warning
    * banner. Same danger treatment as the overlap state.
    *
-   * Auto-placed slots are excluded.
+   * Auto-placed cells are excluded.
    *
    * @returns {boolean}
    */
   get isOutOfBounds() {
-    if (!this.isTransparent || this.args.blockName !== "ve:slot") {
-      return false;
-    }
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.visualEditor.structuralVersion;
-    const entry = this.visualEditor._findEntryAndOutletSync(
-      this.args.blockKey
-    )?.entry;
-    if (!entry?.args) {
+    if (!this.isGridCell) {
       return false;
     }
     const grid = this.visualEditor._findEntryParent(this.args.blockKey);
@@ -359,7 +290,10 @@ export default class BlockChrome extends Component {
     }
     const maxColumns = Number(grid.args?.columns ?? 6);
     const maxRows = Number(grid.args?.rows ?? 2);
-    const placement = parseSlotPlacement(entry.args);
+    const placement = parsePlacement(
+      this.visualEditor._findEntryAndOutletSync(this.args.blockKey)?.entry
+        ?.containerArgs
+    );
     const colExceeds =
       placement.column.start != null &&
       placement.column.end != null &&
@@ -369,34 +303,6 @@ export default class BlockChrome extends Component {
       placement.row.end != null &&
       placement.row.end > maxRows + 1;
     return colExceeds || rowExceeds;
-  }
-
-  /**
-   * Whether the block INSIDE this slot is the active selection. Drives
-   * the slot wrapper's `--selected` styling (solid border + visible
-   * resize handle). Authors click the heading inside a cell; the cell
-   * outline lights up because of THIS getter, not because the slot
-   * itself is selected.
-   *
-   * @returns {boolean}
-   */
-  get isInnerSelected() {
-    if (!this.isTransparent || this.args.blockName !== "ve:slot") {
-      return false;
-    }
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.visualEditor.structuralVersion;
-    const entry = this.visualEditor._findEntryAndOutletSync(
-      this.args.blockKey
-    )?.entry;
-    if (!entry?.children?.length) {
-      return this.isSelected;
-    }
-    const innerKey = entryKey(entry.children[0]);
-    return (
-      this.isSelected ||
-      (innerKey && this.visualEditor.isBlockSelected(innerKey))
-    );
   }
 
   /**
@@ -414,16 +320,16 @@ export default class BlockChrome extends Component {
 
   /**
    * Whether to render the before/after sibling drop zones around this
-   * chrome. In a stack/row/auto-grid layout they let authors drop
-   * blocks adjacent to existing siblings; inside a grid slot
-   * there's no "before/after" — placement is by cell coordinate — so
-   * the zones are meaningless and (because they take real flow space)
-   * actively misalign the chrome with the grid cell. Skip them.
+   * chrome. In a stack/row layout they let authors drop blocks
+   * adjacent to existing siblings; inside a grid cell there's no
+   * "before/after" — placement is by cell coordinate — so the zones
+   * are meaningless and (because they take real flow space) actively
+   * misalign the chrome with the grid cell. Skip them.
    *
    * @returns {boolean}
    */
   get showsSiblingDropZones() {
-    return !this.isInFreeGridSlot;
+    return !this.isGridCell;
   }
 
   /**
@@ -557,9 +463,9 @@ export default class BlockChrome extends Component {
       this.visualEditor.endDrag?.();
       return;
     }
-    const placement = parseSlotPlacement(
+    const placement = parsePlacement(
       this.visualEditor._findEntryAndOutletSync(this.args.blockKey)?.entry
-        ?.args ?? {}
+        ?.containerArgs
     );
     const fallbackCell = {
       column: placement.column.start ?? 1,
@@ -572,10 +478,6 @@ export default class BlockChrome extends Component {
    * Captures the click only when editor is active. Stops propagation so the
    * host page's own click handlers (links, buttons inside the block) don't
    * fire while the user is editing.
-   *
-   * For transparent slots, the click routes to the slot's INNER block
-   * instead — the slot is internal plumbing; the user wants to inspect
-   * and edit the heading / image / etc. they actually see in the cell.
    */
   @action
   onClick(event) {
@@ -584,25 +486,6 @@ export default class BlockChrome extends Component {
     }
     event.preventDefault();
     event.stopPropagation();
-    if (this.isTransparent && this.args.blockName === "ve:slot") {
-      const entry = this.visualEditor._findEntryAndOutletSync(
-        this.args.blockKey
-      )?.entry;
-      const inner = entry?.children?.[0];
-      if (inner) {
-        const innerKey = entryKey(inner);
-        const innerName = this.visualEditor._blockNameOf(inner);
-        this.visualEditor.selectBlock({
-          key: innerKey,
-          name: innerName,
-          args: inner.args,
-          outletName: this.args.outletName,
-          conditions: inner.conditions ?? null,
-          metadata: null,
-        });
-        return;
-      }
-    }
     this.visualEditor.selectBlock({
       key: this.args.blockKey,
       name: this.args.blockName,
@@ -735,87 +618,22 @@ export default class BlockChrome extends Component {
   }
 
   <template>
-    {{#if this.isTransparent}}
-      {{! Transparent blocks (`ve:slot`) get a positioned wrapper but
-        no chrome decoration. The wrapper IS the direct child of the
-        parent (e.g. a grid layout) and carries grid-column /
-        grid-row from the wrapped block's args, so CSS Grid honours
-        placement regardless of what's inside the slot. }}
-      {{! Slot wrapper IS the cell. The wrapper renders ALWAYS so the
-        live page lays out cells correctly; the chrome decoration
-        (border, handle, resize, badge) is only added when the editor
-        is active. SCSS scopes the visible decoration to
-        `body.visual-editor-active` for the same reason. }}
-      <div
-        class={{dConcatClass
-          "visual-editor-transparent-slot"
-          (if this.isInnerSelected "--selected")
-          (if this.hasGridOverlap "--overlapping")
-          (if this.isOutOfBounds "--out-of-bounds")
-        }}
-        style={{this.transparentWrapperStyle}}
-        data-ve-block-name={{@blockName}}
-        data-ve-block-key={{@blockKey}}
-        role={{if this.visualEditor.isActive "button"}}
-        tabindex={{if this.visualEditor.isActive "0"}}
-        {{didInsert this.captureChromeEl}}
-        {{on "click" this.onClick}}
-        {{dDragAndDropTarget
-          accepts=this.acceptedDragKinds
-          canDrop=this.canDropOnSlot
-          onDrop=this.applySlotDrop
-        }}
-      >
-        {{#if this.visualEditor.isActive}}
-          {{#if this.isOutOfBounds}}
-            <span
-              class="visual-editor-block-chrome__overlap-badge"
-              title={{i18n "visual_editor.canvas.out_of_bounds_warning"}}
-            >
-              {{dIcon "triangle-exclamation"}}
-              <span>{{i18n "visual_editor.canvas.out_of_bounds_label"}}</span>
-            </span>
-          {{else if this.hasGridOverlap}}
-            <span
-              class="visual-editor-block-chrome__overlap-badge"
-              title={{i18n "visual_editor.canvas.overlap_warning"}}
-            >
-              {{dIcon "triangle-exclamation"}}
-              <span>{{i18n "visual_editor.canvas.overlap_label"}}</span>
-            </span>
-          {{/if}}
-        {{/if}}
-
-        <@WrappedComponent />
-
-        {{#if this.isInnerSelected}}
-          <span
-            class="visual-editor-block-chrome__resize-handle"
-            title={{i18n "visual_editor.canvas.resize_handle_title"}}
-            aria-hidden="true"
-            {{gridTileDrag
-              this.getResizeGridElement
-              this.slotPlacement
-              this.slotGridColumns
-              this.slotGridRows
-              this.getResizeGhost
-              this.commitSelfResize
-            }}
-          ></span>
-        {{/if}}
-      </div>
-    {{else if this.visualEditor.isActive}}
-      {{! Outer wrapper hosts the sibling drop zones (before/after) and the
-        bordered frame in between. The dotted block-chrome border is on the
-        inner element so the before/after zones render visually OUTSIDE the
-        block — matching the move semantics ("place adjacent to this block
-        at the parent's level"). Inside zones (containers only) sit within
-        the frame, signalling "place as the container's first child". }}
+    {{#if this.visualEditor.isActive}}
+      {{! Outer wrapper hosts the sibling drop zones (before/after) for
+        stack / row layouts and the bordered chrome frame in between.
+        Grid cell occupants skip the sibling drop zones — their
+        placement is by cell coordinate, applied via the `@style`
+        forwarded from the parent layout. In active editor mode the
+        chrome IS the rendered outermost element (the curried child the
+        layout sees), so the parent's placement style needs to land here
+        rather than on the inner `WrappedBlockLayout` div. }}
       <div
         class={{dConcatClass
           "visual-editor-block-chrome-wrapper"
+          (if this.isGridCell "--in-grid-cell")
           (if (eq this.parentLayoutAxis "horizontal") "--axis-horizontal")
         }}
+        style={{@style}}
       >
         {{#if this.showsSiblingDropZones}}
           <div
@@ -841,14 +659,19 @@ export default class BlockChrome extends Component {
             (if this.isSelected "--selected")
             (if this.isContainer "--container")
             (if this.isEmptyContainer "--empty-container")
-            (if this.isInFreeGridSlot "--in-grid-slot")
             (if this.hasGridOverlap "--overlapping")
+            (if this.isOutOfBounds "--out-of-bounds")
           }}
           data-ve-block-name={{@blockName}}
           data-ve-block-key={{@blockKey}}
           data-ve-empty={{this.isEmptyContainer}}
           {{didInsert this.captureChromeEl}}
           {{on "click" this.onClick}}
+          {{dDragAndDropTarget
+            accepts=this.acceptedDragKinds
+            canDrop=this.canDropOnSlot
+            onDrop=this.applySlotDrop
+          }}
           role="button"
           tabindex="0"
         >
@@ -856,11 +679,19 @@ export default class BlockChrome extends Component {
             <BlockToolbar @blockKey={{@blockKey}} />
           {{/if}}
 
-          {{! Overlap warning badge — only visible when this slot's cell
-            rectangle intersects a sibling slot's. Loud on purpose: the
-            chrome's tinted background alone is too easy to miss, and
-            silent overlap was the original complaint. }}
-          {{#if this.hasGridOverlap}}
+          {{! Overlap / out-of-bounds warning badge — only visible when
+            this cell's rectangle intersects a sibling or runs past the
+            grid's edge. Loud on purpose: a tinted background alone is
+            too easy to miss. }}
+          {{#if this.isOutOfBounds}}
+            <span
+              class="visual-editor-block-chrome__overlap-badge"
+              title={{i18n "visual_editor.canvas.out_of_bounds_warning"}}
+            >
+              {{dIcon "triangle-exclamation"}}
+              <span>{{i18n "visual_editor.canvas.out_of_bounds_label"}}</span>
+            </span>
+          {{else if this.hasGridOverlap}}
             <span
               class="visual-editor-block-chrome__overlap-badge"
               title={{i18n "visual_editor.canvas.overlap_warning"}}
@@ -900,10 +731,21 @@ export default class BlockChrome extends Component {
             <GridOverlay @gridKey={{@blockKey}} @outletName={{@outletName}} />
           {{/if}}
 
-          {{! Resize handle for blocks inside grid slots lives on
-            the slot wrapper itself (transparent path above), not on
-            the inner chrome — that's where it aligns with the cell
-            outline and corner. Nothing rendered here. }}
+          {{#if (and this.isGridCell this.isSelected)}}
+            <span
+              class="visual-editor-block-chrome__resize-handle"
+              title={{i18n "visual_editor.canvas.resize_handle_title"}}
+              aria-hidden="true"
+              {{gridTileDrag
+                this.getResizeGridElement
+                this.slotPlacement
+                this.slotGridColumns
+                this.slotGridRows
+                this.getResizeGhost
+                this.commitSelfResize
+              }}
+            ></span>
+          {{/if}}
 
           {{#if this.showsInsideDropZone}}
             <div
@@ -952,7 +794,7 @@ export default class BlockChrome extends Component {
         {{/if}}
       </div>
     {{else}}
-      <@WrappedComponent />
+      <@WrappedComponent @style={{@style}} />
     {{/if}}
   </template>
 }
