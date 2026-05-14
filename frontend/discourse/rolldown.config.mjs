@@ -56,7 +56,9 @@ const aliases = [
 ];
 
 export function buildConfig({ devMode } = {}) {
-  if (process.env.EMBER_ENV !== "production") {
+  const isProduction = process.env.EMBER_ENV === "production";
+
+  if (!isProduction) {
     process.env.NODE_ENV = "development";
   }
 
@@ -75,8 +77,7 @@ export function buildConfig({ devMode } = {}) {
       vendor: "vendor.js",
       "start-discourse": "start-discourse.js",
       "media-optimization-bundle": "media-optimization-bundle.js",
-      ...(process.env.EMBER_ENV !== "production" ||
-      process.env.FORCE_BUILD_TESTS
+      ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
             "tests/test-entrypoint": "tests/test-entrypoint.js",
             "qunit-live-reload": "qunit-live-reload.js",
@@ -84,7 +85,7 @@ export function buildConfig({ devMode } = {}) {
         : undefined),
     },
     output: {
-      minify: false,
+      minify: isProduction,
       dir: "dist",
       sourcemap: true,
       cleanDir: !devMode,
