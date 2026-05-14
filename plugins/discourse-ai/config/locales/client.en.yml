@@ -954,6 +954,8 @@ en:
           success: "Success!"
           invalid_config: "Fix the following errors in your configuration first:"
           failure: "Trying to contact the model returned this error: %{error}"
+          failure_non_streaming: "Non-streaming request failed: %{error}"
+          failure_streaming: "Streaming request failed: %{error}"
 
         hints:
           max_prompt_tokens: "The maximum number of tokens the model can process in a single request"

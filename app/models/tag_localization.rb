@@ -24,12 +24,12 @@ end
 # Table name: tag_localizations
 #
 #  id          :bigint           not null, primary key
-#  tag_id      :bigint           not null
+#  description :string(1000)
 #  locale      :string(20)       not null
 #  name        :string           not null
-#  description :string(1000)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  tag_id      :bigint           not null
 #
 # Indexes
 #

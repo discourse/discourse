@@ -3492,6 +3492,8 @@ tr_TR:
         relist_topics: "Konuları yeniden listele"
         pin_topics: "Bu konuları öne çıkarın"
         unpin_topics: "Konuların Sabitlemesini Kaldır"
+        enable_nested_replies: "İç içe geçmiş yanıtları etkinleştir"
+        disable_nested_replies: "İç içe geçmiş yanıtları devre dışı bırak"
         reset_bump_dates: "Üste sıçratma tarihlerini sıfırla"
         defer: "Okunmamış olarak işaretle"
         delete: "Konuları sil"
@@ -3673,6 +3675,10 @@ tr_TR:
       unpin_topics:
         name: "Sabitlemeyi kaldır"
         description: "Bir kategoriye veya genel olarak sabitlenmiş olan tüm seçili konuların sabitlemesini kaldır"
+      enable_nested_replies:
+        name: "İç içe geçmiş yanıtları etkinleştir"
+      disable_nested_replies:
+        name: "İç içe geçmiş yanıtları devre dışı bırak"
     nested_replies:
       nested_view: "İç içe geçmiş görünüm"
       flat_view: "Düz görünüm"

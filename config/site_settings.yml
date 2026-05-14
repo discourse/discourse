@@ -1087,6 +1087,9 @@ users:
     default: 100
     hidden: true
     area: "users"
+  directory_columns_seeded:
+    default: false
+    hidden: true
   allow_anonymous_mode:
     default: false
     client: true
@@ -2470,7 +2473,7 @@ files:
   image_quality:
     enum: "ImageQualitySetting"
     client: true
-    default: 70
+    default: 90
   png_to_jpg_quality:
     default: 0
     min: 0
@@ -3350,6 +3353,9 @@ navigation:
       - "top"
       - "bottom"
     area: "navigation"
+  sidebar_seeded:
+    default: false
+    hidden: true
 
 embedding:
   embed_full_app:
@@ -4338,6 +4344,18 @@ dashboard:
       - reports
       - features
     area: "reports"
+  admin_dashboard_sections:
+    type: list
+    list_type: compact
+    default: "highlights|reports|traffic|engagement"
+    allow_any: false
+    choices:
+      - highlights
+      - reports
+      - traffic
+      - engagement
+    area: "reports"
+    hidden: true
   dashboard_general_tab_activity_metrics:
     client: true
     type: list

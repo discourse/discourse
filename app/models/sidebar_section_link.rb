@@ -43,13 +43,13 @@ end
 # Table name: sidebar_section_links
 #
 #  id                 :bigint           not null, primary key
-#  user_id            :integer          not null
-#  linkable_id        :integer          not null
 #  linkable_type      :string           not null
+#  position           :integer          default(0), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  linkable_id        :integer          not null
 #  sidebar_section_id :integer
-#  position           :integer          default(0), not null
+#  user_id            :integer          not null
 #
 # Indexes
 #

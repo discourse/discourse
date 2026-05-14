@@ -10,6 +10,7 @@ import {
 } from "discourse/admin/components/dashboard/date-range";
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import VersionCheck from "discourse/admin/models/version-check";
+import { ajax } from "discourse/lib/ajax";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
 const PROBLEMS_CHECK_MINUTES = 1;
@@ -25,6 +26,7 @@ export default class AdminDashboardController extends Controller {
   @tracked start_date = null;
   @tracked end_date = null;
   @tracked sections = null;
+  @tracked configuration = null;
   @tracked loadingSections = false;
   @tracked sectionsFetchError = false;
   @autoTrackedArray problems;
@@ -81,6 +83,16 @@ export default class AdminDashboardController extends Controller {
     this.fetchSections();
   }
 
+  @action
+  async updateConfiguration(sections) {
+    await ajax("/admin/dashboard/configuration.json", {
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({ sections }),
+    });
+    await this.fetchSections();
+  }
+
   async fetchSections() {
     const id = ++this._sectionsLoadId;
     this.loadingSections = true;
@@ -95,6 +107,7 @@ export default class AdminDashboardController extends Controller {
         return;
       }
       this.sections = model.sections;
+      this.configuration = model.configuration;
     } catch {
       if (id !== this._sectionsLoadId) {
         return;

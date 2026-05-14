@@ -46,14 +46,14 @@ end
 # Table name: policy_users
 #
 #  id             :bigint           not null, primary key
-#  post_policy_id :bigint           not null
-#  user_id        :integer          not null
 #  accepted_at    :datetime
-#  revoked_at     :datetime
 #  expired_at     :datetime
+#  revoked_at     :datetime
 #  version        :string
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  post_policy_id :bigint           not null
+#  user_id        :integer          not null
 #
 # Indexes
 #

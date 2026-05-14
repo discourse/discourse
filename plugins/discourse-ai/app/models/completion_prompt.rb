@@ -72,15 +72,15 @@ end
 # Table name: completion_prompts
 #
 #  id              :bigint           not null, primary key
-#  name            :string           not null
-#  translated_name :string
-#  prompt_type     :integer          default("text"), not null
 #  enabled         :boolean          default(TRUE), not null
+#  messages        :jsonb
+#  name            :string           not null
+#  prompt_type     :integer          default("text"), not null
+#  stop_sequences  :string           is an Array
+#  temperature     :integer
+#  translated_name :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  messages        :jsonb
-#  temperature     :integer
-#  stop_sequences  :string           is an Array
 #
 # Indexes
 #

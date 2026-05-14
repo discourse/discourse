@@ -113,12 +113,12 @@ end
 # Table name: user_emails
 #
 #  id               :integer          not null, primary key
-#  user_id          :integer          not null
 #  email            :string(513)      not null
+#  normalized_email :string
 #  primary          :boolean          default(FALSE), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  normalized_email :string
+#  user_id          :integer          not null
 #
 # Indexes
 #

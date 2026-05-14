@@ -33,15 +33,15 @@ end
 # Table name: user_security_keys
 #
 #  id            :bigint           not null, primary key
-#  user_id       :bigint           not null
-#  credential_id :string           not null
-#  public_key    :string           not null
-#  factor_type   :integer          default(0), not null
 #  enabled       :boolean          default(TRUE), not null
-#  name          :string(300)      not null
+#  factor_type   :integer          default(0), not null
 #  last_used     :datetime
+#  name          :string(300)      not null
+#  public_key    :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  credential_id :string           not null
+#  user_id       :bigint           not null
 #
 # Indexes
 #

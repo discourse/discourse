@@ -697,29 +697,29 @@ end
 # Table name: uploads
 #
 #  id                           :integer          not null, primary key
-#  user_id                      :integer          not null
-#  original_filename            :string           not null
-#  filesize                     :bigint           not null
-#  width                        :integer
-#  height                       :integer
-#  url                          :string           not null
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  sha1                         :string(40)
-#  origin                       :string(2000)
-#  retain_hours                 :integer
-#  extension                    :string(10)
-#  thumbnail_width              :integer
-#  thumbnail_height             :integer
-#  etag                         :string
-#  secure                       :boolean          default(FALSE), not null
-#  access_control_post_id       :bigint
-#  original_sha1                :string
 #  animated                     :boolean
-#  verification_status          :integer          default(1), not null
+#  dominant_color               :text
+#  etag                         :string
+#  extension                    :string(10)
+#  filesize                     :bigint           not null
+#  height                       :integer
+#  origin                       :string(2000)
+#  original_filename            :string           not null
+#  original_sha1                :string
+#  retain_hours                 :integer
+#  secure                       :boolean          default(FALSE), not null
 #  security_last_changed_at     :datetime
 #  security_last_changed_reason :string
-#  dominant_color               :text
+#  sha1                         :string(40)
+#  thumbnail_height             :integer
+#  thumbnail_width              :integer
+#  url                          :string           not null
+#  verification_status          :integer          default(1), not null
+#  width                        :integer
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  access_control_post_id       :bigint
+#  user_id                      :integer          not null
 #
 # Indexes
 #

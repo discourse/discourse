@@ -20,9 +20,9 @@ end
 #
 # Table name: post_replies
 #
-#  post_id       :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  post_id       :integer
 #  reply_post_id :integer
 #
 # Indexes

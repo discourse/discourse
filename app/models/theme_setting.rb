@@ -94,11 +94,11 @@ end
 # Table name: theme_settings
 #
 #  id         :bigint           not null, primary key
-#  name       :string(255)      not null
 #  data_type  :integer          not null
+#  json_value :jsonb
+#  name       :string(255)      not null
 #  value      :text
-#  theme_id   :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  json_value :jsonb
+#  theme_id   :integer          not null
 #

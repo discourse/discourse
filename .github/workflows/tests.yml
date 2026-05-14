@@ -239,6 +239,8 @@ jobs:
 
       - name: Check Annotations
         if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
+        env:
+          LOAD_PLUGINS: ""
         run: |
           directories=""
           if [ "${{ matrix.target }}" = "core" ]; then

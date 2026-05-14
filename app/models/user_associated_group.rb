@@ -38,10 +38,10 @@ end
 # Table name: user_associated_groups
 #
 #  id                  :bigint           not null, primary key
-#  user_id             :bigint           not null
-#  associated_group_id :bigint           not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  associated_group_id :bigint           not null
+#  user_id             :bigint           not null
 #
 # Indexes
 #

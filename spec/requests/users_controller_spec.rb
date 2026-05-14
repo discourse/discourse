@@ -3485,8 +3485,6 @@ RSpec.describe UsersController do
         TranslationOverride.upsert!("en", "badges.demogorgon.name", "Boss")
       end
 
-      after { TranslationOverride.revert!("en", ["badges.demogorgon.name"]) }
-
       it "uses the badge display name as user title" do
         sign_in(user1)
 

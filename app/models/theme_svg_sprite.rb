@@ -14,11 +14,11 @@ end
 # Table name: theme_svg_sprites
 #
 #  id         :bigint           not null, primary key
-#  theme_id   :integer          not null
-#  upload_id  :integer          not null
 #  sprite     :binary           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  theme_id   :integer          not null
+#  upload_id  :integer          not null
 #
 # Indexes
 #
