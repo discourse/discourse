@@ -151,3 +151,6 @@ loaderShim("ember-this-fallback/this-fallback-helper", () =>
 loaderShim("ember-this-fallback/try-lookup-helper", () =>
   importSync("./lib/ember-this-fallback/try-lookup-helper")
 );
+loaderShim("ember-buffered-proxy/proxy", () =>
+  importSync("ember-buffered-proxy/proxy")
+);
