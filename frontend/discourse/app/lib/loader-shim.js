@@ -1,4 +1,4 @@
-import "../loader"; // todo, loader.js from npm?
+import "../loader";
 
 // Webpack has bugs, using globalThis is the safest
 // https://github.com/embroider-build/embroider/issues/1545
