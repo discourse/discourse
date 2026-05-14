@@ -62,15 +62,13 @@ populatePreloadStore();
 defineModules(null, embroiderCompatModules);
 
 import dialogHolderCompatModules from "discourse/dialog-holder/compat-modules";
+import floatKitCompatModules from "discourse/float-kit/compat-modules";
+import selectKitCompatModules from "discourse/select-kit/compat-modules";
+import uiKitCompatModules from "discourse/ui-kit/compat-modules";
 
 defineModules("discourse/dialog-holder", dialogHolderCompatModules);
-
-import floatKitCompatModules from "discourse/float-kit/compat-modules";
-
 defineModules("discourse/float-kit", floatKitCompatModules);
-
-import selectKitCompatModules from "discourse/select-kit/compat-modules";
-
+defineModules("discourse/ui-kit", uiKitCompatModules);
 defineModules("discourse/select-kit", selectKitCompatModules);
 
 const _pluginCallbacks = [];
