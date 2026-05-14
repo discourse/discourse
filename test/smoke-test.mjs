@@ -16,6 +16,7 @@ import { chromium } from "playwright";
 
 (async () => {
   const browser = await chromium.launch({
+    channel: "chrome",
     // when debugging locally setting the SHOW_BROWSER env variable can be very helpful
     headless: process.env.SHOW_BROWSER === undefined,
     args: ["--no-sandbox"],
