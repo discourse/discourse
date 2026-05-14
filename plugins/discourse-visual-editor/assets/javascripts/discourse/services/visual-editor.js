@@ -1297,15 +1297,24 @@ export default class VisualEditorService extends Service {
    * namespace declared by the parent). Returns `null` when the entry sits at
    * the outlet root or when the parent doesn't declare a childArgs schema.
    *
+   * Handles both forms of `parent.block`: a class reference (decorated
+   * blocks passed by class to `api.renderBlocks`) and a registered name
+   * string (everything that's been through serialisation, including
+   * theme-shipped layouts and the editor's own draft layer).
+   *
    * @param {string} key
    * @returns {Object|null}
    */
   _resolveParentChildArgsSchema(key) {
     const parent = this._findEntryParent(key);
-    if (!parent?.block) {
+    if (!parent) {
       return null;
     }
-    return getBlockMetadata(parent.block)?.childArgs ?? null;
+    const parentName = this._blockNameOf(parent);
+    if (!parentName) {
+      return null;
+    }
+    return this._metadataForName(parentName)?.childArgs ?? null;
   }
 
   _withInferredMetadata(data) {

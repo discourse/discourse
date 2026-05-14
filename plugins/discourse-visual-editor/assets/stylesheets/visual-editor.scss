@@ -349,24 +349,39 @@ body.visual-editor-active {
     }
   }
 
-  /* Grid-cell chrome wrappers ARE the grid items in editor-active
-     mode (the chrome's outer `<div>` is the outermost element returned
-     by the curry the parent layout renders, and receives the parent's
-     `@style` placement directly). `min-width: 0` / `min-height: 0`
-     keep the cell from inflating past its declared track sizes when
-     content has an intrinsic minimum. The chrome inside fills the
-     wrapper so its border reads as the full cell rectangle. */
+  /* Grid cells in editor mode: the `ve-layout__cell` wrapper is the
+     grid item (`ve:layout` renders it), and the chrome wrapper sits
+     inside it. The chrome must always stretch to fill its parent cell
+     so the chrome border traces the full cell rectangle regardless of
+     the user's `align` / `justify` choice — that choice positions the
+     content INSIDE the chrome, via the `__content` wrapper, not the
+     chrome itself. Without these overrides, the cell wrapper's
+     `place-items` would shrink the chrome and break the cell outline. */
 
-  .visual-editor-block-chrome-wrapper.--in-grid-cell {
-    min-width: 0;
-    min-height: 0;
+  .ve-layout__cell > .visual-editor-block-chrome-wrapper {
+    width: 100%;
     height: 100%;
+    align-self: stretch;
+    justify-self: stretch;
 
     > .visual-editor-block-chrome {
+      width: 100%;
       height: 100%;
       box-sizing: border-box;
       margin: 0;
     }
+  }
+
+  /* The chrome's inner content slot for grid cells: a single-cell
+     sub-grid whose `place-items` positions the wrapped block per the
+     user's `align` / `justify` choice. Fills the chrome (so non-stretch
+     placements aren't artificially constrained by content size). */
+
+  .visual-editor-block-chrome__content {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
   }
 
   /* Floating block toolbar (Phase 7p.2). Mounted inside a selected
