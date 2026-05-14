@@ -374,7 +374,7 @@ describe AdPlugin::HouseAd do
 
       expect do
         delete_queries =
-          track_sql_queries { ad.destroy }.select do |sql|
+          track_sql_queries { ad.destroy! }.select do |sql|
             sql.match?(/DELETE FROM ["']?ad_plugin_impressions["']?/i)
           end
       end.to change { AdPlugin::AdImpression.count }.by(-3)
