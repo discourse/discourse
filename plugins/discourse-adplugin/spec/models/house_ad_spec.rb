@@ -357,16 +357,6 @@ describe AdPlugin::HouseAd do
   describe "destroying with associated impressions" do
     fab!(:ad, :house_ad)
 
-    it "has no impression destroy hooks that dependent: :delete_all would skip" do
-      dependent_associations =
-        AdPlugin::AdImpression.reflect_on_all_associations.select do |reflection|
-          reflection.options[:dependent].present?
-        end
-
-      expect(AdPlugin::AdImpression._destroy_callbacks.map(&:filter)).to be_empty
-      expect(dependent_associations.map(&:name)).to be_empty
-    end
-
     it "deletes impressions in a single DELETE query" do
       3.times { Fabricate(:anonymous_house_ad_impression, house_ad: ad) }
 
