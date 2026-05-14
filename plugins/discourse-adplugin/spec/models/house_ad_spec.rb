@@ -367,7 +367,7 @@ describe AdPlugin::HouseAd do
       expect(dependent_associations.map(&:name)).to be_empty
     end
 
-    it "deletes impressions in a single DELETE when the ad is destroyed" do
+    it "deletes impressions in a single DELETE query" do
       3.times { Fabricate(:anonymous_house_ad_impression, house_ad: ad) }
 
       delete_queries = nil
