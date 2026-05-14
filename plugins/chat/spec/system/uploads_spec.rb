@@ -165,7 +165,8 @@ describe "Uploading files in chat messages" do
       expect(channel_page.message_by_id(message_2.id)).to have_no_css(".chat-uploads")
 
       channel_page.click_send_message
-      expect(message_2.reload.upload_ids).to be_empty
+
+      try_until_success { expect(message_2.reload.upload_ids).to be_empty }
     end
 
     it "allows adding more uploads" do
