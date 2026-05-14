@@ -1842,7 +1842,9 @@ CREATE TABLE public.browser_pageview_events (
     topic_id integer,
     user_id integer,
     country_code character varying(2),
-    created_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone NOT NULL,
+    asn integer,
+    score integer
 );
 
 
@@ -3438,6 +3440,38 @@ CREATE SEQUENCE public.directory_items_id_seq
 --
 
 ALTER SEQUENCE public.directory_items_id_seq OWNED BY public.directory_items.id;
+
+
+--
+-- Name: discourse_ai_ai_bot_conversation_stars; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_ai_ai_bot_conversation_stars (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    topic_id integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_ai_ai_bot_conversation_stars_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_ai_ai_bot_conversation_stars_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_ai_ai_bot_conversation_stars_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_ai_ai_bot_conversation_stars_id_seq OWNED BY public.discourse_ai_ai_bot_conversation_stars.id;
 
 
 --
@@ -11831,6 +11865,13 @@ ALTER TABLE ONLY public.directory_items ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: discourse_ai_ai_bot_conversation_stars id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_ai_ai_bot_conversation_stars ALTER COLUMN id SET DEFAULT nextval('public.discourse_ai_ai_bot_conversation_stars_id_seq'::regclass);
+
+
+--
 -- Name: discourse_automation_automations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -13950,6 +13991,14 @@ ALTER TABLE ONLY public.directory_items
 
 
 --
+-- Name: discourse_ai_ai_bot_conversation_stars discourse_ai_ai_bot_conversation_stars_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_ai_ai_bot_conversation_stars
+    ADD CONSTRAINT discourse_ai_ai_bot_conversation_stars_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_automation_automations discourse_automation_automations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15740,10 +15789,45 @@ CREATE UNIQUE INDEX discourse_post_event_invitees_post_id_user_id_idx ON public.
 
 
 --
+-- Name: idx_ai_bot_conversation_stars_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_bot_conversation_stars_topic_id ON public.discourse_ai_ai_bot_conversation_stars USING btree (topic_id);
+
+
+--
+-- Name: idx_ai_bot_conversation_stars_user_created; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_bot_conversation_stars_user_created ON public.discourse_ai_ai_bot_conversation_stars USING btree (user_id, created_at);
+
+
+--
+-- Name: idx_ai_bot_conversation_stars_user_topic; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_ai_bot_conversation_stars_user_topic ON public.discourse_ai_ai_bot_conversation_stars USING btree (user_id, topic_id);
+
+
+--
 -- Name: idx_bookmarks_user_polymorphic_unique; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX idx_bookmarks_user_polymorphic_unique ON public.bookmarks USING btree (user_id, bookmarkable_type, bookmarkable_id);
+
+
+--
+-- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING btree (ip_address, user_agent, created_at);
+
+
+--
+-- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
 
 
 --
@@ -20748,8 +20832,10 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260513105516'),
 ('20260513101242'),
+('20260513024004'),
 ('20260512061336'),
 ('20260511044542'),
+('20260510232238'),
 ('20260507083943'),
 ('20260505222400'),
 ('20260505161704'),
