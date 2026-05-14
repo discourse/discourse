@@ -1659,6 +1659,24 @@ RSpec.describe UsersController do
       include_examples "failed signup"
     end
 
+    context "when using an unknown value for an enum user field on signup" do
+      fab!(:user_field, :user_field_dropdown)
+
+      let(:create_params) do
+        {
+          name: @user.name,
+          username: @user.username,
+          password: "strongpassword",
+          email: @user.email,
+          user_fields: {
+            user_field.id.to_s => "Juice",
+          },
+        }
+      end
+
+      include_examples "failed signup"
+    end
+
     context "with custom fields" do
       fab!(:user_field)
       fab!(:another_field, :user_field)
