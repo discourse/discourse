@@ -36,7 +36,7 @@ class Report
     page_view_logged_in_reqs
   ]
 
-  ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads]
+  ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads topic_view_stats]
 
   def self.hidden?(type, admin:)
     return true if !admin && ADMIN_ONLY_REPORTS.include?(type)
