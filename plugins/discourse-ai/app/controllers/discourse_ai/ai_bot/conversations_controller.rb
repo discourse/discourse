@@ -9,32 +9,47 @@ module DiscourseAi
       requires_login
 
       def index
-        page = params[:page].to_i
-        per_page = params[:per_page]&.to_i || 40
-
-        base_query =
-          Topic
-            .private_messages_for_user(current_user)
-            .where(user: current_user) # Only show PMs where the current user is the author
-            .joins(
-              "INNER JOIN topic_custom_fields tcf ON tcf.topic_id = topics.id
-                   AND tcf.name = '#{DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD}'
-                   AND tcf.value = 't'",
+        ListConversations.call(service_params) do
+          on_success do |list_result:|
+            render json:
+                     ConversationListSerializer.new(
+                       list_result,
+                       scope: guardian,
+                       root: false,
+                       starred_at_by_topic_id: list_result.starred_at_by_topic_id,
+                     ).as_json
+          end
+          on_failed_contract do |contract|
+            render(
+              json: failed_json.merge(errors: contract.errors.full_messages),
+              status: :bad_request,
             )
-            .distinct
+          end
+          on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        end
+      end
 
-        total = base_query.count
-        pms = base_query.order(last_posted_at: :desc).offset(page * per_page).limit(per_page)
+      def update_starred
+        UpdateConversationStar.call(star_service_params) do
+          on_success { |params:| render json: success_json.merge(starred: params.starred) }
+          on_failed_policy(:not_already_starred) { render json: success_json.merge(starred: true) }
+          on_model_not_found(:topic) { raise Discourse::NotFound }
+          on_failed_policy(:feature_enabled) { raise Discourse::NotFound }
+          on_failed_policy(:can_access_conversation) { raise Discourse::NotFound }
+          on_failed_contract do |contract|
+            render(
+              json: failed_json.merge(errors: contract.errors.full_messages),
+              status: :bad_request,
+            )
+          end
+          on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        end
+      end
 
-        render json: {
-                 conversations: serialize_data(pms, ListableTopicSerializer),
-                 meta: {
-                   total: total,
-                   page: page,
-                   per_page: per_page,
-                   has_more: total > (page + 1) * per_page,
-                 },
-               }
+      private
+
+      def star_service_params
+        service_params.deep_merge(params: { topic_id: params[:topic_id] })
       end
     end
   end
