@@ -121,11 +121,12 @@ describe "Admin Onboarding Banner" do
 
       expect(theme_picker_modal).to be_open
 
-      theme_picker_modal.select_first_selectable_theme
+      selected_name = theme_picker_modal.select_first_selectable_theme
 
       # Page reloads after theme selection; wait for it to complete
       expect(page).to have_css(".admin-onboarding-banner")
       expect(banner.step_completed?("select_theme")).to eq(true)
+      expect(Theme.find(SiteSetting.default_theme_id).name).to eq(selected_name)
     end
   end
 
