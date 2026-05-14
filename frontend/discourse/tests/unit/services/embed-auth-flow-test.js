@@ -29,16 +29,10 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
   hooks.beforeEach(function () {
     this.siteSettings = this.owner.lookup("service:site-settings");
     this.modalService = this.owner.lookup("service:modal");
-    this.capabilities = this.owner.lookup("service:capabilities");
 
     this.originalEmbedMode = EmbedMode.enabled;
     EmbedMode.enabled = true;
     this.siteSettings.embed_full_app_signin_flow = true;
-    // Default to non-Safari; Storage Access is only invoked on Safari.
-    // Plain property assignment — `isSafari` is a class field on the
-    // capabilities service, and the service instance is fresh per test.
-    this.originalIsSafari = this.capabilities.isSafari;
-    this.capabilities.isSafari = false;
 
     sessionStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem(SESSION_KEY_INTENT);
@@ -51,7 +45,6 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
 
   hooks.afterEach(function () {
     EmbedMode.enabled = this.originalEmbedMode;
-    this.capabilities.isSafari = this.originalIsSafari;
     sessionStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem(SESSION_KEY_INTENT);
   });
@@ -80,16 +73,12 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
     assert.true(this.modalShow.notCalled, "no modal shown");
   });
 
-  test("non-Safari skips Storage Access and goes straight to sign-in", async function (assert) {
-    const hasStorageAccess = sinon.stub(document, "hasStorageAccess");
+  test("storage access already granted goes straight to sign-in", async function (assert) {
+    sinon.stub(document, "hasStorageAccess").resolves(true);
 
     const service = buildService(this.owner);
     await service.requestAccess({ intent: "login" });
 
-    assert.true(
-      hasStorageAccess.notCalled,
-      "hasStorageAccess is not consulted on non-Safari"
-    );
     assert.strictEqual(
       this.modalShow.firstCall.args[0],
       EmbedAuthFlowModal,
@@ -98,12 +87,11 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
     assert.strictEqual(
       modalKind(this.modalShow),
       "signin",
-      "goes straight to sign-in modal"
+      "skips the storage-access prompt"
     );
   });
 
-  test("Safari with no Storage Access yet prompts for it first", async function (assert) {
-    this.capabilities.isSafari = true;
+  test("partitioned cookies prompt for Storage Access first", async function (assert) {
     sinon.stub(document, "hasStorageAccess").resolves(false);
 
     const service = buildService(this.owner);
@@ -112,22 +100,11 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
     assert.strictEqual(
       modalKind(this.modalShow),
       "storage-access",
-      "Safari needs storage access to bypass ITP"
+      "partitioned cookie jar needs to be bridged before sign-in"
     );
   });
 
-  test("Safari with Storage Access already granted skips the prompt", async function (assert) {
-    this.capabilities.isSafari = true;
-    sinon.stub(document, "hasStorageAccess").resolves(true);
-
-    const service = buildService(this.owner);
-    await service.requestAccess({ intent: "login" });
-
-    assert.strictEqual(modalKind(this.modalShow), "signin");
-  });
-
-  test("Safari without Storage Access API falls back to legacy login tab", async function (assert) {
-    this.capabilities.isSafari = true;
+  test("no Storage Access API falls back to legacy login tab", async function (assert) {
     const service = buildService(this.owner);
     sinon.stub(service, "_supportsStorageAccess").get(() => false);
 
@@ -143,8 +120,7 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
     );
   });
 
-  test("storage access denial on Safari does not chain to a sign-in popup", async function (assert) {
-    this.capabilities.isSafari = true;
+  test("storage access denial does not chain to a sign-in popup", async function (assert) {
     sinon.stub(document, "hasStorageAccess").resolves(false);
     sinon.stub(document, "requestStorageAccess").rejects(new Error("denied"));
 
@@ -168,6 +144,8 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
   });
 
   test("opening sign-in popup uses /signup for signup intent", async function (assert) {
+    sinon.stub(document, "hasStorageAccess").resolves(true);
+
     const service = buildService(this.owner);
     await service.requestAccess({ intent: "signup" });
 

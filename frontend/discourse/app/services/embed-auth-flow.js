@@ -31,7 +31,6 @@ function clearSessionFlag(key) {
 }
 
 export default class EmbedAuthFlow extends Service {
-  @service capabilities;
   @service currentUser;
   @service modal;
   @service siteSettings;
@@ -60,13 +59,6 @@ export default class EmbedAuthFlow extends Service {
     return EmbedMode.enabled && this.siteSettings.embed_full_app_signin_flow;
   }
 
-  get _needsStorageAccess() {
-    // Storage Access is only useful for bypassing Safari's ITP, which
-    // blocks third-party cookies even when SameSite=None would allow them.
-    // Same-site embeds and other browsers don't need it.
-    return this.capabilities.isSafari;
-  }
-
   get _supportsStorageAccess() {
     return (
       typeof document.hasStorageAccess === "function" &&
@@ -83,26 +75,29 @@ export default class EmbedAuthFlow extends Service {
       return false;
     }
 
-    if (this._needsStorageAccess && !this._supportsStorageAccess) {
-      // No way to bridge cross-origin cookies. The auto-close popup would
-      // dead-end the user as anonymous, so open a plain top-level login tab
-      // instead — at least they can sign in there.
+    // hasStorageAccess() is the browser-agnostic signal for cookie
+    // partitioning — returns true on same-site embeds (and same-origin
+    // iframes) where nothing's blocked, false when the iframe's cookie jar
+    // is partitioned (Safari ITP, Firefox Total Cookie Protection, Chrome
+    // 3p cookie phaseout). When partitioned we bridge via Storage Access
+    // so the iframe's post-signin polling can see the popup's cookies.
+    if (!this._supportsStorageAccess) {
+      // Old browser with no API to bridge — fall back to a top-level login
+      // tab so the user isn't dead-ended inside the iframe.
       this._openLegacyLoginTab(intent);
       return true;
     }
 
-    if (this._needsStorageAccess) {
-      let hasAccess = false;
-      try {
-        hasAccess = await document.hasStorageAccess();
-      } catch {
-        hasAccess = false;
-      }
+    let hasAccess = false;
+    try {
+      hasAccess = await document.hasStorageAccess();
+    } catch {
+      hasAccess = false;
+    }
 
-      if (!hasAccess) {
-        this._promptForStorageAccess(intent);
-        return true;
-      }
+    if (!hasAccess) {
+      this._promptForStorageAccess(intent);
+      return true;
     }
 
     this._promptForSignin(intent);
