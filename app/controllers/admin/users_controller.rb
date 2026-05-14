@@ -492,7 +492,7 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def delete_other_accounts_with_same_ip
-    params.require(:ip)
+    params.require(:user_id)
     params.require(:exclude)
     params.require(:order)
 
@@ -503,11 +503,11 @@ class Admin::UsersController < Admin::StaffController
       block_urls: true,
       block_ip: true,
       delete_as_spammer: true,
-      context: I18n.t("user.destroy_reasons.same_ip_address", ip_address: params[:ip]),
+      context: same_ip_address_context,
     }
 
     AdminUserIndexQuery
-      .new(params)
+      .new(same_ip_query_params)
       .find_users(50)
       .each { |user| user_destroyer.destroy(user, options) }
 
@@ -515,11 +515,11 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def total_other_accounts_with_same_ip
-    params.require(:ip)
+    params.require(:user_id)
     params.require(:exclude)
     params.require(:order)
 
-    render json: { total: AdminUserIndexQuery.new(params).count_users }
+    render json: { total: AdminUserIndexQuery.new(same_ip_query_params).count_users }
   end
 
   def anonymize
@@ -592,6 +592,26 @@ class Admin::UsersController < Admin::StaffController
   def fetch_user
     @user = User.find_by(id: params[:user_id])
     raise Discourse::NotFound unless @user
+  end
+
+  def same_ip_query_params
+    params.merge(same_ip_user_id: params[:user_id])
+  end
+
+  def same_ip_address_context
+    user = User.find_by(id: params[:user_id])
+    raise Discourse::NotFound unless user
+
+    if guardian.can_see_ip?
+      ip_address = user.public_send(same_ip_address_column)
+      return I18n.t("user.destroy_reasons.same_ip_address", ip_address: ip_address) if ip_address
+    end
+
+    I18n.t("user.destroy_reasons.same_ip_address_user", username: user.username)
+  end
+
+  def same_ip_address_column
+    AdminUserIndexQuery::SAME_IP_ADDRESS_COLUMNS.fetch(params[:ip_type].presence, :ip_address)
   end
 
   def refresh_browser(user)

@@ -52,7 +52,9 @@ export default class ReviewableIpLookup extends Component {
 
   get queryData() {
     return {
-      ip: this.ipAddress,
+      same_ip_user_id: this.target,
+      user_id: this.target,
+      ip_type: "last",
       exclude: this.target,
       order: "trust_level DESC",
     };

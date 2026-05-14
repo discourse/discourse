@@ -24,6 +24,8 @@ class AdminUserIndexQuery
     "silence_reason" => "silence_reason",
   }
 
+  SAME_IP_ADDRESS_COLUMNS = { "last" => :ip_address, "registration" => :registration_ip_address }
+
   def find_users(limit = 100)
     page = params[:page].to_i - 1
     page = 0 if page < 0
@@ -116,12 +118,29 @@ class AdminUserIndexQuery
     end
   end
 
+  def filter_by_same_ip_user
+    if params[:same_ip_user_id].present?
+      user = User.find_by(id: params[:same_ip_user_id])
+      ip_address = user&.public_send(same_ip_address_column)
+
+      if ip_address.present?
+        @query.where("ip_address = :ip OR registration_ip_address = :ip", ip: ip_address.to_s)
+      else
+        @query.none
+      end
+    end
+  end
+
   def filter_exclude
     @query.where.not(id: params[:exclude]) if params[:exclude].present?
   end
 
   def append(active_relation)
     @query = active_relation if active_relation
+  end
+
+  def same_ip_address_column
+    SAME_IP_ADDRESS_COLUMNS.fetch(params[:ip_type].presence, :ip_address)
   end
 
   def with_silence_reason
@@ -142,6 +161,7 @@ class AdminUserIndexQuery
     append filter_by_trust
     append filter_by_query_classification
     append filter_by_ip
+    append filter_by_same_ip_user
     append filter_exclude
     append filter_by_search
     append with_silence_reason

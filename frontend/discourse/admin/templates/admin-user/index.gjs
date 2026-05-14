@@ -235,6 +235,7 @@ export default <template>
               <IpLookup
                 @ip={{@controller.model.ip_address}}
                 @userId={{@controller.model.id}}
+                @ipType="last"
               />
             {{/if}}
           {{/if}}
@@ -252,6 +253,7 @@ export default <template>
               <IpLookup
                 @ip={{@controller.model.registration_ip_address}}
                 @userId={{@controller.model.id}}
+                @ipType="registration"
               />
             {{/if}}
           {{/if}}

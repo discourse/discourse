@@ -10,8 +10,8 @@ module Reports
         @type = name.to_s.gsub("report_", "")
       end
 
-      def visible?(admin:)
-        return false if Report.hidden?(type, admin:)
+      def visible?(admin:, can_see_ip: false)
+        return false if Report.hidden?(type, admin:, can_see_ip:)
 
         if SiteSetting.reporting_improvements
           return false if plugin_report? && plugin_disabled?
@@ -96,7 +96,7 @@ module Reports
       end
     end
 
-    def self.call(admin:)
+    def self.call(admin:, can_see_ip: false)
       page_view_req_report_methods =
         ["page_view_total_reqs"] +
           ApplicationRequest
@@ -116,7 +116,7 @@ module Reports
       reports_methods
         .filter_map do |report_name|
           report = Reports::ListQuery::FormattedReport.new(report_name)
-          report.to_h if report.visible?(admin:)
+          report.to_h if report.visible?(admin:, can_see_ip:)
         end
         .sort_by { |report| report[:title] }
     end

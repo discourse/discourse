@@ -72,6 +72,24 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
         expect(response.parsed_body).to be_present
       end
+
+      it "returns users with the same IP as a user" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        same_ip_user = Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "43.43.43.43")
+
+        get "/admin/users/list.json",
+            params: {
+              same_ip_user_id: target_user.id,
+              exclude: target_user.id,
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |result| result["id"] }).to contain_exactly(
+          same_ip_user.id,
+        )
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -2191,19 +2209,53 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#total_other_accounts_with_same_ip" do
+    shared_examples "counting other accounts with same ip possible" do
+      it "returns the count for a user" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "42.42.42.42")
+
+        get "/admin/users/total-others-with-same-ip.json",
+            params: {
+              user_id: target_user.id,
+              exclude: target_user.id,
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["total"]).to eq(2)
+      end
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      include_examples "counting other accounts with same ip possible"
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "counting other accounts with same ip possible"
+    end
+  end
+
   describe "#delete_other_accounts_with_same_ip" do
     shared_examples "deleting other accounts with same ip possible" do
       it "works" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
         user_a = Fabricate(:user, ip_address: "42.42.42.42")
         user_b = Fabricate(:user, ip_address: "42.42.42.42")
 
         delete "/admin/users/delete-others-with-same-ip.json",
                params: {
-                 ip: "42.42.42.42",
-                 exclude: -1,
+                 user_id: target_user.id,
+                 exclude: target_user.id,
                  order: "trust_level DESC",
                }
         expect(response.status).to eq(200)
+        expect(User.exists?(id: target_user.id)).to eq(true)
         expect(User.where(id: user_a.id).count).to eq(0)
         expect(User.where(id: user_b.id).count).to eq(0)
       end
@@ -2219,6 +2271,27 @@ RSpec.describe Admin::UsersController do
       before { sign_in(moderator) }
 
       include_examples "deleting other accounts with same ip possible"
+
+      it "does not reveal the IP address in the staff log context without IP viewing permission" do
+        SiteSetting.moderators_view_ips = false
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "42.42.42.42")
+
+        delete "/admin/users/delete-others-with-same-ip.json",
+               params: {
+                 user_id: target_user.id,
+                 exclude: target_user.id,
+                 order: "trust_level DESC",
+               }
+
+        expect(response.status).to eq(200)
+        expect(
+          UserHistory
+            .where(action: UserHistory.actions[:delete_user], acting_user_id: moderator.id)
+            .pluck(:context)
+            .join("\n"),
+        ).not_to include("42.42.42.42")
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -2230,7 +2303,7 @@ RSpec.describe Admin::UsersController do
 
         delete "/admin/users/delete-others-with-same-ip.json",
                params: {
-                 ip: "42.42.42.42",
+                 user_id: 0,
                  exclude: -1,
                  order: "trust_level DESC",
                }
