@@ -111,55 +111,104 @@ class CrawlerScorer
       GROUP BY ip_address, user_agent
     ),
 
-    totals AS (
+    breakdown AS (
       SELECT
         e.id,
         CASE
           WHEN :ua_regex <> '' AND e.user_agent ~* :ua_regex THEN :automation_ua_score
           ELSE 0
-        END
-        + CASE
-            WHEN e.asn = ANY(ARRAY[:crawler_asns]::int[]) THEN :known_asn_score
-            ELSE 0
-          END
-        + CASE
-            WHEN iu.pageviews >= :velocity_high   THEN :velocity_high_score
-            WHEN iu.pageviews >= :velocity_medium THEN :velocity_medium_score
-            WHEN iu.pageviews >= :velocity_low    THEN :velocity_low_score
-            ELSE 0
-          END
-        + CASE
-            WHEN iu.distinct_sessions >= :churn_high_min_sessions
-              AND iu.pageviews::float / NULLIF(iu.distinct_sessions, 0) <= :churn_max_avg_events
-              THEN :churn_high_score
-            WHEN iu.distinct_sessions >= :churn_low_min_sessions
-              AND iu.pageviews::float / NULLIF(iu.distinct_sessions, 0) <= :churn_max_avg_events
-              THEN :churn_low_score
-            ELSE 0
-          END
-        + CASE
-            WHEN mg.gap_count >= :rapid_nav_min_gaps
-              AND mg.median_gap_seconds < :rapid_nav_max_median_seconds
-              THEN :rapid_nav_score
-            ELSE 0
-          END
-        + CASE
-            WHEN iu.pageviews >= :referrer_min_events
-              AND iu.bad_referrer_ratio >= :referrer_high_ratio THEN :referrer_high_score
-            WHEN iu.pageviews >= :referrer_min_events
-              AND iu.bad_referrer_ratio >= :referrer_low_ratio  THEN :referrer_low_score
-            ELSE 0
-          END
-          AS score
+        END AS automation_ua_score,
+        CASE
+          WHEN e.asn = ANY(ARRAY[:crawler_asns]::int[]) THEN :known_asn_score
+          ELSE 0
+        END AS known_asn_score,
+        CASE
+          WHEN iu.pageviews >= :velocity_high   THEN :velocity_high_score
+          WHEN iu.pageviews >= :velocity_medium THEN :velocity_medium_score
+          WHEN iu.pageviews >= :velocity_low    THEN :velocity_low_score
+          ELSE 0
+        END AS velocity_score,
+        CASE
+          WHEN iu.distinct_sessions >= :churn_high_min_sessions
+            AND iu.pageviews::float / NULLIF(iu.distinct_sessions, 0) <= :churn_max_avg_events
+            THEN :churn_high_score
+          WHEN iu.distinct_sessions >= :churn_low_min_sessions
+            AND iu.pageviews::float / NULLIF(iu.distinct_sessions, 0) <= :churn_max_avg_events
+            THEN :churn_low_score
+          ELSE 0
+        END AS churn_score,
+        CASE
+          WHEN mg.gap_count >= :rapid_nav_min_gaps
+            AND mg.median_gap_seconds < :rapid_nav_max_median_seconds
+            THEN :rapid_nav_score
+          ELSE 0
+        END AS rapid_nav_score,
+        CASE
+          WHEN iu.pageviews >= :referrer_min_events
+            AND iu.bad_referrer_ratio >= :referrer_high_ratio THEN :referrer_high_score
+          WHEN iu.pageviews >= :referrer_min_events
+            AND iu.bad_referrer_ratio >= :referrer_low_ratio  THEN :referrer_low_score
+          ELSE 0
+        END AS referrer_score
       FROM events e
       LEFT JOIN ipua_stats iu USING (ip_address, user_agent)
       LEFT JOIN median_gap mg USING (ip_address, user_agent)
+    ),
+
+    totals AS (
+      SELECT
+        id,
+        automation_ua_score,
+        known_asn_score,
+        velocity_score,
+        churn_score,
+        rapid_nav_score,
+        referrer_score,
+        automation_ua_score + known_asn_score + velocity_score
+          + churn_score + rapid_nav_score + referrer_score AS score
+      FROM breakdown
+    ),
+
+    updated AS (
+      UPDATE browser_pageview_events e
+      SET score = t.score
+      FROM totals t
+      WHERE e.id = t.id
+        AND t.score > 0
+        AND t.score > COALESCE(e.score, 0)
+      RETURNING e.id,
+                t.automation_ua_score,
+                t.known_asn_score,
+                t.velocity_score,
+                t.churn_score,
+                t.rapid_nav_score,
+                t.referrer_score
     )
 
-    UPDATE browser_pageview_events e
-    SET score = t.score
-    FROM totals t
-    WHERE e.id = t.id
-      AND t.score > COALESCE(e.score, 0);
+    INSERT INTO browser_pageview_event_scores (
+      event_id,
+      automation_ua_score,
+      known_asn_score,
+      velocity_score,
+      churn_score,
+      rapid_nav_score,
+      referrer_score
+    )
+    SELECT
+      id,
+      automation_ua_score,
+      known_asn_score,
+      velocity_score,
+      churn_score,
+      rapid_nav_score,
+      referrer_score
+    FROM updated
+    ON CONFLICT (event_id) DO UPDATE
+    SET automation_ua_score = EXCLUDED.automation_ua_score,
+        known_asn_score     = EXCLUDED.known_asn_score,
+        velocity_score      = EXCLUDED.velocity_score,
+        churn_score         = EXCLUDED.churn_score,
+        rapid_nav_score     = EXCLUDED.rapid_nav_score,
+        referrer_score      = EXCLUDED.referrer_score;
   SQL
 end
