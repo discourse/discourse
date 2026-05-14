@@ -1234,14 +1234,36 @@ body {
 
   .category-input {
     border-right: 1px solid var(--primary-low);
+
+    @include viewport.until(sm) {
+      flex-grow: 1;
+    }
   }
 
   .tags-input {
+    @include viewport.until(sm) {
+      flex-grow: 0 !important;
+    }
+
+    @include viewport.until(sm) {
+      .select-kit {
+        .formatted-selection {
+          display: none !important;
+        }
+      }
+    }
+
     .select-kit-header-wrapper {
       gap: var(--space-1);
 
       .formatted-selection {
         color: var(--primary-medium);
+      }
+
+      .d-icon-plus {
+        @include viewport.until(sm) {
+          display: none;
+        }
       }
 
       .d-icon-tag {
@@ -1269,6 +1291,10 @@ body {
     width: 50% !important;
     box-sizing: border-box;
 
+    @include viewport.until(sm) {
+      width: auto !important;
+    }
+
     .select-kit.combo-box .select-kit-header,
     .select-kit.multi-select .multi-select-header {
       border: 0;
@@ -1288,14 +1314,36 @@ body {
       font-size: var(--font-up-3);
       margin-bottom: 0 !important;
 
+      &::placeholder {
+        color: var(--primary-medium);
+      }
+
+      @include viewport.until(sm) {
+        font-size: var(--font-up-2);
+      }
+
       &:focus {
         outline: 0;
       }
     }
   }
 
+  .d-editor-textarea-wrapper {
+    border: 0;
+
+    &:focus,
+    &.in-focus {
+      outline: none;
+      border: 0;
+    }
+  }
+
   .d-editor-input {
     padding-top: 0 !important;
+
+    @include viewport.until(sm) {
+      padding-inline: var(--space-4);
+    }
   }
 
   .composer-footer {
@@ -1303,6 +1351,11 @@ body {
     align-items: center;
     flex-wrap: nowrap;
     gap: var(--space-2);
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      border-top: 1px solid var(--primary-low);
+    }
 
     &__toolbar {
       overflow: hidden;
@@ -1321,8 +1374,25 @@ body {
       }
     }
 
+    .submit-panel {
+      @include viewport.until(sm) {
+        align-self: flex-end;
+      }
+    }
+
     .composer-toggle-switch {
       margin-left: 0;
+    }
+  }
+
+  @include viewport.until(sm) {
+    .reply-area {
+      background: var(--secondary);
+      padding: 0 !important;
+    }
+
+    .reply-to {
+      padding: var(--space-3);
     }
   }
 }
