@@ -1,0 +1,68 @@
+/* Banner with title, body text, optional CTA button, optional dismiss.
+   Adapted from meta-branded-theme's `block-cta-banner.scss` — theme-
+   specific mixins (`@include card-accent`, `@include viewport.from`)
+   replaced with plain borders and a single small-screen breakpoint. */
+
+.ve-cta-banner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  background: var(--primary-very-low);
+  color: var(--primary);
+
+  @media (width >= 768px) {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__title {
+    margin: 0;
+    padding-right: 2rem;
+
+    @media (width >= 768px) {
+      padding-right: 0;
+    }
+  }
+
+  &__text {
+    margin: 0;
+    color: var(--primary-medium);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__close {
+    --d-button-border: none;
+    --d-button-default-bg-color--hover: transparent;
+    --d-button-default-icon-color--hover: var(--tertiary-hover);
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: transparent;
+    padding: 0.5rem;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    @media (width >= 768px) {
+      position: static;
+    }
+  }
+}

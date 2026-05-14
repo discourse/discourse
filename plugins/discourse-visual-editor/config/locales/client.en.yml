@@ -126,6 +126,33 @@ en:
             align_self: "Align self"
             flex_grow: "Grow"
             order: "Order"
+        cta_banner:
+          title: "Title"
+          content: "Content"
+          link_label: "Button label"
+          link_href: "Button link"
+          dismissable: "Allow dismiss"
+          cookie_key: "Dismiss key"
+          cookie_key_help: "Identifier for this banner's dismiss cookie. Leave blank to share state with other banners that don't set a key."
+        featured_categories:
+          categories: "Categories"
+          categories_help: "Category IDs separated by `|` (e.g. `1|3|7`)."
+          description: "Show descriptions"
+          all_categories_link: "Show \"all categories\" link"
+          all_categories_label: "\"All categories\" label"
+        category_banner:
+          show_logo: "Show logo"
+          show_icon: "Show icon / emoji"
+          show_description: "Show description"
+        recent_topics:
+          title: "Title"
+          count: "Topics to show"
+          filter: "Filter"
+          category_id: "Category"
+          tag: "Tag"
+          solved: "Solved only"
+          link_label: "Link label"
+          link_href: "Link href"
         conditions:
           empty_hint: "Pick a condition to control when this block renders."
           clear_all: "Remove all conditions"

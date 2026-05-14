@@ -9,6 +9,15 @@
  * dynamically — we can't rely on its variables being present.
  */
 
+/* Per-block styles for the starter library. Editor-chrome rules live in
+   this file (the block-chrome wrapper, drop zones, overlays, etc.) so
+   they're loaded only when the editor is active. */
+@import "blocks/category-card";
+@import "blocks/category-banner";
+@import "blocks/cta-banner";
+@import "blocks/featured-categories";
+@import "blocks/recent-topics";
+
 :root {
   --visual-editor-block-color: #d97706;
   --visual-editor-block-hover-color: #b45309;
@@ -1586,10 +1595,26 @@ body.visual-editor-active
     background: rgb(217 119 6 / 0.08);
   }
 
+  &.--rect-swap,
+  &.--rect-replace,
+  &.--rect-move {
+    transition:
+      width 120ms ease,
+      height 120ms ease;
+  }
+
   &.--line-column,
   &.--line-row {
     background: var(--tertiary);
     border-radius: 2px;
+  }
+
+  &.--line-column {
+    transition: width 120ms ease;
+  }
+
+  &.--line-row {
+    transition: height 120ms ease;
   }
 }
 

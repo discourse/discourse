@@ -3,8 +3,11 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import VEBadgesGrid from "../blocks/ve-badges-grid";
 import VEButtonLink from "../blocks/ve-button-link";
 import VECallout from "../blocks/ve-callout";
+import VECategoryBanner from "../blocks/ve-category-banner";
 import VEColumns from "../blocks/ve-columns";
+import VECTABanner from "../blocks/ve-cta-banner";
 import VEDivider from "../blocks/ve-divider";
+import VEFeaturedCategories from "../blocks/ve-featured-categories";
 import VEHeading from "../blocks/ve-heading";
 import VEImage from "../blocks/ve-image";
 import VELayout from "../blocks/ve-layout";
@@ -24,6 +27,9 @@ const STARTER_BLOCKS = [
   // referencing it continue to resolve. Authors should use ve:layout.
   VEColumns,
   VECallout,
+  VECTABanner,
+  VECategoryBanner,
+  VEFeaturedCategories,
   VERecentTopics,
   VEBadgesGrid,
 ];
