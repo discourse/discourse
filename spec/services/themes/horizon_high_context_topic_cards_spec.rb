@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Themes::HorizonHighContextTopicCards do
+RSpec.describe Themes::Action::HorizonHighContextTopicCardsToggled do
   fab!(:horizon_theme) { Theme.horizon_theme }
 
   before do
@@ -42,6 +42,7 @@ RSpec.describe Themes::HorizonHighContextTopicCards do
 
     it "returns false when Horizon is not user-selectable and is not the default theme" do
       horizon_theme.update_columns(user_selectable: false)
+      SiteSetting.default_theme_id = Theme.find(Theme::CORE_THEMES["foundation"]).id
 
       expect(described_class.should_display_upcoming_change?).to eq(false)
     end
@@ -53,6 +54,13 @@ RSpec.describe Themes::HorizonHighContextTopicCards do
       expect(described_class.should_display_upcoming_change?).to eq(true)
     end
 
+    it "returns true when Horizon is user-selectable but not the default theme" do
+      horizon_theme.update_columns(user_selectable: true)
+      SiteSetting.default_theme_id = Theme.find(Theme::CORE_THEMES["foundation"]).id
+
+      expect(described_class.should_display_upcoming_change?).to eq(true)
+    end
+
     it "returns false when Horizon has no high-context override" do
       horizon_theme.theme_settings.where(name: "topic_card_high_context").delete_all
 
@@ -60,18 +68,18 @@ RSpec.describe Themes::HorizonHighContextTopicCards do
     end
   end
 
-  describe ".set_enabled" do
+  describe ".call" do
     it "enables high-context topic cards" do
-      described_class.set_enabled(true)
+      horizon_theme.update_setting(:topic_card_high_context, false)
+      horizon_theme.save!
+
+      described_class.call(enabled: true)
 
       expect(horizon_theme.reload.get_setting(:topic_card_high_context)).to eq(true)
     end
 
     it "disables high-context topic cards" do
-      horizon_theme.update_setting(:topic_card_high_context, true)
-      horizon_theme.save!
-
-      described_class.set_enabled(false)
+      described_class.call(enabled: false)
 
       expect(horizon_theme.reload.get_setting(:topic_card_high_context)).to eq(false)
     end
