@@ -28,6 +28,20 @@ const translationForExtraShortcuts = {
   comma: COMMA,
 };
 
+const SEARCH_ALIASES = new Map();
+function addSearchAlias(key, alias) {
+  // Some platforms render distinct keys (e.g. Meta and Ctrl) with the same
+  // string. Merge aliases so both semantic names remain searchable.
+  const existing = SEARCH_ALIASES.get(key);
+  SEARCH_ALIASES.set(key, existing ? `${existing} ${alias}` : alias);
+}
+addSearchAlias(SHIFT, "shift");
+addSearchAlias(ALT, "alt option");
+addSearchAlias(META, "meta cmd command win windows super");
+addSearchAlias(CTRL, "ctrl control");
+addSearchAlias(ENTER, "enter return");
+addSearchAlias(ESC, "esc escape");
+
 function buildHTML(keys1, keys2, shortcutsDelimiter) {
   const allKeys = [keys1, keys2]
     .filter((keys) => keys.length !== 0)
@@ -78,10 +92,18 @@ function buildShortcut(
   key,
   { keys1 = [], keys2 = [], shortcutsDelimiter = "or" }
 ) {
-  const context = {
+  const shortcutText = [...keys1, ...keys2]
+    .flatMap((k) => {
+      const alias = SEARCH_ALIASES.get(k);
+      return alias ? [k, alias] : [k];
+    })
+    .join(" ");
+
+  return {
     shortcut: buildHTML(keys1, keys2, shortcutsDelimiter),
+    shortcutText,
+    description: i18n(`${KEY}.${key}`, { shortcut: "" }).trim(),
   };
-  return i18n(`${KEY}.${key}`, context);
 }
 
 export default class KeyboardShortcutsHelp extends Component {
@@ -336,20 +358,32 @@ export default class KeyboardShortcutsHelp extends Component {
 
   @action
   filterShortcuts(event) {
-    this.searchTerm = event.target.value.toLowerCase().trim();
+    this.searchTerm = event.target.value.toLowerCase();
   }
 
   get filteredShortcuts() {
+    const searchTokens = this.searchTerm.trim().split(/\s+/).filter(Boolean);
     return Object.entries(this.shortcuts).reduce(
       (acc, [category, shortcutCategory]) => {
         const filteredShortcuts = Object.entries(
           shortcutCategory.shortcuts
         ).reduce((shortcutsAcc, [name, shortcut]) => {
-          if (
-            this.searchTerm === "" ||
-            name.toLowerCase().includes(this.searchTerm) ||
-            shortcut.toLowerCase().includes(this.searchTerm)
-          ) {
+          const nameLower = name.toLowerCase();
+          const descriptionLower = shortcut.description.toLowerCase();
+          const shortcutTextLower = shortcut.shortcutText.toLowerCase();
+          const compactShortcutText = shortcutTextLower.replace(/\s+/g, "");
+
+          const matches =
+            searchTokens.length === 0 ||
+            searchTokens.every(
+              (token) =>
+                nameLower.includes(token) ||
+                descriptionLower.includes(token) ||
+                shortcutTextLower.includes(token) ||
+                compactShortcutText.includes(token)
+            );
+
+          if (matches) {
             shortcutsAcc[name] = shortcut;
           }
           return shortcutsAcc;
@@ -465,6 +499,7 @@ export default class KeyboardShortcutsHelp extends Component {
             @filterAction={{this.filterShortcuts}}
             @value={{this.searchTerm}}
             placeholder={{i18n "keyboard_shortcuts_help.search_placeholder"}}
+            aria-label={{i18n "keyboard_shortcuts_help.search_placeholder"}}
           />
 
           <div class="keyboard-shortcuts-help__container">
@@ -476,14 +511,33 @@ export default class KeyboardShortcutsHelp extends Component {
                 class="shortcut-category span-{{shortcutCategory.count}}
                   shortcut-category-{{category}}"
               >
-                <h2>{{i18n
+                <h2 id="shortcut-category-{{category}}-heading">{{i18n
                     (concat "keyboard_shortcuts_help." category ".title")
                   }}</h2>
-                <ul>
-                  {{#each-in shortcutCategory.shortcuts as |name shortcut|}}
-                    <li>{{trustHTML shortcut}}</li>
-                  {{/each-in}}
-                </ul>
+                <table aria-labelledby="shortcut-category-{{category}}-heading">
+                  <thead class="sr-only">
+                    <tr>
+                      <th scope="col">{{i18n
+                          "keyboard_shortcuts_help.description_header"
+                        }}</th>
+                      <th scope="col">{{i18n
+                          "keyboard_shortcuts_help.key_header"
+                        }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each-in shortcutCategory.shortcuts as |name pair|}}
+                      <tr>
+                        <td class="shortcut-description">{{trustHTML
+                            pair.description
+                          }}</td>
+                        <td class="shortcut-key">{{trustHTML
+                            pair.shortcut
+                          }}</td>
+                      </tr>
+                    {{/each-in}}
+                  </tbody>
+                </table>
               </section>
             {{/each-in}}
           </div>

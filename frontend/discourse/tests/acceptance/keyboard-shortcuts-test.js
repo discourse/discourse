@@ -1,4 +1,10 @@
-import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
@@ -317,5 +323,61 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
           "composer shows create message title"
         );
     });
+  });
+});
+
+acceptance("Keyboard Shortcuts Help Modal - Search", function () {
+  async function openHelpModal() {
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
+  }
+
+  function description(key) {
+    return i18n(`keyboard_shortcuts_help.${key}`, { shortcut: "" }).trim();
+  }
+
+  test("matches sequential keys without whitespace (gh → G H)", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "gh");
+
+    assert
+      .dom(".shortcut-category-jump_to tbody")
+      .includesText(description("jump_to.home"));
+    assert
+      .dom(".shortcut-category-jump_to tbody")
+      .doesNotIncludeText(description("jump_to.latest"));
+  });
+
+  test("requires every search token to match (command /)", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "command /");
+
+    assert
+      .dom(".shortcut-category-application tbody")
+      .includesText(description("application.filter_sidebar"));
+    assert
+      .dom(".shortcut-category-application tbody")
+      .doesNotIncludeText(description("application.help"));
+  });
+
+  test("modifier aliases match regardless of glyph (ctrl)", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "ctrl");
+
+    assert
+      .dom(".shortcut-category-application tbody")
+      .includesText(description("application.search"));
+  });
+
+  test("multi-word description match", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "open keyboard help");
+
+    assert
+      .dom(".shortcut-category-application tbody")
+      .includesText(description("application.help"));
+    assert
+      .dom(".shortcut-category-jump_to")
+      .doesNotExist("unrelated categories are filtered out");
   });
 });

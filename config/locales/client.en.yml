@@ -5426,6 +5426,8 @@ en:
       title: "Keyboard Shortcuts"
       short_title: "Shortcuts"
       search_ctrl_f_tip: "To search across this entire forum, press <kbd>/</kbd>"
+      description_header: "Description"
+      key_header: "Key"
       jump_to:
         title: "Jump To"
         home: "%{shortcut} Home"
