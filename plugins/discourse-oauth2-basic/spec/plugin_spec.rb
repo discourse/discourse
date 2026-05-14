@@ -127,12 +127,7 @@ describe OAuth2BasicAuthenticator do
         before { SiteSetting.oauth2_json_groups_path = "account.groups" }
 
         it "sets associated_groups from the configured path" do
-          body = {
-            account: {
-              email: "newemail@example.com",
-              groups: %w[admins editors],
-            },
-          }.to_json
+          body = { account: { email: "newemail@example.com", groups: %w[admins editors] } }.to_json
           stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
 
           result = authenticator.after_authenticate(auth)
@@ -167,12 +162,7 @@ describe OAuth2BasicAuthenticator do
 
         it "leaves associated_groups nil when no path is configured" do
           SiteSetting.oauth2_json_groups_path = ""
-          body = {
-            account: {
-              email: "newemail@example.com",
-              groups: %w[admins editors],
-            },
-          }.to_json
+          body = { account: { email: "newemail@example.com", groups: %w[admins editors] } }.to_json
           stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
 
           result = authenticator.after_authenticate(auth)
