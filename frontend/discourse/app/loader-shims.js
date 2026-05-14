@@ -121,6 +121,9 @@ loaderShim("xss", () => importSync("xss"));
 loaderShim("ember-this-fallback/deprecations-helper", () =>
   importSync("./lib/ember-this-fallback-deprecation-helper")
 );
+loaderShim("pretty-text/pretty-text", () =>
+  importSync("pretty-text/pretty-text")
+);
 loaderShim("pretty-text/sanitizer", () => importSync("pretty-text/sanitizer"));
 loaderShim("pretty-text/guid", () => importSync("pretty-text/guid"));
 loaderShim("pretty-text/emoji", () => importSync("pretty-text/emoji"));
