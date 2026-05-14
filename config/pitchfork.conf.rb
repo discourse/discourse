@@ -136,9 +136,9 @@ before_service_worker_ready do |server, service_worker|
     Demon::PluginJsWatcher.start(verbose: false, logger: server.logger)
   end
 
-  EmberCli.watch! if Rails.env.development?
-
   if Rails.env.development?
+    EmberCli.watch!
+
     workers = server.worker_processes
     parts = ["#{workers} worker#{"s" if workers != 1}"]
     parts << "#{sidekiqs} sidekiq#{"s" if sidekiqs != 1}" if sidekiqs > 0
