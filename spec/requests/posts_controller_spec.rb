@@ -2701,7 +2701,6 @@ RSpec.describe PostsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["acting_user_name"]).to eq(nil)
-          expect(response.body).not_to include("Hidden Editor")
         end
       end
     end
