@@ -1072,6 +1072,65 @@ TEXT
     end
   end
 
+  describe "#register_admin_dashboard_report_source" do
+    let(:plugin) { Plugin::Instance.new }
+    let(:fake_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "fake_source" }
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == fake_provider
+      end
+    end
+
+    it "raises when the argument isn't a SourceProvider subclass" do
+      expect { plugin.register_admin_dashboard_report_source(Object) }.to raise_error(
+        ArgumentError,
+        /AdminDashboard::Reports::SourceProvider/,
+      )
+    end
+
+    it "raises when the argument isn't a class at all" do
+      expect { plugin.register_admin_dashboard_report_source("nope") }.to raise_error(
+        ArgumentError,
+        /AdminDashboard::Reports::SourceProvider/,
+      )
+    end
+
+    it "raises when a different provider already claims the source_name" do
+      plugin.register_admin_dashboard_report_source(fake_provider)
+
+      conflicting =
+        Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "fake_source" }
+
+      expect { plugin.register_admin_dashboard_report_source(conflicting) }.to raise_error(
+        ArgumentError,
+        /already registered/,
+      )
+    end
+
+    it "is idempotent when the same class is registered twice (e.g. plugin reload)" do
+      plugin.register_admin_dashboard_report_source(fake_provider)
+
+      expect do plugin.register_admin_dashboard_report_source(fake_provider) end.not_to change {
+        DiscoursePluginRegistry._raw_admin_dashboard_report_sources.count do |entry|
+          entry[:value] == fake_provider
+        end
+      }
+    end
+
+    it "raises against core source_name collisions too" do
+      core_clash =
+        Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "core_report" }
+
+      expect { plugin.register_admin_dashboard_report_source(core_clash) }.to raise_error(
+        ArgumentError,
+        /already registered/,
+      )
+    end
+  end
+
   describe "#register_modifier" do
     let(:plugin) { Plugin::Instance.new }
 

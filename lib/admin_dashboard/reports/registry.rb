@@ -6,7 +6,7 @@ module AdminDashboard
       CORE_PROVIDERS = [CoreReportProvider].freeze
 
       def self.providers
-        (CORE_PROVIDERS + DiscoursePluginRegistry.admin_dashboard_report_sources).uniq
+        CORE_PROVIDERS + DiscoursePluginRegistry.admin_dashboard_report_sources
       end
 
       def self.provider_for(source_name)
