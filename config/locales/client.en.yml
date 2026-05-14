@@ -510,7 +510,7 @@ en:
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
       select_theme:
         title: "Customize your site"
-        description: "Give your community its own look and feel"
+        description: "Choose a starting theme for your community"
         action: "Select theme"
         modal_title: "Choose a theme"
         use_theme: "Use this theme"
@@ -519,8 +519,6 @@ en:
         browse_all: "Browse all themes"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
-        expand_preview: "Expand preview"
-        close_preview: "Close preview"
       invite_collaborators:
         title: "Invite Collaborators"
         description: "Early members help bring your community to life"

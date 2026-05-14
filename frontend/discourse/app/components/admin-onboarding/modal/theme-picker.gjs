@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import ThemeCardPreview from "discourse/components/theme-card-preview";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
@@ -21,130 +21,28 @@ import { i18n } from "discourse-i18n";
 
 const ALLOWED_THEME_IDS = [FOUNDATION_THEME_ID, HORIZON_THEME_ID];
 
-class ThemeCard extends Component {
-  @service interfaceColor;
-  @service session;
-
-  @tracked showingDarkScreenshot = this.#shouldShowDarkByDefault();
-  @tracked previewExpanded = false;
-
-  get currentScreenshotUrl() {
-    const { screenshot_dark_url, screenshot_light_url } = this.args.theme;
-
-    return this.showingDarkScreenshot
-      ? screenshot_dark_url || screenshot_light_url
-      : screenshot_light_url || screenshot_dark_url;
-  }
-
-  get screenshotToggleIcon() {
-    return this.showingDarkScreenshot ? "sun" : "moon";
-  }
-
-  get screenshotToggleLabel() {
-    return this.showingDarkScreenshot
-      ? "admin_onboarding_banner.select_theme.show_light_screenshot"
-      : "admin_onboarding_banner.select_theme.show_dark_screenshot";
-  }
-
-  get hasBothScreenshots() {
-    return (
-      this.args.theme.screenshot_light_url &&
-      this.args.theme.screenshot_dark_url
-    );
-  }
-
-  #shouldShowDarkByDefault() {
-    return (
-      this.interfaceColor?.colorModeIsDark ||
-      window.matchMedia("(prefers-color-scheme: dark)").matches ||
-      this.session?.defaultColorSchemeIsDark
-    );
-  }
-
-  @action
-  toggleScreenshot() {
-    this.showingDarkScreenshot = !this.showingDarkScreenshot;
-  }
-
-  @action
-  expandPreview() {
-    this.previewExpanded = true;
-  }
-
-  @action
-  collapsePreview() {
-    this.previewExpanded = false;
-  }
-
-  <template>
-    <div class="theme-picker-modal__card {{if @theme.default '--active'}}">
-      <div class="theme-picker-modal__screenshot">
-        {{#if this.currentScreenshotUrl}}
-          <img src={{this.currentScreenshotUrl}} alt={{@theme.name}} />
-          <div class="theme-picker-modal__screenshot-actions">
-            {{#if this.hasBothScreenshots}}
-              <DButton
-                @action={{this.toggleScreenshot}}
-                @ariaLabel={{this.screenshotToggleLabel}}
-                @icon={{this.screenshotToggleIcon}}
-                @preventFocus={{true}}
-                @title={{this.screenshotToggleLabel}}
-                class="btn-flat btn-small"
-              />
-            {{/if}}
-            <DButton
-              @action={{this.expandPreview}}
-              @ariaLabel="admin_onboarding_banner.select_theme.expand_preview"
-              @icon="expand"
-              @preventFocus={{true}}
-              @title="admin_onboarding_banner.select_theme.expand_preview"
-              class="btn-flat btn-small"
-            />
-          </div>
-        {{/if}}
-      </div>
-      <div class="theme-picker-modal__info">
-        <span class="theme-picker-modal__name">{{@theme.name}}</span>
+const ThemeCard = <template>
+  <div class="theme-picker-modal__card {{if @theme.default '--active'}}">
+    <ThemeCardPreview @theme={{@theme}}>
+      <:footer>
         {{#if @theme.default}}
           <span class="theme-picker-modal__badge">
             {{dIcon "check"}}
             {{i18n "admin_onboarding_banner.select_theme.current"}}
           </span>
+        {{else}}
+          <DButton
+            @action={{fn @onSelect @theme}}
+            @translatedLabel={{i18n
+              "admin_onboarding_banner.select_theme.use_theme"
+            }}
+            class="btn-primary"
+          />
         {{/if}}
-      </div>
-      {{#unless @theme.default}}
-        <DButton
-          @action={{fn @onSelect @theme}}
-          @translatedLabel={{i18n
-            "admin_onboarding_banner.select_theme.use_theme"
-          }}
-          class="btn-primary"
-        />
-      {{/unless}}
-    </div>
-    {{#if this.previewExpanded}}
-      <div class="theme-picker-modal__lightbox">
-        <button
-          aria-label={{i18n
-            "admin_onboarding_banner.select_theme.close_preview"
-          }}
-          class="theme-picker-modal__lightbox-backdrop"
-          title={{i18n "admin_onboarding_banner.select_theme.close_preview"}}
-          type="button"
-          {{on "click" this.collapsePreview}}
-        ></button>
-        <img src={{this.currentScreenshotUrl}} alt={{@theme.name}} />
-        <DButton
-          @action={{this.collapsePreview}}
-          @ariaLabel="admin_onboarding_banner.select_theme.close_preview"
-          @icon="xmark"
-          @title="admin_onboarding_banner.select_theme.close_preview"
-          class="btn-flat theme-picker-modal__lightbox-close"
-        />
-      </div>
-    {{/if}}
-  </template>
-}
+      </:footer>
+    </ThemeCardPreview>
+  </div>
+</template>;
 
 export default class ThemePickerModal extends Component {
   @service toasts;

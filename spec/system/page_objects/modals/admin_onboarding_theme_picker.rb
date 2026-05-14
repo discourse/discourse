@@ -5,7 +5,7 @@ module PageObjects
     class AdminOnboardingThemePicker < PageObjects::Modals::Base
       MODAL_SELECTOR = ".theme-picker-modal"
       CARD_SELECTOR = ".theme-picker-modal__card"
-      NAME_SELECTOR = ".theme-picker-modal__name"
+      NAME_SELECTOR = ".theme-card-preview__name"
 
       def open?
         has_css?(MODAL_SELECTOR)
