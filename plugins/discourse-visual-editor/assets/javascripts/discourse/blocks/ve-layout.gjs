@@ -83,20 +83,17 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
         placeholder: "e.g. auto 1fr (overrides Rows)",
       },
     },
-    // `minmax(0, 1fr)` so rows split the container's height equally
-    // regardless of content. `1fr` on its own keeps an auto minimum
-    // (tracks can't shrink below content), which made rows inflate
-    // unevenly when one held a tall heading and another was empty.
-    // Pair with the container's `min-height` floor (set in
-    // `containerStyle`) so the equal distribution has space to work
-    // when the grid is empty. Authors can override to "auto", "120px",
-    // etc. for content-sized rows.
+    // `minmax(80px, auto)` so rows have a sensible floor (an empty
+    // cell renders at 80px so the grid stays readable) but grow to
+    // their tallest content when the user puts taller blocks in.
+    // Equal-rows behaviour (`minmax(0, 1fr)`) is still available via
+    // explicit override.
     rowHeight: {
       type: "string",
-      default: "minmax(0, 1fr)",
+      default: "minmax(80px, auto)",
       ui: {
         label: "Row height",
-        placeholder: "minmax(0, 1fr), auto, 120px, minmax(80px, auto)",
+        placeholder: "minmax(80px, auto), minmax(0, 1fr), auto, 120px",
       },
     },
   },
@@ -120,18 +117,14 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           type: "string",
           default: "auto",
           ui: {
-            label: i18n(
-              "discourse_visual_editor.editor.layout.placement.grid_column"
-            ),
+            label: i18n("visual_editor.inspector.layout.placement.grid_column"),
           },
         },
         row: {
           type: "string",
           default: "auto",
           ui: {
-            label: i18n(
-              "discourse_visual_editor.editor.layout.placement.grid_row"
-            ),
+            label: i18n("visual_editor.inspector.layout.placement.grid_row"),
           },
         },
         align: {
@@ -139,9 +132,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: "stretch",
           enum: VALID_ALIGNS,
           ui: {
-            label: i18n(
-              "discourse_visual_editor.editor.layout.placement.grid_align"
-            ),
+            label: i18n("visual_editor.inspector.layout.placement.grid_align"),
           },
         },
         justify: {
@@ -150,15 +141,13 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           enum: VALID_ALIGNS,
           ui: {
             label: i18n(
-              "discourse_visual_editor.editor.layout.placement.grid_justify"
+              "visual_editor.inspector.layout.placement.grid_justify"
             ),
           },
         },
       },
       ui: {
-        label: i18n(
-          "discourse_visual_editor.editor.layout.placement.grid_section"
-        ),
+        label: i18n("visual_editor.inspector.layout.placement.grid_section"),
         conditional: { arg: "mode", equals: "grid" },
       },
     },
@@ -171,9 +160,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: "auto",
           enum: VALID_ALIGN_SELF,
           ui: {
-            label: i18n(
-              "discourse_visual_editor.editor.layout.placement.align_self"
-            ),
+            label: i18n("visual_editor.inspector.layout.placement.align_self"),
           },
         },
         flexGrow: {
@@ -181,9 +168,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: 0,
           min: 0,
           ui: {
-            label: i18n(
-              "discourse_visual_editor.editor.layout.placement.flex_grow"
-            ),
+            label: i18n("visual_editor.inspector.layout.placement.flex_grow"),
           },
         },
         order: {
@@ -191,16 +176,12 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: 0,
           integer: true,
           ui: {
-            label: i18n(
-              "discourse_visual_editor.editor.layout.placement.order"
-            ),
+            label: i18n("visual_editor.inspector.layout.placement.order"),
           },
         },
       },
       ui: {
-        label: i18n(
-          "discourse_visual_editor.editor.layout.placement.stack_section"
-        ),
+        label: i18n("visual_editor.inspector.layout.placement.stack_section"),
         conditional: { arg: "mode", equals: "stack" },
       },
     },
@@ -213,9 +194,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: "auto",
           enum: VALID_ALIGN_SELF,
           ui: {
-            label: i18n(
-              "discourse_visual_editor.editor.layout.placement.align_self"
-            ),
+            label: i18n("visual_editor.inspector.layout.placement.align_self"),
           },
         },
         flexGrow: {
@@ -223,9 +202,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: 0,
           min: 0,
           ui: {
-            label: i18n(
-              "discourse_visual_editor.editor.layout.placement.flex_grow"
-            ),
+            label: i18n("visual_editor.inspector.layout.placement.flex_grow"),
           },
         },
         order: {
@@ -233,16 +210,12 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: 0,
           integer: true,
           ui: {
-            label: i18n(
-              "discourse_visual_editor.editor.layout.placement.order"
-            ),
+            label: i18n("visual_editor.inspector.layout.placement.order"),
           },
         },
       },
       ui: {
-        label: i18n(
-          "discourse_visual_editor.editor.layout.placement.row_section"
-        ),
+        label: i18n("visual_editor.inspector.layout.placement.row_section"),
         conditional: { arg: "mode", equals: "row" },
       },
     },
@@ -318,35 +291,14 @@ export default class VELayout extends Component {
       const rows = this.args.rows ?? 2;
       const columnTemplate = (this.args.columnTemplate ?? "").trim();
       const rowTemplate = (this.args.rowTemplate ?? "").trim();
-      let rowHeight =
-        (this.args.rowHeight ?? "minmax(0, 1fr)").trim() || "minmax(0, 1fr)";
-      // Migrate legacy defaults to the equal-rows model. `1fr` (the
-      // previous default) has an auto minimum so rows can't shrink
-      // below their content — a tall heading inflates its row above
-      // any empty rows. `minmax(0, 1fr)` lets every row shrink to 0
-      // and then expand equally into the container's min-height, so
-      // rows END UP truly the same size.
-      if (
-        rowHeight === "minmax(60px, auto)" ||
-        rowHeight === "1fr" ||
-        rowHeight === "minmax(60px,auto)"
-      ) {
-        rowHeight = "minmax(0, 1fr)";
-      }
+      const rowHeight =
+        (this.args.rowHeight ?? "minmax(80px, auto)").trim() ||
+        "minmax(80px, auto)";
 
       const gridTemplateColumns =
         columnTemplate.length > 0 ? columnTemplate : `repeat(${columns}, 1fr)`;
       const gridTemplateRows =
         rowTemplate.length > 0 ? rowTemplate : `repeat(${rows}, ${rowHeight})`;
-
-      // For flexible rows, the container's `min-height` is what gives
-      // `minmax(0, 1fr)` something to distribute — without it the rows
-      // would all resolve to 0. 80px per row is enough for typical
-      // heading content (~24px text + padding) without producing visible
-      // overflow.
-      const useFlexRows =
-        rowTemplate.length === 0 && rowHeight === "minmax(0, 1fr)";
-      const minHeight = useFlexRows ? `min-height: ${rows * 80}px; ` : "";
 
       // `padding: var(--visual-editor-container-margin)` compensates
       // for the chrome's own outer margin, which adds visible
@@ -366,7 +318,6 @@ export default class VELayout extends Component {
           `gap: ${gap}rem; align-items: ${align}; ` +
           `padding: var(--visual-editor-container-margin); ` +
           `position: relative; ` +
-          minHeight +
           `transition: grid-template-columns 180ms ease, ` +
           `grid-template-rows 180ms ease, gap 180ms ease;`
       );

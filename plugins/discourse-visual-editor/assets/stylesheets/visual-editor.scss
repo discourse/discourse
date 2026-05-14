@@ -350,38 +350,47 @@ body.visual-editor-active {
   }
 
   /* Grid cells in editor mode: the `ve-layout__cell` wrapper is the
-     grid item (`ve:layout` renders it), and the chrome wrapper sits
-     inside it. The chrome must always stretch to fill its parent cell
-     so the chrome border traces the full cell rectangle regardless of
-     the user's `align` / `justify` choice — that choice positions the
-     content INSIDE the chrome, via the `__content` wrapper, not the
-     chrome itself. Without these overrides, the cell wrapper's
-     `place-items` would shrink the chrome and break the cell outline. */
+     grid item (`ve:layout` renders it). The chrome wrapper inside
+     stretches to fill the cell so its border traces the full cell
+     rectangle regardless of the user's `align` / `justify` choice.
+     Each layer is a flex column so the inner `__content` slot can
+     claim the chrome's remaining height (below the in-flow drag
+     handle) via `flex: 1` — relying on `height: 100%` chains here
+     doesn't resolve cleanly when the cell wrapper itself is
+     auto-sized by its row track. */
 
   .ve-layout__cell > .visual-editor-block-chrome-wrapper {
-    width: 100%;
-    height: 100%;
     align-self: stretch;
     justify-self: stretch;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
 
     > .visual-editor-block-chrome {
-      width: 100%;
-      height: 100%;
+      flex: 1 1 auto;
       box-sizing: border-box;
       margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+
+      > .visual-editor-block-chrome__content {
+        flex: 1 1 0;
+        min-height: 0;
+      }
     }
   }
 
   /* The chrome's inner content slot for grid cells: a single-cell
      sub-grid whose `place-items` positions the wrapped block per the
-     user's `align` / `justify` choice. Fills the chrome (so non-stretch
-     placements aren't artificially constrained by content size). */
+     user's `align` / `justify` choice. The inline `style` from chrome
+     sets `display: grid; place-items: <align> <justify>` — this rule
+     just makes the slot fill its allotted area. */
 
   .visual-editor-block-chrome__content {
     width: 100%;
-    height: 100%;
     min-width: 0;
-    min-height: 0;
   }
 
   /* Floating block toolbar (Phase 7p.2). Mounted inside a selected
