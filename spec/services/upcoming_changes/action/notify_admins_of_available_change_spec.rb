@@ -187,6 +187,54 @@ RSpec.describe UpcomingChanges::Action::NotifyAdminsOfAvailableChange do
       end
     end
 
+    context "when an admin has disabled upcoming change available notifications" do
+      before { admin_2.user_option.update!(enable_upcoming_change_available_notifications: false) }
+
+      it "only creates a notification for admins who have the preference enabled" do
+        expect { result }.to change {
+          Notification.where(
+            notification_type: Notification.types[:upcoming_change_available],
+          ).count
+        }.by(1)
+
+        expect(
+          Notification.exists?(
+            notification_type: Notification.types[:upcoming_change_available],
+            user_id: admin_1.id,
+          ),
+        ).to eq(true)
+        expect(
+          Notification.exists?(
+            notification_type: Notification.types[:upcoming_change_available],
+            user_id: admin_2.id,
+          ),
+        ).to eq(false)
+      end
+
+      context "when no admins have the preference enabled" do
+        before do
+          admin_1.user_option.update!(enable_upcoming_change_available_notifications: false)
+        end
+
+        it "does not create any notifications" do
+          expect { result }.not_to change {
+            Notification.where(
+              notification_type: Notification.types[:upcoming_change_available],
+            ).count
+          }
+        end
+
+        it "still creates an admins_notified_available_change event" do
+          expect { result }.to change {
+            UpcomingChangeEvent.where(
+              event_type: :admins_notified_available_change,
+              upcoming_change_name: :test_upcoming_change,
+            ).count
+          }.by(1)
+        end
+      end
+    end
+
     context "when there is an existing notification with the old data format" do
       before do
         Fabricate(
