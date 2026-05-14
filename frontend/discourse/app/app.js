@@ -115,7 +115,7 @@ async function loadPluginFromModulePreload(link) {
     // eslint-disable-next-line no-console
     console.error(
       `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
-      error
+      String(error)
     );
 
     if (DEBUG) {
