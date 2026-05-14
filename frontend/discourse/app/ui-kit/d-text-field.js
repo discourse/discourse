@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { computed } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
 import { attributeBindings } from "@ember-decorators/component";

@@ -1,5 +1,8 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
+import { cached } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
@@ -13,68 +16,115 @@ import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const BUTTON_TYPES = ["button", "submit", "reset"];
+
+/**
+ * A primary clickable element. Renders a native `<button>` by default, or an
+ * `<a>` when `@href` is provided. Supports i18n-keyed labels (`@label`,
+ * `@title`, `@ariaLabel`) and already-translated counterparts. Reach for
+ * `DButton` instead of writing `<button class="btn">` so loading, disabled,
+ * icon, and accessibility states stay consistent across the app.
+ *
+ * Click behavior comes from `@action`, `@route`, or `@href`. They can be
+ * combined — for example, passing `@action` alongside `@href` renders an
+ * `<a>` so middle-click opens in a new tab while a regular click runs the
+ * handler. When both `@action` and `@route` are passed, `@action` wins
+ * and `@route` is silently dropped. `@action` runs inside `next()` on
+ * non-iOS to optimise INP; pass `@forwardEvent` if your handler needs the
+ * original event.
+ *
+ * @example
+ * <DButton @icon="plus" @label="topic.create" @action={{this.create}} />
+ *
+ * @example
+ * <DButton @href="https://example.com" @translatedLabel="Open" />
+ */
+
 /**
  * @typedef DButtonSignature
  *
  * @property {object} Args
  *
- * // Text
- * @property {string} [Args.title]
- * @property {string} [Args.translatedTitle]
- * @property {string} [Args.label]
- * @property {string} [Args.translatedLabel]
+ * Text
  *
- * // Actions / events
- * @property {function|object} [Args.action]
- * @property {any} [Args.actionParam]
- * @property {boolean} [Args.forwardEvent]
- * @property {function} [Args.onKeyDown]
+ * @property {string} [Args.label] Translatable i18n key for the visible label. Mutually exclusive with `translatedLabel`.
+ * @property {string} [Args.translatedLabel] Pre-translated visible label. Use when the label is computed at runtime and already localized.
+ * @property {string} [Args.title] Translatable i18n key for the native `title` tooltip. Mutually exclusive with `translatedTitle`.
+ * @property {string} [Args.translatedTitle] Pre-translated `title` tooltip.
  *
- * // Navigation
- * @property {string} [Args.href]
- * @property {string} [Args.route]
- * @property {object|object[]} [Args.routeModels]
+ * Actions and navigation
  *
- * // State
- * @property {boolean} [Args.isLoading]
- * @property {boolean} [Args.disabled]
- * @property {boolean} [Args.preventFocus]
+ * @property {Function|{value: Function}} [Args.action] Click handler. Accepts a plain function or an Ember action descriptor (`{ value: Function }`). Wins over `@route` when both are passed.
+ * @property {any} [Args.actionParam] Value passed as the first argument to `@action` when it fires.
+ * @property {boolean} [Args.forwardEvent] When true, the original click event is passed as the second argument to `@action`.
+ * @property {(event: KeyboardEvent) => void} [Args.onKeyDown] Custom keydown handler. When set, the default Enter-triggers-click behavior is suppressed and your handler receives every keydown.
+ * @property {string} [Args.href] Renders an `<a href="...">` instead of `<button>`. Pair with `@action` or `@route` to handle the click in JS while still exposing a real URL for middle-click and copy-link.
+ * @property {string} [Args.route] Ember route name to transition to on click. Silently dropped when `@action` is also passed.
+ * @property {object|object[]} [Args.routeModels] Models passed to `router.transitionTo` alongside `@route`. Accepts a single model or an array.
  *
- * // Display mode
- * @property {"link"} [Args.display]
+ * State
  *
- * // Display / icon
- * @property {string} [Args.icon]
- * @property {boolean} [Args.ellipsis]
- * @property {string} [Args.suffixIcon]
+ * @property {boolean} [Args.isLoading] When true, shows a spinner icon and disables the button. Use for async actions to give the user feedback during the in-flight request.
+ * @property {boolean} [Args.disabled] When true, the button is rendered disabled and click handlers do not fire.
+ * @property {boolean} [Args.preventFocus] When true, the button does not receive focus on mousedown. Useful for toolbar buttons that should not steal focus from an active editor.
  *
- * // Accessibility
- * @property {string} [Args.ariaLabel]
- * @property {string} [Args.translatedAriaLabel]
- * @property {boolean} [Args.ariaExpanded]
- * @property {boolean} [Args.ariaPressed]
- * @property {string} [Args.ariaControls]
- * @property {boolean} [Args.ariaHidden]
+ * Display
  *
- * // HTML attributes
- * @property {string} [Args.type]
- * @property {string} [Args.id]
- * @property {string} [Args.form]
- * @property {string} [Args.tabindex]
- * @property {string} [Args.class]
+ * @property {"link"} [Args.display] Visual style. `"link"` renders as a `.btn-link` (text-only, no background). Omit for the default `.btn` style.
+ * @property {string} [Args.icon] Name of the FontAwesome icon to render before the label. Looked up via `discourse/ui-kit/helpers/d-icon`.
+ * @property {string} [Args.suffixIcon] Name of an additional icon rendered after the label.
+ * @property {boolean} [Args.ellipsis] When true, appends `…` after the label to indicate the click will open a dialog or further interaction.
  *
- * // Root element type (enables ...attributes type checking)
- * @property {HTMLButtonElement} Element
+ * Accessibility
  *
- * // Optional yield
+ * @property {string} [Args.ariaLabel] Translatable i18n key for `aria-label`. Required when the button is icon-only. Mutually exclusive with `translatedAriaLabel`.
+ * @property {string} [Args.translatedAriaLabel] Pre-translated `aria-label`.
+ * @property {boolean} [Args.ariaExpanded] Value for `aria-expanded`. Pass a boolean; the component renders the string `"true"`/`"false"`.
+ * @property {boolean} [Args.ariaPressed] Value for `aria-pressed` (toggle-button state).
+ * @property {string} [Args.ariaControls] Value for `aria-controls`: the id of the element this button controls.
+ * @property {boolean} [Args.ariaHidden] When true, wraps the icon in an `aria-hidden="true"` span so screen readers skip it. Use when the icon is decorative and duplicates the label.
+ *
+ * HTML attributes (legacy — prefer `...attributes`)
+ *
+ * @property {"button"|"submit"|"reset"} [Args.type] Native `<button type>` value. Defaults to `"button"` so clicks never accidentally submit a form. Ignored when `@href` is set.
+ * @property {string} [Args.id] **Deprecated** — pass `id` via `...attributes` instead. Native `id` attribute.
+ * @property {string} [Args.form] **Deprecated** — pass `form` via `...attributes` instead. Native `form` attribute. Associates the button with a form by id when it lives outside that form's DOM.
+ * @property {string|number} [Args.tabindex] **Deprecated** — pass `tabindex` via `...attributes` instead. Native `tabindex` attribute.
+ * @property {string} [Args.class] **Deprecated** — pass `class` via `...attributes` instead. Extra classes joined to the component's own.
+ *
+ * @property {HTMLButtonElement} Element The rendered root. When `@href` is set the actual element is an `HTMLAnchorElement`, but the Signature tracks the more common case for `...attributes` typing.
+ *
  * @property {object} Blocks
- * @property {[]} Blocks.default Contents of the button
+ * @property {[]} Blocks.default Optional inner content. When provided alongside `@label`, the label still renders first; pure block content (no `@label`) substitutes for the label entirely.
  */
 
 /** @extends {Component<DButtonSignature>} */
 export default class DButton extends Component {
   @service router;
   @service capabilities;
+
+  @cached
+  get validateArgs() {
+    if (DEBUG) {
+      assert(
+        "[d-button] pass either @label or @translatedLabel, not both",
+        !(this.args.label && this.args.translatedLabel)
+      );
+      assert(
+        "[d-button] pass either @title or @translatedTitle, not both",
+        !(this.args.title && this.args.translatedTitle)
+      );
+      assert(
+        "[d-button] pass either @ariaLabel or @translatedAriaLabel, not both",
+        !(this.args.ariaLabel && this.args.translatedAriaLabel)
+      );
+      assert(
+        `[d-button] @type must be one of ${BUTTON_TYPES.join(", ")}`,
+        !this.args.type || BUTTON_TYPES.includes(this.args.type)
+      );
+    }
+    return null;
+  }
 
   @computed("args.icon")
   get btnIcon() {
@@ -178,13 +228,14 @@ export default class DButton extends Component {
 
         if (typeof actionVal === "object" && actionVal.value) {
           if (isIOS) {
-            // Don't optimise INP in iOS
-            // it results in focus events not being triggered
+            // iOS skips the next() optimisation: scheduling the call breaks
+            // focus events that depend on the click being synchronous.
             forwardEvent
               ? actionVal.value(actionParam, event)
               : actionVal.value(actionParam);
           } else {
-            // Using `next()` to optimise INP
+            // Defer the call to optimise INP — keeps the click handler short
+            // so the browser can paint sooner.
             next(() =>
               forwardEvent
                 ? actionVal.value(actionParam, event)
@@ -193,13 +244,10 @@ export default class DButton extends Component {
           }
         } else if (typeof actionVal === "function") {
           if (isIOS) {
-            // Don't optimise INP in iOS
-            // it results in focus events not being triggered
             forwardEvent
               ? actionVal(actionParam, event)
               : actionVal(actionParam);
           } else {
-            // Using `next()` to optimise INP
             next(() =>
               forwardEvent
                 ? actionVal(actionParam, event)
@@ -231,6 +279,8 @@ export default class DButton extends Component {
 
   <template>
     {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! @glint-nocheck: dynamic `<this.wrapperElement>` root types the element as `unknown`, which interferes with attribute checks }}
+    {{this.validateArgs}}
     <this.wrapperElement
       href={{@href}}
       type={{unless @href (or @type "button")}}

@@ -8,6 +8,24 @@ import { i18n } from "discourse-i18n";
 module("Integration | ui-kit | DPageSubheader", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("renders the root element with the d-page-subheader class", async function (assert) {
+    await render(<template><DPageSubheader /></template>);
+    assert.dom(".d-page-subheader").exists();
+  });
+
+  test("@titleUrl wraps the title in an anchor", async function (assert) {
+    await render(
+      <template>
+        <DPageSubheader @titleLabel="Badges" @titleUrl="/admin/badges" />
+      </template>
+    );
+
+    assert
+      .dom(".d-page-subheader__title a.d-page-subheader__title-link")
+      .hasText("Badges")
+      .hasAttribute("href", "/admin/badges");
+  });
+
   test("@titleLabel", async function (assert) {
     await render(
       <template><DPageSubheader @titleLabel={{i18n "admin.title"}} /></template>

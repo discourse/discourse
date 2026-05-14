@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { hash } from "@ember/helper";
 
 const DropdownItem = <template>

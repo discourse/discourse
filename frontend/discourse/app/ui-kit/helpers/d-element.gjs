@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, local/require-ts-check */
 import ClassicComponent from "@ember/component";
 
 const empty = <template>

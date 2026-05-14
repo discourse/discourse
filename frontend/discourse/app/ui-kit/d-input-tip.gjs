@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const DInputTip = <template>

@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { isPresent } from "@ember/utils";
 import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 

@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components, local/require-ts-check */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";

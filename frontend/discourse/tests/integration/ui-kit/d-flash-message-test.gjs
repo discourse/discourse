@@ -59,4 +59,34 @@ module("Integration | ui-kit | DFlashMessage", function (hooks) {
 
     assert.dom(".alert").doesNotExist();
   });
+
+  test("renders the plain .alert class when no @type is given", async function (assert) {
+    await render(<template><DFlashMessage @flash="Plain message" /></template>);
+
+    assert.dom(".alert").hasText("Plain message");
+    assert
+      .dom(".alert")
+      .doesNotHaveClass("alert-success")
+      .doesNotHaveClass("alert-error")
+      .doesNotHaveClass("alert-warning")
+      .doesNotHaveClass("alert-info");
+  });
+
+  test("forwards HTML attributes to the alert element", async function (assert) {
+    await render(
+      <template>
+        <DFlashMessage
+          @flash="Note"
+          @type="info"
+          data-test-flash="x"
+          id="form-flash"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".alert")
+      .hasAttribute("data-test-flash", "x")
+      .hasAttribute("id", "form-flash");
+  });
 });

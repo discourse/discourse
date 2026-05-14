@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";

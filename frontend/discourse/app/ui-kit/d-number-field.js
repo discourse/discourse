@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { computed } from "@ember/object";
 import { classNameBindings } from "@ember-decorators/component";
 import deprecated from "discourse/lib/deprecated";

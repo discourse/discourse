@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 // https://github.com/emberjs/ember.js/blob/master/packages/@ember/-internals/glimmer/lib/helpers/unique-id.ts
 export default function dUniqueId() {
   return ([3e7] + -1e3 + -4e3 + -2e3 + -1e11).replace(

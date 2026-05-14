@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { registerDestructor } from "@ember/destroyable";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";

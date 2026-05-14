@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components, local/require-ts-check */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";

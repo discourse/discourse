@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 export default function dConcatClass(...args) {
   const classes = args.flat().filter(Boolean).join(" ");
 

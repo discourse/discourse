@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";

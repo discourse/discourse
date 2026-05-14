@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { get } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";

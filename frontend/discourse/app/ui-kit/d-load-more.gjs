@@ -1,12 +1,17 @@
+// @ts-check
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
+import { cached } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { action } from "@ember/object";
 import discourseDebounce from "discourse/lib/debounce";
+/** @type {import("discourse/ui-kit/helpers/d-element.gjs").default} */
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dObserveIntersection from "discourse/ui-kit/modifiers/d-observe-intersection";
 
 let ENABLE_LOAD_MORE_OBSERVER = true;
 
-// Exported functions to control the behavior in tests
+// Exported functions to control the behavior in tests.
 export function disableLoadMoreObserver() {
   ENABLE_LOAD_MORE_OBSERVER = false;
 }
@@ -16,69 +21,73 @@ export function enableLoadMoreObserver() {
 }
 
 /**
- * A component that implements infinite loading using IntersectionObserver.
+ * Infinite-scroll trigger backed by `IntersectionObserver`. Renders a hidden
+ * sentinel element after the yielded content; once the sentinel scrolls into
+ * view, `@action` is invoked (debounced) so the consumer can fetch the next
+ * page.
  *
- * LoadMore triggers an action when a sentinel element becomes visible in the viewport,
- * which is typically used to load additional content. Besides the `action` argument, it also takes
- * in additional options to customize the observer's behavior;
- * Refer to https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options for a full list.
+ * Use the block form to wrap the existing list and have the sentinel
+ * naturally attach to its bottom edge. Use the no-block form to drop a
+ * standalone sentinel anywhere on the page when the wrapper is undesirable.
  *
- * @param {Function} action - The action to trigger when more content should be loaded
- * @param {boolean} [enabled=true] - Whether to allow the loadMore action to trigger.
- *   Use this when you know there's no more content available (e.g., `model.canLoadMore`).
- *   When false, the observer continues to run but the action won't be triggered.
- * @param {boolean} [isLoading=false] - Whether content is currently loading.
- *   When true, the IntersectionObserver won't be created, preventing premature triggers
- *   during initial content load. Pass this to avoid race conditions during page initialization.
- * @param {string} [rootMargin="0px 0px 0px 0px"] - Margin around the root element for intersection detection
- * @param {number} [threshold=0.0] - Threshold at which the intersection callback is triggered
- * @param {string} [root=null] - CSS selector for the root element to observe intersection within
+ * `@enabled` and `@isLoading` exist to prevent unwanted triggers:
  *
- * @example Basic usage with a block:
- * ```gjs
- * <LoadMore @action={{this.loadMoreTopics}}>
+ * - `@enabled={{false}}` keeps the observer running but blocks the action,
+ *   useful when you've reached the end of the data.
+ * - `@isLoading={{true}}` skips creating the observer entirely, avoiding
+ *   race conditions on initial load.
+ *
+ * The remaining args (`@rootMargin`, `@threshold`, `@root`) map 1:1 to
+ * `IntersectionObserver` options.
+ *
+ * @example
+ * <DLoadMore @action={{this.loadMoreTopics}}>
  *   <TopicList @topics={{this.topics}} />
- * </LoadMore>
- * ```
+ * </DLoadMore>
  *
- * @example Usage without a block (as standalone sentinel):
- * ```gjs
- * <div class="my-content">
- *   {{#each this.items as |item|}}
- *     <ItemComponent @item={{item}} />
- *   {{/each}}
- * </div>
- *
- * <LoadMore @action={{this.loadMore}} />
- * ```
- *
- * @example With enabled and isLoading to prevent premature loading:
- * ```gjs
- * <LoadMore
+ * @example
+ * <DLoadMore
  *   @action={{this.loadMoreUsers}}
  *   @enabled={{this.model.canLoadMore}}
  *   @isLoading={{this.isLoading}}
- * >
- *   <UserList @users={{this.model}} />
- * </LoadMore>
- * ```
- *
- * @example With custom IntersectionObserver options:
- * ```gjs
- * <LoadMore
- *   @action={{this.fetchMoreUsers}}
- *   @rootMargin="100px"
- *   @threshold={{0.2}}
- *   @root={{this.scrollContainer}}
- *   class="users-container"
  * />
- * ```
  */
+
+/**
+ * @typedef DLoadMoreSignature
+ *
+ * @property {object} Args
+ *
+ * @property {Function} Args.action Required. Invoked (debounced) when the sentinel becomes visible. The component does not pass arguments — the consumer typically captures the next-page state in its own closure.
+ * @property {boolean} [Args.enabled] When false, the action is suppressed even though the observer keeps running. Defaults to `true`. Use `model.canLoadMore` or similar.
+ * @property {boolean} [Args.isLoading] When true, no `IntersectionObserver` is created at all. Defaults to `false`. Use to suppress trigger races during page initialization.
+ * @property {string} [Args.rootMargin] CSS-style margin around the root element for intersection detection. Defaults to `"0px 0px 0px 0px"`.
+ * @property {number} [Args.threshold] Visibility fraction at which the callback fires. Defaults to `0.0` (any pixel visible).
+ * @property {Element|null} [Args.root] Element to observe within. `null` (the default) means the viewport.
+ *
+ * @property {HTMLDivElement} Element The wrapper `<div>` rendered when a block is yielded. When no block is given, the component renders only the sentinel and `...attributes` has no element to attach to.
+ *
+ * @property {object} Blocks
+ * @property {[]} Blocks.default Optional content the sentinel should be appended after. When given, the wrapper `<div>` is rendered around both block and sentinel.
+ */
+
+/** @extends {Component<DLoadMoreSignature>} */
 export default class DLoadMore extends Component {
   observer;
   root = this.args.root || null;
   rootMargin = this.args.rootMargin || "0px 0px 0px 0px";
   threshold = this.args.threshold || 0.0;
+
+  @cached
+  get validateArgs() {
+    if (DEBUG) {
+      assert(
+        "[d-load-more] @action is required",
+        typeof this.args.action === "function"
+      );
+    }
+    return null;
+  }
 
   get enabled() {
     return this.args.enabled ?? true;
@@ -92,6 +101,7 @@ export default class DLoadMore extends Component {
   }
 
   <template>
+    {{this.validateArgs}}
     {{#let (dElement (if (has-block) "div" "")) as |Wrapper|}}
       <Wrapper ...attributes>
         {{yield}}

@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { avatarImg } from "discourse/lib/avatar-utils";

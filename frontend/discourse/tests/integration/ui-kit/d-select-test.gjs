@@ -83,4 +83,52 @@ module("Integration | ui-kit | DSelect", function (hooks) {
 
     assert.dom(".d-select__option.test").exists();
   });
+
+  test("renders the d-select root element on its own", async function (assert) {
+    await render(<template><DSelect /></template>);
+    assert.dom("select.d-select").exists();
+  });
+
+  test("@nonePlaceholder overrides the default placeholder label", async function (assert) {
+    await render(
+      <template><DSelect @nonePlaceholder="Pick something" /></template>
+    );
+
+    assert.dselect().hasSelectedOption({
+      value: NO_VALUE_OPTION,
+      label: "Pick something",
+    });
+  });
+
+  test("selecting the placeholder fires @onChange with undefined", async function (assert) {
+    const receivedValues = [];
+    const handleChange = (value) => {
+      receivedValues.push(value);
+    };
+
+    await render(
+      <template>
+        <DSelect @value="foo" @onChange={{handleChange}} as |s|>
+          <s.Option @value="foo">The real foo</s.Option>
+        </DSelect>
+      </template>
+    );
+
+    await select(".d-select", NO_VALUE_OPTION);
+
+    assert.deepEqual(receivedValues, [undefined]);
+  });
+
+  test("changing without @onChange does not throw", async function (assert) {
+    await render(
+      <template>
+        <DSelect as |s|>
+          <s.Option @value="foo">The real foo</s.Option>
+        </DSelect>
+      </template>
+    );
+
+    await select(".d-select", "foo");
+    assert.dom(".d-select").exists("component still rendered after change");
+  });
 });

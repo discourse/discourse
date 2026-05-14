@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 
 const DRelativeDate = <template>{{dAgeWithTooltip @date}}</template>;

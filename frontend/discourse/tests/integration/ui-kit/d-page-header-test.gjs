@@ -22,6 +22,48 @@ const DPageHeaderActionsTestComponent = <template>
 module("Integration | ui-kit | DPageHeader", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("renders the root element when displayed", async function (assert) {
+    await render(<template><DPageHeader /></template>);
+    assert.dom(".d-page-header").exists();
+  });
+
+  test("@hideTabs suppresses the tab strip", async function (assert) {
+    await render(<template><DPageHeader @hideTabs={{true}} /></template>);
+    assert.dom(".d-nav-submenu").doesNotExist();
+  });
+
+  test("the tab strip is rendered by default even without yielded tabs", async function (assert) {
+    await render(<template><DPageHeader /></template>);
+    assert.dom(".d-nav-submenu").exists();
+  });
+
+  test("@showDrawer reveals the drawer slot", async function (assert) {
+    await render(
+      <template>
+        <DPageHeader @showDrawer={{true}}>
+          <:drawer>
+            <div class="my-drawer">drawer body</div>
+          </:drawer>
+        </DPageHeader>
+      </template>
+    );
+
+    assert.dom(".d-page-header__drawer .my-drawer").hasText("drawer body");
+  });
+
+  test("the <:title> block wins over @titleLabel", async function (assert) {
+    await render(
+      <template>
+        <DPageHeader @titleLabel="From arg">
+          <:title><span class="custom-title">From block</span></:title>
+        </DPageHeader>
+      </template>
+    );
+
+    assert.dom(".d-page-header__title .custom-title").hasText("From block");
+    assert.dom(".d-page-header__title").doesNotContainText("From arg");
+  });
+
   test("no @titleLabel", async function (assert) {
     await render(<template><DPageHeader /></template>);
     assert.dom(".d-page-header__title").doesNotExist();

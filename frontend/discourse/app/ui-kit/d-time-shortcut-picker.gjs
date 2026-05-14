@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/no-observers */
+/* eslint-disable ember/no-classic-components, ember/no-observers, local/require-ts-check */
 import Component, { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";

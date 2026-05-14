@@ -1,3 +1,4 @@
+/* eslint-disable local/require-ts-check */
 import HorizontalScrollSyncWrapper from "discourse/components/horizontal-scroll-sync-wrapper";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
