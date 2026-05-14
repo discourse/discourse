@@ -203,15 +203,24 @@ export default class ComposerActions extends Component {
     }
 
     // 2. Reply to Post (reply_to_post)
+    const canRestoreReplyToPost =
+      currentAction === REPLY &&
+      !currentPost &&
+      _postSnapshot &&
+      _topicSnapshot &&
+      currentTopic?.id === _topicSnapshot.id;
+
     if (
       (currentAction !== REPLY && currentPost) ||
       (currentAction === REPLY &&
         currentPost &&
-        !(this.replyOptions?.userAvatar && this.replyOptions?.userLink))
+        !(this.replyOptions?.userAvatar && this.replyOptions?.userLink)) ||
+      canRestoreReplyToPost
     ) {
+      const postForLabel = currentPost || _postSnapshot;
       const actionObj = {
         name: i18n("composer.composer_actions.reply_to_post.label", {
-          postUsername: currentPost?.username || "User",
+          postUsername: postForLabel?.username || "User",
         }),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
