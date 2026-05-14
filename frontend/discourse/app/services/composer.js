@@ -226,6 +226,14 @@ export default class ComposerService extends Service {
     return this.model?.creatingTopic && this.isStaffUser;
   }
 
+  @computed("model.action", "isStaffUser", "currentUser.trust_level")
+  get canToggleNoBump() {
+    return (
+      this.model?.action === Composer.REPLY &&
+      (this.isStaffUser || this.currentUser?.trust_level === 4)
+    );
+  }
+
   @computed("replyingToWhisper", "model.whisper")
   get isWhispering() {
     return this.replyingToWhisper || this.model?.whisper;

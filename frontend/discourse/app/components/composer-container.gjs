@@ -27,7 +27,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { translateModKey } from "discourse/lib/utilities";
-import { REPLY, SAVE_LABELS } from "discourse/models/composer";
+import { SAVE_LABELS } from "discourse/models/composer";
 import PostLocalization from "discourse/models/post-localization";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
@@ -45,7 +45,6 @@ import { i18n } from "discourse-i18n";
 
 export default class ComposerContainer extends Component {
   @service composer;
-  @service currentUser;
   @service languageNameLookup;
   @service site;
   @service siteSettings;
@@ -108,13 +107,6 @@ export default class ComposerContainer extends Component {
     return (
       this.composer.canWhisper &&
       this.composer.model?.post?.post_type !== this.site.post_types?.whisper
-    );
-  }
-
-  get canToggleNoBump() {
-    return (
-      this.composer.model?.action === REPLY &&
-      (this.currentUser?.staff || this.currentUser?.trust_level === 4)
     );
   }
 
@@ -460,7 +452,7 @@ export default class ComposerContainer extends Component {
                 {{#if
                   (or
                     this.canToggleWhisper
-                    this.canToggleNoBump
+                    this.composer.canToggleNoBump
                     this.composer.canUnlistTopic
                   )
                 }}
@@ -513,7 +505,7 @@ export default class ComposerContainer extends Component {
                           </dropdown.item>
                         {{/if}}
 
-                        {{#if this.canToggleNoBump}}
+                        {{#if this.composer.canToggleNoBump}}
                           <dropdown.item>
                             {{! template-lint-disable no-invalid-interactive }}
                             <div

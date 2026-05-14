@@ -82,12 +82,16 @@ export default class ComposerActions extends Component {
 
   initializeSnapshots() {
     // Initialize snapshots without triggering reactivity
-    if (
-      this.topic &&
-      (!_topicSnapshot || this.topic.id !== _topicSnapshot.id)
-    ) {
-      _topicSnapshot = this.topic;
-      _postSnapshot = this.post;
+    if (this.topic) {
+      if (!_topicSnapshot || this.topic.id !== _topicSnapshot.id) {
+        _topicSnapshot = this.topic;
+        _postSnapshot = this.post;
+      }
+    } else {
+      // Composer opened without a source topic (e.g. fresh "new topic" from
+      // /latest); clear any snapshots left over from a previous reply session.
+      _topicSnapshot = null;
+      _postSnapshot = null;
     }
 
     if (this.post && (!_postSnapshot || this.post.id !== _postSnapshot.id)) {
@@ -101,12 +105,14 @@ export default class ComposerActions extends Component {
 
   ensureSnapshotsUpdated() {
     // Update snapshots silently (no seq increment to avoid loops)
-    if (
-      this.topic &&
-      (!_topicSnapshot || this.topic.id !== _topicSnapshot.id)
-    ) {
-      _topicSnapshot = this.topic;
-      _postSnapshot = this.post;
+    if (this.topic) {
+      if (!_topicSnapshot || this.topic.id !== _topicSnapshot.id) {
+        _topicSnapshot = this.topic;
+        _postSnapshot = this.post;
+      }
+    } else {
+      _topicSnapshot = null;
+      _postSnapshot = null;
     }
 
     if (this.post && (!_postSnapshot || this.post.id !== _postSnapshot.id)) {
