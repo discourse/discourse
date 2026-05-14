@@ -59,10 +59,10 @@ export default class ThemeCardPreview extends Component {
         {{#if this.hasBothScreenshots}}
           <DButton
             @action={{this.toggleScreenshot}}
-            @ariaLabel={{this.screenshotToggleLabel}}
+            @translatedAriaLabel={{this.screenshotToggleLabel}}
             @icon={{this.screenshotToggleIcon}}
             @preventFocus={{true}}
-            @title={{this.screenshotToggleLabel}}
+            @translatedTitle={{this.screenshotToggleLabel}}
             class="btn-flat theme-card-preview__screenshot-toggle"
           />
         {{/if}}
