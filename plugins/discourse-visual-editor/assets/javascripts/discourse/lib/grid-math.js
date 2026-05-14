@@ -1,4 +1,5 @@
 // @ts-check
+import { entryKey } from "./mutate-layout";
 
 /**
  * Pure helpers for the grid editor (Phase 7s). All functions
@@ -37,6 +38,20 @@ export function parseSlotPlacement(args) {
     column: parseTrack(args?.column),
     row: parseTrack(args?.row),
   };
+}
+
+/**
+ * Reads grid placement out of a child entry's `containerArgs`. `ve:layout`
+ * namespaces per-parent-mode placement hints under a top-level key
+ * (`containerArgs.grid` for grid mode); this helper centralises that
+ * access so callers don't reach into the namespace structure directly,
+ * and future modes can be added without rewriting every consumer.
+ *
+ * @param {Object} [containerArgs]
+ * @returns {SlotPlacement}
+ */
+export function parsePlacement(containerArgs) {
+  return parseSlotPlacement(containerArgs?.grid);
 }
 
 /**
@@ -100,8 +115,8 @@ export function formatTrack(track) {
  * to surface "+" placeholders only where authors haven't already
  * placed content.
  *
- * @param {Array<Object>} slots - Child entries of a grid layout
- *   (typically `ve:slot` blocks). Reads `slot.args.column` / `.row`.
+ * @param {Array<Object>} slots - Child entries of a grid layout.
+ *   Reads each entry's `containerArgs.grid.column` / `.row`.
  * @param {number} columns
  * @param {number} rows
  * @returns {Set<string>}
@@ -111,7 +126,7 @@ export function computeOccupation(slots, columns, rows) {
   const autoSlots = [];
 
   for (const slot of slots ?? []) {
-    const placement = parseSlotPlacement(slot.args ?? {});
+    const placement = parsePlacement(slot.containerArgs);
     if (placement.column.start != null && placement.row.start != null) {
       fillRect(occupied, placement, columns, rows);
     } else {
@@ -258,11 +273,11 @@ export function computeShiftPlan({
   // Build rect index, dropping the source's rect (treated as vacant).
   const rects = new Map();
   for (const slot of slots ?? []) {
-    const key = _slotEntryKey(slot);
+    const key = entryKey(slot);
     if (!key || key === sourceKey) {
       continue;
     }
-    const placement = parseSlotPlacement(slot.args ?? {});
+    const placement = parsePlacement(slot.containerArgs);
     if (placement.column.start == null || placement.row.start == null) {
       continue;
     }
@@ -408,13 +423,6 @@ export function computeShiftPlan({
       row: `${landingRow}`,
     },
   };
-}
-
-function _slotEntryKey(slot) {
-  if (!slot || slot.__stableKey === undefined) {
-    return null;
-  }
-  return `ve:slot:${slot.__stableKey}`;
 }
 
 function _findSlotAt(rects, col, row) {

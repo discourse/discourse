@@ -66,8 +66,8 @@ module("Unit | Discourse Visual Editor | lib:grid-math", function () {
   module("computeOccupation", function () {
     test("marks explicit placements", function (assert) {
       const slots = [
-        { args: { column: "1 / 3", row: "1" } },
-        { args: { column: "3", row: "1" } },
+        { containerArgs: { grid: { column: "1 / 3", row: "1" } } },
+        { containerArgs: { grid: { column: "3", row: "1" } } },
       ];
       const occupied = computeOccupation(slots, 4, 2);
       assert.true(occupied.has("1,1"));
@@ -79,8 +79,8 @@ module("Unit | Discourse Visual Editor | lib:grid-math", function () {
 
     test("auto-places remaining slots in row-major order", function (assert) {
       const slots = [
-        { args: { column: "1", row: "1" } },
-        { args: { column: "auto", row: "auto" } },
+        { containerArgs: { grid: { column: "1", row: "1" } } },
+        { containerArgs: { grid: { column: "auto", row: "auto" } } },
       ];
       const occupied = computeOccupation(slots, 3, 1);
       assert.true(occupied.has("1,1"));

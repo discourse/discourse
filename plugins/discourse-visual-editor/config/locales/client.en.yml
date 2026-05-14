@@ -115,6 +115,17 @@ en:
             one: "%{count} block sits outside this grid's cells and won't render correctly. Increase columns/rows to include it, or click below to snap it into the current bounds."
             other: "%{count} blocks sit outside this grid's cells and won't render correctly. Increase columns/rows to include them, or click below to snap them into the current bounds."
           out_of_bounds_fix: "Snap blocks into bounds"
+          placement:
+            grid_section: "Grid placement"
+            grid_column: "Column"
+            grid_row: "Row"
+            grid_align: "Align (vertical)"
+            grid_justify: "Justify (horizontal)"
+            stack_section: "Stack item"
+            row_section: "Row item"
+            align_self: "Align self"
+            flex_grow: "Grow"
+            order: "Order"
         conditions:
           empty_hint: "Pick a condition to control when this block renders."
           clear_all: "Remove all conditions"

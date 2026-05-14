@@ -197,6 +197,19 @@ function assignStableKeys(entries, { skipExisting = false } = {}) {
       entry.__argKeys = Object.keys(initialArgs);
     }
 
+    // Same reactivity treatment for `containerArgs` (values the parent
+    // container reads from its `@children`). Without this, a mutation
+    // like `entry.containerArgs.column = "3"` wouldn't propagate to the
+    // parent's render — the parent's template reads `child.containerArgs.X`
+    // and needs a tracked Proxy to register a per-key dep at render time.
+    if (entry.containerArgs && !_trackedArgsCache.has(entry.containerArgs)) {
+      const initialContainerArgs = { ...entry.containerArgs };
+      const wrapped = trackedObject(initialContainerArgs);
+      _trackedArgsCache.add(wrapped);
+      entry.containerArgs = wrapped;
+      entry.__containerArgKeys = Object.keys(initialContainerArgs);
+    }
+
     if (entry.children?.length) {
       assignStableKeys(entry.children, { skipExisting });
     }
@@ -394,7 +407,10 @@ function createChildBlock(entry, owner, debugContext = {}) {
     applyArgDefaults(ComponentClass, entry.args ?? {})
   );
 
-  // All blocks are wrapped for consistent styling
+  // All blocks are wrapped for consistent styling. Parent containers can
+  // augment the curried invocation with `@style` (e.g. CSS Grid placement)
+  // — the wrapper applies whatever the parent passes without itself
+  // knowing about layout modes.
   let wrappedComponent = wrapBlockLayout(
     {
       name: blockMeta?.blockName,

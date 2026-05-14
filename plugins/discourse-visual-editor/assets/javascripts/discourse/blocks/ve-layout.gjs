@@ -2,9 +2,11 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
+import { i18n } from "discourse-i18n";
 
 const VALID_MODES = ["stack", "row", "grid"];
 const VALID_ALIGNS = ["start", "center", "end", "stretch"];
+const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
 
 /**
  * Container layout block.
@@ -13,16 +15,12 @@ const VALID_ALIGNS = ["start", "center", "end", "stretch"];
  *  - `stack` — flex column, children stack vertically (default).
  *  - `row` — flex row, children flow horizontally.
  *  - `grid` — CSS Grid with explicit `columns` / `rows` dimensions.
- *     Children are `ve:slot` blocks that carry their own `column` /
- *     `row` placement; the layout block itself sets up the grid
- *     template and renders slots as direct children. This is the
- *     mode the visual editor's per-cell editor targets.
- *
- * Legacy: an earlier mode `"free-grid"` is coerced to `"grid"` at
- * read time so existing saved layouts keep rendering. The previous
- * auto-flow `"grid"` (with `count` columns) has been removed —
- * stack/row covers single-axis layouts; the new `grid` covers
- * everything else.
+ *     Each direct child carries its own placement under
+ *     `containerArgs.grid` (`column` / `row` / `align` / `justify`);
+ *     the layout's template hands each child a precomputed `@style` so
+ *     core's `WrappedBlockLayout` puts those CSS Grid declarations on
+ *     the child's outer wrapper — the direct DOM child of this layout's
+ *     container `<div>`.
  */
 @block("ve:layout", {
   container: true,
@@ -102,8 +100,189 @@ const VALID_ALIGNS = ["start", "center", "end", "stretch"];
     },
   },
   previewArgs: { mode: "stack", gap: 1, align: "stretch" },
+  // One namespace per mode. Direct children carry mode-specific placement
+  // hints under `containerArgs.<mode>` — e.g. a grid child sets
+  // `containerArgs.grid = {column, row, align, justify}` so CSS Grid can
+  // position it. Per-namespace `ui.conditional` keeps the inspector showing
+  // only the section relevant to the parent's current `mode`.
+  childArgs: {
+    grid: {
+      type: "object",
+      default: {
+        column: "auto",
+        row: "auto",
+        align: "stretch",
+        justify: "stretch",
+      },
+      properties: {
+        column: {
+          type: "string",
+          default: "auto",
+          ui: {
+            label: i18n(
+              "discourse_visual_editor.editor.layout.placement.grid_column"
+            ),
+          },
+        },
+        row: {
+          type: "string",
+          default: "auto",
+          ui: {
+            label: i18n(
+              "discourse_visual_editor.editor.layout.placement.grid_row"
+            ),
+          },
+        },
+        align: {
+          type: "string",
+          default: "stretch",
+          enum: VALID_ALIGNS,
+          ui: {
+            label: i18n(
+              "discourse_visual_editor.editor.layout.placement.grid_align"
+            ),
+          },
+        },
+        justify: {
+          type: "string",
+          default: "stretch",
+          enum: VALID_ALIGNS,
+          ui: {
+            label: i18n(
+              "discourse_visual_editor.editor.layout.placement.grid_justify"
+            ),
+          },
+        },
+      },
+      ui: {
+        label: i18n(
+          "discourse_visual_editor.editor.layout.placement.grid_section"
+        ),
+        conditional: { arg: "mode", equals: "grid" },
+      },
+    },
+    stack: {
+      type: "object",
+      default: { alignSelf: "auto", flexGrow: 0, order: 0 },
+      properties: {
+        alignSelf: {
+          type: "string",
+          default: "auto",
+          enum: VALID_ALIGN_SELF,
+          ui: {
+            label: i18n(
+              "discourse_visual_editor.editor.layout.placement.align_self"
+            ),
+          },
+        },
+        flexGrow: {
+          type: "number",
+          default: 0,
+          min: 0,
+          ui: {
+            label: i18n(
+              "discourse_visual_editor.editor.layout.placement.flex_grow"
+            ),
+          },
+        },
+        order: {
+          type: "number",
+          default: 0,
+          integer: true,
+          ui: {
+            label: i18n(
+              "discourse_visual_editor.editor.layout.placement.order"
+            ),
+          },
+        },
+      },
+      ui: {
+        label: i18n(
+          "discourse_visual_editor.editor.layout.placement.stack_section"
+        ),
+        conditional: { arg: "mode", equals: "stack" },
+      },
+    },
+    row: {
+      type: "object",
+      default: { alignSelf: "auto", flexGrow: 0, order: 0 },
+      properties: {
+        alignSelf: {
+          type: "string",
+          default: "auto",
+          enum: VALID_ALIGN_SELF,
+          ui: {
+            label: i18n(
+              "discourse_visual_editor.editor.layout.placement.align_self"
+            ),
+          },
+        },
+        flexGrow: {
+          type: "number",
+          default: 0,
+          min: 0,
+          ui: {
+            label: i18n(
+              "discourse_visual_editor.editor.layout.placement.flex_grow"
+            ),
+          },
+        },
+        order: {
+          type: "number",
+          default: 0,
+          integer: true,
+          ui: {
+            label: i18n(
+              "discourse_visual_editor.editor.layout.placement.order"
+            ),
+          },
+        },
+      },
+      ui: {
+        label: i18n(
+          "discourse_visual_editor.editor.layout.placement.row_section"
+        ),
+        conditional: { arg: "mode", equals: "row" },
+      },
+    },
+  },
 })
 export default class VELayout extends Component {
+  /**
+   * Per-child inline style for the wrapper that core's
+   * `WrappedBlockLayout` renders around every block. The wrapper is the
+   * direct DOM child of this layout's container `<div>`, which makes it
+   * the right element to receive CSS Grid placement (or, in future modes,
+   * flexbox per-child overrides). Returns `null` for stack / row modes,
+   * which let flexbox auto-place children.
+   *
+   * @param {Object} [containerArgs] - The child entry's `containerArgs`.
+   * @returns {ReturnType<typeof trustHTML>|null}
+   */
+  childStyle = (containerArgs) => {
+    if (this.resolvedMode !== "grid") {
+      return null;
+    }
+    const grid = containerArgs?.grid;
+    if (!grid) {
+      return null;
+    }
+    const parts = [];
+    if (grid.column != null) {
+      parts.push(`grid-column: ${grid.column};`);
+    }
+    if (grid.row != null) {
+      parts.push(`grid-row: ${grid.row};`);
+    }
+    if (grid.align != null) {
+      parts.push(`align-self: ${grid.align};`);
+    }
+    if (grid.justify != null) {
+      parts.push(`justify-self: ${grid.justify};`);
+    }
+    return parts.length ? trustHTML(parts.join(" ")) : null;
+  };
+
   /**
    * Resolved layout mode with legacy values normalised. `"free-grid"`
    * (the pre-rename name) maps to `"grid"`; anything else outside the
@@ -207,7 +386,7 @@ export default class VELayout extends Component {
   <template>
     <div class={{this.className}} style={{this.containerStyle}}>
       {{#each @children key="key" as |child|}}
-        <child.Component />
+        <child.Component @style={{this.childStyle child.containerArgs}} />
       {{/each}}
     </div>
   </template>

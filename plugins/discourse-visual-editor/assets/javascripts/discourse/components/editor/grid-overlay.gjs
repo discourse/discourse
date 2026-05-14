@@ -13,7 +13,7 @@ import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-targe
 import { i18n } from "discourse-i18n";
 import {
   computeOccupation,
-  parseSlotPlacement,
+  parsePlacement,
   unoccupiedCells,
 } from "../../lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
@@ -622,7 +622,7 @@ export default class GridOverlay extends Component {
    */
   _slotAtCell(cell) {
     for (const slot of this.slots) {
-      const placement = parseSlotPlacement(slot.args ?? {});
+      const placement = parsePlacement(slot.containerArgs);
       if (placement.column.start == null || placement.row.start == null) {
         continue;
       }
@@ -645,7 +645,7 @@ export default class GridOverlay extends Component {
    * Edges map to thin lines in the gap on the slot's outer perimeter.
    */
   _slotDescriptorForZone({ slot, zone, shift, source }) {
-    const placement = parseSlotPlacement(slot.args ?? {});
+    const placement = parsePlacement(slot.containerArgs);
     const slotKey = entryKey(slot);
     if (zone === "center") {
       if (source?.kind !== "ve-block") {
