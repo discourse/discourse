@@ -119,6 +119,21 @@ describe OpenIDConnectAuthenticator do
         result = authenticator.after_authenticate(hash)
         expect(result.associated_groups).to eq([])
       end
+
+      it "falls back to the id_token when the claim is missing from raw_info" do
+        hash[:extra][:id_token_info] = { "groups" => %w[group1 group2] }
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "prefers raw_info over the id_token when both contain the claim" do
+        hash[:extra][:raw_info][:groups] = %w[from_userinfo]
+        hash[:extra][:id_token_info] = { "groups" => %w[from_id_token] }
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq([{ id: "from_userinfo", name: "from_userinfo" }])
+      end
     end
 
     context "with a custom claim name" do
