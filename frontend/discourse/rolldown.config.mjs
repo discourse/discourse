@@ -75,7 +75,7 @@ export function buildConfig({ devMode } = {}) {
     },
     input: {
       vendor: "vendor.js",
-      "start-discourse": "start-discourse.js",
+      discourse: "discourse.js",
       "media-optimization-bundle": "media-optimization-bundle.js",
       ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
