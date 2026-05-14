@@ -88,6 +88,8 @@ module SvgSprite
         discourse-bookmark-clock
         discourse-chevron-collapse
         discourse-chevron-expand
+        discourse-circle-minus
+        discourse-circle-plus
         discourse-compress
         discourse-dnd
         discourse-emojis
@@ -215,8 +217,6 @@ module SvgSprite
         minus
         mobile-screen-button
         moon
-        nested-circle-minus
-        nested-circle-plus
         nested-thread
         paintbrush
         palette
