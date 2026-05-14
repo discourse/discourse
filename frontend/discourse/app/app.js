@@ -139,19 +139,6 @@ export async function loadThemesAndPlugins() {
   await Promise.all(promises);
 }
 
-export async function loadThemes() {
-  const promises = [
-    ...[
-      ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
-    ].map(loadThemeFromModulePreload),
-    ...[
-      ...document.querySelectorAll("link[rel=modulepreload][data-plugin-name]"),
-    ].map(loadPluginFromModulePreload),
-  ];
-
-  await Promise.all(promises);
-}
-
 export async function loadAdmin() {
   defineModules(
     "discourse/admin",

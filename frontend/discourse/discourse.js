@@ -1,4 +1,4 @@
-import App, { loadAdmin, loadThemes } from "discourse/app";
+import App, { loadAdmin, loadThemesAndPlugins } from "discourse/app";
 
 document.addEventListener("discourse-init", async (e) => {
   performance.mark("discourse-init");
@@ -11,7 +11,7 @@ document.addEventListener("discourse-init", async (e) => {
     await loadAdmin();
   }
 
-  await loadThemes();
+  await loadThemesAndPlugins();
 
   const app = App.create(config);
   app.start();
