@@ -288,7 +288,10 @@ describe "Content Localization" do
         topic_page.click_post_action_button(post_3, :edit)
         expect(edit_localized_post_dialog).to be_open
         edit_localized_post_dialog.click_no
-        expect(page).to have_css(".action-title", text: I18n.t("js.composer.translations.title"))
+        expect(page).to have_css(
+          ".composer-actions-trigger",
+          text: I18n.t("js.composer.translations.title"),
+        )
       end
 
       it "does not open the fast editor for localized posts" do

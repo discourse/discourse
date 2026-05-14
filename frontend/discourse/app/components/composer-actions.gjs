@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -11,9 +11,11 @@ import {
 } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
+  ADD_TRANSLATION,
   CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
   EDIT,
+  EDIT_SHARED_DRAFT,
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
@@ -125,6 +127,10 @@ export default class ComposerActions extends Component {
   @cached
   get templateData() {
     const { action: currentAction, isInSlowMode, isEditing } = this;
+    if (this.composerModel) {
+      get(this.composerModel, "tags");
+      get(this.composerModel, "category");
+    }
 
     let iconName;
     if (currentAction === CREATE_TOPIC) {
@@ -141,8 +147,10 @@ export default class ComposerActions extends Component {
       iconName = "share";
     }
 
-    let labelText;
-    if (currentAction === CREATE_TOPIC) {
+    let labelText = this.composerModel?.customizationFor("actionTitle");
+    if (labelText) {
+      // plugin-provided label wins
+    } else if (currentAction === CREATE_TOPIC) {
       labelText = i18n("composer.composer_actions.create_topic.label");
     } else if (currentAction === PRIVATE_MESSAGE) {
       labelText = i18n(
@@ -150,13 +158,24 @@ export default class ComposerActions extends Component {
       );
     } else if (currentAction === CREATE_SHARED_DRAFT) {
       labelText = i18n("composer.composer_actions.shared_draft.label");
+    } else if (currentAction === EDIT_SHARED_DRAFT) {
+      labelText = i18n("composer.edit_shared_draft");
+    } else if (currentAction === ADD_TRANSLATION) {
+      labelText = i18n("composer.translations.title");
     } else if (currentAction === REPLY) {
+      const isReplyingToPost =
+        this.post &&
+        this.replyOptions?.userAvatar &&
+        this.replyOptions?.userLink;
+
       if (isInSlowMode) {
         labelText = i18n("composer.composer_actions.slow_mode_reply");
+      } else if (isReplyingToPost) {
+        labelText = i18n("composer.composer_actions.reply_to_post.label", {
+          postUsername: this.post.username,
+        });
       } else {
-        labelText = i18n(
-          "composer.composer_actions.reply_to_topic_composer_action.label"
-        );
+        labelText = i18n("composer.composer_actions.reply_to_topic.label");
       }
     } else if (currentAction === EDIT) {
       labelText = i18n("composer.composer_actions.edit_post");

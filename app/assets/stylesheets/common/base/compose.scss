@@ -282,21 +282,6 @@ html.composer-open:not(.has-full-page-chat) {
       max-width: 100%;
       min-width: 0; // allows shrinking when needed
 
-      .action-title {
-        display: flex;
-        align-items: center;
-        line-height: normal;
-        min-width: 0;
-
-        .topic-link,
-        .user-link,
-        .post-link {
-          margin-right: 8px;
-
-          @include ellipsis;
-        }
-      }
-
       .username {
         margin-right: 5px;
         max-width: 100px;

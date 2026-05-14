@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -149,21 +148,6 @@ export default class ComposerActionTitle extends Component {
         @options={{hash mobilePlacementStrategy="fixed"}}
       />
 
-      <span class="action-title" role="heading" aria-level="1">
-        {{this.actionTitle}}
-        {{#if this.replyTargetSegment}}
-          {{#if this.canEditReplyTo}}
-            <button
-              type="button"
-              class="composer-edit-reply-to"
-              title={{i18n "composer.change_reply_to.open"}}
-              {{on "click" this.openChangeReplyToModal}}
-            >{{this.replyTargetSegment}}</button>
-          {{else}}
-            {{this.replyTargetSegment}}
-          {{/if}}
-        {{/if}}
-      </span>
     </div>
   </template>
 }

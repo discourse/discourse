@@ -287,9 +287,9 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       await triggerKeyEvent(document, "keypress", "C");
 
       assert
-        .dom(".composer-action-create-topic .composer-action-title")
+        .dom(".composer-action-create-topic .composer-actions-trigger")
         .includesText(
-          i18n("composer.composer_actions.create_topic.desc"),
+          i18n("composer.composer_actions.create_topic.label"),
           "composer shows create topic title"
         );
     });
@@ -299,9 +299,9 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       await triggerKeyEvent(document, "keypress", "C");
 
       assert
-        .dom(".composer-action-private-message .composer-action-title")
+        .dom(".composer-action-private-message .composer-actions-trigger")
         .includesText(
-          i18n("topic.private_message"),
+          i18n("composer.composer_actions.create_personal_message.label"),
           "composer shows create message title"
         );
     });
@@ -311,9 +311,9 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       await triggerKeyEvent(document, "keypress", "C");
 
       assert
-        .dom(".composer-action-private-message .composer-action-title")
+        .dom(".composer-action-private-message .composer-actions-trigger")
         .includesText(
-          i18n("topic.private_message"),
+          i18n("composer.composer_actions.create_personal_message.label"),
           "composer shows create message title"
         );
     });

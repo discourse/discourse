@@ -355,13 +355,13 @@ acceptance(`Composer`, function (needs) {
 
     await click("#post_1 .reply.create");
     assert
-      .dom(".reply-details a.topic-link")
-      .hasText("Internationalization / localization");
+      .dom(".composer-actions-trigger")
+      .includesText(i18n("composer.composer_actions.reply_to_topic.label"));
 
     await click("#post_1 .reply.create");
     assert
-      .dom(".reply-details a.topic-link")
-      .hasText("Internationalization / localization");
+      .dom(".composer-actions-trigger")
+      .includesText(i18n("composer.composer_actions.reply_to_topic.label"));
   });
 
   test("Can edit a post after starting a reply", async function (assert) {
@@ -1024,8 +1024,11 @@ acceptance(`Composer`, function (needs) {
     await fillIn(".d-editor-input", longText);
 
     assert
-      .dom('.action-title a[href="/t/internationalization-localization/280"]')
-      .exists("the mode should be: reply to post");
+      .dom(".composer-actions-trigger")
+      .includesText(
+        i18n("composer.composer_actions.reply_to_topic.label"),
+        "the mode should be: reply to topic"
+      );
 
     await click("article#post_3 button.reply");
 
@@ -1039,8 +1042,11 @@ acceptance(`Composer`, function (needs) {
       .includesValue(longText, "entered text should still be there");
 
     assert
-      .dom('.action-title a[href="/t/internationalization-localization/280"]')
-      .doesNotExist("mode should have changed");
+      .dom(".composer-actions-trigger")
+      .includesText(
+        i18n("composer.composer_actions.create_topic.label"),
+        "mode should have changed to create topic"
+      );
   });
 
   test("Does not replace recipient when another draft exists", async function (assert) {
@@ -1245,7 +1251,7 @@ acceptance(`Composer - Customizations`, function (needs) {
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
     await tags.selectRowByName("monkey");
-    assert.dom(".action-title").hasText("custom text");
+    assert.dom(".composer-actions-trigger").includesText("custom text");
     assert.dom(".save-or-cancel button").hasText(i18n("composer.emoji"));
   });
 });
@@ -1701,44 +1707,6 @@ acceptance(`composer buttons API`, function (needs) {
     assert
       .dom(`button[title="${expectedName}"]`)
       .exists("custom button is displayed for new topic");
-  });
-
-  test("modified name when replying to a post", async function (assert) {
-    withPluginApi((api) => {
-      api.registerValueTransformer(
-        "composer-reply-options-user-link-name",
-        () => {
-          return "NewNameHere";
-        }
-      );
-    });
-
-    await visit("/t/34");
-    await click("article#post_3 button.reply");
-
-    assert.dom(".reply-details .user-link").hasText("NewNameHere");
-  });
-
-  test("modified avatar when replying to a post", async function (assert) {
-    withPluginApi((api) => {
-      api.registerValueTransformer(
-        "composer-reply-options-user-avatar-template",
-        () => {
-          return "/images/avatar.png?size={size}";
-        }
-      );
-    });
-
-    await visit("/t/34");
-    await click("article#post_3 button.reply");
-
-    assert
-      .dom(".reply-details .action-title img")
-      .hasAttribute(
-        "src",
-        /\/images\/avatar\.png/,
-        "Reply avatar can be customized"
-      );
   });
 
   test("modified avatar in quote", async function (assert) {

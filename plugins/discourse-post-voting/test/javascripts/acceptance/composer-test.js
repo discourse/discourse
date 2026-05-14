@@ -46,8 +46,8 @@ acceptance("composer", function (needs) {
     await click("[data-action-id='togglePostVoting']");
 
     assert
-      .dom(".action-title")
-      .hasText(
+      .dom(".composer-actions-trigger")
+      .includesText(
         i18n("composer.create_post_voting.label"),
         "displays the right composer action title when creating Post Voting topic"
       );
@@ -63,7 +63,7 @@ acceptance("composer", function (needs) {
     await click("[data-action-id='togglePostVoting']");
 
     assert
-      .dom(".action-title")
+      .dom(".composer-actions-trigger")
       .doesNotIncludeText(
         i18n("composer.create_post_voting.label"),
         "reverts to original composer title when post voting format is disabled"
@@ -93,8 +93,8 @@ acceptance("composer", function (needs) {
     await categoryChooser.selectRowByValue(2);
 
     assert
-      .dom(".action-title")
-      .hasText(i18n("composer.create_post_voting.label"));
+      .dom(".composer-actions-trigger")
+      .includesText(i18n("composer.create_post_voting.label"));
   });
 
   test("Creating new topic in category with only_post_voting_in_this_category enabled", async function (assert) {
@@ -110,7 +110,7 @@ acceptance("composer", function (needs) {
     await categoryChooser.selectRowByValue(2);
 
     assert
-      .dom(".action-title")
-      .hasText(i18n("composer.create_post_voting.label"));
+      .dom(".composer-actions-trigger")
+      .includesText(i18n("composer.create_post_voting.label"));
   });
 });

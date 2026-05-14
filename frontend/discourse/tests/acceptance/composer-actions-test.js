@@ -93,11 +93,8 @@ acceptance(`Composer Actions`, function (needs) {
     await composerActions.selectRowByValue("reply_to_topic");
 
     assert
-      .dom(".action-title .topic-link")
-      .hasText("Internationalization / localization");
-    assert
-      .dom(".action-title .topic-link")
-      .hasAttribute("href", "/t/internationalization-localization/280");
+      .dom(".composer-actions-trigger")
+      .includesText(i18n("composer.composer_actions.reply_to_topic.label"));
     assert
       .dom(".d-editor-input")
       .hasValue("test replying to topic when initially replied to post");
@@ -191,7 +188,9 @@ acceptance(`Composer Actions`, function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_to_topic");
 
-    assert.dom(".action-title").hasText("Short topic with two posts");
+    assert
+      .dom(".composer-actions-trigger")
+      .includesText(i18n("composer.composer_actions.reply_to_topic.label"));
     assert.dom(".d-editor-input").hasValue(quote);
 
     await composerActions.expand();
@@ -206,8 +205,11 @@ acceptance(`Composer Actions`, function (needs) {
     await composerActions.selectRowByValue("reply_to_post");
     await composerActions.expand();
 
-    assert.dom(".action-title img.avatar").exists();
-    assert.dom(".action-title .user-link").hasText("tms");
+    assert.dom(".composer-actions-trigger").includesText(
+      i18n("composer.composer_actions.reply_to_post.label", {
+        postUsername: "tms",
+      })
+    );
     assert.dom(".d-editor-input").hasValue(quote);
     assert.strictEqual(
       composerActions.rowByIndex(0).value(),
@@ -370,14 +372,12 @@ acceptance(`Composer Actions`, function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
 
-    assert
-      .dom(".composer-actions-trigger")
-      .hasText(
-        i18n(
-          "composer.composer_actions.reply_to_topic_composer_action.label"
-        ).trim(),
-        "shows reply label"
-      );
+    assert.dom(".composer-actions-trigger").includesText(
+      i18n("composer.composer_actions.reply_to_post.label", {
+        postUsername: "codinghorror",
+      }),
+      "shows reply to post label"
+    );
   });
 
   test("trigger shows correct label for create topic mode", async function (assert) {
@@ -509,7 +509,11 @@ acceptance(`Prioritize Username`, function (needs) {
     await visit("/t/short-topic-with-two-posts/54079");
     await click("article#post_2 button.reply");
 
-    assert.dom(".action-title .user-link").hasText("james_john");
+    assert.dom(".composer-actions-trigger").includesText(
+      i18n("composer.composer_actions.reply_to_post.label", {
+        postUsername: "james_john",
+      })
+    );
   });
 
   test("Quotes use username", async function (assert) {
@@ -535,9 +539,11 @@ acceptance(`Prioritize Full Name`, function (needs) {
     await visit("/t/short-topic-with-two-posts/54079");
     await click("article#post_3 button.reply");
 
-    assert
-      .dom(".action-title .user-link")
-      .hasHtml("&lt;h1&gt;Tim Stone&lt;/h1&gt;");
+    assert.dom(".composer-actions-trigger").includesText(
+      i18n("composer.composer_actions.reply_to_post.label", {
+        postUsername: "tms",
+      })
+    );
   });
 
   test("Quotes use full name", async function (assert) {
