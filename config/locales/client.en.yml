@@ -3991,6 +3991,26 @@ en:
       category_settings:
         default_nested_view: "Use nested view as default for topics in this category"
       no_replies: "No replies yet."
+      topic_timeline:
+        aria_label: "Topic timeline"
+        position: "%{current} / %{total}"
+        position_total: "%{total} replies"
+        replies:
+          one: "%{count} reply"
+          other: "%{count} replies"
+        jump_to_root:
+          one: "Jump to thread with %{count} reply"
+          other: "Jump to thread with %{count} replies"
+        sort_endpoints:
+          top:
+            start: "Most liked"
+            end: "Least liked"
+          new:
+            start: "Newest"
+            end: "Oldest"
+          old:
+            start: "Oldest"
+            end: "Newest"
       deleted_post_placeholder: "[deleted]"
       ignored_post_placeholder: "[ignored]"
       toggle_ignored_content: "Show ignored content"

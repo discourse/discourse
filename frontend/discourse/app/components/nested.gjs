@@ -55,63 +55,76 @@ export default class Nested extends Component {
         topicId=@topic.id
       }}
     >
-      <NestedHeader
-        @topic={{@topic}}
-        @editingTopic={{@editingTopic}}
-        @buffered={{@buffered}}
-        @showCategoryChooser={{@showCategoryChooser}}
-        @canEditTags={{@canEditTags}}
-        @minimumRequiredTags={{@minimumRequiredTags}}
-        @finishedEditingTopic={{@finishedEditingTopic}}
-        @cancelEditingTopic={{@cancelEditingTopic}}
-        @topicCategoryChanged={{@topicCategoryChanged}}
-        @topicTagsChanged={{@topicTagsChanged}}
-        @startEditingTopic={{@startEditingTopic}}
-      />
-
       <PluginOutlet
         @name="topic-above-post-stream"
         @connectorTagName="div"
         @outletArgs={{lazyHash model=@topic}}
       />
 
-      <NestedOp
-        @post={{@opPost}}
-        @topic={{@topic}}
-        @editPost={{@editPost}}
-        @showHistory={{@showHistory}}
-        @replyToPost={{@replyToPost}}
-        @showPostMenu={{true}}
-        @registerPost={{this.viewportTracker.registerPost}}
-      />
-
-      <div class="nested-view__topic-map topic-map">
-        <TopicMap
-          @model={{@topic}}
-          @topicDetails={{@topic.details}}
-          @showPMMap={{@topic.isPrivateMessage}}
+      {{! Intro chrome (header / OP / topic map) is only meaningful when
+          the loaded window starts at page 0. After a timeline jump to a
+          later page, keeping these visible suggests the user is at the
+          top of the topic when they aren't. The site header docks the
+          title in that case so it's never lost. }}
+      {{#unless @firstLoadedPage}}
+        <NestedHeader
+          @topic={{@topic}}
+          @editingTopic={{@editingTopic}}
+          @buffered={{@buffered}}
+          @showCategoryChooser={{@showCategoryChooser}}
+          @canEditTags={{@canEditTags}}
+          @minimumRequiredTags={{@minimumRequiredTags}}
+          @finishedEditingTopic={{@finishedEditingTopic}}
+          @cancelEditingTopic={{@cancelEditingTopic}}
+          @topicCategoryChanged={{@topicCategoryChanged}}
+          @topicTagsChanged={{@topicTagsChanged}}
+          @startEditingTopic={{@startEditingTopic}}
         />
-      </div>
 
-      <div class="nested-view__controls">
-        <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
-        <div class="nested-view__controls-right">
-          {{#if @topic.has_activity_log}}
-            <DButton
-              class="btn-flat nested-view__activity-link"
-              @action={{@showActivityLog}}
-              @label="nested_replies.activity_log.link"
-            />
-          {{/if}}
-          {{#if this.currentUser.can_toggle_nested_mode}}
-            <DButton
-              class="btn-flat nested-view__flat-link"
-              @href={{this.flatViewUrl}}
-              @label="nested_replies.view_as_flat"
-            />
-          {{/if}}
+        <NestedOp
+          @post={{@opPost}}
+          @topic={{@topic}}
+          @editPost={{@editPost}}
+          @showHistory={{@showHistory}}
+          @replyToPost={{@replyToPost}}
+          @showPostMenu={{true}}
+          @registerPost={{this.viewportTracker.registerPost}}
+        />
+
+        <div class="nested-view__topic-map topic-map">
+          <TopicMap
+            @model={{@topic}}
+            @topicDetails={{@topic.details}}
+            @showPMMap={{@topic.isPrivateMessage}}
+          />
         </div>
-      </div>
+      {{/unless}}
+
+      {{! Controls (sort, activity log, view-as-flat) belong with the
+          intro chrome — once the loaded window has been jumped past
+          page 0, they're not meaningful to show above the visible
+          roots. Bundled with the header/OP/map unless above. }}
+      {{#unless @firstLoadedPage}}
+        <div class="nested-view__controls">
+          <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
+          <div class="nested-view__controls-right">
+            {{#if @topic.has_activity_log}}
+              <DButton
+                class="btn-flat nested-view__activity-link"
+                @action={{@showActivityLog}}
+                @label="nested_replies.activity_log.link"
+              />
+            {{/if}}
+            {{#if this.currentUser.can_toggle_nested_mode}}
+              <DButton
+                class="btn-flat nested-view__flat-link"
+                @href={{this.flatViewUrl}}
+                @label="nested_replies.view_as_flat"
+              />
+            {{/if}}
+          </div>
+        </div>
+      {{/unless}}
 
       {{#if (gt @newRootPostCount 0)}}
         <div class="nested-view__new-replies">
@@ -127,6 +140,20 @@ export default class Nested extends Component {
       {{/if}}
 
       <div class="nested-view__roots">
+        {{! No negative rootMargin: when firstLoadedPage > 0 the
+            intro chrome is hidden, so the user can't scroll above
+            the first root — a negative margin would put the sentinel
+            permanently out of the intersection rect. The @isLoading
+            guard prevents the observer from being created during a
+            jump; one buffer page may load right after the observer
+            re-attaches, which is fine — anchor preservation then
+            pushes the sentinel out of view. }}
+        <DLoadMore
+          @action={{@loadPreviousRoots}}
+          @enabled={{@hasMoreRootsBefore}}
+          @isLoading={{@loadingMore}}
+        />
+
         {{#each @rootNodes key="post.id" as |node|}}
           <NestedPost
             @post={{node.post}}
@@ -203,6 +230,10 @@ export default class Nested extends Component {
         @topic={{@topic}}
         @replyAction={{fn @replyToPost @opPost 0}}
       />
+
+      {{! Timeline is rendered at the route level (templates/nested.gjs)
+          as a sibling of this component so it can be a grid item in
+          the .nested-topic-layout grid, matching flat's structure. }}
     </div>
   </template>
 }

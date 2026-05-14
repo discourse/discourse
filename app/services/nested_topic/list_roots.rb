@@ -126,6 +126,7 @@ class NestedTopic::ListRoots
     response[:sort] = params.sort
     response[:message_bus_last_id] = topic_view.message_bus_last_id
     response[:pinned_post_ids] = pinned_post_ids if pinned_post_ids.present?
+    response[:root_summary] = loader.root_summary(params.sort, pinned_post_ids: pinned_post_ids)
   end
 
   def attach_suggested_and_related(serializer:, response:)

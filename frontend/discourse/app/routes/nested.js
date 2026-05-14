@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
@@ -10,7 +11,9 @@ import processNode from "../lib/process-node";
 
 export default class NestedRoute extends Route {
   @service composer;
+  @service header;
   @service nestedViewCache;
+  @service router;
   @service screenTrack;
   @service site;
   @service siteSettings;
@@ -106,6 +109,12 @@ export default class NestedRoute extends Route {
 
     this.screenTrack.start(model.topic.id, controller);
 
+    // Show the topic title in the site header as soon as it scrolls
+    // out of view (or always, if we're entering on a non-zero page
+    // where the in-page header is hidden). Mirrors flat view's
+    // routes/topic/from-params.js#redirect.
+    this.header.enterTopic(model.topic, model.firstLoadedPage === 0);
+
     if (!isEmpty(model.topic.draft) && !EmbedMode.enabled) {
       this.composer.open({
         draft: Draft.getLocal(model.topic.draft_key, model.topic.draft),
@@ -115,6 +124,18 @@ export default class NestedRoute extends Route {
         topic: model.topic,
       });
     }
+  }
+
+  @action
+  willTransition(transition) {
+    // Mirror flat view: only clear the docked topic info if we're
+    // leaving nested routes entirely. Transitions between nested URLs
+    // (e.g. same topic, different sort) will reseed via enterTopic.
+    transition.followRedirects().finally(() => {
+      if (!this.router.currentRouteName?.startsWith("nested")) {
+        this.header.clearTopic();
+      }
+    });
   }
 
   deactivate() {
@@ -148,6 +169,8 @@ export default class NestedRoute extends Route {
         sort: controller.sort,
         messageBusLastId: controller.messageBusLastId,
         pinnedPostIds: controller.pinnedPostIds,
+        rootSummary: controller.rootSummary,
+        firstLoadedPage: controller.firstLoadedPage,
         postNumber: controller.postNumber,
         contextMode: controller.contextMode,
         contextChain: controller.contextChain,
@@ -228,6 +251,8 @@ export default class NestedRoute extends Route {
       sort: data.sort || this.siteSettings.nested_replies_default_sort || "top",
       messageBusLastId: data.message_bus_last_id,
       pinnedPostIds: data.pinned_post_ids || [],
+      rootSummary: data.root_summary || null,
+      firstLoadedPage: data.page || 0,
       postNumber: params.post_number ? Number(params.post_number) : null,
       contextMode: false,
       contextChain: null,
@@ -288,6 +313,8 @@ export default class NestedRoute extends Route {
       opPost,
       sort,
       pinnedPostIds: [],
+      rootSummary: null,
+      firstLoadedPage: 0,
       messageBusLastId: data.message_bus_last_id,
       postNumber: Number(params.post_number),
       contextMode: true,

@@ -18,8 +18,10 @@ export default class NestedController extends Controller {
   @service store;
   @service dialog;
   @service currentUser;
+  @service header;
   @service messageBus;
   @service modal;
+  @service nestedRootElements;
   @service nestedViewCache;
   @service router;
   @service site;
@@ -28,6 +30,12 @@ export default class NestedController extends Controller {
   @tracked opPost;
   @tracked rootNodes = [];
   @tracked page = 0;
+  // firstLoadedPage and page (= lastLoadedPage) bracket the current loaded
+  // window of root pages. Sequential infinite scroll grows the window
+  // forwards via loadMoreRoots and backwards via loadPreviousRoots; a
+  // timeline jump collapses the window to a single page and the user can
+  // then expand it in either direction.
+  @tracked firstLoadedPage = 0;
   @tracked hasMoreRoots = false;
   @tracked loadingMore = false;
   @tracked sort;
@@ -42,6 +50,7 @@ export default class NestedController extends Controller {
   @tracked newRootPostIds = [];
   @tracked editingTopic = false;
   @tracked pinnedPostIds = [];
+  @tracked rootSummary = null;
   // Persisted in the URL across in-topic navigation by design — once a
   // user lands via a consolidated reply notification, browsing within
   // the topic keeps the collapsed view, and the URL is shareable in that
@@ -97,6 +106,187 @@ export default class NestedController extends Controller {
 
   get minimumRequiredTags() {
     return this.#topicController.minimumRequiredTags;
+  }
+
+  get hasMoreRootsBefore() {
+    return this.firstLoadedPage > 0;
+  }
+
+  // Non-contiguous jump: collapses the loaded window to a single target
+  // page. After the jump, the user can grow the window forward
+  // (loadMoreRoots) or backward (loadPreviousRoots) — no sequential
+  // pagination is required to navigate elsewhere.
+  @action
+  async jumpToRootPage(targetPage, targetPostNumber = null) {
+    if (this.loadingMore) {
+      return;
+    }
+    if (
+      targetPage >= this.firstLoadedPage &&
+      targetPage <= this.page &&
+      this.rootNodes.length > 0
+    ) {
+      // Already inside the loaded window — just scroll.
+      const inWindow =
+        targetPostNumber && this.#scrollToLoadedRoot(targetPostNumber);
+      if (!inWindow) {
+        this.#scrollToLoadedRootPage(targetPage);
+      }
+      return;
+    }
+
+    this.loadingMore = true;
+    try {
+      const data = await ajax(
+        `/n/${this.topic.slug}/${this.topic.id}.json?page=${targetPage}&sort=${this.sort}`
+      );
+
+      const newNodes = (data.roots || []).map((root) =>
+        this.#processNode(root)
+      );
+
+      // Pick the scroll target post number BEFORE swapping rootNodes so
+      // we can await its registration in the registry rather than
+      // guessing at render timing with afterRender+rAF.
+      const scrollTargetPostNumber =
+        targetPostNumber ?? newNodes[0]?.post?.post_number ?? null;
+
+      this.rootNodes = newNodes;
+      this.firstLoadedPage = data.page;
+      this.page = data.page;
+      this.hasMoreRoots = data.has_more_roots || false;
+      // The backend piggybacks suggested/related on whichever response
+      // has has_more_roots=false. If a jump lands on the final page,
+      // skipping this leaves MoreTopics rendering with no suggestions.
+      this.#assignSuggestedAndRelated(data);
+
+      // Always land the user inside the new loaded window. Without an
+      // explicit target post, the previous scrollY is stale (often past
+      // the new shorter content's end) and the bottom sentinel triggers
+      // a cascade of loadMore calls.
+      if (scrollTargetPostNumber != null) {
+        const element = await this.nestedRootElements.waitForElement(
+          scrollTargetPostNumber
+        );
+        this.#scrollToRootWrapper(element);
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingMore = false;
+    }
+  }
+
+  #scrollToLoadedRootPage(targetPage) {
+    const ordered = this.nestedRootElements.elementsInOrder();
+    if (ordered.length === 0) {
+      return;
+    }
+
+    const pageSize = this.rootSummary?.page_size;
+    if (!pageSize) {
+      this.#scrollToRootWrapper(ordered[0].el);
+      return;
+    }
+
+    let targetIndex = (targetPage - this.firstLoadedPage) * pageSize;
+    if (this.firstLoadedPage === 0 && targetPage > 0) {
+      const pinnedIds = new Set(this.pinnedPostIds);
+      targetIndex += this.rootNodes.filter((node) =>
+        pinnedIds.has(node.post.id)
+      ).length;
+    }
+
+    const clamped = Math.max(0, Math.min(targetIndex, ordered.length - 1));
+    this.#scrollToRootWrapper(ordered[clamped].el);
+  }
+
+  // Backwards infinite scroll. Prepends the previous page to rootNodes and
+  // compensates window scroll so the user's current viewport anchor (the
+  // first wrapper that was visible before the prepend) stays put. Without
+  // the compensation, prepending content above the viewport would push the
+  // visible content downward by the height of the new content.
+  @action
+  async loadPreviousRoots() {
+    if (this.loadingMore || !this.hasMoreRootsBefore) {
+      return;
+    }
+
+    // Capture an anchor + its viewport position BEFORE mutation. The
+    // first registered root is the boundary between old/new content
+    // after the prepend; preserving its `top` keeps the user's
+    // current reading position visually stationary.
+    const anchorEl = this.nestedRootElements.firstElement();
+    const anchorPostNumber = anchorEl
+      ? (this.nestedRootElements
+          .elementsInOrder()
+          .find((entry) => entry.el === anchorEl)?.postNumber ?? null)
+      : null;
+    const anchorTopBefore = anchorEl?.getBoundingClientRect().top ?? null;
+
+    this.loadingMore = true;
+    try {
+      const targetPage = this.firstLoadedPage - 1;
+      const data = await ajax(
+        `/n/${this.topic.slug}/${this.topic.id}.json?page=${targetPage}&sort=${this.sort}`
+      );
+
+      const newNodes = (data.roots || []).map((root) =>
+        this.#processNode(root)
+      );
+
+      this.rootNodes = [...newNodes, ...this.rootNodes];
+      this.firstLoadedPage = data.page;
+      // Same final-page piggyback concern as in jumpToRootPage — if
+      // the user previously scrolled to the bottom (loading suggested)
+      // and a previous-page prepend ended up being the final-page
+      // response, suggested would never attach without this.
+      this.#assignSuggestedAndRelated(data);
+
+      // Wait for the prepended roots to register so the layout has
+      // settled before we re-measure the anchor.
+      const newFirstPostNumber = newNodes[0]?.post?.post_number;
+      if (newFirstPostNumber != null) {
+        await this.nestedRootElements.waitForElement(newFirstPostNumber);
+      }
+
+      if (anchorPostNumber != null && anchorTopBefore != null) {
+        const liveAnchor = this.nestedRootElements.getElement(anchorPostNumber);
+        if (liveAnchor) {
+          const anchorTopAfter = liveAnchor.getBoundingClientRect().top;
+          const delta = anchorTopAfter - anchorTopBefore;
+          if (delta !== 0) {
+            window.scrollBy({ top: delta, behavior: "auto" });
+          }
+        }
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingMore = false;
+    }
+  }
+
+  #scrollToLoadedRoot(postNumber) {
+    if (!postNumber) {
+      return false;
+    }
+    const element = this.nestedRootElements.getElement(postNumber);
+    if (!element) {
+      return false;
+    }
+    this.#scrollToRootWrapper(element);
+    return true;
+  }
+
+  #scrollToRootWrapper(wrapper) {
+    if (!wrapper) {
+      return;
+    }
+    const headerOffset = this.header.headerOffset ?? 0;
+    const top =
+      wrapper.getBoundingClientRect().top + window.scrollY - headerOffset - 8;
+    window.scrollTo({ top, behavior: "auto" });
   }
 
   @action

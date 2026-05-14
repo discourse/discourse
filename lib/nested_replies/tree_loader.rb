@@ -7,6 +7,7 @@ module NestedReplies
     CHILDREN_PER_PAGE = 50
     PRELOAD_CHILDREN_PER_PARENT = 3
     SIBLINGS_PER_ANCESTOR = 5
+    ROOT_SUMMARY_THRESHOLD = 80
 
     POST_INCLUDES = [
       { user: %i[primary_group flair_group] },
@@ -255,6 +256,54 @@ module NestedReplies
         .where(post_type: visible_post_types)
         .group(:reply_to_post_number)
         .count
+    end
+
+    # Above ROOT_SUMMARY_THRESHOLD we omit :entries so the client renders a
+    # plain scrubber + count instead of a per-root density rail (compact mode).
+    def root_summary(sort, pinned_post_ids: nil)
+      scope = root_posts_scope(sort)
+      total = scope.count
+      unpinned_scope = pinned_post_ids.present? ? scope.where.not(id: pinned_post_ids) : scope
+      unpinned_total = unpinned_scope.count
+      page_count = total.zero? ? 0 : [1, (unpinned_total.to_f / ROOTS_PER_PAGE).ceil].max
+      # pinned_count lets the compact-mode client offset its
+      # "position in total" calculation when firstLoadedPage > 0 —
+      # pages after 0 contain only unpinned roots, but those roots
+      # come after N_pinned in the total ordering.
+      pinned_count = total - unpinned_total
+
+      result = {
+        total: total,
+        page_size: ROOTS_PER_PAGE,
+        page_count: page_count,
+        pinned_count: pinned_count,
+      }
+      return result if total > ROOT_SUMMARY_THRESHOLD
+
+      rows = scope.pluck(:id, :post_number)
+      pinned_rows = []
+      unpinned_rows = rows
+
+      if pinned_post_ids.present?
+        pinned_set = pinned_post_ids.to_set
+        pinned_rows, unpinned_rows = rows.partition { |id, _| pinned_set.include?(id) }
+        pinned_rows.sort_by! { |id, _| pinned_post_ids.index(id) }
+        rows = pinned_rows + unpinned_rows
+      end
+
+      page_by_id = {}
+      pinned_rows.each { |id, _| page_by_id[id] = 0 }
+      unpinned_rows.each_with_index { |(id, _), index| page_by_id[id] = index / ROOTS_PER_PAGE }
+      descendant_counts = total_descendant_counts(rows.map(&:first))
+
+      result[:entries] = rows.map do |id, post_number|
+        {
+          post_number: post_number,
+          total_descendant_count: descendant_counts[id] || 0,
+          page: page_by_id[id] || 0,
+        }
+      end
+      result
     end
 
     def total_descendant_counts(post_ids)

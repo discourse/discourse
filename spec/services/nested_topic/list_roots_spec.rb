@@ -94,6 +94,114 @@ RSpec.describe NestedTopic::ListRoots do
       end
     end
 
+    context "with root_summary" do
+      it "is omitted on page 1+" do
+        result =
+          described_class.call(
+            params: {
+              sort: "top",
+              page: 1,
+            },
+            guardian: user.guardian,
+            topic_view: topic_view,
+          )
+        expect(result[:response]).not_to have_key(:root_summary)
+      end
+
+      it "includes page_size so the client can compute target pages" do
+        summary = result[:response][:root_summary]
+        expect(summary[:page_size]).to eq(NestedReplies::TreeLoader::ROOTS_PER_PAGE)
+      end
+
+      it "includes page_count for compact summaries" do
+        summary = result[:response][:root_summary]
+        expect(summary[:page_count]).to eq(0)
+      end
+
+      it "includes pinned_count so the client can offset position math" do
+        root_a = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        Fabricate(:nested_topic, topic: topic).update!(pinned_post_ids: [root_a.id])
+
+        summary = result[:response][:root_summary]
+        expect(summary[:pinned_count]).to eq(1)
+      end
+
+      it "reports pinned_count as 0 when nothing is pinned" do
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        summary = result[:response][:root_summary]
+        expect(summary[:pinned_count]).to eq(0)
+      end
+
+      it "includes entries with descendant counts when under the threshold" do
+        root_a = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        root_b = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root_a.post_number)
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root_a.post_number)
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root_b.post_number)
+
+        summary = result[:response][:root_summary]
+        expect(summary[:total]).to eq(2)
+        expect(summary[:entries].length).to eq(2)
+
+        by_post_number = summary[:entries].index_by { |e| e[:post_number] }
+        expect(by_post_number[root_a.post_number][:total_descendant_count]).to eq(2)
+        expect(by_post_number[root_b.post_number][:total_descendant_count]).to eq(1)
+      end
+
+      it "omits entries when over the threshold" do
+        3.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1) }
+
+        stub_const(NestedReplies::TreeLoader, :ROOT_SUMMARY_THRESHOLD, 2) do
+          summary = result[:response][:root_summary]
+          expect(summary[:total]).to eq(3)
+          expect(summary).not_to have_key(:entries)
+        end
+      end
+
+      it "includes entries exactly at the threshold" do
+        2.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1) }
+
+        stub_const(NestedReplies::TreeLoader, :ROOT_SUMMARY_THRESHOLD, 2) do
+          summary = result[:response][:root_summary]
+          expect(summary[:total]).to eq(2)
+          expect(summary[:entries].length).to eq(2)
+        end
+      end
+
+      it "promotes pinned roots to the front without duplicating them" do
+        root_a = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        root_b = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        root_c = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        Fabricate(:nested_topic, topic: topic).update!(pinned_post_ids: [root_c.id, root_a.id])
+
+        entries = result[:response][:root_summary][:entries]
+        post_numbers = entries.map { |e| e[:post_number] }
+        expect(post_numbers.length).to eq(3)
+        expect(post_numbers.uniq).to eq(post_numbers)
+        expect(post_numbers.first(2)).to eq([root_c.post_number, root_a.post_number])
+        expect(post_numbers.last).to eq(root_b.post_number)
+      end
+
+      it "includes server pages after pinned roots shift entry indexes" do
+        root_a = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        root_b = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        pinned_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        Fabricate(:nested_topic, topic: topic).update!(pinned_post_ids: [pinned_root.id])
+
+        stub_const(NestedReplies::TreeLoader, :ROOTS_PER_PAGE, 2) do
+          entries = result[:response][:root_summary][:entries]
+          by_post_number = entries.index_by { |entry| entry[:post_number] }
+
+          expect(entries.map { |entry| entry[:post_number] }).to eq(
+            [pinned_root.post_number, root_a.post_number, root_b.post_number],
+          )
+          expect(by_post_number[pinned_root.post_number][:page]).to eq(0)
+          expect(by_post_number[root_b.post_number][:page]).to eq(0)
+        end
+      end
+    end
+
     context "when there are pinned roots on page 1" do
       let(:params) { { sort: "top", page: 1 } }
 
