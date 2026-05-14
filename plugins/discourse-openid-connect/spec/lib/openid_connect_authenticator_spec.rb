@@ -149,6 +149,60 @@ describe OpenIDConnectAuthenticator do
     end
   end
 
+  describe "user field syncing" do
+    fab!(:user_field)
+
+    it "leaves user_field_values empty when no mappings are configured" do
+      result = authenticator.after_authenticate(hash)
+      expect(result.user_field_values).to eq({})
+    end
+
+    context "with a mapping configured" do
+      before do
+        SiteSetting.openid_connect_user_field_mappings = [
+          { "claim" => "department", "user_field_id" => user_field.id },
+        ].to_json
+      end
+
+      it "pulls the value from raw_info" do
+        hash[:extra][:raw_info][:department] = "Engineering"
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "Engineering")
+      end
+
+      it "falls back to id_token_info when the claim is missing from raw_info" do
+        hash[:extra][:id_token_info] = { "department" => "Engineering" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "Engineering")
+      end
+
+      it "joins array values with commas" do
+        hash[:extra][:raw_info][:department] = %w[Eng Ops]
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "Eng,Ops")
+      end
+
+      it "skips mappings whose claim is missing entirely" do
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq({})
+      end
+
+      it "clears the field when raw_info has the claim set to an empty string" do
+        hash[:extra][:raw_info][:department] = ""
+        hash[:extra][:id_token_info] = { "department" => "Engineering" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "")
+      end
+
+      it "clears the field when raw_info has the claim set to null" do
+        hash[:extra][:raw_info][:department] = nil
+        hash[:extra][:id_token_info] = { "department" => "Engineering" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "")
+      end
+    end
+  end
+
   describe "discovery document fetching" do
     let(:document_url) do
       SiteSetting.openid_connect_discovery_document =
