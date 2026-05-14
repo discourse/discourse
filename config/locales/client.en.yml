@@ -5428,6 +5428,13 @@ en:
       search_ctrl_f_tip: "To search across this entire forum, press <kbd>/</kbd>"
       description_header: "Description"
       key_header: "Key"
+      search_aliases:
+        shift: "shift"
+        alt: "alt option"
+        meta: "meta cmd command win windows super"
+        ctrl: "ctrl control"
+        enter: "enter return"
+        esc: "esc escape"
       jump_to:
         title: "Jump To"
         home: "%{shortcut} Home"

@@ -29,18 +29,19 @@ const translationForExtraShortcuts = {
 };
 
 const SEARCH_ALIASES = new Map();
-function addSearchAlias(key, alias) {
+function addSearchAlias(key, aliasKey) {
   // Some platforms render distinct keys (e.g. Meta and Ctrl) with the same
   // string. Merge aliases so both semantic names remain searchable.
+  const alias = i18n(`${KEY}.search_aliases.${aliasKey}`);
   const existing = SEARCH_ALIASES.get(key);
   SEARCH_ALIASES.set(key, existing ? `${existing} ${alias}` : alias);
 }
 addSearchAlias(SHIFT, "shift");
-addSearchAlias(ALT, "alt option");
-addSearchAlias(META, "meta cmd command win windows super");
-addSearchAlias(CTRL, "ctrl control");
-addSearchAlias(ENTER, "enter return");
-addSearchAlias(ESC, "esc escape");
+addSearchAlias(ALT, "alt");
+addSearchAlias(META, "meta");
+addSearchAlias(CTRL, "ctrl");
+addSearchAlias(ENTER, "enter");
+addSearchAlias(ESC, "esc");
 
 function buildHTML(keys1, keys2, shortcutsDelimiter) {
   const allKeys = [keys1, keys2]
