@@ -355,7 +355,7 @@ describe AdPlugin::HouseAd do
   end
 
   describe "destroying with associated impressions" do
-    fab!(:ad) { AdPlugin::HouseAd.create!(valid_attrs) }
+    fab!(:ad, :house_ad)
 
     it "has no impression destroy hooks that dependent: :delete_all would skip" do
       dependent_associations =
