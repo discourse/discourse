@@ -4,34 +4,10 @@ import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
 
-const SESSION_KEY_FLOW_STATE = "discourse:embed:auth-flow-state";
-const SESSION_KEY_INTENT = "discourse:embed:auth-flow-intent";
-const STATE_POST_STORAGE_ACCESS = "post-storage-access";
 const SESSION_POLL_INTERVAL_MS = 3000;
 const SESSION_POLL_MAX_MS = 5 * 60 * 1000;
 
-function readSessionFlag(key) {
-  try {
-    return sessionStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-
-function writeSessionFlag(key, value) {
-  try {
-    sessionStorage.setItem(key, value);
-  } catch {}
-}
-
-function clearSessionFlag(key) {
-  try {
-    sessionStorage.removeItem(key);
-  } catch {}
-}
-
 export default class EmbedAuthFlow extends Service {
-  @service currentUser;
   @service modal;
   @service siteSettings;
 
@@ -39,11 +15,6 @@ export default class EmbedAuthFlow extends Service {
   _pollTimer = null;
   _pollStartedAt = null;
   _pollInFlight = false;
-
-  init() {
-    super.init(...arguments);
-    this._handlePostReload();
-  }
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -115,12 +86,11 @@ export default class EmbedAuthFlow extends Service {
           document
             .requestStorageAccess()
             .then(() => {
-              writeSessionFlag(
-                SESSION_KEY_FLOW_STATE,
-                STATE_POST_STORAGE_ACCESS
-              );
-              writeSessionFlag(SESSION_KEY_INTENT, intent);
-              window.location.reload();
+              // We have storage access right now; chain straight into the
+              // sign-in modal. Reloading would put the iframe back in
+              // partitioned mode in most browsers, losing the access we
+              // just got.
+              this._promptForSignin(intent);
             })
             .catch(() => {
               // Storage access was denied; the iframe cannot access the
@@ -229,28 +199,5 @@ export default class EmbedAuthFlow extends Service {
     // persists across iframe reload, so reloading is enough to pick up the
     // session cookie that the popup just established first-party.
     window.location.reload();
-  }
-
-  _handlePostReload() {
-    if (!this.isActive) {
-      return;
-    }
-
-    const state = readSessionFlag(SESSION_KEY_FLOW_STATE);
-    if (state !== STATE_POST_STORAGE_ACCESS) {
-      return;
-    }
-
-    const intent = readSessionFlag(SESSION_KEY_INTENT) ?? "login";
-    clearSessionFlag(SESSION_KEY_FLOW_STATE);
-    clearSessionFlag(SESSION_KEY_INTENT);
-
-    if (this.currentUser) {
-      return;
-    }
-
-    // Storage access was granted but no session was found — guide them to
-    // sign in or sign up depending on the original intent.
-    this._promptForSignin(intent);
   }
 }

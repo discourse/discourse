@@ -3,14 +3,8 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import EmbedAuthFlowModal from "discourse/components/modal/embed-auth-flow";
 import EmbedMode from "discourse/lib/embed-mode";
-import { logIn } from "discourse/tests/helpers/qunit-helpers";
-
-const SESSION_KEY = "discourse:embed:auth-flow-state";
-const SESSION_KEY_INTENT = "discourse:embed:auth-flow-intent";
 
 function buildService(owner) {
-  // Re-look up so a fresh instance runs `init` after we have set
-  // EmbedMode.enabled and the site setting.
   owner.unregister("service:embed-auth-flow");
   return owner.lookup("service:embed-auth-flow");
 }
@@ -34,9 +28,6 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
     EmbedMode.enabled = true;
     this.siteSettings.embed_full_app_signin_flow = true;
 
-    sessionStorage.removeItem(SESSION_KEY);
-    sessionStorage.removeItem(SESSION_KEY_INTENT);
-
     this.modalShow = sinon.stub(this.modalService, "show");
     this.windowOpen = sinon
       .stub(window, "open")
@@ -45,8 +36,6 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
 
   hooks.afterEach(function () {
     EmbedMode.enabled = this.originalEmbedMode;
-    sessionStorage.removeItem(SESSION_KEY);
-    sessionStorage.removeItem(SESSION_KEY_INTENT);
   });
 
   test("isActive requires embed mode and the site setting", function (assert) {
@@ -136,10 +125,34 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
       1,
       "no second modal after denial — user retries on next click"
     );
+  });
+
+  test("storage access grant chains into the sign-in modal", async function (assert) {
+    sinon.stub(document, "hasStorageAccess").resolves(false);
+    sinon.stub(document, "requestStorageAccess").resolves();
+
+    const service = buildService(this.owner);
+    await service.requestAccess({ intent: "signup" });
+
     assert.strictEqual(
-      sessionStorage.getItem(SESSION_KEY),
-      null,
-      "no post-reload state was persisted"
+      modalKind(this.modalShow),
+      "storage-access",
+      "starts with the storage-access prompt"
+    );
+
+    modalOnConfirm(this.modalShow)();
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    assert.strictEqual(
+      this.modalShow.callCount,
+      2,
+      "shows the sign-in modal once access is granted"
+    );
+    assert.strictEqual(
+      modalKind(this.modalShow, 1),
+      "signin",
+      "chains directly into sign-in without reloading"
     );
   });
 
@@ -157,68 +170,6 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
     assert.true(
       url.includes("embed_signin_callback=1"),
       "appends callback flag"
-    );
-  });
-
-  test("post-reload state with session shows nothing", function (assert) {
-    logIn(this.owner);
-    sessionStorage.setItem(SESSION_KEY, "post-storage-access");
-
-    buildService(this.owner);
-
-    assert.true(this.modalShow.notCalled, "no prompt for logged-in user");
-    assert.strictEqual(
-      sessionStorage.getItem(SESSION_KEY),
-      null,
-      "flag is cleared"
-    );
-  });
-
-  test("post-reload state without session prompts for sign-in", function (assert) {
-    sessionStorage.setItem(SESSION_KEY, "post-storage-access");
-
-    buildService(this.owner);
-
-    assert.strictEqual(modalKind(this.modalShow), "signin");
-    assert.strictEqual(
-      sessionStorage.getItem(SESSION_KEY),
-      null,
-      "flag is cleared"
-    );
-  });
-
-  test("post-reload preserves signup intent across reload", function (assert) {
-    sessionStorage.setItem(SESSION_KEY, "post-storage-access");
-    sessionStorage.setItem(SESSION_KEY_INTENT, "signup");
-
-    buildService(this.owner);
-
-    assert.strictEqual(modalKind(this.modalShow), "signin");
-    modalOnConfirm(this.modalShow)();
-
-    assert.true(this.windowOpen.calledOnce, "popup opened");
-    assert.true(
-      this.windowOpen.firstCall.args[0].includes("/signup"),
-      "uses /signup path, preserving original intent"
-    );
-    assert.strictEqual(
-      sessionStorage.getItem(SESSION_KEY_INTENT),
-      null,
-      "intent flag is cleared"
-    );
-  });
-
-  test("post-reload handler is skipped when inactive", function (assert) {
-    sessionStorage.setItem(SESSION_KEY, "post-storage-access");
-    EmbedMode.enabled = false;
-
-    buildService(this.owner);
-
-    assert.true(this.modalShow.notCalled, "no prompt when inactive");
-    assert.strictEqual(
-      sessionStorage.getItem(SESSION_KEY),
-      "post-storage-access",
-      "flag is not cleared so the active session can act on it later"
     );
   });
 });
