@@ -222,7 +222,6 @@ en:
           pick_block: "Pick a block"
           cancel: "Cancel"
           delete_tile: "Remove this tile"
-          drag_tile: "Drag to move this tile"
           resize_tile: "Drag to resize this tile"
         breadcrumb_label: "Selected block breadcrumb"
         toolbar:
