@@ -90,7 +90,7 @@ async function loadThemeFromModulePreload(link) {
     // eslint-disable-next-line no-console
     console.error(
       `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
-      String(error)
+      window.Testem ? String(error) : error
     );
 
     if (DEBUG && (isRailsTesting() || isTesting())) {
