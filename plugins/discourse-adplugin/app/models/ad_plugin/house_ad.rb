@@ -12,11 +12,6 @@ module AdPlugin
     JAVASCRIPT_PROTOCOL_RE = /\Ajavascript:/i
     PROTOCOL_SEPARATOR_RE = /[\x00-\x20\x7f-\xa0]+/n
 
-    # delete_all (single DELETE) rather than :destroy (per-row instantiation)
-    # because AdImpression has no destroy callbacks and a single ad can
-    # accumulate hundreds of thousands of impressions. The FK already has
-    # ON DELETE CASCADE on the DB side; this just keeps the cleanup
-    # explicit on the Rails side and matches the pattern used for :routes.
     has_many :impressions,
              class_name: "AdPlugin::AdImpression",
              foreign_key: "ad_plugin_house_ad_id",

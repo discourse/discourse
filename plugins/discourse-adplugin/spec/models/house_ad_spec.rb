@@ -355,9 +355,9 @@ describe AdPlugin::HouseAd do
   end
 
   describe "destroying with associated impressions" do
-    let!(:ad) { AdPlugin::HouseAd.create!(valid_attrs) }
+    fab!(:ad) { AdPlugin::HouseAd.create!(valid_attrs) }
 
-    it "does not bypass impression destroy callbacks or dependent cleanup" do
+    it "has no impression destroy hooks that dependent: :delete_all would skip" do
       dependent_associations =
         AdPlugin::AdImpression.reflect_on_all_associations.select do |reflection|
           reflection.options[:dependent].present?
@@ -367,20 +367,17 @@ describe AdPlugin::HouseAd do
       expect(dependent_associations.map(&:name)).to be_empty
     end
 
-    it "deletes impressions when the ad is destroyed" do
-      Fabricate(:anonymous_house_ad_impression, house_ad: ad)
-      Fabricate(:anonymous_house_ad_impression, house_ad: ad)
-
-      expect { ad.destroy }.to change { AdPlugin::AdImpression.count }.by(-2)
-    end
-
-    it "deletes impressions in a single DELETE rather than per-row" do
+    it "deletes impressions in a single DELETE when the ad is destroyed" do
       3.times { Fabricate(:anonymous_house_ad_impression, house_ad: ad) }
 
-      delete_queries =
-        track_sql_queries { ad.destroy }.select do |sql|
-          sql.match?(/DELETE FROM ["']?ad_plugin_impressions["']?/i)
-        end
+      delete_queries = nil
+
+      expect do
+        delete_queries =
+          track_sql_queries { ad.destroy }.select do |sql|
+            sql.match?(/DELETE FROM ["']?ad_plugin_impressions["']?/i)
+          end
+      end.to change { AdPlugin::AdImpression.count }.by(-3)
 
       expect(delete_queries.size).to eq(1)
     end
