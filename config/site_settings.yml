@@ -3363,7 +3363,7 @@ embedding:
     client: true
     area: "embedding"
   embed_full_app_signin_flow:
-    default: false
+    default: true
     client: true
     area: "embedding"
   suppress_third_party_analytics_in_embed:
