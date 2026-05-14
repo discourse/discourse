@@ -313,12 +313,6 @@ export default class ComposerContainer extends Component {
                       class="title-and-category
                         {{if this.composer.isPreviewVisible 'with-preview'}}"
                     >
-                      <ComposerTitle
-                        @composer={{this.composer.model}}
-                        @lastValidatedAt={{this.composer.lastValidatedAt}}
-                        @focusTarget={{this.composer.focusTarget}}
-                      />
-
                       {{#if this.composer.model.showCategoryChooser}}
                         <div class="category-input">
                           <CategoryChooser
@@ -352,6 +346,7 @@ export default class ComposerContainer extends Component {
                               disabled=this.composer.disableTagsChooser
                               categoryId=this.composer.model.categoryId
                               minimum=this.composer.model.minimumRequiredTags
+                              icon="tag"
                             }}
                           />
                           <PluginOutlet
@@ -376,6 +371,12 @@ export default class ComposerContainer extends Component {
                         }}
                       />
                     </div>
+
+                    <ComposerTitle
+                      @composer={{this.composer.model}}
+                      @lastValidatedAt={{this.composer.lastValidatedAt}}
+                      @focusTarget={{this.composer.focusTarget}}
+                    />
                   {{/if}}
 
                   <span>

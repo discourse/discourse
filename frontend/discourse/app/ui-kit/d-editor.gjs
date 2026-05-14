@@ -789,6 +789,30 @@ export default class DEditor extends Component {
             {{if this.disabled 'disabled'}}
             {{if this.isEditorFocused 'in-focus'}}"
         >
+          <DConditionalLoadingSpinner @condition={{this.loading}} />
+          <this.editorComponent
+            @class="d-editor-input"
+            @onSetup={{this.setupEditor}}
+            @markdownOptions={{this.markdownOptions}}
+            @keymap={{this.keymap}}
+            @value={{this.value}}
+            @placeholder={{@placeholder}}
+            @disabled={{this.disabled}}
+            @change={{this.onChange}}
+            @focusIn={{this.handleFocusIn}}
+            @focusOut={{this.handleFocusOut}}
+            @categoryId={{@categoryId}}
+            @topicId={{@topicId}}
+            @id={{this.textAreaId}}
+            @replaceToolbar={{this.replaceToolbar}}
+            @toggleRichEditor={{this.toggleRichEditor}}
+          />
+          <DPopupInputTip @validation={{this.validation}} />
+          <PluginOutlet
+            @name="after-d-editor"
+            @connectorTagName="div"
+            @outletArgs={{this.outletArgs}}
+          />
 
           {{#if this.replacedToolbarInstance}}
             <ToolbarScrollContainer @class="--replaced-toolbar">
@@ -824,31 +848,6 @@ export default class DEditor extends Component {
               />
             </ToolbarScrollContainer>
           {{/if}}
-
-          <DConditionalLoadingSpinner @condition={{this.loading}} />
-          <this.editorComponent
-            @class="d-editor-input"
-            @onSetup={{this.setupEditor}}
-            @markdownOptions={{this.markdownOptions}}
-            @keymap={{this.keymap}}
-            @value={{this.value}}
-            @placeholder={{@placeholder}}
-            @disabled={{this.disabled}}
-            @change={{this.onChange}}
-            @focusIn={{this.handleFocusIn}}
-            @focusOut={{this.handleFocusOut}}
-            @categoryId={{@categoryId}}
-            @topicId={{@topicId}}
-            @id={{this.textAreaId}}
-            @replaceToolbar={{this.replaceToolbar}}
-            @toggleRichEditor={{this.toggleRichEditor}}
-          />
-          <DPopupInputTip @validation={{this.validation}} />
-          <PluginOutlet
-            @name="after-d-editor"
-            @connectorTagName="div"
-            @outletArgs={{this.outletArgs}}
-          />
         </div>
       </div>
 
