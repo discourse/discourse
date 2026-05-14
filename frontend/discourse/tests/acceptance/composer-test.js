@@ -846,7 +846,9 @@ acceptance(`Composer`, function (needs) {
         await click(".composer-actions-trigger");
         assert
           .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
-          .exists("composer topic context is preserved when reopened");
+          .doesNotExist(
+            "stale topic context is cleared when opening a fresh new-topic composer"
+          );
 
         await click("[data-action-id='create_private_message']");
         assert

@@ -15,6 +15,7 @@ import {
   EDIT_SHARED_DRAFT,
   REPLY,
 } from "discourse/models/composer";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const TITLES = {
@@ -147,6 +148,19 @@ export default class ComposerActionTitle extends Component {
         @post={{this.model.post}}
         @options={{hash mobilePlacementStrategy="fixed"}}
       />
+
+      {{#if this.replyTargetSegment}}
+        {{#if this.canEditReplyTo}}
+          <DButton
+            @action={{this.openChangeReplyToModal}}
+            @title="composer.change_reply_to.open"
+            @translatedLabel={{this.replyTargetSegment}}
+            class="composer-edit-reply-to btn-default"
+          />
+        {{else}}
+          {{this.replyTargetSegment}}
+        {{/if}}
+      {{/if}}
 
     </div>
   </template>

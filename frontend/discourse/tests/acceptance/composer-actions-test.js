@@ -336,8 +336,11 @@ acceptance(`Composer Actions`, function (needs) {
     await click("article#post_1 button.edit");
     await composerActions.expand();
 
-    assert.strictEqual(composerActions.rows().length, 1);
-    assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
+    assert.strictEqual(
+      composerActions.rows().length,
+      0,
+      "no switch actions are offered while editing a post"
+    );
   });
 
   test("trigger shows correct icon for reply mode", async function (assert) {

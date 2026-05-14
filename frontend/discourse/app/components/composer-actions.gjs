@@ -274,6 +274,25 @@ export default class ComposerActions extends Component {
 
     // === CREATE_TOPIC MODE ACTIONS ===
 
+    // 2b. Reply to Post (when in CREATE_TOPIC mode with a remembered post)
+    if (
+      currentAction === CREATE_TOPIC &&
+      !this.isEditing &&
+      _postSnapshot &&
+      _topicSnapshot
+    ) {
+      const actionObj = {
+        name: i18n("composer.composer_actions.reply_to_post.label", {
+          postUsername: _postSnapshot.username || "User",
+        }),
+        description: i18n("composer.composer_actions.reply_to_post.desc"),
+        icon: "share",
+        id: "reply_to_post",
+      };
+
+      items.push(actionObj);
+    }
+
     // 3. Reply to Topic (when in CREATE_TOPIC mode, allow going back to REPLY)
     if (currentAction === CREATE_TOPIC && !this.isEditing && _topicSnapshot) {
       const actionObj = {
@@ -514,7 +533,7 @@ export default class ComposerActions extends Component {
               </dropdown.item>
             {{/each}}
             {{#unless data.actions.length}}
-              <div class="composer-actions-empty">
+              <div class="composer-actions-btn">
                 No actions available
               </div>
             {{/unless}}
