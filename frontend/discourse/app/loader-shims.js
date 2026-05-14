@@ -121,14 +121,33 @@ loaderShim("xss", () => importSync("xss"));
 loaderShim("ember-this-fallback/deprecations-helper", () =>
   importSync("./lib/ember-this-fallback-deprecation-helper")
 );
+loaderShim("pretty-text/allow-lister", () =>
+  importSync("pretty-text/allow-lister")
+);
+loaderShim("pretty-text/censored-words", () =>
+  importSync("pretty-text/censored-words")
+);
+loaderShim("pretty-text/emoji", () => importSync("pretty-text/emoji"));
+loaderShim("pretty-text/emoji/data", () =>
+  importSync("pretty-text/emoji/data")
+);
+loaderShim("pretty-text/emoji/version", () =>
+  importSync("pretty-text/emoji/version")
+);
+loaderShim("pretty-text/guid", () => importSync("pretty-text/guid"));
+loaderShim("pretty-text/inline-oneboxer", () =>
+  importSync("pretty-text/inline-oneboxer")
+);
+loaderShim("pretty-text/oneboxer", () => importSync("pretty-text/oneboxer"));
 loaderShim("pretty-text/pretty-text", () =>
   importSync("pretty-text/pretty-text")
 );
 loaderShim("pretty-text/sanitizer", () => importSync("pretty-text/sanitizer"));
-loaderShim("pretty-text/guid", () => importSync("pretty-text/guid"));
-loaderShim("pretty-text/emoji", () => importSync("pretty-text/emoji"));
-loaderShim("pretty-text/emoji/data", () =>
-  importSync("pretty-text/emoji/data")
+loaderShim("pretty-text/text-replace", () =>
+  importSync("pretty-text/text-replace")
+);
+loaderShim("pretty-text/upload-short-url", () =>
+  importSync("pretty-text/upload-short-url")
 );
 loaderShim("@ember-decorators/component", () =>
   importSync("@ember-decorators/component")
