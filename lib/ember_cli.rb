@@ -32,7 +32,6 @@ class EmberCli < ActiveSupport::CurrentAttributes
     return {} if manifest.nil?
 
     manifest.each do |key, value|
-      next unless value["isEntry"]
       entrypoints[key.delete_suffix(".js")] = [
         value["file"].delete_prefix("assets/").delete_suffix(".js"),
       ]

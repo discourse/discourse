@@ -184,7 +184,10 @@ export function buildConfig({ devMode } = {}) {
           const manifest = {};
 
           for (const [fileName, chunk] of Object.entries(bundle)) {
-            if (chunk.type === "chunk" && chunk.isEntry) {
+            if (
+              chunk.type === "chunk" &&
+              (chunk.isEntry || chunk.name === "admin-compat-modules")
+            ) {
               manifest[`${chunk.name}.js`] = {
                 file: fileName,
                 name: chunk.name,
