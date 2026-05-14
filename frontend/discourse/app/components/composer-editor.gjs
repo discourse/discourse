@@ -949,7 +949,7 @@ export default class ComposerEditor extends Component {
     toolbar.addButton({
       id: "options",
       group: "extras",
-      icon: "circle-plus",
+      icon: "discourse-circle-plus",
       title: "composer.options",
       sendAction: this.onExpandPopupMenuOptions.bind(this),
       popupMenu: {
@@ -1164,6 +1164,7 @@ export default class ComposerEditor extends Component {
         @replyingToUserId={{this.composer.replyingToUserId}}
         @onSetup={{this.setupEditor}}
         @disableSubmit={{this.composer.disableSubmit}}
+        @toolbarPortalTarget={{this.toolbarPortalTarget}}
         {{didInsert this._composerEditorInitEditor}}
         {{willDestroy this._composerEditorDestroyEditor}}
         {{didInsert this._composerEditorInitPreview}}
