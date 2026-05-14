@@ -157,12 +157,7 @@ describe OAuth2BasicAuthenticator do
         end
 
         it "joins array values with commas" do
-          body = {
-            account: {
-              email: "newemail@example.com",
-              department: %w[Eng Ops],
-            },
-          }.to_json
+          body = { account: { email: "newemail@example.com", department: %w[Eng Ops] } }.to_json
           stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
 
           result = authenticator.after_authenticate(auth)
