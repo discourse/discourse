@@ -184,7 +184,7 @@ export function buildConfig({ devMode } = {}) {
           const manifest = {};
 
           for (const [fileName, chunk] of Object.entries(bundle)) {
-            if (chunk.type === "chunk") {
+            if (chunk.type === "chunk" && chunk.isEntry) {
               manifest[`${chunk.name}.js`] = {
                 file: fileName,
                 name: chunk.name,
