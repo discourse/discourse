@@ -64,7 +64,7 @@ export default class CreateTopicButton extends Component {
       this.transformerContext
     );
 
-    return concatClass(this.btnTypeClass, ...additionalClasses);
+    return dConcatClass(this.btnTypeClass, ...additionalClasses);
   }
 
   <template>
