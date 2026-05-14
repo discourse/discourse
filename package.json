@@ -12,7 +12,6 @@
     "@glint/tsserver-plugin": "^2.4.0",
     "@rdil/parallel-prettier": "^3.0.0",
     "@swc/core": "^1.15.33",
-    "chrome-remote-interface": "^0.34.0",
     "concurrently": "^9.2.1",
     "ember-template-lint": "7.9.3",
     "esbuild": "^0.28.0",
