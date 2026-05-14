@@ -15,8 +15,8 @@ on:
       - release/*
 
 concurrency:
-  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
-  cancel-in-progress: true
+  group: tests-${{ format('{0}-{1}-{2}', github.head_ref || github.run_number, github.job, github.sha) }}
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -67,23 +67,13 @@ jobs:
       matrix:
         include:
           - target: core
-            build_type: backend
-          - target: core
-            build_type: frontend
-          - target: core
             build_type: system
-          - target: plugins
-            build_type: backend
-          - target: plugins
-            build_type: frontend
           - target: core-plugins
             build_type: system
           - target: chat
             build_type: system
           - target: official-plugins
             build_type: system
-          - target: themes
-            build_type: frontend
           - target: themes
             build_type: system
 
