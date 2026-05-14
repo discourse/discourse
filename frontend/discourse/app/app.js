@@ -22,7 +22,6 @@ import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.12";
 import { importSync } from "@embroider/macros";
-// import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
