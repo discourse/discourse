@@ -177,6 +177,22 @@ module("Integration | Component | CreateInvite", function (hooks) {
     );
   });
 
+  test("focuses the description field after expanding advanced options", async function (assert) {
+    const model = {};
+
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
+
+    await click(".edit-link-options");
+
+    assert
+      .dom("input[name='description']")
+      .isFocused(
+        "the description input receives focus when advanced options expand, so screen reader users land inside the form"
+      );
+  });
+
   test("the expiresAfterDays field", async function (assert) {
     const model = {};
     this.siteSettings.invite_expiry_days = 3;

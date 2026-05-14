@@ -807,6 +807,12 @@ html:not(.keyboard-visible).mobile-device {
   }
 }
 
+.create-invite-modal {
+  .edit-link-options {
+    text-align: left;
+  }
+}
+
 .wrap-attributes-modal {
   .wrap-modal__attribute-row {
     display: flex;
