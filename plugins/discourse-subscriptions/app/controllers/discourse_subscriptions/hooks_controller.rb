@@ -39,8 +39,14 @@ module DiscourseSubscriptions
           Rails.logger.warn("#{event[:type]} data: #{checkout_session}")
         end
 
+        user = trusted_checkout_session_user(checkout_session)
+
+        return render_json_error "user not found" if !user
+
         email = checkout_session[:customer_email]
         return render_json_error "email not found" if !email
+
+        return render_json_error "user not found" if !::User.find_by_username_or_email(email)
 
         if checkout_session[:customer].nil?
           customer = ::Stripe::Customer.create({ email: email }, stripe_request_opts)
@@ -50,12 +56,8 @@ module DiscourseSubscriptions
         end
 
         if SiteSetting.discourse_subscriptions_enable_verbose_logging
-          Rails.logger.warn("Looking up user with email: #{email}")
+          Rails.logger.warn("Processing checkout session for user: #{user.email} (id: #{user.id})")
         end
-
-        user = ::User.find_by_username_or_email(email)
-
-        return render_json_error "user not found" if !user
 
         discourse_customer = Customer.create(user_id: user.id, customer_id: customer_id)
 
@@ -134,6 +136,18 @@ module DiscourseSubscriptions
     end
 
     private
+
+    def trusted_checkout_session_user(checkout_session)
+      client_reference_id =
+        checkout_session[:client_reference_id] || checkout_session["client_reference_id"]
+
+      return if client_reference_id.blank?
+
+      ::User.find_signed(
+        client_reference_id,
+        purpose: DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_PURPOSE,
+      )
+    end
 
     def update_status(customer_id, subscription_id, status)
       discourse_subscription =
