@@ -9,9 +9,6 @@ const SESSION_KEY_INTENT = "discourse:embed:auth-flow-intent";
 const STATE_POST_STORAGE_ACCESS = "post-storage-access";
 const SESSION_POLL_INTERVAL_MS = 3000;
 const SESSION_POLL_MAX_MS = 5 * 60 * 1000;
-// Linger briefly after the popup closes to catch a sign-in that completed
-// just before close (race between cookie set and close), then give up.
-const POPUP_CLOSED_GRACE_MS = 5000;
 
 function readSessionFlag(key) {
   try {
@@ -41,7 +38,6 @@ export default class EmbedAuthFlow extends Service {
 
   _popup = null;
   _pollTimer = null;
-  _popupClosedAt = null;
   _pollStartedAt = null;
   _pollInFlight = false;
 
@@ -202,14 +198,6 @@ export default class EmbedAuthFlow extends Service {
       return;
     }
 
-    if (this._popup?.closed) {
-      this._popupClosedAt ??= Date.now();
-      if (Date.now() - this._popupClosedAt > POPUP_CLOSED_GRACE_MS) {
-        this._giveUpWaiting();
-        return;
-      }
-    }
-
     this._pollInFlight = true;
     try {
       await ajax("/session/current.json");
@@ -230,7 +218,6 @@ export default class EmbedAuthFlow extends Service {
       this._popup.close();
     }
     this._popup = null;
-    this._popupClosedAt = null;
     this._pollStartedAt = null;
   }
 
