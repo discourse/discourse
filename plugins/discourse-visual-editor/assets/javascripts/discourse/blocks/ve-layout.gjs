@@ -169,6 +169,15 @@ export default class VELayout extends Component {
         rowTemplate.length === 0 && rowHeight === "minmax(0, 1fr)";
       const minHeight = useFlexRows ? `min-height: ${rows * 80}px; ` : "";
 
+      // `padding: var(--visual-editor-container-margin)` compensates
+      // for the chrome's own outer margin, which adds visible
+      // breathing room OUTSIDE the chrome but has no equivalent
+      // INSIDE. Without it the gap between the layout's border and
+      // its cells reads 2px short of the gap between the layout
+      // chrome and its parent's border — the "unaccounted border"
+      // the cells lack. Using the container-margin variable keeps
+      // the two sides in sync if the spacing token ever changes.
+      //
       // `position: relative` anchors the editor's drop-preview overlay
       // (rendered inside the grid by `GridOverlay` and positioned with
       // absolute pixel coordinates for line-shape variants).
@@ -176,6 +185,7 @@ export default class VELayout extends Component {
         `display: grid; grid-template-columns: ${gridTemplateColumns}; ` +
           `grid-template-rows: ${gridTemplateRows}; ` +
           `gap: ${gap}rem; align-items: ${align}; ` +
+          `padding: var(--visual-editor-container-margin); ` +
           `position: relative; ` +
           minHeight +
           `transition: grid-template-columns 180ms ease, ` +

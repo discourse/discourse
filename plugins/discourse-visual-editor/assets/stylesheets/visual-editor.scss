@@ -20,6 +20,20 @@
   --visual-editor-badge-radius: 0 0 4px 0;
   --visual-editor-shadow: 1px 1px 2px rgb(0 0 0 / 0.5);
   --visual-editor-container-margin: 2px;
+  --visual-editor-container-padding: 2px;
+  --visual-editor-container-border-width: 1px;
+
+  /* Offset to slide an in-flow badge from its natural position
+     (inside the chrome's padding) onto the chrome's outline corner.
+     Used by both block and outlet badges so adjusting padding / border
+     in one place re-aligns every badge. */
+  --visual-editor-badge-offset: calc(
+    -1 *
+      (
+        var(--visual-editor-container-padding) +
+          var(--visual-editor-container-border-width)
+      )
+  );
 }
 
 /* Entry pill */
@@ -51,9 +65,10 @@ body.visual-editor-active {
   .visual-editor-block-chrome {
     position: relative;
     margin: var(--visual-editor-container-margin);
-    border: 1px dotted var(--visual-editor-block-color);
+    border: var(--visual-editor-container-border-width) dotted
+      var(--visual-editor-block-color);
     background: rgb(217 119 6 / var(--visual-editor-bg-opacity));
-    padding: 2px;
+    padding: var(--visual-editor-container-padding);
 
     &.--container {
       /* containers stay dotted — same treatment as leaves */
@@ -168,14 +183,25 @@ body.visual-editor-active {
   }
 
   /* Block handle (corner badge) — also the drag source.
-     The handle is rendered always (so the modifier registration is stable)
-     but visually hidden until the chrome is hovered or selected. We
-     toggle via opacity, not display, to avoid layout shifts on hover. */
+     The handle is rendered always and stays visible at every nesting
+     level, mirroring core's dev-tools overlay (`.block-debug-badge`).
+     A previous version opacity-hid it until hover/select; that left the
+     canvas missing the full block cascade dev-tools shows.
+
+     The badge sits IN FLOW (position: relative) so the wrapped block's
+     content naturally falls below the badge — no overlap. The negative
+     `top` / `left` shift the badge visually onto the chrome's
+     border-box corner (the chrome's `padding: 2px` + `border: 1px`
+     pull the badge 3px inside the corner by default; -3px cancels
+     that). Dev-tools gets away with absolute positioning because its
+     blocks have natural content margins, but the editor's grid cells
+     pack content tight against the border, so an absolute badge ends
+     up on top of the wrapped block. */
 
   .visual-editor-block-handle {
-    position: absolute;
-    top: -1px;
-    left: -1px;
+    position: relative;
+    top: var(--visual-editor-badge-offset);
+    left: var(--visual-editor-badge-offset);
     z-index: 1000;
     display: inline-flex;
     align-items: center;
@@ -189,8 +215,10 @@ body.visual-editor-active {
     text-shadow: var(--visual-editor-shadow);
     pointer-events: auto;
     cursor: grab;
-    opacity: 0;
-    transition: opacity 80ms ease-out;
+
+    &:hover {
+      background: var(--visual-editor-block-hover-color);
+    }
 
     &:active {
       cursor: grabbing;
@@ -219,13 +247,6 @@ body.visual-editor-active {
         color: var(--danger-low);
       }
     }
-  }
-
-  .visual-editor-block-chrome:hover > .visual-editor-block-handle,
-  .visual-editor-block-chrome.--selected > .visual-editor-block-handle,
-  .visual-editor-transparent-slot:hover > .visual-editor-block-handle,
-  .visual-editor-transparent-slot.--selected > .visual-editor-block-handle {
-    opacity: 1;
   }
 
   /* Drop zones for drag-and-drop reordering. Always present in layout
@@ -385,9 +406,10 @@ body.visual-editor-active {
   .visual-editor-outlet-boundary {
     position: relative;
     margin: var(--visual-editor-container-margin);
-    border: 1px dashed var(--visual-editor-block-outlet-color);
+    border: var(--visual-editor-container-border-width) dashed
+      var(--visual-editor-block-outlet-color);
     background: rgb(245 158 11 / var(--visual-editor-bg-opacity));
-    padding: 2px;
+    padding: var(--visual-editor-container-padding);
     min-height: 20px;
   }
 
@@ -431,9 +453,9 @@ body.visual-editor-active {
   }
 
   .visual-editor-outlet-boundary__badge {
-    position: absolute;
-    top: -1px;
-    left: -1px;
+    position: relative;
+    top: var(--visual-editor-badge-offset);
+    left: var(--visual-editor-badge-offset);
     z-index: 1000;
     display: inline-flex;
     align-items: center;
@@ -1125,10 +1147,15 @@ body.visual-editor-active {
        inner block's chrome (which is content-height and would draw a
        border smaller than the cell). Border treatment matches the
        standard block chrome (dotted amber, solid on selection) so cells
-       in a free-grid read consistently with everything else. */
-    border: 1px dotted var(--visual-editor-block-color);
+       in a free-grid read consistently with everything else.
+
+       Padding and border use the same variables as the other chrome
+       boxes so the cell insets and badge offset stay in sync. */
+    border: var(--visual-editor-container-border-width) dotted
+      var(--visual-editor-block-color);
     border-radius: 3px;
     background: rgb(217 119 6 / var(--visual-editor-bg-opacity));
+    padding: var(--visual-editor-container-padding);
     pointer-events: auto;
     transition:
       grid-column 140ms ease-out,
@@ -1191,9 +1218,13 @@ body.visual-editor-active {
     }
 
     /* The inner block's chrome inside a slot must NOT add its own
-       decoration — the slot wrapper IS the visible cell outline.
-       Hide border / background / handle so the only visible chrome
-       is the slot wrapper's, perfectly aligned to the grid cell. */
+       outline decoration — the slot wrapper IS the visible cell outline.
+       Hide border / background / box-shadow and zero out the spacing so
+       the only visible chrome around the cell is the slot wrapper's,
+       perfectly aligned to the grid cell. The inner chrome's badge
+       (`.visual-editor-block-handle`) is in flow so it sits as the
+       first row at the top of the chrome, with the wrapped block's
+       content below it. */
 
     .visual-editor-block-chrome {
       border: none !important;
@@ -1201,10 +1232,6 @@ body.visual-editor-active {
       box-shadow: none !important;
       padding: 0 !important;
       margin: 0 !important;
-    }
-
-    .visual-editor-block-chrome > .visual-editor-block-handle {
-      display: none;
     }
   }
 }
@@ -1222,10 +1249,6 @@ body.visual-editor-active
   border-style: solid;
   border-color: var(--primary-low);
   background: transparent;
-
-  .visual-editor-block-handle {
-    display: none;
-  }
 }
 
 /* Grid editor affordances (cells / tiles / ghost). Rendered INTO the

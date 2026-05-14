@@ -784,21 +784,6 @@ export default class BlockChrome extends Component {
               <span>{{i18n "visual_editor.canvas.overlap_label"}}</span>
             </span>
           {{/if}}
-
-          <span
-            class="visual-editor-block-handle"
-            title={{i18n "visual_editor.canvas.drag_handle_title"}}
-            {{dDragAndDropSource
-              kind="ve-block"
-              data=(hash blockKey=@blockKey outletName=@outletName)
-              dragImage=this._chromeEl
-              onDragStart=this.handleDragStart
-              onDragEnd=this.visualEditor.endDrag
-            }}
-          >
-            {{dIcon "grip-lines"}}
-            <span>{{i18n "visual_editor.canvas.grid_overlay.drag_tile"}}</span>
-          </span>
         {{/if}}
 
         <@WrappedComponent />
