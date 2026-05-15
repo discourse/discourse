@@ -514,9 +514,9 @@ en:
         action: "Select theme"
         modal_title: "Choose a theme"
         use_theme: "Use this theme"
-        currently_selected: "Currently selected"
+        enabled: "Enabled"
         theme_set: "%{theme} is now your default theme"
-        browse_all: "Browse all themes"
+        browse_all: "Manage themes"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
       invite_collaborators:
