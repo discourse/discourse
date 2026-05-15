@@ -1342,7 +1342,6 @@ body {
 
     @include viewport.until(sm) {
       flex-direction: column;
-      border-top: 1px solid var(--primary-low);
     }
 
     &__toolbar {
@@ -1353,6 +1352,8 @@ body {
         width: 100%;
         padding-inline: var(--space-2);
         box-sizing: border-box;
+        border-top: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--primary-low);
       }
     }
 
@@ -1363,6 +1364,10 @@ body {
     }
 
     .d-editor-button-bar {
+      @include viewport.until(sm) {
+        padding-inline: var(--space-2);
+      }
+
       &__scroll-btn {
         color: var(--primary-medium);
       }
@@ -1377,6 +1382,7 @@ body {
     .submit-panel {
       @include viewport.until(sm) {
         align-self: flex-end;
+        margin: 0 !important;
       }
     }
 
@@ -1388,7 +1394,7 @@ body {
   @include viewport.until(sm) {
     .reply-area {
       background: var(--secondary);
-      padding: 0 !important;
+      padding: 0 0 max(env(safe-area-inset-bottom), var(--space-2)) !important;
     }
 
     .reply-to {
