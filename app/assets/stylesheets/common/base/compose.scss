@@ -264,16 +264,6 @@ html.composer-open:not(.has-full-page-chat) {
       border-color: var(--input-border-color);
     }
 
-    @include viewport.until(sm) {
-      .composer-actions-trigger .d-button-label {
-        display: none;
-
-        + .d-icon {
-          margin-left: 0;
-        }
-      }
-    }
-
     .composer-action-title {
       display: flex;
       gap: var(--space-2);
@@ -589,15 +579,11 @@ html.composer-open:not(.has-full-page-chat) {
       flex: 1 1 auto;
     }
 
-    .btn-primary {
-      flex: 0 0 auto;
+    .d-combo-button-button .d-icon {
+      margin-right: 0.45em;
     }
 
-    .d-combo-button {
-      flex: 0 0 auto;
-    }
-
-    .cancel {
+    .d-c .cancel {
       align-items: center;
       display: flex;
       margin-left: 1em;

@@ -288,10 +288,7 @@ describe "Content Localization" do
         topic_page.click_post_action_button(post_3, :edit)
         expect(edit_localized_post_dialog).to be_open
         edit_localized_post_dialog.click_no
-        expect(page).to have_css(
-          ".composer-actions-trigger",
-          text: I18n.t("js.composer.translations.title"),
-        )
+        expect(page).to have_css(".action-title", text: I18n.t("js.composer.translations.title"))
       end
 
       it "does not open the fast editor for localized posts" do
@@ -741,6 +738,7 @@ describe "Content Localization" do
       translation_composer.select_locale("Japanese (日本語)")
       translation_composer.fill_content("著者のオリジナル投稿")
       translation_composer.create
+      expect(translation_composer).to be_closed
 
       sign_in(japanese_user)
       topic_page.visit_topic(topic)

@@ -39,6 +39,11 @@ module PageObjects
       end
 
       def open_composer_actions
+        find(".composer-action-title .btn").click
+        self
+      end
+
+      def open_composer_actions_new
         find(".composer-actions-trigger").click
         self
       end
@@ -118,33 +123,42 @@ module PageObjects
         composer_popup.has_content?(content)
       end
 
-      def has_no_action?(action_id)
+      def has_no_action?(action)
+        !actions.include?(action)
+      end
+
+      def has_no_action_id?(action_id)
         has_no_css?(".composer-actions-dropdown [data-action-id='#{action_id}']")
       end
 
-      def select_action(action_id)
+      def select_action(action)
+        find(action(action)).click
+        self
+      end
+
+      def select_action_by_id(action_id)
         find(".composer-actions-dropdown [data-action-id='#{action_id}']").click
         self
       end
 
       def reply_button_focused?
-        page.has_css?("#{@composer_id} .btn-primary.create:focus")
+        page.has_css?("#{@composer_id} .btn-primary:focus")
       end
 
       def create
-        find("#{@composer_id} .btn-primary.create").click
+        find("#{@composer_id} .btn-primary").click
       end
 
-      def action(action_id)
-        ".composer-actions-dropdown [data-action-id='#{action_id}']"
+      def action(action_title)
+        ".composer-action-title .select-kit-collection li[title='#{action_title}']"
       end
 
       def actions
-        all(".composer-actions-dropdown [data-action-id]").map { |el| el["data-action-id"] }
+        all(".composer-action-title .select-kit-collection li").map { |el| el[:title] }
       end
 
       def button_label
-        find("#{@composer_id} .btn-primary.create .d-button-label")
+        find("#{@composer_id} .btn-primary .d-button-label")
       end
 
       def emoji_picker

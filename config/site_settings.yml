@@ -4430,6 +4430,14 @@ experimental:
     upcoming_change:
       status: "beta"
       impact: "feature,all_members"
+  enable_new_composer_actions:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
     hidden: true

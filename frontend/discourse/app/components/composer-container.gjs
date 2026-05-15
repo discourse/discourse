@@ -273,6 +273,11 @@ export default class ComposerContainer extends Component {
                   />
 
                   {{#if this.site.desktopView}}
+                    {{#unless this.siteSettings.enable_new_composer_actions}}
+                      {{#if this.composer.model.unlistTopic}}
+                        <span class="unlist">({{i18n "composer.unlist"}})</span>
+                      {{/if}}
+                    {{/unless}}
                     {{#if this.composer.isWhispering}}
                       {{#if this.composer.model.noBump}}
                         <span class="no-bump">{{dIcon "anchor"}}</span>
@@ -449,10 +454,13 @@ export default class ComposerContainer extends Component {
 
               <div class="save-or-cancel">
                 {{#if
-                  (or
-                    this.canToggleWhisper
-                    this.composer.canToggleNoBump
-                    this.composer.canUnlistTopic
+                  (and
+                    this.siteSettings.enable_new_composer_actions
+                    (or
+                      this.canToggleWhisper
+                      this.composer.canToggleNoBump
+                      this.composer.canUnlistTopic
+                    )
                   )
                 }}
                   <DComboButton class="--has-menu" as |combo|>

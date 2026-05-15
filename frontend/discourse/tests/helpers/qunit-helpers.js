@@ -17,7 +17,7 @@ import sinon from "sinon";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
-import { _clearSnapshots } from "discourse/components/composer-actions";
+import { _clearSnapshots as _clearComposerActionsSnapshotsNew } from "discourse/components/composer-actions";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
@@ -95,6 +95,7 @@ import Site from "discourse/models/site";
 import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
+import { _clearSnapshots as _clearComposerActionsSnapshotsOld } from "discourse/select-kit/components/composer-actions";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import {
   clearDisabledDefaultKeyboardBindings,
@@ -231,7 +232,8 @@ export function testCleanup(container, app) {
   clearDisabledDefaultKeyboardBindings();
   clearNavItems();
   setTopicList(null);
-  _clearSnapshots();
+  _clearComposerActionsSnapshotsNew();
+  _clearComposerActionsSnapshotsOld();
   cleanUpComposerUploadHandler();
   cleanUpComposerUploadMarkdownResolver();
   cleanUpComposerUploadPreProcessor();

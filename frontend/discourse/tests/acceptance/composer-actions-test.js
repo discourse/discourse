@@ -13,33 +13,6 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
-function composerActionsDropdown() {
-  return {
-    async expand() {
-      await click(".composer-actions-trigger");
-    },
-    async selectRowByValue(value) {
-      await click(`[data-action-id='${value}']`);
-    },
-    rows() {
-      return document.querySelectorAll(
-        ".composer-actions-dropdown [data-action-id]"
-      );
-    },
-    rowByIndex(index) {
-      const rows = document.querySelectorAll(
-        ".composer-actions-dropdown [data-action-id]"
-      );
-      const row = rows[index];
-      return {
-        value() {
-          return row ? row.dataset.actionId : null;
-        },
-      };
-    },
-  };
-}
-
 acceptance(`Composer Actions`, function (needs) {
   needs.user({
     id: 5,
@@ -65,7 +38,7 @@ acceptance(`Composer Actions`, function (needs) {
   });
 
   test("replying to post", async function (assert) {
-    const composerActions = composerActionsDropdown();
+    const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
@@ -76,11 +49,16 @@ acceptance(`Composer Actions`, function (needs) {
       "reply_as_new_topic"
     );
     assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rows().length, 2);
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "toggle_whisper");
+    assert.strictEqual(
+      composerActions.rowByIndex(3).value(),
+      "toggle_topic_bump"
+    );
+    assert.strictEqual(composerActions.rowByIndex(4).value(), null);
   });
 
   test("replying to post - reply_to_topic", async function (assert) {
-    const composerActions = composerActionsDropdown();
+    const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
@@ -93,50 +71,49 @@ acceptance(`Composer Actions`, function (needs) {
     await composerActions.selectRowByValue("reply_to_topic");
 
     assert
-      .dom(".composer-actions-trigger")
-      .includesText(i18n("composer.composer_actions.reply_to_topic.label"));
+      .dom(".action-title .topic-link")
+      .hasText("Internationalization / localization");
+    assert
+      .dom(".action-title .topic-link")
+      .hasAttribute("href", "/t/internationalization-localization/280");
     assert
       .dom(".d-editor-input")
       .hasValue("test replying to topic when initially replied to post");
   });
 
-  test("toggle whisper via combo button menu for whisperers", async function (assert) {
+  test("replying to post - toggle_whisper for whisperers", async function (assert) {
     updateCurrentUser({ admin: false, moderator: false });
+    const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
+    await fillIn(
+      ".d-editor-input",
+      "test replying as whisper to topic when initially not a whisper"
+    );
 
     assert
-      .dom(".d-combo-button .d-combo-button-menu")
-      .exists("combo button menu trigger is visible");
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .doesNotExist("whisper icon is not visible");
+    assert
+      .dom(".composer-actions svg.d-icon-reply")
+      .exists("reply icon is visible");
 
-    await click(".d-combo-button .d-combo-button-menu");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("toggle_whisper");
 
     assert
-      .dom(".composer-toggle-whisper")
-      .exists("whisper toggle item is visible in dropdown");
-
-    await click(".composer-toggle-whisper");
-
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .exists("whisper icon is visible");
     assert
-      .dom(
-        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='true']"
-      )
-      .exists("whisper toggle is on after click");
-
-    await click(".composer-toggle-whisper");
-
-    assert
-      .dom(
-        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='false']"
-      )
-      .exists("whisper toggle is off after second click");
+      .dom(".composer-actions svg.d-icon-reply")
+      .doesNotExist("reply icon is not visible");
   });
 
   test("replying to post - reply_as_new_topic", async function (assert) {
     sinon.stub(Draft, "get").resolves({ draft: "", draft_sequence: 0 });
 
-    const composerActions = composerActionsDropdown();
+    const composerActions = selectKit(".composer-actions");
     const categoryChooser = selectKit(".title-wrapper .category-chooser");
     const categoryChooserReplyArea = selectKit(".reply-area .category-chooser");
     const quote = "test replying as new topic when initially replied to post";
@@ -155,13 +132,14 @@ acceptance(`Composer Actions`, function (needs) {
     await composerActions.selectRowByValue("reply_as_new_topic");
 
     assert.strictEqual(categoryChooserReplyArea.header().name(), "faq");
+    assert.dom(".action-title").hasText(i18n("topic.create_long"));
     assert.dom(".d-editor-input").includesValue(quote);
   });
 
   test("reply_as_new_topic without a new_topic draft", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".create.reply");
-    const composerActions = composerActionsDropdown();
+    const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
     assert.dom(".dialog-body").doesNotExist();
@@ -171,15 +149,26 @@ acceptance(`Composer Actions`, function (needs) {
     updateCurrentUser({ can_create_topic: false });
     await visit("/t/internationalization-localization/280");
     await click(".create.reply");
-    const composerActions = composerActionsDropdown();
+    const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     assert
-      .dom(".composer-actions-dropdown [data-action-id='reply_as_new_topic']")
-      .doesNotExist("reply as new topic option is not visible");
+      .dom(".composer-actions svg.d-icon-plus")
+      .doesNotExist("reply as new topic icon is not visible");
+  });
+
+  test("reply_as_new_group_message", async function (assert) {
+    await visit("/t/lorem-ipsum-dolor-sit-amet/130");
+    await click(".create.reply");
+    const composerActions = selectKit(".composer-actions");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("reply_as_new_group_message");
+
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.deepEqual(privateMessageUsers.header().value(), "foo,foo_group");
   });
 
   test("interactions", async function (assert) {
-    const composerActions = composerActionsDropdown();
+    const composerActions = selectKit(".composer-actions");
     const quote = "Life is like riding a bicycle.";
 
     await visit("/t/short-topic-with-two-posts/54077");
@@ -188,9 +177,7 @@ acceptance(`Composer Actions`, function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_to_topic");
 
-    assert
-      .dom(".composer-actions-trigger")
-      .includesText(i18n("composer.composer_actions.reply_to_topic.label"));
+    assert.dom(".action-title").hasText("Short topic with two posts");
     assert.dom(".d-editor-input").hasValue(quote);
 
     await composerActions.expand();
@@ -200,97 +187,167 @@ acceptance(`Composer Actions`, function (needs) {
       "reply_as_new_topic"
     );
     assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_post");
-    assert.strictEqual(composerActions.rows().length, 2);
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "toggle_whisper");
+    assert.strictEqual(
+      composerActions.rowByIndex(3).value(),
+      "toggle_topic_bump"
+    );
+    assert.strictEqual(composerActions.rows().length, 4);
 
     await composerActions.selectRowByValue("reply_to_post");
     await composerActions.expand();
 
-    assert.dom(".composer-actions-trigger").includesText(
-      i18n("composer.composer_actions.reply_to_post.label", {
-        postUsername: "tms",
-      })
-    );
+    assert.dom(".action-title img.avatar").exists();
+    assert.dom(".action-title .user-link").hasText("tms");
     assert.dom(".d-editor-input").hasValue(quote);
     assert.strictEqual(
       composerActions.rowByIndex(0).value(),
       "reply_as_new_topic"
     );
     assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rows().length, 2);
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "toggle_whisper");
+    assert.strictEqual(
+      composerActions.rowByIndex(3).value(),
+      "toggle_topic_bump"
+    );
+    assert.strictEqual(composerActions.rows().length, 4);
 
     await composerActions.selectRowByValue("reply_as_new_topic");
     await composerActions.expand();
 
+    assert.dom(".action-title").hasText(i18n("topic.create_long"));
     assert.dom(".d-editor-input").includesValue(quote);
     assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
     assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rowByIndex(2).value(), "shared_draft");
     assert.strictEqual(
-      composerActions.rowByIndex(3).value(),
+      composerActions.rowByIndex(2).value(),
+      "toggle_unlisted"
+    );
+    assert.strictEqual(composerActions.rowByIndex(3).value(), "shared_draft");
+    assert.strictEqual(
+      composerActions.rowByIndex(4).value(),
       "create_private_message"
     );
-    assert.strictEqual(composerActions.rows().length, 4);
+    assert.strictEqual(composerActions.rows().length, 5);
+  });
+
+  test("new topic in shared drafts category opens shared draft composer", async function (assert) {
+    await visit("/c/shared-drafts/24");
+
+    assert.dom("#create-topic").hasText(i18n("topic.create_shared_draft"));
+
+    await click("#create-topic");
+
+    assert
+      .dom("#reply-control .btn-primary.create .d-button-label")
+      .hasText(i18n("composer.create_shared_draft"));
+    assert
+      .dom(".composer-actions svg.d-icon-far-clipboard")
+      .exists("shared draft icon is visible");
+    assert.strictEqual(
+      selectKit(".category-chooser").header().value(),
+      null,
+      "shared drafts category is not selected as the destination category"
+    );
   });
 
   test("interactions - private message", async function (assert) {
-    const composerActions = composerActionsDropdown();
+    const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
     await click('#post_4 a[data-user-card="shade"]');
     await click(".usercard-controls .compose-pm .btn-primary");
     await composerActions.expand();
 
+    assert.dom(".action-title").hasText(i18n("topic.private_message"));
     assert.strictEqual(composerActions.rowByIndex(0).value(), "create_topic");
     assert.strictEqual(composerActions.rows().length, 1);
   });
 
-  test("toggle no-bump via combo button menu", async function (assert) {
+  test("replying to post - toggle_topic_bump", async function (assert) {
+    const composerActions = selectKit(".composer-actions");
+
     await visit("/t/short-topic-with-two-posts/54077");
     await click("article#post_2 button.reply");
 
-    await click(".d-combo-button .d-combo-button-menu");
+    assert
+      .dom(".composer-actions svg.d-icon-anchor")
+      .doesNotExist("no-bump icon is not visible");
+    assert
+      .dom(".composer-actions svg.d-icon-reply")
+      .exists("reply icon is visible");
+
+    await composerActions.expand();
+    await composerActions.selectRowByValue("toggle_topic_bump");
 
     assert
-      .dom(".composer-toggle-no-bump")
-      .exists("no-bump toggle item is visible in dropdown");
+      .dom(".composer-actions svg.d-icon-anchor")
+      .exists("no-bump icon is visible");
+    assert
+      .dom(".composer-actions svg.d-icon-reply")
+      .doesNotExist("reply icon is not visible");
 
-    await click(".composer-toggle-no-bump");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("toggle_topic_bump");
 
     assert
-      .dom(
-        ".composer-toggle-no-bump .d-toggle-switch__checkbox[aria-checked='true']"
-      )
-      .exists("no-bump toggle is on after click");
-
-    await click(".composer-toggle-no-bump");
-
+      .dom(".composer-actions svg.d-icon-anchor")
+      .doesNotExist("no-bump icon is not visible");
     assert
-      .dom(
-        ".composer-toggle-no-bump .d-toggle-switch__checkbox[aria-checked='false']"
-      )
-      .exists("no-bump toggle is off after second click");
+      .dom(".composer-actions svg.d-icon-reply")
+      .exists("reply icon is visible");
   });
 
-  test("replying to post as staff shows combo button with toggles", async function (assert) {
+  test("replying to post - whisper and no bump", async function (assert) {
+    const composerActions = selectKit(".composer-actions");
+
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click("article#post_2 button.reply");
+
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .doesNotExist("whisper icon is not visible");
+    assert
+      .dom(".reply-details .whisper .d-icon-anchor")
+      .doesNotExist("no-bump icon is not visible");
+    assert
+      .dom(".composer-actions svg.d-icon-reply")
+      .exists("reply icon is visible");
+
+    await composerActions.expand();
+    await composerActions.selectRowByValue("toggle_topic_bump");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("toggle_whisper");
+
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .exists("whisper icon is visible");
+    assert
+      .dom(".reply-details .no-bump .d-icon-anchor")
+      .exists("no-bump icon is visible");
+    assert
+      .dom(".composer-actions svg.d-icon-reply")
+      .doesNotExist("reply icon is not visible");
+  });
+
+  test("replying to post as staff", async function (assert) {
+    const composerActions = selectKit(".composer-actions");
+
     updateCurrentUser({ admin: true });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
+    await composerActions.expand();
 
-    assert
-      .dom(".d-combo-button .d-combo-button-menu")
-      .exists("combo button menu is visible for staff");
-
-    await click(".d-combo-button .d-combo-button-menu");
-
-    assert
-      .dom(".composer-toggle-whisper")
-      .exists("whisper toggle is visible for staff");
-    assert
-      .dom(".composer-toggle-no-bump")
-      .exists("no-bump toggle is visible for staff");
+    assert.strictEqual(composerActions.rows().length, 4);
+    assert.strictEqual(
+      composerActions.rowByIndex(3).value(),
+      "toggle_topic_bump"
+    );
   });
 
-  test("replying to post as TL3 user shows no combo button", async function (assert) {
+  test("replying to post as TL3 user", async function (assert) {
+    const composerActions = selectKit(".composer-actions");
+
     updateCurrentUser({
       moderator: false,
       admin: false,
@@ -300,13 +357,21 @@ acceptance(`Composer Actions`, function (needs) {
     });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
+    await composerActions.expand();
 
-    assert
-      .dom(".d-combo-button .d-combo-button-menu")
-      .doesNotExist("combo button menu is not visible for TL3 non-whisperer");
+    assert.strictEqual(composerActions.rows().length, 2);
+    Array.from(composerActions.rows()).forEach((row) => {
+      assert.notStrictEqual(
+        row.value,
+        "toggle_topic_bump",
+        "toggle button is not visible"
+      );
+    });
   });
 
-  test("replying to post as TL4 user shows combo button with no-bump toggle", async function (assert) {
+  test("replying to post as TL4 user", async function (assert) {
+    const composerActions = selectKit(".composer-actions");
+
     updateCurrentUser({
       moderator: false,
       admin: false,
@@ -316,116 +381,25 @@ acceptance(`Composer Actions`, function (needs) {
     });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
+    await composerActions.expand();
 
-    assert
-      .dom(".d-combo-button .d-combo-button-menu")
-      .exists("combo button menu is visible for TL4");
-
-    await click(".d-combo-button .d-combo-button-menu");
-
-    assert
-      .dom(".composer-toggle-no-bump")
-      .exists("no-bump toggle is visible for TL4");
+    assert.strictEqual(composerActions.rows().length, 3);
+    assert.strictEqual(
+      composerActions.rowByIndex(2).value(),
+      "toggle_topic_bump"
+    );
   });
 
   test("editing post", async function (assert) {
-    const composerActions = composerActionsDropdown();
+    const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
     await click("article#post_1 button.show-more-actions");
     await click("article#post_1 button.edit");
     await composerActions.expand();
 
-    assert.strictEqual(
-      composerActions.rows().length,
-      0,
-      "no switch actions are offered while editing a post"
-    );
-  });
-
-  test("trigger shows correct icon for reply mode", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
-
-    assert
-      .dom(".composer-actions-trigger svg.d-icon-share")
-      .exists("shows share icon when replying");
-  });
-
-  test("trigger shows correct icon for create topic mode", async function (assert) {
-    await visit("/");
-    await click("#create-topic");
-
-    assert
-      .dom(".composer-actions-trigger svg.d-icon-far-pen-to-square")
-      .exists("shows pen-to-square icon when creating topic");
-  });
-
-  test("trigger shows correct icon for editing", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_1 button.show-more-actions");
-    await click("article#post_1 button.edit");
-
-    assert
-      .dom(".composer-actions-trigger svg.d-icon-pencil")
-      .exists("shows pencil icon when editing");
-  });
-
-  test("trigger shows correct label for reply mode", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
-
-    assert.dom(".composer-actions-trigger").includesText(
-      i18n("composer.composer_actions.reply_to_post.label", {
-        postUsername: "codinghorror",
-      }),
-      "shows reply to post label"
-    );
-  });
-
-  test("trigger shows correct label for create topic mode", async function (assert) {
-    await visit("/");
-    await click("#create-topic");
-
-    assert
-      .dom(".composer-actions-trigger")
-      .includesText(
-        i18n("composer.composer_actions.create_topic.label"),
-        "shows create topic label"
-      );
-  });
-
-  test("create topic mode shows correct actions and unlisted toggle", async function (assert) {
-    const composerActions = composerActionsDropdown();
-    updateCurrentUser({ admin: true });
-
-    await visit("/");
-    await click("#create-topic");
-    await composerActions.expand();
-
-    assert
-      .dom(
-        ".composer-actions-dropdown [data-action-id='create_private_message']"
-      )
-      .exists("shows create private message action");
-
-    await click(".d-combo-button .d-combo-button-menu");
-
-    assert
-      .dom(".composer-toggle-unlisted")
-      .exists("unlisted toggle is visible for staff in create topic mode");
-  });
-
-  test("create topic mode does not show reply_as_new_topic", async function (assert) {
-    const composerActions = composerActionsDropdown();
-
-    await visit("/");
-    await click("#create-topic");
-    await composerActions.expand();
-
-    assert
-      .dom(".composer-actions-dropdown [data-action-id='reply_as_new_topic']")
-      .doesNotExist("does not show reply_as_new_topic in create topic mode");
+    assert.strictEqual(composerActions.rows().length, 1);
+    assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
   });
 });
 
@@ -465,7 +439,7 @@ acceptance(`Composer Actions With New Topic Draft`, function (needs) {
     await tags.expand();
     await tags.selectRowByName("monkey");
 
-    const composerActions = composerActionsDropdown();
+    const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("shared_draft");
 
@@ -478,7 +452,7 @@ acceptance(`Composer Actions With New Topic Draft`, function (needs) {
       .dom("#reply-control .btn-primary.create .d-button-label")
       .hasText(i18n("composer.create_shared_draft"));
     assert
-      .dom(".composer-actions-trigger svg.d-icon-far-clipboard")
+      .dom(".composer-actions svg.d-icon-far-clipboard")
       .exists("shared draft icon is visible");
   });
 
@@ -488,7 +462,7 @@ acceptance(`Composer Actions With New Topic Draft`, function (needs) {
 
     stubDraftResponse();
 
-    const composerActions = composerActionsDropdown();
+    const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
 
@@ -512,11 +486,7 @@ acceptance(`Prioritize Username`, function (needs) {
     await visit("/t/short-topic-with-two-posts/54079");
     await click("article#post_2 button.reply");
 
-    assert.dom(".composer-actions-trigger").includesText(
-      i18n("composer.composer_actions.reply_to_post.label", {
-        postUsername: "james_john",
-      })
-    );
+    assert.dom(".action-title .user-link").hasText("james_john");
   });
 
   test("Quotes use username", async function (assert) {
@@ -542,11 +512,9 @@ acceptance(`Prioritize Full Name`, function (needs) {
     await visit("/t/short-topic-with-two-posts/54079");
     await click("article#post_3 button.reply");
 
-    assert.dom(".composer-actions-trigger").includesText(
-      i18n("composer.composer_actions.reply_to_post.label", {
-        postUsername: "tms",
-      })
-    );
+    assert
+      .dom(".action-title .user-link")
+      .hasHtml("&lt;h1&gt;Tim Stone&lt;/h1&gt;");
   });
 
   test("Quotes use full name", async function (assert) {
