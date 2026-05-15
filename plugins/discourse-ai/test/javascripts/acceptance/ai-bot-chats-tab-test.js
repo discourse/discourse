@@ -3,7 +3,10 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("AI Bot - Bot chats tab", function (needs) {
-  needs.user();
+  needs.user({
+    ai_enabled_agents: [],
+    ai_enabled_chat_bots: [],
+  });
 
   needs.settings({
     discourse_ai_enabled: true,
@@ -14,9 +17,14 @@ acceptance("AI Bot - Bot chats tab", function (needs) {
     const emptyList = () => helper.response({ topic_list: { topics: [] } });
 
     server.get("/topics/private-messages/:username.json", emptyList);
-    server.get("/discourse-ai/ai-bot/conversations.json", () =>
-      helper.response({})
-    );
+    server.get("/discourse-ai/ai-bot/conversations.json", () => {
+      return helper.response({
+        conversations: [],
+        meta: {
+          has_more: false,
+        },
+      });
+    });
   });
 
   test("links to ai-bot conversations and navigates there on click", async function (assert) {
