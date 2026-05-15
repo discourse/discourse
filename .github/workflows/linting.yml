@@ -84,10 +84,6 @@ jobs:
           pnpm prettier -v
           pnpm lint:prettier
 
-      - name: Ember template lint
-        if: ${{ !cancelled() }}
-        run: pnpm lint:hbs
-
       - name: Stylelint
         if: ${{ !cancelled() }}
         run: pnpm lint:css

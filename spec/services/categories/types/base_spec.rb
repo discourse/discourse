@@ -73,7 +73,7 @@ RSpec.describe Categories::Types::Base do
         category,
         guardian: admin.guardian,
         configuration_values: {
-          "title" => "Override",
+          title: "Override",
         },
       )
       expect(SiteSetting.title).to eq("Override")

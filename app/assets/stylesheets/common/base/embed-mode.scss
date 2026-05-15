@@ -249,3 +249,14 @@ body.embed-mode {
     }
   }
 }
+
+.embed-auth-flow-modal {
+  &__waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    padding: 1em 0;
+    text-align: center;
+  }
+}
