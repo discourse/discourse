@@ -1227,7 +1227,6 @@ id:
     include_in_discourse_discover: "Izinkan CDCK, Inc (\"Discourse\") untuk menampilkan komunitas ini di <a href='https://discover.discourse.org' target='_blank'>halaman Discover</a> dan dalam materi pemasaran Discourse. Dengan demikian, Anda akan membagikan data yang diperlukan agar situs Anda dapat disertakan dalam layanan ini. Harap diperhatikan bahwa promosi komunitas merupakan kebijakan Discourse."
     discourse_connect_url: "URL endpoint DiscourseConnect (harus menyertakan http:// atau https://, dan tidak boleh menyertakan garis miring)"
     discourse_connect_allowed_redirect_domains: "Batasi ke domain ini untuk return_paths yang disediakan oleh DiscourseConnect (secara bawaan jalur pengembalian harus ada di situs saat ini). Gunakan * untuk mengizinkan domain apa pun untuk jalur pengembalian. Karakter pengganti subdomain (`*.foobar.com`) tidak diizinkan."
-    enable_direct_s3_uploads: "Memungkinkan pengunggahan multipart secara langsung ke Amazon S3, lihat https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 untuk informasi lebih lanjut."
     backup_location: "Lokasi penyimpanan cadangan. PENTING: S3 memerlukan kredensial S3 valid yang dimasukkan dalam pengaturan File. Saat mengubahnya ke S3 dari Lokal, Anda harus menjalankan tugas rake `s3:ensure_cors_rules`."
     s3_use_cdn_url_for_all_uploads: "Gunakan URL CDN untuk semua file yang diunggah ke s3, bukan hanya untuk gambar."
     composer_media_optimization_image_encode_quality: "Kualitas penyandian JPG digunakan dalam proses penyandian ulang."

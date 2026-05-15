@@ -256,8 +256,6 @@ id:
     admin_onboarding_banner:
       start_posting:
         back: "Kembali"
-      spread_the_word:
-        copied_to_clipboard: "Tautan disalin ke papan klip!"
     about:
       simple_title: "Tentang"
       title: "Tentang %{title}"
@@ -2120,16 +2118,44 @@ id:
     lightbox:
       close: "Tutup (Esc)"
     keyboard_shortcuts_help:
+      description_header: "Deskripsi"
+      search_aliases:
+        shift: "shift"
       jump_to:
-        new: "%{shortcut} Baru"
+        home: "Beranda"
+        latest: "Terbaru"
+        new: "Baru"
+        unread: "Belum dibaca"
+        unseen: "Tak terlihat"
+        categories: "Kategori"
+        bookmarks: "Markah"
+        profile: "Profil"
+        messages: "Pesan"
+        drafts: "Konsep"
       navigation:
         title: "Navigasi"
+        back: "Kembali"
       application:
         title: "Aplikasi"
-        notifications: "%{shortcut} Buka notifikasi"
+        search: "Cari"
+        log_out: "Keluar"
+      composing:
+        preformatted: "Teks terformat"
+        blockquote: "Blok Kutipan"
+      bookmarks:
+        later_today: "Nanti hari ini"
+        later_this_week: "Nanti pekan ini"
+        tomorrow: "Besok"
+        next_week: "Minggu depan"
+        next_month: "Bulan depan"
+        next_business_day: "Hari kerja berikutnya"
+        custom: "Tanggal dan waktu tersuai"
+        delete: "Hapus penanda"
       actions:
         title: "Aksi"
-        defer: "%{shortcut} Tandai topik sebagai belum dibaca"
+        reply_topic: "Balas ke topik"
+        delete: "Hapus postingan"
+        defer: "Tandai topik sebagai belum dibaca"
       admin:
         title: "Admin"
     badges:
