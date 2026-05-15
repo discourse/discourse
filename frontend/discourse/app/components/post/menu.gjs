@@ -636,6 +636,8 @@ export default class PostMenu extends Component {
             "replies-button-visible"
           )
         }}
+        role="group"
+        aria-label={{i18n "post.controls.menu_label"}}
       >
         {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
         {{#each this.extraControls key="key" as |extraControl|}}

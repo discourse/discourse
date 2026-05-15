@@ -3698,6 +3698,7 @@ en:
           aria_label: filter by maximum views
 
     hamburger_menu: "Navigation menu"
+    header_panel: "Header"
     new_item: "new"
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
@@ -4686,6 +4687,7 @@ en:
       few_likes_left: "Thanks for sharing the love! You only have a few likes left for today."
 
       controls:
+        menu_label: "Post actions"
         reply: "begin composing a reply to this post"
         like_action: "Like"
         like: "like this post"
