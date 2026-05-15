@@ -2,14 +2,12 @@
 
 import { chromium } from "playwright";
 
-const args = process.argv.slice(2);
-
-if (args.length < 1 || args.length > 2) {
+if (process.argv.length !== 3) {
   console.log("Expecting: node test/smoke-test.mjs {URL}");
   process.exit(1);
 }
 
-const url = args[0];
+const url = process.argv[2];
 console.log(`Starting Discourse Smoke Test for ${url}`);
 
 (async () => {
