@@ -2,21 +2,19 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
-import { i18n } from "discourse-i18n";
 import {
   computeOccupation,
   parsePlacement,
   unoccupiedCells,
 } from "../../lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
+import EmptyCellPlaceholder from "./empty-cell-placeholder";
 
 /**
  * Edit-mode affordances for a selected `ve:layout` in grid mode.
@@ -1011,45 +1009,13 @@ export default class GridOverlay extends Component {
               onDrop=(fn this.applyCellDrop cell)
             }}
           >
-            <button
-              type="button"
-              class="visual-editor-grid-cell__plus"
-              title={{i18n "visual_editor.canvas.grid_overlay.add_at_cell"}}
-              {{on "click" (fn this.openPicker cell)}}
-            >
-              {{dIcon "plus"}}
-            </button>
-            {{#if (this.isPickingCell cell)}}
-              <div class="visual-editor-grid-cell__picker">
-                <div class="visual-editor-grid-cell__picker-header">
-                  <span>{{i18n
-                      "visual_editor.canvas.grid_overlay.pick_block"
-                    }}</span>
-                  <button
-                    type="button"
-                    class="visual-editor-grid-cell__picker-close"
-                    title={{i18n "visual_editor.canvas.grid_overlay.cancel"}}
-                    {{on "click" this.closePicker}}
-                  >
-                    {{dIcon "xmark"}}
-                  </button>
-                </div>
-                <div class="visual-editor-grid-cell__picker-grid" role="menu">
-                  {{#each this.palette as |blockEntry|}}
-                    <button
-                      type="button"
-                      class="visual-editor-grid-cell__picker-chip"
-                      role="menuitem"
-                      title={{blockEntry.displayName}}
-                      {{on "click" (fn this.pickBlock blockEntry)}}
-                    >
-                      {{dIcon blockEntry.icon}}
-                      <span>{{blockEntry.displayName}}</span>
-                    </button>
-                  {{/each}}
-                </div>
-              </div>
-            {{/if}}
+            <EmptyCellPlaceholder
+              @palette={{this.palette}}
+              @isOpen={{this.isPickingCell cell}}
+              @onOpen={{fn this.openPicker cell}}
+              @onClose={{this.closePicker}}
+              @onPick={{this.pickBlock}}
+            />
           </div>
         {{/each}}
 

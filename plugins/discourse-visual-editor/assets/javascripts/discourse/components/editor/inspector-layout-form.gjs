@@ -9,7 +9,7 @@ import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { GRID_TEMPLATES } from "../../lib/grid-templates";
+import { GRID_TEMPLATES, parseGridAreas } from "../../lib/grid-templates";
 
 /**
  * Custom inspector form for the `ve:layout` block. The generic
@@ -41,6 +41,24 @@ const GAP_STEP = 0.25;
 export default class InspectorLayoutForm extends Component {
   @service visualEditor;
   @service dialog;
+
+  /**
+   * Predicate the template-chip render uses to grey out templates
+   * that can't fit the current layout (a template with fewer slots
+   * than there are existing children). Delegates to the service so
+   * the refusal logic lives next to `applyGridTemplate` and the two
+   * stay in lockstep.
+   */
+  canApplyTemplate = (template) => {
+    const data = this.visualEditor.selectedBlockData;
+    if (!data?.key) {
+      return false;
+    }
+    return this.visualEditor.canApplyGridTemplate({
+      gridKey: data.key,
+      template,
+    });
+  };
 
   /**
    * Slot keys whose placements fall OUTSIDE the current grid's
@@ -376,11 +394,20 @@ export default class InspectorLayoutForm extends Component {
             {{#each this.gridTemplates as |template|}}
               <button
                 type="button"
-                class="visual-editor-layout-form__template-chip"
-                title={{i18n
-                  (concat
-                    "visual_editor.inspector.layout.templates." template.i18nKey
+                class={{dConcatClass
+                  "visual-editor-layout-form__template-chip"
+                  (unless (this.canApplyTemplate template) "--disabled")
+                }}
+                disabled={{unless (this.canApplyTemplate template) "disabled"}}
+                title={{if
+                  (this.canApplyTemplate template)
+                  (i18n
+                    (concat
+                      "visual_editor.inspector.layout.templates."
+                      template.i18nKey
+                    )
                   )
+                  (i18n "visual_editor.inspector.layout.template_cant_fit")
                 }}
                 {{on "click" (fn this.applyTemplate template)}}
               >
@@ -518,28 +545,46 @@ class Stepper extends Component {
  * applying it.
  */
 class TemplatePreview extends Component {
+  /**
+   * Parses the template's `areas` string once. Memoised on the
+   * template object so repeated reads (Glimmer re-renders, multiple
+   * preview tiles) don't reparse. Returns `null` for frame-only
+   * templates so the cell-by-cell fallback takes over.
+   */
+  get parsedAreas() {
+    const template = this.args.template;
+    if (!template.areas) {
+      return null;
+    }
+    if (template.__parsedAreas === undefined) {
+      template.__parsedAreas = parseGridAreas(template.areas) ?? null;
+    }
+    return template.__parsedAreas;
+  }
+
   get gridStyle() {
+    const parsed = this.parsedAreas;
     const args = this.args.template.args;
+    const cols = parsed?.columns ?? args.columns ?? 6;
+    const rows = parsed?.rows ?? args.rows ?? 1;
     const columns =
-      (args.columnTemplate ?? "").trim() || `repeat(${args.columns ?? 6}, 1fr)`;
-    const rows =
-      (args.rowTemplate ?? "").trim() || `repeat(${args.rows ?? 1}, 1fr)`;
+      (args.columnTemplate ?? "").trim() || `repeat(${cols}, 1fr)`;
+    const rowTemplate =
+      (args.rowTemplate ?? "").trim() || `repeat(${rows}, 1fr)`;
     return trustHTML(
       `display: grid; grid-template-columns: ${columns}; ` +
-        `grid-template-rows: ${rows}; gap: 2px;`
+        `grid-template-rows: ${rowTemplate}; gap: 2px;`
     );
   }
 
   get tiles() {
-    // A template may declare its own `previewShape` — a list of slot
-    // rectangles — when the cell-by-cell rendering doesn't communicate
-    // the layout's intent (e.g. "Hero + 3" wants one wide top block,
-    // not six equal cells). Otherwise fall back to one tile per cell
+    // Templates with `areas` declare an explicit shape — one tile per
+    // parsed slot rect. Frame-only templates render one tile per cell
     // of the grid.
-    const shape = this.args.template.previewShape;
-    if (Array.isArray(shape) && shape.length > 0) {
-      return shape.map((cell) => ({
-        style: trustHTML(`grid-column: ${cell.column}; grid-row: ${cell.row};`),
+    const parsed = this.parsedAreas;
+    if (parsed) {
+      return parsed.slots.map((slot) => ({
+        style: trustHTML(`grid-column: ${slot.column}; grid-row: ${slot.row};`),
       }));
     }
     const args = this.args.template.args;

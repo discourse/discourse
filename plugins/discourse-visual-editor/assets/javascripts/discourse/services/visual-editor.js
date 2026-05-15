@@ -18,7 +18,12 @@ import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 import discourseDebounce from "discourse/lib/debounce";
 import PreloadStore from "discourse/lib/preload-store";
-import { computeShiftPlan, parsePlacement } from "../lib/grid-math";
+import {
+  computeShiftPlan,
+  parsePlacement,
+  placementsOverlap,
+} from "../lib/grid-math";
+import { resolveTemplateLayout } from "../lib/grid-templates";
 import {
   cloneEntryForPaste,
   cloneLayoutForDraft,
@@ -893,7 +898,19 @@ export default class VisualEditorService extends Service {
       if (!layout) {
         return false;
       }
-      const result = removeEntry(layout, blockKey);
+      // Multi-cell placements get preserved as `ve:slot` drop targets
+      // on delete — that keeps the author's layout shape (a hero
+      // spanning 3 columns, a sidebar rail, etc.) intact even when
+      // the content inside it is removed. Single-cell deletes fall
+      // through to a normal removal; the grid overlay's auto-empty
+      // cell rendering already surfaces those positions as drop
+      // targets.
+      const result = this._shouldRestoreAsSlot(layout, located.entry, blockKey)
+        ? replaceEntryInPlace(layout, blockKey, {
+            block: "ve:slot",
+            containerArgs: located.entry.containerArgs,
+          })
+        : removeEntry(layout, blockKey);
       if (!result.changed) {
         return false;
       }
@@ -903,6 +920,77 @@ export default class VisualEditorService extends Service {
       this._publishStructuralChange(located.outletName, result.layout);
       return true;
     });
+  }
+
+  /**
+   * Returns true when removing `entry` from `layout` should leave a
+   * `ve:slot` placeholder at the same position instead of clearing
+   * the cell entirely. All four conditions must hold:
+   *
+   *   1. The entry isn't already a `ve:slot` — deleting a slot is the
+   *      author saying "I don't want this drop target", not "regenerate
+   *      one".
+   *   2. The placement spans more than one cell (column span > 1 OR
+   *      row span > 1). Single-cell positions are already discoverable
+   *      via the grid overlay's auto-empty cell rendering; we only
+   *      need an explicit slot when the rect is too large for the
+   *      auto-detection to reconstruct.
+   *   3. The placement fits within the parent grid's `columns` /
+   *      `rows`. Restoring a slot that overflows the grid would just
+   *      produce another `--out-of-bounds` warning.
+   *   4. The placement doesn't overlap any sibling's placement.
+   *      Stacking two cells at the same rect is already a
+   *      malformed state; we don't want to perpetuate it.
+   *
+   * @param {Array<Object>} layout
+   * @param {Object} entry
+   * @param {string} entryKeyValue - The entry's composite key.
+   * @returns {boolean}
+   */
+  _shouldRestoreAsSlot(layout, entry, entryKeyValue) {
+    if (!entry || entry.block === "ve:slot") {
+      return false;
+    }
+    const placement = parsePlacement(entry.containerArgs);
+    const cs = placement.column.start;
+    const ce = placement.column.end;
+    const rs = placement.row.start;
+    const re = placement.row.end;
+    if (cs == null || ce == null || rs == null || re == null) {
+      return false;
+    }
+    const colSpan = ce - cs;
+    const rowSpan = re - rs;
+    if (colSpan <= 1 && rowSpan <= 1) {
+      return false;
+    }
+    // Walk to the parent grid via the ancestry chain. The immediate
+    // parent of the entry is at the second-to-last position; its
+    // `args.columns` / `args.rows` are the bounds we check against.
+    const chain = findAncestryPath(layout, entryKeyValue);
+    if (!chain || chain.length < 2) {
+      return false;
+    }
+    const parent = chain[chain.length - 2];
+    const cols = Number(parent.args?.columns);
+    const rows = Number(parent.args?.rows);
+    if (!Number.isFinite(cols) || !Number.isFinite(rows)) {
+      return false;
+    }
+    if (cs < 1 || rs < 1 || ce > cols + 1 || re > rows + 1) {
+      return false;
+    }
+    // Sibling overlap check. The entry itself is in `parent.children`;
+    // skip it during the walk.
+    for (const sibling of parent.children ?? []) {
+      if (sibling === entry) {
+        continue;
+      }
+      if (placementsOverlap(placement, parsePlacement(sibling.containerArgs))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -2914,11 +3002,25 @@ export default class VisualEditorService extends Service {
 
   /**
    * Applies a preset grid template to an existing `ve:layout` block.
-   * Overwrites the layout's args (columns / rows / gap / column or
-   * row templates) but PRESERVES its existing children — templates
-   * are layout frames, not content seeds, so applying one to a
-   * populated grid keeps the author's content in place. To start
-   * fresh, the author deletes children first via the overlay.
+   * The template's `areas` string is parsed into `{columns, rows,
+   * slots}`; each slot becomes a `ve:slot` entry positioned at its
+   * rect.
+   *
+   * Apply algorithm:
+   *
+   *  - **Frame-only template** (no `areas`, e.g. "12-column"): write
+   *    the frame args, leave existing children alone. The author may
+   *    end up with out-of-bounds placements; that's handled by the
+   *    existing `--out-of-bounds` warning + "Snap blocks into bounds"
+   *    fix.
+   *  - **Template with `s` slots, existing child count `n`**:
+   *    - `n === 0`: insert the slot entries as children, apply silently.
+   *    - `0 < n ≤ s`: preserve existing children, fit them into the
+   *      first `n` slots in document order — each child's
+   *      `containerArgs.grid` is overwritten with the slot's rect.
+   *      Append `ve:slot` entries for the remaining `(s - n)` slots.
+   *    - `n > s`: refuse. Returns `false` so the inspector can disable
+   *      the chip with a "more blocks than cells" tooltip.
    *
    * Wrapped in a single structural-undo entry so the whole switch
    * can be reverted with one Cmd+Z.
@@ -2935,22 +3037,181 @@ export default class VisualEditorService extends Service {
     if (!located) {
       return false;
     }
+    const { args: templateArgs, slotEntries } = resolveTemplateLayout(template);
+    const existingChildren = located.entry.children ?? [];
+    // n > s: refuse before mutating anything.
+    if (
+      slotEntries.length > 0 &&
+      existingChildren.length > slotEntries.length
+    ) {
+      return false;
+    }
     return this._recordStructural([located.outletName], () => {
       const layout = this.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
+      let nextChildren;
+      if (slotEntries.length === 0) {
+        // Frame-only — leave children alone.
+        nextChildren = located.entry.children;
+      } else {
+        // Pair each existing child with a slot (document order), then
+        // pad with empty `ve:slot` entries for the leftover slots.
+        // Each paired child gets the slot's rect on its
+        // `containerArgs.grid`, overwriting whatever was there.
+        nextChildren = slotEntries.map((slotEntry, i) => {
+          const existing = existingChildren[i];
+          if (existing) {
+            return {
+              ...existing,
+              containerArgs: {
+                ...existing.containerArgs,
+                grid: { ...slotEntry.containerArgs.grid },
+              },
+            };
+          }
+          return slotEntry;
+        });
+      }
       const result = replaceEntryInPlace(layout, gridKey, {
         ...located.entry,
-        args: { ...located.entry.args, ...template.args },
-        // Children intentionally left untouched — templates only
-        // re-shape the grid frame.
-        children: located.entry.children,
+        args: { ...located.entry.args, ...templateArgs },
+        children: nextChildren,
       });
       if (!result.changed) {
         return false;
       }
       this._publishStructuralChange(located.outletName, result.layout);
+      return true;
+    });
+  }
+
+  /**
+   * Returns `true` when `applyGridTemplate` would succeed for the
+   * given template against the currently-selected `ve:layout`.
+   * Pure-read; the inspector calls this to enable / disable each
+   * template chip (a chip is disabled when the template can't fit
+   * the current content). Mirrors the refusal predicate inside
+   * `applyGridTemplate` itself.
+   *
+   * @param {{gridKey: string, template: Object}} args
+   * @returns {boolean}
+   */
+  canApplyGridTemplate({ gridKey, template }) {
+    if (!template) {
+      return false;
+    }
+    const located = this._findEntryAndOutletSync(gridKey);
+    if (!located) {
+      return false;
+    }
+    const { slotEntries } = resolveTemplateLayout(template);
+    if (slotEntries.length === 0) {
+      // Frame-only templates always apply.
+      return true;
+    }
+    const existing = located.entry.children?.length ?? 0;
+    return existing <= slotEntries.length;
+  }
+
+  /**
+   * Moves a canvas block onto a `ve:slot`, removing the source and
+   * replacing the slot with the moved block's data — the moved
+   * block adopts the slot's `containerArgs.grid` so it lands at the
+   * slot's rect. Same-outlet only for now; cross-outlet move-into-slot
+   * is a future iteration.
+   *
+   * @param {{sourceKey: string, slotKey: string}} args
+   * @returns {boolean}
+   */
+  @action
+  moveBlockIntoSlot({ sourceKey, slotKey }) {
+    if (sourceKey === slotKey) {
+      return false;
+    }
+    const sourceLocated = this._findEntryAndOutletSync(sourceKey);
+    const slotLocated = this._findEntryAndOutletSync(slotKey);
+    if (!sourceLocated || !slotLocated) {
+      return false;
+    }
+    if (sourceLocated.outletName !== slotLocated.outletName) {
+      return false;
+    }
+    if (slotLocated.entry.block !== "ve:slot") {
+      return false;
+    }
+    return this._recordStructural([slotLocated.outletName], () => {
+      const layout = this.readResolvedLayout(slotLocated.outletName);
+      if (!layout) {
+        return false;
+      }
+      const removal = removeEntry(layout, sourceKey);
+      if (!removal.changed || !removal.removed) {
+        return false;
+      }
+      // Drop the source's `__stableKey` — the slot's stableKey wins
+      // (`replaceEntryInPlace` preserves the matched entry's stableKey
+      // on the swap), which is the right identity for re-render
+      // continuity at the slot's position.
+      const { __stableKey, ...sourceData } = removal.removed;
+      void __stableKey;
+      const movedEntry = {
+        ...sourceData,
+        containerArgs: slotLocated.entry.containerArgs,
+      };
+      const replacement = replaceEntryInPlace(
+        removal.layout,
+        slotKey,
+        movedEntry
+      );
+      if (!replacement.changed) {
+        return false;
+      }
+      this._publishStructuralChange(slotLocated.outletName, replacement.layout);
+      return true;
+    });
+  }
+
+  /**
+   * Replaces a `ve:slot` entry with a real block. The new entry
+   * inherits the slot's `containerArgs.grid` so it lands at the
+   * same rect; CSS Grid then places the rendered block exactly
+   * where the slot was.
+   *
+   * @param {{slotKey: string, blockName: string, defaultArgs?: Object}} args
+   * @returns {boolean}
+   */
+  @action
+  fillSlot({ slotKey, blockName, defaultArgs = {} }) {
+    const located = this._findEntryAndOutletSync(slotKey);
+    if (!located || located.entry.block !== "ve:slot") {
+      return false;
+    }
+    if (
+      !this.canInsertBlockAt({
+        blockName,
+        targetOutletName: located.outletName,
+      })
+    ) {
+      return false;
+    }
+    return this._recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const newEntry = {
+        block: blockName,
+        args: { ...defaultArgs },
+        containerArgs: located.entry.containerArgs,
+      };
+      const result = replaceEntryInPlace(layout, slotKey, newEntry);
+      if (!result.changed) {
+        return false;
+      }
+      this._publishStructuralChange(located.outletName, result.layout);
+      this._selectInsertedEntry(newEntry);
       return true;
     });
   }
