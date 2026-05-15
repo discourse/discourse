@@ -1,5 +1,7 @@
 /* eslint no-console: "off" */
 
+import { chromium } from "playwright";
+
 const args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 2) {
@@ -8,10 +10,7 @@ if (args.length < 1 || args.length > 2) {
 }
 
 const url = args[0];
-
 console.log(`Starting Discourse Smoke Test for ${url}`);
-
-import { chromium } from "playwright";
 
 (async () => {
   const browser = await chromium.launch({
