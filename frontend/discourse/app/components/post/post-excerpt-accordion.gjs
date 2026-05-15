@@ -92,7 +92,6 @@ export default class PostExcerptAccordion extends Component {
             @isExpanded={{this.itemIsExpanded excerptPost.id}}
             @onToggleExpanded={{fn this.toggleItemExpanded excerptPost.id}}
             @linesDisplayed={{@linesDisplayed}}
-            @defaultExpanded="first"
             @hasItemMetadataBlock={{has-block "itemMetadata"}}
             @hasBeforeItemContentBlock={{has-block "beforeItemContent"}}
           >
