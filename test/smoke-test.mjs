@@ -63,7 +63,7 @@ const exec = async (description, fn) => {
 page.on("response", (resp) => {
   if (![200, 204, 302].includes(resp.status())) {
     console.log(
-      "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
+      `FAILED HTTP REQUEST TO ${resp.url()} Status is: ${resp.status()}`
     );
     if (resp.status() === 429) {
       const headers = resp.headers();
