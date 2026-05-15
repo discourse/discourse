@@ -224,13 +224,26 @@ RSpec.describe UpcomingChanges::Action::NotifyAdminsOfAvailableChange do
           }
         end
 
-        it "still creates an admins_notified_available_change event" do
-          expect { result }.to change {
+        it "does not create an admins_notified_available_change event" do
+          expect { result }.not_to change {
             UpcomingChangeEvent.where(
               event_type: :admins_notified_available_change,
               upcoming_change_name: :test_upcoming_change,
             ).count
-          }.by(1)
+          }
+        end
+
+        it "does not log a staff action" do
+          expect { result }.not_to change {
+            UserHistory.where(
+              action: UserHistory.actions[:upcoming_change_available],
+              subject: "test_upcoming_change",
+            ).count
+          }
+        end
+
+        it "returns nil" do
+          expect(result).to be_nil
         end
       end
     end
