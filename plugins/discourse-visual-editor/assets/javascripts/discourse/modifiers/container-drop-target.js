@@ -70,14 +70,27 @@ export default modifier(
 
     const isSlot = mode === "slot";
     const axis = mode === "row" ? "x" : "y";
-    // For a `ve:layout` block-chrome, the actual container DOM (where
-    // children render as direct siblings) is the `.ve-layout` div
-    // emitted by the layout block — one level deeper than the chrome.
-    // For slots, there's no inner container — the chrome IS the drop
-    // area. For an outlet boundary (no `.ve-layout` descendant) we
-    // fall back to the chrome element itself: its direct children are
-    // the top-level block wrappers and a label badge, exactly the
-    // shape `computeDescriptor` walks.
+    // Find the container element where block-chrome-wrappers are
+    // direct siblings — that's the geometry `computeDescriptor`
+    // projects the cursor onto.
+    //
+    // - For a `ve:layout` chrome (stack / row mode): the wrappers
+    //   live inside the `.ve-layout` div, which is a DIRECT child
+    //   of the chrome.
+    // - For the outlet boundary: the wrappers live inside
+    //   `BlockOutletRootContainer`'s `__layout` div, three levels
+    //   below the boundary (boundary → div.outletName →
+    //   div.outletName__container → div.outletName__layout →
+    //   wrappers). Can't use a hardcoded selector because the
+    //   classnames are outlet-specific.
+    // - For slots: there's no inner container, the chrome IS the
+    //   drop area.
+    //
+    // Walk strategy: find any descendant chrome with
+    // `[data-ve-block-key]`, climb back up to its
+    // `.visual-editor-block-chrome-wrapper`, and that wrapper's
+    // parent IS the container. Falls back to the chrome itself when
+    // there are no descendant blocks (empty container case).
     let containerElement = null;
     function resolveContainer() {
       if (isSlot) {
@@ -86,8 +99,21 @@ export default modifier(
       if (containerElement && chromeElement.contains(containerElement)) {
         return containerElement;
       }
-      containerElement =
-        chromeElement.querySelector(".ve-layout") ?? chromeElement;
+      const firstBlock = chromeElement.querySelector("[data-ve-block-key]");
+      if (firstBlock) {
+        const wrapper = firstBlock.closest(
+          ".visual-editor-block-chrome-wrapper"
+        );
+        if (
+          wrapper &&
+          chromeElement.contains(wrapper) &&
+          wrapper.parentElement
+        ) {
+          containerElement = wrapper.parentElement;
+          return containerElement;
+        }
+      }
+      containerElement = chromeElement;
       return containerElement;
     }
 
@@ -95,6 +121,31 @@ export default modifier(
       const source = visualEditor.dragSource;
       if (!source) {
         return;
+      }
+      // Edge-band defer. When this modifier instance is on a CHROME
+      // (not the outlet boundary itself), drops within 12px of any
+      // outer edge bubble up to the parent container so the user
+      // can insert a sibling AT THE PARENT level. Without this, a
+      // container chrome (e.g. ve:layout in stack mode at outlet
+      // root) consumes EVERY dragover over its bbox via the
+      // `stopPropagation` below, leaving no way to reach the
+      // outlet boundary's drop logic. The outlet boundary itself
+      // is identified by `containerKey === null` and skips this
+      // check — it's the root, so there's no parent to defer to.
+      // Slot chromes also opt out: a slot is always single-cell
+      // inside a grid, and the grid overlay owns sibling moves at
+      // the parent level.
+      if (containerKey != null && !isSlot) {
+        const rect = chromeElement.getBoundingClientRect();
+        const BAND = 12;
+        const inEdgeBand =
+          event.clientY < rect.top + BAND ||
+          event.clientY > rect.bottom - BAND ||
+          event.clientX < rect.left + BAND ||
+          event.clientX > rect.right - BAND;
+        if (inEdgeBand) {
+          return;
+        }
       }
       const container = resolveContainer();
       if (!container) {
@@ -353,11 +404,23 @@ function buildInsertDescriptor({
   position,
   targetKey,
 }) {
-  // 4px line along the gap (axis-orthogonal).
-  const LINE = 4;
   const containerRect = container.getBoundingClientRect();
   let geometry;
-  if (axis === "y") {
+  if (!targetKey) {
+    // Empty container — no anchor child to draw a line next to. Paint
+    // the whole container rect so the user can clearly see WHERE the
+    // block will land. A 4px line at the container's edge is easy to
+    // miss when the container is tall (or just yellow-tinted, like an
+    // empty outlet).
+    geometry = {
+      top: containerRect.top,
+      left: containerRect.left,
+      width: containerRect.width,
+      height: containerRect.height,
+    };
+  } else if (axis === "y") {
+    // 4px line along the gap (axis-orthogonal).
+    const LINE = 4;
     const y =
       side === "before"
         ? anchorRect.top - LINE / 2
@@ -369,6 +432,7 @@ function buildInsertDescriptor({
       height: LINE,
     };
   } else {
+    const LINE = 4;
     const x =
       side === "before"
         ? anchorRect.left - LINE / 2
@@ -394,9 +458,13 @@ function buildInsertDescriptor({
 
   return {
     geometry,
-    kind: "insert",
+    // Use `inside` for empty containers so the overlay reads as
+    // "drop INTO this" rather than "insert at edge". Same visual
+    // treatment, but the semantic kind is what the label and any
+    // future variant styling key off.
+    kind: targetKey ? "insert" : "inside",
     variant: "valid",
-    label: insertLabel({ visualEditor, source }),
+    label: insertLabel({ visualEditor, source, position, targetKey }),
     dispatch: insertDispatch({
       source,
       targetKey,
@@ -532,11 +600,25 @@ function validateInsideDrop({ visualEditor, source, targetKey }) {
 /* Label builders — `i18n` keys with interpolations the descriptor
    carries pre-resolved (the overlay just renders the string). */
 
-function insertLabel({ visualEditor, source }) {
+function insertLabel({ visualEditor, source, position, targetKey }) {
   const name = sourceDisplayName(visualEditor, source);
-  return source.kind === "ve-palette-block"
-    ? translate("visual_editor.canvas.drop_preview.add_here", { name })
-    : translate("visual_editor.canvas.drop_preview.move_here", { name });
+  const target = targetKey ? targetDisplayName(visualEditor, targetKey) : null;
+  const isPalette = source.kind === "ve-palette-block";
+  // Empty-container case: no anchor child. Fall back to the
+  // ambient "add here / move here" copy.
+  if (!target || (position !== "before" && position !== "after")) {
+    return isPalette
+      ? translate("visual_editor.canvas.drop_preview.add_here", { name })
+      : translate("visual_editor.canvas.drop_preview.move_here", { name });
+  }
+  const key = isPalette
+    ? position === "before"
+      ? "visual_editor.canvas.drop_preview.add_before"
+      : "visual_editor.canvas.drop_preview.add_after"
+    : position === "before"
+      ? "visual_editor.canvas.drop_preview.move_before"
+      : "visual_editor.canvas.drop_preview.move_after";
+  return translate(key, { name, target });
 }
 
 function insideLabel({ visualEditor, source, blockName, targetKey }) {
@@ -651,8 +733,9 @@ function sourceDisplayName(visualEditor, source) {
   if (source.kind === "ve-block") {
     const located = visualEditor._findEntryAndOutletSync(source.data.blockKey);
     if (located?.entry) {
-      return (
-        visualEditor._lookupBlockDisplayName?.(located.entry.block) || "block"
+      return decorateWithId(
+        visualEditor._lookupBlockDisplayName?.(located.entry.block) || "block",
+        located.entry.id
       );
     }
   }
@@ -664,7 +747,24 @@ function targetDisplayName(visualEditor, targetKey) {
   if (!located?.entry) {
     return null;
   }
-  return visualEditor._lookupBlockDisplayName?.(located.entry.block);
+  const name = visualEditor._lookupBlockDisplayName?.(located.entry.block);
+  return decorateWithId(name, located.entry.id);
+}
+
+/**
+ * Appends `#id` to a block's display name when the entry has an
+ * author-assigned ID. Matches the `#id` convention the outline
+ * panel uses for the same purpose, so labels read consistently
+ * across surfaces (e.g. "Heading #hero").
+ */
+function decorateWithId(name, id) {
+  if (!name) {
+    return name;
+  }
+  if (!id) {
+    return name;
+  }
+  return `${name} #${id}`;
 }
 
 function translate(key, vars) {
