@@ -68,7 +68,8 @@ class SchemaFormField extends Component {
         @title={{@entry.label}}
         @description={{@entry.description}}
         @validation={{if @entry.required "required"}}
-        @format="full"
+        @labelFormat="full"
+        @format="large"
         @type="select"
         as |field|
       >
@@ -86,7 +87,8 @@ class SchemaFormField extends Component {
         @title={{@entry.label}}
         @description={{@entry.description}}
         @validation={{if @entry.required "required"}}
-        @format="full"
+        @labelFormat="full"
+        @format="large"
         @type="custom"
         as |field|
       >
