@@ -715,8 +715,10 @@ class InvitesController < ApplicationController
     return if invite.can_be_redeemed_by?(current_user)
     if invite.invited_users.exists?(user: current_user)
       I18n.t("invite.existing_user_already_redemeed")
+    elsif !invite.redeemable?
+      I18n.t("invite.existing_user_invite_unavailable")
     else
-      I18n.t("invite.existing_user_cannot_redeem")
+      I18n.t("invite.existing_user_email_mismatch")
     end
   end
 end
