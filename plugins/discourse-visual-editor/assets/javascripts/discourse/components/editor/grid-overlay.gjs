@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import { i18n } from "discourse-i18n";
 import {
   computeOccupation,
   parsePlacement,
@@ -263,6 +264,124 @@ export default class GridOverlay extends Component {
     if (descriptor) {
       this._lastDropPreview = descriptor;
     }
+    // Mirror to the unified `activeDropPreview` so the single
+    // `<DropPreview>` overlay (mounted at the editor shell) paints
+    // the grid's drop indicator. Drop DISPATCH still goes through
+    // this component's own `applyCellDrop` / `applySlotDrop` —
+    // those read `_lastDropPreview` above and resolve to the right
+    // grid action (swap / replace / shift / occupy). The unified
+    // service-level dispatch is bypassed for grid drops because
+    // the grid's math doesn't fit the generic insertBlock /
+    // moveBlock contract.
+    this._mirrorToActivePreview(descriptor);
+  }
+
+  /**
+   * Translates an internal grid descriptor (`{kind: "rect"|
+   * "line-column"|"line-row", column, row, variant}`) into the
+   * unified viewport-coord descriptor the shell-mounted
+   * `<DropPreview>` paints. Skipped silently when geometry can't
+   * be resolved (e.g. before the grid element is captured).
+   *
+   * @param {Object|null} descriptor
+   */
+  _mirrorToActivePreview(descriptor) {
+    if (!descriptor || !this._gridElement) {
+      this.visualEditor.setActiveDropPreview(null);
+      return;
+    }
+    const gridRel = this._computeOverlayGeometry(descriptor);
+    if (!gridRel) {
+      this.visualEditor.setActiveDropPreview(null);
+      return;
+    }
+    const gridRect = this._gridElement.getBoundingClientRect();
+    const geometry = {
+      top: gridRect.top + gridRel.top,
+      left: gridRect.left + gridRel.left,
+      width: gridRel.width,
+      height: gridRel.height,
+    };
+    const source = this.visualEditor.dragSource;
+    this.visualEditor.setActiveDropPreview({
+      geometry,
+      kind: this._unifiedKindFor(descriptor),
+      variant: "valid",
+      label: this._labelFor(descriptor, source),
+      // No `dispatch` — grid drops dispatch via this component's
+      // own onDrop handlers (`applyCellDrop` / `applySlotDrop`),
+      // which read from `this._lastDropPreview`.
+    });
+  }
+
+  _unifiedKindFor(descriptor) {
+    if (descriptor.kind === "rect") {
+      if (descriptor.variant === "swap") {
+        return "swap";
+      }
+      if (descriptor.variant === "replace") {
+        return "replace";
+      }
+      return "occupy";
+    }
+    return descriptor.variant === "insert" ? "shift" : "insert";
+  }
+
+  _labelFor(descriptor, source) {
+    if (!source) {
+      return "";
+    }
+    const sourceName = this._sourceDisplayName(source);
+    const kind = this._unifiedKindFor(descriptor);
+    if (kind === "swap") {
+      return i18n("visual_editor.canvas.drop_preview.swap", {
+        name: sourceName,
+      });
+    }
+    if (kind === "replace") {
+      return source.kind === "ve-palette-block"
+        ? i18n("visual_editor.canvas.drop_preview.fill_slot", {
+            name: sourceName,
+          })
+        : i18n("visual_editor.canvas.drop_preview.move_into_slot", {
+            name: sourceName,
+          });
+    }
+    if (kind === "shift") {
+      return i18n("visual_editor.canvas.drop_preview.shift", {
+        name: sourceName,
+      });
+    }
+    // occupy / fallback
+    return source.kind === "ve-palette-block"
+      ? i18n("visual_editor.canvas.drop_preview.add_to_cell", {
+          name: sourceName,
+        })
+      : i18n("visual_editor.canvas.drop_preview.move_to_cell", {
+          name: sourceName,
+        });
+  }
+
+  _sourceDisplayName(source) {
+    if (source.kind === "ve-palette-block") {
+      return (
+        this.visualEditor._lookupBlockDisplayName(source.data.blockName) ||
+        source.data.blockName ||
+        "block"
+      );
+    }
+    if (source.kind === "ve-block") {
+      const located = this.visualEditor._findEntryAndOutletSync(
+        source.data.blockKey
+      );
+      if (located?.entry) {
+        return (
+          this.visualEditor._lookupBlockDisplayName(located.entry.block) ||
+          "block"
+        );
+      }
+    }
+    return "block";
   }
 
   @action
@@ -447,6 +566,13 @@ export default class GridOverlay extends Component {
     ) {
       return;
     }
+    // Must call preventDefault on dragover so the subsequent `drop`
+    // event fires (HTML5 DnD spec). The per-empty-cell
+    // `dDragAndDropTarget` modifiers do this for the cells they own,
+    // but grid-positioned leaves (occupied cells like A / B in a
+    // 6×2 grid) rely solely on this capture-phase handler to
+    // qualify their drop event.
+    event.preventDefault();
     const descriptor = this._descriptorFromCursor(event, source);
     this.setDropPreview(descriptor);
   }
@@ -1024,13 +1150,10 @@ export default class GridOverlay extends Component {
           aria-hidden="true"
           {{didInsert this.captureGhost}}
         ></div>
-
-        <div
-          class="visual-editor-grid-drop-overlay {{this.overlayVariantClass}}"
-          style={{this.overlayStyle}}
-          aria-hidden="true"
-          {{didInsert this.captureOverlay}}
-        ></div>
+        {{! The grid-local drop overlay element is removed — the
+          shell-mounted `<DropPreview>` is now the single drop
+          indicator; this component mirrors its descriptor into
+          `visualEditor.activeDropPreview` via `setDropPreview`. }}
       {{/in-element}}
     {{/if}}
   </template>

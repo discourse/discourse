@@ -1,0 +1,60 @@
+// @ts-check
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
+
+/**
+ * The editor's single drop indicator. Reads
+ * `visualEditor.activeDropPreview` and paints exactly one
+ * absolutely-positioned rectangle at the descriptor's geometry,
+ * with the operation label rendered as a small badge in the
+ * top-left corner.
+ *
+ * Mounted once at the editor shell level so by construction there
+ * can never be more than one drop indicator visible — the previous
+ * editor had per-block strip zones AND a grid-level overlay paint
+ * simultaneously at grid edges; this component replaces both.
+ *
+ * The descriptor's `geometry` is in viewport coordinates (`top`,
+ * `left`, `width`, `height` in CSS pixels), so the overlay uses
+ * `position: fixed` to anchor against the viewport regardless of
+ * which scroll container the original drag started in.
+ *
+ * `null` descriptor = no overlay rendered (`{{#if}}` guard at the
+ * top of the template), so when scopes clear their preview the
+ * indicator disappears immediately.
+ */
+export default class DropPreview extends Component {
+  @service visualEditor;
+
+  get preview() {
+    return this.visualEditor.activeDropPreview;
+  }
+
+  get style() {
+    const g = this.preview?.geometry;
+    if (!g) {
+      return null;
+    }
+    return trustHTML(
+      `top: ${g.top}px; left: ${g.left}px; ` +
+        `width: ${g.width}px; height: ${g.height}px;`
+    );
+  }
+
+  <template>
+    {{#if this.preview}}
+      <div
+        class="visual-editor-drop-preview visual-editor-drop-preview--{{this.preview.kind}}"
+        style={{this.style}}
+        aria-hidden="true"
+      >
+        {{#if this.preview.label}}
+          <span class="visual-editor-drop-preview__label">
+            {{this.preview.label}}
+          </span>
+        {{/if}}
+      </div>
+    {{/if}}
+  </template>
+}

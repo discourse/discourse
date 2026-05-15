@@ -139,6 +139,53 @@ export default class VisualEditorService extends Service {
   /** @type {{targetKey: string, position: string, outletName: string}|null} */
   @tracked activeDropTarget = null;
   /**
+   * Full drag-source descriptor during an in-flight drag. Browsers
+   * restrict `event.dataTransfer.getData()` to the `drop` event for
+   * security, so dragover-time consumers (the new
+   * `containerDropTarget` modifier, the grid overlay) read this
+   * instead. Set by every `dDragAndDropSource` site's
+   * `onDragStart` (palette + chrome + outline rows); cleared by
+   * `endDrag`.
+   *
+   * @type {{kind: string, data: Object}|null}
+   */
+  @tracked dragSource = null;
+  /**
+   * The single source of truth for the drag-time drop indicator. Set
+   * by the active scope's dragover handler (a container's
+   * `containerDropTarget` modifier OR the `GridOverlay`'s grid-level
+   * handler) to the descriptor of the drop that WOULD happen if the
+   * user released the mouse right now. The mounted `<DropPreview>`
+   * component renders one overlay element off of this; clearing it
+   * hides the overlay.
+   *
+   * Shape:
+   * ```
+   * {
+   *   geometry: { top, left, width, height }, // viewport-relative px
+   *   kind: "insert" | "inside" | "replace" | "swap" | "shift" | "occupy",
+   *   label: string, // human-readable, already i18n-resolved
+   *   variant: "valid",
+   *   // Caller-private dispatch payload — read at drop time so the
+   *   // drop handler can act on the same descriptor the user saw.
+   *   dispatch: {
+   *     action: "insertBlock" | "moveBlock" | "fillSlot" |
+   *             "moveBlockIntoSlot" | "insertBlockAtCell" |
+   *             "moveBlockToCell" | "swapSlotPlacements" | ...,
+   *     args: Object,
+   *   },
+   * }
+   * ```
+   *
+   * Invariant: only one descriptor is set at any time across the
+   * whole canvas. Scopes that compute a new descriptor MUST clear
+   * the previous one first via `setActiveDropPreview(null)` if their
+   * own computation yielded nothing.
+   *
+   * @type {Object|null}
+   */
+  @tracked activeDropPreview = null;
+  /**
    * Phase 7 simulation slot. When non-null, threads through the condition
    * evaluator's context (via the `EVAL_CONTEXT` debug hook) so
    * condition-gated blocks render as if the simulated user / viewport
@@ -168,6 +215,18 @@ export default class VisualEditorService extends Service {
    * @type {{x: number, y: number, width: number, height: number}|null}
    */
   @tracked conditionsPanelRect = null;
+  /**
+   * Sticky mirror of `activeDropPreview` captured at the moment of
+   * the drop's `drop` event. The visible preview is cleared at
+   * dragleave / drop start (so the overlay disappears immediately on
+   * release), but the dispatch handler needs to read the descriptor
+   * one tick later. Same pattern the old `_lastDropPreview` used
+   * inside `GridOverlay`.
+   *
+   * @type {Object|null}
+   */
+  _lastDropPreview = null;
+
   /**
    * Clipboard slot for the Cmd/Ctrl-C/X/V cycle and the future "duplicate"
    * action. `mode: "copy"` lets paste re-clone the entry on every Cmd-V,
@@ -2020,6 +2079,27 @@ export default class VisualEditorService extends Service {
   startDrag({ blockKey, outletName }) {
     this.dragSourceKey = blockKey;
     this.dragSourceOutlet = outletName;
+    this.dragSource = {
+      kind: "ve-block",
+      data: { blockKey, outletName },
+    };
+    document.body.classList.add("visual-editor-dragging");
+  }
+
+  /**
+   * Records the start of a palette-driven drag. Mirrors `startDrag`
+   * but with the `ve-palette-block` kind so dragover-time consumers
+   * can pick the right label / dispatch action. Called from
+   * `PaletteEntry`'s `onDragStart`.
+   *
+   * @param {{blockName: string, defaultArgs: Object}} payload
+   */
+  @action
+  startPaletteDrag({ blockName, defaultArgs }) {
+    this.dragSource = {
+      kind: "ve-palette-block",
+      data: { blockName, defaultArgs },
+    };
     document.body.classList.add("visual-editor-dragging");
   }
 
@@ -2034,8 +2114,70 @@ export default class VisualEditorService extends Service {
   endDrag() {
     this.dragSourceKey = null;
     this.dragSourceOutlet = null;
+    this.dragSource = null;
     this.activeDropTarget = null;
+    this.activeDropPreview = null;
+    this._lastDropPreview = null;
     document.body.classList.remove("visual-editor-dragging");
+  }
+
+  /**
+   * Writes the unified drop-preview descriptor. The mounted
+   * `<DropPreview>` component reads `activeDropPreview` and paints
+   * exactly one overlay; null hides it. Sources call this from
+   * their dragover handlers; the `_lastDropPreview` mirror lets
+   * drop-time dispatch read the same descriptor after the visible
+   * one has been cleared.
+   *
+   * @param {Object|null} descriptor
+   */
+  @action
+  setActiveDropPreview(descriptor) {
+    this.activeDropPreview = descriptor;
+    if (descriptor) {
+      this._lastDropPreview = descriptor;
+    }
+  }
+
+  /**
+   * Hides the drop overlay (`activeDropPreview = null`) but keeps
+   * `_lastDropPreview` populated for a tick so the drop handler
+   * still has the descriptor to dispatch against.
+   */
+  @action
+  clearActiveDropPreview() {
+    this.activeDropPreview = null;
+  }
+
+  /**
+   * Dispatches the operation described by `_lastDropPreview` (the
+   * sticky mirror captured at the most recent dragover). The drop
+   * handlers attached to container chromes / grid overlay call
+   * this on `drop` — by then the visible preview may have been
+   * cleared by a dragleave, but the dispatch payload is still
+   * available here.
+   *
+   * Returns `true` when an operation ran; `false` when there was no
+   * preview to dispatch against (e.g. dropped outside any
+   * registered scope).
+   *
+   * @returns {boolean}
+   */
+  @action
+  dispatchActiveDrop() {
+    const preview = this._lastDropPreview;
+    this._lastDropPreview = null;
+    this.activeDropPreview = null;
+    if (!preview?.dispatch) {
+      return false;
+    }
+    const { action: actionName, args } = preview.dispatch;
+    const method = this[actionName];
+    if (typeof method !== "function") {
+      return false;
+    }
+    method.call(this, args);
+    return true;
   }
 
   /**
@@ -2151,6 +2293,56 @@ export default class VisualEditorService extends Service {
       return null;
     }
     return getBlockMetadata(klass);
+  }
+
+  /**
+   * Resolves a block reference (either a registry name string or
+   * the decorated class itself, as it appears in layout entries)
+   * to its canonical block name string. Returns `null` for
+   * unresolvable references.
+   *
+   * @param {string|Function} blockRef
+   * @returns {string|null}
+   */
+  _blockNameFor(blockRef) {
+    if (typeof blockRef === "string") {
+      return blockRef;
+    }
+    return getBlockMetadata(blockRef)?.blockName ?? null;
+  }
+
+  /**
+   * Pulls the human-readable display name for a block from its
+   * metadata. The drop-preview overlay uses this so labels match
+   * the palette / outline vocabulary the author already sees
+   * elsewhere. Falls back to the block name itself when no
+   * display name is set.
+   *
+   * @param {string|Function} blockRef
+   * @returns {string|null}
+   */
+  _lookupBlockDisplayName(blockRef) {
+    const name = this._blockNameFor(blockRef);
+    if (!name) {
+      return null;
+    }
+    return this._metadataForName(name)?.displayName ?? name;
+  }
+
+  /**
+   * Returns the block's metadata bag for any block-reference form
+   * (string registry name or class). Convenience over picking
+   * between `_metadataForName` (string) and `getBlockMetadata`
+   * (class) at the call site.
+   *
+   * @param {string|Function} blockRef
+   * @returns {Object|null}
+   */
+  _lookupBlockMetadata(blockRef) {
+    if (typeof blockRef === "function") {
+      return getBlockMetadata(blockRef) ?? null;
+    }
+    return this._metadataForName(blockRef);
   }
 
   /**

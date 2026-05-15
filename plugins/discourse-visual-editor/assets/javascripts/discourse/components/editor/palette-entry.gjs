@@ -18,13 +18,16 @@ export default class PaletteEntry extends Component {
   @service visualEditor;
 
   /**
-   * Drag-start callback for the source modifier. We don't surface palette
-   * drags through the editor service's `dragSourceKey` (that's the
-   * "move" model), so this is a no-op for now — kept as a hook in case
-   * Phase 7+ wants to track the in-flight palette drag.
+   * Drag-start callback. Pushes the palette entry into the editor
+   * service's `dragSource` so dragover-time consumers (the unified
+   * drop coordinator) can build labels like "Add Heading here"
+   * before the drop fires. The legacy chrome `dragSourceKey` stays
+   * null — palette drags aren't moves.
    */
   @action
-  handleDragStart() {}
+  handleDragStart({ data }) {
+    this.visualEditor.startPaletteDrag(data);
+  }
 
   <template>
     <div
