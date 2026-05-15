@@ -185,6 +185,11 @@ module TestSetup
 
     I18n.locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
 
+    # Database is rolled back between specs, but I18n override cache doesn't.
+    # Flush it if there were any TranslationOverrides created.
+    overrides_by_site = I18n.instance_variable_get(:@overrides_by_site) || {}
+    I18n.reload! if overrides_by_site.values.flat_map(&:values).any?(&:any?)
+
     RspecErrorTracker.clear_exceptions
 
     if $test_cleanup_callbacks
@@ -1352,6 +1357,13 @@ def apply_base_chrome_args(args = [])
     base_args << "--remote-debugging-port=" + CHROME_REMOTE_DEBUGGING_PORT
     base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
   end
+
+  resolver_rules = ["MAP test.localhost:80 127.0.0.1:#{Capybara.server_port}"]
+  if ENV["CI"]
+    # Bypass the OS resolver for localhost lookups inside the browser.
+    resolver_rules.push("MAP localhost [::1]", "MAP *.localhost [::1]")
+  end
+  base_args << "--host-resolver-rules=#{resolver_rules.join(",")}"
 
   # A file that contains just a list of paths like so:
   #

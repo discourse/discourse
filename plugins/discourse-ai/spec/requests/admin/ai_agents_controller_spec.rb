@@ -204,17 +204,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
         )
       end
 
-      after do
-        TranslationOverride.revert!(
-          SiteSetting.default_locale,
-          "discourse_ai.ai_bot.agents.general.name",
-        )
-        TranslationOverride.revert!(
-          SiteSetting.default_locale,
-          "discourse_ai.ai_bot.agents.general.description",
-        )
-      end
-
       it "returns localized agent names and descriptions" do
         get "/admin/plugins/discourse-ai/ai-agents.json"
 

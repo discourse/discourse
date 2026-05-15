@@ -8,6 +8,7 @@ RSpec.describe SvgSprite do
   after do
     SvgSprite.clear_plugin_svg_sprite_cache!
     SvgSprite.expire_cache
+    Theme.clear_cache!
   end
 
   it "can generate a bundle" do

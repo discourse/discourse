@@ -22,6 +22,7 @@ class Auth::Result
     failed_reason
     failed_code
     associated_groups
+    user_field_values
     overrides_email
     overrides_username
     overrides_name
@@ -40,6 +41,7 @@ class Auth::Result
     extra_data
     skip_email_validation
     associated_groups
+    user_field_values
     overrides_email
     overrides_username
     overrides_name
@@ -122,6 +124,13 @@ class Auth::Result
 
       user.update(associated_group_ids: associated_group_ids)
       AssociatedGroup.where(id: associated_group_ids).update_all("last_used = CURRENT_TIMESTAMP")
+    end
+
+    if user && user_field_values.present?
+      user_field_values.each do |field_id, value|
+        user.custom_fields["user_field_#{field_id}"] = value
+      end
+      user.save_custom_fields
     end
 
     # refreshes automatic group membership (despite the name, it doesn't change TLs)

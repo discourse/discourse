@@ -114,11 +114,9 @@ export default <template>
               class="directory-table__column-header--username username"
             />
 
-            {{#if @controller.canManageGroup}}
-              <div
-                class="directory-table__column-header directory-table__column-header--can-manage"
-              ></div>
-            {{/if}}
+            <div
+              class="directory-table__column-header directory-table__column-header--can-manage"
+            ></div>
 
             <PluginOutlet
               @name="group-index-table-header-after-username"
@@ -188,27 +186,25 @@ export default <template>
                   />
                 </div>
 
-                {{#if @controller.canManageGroup}}
-                  <div
-                    class="directory-table__cell directory-table__cell--can-manage group-owner"
-                  >
-                    {{#if (or m.owner m.primary)}}
-                      <span class="directory-table__label">
-                        <span>{{i18n "groups.members.status"}}</span>
-                      </span>
-                    {{/if}}
-                    <span class="directory-table__value">
-                      {{#if m.owner}}
-                        {{dIcon "shield-halved"}}
-                        {{i18n "groups.members.owner"}}<br />
-                      {{/if}}
-                      {{#if m.primary}}
-                        {{i18n "groups.members.primary"}}
-                      {{/if}}
+                <div
+                  class="directory-table__cell directory-table__cell--can-manage group-owner"
+                >
+                  {{#if (or m.owner m.primary)}}
+                    <span class="directory-table__label">
+                      <span>{{i18n "groups.members.status"}}</span>
                     </span>
+                  {{/if}}
+                  <span class="directory-table__value">
+                    {{#if m.owner}}
+                      {{dIcon "shield-halved"}}
+                      {{i18n "groups.members.owner"}}<br />
+                    {{/if}}
+                    {{#if m.primary}}
+                      {{i18n "groups.members.primary"}}
+                    {{/if}}
+                  </span>
 
-                  </div>
-                {{/if}}
+                </div>
 
                 <PluginOutlet
                   @name="group-index-table-row-after-username"

@@ -47,7 +47,7 @@ module Plugin
       start = Time.now
 
       if !GlobalSetting.mini_racer_single_threaded && AssetProcessor.booted?
-        raise "[Plugin::JSManager] Cannot fork for parallel compilation because AssetProcessor is already booted."
+        raise "Cannot fork Plugin::JsManager for parallel compilation because AssetProcessor is already booted."
       end
 
       parallel_count = [Etc.nprocessors, 4].min
@@ -209,7 +209,7 @@ module Plugin
     end
 
     def log(message)
-      STDERR.puts "[Plugin::JsManager] #{message}"
+      STDERR.puts message
     end
 
     private_class_method def self.maybe_cache(key, &blk)
