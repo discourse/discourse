@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class DisableHorizonHighContextTopicCardsForExistingSites < ActiveRecord::Migration[8.0]
   def up
-    return if !Migration::Helpers.existing_site?
+    return if Migration::Helpers.new_site?
 
     execute <<~SQL
       INSERT INTO theme_settings(name, data_type, value, theme_id, created_at, updated_at)
