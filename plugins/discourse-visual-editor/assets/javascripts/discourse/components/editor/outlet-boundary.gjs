@@ -1,35 +1,53 @@
 // @ts-check
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import containerDropTarget from "../../modifiers/container-drop-target";
 import EditorEmptyOutletDropZone from "./editor-empty-outlet-drop-zone";
 
 /**
- * Outlet boundary chrome rendered around each `<BlockOutlet>` when the editor
- * is active. Wired via `DEBUG_CALLBACK.OUTLET_INFO_COMPONENT` in the api-initializer.
+ * Outlet boundary chrome rendered around each `<BlockOutlet>` when the
+ * editor is active. Wired via `DEBUG_CALLBACK.OUTLET_INFO_COMPONENT` in
+ * the api-initializer.
  *
- * The host BlockOutlet curries this component with `{ outletName, blockCount,
- * outletArgs, error }` and renders it; we add a small label badge above the
- * outlet content and yield the children unchanged.
+ * The host BlockOutlet curries this component with `{ outletName,
+ * blockCount, outletArgs, error }` and renders it; we add a small label
+ * badge above the outlet content and yield the children unchanged.
  *
- * When `blockCount === 0`, the `BlockOutletRootContainer` renders nothing, so
- * there's no `<BlockChrome>` to host a drop zone. Render an inline
- * `<EditorEmptyOutletDropZone>` instead so the palette can populate the
- * outlet.
+ * The boundary div is itself a stack-mode drop container so the palette
+ * can drop multiple top-level blocks into the outlet (the chrome of an
+ * existing top-level block only covers drops INSIDE that block — without
+ * this modifier there was no way to add a second sibling at the outlet
+ * level once the first block existed). `containerKey` is passed as
+ * `null` so `container-drop-target.js` recognises this as an outlet root
+ * and dispatches inserts/moves against `targetOutletName` alone.
+ *
+ * When `blockCount === 0`, the `BlockOutletRootContainer` renders
+ * nothing, so we still render `<EditorEmptyOutletDropZone>` as a pure
+ * visual affordance (its own dragdrop handlers were removed — drops are
+ * handled by THIS boundary's modifier).
  */
-const OutletBoundary = <template>
-  <div class="visual-editor-outlet-boundary" data-outlet-name={{@outletName}}>
-    <span class="visual-editor-outlet-boundary__badge">
-      {{dIcon "cubes"}}
-      <span>{{@outletName}}</span>
-      {{#if @blockCount}}
-        <span class="visual-editor-outlet-boundary__count">·
-          {{@blockCount}}</span>
-      {{/if}}
-    </span>
-    {{yield}}
-    {{#unless @blockCount}}
-      <EditorEmptyOutletDropZone @outletName={{@outletName}} />
-    {{/unless}}
-  </div>
-</template>;
+export default class OutletBoundary extends Component {
+  @service visualEditor;
 
-export default OutletBoundary;
+  <template>
+    <div
+      class="visual-editor-outlet-boundary"
+      data-outlet-name={{@outletName}}
+      {{containerDropTarget this.visualEditor null @outletName "stack"}}
+    >
+      <span class="visual-editor-outlet-boundary__badge">
+        {{dIcon "cubes"}}
+        <span>{{@outletName}}</span>
+        {{#if @blockCount}}
+          <span class="visual-editor-outlet-boundary__count">·
+            {{@blockCount}}</span>
+        {{/if}}
+      </span>
+      {{yield}}
+      {{#unless @blockCount}}
+        <EditorEmptyOutletDropZone @outletName={{@outletName}} />
+      {{/unless}}
+    </div>
+  </template>
+}

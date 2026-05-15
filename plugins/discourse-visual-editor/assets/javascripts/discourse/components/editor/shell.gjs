@@ -11,6 +11,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import BlockBreadcrumb from "./block-breadcrumb";
 import ConditionsFloatingPanel from "./conditions-floating-panel";
+import DropPreview from "./drop-preview";
 import InspectorPanel from "./inspector-panel";
 import OutletJumpSelect from "./outlet-jump-select";
 import OutlinePanel from "./outline-panel";
@@ -413,6 +414,7 @@ export default class EditorShell extends Component {
       </div>
 
       <ConditionsFloatingPanel />
+      <DropPreview />
     {{/if}}
   </template>
 }

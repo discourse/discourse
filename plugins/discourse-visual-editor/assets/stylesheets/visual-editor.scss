@@ -16,6 +16,8 @@
 @import "blocks/category-banner";
 @import "blocks/cta-banner";
 @import "blocks/featured-categories";
+@import "blocks/featured-topics";
+@import "blocks/media-card";
 @import "blocks/recent-topics";
 
 :root {
@@ -210,7 +212,7 @@ body.visual-editor-active {
      readable at every nesting level. */
 
   .visual-editor-block-handle {
-    position: absolute;
+    position: relative;
     top: var(--visual-editor-handler-offset);
     left: var(--visual-editor-handler-offset);
     z-index: 1000;
@@ -225,7 +227,6 @@ body.visual-editor-active {
     border-radius: var(--visual-editor-badge-radius);
     text-shadow: var(--visual-editor-shadow);
     cursor: grab;
-    opacity: 0;
     pointer-events: none;
     transition: opacity 80ms ease-out;
 
@@ -378,9 +379,13 @@ body.visual-editor-active {
      rectangle regardless of the user's `align` / `justify` choice.
      Each layer is a flex column so the inner `__content` slot can
      claim the chrome's remaining height (below the in-flow drag
-     handle) via `flex: 1` — relying on `height: 100%` chains here
-     doesn't resolve cleanly when the cell wrapper itself is
-     auto-sized by its row track. */
+     handle) via `flex: 1`.
+     `min-height: auto` (the flex default) on the chrome layers lets
+     the grid track size to the inner content's intrinsic height when
+     the parent grid's row uses `minmax(80px, auto)`. The previous
+     `min-height: 0` collapsed each layer's min-content to zero, so
+     the grid resolved auto-tracks to the minmax floor and tall
+     nested content overflowed the cell. */
 
   .ve-layout__cell > .visual-editor-block-chrome-wrapper {
     align-self: stretch;
@@ -388,7 +393,6 @@ body.visual-editor-active {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    min-height: 0;
 
     > .visual-editor-block-chrome {
       flex: 1 1 auto;
@@ -396,11 +400,9 @@ body.visual-editor-active {
       margin: 0;
       display: flex;
       flex-direction: column;
-      min-height: 0;
 
       > .visual-editor-block-chrome__content {
-        flex: 1 1 0;
-        min-height: 0;
+        flex: 1 1 auto;
       }
     }
   }
@@ -485,9 +487,12 @@ body.visual-editor-active {
     padding: var(--visual-editor-container-padding);
   }
 
-  /* Empty-outlet drop zone (Phase 7p.1). Rendered inside the outlet
-     boundary when the outlet has no children — gives the palette a
-     drop target so users can populate empty outlets. */
+  /* Empty-outlet visual affordance. Drops on the empty outlet are
+     handled by the parent `<OutletBoundary>`'s `containerDropTarget`
+     modifier — this element is purely a "drop something here" hint.
+     `pointer-events: none` lets dragover pass straight through to the
+     boundary; without it the deeper element would receive dragover
+     events even though it doesn't handle them. */
 
   .visual-editor-empty-outlet-drop-zone {
     display: flex;
@@ -502,17 +507,7 @@ body.visual-editor-active {
     color: var(--primary-medium);
     font-size: var(--font-down-1);
     background: rgb(0 0 0 / 0.02);
-    transition:
-      background-color 80ms ease-out,
-      border-color 80ms ease-out;
-    pointer-events: auto;
-
-    &.is-drag-above,
-    &.is-drag-below {
-      border-color: var(--tertiary);
-      background: var(--tertiary-low);
-      color: var(--tertiary);
-    }
+    pointer-events: none;
 
     &__icon {
       display: inline-flex;
@@ -2157,6 +2152,36 @@ body.visual-editor-dragging {
   .outline-block.--dragging {
     opacity: 0.5;
   }
+
+  /* During an active drag, fade the persistent `+` placeholders so
+     they don't compete with the single drop indicator the shell
+     paints. They STILL receive pointer events because each cell
+     carries its own grid-aware `dDragAndDropTarget` modifier —
+     drops onto a specific cell go through that modifier (it knows
+     about column/row coordinates), not the unified service
+     dispatch path. */
+
+  .visual-editor-grid-cell {
+    opacity: 0.3;
+  }
+}
+
+/* Empty-container hint — replaces the old `--inside` drop zone
+   label. Visible only when the container actually has no children,
+   so an empty `ve:layout` reads as "drag something into me" without
+   eating layout space on every block like the old strip zones did. */
+
+.visual-editor-block-chrome.--empty-container {
+  min-height: 4rem;
+
+  .visual-editor-block-chrome__empty-hint {
+    display: block;
+    text-align: center;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-style: italic;
+    padding: 1rem 0.5rem;
+  }
 }
 
 /* Starter block library */
@@ -2173,6 +2198,10 @@ body.visual-editor-dragging {
   &--align-right {
     text-align: right;
   }
+}
+
+.ve-heading .d-icon {
+  margin-right: 0.4em;
 }
 
 .ve-image {
@@ -3222,5 +3251,61 @@ body.visual-editor-active {
   .visual-editor-block-chrome.--slot > .visual-editor-block-chrome__content {
     place-items: center;
     min-height: 60px;
+  }
+}
+
+/* The editor's single drop indicator. Positioned in viewport
+   coordinates (the descriptor's `geometry` is `getBoundingClientRect`-
+   style), so it lives at the document root and is reachable from any
+   scroll context. Mounted once by `EditorShell` — by construction
+   only one indicator is on screen at a time. */
+
+.visual-editor-drop-preview {
+  position: fixed;
+  pointer-events: none;
+  z-index: z("modal", "content");
+  border-radius: 4px;
+  border: 2px solid var(--tertiary);
+  background: rgb(0 119 204 / 0.18);
+  transition:
+    top 80ms ease-out,
+    left 80ms ease-out,
+    width 80ms ease-out,
+    height 80ms ease-out;
+
+  &__label {
+    position: absolute;
+    top: -22px;
+    left: 0;
+    background: var(--tertiary);
+    color: var(--secondary);
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px 4px 4px 0;
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 18px;
+  }
+
+  /* Kind variants — for now all valid kinds share the same tertiary
+     blue scheme. The label carries the operation difference; the
+     overlay shape itself stays consistent so authors learn one
+     vocabulary. Subtle differentiation reserved for later (e.g. an
+     outline-only stroke for insert-lines vs filled rect for
+     replace), once the single-indicator pattern is in user hands. */
+
+  &--insert,
+  &--inside,
+  &--occupy,
+  &--shift {
+    background: rgb(0 119 204 / 0.12);
+  }
+
+  &--replace,
+  &--swap {
+    background: rgb(0 119 204 / 0.22);
   }
 }

@@ -12,10 +12,10 @@ import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { parsePlacement, placementsOverlap } from "../../lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
+import containerDropTarget from "../../modifiers/container-drop-target";
 import gridTileDrag from "../../modifiers/grid-tile-drag";
 import BlockToolbar from "./block-toolbar";
 import EmptyCellPlaceholder from "./empty-cell-placeholder";
@@ -213,6 +213,48 @@ export default class BlockChrome extends Component {
     )?.entry;
     const mode = entry?.args?.mode ?? this.args.blockArgs?.mode ?? "stack";
     return mode === "grid" || mode === "free-grid";
+  }
+
+  /**
+   * Resolves the drop-mode the `containerDropTarget` modifier should
+   * use for this chrome. Returns `null` for non-container blocks (the
+   * modifier is a no-op on them — leaf blocks never act as drop
+   * targets directly; their parent container handles it).
+   *
+   * For `ve:layout` containers we read `args.mode` (live entry, falls
+   * back to the curry snapshot at chrome creation time). For other
+   * container blocks (e.g. `ve:columns`) we default to `"stack"`
+   * since their children stack vertically.
+   *
+   * @returns {"stack"|"row"|"grid"|null}
+   */
+  get containerDropMode() {
+    if (this.isSlot) {
+      return "slot";
+    }
+    if (!this.isContainer) {
+      // Leaves in a parent grid still need to BE a drop target so
+      // the grid overlay's swap / shift dispatch has an element-
+      // level landing surface. Stack / row leaves don't — their
+      // parent container handles drops near them.
+      return this.isGridCell ? "grid-cell-leaf" : null;
+    }
+    if (this.args.blockName !== "ve:layout") {
+      return "stack";
+    }
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.visualEditor.structuralVersion;
+    const entry = this.visualEditor._findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
+    const mode = entry?.args?.mode ?? this.args.blockArgs?.mode ?? "stack";
+    if (mode === "row") {
+      return "row";
+    }
+    if (mode === "grid" || mode === "free-grid") {
+      return "grid";
+    }
+    return "stack";
   }
 
   /**
@@ -765,24 +807,6 @@ export default class BlockChrome extends Component {
         }}
         style={{@style}}
       >
-        {{#if this.showsSiblingDropZones}}
-          <div
-            class={{dConcatClass
-              "visual-editor-drop-zone --before"
-              (if (this.isDropZoneActive "before") "--active")
-            }}
-            data-ve-position="before"
-            {{dDragAndDropTarget
-              accepts=this.acceptedDragKinds
-              position="before"
-              canDrop=this.canDropOnThisBlock
-              onDragEnter=this.handleZoneDragEnter
-              onDragLeave=this.handleZoneDragLeave
-              onDrop=this.applyDrop
-            }}
-          ></div>
-        {{/if}}
-
         <div
           class={{dConcatClass
             "visual-editor-block-chrome"
@@ -800,10 +824,11 @@ export default class BlockChrome extends Component {
           data-ve-empty={{this.isEmptyContainer}}
           {{didInsert this.captureChromeEl}}
           {{on "click" this.onClick}}
-          {{dDragAndDropTarget
-            accepts=this.acceptedDragKinds
-            canDrop=this.canDropOnSlot
-            onDrop=this.applySlotDrop
+          {{containerDropTarget
+            this.visualEditor
+            @blockKey
+            @outletName
+            this.containerDropMode
           }}
           role="button"
           tabindex="0"
@@ -906,51 +931,12 @@ export default class BlockChrome extends Component {
             ></span>
           {{/if}}
 
-          {{#if this.showsInsideDropZone}}
-            <div
-              class={{dConcatClass
-                "visual-editor-drop-zone --inside"
-                (if this.isEmptyContainer "--empty")
-                (if (this.isDropZoneActive "inside") "--active")
-              }}
-              data-ve-position="inside"
-              {{dDragAndDropTarget
-                accepts=this.acceptedDragKinds
-                position="inside"
-                canDrop=this.canDropOnThisBlock
-                onDragEnter=this.handleZoneDragEnter
-                onDragLeave=this.handleZoneDragLeave
-                onDrop=this.applyDrop
-              }}
-            >
-              <span class="visual-editor-drop-zone__label">
-                {{#if this.isEmptyContainer}}
-                  {{i18n "visual_editor.canvas.empty_container_hint"}}
-                {{else}}
-                  {{i18n "visual_editor.canvas.drop_inside"}}
-                {{/if}}
-              </span>
-            </div>
+          {{#if this.isEmptyContainer}}
+            <span class="visual-editor-block-chrome__empty-hint">
+              {{i18n "visual_editor.canvas.empty_container_hint"}}
+            </span>
           {{/if}}
         </div>
-
-        {{#if this.showsSiblingDropZones}}
-          <div
-            class={{dConcatClass
-              "visual-editor-drop-zone --after"
-              (if (this.isDropZoneActive "after") "--active")
-            }}
-            data-ve-position="after"
-            {{dDragAndDropTarget
-              accepts=this.acceptedDragKinds
-              position="after"
-              canDrop=this.canDropOnThisBlock
-              onDragEnter=this.handleZoneDragEnter
-              onDragLeave=this.handleZoneDragLeave
-              onDrop=this.applyDrop
-            }}
-          ></div>
-        {{/if}}
       </div>
     {{else}}
       <@WrappedComponent />
