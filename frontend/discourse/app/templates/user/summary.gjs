@@ -208,7 +208,7 @@ export default <template>
           <ul>
             {{#each @controller.model.links as |link|}}
               <li>
-                {{! template-lint-disable link-rel-noopener }}
+                {{! eslint-disable ember/template-link-rel-noopener }}
                 <a
                   class="domain"
                   href={{link.url}}
@@ -219,11 +219,10 @@ export default <template>
                   }}"
                   target="_blank"
                   data-clicks={{link.clicks}}
-                  aria-label={{i18n "topic_map.clicks" count=link.clicks}}
-                >
+                  aria-label={{i18n "topic_map.clicks" count=link.clicks}}>
                   {{shortenUrl link.url}}
                 </a>
-                {{! template-lint-enable link-rel-noopener }}
+                {{! eslint-enable ember/template-link-rel-noopener }}
                 <br />
 
                 <a href={{link.post_url}}>

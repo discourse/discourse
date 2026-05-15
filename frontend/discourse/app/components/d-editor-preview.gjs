@@ -40,7 +40,7 @@ export default class DEditorPreview extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class="d-editor-preview-wrapper {{if @forcePreview 'force-preview'}}"
       {{on "click" this.handlePreviewClick}}

@@ -12,13 +12,13 @@ export default class PoweredByDiscourse extends Component {
   });
 
   <template>
-    {{! template-lint-disable link-rel-noopener }}
+
     <a
       class="powered-by-discourse"
       href="https://discourse.org/powered-by"
       target="_blank"
       {{this.setCssVarHeight}}
-    >
+     rel="noopener noreferrer">
       <span class="powered-by-discourse__content">
         <span class="powered-by-discourse__logo">
           {{dIcon "fab-discourse"}}

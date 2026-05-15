@@ -303,9 +303,9 @@ export default <template>
         <ul class="removable-list">
           {{#each @controller.model.uploads as |upload|}}
             <li>
-              {{! template-lint-disable no-unnecessary-curly-strings }}
+
               {{! workaround for https://github.com/typed-ember/glint/issues/840 }}
-              <span class="col">{{"$"}}{{upload.name}}:
+              <span class="col">${{upload.name}}:
                 <a
                   href={{upload.url}}
                   rel="noopener noreferrer"
@@ -338,7 +338,7 @@ export default <template>
   {{#if (and @controller.extraFiles.length (not @controller.model.system))}}
     <div class="control-unit extra-files">
       <div class="mini-title">{{i18n "admin.customize.theme.extra_files"}}</div>
-      {{! template-lint-disable no-nested-interactive }}
+
       <details>
         <summary>
           {{#if @controller.model.remote_theme}}

@@ -727,16 +727,15 @@ export default class UserCardContents extends CardContentsBase {
                   <span class="website-name">
                     {{dIcon "globe"}}
                     {{#if this.linkWebsite}}
-                      {{! template-lint-disable link-rel-noopener }}
+                      {{! eslint-disable ember/template-link-rel-noopener }}
                       <a
                         href={{this.user.website}}
                         rel="noopener {{unless
                           this.removeNoFollow
                           'nofollow ugc'
                         }}"
-                        target="_blank"
-                      >{{this.user.website_name}}</a>
-                      {{! template-lint-enable link-rel-noopener }}
+                        target="_blank">{{this.user.website_name}}</a>
+                      {{! eslint-enable ember/template-link-rel-noopener }}
                     {{else}}
                       <span
                         title={{this.user.website}}

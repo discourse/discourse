@@ -167,7 +167,7 @@ export default class PostQuotedContent extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-unnecessary-concat }}
+
     <this.OptionalWrapperComponent
       ...attributes
       role="none"
@@ -177,8 +177,8 @@ export default class PostQuotedContent extends Component {
         (if this.isQuotedPostIgnored "ignored-user")
       }}
       {{! forced quotes in the data-attributes below to cast the boolean values to string }}
-      data-expanded="{{this.expanded}}"
-      data-full="{{@fullQuote}}"
+      data-expanded={{this.expanded}}
+      data-full={{@fullQuote}}
       data-post={{@quotedPostNumber}}
       data-topic={{@quotedTopicId}}
       data-username={{@quotedUsername}}

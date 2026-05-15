@@ -86,7 +86,7 @@ export default class Toasts extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-potential-path-strings }}
+
     <StyleguideExample @title="Toasts service">
       <StyleguideComponent @tag="default">
         <:actions>

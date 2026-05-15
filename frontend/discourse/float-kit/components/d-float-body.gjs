@@ -85,7 +85,7 @@ export default class DFloatBody extends Component {
         data-identifier={{this.options.identifier}}
         data-content
         aria-labelledby={{@instance.id}}
-        aria-expanded={{if @instance.expanded "true" "false"}}
+
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
         {{this.trapPointerDown}}

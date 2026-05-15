@@ -140,8 +140,8 @@ export default class AssistantItem extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
-    {{! template-lint-disable no-invalid-interactive }}
+
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <li
       class={{dConcatClass @typeClass "search-menu-assistant-item"}}
       {{on "keydown" this.onKeydown}}

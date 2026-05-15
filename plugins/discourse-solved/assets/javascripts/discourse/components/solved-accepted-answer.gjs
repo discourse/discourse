@@ -131,7 +131,7 @@ export default class SolvedAcceptedAnswer extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-unnecessary-concat }}
+
     {{#if this.acceptedAnswer}}
       <aside
         class={{dConcatClass
@@ -140,8 +140,8 @@ export default class SolvedAcceptedAnswer extends Component {
           (unless this.content "title-only")
         }}
         style={{this.maxHeightStyle}}
-        data-expanded="{{this.expanded}}"
-        data-overflowing="{{this.overflowingAttr}}"
+        data-expanded={{this.expanded}}
+        data-overflowing={{this.overflowingAttr}}
         data-username={{this.acceptedAnswer.username}}
         data-post={{this.acceptedAnswer.post_number}}
         data-topic={{this.topic.id}}

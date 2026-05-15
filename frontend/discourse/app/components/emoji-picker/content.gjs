@@ -447,9 +447,9 @@ export default class EmojiPicker extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
-    {{! template-lint-disable no-nested-interactive }}
-    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-nested-interactive }}
+
     <div
       class={{dConcatClass "emoji-picker"}}
       {{didInsert this.loadEmojis}}

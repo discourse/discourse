@@ -284,7 +284,7 @@ export default class DIconGridPickerContent extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class="d-icon-grid-picker__content"
       style={{@iconColorStyle}}
@@ -317,7 +317,7 @@ export default class DIconGridPickerContent extends Component {
             aria-label={{i18n "d_icon_grid_picker.favorites"}}
           >
             {{#each this.displayFavorites as |favIcon|}}
-              {{! template-lint-disable require-context-role }}
+              {{! eslint-disable ember/template-require-context-role }}
               {{#if (eq favIcon @value)}}
                 <button
                   type="button"
@@ -341,7 +341,7 @@ export default class DIconGridPickerContent extends Component {
                   {{/if}}
                 </button>
               {{else}}
-                {{! template-lint-disable require-context-role }}
+                {{! eslint-disable ember/template-require-context-role }}
                 <button
                   type="button"
                   role="option"
@@ -372,7 +372,7 @@ export default class DIconGridPickerContent extends Component {
             </:loading>
             <:content as |icons|>
               {{#each icons as |item|}}
-                {{! template-lint-disable require-context-role }}
+                {{! eslint-disable ember/template-require-context-role }}
                 <button
                   type="button"
                   role="option"

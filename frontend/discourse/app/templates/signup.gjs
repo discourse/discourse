@@ -26,7 +26,7 @@ import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  {{! template-lint-disable no-duplicate-id }}
+
   {{hideApplicationHeaderButtons "search" "login" "signup" "menu"}}
   {{hideApplicationSidebar}}
   {{bodyClass "signup-page"}}
