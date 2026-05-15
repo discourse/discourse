@@ -579,6 +579,7 @@ export default class EmojiPicker extends Component {
                       }}
                     >
                       <div class="emoji-picker__section-title-container">
+                        {{! eslint-disable-next-line ember/template-no-heading-inside-button }}
                         <h2 class="emoji-picker__section-title">
                           {{i18n
                             (concat "chat.emoji_picker." section)

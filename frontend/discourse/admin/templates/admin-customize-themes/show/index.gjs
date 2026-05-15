@@ -303,8 +303,6 @@ export default <template>
         <ul class="removable-list">
           {{#each @controller.model.uploads as |upload|}}
             <li>
-
-              {{! workaround for https://github.com/typed-ember/glint/issues/840 }}
               <span class="col">${{upload.name}}:
                 <a
                   href={{upload.url}}

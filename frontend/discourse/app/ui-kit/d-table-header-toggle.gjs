@@ -104,6 +104,7 @@ export default class DTableHeaderToggle extends Component {
       {{on "click" this.click}}
       {{on "keypress" this.keyPress}}
     >
+      {{! eslint-disable-next-line ember/template-no-nested-interactive }}
       <div
         class="header-contents"
         id={{this.id}}
