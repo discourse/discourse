@@ -538,7 +538,7 @@ module ApplicationHelper
     end
   end
 
-    def custom_splash_screen_enabled?
+  def custom_splash_screen_enabled?
     @custom_splash_screen_enabled ||=
       resolve_splash_screen_upload.present? || resolve_splash_screen_upload(dark: true).present?
   end
@@ -576,17 +576,19 @@ module ApplicationHelper
     upload = resolve_splash_screen_upload(dark: dark)
     return unless upload
 
-    Discourse.cache.fetch(
-      "splash_screen_svg_#{dark ? "dark" : "light"}_#{upload.id}_#{upload.sha1}",
-      expires_in: 1.day
-    ) do
-      begin
-        upload.content.presence
-      rescue StandardError => e
-        Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
-        nil
+    Discourse
+      .cache
+      .fetch(
+        "splash_screen_svg_#{dark ? "dark" : "light"}_#{upload.id}_#{upload.sha1}",
+        expires_in: 1.day,
+      ) do
+        begin
+          upload.content.presence
+        rescue StandardError => e
+          Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+          nil
+        end
       end
-    end
   end
 
   def resolve_splash_screen_upload(dark: false)
