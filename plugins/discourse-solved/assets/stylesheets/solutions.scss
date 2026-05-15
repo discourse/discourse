@@ -111,6 +111,7 @@ $solved-color: var(--success);
 
 .accepted-answers {
   margin-left: var(--topic-body-width-padding);
+  margin-bottom: 0.5em;
 
   & .d-post-excerpt-accordion {
     &__header {

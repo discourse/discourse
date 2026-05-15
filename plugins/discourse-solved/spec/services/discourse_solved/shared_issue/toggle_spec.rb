@@ -54,6 +54,18 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
         end
 
         it { is_expected.to fail_a_policy(:can_create_shared_issue) }
+
+        context "when allow_multiple_solutions is enabled" do
+          before { SiteSetting.solved_allow_multiple_solutions = true }
+
+          it { is_expected.to run_successfully }
+
+          it "creates a shared issue record" do
+            expect { result }.to change {
+              DiscourseSolved::SharedIssue.where(topic:, user: acting_user).count
+            }.by(1)
+          end
+        end
       end
 
       context "when the acting user is the topic author" do
