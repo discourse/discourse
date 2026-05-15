@@ -90,12 +90,6 @@ Discourse::Application.configure do
     config.middleware.insert_after ActionDispatch::Flash, RspecErrorTracker
   end
 
-  if ENV["CI"].present?
-    config.to_prepare do
-      ActiveSupport.on_load(:active_record_postgresqladapter) { self.create_unlogged_tables = true }
-    end
-  end
-
   # This is a NGINX specific header
   config.action_dispatch.x_sendfile_header = nil
 end
