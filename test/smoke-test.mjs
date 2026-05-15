@@ -50,22 +50,20 @@ import { chromium } from "playwright";
     return page.screenshot({ path: screenshotPath, fullPage: true });
   };
 
-  const exec = (description, fn) => {
+  const exec = async (description, fn) => {
     const start = +new Date();
 
-    return fn
-      .call()
-      .then(() => {
-        console.log(`PASSED: ${description} - ${+new Date() - start}ms`);
-      })
-      .catch(async (error) => {
-        console.log(
-          `ERROR (${description}): ${error.message} - ${+new Date() - start}ms`
-        );
-        await takeFailureScreenshot();
-        console.log("SMOKE TEST FAILED");
-        process.exit(1);
-      });
+    try {
+      await fn();
+      console.log(`PASSED: ${description} - ${+new Date() - start}ms`);
+    } catch (error) {
+      console.log(
+        `ERROR (${description}): ${error.message} - ${+new Date() - start}ms`
+      );
+      await takeFailureScreenshot();
+      console.log("SMOKE TEST FAILED");
+      process.exit(1);
+    }
   };
 
   page.on("console", (msg) => console.log(`PAGE LOG: ${msg.text()}`));
