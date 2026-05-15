@@ -498,6 +498,7 @@ export default class PostMenu extends Component {
         permanentlyDeletePost: this.args.permanentlyDeletePost,
         rebakePost: this.args.rebakePost,
         showPagePublish: this.args.showPagePublish,
+        setPostType: this.args.setPostType,
         togglePostType: this.args.togglePostType,
         toggleWiki: this.args.toggleWiki,
         unhidePost: this.args.unhidePost,

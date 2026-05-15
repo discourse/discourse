@@ -4430,6 +4430,14 @@ experimental:
     upcoming_change:
       status: "beta"
       impact: "feature,all_members"
+  enable_updated_post_type_dropdown:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,staff"
   rename_faq_to_guidelines:
     default: false
     hidden: true

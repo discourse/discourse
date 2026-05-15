@@ -3,13 +3,14 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { and, not, or } from "discourse/truth-helpers";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class AdminPostMenu extends Component {
   @service currentUser;
+  @service site;
   @service siteSettings;
   @service router;
   @service adminPostMenuButtons;
@@ -73,6 +74,20 @@ export default class AdminPostMenu extends Component {
   }
 
   @action
+  async setPostType(postType) {
+    await this.args.close();
+
+    try {
+      await this.args.data.setPostType?.(postType);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Unknown error while attempting `setPostType`:", error);
+    }
+
+    await this.args.data.scheduleRerender?.();
+  }
+
+  @action
   async extraAction(button) {
     await this.args.close();
     await button.action(this.args.data.post);
@@ -92,27 +107,74 @@ export default class AdminPostMenu extends Component {
         </dropdown.item>
       {{/if}}
 
-      {{#if (and this.currentUser.staff (not @data.post.isWhisper))}}
-        <dropdown.item>
-          <DButton
-            @label={{if
-              @data.post.isModeratorAction
-              "post.controls.revert_to_regular"
-              "post.controls.convert_to_moderator"
-            }}
-            @title={{if
-              @data.post.isModeratorAction
-              ""
-              "post.controls.convert_to_moderator_description"
-            }}
-            @icon="shield-halved"
-            class={{dConcatClass
-              "btn btn-transparent toggle-post-type"
-              (if @data.post.isModeratorAction "btn-success")
-            }}
-            @action={{fn this.topicAction "togglePostType"}}
-          />
-        </dropdown.item>
+      {{#if this.currentUser.staff}}
+        {{#if this.siteSettings.enable_updated_post_type_dropdown}}
+          <dropdown.item>
+            <DButton
+              @label="post.controls.post_type.regular"
+              @icon="comment"
+              class={{dConcatClass
+                "btn btn-transparent post-type-regular"
+                (if
+                  (eq @data.post.post_type this.site.post_types.regular)
+                  "btn-success"
+                )
+              }}
+              @action={{fn this.setPostType this.site.post_types.regular}}
+            />
+          </dropdown.item>
+
+          <dropdown.item>
+            <DButton
+              @label="post.controls.post_type.moderator_action"
+              @title="post.controls.convert_to_moderator_description"
+              @icon="shield-halved"
+              class={{dConcatClass
+                "btn btn-transparent post-type-moderator-action"
+                (if @data.post.isModeratorAction "btn-success")
+              }}
+              @action={{fn
+                this.setPostType
+                this.site.post_types.moderator_action
+              }}
+            />
+          </dropdown.item>
+
+          {{#if (and this.currentUser.whisperer this.site.post_types.whisper)}}
+            <dropdown.item>
+              <DButton
+                @label="post.controls.post_type.whisper"
+                @icon="far-eye-slash"
+                class={{dConcatClass
+                  "btn btn-transparent post-type-whisper"
+                  (if @data.post.isWhisper "btn-success")
+                }}
+                @action={{fn this.setPostType this.site.post_types.whisper}}
+              />
+            </dropdown.item>
+          {{/if}}
+        {{else if (not @data.post.isWhisper)}}
+          <dropdown.item>
+            <DButton
+              @label={{if
+                @data.post.isModeratorAction
+                "post.controls.revert_to_regular"
+                "post.controls.convert_to_moderator"
+              }}
+              @title={{if
+                @data.post.isModeratorAction
+                ""
+                "post.controls.convert_to_moderator_description"
+              }}
+              @icon="shield-halved"
+              class={{dConcatClass
+                "btn btn-transparent toggle-post-type"
+                (if @data.post.isModeratorAction "btn-success")
+              }}
+              @action={{fn this.topicAction "togglePostType"}}
+            />
+          </dropdown.item>
+        {{/if}}
       {{/if}}
 
       {{#if @data.post.canEditStaffNotes}}

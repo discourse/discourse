@@ -401,6 +401,7 @@ export default <template>
                   @expandHidden={{@controller.expandHidden}}
                   @toggleBookmark={{@controller.toggleBookmark}}
                   @togglePostType={{@controller.togglePostType}}
+                  @setPostType={{@controller.setPostType}}
                   @rebakePost={{@controller.rebakePost}}
                   @changePostOwner={{@controller.changePostOwner}}
                   @grantBadge={{@controller.grantBadge}}

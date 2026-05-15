@@ -19,6 +19,7 @@ function renderComponent(
     rebakePost,
     showHistory,
     showRawEmail,
+    setPostType,
     togglePostType,
     unhidePost,
   } = {}
@@ -35,6 +36,7 @@ function renderComponent(
         @rebakePost={{rebakePost}}
         @showHistory={{showHistory}}
         @showRawEmail={{showRawEmail}}
+        @setPostType={{setPostType}}
         @togglePostType={{togglePostType}}
         @unhidePost={{unhidePost}}
       />
@@ -579,6 +581,7 @@ module("Integration | Component | Post", function (hooks) {
 
   test("toggle moderator post", async function (assert) {
     this.currentUser.moderator = true;
+    this.siteSettings.enable_updated_post_type_dropdown = false;
 
     await renderComponent(this.post, {
       togglePostType: () => assert.step("toggle post type called"),
@@ -591,6 +594,46 @@ module("Integration | Component | Post", function (hooks) {
     assert.verifySteps(
       ["toggle post type called"],
       "clicked on toggle moderator post (add staff color)"
+    );
+    assert
+      .dom("[data-content][data-identifier='admin-post-menu']")
+      .doesNotExist("also hides the menu");
+  });
+
+  test("set post type from updated dropdown", async function (assert) {
+    this.currentUser.moderator = true;
+    this.currentUser.whisperer = false;
+    this.siteSettings.enable_updated_post_type_dropdown = true;
+    this.site.post_types = {
+      regular: 1,
+      moderator_action: 2,
+      whisper: 4,
+    };
+    this.post.post_type = this.site.post_types.regular;
+
+    await renderComponent(this.post, {
+      setPostType: (postType) => assert.step(`set post type ${postType}`),
+    });
+
+    await click(".post-menu-area .show-post-admin-menu");
+
+    assert
+      .dom("[data-content][data-identifier='admin-post-menu'] .toggle-post-type")
+      .doesNotExist("hides the legacy toggle");
+    assert
+      .dom("[data-content][data-identifier='admin-post-menu'] .post-type-regular")
+      .hasClass("btn-success", "marks the current post type");
+    assert
+      .dom("[data-content][data-identifier='admin-post-menu'] .post-type-whisper")
+      .doesNotExist("hides the whisper option from staff who cannot whisper");
+
+    await click(
+      "[data-content][data-identifier='admin-post-menu'] .post-type-moderator-action"
+    );
+
+    assert.verifySteps(
+      [`set post type ${this.site.post_types.moderator_action}`],
+      "clicked on moderator action post type"
     );
     assert
       .dom("[data-content][data-identifier='admin-post-menu']")

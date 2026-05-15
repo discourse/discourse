@@ -1577,10 +1577,15 @@ export default class TopicController extends Controller {
   togglePostType(post) {
     const regular = this.site.get("post_types.regular");
     const moderator = this.site.get("post_types.moderator_action");
-    return post.updatePostField(
-      "post_type",
+    return this.setPostType(
+      post,
       post.get("post_type") === moderator ? regular : moderator
     );
+  }
+
+  @action
+  setPostType(post, postType) {
+    return post.updatePostField("post_type", postType);
   }
 
   @action

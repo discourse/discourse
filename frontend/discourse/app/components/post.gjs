@@ -630,6 +630,7 @@ export default class Post extends Component {
                           @showReadIndicator={{@showReadIndicator}}
                           @toggleLike={{this.toggleLike}}
                           @togglePostType={{@togglePostType}}
+                          @setPostType={{@setPostType}}
                           @toggleReplies={{this.toggleReplies}}
                           @toggleWiki={{@toggleWiki}}
                           @unhidePost={{@unhidePost}}

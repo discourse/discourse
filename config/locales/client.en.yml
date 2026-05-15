@@ -4725,6 +4725,10 @@ en:
         convert_to_moderator: "Add Staff Color"
         convert_to_moderator_description: "highlight the content of this post"
         revert_to_regular: "Remove Staff Color"
+        post_type:
+          regular: "Regular post"
+          moderator_action: "Staff color"
+          whisper: "Whisper"
         rebake: "Rebuild HTML"
         rebake_description: "reprocess this post to fix formatting or embeds"
         publish_page: "Page Publishing"

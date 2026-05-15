@@ -394,6 +394,7 @@ export default class PostStream extends Component {
                 @streamElement={{true}}
                 @togglePostSelection={{fn @togglePostSelection post}}
                 @togglePostType={{fn @togglePostType post}}
+                @setPostType={{fn @setPostType post}}
                 @toggleReplyAbove={{fn @toggleReplyAbove post}}
                 @toggleWiki={{fn @toggleWiki post}}
                 @topicPageQueryParams={{@topicPageQueryParams}}
