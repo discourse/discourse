@@ -243,6 +243,48 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "#custom_splash_screen_enabled?" do
+    it "returns true when only splash_screen_image_dark is set" do
+      SiteSetting.splash_screen_image_dark = Fabricate(:upload)
+
+      expect(helper.custom_splash_screen_enabled?).to eq(true)
+    end
+  end
+
+  describe "#splash_screen_image_data_uri" do
+    let(:light_svg) { '<svg><rect fill="var(--primary)"/></svg>' }
+    let(:dark_svg) { '<svg><circle fill="var(--primary)"/></svg>' }
+
+    it "uses splash_screen_image_dark when dark is true" do
+      light_upload = Fabricate(:upload)
+      dark_upload = Fabricate(:upload)
+
+      SiteSetting.splash_screen_image = light_upload
+      SiteSetting.splash_screen_image_dark = dark_upload
+
+      light_upload.stubs(:content).returns(light_svg)
+      dark_upload.stubs(:content).returns(dark_svg)
+
+      data_uri = helper.splash_screen_image_data_uri(dark: true)
+      decoded_svg = Base64.decode64(data_uri.split(",").last)
+
+      expect(decoded_svg).to include("<circle")
+      expect(decoded_svg).not_to include("<rect")
+    end
+
+    it "falls back to splash_screen_image when dark image is not set" do
+      light_upload = Fabricate(:upload)
+
+      SiteSetting.splash_screen_image = light_upload
+      light_upload.stubs(:content).returns(light_svg)
+
+      data_uri = helper.splash_screen_image_data_uri(dark: true)
+      decoded_svg = Base64.decode64(data_uri.split(",").last)
+
+      expect(decoded_svg).to include("<rect")
+    end
+  end
+
   describe "application_logo_url" do
     context "when a dark color scheme is active" do
       before do
