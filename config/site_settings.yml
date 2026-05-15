@@ -4505,6 +4505,17 @@ experimental:
       impact: "feature,all_members"
       status: "beta"
       learn_more_url: "https://meta.discourse.org/t/-/395331"
+  enable_horizon_high_context_topic_cards:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "http://meta.discourse.org/t/-/402843"
+      allow_enabled_for:
+        - everyone
   granular_anonymous_and_logged_in_groups_permissions:
     default: false
     client: true
