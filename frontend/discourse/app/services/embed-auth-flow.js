@@ -71,6 +71,14 @@ export default class EmbedAuthFlow extends Service {
       return true;
     }
 
+    // We have access — if the user is already signed in to Discourse in
+    // another tab, the iframe was just missing the cookie due to
+    // partitioning. Reloading is enough; no popup needed.
+    if (await this._isUserSignedIn()) {
+      this._reload();
+      return true;
+    }
+
     this._promptForSignin(intent);
     return true;
   }
@@ -86,11 +94,11 @@ export default class EmbedAuthFlow extends Service {
           document
             .requestStorageAccess()
             .then(() => {
-              // We have storage access right now; chain straight into the
-              // sign-in modal. Reloading would put the iframe back in
-              // partitioned mode in most browsers, losing the access we
-              // just got.
-              this._promptForSignin(intent);
+              // Re-run requestAccess so the unified post-access path runs
+              // — including the already-signed-in check, which otherwise
+              // sends the user through an unnecessary popup that just
+              // bounces back to the homepage.
+              this.requestAccess({ intent });
             })
             .catch(() => {
               // Storage access was denied; the iframe cannot access the
@@ -101,6 +109,19 @@ export default class EmbedAuthFlow extends Service {
         },
       },
     });
+  }
+
+  async _isUserSignedIn() {
+    try {
+      await ajax("/session/current.json");
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  _reload() {
+    window.location.reload();
   }
 
   _promptForSignin(intent) {
@@ -198,6 +219,6 @@ export default class EmbedAuthFlow extends Service {
     // Storage access (when needed) was granted before the popup opened and
     // persists across iframe reload, so reloading is enough to pick up the
     // session cookie that the popup just established first-party.
-    window.location.reload();
+    this._reload();
   }
 }

@@ -66,6 +66,8 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
     sinon.stub(document, "hasStorageAccess").resolves(true);
 
     const service = buildService(this.owner);
+    sinon.stub(service, "_isUserSignedIn").resolves(false);
+
     await service.requestAccess({ intent: "login" });
 
     assert.strictEqual(
@@ -128,10 +130,14 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
   });
 
   test("storage access grant chains into the sign-in modal", async function (assert) {
-    sinon.stub(document, "hasStorageAccess").resolves(false);
+    const hasStorageAccess = sinon.stub(document, "hasStorageAccess");
+    hasStorageAccess.onFirstCall().resolves(false);
+    hasStorageAccess.resolves(true);
     sinon.stub(document, "requestStorageAccess").resolves();
 
     const service = buildService(this.owner);
+    sinon.stub(service, "_isUserSignedIn").resolves(false);
+
     await service.requestAccess({ intent: "signup" });
 
     assert.strictEqual(
@@ -156,10 +162,28 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
     );
   });
 
+  test("already-signed-in user gets a reload instead of the sign-in popup", async function (assert) {
+    sinon.stub(document, "hasStorageAccess").resolves(true);
+
+    const service = buildService(this.owner);
+    sinon.stub(service, "_isUserSignedIn").resolves(true);
+    const reload = sinon.stub(service, "_reload");
+
+    await service.requestAccess({ intent: "login" });
+
+    assert.true(reload.calledOnce, "reload invoked to pick up the session");
+    assert.true(
+      this.modalShow.notCalled,
+      "sign-in modal is skipped — no popup needed"
+    );
+  });
+
   test("opening sign-in popup uses /signup for signup intent", async function (assert) {
     sinon.stub(document, "hasStorageAccess").resolves(true);
 
     const service = buildService(this.owner);
+    sinon.stub(service, "_isUserSignedIn").resolves(false);
+
     await service.requestAccess({ intent: "signup" });
 
     modalOnConfirm(this.modalShow)();
