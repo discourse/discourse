@@ -64,6 +64,68 @@ acceptance("Chat | New message", function (needs) {
       .hasValue("hello world", "pre-fills the chat composer");
   });
 
+  test("pre-fills the composer when visiting with channel slug and message", async function (assert) {
+    await visit(
+      `/chat/new-message?channel=${CHANNEL_SLUG}&message=hi%20via%20slug`
+    );
+
+    assert.strictEqual(
+      currentURL(),
+      `/chat/c/${CHANNEL_SLUG}/${CHANNEL_ID}`,
+      "redirects to the channel"
+    );
+
+    await waitFor(".chat-composer__input", { timeout: 5000 });
+
+    assert
+      .dom(".chat-composer__input")
+      .hasValue("hi via slug", "pre-fills the chat composer");
+  });
+
+  test("fetches a channel from the server when its slug is not in the sidebar cache", async function (assert) {
+    const UNFOLLOWED_CHANNEL_ID = 42;
+    const UNFOLLOWED_CHANNEL_SLUG = "unfollowed";
+
+    pretender.get(`/chat/api/channels/${UNFOLLOWED_CHANNEL_SLUG}`, () =>
+      response({
+        channel: {
+          id: UNFOLLOWED_CHANNEL_ID,
+          title: "Unfollowed",
+          slug: UNFOLLOWED_CHANNEL_SLUG,
+          chatable_id: 2,
+          chatable_type: "Category",
+          meta: { message_bus_last_ids: {} },
+          current_user_membership: { following: false },
+          chatable: { id: 2, color: "00ff00", name: "category2" },
+        },
+      })
+    );
+
+    pretender.get(`/chat/api/channels/${UNFOLLOWED_CHANNEL_ID}/messages`, () =>
+      response({ messages: [], meta: {} })
+    );
+
+    pretender.post(`/chat/api/channels/${UNFOLLOWED_CHANNEL_ID}/drafts`, () =>
+      response({})
+    );
+
+    await visit(
+      `/chat/new-message?channel=${UNFOLLOWED_CHANNEL_SLUG}&message=external%20link`
+    );
+
+    assert.strictEqual(
+      currentURL(),
+      `/chat/c/${UNFOLLOWED_CHANNEL_SLUG}/${UNFOLLOWED_CHANNEL_ID}`,
+      "redirects to the channel resolved from the server"
+    );
+
+    await waitFor(".chat-composer__input", { timeout: 5000 });
+
+    assert
+      .dom(".chat-composer__input")
+      .hasValue("external link", "pre-fills the chat composer");
+  });
+
   function stubDmChannel(onPost) {
     pretender.post("/chat/api/direct-message-channels.json", (request) => {
       onPost?.(request);

@@ -56,28 +56,26 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
       return;
     }
 
-    this.chatDraftsManager.add(
-      ChatMessage.createDraftMessage(channel, {
-        user: this.currentUser,
-        message,
-      }),
-      channel.id,
-      null,
-      false
-    );
+    const draft = ChatMessage.createDraftMessage(channel, {
+      user: this.currentUser,
+      message,
+    });
+
+    channel.draft = draft;
+    this.chatDraftsManager.add(draft, channel.id, null, false);
   }
 
   async #findChannel({ channelId, channelSlug }) {
     await this.chat.loadChannels();
 
     if (channelId) {
-      return this.chatChannelsManager.find(channelId, {
-        fetchIfNotFound: false,
-      });
+      return this.chatChannelsManager.find(channelId);
     }
 
-    return this.chatChannelsManager.channels.find(
+    const cached = this.chatChannelsManager.channels.find(
       (channel) => channel.slug === channelSlug
     );
+
+    return cached ?? this.chatChannelsManager.find(channelSlug);
   }
 }
