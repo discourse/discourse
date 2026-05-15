@@ -1,7 +1,6 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -595,7 +594,7 @@ ALTER SEQUENCE public.ai_artifacts_id_seq OWNED BY public.ai_artifacts.id;
 --
 
 CREATE TABLE public.ai_document_fragments_embeddings (
-    rag_document_fragment_id bigint CONSTRAINT ai_document_fragments_embeddi_rag_document_fragment_id_not_null NOT NULL,
+    rag_document_fragment_id bigint NOT NULL,
     model_id bigint NOT NULL,
     model_version integer NOT NULL,
     strategy_id integer NOT NULL,
@@ -4878,7 +4877,7 @@ CREATE TABLE public.group_category_notification_defaults (
     id bigint NOT NULL,
     group_id integer NOT NULL,
     category_id integer NOT NULL,
-    notification_level integer CONSTRAINT group_category_notification_default_notification_level_not_null NOT NULL
+    notification_level integer NOT NULL
 );
 
 
@@ -6935,7 +6934,7 @@ CREATE TABLE public.post_timings (
 
 CREATE TABLE public.post_voting_comment_custom_fields (
     id bigint NOT NULL,
-    post_voting_comment_id bigint CONSTRAINT post_voting_comment_custom_fiel_post_voting_comment_id_not_null NOT NULL,
+    post_voting_comment_id bigint NOT NULL,
     name character varying(256) NOT NULL,
     value text,
     created_at timestamp(6) without time zone NOT NULL,
@@ -8547,7 +8546,7 @@ CREATE TABLE public.theme_settings (
     theme_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    "json_value" jsonb
+    json_value jsonb
 );
 
 
@@ -10111,8 +10110,8 @@ CREATE TABLE public.user_chat_channel_memberships (
     last_read_message_id bigint,
     following boolean DEFAULT false NOT NULL,
     muted boolean DEFAULT false NOT NULL,
-    desktop_notification_level integer DEFAULT 1 CONSTRAINT user_chat_channel_membershi_desktop_notification_level_not_null NOT NULL,
-    mobile_notification_level integer DEFAULT 1 CONSTRAINT user_chat_channel_membership_mobile_notification_level_not_null NOT NULL,
+    desktop_notification_level integer DEFAULT 1 NOT NULL,
+    mobile_notification_level integer DEFAULT 1 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     last_unread_mention_when_emailed_id bigint,
