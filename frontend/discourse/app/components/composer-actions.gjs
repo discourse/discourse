@@ -230,11 +230,12 @@ export default class ComposerActions extends Component {
       currentTopic?.id === _topicSnapshot.id;
 
     if (
-      (currentAction !== REPLY && currentPost) ||
-      (currentAction === REPLY &&
-        currentPost &&
-        !(this.replyOptions?.userAvatar && this.replyOptions?.userLink)) ||
-      canRestoreReplyToPost
+      !this.isEditing &&
+      ((currentAction !== REPLY && currentPost) ||
+        (currentAction === REPLY &&
+          currentPost &&
+          !(this.replyOptions?.userAvatar && this.replyOptions?.userLink)) ||
+        canRestoreReplyToPost)
     ) {
       const postForLabel = currentPost || _postSnapshot;
       const actionObj = {
