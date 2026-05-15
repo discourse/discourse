@@ -485,6 +485,25 @@ body.visual-editor-active {
       var(--visual-editor-block-outlet-color);
     background: rgb(245 158 11 / var(--visual-editor-bg-opacity));
     padding: var(--visual-editor-container-padding);
+
+    /* Vertical breathing room between consecutive top-level blocks so
+       the boundary's between-children drop landing is visible AND
+       directly hoverable. The wrappers live three divs below the
+       boundary (BlockOutletRootContainer renders
+       boundary → div.{outlet} → div.{outlet}__container →
+       div.{outlet}__layout → wrappers). The outlet name is dynamic,
+       but the deepest wrapper's class always ends in `__layout`, so
+       `[class$="__layout"]` targets it without hardcoding the outlet
+       name. The edge-band defer in `container-drop-target.js` covers
+       the case where the cursor sits ON a chrome's edge; this gap
+       makes the "between" zone a real, dragover-emitting strip of
+       background. */
+
+    [class$="__layout"]
+      > .visual-editor-block-chrome-wrapper
+      + .visual-editor-block-chrome-wrapper {
+      margin-top: 0.5rem;
+    }
   }
 
   /* Empty-outlet visual affordance. Drops on the empty outlet are

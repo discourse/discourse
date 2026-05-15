@@ -294,6 +294,10 @@ en:
         drop_preview:
           add_here: "Add %{name} here"
           move_here: "Move %{name} here"
+          add_before: "Add %{name} before %{target}"
+          add_after: "Add %{name} after %{target}"
+          move_before: "Move %{name} before %{target}"
+          move_after: "Move %{name} after %{target}"
           add_inside: "Add %{name} inside %{container}"
           move_inside: "Move %{name} inside %{container}"
           fill_slot: "Fill slot with %{name}"
