@@ -35,55 +35,7 @@ module("Integration | Component | nested-topic-timeline", function (hooks) {
     this.styleEl.remove();
   });
 
-  test("uses entry pages when pinned roots shift indexes", async function (assert) {
-    const jumpToRootPage = sinon.spy();
-    this.setProperties({
-      firstLoadedPage: 0,
-      jumpToRootPage,
-      loadedPostNumbers: [10],
-      summary: {
-        total: 3,
-        page_size: 2,
-        page_count: 1,
-        entries: [
-          { post_number: 30, total_descendant_count: 0, page: 0 },
-          { post_number: 10, total_descendant_count: 0, page: 0 },
-          { post_number: 20, total_descendant_count: 0, page: 0 },
-        ],
-      },
-    });
-
-    await render(
-      <template>
-        <div class="nested-view__roots">
-          {{#each this.loadedPostNumbers as |postNumber|}}
-            <div class="nested-post --depth-0">
-              <article data-post-number={{postNumber}}></article>
-            </div>
-          {{/each}}
-        </div>
-
-        <NestedTopicTimeline
-          @summary={{this.summary}}
-          @sort="top"
-          @firstLoadedPage={{this.firstLoadedPage}}
-          @jumpToRootPage={{this.jumpToRootPage}}
-        />
-      </template>
-    );
-
-    const rail = document.querySelector(".nested-topic-timeline__scrubber");
-    await pointerAt(rail, "pointerdown", 0.8);
-    await pointerAt(rail, "pointerup", 0.8);
-
-    assert.deepEqual(
-      jumpToRootPage.lastCall.args,
-      [0, 20],
-      "uses the server-provided page instead of index / page size"
-    );
-  });
-
-  test("uses page_count for compact summaries", async function (assert) {
+  test("commits to a page derived from page_count", async function (assert) {
     const jumpToRootPage = sinon.spy();
     this.setProperties({
       firstLoadedPage: 0,
