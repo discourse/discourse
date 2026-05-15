@@ -36,6 +36,7 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
 
   hooks.afterEach(function () {
     EmbedMode.enabled = this.originalEmbedMode;
+    sinon.restore();
   });
 
   test("isActive requires embed mode and the site setting", function (assert) {
