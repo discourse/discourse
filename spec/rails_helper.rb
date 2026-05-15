@@ -1358,6 +1358,11 @@ def apply_base_chrome_args(args = [])
     base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
   end
 
+  if ENV["CI"]
+    # Bypass the OS resolver for localhost lookups inside the browser.
+    base_args << "--host-resolver-rules=MAP localhost [::1],MAP *.localhost [::1]"
+  end
+
   # A file that contains just a list of paths like so:
   #
   # /home/me/.config/google-chrome/Default/Extensions/bmdblncegkenkacieihfhpjfppoconhi/4.9.1_0
