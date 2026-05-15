@@ -140,6 +140,7 @@ jobs:
 
       - name: Setup gems
         run: |
+          bundle -v
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
