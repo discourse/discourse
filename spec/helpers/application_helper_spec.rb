@@ -245,7 +245,7 @@ RSpec.describe ApplicationHelper do
 
   describe "#custom_splash_screen_enabled?" do
     it "returns true when only splash_screen_image_dark is set" do
-      SiteSetting.splash_screen_image_dark = Fabricate(:upload)
+      SiteSetting.splash_screen_image_dark = Fabricate(:upload).id
 
       expect(helper.custom_splash_screen_enabled?).to eq(true)
     end
@@ -259,8 +259,8 @@ RSpec.describe ApplicationHelper do
       light_upload = Fabricate(:upload)
       dark_upload = Fabricate(:upload)
 
-      SiteSetting.splash_screen_image = light_upload
-      SiteSetting.splash_screen_image_dark = dark_upload
+      SiteSetting.splash_screen_image = light_upload.id
+      SiteSetting.splash_screen_image_dark = dark_upload.id
 
       light_upload.stubs(:content).returns(light_svg)
       dark_upload.stubs(:content).returns(dark_svg)
@@ -275,7 +275,7 @@ RSpec.describe ApplicationHelper do
     it "falls back to splash_screen_image when dark image is not set" do
       light_upload = Fabricate(:upload)
 
-      SiteSetting.splash_screen_image = light_upload
+      SiteSetting.splash_screen_image = light_upload.id
       light_upload.stubs(:content).returns(light_svg)
 
       data_uri = helper.splash_screen_image_data_uri(dark: true)
