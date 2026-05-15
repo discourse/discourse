@@ -95,7 +95,7 @@ export default class PostExcerptAccordionItem extends Component {
         data-post={{this.excerptPost.post_number}}
         data-topic={{this.excerptPost.topic_id}}
       >
-        {{! template-lint-disable no-invalid-interactive }}
+        {{! eslint-disable ember/template-no-invalid-interactive }}
         <div
           class="d-post-excerpt-accordion-item__header"
           {{on "click" this.onClickHeader}}
