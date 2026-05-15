@@ -10592,7 +10592,8 @@ CREATE TABLE public.user_options (
     discourse_rewind_dismissed_at timestamp(6) without time zone,
     discourse_rewind_enabled boolean DEFAULT true NOT NULL,
     notify_on_solved boolean DEFAULT true NOT NULL,
-    show_original_content boolean DEFAULT false NOT NULL
+    show_original_content boolean DEFAULT false NOT NULL,
+    enable_upcoming_change_available_notifications boolean DEFAULT true CONSTRAINT user_options_enable_upcoming_change_available_notifica_not_null NOT NULL
 );
 
 
@@ -20802,6 +20803,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260514043815'),
 ('20260513105516'),
 ('20260513101242'),
 ('20260513055222'),
