@@ -68,9 +68,9 @@ page.on("response", (resp) => {
     if (resp.status() === 429) {
       const headers = resp.headers();
       console.log("Response headers:");
-      Object.keys(headers).forEach((key) => {
-        console.log(`${key}: ${headers[key]}`);
-      });
+      for (const [key, value] of Object.entries(headers)) {
+        console.log(`${key}: ${value}`);
+      }
     }
   }
   return resp;
