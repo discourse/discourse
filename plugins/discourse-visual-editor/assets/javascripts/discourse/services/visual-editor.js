@@ -341,31 +341,49 @@ export default class VisualEditorService extends Service {
   _gridOverlays = new Map();
 
   /**
-   * Document-level click handler that clears the current selection when
-   * the click lands outside any block chrome and outside the editor
-   * shell (toolbar / panels). Block chromes already stop propagation on
-   * their own click handler, so the listener never sees chrome clicks;
-   * shell elements are guarded by an explicit `.closest()` check so
-   * panel inputs, toolbar buttons, etc. don't deselect when activated.
+   * Tracks the mousedown target so the deselect handler can require
+   * BOTH the down and up events to land outside the allowed scope.
+   * Without this, dragging to select text inside an input (mousedown
+   * on input, mouseup outside the input's bounds) would synthesise
+   * a `click` on the common ancestor — often `<body>` — and trigger
+   * an accidental deselect even though the user's intent was to
+   * edit, not click elsewhere.
    *
-   * Bound once in `enter()` and removed in `exit()` so the editor adds
-   * no global handler weight when inactive.
+   * @type {EventTarget|null}
+   */
+  _selectionMousedownTarget = null;
+
+  _onCanvasMouseDown = (event) => {
+    this._selectionMousedownTarget = event.target;
+  };
+
+  /**
+   * Document-level mouseup handler that clears the current selection
+   * when BOTH the mousedown and mouseup landed outside the allowed
+   * scope (block chrome, editor shell, the conditions floating
+   * panel, or any Float-Kit portal — menus / modals / tooltips
+   * mount their content at body level via portals, so they're
+   * physically outside the shell even though they're conceptually
+   * part of it). Block chromes already stop propagation on their
+   * own click handler — we use mouseup rather than click here so
+   * the input-text-selection case (described in
+   * `_selectionMousedownTarget`) doesn't deselect.
+   *
+   * Bound once in `enter()` and removed in `exit()` so the editor
+   * adds no global handler weight when inactive.
    *
    * @param {MouseEvent} event
    */
-  _onCanvasClickOutside = (event) => {
+  _onCanvasMouseUp = (event) => {
+    const downTarget = this._selectionMousedownTarget;
+    this._selectionMousedownTarget = null;
     if (!this.isActive || !this.selectedBlockKey) {
       return;
     }
-    const target = event.target;
-    if (!(target instanceof Element)) {
+    if (this._isInsideAllowedScope(downTarget)) {
       return;
     }
-    if (
-      target.closest(".visual-editor-block-chrome") ||
-      target.closest(".visual-editor-shell") ||
-      target.closest(".visual-editor-conditions-floating-panel")
-    ) {
+    if (this._isInsideAllowedScope(event.target)) {
       return;
     }
     this.selectBlock(null);
@@ -374,6 +392,24 @@ export default class VisualEditorService extends Service {
   constructor() {
     super(...arguments);
     this._loadConditionsPanelState();
+  }
+
+  _isInsideAllowedScope(target) {
+    if (!(target instanceof Element)) {
+      return false;
+    }
+    return Boolean(
+      target.closest(".visual-editor-block-chrome") ||
+      target.closest(".visual-editor-shell") ||
+      target.closest(".visual-editor-conditions-floating-panel") ||
+      // Float-Kit portals (menus / modals / tooltips) mount at body
+      // level, outside the shell. They're conceptually part of the
+      // editor surface (an icon picker, a colour swatch dropdown,
+      // a hover tooltip) so clicks inside them must NOT deselect.
+      target.closest(".fk-d-menu") ||
+      target.closest(".fk-d-menu-modal") ||
+      target.closest(".fk-d-tooltip")
+    );
   }
 
   /**
@@ -498,7 +534,8 @@ export default class VisualEditorService extends Service {
     this.isActive = true;
     this.activeThemeId = themeId ?? this._defaultThemeId();
     document.body.classList.add("visual-editor-active");
-    document.addEventListener("click", this._onCanvasClickOutside);
+    document.addEventListener("mousedown", this._onCanvasMouseDown);
+    document.addEventListener("mouseup", this._onCanvasMouseUp);
     this._materializeAllDrafts();
   }
 
@@ -646,7 +683,9 @@ export default class VisualEditorService extends Service {
     this._originalLayouts.clear();
     this._structurallyEditedOutlets.clear();
     document.body.classList.remove("visual-editor-active");
-    document.removeEventListener("click", this._onCanvasClickOutside);
+    document.removeEventListener("mousedown", this._onCanvasMouseDown);
+    document.removeEventListener("mouseup", this._onCanvasMouseUp);
+    this._selectionMousedownTarget = null;
   }
 
   /** @returns {boolean} */
