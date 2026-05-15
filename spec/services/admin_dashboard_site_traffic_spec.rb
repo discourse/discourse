@@ -6,6 +6,43 @@ RSpec.describe AdminDashboardSiteTraffic do
     SiteSetting.use_legacy_pageviews = false
   end
 
+  def traffic_point(date, count, end_date: nil)
+    point = { x: date, y: count }
+    point[:end_date] = end_date if end_date
+    point
+  end
+
+  def traffic_series(id, data, req: traffic_series_req(id))
+    {
+      req: req,
+      label: I18n.t("reports.site_traffic.xaxis.#{traffic_series_label_req(id)}"),
+      color_var: "--db-traffic-series-#{id.to_s.tr("_", "-")}-color",
+      data: data,
+    }
+  end
+
+  def traffic_series_req(id)
+    {
+      logged_in: "page_view_logged_in_browser",
+      anonymous: "page_view_anon_browser",
+      embedded: "page_view_embed",
+      crawlers: "page_view_crawler",
+    }.fetch(id)
+  end
+
+  def traffic_series_label_req(id)
+    {
+      logged_in: "page_view_logged_in_browser",
+      anonymous: "page_view_anon_browser",
+      embedded: "page_view_embed",
+      crawlers: "page_view_crawler",
+    }.fetch(id)
+  end
+
+  def traffic_series_data(response, id, req: traffic_series_req(id))
+    response[:pageview_series].find { |traffic_series| traffic_series[:req] == req }[:data]
+  end
+
   describe ".build" do
     it "returns public-community KPIs and pageview series for selected dates" do
       SiteSetting.embed_topics_list = true
@@ -35,42 +72,38 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         },
         pageview_series: [
-          {
-            id: "logged_in",
-            default_visible: true,
-            data: [
-              { date: "2026-05-01", count: 10 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 0 },
+          traffic_series(
+            :logged_in,
+            [
+              traffic_point("2026-05-01", 10),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
             ],
-          },
-          {
-            id: "anonymous",
-            default_visible: true,
-            data: [
-              { date: "2026-05-01", count: 0 },
-              { date: "2026-05-02", count: 20 },
-              { date: "2026-05-03", count: 0 },
+          ),
+          traffic_series(
+            :anonymous,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 20),
+              traffic_point("2026-05-03", 0),
             ],
-          },
-          {
-            id: "embedded",
-            default_visible: true,
-            data: [
-              { date: "2026-05-01", count: 0 },
-              { date: "2026-05-02", count: 4 },
-              { date: "2026-05-03", count: 0 },
+          ),
+          traffic_series(
+            :embedded,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 4),
+              traffic_point("2026-05-03", 0),
             ],
-          },
-          {
-            id: "crawlers",
-            default_visible: false,
-            data: [
-              { date: "2026-05-01", count: 0 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 3 },
+          ),
+          traffic_series(
+            :crawlers,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 3),
             ],
-          },
+          ),
         ],
       )
     end
@@ -95,33 +128,30 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         },
         pageview_series: [
-          {
-            id: "logged_in",
-            default_visible: true,
-            data: [
-              { date: "2026-05-01", count: 5 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 0 },
+          traffic_series(
+            :logged_in,
+            [
+              traffic_point("2026-05-01", 5),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
             ],
-          },
-          {
-            id: "anonymous",
-            default_visible: true,
-            data: [
-              { date: "2026-05-01", count: 0 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 0 },
+          ),
+          traffic_series(
+            :anonymous,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
             ],
-          },
-          {
-            id: "crawlers",
-            default_visible: false,
-            data: [
-              { date: "2026-05-01", count: 0 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 0 },
+          ),
+          traffic_series(
+            :crawlers,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
             ],
-          },
+          ),
         ],
       )
     end
@@ -134,27 +164,23 @@ RSpec.describe AdminDashboardSiteTraffic do
       Fabricate(:anonymous_browser_application_request, date: "2026-03-08", count: 10)
 
       response = described_class.build(start_date: "2026-03-01", end_date: "2026-04-04")
-      logged_in_series =
-        response[:pageview_series].find { |traffic_series| traffic_series[:id] == "logged_in" }
-      anonymous_series =
-        response[:pageview_series].find { |traffic_series| traffic_series[:id] == "anonymous" }
 
-      expect(logged_in_series[:data]).to eq(
+      expect(traffic_series_data(response, :logged_in)).to eq(
         [
-          { date: "2026-03-01", end_date: "2026-03-07", count: 3 },
-          { date: "2026-03-08", end_date: "2026-03-14", count: 4 },
-          { date: "2026-03-15", end_date: "2026-03-21", count: 0 },
-          { date: "2026-03-22", end_date: "2026-03-28", count: 0 },
-          { date: "2026-03-29", end_date: "2026-04-04", count: 8 },
+          traffic_point("2026-03-01", 3, end_date: "2026-03-07"),
+          traffic_point("2026-03-08", 4, end_date: "2026-03-14"),
+          traffic_point("2026-03-15", 0, end_date: "2026-03-21"),
+          traffic_point("2026-03-22", 0, end_date: "2026-03-28"),
+          traffic_point("2026-03-29", 8, end_date: "2026-04-04"),
         ],
       )
-      expect(anonymous_series[:data]).to eq(
+      expect(traffic_series_data(response, :anonymous)).to eq(
         [
-          { date: "2026-03-01", end_date: "2026-03-07", count: 0 },
-          { date: "2026-03-08", end_date: "2026-03-14", count: 10 },
-          { date: "2026-03-15", end_date: "2026-03-21", count: 0 },
-          { date: "2026-03-22", end_date: "2026-03-28", count: 0 },
-          { date: "2026-03-29", end_date: "2026-04-04", count: 0 },
+          traffic_point("2026-03-01", 0, end_date: "2026-03-07"),
+          traffic_point("2026-03-08", 10, end_date: "2026-03-14"),
+          traffic_point("2026-03-15", 0, end_date: "2026-03-21"),
+          traffic_point("2026-03-22", 0, end_date: "2026-03-28"),
+          traffic_point("2026-03-29", 0, end_date: "2026-04-04"),
         ],
       )
     end
@@ -166,23 +192,21 @@ RSpec.describe AdminDashboardSiteTraffic do
       Fabricate(:logged_in_browser_application_request, date: "2025-12-31", count: 8)
 
       response = described_class.build(start_date: "2025-01-01", end_date: "2025-12-31")
-      logged_in_series =
-        response[:pageview_series].find { |traffic_series| traffic_series[:id] == "logged_in" }
 
-      expect(logged_in_series[:data]).to eq(
+      expect(traffic_series_data(response, :logged_in)).to eq(
         [
-          { date: "2025-01-01", end_date: "2025-01-31", count: 3 },
-          { date: "2025-02-01", end_date: "2025-02-28", count: 4 },
-          { date: "2025-03-01", end_date: "2025-03-31", count: 0 },
-          { date: "2025-04-01", end_date: "2025-04-30", count: 0 },
-          { date: "2025-05-01", end_date: "2025-05-31", count: 0 },
-          { date: "2025-06-01", end_date: "2025-06-30", count: 0 },
-          { date: "2025-07-01", end_date: "2025-07-31", count: 0 },
-          { date: "2025-08-01", end_date: "2025-08-31", count: 0 },
-          { date: "2025-09-01", end_date: "2025-09-30", count: 0 },
-          { date: "2025-10-01", end_date: "2025-10-31", count: 0 },
-          { date: "2025-11-01", end_date: "2025-11-30", count: 0 },
-          { date: "2025-12-01", end_date: "2025-12-31", count: 8 },
+          traffic_point("2025-01-01", 3, end_date: "2025-01-31"),
+          traffic_point("2025-02-01", 4, end_date: "2025-02-28"),
+          traffic_point("2025-03-01", 0, end_date: "2025-03-31"),
+          traffic_point("2025-04-01", 0, end_date: "2025-04-30"),
+          traffic_point("2025-05-01", 0, end_date: "2025-05-31"),
+          traffic_point("2025-06-01", 0, end_date: "2025-06-30"),
+          traffic_point("2025-07-01", 0, end_date: "2025-07-31"),
+          traffic_point("2025-08-01", 0, end_date: "2025-08-31"),
+          traffic_point("2025-09-01", 0, end_date: "2025-09-30"),
+          traffic_point("2025-10-01", 0, end_date: "2025-10-31"),
+          traffic_point("2025-11-01", 0, end_date: "2025-11-30"),
+          traffic_point("2025-12-01", 8, end_date: "2025-12-31"),
         ],
       )
     end
@@ -291,9 +315,9 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         },
         pageview_series: [
-          { id: "logged_in", default_visible: true, data: [{ date: "2026-05-01", count: 10 }] },
-          { id: "anonymous", default_visible: true, data: [{ date: "2026-05-01", count: 20 }] },
-          { id: "crawlers", default_visible: false, data: [{ date: "2026-05-01", count: 0 }] },
+          traffic_series(:logged_in, [traffic_point("2026-05-01", 10)]),
+          traffic_series(:anonymous, [traffic_point("2026-05-01", 20)]),
+          traffic_series(:crawlers, [traffic_point("2026-05-01", 0)]),
         ],
       )
     end
@@ -319,9 +343,9 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         },
         pageview_series: [
-          { id: "logged_in", default_visible: true, data: [{ date: "2026-05-01", count: 11 }] },
-          { id: "anonymous", default_visible: true, data: [{ date: "2026-05-01", count: 22 }] },
-          { id: "crawlers", default_visible: false, data: [{ date: "2026-05-01", count: 4 }] },
+          traffic_series(:logged_in, [traffic_point("2026-05-01", 11)], req: "page_view_logged_in"),
+          traffic_series(:anonymous, [traffic_point("2026-05-01", 22)], req: "page_view_anon"),
+          traffic_series(:crawlers, [traffic_point("2026-05-01", 4)]),
         ],
       )
     end
@@ -339,9 +363,9 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         },
         pageview_series: [
-          { id: "logged_in", default_visible: true, data: [{ date: "2026-05-01", count: 0 }] },
-          { id: "anonymous", default_visible: true, data: [{ date: "2026-05-01", count: 0 }] },
-          { id: "crawlers", default_visible: false, data: [{ date: "2026-05-01", count: 0 }] },
+          traffic_series(:logged_in, [traffic_point("2026-05-01", 0)]),
+          traffic_series(:anonymous, [traffic_point("2026-05-01", 0)]),
+          traffic_series(:crawlers, [traffic_point("2026-05-01", 0)]),
         ],
       )
 
@@ -358,10 +382,10 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         },
         pageview_series: [
-          { id: "logged_in", default_visible: true, data: [{ date: "2026-05-01", count: 0 }] },
-          { id: "anonymous", default_visible: true, data: [{ date: "2026-05-01", count: 0 }] },
-          { id: "embedded", default_visible: true, data: [{ date: "2026-05-01", count: 7 }] },
-          { id: "crawlers", default_visible: false, data: [{ date: "2026-05-01", count: 0 }] },
+          traffic_series(:logged_in, [traffic_point("2026-05-01", 0)]),
+          traffic_series(:anonymous, [traffic_point("2026-05-01", 0)]),
+          traffic_series(:embedded, [traffic_point("2026-05-01", 7)]),
+          traffic_series(:crawlers, [traffic_point("2026-05-01", 0)]),
         ],
       )
     end
@@ -382,10 +406,10 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         },
         pageview_series: [
-          { id: "logged_in", default_visible: true, data: [{ date: "2026-05-01", count: 0 }] },
-          { id: "anonymous", default_visible: true, data: [{ date: "2026-05-01", count: 0 }] },
-          { id: "embedded", default_visible: true, data: [{ date: "2026-05-01", count: 7 }] },
-          { id: "crawlers", default_visible: false, data: [{ date: "2026-05-01", count: 0 }] },
+          traffic_series(:logged_in, [traffic_point("2026-05-01", 0)]),
+          traffic_series(:anonymous, [traffic_point("2026-05-01", 0)]),
+          traffic_series(:embedded, [traffic_point("2026-05-01", 7)]),
+          traffic_series(:crawlers, [traffic_point("2026-05-01", 0)]),
         ],
       )
     end
@@ -406,9 +430,7 @@ RSpec.describe AdminDashboardSiteTraffic do
             value: 9,
           },
         },
-        pageview_series: [
-          { id: "logged_in", default_visible: true, data: [{ date: "2026-05-01", count: 9 }] },
-        ],
+        pageview_series: [traffic_series(:logged_in, [traffic_point("2026-05-01", 9)])],
       )
     end
 
@@ -427,33 +449,30 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         },
         pageview_series: [
-          {
-            id: "logged_in",
-            default_visible: true,
-            data: [
-              { date: "2026-05-01", count: 8 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 0 },
+          traffic_series(
+            :logged_in,
+            [
+              traffic_point("2026-05-01", 8),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
             ],
-          },
-          {
-            id: "anonymous",
-            default_visible: true,
-            data: [
-              { date: "2026-05-01", count: 0 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 0 },
+          ),
+          traffic_series(
+            :anonymous,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
             ],
-          },
-          {
-            id: "crawlers",
-            default_visible: false,
-            data: [
-              { date: "2026-05-01", count: 0 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 0 },
+          ),
+          traffic_series(
+            :crawlers,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
             ],
-          },
+          ),
         ],
       )
     end
@@ -471,33 +490,30 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         },
         pageview_series: [
-          {
-            id: "logged_in",
-            default_visible: true,
-            data: [
-              { date: "2026-05-01", count: 0 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 0 },
+          traffic_series(
+            :logged_in,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
             ],
-          },
-          {
-            id: "anonymous",
-            default_visible: true,
-            data: [
-              { date: "2026-05-01", count: 0 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 0 },
+          ),
+          traffic_series(
+            :anonymous,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
             ],
-          },
-          {
-            id: "crawlers",
-            default_visible: false,
-            data: [
-              { date: "2026-05-01", count: 0 },
-              { date: "2026-05-02", count: 0 },
-              { date: "2026-05-03", count: 0 },
+          ),
+          traffic_series(
+            :crawlers,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
             ],
-          },
+          ),
         ],
       )
     end
@@ -511,14 +527,13 @@ RSpec.describe AdminDashboardSiteTraffic do
           described_class.build(start_date: "not-a-date", end_date: "also-not-a-date"),
           described_class.build(start_date: "2026-05-10", end_date: "2026-05-01"),
         ].map do |response|
-          logged_in_series =
-            response[:pageview_series].find { |traffic_series| traffic_series[:id] == "logged_in" }
+          logged_in_series_data = traffic_series_data(response, :logged_in)
 
           {
             browser_pageviews: response.dig(:kpis, :browser_pageviews, :value),
-            first_point: logged_in_series[:data].first,
-            last_point: logged_in_series[:data].last,
-            data_points: logged_in_series[:data].size,
+            first_point: logged_in_series_data.first,
+            last_point: logged_in_series_data.last,
+            data_points: logged_in_series_data.size,
           }
         end
 
@@ -526,38 +541,20 @@ RSpec.describe AdminDashboardSiteTraffic do
         [
           {
             browser_pageviews: 3,
-            first_point: {
-              date: "2026-04-14",
-              count: 3,
-            },
-            last_point: {
-              date: "2026-05-14",
-              count: 0,
-            },
+            first_point: traffic_point("2026-04-14", 3),
+            last_point: traffic_point("2026-05-14", 0),
             data_points: 31,
           },
           {
             browser_pageviews: 3,
-            first_point: {
-              date: "2026-04-14",
-              count: 3,
-            },
-            last_point: {
-              date: "2026-05-14",
-              count: 0,
-            },
+            first_point: traffic_point("2026-04-14", 3),
+            last_point: traffic_point("2026-05-14", 0),
             data_points: 31,
           },
           {
             browser_pageviews: 3,
-            first_point: {
-              date: "2026-04-14",
-              count: 3,
-            },
-            last_point: {
-              date: "2026-05-14",
-              count: 0,
-            },
+            first_point: traffic_point("2026-04-14", 3),
+            last_point: traffic_point("2026-05-14", 0),
             data_points: 31,
           },
         ],

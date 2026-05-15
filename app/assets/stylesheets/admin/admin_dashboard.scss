@@ -218,8 +218,17 @@ h1 {
   }
 
   &__traffic-chart-canvas,
+  &__traffic-chart-canvas .chart-canvas,
   &__traffic-chart-canvas .chart-canvas-container {
     height: 100%;
+  }
+
+  &__traffic-chart &__traffic-chart-canvas.admin-report-stacked-chart {
+    height: 100%;
+
+    .chart-canvas-container {
+      height: 100%;
+    }
   }
 
   &__traffic-chart-shell {

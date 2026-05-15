@@ -72,21 +72,43 @@ class AdminDashboardSiteTraffic
   def pageview_series(rows, include_embedded:)
     series_ids(include_embedded: include_embedded).map do |id|
       {
-        id: id.to_s,
-        default_visible: default_visible_series?(id),
+        req: series_req(id),
+        label: series_label(id),
+        color_var: series_color_var(id),
         data: rows.map { |row| pageview_series_point(row, id) },
       }
     end
   end
 
   def pageview_series_point(row, id)
-    point = { date: row.date.iso8601, count: row.public_send(id).to_i }
+    point = { x: row.date.iso8601, y: row.public_send(id).to_i }
     point[:end_date] = row.end_date.iso8601 if row.end_date != row.date
     point
   end
 
-  def default_visible_series?(id)
-    id != :crawlers
+  def series_req(id)
+    selected_request_type_names.fetch(id)
+  end
+
+  def series_label(id)
+    I18n.t("reports.site_traffic.xaxis.#{series_label_req(id)}")
+  end
+
+  def series_label_req(id)
+    case id
+    when :logged_in
+      "page_view_logged_in_browser"
+    when :anonymous
+      "page_view_anon_browser"
+    when :embedded
+      "page_view_embed"
+    when :crawlers
+      "page_view_crawler"
+    end
+  end
+
+  def series_color_var(id)
+    "--db-traffic-series-#{id.to_s.tr("_", "-")}-color"
   end
 
   def login_required?
@@ -137,20 +159,16 @@ class AdminDashboardSiteTraffic
 
   def selected_request_types
     @selected_request_types ||=
+      selected_request_type_names.transform_values { |name| ApplicationRequest.req_types[name] }
+  end
+
+  def selected_request_type_names
+    @selected_request_type_names ||=
       if SiteSetting.use_legacy_pageviews
-        {
-          logged_in: ApplicationRequest.req_types[:page_view_logged_in],
-          anonymous: ApplicationRequest.req_types[:page_view_anon],
-        }
+        { logged_in: "page_view_logged_in", anonymous: "page_view_anon" }
       else
-        {
-          logged_in: ApplicationRequest.req_types[:page_view_logged_in_browser],
-          anonymous: ApplicationRequest.req_types[:page_view_anon_browser],
-        }
-      end.merge(
-        crawlers: ApplicationRequest.req_types[:page_view_crawler],
-        embedded: ApplicationRequest.req_types[:page_view_embed],
-      )
+        { logged_in: "page_view_logged_in_browser", anonymous: "page_view_anon_browser" }
+      end.merge(crawlers: "page_view_crawler", embedded: "page_view_embed")
   end
 
   def traffic_rows(range_start_date, range_end_date)

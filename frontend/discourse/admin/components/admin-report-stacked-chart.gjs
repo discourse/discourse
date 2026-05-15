@@ -4,10 +4,8 @@ import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import Chart from "./chart";
 
-function getCSSColor(varName) {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(varName)
-    .trim();
+function getCSSColor(varName, element = document.documentElement) {
+  return getComputedStyle(element).getPropertyValue(varName).trim();
 }
 
 function hexToRgba(hex, alpha) {
@@ -79,22 +77,28 @@ export default class AdminReportStackedChart extends Component {
       (series) => ({
         label: series.label,
         color: series.color,
-        data: Report.collapse(model, series.data, chartOptions.chartGrouping),
+        colorVar: series.color_var,
+        data: chartOptions.skipCollapse
+          ? series.data
+          : Report.collapse(model, series.data, chartOptions.chartGrouping),
         req: series.req,
       })
     );
 
     const data = {
-      labels: chartData[0].data.map((point) => point.x),
+      labels: chartData[0]?.data.map((point) => point.x) ?? [],
       datasets: chartData.map((series) => ({
         label: series.label,
-        stack: "pageviews-stack",
+        stack: chartOptions.stack || "pageviews-stack",
         data: series.data,
-        backgroundColor: series.color,
-        _baseColor: series.color, // Store for gradient plugin
+        backgroundColor:
+          series.color ||
+          ((context) => this.#seriesColor(series, context.chart.canvas)),
+        _baseColor: series.color,
+        _colorVar: series.colorVar,
         hidden: chartOptions.hiddenLabels.includes(series.req),
-        borderRadius: 2,
-        maxBarThickness: 30,
+        borderRadius: chartOptions.borderRadius ?? 2,
+        maxBarThickness: chartOptions.maxBarThickness ?? 30,
       })),
     };
 
@@ -105,18 +109,22 @@ export default class AdminReportStackedChart extends Component {
     return {
       type: "bar",
       data,
-      plugins: [gradientPlugin, emptyTooltipPlugin],
+      plugins:
+        chartOptions.useGradient === false
+          ? [emptyTooltipPlugin]
+          : [gradientPlugin, emptyTooltipPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        hover: { mode: "index" },
+        hover: { mode: "index", intersect: false },
         animation: {
           duration: prefersReducedMotion ? 0 : 300,
         },
         plugins: {
           legend: {
-            display: true,
-            position: "bottom",
+            display: chartOptions.legendDisplay ?? true,
+            position: chartOptions.legendPosition || "bottom",
+            align: chartOptions.legendAlign,
             onClick: (e, legendItem, legend) => {
               const index = legendItem.datasetIndex;
               const ci = legend.chart;
@@ -137,18 +145,20 @@ export default class AdminReportStackedChart extends Component {
             labels: {
               usePointStyle: true,
               pointStyle: "rectRounded",
-              padding: 25,
+              ...this.#legendPadding(chartOptions),
               boxWidth: 10,
               boxHeight: 10,
               generateLabels: (chart) => {
                 const textColor = getCSSColor("--primary-high");
                 return chart.data.datasets.map((dataset, i) => {
                   const isVisible = chart.isDatasetVisible(i);
+                  const color = this.#seriesColor(dataset, chart.canvas);
+
                   return {
                     text: dataset.label,
                     fontColor: textColor,
-                    fillStyle: isVisible ? dataset._baseColor : "transparent",
-                    strokeStyle: dataset._baseColor,
+                    fillStyle: isVisible ? color : "transparent",
+                    strokeStyle: color,
                     lineWidth: 2,
                     hidden: false,
                     datasetIndex: i,
@@ -185,6 +195,7 @@ export default class AdminReportStackedChart extends Component {
                 return `Total: ${total}`;
               },
               title: (tooltipItem) =>
+                chartOptions.tooltipTitle?.(tooltipItem) ||
                 moment(tooltipItem[0].parsed.x).format("LL"),
             },
           },
@@ -220,9 +231,11 @@ export default class AdminReportStackedChart extends Component {
             grid: { display: false },
             type: "time",
             time: {
-              unit: chartOptions.chartGrouping
-                ? Report.unitForGrouping(chartOptions.chartGrouping)
-                : Report.unitForDatapoints(data.labels.length),
+              unit: chartOptions.timeUnit
+                ? chartOptions.timeUnit
+                : chartOptions.chartGrouping
+                  ? Report.unitForGrouping(chartOptions.chartGrouping)
+                  : Report.unitForDatapoints(data.labels.length),
             },
             ticks: {
               sampleSize: 5,
@@ -237,8 +250,33 @@ export default class AdminReportStackedChart extends Component {
 
   <template>
     <Chart
+      ...attributes
       @chartConfig={{this.chartConfig}}
+      @rebuildKey={{@rebuildKey}}
       class="admin-report-chart admin-report-stacked-chart"
     />
   </template>
+
+  #seriesColor(series, element = document.documentElement) {
+    if (series.color || series._baseColor) {
+      return series.color || series._baseColor;
+    }
+
+    if (series.colorVar || series._colorVar) {
+      return (
+        getCSSColor(series.colorVar || series._colorVar, element) ||
+        getCSSColor("--primary-med-or-secondary-med", element)
+      );
+    }
+
+    return getCSSColor("--primary-med-or-secondary-med", element);
+  }
+
+  #legendPadding(chartOptions) {
+    if (chartOptions.legendLabelPadding === null) {
+      return {};
+    }
+
+    return { padding: chartOptions.legendLabelPadding ?? 25 };
+  }
 }
