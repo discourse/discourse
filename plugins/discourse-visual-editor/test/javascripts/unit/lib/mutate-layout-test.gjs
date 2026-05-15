@@ -11,6 +11,7 @@ import {
   removeEntry,
   replaceEntryArgs,
   replaceEntryContainerArgs,
+  replaceEntryId,
   setEntryArg,
 } from "discourse/plugins/discourse-visual-editor/discourse/lib/mutate-layout";
 
@@ -300,6 +301,96 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
         "nope:0",
         "grid",
         () => ({})
+      );
+
+      assert.false(changed);
+      assert.strictEqual(next, layout);
+    });
+  });
+
+  module("replaceEntryId", function () {
+    function makeIdLayout() {
+      return [
+        {
+          block: ContainerBlock,
+          args: {},
+          __stableKey: 60,
+          children: [
+            {
+              block: LeafBlock,
+              args: { title: "Inner" },
+              __stableKey: 61,
+            },
+            {
+              block: LeafBlock,
+              args: { title: "Inner 2" },
+              id: "untouched",
+              __stableKey: 62,
+            },
+          ],
+        },
+      ];
+    }
+
+    test("sets the id on the matched entry, preserves __stableKey", function (assert) {
+      const layout = makeIdLayout();
+      const { layout: next, changed } = replaceEntryId(
+        layout,
+        "ve:mutate-test-leaf:61",
+        "hero"
+      );
+
+      assert.true(changed);
+      assert.strictEqual(next[0].children[0].id, "hero");
+      assert.strictEqual(next[0].children[0].__stableKey, 61);
+    });
+
+    test("preserves identity of untouched siblings", function (assert) {
+      const layout = makeIdLayout();
+      const siblingOriginal = layout[0].children[1];
+
+      const { layout: next } = replaceEntryId(
+        layout,
+        "ve:mutate-test-leaf:61",
+        "hero"
+      );
+
+      assert.strictEqual(next[0].children[1], siblingOriginal);
+    });
+
+    test("clears the id property when passed null", function (assert) {
+      const layout = makeIdLayout();
+      const { layout: next, changed } = replaceEntryId(
+        layout,
+        "ve:mutate-test-leaf:62",
+        null
+      );
+
+      assert.true(changed);
+      assert.false(
+        "id" in next[0].children[1],
+        "the id property is dropped, not just set to null"
+      );
+    });
+
+    test("clears the id property when passed an empty string", function (assert) {
+      const layout = makeIdLayout();
+      const { layout: next, changed } = replaceEntryId(
+        layout,
+        "ve:mutate-test-leaf:62",
+        ""
+      );
+
+      assert.true(changed);
+      assert.false("id" in next[0].children[1]);
+    });
+
+    test("returns the original layout when no entry matches", function (assert) {
+      const layout = makeIdLayout();
+      const { layout: next, changed } = replaceEntryId(
+        layout,
+        "nope:0",
+        "hero"
       );
 
       assert.false(changed);

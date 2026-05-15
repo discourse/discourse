@@ -16,6 +16,7 @@ enabled_site_setting :visual_editor_enabled
 register_svg_icon "arrow-line-left"
 register_svg_icon "arrows-up-down"
 register_svg_icon "border-none"
+register_svg_icon "circle-dashed"
 register_svg_icon "cube"
 register_svg_icon "cubes"
 register_svg_icon "down-left-and-up-right-to-center"

@@ -469,7 +469,13 @@ body.visual-editor-active {
     filter: grayscale(1);
   }
 
-  /* Outlet boundaries — dashed amber, mirrors .block-outlet-debug */
+  /* Outlet boundaries — dashed amber, mirrors .block-outlet-debug.
+     No `min-height` here: in flex / sidebar columns the floor would
+     compete with the inner block's natural size and the content
+     would overflow the boundary. Empty outlets get their visible
+     drop target from `.visual-editor-empty-outlet-drop-zone` (rule
+     below), which carries its own min-height. */
+
   .visual-editor-outlet-boundary {
     position: relative;
     margin: var(--visual-editor-container-margin);
@@ -477,7 +483,6 @@ body.visual-editor-active {
       var(--visual-editor-block-outlet-color);
     background: rgb(245 158 11 / var(--visual-editor-bg-opacity));
     padding: var(--visual-editor-container-padding);
-    min-height: 20px;
   }
 
   /* Empty-outlet drop zone (Phase 7p.1). Rendered inside the outlet
@@ -1051,6 +1056,85 @@ body.visual-editor-active {
     font-size: var(--font-down-2);
   }
 
+  /* Filter bar — text search + status chips, shown only in tree view. */
+  &__filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    background: var(--secondary);
+    color: var(--primary-medium);
+
+    input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: var(--font-down-1);
+      color: var(--primary);
+      outline: none;
+
+      &::placeholder {
+        color: var(--primary-medium);
+      }
+    }
+  }
+
+  &__search-clear {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--primary-medium);
+    display: inline-flex;
+    align-items: center;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  &__chips {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--primary-low);
+    background: var(--secondary);
+    border-radius: 999px;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--primary-low-mid);
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--primary-very-low);
+      border-color: var(--primary-low-mid);
+      color: var(--primary);
+    }
+
+    .d-icon {
+      font-size: 0.85em;
+    }
+  }
+
   .outline-outlet {
     margin-bottom: 0.75rem;
 
@@ -1061,6 +1145,21 @@ body.visual-editor-active {
       font-weight: 600;
       color: var(--visual-editor-block-outlet-color);
       margin-bottom: 0.25rem;
+
+      /* Reset the native button chrome — the label is a button so the
+         outlet can be expanded / collapsed via the heading, but it
+         needs to read visually as a heading row, not a UI button. */
+      background: transparent;
+      border: none;
+      padding: 0;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      font-size: inherit;
+
+      &:hover {
+        color: var(--visual-editor-block-outlet-hover-color);
+      }
     }
 
     .outline-block {
@@ -1069,17 +1168,101 @@ body.visual-editor-active {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      border-radius: 3px;
 
-      &:hover,
-      &.--selected {
+      &:hover {
         color: var(--visual-editor-block-hover-color);
       }
+
+      /* Selection — distinct from hover so the active row stands out
+         even while the pointer is elsewhere. Tinted background plus
+         a left-edge accent bar (drawn via inset box-shadow so the
+         depth-based `padding-left` is unaffected). Bolder weight
+         reinforces the "active" read. */
+
+      &.--selected {
+        background: var(--tertiary-low);
+        box-shadow: inset 3px 0 0 var(--tertiary);
+        font-weight: 600;
+      }
+
+      /* Error tone — text-only `--danger` so the row reads as an alert
+         without competing with the canvas ghost's tinted background.
+         The status icon picks up the same color via the cascade rule
+         on `.outline-block.--error .outline-block__status`. */
+
+      &.--error {
+        color: var(--danger);
+      }
+
+      /* Muted tone mirrors the canvas ghost's neutral faded silhouette
+         (`condition-failed` entries that aren't authoring mistakes but
+         won't render on the live page). Stays out of the way of
+         hover / selection. */
+
+      &.--muted:not(:hover, .--selected) {
+        color: var(--primary-medium);
+        opacity: 0.85;
+      }
+    }
+
+    /* Chevron toggle on container rows — clicking it expands /
+       collapses the branch. Sized to match `.outline-block__leaf` so
+       container and leaf rows line up vertically. */
+
+    .outline-block__toggle {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: var(--primary-medium);
+      display: inline-flex;
+      align-items: center;
+      width: 1rem;
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+
+    /* Leaf icon — placeholder slot that matches the chevron's width,
+       so container and leaf rows have the same icon-to-text gap. */
+
+    .outline-block__leaf {
+      display: inline-flex;
+      align-items: center;
+      width: 1rem;
+      color: var(--primary-medium);
+    }
+
+    .outline-block__name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .outline-block__id {
       opacity: 0.65;
       font-family: "Courier New", courier, "Lucida Console", monaco, monospace;
       font-size: var(--font-down-2);
+    }
+
+    /* Status badge — gates / failure indicator at the end of each row.
+       Color mirrors the row's `.--error` state so failing blocks read
+       as a single coherent warning rather than a row + lone icon. */
+
+    .outline-block__status {
+      display: inline-flex;
+      align-items: center;
+      color: var(--primary-medium);
+      font-size: 0.85em;
+      cursor: help;
+    }
+
+    .outline-block.--error .outline-block__status {
+      color: var(--danger);
     }
 
     .outline-children {
@@ -2827,5 +3010,189 @@ body.visual-editor-dragging {
     font-style: italic;
     font-size: var(--font-down-1);
     margin: 0;
+  }
+}
+
+/* Inspector metadata section — collapsible block holding entry-level
+   metadata (currently the block `id`). Sits above the tab strip. */
+
+.visual-editor-inspector-metadata {
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--primary-low);
+  border-radius: 4px;
+  background: var(--primary-very-low);
+
+  &__summary {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.5rem;
+    cursor: pointer;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    user-select: none;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  &__body {
+    padding: 0.5rem;
+    border-top: 1px solid var(--primary-low);
+    background: var(--secondary);
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__label {
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  &__input {
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--primary-low);
+    border-radius: 3px;
+    font-family: "Courier New", courier, "Lucida Console", monaco, monospace;
+    font-size: var(--font-down-1);
+    color: var(--primary);
+    background: var(--secondary);
+
+    &:focus {
+      outline: none;
+      border-color: var(--tertiary);
+      box-shadow: 0 0 0 2px rgb(0 119 204 / 0.15);
+    }
+  }
+
+  &__help {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  &__error {
+    color: var(--danger);
+    font-size: var(--font-down-2);
+  }
+}
+
+/* Editor-native ghost block — placeholder for an entry that didn't
+   render (condition failed, unknown block, no visible children). Faded
+   silhouette so authors can still see + select it; visually distinct
+   from real blocks (dashed border, no background). */
+
+/* Editor-native ghost block. The surrounding `BlockChrome` wrapper
+   already paints the dashed border (via its `.--ghost` modifier) and
+   `--error` color, so this component focuses on the content surface:
+   diagonal-stripe background, icon, name, and hint message. Drawing
+   a border here too would double up. */
+
+.ve-ghost-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(0 0 0 / 0.015),
+    rgb(0 0 0 / 0.015) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  color: var(--primary-medium);
+  min-height: 3rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary-medium);
+  }
+
+  &__name {
+    color: var(--primary);
+  }
+
+  &__id {
+    opacity: 0.65;
+    font-family: "Courier New", courier, "Lucida Console", monaco, monospace;
+    font-size: var(--font-down-2);
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  /* Container that nests recursively-rendered ghost children (the
+     output of `GHOST_CHILDREN_CREATOR`). Each child carries its own
+     chrome + ghost, so this is just a vertical-stack scaffold. */
+
+  &__children {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--primary-low);
+  }
+
+  /* Error modifier — applied when the failure is a genuine authoring
+     mistake (UNKNOWN_BLOCK). Repaints the silhouette's background and
+     text in danger tones so a typo'd block jumps out, distinct from
+     an intentionally condition-gated block. Border color comes from
+     the surrounding chrome's own `--error` modifier. */
+
+  &.--error {
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgb(217 48 37 / 0.04),
+        rgb(217 48 37 / 0.04) 6px,
+        transparent 6px,
+        transparent 12px
+      ),
+      var(--danger-low);
+    color: var(--danger);
+
+    .ve-ghost-block__icon,
+    .ve-ghost-block__name,
+    .ve-ghost-block__hint {
+      color: var(--danger);
+    }
+  }
+}
+
+/* Block-chrome ghost modifier — the wrapper that surrounds VEGhostBlock
+   tones down its border and background, since the ghost component
+   already paints its own dashed silhouette. */
+
+body.visual-editor-active {
+  .visual-editor-block-chrome.--ghost {
+    border-style: dashed;
+    background: transparent;
+  }
+
+  /* Error-tone chrome — applied alongside `.--ghost` for genuine
+     authoring mistakes (UNKNOWN_BLOCK). Repaints the chrome border in
+     danger so the surrounding wrapper matches the inner ghost's
+     red silhouette. */
+
+  .visual-editor-block-chrome.--error,
+  .visual-editor-block-chrome-wrapper.--error > .visual-editor-block-chrome {
+    border-color: var(--danger);
   }
 }

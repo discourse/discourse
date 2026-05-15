@@ -246,6 +246,14 @@ export function handleUnknownBlock({
     {
       name: blockName,
       id: entry.id,
+      // Forward the stable key into the BLOCK_DEBUG payload so debug
+      // consumers (e.g. the visual editor's chrome wrapper) can wire
+      // the ghost back to its underlying layout entry. The same `key`
+      // is also stamped on the returned ghostData below — the
+      // duplication is intentional: the outer key drives Glimmer's
+      // `{{#each}}` identity, the inner one drives `BLOCK_DEBUG`
+      // consumer logic.
+      key,
       args: entry.args,
       conditions: entry.conditions,
       failureType: FAILURE_TYPE.UNKNOWN_BLOCK,
@@ -379,6 +387,9 @@ export function createGhostBlock({
     {
       name: blockName,
       id: entry.id,
+      // Forward the stable key into the BLOCK_DEBUG payload — see the
+      // matching note in `handleUnknownBlock` for why this is needed.
+      key,
       args: entry.args,
       containerArgs: entry.containerArgs,
       conditions: entry.conditions,
