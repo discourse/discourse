@@ -538,29 +538,25 @@ module ApplicationHelper
     end
   end
 
+  def custom_splash_screen_enabled?
+    @custom_splash_screen_enabled ||=
+      SiteSetting.splash_screen_image.is_a?(Upload) ||
+        SiteSetting.splash_screen_image_dark.is_a?(Upload)
+  end
+
   def splash_screen_image_animated?
-    build_splash_screen_image unless defined?(@splash_screen_image_svg)
-    @splash_screen_image_svg.present? && @splash_screen_image_svg.match?(/@keyframes\s/)
+    svg = build_splash_screen_image
+    svg.present? && svg.match?(/@keyframes\s/)
   end
 
   def splash_screen_inline_svg
-    build_splash_screen_image unless defined?(@splash_screen_image_svg)
-    @splash_screen_image_svg&.html_safe
+    build_splash_screen_image&.html_safe
   end
-
-  public
-
-  def custom_splash_screen_enabled?
-  @custom_splash_screen_enabled ||=
-    SiteSetting.splash_screen_image.is_a?(Upload) ||
-    SiteSetting.splash_screen_image_dark.is_a?(Upload)
-end
 
   def splash_screen_image_data_uri(dark: false)
     svg = build_splash_screen_image(dark: dark)
     return nil if svg.blank?
 
-    # Replace CSS variable references with actual theme colors
     svg_with_colors = svg.dup
 
     color_method = dark ? :dark_color_hex_for_name : :light_color_hex_for_name
@@ -572,34 +568,33 @@ end
     svg_with_colors.gsub!(/var\(\s*--secondary\s*\)/, secondary)
     svg_with_colors.gsub!(/var\(\s*--tertiary\s*\)/, tertiary)
 
-    # Use base64 encoding for better compatibility with complex SVGs
     "data:image/svg+xml;base64,#{Base64.strict_encode64(svg_with_colors)}"
   end
 
   private
 
-def build_splash_screen_image(dark: false)
-  upload =
-    if dark && SiteSetting.splash_screen_image_dark.is_a?(Upload)
-      SiteSetting.splash_screen_image_dark
-    else
-      SiteSetting.splash_screen_image
-    end
+  def build_splash_screen_image(dark: false)
+    upload =
+      if dark && SiteSetting.splash_screen_image_dark.is_a?(Upload)
+        SiteSetting.splash_screen_image_dark
+      else
+        SiteSetting.splash_screen_image
+      end
 
-  return unless upload.is_a?(Upload)
+    return unless upload.is_a?(Upload)
 
-  Discourse.cache.fetch(
-    "splash_screen_svg_#{dark ? "dark" : "light"}_#{upload.id}_#{upload.sha1}",
-    expires_in: 1.day
-  ) do
-    begin
-      upload.content.presence
-    rescue StandardError => e
-      Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
-      nil
+    Discourse.cache.fetch(
+      "splash_screen_svg_#{dark ? "dark" : "light"}_#{upload.id}_#{upload.sha1}",
+      expires_in: 1.day
+    ) do
+      begin
+        upload.content.presence
+      rescue StandardError => e
+        Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+        nil
+      end
     end
   end
-end
 
   public
 
