@@ -3195,4 +3195,32 @@ body.visual-editor-active {
   .visual-editor-block-chrome-wrapper.--error > .visual-editor-block-chrome {
     border-color: var(--danger);
   }
+
+  /* Slot chrome — a `ve:slot` entry is a template-defined drop
+     target. Dashed amber border + tinted background mirror the grid
+     overlay's auto-empty cells so the two read as the same
+     affordance. The chrome's inner `__content` carries the
+     `EmptyCellPlaceholder` (+ button + palette picker), so this is
+     just the frame around it. */
+
+  .visual-editor-block-chrome.--slot {
+    border-style: dashed;
+    border-color: var(--visual-editor-block-outlet-color);
+    background: rgb(245 158 11 / 0.06);
+
+    &:hover {
+      border-color: var(--visual-editor-block-outlet-hover-color);
+      background: rgb(245 158 11 / 0.12);
+    }
+  }
+
+  /* Slot's content area centers the placeholder. Override the
+     grid-cell `place-items` (set by the chrome's `contentStyle`
+     getter for align/justify) so the + button sits in the middle of
+     the slot rect regardless of the slot's stored alignment. */
+
+  .visual-editor-block-chrome.--slot > .visual-editor-block-chrome__content {
+    place-items: center;
+    min-height: 60px;
+  }
 }

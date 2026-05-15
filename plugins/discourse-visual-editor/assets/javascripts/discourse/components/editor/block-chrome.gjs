@@ -7,6 +7,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
 import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -17,6 +18,7 @@ import { parsePlacement, placementsOverlap } from "../../lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
 import gridTileDrag from "../../modifiers/grid-tile-drag";
 import BlockToolbar from "./block-toolbar";
+import EmptyCellPlaceholder from "./empty-cell-placeholder";
 import GridOverlay from "./grid-overlay";
 
 /**
@@ -45,6 +47,15 @@ export default class BlockChrome extends Component {
   @service blocks;
   @service visualEditor;
 
+  /**
+   * Whether this slot is currently showing its palette picker
+   * popover. Stored on the chrome instance (rather than at a higher
+   * scope) because the chrome IS the slot in this model — each slot
+   * gets its own chrome, each picker opens / closes against the
+   * chrome that owns it. Unprefixed because the template reads it
+   * via `this.pickingSlot`.
+   */
+  @tracked pickingSlot = false;
   acceptedDragKinds = ["ve-block", "ve-palette-block"];
 
   /**
@@ -432,6 +443,89 @@ export default class BlockChrome extends Component {
     return this.metadata?.shortName ?? this.args.blockName;
   }
 
+  /**
+   * `ve:slot` entries are template-defined drop targets. The chrome
+   * wraps them like any other block (selection, drag, resize via the
+   * existing grid handle), but the inner render area becomes a
+   * "Pick a block" placeholder instead of the slot's no-op template,
+   * and drops route through `fillSlot` / `moveBlockIntoSlot` so the
+   * slot is REPLACED by content rather than inserted-as-sibling.
+   *
+   * @returns {boolean}
+   */
+  get isSlot() {
+    return this.args.blockName === "ve:slot";
+  }
+
+  /**
+   * Compact palette for the slot picker popover — same shape the
+   * grid overlay uses for its auto-empty-cell picker. The two are
+   * intentionally identical in vocabulary; the only difference is
+   * where the placeholder is anchored.
+   */
+  @cached
+  get slotPalette() {
+    return this.blocks
+      .listBlocksWithMetadata()
+      .map(({ name, component }) => {
+        const display = getBlockDisplayMetadata(component) ?? {};
+        return {
+          name,
+          displayName: display.displayName,
+          icon: display.icon,
+          paletteHidden: display.paletteHidden === true,
+          previewArgs: display.previewArgs ?? {},
+        };
+      })
+      .filter((row) => !row.paletteHidden)
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+  }
+
+  @action
+  openSlotPicker() {
+    this.pickingSlot = true;
+  }
+
+  @action
+  closeSlotPicker() {
+    this.pickingSlot = false;
+  }
+
+  @action
+  pickBlockForSlot(blockEntry) {
+    this.visualEditor.fillSlot({
+      slotKey: this.args.blockKey,
+      blockName: blockEntry.name,
+      defaultArgs: blockEntry.previewArgs,
+    });
+    this.pickingSlot = false;
+  }
+
+  /**
+   * Drop handler bound to a `ve:slot` chrome. Palette drops fill the
+   * slot directly via `fillSlot`; canvas-block drops route through
+   * `moveBlockIntoSlot` so the dragged block adopts the slot's grid
+   * rect (same-outlet only — cross-outlet move-into-slot is
+   * deferred). Either way the slot entry is consumed by the
+   * incoming content.
+   */
+  @action
+  applyVeSlotDrop({ source }) {
+    if (source?.kind === "ve-palette-block") {
+      this.visualEditor.fillSlot({
+        slotKey: this.args.blockKey,
+        blockName: source.data.blockName,
+        defaultArgs: source.data.defaultArgs,
+      });
+    } else if (source?.kind === "ve-block") {
+      this.visualEditor.moveBlockIntoSlot({
+        sourceKey: source.data.blockKey,
+        slotKey: this.args.blockKey,
+      });
+    }
+    this.visualEditor.endDrag();
+  }
+
   @action
   captureChromeEl(element) {
     this._chromeEl = element;
@@ -478,6 +572,16 @@ export default class BlockChrome extends Component {
    */
   @action
   applySlotDrop({ source }) {
+    // `ve:slot` entries get the dedicated REPLACE handler: drops fill
+    // the slot (palette) or move existing content into it
+    // (canvas-block drag). The grid-overlay's slot-wrapper dispatch
+    // below is for legacy positioned wrappers from the pre-
+    // `containerArgs` era and would try to insert-as-sibling, which
+    // doesn't match the "slot is consumed by content" model.
+    if (this.isSlot) {
+      this.applyVeSlotDrop({ source });
+      return;
+    }
     const parent = this.visualEditor._findEntryParent(this.args.blockKey);
     const gridKey = parent ? entryKey(parent) : null;
     const overlay = gridKey
@@ -689,6 +793,7 @@ export default class BlockChrome extends Component {
             (if this.isOutOfBounds "--out-of-bounds")
             (if @isGhost "--ghost")
             (if @isError "--error")
+            (if this.isSlot "--slot")
           }}
           data-ve-block-name={{@blockName}}
           data-ve-block-key={{@blockKey}}
@@ -753,7 +858,20 @@ export default class BlockChrome extends Component {
             <span>{{this.displayName}}</span>
           </span>
 
-          {{#if this.isGridCell}}
+          {{#if this.isSlot}}
+            <div
+              class="visual-editor-block-chrome__content"
+              style={{this.contentStyle}}
+            >
+              <EmptyCellPlaceholder
+                @palette={{this.slotPalette}}
+                @isOpen={{this.pickingSlot}}
+                @onOpen={{this.openSlotPicker}}
+                @onClose={{this.closeSlotPicker}}
+                @onPick={{this.pickBlockForSlot}}
+              />
+            </div>
+          {{else if this.isGridCell}}
             {{! Grid cells: the chrome always fills the cell rectangle
               (border traces the full cell), and a single-cell sub-grid
               inside positions the wrapped block per the user's
