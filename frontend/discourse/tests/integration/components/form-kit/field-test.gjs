@@ -91,6 +91,49 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.form().field("foo").hasDescription("foo foo");
   });
 
+  test("aria-describedby links description, help text, and error", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            @description="A description"
+            @helpText="A help text"
+            @validation="required"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    const input = document.querySelector("[name='foo']");
+    const descriptionId = document.querySelector(
+      ".form-kit__container-description"
+    ).id;
+    const helpTextId = document.querySelector(
+      ".form-kit__container-help-text"
+    ).id;
+
+    assert.strictEqual(
+      input.getAttribute("aria-describedby"),
+      `${descriptionId} ${helpTextId}`,
+      "joins description and help text ids when no error"
+    );
+
+    await formKit().submit();
+
+    const errorId = document.querySelector(".form-kit__errors").id;
+    assert.strictEqual(
+      input.getAttribute("aria-describedby"),
+      `${descriptionId} ${helpTextId} ${errorId}`,
+      "appends the error id when a validation error is present"
+    );
+  });
+
   test("invalid @name", async function (assert) {
     setupOnerror((error) => {
       assert.deepEqual(error.message, "@name can't include `.` or `-`.");
