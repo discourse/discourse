@@ -17,8 +17,8 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     Fabricate(:embeddable_host)
 
-    Fabricate(:logged_in_browser_application_request, date: "2025-11-16", count: 25)
-    Fabricate(:logged_in_browser_application_request, date: "2026-03-14", count: 5)
+    Fabricate(:logged_in_browser_application_request, date: "2025-11-18", count: 25)
+    Fabricate(:logged_in_browser_application_request, date: "2026-03-16", count: 5)
 
     Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 15)
     Fabricate(:logged_in_browser_application_request, date: "2026-05-12", count: 20)
@@ -32,12 +32,12 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     traffic = dashboard.site_traffic
 
     expect(traffic).to have_headline("45 pageviews in the last 30 days")
-    expect(traffic).to have_trend("up 800%")
+    expect(traffic).to have_up_trend("up 800%")
     expect(traffic).to have_metric("Logged-in share", "78%")
 
     traffic.hover_comparison_tooltip
     expect(traffic).to have_comparison_tooltip(
-      "Compared with the previous 30 days (Mar 14 – Apr 13, 2026)",
+      "Compared with the previous 30 days (Mar 16 – Apr 14, 2026)",
     )
 
     traffic.hover_logged_in_share_tooltip
@@ -52,7 +52,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
     traffic.hover_comparison_tooltip
     expect(traffic).to have_comparison_tooltip(
-      "Compared with the previous 7 days (Apr 29 – May 6, 2026)",
+      "Compared with the previous 7 days (May 1 – May 7, 2026)",
     )
 
     dashboard.select_preset("last_3_months")
@@ -62,13 +62,13 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
     traffic.hover_comparison_tooltip
     expect(traffic).to have_comparison_tooltip(
-      "Compared with the previous 3 months (Nov 16, 2025 – Feb 13, 2026)",
+      "Compared with the previous 3 months (Nov 18, 2025 – Feb 14, 2026)",
     )
   end
 
   it "shows staff when pageviews are down compared with the previous period",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-    Fabricate(:logged_in_browser_application_request, date: "2026-03-14", count: 80)
+    Fabricate(:logged_in_browser_application_request, date: "2026-03-16", count: 80)
 
     Fabricate(:logged_in_browser_application_request, date: "2026-05-12", count: 20)
 
@@ -123,6 +123,8 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     traffic = dashboard.site_traffic
 
     expect(traffic).to have_headline("0 pageviews in the last 30 days")
+    expect(traffic).to have_no_trend
+    expect(traffic).to have_no_comparison_tooltip
     expect(traffic).to have_chart
   end
 end

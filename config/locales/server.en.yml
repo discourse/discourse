@@ -1423,8 +1423,8 @@ en:
       title: "Site traffic"
       xaxis:
         page_view_anon_browser: "Anonymous"
-        page_view_logged_in_browser: "Logged In"
-        page_view_crawler: "Known crawlers"
+        page_view_logged_in_browser: "Logged in"
+        page_view_crawler: "Crawlers"
         page_view_embed: "Embedded pageviews"
         page_view_other: "Other traffic"
       yaxis: "Day"

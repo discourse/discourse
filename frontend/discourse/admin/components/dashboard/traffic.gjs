@@ -1,14 +1,32 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardSection from "discourse/admin/components/dashboard/section";
-import TrafficChart from "discourse/admin/components/dashboard/traffic-chart";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
-const DATE_FORMAT = "YYYY-MM-DD";
+const PERIOD_COPY_KEYS = {
+  last_7_days: {
+    headline: "admin.dashboard.site_traffic.headline.last_7_days",
+    comparisonTooltip:
+      "admin.dashboard.site_traffic.comparison_tooltip.previous_7_days",
+  },
+  last_30_days: {
+    headline: "admin.dashboard.site_traffic.headline.last_30_days",
+    comparisonTooltip:
+      "admin.dashboard.site_traffic.comparison_tooltip.previous_30_days",
+  },
+  last_3_months: {
+    headline: "admin.dashboard.site_traffic.headline.last_3_months",
+    comparisonTooltip:
+      "admin.dashboard.site_traffic.comparison_tooltip.previous_3_months",
+  },
+};
 
 export default class DashboardTraffic extends Component {
+  hiddenLabels = ["page_view_crawler"];
+
   get browserPageviews() {
     return this.args.traffic?.kpis?.browser_pageviews?.value ?? 0;
   }
@@ -18,7 +36,7 @@ export default class DashboardTraffic extends Component {
   }
 
   get headlineText() {
-    return i18n(this.#headlineDescriptor(this.args.period).key, {
+    return i18n(this.#headlineKey(this.args.period), {
       count: this.browserPageviews,
       formatted_count: this.headlineCount,
     });
@@ -74,6 +92,22 @@ export default class DashboardTraffic extends Component {
     return `${this.args.traffic?.kpis?.logged_in_share?.value ?? 0}%`;
   }
 
+  get chartModel() {
+    return {
+      start_date: this.args.startDate,
+      end_date: this.args.endDate,
+      data: this.args.traffic?.pageview_series ?? [],
+    };
+  }
+
+  get chartOptions() {
+    return {
+      hideYAxisGridLines: true,
+      hiddenLabels: this.hiddenLabels,
+      legendPosition: "top",
+    };
+  }
+
   formatHeadlineCount(value) {
     if (value >= 1_000_000) {
       const formatted = I18n.toNumber(value / 1_000_000, { precision: 1 });
@@ -93,30 +127,18 @@ export default class DashboardTraffic extends Component {
   }
 
   #dateFrom(value) {
-    return moment(value, DATE_FORMAT);
-  }
-
-  #readDate(object, camelKey, snakeKey) {
-    return object?.[camelKey] || object?.[snakeKey];
+    return moment(value, "YYYY-MM-DD");
   }
 
   #inclusiveDayCount(startDate, endDate) {
     return this.#dateFrom(endDate).diff(this.#dateFrom(startDate), "days") + 1;
   }
 
-  #headlineDescriptor(period) {
-    switch (period) {
-      case "last_7_days":
-        return { key: "admin.dashboard.site_traffic.headline.last_7_days" };
-      case "last_30_days":
-        return { key: "admin.dashboard.site_traffic.headline.last_30_days" };
-      case "last_3_months":
-        return { key: "admin.dashboard.site_traffic.headline.last_3_months" };
-      default:
-        return {
-          key: "admin.dashboard.site_traffic.headline.selected_period",
-        };
-    }
+  #headlineKey(period) {
+    return (
+      PERIOD_COPY_KEYS[period]?.headline ??
+      "admin.dashboard.site_traffic.headline.selected_period"
+    );
   }
 
   #comparisonTooltip(period, comparisonPeriod) {
@@ -124,40 +146,20 @@ export default class DashboardTraffic extends Component {
       return null;
     }
 
-    const startDate = this.#readDate(
-      comparisonPeriod,
-      "startDate",
-      "start_date"
-    );
-    const endDate = this.#readDate(comparisonPeriod, "endDate", "end_date");
+    const startDate = comparisonPeriod.start_date;
+    const endDate = comparisonPeriod.end_date;
     const tooltip = { startDate, endDate };
+    const presetKey = PERIOD_COPY_KEYS[period]?.comparisonTooltip;
 
-    switch (period) {
-      case "last_7_days":
-        return {
-          ...tooltip,
-          key: "admin.dashboard.site_traffic.comparison_tooltip.previous_7_days",
-        };
-      case "last_30_days":
-        return {
-          ...tooltip,
-          key: "admin.dashboard.site_traffic.comparison_tooltip.previous_30_days",
-        };
-      case "last_3_months":
-        return {
-          ...tooltip,
-          key: "admin.dashboard.site_traffic.comparison_tooltip.previous_3_months",
-        };
-      default: {
-        const days = this.#inclusiveDayCount(startDate, endDate);
-
-        return {
-          ...tooltip,
-          count: days,
-          key: "admin.dashboard.site_traffic.comparison_tooltip.previous_days",
-        };
-      }
+    if (presetKey) {
+      return { ...tooltip, key: presetKey };
     }
+
+    return {
+      ...tooltip,
+      count: this.#inclusiveDayCount(startDate, endDate),
+      key: "admin.dashboard.site_traffic.comparison_tooltip.previous_days",
+    };
   }
 
   #formatComparisonDates(startDate, endDate) {
@@ -253,11 +255,13 @@ export default class DashboardTraffic extends Component {
             </div>
           </div>
         {{else if @traffic}}
-          <TrafficChart
-            @traffic={{@traffic}}
-            @startDate={{@startDate}}
-            @endDate={{@endDate}}
-          />
+          <div class="db-section__traffic-chart">
+            <AdminReportStackedChart
+              @model={{this.chartModel}}
+              @options={{this.chartOptions}}
+              class="db-section__traffic-chart-canvas"
+            />
+          </div>
         {{else}}
           <div class="db-section__traffic-chart">
             <div class="db-section__traffic-chart-shell"></div>

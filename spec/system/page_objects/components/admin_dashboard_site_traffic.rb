@@ -11,8 +11,16 @@ module PageObjects
         has_css?(".db-traffic__trend", text: text)
       end
 
+      def has_up_trend?(text)
+        has_css?(".db-traffic__trend.--up", text: text)
+      end
+
       def has_down_trend?(text)
         has_css?(".db-traffic__trend.--down", text: text)
+      end
+
+      def has_no_trend?
+        has_no_css?(".db-traffic__trend")
       end
 
       def has_metric?(label, value)
@@ -35,6 +43,10 @@ module PageObjects
 
       def has_comparison_tooltip?(text)
         Tooltips.new("site-traffic-comparison-tooltip").present?(text: text)
+      end
+
+      def has_no_comparison_tooltip?
+        has_no_css?("[data-trigger][data-identifier='site-traffic-comparison-tooltip']")
       end
 
       def hover_logged_in_share_tooltip

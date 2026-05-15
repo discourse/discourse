@@ -113,15 +113,12 @@ RSpec.describe Admin::DashboardController do
         sign_in(admin)
       end
 
-      def section_payload(id)
-        sections = response.parsed_body["sections"]
-        sections.find { |section| section["id"] == id }
+      let(:section_payloads) do
+        response.parsed_body["sections"].index_by { |section| section["id"] }
       end
 
       context "with highlights_data" do
-        def highlights_data
-          section_payload("highlights")&.dig("data")
-        end
+        let(:highlights_data) { section_payloads["highlights"]&.dig("data") }
 
         it "returns the highlights payload for the selected dates" do
           Fabricate(:user, created_at: Time.zone.local(2026, 4, 10))
@@ -172,9 +169,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       context "with traffic_data" do
-        def traffic_data
-          section_payload("traffic")&.dig("data")
-        end
+        let(:traffic_data) { section_payloads["traffic"]&.dig("data") }
 
         it "returns the site traffic payload for the selected dates" do
           SiteSetting.use_legacy_pageviews = false
@@ -210,7 +205,7 @@ RSpec.describe Admin::DashboardController do
               {
                 "req" => "page_view_logged_in_browser",
                 "label" => I18n.t("reports.site_traffic.xaxis.page_view_logged_in_browser"),
-                "color_var" => "--db-traffic-series-logged-in-color",
+                "color" => "#4B3CE0",
                 "data" => [
                   { "x" => "2026-05-01", "y" => 10 },
                   { "x" => "2026-05-02", "y" => 0 },
@@ -220,7 +215,7 @@ RSpec.describe Admin::DashboardController do
               {
                 "req" => "page_view_anon_browser",
                 "label" => I18n.t("reports.site_traffic.xaxis.page_view_anon_browser"),
-                "color_var" => "--db-traffic-series-anonymous-color",
+                "color" => "#9C8DEC",
                 "data" => [
                   { "x" => "2026-05-01", "y" => 0 },
                   { "x" => "2026-05-02", "y" => 20 },
@@ -230,7 +225,7 @@ RSpec.describe Admin::DashboardController do
               {
                 "req" => "page_view_embed",
                 "label" => I18n.t("reports.site_traffic.xaxis.page_view_embed"),
-                "color_var" => "--db-traffic-series-embedded-color",
+                "color" => "#E6E1F8",
                 "data" => [
                   { "x" => "2026-05-01", "y" => 0 },
                   { "x" => "2026-05-02", "y" => 4 },
@@ -240,7 +235,7 @@ RSpec.describe Admin::DashboardController do
               {
                 "req" => "page_view_crawler",
                 "label" => I18n.t("reports.site_traffic.xaxis.page_view_crawler"),
-                "color_var" => "--db-traffic-series-crawlers-color",
+                "color" => "#D5CDF7",
                 "data" => [
                   { "x" => "2026-05-01", "y" => 0 },
                   { "x" => "2026-05-02", "y" => 0 },
@@ -260,6 +255,20 @@ RSpec.describe Admin::DashboardController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["sections"]).to be_nil
         expect(response.parsed_body["configuration"]).to be_nil
+      end
+
+      it "falls back to default dates when date params are malformed" do
+        get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
+
+        expect(response.status).to eq(200)
+        expect(section_payloads.keys).to contain_exactly(
+          "highlights",
+          "reports",
+          "traffic",
+          "engagement",
+        )
+        expect(section_payloads.dig("highlights", "data")).to be_present
+        expect(section_payloads.dig("traffic", "data")).to be_present
       end
 
       it "returns the sections as an ordered array of {id, data}" do

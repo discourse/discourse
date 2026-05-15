@@ -2,10 +2,13 @@ import Component from "@glimmer/component";
 import Report from "discourse/admin/models/report";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
+import I18n, { i18n } from "discourse-i18n";
 import Chart from "./chart";
 
-function getCSSColor(varName, element = document.documentElement) {
-  return getComputedStyle(element).getPropertyValue(varName).trim();
+function getCSSColor(varName) {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(varName)
+    .trim();
 }
 
 function hexToRgba(hex, alpha) {
@@ -73,58 +76,51 @@ export default class AdminReportStackedChart extends Component {
     const chartOptions = options || {};
     chartOptions.hiddenLabels ??= [];
 
-    const chartData = makeArray(model.chartData || model.data).map(
-      (series) => ({
-        label: series.label,
-        color: series.color,
-        colorVar: series.color_var,
-        data: chartOptions.skipCollapse
-          ? series.data
-          : Report.collapse(model, series.data, chartOptions.chartGrouping),
-        req: series.req,
-      })
-    );
+    const sourceData = makeArray(model.chartData || model.data);
+    const chartGrouping =
+      chartOptions.chartGrouping ||
+      Report.groupingForDatapoints(sourceData[0]?.data?.length || 0);
+
+    const chartData = sourceData.map((series) => ({
+      label: series.label,
+      color: series.color,
+      data: Report.collapse(model, series.data, chartGrouping),
+      req: series.req,
+    }));
 
     const data = {
       labels: chartData[0]?.data.map((point) => point.x) ?? [],
       datasets: chartData.map((series) => ({
         label: series.label,
-        stack: chartOptions.stack || "pageviews-stack",
         data: series.data,
-        backgroundColor:
-          series.color ||
-          ((context) => this.#seriesColor(series, context.chart.canvas)),
-        _baseColor: series.color,
-        _colorVar: series.colorVar,
+        backgroundColor: series.color,
+        _baseColor: series.color, // Store for gradient plugin
         hidden: chartOptions.hiddenLabels.includes(series.req),
-        borderRadius: chartOptions.borderRadius ?? 2,
-        maxBarThickness: chartOptions.maxBarThickness ?? 30,
+        borderRadius: 2,
+        maxBarThickness: 30,
       })),
     };
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+    const timeUnit = Report.unitForGrouping(chartGrouping);
 
     return {
       type: "bar",
       data,
-      plugins:
-        chartOptions.useGradient === false
-          ? [emptyTooltipPlugin]
-          : [gradientPlugin, emptyTooltipPlugin],
+      plugins: [gradientPlugin, emptyTooltipPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        hover: { mode: "index", intersect: false },
+        hover: { mode: "index" },
         animation: {
           duration: prefersReducedMotion ? 0 : 300,
         },
         plugins: {
           legend: {
-            display: chartOptions.legendDisplay ?? true,
+            display: data.datasets.length > 1,
             position: chartOptions.legendPosition || "bottom",
-            align: chartOptions.legendAlign,
             onClick: (e, legendItem, legend) => {
               const index = legendItem.datasetIndex;
               const ci = legend.chart;
@@ -137,28 +133,26 @@ export default class AdminReportStackedChart extends Component {
                 }
               } else {
                 ci.show(index);
-                chartOptions.hiddenLabels = chartOptions.hiddenLabels.filter(
-                  (l) => l !== req
-                );
+                const hiddenIndex = chartOptions.hiddenLabels.indexOf(req);
+                if (hiddenIndex !== -1) {
+                  chartOptions.hiddenLabels.splice(hiddenIndex, 1);
+                }
               }
             },
             labels: {
               usePointStyle: true,
               pointStyle: "rectRounded",
-              ...this.#legendPadding(chartOptions),
               boxWidth: 10,
               boxHeight: 10,
               generateLabels: (chart) => {
                 const textColor = getCSSColor("--primary-high");
                 return chart.data.datasets.map((dataset, i) => {
                   const isVisible = chart.isDatasetVisible(i);
-                  const color = this.#seriesColor(dataset, chart.canvas);
-
                   return {
                     text: dataset.label,
                     fontColor: textColor,
-                    fillStyle: isVisible ? color : "transparent",
-                    strokeStyle: color,
+                    fillStyle: isVisible ? dataset._baseColor : "transparent",
+                    strokeStyle: dataset._baseColor,
                     lineWidth: 2,
                     hidden: false,
                     datasetIndex: i,
@@ -192,11 +186,11 @@ export default class AdminReportStackedChart extends Component {
                   (sum, item) => sum + parseInt(item.parsed.y || 0, 10),
                   0
                 );
-                return `Total: ${total}`;
+                return i18n("admin.reports.chart.total", {
+                  count: I18n.toNumber(total, { precision: 0 }),
+                });
               },
-              title: (tooltipItem) =>
-                chartOptions.tooltipTitle?.(tooltipItem) ||
-                moment(tooltipItem[0].parsed.x).format("LL"),
+              title: (tooltipItem) => this.#tooltipTitle(tooltipItem),
             },
           },
         },
@@ -215,6 +209,7 @@ export default class AdminReportStackedChart extends Component {
             display: true,
             grid: {
               color: getCSSColor("--primary-very-low"),
+              display: !chartOptions.hideYAxisGridLines,
             },
             ticks: {
               callback: (label) => number(label),
@@ -229,15 +224,10 @@ export default class AdminReportStackedChart extends Component {
             display: true,
 
             grid: { display: false },
-            type: "time",
-            time: {
-              unit: chartOptions.timeUnit
-                ? chartOptions.timeUnit
-                : chartOptions.chartGrouping
-                  ? Report.unitForGrouping(chartOptions.chartGrouping)
-                  : Report.unitForDatapoints(data.labels.length),
-            },
+            type: "category",
             ticks: {
+              callback: (value) =>
+                this.#categoryTickLabel(value, data.labels, timeUnit),
               sampleSize: 5,
               maxRotation: 50,
               minRotation: 0,
@@ -252,31 +242,51 @@ export default class AdminReportStackedChart extends Component {
     <Chart
       ...attributes
       @chartConfig={{this.chartConfig}}
-      @rebuildKey={{@rebuildKey}}
       class="admin-report-chart admin-report-stacked-chart"
     />
   </template>
 
-  #seriesColor(series, element = document.documentElement) {
-    if (series.color || series._baseColor) {
-      return series.color || series._baseColor;
+  #tooltipTitle(tooltipItem) {
+    const point = tooltipItem[0].raw;
+    const startDate = point?.x ?? tooltipItem[0].parsed.x;
+
+    if (point?.end_date) {
+      return this.#tooltipDateRange(startDate, point.end_date);
     }
 
-    if (series.colorVar || series._colorVar) {
-      return (
-        getCSSColor(series.colorVar || series._colorVar, element) ||
-        getCSSColor("--primary-med-or-secondary-med", element)
-      );
-    }
-
-    return getCSSColor("--primary-med-or-secondary-med", element);
+    return this.#dateLabelMoment(startDate).format("LL");
   }
 
-  #legendPadding(chartOptions) {
-    if (chartOptions.legendLabelPadding === null) {
-      return {};
+  #tooltipDateRange(startValue, endValue) {
+    const startDate = this.#dateLabelMoment(startValue);
+    const endDate = this.#dateLabelMoment(endValue);
+
+    if (startDate.isSame(endDate, "day")) {
+      return startDate.format("LL");
     }
 
-    return { padding: chartOptions.legendLabelPadding ?? 25 };
+    return `${startDate.format("ll")} - ${endDate.format("ll")}`;
+  }
+
+  #categoryTickLabel(value, labels, timeUnit) {
+    const label = labels[value] ?? value;
+
+    return this.#formatDateLabel(label, timeUnit);
+  }
+
+  #formatDateLabel(label, timeUnit) {
+    const date = this.#dateLabelMoment(label);
+
+    if (timeUnit === "month") {
+      return date.format("MMM YYYY");
+    }
+
+    return date.format("D MMM");
+  }
+
+  #dateLabelMoment(value) {
+    return typeof value === "string"
+      ? moment.utc(value, "YYYY-MM-DD")
+      : moment(value);
   }
 }

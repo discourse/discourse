@@ -6240,6 +6240,8 @@ en:
         group_moderation_and_security: "Moderation & Security"
         group_other: "Other"
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
+        chart:
+          total: "Total: %{count}"
 
       config_sections:
         account:
@@ -6915,9 +6917,6 @@ en:
             anonymous: "Anonymous"
             embedded: "Embedded pageviews"
             crawlers: "Crawlers"
-          chart:
-            total: "Total: %{count}"
-
         period:
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"

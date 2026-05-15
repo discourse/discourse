@@ -2,17 +2,25 @@
 
 class AdminDashboardSiteTraffic
   DEFAULT_RANGE_DAYS = 30
+  SERIES_LABEL_REQS = {
+    logged_in: "page_view_logged_in_browser",
+    anonymous: "page_view_anon_browser",
+    embedded: "page_view_embed",
+    crawlers: "page_view_crawler",
+  }.freeze
+  private_constant :DEFAULT_RANGE_DAYS
+  private_constant :SERIES_LABEL_REQS
 
   def self.build(start_date:, end_date:)
     new(start_date: start_date, end_date: end_date).build
   end
 
   def initialize(start_date:, end_date:)
-    @start_date = parse_date(start_date) || DEFAULT_RANGE_DAYS.days.ago.beginning_of_day
+    @start_date = parse_date(start_date) || (DEFAULT_RANGE_DAYS - 1).days.ago.beginning_of_day
     @end_date = parse_date(end_date)&.end_of_day || Time.zone.now.end_of_day
 
     if @start_date.to_date > @end_date.to_date
-      @start_date = DEFAULT_RANGE_DAYS.days.ago.beginning_of_day
+      @start_date = (DEFAULT_RANGE_DAYS - 1).days.ago.beginning_of_day
       @end_date = Time.zone.now.end_of_day
     end
   end
@@ -74,16 +82,14 @@ class AdminDashboardSiteTraffic
       {
         req: series_req(id),
         label: series_label(id),
-        color_var: series_color_var(id),
+        color: series_color(id),
         data: rows.map { |row| pageview_series_point(row, id) },
       }
     end
   end
 
   def pageview_series_point(row, id)
-    point = { x: row.date.iso8601, y: row.public_send(id).to_i }
-    point[:end_date] = row.end_date.iso8601 if row.end_date != row.date
-    point
+    { x: row.date.iso8601, y: row.public_send(id).to_i }
   end
 
   def series_req(id)
@@ -95,20 +101,11 @@ class AdminDashboardSiteTraffic
   end
 
   def series_label_req(id)
-    case id
-    when :logged_in
-      "page_view_logged_in_browser"
-    when :anonymous
-      "page_view_anon_browser"
-    when :embedded
-      "page_view_embed"
-    when :crawlers
-      "page_view_crawler"
-    end
+    SERIES_LABEL_REQS.fetch(id)
   end
 
-  def series_color_var(id)
-    "--db-traffic-series-#{id.to_s.tr("_", "-")}-color"
+  def series_color(id)
+    Reports::SiteTraffic::SERIES_COLORS.fetch(series_label_req(id))
   end
 
   def login_required?
@@ -124,29 +121,32 @@ class AdminDashboardSiteTraffic
   end
 
   def prior_period_complete?
-    tracking_started_at.present? && prior_start_date >= tracking_started_at
+    prior_period_tracking_started?
   end
 
-  def tracking_started_at
-    @tracking_started_at ||=
-      begin
-        req_type_sql =
-          if login_required?
-            "req_type = :logged_in_req_type"
-          else
-            "req_type IN (:logged_in_req_type, :anonymous_req_type)"
-          end
+  def prior_period_tracking_started?
+    return @prior_period_tracking_started if defined?(@prior_period_tracking_started)
 
-        DB.query_single(
-          <<~SQL,
-            SELECT MIN(date)
-            FROM application_requests
-            WHERE #{req_type_sql}
-          SQL
-          logged_in_req_type: selected_request_types[:logged_in],
-          anonymous_req_type: selected_request_types[:anonymous],
-        ).first
+    req_type_sql =
+      if login_required?
+        "req_type = :logged_in_req_type"
+      else
+        "req_type IN (:logged_in_req_type, :anonymous_req_type)"
       end
+
+    @prior_period_tracking_started =
+      DB.query_single(
+        <<~SQL,
+          SELECT 1
+          FROM application_requests
+          WHERE date <= :prior_start_date
+            AND #{req_type_sql}
+          LIMIT 1
+        SQL
+        prior_start_date: prior_start_date,
+        logged_in_req_type: selected_request_types[:logged_in],
+        anonymous_req_type: selected_request_types[:anonymous],
+      ).present?
   end
 
   def parse_date(value)
@@ -174,43 +174,35 @@ class AdminDashboardSiteTraffic
   def traffic_rows(range_start_date, range_end_date)
     DB.query(
       <<~SQL,
-        WITH buckets AS (
+        WITH dates AS (
           SELECT
-            bucket_start::date AS date,
-            LEAST(
-              (
-                bucket_start::date + CAST(:bucket_interval AS interval) - INTERVAL '1 day'
-              )::date,
-              CAST(:end_date AS date)
-            ) AS end_date
+            request_date::date AS date
           FROM generate_series(
             CAST(:start_date AS date),
             CAST(:end_date AS date),
-            CAST(:bucket_interval AS interval)
-          ) bucket_start
+            INTERVAL '1 day'
+          ) request_date
         )
         SELECT
-          buckets.date,
-          buckets.end_date,
+          dates.date,
           COALESCE(SUM(CASE WHEN ar.req_type = :logged_in_req_type THEN ar.count ELSE 0 END), 0)::bigint AS logged_in,
           COALESCE(SUM(CASE WHEN ar.req_type = :anonymous_req_type THEN ar.count ELSE 0 END), 0)::bigint AS anonymous,
           COALESCE(SUM(CASE WHEN ar.req_type = :crawler_req_type THEN ar.count ELSE 0 END), 0)::bigint AS crawlers,
           COALESCE(SUM(CASE WHEN ar.req_type = :embedded_req_type THEN ar.count ELSE 0 END), 0)::bigint AS embedded
-        FROM buckets
+        FROM dates
         LEFT JOIN application_requests ar
-          ON ar.date BETWEEN buckets.date AND buckets.end_date
+          ON ar.date = dates.date
           AND ar.req_type IN (
             :logged_in_req_type,
             :anonymous_req_type,
             :crawler_req_type,
             :embedded_req_type
           )
-        GROUP BY buckets.date, buckets.end_date
-        ORDER BY buckets.date ASC
+        GROUP BY dates.date
+        ORDER BY dates.date ASC
       SQL
       start_date: range_start_date,
       end_date: range_end_date,
-      bucket_interval: bucket_interval,
       logged_in_req_type: selected_request_types[:logged_in],
       anonymous_req_type: selected_request_types[:anonymous],
       crawler_req_type: selected_request_types[:crawlers],
@@ -268,11 +260,7 @@ class AdminDashboardSiteTraffic
   end
 
   def include_embedded_series?
-    return false if login_required?
-    return false if !embedding_enabled?
-    return false if !EmbeddableHost.exists?
-
-    true
+    !login_required? && embedding_enabled? && EmbeddableHost.exists?
   end
 
   def embedding_enabled?
@@ -281,12 +269,5 @@ class AdminDashboardSiteTraffic
 
   def selected_day_count
     (end_date.to_date - start_date.to_date).to_i + 1
-  end
-
-  def bucket_interval
-    return "1 day" if selected_day_count <= 31
-    return "1 week" if selected_day_count < 365
-
-    "1 month"
   end
 end

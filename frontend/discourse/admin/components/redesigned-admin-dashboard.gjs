@@ -15,10 +15,6 @@ import { deepEqual } from "discourse/lib/object";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-function buildPending(committed) {
-  return committed?.map((s) => ({ ...s })) ?? [];
-}
-
 export default class RedesignedAdminDashboard extends Component {
   @service currentUser;
 
@@ -29,7 +25,7 @@ export default class RedesignedAdminDashboard extends Component {
 
   constructor() {
     super(...arguments);
-    this.pendingSections = buildPending(
+    this.pendingSections = this.#buildPendingSections(
       this.args.loadedSections?.configuration?.sections
     );
   }
@@ -37,7 +33,7 @@ export default class RedesignedAdminDashboard extends Component {
   @action
   onMenuOpen() {
     this._opened = true;
-    this.pendingSections = buildPending(
+    this.pendingSections = this.#buildPendingSections(
       this.args.loadedSections?.configuration?.sections
     );
   }
@@ -75,13 +71,17 @@ export default class RedesignedAdminDashboard extends Component {
       .updateConfiguration(this.pendingSections)
       .catch((e) => {
         popupAjaxError(e);
-        this.pendingSections = buildPending(
+        this.pendingSections = this.#buildPendingSections(
           this.args.loadedSections?.configuration?.sections
         );
       })
       .finally(() => {
         this._saving = false;
       });
+  }
+
+  #buildPendingSections(sections) {
+    return sections?.map((section) => ({ ...section })) ?? [];
   }
 
   <template>

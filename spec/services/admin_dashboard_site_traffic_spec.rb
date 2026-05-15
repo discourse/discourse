@@ -6,31 +6,22 @@ RSpec.describe AdminDashboardSiteTraffic do
     SiteSetting.use_legacy_pageviews = false
   end
 
-  def traffic_point(date, count, end_date: nil)
-    point = { x: date, y: count }
-    point[:end_date] = end_date if end_date
-    point
+  def traffic_point(date, count)
+    { x: date, y: count }
   end
 
   def traffic_series(id, data, req: traffic_series_req(id))
+    canonical_req = traffic_series_req(id)
+
     {
       req: req,
-      label: I18n.t("reports.site_traffic.xaxis.#{traffic_series_label_req(id)}"),
-      color_var: "--db-traffic-series-#{id.to_s.tr("_", "-")}-color",
+      label: I18n.t("reports.site_traffic.xaxis.#{canonical_req}"),
+      color: Reports::SiteTraffic::SERIES_COLORS.fetch(canonical_req),
       data: data,
     }
   end
 
   def traffic_series_req(id)
-    {
-      logged_in: "page_view_logged_in_browser",
-      anonymous: "page_view_anon_browser",
-      embedded: "page_view_embed",
-      crawlers: "page_view_crawler",
-    }.fetch(id)
-  end
-
-  def traffic_series_label_req(id)
     {
       logged_in: "page_view_logged_in_browser",
       anonymous: "page_view_anon_browser",
@@ -156,7 +147,9 @@ RSpec.describe AdminDashboardSiteTraffic do
       )
     end
 
-    it "returns weekly buckets for longer selected date ranges" do
+    it "returns daily rows for longer selected date ranges" do
+      Fabricate(:logged_in_browser_application_request, date: "2026-02-28", count: 99)
+
       Fabricate(:logged_in_browser_application_request, date: "2026-03-01", count: 1)
       Fabricate(:logged_in_browser_application_request, date: "2026-03-07", count: 2)
       Fabricate(:logged_in_browser_application_request, date: "2026-03-08", count: 4)
@@ -165,49 +158,20 @@ RSpec.describe AdminDashboardSiteTraffic do
 
       response = described_class.build(start_date: "2026-03-01", end_date: "2026-04-04")
 
+      dates = (Date.iso8601("2026-03-01")..Date.iso8601("2026-04-04")).map(&:iso8601)
+      logged_in_counts = {
+        "2026-03-01" => 1,
+        "2026-03-07" => 2,
+        "2026-03-08" => 4,
+        "2026-04-04" => 8,
+      }
+      anonymous_counts = { "2026-03-08" => 10 }
+
       expect(traffic_series_data(response, :logged_in)).to eq(
-        [
-          traffic_point("2026-03-01", 3, end_date: "2026-03-07"),
-          traffic_point("2026-03-08", 4, end_date: "2026-03-14"),
-          traffic_point("2026-03-15", 0, end_date: "2026-03-21"),
-          traffic_point("2026-03-22", 0, end_date: "2026-03-28"),
-          traffic_point("2026-03-29", 8, end_date: "2026-04-04"),
-        ],
+        dates.map { |date| traffic_point(date, logged_in_counts.fetch(date, 0)) },
       )
       expect(traffic_series_data(response, :anonymous)).to eq(
-        [
-          traffic_point("2026-03-01", 0, end_date: "2026-03-07"),
-          traffic_point("2026-03-08", 10, end_date: "2026-03-14"),
-          traffic_point("2026-03-15", 0, end_date: "2026-03-21"),
-          traffic_point("2026-03-22", 0, end_date: "2026-03-28"),
-          traffic_point("2026-03-29", 0, end_date: "2026-04-04"),
-        ],
-      )
-    end
-
-    it "returns monthly buckets for year-long selected date ranges" do
-      Fabricate(:logged_in_browser_application_request, date: "2025-01-01", count: 1)
-      Fabricate(:logged_in_browser_application_request, date: "2025-01-31", count: 2)
-      Fabricate(:logged_in_browser_application_request, date: "2025-02-01", count: 4)
-      Fabricate(:logged_in_browser_application_request, date: "2025-12-31", count: 8)
-
-      response = described_class.build(start_date: "2025-01-01", end_date: "2025-12-31")
-
-      expect(traffic_series_data(response, :logged_in)).to eq(
-        [
-          traffic_point("2025-01-01", 3, end_date: "2025-01-31"),
-          traffic_point("2025-02-01", 4, end_date: "2025-02-28"),
-          traffic_point("2025-03-01", 0, end_date: "2025-03-31"),
-          traffic_point("2025-04-01", 0, end_date: "2025-04-30"),
-          traffic_point("2025-05-01", 0, end_date: "2025-05-31"),
-          traffic_point("2025-06-01", 0, end_date: "2025-06-30"),
-          traffic_point("2025-07-01", 0, end_date: "2025-07-31"),
-          traffic_point("2025-08-01", 0, end_date: "2025-08-31"),
-          traffic_point("2025-09-01", 0, end_date: "2025-09-30"),
-          traffic_point("2025-10-01", 0, end_date: "2025-10-31"),
-          traffic_point("2025-11-01", 0, end_date: "2025-11-30"),
-          traffic_point("2025-12-01", 8, end_date: "2025-12-31"),
-        ],
+        dates.map { |date| traffic_point(date, anonymous_counts.fetch(date, 0)) },
       )
     end
 
@@ -519,7 +483,7 @@ RSpec.describe AdminDashboardSiteTraffic do
     end
 
     it "uses the default date range when dates are missing, malformed, or reversed" do
-      Fabricate(:logged_in_browser_application_request, date: "2026-04-14", count: 3)
+      Fabricate(:logged_in_browser_application_request, date: "2026-04-15", count: 3)
 
       response_summaries =
         [
@@ -541,21 +505,21 @@ RSpec.describe AdminDashboardSiteTraffic do
         [
           {
             browser_pageviews: 3,
-            first_point: traffic_point("2026-04-14", 3),
+            first_point: traffic_point("2026-04-15", 3),
             last_point: traffic_point("2026-05-14", 0),
-            data_points: 31,
+            data_points: 30,
           },
           {
             browser_pageviews: 3,
-            first_point: traffic_point("2026-04-14", 3),
+            first_point: traffic_point("2026-04-15", 3),
             last_point: traffic_point("2026-05-14", 0),
-            data_points: 31,
+            data_points: 30,
           },
           {
             browser_pageviews: 3,
-            first_point: traffic_point("2026-04-14", 3),
+            first_point: traffic_point("2026-04-15", 3),
             last_point: traffic_point("2026-05-14", 0),
-            data_points: 31,
+            data_points: 30,
           },
         ],
       )

@@ -36,6 +36,7 @@ export default class AdminDashboardController extends Controller {
   isLoading = false;
   dashboardFetchedAt = null;
   _sectionsLoadId = 0;
+  _sectionsLoadingCount = 0;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -101,7 +102,11 @@ export default class AdminDashboardController extends Controller {
 
     this.loadingSections = true;
     this.sectionsFetchError = false;
-    this.loadingSlider.transitionStarted();
+
+    this._sectionsLoadingCount += 1;
+    if (this._sectionsLoadingCount === 1) {
+      this.loadingSlider.transitionStarted();
+    }
 
     try {
       const model = await AdminDashboard.fetch({
@@ -126,9 +131,13 @@ export default class AdminDashboardController extends Controller {
       }
       this.sectionsFetchError = true;
     } finally {
+      this._sectionsLoadingCount = Math.max(this._sectionsLoadingCount - 1, 0);
+      if (this._sectionsLoadingCount === 0) {
+        this.loadingSlider.transitionEnded();
+      }
+
       if (id === this._sectionsLoadId) {
         this.loadingSections = false;
-        this.loadingSlider.transitionEnded();
       }
     }
   }
