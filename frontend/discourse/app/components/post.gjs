@@ -603,7 +603,11 @@ export default class Post extends Component {
                         />
                       {{/if}}
 
-                      <section class="post__menu-area post-menu-area clearfix">
+                      <section
+                        class="post__menu-area post-menu-area clearfix"
+                        role="group"
+                        aria-label={{i18n "post.controls.menu_label"}}
+                      >
                         <PostMenu
                           @post={{@post}}
                           @prevPost={{@prevPost}}
