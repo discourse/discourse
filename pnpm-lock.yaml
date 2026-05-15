@@ -33,8 +33,8 @@ importers:
   .:
     devDependencies:
       '@discourse/lint-configs':
-        specifier: ^3.0.0
-        version: 3.0.0(eslint@9.39.2(jiti@2.6.1))(postcss@8.5.14)(prettier@3.8.1)(stylelint@17.4.0(typescript@5.9.3))
+        specifier: ^3.0.1
+        version: 3.0.1(eslint@9.39.2(jiti@2.6.1))(postcss@8.5.14)(prettier@3.8.1)(stylelint@17.4.0(typescript@5.9.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -87,8 +87,8 @@ importers:
   docs/developer-guides:
     devDependencies:
       '@discourse/lint-configs':
-        specifier: ^3.0.0
-        version: 3.0.0(eslint@9.39.2(jiti@2.6.1))(postcss@8.5.14)(prettier@3.8.1)(stylelint@17.4.0(typescript@5.9.3))
+        specifier: ^3.0.1
+        version: 3.0.1(eslint@9.39.2(jiti@2.6.1))(postcss@8.5.14)(prettier@3.8.1)(stylelint@17.4.0(typescript@5.9.3))
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -1686,8 +1686,8 @@ packages:
   '@discourse/jxl@1.3.0':
     resolution: {integrity: sha512-Veu75DEDC7uKsCCsD94UIjFwvHE73+AATBQbBWb83QyJV34wmyxl2Ji+fiiM234mlNn4cpo3DUl0QFrXgRTcfA==}
 
-  '@discourse/lint-configs@3.0.0':
-    resolution: {integrity: sha512-JjX2GWHK68caLr9Wu5pIATp39LRdYRBIWGxHT+At8QsYHMR4Lq+44+yJqaKL9tN9gBgDXl4Afu2ZG2u0iTE20g==}
+  '@discourse/lint-configs@3.0.1':
+    resolution: {integrity: sha512-G8gy82GcQRpNoc1IS7Ke91dinJiJMHEHE1vn+WmTzUCmd2ZnTLc58n32Ow1wmBjzXW3v0WCl3GqfMzPU3MrvMg==}
     peerDependencies:
       eslint: 9.39.2
       prettier: 3.8.1
@@ -10138,7 +10138,7 @@ snapshots:
     dependencies:
       wasm-feature-detect: 1.8.0
 
-  '@discourse/lint-configs@3.0.0(eslint@9.39.2(jiti@2.6.1))(postcss@8.5.14)(prettier@3.8.1)(stylelint@17.4.0(typescript@5.9.3))':
+  '@discourse/lint-configs@3.0.1(eslint@9.39.2(jiti@2.6.1))(postcss@8.5.14)(prettier@3.8.1)(stylelint@17.4.0(typescript@5.9.3))':
     dependencies:
       '@babel/core': 7.29.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.28.6(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1))
