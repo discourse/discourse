@@ -11,7 +11,6 @@ const url = args[0];
 
 console.log(`Starting Discourse Smoke Test for ${url}`);
 
-import path from "path";
 import { chromium } from "playwright";
 
 (async () => {
@@ -141,7 +140,7 @@ import { chromium } from "playwright";
   }
 
   await exec("go to latest page", () => {
-    return page.goto(path.join(url, "latest"));
+    return page.goto(new URL("latest", url).href);
   });
 
   await exec("at least one topic shows up", () => {
@@ -149,7 +148,7 @@ import { chromium } from "playwright";
   });
 
   await exec("go to categories page", () => {
-    return page.goto(path.join(url, "categories"));
+    return page.goto(new URL("categories", url).href);
   });
 
   await exec("can see categories on the page", () => {
