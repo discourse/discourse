@@ -45,14 +45,14 @@ function takeFailureScreenshot() {
 }
 
 const exec = async (description, fn) => {
-  const start = +new Date();
+  const start = Date.now();
 
   try {
     await fn();
-    console.log(`PASSED: ${description} - ${+new Date() - start}ms`);
+    console.log(`PASSED: ${description} - ${Date.now() - start}ms`);
   } catch (error) {
     console.log(
-      `ERROR (${description}): ${error.message} - ${+new Date() - start}ms`
+      `ERROR (${description}): ${error.message} - ${Date.now() - start}ms`
     );
     await takeFailureScreenshot();
     console.log("SMOKE TEST FAILED");
@@ -182,7 +182,7 @@ if (!process.env.READONLY_TESTS) {
   });
 
   await exec("compose new topic", async () => {
-    const date = `(${+new Date()})`;
+    const date = `(${Date.now()})`;
     const title = `This is a new topic ${date}`;
     const post = `I can write a new topic inside the smoke test! ${date} \n\n`;
 
@@ -214,7 +214,7 @@ if (!process.env.READONLY_TESTS) {
   });
 
   await exec("compose reply", () => {
-    const post = `I can even write a reply inside the smoke test ;) (${+new Date()})`;
+    const post = `I can even write a reply inside the smoke test ;) (${Date.now()})`;
     return page
       .locator("#reply-control .d-editor-input")
       .pressSequentially(post);
