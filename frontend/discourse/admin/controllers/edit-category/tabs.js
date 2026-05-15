@@ -391,7 +391,6 @@ export default class EditCategoryTabsController extends Controller {
         return;
       }
 
-      // Plugin's enabled_site_setting may have just flipped; full reload to pick up its JS bundle.
       const newTypes = Object.keys(result.category.category_types ?? {});
       const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
       if (typeWasAdded) {

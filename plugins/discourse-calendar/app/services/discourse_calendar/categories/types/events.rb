@@ -99,6 +99,7 @@ module DiscourseCalendar
                 events_calendar_default_view: {
                   default: "month",
                   type: :enum,
+                  required: true,
                   choices: [
                     {
                       name: I18n.t("discourse_calendar.category_type.default_calendar_view.day"),
@@ -137,6 +138,7 @@ module DiscourseCalendar
                 use_local_event_date: {
                   default: false,
                   type: :enum,
+                  required: true,
                   choices: [
                     {
                       name: I18n.t("discourse_calendar.category_type.use_local_event_date.local"),
@@ -153,6 +155,7 @@ module DiscourseCalendar
                 sort_categories_by_event_start_date_enabled: {
                   default: true,
                   type: :enum,
+                  required: true,
                   choices: [
                     {
                       name:
