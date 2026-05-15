@@ -92,10 +92,6 @@ html.composer-open:not(.has-full-page-chat) {
   .with-form-template {
     overflow: auto;
     flex: 1;
-
-    #mobile-file-upload {
-      display: none;
-    }
   }
 
   .saving-text,
@@ -525,13 +521,6 @@ html.composer-open:not(.has-full-page-chat) {
       }
     }
 
-    .mobile-file-upload {
-      &.hidden + .mobile-preview {
-        // Hide preview button while file is uploading to make room for upload progress
-        display: none;
-      }
-    }
-
     .mobile-preview {
       margin-left: 0.25em;
     }
@@ -817,7 +806,6 @@ html.composer-open:not(.has-full-page-chat) {
         background-color: var(--secondary);
 
         .cancel,
-        .mobile-file-upload,
         .mobile-preview {
           display: none;
         }
@@ -1360,6 +1348,18 @@ body {
     &__toolbar {
       overflow: hidden;
       flex-grow: 1;
+
+      @include viewport.until(sm) {
+        width: 100%;
+        padding-inline: var(--space-2);
+        box-sizing: border-box;
+      }
+    }
+
+    .d-editor-button-bar__wrap {
+      @include viewport.until(sm) {
+        margin: 0;
+      }
     }
 
     .d-editor-button-bar {

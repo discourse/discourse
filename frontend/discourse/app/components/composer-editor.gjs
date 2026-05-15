@@ -932,11 +932,7 @@ export default class ComposerEditor extends Component {
 
   @action
   extraButtons(toolbar) {
-    if (
-      this.composer.allowUpload &&
-      this.composer.uploadIcon &&
-      this.site.desktopView
-    ) {
+    if (this.composer.allowUpload && this.composer.uploadIcon) {
       toolbar.addButton({
         id: "upload",
         group: "insertions",

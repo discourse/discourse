@@ -471,17 +471,6 @@ export default class ComposerContainer extends Component {
                     />
                   </span>
 
-                  {{#if this.composer.allowUpload}}
-                    <a
-                      id="mobile-file-upload"
-                      class="btn btn-default no-text mobile-file-upload
-                        {{if this.composer.isUploading 'hidden'}}"
-                      aria-label={{i18n "composer.upload_title"}}
-                    >
-                      {{dIcon this.composer.uploadIcon}}
-                    </a>
-                  {{/if}}
-
                   {{#if this.composer.allowPreview}}
                     <a
                       href
