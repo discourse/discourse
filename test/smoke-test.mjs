@@ -82,7 +82,7 @@ const login = async function () {
   });
 
   await exec("login form is visible", () => {
-    return page.waitForSelector("#login-form", { state: "visible" });
+    return page.waitForSelector("#login-form");
   });
 
   await exec("type in credentials & log in", async () => {
@@ -98,7 +98,7 @@ const login = async function () {
   });
 
   await exec("is logged in", () => {
-    return page.waitForSelector(".current-user", { state: "visible" });
+    return page.waitForSelector(".current-user");
   });
 };
 
@@ -107,7 +107,7 @@ await exec("go to site", () => {
 });
 
 await exec("expect a log in button in the header", () => {
-  return page.waitForSelector("header .login-button", { state: "visible" });
+  return page.waitForSelector("header .login-button");
 });
 
 if (process.env.LOGIN_AT_BEGINNING) {
@@ -119,7 +119,7 @@ await exec("go to latest page", () => {
 });
 
 await exec("at least one topic shows up", () => {
-  return page.waitForSelector(".topic-list tbody tr", { state: "visible" });
+  return page.waitForSelector(".topic-list tbody tr");
 });
 
 await exec("go to categories page", () => {
@@ -127,7 +127,7 @@ await exec("go to categories page", () => {
 });
 
 await exec("can see categories on the page", () => {
-  return page.waitForSelector(".category-list", { state: "visible" });
+  return page.waitForSelector(".category-list");
 });
 
 await exec("navigate to 1st topic", () => {
@@ -135,7 +135,7 @@ await exec("navigate to 1st topic", () => {
 });
 
 await exec("at least one post body", () => {
-  return page.waitForSelector(".topic-post", { state: "visible" });
+  return page.waitForSelector(".topic-post");
 });
 
 await exec("click on the 1st user", () => {
@@ -143,7 +143,7 @@ await exec("click on the 1st user", () => {
 });
 
 await exec("user has details", () => {
-  return page.waitForSelector(".user-card .names", { state: "visible" });
+  return page.waitForSelector(".user-card .names");
 });
 
 if (!process.env.READONLY_TESTS) {
@@ -152,19 +152,17 @@ if (!process.env.READONLY_TESTS) {
   }
 
   await exec("go home", async () => {
-    await page.waitForSelector("#site-logo, #site-text-logo", {
-      state: "visible",
-    });
+    await page.waitForSelector("#site-logo, #site-text-logo");
 
     return page.click("#site-logo, #site-text-logo");
   });
 
   await exec("it shows a topic list", () => {
-    return page.waitForSelector(".topic-list", { state: "visible" });
+    return page.waitForSelector(".topic-list");
   });
 
   await exec("we have a create topic button", () => {
-    return page.waitForSelector("#create-topic", { state: "visible" });
+    return page.waitForSelector("#create-topic");
   });
 
   await exec("open composer", () => {
@@ -180,9 +178,7 @@ if (!process.env.READONLY_TESTS) {
   });
 
   await exec("composer is open", () => {
-    return page.waitForSelector("#reply-control .d-editor-input", {
-      state: "visible",
-    });
+    return page.waitForSelector("#reply-control .d-editor-input");
   });
 
   await exec("compose new topic", async () => {
@@ -198,7 +194,7 @@ if (!process.env.READONLY_TESTS) {
   });
 
   // await exec("updates preview", () => {
-  //   return page.waitForSelector(".d-editor-preview p", { state: "visible" });
+  //   return page.waitForSelector(".d-editor-preview p");
   // });
 
   await exec("submit the topic", () => {
@@ -206,7 +202,7 @@ if (!process.env.READONLY_TESTS) {
   });
 
   await exec("topic is created", () => {
-    return page.waitForSelector(".fancy-title", { state: "visible" });
+    return page.waitForSelector(".fancy-title");
   });
 
   await exec("open the composer", () => {
@@ -214,9 +210,7 @@ if (!process.env.READONLY_TESTS) {
   });
 
   await exec("composer is open", () => {
-    return page.waitForSelector("#reply-control .d-editor-input", {
-      state: "visible",
-    });
+    return page.waitForSelector("#reply-control .d-editor-input");
   });
 
   await exec("compose reply", () => {
@@ -266,9 +260,7 @@ if (!process.env.READONLY_TESTS) {
 
     await page.click("#post_1 .post-controls .edit");
 
-    return page.waitForSelector("#reply-control .d-editor-input", {
-      state: "visible",
-    });
+    return page.waitForSelector("#reply-control .d-editor-input");
   });
 
   await exec("update post raw in composer", async () => {
