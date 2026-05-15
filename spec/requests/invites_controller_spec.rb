@@ -260,7 +260,7 @@ RSpec.describe InvitesController do
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["existing_user_can_redeem"]).to eq(false)
           expect(invite_info["existing_user_can_redeem_error"]).to eq(
-            I18n.t("invite.existing_user_email_mismatch"),
+            I18n.t("invite.existing_user_cannot_redeem"),
           )
         end
       end
