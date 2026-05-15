@@ -60,6 +60,15 @@ RSpec.describe NestedTopic::ListRoots do
       end
     end
 
+    it "marks an exact full root page as the final page" do
+      stub_const(NestedReplies::TreeLoader, :ROOTS_PER_PAGE, 2) do
+        2.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1) }
+
+        expect(result[:response][:roots].length).to eq(2)
+        expect(result[:response][:has_more_roots]).to eq(false)
+      end
+    end
+
     context "when page is greater than 0" do
       let(:params) { { sort: "top", page: 1 } }
 

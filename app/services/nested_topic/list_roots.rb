@@ -57,12 +57,11 @@ class NestedTopic::ListRoots
     pinned_post_ids = topic_view.topic.nested_topic&.pinned_post_ids.presence
     scope = loader.root_posts_scope(params.sort)
     scope = scope.where.not(id: pinned_post_ids) if pinned_post_ids.present?
-    roots =
-      scope.offset(params.page * NestedReplies::TreeLoader::ROOTS_PER_PAGE).limit(
-        NestedReplies::TreeLoader::ROOTS_PER_PAGE,
-      )
-    context[:roots] = loader.load_posts_for_tree(roots).to_a
-    context[:has_more_roots] = context[:roots].size == NestedReplies::TreeLoader::ROOTS_PER_PAGE
+    page_size = NestedReplies::TreeLoader::ROOTS_PER_PAGE
+    roots = scope.offset(params.page * page_size).limit(page_size + 1)
+    roots = loader.load_posts_for_tree(roots).to_a
+    context[:has_more_roots] = roots.size > page_size
+    context[:roots] = roots.first(page_size)
   end
 
   def promote_pinned_roots(loader:, topic_view:, roots:)
