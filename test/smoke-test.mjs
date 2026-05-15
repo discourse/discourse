@@ -36,13 +36,13 @@ page.on("console", (msg) => {
 });
 page.on("pageerror", (err) => console.log(`PAGE ERROR: ${err.message}`));
 
-const takeFailureScreenshot = function () {
+function takeFailureScreenshot() {
   const screenshotPath = `${
     process.env.SMOKE_TEST_SCREENSHOT_PATH || "tmp/smoke-test-screenshots"
   }/smoke-test-${Date.now()}.png`;
   console.log(`Screenshot of failure taken at ${screenshotPath}`);
   return page.screenshot({ path: screenshotPath, fullPage: true });
-};
+}
 
 const exec = async (description, fn) => {
   const start = +new Date();
@@ -76,7 +76,7 @@ page.on("response", (resp) => {
   return resp;
 });
 
-const login = async function () {
+async function login() {
   await exec("open login modal or page", () => {
     return page.click(".login-button");
   });
@@ -100,7 +100,7 @@ const login = async function () {
   await exec("is logged in", () => {
     return page.waitForSelector(".current-user");
   });
-};
+}
 
 await exec("go to site", () => {
   return page.goto(url);
