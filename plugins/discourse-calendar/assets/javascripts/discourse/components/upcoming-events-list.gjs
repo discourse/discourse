@@ -48,6 +48,12 @@ export default class UpcomingEventsList extends Component {
   constructor() {
     super(...arguments);
     this.appEvents.on("page:changed", this, this.updateEventsList);
+    // Initial fetch — `page:changed` is the only refresh trigger in the
+    // sidebar use case (it fires every navigation), but consumers that
+    // mount this component outside a route transition (e.g. visual-
+    // editor blocks rendered into a frozen homepage) wouldn't otherwise
+    // see any data.
+    this.updateEventsList();
   }
 
   willDestroy() {
@@ -56,7 +62,10 @@ export default class UpcomingEventsList extends Component {
   }
 
   get categoryId() {
-    return this.router.currentRoute.attributes?.category?.id;
+    return (
+      this.args.params?.categoryId ??
+      this.router.currentRoute.attributes?.category?.id
+    );
   }
 
   get hasEmptyResponse() {
