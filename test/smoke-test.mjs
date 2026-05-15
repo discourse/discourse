@@ -35,9 +35,7 @@ console.log(`Starting Discourse Smoke Test for ${url}`);
   const page = await context.newPage();
 
   page.on("console", (msg) => {
-    if (["error", "warning"].includes(msg.type())) {
-      console.log(`PAGE ${msg.type().toUpperCase()}: ${msg.text()}`);
-    }
+    console.log(`PAGE ${msg.type().toUpperCase()}: ${msg.text()}`);
   });
   page.on("pageerror", (err) => console.log(`PAGE ERROR: ${err.message}`));
 
@@ -64,8 +62,6 @@ console.log(`Starting Discourse Smoke Test for ${url}`);
       process.exit(1);
     }
   };
-
-  page.on("console", (msg) => console.log(`PAGE LOG: ${msg.text()}`));
 
   page.on("response", (resp) => {
     if (![200, 204, 302].includes(resp.status())) {
