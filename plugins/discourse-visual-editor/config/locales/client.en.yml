@@ -68,6 +68,11 @@ en:
         tab_args: "Args"
         tab_conditions: "Conditions"
         tab_raw: "Raw JSON"
+        metadata:
+          section_title: "Metadata"
+          id_label: "Block ID"
+          id_help: "Lowercase letters, numbers, and hyphens. Used for CSS targeting (`{outlet}__block--{id}`)."
+          id_invalid_format: "Must start with a lowercase letter and contain only lowercase letters, numbers, and hyphens."
         raw_json:
           aria_label: "Selected block JSON"
           apply: "Apply"
@@ -244,12 +249,30 @@ en:
         outlet_label: "Outlet"
         view_tree: "Tree"
         view_outlets: "Outlets"
+        expand_row: "Expand children"
+        collapse_row: "Collapse children"
+        filter:
+          placeholder: "Filter blocks"
+          clear: "Clear filter"
+          chip_all: "All"
+          chip_errors: "Errors"
+          chip_conditions: "Conditions"
+        status:
+          unknown_block: "Block name doesn't match any registered block."
+          condition_failed: "Conditions aren't met right now — block is hidden."
+          conditions_passing: "Conditions are met — block is rendering."
+          validation_failed: "Block is structurally invalid and won't render."
       canvas:
         drop_inside: "Drop here to add inside"
         drag_handle_title: "Drag to move this block"
         delete_block_title: "Delete this block"
         empty_outlet_hint: "Drag a block from the palette to fill this outlet"
         empty_container_hint: "Drag a block here"
+        ghost:
+          condition_failed: "This block's conditions aren't met right now, so it won't render on the live page. Adjust its conditions, or simulate a different viewport / persona, to preview it here."
+          unknown_block: "This block name isn't registered — it likely refers to a renamed or removed block. Pick a replacement or remove the entry."
+          no_visible_children: "This container has no visible children, so it won't render on the live page. Fix one of its children below to bring the container back."
+          optional_missing: "Optional block isn't currently present."
         resize_handle_title: "Drag to resize across cells"
         overlap_label: "Overlap"
         overlap_warning: "This block's cells overlap another block. CSS Grid will render them stacked — resize back if that wasn't intentional."

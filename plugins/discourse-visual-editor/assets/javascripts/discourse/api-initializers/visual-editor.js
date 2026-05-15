@@ -5,7 +5,10 @@ import {
   DEBUG_CALLBACK,
   debugHooks,
 } from "discourse/lib/blocks/-internals/debug-hooks";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import VEGhostBlock from "../components/blocks/ve-ghost-block";
 import BlockChrome from "../components/editor/block-chrome";
 import EntryPill from "../components/editor/entry-pill";
 import OutletBoundary from "../components/editor/outlet-boundary";
@@ -34,6 +37,7 @@ export default apiInitializer((api) => {
 
   const editor = api.container.lookup("service:visual-editor");
   installBlockChrome();
+  installGhostChildrenCreator();
   installOutletBoundary(editor);
   installGhostBlocksWhileEditing(editor);
   installSimulationContext(editor);
@@ -141,6 +145,171 @@ function readVeThemeParam(url) {
 }
 
 /**
+ * Wires `GHOST_CHILDREN_CREATOR` so a container that fails with
+ * `NO_VISIBLE_CHILDREN` doesn't render as an empty placeholder — its
+ * child entries are recursively turned into ghost components (each
+ * routed back through the `BLOCK_DEBUG` hook, so each child gets its
+ * own chrome + `VEGhostBlock`). This is what lets authors see and
+ * edit nested failing entries (e.g. four broken `ve:slot` rows
+ * inside a failing layout container).
+ *
+ * Mirrors core's dev-tools `createGhostChildren` (in
+ * `static/dev-tools/block-debug/patch.js`) but extends it to handle
+ * unresolved (`UNKNOWN_BLOCK`) children — dev-tools' version skips
+ * those, which is the exact case authors hit when a saved layout
+ * references a renamed / removed block.
+ */
+function installGhostChildrenCreator() {
+  debugHooks.setCallback(
+    DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR,
+    function veCreateGhostChildren(
+      childEntries,
+      _owner,
+      containerPath,
+      _outletArgs,
+      _isLoggingEnabled,
+      resolveBlockFn,
+      depth = 0
+    ) {
+      // Defense-in-depth — `validateLayout` enforces a much tighter
+      // bound at registration time, but if something slips past we'd
+      // rather render an empty ghost than infinite-loop.
+      if (depth >= 20) {
+        return [];
+      }
+
+      const blockDebug = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
+      if (!blockDebug) {
+        return [];
+      }
+
+      const result = [];
+      for (const childEntry of childEntries) {
+        const resolvedBlock = resolveBlockFn(childEntry.block);
+
+        // Unresolved branch — typo'd / removed block reference.
+        // Dev-tools skips these; the editor renders them as
+        // selectable `UNKNOWN_BLOCK` ghosts so authors can fix them.
+        if (!resolvedBlock) {
+          const blockName =
+            typeof childEntry.block === "string"
+              ? childEntry.block
+              : "(unknown)";
+          // Mint the same composite key the outline walker uses
+          // (`${name}:${__stableKey}`) so canvas ↔ outline selection
+          // syncs for ghost children too.
+          const blockKey = `${blockName}:${childEntry.__stableKey ?? "no-key"}`;
+          // Recurse into the unknown block's children even though the
+          // block itself is unresolved. The children are often still
+          // valid (e.g. a `ve:button-link` inside a removed `ve:slot`
+          // container) — surfacing them keeps the author's work
+          // editable, so they can drag the salvageable pieces out
+          // before deleting the broken parent.
+          let nestedGhostChildren = null;
+          if (childEntry.children?.length) {
+            nestedGhostChildren = veCreateGhostChildren(
+              childEntry.children,
+              _owner,
+              `${containerPath}/${blockName}`,
+              _outletArgs,
+              _isLoggingEnabled,
+              resolveBlockFn,
+              depth + 1
+            );
+          }
+          const ghostData = blockDebug(
+            {
+              name: blockName,
+              id: childEntry.id,
+              key: blockKey,
+              Component: null,
+              args: childEntry.args,
+              containerArgs: childEntry.containerArgs,
+              conditions: childEntry.conditions,
+              conditionsPassed: false,
+              failureType: FAILURE_TYPE.UNKNOWN_BLOCK,
+              failureReason: `Block "${blockName}" is not registered.`,
+              children: nestedGhostChildren,
+            },
+            { outletName: containerPath }
+          );
+          if (ghostData?.Component) {
+            result.push({ ...ghostData, key: blockKey });
+          }
+          continue;
+        }
+
+        // Resolved branch — block class exists; the entry is invisible
+        // because of its own failed conditions or because its own
+        // children all failed. Recurse into nested containers when
+        // they're the `NO_VISIBLE_CHILDREN` case so the whole
+        // sub-tree surfaces.
+        const meta = getBlockMetadata(resolvedBlock);
+        const blockName =
+          meta?.blockName ??
+          (typeof childEntry.block === "string"
+            ? childEntry.block
+            : "(unknown)");
+        const isChildContainer = meta?.isContainer ?? false;
+
+        // A child of an unknown / failing parent has no `__failureType`
+        // marker (the framework never preprocesses inside an unrendered
+        // parent). Treat those as "orphaned but salvageable" — render
+        // them as ghosts with a CONDITION_FAILED failure (neutral
+        // styling, not error-red) and a custom reason that nudges
+        // the author to drag them elsewhere to recover the work.
+        const failureType =
+          childEntry.__failureType ?? FAILURE_TYPE.CONDITION_FAILED;
+        const failureReason =
+          childEntry.__failureReason ??
+          (childEntry.__failureType
+            ? undefined
+            : "Parent block isn't rendering. Drag this elsewhere to recover the work, or remove it.");
+
+        // Recurse into children whenever the entry has them — for
+        // NO_VISIBLE_CHILDREN containers (the obvious case) AND for
+        // salvageable orphans whose original parent is unknown, so
+        // their grandchildren stay reachable too.
+        let nestedGhostChildren = null;
+        if (isChildContainer && childEntry.children?.length) {
+          nestedGhostChildren = veCreateGhostChildren(
+            childEntry.children,
+            _owner,
+            `${containerPath}/${blockName}`,
+            _outletArgs,
+            _isLoggingEnabled,
+            resolveBlockFn,
+            depth + 1
+          );
+        }
+
+        const blockKey = `${blockName}:${childEntry.__stableKey ?? "no-key"}`;
+        const ghostData = blockDebug(
+          {
+            name: blockName,
+            id: childEntry.id,
+            key: blockKey,
+            Component: null,
+            args: childEntry.args,
+            containerArgs: childEntry.containerArgs,
+            conditions: childEntry.conditions,
+            conditionsPassed: false,
+            failureType,
+            failureReason,
+            children: nestedGhostChildren,
+          },
+          { outletName: containerPath }
+        );
+        if (ghostData?.Component) {
+          result.push({ ...ghostData, key: blockKey });
+        }
+      }
+      return result;
+    }
+  );
+}
+
+/**
  * Wires `OUTLET_INFO_COMPONENT` so each `<BlockOutlet>` renders our boundary
  * chrome while the editor is active. Falls through to whatever was previously
  * registered (e.g. dev-tools' info component) when the editor is inactive,
@@ -174,14 +343,45 @@ function installBlockChrome() {
 
   debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData, context) => {
     const upstream = previous ? previous(blockData, context) : blockData;
+    // A ghost call is signalled by EITHER an upstream `isGhost: true`
+    // (set by dev-tools when both plugins coexist) OR a `failureType`
+    // on the raw `blockData` (set by core's `createDebugGhost` /
+    // `handleUnknownBlock` regardless of whether dev-tools is loaded).
+    // The latter is what lets us paint ghosts in editor-only sessions —
+    // without it, `Component: null` would bail out at the wrap guard
+    // below and the failing entry would disappear from the canvas.
+    const isGhost = !!upstream?.isGhost || !!blockData.failureType;
 
-    // Ghost blocks (failed conditions) already render their own debug
-    // visualization. Don't wrap them — selection is for visible blocks.
-    if (upstream?.isGhost) {
-      return upstream;
-    }
+    const owner = getOwnerWithFallback();
 
-    const wrapped = upstream?.Component ?? blockData.Component;
+    // Pick the inner component the chrome will wrap:
+    //   - real blocks: the curried block component the upstream / blockData
+    //     payload already supplies.
+    //   - ghost blocks: `VEGhostBlock` curried with the entry's failure
+    //     metadata. We curry up-front because `BlockChrome` invokes its
+    //     `<@WrappedComponent />` with no args, so anything the ghost
+    //     component needs (block name, failureType, reason) has to be
+    //     baked into the component itself.
+    const wrapped = isGhost
+      ? curryComponent(
+          VEGhostBlock,
+          {
+            blockName: blockData.name,
+            blockId: blockData.id,
+            failureType: blockData.failureType,
+            failureReason: blockData.failureReason,
+            // When the parent ghost's children were resolved via
+            // `GHOST_CHILDREN_CREATOR` (see `installGhostChildrenCreator`
+            // below) they arrive as an array of `{Component, key}` ghost
+            // descriptors. Forward them so `VEGhostBlock` can render
+            // them inside its own silhouette — that's how nested
+            // failing entries (e.g. unknown `ve:slot` rows inside a
+            // failing layout) surface as separately editable rows.
+            ghostChildren: blockData.children ?? null,
+          },
+          owner
+        )
+      : (upstream?.Component ?? blockData.Component);
     if (!wrapped) {
       return upstream;
     }
@@ -194,10 +394,13 @@ function installBlockChrome() {
     const blockKey =
       blockData.key ?? `${blockData.name}@${++fallbackKeyCounter}`;
 
-    const owner = getOwnerWithFallback();
-
     return {
       ...upstream,
+      // Don't propagate `isGhost: true` upstream — the chrome wraps both
+      // real blocks and ghost-as-VEGhostBlock identically. Returning
+      // `isGhost: true` would make any further BLOCK_DEBUG consumer
+      // (e.g. dev-tools) short-circuit the wrap.
+      isGhost: false,
       Component: curryComponent(
         BlockChrome,
         {
@@ -223,6 +426,16 @@ function installBlockChrome() {
           outletName: context?.rootOutletName ?? context?.outletName,
           displayHierarchy: context?.outletName,
           WrappedComponent: wrapped,
+          // Ghost-specific args read by `VEGhostBlock` and by the chrome
+          // (to suppress drop zones / resize handle / overlay).
+          isGhost,
+          // `isError` reserves the danger-tone treatment for genuine
+          // authoring mistakes (an UNKNOWN_BLOCK ghost). Condition-failed
+          // and no-visible-children ghosts stay neutral — those aren't
+          // errors so much as expected outcomes of the layout's gating.
+          isError: blockData.failureType === FAILURE_TYPE.UNKNOWN_BLOCK,
+          failureType: blockData.failureType,
+          failureReason: blockData.failureReason,
         },
         owner
       ),

@@ -33,26 +33,41 @@ import { _getOutletLayouts } from "discourse/blocks/block-outlet";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 
 /**
- * Resolves a layout entry's `block` reference to a display name.
+ * Resolves a layout entry's `block` reference into a display name plus
+ * an `unknown` flag.
  *
  * Layout entries reference a block either as a string registry name (e.g.
  * `"hero-banner"`) or as the block class itself (the result of `import`ing
  * from a `@block`-decorated module). Both forms are valid in
  * `api.renderBlocks(...)` calls; this helper normalises both into the
- * canonical block name string.
+ * canonical block name string AND verifies the resulting name is
+ * registered with the blocks service. A string ref that doesn't resolve
+ * (typo, removed block, renamed registration) keeps its raw name so
+ * the author can still find the offending entry in the outline, but is
+ * flagged `unknown: true` so callers can paint an error indicator.
  *
  * @param {string|Function} blockRef - A registry name or a `@block` class.
- * @returns {string} The block name, or `"(unknown)"` when the reference
- *   cannot be resolved.
+ * @param {any} blocksService - The Discourse `blocks` service; used to
+ *   verify that string refs resolve to registered blocks.
+ * @returns {{ name: string, unknown: boolean }}
  */
-function resolveBlockName(blockRef) {
+function resolveBlockName(blockRef, blocksService) {
   if (blockRef == null) {
-    return "(unknown)";
+    return { name: "(unknown)", unknown: true };
   }
   if (typeof blockRef === "string") {
-    return blockRef;
+    const unknown = !blocksService?.hasBlock?.(blockRef);
+    return { name: blockRef, unknown };
   }
-  return getBlockMetadata(blockRef)?.blockName ?? "(unknown)";
+  const resolved = getBlockMetadata(blockRef)?.blockName;
+  if (!resolved) {
+    return { name: "(unknown)", unknown: true };
+  }
+  // Class refs come from `import` of a `@block`-decorated module — the
+  // decorator registers them as a side effect, so by the time we see
+  // the class the name is registered. Skipping the `hasBlock` check
+  // here keeps the walker pure-function on the class branch.
+  return { name: resolved, unknown: false };
 }
 
 /**
@@ -65,7 +80,7 @@ function resolveBlockName(blockRef) {
  *
  * @returns {Set<string>|null}
  */
-function mountedOutletNames() {
+export function mountedOutletNames() {
   if (typeof document === "undefined") {
     return null;
   }
@@ -86,10 +101,17 @@ function mountedOutletNames() {
 }
 
 /**
- * @param {{ blocksService: any }} options
+ * @param {object} options
+ * @param {any} options.blocksService
+ * @param {Set<string>} [options.alwaysInclude] - Outlet names the
+ *   caller wants kept regardless of the DOM scan. The editor passes
+ *   the outlets it has materialized session-drafts for, so a publish-
+ *   driven re-render (which briefly unmounts the boundary during
+ *   `DAsyncContent`'s `:loading` block) doesn't drop the row from
+ *   the outline mid-edit.
  * @returns {Promise<Array<{outletName: string, rows: Array<Object>}>>}
  */
-export async function walkAllOutlets({ blocksService }) {
+export async function walkAllOutlets({ blocksService, alwaysInclude }) {
   const result = [];
   const outlets = blocksService.listOutlets();
   const layoutMap = _getOutletLayouts();
@@ -102,7 +124,12 @@ export async function walkAllOutlets({ blocksService }) {
     // Filter to outlets actually rendered on this page when we can tell
     // (mounted is null only in environments where the DOM query can't
     // resolve — tests, SSR — at which point we walk everything).
-    if (mounted && !mounted.has(outletName)) {
+    // `alwaysInclude` lets the editor pin outlets it knows it has
+    // touched this session — the DOM boundary briefly disappears
+    // during a publish cycle and we don't want the outline to flicker
+    // the outlet out and back.
+    const forceInclude = alwaysInclude?.has(outletName);
+    if (mounted && !mounted.has(outletName) && !forceInclude) {
       continue;
     }
     const entry = layoutMap.get(outletName);
@@ -129,7 +156,10 @@ function walkEntries(entries, depth, path, rows, blocksService) {
   entries.forEach((entry, index) => {
     const entryPath = [...path, index];
 
-    const blockName = resolveBlockName(entry.block);
+    const { name: blockName, unknown } = resolveBlockName(
+      entry.block,
+      blocksService
+    );
     // Composite key matching the form minted in entry-processing.js (the
     // BLOCK_DEBUG callback receives the same value), so outline ↔ canvas
     // selection compares apples to apples.
@@ -141,6 +171,21 @@ function walkEntries(entries, depth, path, rows, blocksService) {
       blockKey,
       args: entry.args ?? {},
       conditions: entry.conditions,
+      hasConditions: entry.conditions != null,
+      // `isUnknown` flags entries whose block reference can't be
+      // resolved to a registered block — typo in the block name,
+      // renamed / removed registration, or a `null`/missing block
+      // reference. The outline shows these with a warning icon so
+      // authors can find and fix them.
+      isUnknown: unknown,
+      // `validationFailure` surfaces soft-failures stamped on the entry
+      // by `validateLayout` in permissive mode (`__failureType =
+      // "structural-invalid"`, `__failureReason` set to the original
+      // BlockError message — e.g. "Container must have children" for
+      // an empty `ve:layout`). The outline reads these to paint the
+      // row as an error so authors can find the offending entry.
+      validationFailure: entry.__failureType ?? null,
+      validationReason: entry.__failureReason ?? null,
       hasChildren: !!(entry.children && entry.children.length),
       path: entryPath,
     });

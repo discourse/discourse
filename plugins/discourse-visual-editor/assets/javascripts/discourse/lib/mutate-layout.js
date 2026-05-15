@@ -288,6 +288,54 @@ export function findEntrySiblings(layout, key) {
  * @param {Array|Object|null} newConditions
  * @returns {{layout: Array<Object>, changed: boolean}}
  */
+/**
+ * Returns a new layout where the entry matching `key` has its `id`
+ * replaced. `id` is the entry-level identifier used for CSS targeting
+ * (BEM modifier classes, `data-block-id` attribute). Authors edit it
+ * from the inspector's metadata section.
+ *
+ * Pass `null` or an empty string to clear the property — the entry is
+ * spread without `id` so the serialised output drops it cleanly. The
+ * caller is responsible for format validation against
+ * `VALID_BLOCK_ID_PATTERN`; this helper accepts any string.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} key
+ * @param {string|null} nextId
+ * @returns {{layout: Array<Object>, changed: boolean}}
+ */
+export function replaceEntryId(layout, key, nextId) {
+  let changed = false;
+
+  function walk(entries) {
+    let subtreeChanged = false;
+    const result = entries.map((entry) => {
+      if (entryKey(entry) === key) {
+        changed = true;
+        subtreeChanged = true;
+        if (nextId == null || nextId === "") {
+          // eslint-disable-next-line no-unused-vars
+          const { id, ...rest } = entry;
+          return rest;
+        }
+        return { ...entry, id: nextId };
+      }
+      if (entry.children?.length) {
+        const newChildren = walk(entry.children);
+        if (newChildren !== entry.children) {
+          subtreeChanged = true;
+          return { ...entry, children: newChildren };
+        }
+      }
+      return entry;
+    });
+    return subtreeChanged ? result : entries;
+  }
+
+  const newLayout = walk(layout);
+  return { layout: newLayout, changed };
+}
+
 export function replaceEntryConditions(layout, key, newConditions) {
   let changed = false;
 

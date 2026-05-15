@@ -15,6 +15,7 @@ import {
   LAYOUT_LAYERS,
 } from "discourse/blocks/block-outlet";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 import discourseDebounce from "discourse/lib/debounce";
 import PreloadStore from "discourse/lib/preload-store";
 import { computeShiftPlan, parsePlacement } from "../lib/grid-math";
@@ -30,10 +31,12 @@ import {
   removeEntry,
   replaceEntryConditions,
   replaceEntryContainerArgs,
+  replaceEntryId,
   replaceEntryInPlace,
   serializeEntryForSave,
 } from "../lib/mutate-layout";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
+import { mountedOutletNames } from "../lib/walk-layout";
 
 const FLUSH_DELAY_MS = 200;
 
@@ -403,17 +406,24 @@ export default class VisualEditorService extends Service {
   }
 
   /**
-   * The names of every block outlet that has a layout registered right now.
-   * The entry pill uses this to decide whether to appear and what count to
-   * display. Sourced from `services/blocks` so the registry is the single
-   * source of truth.
+   * The names of every block outlet that's editable on the current page —
+   * either one that already has a registered layout (the historical
+   * criterion) or one whose `<BlockOutlet>` is mounted in the DOM with no
+   * layout yet. Including the empty-mounted case is what makes "start a
+   * layout from scratch" possible: previously the entry pill stayed
+   * hidden until *some* code path called `api.renderBlocks(...)` first.
+   *
+   * Mounted outlets that aren't registered are silently ignored (they
+   * can't have a layout, so they shouldn't appear in the editor).
    *
    * @returns {string[]}
    */
   get editableOutlets() {
-    return this.blocks
-      .listOutlets()
-      .filter((name) => this.blocks.hasLayout(name));
+    const registered = this.blocks.listOutlets();
+    const mounted = mountedOutletNames();
+    return registered.filter(
+      (name) => this.blocks.hasLayout(name) || mounted?.has(name)
+    );
   }
 
   @action
@@ -474,14 +484,19 @@ export default class VisualEditorService extends Service {
         continue;
       }
       const layout = this.readResolvedLayout(outletName);
-      if (!layout) {
-        continue;
-      }
-      const draftLayout = cloneLayoutForDraft(layout);
+      // Outlets that are mounted but have no registered layout get an
+      // empty draft seeded here, so the outline lists them with zero
+      // rows and the canvas accepts drops on the outlet boundary
+      // immediately. Without this seed an empty outlet would only get
+      // a draft the first time something tried to write to it.
+      const draftLayout = layout ? cloneLayoutForDraft(layout) : [];
       // Second clone, never published. Held as the rollback target for
       // `resetAll()` — we can't capture the draft itself because in-place
       // arg mutations would leak into the snapshot.
-      this._originalLayouts.set(outletName, cloneLayoutForDraft(layout));
+      this._originalLayouts.set(
+        outletName,
+        layout ? cloneLayoutForDraft(layout) : []
+      );
       _setLayoutLayer(
         outletName,
         LAYOUT_LAYERS.SESSION_DRAFT,
@@ -935,6 +950,48 @@ export default class VisualEditorService extends Service {
       this._publishStructuralChange(located.outletName, result.layout);
       return true;
     });
+  }
+
+  /**
+   * Sets the `id` property on the selected entry. Validates against
+   * `VALID_BLOCK_ID_PATTERN` (lowercase letters / digits / hyphens,
+   * starting with a letter — same shape as block names). Empty / null
+   * clears the property entirely.
+   *
+   * Returns `{ ok, error }` so the caller (the inspector's metadata
+   * section) can show inline validation feedback without poking the
+   * service for state.
+   *
+   * @param {string|null} nextId
+   * @returns {{ok: boolean, error: string|null}}
+   */
+  @action
+  updateSelectedEntryId(nextId) {
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return { ok: false, error: "no-selection" };
+    }
+    const trimmed = typeof nextId === "string" ? nextId.trim() : nextId;
+    if (trimmed && !VALID_BLOCK_ID_PATTERN.test(trimmed)) {
+      return { ok: false, error: "invalid-format" };
+    }
+    const located = this._findEntryAndOutletSync(key);
+    if (!located) {
+      return { ok: false, error: "not-found" };
+    }
+    const committed = this._recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = replaceEntryId(layout, key, trimmed || null);
+      if (!result.changed) {
+        return false;
+      }
+      this._publishStructuralChange(located.outletName, result.layout);
+      return true;
+    });
+    return { ok: !!committed, error: null };
   }
 
   /**

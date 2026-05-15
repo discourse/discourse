@@ -12,6 +12,7 @@ import ConditionsTree from "./conditions-tree";
 import InspectorContainerArgsForm from "./inspector-container-args-form";
 import InspectorForm from "./inspector-form";
 import InspectorLayoutForm from "./inspector-layout-form";
+import InspectorMetadataSection from "./inspector-metadata-section";
 import InspectorRawJson from "./inspector-raw-json";
 
 /**
@@ -172,6 +173,8 @@ export default class InspectorPanel extends Component {
           {{dIcon "circle-info"}}
         </span>
       </div>
+
+      <InspectorMetadataSection />
 
       <div class="visual-editor-inspector__tabs" role="tablist">
         <button

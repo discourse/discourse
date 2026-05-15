@@ -218,7 +218,7 @@ export default class BlockChrome extends Component {
    * @returns {boolean}
    */
   get showsGridOverlay() {
-    return this.isGridLayout;
+    return this.isGridLayout && !this.args.isGhost;
   }
 
   /**
@@ -339,7 +339,7 @@ export default class BlockChrome extends Component {
    * @returns {boolean}
    */
   get showsInsideDropZone() {
-    return this.isContainer && !this.isGridLayout;
+    return this.isContainer && !this.isGridLayout && !this.args.isGhost;
   }
 
   /**
@@ -353,7 +353,7 @@ export default class BlockChrome extends Component {
    * @returns {boolean}
    */
   get showsSiblingDropZones() {
-    return !this.isGridCell;
+    return !this.isGridCell && !this.args.isGhost;
   }
 
   /**
@@ -655,6 +655,8 @@ export default class BlockChrome extends Component {
         class={{dConcatClass
           "visual-editor-block-chrome-wrapper"
           (if this.isGridCell "--in-grid-cell")
+          (if @isGhost "--ghost")
+          (if @isError "--error")
           (if (eq this.parentLayoutAxis "horizontal") "--axis-horizontal")
         }}
         style={{@style}}
@@ -685,6 +687,8 @@ export default class BlockChrome extends Component {
             (if this.isEmptyContainer "--empty-container")
             (if this.hasGridOverlap "--overlapping")
             (if this.isOutOfBounds "--out-of-bounds")
+            (if @isGhost "--ghost")
+            (if @isError "--error")
           }}
           data-ve-block-name={{@blockName}}
           data-ve-block-key={{@blockKey}}
