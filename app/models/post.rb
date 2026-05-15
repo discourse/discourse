@@ -1261,57 +1261,58 @@ end
 # Table name: posts
 #
 #  id                      :integer          not null, primary key
-#  user_id                 :integer
-#  topic_id                :integer          not null
-#  post_number             :integer          not null
-#  raw                     :text             not null
-#  cooked                  :text             not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  reply_to_post_number    :integer
-#  reply_count             :integer          default(0), not null
-#  quote_count             :integer          default(0), not null
-#  deleted_at              :datetime
-#  off_topic_count         :integer          default(0), not null
-#  like_count              :integer          default(0), not null
-#  incoming_link_count     :integer          default(0), not null
-#  bookmark_count          :integer          default(0), not null
-#  score                   :float
-#  reads                   :integer          default(0), not null
-#  post_type               :integer          default(1), not null
-#  sort_order              :integer
-#  last_editor_id          :integer
-#  hidden                  :boolean          default(FALSE), not null
-#  hidden_reason_id        :integer
-#  notify_moderators_count :integer          default(0), not null
-#  spam_count              :integer          default(0), not null
-#  illegal_count           :integer          default(0), not null
-#  inappropriate_count     :integer          default(0), not null
-#  last_version_at         :datetime         not null
-#  user_deleted            :boolean          default(FALSE), not null
-#  reply_to_user_id        :integer
-#  percent_rank            :float            default(1.0)
-#  notify_user_count       :integer          default(0), not null
-#  like_score              :integer          default(0), not null
-#  deleted_by_id           :integer
-#  edit_reason             :string
-#  word_count              :integer
-#  version                 :integer          default(1), not null
-#  cook_method             :integer          default(1), not null
-#  wiki                    :boolean          default(FALSE), not null
+#  action_code             :string
 #  baked_at                :datetime
 #  baked_version           :integer
+#  bookmark_count          :integer          default(0), not null
+#  cook_method             :integer          default(1), not null
+#  cooked                  :text             not null
+#  deleted_at              :datetime
+#  edit_reason             :string
+#  hidden                  :boolean          default(FALSE), not null
 #  hidden_at               :datetime
-#  self_edits              :integer          default(0), not null
-#  reply_quoted            :boolean          default(FALSE), not null
-#  via_email               :boolean          default(FALSE), not null
-#  raw_email               :text
-#  public_version          :integer          default(1), not null
-#  action_code             :string
-#  locked_by_id            :integer
-#  image_upload_id         :bigint
-#  outbound_message_id     :string
+#  illegal_count           :integer          default(0), not null
+#  inappropriate_count     :integer          default(0), not null
+#  incoming_link_count     :integer          default(0), not null
+#  last_version_at         :datetime         not null
+#  like_count              :integer          default(0), not null
+#  like_score              :integer          default(0), not null
 #  locale                  :string(20)
+#  notify_moderators_count :integer          default(0), not null
+#  notify_user_count       :integer          default(0), not null
+#  off_topic_count         :integer          default(0), not null
+#  percent_rank            :float            default(1.0)
+#  post_number             :integer          not null
+#  post_type               :integer          default(1), not null
+#  public_version          :integer          default(1), not null
+#  qa_vote_count           :integer          default(0)
+#  quote_count             :integer          default(0), not null
+#  raw                     :text             not null
+#  raw_email               :text
+#  reads                   :integer          default(0), not null
+#  reply_count             :integer          default(0), not null
+#  reply_quoted            :boolean          default(FALSE), not null
+#  reply_to_post_number    :integer
+#  score                   :float
+#  self_edits              :integer          default(0), not null
+#  sort_order              :integer
+#  spam_count              :integer          default(0), not null
+#  user_deleted            :boolean          default(FALSE), not null
+#  version                 :integer          default(1), not null
+#  via_email               :boolean          default(FALSE), not null
+#  wiki                    :boolean          default(FALSE), not null
+#  word_count              :integer
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  deleted_by_id           :integer
+#  hidden_reason_id        :integer
+#  image_upload_id         :bigint
+#  last_editor_id          :integer
+#  locked_by_id            :integer
+#  outbound_message_id     :string
+#  reply_to_user_id        :integer
+#  topic_id                :integer          not null
+#  user_id                 :integer
 #
 # Indexes
 #
@@ -1332,6 +1333,8 @@ end
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE
 #  index_posts_on_topic_id_and_reply_to_post_number       (topic_id,reply_to_post_number)
 #  index_posts_on_topic_id_and_sort_order                 (topic_id,sort_order)
+#  index_posts_on_updated_at_for_locale_detection         (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
+#  index_posts_on_updated_at_for_localization             (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
 #  index_posts_on_user_id_and_created_at                  (user_id,created_at)
 #  index_posts_user_and_likes                             (user_id,like_count DESC,created_at DESC) WHERE (post_number > 1)
 #

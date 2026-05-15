@@ -88,11 +88,11 @@ end
 # Table name: sidebar_urls
 #
 #  id         :bigint           not null, primary key
+#  external   :boolean          default(FALSE), not null
+#  icon       :string(40)       not null
 #  name       :string(80)       not null
+#  segment    :integer          default("primary"), not null
 #  value      :string(1000)     not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  icon       :string(40)       not null
-#  external   :boolean          default(FALSE), not null
-#  segment    :integer          default("primary"), not null
 #

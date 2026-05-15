@@ -14,7 +14,16 @@ if enable_logstash_logger
            customize_event: lambda { |event| event["@timestamp"] = ::Time.now.utc },
          )
 else
-  logger Logger.new(STDOUT)
+  console_logger = Logger.new(STDOUT)
+  if ENV["RAILS_ENV"] != "production"
+    require_relative "../lib/dev_log_formatter"
+    console_logger.formatter = DevLogFormatter.new(color: ENV["NO_COLOR"].nil?)
+
+    # Drop per-worker spawn logs. Summary below covers that.
+    console_logger.level = Logger::WARN
+    STDOUT.puts "Starting Pitchfork..."
+  end
+  logger console_logger
 end
 
 worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
@@ -123,7 +132,18 @@ before_service_worker_ready do |server, service_worker|
     demon_class.start(1, logger: server.logger)
   end
 
-  Demon::PluginJsWatcher.start(verbose: true) if Rails.env.development? && !ENV["CI"]
+  if Rails.env.development? && !ENV["CI"]
+    Demon::PluginJsWatcher.start(verbose: false, logger: server.logger)
+  end
+
+  if Rails.env.development?
+    workers = server.worker_processes
+    parts = ["#{workers} worker#{"s" if workers != 1}"]
+    parts << "#{sidekiqs} sidekiq#{"s" if sidekiqs != 1}" if sidekiqs > 0
+    parts.concat(DiscoursePluginRegistry.demon_processes.map(&:prefix))
+    parts << "plugin JS watcher" if !ENV["CI"]
+    STDOUT.puts "Pitchfork ready on http://localhost:#{ENV["UNICORN_PORT"] || 3000} (#{parts.join(", ")})"
+  end
 
   Thread.new do
     while true
@@ -159,4 +179,5 @@ if RUBY_PLATFORM.include?("darwin") && ENV["RAILS_ENV"] != "production"
   # macOS doesn't support the default :SOCK_SEQPACKET
   # So we override it to avoid the warning
   Pitchfork.instance_variable_set(:@socket_type, :SOCK_STREAM)
+  require_relative "../lib/freedom_patches/pitchfork_sock_stream"
 end

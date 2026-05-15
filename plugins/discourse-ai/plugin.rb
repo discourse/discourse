@@ -142,6 +142,11 @@ after_initialize do
     Post.prepend DiscourseAi::PostExtensions
   end
 
+  # AI bots reply via `skip_guardian: true`, so the reachability warning is misleading.
+  register_modifier(:composer_mention_user_reason) do |reason, user|
+    DiscourseAi::AiBot::EntryPoint.all_bot_ids.include?(user.id) ? nil : reason
+  end
+
   register_modifier(:post_should_secure_uploads?) do |_, _, topic|
     if topic.private_message? && SharedAiConversation.exists?(target: topic)
       false

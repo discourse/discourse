@@ -52,16 +52,16 @@ end
 # Table name: ai_summaries
 #
 #  id                    :bigint           not null, primary key
-#  target_id             :integer          not null
-#  target_type           :string           not null
-#  summarized_text       :string           not null
-#  original_content_sha  :string           not null
 #  algorithm             :string           not null
+#  highest_target_number :integer          default(1), not null
+#  origin                :integer
+#  original_content_sha  :string           not null
+#  summarized_text       :string           not null
+#  summary_type          :integer          default("complete"), not null
+#  target_type           :string           not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  summary_type          :integer          default("complete"), not null
-#  origin                :integer
-#  highest_target_number :integer          default(1), not null
+#  target_id             :integer          not null
 #
 # Indexes
 #

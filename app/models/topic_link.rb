@@ -437,22 +437,22 @@ end
 # Table name: topic_links
 #
 #  id            :integer          not null, primary key
-#  topic_id      :integer          not null
-#  post_id       :integer
-#  user_id       :integer          not null
-#  url           :string           not null
+#  clicks        :integer          default(0), not null
+#  crawled_at    :datetime
 #  domain        :string(100)      not null
+#  extension     :string(10)
 #  internal      :boolean          default(FALSE), not null
-#  link_topic_id :integer
+#  quote         :boolean          default(FALSE), not null
+#  reflection    :boolean          default(FALSE)
+#  title         :string
+#  url           :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  reflection    :boolean          default(FALSE)
-#  clicks        :integer          default(0), not null
 #  link_post_id  :integer
-#  title         :string
-#  crawled_at    :datetime
-#  quote         :boolean          default(FALSE), not null
-#  extension     :string(10)
+#  link_topic_id :integer
+#  post_id       :integer
+#  topic_id      :integer          not null
+#  user_id       :integer          not null
 #
 # Indexes
 #

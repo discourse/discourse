@@ -43,6 +43,7 @@
     font-size: var(--font-0);
     background-color: var(--primary-very-low);
     padding: 0.5rem 1rem;
+    margin: 0;
   }
 }
 
@@ -78,19 +79,27 @@
     }
   }
 
-  ul {
-    list-style: none;
-    margin: 0;
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
 
-    li {
-      align-items: center;
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: row-reverse;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--content-border-color);
-      padding: 0.25rem 1rem;
-    }
+  tbody tr {
+    border-bottom: 1px solid var(--content-border-color);
+  }
+
+  td {
+    padding: 0.25rem 1rem;
+    vertical-align: middle;
+  }
+
+  .shortcut-description {
+    width: 100%;
+  }
+
+  .shortcut-key {
+    text-align: right;
+    white-space: nowrap;
 
     span {
       border-radius: 3px;
@@ -111,10 +120,10 @@
       display: revert;
       text-align: right;
     }
+  }
 
-    kbd {
-      font-family: var(--d-font-family--monospace);
-      font-weight: bold;
-    }
+  kbd {
+    font-family: var(--d-font-family--monospace);
+    font-weight: bold;
   }
 }

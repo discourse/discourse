@@ -53,9 +53,9 @@ end
 # Table name: group_tag_notification_defaults
 #
 #  id                 :bigint           not null, primary key
+#  notification_level :integer          not null
 #  group_id           :integer          not null
 #  tag_id             :integer          not null
-#  notification_level :integer          not null
 #
 # Indexes
 #

@@ -107,14 +107,14 @@ end
 # Table name: email_tokens
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  email      :string           not null
 #  confirmed  :boolean          default(FALSE), not null
+#  email      :string           not null
 #  expired    :boolean          default(FALSE), not null
+#  scope      :integer
+#  token_hash :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  token_hash :string           not null
-#  scope      :integer
+#  user_id    :integer          not null
 #
 # Indexes
 #

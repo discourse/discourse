@@ -15,7 +15,7 @@ module AdPlugin
     has_many :impressions,
              class_name: "AdPlugin::AdImpression",
              foreign_key: "ad_plugin_house_ad_id",
-             dependent: :destroy
+             dependent: :delete_all
 
     has_many :routes,
              class_name: "AdPlugin::HouseAdRoute",

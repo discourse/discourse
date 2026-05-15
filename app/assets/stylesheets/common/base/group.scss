@@ -161,7 +161,7 @@ table.group-manage-logs {
 }
 
 .group-members {
-  grid-template-columns: 3fr repeat(3, minmax(min-content, 1fr));
+  grid-template-columns: 3fr repeat(4, minmax(min-content, 1fr));
 
   &--can-manage {
     grid-template-columns: 3fr repeat(4, minmax(min-content, 1fr)) 3em;

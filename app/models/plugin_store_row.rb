@@ -8,8 +8,8 @@ end
 # Table name: plugin_store_rows
 #
 #  id          :integer          not null, primary key
-#  plugin_name :string           not null
 #  key         :string           not null
+#  plugin_name :string           not null
 #  type_name   :string           not null
 #  value       :text
 #

@@ -11,29 +11,37 @@ const url = args[0];
 
 console.log(`Starting Discourse Smoke Test for ${url}`);
 
-import { Launcher } from "chrome-launcher";
 import path from "path";
-import puppeteer from "puppeteer-core";
+import { chromium } from "playwright";
 
 (async () => {
-  const browser = await puppeteer.launch({
-    executablePath: Launcher.getInstallations()[0],
+  const browser = await chromium.launch({
+    channel: "chrome",
     // when debugging locally setting the SHOW_BROWSER env variable can be very helpful
     headless: process.env.SHOW_BROWSER === undefined,
     args: ["--no-sandbox"],
   });
-  const page = await browser.newPage();
+
+  const contextOptions = {
+    viewport: { width: 1366, height: 768 },
+  };
+
+  if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
+    contextOptions.httpCredentials = {
+      username: process.env.AUTH_USER,
+      password: process.env.AUTH_PASSWORD,
+    };
+  }
+
+  const context = await browser.newContext(contextOptions);
+  const page = await context.newPage();
+
   page.on("console", (msg) => {
     if (["error", "warning"].includes(msg.type())) {
       console.log(`PAGE ${msg.type().toUpperCase()}: ${msg.text()}`);
     }
   });
   page.on("pageerror", (err) => console.log(`PAGE ERROR: ${err.message}`));
-
-  await page.setViewport({
-    width: 1366,
-    height: 768,
-  });
 
   const takeFailureScreenshot = function () {
     const screenshotPath = `${
@@ -79,7 +87,7 @@ import puppeteer from "puppeteer-core";
   page.on("console", (msg) => console.log(`PAGE LOG: ${msg.text()}`));
 
   page.on("response", (resp) => {
-    if (resp.status() !== 200 && resp.status() !== 302) {
+    if (![200, 204, 302].includes(resp.status())) {
       console.log(
         "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
       );
@@ -94,46 +102,29 @@ import puppeteer from "puppeteer-core";
     return resp;
   });
 
-  if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
-    await exec("basic authentication", () => {
-      return page.authenticate({
-        username: process.env.AUTH_USER,
-        password: process.env.AUTH_PASSWORD,
-      });
-    });
-  }
-
   const login = async function () {
     await exec("open login modal or page", () => {
       return page.click(".login-button");
     });
 
     await exec("login form is visible", () => {
-      return page.waitForSelector("#login-form", { visible: true });
+      return page.waitForSelector("#login-form", { state: "visible" });
     });
 
-    await exec("type in credentials & log in", () => {
-      let promise = page.type(
-        "#login-account-name",
-        process.env.DISCOURSE_USERNAME || "smoke_user"
-      );
+    await exec("type in credentials & log in", async () => {
+      await page
+        .locator("#login-account-name")
+        .pressSequentially(process.env.DISCOURSE_USERNAME || "smoke_user");
 
-      promise = promise.then(() => {
-        return page.type(
-          "#login-account-password",
-          process.env.DISCOURSE_PASSWORD || "P4ssw0rd"
-        );
-      });
+      await page
+        .locator("#login-account-password")
+        .pressSequentially(process.env.DISCOURSE_PASSWORD || "P4ssw0rd");
 
-      promise = promise.then(() => {
-        return page.click("#login-button");
-      });
-
-      return promise;
+      return page.click("#login-button");
     });
 
     await exec("is logged in", () => {
-      return page.waitForSelector(".current-user", { visible: true });
+      return page.waitForSelector(".current-user", { state: "visible" });
     });
   };
 
@@ -142,7 +133,7 @@ import puppeteer from "puppeteer-core";
   });
 
   await exec("expect a log in button in the header", () => {
-    return page.waitForSelector("header .login-button", { visible: true });
+    return page.waitForSelector("header .login-button", { state: "visible" });
   });
 
   if (process.env.LOGIN_AT_BEGINNING) {
@@ -154,7 +145,7 @@ import puppeteer from "puppeteer-core";
   });
 
   await exec("at least one topic shows up", () => {
-    return page.waitForSelector(".topic-list tbody tr", { visible: true });
+    return page.waitForSelector(".topic-list tbody tr", { state: "visible" });
   });
 
   await exec("go to categories page", () => {
@@ -162,7 +153,7 @@ import puppeteer from "puppeteer-core";
   });
 
   await exec("can see categories on the page", () => {
-    return page.waitForSelector(".category-list", { visible: true });
+    return page.waitForSelector(".category-list", { state: "visible" });
   });
 
   await exec("navigate to 1st topic", () => {
@@ -170,7 +161,7 @@ import puppeteer from "puppeteer-core";
   });
 
   await exec("at least one post body", () => {
-    return page.waitForSelector(".topic-post", { visible: true });
+    return page.waitForSelector(".topic-post", { state: "visible" });
   });
 
   await exec("click on the 1st user", () => {
@@ -178,7 +169,7 @@ import puppeteer from "puppeteer-core";
   });
 
   await exec("user has details", () => {
-    return page.waitForSelector(".user-card .names", { visible: true });
+    return page.waitForSelector(".user-card .names", { state: "visible" });
   });
 
   if (!process.env.READONLY_TESTS) {
@@ -186,24 +177,20 @@ import puppeteer from "puppeteer-core";
       await login();
     }
 
-    await exec("go home", () => {
-      let promise = page.waitForSelector("#site-logo, #site-text-logo", {
-        visible: true,
+    await exec("go home", async () => {
+      await page.waitForSelector("#site-logo, #site-text-logo", {
+        state: "visible",
       });
 
-      promise = promise.then(() => {
-        return page.click("#site-logo, #site-text-logo");
-      });
-
-      return promise;
+      return page.click("#site-logo, #site-text-logo");
     });
 
     await exec("it shows a topic list", () => {
-      return page.waitForSelector(".topic-list", { visible: true });
+      return page.waitForSelector(".topic-list", { state: "visible" });
     });
 
     await exec("we have a create topic button", () => {
-      return page.waitForSelector("#create-topic", { visible: true });
+      return page.waitForSelector("#create-topic", { state: "visible" });
     });
 
     await exec("open composer", () => {
@@ -222,26 +209,24 @@ import puppeteer from "puppeteer-core";
 
     await exec("composer is open", () => {
       return page.waitForSelector("#reply-control .d-editor-input", {
-        visible: true,
+        state: "visible",
       });
     });
 
-    await exec("compose new topic", () => {
+    await exec("compose new topic", async () => {
       const date = `(${+new Date()})`;
       const title = `This is a new topic ${date}`;
       const post = `I can write a new topic inside the smoke test! ${date} \n\n`;
 
-      let promise = page.type("#reply-title", title);
+      await page.locator("#reply-title").pressSequentially(title);
 
-      promise = promise.then(() => {
-        return page.type("#reply-control .d-editor-input", post);
-      });
-
-      return promise;
+      return page
+        .locator("#reply-control .d-editor-input")
+        .pressSequentially(post);
     });
 
     // await exec("updates preview", () => {
-    //   return page.waitForSelector(".d-editor-preview p", { visible: true });
+    //   return page.waitForSelector(".d-editor-preview p", { state: "visible" });
     // });
 
     await exec("submit the topic", () => {
@@ -249,7 +234,7 @@ import puppeteer from "puppeteer-core";
     });
 
     await exec("topic is created", () => {
-      return page.waitForSelector(".fancy-title", { visible: true });
+      return page.waitForSelector(".fancy-title", { state: "visible" });
     });
 
     await exec("open the composer", () => {
@@ -258,18 +243,20 @@ import puppeteer from "puppeteer-core";
 
     await exec("composer is open", () => {
       return page.waitForSelector("#reply-control .d-editor-input", {
-        visible: true,
+        state: "visible",
       });
     });
 
     await exec("compose reply", () => {
       const post = `I can even write a reply inside the smoke test ;) (${+new Date()})`;
-      return page.type("#reply-control .d-editor-input", post);
+      return page
+        .locator("#reply-control .d-editor-input")
+        .pressSequentially(post);
     });
 
     // await exec("waiting for the preview", async () => {
     //   await page.waitForSelector("div.d-editor-preview", {
-    //     visible: true,
+    //     state: "visible",
     //   });
     //   return page.waitForFunction(
     //     "document.querySelector('div.d-editor-preview').innerText.includes('I can even write a reply')"
@@ -280,97 +267,64 @@ import puppeteer from "puppeteer-core";
       return new Promise((resolve) => setTimeout(resolve, 5000));
     });
 
-    await exec("submit the reply", () => {
-      let promise = page.click("#reply-control .create");
+    await exec("submit the reply", async () => {
+      await page.click("#reply-control .create");
 
-      promise = promise.then(() => {
-        return page.waitForSelector("#reply-control.closed", {
-          visible: false,
-        });
+      return page.waitForSelector("#reply-control.closed", {
+        state: "attached",
       });
-
-      return promise;
     });
 
-    await assert("reply is created", () => {
-      let promise = page.waitForSelector(
-        ".topic-post:not(.staged) #post_2 .cooked",
-        {
-          visible: true,
-        }
-      );
-
-      promise = promise.then(() => {
-        return page.waitForFunction(
-          "document.querySelector('#post_2 .cooked').innerText.includes('I can even write a reply')"
-        );
+    await assert("reply is created", async () => {
+      await page.waitForSelector(".topic-post:not(.staged) #post_2 .cooked", {
+        state: "visible",
       });
 
-      return promise;
+      return page.waitForFunction(
+        "document.querySelector('#post_2 .cooked').innerText.includes('I can even write a reply')"
+      );
     });
 
     await exec("wait a little bit", () => {
       return new Promise((resolve) => setTimeout(resolve, 5000));
     });
 
-    await exec("open composer to edit first post", () => {
-      let promise = page.evaluate(() => {
+    await exec("open composer to edit first post", async () => {
+      await page.evaluate(() => {
         window.scrollTo(0, 0);
       });
 
-      promise = promise.then(() => {
-        return page.click("#post_1 .post-controls .edit");
-      });
+      await page.click("#post_1 .post-controls .edit");
 
-      promise = promise.then(() => {
-        return page.waitForSelector("#reply-control .d-editor-input", {
-          visible: true,
-        });
+      return page.waitForSelector("#reply-control .d-editor-input", {
+        state: "visible",
       });
-
-      return promise;
     });
 
-    await exec("update post raw in composer", () => {
-      let promise = new Promise((resolve) => setTimeout(resolve, 5000));
+    await exec("update post raw in composer", async () => {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
-      promise = promise.then(() => {
-        return page.type(
-          "#reply-control .d-editor-input",
-          "\n\nI edited this post"
-        );
-      });
-
-      return promise;
+      return page
+        .locator("#reply-control .d-editor-input")
+        .pressSequentially("\n\nI edited this post");
     });
 
-    await exec("submit the edit", () => {
-      let promise = page.click("#reply-control .create");
+    await exec("submit the edit", async () => {
+      await page.click("#reply-control .create");
 
-      promise = promise.then(() => {
-        return page.waitForSelector("#reply-control.closed", {
-          visible: false,
-        });
+      return page.waitForSelector("#reply-control.closed", {
+        state: "attached",
       });
-
-      return promise;
     });
 
-    await assert("edit is successful", () => {
-      let promise = page.waitForSelector(
-        ".topic-post:not(.staged) #post_1 .cooked",
-        {
-          visible: true,
-        }
+    await assert("edit is successful", async () => {
+      await page.waitForSelector(".topic-post:not(.staged) #post_1 .cooked", {
+        state: "visible",
+      });
+
+      return page.waitForFunction(
+        "document.querySelector('#post_1 .cooked').innerText.includes('I edited this post')"
       );
-
-      promise = promise.then(() => {
-        return page.waitForFunction(
-          "document.querySelector('#post_1 .cooked').innerText.includes('I edited this post')"
-        );
-      });
-
-      return promise;
     });
   }
 

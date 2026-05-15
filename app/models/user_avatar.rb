@@ -217,12 +217,12 @@ end
 # Table name: user_avatars
 #
 #  id                             :integer          not null, primary key
-#  user_id                        :integer          not null
-#  custom_upload_id               :integer
-#  gravatar_upload_id             :integer
 #  last_gravatar_download_attempt :datetime
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
+#  custom_upload_id               :integer
+#  gravatar_upload_id             :integer
+#  user_id                        :integer          not null
 #
 # Indexes
 #

@@ -3,6 +3,7 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicCategory from "discourse/components/topic-category";
 import TopicMetadata from "discourse/components/topic-metadata";
+import TopicStatus from "discourse/components/topic-status";
 import TopicTitleEditor from "discourse/components/topic-title-editor";
 import lazyHash from "discourse/helpers/lazy-hash";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -31,6 +32,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
       </div>
     {{else}}
       <h1 class="nested-view__title">
+        <TopicStatus @topic={{@topic}} />
         <a
           href={{@topic.url}}
           {{on "click" @startEditingTopic}}

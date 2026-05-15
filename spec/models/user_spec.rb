@@ -3046,8 +3046,6 @@ RSpec.describe User do
         user.update!(title: customized_badge_name)
         expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
       end
-
-      after { TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name)) }
     end
   end
 

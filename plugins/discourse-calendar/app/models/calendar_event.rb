@@ -109,19 +109,19 @@ end
 # Table name: calendar_events
 #
 #  id          :bigint           not null, primary key
-#  topic_id    :integer          not null
-#  post_id     :integer
-#  post_number :integer
-#  user_id     :integer
-#  username    :string
 #  description :string
-#  start_date  :datetime         not null
 #  end_date    :datetime
+#  post_number :integer
 #  recurrence  :string
 #  region      :string
+#  start_date  :datetime         not null
+#  timezone    :string
+#  username    :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  timezone    :string
+#  post_id     :integer
+#  topic_id    :integer          not null
+#  user_id     :integer
 #
 # Indexes
 #

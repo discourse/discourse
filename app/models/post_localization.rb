@@ -27,14 +27,14 @@ end
 # Table name: post_localizations
 #
 #  id                :bigint           not null, primary key
-#  post_id           :integer          not null
-#  post_version      :integer          not null
-#  locale            :string(20)       not null
-#  raw               :text             not null
 #  cooked            :text             not null
-#  localizer_user_id :integer          not null
+#  locale            :string(20)       not null
+#  post_version      :integer          not null
+#  raw               :text             not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  localizer_user_id :integer          not null
+#  post_id           :integer          not null
 #
 # Indexes
 #

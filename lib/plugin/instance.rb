@@ -94,9 +94,13 @@ class Plugin::Instance
   end
 
   def self.find_all(parent_path)
+    allowed = GlobalSetting.plugins_to_load
     [].tap do |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/*/plugin.rb"].sort.each { |path| plugins << parse_from_source(path) }
+      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
+        next if allowed && !allowed.include?(File.basename(File.dirname(path)))
+        plugins << parse_from_source(path)
+      end
     end
   end
 

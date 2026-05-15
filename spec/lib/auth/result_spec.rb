@@ -71,4 +71,27 @@ RSpec.describe Auth::Result do
 
     expect(user.email).to eq(new_email)
   end
+
+  describe "#apply_associated_attributes!" do
+    fab!(:user_field)
+
+    it "writes user_field_values to the user's custom fields" do
+      result.user_field_values = { user_field.id.to_s => "Engineering" }
+      result.apply_associated_attributes!
+
+      expect(user.reload.custom_fields["user_field_#{user_field.id}"]).to eq("Engineering")
+    end
+
+    it "is a no-op when user_field_values is blank" do
+      result.user_field_values = nil
+      expect { result.apply_associated_attributes! }.not_to raise_error
+    end
+
+    it "round-trips user_field_values through session data" do
+      result.user_field_values = { "42" => "Engineering" }
+      restored = Auth::Result.from_session_data(result.session_data, user: user)
+
+      expect(restored.user_field_values).to eq("42" => "Engineering")
+    end
+  end
 end

@@ -101,14 +101,14 @@ end
 # Table name: user_api_keys
 #
 #  id                     :integer          not null, primary key
-#  user_id                :integer          not null
+#  key_hash               :string           not null
+#  last_used_at           :datetime         not null
 #  push_url               :string
+#  revoked_at             :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  revoked_at             :datetime
-#  last_used_at           :datetime         not null
-#  key_hash               :string           not null
 #  user_api_key_client_id :bigint
+#  user_id                :integer          not null
 #
 # Indexes
 #

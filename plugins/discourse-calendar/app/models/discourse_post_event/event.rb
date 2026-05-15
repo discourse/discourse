@@ -620,6 +620,7 @@ end
 # Table name: discourse_post_event_events
 #
 #  id                 :bigint           not null, primary key
+#  all_day            :boolean          default(FALSE), not null
 #  chat_enabled       :boolean          default(FALSE), not null
 #  closed             :boolean          default(FALSE), not null
 #  custom_fields      :jsonb            not null
@@ -636,7 +637,6 @@ end
 #  recurrence_until   :datetime
 #  reminders          :string
 #  show_local_time    :boolean          default(FALSE), not null
-#  all_day            :boolean          default(FALSE), not null
 #  status             :integer          default(0), not null
 #  timezone           :string
 #  url                :string(1000)

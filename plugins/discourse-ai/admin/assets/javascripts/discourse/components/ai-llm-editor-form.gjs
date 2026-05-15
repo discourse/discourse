@@ -37,6 +37,7 @@ export default class AiLlmEditorForm extends Component {
   @tracked testResult = null;
   @tracked testError = null;
   @tracked testValidationErrors = null;
+  @tracked testFailedMode = null;
 
   @cached
   get formData() {
@@ -139,9 +140,15 @@ export default class AiLlmEditorForm extends Component {
   get testErrorMessage() {
     if (this.testValidationErrors?.length > 0) {
       return i18n("discourse_ai.llms.tests.invalid_config");
-    } else {
-      return i18n("discourse_ai.llms.tests.failure", { error: this.testError });
     }
+
+    if (this.testFailedMode) {
+      return i18n(`discourse_ai.llms.tests.failure_${this.testFailedMode}`, {
+        error: this.testError,
+      });
+    }
+
+    return i18n("discourse_ai.llms.tests.failure", { error: this.testError });
   }
 
   get displayTestResult() {
@@ -257,9 +264,11 @@ export default class AiLlmEditorForm extends Component {
       if (this.testResult) {
         this.testError = null;
         this.testValidationErrors = null;
+        this.testFailedMode = null;
       } else {
         this.testError = configTestResult.error;
         this.testValidationErrors = configTestResult.validation_errors;
+        this.testFailedMode = configTestResult.failed_mode;
       }
     } catch (e) {
       popupAjaxError(e);

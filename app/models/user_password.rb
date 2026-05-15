@@ -78,13 +78,13 @@ end
 # Table name: user_passwords
 #
 #  id                  :integer          not null, primary key
-#  user_id             :integer          not null
-#  password_hash       :string(64)       not null
-#  password_salt       :string(32)       not null
 #  password_algorithm  :string(64)       not null
 #  password_expired_at :datetime
+#  password_hash       :string(64)       not null
+#  password_salt       :string(32)       not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  user_id             :integer          not null
 #
 # Indexes
 #

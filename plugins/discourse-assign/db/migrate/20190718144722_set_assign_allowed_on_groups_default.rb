@@ -2,6 +2,8 @@
 
 class SetAssignAllowedOnGroupsDefault < ActiveRecord::Migration[5.2]
   def up
+    return if Migration::Helpers.new_site?
+
     current_values =
       DB.query_single(
         "SELECT value FROM site_settings WHERE name = 'assign_allowed_on_groups'",
