@@ -15,6 +15,7 @@ import {
 } from "discourse/lib/theme-selector";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
@@ -22,25 +23,21 @@ const ALLOWED_THEME_IDS = [FOUNDATION_THEME_ID, HORIZON_THEME_ID];
 
 const ThemeCard = <template>
   <div class="theme-picker-modal__card {{if @theme.default '--active'}}">
+    {{#if @theme.default}}
+      <span class="theme-picker-modal__enabled-badge">
+        {{dIcon "check"}}
+        {{i18n "admin_onboarding_banner.select_theme.enabled"}}
+      </span>
+    {{/if}}
     <ThemeCardPreview @theme={{@theme}}>
       <:footer>
-        {{#if @theme.default}}
-          <DButton
-            @icon="check"
-            @translatedLabel={{i18n
-              "admin_onboarding_banner.select_theme.currently_selected"
-            }}
-            class="btn-transparent theme-picker-modal__current-btn"
-          />
-        {{else}}
-          <DButton
-            @action={{fn @onSelect @theme}}
-            @translatedLabel={{i18n
-              "admin_onboarding_banner.select_theme.use_theme"
-            }}
-            class="btn-primary"
-          />
-        {{/if}}
+        <DButton
+          @action={{fn @onSelect @theme}}
+          @translatedLabel={{i18n
+            "admin_onboarding_banner.select_theme.use_theme"
+          }}
+          class="btn-primary"
+        />
       </:footer>
     </ThemeCardPreview>
   </div>

@@ -199,6 +199,7 @@
   }
 
   &__card {
+    position: relative;
     display: flex;
     flex-direction: column;
     border: 2px solid var(--content-border-color);
@@ -215,14 +216,20 @@
     margin: var(--space-3) var(--space-4) var(--space-4);
   }
 
-  &__card .theme-picker-modal__current-btn.btn {
-    color: var(--tertiary);
-    pointer-events: none;
-    cursor: default;
-
-    .d-icon {
-      color: var(--tertiary);
-    }
+  &__enabled-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-down-2);
+    font-weight: 700;
+    color: var(--secondary);
+    background: var(--tertiary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: 0 0 0 var(--d-border-radius);
+    z-index: 1;
   }
 
   &__browse-all,
