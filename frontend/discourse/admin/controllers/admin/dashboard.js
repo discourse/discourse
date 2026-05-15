@@ -18,6 +18,7 @@ const PROBLEMS_CHECK_MINUTES = 1;
 export default class AdminDashboardController extends Controller {
   @service router;
   @service siteSettings;
+  @service loadingSlider;
   @controller("exception") exceptionController;
 
   @tracked loadingProblems = false;
@@ -25,8 +26,7 @@ export default class AdminDashboardController extends Controller {
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
-  @tracked sections = null;
-  @tracked configuration = null;
+  @tracked loadedSections = null;
   @tracked loadingSections = false;
   @tracked sectionsFetchError = false;
   @autoTrackedArray problems;
@@ -95,19 +95,31 @@ export default class AdminDashboardController extends Controller {
 
   async fetchSections() {
     const id = ++this._sectionsLoadId;
+    const period = this.safePeriod;
+    const startDate = this.startDate;
+    const endDate = this.endDate;
+
     this.loadingSections = true;
     this.sectionsFetchError = false;
+    this.loadingSlider.transitionStarted();
 
     try {
       const model = await AdminDashboard.fetch({
-        startDate: this.startDate,
-        endDate: this.endDate,
+        startDate,
+        endDate,
       });
+
       if (id !== this._sectionsLoadId) {
         return;
       }
-      this.sections = model.sections;
-      this.configuration = model.configuration;
+
+      this.loadedSections = {
+        period,
+        startDate,
+        endDate,
+        sections: model.sections,
+        configuration: model.configuration,
+      };
     } catch {
       if (id !== this._sectionsLoadId) {
         return;
@@ -116,6 +128,7 @@ export default class AdminDashboardController extends Controller {
     } finally {
       if (id === this._sectionsLoadId) {
         this.loadingSections = false;
+        this.loadingSlider.transitionEnded();
       }
     }
   }
