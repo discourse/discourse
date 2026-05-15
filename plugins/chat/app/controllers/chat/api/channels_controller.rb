@@ -98,14 +98,10 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   def show
-    channel = Chat::Channel.find_by_id_or_slug(params.require(:channel_id))
-    raise Discourse::NotFound if channel.blank?
-    guardian.ensure_can_join_chat_channel!(channel)
-
     render_serialized(
-      channel,
+      channel_from_params,
       Chat::ChannelSerializer,
-      membership: channel.membership_for(current_user),
+      membership: channel_from_params.membership_for(current_user),
       root: "channel",
       include_extra_info: true,
     )

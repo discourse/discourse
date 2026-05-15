@@ -86,18 +86,21 @@ acceptance("Chat | New message", function (needs) {
     const UNFOLLOWED_CHANNEL_ID = 42;
     const UNFOLLOWED_CHANNEL_SLUG = "unfollowed";
 
-    pretender.get(`/chat/api/channels/${UNFOLLOWED_CHANNEL_SLUG}`, () =>
+    pretender.get("/chat/api/channels", () =>
       response({
-        channel: {
-          id: UNFOLLOWED_CHANNEL_ID,
-          title: "Unfollowed",
-          slug: UNFOLLOWED_CHANNEL_SLUG,
-          chatable_id: 2,
-          chatable_type: "Category",
-          meta: { message_bus_last_ids: {} },
-          current_user_membership: { following: false },
-          chatable: { id: 2, color: "00ff00", name: "category2" },
-        },
+        channels: [
+          {
+            id: UNFOLLOWED_CHANNEL_ID,
+            title: "Unfollowed",
+            slug: UNFOLLOWED_CHANNEL_SLUG,
+            chatable_id: 2,
+            chatable_type: "Category",
+            meta: { message_bus_last_ids: {} },
+            current_user_membership: { following: true },
+            chatable: { id: 2, color: "00ff00", name: "category2" },
+          },
+        ],
+        meta: {},
       })
     );
 

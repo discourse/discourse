@@ -244,13 +244,6 @@ RSpec.describe Chat::Api::ChannelsController do
           expect(response.status).to eq(200)
           expect(response.parsed_body.dig("channel", "id")).to eq(channel_1.id)
         end
-
-        it "can find channel by slug" do
-          get "/chat/api/channels/#{channel_1.slug}"
-
-          expect(response.status).to eq(200)
-          expect(response.parsed_body.dig("channel", "id")).to eq(channel_1.id)
-        end
       end
     end
   end

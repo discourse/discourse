@@ -5,6 +5,7 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export default class ChatNewMessageRoute extends DiscourseRoute {
   @service chat;
+  @service chatApi;
   @service chatChannelsManager;
   @service chatDraftsManager;
   @service currentUser;
@@ -72,10 +73,17 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
       return this.chatChannelsManager.find(channelId);
     }
 
-    const cached = this.chatChannelsManager.channels.find(
+    const cachedChannel = this.chatChannelsManager.channels.find(
       (channel) => channel.slug === channelSlug
     );
 
-    return cached ?? this.chatChannelsManager.find(channelSlug);
+    if (cachedChannel) {
+      return cachedChannel;
+    }
+
+    const channels = this.chatApi.channels({ filter: channelSlug });
+    await channels.load({ limit: 10 });
+
+    return channels.items.find((channel) => channel.slug === channelSlug);
   }
 }
