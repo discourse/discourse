@@ -413,6 +413,20 @@ RSpec.describe Theme do
     expect(Theme.enabled_theme_and_component_ids).to eq([])
   end
 
+  describe ".discourse_gifs_component_installed?" do
+    it "returns false when no discourse-gifs theme component exists" do
+      expect(Theme.discourse_gifs_component_installed?).to eq(false)
+    end
+
+    it "returns true when a discourse-gifs theme component is installed" do
+      remote_theme =
+        RemoteTheme.create!(remote_url: "https://github.com/discourse/discourse-gifs.git")
+      Fabricate(:theme, component: true, remote_theme: remote_theme)
+
+      expect(Theme.discourse_gifs_component_installed?).to eq(true)
+    end
+  end
+
   it "correctly caches user_themes template" do
     Theme.delete_all
 

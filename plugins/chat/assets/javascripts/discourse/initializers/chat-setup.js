@@ -1,6 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
+import GifsModal from "discourse/components/modal/gifs";
 import { bind } from "discourse/lib/decorators";
 import EmbedMode from "discourse/lib/embed-mode";
 import { number } from "discourse/lib/formatter";
@@ -101,6 +102,35 @@ class ChatSetupInit {
           return this.canAttachUploads;
         },
       });
+
+      if (this.siteSettings.enable_gifs) {
+        api.registerChatComposerButton({
+          id: "gifs",
+          label: "gifs.composer_title",
+          icon: "gif",
+          position: "dropdown",
+          async action(context) {
+            const modal = owner.lookup("service:modal");
+            const currentUser = owner.lookup("service:current-user");
+            const draft = this.draft;
+
+            await modal.show(GifsModal, {
+              model: {
+                customPickHandler: (message) => {
+                  api.sendChatMessage(draft.channel.id, {
+                    message,
+                    threadId: context === "thread" ? draft.thread?.id : null,
+                    inReplyToId:
+                      context === "channel" ? draft.inReplyTo?.id : null,
+                  });
+                },
+              },
+            });
+
+            draft.channel.resetDraft(currentUser);
+          },
+        });
+      }
 
       if (this.siteSettings.discourse_local_dates_enabled) {
         api.registerChatComposerButton({

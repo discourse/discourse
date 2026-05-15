@@ -303,6 +303,14 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def self.discourse_gifs_component_installed?
+    Theme
+      .joins(:remote_theme)
+      .where(component: true)
+      .where("remote_themes.remote_url ILIKE ?", "%discourse/discourse-gifs%")
+      .exists?
+  end
+
   def self.components_for(theme_id)
     get_set_cache "theme_components_for_#{theme_id}" do
       ChildTheme.where(parent_theme_id: theme_id).pluck(:child_theme_id)

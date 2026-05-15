@@ -182,6 +182,7 @@ module SvgSprite
         forward-step
         gavel
         gear
+        gif
         gift
         globe
         grip-lines

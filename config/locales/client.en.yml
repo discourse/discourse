@@ -3134,6 +3134,15 @@ en:
       confirm_publish: "Are you sure you want to publish this draft?"
       publishing: "Publishing Topic…"
 
+    gifs:
+      modal_title: "Search GIFs"
+      composer_title: "Insert GIF"
+      no_results: "Enter a keyword above to search for GIFs."
+      browse_categories: "Browse by category"
+      bad_api_key: "Klipy API key is missing or invalid. Site admins, please check the gifs API key setting."
+      error_rate_limit: "We have reached the GIF API rate limits. Please wait a moment and try again."
+      error_search_too_long: "Please shorten your search query to under 50 characters and try again."
+
     composer:
       autocomplete:
         username_missing: "Selected autocomplete result is missing username."
