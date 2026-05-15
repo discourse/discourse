@@ -85,15 +85,6 @@ end
 Discourse::Application.routes.draw do
   mount DiscourseAi::Engine, at: "discourse-ai"
 
-  get "topics/private-messages-ai-bot/:username" => "list#private_messages_ai_bot",
-      :as => "topics_private_messages_ai_bot",
-      :defaults => {
-        format: :json,
-      },
-      :constraints => {
-        username: RouteFormat.username,
-      }
-
   get "admin/dashboard/sentiment" => "discourse_ai/admin/dashboard#sentiment",
       :constraints => StaffConstraint.new
 

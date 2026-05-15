@@ -46,9 +46,6 @@ en:
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
-    user:
-      messages:
-        bot_chats: "Bot chats"
     discourse_automation:
       scriptables:
         llm_report:

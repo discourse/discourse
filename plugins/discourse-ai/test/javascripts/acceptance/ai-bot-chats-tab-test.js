@@ -13,15 +13,13 @@ acceptance("AI Bot - Bot chats tab", function (needs) {
   needs.pretender((server, helper) => {
     const emptyList = () => helper.response({ topic_list: { topics: [] } });
 
-    server.get("/topics/private-messages-ai-bot/:username.json", emptyList);
     server.get("/topics/private-messages/:username.json", emptyList);
-    server.get("/topics/private-messages-new/:username.json", emptyList);
-    server.get("/topics/private-messages-unread/:username.json", emptyList);
-    server.get("/topics/private-messages-archive/:username.json", emptyList);
-    server.get("/topics/private-messages-sent/:username.json", emptyList);
+    server.get("/discourse-ai/ai-bot/conversations.json", () =>
+      helper.response({})
+    );
   });
 
-  test("renders and transitions to bot chats from /messages", async function (assert) {
+  test("links to ai-bot conversations and navigates there on click", async function (assert) {
     await visit("/u/eviltrout/messages");
 
     assert
@@ -31,44 +29,17 @@ acceptance("AI Bot - Bot chats tab", function (needs) {
       .dom(".user-nav__messages-ai-bot-chats a")
       .hasAttribute(
         "href",
-        "/u/eviltrout/messages/ai-bot-chats",
-        "tab link resolves to the bot chats route"
+        "/discourse-ai/ai-bot/conversations",
+        "tab link resolves to the ai-bot conversations route"
       );
 
     await click(".user-nav__messages-ai-bot-chats a");
 
     assert.strictEqual(
       currentURL(),
-      "/u/eviltrout/messages/ai-bot-chats",
-      "transitions to the bot chats route"
+      "/discourse-ai/ai-bot/conversations",
+      "transitions to the ai-bot conversations route"
     );
-  });
-
-  ["new", "unread", "archive", "sent"].forEach((filter) => {
-    test(`tab href resolves on /messages/${filter}`, async function (assert) {
-      await visit(`/u/eviltrout/messages/${filter}`);
-
-      assert
-        .dom(".user-nav__messages-ai-bot-chats a")
-        .hasAttribute(
-          "href",
-          "/u/eviltrout/messages/ai-bot-chats",
-          `tab link resolves on /messages/${filter}`
-        );
-    });
-  });
-
-  test("loads the bot chats route directly", async function (assert) {
-    await visit("/u/eviltrout/messages/ai-bot-chats");
-
-    assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/messages/ai-bot-chats",
-      "loads bot chats route directly"
-    );
-    assert
-      .dom(".user-nav__messages-ai-bot-chats")
-      .exists("bot chats tab is rendered on the bot chats route");
   });
 
   test("tab is hidden when viewing another user's messages", async function (assert) {

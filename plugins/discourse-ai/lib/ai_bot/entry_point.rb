@@ -87,39 +87,6 @@ module DiscourseAi
           SQL
         end
 
-        plugin.add_to_class(:list_controller, :private_messages_ai_bot) do
-          target_user =
-            fetch_user_from_params(
-              { include_inactive: current_user.try(:staff?) },
-              %i[user_stat user_option],
-            )
-
-          raise Discourse::NotFound if target_user.id != current_user.id
-          guardian.ensure_can_see_private_messages!(target_user.id)
-
-          list_opts = build_topic_list_options
-          list = generate_list_for("private_messages_ai_bot", target_user, list_opts)
-          list.more_topics_url = construct_url_with(:next, list_opts, "topics")
-          list.prev_topics_url = construct_url_with(:prev, list_opts, "topics")
-          respond_with_list(list)
-        end
-
-        TopicQuery::PrivateMessageLists.module_eval do
-          unless method_defined?(:list_private_messages_ai_bot)
-            define_method(:list_private_messages_ai_bot) do |user|
-              list = send(:user_personal_private_messages, user)
-              list = send(:not_archived, list, user)
-              list = list.joins(<<~SQL)
-                  INNER JOIN topic_custom_fields tcf_ai_bot
-                  ON tcf_ai_bot.topic_id = topics.id
-                  AND tcf_ai_bot.name = #{ActiveRecord::Base.connection.quote(DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD)}
-                  AND tcf_ai_bot.value = 't'
-                SQL
-              create_list(:private_messages, {}, list)
-            end
-          end
-        end
-
         plugin.on(:topic_created) do |topic|
           next if !topic.private_message?
           creator = topic.user
