@@ -66,6 +66,9 @@ login:
   oauth2_json_avatar_path:
     default: ""
     area: "oauth2"
+  oauth2_json_groups_path:
+    default: ""
+    area: "oauth2"
   oauth2_user_field_mappings:
     type: objects
     default: []

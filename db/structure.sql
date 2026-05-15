@@ -20804,6 +20804,7 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260513105516'),
 ('20260513101242'),
+('20260513055222'),
 ('20260513024004'),
 ('20260512061336'),
 ('20260511044542'),
