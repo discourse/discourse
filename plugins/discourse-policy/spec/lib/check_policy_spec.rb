@@ -265,19 +265,22 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
   end
 
   context "when the policy topic is restricted" do
-    fab!(:visible_group) do
-      visibility_group = Fabricate(:group)
-      visibility_group.add(user1)
-      visibility_group
-    end
-
-    fab!(:private_category) { Fabricate(:private_category, group: visible_group) }
-
     it "creates reminders only for users who can see it" do
       freeze_time
 
+      policy_user_with_topic_access = Fabricate(:user)
+      policy_user_without_topic_access = Fabricate(:user)
+
+      policy_target_group = Fabricate(:group)
+      policy_target_group.add(policy_user_with_topic_access)
+      policy_target_group.add(policy_user_without_topic_access)
+
+      private_category_access_group = Fabricate(:group)
+      private_category_access_group.add(policy_user_with_topic_access)
+      private_category = Fabricate(:private_category, group: private_category_access_group)
+
       raw = <<~MD
-        [policy group=#{group.name} reminder=weekly]
+        [policy group=#{policy_target_group.name} reminder=weekly]
         I always open **doors**!
         [/policy]
       MD
@@ -294,7 +297,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
           topic_id: post.topic_id,
           post_number: 1,
         ).pluck(:user_id),
-      ).to contain_exactly(user1.id)
+      ).to contain_exactly(policy_user_with_topic_access.id)
     end
   end
 
