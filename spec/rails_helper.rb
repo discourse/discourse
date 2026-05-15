@@ -477,6 +477,13 @@ RSpec.configure do |config|
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
 
+        if MessageBusTestSync.pending?
+          MessageBusTestSync.flush!(
+            session,
+            timeout: seconds || session_options.default_max_wait_time,
+          )
+        end
+
         begin
           super
         rescue StandardError => e
@@ -508,6 +515,9 @@ RSpec.configure do |config|
     end
 
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
+
+    config.before(:each, type: :system) { MessageBusTestSync.start }
+    config.after(:each, type: :system) { MessageBusTestSync.stop }
 
     config.before(:each, type: :system) do |example|
       # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
