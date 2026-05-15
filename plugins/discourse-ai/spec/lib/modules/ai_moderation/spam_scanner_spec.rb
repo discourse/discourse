@@ -442,7 +442,7 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       ).to be_blank
     end
 
-    it "does not silence the user or hide the post when a flag cannot be created" do
+    it "skips posts already flagged by the scanner" do
       post = post_with_uploaded_image
       Fabricate(
         :post_action,
@@ -459,6 +459,51 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
         # force a rebake so we actually scan
         post.rebake!
       end
+
+      log = AiSpamLog.find_by(post: post)
+
+      expect(log.reviewable).to be_nil
+      expect(log.error).to eq("skipped because post already has a flag")
+      expect(post.user.reload).not_to be_silenced
+      expect(post.topic.reload).to be_visible
+    end
+
+    it "skips posts that already have an active flag" do
+      flagger = Fabricate(:user)
+      Fabricate(
+        :post_action,
+        post: post,
+        user: flagger,
+        post_action_type_id: PostActionType.types[:spam],
+      )
+
+      described_class.new_post(post)
+
+      expect do
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ spam: true, reason: "spam detected" }],
+        ) { post.rebake! }
+      end.not_to change { PostAction.active.flags.where(post: post).count }
+
+      log = AiSpamLog.find_by(post: post)
+
+      expect(log.reviewable).to be_nil
+      expect(log.error).to eq("skipped because post already has a flag")
+      expect(post.user.reload).not_to be_silenced
+      expect(post.topic.reload).to be_visible
+    end
+
+    it "does not silence or hide when flag creation fails" do
+      flagging_user = Fabricate(:user, trust_level: TrustLevel[4])
+      SiteSetting.ai_spam_detection_user_id = flagging_user.id
+
+      described_class.new_post(post)
+
+      expect do
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ spam: true, reason: "spam detected" }],
+        ) { post.rebake! }
+      end.not_to change { PostAction.active.flags.where(post: post).count }
 
       log = AiSpamLog.find_by(post: post)
 

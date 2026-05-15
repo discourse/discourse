@@ -678,6 +678,20 @@ RSpec.describe GroupsController do
       expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
     end
 
+    it "does not include names when names are disabled" do
+      SiteSetting.enable_names = false
+      user.update!(name: "Hidden Full Name")
+      sign_in(user)
+      Fabricate(:post, user: user)
+
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      post_response = response.parsed_body["posts"].first
+      expect(post_response["username"]).to eq(user.username)
+      expect(post_response).not_to have_key("name")
+    end
+
     it "returns moderator actions" do
       sign_in(user)
       post = Fabricate(:post, user: user, post_type: Post.types[:moderator_action])

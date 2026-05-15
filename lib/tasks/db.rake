@@ -76,6 +76,25 @@ begin
   Rake::Task["db:rollback"].clear
 end
 
+# Loading structure.sql populates `schema_migrations` but not our custom
+# `schema_migration_details` table. Backfill it so `Discourse.site_creation_date` works.
+module BackfillSchemaMigrationDetails
+  def load_schema(*)
+    result = super
+    conn = ActiveRecord::Base.connection
+    conn.execute(<<~SQL) if conn.table_exists?("schema_migration_details")
+        INSERT INTO schema_migration_details (version, created_at)
+        SELECT sm.version, current_timestamp
+          FROM schema_migrations sm
+          LEFT JOIN schema_migration_details smd ON smd.version = sm.version
+         WHERE smd.version IS NULL
+         ORDER BY sm.version
+      SQL
+    result
+  end
+end
+ActiveRecord::Tasks::DatabaseTasks.singleton_class.prepend(BackfillSchemaMigrationDetails)
+
 task "db:rollback" => %w[environment set_locale] do |_, args|
   step = ENV["STEP"] ? ENV["STEP"].to_i : 1
   ActiveRecord::Base.connection_pool.migration_context.rollback(step)

@@ -72,43 +72,10 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
-      - name: Get CPU cores
-        id: cpu-info
-        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
-
-      - name: Fetch app state cache
-        uses: actions/cache@v5
-        id: app-cache
-        with:
-          path: tmp/app-cache
-          key: >-
-            ${{ runner.os }}-
-            ${{ steps.cpu-info.outputs.cpu-cores }}-
-            ${{ hashFiles('.github/workflows/migration-tests.yml') }}-
-            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
-            ${{ hashFiles('config/environments/test.rb') }}
-
-      - name: Restore database from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
-
-      - name: Restore uploads from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
-
       - name: Create and migrate database
-        if: steps.app-cache.outputs.cache-hit != 'true'
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
-
-      - name: Dump database for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
-
-      - name: Dump uploads for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Validate IntermediateDB schema
         run: |

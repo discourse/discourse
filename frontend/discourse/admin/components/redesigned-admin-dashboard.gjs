@@ -7,6 +7,7 @@ import DashboardDateRange from "discourse/admin/components/dashboard/date-range"
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
 import DashboardHighlights from "discourse/admin/components/dashboard/highlights";
 import DashboardReports from "discourse/admin/components/dashboard/reports";
+import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -33,6 +34,10 @@ export default class RedesignedAdminDashboard extends Component {
 
   get committedSections() {
     return this.args.configuration?.sections ?? [];
+  }
+
+  get showSkeleton() {
+    return this.args.loadingSections && !this.args.sections;
   }
 
   @action
@@ -114,39 +119,49 @@ export default class RedesignedAdminDashboard extends Component {
     </div>
 
     <div class="db-main">
-      {{#each @sections key="id" as |section|}}
-        <div class="db-main__section" data-section-id={{section.id}}>
-          {{#if (eq section.id "highlights")}}
-            <DashboardHighlights
-              @highlights={{section.data}}
-              @period={{@period}}
-              @loading={{@loadingSections}}
-              @fetchError={{@sectionsFetchError}}
-              @startDate={{@startDate}}
-              @endDate={{@endDate}}
-            />
-          {{else if (eq section.id "reports")}}
-            <DashboardReports @startDate={{@startDate}} @endDate={{@endDate}} />
-          {{else if (eq section.id "traffic")}}
-            <DashboardTraffic @startDate={{@startDate}} @endDate={{@endDate}} />
-          {{else if (eq section.id "engagement")}}
-            <DashboardEngagement
-              @startDate={{@startDate}}
-              @endDate={{@endDate}}
-            />
-          {{/if}}
-        </div>
-      {{/each}}
+      {{#if this.showSkeleton}}
+        <DashboardSkeleton />
+      {{else}}
+        {{#each @sections key="id" as |section|}}
+          <div class="db-main__section" data-section-id={{section.id}}>
+            {{#if (eq section.id "highlights")}}
+              <DashboardHighlights
+                @highlights={{section.data}}
+                @period={{@period}}
+                @loading={{@loadingSections}}
+                @fetchError={{@sectionsFetchError}}
+                @startDate={{@startDate}}
+                @endDate={{@endDate}}
+              />
+            {{else if (eq section.id "reports")}}
+              <DashboardReports
+                @startDate={{@startDate}}
+                @endDate={{@endDate}}
+              />
+            {{else if (eq section.id "traffic")}}
+              <DashboardTraffic
+                @startDate={{@startDate}}
+                @endDate={{@endDate}}
+              />
+            {{else if (eq section.id "engagement")}}
+              <DashboardEngagement
+                @startDate={{@startDate}}
+                @endDate={{@endDate}}
+              />
+            {{/if}}
+          </div>
+        {{/each}}
 
-      {{#unless @sections.length}}
-        <div class="db-main__empty" role="status" aria-live="polite">
-          {{#if this.currentUser.admin}}
-            {{i18n "admin.dashboard.configure.empty_state_admin"}}
-          {{else}}
-            {{i18n "admin.dashboard.configure.empty_state_moderator"}}
-          {{/if}}
-        </div>
-      {{/unless}}
+        {{#unless @sections.length}}
+          <div class="db-main__empty" role="status" aria-live="polite">
+            {{#if this.currentUser.admin}}
+              {{i18n "admin.dashboard.configure.empty_state_admin"}}
+            {{else}}
+              {{i18n "admin.dashboard.configure.empty_state_moderator"}}
+            {{/if}}
+          </div>
+        {{/unless}}
+      {{/if}}
     </div>
   </template>
 }
