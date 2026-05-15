@@ -1358,10 +1358,12 @@ def apply_base_chrome_args(args = [])
     base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
   end
 
+  resolver_rules = ["MAP test.localhost:80 127.0.0.1:#{Capybara.server_port}"]
   if ENV["CI"]
     # Bypass the OS resolver for localhost lookups inside the browser.
-    base_args << "--host-resolver-rules=MAP localhost [::1],MAP *.localhost [::1]"
+    resolver_rules.push("MAP localhost [::1]", "MAP *.localhost [::1]")
   end
+  base_args << "--host-resolver-rules=#{resolver_rules.join(",")}"
 
   # A file that contains just a list of paths like so:
   #
