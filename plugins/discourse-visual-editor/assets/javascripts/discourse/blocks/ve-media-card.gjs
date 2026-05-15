@@ -10,10 +10,10 @@ import { i18n } from "discourse-i18n";
  * instance = one card; build a row by dropping multiple `ve:media-card`
  * blocks into a `ve:layout` grid.
  *
- * Visual model mirrors the "Watch & Listen" tiles from the
- * meta-branded-theme PR #69 layout: optional decorative image or
- * gradient background, top region with avatar / name / role / badge,
- * bottom region with title and a single CTA link.
+ * Optional decorative image or solid background, top region with
+ * avatar / name / role, bottom region with badge / title / single CTA
+ * link. All copy fields start empty so the block doesn't carry any
+ * theme-specific placeholder content into a fresh insert.
  */
 @block("ve:media-card", {
   displayName: "Media card",
@@ -46,7 +46,7 @@ import { i18n } from "discourse-i18n";
     },
     badgeIcon: {
       type: "string",
-      default: "microphone",
+      default: "",
       ui: {
         control: "icon",
         label: i18n("visual_editor.inspector.media_card.badge_icon"),
@@ -69,7 +69,7 @@ import { i18n } from "discourse-i18n";
     },
     ctaLabel: {
       type: "string",
-      default: "Watch now",
+      default: "",
       ui: {
         label: i18n("visual_editor.inspector.media_card.cta_label"),
       },
@@ -104,13 +104,12 @@ import { i18n } from "discourse-i18n";
     },
   },
   previewArgs: {
-    name: "Sam Saffron",
-    role: "Co-founder & CEO, Discourse",
-    badgeIcon: "microphone",
-    badgeLabel: "Podcast",
-    title:
-      "What a Decade of Running Discourse Taught Sam Saffron About AI in Communities",
-    ctaLabel: "Watch now",
+    name: "Name",
+    role: "Role",
+    badgeIcon: "star",
+    badgeLabel: "Featured",
+    title: "A short headline describing this card",
+    ctaLabel: "Learn more",
     ctaHref: "#",
   },
 })
