@@ -47,6 +47,7 @@ jobs:
         shell: bash
 
     env:
+      BUNDLER_VERSION: 4.0.11
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
