@@ -552,48 +552,52 @@ module ApplicationHelper
     @splash_screen_image_svg&.html_safe
   end
 
-  def splash_screen_image_data_uri(dark: false)
-    build_splash_screen_image unless defined?(@splash_screen_image_svg)
-    return nil if @splash_screen_image_svg.blank?
-
-    # Replace CSS variable references with actual theme colors
-    svg_with_colors = @splash_screen_image_svg.dup
-
-    color_method = dark ? :dark_color_hex_for_name : :light_color_hex_for_name
-    primary = "##{public_send(color_method, "primary")}"
-    secondary = "##{public_send(color_method, "secondary")}"
-    tertiary = "##{public_send(color_method, "tertiary")}"
-
-    svg_with_colors.gsub!(/var\(\s*--primary\s*\)/, primary)
-    svg_with_colors.gsub!(/var\(\s*--secondary\s*\)/, secondary)
-    svg_with_colors.gsub!(/var\(\s*--tertiary\s*\)/, tertiary)
-
-    # Use base64 encoding for better compatibility with complex SVGs
-    "data:image/svg+xml;base64,#{Base64.strict_encode64(svg_with_colors)}"
-  end
-
-  private
-
-  def build_splash_screen_image
-    @splash_screen_image_svg = nil
-
-    upload = SiteSetting.splash_screen_image
-    return unless upload.is_a?(Upload)
-
-    @splash_screen_image_svg =
-      Discourse
-        .cache
-        .fetch("splash_screen_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
-          begin
-            upload.content.presence
-          rescue StandardError => e
-            Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
-            nil
-          end
-        end
-  end
-
   public
+
+  def custom_splash_screen_enabled?
+  @custom_splash_screen_enabled ||=
+    SiteSetting.splash_screen_image.is_a?(Upload) ||
+    SiteSetting.splash_screen_image_dark.is_a?(Upload)
+end
+
+def splash_screen_image_data_uri(dark: false)
+  svg = build_splash_screen_image(dark: dark)
+  return nil if svg.blank?
+
+  svg_with_colors = svg.dup
+
+  color_method = dark ? :dark_color_hex_for_name : :light_color_hex_for_name
+  primary = "##{public_send(color_method, "primary")}"
+  secondary = "##{public_send(color_method, "secondary")}"
+  tertiary = "##{public_send(color_method, "tertiary")}"
+
+  svg_with_colors.gsub!(/var\(\s*--primary\s*\)/, primary)
+  svg_with_colors.gsub!(/var\(\s*--secondary\s*\)/, secondary)
+  svg_with_colors.gsub!(/var\(\s*--tertiary\s*\)/, tertiary)
+
+  "data:image/svg+xml;base64,#{Base64.strict_encode64(svg_with_colors)}"
+end
+
+private
+  
+def build_splash_screen_image(dark: false)
+ upload =
+   if dark && SiteSetting.splash_screen_image_dark.is_a?(Upload)
+    SiteSetting.splash_screen_image_dark
+   else
+     SiteSetting.splash_screen_image
+   end
+  return unless upload.is_a?(Upload)
+  
+  Discourse.cache.fetch(
+   "splash_screen_svg_#{dark ? "dark" : "light"}_#{upload.id}_#{upload.sha1}",
+   expires_in: 1.day
+  ) do
+  upload.content.presence
+ end
+end
+
+public
 
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
