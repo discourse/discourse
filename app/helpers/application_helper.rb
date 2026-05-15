@@ -538,10 +538,9 @@ module ApplicationHelper
     end
   end
 
-  def custom_splash_screen_enabled?
+    def custom_splash_screen_enabled?
     @custom_splash_screen_enabled ||=
-      SiteSetting.splash_screen_image.is_a?(Upload) ||
-        SiteSetting.splash_screen_image_dark.is_a?(Upload)
+      resolve_splash_screen_upload.present? || resolve_splash_screen_upload(dark: true).present?
   end
 
   def splash_screen_image_animated?
@@ -574,14 +573,8 @@ module ApplicationHelper
   private
 
   def build_splash_screen_image(dark: false)
-    upload =
-      if dark && SiteSetting.splash_screen_image_dark.is_a?(Upload)
-        SiteSetting.splash_screen_image_dark
-      else
-        SiteSetting.splash_screen_image
-      end
-
-    return unless upload.is_a?(Upload)
+    upload = resolve_splash_screen_upload(dark: dark)
+    return unless upload
 
     Discourse.cache.fetch(
       "splash_screen_svg_#{dark ? "dark" : "light"}_#{upload.id}_#{upload.sha1}",
@@ -594,6 +587,17 @@ module ApplicationHelper
         nil
       end
     end
+  end
+
+  def resolve_splash_screen_upload(dark: false)
+    upload =
+      if dark && SiteSetting.splash_screen_image_dark.present?
+        SiteSetting.splash_screen_image_dark
+      else
+        SiteSetting.splash_screen_image
+      end
+
+    upload.is_a?(Upload) ? upload : Upload.find_by(id: upload)
   end
 
   public
