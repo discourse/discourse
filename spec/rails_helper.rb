@@ -477,38 +477,40 @@ RSpec.configure do |config|
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
 
-        if MessageBusTestSync.pending?
-          MessageBusTestSync.flush!(
-            session,
-            timeout: seconds || session_options.default_max_wait_time,
-          )
-        end
+        mb_retried = false
 
         begin
           super
         rescue StandardError => e
-          seconds = session_options.default_max_wait_time if [nil, true].include? seconds
-          if catch_error?(e, errors) && seconds != 0
-            # This error will only have been raised if the timer expired
-            timeout_error = CapybaraTimedOut.new(seconds, e)
-            if RSpec.current_example
-              # Store timeout for later, we'll only raise it if the test otherwise passes
-              RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
+          raise unless catch_error?(e, errors) && seconds != 0
 
-              if RSpec.current_example.metadata[:dump_threads_on_failure]
-                RSpec.current_example.metadata[:_capybara_server_threads_backtraces] = Thread
-                  .list
-                  .reduce([]) { |array, thread| array << thread.backtrace }
-                  .uniq
-              end
+          # On timeout, give a pending MessageBus publish one chance to land,
+          # then retry the matcher once.
+          if !mb_retried && MessageBusTestSync.pending?
+            mb_retried = true
+            MessageBusTestSync.flush!(session, timeout: 2)
+            retry
+          end
 
-              raise # re-raise original error
-            else
-              # Outside an example... maybe a `before(:all)` hook?
-              raise timeout_error
+          # This error will only have been raised if the timer expired
+          effective_seconds =
+            [nil, true].include?(seconds) ? session_options.default_max_wait_time : seconds
+          timeout_error = CapybaraTimedOut.new(effective_seconds, e)
+          if RSpec.current_example
+            # Store timeout for later, we'll only raise it if the test otherwise passes
+            RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
+
+            if RSpec.current_example.metadata[:dump_threads_on_failure]
+              RSpec.current_example.metadata[:_capybara_server_threads_backtraces] = Thread
+                .list
+                .reduce([]) { |array, thread| array << thread.backtrace }
+                .uniq
             end
+
+            raise # re-raise original error
           else
-            raise
+            # Outside an example... maybe a `before(:all)` hook?
+            raise timeout_error
           end
         end
       end
