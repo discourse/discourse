@@ -391,18 +391,20 @@ export default class EditCategoryTabsController extends Controller {
         return;
       }
 
-      const newTypes = Object.keys(result.category.category_types ?? {});
-      const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
-      if (typeWasAdded) {
-        if (this.model.id) {
-          window.location.reload();
-        } else {
-          window.location = this.router.urlFor(
-            "editCategory",
-            Category.slugFor(updatedModel)
-          );
+      if (this.siteSettings.enable_simplified_category_creation) {
+        const newTypes = Object.keys(result.category.category_types ?? {});
+        const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
+        if (typeWasAdded) {
+          if (this.model.id) {
+            window.location.reload();
+          } else {
+            window.location = this.router.urlFor(
+              "editCategory",
+              Category.slugFor(updatedModel)
+            );
+          }
+          return;
         }
-        return;
       }
 
       this.set("saving", false);
