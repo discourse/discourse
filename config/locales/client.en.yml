@@ -2419,8 +2419,10 @@ en:
           hide_advanced: "Hide Advanced Options"
 
           description: "Description"
+          description_help: "A note to help you identify this invite."
 
           restrict: "Restrict to"
+          restrict_help: "Enter an email or email domain to limit who can accept this invite."
           restrict_email: "Restrict to email"
           restrict_domain: "Restrict to domain"
           email_or_domain_placeholder: "name@example.com or example.com"
@@ -2432,6 +2434,7 @@ en:
           expires_at: "Expire at"
           expires_after: "Expire after"
           custom_message: "Custom message"
+          custom_message_help: "Included in the invitation email."
           custom_message_placeholder: "Add a personal note to your invitation"
 
           send_invite_email: "Save and Send Email"

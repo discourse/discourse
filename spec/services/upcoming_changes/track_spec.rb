@@ -4,10 +4,8 @@ RSpec.describe UpcomingChanges::Track do
   fab!(:admin_1, :admin)
   fab!(:admin_2, :admin)
 
-  let(:all_admins) { [admin_1, admin_2] }
-
   describe ".call" do
-    subject(:result) { described_class.call(all_admins:) }
+    subject(:result) { described_class.call }
 
     let(:added_changes_result) do
       { added_changes: [:added_change], notified_changes: [:notified_added] }
@@ -37,9 +35,9 @@ RSpec.describe UpcomingChanges::Track do
 
     it "calls TrackNotifyAddedChanges with correct arguments" do
       result
-      expect(UpcomingChanges::Action::TrackNotifyAddedChanges).to have_received(:call).with(
-        all_admins:,
-      )
+      expect(UpcomingChanges::Action::TrackNotifyAddedChanges).to have_received(:call) do |args|
+        expect(args[:all_admins]).to contain_exactly(admin_1, admin_2)
+      end
     end
 
     it "calls TrackRemovedChanges" do
@@ -49,11 +47,11 @@ RSpec.describe UpcomingChanges::Track do
 
     it "calls TrackNotifyStatusChanges with correct arguments" do
       result
-      expect(UpcomingChanges::Action::TrackNotifyStatusChanges).to have_received(:call).with(
-        all_admins:,
-        added_changes: [:added_change],
-        removed_changes: [:removed_change],
-      )
+      expect(UpcomingChanges::Action::TrackNotifyStatusChanges).to have_received(:call) do |args|
+        expect(args[:all_admins]).to contain_exactly(admin_1, admin_2)
+        expect(args[:added_changes]).to eq([:added_change])
+        expect(args[:removed_changes]).to eq([:removed_change])
+      end
     end
 
     it "populates the context with results from actions" do

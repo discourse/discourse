@@ -69,8 +69,6 @@ RSpec.describe "Filter sidebar" do
 end
 ```
 
-The `type: :system` metadata is inferred automatically from the file's location under `spec/system/`, so no explicit `system: true` is needed on the describe block.
-
 **Key patterns:**
 - Instantiate page objects with `let`
 - Use `context` blocks to group related scenarios
@@ -168,6 +166,49 @@ end
 expect(sidebar).to have_category_name(category)
 expect(sidebar).to have_category_link(category)
 ```
+
+## Composing Page Objects
+
+**Don't stuff everything into a single page object.** Identify UI boundaries (header, sidebar, composer, post, modal, etc.) and split them into separate component page objects. The main page object exposes methods that return instances of those components.
+
+```rb
+# Good - main page composes scoped components
+module PageObjects
+  module Pages
+    class Topic < PageObjects::Pages::Base
+      def header
+        PageObjects::Components::TopicHeader.new
+      end
+
+      def composer
+        PageObjects::Components::Composer.new
+      end
+
+      def post_by_number(number)
+        PageObjects::Components::Post.new(".topic-post[data-post-number='#{number}']")
+      end
+    end
+  end
+end
+
+# In test
+topic_page.visit_topic(topic)
+topic_page.header.click_reply
+topic_page.composer.fill_in_body("Hello")
+expect(topic_page.post_by_number(2)).to be_liked
+```
+
+```rb
+# Avoid - one mega page object with every selector and interaction
+class Topic < PageObjects::Pages::Base
+  def click_header_reply; end
+  def fill_composer_body(text); end
+  def post_2_liked?; end
+  # ...dozens more methods spanning unrelated UI regions
+end
+```
+
+Component page objects keep selectors local to the region they describe, make tests read like the UI is structured, and let components be reused across pages (e.g. the composer appears in multiple pages).
 
 ## Scoping Components to Elements
 
