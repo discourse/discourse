@@ -139,8 +139,10 @@ export default class SolvedAcceptedAnswer extends Component {
           (unless this.content "title-only")
         }}
         style={{this.maxHeightStyle}}
-        data-expanded={{this.expanded}}
-        data-overflowing={{this.overflowingAttr}}
+        {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
+        data-expanded="{{this.expanded}}"
+        {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
+        data-overflowing="{{this.overflowingAttr}}"
         data-username={{this.acceptedAnswer.username}}
         data-post={{this.acceptedAnswer.post_number}}
         data-topic={{this.topic.id}}

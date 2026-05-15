@@ -176,8 +176,10 @@ export default class PostQuotedContent extends Component {
         (if this.isQuotedPostIgnored "ignored-user")
       }}
       {{! forced quotes in the data-attributes below to cast the boolean values to string }}
-      data-expanded={{this.expanded}}
-      data-full={{@fullQuote}}
+      {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
+      data-expanded="{{this.expanded}}"
+      {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
+      data-full="{{@fullQuote}}"
       data-post={{@quotedPostNumber}}
       data-topic={{@quotedTopicId}}
       data-username={{@quotedUsername}}
