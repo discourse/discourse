@@ -50,24 +50,13 @@ import { chromium } from "playwright";
     return page.screenshot({ path: screenshotPath, fullPage: true });
   };
 
-  const exec = (description, fn, assertion) => {
+  const exec = (description, fn) => {
     const start = +new Date();
 
     return fn
       .call()
-      .then(async (output) => {
-        if (assertion) {
-          if (assertion.call(this, output)) {
-            console.log(`PASSED: ${description} - ${+new Date() - start}ms`);
-          } else {
-            console.log(`FAILED: ${description} - ${+new Date() - start}ms`);
-            await takeFailureScreenshot();
-            console.log("SMOKE TEST FAILED");
-            process.exit(1);
-          }
-        } else {
-          console.log(`PASSED: ${description} - ${+new Date() - start}ms`);
-        }
+      .then(() => {
+        console.log(`PASSED: ${description} - ${+new Date() - start}ms`);
       })
       .catch(async (error) => {
         console.log(
@@ -77,10 +66,6 @@ import { chromium } from "playwright";
         console.log("SMOKE TEST FAILED");
         process.exit(1);
       });
-  };
-
-  const assert = (description, fn, assertion) => {
-    return exec(description, fn, assertion);
   };
 
   page.on("console", (msg) => console.log(`PAGE LOG: ${msg.text()}`));
@@ -272,7 +257,7 @@ import { chromium } from "playwright";
       });
     });
 
-    await assert("reply is created", () => {
+    await exec("reply is created", () => {
       return page
         .locator(".topic-post:not(.staged) #post_2 .cooked", {
           hasText: "I can even write a reply",
@@ -312,7 +297,7 @@ import { chromium } from "playwright";
       });
     });
 
-    await assert("edit is successful", () => {
+    await exec("edit is successful", () => {
       return page
         .locator(".topic-post:not(.staged) #post_1 .cooked", {
           hasText: "I edited this post",
