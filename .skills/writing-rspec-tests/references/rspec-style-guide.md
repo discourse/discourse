@@ -8,6 +8,32 @@
 - **One blank line** between separate `describe`/`context` blocks; no blank line before closing `end`
 - **One blank line** after `let`, `subject`, and `before`/`after` declarations before subsequent blocks
 - **Group `let`/`subject` together**, separate from `before`/`after` hooks with blank lines
+- **Surround multi-line declarations with blank lines** — when a `let`, `let!`, `fab!`, or `subject` uses a `do...end` or multi-line `{ }` body, put a blank line above and below it, even when adjacent declarations are single-line. Single-line declarations can still pack together, but a multi-line block always breathes on both sides:
+
+  ```rb
+  # bad — multi-line blocks stacked against neighbors
+  fab!(:author)
+  fab!(:topic) do
+    Fabricate(:topic, user: author, title: "Hello")
+  end
+  fab!(:reply) do
+    Fabricate(:post, topic: topic, user: author)
+  end
+  fab!(:tag)
+
+  # good
+  fab!(:author)
+
+  fab!(:topic) do
+    Fabricate(:topic, user: author, title: "Hello")
+  end
+
+  fab!(:reply) do
+    Fabricate(:post, topic: topic, user: author)
+  end
+
+  fab!(:tag)
+  ```
 - **One blank line** before and after each `it`/`specify` block
 - **Blank lines between logical chunks** within an example — separate setup, action, and assertion for readability
 

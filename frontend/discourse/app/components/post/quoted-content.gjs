@@ -167,7 +167,6 @@ export default class PostQuotedContent extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-unnecessary-concat }}
     <this.OptionalWrapperComponent
       ...attributes
       role="none"
@@ -177,7 +176,9 @@ export default class PostQuotedContent extends Component {
         (if this.isQuotedPostIgnored "ignored-user")
       }}
       {{! forced quotes in the data-attributes below to cast the boolean values to string }}
+      {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
       data-expanded="{{this.expanded}}"
+      {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
       data-full="{{@fullQuote}}"
       data-post={{@quotedPostNumber}}
       data-topic={{@quotedTopicId}}

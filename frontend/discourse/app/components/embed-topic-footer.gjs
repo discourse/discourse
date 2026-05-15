@@ -13,6 +13,7 @@ import { i18n } from "discourse-i18n";
 export default class EmbedTopicFooter extends Component {
   @service appEvents;
   @service currentUser;
+  @service embedAuthFlow;
   @service siteSettings;
 
   @tracked footerButtonsVisible = false;
@@ -74,7 +75,11 @@ export default class EmbedTopicFooter extends Component {
   @action
   handleReply() {
     if (!this.currentUser) {
-      window.open(getURL("/login"), "_blank");
+      if (this.embedAuthFlow.isActive) {
+        this.embedAuthFlow.requestAccess({ intent: "login" });
+      } else {
+        window.open(getURL("/login"), "_blank");
+      }
       return;
     }
 

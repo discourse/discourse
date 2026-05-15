@@ -102,7 +102,7 @@ export default class PollBreakdownModal extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <DModal
       @title={{i18n "poll.breakdown.title"}}
       @closeModal={{@closeModal}}

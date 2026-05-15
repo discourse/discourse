@@ -117,6 +117,7 @@ export default class SectionFormLink extends Component {
       </div>
 
       <div class="input-group" role="cell">
+        {{! eslint-disable-next-line ember/template-no-nested-interactive }}
         <Input
           {{on "input" (withEventValue (fn (mut @link.name)))}}
           @type="text"
@@ -135,6 +136,7 @@ export default class SectionFormLink extends Component {
       </div>
 
       <div class="input-group" role="cell">
+        {{! eslint-disable-next-line ember/template-no-nested-interactive }}
         <Input
           {{on "input" (withEventValue (fn (mut @link.value)))}}
           @type="text"

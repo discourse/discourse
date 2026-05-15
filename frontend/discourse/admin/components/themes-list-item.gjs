@@ -73,7 +73,7 @@ export default class ThemesListItem extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-nested-interactive }}
+    {{! eslint-disable ember/template-no-nested-interactive }}
     <div
       class={{dConcatClass
         "themes-list-container__item"

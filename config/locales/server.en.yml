@@ -2586,6 +2586,7 @@ en:
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_full_app: "Enable full app mode for embedded comments. When enabled, embedded comments will load the full Discourse application in an iframe, allowing users to interact with topics directly"
+    embed_full_app_signin_flow: "When full app mode is enabled, intercept logged-out actions inside the iframe with a guided flow that opens a top-level sign-in tab that auto-closes on success. Only enable this when the embed is same-site to the host page (e.g. `forum.example.com` on `blog.example.com`) or when `same site cookies` is set to `None` — otherwise the iframe will not receive the session cookie after sign-in."
     suppress_third_party_analytics_in_embed: "Skip rendering third-party analytics scripts (Google Tag Manager, Google Analytics, Adobe Analytics) when Discourse is loaded inside a full app embed iframe. Prevents duplicate pageviews and tag firing when the host page already loads the same scripts."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
