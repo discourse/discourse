@@ -673,6 +673,8 @@ ru:
       edit: "Изменить закладку"
       not_bookmarked: "добавить сообщение в закладки"
       topic_bookmark: "Тема"
+      post_bookmark: "Cообщение #%{post_number}"
+      jump_to_post: "Перейти к сообщению %{post_number}"
       remove_reminder_keep_bookmark: "Удалить напоминание, но оставить закладку"
       created_with_reminder: "Вы добавили это сообщение в закладки с напоминанием %{date}: «%{name}»"
       created_with_reminder_generic: "Добавлено в закладки с напоминанием %{date}: «%{name}»"
@@ -755,6 +757,8 @@ ru:
       allow_access: "Разрешить доступ"
       continue_as_guest: "Продолжить как Гость"
       be_first_to_reply: "Будь первым, кто ответит!"
+      replying_to: "Ответ на %{username}"
+      reply_placeholder: "Напишите ответ..."
     topic_count_all:
       one: "Посмотреть %{count} новую тему"
       few: "Посмотреть %{count} новые темы"
@@ -3089,6 +3093,12 @@ ru:
       default: Пользовательские эмодзи
     filter_input:
       clear: "Очистить фильтр"
+    d_icon_grid_picker:
+      select_icon: "Выбрать иконки"
+      search_placeholder: "Искать иконки..."
+      no_results: "Иконки не найдены"
+      favorites: "Избранное"
+      selected_icon: "Выбранная иконка: %{iconName}"
     shared_drafts:
       title: "Общие черновики"
       notice: "Эта тема видна только тем, кто может публиковать общие черновики."
@@ -3790,6 +3800,8 @@ ru:
         archive_topics: "Архив тем"
         move_messages_to_inbox: "Переместить во входящие"
         archive_messages: "Переместить в архив"
+        convert_to_public_topic: "Сделать темы общедоступными"
+        convert_to_private_message: "Сделать личные сообщения"
         notification_level: "Уведомления об обновлении"
         change_notification_level: "Изменить уровень уведомлений"
         choose_new_category: "Выберите новую категорию для этих тем:"
@@ -5559,7 +5571,10 @@ ru:
         synonyms_subtitle: "При использовании следующих тегов они будут заменены на %{name}"
         save: "Сохранить тег"
         delete: "Удалить тег"
+        synonyms_hint: "При использовании указанных выше тегов они будут заменены на %{baseTagName}."
+        add_synonyms_confirm: "Везде, где сейчас используется %{synonymNames} , будет заменено на %{tagName} . Вы уверены, что хотите внести это изменение?"
       localization:
+        hint: "Добавьте локализацию, чтобы отображать разные названия тегов для пользователей на разных языках."
         locale: "Локаль"
         name: "Название"
         description: "Описание"
@@ -6163,6 +6178,8 @@ ru:
         permanent_no_group_selection: "Неприменимо, постоянные изменения касаются всех групп."
         no_changes: "В настоящее время никаких изменений в ближайшее время не планируется."
         preview: "Предпросмотр"
+        default_warning: "Значение по умолчанию для этой настройки изменилось с %{oldDefaultValue} на %{newDefaultValue} в связи с предстоящим изменением <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'></a>."
+        default_warning_short: "Значение по умолчанию для этой настройки изменилось, подробнее об этом читайте на странице <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>предстоящих изменений</a>."
         enabled_for_options:
           no_one: "Никто"
           everyone: "Все"

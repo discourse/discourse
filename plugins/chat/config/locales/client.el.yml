@@ -17,6 +17,11 @@ el:
           always: "Πάντα"
           fullscreen: "Όταν η συνομιλία είναι σε πλήρη οθόνη"
           never: "Ποτέ"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Η κατάσταση του καναλιού συνομιλίας άλλαξε"
+            chat_channel_delete: "Το κανάλι συνομιλίας διαγράφηκε"
       api:
         scopes:
           descriptions:
@@ -44,6 +49,7 @@ el:
         description: "Περιγραφή"
         actions: "Ενέργειες"
         settings: "Ρυθμίσεις"
+        include_subcategories: "Συμπερίληψη καναλιών υποκατηγορίας"
       text_copied: Το κείμενο αντιγράφηκε στο πρόχειρο
       link_copied: Ο σύνδεσμος αντιγράφηκε στο πρόχειρο
       back_to_forum: "Φόρουμ"
@@ -57,6 +63,14 @@ el:
       cancel: "Ακύρωση"
       cancel_reply: "Ακύρωση απάντησης"
       chat_channels: "Κανάλια"
+      pinned_messages:
+        title: "Καρφιτσωμένα μηνύματα"
+        close: "Κλείσιμο καρφιτσωμένων μηνυμάτων"
+        pinned_by_you: "Καρφιτσώθηκε από εσάς"
+        pinned_by_user: "Καρφιτσώθηκε από %{username}"
+      no_pinned_messages: "Δεν υπάρχουν καρφιτσωμένα μηνύματα σε αυτό το κανάλι."
+      pin_message: "Καρφίτσωμα μηνύματος"
+      unpin_message: "Ξεκαρφίτσωμα μηνύματος"
       pinned: "Καρφιτσωμένο"
       browse_all_channels: "Περιήγηση σε όλα τα κανάλια"
       see_in: "Δείτε σε"
@@ -74,6 +88,8 @@ el:
         add: "Προσθήκη"
         close_channel: "Κλείσιμο καναλιού"
         open_channel: "Άνοιγμα καναλιού"
+        open_channel_disabled_archived: "Τα αρχειοθετημένα κανάλια δεν μπορούν να ανοίξουν ξανά."
+        open_channel_disabled_read_only: "Τα κανάλια μόνο για ανάγνωση δεν μπορούν να ανοίξουν ξανά."
         archive_channel: "Αρχειοθέτηση καναλιού"
         delete_channel: "Διαγραφή καναλιού"
         join_channel: "Εγγραφή στο κανάλι"
@@ -155,6 +171,10 @@ el:
             some: "Ορισμένοι χρήστες δεν θα ειδοποιηθούν"
             all: "Κανείς δεν θα ειδοποιηθεί"
           unreachable_1: "@%{group} δεν επιτρέπει επισημάνσεις."
+          unreachable_2: "@%{group1} και @%{group2} δεν επιτρέπουν τις επισημάνσεις."
+          unreachable_multiple:
+            one: "@%{group} και %{count} άλλη ομάδα δεν επιτρέπουν τις επισημάνσεις."
+            other: "@%{group} και %{count} άλλες ομάδες δεν επιτρέπουν τις επισημάνσεις."
       aria_roles:
         header: "Κεφαλίδα συνομιλίας"
         composer: "Συνθέτης συνομιλίας"
@@ -208,6 +228,9 @@ el:
         other: "Έχετε %{count} αδιάβαστες συζητήσεις"
       scroll_to_bottom: "Κύλιση προς τα κάτω"
       scroll_to_new_messages: "Δείτε νέα μηνύματα"
+      new_messages:
+        one: "%{count} νέο μήνυμα"
+        other: "%{count} νέα μηνύματα"
       sound:
         title: "Ήχος ειδοποίησης συνομιλίας για υπολογιστές"
       sounds:
@@ -484,6 +507,7 @@ el:
           one: "Οι %{commaSeparatedUsernames} και %{count} άλλος πληκτρολογούν"
           other: "Οι %{commaSeparatedUsernames} και %{count} άλλοι πληκτρολογούν"
       retention_reminders:
+        chat_settings: "Ρυθμίσεις συνομιλίας"
         indefinitely_short: "επ' αόριστον"
         short:
           one: "%{count} ημ"
@@ -555,11 +579,15 @@ el:
         chat_mention:
           direct: 'σας επισήμανε στο "%{channel}"'
           direct_html: '<span>%{username}</span> <span>σας επισήμανε στο "%{channel}"</span>'
+          other_plain: 'επισήμανε %{identifier} στο "%{channel}"'
+          other_html: '<span>%{username}</span> <span>επισήμανε %{identifier} στο "%{channel}"</span>'
         direct_message_chat_mention:
           direct: "σας επισήμανε σε προσωπική συνομιλία"
           direct_html: "<span>%{username}</span> <span>σας επισήμανε σε προσωπική συνομιλία</span>"
           other_plain: "επισήμανε %{identifier} σε προσωπική συνομιλία"
           other_html: "<span>%{username}</span> <span>επισήμανε %{identifier} σε προσωπική συνομιλία</span>"
+        chat_message: "Νέο μήνυμα συνομιλίας"
+        chat_quoted: "%{username} παρέθεσε το μήνυμα συνομιλίας σας"
       titles:
         chat_mention: "Επισημάνθηκες σε συνομιλία"
         chat_invitation: "Προσκλήθηκες σε κανάλι συνομιλίας"
@@ -604,8 +632,16 @@ el:
           drawer_toggle: "%{shortcut} Εναλλαγή συρταριού συνομιλίας"
           drawer_close: "%{shortcut} Κλείσιμο συρταριού συνομιλίας"
           mark_all_channels_read: "%{shortcut} Σήμανση όλων των καναλιών ως διαβασμένα"
+    topic_statuses:
+      chat:
+        help: "Η συνομιλία είναι ενεργοποιημένη για αυτό το θέμα"
     user_menu:
       no_chat_notifications_title: "Δεν έχετε ειδοποιήσεις συνομιλίας ακόμη"
+      tabs:
+        chat_notifications: "Ειδοποιήσεις συνομιλίας"
+        chat_notifications_with_unread:
+          one: "Ειδοποιήσεις συνομιλίας - %{count} αδιάβαστη ειδοποίηση"
+          other: "Ειδοποιήσεις συνομιλίας - %{count} αδιάβαστες ειδοποιήσεις"
     styleguide:
       sections:
         chat:
