@@ -5,6 +5,9 @@
 module DbStructure
   BOOKKEEPING_TABLES = %w[schema_migrations schema_migration_details ar_internal_metadata].freeze
 
+  # PG 17+ pg_dump changes output format. Pin to 15/16 for now:
+  PG_DUMP_VERSIONS = (15..16)
+
   def self.temp_db_env
     bundled = `script/list_bundled_plugins`.split.map { |p| File.basename(p) }.join(",")
     {
@@ -18,7 +21,7 @@ module DbStructure
   def self.with_temp_db
     require "temporary_db"
 
-    db = TemporaryDb.new
+    db = TemporaryDb.new(versions: PG_DUMP_VERSIONS)
     db.start
     begin
       db.with_env { yield }
@@ -32,7 +35,14 @@ end
 desc "Migrate a clean disposable database and dump its schema to db/structure.sql"
 task "db:dump_structure" => :environment do
   DbStructure.with_temp_db do
-    system(DbStructure.temp_db_env, "bin/rails", "db:migrate", "db:schema:dump", exception: true)
+    env = DbStructure.temp_db_env
+    system(
+      env.merge("SCHEMA" => "db/non-existent-structure.sql"), # Force full re-migrate
+      "bin/rails",
+      "db:migrate",
+      exception: true,
+    )
+    system(env, "bin/rails", "db:schema:dump", exception: true)
   end
 
   STDERR.puts "Wrote db/structure.sql"
@@ -46,7 +56,7 @@ task "db:check_structure_dump" => :environment do
   DbStructure.with_temp_db do
     env = DbStructure.temp_db_env
     system(
-      env,
+      env.merge("SCHEMA" => "db/non-existent-structure.sql"), # Force full re-migrate
       "bin/rails",
       "db:migrate",
       "db:check_structure_dump:assert_no_unexpected_rows",
