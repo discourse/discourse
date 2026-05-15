@@ -12,10 +12,10 @@ export default class PoweredByDiscourse extends Component {
   });
 
   <template>
-    {{! eslint-disable-next-line ember/template-link-rel-noopener }}
     <a
       class="powered-by-discourse"
       href="https://discourse.org/powered-by"
+      {{! eslint-disable-next-line ember/template-link-rel-noopener }}
       target="_blank"
       {{this.setCssVarHeight}}
     >

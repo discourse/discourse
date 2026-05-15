@@ -76,6 +76,7 @@ export default class DFloatBody extends Component {
       @inline={{@inline}}
       @portalOutletElement={{@instance.portalOutletElement}}
     >
+      {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
       <div
         class={{dConcatClass
           @mainClass
@@ -85,7 +86,6 @@ export default class DFloatBody extends Component {
         data-identifier={{this.options.identifier}}
         data-content
         aria-labelledby={{@instance.id}}
-        {{! eslint-disable-next-line ember/template-no-unnecessary-curly-strings }}
         aria-expanded={{if @instance.expanded "true" "false"}}
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
