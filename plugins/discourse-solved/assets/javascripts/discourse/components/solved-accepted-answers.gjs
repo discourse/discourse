@@ -60,7 +60,7 @@ export default class SolvedAcceptedAnswers extends Component {
         </h3>
 
         {{#if this.hasMultipleAnswers}}
-          <span class="accepted-answers__solution_count">
+          <span class="accepted-answers__solution-count">
             {{this.acceptedAnswers.length}}
             {{i18n "solved.solution_summary" count=this.acceptedAnswers.length}}
           </span>
