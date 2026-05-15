@@ -12,6 +12,7 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 - **Test behavior, not implementation** — test public interfaces; don't assert on internal state or private methods. Refactoring internals shouldn't break tests.
 - **One concept per test** — each `it` block verifies one behavior for clear failure diagnosis.
 - **Don't over-mock** — mock external boundaries (HTTP, third-party services), not internal collaborators. Too many mocks signals a design problem.
+- **Don't assert that internal methods are or aren't called** — assertions like `SomeService.expects(:some_method).never` (or `.once`, `.with(...)`) couple the test to internal implementation details that the caller shouldn't care about. Assert on the observable outcome instead: returned value, persisted state, emitted event, response body, rendered output. If the implementation is later refactored, inlined, or renamed, a behavior-focused test still passes when the behavior is correct.
 - **Prefer readability over DRYness** — tests are documentation. Some duplication is fine. Avoid deep `shared_examples`/`let` chains that hurt readability.
 - **Test edge cases** — nil inputs, empty collections, boundary values, permission failures — not just happy paths.
 - **Keep tests independent** — no test should depend on another test's execution or shared mutable state.
@@ -21,6 +22,7 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 - **Avoid redundant multi-layer testing** — if a model spec tests a validation, the controller spec doesn't need to re-verify that same validation logic.
 - **No single-letter block variables** — use descriptive names like `|vote|`, `|option|`, not `|v|`, `|o|`.
 - **Assert collections in a single assertion** — use `contain_exactly` or `eq` instead of multiple `include`/`not_to include` checks.
+- **Reference objects, not literal strings, in negative assertions** — `expect(response.body).not_to include("hidden data explorer excerpt")` silently passes if the literal has a typo or drifts from the source, giving a false sense of security. Reference the object directly (`expect(response.body).not_to include(private_post.raw)`) so the assertion stays in sync with the data under test. The same applies to any `not_to include`/`not_to match` against hardcoded strings.
 - **Optimise for human readability** — minimise context overload when reading an example. Avoid too many indirections.
 - **Limit nesting to 2 levels** — avoid more than 2 levels of `describe`/`context` nesting. Instead of deeply nested contexts, put the full scenario description in the `it` block itself. Flat tests are easier to read and maintain.
 - **Avoid double negatives in descriptions** — write test descriptions that state the positive condition. For example, prefer `"returns true when topic_approval_type is approval or pre_approval"` over `"returns true when topic_approval_type is not none"`. Be specific about the values being tested.
@@ -72,5 +74,10 @@ bin/rspec spec/models/topic_spec.rb:15
 
 ## Specialized Test Types
 
+- **Request specs**: See [references/request-specs.md](references/request-specs.md) for controller/request spec structure, action-based `describe` grouping, and what to assert.
 - **System tests**: See [references/system-tests.md](references/system-tests.md) for file naming, test structure, page objects, and scoping patterns.
 - **Theme/component tests**: See [references/theme-tests.md](references/theme-tests.md) for theme upload helpers, settings, and directory structure.
+
+## Tracking Helpers
+
+See [references/tracking-helpers.md](references/tracking-helpers.md) for `DiscourseEvent.track_events`, `MessageBus.track_publish`, and `track_sql_queries` — block helpers that capture events, message-bus publishes, and SQL queries so tests can assert on side effects.
