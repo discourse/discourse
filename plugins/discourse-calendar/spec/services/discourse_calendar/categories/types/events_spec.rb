@@ -17,24 +17,13 @@ RSpec.describe DiscourseCalendar::Categories::Types::Events do
   end
 
   describe ".enable_plugin" do
-    it "enables calendar and post-event site settings and requests a client refresh" do
+    it "enables calendar and post-event site settings" do
       SiteSetting.calendar_enabled = false
       SiteSetting.discourse_post_event_enabled = false
 
-      Discourse.expects(:request_refresh!).once
       described_class.enable_plugin
 
       expect(SiteSetting.calendar_enabled).to eq(true)
-      expect(SiteSetting.discourse_post_event_enabled).to eq(true)
-    end
-
-    it "still enables the post-event setting but skips the refresh when calendar was already enabled" do
-      SiteSetting.calendar_enabled = true
-      SiteSetting.discourse_post_event_enabled = false
-
-      Discourse.expects(:request_refresh!).never
-      described_class.enable_plugin
-
       expect(SiteSetting.discourse_post_event_enabled).to eq(true)
     end
   end

@@ -379,12 +379,30 @@ export default class EditCategoryTabsController extends Controller {
     this.set("saving", true);
 
     try {
+      const previousTypes = new Set(
+        Object.keys(this.model.categoryTypes ?? {})
+      );
       const result = await this.model.save();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
 
       if (lostAccess) {
         this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        return;
+      }
+
+      // Plugin's enabled_site_setting may have just flipped; full reload to pick up its JS bundle.
+      const newTypes = Object.keys(result.category.category_types ?? {});
+      const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
+      if (typeWasAdded) {
+        if (this.model.id) {
+          window.location.reload();
+        } else {
+          window.location = this.router.urlFor(
+            "editCategory",
+            Category.slugFor(updatedModel)
+          );
+        }
         return;
       }
 

@@ -12,12 +12,8 @@ module DiscourseCalendar
           end
 
           def enable_plugin
-            calendar_was_disabled = !SiteSetting.calendar_enabled
-
             SiteSetting.calendar_enabled = true
             SiteSetting.discourse_post_event_enabled = true
-
-            Discourse.request_refresh! if calendar_was_disabled
           end
 
           def category_matches?(category)
