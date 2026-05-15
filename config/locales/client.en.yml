@@ -4842,7 +4842,6 @@ en:
         name_placeholder: "What is this bookmark for?"
         name_input_label: "Bookmark name"
         set_reminder: "Remind me"
-        options: "Options"
         actions:
           delete_bookmark:
             name: "Delete bookmark"
