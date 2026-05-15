@@ -198,9 +198,7 @@ import { chromium } from "playwright";
     });
 
     await exec("the editor is visible", () => {
-      return page.waitForFunction(
-        "document.activeElement === document.getElementById('reply-title')"
-      );
+      return page.locator("#reply-title:focus").waitFor();
     });
 
     await page.evaluate(() => {
@@ -275,14 +273,12 @@ import { chromium } from "playwright";
       });
     });
 
-    await assert("reply is created", async () => {
-      await page.waitForSelector(".topic-post:not(.staged) #post_2 .cooked", {
-        state: "visible",
-      });
-
-      return page.waitForFunction(
-        "document.querySelector('#post_2 .cooked').innerText.includes('I can even write a reply')"
-      );
+    await assert("reply is created", () => {
+      return page
+        .locator(".topic-post:not(.staged) #post_2 .cooked", {
+          hasText: "I can even write a reply",
+        })
+        .waitFor();
     });
 
     await exec("wait a little bit", () => {
@@ -317,14 +313,12 @@ import { chromium } from "playwright";
       });
     });
 
-    await assert("edit is successful", async () => {
-      await page.waitForSelector(".topic-post:not(.staged) #post_1 .cooked", {
-        state: "visible",
-      });
-
-      return page.waitForFunction(
-        "document.querySelector('#post_1 .cooked').innerText.includes('I edited this post')"
-      );
+    await assert("edit is successful", () => {
+      return page
+        .locator(".topic-post:not(.staged) #post_1 .cooked", {
+          hasText: "I edited this post",
+        })
+        .waitFor();
     });
   }
 
