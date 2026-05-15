@@ -44,7 +44,7 @@ const RowColWrapper = <template>
 </template>;
 
 const EmptyWrapper = <template>
-  {{! template-lint-disable no-yield-only }}
+  {{! eslint-disable ember/template-no-yield-only }}
   {{yield}}
 </template>;
 

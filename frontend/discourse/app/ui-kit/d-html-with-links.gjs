@@ -17,7 +17,7 @@ export default class DHtmlWithLinks extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div {{on "click" this.click}} ...attributes>{{yield}}</div>
   </template>
 }

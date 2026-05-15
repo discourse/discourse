@@ -281,8 +281,8 @@ export default class Item extends Component {
   }
 
   <template>
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <tr
-      {{! template-lint-disable no-invalid-interactive }}
       {{this.highlightIfNeeded}}
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}

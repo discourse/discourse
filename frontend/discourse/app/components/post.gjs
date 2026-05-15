@@ -577,7 +577,7 @@ export default class Post extends Component {
                       {{#if
                         (and @post.cooked_hidden @post.can_see_hidden_post)
                       }}
-                        {{! template-lint-disable no-invalid-interactive }}
+                        {{! eslint-disable ember/template-no-invalid-interactive }}
                         <a
                           class="post__expand-hidden expand-hidden"
                           {{on "click" @expandHidden}}

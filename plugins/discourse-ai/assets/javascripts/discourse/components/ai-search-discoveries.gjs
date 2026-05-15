@@ -218,7 +218,7 @@ export default class AiSearchDiscoveries extends Component {
         {{else if this.discobotDiscoveries.discoveryTimedOut}}
           {{i18n "discourse_ai.discobot_discoveries.timed_out"}}
         {{else}}
-          {{! template-lint-disable no-invalid-interactive }}
+          {{! eslint-disable ember/template-no-invalid-interactive }}
           <article
             class={{dConcatClass
               "ai-search-discoveries__discovery"

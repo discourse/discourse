@@ -40,7 +40,6 @@ export default class MultiSelectFilter extends SelectKitFilterComponent {
   <template>
     {{#unless this.isHidden}}
       {{! filter-input-search prevents 1password from attempting autocomplete }}
-      {{! template-lint-disable no-pointer-down-event-binding }}
 
       <Input
         tabindex={{0}}
