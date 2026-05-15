@@ -131,7 +131,6 @@ export default class SolvedAcceptedAnswer extends Component {
   }
 
   <template>
-
     {{#if this.acceptedAnswer}}
       <aside
         class={{dConcatClass

@@ -140,7 +140,6 @@ export default class AssistantItem extends Component {
   }
 
   <template>
-
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <li
       class={{dConcatClass @typeClass "search-menu-assistant-item"}}

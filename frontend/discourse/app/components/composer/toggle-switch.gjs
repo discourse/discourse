@@ -45,7 +45,6 @@ export default class ComposerToggleSwitch extends Component {
   }
 
   <template>
-
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <button
       class={{dConcatClass

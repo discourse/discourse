@@ -80,7 +80,6 @@ export default class DUserInfo extends Component {
                 href={{this.userPath}}
                 data-user-card={{@user.username}}
                 role={{if @headingLevel "heading"}}
-
               >
                 <span class="username">{{formatUsername @user.username}}</span>
               </a>

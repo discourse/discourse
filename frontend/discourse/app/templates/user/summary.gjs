@@ -219,7 +219,8 @@ export default <template>
                   }}"
                   target="_blank"
                   data-clicks={{link.clicks}}
-                  aria-label={{i18n "topic_map.clicks" count=link.clicks}}>
+                  aria-label={{i18n "topic_map.clicks" count=link.clicks}}
+                >
                   {{shortenUrl link.url}}
                 </a>
                 {{! eslint-enable ember/template-link-rel-noopener }}

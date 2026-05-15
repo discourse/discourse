@@ -167,7 +167,6 @@ export default class PostQuotedContent extends Component {
   }
 
   <template>
-
     <this.OptionalWrapperComponent
       ...attributes
       role="none"

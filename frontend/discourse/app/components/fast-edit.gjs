@@ -71,7 +71,6 @@ export default class FastEdit extends Component {
   }
 
   <template>
-
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div class="fast-edit-container" {{on "keydown" this.onKeydown}}>
       <textarea

@@ -86,7 +86,6 @@ export default class Toasts extends Component {
   }
 
   <template>
-
     <StyleguideExample @title="Toasts service">
       <StyleguideComponent @tag="default">
         <:actions>

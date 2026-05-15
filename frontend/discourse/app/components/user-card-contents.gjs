@@ -734,7 +734,8 @@ export default class UserCardContents extends CardContentsBase {
                           this.removeNoFollow
                           'nofollow ugc'
                         }}"
-                        target="_blank">{{this.user.website_name}}</a>
+                        target="_blank"
+                      >{{this.user.website_name}}</a>
                       {{! eslint-enable ember/template-link-rel-noopener }}
                     {{else}}
                       <span

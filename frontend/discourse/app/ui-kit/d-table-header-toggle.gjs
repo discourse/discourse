@@ -95,7 +95,6 @@ export default class DTableHeaderToggle extends Component {
   }
 
   <template>
-
     <div
       ...attributes
       class="directory-table__column-header sortable"

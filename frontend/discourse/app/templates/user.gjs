@@ -265,7 +265,8 @@ export default <template>
                           @controller.removeNoFollow
                           'nofollow ugc'
                         }}"
-                        target="_blank">{{@controller.model.website_name}}</a>
+                        target="_blank"
+                      >{{@controller.model.website_name}}</a>
                     {{else}}
                       <span
                         title={{@controller.model.website}}

@@ -19,7 +19,6 @@ export default class CategoriesField extends BaseField {
   }
 
   <template>
-
     <section class="field categories-field">
       <div class="control-group">
         <DAFieldLabel @label={{@label}} @field={{@field}} />
