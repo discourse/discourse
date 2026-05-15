@@ -134,6 +134,9 @@ jobs:
         run: |
           ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
+      - name: Install bundler
+        run: gem install bundler -v 4.0.11 --no-document
+
       - name: Setup gems
         run: |
           bundle config --local path vendor/bundle
