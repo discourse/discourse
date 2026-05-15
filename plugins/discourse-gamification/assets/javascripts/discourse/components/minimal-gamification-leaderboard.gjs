@@ -9,6 +9,13 @@ import { i18n } from "discourse-i18n";
 import fullnumber from "../helpers/fullnumber";
 import MinimalGamificationLeaderboardRow from "./minimal-gamification-leaderboard-row";
 
+/**
+ * Compact sidebar leaderboard. The base usage is two args (`id`,
+ * `count`) — kept as-is for backwards compatibility with the
+ * `discourse-right-sidebar-blocks` theme. Additional optional args
+ * customize the rendering for visual-editor block usage; defaults
+ * preserve the current look.
+ */
 export default class extends Component {
   @service site;
 
@@ -22,25 +29,51 @@ export default class extends Component {
       ? `/leaderboard/${this.args.id}`
       : "/leaderboard";
 
-    ajax(endpoint, { data: { user_limit: this.args.count || 10 } }).then(
-      (model) => {
-        for (const user of model.users) {
-          if (user.id === model.personal?.user?.id) {
-            user.isCurrentUser = "true";
-          }
-        }
+    const data = { user_limit: this.args.count || 10 };
+    if (this.args.period) {
+      data.period = this.args.period;
+    }
 
-        if (model.users[0]) {
-          model.users[0].topRanked = true;
+    ajax(endpoint, { data }).then((model) => {
+      for (const user of model.users) {
+        if (user.id === model.personal?.user?.id) {
+          user.isCurrentUser = "true";
         }
-
-        this.model = model;
       }
-    );
+
+      if (model.users[0]) {
+        model.users[0].topRanked = true;
+      }
+
+      this.model = model;
+    });
   }
 
-  get notTop10() {
+  get notTopTen() {
     return this.model?.personal?.position > 10;
+  }
+
+  get showColumnHeaders() {
+    return this.args.showColumnHeaders ?? true;
+  }
+
+  get showRank() {
+    return this.args.showRank ?? true;
+  }
+
+  get avatarSize() {
+    return this.args.avatarSize || "small";
+  }
+
+  get displayedTitle() {
+    return this.args.title || this.model?.leaderboard?.name;
+  }
+
+  get footerLinkLabel() {
+    return (
+      this.args.footerLinkLabel ||
+      i18n("gamification.leaderboard.block.footer_link_default_label")
+    );
   }
 
   <template>
@@ -50,20 +83,31 @@ export default class extends Component {
           @route="gamificationLeaderboard.byName"
           @model={{this.model.leaderboard.id}}
         >
-          <h3 class="page__title">{{this.model.leaderboard.name}}</h3>
+          <h3 class="page__title">
+            {{#if @titleIcon}}
+              {{dIcon @titleIcon}}
+            {{/if}}
+            {{this.displayedTitle}}
+          </h3>
         </LinkTo>
       </div>
 
-      <div class="ranking-col-names">
-        <span>{{i18n "gamification.leaderboard.rank"}}</span>
-        <span>{{dIcon "award"}}{{i18n "gamification.score"}}</span>
-      </div>
+      {{#if this.showColumnHeaders}}
+        <div class="ranking-col-names">
+          {{#if this.showRank}}
+            <span>{{i18n "gamification.leaderboard.rank"}}</span>
+          {{/if}}
+          <span>{{dIcon "award"}}{{i18n "gamification.score"}}</span>
+        </div>
 
-      <div class="ranking-col-names__sticky-border"></div>
+        <div class="ranking-col-names__sticky-border"></div>
+      {{/if}}
 
       {{#if this.notTopTen}}
         <div class="user -self">
-          <div class="user__rank">{{this.model.personal.position}}</div>
+          {{#if this.showRank}}
+            <div class="user__rank">{{this.model.personal.position}}</div>
+          {{/if}}
           <div class="user__name">{{i18n "gamification.you"}}</div>
           <div class="user__score">
             {{#if this.site.mobileView}}
@@ -76,8 +120,25 @@ export default class extends Component {
       {{/if}}
 
       {{#each this.model.users as |rank index|}}
-        <MinimalGamificationLeaderboardRow @rank={{rank}} @index={{index}} />
+        <MinimalGamificationLeaderboardRow
+          @rank={{rank}}
+          @index={{index}}
+          @showRank={{this.showRank}}
+          @avatarSize={{this.avatarSize}}
+        />
       {{/each}}
+
+      {{#if @showFooterLink}}
+        <div class="leaderboard__footer">
+          <LinkTo
+            class="leaderboard__footer-link"
+            @route="gamificationLeaderboard.byName"
+            @model={{this.model.leaderboard.id}}
+          >
+            {{this.footerLinkLabel}}
+          </LinkTo>
+        </div>
+      {{/if}}
     </div>
   </template>
 }

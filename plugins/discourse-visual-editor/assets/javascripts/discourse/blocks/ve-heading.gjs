@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
 import eq from "discourse/truth-helpers/helpers/eq";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const VALID_LEVELS = [1, 2, 3, 4, 5, 6];
 const VALID_ALIGNMENTS = ["left", "center", "right"];
@@ -16,6 +17,11 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
       type: "string",
       default: "Heading",
       ui: { label: "Text" },
+    },
+    icon: {
+      type: "string",
+      default: "",
+      ui: { control: "icon", label: "Icon" },
     },
     level: {
       type: "number",
@@ -40,17 +46,29 @@ export default class VEHeading extends Component {
 
   <template>
     {{#if (eq @level 1)}}
-      <h1 class={{this.className}}>{{@text}}</h1>
+      <h1 class={{this.className}}>
+        {{#if @icon}}{{dIcon @icon}}{{/if}}{{@text}}
+      </h1>
     {{else if (eq @level 3)}}
-      <h3 class={{this.className}}>{{@text}}</h3>
+      <h3 class={{this.className}}>
+        {{#if @icon}}{{dIcon @icon}}{{/if}}{{@text}}
+      </h3>
     {{else if (eq @level 4)}}
-      <h4 class={{this.className}}>{{@text}}</h4>
+      <h4 class={{this.className}}>
+        {{#if @icon}}{{dIcon @icon}}{{/if}}{{@text}}
+      </h4>
     {{else if (eq @level 5)}}
-      <h5 class={{this.className}}>{{@text}}</h5>
+      <h5 class={{this.className}}>
+        {{#if @icon}}{{dIcon @icon}}{{/if}}{{@text}}
+      </h5>
     {{else if (eq @level 6)}}
-      <h6 class={{this.className}}>{{@text}}</h6>
+      <h6 class={{this.className}}>
+        {{#if @icon}}{{dIcon @icon}}{{/if}}{{@text}}
+      </h6>
     {{else}}
-      <h2 class={{this.className}}>{{@text}}</h2>
+      <h2 class={{this.className}}>
+        {{#if @icon}}{{dIcon @icon}}{{/if}}{{@text}}
+      </h2>
     {{/if}}
   </template>
 }

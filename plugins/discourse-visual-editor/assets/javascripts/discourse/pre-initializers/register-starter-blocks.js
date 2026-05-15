@@ -8,9 +8,11 @@ import VEColumns from "../blocks/ve-columns";
 import VECTABanner from "../blocks/ve-cta-banner";
 import VEDivider from "../blocks/ve-divider";
 import VEFeaturedCategories from "../blocks/ve-featured-categories";
+import VEFeaturedTopics from "../blocks/ve-featured-topics";
 import VEHeading from "../blocks/ve-heading";
 import VEImage from "../blocks/ve-image";
 import VELayout from "../blocks/ve-layout";
+import VEMediaCard from "../blocks/ve-media-card";
 import VEParagraph from "../blocks/ve-paragraph";
 import VERecentTopics from "../blocks/ve-recent-topics";
 import VESlot from "../blocks/ve-slot";
@@ -33,6 +35,8 @@ const STARTER_BLOCKS = [
   VECategoryBanner,
   VEFeaturedCategories,
   VERecentTopics,
+  VEFeaturedTopics,
+  VEMediaCard,
   VEBadgesGrid,
 ];
 
