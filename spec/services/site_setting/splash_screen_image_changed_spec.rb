@@ -213,3 +213,40 @@ describe SiteSetting::SplashScreenImageDarkChanged do
     expect(upload.content).not_to include("animate")
   end
 end
+
+RSpec.describe SiteSetting::SplashScreenImageDarkChanged do
+  fab!(:user)
+
+  def write_upload_file(upload, content)
+    path = Discourse.store.path_for(upload)
+    FileUtils.mkdir_p(File.dirname(path))
+    File.write(path, content)
+  end
+
+  let(:svg_with_animate) { <<~SVG }
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+        <rect x="0" y="0" width="100" height="100" fill="white"/>
+        <animate attributeName="opacity" from="1" to="0" dur="1s"/>
+      </svg>
+    SVG
+
+  let(:upload) do
+    u = Fabricate(:upload, extension: "svg", original_filename: "dark-splash.svg")
+    write_upload_file(u, svg_with_animate)
+    u
+  end
+
+  it "runs the sanitizer pipeline for the dark splash screen image" do
+    result = described_class.call(params: { upload_id: upload.id })
+
+    expect(result).to run_successfully
+
+    upload.reload
+    doc = Nokogiri.XML(upload.content)
+    svg = doc.at_css("svg")
+
+    expect(upload.content).not_to include("animate")
+    expect(svg["width"]).to be_nil
+    expect(svg["height"]).to be_nil
+  end
+end
