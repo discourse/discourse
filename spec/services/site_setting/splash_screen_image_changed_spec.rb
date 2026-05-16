@@ -229,4 +229,38 @@ RSpec.describe SiteSetting::SplashScreenImageDarkChanged do
     expect(svg["width"]).to be_nil
     expect(svg["height"]).to be_nil
   end
+  it "sets splash_screen_image_dark when another upload with the same cleaned sha1 exists" do
+    cleaned_svg_content =
+      begin
+        doc = Nokogiri.XML(svg_with_animate)
+        svg = doc.at_css("svg")
+
+        svg.xpath(
+          ".//*[local-name()='animate' or local-name()='animateTransform' or local-name()='animateMotion' or local-name()='set']",
+        ).each(&:remove)
+
+        if svg["viewBox"].present?
+          svg.remove_attribute("width")
+          svg.remove_attribute("height")
+        end
+
+        svg.to_xml
+      end
+
+    existing_upload = Fabricate(:upload, extension: "svg", original_filename: "existing-dark.svg")
+    write_upload_file(existing_upload, cleaned_svg_content)
+    existing_upload.update!(
+      sha1: Upload.generate_digest(Discourse.store.path_for(existing_upload)),
+      filesize: File.size(Discourse.store.path_for(existing_upload)),
+    )
+
+    SiteSetting.splash_screen_image = ""
+    SiteSetting.splash_screen_image_dark = ""
+
+    result = described_class.call(params: { upload_id: upload.id })
+
+    expect(result).to run_successfully
+    expect(SiteSetting.splash_screen_image_dark).to eq(existing_upload)
+    expect(SiteSetting.splash_screen_image).to be_blank
+  end
 end

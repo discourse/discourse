@@ -255,8 +255,17 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "#splash_screen_image_data_uri" do
-    let(:light_svg) { '<svg><rect fill="var(--primary)"/></svg>' }
-    let(:dark_svg) { '<svg><circle fill="var(--primary)"/></svg>' }
+    let(:light_svg) do
+      '<svg><rect fill="var(--primary)" stroke="var(--secondary)" color="var(--tertiary)"/></svg>'
+    end
+
+    let(:dark_svg) do
+      '<svg><circle fill="var(--primary)" stroke="var(--secondary)" color="var(--tertiary)"/></svg>'
+    end
+
+    def decoded_splash_data_uri(data_uri)
+      Base64.decode64(data_uri.split(",").last)
+    end
 
     it "uses splash_screen_image_dark when dark is true" do
       light_upload = Fabricate(:upload)
@@ -268,8 +277,11 @@ RSpec.describe ApplicationHelper do
       light_upload.stubs(:content).returns(light_svg)
       dark_upload.stubs(:content).returns(dark_svg)
 
-      data_uri = helper.splash_screen_image_data_uri(dark: true)
-      decoded_svg = Base64.decode64(data_uri.split(",").last)
+      helper.stubs(:dark_color_hex_for_name).with("primary").returns("111111")
+      helper.stubs(:dark_color_hex_for_name).with("secondary").returns("222222")
+      helper.stubs(:dark_color_hex_for_name).with("tertiary").returns("333333")
+
+      decoded_svg = decoded_splash_data_uri(helper.splash_screen_image_data_uri(dark: true))
 
       expect(decoded_svg).to include("<circle")
       expect(decoded_svg).not_to include("<rect")
@@ -283,10 +295,60 @@ RSpec.describe ApplicationHelper do
 
       light_upload.stubs(:content).returns(light_svg)
 
-      data_uri = helper.splash_screen_image_data_uri(dark: true)
-      decoded_svg = Base64.decode64(data_uri.split(",").last)
+      helper.stubs(:dark_color_hex_for_name).with("primary").returns("111111")
+      helper.stubs(:dark_color_hex_for_name).with("secondary").returns("222222")
+      helper.stubs(:dark_color_hex_for_name).with("tertiary").returns("333333")
+
+      decoded_svg = decoded_splash_data_uri(helper.splash_screen_image_data_uri(dark: true))
 
       expect(decoded_svg).to include("<rect")
+    end
+
+    it "uses dark colors by default when dark is true" do
+      dark_upload = Fabricate(:upload)
+
+      SiteSetting.stubs(:splash_screen_image).returns(nil)
+      SiteSetting.stubs(:splash_screen_image_dark).returns(dark_upload)
+
+      dark_upload.stubs(:content).returns(dark_svg)
+
+      helper.stubs(:dark_color_hex_for_name).with("primary").returns("111111")
+      helper.stubs(:dark_color_hex_for_name).with("secondary").returns("222222")
+      helper.stubs(:dark_color_hex_for_name).with("tertiary").returns("333333")
+
+      decoded_svg = decoded_splash_data_uri(helper.splash_screen_image_data_uri(dark: true))
+
+      expect(decoded_svg).to include("#111111")
+      expect(decoded_svg).to include("#222222")
+      expect(decoded_svg).to include("#333333")
+      expect(decoded_svg).not_to include("var(--primary)")
+      expect(decoded_svg).not_to include("var(--secondary)")
+      expect(decoded_svg).not_to include("var(--tertiary)")
+    end
+
+    it "can use light colors with the dark upload when color_scheme is light" do
+      dark_upload = Fabricate(:upload)
+
+      SiteSetting.stubs(:splash_screen_image).returns(nil)
+      SiteSetting.stubs(:splash_screen_image_dark).returns(dark_upload)
+
+      dark_upload.stubs(:content).returns(dark_svg)
+
+      helper.stubs(:light_color_hex_for_name).with("primary").returns("aaaaaa")
+      helper.stubs(:light_color_hex_for_name).with("secondary").returns("bbbbbb")
+      helper.stubs(:light_color_hex_for_name).with("tertiary").returns("cccccc")
+
+      decoded_svg =
+        decoded_splash_data_uri(
+          helper.splash_screen_image_data_uri(dark: true, color_scheme: :light),
+        )
+
+      expect(decoded_svg).to include("#aaaaaa")
+      expect(decoded_svg).to include("#bbbbbb")
+      expect(decoded_svg).to include("#cccccc")
+      expect(decoded_svg).not_to include("var(--primary)")
+      expect(decoded_svg).not_to include("var(--secondary)")
+      expect(decoded_svg).not_to include("var(--tertiary)")
     end
   end
 
