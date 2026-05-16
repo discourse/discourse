@@ -1,8 +1,14 @@
 <%
-  custom_splash = custom_splash_screen_enabled?
-  light_splash_animated = custom_splash && splash_screen_image_animated?(dark: false)
-  dark_splash_animated = custom_splash && splash_screen_image_animated?(dark: true)
+  light_custom_splash = splash_screen_image_available?(dark: false)
+  dark_custom_splash = splash_screen_image_available?(dark: true)
+  custom_splash = light_custom_splash || dark_custom_splash
+
+  light_splash_animated = light_custom_splash && splash_screen_image_animated?(dark: false)
+  dark_splash_animated = dark_custom_splash && splash_screen_image_animated?(dark: true)
+
+  single_scheme_splash = dark_color_scheme? || forced_light_mode? || forced_dark_mode?
   current_splash_dark = dark_color_scheme? || forced_dark_mode?
+  current_custom_splash = current_splash_dark ? dark_custom_splash : light_custom_splash
   current_splash_animated = current_splash_dark ? dark_splash_animated : light_splash_animated
 %>
 
@@ -24,13 +30,13 @@
 
       #d-splash {
         --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
-        <%- if custom_splash %>
-          <%- if splash_screen_image_animated?(dark: true) %>
+        <%- if dark_custom_splash %>
+          <%- if dark_splash_animated %>
           --primary: #<%= light_color_hex_for_name("primary") %>;
           --secondary: #<%= light_color_hex_for_name("secondary") %>;
           --tertiary: #<%= light_color_hex_for_name("tertiary") %>;
           <%- else %>
-          --splash-bg: url("<%= splash_screen_image_data_uri(dark: true) %>");
+          --splash-bg: url("<%= splash_screen_image_data_uri(dark: true, color_scheme: :light) %>");
           --splash-image-offset: -10vh;
           <%- end %>
         <%- end %>
@@ -42,13 +48,13 @@
 
       #d-splash {
         --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
-        <%- if custom_splash %>
-          <%- if splash_screen_image_animated?(dark: false) %>
+        <%- if light_custom_splash %>
+          <%- if light_splash_animated %>
           --primary: #<%= light_color_hex_for_name("primary") %>;
           --secondary: #<%= light_color_hex_for_name("secondary") %>;
           --tertiary: #<%= light_color_hex_for_name("tertiary") %>;
           <%- else %>
-          --splash-bg: url("<%= splash_screen_image_data_uri(dark: false) %>");
+          --splash-bg: url("<%= splash_screen_image_data_uri(dark: false, color_scheme: :light) %>");
           --splash-image-offset: -10vh;
           <%- end %>
         <%- end %>
@@ -60,13 +66,13 @@
 
       #d-splash {
         --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
-        <%- if custom_splash %>
-          <%- if splash_screen_image_animated?(dark: true) %>
+        <%- if dark_custom_splash %>
+          <%- if dark_splash_animated %>
           --primary: #<%= dark_color_hex_for_name("primary") %>;
           --secondary: #<%= dark_color_hex_for_name("secondary") %>;
           --tertiary: #<%= dark_color_hex_for_name("tertiary") %>;
           <%- else %>
-          --splash-bg: url("<%= splash_screen_image_data_uri(dark: true) %>");
+          --splash-bg: url("<%= splash_screen_image_data_uri(dark: true, color_scheme: :dark) %>");
           --splash-image-offset: -10vh;
           <%- end %>
         <%- end %>
@@ -82,13 +88,13 @@
 
         #d-splash {
           --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
-          <%- if custom_splash %>
-            <%- if splash_screen_image_animated?(dark: false) %>
+          <%- if light_custom_splash %>
+            <%- if light_splash_animated %>
             --primary: #<%= light_color_hex_for_name("primary") %>;
             --secondary: #<%= light_color_hex_for_name("secondary") %>;
             --tertiary: #<%= light_color_hex_for_name("tertiary") %>;
             <%- else %>
-            --splash-bg: url("<%= splash_screen_image_data_uri(dark: false) %>");
+            --splash-bg: url("<%= splash_screen_image_data_uri(dark: false, color_scheme: :light) %>");
             --splash-image-offset: -10vh;
             <%- end %>
           <%- end %>
@@ -103,13 +109,13 @@
 
         #d-splash {
           --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
-          <%- if custom_splash %>
-            <%- if splash_screen_image_animated?(dark: true) %>
+          <%- if dark_custom_splash %>
+            <%- if dark_splash_animated %>
             --primary: #<%= dark_color_hex_for_name("primary") %>;
             --secondary: #<%= dark_color_hex_for_name("secondary") %>;
             --tertiary: #<%= dark_color_hex_for_name("tertiary") %>;
             <%- else %>
-            --splash-bg: url("<%= splash_screen_image_data_uri(dark: true) %>");
+            --splash-bg: url("<%= splash_screen_image_data_uri(dark: true, color_scheme: :dark) %>");
             --splash-image-offset: -10vh;
             <%- end %>
           <%- end %>
@@ -131,30 +137,101 @@
     #d-splash .preloader-image {
       --splash-dot-size: max(1vw, 25px);
       --splash-dot-spacing: calc(var(--splash-dot-size) * 1.5);
-      <%- if custom_splash %>
-      width: 700px;
-      @media (width < 700px) {
-        width: 320px;
-      }
-      @media (width < 325px) {
-        width: 300px;
-      }
       position: relative;
+      width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
+      height: 100dvh;
+      background-size: cover;
+    }
+
+    #d-splash .preloader-image.single-custom-splash {
+      width: 700px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 1.5rem;
       margin-top: var(--splash-image-offset, 0);
-      @media (display-mode: standalone) {
+    }
+
+    @media (display-mode: standalone) {
+      #d-splash .preloader-image.single-custom-splash {
         transform: translateY(-5dvh);
       }
-      <%- else %>
-      width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
-      <%- end %>
-      height: 100dvh;
-      background-size: cover;
     }
+
+    @media (width < 700px) {
+      #d-splash .preloader-image.single-custom-splash {
+        width: 320px;
+      }
+    }
+
+    @media (width < 325px) {
+      #d-splash .preloader-image.single-custom-splash {
+        width: 300px;
+      }
+    }
+
+    <%- unless single_scheme_splash %>
+      @media (prefers-color-scheme: light) {
+        #d-splash .preloader-image.light-custom-splash {
+          width: 700px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 1.5rem;
+          margin-top: var(--splash-image-offset, 0);
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        #d-splash .preloader-image.dark-custom-splash {
+          width: 700px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 1.5rem;
+          margin-top: var(--splash-image-offset, 0);
+        }
+      }
+
+      @media (prefers-color-scheme: light) and (display-mode: standalone) {
+        #d-splash .preloader-image.light-custom-splash {
+          transform: translateY(-5dvh);
+        }
+      }
+
+      @media (prefers-color-scheme: dark) and (display-mode: standalone) {
+        #d-splash .preloader-image.dark-custom-splash {
+          transform: translateY(-5dvh);
+        }
+      }
+
+      @media (prefers-color-scheme: light) and (width < 700px) {
+        #d-splash .preloader-image.light-custom-splash {
+          width: 320px;
+        }
+      }
+
+      @media (prefers-color-scheme: dark) and (width < 700px) {
+        #d-splash .preloader-image.dark-custom-splash {
+          width: 320px;
+        }
+      }
+
+      @media (prefers-color-scheme: light) and (width < 325px) {
+        #d-splash .preloader-image.light-custom-splash {
+          width: 300px;
+        }
+      }
+
+      @media (prefers-color-scheme: dark) and (width < 325px) {
+        #d-splash .preloader-image.dark-custom-splash {
+          width: 300px;
+        }
+      }
+    <%- end %>
 
     @keyframes d-splash-fade-in {
       0% {
@@ -172,88 +249,9 @@
       height: var(--splash-dot-size);
     }
 
-    #d-splash .dots-container.light-splash-dots,
-    #d-splash .dots-container.dark-splash-dots,
-    #d-splash .splash-logo-container.light-splash-logo,
-    #d-splash .splash-logo-container.dark-splash-logo {
-      display: none;
-    }
-
-    @media (prefers-color-scheme: light) {
-      #d-splash .dots-container.light-splash-dots {
-        display: block;
-      }
-
-      #d-splash .splash-logo-container.light-splash-logo.animated {
-        display: flex;
-      }
-
-      #d-splash .splash-logo-container.light-splash-logo.static {
-        display: block;
-      }
-    }
-
-    @media (prefers-color-scheme: dark) {
-      #d-splash .dots-container.dark-splash-dots {
-        display: block;
-      }
-
-      #d-splash .splash-logo-container.dark-splash-logo.animated {
-        display: flex;
-      }
-
-      #d-splash .splash-logo-container.dark-splash-logo.static {
-        display: block;
-      }
-    }
-    <%- end %>
-
-    .dots {
-      animation-name: d-splash-loader;
-      animation-timing-function: ease-in-out;
-      animation-duration: 3s;
-      animation-iteration-count: infinite;
-      animation-delay: calc(var(--n) * 0.15s);
-
-      position: absolute;
-      <%- if custom_splash %>
-      top: 0;
-      <%- else %>
-      top: calc(50% - var(--splash-dot-size) / 2);
-      <%- end %>
-      left: calc((50% - var(--splash-dot-size) / 2) + (var(--n) * var(--splash-dot-spacing)));
-      transform-origin: calc((var(--splash-dot-spacing) * var(--n) * -1) + var(--splash-dot-size)/2) center;
-
-      width: var(--splash-dot-size);
-      height: var(--splash-dot-size);
-      border-radius: 50%;
-
-      background-color: var(--dot-color);
-      filter: saturate(2) opacity(0.85);
-      opacity: 0;
-    }
-
-    @keyframes d-splash-loader {
-      0% {
-        opacity: 0;
-        transform: scale(1);
-      }
-      45% {
-        opacity: 1;
-        transform: scale(0.7);
-      }
-      65% {
-        opacity: 1;
-        transform: scale(0.7);
-      }
-      100% {
-        opacity: 0;
-        transform: scale(1);
-      }
-    }
-
-    <%- if custom_splash %>
-    #d-splash .preloader-image {
+    #d-splash .single-custom-splash,
+    #d-splash .light-custom-splash,
+    #d-splash .dark-custom-splash {
       --splash-dot-size: max(0.7vw, 14px);
     }
 
@@ -282,6 +280,37 @@
       max-height: 100%;
     }
 
+    <%- unless single_scheme_splash %>
+    #d-splash .light-splash-element,
+    #d-splash .dark-splash-element {
+      display: none;
+    }
+
+    @media (prefers-color-scheme: light) {
+      #d-splash .light-splash-element.default-dots-container,
+      #d-splash .light-splash-element.dots-container,
+      #d-splash .light-splash-element.splash-logo-container.static {
+        display: block;
+      }
+
+      #d-splash .light-splash-element.splash-logo-container.animated {
+        display: flex;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      #d-splash .dark-splash-element.default-dots-container,
+      #d-splash .dark-splash-element.dots-container,
+      #d-splash .dark-splash-element.splash-logo-container.static {
+        display: block;
+      }
+
+      #d-splash .dark-splash-element.splash-logo-container.animated {
+        display: flex;
+      }
+    }
+    <%- end %>
+
     @keyframes d-splash-logo-pulse {
       0%, 100% {
         opacity: 0.4;
@@ -291,11 +320,58 @@
       }
     }
     <%- end %>
+
+    .dots {
+      animation-name: d-splash-loader;
+      animation-timing-function: ease-in-out;
+      animation-duration: 3s;
+      animation-iteration-count: infinite;
+      animation-delay: calc(var(--n) * 0.15s);
+
+      position: absolute;
+      top: calc(50% - var(--splash-dot-size) / 2);
+      left: calc((50% - var(--splash-dot-size) / 2) + (var(--n) * var(--splash-dot-spacing)));
+      transform-origin: calc((var(--splash-dot-spacing) * var(--n) * -1) + var(--splash-dot-size)/2) center;
+
+      width: var(--splash-dot-size);
+      height: var(--splash-dot-size);
+      border-radius: 50%;
+
+      background-color: var(--dot-color);
+      filter: saturate(2) opacity(0.85);
+      opacity: 0;
+    }
+
+    #d-splash .dots-container .dots {
+      top: 0;
+    }
+
+    @keyframes d-splash-loader {
+      0% {
+        opacity: 0;
+        transform: scale(1);
+      }
+      45% {
+        opacity: 1;
+        transform: scale(0.7);
+      }
+      65% {
+        opacity: 1;
+        transform: scale(0.7);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1);
+      }
+    }
   </style>
 
-  <div class="preloader-image" elementtiming="discourse-splash-visible">
-    <%- if custom_splash %>
-      <%- if dark_color_scheme? || forced_light_mode? || forced_dark_mode? %>
+  <div
+    class="preloader-image<%= " single-custom-splash" if single_scheme_splash && current_custom_splash %><%= " light-custom-splash" if !single_scheme_splash && light_custom_splash %><%= " dark-custom-splash" if !single_scheme_splash && dark_custom_splash %>"
+    elementtiming="discourse-splash-visible"
+  >
+    <%- if single_scheme_splash %>
+      <%- if current_custom_splash %>
         <%- if current_splash_animated %>
           <div class="splash-logo-container animated">
             <%= splash_screen_inline_svg(dark: current_splash_dark) %>
@@ -311,13 +387,21 @@
           </div>
         <%- end %>
       <%- else %>
+        <div class="dots" style="--n:-2;"></div>
+        <div class="dots" style="--n:-1;"></div>
+        <div class="dots" style="--n:0;"></div>
+        <div class="dots" style="--n:1;"></div>
+        <div class="dots" style="--n:2;"></div>
+      <%- end %>
+    <%- elsif custom_splash %>
+      <%- if light_custom_splash %>
         <%- if light_splash_animated %>
-          <div class="splash-logo-container animated light-splash-logo">
+          <div class="splash-logo-container animated light-splash-element">
             <%= splash_screen_inline_svg(dark: false) %>
           </div>
         <%- else %>
-          <div class="splash-logo-container static light-splash-logo"></div>
-          <div class="dots-container light-splash-dots">
+          <div class="splash-logo-container static light-splash-element"></div>
+          <div class="dots-container light-splash-element">
             <div class="dots" style="--n:-2;"></div>
             <div class="dots" style="--n:-1;"></div>
             <div class="dots" style="--n:0;"></div>
@@ -325,14 +409,24 @@
             <div class="dots" style="--n:2;"></div>
           </div>
         <%- end %>
+      <%- else %>
+        <div class="default-dots-container light-splash-element">
+          <div class="dots" style="--n:-2;"></div>
+          <div class="dots" style="--n:-1;"></div>
+          <div class="dots" style="--n:0;"></div>
+          <div class="dots" style="--n:1;"></div>
+          <div class="dots" style="--n:2;"></div>
+        </div>
+      <%- end %>
 
+      <%- if dark_custom_splash %>
         <%- if dark_splash_animated %>
-          <div class="splash-logo-container animated dark-splash-logo">
+          <div class="splash-logo-container animated dark-splash-element">
             <%= splash_screen_inline_svg(dark: true) %>
           </div>
         <%- else %>
-          <div class="splash-logo-container static dark-splash-logo"></div>
-          <div class="dots-container dark-splash-dots">
+          <div class="splash-logo-container static dark-splash-element"></div>
+          <div class="dots-container dark-splash-element">
             <div class="dots" style="--n:-2;"></div>
             <div class="dots" style="--n:-1;"></div>
             <div class="dots" style="--n:0;"></div>
@@ -340,6 +434,14 @@
             <div class="dots" style="--n:2;"></div>
           </div>
         <%- end %>
+      <%- else %>
+        <div class="default-dots-container dark-splash-element">
+          <div class="dots" style="--n:-2;"></div>
+          <div class="dots" style="--n:-1;"></div>
+          <div class="dots" style="--n:0;"></div>
+          <div class="dots" style="--n:1;"></div>
+          <div class="dots" style="--n:2;"></div>
+        </div>
       <%- end %>
     <%- else %>
       <div class="dots" style="--n:-2;"></div>
