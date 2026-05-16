@@ -558,12 +558,13 @@ module ApplicationHelper
     build_splash_screen_image(dark: dark)&.html_safe
   end
 
-  def splash_screen_image_data_uri(dark: false, color_scheme: :light)
+  def splash_screen_image_data_uri(dark: false, color_scheme: nil)
     svg = build_splash_screen_image(dark: dark)
     return nil if svg.blank?
 
     svg_with_colors = svg.dup
 
+    color_scheme ||= dark ? :dark : :light
     color_method = color_scheme == :dark ? :dark_color_hex_for_name : :light_color_hex_for_name
     primary = "##{public_send(color_method, "primary")}"
     secondary = "##{public_send(color_method, "secondary")}"
