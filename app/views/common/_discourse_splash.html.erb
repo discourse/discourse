@@ -6,7 +6,8 @@
   light_splash_animated = light_custom_splash && splash_screen_image_animated?(dark: false)
   dark_splash_animated = dark_custom_splash && splash_screen_image_animated?(dark: true)
 
-  single_scheme_splash = dark_color_scheme? || forced_light_mode? || forced_dark_mode?
+  has_dark_scheme = dark_scheme_id.present? && dark_scheme_id != -1
+  single_scheme_splash = dark_color_scheme? || forced_light_mode? || forced_dark_mode? || !has_dark_scheme
   current_splash_dark = dark_color_scheme? || forced_dark_mode?
   current_custom_splash = current_splash_dark ? dark_custom_splash : light_custom_splash
   current_splash_animated = current_splash_dark ? dark_splash_animated : light_splash_animated
