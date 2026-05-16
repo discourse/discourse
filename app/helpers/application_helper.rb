@@ -539,17 +539,19 @@ module ApplicationHelper
   end
 
   def custom_splash_screen_enabled?
-    @custom_splash_screen_enabled ||=
+    return @custom_splash_screen_enabled if defined?(@custom_splash_screen_enabled)
+
+    @custom_splash_screen_enabled =
       resolve_splash_screen_upload.present? || resolve_splash_screen_upload(dark: true).present?
   end
 
-  def splash_screen_image_animated?
-    svg = build_splash_screen_image
+  def splash_screen_image_animated?(dark: false)
+    svg = build_splash_screen_image(dark: dark)
     svg.present? && svg.match?(/@keyframes\s/)
   end
 
-  def splash_screen_inline_svg
-    build_splash_screen_image&.html_safe
+  def splash_screen_inline_svg(dark: false)
+    build_splash_screen_image(dark: dark)&.html_safe
   end
 
   def splash_screen_image_data_uri(dark: false)
@@ -598,6 +600,8 @@ module ApplicationHelper
       else
         SiteSetting.splash_screen_image
       end
+
+    return if upload.blank?
 
     upload.is_a?(Upload) ? upload : Upload.find_by(id: upload)
   end
