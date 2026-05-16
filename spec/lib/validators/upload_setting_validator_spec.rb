@@ -4,7 +4,9 @@ RSpec.describe UploadSettingValidator do
   describe "#valid_value?" do
     let(:safe_svg) { "<svg xmlns='http://www.w3.org/2000/svg'><circle /></svg>" }
     let(:script_svg) { "<svg xmlns='http://www.w3.org/2000/svg'><script>alert(1)</script></svg>" }
-    let(:event_handler_svg) { "<svg xmlns='http://www.w3.org/2000/svg'><circle onclick='alert(1)' /></svg>" }
+    let(:event_handler_svg) do
+      "<svg xmlns='http://www.w3.org/2000/svg'><circle onclick='alert(1)' /></svg>"
+    end
 
     shared_examples "validates splash screen SVG uploads" do |setting_name|
       subject(:validator) { described_class.new(name: setting_name) }

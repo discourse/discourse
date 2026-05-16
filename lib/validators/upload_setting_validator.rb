@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 class UploadSettingValidator
-  SPLASH_SCREEN_IMAGE_SETTINGS = %i[
-    splash_screen_image
-    splash_screen_image_dark
-  ].freeze
+  SPLASH_SCREEN_IMAGE_SETTINGS = %i[splash_screen_image splash_screen_image_dark].freeze
 
   def initialize(opts = {})
     @opts = opts
