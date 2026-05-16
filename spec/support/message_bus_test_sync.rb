@@ -6,29 +6,27 @@ module MessageBusTestSync
   MUTEX = Mutex.new
   CATCH_UP_SCRIPT = <<~JS
     const [pending, timeoutMs, done] = arguments;
-    const entries = Object.entries(pending);
     const deadline = Date.now() + timeoutMs;
 
-    const stillBehind = () => {
-      const cbs = window.MessageBus?.callbacks ?? [];
+    function poll() {
+      const callbacks = window.MessageBus?.callbacks ?? [];
       const behind = [];
-      for (const [channel, expected] of entries) {
-        const actual = cbs.find((c) => c.channel === channel)?.last_id;
-        if (Number.isInteger(actual) && actual < expected) {
-          behind.push({ channel, expected, actual });
+
+      for (const [channel, expectedId] of Object.entries(pending)) {
+        const lastId = callbacks.find((c) => c.channel === channel)?.last_id;
+        if (Number.isInteger(lastId) && lastId < expectedId) {
+          behind.push({ channel, lastId, expectedId });
         }
       }
-      return behind;
-    };
 
-    (async () => {
-      let behind = stillBehind();
-      while (behind.length && Date.now() < deadline) {
-        await new Promise((r) => setTimeout(r, 10));
-        behind = stillBehind();
+      if (behind.length === 0 || Date.now() >= deadline) {
+        done(behind);
+      } else {
+        setTimeout(poll, 10);
       }
-      done(behind);
-    })();
+    }
+
+    poll();
   JS
 
   @pending = nil
@@ -53,8 +51,8 @@ module MessageBusTestSync
     end
   end
 
-  # Waits in the browser until each recorded id is observed on its callback,
-  # or `timeout` elapses. Channels with no numeric `last_id` are skipped.
+  # Waits until each recorded id is observed in the browser, or
+  # `timeout` elapses. Channels with no `last_id` are skipped.
   def self.flush!(session, timeout:)
     snapshot =
       MUTEX.synchronize do
