@@ -85,6 +85,17 @@ RSpec.describe SiteSetting::SplashScreenImageChanged do
             .cache
             .expects(:delete)
             .with { |key| key.match?(/\Asplash_screen_svg_#{upload.id}_[a-f0-9]{40}\z/) }
+
+          Discourse
+            .cache
+            .expects(:delete)
+            .with { |key| key.match?(/\Asplash_screen_svg_light_#{upload.id}_[a-f0-9]{40}\z/) }
+
+          Discourse
+            .cache
+            .expects(:delete)
+            .with { |key| key.match?(/\Asplash_screen_svg_dark_#{upload.id}_[a-f0-9]{40}\z/) }
+
           result
         end
       end
