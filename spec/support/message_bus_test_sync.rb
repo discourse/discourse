@@ -9,19 +9,25 @@ module MessageBusTestSync
     const entries = Object.entries(pending);
     const deadline = Date.now() + timeoutMs;
 
-    const caughtUp = () => {
+    const stillBehind = () => {
       const cbs = window.MessageBus?.callbacks ?? [];
-      return entries.every(([ch, id]) => {
-        const cid = cbs.find((c) => c.channel === ch)?.last_id;
-        return !Number.isInteger(cid) || cid >= id;
-      });
+      const behind = [];
+      for (const [channel, expected] of entries) {
+        const actual = cbs.find((c) => c.channel === channel)?.last_id;
+        if (Number.isInteger(actual) && actual < expected) {
+          behind.push({ channel, expected, actual });
+        }
+      }
+      return behind;
     };
 
     (async () => {
-      while (!caughtUp() && Date.now() < deadline) {
+      let behind = stillBehind();
+      while (behind.length && Date.now() < deadline) {
         await new Promise((r) => setTimeout(r, 10));
+        behind = stillBehind();
       }
-      done();
+      done(behind);
     })();
   JS
 

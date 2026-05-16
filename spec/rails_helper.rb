@@ -477,7 +477,7 @@ RSpec.configure do |config|
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
 
-        mb_retried = false
+        mb_behind = nil
 
         begin
           super
@@ -486,10 +486,13 @@ RSpec.configure do |config|
 
           # On timeout, give a pending MessageBus publish one chance to land,
           # then retry the matcher once.
-          if !mb_retried && MessageBusTestSync.pending?
-            mb_retried = true
-            MessageBusTestSync.flush!(session, timeout: 2)
+          if mb_behind.nil? && MessageBusTestSync.pending?
+            mb_behind = MessageBusTestSync.flush!(session, timeout: 2)
             retry
+          end
+
+          if mb_behind&.any?
+            warn "[MessageBusTestSync] client never caught up on: #{mb_behind.inspect}"
           end
 
           # This error will only have been raised if the timer expired
