@@ -57,10 +57,11 @@ class SiteSetting::SplashScreenImageChanged
       existing = Upload.find_by(sha1: new_sha1)
 
       if existing && existing.id != upload.id
-        SiteSetting.splash_screen_image = existing.id
+        SiteSetting.public_send("#{site_setting_name}=", existing.id)
       else
         old_path = Discourse.store.get_path_for_upload(upload)
         old_url = upload.url
+
         upload.tap do |u|
           u.sha1 = new_sha1
           u.filesize = tmp.size
@@ -75,5 +76,13 @@ class SiteSetting::SplashScreenImageChanged
 
   def clear_cache(upload:)
     Discourse.cache.delete("splash_screen_svg_#{upload.id}_#{upload.sha1}")
+
+    %w[light dark].each do |scheme|
+      Discourse.cache.delete("splash_screen_svg_#{scheme}_#{upload.id}_#{upload.sha1}")
+    end
+  end
+
+  def site_setting_name
+    :splash_screen_image
   end
 end
