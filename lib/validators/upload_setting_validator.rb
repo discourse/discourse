@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class UploadSettingValidator
+  SPLASH_SCREEN_IMAGE_SETTINGS = %i[
+    splash_screen_image
+    splash_screen_image_dark
+  ].freeze
+
   def initialize(opts = {})
     @opts = opts
   end
@@ -13,16 +18,15 @@ class UploadSettingValidator
   end
 
   def error_message
-    return I18n.t("site_settings.errors.invalid_svg") if @opts[:name] == :splash_screen_image
+    return I18n.t("site_settings.errors.invalid_svg") if splash_screen_image_setting?
+
     I18n.t("site_settings.errors.invalid_upload")
   end
 
   def additional_validation_passed(upload)
-    if @opts[:name] == :splash_screen_image
-      validate_svg(upload)
-    else
-      true
-    end
+    return validate_svg(upload) if splash_screen_image_setting?
+
+    true
   end
 
   # We also clean svgs in UploadCreator#clean_svg!,
@@ -34,6 +38,7 @@ class UploadSettingValidator
       rescue StandardError
         nil
       end
+
     return false if content.blank?
 
     svg = Nokogiri.XML(content).at_css("svg")
@@ -43,5 +48,11 @@ class UploadSettingValidator
     has_event_handlers = svg.xpath("//@*[starts-with(local-name(), 'on')]").present?
 
     !has_scripts && !has_event_handlers
+  end
+
+  private
+
+  def splash_screen_image_setting?
+    SPLASH_SCREEN_IMAGE_SETTINGS.include?(@opts[:name])
   end
 end
