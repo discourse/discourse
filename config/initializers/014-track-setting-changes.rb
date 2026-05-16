@@ -80,7 +80,14 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
         SiteSetting::SplashScreenImageChanged
       end
 
-    service.call(upload_id: new_value, guardian: Discourse.system_user.guardian) do |result|
+    upload_id = new_value.is_a?(Upload) ? new_value.id : new_value
+
+    service.call(
+      params: {
+        upload_id: upload_id,
+      },
+      guardian: Discourse.system_user.guardian,
+    ) do |result|
       on_model_not_found(:upload) { Rails.logger.error("Upload not found for #{name} change") }
       on_model_not_found(:svg) do
         Rails.logger.error("SVG could not be parsed from upload #{new_value} when updating #{name}")

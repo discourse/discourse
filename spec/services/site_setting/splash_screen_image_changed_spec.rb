@@ -218,8 +218,8 @@ RSpec.describe SiteSetting::SplashScreenImageDarkChanged do
     expect(svg["height"]).to be_nil
   end
 
-  it "runs the sanitizer pipeline when splash_screen_image_dark changes" do
-    SiteSetting.splash_screen_image_dark = upload.id
+  it "runs the sanitizer pipeline from the site setting changed hook" do
+    DiscourseEvent.trigger(:site_setting_changed, :splash_screen_image_dark, nil, upload.id)
 
     upload.reload
     doc = Nokogiri.XML(upload.content)
