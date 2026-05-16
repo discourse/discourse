@@ -217,4 +217,16 @@ RSpec.describe SiteSetting::SplashScreenImageDarkChanged do
     expect(svg["width"]).to be_nil
     expect(svg["height"]).to be_nil
   end
+
+  it "runs the sanitizer pipeline when splash_screen_image_dark changes" do
+    SiteSetting.splash_screen_image_dark = upload.id
+
+    upload.reload
+    doc = Nokogiri.XML(upload.content)
+    svg = doc.at_css("svg")
+
+    expect(upload.content).not_to include("animate")
+    expect(svg["width"]).to be_nil
+    expect(svg["height"]).to be_nil
+  end
 end

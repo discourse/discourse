@@ -72,11 +72,15 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
 
   Theme.expire_site_cache! if name == :default_theme_id
 
-  if name == :splash_screen_image && new_value.present?
-    SiteSetting::SplashScreenImageChanged.call(
-      upload_id: new_value,
-      guardian: Discourse.system_user.guardian,
-    ) do |result|
+  if %i[splash_screen_image splash_screen_image_dark].include?(name) && new_value.present?
+    service =
+      if name == :splash_screen_image_dark
+        SiteSetting::SplashScreenImageDarkChanged
+      else
+        SiteSetting::SplashScreenImageChanged
+      end
+
+    service.call(upload_id: new_value, guardian: Discourse.system_user.guardian) do |result|
       on_model_not_found(:upload) { Rails.logger.error("Upload not found for #{name} change") }
       on_model_not_found(:svg) do
         Rails.logger.error("SVG could not be parsed from upload #{new_value} when updating #{name}")
