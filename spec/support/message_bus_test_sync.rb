@@ -4,13 +4,25 @@
 # to catch up, to prevent flakes in "publish then assert" scenarios.
 module MessageBusTestSync
   MUTEX = Mutex.new
-  LAST_IDS_SCRIPT = <<~JS
-    Object.fromEntries(
-      arguments[0].map((ch) => {
-        const cb = (window.MessageBus?.callbacks ?? []).find((c) => c.channel === ch);
-        return [ch, cb?.last_id ?? null];
-      })
-    )
+  CATCH_UP_SCRIPT = <<~JS
+    const [pending, timeoutMs, done] = arguments;
+    const entries = Object.entries(pending);
+    const deadline = Date.now() + timeoutMs;
+
+    const caughtUp = () => {
+      const cbs = window.MessageBus?.callbacks ?? [];
+      return entries.every(([ch, id]) => {
+        const cid = cbs.find((c) => c.channel === ch)?.last_id;
+        return !Number.isInteger(cid) || cid >= id;
+      });
+    };
+
+    (async () => {
+      while (!caughtUp() && Date.now() < deadline) {
+        await new Promise((r) => setTimeout(r, 10));
+      }
+      done();
+    })();
   JS
 
   @pending = nil
@@ -31,13 +43,12 @@ module MessageBusTestSync
     return if id.nil? || @pending.nil?
     MUTEX.synchronize do
       next if @pending.nil?
-      current = @pending[channel]
-      @pending[channel] = id if current.nil? || id > current
+      @pending[channel] = id if id > (@pending[channel] || -1)
     end
   end
 
-  # Polls the browser until each recorded id is observed on its callback,
-  # or `timeout` elapses. Channels with no `last_id` are skipped.
+  # Waits in the browser until each recorded id is observed on its callback,
+  # or `timeout` elapses. Channels with no numeric `last_id` are skipped.
   def self.flush!(session, timeout:)
     snapshot =
       MUTEX.synchronize do
@@ -47,19 +58,7 @@ module MessageBusTestSync
         taken
       end
 
-    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
-    backoff = 0.01
-
-    loop do
-      client_ids = session.evaluate_script(LAST_IDS_SCRIPT, snapshot.keys)
-      snapshot.select! { |ch, id| client_ids[ch].is_a?(Integer) && client_ids[ch] < id }
-
-      return if snapshot.empty?
-      return if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
-
-      sleep backoff
-      backoff = [backoff * 1.5, 0.1].min # grow per retry, cap at 100ms
-    end
+    session.evaluate_async_script(CATCH_UP_SCRIPT, snapshot, (timeout * 1000).to_i)
   end
 
   module PublishHook
