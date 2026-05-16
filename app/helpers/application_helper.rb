@@ -545,6 +545,10 @@ module ApplicationHelper
       resolve_splash_screen_upload.present? || resolve_splash_screen_upload(dark: true).present?
   end
 
+  def splash_screen_image_available?(dark: false)
+    resolve_splash_screen_upload(dark: dark).present?
+  end
+
   def splash_screen_image_animated?(dark: false)
     svg = build_splash_screen_image(dark: dark)
     svg.present? && svg.match?(/@keyframes\s/)
@@ -554,13 +558,13 @@ module ApplicationHelper
     build_splash_screen_image(dark: dark)&.html_safe
   end
 
-  def splash_screen_image_data_uri(dark: false)
+  def splash_screen_image_data_uri(dark: false, color_scheme: :light)
     svg = build_splash_screen_image(dark: dark)
     return nil if svg.blank?
 
     svg_with_colors = svg.dup
 
-    color_method = dark ? :dark_color_hex_for_name : :light_color_hex_for_name
+    color_method = color_scheme == :dark ? :dark_color_hex_for_name : :light_color_hex_for_name
     primary = "##{public_send(color_method, "primary")}"
     secondary = "##{public_send(color_method, "secondary")}"
     tertiary = "##{public_send(color_method, "tertiary")}"
