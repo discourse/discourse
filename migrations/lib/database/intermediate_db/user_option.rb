@@ -47,6 +47,7 @@ module Migrations
             notify_on_linked_posts,
             oldest_search_log_date,
             seen_popups,
+            show_original_content,
             sidebar_link_to_filtered_list,
             sidebar_show_count_of_new_items,
             skip_new_user_tips,
@@ -60,7 +61,7 @@ module Migrations
             watched_precedence_over_muted
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -104,6 +105,7 @@ module Migrations
         # @param notify_on_linked_posts             [Boolean, nil]
         # @param oldest_search_log_date             [Time, nil]
         # @param seen_popups                        [Integer, nil]
+        # @param show_original_content              [Boolean, nil]
         # @param sidebar_link_to_filtered_list      [Boolean, nil]
         # @param sidebar_show_count_of_new_items    [Boolean, nil]
         # @param skip_new_user_tips                 [Boolean, nil]
@@ -155,6 +157,7 @@ module Migrations
           notify_on_linked_posts: nil,
           oldest_search_log_date: nil,
           seen_popups: nil,
+          show_original_content: nil,
           sidebar_link_to_filtered_list: nil,
           sidebar_show_count_of_new_items: nil,
           skip_new_user_tips: nil,
@@ -206,6 +209,7 @@ module Migrations
             Migrations::Database.format_boolean(notify_on_linked_posts),
             Migrations::Database.format_datetime(oldest_search_log_date),
             seen_popups,
+            Migrations::Database.format_boolean(show_original_content),
             Migrations::Database.format_boolean(sidebar_link_to_filtered_list),
             Migrations::Database.format_boolean(sidebar_show_count_of_new_items),
             Migrations::Database.format_boolean(skip_new_user_tips),

@@ -444,6 +444,7 @@ CREATE TABLE user_options
     notify_on_linked_posts           BOOLEAN,
     oldest_search_log_date           DATETIME,
     seen_popups                      INTEGER,
+    show_original_content            BOOLEAN,
     sidebar_link_to_filtered_list    BOOLEAN,
     sidebar_show_count_of_new_items  BOOLEAN,
     skip_new_user_tips               BOOLEAN,
