@@ -156,7 +156,7 @@ class TopicLink < ActiveRecord::Base
       .each do |link, parsed|
         TopicLink.transaction do
           begin
-            url, reflected_id = self.ensure_entry_for(post, link, parsed)
+            url, reflected_id = ensure_entry_for(post, link, parsed)
             current_urls << url unless url.nil?
             reflected_ids << reflected_id unless reflected_id.nil?
           rescue URI::Error
@@ -167,7 +167,7 @@ class TopicLink < ActiveRecord::Base
         end
       end
 
-    self.cleanup_entries(post, current_urls, reflected_ids)
+    cleanup_entries(post, current_urls, reflected_ids)
   end
 
   def self.crawl_link_title(topic_link_id)

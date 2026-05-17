@@ -31,51 +31,47 @@ module Chat
 
     def replies_count_cache_updated_at
       Time.at(
-        Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(self.id)).to_i,
+        Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(id)).to_i,
         in: Time.zone,
       )
     end
 
     def replies_count_cache
-      redis_cache = Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(self.id))&.to_i
+      redis_cache = Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(id))&.to_i
 
       # If the cache is not present for whatever reason, set it to the current value,
       # otherwise INCR/DECR will be way off. No need to enqueue the job or publish,
       # since this is likely fetched by a serializer.
       if !redis_cache.present?
-        set_replies_count_redis_cache(self.replies_count)
-        self.replies_count
+        set_replies_count_redis_cache(replies_count)
+        replies_count
       else
-        redis_cache != self.replies_count ? redis_cache : self.replies_count
+        redis_cache != replies_count ? redis_cache : replies_count
       end
     end
 
     def set_replies_count_cache(value, update_db: false)
-      self.update!(replies_count: value) if update_db
+      update!(replies_count: value) if update_db
       set_replies_count_redis_cache(value)
       thread_reply_count_cache_changed
     end
 
     def set_replies_count_redis_cache(value)
-      Discourse.redis.setex(
-        Chat::Thread.replies_count_cache_redis_key(self.id),
-        5.minutes.to_i,
-        value,
-      )
+      Discourse.redis.setex(Chat::Thread.replies_count_cache_redis_key(id), 5.minutes.to_i, value)
     end
 
     def increment_replies_count_cache
-      Discourse.redis.incr(Chat::Thread.replies_count_cache_redis_key(self.id))
+      Discourse.redis.incr(Chat::Thread.replies_count_cache_redis_key(id))
       thread_reply_count_cache_changed
     end
 
     def decrement_replies_count_cache
-      Discourse.redis.decr(Chat::Thread.replies_count_cache_redis_key(self.id))
+      Discourse.redis.decr(Chat::Thread.replies_count_cache_redis_key(id))
       thread_reply_count_cache_changed
     end
 
     def thread_reply_count_cache_changed
-      Jobs.enqueue_in(5.seconds, Jobs::Chat::UpdateThreadReplyCount, thread_id: self.id)
+      Jobs.enqueue_in(5.seconds, Jobs::Chat::UpdateThreadReplyCount, thread_id: id)
     end
   end
 end

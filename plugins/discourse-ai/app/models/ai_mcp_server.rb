@@ -411,7 +411,7 @@ class AiMcpServer < ActiveRecord::Base
     if instance_variable_defined?(:@tools_for_serialization)
       remove_instance_variable(:@tools_for_serialization)
     end
-    DiscourseAi::Mcp::ToolRegistry.invalidate!(self.id)
+    DiscourseAi::Mcp::ToolRegistry.invalidate!(id)
     AiAgent.agent_cache.flush!
   end
 

@@ -30,7 +30,7 @@ class SocketServer
         done = false
         done = !accept_connection(server) while !done
       ensure
-        self.stop
+        stop
         Rails.logger.info("Cleaned up socket server at #{@socket_path}")
       end
     end

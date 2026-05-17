@@ -114,7 +114,7 @@ class Search
       elsif @is_header_search && public_send(type).length == Search.per_facet
         instance_variable_set("@more_#{type}".to_sym, true)
       else
-        (self.public_send(type)) << object
+        (public_send(type)) << object
       end
 
       if can_lazy_load_categories

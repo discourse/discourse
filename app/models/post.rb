@@ -254,8 +254,8 @@ class Post < ActiveRecord::Base
   end
 
   def trash!(trashed_by = nil)
-    self.topic_links.each(&:destroy)
-    self.save_custom_fields if self.custom_fields.delete(Post::NOTICE)
+    topic_links.each(&:destroy)
+    save_custom_fields if custom_fields.delete(Post::NOTICE)
     super(trashed_by)
   end
 
@@ -332,11 +332,11 @@ class Post < ActiveRecord::Base
     # this when cooking #hashtags to determine whether we should render
     # the found hashtag based on whether the user can access the category it
     # is referencing.
-    options[:user_id] = self.last_editor_id
+    options[:user_id] = last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
-    options[:post_id] = self.id
+    options[:post_id] = id
 
-    if self.should_secure_uploads?
+    if should_secure_uploads?
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
@@ -381,7 +381,7 @@ class Post < ActiveRecord::Base
   end
 
   def last_editor
-    self.last_editor_id ? (User.find_by_id(self.last_editor_id) || user) : user
+    last_editor_id ? (User.find_by_id(last_editor_id) || user) : user
   end
 
   def allowed_spam_hosts
@@ -471,22 +471,22 @@ class Post < ActiveRecord::Base
   end
 
   def delete_post_notices
-    self.custom_fields.delete(Post::NOTICE)
-    self.save_custom_fields
+    custom_fields.delete(Post::NOTICE)
+    save_custom_fields
   end
 
   def recover_public_post_actions
     PostAction
       .publics
       .with_deleted
-      .where(post_id: self.id, id: self.custom_fields["deleted_public_actions"])
+      .where(post_id: id, id: custom_fields["deleted_public_actions"])
       .find_each do |post_action|
         post_action.recover!
         post_action.save!
       end
 
-    self.custom_fields.delete("deleted_public_actions")
-    self.save_custom_fields
+    custom_fields.delete("deleted_public_actions")
+    save_custom_fields
   end
 
   def filter_quotes(parent_post = nil)
@@ -616,7 +616,7 @@ class Post < ActiveRecord::Base
   # consider how it interacts with UploadSecurity and the uploads.rake tasks.
   def should_secure_uploads?
     return false if !SiteSetting.secure_uploads?
-    topic_including_deleted = Topic.with_deleted.find_by(id: self.topic_id)
+    topic_including_deleted = Topic.with_deleted.find_by(id: topic_id)
     return false if topic_including_deleted.blank?
 
     # NOTE: This is to be used for plugins where adding a new public upload
@@ -668,7 +668,7 @@ class Post < ActiveRecord::Base
         Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
       if is_first_post? || !any_visible_posts_in_topic
-        self.topic.update_status(
+        topic.update_status(
           "visible",
           false,
           Discourse.system_user,
@@ -713,18 +713,18 @@ class Post < ActiveRecord::Base
 
   def unhide!
     Post.transaction do
-      self.update!(hidden: false)
+      update!(hidden: false)
       should_update_user_stat = true
 
       # NOTE: We have to consider `nil` a valid reason here because historically
       # topics didn't have a visibility_reason_id, if we didn't do this we would
       # break backwards compat since we cannot backfill data.
       hidden_because_of_op_flagging =
-        self.topic.visibility_reason_id == Topic.visibility_reasons[:op_flag_threshold_reached] ||
-          self.topic.visibility_reason_id.nil?
+        topic.visibility_reason_id == Topic.visibility_reasons[:op_flag_threshold_reached] ||
+          topic.visibility_reason_id.nil?
 
       if is_first_post? && hidden_because_of_op_flagging
-        self.topic.update_status(
+        topic.update_status(
           "visible",
           true,
           Discourse.system_user,
@@ -733,7 +733,7 @@ class Post < ActiveRecord::Base
         should_update_user_stat = false
       end
 
-      self.topic.reset_bumped_at(self) if is_last_reply? && !whisper?
+      topic.reset_bumped_at(self) if is_last_reply? && !whisper?
 
       # We need to do this because TopicStatusUpdater also does the increment
       # and we don't want to double count for the OP.
@@ -899,7 +899,7 @@ class Post < ActiveRecord::Base
     old_user = user
     revise(
       actor,
-      { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason },
+      { raw: raw, user_id: new_user.id, edit_reason: edit_reason },
       bypass_bump: true,
       skip_revision: skip_revision,
       skip_validations: true,
@@ -963,10 +963,10 @@ class Post < ActiveRecord::Base
 
   def save_reply_relationships
     add_to_quoted_post_numbers(reply_to_post_number)
-    return if self.quoted_post_numbers.blank?
+    return if quoted_post_numbers.blank?
 
     # Create a reply relationship between quoted posts and this new post
-    self.quoted_post_numbers.each do |p|
+    quoted_post_numbers.each do |p|
       post = Post.find_by(topic_id: topic_id, post_number: p)
       create_reply_relationship_with(post)
     end
@@ -981,14 +981,14 @@ class Post < ActiveRecord::Base
   )
     args = {
       bypass_bump: bypass_bump,
-      cooking_options: self.cooking_options,
+      cooking_options: cooking_options,
       new_post: new_post,
-      post_id: self.id,
+      post_id: id,
       skip_pull_hotlinked_images: skip_pull_hotlinked_images,
     }
 
-    args[:image_sizes] = image_sizes if self.image_sizes.present?
-    args[:invalidate_oneboxes] = true if self.invalidate_oneboxes.present?
+    args[:image_sizes] = image_sizes if image_sizes.present?
+    args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
     args[:queue] = priority.to_s if priority && priority != :normal
 
     Jobs.enqueue(:process_post, args)
@@ -1122,7 +1122,7 @@ class Post < ActiveRecord::Base
 
   def update_uploads_secure_status(source:)
     if Discourse.store.external?
-      self.uploads.each { |upload| upload.update_secure_status(source: source) }
+      uploads.each { |upload| upload.update_secure_status(source: source) }
     end
   end
 
@@ -1195,7 +1195,7 @@ class Post < ActiveRecord::Base
   end
 
   def owned_uploads_via_access_control
-    Upload.where(access_control_post_id: self.id)
+    Upload.where(access_control_post_id: id)
   end
 
   def image_url
@@ -1204,10 +1204,10 @@ class Post < ActiveRecord::Base
   end
 
   def cannot_permanently_delete_reason(user)
-    if self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+    if deleted_by_id == user&.id && deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
       time_left =
         RateLimiter.time_left(
-          Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i,
+          Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + deleted_at.to_i,
         )
       I18n.t("post.cannot_permanently_delete.wait_or_different_admin", time_left: time_left)
     end
@@ -1220,15 +1220,15 @@ class Post < ActiveRecord::Base
   private
 
   def access_control_post_id_for_upload
-    self.id
+    id
   end
 
   def handle_video_thumbnail(thumbnail)
-    if self.is_first_post? && !self.topic.image_upload_id
-      self.topic.update_column(:image_upload_id, thumbnail.id)
+    if is_first_post? && !topic.image_upload_id
+      topic.update_column(:image_upload_id, thumbnail.id)
       extra_sizes =
         ThemeModifierHelper.new(theme_ids: Theme.user_selectable.pluck(:id)).topic_thumbnail_sizes
-      self.topic.generate_thumbnails!(extra_sizes: extra_sizes)
+      topic.generate_thumbnails!(extra_sizes: extra_sizes)
     end
   end
 
@@ -1246,10 +1246,10 @@ class Post < ActiveRecord::Base
   end
 
   def create_reply_relationship_with(post)
-    return if post.nil? || self.deleted_at.present?
+    return if post.nil? || deleted_at.present?
     post_reply = post.post_replies.new(reply_post_id: id)
     if post_reply.save
-      if Topic.visible_post_types.include?(self.post_type)
+      if Topic.visible_post_types.include?(post_type)
         Post.where(id: post.id).update_all ["reply_count = reply_count + 1"]
       end
     end

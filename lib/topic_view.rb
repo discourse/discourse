@@ -140,7 +140,7 @@ class TopicView
 
     @message_bus_last_id = MessageBus.last_id("/topic/#{@topic.id}")
 
-    options.each { |key, value| self.instance_variable_set("@#{key}".to_sym, value) }
+    options.each { |key, value| instance_variable_set("@#{key}".to_sym, value) }
 
     @post_number = [@post_number.to_i, 1].max
 

@@ -75,9 +75,7 @@ class IncomingLink < ActiveRecord::Base
   end
 
   def referer
-    if self.incoming_referer
-      self.incoming_referer.incoming_domain.to_url + self.incoming_referer.path
-    end
+    incoming_referer.incoming_domain.to_url + incoming_referer.path if incoming_referer
   end
 
   def domain

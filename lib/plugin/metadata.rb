@@ -31,7 +31,7 @@ class Plugin::Metadata
   end
 
   def self.parse(text)
-    metadata = self.new
+    metadata = new
     text.each_line { |line| break unless metadata.parse_line(line) }
     metadata
   end
@@ -51,10 +51,7 @@ class Plugin::Metadata
       attribute = attribute.strip.gsub(/ /, "_").to_sym
 
       if FIELDS.include?(attribute)
-        self.public_send(
-          "#{attribute}=",
-          value.strip.truncate(MAX_FIELD_LENGTHS[attribute] || 1000),
-        )
+        public_send("#{attribute}=", value.strip.truncate(MAX_FIELD_LENGTHS[attribute] || 1000))
       end
     end
 

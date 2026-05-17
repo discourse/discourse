@@ -21,7 +21,7 @@ module DiscourseSolved::TopicExtension
     return unless answer_post = solved.answer_post
 
     answer_post_user = answer_post.user || Discourse.system_user
-    accepter = solved.accepter || self.user || Discourse.system_user
+    accepter = solved.accepter || user || Discourse.system_user
 
     excerpt = SiteSetting.solved_quote_length > 0 ? answer_post.cooked : nil
 

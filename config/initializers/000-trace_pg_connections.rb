@@ -23,7 +23,7 @@ if ENV["TRACE_PG_CONNECTIONS"]
         super(*args).tap do
           next if ENV["TRACE_PG_CONNECTIONS"] == "SIDEKIQ" && !Sidekiq.server?
           FileUtils.mkdir_p(TRACE_DIR)
-          @trace_filename = "#{TRACE_DIR}/#{Process.pid}_#{self.object_id}.txt"
+          @trace_filename = "#{TRACE_DIR}/#{Process.pid}_#{object_id}.txt"
           trace File.new(@trace_filename, "w")
         end
         @access_log_mutex = Mutex.new

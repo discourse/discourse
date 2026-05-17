@@ -51,16 +51,16 @@ class Upload < ActiveRecord::Base
   validates_with UploadValidator
 
   before_destroy do
-    UserProfile.where(card_background_upload_id: self.id).update_all(card_background_upload_id: nil)
-    UserProfile.where(profile_background_upload_id: self.id).update_all(
+    UserProfile.where(card_background_upload_id: id).update_all(card_background_upload_id: nil)
+    UserProfile.where(profile_background_upload_id: id).update_all(
       profile_background_upload_id: nil,
     )
   end
 
   after_destroy do
-    User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
-    UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
-    UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
+    User.where(uploaded_avatar_id: id).update_all(uploaded_avatar_id: nil)
+    UserAvatar.where(gravatar_upload_id: id).update_all(gravatar_upload_id: nil)
+    UserAvatar.where(custom_upload_id: id).update_all(custom_upload_id: nil)
   end
 
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
@@ -118,7 +118,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.with_no_non_post_relations
-    self.joins(
+    joins(
       "LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'",
     ).where("ur.upload_id IS NULL")
   end
@@ -129,14 +129,14 @@ class Upload < ActiveRecord::Base
   end
 
   def to_s
-    self.url
+    url
   end
 
   def to_markdown
     UploadMarkdown.new(self).to_markdown
   end
 
-  def thumbnail(width = self.thumbnail_width, height = self.thumbnail_height)
+  def thumbnail(width = thumbnail_width, height = thumbnail_height)
     optimized_images.find_by(width: width, height: height)
   end
 
@@ -199,12 +199,12 @@ class Upload < ActiveRecord::Base
         end
       new_extension = image_info&.type&.to_s || "unknown"
 
-      if new_extension != self.extension
-        self.update_columns(extension: new_extension)
+      if new_extension != extension
+        update_columns(extension: new_extension)
         true
       end
     rescue StandardError
-      self.update_columns(extension: "unknown")
+      update_columns(extension: "unknown")
       true
     end
   end
@@ -234,7 +234,7 @@ class Upload < ActiveRecord::Base
   end
 
   def short_path
-    self.class.short_path(sha1: self.sha1, extension: self.extension)
+    self.class.short_path(sha1: sha1, extension: extension)
   end
 
   def self.consider_for_reuse(upload, post)
@@ -277,7 +277,7 @@ class Upload < ActiveRecord::Base
   def self.short_path(sha1:, extension:)
     @url_helpers ||= Rails.application.routes.url_helpers
 
-    @url_helpers.upload_short_path(base62: self.base62_sha1(sha1), extension: extension)
+    @url_helpers.upload_short_path(base62: base62_sha1(sha1), extension: extension)
   end
 
   def self.base62_sha1(sha1)
@@ -285,7 +285,7 @@ class Upload < ActiveRecord::Base
   end
 
   def base62_sha1
-    Upload.base62_sha1(self.sha1)
+    Upload.base62_sha1(sha1)
   end
 
   def local?
@@ -326,7 +326,7 @@ class Upload < ActiveRecord::Base
 
       self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(w, h)
 
-      self.update_columns(
+      update_columns(
         width: width,
         height: height,
         thumbnail_width: thumbnail_width,
@@ -430,7 +430,7 @@ class Upload < ActiveRecord::Base
     end
 
     if persisted?
-      self.update_column(:dominant_color, color)
+      update_column(:dominant_color, color)
     else
       self.dominant_color = color
     end
@@ -455,11 +455,11 @@ class Upload < ActiveRecord::Base
   end
 
   def self.sha1_from_short_path(path)
-    self.sha1_from_base62_encoded($2) if path =~ %r{(/uploads/short-url/)([a-zA-Z0-9]+)(\..*)?}
+    sha1_from_base62_encoded($2) if path =~ %r{(/uploads/short-url/)([a-zA-Z0-9]+)(\..*)?}
   end
 
   def self.sha1_from_short_url(url)
-    self.sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
+    sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
   end
 
   def self.sha1_from_long_url(url)
@@ -482,11 +482,11 @@ class Upload < ActiveRecord::Base
   end
 
   def human_filesize
-    number_to_human_size(self.filesize)
+    number_to_human_size(filesize)
   end
 
   def rebake_posts_on_old_scheme
-    self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
+    posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
   def update_secure_status(source: "unknown", override: nil)
@@ -497,8 +497,8 @@ class Upload < ActiveRecord::Base
       reason = "manually overridden"
     end
 
-    secure_status_did_change = self.secure? != mark_secure
-    self.update(secure_params(mark_secure, reason, source))
+    secure_status_did_change = secure? != mark_secure
+    update(secure_params(mark_secure, reason, source))
 
     if secure_status_did_change && Discourse.store.external?
       Discourse.store.update_upload_access_control(self)

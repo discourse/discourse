@@ -6,7 +6,7 @@ class TopicCreator
   include HasErrors
 
   def self.create(user, guardian, opts)
-    self.new(user, guardian, opts).create
+    new(user, guardian, opts).create
   end
 
   def initialize(user, guardian, opts)

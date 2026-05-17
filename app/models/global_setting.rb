@@ -143,7 +143,7 @@ class GlobalSetting
       replica_host
       replica_port
     ].each do |s|
-      if val = self.public_send("db_#{s}")
+      if val = public_send("db_#{s}")
         hash[s] = val
       end
     end
@@ -156,16 +156,16 @@ class GlobalSetting
 
     hash["host_names"] = hostnames
     hash["database"] = db_name
-    hash["prepared_statements"] = !!self.db_prepared_statements
+    hash["prepared_statements"] = !!db_prepared_statements
     hash["idle_timeout"] = connection_reaper_age if connection_reaper_age.present?
     hash["reaping_frequency"] = connection_reaper_interval if connection_reaper_interval.present?
-    hash["advisory_locks"] = !!self.db_advisory_locks
+    hash["advisory_locks"] = !!db_advisory_locks
 
     db_variables = provider.keys.filter { |k| k.to_s.starts_with? "db_variables_" }
     if db_variables.length > 0
       hash["variables"] = {}
       db_variables.each do |k|
-        hash["variables"][k.slice(("db_variables_".length)..)] = self.public_send(k)
+        hash["variables"][k.slice(("db_variables_".length)..)] = public_send(k)
       end
     end
 
@@ -261,7 +261,7 @@ class GlobalSetting
   end
 
   def self.add_default(name, default)
-    define_singleton_method(name) { default } unless self.respond_to? name
+    define_singleton_method(name) { default } unless respond_to? name
   end
 
   def self.smtp_settings
@@ -340,7 +340,7 @@ class GlobalSetting
     end
 
     def self.parse(file)
-      provider = self.new(file)
+      provider = new(file)
       provider.read
       provider
     end

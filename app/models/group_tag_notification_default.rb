@@ -9,14 +9,14 @@ class GroupTagNotificationDefault < ActiveRecord::Base
   end
 
   def self.lookup(group, level)
-    self.where(group: group, notification_level: notification_levels[level])
+    where(group: group, notification_level: notification_levels[level])
   end
 
   def self.batch_set(group, level, tag_names)
     tag_names ||= []
     changed = false
 
-    records = self.where(group: group, notification_level: notification_levels[level])
+    records = where(group: group, notification_level: notification_levels[level])
     old_ids = records.pluck(:tag_id)
 
     tag_ids = tag_names.empty? ? [] : Tag.where_name(tag_names).pluck(:id)

@@ -104,7 +104,7 @@ class S3Helper
 
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
-      self.copy(get_path_for_s3_upload(s3_filename), File.join(@tombstone_prefix, s3_filename))
+      copy(get_path_for_s3_upload(s3_filename), File.join(@tombstone_prefix, s3_filename))
     end
 
     # delete the file

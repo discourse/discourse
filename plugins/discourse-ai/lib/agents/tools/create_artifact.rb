@@ -127,7 +127,7 @@ module DiscourseAi
             update_custom_html(artifact)
             success_response(artifact)
           else
-            self.custom_raw = self.custom_raw + "\n\n###Error creating artifact..."
+            self.custom_raw = custom_raw + "\n\n###Error creating artifact..."
             error_response(artifact.errors.full_messages.join(", "))
           end
         end

@@ -716,7 +716,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
       raise Error, "too many arguments" if args.length > 1
       self.smfroot = args.first
-      read_smf_settings if self.smfroot
+      read_smf_settings if smfroot
 
       self.host ||= "localhost"
       self.username ||= Etc.getlogin
@@ -749,7 +749,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     end
 
     def read_smf_settings
-      settings = File.join(self.smfroot, "Settings.php")
+      settings = File.join(smfroot, "Settings.php")
       File
         .readlines(settings)
         .each do |line|

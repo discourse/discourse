@@ -414,7 +414,7 @@ RSpec.describe SiteSettingExtension do
   describe "enum setting" do
     class TestEnumClass
       def self.valid_value?(v)
-        self.values.include?(v)
+        values.include?(v)
       end
 
       def self.values

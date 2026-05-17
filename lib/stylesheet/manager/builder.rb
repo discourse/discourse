@@ -130,7 +130,7 @@ class Stylesheet::Manager::Builder
   end
 
   def stylesheet_filename(with_digest = true)
-    digest_string = "_#{self.digest}" if with_digest
+    digest_string = "_#{digest}" if with_digest
     "#{qualified_target}#{digest_string}.css"
   end
 

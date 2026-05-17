@@ -479,7 +479,7 @@ after_initialize do
   add_to_serializer(:topic_view, :valid_reactions) { DiscourseReactions::Reaction.valid_reactions }
 
   add_model_callback(User, :before_destroy) do
-    DiscourseReactions::ReactionUser.where(user_id: self.id).delete_all
+    DiscourseReactions::ReactionUser.where(user_id: id).delete_all
   end
 
   add_report("reactions") do |report|

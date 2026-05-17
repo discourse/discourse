@@ -75,7 +75,7 @@ end
 
 RSpec.shared_examples "action requires login" do |method, url, params = {}|
   it "raises an exception when not logged in" do
-    self.public_send(method, url, **params)
+    public_send(method, url, **params)
     expect(response.status).to eq(403)
   end
 end

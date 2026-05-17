@@ -90,7 +90,7 @@ class Stylesheet::Manager
     compiled = Set.new
 
     themes.each do |theme_id, light_color_scheme_id, dark_color_scheme_id|
-      manager = self.new(theme_id: theme_id)
+      manager = new(theme_id: theme_id)
 
       targets.each do |target|
         next if theme_id == -1

@@ -15,7 +15,7 @@ class PostSerializer < BasicPostSerializer
     ignored_user_like_counts
   ]
 
-  INSTANCE_VARS.each { |v| self.public_send(:attr_accessor, v) }
+  INSTANCE_VARS.each { |v| public_send(:attr_accessor, v) }
 
   attributes :post_number,
              :post_type,
@@ -107,7 +107,7 @@ class PostSerializer < BasicPostSerializer
     super(object, opts)
 
     PostSerializer::INSTANCE_VARS.each do |name|
-      self.public_send("#{name}=", opts[name]) if opts.include? name
+      public_send("#{name}=", opts[name]) if opts.include? name
     end
   end
 

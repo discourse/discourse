@@ -50,9 +50,9 @@ module DiscoursePostEvent
 
       new_status = Invitee.statuses[status.to_sym]
       status_changed = self.status != new_status
-      self.update(status: new_status)
-      self.event.publish_update!
-      self.update_topic_tracking! if status_changed
+      update(status: new_status)
+      event.publish_update!
+      update_topic_tracking! if status_changed
       DiscourseEvent.trigger(:discourse_calendar_post_event_invitee_status_changed, self)
       self
     end
@@ -64,16 +64,16 @@ module DiscoursePostEvent
     end
 
     def sync_chat_channel_members
-      return if !self.event.chat_enabled?
-      ChatChannelSync.sync(self.event)
+      return if !event.chat_enabled?
+      ChatChannelSync.sync(event)
     end
 
     def update_topic_tracking!
-      topic_id = self.event.post.topic.id
-      user_id = self.user.id
+      topic_id = event.post.topic.id
+      user_id = user.id
       tracking = :regular
 
-      case self.status
+      case status
       when Invitee.statuses[:going]
         tracking = :watching
       when Invitee.statuses[:interested]

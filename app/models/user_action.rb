@@ -278,10 +278,10 @@ class UserAction < ActiveRecord::Base
         # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
 
         # protect against dupes, for some reason this is failing in some cases
-        action = self.find_by(hash.select { |k, _| required_parameters.include?(k) })
+        action = find_by(hash.select { |k, _| required_parameters.include?(k) })
         return action if action
 
-        action = self.new(hash)
+        action = new(hash)
 
         action.created_at = hash[:created_at] if hash[:created_at]
         action.save!
@@ -384,7 +384,7 @@ class UserAction < ActiveRecord::Base
   end
 
   def self.ensure_consistency!(limit = nil)
-    self.synchronize_target_topic_ids(nil, limit: limit)
+    synchronize_target_topic_ids(nil, limit: limit)
   end
 
   def self.update_like_count(user_id, action_type, delta)

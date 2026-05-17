@@ -9,7 +9,7 @@ class GroupCategoryNotificationDefault < ActiveRecord::Base
   end
 
   def self.lookup(group, level)
-    self.where(group: group, notification_level: notification_levels[level])
+    where(group: group, notification_level: notification_levels[level])
   end
 
   def self.batch_set(group, level, category_ids)

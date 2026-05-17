@@ -17,15 +17,15 @@ class WatchedWordGroup < ActiveRecord::Base
 
       words.each do |word|
         watched_word = WatchedWord.create_or_update_word(params.merge(word: word))
-        self.watched_words << watched_word
+        watched_words << watched_word
       end
 
-      self.save!
+      save!
     end
   end
 
   def action_log_details
-    "#{WatchedWord.actions.key(self.action)} → #{watched_words.pluck(:word).join(", ")}"
+    "#{WatchedWord.actions.key(action)} → #{watched_words.pluck(:word).join(", ")}"
   end
 end
 

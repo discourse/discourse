@@ -190,7 +190,7 @@ class TranslationOverride < ActiveRecord::Base
 
     return if invalid_keys.blank?
 
-    self.errors.add(
+    errors.add(
       :base,
       I18n.t(
         "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",

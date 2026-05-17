@@ -74,7 +74,7 @@ after_initialize do
         Patreon::Patron.update_local_user(user, patreon_id, true)
       rescue => e
         Rails.logger.warn(
-          "Patreon group membership callback failed for new user #{self.id} with error: #{e}.\n\n #{e.backtrace.join("\n")}",
+          "Patreon group membership callback failed for new user #{id} with error: #{e}.\n\n #{e.backtrace.join("\n")}",
         )
       end
     end

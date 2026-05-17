@@ -80,7 +80,7 @@ after_initialize do
   add_to_serializer(
     :admin_plugin,
     :extras,
-    include_condition: -> { self.name == "discourse-gamification" },
+    include_condition: -> { name == "discourse-gamification" },
   ) do
     {
       gamification_recalculate_scores_remaining:
@@ -89,7 +89,7 @@ after_initialize do
         Group
           .includes(:flair_upload)
           .all
-          .map { |group| BasicGroupSerializer.new(group, root: false, scope: self.scope).as_json },
+          .map { |group| BasicGroupSerializer.new(group, root: false, scope: scope).as_json },
       gamification_leaderboards:
         DiscourseGamification::GamificationLeaderboard
           .order(updated_at: :desc)

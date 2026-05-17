@@ -60,7 +60,7 @@ after_initialize do
   TopicView.default_post_custom_fields << DiscoursePolicy::HAS_POLICY
 
   validate(:post, :validate_policy) do
-    return unless self.raw_changed?
+    return unless raw_changed?
 
     validator = DiscoursePolicy::PostValidator.new(self)
     return unless validator.validate_post

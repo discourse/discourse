@@ -8,7 +8,7 @@ class UserAvatar < ActiveRecord::Base
 
   after_save do
     if saved_change_to_custom_upload_id? || saved_change_to_gravatar_upload_id?
-      upload_ids = [self.custom_upload_id, self.gravatar_upload_id]
+      upload_ids = [custom_upload_id, gravatar_upload_id]
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
@@ -28,7 +28,7 @@ class UserAvatar < ActiveRecord::Base
   def update_gravatar!
     DistributedMutex.synchronize("update_gravatar_#{user_id}") do
       begin
-        self.update!(last_gravatar_download_attempt: Time.zone.now)
+        update!(last_gravatar_download_attempt: Time.zone.now)
 
         max = Discourse.avatar_sizes.max
 
@@ -73,7 +73,7 @@ class UserAvatar < ActiveRecord::Base
                 user.update!(uploaded_avatar_id: upload.id)
               end
 
-              self.update!(gravatar_upload: upload)
+              update!(gravatar_upload: upload)
             end
           end
         end
@@ -86,7 +86,7 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.local_avatar_url(hostname, username, upload_id, size)
-    self.local_avatar_template(hostname, username, upload_id).gsub("{size}", size.to_s)
+    local_avatar_template(hostname, username, upload_id).gsub("{size}", size.to_s)
   end
 
   def self.local_avatar_template(hostname, username, upload_id)
@@ -95,7 +95,7 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.external_avatar_url(user_id, upload_id, size)
-    self.external_avatar_template(user_id, upload_id).gsub("{size}", size.to_s)
+    external_avatar_template(user_id, upload_id).gsub("{size}", size.to_s)
   end
 
   def self.external_avatar_template(user_id, upload_id)

@@ -107,7 +107,7 @@ class Plugin::Instance
   def self.parse_from_source(path)
     source = File.read(path)
     metadata = Plugin::Metadata.parse(source)
-    self.new(metadata, path)
+    new(metadata, path)
   end
 
   def initialize(metadata = nil, path = nil)
@@ -138,7 +138,7 @@ class Plugin::Instance
   end
 
   def full_admin_route
-    route = self.admin_route
+    route = admin_route
 
     if route.blank?
       return if !any_settings? || has_only_enabled_setting?
@@ -162,7 +162,7 @@ class Plugin::Instance
   end
 
   def plugin_settings
-    @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == self.name }
+    @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == name }
   end
 
   def deprecate_setting(old_setting, new_setting, override, drom_from)
@@ -414,7 +414,7 @@ class Plugin::Instance
   end
 
   def register_category_type(klass)
-    Categories::TypeRegistry.register(klass, plugin_identifier: self.metadata.name)
+    Categories::TypeRegistry.register(klass, plugin_identifier: metadata.name)
   end
 
   def register_problem_check(klass)
@@ -647,7 +647,7 @@ class Plugin::Instance
 
   def discourse_owned?
     return false if commit_hash.blank?
-    parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
+    parsed_commit_url = UrlHelper.relaxed_parse(commit_url)
     return false if parsed_commit_url.blank? || parsed_commit_url.path.blank?
     github_org = parsed_commit_url.path.split("/")[1]
     (github_org == "discourse" || github_org == "discourse-org") &&
@@ -733,8 +733,8 @@ class Plugin::Instance
   end
 
   def listen_for(event_name)
-    return unless self.respond_to?(event_name)
-    DiscourseEvent.on(event_name, &self.method(event_name))
+    return unless respond_to?(event_name)
+    DiscourseEvent.on(event_name, &method(event_name))
   end
 
   def register_css(style)
@@ -847,7 +847,7 @@ class Plugin::Instance
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
-    self.instance_eval File.read(path), path
+    instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
       assets.concat(auto_assets)
     end

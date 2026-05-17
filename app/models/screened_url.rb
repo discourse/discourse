@@ -16,8 +16,8 @@ class ScreenedUrl < ActiveRecord::Base
   validates :domain, presence: true
 
   def normalize
-    self.url = ScreenedUrl.normalize_url(self.url) if self.url
-    self.domain = self.domain.downcase.sub(/\Awww\./, "") if self.domain
+    self.url = ScreenedUrl.normalize_url(url) if url
+    self.domain = domain.downcase.sub(/\Awww\./, "") if domain
   end
 
   def self.watch(url, domain, opts = {})

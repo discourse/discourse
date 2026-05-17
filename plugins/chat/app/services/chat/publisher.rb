@@ -44,7 +44,7 @@ module Chat
 
       if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel, chat_message)
         MessageBus.publish(
-          self.new_messages_message_bus_channel(chat_channel.id),
+          new_messages_message_bus_channel(chat_channel.id),
           {
             type: "channel",
             channel_id: chat_channel.id,
@@ -61,7 +61,7 @@ module Chat
 
       if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel, chat_message)
         MessageBus.publish(
-          self.new_messages_message_bus_channel(chat_channel.id),
+          new_messages_message_bus_channel(chat_channel.id),
           {
             type: "thread",
             channel_id: chat_channel.id,
@@ -320,7 +320,7 @@ module Chat
       end
 
       MessageBus.publish(
-        self.user_tracking_state_message_bus_channel(user.id),
+        user_tracking_state_message_bus_channel(user.id),
         data.as_json,
         user_ids: [user.id],
       )
@@ -349,7 +349,7 @@ module Chat
       end
 
       MessageBus.publish(
-        self.bulk_user_tracking_state_message_bus_channel(user.id),
+        bulk_user_tracking_state_message_bus_channel(user.id),
         channel_last_read_map.as_json,
         user_ids: [user.id],
       )
@@ -365,7 +365,7 @@ module Chat
 
     def self.publish_new_mention(user_id, chat_channel_id, chat_message_id)
       MessageBus.publish(
-        self.new_mentions_message_bus_channel(chat_channel_id),
+        new_mentions_message_bus_channel(chat_channel_id),
         { message_id: chat_message_id, channel_id: chat_channel_id }.as_json,
         user_ids: [user_id],
       )

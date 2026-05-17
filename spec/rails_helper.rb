@@ -783,7 +783,7 @@ RSpec.configure do |config|
       class << self
         def using_session_with_localhost_resolution(name, &block)
           attempts = 0
-          self._using_session(name, &block)
+          _using_session(name, &block)
         rescue Socket::ResolutionError
           puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
           attempts += 1

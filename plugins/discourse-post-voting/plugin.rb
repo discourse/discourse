@@ -71,7 +71,7 @@ after_initialize do
   # TODO: Performance of the query degrades as the number of posts a user has voted
   # on increases. We should probably keep a counter cache in the user's
   # custom fields.
-  add_to_class(:user, :vote_count) { Post.where(user_id: self.id).sum(:qa_vote_count) }
+  add_to_class(:user, :vote_count) { Post.where(user_id: id).sum(:qa_vote_count) }
 
   add_to_serializer(:user_card, :vote_count) { object.vote_count }
 
@@ -231,9 +231,7 @@ after_initialize do
   register_preloaded_category_custom_fields(PostVoting::CREATE_AS_POST_VOTING_DEFAULT)
 
   add_to_class(:category, :create_as_post_voting_default) do
-    ActiveModel::Type::Boolean.new.cast(
-      self.custom_fields[PostVoting::CREATE_AS_POST_VOTING_DEFAULT],
-    )
+    ActiveModel::Type::Boolean.new.cast(custom_fields[PostVoting::CREATE_AS_POST_VOTING_DEFAULT])
   end
   add_to_serializer(:basic_category, :create_as_post_voting_default) do
     object.create_as_post_voting_default
@@ -249,7 +247,7 @@ after_initialize do
 
   add_to_class(:category, :only_post_voting_in_this_category) do
     ActiveModel::Type::Boolean.new.cast(
-      self.custom_fields[PostVoting::ONLY_POST_VOTING_IN_THIS_CATEGORY],
+      custom_fields[PostVoting::ONLY_POST_VOTING_IN_THIS_CATEGORY],
     )
   end
   add_to_serializer(:basic_category, :only_post_voting_in_this_category) do
@@ -257,8 +255,8 @@ after_initialize do
   end
 
   add_model_callback(:post, :before_create) do
-    if SiteSetting.post_voting_enabled && self.is_post_voting_topic? && self.via_email &&
-         self.reply_to_post_number == 1
+    if SiteSetting.post_voting_enabled && is_post_voting_topic? && via_email &&
+         reply_to_post_number == 1
       self.reply_to_post_number = nil
     end
   end

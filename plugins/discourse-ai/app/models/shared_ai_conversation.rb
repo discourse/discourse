@@ -73,7 +73,7 @@ class SharedAiConversation < ActiveRecord::Base
 
   def to_json
     posts =
-      self.populated_context.map do |post|
+      populated_context.map do |post|
         {
           id: post.id,
           cooked: post.cooked,
@@ -81,7 +81,7 @@ class SharedAiConversation < ActiveRecord::Base
           created_at: post.created_at,
         }
       end
-    { llm_name: self.llm_name, share_key: self.share_key, title: self.title, posts: posts }
+    { llm_name: llm_name, share_key: share_key, title: title, posts: posts }
   end
 
   def url
