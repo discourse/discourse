@@ -102,6 +102,9 @@ en_GB:
       categories:
         title: "Categories"
     keyboard_shortcuts_help:
+      description_header: "Description"
+      jump_to:
+        categories: "Categories"
       navigation:
         title: "Navigation"
     tagging:
