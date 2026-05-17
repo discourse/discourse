@@ -118,7 +118,7 @@ if DiscourseLograge.enabled?
               output["request.headers.http_accept_language"] = http_accept_language_request_header
             end
 
-            if data = (Thread.current[:_method_profiler] || event.payload[:timings])
+            if data = Thread.current[:_method_profiler] || event.payload[:timings]
               if sql = data[:sql]
                 output[:db] = sql[:duration] * 1000
                 output[:db_calls] = sql[:calls]

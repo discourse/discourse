@@ -39,7 +39,7 @@ class IncomingLink < ActiveRecord::Base
       post_id ||=
         Post.where(topic_id: opts[:topic_id], post_number: opts[:post_number] || 1).pick(:id)
 
-      cid = current_user ? (current_user.id) : (nil)
+      cid = current_user ? current_user.id : nil
       ip_address = nil if cid
 
       unless cid && cid == user_id

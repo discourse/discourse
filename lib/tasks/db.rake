@@ -5,7 +5,7 @@ task "set_locale" do
   begin
     I18n.locale =
       begin
-        (SiteSetting.default_locale || :en)
+        SiteSetting.default_locale || :en
       rescue StandardError
         :en
       end
@@ -396,7 +396,7 @@ task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] 
 
   puts
 
-  fix_indexes = (ENV["FIX_INDEXES"] == "1" || args[:arg] == "fix")
+  fix_indexes = ENV["FIX_INDEXES"] == "1" || args[:arg] == "fix"
   inconsistency_found = false
 
   RailsMultisite::ConnectionManagement.each_connection do |db_name|

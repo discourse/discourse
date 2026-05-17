@@ -155,7 +155,7 @@ class Upload < ActiveRecord::Base
   def get_optimized_image(width, height, opts = nil)
     opts ||= {}
 
-    fix_image_extension if (!extension || extension.length == 0)
+    fix_image_extension if !extension || extension.length == 0
 
     opts = opts.merge(raise_on_error: true)
     begin

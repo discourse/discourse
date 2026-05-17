@@ -69,7 +69,7 @@ module DiscourseAi
           doc.children.each do |node|
             html = node.to_html
             end_pos = max_length_within_target + html.length
-            if (max_length_within_target > 0 && end_pos > target_pos)
+            if max_length_within_target > 0 && end_pos > target_pos
               return max_length_within_target
             end
             max_length_within_target = end_pos
@@ -86,7 +86,7 @@ module DiscourseAi
           text.scan(pattern) do |_|
             match = $~
             tag_end = match.end(0)
-            if (max_length_within_target > 0 && tag_end > target_pos)
+            if max_length_within_target > 0 && tag_end > target_pos
               return max_length_within_target
             end
             max_length_within_target = tag_end

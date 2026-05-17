@@ -369,12 +369,12 @@ class Auth::DefaultCurrentUserProvider
   # api has special rights return true if api was detected
   def is_api?
     current_user
-    !!(@env[API_KEY_ENV])
+    !!@env[API_KEY_ENV]
   end
 
   def is_user_api?
     current_user
-    !!(@env[USER_API_KEY_ENV])
+    !!@env[USER_API_KEY_ENV]
   end
 
   def has_auth_cookie?

@@ -164,7 +164,7 @@ module Stylesheet
           rescue StandardError
             ColorScheme.base_colors
           end
-      elsif (@theme_id && !theme.component)
+      elsif @theme_id && !theme.component
         colors = theme&.color_scheme&.resolved_colors || ColorScheme.base_colors
       else
         # this is a slightly ugly backwards compatibility fix,

@@ -581,8 +581,8 @@ class TopicTrackingState
     groups.each do |group|
       member = group.members.include?(user_id)
 
-      member_writing = (write_event && member)
-      non_member_reading = (!write_event && !member)
+      member_writing = write_event && member
+      non_member_reading = !write_event && !member
       next if non_member_reading || member_writing
 
       groups_to_update << group

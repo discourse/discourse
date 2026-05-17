@@ -559,14 +559,12 @@ class User < ActiveRecord::Base
 
     # Sometimes the system user doesn't have their auto groups
     # from some strange edge case, this handles it.
-    if (
-         is_system_user? &&
+    if is_system_user? &&
            (
              (
                Group.auto_groups_between(:admins, :trust_level_4) - [Group::AUTO_GROUPS[:anonymous]]
              ) & group_ids
            ).any?
-       )
       return true
     end
 
@@ -873,7 +871,7 @@ class User < ActiveRecord::Base
     notification = notifications.visible.order("notifications.created_at desc").first
     json = NotificationSerializer.new(notification).as_json if notification
 
-    sql = (<<~SQL)
+    sql = <<~SQL
        SELECT * FROM (
          SELECT n.id, n.read FROM notifications n
          LEFT JOIN topics t ON n.topic_id = t.id

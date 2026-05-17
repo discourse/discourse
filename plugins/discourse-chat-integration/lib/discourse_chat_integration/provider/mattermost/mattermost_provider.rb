@@ -44,7 +44,7 @@ module DiscourseChatIntegration
         elsif topic.category
           category =
             (
-              if (topic.category.parent_category)
+              if topic.category.parent_category
                 "[#{topic.category.parent_category.name}/#{topic.category.name}]"
               else
                 "[#{topic.category.name}]"
@@ -56,7 +56,7 @@ module DiscourseChatIntegration
           if SiteSetting.chat_integration_mattermost_icon_url.present?
             UrlHelper.absolute(SiteSetting.chat_integration_mattermost_icon_url)
           elsif (
-                url = (SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url)
+                url = SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url
               ).present?
             UrlHelper.absolute(url)
           end

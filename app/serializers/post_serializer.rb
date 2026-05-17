@@ -160,15 +160,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def moderator?
-    !!(object&.user&.moderator?)
+    !!object&.user&.moderator?
   end
 
   def admin?
-    !!(object&.user&.admin?)
+    !!object&.user&.admin?
   end
 
   def staff?
-    !!(object&.user&.staff?)
+    !!object&.user&.staff?
   end
 
   def group_moderator
@@ -741,7 +741,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def user_custom_fields_object
-    (@topic_view&.user_custom_fields || @options[:user_custom_fields] || {})
+    @topic_view&.user_custom_fields || @options[:user_custom_fields] || {}
   end
 
   def topic

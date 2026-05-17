@@ -1203,7 +1203,7 @@ class TopicsController < ApplicationController
   def reset_new
     topic_scope =
       if current_user.new_new_view_enabled?
-        if (params[:dismiss_topics] && params[:dismiss_posts])
+        if params[:dismiss_topics] && params[:dismiss_posts]
           TopicQuery.new(current_user).new_and_unread_results(limit: false)
         elsif params[:dismiss_topics]
           TopicQuery.new(current_user).new_results(limit: false)
@@ -1521,7 +1521,7 @@ class TopicsController < ApplicationController
           helpers.localize_topic_view_content(@topic_view)
         end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-        @description_meta = (@topic_view.topic.excerpt.presence || @topic_view.summary)
+        @description_meta = @topic_view.topic.excerpt.presence || @topic_view.summary
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         render :show
       end

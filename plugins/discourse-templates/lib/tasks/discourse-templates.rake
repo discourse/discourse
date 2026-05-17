@@ -196,7 +196,7 @@ def purge_old_data
           key: canned_replies_store_name,
         )
 
-      (old_replies.presence&.destroy!)
+      old_replies.presence&.destroy!
 
       puts "Finished!"
     rescue StandardError => e

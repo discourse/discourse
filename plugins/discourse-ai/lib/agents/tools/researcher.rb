@@ -62,7 +62,7 @@ module DiscourseAi
 
           def assign_tip
             if SiteSetting.respond_to?(:assign_enabled) && SiteSetting.assign_enabled
-              (<<~TEXT).strip
+              <<~TEXT.strip
                 assigned_to:username or assigned_to:username1,username2 - topics assigned to a specific user
                 assigned_to:* - topics assigned to any user
                 assigned_to:nobody - topics not assigned to any user

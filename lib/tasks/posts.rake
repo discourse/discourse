@@ -289,7 +289,7 @@ task "posts:remap", %i[find replace type ignore_case] => [:environment] do |_, a
       ask(
         "Are you sure you want to replace all #{type} occurrences of '#{find}' with '#{replace}'? (Y/n)",
       )
-    exit 1 unless (confirm_replace == "" || confirm_replace.downcase == "y")
+    exit 1 unless confirm_replace == "" || confirm_replace.downcase == "y"
   end
 
   puts "Remapping"
@@ -318,7 +318,7 @@ task "posts:delete_word", %i[find type ignore_case] => [:environment] do |_, arg
   else
     confirm_delete =
       ask("Are you sure you want to remove all #{type} occurrences of '#{find}'? (Y/n)")
-    exit 1 unless (confirm_delete == "" || confirm_delete.downcase == "y")
+    exit 1 unless confirm_delete == "" || confirm_delete.downcase == "y"
   end
 
   puts "Processing"

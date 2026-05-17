@@ -256,7 +256,7 @@ RSpec.describe PostCreator do
         expect(
           messages.any? do |m|
             m.group_ids != admin_ids &&
-              (!m.user_ids.include?(other_admin.id) && !m.user_ids.include?(admin.id))
+              !m.user_ids.include?(other_admin.id) && !m.user_ids.include?(admin.id)
           end,
         ).to eq(false)
       end
@@ -875,8 +875,8 @@ RSpec.describe PostCreator do
       GroupMessage
         .expects(:create)
         .with do |group_name, msg_type, params|
-          group_name == (Group[:moderators].name) && msg_type == (:spam_post_blocked) &&
-            params[:user].id == (user.id)
+          group_name == Group[:moderators].name && msg_type == :spam_post_blocked &&
+            params[:user].id == user.id
         end
       creator.create
     end

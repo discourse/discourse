@@ -1556,7 +1556,7 @@ class BulkImport::Base
     category[:name_lower] = name_lower
 
     slug_next_number = 1
-    original_slug = slug = (category[:slug] || Slug.for(name_lower, ""))
+    original_slug = slug = category[:slug] || Slug.for(name_lower, "")
 
     while !@category_slugs.add?(slug.downcase)
       slug = "#{original_slug}-#{slug_next_number}"

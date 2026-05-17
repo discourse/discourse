@@ -18,7 +18,7 @@ class Admin::ReportsController < Admin::StaffController
         args[:current_user] = current_user
 
         report = nil
-        report = Report.find_cached(report_type, args) if (report_params[:cache])
+        report = Report.find_cached(report_type, args) if report_params[:cache]
 
         if Report.hidden?(report_type, admin: current_user.admin?)
           report = Report._get(report_type, args)
@@ -30,7 +30,7 @@ class Admin::ReportsController < Admin::StaffController
         else
           report = Report.find(report_type, args)
 
-          Report.cache(report) if (report_params[:cache]) && report
+          Report.cache(report) if report_params[:cache] && report
 
           if report.blank?
             report = Report._get(report_type, args)
@@ -55,7 +55,7 @@ class Admin::ReportsController < Admin::StaffController
     args[:current_user] = current_user
 
     report = nil
-    report = Report.find_cached(report_type, args) if (params[:cache])
+    report = Report.find_cached(report_type, args) if params[:cache]
 
     return render_json_dump(report: report) if report
 
@@ -64,7 +64,7 @@ class Admin::ReportsController < Admin::StaffController
 
       raise Discourse::NotFound if report.blank?
 
-      Report.cache(report) if (params[:cache])
+      Report.cache(report) if params[:cache]
 
       render_json_dump(report: report)
     end

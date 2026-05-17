@@ -43,7 +43,7 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
     return no_problem if failure_rate(total_calls, failed_calls) < FAILURE_RATE_THRESHOLD
 
     details =
-      self.class.problem_details(model, failed_calls, total_calls, (LOOKBACK_WINDOW / 1.hour))
+      self.class.problem_details(model, failed_calls, total_calls, LOOKBACK_WINDOW / 1.hour)
 
     problem(model, override_data: details, details: details)
   end

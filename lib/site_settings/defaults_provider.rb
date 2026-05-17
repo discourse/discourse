@@ -18,7 +18,7 @@ class SiteSettings::DefaultsProvider
     name = name_arg.to_sym
     @defaults[DEFAULT_LOCALE.to_sym][name] = value
 
-    if (locale_defaults)
+    if locale_defaults
       locale_defaults.each do |locale, v|
         locale = locale.to_sym
         @defaults[locale] ||= {}

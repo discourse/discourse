@@ -334,7 +334,7 @@ RSpec.describe Admin::SiteTextsController do
         get "/admin/customize/site_texts.json", params: { q: "confirm_old_email", locale: }
         expect(response.status).to eq(200)
         returned_ids = response.parsed_body["site_texts"].map { |t| t["id"] }
-        expect((returned_ids & Admin::SiteTextsController::RESTRICTED_KEYS.to_a)).to be_empty
+        expect(returned_ids & Admin::SiteTextsController::RESTRICTED_KEYS.to_a).to be_empty
 
         get "/admin/customize/site_texts.json", params: { q: "powered_by", locale: }
         expect(response.status).to eq(200)

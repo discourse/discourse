@@ -196,7 +196,7 @@ class Topic < ActiveRecord::Base
             max_emojis: true,
             unique_among: {
               unless:
-                Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },
+                Proc.new { |t| SiteSetting.allow_duplicate_topic_titles? || t.private_message? },
               message: :has_already_been_used,
               allow_blank: true,
               case_sensitive: false,
@@ -1468,7 +1468,7 @@ class Topic < ActiveRecord::Base
     post = self.ordered_posts.first
 
     html = post.cooked
-    if (guardian && ContentLocalization.show_translated_post?(post, guardian))
+    if guardian && ContentLocalization.show_translated_post?(post, guardian)
       html = post.get_localization&.cooked.presence || html
     end
 
@@ -1716,7 +1716,7 @@ class Topic < ActiveRecord::Base
     elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
       if duration_minutes > 0
         first_reply_created_at =
-          (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
+          self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now
         topic_timer.duration_minutes = duration_minutes
         topic_timer.execute_at = first_reply_created_at + duration_minutes.minutes
         topic_timer.created_at = first_reply_created_at

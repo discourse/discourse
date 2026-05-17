@@ -232,7 +232,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
   end
 
   it "correctly accounts for tokens in non streaming mode" do
-    body = (<<~TEXT).strip
+    body = <<~TEXT.strip
       {"id":"chat-c580e4a9ebaa44a0becc802ed5dc213a","object":"chat.completion","created":1731294404,"model":"meta-llama/Meta-Llama-3.1-70B-Instruct","choices":[{"index":0,"message":{"role":"assistant","content":"Random Number Generator Produces Smallest Possible Result","tool_calls":[]},"logprobs":null,"finish_reason":"stop","stop_reason":null}],"usage":{"prompt_tokens":146,"total_tokens":156,"completion_tokens":10},"prompt_logprobs":null}
     TEXT
 
@@ -377,7 +377,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
         ).to_return(
           status: 200,
           body:
-            +"data: #{({ choices: [{ delta: { content: "hello" } }] }).to_json}\n\ndata: [DONE]",
+            +"data: #{{ choices: [{ delta: { content: "hello" } }] }.to_json}\n\ndata: [DONE]",
         )
 
       llm.generate("say hello", user: Discourse.system_user) { |_| }

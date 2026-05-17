@@ -944,7 +944,7 @@ module Discourse
       User.find_by(
         username_lower: SiteSetting.site_contact_username.downcase,
       ) if SiteSetting.site_contact_username.present?
-    user ||= (system_user || User.admins.real.order(:id).first)
+    user ||= system_user || User.admins.real.order(:id).first
   end
 
   SYSTEM_USER_ID = -1
