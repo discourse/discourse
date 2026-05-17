@@ -78,18 +78,19 @@ after_initialize do
   add_to_class(:topic_view, :user_voted_posts) do |user|
     @user_voted_posts ||= {}
 
-    @user_voted_posts[user.id] ||= PostVotingVote.where(user: user, post: @posts).distinct.pluck(:post_id)
-    
+    @user_voted_posts[user.id] ||= PostVotingVote
+      .where(user: user, post: @posts)
+      .distinct
+      .pluck(:post_id)
   end
 
   add_to_class(:topic_view, :user_voted_posts_last_timestamp) do |user|
     @user_voted_posts_last_timestamp ||= {}
 
     @user_voted_posts_last_timestamp[user.id] ||= PostVotingVote
-        .where(user: user, post: @posts)
-        .group(:votable_id, :created_at)
-        .pluck(:votable_id, :created_at)
-    
+      .where(user: user, post: @posts)
+      .group(:votable_id, :created_at)
+      .pluck(:votable_id, :created_at)
   end
 
   TopicView.apply_custom_default_scope do |scope, topic_view|

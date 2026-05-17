@@ -45,16 +45,14 @@ class RspecErrorTracker
   end
 
   def call(env)
-    
-      @app.call(env)
+    @app.call(env)
 
-      # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
-      # and also Mocha::ExpectationError inherit from Exception instead of StandardError
-      # they do not get captured by the rescue => e shorthand :(
-    rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
-      RspecErrorTracker.report_exception(env["PATH_INFO"], e)
-      raise e
-    
+    # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
+    # and also Mocha::ExpectationError inherit from Exception instead of StandardError
+    # they do not get captured by the rescue => e shorthand :(
+  rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
+    RspecErrorTracker.report_exception(env["PATH_INFO"], e)
+    raise e
   end
 end
 

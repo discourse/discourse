@@ -8,13 +8,11 @@ class RegexpListValidator
     value
       .split("|")
       .all? do |regexp|
-        
-          Regexp.new(regexp)
-        rescue RegexpError => e
-          @regexp = regexp
-          @error_message = e.message
-          false
-        
+        Regexp.new(regexp)
+      rescue RegexpError => e
+        @regexp = regexp
+        @error_message = e.message
+        false
       end
   end
 

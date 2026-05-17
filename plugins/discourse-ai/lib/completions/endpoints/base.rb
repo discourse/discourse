@@ -245,25 +245,24 @@ module DiscourseAi
                 return response_data
               end
 
-              
-                response.read_body do |chunk|
+              response.read_body do |chunk|
+                break if cancelled
+
+                response_raw << chunk
+
+                decode_chunk(chunk).each do |partial|
                   break if cancelled
-
-                  response_raw << chunk
-
-                  decode_chunk(chunk).each do |partial|
-                    break if cancelled
-                    partials_raw << partial.to_s
-                    response_data << partial if partial.is_a?(String)
-                    partials = [partial]
-                    if xml_tool_processor && partial.is_a?(String)
-                      partials = (xml_tool_processor << partial)
-                      break if xml_tool_processor.should_cancel?
-                    end
-                    partials.each { |inner_partial| blk.call(inner_partial) }
+                  partials_raw << partial.to_s
+                  response_data << partial if partial.is_a?(String)
+                  partials = [partial]
+                  if xml_tool_processor && partial.is_a?(String)
+                    partials = (xml_tool_processor << partial)
+                    break if xml_tool_processor.should_cancel?
                   end
+                  partials.each { |inner_partial| blk.call(inner_partial) }
                 end
-              
+              end
+
               if xml_stripper
                 stripped = xml_stripper.finish
                 if stripped.present?
@@ -447,11 +446,9 @@ module DiscourseAi
         private
 
         def format_possible_json_payload(payload)
-          
-            JSON.pretty_generate(JSON.parse(payload))
-          rescue JSON::ParserError
-            payload
-          
+          JSON.pretty_generate(JSON.parse(payload))
+        rescue JSON::ParserError
+          payload
         end
 
         def track_failures(call_status)

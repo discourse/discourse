@@ -647,16 +647,14 @@ RSpec.describe UploadCreator do
     end
 
     it "removes event handlers" do
-      
-        UploadCreator.new(file, "file.svg").clean_svg!
-        file_content = file.read
-        expect(file_content).not_to include("onload")
-        expect(file_content).to include("#pathdef")
-        expect(file_content).not_to include("evil.svg")
-        expect(file_content).not_to include(b64)
-      ensure
-        file.unlink
-      
+      UploadCreator.new(file, "file.svg").clean_svg!
+      file_content = file.read
+      expect(file_content).not_to include("onload")
+      expect(file_content).to include("#pathdef")
+      expect(file_content).not_to include("evil.svg")
+      expect(file_content).not_to include(b64)
+    ensure
+      file.unlink
     end
   end
 

@@ -14,12 +14,10 @@ module DiscourseSubscriptions
     end
 
     def create_campaign
-      
-        DiscourseSubscriptions::Campaign.new.create_campaign
-        render json: success_json
-      rescue => e
-        render_json_error e.message
-      
+      DiscourseSubscriptions::Campaign.new.create_campaign
+      render json: success_json
+    rescue => e
+      render_json_error e.message
     end
   end
 end

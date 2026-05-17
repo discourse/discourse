@@ -26,13 +26,11 @@ class SocketServer
   def new_accept_thread
     server = @server
     Thread.new do
-      
-        done = false
-        done = !accept_connection(server) while !done
-      ensure
-        self.stop
-        Rails.logger.info("Cleaned up socket server at #{@socket_path}")
-      
+      done = false
+      done = !accept_connection(server) while !done
+    ensure
+      self.stop
+      Rails.logger.info("Cleaned up socket server at #{@socket_path}")
     end
   end
 

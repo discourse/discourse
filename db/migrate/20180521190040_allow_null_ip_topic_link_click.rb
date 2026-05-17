@@ -2,12 +2,10 @@
 
 class AllowNullIpTopicLinkClick < ActiveRecord::Migration[5.1]
   def up
-    
-      Migration::SafeMigrate.disable!
-      change_column :topic_link_clicks, :ip_address, :inet, null: true
-    ensure
-      Migration::SafeMigrate.enable!
-    
+    Migration::SafeMigrate.disable!
+    change_column :topic_link_clicks, :ip_address, :inet, null: true
+  ensure
+    Migration::SafeMigrate.enable!
   end
 
   def down

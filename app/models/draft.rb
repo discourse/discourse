@@ -150,11 +150,9 @@ class Draft < ActiveRecord::Base
   end
 
   def parsed_data
-    
-      JSON.parse(data)
-    rescue JSON::ParserError
-      {}
-    
+    JSON.parse(data)
+  rescue JSON::ParserError
+    {}
   end
 
   def topic_id

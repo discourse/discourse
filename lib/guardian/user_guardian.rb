@@ -184,11 +184,10 @@ module UserGuardian
     cache_key = is_staff_or_is_me ? :staff_or_me : :other
 
     @allowed_user_field_ids[cache_key] ||= if is_staff_or_is_me
-        UserField.pluck(:id)
-      else
-        UserField.where("show_on_profile OR show_on_user_card").pluck(:id)
-      end
-    
+      UserField.pluck(:id)
+    else
+      UserField.where("show_on_profile OR show_on_user_card").pluck(:id)
+    end
   end
 
   def can_feature_topic?(user, topic)

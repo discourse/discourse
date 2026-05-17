@@ -35,12 +35,10 @@ module Stylesheet
 
     def start
       Thread.new do
-        
-          worker_loop while true
-        rescue => e
-          STDERR.puts "CSS change notifier crashed \n#{e}"
-          start
-        
+        worker_loop while true
+      rescue => e
+        STDERR.puts "CSS change notifier crashed \n#{e}"
+        start
       end
 
       listener_opts = { ignore: [/node_modules/], only: /\.s?css\z/ }

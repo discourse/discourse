@@ -246,13 +246,12 @@ class TopicView
 
     @post_user_badges ||=
       UserBadge
-          .for_post_header_badges(@posts)
-          .reduce({}) do |hash, user_badge|
-            hash[user_badge.post_id] ||= []
-            hash[user_badge.post_id] << user_badge
-            hash
-          end
-      
+        .for_post_header_badges(@posts)
+        .reduce({}) do |hash, user_badge|
+          hash[user_badge.post_id] ||= []
+          hash[user_badge.post_id] << user_badge
+          hash
+        end
 
     return [] unless @post_user_badges
 
@@ -290,11 +289,10 @@ class TopicView
 
     @gaps ||=
       if is_mega_topic?
-          nil
-        else
-          Gaps.new(filtered_post_ids, apply_default_scope(unfiltered_posts).pluck(:id))
-        end
-      
+        nil
+      else
+        Gaps.new(filtered_post_ids, apply_default_scope(unfiltered_posts).pluck(:id))
+      end
   end
 
   def last_post
@@ -309,9 +307,8 @@ class TopicView
   def next_page
     @next_page ||=
       if last_post && highest_post_number && (highest_post_number > last_post.post_number)
-          @page + 1
-        end
-      
+        @page + 1
+      end
   end
 
   def prev_page_path
@@ -570,9 +567,9 @@ class TopicView
   def post_counts_by_user
     @post_counts_by_user ||=
       if is_mega_topic?
-          {}
-        else
-          sql = <<~SQL
+        {}
+      else
+        sql = <<~SQL
             SELECT user_id, count(*) AS count_all
               FROM posts
              WHERE topic_id = :topic_id
@@ -585,15 +582,14 @@ class TopicView
              LIMIT #{MAX_PARTICIPANTS}
         SQL
 
-          Hash[
-            *DB.query_single(
-              sql,
-              topic_id: @topic.id,
-              post_types: Topic.visible_post_types(@guardian&.user),
-            )
-          ]
-        end
-      
+        Hash[
+          *DB.query_single(
+            sql,
+            topic_id: @topic.id,
+            post_types: Topic.visible_post_types(@guardian&.user),
+          )
+        ]
+      end
   end
 
   # if a topic has more that N posts no longer attempt to
@@ -604,21 +600,20 @@ class TopicView
   def participant_count
     @participant_count ||=
       if participants.size == MAX_PARTICIPANTS
-          if @topic.posts_count > MAX_POSTS_COUNT_PARTICIPANTS
-            @topic.participant_count
-          else
-            sql = <<~SQL
+        if @topic.posts_count > MAX_POSTS_COUNT_PARTICIPANTS
+          @topic.participant_count
+        else
+          sql = <<~SQL
               SELECT COUNT(DISTINCT user_id)
               FROM posts
               WHERE id IN (:post_ids)
               AND user_id IS NOT NULL
             SQL
-            DB.query_single(sql, post_ids: unfiltered_post_ids).first.to_i
-          end
-        else
-          participants.size
+          DB.query_single(sql, post_ids: unfiltered_post_ids).first.to_i
         end
-      
+      else
+        participants.size
+      end
   end
 
   def participants
@@ -634,9 +629,7 @@ class TopicView
   end
 
   def topic_allowed_group_ids
-    @topic_allowed_group_ids ||=
-      @topic.allowed_groups.map(&:id)
-      
+    @topic_allowed_group_ids ||= @topic.allowed_groups.map(&:id)
   end
 
   def group_allowed_user_ids
@@ -649,23 +642,22 @@ class TopicView
   def category_group_moderator_user_ids
     @category_group_moderator_user_ids ||=
       if SiteSetting.enable_category_group_moderation? && @topic.category.present?
-          posts_user_ids = Set.new(@posts.map(&:user_id))
-          Set.new(
-            GroupUser
-              .joins(
-                "INNER JOIN category_moderation_groups ON category_moderation_groups.group_id = group_users.group_id",
-              )
-              .where(
-                "category_moderation_groups.category_id": @topic.category.id,
-                user_id: posts_user_ids,
-              )
-              .distinct
-              .pluck(:user_id),
-          )
-        else
-          Set.new
-        end
-      
+        posts_user_ids = Set.new(@posts.map(&:user_id))
+        Set.new(
+          GroupUser
+            .joins(
+              "INNER JOIN category_moderation_groups ON category_moderation_groups.group_id = group_users.group_id",
+            )
+            .where(
+              "category_moderation_groups.category_id": @topic.category.id,
+              user_id: posts_user_ids,
+            )
+            .distinct
+            .pluck(:user_id),
+        )
+      else
+        Set.new
+      end
   end
 
   def all_post_actions
@@ -839,11 +831,10 @@ class TopicView
   def unfiltered_post_ids
     @unfiltered_post_ids ||=
       if @contains_gaps
-          unfiltered_posts.pluck(:id)
-        else
-          filtered_post_ids
-        end
-      
+        unfiltered_posts.pluck(:id)
+      else
+        filtered_post_ids
+      end
   end
 
   def filtered_post_id(post_number)

@@ -423,12 +423,10 @@ class BulkImport::PhpBB < BulkImport::Base
   protected
 
   def bbcode_to_md(text)
-    
-      text.bbcode_to_md(false)
-    rescue => e
-      puts "Problem converting \n#{text}\n using ruby-bbcode-to-md"
-      text
-    
+    text.bbcode_to_md(false)
+  rescue => e
+    puts "Problem converting \n#{text}\n using ruby-bbcode-to-md"
+    text
   end
 
   def add_default_smilies

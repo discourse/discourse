@@ -230,7 +230,6 @@ class TopicQuery
     def group
       @group ||=
         Group.where("name ilike ?", @options[:group_name]).select(:id, :publish_read_state).first
-        
     end
 
     def user_first_unread_pm_at(user)

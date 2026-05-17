@@ -274,45 +274,43 @@ class UserAction < ActiveRecord::Base
     require_parameters(hash, *required_parameters)
 
     transaction(requires_new: true) do
-      
-        # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
+      # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
 
-        # protect against dupes, for some reason this is failing in some cases
-        action = self.find_by(hash.select { |k, _| required_parameters.include?(k) })
-        return action if action
+      # protect against dupes, for some reason this is failing in some cases
+      action = self.find_by(hash.select { |k, _| required_parameters.include?(k) })
+      return action if action
 
-        action = self.new(hash)
+      action = self.new(hash)
 
-        action.created_at = hash[:created_at] if hash[:created_at]
-        action.save!
+      action.created_at = hash[:created_at] if hash[:created_at]
+      action.save!
 
-        user_id = hash[:user_id]
+      user_id = hash[:user_id]
 
-        topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
+      topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
 
-        update_like_count(user_id, hash[:action_type], 1) if topic && !topic.private_message?
+      update_like_count(user_id, hash[:action_type], 1) if topic && !topic.private_message?
 
-        user_ids = user_id != action.acting_user_id ? [user_id] : nil
+      user_ids = user_id != action.acting_user_id ? [user_id] : nil
 
-        group_ids = nil
-        if topic&.category&.read_restricted
-          group_ids = [Group::AUTO_GROUPS[:admins]] | topic.category.groups.pluck("groups.id")
-        end
+      group_ids = nil
+      if topic&.category&.read_restricted
+        group_ids = [Group::AUTO_GROUPS[:admins]] | topic.category.groups.pluck("groups.id")
+      end
 
-        if action.user && (user_ids.present? || group_ids.present?)
-          MessageBus.publish(
-            "/u/#{action.user.username_lower}",
-            action.id,
-            user_ids: user_ids,
-            group_ids: group_ids,
-          )
-        end
+      if action.user && (user_ids.present? || group_ids.present?)
+        MessageBus.publish(
+          "/u/#{action.user.username_lower}",
+          action.id,
+          user_ids: user_ids,
+          group_ids: group_ids,
+        )
+      end
 
-        action
-      rescue ActiveRecord::RecordNotUnique
-        # can happen, don't care already logged
-        raise ActiveRecord::Rollback
-      
+      action
+    rescue ActiveRecord::RecordNotUnique
+      # can happen, don't care already logged
+      raise ActiveRecord::Rollback
     end
   end
 

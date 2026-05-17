@@ -106,11 +106,9 @@ module Jobs
       end
 
       def self.raw_log(message)
-        
-          logger << message
-        rescue => e
-          Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
-        
+        logger << message
+      rescue => e
+        Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
       end
 
       # For test environment only
@@ -162,19 +160,17 @@ module Jobs
         interval = interval.to_i
         @@interval_thread ||=
           Thread.new do
-            
-              loop do
-                sleep interval
-                mutex.synchronize do
-                  @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval }
-                end
+            loop do
+              sleep interval
+              mutex.synchronize do
+                @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval }
               end
-            rescue Exception => e
-              Discourse.warn_exception(
-                e,
-                message: "Sidekiq interval logging thread terminated unexpectedly",
-              )
-            
+            end
+          rescue Exception => e
+            Discourse.warn_exception(
+              e,
+              message: "Sidekiq interval logging thread terminated unexpectedly",
+            )
           end
       end
     end
@@ -299,38 +295,36 @@ module Jobs
 
       exceptions = []
       dbs.each do |db|
-        
-          exception = {}
+        exception = {}
 
-          RailsMultisite::ConnectionManagement.with_connection(db) do
-            job_instrumenter =
-              JobInstrumenter.new(job_class: self.class, opts: opts, db: db, jid: jid)
+        RailsMultisite::ConnectionManagement.with_connection(db) do
+          job_instrumenter =
+            JobInstrumenter.new(job_class: self.class, opts: opts, db: db, jid: jid)
+          begin
+            I18n.locale =
+              SiteSetting.default_locale || SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+            I18n.ensure_all_loaded!
             begin
-              I18n.locale =
-                SiteSetting.default_locale || SiteSettings::DefaultsProvider::DEFAULT_LOCALE
-              I18n.ensure_all_loaded!
-              begin
-                logster_env = {}
-                Logster.add_to_env(logster_env, :job, self.class.to_s)
-                Logster.add_to_env(logster_env, :db, db)
-                Thread.current[Logster::Logger::LOGSTER_ENV] = logster_env
+              logster_env = {}
+              Logster.add_to_env(logster_env, :job, self.class.to_s)
+              Logster.add_to_env(logster_env, :db, db)
+              Thread.current[Logster::Logger::LOGSTER_ENV] = logster_env
 
-                execute(opts)
-              rescue => e
-                exception[:ex] = e
-                exception[:other] = { problem_db: db }
-              end
+              execute(opts)
             rescue => e
               exception[:ex] = e
-              exception[:message] = "While establishing database connection to #{db}"
               exception[:other] = { problem_db: db }
-            ensure
-              job_instrumenter.stop(exception: exception)
             end
+          rescue => e
+            exception[:ex] = e
+            exception[:message] = "While establishing database connection to #{db}"
+            exception[:other] = { problem_db: db }
+          ensure
+            job_instrumenter.stop(exception: exception)
           end
+        end
 
-          exceptions << exception unless exception.empty?
-        
+        exceptions << exception unless exception.empty?
       end
 
       Thread.current[Logster::Logger::LOGSTER_ENV] = nil

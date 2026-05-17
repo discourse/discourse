@@ -293,17 +293,15 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def create_direct_multipart_upload
-    
-      yield
-    rescue BackupRestore::BackupStore::StorageError => err
-      message =
-        debug_upload_error(
-          err,
-          I18n.t("upload.create_multipart_failure", additional_detail: err.message),
-        )
-      raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
-    rescue BackupRestore::BackupStore::BackupFileExists
-      raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.file_exists"))
-    
+    yield
+  rescue BackupRestore::BackupStore::StorageError => err
+    message =
+      debug_upload_error(
+        err,
+        I18n.t("upload.create_multipart_failure", additional_detail: err.message),
+      )
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
+  rescue BackupRestore::BackupStore::BackupFileExists
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.file_exists"))
   end
 end

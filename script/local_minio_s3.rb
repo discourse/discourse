@@ -5,17 +5,15 @@ require "minio_runner"
 
 class ExecuteLocalMinioS3
   def run
-    
-      start_minio
-      save_old_config
-      change_to_minio_settings
-      puts "Press any key when done..."
-      gets
-      restore_old
-    rescue SystemExit, Interrupt
-      restore_old
-      raise
-    
+    start_minio
+    save_old_config
+    change_to_minio_settings
+    puts "Press any key when done..."
+    gets
+    restore_old
+  rescue SystemExit, Interrupt
+    restore_old
+    raise
   end
 
   def start_minio

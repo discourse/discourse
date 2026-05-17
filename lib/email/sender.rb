@@ -330,15 +330,11 @@ module Email
     end
 
     def cc_addresses
-      @cc_addresses ||=
-        @message.try(:cc) || []
-        
+      @cc_addresses ||= @message.try(:cc) || []
     end
 
     def bcc_addresses
-      @bcc_addresses ||=
-        @message.try(:bcc) || []
-        
+      @bcc_addresses ||= @message.try(:bcc) || []
     end
 
     def self.host_for(base_url)

@@ -82,15 +82,13 @@ class DiscourseIpInfo
   end
 
   def mmdb_load(filepath)
-    
-      MaxMindDB.new(filepath, MaxMindDB::LOW_MEMORY_FILE_READER)
-    rescue Errno::ENOENT => e
-      Rails.logger.warn("MaxMindDB (#{filepath}) could not be found: #{e}")
-      nil
-    rescue => e
-      Discourse.warn_exception(e, message: "MaxMindDB (#{filepath}) could not be loaded.")
-      nil
-    
+    MaxMindDB.new(filepath, MaxMindDB::LOW_MEMORY_FILE_READER)
+  rescue Errno::ENOENT => e
+    Rails.logger.warn("MaxMindDB (#{filepath}) could not be found: #{e}")
+    nil
+  rescue => e
+    Discourse.warn_exception(e, message: "MaxMindDB (#{filepath}) could not be loaded.")
+    nil
   end
 
   def lookup(ip, locale: :en, resolve_hostname: false)

@@ -241,26 +241,29 @@ class SiteSetting < ActiveRecord::Base
     current_db = RailsMultisite::ConnectionManagement.current_db
 
     @blocked_attachment_content_types_regex ||= {}
-    @blocked_attachment_content_types_regex[current_db] ||= Regexp.union(SiteSetting.blocked_attachment_content_types.split("|"))
-    
+    @blocked_attachment_content_types_regex[current_db] ||= Regexp.union(
+      SiteSetting.blocked_attachment_content_types.split("|"),
+    )
   end
 
   def self.blocked_attachment_filenames_regex
     current_db = RailsMultisite::ConnectionManagement.current_db
 
     @blocked_attachment_filenames_regex ||= {}
-    @blocked_attachment_filenames_regex[current_db] ||= Regexp.union(SiteSetting.blocked_attachment_filenames.split("|"))
-    
+    @blocked_attachment_filenames_regex[current_db] ||= Regexp.union(
+      SiteSetting.blocked_attachment_filenames.split("|"),
+    )
   end
 
   def self.allowed_unicode_username_characters_regex
     current_db = RailsMultisite::ConnectionManagement.current_db
 
     @allowed_unicode_username_regex ||= {}
-    @allowed_unicode_username_regex[current_db] ||= if SiteSetting.allowed_unicode_username_characters.present?
-        Regexp.new(SiteSetting.allowed_unicode_username_characters)
-      end
-    
+    @allowed_unicode_username_regex[
+      current_db
+    ] ||= if SiteSetting.allowed_unicode_username_characters.present?
+      Regexp.new(SiteSetting.allowed_unicode_username_characters)
+    end
   end
 
   def self.history_for(setting_name)

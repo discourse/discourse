@@ -6,10 +6,8 @@ class ThemeSettingsManager::String < ThemeSettingsManager
   end
 
   def json_schema
-    
-      JSON.parse(@opts[:json_schema])
-    rescue StandardError
-      false
-    
+    JSON.parse(@opts[:json_schema])
+  rescue StandardError
+    false
   end
 end

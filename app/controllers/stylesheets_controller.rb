@@ -105,9 +105,7 @@ class StylesheetsController < ApplicationController
   private
 
   def read_file(location)
-    
-      File.read(location)
-    rescue Errno::ENOENT
-    
+    File.read(location)
+  rescue Errno::ENOENT
   end
 end

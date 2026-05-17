@@ -19,61 +19,59 @@ class DiscourseAi::Utils::PdfToImages
   end
 
   def extract_pages
-    
-      pdf_path =
-        if upload.local?
-          Discourse.store.path_for(upload)
-        else
-          Discourse.store.download(upload, max_file_size_kb: MAX_PDF_SIZE)
-        end
+    pdf_path =
+      if upload.local?
+        Discourse.store.path_for(upload)
+      else
+        Discourse.store.download(upload, max_file_size_kb: MAX_PDF_SIZE)
+      end
 
-      raise Discourse::InvalidParameters.new("Failed to download PDF") if pdf_path.nil?
+    raise Discourse::InvalidParameters.new("Failed to download PDF") if pdf_path.nil?
 
-      temp_dir = Dir.mktmpdir("discourse-pdf-#{SecureRandom.hex(8)}")
-      temp_pdf = File.join(temp_dir, "source.pdf")
-      FileUtils.cp(pdf_path, temp_pdf)
+    temp_dir = Dir.mktmpdir("discourse-pdf-#{SecureRandom.hex(8)}")
+    temp_pdf = File.join(temp_dir, "source.pdf")
+    FileUtils.cp(pdf_path, temp_pdf)
 
-      # Convert PDF to individual page images
-      output_pattern = File.join(temp_dir, "page-%04d.png")
+    # Convert PDF to individual page images
+    output_pattern = File.join(temp_dir, "page-%04d.png")
 
-      command = [
-        "magick",
-        "-density",
-        "300",
-        temp_pdf,
-        "-background",
-        "white",
-        "-auto-orient",
-        "-quality",
-        "85",
-        output_pattern,
-      ]
+    command = [
+      "magick",
+      "-density",
+      "300",
+      temp_pdf,
+      "-background",
+      "white",
+      "-auto-orient",
+      "-quality",
+      "85",
+      output_pattern,
+    ]
 
-      Discourse::Utils.execute_command(
-        *command,
-        failure_message: "Failed to convert PDF to images",
-        timeout: MAX_CONVERT_SECONDS,
-      )
+    Discourse::Utils.execute_command(
+      *command,
+      failure_message: "Failed to convert PDF to images",
+      timeout: MAX_CONVERT_SECONDS,
+    )
 
-      uploads = []
-      Dir
-        .glob(File.join(temp_dir, "page-*.png"))
-        .sort
-        .each do |page_path|
-          upload =
-            UploadCreator.new(File.open(page_path), "page-#{File.basename(page_path)}").create_for(
-              @user.id,
-            )
+    uploads = []
+    Dir
+      .glob(File.join(temp_dir, "page-*.png"))
+      .sort
+      .each do |page_path|
+        upload =
+          UploadCreator.new(File.open(page_path), "page-#{File.basename(page_path)}").create_for(
+            @user.id,
+          )
 
-          uploads << upload
-        end
+        uploads << upload
+      end
 
-      # Create upload references
-      UploadReference.ensure_exist!(upload_ids: uploads.map(&:id), target: @upload)
+    # Create upload references
+    UploadReference.ensure_exist!(upload_ids: uploads.map(&:id), target: @upload)
 
-      @uploaded_pages = uploads
-    ensure
-      FileUtils.rm_rf(temp_dir) if temp_dir
-    
+    @uploaded_pages = uploads
+  ensure
+    FileUtils.rm_rf(temp_dir) if temp_dir
   end
 end

@@ -73,11 +73,10 @@ class ThemeJavascriptsController < ApplicationController
   def last_modified
     @last_modified ||=
       if params[:action].to_s == "show_tests"
-          File.exist?(@cache_file) ? File.ctime(@cache_file) : nil
-        else
-          query.pick(:updated_at)
-        end
-      
+        File.exist?(@cache_file) ? File.ctime(@cache_file) : nil
+      else
+        query.pick(:updated_at)
+      end
   end
 
   def not_modified?

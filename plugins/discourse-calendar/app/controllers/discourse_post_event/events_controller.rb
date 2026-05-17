@@ -127,35 +127,33 @@ module DiscoursePostEvent
       raise Discourse::InvalidParameters.new(:file) if file.blank?
 
       hijack do
-        
-          invitees = []
+        invitees = []
 
-          CSV.foreach(file.tempfile) do |row|
-            invitees << { identifier: row[0], attendance: row[1] || "going" } if row[0].present?
-          end
+        CSV.foreach(file.tempfile) do |row|
+          invitees << { identifier: row[0], attendance: row[1] || "going" } if row[0].present?
+        end
 
-          if invitees.present?
-            Jobs.enqueue(
-              :discourse_post_event_bulk_invite,
-              event_id: event.id,
-              invitees: invitees,
-              current_user_id: current_user.id,
-            )
-            render json: success_json
-          else
-            render json:
-                     failed_json.merge(
-                       errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
-                     ),
-                   status: :unprocessable_entity
-          end
-        rescue StandardError
+        if invitees.present?
+          Jobs.enqueue(
+            :discourse_post_event_bulk_invite,
+            event_id: event.id,
+            invitees: invitees,
+            current_user_id: current_user.id,
+          )
+          render json: success_json
+        else
           render json:
                    failed_json.merge(
                      errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
                    ),
                  status: :unprocessable_entity
-        
+        end
+      rescue StandardError
+        render json:
+                 failed_json.merge(
+                   errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
+                 ),
+               status: :unprocessable_entity
       end
     end
 

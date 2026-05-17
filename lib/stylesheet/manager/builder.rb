@@ -154,13 +154,12 @@ class Stylesheet::Manager::Builder
   def digest
     @digest ||=
       if is_theme?
-          theme_digest
-        elsif is_color_scheme?
-          color_scheme_digest
-        else
-          default_digest
-        end
-      
+        theme_digest
+      elsif is_color_scheme?
+        color_scheme_digest
+      else
+        default_digest
+      end
   end
 
   def with_load_paths

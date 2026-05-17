@@ -406,27 +406,25 @@ class Admin::UsersController < Admin::StaffController
     options[:prepare_for_destroy] = true
 
     hijack do
-      
-        if UserDestroyer.new(current_user).destroy(user, options)
-          render json: { deleted: true }
-        else
-          render json: {
-                   deleted: false,
-                   user: AdminDetailedUserSerializer.new(user, root: false).as_json,
-                 }
-        end
-      rescue UserDestroyer::PostsExistError
+      if UserDestroyer.new(current_user).destroy(user, options)
+        render json: { deleted: true }
+      else
         render json: {
                  deleted: false,
-                 message:
-                   I18n.t(
-                     "user.cannot_delete_has_posts",
-                     username: user.username,
-                     count: user.posts.joins(:topic).count,
-                   ),
-               },
-               status: :forbidden
-      
+                 user: AdminDetailedUserSerializer.new(user, root: false).as_json,
+               }
+      end
+    rescue UserDestroyer::PostsExistError
+      render json: {
+               deleted: false,
+               message:
+                 I18n.t(
+                   "user.cannot_delete_has_posts",
+                   username: user.username,
+                   count: user.posts.joins(:topic).count,
+                 ),
+             },
+             status: :forbidden
     end
   end
 

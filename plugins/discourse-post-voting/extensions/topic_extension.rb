@@ -20,7 +20,6 @@ module PostVoting
     def answers
       @answers ||=
         posts.where(reply_to_post_number: nil).where.not(post_number: 1).order(post_number: :asc)
-        
     end
 
     def answer_count
@@ -35,11 +34,7 @@ module PostVoting
 
     def comments
       @comments ||=
-        PostVotingComment
-            .joins(:post)
-            .where("posts.topic_id = ?", self.id)
-            .order(created_at: :asc)
-        
+        PostVotingComment.joins(:post).where("posts.topic_id = ?", self.id).order(created_at: :asc)
     end
 
     def last_commented_on

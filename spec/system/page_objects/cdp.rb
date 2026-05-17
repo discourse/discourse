@@ -71,91 +71,85 @@ module PageObjects
 
     def with_network_disconnected
       page.driver.with_playwright_page do |pw_page|
-        
-          cdp_client = pw_page.context.new_cdp_session(pw_page)
+        cdp_client = pw_page.context.new_cdp_session(pw_page)
 
-          cdp_client.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: true,
-              latency: 0,
-              downloadThroughput: -1,
-              uploadThroughput: -1,
-            },
-          )
+        cdp_client.send_message(
+          "Network.emulateNetworkConditions",
+          params: {
+            offline: true,
+            latency: 0,
+            downloadThroughput: -1,
+            uploadThroughput: -1,
+          },
+        )
 
-          yield
-        ensure
-          cdp_client.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 0,
-              downloadThroughput: -1,
-              uploadThroughput: -1,
-            },
-          )
-        
+        yield
+      ensure
+        cdp_client.send_message(
+          "Network.emulateNetworkConditions",
+          params: {
+            offline: false,
+            latency: 0,
+            downloadThroughput: -1,
+            uploadThroughput: -1,
+          },
+        )
       end
     end
 
     def with_slow_download
       page.driver.with_playwright_page do |pw_page|
-        
-          cdp_client = pw_page.context.new_cdp_session(pw_page)
+        cdp_client = pw_page.context.new_cdp_session(pw_page)
 
-          cdp_client.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 20_000,
-              downloadThroughput: 1,
-              uploadThroughput: -1,
-            },
-          )
+        cdp_client.send_message(
+          "Network.emulateNetworkConditions",
+          params: {
+            offline: false,
+            latency: 20_000,
+            downloadThroughput: 1,
+            uploadThroughput: -1,
+          },
+        )
 
-          yield
-        ensure
-          cdp_client.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 0,
-              downloadThroughput: -1,
-              uploadThroughput: -1,
-            },
-          )
-        
+        yield
+      ensure
+        cdp_client.send_message(
+          "Network.emulateNetworkConditions",
+          params: {
+            offline: false,
+            latency: 0,
+            downloadThroughput: -1,
+            uploadThroughput: -1,
+          },
+        )
       end
     end
 
     def with_slow_upload
       page.driver.with_playwright_page do |pw_page|
-        
-          cdp_client = pw_page.context.new_cdp_session(pw_page)
+        cdp_client = pw_page.context.new_cdp_session(pw_page)
 
-          cdp_client.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 20_000,
-              downloadThroughput: -1,
-              uploadThroughput: 1,
-            },
-          )
+        cdp_client.send_message(
+          "Network.emulateNetworkConditions",
+          params: {
+            offline: false,
+            latency: 20_000,
+            downloadThroughput: -1,
+            uploadThroughput: 1,
+          },
+        )
 
-          yield
-        ensure
-          cdp_client.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 0,
-              downloadThroughput: -1,
-              uploadThroughput: -1,
-            },
-          )
-        
+        yield
+      ensure
+        cdp_client.send_message(
+          "Network.emulateNetworkConditions",
+          params: {
+            offline: false,
+            latency: 0,
+            downloadThroughput: -1,
+            uploadThroughput: -1,
+          },
+        )
       end
     end
   end

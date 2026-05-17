@@ -53,21 +53,19 @@ module Migrations
           fork_output_stream
         )
           ForkManager.fork do
-            
-              Process.setproctitle("worker_process#{@index}")
+            Process.setproctitle("worker_process#{@index}")
 
-              parent_output_stream.close
-              fork_input_stream.close
+            parent_output_stream.close
+            fork_input_stream.close
 
-              Oj.load(parent_input_stream, OJ_SETTINGS) do |data|
-                result = @job.run(data)
-                Oj.to_stream(fork_output_stream, result, OJ_SETTINGS)
-              end
-            rescue SignalException
-              exit(1)
-            ensure
-              @job.cleanup
-            
+            Oj.load(parent_input_stream, OJ_SETTINGS) do |data|
+              result = @job.run(data)
+              Oj.to_stream(fork_output_stream, result, OJ_SETTINGS)
+            end
+          rescue SignalException
+            exit(1)
+          ensure
+            @job.cleanup
           end
         end
 

@@ -87,9 +87,7 @@ class ImportScripts::JForum < ImportScripts::Base
   end
 
   def user_fields
-    @user_fields ||=
-      UserField.all.index_by(&:name)
-      
+    @user_fields ||= UserField.all.index_by(&:name)
   end
 
   def user_custom_fields(row)

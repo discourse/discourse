@@ -25,13 +25,11 @@ module Migrations
     rails_root = File.expand_path("..", __dir__)
     # rubocop:disable Discourse/NoChdir
     Dir.chdir(rails_root) do
-      
-        ENV["DISCOURSE_DEV_ALLOW_HTTPS"] = "1" # suppress warning
-        require File.join(rails_root, "config/environment")
-      rescue LoadError => e
-        $stderr.puts e.message
-        raise
-      
+      ENV["DISCOURSE_DEV_ALLOW_HTTPS"] = "1" # suppress warning
+      require File.join(rails_root, "config/environment")
+    rescue LoadError => e
+      $stderr.puts e.message
+      raise
     end
     # rubocop:enable Discourse/NoChdir
 

@@ -118,9 +118,8 @@ module Middleware
       alias_method :key_is_mobile?, :is_mobile?
 
       def key_has_brotli?
-        @has_brotli ||=
-          @env[ACCEPT_ENCODING].to_s =~ /br/ ? :true : :false
-          
+        @has_brotli ||= @env[ACCEPT_ENCODING].to_s =~ /br/ ? :true : :false
+
         @has_brotli == :true
       end
       # rubocop:enable Lint/BooleanSymbol
@@ -137,17 +136,17 @@ module Middleware
       def is_crawler?
         @is_crawler ||=
           if @env[DISCOURSE_RENDER] == "crawler" ||
-                 CrawlerDetection.crawler?(@user_agent, @env["HTTP_VIA"])
+               CrawlerDetection.crawler?(@user_agent, @env["HTTP_VIA"])
+            :true
+          else
+            if @user_agent.downcase.include?("discourse") &&
+                 !@user_agent.downcase.include?("mobile")
               :true
             else
-              if @user_agent.downcase.include?("discourse") &&
-                   !@user_agent.downcase.include?("mobile")
-                :true
-              else
-                :false
-              end
+              :false
             end
-          
+          end
+
         @is_crawler == :true
       end
       alias_method :key_is_crawler?, :is_crawler?

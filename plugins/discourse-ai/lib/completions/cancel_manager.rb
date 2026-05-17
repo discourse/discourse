@@ -28,28 +28,26 @@ module DiscourseAi
 
           @monitor_thread =
             Thread.new do
-              
-                loop do
-                  done = false
-                  @mutex.synchronize { done = true if @stop_monitor }
-                  break if done
-                  sleep delay
-                  @mutex.synchronize { done = true if @stop_monitor }
-                  @mutex.synchronize { done = true if cancelled? }
-                  break if done
+              loop do
+                done = false
+                @mutex.synchronize { done = true if @stop_monitor }
+                break if done
+                sleep delay
+                @mutex.synchronize { done = true if @stop_monitor }
+                @mutex.synchronize { done = true if cancelled? }
+                break if done
 
-                  should_cancel = false
-                  RailsMultisite::ConnectionManagement.with_connection(db) do
-                    should_cancel = block.call
-                  end
-
-                  @mutex.synchronize { cancel! if should_cancel }
-
-                  break if cancelled?
+                should_cancel = false
+                RailsMultisite::ConnectionManagement.with_connection(db) do
+                  should_cancel = block.call
                 end
-              ensure
-                @mutex.synchronize { @monitor_thread = nil }
-              
+
+                @mutex.synchronize { cancel! if should_cancel }
+
+                break if cancelled?
+              end
+            ensure
+              @mutex.synchronize { @monitor_thread = nil }
             end
         end
       end
@@ -97,11 +95,9 @@ module DiscourseAi
           end
         end
         @callbacks.each do |cb|
-          
-            cb.call
-          rescue StandardError
-            # ignore cause this may have already been cancelled
-          
+          cb.call
+        rescue StandardError
+          # ignore cause this may have already been cancelled
         end
       end
     end

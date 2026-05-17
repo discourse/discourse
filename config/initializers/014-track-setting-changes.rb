@@ -102,13 +102,11 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   if SiteSetting.discourse_id_client_id.present? && SiteSetting.discourse_id_client_secret.present?
     if %i[title logo logo_small site_description].include?(name)
       Scheduler::Defer.later("Update Discourse ID metadata") do
-        
-          DiscourseId::Register.call(update: true)
-        rescue StandardError => e
-          Rails.logger.error(
-            "Failed to update Discourse ID metadata after #{name} change: #{e.message}",
-          )
-        
+        DiscourseId::Register.call(update: true)
+      rescue StandardError => e
+        Rails.logger.error(
+          "Failed to update Discourse ID metadata after #{name} change: #{e.message}",
+        )
       end
     end
   end

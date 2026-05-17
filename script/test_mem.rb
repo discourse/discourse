@@ -9,11 +9,9 @@ I18n.t(:posts)
 
 # load up all models and schema
 (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
-  
-    table.classify.constantize.first
-  rescue StandardError
-    nil
-  
+  table.classify.constantize.first
+rescue StandardError
+  nil
 end
 
 # router warm up

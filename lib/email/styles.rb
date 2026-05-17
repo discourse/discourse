@@ -226,27 +226,24 @@ module Email
       @fragment
         .css("iframe")
         .each do |i|
-          
-            # sometimes, iframes are blocklisted...
-            if i["src"].blank?
-              i.remove
-              next
-            end
-
-            src_uri =
-              i["data-original-href"].present? ? URI(i["data-original-href"]) : URI(i["src"])
-            # If an iframe is protocol relative, use SSL when displaying it
-            display_src =
-              "#{src_uri.scheme || "https"}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? "" : "?" + src_uri.query}#{src_uri.fragment.nil? ? "" : "#" + src_uri.fragment}"
-            i.replace(
-              Nokogiri::HTML5.fragment(
-                "<p><a href='#{src_uri}'>#{CGI.escapeHTML(display_src)}</a><p>",
-              ),
-            )
-          rescue URI::Error
-            # If the URL is weird, remove the iframe
+          # sometimes, iframes are blocklisted...
+          if i["src"].blank?
             i.remove
-          
+            next
+          end
+
+          src_uri = i["data-original-href"].present? ? URI(i["data-original-href"]) : URI(i["src"])
+          # If an iframe is protocol relative, use SSL when displaying it
+          display_src =
+            "#{src_uri.scheme || "https"}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? "" : "?" + src_uri.query}#{src_uri.fragment.nil? ? "" : "#" + src_uri.fragment}"
+          i.replace(
+            Nokogiri::HTML5.fragment(
+              "<p><a href='#{src_uri}'>#{CGI.escapeHTML(display_src)}</a><p>",
+            ),
+          )
+        rescue URI::Error
+          # If the URL is weird, remove the iframe
+          i.remove
         end
     end
 
@@ -486,11 +483,9 @@ module Email
       @fragment
         .css("a")
         .each do |link|
-          
-            link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
-          rescue URI::Error
-            # leave it
-          
+          link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
+        rescue URI::Error
+          # leave it
         end
     end
 

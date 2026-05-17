@@ -828,33 +828,31 @@ class Post < ActiveRecord::Base
       .limit(limit)
       .pluck(:id)
       .each do |id|
-        
-          break if !limiter.can_perform?
+        break if !limiter.can_perform?
 
-          post = Post.find(id)
-          post.rebake!(priority: priority)
+        post = Post.find(id)
+        post.rebake!(priority: priority)
 
-          begin
-            limiter.performed! if rate_limiter
-          rescue RateLimiter::LimitExceeded
-            break
-          end
-        rescue => e
-          problems << { post: post, ex: e }
+        begin
+          limiter.performed! if rate_limiter
+        rescue RateLimiter::LimitExceeded
+          break
+        end
+      rescue => e
+        problems << { post: post, ex: e }
 
-          attempts = post.custom_fields["rebake_attempts"].to_i
+        attempts = post.custom_fields["rebake_attempts"].to_i
 
-          if attempts > 3
-            post.update_columns(baked_version: BAKED_VERSION)
-            Discourse.warn_exception(
-              e,
-              message: "Can not rebake post# #{post.id} after 3 attempts, giving up",
-            )
-          else
-            post.custom_fields["rebake_attempts"] = attempts + 1
-            post.save_custom_fields
-          end
-        
+        if attempts > 3
+          post.update_columns(baked_version: BAKED_VERSION)
+          Discourse.warn_exception(
+            e,
+            message: "Can not rebake post# #{post.id} after 3 attempts, giving up",
+          )
+        else
+          post.custom_fields["rebake_attempts"] = attempts + 1
+          post.save_custom_fields
+        end
       end
     problems
   end
