@@ -255,8 +255,8 @@ RSpec.describe PostCreator do
         admin_ids = [Group[:admins].id]
         expect(
           messages.any? do |m|
-            m.group_ids != admin_ids &&
-              !m.user_ids.include?(other_admin.id) && !m.user_ids.include?(admin.id)
+            m.group_ids != admin_ids && !m.user_ids.include?(other_admin.id) &&
+              !m.user_ids.include?(admin.id)
           end,
         ).to eq(false)
       end

@@ -849,7 +849,7 @@ class ApplicationController < ActionController::Base
   def should_enforce_2fa?
     enforcing_2fa =
       (SiteSetting.enforce_second_factor == "staff" && current_user.staff?) ||
-          SiteSetting.enforce_second_factor == "all"
+        SiteSetting.enforce_second_factor == "all"
     !disqualified_from_2fa_enforcement && enforcing_2fa &&
       !current_user.has_any_second_factor_methods_enabled?
   end

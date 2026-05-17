@@ -204,9 +204,9 @@ class UserProfile < ActiveRecord::Base
     if allowed_domains.split("|").exclude?(domain)
       self.errors.add :base,
                       I18n.t(
-                          "user.website.domain_not_allowed",
-                          domains: allowed_domains.split("|").join(", "),
-                        )
+                        "user.website.domain_not_allowed",
+                        domains: allowed_domains.split("|").join(", "),
+                      )
     end
   end
 

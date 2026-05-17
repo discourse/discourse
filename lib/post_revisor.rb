@@ -347,18 +347,18 @@ class PostRevisor
 
     # Lock the post by default if the appropriate setting is true
     if SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
-           @editor.staff? && @editor != Discourse.system_user && !@post.user&.staff?
+         @editor.staff? && @editor != Discourse.system_user && !@post.user&.staff?
       PostLocker.new(@post, @editor).lock
     end
 
     # We log staff/group moderator edits to posts
     if (
-           @editor.staff? ||
-             (
-               @post.is_category_description? &&
-                 guardian.can_edit_category_description?(@post.topic.category)
-             )
-         ) && @editor.id != @post.user_id && @fields.has_key?("raw") && !@opts[:skip_staff_log]
+         @editor.staff? ||
+           (
+             @post.is_category_description? &&
+               guardian.can_edit_category_description?(@post.topic.category)
+           )
+       ) && @editor.id != @post.user_id && @fields.has_key?("raw") && !@opts[:skip_staff_log]
       StaffActionLogger.new(@editor).log_post_edit(@post, old_raw: old_raw)
     end
 

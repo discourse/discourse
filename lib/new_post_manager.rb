@@ -89,7 +89,7 @@ class NewPostManager
     return :email_spam if manager.args[:email_spam]
 
     if user.trust_level <= TrustLevel.levels[:basic] &&
-           (user.post_count + user.topic_count) < SiteSetting.approve_post_count
+         (user.post_count + user.topic_count) < SiteSetting.approve_post_count
       return :post_count
     end
 
@@ -98,7 +98,7 @@ class NewPostManager
     end
 
     if manager.args[:title].present? && !user.staged? &&
-           !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
+         !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
       return :new_topics_unless_allowed_groups
     end
 
@@ -115,7 +115,7 @@ class NewPostManager
     return :category if post_needs_approval_in_its_category?(manager)
 
     if manager.args[:image_sizes].present? &&
-           !user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
+         !user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
       return :contains_media
     end
 
@@ -205,8 +205,8 @@ class NewPostManager
     SiteSetting.approve_post_count > 0 ||
       !SiteSetting.approve_unless_allowed_groups_map.include?(Group::AUTO_GROUPS[:trust_level_0]) ||
       !SiteSetting.approve_new_topics_unless_allowed_groups_map.include?(
-          Group::AUTO_GROUPS[:trust_level_0],
-        ) || SiteSetting.approve_unless_staged ||
+        Group::AUTO_GROUPS[:trust_level_0],
+      ) || SiteSetting.approve_unless_staged ||
       WordWatcher.words_for_action_exist?(:require_approval) || handlers.size > 1
   end
 

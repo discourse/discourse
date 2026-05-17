@@ -48,7 +48,7 @@ module Onebox
             # ul support will imporve the output generated for a section with a list as the main content (for example: an Author Bibliography, A musician Discography, etc)
             first_p_found = nil
             while ((next_sibling = cur_element.next_sibling).name =~ /p|text|div|ul/) ||
-                      first_p_found.nil?
+                    first_p_found.nil?
               # from section header get the next sibling until it is a breaker tag
               cur_element = next_sibling
               if cur_element.name == "p" || cur_element.name == "ul" #we treat a list as we detect a p to avoid showing

@@ -23,8 +23,8 @@ class InlineUploads
       if node.name == "img"
         # Do nothing
       elsif !(
-            node.children.count == 1 &&
-              node.children[0].name != "img" && node.children[0].children.blank?
+            node.children.count == 1 && node.children[0].name != "img" &&
+              node.children[0].children.blank?
           ) &&
             !(
               node.name == "a" && node.children.count > 1 &&

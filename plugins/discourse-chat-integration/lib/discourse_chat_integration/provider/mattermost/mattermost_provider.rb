@@ -55,9 +55,7 @@ module DiscourseChatIntegration
         icon_url =
           if SiteSetting.chat_integration_mattermost_icon_url.present?
             UrlHelper.absolute(SiteSetting.chat_integration_mattermost_icon_url)
-          elsif (
-                url = SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url
-              ).present?
+          elsif (url = SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url).present?
             UrlHelper.absolute(url)
           end
 

@@ -70,7 +70,7 @@ class PostCreator
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title]&.include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw]&.include?("\u0000")
     opts[:visible] = false if (opts[:visible].nil? && opts[:hidden_reason_id].present?) ||
-        (opts[:embed_url].present? && SiteSetting.embed_unlisted?)
+      (opts[:embed_url].present? && SiteSetting.embed_unlisted?)
 
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
   end

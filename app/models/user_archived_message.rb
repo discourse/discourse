@@ -8,10 +8,10 @@ class UserArchivedMessage < ActiveRecord::Base
     topic_id = topic.id
 
     if TopicUser.where(
-           user_id: user_id,
-           topic_id: topic_id,
-           notification_level: TopicUser.notification_levels[:muted],
-         ).exists?
+         user_id: user_id,
+         topic_id: topic_id,
+         notification_level: TopicUser.notification_levels[:muted],
+       ).exists?
       return
     end
 

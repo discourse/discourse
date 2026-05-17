@@ -560,11 +560,10 @@ class User < ActiveRecord::Base
     # Sometimes the system user doesn't have their auto groups
     # from some strange edge case, this handles it.
     if is_system_user? &&
-           (
-             (
-               Group.auto_groups_between(:admins, :trust_level_4) - [Group::AUTO_GROUPS[:anonymous]]
-             ) & group_ids
-           ).any?
+         (
+           (Group.auto_groups_between(:admins, :trust_level_4) - [Group::AUTO_GROUPS[:anonymous]]) &
+             group_ids
+         ).any?
       return true
     end
 

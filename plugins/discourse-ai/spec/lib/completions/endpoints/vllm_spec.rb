@@ -376,8 +376,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
           body: hash_including("stream_options" => { "include_usage" => true }),
         ).to_return(
           status: 200,
-          body:
-            +"data: #{{ choices: [{ delta: { content: "hello" } }] }.to_json}\n\ndata: [DONE]",
+          body: +"data: #{{ choices: [{ delta: { content: "hello" } }] }.to_json}\n\ndata: [DONE]",
         )
 
       llm.generate("say hello", user: Discourse.system_user) { |_| }

@@ -192,7 +192,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
             (user["website"] && user["website"].include?(".")) ?
               user["website"].strip :
               if user["qq"] && user["qq"].strip == user["qq"].strip.to_i &&
-                     user["qq"].strip.to_i > 10_000
+                   user["qq"].strip.to_i > 10_000
                 "http://user.qzone.qq.com/" + user["qq"].strip
               else
                 nil
@@ -820,25 +820,25 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         replace_internal_link(
           discuzx_link,
           begin
-              $~[:tid].to_i
-            rescue StandardError
-              nil
-            end,
+            $~[:tid].to_i
+          rescue StandardError
+            nil
+          end,
           begin
-              $~[:pid].to_i
-            rescue StandardError
-              nil
-            end,
+            $~[:pid].to_i
+          rescue StandardError
+            nil
+          end,
           begin
-              $~[:fid].to_i
-            rescue StandardError
-              nil
-            end,
+            $~[:fid].to_i
+          rescue StandardError
+            nil
+          end,
           begin
-              $~[:action]
-            rescue StandardError
-              nil
-            end,
+            $~[:action]
+          rescue StandardError
+            nil
+          end,
         )
       end
     end

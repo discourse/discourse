@@ -167,8 +167,8 @@ module PostGuardian
 
     # Editing a shared draft.
     if can_see_post?(post) && can_create_post?(post.topic) &&
-           post.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
-           can_see_category?(post.topic.category) && can_see_shared_draft?
+         post.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
+         can_see_category?(post.topic.category) && can_see_shared_draft?
       return true
     end
 
@@ -230,8 +230,7 @@ module PostGuardian
 
     # You can delete your own posts
     if is_my_own?(post)
-      if SiteSetting.max_post_deletions_per_minute < 1 ||
-             SiteSetting.max_post_deletions_per_day < 1
+      if SiteSetting.max_post_deletions_per_minute < 1 || SiteSetting.max_post_deletions_per_day < 1
         return false
       end
       return true if !post.user_deleted?
@@ -260,8 +259,7 @@ module PostGuardian
     return true if can_moderate_topic?(topic) && !!post.deleted_at
 
     if is_my_own?(post)
-      if SiteSetting.max_post_deletions_per_minute < 1 ||
-             SiteSetting.max_post_deletions_per_day < 1
+      if SiteSetting.max_post_deletions_per_minute < 1 || SiteSetting.max_post_deletions_per_day < 1
         return false
       end
       return true if post.user_deleted && !post.deleted_at

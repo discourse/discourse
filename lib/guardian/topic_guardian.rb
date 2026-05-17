@@ -102,24 +102,24 @@ module TopicGuardian
     # except for a tiny edge case where the topic is uncategorized and you are trying
     # to fix it but uncategorized is disabled
     if SiteSetting.allow_uncategorized_topics ||
-           topic.category_id != SiteSetting.uncategorized_category_id
+         topic.category_id != SiteSetting.uncategorized_category_id
       return false if !can_create_topic_on_category?(topic.category)
     end
 
     # Editing a shared draft.
     if !topic.archived && !topic.private_message? &&
-           topic.category_id == SiteSetting.shared_drafts_category.to_i &&
-           can_see_category?(topic.category) && can_see_shared_draft? && can_create_post?(topic)
+         topic.category_id == SiteSetting.shared_drafts_category.to_i &&
+         can_see_category?(topic.category) && can_see_shared_draft? && can_create_post?(topic)
       return true
     end
 
     if is_in_edit_post_groups? && topic.archived && !topic.private_message? &&
-           can_create_post?(topic)
+         can_create_post?(topic)
       return true
     end
 
     if is_in_edit_topic_groups? && !topic.archived && !topic.private_message? &&
-           can_create_post?(topic)
+         can_create_post?(topic)
       return true
     end
 
