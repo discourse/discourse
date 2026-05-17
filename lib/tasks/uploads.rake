@@ -25,7 +25,7 @@ rescue StandardError
 end
 
 def gather_uploads
-  public_directory = "#{Rails.root}/public"
+  public_directory = "#{Rails.public_path}"
   current_db = RailsMultisite::ConnectionManagement.current_db
 
   puts "", "Gathering uploads for '#{current_db}'...", ""
@@ -303,7 +303,7 @@ def regenerate_missing_optimized
     return
   end
 
-  public_directory = "#{Rails.root}/public"
+  public_directory = "#{Rails.public_path}"
   missing_uploads = Set.new
 
   avatar_upload_ids = UserAvatar.all.pluck(:custom_upload_id, :gravatar_upload_id).flatten.compact
@@ -943,7 +943,7 @@ def inline_img_tags(post)
           end
         end
         if !upload
-          local_file = File.join(Rails.root, "public", $2)
+          local_file = Rails.public_path.join($2).to_s
           if File.exist?(local_file)
             File.open(local_file) do |f|
               upload = UploadCreator.new(f, "image").create_for(post.user_id)

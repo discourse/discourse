@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.join(Rails.root, "script", "import_scripts", "base.rb")
+require Rails.root.join("script/import_scripts/base.rb").to_s
 
 module ImportExport
   class Importer < ImportScripts::Base

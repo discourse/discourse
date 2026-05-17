@@ -102,10 +102,7 @@ after_initialize do
     DiscourseGamification::GamificationLeaderboard.first&.id
   end
 
-  SeedFu.fixture_paths << Rails
-    .root
-    .join("plugins", "discourse-gamification", "db", "fixtures")
-    .to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-gamification/db/fixtures").to_s
 
   on(:site_setting_changed) do |name|
     next if name != :score_ranking_strategy

@@ -2065,8 +2065,10 @@ RSpec.describe TagsController do
     end
 
     context "while logged in" do
-      let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/tags.csv") }
-      let(:invalid_csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/tags_invalid.csv") }
+      let(:csv_file) { File.new("#{Rails.root.join("spec/fixtures/csv/tags.csv")}") }
+      let(:invalid_csv_file) do
+        File.new("#{Rails.root.join("spec/fixtures/csv/tags_invalid.csv")}")
+      end
 
       let(:file) { Rack::Test::UploadedFile.new(File.open(csv_file)) }
 

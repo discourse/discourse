@@ -64,12 +64,12 @@ TEXT
 
   describe "find_all" do
     it "can find plugins correctly" do
-      plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
+      plugins = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")
       expect(plugins.count).to eq(5)
       plugin = plugins[3]
 
       expect(plugin.name).to eq("plugin-name")
-      expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
+      expect(plugin.path).to eq("#{Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb")}")
 
       plugin.git_repo.stubs(:latest_local_commit).returns("123456")
       plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
@@ -80,7 +80,7 @@ TEXT
     end
 
     it "does not blow up on missing directory" do
-      plugins = Plugin::Instance.find_all("#{Rails.root}/frank_zappa")
+      plugins = Plugin::Instance.find_all("#{Rails.root.join("frank_zappa")}")
       expect(plugins.count).to eq(0)
     end
   end
@@ -139,7 +139,7 @@ TEXT
   describe "git repo details" do
     describe ".discourse_owned?" do
       it "returns true if the plugin is on github in discourse-org or discourse orgs" do
-        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")[3]
         plugin.git_repo.stubs(:latest_local_commit).returns("123456")
         plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
         expect(plugin.discourse_owned?).to eq(true)
@@ -152,13 +152,13 @@ TEXT
       end
 
       it "returns false if the commit_url is missing because of git command issues" do
-        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")[3]
         plugin.git_repo.stubs(:latest_local_commit).returns(nil)
         expect(plugin.discourse_owned?).to eq(false)
       end
 
       it "returns false if the commit_url has a nil path" do
-        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")[3]
         plugin.git_repo.stubs(:latest_local_commit).returns("123456")
         plugin.git_repo.stubs(:url).returns("invalid://url")
         parsed_url = URI.parse("invalid://url")
@@ -170,7 +170,7 @@ TEXT
 
     describe ".preinstalled?" do
       it "returns true when the plugin directory has no .git directory" do
-        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")[3]
         expect(plugin.preinstalled?).to eq(true)
       end
 
@@ -598,12 +598,12 @@ TEXT
 
       expect(locale[:fallbackLocale]).to eq("pt_BR")
       expect(locale[:moment_js]).to eq(
-        ["pt-br", "#{Rails.root}/frontend/discourse/node_modules/moment/locale/pt-br.js"],
+        ["pt-br", "#{Rails.root.join("frontend/discourse/node_modules/moment/locale/pt-br.js")}"],
       )
       expect(locale[:moment_js_timezones]).to eq(
         [
           "pt",
-          "#{Rails.root}/node_modules/@discourse/moment-timezone-names-translations/locales/pt.js",
+          "#{Rails.root.join("node_modules/@discourse/moment-timezone-names-translations/locales/pt.js")}",
         ],
       )
       expect(locale[:plural]).to be_nil
@@ -619,7 +619,7 @@ TEXT
 
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:moment_js]).to eq(
-        ["tlh", "#{Rails.root}/frontend/discourse/node_modules/moment/locale/tlh.js"],
+        ["tlh", "#{Rails.root.join("frontend/discourse/node_modules/moment/locale/tlh.js")}"],
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 

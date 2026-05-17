@@ -320,7 +320,7 @@ module SvgSprite
   end
 
   def self.core_svgs_files
-    @svg_files ||= Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
+    @svg_files ||= Dir.glob("#{Rails.root.join("vendor/assets/svg-icons/**/*.svg")}")
   end
 
   def self.core_svgs

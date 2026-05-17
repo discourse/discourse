@@ -17,7 +17,7 @@ class DiscourseIpInfo
   end
 
   def self.path
-    @path ||= File.join(Rails.root, "vendor", "data")
+    @path ||= Rails.root.join("vendor/data").to_s
   end
 
   def self.mmdb_path(name)

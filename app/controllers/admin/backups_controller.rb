@@ -256,7 +256,7 @@ class Admin::BackupsController < Admin::AdminController
   private
 
   def has_enough_space_on_disk?(size)
-    DiskSpace.free("#{Rails.root}/public/backups") > size
+    DiskSpace.free("#{Rails.public_path.join("backups")}") > size
   end
 
   def ensure_backups_enabled

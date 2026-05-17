@@ -26,7 +26,7 @@ end
 require_relative "lib/discourse_reactions/engine"
 
 after_initialize do
-  SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-reactions", "db", "fixtures").to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-reactions/db/fixtures").to_s
 
   %w[
     app/controllers/discourse_reactions/custom_reactions_controller.rb

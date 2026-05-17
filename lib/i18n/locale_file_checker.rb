@@ -45,7 +45,9 @@ class LocaleFileChecker
   FORCE_PLURAL_COUNT_LOCALES = %w[bs fr lt lv ru sl sr uk]
 
   def locale_files
-    YML_DIRS.map { |dir| Dir["#{Rails.root}/#{dir}/{client,server}.#{@locale}.yml"] }.flatten
+    YML_DIRS
+      .map { |dir| Dir["#{Rails.root.join("#{dir}/{client,server}.#{@locale}.yml")}"] }
+      .flatten
   end
 
   def reference_file(path)
@@ -173,7 +175,7 @@ class LocaleFileChecker
     @plural_keys ||=
       begin
         # rubocop:disable Security/Eval
-        eval(File.read("#{Rails.root}/#{PLURALS_FILE}"))
+        eval(File.read("#{Rails.root.join("#{PLURALS_FILE}")}"))
           .map { |locale, value| [locale.to_s, value[:i18n][:plural][:keys].map(&:to_s)] }
           .to_h
       end

@@ -2143,7 +2143,7 @@ RSpec.describe Admin::UsersController do
       it "retrieves IP info" do
         ip = "81.2.69.142"
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS.any_instance.stubs(:getname).with(ip).returns("ip-81-2-69-142.example.com")
 
         get "/admin/users/ip-info.json", params: { ip: ip }
@@ -2180,7 +2180,7 @@ RSpec.describe Admin::UsersController do
       it "prevents retrieval of IP info with a 404 response" do
         ip = "81.2.69.142"
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS.any_instance.stubs(:getname).with(ip).returns("ip-81-2-69-142.example.com")
 
         get "/admin/users/ip-info.json", params: { ip: ip }

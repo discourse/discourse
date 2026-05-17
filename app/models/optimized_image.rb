@@ -254,7 +254,7 @@ class OptimizedImage < ActiveRecord::Base
         -interlace
         none
         -profile
-        #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
+        #{Rails.root.join("vendor/data/RT_sRGB.icm")}
         #{to}
       ],
     )
@@ -283,7 +283,7 @@ class OptimizedImage < ActiveRecord::Base
       -interlace
       none
       -profile
-      #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
+      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
     }
 
     instructions << "-quality" << opts[:quality].to_s if opts[:quality]
@@ -310,7 +310,7 @@ class OptimizedImage < ActiveRecord::Base
       -resize
       #{dimensions}
       -profile
-      #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
+      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
       #{to}
     }
   end
