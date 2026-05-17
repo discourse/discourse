@@ -593,7 +593,7 @@ task "import:remap_old_phpbb_permalinks" => :environment do
   Post
     .where("raw LIKE ?", "%discussions.example.com%")
     .each do |p|
-      begin
+      
         new_raw = p.raw.dup
         # \((https?:\/\/discussions\.example\.com\/\S*-t\d+.html)\)
         new_raw.gsub!(%r{\((https?://discussions\.example\.com/\S*-t\d+.html)\)}) do
@@ -618,7 +618,7 @@ task "import:remap_old_phpbb_permalinks" => :environment do
         end
       rescue StandardError
         # skip
-      end
+      
     end
 
   log "Done! #{i} posts remapped."

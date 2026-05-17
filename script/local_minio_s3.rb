@@ -5,7 +5,7 @@ require "minio_runner"
 
 class ExecuteLocalMinioS3
   def run
-    begin
+    
       start_minio
       save_old_config
       change_to_minio_settings
@@ -15,7 +15,7 @@ class ExecuteLocalMinioS3
     rescue SystemExit, Interrupt
       restore_old
       raise
-    end
+    
   end
 
   def start_minio

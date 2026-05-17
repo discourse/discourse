@@ -28,7 +28,7 @@ module DiscourseAi
 
           @monitor_thread =
             Thread.new do
-              begin
+              
                 loop do
                   done = false
                   @mutex.synchronize { done = true if @stop_monitor }
@@ -49,7 +49,7 @@ module DiscourseAi
                 end
               ensure
                 @mutex.synchronize { @monitor_thread = nil }
-              end
+              
             end
         end
       end
@@ -97,11 +97,11 @@ module DiscourseAi
           end
         end
         @callbacks.each do |cb|
-          begin
+          
             cb.call
           rescue StandardError
             # ignore cause this may have already been cancelled
-          end
+          
         end
       end
     end

@@ -84,7 +84,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
   end
 
   def test
-    begin
+    
       channel_id = params[:channel_id].to_i
       topic_id = params[:topic_id].to_i
 
@@ -107,7 +107,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
       else
         render json: { errors: [err.message] }, status: :unprocessable_entity
       end
-    end
+    
   end
 
   def list_channels
@@ -121,7 +121,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
   end
 
   def create_channel
-    begin
+    
       providers = DiscourseChatIntegration::Provider.enabled_providers.map { |x| x::PROVIDER_NAME }
 
       if !defined?(params[:channel]) && defined?(params[:channel][:provider])
@@ -148,11 +148,11 @@ class DiscourseChatIntegration::ChatController < ApplicationController
       render_serialized channel, DiscourseChatIntegration::ChannelSerializer, root: "channel"
     rescue Discourse::InvalidParameters => e
       render json: { errors: [e.message] }, status: :unprocessable_entity
-    end
+    
   end
 
   def update_channel
-    begin
+    
       channel = DiscourseChatIntegration::Channel.find(params[:id].to_i)
       channel.error_key = nil # Reset any error on the rule
 
@@ -168,7 +168,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
       render_serialized channel, DiscourseChatIntegration::ChannelSerializer, root: "channel"
     rescue Discourse::InvalidParameters => e
       render json: { errors: [e.message] }, status: :unprocessable_entity
-    end
+    
   end
 
   def destroy_channel
@@ -180,7 +180,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
   end
 
   def create_rule
-    begin
+    
       hash =
         params.require(:rule).permit(:channel_id, :type, :filter, :group_id, :category_id, tags: [])
       rule = DiscourseChatIntegration::Rule.new(hash)
@@ -190,11 +190,11 @@ class DiscourseChatIntegration::ChatController < ApplicationController
       render_serialized rule, DiscourseChatIntegration::RuleSerializer, root: "rule"
     rescue Discourse::InvalidParameters => e
       render json: { errors: [e.message] }, status: :unprocessable_entity
-    end
+    
   end
 
   def update_rule
-    begin
+    
       rule = DiscourseChatIntegration::Rule.find(params[:id].to_i)
       hash = params.require(:rule).permit(:type, :filter, :group_id, :category_id, tags: [])
 
@@ -203,7 +203,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
       render_serialized rule, DiscourseChatIntegration::RuleSerializer, root: "rule"
     rescue Discourse::InvalidParameters => e
       render json: { errors: [e.message] }, status: :unprocessable_entity
-    end
+    
   end
 
   def destroy_rule

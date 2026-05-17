@@ -230,7 +230,7 @@ class Autospec::Manager
     %w[spec lib app config test vendor plugins].each do |watch|
       puts "@@@@@@@@@ Listen to #{path}/#{watch} #{options}" if @debug
       Thread.new do
-        begin
+        
           listener =
             Listen.to("#{path}/#{watch}", options) do |modified, added, _|
               paths = [modified, added].flatten
@@ -246,7 +246,7 @@ class Autospec::Manager
         rescue => e
           puts "FAILED to listen on changes to #{path}/#{watch}"
           puts e
-        end
+        
       end
     end
   end

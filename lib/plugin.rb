@@ -2,7 +2,7 @@
 
 module Plugin
   def self.initialization_guard(&block)
-    begin
+    
       block.call
     rescue => error
       plugins_directory = Rails.root + "plugins"
@@ -62,6 +62,6 @@ module Plugin
         TEXT
       end
       exit 1
-    end
+    
   end
 end

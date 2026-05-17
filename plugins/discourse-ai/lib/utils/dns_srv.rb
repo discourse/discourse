@@ -39,13 +39,13 @@ module DiscourseAi
       end
 
       def self.server_available?(server)
-        begin
+        
           conn = Faraday.new { |f| f.adapter FinalDestination::FaradayAdapter }
           response = conn.get("https://#{server.target}:#{server.port}/health")
           response.success?
         rescue StandardError
           false
-        end
+        
       end
 
       def self.server_election(resources)

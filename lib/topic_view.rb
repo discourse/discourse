@@ -245,15 +245,14 @@ class TopicView
     return [] unless SiteSetting.enable_badges && SiteSetting.show_badges_in_post_header
 
     @post_user_badges ||=
-      begin
-        UserBadge
+      UserBadge
           .for_post_header_badges(@posts)
           .reduce({}) do |hash, user_badge|
             hash[user_badge.post_id] ||= []
             hash[user_badge.post_id] << user_badge
             hash
           end
-      end
+      
 
     return [] unless @post_user_badges
 
@@ -290,13 +289,12 @@ class TopicView
     return unless @contains_gaps
 
     @gaps ||=
-      begin
-        if is_mega_topic?
+      if is_mega_topic?
           nil
         else
           Gaps.new(filtered_post_ids, apply_default_scope(unfiltered_posts).pluck(:id))
         end
-      end
+      
   end
 
   def last_post
@@ -310,11 +308,10 @@ class TopicView
 
   def next_page
     @next_page ||=
-      begin
-        if last_post && highest_post_number && (highest_post_number > last_post.post_number)
+      if last_post && highest_post_number && (highest_post_number > last_post.post_number)
           @page + 1
         end
-      end
+      
   end
 
   def prev_page_path
@@ -572,8 +569,7 @@ class TopicView
 
   def post_counts_by_user
     @post_counts_by_user ||=
-      begin
-        if is_mega_topic?
+      if is_mega_topic?
           {}
         else
           sql = <<~SQL
@@ -597,7 +593,7 @@ class TopicView
             )
           ]
         end
-      end
+      
   end
 
   # if a topic has more that N posts no longer attempt to
@@ -607,8 +603,7 @@ class TopicView
 
   def participant_count
     @participant_count ||=
-      begin
-        if participants.size == MAX_PARTICIPANTS
+      if participants.size == MAX_PARTICIPANTS
           if @topic.posts_count > MAX_POSTS_COUNT_PARTICIPANTS
             @topic.participant_count
           else
@@ -623,7 +618,7 @@ class TopicView
         else
           participants.size
         end
-      end
+      
   end
 
   def participants
@@ -640,9 +635,8 @@ class TopicView
 
   def topic_allowed_group_ids
     @topic_allowed_group_ids ||=
-      begin
-        @topic.allowed_groups.map(&:id)
-      end
+      @topic.allowed_groups.map(&:id)
+      
   end
 
   def group_allowed_user_ids
@@ -654,8 +648,7 @@ class TopicView
 
   def category_group_moderator_user_ids
     @category_group_moderator_user_ids ||=
-      begin
-        if SiteSetting.enable_category_group_moderation? && @topic.category.present?
+      if SiteSetting.enable_category_group_moderation? && @topic.category.present?
           posts_user_ids = Set.new(@posts.map(&:user_id))
           Set.new(
             GroupUser
@@ -672,7 +665,7 @@ class TopicView
         else
           Set.new
         end
-      end
+      
   end
 
   def all_post_actions
@@ -845,13 +838,12 @@ class TopicView
 
   def unfiltered_post_ids
     @unfiltered_post_ids ||=
-      begin
-        if @contains_gaps
+      if @contains_gaps
           unfiltered_posts.pluck(:id)
         else
           filtered_post_ids
         end
-      end
+      
   end
 
   def filtered_post_id(post_number)

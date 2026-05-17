@@ -68,7 +68,7 @@ class UploadsController < ApplicationController
     # note, atm hijack is processed in its own context and has not access to controller
     # longer term we may change this
     hijack do
-      begin
+      
         info =
           UploadsController.create_upload(
             current_user: me,
@@ -87,7 +87,7 @@ class UploadsController < ApplicationController
                status: :unprocessable_entity
       else
         render json: UploadsController.serialize_upload(info), status: Upload === info ? 200 : 422
-      end
+      
     end
   end
 
@@ -117,7 +117,7 @@ class UploadsController < ApplicationController
         request.env.delete(Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY)
 
       RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
-        begin
+        
           # current_user here refers to the user for the site that we are operating on
           # using with_connection. If DB for the target site matches the current site
           # for the request, then current_user will be the same as the request_site_current_user
@@ -137,7 +137,7 @@ class UploadsController < ApplicationController
           else
             render_404
           end
-        end
+        
       end
     ensure
       request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = request_site_current_user
@@ -392,7 +392,7 @@ class UploadsController < ApplicationController
   end
 
   def create_direct_multipart_upload
-    begin
+    
       yield
     rescue Aws::S3::Errors::ServiceError => err
       message =
@@ -401,6 +401,6 @@ class UploadsController < ApplicationController
           I18n.t("upload.create_multipart_failure", additional_detail: err.message),
         )
       raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
-    end
+    
   end
 end

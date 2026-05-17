@@ -420,7 +420,7 @@ RSpec.describe PostDestroyer do
 
   describe "basic destroying" do
     it "as the creator of the post, doesn't delete the post" do
-      begin
+      
         post2 = create_post
         user_stat = post2.user.user_stat
 
@@ -468,7 +468,7 @@ RSpec.describe PostDestroyer do
       ensure
         DiscourseEvent.off(:topic_destroyed, &topic_destroyed)
         DiscourseEvent.off(:topic_recovered, &topic_recovered)
-      end
+      
     end
 
     it "maintains history when a user destroys a hidden post" do

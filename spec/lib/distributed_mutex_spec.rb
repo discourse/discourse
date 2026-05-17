@@ -93,7 +93,7 @@ RSpec.describe DistributedMutex do
 
           3.times do |i|
             execution.spawn do
-              begin
+              
                 redis = Concurrency::RedisWrapper.new(connections[i], execution)
 
                 2.times do
@@ -108,7 +108,7 @@ RSpec.describe DistributedMutex do
                   end
                 end
               rescue Redis::ConnectionError
-              end
+              
             end
           end
         end

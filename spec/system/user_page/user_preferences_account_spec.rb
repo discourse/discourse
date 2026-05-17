@@ -128,7 +128,7 @@ describe "User preferences | Account" do
     end
 
     it "shows provider names without links when provider_url is not implemented" do
-      begin
+      
         authenticator =
           Class
             .new(Auth::ManagedAuthenticator) do
@@ -151,7 +151,7 @@ describe "User preferences | Account" do
         expect(name).not_to have_css("a")
       ensure
         DiscoursePluginRegistry.reset!
-      end
+      
     end
   end
 end

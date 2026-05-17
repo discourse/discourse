@@ -828,7 +828,7 @@ class Post < ActiveRecord::Base
       .limit(limit)
       .pluck(:id)
       .each do |id|
-        begin
+        
           break if !limiter.can_perform?
 
           post = Post.find(id)
@@ -854,7 +854,7 @@ class Post < ActiveRecord::Base
             post.custom_fields["rebake_attempts"] = attempts + 1
             post.save_custom_fields
           end
-        end
+        
       end
     problems
   end

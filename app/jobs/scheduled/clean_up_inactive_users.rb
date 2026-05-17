@@ -33,7 +33,7 @@ module Jobs
 
       User.transaction do
         ids.each do |id|
-          begin
+          
             user = User.find_by(id: id)
             next unless user
             destroyer.destroy(
@@ -50,7 +50,7 @@ module Jobs
               },
             )
             raise e
-          end
+          
         end
       end
     end

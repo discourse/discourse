@@ -35,8 +35,7 @@ class EmbeddingDefinition < ActiveRecord::Base
 
     def presets
       @presets ||=
-        begin
-          [
+        [
             {
               preset_id: "bge-large-en",
               display_name: "bge-large-en",
@@ -120,7 +119,7 @@ class EmbeddingDefinition < ActiveRecord::Base
               },
             },
           ]
-        end
+        
     end
   end
 

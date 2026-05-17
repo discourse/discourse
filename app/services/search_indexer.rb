@@ -357,7 +357,7 @@ class SearchIndexer
     raw_data.scan(Discourse::Utils::URI_REGEXP) { urls << $& }
 
     urls.each do |url|
-      begin
+      
         case File.extname(URI(url).path || "")
         when Oneboxer::VIDEO_REGEX
           raw_data.gsub!(url, I18n.t("search.video"))
@@ -365,7 +365,7 @@ class SearchIndexer
           raw_data.gsub!(url, I18n.t("search.audio"))
         end
       rescue URI::InvalidURIError
-      end
+      
     end
 
     raw_data

@@ -16,7 +16,7 @@ module Jobs
         .where("raw LIKE '%http%'")
         .find_in_batches do |group|
           group.each do |p|
-            begin
+            
               # Note we can't use `p.cooked` here because oneboxes have been cooked out
               cooked = PrettyText.cook(p.raw)
               doc = Nokogiri::HTML5.fragment(cooked)
@@ -25,7 +25,7 @@ module Jobs
               end
             rescue StandardError
               nil # if there is a problem cooking we don't care
-            end
+            
           end
         end
 

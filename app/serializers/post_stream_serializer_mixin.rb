@@ -56,8 +56,7 @@ module PostStreamSerializerMixin
 
   def posts
     @posts ||=
-      begin
-        (object.posts || []).map do |post|
+      (object.posts || []).map do |post|
           post.topic = object.topic
 
           serializer = PostSerializer.new(post, scope: scope, root: false)
@@ -68,7 +67,7 @@ module PostStreamSerializerMixin
 
           serializer.as_json
         end
-      end
+      
   end
 
   def post_notice_created_by_users

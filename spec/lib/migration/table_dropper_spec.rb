@@ -68,7 +68,7 @@ RSpec.describe Migration::TableDropper do
     end
 
     it "should prevent insertions to the table" do
-      begin
+      
         DB.exec <<~SQL
           INSERT INTO #{table_name} (topic_id) VALUES (2)
         SQL
@@ -77,7 +77,7 @@ RSpec.describe Migration::TableDropper do
           "Discourse: #{table_name} is read only",
           "discourse_functions.raise_table_with_old_name_readonly()",
         ].each { |message| expect(e.message).to include(message) }
-      end
+      
     end
   end
 end

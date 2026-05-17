@@ -155,7 +155,7 @@ class TopicLink < ActiveRecord::Base
       .uniq { |_, p| p }
       .each do |link, parsed|
         TopicLink.transaction do
-          begin
+          
             url, reflected_id = self.ensure_entry_for(post, link, parsed)
             current_urls << url unless url.nil?
             reflected_ids << reflected_id unless reflected_id.nil?
@@ -163,7 +163,7 @@ class TopicLink < ActiveRecord::Base
             # if the URI is invalid, don't store it.
           rescue ActionController::RoutingError
             # If we can't find the route, no big deal
-          end
+          
         end
       end
 

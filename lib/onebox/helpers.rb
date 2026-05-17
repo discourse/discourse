@@ -212,11 +212,11 @@ module Onebox
     end
 
     def self.get_absolute_image_url(src, url)
-      begin
+      
         URI.parse(url).merge(src).to_s
       rescue ArgumentError, URI::BadURIError, URI::InvalidURIError
         src
-      end
+      
     end
 
     def self.user_agent

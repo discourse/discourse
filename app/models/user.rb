@@ -2209,11 +2209,11 @@ class User < ActiveRecord::Base
       .where("user_histories.id IS NULL")
       .limit(200)
       .find_each do |user|
-        begin
+        
           destroyer.destroy(user, context: I18n.t(:purge_reason))
         rescue Discourse::InvalidAccess
           # keep going
-        end
+        
       end
   end
 

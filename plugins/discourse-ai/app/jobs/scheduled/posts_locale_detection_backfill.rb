@@ -31,7 +31,7 @@ module Jobs
       return if posts.empty?
 
       posts.each do |post|
-        begin
+        
           next if !DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, "")
 
           DiscourseAi::Translation::PostLocaleDetector.detect_locale(post)
@@ -41,7 +41,7 @@ module Jobs
           DiscourseAi::Translation::VerboseLogger.log(
             "Failed to detect post #{post.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
           )
-        end
+        
       end
 
       DiscourseAi::Translation::VerboseLogger.log("Detected #{posts.size} post locales")

@@ -60,7 +60,7 @@ module DiscourseAi
           errors = []
 
           max_prompts.each do |prompt|
-            begin
+            
               # Create tool instance with parameters
               tool_params = { prompt: prompt }
 
@@ -101,7 +101,7 @@ module DiscourseAi
                   "Tool: #{tool_class.name}, Error: #{e.class.name} - #{e.message}",
               )
               errors << e.message
-            end
+            
           end
 
           if uploads.empty?

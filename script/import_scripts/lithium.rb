@@ -924,7 +924,7 @@ SQL
     Post
       .where("id > ?", @max_start_id)
       .find_each do |post|
-        begin
+        
           id = post.custom_fields["import_unique_id"]
           next unless id
           raw = mysql_query("select body from message2 where unique_id = '#{id}'").first["body"]
@@ -948,7 +948,7 @@ SQL
           nil
         ensure
           print_status(current += 1, max)
-        end
+        
       end
 
     SiteSetting.authorized_extensions = default_extensions

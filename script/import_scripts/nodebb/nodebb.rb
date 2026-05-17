@@ -476,7 +476,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
     start_time = Time.now
 
     Post.find_each do |post|
-      begin
+      
         next if post.custom_fields["import_post_processing"]
 
         new_raw = postprocess_post(post)
@@ -487,7 +487,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
         end
       ensure
         print_status(current += 1, max, start_time)
-      end
+      
     end
   end
 

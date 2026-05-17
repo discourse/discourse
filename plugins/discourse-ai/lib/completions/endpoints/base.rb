@@ -245,7 +245,7 @@ module DiscourseAi
                 return response_data
               end
 
-              begin
+              
                 response.read_body do |chunk|
                   break if cancelled
 
@@ -263,7 +263,7 @@ module DiscourseAi
                     partials.each { |inner_partial| blk.call(inner_partial) }
                   end
                 end
-              end
+              
               if xml_stripper
                 stripped = xml_stripper.finish
                 if stripped.present?
@@ -447,11 +447,11 @@ module DiscourseAi
         private
 
         def format_possible_json_payload(payload)
-          begin
+          
             JSON.pretty_generate(JSON.parse(payload))
           rescue JSON::ParserError
             payload
-          end
+          
         end
 
         def track_failures(call_status)

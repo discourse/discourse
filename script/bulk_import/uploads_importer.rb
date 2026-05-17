@@ -217,7 +217,7 @@ module BulkImport
                 error_message = nil
                 upload =
                   copy_to_tempfile(path) do |file|
-                    begin
+                    
                       UploadCreator.new(
                         file,
                         metadata.original_filename,
@@ -227,7 +227,7 @@ module BulkImport
                     rescue StandardError => e
                       error_message = e.message
                       nil
-                    end
+                    
                   end
 
                 if (upload_okay = upload.present? && upload.persisted? && upload.errors.blank?)

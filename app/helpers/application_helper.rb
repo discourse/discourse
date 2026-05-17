@@ -457,8 +457,7 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||=
-      begin
-        if mobile_view?
+      if mobile_view?
           if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
             SiteSetting.site_mobile_logo_dark_url
           elsif SiteSetting.site_mobile_logo_url.present?
@@ -471,20 +470,19 @@ module ApplicationHelper
             SiteSetting.site_logo_url
           end
         end
-      end
+      
   end
 
   def application_logo_dark_url
     @application_logo_dark_url ||=
-      begin
-        if dark_scheme_id != -1
+      if dark_scheme_id != -1
           if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
             SiteSetting.site_mobile_logo_dark_url
           elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
             SiteSetting.site_logo_dark_url
           end
         end
-      end
+      
   end
 
   def waving_hand_url
@@ -584,12 +582,12 @@ module ApplicationHelper
       Discourse
         .cache
         .fetch("splash_screen_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
-          begin
+          
             upload.content.presence
           rescue StandardError => e
             Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
             nil
-          end
+          
         end
   end
 
@@ -665,14 +663,14 @@ module ApplicationHelper
   end
 
   def topic_featured_link_domain(link)
-    begin
+    
       uri = UrlHelper.encode_and_parse(link)
       uri = URI.parse("http://#{uri}") if uri.scheme.nil?
       host = uri.host.downcase
       host.start_with?("www.") ? host[4..-1] : host
     rescue StandardError
       ""
-    end
+    
   end
 
   def theme_id

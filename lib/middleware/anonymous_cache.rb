@@ -119,9 +119,8 @@ module Middleware
 
       def key_has_brotli?
         @has_brotli ||=
-          begin
-            @env[ACCEPT_ENCODING].to_s =~ /br/ ? :true : :false
-          end
+          @env[ACCEPT_ENCODING].to_s =~ /br/ ? :true : :false
+          
         @has_brotli == :true
       end
       # rubocop:enable Lint/BooleanSymbol
@@ -137,8 +136,7 @@ module Middleware
       # rubocop:disable Lint/BooleanSymbol
       def is_crawler?
         @is_crawler ||=
-          begin
-            if @env[DISCOURSE_RENDER] == "crawler" ||
+          if @env[DISCOURSE_RENDER] == "crawler" ||
                  CrawlerDetection.crawler?(@user_agent, @env["HTTP_VIA"])
               :true
             else
@@ -149,7 +147,7 @@ module Middleware
                 :false
               end
             end
-          end
+          
         @is_crawler == :true
       end
       alias_method :key_is_crawler?, :is_crawler?

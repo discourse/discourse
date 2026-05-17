@@ -571,7 +571,7 @@ RSpec.describe TopicUser do
   end
 
   it "correctly triggers an event on first visit" do
-    begin
+    
       tracked_user = Fabricate(:user)
       post = create_post
 
@@ -596,6 +596,6 @@ RSpec.describe TopicUser do
       expect(called).to eq(1)
     ensure
       DiscourseEvent.off(:topic_first_visited_by_user, &user_first_visit)
-    end
+    
   end
 end

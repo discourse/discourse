@@ -826,13 +826,13 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   end
 
   def append_missing_upload(filename)
-    begin
+    
       File.open(@missing_uploads_path, "a") { |f| f.puts(filename) }
     rescue => e
       print_warning(
         "Could not append to missing uploads list #{@missing_uploads_path}: #{e.message}",
       )
-    end
+    
   end
 
   def find_uploads_table_name
@@ -1020,7 +1020,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       .where("raw LIKE '%/images/uploaded/%'")
       .find_in_batches(batch_size: BATCH_SIZE) do |posts|
         posts.each do |post|
-          begin
+          
             old_raw = post.raw.to_s
             next if old_raw.blank?
             #next unless old_raw =~ @legacy_upload_regex
@@ -1048,7 +1048,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
             print "."
           rescue => e
             print_warning("Repair failed for post #{post.id}: #{e.message}")
-          end
+          
         end
       end
 

@@ -11,7 +11,7 @@ module DiscourseSubscriptions
       PAGE_LIMIT = 10
 
       def index
-        begin
+        
           subscription_ids = Subscription.all.pluck(:external_id)
           subscriptions = {
             has_more: false,
@@ -45,7 +45,7 @@ module DiscourseSubscriptions
           render_json_dump subscriptions
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       def destroy

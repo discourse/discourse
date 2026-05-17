@@ -14,7 +14,7 @@ module Email
     end
 
     def process!
-      begin
+      
         @receiver = Email::Receiver.new(@mail, @opts)
         @receiver.process!
       rescue RateLimiter::LimitExceeded
@@ -32,7 +32,7 @@ module Email
         if rejection_message.present?
           set_incoming_email_rejection_message(incoming_email, rejection_message.body.to_s)
         end
-      end
+      
     end
 
     private

@@ -25,7 +25,7 @@ class EmailSettingsValidator
     openssl_verify: SiteSetting.pop3_polling_openssl_verify,
     debug: Rails.env.development?
   )
-    begin
+    
       pop3 = Net::POP3.new(host, port)
 
       # Note that we do not allow which verification mode to be specified
@@ -43,7 +43,7 @@ class EmailSettingsValidator
       pop3.auth_only(username, password)
     rescue => err
       log_and_raise(err, debug)
-    end
+    
   end
 
   ##
@@ -67,7 +67,7 @@ class EmailSettingsValidator
     openssl_verify_mode: GlobalSetting.smtp_openssl_verify_mode,
     debug: Rails.env.development?
   )
-    begin
+    
       if username || password
         authentication = SmtpProviderOverrides.authentication_override(host) if authentication.nil?
         authentication = authentication.to_sym
@@ -123,7 +123,7 @@ class EmailSettingsValidator
       smtp.finish
     rescue => err
       log_and_raise(err, debug)
-    end
+    
   end
 
   def self.log_and_raise(err, debug)

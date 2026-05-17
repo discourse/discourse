@@ -11,8 +11,7 @@ module DiscourseReactions::PostExtension
 
   def emoji_reactions
     @emoji_reactions ||=
-      begin
-        self.reactions.select { |reaction| Emoji.exists?(reaction.reaction_value) }
-      end
+      self.reactions.select { |reaction| Emoji.exists?(reaction.reaction_value) }
+      
   end
 end

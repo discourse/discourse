@@ -12,7 +12,7 @@ module RailsMultisite
 
     def self.safe_each_connection
       each_active_connection do |db|
-        begin
+        
           yield(db) if block_given?
         rescue PG::ConnectionBad, PG::UnableToSend, PG::ServerError
           break if !defined?(RailsFailover::ActiveRecord)
@@ -32,7 +32,7 @@ module RailsMultisite
           STDERR.puts "URGENT: Failed to initialize site #{db}: " \
                         "#{e.class} #{e.message}\n#{e.backtrace.join("\n")}"
           # the show must go on, don't stop startup if multisite fails
-        end
+        
       end
     end
   end

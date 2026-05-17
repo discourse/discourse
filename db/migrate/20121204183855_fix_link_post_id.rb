@@ -7,7 +7,7 @@ class FixLinkPostId < ActiveRecord::Migration[4.2]
     TopicLink
       .where("internal = TRUE AND link_post_id IS NULL")
       .each do |tl|
-        begin
+        
           parsed = URI.parse(tl.url)
           route = Rails.application.routes.recognize_path(parsed.path)
           if route[:topic_id].present?
@@ -16,7 +16,7 @@ class FixLinkPostId < ActiveRecord::Migration[4.2]
           end
         rescue ActionController::RoutingError
           to_remove << tl.id
-        end
+        
       end
 
     TopicLink.where("id in (?)", to_remove).delete_all

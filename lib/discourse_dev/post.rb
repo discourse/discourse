@@ -94,7 +94,7 @@ module DiscourseDev
       puts "Creating #{count} replies in '#{topic.title}'"
 
       count.times do |i|
-        begin
+        
           user = User.random
           reply =
             Faker::DiscourseMarkdown.with_user(user.id) do
@@ -107,7 +107,7 @@ module DiscourseDev
           PostCreator.new(user, reply).create!
         rescue ActiveRecord::RecordNotSaved => e
           puts e
-        end
+        
       end
 
       puts "Done!"

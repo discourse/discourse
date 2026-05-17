@@ -34,7 +34,7 @@ def gather_uploads
     .where("url ~ '^\/uploads\/'")
     .where("url !~ ?", "^\/uploads\/#{current_db}")
     .find_each do |upload|
-      begin
+      
         old_db = upload.url[%r{\A/uploads/([^/]+)/}, 1]
         from = upload.url.dup
         to = upload.url.sub("/uploads/#{old_db}/", "/uploads/#{current_db}/")
@@ -56,7 +56,7 @@ def gather_uploads
         putc "!"
       else
         putc "."
-      end
+      
     end
 
   puts "", "Done!"
@@ -72,7 +72,7 @@ task "uploads:backfill_shas" => :environment do
     Upload
       .where(sha1: nil)
       .find_each do |u|
-        begin
+        
           path = Discourse.store.path_for(u)
           sha1 = Upload.generate_digest(path)
           u.sha1 = u.secure? ? SecureRandom.hex(20) : sha1
@@ -81,7 +81,7 @@ task "uploads:backfill_shas" => :environment do
           putc "."
         rescue => e
           puts "Skipping #{u.original_filename} (#{u.url}) #{e.message}"
-        end
+        
       end
   end
   puts "", "Done"
@@ -102,7 +102,7 @@ end
 
 def migrate_to_s3_all_sites
   RailsMultisite::ConnectionManagement.each_connection do
-    begin
+    
       migrate_to_s3
     rescue RuntimeError => e
       if ENV["SKIP_FAILED"]
@@ -110,7 +110,7 @@ def migrate_to_s3_all_sites
       else
         raise e unless ENV["SKIP_FAILED"]
       end
-    end
+    
   end
 end
 
@@ -544,11 +544,11 @@ def sync_access_control(async: true, concurrency: 10)
         .map do |upload|
           Concurrent::Future.execute(executor:) do
             RailsMultisite::ConnectionManagement.with_connection(current_db) do
-              begin
+              
                 Discourse.store.update_upload_access_control(upload, remove_existing_acl: true)
               rescue => error
                 errors << "Error updating access control for upload #{upload.url}: #{error.message}"
-              end
+              
             end
           end
         end

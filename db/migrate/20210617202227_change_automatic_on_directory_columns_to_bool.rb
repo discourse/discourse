@@ -2,7 +2,7 @@
 
 class ChangeAutomaticOnDirectoryColumnsToBool < ActiveRecord::Migration[6.1]
   def up
-    begin
+    
       Migration::SafeMigrate.disable!
 
       # Because of a weird state we are in where some sites have a boolean type column for `automatic` and some
@@ -16,7 +16,7 @@ class ChangeAutomaticOnDirectoryColumnsToBool < ActiveRecord::Migration[6.1]
       SQL
     ensure
       Migration::SafeMigrate.enable!
-    end
+    
   end
 
   def down

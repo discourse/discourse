@@ -331,16 +331,14 @@ module Email
 
     def cc_addresses
       @cc_addresses ||=
-        begin
-          @message.try(:cc) || []
-        end
+        @message.try(:cc) || []
+        
     end
 
     def bcc_addresses
       @bcc_addresses ||=
-        begin
-          @message.try(:bcc) || []
-        end
+        @message.try(:bcc) || []
+        
     end
 
     def self.host_for(base_url)

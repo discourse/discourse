@@ -131,11 +131,11 @@ after_initialize do
               { skip_empty:, users_from_group:, attach_csv:, render_url_columns: true },
             )
             .each do |pm|
-              begin
+              
                 utils.send_pm(pm, automation_id: automation.id)
               rescue ActiveRecord::RecordNotSaved => e
                 Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't send PM for automation #{automation.id}: #{e.message}"
-              end
+              
             end
         end
       end

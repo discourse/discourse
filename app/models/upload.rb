@@ -559,7 +559,7 @@ class Upload < ActiveRecord::Base
         remap_scope = nil
 
         scope.each do |upload|
-          begin
+          
             # keep track of the url
             previous_url = upload.url.dup
             # where is the file currently stored?
@@ -618,15 +618,14 @@ class Upload < ActiveRecord::Base
             )
 
             remap_scope ||=
-              begin
-                Post
+              Post
                   .with_deleted
                   .where(
                     "raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'",
                   )
                   .select(:id, :raw, :cooked)
                   .all
-              end
+              
 
             remap_scope.each do |post|
               post.raw.gsub!(previous_url, upload.url)
@@ -645,7 +644,7 @@ class Upload < ActiveRecord::Base
           ensure
             file&.unlink
             file&.close
-          end
+          
         end
       end
     end

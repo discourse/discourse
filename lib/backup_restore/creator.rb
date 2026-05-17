@@ -158,7 +158,7 @@ module BackupRestore
       end
 
       IO.popen("#{pg_dump_command} 2>&1") do |pipe|
-        begin
+        
           while line = pipe.readline
             logs << line
           end
@@ -167,7 +167,7 @@ module BackupRestore
         ensure
           pg_dump_running = false
           logs << ""
-        end
+        
       end
 
       raise "pg_dump failed" unless $?.success?

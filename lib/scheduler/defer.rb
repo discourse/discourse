@@ -128,7 +128,7 @@ module Scheduler
       db ||= RailsMultisite::ConnectionManagement::DEFAULT
 
       RailsMultisite::ConnectionManagement.with_connection(db) do
-        begin
+        
           warning_job =
             @reactor.queue(@timeout) do
               Rails.logger.error "'#{desc}' is still running after #{@timeout} seconds on db #{db}, this process may need to be restarted!"
@@ -142,7 +142,7 @@ module Scheduler
           Discourse.handle_job_exception(ex, message: "Running deferred code '#{desc}'")
         ensure
           warning_job&.cancel
-        end
+        
       end
     rescue => ex
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")

@@ -98,14 +98,13 @@ class GlobalSetting
   def self.use_s3?
     (
       @use_s3 ||=
-        begin
-          if s3_bucket && s3_region &&
+        if s3_bucket && s3_region &&
                (s3_use_iam_profile || (s3_access_key_id && s3_secret_access_key))
             :true
           else
             :false
           end
-        end
+        
     ) == :true
   end
   # rubocop:enable Lint/BooleanSymbol

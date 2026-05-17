@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 def process_popmail(popmail)
-  begin
+  
     mail_string = popmail.pop
     Email::Receiver.new(mail_string).process
   rescue StandardError
     putc "!"
   else
     putc "."
-  end
+  
 end
 
 desc "use this task to import a mailbox into Discourse"
 task "emails:import" => :environment do
-  begin
+  
     unless SiteSetting.email_in
       puts "ERROR: you should enable the 'email_in' site setting before running this task"
       exit(1)
@@ -52,7 +52,7 @@ task "emails:import" => :environment do
     exit(10)
   ensure
     RateLimiter.enable
-  end
+  
 end
 
 desc "Check if SMTP connection is successful and send test message"

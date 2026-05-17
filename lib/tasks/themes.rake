@@ -288,7 +288,7 @@ def update_themes(version_cache: Concurrent::Map.new)
     .includes(:remote_theme)
     .where(enabled: true, auto_update: true)
     .find_each do |theme|
-      begin
+      
         theme.transaction do
           remote_theme = theme.remote_theme
           next if remote_theme.blank? || remote_theme.remote_url.blank?
@@ -321,7 +321,7 @@ def update_themes(version_cache: Concurrent::Map.new)
       rescue => e
         $stderr.puts "[#{RailsMultisite::ConnectionManagement.current_db}] Failed to update '#{theme.name}' (#{theme.id}): #{e}"
         raise if ENV["RAISE_THEME_ERRORS"] == "1"
-      end
+      
     end
 
   true

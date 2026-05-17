@@ -291,7 +291,7 @@ module ExternalUploadHelpers
 
     external_upload_manager = ExternalUploadManager.new(external_upload_stub, opts)
     hijack do
-      begin
+      
         upload = external_upload_manager.transform!
 
         if upload.errors.empty?
@@ -339,7 +339,7 @@ module ExternalUploadHelpers
         )
 
         render_json_error(I18n.t("upload.failed"), status: 422)
-      end
+      
     end
   end
 

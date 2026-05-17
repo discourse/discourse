@@ -704,14 +704,14 @@ RSpec.describe PrettyText do
     end
 
     it "does censor code fences" do
-      begin
+      
         %w[apple banana].each do |w|
           Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
         end
         expect(PrettyText.cook("# banana")).not_to include("banana")
       ensure
         Discourse.redis.flushdb
-      end
+      
     end
 
     it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do

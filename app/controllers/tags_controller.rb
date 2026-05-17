@@ -320,7 +320,7 @@ class TagsController < ::ApplicationController
     file = params[:file] || params[:files].first
 
     hijack do
-      begin
+      
         Tag.transaction do
           CSV.foreach(file.tempfile) do |row|
             if row.length > 2
@@ -343,7 +343,7 @@ class TagsController < ::ApplicationController
         render json: success_json
       rescue Discourse::InvalidParameters => e
         render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
-      end
+      
     end
   end
 

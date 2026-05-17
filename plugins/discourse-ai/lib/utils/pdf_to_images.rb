@@ -19,7 +19,7 @@ class DiscourseAi::Utils::PdfToImages
   end
 
   def extract_pages
-    begin
+    
       pdf_path =
         if upload.local?
           Discourse.store.path_for(upload)
@@ -74,6 +74,6 @@ class DiscourseAi::Utils::PdfToImages
       @uploaded_pages = uploads
     ensure
       FileUtils.rm_rf(temp_dir) if temp_dir
-    end
+    
   end
 end

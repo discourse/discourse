@@ -76,7 +76,7 @@ module BackupRestore
         end
 
       IO.popen(restore_dump_command) do |pipe|
-        begin
+        
           while line = pipe.readline
             logs << line
             last_line = line
@@ -85,7 +85,7 @@ module BackupRestore
           # finished reading...
         ensure
           psql_running = false
-        end
+        
       end
 
       logs << ""

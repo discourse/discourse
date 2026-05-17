@@ -284,7 +284,7 @@ class ImportScripts::Question2Answer < ImportScripts::Base
     puts "", "importing best answers..."
     ans = mysql_query("select postid, selchildid from qa_posts where selchildid is not null").to_a
     ans.each do |answer|
-      begin
+      
         post = Post.find_by(id: post_id_from_imported_post_id("#{answer["selchildid"]}"))
         post.custom_fields["is_accepted_answer"] = "true"
         post.save
@@ -293,7 +293,7 @@ class ImportScripts::Question2Answer < ImportScripts::Base
         topic.save
       rescue => e
         puts "error acting on post #{e}"
-      end
+      
     end
   end
 
@@ -322,7 +322,7 @@ class ImportScripts::Question2Answer < ImportScripts::Base
     max = Post.count
 
     Post.find_each do |post|
-      begin
+      
         new_raw = postprocess_post_raw(post.raw)
         if new_raw != post.raw
           post.raw = new_raw
@@ -332,7 +332,7 @@ class ImportScripts::Question2Answer < ImportScripts::Base
         nil
       ensure
         print_status(current += 1, max)
-      end
+      
     end
   end
 

@@ -364,7 +364,7 @@ EOM
     puts "", "creating groups membership..."
 
     Group.find_each do |group|
-      begin
+      
         next if group.automatic
         puts "\t#{group.name}"
         next if GroupUser.where(group_id: group.id).count > 0
@@ -383,7 +383,7 @@ EOM
       rescue Exception => e
         puts e.message
         puts e.backtrace.join("\n")
-      end
+      
     end
   end
 
@@ -1337,7 +1337,7 @@ LEFT OUTER JOIN #{TABLE_PREFIX}avatar a ON a.avatarid = u.avatarid
     start = Time.now
 
     Post.find_each do |post|
-      begin
+      
         old_raw = post.raw.dup
         new_raw = postprocess_post_raw(post, post.raw)
         if new_raw != old_raw
@@ -1348,7 +1348,7 @@ LEFT OUTER JOIN #{TABLE_PREFIX}avatar a ON a.avatarid = u.avatarid
         nil
       ensure
         print_status(current += 1, max, start)
-      end
+      
     end
   end
 

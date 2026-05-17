@@ -186,7 +186,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     puts "", "Creating groups membership..."
 
     Group.find_each do |group|
-      begin
+      
         next if group.automatic
         puts "\t#{group.name}"
         next if GroupUser.where(group_id: group.id).count > 0
@@ -203,7 +203,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       rescue Exception => e
         puts e.message
         puts e.backtrace.join("\n")
-      end
+      
     end
 
     Group.reset_all_counters!
@@ -738,7 +738,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     max = Post.count
 
     Post.find_each do |post|
-      begin
+      
         old_raw = post.raw.dup
         new_raw = postprocess_post_raw(post.raw)
         if new_raw != old_raw
@@ -749,7 +749,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
         nil
       ensure
         print_status(current += 1, max)
-      end
+      
     end
   end
 

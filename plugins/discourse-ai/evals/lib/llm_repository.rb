@@ -41,12 +41,12 @@ module DiscourseAi
 
       def all_available_models
         configs.keys.filter_map do |config_name|
-          begin
+          
             hydrate(config_name)
           rescue => e
             puts "Failed to hydrate #{config_name}: #{e.message}" unless Rails.env.test?
             nil
-          end
+          
         end
       end
 

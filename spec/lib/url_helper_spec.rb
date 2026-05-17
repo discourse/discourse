@@ -42,7 +42,7 @@ RSpec.describe UrlHelper do
 
   describe "#absolute" do
     it "returns an absolute URL for CDN" do
-      begin
+      
         Rails.configuration.action_controller.asset_host = "//cdn.awesome.com"
         expect(UrlHelper.absolute("/test.jpg")).to eq("https://cdn.awesome.com/test.jpg")
 
@@ -53,7 +53,7 @@ RSpec.describe UrlHelper do
         expect(UrlHelper.absolute("/test.jpg")).to eq("http://cdn.awesome.com/test.jpg")
       ensure
         Rails.configuration.action_controller.asset_host = nil
-      end
+      
     end
 
     it "does not change non-relative url" do

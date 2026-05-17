@@ -124,7 +124,7 @@ module Email
       id_hash = Digest::SHA1.hexdigest(@message_id)
 
       DistributedMutex.synchronize("process_email_#{id_hash}") do
-        begin
+        
           # If we find an existing incoming email record with the exact same `message_id`
           # do not create a new `IncomingEmail` record to avoid double ups.
           return if @incoming_email = IncomingEmail.find_by(message_id: @message_id)
@@ -144,7 +144,7 @@ module Email
           @incoming_email.update_columns(error: e.class.name) if @incoming_email
           delete_created_staged_users
           raise
-        end
+        
       end
     end
 
@@ -249,11 +249,11 @@ module Email
         first_exception = nil
 
         destinations.each do |destination|
-          begin
+          
             return process_destination(destination, user, body, elided)
           rescue => e
             first_exception ||= e
-          end
+          
         end
 
         raise first_exception if first_exception
@@ -292,10 +292,10 @@ module Email
         next if mail[field].blank?
 
         mail[field].each do |address_field|
-          begin
+          
             address_field.decoded
             recipients << address_field.address.downcase
-          end
+          
         end
       end
 
@@ -763,7 +763,7 @@ module Email
     end
 
     def self.extract_email_address_and_name(value)
-      begin
+      
         # ensure the email header value is a string
         value = value.to_s
         # in embedded emails, converts [mailto:foo@bar.com] to <foo@bar.com>
@@ -784,7 +784,7 @@ module Email
         end
       rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
         # something went wrong parsing the email header value, return nil
-      end
+      
     end
 
     def subject
@@ -1587,7 +1587,7 @@ module Email
         next if mail_object[d].blank?
 
         mail_object[d].each do |address_field|
-          begin
+          
             address_field.decoded
             email = address_field.address.downcase
             display_name = address_field.display_name.try(:to_s)
@@ -1626,7 +1626,7 @@ module Email
             end
           rescue ActiveRecord::RecordInvalid, EmailNotAllowed
             # don't care if user already allowed or the user's email address is not allowed
-          end
+          
         end
       end
     end

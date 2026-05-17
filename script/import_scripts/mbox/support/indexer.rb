@@ -65,7 +65,7 @@ module ImportScripts::Mbox
 
     def index_emails(directory, category_name)
       all_messages(directory, category_name) do |receiver, filename, opts|
-        begin
+        
           msg_id = receiver.message_id
           parsed_email = receiver.mail
 
@@ -125,7 +125,7 @@ module ImportScripts::Mbox
 
           STDERR.puts e.message
           STDERR.puts e.backtrace.inspect
-        end
+        
       end
     end
 

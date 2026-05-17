@@ -53,7 +53,7 @@ module Migrations
           fork_output_stream
         )
           ForkManager.fork do
-            begin
+            
               Process.setproctitle("worker_process#{@index}")
 
               parent_output_stream.close
@@ -67,7 +67,7 @@ module Migrations
               exit(1)
             ensure
               @job.cleanup
-            end
+            
           end
         end
 

@@ -80,11 +80,11 @@ RSpec.describe Migration::SafeMigrate do
     error = nil
 
     capture_stdout do
-      begin
+      
         migrate_up(path)
       rescue StandardError => e
         error = e
-      end
+      
     end
 
     expect(error.cause.cause.message).to include(
@@ -99,11 +99,11 @@ RSpec.describe Migration::SafeMigrate do
     error = nil
 
     capture_stdout do
-      begin
+      
         migrate_up(path)
       rescue StandardError => e
         error = e
-      end
+      
     end
 
     expect(error.cause.cause.message).to include(

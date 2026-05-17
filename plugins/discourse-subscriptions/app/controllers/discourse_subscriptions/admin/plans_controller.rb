@@ -8,17 +8,17 @@ module DiscourseSubscriptions
       requires_plugin PLUGIN_NAME
 
       def index
-        begin
+        
           plans = ::Stripe::Price.list(product_params, stripe_request_opts)
 
           render_json_dump plans.data
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       def create
-        begin
+        
           price_object = {
             nickname: params[:nickname],
             unit_amount: params[:amount],
@@ -38,11 +38,11 @@ module DiscourseSubscriptions
           render_json_dump plan
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       def show
-        begin
+        
           plan = ::Stripe::Price.retrieve(params[:id], stripe_request_opts)
 
           if plan[:metadata] && plan[:metadata][:trial_period_days]
@@ -64,11 +64,11 @@ module DiscourseSubscriptions
           render_json_dump serialized
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       def update
-        begin
+        
           plan =
             ::Stripe::Price.update(
               params[:id],
@@ -86,7 +86,7 @@ module DiscourseSubscriptions
           render_json_dump plan
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       private

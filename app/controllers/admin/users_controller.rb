@@ -406,7 +406,7 @@ class Admin::UsersController < Admin::StaffController
     options[:prepare_for_destroy] = true
 
     hijack do
-      begin
+      
         if UserDestroyer.new(current_user).destroy(user, options)
           render json: { deleted: true }
         else
@@ -426,7 +426,7 @@ class Admin::UsersController < Admin::StaffController
                    ),
                },
                status: :forbidden
-      end
+      
     end
   end
 

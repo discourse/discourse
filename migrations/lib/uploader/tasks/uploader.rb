@@ -153,7 +153,7 @@ module Migrations
             with_retries do
               upload =
                 copy_to_tempfile(path) do |file|
-                  begin
+                  
                     UploadCreator.new(
                       file,
                       metadata.original_filename,
@@ -163,7 +163,7 @@ module Migrations
                   rescue StandardError => e
                     error_message = e.message
                     nil
-                  end
+                  
                 end
 
               if (upload_okay = upload.present? && upload.persisted? && upload.errors.blank?)

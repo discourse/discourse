@@ -179,12 +179,11 @@ class TopicList
 
   def category_user_lookup
     @category_user_lookup ||=
-      begin
-        if @current_user
+      if @current_user
           CategoryUser.lookup_for(@current_user, @topics.map(&:category_id).uniq)
         else
           []
         end
-      end
+      
   end
 end

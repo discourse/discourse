@@ -423,7 +423,7 @@ class GroupsController < ApplicationController
       skip_email ||= params.key?(:notify_users) && !notify
 
       emails.each do |email|
-        begin
+        
           Invite.generate(current_user, email:, group_ids:, skip_email:)
         rescue RateLimiter::LimitExceeded => e
           return(
@@ -435,7 +435,7 @@ class GroupsController < ApplicationController
               ),
             )
           )
-        end
+        
       end
 
       render json: success_json.merge!(usernames: uniq_users.map(&:username), emails: emails)
@@ -757,7 +757,7 @@ class GroupsController < ApplicationController
     end
 
     hijack do
-      begin
+      
         raise Discourse::InvalidParameters if params[:ssl_mode].blank?
 
         settings.delete(:ssl_mode)
@@ -780,7 +780,7 @@ class GroupsController < ApplicationController
         render json: success_json
       rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
         render_json_error(EmailSettingsExceptionHandler.friendly_exception_message(err, email_host))
-      end
+      
     end
   end
 

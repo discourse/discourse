@@ -20,14 +20,14 @@ class UserExport < ActiveRecord::Base
       .where("created_at < ?", DESTROY_CREATED_BEFORE.ago)
       .find_each do |user_export|
         UserExport.transaction do
-          begin
+          
             Post.where(topic_id: user_export.topic_id).find_each { |p| p.destroy! }
             user_export.destroy!
           rescue => e
             Rails.logger.warn(
               "Failed to remove user_export record with id #{user_export.id}: #{e.message}\n#{e.backtrace.join("\n")}",
             )
-          end
+          
         end
       end
   end

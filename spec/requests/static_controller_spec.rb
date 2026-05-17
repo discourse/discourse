@@ -69,7 +69,7 @@ RSpec.describe StaticController do
     let(:site) { RailsMultisite::ConnectionManagement.current_db }
 
     it "can serve assets" do
-      begin
+      
         assets_path = Rails.public_path.join("assets")
 
         FileUtils.mkdir_p(assets_path)
@@ -83,11 +83,11 @@ RSpec.describe StaticController do
         expect(response.headers["Cache-Control"]).to match(/public/)
       ensure
         File.delete(file_path)
-      end
+      
     end
 
     it "does not serve files outside the assets directory via path traversal" do
-      begin
+      
         secret_dir = Rails.public_path.join("assets-secret")
         FileUtils.mkdir_p(secret_dir)
         secret_file = secret_dir.join("leak.txt")
@@ -99,7 +99,7 @@ RSpec.describe StaticController do
       ensure
         File.delete(secret_file) if secret_file && File.exist?(secret_file)
         FileUtils.rm_rf(secret_dir) if secret_dir && Dir.exist?(secret_dir)
-      end
+      
     end
 
     context "with fallback_assets_path" do

@@ -217,7 +217,7 @@ class ImportScripts::Base
     return false if import_ids.empty?
 
     ActiveRecord::Base.transaction do
-      begin
+      
         connection = ActiveRecord::Base.connection.raw_connection
         connection.exec("CREATE TEMP TABLE import_ids(val text PRIMARY KEY)")
 
@@ -235,7 +235,7 @@ class ImportScripts::Base
         end
       ensure
         connection.exec("DROP TABLE import_ids") unless connection.nil?
-      end
+      
     end
   end
 

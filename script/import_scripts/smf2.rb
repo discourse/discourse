@@ -260,14 +260,14 @@ class ImportScripts::Smf2 < ImportScripts::Base
         ORDER BY id_attach ASC
       SQL
       attachments.map! do |a|
-        begin
+        
           import_attachment(post, a)
         rescue StandardError
           (
             puts $!
             nil
           )
-        end
+        
       end
       begin
         post[:raw] = convert_message_body(message[:body], attachments, ignore_quotes: ignore_quotes)

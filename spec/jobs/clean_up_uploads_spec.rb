@@ -106,7 +106,7 @@ RSpec.describe Jobs::CleanUpUploads do
   end
 
   it "does not clean up upload site settings" do
-    begin
+    
       original_provider = SiteSetting.provider
       SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
       SiteSetting.clean_orphan_uploads_grace_period_hours = 1
@@ -156,7 +156,7 @@ RSpec.describe Jobs::CleanUpUploads do
     ensure
       SiteSetting.delete_all
       SiteSetting.provider = original_provider
-    end
+    
   end
 
   it "does not clean up selectable avatars" do

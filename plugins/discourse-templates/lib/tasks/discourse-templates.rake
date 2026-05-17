@@ -177,7 +177,7 @@ end
 def purge_old_data
   puts "Removing canned replies data"
 
-  begin
+  
     ActiveRecord::Base.transaction do
       DB.exec <<~SQL
         DELETE FROM site_settings#{" "}
@@ -203,5 +203,5 @@ def purge_old_data
       puts e
       puts "Transaction aborted! All changes were rolled back!"
     end
-  end
+  
 end

@@ -232,7 +232,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
           created_at: p["c_creation_date"],
           post_create_action:
             proc do |post_info|
-              begin
+              
                 if p["c_type"] == "answer" && p["c_marked"] == 1
                   post = Post.find(post_info[:id])
                   if post
@@ -245,7 +245,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
                 end
               rescue ActiveRecord::RecordInvalid
                 puts "SOLVED: Skipped post_id: #{post.id} because invalid"
-              end
+              
             end,
         }
       end
@@ -356,7 +356,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     avatars = @client.query(query)
 
     avatars.each do |a|
-      begin
+      
         user_id = user_id_from_imported_user_id(a["c_user"])
         user = User.find(user_id)
         if user
@@ -387,7 +387,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
         end
       rescue ActiveRecord::RecordNotFound
         puts "Could not find User for user_id: #{a["c_user"]}"
-      end
+      
     end
   end
 

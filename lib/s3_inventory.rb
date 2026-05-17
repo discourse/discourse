@@ -46,13 +46,13 @@ class S3Inventory
     end
 
     DistributedMutex.synchronize("s3_inventory_list_missing_#{type}", validity: 30.minutes) do
-      begin
+      
         download_and_decompress_files if !@preloaded_inventory_file
 
         multisite_prefix = Discourse.store.upload_path
 
         ActiveRecord::Base.transaction do
-          begin
+          
             connection.exec(
               "CREATE TEMP TABLE #{tmp_table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))",
             )
@@ -158,11 +158,11 @@ class S3Inventory
             set_missing_s3_discourse_stats(missing_count)
           ensure
             connection.exec("DROP TABLE #{tmp_table_name}") unless connection.nil?
-          end
+          
         end
       ensure
         cleanup!
-      end
+      
     end
   end
 

@@ -71,7 +71,7 @@ module PageObjects
 
     def with_network_disconnected
       page.driver.with_playwright_page do |pw_page|
-        begin
+        
           cdp_client = pw_page.context.new_cdp_session(pw_page)
 
           cdp_client.send_message(
@@ -95,13 +95,13 @@ module PageObjects
               uploadThroughput: -1,
             },
           )
-        end
+        
       end
     end
 
     def with_slow_download
       page.driver.with_playwright_page do |pw_page|
-        begin
+        
           cdp_client = pw_page.context.new_cdp_session(pw_page)
 
           cdp_client.send_message(
@@ -125,13 +125,13 @@ module PageObjects
               uploadThroughput: -1,
             },
           )
-        end
+        
       end
     end
 
     def with_slow_upload
       page.driver.with_playwright_page do |pw_page|
-        begin
+        
           cdp_client = pw_page.context.new_cdp_session(pw_page)
 
           cdp_client.send_message(
@@ -155,7 +155,7 @@ module PageObjects
               uploadThroughput: -1,
             },
           )
-        end
+        
       end
     end
   end

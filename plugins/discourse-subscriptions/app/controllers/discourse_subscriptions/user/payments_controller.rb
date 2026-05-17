@@ -10,7 +10,7 @@ module DiscourseSubscriptions
       requires_login
 
       def index
-        begin
+        
           customer = Customer.where(user_id: current_user.id)
           customer_ids = customer.map { |c| c.customer_id } if customer
           product_ids = Product.all.pluck(:external_id)
@@ -57,7 +57,7 @@ module DiscourseSubscriptions
           render_json_dump data
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       private

@@ -208,14 +208,14 @@ class ThemeField < ActiveRecord::Base
 
     fallback_data =
       fallback_fields.each_with_index.map do |field, index|
-        begin
+        
           field.raw_translation_data(internal: internal)
         rescue ThemeTranslationParser::InvalidYaml
           # If this is the locale with the error, raise it.
           # If not, let the other theme_field raise the error when it processes itself
           raise if field.id == id
           {}
-        end
+        
       end
 
     # TODO: Deduplicate the fallback data in the same way as JSLocaleHelper#load_translations_merged
@@ -678,7 +678,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   def upsert_svg_sprite!
-    begin
+    
       content = upload.content
     rescue => e
       Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
@@ -693,7 +693,7 @@ class ThemeField < ActiveRecord::Base
           unique_by: :theme_id,
         )
       end
-    end
+    
   end
 
   def upload_url

@@ -143,7 +143,7 @@ module DiscourseUpdates
       return [] if entries.blank?
 
       entries.select! do |item|
-        begin
+        
           valid_version =
             item["discourse_version"].nil? ||
               Discourse.has_needed_version?(current_version, item["discourse_version"]) ||
@@ -155,7 +155,7 @@ module DiscourseUpdates
           valid_version && valid_plugin_name
         rescue StandardError
           false
-        end
+        
       end
 
       entries.sort_by { |item| Time.zone.parse(item["created_at"]).to_i }.reverse

@@ -8,7 +8,7 @@ module DiscourseSubscriptions
       requires_plugin PLUGIN_NAME
 
       def index
-        begin
+        
           product_ids = Product.all.pluck(:external_id)
           products = []
 
@@ -22,11 +22,11 @@ module DiscourseSubscriptions
           render_json_dump products
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       def create
-        begin
+        
           create_params = product_params.merge!(type: "service")
 
           create_params.except!(:statement_descriptor) if params[:statement_descriptor].blank?
@@ -38,31 +38,31 @@ module DiscourseSubscriptions
           render_json_dump product
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       def show
-        begin
+        
           product = ::Stripe::Product.retrieve(params[:id], stripe_request_opts)
 
           render_json_dump product
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       def update
-        begin
+        
           product = ::Stripe::Product.update(params[:id], product_params, stripe_request_opts)
 
           render_json_dump product
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       def destroy
-        begin
+        
           product = ::Stripe::Product.delete(params[:id], {}, stripe_request_opts)
 
           Product.delete_by(external_id: params[:id])
@@ -70,7 +70,7 @@ module DiscourseSubscriptions
           render_json_dump product
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       private

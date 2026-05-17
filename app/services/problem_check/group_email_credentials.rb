@@ -37,7 +37,7 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
   end
 
   def try_validate(group, &blk)
-    begin
+    
       blk.call
       no_problem
     rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
@@ -52,6 +52,6 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
           "Unexpected error when checking SMTP credentials for group #{group.id} (#{group.name}).",
       )
       no_problem
-    end
+    
   end
 end

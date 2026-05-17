@@ -119,7 +119,7 @@ class LetterAvatar
     end
 
     def cleanup_old
-      begin
+      
         skip = File.basename(cache_path)
         parent_path = File.dirname(cache_path)
         Dir
@@ -129,7 +129,7 @@ class LetterAvatar
           end
       rescue Errno::ENOENT
         # no worries, folder doesn't exists
-      end
+      
     end
   end
 

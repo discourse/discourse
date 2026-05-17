@@ -2188,7 +2188,7 @@ class BulkImport::Base
       begin
         @raw_connection.copy_data(sql, @encoder) do
           rows.each do |row|
-            begin
+            
               if (mapped = yield(row))
                 processed = send(process_method_name, mapped)
                 imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
@@ -2205,7 +2205,7 @@ class BulkImport::Base
               puts "\n"
               puts "ERROR: #{e.message}"
               puts e.backtrace.join("\n")
-            end
+            
           end
         end
       rescue => e

@@ -106,11 +106,11 @@ module Jobs
       end
 
       def self.raw_log(message)
-        begin
+        
           logger << message
         rescue => e
           Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
-        end
+        
       end
 
       # For test environment only
@@ -162,7 +162,7 @@ module Jobs
         interval = interval.to_i
         @@interval_thread ||=
           Thread.new do
-            begin
+            
               loop do
                 sleep interval
                 mutex.synchronize do
@@ -174,7 +174,7 @@ module Jobs
                 e,
                 message: "Sidekiq interval logging thread terminated unexpectedly",
               )
-            end
+            
           end
       end
     end
@@ -299,7 +299,7 @@ module Jobs
 
       exceptions = []
       dbs.each do |db|
-        begin
+        
           exception = {}
 
           RailsMultisite::ConnectionManagement.with_connection(db) do
@@ -330,7 +330,7 @@ module Jobs
           end
 
           exceptions << exception unless exception.empty?
-        end
+        
       end
 
       Thread.current[Logster::Logger::LOGSTER_ENV] = nil

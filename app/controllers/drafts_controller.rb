@@ -190,14 +190,14 @@ class DraftsController < ApplicationController
     # Validate all sequences first (fail fast)
     sequence_errors = []
     draft_keys.each do |draft_key|
-      begin
+      
         current_sequence = DraftSequence.current(user, draft_key)
         provided_sequence = sequences[draft_key].to_i
         sequence_errors << draft_key if provided_sequence != current_sequence
       rescue StandardError
         # If we can't get sequence for some reason, skip validation for this draft
         # This maintains the same lenient behavior as the single delete
-      end
+      
     end
 
     if sequence_errors.any?

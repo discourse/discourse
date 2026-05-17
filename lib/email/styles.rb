@@ -226,7 +226,7 @@ module Email
       @fragment
         .css("iframe")
         .each do |i|
-          begin
+          
             # sometimes, iframes are blocklisted...
             if i["src"].blank?
               i.remove
@@ -246,7 +246,7 @@ module Email
           rescue URI::Error
             # If the URL is weird, remove the iframe
             i.remove
-          end
+          
         end
     end
 
@@ -486,11 +486,11 @@ module Email
       @fragment
         .css("a")
         .each do |link|
-          begin
+          
             link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
           rescue URI::Error
             # leave it
-          end
+          
         end
     end
 

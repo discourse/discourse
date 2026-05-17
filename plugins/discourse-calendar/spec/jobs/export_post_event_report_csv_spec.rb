@@ -26,7 +26,7 @@ describe Jobs::ExportCsvFile do
 
           context "when the user requesting the upload is admin" do
             it "generates the upload and notify the user" do
-              begin
+              
                 expect do
                   Jobs::ExportCsvFile.new.execute(
                     user_id: user.id,
@@ -89,7 +89,7 @@ describe Jobs::ExportCsvFile do
                 expect(files.size).to eq(1)
               ensure
                 user.uploads.each(&:destroy!)
-              end
+              
             end
           end
         end
@@ -135,7 +135,7 @@ describe Jobs::ExportCsvFile do
       before { SiteSetting.discourse_post_event_allowed_on_groups = group_1.id }
 
       it "generates the upload" do
-        begin
+        
           expect do
             Jobs::ExportCsvFile.new.execute(
               user_id: user.id,
@@ -147,7 +147,7 @@ describe Jobs::ExportCsvFile do
           end.to change { Upload.count }.by(1)
         ensure
           user.uploads.each(&:destroy!)
-        end
+        
       end
     end
   end

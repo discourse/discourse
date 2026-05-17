@@ -27,7 +27,7 @@ class UserAvatar < ActiveRecord::Base
 
   def update_gravatar!
     DistributedMutex.synchronize("update_gravatar_#{user_id}") do
-      begin
+      
         self.update!(last_gravatar_download_attempt: Time.zone.now)
 
         max = Discourse.avatar_sizes.max
@@ -81,7 +81,7 @@ class UserAvatar < ActiveRecord::Base
         raise e if e.io&.status&.[](0).to_i != 404
       ensure
         tempfile&.close!
-      end
+      
     end
   end
 
@@ -199,7 +199,7 @@ class UserAvatar < ActiveRecord::Base
     warnings_reported = 0
 
     ids.each do |id|
-      begin
+      
         OptimizedImage.find(id).destroy!
       rescue ActiveRecord::RecordNotFound
       rescue => e
@@ -207,7 +207,7 @@ class UserAvatar < ActiveRecord::Base
           Discourse.warn_exception(e, message: "Failed to remove optimized image")
           warnings_reported += 1
         end
-      end
+      
     end
   end
 end

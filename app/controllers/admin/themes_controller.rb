@@ -66,7 +66,7 @@ class Admin::ThemesController < Admin::AdminController
       end
 
       hijack do
-        begin
+        
           branch = params[:branch] ? params[:branch] : nil
           private_key =
             params[:public_key] ? Discourse.redis.get("ssh_key_#{params[:public_key]}") : nil
@@ -95,7 +95,7 @@ class Admin::ThemesController < Admin::AdminController
           else
             render_json_error e.message
           end
-        end
+        
       end
     elsif params[:bundle] ||
           (params[:theme] && THEME_CONTENT_TYPES.include?(params[:theme].content_type))
@@ -388,7 +388,7 @@ class Admin::ThemesController < Admin::AdminController
     theme_id = @theme.id
 
     hijack do
-      begin
+      
         private_key = nil
         if params[:public_key].present?
           private_key = Discourse.redis.get("ssh_key_#{params[:public_key]}")
@@ -420,7 +420,7 @@ class Admin::ThemesController < Admin::AdminController
              Theme::SettingsMigrationError => e
         remote_theme.reload
         render_json_error e.message
-      end
+      
     end
   end
 

@@ -58,7 +58,7 @@ if defined?(DiscourseAutomation)
     field :debug_mode, component: :boolean
 
     script do |context, fields, automation|
-      begin
+      
         sender = fields.dig("sender", "value")
         receivers = fields.dig("receivers", "value")
         topic_id = fields.dig("topic_id", "value")
@@ -129,7 +129,7 @@ if defined?(DiscourseAutomation)
           p e
           puts e.backtrace
         end
-      end
+      
     end
   end
 end

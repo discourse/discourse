@@ -64,7 +64,7 @@ RSpec.describe Admin::BackupsController do
 
       context "with json format" do
         it "returns a list of all the backups" do
-          begin
+          
             create_backup_files(backup_filename, backup_filename2)
 
             get "/admin/backups.json"
@@ -73,7 +73,7 @@ RSpec.describe Admin::BackupsController do
             filenames = response.parsed_body.map { |backup| backup["filename"] }
             expect(filenames).to include(backup_filename)
             expect(filenames).to include(backup_filename2)
-          end
+          
         end
       end
     end
@@ -206,7 +206,7 @@ RSpec.describe Admin::BackupsController do
       before { sign_in(admin) }
 
       it "uses send_file to transmit the backup" do
-        begin
+        
           token = EmailBackupToken.set(admin.id)
           create_backup_files(backup_filename)
 
@@ -218,17 +218,17 @@ RSpec.describe Admin::BackupsController do
 
           expect(response.headers["Content-Length"]).to eq("11")
           expect(response.headers["Content-Disposition"]).to match(/attachment; filename/)
-        end
+        
       end
 
       it "returns 422 when token is bad" do
-        begin
+        
           get "/admin/backups/#{backup_filename}.json", params: { token: "bad_value" }
 
           expect(response.status).to eq(422)
           expect(response.headers["Content-Disposition"]).not_to match(/attachment; filename/)
           expect(response.body).to include(I18n.t("download_backup_mailer.no_token"))
-        end
+        
       end
 
       it "returns 404 when the backup does not exist" do
@@ -241,7 +241,7 @@ RSpec.describe Admin::BackupsController do
 
     shared_examples "backup inaccessible" do
       it "denies access with a 404 response" do
-        begin
+        
           token = EmailBackupToken.set(admin.id)
           create_backup_files(backup_filename)
 
@@ -254,7 +254,7 @@ RSpec.describe Admin::BackupsController do
           expect(response.status).to eq(404)
           expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
           expect(response.headers["Content-Disposition"]).not_to match(/attachment; filename/)
-        end
+        
       end
     end
 
@@ -276,7 +276,7 @@ RSpec.describe Admin::BackupsController do
       before { sign_in(admin) }
 
       it "removes the backup if found" do
-        begin
+        
           path = backup_path(backup_filename)
           create_backup_files(backup_filename)
           expect(File.exist?(path)).to eq(true)
@@ -287,7 +287,7 @@ RSpec.describe Admin::BackupsController do
 
           expect(response.status).to eq(200)
           expect(File.exist?(path)).to eq(false)
-        end
+        
       end
 
       it "doesn't remove the backup if not found" do
@@ -310,7 +310,7 @@ RSpec.describe Admin::BackupsController do
 
     shared_examples "backup deletion not allowed" do
       it "prevents deletion with a 404 response" do
-        begin
+        
           path = backup_path(backup_filename)
           create_backup_files(backup_filename)
           expect(File.exist?(path)).to eq(true)
@@ -322,7 +322,7 @@ RSpec.describe Admin::BackupsController do
           expect(response.status).to eq(404)
           expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
           expect(File.exist?(path)).to eq(true)
-        end
+        
       end
     end
 

@@ -677,14 +677,14 @@ class Plugin::Instance
 
   def notify_after_initialize
     initializers.each do |callback|
-      begin
+      
         callback.call(self)
       rescue ActiveRecord::StatementInvalid => e
         # When running `db:migrate` for the first time on a new database,
         # plugin initializers might try to use models.
         # Tolerate it.
         raise e unless e.message.try(:include?, "PG::UndefinedTable")
-      end
+      
     end
   end
 

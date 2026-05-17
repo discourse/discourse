@@ -84,7 +84,7 @@ class FinishInstallationController < ApplicationController
   end
 
   def setup_discourse_id
-    begin
+    
       if find_allowed_emails.empty?
         raise StandardError.new(I18n.t("finish_installation.discourse_id.no_allowed_emails"))
       end
@@ -98,7 +98,7 @@ class FinishInstallationController < ApplicationController
     rescue StandardError => e
       @discourse_id_enabled = false
       @discourse_id_error = e.message
-    end
+    
   end
 
   def seed_admin_users

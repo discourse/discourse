@@ -17,7 +17,7 @@ RSpec.describe FileHelper do
       stub_request(:get, url).to_return(status: 404, body: "404")
 
       expect do
-        begin
+        
           FileHelper.download(
             url,
             max_file_size: 10_000,
@@ -27,7 +27,7 @@ RSpec.describe FileHelper do
         rescue => e
           expect(e.io.status[0]).to eq("404")
           raise
-        end
+        
       end.to raise_error(OpenURI::HTTPError, "404 Error")
     end
 
@@ -73,7 +73,7 @@ RSpec.describe FileHelper do
       stub_request(:get, url).to_return(status: 404, body: "404")
 
       expect do
-        begin
+        
           FileHelper.download(
             url,
             max_file_size: 10_000,
@@ -83,23 +83,23 @@ RSpec.describe FileHelper do
         rescue => e
           expect(e.io.status[0]).to eq("404")
           raise
-        end
+        
       end.to raise_error(OpenURI::HTTPError)
     end
 
     it "returns a file with the image" do
-      begin
+      
         tmpfile = FileHelper.download(url, max_file_size: 10_000, tmp_file_name: "trouttmp")
 
         expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
       ensure
         tmpfile&.close
         tmpfile&.unlink
-      end
+      
     end
 
     it "works with a protocol relative url" do
-      begin
+      
         tmpfile =
           FileHelper.download(
             "//eviltrout.com/trout.png",
@@ -111,7 +111,7 @@ RSpec.describe FileHelper do
       ensure
         tmpfile&.close
         tmpfile&.unlink
-      end
+      
     end
 
     describe "when max_file_size is exceeded" do
@@ -127,7 +127,7 @@ RSpec.describe FileHelper do
       end
 
       it "is able to retain the tmpfile" do
-        begin
+        
           tmpfile =
             FileHelper.download(
               "//eviltrout.com/trout.png",
@@ -140,7 +140,7 @@ RSpec.describe FileHelper do
         ensure
           tmpfile&.close
           tmpfile&.unlink
-        end
+        
       end
     end
 
@@ -148,7 +148,7 @@ RSpec.describe FileHelper do
       let(:url) { "https://eviltrout.com/trout.jpg" }
 
       it "should prioritize the content type returned by the response" do
-        begin
+        
           stub_request(:get, url).to_return(body: png, headers: { "content-type": "image/png" })
 
           tmpfile = FileHelper.download(url, max_file_size: 10_000, tmp_file_name: "trouttmp")
@@ -157,7 +157,7 @@ RSpec.describe FileHelper do
         ensure
           tmpfile&.close
           tmpfile&.unlink
-        end
+        
       end
     end
   end

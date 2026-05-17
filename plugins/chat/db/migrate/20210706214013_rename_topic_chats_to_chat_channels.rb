@@ -2,7 +2,7 @@
 
 class RenameTopicChatsToChatChannels < ActiveRecord::Migration[6.1]
   def up
-    begin
+    
       Migration::SafeMigrate.disable!
 
       # Trash all existing chat info
@@ -23,7 +23,7 @@ class RenameTopicChatsToChatChannels < ActiveRecord::Migration[6.1]
       change_column_null :chat_messages, :post_id, true # Don't require post_id
     ensure
       Migration::SafeMigrate.enable!
-    end
+    
   end
 
   def down

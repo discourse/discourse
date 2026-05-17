@@ -232,7 +232,7 @@ module VideoConversion
     end
 
     def update_file_acl(s3_store, destination_path)
-      begin
+      
         s3_store.update_file_access_control(destination_path, @upload.secure?)
       rescue Aws::S3::Errors::NotFound => e
         Rails.logger.error(
@@ -264,7 +264,7 @@ module VideoConversion
           },
         )
         raise
-      end
+      
     end
 
     def remove_temp_file(s3_store, temp_path)

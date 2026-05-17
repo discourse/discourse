@@ -10,7 +10,7 @@ module DiscourseSubscriptions
     requires_login except: %i[index contributors show]
 
     def index
-      begin
+      
         product_ids = Product.all.pluck(:external_id)
         products = []
 
@@ -23,7 +23,7 @@ module DiscourseSubscriptions
         render_json_dump products
       rescue ::Stripe::InvalidRequestError => e
         render_json_error e.message
-      end
+      
     end
 
     def contributors
@@ -264,7 +264,7 @@ module DiscourseSubscriptions
     end
 
     def retrieve_transaction(transaction)
-      begin
+      
         case transaction
         when /^sub_/
           ::Stripe::Subscription.retrieve(transaction, stripe_request_opts)
@@ -273,7 +273,7 @@ module DiscourseSubscriptions
         end
       rescue ::Stripe::InvalidRequestError => e
         e.message
-      end
+      
     end
 
     def metadata_user

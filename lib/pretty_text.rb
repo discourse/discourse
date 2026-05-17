@@ -539,7 +539,7 @@ module PrettyText
     doc
       .css("a[href]")
       .each do |a|
-        begin
+        
           href = a["href"].to_s
           next if href.blank?
           next if href.start_with?("mailto:")
@@ -555,7 +555,7 @@ module PrettyText
           )
         rescue URI::Error
           # leave it
-        end
+        
       end
   end
 

@@ -127,7 +127,7 @@ module DiscoursePostEvent
       raise Discourse::InvalidParameters.new(:file) if file.blank?
 
       hijack do
-        begin
+        
           invitees = []
 
           CSV.foreach(file.tempfile) do |row|
@@ -155,7 +155,7 @@ module DiscoursePostEvent
                      errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
                    ),
                  status: :unprocessable_entity
-        end
+        
       end
     end
 

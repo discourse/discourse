@@ -127,11 +127,11 @@ end
 
 RequireProfiler.profile do
   Bundler.definition.dependencies.each do |dep|
-    begin
+    
       require dep.name
     rescue Exception
       # don't care
-    end
+    
   end
 end
 

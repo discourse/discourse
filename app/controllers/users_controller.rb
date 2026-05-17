@@ -2248,12 +2248,12 @@ class UsersController < ApplicationController
     allowed_actions = %w[show update destroy]
 
     http_verbs.any? do |verb|
-      begin
+      
         path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
         allowed_actions.exclude?(path[:action])
       rescue ActionController::RoutingError
         false
-      end
+      
     end
   end
 

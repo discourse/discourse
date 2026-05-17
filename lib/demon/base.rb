@@ -264,12 +264,12 @@ class Demon::Base
     Discourse.after_fork if defined?(Discourse)
 
     Signal.trap("HUP") do
-      begin
+      
         delete_pid_file
       ensure
         # TERM is way cleaner than exit
         Process.kill("TERM", Process.pid)
-      end
+      
     end
 
     # keep stuff simple for now

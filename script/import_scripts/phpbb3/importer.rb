@@ -83,12 +83,12 @@ module ImportScripts::PhpBB3
         break if rows.size < 1
 
         create_users(rows, total: total_count, offset: offset) do |row|
-          begin
+          
             next if user_id_from_imported_user_id(@settings.prefix(row[:user_id]))
             importer.map_user(row)
           rescue => e
             log_error("Failed to map user with ID #{row[:user_id]}", e)
-          end
+          
         end
       end
     end
@@ -104,12 +104,12 @@ module ImportScripts::PhpBB3
         break if rows.size < 1
 
         create_users(rows, total: total_count, offset: offset) do |row|
-          begin
+          
             next if user_id_from_imported_user_id(@settings.prefix(row[:post_username]))
             importer.map_anonymous_user(row)
           rescue => e
             log_error("Failed to map anonymous user with ID #{row[:user_id]}", e)
-          end
+          
         end
       end
     end
@@ -119,7 +119,7 @@ module ImportScripts::PhpBB3
       rows = @database.fetch_groups
 
       create_groups(rows) do |row|
-        begin
+        
           next if row[:group_type] == 3
 
           group_name =
@@ -146,7 +146,7 @@ module ImportScripts::PhpBB3
           }
         rescue => e
           log_error("Failed to map group with ID #{row[:group_id]}", e)
-        end
+        
       end
     end
 
@@ -210,12 +210,12 @@ module ImportScripts::PhpBB3
         break if rows.size < 1
 
         create_posts(rows, total: total_count, offset: offset) do |row|
-          begin
+          
             next if post_id_from_imported_post_id(@settings.prefix(row[:post_id]))
             importer.map_post(row)
           rescue => e
             log_error("Failed to map post with ID #{row[:post_id]}", e)
-          end
+          
         end
       end
     end
@@ -231,12 +231,12 @@ module ImportScripts::PhpBB3
         break if rows.size < 1
 
         create_posts(rows, total: total_count, offset: offset) do |row|
-          begin
+          
             next if post_id_from_imported_post_id(@settings.prefix("pm:#{row[:msg_id]}"))
             importer.map_message(row)
           rescue => e
             log_error("Failed to map message with ID #{row[:msg_id]}", e)
-          end
+          
         end
       end
     end
@@ -252,11 +252,11 @@ module ImportScripts::PhpBB3
         break if rows.size < 1
 
         create_bookmarks(rows, total: total_count, offset: offset) do |row|
-          begin
+          
             importer.map_bookmark(row)
           rescue => e
             log_error("Failed to map bookmark (#{row[:user_id]}, #{row[:topic_first_post_id]})", e)
-          end
+          
         end
       end
     end

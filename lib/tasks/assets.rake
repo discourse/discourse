@@ -56,7 +56,7 @@ task "assets:precompile:css" => "environment" do
 end
 
 task "assets:flush_sw" => "environment" do
-  begin
+  
     hostname = Discourse.current_hostname
     default_port = SiteSetting.force_https? ? 443 : 80
     port = SiteSetting.port.to_i > 0 ? SiteSetting.port : default_port
@@ -65,7 +65,7 @@ task "assets:flush_sw" => "environment" do
     STDERR.puts "done"
   rescue StandardError
     STDERR.puts "Warning: unable to flush service worker script"
-  end
+  
 end
 
 def assets_path

@@ -36,7 +36,7 @@ RSpec.describe FileStore::LocalStore do
     end
 
     it "moves the file to the tombstone" do
-      begin
+      
         upload =
           UploadCreator.new(file_from_fixtures("smallest.png"), "smallest.png").create_for(
             Fabricate(:user).id,
@@ -53,13 +53,13 @@ RSpec.describe FileStore::LocalStore do
         expect(File.mtime(tombstone_path)).to_not eq(mtime)
       ensure
         [path, tombstone_path].each { |file_path| File.delete(file_path) if File.exist?(file_path) }
-      end
+      
     end
   end
 
   describe "#remove_optimized_image" do
     it "moves the file to the tombstone" do
-      begin
+      
         upload =
           UploadCreator.new(file_from_fixtures("smallest.png"), "smallest.png").create_for(
             Fabricate(:user).id,
@@ -77,7 +77,7 @@ RSpec.describe FileStore::LocalStore do
         expect(File.exist?(tombstone_path)).to eq(true)
       ensure
         [path, tombstone_path].each { |file_path| File.delete(file_path) if File.exist?(file_path) }
-      end
+      
     end
   end
 

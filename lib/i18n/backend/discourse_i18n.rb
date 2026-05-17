@@ -27,12 +27,12 @@ module I18n
       end
 
       def pluralize(locale, entry, count)
-        begin
+        
           super
         rescue I18n::InvalidPluralizationData => e
           raise e if I18n.fallbacks[locale] == [locale]
           throw(:exception, e)
-        end
+        
       end
 
       def self.sort_locale_files(files)

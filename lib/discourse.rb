@@ -589,13 +589,12 @@ module Discourse
 
   def self.cache
     @cache ||=
-      begin
-        if GlobalSetting.skip_redis?
+      if GlobalSetting.skip_redis?
           ActiveSupport::Cache::MemoryStore.new
         else
           Cache.new
         end
-      end
+      
   end
 
   # hostname of the server, operating system level
@@ -1193,11 +1192,11 @@ module Discourse
   def self.reset_active_record_cache
     ActiveRecord::Base.connection.query_cache.clear
     (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      begin
+      
         table.classify.constantize.reset_column_information
       rescue StandardError
         nil
-      end
+      
     end
     nil
   end
@@ -1221,11 +1220,11 @@ module Discourse
 
       # load up all models and schema
       (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-        begin
+        
           table.classify.constantize.first
         rescue StandardError
           nil
-        end
+        
       end
 
       # ensure we have a full schema cache in case we missed something above
@@ -1257,11 +1256,11 @@ module Discourse
     [
       Thread.new do
         # router warm up
-        begin
+        
           Rails.application.routes.recognize_path("abc")
         rescue StandardError
           nil
-        end
+        
       end,
       Thread.new do
         # preload discourse version

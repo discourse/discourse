@@ -45,7 +45,7 @@ class RspecErrorTracker
   end
 
   def call(env)
-    begin
+    
       @app.call(env)
 
       # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
@@ -54,7 +54,7 @@ class RspecErrorTracker
     rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
       RspecErrorTracker.report_exception(env["PATH_INFO"], e)
       raise e
-    end
+    
   end
 end
 

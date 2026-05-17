@@ -171,7 +171,7 @@ module Onebox
       end
 
       def follow_redirect!
-        begin
+        
           http =
             FinalDestination::HTTP.start(
               uri.host,
@@ -194,7 +194,7 @@ module Onebox
           rescue StandardError
             nil
           end
-        end
+        
       end
     end
   end

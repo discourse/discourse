@@ -92,7 +92,7 @@ module DiscourseAi
           errors = []
 
           selected_prompts.each_with_index do |prompt, index|
-            begin
+            
               # Create tool instance with parameters
               tool_params = { prompt: prompt }
               tool_params[:size] = size if size
@@ -123,7 +123,7 @@ module DiscourseAi
             rescue => e
               Rails.logger.warn("Failed to generate image for prompt #{prompt}: #{e}")
               errors << e.message
-            end
+            
           end
 
           if uploads.empty?

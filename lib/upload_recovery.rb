@@ -11,7 +11,7 @@ class UploadRecovery
   end
 
   def recover_post(post)
-    begin
+    
       analyzer = PostAnalyzer.new(post.raw, post.topic_id)
 
       analyzer
@@ -47,7 +47,7 @@ class UploadRecovery
     rescue => e
       raise e if @stop_on_error
       puts "#{post.full_url} #{e.class}: #{e.message}"
-    end
+    
   end
 
   private
@@ -95,11 +95,10 @@ class UploadRecovery
 
   def recover_from_local(sha1:, user_id:)
     @paths ||=
-      begin
-        Dir.glob(File.join(Discourse.store.tombstone_dir, "original", "**", "*.*")).concat(
+      Dir.glob(File.join(Discourse.store.tombstone_dir, "original", "**", "*.*")).concat(
           Dir.glob(File.join(Discourse.store.upload_path, "original", "**", "*.*")),
         )
-      end
+      
 
     @paths.each do |path|
       if path =~ /#{sha1}/

@@ -16,13 +16,13 @@ end
 
 Rails.application.config.to_prepare do
   RailsMultisite::ConnectionManagement.safe_each_connection do
-    begin
+    
       SiteSetting.refresh!
 
       # Check for circular dependencies in site settings.
       SiteSetting.type_supervisor.dependencies.order
     rescue ActiveRecord::StatementInvalid
       # This will happen when migrating a new database
-    end
+    
   end
 end

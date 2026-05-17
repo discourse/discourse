@@ -25,7 +25,7 @@ module DiscourseAi
         RateLimiter.new(current_user, "channel_summary", 6, 5.minutes).performed!
 
         hijack do
-          begin
+          
             strategy = DiscourseAi::Summarization::Strategies::ChatMessages.new(channel, since)
 
             summarized_text =
@@ -38,7 +38,7 @@ module DiscourseAi
             render json: { summary: summarized_text }
           rescue LlmCreditAllocation::CreditLimitExceeded => e
             render_credit_limit_error(e)
-          end
+          
         end
       end
     end

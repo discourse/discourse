@@ -97,7 +97,7 @@ module ImportScripts::Mbox
         next if all_records_exist?(:posts, rows.map { |row| row["msg_id"] })
 
         create_posts(rows, total: total_count, offset: offset) do |row|
-          begin
+          
             if row["email_date"].blank?
               puts "Date is missing. Skipping #{row["msg_id"]}"
               nil
@@ -108,7 +108,7 @@ module ImportScripts::Mbox
             end
           rescue => e
             puts "Failed to map post for #{row["msg_id"]}", e, e.backtrace.join("\n")
-          end
+          
         end
       end
     end

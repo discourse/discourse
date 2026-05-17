@@ -66,11 +66,11 @@ module ImportExport
         new_group = Group.find_by_name(g[:name]) || Group.create!(g)
 
         user_ids.each do |external_user_id|
-          begin
+          
             new_group.add(User.find(new_user_id(external_user_id)))
           rescue StandardError
             ActiveRecord::RecordNotUnique
-          end
+          
         end
       end
 
@@ -103,7 +103,7 @@ module ImportExport
       @categories.sort_by! { |c| levels[c[:id]] || 0 }
 
       @categories.each do |cat_attrs|
-        begin
+        
           id = cat_attrs.delete(:id)
           permissions = cat_attrs.delete(:permissions_params)
 
@@ -128,7 +128,7 @@ module ImportExport
           end
         rescue => e
           puts "Failed to import category (ID = #{id}, name = #{cat_attrs[:name]}): #{e.message}"
-        end
+        
       end
 
       self

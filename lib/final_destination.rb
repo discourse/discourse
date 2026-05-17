@@ -562,10 +562,10 @@ class FinalDestination
   private
 
   def uri(location)
-    begin
+    
       URI.parse(location)
     rescue URI::Error
-    end
+    
   end
 
   def fetch_canonical_url(body)

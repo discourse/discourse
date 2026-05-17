@@ -364,7 +364,7 @@ module DiscourseAi
 
         t =
           Thread.new do
-            begin
+            
               while !done
                 # this is not accurate. but reasonable enough for a timeout
                 sleep(0.001)
@@ -377,7 +377,7 @@ module DiscourseAi
             rescue => e
               STDERR.puts e
               STDERR.puts "FAILED TO TERMINATE DUE TO TIMEOUT"
-            end
+            
           end
 
         rval = mini_racer_context.eval(script)

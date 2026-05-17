@@ -21,7 +21,7 @@ RSpec.describe "site" do
 
       produces "application/json"
       response "200", "success response" do
-        begin
+        
           Site.preloaded_category_custom_fields << "no_oddjob"
 
           expected_response_schema = load_spec_schema("site_response")
@@ -33,7 +33,7 @@ RSpec.describe "site" do
           end
         ensure
           Site.reset_preloaded_category_custom_fields
-        end
+        
       end
     end
   end

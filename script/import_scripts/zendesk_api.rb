@@ -430,7 +430,7 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
 
       retry_count = 0
 
-      begin
+      
         while retry_count < 5
           begin
             response = connection.request(get)
@@ -442,7 +442,7 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
             retry_count += 1
           end
         end
-      end
+      
 
       json = JSON.parse(response.body)
 

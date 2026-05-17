@@ -60,14 +60,14 @@ describe DiscourseAi::Completions::CancelManager do
       thread =
         Thread.new do
           loop do
-            begin
+            
               _client = server.accept
               sleep(30) # Hold the connection longer than the test will run
               break
             rescue StandardError
               # Server closed
               break
-            end
+            
           end
         end
 

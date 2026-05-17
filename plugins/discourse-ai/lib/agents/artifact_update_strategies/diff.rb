@@ -57,7 +57,7 @@ module DiscourseAi
 
             content = source.public_send(section == :javascript ? :js : section)
             blocks.each do |block|
-              begin
+              
                 if !block[:search]
                   content = block[:replace]
                 else
@@ -73,7 +73,7 @@ module DiscourseAi
                 # TODO, we may need to inform caller here, LLM made a mistake which it
                 # should correct
                 Rails.logger.warn("Failed to find search: #{block[:search]}")
-              end
+              
             end
             updated_content[section == :javascript ? :js : section] = content
           end

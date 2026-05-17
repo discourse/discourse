@@ -138,7 +138,7 @@ class DestroyTask
       .human_users
       .where(admin: false)
       .find_each do |user|
-        begin
+        
           if UserDestroyer.new(Discourse.system_user).destroy(
                user,
                delete_posts: true,
@@ -156,7 +156,7 @@ class DestroyTask
           @io.puts "#{user.username} could not be deleted"
         rescue Discourse::InvalidAccess => e
           @io.puts "#{user.username} #{e.message}"
-        end
+        
       end
   end
 

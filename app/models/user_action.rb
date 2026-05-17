@@ -274,7 +274,7 @@ class UserAction < ActiveRecord::Base
     require_parameters(hash, *required_parameters)
 
     transaction(requires_new: true) do
-      begin
+      
         # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
 
         # protect against dupes, for some reason this is failing in some cases
@@ -312,7 +312,7 @@ class UserAction < ActiveRecord::Base
       rescue ActiveRecord::RecordNotUnique
         # can happen, don't care already logged
         raise ActiveRecord::Rollback
-      end
+      
     end
   end
 

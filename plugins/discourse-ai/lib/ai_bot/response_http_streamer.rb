@@ -19,11 +19,11 @@ module DiscourseAi
 
         def schedule_block(&block)
           thread_pool.post do
-            begin
+            
               block.call
             rescue StandardError => e
               Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
-            end
+            
           end
         end
 
@@ -42,7 +42,7 @@ module DiscourseAi
           tool_results: nil
         )
           schedule_block do
-            begin
+            
               if custom_tools.present? || resume_token.present?
                 stream_custom_tool_reply(
                   io: io,
@@ -74,7 +74,7 @@ module DiscourseAi
               Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
             ensure
               io.close
-            end
+            
           end
         end
 

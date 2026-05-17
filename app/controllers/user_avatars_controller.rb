@@ -53,14 +53,14 @@ class UserAvatarsController < ApplicationController
     return render_blank if disable_proxy?
 
     hijack do
-      begin
+      
         proxy_avatar(
           "https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png",
           Time.new(1990, 01, 01),
         )
       rescue OpenURI::HTTPError
         render_blank
-      end
+      
     end
   end
 

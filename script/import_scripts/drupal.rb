@@ -408,7 +408,7 @@ class ImportScripts::Drupal < ImportScripts::Base
     puts "", "creating permalinks..."
 
     Topic.listable_topics.find_each do |topic|
-      begin
+      
         tcf = topic.custom_fields
         if tcf && tcf["import_id"]
           node_id = tcf["import_id"][/nid:(\d+)/, 1]
@@ -418,7 +418,7 @@ class ImportScripts::Drupal < ImportScripts::Base
       rescue => e
         puts e.message
         puts "Permalink creation failed for id #{topic.id}"
-      end
+      
     end
   end
 
@@ -471,7 +471,7 @@ class ImportScripts::Drupal < ImportScripts::Base
     max = Post.count
 
     Post.find_each do |post|
-      begin
+      
         raw = post.raw
         new_raw = raw.dup
 
@@ -499,7 +499,7 @@ class ImportScripts::Drupal < ImportScripts::Base
         puts "", "Failed rewrite on post: #{post.id}"
       ensure
         print_status(current += 1, max)
-      end
+      
     end
   end
 
@@ -508,14 +508,14 @@ class ImportScripts::Drupal < ImportScripts::Base
     current = 0
     max = User.count
     User.find_each do |user|
-      begin
+      
         user.create_user_avatar(user_id: user.id) unless user.user_avatar
         user.user_avatar.update_gravatar!
       rescue StandardError
         puts "", 'Failed avatar update on user #{user.id}'
       ensure
         print_status(current += 1, max)
-      end
+      
     end
   end
 

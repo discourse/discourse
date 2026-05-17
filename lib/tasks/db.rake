@@ -2,7 +2,7 @@
 
 # we should set the locale before the migration
 task "set_locale" do
-  begin
+  
     I18n.locale =
       begin
         (SiteSetting.default_locale || :en)
@@ -11,7 +11,7 @@ task "set_locale" do
       end
   rescue I18n::InvalidLocale
     I18n.locale = :en
-  end
+  
 end
 
 module MultisiteTestHelpers
@@ -240,12 +240,12 @@ task "db:migrate" => %w[
     end
 
     %i[pg_trgm unaccent].each do |extension|
-      begin
+      
         DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
       rescue => e
         STDERR.puts "Cannot enable database extension #{extension}"
         STDERR.puts e
-      end
+      
     end
 
     execute_db_migration
@@ -455,11 +455,11 @@ task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] 
       if fix_indexes
         puts "Adding missing indexes..."
         missing.each do |m|
-          begin
+          
             DB.exec(m)
           rescue => e
             $stderr.puts "Error running: #{m} - #{e}"
-          end
+          
         end
       end
     else
@@ -547,24 +547,24 @@ task "db:rebuild_indexes" => "environment" do
         "SELECT indexname FROM pg_indexes WHERE schemaname = 'public' AND tablename IN ('#{table_names.join("', '")}')",
       )
     index_names.each do |index_name|
-      begin
+      
         puts index_name
         DB.exec("DROP INDEX public.#{index_name}")
       rescue ActiveRecord::StatementInvalid
         # It's this:
         # PG::Error: ERROR:  cannot drop index category_users_pkey because constraint category_users_pkey on table category_users requires it
         # HINT:  You can drop constraint category_users_pkey on table category_users instead.
-      end
+      
     end
 
     # Create the indexes
     table_names.each do |table_name|
       index_definitions[table_name].each do |index_def|
-        begin
+        
           DB.exec(index_def)
         rescue ActiveRecord::StatementInvalid
           # Trying to recreate a primary key
-        end
+        
       end
     end
   rescue StandardError
@@ -577,14 +577,14 @@ end
 
 desc "Check that the DB can be accessed"
 task "db:status:json" do
-  begin
+  
     Rake::Task["environment"].invoke
     DB.query("SELECT 1")
   rescue StandardError
     puts({ status: "error" }.to_json)
   else
     puts({ status: "ok" }.to_json)
-  end
+  
 end
 
 desc "Grow notification id column to a big int in case of overflow"

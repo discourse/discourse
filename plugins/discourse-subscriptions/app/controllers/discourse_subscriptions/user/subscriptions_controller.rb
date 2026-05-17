@@ -12,7 +12,7 @@ module DiscourseSubscriptions
       requires_login
 
       def index
-        begin
+        
           customer = Customer.where(user_id: current_user.id)
           customer_ids = customer.map { |c| c.id } if customer
           stripe_customer_ids = customer.map { |c| c.customer_id }.uniq if customer
@@ -54,13 +54,13 @@ module DiscourseSubscriptions
           render_json_dump subscriptions
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       def destroy
         # we cancel but don't remove until the end of the period
         # full removal is done via webhooks
-        begin
+        
           subscription =
             ::Stripe::Subscription.update(
               params[:id],
@@ -75,7 +75,7 @@ module DiscourseSubscriptions
           end
         rescue ::Stripe::InvalidRequestError => e
           render_json_error e.message
-        end
+        
       end
 
       def update

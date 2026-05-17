@@ -90,7 +90,7 @@ class InvitesController < ApplicationController
     fail = []
 
     emails.map do |email|
-      begin
+      
         invite =
           Invite.generate(
             current_user,
@@ -111,7 +111,7 @@ class InvitesController < ApplicationController
         fail.push({ email: email, error: e.message })
       rescue ActiveRecord::RecordInvalid => e
         fail.push({ email: email, error: e.record.errors.full_messages.first })
-      end
+      
     end
 
     render json: {
@@ -124,7 +124,7 @@ class InvitesController < ApplicationController
   end
 
   def create
-    begin
+    
       if params[:topic_id].present?
         topic = Topic.find_by(id: params[:topic_id])
         raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?
@@ -179,7 +179,7 @@ class InvitesController < ApplicationController
       render_json_error(e.message)
     rescue ActiveRecord::RecordInvalid => e
       render_json_error(e.record.errors.full_messages.first)
-    end
+    
   end
 
   def retrieve
@@ -489,7 +489,7 @@ class InvitesController < ApplicationController
     guardian.ensure_can_bulk_invite_to_forum!
 
     hijack do
-      begin
+      
         file = params[:file] || params[:files].first
 
         csv_header = nil
@@ -551,7 +551,7 @@ class InvitesController < ApplicationController
           render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]),
                  status: :unprocessable_entity
         end
-      end
+      
     end
   end
 

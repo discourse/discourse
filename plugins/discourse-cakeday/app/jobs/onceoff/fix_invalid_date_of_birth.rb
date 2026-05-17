@@ -7,11 +7,11 @@ module Jobs
         .where(name: "date_of_birth")
         .where("value != ''")
         .find_each do |custom_field|
-          begin
+          
             Date.parse(custom_field.value)
           rescue ArgumentError
             custom_field.update!(value: "")
-          end
+          
         end
     end
   end

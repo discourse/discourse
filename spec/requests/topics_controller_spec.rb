@@ -393,7 +393,7 @@ RSpec.describe TopicsController do
         end
 
         it "triggers an event on merge" do
-          begin
+          
             called = false
 
             assert = ->(original_topic, destination_topic) do
@@ -414,7 +414,7 @@ RSpec.describe TopicsController do
             expect(response.status).to eq(200)
           ensure
             DiscourseEvent.off(:topic_merged, &assert)
-          end
+          
         end
       end
 

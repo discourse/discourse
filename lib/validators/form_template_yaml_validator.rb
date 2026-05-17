@@ -16,7 +16,7 @@ class FormTemplateYamlValidator < ActiveModel::Validator
   }
 
   def validate(record)
-    begin
+    
       yaml = Psych.safe_load(record.template)
 
       unless yaml.is_a?(Array)
@@ -35,7 +35,7 @@ class FormTemplateYamlValidator < ActiveModel::Validator
       check_tag_groups(record, yaml.map { |f| f["tag_group"] })
     rescue Psych::SyntaxError
       record.errors.add(:template, I18n.t("form_templates.errors.invalid_yaml"))
-    end
+    
   end
 
   def check_allowed_types(record, field)

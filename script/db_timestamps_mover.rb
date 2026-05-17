@@ -117,19 +117,19 @@ class TimestampsUpdater
 end
 
 def is_i?(string)
-  begin
+  
     true if Integer(string)
   rescue StandardError
     false
-  end
+  
 end
 
 def is_date?(string)
-  begin
+  
     true if Date.parse(string)
   rescue StandardError
     false
-  end
+  
 end
 
 def create_updater
