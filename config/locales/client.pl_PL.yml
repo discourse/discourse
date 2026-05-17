@@ -709,7 +709,7 @@ pl_PL:
         delete_completed: "Zakładki zostały pomyślnie usunięte."
         reminders_cleared: "Przypomnienia o zakładkach zostały pomyślnie usunięte."
         toggle: "przełącz zbiorczy wybór zakładek"
-        select_all: "Zaznacz wszystkie"
+        select_all: "Wybierz wszystko"
         clear_all: "Wyczyść wszystko"
         selected_count:
           one: "%{count} wybrano"
@@ -747,8 +747,8 @@ pl_PL:
       resume: "Kontynuuj"
       remove: "Usuń"
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"
-      bulk_delete: "Usuń zaznaczone"
-      bulk_delete_confirmation: "Usuń wersje robocze"
+      bulk_delete: "Usuń wybrane"
+      bulk_delete_confirmation: "Usuń szkice"
       bulk_delete_message:
         one: "Czy na pewno chcesz usunąć ten szkic?"
         few: "Czy na pewno chcesz usunąć te %{count} szkice?"
@@ -3611,7 +3611,7 @@ pl_PL:
       last_read: "Ostatnio czytane"
       most_viewed: "Popularne"
       most_liked: "Najczęściej polubione"
-      select_all: "Zaznacz wszystkie"
+      select_all: "Wybierz wszystko"
       clear_all: "Wyczyść wszystkie"
       too_short: "Wyszukiwana fraza jest zbyt krótka."
       open_advanced: "Otwórz wyszukiwanie zaawansowane"
@@ -4108,7 +4108,7 @@ pl_PL:
         other: "%{count} postów w temacie"
       create: "Nowy temat"
       create_long: "Utwórz nowy temat"
-      create_group: "Nowy temat i wersje robocze"
+      create_group: "Nowy temat i szkice"
       open_draft: "Otwórz szkic"
       private_message: "Napisz wiadomość"
       archive_message:

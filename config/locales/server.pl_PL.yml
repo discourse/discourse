@@ -1220,7 +1220,7 @@ pl_PL:
       description: "Osiągnąłeś maksymalną liczbę dozwolonych szkiców. Usuń niektóre z [twoich szkiców](%{base_url}/my/activity/draft) i spróbuj ponownie."
     bulk_destroy_limit: "Jednorazowo możesz usunąć maksymalnie %{limit} wersji roboczych."
   draft_backup:
-    pm_title: "Kopie zapasowe wersje robocze z bieżących tematów"
+    pm_title: "Szkice bieżących tematów"
     pm_body: "Temat zawierający kopie zapasowe"
   user_activity:
     no_log_search_queries: "Dzienniki zapytań wyszukiwania są obecnie wyłączone (administrator może je włączyć w ustawieniach witryny)."
@@ -5522,7 +5522,7 @@ pl_PL:
       no_description: "Przyczyń się do rozwoju %{repo}, tworząc konto na GitHub."
       pr_title:
         default: "Pull request"
-        draft: "Projekt pull request"
+        draft: "Szkic pull requestu"
         open: "Otwórz pull request"
         approved: "Zatwierdzony pull request"
         changes_requested: "Żądane zmiany"

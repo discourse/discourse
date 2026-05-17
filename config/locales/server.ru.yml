@@ -2632,6 +2632,7 @@ ru:
     lazy_load_categories_groups: "Ленивая загрузка информации о категориях только для пользователей указанных групп. Повышает производительность на сайтах со множеством категорий."
     enable_auto_grid_images: "Автоматически оборачивать изображения в теги [grid], если в редактор загружено 3 и более изображения."
     enable_new_checkbox_style: "Включите обновленный стиль флажков для флажков FormKit."
+    enable_new_post_reactions_menu: "Включите обновлённое меню лайков и реакций к постам с бесконечной прокруткой и поддержкой мобильных устройств."
     impersonate_without_logout: "Разрешите администраторам выдавать себя за другого пользователя, не выходя из своей учетной записи администратора."
     experimental_impersonation_time_limit_minutes: "Через какое время сеанс маскировки будет автоматически завершен."
     page_loading_indicator: "Выбор индикатора загрузки, который появляется во время перехода по страницам в Discourse. «Спиннер» — индикатор на всю страницу. «Слайдер» — узкая полоса вверху экрана."
@@ -3021,6 +3022,7 @@ ru:
     omniauth_confirm_title: "Вход с помощью %{provider}"
     omniauth_confirm_button: "Продолжить"
     omniauth_confirm_description: "Вы будете перенаправлены на %{provider} для входа в систему."
+    omniauth_confirm_footer_html: "Вы войдете в систему %{site}"
     authenticator_error_no_valid_email: "Нет разрешённых адресов электронной почты, связанных с аккаунтом %{account}. Настройте аккаунт с помощью другого адреса."
     new_registrations_disabled: "Регистрация пока что недоступна."
     new_registrations_disabled_discourse_connect: "Регистрация новых аккаунтов разрешена только через Discourse Connect."
@@ -3648,6 +3650,7 @@ ru:
     email_reject_user_not_found:
       title: "Письмо отклонено: пользователь не найден"
       subject_template: "[%{email_prefix}] Проблема с письмом: пользователь не найден"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — пользователь не найден"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3655,12 +3658,15 @@ ru:
     email_reject_screened_email:
       title: "Письмо отклонено: адрес отправителя заблокирован"
       subject_template: "[%{email_prefix}] Проблема с письмом: адрес электронной почты заблокирован"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — заблокированная почта"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
         Ответ был отправлен с заблокированного адреса электронной почты. Попробуйте отправить письмо с другого адреса электронной почты или [свяжитесь с сотрудником](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Письмо отклонено: запрещенный адрес электронной почты"
+      subject_template: "[%{email_prefix}] Проблема с электронной почтой - заблокированная почта"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой - заблокированная почта"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3668,6 +3674,7 @@ ru:
     email_reject_inactive_user:
       title: "Письмо отклонено: неактивный пользователь"
       subject_template: "[%{email_prefix}] Проблема с письмом: неактивный пользователь"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой - неактивный пользователь"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3682,6 +3689,7 @@ ru:
     email_reject_reply_user_not_matching:
       title: "Письмо отклонено: адрес не соответствует пользователю"
       subject_template: "[%{email_prefix}] Проблема с письмом: неожиданный адрес отправителя ответа"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — неожиданный адрес для ответа"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3689,6 +3697,7 @@ ru:
     email_reject_empty:
       title: "Письмо отклонено: нет содержимого"
       subject_template: "[%{email_prefix}] Проблема с письмом: нет контента"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — нет содержимого"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3698,6 +3707,7 @@ ru:
     email_reject_parsing:
       title: "Письмо отклонено: ошибка анализа контента"
       subject_template: "[%{email_prefix}] Проблема с письмом: контент не распознан"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — содержимое не распознано"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3705,6 +3715,7 @@ ru:
     email_reject_invalid_access:
       title: "Письмо отклонено: ошибка доступа"
       subject_template: "[%{email_prefix}] Проблема с письмом: ошибка доступа"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — недействительный доступ"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3712,6 +3723,7 @@ ru:
     email_reject_strangers_not_allowed:
       title: "Письмо отклонено: ответ от неизвестного пользователя"
       subject_template: "[%{email_prefix}] Проблема с письмом: ошибка доступа"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — недействительный доступ"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3719,6 +3731,7 @@ ru:
     email_reject_invalid_post:
       title: "Письмо отклонено: ошибка публикации"
       subject_template: "[%{email_prefix}] Проблема с письмом: ошибка публикации"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой - ошибка публикации"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3726,6 +3739,7 @@ ru:
     email_reject_invalid_post_specified:
       title: "Письмо отклонено: неверное сообщение"
       subject_template: "[%{email_prefix}] Проблема с письмом: ошибка публикации"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой - ошибка публикации"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3738,6 +3752,7 @@ ru:
     email_reject_post_too_short:
       title: "Письмо отклонено: сообщение слишком короткое"
       subject_template: "[%{email_prefix}] Проблема с письмом: сообщение слишком короткое"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой - сообщение слишком короткое"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3745,6 +3760,7 @@ ru:
     email_reject_invalid_post_action:
       title: "Письмо отклонено: действие не распознано"
       subject_template: "[%{email_prefix}] Проблема с письмом: действие не распознано"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой -- недействительное действие при публикации"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3759,6 +3775,7 @@ ru:
     email_reject_bad_destination_address:
       title: "Письмо отклонено: неверный адрес получателя"
       subject_template: "[%{email_prefix}] Проблема с письмом: неверный адрес получателя"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — неизвестно: адрес"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3774,6 +3791,7 @@ ru:
     email_reject_old_destination:
       title: "Письмо отклонено: ответ на просроченное уведомление"
       subject_template: "[%{email_prefix}] Проблема с письмом: вы пытаетесь ответить на старое уведомление"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой - ты пытаешься ответить на старое уведомление"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3781,6 +3799,7 @@ ru:
     email_reject_topic_not_found:
       title: "Письмо отклонено: тема не найдена"
       subject_template: "[%{email_prefix}] Проблема с письмом: тема не найдена"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — тема не найдена"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3788,6 +3807,7 @@ ru:
     email_reject_topic_closed:
       title: "Письмо отклонено: тема закрыта"
       subject_template: "[%{email_prefix}] Проблема с письмом: тема закрыта"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — тема закрыта"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3795,6 +3815,7 @@ ru:
     email_reject_auto_generated:
       title: "Письмо отклонено: автоматический ответ"
       subject_template: "[%{email_prefix}] Проблема с письмом: автоматический ответ"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — автоматически сгенерированный ответ"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
@@ -3802,6 +3823,7 @@ ru:
     email_reject_unrecognized_error:
       title: "Письмо отклонено: нераспознанная ошибка"
       subject_template: "[%{email_prefix}] Проблема с письмом: нераспознанная ошибка"
+      subject_template_improved: "%{email_prefix}: Проблема с электронной почтой — нераспознанная ошибка"
       text_body_template: |
         Ваше письмо, отправленное на адрес %{destination} (озаглавленное как %{former_title}), не опубликовано.
 
