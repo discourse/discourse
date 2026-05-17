@@ -146,7 +146,7 @@ class SiteSettings::TypeSupervisor
       @static_types[name] = type.to_sym
 
       if type.to_sym == :list
-        @allow_any[name] = opts[:allow_any] == false ? false : true
+        @allow_any[name] = opts[:allow_any] != false
         @list_type[name] = opts[:list_type] if opts[:list_type]
       end
 

@@ -50,3 +50,6 @@ RSpec/InstanceVariable:
 
 Style/RedundantFreeze:
   Enabled: true
+
+Style/RedundantConditional:
+  Enabled: true
