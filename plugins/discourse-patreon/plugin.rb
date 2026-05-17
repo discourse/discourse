@@ -83,7 +83,7 @@ after_initialize do
   Patreon::USER_DETAIL_FIELDS.each do |attribute|
     add_to_serializer(
       :admin_detailed_user,
-      "patreon_#{attribute}".to_sym,
+      :"patreon_#{attribute}",
       include_condition: -> do
         Patreon::Patron.attr(attribute, object).present? &&
           (attribute != "amount_cents" || scope.is_admin?)

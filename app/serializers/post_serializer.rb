@@ -339,7 +339,7 @@ class PostSerializer < BasicPostSerializer
     ignored_like_count = ignored_like_count_for_viewer
 
     @post_action_type_view.types.each do |sym, id|
-      count_col = "#{sym}_count".to_sym
+      count_col = :"#{sym}_count"
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
       count = [count.to_i - ignored_like_count, 0].max if count && sym == :like

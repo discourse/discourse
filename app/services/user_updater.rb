@@ -65,8 +65,8 @@ class UserUpdater
   NOTIFICATION_SCHEDULE_ATTRS = -> do
     attrs = [:enabled]
     7.times do |n|
-      attrs.push("day_#{n}_start_time".to_sym)
-      attrs.push("day_#{n}_end_time".to_sym)
+      attrs.push(:"day_#{n}_start_time")
+      attrs.push(:"day_#{n}_end_time")
     end
     { user_notification_schedule: attrs }
   end.call

@@ -2528,7 +2528,7 @@ RSpec.describe Post do
       Fabricate(:post_localization, post: post, locale: "zh_CN")
 
       expect(post.has_localization?(:zh_CN)).to eq(true)
-      expect(post.has_localization?(:"zh_CN")).to eq(true)
+      expect(post.has_localization?(:zh_CN)).to eq(true)
       expect(post.has_localization?("zh-CN")).to eq(true)
 
       expect(post.has_localization?("z")).to eq(false)
