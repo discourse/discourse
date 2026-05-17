@@ -47,3 +47,6 @@ RSpec/InstanceVariable:
   Enabled: true
   Include:
     - spec/models/**/*
+
+Style/RedundantFreeze:
+  Enabled: true

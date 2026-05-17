@@ -6,7 +6,7 @@ require "faker"
 
 module DiscourseDev
   class Record
-    DEFAULT_COUNT = 30.freeze
+    DEFAULT_COUNT = 30
     AUTO_POPULATED = "auto_populated"
 
     attr_reader :model, :type
