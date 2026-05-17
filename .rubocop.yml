@@ -56,3 +56,6 @@ Style/RedundantConditional:
 
 Lint/DuplicateMagicComment:
   Enabled: true
+
+Lint/IdentityComparison:
+  Enabled: true
