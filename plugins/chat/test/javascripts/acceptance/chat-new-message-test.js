@@ -1,4 +1,4 @@
-import { currentURL, visit, waitFor } from "@ember/test-helpers";
+import { currentURL, fillIn, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -7,26 +7,39 @@ const CHANNEL_ID = 11;
 const CHANNEL_SLUG = "my-channel";
 const DM_CHANNEL_ID = 75;
 
+function channelPayload({
+  id = CHANNEL_ID,
+  title = "My channel",
+  slug = CHANNEL_SLUG,
+  chatableId = 1,
+  chatableColor = "ff0000",
+  chatableName = "category1",
+} = {}) {
+  return {
+    id,
+    title,
+    slug,
+    chatable_id: chatableId,
+    chatable_type: "Category",
+    meta: { message_bus_last_ids: {} },
+    current_user_membership: { following: true },
+    chatable: { id: chatableId, color: chatableColor, name: chatableName },
+  };
+}
+
 acceptance("Chat | New message", function (needs) {
+  let preloadedPublicChannels;
+
   needs.user({ has_chat_enabled: true });
   needs.settings({ chat_enabled: true });
 
   needs.hooks.beforeEach(function () {
+    preloadedPublicChannels = [channelPayload()];
+
     pretender.get("/chat/api/me/channels", () =>
       response({
         direct_message_channels: [],
-        public_channels: [
-          {
-            id: CHANNEL_ID,
-            title: "My channel",
-            slug: CHANNEL_SLUG,
-            chatable_id: 1,
-            chatable_type: "Category",
-            meta: { message_bus_last_ids: {} },
-            current_user_membership: { following: true },
-            chatable: { id: 1, color: "ff0000", name: "category1" },
-          },
-        ],
+        public_channels: preloadedPublicChannels,
         meta: { message_bus_last_ids: {} },
         tracking: {
           channel_tracking: {
@@ -62,6 +75,73 @@ acceptance("Chat | New message", function (needs) {
     assert
       .dom(".chat-composer__input")
       .hasValue("hello world", "pre-fills the chat composer");
+  });
+
+  test("fetches a channel from the server when channel_id is not in the sidebar cache", async function (assert) {
+    const UNCACHED_CHANNEL_ID = 42;
+    const UNCACHED_CHANNEL_SLUG = "uncached";
+
+    preloadedPublicChannels = [];
+
+    pretender.get(`/chat/api/channels/${UNCACHED_CHANNEL_ID}`, () => {
+      assert.step("fetched channel by id");
+
+      return response({
+        channel: channelPayload({
+          id: UNCACHED_CHANNEL_ID,
+          title: "Uncached",
+          slug: UNCACHED_CHANNEL_SLUG,
+          chatableId: 2,
+          chatableColor: "00ff00",
+          chatableName: "category2",
+        }),
+      });
+    });
+
+    pretender.get(`/chat/api/channels/${UNCACHED_CHANNEL_ID}/messages`, () =>
+      response({ messages: [], meta: {} })
+    );
+
+    pretender.post(`/chat/api/channels/${UNCACHED_CHANNEL_ID}/drafts`, () =>
+      response({})
+    );
+
+    await visit(
+      `/chat/new-message?channel_id=${UNCACHED_CHANNEL_ID}&message=id%20link`
+    );
+
+    assert.verifySteps(["fetched channel by id"]);
+    assert.strictEqual(
+      currentURL(),
+      `/chat/c/${UNCACHED_CHANNEL_SLUG}/${UNCACHED_CHANNEL_ID}`,
+      "redirects to the channel fetched by id"
+    );
+
+    await waitFor(".chat-composer__input", { timeout: 5000 });
+
+    assert
+      .dom(".chat-composer__input")
+      .hasValue("id link", "pre-fills the chat composer");
+  });
+
+  test("does not overwrite an existing draft when visiting with channel_id and message", async function (assert) {
+    await visit(`/chat/c/${CHANNEL_SLUG}/${CHANNEL_ID}`);
+    await waitFor(".chat-composer__input", { timeout: 5000 });
+    await fillIn(".chat-composer__input", "existing draft");
+
+    await visit(
+      `/chat/new-message?channel_id=${CHANNEL_ID}&message=replacement%20draft`
+    );
+
+    assert.strictEqual(
+      currentURL(),
+      `/chat/c/${CHANNEL_SLUG}/${CHANNEL_ID}`,
+      "redirects back to the channel"
+    );
+
+    assert
+      .dom(".chat-composer__input")
+      .hasValue("existing draft", "keeps the existing composer draft");
   });
 
   test("pre-fills the composer when visiting with channel slug and message", async function (assert) {

@@ -53,7 +53,7 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
   }
 
   #seedDraft(channel, message) {
-    if (!message) {
+    if (!message || this.#hasExistingDraft(channel)) {
       return;
     }
 
@@ -64,6 +64,12 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
 
     channel.draft = draft;
     this.chatDraftsManager.add(draft, channel.id, null, false);
+  }
+
+  #hasExistingDraft(channel) {
+    return [channel.draft, this.chatDraftsManager.get(channel.id)].some(
+      (draft) => draft?.message?.length > 0 || draft?.uploads?.length > 0
+    );
   }
 
   async #findChannel({ channelId, channelSlug }) {
