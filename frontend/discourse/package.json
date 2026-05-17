@@ -53,7 +53,7 @@
     "ember-resolver": "^13.2.0",
     "ember-route-template": "^1.0.3",
     "ember-source": "~6.10.0",
-    "ember-tracked-storage-polyfill": "^1.0.0",
+    "ember-tracked-storage-polyfill": "^1.0.1",
     "highlight.js": "11.11.1",
     "immer": "^11.1.8",
     "jspreadsheet-ce": "^5.0.4",
