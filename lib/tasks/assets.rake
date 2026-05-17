@@ -56,16 +56,14 @@ task "assets:precompile:css" => "environment" do
 end
 
 task "assets:flush_sw" => "environment" do
-  
-    hostname = Discourse.current_hostname
-    default_port = SiteSetting.force_https? ? 443 : 80
-    port = SiteSetting.port.to_i > 0 ? SiteSetting.port : default_port
-    STDERR.puts "Flushing service worker script"
-    `curl -s -m 1 --resolve '#{hostname}:#{port}:127.0.0.1' #{Discourse.base_url}/service-worker.js > /dev/null`
-    STDERR.puts "done"
-  rescue StandardError
-    STDERR.puts "Warning: unable to flush service worker script"
-  
+  hostname = Discourse.current_hostname
+  default_port = SiteSetting.force_https? ? 443 : 80
+  port = SiteSetting.port.to_i > 0 ? SiteSetting.port : default_port
+  STDERR.puts "Flushing service worker script"
+  `curl -s -m 1 --resolve '#{hostname}:#{port}:127.0.0.1' #{Discourse.base_url}/service-worker.js > /dev/null`
+  STDERR.puts "done"
+rescue StandardError
+  STDERR.puts "Warning: unable to flush service worker script"
 end
 
 def assets_path
