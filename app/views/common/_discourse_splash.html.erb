@@ -1,22 +1,28 @@
 <%
   light_custom_splash = splash_screen_image_available?(dark: false)
-  dark_custom_splash = splash_screen_image_available?(dark: true)
-  custom_splash = light_custom_splash || dark_custom_splash
+  dark_mode_custom_splash = splash_screen_image_available?(dark: true)
+  custom_splash = light_custom_splash || dark_mode_custom_splash
 
   light_splash_animated = light_custom_splash && splash_screen_image_animated?(dark: false)
-  dark_splash_animated = dark_custom_splash && splash_screen_image_animated?(dark: true)
+  dark_mode_splash_animated = dark_mode_custom_splash && splash_screen_image_animated?(dark: true)
 
-  has_dark_scheme = dark_scheme_id.present? && dark_scheme_id != -1
-  single_scheme_splash = dark_color_scheme? || forced_light_mode? || forced_dark_mode? || !has_dark_scheme
+  selected_dark_scheme_id = dark_scheme_id
+  has_dark_scheme =
+    selected_dark_scheme_id.present? &&
+      selected_dark_scheme_id != -1 &&
+      selected_dark_scheme_id.to_i != scheme_id&.to_i
+  single_scheme_splash =
+    dark_color_scheme? || forced_light_mode? || forced_dark_mode? || !has_dark_scheme
   current_splash_dark = dark_color_scheme? || forced_dark_mode?
-  current_custom_splash = current_splash_dark ? dark_custom_splash : light_custom_splash
-  current_splash_animated = current_splash_dark ? dark_splash_animated : light_splash_animated
+  current_custom_splash = current_splash_dark ? dark_mode_custom_splash : light_custom_splash
+  current_splash_animated = current_splash_dark ? dark_mode_splash_animated : light_splash_animated
+  rendered_custom_splash = single_scheme_splash ? current_custom_splash : custom_splash
 %>
 
 <section id="d-splash">
   <style>
     html {
-      <%- if custom_splash %>
+      <%- if rendered_custom_splash %>
       overflow: hidden !important;
       <%- else %>
       overflow-y: hidden !important;
@@ -31,8 +37,8 @@
 
       #d-splash {
         --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
-        <%- if dark_custom_splash %>
-          <%- if dark_splash_animated %>
+        <%- if dark_mode_custom_splash %>
+          <%- if dark_mode_splash_animated %>
           --primary: #<%= light_color_hex_for_name("primary") %>;
           --secondary: #<%= light_color_hex_for_name("secondary") %>;
           --tertiary: #<%= light_color_hex_for_name("tertiary") %>;
@@ -42,7 +48,7 @@
           <%- end %>
         <%- end %>
       }
-    <%- elsif forced_light_mode? %>
+    <%- elsif forced_light_mode? || !has_dark_scheme %>
       html {
         background-color: #<%= light_color_hex_for_name("secondary") %>;
       }
@@ -67,8 +73,8 @@
 
       #d-splash {
         --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
-        <%- if dark_custom_splash %>
-          <%- if dark_splash_animated %>
+        <%- if dark_mode_custom_splash %>
+          <%- if dark_mode_splash_animated %>
           --primary: #<%= dark_color_hex_for_name("primary") %>;
           --secondary: #<%= dark_color_hex_for_name("secondary") %>;
           --tertiary: #<%= dark_color_hex_for_name("tertiary") %>;
@@ -110,8 +116,8 @@
 
         #d-splash {
           --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
-          <%- if dark_custom_splash %>
-            <%- if dark_splash_animated %>
+          <%- if dark_mode_custom_splash %>
+            <%- if dark_mode_splash_animated %>
             --primary: #<%= dark_color_hex_for_name("primary") %>;
             --secondary: #<%= dark_color_hex_for_name("secondary") %>;
             --tertiary: #<%= dark_color_hex_for_name("tertiary") %>;
@@ -243,7 +249,7 @@
       }
     }
 
-    <%- if custom_splash %>
+    <%- if rendered_custom_splash %>
     #d-splash .dots-container {
       position: relative;
       width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
@@ -366,7 +372,7 @@
   </style>
 
   <div
-    class="preloader-image<%= " single-custom-splash" if single_scheme_splash && current_custom_splash %><%= " light-custom-splash" if !single_scheme_splash && light_custom_splash %><%= " dark-custom-splash" if !single_scheme_splash && dark_custom_splash %>"
+    class="preloader-image<%= " single-custom-splash" if single_scheme_splash && current_custom_splash %><%= " light-custom-splash" if !single_scheme_splash && light_custom_splash %><%= " dark-custom-splash" if !single_scheme_splash && dark_mode_custom_splash %>"
     elementtiming="discourse-splash-visible"
   >
     <%- if single_scheme_splash %>
@@ -392,7 +398,7 @@
         <div class="dots" style="--n:1;"></div>
         <div class="dots" style="--n:2;"></div>
       <%- end %>
-    <%- elsif custom_splash %>
+    <%- elsif rendered_custom_splash %>
       <%- if light_custom_splash %>
         <%- if light_splash_animated %>
           <div class="splash-logo-container animated light-splash-element">
@@ -418,8 +424,8 @@
         </div>
       <%- end %>
 
-      <%- if dark_custom_splash %>
-        <%- if dark_splash_animated %>
+      <%- if dark_mode_custom_splash %>
+        <%- if dark_mode_splash_animated %>
           <div class="splash-logo-container animated dark-splash-element">
             <%= splash_screen_inline_svg(dark: true) %>
           </div>

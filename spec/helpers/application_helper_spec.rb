@@ -352,6 +352,47 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "#splash_screen_inline_svg" do
+    let(:light_svg) do
+      '<svg><style>@keyframes light-pulse {}</style><rect id="light-splash" /></svg>'
+    end
+
+    let(:dark_svg) do
+      '<svg><style>@keyframes dark-pulse {}</style><circle id="dark-splash" /></svg>'
+    end
+
+    it "uses splash_screen_image_dark when dark is true" do
+      light_upload = Fabricate(:upload)
+      dark_upload = Fabricate(:upload)
+
+      SiteSetting.stubs(:splash_screen_image).returns(light_upload)
+      SiteSetting.stubs(:splash_screen_image_dark).returns(dark_upload)
+
+      light_upload.stubs(:content).returns(light_svg)
+      dark_upload.stubs(:content).returns(dark_svg)
+
+      inline_svg = helper.splash_screen_inline_svg(dark: true).to_s
+
+      expect(inline_svg).to include("dark-splash")
+      expect(inline_svg).not_to include("light-splash")
+      expect(helper.splash_screen_image_animated?(dark: true)).to eq(true)
+    end
+
+    it "falls back to splash_screen_image when no dark upload is set" do
+      light_upload = Fabricate(:upload)
+
+      SiteSetting.stubs(:splash_screen_image).returns(light_upload)
+      SiteSetting.stubs(:splash_screen_image_dark).returns(nil)
+
+      light_upload.stubs(:content).returns(light_svg)
+
+      inline_svg = helper.splash_screen_inline_svg(dark: true).to_s
+
+      expect(inline_svg).to include("light-splash")
+      expect(helper.splash_screen_image_animated?(dark: true)).to eq(true)
+    end
+  end
+
   describe "application_logo_url" do
     context "when a dark color scheme is active" do
       before do

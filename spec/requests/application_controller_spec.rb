@@ -760,6 +760,16 @@ RSpec.describe ApplicationController do
   describe "splash_screen" do
     let(:admin) { Fabricate(:admin) }
 
+    def create_splash_svg_upload(content, filename)
+      file = file_from_contents(content, filename, "images")
+      UploadCreator.new(file, filename).create_for(admin.id)
+    end
+
+    def data_uri_svg_from_style(style)
+      data_uri = style[/url\("([^"]+)"\)/, 1]
+      Base64.decode64(data_uri.split(",").last)
+    end
+
     before do
       admin
       allow_any_instance_of(ApplicationController).to receive(:include_splash_screen?).and_return(
@@ -780,6 +790,9 @@ RSpec.describe ApplicationController do
       end
       let!(:dark_scheme) do
         ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
+      end
+      let(:dark_splash_svg) do
+        '<svg xmlns="http://www.w3.org/2000/svg"><circle fill="var(--primary)" /></svg>'
       end
 
       before do
@@ -875,6 +888,67 @@ RSpec.describe ApplicationController do
               }
             }
           CSS
+        end
+
+        it "renders default light dots and the dark custom splash when only the dark upload is set" do
+          SiteSetting.splash_screen_image = ""
+          dark_splash_upload = create_splash_svg_upload(dark_splash_svg, "dark-splash.svg")
+          SiteSetting.splash_screen_image_dark = dark_splash_upload.id
+
+          get "/"
+
+          preloader_classes = css_select("#d-splash .preloader-image").first["class"]
+          expect(preloader_classes).to include("dark-custom-splash")
+          expect(preloader_classes).not_to include("light-custom-splash")
+          expect(css_select("#d-splash .default-dots-container.light-splash-element")).to be_present
+          expect(
+            css_select("#d-splash .splash-logo-container.static.light-splash-element"),
+          ).to be_blank
+          expect(
+            css_select("#d-splash .splash-logo-container.static.dark-splash-element"),
+          ).to be_present
+          expect(css_select("#d-splash .dots-container.dark-splash-element")).to be_present
+        end
+      end
+
+      context "when the regular scheme is dark" do
+        before do
+          Theme.find_default.update!(color_scheme_id: dark_scheme.id, dark_color_scheme_id: nil)
+          SiteSetting.splash_screen_image = ""
+          dark_splash_upload = create_splash_svg_upload(dark_splash_svg, "regular-dark-splash.svg")
+          SiteSetting.splash_screen_image_dark = dark_splash_upload.id
+        end
+
+        it "uses the dark upload with the active regular scheme colors" do
+          get "/"
+
+          style = css_select("#d-splash style").to_s
+          primary = dark_scheme.colors.find { |color| color.name == "primary" }.hex
+
+          expect(style).not_to include("prefers-color-scheme")
+          expect(css_select("#d-splash .preloader-image.single-custom-splash")).to be_present
+          expect(data_uri_svg_from_style(style)).to include("##{primary}")
+        end
+      end
+
+      context "when no dark scheme is configured" do
+        before do
+          Theme.find_default.update!(color_scheme_id: light_scheme.id, dark_color_scheme_id: nil)
+          SiteSetting.splash_screen_image = ""
+          dark_splash_upload = create_splash_svg_upload(dark_splash_svg, "unused-dark-splash.svg")
+          SiteSetting.splash_screen_image_dark = dark_splash_upload.id
+        end
+
+        it "treats the splash as a single light-scheme fallback" do
+          get "/"
+
+          style = css_select("#d-splash style").to_s
+          preloader_classes = css_select("#d-splash .preloader-image").first["class"]
+
+          expect(style).not_to include("prefers-color-scheme")
+          expect(preloader_classes).not_to include("single-custom-splash")
+          expect(preloader_classes).not_to include("dark-custom-splash")
+          expect(css_select("#d-splash .splash-logo-container")).to be_blank
         end
       end
     end
