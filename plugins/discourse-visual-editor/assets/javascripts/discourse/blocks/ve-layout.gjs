@@ -4,6 +4,7 @@ import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import { parsePlacement } from "../lib/grid-math";
 
 const VALID_MODES = ["stack", "row", "grid"];
 const VALID_ALIGNS = ["start", "center", "end", "stretch"];
@@ -323,9 +324,81 @@ export default class VELayout extends Component {
     return `ve-layout ve-layout--${this.resolvedMode}`;
   }
 
+  /**
+   * Children reordered to match VISUAL reading order in grid mode.
+   *
+   * Grid layouts persist children in the order they were inserted /
+   * moved by the author — NOT in row-then-column visual order. At
+   * desktop width that's fine: the explicit `grid-row` / `grid-column`
+   * placement on each cell positions it wherever the author wants,
+   * independent of DOM order. But this breaks two things otherwise:
+   *
+   * 1. **Container-query collapse.** When the layout collapses to one
+   *    column at narrow widths (`@container ve-layout (max-width:
+   *    40rem)` in visual-editor.scss), every cell gets
+   *    `grid-column: 1 / -1` and `grid-row: auto`, so CSS Grid
+   *    auto-places them in DOM order. Persisted-insert order then
+   *    determines the stack, which can put a footer-banner on top
+   *    and the heading at the bottom.
+   * 2. **Accessibility (WCAG 1.3.2 — meaningful sequence).** Screen
+   *    readers and tab-key focus follow DOM order, NOT visual order.
+   *    At desktop a sighted user reads heading first; a screen reader
+   *    user reads whatever's first in the persisted children array
+   *    — often the wrong block. The `order` CSS property would solve
+   *    the visual-collapse case but NOT this one; MDN warns against
+   *    `order` precisely because of the DOM-vs-visual mismatch.
+   *
+   * Sorting the RENDERED children (not the persisted ones) by
+   * `(rowStart, colStart)` fixes both. The persisted JSON keeps the
+   * author's edit history; DOM order matches visual reading order;
+   * auto-placement at narrow widths flows correctly; screen readers
+   * and tab focus walk the layout in the order a sighted user reads
+   * it.
+   *
+   * Stack / row modes return the persisted order unchanged — their
+   * visual order IS their DOM order, no remapping needed.
+   *
+   * RTL: the sort key is the grid-line index, which is direction-
+   * agnostic. CSS Grid flips `column: 1` to the right edge in `dir=
+   * rtl`, and RTL reading is right-to-left, so the sorted DOM order
+   * still matches visual reading order in both directions without a
+   * special branch.
+   *
+   * @returns {Array<Object>} children in row-major reading order
+   */
+  get sortedChildren() {
+    const children = this.args.children ?? [];
+    if (this.resolvedMode !== "grid") {
+      return children;
+    }
+    // Copy the array — sort mutates in place and `this.args.children`
+    // is owned by the block-outlet pipeline upstream of this block.
+    return [...children].sort((a, b) => {
+      const aPos = parsePlacement(a.containerArgs);
+      const bPos = parsePlacement(b.containerArgs);
+      // `parsePlacement` returns `{column: {start, end}, row: ...}`
+      // with `start: null` for "auto" / missing placements; treat
+      // those as the first cell (row 1, col 1) so unplaced cells
+      // come first in reading order rather than getting an
+      // arbitrary sort position from NaN comparisons.
+      const aRow = aPos.row.start ?? 1;
+      const bRow = bPos.row.start ?? 1;
+      if (aRow !== bRow) {
+        return aRow - bRow;
+      }
+      const aCol = aPos.column.start ?? 1;
+      const bCol = bPos.column.start ?? 1;
+      return aCol - bCol;
+    });
+  }
+
   <template>
     <div class={{this.className}} style={{this.containerStyle}}>
-      {{#each @children key="key" as |child|}}
+      {{! Iterate sorted children, NOT `@children` directly. See the
+        `sortedChildren` getter's JSDoc for why: keeps DOM order in
+        sync with visual reading order so accessibility tooling and
+        narrow-width auto-placement both behave correctly. }}
+      {{#each this.sortedChildren key="key" as |child|}}
         {{#if (eq this.resolvedMode "grid")}}
           <div
             class="ve-layout__cell"
