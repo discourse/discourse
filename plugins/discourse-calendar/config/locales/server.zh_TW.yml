@@ -5,10 +5,21 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  category_types:
+    events:
+      name: "活動"
+      title: "活動"
   reports:
     currently_away:
       labels:
         username: 使用者名稱
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "天"
+        week: "週"
+        month: "月"
+        year: "年"
   discourse_post_event:
     errors:
       bulk_invite:

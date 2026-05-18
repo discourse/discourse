@@ -126,12 +126,46 @@ export default class DiscoursePostEvent extends Component {
 
     if (this.args.event) {
       try {
-        this.event = await this.discoursePostEventApi.event(this.args.event.id);
-        this.event.startsAt = this.args.event.startsAt;
-        this.event.endsAt = this.args.event.endsAt;
+        const fetched = await this.discoursePostEventApi.event(
+          this.args.event.id
+        );
+        const displayedStartsAt = this.args.event.startsAt;
+
+        if (
+          fetched.recurrence &&
+          displayedStartsAt &&
+          fetched.startsAt &&
+          displayedStartsAt !== fetched.startsAt
+        ) {
+          this.#filterForFutureOccurrence(fetched);
+        }
+
+        fetched.startsAt = displayedStartsAt;
+        fetched.endsAt = this.args.event.endsAt;
+        this.event = fetched;
       } catch (error) {
         popupAjaxError(error);
       }
+    }
+  }
+
+  #filterForFutureOccurrence(event) {
+    event.sampleInvitees = event.sampleInvitees.filter(
+      (invitee) => invitee.status !== "going" || invitee.recurring
+    );
+
+    const recurringCount = event.stats?.goingRecurring ?? 0;
+    if (event.stats) {
+      event.stats.going = recurringCount;
+    }
+    event.atCapacity =
+      event.maxAttendees != null && recurringCount >= event.maxAttendees;
+
+    if (
+      event.watchingInvitee?.status === "going" &&
+      !event.watchingInvitee?.recurring
+    ) {
+      event.watchingInvitee = null;
     }
   }
 

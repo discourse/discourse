@@ -227,14 +227,18 @@ RSpec.describe Admin::ReportsController do
                 top_uploads: {
                   limit: 10,
                 },
+                topic_view_stats: {
+                  limit: 10,
+                },
               },
             }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["reports"].count).to eq(3)
+        expect(response.parsed_body["reports"].count).to eq(4)
         expect(response.parsed_body["reports"][0]["type"]).to eq("topics")
         expect(response.parsed_body["reports"][1]).to include("error" => "not_found", "data" => nil)
         expect(response.parsed_body["reports"][2]).to include("error" => "not_found", "data" => nil)
+        expect(response.parsed_body["reports"][3]).to include("error" => "not_found", "data" => nil)
       end
     end
 

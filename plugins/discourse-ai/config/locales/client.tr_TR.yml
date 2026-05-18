@@ -1179,6 +1179,7 @@ tr_TR:
             one: "Mesaj %{count} karakter veya daha uzun olmalıdır"
             other: "Mesaj %{count} karakter veya daha uzun olmalıdır"
           messages_sidebar_title: "Konuşmalar"
+          starred: "Yıldızlı"
           today: "Bugün"
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"

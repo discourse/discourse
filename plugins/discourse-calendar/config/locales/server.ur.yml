@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ur:
+  category_types:
+    events:
+      name: "ایوینٹس"
+      title: "ایوینٹس"
   reports:
     currently_away:
       labels:
@@ -12,6 +16,13 @@ ur:
   site_settings:
     working_days: "کام کے دن مقرر کریں۔ آپ پوسٹ میں `خطہ کے اوقات` ٹیگ کا استعمال کرتے ہوئے گروپ کی دستیابی کو ظاہر کر سکتے ہیں، جیسے: `[timezones group=admins][timezones]`"
     close_to_working_day_hours_extension: "خطہ کے اوقات کو نمایاں کرنے کے لیے کام کے دن کے اوقات میں توسیع کا وقت سیٹ کریں۔"
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "دن"
+        week: "ہفتہ"
+        month: "ماہ"
+        year: "سال"
   discourse_post_event:
     errors:
       bulk_invite:
