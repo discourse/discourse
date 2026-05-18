@@ -125,6 +125,7 @@ let userOptionFields = [
   "enable_markdown_monospace_font",
   "enable_quoting",
   "enable_smart_lists",
+  "enable_upcoming_change_available_notifications",
   "external_links_in_new_tab",
   "hide_presence",
   "hide_profile",

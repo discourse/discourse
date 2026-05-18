@@ -1617,6 +1617,7 @@ en:
           in_specific_groups: "The user is in the specific groups required for this change"
           enabled_for_everyone: "This change is enabled for all members"
           enabled_for_no_one: "This change is disabled for all members"
+        enable_available_notifications: "Notify me when an upcoming change becomes available for preview"
 
       user_notifications:
         filters:
@@ -1640,7 +1641,7 @@ en:
         normal_option: "Normal"
         normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
       notification_schedule:
-        title: "Notification Schedule"
+        title: "Notification schedule"
         label: "Enable custom notification schedule"
         tip: "Outside of these hours your notifications will be paused."
         midnight: "Midnight"
@@ -1684,13 +1685,13 @@ en:
       notifications: "Notifications"
       statistics: "Stats"
       desktop_notifications:
-        label: "Live Notifications"
+        label: "Live notifications"
         not_supported: "Notifications are not supported on this browser. Sorry."
-        perm_default: "Turn On Notifications"
-        perm_denied_btn: "Permission Denied"
+        perm_default: "Turn on notifications"
+        perm_denied_btn: "Permission denied"
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
-        disable: "Disable Notifications"
-        enable: "Enable Notifications"
+        disable: "Disable notifications"
+        enable: "Enable notifications"
         each_browser_note: "Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
