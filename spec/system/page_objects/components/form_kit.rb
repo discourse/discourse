@@ -44,7 +44,7 @@ module PageObjects
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.value
         when "checkbox"
-          component.find("input[type='checkbox']").checked?
+          component.find("input[type='checkbox']", visible: :all).checked?
         when "menu"
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
@@ -57,6 +57,32 @@ module PageObjects
           Upload.find_by(sha1:)
         when "toggle"
           component.find("button[role=\"switch\"]", visible: :all)["aria-checked"] == "true"
+        end
+      end
+
+      def uncheck
+        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+          return unless value
+
+          component.find(".form-kit__control-checkbox-checkmark").click
+          return
+        end
+
+        within component do
+          uncheck("input[type='checkbox']", visible: :all)
+        end
+      end
+
+      def check
+        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+          return if value
+
+          component.find(".form-kit__control-checkbox-checkmark").click
+          return
+        end
+
+        within component do
+          check("input[type='checkbox']", visible: :all)
         end
       end
 
@@ -107,7 +133,11 @@ module PageObjects
       def toggle
         case control_type
         when "checkbox"
-          component.find("input[type='checkbox']").click
+          if SiteSetting.enable_new_checkbox_style
+            component.find(".form-kit__control-checkbox-checkmark").click
+          else
+            component.find("input[type='checkbox']").click
+          end
         when "password"
           component.find(".form-kit__control-password-toggle").click
         when "toggle"
@@ -242,6 +272,14 @@ module PageObjects
         within component do
           find(".form-kit__alert-message", text: message)
         end
+      end
+
+      def collection_field(collection_name, collection_index, field_name)
+        FormKitField.new(
+          find(
+            ".form-kit__field[data-name='#{collection_name}.#{collection_index}.#{field_name}']",
+          ),
+        )
       end
 
       def field(name)

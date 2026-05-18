@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 nl:
+  category_types:
+    events:
+      name: "Gebeurtenissen"
+      title: "gebeurtenissen"
   reports:
     currently_away:
       title: Gebruikers die momenteel afwezig zijn
@@ -61,6 +65,12 @@ nl:
     event_participation_buttons: "Lijst met knoppen voor evenementdeelname die gebruikers kunnen gebruiken."
     sidebar_show_upcoming_events: "Geef een link naar aankomende evenementen weer in de zijbalk onder 'Meer'."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dag"
+        week: "Week"
+        month: "Maand"
+        year: "Jaar"
     invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
     calendar_must_be_in_first_post: "Calendar-tag kan alleen worden gebruikt in het eerste bericht van een topic."
     more_than_one_calendar: "Je kunt niet meer dan één kalender hebben in een topic."

@@ -971,6 +971,7 @@ pt_BR:
             one: "A mensagem deve ter pelo menos %{count} caractere"
             other: "A mensagem deve ter pelo menos %{count} caracteres"
           messages_sidebar_title: "Conversas"
+          starred: "Marcado como favorito"
           today: "Hoje"
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"

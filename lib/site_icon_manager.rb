@@ -115,6 +115,7 @@ module SiteIconManager
   private
 
   def self.get_set_cache(key, &block)
+    return block.call if @disabled
     @cache.defer_get_set(key, &block)
   end
 

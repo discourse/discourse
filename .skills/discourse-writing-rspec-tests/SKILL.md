@@ -1,5 +1,5 @@
 ---
-name: writing-rspec-tests
+name: discourse-writing-rspec-tests
 description: Write and structure RSpec tests for Discourse core, plugins, themes, or theme components. Use when creating or modifying model specs, controller specs, service specs, job specs, system tests, or integration tests. Covers fabricators, page objects, test structure, and theme test setup.
 ---
 
