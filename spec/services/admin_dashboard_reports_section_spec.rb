@@ -78,20 +78,20 @@ RSpec.describe AdminDashboardReportsSection do
   end
 
   it "caps at VISIBLE_CAP, dropping the oldest rows by created_at" do
-    (AdminDashboardReport::VISIBLE_CAP + 2).times do |i|
-      AdminDashboardReport.create!(
-        source: "fake",
-        identifier: "r_#{i}",
-        position: i,
-        created_at: i.minutes.ago,
-      )
+    stub_const(AdminDashboardReport, :VISIBLE_CAP, 3) do
+      5.times do |i|
+        AdminDashboardReport.create!(
+          source: "fake",
+          identifier: "r_#{i}",
+          position: i,
+          created_at: i.minutes.ago,
+        )
+      end
+
+      result = described_class.build(guardian: guardian)
+      identifiers = result[:items].map { |i| i[:identifier] }
+
+      expect(identifiers).to eq(%w[r_0 r_1 r_2])
     end
-
-    result = described_class.build(guardian: guardian)
-    identifiers = result[:items].map { |i| i[:identifier] }
-
-    expect(identifiers.size).to eq(AdminDashboardReport::VISIBLE_CAP)
-    expect(identifiers).not_to include("r_10", "r_11")
-    expect(identifiers).to eq((0..AdminDashboardReport::VISIBLE_CAP - 1).map { |i| "r_#{i}" })
   end
 end

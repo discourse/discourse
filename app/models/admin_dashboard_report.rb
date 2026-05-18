@@ -5,8 +5,15 @@ class AdminDashboardReport < ActiveRecord::Base
 
   validates :source, presence: true
   validates :identifier, presence: true
-  validates :position, presence: true
   validates :identifier, uniqueness: { scope: :source }
+
+  before_validation :assign_default_position, on: :create
+
+  private
+
+  def assign_default_position
+    self.position ||= self.class.maximum(:position).to_i + 1
+  end
 end
 
 # == Schema Information

@@ -21,15 +21,10 @@ class AdminDashboardReportsBulkFetch
 
   def collect_results
     per_source =
-      items
-        .group_by { |i| i[:source] }
-        .each_with_object({}) do |(source, group), hash|
-          provider = AdminDashboard::Reports::Registry.provider_for(source)
-          next if provider.nil?
-
-          identifiers = group.map { |i| i[:identifier] }
-          hash[source] = provider.fetch_many(identifiers, guardian:, filters:)
-        end
+      AdminDashboard::Reports::Registry.dispatch_per_source(items) do |provider, group|
+        identifiers = group.map { |i| i[:identifier] }
+        provider.fetch_many(identifiers, guardian:, filters:)
+      end
 
     items.map do |item|
       {

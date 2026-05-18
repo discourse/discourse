@@ -46,11 +46,13 @@ module DiscourseDataExplorer
         description: query.description,
       )
     end
+    private_class_method :build_resolved
 
     def self.load_queries(identifiers)
       ids = identifiers.map(&:to_i).select(&:positive?)
       return Query.none if ids.empty?
       Query.where(id: ids, hidden: false).includes(:groups)
     end
+    private_class_method :load_queries
   end
 end

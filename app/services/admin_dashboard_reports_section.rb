@@ -31,15 +31,14 @@ class AdminDashboardReportsSection
   end
 
   def resolve_rows(rows)
-    rows
-      .group_by(&:source)
-      .each_with_object({}) do |(source, group), resolved|
-        provider = AdminDashboard::Reports::Registry.provider_for(source)
-        next if provider.nil?
-
-        objects_by_identifier = provider.resolve_many(group.map(&:identifier), guardian: guardian)
-        group.each { |row| resolved[row.id] = objects_by_identifier[row.identifier] }
+    per_source =
+      AdminDashboard::Reports::Registry.dispatch_per_source(rows) do |provider, group|
+        provider.resolve_many(group.map(&:identifier), guardian: guardian)
       end
+
+    rows.each_with_object({}) do |row, resolved|
+      resolved[row.id] = per_source.dig(row.source, row.identifier)
+    end
   end
 
   def serialize(resolved)

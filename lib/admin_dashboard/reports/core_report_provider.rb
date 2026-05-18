@@ -55,6 +55,7 @@ module AdminDashboard
           description: entry[:description],
         )
       end
+      private_class_method :build_resolved
 
       def self.build_opts(filters, guardian)
         filters = filters.symbolize_keys if filters.respond_to?(:symbolize_keys)
@@ -66,12 +67,14 @@ module AdminDashboard
         opts[:filters] = filters[:filters] if filters[:filters]
         opts
       end
+      private_class_method :build_opts
 
       def self.parse_date(value)
         Time.zone.parse(value.to_s)
       rescue ArgumentError, TypeError
         nil
       end
+      private_class_method :parse_date
 
       def self.filter_by_search(entries, search)
         query = search.to_s.downcase
@@ -80,6 +83,7 @@ module AdminDashboard
             entry[:description].to_s.downcase.include?(query)
         end
       end
+      private_class_method :filter_by_search
     end
   end
 end

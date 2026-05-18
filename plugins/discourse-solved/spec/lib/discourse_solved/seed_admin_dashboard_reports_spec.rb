@@ -3,8 +3,6 @@
 require "discourse_solved/seed_admin_dashboard_reports"
 
 RSpec.describe DiscourseSolved::SeedAdminDashboardReports do
-  subject(:seeder) { described_class.new }
-
   before do
     SiteSetting.discourse_solved_admin_dashboard_seeded = false
     AdminDashboardReport.delete_all
@@ -14,7 +12,7 @@ RSpec.describe DiscourseSolved::SeedAdminDashboardReports do
 
   describe "when solved is not in use anywhere" do
     it "does not seed and does not flip the marker" do
-      expect { seeder.create }.not_to change { AdminDashboardReport.count }
+      expect { described_class.create }.not_to change { AdminDashboardReport.count }
       expect(SiteSetting.discourse_solved_admin_dashboard_seeded).to eq(false)
     end
   end
@@ -23,7 +21,7 @@ RSpec.describe DiscourseSolved::SeedAdminDashboardReports do
     before { SiteSetting.allow_solved_on_all_topics = true }
 
     it "seeds accepted_solutions and flips the marker" do
-      seeder.create
+      described_class.create
 
       row = AdminDashboardReport.find_by(source: "core_report", identifier: "accepted_solutions")
       expect(row).to be_present
@@ -38,7 +36,7 @@ RSpec.describe DiscourseSolved::SeedAdminDashboardReports do
         position: 1,
       )
 
-      seeder.create
+      described_class.create
 
       row = AdminDashboardReport.find_by(identifier: "accepted_solutions")
       expect(row.position).to eq(2)
@@ -57,7 +55,7 @@ RSpec.describe DiscourseSolved::SeedAdminDashboardReports do
     end
 
     it "seeds accepted_solutions" do
-      seeder.create
+      described_class.create
       expect(AdminDashboardReport.exists?(identifier: "accepted_solutions")).to eq(true)
     end
   end
@@ -67,14 +65,14 @@ RSpec.describe DiscourseSolved::SeedAdminDashboardReports do
 
     it "does nothing when the marker is already set" do
       SiteSetting.discourse_solved_admin_dashboard_seeded = true
-      expect { seeder.create }.not_to change { AdminDashboardReport.count }
+      expect { described_class.create }.not_to change { AdminDashboardReport.count }
     end
 
     it "does not resurrect the row after the admin removes it" do
-      seeder.create
+      described_class.create
       AdminDashboardReport.where(identifier: "accepted_solutions").destroy_all
 
-      expect { seeder.create }.not_to change { AdminDashboardReport.count }
+      expect { described_class.create }.not_to change { AdminDashboardReport.count }
       expect(AdminDashboardReport.exists?(identifier: "accepted_solutions")).to eq(false)
     end
   end
