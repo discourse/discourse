@@ -836,6 +836,52 @@ RSpec.describe PostsController do
       end
     end
 
+    context "when logged in as a category group moderator who cannot see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "prevents editing a post in a topic the user cannot see" do
+        put "/posts/#{private_post.id}.json", params: { post: { raw: "edited body" } }
+
+        expect(response.status).to eq(403)
+        expect(private_post.reload.raw).not_to eq("edited body")
+      end
+    end
+
+    context "when logged in as a category group moderator who can see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "allows editing a post in a topic the user can see" do
+        put "/posts/#{private_post.id}.json", params: { post: { raw: "edited body" } }
+
+        expect(response.status).to eq(200)
+        expect(private_post.reload.raw).to eq("edited body")
+      end
+    end
+
     it "can not change category to a disallowed category" do
       post = create_post
       sign_in(post.user)
