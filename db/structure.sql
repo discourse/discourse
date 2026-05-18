@@ -1801,6 +1801,41 @@ ALTER SEQUENCE public.bookmarks_id_seq OWNED BY public.bookmarks.id;
 
 
 --
+-- Name: browser_pageview_event_scores; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_event_scores (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    automation_ua_score smallint DEFAULT 0 NOT NULL,
+    known_asn_score smallint DEFAULT 0 NOT NULL,
+    velocity_score smallint DEFAULT 0 NOT NULL,
+    churn_score smallint DEFAULT 0 NOT NULL,
+    rapid_nav_score smallint DEFAULT 0 NOT NULL,
+    referrer_score smallint DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_event_scores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_event_scores_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_event_scores_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_event_scores_id_seq OWNED BY public.browser_pageview_event_scores.id;
+
+
+--
 -- Name: browser_pageview_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -11516,6 +11551,13 @@ ALTER TABLE ONLY public.bookmarks ALTER COLUMN id SET DEFAULT nextval('public.bo
 
 
 --
+-- Name: browser_pageview_event_scores id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_event_scores ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_event_scores_id_seq'::regclass);
+
+
+--
 -- Name: browser_pageview_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -13577,6 +13619,14 @@ ALTER TABLE ONLY public.badges
 
 ALTER TABLE ONLY public.bookmarks
     ADD CONSTRAINT bookmarks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_event_scores browser_pageview_event_scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_event_scores
+    ADD CONSTRAINT browser_pageview_event_scores_pkey PRIMARY KEY (id);
 
 
 --
@@ -16697,6 +16747,13 @@ CREATE INDEX index_bookmarks_on_reminder_set_at ON public.bookmarks USING btree 
 --
 
 CREATE INDEX index_bookmarks_on_user_id ON public.bookmarks USING btree (user_id);
+
+
+--
+-- Name: index_browser_pageview_event_scores_on_event_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_browser_pageview_event_scores_on_event_id ON public.browser_pageview_event_scores USING btree (event_id);
 
 
 --
@@ -20803,6 +20860,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260514055648'),
 ('20260514043815'),
 ('20260513105516'),
 ('20260513101242'),
