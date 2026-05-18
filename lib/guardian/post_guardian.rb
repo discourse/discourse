@@ -158,10 +158,14 @@ module PostGuardian
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
-    if is_in_edit_post_groups? || is_category_group_moderator?(post.topic&.category)
-      return can_create_post?(post.topic)
+    # Staff in edit groups skip visibility (e.g. deleted topics); non-staff must pass it
+    if is_in_edit_post_groups?
+      return can_create_post?(post.topic) if is_staff?
+      return can_create_post?(post.topic) if can_see_post_topic?(post)
+      return false
     end
     return false if !can_see_post_topic?(post)
+    return can_create_post?(post.topic) if is_category_group_moderator?(post.topic&.category)
 
     return false if post.topic&.archived? || post.user_deleted || post.deleted_at
 
