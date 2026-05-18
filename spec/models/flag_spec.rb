@@ -16,6 +16,19 @@ RSpec.describe Flag, type: :model do
     flag.destroy!
   end
 
+  it "uses the custom id range when the sequence is stale" do
+    DB.exec("SELECT setval('public.flags_id_seq', 1, false)")
+
+    first_flag = Fabricate(:flag, name: "first custom flag")
+    second_flag = Fabricate(:flag, name: "second custom flag")
+
+    expect(first_flag.id).to be > Flag::MAX_SYSTEM_FLAG_ID
+    expect(second_flag.id).to eq(first_flag.id + 1)
+
+    first_flag.destroy!
+    second_flag.destroy!
+  end
+
   it "has correct name key" do
     flag = Fabricate(:flag, name: "FlAg!!!")
     expect(flag.name_key).to eq("custom_flag")

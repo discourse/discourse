@@ -205,15 +205,26 @@ class TemporaryDb
 
   def create_user
     run_command!(
-      "createuser",
+      "psql",
       "-h",
       "localhost",
       "-p",
       pg_port.to_s,
-      "-s",
-      "-D",
+      "-d",
+      "postgres",
       "-w",
-      "discourse",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-c",
+      <<~SQL,
+        DO $$
+        BEGIN
+          IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'discourse') THEN
+            CREATE ROLE discourse SUPERUSER CREATEDB LOGIN;
+          END IF;
+        END
+        $$;
+      SQL
       error_prefix: "Failed to create temporary postgres superuser",
     )
   end

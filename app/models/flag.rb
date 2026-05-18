@@ -11,6 +11,7 @@ class Flag < ActiveRecord::Base
 
   before_save :set_position
   before_save :set_name_key
+  before_create :set_custom_id
   after_commit { reset_flag_settings! if !skip_reset_flag_callback }
 
   attr_accessor :skip_reset_flag_callback
@@ -68,6 +69,19 @@ class Flag < ActiveRecord::Base
   def set_name_key
     prefix = self.system? ? "" : "custom_"
     self.name_key = "#{prefix}#{self.name.squeeze(" ").gsub(" ", "_").gsub(/[^\w]/, "").downcase}"
+  end
+
+  def set_custom_id
+    return if self.id.present?
+
+    self.id = self.class.next_custom_id
+  end
+
+  def self.next_custom_id
+    loop do
+      next_id = DB.query_single("SELECT nextval('public.flags_id_seq')").first
+      return next_id if next_id > MAX_SYSTEM_FLAG_ID
+    end
   end
 end
 
