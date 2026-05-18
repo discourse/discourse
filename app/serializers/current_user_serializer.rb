@@ -328,7 +328,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_view_raw_email
-    scope.user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
+    scope.can_view_raw_emails?
   end
 
   def do_not_disturb_channel_position
