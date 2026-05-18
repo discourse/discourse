@@ -274,6 +274,14 @@ module PageObjects
         end
       end
 
+      def collection_field(collection_name, collection_index, field_name)
+        FormKitField.new(
+          find(
+            ".form-kit__field[data-name='#{collection_name}.#{collection_index}.#{field_name}']",
+          ),
+        )
+      end
+
       def field(name)
         within component do
           FormKitField.new(find(".form-kit__field[data-name='#{name}']"))
