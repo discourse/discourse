@@ -49,13 +49,14 @@ module NestedReplies
     def promotable_pinned_post_ids(pinned_post_ids)
       return [] if pinned_post_ids.blank?
 
+      # apply_visibility unscopes deleted_at, so re-filter after it.
       apply_visibility(
         topic
           .posts
-          .where(id: pinned_post_ids, deleted_at: nil)
+          .where(id: pinned_post_ids)
           .where("reply_to_post_number IS NULL OR reply_to_post_number = 1")
           .where(post_number: 2..),
-      ).pluck(:id)
+      ).where(deleted_at: nil).pluck(:id)
     end
 
     def promote_pinned_roots(roots, pinned_post_ids)
