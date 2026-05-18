@@ -9,12 +9,15 @@ import { trustHTML } from "@ember/template";
 import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
+// `grid-math` is in the universal bundle (its `parsePlacement` is
+// called by the live-page `ve-layout.gjs`); this component is
+// admin-only. Cross-bundle imports use absolute addon paths.
 import {
   computeOccupation,
   computeShiftPlan,
   parsePlacement,
   unoccupiedCells,
-} from "../../lib/grid-math";
+} from "discourse/plugins/discourse-visual-editor/discourse/lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
 import EmptyCellPlaceholder from "./empty-cell-placeholder";
 

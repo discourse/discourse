@@ -18,29 +18,16 @@
  * editor service stays small and the helpers stay testable in isolation.
  */
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+// `entryKey` lives in its own file in the UNIVERSAL bundle so the
+// live-page `grid-math.js` can use it without dragging mutate-layout
+// (admin-only) into the universal bundle. This file is admin-only; we
+// import via the absolute addon path because the universal entry-key
+// module isn't reachable via a relative path from this admin location.
+// Re-exported so existing call sites that import it from
+// `lib/mutate-layout` keep working.
+import { entryKey } from "discourse/plugins/discourse-visual-editor/discourse/lib/entry-key";
 
-/**
- * Resolves a layout entry's `block` reference to the same composite key the
- * BLOCK_DEBUG callback receives (`${blockName}:${__stableKey}`). When the
- * editor service has a `selectedBlockKey` it compares against this.
- *
- * @param {Object} entry
- * @returns {string|null}
- */
-export function entryKey(entry) {
-  if (entry?.__stableKey === undefined) {
-    return null;
-  }
-  const blockRef = entry.block;
-  if (typeof blockRef === "string") {
-    return `${blockRef}:${entry.__stableKey}`;
-  }
-  const name = getBlockMetadata(blockRef)?.blockName;
-  if (!name) {
-    return null;
-  }
-  return `${name}:${entry.__stableKey}`;
-}
+export { entryKey };
 
 /**
  * Walks a layout looking for the entry whose composite key matches.

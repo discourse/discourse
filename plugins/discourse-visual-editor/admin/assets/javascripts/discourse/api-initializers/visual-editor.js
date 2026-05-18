@@ -8,7 +8,11 @@ import {
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import VEGhostBlock from "../components/blocks/ve-ghost-block";
+// Absolute addon path because `ve-ghost-block` lives in the universal
+// bundle (rendered on live pages when a block fails to resolve), while
+// this api-initializer is admin-only. Cross-bundle imports must use
+// the absolute `discourse/plugins/<plugin>/discourse/...` form.
+import VEGhostBlock from "discourse/plugins/discourse-visual-editor/discourse/components/blocks/ve-ghost-block";
 import BlockChrome from "../components/editor/block-chrome";
 import EntryPill from "../components/editor/entry-pill";
 import OutletBoundary from "../components/editor/outlet-boundary";

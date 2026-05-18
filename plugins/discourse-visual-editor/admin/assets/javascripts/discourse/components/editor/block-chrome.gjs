@@ -13,7 +13,13 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { i18n } from "discourse-i18n";
-import { parsePlacement, placementsOverlap } from "../../lib/grid-math";
+// `grid-math` is in the universal bundle (its `parsePlacement` is
+// called by the live-page `ve-layout.gjs`); this chrome is admin-only.
+// Cross-bundle imports use absolute addon paths.
+import {
+  parsePlacement,
+  placementsOverlap,
+} from "discourse/plugins/discourse-visual-editor/discourse/lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
 import containerDropTarget from "../../modifiers/container-drop-target";
 import gridTileDrag from "../../modifiers/grid-tile-drag";

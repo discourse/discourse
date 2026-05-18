@@ -1,5 +1,12 @@
 // @ts-check
-import { entryKey } from "./mutate-layout";
+// Imports from `./entry-key` (not `./mutate-layout`) so the universal
+// bundle doesn't pull in the rest of mutate-layout's editor-only
+// helpers. `parsePlacement` exported from this file is called by the
+// live-page `ve-layout.gjs` block, so grid-math itself must stay
+// universal — even though `computeShiftPlan` below is editor-only.
+// Tree-shaking should keep `computeShiftPlan` out of the universal
+// bundle when no universal consumer imports it.
+import { entryKey } from "./entry-key";
 
 /**
  * Pure helpers for the grid editor (Phase 7s). All functions

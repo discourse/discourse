@@ -1,6 +1,12 @@
 // @ts-check
 import { modifier } from "ember-modifier";
-import { cellAt, parseSlotPlacement } from "../lib/grid-math";
+// Absolute addon path: `grid-math` is in the universal bundle (its
+// `parsePlacement` is called by the live-page `ve-layout.gjs`), this
+// modifier is admin-only. Cross-bundle imports use absolute paths.
+import {
+  cellAt,
+  parseSlotPlacement,
+} from "discourse/plugins/discourse-visual-editor/discourse/lib/grid-math";
 
 /**
  * Pointer-event drag handler for grid tile overlays (Phase 7s.6).

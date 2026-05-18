@@ -18,11 +18,14 @@ import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 import discourseDebounce from "discourse/lib/debounce";
 import PreloadStore from "discourse/lib/preload-store";
+// Absolute addon path: `grid-math` is in the universal bundle (its
+// `parsePlacement` is called by the live-page `ve-layout.gjs`); this
+// service is admin-only. Cross-bundle imports use absolute paths.
 import {
   computeShiftPlan,
   parsePlacement,
   placementsOverlap,
-} from "../lib/grid-math";
+} from "discourse/plugins/discourse-visual-editor/discourse/lib/grid-math";
 import { resolveTemplateLayout } from "../lib/grid-templates";
 import {
   cloneEntryForPaste,
