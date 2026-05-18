@@ -26,15 +26,21 @@ export default class NestedTopicTimeline extends Component {
       window.removeEventListener("scroll", this.#scrollHandler);
       window.removeEventListener("resize", this.#scrollHandler);
       this.#scrollHandler = null;
+      if (this.#rafHandle != null) {
+        cancelAnimationFrame(this.#rafHandle);
+        this.#rafHandle = null;
+      }
     };
   });
 
+  // Reads firstLoadedPage so the modifier re-runs whenever the loaded
+  // window shifts (jumpToRootPage / loadPreviousRoots).
   syncOnLoadedWindow = modifier((_el, [firstLoadedPage]) => {
     void firstLoadedPage;
     this.#scheduleUpdate();
   });
 
-  #rafScheduled = false;
+  #rafHandle = null;
   #scrollHandler = null;
 
   get summary() {
@@ -50,13 +56,7 @@ export default class NestedTopicTimeline extends Component {
   }
 
   get pageCount() {
-    if (this.summary?.page_count) {
-      return this.summary.page_count;
-    }
-    if (!this.pageSize || this.total === 0) {
-      return 0;
-    }
-    return Math.max(1, Math.ceil(this.total / this.pageSize));
+    return this.summary?.page_count ?? 0;
   }
 
   get keyboardStep() {
@@ -92,17 +92,11 @@ export default class NestedTopicTimeline extends Component {
 
   @action
   indexAtProgress(progress) {
-    if (this.total === 0) {
-      return null;
-    }
     return Math.min(this.total - 1, Math.floor(progress * this.total));
   }
 
   @action
   positionLabelAt(progress) {
-    if (this.total === 0) {
-      return null;
-    }
     return i18n("nested_replies.topic_timeline.position", {
       current: this.indexAtProgress(progress) + 1,
       total: this.total,
@@ -110,12 +104,11 @@ export default class NestedTopicTimeline extends Component {
   }
 
   #scheduleUpdate() {
-    if (this.#rafScheduled) {
+    if (this.#rafHandle != null) {
       return;
     }
-    this.#rafScheduled = true;
-    requestAnimationFrame(() => {
-      this.#rafScheduled = false;
+    this.#rafHandle = requestAnimationFrame(() => {
+      this.#rafHandle = null;
       this.#updateActive();
     });
   }

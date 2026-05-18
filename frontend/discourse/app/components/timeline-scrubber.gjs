@@ -79,9 +79,8 @@ export default class TimelineScrubber extends Component {
     event.preventDefault();
     this.dragging = true;
     event.currentTarget.setPointerCapture?.(event.pointerId);
-    const scroller = event.target.closest?.(".timeline-scroller");
-    if (scroller) {
-      const rect = scroller.getBoundingClientRect();
+    if (this.#scrollerEl?.contains(event.target)) {
+      const rect = this.#scrollerEl.getBoundingClientRect();
       this.#dragOffset = event.clientY - (rect.top + rect.height / 2);
     } else {
       this.#dragOffset = 0;

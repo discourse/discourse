@@ -3994,13 +3994,6 @@ en:
       topic_timeline:
         aria_label: "Topic timeline"
         position: "%{current} / %{total}"
-        position_total: "%{total} replies"
-        replies:
-          one: "%{count} reply"
-          other: "%{count} replies"
-        jump_to_root:
-          one: "Jump to thread with %{count} reply"
-          other: "Jump to thread with %{count} replies"
         sort_endpoints:
           top:
             start: "Most liked"
