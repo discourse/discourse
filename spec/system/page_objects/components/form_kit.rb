@@ -107,7 +107,11 @@ module PageObjects
       def toggle
         case control_type
         when "checkbox"
-          component.find("input[type='checkbox']").click
+          if SiteSetting.enable_new_checkbox_style
+            component.find(".form-kit__control-checkbox-checkmark").click
+          else
+            component.find("input[type='checkbox']").click
+          end
         when "password"
           component.find(".form-kit__control-password-toggle").click
         when "toggle"
