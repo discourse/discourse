@@ -105,6 +105,10 @@ module Chat
       @current_user_membership.present?
     end
 
+    def include_last_message?
+      scope.can_preview_chat_channel?(object)
+    end
+
     def current_user_membership
       @current_user_membership.chat_channel = object
 
