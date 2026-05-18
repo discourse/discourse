@@ -249,6 +249,8 @@ gl:
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Activado"
       start_posting:
         back: "Volver"
     about:
@@ -319,6 +321,9 @@ gl:
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"
       new_topic: "Borrador de novo tema"
+    embed_mode:
+      signin_flow:
+        cancel: "Cancelar"
     topic_count_all:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
@@ -938,7 +943,6 @@ gl:
         normal_option: "Normal"
         normal_option_title: "Recibirá unha notificación se este usuario lle responde, cita a súa mensaxe ou menciona o seu nome."
       notification_schedule:
-        title: "Calendario de notificacións"
         label: "Activar o calendario personalizado de notificacións"
         midnight: "Medianoite"
         none: "Ningunha"
@@ -975,13 +979,8 @@ gl:
       notifications: "Notificacións"
       statistics: "Estatísticas"
       desktop_notifications:
-        label: "Notificacións ao vivo"
         not_supported: "Este navegador non admite notificacións. Desculpe."
-        perm_default: "Acender notificacións"
-        perm_denied_btn: "Permiso denegado"
         perm_denied_expl: "Denegou o permiso para recibir notificacións no navegador. Permita as notificacións na configuración do navegador."
-        disable: "Desactivar as notificacións"
-        enable: "Activar as notificacións"
         consent_prompt: "Quere recibir notificacións ao vivo cando a xente lea as súas publicacións?"
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
@@ -2090,6 +2089,7 @@ gl:
           placeholder: mínimo
         max_views:
           placeholder: máximo
+    header_panel: "Cabeceira"
     new_item: "novo"
     go_back: "volver"
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"

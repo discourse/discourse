@@ -370,7 +370,6 @@ it:
       <p>In caso contrario, <a href="%{base_url}/password-reset">reimposta la password</a>.</p>
     not_found_template_link: |
       <p>L'invito a <a href="%{base_url}">%{site_name}</a> non può più essere riscattato. Chiedi alla persona che ti ha invitato di inviarti un nuovo invito.</p>
-    existing_user_cannot_redeem: "Questo invito non può essere riscattato. Chiedi alla persona che ti ha invitato di inviarti un nuovo invito."
     existing_user_already_redemeed: "Hai già riscattato questo link di invito."
     user_exists: "Non c'è bisogno di invitare <b>%{email}</b>: ha già un account!"
     invite_exists: "Hai già invitato <b>%{email}</b>."

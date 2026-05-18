@@ -377,7 +377,6 @@ pt_BR:
       <p>Caso contrário, <a href="%{base_url}/password-reset">redefina a senha</a>.</p>
     not_found_template_link: |
       <p>Este convite para <a href="%{base_url}">%{site_name}</a> não pode ser mais resgatado. Peça que enviem outro convite.</p>
-    existing_user_cannot_redeem: "Este convite não poderá ser resgatado. Peça outro convite a quem enviou."
     existing_user_already_redemeed: "Você já resgatou este link de convite."
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, visto que já têm uma conta!"
     invite_exists: "Você já convidou <b>%{email}</b>"

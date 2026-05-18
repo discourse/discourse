@@ -305,6 +305,8 @@ sl:
       title: "Nove in neprebrane teme"
       pm_title: "Predlagana sporočila"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Vključeno"
       start_posting:
         back: "Nazaj"
     about:
@@ -397,6 +399,9 @@ sl:
       remove_confirmation: "Ali ste prepričani da hočete izbrisati ta osnutek?"
       new_topic: "Nov osnutek teme"
       new_private_message: "Nov osnutek osebnega sporočila"
+    embed_mode:
+      signin_flow:
+        cancel: "Prekliči"
     topic_count_all:
       one: "Poglej %{count} novo temo"
       two: "Poglej %{count} novi temi"
@@ -1073,7 +1078,6 @@ sl:
         normal_option: "Običajno"
         normal_option_title: "Obveščeni boste, če vam ta uporabnik odgovori, vas citira ali vas omeni."
       notification_schedule:
-        title: "Razpored obveščanja"
         label: "Omogočite razpored obveščanja po meri"
         midnight: "Opolnoči"
         none: "Brez"
@@ -1110,13 +1114,8 @@ sl:
       notifications: "Obvestila"
       statistics: "Statistika"
       desktop_notifications:
-        label: "Obvestila v brskalniku"
         not_supported: "Oprostite, obvestila niso podprta v tem brskalniku."
-        perm_default: "Vklopi obvestila"
-        perm_denied_btn: "Dovoljenje zavrnjeno"
         perm_denied_expl: "Zavrnili ste dovoljenje za obvestila. Omogočite obvestila v nastavitvah vašega brskalnika."
-        disable: "Onemogoči obvestila"
-        enable: "Omogoči obvestila"
         consent_prompt: "Ali hočete obvestila v brskalniku, ko prejmete odgovore na vaše prispevke?"
       dismiss: "Opusti"
       dismiss_notifications: "Opusti vse"
@@ -2290,6 +2289,7 @@ sl:
           placeholder: najmanj
         max_views:
           placeholder: največ
+    header_panel: "Glava"
     new_item: "nov"
     go_back: "pojdi nazaj"
     not_logged_in_user: "stran uporabnika s povzetkom trenutnih aktivnosti in nastavitev"

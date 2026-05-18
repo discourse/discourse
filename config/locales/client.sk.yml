@@ -371,6 +371,8 @@ sk:
       pill: "Odporúčané"
       pm_title: "Odporúčané správy"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Povolené"
       start_posting:
         back: "Späť"
     about:
@@ -576,6 +578,9 @@ sk:
           few: "+%{count} ďalších návrhov"
           many: "+%{count} ďalších návrhov"
           other: "+%{count} ďalšie návrhy"
+    embed_mode:
+      signin_flow:
+        cancel: "Zrušiť"
     topic_count_all:
       one: "Pozrieť %{count} novú tému."
       few: "Pozrieť %{count} nových tém."
@@ -1415,7 +1420,6 @@ sk:
         normal_option: "Normálne"
         normal_option_title: "Budete upozornení, ak vám tento používateľ odpovie, cituje vás alebo sa o vás zmieni."
       notification_schedule:
-        title: "Harmonogram upozornení"
         label: "Povoliť vlastný plán upozornení"
         tip: "Mimo týchto hodín budú vaše upozornenia pozastavené."
         midnight: "Polnoc"
@@ -1459,13 +1463,8 @@ sk:
       notifications: "Upozornenia"
       statistics: "Štatistiky"
       desktop_notifications:
-        label: "Upozornenia na pracovnej ploche"
         not_supported: "Ľutujeme, tento prehliadač nepodporuje upozornenia."
-        perm_default: "Zapnúť upozornenia"
-        perm_denied_btn: "Prístup zamietnutý"
         perm_denied_expl: "Povolenie pre zobrazenie notifikácií ste zakázali. Notifikácie povolíte v nastaveniach vášho prehliadača."
-        disable: "Zakázať upozornenia"
-        enable: "Povoliť upozornenia"
         each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom prehliadači, ktorý používate. Všetky upozornenia budú zakázané, ak pozastavíte upozornenia z používateľskej ponuky, bez ohľadu na toto nastavenie."
         consent_prompt: "Prajete si dostávať upozornenia na pracovnej ploche hneď keď niekto odpovie na váš príspevok?"
       dismiss: "Zahodiť"
@@ -3331,6 +3330,7 @@ sk:
           placeholder: maximum
           aria_label: filtrovať podľa maximálneho počtu zobrazení
     hamburger_menu: "Navigačné menu"
+    header_panel: "Hlavička"
     new_item: "nový"
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"

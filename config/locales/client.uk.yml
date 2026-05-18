@@ -414,6 +414,15 @@ uk:
         visual_overlay: "Візуальне накладення"
         ghost_blocks: "Блоки-привиди"
         condition_debugging: "Налагодження умов"
+      plugin_outlet_debug:
+        find_on_github: "Знайти на GitHub"
+        wrapper: "(обгортка)"
+        outlet_args: "Аргументи виводу"
+        no_outlet_args: "До цього виводу не передано жодних аргументів"
+        aliases: "Аліаси"
+        deprecated: "застарілий"
+        deprecated_outlet: "Цей вивід застарів і буде видалений."
+        since: "(з %{version})"
       toggle_safe_mode: "Увімкнути/вимкнути безпечний режим"
       toggle_verbose_localization: "Увімкнути/вимкнути детальну локалізацію"
       toggle_mobile_view: "Переключити мобільний перегляд"
@@ -518,6 +527,16 @@ uk:
     admin_onboarding_banner:
       launch_in_easy_steps: "Запуск за %{step_count} простих кроків"
       congrats_onboarding_complete: "Вітаємо із завершенням процесу адаптації!"
+      select_theme:
+        title: "Налаштуйте свій сайт"
+        description: "Виберіть початкову тему для вашої спільноти"
+        action: "Виберіть тему"
+        modal_title: "Виберіть тему"
+        use_theme: "Використовуйте цю тему"
+        enabled: "Включено"
+        theme_set: "%{theme} тепер ваша тема за замовчуванням"
+        show_light_screenshot: "Показувати світлий скріншот"
+        show_dark_screenshot: "Показати темний скріншот"
       invite_collaborators:
         title: "Запросити співавторів"
         description: "Перші члени допомагають оживити вашу спільноту"
@@ -775,6 +794,8 @@ uk:
       replying_to: "Відповідь %{username}"
       editing_post: "Редагування допису"
       reply_placeholder: "Написати відповідь..."
+      signin_flow:
+        cancel: "Скасувати"
     topic_count_all:
       one: "Переглянути %{count} нову тему"
       few: "Переглянути %{count} нові теми"
@@ -1690,7 +1711,6 @@ uk:
         normal_option: "Нормальний"
         normal_option_title: "Ви отримаєте сповіщення, коли цей користувач відповість вам, цитуватиме або згадуватиме вас."
       notification_schedule:
-        title: "Розклад сповіщень"
         label: "Увімкнути власний розклад сповіщень"
         tip: "Поза цими годинами ваші сповіщення буде призупинено."
         midnight: "Опівночі"
@@ -1734,13 +1754,8 @@ uk:
       notifications: "Сповіщення"
       statistics: "Статистика"
       desktop_notifications:
-        label: "Сповіщення в реальному часі"
         not_supported: "Сповіщення не підтримуються у цьому оглядачі. Вибачте."
-        perm_default: "Ввімкнути сповіщення"
-        perm_denied_btn: "Немає доступу"
         perm_denied_expl: "Ви заборонили сповіщення. Дозвольте сповіщення у налаштуваннях свого оглядача."
-        disable: "Вимкнути сповіщення"
-        enable: "Увімкнути сповіщення"
         each_browser_note: "Примітка. Вам потрібно змінити це налаштування в кожному браузері, який ви використовуєте. Усі сповіщення буде вимкнено, якщо призупинити сповіщення в меню користувача, незалежно від цього налаштування."
         consent_prompt: "Хочете отримувати сповіщення в реальному часі, коли люди відповідають на ваші дописи?"
       dismiss: "Відкинути"
@@ -3759,6 +3774,7 @@ uk:
           placeholder: максимум
           aria_label: фільтрувати за максимальною кількістю переглядів
     hamburger_menu: "Меню навігації"
+    header_panel: "Шапка"
     new_item: "новий"
     go_back: "повернутися назад"
     not_logged_in_user: "сторінка користувача з підсумком поточної діяльності та налаштуваннями"
@@ -3927,6 +3943,16 @@ uk:
           few: "Відкріпити %{count} теми"
           many: "Відкріпити %{count} тем"
           other: "Відкріпити %{count} тем"
+        confirm_enable_nested_replies:
+          one: "Увімкнути вкладені відповіді в %{count} темі"
+          few: "Увімкнути вкладені відповіді в %{count} темах"
+          many: "Увімкнути вкладені відповіді в %{count} темах"
+          other: "Увімкнути вкладені відповіді в %{count} темах"
+        confirm_disable_nested_replies:
+          one: "Вимкнути вкладені відповіді в %{count} темі"
+          few: "Вимкнути вкладені відповіді в %{count} темах"
+          many: "Вимкнути вкладені відповіді в %{count} темах"
+          other: "Вимкнути вкладені відповіді в %{count} темах"
         confirm_update_topics:
           one: "Оновити %{count} тему"
           few: "Оновити %{count} теми"
@@ -4084,8 +4110,10 @@ uk:
         description: "Відкріпити всі вибрані теми, закріплені в категорії або закріплені глобально"
       enable_nested_replies:
         name: "Увімкнути вкладені відповіді"
+        description: "Перемкніть вибрані теми на вкладений вигляд. Відповіді відображатимуться у вигляді тем."
       disable_nested_replies:
         name: "Вимкнути вкладені відповіді"
+        description: "Повернути вибрані теми до плоского вигляду."
     nested_replies:
       nested_view: "Вкладений вигляд"
       flat_view: "Плоский вигляд"
@@ -4143,6 +4171,7 @@ uk:
         many: "%{count} дописів в темі"
         other: "%{count} дописів в темі"
       create: "Нова тема"
+      create_shared_draft: "Нова спільна чернетка"
       create_long: "Створити нову тему"
       create_group: "Нова тема та чернетки"
       open_draft: "Відкрити чернетку"
@@ -5592,6 +5621,11 @@ uk:
       key_header: "Ключ"
       search_aliases:
         shift: "shift"
+        alt: "параметр alt"
+        meta: "meta cmd command win windows super"
+        ctrl: "ctrl control"
+        enter: "enter return"
+        esc: "esc escape"
       jump_to:
         title: "Перейти до"
         home: "Головна"
@@ -5605,16 +5639,37 @@ uk:
         profile: "Профіль"
         messages: "Повідомлення"
         drafts: "Чернетки"
+        next: "Наступна тема"
+        previous: "Попередня тема"
       navigation:
         title: "Навігація"
+        jump: "Перейти до повідомлення #"
         back: "Назад"
         up_down: "Рухати курсор виділення теми &uarr; &darr;"
+        open: "Відкрити вибрану тему"
+        open_new_window: "Відкрити вибрану тему в новій вкладці / вікні"
+        next_prev: "Наступний/попередній розділ"
+        go_to_unread_post: "Перейти до першого непрочитаного повідомлення"
       application:
         title: "Застосунок"
+        create: "Створити нову тему або особисте повідомлення"
+        notifications: "Відкрити сповіщення"
+        hamburger_menu: "Відкрити меню навігації"
+        user_profile_menu: "Відкрити меню користувача"
+        show_incoming_updated_topics: "Показати оновлені теми"
         search: "Пошук"
+        filter_sidebar: "Бічна панель фільтрів"
+        help: "Показати поєднання клавіш"
+        toggle_bulk_select: "Перемкнути масовий вибір"
+        dismiss: "Відхилити вибрані теми"
+        x: "Перемикання вибору (в режимі масового вибору)"
         log_out: "Вийти"
       composing:
         title: "Редагування"
+        return: "Повернутися в редактор"
+        minimize: "Згорнути редактор тексту"
+        create_or_reply: "Створити тему або відповісти"
+        fullscreen: "Повноекранний редактор"
         link: "Вставити посилання"
         preformatted: "Попередньо форматований текст"
         paragraph: "Абзац"
@@ -6983,6 +7038,9 @@ uk:
             title: "Залучення"
         configure:
           button: "Налаштувати"
+        highlights:
+          comparison:
+            previous_period: "в порівнянні з попереднім періодом"
         period:
           last_7_days: "Останні 7 днів"
           last_30_days: "Останні 30 днів"

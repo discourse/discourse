@@ -301,6 +301,8 @@ nb_NO:
       pill: "Foreslåtte"
       pm_title: "Anbefalte meldinger"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Aktivert"
       start_posting:
         back: "Forrige"
     about:
@@ -442,6 +444,9 @@ nb_NO:
       remove_confirmation: "Er du sikker på at du vil slette dette utkastet?"
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt personlig meldingsutkast"
+    embed_mode:
+      signin_flow:
+        cancel: "Avbryt"
     topic_count_all:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
@@ -1145,7 +1150,6 @@ nb_NO:
         normal_option: "Normal"
         normal_option_title: "Du vil bli varslet hvis denne brukeren svarer på deg, siterer deg eller nevner deg."
       notification_schedule:
-        title: "Tidsplan for varsling"
         label: "Aktiver egendefinert meldingsplan"
         tip: "Utenom disse tidene vil varslene dine bli satt på pause."
         midnight: "Midnatt"
@@ -1189,13 +1193,8 @@ nb_NO:
       notifications: "Varsler"
       statistics: "Statistikk"
       desktop_notifications:
-        label: "Skrivebordsvarsler"
         not_supported: "Varsler er ikke støttet på denne nettleseren. Beklager."
-        perm_default: "Slå på varslinger"
-        perm_denied_btn: "Tillatelse avslått"
         perm_denied_expl: "Du tillot ikke varsler. Tillat varsler via innstillingene i din nettleser."
-        disable: "Slå av varslinger"
-        enable: "Slå på varslinger"
         each_browser_note: "Merk: Du må endre denne innstillingen i hver nettleser du bruker. Alle varsler deaktiveres hvis du setter varsler på pause fra brukermenyen, uavhengig av denne innstillingen."
         consent_prompt: "Ønsker du å motta skrivebordsvarsler når andre svarer på dine innlegg?"
       dismiss: "Avslå"
@@ -2758,6 +2757,7 @@ nb_NO:
         max_views:
           placeholder: maksimum
           aria_label: filtrer etter maksimal antall visninger
+    header_panel: "Hode"
     new_item: "ny"
     go_back: "gå tilbake"
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og innstillinger"

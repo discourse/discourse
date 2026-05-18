@@ -377,7 +377,6 @@ tr_TR:
       <p>Aksi takdirde lütfen <a href="%{base_url}/password-reset">Şifrenizi Sıfırlayın</a>.</p>
     not_found_template_link: |
       <p>Bu <a href="%{base_url}">%{site_name}</a> daveti artık kullanılamıyor. Lütfen sizi davet eden kişiden size yeni bir davet göndermesini isteyin.</p>
-    existing_user_cannot_redeem: "Bu davet kullanılamaz. Lütfen sizi davet eden kişiden size yeni bir davet göndermesini isteyin."
     existing_user_already_redemeed: "Bu davet bağlantısını zaten kullandınız."
     user_exists: "<b>%{email}</b> adresini davet etmeye gerek yok, zaten hesabı var!"
     invite_exists: "<b>%{email}</b> adresini zaten davet etmiştiniz."

@@ -407,6 +407,8 @@ it:
       pill: "Suggeriti"
       pm_title: "Messaggi Suggeriti"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Abilitato"
       start_posting:
         back: "Indietro"
     about:
@@ -576,6 +578,9 @@ it:
         other_drafts:
           one: "+%{count} altra bozza"
           other: "+%{count} altre bozze"
+    embed_mode:
+      signin_flow:
+        cancel: "Annulla"
     topic_count_all:
       one: "Vedi %{count} nuovo argomento"
       other: "Vedi %{count} nuovi argomenti"
@@ -1351,7 +1356,6 @@ it:
         normal_option: "Normale"
         normal_option_title: "Riceverai una notifica quando questo utente ti risponde, ti cita o ti menziona."
       notification_schedule:
-        title: "Programmazione delle notifiche"
         label: "Attiva pianificazione delle notifiche personalizzata"
         tip: "Al di fuori di queste ore le tue notifiche verranno messe in pausa."
         midnight: "Mezzanotte"
@@ -1395,13 +1399,8 @@ it:
       notifications: "Notifiche"
       statistics: "Statistiche"
       desktop_notifications:
-        label: "Notifiche in tempo reale"
         not_supported: "Spiacenti, le notifiche non sono supportate su questo browser."
-        perm_default: "Attiva Notifiche"
-        perm_denied_btn: "Permesso Negato"
         perm_denied_expl: "Hai negato il permesso per le notifiche. Autorizza le notifiche tramite le impostazioni del tuo browser."
-        disable: "Disabilita Notifiche"
-        enable: "Abilita Notifiche"
         each_browser_note: "Nota: devi modificare questa impostazione su ogni browser che utilizzi. Tutte le notifiche verranno disabilitate quando le notifiche sono messe in pausa nel menu utente, indipendentemente da questa impostazione."
         consent_prompt: "Desideri ricevere notifiche in tempo reale quando qualcuno risponde a un tuo messaggio?"
       dismiss: "Ignora"
@@ -3127,6 +3126,7 @@ it:
           placeholder: massimo
           aria_label: filtra per visualizzazioni massime
     hamburger_menu: "Menu di navigazione"
+    header_panel: "Intestazione"
     new_item: "nuovo"
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"

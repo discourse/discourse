@@ -370,7 +370,6 @@ nl:
       <p>Zo niet, dan kun je je <a href="%{base_url}/password-reset">Wachtwoord herstellen</a>.</p>
     not_found_template_link: |
       <p>Deze uitnodiging voor <a href="%{base_url}">%{site_name}</a> kan niet meer worden verzilverd. Vraag de persoon die je heeft uitgenodigd om je een nieuwe uitnodiging te sturen.</p>
-    existing_user_cannot_redeem: "Deze uitnodiging kan niet worden verzilverd. Vraag de persoon die je heeft uitgenodigd je een nieuwe uitnodiging te sturen."
     existing_user_already_redemeed: "Je hebt deze uitnodigingslink al verzilverd."
     user_exists: "Het is niet nodig om <b>%{email}</b>uit te nodigen, deze heeft al een account!"
     invite_exists: "Je hebt <b>%{email}</b> al uitgenodigd."

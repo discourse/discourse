@@ -426,7 +426,6 @@ sk:
       <p>V opačnom prípade prosím <a href="%{base_url}/password-reset">Obnoviť heslo</a>.</p>
     not_found_template_link: |
       <p>Túto pozvánku do <a href="%{base_url}">%{site_name}</a> už nie je možné uplatniť. Požiadajte osobu, ktorá vás pozvala, aby vám poslala novú pozvánku.</p>
-    existing_user_cannot_redeem: "Túto pozvánku nie je možné uplatniť. Požiadajte osobu, ktorá vás pozvala, aby vám poslala novú pozvánku."
     existing_user_already_redemeed: "Tento odkaz na pozvánku ste už uplatnili."
     user_exists: "Nie je potrebné pozývať <b>%{email}</b>, už majú účet!"
     invite_exists: "Už ste pozvali <b>%{email}</b>."

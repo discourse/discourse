@@ -372,6 +372,8 @@ zh_TW:
       pill: "建議"
       pm_title: "推薦訊息"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "啟用"
       invite_collaborators:
         title: "邀請協作者"
       start_posting:
@@ -527,6 +529,9 @@ zh_TW:
         view_all: "檢視所有草稿"
         other_drafts:
           other: "+其他 %{count} 份草稿"
+    embed_mode:
+      signin_flow:
+        cancel: "取消"
     topic_count_all:
       other: "檢視 %{count} 則新話題"
     topic_count_categories:
@@ -1225,7 +1230,6 @@ zh_TW:
         normal_option: "一般"
         normal_option_title: "如果有人@你或回覆你的帖子，將通知你。"
       notification_schedule:
-        title: "通知時程"
         label: "啟用自定義通知時程"
         tip: "在這些時間以外，將暫停您的通知。"
         midnight: "半夜"
@@ -1269,13 +1273,8 @@ zh_TW:
       notifications: "通知"
       statistics: "統計"
       desktop_notifications:
-        label: "即時通知"
         not_supported: "抱歉，您的瀏覽器不支援桌面通知。"
-        perm_default: "啟用桌面通知"
-        perm_denied_btn: "權限被拒絕"
         perm_denied_expl: "你拒絶了通知提醒的權限。請在瀏覽器設定中允許桌面通知。"
-        disable: "停用通知"
-        enable: "啟用通知"
         each_browser_note: "注意：您必須在所使用的每個瀏覽器上變更此設定。如果您暫停使用者功能表中的通知，所有通知都將被停用，無論此設定為何。"
         consent_prompt: "當別人回覆您的貼文時，您想要收到即時通知嗎？"
       dismiss: "忽略"
@@ -2835,6 +2834,7 @@ zh_TW:
         max_views:
           placeholder: 最大值
           aria_label: 按最大瀏覽量過濾
+    header_panel: "頁首"
     new_item: "新增"
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"

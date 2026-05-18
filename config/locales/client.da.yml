@@ -403,6 +403,8 @@ da:
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Aktiveret"
       start_posting:
         back: "Tilbage"
     about:
@@ -530,6 +532,9 @@ da:
       dropdown:
         untitled: "Unavngiven kladde"
         view_all: "se alle kladder"
+    embed_mode:
+      signin_flow:
+        cancel: "Annuller"
     topic_count_all:
       one: "Se %{count} nyt emne"
       other: "Se %{count} nye emner"
@@ -1278,7 +1283,6 @@ da:
         normal_option: "Normal"
         normal_option_title: "Du vil blive underrettet, hvis denne bruger svarer dig, citerer dig eller nævner dig."
       notification_schedule:
-        title: "Tidsplan for notifikation"
         label: "Aktiver brugerdefineret meddelelsesplan"
         tip: "Uden for disse timer vil dine notifikationer blive sat på pause."
         midnight: "Midnat"
@@ -1322,13 +1326,8 @@ da:
       notifications: "Notifikationer"
       statistics: "Statistik"
       desktop_notifications:
-        label: "Live notifikationer"
         not_supported: "Notifikationer understøttes ikke af denne browser. Beklager."
-        perm_default: "Slå notifikationer til"
-        perm_denied_btn: "Tilladelse nægtet"
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
-        disable: "Deaktiver notifikationer"
-        enable: "Aktiver notifikationer"
         each_browser_note: "Bemærk: Du skal ændre denne indstilling på hver browser, du bruger. Alle notifikationer vil blive deaktiveret, hvis du pauserer notifikationer fra brugermenuen, uanset denne indstilling."
         consent_prompt: "Ønsker du live notifikationer, når folk svarer på dine indlæg?"
       dismiss: "Ignorer Alle"
@@ -2720,6 +2719,7 @@ da:
           placeholder: minimum
         max_views:
           placeholder: maksimum
+    header_panel: "Sidehoved"
     new_item: "ny"
     go_back: "gå tilbage"
     not_logged_in_user: "bruger side, med oversigt over aktivitet og indstillinger"

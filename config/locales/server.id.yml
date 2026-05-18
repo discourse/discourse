@@ -234,7 +234,6 @@ id:
       <p>Jika tidak silahkan <a href="%{base_url}/password-reset">Atur Ulang Kata Sandi</a>.</p>
     not_found_template_link: |
       <p>Undangan ke <a href="%{base_url}">%{site_name}</a> ini tidak dapat ditukarkan lagi. Harap minta orang yang mengundang Anda untuk mengirimi Anda undangan baru.</p>
-    existing_user_cannot_redeem: "Undangan ini tidak dapat ditukarkan. Harap minta orang yang mengundang Anda untuk mengirimi Anda undangan baru."
     existing_user_already_redemeed: "Anda telah menukarkan tautan undangan ini."
     user_exists: "Tidak perlu mengundang <b>%{email}</b>, dia sudah punya akun!"
     invite_exists: "Anda sudah mengundang <b>%{email}</b>."

@@ -279,6 +279,8 @@ ko:
       pill: "추천"
       pm_title: "제안된 메시지"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "활성화"
       start_posting:
         back: "뒤로"
     about:
@@ -413,6 +415,9 @@ ko:
         view_all: "모든 초안 보기"
         other_drafts:
           other: "+%{count}개의 기타 초안"
+    embed_mode:
+      signin_flow:
+        cancel: "취소"
     topic_count_all:
       other: "%{count}개의 새로운 글 보기"
     topic_count_categories:
@@ -1068,7 +1073,6 @@ ko:
         normal_option: "일반"
         normal_option_title: "이 사용자가 나에게 댓글을 작성하거나, 인용하거나, 언급 하면 알림이 전송됩니다."
       notification_schedule:
-        title: "알림 일정"
         label: "사용자 지정 알림 일정 활성화"
         midnight: "자정"
         none: "없음"
@@ -1107,13 +1111,8 @@ ko:
       notifications: "알림"
       statistics: "통계"
       desktop_notifications:
-        label: "실시간 알림"
         not_supported: "이 브라우저에서는 알림이 지원되지 않습니다."
-        perm_default: "알림 켜기"
-        perm_denied_btn: "권한 거부됨"
         perm_denied_expl: "알림 권한을 거부한 상태입니다. 브라우저 설정에서 알림을 허용해 주세요."
-        disable: "알림 비활성화"
-        enable: "알림 활성화"
         consent_prompt: "내 게시물에 댓글이 달리면 실시간으로 알림을 받을까요?"
       dismiss: "해제"
       dismiss_notifications: "모두 해제"
@@ -2370,6 +2369,7 @@ ko:
         max_views:
           placeholder: 최대
           aria_label: 최대 조회수로 필터링
+    header_panel: "헤더"
     new_item: "새로운"
     go_back: "뒤로 가기"
     not_logged_in_user: "현재 활동 및 환경설정에 대한 요약이 포함된 사용자 페이지"
