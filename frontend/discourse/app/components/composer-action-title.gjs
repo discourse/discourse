@@ -6,7 +6,7 @@ import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import ComposerActionsNew from "discourse/components/composer-actions";
+import ComposerActionsNew from "discourse/components/composer-actions-new";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {

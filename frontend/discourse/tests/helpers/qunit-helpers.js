@@ -17,7 +17,7 @@ import sinon from "sinon";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
-import { _clearSnapshots as _clearComposerActionsSnapshotsNew } from "discourse/components/composer-actions";
+import { _clearSnapshots as _clearComposerActionsSnapshotsNew } from "discourse/components/composer-actions-new";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
