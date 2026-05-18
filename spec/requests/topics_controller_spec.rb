@@ -3063,6 +3063,15 @@ RSpec.describe TopicsController do
       expect(response).not_to redirect_to("/n/#{pm.slug}/#{pm.id}")
     end
 
+    it "preserves embed_mode when redirecting to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
+
+      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}?embed_mode=true")
+    end
+
     it "returns 404 when an invalid slug is given and no id" do
       get "/t/nope-nope.json"
 

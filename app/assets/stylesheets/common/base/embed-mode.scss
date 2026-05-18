@@ -19,6 +19,8 @@ body.embed-mode {
   .suggested-topics,
   .more-topics__container,
   #topic-title,
+  .nested-view__header,
+  .nested-view__topic-map,
   .topic-above-footer-buttons-outlet.presence,
   .above-main-container-outlet,
   .topic-footer-main-buttons__actions .toggle-admin-menu,
@@ -165,12 +167,20 @@ body.embed-mode {
 
   // Hide OP
   // Use visibility hidden to prevent issues with jumpy behavior
-  .post-stream .topic-post.topic-owner:first-child {
+  .post-stream .topic-post.topic-owner:first-child,
+  .nested-view__op {
     opacity: 0;
     height: 0;
     visibility: hidden;
     position: absolute;
     pointer-events: none;
+  }
+
+  // Drop the nested-view's outer framing so it sits flush in the iframe
+  .nested-view {
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
   }
 
   .embed-mode-composer {
