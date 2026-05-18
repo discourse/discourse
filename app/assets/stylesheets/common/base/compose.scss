@@ -227,6 +227,31 @@ html.composer-open:not(.has-full-page-chat) {
       border-color: var(--input-border-color);
     }
 
+    .composer-whisper-indicator {
+      font-size: var(--font-down-1);
+      border-radius: var(--d-border-radius);
+
+      &.--public {
+        color: var(--primary-high);
+
+        .d-icon {
+          color: var(--primary-high);
+        }
+      }
+
+      &.--whispering {
+        color: var(--tertiary);
+
+        &:hover {
+          background-color: var(--tertiary-200);
+        }
+
+        .d-icon {
+          color: var(--tertiary);
+        }
+      }
+    }
+
     .composer-action-title {
       display: flex;
       gap: var(--space-2);
@@ -262,6 +287,10 @@ html.composer-open:not(.has-full-page-chat) {
     @include viewport.until(sm) {
       .reply-details {
         flex-wrap: wrap;
+      }
+
+      .composer-action-label__prefix {
+        display: none;
       }
 
       .display-edit-reason.--active {

@@ -5,6 +5,7 @@ import { action, get } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
+import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import {
   applyBehaviorTransformer,
@@ -25,6 +26,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DTextField from "discourse/ui-kit/d-text-field";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -177,11 +179,9 @@ export default class ComposerActions extends Component {
       if (isInSlowMode) {
         labelText = i18n("composer.composer_actions.slow_mode_reply");
       } else if (isReplyingToPost) {
-        labelText = i18n("composer.composer_actions.reply_to_post.label", {
-          postUsername: this.post.username,
-        });
+        labelText = this._replyToPostLabel(this.post.username);
       } else {
-        labelText = i18n("composer.composer_actions.reply_to_topic.label");
+        labelText = this._replyToTopicLabel();
       }
     } else if (currentAction === EDIT) {
       labelText = i18n("composer.composer_actions.edit_post");
@@ -197,6 +197,35 @@ export default class ComposerActions extends Component {
       actions: availableActions,
       hasActions: availableActions.length > 0,
     };
+  }
+
+  // Builds the "Reply to a post by <user>" label as trusted HTML with span
+  // wrappers so CSS can target / hide the prefix on small viewports while
+  // keeping the username visible.
+  _replyToPostLabel(username) {
+    const prefix = escapeExpression(
+      i18n("composer.composer_actions.reply_to_post.label_prefix")
+    );
+    const user = escapeExpression(username || "");
+    return trustHTML(
+      `<span class="composer-action-label__prefix">${prefix}</span> ` +
+        `<span class="composer-action-label__user">${user}</span>`
+    );
+  }
+
+  // Same split treatment as _replyToPostLabel so CSS can hide the prefix on
+  // small viewports while keeping the noun visible.
+  _replyToTopicLabel() {
+    const prefix = escapeExpression(
+      i18n("composer.composer_actions.reply_to_topic.label_prefix")
+    );
+    const noun = escapeExpression(
+      i18n("composer.composer_actions.reply_to_topic.label_noun")
+    );
+    return trustHTML(
+      `<span class="composer-action-label__prefix">${prefix}</span> ` +
+        `<span class="composer-action-label__topic">${noun}</span>`
+    );
   }
 
   _computeAvailableActions() {
@@ -245,9 +274,7 @@ export default class ComposerActions extends Component {
     ) {
       const postForLabel = currentPost || _postSnapshot;
       const actionObj = {
-        name: i18n("composer.composer_actions.reply_to_post.label", {
-          postUsername: postForLabel?.username || "User",
-        }),
+        name: this._replyToPostLabel(postForLabel?.username || "User"),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
         id: "reply_to_post",
@@ -270,7 +297,7 @@ export default class ComposerActions extends Component {
           this.replyOptions?.topicLink))
     ) {
       const actionObj = {
-        name: i18n("composer.composer_actions.reply_to_topic.label"),
+        name: this._replyToTopicLabel(),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
         icon: "share",
         id: "reply_to_topic",
@@ -289,9 +316,7 @@ export default class ComposerActions extends Component {
       _topicSnapshot
     ) {
       const actionObj = {
-        name: i18n("composer.composer_actions.reply_to_post.label", {
-          postUsername: _postSnapshot.username || "User",
-        }),
+        name: this._replyToPostLabel(_postSnapshot.username || "User"),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
         id: "reply_to_post",
@@ -303,7 +328,7 @@ export default class ComposerActions extends Component {
     // 3. Reply to Topic (when in CREATE_TOPIC mode, allow going back to REPLY)
     if (currentAction === CREATE_TOPIC && !this.isEditing && _topicSnapshot) {
       const actionObj = {
-        name: i18n("composer.composer_actions.reply_to_topic.label"),
+        name: this._replyToTopicLabel(),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
         icon: "share",
         id: "reply_to_topic",
@@ -351,7 +376,7 @@ export default class ComposerActions extends Component {
       _topicSnapshot
     ) {
       const actionObj = {
-        name: i18n("composer.composer_actions.reply_to_topic.label"),
+        name: this._replyToTopicLabel(),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
         icon: "share",
         id: "reply_to_topic",
@@ -712,6 +737,22 @@ export default class ComposerActions extends Component {
           {{dIcon data.icon}}
           <span class="d-button-label">{{data.label}}</span>
         </span>
+      {{/if}}
+
+      {{#if this.canToggleWhisper}}
+        <DButton
+          @action={{this.toggleWhisper}}
+          @icon={{if this.composerModel.whisper "far-eye-slash" "far-eye"}}
+          @label={{if
+            this.composerModel.whisper
+            "composer.whisper_indicator.whispering"
+            "composer.whisper_indicator.public"
+          }}
+          class={{dConcatClass
+            "composer-whisper-indicator btn-flat"
+            (if this.composerModel.whisper "--whispering" "--public")
+          }}
+        />
       {{/if}}
     {{/let}}
   </template>
