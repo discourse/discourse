@@ -6,10 +6,7 @@ RSpec.describe Admin::SiteTextsController do
   fab!(:user)
   let(:locale) { I18n.locale }
 
-  after do
-    TranslationOverride.delete_all
-    I18n.reload!
-  end
+  after { I18n.reload! }
 
   describe "#index" do
     context "when logged in as an admin" do
