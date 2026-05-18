@@ -44,7 +44,7 @@ module PageObjects
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.value
         when "checkbox"
-          component.find("input[type='checkbox']").checked?
+          component.find("input[type='checkbox']", visible: :all).checked?
         when "menu"
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
@@ -57,6 +57,32 @@ module PageObjects
           Upload.find_by(sha1:)
         when "toggle"
           component.find("button[role=\"switch\"]", visible: :all)["aria-checked"] == "true"
+        end
+      end
+
+      def uncheck
+        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+          return unless value
+
+          component.find(".form-kit__control-checkbox-checkmark").click
+          return
+        end
+
+        within component do
+          uncheck("input[type='checkbox']", visible: :all)
+        end
+      end
+
+      def check
+        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+          return if value
+
+          component.find(".form-kit__control-checkbox-checkmark").click
+          return
+        end
+
+        within component do
+          check("input[type='checkbox']", visible: :all)
         end
       end
 
