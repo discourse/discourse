@@ -143,6 +143,21 @@ RSpec.describe NestedTopic::ListRoots do
       end
     end
 
+    context "with a deleted pinned root" do
+      fab!(:deleted_pinned) do
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1, deleted_at: Time.now)
+      end
+
+      before do
+        Fabricate(:nested_topic, topic: topic).update!(pinned_post_ids: [deleted_pinned.id])
+      end
+
+      it "keeps the deleted pinned root in the normal sorted list instead of dropping it" do
+        ids = result[:response][:roots].map { |r| r[:id] }
+        expect(ids).to include(deleted_pinned.id)
+      end
+    end
+
     context "when there are pinned roots on page 1" do
       let(:params) { { sort: "top", page: 1 } }
 

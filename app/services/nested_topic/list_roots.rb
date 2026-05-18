@@ -58,7 +58,15 @@ class NestedTopic::ListRoots
     pinned_post_ids = topic_view.topic.nested_topic&.pinned_post_ids.presence
     context[:all_pinned_post_ids] = pinned_post_ids
     scope = loader.root_posts_scope(params.sort)
-    scope = scope.where.not(id: pinned_post_ids) if pinned_post_ids.present?
+
+    # Deleted pinned roots aren't promoted; let them fall through to
+    # render as [deleted] placeholders instead of vanishing.
+    if pinned_post_ids.present?
+      promotable_pinned_ids =
+        topic_view.topic.posts.where(id: pinned_post_ids, deleted_at: nil).pluck(:id)
+      scope = scope.where.not(id: promotable_pinned_ids) if promotable_pinned_ids.present?
+    end
+
     page_size = NestedReplies::TreeLoader::ROOTS_PER_PAGE
     roots = scope.offset(params.page * page_size).limit(page_size + 1)
     roots = loader.load_posts_for_tree(roots).to_a

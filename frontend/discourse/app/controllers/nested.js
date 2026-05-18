@@ -142,6 +142,7 @@ export default class NestedController extends Controller {
       this.firstLoadedPage = data.page;
       this.page = data.page;
       this.hasMoreRoots = data.has_more_roots || false;
+      this.rootSummary = data.root_summary ?? this.rootSummary;
       this.#assignSuggestedAndRelated(data);
 
       if (scrollTargetPostNumber != null) {
@@ -207,6 +208,7 @@ export default class NestedController extends Controller {
 
       this.rootNodes = [...newNodes, ...this.rootNodes];
       this.firstLoadedPage = data.page;
+      this.rootSummary = data.root_summary ?? this.rootSummary;
       this.#assignSuggestedAndRelated(data);
 
       const newFirstPostNumber = newNodes[0]?.post?.post_number;
@@ -273,6 +275,7 @@ export default class NestedController extends Controller {
       this.rootNodes = [...this.rootNodes, ...newNodes];
       this.page = data.page;
       this.hasMoreRoots = data.has_more_roots || false;
+      this.rootSummary = data.root_summary ?? this.rootSummary;
       this.#assignSuggestedAndRelated(data);
     } catch (e) {
       popupAjaxError(e);

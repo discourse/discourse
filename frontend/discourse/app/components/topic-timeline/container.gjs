@@ -361,6 +361,18 @@ export default class TopicTimelineScrollArea extends Component {
     this.args.jumpToIndex(this.lastRead);
   }
 
+  @action
+  jumpTopFromEndpoint(event) {
+    event.preventDefault();
+    this.args.jumpTop?.(event);
+  }
+
+  @action
+  jumpBottomFromEndpoint(event) {
+    event.preventDefault();
+    this.args.jumpBottom?.(event);
+  }
+
   dockCheck() {
     const timeline = document.querySelector(".timeline-container");
     const timelineHeight = (timeline && timeline.offsetHeight) || 400;
@@ -532,7 +544,7 @@ export default class TopicTimelineScrollArea extends Component {
             href={{@model.firstPostUrl}}
             title={{i18n "topic_entrance.jump_top_button_title"}}
             class="start-date"
-            {{on "click" @jumpTop}}
+            {{on "click" this.jumpTopFromEndpoint}}
           >
             <span>
               {{this.startDate}}
@@ -587,7 +599,7 @@ export default class TopicTimelineScrollArea extends Component {
           <a
             href={{@model.lastPostUrl}}
             class="now-date"
-            {{on "click" @jumpBottom}}
+            {{on "click" this.jumpBottomFromEndpoint}}
           >
             <span>
               {{dAgeWithTooltip this.nowDate this.nowDateOptions}}

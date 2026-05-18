@@ -162,6 +162,9 @@ module("Integration | Component | timeline-scrubber", function (hooks) {
     await triggerKeyEvent(".timeline-scrubber", "keydown", "ArrowDown");
 
     assert.strictEqual(onCommit.callCount, 1);
-    assert.approximately(onCommit.lastCall.args[0], 0.6, 0.0001);
+    assert.true(
+      Math.abs(onCommit.lastCall.args[0] - 0.6) < 0.0001,
+      `expected ~0.6, got ${onCommit.lastCall.args[0]}`
+    );
   });
 });

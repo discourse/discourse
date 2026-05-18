@@ -132,11 +132,13 @@ export default class Nested extends Component {
       {{/if}}
 
       <div class="nested-view__roots">
-        <DLoadMore
-          @action={{@loadPreviousRoots}}
-          @enabled={{@hasMoreRootsBefore}}
-          @isLoading={{@loadingMore}}
-        />
+        {{#if @hasMoreRootsBefore}}
+          <DLoadMore
+            @action={{@loadPreviousRoots}}
+            @enabled={{@hasMoreRootsBefore}}
+            @isLoading={{@loadingMore}}
+          />
+        {{/if}}
 
         {{#each @rootNodes key="post.id" as |node|}}
           <NestedPost

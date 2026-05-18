@@ -113,6 +113,17 @@ export default class TimelineScrubber extends Component {
   }
 
   @action
+  onPointerCancel(event) {
+    if (!this.dragging) {
+      return;
+    }
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+    this.#dragOffset = 0;
+    this.dragging = false;
+    this.args.onDragEnd?.();
+  }
+
+  @action
   onKeyDown(event) {
     let nextProgress = null;
 
@@ -166,7 +177,7 @@ export default class TimelineScrubber extends Component {
       {{on "pointerdown" this.onPointerDown}}
       {{on "pointermove" this.onPointerMove}}
       {{on "pointerup" this.onPointerUp}}
-      {{on "pointercancel" this.onPointerUp}}
+      {{on "pointercancel" this.onPointerCancel}}
       {{on "keydown" this.onKeyDown}}
     >
       <div class="timeline-scrubber__track">
