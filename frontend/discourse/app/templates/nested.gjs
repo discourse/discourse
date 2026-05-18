@@ -56,6 +56,8 @@ export default <template>
           @rootNodes={{@controller.rootNodes}}
           @hasMoreRoots={{@controller.hasMoreRoots}}
           @loadingMore={{@controller.loadingMore}}
+          @loadingPreviousRoots={{@controller.loadingPreviousRoots}}
+          @loadingNextRoots={{@controller.loadingNextRoots}}
           @loadMoreRoots={{@controller.loadMoreRoots}}
           @sort={{@controller.sort}}
           @changeSort={{@controller.changeSort}}

@@ -23,6 +23,11 @@
     border-bottom: 1px solid var(--primary-low);
   }
 
+  &__loading-previous,
+  &__loading-next {
+    overflow-anchor: none;
+  }
+
   &__title {
     margin: 0;
     font-size: var(--font-up-4);
@@ -1095,7 +1100,7 @@ html.footer-nav-visible {
     font: inherit;
     font-size: var(--font-down-2);
     color: var(--primary-med-or-secondary-med);
-    padding: 0 0 0 0.5em; // align under the rail line
+    padding: 0.5em 0;
     white-space: nowrap;
     cursor: pointer;
     text-align: left;
@@ -1103,7 +1108,6 @@ html.footer-nav-visible {
     &:hover,
     &:focus {
       color: var(--primary);
-      text-decoration: underline;
     }
   }
 

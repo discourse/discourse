@@ -136,8 +136,15 @@ export default class Nested extends Component {
           <DLoadMore
             @action={{@loadPreviousRoots}}
             @enabled={{@hasMoreRootsBefore}}
-            @isLoading={{@loadingMore}}
-          />
+            @isLoading={{@loadingPreviousRoots}}
+          >
+            {{#if @loadingPreviousRoots}}
+              <DConditionalLoadingSpinner
+                class="nested-view__loading-previous"
+                @condition={{true}}
+              />
+            {{/if}}
+          </DLoadMore>
         {{/if}}
 
         {{#each @rootNodes key="post.id" as |node|}}
@@ -170,12 +177,17 @@ export default class Nested extends Component {
         {{/each}}
       </div>
 
-      <DConditionalLoadingSpinner @condition={{@loadingMore}} />
+      {{#if @loadingNextRoots}}
+        <DConditionalLoadingSpinner
+          class="nested-view__loading-next"
+          @condition={{true}}
+        />
+      {{/if}}
 
       <DLoadMore
         @action={{@loadMoreRoots}}
         @enabled={{@hasMoreRoots}}
-        @isLoading={{@loadingMore}}
+        @isLoading={{@loadingNextRoots}}
       />
 
       <PluginOutlet

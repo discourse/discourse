@@ -33,6 +33,8 @@ export default class NestedController extends Controller {
   @tracked firstLoadedPage = 0;
   @tracked hasMoreRoots = false;
   @tracked loadingMore = false;
+  @tracked loadingPreviousRoots = false;
+  @tracked loadingNextRoots = false;
   @tracked sort;
   @tracked messageBusLastId;
   @tracked postNumber;
@@ -204,6 +206,7 @@ export default class NestedController extends Controller {
     const anchorTopBefore = anchor?.el.getBoundingClientRect().top ?? null;
 
     this.loadingMore = true;
+    this.loadingPreviousRoots = true;
     try {
       const targetPage = this.firstLoadedPage - 1;
       const data = await ajax(
@@ -237,6 +240,7 @@ export default class NestedController extends Controller {
     } catch (e) {
       popupAjaxError(e);
     } finally {
+      this.loadingPreviousRoots = false;
       this.loadingMore = false;
     }
   }
@@ -270,6 +274,7 @@ export default class NestedController extends Controller {
     }
 
     this.loadingMore = true;
+    this.loadingNextRoots = true;
     try {
       const nextPage = this.page + 1;
       const data = await ajax(
@@ -288,6 +293,7 @@ export default class NestedController extends Controller {
     } catch (e) {
       popupAjaxError(e);
     } finally {
+      this.loadingNextRoots = false;
       this.loadingMore = false;
     }
   }

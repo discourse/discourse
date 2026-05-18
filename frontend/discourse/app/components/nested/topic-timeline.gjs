@@ -34,13 +34,6 @@ export default class NestedTopicTimeline extends Component {
     };
   });
 
-  // Reads firstLoadedPage so the modifier re-runs whenever the loaded
-  // window shifts (jumpToRootPage / loadPreviousRoots).
-  syncOnLoadedWindow = modifier((_el, [firstLoadedPage]) => {
-    void firstLoadedPage;
-    this.#scheduleUpdate();
-  });
-
   #rafHandle = null;
   #scrollHandler = null;
 
@@ -200,7 +193,6 @@ export default class NestedTopicTimeline extends Component {
         class="nested-topic-timeline"
         aria-label={{i18n "nested_replies.topic_timeline.aria_label"}}
         {{this.trackViewport}}
-        {{this.syncOnLoadedWindow @firstLoadedPage}}
       >
         <button
           type="button"
