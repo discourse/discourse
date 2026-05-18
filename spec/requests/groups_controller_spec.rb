@@ -2535,6 +2535,29 @@ RSpec.describe GroupsController do
         end
       end
 
+      it "does not expose email setting values in history logs" do
+        group.update!(
+          email_password: "secret_smtp_pass",
+          email_username: "group@example.com",
+          smtp_server: "smtp.example.com",
+          smtp_port: 587,
+          smtp_ssl_mode: "starttls",
+        )
+        GroupActionLogger.new(admin, group).log_change_group_settings
+
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+
+        logs = response.parsed_body["logs"]
+        redacted = I18n.t("staff_action_logs.redacted")
+
+        %w[email_password email_username smtp_server smtp_port smtp_ssl_mode].each do |subject|
+          entry = logs.find { |log| log["subject"] == subject }
+          expect(entry["new_value"]).to eq(redacted)
+        end
+      end
+
       it "should not be allowed to view history of an automatic group" do
         group = Group.find_by(id: Group::AUTO_GROUPS[:admins])
 
