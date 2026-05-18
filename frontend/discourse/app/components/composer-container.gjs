@@ -486,87 +486,80 @@ export default class ComposerContainer extends Component {
                         {{#if this.canToggleWhisper}}
                           <dropdown.item>
                             {{! template-lint-disable no-invalid-interactive }}
-                            <div
-                              class="composer-toggle-item composer-toggle-whisper"
-                              {{on "click" this.toggleWhisper}}
+                            <DButton
+                              class="composer-toggle-item composer-toggle-whisper --with-description"
+                              @action={{this.toggleWhisper}}
                             >
-                              <span class="composer-toggle-item__info">
+                              <div class="composer-toggle-item__icons">
                                 {{dIcon "far-eye-slash"}}
-                                <span class="composer-toggle-item__texts">
-                                  <span
-                                    class="composer-toggle-item__label"
-                                  >{{i18n
-                                      "composer.composer_actions.toggle_whisper.label"
-                                    }}</span>
-                                  <span
-                                    class="composer-toggle-item__description"
-                                  >{{i18n
-                                      "composer.composer_actions.toggle_whisper.desc"
-                                    }}</span>
-                                </span>
-                              </span>
+                              </div>
+                              <div class="composer-toggle-item__texts">
+                                <span class="composer-toggle-item__label">{{i18n
+                                    "composer.composer_actions.toggle_whisper.label"
+                                  }}</span>
+                                <span
+                                  class="composer-toggle-item__description"
+                                >{{i18n
+                                    "composer.composer_actions.toggle_whisper.desc"
+                                  }}</span>
+                              </div>
                               <DToggleSwitch
                                 @state={{this.composer.model.whisper}}
                               />
-                            </div>
+                            </DButton>
                           </dropdown.item>
                         {{/if}}
 
                         {{#if this.composer.canToggleNoBump}}
                           <dropdown.item>
-                            {{! template-lint-disable no-invalid-interactive }}
-                            <div
-                              class="composer-toggle-item composer-toggle-no-bump"
-                              {{on "click" this.toggleNoBump}}
+                            <DButton
+                              class="composer-toggle-item composer-toggle-no-bump --with-description"
+                              @action={{this.toggleNoBump}}
                             >
-                              <span class="composer-toggle-item__info">
+                              <div class="composer-toggle-item__icons">
                                 {{dIcon "anchor"}}
-                                <span class="composer-toggle-item__texts">
-                                  <span
-                                    class="composer-toggle-item__label"
-                                  >{{i18n
-                                      "composer.composer_actions.toggle_topic_bump.label"
-                                    }}</span>
-                                  <span
-                                    class="composer-toggle-item__description"
-                                  >{{i18n
-                                      "composer.composer_actions.toggle_topic_bump.desc"
-                                    }}</span>
-                                </span>
-                              </span>
+                              </div>
+                              <div class="composer-toggle-item__texts">
+                                <span class="composer-toggle-item__label">{{i18n
+                                    "composer.composer_actions.toggle_topic_bump.label"
+                                  }}</span>
+                                <span
+                                  class="composer-toggle-item__description"
+                                >{{i18n
+                                    "composer.composer_actions.toggle_topic_bump.desc"
+                                  }}</span>
+                              </div>
                               <DToggleSwitch
                                 @state={{this.composer.model.noBump}}
                               />
-                            </div>
+                            </DButton>
                           </dropdown.item>
                         {{/if}}
 
                         {{#if this.composer.canUnlistTopic}}
                           <dropdown.item>
                             {{! template-lint-disable no-invalid-interactive }}
-                            <div
-                              class="composer-toggle-item composer-toggle-unlisted"
-                              {{on "click" this.toggleUnlisted}}
+                            <DButton
+                              class="composer-toggle-item composer-toggle-unlisted --with-description"
+                              @action={{this.toggleUnlisted}}
                             >
-                              <span class="composer-toggle-item__info">
+                              <div class="composer-toggle-item__icons">
                                 {{dIcon "far-eye-slash"}}
-                                <span class="composer-toggle-item__texts">
-                                  <span
-                                    class="composer-toggle-item__label"
-                                  >{{i18n
-                                      "composer.composer_actions.toggle_unlisted.label"
-                                    }}</span>
-                                  <span
-                                    class="composer-toggle-item__description"
-                                  >{{i18n
-                                      "composer.composer_actions.toggle_unlisted.desc"
-                                    }}</span>
-                                </span>
-                              </span>
+                              </div>
+                              <div class="composer-toggle-item__texts">
+                                <span class="composer-toggle-item__label">{{i18n
+                                    "composer.composer_actions.toggle_unlisted.label"
+                                  }}</span>
+                                <span
+                                  class="composer-toggle-item__description"
+                                >{{i18n
+                                    "composer.composer_actions.toggle_unlisted.desc"
+                                  }}</span>
+                              </div>
                               <DToggleSwitch
                                 @state={{this.composer.model.unlistTopic}}
                               />
-                            </div>
+                            </DButton>
                           </dropdown.item>
                         {{/if}}
                       </DDropdownMenu>
