@@ -1086,8 +1086,12 @@ html.footer-nav-visible {
   grid-area: timeline;
   align-self: start;
   position: sticky;
+
+  // Matches the sticky offset exactly so the aside doesn't jump between
+  // its natural (scrollY=0) and pinned (scrollY>0) y-positions — the
+  // jump is what made it look like the load-previous spinner was
+  // "pushing" the timeline down.
   top: calc(var(--header-offset, 60px) + 1.5em);
-  margin-top: 4em;
   margin-left: 1em;
   width: 12em;
   z-index: 50;
@@ -1098,9 +1102,9 @@ html.footer-nav-visible {
     border: 0;
     display: block;
     font: inherit;
-    font-size: var(--font-down-2);
     color: var(--primary-med-or-secondary-med);
-    padding: 0.5em 0;
+    padding: 0;
+    margin: 0;
     white-space: nowrap;
     cursor: pointer;
     text-align: left;
@@ -1109,10 +1113,6 @@ html.footer-nav-visible {
     &:focus {
       color: var(--primary);
     }
-  }
-
-  &__endpoint--start {
-    margin-bottom: var(--space-2);
   }
 
   &__endpoint--end {
