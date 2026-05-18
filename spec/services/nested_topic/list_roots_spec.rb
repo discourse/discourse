@@ -156,6 +156,18 @@ RSpec.describe NestedTopic::ListRoots do
         ids = result[:response][:roots].map { |r| r[:id] }
         expect(ids).to include(deleted_pinned.id)
       end
+
+      it "does not count deleted pinned roots as pinned in root_summary" do
+        stub_const(NestedReplies::TreeLoader, :ROOTS_PER_PAGE, 2) do
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+
+          summary = result[:response][:root_summary]
+          expect(summary[:total]).to eq(3)
+          expect(summary[:pinned_count]).to eq(0)
+          expect(summary[:page_count]).to eq(2)
+        end
+      end
     end
 
     context "when there are pinned roots on page 1" do

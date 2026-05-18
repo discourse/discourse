@@ -108,7 +108,11 @@ export default class NestedController extends Controller {
   }
 
   @action
-  async jumpToRootPage(targetPage, targetPostNumber = null) {
+  async jumpToRootPage(
+    targetPage,
+    targetPostNumber = null,
+    targetRootOffset = 0
+  ) {
     if (this.loadingMore) {
       return;
     }
@@ -120,7 +124,7 @@ export default class NestedController extends Controller {
       const inWindow =
         targetPostNumber && this.#scrollToLoadedRoot(targetPostNumber);
       if (!inWindow) {
-        this.#scrollToLoadedRootPage(targetPage);
+        this.#scrollToLoadedRootPage(targetPage, targetRootOffset);
       }
       return;
     }
@@ -136,7 +140,10 @@ export default class NestedController extends Controller {
       );
 
       const scrollTargetPostNumber =
-        targetPostNumber ?? newNodes[0]?.post?.post_number ?? null;
+        targetPostNumber ??
+        newNodes[targetRootOffset]?.post?.post_number ??
+        newNodes[0]?.post?.post_number ??
+        null;
 
       this.rootNodes = newNodes;
       this.firstLoadedPage = data.page;
@@ -158,7 +165,7 @@ export default class NestedController extends Controller {
     }
   }
 
-  #scrollToLoadedRootPage(targetPage) {
+  #scrollToLoadedRootPage(targetPage, targetRootOffset = 0) {
     const ordered = this.nestedRootElements.elementsInOrder();
     if (ordered.length === 0) {
       return;
@@ -170,7 +177,8 @@ export default class NestedController extends Controller {
       return;
     }
 
-    let targetIndex = (targetPage - this.firstLoadedPage) * pageSize;
+    let targetIndex =
+      (targetPage - this.firstLoadedPage) * pageSize + targetRootOffset;
     if (this.firstLoadedPage === 0 && targetPage > 0) {
       const pinnedIds = new Set(this.pinnedPostIds);
       targetIndex += this.rootNodes.filter((node) =>
@@ -386,9 +394,14 @@ export default class NestedController extends Controller {
         }
       );
 
+      const wasPinned = this.pinnedPostIds.includes(post.id);
       this.pinnedPostIds = result.pinned_post_ids || [];
+      const isPinned = this.pinnedPostIds.includes(post.id);
+      if (wasPinned !== isPinned) {
+        this.#updateRootSummary({ pinnedDelta: isPinned ? 1 : -1 });
+      }
 
-      if (this.pinnedPostIds.includes(post.id)) {
+      if (isPinned) {
         // Move newly pinned post to front of rootNodes
         const idx = this.rootNodes.findIndex((n) => n.post.id === post.id);
         if (idx > 0) {
@@ -600,6 +613,7 @@ export default class NestedController extends Controller {
 
       if (isRoot) {
         if (data.user_id === this.currentUser?.id) {
+          this.#updateRootSummary({ totalDelta: 1 });
           this.rootNodes = [{ post, children: [] }, ...this.rootNodes];
         } else {
           this.newRootPostIds = [...this.newRootPostIds, data.id];
@@ -675,8 +689,10 @@ export default class NestedController extends Controller {
   }
 
   #markPostDeletedLocally(postId) {
+    let deletedPost = null;
     for (const post of this.postRegistry.values()) {
       if (post.id === postId) {
+        deletedPost = post;
         post.set("deleted_at", new Date());
         post.set("deleted_post_placeholder", true);
         if (!this.currentUser?.staff) {
@@ -684,6 +700,16 @@ export default class NestedController extends Controller {
         }
         break;
       }
+    }
+
+    if (
+      deletedPost &&
+      this.pinnedPostIds.includes(postId) &&
+      (!deletedPost.reply_to_post_number ||
+        deletedPost.reply_to_post_number === 1)
+    ) {
+      this.pinnedPostIds = this.pinnedPostIds.filter((id) => id !== postId);
+      this.#updateRootSummary({ pinnedDelta: -1 });
     }
   }
 
@@ -712,6 +738,7 @@ export default class NestedController extends Controller {
     }
 
     if (newNodes.length > 0) {
+      this.#updateRootSummary({ totalDelta: newNodes.length });
       this.rootNodes = [...newNodes, ...this.rootNodes];
     }
   }
@@ -731,6 +758,31 @@ export default class NestedController extends Controller {
 
   #processNode(nodeData) {
     return processNode(this.store, this.topic, nodeData);
+  }
+
+  #updateRootSummary({ totalDelta = 0, pinnedDelta = 0 } = {}) {
+    if (!this.rootSummary) {
+      return;
+    }
+
+    const total = Math.max(0, (this.rootSummary.total ?? 0) + totalDelta);
+    const pinnedCount = Math.max(
+      0,
+      Math.min(total, (this.rootSummary.pinned_count ?? 0) + pinnedDelta)
+    );
+    const pageSize = this.rootSummary.page_size;
+    const unpinnedTotal = Math.max(0, total - pinnedCount);
+    const pageCount =
+      total === 0 || !pageSize
+        ? 0
+        : Math.max(1, Math.ceil(unpinnedTotal / pageSize));
+
+    this.rootSummary = {
+      ...this.rootSummary,
+      total,
+      page_count: pageCount,
+      pinned_count: pinnedCount,
+    };
   }
 
   #assignSuggestedAndRelated(data) {

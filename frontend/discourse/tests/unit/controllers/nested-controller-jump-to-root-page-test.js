@@ -103,6 +103,34 @@ module("Unit | Controller | nested - jumpToRootPage", function (hooks) {
     assert.true(this.controller.hasMoreRoots);
   });
 
+  test("uses target offset when no target post is given", async function (assert) {
+    pretender.get("/n/demo-topic/42.json", () =>
+      response({
+        roots: [
+          { id: 200, post_number: 80 },
+          { id: 201, post_number: 81 },
+        ],
+        page: 5,
+        has_more_roots: false,
+      })
+    );
+
+    this.controller.setProperties({
+      topic: fakeTopic(),
+      rootNodes: [makeRootNode(5)],
+      firstLoadedPage: 0,
+      page: 0,
+      rootSummary: { page_size: 2, total: 100 },
+      sort: "top",
+    });
+    registerStubElement(this.controller, 81, 400);
+
+    await this.controller.jumpToRootPage(5, null, 1);
+    await settled();
+
+    assert.true(this.scrollSpy.called, "scrolls to the offset root");
+  });
+
   test("uses first node post_number when no target is given", async function (assert) {
     pretender.get("/n/demo-topic/42.json", () =>
       response({

@@ -46,6 +46,18 @@ module NestedReplies
       NestedReplies::Sort.apply(scope, sort)
     end
 
+    def promotable_pinned_post_ids(pinned_post_ids)
+      return [] if pinned_post_ids.blank?
+
+      apply_visibility(
+        topic
+          .posts
+          .where(id: pinned_post_ids, deleted_at: nil)
+          .where("reply_to_post_number IS NULL OR reply_to_post_number = 1")
+          .where(post_number: 2..),
+      ).pluck(:id)
+    end
+
     def promote_pinned_roots(roots, pinned_post_ids)
       return roots if pinned_post_ids.blank?
 
@@ -264,7 +276,13 @@ module NestedReplies
     def root_summary(sort, pinned_post_ids: nil)
       scope = root_posts_scope(sort)
       total = scope.count
-      unpinned_total = pinned_post_ids.present? ? scope.where.not(id: pinned_post_ids).count : total
+      unpinned_total =
+        if pinned_post_ids.present?
+          promotable_pinned_ids = promotable_pinned_post_ids(pinned_post_ids)
+          promotable_pinned_ids.present? ? scope.where.not(id: promotable_pinned_ids).count : total
+        else
+          total
+        end
       page_count = total.zero? ? 0 : [1, (unpinned_total.to_f / ROOTS_PER_PAGE).ceil].max
       pinned_count = total - unpinned_total
 

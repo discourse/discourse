@@ -164,14 +164,17 @@ export default class NestedTopicTimeline extends Component {
     // Page 0 holds pinned + first unpinned page; later pages hold only unpinned.
     const pinnedCount = this.summary?.pinned_count ?? 0;
     const targetIndex = this.indexAtProgress(progress);
+    const unpinnedTargetIndex = Math.max(0, targetIndex - pinnedCount);
     const targetPage = Math.min(
       this.pageCount - 1,
-      Math.max(0, Math.floor((targetIndex - pinnedCount) / pageSize))
+      Math.floor(unpinnedTargetIndex / pageSize)
     );
+    const targetOffset =
+      targetPage === 0 ? targetIndex : unpinnedTargetIndex % pageSize;
 
     this.latchedProgress = progress;
     try {
-      await this.args.jumpToRootPage(targetPage);
+      await this.args.jumpToRootPage(targetPage, null, targetOffset);
       await new Promise((r) =>
         requestAnimationFrame(() => requestAnimationFrame(r))
       );

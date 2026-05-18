@@ -71,6 +71,54 @@ module("Integration | Component | nested-topic-timeline", function (hooks) {
     await pointerAt(rail, "pointerdown", 0.99);
     await pointerAt(rail, "pointerup", 0.99);
 
-    assert.deepEqual(jumpToRootPage.lastCall.args, [3], "uses page_count");
+    assert.deepEqual(
+      jumpToRootPage.lastCall.args,
+      [3, null, 19],
+      "uses page_count and preserves the target offset"
+    );
+  });
+
+  test("accounts for pinned roots when committing to an exact offset", async function (assert) {
+    const jumpToRootPage = sinon.spy();
+    this.setProperties({
+      firstLoadedPage: 0,
+      jumpToRootPage,
+      loadedPostNumbers: [10],
+      summary: {
+        total: 100,
+        page_size: 20,
+        page_count: 5,
+        pinned_count: 10,
+      },
+    });
+
+    await render(
+      <template>
+        <div class="nested-view__roots">
+          {{#each this.loadedPostNumbers as |postNumber|}}
+            <div class="nested-post --depth-0">
+              <article data-post-number={{postNumber}}></article>
+            </div>
+          {{/each}}
+        </div>
+
+        <NestedTopicTimeline
+          @summary={{this.summary}}
+          @sort="top"
+          @firstLoadedPage={{this.firstLoadedPage}}
+          @jumpToRootPage={{this.jumpToRootPage}}
+        />
+      </template>
+    );
+
+    const rail = document.querySelector(".nested-topic-timeline__scrubber");
+    await pointerAt(rail, "pointerdown", 0.75);
+    await pointerAt(rail, "pointerup", 0.75);
+
+    assert.deepEqual(
+      jumpToRootPage.lastCall.args,
+      [3, null, 5],
+      "lands at the target offset within the unpinned page"
+    );
   });
 });

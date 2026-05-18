@@ -62,8 +62,7 @@ class NestedTopic::ListRoots
     # Deleted pinned roots aren't promoted; let them fall through to
     # render as [deleted] placeholders instead of vanishing.
     if pinned_post_ids.present?
-      promotable_pinned_ids =
-        topic_view.topic.posts.where(id: pinned_post_ids, deleted_at: nil).pluck(:id)
+      promotable_pinned_ids = loader.promotable_pinned_post_ids(pinned_post_ids)
       scope = scope.where.not(id: promotable_pinned_ids) if promotable_pinned_ids.present?
     end
 
