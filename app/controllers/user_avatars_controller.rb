@@ -231,8 +231,4 @@ class UserAvatarsController < ApplicationController
   def disable_proxy?
     Rails.env.test?
   end
-
-  def disable_proxy?
-    Rails.env.test?
-  end
 end
