@@ -17,7 +17,7 @@ acceptance(
       });
     });
 
-    test("Uses whisper channel for whispers via combo button menu", async function (assert) {
+    test("Uses whisper channel for whispers via actions dropdown", async function (assert) {
       await visit("/t/internationalization-localization/280");
 
       await click("#topic-footer-buttons .btn.create");
@@ -31,7 +31,7 @@ acceptance(
         "publishes reply presence when typing"
       );
 
-      await click(".d-combo-button .d-combo-button-menu");
+      await click(".composer-actions-trigger");
       await click(".composer-toggle-whisper");
 
       assert.deepEqual(

@@ -101,17 +101,13 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
       .hasValue("test replying to topic when initially replied to post");
   });
 
-  test("toggle whisper via combo button menu for whisperers", async function (assert) {
+  test("toggle whisper via actions dropdown for whisperers", async function (assert) {
     updateCurrentUser({ admin: false, moderator: false });
 
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
 
-    assert
-      .dom(".d-combo-button .d-combo-button-menu")
-      .exists("combo button menu trigger is visible");
-
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
 
     assert
       .dom(".composer-toggle-whisper")
@@ -245,11 +241,11 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     assert.strictEqual(composerActions.rows().length, 1);
   });
 
-  test("toggle no-bump via combo button menu", async function (assert) {
+  test("toggle no-bump via actions dropdown", async function (assert) {
     await visit("/t/short-topic-with-two-posts/54077");
     await click("article#post_2 button.reply");
 
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
 
     assert
       .dom(".composer-toggle-no-bump")
@@ -272,16 +268,12 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
       .exists("no-bump toggle is off after second click");
   });
 
-  test("replying to post as staff shows combo button with toggles", async function (assert) {
+  test("replying to post as staff shows whisper + no-bump toggles in dropdown", async function (assert) {
     updateCurrentUser({ admin: true });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
 
-    assert
-      .dom(".d-combo-button .d-combo-button-menu")
-      .exists("combo button menu is visible for staff");
-
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
 
     assert
       .dom(".composer-toggle-whisper")
@@ -291,7 +283,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
       .exists("no-bump toggle is visible for staff");
   });
 
-  test("replying to post as TL3 user shows no combo button", async function (assert) {
+  test("replying to post as TL3 user shows no toggles in dropdown", async function (assert) {
     updateCurrentUser({
       moderator: false,
       admin: false,
@@ -302,12 +294,17 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
 
+    await click(".composer-actions-trigger");
+
     assert
-      .dom(".d-combo-button .d-combo-button-menu")
-      .doesNotExist("combo button menu is not visible for TL3 non-whisperer");
+      .dom(".composer-toggle-whisper")
+      .doesNotExist("whisper toggle is not visible for TL3 non-whisperer");
+    assert
+      .dom(".composer-toggle-no-bump")
+      .doesNotExist("no-bump toggle is not visible for TL3 non-whisperer");
   });
 
-  test("replying to post as TL4 user shows combo button with no-bump toggle", async function (assert) {
+  test("replying to post as TL4 user shows no-bump toggle in dropdown", async function (assert) {
     updateCurrentUser({
       moderator: false,
       admin: false,
@@ -318,11 +315,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
 
-    assert
-      .dom(".d-combo-button .d-combo-button-menu")
-      .exists("combo button menu is visible for TL4");
-
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
 
     assert
       .dom(".composer-toggle-no-bump")
@@ -409,8 +402,6 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
         ".composer-actions-dropdown [data-action-id='create_private_message']"
       )
       .exists("shows create private message action");
-
-    await click(".d-combo-button .d-combo-button-menu");
 
     assert
       .dom(".composer-toggle-unlisted")

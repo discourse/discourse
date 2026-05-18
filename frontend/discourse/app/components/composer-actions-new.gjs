@@ -22,6 +22,7 @@ import {
 import Draft from "discourse/models/draft";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -378,6 +379,40 @@ export default class ComposerActions extends Component {
     });
   }
 
+  get canToggleWhisper() {
+    return (
+      this.composer.canWhisper &&
+      this.composerModel?.post?.post_type !== this.site.post_types?.whisper
+    );
+  }
+
+  get canToggleNoBump() {
+    return this.composer.canToggleNoBump;
+  }
+
+  get canUnlistTopic() {
+    return this.composer.canUnlistTopic;
+  }
+
+  get hasToggles() {
+    return this.canToggleWhisper || this.canToggleNoBump || this.canUnlistTopic;
+  }
+
+  @action
+  toggleWhisper() {
+    this.composerModel.toggleProperty("whisper");
+  }
+
+  @action
+  toggleNoBump() {
+    this.composerModel.toggleProperty("noBump");
+  }
+
+  @action
+  toggleUnlisted() {
+    this.composerModel.toggleProperty("unlistTopic");
+  }
+
   @action
   registerDmenuApi(api) {
     this.dmenuApi = api;
@@ -392,7 +427,10 @@ export default class ComposerActions extends Component {
       "draftSequence",
       "title",
       "reply",
-      "disableScopedCategory"
+      "disableScopedCategory",
+      "whisper",
+      "noBump",
+      "unlistTopic"
     );
 
     const composerAction = `${camelize(actionId)}Selected`;
@@ -429,11 +467,32 @@ export default class ComposerActions extends Component {
       ...options,
       prependText: this._continuedFromText(post, topic),
     });
+    this._reapplyToggles(options);
   }
 
-  _openComposer(options) {
+  async _openComposer(options) {
     this.composer.closeComposer();
-    this.composer.open(options);
+    await this.composer.open(options);
+    this._reapplyToggles(options);
+  }
+
+  // composer.open() / model.open() pick up `whisper` and `noBump` from opts but
+  // not `unlistTopic`, so make sure all three toggle states survive a mode
+  // switch (reply-to-topic <-> reply-to-post, etc.)
+  _reapplyToggles(options) {
+    const model = this.composer.model;
+    if (!model) {
+      return;
+    }
+    if (options.unlistTopic) {
+      model.set("unlistTopic", true);
+    }
+    if (options.whisper) {
+      model.set("whisper", true);
+    }
+    if (options.noBump) {
+      model.set("noBump", true);
+    }
   }
 
   replyAsNewTopicSelected(options) {
@@ -538,6 +597,78 @@ export default class ComposerActions extends Component {
                 No actions available
               </div>
             {{/unless}}
+
+            {{#if this.hasToggles}}
+              <div class="composer-actions-toggles">
+                {{#if this.canToggleWhisper}}
+                  <dropdown.item>
+                    <DButton
+                      class="composer-toggle-item composer-toggle-whisper --with-description"
+                      @action={{this.toggleWhisper}}
+                    >
+                      <div class="composer-toggle-item__icons">
+                        {{dIcon "far-eye-slash"}}
+                      </div>
+                      <div class="composer-toggle-item__texts">
+                        <span class="composer-toggle-item__label">{{i18n
+                            "composer.composer_actions.toggle_whisper.label"
+                          }}</span>
+                        <span class="composer-toggle-item__description">{{i18n
+                            "composer.composer_actions.toggle_whisper.desc"
+                          }}</span>
+                      </div>
+                      <DToggleSwitch @state={{this.composerModel.whisper}} />
+                    </DButton>
+                  </dropdown.item>
+                {{/if}}
+
+                {{#if this.canToggleNoBump}}
+                  <dropdown.item>
+                    <DButton
+                      class="composer-toggle-item composer-toggle-no-bump --with-description"
+                      @action={{this.toggleNoBump}}
+                    >
+                      <div class="composer-toggle-item__icons">
+                        {{dIcon "anchor"}}
+                      </div>
+                      <div class="composer-toggle-item__texts">
+                        <span class="composer-toggle-item__label">{{i18n
+                            "composer.composer_actions.toggle_topic_bump.label"
+                          }}</span>
+                        <span class="composer-toggle-item__description">{{i18n
+                            "composer.composer_actions.toggle_topic_bump.desc"
+                          }}</span>
+                      </div>
+                      <DToggleSwitch @state={{this.composerModel.noBump}} />
+                    </DButton>
+                  </dropdown.item>
+                {{/if}}
+
+                {{#if this.canUnlistTopic}}
+                  <dropdown.item>
+                    <DButton
+                      class="composer-toggle-item composer-toggle-unlisted --with-description"
+                      @action={{this.toggleUnlisted}}
+                    >
+                      <div class="composer-toggle-item__icons">
+                        {{dIcon "far-eye-slash"}}
+                      </div>
+                      <div class="composer-toggle-item__texts">
+                        <span class="composer-toggle-item__label">{{i18n
+                            "composer.composer_actions.toggle_unlisted.label"
+                          }}</span>
+                        <span class="composer-toggle-item__description">{{i18n
+                            "composer.composer_actions.toggle_unlisted.desc"
+                          }}</span>
+                      </div>
+                      <DToggleSwitch
+                        @state={{this.composerModel.unlistTopic}}
+                      />
+                    </DButton>
+                  </dropdown.item>
+                {{/if}}
+              </div>
+            {{/if}}
           </DDropdownMenu>
         </:content>
       </DMenu>

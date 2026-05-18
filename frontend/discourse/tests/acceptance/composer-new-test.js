@@ -63,7 +63,7 @@ acceptance(`Composer (new composer actions)`, function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post[data-post-number='1'] button.reply");
 
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
 
     assert
       .dom(".composer-toggle-whisper")
@@ -129,7 +129,7 @@ acceptance(`Composer (new composer actions)`, function (needs) {
     await visit("/t/this-is-a-test-topic/54081");
     await click(".topic-post[data-post-number='1'] button.reply");
 
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
     await click(".composer-toggle-whisper");
 
     assert
@@ -137,7 +137,7 @@ acceptance(`Composer (new composer actions)`, function (needs) {
         ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='true']"
       )
       .exists("sets the post type to whisper");
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
 
     await visit("/");
     assert.dom("#create-topic").exists("the create topic button is visible");
@@ -147,7 +147,7 @@ acceptance(`Composer (new composer actions)`, function (needs) {
       .dom(".reply-details .whisper .d-icon-far-eye-slash")
       .doesNotExist("should reset the state of the composer's model");
 
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
     await click(".composer-toggle-unlisted");
 
     assert
@@ -168,16 +168,16 @@ acceptance(`Composer (new composer actions)`, function (needs) {
     await visit("/t/topic-with-whisper/960");
 
     await click(".topic-post[data-post-number='3'] button.reply");
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
     assert
       .dom(".composer-toggle-whisper")
       .doesNotExist("whisper toggle is not available when reply to whisper");
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
 
     await click(".composer-actions-trigger");
     await click("[data-action-id='reply_to_topic']");
 
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
     assert
       .dom(".composer-toggle-whisper")
       .exists("whisper toggle is available when reply to topic");
@@ -190,7 +190,7 @@ acceptance(`Composer (new composer actions)`, function (needs) {
     await click("#reply-control .discard-button");
     await click(".timeline-footer-controls button.create");
 
-    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-actions-trigger");
     assert
       .dom(".composer-toggle-whisper")
       .exists("whisper toggle is available when reply to topic");

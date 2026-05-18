@@ -21,9 +21,6 @@ import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
-import { applyValueTransformer } from "discourse/lib/transformer";
-import { translateModKey } from "discourse/lib/utilities";
-import { SAVE_LABELS } from "discourse/models/composer";
 import PostLocalization from "discourse/models/post-localization";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
@@ -31,11 +28,8 @@ import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-b
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { and, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import DComboButton from "discourse/ui-kit/d-combo-button";
-import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
 import DTextField from "discourse/ui-kit/d-text-field";
-import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -100,42 +94,6 @@ export default class ComposerContainer extends Component {
         originalTitle: "",
       });
     }
-  }
-
-  get canToggleWhisper() {
-    return (
-      this.composer.canWhisper &&
-      this.composer.model?.post?.post_type !== this.site.post_types?.whisper
-    );
-  }
-
-  get saveButtonLabel() {
-    let label = this.composer.saveLabel;
-    // Keep the default action label when whisper is active — the icon
-    // already indicates whisper mode, so the label doesn't need to change
-    if (label === "composer.create_whisper") {
-      label = SAVE_LABELS[this.composer.model?.action] ?? label;
-    }
-    return applyValueTransformer("composer-save-button-label", label);
-  }
-
-  get saveButtonTitle() {
-    return i18n("composer.title", { modifier: translateModKey("Meta+") });
-  }
-
-  @action
-  toggleWhisper() {
-    this.composer.model.toggleProperty("whisper");
-  }
-
-  @action
-  toggleNoBump() {
-    this.composer.model.toggleProperty("noBump");
-  }
-
-  @action
-  toggleUnlisted() {
-    this.composer.model.toggleProperty("unlistTopic");
   }
 
   @bind
@@ -278,11 +236,6 @@ export default class ComposerContainer extends Component {
                         <span class="unlist">({{i18n "composer.unlist"}})</span>
                       {{/if}}
                     {{/unless}}
-                    {{#if this.composer.isWhispering}}
-                      {{#if this.composer.model.noBump}}
-                        <span class="no-bump">{{dIcon "anchor"}}</span>
-                      {{/if}}
-                    {{/if}}
                   {{/if}}
 
                   {{#if this.composer.canEdit}}
@@ -453,127 +406,13 @@ export default class ComposerContainer extends Component {
               </span>
 
               <div class="save-or-cancel">
-                {{#if
-                  (and
-                    this.siteSettings.enable_new_composer_actions
-                    (or
-                      this.canToggleWhisper
-                      this.composer.canToggleNoBump
-                      this.composer.canUnlistTopic
-                    )
-                  )
-                }}
-                  <DComboButton class="--has-menu" as |combo|>
-                    <combo.Button
-                      @action={{this.composer.saveAction}}
-                      @icon={{this.composer.saveIcon}}
-                      @label={{this.saveButtonLabel}}
-                      @translatedTitle={{this.saveButtonTitle}}
-                      @forwardEvent={{true}}
-                      class={{dConcatClass
-                        "btn-primary create"
-                        (if this.composer.disableSubmit "disabled")
-                      }}
-                      aria-keyshortcuts={{translateModKey "Meta+Enter" "+"}}
-                    />
-
-                    <combo.Menu
-                      @identifier="composer-toggles-menu"
-                      @modalForMobile={{true}}
-                      class="btn-primary composer-toggles-menu-trigger"
-                    >
-                      <DDropdownMenu as |dropdown|>
-                        {{#if this.canToggleWhisper}}
-                          <dropdown.item>
-
-                            <DButton
-                              class="composer-toggle-item composer-toggle-whisper --with-description"
-                              @action={{this.toggleWhisper}}
-                            >
-                              <div class="composer-toggle-item__icons">
-                                {{dIcon "far-eye-slash"}}
-                              </div>
-                              <div class="composer-toggle-item__texts">
-                                <span class="composer-toggle-item__label">{{i18n
-                                    "composer.composer_actions.toggle_whisper.label"
-                                  }}</span>
-                                <span
-                                  class="composer-toggle-item__description"
-                                >{{i18n
-                                    "composer.composer_actions.toggle_whisper.desc"
-                                  }}</span>
-                              </div>
-                              <DToggleSwitch
-                                @state={{this.composer.model.whisper}}
-                              />
-                            </DButton>
-                          </dropdown.item>
-                        {{/if}}
-
-                        {{#if this.composer.canToggleNoBump}}
-                          <dropdown.item>
-                            <DButton
-                              class="composer-toggle-item composer-toggle-no-bump --with-description"
-                              @action={{this.toggleNoBump}}
-                            >
-                              <div class="composer-toggle-item__icons">
-                                {{dIcon "anchor"}}
-                              </div>
-                              <div class="composer-toggle-item__texts">
-                                <span class="composer-toggle-item__label">{{i18n
-                                    "composer.composer_actions.toggle_topic_bump.label"
-                                  }}</span>
-                                <span
-                                  class="composer-toggle-item__description"
-                                >{{i18n
-                                    "composer.composer_actions.toggle_topic_bump.desc"
-                                  }}</span>
-                              </div>
-                              <DToggleSwitch
-                                @state={{this.composer.model.noBump}}
-                              />
-                            </DButton>
-                          </dropdown.item>
-                        {{/if}}
-
-                        {{#if this.composer.canUnlistTopic}}
-                          <dropdown.item>
-
-                            <DButton
-                              class="composer-toggle-item composer-toggle-unlisted --with-description"
-                              @action={{this.toggleUnlisted}}
-                            >
-                              <div class="composer-toggle-item__icons">
-                                {{dIcon "far-eye-slash"}}
-                              </div>
-                              <div class="composer-toggle-item__texts">
-                                <span class="composer-toggle-item__label">{{i18n
-                                    "composer.composer_actions.toggle_unlisted.label"
-                                  }}</span>
-                                <span
-                                  class="composer-toggle-item__description"
-                                >{{i18n
-                                    "composer.composer_actions.toggle_unlisted.desc"
-                                  }}</span>
-                              </div>
-                              <DToggleSwitch
-                                @state={{this.composer.model.unlistTopic}}
-                              />
-                            </DButton>
-                          </dropdown.item>
-                        {{/if}}
-                      </DDropdownMenu>
-                    </combo.Menu>
-                  </DComboButton>
-                {{else}}
-                  <ComposerSaveButton
-                    @action={{this.composer.saveAction}}
-                    @icon={{this.composer.saveIcon}}
-                    @label={{this.composer.saveLabel}}
-                    @forwardEvent={{true}}
-                    @disableSubmit={{this.composer.disableSubmit}}
-                  />
-                {{/if}}
+                <ComposerSaveButton
+                  @action={{this.composer.saveAction}}
+                  @icon={{this.composer.saveIcon}}
+                  @label={{this.composer.saveLabel}}
+                  @forwardEvent={{true}}
+                  @disableSubmit={{this.composer.disableSubmit}}
+                />
 
                 {{#unless this.site.mobileView}}
                   <DButton
