@@ -190,6 +190,17 @@ describe DiscourseReactions::CustomReactionsController do
       expect(parsed[0]["reaction"]["id"]).to eq(laughing_reaction.id)
     end
 
+    it "does not expose post author names when names are disabled" do
+      SiteSetting.enable_names = false
+      sign_in(user_1)
+
+      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+      expect(response.status).to eq(200)
+
+      post = response.parsed_body.find { |reaction| reaction["post_id"] == post_2.id }["post"]
+      expect(post).not_to have_key("name")
+    end
+
     it "does not return reactions for private messages" do
       sign_in(user_1)
 
