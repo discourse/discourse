@@ -32,6 +32,10 @@ module PageObjects
       def has_choices?(*choices)
         expect(body.all(".flag-action-type-details strong").map(&:text)).to eq(choices)
       end
+
+      def has_no_choice?(choice)
+        body.has_no_css?(".flag-action-type-details strong", text: choice)
+      end
     end
   end
 end

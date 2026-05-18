@@ -772,6 +772,7 @@ export default class Post extends RestModel {
     if (json && json.id === this.id) {
       json = Post.munge(json);
       this.set("actions_summary", json.actions_summary);
+      this.set("actionByName", json.actionByName);
     }
   }
 

@@ -82,6 +82,16 @@ describe "Flagging post" do
   end
 
   describe "As send a message to user" do
+    fab!(:custom_notify_flag, :flag) do
+      Fabricate(
+        :flag,
+        name: "Needs review",
+        description: "Custom moderator flag",
+        notify_type: true,
+        require_message: true,
+      )
+    end
+
     before do
       SiteSetting.allow_user_locale = true
       current_user.update!(locale: "en_GB")
@@ -99,6 +109,18 @@ describe "Flagging post" do
       flag_modal.confirm_flag
 
       expect(page).to have_content(I18n.t("js.post.actions.by_you.notify_user"))
+
+      topic_page.expand_post_actions(first_post)
+      topic_page.click_post_action_button(first_post, :flag)
+      flag_modal.choose_type(custom_notify_flag.name_key)
+
+      flag_modal.fill_message("This needs moderator attention.")
+
+      flag_modal.confirm_flag
+
+      topic_page.click_post_action_button(first_post, :flag)
+
+      expect(flag_modal).to have_no_choice("Notify moderators")
     end
   end
 

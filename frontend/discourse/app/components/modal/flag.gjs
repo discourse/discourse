@@ -128,7 +128,9 @@ export default class Flag extends Component {
   }
 
   get notifyModeratorsFlag() {
-    return this.flagsAvailable.find((f) => f.id === NOTIFY_MODERATORS_KEY);
+    return this.flagsAvailable.find(
+      (flag) => flag.name_key === NOTIFY_MODERATORS_KEY
+    );
   }
 
   get canTakeAction() {
