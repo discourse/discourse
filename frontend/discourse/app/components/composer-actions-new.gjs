@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action, get } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -22,6 +23,7 @@ import {
 import Draft from "discourse/models/draft";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DTextField from "discourse/ui-kit/d-text-field";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -131,6 +133,7 @@ export default class ComposerActions extends Component {
     if (this.composerModel) {
       get(this.composerModel, "tags");
       get(this.composerModel, "category");
+      get(this.composerModel, "whisper");
     }
 
     let iconName;
@@ -144,6 +147,8 @@ export default class ComposerActions extends Component {
       iconName = "hourglass-start";
     } else if (isEditing) {
       iconName = "pencil";
+    } else if (currentAction === REPLY && this.composerModel?.whisper) {
+      iconName = "far-eye-slash";
     } else {
       iconName = "share";
     }
@@ -398,6 +403,10 @@ export default class ComposerActions extends Component {
     return this.canToggleWhisper || this.canToggleNoBump || this.canUnlistTopic;
   }
 
+  get hasMenuContent() {
+    return this.templateData.hasActions || this.hasToggles;
+  }
+
   @action
   toggleWhisper() {
     this.composerModel.toggleProperty("whisper");
@@ -416,6 +425,14 @@ export default class ComposerActions extends Component {
   @action
   registerDmenuApi(api) {
     this.dmenuApi = api;
+  }
+
+  @action
+  handleEditReasonClick() {
+    this.composer.displayEditReason();
+    schedule("afterRender", () => {
+      document.getElementById("edit-reason")?.focus();
+    });
   }
 
   @action
@@ -552,126 +569,150 @@ export default class ComposerActions extends Component {
 
   <template>
     {{#let this.templateData as |data|}}
+      {{#if this.hasMenuContent}}
+        <DMenu
+          @label={{data.label}}
+          @icon={{data.icon}}
+          @modalForMobile={{true}}
+          @closeOnClickOutside={{true}}
+          @closeOnEscape={{true}}
+          @onRegisterApi={{this.registerDmenuApi}}
+          @triggerClass="composer-actions-trigger btn-flat btn-icon-text"
+          @contentClass="composer-actions-dropdown"
+          class="composer-actions-new"
+        >
+          <:trigger>
+            {{dIcon "angle-down" class="composer-actions-caret"}}
+          </:trigger>
 
-      <DMenu
-        @label={{data.label}}
-        @icon={{data.icon}}
-        @modalForMobile={{true}}
-        @closeOnClickOutside={{true}}
-        @closeOnEscape={{true}}
-        @onRegisterApi={{this.registerDmenuApi}}
-        @triggerClass="composer-actions-trigger btn-flat btn-icon-text"
-        @contentClass="composer-actions-dropdown"
-        class="composer-actions-new"
-      >
-        <:trigger>
-          {{dIcon "angle-down" class="composer-actions-caret"}}
-        </:trigger>
+          <:content>
+            <DDropdownMenu as |dropdown|>
+              {{#each data.actions as |availAction|}}
+                <dropdown.item>
+                  <DButton
+                    class="composer-actions-btn
+                      {{if availAction.description '--with-description'}}"
+                    @action={{fn this.onSelectAction availAction.id}}
+                    data-action-id={{availAction.id}}
+                  >
+                    <div class="composer-actions-btn__icons">
+                      {{dIcon availAction.icon}}
+                    </div>
+                    <div class="composer-actions-btn__texts">
+                      <span class="composer-actions-btn__label">
+                        {{availAction.name}}
+                      </span>
+                      <span class="composer-actions-btn__description">
+                        {{availAction.description}}
+                      </span>
+                    </div>
+                  </DButton>
+                </dropdown.item>
+              {{/each}}
+              {{#unless data.actions.length}}
+                <div class="composer-actions-btn">
+                  No actions available
+                </div>
+              {{/unless}}
 
-        <:content>
-          <DDropdownMenu as |dropdown|>
-            {{#each data.actions as |availAction|}}
-              <dropdown.item>
-                <DButton
-                  class="composer-actions-btn
-                    {{if availAction.description '--with-description'}}"
-                  @action={{fn this.onSelectAction availAction.id}}
-                  data-action-id={{availAction.id}}
-                >
-                  <div class="composer-actions-btn__icons">
-                    {{dIcon availAction.icon}}
-                  </div>
-                  <div class="composer-actions-btn__texts">
-                    <span class="composer-actions-btn__label">
-                      {{availAction.name}}
-                    </span>
-                    <span class="composer-actions-btn__description">
-                      {{availAction.description}}
-                    </span>
-                  </div>
-                </DButton>
-              </dropdown.item>
-            {{/each}}
-            {{#unless data.actions.length}}
-              <div class="composer-actions-btn">
-                No actions available
-              </div>
-            {{/unless}}
+              {{#if this.hasToggles}}
+                <div class="composer-actions-toggles">
+                  {{#if this.canToggleWhisper}}
+                    <dropdown.item>
+                      <DButton
+                        class="composer-toggle-item composer-toggle-whisper --with-description"
+                        @action={{this.toggleWhisper}}
+                      >
+                        <div class="composer-toggle-item__icons">
+                          {{dIcon "far-eye-slash"}}
+                        </div>
+                        <div class="composer-toggle-item__texts">
+                          <span class="composer-toggle-item__label">{{i18n
+                              "composer.composer_actions.toggle_whisper.label"
+                            }}</span>
+                          <span class="composer-toggle-item__description">{{i18n
+                              "composer.composer_actions.toggle_whisper.desc"
+                            }}</span>
+                        </div>
+                        <DToggleSwitch @state={{this.composerModel.whisper}} />
+                      </DButton>
+                    </dropdown.item>
+                  {{/if}}
 
-            {{#if this.hasToggles}}
-              <div class="composer-actions-toggles">
-                {{#if this.canToggleWhisper}}
-                  <dropdown.item>
-                    <DButton
-                      class="composer-toggle-item composer-toggle-whisper --with-description"
-                      @action={{this.toggleWhisper}}
-                    >
-                      <div class="composer-toggle-item__icons">
-                        {{dIcon "far-eye-slash"}}
-                      </div>
-                      <div class="composer-toggle-item__texts">
-                        <span class="composer-toggle-item__label">{{i18n
-                            "composer.composer_actions.toggle_whisper.label"
-                          }}</span>
-                        <span class="composer-toggle-item__description">{{i18n
-                            "composer.composer_actions.toggle_whisper.desc"
-                          }}</span>
-                      </div>
-                      <DToggleSwitch @state={{this.composerModel.whisper}} />
-                    </DButton>
-                  </dropdown.item>
-                {{/if}}
+                  {{#if this.canToggleNoBump}}
+                    <dropdown.item>
+                      <DButton
+                        class="composer-toggle-item composer-toggle-no-bump --with-description"
+                        @action={{this.toggleNoBump}}
+                      >
+                        <div class="composer-toggle-item__icons">
+                          {{dIcon "anchor"}}
+                        </div>
+                        <div class="composer-toggle-item__texts">
+                          <span class="composer-toggle-item__label">{{i18n
+                              "composer.composer_actions.toggle_topic_bump.label"
+                            }}</span>
+                          <span class="composer-toggle-item__description">{{i18n
+                              "composer.composer_actions.toggle_topic_bump.desc"
+                            }}</span>
+                        </div>
+                        <DToggleSwitch @state={{this.composerModel.noBump}} />
+                      </DButton>
+                    </dropdown.item>
+                  {{/if}}
 
-                {{#if this.canToggleNoBump}}
-                  <dropdown.item>
-                    <DButton
-                      class="composer-toggle-item composer-toggle-no-bump --with-description"
-                      @action={{this.toggleNoBump}}
-                    >
-                      <div class="composer-toggle-item__icons">
-                        {{dIcon "anchor"}}
-                      </div>
-                      <div class="composer-toggle-item__texts">
-                        <span class="composer-toggle-item__label">{{i18n
-                            "composer.composer_actions.toggle_topic_bump.label"
-                          }}</span>
-                        <span class="composer-toggle-item__description">{{i18n
-                            "composer.composer_actions.toggle_topic_bump.desc"
-                          }}</span>
-                      </div>
-                      <DToggleSwitch @state={{this.composerModel.noBump}} />
-                    </DButton>
-                  </dropdown.item>
-                {{/if}}
-
-                {{#if this.canUnlistTopic}}
-                  <dropdown.item>
-                    <DButton
-                      class="composer-toggle-item composer-toggle-unlisted --with-description"
-                      @action={{this.toggleUnlisted}}
-                    >
-                      <div class="composer-toggle-item__icons">
-                        {{dIcon "far-eye-slash"}}
-                      </div>
-                      <div class="composer-toggle-item__texts">
-                        <span class="composer-toggle-item__label">{{i18n
-                            "composer.composer_actions.toggle_unlisted.label"
-                          }}</span>
-                        <span class="composer-toggle-item__description">{{i18n
-                            "composer.composer_actions.toggle_unlisted.desc"
-                          }}</span>
-                      </div>
-                      <DToggleSwitch
-                        @state={{this.composerModel.unlistTopic}}
-                      />
-                    </DButton>
-                  </dropdown.item>
-                {{/if}}
-              </div>
-            {{/if}}
-          </DDropdownMenu>
-        </:content>
-      </DMenu>
+                  {{#if this.canUnlistTopic}}
+                    <dropdown.item>
+                      <DButton
+                        class="composer-toggle-item composer-toggle-unlisted --with-description"
+                        @action={{this.toggleUnlisted}}
+                      >
+                        <div class="composer-toggle-item__icons">
+                          {{dIcon "far-eye-slash"}}
+                        </div>
+                        <div class="composer-toggle-item__texts">
+                          <span class="composer-toggle-item__label">{{i18n
+                              "composer.composer_actions.toggle_unlisted.label"
+                            }}</span>
+                          <span class="composer-toggle-item__description">{{i18n
+                              "composer.composer_actions.toggle_unlisted.desc"
+                            }}</span>
+                        </div>
+                        <DToggleSwitch
+                          @state={{this.composerModel.unlistTopic}}
+                        />
+                      </DButton>
+                    </dropdown.item>
+                  {{/if}}
+                </div>
+              {{/if}}
+            </DDropdownMenu>
+          </:content>
+        </DMenu>
+      {{else if this.composer.showEditReason}}
+        <span
+          class="composer-actions-trigger composer-actions-trigger--static composer-actions-trigger--editing"
+        >
+          <DTextField
+            @value={{this.composer.editReason}}
+            @id="edit-reason"
+            @maxlength="255"
+            @placeholderKey="composer.edit_reason_placeholder"
+          />
+        </span>
+      {{else if this.composer.canEdit}}
+        <DButton
+          @action={{this.handleEditReasonClick}}
+          @icon={{data.icon}}
+          @label="composer.describe_your_edit"
+          class="composer-actions-trigger composer-actions-trigger--static btn-flat btn-icon-text"
+        />
+      {{else}}
+        <span class="composer-actions-trigger composer-actions-trigger--static">
+          {{dIcon data.icon}}
+          <span class="d-button-label">{{data.label}}</span>
+        </span>
+      {{/if}}
     {{/let}}
   </template>
 }
