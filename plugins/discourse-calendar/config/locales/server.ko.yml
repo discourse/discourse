@@ -14,6 +14,12 @@ ko:
       event_started:
         title: 이벤트 시작됨
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "일"
+        week: "주"
+        month: "월"
+        year: "년"
     invite_user_notification: "%{username}님이 사용자님을 초대했습니다: %{description}"
   discourse_post_event:
     errors:

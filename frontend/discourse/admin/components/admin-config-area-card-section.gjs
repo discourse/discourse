@@ -31,6 +31,7 @@ export default class AdminConfigAreaCardSection extends Component {
         role="button"
         {{on "click" this.toggleSectionDisplay}}
       >
+        {{! eslint-disable-next-line ember/template-no-heading-inside-button }}
         <h4 class="admin-config-area-card-section__title">{{@heading}}</h4>
         {{#if @collapsable}}
           {{dIcon this.headerCaretIcon}}

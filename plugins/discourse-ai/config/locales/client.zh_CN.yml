@@ -1156,6 +1156,7 @@ zh_CN:
           min_input_length_message:
             other: "消息必须为 %{count} 个字符或更长"
           messages_sidebar_title: "对话"
+          starred: "收藏"
           today: "今天"
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"

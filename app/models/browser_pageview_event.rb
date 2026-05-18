@@ -6,6 +6,8 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_REFERRER_LENGTH = 2000
   MAX_USER_AGENT_LENGTH = 1000
 
+  has_one :browser_pageview_event_score, foreign_key: :event_id, dependent: :delete
+
   before_save :truncate_fields
 
   private
@@ -23,9 +25,11 @@ end
 # Table name: browser_pageview_events
 #
 #  id           :bigint           not null, primary key
+#  asn          :integer
 #  country_code :string(2)
 #  ip_address   :inet             not null
 #  referrer     :string(2000)
+#  score        :integer
 #  url          :string(2000)     not null
 #  user_agent   :string(1000)     not null
 #  created_at   :datetime         not null
@@ -35,6 +39,8 @@ end
 #
 # Indexes
 #
+#  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
+#  idx_bpe_session_created_at                   (session_id,created_at)
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
 #  index_browser_pageview_events_on_topic_id    (topic_id)
 #  index_browser_pageview_events_on_user_id     (user_id)

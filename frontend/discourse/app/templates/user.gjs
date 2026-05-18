@@ -256,7 +256,7 @@ export default <template>
                     {{@controller.model.location}}</div>{{/if}}
                 {{#if @controller.model.website_name}}
                   <div class="user-profile-website">
-                    {{! template-lint-disable link-rel-noopener }}
+                    {{! eslint-disable ember/template-link-rel-noopener }}
                     {{dIcon "globe"~}}
                     {{#if @controller.linkWebsite~}}
                       <a
@@ -272,7 +272,7 @@ export default <template>
                         title={{@controller.model.website}}
                       >{{@controller.model.website_name}}</span>
                     {{/if}}
-                    {{! template-lint-enable link-rel-noopener }}
+                    {{! eslint-enable ember/template-link-rel-noopener }}
                   </div>
                 {{/if}}
                 <span>

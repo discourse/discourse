@@ -1,6 +1,13 @@
-import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -317,5 +324,102 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
           "composer shows create message title"
         );
     });
+  });
+});
+
+acceptance("Keyboard Shortcuts Help Modal - Search", function () {
+  async function openHelpModal() {
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
+  }
+
+  function description(key) {
+    return i18n(`keyboard_shortcuts_help.${key}`, { shortcut: "" }).trim();
+  }
+
+  test("matches sequential keys without whitespace (gh → G H)", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "gh");
+
+    assert
+      .dom(".shortcut-category-jump_to tbody")
+      .includesText(description("jump_to.home"));
+    assert
+      .dom(".shortcut-category-jump_to tbody")
+      .doesNotIncludeText(description("jump_to.latest"));
+  });
+
+  test("requires every search token to match (command /)", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "command /");
+
+    assert
+      .dom(".shortcut-category-application tbody")
+      .includesText(description("application.filter_sidebar"));
+    assert
+      .dom(".shortcut-category-application tbody")
+      .doesNotIncludeText(description("application.help"));
+  });
+
+  test("modifier aliases match regardless of glyph (ctrl)", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "ctrl");
+
+    assert
+      .dom(".shortcut-category-application tbody")
+      .includesText(description("application.search"));
+  });
+
+  test("multi-word description match", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "open keyboard help");
+
+    assert
+      .dom(".shortcut-category-application tbody")
+      .includesText(description("application.help"));
+    assert
+      .dom(".shortcut-category-jump_to")
+      .doesNotExist("unrelated categories are filtered out");
+  });
+
+  test("alternative key groups don't merge for compact match", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "kj");
+
+    // navigation.up_down is K or J, not K then J. "kj" must not
+    // match it just because both letters appear across the alternative groups.
+    assert
+      .dom(".shortcut-category-navigation")
+      .doesNotExist(
+        "alternative key groups don't false-match the merged compact form"
+      );
+  });
+
+  test("alternative key groups don't satisfy tokens across alternatives", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "ctrl /");
+
+    // application.search has alternatives "/" or Ctrl+Alt+F. "ctrl /" must not
+    // match because "ctrl" lives in one alternative and "/" in the other.
+    assert
+      .dom(".shortcut-category-application tbody")
+      .doesNotIncludeText(description("application.search"));
+  });
+
+  test("plugin-registered shortcut with raw 'esc' key matches escape alias", async function (assert) {
+    withPluginApi((api) => {
+      api.addKeyboardShortcut("shift+esc", () => {}, {
+        help: {
+          category: "esc_test",
+          name: "esc_test.bail",
+          definition: { keys1: ["shift", "esc"] },
+        },
+      });
+    });
+
+    await openHelpModal();
+    await fillIn(".filter-input", "escape");
+
+    assert.dom(".shortcut-category-esc_test tbody tr").exists({ count: 1 });
   });
 });

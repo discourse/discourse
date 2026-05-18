@@ -104,6 +104,10 @@ class PostRevisionSerializer < ApplicationSerializer
     user.name
   end
 
+  def include_acting_user_name?
+    SiteSetting.enable_names?
+  end
+
   def avatar_template
     user.avatar_template
   end

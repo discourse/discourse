@@ -234,6 +234,7 @@ hu:
         share_modal:
           copy: "Másolás"
         conversations:
+          starred: "Csillagozott"
           today: "Ma"
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"

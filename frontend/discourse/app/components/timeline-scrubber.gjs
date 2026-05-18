@@ -148,7 +148,7 @@ export default class TimelineScrubber extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <div
       role="slider"
       tabindex="0"

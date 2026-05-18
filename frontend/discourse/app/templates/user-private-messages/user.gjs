@@ -1,5 +1,7 @@
 import { trustHTML } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DNavigationItem from "discourse/ui-kit/d-navigation-item";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -59,6 +61,13 @@ export default <template>
       <span>{{i18n "user.messages.archive"}}</span>
     </DNavigationItem>
 
+    <PluginOutlet
+      @name="user-messages-nav-bottom"
+      @outletArgs={{lazyHash
+        viewingSelf=@controller.viewingSelf
+        model=@controller.model
+      }}
+    />
   </MessagesSecondaryNav>
 
   {{outlet}}

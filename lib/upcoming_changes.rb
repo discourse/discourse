@@ -22,6 +22,10 @@ module UpcomingChanges
 
       true
     end
+
+    def self.should_display_enable_horizon_high_context_topic_cards?
+      Themes::Action::HorizonHighContextTopicCardsToggled.should_display_upcoming_change?
+    end
   end
 
   def self.user_enabled_reasons

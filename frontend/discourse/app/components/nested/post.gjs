@@ -412,7 +412,7 @@ export default class NestedPost extends Component {
             >
               {{#if this.expanded}}
                 <span class="nested-post__depth-line-icon">
-                  {{dIcon "nested-circle-minus"}}
+                  {{dIcon "discourse-circle-minus"}}
                 </span>
               {{/if}}
             </button>
@@ -426,7 +426,7 @@ export default class NestedPost extends Component {
               data-post-number={{@post.post_number}}
               {{on "click" this.toggleExpanded}}
             >
-              {{dIcon "nested-circle-plus"}}
+              {{dIcon "discourse-circle-plus"}}
               {{#if this.isDeletedPlaceholder}}
                 <span class="nested-post__collapsed-username">{{i18n
                     "nested_replies.deleted_post_placeholder"

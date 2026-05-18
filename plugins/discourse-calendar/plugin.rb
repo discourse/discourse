@@ -84,6 +84,7 @@ Dir
 
 after_initialize do
   reloadable_patch do
+    register_category_type(DiscourseCalendar::Categories::Types::Events)
     Category.register_custom_field_type("sort_topics_by_event_start_date", :boolean)
     Category.register_custom_field_type("disable_topic_resorting", :boolean)
     register_preloaded_category_custom_fields("sort_topics_by_event_start_date")
