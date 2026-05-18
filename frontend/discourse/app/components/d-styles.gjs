@@ -105,7 +105,7 @@ export default class DStyles extends Component {
         (if this.site.mobileView "mobile-device" "not-mobile-device")
       }}
     {{/if}}
-    {{! template-lint-disable no-forbidden-elements }}
+    {{! eslint-disable ember/template-no-forbidden-elements }}
     <style id="d-styles">
       {{#if this.site.categories}}
         {{this.categoryColors}}

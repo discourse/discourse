@@ -377,7 +377,6 @@ hu:
       <p>Ha nem <a href="%{base_url}/password-reset">állítsa helyre a jelszavát</a>.</p>
     not_found_template_link: |
       <p>Ez a(z) <a href="%{base_url}">%{site_name}</a> meghívó már nem váltható be. Kérje meg az Ön meghívó személyt, hogy küldjön egy új meghívót.</p>
-    existing_user_cannot_redeem: "Ez a meghívó nem váltható be. Kérje meg az Önt meghívó személyt, hogy küldjön új meghívót."
     existing_user_already_redemeed: "Már beváltotta ezt a meghívólinket."
     user_exists: "Nem kell meghívni <b>%{email}</b>, már van fiókja!"
     invite_exists: "Már meghívtad: <b>%{email}</b>."
@@ -1740,7 +1739,6 @@ hu:
     x_summary_large_image: "Twitter kártya 'summary large image' (legalább 280 pixel széles és legalább 150 pixel magas legyen, nem lehet .svg formátumú). Ha üresen hagyja, a normál kártya metaadatai az opengraph_image alapján lesznek generálva, amennyiben az sem .svg formátumú."
     notification_email: "A feladó e-mail címe, amelyet az összes lényeges rendszerüzenet küldésekor használ a rendszer. Az itt megadott domainhez helyesen beállított SPF, DKIM és fordított PTR rekordokkal kell rendelkeznie ahhoz, hogy az e-mailek megérkezzenek."
     email_custom_headers: "Egyéni e-mail fejlécek listája"
-    email_subject: "Testreszabható tárgyformátum a szabványos e-mailekhez. Lásd <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Részletesebb tájékoztatást nyújt a felhasználóknak arról, hogy miért nem férhetnek hozzá egy adott témához. Megjegyzés: Ez kevésbé biztonságos, mert a felhasználók tudni fogják, ha egy URL érvényes témára mutat."
     enforce_second_factor: "A felhasználóknak engedélyezniük kell a kétfaktoros hitelesítést (2FA), mielőtt hozzáférhetnének a Discourse felhasználói felületéhez. Ez a beállítás nem befolyásolja az API vagy a „DiscourseConnect szolgáltató” hitelesítését. Ha az enforce_second_factor_on_external_auth engedélyezve van, a felhasználók a 2FA beállítása után nem tudnak majd bejelentkezni külső hitelesítési szolgáltatókkal."
     enforce_second_factor_on_external_auth: "A kétlépcsős azonosítás (2FA) folyamatos használatának megkövetelése. Ha engedélyezi, ez megakadályozza, hogy a felhasználók külső azonosítási módszerekkel (például közösségi bejelentkezéssel) lépjenek be, amennyiben aktiválva van náluk a 2FA. Ha ki van kapcsolva, a felhasználóknak csak akkor kell megerősíteniük a kétlépcsős azonosítást, ha felhasználónévvel és jelszóval jelentkeznek be. Lásd még az enforce_second_factor beállítást."
@@ -1911,7 +1909,6 @@ hu:
     google_oauth2_client_secret: "A Google-alkalmazás titkos kliens kódja."
     google_oauth2_prompt: "Egy opcionális szóközzel elválasztott karakterlánc-értékek listája, amely meghatározza, hogy az autorizációs szerver kér-e újrahitelesítést és hozzájárulást a felhasználótól. A lehetséges értékeket lásd itt: <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>."
     google_oauth2_hd: "Egy opcionális Google Apps által hosztolt domain, amelyre a bejelentkezés korlátozva lesz. További részletek: <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
-    google_oauth2_hd_groups: "A felhasználók Google-csoportjainak lekérése a hosztolt domainen hitelesítéskor. A lekért Google-csoportok felhasználhatók automatikus Discourse csoporttagság megadására (lásd csoportbeállítások). További információért: https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Egy Google Workspace adminisztrátori fiókhoz tartozó e-mail cím. A szolgáltatásfiók hitelesítő adataival együtt használva a csoportinformációk lekérésére szolgál."
     google_oauth2_hd_groups_service_account_json: "JSON formátumú kulcsinformáció a szolgáltatásfiókhoz. Csoportinformációk lekérésére lesz használva."
     google_oauth2_verbose_logging: "A Google OAuth2-vel kapcsolatos részletes diagnosztika naplózása a <a href='%{base_path}/logs' target='_blank'>/logs</a> fájlba"
@@ -1941,7 +1938,6 @@ hu:
     s3_configure_tombstone_policy: "Automatikus törlési szabályzat engedélyezése a törölt feltöltésekre. FONTOS: Ha ki van kapcsolva, a feltöltések törlése után nem szabadul fel tárhely."
     s3_disable_cleanup: "Megakadályozza a régi biztonsági mentések eltávolítását az S3-ból, ha több biztonsági mentés van, mint a megengedett maximum."
     s3_use_acls: "Az AWS azt ajánlja, hogy ne használjon ACL-eket az S3 vödrökön; csak akkor törölje ezt a jelölőnégyzetet, ha a konfigurált `s3_upload_bucket` és `s3_backup_bucket` engedélyezési házirendeket kívánja konfigurálni."
-    enable_direct_s3_uploads: "Lehetővé teszi a közvetlen többrészes feltöltéseket az Amazon S3-ba, további részletekért lásd: https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469"
     backup_time_of_day: "A nap azon időpontja UTC-ben, amikor a biztonsági mentésnek meg kell történnie."
     backup_with_uploads: "Feltöltések felvétele az ütemezett biztonsági mentésekbe. Ennek kikapcsolásával csak az adatbázisról készül biztonsági mentés."
     backup_location: "A biztonsági mentések tárolási helye. FONTOS: Az S3 használatához érvényes S3 hitelesítő adatokat kell megadni a Fájlok beállításaiban. Ha ezt Helyiről S3-ra változtatja, futtatnia kell az `s3:ensure_cors_rules` rake feladatot."
@@ -2200,7 +2196,6 @@ hu:
     log_mail_processing_failures: "Minden e-mail-feldolgozási hiba naplózása ide: <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Felhasználók számára új témák létrehozásának engedélyezése e-mailen keresztül. Ennek a beállításnak az engedélyezése után konfigurálhatja a beérkező e-mail címeket a csoportokhoz és kategóriákhoz."
     email_in_allowed_groups: "Csoportok, amelyek új témákat tehetnek közzé e-mailben. Az adminisztrátorok és a moderátorok bármikor közzétehetnek új témákat e-mailben."
-    email_in_authserv_id: "A bejövő e-mailek hitelesítését végző szolgáltatás azonosítója. Ennek beállításaira vonatkozó utasításokat <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> oldalon találja."
     email_in_spam_header: "Kiválasztja a levélszemét azonosítására használt e-mail-fejlécet. Ez a lehetőség az X-Spam-Flag, az X-Spam-Status vagy az X-SES-Spam-Verdict lehet, és a fejléc értéke alapján lesz az e-mail levélszemétnek jelölve. Például, ha a kiválasztott beállítás az X-Spam-Flag, akkor egy YES fejlécértékű üzenet levélszemétként lesz osztályozva."
     enable_smtp: "Engedélyezze az SMTP-t a csoportos üzenetekhez tartozó értesítések küldéséhez."
     email_prefix: "Az e-mailek tárgyában használt [címke]. Alapértelmezés szerint a „cím” lesz, ha nincs beállítva."

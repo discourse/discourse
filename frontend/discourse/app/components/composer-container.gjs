@@ -62,32 +62,40 @@ export default class ComposerContainer extends Component {
 
   @action
   async updateSelectedTranslationLocale(locale) {
+    const { model } = this.composer;
+    const replyBefore = model.reply;
+    const titleBefore = model.title;
     this.composer.selectedTranslationLocale = locale;
 
-    let currentLocalization;
+    let localization;
     try {
-      const { post_localizations } = await PostLocalization.find(
-        this.composer.model.post.id
-      );
-      currentLocalization = post_localizations.find(
-        (localization) => localization.locale === locale
-      );
+      const { post_localizations } = await PostLocalization.find(model.post.id);
+      localization = post_localizations.find((l) => l.locale === locale);
     } catch {}
 
-    if (currentLocalization) {
-      this.composer.model.setProperties({
-        reply: currentLocalization.raw,
-        originalText: currentLocalization.raw,
+    // Bail if the user picked a different locale or typed during the fetch.
+    if (
+      this.composer.selectedTranslationLocale !== locale ||
+      model.reply !== replyBefore ||
+      model.title !== titleBefore
+    ) {
+      return;
+    }
+
+    if (localization) {
+      model.setProperties({
+        reply: localization.raw,
+        originalText: localization.raw,
       });
 
-      if (currentLocalization?.topic_localization) {
-        this.composer.model.setProperties({
-          title: currentLocalization.topic_localization.title,
-          originalTitle: currentLocalization.topic_localization.title,
+      if (localization.topic_localization) {
+        model.setProperties({
+          title: localization.topic_localization.title,
+          originalTitle: localization.topic_localization.title,
         });
       }
     } else {
-      this.composer.model.setProperties({
+      model.setProperties({
         reply: "",
         title: "",
         originalText: "",

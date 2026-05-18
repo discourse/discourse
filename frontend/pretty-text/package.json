@@ -6,7 +6,6 @@
   "license": "GPL-2.0-only",
   "scripts": {
     "build": "ember build",
-    "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
     "start": "ember serve"
   },

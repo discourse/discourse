@@ -9,3 +9,10 @@ bg:
     currently_away:
       labels:
         username: Потребителско име
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Ден"
+        week: "Седмица"
+        month: "Месец"
+        year: "Година"

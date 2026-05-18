@@ -6,6 +6,14 @@
 
 sv:
   accepted_answer: "Godkänt svar"
+  category_types:
+    support:
+      name: "Stöd"
+      title: "stöd"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Låt ämnesägare och personal markera ett svar som lösningen"
   site_settings:
     solved_enabled: "Aktivera tillägg för lösningar, låt användare välja lösningar för ämnen"
     allow_solved_on_all_topics: "Tillåt användare att välja lösningar för alla ämnen (om detta avmarkeras kan lösningar aktiveras per kategori eller tagg)"

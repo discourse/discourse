@@ -9,3 +9,9 @@ th:
     currently_away:
       labels:
         username: ชื่อผู้ใช้
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        week: "สัปดาห์"
+        month: "เดือน"
+        year: "ปี"

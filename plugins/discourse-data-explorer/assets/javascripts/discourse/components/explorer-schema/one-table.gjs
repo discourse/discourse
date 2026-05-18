@@ -21,7 +21,7 @@ export default class OneTable extends Component {
 
   <template>
     <li class="schema-table {{this.styles}}">
-      {{! template-lint-enable no-invalid-interactive }}
+
       <div
         class="schema-table-name"
         role="button"

@@ -9,6 +9,13 @@ gl:
     currently_away:
       labels:
         username: Nome de usuario
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Día"
+        week: "Semana"
+        month: "Mes"
+        year: "Ano"
   discourse_post_event:
     errors:
       bulk_invite:

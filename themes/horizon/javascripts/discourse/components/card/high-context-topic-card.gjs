@@ -153,7 +153,10 @@ export default class HighContextTopicCard extends Component {
         </div>
         <div class="hc-topic-card__status-tags">
           {{#if this.hasSolved}}
-            <span class="hc-topic-card__status --solved">
+            <span
+              class="hc-topic-card__status --solved"
+              aria-label={{i18n (themePrefix "solved")}}
+            >
               {{#if this.capabilities.viewport.sm}}
                 {{i18n (themePrefix "solved")}}
               {{/if}}
@@ -167,6 +170,7 @@ export default class HighContextTopicCard extends Component {
                 "hc-topic-card__status"
                 this.statusBadge.className
               }}
+              aria-label={{i18n this.statusBadge.text}}
             >
               {{dIcon this.statusBadge.icon}}
 
@@ -181,7 +185,7 @@ export default class HighContextTopicCard extends Component {
       </div>
 
       <div class="hc-topic-card__content">
-        <div class="hc-topic-card__title">
+        <div class="hc-topic-card__title" role="heading" aria-level="2">
           <TopicStatus @topic={{@topic}} @context="topic-list" />
           <TopicLink
             {{on "focus" this.onTitleFocus}}
@@ -223,6 +227,9 @@ export default class HighContextTopicCard extends Component {
             {{#if this.assignedUser}}
               <div class="hc-topic-card__assigned">
                 {{dIcon "user-plus"}}
+                <span class="sr-only">{{i18n
+                    "discourse_assign.assigned_to"
+                  }}</span>
                 <span
                   class="hc-topic-card__assigned-name"
                 >{{this.assignedUser.username}}</span>
@@ -231,6 +238,9 @@ export default class HighContextTopicCard extends Component {
             {{#each this.indirectAssignees as |assignment|}}
               <div class="hc-topic-card__assigned">
                 {{dIcon "user-plus"}}
+                <span class="sr-only">{{i18n
+                    "discourse_assign.assigned_to"
+                  }}</span>
                 <span
                   class="hc-topic-card__assigned-name"
                 >{{assignment.user.username}}</span>

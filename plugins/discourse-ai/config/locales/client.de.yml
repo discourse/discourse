@@ -1179,6 +1179,7 @@ de:
             one: "Nachricht muss mindestens %{count} Zeichen lang sein"
             other: "Nachricht muss mindestens %{count} Zeichen lang sein"
           messages_sidebar_title: "Unterhaltungen"
+          starred: "Mit Sternchen"
           today: "Heute"
           last_7_days: "Letzte 7 Tage"
           last_30_days: "Letzte 30 Tage"
