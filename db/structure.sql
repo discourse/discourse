@@ -10593,7 +10593,7 @@ CREATE TABLE public.user_options (
     discourse_rewind_enabled boolean DEFAULT true NOT NULL,
     notify_on_solved boolean DEFAULT true NOT NULL,
     show_original_content boolean DEFAULT false NOT NULL,
-    enable_upcoming_change_available_notifications boolean DEFAULT true CONSTRAINT user_options_enable_upcoming_change_available_notifica_not_null NOT NULL
+    enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL
 );
 
 
