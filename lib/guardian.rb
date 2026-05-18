@@ -497,7 +497,7 @@ class Guardian
       if entity == "report"
         report_name = args&.[](:name) || args&.[]("name")
         return true if report_name.blank?
-        return !Report.hidden?(report_name, admin: false, can_see_ip: can_see_ip?)
+        return !Report.hidden?(report_name, guardian: self)
       end
       return %w[staff_action screened_url report user_archive].include?(entity)
     end

@@ -30,7 +30,7 @@ class Admin::UsersController < Admin::StaffController
                 ]
 
   def index
-    users = ::AdminUserIndexQuery.new(params).find_users
+    users = ::AdminUserIndexQuery.new(params, guardian: guardian).find_users
 
     opts = { include_can_be_deleted: true, include_silence_reason: true }
     if params[:show_emails] == "true"
@@ -493,8 +493,6 @@ class Admin::UsersController < Admin::StaffController
 
   def delete_other_accounts_with_same_ip
     params.require(:user_id)
-    params.require(:exclude)
-    params.require(:order)
 
     user_destroyer = UserDestroyer.new(current_user)
     options = {
@@ -507,7 +505,7 @@ class Admin::UsersController < Admin::StaffController
     }
 
     AdminUserIndexQuery
-      .new(same_ip_query_params)
+      .new(same_ip_query_params, guardian: guardian)
       .find_users(50)
       .each { |user| user_destroyer.destroy(user, options) }
 
@@ -516,10 +514,10 @@ class Admin::UsersController < Admin::StaffController
 
   def total_other_accounts_with_same_ip
     params.require(:user_id)
-    params.require(:exclude)
-    params.require(:order)
 
-    render json: { total: AdminUserIndexQuery.new(same_ip_query_params).count_users }
+    render json: {
+             total: AdminUserIndexQuery.new(same_ip_query_params, guardian: guardian).count_users,
+           }
   end
 
   def anonymize
@@ -595,7 +593,12 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def same_ip_query_params
-    params.merge(same_ip_user_id: params[:user_id])
+    {
+      same_ip_user_id: params[:user_id],
+      exclude: params[:user_id],
+      ip_type: params[:ip_type].presence,
+      order: "trust_level DESC",
+    }.compact
   end
 
   def same_ip_address_context

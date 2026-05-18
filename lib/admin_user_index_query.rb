@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 class AdminUserIndexQuery
-  def initialize(params = {}, klass = User, trust_levels = TrustLevel.levels)
-    @params = params
+  def initialize(
+    params = {},
+    klass = User,
+    trust_levels = TrustLevel.levels,
+    guardian: nil,
+    **kwargs
+  )
+    @params = kwargs.present? ? params.merge(kwargs) : params
     @query = initialize_query_with_order(klass)
     @trust_levels = trust_levels
+    @guardian = guardian
   end
 
-  attr_reader :params, :trust_levels
+  attr_reader :params, :trust_levels, :guardian
 
   SORTABLE_MAPPING = {
     "created" => "created_at",
@@ -99,12 +106,10 @@ class AdminUserIndexQuery
     filter = params[:filter]
     if filter.present?
       filter = filter.strip
-      if ip =
-           begin
-             IPAddr.new(filter)
-           rescue StandardError
-             nil
-           end
+      if ip = parse_ip(filter)
+        return if params[:same_ip_user_id].present?
+        return @query.none unless can_see_ip?
+
         @query.where("ip_address <<= :ip OR registration_ip_address <<= :ip", ip: ip.to_cidr_s)
       else
         @query.filter_by_username_or_email(filter)
@@ -114,6 +119,9 @@ class AdminUserIndexQuery
 
   def filter_by_ip
     if params[:ip].present?
+      return if params[:same_ip_user_id].present?
+      return @query.none unless can_see_ip?
+
       @query.where("ip_address = :ip OR registration_ip_address = :ip", ip: params[:ip].strip)
     end
   end
@@ -141,6 +149,16 @@ class AdminUserIndexQuery
 
   def same_ip_address_column
     SAME_IP_ADDRESS_COLUMNS.fetch(params[:ip_type].presence, :ip_address)
+  end
+
+  def parse_ip(filter)
+    IPAddr.new(filter)
+  rescue StandardError
+    nil
+  end
+
+  def can_see_ip?
+    guardian&.can_see_ip?
   end
 
   def with_silence_reason
