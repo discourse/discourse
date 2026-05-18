@@ -1293,6 +1293,26 @@ RSpec.describe PostGuardian do
 
       expect(Guardian.new(trust_level_0).can_view_raw_email?(post)).to be_falsey
     end
+
+    it "returns false when the post is nil even for an allowed user" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_4).can_view_raw_email?(nil)).to be_falsey
+    end
+  end
+
+  describe "#can_view_raw_emails?" do
+    it "returns true for a user in an allowed group" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_4).can_view_raw_emails?).to be_truthy
+    end
+
+    it "returns false for a user not in an allowed group" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_0).can_view_raw_emails?).to be_falsey
+    end
   end
 
   describe "#can_receive_post_notifications?" do
