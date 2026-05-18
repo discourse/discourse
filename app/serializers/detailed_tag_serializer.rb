@@ -22,6 +22,9 @@ class DetailedTagSerializer < TagSerializer
   end
 
   def tag_group_names
-    object.tag_groups.map(&:name)
+    TagGroup
+      .visible(scope)
+      .where(id: object.tag_group_memberships.select(:tag_group_id))
+      .pluck(:name)
   end
 end
