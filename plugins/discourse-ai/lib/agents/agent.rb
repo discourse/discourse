@@ -238,6 +238,8 @@ module DiscourseAi
             ReportRunner => -33,
             Discover => -34,
             ChatThreadTitler => -35,
+            SentimentClassifier => -36,
+            EmotionClassifier => -37,
           }.freeze
         end
       end
