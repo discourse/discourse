@@ -485,7 +485,7 @@ export default class ComposerContainer extends Component {
                       <DDropdownMenu as |dropdown|>
                         {{#if this.canToggleWhisper}}
                           <dropdown.item>
-                            {{! template-lint-disable no-invalid-interactive }}
+
                             <DButton
                               class="composer-toggle-item composer-toggle-whisper --with-description"
                               @action={{this.toggleWhisper}}
@@ -538,7 +538,7 @@ export default class ComposerContainer extends Component {
 
                         {{#if this.composer.canUnlistTopic}}
                           <dropdown.item>
-                            {{! template-lint-disable no-invalid-interactive }}
+
                             <DButton
                               class="composer-toggle-item composer-toggle-unlisted --with-description"
                               @action={{this.toggleUnlisted}}
