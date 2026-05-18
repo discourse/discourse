@@ -333,7 +333,15 @@ class PostCreator
     if reply_info.present?
       post.reply_to_user_id ||= reply_info.user_id
       whisper_type = Post.types[:whisper]
-      post.post_type = whisper_type if reply_info.post_type == whisper_type
+
+      if reply_info.post_type == whisper_type
+        if post.acting_user&.whisperer?
+          post.post_type = whisper_type
+        else
+          post.errors.add(:base, I18n.t(:topic_not_found))
+          throw :abort
+        end
+      end
     end
   end
 
