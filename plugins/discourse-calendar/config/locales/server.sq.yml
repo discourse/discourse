@@ -9,3 +9,10 @@ sq:
     currently_away:
       labels:
         username: Emri i përdoruesit
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Day"
+        week: "Këtë javë"
+        month: "Këtë muaj"
+        year: "Këtë vit"

@@ -61,8 +61,8 @@ RSpec.describe "Admin AI agent configuration" do
 
     visit "/admin/plugins/discourse-ai/ai-agents/#{agent_id}/edit"
 
-    expect(page).to have_selector("input[name='toolOptions.Read.read_private']")
-    expect(page).not_to have_selector("input[name='toolOptions.Read.got_deleted']")
+    expect(page).to have_selector("input[name='toolOptions.Read.read_private']", visible: :all)
+    expect(page).not_to have_selector("input[name='toolOptions.Read.got_deleted']", visible: :all)
   end
 
   it "will not allow deletion or editing of system agents" do

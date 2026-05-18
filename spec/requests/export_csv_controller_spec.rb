@@ -223,6 +223,20 @@ RSpec.describe ExportCsvController do
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
       end
 
+      it "does not allow moderators to export the topic_view_stats report" do
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "report",
+               args: {
+                 name: "topic_view_stats",
+                 start_date: "2026-01-01",
+                 end_date: "2026-02-15",
+               },
+             }
+        expect(response.status).to eq(422)
+        expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
+      end
+
       it "allows moderators to export non-hidden reports" do
         post "/export_csv/export_entity.json",
              params: {

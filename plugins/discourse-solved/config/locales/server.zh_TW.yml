@@ -6,6 +6,10 @@
 
 zh_TW:
   accepted_answer: "接受的答案"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "允許主題擁有者與管理員標示回覆為解決方式"
   site_settings:
     solved_enabled: "啟用已解決的插件，允許用戶為主題選擇解決方案"
   reports:

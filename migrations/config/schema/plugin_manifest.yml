@@ -79,6 +79,7 @@ plugins:
       - chat_message_custom_prompts
       - classification_results
       - completion_prompts
+      - discourse_ai_ai_bot_conversation_stars
       - embedding_definitions
       - inferred_concept_posts
       - inferred_concept_topics
@@ -121,6 +122,7 @@ plugins:
     columns: {}
   discourse-gamification:
     tables:
+      - gamification_leaderboard_scores
       - gamification_leaderboards
       - gamification_score_events
       - gamification_scores
@@ -166,10 +168,13 @@ plugins:
     columns: {}
   discourse-solved:
     tables:
+      - discourse_solved_shared_issues
       - discourse_solved_solved_topics
     columns:
       directory_items:
         - solutions
+      user_options:
+        - notify_on_solved
   discourse-subscriptions:
     tables:
       - discourse_subscriptions_customers
@@ -194,16 +199,16 @@ plugins:
     columns: {}
 plugin_checksums:
   automation: e69972690991bc04d92b2d161aac8921
-  chat: a44b3089f09fe0cef90e270aa2b4bedb
+  chat: 9d3d85836fd85af6f682b78cbcb3d092
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: '093aaf7828d3b833e4dfeae25d2cca02'
-  discourse-assign: 65afd026c76ff19a8d4f0ed1d9c21aa1
+  discourse-ai: ef2706fb0393edaace313b0738419d52
+  discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
-  discourse-calendar: 8ec0c0ab443991a508c337ee137c4bba
+  discourse-calendar: 03beabdd81496f54b385e9493fea3438
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
   discourse-data-explorer: 3c8891eb000d2f91f1edf1a48c28a96e
-  discourse-gamification: 864797c200fde3faf8508c500af6915d
+  discourse-gamification: 633256e241b030fddcc059076f7474f8
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
   discourse-graphviz: 2182f4029ce73b9b77ea682a4558087c
   discourse-lazy-videos: a916a4f265d1cc6f99a3e53f5bcd1e9e
@@ -216,11 +221,11 @@ plugin_checksums:
   discourse-post-voting: ece13b87f2fbac3e64f8aa3abe07fe3d
   discourse-reactions: e9de82d2ebb48eb434be2b646c7fec26
   discourse-rewind: 1e0f2acf6e8409f2d2f011e14405fa06
-  discourse-rss-polling: adb232423452557f71219f3b61ff0465
-  discourse-solved: 88ac1f71ea5f4a5cc1c9dcd0ce457511
+  discourse-rss-polling: b7cb3eeb38beff3ce10b333f24128d2f
+  discourse-solved: 8c544acc9dc985760ccc56d335b3e647
   discourse-subscriptions: 05eb12877a6a842a290a98fa0e70d462
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
-  discourse-topic-voting: b3ab6519c9cbad4ccfbefd17ef2aa41b
+  discourse-topic-voting: 5464e186402b9589d71f338c704a7d21
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
   poll: 4af8698c5fcc1dc9a786b31ec8234171
