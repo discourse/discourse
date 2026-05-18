@@ -4424,7 +4424,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "stable"
       impact: "feature,all_members"
   enable_new_post_reactions_menu:
     default: false

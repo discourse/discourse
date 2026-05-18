@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 el:
+  category_types:
+    events:
+      name: "Συμβάντα"
+      title: "συμβάντα"
   reports:
     currently_away:
       labels:
@@ -21,6 +25,12 @@ el:
     discourse_post_event_allowed_on_groups: "Ομάδες που επιτρέπεται να δημιουργούν εκδηλώσεις."
     event_participation_buttons: "Λίστα κουμπιών συμμετοχής σε εκδήλωση που μπορούν να χρησιμοποιήσουν οι χρήστες."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Ημέρα"
+        week: "Εβδομάδα"
+        month: "Μήνας"
+        year: "Χρόνος"
     invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
     event_expired: "Η εκδήλωση έληξε"
   discourse_post_event:

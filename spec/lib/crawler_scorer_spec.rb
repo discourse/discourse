@@ -25,6 +25,33 @@ RSpec.describe CrawlerScorer do
     expect(event.reload.score).to eq(100)
   end
 
+  it "writes the score breakdown per heuristic to the side table" do
+    SiteSetting.crawler_asns = "12345"
+    event =
+      make_event(
+        user_agent: "Mozilla/5.0 (X11; Linux x86_64) HeadlessChrome/120.0.0.0",
+        asn: 12_345,
+      )
+
+    score!
+
+    expect(event.reload.score).to eq(115)
+    breakdown = event.browser_pageview_event_score
+    expect(breakdown.automation_ua_score).to eq(100)
+    expect(breakdown.known_asn_score).to eq(15)
+    expect(breakdown.velocity_score).to eq(0)
+    expect(breakdown.churn_score).to eq(0)
+    expect(breakdown.rapid_nav_score).to eq(0)
+    expect(breakdown.referrer_score).to eq(0)
+  end
+
+  it "does not write a breakdown row for events that score 0" do
+    event = make_event
+    score!
+    expect(event.reload.score).to be_nil
+    expect(event.browser_pageview_event_score).to be_nil
+  end
+
   it "scores known crawler ASNs at +15" do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345)

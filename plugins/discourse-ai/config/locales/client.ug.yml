@@ -230,6 +230,7 @@ ug:
         share_modal:
           copy: "كۆچۈر"
         conversations:
+          starred: "يۇلتۇزلانغان"
           today: "بۈگۈن"
           scroll_to_bottom: "ئەڭ ئاستىغا دومىلات"
           editing_post: "يازما تەھرىرلىنىۋاتىدۇ"
