@@ -455,6 +455,28 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_json["cooked"]).to be_present
         expect(root_json["cooked"]).not_to eq("")
       end
+
+      it "lets staff view a fully-deleted topic so they can recover it" do
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        expect(topic.deleted_at).to be_present
+        sign_in(admin)
+
+        get show_url(topic)
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["op_post"]).to be_present
+        expect(json["op_post"]["deleted_post_placeholder"]).to eq(true)
+      end
+
+      it "returns 404 for non-staff on a fully-deleted topic" do
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        sign_in(user)
+
+        get show_url(topic)
+        expect(response.status).to eq(404)
+      end
     end
 
     describe "pinned replies" do
@@ -1169,6 +1191,20 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(ancestor["deleted_post_placeholder"]).to eq(true)
         expect(ancestor["cooked"]).to be_present
         expect(ancestor["cooked"]).not_to eq("")
+      end
+
+      it "lets staff load the context view of a fully-deleted topic" do
+        reply = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        expect(topic.deleted_at).to be_present
+        sign_in(admin)
+
+        get context_url(topic, reply.post_number)
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["op_post"]).to be_present
+        expect(json["op_post"]["deleted_post_placeholder"]).to eq(true)
       end
     end
   end
