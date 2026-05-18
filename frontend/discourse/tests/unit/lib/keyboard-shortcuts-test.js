@@ -1,7 +1,9 @@
+import Controller from "@ember/controller";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utility | keyboard-shortcuts", function (hooks) {
   setupTest(hooks);
@@ -169,32 +171,57 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
   });
 
   module("nested view navigation", function (nestedHooks) {
-    // Builds a minimal nested-view DOM:
-    //
-    //   r1
-    //     r1-child
-    //   r2
-    //   r3
-    //
-    // Navigation walks every visible .nested-post in document order.
+    function appendPostControls(article) {
+      const likeButton = document.createElement("button");
+      likeButton.className = "toggle-like";
+      article.appendChild(likeButton);
+
+      const postDate = document.createElement("a");
+      postDate.className = "post-date";
+      postDate.href = "#";
+      article.appendChild(postDate);
+    }
+
+    function makePostArticle(id, postId, postNumber, op = false) {
+      const article = document.createElement("article");
+      article.className = op
+        ? "nested-view__op-article boxed"
+        : "nested-post__article boxed";
+      article.id = id;
+      article.dataset.postId = postId;
+      article.dataset.postNumber = postNumber;
+      article.style.height = "20px";
+      appendPostControls(article);
+      return article;
+    }
+
+    function makePost(id, postId, postNumber) {
+      const post = document.createElement("div");
+      post.className = "nested-post";
+      post.id = id;
+
+      const main = document.createElement("div");
+      main.className = "nested-post__main";
+      main.appendChild(makePostArticle(`${id}-article`, postId, postNumber));
+      post.appendChild(main);
+
+      return post;
+    }
+
     function buildNestedView() {
       const view = document.createElement("div");
       view.className = "nested-view";
+      view.appendChild(makePostArticle("op", "100", "1", true));
 
       const roots = document.createElement("div");
       roots.className = "nested-view__roots";
       view.appendChild(roots);
 
-      const makePost = (id) => {
-        const post = document.createElement("div");
-        post.className = "nested-post";
-        post.id = id;
-        return post;
-      };
-
-      const r1 = makePost("r1");
-      r1.appendChild(makePost("r1-child"));
-      roots.append(r1, makePost("r2"), makePost("r3"));
+      const r1 = makePost("r1", "101", "2");
+      r1.querySelector(".nested-post__main").appendChild(
+        makePost("r1-child", "102", "3")
+      );
+      roots.append(r1, makePost("r2", "103", "4"), makePost("r3", "104", "5"));
 
       document.body.appendChild(view);
       return view;
@@ -206,7 +233,7 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
         .forEach((el) => el.remove());
     });
 
-    test("selectDown seeds the first post when nothing is selected", function (assert) {
+    test("selectDown seeds the OP when nothing is selected", function (assert) {
       buildNestedView();
       const ks = this.owner.lookup("service:keyboard-shortcuts");
 
@@ -214,14 +241,15 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
 
       assert.strictEqual(
         document.querySelector("[data-keyboard-selected]")?.id,
-        "r1"
+        "op"
       );
     });
 
-    test("selectDown / selectUp walk every visible post in DOM order regardless of depth", function (assert) {
+    test("selectDown / selectUp walk the OP and every visible post in DOM order regardless of depth", function (assert) {
       buildNestedView();
       const ks = this.owner.lookup("service:keyboard-shortcuts");
 
+      ks.selectDown(); // op
       ks.selectDown(); // r1
       ks.selectDown(); // r1-child
       assert.strictEqual(
@@ -247,11 +275,12 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
       );
 
       ks.selectUp(); // r1
+      ks.selectUp(); // op
       ks.selectUp(); // no-op before the first post
       assert.strictEqual(
         document.querySelector("[data-keyboard-selected]")?.id,
-        "r1",
-        "no wrap-around past the first post"
+        "op",
+        "no wrap-around past the OP"
       );
     });
 
@@ -265,16 +294,72 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
       appEvents.on("keyboard:move-selection", handler);
 
       try {
-        ks.selectDown(); // r1
-        assert.strictEqual(payload?.selectedArticle?.id, "r1");
+        ks.selectDown(); // op
+        assert.strictEqual(payload?.selectedArticle?.id, "op");
         assert.deepEqual(
-          payload.articles.map((a) => a.id),
-          ["r1", "r1-child", "r2", "r3"],
+          payload.articles.map((article) => article.id),
+          ["op", "r1", "r1-child", "r2", "r3"],
           "payload mirrors the flat post-stream shape so Nested can detect boundary"
         );
       } finally {
         appEvents.off("keyboard:move-selection", handler);
       }
+    });
+
+    test("post actions target the selected OP and nested reply", function (assert) {
+      const opPost = { id: 100, post_number: 1 };
+      const nestedPost = { id: 101, post_number: 2 };
+      let receivedPost;
+
+      this.owner.register(
+        "controller:topic",
+        class extends Controller {
+          model = { postStream: { posts: [opPost, nestedPost] } };
+          actions = {
+            replyToPost(post) {
+              receivedPost = post;
+            },
+          };
+        }
+      );
+
+      buildNestedView();
+      const ks = this.owner.lookup("service:keyboard-shortcuts");
+
+      ks.selectDown(); // op
+      ks.sendToSelectedPost("replyToPost");
+      assert.strictEqual(receivedPost, opPost);
+
+      receivedPost = null;
+      ks.selectDown(); // r1
+      ks.sendToSelectedPost("replyToPost");
+      assert.strictEqual(receivedPost, nestedPost);
+    });
+
+    test("like and share shortcuts click controls on selected nested articles", function (assert) {
+      logIn(this.owner);
+      buildNestedView();
+      const ks = this.owner.lookup("service:keyboard-shortcuts");
+      let liked = false;
+      let shared = false;
+
+      ks.selectDown(); // op
+      ks.selectDown(); // r1
+
+      const article = document.querySelector("#r1-article");
+      article
+        .querySelector(".toggle-like")
+        .addEventListener("click", () => (liked = true));
+      article.querySelector(".post-date").addEventListener("click", (event) => {
+        event.preventDefault();
+        shared = true;
+      });
+
+      ks.keyTrapper.trigger("l");
+      ks.keyTrapper.trigger("s");
+
+      assert.true(liked);
+      assert.true(shared);
     });
 
     test("selectDown outside the nested view delegates to _moveSelection", function (assert) {
