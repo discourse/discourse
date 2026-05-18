@@ -1,6 +1,6 @@
 ---
 name: discourse-bem-guidelines
-description: Use when applying Discourse's BEM guidelines for CSS class naming, modifiers, state classes, and selector structure in core, themes, theme components, or plugins.
+description: Use when adding, changing, or reviewing CSS class names and selectors in Discourse components, templates, stylesheets, themes, theme components, or plugins.
 ---
 
 # Discourse BEM Guidelines
