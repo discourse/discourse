@@ -4575,7 +4575,7 @@ CREATE TABLE public.flags (
 --
 
 CREATE SEQUENCE public.flags_id_seq
-    START WITH 1
+    START WITH 1001
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -20860,6 +20860,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260518054805'),
 ('20260514055648'),
 ('20260514043815'),
 ('20260513105516'),
