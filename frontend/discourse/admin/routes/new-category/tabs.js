@@ -10,10 +10,7 @@ export default class NewCategoryTabs extends DiscourseRoute {
   templateName = "edit-category.tabs";
 
   beforeModel() {
-    if (
-      this.categoryTypeChooser.isEnabled &&
-      !this.categoryTypeChooser.hasCompletedSetup
-    ) {
+    if (!this.categoryTypeChooser.hasCompletedSetup) {
       this.router.replaceWith("newCategory.setup");
     }
   }

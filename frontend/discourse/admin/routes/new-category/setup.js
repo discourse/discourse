@@ -7,12 +7,6 @@ export default class NewCategorySetup extends DiscourseRoute {
   @service categoryTypeChooser;
   @service router;
 
-  beforeModel() {
-    if (!this.categoryTypeChooser.isEnabled) {
-      this.router.replaceWith("newCategory");
-    }
-  }
-
   async model() {
     return await ajax("/categories/types");
   }

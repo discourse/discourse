@@ -10,9 +10,8 @@ export default class SolvedSettingsUpsert extends Component {
     // of this component entirely and just rely on the schema defined
     // in Categories::Types::Support.
     return (
-      context.siteSettings.enable_simplified_category_creation &&
-      (!args.category?.isType("support") ||
-        !context.siteSettings.enable_support_category_type_setup)
+      !args.category?.isType("support") ||
+      !context.siteSettings.enable_support_category_type_setup
     );
   }
 

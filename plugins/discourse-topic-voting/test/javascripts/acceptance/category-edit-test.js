@@ -1,6 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender from "discourse/tests/helpers/create-pretender";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Category Edit | Topic Voting", function (needs) {
@@ -9,8 +10,8 @@ acceptance("Category Edit | Topic Voting", function (needs) {
 
   test("Enabling topic voting sends boolean true", async function (assert) {
     await visit("/c/bug/edit/settings");
-    await click(".enable-topic-voting input[type='checkbox']");
-    await click("#save-category");
+    await formKit().field("custom_fields.enable_topic_voting").toggle();
+    await click(".admin-changes-banner .btn-primary");
 
     const payload = JSON.parse(
       pretender.handledRequests[pretender.handledRequests.length - 1]
@@ -26,10 +27,10 @@ acceptance("Category Edit | Topic Voting", function (needs) {
     await visit("/c/bug/edit/settings");
 
     // twice to toggle false
-    await click(".enable-topic-voting input[type='checkbox']");
-    await click(".enable-topic-voting input[type='checkbox']");
+    await formKit().field("custom_fields.enable_topic_voting").toggle();
+    await formKit().field("custom_fields.enable_topic_voting").toggle();
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
 
     const payload = JSON.parse(
       pretender.handledRequests[pretender.handledRequests.length - 1]
@@ -43,7 +44,8 @@ acceptance("Category Edit | Topic Voting", function (needs) {
 
   test("Modifying other settings does not include enable_topic_voting", async function (assert) {
     await visit("/c/bug/edit/settings");
-    await click("#save-category");
+    await formKit().field("search_priority").select("1");
+    await click(".admin-changes-banner .btn-primary");
 
     const payload = JSON.parse(
       pretender.handledRequests[pretender.handledRequests.length - 1]

@@ -159,12 +159,10 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def category_types
-    return {} if !SiteSetting.enable_simplified_category_creation
     object.category_types
   end
 
   def category_type_settings
-    return {} if !SiteSetting.enable_simplified_category_creation
     Categories::TypeRegistry
       .all
       .values
@@ -175,7 +173,6 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def available_category_types
-    return [] if !SiteSetting.enable_simplified_category_creation
     Categories::TypeRegistry.list(only_visible: true)
   end
 end

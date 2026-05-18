@@ -52,12 +52,14 @@ acceptance("Category New", function (needs) {
     await fillIn("input.category-name", "testing");
     assert.dom(".badge-category").hasText("testing");
 
-    await click(".edit-category-nav .edit-category-topic-template a");
+    await click(".category-show-advanced-tabs-toggle");
+
+    await click(".edit-category-topic-template a");
     assert
       .dom(".edit-category-tab-topic-template.active")
       .exists("it can switch to the topic template tab");
 
-    await click(".edit-category-nav .edit-category-tags a");
+    await click(".edit-category-tags a");
     await click("button.add-required-tag-group");
 
     const tagSelector = selectKit(
@@ -66,7 +68,7 @@ acceptance("Category New", function (needs) {
     await tagSelector.expand();
     await tagSelector.selectRowByValue("TagGroup1");
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
 
     assert.strictEqual(
       currentURL(),
@@ -74,7 +76,7 @@ acceptance("Category New", function (needs) {
       "it transitions to the category edit route"
     );
 
-    await click(".edit-category-nav .edit-category-tags a");
+    await click(".edit-category-tags a");
 
     assert
       .dom(".required-tag-group-row .select-kit-header[data-value='TagGroup1']")
@@ -98,7 +100,7 @@ acceptance("Category New", function (needs) {
 
     sinon.stub(DiscourseURL, "routeTo");
 
-    await click(".category-back");
+    await click(".back-button");
     assert.true(
       DiscourseURL.routeTo.calledWith("/c/testing/11"),
       "back routing works"
@@ -123,9 +125,6 @@ acceptance("Category New", function (needs) {
 
 acceptance("Category type setup page", function (needs) {
   needs.user({ admin: true, can_create_category: true });
-  needs.settings({
-    enable_simplified_category_creation: true,
-  });
   needs.pretender((server, helper) => {
     server.get("/categories/types", () => {
       return helper.response(200, {

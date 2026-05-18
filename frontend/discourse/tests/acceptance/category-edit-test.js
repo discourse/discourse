@@ -26,10 +26,12 @@ acceptance("Category Edit", function (needs) {
     await fillIn("input.category-name", "testing");
     assert.dom(".category-style .badge-category__name").hasText("testing");
 
+    await click(".category-show-advanced-tabs-toggle");
+
     await click(".edit-category-topic-template a");
     await fillIn(".d-editor-input", "this is the new topic template");
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/topic-template",
@@ -41,7 +43,7 @@ acceptance("Category Edit", function (needs) {
     await searchPriorityChooser.expand();
     await searchPriorityChooser.selectRowByValue(1);
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/settings",
@@ -80,13 +82,13 @@ acceptance("Category Edit", function (needs) {
     await tagGroupChooser.expand();
     await tagGroupChooser.selectRowByValue("TagGroup1");
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
     assert.dom(".required-tag-group-row").exists({ count: 1 });
 
     await click(".delete-required-tag-group");
     assert.dom(".required-tag-group-row").doesNotExist();
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
     assert.dom(".required-tag-group-row").doesNotExist();
   });
 
@@ -102,7 +104,7 @@ acceptance("Category Edit", function (needs) {
     await allowedTagGroupChooser.expand();
     await allowedTagGroupChooser.selectRowByValue("TagGroup1");
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
 
     const payload = JSON.parse(
       pretender.handledRequests[pretender.handledRequests.length - 1]
@@ -117,7 +119,7 @@ acceptance("Category Edit", function (needs) {
     await allowedTagGroupChooser.expand();
     await allowedTagGroupChooser.deselectItemByValue("TagGroup1");
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
 
     const removePayload = JSON.parse(
       pretender.handledRequests[pretender.handledRequests.length - 1]
@@ -179,7 +181,7 @@ acceptance("Category Edit", function (needs) {
   test("Error Saving", async function (assert) {
     await visit("/c/bug/edit/settings");
     await fillIn(".email-in", "duplicate@example.com");
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
 
     assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
@@ -198,7 +200,7 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(1002);
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
 
     assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
@@ -258,7 +260,6 @@ acceptance(
   "Category Edit - parent category permission inheritance",
   function (needs) {
     needs.user();
-    needs.settings({ enable_simplified_category_creation: true });
     needs.pretender((server, helper) => {
       // Sub-category with only moderator permissions
       server.get("/c/restricted-group/find_by_slug.json", () =>

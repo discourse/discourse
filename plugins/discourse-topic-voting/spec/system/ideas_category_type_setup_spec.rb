@@ -11,7 +11,6 @@ RSpec.describe "Ideas Category Type Setup" do
   let(:toast) { PageObjects::Components::Toasts.new }
 
   before do
-    SiteSetting.enable_simplified_category_creation = true
     SiteSetting.enable_ideas_category_type_setup = true
     sign_in(admin)
   end
