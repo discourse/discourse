@@ -200,7 +200,7 @@ export default class UpsertHyperlink extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <DModal
       {{on "keydown" this.keyDown}}
       {{on "mousedown" this.mouseDown}}

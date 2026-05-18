@@ -228,6 +228,14 @@ acceptance(
       await visit("/");
 
       assert
+        .dom("nav#d-sidebar")
+        .hasAttribute(
+          "aria-label",
+          i18n("sidebar.title"),
+          "sidebar is exposed as a named navigation landmark"
+        );
+
+      assert
         .dom(
           ".btn-sidebar-toggle[aria-expanded='true'][aria-controls='d-sidebar']"
         )
@@ -260,6 +268,13 @@ acceptance(
           i18n("sidebar.title"),
           "has the right title attribute when sidebar is collapsed"
         );
+
+      await click(".btn-sidebar-toggle");
+
+      assert.true(
+        document.querySelector("#d-sidebar").contains(document.activeElement),
+        "focus moves into the sidebar when it is opened via the toggle"
+      );
     });
   }
 );

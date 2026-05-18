@@ -13,6 +13,10 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
     SiteSetting.oauth2_allow_association_change
   end
 
+  def provides_groups?
+    SiteSetting.oauth2_json_groups_path.present?
+  end
+
   def register_middleware(omniauth)
     omniauth.provider :oauth2_basic,
                       name: name,
@@ -118,6 +122,22 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
     end
   end
 
+  def groups_from(user_json)
+    path = SiteSetting.oauth2_json_groups_path
+    expanded = path.gsub(".[].", ".").gsub(".[", "[")
+    value = walk_path(user_json, parse_segments(expanded))
+
+    if value.is_a?(Array)
+      value
+    elsif value.present?
+      log("groups path '#{path}' did not resolve to an array (got #{value.class})")
+      []
+    else
+      log("groups path '#{path}' did not resolve to anything")
+      []
+    end
+  end
+
   def user_field_values_from(user_json)
     mappings = JSON.parse(SiteSetting.oauth2_user_field_mappings.presence || "[]")
     return {} if mappings.blank?
@@ -205,6 +225,7 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
         end
 
         result[:user_field_values] = user_field_values_from(user_json)
+        result[:groups] = groups_from(user_json) if provides_groups?
       end
       result
     else
@@ -274,7 +295,13 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
     end
 
     result = super(auth, existing_account: existing_account)
-    result.user_field_values = fetched_user_details[:user_field_values] if fetched_user_details
+    if fetched_user_details
+      result.user_field_values = fetched_user_details[:user_field_values]
+      if provides_groups?
+        groups = fetched_user_details[:groups] || []
+        result.associated_groups = groups.map { |g| { id: g, name: g } }
+      end
+    end
     result
   end
 

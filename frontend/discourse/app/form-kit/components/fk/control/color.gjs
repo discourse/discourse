@@ -190,7 +190,7 @@ export default class FKControlColor extends FKBaseControl {
           id={{@field.id}}
           name={{@field.name}}
           aria-invalid={{if @field.error "true"}}
-          aria-describedby={{if @field.error @field.errorId}}
+          aria-describedby={{@field.describedBy}}
           {{on "input" this.handleTextInput}}
           {{on "blur" this.handleBlur}}
           {{on "paste" this.handlePaste}}

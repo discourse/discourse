@@ -25,7 +25,7 @@ export default class FKControlQuestion extends FKBaseControl {
             checked={{eq @field.value true}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
-            aria-describedby={{if @field.error @field.errorId}}
+            aria-describedby={{@field.describedBy}}
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}
@@ -48,7 +48,7 @@ export default class FKControlQuestion extends FKBaseControl {
             checked={{eq @field.value false}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
-            aria-describedby={{if @field.error @field.errorId}}
+            aria-describedby={{@field.describedBy}}
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}

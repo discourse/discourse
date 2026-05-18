@@ -31,7 +31,7 @@ export default class PostMetaDataEmailIndicator extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class={{dConcatClass
         "post-info"

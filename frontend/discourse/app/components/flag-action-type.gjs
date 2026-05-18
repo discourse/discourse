@@ -120,6 +120,7 @@ export default class FlagActionType extends Component {
                   this.flagDescription
                 }}</span>
               {{#if this.showMessageInput}}
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <Textarea
                   name="message"
                   class="flag-message"
@@ -157,6 +158,7 @@ export default class FlagActionType extends Component {
               <strong class="flag-name">{{this.formattedName}}</strong>
               <div class="description">{{trustHTML this.flagDescription}}</div>
               {{#if this.showMessageInput}}
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <Textarea
                   name="message"
                   class="flag-message"

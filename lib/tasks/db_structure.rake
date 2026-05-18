@@ -5,6 +5,9 @@
 module DbStructure
   BOOKKEEPING_TABLES = %w[schema_migrations schema_migration_details ar_internal_metadata].freeze
 
+  # PG 17+ pg_dump changes output format. Pin to 15/16 for now:
+  PG_DUMP_VERSIONS = (15..16)
+
   def self.temp_db_env
     bundled = `script/list_bundled_plugins`.split.map { |p| File.basename(p) }.join(",")
     {
@@ -18,7 +21,7 @@ module DbStructure
   def self.with_temp_db
     require "temporary_db"
 
-    db = TemporaryDb.new
+    db = TemporaryDb.new(versions: PG_DUMP_VERSIONS)
     db.start
     begin
       db.with_env { yield }
@@ -31,54 +34,65 @@ end
 
 desc "Migrate a clean disposable database and dump its schema to db/structure.sql"
 task "db:dump_structure" => :environment do
+  candidate = "db/structure-new.sql"
+  FileUtils.rm_f(candidate)
+
   DbStructure.with_temp_db do
-    system(DbStructure.temp_db_env, "bin/rails", "db:migrate", "db:schema:dump", exception: true)
+    env = DbStructure.temp_db_env
+    system(
+      DbStructure.temp_db_env.merge("SCHEMA" => candidate),
+      "bin/rails",
+      "db:migrate",
+      "db:schema:dump",
+      exception: true,
+    )
   end
 
+  FileUtils.mv(candidate, "db/structure.sql")
   STDERR.puts "Wrote db/structure.sql"
 end
 
 desc "CI guard: db/structure.sql is up-to-date and migrations leave no unexpected rows"
 task "db:check_structure_dump" => :environment do
   require "open3"
-  require "tmpdir"
+  candidate = "db/structure-new.sql"
+  FileUtils.rm_f(candidate)
 
   DbStructure.with_temp_db do
-    env = DbStructure.temp_db_env
+    # SCHEMA points at a path that doesn't yet exist, so `db:migrate` skips
+    # the schema-load shortcut and `db:schema:dump` writes the fresh dump
+    # there — one Rails boot for all three tasks.
     system(
-      env,
+      DbStructure.temp_db_env.merge("SCHEMA" => candidate),
       "bin/rails",
       "db:migrate",
       "db:check_structure_dump:assert_no_unexpected_rows",
+      "db:schema:dump",
       exception: true,
     )
 
-    Dir.mktmpdir("discourse-structure-check") do |dir|
-      candidate = File.join(dir, "structure.sql")
-      system(env.merge("SCHEMA" => candidate), "bin/rails", "db:schema:dump", exception: true)
+    diff, status = Open3.capture2("diff", "-u", "db/structure.sql", candidate)
+    next if status.success?
 
-      diff, status = Open3.capture2("diff", "-u", "db/structure.sql", candidate)
-      next if status.success?
+    max_lines = 200
+    lines = diff.lines
+    shown = lines.first(max_lines).join
+    truncation = lines.length > max_lines ? "\n[diff truncated; run locally for the full diff]" : ""
 
-      max_lines = 200
-      lines = diff.lines
-      shown = lines.first(max_lines).join
-      truncation =
-        lines.length > max_lines ? "\n[diff truncated; run locally for the full diff]" : ""
+    abort <<~MSG.strip
+      db/structure.sql is out of date. Run:
 
-      abort <<~MSG.strip
-        db/structure.sql is out of date. Run:
+        bin/rake db:dump_structure
 
-          bin/rake db:dump_structure
+      and commit the regenerated file. Diff:
 
-        and commit the regenerated file. Diff:
-
-        #{shown}#{truncation}
-      MSG
-    end
+      #{shown}#{truncation}
+    MSG
   end
 
   STDERR.puts "db/structure.sql is up-to-date and migrations leave no unexpected rows."
+ensure
+  FileUtils.rm_f(candidate) if candidate
 end
 
 task "db:check_structure_dump:assert_no_unexpected_rows" => :environment do

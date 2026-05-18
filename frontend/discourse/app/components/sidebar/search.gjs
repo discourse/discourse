@@ -32,7 +32,7 @@ export default class Search extends Component {
             @icon="magnifying-glass"
             class="btn-transparent sidebar-search__icon"
           />
-          {{! template-lint-disable no-pointer-down-event-binding }}
+          {{! eslint-disable ember/template-no-pointer-down-event-binding }}
           <input
             {{on "mousedown" this.onClick}}
             placeholder={{i18n "sidebar.search"}}

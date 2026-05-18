@@ -1263,7 +1263,6 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     pop3_polling_delete_from_server: "Xóa email khỏi máy chủ. LƯU Ý: Nếu bạn tắt tính năng này, bạn nên dọn dẹp hộp thư đến của mình theo cách thủ công"
-    email_in_authserv_id: "Mã định danh của dịch vụ đang thực hiện kiểm tra xác thực đối với các email đến. Xem <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> để biết hướng dẫn về cách định cấu hình."
     email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
     email_site_title: "Tên website được sử dụng là tên người gửi email, mặc định là 'title' nếu không thiết lập. Nếu 'title' có chứa ký tự không được phép trong chuỗi người gửi email, sử dụng thiết lập này."
     minimum_topics_similar: "Có bao nhiêu chủ đề cần phải có trước các chủ đề tương tự được giới thiệu khi soạn thảo chủ đề mới."
