@@ -122,6 +122,26 @@ export default modifier(
       if (!source) {
         return;
       }
+      // Grid-overlay defer. The grid overlay attaches a capture-phase
+      // dragover listener on its `.ve-layout--grid` div, which sets
+      // the unified `activeDropPreview` to a grid-level descriptor
+      // (swap / shift / replace / occupy) before the event reaches
+      // any chrome's bubble-phase handler. If we ran the normal
+      // projection logic here, we'd overwrite the grid overlay's
+      // descriptor with an outer-container one — e.g. dragover on
+      // a card inside a grid bubbles up to the outlet boundary,
+      // which would write "INSERT before Layout" and clobber the
+      // grid's "swap with X" descriptor. Detect "the dragover
+      // target is inside a `.ve-layout--grid` that's nested inside
+      // MY chromeElement" and bail out — the grid overlay owns it.
+      const targetGrid = event.target?.closest?.(".ve-layout--grid");
+      if (
+        targetGrid &&
+        targetGrid !== chromeElement &&
+        chromeElement.contains(targetGrid)
+      ) {
+        return;
+      }
       // Edge-band defer. When this modifier instance is on a CHROME
       // (not the outlet boundary itself), drops within 12px of any
       // outer edge bubble up to the parent container so the user
@@ -452,9 +472,6 @@ function buildInsertDescriptor({
     outletName,
     targetKey,
   });
-  if (!validity.ok) {
-    return null;
-  }
 
   return {
     geometry,
@@ -463,15 +480,20 @@ function buildInsertDescriptor({
     // treatment, but the semantic kind is what the label and any
     // future variant styling key off.
     kind: targetKey ? "insert" : "inside",
-    variant: "valid",
+    validity: validity.ok ? "valid" : "invalid",
     label: insertLabel({ visualEditor, source, position, targetKey }),
-    dispatch: insertDispatch({
-      source,
-      targetKey,
-      position,
-      containerKey,
-      outletName,
-    }),
+    // No dispatch when invalid — `dispatchActiveDrop` no-ops on
+    // descriptors without a `dispatch` payload, so the drop quietly
+    // fails. The red overlay already communicated the rejection.
+    dispatch: validity.ok
+      ? insertDispatch({
+          source,
+          targetKey,
+          position,
+          containerKey,
+          outletName,
+        })
+      : null,
   };
 }
 
@@ -483,9 +505,6 @@ function buildInsideDescriptor({
   source,
 }) {
   const validity = validateInsideDrop({ visualEditor, source, targetKey });
-  if (!validity.ok) {
-    return null;
-  }
   return {
     geometry: {
       top: rect.top,
@@ -494,9 +513,9 @@ function buildInsideDescriptor({
       height: rect.height,
     },
     kind: "inside",
-    variant: "valid",
+    validity: validity.ok ? "valid" : "invalid",
     label: insideLabel({ visualEditor, source, blockName, targetKey }),
-    dispatch: insideDispatch({ source, targetKey }),
+    dispatch: validity.ok ? insideDispatch({ source, targetKey }) : null,
   };
 }
 
@@ -528,7 +547,7 @@ function buildSlotChromeDescriptor({
       height: rect.height,
     },
     kind: "replace",
-    variant: "valid",
+    validity: "valid",
     label: replaceSlotLabel({ visualEditor, source }),
     dispatch: replaceSlotDispatch({ source, targetKey: containerKey }),
   };
@@ -548,7 +567,7 @@ function buildReplaceSlotDescriptor({ visualEditor, rect, targetKey, source }) {
       height: rect.height,
     },
     kind: "replace",
-    variant: "valid",
+    validity: "valid",
     label: replaceSlotLabel({ visualEditor, source }),
     dispatch: replaceSlotDispatch({ source, targetKey }),
   };

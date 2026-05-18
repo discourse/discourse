@@ -11,6 +11,7 @@ import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-targe
 import { i18n } from "discourse-i18n";
 import {
   computeOccupation,
+  computeShiftPlan,
   parsePlacement,
   unoccupiedCells,
 } from "../../lib/grid-math";
@@ -306,7 +307,11 @@ export default class GridOverlay extends Component {
     this.visualEditor.setActiveDropPreview({
       geometry,
       kind: this._unifiedKindFor(descriptor),
-      variant: "valid",
+      // Translate the descriptor's `_invalid` sentinel (set by
+      // `_descriptorFromCursor` when the underlying operation would
+      // be rejected) into the unified `validity` flag the overlay's
+      // red styling keys off of.
+      validity: descriptor._invalid ? "invalid" : "valid",
       label: this._labelFor(descriptor, source),
       // No `dispatch` — grid drops dispatch via this component's
       // own onDrop handlers (`applyCellDrop` / `applySlotDrop`),
@@ -642,6 +647,7 @@ export default class GridOverlay extends Component {
     );
 
     const slot = this._slotAtCell(cell);
+    let descriptor;
     if (slot) {
       // Same check at the slot level — never preview a drop onto the
       // source slot itself or any slot nested inside the source.
@@ -649,14 +655,90 @@ export default class GridOverlay extends Component {
       if (sourceKey && this._sourceCoversTarget(sourceKey, slotKey)) {
         return null;
       }
-      return this._slotDescriptorForZone({
+      descriptor = this._slotDescriptorForZone({
         slot,
         zone,
         shift: event.shiftKey,
         source,
       });
+    } else {
+      descriptor = this._cellDescriptorForZone(cell, zone);
     }
-    return this._cellDescriptorForZone(cell, zone);
+    if (!descriptor) {
+      return null;
+    }
+    // Real-time validity gate. Some descriptor shapes (line-column /
+    // line-row inserts that need to cascade existing slots out of the
+    // way) only succeed when the shift plan fits the grid. If it
+    // doesn't, mark the descriptor with the `_invalid` sentinel so
+    // the mirrored unified preview paints in danger tones — the
+    // author sees what they intended but knows the drop will be
+    // rejected. Without this, the overlay reads as a normal valid
+    // target and the drop silently fails on release.
+    //
+    // We use a separate sentinel field (`_invalid`) rather than
+    // overwriting `variant` because the descriptor's `variant`
+    // already carries the operation kind (`insert` / `swap` /
+    // `replace` / `move`) that `_dispatchDrop` switches on.
+    if (!this._canExecuteDescriptor(descriptor, source)) {
+      return { ...descriptor, _invalid: true };
+    }
+    return descriptor;
+  }
+
+  /**
+   * Returns `true` when `_dispatchDrop` would produce a real change
+   * for `descriptor` + `source`. Shift-insert descriptors call into
+   * `computeShiftPlan` to see whether the cascade fits within the
+   * grid; swap / replace / occupy descriptors always succeed at this
+   * stage (cycle / self-drop checks already happened upstream in
+   * `_descriptorFromCursor` via `_sourceCoversTarget`).
+   */
+  _canExecuteDescriptor(descriptor, source) {
+    if (!descriptor) {
+      return false;
+    }
+    if (descriptor.kind === "line-column" || descriptor.kind === "line-row") {
+      const dropCell =
+        descriptor.kind === "line-column"
+          ? {
+              column: descriptor.line,
+              row: descriptor.row?.start ?? 1,
+            }
+          : {
+              column: descriptor.column?.start ?? 1,
+              row: descriptor.line,
+            };
+      const direction = descriptor.kind === "line-column" ? "left" : "up";
+      const sourceKey =
+        source?.kind === "ve-block" ? source.data?.blockKey : null;
+      // Only same-grid sources free a cell; cross-grid arrivals don't.
+      let sourceInGrid = null;
+      if (sourceKey) {
+        const located = this.visualEditor._findEntryAndOutletSync?.(sourceKey);
+        if (located?.outletName === this._outletName(this.args.gridKey)) {
+          for (const slot of this.slots) {
+            if (entryKey(slot) === sourceKey) {
+              sourceInGrid = sourceKey;
+              break;
+            }
+          }
+        }
+      }
+      const plan = computeShiftPlan({
+        slots: this.slots,
+        sourceKey: sourceInGrid,
+        dropCell,
+        direction,
+        gridDims: { columns: this.columns, rows: this.rows },
+      });
+      return plan != null;
+    }
+    return true;
+  }
+
+  _outletName(blockKey) {
+    return this.visualEditor._findEntryAndOutletSync?.(blockKey)?.outletName;
   }
 
   /**

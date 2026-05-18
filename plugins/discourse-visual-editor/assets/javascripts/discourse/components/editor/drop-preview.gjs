@@ -45,7 +45,8 @@ export default class DropPreview extends Component {
   <template>
     {{#if this.preview}}
       <div
-        class="visual-editor-drop-preview visual-editor-drop-preview--{{this.preview.kind}}"
+        class="visual-editor-drop-preview visual-editor-drop-preview--{{this.preview.kind}}
+          visual-editor-drop-preview--{{this.preview.validity}}"
         style={{this.style}}
         aria-hidden="true"
       >

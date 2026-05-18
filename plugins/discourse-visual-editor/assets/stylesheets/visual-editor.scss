@@ -2203,6 +2203,104 @@ body.visual-editor-dragging {
   }
 }
 
+/* ve:layout — container block.
+   Layout properties are read from CSS custom properties set inline by
+   the block's `containerStyle` / `cellStyle` so a parent `@container`
+   rule can override the actual `grid-template-columns` etc. at narrow
+   widths (an inline-style declaration would otherwise win over the
+   query rule). The defaults inside `var(..., default)` match what the
+   block emits by default, so the layout still renders even when the
+   custom property isn't set. */
+
+.ve-layout {
+  /* Establish a container query context so the layout adapts to its
+     available width — not the viewport's. A `ve:layout` inside a
+     narrow sidebar collapses the same way it would on a phone, and
+     a wide outlet keeps the author's full-width layout.
+     `container-name: ve-layout` lets the `@container` rules below
+     target this element specifically, without colliding with any
+     outlet-level container context. */
+  container-type: inline-size;
+  container-name: ve-layout;
+}
+
+.ve-layout--stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ve-layout-gap, 1rem);
+  align-items: var(--ve-layout-align, stretch);
+}
+
+.ve-layout--row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--ve-layout-gap, 1rem);
+  align-items: var(--ve-layout-align, stretch);
+}
+
+.ve-layout--grid {
+  display: grid;
+  grid-template-columns: var(--ve-layout-cols, repeat(6, 1fr));
+  grid-template-rows: var(--ve-layout-rows, repeat(2, minmax(80px, auto)));
+  gap: var(--ve-layout-gap, 1rem);
+  align-items: var(--ve-layout-align, stretch);
+  transition:
+    grid-template-columns 180ms ease,
+    grid-template-rows 180ms ease,
+    gap 180ms ease;
+}
+
+.ve-layout--grid > .ve-layout__cell {
+  grid-column: var(--ve-cell-column, auto);
+  grid-row: var(--ve-cell-row, auto);
+  display: grid;
+  place-items: var(--ve-cell-align, stretch) var(--ve-cell-justify, stretch);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Editor-only chrome support: anchor for the absolute-positioned
+   `GridOverlay` and padding compensating for the chrome's own outer
+   margin INSIDE the layout. Scoped to `body.visual-editor-active` so
+   it doesn't apply on the live page where the overlay never mounts.
+   A follow-up will migrate all editor-chrome CSS into a JS-injected
+   stylesheet so these rules don't ship to non-editor users at all. */
+
+body.visual-editor-active {
+  .ve-layout--grid {
+    position: relative;
+    padding: var(--visual-editor-container-margin, 0);
+  }
+}
+
+/* Responsive collapse. Below 40rem of container width (matches core's
+   `sm` breakpoint from viewport.scss) the layout flattens so authors
+   don't have to build a separate phone layout — grid layouts go to a
+   single column, row layouts stack as columns, stack layouts are
+   already column-oriented.
+   The `@container` rule sets the concrete `grid-template-columns` /
+   `flex-direction` properties directly (bypassing the inline-style
+   custom-property hand-off), so it wins by cascade order without
+   needing `!important`. Cell placements are forced to full-width and
+   auto-row so author placements (e.g. `column: 3 / 5`) don't leave
+   gaps at narrow widths. */
+
+@container ve-layout (max-width: 40rem) {
+  .ve-layout--grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .ve-layout--grid > .ve-layout__cell {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .ve-layout--row {
+    flex-direction: column;
+  }
+}
+
 /* Starter block library */
 .ve-heading,
 .ve-paragraph {
@@ -3326,5 +3424,21 @@ body.visual-editor-active {
   &--replace,
   &--swap {
     background: rgb(0 119 204 / 0.22);
+  }
+
+  /* Invalid variant — the cursor IS over a valid drop SHAPE, but
+     the operation underneath would be rejected (out-of-bounds shift,
+     denied outlet, self-drop, etc.). Render in danger tones so the
+     author sees the target but knows it won't accept the drop. The
+     label still describes the proposed operation so the author can
+     reason about what would happen if it were valid. */
+
+  &--invalid {
+    border-color: var(--danger);
+    background: rgb(220 38 38 / 0.15);
+
+    .visual-editor-drop-preview__label {
+      background: var(--danger);
+    }
   }
 }

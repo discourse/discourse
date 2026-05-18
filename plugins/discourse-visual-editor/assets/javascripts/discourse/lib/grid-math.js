@@ -331,28 +331,78 @@ export function computeShiftPlan({
     axis = "row";
   }
 
-  if (
-    landingCol < 1 ||
-    landingCol > maxCol ||
-    landingRow < 1 ||
-    landingRow > maxRow
-  ) {
+  // Clamp out-of-bounds landings to the trailing edge of the grid.
+  // Without this, dropping on the right edge of the LAST column
+  // (e.g. "after C" in a 3-col grid → landingCol = 4) would return
+  // null immediately. Clamping to maxCol means the source displaces
+  // the trailing slot; the bidirectional cascade below figures out
+  // where the displaced slot goes.
+  if (landingCol > maxCol) {
+    landingCol = maxCol;
+  }
+  if (landingRow > maxRow) {
+    landingRow = maxRow;
+  }
+  if (landingCol < 1 || landingRow < 1) {
     return null;
   }
 
-  // Scan from the landing position in the cascade direction to find
-  // the FIRST occupied cell. For an occupied drop slot this lands
-  // immediately on the slot itself; for an empty drop cell it skips
-  // ahead to the nearest neighbour, which is what the user expects
-  // when dropping on the edge of a placeholder cell next to a row of
-  // slots ("ripple shift everything past me to the right").
+  // Try a forward cascade (slots shift +1 on the axis). When the
+  // forward cascade walks off the grid (e.g. source is to the LEFT
+  // of the landing, so there's no room to push further right), fall
+  // back to a backward cascade (slots shift -1, using the space the
+  // source vacated). This lets `A, B, C → B, C, A` succeed via the
+  // same drop gesture as the symmetric `A, B, C → C, A, B`.
+  const forward = _attemptCascade({
+    rects,
+    landingCol,
+    landingRow,
+    axis,
+    cascadeForward: true,
+    maxCol,
+    maxRow,
+  });
+  if (forward) {
+    return forward;
+  }
+  return _attemptCascade({
+    rects,
+    landingCol,
+    landingRow,
+    axis,
+    cascadeForward: false,
+    maxCol,
+    maxRow,
+  });
+}
+
+/**
+ * One cascade attempt — either forward (shift +1, source's vacated
+ * cell is to the RIGHT/BELOW the landing) or backward (shift -1,
+ * source's vacated cell is to the LEFT/ABOVE). Returns the move plan
+ * if everything fits without overflowing the grid; `null` otherwise.
+ */
+function _attemptCascade({
+  rects,
+  landingCol,
+  landingRow,
+  axis,
+  cascadeForward,
+  maxCol,
+  maxRow,
+}) {
+  // The first slot to displace is whatever overlaps the source's
+  // intended landing rect. If that cell is empty, scan along the
+  // cascade direction to find the nearest neighbour — that's the
+  // "ripple shift" semantic for empty-cell edge drops.
   const firstShifted = _findFirstSlotInDirection(
     rects,
     landingCol,
     landingRow,
     axis,
     maxCol,
-    maxRow
+    maxRow,
+    cascadeForward
   );
 
   const moves = [];
@@ -368,12 +418,17 @@ export function computeShiftPlan({
     if (!rect) {
       return null;
     }
-    const newRect = _shiftRect(rect, axis);
-    if (newRect.colEnd > maxCol + 1 || newRect.rowEnd > maxRow + 1) {
-      return null;
+    const newRect = _shiftRect(rect, axis, cascadeForward);
+    if (cascadeForward) {
+      if (newRect.colEnd > maxCol + 1 || newRect.rowEnd > maxRow + 1) {
+        return null;
+      }
+    } else {
+      if (newRect.colStart < 1 || newRect.rowStart < 1) {
+        return null;
+      }
     }
     moves.push({ slotKey: cursor, newRect });
-    // Find anything in newRect's space that isn't already shifted.
     let next = null;
     for (const [key, otherRect] of rects) {
       if (key === cursor || shifted.has(key)) {
@@ -453,31 +508,51 @@ function _findFirstSlotInDirection(
   startRow,
   axis,
   maxCol,
-  maxRow
+  maxRow,
+  cascadeForward = true
 ) {
   if (axis === "column") {
-    for (let c = startCol; c <= maxCol; c++) {
-      const slot = _findSlotAt(rects, c, startRow);
-      if (slot) {
-        return slot;
+    if (cascadeForward) {
+      for (let c = startCol; c <= maxCol; c++) {
+        const slot = _findSlotAt(rects, c, startRow);
+        if (slot) {
+          return slot;
+        }
+      }
+    } else {
+      for (let c = startCol; c >= 1; c--) {
+        const slot = _findSlotAt(rects, c, startRow);
+        if (slot) {
+          return slot;
+        }
       }
     }
   } else {
-    for (let r = startRow; r <= maxRow; r++) {
-      const slot = _findSlotAt(rects, startCol, r);
-      if (slot) {
-        return slot;
+    if (cascadeForward) {
+      for (let r = startRow; r <= maxRow; r++) {
+        const slot = _findSlotAt(rects, startCol, r);
+        if (slot) {
+          return slot;
+        }
+      }
+    } else {
+      for (let r = startRow; r >= 1; r--) {
+        const slot = _findSlotAt(rects, startCol, r);
+        if (slot) {
+          return slot;
+        }
       }
     }
   }
   return null;
 }
 
-function _shiftRect(rect, axis) {
+function _shiftRect(rect, axis, cascadeForward = true) {
+  const delta = cascadeForward ? 1 : -1;
   if (axis === "column") {
     return {
-      colStart: rect.colStart + 1,
-      colEnd: rect.colEnd + 1,
+      colStart: rect.colStart + delta,
+      colEnd: rect.colEnd + delta,
       rowStart: rect.rowStart,
       rowEnd: rect.rowEnd,
     };
@@ -485,8 +560,8 @@ function _shiftRect(rect, axis) {
   return {
     colStart: rect.colStart,
     colEnd: rect.colEnd,
-    rowStart: rect.rowStart + 1,
-    rowEnd: rect.rowEnd + 1,
+    rowStart: rect.rowStart + delta,
+    rowEnd: rect.rowEnd + delta,
   };
 }
 

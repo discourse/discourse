@@ -224,11 +224,15 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
 export default class VELayout extends Component {
   /**
    * Inline style for the `.ve-layout__cell` wrapper this layout renders
-   * around each grid-mode child. The cell wrapper IS the grid item, so
-   * it carries CSS Grid placement (`grid-column` / `grid-row`) and acts
-   * as a single-cell sub-grid (`display: grid` + `place-items`) that
-   * positions its content (the rendered block on the live page) within
-   * the cell rectangle.
+   * around each grid-mode child. The cell wrapper IS the grid item.
+   *
+   * Emits ONLY CSS custom properties (`--ve-cell-column`, etc.) — the
+   * actual `grid-column`, `grid-row`, `display: grid`, `place-items`,
+   * and `min-*` declarations live in the stylesheet on
+   * `.ve-layout--grid > .ve-layout__cell`. Same rationale as
+   * `containerStyle`: a parent `@container ve-layout` rule can then
+   * override the cell's `grid-column` at narrow widths (e.g. force
+   * full-width when the grid collapses to one column).
    *
    * In editor mode the chrome wrapper sits inside the cell wrapper and
    * overrides its `place-items` via SCSS — the chrome always stretches
@@ -250,9 +254,8 @@ export default class VELayout extends Component {
     const align = grid.align ?? "stretch";
     const justify = grid.justify ?? "stretch";
     return trustHTML(
-      `grid-column: ${column}; grid-row: ${row}; ` +
-        `display: grid; place-items: ${align} ${justify}; ` +
-        `min-width: 0; min-height: 0;`
+      `--ve-cell-column: ${column}; --ve-cell-row: ${row}; ` +
+        `--ve-cell-align: ${align}; --ve-cell-justify: ${justify};`
     );
   };
 
@@ -272,14 +275,17 @@ export default class VELayout extends Component {
   /**
    * Container layout style driven by the `mode` arg.
    *
-   * For stack / row, we use flexbox. For grid, we resolve the column
-   * / row templates and let each child slot position itself via its
-   * own `grid-column` / `grid-row` styles.
+   * Emits ONLY CSS custom properties (`--ve-layout-cols`, etc.) — the
+   * actual layout declarations (`display: grid`, `grid-template-*`,
+   * `flex-direction`, `transition`, etc.) live in the stylesheet on
+   * `.ve-layout--{mode}` rules. This separation lets a parent
+   * `@container ve-layout` rule override the actual `grid-template-
+   * columns` at narrow widths; an inline `style` declaration would
+   * otherwise always win over the query rule.
    *
-   * Transitions are applied so changing `columns` / `gap` / templates
-   * from the inspector animates smoothly — matches the
-   * cssgridgenerator-style feel where adding a column glides instead
-   * of popping.
+   * Transitions (declared in the stylesheet) animate smoothly when
+   * the author changes `columns` / `gap` / templates from the
+   * inspector — adding a column glides instead of popping.
    */
   get containerStyle() {
     const mode = this.resolvedMode;
@@ -300,33 +306,16 @@ export default class VELayout extends Component {
       const gridTemplateRows =
         rowTemplate.length > 0 ? rowTemplate : `repeat(${rows}, ${rowHeight})`;
 
-      // `padding: var(--visual-editor-container-margin)` compensates
-      // for the chrome's own outer margin, which adds visible
-      // breathing room OUTSIDE the chrome but has no equivalent
-      // INSIDE. Without it the gap between the layout's border and
-      // its cells reads 2px short of the gap between the layout
-      // chrome and its parent's border — the "unaccounted border"
-      // the cells lack. Using the container-margin variable keeps
-      // the two sides in sync if the spacing token ever changes.
-      //
-      // `position: relative` anchors the editor's drop-preview overlay
-      // (rendered inside the grid by `GridOverlay` and positioned with
-      // absolute pixel coordinates for line-shape variants).
       return trustHTML(
-        `display: grid; grid-template-columns: ${gridTemplateColumns}; ` +
-          `grid-template-rows: ${gridTemplateRows}; ` +
-          `gap: ${gap}rem; align-items: ${align}; ` +
-          `padding: var(--visual-editor-container-margin); ` +
-          `position: relative; ` +
-          `transition: grid-template-columns 180ms ease, ` +
-          `grid-template-rows 180ms ease, gap 180ms ease;`
+        `--ve-layout-cols: ${gridTemplateColumns}; ` +
+          `--ve-layout-rows: ${gridTemplateRows}; ` +
+          `--ve-layout-gap: ${gap}rem; ` +
+          `--ve-layout-align: ${align};`
       );
     }
 
-    const direction = mode === "row" ? "row" : "column";
     return trustHTML(
-      `display: flex; flex-direction: ${direction}; gap: ${gap}rem; ` +
-        `align-items: ${align};`
+      `--ve-layout-gap: ${gap}rem; --ve-layout-align: ${align};`
     );
   }
 
