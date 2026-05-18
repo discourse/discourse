@@ -191,6 +191,16 @@ RSpec.describe DiscourseSubscriptions::HooksController do
           expect(response.status).to eq 200
         end
       end
+
+      it "does not create records or add the user to the group when payment_status is not paid" do
+        unpaid_data = checkout_session_completed_data.deep_dup
+        unpaid_data[:object][:payment_status] = "unpaid"
+        event = { type: "checkout.session.completed", data: unpaid_data }
+        ::Stripe::Webhook.stubs(:construct_event).returns(event)
+
+        expect { post "/s/hooks.json" }.not_to change { user.groups.count }
+        expect(response.status).to eq(200)
+      end
     end
 
     describe "checkout.session.completed with bad data" do
@@ -367,6 +377,62 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         expect { post "/s/hooks.json" }.to change { user.groups.count }.by(-1)
 
         expect(response.status).to eq 200
+      end
+    end
+
+    describe "checkout.session.async_payment_succeeded" do
+      before do
+        event = {
+          type: "checkout.session.async_payment_succeeded",
+          data: checkout_session_completed_data,
+        }
+        ::Stripe::Webhook.stubs(:construct_event).returns(event)
+        ::Stripe::Checkout::Session
+          .stubs(:list_line_items)
+          .with(
+            checkout_session_completed_data[:object][:id],
+            { limit: 1 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
+          .returns(list_line_items_data)
+        ::Stripe::Subscription
+          .stubs(:update)
+          .with(
+            checkout_session_completed_data[:object][:subscription],
+            { metadata: { user_id: user.id, username: user.username } },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
+          .returns(
+            {
+              id: checkout_session_completed_data[:object][:subscription],
+              object: "subscription",
+              metadata: {
+                user_id: user.id.to_s,
+                username: user.username,
+              },
+            },
+          )
+      end
+
+      it "creates customer and subscription records and adds the user to the group" do
+        post "/s/hooks.json"
+
+        expect(response.status).to eq(200)
+        expect(user.groups).to include(group)
+
+        expect(
+          DiscourseSubscriptions::Customer.exists?(
+            user_id: user.id,
+            customer_id: customer.customer_id,
+            product_id: "prod_PhB6IpGhEX14Hi",
+          ),
+        ).to eq(true)
+        expect(
+          DiscourseSubscriptions::Subscription.exists?(
+            customer_id: DiscourseSubscriptions::Customer.last.id,
+            external_id: "sub_1P9b7iEYXaQnncSh3H3G9d2Y",
+          ),
+        ).to eq(true)
       end
     end
   end
