@@ -19,7 +19,7 @@ class InlineFootnote extends Component {
       @closeOnClickOutside={{true}}
     >
       <:trigger>
-        {{! template-lint-disable no-invalid-link-text }}
+        {{! eslint-disable ember/template-no-invalid-link-text }}
         <a
           class="expand-footnote"
           href

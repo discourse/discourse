@@ -148,6 +148,7 @@ export default class ChooseTopic extends Component {
             <div class="choose-topic-list" role="radiogroup">
               {{#each topics as |t|}}
                 <div class="controls existing-topic">
+                  {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                   <label class="radio">
                     <input
                       {{on "click" (fn this.chooseTopic t)}}

@@ -114,23 +114,23 @@ class LinkToolbarPluginView {
   update(view) {
     this.#view = view;
 
-    if (view.state.selection instanceof NodeSelection) {
-      this.#resetToolbar();
+    const markRange =
+      !(view.state.selection instanceof NodeSelection) &&
+      this.#utils.getMarkRange(
+        view.state.selection.$head,
+        view.state.schema.marks.link
+      );
+
+    if (markRange) {
+      this.#updateLinkState(markRange);
+      this.#displayToolbar();
       return;
     }
 
-    const markRange = this.#utils.getMarkRange(
-      view.state.selection.$head,
-      view.state.schema.marks.link
-    );
-
-    if (!markRange) {
+    // Don't tear down while a toolbar button is focused.
+    if (!this.#menuInstance?.content?.contains(document.activeElement)) {
       this.#resetToolbar();
-      return;
     }
-
-    this.#updateLinkState(markRange);
-    this.#displayToolbar();
   }
 
   #resetToolbar() {

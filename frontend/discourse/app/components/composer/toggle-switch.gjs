@@ -45,7 +45,7 @@ export default class ComposerToggleSwitch extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-redundant-role }}
+    {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <button
       class={{dConcatClass
         "composer-toggle-switch"
@@ -58,7 +58,6 @@ export default class ComposerToggleSwitch extends Component {
       aria-label={{this.label}}
       aria-keyshortcuts={{this.ariaKeyshortcuts}}
       title={{this.label}}
-      {{! template-lint-disable no-pointer-down-event-binding }}
       {{on "mousedown" this.mouseDown}}
       {{on "keydown" this.handleKeydown}}
       data-rich-editor={{@state}}

@@ -100,11 +100,10 @@ export default class DTableHeaderToggle extends Component {
       class="directory-table__column-header sortable"
       aria-sort={{this.ariaSort}}
       role="columnheader"
-      {{! template-lint-disable no-invalid-interactive }}
       {{on "click" this.click}}
-      {{! template-lint-disable no-invalid-interactive }}
       {{on "keypress" this.keyPress}}
     >
+      {{! eslint-disable-next-line ember/template-no-nested-interactive }}
       <div
         class="header-contents"
         id={{this.id}}
