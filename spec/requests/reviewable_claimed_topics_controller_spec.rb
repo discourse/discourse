@@ -270,7 +270,7 @@ RSpec.describe ReviewableClaimedTopicsController do
       it "prevents unclaiming a topic the user cannot see" do
         delete "/reviewable_claimed_topics/#{private_topic.id}.json"
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(403)
         expect(ReviewableClaimedTopic.where(topic_id: private_topic.id).exists?).to eq(true)
       end
 
@@ -280,7 +280,7 @@ RSpec.describe ReviewableClaimedTopicsController do
 
         delete "/reviewable_claimed_topics/#{private_topic.id}.json"
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(403)
         expect(ReviewableClaimedTopic.where(topic_id: private_topic.id).exists?).to eq(true)
       end
     end
