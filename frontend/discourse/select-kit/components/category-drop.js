@@ -91,8 +91,12 @@ export default class CategoryDrop extends ComboBoxComponent {
 
   @computed(
     "content.length",
+    "options.parentCategory.id",
+    "shortcuts.length",
     "site.lazy_load_categories",
-    "site.categoriesList.[]"
+    "site.categoriesList.[]",
+    "site.uncategorized_category_id",
+    "siteSettings.allow_uncategorized_topics"
   )
   get autoFilterable() {
     if (this.site.lazy_load_categories) {
