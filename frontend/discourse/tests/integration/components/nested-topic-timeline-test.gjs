@@ -1,4 +1,4 @@
-import { render, triggerEvent } from "@ember/test-helpers";
+import { click, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import NestedTopicTimeline from "discourse/components/nested/topic-timeline";
@@ -119,6 +119,54 @@ module("Integration | Component | nested-topic-timeline", function (hooks) {
       jumpToRootPage.lastCall.args,
       [3, null, 5],
       "lands at the target offset within the unpinned page"
+    );
+  });
+
+  test("endpoint labels jump to the start and end", async function (assert) {
+    const jumpToRootPage = sinon.spy();
+    this.setProperties({
+      firstLoadedPage: 0,
+      jumpToRootPage,
+      loadedPostNumbers: [10],
+      summary: {
+        total: 100,
+        page_size: 20,
+        page_count: 5,
+        pinned_count: 10,
+      },
+    });
+
+    await render(
+      <template>
+        <div class="nested-view__roots">
+          {{#each this.loadedPostNumbers as |postNumber|}}
+            <div class="nested-post --depth-0">
+              <article data-post-number={{postNumber}}></article>
+            </div>
+          {{/each}}
+        </div>
+
+        <NestedTopicTimeline
+          @summary={{this.summary}}
+          @sort="top"
+          @firstLoadedPage={{this.firstLoadedPage}}
+          @jumpToRootPage={{this.jumpToRootPage}}
+        />
+      </template>
+    );
+
+    await click(".nested-topic-timeline__endpoint--start");
+    assert.deepEqual(
+      jumpToRootPage.lastCall.args,
+      [0, null, 0],
+      "start label jumps to the first root"
+    );
+
+    await click(".nested-topic-timeline__endpoint--end");
+    assert.deepEqual(
+      jumpToRootPage.lastCall.args,
+      [4, null, 9],
+      "end label jumps to the last root"
     );
   });
 });

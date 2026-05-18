@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
@@ -183,6 +184,16 @@ export default class NestedTopicTimeline extends Component {
     }
   }
 
+  @action
+  jumpToStart() {
+    return this.onCommit(0);
+  }
+
+  @action
+  jumpToEnd() {
+    return this.onCommit(1);
+  }
+
   <template>
     {{#if (gt this.total 0)}}
       <aside
@@ -191,11 +202,13 @@ export default class NestedTopicTimeline extends Component {
         {{this.trackViewport}}
         {{this.syncOnLoadedWindow @firstLoadedPage}}
       >
-        <div
+        <button
+          type="button"
           class="nested-topic-timeline__endpoint nested-topic-timeline__endpoint--start"
+          {{on "click" this.jumpToStart}}
         >
           {{this.sortEndpoints.start}}
-        </div>
+        </button>
 
         <TimelineScrubber
           class="nested-topic-timeline__scrubber"
@@ -212,11 +225,13 @@ export default class NestedTopicTimeline extends Component {
           </:handle>
         </TimelineScrubber>
 
-        <div
+        <button
+          type="button"
           class="nested-topic-timeline__endpoint nested-topic-timeline__endpoint--end"
+          {{on "click" this.jumpToEnd}}
         >
           {{this.sortEndpoints.end}}
-        </div>
+        </button>
       </aside>
     {{/if}}
   </template>
