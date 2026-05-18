@@ -11,28 +11,16 @@ export default class NestedTopicTimeline extends Component {
   @service header;
   @service nestedRootElements;
 
-  // activeGlobalIndex is the user's "where in the topic" position
-  // across ALL roots (not just the loaded window), derived from
-  // `firstLoadedPage * page_size + indexInDom`. Drives scrubProgress so
-  // the handle can't drift when the loaded window grows or shrinks.
   @tracked activeGlobalIndex = null;
+  @tracked latchedProgress = null;
 
   trackViewport = modifier(() => {
-    this.#scrollHandler = () => {
-      if (this.#rafScheduled) {
-        return;
-      }
-      this.#rafScheduled = true;
-      requestAnimationFrame(() => {
-        this.#rafScheduled = false;
-        this.#updateActive();
-      });
-    };
+    this.#scrollHandler = () => this.#scheduleUpdate();
 
     window.addEventListener("scroll", this.#scrollHandler, { passive: true });
     window.addEventListener("resize", this.#scrollHandler, { passive: true });
 
-    requestAnimationFrame(() => this.#updateActive());
+    this.#scheduleUpdate();
 
     return () => {
       window.removeEventListener("scroll", this.#scrollHandler);
@@ -41,15 +29,9 @@ export default class NestedTopicTimeline extends Component {
     };
   });
 
-  // Re-sync activeGlobalIndex whenever the loaded window shifts. After
-  // jumpToRootPage / loadPreviousRoots the DOM mutates and we scroll,
-  // but the resulting scroll event isn't always enough to trigger a
-  // timely #updateActive — reading the arg here makes ember-modifier
-  // re-run on every change, and we defer a frame so layout has settled.
   syncOnLoadedWindow = modifier((_el, [firstLoadedPage]) => {
     void firstLoadedPage;
-    const handle = requestAnimationFrame(() => this.#updateActive());
-    return () => cancelAnimationFrame(handle);
+    this.#scheduleUpdate();
   });
 
   #rafScheduled = false;
@@ -82,13 +64,9 @@ export default class NestedTopicTimeline extends Component {
   }
 
   get ariaValueText() {
-    return this.positionLabelAt(this.scrubProgress);
+    return this.positionLabelAt(this.effectiveProgress);
   }
 
-  // Sort-dependent labels above/below the rail. The order of the rail
-  // matches the current sort, so the labels tell the user what "up"
-  // and "down" actually mean — see config/locales/client.en.yml for
-  // the per-sort phrasing.
   get sortEndpoints() {
     const sort = this.args.sort || "top";
     return {
@@ -104,10 +82,14 @@ export default class NestedTopicTimeline extends Component {
     return Math.min(this.total - 1, this.activeGlobalIndex) / (this.total - 1);
   }
 
-  // The readout below is driven by the progress value the primitive
-  // yields from its slot — which is latch-aware. That way the readout
-  // locks at the committed position during navigation in lockstep with
-  // the handle (no flicker), and follows scroll afterward.
+  // Holds the handle at the just-committed position until jumpToRootPage
+  // resolves and the post-jump scroll has propagated into activeGlobalIndex.
+  // Without this the handle snaps back to the stale scrubProgress for a
+  // visible flash.
+  get effectiveProgress() {
+    return this.latchedProgress ?? this.scrubProgress;
+  }
+
   @action
   indexAtProgress(progress) {
     if (this.total === 0) {
@@ -121,15 +103,20 @@ export default class NestedTopicTimeline extends Component {
     if (this.total === 0) {
       return null;
     }
-    const idx = this.indexAtProgress(progress);
-    if (idx == null) {
-      return i18n("nested_replies.topic_timeline.position_total", {
-        total: this.total,
-      });
-    }
     return i18n("nested_replies.topic_timeline.position", {
-      current: idx + 1,
+      current: this.indexAtProgress(progress) + 1,
       total: this.total,
+    });
+  }
+
+  #scheduleUpdate() {
+    if (this.#rafScheduled) {
+      return;
+    }
+    this.#rafScheduled = true;
+    requestAnimationFrame(() => {
+      this.#rafScheduled = false;
+      this.#updateActive();
     });
   }
 
@@ -163,11 +150,8 @@ export default class NestedTopicTimeline extends Component {
     }
 
     const firstPage = this.args.firstLoadedPage ?? 0;
-    // On firstPage 0 the DOM contains pinned + first unpinned page,
-    // so bestDomIndex already maps onto the total ordering. On later
-    // pages the DOM has only unpinned roots, and the global position
-    // is offset by N_pinned (which sit at the top of total ordering
-    // but aren't re-rendered on those pages).
+    // Pages after 0 contain only unpinned roots; pinned roots sit at the
+    // top of total ordering but aren't re-rendered, so offset for them.
     const pinnedOffset =
       firstPage === 0 ? 0 : (this.summary?.pinned_count ?? 0);
     const globalIndex = pinnedOffset + firstPage * pageSize + bestDomIndex;
@@ -178,29 +162,26 @@ export default class NestedTopicTimeline extends Component {
   }
 
   @action
-  onCommit(progress) {
-    this.#commitScrub(progress);
-  }
-
-  #commitScrub(progress) {
+  async onCommit(progress) {
     const pageSize = this.pageSize;
-
-    if (pageSize && this.total > 0 && this.args.jumpToRootPage) {
-      const totalPages =
-        this.pageCount || Math.max(1, Math.ceil(this.total / pageSize));
-      const targetPage = Math.min(
-        totalPages - 1,
-        Math.floor(progress * totalPages)
-      );
-      this.args.jumpToRootPage(targetPage);
+    if (!pageSize || this.total === 0 || !this.args.jumpToRootPage) {
       return;
     }
 
-    const max = Math.max(
-      0,
-      document.documentElement.scrollHeight - window.innerHeight
+    const targetPage = Math.min(
+      this.pageCount - 1,
+      Math.floor(progress * this.pageCount)
     );
-    window.scrollTo({ top: progress * max, behavior: "auto" });
+
+    this.latchedProgress = progress;
+    try {
+      await this.args.jumpToRootPage(targetPage);
+      await new Promise((r) =>
+        requestAnimationFrame(() => requestAnimationFrame(r))
+      );
+    } finally {
+      this.latchedProgress = null;
+    }
   }
 
   <template>
@@ -219,11 +200,10 @@ export default class NestedTopicTimeline extends Component {
 
         <TimelineScrubber
           class="nested-topic-timeline__scrubber"
-          @progress={{this.scrubProgress}}
+          @progress={{this.effectiveProgress}}
           @ariaLabel={{i18n "nested_replies.topic_timeline.aria_label"}}
           @ariaValueText={{this.ariaValueText}}
           @keyboardStep={{this.keyboardStep}}
-          @tolerance={{this.keyboardStep}}
           @onCommit={{this.onCommit}}
         >
           <:handle as |progress|>

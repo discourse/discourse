@@ -1,39 +1,15 @@
-// Shared scrubber primitive for the flat-view and nested-view topic
-// timelines. Owns the rail, scroller pill, and grip handle visuals.
-// Per-consumer chrome (date labels, density segments, last-read marker)
-// is layered via the <:track> and <:handle> yielded slots.
-//
-// CSS variables (override per consumer):
-//   --timeline-scroller-height   actual rendered height of the pill;
-//                                used by the JS-computed top: math so
-//                                the scroller can't overflow the rail.
-//                                Mirrors the JS SCROLLER_HEIGHT constant
-//                                in timeline-scrubber.gjs — keep in sync.
-//
-// Class names mirror the classic timeline (`.timeline-scrollarea`,
-// `.timeline-scroller`, `.timeline-handle`, `.timeline-scroller-content`)
-// so existing CSS, themes, and plugins continue to target them.
 .timeline-scrubber {
   position: relative;
   touch-action: none;
   user-select: none;
 
   --timeline-scroller-height: 50px;
-
-  // Classic-style 1px rail track. Sits on the left edge of the
-  // scrollarea; the scroller pill floats to its right. Consumers can
-  // hide / replace via the <:track> slot (e.g. density segments).
   border-left: 1px solid var(--topic-timeline-border-color);
   margin-left: 0.5em;
 
   &__track {
     position: absolute;
     inset: 0;
-    pointer-events: none;
-  }
-
-  &--interactive-track &__track {
-    pointer-events: auto;
   }
 
   &__scroller {
@@ -48,8 +24,7 @@
     will-change: top;
     transition: top 0.05s linear;
 
-    // Travel range = rail height minus scroller height, so the pill
-    // can't overflow either end at progress 0 or 1.
+    // Travel = rail height minus pill height, so progress 0/1 don't overflow.
     top: calc(
       var(--scrubber-progress, 0) *
         (100% - var(--timeline-scroller-height, 50px))
@@ -79,9 +54,6 @@
     max-height: 3em;
   }
 
-  // Default styling for label content commonly placed inside the
-  // scroller. Consumers can override per-instance. Mirrors the classic
-  // timeline so the migration leaves the look untouched.
   .timeline-replies {
     overflow: hidden;
     overflow-wrap: break-word;

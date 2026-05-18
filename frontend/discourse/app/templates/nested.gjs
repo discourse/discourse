@@ -13,11 +13,6 @@ export default <template>
     @topic={{@controller.topic}}
   />
 
-  {{! Two-column grid matching flat's .container.posts: content on
-      the left auto-sized to the post body width, timeline on the
-      right auto-sized to the scrubber. With both as grid items the
-      grid sizes to their combined max-content — same behavior as
-      flat — rather than stretching to fill #main-outlet. }}
   <div class="nested-topic-layout">
     <div class="nested-topic-layout__content">
       {{#if @controller.contextMode}}
@@ -98,11 +93,6 @@ export default <template>
       {{/if}}
     </div>
 
-    {{! Desktop-only: matches flat view, which uses topic-navigation to
-        suppress the timeline on mobileView. Skipping at the render layer
-        also avoids running scroll listeners / IO observers in the
-        background. Context view (single-thread) has no use for a
-        whole-topic scrubber. }}
     {{#if (and (not @controller.contextMode) @controller.site.desktopView)}}
       {{#if @controller.rootSummary}}
         <NestedTopicTimeline

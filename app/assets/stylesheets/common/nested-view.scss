@@ -1,11 +1,5 @@
 @use "lib/viewport";
 
-// ── Layout wrapper ───────────────────────────────────────────────
-// Two-column grid mirroring flat view's `.container.posts`. With both
-// columns `auto`, the grid sizes to its children's max-content
-// instead of stretching — that's what gives flat its compact width.
-// Content column holds <Nested>, timeline column holds the scrubber
-// as a sibling (NOT fixed-positioned, so the grid can size around it).
 .nested-topic-layout {
   display: grid;
   grid-template-areas: "content timeline";
@@ -17,11 +11,7 @@
   }
 }
 
-// ── Top-level nested view ──────────────────────────────────────────
 .nested-view {
-  // Width is set by .nested-topic-layout's grid column above; this
-  // max-width is a belt-and-braces ceiling for any environment that
-  // bypasses the wrapper.
   max-width: calc(
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
       var(--topic-avatar-width)
@@ -1087,22 +1077,11 @@ html.footer-nav-visible {
   }
 }
 
-// ── Topic timeline (nested view) ─────────────────────────────────
-// Composes the shared <TimelineScrubber>. The primitive ships the rail
-// line, scroller pill, and grip handle (classic look). We bracket the
-// rail with sort-aware endpoint labels.
 .nested-topic-timeline {
-  // Renders as the timeline grid item of .nested-topic-layout. Sticky
-  // so it stays visible as the user scrolls the content column,
-  // matching flat view's .topic-navigation behavior.
   grid-area: timeline;
   align-self: start;
   position: sticky;
   top: calc(var(--header-offset, 60px) + 1.5em);
-
-  // Visually align the rail with the topic body content rather than
-  // the topic title — same intent as flat where the timeline sits to
-  // the right of the first post, not the title.
   margin-top: 4em;
   margin-left: 1em;
   width: 12em;

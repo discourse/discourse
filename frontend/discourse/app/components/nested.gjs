@@ -61,11 +61,7 @@ export default class Nested extends Component {
         @outletArgs={{lazyHash model=@topic}}
       />
 
-      {{! Intro chrome (header / OP / topic map) is only meaningful when
-          the loaded window starts at page 0. After a timeline jump to a
-          later page, keeping these visible suggests the user is at the
-          top of the topic when they aren't. The site header docks the
-          title in that case so it's never lost. }}
+      {{! Site header docks the title once the in-page header is hidden. }}
       {{#unless @firstLoadedPage}}
         <NestedHeader
           @topic={{@topic}}
@@ -100,10 +96,6 @@ export default class Nested extends Component {
         </div>
       {{/unless}}
 
-      {{! Controls (sort, activity log, view-as-flat) belong with the
-          intro chrome — once the loaded window has been jumped past
-          page 0, they're not meaningful to show above the visible
-          roots. Bundled with the header/OP/map unless above. }}
       {{#unless @firstLoadedPage}}
         <div class="nested-view__controls">
           <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
@@ -140,14 +132,6 @@ export default class Nested extends Component {
       {{/if}}
 
       <div class="nested-view__roots">
-        {{! No negative rootMargin: when firstLoadedPage > 0 the
-            intro chrome is hidden, so the user can't scroll above
-            the first root — a negative margin would put the sentinel
-            permanently out of the intersection rect. The @isLoading
-            guard prevents the observer from being created during a
-            jump; one buffer page may load right after the observer
-            re-attaches, which is fine — anchor preservation then
-            pushes the sentinel out of view. }}
         <DLoadMore
           @action={{@loadPreviousRoots}}
           @enabled={{@hasMoreRootsBefore}}
@@ -230,10 +214,6 @@ export default class Nested extends Component {
         @topic={{@topic}}
         @replyAction={{fn @replyToPost @opPost 0}}
       />
-
-      {{! Timeline is rendered at the route level (templates/nested.gjs)
-          as a sibling of this component so it can be a grid item in
-          the .nested-topic-layout grid, matching flat's structure. }}
     </div>
   </template>
 }

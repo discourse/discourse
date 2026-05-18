@@ -104,7 +104,7 @@ RSpec.describe NestedTopic::ListRoots do
     end
 
     context "with root_summary" do
-      it "is omitted on page 1+" do
+      it "is included on every page so deep links can render the timeline" do
         result =
           described_class.call(
             params: {
@@ -114,7 +114,7 @@ RSpec.describe NestedTopic::ListRoots do
             guardian: user.guardian,
             topic_view: topic_view,
           )
-        expect(result[:response]).not_to have_key(:root_summary)
+        expect(result[:response]).to have_key(:root_summary)
       end
 
       it "includes page_size so the client can compute target pages" do

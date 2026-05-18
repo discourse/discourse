@@ -19,6 +19,7 @@ class NestedTopic::ListRoots
   step :expand_reply_trees
   step :prepare_posts
   step :serialize_roots
+  step :attach_root_summary
   only_if(:initial_page) { step :enrich_with_topic_metadata }
   only_if(:final_page) { step :attach_suggested_and_related }
 
@@ -125,6 +126,10 @@ class NestedTopic::ListRoots
     response[:sort] = params.sort
     response[:message_bus_last_id] = topic_view.message_bus_last_id
     response[:pinned_post_ids] = pinned_post_ids if pinned_post_ids.present?
+  end
+
+  def attach_root_summary(params:, loader:, topic_view:, response:)
+    pinned_post_ids = topic_view.topic.nested_topic&.pinned_post_ids.presence
     response[:root_summary] = loader.root_summary(params.sort, pinned_post_ids: pinned_post_ids)
   end
 

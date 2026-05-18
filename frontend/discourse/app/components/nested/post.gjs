@@ -55,9 +55,6 @@ export default class NestedPost extends Component {
     window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
   });
 
-  // Depth-0 root registration. The shared registry lets the timeline
-  // and the controller find/scroll-to roots without DOM-class coupling
-  // to .nested-view__roots .nested-post.--depth-0.
   registerRoot = modifier((element) => {
     if (this.args.depth !== 0) {
       return;

@@ -27,9 +27,6 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import BackButton from "./back-button";
 
-// Re-exported for plugin compat — plugins historically imported this
-// from container.gjs. The canonical source is now timeline-scrubber.gjs.
-export { SCROLLER_HEIGHT };
 const DEFAULT_MIN_SCROLLAREA_HEIGHT = 170;
 const DEFAULT_MAX_SCROLLAREA_HEIGHT = 300;
 const LAST_READ_HEIGHT = 20;
@@ -287,9 +284,6 @@ export default class TopicTimelineScrollArea extends Component {
       this.lastReadTop = Math.round(
         this.lastReadPercentage * this.scrollareaHeight
       );
-      // Scroller travel range is (railH - scrollerH). Compute the
-      // scroller's current top in px so we can decide whether the
-      // last-read marker is hidden under it.
       const scrollerTop =
         this.percentage * (this.scrollareaHeight - SCROLLER_HEIGHT);
       this.showButton =
@@ -348,10 +342,6 @@ export default class TopicTimelineScrollArea extends Component {
     });
   }
 
-  // Called by <TimelineScrubber> on pointer release with the final
-  // progress value. The primitive owns drag state and defers commit
-  // until release, so we just translate progress → post index and ask
-  // the topic to jump there.
   @action
   handleCommit(progress) {
     this.percentage = this.clamp(progress);
@@ -436,9 +426,6 @@ export default class TopicTimelineScrollArea extends Component {
     }
   }
 
-  // Helpers consumed by <:handle> via the yielded progress so the
-  // scroller's labels stay in sync with the (latched) handle position
-  // during drag and the post-commit settle period.
   @action
   currentAt(progress) {
     const total = this.total;
@@ -563,9 +550,7 @@ export default class TopicTimelineScrollArea extends Component {
             current=this.current
             total=this.total
           }}
-          @interactiveTrack={{true}}
           @keyboardStep={{this.keyboardStep}}
-          @tolerance={{this.keyboardStep}}
           @onCommit={{this.handleCommit}}
         >
           <:track>
@@ -591,9 +576,7 @@ export default class TopicTimelineScrollArea extends Component {
                 </div>
               {{/if}}
             {{/let}}
-            {{! Restore parity with the legacy scroller component: the
-                in-pill BackButton hid itself during a drag so it didn't
-                visually compete with the moving handle. }}
+            {{! Hide while dragging so it doesn't fight the moving handle. }}
             {{#if (and this.showDockedButton (not dragging))}}
               <BackButton @onGoBack={{this.goBack}} />
             {{/if}}

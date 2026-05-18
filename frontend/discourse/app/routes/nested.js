@@ -109,10 +109,6 @@ export default class NestedRoute extends Route {
 
     this.screenTrack.start(model.topic.id, controller);
 
-    // Show the topic title in the site header as soon as it scrolls
-    // out of view (or always, if we're entering on a non-zero page
-    // where the in-page header is hidden). Mirrors flat view's
-    // routes/topic/from-params.js#redirect.
     this.header.enterTopic(model.topic, model.firstLoadedPage === 0);
 
     if (!isEmpty(model.topic.draft) && !EmbedMode.enabled) {
@@ -128,9 +124,6 @@ export default class NestedRoute extends Route {
 
   @action
   willTransition(transition) {
-    // Mirror flat view: only clear the docked topic info if we're
-    // leaving nested routes entirely. Transitions between nested URLs
-    // (e.g. same topic, different sort) will reseed via enterTopic.
     transition.followRedirects().finally(() => {
       if (!this.router.currentRouteName?.startsWith("nested")) {
         this.header.clearTopic();

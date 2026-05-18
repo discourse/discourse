@@ -152,10 +152,8 @@
         border-left: none;
         max-width: 120px;
 
-        // Restore legacy fullscreen layout where the grip sat on the
-        // right side of the pill (against the right-aligned rail line).
-        // The primitive renders grip-then-content; row-reverse swaps
-        // the visual order without a second DOM template.
+        // Fullscreen mode renders the rail on the right edge; flip the
+        // pill so the grip sits against it.
         .timeline-scroller {
           position: relative;
           margin-right: -1.5em;
@@ -234,10 +232,6 @@
       color: var(--primary-med-or-secondary-med);
     }
 
-    // Rail, scroller pill, grip handle, and label styling now live in
-    // common/components/timeline-scrubber.scss — applied via the shared
-    // <TimelineScrubber> primitive. What stays here is the topic-page-
-    // specific chrome (last-read marker, date wrappers, footer controls).
     .topic-timeline-scrubber .back-button {
       margin-top: var(--space-4);
     }

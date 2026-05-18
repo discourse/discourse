@@ -16,10 +16,6 @@ import dObserveIntersection from "discourse/ui-kit/modifiers/d-observe-intersect
 export default class NestedHeader extends Component {
   @service header;
 
-  // Mirror frontend/discourse/app/components/topic-title.gjs: when the
-  // in-page title scrolls out of view the site header docks it. Treat
-  // "above viewport" (boundingClientRect.top > 0 path) as on-screen to
-  // handle short viewports / tall headers.
   @action
   handleIntersectionChange(entry) {
     this.header.mainTopicTitleVisible =

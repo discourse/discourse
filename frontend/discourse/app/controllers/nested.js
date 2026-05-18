@@ -30,11 +30,6 @@ export default class NestedController extends Controller {
   @tracked opPost;
   @tracked rootNodes = [];
   @tracked page = 0;
-  // firstLoadedPage and page (= lastLoadedPage) bracket the current loaded
-  // window of root pages. Sequential infinite scroll grows the window
-  // forwards via loadMoreRoots and backwards via loadPreviousRoots; a
-  // timeline jump collapses the window to a single page and the user can
-  // then expand it in either direction.
   @tracked firstLoadedPage = 0;
   @tracked hasMoreRoots = false;
   @tracked loadingMore = false;
@@ -112,10 +107,6 @@ export default class NestedController extends Controller {
     return this.firstLoadedPage > 0;
   }
 
-  // Non-contiguous jump: collapses the loaded window to a single target
-  // page. After the jump, the user can grow the window forward
-  // (loadMoreRoots) or backward (loadPreviousRoots) — no sequential
-  // pagination is required to navigate elsewhere.
   @action
   async jumpToRootPage(targetPage, targetPostNumber = null) {
     if (this.loadingMore) {
@@ -126,7 +117,6 @@ export default class NestedController extends Controller {
       targetPage <= this.page &&
       this.rootNodes.length > 0
     ) {
-      // Already inside the loaded window — just scroll.
       const inWindow =
         targetPostNumber && this.#scrollToLoadedRoot(targetPostNumber);
       if (!inWindow) {
@@ -145,9 +135,6 @@ export default class NestedController extends Controller {
         this.#processNode(root)
       );
 
-      // Pick the scroll target post number BEFORE swapping rootNodes so
-      // we can await its registration in the registry rather than
-      // guessing at render timing with afterRender+rAF.
       const scrollTargetPostNumber =
         targetPostNumber ?? newNodes[0]?.post?.post_number ?? null;
 
@@ -155,15 +142,8 @@ export default class NestedController extends Controller {
       this.firstLoadedPage = data.page;
       this.page = data.page;
       this.hasMoreRoots = data.has_more_roots || false;
-      // The backend piggybacks suggested/related on whichever response
-      // has has_more_roots=false. If a jump lands on the final page,
-      // skipping this leaves MoreTopics rendering with no suggestions.
       this.#assignSuggestedAndRelated(data);
 
-      // Always land the user inside the new loaded window. Without an
-      // explicit target post, the previous scrollY is stale (often past
-      // the new shorter content's end) and the bottom sentinel triggers
-      // a cascade of loadMore calls.
       if (scrollTargetPostNumber != null) {
         const element = await this.nestedRootElements.waitForElement(
           scrollTargetPostNumber
@@ -201,28 +181,18 @@ export default class NestedController extends Controller {
     this.#scrollToRootWrapper(ordered[clamped].el);
   }
 
-  // Backwards infinite scroll. Prepends the previous page to rootNodes and
-  // compensates window scroll so the user's current viewport anchor (the
-  // first wrapper that was visible before the prepend) stays put. Without
-  // the compensation, prepending content above the viewport would push the
-  // visible content downward by the height of the new content.
   @action
   async loadPreviousRoots() {
     if (this.loadingMore || !this.hasMoreRootsBefore) {
       return;
     }
 
-    // Capture an anchor + its viewport position BEFORE mutation. The
-    // first registered root is the boundary between old/new content
-    // after the prepend; preserving its `top` keeps the user's
-    // current reading position visually stationary.
-    const anchorEl = this.nestedRootElements.firstElement();
-    const anchorPostNumber = anchorEl
-      ? (this.nestedRootElements
-          .elementsInOrder()
-          .find((entry) => entry.el === anchorEl)?.postNumber ?? null)
-      : null;
-    const anchorTopBefore = anchorEl?.getBoundingClientRect().top ?? null;
+    // Preserving the first visible root's viewport top keeps the user's
+    // reading position stationary across the prepend.
+    const ordered = this.nestedRootElements.elementsInOrder();
+    const anchor = ordered[0] ?? null;
+    const anchorPostNumber = anchor?.postNumber ?? null;
+    const anchorTopBefore = anchor?.el.getBoundingClientRect().top ?? null;
 
     this.loadingMore = true;
     try {
@@ -237,14 +207,8 @@ export default class NestedController extends Controller {
 
       this.rootNodes = [...newNodes, ...this.rootNodes];
       this.firstLoadedPage = data.page;
-      // Same final-page piggyback concern as in jumpToRootPage — if
-      // the user previously scrolled to the bottom (loading suggested)
-      // and a previous-page prepend ended up being the final-page
-      // response, suggested would never attach without this.
       this.#assignSuggestedAndRelated(data);
 
-      // Wait for the prepended roots to register so the layout has
-      // settled before we re-measure the anchor.
       const newFirstPostNumber = newNodes[0]?.post?.post_number;
       if (newFirstPostNumber != null) {
         await this.nestedRootElements.waitForElement(newFirstPostNumber);
