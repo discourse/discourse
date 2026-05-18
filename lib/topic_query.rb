@@ -1338,7 +1338,7 @@ class TopicQuery
 
       # perf note, in the past we tried doing this in a subquery but performance was
       # terrible, also tried with a join and it was bad
-      results = results.where("topics.updated_at >= ?", unread_at)
+      results = results.where("topics.bumped_at >= ?", unread_at)
     end
     results
   end
