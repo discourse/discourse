@@ -1699,6 +1699,7 @@ RSpec.describe PostAlerter do
     end
 
     it "notifies staff user about whispered reply" do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       admin1 = Fabricate(:admin)
       admin2 = Fabricate(:admin)
 
