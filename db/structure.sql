@@ -3823,7 +3823,8 @@ CREATE TABLE public.discourse_post_event_invitees (
     status integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    notified boolean DEFAULT false NOT NULL
+    notified boolean DEFAULT false NOT NULL,
+    recurring boolean DEFAULT false NOT NULL
 );
 
 
@@ -20867,6 +20868,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260513055222'),
 ('20260513024004'),
 ('20260512061336'),
+('20260511145109'),
 ('20260511044542'),
 ('20260510232238'),
 ('20260507083943'),
