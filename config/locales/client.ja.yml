@@ -389,6 +389,8 @@ ja:
       pill: "提案"
       pm_title: "推奨メッセージ"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "有効"
       start_posting:
         back: "戻る"
     about:
@@ -546,6 +548,8 @@ ja:
           other: "他 %{count} 件の下書き"
     embed_mode:
       editing_post: "投稿を編集中"
+      signin_flow:
+        cancel: "キャンセル"
     topic_count_all:
       other: "%{count} 件の新規トピックを見る"
     topic_count_categories:
@@ -1347,7 +1351,6 @@ ja:
         normal_option: "通常"
         normal_option_title: "このユーザーがあなたに返信したり、引用したり、メンションすると通知されます。"
       notification_schedule:
-        title: "通知スケジュール"
         label: "カスタム通知スケジュールを有効にする"
         tip: "この時間外は、通知が停止されます。"
         midnight: "深夜"
@@ -1391,13 +1394,8 @@ ja:
       notifications: "通知"
       statistics: "統計"
       desktop_notifications:
-        label: "ライブ通知"
         not_supported: "このブラウザでは通知がサポートされていません。"
-        perm_default: "通知を有効にする"
-        perm_denied_btn: "アクセス拒否"
         perm_denied_expl: "通知へのアクセスが拒否されました。ブラウザの設定から通知を許可してください。"
-        disable: "通知を無効にする"
-        enable: "通知を有効にする"
         each_browser_note: "注意: 使用するすべてのブラウザでこの設定を変更する必要があります。ユーザーメニューから通知を一時停止にした場合、この設定に関係なくすべての通知が無効になります。"
         consent_prompt: "あなたの投稿に返信があったときライブ通知しますか？"
       dismiss: "閉じる"
@@ -3104,6 +3102,7 @@ ja:
           placeholder: 最大
           aria_label: 最大閲覧数でフィルタ
     hamburger_menu: "ナビゲーションメニュー"
+    header_panel: "ヘッダー"
     new_item: "新規"
     go_back: "戻る"
     not_logged_in_user: "現在のアクティビティと設定に関するユーザーの概要ページ"

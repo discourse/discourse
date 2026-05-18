@@ -412,6 +412,8 @@ fr:
       pill: "Suggérés"
       pm_title: "Messages suggérés"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Activé"
       start_posting:
         back: "Retour"
     about:
@@ -584,6 +586,9 @@ fr:
         other_drafts:
           one: "+%{count} autre brouillon"
           other: "+%{count} autres brouillons"
+    embed_mode:
+      signin_flow:
+        cancel: "Annuler"
     topic_count_all:
       one: "Voir %{count} nouveau sujet"
       other: "Voir %{count} nouveaux sujets"
@@ -1362,7 +1367,6 @@ fr:
         normal_option: "Normal"
         normal_option_title: "Vous recevrez une notification si cet utilisateur vous répond, vous cite ou vous mentionne."
       notification_schedule:
-        title: "Planification des notifications"
         label: "Activer la planification personnalisée des notifications"
         tip: "En dehors de ces heures, vos notifications seront suspendues."
         midnight: "Minuit"
@@ -1406,13 +1410,8 @@ fr:
       notifications: "Notifications"
       statistics: "Statistiques"
       desktop_notifications:
-        label: "Notifications instantanées"
         not_supported: "Nous sommes désolés, les notifications ne sont pas supportées sur ce navigateur."
-        perm_default: "Activer les notifications"
-        perm_denied_btn: "Permission refusée"
         perm_denied_expl: "Vous n'avez pas autorisé les notifications. Autorisez-les à partir des paramètres de votre navigateur."
-        disable: "Désactiver les notifications"
-        enable: "Activer les notifications"
         each_browser_note: "Remarque : vous devez modifier ce paramètre sur chaque navigateur utilisé. Toutes les notifications seront désactivées si vous suspendez les notifications à partir du menu utilisateur, quel que soit ce paramètre."
         consent_prompt: "Souhaitez-vous recevoir des notifications en temps réel en cas de réponse à vos messages ?"
       dismiss: "Vu"
@@ -3145,6 +3144,7 @@ fr:
           placeholder: maximum
           aria_label: filtrer par nombre de vues maximal
     hamburger_menu: "Menu de navigation"
+    header_panel: "En-tête"
     new_item: "nouveau"
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"

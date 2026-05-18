@@ -452,6 +452,8 @@ es:
     admin_onboarding_banner:
       launch_in_easy_steps: "Empieza en %{step_count} sencillos pasos"
       congrats_onboarding_complete: "¡Enhorabuena por haber completado el proceso de incorporación!"
+      select_theme:
+        enabled: "Activado"
       invite_collaborators:
         title: "Invitar colaboradores"
         description: "Los primeros miembros ayudan a dar vida a tu comunidad"
@@ -667,6 +669,8 @@ es:
       continue_as_guest: "Continuar sin iniciar sesión"
       be_first_to_reply: "¡Sé la primera persona en responder!"
       editing_post: "Editando publicación"
+      signin_flow:
+        cancel: "Cancelar"
     topic_count_all:
       one: "Ver %{count} tema nuevo"
       other: "Ver %{count} temas nuevos"
@@ -1512,7 +1516,6 @@ es:
         normal_option: "Normal"
         normal_option_title: "Se te notificará si este usuario te responde, cita o menciona."
       notification_schedule:
-        title: "Horario de notificaciones"
         label: "Activar horario personalizado de notificaciones"
         tip: "Fuera de este horario, tus notificaciones se pondrán en pausa."
         midnight: "Medianoche"
@@ -1556,13 +1559,8 @@ es:
       notifications: "Notificaciones"
       statistics: "Estadísticas"
       desktop_notifications:
-        label: "Notificaciones en vivo"
         not_supported: "Las notificaciones no están disponibles en este navegador. Lo sentimos."
-        perm_default: "Activar notificaciones"
-        perm_denied_btn: "Permiso denegado"
         perm_denied_expl: "Has denegado el permiso para las notificaciones. Configura tu navegador para permitir notificaciones. "
-        disable: "Desactivar notificaciones"
-        enable: "Activar notificaciones"
         each_browser_note: "Nota: Hay que cambiar esta configuración en cada navegador que utilices. Todas las notificaciones se desactivarán si pausas las notificaciones desde el menú de usuario, independientemente de este ajuste."
         consent_prompt: "¿Quieres recibir notificaciones en tiempo real cuando alguien responda a tus mensajes?"
       dismiss: "Descartar"
@@ -3396,6 +3394,7 @@ es:
           placeholder: máximo
           aria_label: filtrar por número máximo de visitas
     hamburger_menu: "Menú de navegación"
+    header_panel: "Encabezado"
     new_item: "nuevo"
     go_back: "volver"
     not_logged_in_user: "página de usuario con resumen de la actividad y preferencias actuales"

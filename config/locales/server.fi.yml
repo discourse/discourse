@@ -370,7 +370,6 @@ fi:
       <p>Muussa tapauksessa <a href="%{base_url}/password-reset">vaihda salasanasi</a>.</p>
     not_found_template_link: |
       <p>Tätä kutsua sivustolle <a href="%{base_url}">%{site_name}</a> ei voa enää käyttää. Pyydä henkilöä, joka kutsui sinut, lähettämään sinulle uusi kutsu.</p>
-    existing_user_cannot_redeem: "Tätä kutsua ei voi lunastaa. Pyydä kutsujaasi lähettämään sinulle uusi kutsu."
     existing_user_already_redemeed: "Olet jo lunastanut tämän kutsulinkin."
     user_exists: "Henkilöä <b>%{email}</b> ei tarvitse kutsua, hänellä on jo tili!"
     invite_exists: "Olet jo lähettänyt kutsun osoitteeseen <b>%{email}</b>."

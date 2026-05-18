@@ -345,7 +345,6 @@ ja:
       <p>そうでない場合は、<a href="%{base_url}/password-reset">パスワードをリセット</a>してください。</p>
     not_found_template_link: |
       <p>この <a href="%{base_url}">%{site_name}</a> への招待を引き換えられなくなりました。あなたを招待した人に新しい招待を送るようリクエストしてください。</p>
-    existing_user_cannot_redeem: "この招待は引き換えられません。あなたを招待した人に、新しい招待を送るよう依頼してください。"
     existing_user_already_redemeed: "この招待リンクはすでに引き換え済みです。"
     user_exists: "<b>%{email}</b> を招待する必要はありません。すでにアカウントを持っています！"
     invite_exists: "<b>%{email}</b> はすでに招待済みです。"

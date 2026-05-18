@@ -389,6 +389,8 @@ vi:
       pill: "Đề xuất"
       pm_title: "Tin nhắn gợi ý"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Đã bật"
       start_posting:
         back: "Quay lại"
     about:
@@ -546,6 +548,8 @@ vi:
           other: "+%{count} bản nháp khác"
     embed_mode:
       editing_post: "Đang chỉnh sửa tút"
+      signin_flow:
+        cancel: "Hủy"
     topic_count_all:
       other: "Xem %{count} chủ đề mới"
     topic_count_categories:
@@ -1347,7 +1351,6 @@ vi:
         normal_option: "Bình thường"
         normal_option_title: "Bạn sẽ được thông báo khi người này trả lời, trích dẫn hoặc nhắc đến bạn."
       notification_schedule:
-        title: "Lịch thông báo"
         label: "Bật lịch thông báo tùy chỉnh"
         tip: "Ngoài những giờ này, thông báo của bạn sẽ tạm dừng."
         midnight: "Nửa đêm"
@@ -1391,13 +1394,8 @@ vi:
       notifications: "Thông báo"
       statistics: "Thống kê"
       desktop_notifications:
-        label: "Thông báo trực tiếp"
         not_supported: "Xin lỗi. Trình duyệt của bạn không hỗ trợ Notification."
-        perm_default: "Mở thông báo"
-        perm_denied_btn: "Không có quyền"
         perm_denied_expl: "Bạn đã từ chối nhận thông báo, để nhận lại bạn cần thiết lập trình duyệt."
-        disable: "Khóa Notification"
-        enable: "Cho phép thông báo"
         each_browser_note: "Lưu ý: Bạn phải thay đổi cài đặt này trên mọi trình duyệt bạn sử dụng. Tất cả thông báo sẽ bị tắt nếu bạn tạm dừng thông báo từ menu người dùng, bất kể cài đặt này như thế nào."
         consent_prompt: "Bạn có muốn thông báo trực tiếp khi mọi người trả lời bài đăng của bạn không?"
       dismiss: "Hủy bỏ"
@@ -3108,6 +3106,7 @@ vi:
           placeholder: Tối đa
           aria_label: lọc theo lượt xem tối đa
     hamburger_menu: "Menu điều hướng"
+    header_panel: "Header"
     new_item: "mới"
     go_back: "quay trở lại"
     not_logged_in_user: "Trang cá nhân với tóm tắt các hoạt động và cấu hình"

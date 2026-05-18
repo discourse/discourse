@@ -417,6 +417,8 @@ nl:
     admin_onboarding_banner:
       launch_in_easy_steps: "Start in %{step_count} eenvoudige stappen"
       congrats_onboarding_complete: "Gefeliciteerd met het voltooien van het onboardingproces!"
+      select_theme:
+        enabled: "Ingeschakeld"
       invite_collaborators:
         description: "Vroege leden helpen je community tot leven te brengen"
         action: "Uitnodiging aanmaken"
@@ -607,6 +609,9 @@ nl:
         other_drafts:
           one: "+%{count} ander concept"
           other: "+%{count} andere concepten"
+    embed_mode:
+      signin_flow:
+        cancel: "Annuleren"
     topic_count_all:
       one: "%{count} nieuw topic weergeven"
       other: "%{count} nieuwe topics weergeven"
@@ -1386,7 +1391,6 @@ nl:
         normal_option: "Normaal"
         normal_option_title: "Je ontvangt een melding als deze gebruiker een bericht van je beantwoordt, je citeert, of je naam noemt."
       notification_schedule:
-        title: "Meldingsschema"
         label: "Aangepast meldingsschema inschakelen"
         tip: "Buiten deze tijden worden je meldingen gepauzeerd."
         midnight: "Middernacht"
@@ -1430,13 +1434,8 @@ nl:
       notifications: "Meldingen"
       statistics: "Statistieken"
       desktop_notifications:
-        label: "Livemeldingen"
         not_supported: "Meldingen worden niet ondersteund in deze browser. Sorry."
-        perm_default: "Meldingen inschakelen"
-        perm_denied_btn: "Toestemming geweigerd"
         perm_denied_expl: "Je hebt toestemming voor meldingen geweigerd. Sta meldingen toe via je browserinstellingen."
-        disable: "Meldingen uitschakelen"
-        enable: "Meldingen inschakelen"
         each_browser_note: "Opmerking: je moet deze instelling wijzigen in elke browser die je gebruikt. Alle meldingen worden uitgeschakeld als je meldingen onderbreekt vanuit het gebruikersmenu, ongeacht deze instelling."
         consent_prompt: "Wil je live meldingen ontvangen als mensen antwoorden op je berichten?"
       dismiss: "Negeren"
@@ -3183,6 +3182,7 @@ nl:
           placeholder: maximum
           aria_label: filteren op maximumaantal weergaven
     hamburger_menu: "Navigatiemenu"
+    header_panel: "Koptekst"
     new_item: "nieuw"
     go_back: "terug"
     not_logged_in_user: "gebruikerspagina met samenvatting van huidige activiteit en voorkeuren"

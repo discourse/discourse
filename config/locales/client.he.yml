@@ -485,6 +485,8 @@ he:
       pill: "מוצע"
       pm_title: "הודעות מוצעות"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "פעיל"
       start_posting:
         back: "חזרה"
     about:
@@ -697,6 +699,9 @@ he:
           two: "+שתי טיוטות נוספות"
           many: "+%{count} טיוטות נוספות"
           other: "+%{count} טיוטות נוספות"
+    embed_mode:
+      signin_flow:
+        cancel: "ביטול"
     topic_count_all:
       one: "הצגת נושא חדש"
       two: "הצגת שני נושאים חדשים"
@@ -1575,7 +1580,6 @@ he:
         normal_option: "רגיל"
         normal_option_title: "תגיע אליך התראה אם המשתמש הזה יגיב לך, יצטט אותך או יאזכר אותך."
       notification_schedule:
-        title: "תזמון התראות"
         label: "הפעלת תזמון התראות מותאם אישית"
         tip: "מחוץ לשעות אלו ההתראות שלך יושהו."
         midnight: "חצות"
@@ -1619,13 +1623,8 @@ he:
       notifications: "התראות"
       statistics: "סטטיסטיקות"
       desktop_notifications:
-        label: "התראות חיות"
         not_supported: "התראות לא נתמכות בדפדפן זה. עמך הסליחה."
-        perm_default: "הפעלת התראות"
-        perm_denied_btn: "הרשאות נדחו"
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
-        disable: "השבתת התראות"
-        enable: "הפעלת התראות"
         each_browser_note: "הערה: עליך לשנות הגדרה זו בכל דפדפן שמשמש אותך. כל ההודעות יושבתו אם בחרת להשהות התראות מתפריט המשתמש, ללא קשר להגדרה זו."
         consent_prompt: "לקבל התראות חיות כשמתקבלות תגובות לפוסטים שלך?"
       dismiss: "התעלמות"
@@ -3544,6 +3543,7 @@ he:
           placeholder: מרבי
           aria_label: סינון לפי כמות הצפיות המרבית
     hamburger_menu: "תפריט ניווט"
+    header_panel: "כותרת"
     new_item: "חדש"
     go_back: "חזור אחורה"
     not_logged_in_user: "עמוד משתמש עם סיכום פעילות נוכחית והעדפות"

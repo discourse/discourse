@@ -489,7 +489,6 @@ ar:
       <p>بخلاف ذلك، يُرجى <a href="%{base_url}/password-reset">إعادة تعيين كلمة المرور</a>.</p>
     not_found_template_link: |
       <p>لم يعُد من الممكن استرداد هذه الدعوة إلى <a href="%{base_url}">%{site_name}</a>. يُرجى أن تطلب من الشخص الذي دعاك أن يُرسل إليك دعوة جديدة.</p>
-    existing_user_cannot_redeem: "لا يمكن استخدام هذه الدعوة. اطلب من الشخص الذي دعاك أن يُرسل إليك دعوة جديدة."
     existing_user_already_redemeed: "لقد استخدمت رمز الدعوة هذا بالفعل."
     user_exists: "ليست هناك حاجة لدعوة <b>%{email}</b>، فلديه حساب بالفعل!"
     invite_exists: "لقد أرسلت بالفعل دعوة إلى <b>%{email}</b>."

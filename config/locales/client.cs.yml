@@ -488,6 +488,8 @@ cs:
       pm_title: "Doporučené zprávy"
     admin_onboarding_banner:
       launch_in_easy_steps: "Odstartujte v %{step_count} snadných krocích"
+      select_theme:
+        enabled: "Zapnuto"
       start_posting:
         back: "Zpět"
     about:
@@ -702,6 +704,8 @@ cs:
           other: "+%{count} dalších konceptů"
     embed_mode:
       editing_post: "Příspěvek je upravován"
+      signin_flow:
+        cancel: "Zrušit"
     topic_count_all:
       one: "Zobrazit %{count} nové téma"
       few: "Zobrazit %{count} nová témata"
@@ -1605,7 +1609,6 @@ cs:
         normal_option: "Normální"
         normal_option_title: "Budete upozorněni, pokud vám tento uživatel odpoví, cituje vás nebo vás zmiňuje."
       notification_schedule:
-        title: "Harmonogram upozorňování"
         label: "Povolit vlastní harmonogram upozorňování"
         tip: "Mimo tyto hodiny budou vaše upozornění ztlumena."
         midnight: "Půlnoc"
@@ -1649,13 +1652,8 @@ cs:
       notifications: "Upozornění"
       statistics: "Statistiky"
       desktop_notifications:
-        label: "Upozornění v reálném čase"
         not_supported: "Tento prohlížeč nepodporuje upozornění. Omlouváme se."
-        perm_default: "Vypnout upozornění."
-        perm_denied_btn: "Povolení zamítnuto"
         perm_denied_expl: "Máte zakázané upozornění. Povolte upozornění v nastavení vašeho prohlížeče."
-        disable: "Vypnout upozornění"
-        enable: "Povolit upozornění"
         each_browser_note: "Poznámka: Toto nastavení musíte změnit v každém prohlížeči, který používáte. Všechna upozornění budou deaktivována, pokud vypnete upozornění z uživatelské nabídky."
         consent_prompt: "Chcete dostávat upozornění v reálném čase, když někdo odpoví na vaše příspěvky?"
       dismiss: "Označit jako přečtené"
@@ -3593,6 +3591,7 @@ cs:
           placeholder: maximum
           aria_label: filtrovat podle maximálního počtu zobrazení
     hamburger_menu: "Navigační nabídka"
+    header_panel: "Hlavička"
     new_item: "nové"
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"

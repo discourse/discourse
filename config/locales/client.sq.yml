@@ -302,6 +302,8 @@ sq:
       pill: "Sugjeruar"
       pm_title: "Mesazhet e sugjeruara"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Aktivizuar"
       start_posting:
         back: "Kthehu mbrapa"
     about:
@@ -463,6 +465,9 @@ sq:
       new_private_message: "Draft i ri i mesazhit personal"
       dropdown:
         title: "Hapni menunë e drafteve më të fundit"
+    embed_mode:
+      signin_flow:
+        cancel: "Anulo"
     topic_count_all:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
@@ -1179,7 +1184,6 @@ sq:
         normal_option: "Normal"
         normal_option_title: "Ju do të njoftoheni nëse ky përdorues ju përgjigjet, ju citon ose ju përmend."
       notification_schedule:
-        title: "Orari i njoftimeve"
         label: "Aktivizoni orarin e njoftimeve"
         tip: "Jashtë këtyre orëve njoftimet tuaja do të ndalohen."
         midnight: "Mesnatë"
@@ -1223,13 +1227,8 @@ sq:
       notifications: "Njoftimet"
       statistics: "Statistikat"
       desktop_notifications:
-        label: "Njoftimet e drejtpërdrejta"
         not_supported: "Ky shfletues nuk është i aftë të ruajë njoftimet. "
-        perm_default: "Aktivizo njoftimet"
-        perm_denied_btn: "Nuk lejohet"
         perm_denied_expl: "Ju nuk na dhatë të drejtën t'ju dërgojmë njoftime. Njoftimet mund t'i lejoni në rregullimet e shfletuesit tuaj. "
-        disable: "Çaktivizoni njoftimet"
-        enable: "Aktivizoni njoftimet"
         each_browser_note: "Shënim: Ju duhet ta ndryshoni këtë cilësim në çdo shfletues që përdorni. Të gjitha njoftimet do të çaktivizohen nëse i ndaloni njoftimet nga menyja e përdoruesit, pavarësisht nga ky cilësim."
         consent_prompt: "Dëshironi njoftime të drejtpërdrejta kur njerëzit u përgjigjen postimeve tuaja?"
       dismiss: "Hiqe"
@@ -2835,6 +2834,7 @@ sq:
         max_views:
           placeholder: maksimale
           aria_label: Filtro sipas shikimeve maksimale
+    header_panel: "Ballina"
     new_item: "e re"
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"

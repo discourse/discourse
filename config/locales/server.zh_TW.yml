@@ -170,7 +170,6 @@ zh_TW:
   word_connector:
     comma: "，"
   invite:
-    existing_user_cannot_redeem: "此邀請無法兌換。請找當初邀請您的人來重發一個新的邀請。"
     confirm_email: "<p>快完成了！我們發送了一封啟用帳號郵件到你的信箱。請按照信件中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件\\b匣。"
     disabled_errors:
       invalid_access: "你不允許查看所請求的資源。"
