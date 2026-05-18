@@ -362,15 +362,15 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   @action
-  jumpTopFromEndpoint(event) {
+  jumpToStart(event) {
     event.preventDefault();
-    this.args.jumpTop?.(event);
+    this.handleCommit(0);
   }
 
   @action
-  jumpBottomFromEndpoint(event) {
+  jumpToEnd(event) {
     event.preventDefault();
-    this.args.jumpBottom?.(event);
+    this.handleCommit(1);
   }
 
   dockCheck() {
@@ -544,7 +544,7 @@ export default class TopicTimelineScrollArea extends Component {
             href={{@model.firstPostUrl}}
             title={{i18n "topic_entrance.jump_top_button_title"}}
             class="start-date"
-            {{on "click" this.jumpTopFromEndpoint}}
+            {{on "click" this.jumpToStart}}
           >
             <span>
               {{this.startDate}}
@@ -599,7 +599,7 @@ export default class TopicTimelineScrollArea extends Component {
           <a
             href={{@model.lastPostUrl}}
             class="now-date"
-            {{on "click" this.jumpBottomFromEndpoint}}
+            {{on "click" this.jumpToEnd}}
           >
             <span>
               {{dAgeWithTooltip this.nowDate this.nowDateOptions}}
