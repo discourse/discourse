@@ -159,6 +159,7 @@ Migrations::Database::Schema.ignored do
          :backup_metadata,
          :badge_types,
          :bookmarks,
+         :browser_pageview_event_scores,
          :browser_pageview_events,
          :custom_emojis,
          :developers,
