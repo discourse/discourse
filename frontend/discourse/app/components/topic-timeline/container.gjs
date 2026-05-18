@@ -607,8 +607,8 @@ export default class TopicTimelineScrollArea extends Component {
           style={{this.timelineScrollareaStyle}}
           {{didInsert this.registerScrollarea}}
         >
+          {{! eslint-disable ember/template-no-invalid-interactive }}
           <div
-            {{! template-lint-disable no-invalid-interactive }}
             {{on "click" this.updatePercentage}}
             style={{this.beforePadding}}
             class="timeline-padding"
@@ -627,8 +627,8 @@ export default class TopicTimelineScrollArea extends Component {
             {{didInsert this.registerScroller}}
           />
 
+          {{! eslint-disable ember/template-no-invalid-interactive }}
           <div
-            {{! template-lint-disable no-invalid-interactive }}
             {{on "click" this.updatePercentage}}
             style={{this.afterPadding}}
             class="timeline-padding"

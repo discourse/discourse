@@ -514,9 +514,9 @@ en:
         action: "Select theme"
         modal_title: "Choose a theme"
         use_theme: "Use this theme"
-        currently_selected: "Currently selected"
+        enabled: "Enabled"
         theme_set: "%{theme} is now your default theme"
-        browse_all: "Browse all themes"
+        browse_all: "Manage themes"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
       invite_collaborators:
@@ -743,6 +743,16 @@ en:
       replying_to: "Replying to %{username}"
       editing_post: "Editing post"
       reply_placeholder: "Write a reply..."
+      signin_flow:
+        share_session_title: "Sign in to %{site_name}"
+        share_session_message: "To continue, %{site_name} needs permission to use your existing session inside this page. Click below to allow access."
+        signin_required_title: "Sign in to %{site_name}"
+        signin_required_message: "We didn't find an existing %{site_name} session. Open a new tab to sign in or sign up, then return here to continue."
+        open_signin_tab: "Open sign-in tab"
+        waiting_title: "Waiting for sign-in"
+        waiting_message: "Finish signing in in the new tab. This page will update automatically once you're done."
+        cancel: "Cancel"
+        sign_in_to_reply: "Sign in to reply"
 
     topic_count_all:
       one: "See %{count} new topic"
@@ -2419,8 +2429,10 @@ en:
           hide_advanced: "Hide Advanced Options"
 
           description: "Description"
+          description_help: "A note to help you identify this invite."
 
           restrict: "Restrict to"
+          restrict_help: "Enter an email or email domain to limit who can accept this invite."
           restrict_email: "Restrict to email"
           restrict_domain: "Restrict to domain"
           email_or_domain_placeholder: "name@example.com or example.com"
@@ -2432,6 +2444,7 @@ en:
           expires_at: "Expire at"
           expires_after: "Expire after"
           custom_message: "Custom message"
+          custom_message_help: "Included in the invitation email."
           custom_message_placeholder: "Add a personal note to your invitation"
 
           send_invite_email: "Save and Send Email"
@@ -3695,6 +3708,7 @@ en:
           aria_label: filter by maximum views
 
     hamburger_menu: "Navigation menu"
+    header_panel: "Header"
     new_item: "new"
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
@@ -4683,6 +4697,7 @@ en:
       few_likes_left: "Thanks for sharing the love! You only have a few likes left for today."
 
       controls:
+        menu_label: "Post actions"
         reply: "begin composing a reply to this post"
         like_action: "Like"
         like: "like this post"

@@ -722,8 +722,8 @@ export default class ChatComposer extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
 
     <div class="chat-composer__wrapper">
       {{#if this.shouldRenderMessageDetails}}

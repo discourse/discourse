@@ -131,7 +131,6 @@ export default class SolvedAcceptedAnswer extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-unnecessary-concat }}
     {{#if this.acceptedAnswer}}
       <aside
         class={{dConcatClass
@@ -140,7 +139,9 @@ export default class SolvedAcceptedAnswer extends Component {
           (unless this.content "title-only")
         }}
         style={{this.maxHeightStyle}}
+        {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
         data-expanded="{{this.expanded}}"
+        {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
         data-overflowing="{{this.overflowingAttr}}"
         data-username={{this.acceptedAnswer.username}}
         data-post={{this.acceptedAnswer.post_number}}

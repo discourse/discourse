@@ -3374,6 +3374,10 @@ embedding:
     default: false
     client: true
     area: "embedding"
+  embed_full_app_signin_flow:
+    default: true
+    client: true
+    area: "embedding"
   suppress_third_party_analytics_in_embed:
     default: true
     area: "embedding"
@@ -4430,6 +4434,7 @@ experimental:
     upcoming_change:
       status: "beta"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/389820"
   rename_faq_to_guidelines:
     default: false
     hidden: true

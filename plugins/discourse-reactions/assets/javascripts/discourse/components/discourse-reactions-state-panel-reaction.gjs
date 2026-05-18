@@ -52,7 +52,7 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class={{dConcatClass
         "discourse-reactions-state-panel-reaction"

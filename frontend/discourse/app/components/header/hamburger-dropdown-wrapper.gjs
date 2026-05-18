@@ -90,9 +90,9 @@ export default class HamburgerDropdownWrapper extends Component {
   }
 
   <template>
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class="hamburger-dropdown-wrapper"
-      {{! template-lint-disable no-invalid-interactive }}
       {{on "click" this.click}}
       {{! we don't want to close the hamburger dropdown when clicking on the hamburger dropdown itself
         so we use the secondaryTargetSelector to prevent that }}

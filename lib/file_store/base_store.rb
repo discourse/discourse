@@ -153,7 +153,12 @@ module FileStore
       get_path_for("optimized", upload.id, upload.sha1, extension)
     end
 
-    CACHE_DIR = "#{Rails.root}/tmp/download_cache/"
+    CACHE_DIR =
+      if Rails.env.test?
+        "#{Rails.root}/tmp/download_cache_test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/"
+      else
+        "#{Rails.root}/tmp/download_cache/"
+      end
     CACHE_MAXIMUM_SIZE = 500
     CACHE_EVICT_COUNT = 100
 
