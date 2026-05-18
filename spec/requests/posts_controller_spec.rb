@@ -1734,6 +1734,41 @@ RSpec.describe PostsController do
         expect(topic.visible).to eq(true)
       end
 
+      it "prevents regular users from replying to whispers" do
+        sign_in(admin)
+        post "/posts.json",
+             params: {
+               raw: "this is the first post with enough words",
+               title: "this is a topic title for whispers",
+             }
+        expect(response.status).to eq(200)
+
+        topic_id = response.parsed_body["topic_id"]
+        post "/posts.json",
+             params: {
+               raw: "this is a staff-only whisper",
+               topic_id: topic_id,
+               reply_to_post_number: 1,
+               whisper: true,
+             }
+        expect(response.status).to eq(200)
+
+        whisper_post_number = response.parsed_body["post_number"]
+        sign_in(user)
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "replying to a whisper over http",
+                 topic_id: topic_id,
+                 reply_to_post_number: whisper_post_number,
+               }
+        end.not_to change { Post.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(I18n.t(:topic_not_found))
+      end
+
       describe "posts_controller_create_user modifier" do
         fab!(:different_user, :admin)
 
