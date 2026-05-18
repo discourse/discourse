@@ -1914,6 +1914,72 @@ RSpec.describe TopicsController do
           expect(post.trashed?).to be_falsey
         end
       end
+
+      context "when logged in as a category group moderator who cannot see the topic" do
+        fab!(:mod_group, :group)
+        fab!(:cat_mod_user, :user)
+        fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:private_topic) do
+          Fabricate(:topic, category: private_category, deleted_at: Time.now, deleted_by: moderator)
+        end
+        fab!(:private_post) do
+          Fabricate(
+            :post,
+            topic: private_topic,
+            post_number: 1,
+            deleted_at: Time.now,
+            deleted_by: moderator,
+          )
+        end
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+          mod_group.add(cat_mod_user)
+          sign_in(cat_mod_user)
+        end
+
+        it "prevents recovering a topic the user cannot see" do
+          put "/t/#{private_topic.id}/recover.json"
+
+          expect(response).to be_forbidden
+          expect(private_topic.reload.trashed?).to be_truthy
+        end
+      end
+
+      context "when logged in as a category group moderator who can see the topic" do
+        fab!(:mod_group, :group)
+        fab!(:cat_mod_user, :user)
+        fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:private_topic) do
+          Fabricate(:topic, category: private_category, deleted_at: Time.now, deleted_by: moderator)
+        end
+        fab!(:private_post) do
+          Fabricate(
+            :post,
+            topic: private_topic,
+            post_number: 1,
+            deleted_at: Time.now,
+            deleted_by: moderator,
+          )
+        end
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          private_category.set_permissions(mod_group => :full)
+          private_category.save!
+          Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+          mod_group.add(cat_mod_user)
+          sign_in(cat_mod_user)
+        end
+
+        it "allows recovering a topic the user can see" do
+          put "/t/#{private_topic.id}/recover.json"
+
+          expect(response.status).to eq(200)
+          expect(private_topic.reload.trashed?).to be_falsey
+        end
+      end
     end
   end
 
@@ -1943,6 +2009,52 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
           topic.reload
           expect(topic.trashed?).to be_truthy
+        end
+      end
+
+      context "when logged in as a category group moderator who cannot see the topic" do
+        fab!(:mod_group, :group)
+        fab!(:cat_mod_user, :user)
+        fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+        fab!(:private_post) { Fabricate(:post, topic: private_topic, user: user, post_number: 1) }
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+          mod_group.add(cat_mod_user)
+          sign_in(cat_mod_user)
+        end
+
+        it "prevents deleting a topic the user cannot see" do
+          delete "/t/#{private_topic.id}.json"
+
+          expect(response.status).to eq(422)
+          expect(private_topic.reload.trashed?).to be_falsey
+        end
+      end
+
+      context "when logged in as a category group moderator who can see the topic" do
+        fab!(:mod_group, :group)
+        fab!(:cat_mod_user, :user)
+        fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+        fab!(:private_post) { Fabricate(:post, topic: private_topic, user: user, post_number: 1) }
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          private_category.set_permissions(mod_group => :full)
+          private_category.save!
+          Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+          mod_group.add(cat_mod_user)
+          sign_in(cat_mod_user)
+        end
+
+        it "allows deleting a topic the user can see" do
+          delete "/t/#{private_topic.id}.json"
+
+          expect(response.status).to eq(200)
+          expect(private_topic.reload.trashed?).to be_truthy
         end
       end
     end
