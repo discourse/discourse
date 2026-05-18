@@ -689,6 +689,79 @@ module DiscoursePostEvent
     end
   end
 
+  describe "#show" do
+    before do
+      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
+
+    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:category)
+    fab!(:topic) { Fabricate(:topic, user: admin_user, category: category) }
+    fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
+    fab!(:chat_channel) { Fabricate(:chat_channel, chatable: category) }
+    fab!(:event) { Fabricate(:event, post: post_1, chat_enabled: true, chat_channel: chat_channel) }
+    fab!(:chat_message) do
+      Fabricate(
+        :chat_message,
+        chat_channel: chat_channel,
+        user: admin_user,
+        message: "private chat message body",
+      )
+    end
+
+    before { chat_channel.update!(last_message: chat_message) }
+
+    context "when the viewer is anonymous" do
+      before do
+        SiteSetting.chat_enabled = true
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      end
+
+      it "does not include the chat channel block or last message body" do
+        get "/discourse-post-event/events/#{event.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["event"]).not_to have_key("channel")
+        expect(response.body).not_to include("private chat message body")
+      end
+    end
+
+    context "when the viewer cannot join the chat channel" do
+      fab!(:viewer, :user)
+
+      before do
+        SiteSetting.chat_enabled = true
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+        sign_in(viewer)
+      end
+
+      it "does not include the chat channel block or last message body" do
+        get "/discourse-post-event/events/#{event.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["event"]).not_to have_key("channel")
+        expect(response.body).not_to include("private chat message body")
+      end
+    end
+
+    context "when the viewer can join the chat channel" do
+      before do
+        SiteSetting.chat_enabled = true
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        sign_in(admin_user)
+      end
+
+      it "includes the chat channel block with the last message body" do
+        get "/discourse-post-event/events/#{event.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["event"]["channel"]).to be_present
+        expect(response.body).to include("private chat message body")
+      end
+    end
+  end
+
   describe "anonymous access to EventsController" do
     before do
       SiteSetting.calendar_enabled = true
