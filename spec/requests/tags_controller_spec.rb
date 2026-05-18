@@ -688,6 +688,40 @@ RSpec.describe TagsController do
           expect(response.parsed_body["categories"]).to be_blank
           expect(response.parsed_body.dig("tag_info", "category_restricted")).to eq(true)
         end
+
+        it "doesn't leak the restricted tag group name to users without access" do
+          SiteSetting.tags_listed_by_group = true
+          sign_in(user)
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq([])
+        end
+
+        it "doesn't leak the restricted tag group name to anon" do
+          SiteSetting.tags_listed_by_group = true
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq([])
+        end
+
+        it "still returns the restricted tag group name to admins" do
+          SiteSetting.tags_listed_by_group = true
+          sign_in(admin)
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq([tag_group.name])
+        end
+
+        it "returns only visible tag group names when tag is in multiple groups" do
+          SiteSetting.tags_listed_by_group = true
+          public_tag_group = Fabricate(:tag_group, name: "public-group", tags: [tag])
+          sign_in(user)
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq(
+            [public_tag_group.name],
+          )
+        end
       end
     end
   end
