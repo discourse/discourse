@@ -1388,6 +1388,24 @@ RSpec.describe Guardian do
       Fabricate(:category_moderation_group, category: topic.category, group:)
       expect(Guardian.new(user).can_review_topic?(topic)).to eq(true)
     end
+
+    it "returns false for a category group moderator who cannot see the topic" do
+      SiteSetting.enable_category_group_moderation = true
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      Fabricate(:category_moderation_group, category: private_category, group:)
+      expect(Guardian.new(user).can_review_topic?(private_topic)).to eq(false)
+    end
+
+    it "returns true for a category group moderator who can see the topic" do
+      SiteSetting.enable_category_group_moderation = true
+      private_category = Fabricate(:private_category, group:)
+      private_topic = Fabricate(:topic, category: private_category)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      Fabricate(:category_moderation_group, category: private_category, group:)
+      expect(Guardian.new(user).can_review_topic?(private_topic)).to eq(true)
+    end
   end
 
   describe "#can_close_topic?" do
