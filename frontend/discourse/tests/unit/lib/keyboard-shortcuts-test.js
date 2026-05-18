@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import { triggerKeyEvent } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -336,10 +337,12 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
       assert.strictEqual(receivedPost, nestedPost);
     });
 
-    test("like and share shortcuts click controls on selected nested articles", function (assert) {
-      logIn(this.owner);
+    test("like and share shortcuts click controls on selected nested articles", async function (assert) {
+      const currentUser = logIn(this.owner);
       buildNestedView();
       const ks = this.owner.lookup("service:keyboard-shortcuts");
+      ks.currentUser = currentUser;
+      ks.bindKey("l");
       let liked = false;
       let shared = false;
 
@@ -355,11 +358,17 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
         shared = true;
       });
 
-      ks.keyTrapper.trigger("l");
-      ks.keyTrapper.trigger("s");
+      await triggerKeyEvent(document.body, "keypress", "L");
+      await triggerKeyEvent(document.body, "keypress", "S");
 
-      assert.true(liked);
-      assert.true(shared);
+      assert.true(
+        liked,
+        "like shortcut clicks the selected nested article's like button"
+      );
+      assert.true(
+        shared,
+        "share shortcut clicks the selected nested article's date link"
+      );
     });
 
     test("selectDown outside the nested view delegates to _moveSelection", function (assert) {
