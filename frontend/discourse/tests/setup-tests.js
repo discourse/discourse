@@ -203,7 +203,7 @@ function writeSummaryLine(message) {
   }
 }
 
-export default function setupTests(config) {
+export default async function setupTests(config) {
   const target = getUrlParameter("target") || "core";
 
   disableCloaking();
@@ -240,6 +240,8 @@ export default function setupTests(config) {
     setupDataElement.remove();
   }
 
+  await loadSprites(setupData.svgSpritePath, "fontawesome");
+
   let app;
   QUnit.testStart(async function (ctx) {
     let settings = resetSettings();
@@ -256,7 +258,6 @@ export default function setupTests(config) {
     } else {
       setupS3CDN(null, null, { snapshot: true });
     }
-    await loadSprites(setupData.svgSpritePath, "fontawesome");
 
     applyDefaultHandlers();
 

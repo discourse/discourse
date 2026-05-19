@@ -41,7 +41,7 @@ export async function startTests() {
   }
 
   setup(QUnit.assert);
-  setupTests(config.APP);
+  await setupTests(config.APP);
 
   if (window.Testem && (hasThemeJs || target !== "core")) {
     window.Testem.on("test-result", (t) => {

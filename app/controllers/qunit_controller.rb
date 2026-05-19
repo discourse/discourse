@@ -10,11 +10,12 @@ class QunitController < ApplicationController
                        redirect_to_login_if_required
                        redirect_to_profile_if_required
                      ]
+
   layout false
+  around_action :ensure_locale_en
 
   def index
     raise Discourse::NotFound.new if !can_see_theme_qunit?
-    helpers.csp_nonce_placeholder # set up header, so that Capybara.disable_animation=true works correctly
     @suggested_themes =
       Theme
         .where(id: ThemeField.where(target_id: Theme.targets[:tests_js]).distinct.pluck(:theme_id))
@@ -103,5 +104,9 @@ class QunitController < ApplicationController
 
   def get_param(key)
     params[:"theme_#{key}"] || params[key]
+  end
+
+  def ensure_locale_en
+    I18n.with_locale(:en) { yield }
   end
 end

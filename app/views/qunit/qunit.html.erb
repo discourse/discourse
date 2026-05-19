@@ -16,8 +16,13 @@
 
       <script nonce="<%= csp_nonce_placeholder %>">
         window._discourseQunitPluginNames = <%= Discourse.plugins.map(&:directory_name).to_json.html_safe %>;
-        window._discourseQunitLiveReloadUrl = "<%= script_asset_path(EmberCli.script_chunks["qunit-live-reload"].first) %>";
       </script>
+
+      <%= tag.iframe srcdoc: tag.script(
+        src: script_asset_path(EmberCli.script_chunks["qunit-live-reload"].first),
+        nonce: csp_nonce_placeholder,
+        type: "module",
+      ), style: "display: none;" %>
 
       <%= preload_script "test-support" %>
 
