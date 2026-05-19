@@ -31,7 +31,7 @@ export default class AiFeatures extends Component {
         (f) => f.module_enabled === true
       ).length;
       if (configuredCount === 0) {
-        this.selectedFeatureGroup = NOTENABLED;
+        this.selectedFeatureGroup = NOT_ENABLED;
       }
     }
   }
