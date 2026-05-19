@@ -67,6 +67,11 @@ RSpec.describe "upcoming change metadata integrity checks" do
         expect(valid_statuses).to include(status),
         "#{label} has invalid upcoming_change status #{status.inspect}. Valid statuses: #{valid_statuses.join(", ")}"
 
+        if metadata[:learn_more_url].present?
+          expect(metadata[:learn_more_url]).to match(%r{\Ahttps://meta\.discourse\.org/t/-/\d+\z}),
+          "#{label} upcoming_change.learn_more_url must match https://meta.discourse.org/t/-/NNNN, do not include the topic slug"
+        end
+
         expect(impact_parts.length).to eq(2),
         "#{label} must set upcoming_change.impact as `type,role`, got #{impact.inspect}"
 

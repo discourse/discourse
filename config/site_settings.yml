@@ -4519,7 +4519,7 @@ experimental:
     upcoming_change:
       status: "alpha"
       impact: "site_setting_default,all_members"
-      learn_more_url: "http://meta.discourse.org/t/-/402843"
+      learn_more_url: "https://meta.discourse.org/t/-/402843"
       allow_enabled_for:
         - everyone
   granular_anonymous_and_logged_in_groups_permissions:
