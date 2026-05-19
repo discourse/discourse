@@ -59,7 +59,7 @@ export default class AiFeatures extends Component {
 
     if (this.selectedFeatureGroup === ENABLED) {
       features = features.filter((feature) => feature.module_enabled === true);
-    } else if (this.selectedFeatureGroup === NOTENABLED) {
+    } else if (this.selectedFeatureGroup === NOT_ENABLED) {
       features = features.filter((feature) => feature.module_enabled === false);
     }
 
