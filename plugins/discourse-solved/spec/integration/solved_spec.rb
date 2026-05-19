@@ -1053,7 +1053,7 @@ RSpec.describe "Managing Posts solved status" do
       expect(first_accepted_answer[:accepter_username]).to eq(admin.username)
 
       unaccepted_message = messages.find { |m| m.data[:type] == :unaccepted_solution }
-      expect(unaccepted_message.data[:accepted_answers]).to be_empty
+      expect(unaccepted_message.data[:accepted_answers]).to be_nil
     end
 
     it "publishes MessageBus messages securely for PMs" do

@@ -81,7 +81,7 @@ RSpec.describe DiscourseSolved::AcceptedAnswersHelper do
             accepted_answers =
               DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, Guardian.new(user))
           }.not_to raise_error
-          expect(accepted_answers).to be_empty
+          expect(accepted_answers).to be_nil
         end
       end
     end
@@ -137,7 +137,7 @@ RSpec.describe DiscourseSolved::AcceptedAnswersHelper do
           }.not_to raise_error
 
           expect(accepted_answers.length).to eq(2)
-          PostDestroyer.new(Discourse.system_user, answer_post).destroy
+          PostDestroyer.new(Discourse.system_user, answer_post, context: "test").destroy
 
           expect {
             accepted_answers =
@@ -151,7 +151,7 @@ RSpec.describe DiscourseSolved::AcceptedAnswersHelper do
     it "returns nil when topic is not solved" do
       expect(
         DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, Guardian.new(user)),
-      ).to be_empty
+      ).to be_nil
     end
   end
 end

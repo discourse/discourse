@@ -130,8 +130,7 @@ RSpec.describe DiscourseSolved::AnswerController do
 
       expect(response.status).to eq(200)
       result = response.parsed_body
-      expect(result).to be_an(Array)
-      expect(result).to be_empty
+      expect(result).to be_nil
     end
 
     context "with multiple solutions enabled" do

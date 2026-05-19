@@ -20,7 +20,7 @@ describe TopicViewSerializer do
       unsolved_topic = Fabricate(:topic)
       serializer = TopicViewSerializer.new(TopicView.new(unsolved_topic), scope: Guardian.new(user))
       serialized = serializer.as_json
-      expect(serialized[:accepted_answers]).to be_nil
+      expect(serialized[:topic_view][:accepted_answers]).to be_nil
     end
 
     it "returns nil when the accepted answer post does not exist" do
@@ -30,7 +30,7 @@ describe TopicViewSerializer do
       serializer =
         TopicViewSerializer.new(TopicView.new(weird_topic.topic), scope: Guardian.new(user))
       serialized = serializer.as_json
-      expect(serialized[:accepted_answers]).to be_nil
+      expect(serialized[:topic_view][:accepted_answers]).to be_nil
     end
 
     describe "with multiple solutions enabled" do
