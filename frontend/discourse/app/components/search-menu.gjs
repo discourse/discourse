@@ -22,6 +22,7 @@ import getURL from "discourse/lib/get-url";
 import {
   isValidSearchTerm,
   searchForTerm,
+  searchTermScopesToPMs,
   updateRecentSearches,
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
@@ -123,11 +124,9 @@ export default class SearchMenu extends Component {
   }
 
   get isPMOnly() {
-    // Check if search is filtered to private messages only
-    const searchTerm = this.search.activeGlobalSearchTerm || "";
     return (
       this.inPMInboxContext ||
-      /\bin:(personal|messages|personal-direct|all-pms)\b/i.test(searchTerm)
+      searchTermScopesToPMs(this.search.activeGlobalSearchTerm)
     );
   }
 
