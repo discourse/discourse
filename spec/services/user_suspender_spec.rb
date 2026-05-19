@@ -65,7 +65,7 @@ RSpec.describe UserSuspender do
       expect(messages[0].data).to eq(user.id)
     end
 
-    it "suspends and logs out anonymous shadow accounts" do
+    it "suspends and logs out anonymous shadow accounts", :aggregate_failures do
       freeze_time
       SiteSetting.allow_anonymous_mode = true
       SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s

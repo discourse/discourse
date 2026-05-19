@@ -10,7 +10,7 @@ RSpec.describe User do
       SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
     end
 
-    it "uses the shadow account's own state" do
+    it "uses the shadow account's own state", :aggregate_failures do
       shadow_user = AnonymousShadowCreator.get(master_user)
 
       master_user.update!(
@@ -27,7 +27,7 @@ RSpec.describe User do
       expect(shadow_user).not_to be_suspended
     end
 
-    it "deactivates and logs out shadows with the master" do
+    it "deactivates and logs out shadows with the master", :aggregate_failures do
       shadow_user = AnonymousShadowCreator.get(master_user)
       UserAuthToken.generate!(user_id: shadow_user.id)
 
