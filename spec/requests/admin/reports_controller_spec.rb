@@ -452,6 +452,31 @@ RSpec.describe Admin::ReportsController do
         expect(response.parsed_body["report"]["total"]).to eq(1)
       end
 
+      context "when moderators cannot view IPs" do
+        before do
+          SiteSetting.moderators_view_ips = false
+          DiscourseIpInfo.stubs(:get).returns(location: "Earth")
+
+          user.user_auth_token_logs.create!(
+            action: "suspicious",
+            client_ip: "1.1.1.1",
+            user_agent: "Mozilla/5.0",
+            created_at: 1.hour.ago,
+          )
+        end
+
+        it "redacts suspicious login IP address while retaining location" do
+          get "/admin/reports/suspicious_logins.json"
+
+          expect(response.status).to eq(200)
+
+          row = response.parsed_body.dig("report", "data", 0)
+          expect(row["username"]).to eq(user.username)
+          expect(row["client_ip"]).to be_nil
+          expect(row["location"]).to eq("Earth")
+        end
+      end
+
       it "does not allow accessing admin-only reports" do
         Report::ADMIN_ONLY_REPORTS.each do |report_type|
           get "/admin/reports/#{report_type}.json"
