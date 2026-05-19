@@ -939,12 +939,7 @@ class TopicsFilter
       value.scan(
         /\A(?<tag_names>([\p{N}\p{L}\-_.]+)(?<delimiter>[,+])?([\p{N}\p{L}\-_.]+)?(\k<delimiter>[\p{N}\p{L}\-_.]+)*)\z/,
       ) do |tag_names, delimiter|
-        match_all =
-          if delimiter == ","
-            false
-          else
-            true
-          end
+        match_all = delimiter != ","
 
         tags = tag_names.split(delimiter)
         tag_ids = tag_ids_from_tag_names(tags)

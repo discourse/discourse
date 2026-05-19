@@ -7,7 +7,7 @@ class Emoji
   FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
   # matches emoji codes in text, e.g. :smile: or :wave:t2:
-  EMOJI_CODE_REGEXP = /:([\w\-+]+(?::t\d)?):/.freeze
+  EMOJI_CODE_REGEXP = /:([\w\-+]+(?::t\d)?):/
 
   DEFAULT_GROUP = "default"
 
