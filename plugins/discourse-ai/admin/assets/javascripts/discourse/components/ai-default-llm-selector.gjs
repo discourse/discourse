@@ -68,11 +68,17 @@ export default class AiDefaultLlmSelector extends Component {
     this.isSaving = true;
 
     try {
-      const backendValue = value === "none" ? "" : value;
-      await ajax("/admin/site_settings/ai_default_llm_model", {
-        type: "PUT",
-        data: { ai_default_llm_model: backendValue },
-      });
+      try {
+        const backendValue = value === "none" ? "" : value;
+        await ajax("/admin/site_settings/ai_default_llm_model", {
+          type: "PUT",
+          data: { ai_default_llm_model: backendValue },
+        });
+      } catch (error) {
+        this.selectedValue = previousValue;
+        popupAjaxError(error);
+        return;
+      }
 
       this.toasts.success({
         duration: 3000,
@@ -81,10 +87,11 @@ export default class AiDefaultLlmSelector extends Component {
         },
       });
 
-      await this.args.onChange?.();
-    } catch (error) {
-      this.selectedValue = previousValue;
-      popupAjaxError(error);
+      try {
+        await this.args.onChange?.();
+      } catch (error) {
+        popupAjaxError(error);
+      }
     } finally {
       this.isSaving = false;
     }
