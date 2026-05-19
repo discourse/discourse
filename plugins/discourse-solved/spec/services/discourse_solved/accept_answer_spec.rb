@@ -121,6 +121,39 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
                   }.by(1)
           end
         end
+
+        context "with multiple solutions disabled after two solutions were already accepted" do
+          fab!(:post_2, :post) { Fabricate(:post, topic:) }
+
+          before do
+            UserAction.log_action!(
+              action_type: UserAction::SOLVED,
+              user_id: post_2.user_id,
+              acting_user_id: acting_user.id,
+              target_post_id: post_2.id,
+              target_topic_id: topic.id,
+            )
+            Fabricate(
+              :topic_answer,
+              solved_topic: existing_solved,
+              post: post_2,
+              accepter: acting_user,
+            )
+          end
+
+          it "revokes all existing topic answers and user actions" do
+            expect { result }.to change { topic.reload.solved.topic_answers.count }.from(2).to(
+              1,
+            ).and change {
+                    UserAction.where(action_type: UserAction::SOLVED, target_post: post_1).count
+                  }.by(-1).and change {
+                          UserAction.where(
+                            action_type: UserAction::SOLVED,
+                            target_post: post_2,
+                          ).count
+                        }.by(-1)
+          end
+        end
       end
 
       it "credits the post author with a solved action" do
