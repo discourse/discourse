@@ -761,7 +761,9 @@ RSpec.describe TopicTrackingState do
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
-      expect(row.tags.map { |t| t["name"] }).to contain_exactly("apples", "bananas")
+      expect(row.tags.map { |t| t["id"] }).to contain_exactly(
+        *Tag.where(name: %w[apples bananas]).pluck(:id),
+      )
     end
   end
 

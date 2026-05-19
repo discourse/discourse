@@ -93,7 +93,6 @@ class TemporaryDb
     start_server
     @started = true
 
-    create_user
     create_database
 
     puts "PG server is ready and DB is loaded"
@@ -176,6 +175,7 @@ class TemporaryDb
       "--locale=en_US.UTF-8",
       "-E",
       "UTF8",
+      "--username=discourse",
       error_prefix: "Failed to initialize postgres data directory",
     )
   end
@@ -203,21 +203,6 @@ class TemporaryDb
     )
   end
 
-  def create_user
-    run_command!(
-      "createuser",
-      "-h",
-      "localhost",
-      "-p",
-      pg_port.to_s,
-      "-s",
-      "-D",
-      "-w",
-      "discourse",
-      error_prefix: "Failed to create temporary postgres superuser",
-    )
-  end
-
   def create_database
     run_command!(
       "createdb",
@@ -225,6 +210,8 @@ class TemporaryDb
       "localhost",
       "-p",
       pg_port.to_s,
+      "-U",
+      "discourse",
       "discourse",
       error_prefix: "Failed to create temporary postgres database",
     )

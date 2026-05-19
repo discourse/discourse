@@ -1747,7 +1747,7 @@ CREATE TABLE public.badges (
 
 CREATE SEQUENCE public.badges_id_seq
     AS integer
-    START WITH 100
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -5207,7 +5207,7 @@ CREATE TABLE public.groups (
 
 CREATE SEQUENCE public.groups_id_seq
     AS integer
-    START WITH 100
+    START WITH 40
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -20861,6 +20861,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260518104900'),
 ('20260518054805'),
 ('20260514055648'),
 ('20260514043815'),

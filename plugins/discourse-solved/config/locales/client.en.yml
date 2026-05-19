@@ -60,6 +60,7 @@ en:
       confirm_solved_removal_cancel: "Cancel"
 
       shared_issue:
+        label_zero: "Me too"
         label:
           one: "Me too (%{count})"
           other: "Me too (%{count})"
