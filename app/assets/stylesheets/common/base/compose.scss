@@ -252,17 +252,22 @@ html.composer-open:not(.has-full-page-chat) {
       }
     }
 
+    .composer-action-title {
+      display: flex;
+      gap: var(--space-2);
+      align-items: center;
+      width: auto;
+      max-width: 100%;
+      min-width: 0; // allows shrinking when needed
+
+      img.avatar {
+        margin-right: 3px;
+      }
+    }
+
     .composer-controls {
       display: flex;
       gap: 8px;
-    }
-
-    .composer-action-label__prefix {
-      display: none;
-    }
-
-    .composer-action-label__topic {
-      text-transform: capitalize;
     }
 
     // Protection for languages with long strings on very small screens. This
@@ -271,10 +276,6 @@ html.composer-open:not(.has-full-page-chat) {
     @include viewport.until(sm) {
       .reply-details {
         flex-wrap: wrap;
-      }
-
-      .composer-action-label__prefix {
-        display: none;
       }
 
       .display-edit-reason.--active {
