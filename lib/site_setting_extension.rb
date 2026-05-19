@@ -307,6 +307,15 @@ module SiteSettingExtension
           value = value.to_s
         elsif type == :uploaded_image_list && value.present?
           value = value.map(&:to_s).join("|")
+        elsif type == :objects && value.present?
+          type_hash = type_supervisor.type_hash(name)
+          if type_hash[:schema]
+            value =
+              SchemaSettingsObjectValidator.hydrate_uploads(
+                objects: JSON.parse(value),
+                schema: type_hash[:schema],
+              ).to_json
+          end
         end
 
         [name, value]
@@ -457,7 +466,11 @@ module SiteSettingExtension
         # For uploads nested in objects type, hydrate upload IDs to URLs
         if type_hash[:type].to_s == "objects" && type_hash[:schema]
           parsed_value = JSON.parse(value)
-          value = hydrate_uploads_in_objects(parsed_value, type_hash[:schema])
+          value =
+            SchemaSettingsObjectValidator.hydrate_uploads(
+              objects: parsed_value,
+              schema: type_hash[:schema],
+            )
         end
 
         opts = {
@@ -1381,39 +1394,4 @@ module SiteSettingExtension
   end
 
   private
-
-  def hydrate_uploads_in_objects(objects, schema)
-    return objects if objects.blank?
-
-    upload_ids =
-      SchemaSettingsObjectValidator.property_values_of_type(
-        schema: schema,
-        objects: objects,
-        type: "upload",
-      )
-
-    uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
-    objects.map { |obj| hydrate_uploads_in_object(obj, schema[:properties], uploads_by_id) }
-  end
-
-  def hydrate_uploads_in_object(object, properties, uploads_by_id)
-    properties.each do |prop_key, prop_value|
-      case prop_value[:type]
-      when "upload"
-        key = prop_key.to_s
-        upload_id = object[key]
-        upload = uploads_by_id[upload_id]
-        object[key] = upload.url if upload
-      when "objects"
-        nested_objects = object[prop_key.to_s]
-        if nested_objects.is_a?(Array)
-          nested_objects.each do |nested_obj|
-            hydrate_uploads_in_object(nested_obj, prop_value[:schema][:properties], uploads_by_id)
-          end
-        end
-      end
-    end
-
-    object
-  end
 end

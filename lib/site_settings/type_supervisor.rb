@@ -346,6 +346,21 @@ class SiteSettings::TypeSupervisor
       val = val.is_a?(String) ? val : val.map(&:id).join("|")
     elsif type == self.class.types[:upload] && val.present?
       val = val.is_a?(Integer) ? val : val.id
+    elsif type == self.class.types[:objects] && val.present?
+      begin
+        objects = val.is_a?(String) ? JSON.parse(val) : val
+
+        if objects.is_a?(Array) && @schemas[name]
+          val =
+            JSON.generate(
+              SchemaSettingsObjectValidator.normalize_uploads(
+                schema: @schemas[name],
+                objects: objects,
+              ),
+            )
+        end
+      rescue JSON::ParserError
+      end
     end
 
     [val, type]
