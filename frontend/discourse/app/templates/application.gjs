@@ -155,9 +155,12 @@ export default <template>
         <PoweredByDiscourse />
       {{/if}}
 
-      {{#unless @controller.isCurrentAdminRoute}}
-        <BlockOutlet @name="sidebar-right" />
-      {{/unless}}
+      {{#if @controller.rightSidebarEnabled}}
+        <div class="sidebar-right">
+          <PluginOutlet @name="sidebar-right" />
+          <BlockOutlet @name="sidebar-right" />
+        </div>
+      {{/if}}
     </div>
 
     <PluginOutlet
