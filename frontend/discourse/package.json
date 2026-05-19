@@ -150,7 +150,7 @@
     "source-map": "^0.7.6",
     "terser": "^5.47.1",
     "testem": "^3.20.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "util": "^0.12.5",
     "webpack": "5.99.9",
     "webpack-retry-chunk-load-plugin": "^3.1.1",
