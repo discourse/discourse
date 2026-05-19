@@ -59,7 +59,9 @@ RSpec.describe ApplicationHelper do
         global_setting :s3_cdn_url, "https://s3cdn.com"
 
         # Backend RSpec tests might be run without real manifest/assets
-        EmberCli.stubs(:script_chunks).returns({ "discourse" => "js/discourse-20n62q6s.digested" })
+        EmberCli.stubs(:script_chunks).returns(
+          { "discourse" => ["js/discourse-20n62q6s.digested"] },
+        )
       end
 
       it "deals correctly with subfolder" do
