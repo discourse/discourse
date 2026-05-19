@@ -31,15 +31,27 @@ class EmberCli < ActiveSupport::CurrentAttributes
     manifest = read_manifest!(exception: exception)
     return {} if manifest.nil?
 
-    manifest.each do |key, value|
-      entrypoints[key.delete_suffix(".js")] = [
-        value["file"].delete_prefix("assets/").delete_suffix(".js"),
-      ]
+    {
+      **manifest["entrypoints"],
+      **manifest["dynamicEntrypoints"],
+    }.each do |entry_name, entry_filename|
+      entrypoints[entry_name.delete_suffix(".js")] = deep_imports_for(
+        chunk_filename: entry_filename,
+        chunks: manifest["chunks"],
+      ).map { it.delete_prefix("assets/").delete_suffix(".js") }
     end
 
-    entrypoints["@embroider/virtual/test-support"] = ["test-support"]
-
     cache[:script_chunks] = entrypoints
+  end
+
+  def self.deep_imports_for(chunk_filename:, chunks:, seen: Set.new)
+    return [] unless seen.add?(chunk_filename)
+    [
+      chunk_filename,
+      *chunks
+        .dig(chunk_filename, "imports")
+        &.flat_map { |import| deep_imports_for(chunk_filename: import, chunks:, seen:) },
+    ]
   end
 
   BUILD_WAIT_TIMEOUT = 20.0
@@ -136,7 +148,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.has_tests?
-    script_chunks["tests/test-entrypoint"].present?
+    script_chunks["test-entrypoint"].present?
   end
 
   def self.cache

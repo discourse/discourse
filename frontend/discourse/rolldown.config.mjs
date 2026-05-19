@@ -79,7 +79,7 @@ export function buildConfig({ devMode } = {}) {
       "media-optimization-bundle": "media-optimization-bundle.js",
       ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
-            "tests/test-entrypoint": "tests/test-entrypoint.js",
+            "test-entrypoint": "tests/test-entrypoint.js",
             "qunit-live-reload": "qunit-live-reload.js",
           }
         : undefined),
@@ -181,21 +181,39 @@ export function buildConfig({ devMode } = {}) {
       {
         name: "bundle-manifest",
         generateBundle(_outputOptions, bundle) {
-          const manifest = {};
+          const manifest = {
+            entrypoints: {},
+            dynamicEntrypoints: {},
+            chunks: {},
+          };
 
           for (const [fileName, chunk] of Object.entries(bundle)) {
-            if (
-              chunk.type === "chunk" &&
-              (chunk.isEntry || chunk.name === "admin-compat-modules")
-            ) {
-              manifest[`${chunk.name}.js`] = {
-                file: fileName,
-                name: chunk.name,
-                isEntry: chunk.isEntry,
-                isDynamicEntry: chunk.isDynamicEntry,
-                imports: chunk.imports,
-              };
+            if (chunk.type !== "chunk") {
+              continue;
             }
+
+            const facadeModuleId = chunk.facadeModuleId
+              ? relative(import.meta.dirname, chunk.facadeModuleId)
+              : null;
+
+            if (chunk.isEntry) {
+              manifest.entrypoints[chunk.name] = fileName;
+            } else if (
+              chunk.isDynamicEntry &&
+              facadeModuleId &&
+              !facadeModuleId.startsWith("../")
+            ) {
+              manifest.dynamicEntrypoints[facadeModuleId] = fileName;
+            }
+
+            manifest.chunks[fileName] = {
+              file: fileName,
+              facadeModuleId,
+              name: chunk.name,
+              isEntry: chunk.isEntry,
+              isDynamicEntry: chunk.isDynamicEntry,
+              imports: chunk.imports,
+            };
           }
 
           if (devMode) {

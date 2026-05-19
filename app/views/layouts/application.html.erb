@@ -58,6 +58,8 @@
 
     <%= preload_script "vendor", type_module: true %>
 
+    <%= module_preloads_for "discourse", (staff? ? "admin/compat-modules" : nil) %>
+
     <%- if staff? %>
       <% EmberCli.script_chunks["chunk.admin"]&.each do |script_name| %>
         <link rel="preload" href="<%= script_asset_path(script_name) %>" as="script" nonce="<%= csp_nonce_placeholder %>" data-discourse-entrypoint="admin">
