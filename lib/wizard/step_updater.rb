@@ -46,7 +46,7 @@ class Wizard
     def apply_setting(id)
       update_setting(id, @fields[id])
     rescue Discourse::InvalidParameters => e
-      errors.add(id, e.message)
+      errors.add(id, e.message.delete_prefix("#{id}: "))
     end
 
     def ensure_changed(id)

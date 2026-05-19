@@ -29,6 +29,13 @@ class Wizard
         )
 
         step.add_field(
+          id: "company_url",
+          type: "text",
+          required: false,
+          value: SiteSetting.company_url,
+        )
+
+        step.add_field(
           id: "default_locale",
           type: "dropdown",
           required: false,
@@ -66,6 +73,7 @@ class Wizard
           updater.ensure_changed(:title)
 
           updater.apply_settings(:title) if updater.errors.blank?
+          updater.apply_setting(:company_url)
 
           old_locale = SiteSetting.default_locale
           updater.apply_setting(:default_locale)

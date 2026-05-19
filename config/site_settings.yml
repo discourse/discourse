@@ -122,6 +122,10 @@ required:
   company_name:
     default: ""
     area: "about|legal"
+  company_url:
+    default: ""
+    area: "about|legal"
+    validator: "UrlSettingValidator"
   governing_law:
     default: ""
     area: "about|legal"

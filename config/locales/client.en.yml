@@ -7440,6 +7440,10 @@ en:
           company_name_placeholder: "Acme Organization"
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
+          company_url: "Organization URL"
+          company_url_placeholder: "https://example.com"
+          company_url_help: |
+            The website for your organization.
           governing_law: "Governing law"
           governing_law_placeholder: "Province, State, or Country"
           governing_law_help: |

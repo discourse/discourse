@@ -14,6 +14,7 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
   get data() {
     return {
       companyName: this.args.yourOrganization.companyName.value,
+      companyURL: this.args.yourOrganization.companyURL.value,
       governingLaw: this.args.yourOrganization.governingLaw.value,
       cityForDisputes: this.args.yourOrganization.cityForDisputes.value,
     };
@@ -28,6 +29,7 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
         data: {
           your_organization: {
             company_name: data.companyName,
+            company_url: data.companyURL,
             governing_law: data.governingLaw,
             city_for_disputes: data.cityForDisputes,
           },
@@ -66,6 +68,22 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       <form.Alert @type="info">
         {{i18n "admin.config_areas.about.company_name_warning"}}
       </form.Alert>
+
+      <form.Field
+        @name="companyURL"
+        @title={{i18n "admin.config_areas.about.company_url"}}
+        @description={{i18n "admin.config_areas.about.company_url_help"}}
+        @format="large"
+        @type="input-url"
+        @validation="url"
+        as |field|
+      >
+        <field.Control
+          placeholder={{i18n
+            "admin.config_areas.about.company_url_placeholder"
+          }}
+        />
+      </form.Field>
 
       <form.Field
         @name="governingLaw"
