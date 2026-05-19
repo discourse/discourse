@@ -26,10 +26,26 @@ class SchemaSettingsObjectValidator
       values.to_a
     end
 
+    def upload_ids(schema:, objects:)
+      property_values_of_type(schema:, objects:, type: "upload").filter_map do |value|
+        if value.is_a?(Integer)
+          value
+        elsif value.is_a?(String) && value.present?
+          Upload.get_from_url(value)&.id
+        end
+      end
+    end
+
     def normalize_uploads(schema:, objects:)
       return objects if objects.blank?
 
-      normalize_uploads_in_objects(objects.deep_dup, schema[:properties])
+      transform_uploads_in_objects(objects.deep_dup, schema[:properties]) do |value|
+        if value.is_a?(String) && value.present?
+          Upload.get_from_url(value)&.id || value
+        else
+          value
+        end
+      end
     end
 
     def hydrate_uploads(schema:, objects:, cdn: false)
@@ -41,12 +57,18 @@ class SchemaSettingsObjectValidator
         end
 
       uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
-      hydrate_uploads_in_objects(objects.deep_dup, schema[:properties], uploads_by_id, cdn:)
+      transform_uploads_in_objects(objects.deep_dup, schema[:properties]) do |value|
+        if upload = uploads_by_id[value]
+          cdn ? Discourse.store.cdn_url(upload.url) : upload.url
+        else
+          value
+        end
+      end
     end
 
     private
 
-    def normalize_uploads_in_objects(objects, properties)
+    def transform_uploads_in_objects(objects, properties, &block)
       objects.each do |object|
         properties.each do |property_name, property_attributes|
           key = object_key(object, property_name)
@@ -54,44 +76,14 @@ class SchemaSettingsObjectValidator
 
           case property_attributes[:type]
           when "upload"
-            value = object[key]
-            if value.is_a?(String) && value.present?
-              upload = Upload.get_from_url(value)
-              object[key] = upload.id if upload
-            end
+            object[key] = block.call(object[key])
           when "objects"
             nested_objects = object[key]
             if nested_objects.is_a?(Array)
-              normalize_uploads_in_objects(
+              transform_uploads_in_objects(
                 nested_objects,
                 property_attributes[:schema][:properties],
-              )
-            end
-          end
-        end
-      end
-
-      objects
-    end
-
-    def hydrate_uploads_in_objects(objects, properties, uploads_by_id, cdn:)
-      objects.each do |object|
-        properties.each do |property_name, property_attributes|
-          key = object_key(object, property_name)
-          next if key.nil?
-
-          case property_attributes[:type]
-          when "upload"
-            upload = uploads_by_id[object[key]]
-            object[key] = cdn ? Discourse.store.cdn_url(upload.url) : upload.url if upload
-          when "objects"
-            nested_objects = object[key]
-            if nested_objects.is_a?(Array)
-              hydrate_uploads_in_objects(
-                nested_objects,
-                property_attributes[:schema][:properties],
-                uploads_by_id,
-                cdn:,
+                &block
               )
             end
           end

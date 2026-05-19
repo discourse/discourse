@@ -109,5 +109,25 @@ RSpec.describe ThemeSiteSetting do
 
       expect { theme_site_setting.destroy! }.to change { UploadReference.count }.by(-2)
     end
+
+    it "removes upload references when uploads are removed from objects" do
+      theme_site_setting =
+        ThemeSiteSetting.create!(
+          theme: theme_1,
+          name: "test_objects_with_uploads",
+          data_type: SiteSettings::TypeSupervisor.types[:objects],
+          value:
+            JSON.generate(
+              [
+                { "name" => "object1", "upload_id" => upload.id },
+                { "name" => "object2", "upload_id" => upload2.id },
+              ],
+            ),
+        )
+
+      expect {
+        theme_site_setting.update!(value: JSON.generate([{ "name" => "object1" }]))
+      }.to change { UploadReference.where(target: theme_site_setting).count }.from(2).to(0)
+    end
   end
 end

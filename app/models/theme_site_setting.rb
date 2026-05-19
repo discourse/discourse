@@ -18,13 +18,12 @@ class ThemeSiteSetting < ActiveRecord::Base
         UploadReference.ensure_exist!(upload_ids: [value], target: self)
       elsif data_type == SiteSettings::TypeSupervisor.types[:objects] && value.present?
         upload_ids =
-          SchemaSettingsObjectValidator.property_values_of_type(
+          SchemaSettingsObjectValidator.upload_ids(
             schema: SiteSetting.type_supervisor.type_hash(name.to_sym)[:schema],
             objects: JSON.parse(value),
-            type: "upload",
           )
 
-        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
+        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
       end
     end
   end

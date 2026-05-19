@@ -310,11 +310,7 @@ module SiteSettingExtension
         elsif type == :objects && value.present?
           type_hash = type_supervisor.type_hash(name)
           if type_hash[:schema]
-            value =
-              SchemaSettingsObjectValidator.hydrate_uploads(
-                objects: JSON.parse(value),
-                schema: type_hash[:schema],
-              ).to_json
+            value = hydrate_objects_setting_value(name, value, type_hash:).to_json
           end
         end
 
@@ -465,12 +461,7 @@ module SiteSettingExtension
 
         # For uploads nested in objects type, hydrate upload IDs to URLs
         if type_hash[:type].to_s == "objects" && type_hash[:schema]
-          parsed_value = JSON.parse(value)
-          value =
-            SchemaSettingsObjectValidator.hydrate_uploads(
-              objects: parsed_value,
-              schema: type_hash[:schema],
-            )
+          value = hydrate_objects_setting_value(s, value, type_hash:)
         end
 
         opts = {
@@ -1394,4 +1385,12 @@ module SiteSettingExtension
   end
 
   private
+
+  def hydrate_objects_setting_value(name, value, type_hash: nil)
+    type_hash ||= type_supervisor.type_hash(name)
+    return value if !type_hash[:schema] || value.blank?
+
+    objects = value.is_a?(String) ? JSON.parse(value) : value
+    SchemaSettingsObjectValidator.hydrate_uploads(objects:, schema: type_hash[:schema])
+  end
 end
