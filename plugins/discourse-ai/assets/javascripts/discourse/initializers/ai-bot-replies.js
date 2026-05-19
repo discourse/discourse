@@ -44,6 +44,7 @@ function initializeAIBotReplies(api) {
     let cancelled = false;
     const cancel = () => {
       cancelled = true;
+      appEvents.off("page:changed", cancel);
     };
     appEvents.on("page:changed", cancel);
 

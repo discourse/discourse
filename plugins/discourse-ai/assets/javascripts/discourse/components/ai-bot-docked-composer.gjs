@@ -72,16 +72,15 @@ export default class AiBotDockedComposer extends Component {
       return;
     }
 
-    const scrollFraction = (window.scrollY + window.innerHeight) / scrollH;
-    const below = scrollFraction < 0.85;
-    if (below !== this.hasContentBelow) {
-      this.hasContentBelow = below;
+    const distFromBottom = scrollH - window.scrollY - window.innerHeight;
+    const hasContentBelow = distFromBottom > 100;
+    if (hasContentBelow !== this.hasContentBelow) {
+      this.hasContentBelow = hasContentBelow;
     }
 
     // Two thresholds (show at 60px, hide at 140px) prevent the disclaimer
     // from toggling itself: appearing adds height, which shifts the scroll
     // position and would immediately hide it again in a loop on Firefox.
-    const distFromBottom = scrollH - window.scrollY - window.innerHeight;
     const nearBottom = this.atAbsoluteBottom
       ? distFromBottom <= 140
       : distFromBottom <= 60;
@@ -112,6 +111,11 @@ export default class AiBotDockedComposer extends Component {
       this.#placeholderEl?.style.setProperty(
         "--docked-composer-content-offset",
         `${offset}px`
+      );
+    } else {
+      composerEl.style.removeProperty("--docked-composer-content-offset");
+      this.#placeholderEl?.style.removeProperty(
+        "--docked-composer-content-offset"
       );
     }
   };
@@ -366,7 +370,9 @@ export default class AiBotDockedComposer extends Component {
       this.#pendingBotReplyTimeout = setTimeout(() => {
         this.pendingBotReply = false;
       }, 10000);
-      window.scrollTo({ top: document.documentElement.scrollHeight });
+      schedule("afterRender", () => {
+        window.scrollTo({ top: document.documentElement.scrollHeight });
+      });
       if (result.post?.post_number) {
         this.appEvents.trigger("discourse-ai:post-submitted", {
           topicId: this.topicId,
