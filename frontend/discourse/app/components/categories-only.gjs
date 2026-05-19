@@ -83,14 +83,16 @@ export default class CategoriesOnly extends Component {
             </div>
           {{else}}
             <table class="category-list {{if this.showTopics 'with-topics'}}">
-              <thead>
+              <thead class="category-list-header">
                 <tr>
-                  <th class="category"><span
+                  <th class="category topic-list-data default"><span
                       role="heading"
                       aria-level="2"
                       id="categories-only-category"
                     >{{i18n "categories.category"}}</span></th>
-                  <th class="topics">{{i18n "categories.topics"}}</th>
+                  <th class="topics topic-list-data num">{{i18n
+                      "categories.topics"
+                    }}</th>
                   {{#if this.showTopics}}
                     <th class="latest">{{i18n "categories.latest"}}</th>
                   {{/if}}
