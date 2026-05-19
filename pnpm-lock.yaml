@@ -508,9 +508,6 @@ importers:
       broccoli-merge-files:
         specifier: ^0.8.0
         version: 0.8.0
-      chokidar:
-        specifier: ^5.0.0
-        version: 5.0.0
       deprecation-silencer:
         specifier: workspace:1.0.0
         version: link:../deprecation-silencer
