@@ -231,7 +231,7 @@ module("Integration | Component | PostExcerptAccordion", function (hooks) {
       <template>
         <PostExcerptAccordion
           @excerptPosts={{fiveLineExcerptPost}}
-          @linesDisplayed="6"
+          @linesDisplayed="10"
         />
       </template>
     );
