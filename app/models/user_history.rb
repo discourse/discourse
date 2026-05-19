@@ -410,12 +410,12 @@ class UserHistory < ActiveRecord::Base
   end
 
   def self.for(user, action_type)
-    self.where(target_user_id: user.id, action: UserHistory.actions[action_type])
+    where(target_user_id: user.id, action: UserHistory.actions[action_type])
   end
 
   def self.exists_for_user?(user, action_type, opts = nil)
     opts = opts || {}
-    result = self.where(target_user_id: user.id, action: UserHistory.actions[action_type])
+    result = where(target_user_id: user.id, action: UserHistory.actions[action_type])
     result = result.where(topic_id: opts[:topic_id]) if opts[:topic_id]
     result.exists?
   end
@@ -431,12 +431,11 @@ class UserHistory < ActiveRecord::Base
     if custom_staff
       opts[:custom_type] = opts[:action_name]
     else
-      opts[:action_id] = self.actions[opts[:action_name].to_sym] if opts[:action_name]
+      opts[:action_id] = actions[opts[:action_name].to_sym] if opts[:action_name]
     end
 
     query =
-      self
-        .with_filters(opts.slice(*staff_filters))
+      with_filters(opts.slice(*staff_filters))
         .only_staff_actions
         .order("id DESC")
         .includes(:acting_user, :target_user, :topic, :post, :category)
@@ -450,7 +449,7 @@ class UserHistory < ActiveRecord::Base
   end
 
   def set_admin_only
-    self.admin_only = UserHistory.admin_only_action_ids.include?(self.action)
+    self.admin_only = UserHistory.admin_only_action_ids.include?(action)
     self
   end
 

@@ -45,7 +45,7 @@ module Categories
 
         # Always need to re-register the core Discussion type, the system doesn't work
         # without it.
-        self.register(Categories::Types::Discussion)
+        register(Categories::Types::Discussion)
       end
 
       # Returns all the category type counts in a hash with the type

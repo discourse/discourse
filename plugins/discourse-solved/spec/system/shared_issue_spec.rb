@@ -31,10 +31,10 @@ describe "Solved | Shared issue button" do
     topic_page.visit_topic(topic)
 
     expect(shared_issue_button).to have_shared_issue_button
-    expect(shared_issue_button).to have_count(1)
+    expect(shared_issue_button).to have_count(0)
 
     shared_issue_button.click
-    expect(shared_issue_button).to have_count(2)
+    expect(shared_issue_button).to have_count(1)
     expect(shared_issue_button).to have_active
 
     expect(TopicUser.get(topic, member).notification_level).to eq(
@@ -42,7 +42,7 @@ describe "Solved | Shared issue button" do
     )
 
     shared_issue_button.click
-    expect(shared_issue_button).to have_count(1)
+    expect(shared_issue_button).to have_count(0)
     expect(shared_issue_button).to have_no_css(".has-shared-issue")
   end
 
@@ -109,7 +109,7 @@ describe "Solved | Shared issue button" do
 
     expect(shared_issue_button).to have_shared_issue_button
     expect(shared_issue_button).to have_read_only
-    expect(shared_issue_button).to have_count(1)
+    expect(shared_issue_button).to have_count(0)
   end
 
   describe "with multiple solutions enabled" do

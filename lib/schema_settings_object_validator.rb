@@ -7,7 +7,7 @@ class SchemaSettingsObjectValidator
 
       objects.each_with_index do |object, index|
         humanize_error_messages(
-          self.new(schema: schema, object: object).validate,
+          new(schema: schema, object: object).validate,
           index:,
           error_messages:,
         )
@@ -20,7 +20,7 @@ class SchemaSettingsObjectValidator
       values = Set.new
 
       objects.each do |object|
-        values.merge(self.new(schema: schema, object: object).property_values_of_type(type))
+        values.merge(new(schema: schema, object: object).property_values_of_type(type))
       end
 
       values.to_a

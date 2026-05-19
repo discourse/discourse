@@ -61,12 +61,13 @@ task "db:check_structure_dump" => :environment do
   DbStructure.with_temp_db do
     # SCHEMA points at a path that doesn't yet exist, so `db:migrate` skips
     # the schema-load shortcut and `db:schema:dump` writes the fresh dump
-    # there — one Rails boot for all three tasks.
+    # there — one Rails boot for all the tasks.
     system(
       DbStructure.temp_db_env.merge("SCHEMA" => candidate),
       "bin/rails",
       "db:migrate",
       "db:check_structure_dump:assert_no_unexpected_rows",
+      "db:check_structure_dump:assert_fresh_sequences",
       "db:schema:dump",
       exception: true,
     )
@@ -112,10 +113,41 @@ task "db:check_structure_dump:assert_no_unexpected_rows" => :environment do
     only captures schema, so any data a migration writes on a fresh DB silently disappears
     on installs provisioned from the dump. Move the data into a seed fixture under
     `db/fixtures/` (or a plugin's `db/fixtures/`) and, if any of the original migration
-    body needs to run on upgrade paths, gate it on `Migration::Helpers.new_site?`.
+    body needs to run on upgrade paths, gate it on `Migration::Helpers.existing_site?`.
 
     Unexpected rows:
       - #{unexpected.join("\n  - ")}
+  MSG
+end
+
+task "db:check_structure_dump:assert_fresh_sequences" => :environment do
+  conn = ActiveRecord::Base.connection
+  bookkeeping_sequences = DbStructure::BOOKKEEPING_TABLES.map { |t| "#{t}_id_seq" }
+  sequences =
+    DB.query("SELECT sequencename, start_value FROM pg_sequences WHERE schemaname = 'public'")
+
+  non_fresh_sequences =
+    sequences.filter_map do |seq|
+      next if bookkeeping_sequences.include?(seq.sequencename)
+      qualified = "public.#{conn.quote_column_name(seq.sequencename)}"
+      row = DB.query("SELECT last_value, is_called FROM #{qualified}").first
+      next if !row.is_called && row.last_value == seq.start_value
+      "#{seq.sequencename} (last_value=#{row.last_value}, is_called=#{row.is_called}, start=#{seq.start_value})"
+    end
+
+  next if non_fresh_sequences.empty?
+
+  abort <<~MSG.strip
+    A fresh `db:migrate` advanced one or more sequences past their start values.
+    `db/structure.sql` captures `start_value` but not runtime `last_value` /
+    `is_called`, so any `setval` (or `nextval` triggered by an INSERT) silently
+    reverts on installs provisioned from the dump.
+
+    Use `ALTER SEQUENCE my_id_seq START WITH N` — pg_dump preserves it in
+    structure.sql so fresh installs land at the right place.
+
+    Non-fresh sequences:
+      - #{non_fresh_sequences.join("\n  - ")}
   MSG
 end
 

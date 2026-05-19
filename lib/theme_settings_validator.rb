@@ -9,15 +9,15 @@ class ThemeSettingsValidator
 
     def is_valid_value_type?(value, type)
       case type
-      when self.types[:integer]
+      when types[:integer]
         value.is_a?(Integer)
-      when self.types[:float]
+      when types[:float]
         value.is_a?(Integer) || value.is_a?(Float)
-      when self.types[:bool]
+      when types[:bool]
         value.is_a?(TrueClass) || value.is_a?(FalseClass)
-      when self.types[:list]
+      when types[:list]
         value.is_a?(String)
-      when self.types[:objects]
+      when types[:objects]
         value.is_a?(Array) && value.all? { |v| v.is_a?(Hash) }
       else
         true

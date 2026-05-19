@@ -1131,7 +1131,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       header_lines, _, payload_lines = lines.chunk { |l| l == "" }.map(&:last)
 
-      preamble = (<<~PREAMBLE).strip
+      preamble = <<~PREAMBLE.strip
         HTTP/1.1 200 OK
         Content-Type: text/plain; charset=utf-8
         Transfer-Encoding: chunked

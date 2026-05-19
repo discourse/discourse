@@ -185,9 +185,10 @@ class TopicsController < ApplicationController
          !@topic_view.topic.private_message? &&
          (@topic_view.topic.nested_topic.present? || SiteSetting.nested_replies_default) &&
          params[:flat] != "1"
-      url = "/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
+      url = +"/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
       post_number = opts[:post_number].to_i
       url << "/#{post_number}" if post_number > 0
+      url << "?embed_mode=true" if params[:embed_mode] == "true"
       redirect_to url, status: :found
       return
     end
@@ -1203,7 +1204,7 @@ class TopicsController < ApplicationController
   def reset_new
     topic_scope =
       if current_user.new_new_view_enabled?
-        if (params[:dismiss_topics] && params[:dismiss_posts])
+        if params[:dismiss_topics] && params[:dismiss_posts]
           TopicQuery.new(current_user).new_and_unread_results(limit: false)
         elsif params[:dismiss_topics]
           TopicQuery.new(current_user).new_results(limit: false)
@@ -1521,7 +1522,7 @@ class TopicsController < ApplicationController
           helpers.localize_topic_view_content(@topic_view)
         end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-        @description_meta = (@topic_view.topic.excerpt.presence || @topic_view.summary)
+        @description_meta = @topic_view.topic.excerpt.presence || @topic_view.summary
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         render :show
       end

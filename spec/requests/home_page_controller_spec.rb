@@ -28,7 +28,10 @@ RSpec.describe HomePageController do
 
         it "should allow plugin to override output" do
           plugin =
-            plugin_class.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
+            plugin_class.new(
+              nil,
+              "#{Rails.root.join("spec/fixtures/plugins/csp_extension/plugin.rb")}",
+            )
 
           plugin.register_html_builder("server:custom-homepage-crawler-view") do |c|
             "<div>override</div>"

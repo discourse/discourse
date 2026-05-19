@@ -1,8 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
+import DashboardDateRange, {
+  calculatePresetStartDate,
+} from "discourse/admin/components/dashboard/date-range";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { withFrozenTime } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Dashboard | DateRange", function (hooks) {
   setupRenderingTest(hooks);
@@ -60,6 +63,23 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
 
     await click("input[value='last_7_days']");
     assert.deepEqual(calls, ["last_7_days"], "fires with the chosen value");
+  });
+
+  test("preset start dates include exactly the named period through today", function (assert) {
+    withFrozenTime("2026-05-14 12:00:00", "UTC", () => {
+      assert.strictEqual(
+        moment(calculatePresetStartDate("last_7_days")).format("YYYY-MM-DD"),
+        "2026-05-08"
+      );
+      assert.strictEqual(
+        moment(calculatePresetStartDate("last_30_days")).format("YYYY-MM-DD"),
+        "2026-04-15"
+      );
+      assert.strictEqual(
+        moment(calculatePresetStartDate("last_3_months")).format("YYYY-MM-DD"),
+        "2026-02-15"
+      );
+    });
   });
 
   test("does not call @setPeriod when the custom item is clicked", async function (assert) {

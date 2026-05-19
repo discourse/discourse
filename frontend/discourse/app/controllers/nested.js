@@ -291,6 +291,61 @@ export default class NestedController extends Controller {
   }
 
   @action
+  changeNotice(post) {
+    return this.#topicController.changeNotice(post);
+  }
+
+  @action
+  changePostOwner(post) {
+    return this.#topicRoute.changeOwner(post);
+  }
+
+  @action
+  grantBadge(post) {
+    return this.#topicRoute.showGrantBadgeModal(post);
+  }
+
+  @action
+  lockPost(post) {
+    return this.#topicController.lockPost(post);
+  }
+
+  @action
+  unlockPost(post) {
+    return this.#topicController.unlockPost(post);
+  }
+
+  @action
+  permanentlyDeletePost(post) {
+    return this.#topicController.permanentlyDeletePost(post);
+  }
+
+  @action
+  rebakePost(post) {
+    return this.#topicController.rebakePost(post);
+  }
+
+  @action
+  showPagePublish() {
+    return this.#topicRoute.showPagePublish();
+  }
+
+  @action
+  togglePostType(post) {
+    return this.#topicController.togglePostType(post);
+  }
+
+  @action
+  toggleWiki(post) {
+    return this.#topicController.toggleWiki(post);
+  }
+
+  @action
+  unhidePost(post) {
+    return this.#topicController.unhidePost(post);
+  }
+
+  @action
   showActivityLog() {
     this.modal.show(NestedActivityLog, {
       model: { topic: this.topic },

@@ -2549,6 +2549,7 @@ files:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402705"
       allow_enabled_for:
         - everyone
   composer_media_optimization_gif_conversion_threshold:
@@ -4424,7 +4425,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "stable"
       impact: "feature,all_members"
   enable_new_post_reactions_menu:
     default: false

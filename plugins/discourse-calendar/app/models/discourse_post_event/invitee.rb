@@ -19,42 +19,49 @@ module DiscoursePostEvent
     end
     scope :with_status, ->(status) { where(status: Invitee.statuses[status]) }
 
+    before_save :clear_recurring_unless_going
     after_commit :sync_chat_channel_members
 
     def self.statuses
       @statuses ||= Enum.new(going: 0, interested: 1, not_going: 2)
     end
 
-    def self.create_attendance!(user_id, post_id, status)
+    def self.create_attendance!(user_id, post_id, status, recurring: false)
+      status = status.to_sym
       event = Event.find(post_id)
-      if status.to_sym == :going && event.at_capacity?
+
+      if status == :going && event.at_capacity?
         raise Discourse::InvalidParameters.new(:max_attendees)
       end
 
-      invitee =
-        Invitee.create!(status: Invitee.statuses[status.to_sym], post_id: post_id, user_id: user_id)
-      invitee.event.publish_update!
-      invitee.update_topic_tracking!
-      DiscourseEvent.trigger(:discourse_calendar_post_event_invitee_status_changed, invitee)
+      invitee = create!(post_id:, user_id:, status: statuses[status], recurring:)
+      invitee.publish_attendance_change!
       invitee
     rescue ActiveRecord::RecordNotUnique
-      # do nothing in case multiple new attendances would be created very fast
-      Invitee.find_by(post_id: post_id, user_id: user_id)
+      # multiple attendances may be created concurrently — return the winning row
+      find_by(post_id:, user_id:)
     end
 
-    def update_attendance!(status)
-      if status && status.to_sym == :going && event.at_capacity? &&
-           self.status != Invitee.statuses[:going]
+    def update_attendance!(status, recurring: false)
+      status = status&.to_sym
+
+      if status == :going && event.at_capacity? && !going?
         raise Discourse::InvalidParameters.new(:max_attendees)
       end
 
-      new_status = Invitee.statuses[status.to_sym]
-      status_changed = self.status != new_status
-      self.update(status: new_status)
-      self.event.publish_update!
-      self.update_topic_tracking! if status_changed
-      DiscourseEvent.trigger(:discourse_calendar_post_event_invitee_status_changed, self)
+      update!(status: self.class.statuses[status], recurring:)
+      publish_attendance_change!
       self
+    end
+
+    def going?
+      status == Invitee.statuses[:going]
+    end
+
+    def publish_attendance_change!
+      event.publish_update!
+      update_topic_tracking!
+      DiscourseEvent.trigger(:discourse_calendar_post_event_invitee_status_changed, self)
     end
 
     def self.extract_uniq_usernames(groups)
@@ -64,16 +71,16 @@ module DiscoursePostEvent
     end
 
     def sync_chat_channel_members
-      return if !self.event.chat_enabled?
-      ChatChannelSync.sync(self.event)
+      return if !event.chat_enabled?
+      ChatChannelSync.sync(event)
     end
 
     def update_topic_tracking!
-      topic_id = self.event.post.topic.id
-      user_id = self.user.id
+      topic_id = event.post.topic.id
+      user_id = user.id
       tracking = :regular
 
-      case self.status
+      case status
       when Invitee.statuses[:going]
         tracking = :watching
       when Invitee.statuses[:interested]
@@ -86,6 +93,12 @@ module DiscoursePostEvent
         notification_level: TopicUser.notification_levels[tracking],
       )
     end
+
+    private
+
+    def clear_recurring_unless_going
+      self.recurring = false unless going?
+    end
   end
 end
 
@@ -95,6 +108,7 @@ end
 #
 #  id         :bigint           not null, primary key
 #  notified   :boolean          default(FALSE), not null
+#  recurring  :boolean          default(FALSE), not null
 #  status     :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

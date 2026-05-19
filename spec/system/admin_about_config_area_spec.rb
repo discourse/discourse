@@ -243,6 +243,7 @@ describe "Admin About Config Area Page" do
       config_area.group_listing_section.initial_members_input.fill_in("3")
       config_area.group_listing_section.order_input.select("alphabetically")
       config_area.group_listing_section.show_description_input.uncheck
+      expect(config_area.group_listing_section.show_description_input.value).to eq(false)
 
       config_area.group_listing_section.submit
       expect(config_area.group_listing_section).to have_saved_successfully

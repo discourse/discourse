@@ -32,7 +32,7 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
         Fabricate(
           :ai_agent,
           default_llm_id: llm_model.id,
-          allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+          allowed_group_ids: [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]],
         )
       end
 
@@ -265,7 +265,7 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
         Fabricate(
           :ai_agent,
           default_llm_id: llm_model.id,
-          allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+          allowed_group_ids: [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]],
         )
       end
       fab!(:llm_credit_allocation) do

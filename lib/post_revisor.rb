@@ -68,7 +68,7 @@ class PostRevisor
         removed_tags = prev_tags - persisted_tag_names
         diff_tags = added_tags | removed_tags
 
-        if diff_tags.present? && !self.silent
+        if diff_tags.present? && !silent
           Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
 
           PostRevisor.create_small_action_for_tag_changes(
@@ -113,7 +113,7 @@ class PostRevisor
     tracked_topic_fields[field] = block
 
     # Define it in the serializer unless it already has been defined
-    if PostRevisionSerializer.instance_methods(false).exclude?("#{field}_changes".to_sym)
+    if PostRevisionSerializer.instance_methods(false).exclude?(:"#{field}_changes")
       PostRevisionSerializer.add_compared_field(field)
     end
   end
@@ -346,23 +346,19 @@ class PostRevisor
     return false if !successfully_saved_post_and_topic
 
     # Lock the post by default if the appropriate setting is true
-    if (
-         SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
-           @editor.staff? && @editor != Discourse.system_user && !@post.user&.staff?
-       )
+    if SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
+         @editor.staff? && @editor != Discourse.system_user && !@post.user&.staff?
       PostLocker.new(@post, @editor).lock
     end
 
     # We log staff/group moderator edits to posts
     if (
-         (
-           @editor.staff? ||
-             (
-               @post.is_category_description? &&
-                 guardian.can_edit_category_description?(@post.topic.category)
-             )
-         ) && @editor.id != @post.user_id && @fields.has_key?("raw") && !@opts[:skip_staff_log]
-       )
+         @editor.staff? ||
+           (
+             @post.is_category_description? &&
+               guardian.can_edit_category_description?(@post.topic.category)
+           )
+       ) && @editor.id != @post.user_id && @fields.has_key?("raw") && !@opts[:skip_staff_log]
       StaffActionLogger.new(@editor).log_post_edit(@post, old_raw: old_raw)
     end
 
@@ -820,7 +816,7 @@ class PostRevisor
   def post_process_post
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
-    DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?, self)
+    DiscourseEvent.trigger(:post_edited, @post, topic_changed?, self)
   end
 
   def alert_users

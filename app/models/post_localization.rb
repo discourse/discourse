@@ -18,7 +18,7 @@ class PostLocalization < ActiveRecord::Base
   private
 
   def access_control_post_id_for_upload
-    self.post_id
+    post_id
   end
 end
 

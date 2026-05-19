@@ -14,7 +14,7 @@ export default class DiscoursePostEventInvitee extends Component {
   get statusIcon() {
     switch (this.args.invitee.status) {
       case "going":
-        return "check";
+        return this.args.invitee.recurring ? "arrows-rotate" : "check";
       case "interested":
         return "star";
       case "not_going":

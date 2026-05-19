@@ -26,7 +26,7 @@ export default class SolvedSharedIssueButton extends Component {
   }
 
   get count() {
-    return this.args.post.topic.shared_issue_count ?? 1;
+    return this.args.post.topic.shared_issue_count ?? 0;
   }
 
   get hasSharedIssue() {
@@ -42,6 +42,9 @@ export default class SolvedSharedIssueButton extends Component {
   }
 
   get label() {
+    if (this.count === 0) {
+      return i18n("solved.shared_issue.label_zero");
+    }
     return i18n("solved.shared_issue.label", { count: this.count });
   }
 

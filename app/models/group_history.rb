@@ -26,16 +26,13 @@ class GroupHistory < ActiveRecord::Base
 
   def self.with_filters(group, params = {})
     records =
-      self
-        .includes(:acting_user, :target_user)
-        .where(group_id: group.id)
-        .order("group_histories.created_at DESC")
+      includes(:acting_user, :target_user).where(group_id: group.id).order(
+        "group_histories.created_at DESC",
+      )
 
     if params.present?
       params = params.slice(*filters)
-      records = records.where(action: self.actions[params[:action].to_sym]) if params[
-        :action
-      ].present?
+      records = records.where(action: actions[params[:action].to_sym]) if params[:action].present?
       records = records.where(subject: params[:subject]) if params[:subject].present?
 
       %i[acting_user target_user].each do |filter|

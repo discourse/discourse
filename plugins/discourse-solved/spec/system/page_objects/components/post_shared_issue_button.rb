@@ -31,7 +31,8 @@ module PageObjects
       end
 
       def has_count?(count)
-        within_post { has_css?(SELECTOR, text: "Me too (#{count})") }
+        label = count.zero? ? "Me too" : "Me too (#{count})"
+        within_post { has_css?(SELECTOR, exact_text: label) }
       end
 
       private

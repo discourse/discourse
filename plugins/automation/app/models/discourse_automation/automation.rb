@@ -57,8 +57,8 @@ module DiscourseAutomation
       change_automation_ids_custom_field_in_mutex(target, custom_field_key) do
         target.reload
         ids = Array(target.custom_fields[custom_field_key])
-        if !ids.include?(self.id)
-          ids << self.id
+        if !ids.include?(id)
+          ids << id
           ids = ids.compact.uniq
           target.custom_fields[custom_field_key] = ids
           target.save_custom_fields
@@ -74,9 +74,9 @@ module DiscourseAutomation
       change_automation_ids_custom_field_in_mutex(target, custom_field_key) do
         target.reload
         ids = Array(target.custom_fields[custom_field_key])
-        if ids.include?(self.id)
+        if ids.include?(id)
           ids = ids.compact.uniq
-          ids.delete(self.id)
+          ids.delete(id)
           target.custom_fields[custom_field_key] = ids
           target.save_custom_fields
         end
@@ -152,7 +152,7 @@ module DiscourseAutomation
         return if active_id = DiscourseAutomation.get_active_automation
 
         begin
-          DiscourseAutomation.set_active_automation(self.id)
+          DiscourseAutomation.set_active_automation(id)
           if scriptable.background && !running_in_background
             trigger_in_background!(context)
           else
@@ -191,7 +191,7 @@ module DiscourseAutomation
     end
 
     def new_user_custom_field_name
-      "automation_#{self.id}_new_user"
+      "automation_#{id}_new_user"
     end
 
     private

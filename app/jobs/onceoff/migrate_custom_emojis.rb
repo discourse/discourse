@@ -5,7 +5,7 @@ module Jobs
     def execute_onceoff(args)
       return if Rails.env.test?
 
-      Dir["#{Rails.root}/#{Emoji.base_directory}/*.{png,gif}"].each do |path|
+      Dir["#{Rails.root.join("#{Emoji.base_directory}/*.{png,gif}")}"].each do |path|
         name = File.basename(path, File.extname(path))
 
         File.open(path) do |file|

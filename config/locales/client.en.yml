@@ -1617,6 +1617,7 @@ en:
           in_specific_groups: "The user is in the specific groups required for this change"
           enabled_for_everyone: "This change is enabled for all members"
           enabled_for_no_one: "This change is disabled for all members"
+        enable_available_notifications: "Notify me when an upcoming change becomes available for preview"
 
       user_notifications:
         filters:
@@ -1640,7 +1641,7 @@ en:
         normal_option: "Normal"
         normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
       notification_schedule:
-        title: "Notification Schedule"
+        title: "Notification schedule"
         label: "Enable custom notification schedule"
         tip: "Outside of these hours your notifications will be paused."
         midnight: "Midnight"
@@ -1684,13 +1685,13 @@ en:
       notifications: "Notifications"
       statistics: "Stats"
       desktop_notifications:
-        label: "Live Notifications"
+        label: "Live notifications"
         not_supported: "Notifications are not supported on this browser. Sorry."
-        perm_default: "Turn On Notifications"
-        perm_denied_btn: "Permission Denied"
+        perm_default: "Turn on notifications"
+        perm_denied_btn: "Permission denied"
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
-        disable: "Disable Notifications"
-        enable: "Enable Notifications"
+        disable: "Disable notifications"
+        enable: "Enable notifications"
         each_browser_note: "Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
@@ -6269,6 +6270,8 @@ en:
         group_moderation_and_security: "Moderation & Security"
         group_other: "Other"
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
+        chart:
+          total: "Total: %{count}"
 
       config_sections:
         account:
@@ -6910,6 +6913,40 @@ en:
             last_3_months: "vs last 3 months"
             previous_period: "vs previous period"
 
+        site_traffic:
+          fetch_error: "Couldn't load site traffic. Try refreshing the page."
+          headline:
+            last_7_days:
+              one: "%{formatted_count} pageview in the last 7 days"
+              other: "%{formatted_count} pageviews in the last 7 days"
+            last_30_days:
+              one: "%{formatted_count} pageview in the last 30 days"
+              other: "%{formatted_count} pageviews in the last 30 days"
+            last_3_months:
+              one: "%{formatted_count} pageview in the last 3 months"
+              other: "%{formatted_count} pageviews in the last 3 months"
+            selected_period:
+              one: "%{formatted_count} pageview in the selected period"
+              other: "%{formatted_count} pageviews in the selected period"
+          trend:
+            up: "up %{percent}"
+            down: "down %{percent}"
+          comparison_tooltip:
+            previous_7_days: "Compared with the previous 7 days (%{start} – %{end})"
+            previous_30_days: "Compared with the previous 30 days (%{start} – %{end})"
+            previous_3_months: "Compared with the previous 3 months (%{start} – %{end})"
+            previous_days:
+              one: "Compared with the previous day (%{start} – %{end})"
+              other: "Compared with the previous %{count} days (%{start} – %{end})"
+          kpi:
+            logged_in_share:
+              label: "Logged-in share"
+              tooltip: "The share of pageviews from logged-in members."
+          series:
+            logged_in: "Logged in"
+            anonymous: "Anonymous"
+            embedded: "Embedded pageviews"
+            crawlers: "Crawlers"
         period:
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"
