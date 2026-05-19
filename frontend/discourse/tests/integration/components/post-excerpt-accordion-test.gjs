@@ -15,7 +15,6 @@ module("Integration | Component | PostExcerptAccordion", function (hooks) {
       name: "User One",
       avatar_template: "/images/avatar.png",
       cooked: "<p>First excerpt content</p>",
-      post_url: "/t/test-topic/123/2",
       url: "/t/test-topic/123/2",
       created_at: "2024-01-01T00:00:00Z",
     },
@@ -27,13 +26,12 @@ module("Integration | Component | PostExcerptAccordion", function (hooks) {
       name: "User Two",
       avatar_template: "/images/avatar.png",
       cooked: "<p>Second excerpt content</p>",
-      post_url: "/t/test-topic/123/3",
       url: "/t/test-topic/123/3",
       created_at: "2024-01-02T00:00:00Z",
     },
   ];
 
-  test("renders excerpt posts", async function (assert) {
+  test("renders excerpt posts with default metadata section", async function (assert) {
     await render(
       <template>
         <PostExcerptAccordion @excerptPosts={{excerptPosts}} />
@@ -48,6 +46,19 @@ module("Integration | Component | PostExcerptAccordion", function (hooks) {
     assert
       .dom(".d-post-excerpt-accordion-item__read-more")
       .exists({ count: 2 });
+
+    assert
+      .dom(":nth-child(1 of .d-post-excerpt-accordion-item) .read-more-link")
+      .hasAttribute("href", excerptPosts[0].url);
+    assert
+      .dom(":nth-child(1 of .d-post-excerpt-accordion-item) .date-link")
+      .hasAttribute("href", excerptPosts[0].url);
+    assert
+      .dom(":nth-child(2 of .d-post-excerpt-accordion-item) .read-more-link")
+      .hasAttribute("href", excerptPosts[1].url);
+    assert
+      .dom(":nth-child(2 of .d-post-excerpt-accordion-item) .date-link")
+      .hasAttribute("href", excerptPosts[1].url);
   });
 
   test("yields custom header", async function (assert) {
@@ -131,7 +142,6 @@ module("Integration | Component | PostExcerptAccordion", function (hooks) {
         name: "User Three",
         avatar_template: "/images/avatar.png",
         cooked: null,
-        post_url: "/t/test-topic/123/4",
         url: "/t/test-topic/123/4",
         created_at: "2024-01-03T00:00:00Z",
       },
@@ -147,6 +157,9 @@ module("Integration | Component | PostExcerptAccordion", function (hooks) {
     assert.dom(".d-post-excerpt-accordion-item--has-excerpt").doesNotExist();
     assert.dom(".d-post-excerpt-accordion-item__body").doesNotExist();
     assert.dom(".d-post-excerpt-accordion-item__jump").exists();
+    assert
+      .dom(".d-post-excerpt-accordion-item__jump")
+      .hasAttribute("href", postsWithoutContent[0].url);
   });
 
   test("first post is expanded by default, others are collapsed", async function (assert) {
@@ -193,7 +206,6 @@ module("Integration | Component | PostExcerptAccordion", function (hooks) {
       name: "User One",
       avatar_template: "/images/avatar.png",
       cooked: "<p>Line 1<br/>Line 2<br/>Line 3<br/>Line 4<br/>Line 5</p>",
-      post_url: "/t/test-topic/123/2",
       url: "/t/test-topic/123/2",
       created_at: "2024-01-01T00:00:00Z",
     },

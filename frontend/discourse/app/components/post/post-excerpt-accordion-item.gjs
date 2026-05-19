@@ -30,10 +30,6 @@ export default class PostExcerptAccordionItem extends Component {
     return !!this.excerptPost?.cooked;
   }
 
-  get postPath() {
-    return this.excerptPost.post_url;
-  }
-
   get userDisplayName() {
     return userPrioritizedName({
       username: this.excerptPost.username,
@@ -60,7 +56,7 @@ export default class PostExcerptAccordionItem extends Component {
     if (this.hasContent) {
       this.args.onToggleExpanded();
     } else {
-      DiscourseURL.routeTo(this.postPath);
+      DiscourseURL.routeTo(this.excerptPost.url);
     }
   }
 
@@ -113,7 +109,7 @@ export default class PostExcerptAccordionItem extends Component {
               </DUserLink>
               <span class="dot-separator"></span>
               <a
-                href={{this.excerptPost.post_url}}
+                href={{this.excerptPost.url}}
                 class="date-link"
                 title={{i18n "post.sr_date"}}
               >
@@ -135,7 +131,7 @@ export default class PostExcerptAccordionItem extends Component {
             {{else}}
               <DButton
                 class="btn-flat d-post-excerpt-accordion-item__jump"
-                @href={{this.postPath}}
+                @href={{this.excerptPost.url}}
                 @ariaLabel="post.follow_quote"
                 @title="post.follow_quote"
                 @icon="arrow-down"
