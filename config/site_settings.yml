@@ -4426,6 +4426,7 @@ experimental:
     upcoming_change:
       status: "stable"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403284"
   enable_new_post_reactions_menu:
     default: false
     client: true
