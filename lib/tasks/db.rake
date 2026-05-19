@@ -5,7 +5,7 @@ task "set_locale" do
   begin
     I18n.locale =
       begin
-        (SiteSetting.default_locale || :en)
+        SiteSetting.default_locale || :en
       rescue StandardError
         :en
       end
@@ -15,6 +15,9 @@ task "set_locale" do
 end
 
 module MultisiteTestHelpers
+  MULTISITE_CONFIG_PATH = "spec/fixtures/multisite/two_dbs.yml"
+  MULTISITE_TEST_SITE = "second"
+
   def self.load_multisite?
     Rails.env.test? && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
   end
@@ -23,14 +26,23 @@ module MultisiteTestHelpers
     (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] &&
       !ENV["SKIP_MULTISITE"] && !ENV["SKIP_TEST_DATABASE"]
   end
+
+  # Routes ActiveRecord at the multisite test DB via RailsMultisite for the
+  # duration of the block, then restores the prior connection.
+  def self.with_multisite_test_connection(&block)
+    RailsMultisite::ConnectionManagement.config_filename = MULTISITE_CONFIG_PATH
+    RailsMultisite::ConnectionManagement.with_connection(MULTISITE_TEST_SITE, &block)
+  ensure
+    RailsMultisite::ConnectionManagement.clear_settings!
+  end
 end
 
-task "db:environment:set" => [:load_config] do |_, args|
+task "db:environment:set" => [:load_config] do
   if MultisiteTestHelpers.load_multisite?
-    system(
-      "RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set",
-      exception: true,
-    )
+    MultisiteTestHelpers.with_multisite_test_connection do
+      pool = ActiveRecord::Tasks::DatabaseTasks.migration_connection_pool
+      pool.internal_metadata.create_table_and_set_flags(pool.migration_context.current_environment)
+    end
   end
 end
 
@@ -39,14 +51,10 @@ task "db:force_skip_persist" do
   GlobalSetting.skip_redis = true
 end
 
-task "db:create" => [:load_config] do |_, args|
+task "db:create" => [:load_config] do
   if MultisiteTestHelpers.create_multisite?
-    unless system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
-      STDERR.puts "-" * 80
-      STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
-      STDERR.puts "checking the column structure when initializing, which raises an error."
-      STDERR.puts "-" * 80
-      raise "Could not initialize discourse_test_multisite"
+    MultisiteTestHelpers.with_multisite_test_connection do
+      ActiveRecord::Tasks::DatabaseTasks.create(ActiveRecord::Base.connection_db_config)
     end
   end
 end
@@ -65,9 +73,11 @@ begin
   end
 end
 
-task "db:drop" => [:load_config] do |_, args|
+task "db:drop" => [:load_config] do
   if MultisiteTestHelpers.create_multisite?
-    system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop", exception: true)
+    MultisiteTestHelpers.with_multisite_test_connection do
+      ActiveRecord::Tasks::DatabaseTasks.drop(ActiveRecord::Base.connection_db_config)
+    end
   end
 end
 
@@ -253,7 +263,7 @@ task "db:migrate" => %w[
   end
 
   if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:migrate", exception: true)
+    MultisiteTestHelpers.with_multisite_test_connection { execute_db_migration }
   end
 end
 
@@ -396,7 +406,7 @@ task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] 
 
   puts
 
-  fix_indexes = (ENV["FIX_INDEXES"] == "1" || args[:arg] == "fix")
+  fix_indexes = ENV["FIX_INDEXES"] == "1" || args[:arg] == "fix"
   inconsistency_found = false
 
   RailsMultisite::ConnectionManagement.each_connection do |db_name|

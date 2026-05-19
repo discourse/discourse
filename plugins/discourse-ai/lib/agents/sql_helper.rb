@@ -24,7 +24,7 @@ module DiscourseAi
         order by table_name
       SQL
 
-        priority = +(priority_tables.map { |name| "#{name}(#{tables[name].join(",")})" }.join("\n"))
+        priority = +priority_tables.map { |name| "#{name}(#{tables[name].join(",")})" }.join("\n")
 
         other_tables = +""
         tables.each do |table_name, _|

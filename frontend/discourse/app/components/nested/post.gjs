@@ -556,6 +556,20 @@ export default class NestedPost extends Component {
                         @replyToPost={{fn @replyToPost @post @depth}}
                         @share={{this.share}}
                         @showFlags={{fn @showFlags @post}}
+                        @changeNotice={{fn @changeNotice @post}}
+                        @changePostOwner={{fn @changePostOwner @post}}
+                        @grantBadge={{fn @grantBadge @post}}
+                        @lockPost={{fn @lockPost @post}}
+                        @unlockPost={{fn @unlockPost @post}}
+                        @permanentlyDeletePost={{fn
+                          @permanentlyDeletePost
+                          @post
+                        }}
+                        @rebakePost={{fn @rebakePost @post}}
+                        @showPagePublish={{@showPagePublish}}
+                        @togglePostType={{fn @togglePostType @post}}
+                        @toggleWiki={{fn @toggleWiki @post}}
+                        @unhidePost={{fn @unhidePost @post}}
                         @toggleLike={{this.toggleLike}}
                         @toggleReplies={{unless
                           this.atMaxDepth
@@ -608,6 +622,17 @@ export default class NestedPost extends Component {
               @recoverPost={{@recoverPost}}
               @showFlags={{@showFlags}}
               @showHistory={{@showHistory}}
+              @changeNotice={{@changeNotice}}
+              @changePostOwner={{@changePostOwner}}
+              @grantBadge={{@grantBadge}}
+              @lockPost={{@lockPost}}
+              @unlockPost={{@unlockPost}}
+              @permanentlyDeletePost={{@permanentlyDeletePost}}
+              @rebakePost={{@rebakePost}}
+              @showPagePublish={{@showPagePublish}}
+              @togglePostType={{@togglePostType}}
+              @toggleWiki={{@toggleWiki}}
+              @unhidePost={{@unhidePost}}
               @collapseParent={{this.toggleExpanded}}
               @highlightParentLine={{this.highlightLine}}
               @unhighlightParentLine={{this.unhighlightLine}}

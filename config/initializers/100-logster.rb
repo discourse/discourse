@@ -7,7 +7,7 @@ if GlobalSetting.skip_redis?
   return
 end
 
-if (Rails.env.local?) && ENV["FORCE_RAILS_LOGS_STDOUT"] == "1"
+if Rails.env.local? && ENV["FORCE_RAILS_LOGS_STDOUT"] == "1"
   Rails.logger = Logger.new(STDOUT)
   return
 end

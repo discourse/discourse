@@ -328,6 +328,27 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         end
       end
 
+      context "when user can only see a readonly category channel" do
+        fab!(:group) { Fabricate(:group, users: [current_user]) }
+        fab!(:category) do
+          Fabricate(
+            :private_category,
+            group: group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        end
+        fab!(:channel_1) do
+          Fabricate(:category_channel, chatable: category, threading_enabled: true)
+        end
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+        it "returns 403" do
+          post "/chat/api/channels/#{channel_id}/threads", params: params
+
+          expect(response.status).to eq(403)
+        end
+      end
+
       context "when the title is too long" do
         let(:title) { "x" * Chat::Thread::MAX_TITLE_LENGTH + "x" }
 

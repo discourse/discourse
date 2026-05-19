@@ -77,7 +77,7 @@ module Email
             img["width"] = img["height"] = 20
           else
             # use dimensions of original iPhone screen for 'too big, let device rescale'
-            if img["width"].to_i > (320) || img["height"].to_i > (480)
+            if img["width"].to_i > 320 || img["height"].to_i > 480
               img["width"] = img["height"] = "auto"
             end
           end
@@ -574,7 +574,7 @@ module Email
             .css("a")
             .each do |inner|
               # we want the first footer link to be specially highlighted as IMPORTANT
-              if footernum == (0) && linknum == (0)
+              if footernum == 0 && linknum == 0
                 bg_color = SiteSetting.email_accent_bg_color
                 inner[
                   "style"

@@ -117,7 +117,7 @@ module ImportScripts::PhpBB3
         begin
           @settings.custom_fields.map do |field|
             {
-              phpbb_field_name: "pf_#{field[:phpbb_field_name]}".to_sym,
+              phpbb_field_name: :"pf_#{field[:phpbb_field_name]}",
               discourse_user_field: user_fields[field[:discourse_field_name]],
             }
           end

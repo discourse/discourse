@@ -504,7 +504,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       if use_count.keys.length < attachments.select(&:present?).length
         body = "#{body}\n\n---"
         attachments.each_with_index do |upload, num|
-          "#{body}\n\n#{get_upload_markdown(upload)}" if upload.present? && use_count[num] == (0)
+          "#{body}\n\n#{get_upload_markdown(upload)}" if upload.present? && use_count[num] == 0
         end
       end
     end

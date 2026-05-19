@@ -10,7 +10,7 @@ end
 
 desc "Imports site settings"
 task "site_settings:import" => :environment do
-  yml = (STDIN.tty?) ? "" : STDIN.read
+  yml = STDIN.tty? ? "" : STDIN.read
   if yml == ""
     puts
     puts "Please specify a settings yml file"

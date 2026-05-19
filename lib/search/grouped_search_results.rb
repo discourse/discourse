@@ -112,9 +112,9 @@ class Search
       if !@is_header_search && public_send(type).length == Search.per_filter
         @more_full_page_results = true
       elsif @is_header_search && public_send(type).length == Search.per_facet
-        instance_variable_set("@more_#{type}".to_sym, true)
+        instance_variable_set(:"@more_#{type}", true)
       else
-        (self.public_send(type)) << object
+        self.public_send(type) << object
       end
 
       if can_lazy_load_categories

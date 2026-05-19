@@ -304,9 +304,7 @@ RSpec.describe Assigner do
 
       it "reassigns a post even when at the assignments limit" do
         posts =
-          (described_class::ASSIGNMENTS_PER_TOPIC_LIMIT).times.map do
-            Fabricate(:post, topic: topic)
-          end
+          described_class::ASSIGNMENTS_PER_TOPIC_LIMIT.times.map { Fabricate(:post, topic: topic) }
 
         posts.each do |post|
           user = Fabricate(:moderator)

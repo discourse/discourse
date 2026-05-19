@@ -33,7 +33,7 @@ module NestedReplies
     end
 
     def op_post
-      @op_post ||= load_posts_for_tree(topic.posts.where(post_number: 1)).first
+      @op_post ||= load_posts_for_tree(apply_visibility(topic.posts.where(post_number: 1))).first
     end
 
     def root_posts_scope(sort)

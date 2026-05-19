@@ -186,7 +186,7 @@ module DiscourseAi
                 .compact
 
             if keep_last
-              @buffer = +(keep_last)
+              @buffer = +keep_last
             else
               @buffer = +""
             end
