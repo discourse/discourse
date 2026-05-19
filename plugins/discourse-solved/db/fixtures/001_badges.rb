@@ -3,8 +3,8 @@
 first_solution_query = <<~SQL
   SELECT post_id, user_id, created_at AS granted_at
   FROM (
-           SELECT p.id AS post_id, p.user_id, dsst.created_at,
-              ROW_NUMBER() OVER (PARTITION BY p.user_id ORDER BY dsst.created_at) AS row_number
+           SELECT p.id AS post_id, p.user_id, dsta.created_at,
+              ROW_NUMBER() OVER (PARTITION BY p.user_id ORDER BY dsta.created_at) AS row_number
            FROM discourse_solved_solved_topics dsst
               JOIN discourse_solved_topic_answers dsta ON dsta.solved_topic_id = dsst.id
               JOIN badge_posts p ON dsta.answer_post_id = p.id
@@ -32,7 +32,7 @@ end
 
 def solved_query_with_count(min_count)
   <<~SQL
-    SELECT p.user_id, MAX(dsst.created_at) AS granted_at
+    SELECT p.user_id, MAX(dsta.created_at) AS granted_at
     FROM discourse_solved_solved_topics dsst
          JOIN discourse_solved_topic_answers dsta ON dsta.solved_topic_id = dsst.id
          JOIN badge_posts p ON dsta.answer_post_id = p.id
