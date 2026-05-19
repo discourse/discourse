@@ -108,5 +108,12 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
         destination_topic.first_post.id,
       )
     end
+
+    it "does not create a SolvedTopic when moving non-answer posts to a destination that allows answers" do
+      topic.move_posts(admin, [post_ids.first], destination_topic_id: destination_topic.id)
+
+      expect(topic.reload.solved).not_to be_nil
+      expect(destination_topic.reload.solved).to be_nil
+    end
   end
 end
