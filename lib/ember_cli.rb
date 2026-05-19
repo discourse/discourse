@@ -143,8 +143,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.is_ember_cli_asset?(name)
-    name === "@embroider/virtual/test-support" || assets.include?(name) ||
-      script_chunks.values.flatten.include?(name.delete_suffix(".js"))
+    assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
   end
 
   def self.has_tests?

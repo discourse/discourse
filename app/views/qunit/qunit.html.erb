@@ -19,7 +19,7 @@
         window._discourseQunitLiveReloadUrl = "<%= script_asset_path(EmberCli.script_chunks["qunit-live-reload"].first) %>";
       </script>
 
-      <%= preload_script "@embroider/virtual/test-support" %>
+      <%= preload_script "test-support" %>
 
       <%= render "layouts/plugin_js",
         opts: {
