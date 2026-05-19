@@ -1631,40 +1631,48 @@ posting:
     default: false
     client: true
     hidden: true
+    area: "gifs"
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-  gifs_api_key:
+  klipy_api_key:
     default: ""
     client: true
-  gifs_file_detail:
+    hidden: true
+  klipy_file_detail:
     default: "webp"
     client: true
+    area: "gifs"
     type: enum
     choices:
       - webp
       - gif
-  gifs_content_filter:
+  klipy_content_filter:
     default: "high"
     client: true
+    area: "gifs"
     type: enum
     choices:
       - high
       - medium
       - low
       - "off"
-  gifs_country:
+  klipy_country:
     default: "US"
     client: true
-  gifs_locale:
+    area: "gifs"
+  klipy_locale:
     default: "en_US"
     client: true
-  gifs_limit_infinite_search_results:
+    area: "gifs"
+  klipy_limit_infinite_search_results:
     default: false
     client: true
-  gifs_max_results_limit:
+    area: "gifs"
+  klipy_max_results_limit:
     default: 240
     client: true
+    area: "gifs"
     min: 24
   approve_post_count:
     default: 0

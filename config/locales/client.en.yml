@@ -3139,7 +3139,7 @@ en:
       composer_title: "Insert GIF"
       no_results: "Enter a keyword above to search for GIFs."
       browse_categories: "Browse by category"
-      bad_api_key: "Klipy API key is missing or invalid. Site admins, please check the gifs API key setting."
+      bad_api_key: "Klipy API key is missing or invalid. Please check the gifs API key setting."
       error_rate_limit: "We have reached the GIF API rate limits. Please wait a moment and try again."
       error_search_too_long: "Please shorten your search query to under 50 characters and try again."
 
@@ -6588,6 +6588,9 @@ en:
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation"
+        gifs:
+          title: "GIFs"
+          header_description: "Configure the GIF picker that lets users search and insert GIFs into posts and chat messages. Site texts for the modal can be customized in customize/site_texts."
         onebox:
           title: "Onebox"
           header_description: "Configure how onebox previews are generated and displayed for your site"

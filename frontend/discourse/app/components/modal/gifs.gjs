@@ -71,7 +71,7 @@ export default class GifsModal extends Component {
   }
 
   async fetchCategories() {
-    if (this.siteSettings.gifs_api_key === "") {
+    if (this.siteSettings.klipy_api_key === "") {
       return;
     }
 
@@ -79,11 +79,11 @@ export default class GifsModal extends Component {
 
     try {
       const params = {
-        key: this.siteSettings.gifs_api_key,
-        country: this.siteSettings.gifs_country,
-        locale: this.siteSettings.gifs_locale,
+        key: this.siteSettings.klipy_api_key,
+        country: this.siteSettings.klipy_country,
+        locale: this.siteSettings.klipy_locale,
         type: "featured",
-        contentfilter: this.siteSettings.gifs_content_filter,
+        contentfilter: this.siteSettings.klipy_content_filter,
       };
 
       const response = await fetch(
@@ -146,8 +146,8 @@ export default class GifsModal extends Component {
     const meetsLengthRequirement =
       skipLengthCheck || this.query.length >= MIN_QUERY_LENGTH;
     const limitReached =
-      this.siteSettings.gifs_limit_infinite_search_results &&
-      this.currentGifs.length >= this.siteSettings.gifs_max_results_limit;
+      this.siteSettings.klipy_limit_infinite_search_results &&
+      this.currentGifs.length >= this.siteSettings.klipy_max_results_limit;
 
     if (!meetsLengthRequirement || limitReached) {
       return;
@@ -156,7 +156,7 @@ export default class GifsModal extends Component {
     this.loading = true;
 
     try {
-      if (this.siteSettings.gifs_api_key === "") {
+      if (this.siteSettings.klipy_api_key === "") {
         throw new Error(i18n("gifs.bad_api_key"));
       }
 
@@ -175,7 +175,7 @@ export default class GifsModal extends Component {
         return;
       }
 
-      const fileDetail = this.siteSettings.gifs_file_detail;
+      const fileDetail = this.siteSettings.klipy_file_detail;
       const images = data.results.map((gif) => {
         const mediaFormat = gif.media_formats[fileDetail];
         return {
@@ -207,30 +207,58 @@ export default class GifsModal extends Component {
       return i18n("gifs.bad_api_key");
     }
 
-    if (response.headers.get("content-type")?.includes("application/json")) {
-      const errorResponse = await response.json();
-      const apiKeyInvalid = errorResponse.error?.details?.find(
-        (e) => e.reason === "API_KEY_INVALID"
-      );
-      if (apiKeyInvalid) {
-        return i18n("gifs.bad_api_key");
-      }
-      return `Klipy ${errorResponse.error?.code ?? ""}: ${
-        errorResponse.error?.message ?? "unknown error"
-      }`;
+    const body = await response.text().catch(() => "");
+
+    let parsed;
+    try {
+      parsed = body && JSON.parse(body);
+    } catch {
+      parsed = null;
     }
 
-    return `Klipy status ${response.status}: ${await response.text()}`;
+    const message = this.extractErrorMessage(parsed) ?? body ?? "unknown error";
+
+    if (/api key is invalid|API_KEY_INVALID/i.test(message)) {
+      return i18n("gifs.bad_api_key");
+    }
+
+    return `Klipy status ${response.status}: ${this.redactApiKey(message)}`;
+  }
+
+  extractErrorMessage(parsed) {
+    if (!parsed) {
+      return null;
+    }
+    // Klipy: { result: false, errors: { message: ["..."] } }
+    const klipyMessages = parsed.errors?.message;
+    if (Array.isArray(klipyMessages) && klipyMessages.length) {
+      return klipyMessages[0];
+    }
+    // Google-style: { error: { message, details: [{ reason }] } }
+    return (
+      parsed.error?.message ??
+      (typeof parsed.error === "string" ? parsed.error : null) ??
+      parsed.message ??
+      null
+    );
+  }
+
+  redactApiKey(message) {
+    const apiKey = this.siteSettings.klipy_api_key;
+    if (!apiKey || typeof message !== "string") {
+      return message;
+    }
+    return message.replaceAll(apiKey, "[redacted]");
   }
 
   getEndpoint(query, offset) {
     const params = {
-      key: this.siteSettings.gifs_api_key,
+      key: this.siteSettings.klipy_api_key,
       q: query,
-      country: this.siteSettings.gifs_country,
-      locale: this.siteSettings.gifs_locale,
-      contentfilter: this.siteSettings.gifs_content_filter,
-      media_filter: this.siteSettings.gifs_file_detail,
+      country: this.siteSettings.klipy_country,
+      locale: this.siteSettings.klipy_locale,
+      contentfilter: this.siteSettings.klipy_content_filter,
+      media_filter: this.siteSettings.klipy_file_detail,
       limit: PAGE_SIZE,
       pos: offset,
     };

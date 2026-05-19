@@ -18,6 +18,7 @@ class SiteSetting < ActiveRecord::Base
     experimental
     flags
     fonts
+    gifs
     group_permissions
     interface
     legal
