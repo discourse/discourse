@@ -223,7 +223,7 @@ export default class AiBotConversations extends Component {
     if (event.target.tagName !== "TEXTAREA") {
       return;
     }
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
       this.prepareAndSubmitToBot();
     }
   }
