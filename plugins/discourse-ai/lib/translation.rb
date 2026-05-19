@@ -38,6 +38,16 @@ module DiscourseAi
         SiteSetting.ai_translation_backfill_max_age_days > 0
     end
 
+    def self.excluded_category_ids
+      SiteSetting.ai_translation_excluded_categories.to_s.split("|").map(&:to_i)
+    end
+
+    def self.category_excluded?(category_id)
+      return true if category_id.blank?
+
+      excluded_category_ids.include?(category_id)
+    end
+
     def self.llm_model_for_agent(agent_id)
       return nil if agent_id.blank?
 

@@ -48,8 +48,9 @@ export default class AiTranslations extends Component {
   @tracked isTogglingTranslation = false;
   @tracked creditStatus = null;
   @tracked creditCheckComplete = false;
-  @tracked selectedCategories = [];
-  @tracked originalCategoryIds = this.args.model?.target_category_ids || [];
+  @tracked excludedCategories = [];
+  @tracked
+  originalExcludedCategoryIds = this.args.model?.excluded_category_ids || [];
   hourlyRate = this.args.model?.hourly_rate || 0;
 
   constructor() {
@@ -62,9 +63,9 @@ export default class AiTranslations extends Component {
   }
 
   async _loadTargetCategories() {
-    const ids = this.args.model?.target_category_ids || [];
+    const ids = this.args.model?.excluded_category_ids || [];
     if (ids.length) {
-      this.selectedCategories = await Category.asyncFindByIds(ids);
+      this.excludedCategories = await Category.asyncFindByIds(ids);
     }
   }
 
@@ -128,10 +129,10 @@ export default class AiTranslations extends Component {
   }
 
   get categoriesChanged() {
-    const current = [...this.selectedCategories.map((c) => c.id)]
+    const current = [...this.excludedCategories.map((c) => c.id)]
       .sort()
       .join("|");
-    const original = [...this.originalCategoryIds].sort().join("|");
+    const original = [...this.originalExcludedCategoryIds].sort().join("|");
     return current !== original;
   }
 
@@ -221,21 +222,21 @@ export default class AiTranslations extends Component {
 
   @action
   updateSelectedCategories(categories) {
-    this.selectedCategories = categories;
+    this.excludedCategories = categories;
   }
 
   @action
   async saveCategories() {
     this.isSavingCategories = true;
     try {
-      const ids = this.selectedCategories.map((c) => c.id);
-      await ajax("/admin/site_settings/ai_translation_target_categories", {
+      const ids = this.excludedCategories.map((c) => c.id);
+      await ajax("/admin/site_settings/ai_translation_excluded_categories", {
         type: "PUT",
         data: {
-          ai_translation_target_categories: ids.join("|"),
+          ai_translation_excluded_categories: ids.join("|"),
         },
       });
-      this.originalCategoryIds = ids;
+      this.originalExcludedCategoryIds = ids;
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -245,14 +246,14 @@ export default class AiTranslations extends Component {
 
   @action
   async cancelCategories() {
-    this.selectedCategories = await Category.asyncFindByIds(
-      this.originalCategoryIds
+    this.excludedCategories = await Category.asyncFindByIds(
+      this.originalExcludedCategoryIds
     );
   }
 
   @action
   resetCategories() {
-    this.selectedCategories = [];
+    this.excludedCategories = [];
   }
 
   @action
@@ -576,13 +577,13 @@ export default class AiTranslations extends Component {
             <div class="setting">
               <div class="setting-label">
                 <label>{{i18n
-                    "discourse_ai.translations.translatable_categories"
+                    "discourse_ai.translations.excluded_categories"
                   }}</label>
               </div>
               <div class="setting-value">
                 <div class="ai-translations__category-input-row">
                   <CategorySelector
-                    @categories={{this.selectedCategories}}
+                    @categories={{this.excludedCategories}}
                     @onChange={{this.updateSelectedCategories}}
                   />
                   {{#if this.categoriesChanged}}
@@ -602,7 +603,7 @@ export default class AiTranslations extends Component {
                         class="cancel setting-controls__cancel"
                       />
                     </div>
-                  {{else if this.selectedCategories.length}}
+                  {{else if this.excludedCategories.length}}
                     <DButton
                       @action={{this.resetCategories}}
                       @icon="arrow-rotate-left"
@@ -612,7 +613,7 @@ export default class AiTranslations extends Component {
                   {{/if}}
                 </div>
                 <div class="desc">{{i18n
-                    "discourse_ai.translations.translatable_categories_description"
+                    "discourse_ai.translations.excluded_categories_description"
                   }}</div>
               </div>
             </div>
