@@ -565,31 +565,6 @@ export default class BlockChrome extends Component {
     this.pickingSlot = false;
   }
 
-  /**
-   * Drop handler bound to a `ve:slot` chrome. Palette drops fill the
-   * slot directly via `fillSlot`; canvas-block drops route through
-   * `moveBlockIntoSlot` so the dragged block adopts the slot's grid
-   * rect (same-outlet only — cross-outlet move-into-slot is
-   * deferred). Either way the slot entry is consumed by the
-   * incoming content.
-   */
-  @action
-  applyVeSlotDrop({ source }) {
-    if (source?.kind === "ve-palette-block") {
-      this.visualEditor.fillSlot({
-        slotKey: this.args.blockKey,
-        blockName: source.data.blockName,
-        defaultArgs: source.data.defaultArgs,
-      });
-    } else if (source?.kind === "ve-block") {
-      this.visualEditor.moveBlockIntoSlot({
-        sourceKey: source.data.blockKey,
-        slotKey: this.args.blockKey,
-      });
-    }
-    this.visualEditor.endDrag();
-  }
-
   @action
   captureChromeEl(element) {
     this._chromeEl = element;
@@ -608,62 +583,6 @@ export default class BlockChrome extends Component {
       column: placement.column,
       row: placement.row,
     });
-  }
-
-  /**
-   * Drop gate for the slot wrapper's `dDragAndDropTarget`. Rejects a
-   * slot dropped onto itself; everything else lets `applySlotDrop`
-   * decide what to do based on the cursor's zone within the slot.
-   */
-  @action
-  canDropOnSlot({ source }) {
-    if (!source?.data?.blockKey) {
-      return true;
-    }
-    return source.data.blockKey !== this.args.blockKey;
-  }
-
-  /**
-   * Drop handler for the slot wrapper. Delegates to the parent
-   * grid's `GridOverlay.applySlotDrop` — the grid-level dragover
-   * listener has been setting the descriptor for this slot all
-   * along, so dispatch reads the descriptor and acts on it without
-   * needing slot-specific zone math here.
-   *
-   * Passes the slot's own cell as `fallbackCell` so the dispatcher
-   * has somewhere to land the block when the descriptor is missing
-   * (drag started directly on this slot with no prior dragover).
-   */
-  @action
-  applySlotDrop({ source }) {
-    // `ve:slot` entries get the dedicated REPLACE handler: drops fill
-    // the slot (palette) or move existing content into it
-    // (canvas-block drag). The grid-overlay's slot-wrapper dispatch
-    // below is for legacy positioned wrappers from the pre-
-    // `containerArgs` era and would try to insert-as-sibling, which
-    // doesn't match the "slot is consumed by content" model.
-    if (this.isSlot) {
-      this.applyVeSlotDrop({ source });
-      return;
-    }
-    const parent = this.visualEditor._findEntryParent(this.args.blockKey);
-    const gridKey = parent ? entryKey(parent) : null;
-    const overlay = gridKey
-      ? this.visualEditor._gridOverlays.get(gridKey)
-      : null;
-    if (!overlay) {
-      this.visualEditor.endDrag?.();
-      return;
-    }
-    const placement = parsePlacement(
-      this.visualEditor._findEntryAndOutletSync(this.args.blockKey)?.entry
-        ?.containerArgs
-    );
-    const fallbackCell = {
-      column: placement.column.start ?? 1,
-      row: placement.row.start ?? 1,
-    };
-    overlay.applySlotDrop({ source, fallbackCell });
   }
 
   /**
@@ -779,34 +698,6 @@ export default class BlockChrome extends Component {
     event.preventDefault();
     event.stopPropagation();
     this.visualEditor.removeBlock(this.args.blockKey);
-  }
-
-  /**
-   * Translates a drop-zone payload into either a move (existing
-   * chrome-to-chrome drag) or an insert (palette-driven drag). The
-   * branch reads from `source.kind`, set by the originating modifier
-   * call site — `"ve-block"` for moves, `"ve-palette-block"` for
-   * palette inserts.
-   */
-  @action
-  applyDrop({ source, position }) {
-    if (source?.kind === "ve-palette-block") {
-      this.visualEditor.insertBlock({
-        blockName: source.data.blockName,
-        defaultArgs: source.data.defaultArgs,
-        targetKey: this.args.blockKey,
-        position,
-        targetOutletName: this.args.outletName,
-      });
-    } else {
-      this.visualEditor.moveBlock({
-        sourceKey: source.data.blockKey,
-        targetKey: this.args.blockKey,
-        position,
-        targetOutletName: this.args.outletName,
-      });
-    }
-    this.visualEditor.endDrag();
   }
 
   <template>

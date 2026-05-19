@@ -329,21 +329,6 @@ export default class VisualEditorService extends Service {
   _structurallyEditedOutlets = trackedSet();
 
   /**
-   * Registry of mounted `GridOverlay` instances keyed by the layout
-   * block's composite key. Lets sibling components (slot wrappers in
-   * `BlockChrome`) route their drop-preview descriptor to the right
-   * overlay without prop-drilling. The overlay registers itself on
-   * `didInsert` and removes itself on `willDestroy`.
-   *
-   * Plain `Map` rather than `trackedMap` — consumers read directly
-   * through method calls during drag events, not in render-time
-   * tracking contexts.
-   *
-   * @type {Map<string, Object>}
-   */
-  _gridOverlays = new Map();
-
-  /**
    * `ve:layout` block keys that the author has explicitly asked to
    * render in their full multi-column layout regardless of the
    * `@container` collapse threshold. Editor-only session state — never
@@ -2268,35 +2253,6 @@ export default class VisualEditorService extends Service {
   }
 
   /**
-   * Registers a `GridOverlay` instance against its layout block's key
-   * so sibling slot wrappers can route drop-preview descriptors back
-   * to it without prop-drilling. Called from the overlay's `didInsert`.
-   *
-   * @param {string} gridKey
-   * @param {Object} overlay - the `GridOverlay` component instance.
-   */
-  registerGridOverlay(gridKey, overlay) {
-    if (gridKey) {
-      this._gridOverlays.set(gridKey, overlay);
-    }
-  }
-
-  /**
-   * Symmetric unregister. Called from the overlay's `willDestroy`.
-   * Guards against stale unregistrations stomping a freshly-mounted
-   * replacement overlay (rare but possible when Glimmer tears down
-   * and re-creates components in the same frame).
-   *
-   * @param {string} gridKey
-   * @param {Object} overlay
-   */
-  unregisterGridOverlay(gridKey, overlay) {
-    if (this._gridOverlays.get(gridKey) === overlay) {
-      this._gridOverlays.delete(gridKey);
-    }
-  }
-
-  /**
    * @param {string} blockKey
    * @returns {boolean}
    */
@@ -2322,46 +2278,6 @@ export default class VisualEditorService extends Service {
     } else {
       this._forceExpandedKeys.add(blockKey);
     }
-  }
-
-  /**
-   * Routes a drop-preview descriptor to the `GridOverlay` registered
-   * for `gridKey`. The overlay positions its single absolutely-placed
-   * element according to the descriptor's `kind` (`"rect"` /
-   * `"line-column"` / `"line-row"`). A `null` descriptor hides it.
-   *
-   * Returning silently when no overlay is registered keeps drag
-   * handlers safe to call this before / after the overlay mounts.
-   *
-   * @param {string} gridKey
-   * @param {Object|null} descriptor
-   */
-  setDropPreview(gridKey, descriptor) {
-    this._gridOverlays.get(gridKey)?.setDropPreview(descriptor);
-  }
-
-  /**
-   * Convenience wrapper for `setDropPreview(gridKey, null)`.
-   *
-   * @param {string} gridKey
-   */
-  clearDropPreview(gridKey) {
-    this._gridOverlays.get(gridKey)?.setDropPreview(null);
-  }
-
-  /**
-   * Returns the most recent drop-preview descriptor set on the
-   * `GridOverlay` for `gridKey`. Drop handlers read this on release
-   * rather than recomputing from the drop event's coords — the same
-   * sticky-state pattern the previous per-element drop-zone classes
-   * used, just promoted to the overlay so all dispatch goes through
-   * one source of truth.
-   *
-   * @param {string} gridKey
-   * @returns {Object|null}
-   */
-  getLastDropPreview(gridKey) {
-    return this._gridOverlays.get(gridKey)?.dropPreview ?? null;
   }
 
   /**

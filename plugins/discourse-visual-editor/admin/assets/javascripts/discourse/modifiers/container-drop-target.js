@@ -1,7 +1,6 @@
 // @ts-check
 import { modifier } from "ember-modifier";
 import { i18n } from "discourse-i18n";
-import { entryKey } from "../lib/mutate-layout";
 
 /**
  * One drop target per layout container. Replaces the per-block
@@ -39,10 +38,11 @@ export default modifier(
     }
 
     // Grid-positioned leaves: the grid overlay's capture-phase
-    // dragover paints the preview; we only need the drop event to
-    // delegate dispatch back to the parent grid overlay's existing
-    // `applySlotDrop` (the legacy path that knows about
-    // swap / shift / replace / occupy variants).
+    // dragover already published the active descriptor (with an
+    // embedded dispatch payload) to the service; here we just route
+    // the drop event into the unified `dispatchActiveDrop`. The
+    // source modifier's `onDragEnd` callback handles `endDrag`, so
+    // we don't call it explicitly.
     if (mode === "grid-cell-leaf") {
       function onLeafDrop(event) {
         const source = visualEditor.dragSource;
@@ -51,16 +51,7 @@ export default modifier(
         }
         event.preventDefault();
         event.stopPropagation();
-        const parent = visualEditor._findEntryParent?.(containerKey);
-        const gridKey = parent ? entryKey(parent) : null;
-        const overlay = gridKey
-          ? visualEditor._gridOverlays?.get(gridKey)
-          : null;
-        if (overlay?.applySlotDrop) {
-          overlay.applySlotDrop({ source, fallbackCell: null });
-        } else {
-          visualEditor.endDrag?.();
-        }
+        visualEditor.dispatchActiveDrop();
       }
       chromeElement.addEventListener("drop", onLeafDrop);
       return () => {

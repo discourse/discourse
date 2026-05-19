@@ -22,9 +22,10 @@ import { entryKey } from "../../lib/mutate-layout";
 import EmptyCellPlaceholder from "./empty-cell-placeholder";
 
 /**
- * Shallow equivalence check for drop-preview descriptors. Returns
- * true when `a` and `b` would produce the same rendered overlay so
- * `setDropPreview` can short-circuit the tracked write + mirror.
+ * Shallow equivalence check for intermediate (logical) grid drop
+ * descriptors. Returns true when `a` and `b` would publish the same
+ * unified preview so the dragover handler can short-circuit before
+ * rebuilding geometry + dispatch.
  *
  * Compares every field that influences either the overlay paint
  * (kind, column.start/end, row.start/end, line, variant, validity)
@@ -125,26 +126,6 @@ export default class GridOverlay extends Component {
   @service blocks;
   @service dragAndDrop;
 
-  /**
-   * Active drop-preview descriptor — drives the overlay element's
-   * shape, position and tint. Slot wrappers in `BlockChrome` set this
-   * via `visualEditor.setDropPreview(gridKey, descriptor)`; empty-cell
-   * handlers set it directly via `setDropPreview(descriptor)` since
-   * they live in this component.
-   *
-   * Shape (null = overlay hidden):
-   *  - `{kind: "rect", column: {start, end}, row: {start, end},
-   *     variant: "swap"|"replace"|"move"}`
-   *  - `{kind: "line-column", line, row: {start, end},
-   *     variant: "insert"}` — vertical line at column line `line`,
-   *     bounded vertically by `row` (defaults to full grid height).
-   *  - `{kind: "line-row", line, column: {start, end},
-   *     variant: "insert"}` — horizontal line at row line `line`,
-   *     bounded horizontally by `column` (defaults to full width).
-   *
-   * @type {Object|null}
-   */
-  @tracked dropPreview = null;
   // Emits CSS custom properties rather than concrete `grid-column` /
   // `grid-row` so a parent `@container` rule (the auto-collapse
   // override in `visual-editor-chrome.scss`) can override the cell's
@@ -173,7 +154,8 @@ export default class GridOverlay extends Component {
 
   /**
    * Accept palette drops AND existing-block drops. Both route through
-   * `applyCellDrop` below, branching on `source.kind`.
+   * the shared `handleDrop` action, which dispatches the descriptor
+   * already published by the dragover handler.
    */
   acceptedDropKinds = ["ve-block", "ve-palette-block"];
   /**
@@ -190,6 +172,17 @@ export default class GridOverlay extends Component {
    * Shape: `{source, gridRect, isCollapsed}` or `null`.
    */
   #dragCache = null;
+
+  /**
+   * The most recently published intermediate descriptor for this
+   * drag. Drives the dragover diff in `_handleGridDragOver` — if the
+   * next dragover produces a shape-equivalent intermediate, we skip
+   * the rebuild + service publish entirely. Cleared on dragleave.
+   *
+   * Holds the intermediate (logical) shape, not the unified one, so
+   * the diff happens before geometry / dispatch builds.
+   */
+  #lastIntermediate = null;
   /**
    * Refreshes the cached gridRect + isCollapsed without dropping the
    * cache identity. Bound to window `resize` and `scroll` so coords
@@ -226,17 +219,6 @@ export default class GridOverlay extends Component {
   _overlayElement = null;
 
   /**
-   * Sticky drop-preview descriptor captured at the most recent
-   * dragover so drop dispatch can branch on the SAME zone the user
-   * was visually targeting. `dropPreview` itself gets cleared during
-   * cleanup (drag-leave, drop) before the drop handler reads it, so
-   * we mirror it here for the brief read-after-clear window.
-   *
-   * @type {Object|null}
-   */
-  _lastDropPreview = null;
-
-  /**
    * Lazily-installed dragover / dragleave handlers attached to the
    * grid container itself (not to per-cell children). Captured here
    * so `willDestroy` can detach them.
@@ -262,7 +244,6 @@ export default class GridOverlay extends Component {
     }
     window.removeEventListener("resize", this.#invalidateDragGeometry);
     window.removeEventListener("scroll", this.#invalidateDragGeometry, true);
-    this.visualEditor.unregisterGridOverlay(this.args.gridKey, this);
   }
 
   get gridEntry() {
@@ -402,102 +383,22 @@ export default class GridOverlay extends Component {
   }
 
   /**
-   * Inline style + class for the overlay element. Empty descriptor =
-   * hidden (`opacity: 0`); rect descriptor = absolutely positioned
-   * over the cell rectangle; line descriptor = a thin strip drawn in
-   * the grid gap. CSS transitions on `top/left/width/height` glide
-   * the overlay between targets as the descriptor mutates.
-   */
-  get overlayStyle() {
-    const d = this.dropPreview;
-    if (!d || !this._gridElement) {
-      return trustHTML("opacity: 0;");
-    }
-    const geometry = this._computeOverlayGeometry(d);
-    if (!geometry) {
-      return trustHTML("opacity: 0;");
-    }
-    return trustHTML(
-      `opacity: 1; ` +
-        `top: ${geometry.top}px; left: ${geometry.left}px; ` +
-        `width: ${geometry.width}px; height: ${geometry.height}px;`
-    );
-  }
-
-  get overlayVariantClass() {
-    const d = this.dropPreview;
-    if (!d) {
-      return "";
-    }
-    if (d.kind === "rect") {
-      return `--rect-${d.variant ?? "swap"}`;
-    }
-    if (d.kind === "line-column") {
-      return "--line-column";
-    }
-    if (d.kind === "line-row") {
-      return "--line-row";
-    }
-    return "";
-  }
-
-  /**
-   * Mutator for the overlay state. Called from sibling slot wrappers
-   * (via `visualEditor.setDropPreview`) and from this component's own
-   * empty-cell handlers. Records the descriptor in two places:
-   * `dropPreview` drives the rendered overlay via reactivity;
-   * `_lastDropPreview` survives the cleanup that fires just before
-   * `applyCellDrop` / `applySlotDrop` reads it.
+   * Translates an internal (logical) grid descriptor into the
+   * unified `activeDropPreview` shape — viewport-coord geometry,
+   * unified `kind`, validity, label, and dispatch payload — and
+   * writes it to the service. Called from `_handleGridDragOver`
+   * after the dragover-diff has confirmed the intermediate changed.
    *
-   * Short-circuits when the incoming descriptor is shape-equivalent
-   * to the current one — the cursor sitting in one cell still fires
-   * dragover at ~60 Hz, and without this gate every event triggered
-   * a tracked invalidation + re-render + mirror call. Comparison
-   * covers the fields that influence the rendered overlay (kind,
-   * placement, variant, validity, hit rect / zone in collapsed mode).
+   * No-ops (publishes `null`) when geometry can't be resolved (e.g.
+   * before the grid element is captured), so the overlay disappears
+   * rather than freezing on stale coords.
    */
-  @action
-  setDropPreview(descriptor) {
-    if (descriptorsEqual(this.dropPreview, descriptor)) {
-      // Still bump `_lastDropPreview` for the drop dispatch path — the
-      // earlier `dragover` already wrote it; this is defensive in case
-      // a caller passes a fresh-but-equivalent descriptor object.
-      if (descriptor) {
-        this._lastDropPreview = descriptor;
-      }
-      return;
-    }
-    this.dropPreview = descriptor;
-    if (descriptor) {
-      this._lastDropPreview = descriptor;
-    }
-    // Mirror to the unified `activeDropPreview` so the single
-    // `<DropPreview>` overlay (mounted at the editor shell) paints
-    // the grid's drop indicator. Drop DISPATCH still goes through
-    // this component's own `applyCellDrop` / `applySlotDrop` —
-    // those read `_lastDropPreview` above and resolve to the right
-    // grid action (swap / replace / shift / occupy). The unified
-    // service-level dispatch is bypassed for grid drops because
-    // the grid's math doesn't fit the generic insertBlock /
-    // moveBlock contract.
-    this._mirrorToActivePreview(descriptor);
-  }
-
-  /**
-   * Translates an internal grid descriptor (`{kind: "rect"|
-   * "line-column"|"line-row", column, row, variant}`) into the
-   * unified viewport-coord descriptor the shell-mounted
-   * `<DropPreview>` paints. Skipped silently when geometry can't
-   * be resolved (e.g. before the grid element is captured).
-   *
-   * @param {Object|null} descriptor
-   */
-  _mirrorToActivePreview(descriptor) {
-    if (!descriptor || !this._gridElement) {
+  #publishUnified(intermediate, source) {
+    if (!intermediate || !this._gridElement) {
       this.visualEditor.setActiveDropPreview(null);
       return;
     }
-    const gridRel = this._computeOverlayGeometry(descriptor);
+    const gridRel = this._computeOverlayGeometry(intermediate);
     if (!gridRel) {
       this.visualEditor.setActiveDropPreview(null);
       return;
@@ -507,29 +408,27 @@ export default class GridOverlay extends Component {
       this.visualEditor.setActiveDropPreview(null);
       return;
     }
-    const geometry = {
-      top: gridRect.top + gridRel.top,
-      left: gridRect.left + gridRel.left,
-      width: gridRel.width,
-      height: gridRel.height,
-    };
-    const source = this.visualEditor.dragSource;
     this.visualEditor.setActiveDropPreview({
-      geometry,
-      kind: this._unifiedKindFor(descriptor),
-      // Translate the descriptor's `_invalid` sentinel (set by
-      // `_descriptorFromCursor` when the underlying operation would
-      // be rejected) into the unified `validity` flag the overlay's
-      // red styling keys off of.
-      validity: descriptor._invalid ? "invalid" : "valid",
-      label: this._labelFor(descriptor, source),
-      // No `dispatch` — grid drops dispatch via this component's
-      // own onDrop handlers (`applyCellDrop` / `applySlotDrop`),
-      // which read from `this._lastDropPreview`.
+      geometry: {
+        top: gridRect.top + gridRel.top,
+        left: gridRect.left + gridRel.left,
+        width: gridRel.width,
+        height: gridRel.height,
+      },
+      kind: this.#unifiedKindFor(intermediate),
+      // The `_invalid` sentinel comes from `_descriptorFromCursor`'s
+      // validity gate (shift-plan check). It maps to the overlay's
+      // red styling AND to `dispatch: null` so `dispatchActiveDrop`
+      // no-ops at drop time.
+      validity: intermediate._invalid ? "invalid" : "valid",
+      label: this.#labelFor(intermediate, source),
+      dispatch: intermediate._invalid
+        ? null
+        : this.#buildDispatch(intermediate, source),
     });
   }
 
-  _unifiedKindFor(descriptor) {
+  #unifiedKindFor(descriptor) {
     if (descriptor.kind === "rect") {
       if (descriptor.variant === "swap") {
         return "swap";
@@ -542,12 +441,12 @@ export default class GridOverlay extends Component {
     return descriptor.variant === "insert" ? "shift" : "insert";
   }
 
-  _labelFor(descriptor, source) {
+  #labelFor(descriptor, source) {
     if (!source) {
       return "";
     }
-    const sourceName = this._sourceDisplayName(source);
-    const kind = this._unifiedKindFor(descriptor);
+    const sourceName = this.#sourceDisplayName(source);
+    const kind = this.#unifiedKindFor(descriptor);
     if (kind === "swap") {
       return i18n("visual_editor.canvas.drop_preview.swap", {
         name: sourceName,
@@ -577,7 +476,7 @@ export default class GridOverlay extends Component {
         });
   }
 
-  _sourceDisplayName(source) {
+  #sourceDisplayName(source) {
     if (source.kind === "ve-palette-block") {
       return (
         this.visualEditor._lookupBlockDisplayName(source.data.blockName) ||
@@ -599,9 +498,103 @@ export default class GridOverlay extends Component {
     return "block";
   }
 
-  @action
-  registerSelf() {
-    this.visualEditor.registerGridOverlay(this.args.gridKey, this);
+  /**
+   * Builds the `{action, args}` dispatch payload for a grid drop
+   * descriptor. The service's `dispatchActiveDrop` looks up
+   * `service[action]` and calls it with `args` — same contract the
+   * linear pipeline uses, so grid drops route through the same
+   * channel after this phase.
+   *
+   * Returns `null` when the descriptor doesn't carry enough info to
+   * dispatch (e.g. unresolved column / row, or unsupported variant /
+   * source kind). The mirror call above feeds `null` through to
+   * `setActiveDropPreview`, where `dispatchActiveDrop` will then
+   * no-op at drop time.
+   */
+  #buildDispatch(descriptor, source) {
+    if (!descriptor || !source) {
+      return null;
+    }
+    const gridKey = this.args.gridKey;
+
+    if (descriptor.kind === "line-column" || descriptor.kind === "line-row") {
+      const dropCell =
+        descriptor.kind === "line-column"
+          ? {
+              column: descriptor.line,
+              row: descriptor.row?.start ?? 1,
+            }
+          : {
+              column: descriptor.column?.start ?? 1,
+              row: descriptor.line,
+            };
+      return {
+        action: "insertWithShift",
+        args: {
+          gridKey,
+          dropCell,
+          direction: descriptor.kind === "line-column" ? "left" : "up",
+          sourceKey: source.kind === "ve-block" ? source.data?.blockKey : null,
+          paletteBlockName:
+            source.kind === "ve-palette-block" ? source.data?.blockName : null,
+          paletteDefaultArgs:
+            source.kind === "ve-palette-block"
+              ? source.data?.defaultArgs
+              : null,
+        },
+      };
+    }
+
+    if (descriptor.kind === "rect" && descriptor.variant === "swap") {
+      return {
+        action: "swapSlotPlacements",
+        args: {
+          slotKeyA: this.#slotKeyAtPlacement(descriptor),
+          slotKeyB: source.data?.blockKey ?? null,
+        },
+      };
+    }
+
+    if (descriptor.kind === "rect" && descriptor.variant === "replace") {
+      return {
+        action: "replaceSlot",
+        args: {
+          targetSlotKey: this.#slotKeyAtPlacement(descriptor),
+          sourceSlotKey: source.data?.blockKey ?? null,
+        },
+      };
+    }
+
+    // `rect` / `move` — palette → insertBlockAtCell, ve-block → moveBlockToCell.
+    const column = descriptor.column?.start;
+    const row = descriptor.row?.start;
+    if (column == null || row == null) {
+      return null;
+    }
+    if (source.kind === "ve-palette-block") {
+      return {
+        action: "insertBlockAtCell",
+        args: {
+          gridKey,
+          blockName: source.data?.blockName,
+          defaultArgs: source.data?.defaultArgs,
+          column,
+          row,
+        },
+      };
+    }
+    if (source.kind === "ve-block") {
+      return {
+        action: "moveBlockToCell",
+        args: {
+          gridKey,
+          sourceKey: source.data?.blockKey,
+          column,
+          row,
+        },
+      };
+    }
+    return null;
   }
 
   @action
@@ -657,116 +650,25 @@ export default class GridOverlay extends Component {
   }
 
   /**
-   * Handles a drop onto an empty cell. The shape of the drop differs by
-   * `source.kind`:
-   *  - `"ve-palette-block"` → insert a fresh block at the cell.
-   *  - `"ve-block"` → move an existing block to the cell (via
-   *     `moveBlockToCell`, which preserves slot identity for same-grid
-   *     drags).
-   */
-  /**
-   * Drop handler for empty cells. The descriptor — set by the
-   * grid-level dragover listener — carries everything the dispatch
-   * needs (target cell coords / line / row / column / variant). The
-   * `cell` arg is the drop-target's own coords, used only as a
-   * fallback when the descriptor is missing.
+   * Unified drop handler for grid drop targets — empty cells, plus
+   * the grid-cell-leaf path that routes here from `container-drop-
+   * target.js`. Dispatch payload was already embedded in the active
+   * descriptor at hit-test time; `dispatchActiveDrop` runs it by
+   * action name. `endDrag` is dispatched by the source modifier's
+   * `onDragEnd` callback, so this handler doesn't call it.
    */
   @action
-  applyCellDrop(cell, { source }) {
-    const descriptor = this._lastDropPreview;
-    this.setDropPreview(null);
-    this._lastDropPreview = null;
-    this._dispatchDrop({ descriptor, source, fallbackCell: cell });
-    this.visualEditor.endDrag?.();
-  }
-
-  /**
-   * Drop handler for slot wrappers in `BlockChrome`. Same dispatch
-   * path as `applyCellDrop` — the descriptor is the source of truth;
-   * the slot's own cell is used only as a fallback.
-   */
-  @action
-  applySlotDrop({ source, fallbackCell }) {
-    const descriptor = this._lastDropPreview;
-    this.setDropPreview(null);
-    this._lastDropPreview = null;
-    this._dispatchDrop({ descriptor, source, fallbackCell });
-    this.visualEditor.endDrag?.();
-  }
-
-  /**
-   * Single dispatch path shared between cell and slot drops — the
-   * descriptor knows what variant / line / cell is being targeted,
-   * so the source element type doesn't matter for routing.
-   */
-  _dispatchDrop({ descriptor, source, fallbackCell }) {
-    if (descriptor?.kind === "line-column") {
-      this._dispatchInsertWithShift({
-        dropCell: {
-          column: descriptor.line,
-          row: descriptor.row?.start ?? fallbackCell?.row ?? 1,
-        },
-        direction: "left",
-        source,
-      });
-      return;
-    }
-    if (descriptor?.kind === "line-row") {
-      this._dispatchInsertWithShift({
-        dropCell: {
-          column: descriptor.column?.start ?? fallbackCell?.column ?? 1,
-          row: descriptor.line,
-        },
-        direction: "up",
-        source,
-      });
-      return;
-    }
-    if (descriptor?.kind === "rect" && descriptor.variant === "swap") {
-      this.visualEditor.swapSlotPlacements({
-        slotKeyA: this._slotKeyAtPlacement(descriptor),
-        slotKeyB: source?.data?.blockKey,
-      });
-      return;
-    }
-    if (descriptor?.kind === "rect" && descriptor.variant === "replace") {
-      this.visualEditor.replaceSlot({
-        targetSlotKey: this._slotKeyAtPlacement(descriptor),
-        sourceSlotKey: source?.data?.blockKey,
-      });
-      return;
-    }
-    // Default / variant === "move": land on the descriptor's column/row
-    // start (or the drop element's own cell as fallback).
-    const column = descriptor?.column?.start ?? fallbackCell?.column ?? null;
-    const row = descriptor?.row?.start ?? fallbackCell?.row ?? null;
-    if (column == null || row == null) {
-      return;
-    }
-    if (source?.kind === "ve-palette-block") {
-      this.visualEditor.insertBlockAtCell({
-        gridKey: this.args.gridKey,
-        blockName: source.data.blockName,
-        defaultArgs: source.data.defaultArgs,
-        column,
-        row,
-      });
-    } else if (source?.kind === "ve-block") {
-      this.visualEditor.moveBlockToCell({
-        gridKey: this.args.gridKey,
-        sourceKey: source.data.blockKey,
-        column,
-        row,
-      });
-    }
+  handleDrop() {
+    this.#lastIntermediate = null;
+    this.visualEditor.dispatchActiveDrop();
   }
 
   /**
    * Finds the slot whose placement matches the rect-descriptor's
-   * `column`/`row` (the slot being swapped / replaced). Returns its
+   * `column` / `row` (the slot being swapped / replaced). Returns its
    * block key, or `null` if no slot covers that rectangle.
    */
-  _slotKeyAtPlacement(descriptor) {
+  #slotKeyAtPlacement(descriptor) {
     if (!descriptor?.column || !descriptor?.row) {
       return null;
     }
@@ -800,8 +702,15 @@ export default class GridOverlay extends Component {
     // 6×2 grid) rely solely on this capture-phase handler to
     // qualify their drop event.
     event.preventDefault();
-    const descriptor = this._descriptorFromCursor(event, source);
-    this.setDropPreview(descriptor);
+    const intermediate = this._descriptorFromCursor(event, source);
+    if (descriptorsEqual(this.#lastIntermediate, intermediate)) {
+      // Cursor sitting in the same hit zone — descriptor didn't
+      // change shape, skip the publish to avoid a tracked re-render
+      // at ~60 Hz during stationary hover.
+      return;
+    }
+    this.#lastIntermediate = intermediate;
+    this.#publishUnified(intermediate, source);
   }
 
   /**
@@ -816,7 +725,8 @@ export default class GridOverlay extends Component {
     if (rt && this._gridElement?.contains(rt)) {
       return;
     }
-    this.setDropPreview(null);
+    this.#lastIntermediate = null;
+    this.visualEditor.setActiveDropPreview(null);
   }
 
   /**
@@ -908,7 +818,7 @@ export default class GridOverlay extends Component {
     // We use a separate sentinel field (`_invalid`) rather than
     // overwriting `variant` because the descriptor's `variant`
     // already carries the operation kind (`insert` / `swap` /
-    // `replace` / `move`) that `_dispatchDrop` switches on.
+    // `replace` / `move`) that `#buildDispatch` switches on.
     if (!this._canExecuteDescriptor(descriptor, source)) {
       return { ...descriptor, _invalid: true };
     }
@@ -930,8 +840,9 @@ export default class GridOverlay extends Component {
    * don't have meaningful semantics in a vertical stack).
    *
    * Output is exactly the same descriptor shape as the track-math
-   * path — `_dispatchDrop` and `_computeOverlayGeometry` (via its own
-   * collapsed branch) consume it the same way.
+   * path — `#publishUnified` / `#buildDispatch` and
+   * `_computeOverlayGeometry` (via its own collapsed branch) consume
+   * it the same way.
    */
   _descriptorFromCursorCollapsed(event, source, sourceKey) {
     const el = document.elementFromPoint(event.clientX, event.clientY);
@@ -1061,8 +972,8 @@ export default class GridOverlay extends Component {
   }
 
   /**
-   * Returns `true` when `_dispatchDrop` would produce a real change
-   * for `descriptor` + `source`. Shift-insert descriptors call into
+   * Returns `true` when the dispatch built for `descriptor` + `source`
+   * would produce a real change. Shift-insert descriptors call into
    * `computeShiftPlan` to see whether the cascade fits within the
    * grid; swap / replace / occupy descriptors always succeed at this
    * stage (cycle / self-drop checks already happened upstream in
@@ -1323,19 +1234,6 @@ export default class GridOverlay extends Component {
       row: { start: cell.row, end: cell.row + 1 },
       variant: "move",
     };
-  }
-
-  _dispatchInsertWithShift({ dropCell, direction, source }) {
-    this.visualEditor.insertWithShift({
-      gridKey: this.args.gridKey,
-      dropCell,
-      direction,
-      sourceKey: source?.kind === "ve-block" ? source.data?.blockKey : null,
-      paletteBlockName:
-        source?.kind === "ve-palette-block" ? source.data?.blockName : null,
-      paletteDefaultArgs:
-        source?.kind === "ve-palette-block" ? source.data?.defaultArgs : null,
-    });
   }
 
   /**
@@ -1632,14 +1530,11 @@ export default class GridOverlay extends Component {
   <template>
     {{! Marker — invisible. On insert, finds the sibling layout grid
       div so we can teleport the edit-mode DOM into the same CSS Grid
-      container the slots already live in. Also registers this
-      component on the editor service so sibling slot wrappers can
-      route drop-preview updates back here. }}
+      container the slots already live in. }}
     <span
       class="visual-editor-grid-edit-marker"
       aria-hidden="true"
       {{didInsert this.captureGridElement}}
-      {{didInsert this.registerSelf}}
     ></span>
 
     {{#if this._gridElement}}
@@ -1654,7 +1549,7 @@ export default class GridOverlay extends Component {
             data-row={{cell.row}}
             {{dDragAndDropTarget
               accepts=this.acceptedDropKinds
-              onDrop=(fn this.applyCellDrop cell)
+              onDrop=this.handleDrop
             }}
           >
             <EmptyCellPlaceholder
@@ -1672,10 +1567,10 @@ export default class GridOverlay extends Component {
           aria-hidden="true"
           {{didInsert this.captureGhost}}
         ></div>
-        {{! The grid-local drop overlay element is removed — the
-          shell-mounted `<DropPreview>` is now the single drop
-          indicator; this component mirrors its descriptor into
-          `visualEditor.activeDropPreview` via `setDropPreview`. }}
+        {{! No local drop overlay — the shell-mounted `<DropPreview>`
+          is the single indicator. The dragover handler publishes
+          the unified descriptor directly to
+          `visualEditor.setActiveDropPreview`. }}
       {{/in-element}}
     {{/if}}
   </template>
