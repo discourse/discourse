@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# baseline measurement (no functional change)
 require "bundler/setup"
 
 require "open3"
