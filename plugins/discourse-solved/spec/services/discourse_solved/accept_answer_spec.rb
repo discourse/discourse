@@ -154,6 +154,11 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
                         }.by(-1)
           end
         end
+
+        it "replacing an accepted answer destroys the old SolvedTopic and creates a new one" do
+          old_solved_topic_id = topic.solved.id
+          expect { result }.to change { topic.reload.solved.id }.from(old_solved_topic_id)
+        end
       end
 
       it "credits the post author with a solved action" do

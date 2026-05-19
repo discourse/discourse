@@ -56,11 +56,13 @@ class DiscourseSolved::AcceptAnswer
 
   def revoke_previous_accepted_answer(topic:)
     topic_answers = topic.solved.topic_answers
-    return if topic_answers.none?
 
-    post_ids = topic_answers.pluck(:answer_post_id)
-    UserAction.where(action_type: UserAction::SOLVED, target_post_id: post_ids).destroy_all
-    topic_answers.destroy_all
+    if topic_answers.any?
+      post_ids = topic_answers.pluck(:answer_post_id)
+      UserAction.where(action_type: UserAction::SOLVED, target_post_id: post_ids).destroy_all
+    end
+
+    topic.solved.destroy!
   end
 
   def credit_post_author(post:, guardian:)
