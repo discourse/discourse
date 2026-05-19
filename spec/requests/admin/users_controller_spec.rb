@@ -2270,6 +2270,23 @@ RSpec.describe Admin::UsersController do
 
       include_examples "counting other accounts with same ip possible"
     end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "denies access with a 404 response" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+
+        get "/admin/users/total-others-with-same-ip.json",
+            params: {
+              user_id: target_user.id,
+              exclude: target_user.id,
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(404)
+      end
+    end
   end
 
   describe "#delete_other_accounts_with_same_ip" do
@@ -2286,9 +2303,9 @@ RSpec.describe Admin::UsersController do
                  order: "trust_level DESC",
                }
         expect(response.status).to eq(200)
-        expect(User.exists?(id: target_user.id)).to eq(true)
-        expect(User.where(id: user_a.id).count).to eq(0)
-        expect(User.where(id: user_b.id).count).to eq(0)
+        expect(User.exists?(target_user.id)).to eq(true)
+        expect(User.exists?(user_a.id)).to eq(false)
+        expect(User.exists?(user_b.id)).to eq(false)
       end
 
       it "does not delete the target user when exclude is tampered with" do
@@ -2350,19 +2367,20 @@ RSpec.describe Admin::UsersController do
       before { sign_in(user) }
 
       it "prevents deletion of other accounts with same ip with a 404 response" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
         user_a = Fabricate(:user, ip_address: "42.42.42.42")
         user_b = Fabricate(:user, ip_address: "42.42.42.42")
 
         delete "/admin/users/delete-others-with-same-ip.json",
                params: {
-                 user_id: 0,
-                 exclude: -1,
+                 user_id: target_user.id,
+                 exclude: target_user.id,
                  order: "trust_level DESC",
                }
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
-        expect(User.where(id: user_a.id).count).to eq(1)
-        expect(User.where(id: user_b.id).count).to eq(1)
+        expect(User.exists?(user_a.id)).to eq(true)
+        expect(User.exists?(user_b.id)).to eq(true)
       end
     end
   end
