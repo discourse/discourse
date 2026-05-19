@@ -489,6 +489,16 @@ acceptance(
       assert
         .dom(".composer-actions-trigger svg.d-icon-far-clipboard")
         .exists("shared draft icon is visible");
+
+      await composerActions.expand();
+      assert
+        .dom(".composer-actions-dropdown [data-action-id='create_topic']")
+        .exists("can switch back to create topic from shared draft mode");
+      assert
+        .dom(
+          ".composer-actions-dropdown [data-action-id='create_private_message']"
+        )
+        .exists("can switch to PM from shared draft mode");
     });
 
     test("reply_as_new_topic with new_topic draft", async function (assert) {

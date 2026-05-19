@@ -330,11 +330,15 @@ export default class ComposerActions extends Component {
       items.push(actionObj);
     }
 
-    // === CREATE_TOPIC MODE ACTIONS ===
+    // === CREATE_TOPIC / CREATE_SHARED_DRAFT MODE ACTIONS ===
 
-    // 2b. Reply to Post (when in CREATE_TOPIC mode with a remembered post)
+    const inCreateTopicLike =
+      currentAction === CREATE_TOPIC || currentAction === CREATE_SHARED_DRAFT;
+
+    // 2b. Reply to Post (when in CREATE_TOPIC/CREATE_SHARED_DRAFT mode with a
+    // remembered post)
     if (
-      currentAction === CREATE_TOPIC &&
+      inCreateTopicLike &&
       !this.isEditing &&
       _postSnapshot &&
       _topicSnapshot
@@ -349,8 +353,9 @@ export default class ComposerActions extends Component {
       items.push(actionObj);
     }
 
-    // 3. Reply to Topic (when in CREATE_TOPIC mode, allow going back to REPLY)
-    if (currentAction === CREATE_TOPIC && !this.isEditing && _topicSnapshot) {
+    // 3. Reply to Topic (allow going back to REPLY from
+    // CREATE_TOPIC/CREATE_SHARED_DRAFT)
+    if (inCreateTopicLike && !this.isEditing && _topicSnapshot) {
       const actionObj = {
         name: this._replyToTopicLabel(),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
@@ -373,10 +378,28 @@ export default class ComposerActions extends Component {
       items.push(actionObj);
     }
 
-    // 7. Create Private Message (create_private_message) - CREATE_TOPIC MODE
+    // 5. Create Topic (when in CREATE_SHARED_DRAFT mode, allow switching back
+    // to CREATE_TOPIC)
+    if (
+      currentAction === CREATE_SHARED_DRAFT &&
+      this.currentUser?.can_create_topic &&
+      !this.isEditing
+    ) {
+      const actionObj = {
+        name: i18n("composer.composer_actions.create_topic.label"),
+        description: i18n("composer.composer_actions.create_topic.desc"),
+        icon: "far-pen-to-square",
+        id: "create_topic",
+      };
+
+      items.push(actionObj);
+    }
+
+    // 7. Create Private Message (create_private_message) -
+    // CREATE_TOPIC/CREATE_SHARED_DRAFT MODE
     if (
       this.currentUser?.can_send_private_messages &&
-      currentAction === CREATE_TOPIC &&
+      inCreateTopicLike &&
       !this.isEditing
     ) {
       const actionObj = {
