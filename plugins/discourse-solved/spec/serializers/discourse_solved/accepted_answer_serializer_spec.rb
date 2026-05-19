@@ -22,6 +22,26 @@ RSpec.describe DiscourseSolved::AcceptedAnswerSerializer do
     expect(json).not_to have_key("accepter_username")
   end
 
+  context "when the answer post user is deleted" do
+    before do
+      user.destroy!
+      post.reload
+    end
+
+    it "falls back to the system user identity" do
+      expect(json["username"]).to eq(Discourse.system_user.username)
+      expect(json["avatar_template"]).to eq(Discourse.system_user.avatar_template)
+    end
+
+    context "when display_name_on_posts is set" do
+      before { SiteSetting.display_name_on_posts = true }
+
+      it "falls back to the system user name" do
+        expect(json["name"]).to eq(Discourse.system_user.name)
+      end
+    end
+  end
+
   context "when display_name_on_posts is set" do
     before { SiteSetting.display_name_on_posts = true }
     it "also includes the poster's name" do

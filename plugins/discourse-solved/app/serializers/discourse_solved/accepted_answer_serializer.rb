@@ -8,7 +8,11 @@ class DiscourseSolved::AcceptedAnswerSerializer < PostExcerptAccordionItemSerial
   end
 
   def username
-    object.user&.username || Discourse.system_user.name
+    object.user&.username || Discourse.system_user.username
+  end
+
+  def avatar_template
+    object.user&.avatar_template || Discourse.system_user.avatar_template
   end
 
   def accepter_name
