@@ -552,6 +552,7 @@ export default class ComposerActions extends Component {
   }
 
   _replyAsNewTopicSelect(options) {
+    this.ensureSnapshotsUpdated();
     options.action = CREATE_TOPIC;
     options.draftKey = this.composer.topicDraftKey;
     options.categoryId = this.composerModel.topic?.category?.id;
@@ -560,12 +561,14 @@ export default class ComposerActions extends Component {
   }
 
   replyToPostSelected(options) {
+    this.ensureSnapshotsUpdated();
     options.action = REPLY;
     options.post = _postSnapshot;
     this._openComposer(options);
   }
 
   replyToTopicSelected(options) {
+    this.ensureSnapshotsUpdated();
     options.action = REPLY;
     options.topic = _topicSnapshot;
     this._openComposer(options);
