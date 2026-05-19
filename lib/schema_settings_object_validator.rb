@@ -55,6 +55,7 @@ class SchemaSettingsObjectValidator
         property_values_of_type(schema: schema, objects: objects, type: "upload").select do |value|
           value.is_a?(Integer)
         end
+      return objects if upload_ids.empty?
 
       uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
       transform_uploads_in_objects(objects.deep_dup, schema[:properties]) do |value|

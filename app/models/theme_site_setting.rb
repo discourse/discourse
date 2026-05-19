@@ -23,7 +23,7 @@ class ThemeSiteSetting < ActiveRecord::Base
             objects: JSON.parse(value),
           )
 
-        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
+        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
       end
     end
   end

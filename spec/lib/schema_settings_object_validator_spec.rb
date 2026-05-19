@@ -62,6 +62,25 @@ RSpec.describe SchemaSettingsObjectValidator do
     end
   end
 
+  describe ".hydrate_uploads" do
+    it "returns the original objects when no upload IDs are present" do
+      schema = {
+        name: "section",
+        properties: {
+          title: {
+            type: "string",
+          },
+          header_image: {
+            type: "upload",
+          },
+        },
+      }
+      objects = [{ "title" => "Build a community" }]
+
+      expect(described_class.hydrate_uploads(schema:, objects:)).to equal(objects)
+    end
+  end
+
   describe ".validate_objects" do
     it "should return the right array of humanized error messages for objects that are invalid" do
       schema = {
