@@ -57,6 +57,12 @@
 .ve-layout--row {
   display: flex;
   flex-direction: row;
+
+  /* Allow wrapping so the per-child `flex-basis: 100%` override
+     emitted by the @container collapse rule below puts each child on
+     its own line. Without `wrap`, 100%-wide children would overflow
+     horizontally instead of stacking. */
+  flex-wrap: wrap;
   gap: var(--ve-layout-gap, 1rem);
   align-items: var(--ve-layout-align, stretch);
 }
@@ -82,8 +88,26 @@
   min-height: 0;
 }
 
-/* Responsive collapse — grid layouts go to one column, row layouts
-   stack. Stack mode is already column-oriented so it needs no rule.
+/* Responsive collapse — at narrow widths, every grid cell takes the
+   full row and stacks vertically. Driven per-cell (not per-container)
+   because `@container` rules only style DESCENDANTS of the queried
+   container, never the container element itself (per the CSS
+   Containment spec). The `.ve-layout--grid` element IS the container,
+   so we can't change its own `display` or `grid-template-*` from
+   inside the query — we instead make each child span all columns
+   (`grid-column: 1 / -1`) and auto-flow row (`grid-row: auto`), which
+   produces a vertical stack of full-width cells: the same visual
+   effect as a real `display: flex; flex-direction: column`.
+
+   Editor-only empty-cell placeholders (`.visual-editor-grid-cell`)
+   need the same override; that lives in
+   `admin/visual-editor-chrome.scss` since those placeholders only
+   render while the editor is active.
+
+   Row mode collapse needs a different mechanism (the container's
+   `flex-direction` can't be flipped from inside its own @container
+   either) — see the `.ve-layout--row` rule below.
+
    Two threshold variants driven by the `autoCollapse` arg on
    `ve:layout` (which emits the `--collapse-{value}` class):
    - `--collapse-default` collapses below 40rem (core's `sm`
@@ -99,37 +123,32 @@
      layout keeps its columns at every width.
    Both thresholds are hardcoded literals: `@container` condition
    expressions can't read `var()` or SCSS interpolation, so each
-   variant needs its own block. */
+   variant needs its own block.
+
+   Row mode: items need to wrap when each child takes 100% width.
+   `flex-wrap: wrap` declared on the base `.ve-layout--row` rule
+   above so that the per-child `flex-basis: 100%` override below
+   actually causes each child onto its own line. */
 
 @container ve-layout (max-width: 40rem) {
-  .ve-layout--grid.ve-layout--collapse-default {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-  }
-
   .ve-layout--grid.ve-layout--collapse-default > .ve-layout__cell {
     grid-column: 1 / -1;
     grid-row: auto;
   }
 
-  .ve-layout--row.ve-layout--collapse-default {
-    flex-direction: column;
+  .ve-layout--row.ve-layout--collapse-default > * {
+    flex-basis: 100%;
   }
 }
 
 @container ve-layout (max-width: 15rem) {
-  .ve-layout--grid.ve-layout--collapse-compact {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-  }
-
   .ve-layout--grid.ve-layout--collapse-compact > .ve-layout__cell {
     grid-column: 1 / -1;
     grid-row: auto;
   }
 
-  .ve-layout--row.ve-layout--collapse-compact {
-    flex-direction: column;
+  .ve-layout--row.ve-layout--collapse-compact > * {
+    flex-basis: 100%;
   }
 }
 

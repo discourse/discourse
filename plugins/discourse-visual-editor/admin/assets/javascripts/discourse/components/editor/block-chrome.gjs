@@ -222,6 +222,22 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * `true` when this chrome wraps a `ve:layout` whose key is in the
+   * editor service's force-expand set. The wrapper's `--force-expanded`
+   * modifier defeats the universal `@container` collapse rule so the
+   * author can edit the full multi-column structure even when the
+   * canvas is narrow enough to trigger collapse on the live page.
+   *
+   * @returns {boolean}
+   */
+  get isForceExpanded() {
+    return (
+      this.args.blockName === "ve:layout" &&
+      this.visualEditor.isForceExpanded(this.args.blockKey)
+    );
+  }
+
+  /**
    * Resolves the drop-mode the `containerDropTarget` modifier should
    * use for this chrome. Returns `null` for non-container blocks (the
    * modifier is a no-op on them — leaf blocks never act as drop
@@ -810,6 +826,7 @@ export default class BlockChrome extends Component {
           (if @isGhost "--ghost")
           (if @isError "--error")
           (if (eq this.parentLayoutAxis "horizontal") "--axis-horizontal")
+          (if this.isForceExpanded "--force-expanded")
         }}
         style={{@style}}
       >

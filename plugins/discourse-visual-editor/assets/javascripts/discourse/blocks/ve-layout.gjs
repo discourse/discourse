@@ -275,9 +275,21 @@ export default class VELayout extends Component {
     const row = grid.row ?? "auto";
     const align = grid.align ?? "stretch";
     const justify = grid.justify ?? "stretch";
+    // `order` is read by CSS Grid auto-placement only — when the
+    // layout collapses to one column under `@container`, every cell
+    // gets `grid-row: auto` and the browser flows them in order order.
+    // Setting order here keeps slot chromes interleaved correctly with
+    // the editor's empty-cell placeholders (which set the same key)
+    // in the stacked view. Harmless in the expanded grid: explicit
+    // `grid-column` / `grid-row` placements take priority.
+    const placement = parsePlacement(containerArgs);
+    const orderRow = placement.row.start ?? 1;
+    const orderCol = placement.column.start ?? 1;
+    const order = (orderRow - 1) * 1000 + (orderCol - 1);
     return trustHTML(
       `--ve-cell-column: ${column}; --ve-cell-row: ${row}; ` +
-        `--ve-cell-align: ${align}; --ve-cell-justify: ${justify};`
+        `--ve-cell-align: ${align}; --ve-cell-justify: ${justify}; ` +
+        `order: ${order};`
     );
   };
 

@@ -1698,15 +1698,13 @@ body.visual-editor-active
   }
 }
 
-/* When the layout collapses to one column, force the editor-only
-   empty-cell placeholders to follow. Without these overrides they'd
-   keep their inline `grid-column: N / N+1` placement (via the
-   `--ve-grid-cell-{column,row}` custom properties) and auto-place
-   into cells that no longer exist in the collapsed grid. Two blocks
-   mirror the universal collapse rules in `visual-editor.scss` — same
-   selector logic, same thresholds, just targeting
-   `.visual-editor-grid-cell` instead of `.ve-layout__cell`.
-   Admin-side because these placeholders only render in editor mode. */
+/* Editor-only empty-cell placeholders use a separate class
+   (`.visual-editor-grid-cell`) and need their own copy of the
+   per-cell collapse override — the universal block in
+   `visual-editor.scss` only covers `.ve-layout__cell`. Same logic:
+   each placeholder spans all columns and auto-flows into its own row
+   so the stacked view shows them between slot chromes (sorted via
+   the `order:` declarations both cell types emit). */
 
 @container ve-layout (max-width: 40rem) {
   .ve-layout--grid.ve-layout--collapse-default > .visual-editor-grid-cell {
@@ -1720,6 +1718,70 @@ body.visual-editor-active
     grid-column: 1 / -1;
     grid-row: auto;
   }
+}
+
+/* "Expand for editing" override — the chrome wrapper carries
+   `--force-expanded` when the author has flipped the toolbar toggle
+   on a `ve:layout`. Restores each cell's per-author grid placement
+   (and each row child's natural flex basis) regardless of canvas
+   width, defeating the universal `@container` collapse rules for
+   that single layout.
+
+   Wins on specificity (4 classes via the wrapper selector chain) vs
+   the universal @container rule's 3 classes. `overflow-x: auto` lets
+   the author scroll horizontally when the restored grid is wider
+   than the canvas. */
+
+.visual-editor-block-chrome-wrapper.--force-expanded {
+  overflow-x: auto;
+
+  .ve-layout--grid.ve-layout--collapse-default > .ve-layout__cell,
+  .ve-layout--grid.ve-layout--collapse-compact > .ve-layout__cell,
+  .ve-layout--grid.ve-layout--collapse-default > .visual-editor-grid-cell,
+  .ve-layout--grid.ve-layout--collapse-compact > .visual-editor-grid-cell {
+    grid-column: var(--ve-cell-column, var(--ve-grid-cell-column, auto));
+    grid-row: var(--ve-cell-row, var(--ve-grid-cell-row, auto));
+  }
+
+  .ve-layout--row.ve-layout--collapse-default > *,
+  .ve-layout--row.ve-layout--collapse-compact > * {
+    flex-basis: auto;
+  }
+}
+
+/* Hide the resize handle when a slot's parent grid is currently
+   collapsed AND not force-expanded — there's only one track, so
+   dragging the handle to "expand columns 2-3" has no meaningful visual
+   effect. The force-expand toggle is the discoverable way back into
+   resizing tracks. */
+
+@container ve-layout (max-width: 40rem) {
+  .ve-layout--grid.ve-layout--collapse-default
+    .visual-editor-block-chrome__resize-handle {
+    display: none;
+  }
+}
+
+@container ve-layout (max-width: 15rem) {
+  .ve-layout--grid.ve-layout--collapse-compact
+    .visual-editor-block-chrome__resize-handle {
+    display: none;
+  }
+}
+
+.visual-editor-block-chrome-wrapper.--force-expanded
+  .visual-editor-block-chrome__resize-handle {
+  display: block;
+}
+
+/* Toolbar toggle "pressed" state — the expand-for-editing button keeps
+   its filled appearance while the layout is force-expanded so the
+   author can see at a glance which layouts they've manually overridden
+   in the current session. */
+
+.visual-editor-block-toolbar__btn.--active {
+  background: var(--primary-low);
+  color: var(--primary);
 }
 
 /* Resize handle — rendered on the chrome of a selected block whose

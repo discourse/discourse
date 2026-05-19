@@ -91,10 +91,18 @@ export default class GridOverlay extends Component {
   // the custom-property hand-off lets the stylesheet take precedence
   // when needed without `!important`. Same pattern `ve-layout`'s
   // `cellStyle` uses for `.ve-layout__cell`.
+  //
+  // `order` is also set so that when the `@container` collapse rewrites
+  // every cell to `grid-row: auto`, auto-placement walks the children
+  // in (row, col) reading order — empty cells interleave naturally with
+  // slot chromes in the stacked view. Harmless in the expanded grid
+  // because explicit `grid-column` / `grid-row` placements take
+  // priority over `order` there.
   cellStyle = (cell) =>
     trustHTML(
       `--ve-grid-cell-column: ${cell.column} / ${cell.column + 1}; ` +
-        `--ve-grid-cell-row: ${cell.row} / ${cell.row + 1};`
+        `--ve-grid-cell-row: ${cell.row} / ${cell.row + 1}; ` +
+        `order: ${(cell.row - 1) * 1000 + (cell.column - 1)};`
     );
 
   isPickingCell = (cell) =>
@@ -192,6 +200,48 @@ export default class GridOverlay extends Component {
   get emptyCells() {
     const occupied = computeOccupation(this.slots, this.columns, this.rows);
     return unoccupiedCells(occupied, this.columns, this.rows);
+  }
+
+  /**
+   * `true` when the layout is currently below its `autoCollapse`
+   * width threshold — i.e. the universal `@container` rule in
+   * `visual-editor.scss` has fired and each cell now spans all
+   * columns via `grid-column: 1 / -1`. The grid container itself
+   * keeps `display: grid` and its original `grid-template-columns`
+   * (per the CSS spec, `@container` queries style descendants, not
+   * the container element itself), so the only direct signal is the
+   * container's measured width vs the SCSS thresholds.
+   *
+   * Drives the dispatch to the DOM-element hit-test / overlay paths
+   * in `_descriptorFromCursor` and `_computeOverlayGeometry`: track
+   * math doesn't fit a layout whose cells all span 1 / -1, so we
+   * hand off to element lookups instead.
+   *
+   * The thresholds (40rem / 15rem) are duplicated from
+   * `visual-editor.scss` because there's no clean way to read a
+   * @container's max-width from JS; if either constant changes,
+   * update both sides.
+   *
+   * Returns `false` when an ancestor carries `.--force-expanded`
+   * (the editor-only override restores per-author placements so the
+   * track-math path is correct).
+   */
+  get isCollapsed() {
+    const gridEl = this._gridElement;
+    if (!gridEl) {
+      return false;
+    }
+    if (gridEl.closest(".--force-expanded")) {
+      return false;
+    }
+    const autoCollapse = this.gridEntry?.args?.autoCollapse ?? "default";
+    if (autoCollapse === "never") {
+      return false;
+    }
+    const remPx =
+      parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    const thresholdRem = autoCollapse === "compact" ? 15 : 40;
+    return gridEl.getBoundingClientRect().width < thresholdRem * remPx;
   }
 
   /**
@@ -637,6 +687,10 @@ export default class GridOverlay extends Component {
       return null;
     }
 
+    if (this.isCollapsed) {
+      return this._descriptorFromCursorCollapsed(event, source, sourceKey);
+    }
+
     const tracks = this._readGridTracks();
     if (!tracks) {
       return null;
@@ -691,6 +745,151 @@ export default class GridOverlay extends Component {
     // overwriting `variant` because the descriptor's `variant`
     // already carries the operation kind (`insert` / `swap` /
     // `replace` / `move`) that `_dispatchDrop` switches on.
+    if (!this._canExecuteDescriptor(descriptor, source)) {
+      return { ...descriptor, _invalid: true };
+    }
+    return descriptor;
+  }
+
+  /**
+   * Collapsed-view variant of `_descriptorFromCursor`. The track-math
+   * path can't run here: a multi-column logical grid that's rendering
+   * as one column has `colWidths.length === 1`, so cursor X always
+   * resolves to `column 1` and `_trackStart(col=3, widths)` returns
+   * NaN.
+   *
+   * Instead we hit-test by DOM element. `elementFromPoint` finds the
+   * visible slot chrome or empty-cell placeholder under the cursor;
+   * its `data-ve-block-key` / `data-col` / `data-row` map back to
+   * logical coordinates; cursor Y within the element's bounding rect
+   * resolves a 3-zone hit test (up / center / down — left and right
+   * don't have meaningful semantics in a vertical stack).
+   *
+   * Output is exactly the same descriptor shape as the track-math
+   * path — `_dispatchDrop` and `_computeOverlayGeometry` (via its own
+   * collapsed branch) consume it the same way.
+   */
+  _descriptorFromCursorCollapsed(event, source, sourceKey) {
+    const el = document.elementFromPoint(event.clientX, event.clientY);
+    if (!el || !this._gridElement.contains(el)) {
+      return null;
+    }
+
+    // Empty cell placeholder — check this first. Empty cells are
+    // teleported directly into the grid and never contain blocks
+    // with `data-ve-block-key`, so a hit on one is unambiguous.
+    const emptyEl = el.closest(".visual-editor-grid-cell");
+    if (emptyEl && this._gridElement.contains(emptyEl)) {
+      const col = parseInt(emptyEl.getAttribute("data-col"), 10);
+      const row = parseInt(emptyEl.getAttribute("data-row"), 10);
+      if (Number.isNaN(col) || Number.isNaN(row)) {
+        return null;
+      }
+      const rect = emptyEl.getBoundingClientRect();
+      const zone = this._computeZoneCollapsed(
+        event.clientY - rect.top,
+        rect.height
+      );
+      const base = this._cellDescriptorForZone({ column: col, row }, zone);
+      return this._finishCollapsedDescriptor(
+        this._attachCollapsedHit(base, rect, zone),
+        source
+      );
+    }
+
+    // Slot — walk up `[data-ve-block-key]` ancestors until we find
+    // one that's a DIRECT child of this grid's layout entry. The
+    // cursor may be over a nested block inside a container slot
+    // (e.g. a paragraph inside a card-shaped slot), in which case
+    // `closest` returns the innermost chrome whose key isn't in
+    // `this.slots`; we want the outer slot's chrome instead.
+    let candidate = el.closest("[data-ve-block-key]");
+    while (candidate && this._gridElement.contains(candidate)) {
+      const blockKey = candidate.getAttribute("data-ve-block-key");
+      const slot = this.slots.find((s) => entryKey(s) === blockKey);
+      if (slot) {
+        if (sourceKey && this._sourceCoversTarget(sourceKey, blockKey)) {
+          return null;
+        }
+        const rect = candidate.getBoundingClientRect();
+        const zone = this._computeZoneCollapsed(
+          event.clientY - rect.top,
+          rect.height
+        );
+        const base = this._slotDescriptorForZone({
+          slot,
+          zone,
+          shift: event.shiftKey,
+          source,
+        });
+        return this._finishCollapsedDescriptor(
+          this._attachCollapsedHit(base, rect, zone),
+          source
+        );
+      }
+      candidate = candidate.parentElement?.closest("[data-ve-block-key]");
+    }
+
+    return null;
+  }
+
+  /**
+   * Stamps the collapsed-view hit-test result onto the base descriptor
+   * so `_computeOverlayGeometryCollapsed` can paint against the actual
+   * element the cursor was over, without round-tripping through
+   * logical (col, row) → DOM lookups. The latter fails for auto-placed
+   * slots (whose `placement.start` is null) and for any case where
+   * `_slotAtCell` can't resolve the cell back to an element.
+   *
+   * The viewport-coord rect is captured at hit-test time; the
+   * mirroring step converts to grid-relative the same way the
+   * track-math path does, so the rest of the pipeline stays uniform.
+   */
+  _attachCollapsedHit(descriptor, rect, zone) {
+    if (!descriptor) {
+      return null;
+    }
+    return {
+      ...descriptor,
+      _collapsedRect: {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      },
+      _collapsedZone: zone,
+    };
+  }
+
+  /**
+   * Three-zone Y-axis hit test for the collapsed view. Left / right
+   * don't carry semantics in a vertical stack — only top (insert
+   * above) / center (swap-or-move-into) / bottom (insert below) do.
+   */
+  _computeZoneCollapsed(y, h) {
+    const edge = 0.25;
+    if (h <= 0) {
+      return "center";
+    }
+    const fromTop = y / h;
+    if (fromTop < edge) {
+      return "up";
+    }
+    if (fromTop > 1 - edge) {
+      return "down";
+    }
+    return "center";
+  }
+
+  /**
+   * Applies the same validity gate the track-math path uses so the
+   * mirrored overlay can paint in danger tones for impossible drops
+   * (e.g. shift-insert that doesn't fit the grid).
+   */
+  _finishCollapsedDescriptor(descriptor, source) {
+    if (!descriptor) {
+      return null;
+    }
     if (!this._canExecuteDescriptor(descriptor, source)) {
       return { ...descriptor, _invalid: true };
     }
@@ -1020,6 +1219,9 @@ export default class GridOverlay extends Component {
    * @returns {{top: number, left: number, width: number, height: number}|null}
    */
   _computeOverlayGeometry(descriptor) {
+    if (this.isCollapsed) {
+      return this._computeOverlayGeometryCollapsed(descriptor);
+    }
     const tracks = this._readGridTracks();
     if (!tracks) {
       return null;
@@ -1080,6 +1282,64 @@ export default class GridOverlay extends Component {
       };
     }
 
+    return null;
+  }
+
+  /**
+   * Collapsed-view variant of `_computeOverlayGeometry`. Looks up the
+   * destination DOM element (slot chrome or empty-cell placeholder)
+   * by its logical (column, row) coordinates and uses its bounding
+   * rect — translated into grid-relative coords — to paint the
+   * overlay over what the author actually sees in the stacked view.
+   * Skips the track-math entirely.
+   *
+   * Line descriptors paint along the target element's TOP edge when
+   * `descriptor.line === row.start` (the cell at `line` is the target;
+   * insert ABOVE it) or BOTTOM edge when `descriptor.line === row + 1`
+   * (the cell at `line - 1` is the target; insert BELOW it).
+   * `line-column` descriptors don't come out of the collapsed hit-test
+   * — left/right zones aren't emitted — so they're handled as a
+   * fallback only.
+   */
+  _computeOverlayGeometryCollapsed(descriptor) {
+    if (!this._gridElement) {
+      return null;
+    }
+    const rect = descriptor._collapsedRect;
+    if (!rect) {
+      return null;
+    }
+    const gridRect = this._gridElement.getBoundingClientRect();
+    const stroke = 4;
+
+    if (descriptor.kind === "rect") {
+      return {
+        left: rect.left - gridRect.left,
+        top: rect.top - gridRect.top,
+        width: rect.width,
+        height: rect.height,
+      };
+    }
+
+    if (descriptor.kind === "line-row") {
+      // The hit test produces "up" → line on top edge, "down" → line
+      // on bottom edge. Use the zone we stamped onto the descriptor
+      // rather than the abstract `descriptor.line` index, so the
+      // overlay tracks the same element the cursor was over.
+      const y =
+        descriptor._collapsedZone === "down"
+          ? rect.top + rect.height
+          : rect.top;
+      return {
+        left: rect.left - gridRect.left,
+        top: y - gridRect.top - stroke / 2,
+        width: rect.width,
+        height: stroke,
+      };
+    }
+
+    // line-column descriptors aren't emitted by the collapsed hit
+    // test — left/right zones don't make sense in a vertical stack.
     return null;
   }
 
@@ -1223,6 +1483,8 @@ export default class GridOverlay extends Component {
           <div
             class="visual-editor-grid-cell"
             style={{this.cellStyle cell}}
+            data-col={{cell.column}}
+            data-row={{cell.row}}
             {{dDragAndDropTarget
               accepts=this.acceptedDropKinds
               onDrop=(fn this.applyCellDrop cell)

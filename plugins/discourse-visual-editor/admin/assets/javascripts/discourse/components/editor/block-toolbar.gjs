@@ -32,6 +32,48 @@ export default class BlockToolbar extends Component {
     return this.visualEditor.canMoveSelectedDown;
   }
 
+  /**
+   * `true` when this toolbar should expose the "expand for editing"
+   * toggle. Shown for `ve:layout` blocks whose `autoCollapse` isn't
+   * `"never"` — i.e. the layout could actually collapse at narrow
+   * widths, so an override has something to override.
+   *
+   * Reads the live entry's `args.mode` / `args.autoCollapse` rather
+   * than the curry snapshot so the button hides instantly when the
+   * author flips `autoCollapse` to `"never"` from the inspector.
+   *
+   * @returns {boolean}
+   */
+  get canForceExpand() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.visualEditor.structuralVersion;
+    const located = this.visualEditor._findEntryAndOutletSync(
+      this.args.blockKey
+    );
+    const entry = located?.entry;
+    if (entry?.block !== "ve:layout") {
+      return false;
+    }
+    return (entry.args?.autoCollapse ?? "default") !== "never";
+  }
+
+  /**
+   * Mirrors the editor service's force-expand state for this block.
+   * Drives the button's pressed/unpressed visual state.
+   *
+   * @returns {boolean}
+   */
+  get isForceExpanded() {
+    return this.visualEditor.isForceExpanded(this.args.blockKey);
+  }
+
+  @action
+  toggleForceExpand(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.visualEditor.toggleForceExpand(this.args.blockKey);
+  }
+
   @action
   moveUp(event) {
     event.preventDefault();
@@ -91,6 +133,36 @@ export default class BlockToolbar extends Component {
       >
         {{dIcon "copy"}}
       </button>
+      {{#if this.canForceExpand}}
+        <button
+          type="button"
+          class={{if
+            this.isForceExpanded
+            "btn btn-flat visual-editor-block-toolbar__btn --active"
+            "btn btn-flat visual-editor-block-toolbar__btn"
+          }}
+          title={{if
+            this.isForceExpanded
+            (i18n "visual_editor.canvas.toolbar.collapse_for_preview")
+            (i18n "visual_editor.canvas.toolbar.expand_for_editing")
+          }}
+          aria-label={{if
+            this.isForceExpanded
+            (i18n "visual_editor.canvas.toolbar.collapse_for_preview")
+            (i18n "visual_editor.canvas.toolbar.expand_for_editing")
+          }}
+          aria-pressed={{if this.isForceExpanded "true" "false"}}
+          {{on "click" this.toggleForceExpand}}
+        >
+          {{dIcon
+            (if
+              this.isForceExpanded
+              "down-left-and-up-right-to-center"
+              "up-right-and-down-left-from-center"
+            )
+          }}
+        </button>
+      {{/if}}
       <button
         type="button"
         class="btn btn-flat visual-editor-block-toolbar__btn visual-editor-block-toolbar__btn--danger"

@@ -340,6 +340,8 @@ en:
           move_down: "Move down"
           duplicate: "Duplicate"
           delete: "Delete"
+          expand_for_editing: "Expand for editing"
+          collapse_for_preview: "Collapse to preview narrow layout"
       theme_admin:
         open_button: "Visual Editor"
         open_button_title: "Open the visual editor for this theme"

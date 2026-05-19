@@ -344,6 +344,21 @@ export default class VisualEditorService extends Service {
   _gridOverlays = new Map();
 
   /**
+   * `ve:layout` block keys that the author has explicitly asked to
+   * render in their full multi-column layout regardless of the
+   * `@container` collapse threshold. Editor-only session state — never
+   * persisted, cleared on `exit()`. The chrome wrapper picks up the
+   * `--force-expanded` modifier class when its block key is in this
+   * set, which defeats the universal `@container` collapse rule via
+   * specificity so the author can edit the full grid structure.
+   *
+   * Per-block so authors can independently toggle different layouts.
+   *
+   * @type {Set<string>}
+   */
+  _forceExpandedKeys = trackedSet();
+
+  /**
    * Tracks the mousedown target so the deselect handler can require
    * BOTH the down and up events to land outside the allowed scope.
    * Without this, dragging to select text inside an input (mousedown
@@ -685,6 +700,7 @@ export default class VisualEditorService extends Service {
     this._editedOutlets.clear();
     this._originalLayouts.clear();
     this._structurallyEditedOutlets.clear();
+    this._forceExpandedKeys.clear();
     document.body.classList.remove("visual-editor-active");
     document.removeEventListener("mousedown", this._onCanvasMouseDown);
     document.removeEventListener("mouseup", this._onCanvasMouseUp);
@@ -2277,6 +2293,34 @@ export default class VisualEditorService extends Service {
   unregisterGridOverlay(gridKey, overlay) {
     if (this._gridOverlays.get(gridKey) === overlay) {
       this._gridOverlays.delete(gridKey);
+    }
+  }
+
+  /**
+   * @param {string} blockKey
+   * @returns {boolean}
+   */
+  isForceExpanded(blockKey) {
+    return blockKey ? this._forceExpandedKeys.has(blockKey) : false;
+  }
+
+  /**
+   * Flips the force-expand state for a single `ve:layout` block. The
+   * change is reactive — the chrome wrapper's class list re-renders
+   * immediately to add or remove `--force-expanded`, and `GridOverlay`
+   * sees an `isCollapsed` flip on its next dragover.
+   *
+   * @param {string} blockKey
+   */
+  @action
+  toggleForceExpand(blockKey) {
+    if (!blockKey) {
+      return;
+    }
+    if (this._forceExpandedKeys.has(blockKey)) {
+      this._forceExpandedKeys.delete(blockKey);
+    } else {
+      this._forceExpandedKeys.add(blockKey);
     }
   }
 
