@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Unified new topic list" do
+describe "Unified new topic list", :soft_reset do
   fab!(:user)
   fab!(:group) { Fabricate(:group, users: [user]) }
   fab!(:category)

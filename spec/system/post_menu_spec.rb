@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post menu" do
+describe "Post menu", :soft_reset do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic, reload: true)

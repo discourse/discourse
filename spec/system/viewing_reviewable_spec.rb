@@ -2,7 +2,7 @@
 
 require "discourse_ip_info"
 
-describe "Viewing reviewable item" do
+describe "Viewing reviewable item", :soft_reset do
   fab!(:admin)
   fab!(:moderator)
   fab!(:group)

@@ -438,7 +438,7 @@ shared_examples "signup scenarios" do
   end
 end
 
-describe "Signup" do
+describe "Signup", :soft_reset do
   context "when desktop" do
     include_examples "signup scenarios"
   end

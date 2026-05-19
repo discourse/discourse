@@ -105,6 +105,15 @@ module TurboTests
     protected
 
     def check_for_migrations
+      # The master process otherwise has zero ActiveRecord usage; gating this
+      # check lets us skip the full Rails app boot (`require
+      # "./config/environment"`) in `lib/turbo_tests.rb`. CI sets this env
+      # var because `bin/rake parallel:migrate` runs before the test step.
+      return if ENV["DISCOURSE_TURBO_SKIP_MIGRATION_CHECK"] == "1"
+
+      require "rails"
+      require File.expand_path("../../../config/environment", __FILE__)
+
       ActiveRecord::Tasks::DatabaseTasks.migrations_paths = %w[db/migrate db/post_migrate]
       ActiveRecord::Migration.check_all_pending!
     rescue ActiveRecord::PendingMigrationError

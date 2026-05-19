@@ -617,25 +617,324 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
-          wait_for_ember_boot
-          wait_for_client_settled(method_name)
+          wait_for_navigation_settled(method_name)
           result
         end
       end
 
       private
 
-      # `<discourse-assets>` is only present on Ember pages; `ember-application`
-      # is added to the root element (`#main`) once Ember mounts.
-      def wait_for_ember_boot
+      # Collapses the post-navigation Ember-boot + client-settled waits into
+      # one Playwright IPC. The previous implementation issued three IPC
+      # round-trips per `visit`/`refresh`/`go_back`/`go_forward`/
+      # `resize_window_to`:
+      #
+      #   1. `has_no_css?("discourse-assets", wait: 0)` — non-Ember-page check.
+      #   2. `assert_selector("#main.ember-application")` — wait for Ember mount.
+      #   3. `evaluate_async_script(window.clientSettled(...))` — drain pending
+      #      AJAX/DOM events.
+      #
+      # The ember-mount and pending-events checks both happen entirely
+      # browser-side, so we collapse the three round-trips into a single
+      # `evaluate_async_script` whose JS:
+      #
+      #   - Returns immediately on non-Ember pages (no `<discourse-assets>`).
+      #   - Polls for `window.clientSettled` to be defined; that initializer
+      #     fires after `discourse-bootstrap`, i.e. once Ember has mounted on
+      #     `#main`. Polling with `setTimeout(0)` is cheaper than the
+      #     `MutationObserver(subtree:true, attributes:true)` iter-24 used,
+      #     which observed the entire document on every DOM change.
+      #   - Awaits `window.clientSettled(...)` to drain pending AJAX/DOM events.
+      #
+      # iter-3's `evaluate_async_script` patch already collapses the
+      # `evaluate_handle + wrap_node` pair into a single `evaluate`, so this
+      # IPC is one Playwright round-trip.
+      def wait_for_navigation_settled(method_name)
         session = @driver.send(:session)
-        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
-        session.assert_selector("#main.ember-application", visible: :all)
+        timeout_ms = Capybara.default_max_wait_time * 1000
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+          now = Time.now.to_f
+          puts "[#{now}] #{method_name}: START"
+        end
+
+        result = session.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          const timeoutMs = #{timeout_ms};
+
+          (async () => {
+            try {
+              if (!document.querySelector('discourse-assets')) {
+                done();
+                return;
+              }
+
+              const start = Date.now();
+              while (!window.clientSettled) {
+                if (Date.now() - start > timeoutMs) {
+                  done(`Timeout waiting for Ember boot after ${timeoutMs}ms`);
+                  return;
+                }
+                await new Promise((r) => setTimeout(r, 0));
+              }
+
+              const remaining = Math.max(timeoutMs - (Date.now() - start), 1000);
+              await window.clientSettled(remaining);
+              done();
+            } catch (error) {
+              done(error.message || String(error));
+            }
+          })();
+        JS
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
+        end
+
+        raise result if result.is_a?(String)
       end
     end
 
     Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
     Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
+
+    # `capybara-playwright-driver`'s `Browser#evaluate_async_script` (in
+    # capybara/playwright/browser.rb) wraps the user script in a
+    # `new Promise((resolve) => …)` shim, then calls Playwright's
+    # `evaluate_handle` (which returns a `JSHandle`) followed by
+    # `wrap_node` to dereference the handle into a Ruby value. That's two
+    # Playwright IPC round-trips per call. Playwright's `evaluate`
+    # already awaits a returned Promise and returns the resolved value
+    # serialized, in a single round-trip — and every caller of
+    # `evaluate_async_script` in this repo
+    # (`execute_async_client_settled_script` here, plus the four
+    # clipboard / image helpers in `spec/system/page_objects/cdp.rb`)
+    # only ever resolves with `null` or a primitive `string`, never an
+    # object/element. Substituting `evaluate` for the
+    # `evaluate_handle + wrap_node` pair halves the IPC cost of the
+    # `wait_for_client_settled` call that fires after every patched
+    # Capybara action (click, send_keys, visit, …).
+    module CapybaraPlaywrightBrowserEvaluateAsyncFastPatch
+      def evaluate_async_script(script, *args)
+        assert_page_alive do
+          js = <<~JAVASCRIPT
+          function(_arguments){
+            let args = Array.prototype.slice.call(_arguments);
+            return new Promise((resolve, reject) => {
+              args.push(resolve);
+              (function(){ #{script} }).apply(this, args);
+            });
+          }
+          JAVASCRIPT
+          @playwright_page.capybara_current_frame.evaluate(js, arg: unwrap_node(args))
+        end
+      end
+    end
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserEvaluateAsyncFastPatch)
+
+    # The upstream `capybara-playwright-driver` gem calls `@element.enabled?`
+    # at the top of `assert_element_not_stale` as a defensive pre-check
+    # before every read operation (visible?, visible_text, find_css, [],
+    # value, checked?, etc.). Each call is a Playwright IPC round-trip and
+    # together they account for ~7-17% of wall time on browser-heavy
+    # system specs (measured via stackprof on login_spec.rb / drafts_spec.rb
+    # / about_page_spec.rb). The pre-check is redundant: every operation
+    # the wrapped block performs (text_content, evaluate, query_selector_all)
+    # hits the same CDP channel and raises `Playwright::Error` with the same
+    # "Element is not attached to the DOM" / "Execution context was
+    # destroyed" / etc. messages that the rescue below already converts to
+    # `StaleReferenceError`. Skipping the explicit `enabled?` check keeps
+    # the staleness detection (via the rescue) but cuts one round-trip per
+    # read.
+    module CapybaraPlaywrightNodeSkipStaleEnabledCheckPatch
+      private def assert_element_not_stale(&block)
+        block.call
+      rescue ::Playwright::Error => err
+        case err.message
+        when /Element is not attached to the DOM/,
+             /Execution context was destroyed, most likely because of a navigation/,
+             /Cannot find context with specified id/,
+             /Unable to adopt element handle from a different document/,
+             /error in channel "content::page": exception while running method "adoptNode"/,
+             /(: Shadow DOM element - no XPath :)/
+          raise Capybara::Playwright::Node::StaleReferenceError.new(err)
+        else
+          raise
+        end
+      end
+    end
+    Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodeSkipStaleEnabledCheckPatch)
+
+    # Opt-IN soft reset for `Capybara::Playwright::Driver#reset!`. The upstream
+    # `clear_browser_contexts` closes the BrowserContext, nils `@browser`, and
+    # forces the next test to rebuild Browser+Context+Page from scratch. The
+    # soft reset keeps the primary BrowserContext + primary Page alive between
+    # examples and only wipes per-test state, saving the full-page-reload cost
+    # on every reset.
+    #
+    # iter-6/9/12/13/15 measured CI step deltas of -10..-27% when this
+    # mechanism was applied to every system spec (loop-best 485s vs 656s
+    # baseline = -26%). Each of those iterations failed CI on a small,
+    # un-enumerable set of spec failures we cannot diagnose without CI log
+    # access (auth-gated). iter-16 tried opt-OUT — tagging 2 admin spec files
+    # with `:full_reset` based on local screenshot evidence — but failed CI
+    # too, indicating the failure source isn't (or isn't only) those 2 admin
+    # files.
+    #
+    # This iteration takes the opposite approach: an explicit OPT-IN. By
+    # default, every spec falls through to the upstream `clear_browser_contexts`
+    # path, getting the un-patched gem behaviour (the proven CI baseline).
+    # Only spec files explicitly tagged with `:soft_reset` at the top-level
+    # describe get the kept-alive treatment. The 30 largest spec files (by
+    # line count, a proxy for runtime; excluding `topic_bulk_select_spec.rb`
+    # which has documented local-failure-screenshot evidence) are tagged
+    # below at the file level. That's roughly 25-30% of the suite by example
+    # count and a much larger share by wall-time, so we still capture most of
+    # iter-12's measured per-example gain on a tightly bounded blast radius.
+    #
+    # Per-reset cleanup steps (when soft-reset path runs for a tagged spec):
+    #   1. Storage.clearDataForOrigin (storageTypes: "all") for every real
+    #      origin pages in the primary context were last on. Wipes cookies,
+    #      localStorage, sessionStorage, IndexedDB, service workers, and
+    #      cache_storage on a per-origin basis.
+    #   2. Close every auxiliary BrowserContext (created by
+    #      `open_new_window(:window)`); typically zero per test.
+    #   3. Close every auxiliary page in the primary context (created by
+    #      `open_new_window(:tab)`), keep the primary page itself alive.
+    #      Typically zero per test, so this is a no-op loop.
+    #   4. Clear context-level permissions (clipboard / notification / etc.
+    #      granted by `cdp.allow_clipboard`) and remaining cookies on the
+    #      primary context.
+    #
+    # Tracing (`:trace` metadata) needs the full BrowserContext lifecycle to
+    # flush a trace zip, so that path falls through to upstream
+    # `clear_browser_contexts`. Any unexpected failure in the soft-reset path
+    # also falls through, so a single broken reset costs at most one
+    # example's full reset rather than cascading.
+    module CapybaraPlaywrightDriverSoftResetPatch
+      def reset!
+        if callback_on_save_screenshot?
+          raw_screenshot = @browser&.raw_screenshot
+          callback_on_save_screenshot(raw_screenshot) if raw_screenshot
+        end
+
+        video_path = @browser&.video_path
+
+        soft_reset_succeeded = false
+        if @browser && RSpec.current_example&.metadata&.[](:soft_reset)
+          begin
+            @browser.soft_reset_browser_state
+            soft_reset_succeeded = true
+          rescue StandardError
+            # Fall through to the upstream close-everything reset path.
+          end
+        end
+
+        unless soft_reset_succeeded
+          @browser&.clear_browser_contexts
+          @browser = nil
+        end
+
+        callback_on_save_screenrecord(video_path) if video_path
+      end
+    end
+
+    module CapybaraPlaywrightBrowserSoftResetPatch
+      class SoftResetFallback < StandardError
+      end
+
+      def soft_reset_browser_state
+        # Trace mode needs the full context lifecycle to flush the zip.
+        raise SoftResetFallback if @callback_on_save_trace
+
+        primary = @playwright_page
+        raise SoftResetFallback if primary.nil? || primary.closed?
+
+        contexts = @playwright_browser.contexts
+        raise SoftResetFallback if contexts.empty?
+
+        primary_ctx = contexts.find { |ctx| ctx.pages.any? { |pg| pg.guid == primary.guid } }
+        raise SoftResetFallback if primary_ctx.nil?
+
+        # Wipe per-origin storage on the surviving primary BrowserContext.
+        # Storage.clearDataForOrigin needs a real origin string, so we
+        # collect unique origins from every page in the primary context.
+        origins = []
+        primary_ctx.pages.each do |pg|
+          page_url =
+            begin
+              pg.url
+            rescue ::Playwright::Error
+              nil
+            end
+          next if page_url.nil? || page_url.empty?
+          next if page_url == "about:blank" || page_url.start_with?("chrome:", "data:")
+
+          begin
+            uri = URI.parse(page_url)
+            next if uri.host.nil? || uri.scheme.nil?
+            port_segment = uri.port && uri.port != uri.default_port ? ":#{uri.port}" : ""
+            origins << "#{uri.scheme}://#{uri.host}#{port_segment}"
+          rescue URI::InvalidURIError
+            # Skip pages with unparseable URLs.
+          end
+        end
+
+        begin
+          cdp = primary_ctx.new_cdp_session(primary)
+          origins.uniq.each do |origin|
+            cdp.send_message(
+              "Storage.clearDataForOrigin",
+              params: {
+                origin: origin,
+                storageTypes: "all",
+              },
+            )
+          end
+          cdp.detach
+        rescue ::Playwright::Error
+          # Page or context torn down mid-reset; the upstream fallback in
+          # Driver#reset! rebuilds from scratch on the next example.
+        end
+
+        # Close every auxiliary BrowserContext (e.g. from
+        # `open_new_window(:window)`). Their pages and any CDP sessions are
+        # torn down with them.
+        contexts.each do |ctx|
+          next if ctx.equal?(primary_ctx)
+          begin
+            ctx.close
+          rescue ::Playwright::Error
+          end
+        end
+
+        # Close every auxiliary page in the primary context (e.g. tabs opened
+        # by `open_new_window(:tab)`). Keep the primary page alive — that's
+        # the dominant perf gain — but drop extra tabs so `current_window`
+        # inventory is reset.
+        primary_ctx.pages.each do |pg|
+          next if pg.guid == primary.guid
+          begin
+            pg.close
+          rescue ::Playwright::Error
+          end
+        end
+
+        # Reset context-level overrides that don't tie to one origin.
+        begin
+          primary_ctx.clear_permissions
+        rescue ::Playwright::Error
+        end
+
+        begin
+          primary_ctx.clear_cookies
+        rescue ::Playwright::Error
+        end
+      end
+    end
+
+    Capybara::Playwright::Driver.prepend(CapybaraPlaywrightDriverSoftResetPatch)
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserSoftResetPatch)
 
     module PlaywrightErrorPatch
       def message
@@ -717,6 +1016,12 @@ RSpec.configure do |config|
 
     mutex = Mutex.new
     condition_variable = ConditionVariable.new
+    # Signalled by the backtrace_logger thread once it has re-entered
+    # `condition_variable.wait` and is ready for the next example. Replaces a
+    # `sleep 0.01 while !is_waiting` spin-wait that paid ~10ms per example on
+    # the critical path of the around-hook ensure (≈2s wall per worker × 8
+    # workers ≈ 0.5% step_sec).
+    ready_condition_variable = ConditionVariable.new
     test_running = false
     is_waiting = false
 
@@ -725,6 +1030,7 @@ RSpec.configure do |config|
         loop do
           mutex.synchronize do
             is_waiting = true
+            ready_condition_variable.signal
             condition_variable.wait(mutex)
             is_waiting = false
           end
@@ -766,7 +1072,7 @@ RSpec.configure do |config|
       ensure
         mutex.synchronize { test_running = false }
         backtrace_logger.wakeup
-        sleep 0.01 while !mutex.synchronize { is_waiting }
+        mutex.synchronize { ready_condition_variable.wait(mutex) until is_waiting }
       end
     end
 

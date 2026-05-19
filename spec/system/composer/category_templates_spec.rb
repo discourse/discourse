@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer Form Templates" do
+describe "Composer Form Templates", :soft_reset do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:form_template_1) do
     Fabricate(

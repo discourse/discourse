@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Reviewables" do
+describe "Reviewables", :soft_reset do
   let(:review_page) { PageObjects::Pages::Review.new }
   fab!(:admin)
   fab!(:theme)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Simplified Category Creation" do
+describe "Simplified Category Creation", :soft_reset do
   fab!(:admin)
   fab!(:group)
   fab!(:category)
