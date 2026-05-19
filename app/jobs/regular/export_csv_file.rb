@@ -199,7 +199,7 @@ module Jobs
         @extra[:include_subcategories],
       ) if @extra[:include_subcategories].present?
 
-      report = Report.find(@extra[:name], @extra.merge(current_user: @current_user))
+      report = Report.find(@extra[:name], @extra.merge(guardian: @current_user&.guardian))
 
       header = []
       titles = {}

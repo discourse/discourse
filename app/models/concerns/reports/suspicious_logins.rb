@@ -41,7 +41,7 @@ module Reports::SuspiciousLogins
         ORDER BY t.created_at DESC
       SQL
 
-      can_see_ip = report.current_user&.guardian&.can_see_ip?
+      can_see_ip = report.guardian&.can_see_ip?
 
       DB
         .query(sql, start_date: report.start_date, end_date: report.end_date)
