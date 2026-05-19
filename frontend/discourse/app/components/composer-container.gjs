@@ -15,6 +15,7 @@ import ComposerSaveButton from "discourse/components/composer-save-button";
 import ComposerTitle from "discourse/components/composer-title";
 import ComposerToggles from "discourse/components/composer-toggles";
 import ComposerUserSelector from "discourse/components/composer-user-selector";
+import LinkToInput from "discourse/components/link-to-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -28,6 +29,7 @@ import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { and, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import DTextField from "discourse/ui-kit/d-text-field";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -241,6 +243,25 @@ export default class ComposerContainer extends Component {
                     {{/unless}}
                   {{/if}}
 
+                  {{#unless this.siteSettings.enable_new_composer_actions}}
+                    {{#if this.composer.canEdit}}
+                      <LinkToInput
+                        @onClick={{this.composer.displayEditReason}}
+                        @showInput={{this.composer.showEditReason}}
+                        @icon="pen-to-square"
+                        class="display-edit-reason
+                          {{if this.composer.showEditReason '--active'}}"
+                        title={{i18n "composer.edit_reason"}}
+                      >
+                        <DTextField
+                          @value={{this.composer.editReason}}
+                          @id="edit-reason"
+                          @maxlength="255"
+                          @placeholderKey="composer.edit_reason_placeholder"
+                        />
+                      </LinkToInput>
+                    {{/if}}
+                  {{/unless}}
                 </div>
               {{/unless}}
 
