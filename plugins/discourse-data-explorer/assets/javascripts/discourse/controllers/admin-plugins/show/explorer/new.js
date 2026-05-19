@@ -25,7 +25,7 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedSql = "";
   @tracked generatedName = "";
   @tracked generatedDescription = "";
-  @tracked showManualForm = false;
+  @tracked mode = "ai";
 
   currentGenerationId = null;
   _aiGenerationTimer = null;
@@ -43,13 +43,8 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  toggleManualForm() {
-    this.showManualForm = true;
-  }
-
-  @action
-  toggleAiForm() {
-    this.showManualForm = false;
+  setMode(value) {
+    this.mode = value;
   }
 
   @action
@@ -207,7 +202,7 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedSql = "";
     this.generatedName = "";
     this.generatedDescription = "";
-    this.showManualForm = false;
+    this.mode = "ai";
     this.loading = false;
   }
 }
