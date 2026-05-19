@@ -128,15 +128,21 @@ class AdminUserIndexQuery
 
   def filter_by_same_ip_user
     if params[:same_ip_user_id].present?
-      user = User.find_by(id: params[:same_ip_user_id])
-      ip_address = user&.public_send(same_ip_address_column)
-
-      if ip_address.present?
-        @query.where("ip_address = :ip OR registration_ip_address = :ip", ip: ip_address.to_s)
+      if same_ip_address.present?
+        @query.where("ip_address = :ip OR registration_ip_address = :ip", ip: same_ip_address.to_s)
       else
         @query.none
       end
     end
+  end
+
+  def same_ip_target_user
+    return @same_ip_target_user if defined?(@same_ip_target_user)
+    @same_ip_target_user = User.find_by(id: params[:same_ip_user_id])
+  end
+
+  def same_ip_address
+    @same_ip_address ||= same_ip_target_user&.public_send(same_ip_address_column)
   end
 
   def filter_exclude
