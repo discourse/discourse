@@ -1543,6 +1543,11 @@ body.visual-editor-active
    dashed version of the same border). */
 
 .visual-editor-grid-cell {
+  /* Placement consumed from custom properties set by `cellStyle` in
+     `grid-overlay.gjs` — see the comment there for why the cell uses
+     property hand-off rather than concrete inline `grid-column`. */
+  grid-column: var(--ve-grid-cell-column, auto);
+  grid-row: var(--ve-grid-cell-row, auto);
   position: relative;
   pointer-events: auto;
   display: flex;
@@ -1690,6 +1695,30 @@ body.visual-editor-active
       color: var(--primary-medium);
       font-size: 0.8rem;
     }
+  }
+}
+
+/* When the layout collapses to one column, force the editor-only
+   empty-cell placeholders to follow. Without these overrides they'd
+   keep their inline `grid-column: N / N+1` placement (via the
+   `--ve-grid-cell-{column,row}` custom properties) and auto-place
+   into cells that no longer exist in the collapsed grid. Two blocks
+   mirror the universal collapse rules in `visual-editor.scss` — same
+   selector logic, same thresholds, just targeting
+   `.visual-editor-grid-cell` instead of `.ve-layout__cell`.
+   Admin-side because these placeholders only render in editor mode. */
+
+@container ve-layout (max-width: 40rem) {
+  .ve-layout--grid.ve-layout--collapse-default > .visual-editor-grid-cell {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+}
+
+@container ve-layout (max-width: 15rem) {
+  .ve-layout--grid.ve-layout--collapse-compact > .visual-editor-grid-cell {
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
 }
 
@@ -1924,6 +1953,28 @@ body.visual-editor-active
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
+  }
+
+  /* Informational hint shown beneath the mode picker for grid / row
+     layouts — surfaces the `@container` auto-collapse behaviour so
+     authors discover it without having to test at narrow widths. */
+
+  &__hint {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0.4rem 0.5rem;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    background: var(--primary-very-low);
+    border-radius: 4px;
+
+    .d-icon {
+      font-size: 0.85rem;
+      color: var(--primary-medium);
+      flex-shrink: 0;
+    }
   }
 
   &__stepper {

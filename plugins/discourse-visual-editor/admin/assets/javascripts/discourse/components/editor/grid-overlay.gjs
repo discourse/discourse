@@ -83,10 +83,18 @@ export default class GridOverlay extends Component {
    * @type {Object|null}
    */
   @tracked dropPreview = null;
+  // Emits CSS custom properties rather than concrete `grid-column` /
+  // `grid-row` so a parent `@container` rule (the auto-collapse
+  // override in `visual-editor-chrome.scss`) can override the cell's
+  // placement when the layout collapses to one column. Inline
+  // `style="grid-column: ..."` would win over any stylesheet rule;
+  // the custom-property hand-off lets the stylesheet take precedence
+  // when needed without `!important`. Same pattern `ve-layout`'s
+  // `cellStyle` uses for `.ve-layout__cell`.
   cellStyle = (cell) =>
     trustHTML(
-      `grid-column: ${cell.column} / ${cell.column + 1}; ` +
-        `grid-row: ${cell.row} / ${cell.row + 1};`
+      `--ve-grid-cell-column: ${cell.column} / ${cell.column + 1}; ` +
+        `--ve-grid-cell-row: ${cell.row} / ${cell.row + 1};`
     );
 
   isPickingCell = (cell) =>

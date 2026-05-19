@@ -82,30 +82,53 @@
   min-height: 0;
 }
 
-/* Responsive collapse. Below 40rem of container width (matches core's
-   `sm` breakpoint from viewport.scss) the layout flattens so authors
-   don't have to build a separate phone layout — grid layouts go to a
-   single column, row layouts stack as columns, stack layouts are
-   already column-oriented.
-   The `@container` rule sets the concrete `grid-template-columns` /
-   `flex-direction` properties directly (bypassing the inline-style
-   custom-property hand-off), so it wins by cascade order without
-   needing `!important`. Cell placements are forced to full-width and
-   auto-row so author placements (e.g. `column: 3 / 5`) don't leave
-   gaps at narrow widths. */
+/* Responsive collapse — grid layouts go to one column, row layouts
+   stack. Stack mode is already column-oriented so it needs no rule.
+   Two threshold variants driven by the `autoCollapse` arg on
+   `ve:layout` (which emits the `--collapse-{value}` class):
+   - `--collapse-default` collapses below 40rem (core's `sm`
+     breakpoint, see `app/assets/stylesheets/lib/viewport.scss:4`).
+     Cards, paragraphs, media — typical content.
+   - `--collapse-compact` collapses below 15rem (~240px). Dense
+     content (icon rows, small buttons, compact links) that should
+     stay multi-column at all typical phone widths and only collapse
+     in genuinely tiny contexts (watch faces, very narrow side
+     panels). 15rem is well below the narrowest modern phones
+     (iPhone SE = 23.4rem).
+   - `--collapse-never` has no matching `@container` rule — the
+     layout keeps its columns at every width.
+   Both thresholds are hardcoded literals: `@container` condition
+   expressions can't read `var()` or SCSS interpolation, so each
+   variant needs its own block. */
 
 @container ve-layout (max-width: 40rem) {
-  .ve-layout--grid {
+  .ve-layout--grid.ve-layout--collapse-default {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
   }
 
-  .ve-layout--grid > .ve-layout__cell {
+  .ve-layout--grid.ve-layout--collapse-default > .ve-layout__cell {
     grid-column: 1 / -1;
     grid-row: auto;
   }
 
-  .ve-layout--row {
+  .ve-layout--row.ve-layout--collapse-default {
+    flex-direction: column;
+  }
+}
+
+@container ve-layout (max-width: 15rem) {
+  .ve-layout--grid.ve-layout--collapse-compact {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .ve-layout--grid.ve-layout--collapse-compact > .ve-layout__cell {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .ve-layout--row.ve-layout--collapse-compact {
     flex-direction: column;
   }
 }

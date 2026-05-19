@@ -28,6 +28,17 @@ const MODES = [
   { id: "grid", labelKey: "mode_grid", icon: "table-cells-large" },
 ];
 
+// Auto-collapse options for grid / row layouts. Each value maps to a
+// `ve-layout--collapse-{id}` modifier class consumed by the
+// `@container` rules in visual-editor.scss. The labels live in i18n
+// (`auto_collapse_{id}`); each option carries its own help-text key
+// for the dynamic hint copy beneath the segmented selector.
+const AUTO_COLLAPSE_OPTIONS = [
+  { id: "never", labelKey: "auto_collapse_never" },
+  { id: "compact", labelKey: "auto_collapse_compact" },
+  { id: "default", labelKey: "auto_collapse_default" },
+];
+
 const ALIGNMENTS = ["start", "center", "end", "stretch"];
 
 const COLUMNS_MIN = 1;
@@ -129,6 +140,19 @@ export default class InspectorLayoutForm extends Component {
     return this.args_.rowTemplate ?? "";
   }
 
+  get autoCollapse() {
+    return this.args_.autoCollapse ?? "default";
+  }
+
+  /**
+   * i18n key for the dynamic help text beneath the auto-collapse
+   * segmented selector. Keys follow the `auto_collapse_help_{value}`
+   * pattern — one per enum value.
+   */
+  get autoCollapseHelpKey() {
+    return `visual_editor.inspector.layout.auto_collapse_help_${this.autoCollapse}`;
+  }
+
   set(name, value) {
     this.visualEditor.updateSelectedArg(name, value);
   }
@@ -136,6 +160,11 @@ export default class InspectorLayoutForm extends Component {
   @action
   setMode(mode) {
     this.set("mode", mode);
+  }
+
+  @action
+  setAutoCollapse(value) {
+    this.set("autoCollapse", value);
   }
 
   @action
@@ -300,6 +329,44 @@ export default class InspectorLayoutForm extends Component {
           {{/each}}
         </div>
       </div>
+
+      {{! Auto-collapse selector — surfaces the @container behaviour
+        from visual-editor.scss and lets authors tune the threshold per
+        layout. Hidden for stack mode (which is already column-oriented
+        and has no @container rule). The help text under the segmented
+        buttons updates based on the active selection. }}
+      {{#unless (eq this.mode "stack")}}
+        <div class="visual-editor-layout-form__field">
+          <span class="visual-editor-layout-form__legend">
+            {{i18n "visual_editor.inspector.layout.auto_collapse_label"}}
+          </span>
+          <div class="visual-editor-layout-form__segmented" role="radiogroup">
+            {{#each AUTO_COLLAPSE_OPTIONS as |option|}}
+              <button
+                type="button"
+                class={{dConcatClass
+                  "visual-editor-layout-form__segment"
+                  (if (eq this.autoCollapse option.id) "--active")
+                }}
+                role="radio"
+                aria-checked={{eq this.autoCollapse option.id}}
+                title={{i18n
+                  (concat "visual_editor.inspector.layout." option.labelKey)
+                }}
+                {{on "click" (fn this.setAutoCollapse option.id)}}
+              >
+                <span>{{i18n
+                    (concat "visual_editor.inspector.layout." option.labelKey)
+                  }}</span>
+              </button>
+            {{/each}}
+          </div>
+          <p class="visual-editor-layout-form__hint">
+            {{dIcon "circle-info"}}
+            <span>{{i18n this.autoCollapseHelpKey}}</span>
+          </p>
+        </div>
+      {{/unless}}
 
       {{#if this.isGrid}}
         <div class="visual-editor-layout-form__pair">

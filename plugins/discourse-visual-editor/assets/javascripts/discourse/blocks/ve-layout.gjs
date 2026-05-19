@@ -97,6 +97,27 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
         placeholder: "minmax(80px, auto), minmax(0, 1fr), auto, 120px",
       },
     },
+    // Per-layout opt-out / customization of the responsive collapse.
+    // The `@container` rules in `visual-editor.scss` key off the
+    // `ve-layout--collapse-<value>` modifier class emitted by
+    // `className` below.
+    //   - `default`: collapse below 40rem (core's `sm`). Cards,
+    //     paragraphs, media — typical content.
+    //   - `compact`: collapse below 15rem (~240px). Dense content
+    //     (icon rows, small buttons) that stays multi-column at all
+    //     typical phone widths; only collapses in genuinely tiny
+    //     contexts like watch screens.
+    //   - `never`: no `@container` rule applies — author keeps the
+    //     full layout at every width. For genuinely-dense content
+    //     like a row of icons or small links.
+    autoCollapse: {
+      type: "string",
+      default: "default",
+      enum: ["never", "compact", "default"],
+      ui: {
+        label: i18n("visual_editor.inspector.layout.auto_collapse_label"),
+      },
+    },
   },
   previewArgs: { mode: "stack", gap: 1, align: "stretch" },
   // One namespace per mode. Direct children carry mode-specific placement
@@ -321,7 +342,14 @@ export default class VELayout extends Component {
   }
 
   get className() {
-    return `ve-layout ve-layout--${this.resolvedMode}`;
+    // Mode + collapse modifier. The collapse class drives which
+    // `@container` rule in `visual-editor.scss` applies to this
+    // layout (40rem for `--collapse-default`, 20rem for
+    // `--collapse-compact`, no rule for `--collapse-never`).
+    return (
+      `ve-layout ve-layout--${this.resolvedMode} ` +
+      `ve-layout--collapse-${this.args.autoCollapse ?? "default"}`
+    );
   }
 
   /**
