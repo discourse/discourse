@@ -49,11 +49,11 @@ after_initialize do
   end
 
   validate(:post, :validate_polls) do |force = nil|
-    return unless self.raw_changed? || force
+    return unless raw_changed? || force
 
     validator = DiscoursePoll::PollsValidator.new(self)
     return unless (polls = validator.validate_polls)
-    return if polls.blank? && self.id.blank?
+    return if polls.blank? && id.blank?
 
     if polls.present?
       validator = DiscoursePoll::PostValidator.new(self)
@@ -61,7 +61,7 @@ after_initialize do
     end
 
     # are we updating a post?
-    if self.id.present?
+    if id.present?
       return if polls.blank? && ::Poll.where(post: self).empty?
 
       DiscoursePoll::PollsUpdater.update(self, polls)
@@ -221,7 +221,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, :polls, include_condition: -> { preloaded_polls.present? }) do
-    preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: self.scope) }
+    preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: scope) }
   end
 
   add_to_serializer(

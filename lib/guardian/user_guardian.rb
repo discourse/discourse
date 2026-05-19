@@ -7,7 +7,7 @@ module UserGuardian
   end
 
   def can_pick_avatar?(user_avatar, upload)
-    return false unless self.user
+    return false unless user
     return true if is_admin?
     # can always pick blank avatar
     return true if !upload

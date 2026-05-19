@@ -68,7 +68,7 @@ class PostRevisor
         removed_tags = prev_tags - persisted_tag_names
         diff_tags = added_tags | removed_tags
 
-        if diff_tags.present? && !self.silent
+        if diff_tags.present? && !silent
           Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
 
           PostRevisor.create_small_action_for_tag_changes(
@@ -816,7 +816,7 @@ class PostRevisor
   def post_process_post
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
-    DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?, self)
+    DiscourseEvent.trigger(:post_edited, @post, topic_changed?, self)
   end
 
   def alert_users

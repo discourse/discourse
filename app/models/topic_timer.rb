@@ -26,7 +26,7 @@ class TopicTimer < BaseTimer
 
   before_save do
     self.created_at ||= Time.zone.now if execute_at
-    self.public_type = self.public_type?
+    self.public_type = public_type?
   end
 
   # These actions are in place to make sure the topic is in the correct

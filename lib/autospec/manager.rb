@@ -11,7 +11,7 @@ end
 
 class Autospec::Manager
   def self.run(opts = {})
-    self.new(opts).run
+    new(opts).run
   end
 
   def initialize(opts = {})

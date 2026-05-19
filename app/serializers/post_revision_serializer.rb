@@ -36,7 +36,7 @@ class PostRevisionSerializer < ApplicationSerializer
   def self.add_compared_field(field)
     changes_name = :"#{field}_changes"
 
-    self.attributes changes_name
+    attributes changes_name
     define_method(changes_name) { { previous: previous[field], current: current[field] } }
 
     define_method("include_#{changes_name}?") { previous[field] != current[field] }

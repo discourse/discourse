@@ -76,7 +76,7 @@ after_initialize do
   add_to_serializer(:group_show, :can_show_assigned_tab?) { object.can_show_assigned_tab? }
 
   add_model_callback(UserCustomField, :before_save) do
-    self.value = self.value.to_i if self.name == frequency_field
+    self.value = value.to_i if name == frequency_field
   end
 
   add_class_method(:group, :assign_allowed_groups) do
@@ -98,9 +98,7 @@ after_initialize do
     ) < 0
   end
 
-  add_to_class(:group, :can_show_assigned_tab?) do
-    self.assignable_level > Group::ALIAS_LEVELS[:nobody]
-  end
+  add_to_class(:group, :can_show_assigned_tab?) { assignable_level > Group::ALIAS_LEVELS[:nobody] }
 
   add_to_class(:guardian, :can_assign?) { user && user.can_assign? }
 

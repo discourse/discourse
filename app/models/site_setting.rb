@@ -87,16 +87,16 @@ class SiteSetting < ActiveRecord::Base
 
   after_save do
     if saved_change_to_value?
-      if self.data_type == SiteSettings::TypeSupervisor.types[:upload]
-        UploadReference.ensure_exist!(upload_ids: [self.value], target: self)
-      elsif self.data_type == SiteSettings::TypeSupervisor.types[:uploaded_image_list]
-        upload_ids = self.value.split("|").compact.uniq
+      if data_type == SiteSettings::TypeSupervisor.types[:upload]
+        UploadReference.ensure_exist!(upload_ids: [value], target: self)
+      elsif data_type == SiteSettings::TypeSupervisor.types[:uploaded_image_list]
+        upload_ids = value.split("|").compact.uniq
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
-      elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects] && self.value.present?
+      elsif data_type == SiteSettings::TypeSupervisor.types[:objects] && value.present?
         upload_values =
           SchemaSettingsObjectValidator.property_values_of_type(
-            schema: SiteSetting.type_supervisor.type_hash(self.name.to_sym)[:schema],
-            objects: JSON.parse(self.value),
+            schema: SiteSetting.type_supervisor.type_hash(name.to_sym)[:schema],
+            objects: JSON.parse(value),
             type: "upload",
           )
 
@@ -328,8 +328,8 @@ class SiteSetting < ActiveRecord::Base
     end
 
     def self.s3_base_url
-      path = self.s3_upload_bucket.split("/", 2)[1]
-      "#{self.absolute_base_url}#{path ? "/" + path : ""}"
+      path = s3_upload_bucket.split("/", 2)[1]
+      "#{absolute_base_url}#{path ? "/" + path : ""}"
     end
 
     def self.absolute_base_url
@@ -396,7 +396,7 @@ class SiteSetting < ActiveRecord::Base
         return SiteIconManager.public_send("#{setting_name}_url")
       end
 
-      upload = self.public_send(setting_name)
+      upload = public_send(setting_name)
       upload ? full_cdn_url(upload.url) : ""
     end
   end

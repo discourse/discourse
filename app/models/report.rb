@@ -242,11 +242,11 @@ class Report
   end
 
   def prev_start_date
-    self.start_date - (self.end_date - self.start_date)
+    start_date - (end_date - start_date)
   end
 
   def prev_end_date
-    self.start_date
+    start_date
   end
 
   def as_json(options = nil)
@@ -263,30 +263,30 @@ class Report
       data: data,
       start_date: start_date&.iso8601,
       end_date: end_date&.iso8601,
-      prev_data: self.prev_data,
+      prev_data: prev_data,
       prev_start_date: prev_start_date&.iso8601,
       prev_end_date: prev_end_date&.iso8601,
-      prev30Days: self.prev30Days,
-      dates_filtering: self.dates_filtering,
+      prev30Days: prev30Days,
+      dates_filtering: dates_filtering,
       report_key: Report.cache_key(self),
-      primary_color: self.primary_color,
-      secondary_color: self.secondary_color,
-      available_filters: self.available_filters.map { |k, v| { id: k }.merge(v) },
+      primary_color: primary_color,
+      secondary_color: secondary_color,
+      available_filters: available_filters.map { |k, v| { id: k }.merge(v) },
       labels: labels || Report.default_labels,
-      average: self.average,
-      percent: self.percent,
-      higher_is_better: self.higher_is_better,
-      modes: self.modes,
+      average: average,
+      percent: percent,
+      higher_is_better: higher_is_better,
+      modes: modes,
     }.tap do |json|
-      json[:legacy] = self.legacy if self.legacy
-      json[:icon] = self.icon if self.icon
-      json[:error] = self.error if self.error
-      json[:total] = self.total if self.total
-      json[:prev_period] = self.prev_period if self.prev_period
-      json[:prev30Days] = self.prev30Days if self.prev30Days
-      json[:limit] = self.limit if self.limit
-      json[:default_group_by] = self.default_group_by if self.default_group_by
-      json[:y_axis_title] = self.y_axis_title if self.y_axis_title
+      json[:legacy] = legacy if legacy
+      json[:icon] = icon if icon
+      json[:error] = error if error
+      json[:total] = total if total
+      json[:prev_period] = prev_period if prev_period
+      json[:prev30Days] = prev30Days if prev30Days
+      json[:limit] = limit if limit
+      json[:default_group_by] = default_group_by if default_group_by
+      json[:y_axis_title] = y_axis_title if y_axis_title
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(

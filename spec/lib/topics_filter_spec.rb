@@ -480,7 +480,7 @@ RSpec.describe TopicsFilter do
                 .new(guardian: Guardian.new(user))
                 .filter_from_query_string("in:#{notification_level}")
                 .pluck(:id),
-            ).to contain_exactly(self.public_send("user_#{notification_level}_topic").id)
+            ).to contain_exactly(public_send("user_#{notification_level}_topic").id)
           end
         end
       end

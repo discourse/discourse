@@ -430,7 +430,7 @@ module Discourse
   end
 
   def self.find_plugin_css_assets(args)
-    plugins = apply_asset_filters(self.find_plugins(args), :css, args[:request])
+    plugins = apply_asset_filters(find_plugins(args), :css, args[:request])
 
     assets = []
 
@@ -453,11 +453,9 @@ module Discourse
 
   def self.find_plugin_js_assets(args)
     plugins =
-      self
-        .find_plugins(args)
-        .select do |plugin|
-          plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
-        end
+      find_plugins(args).select do |plugin|
+        plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
+      end
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 

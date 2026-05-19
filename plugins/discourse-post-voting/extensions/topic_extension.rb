@@ -34,7 +34,7 @@ module PostVoting
 
     def comments
       @comments ||=
-        PostVotingComment.joins(:post).where("posts.topic_id = ?", self.id).order(created_at: :asc)
+        PostVotingComment.joins(:post).where("posts.topic_id = ?", id).order(created_at: :asc)
     end
 
     def last_commented_on
@@ -56,8 +56,7 @@ module PostVoting
     end
 
     def is_post_voting?
-      @is_post_voting ||=
-        SiteSetting.post_voting_enabled && self.subtype == Topic::POST_VOTING_SUBTYPE
+      @is_post_voting ||= SiteSetting.post_voting_enabled && subtype == Topic::POST_VOTING_SUBTYPE
     end
 
     # class methods
@@ -77,21 +76,18 @@ module PostVoting
     private
 
     def ensure_no_post_voting_subtype
-      if will_save_change_to_subtype? && self.subtype == Topic::POST_VOTING_SUBTYPE
-        self.errors.add(
-          :base,
-          I18n.t("topic.post_voting.errors.cannot_change_to_post_voting_subtype"),
-        )
+      if will_save_change_to_subtype? && subtype == Topic::POST_VOTING_SUBTYPE
+        errors.add(:base, I18n.t("topic.post_voting.errors.cannot_change_to_post_voting_subtype"))
       end
     end
 
     def ensure_regular_topic
-      return if self.subtype != Topic::POST_VOTING_SUBTYPE
+      return if subtype != Topic::POST_VOTING_SUBTYPE
 
       if !SiteSetting.post_voting_enabled
-        self.errors.add(:base, I18n.t("topic.post_voting.errors.post_voting_not_enabled"))
-      elsif self.archetype != Archetype.default
-        self.errors.add(:base, I18n.t("topic.post_voting.errors.subtype_not_allowed"))
+        errors.add(:base, I18n.t("topic.post_voting.errors.post_voting_not_enabled"))
+      elsif archetype != Archetype.default
+        errors.add(:base, I18n.t("topic.post_voting.errors.subtype_not_allowed"))
       end
     end
   end

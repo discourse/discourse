@@ -23,7 +23,7 @@ module SiteSettingExtension
   def default_locale=(val)
     val = val.to_s
     raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
-    if val != self.default_locale
+    if val != default_locale
       add_override!(:default_locale, val)
       refresh!
       Discourse.request_refresh!
@@ -362,7 +362,7 @@ module SiteSettingExtension
       description: description(:default_locale),
       type: SiteSetting.types[SiteSetting.types[:locale_enum]],
       preview: nil,
-      value: self.default_locale,
+      value: default_locale,
       valid_values: LocaleSiteSetting.values,
       translate_names: LocaleSiteSetting.translate_names?,
     }
@@ -869,8 +869,7 @@ module SiteSettingExtension
       name: name,
       # default_locale is a special case, it is not themeable and we define
       # a custom getter for it, so we can just use the normal getter
-      value:
-        name.to_s == "default_locale" ? self.public_send(name) : self.public_send(name, scoped_to),
+      value: name.to_s == "default_locale" ? public_send(name) : public_send(name, scoped_to),
       scoped_to: scoped_to,
     )
   end
@@ -910,9 +909,9 @@ module SiteSettingExtension
 
       value = filter_value(name, value)
       if options
-        self.public_send("#{name}=", value, options)
+        public_send("#{name}=", value, options)
       else
-        self.public_send("#{name}=", value)
+        public_send("#{name}=", value)
       end
       Discourse.request_refresh! if requires_refresh?(name)
     else
@@ -958,10 +957,10 @@ module SiteSettingExtension
                   "#{name} requires a theme_id because it is themeable",
                 )
         else
-          self.public_send(name, scoped_to)
+          public_send(name, scoped_to)
         end
       else
-        self.public_send(name)
+        public_send(name)
       end
     else
       raise Discourse::InvalidParameters.new(
@@ -1139,11 +1138,11 @@ module SiteSettingExtension
     setting_type = type_supervisor.get_type(name)
     if setting_type == :category_list
       define_singleton_method("#{clean_name}_map") do
-        self.public_send(clean_name).to_s.split("|").map(&:to_i)
+        public_send(clean_name).to_s.split("|").map(&:to_i)
       end
     elsif setting_type == :group_list
       define_singleton_method("#{clean_name}_map") do
-        ids = self.public_send(clean_name).to_s.split("|").map(&:to_i)
+        ids = public_send(clean_name).to_s.split("|").map(&:to_i)
         if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
              ids.include?(Group::AUTO_GROUPS[:everyone])
           ids =
@@ -1174,13 +1173,13 @@ module SiteSettingExtension
 
       if %w[simple compact].include?(list_type) || list_type.nil?
         define_singleton_method("#{clean_name}_map") do |scoped_to = nil|
-          self.public_send(clean_name, scoped_to).to_s.split("|")
+          public_send(clean_name, scoped_to).to_s.split("|")
         end
       end
     end
 
     define_singleton_method "#{clean_name}?" do |scoped_to = nil|
-      self.public_send(clean_name, scoped_to)
+      public_send(clean_name, scoped_to)
     end
 
     define_singleton_method "#{clean_name}=" do |val|

@@ -22,11 +22,11 @@ class UserAuthToken < ActiveRecord::Base
   before_destroy do
     UserAuthToken.log_verbose(
       action: "destroy",
-      user_auth_token_id: self.id,
-      user_id: self.user_id,
-      user_agent: self.user_agent,
-      client_ip: self.client_ip,
-      auth_token: self.auth_token,
+      user_auth_token_id: id,
+      user_id: user_id,
+      user_agent: user_agent,
+      client_ip: client_ip,
+      auth_token: auth_token,
     )
   end
 
@@ -259,7 +259,7 @@ class UserAuthToken < ActiveRecord::Base
     rotated_at = :now
   WHERE id = :id AND (auth_token_seen or rotated_at < :safeguard_time)
 ",
-        id: self.id,
+        id: id,
         user_agent: user_agent,
         client_ip: client_ip&.to_s,
         now: Time.zone.now,

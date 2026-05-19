@@ -71,3 +71,6 @@ Style/RedundantBegin:
 
 Rails/FilePath:
   Enabled: true
+
+Style/RedundantSelf:
+  Enabled: true

@@ -244,8 +244,8 @@ class PostCreator
   def create!
     create
 
-    if !self.errors.full_messages.empty?
-      raise ActiveRecord::RecordNotSaved.new(self.errors.full_messages.to_sentence)
+    if !errors.full_messages.empty?
+      raise ActiveRecord::RecordNotSaved.new(errors.full_messages.to_sentence)
     end
 
     @post

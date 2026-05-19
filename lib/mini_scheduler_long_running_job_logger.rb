@@ -25,7 +25,7 @@ class MiniSchedulerLongRunningJobLogger
     @thread ||=
       Thread.new do
         loop do
-          break if self.stop_requested?
+          break if stop_requested?
 
           current_long_running_jobs = Set.new
 

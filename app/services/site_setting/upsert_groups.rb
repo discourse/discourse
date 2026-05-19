@@ -4,7 +4,7 @@ class SiteSetting::UpsertGroups
   include Service::Base
 
   params do
-    before_validation { self.group_names = Array.wrap(self.group_names).delete_if(&:empty?) }
+    before_validation { self.group_names = Array.wrap(group_names).delete_if(&:empty?) }
 
     attribute :group_names, :array
     attribute :setting, :string

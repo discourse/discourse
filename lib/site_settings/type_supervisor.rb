@@ -80,15 +80,15 @@ class SiteSettings::TypeSupervisor
   def self.parse_value_type(val)
     case val
     when NilClass
-      self.types[:null]
+      types[:null]
     when String
-      self.types[:string]
+      types[:string]
     when Integer
-      self.types[:integer]
+      types[:integer]
     when Float
-      self.types[:float]
+      types[:float]
     when TrueClass, FalseClass
-      self.types[:bool]
+      types[:bool]
     else
       raise ArgumentError.new("Invalid value type for site setting: #{val.class}")
     end
@@ -310,7 +310,7 @@ class SiteSettings::TypeSupervisor
     end
 
     validate_method = "validate_#{name}"
-    public_send(validate_method, val) if self.respond_to? validate_method
+    public_send(validate_method, val) if respond_to? validate_method
   end
 
   private

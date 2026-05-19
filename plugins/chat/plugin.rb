@@ -208,7 +208,7 @@ after_initialize do
 
   add_to_serializer(:current_user, :has_joinable_public_channels) do
     Chat::ChannelFetcher.secured_public_channel_search(
-      self.scope,
+      scope,
       following: false,
       limit: 1,
       status: :open,
@@ -236,7 +236,7 @@ after_initialize do
       @has_chat_enabled =
         SiteSetting.chat_enabled && scope.can_chat? && object.user_option.chat_enabled
     end,
-  ) { Chat::ChannelFetcher.unreads_total(self.scope) }
+  ) { Chat::ChannelFetcher.unreads_total(scope) }
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 

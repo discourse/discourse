@@ -323,7 +323,7 @@ class Search
   end
 
   def self.execute(term, opts = nil)
-    self.new(term, opts).execute
+    new(term, opts).execute
   end
 
   # Query a term
@@ -1477,7 +1477,7 @@ class Search
   end
 
   def self.set_tsquery_weight_filter(term, weight_filter, prefix_match: true)
-    "'#{self.escape_string(term)}':#{prefix_match ? "*" : ""}#{weight_filter}"
+    "'#{escape_string(term)}':#{prefix_match ? "*" : ""}#{weight_filter}"
   end
 
   def self.escape_string(term)

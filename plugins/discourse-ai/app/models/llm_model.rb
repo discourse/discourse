@@ -361,7 +361,7 @@ class LlmModel < ActiveRecord::Base
             trust_level: TrustLevel[4],
           )
         new_user.save!(validate: false)
-        self.update!(user: new_user)
+        update!(user: new_user)
       else
         user.active = true
         user.save!(validate: false)
@@ -381,7 +381,7 @@ class LlmModel < ActiveRecord::Base
       user.update!(active: false) if user.active
     else
       user.destroy!
-      self.update!(user: nil)
+      update!(user: nil)
     end
   end
 
