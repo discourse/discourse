@@ -411,7 +411,7 @@ class Report
     report.total = data.sum(:count)
 
     report.prev30Days =
-      data.where("date >= ? AND date < ?", (report.start_date - 31.days), report.start_date).sum(
+      data.where("date >= ? AND date < ?", report.start_date - 31.days, report.start_date).sum(
         :count,
       )
   end

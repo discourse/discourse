@@ -62,3 +62,6 @@ Lint/IdentityComparison:
 
 Lint/SymbolConversion:
   Enabled: true
+
+Style/RedundantParentheses:
+  Enabled: true

@@ -72,8 +72,8 @@ RSpec.describe SiteSettings::YamlLoader do
     receiver
       .expects(:setting)
       .with do |category, name, default, opts|
-        category == ("basics") && name == ("default_locale") && default == ("en") &&
-          opts[:enum] == ("LocaleSiteSetting") && opts[:client] == true
+        category == "basics" && name == "default_locale" && default == "en" &&
+          opts[:enum] == "LocaleSiteSetting" && opts[:client] == true
       end
     receiver.load_yaml(enum_client)
   end

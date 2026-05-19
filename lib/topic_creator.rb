@@ -172,7 +172,7 @@ class TopicCreator
     topic_params[:subtype] = TopicSubtype.moderator_warning if @opts[:is_warning]
 
     category = find_category
-    unless (@opts[:skip_validations] || @opts[:archetype] == Archetype.private_message)
+    unless @opts[:skip_validations] || @opts[:archetype] == Archetype.private_message
       @guardian.ensure_can_create!(Topic, category)
     end
 

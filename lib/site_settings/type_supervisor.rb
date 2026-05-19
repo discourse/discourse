@@ -158,7 +158,7 @@ class SiteSettings::TypeSupervisor
     @types[name] = get_data_type(name, @defaults_provider[name])
 
     opts[:validator] = opts[:validator].try(:constantize)
-    if (validator_type = (opts[:validator] || validator_for(@types[name])))
+    if (validator_type = opts[:validator] || validator_for(@types[name]))
       validator_opts = opts.slice(*VALIDATOR_OPTS)
       validator_opts[:name] = name
       @validators[name] = { class: validator_type, opts: validator_opts }
@@ -183,7 +183,7 @@ class SiteSettings::TypeSupervisor
   def to_rb_value(name, value, override_type = nil)
     name = name.to_sym
     @types[name] = (@types[name] || get_data_type(name, value))
-    type = (override_type || @types[name])
+    type = override_type || @types[name]
     case type
     when self.class.types[:float]
       value.to_f

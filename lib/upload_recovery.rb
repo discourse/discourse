@@ -28,7 +28,7 @@ class UploadRecovery
             else
               recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
             end
-          elsif url = (media["href"] || media["src"])
+          elsif url = media["href"] || media["src"]
             data = Upload.extract_url(url)
             next unless data
 

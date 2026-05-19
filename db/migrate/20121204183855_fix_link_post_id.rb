@@ -11,7 +11,7 @@ class FixLinkPostId < ActiveRecord::Migration[4.2]
           parsed = URI.parse(tl.url)
           route = Rails.application.routes.recognize_path(parsed.path)
           if route[:topic_id].present?
-            post = Post.find_by(topic_id: route[:topic_id], post_number: (route[:post_number] || 1))
+            post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number] || 1)
             tl.update_column(:link_post_id, post.id) if post.present?
           end
         rescue ActionController::RoutingError

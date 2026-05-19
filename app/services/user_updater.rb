@@ -252,7 +252,7 @@ class UserUpdater
           (user_notification_schedule.nil? || user_notification_schedule.save) &&
           user_profile.save && user.save
 
-      if saved && (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
+      if saved && name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0
         StaffActionLogger.new(@actor).log_name_change(
           user.id,
           old_user_name,
