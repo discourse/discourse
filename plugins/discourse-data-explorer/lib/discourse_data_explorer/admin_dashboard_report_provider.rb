@@ -17,6 +17,9 @@ module DiscourseDataExplorer
       end
     end
 
+    # TODO: paginate once the Manage Reports modal's list-available endpoint
+    # exists; today this loads every non-hidden Data Explorer query (sites
+    # with hundreds of queries will pay the cost).
     def self.available_for(guardian, search: nil)
       return [] if guardian.nil?
 

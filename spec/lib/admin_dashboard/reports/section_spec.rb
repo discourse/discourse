@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AdminDashboardReportsSection do
+RSpec.describe AdminDashboard::Reports::Section do
   fab!(:admin)
   let(:guardian) { Guardian.new(admin) }
 
@@ -63,7 +63,8 @@ RSpec.describe AdminDashboardReportsSection do
 
   it "drops rows whose source has no registered provider" do
     AdminDashboardReport.create!(source: "fake", identifier: "good", position: 0)
-    AdminDashboardReport.create!(source: "unregistered_source", identifier: "orphan", position: 1)
+    orphan = AdminDashboardReport.create!(source: "fake", identifier: "becomes_orphan", position: 1)
+    orphan.update_column(:source, "unregistered_source")
 
     result = described_class.build(guardian: guardian)
     expect(result[:items].map { |i| i[:identifier] }).to eq(%w[good])

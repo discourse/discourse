@@ -40,6 +40,8 @@ module AdminDashboard
         end
       end
 
+      # TODO: paginate once the Manage Reports modal's list-available endpoint
+      # exists; today this returns every registered built-in report unbounded.
       def self.available_for(guardian, search: nil)
         admin = guardian&.is_admin? || false
         entries = ::Reports::ListQuery.call(admin: admin)

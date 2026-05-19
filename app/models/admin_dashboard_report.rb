@@ -6,6 +6,7 @@ class AdminDashboardReport < ActiveRecord::Base
   validates :source, presence: true
   validates :identifier, presence: true
   validates :identifier, uniqueness: { scope: :source }
+  validate :source_must_be_registered
 
   before_validation :assign_default_position, on: :create
 
@@ -13,6 +14,12 @@ class AdminDashboardReport < ActiveRecord::Base
 
   def assign_default_position
     self.position ||= self.class.maximum(:position).to_i + 1
+  end
+
+  def source_must_be_registered
+    return if source.blank?
+    return if AdminDashboard::Reports::Registry.provider_for(source)
+    errors.add(:source, :invalid)
   end
 end
 

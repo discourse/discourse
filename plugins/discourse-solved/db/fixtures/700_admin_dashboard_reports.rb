@@ -2,4 +2,4 @@
 
 require "discourse_solved/seed_admin_dashboard_reports"
 
-DiscourseSolved::SeedAdminDashboardReports.create if !Rails.env.test?
+DiscourseSolved::SeedAdminDashboardReports.create

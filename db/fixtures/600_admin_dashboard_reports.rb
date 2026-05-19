@@ -2,4 +2,4 @@
 
 require "seed_data/admin_dashboard_reports"
 
-SeedData::AdminDashboardReports.create if !Rails.env.test?
+SeedData::AdminDashboardReports.create

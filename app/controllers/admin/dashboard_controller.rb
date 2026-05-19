@@ -116,7 +116,7 @@ class Admin::DashboardController < Admin::StaffController
 
     hijack do
       render_json_dump(
-        AdminDashboardReportsBulkFetch.call(items: items, filters: filters, guardian: guardian),
+        AdminDashboard::Reports::BulkFetch.call(items: items, filters: filters, guardian: guardian),
       )
     end
   end
@@ -130,7 +130,7 @@ class Admin::DashboardController < Admin::StaffController
     when "traffic"
       AdminDashboardSiteTraffic.build(start_date: params[:start_date], end_date: params[:end_date])
     when "reports"
-      AdminDashboardReportsSection.build(guardian: guardian)
+      AdminDashboard::Reports::Section.build(guardian: guardian)
     end
   end
 
