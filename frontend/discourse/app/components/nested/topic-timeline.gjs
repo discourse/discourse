@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import TimelineScrubber from "discourse/components/timeline-scrubber";
-import { gt } from "discourse/truth-helpers";
+import { and, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class NestedTopicTimeline extends Component {
@@ -14,6 +14,7 @@ export default class NestedTopicTimeline extends Component {
 
   @tracked activeGlobalIndex = null;
   @tracked latchedProgress = null;
+  @tracked viewportWide = true;
 
   trackViewport = modifier(() => {
     this.#scrollHandler = () => this.#scheduleUpdate();
@@ -33,9 +34,33 @@ export default class NestedTopicTimeline extends Component {
       }
     };
   });
+  #mediaQuery = null;
+  #onMediaChange = () => (this.viewportWide = this.#mediaQuery.matches);
 
   #rafHandle = null;
+
   #scrollHandler = null;
+
+  constructor() {
+    super(...arguments);
+    const layout = document.querySelector(".nested-topic-layout");
+    const minWidth =
+      parseInt(
+        layout &&
+          getComputedStyle(layout).getPropertyValue(
+            "--nested-timeline-min-width"
+          ),
+        10
+      ) || 925;
+    this.#mediaQuery = matchMedia(`(min-width: ${minWidth}px)`);
+    this.viewportWide = this.#mediaQuery.matches;
+    this.#mediaQuery.addEventListener("change", this.#onMediaChange);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#mediaQuery?.removeEventListener("change", this.#onMediaChange);
+  }
 
   get summary() {
     return this.args.summary;
@@ -188,7 +213,7 @@ export default class NestedTopicTimeline extends Component {
   }
 
   <template>
-    {{#if (gt this.total 0)}}
+    {{#if (and this.viewportWide (gt this.total 0))}}
       <aside
         class="nested-topic-timeline"
         aria-label={{i18n "nested_replies.topic_timeline.aria_label"}}

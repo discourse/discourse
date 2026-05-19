@@ -1,6 +1,8 @@
 @use "lib/viewport";
 
 .nested-topic-layout {
+  // Read in NestedTopicTimeline to drive matchMedia.
+  --nested-timeline-min-width: 925px;
   display: grid;
   grid-template-areas: "content timeline";
   grid-template-columns: auto auto;
@@ -1093,7 +1095,7 @@ html.footer-nav-visible {
   // "pushing" the timeline down.
   top: calc(var(--header-offset, 60px) + 1.5em);
   margin-left: 1em;
-  width: 12em;
+  width: 7em;
   z-index: 50;
 
   &__endpoint {
@@ -1105,7 +1107,6 @@ html.footer-nav-visible {
     color: var(--primary-med-or-secondary-med);
     padding: 0;
     margin: 0;
-    white-space: nowrap;
     cursor: pointer;
     text-align: left;
 
@@ -1115,12 +1116,18 @@ html.footer-nav-visible {
     }
   }
 
+  &__endpoint--start {
+    margin: var(--space-2) 0;
+
+    // margin-bottom: var(--space-2);
+  }
+
   &__endpoint--end {
     margin-top: var(--space-2);
   }
 
   &__scrubber {
     height: 320px;
-    margin-left: 0;
+    margin-left: var(--space-half);
   }
 }
