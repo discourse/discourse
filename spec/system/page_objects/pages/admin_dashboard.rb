@@ -9,6 +9,12 @@ module PageObjects
         self
       end
 
+      def visit_with_query(params)
+        page.visit("/admin?#{params.to_query}")
+        has_css?(".db-main__section, .db-main__empty, .nav-pills")
+        self
+      end
+
       def has_admin_notice?(message)
         has_css?(".dashboard-problem", text: message)
       end
@@ -73,6 +79,10 @@ module PageObjects
 
       def has_no_section?(id)
         has_no_css?(".db-main__section[data-section-id='#{id}']")
+      end
+
+      def site_traffic
+        PageObjects::Components::AdminDashboardSiteTraffic.new
       end
 
       def section_ids_in_order
