@@ -102,6 +102,17 @@ export default class Nested extends Component {
         @editPost={{@editPost}}
         @showHistory={{@showHistory}}
         @replyToPost={{@replyToPost}}
+        @changeNotice={{@changeNotice}}
+        @changePostOwner={{@changePostOwner}}
+        @grantBadge={{@grantBadge}}
+        @lockPost={{@lockPost}}
+        @unlockPost={{@unlockPost}}
+        @permanentlyDeletePost={{@permanentlyDeletePost}}
+        @rebakePost={{@rebakePost}}
+        @showPagePublish={{@showPagePublish}}
+        @togglePostType={{@togglePostType}}
+        @toggleWiki={{@toggleWiki}}
+        @unhidePost={{@unhidePost}}
         @showPostMenu={{true}}
         @registerPost={{this.viewportTracker.registerPost}}
       />
@@ -162,6 +173,17 @@ export default class Nested extends Component {
             @recoverPost={{@recoverPost}}
             @showFlags={{@showFlags}}
             @showHistory={{@showHistory}}
+            @changeNotice={{@changeNotice}}
+            @changePostOwner={{@changePostOwner}}
+            @grantBadge={{@grantBadge}}
+            @lockPost={{@lockPost}}
+            @unlockPost={{@unlockPost}}
+            @permanentlyDeletePost={{@permanentlyDeletePost}}
+            @rebakePost={{@rebakePost}}
+            @showPagePublish={{@showPagePublish}}
+            @togglePostType={{@togglePostType}}
+            @toggleWiki={{@toggleWiki}}
+            @unhidePost={{@unhidePost}}
             @expansionState={{@expansionState}}
             @fetchedChildrenCache={{@fetchedChildrenCache}}
             @scrollAnchor={{@scrollAnchor}}

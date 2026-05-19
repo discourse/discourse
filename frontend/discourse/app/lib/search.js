@@ -229,6 +229,15 @@ export function getSearchKey(args) {
 const MIN_LENGTH_BYPASS_PATTERN =
   /^(l|r)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
 
+// Filters that scope the search to private messages. Mirrors the server-side
+// set in lib/search.rb (`in:personal`, `in:messages`, `in:personal-direct`,
+// `in:all-pms` — all of which set @search_pms = true).
+const PM_FILTER_PATTERN = /\bin:(personal|messages|personal-direct|all-pms)\b/i;
+
+export function searchTermScopesToPMs(searchTerm) {
+  return PM_FILTER_PATTERN.test(searchTerm || "");
+}
+
 export function isValidSearchTerm(searchTerm, siteSettings) {
   if (!searchTerm) {
     return false;

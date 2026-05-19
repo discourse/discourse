@@ -439,7 +439,7 @@ module DiscourseAi
 
         post_type =
           (
-            if (whisper || post.post_type == Post.types[:whisper])
+            if whisper || post.post_type == Post.types[:whisper]
               Post.types[:whisper]
             else
               Post.types[:regular]

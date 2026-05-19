@@ -32,8 +32,8 @@ class SidebarSection < ActiveRecord::Base
 
   def reset_community!
     ActiveRecord::Base.transaction do
-      self.update!(title: "Community")
-      self.sidebar_section_links.destroy_all
+      update!(title: "Community")
+      sidebar_section_links.destroy_all
       community_urls =
         SidebarUrl::COMMUNITY_SECTION_LINKS.map do |url_data|
           "('#{url_data[:name]}', '#{url_data[:path]}', '#{url_data[:icon]}', '#{url_data[:segment]}', false, now(), now())"
@@ -47,7 +47,7 @@ class SidebarSection < ActiveRecord::Base
 
       sidebar_section_links =
         result.map.with_index do |url, index|
-          "(-1, #{url.id}, 'SidebarUrl', #{self.id}, #{index},  now(), now())"
+          "(-1, #{url.id}, 'SidebarUrl', #{id}, #{index},  now(), now())"
         end
 
       DB.query <<~SQL
@@ -60,7 +60,7 @@ class SidebarSection < ActiveRecord::Base
   private
 
   def set_system_user_for_public_section
-    self.user_id = Discourse.system_user.id if self.public
+    self.user_id = Discourse.system_user.id if public
   end
 end
 

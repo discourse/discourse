@@ -364,20 +364,18 @@ module DiscourseAi
 
         t =
           Thread.new do
-            begin
-              while !done
-                # this is not accurate. but reasonable enough for a timeout
-                sleep(0.001)
-                elapsed += 1 if !self.running_attached_function
-                if elapsed > timeout
-                  mutex.synchronize { mini_racer_context.stop unless done }
-                  break
-                end
+            while !done
+              # this is not accurate. but reasonable enough for a timeout
+              sleep(0.001)
+              elapsed += 1 if !running_attached_function
+              if elapsed > timeout
+                mutex.synchronize { mini_racer_context.stop unless done }
+                break
               end
-            rescue => e
-              STDERR.puts e
-              STDERR.puts "FAILED TO TERMINATE DUE TO TIMEOUT"
             end
+          rescue => e
+            STDERR.puts e
+            STDERR.puts "FAILED TO TERMINATE DUE TO TIMEOUT"
           end
 
         rval = mini_racer_context.eval(script)

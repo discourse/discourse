@@ -20,9 +20,9 @@ class WebHookEventsDailyAggregate < ActiveRecord::Base
     events =
       WebHookEvent.where(
         "created_at >= ? AND created_at < ? AND web_hook_id = ?",
-        self.date,
-        self.date + 1.day,
-        self.web_hook_id,
+        date,
+        date + 1.day,
+        web_hook_id,
       )
 
     if events.empty?

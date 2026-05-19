@@ -12,21 +12,21 @@ class ThemeSetting < ActiveRecord::Base
 
   validates :name, :theme, presence: true
   validates :data_type, inclusion: { in: TYPES_ENUM.values }
-  validate :json_value_size, if: -> { self.data_type == TYPES_ENUM[:objects] }
+  validate :json_value_size, if: -> { data_type == TYPES_ENUM[:objects] }
   validates :name, length: { maximum: 255 }
 
   after_destroy :clear_settings_cache
   after_save :clear_settings_cache
 
   after_save do
-    if self.data_type == ThemeSetting.types[:upload] && saved_change_to_value?
-      UploadReference.ensure_exist!(upload_ids: [self.value], target: self)
-    elsif self.data_type == ThemeSetting.types[:objects] && saved_change_to_json_value? &&
-          self.json_value.present?
+    if data_type == ThemeSetting.types[:upload] && saved_change_to_value?
+      UploadReference.ensure_exist!(upload_ids: [value], target: self)
+    elsif data_type == ThemeSetting.types[:objects] && saved_change_to_json_value? &&
+          json_value.present?
       upload_values =
         SchemaSettingsObjectValidator.property_values_of_type(
-          schema: theme.settings[self.name.to_sym].schema,
-          objects: self.json_value,
+          schema: theme.settings[name.to_sym].schema,
+          objects: json_value,
           type: "upload",
         )
 
@@ -45,7 +45,7 @@ class ThemeSetting < ActiveRecord::Base
     end
 
     if theme.theme_modifier_set.refresh_theme_setting_modifiers(
-         target_setting_name: self.name,
+         target_setting_name: name,
          target_setting_value: self.value,
        )
       theme.theme_modifier_set.save!

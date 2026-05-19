@@ -444,18 +444,18 @@ after_initialize do
   end
 
   validate(:post, :validate_calendar) do |force = nil|
-    return unless self.raw_changed? || force
+    return unless raw_changed? || force
 
     validator = DiscourseCalendar::CalendarValidator.new(self)
     validator.validate_calendar
   end
 
   validate(:post, :validate_event) do |force = nil|
-    return unless self.raw_changed? || force
-    return if self.is_first_post?
+    return unless raw_changed? || force
+    return if is_first_post?
 
     # Skip if not a calendar topic
-    return if !self.topic&.first_post&.custom_fields&.[](DiscourseCalendar::CALENDAR_CUSTOM_FIELD)
+    return if !topic&.first_post&.custom_fields&.[](DiscourseCalendar::CALENDAR_CUSTOM_FIELD)
 
     validator = DiscourseCalendar::EventValidator.new(self)
     validator.validate_event

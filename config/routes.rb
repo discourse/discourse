@@ -14,10 +14,7 @@ Discourse::Application.routes.draw do
   scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
     relative_url_root =
       (
-        if (
-             defined?(Rails.configuration.relative_url_root) &&
-               Rails.configuration.relative_url_root
-           )
+        if defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root
           Rails.configuration.relative_url_root + "/"
         else
           "/"

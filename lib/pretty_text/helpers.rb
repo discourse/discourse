@@ -44,7 +44,7 @@ module PrettyText
 
       urls.each do |url|
         sha1 = Upload.sha1_from_short_url(url)
-        if (url.split(".")[1].nil?) # video sha1 without extension for thumbnail
+        if url.split(".")[1].nil? # video sha1 without extension for thumbnail
           thumbnail = Upload.where("original_filename LIKE ?", "#{sha1}.%").last if sha1
           # Fallback for old posts that don't contain data-video-base62-sha1
           thumbnail = Upload.where("original_filename LIKE ?", "#{url}.%").last if thumbnail.nil? &&

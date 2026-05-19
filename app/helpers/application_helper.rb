@@ -389,7 +389,7 @@ module ApplicationHelper
   end
 
   private def generate_twitter_card_metadata(result, opts)
-    img_url = (opts[:x_summary_large_image].presence || opts[:image])
+    img_url = opts[:x_summary_large_image].presence || opts[:image]
 
     # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
     if img_url.ends_with?(".svg")
@@ -448,32 +448,28 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||=
-      begin
-        if mobile_view?
-          if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
-            SiteSetting.site_mobile_logo_dark_url
-          elsif SiteSetting.site_mobile_logo_url.present?
-            SiteSetting.site_mobile_logo_url
-          end
+      if mobile_view?
+        if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
+          SiteSetting.site_mobile_logo_dark_url
+        elsif SiteSetting.site_mobile_logo_url.present?
+          SiteSetting.site_mobile_logo_url
+        end
+      else
+        if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
+          SiteSetting.site_logo_dark_url
         else
-          if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
-            SiteSetting.site_logo_dark_url
-          else
-            SiteSetting.site_logo_url
-          end
+          SiteSetting.site_logo_url
         end
       end
   end
 
   def application_logo_dark_url
     @application_logo_dark_url ||=
-      begin
-        if dark_scheme_id != -1
-          if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
-            SiteSetting.site_mobile_logo_dark_url
-          elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
-            SiteSetting.site_logo_dark_url
-          end
+      if dark_scheme_id != -1
+        if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
+          SiteSetting.site_mobile_logo_dark_url
+        elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
+          SiteSetting.site_logo_dark_url
         end
       end
   end
@@ -575,12 +571,10 @@ module ApplicationHelper
       Discourse
         .cache
         .fetch("splash_screen_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
-          begin
-            upload.content.presence
-          rescue StandardError => e
-            Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
-            nil
-          end
+          upload.content.presence
+        rescue StandardError => e
+          Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+          nil
         end
   end
 
@@ -656,14 +650,12 @@ module ApplicationHelper
   end
 
   def topic_featured_link_domain(link)
-    begin
-      uri = UrlHelper.encode_and_parse(link)
-      uri = URI.parse("http://#{uri}") if uri.scheme.nil?
-      host = uri.host.downcase
-      host.start_with?("www.") ? host[4..-1] : host
-    rescue StandardError
-      ""
-    end
+    uri = UrlHelper.encode_and_parse(link)
+    uri = URI.parse("http://#{uri}") if uri.scheme.nil?
+    host = uri.host.downcase
+    host.start_with?("www.") ? host[4..-1] : host
+  rescue StandardError
+    ""
   end
 
   def theme_id
@@ -840,11 +832,7 @@ module ApplicationHelper
 
     name = :"#{name}_rtl" if opts[:supports_rtl] && rtl?
 
-    manager.stylesheet_link_tag(
-      name,
-      opts[:media] || "all",
-      self.method(:add_resource_preload_list),
-    )
+    manager.stylesheet_link_tag(name, opts[:media] || "all", method(:add_resource_preload_list))
   end
 
   def discourse_preload_color_scheme_stylesheets
@@ -941,7 +929,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "light" if cookie.present?
 
-    !!(current_user&.user_option&.light_mode_forced?)
+    !!current_user&.user_option&.light_mode_forced?
   end
 
   def forced_dark_mode?
@@ -950,7 +938,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "dark" if cookie.present?
 
-    !!(current_user&.user_option&.dark_mode_forced?)
+    !!current_user&.user_option&.dark_mode_forced?
   end
 
   def light_color_hex_for_name(name)
