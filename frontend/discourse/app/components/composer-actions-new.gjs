@@ -49,8 +49,7 @@ export default class ComposerActions extends Component {
 
   constructor() {
     super(...arguments);
-    // Initialize snapshots on construction (safe - not during render)
-    this.initializeSnapshots();
+    this.ensureSnapshotsUpdated();
   }
 
   willDestroy() {
@@ -85,39 +84,26 @@ export default class ComposerActions extends Component {
     return this.topic?.slow_mode_seconds > 0;
   }
 
-  initializeSnapshots() {
-    // Initialize snapshots without triggering reactivity
-    if (this.topic) {
-      if (!_topicSnapshot || this.topic.id !== _topicSnapshot.id) {
-        _topicSnapshot = this.topic;
-        _postSnapshot = this.post;
-      }
-    } else {
-      // Composer opened without a source topic (e.g. fresh "new topic" from
-      // /latest); clear any snapshots left over from a previous reply session.
-      _topicSnapshot = null;
-      _postSnapshot = null;
-    }
-
-    if (this.post && (!_postSnapshot || this.post.id !== _postSnapshot.id)) {
-      _postSnapshot = this.post;
-    }
-
-    if (this.action !== _actionSnapshot) {
-      _actionSnapshot = this.action;
-    }
-  }
-
+  // Mirrors the original composer-actions.js didReceiveAttrs behaviour: only
+  // update snapshots when this.topic / this.post are present and changed. Do
+  // NOT clear snapshots when this.topic becomes null — module-level snapshots
+  // are intentionally session-scoped so that flows like reply_as_new_topic
+  // (which switch to CREATE_TOPIC with a null this.topic) can still surface
+  // "Reply to topic" / "Reply to post" as a way back. Tests reset snapshots
+  // between runs via _clearSnapshots in qunit-helpers.js.
+  //
+  // Safe to call from getters: the snapshot vars are plain (not @tracked), so
+  // mutating them does not trigger re-renders. Called from the constructor,
+  // from _computeAvailableActions() before each render, and defensively at
+  // the top of selection handlers in case args drift between menu render and
+  // click.
   ensureSnapshotsUpdated() {
-    // Update snapshots silently (no seq increment to avoid loops)
-    if (this.topic) {
-      if (!_topicSnapshot || this.topic.id !== _topicSnapshot.id) {
-        _topicSnapshot = this.topic;
-        _postSnapshot = this.post;
-      }
-    } else {
-      _topicSnapshot = null;
-      _postSnapshot = null;
+    if (
+      this.topic &&
+      (!_topicSnapshot || this.topic.id !== _topicSnapshot.id)
+    ) {
+      _topicSnapshot = this.topic;
+      _postSnapshot = this.post;
     }
 
     if (this.post && (!_postSnapshot || this.post.id !== _postSnapshot.id)) {
@@ -229,6 +215,14 @@ export default class ComposerActions extends Component {
   }
 
   _computeAvailableActions() {
+    // Refresh module-level snapshots against current args before deciding
+    // which actions to expose. Without this, a composer instance that was
+    // first constructed in REPLY mode but later retargeted to a fresh
+    // CREATE_TOPIC (this.topic === null) would still show snapshot-backed
+    // reply_to_post / reply_to_topic items, and selecting one would open
+    // REPLY with a null topic once the handler clears the snapshots.
+    this.ensureSnapshotsUpdated();
+
     let items = [];
 
     const currentTopic = this.topic;
