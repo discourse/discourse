@@ -256,6 +256,30 @@ export default class ComposerActions extends Component {
       items.push(actionObj);
     }
 
+    // 1b. Reply as New Group Message (reply_as_new_group_message) - PM with
+    // multiple recipients or any group recipient
+    if (
+      currentAction === REPLY &&
+      !this.isEditing &&
+      currentTopic?.isPrivateMessage &&
+      currentTopic.details &&
+      (currentTopic.details.allowed_users?.length > 1 ||
+        currentTopic.details.allowed_groups?.length > 0)
+    ) {
+      const actionObj = {
+        name: i18n(
+          "composer.composer_actions.reply_as_new_group_message.label"
+        ),
+        description: i18n(
+          "composer.composer_actions.reply_as_new_group_message.desc"
+        ),
+        icon: "plus",
+        id: "reply_as_new_group_message",
+      };
+
+      items.push(actionObj);
+    }
+
     // 2. Reply to Post (reply_to_post)
     const canRestoreReplyToPost =
       currentAction === REPLY &&
@@ -535,6 +559,20 @@ export default class ComposerActions extends Component {
     if (options.noBump) {
       model.set("noBump", true);
     }
+  }
+
+  replyAsNewGroupMessageSelected(options) {
+    this.ensureSnapshotsUpdated();
+    const recipients = [];
+    const details = this.topic.details;
+    details.allowed_users.forEach((u) => recipients.push(u.username));
+    details.allowed_groups.forEach((g) => recipients.push(g.name));
+
+    options.action = PRIVATE_MESSAGE;
+    options.recipients = recipients.join(",");
+    options.archetypeId = "private_message";
+
+    this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   }
 
   replyAsNewTopicSelected(options) {

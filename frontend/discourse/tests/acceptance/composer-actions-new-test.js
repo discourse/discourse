@@ -164,6 +164,17 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     assert.dom(".dialog-body").doesNotExist();
   });
 
+  test("reply_as_new_group_message", async function (assert) {
+    await visit("/t/lorem-ipsum-dolor-sit-amet/130");
+    await click(".create.reply");
+    const composerActions = composerActionsDropdown();
+    await composerActions.expand();
+    await composerActions.selectRowByValue("reply_as_new_group_message");
+
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.deepEqual(privateMessageUsers.header().value(), "foo,foo_group");
+  });
+
   test("reply_as_new_topic without a permission to create topic", async function (assert) {
     updateCurrentUser({ can_create_topic: false });
     await visit("/t/internationalization-localization/280");
