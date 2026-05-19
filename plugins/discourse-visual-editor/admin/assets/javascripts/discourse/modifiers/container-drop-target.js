@@ -45,12 +45,15 @@ export default modifier(
     // we don't call it explicitly.
     if (mode === "grid-cell-leaf") {
       function onLeafDrop(event) {
-        const source = visualEditor.dragSource;
-        if (!source) {
-          return;
-        }
         event.preventDefault();
         event.stopPropagation();
+        // No source-state guard — by the time this bubble-phase
+        // listener fires, PDND's source.onDrop has already cleared
+        // `visualEditor.dragSource` (PDND dispatches source.onDrop
+        // BEFORE the native drop event finishes bubbling). The
+        // dispatch-side state (`_lastDropPreview`) is what matters,
+        // and `dispatchActiveDrop` reads it directly and no-ops
+        // gracefully when absent.
         visualEditor.dispatchActiveDrop();
       }
       chromeElement.addEventListener("drop", onLeafDrop);
@@ -209,12 +212,14 @@ export default modifier(
     }
 
     function onDrop(event) {
-      const source = visualEditor.dragSource;
-      if (!source) {
-        return;
-      }
       event.preventDefault();
       event.stopPropagation();
+      // See the comment on `onLeafDrop` above — by the time this
+      // bubble-phase native listener fires, `visualEditor.dragSource`
+      // has already been cleared by PDND's source.onDrop dispatch.
+      // The dispatch-side state in `_lastDropPreview` is the source of
+      // truth for what to dispatch; `dispatchActiveDrop` reads it
+      // directly and no-ops gracefully when absent.
       visualEditor.dispatchActiveDrop();
     }
 
@@ -526,7 +531,7 @@ function buildSlotChromeDescriptor({
   containerKey,
   source,
 }) {
-  if (source.kind === "ve-block" && source.data.blockKey === containerKey) {
+  if (source.type === "ve-block" && source.data.blockKey === containerKey) {
     return null;
   }
   const rect = chromeElement.getBoundingClientRect();
@@ -547,7 +552,7 @@ function buildSlotChromeDescriptor({
 function buildReplaceSlotDescriptor({ visualEditor, rect, targetKey, source }) {
   // Slot replace — no validation gate beyond "source isn't the
   // slot itself", since the slot's only purpose is to be filled.
-  if (source.kind === "ve-block" && source.data.blockKey === targetKey) {
+  if (source.type === "ve-block" && source.data.blockKey === targetKey) {
     return null;
   }
   return {
@@ -569,7 +574,7 @@ function buildReplaceSlotDescriptor({ visualEditor, rect, targetKey, source }) {
    into the layout itself. */
 
 function validateInsert({ visualEditor, source, outletName }) {
-  if (source.kind === "ve-palette-block") {
+  if (source.type === "ve-palette-block") {
     return {
       ok: visualEditor.canInsertBlockAt({
         blockName: source.data.blockName,
@@ -577,7 +582,7 @@ function validateInsert({ visualEditor, source, outletName }) {
       }),
     };
   }
-  if (source.kind === "ve-block") {
+  if (source.type === "ve-block") {
     if (source.data.blockKey == null) {
       return { ok: false };
     }
@@ -597,7 +602,7 @@ function validateInsert({ visualEditor, source, outletName }) {
 
 function validateInsideDrop({ visualEditor, source, targetKey }) {
   // Don't allow dropping a container inside itself.
-  if (source.kind === "ve-block" && source.data.blockKey === targetKey) {
+  if (source.type === "ve-block" && source.data.blockKey === targetKey) {
     return { ok: false };
   }
   return validateInsert({
@@ -613,7 +618,7 @@ function validateInsideDrop({ visualEditor, source, targetKey }) {
 function insertLabel({ visualEditor, source, position, targetKey }) {
   const name = sourceDisplayName(visualEditor, source);
   const target = targetKey ? targetDisplayName(visualEditor, targetKey) : null;
-  const isPalette = source.kind === "ve-palette-block";
+  const isPalette = source.type === "ve-palette-block";
   // Empty-container case: no anchor child. Fall back to the
   // ambient "add here / move here" copy.
   if (!target || (position !== "before" && position !== "after")) {
@@ -635,7 +640,7 @@ function insideLabel({ visualEditor, source, blockName, targetKey }) {
   const name = sourceDisplayName(visualEditor, source);
   const container =
     targetDisplayName(visualEditor, targetKey) || blockName || "container";
-  return source.kind === "ve-palette-block"
+  return source.type === "ve-palette-block"
     ? translate("visual_editor.canvas.drop_preview.add_inside", {
         name,
         container,
@@ -648,7 +653,7 @@ function insideLabel({ visualEditor, source, blockName, targetKey }) {
 
 function replaceSlotLabel({ visualEditor, source }) {
   const name = sourceDisplayName(visualEditor, source);
-  return source.kind === "ve-palette-block"
+  return source.type === "ve-palette-block"
     ? translate("visual_editor.canvas.drop_preview.fill_slot", { name })
     : translate("visual_editor.canvas.drop_preview.move_into_slot", { name });
 }
@@ -663,7 +668,7 @@ function insertDispatch({
   containerKey,
   outletName,
 }) {
-  if (source.kind === "ve-palette-block") {
+  if (source.type === "ve-palette-block") {
     return {
       action: "insertBlock",
       args: {
@@ -687,7 +692,7 @@ function insertDispatch({
 }
 
 function insideDispatch({ source, targetKey }) {
-  if (source.kind === "ve-palette-block") {
+  if (source.type === "ve-palette-block") {
     return {
       action: "insertBlock",
       args: {
@@ -709,7 +714,7 @@ function insideDispatch({ source, targetKey }) {
 }
 
 function replaceSlotDispatch({ source, targetKey }) {
-  if (source.kind === "ve-palette-block") {
+  if (source.type === "ve-palette-block") {
     return {
       action: "fillSlot",
       args: {
@@ -733,14 +738,14 @@ function replaceSlotDispatch({ source, targetKey }) {
    outline already show for the same blocks. */
 
 function sourceDisplayName(visualEditor, source) {
-  if (source.kind === "ve-palette-block") {
+  if (source.type === "ve-palette-block") {
     return (
       visualEditor._lookupBlockDisplayName?.(source.data.blockName) ||
       source.data.blockName ||
       "block"
     );
   }
-  if (source.kind === "ve-block") {
+  if (source.type === "ve-block") {
     const located = visualEditor._findEntryAndOutletSync(source.data.blockKey);
     if (located?.entry) {
       return decorateWithId(

@@ -12,47 +12,47 @@ module("Unit | Service | drag-and-drop", function (hooks) {
   test("setCurrentDrag / clearCurrentDrag round-trip", function (assert) {
     assert.strictEqual(this.dragAndDrop.currentDrag, null);
     this.dragAndDrop.setCurrentDrag({
-      kind: "row",
+      type: "row",
       data: { id: 1 },
-      sourceElement: document.body,
+      element: document.body,
     });
     assert.deepEqual(this.dragAndDrop.currentDrag.data, { id: 1 });
     this.dragAndDrop.clearCurrentDrag();
     assert.strictEqual(this.dragAndDrop.currentDrag, null);
   });
 
-  test("isAccepted matches a single kind", function (assert) {
+  test("accepts matches a single type", function (assert) {
     this.dragAndDrop.setCurrentDrag({
-      kind: "row",
+      type: "row",
       data: {},
-      sourceElement: null,
+      element: null,
     });
-    assert.true(this.dragAndDrop.isAccepted("row"));
-    assert.false(this.dragAndDrop.isAccepted("card"));
+    assert.true(this.dragAndDrop.accepts("row"));
+    assert.false(this.dragAndDrop.accepts("card"));
   });
 
-  test("isAccepted matches against an array of kinds", function (assert) {
+  test("accepts matches against an array of types", function (assert) {
     this.dragAndDrop.setCurrentDrag({
-      kind: "card",
+      type: "card",
       data: {},
-      sourceElement: null,
+      element: null,
     });
-    assert.true(this.dragAndDrop.isAccepted(["row", "card"]));
-    assert.false(this.dragAndDrop.isAccepted(["other"]));
+    assert.true(this.dragAndDrop.accepts(["row", "card"]));
+    assert.false(this.dragAndDrop.accepts(["other"]));
   });
 
-  test("isAccepted is false when nothing is in flight", function (assert) {
-    assert.false(this.dragAndDrop.isAccepted("row"));
-    assert.false(this.dragAndDrop.isAccepted(["a", "b"]));
+  test("accepts is false when nothing is in flight", function (assert) {
+    assert.false(this.dragAndDrop.accepts("row"));
+    assert.false(this.dragAndDrop.accepts(["a", "b"]));
   });
 
-  test("isAccepted is false when accepts is missing", function (assert) {
+  test("accepts is false when no filter is supplied", function (assert) {
     this.dragAndDrop.setCurrentDrag({
-      kind: "row",
+      type: "row",
       data: {},
-      sourceElement: null,
+      element: null,
     });
-    assert.false(this.dragAndDrop.isAccepted(null));
-    assert.false(this.dragAndDrop.isAccepted(undefined));
+    assert.false(this.dragAndDrop.accepts(null));
+    assert.false(this.dragAndDrop.accepts(undefined));
   });
 });

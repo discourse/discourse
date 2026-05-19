@@ -11,7 +11,7 @@ import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-sourc
  * an optional description tooltip, and is the drag source for inserting a
  * fresh entry onto the canvas.
  *
- * The drag payload uses the `ve-palette-block` kind so drop targets can
+ * The drag payload uses the `ve-palette-block` type so drop targets can
  * distinguish a palette-driven insert from a chrome-to-chrome move.
  */
 export default class PaletteEntry extends Component {
@@ -25,8 +25,8 @@ export default class PaletteEntry extends Component {
    * null — palette drags aren't moves.
    */
   @action
-  handleDragStart({ data }) {
-    this.visualEditor.startPaletteDrag(data);
+  handleDragStart({ source }) {
+    this.visualEditor.startPaletteDrag(source.data);
   }
 
   <template>
@@ -36,10 +36,10 @@ export default class PaletteEntry extends Component {
       tabindex="0"
       title={{@entry.description}}
       {{dDragAndDropSource
-        kind="ve-palette-block"
+        type="ve-palette-block"
         data=(hash blockName=@entry.name defaultArgs=@entry.previewArgs)
         onDragStart=this.handleDragStart
-        onDragEnd=this.visualEditor.endDrag
+        onDrop=this.visualEditor.endDrag
       }}
     >
       <span class="visual-editor-palette-entry__icon">

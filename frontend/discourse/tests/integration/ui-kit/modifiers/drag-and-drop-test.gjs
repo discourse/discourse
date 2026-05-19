@@ -7,7 +7,9 @@ import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-targe
 
 /**
  * Drives a full HTML5 drag/drop cycle between a source and a target
- * through the test runner. Returns whatever the consumer captured.
+ * through the test runner. PDND wraps the native DnD events under the
+ * hood, so its callbacks fire when the matching DOM events are
+ * dispatched.
  */
 async function dragFromTo(sourceSelector, targetSelector, { dataTransfer }) {
   await triggerEvent(sourceSelector, "dragstart", { dataTransfer });
@@ -28,7 +30,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       <template>
         <div
           id="src"
-          {{dDragAndDropSource kind="row" data=(hash id=1)}}
+          {{dDragAndDropSource type="row" data=(hash id=1)}}
         >src</div>
         <div
           id="tgt"
@@ -42,11 +44,11 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
     assert.strictEqual(drops.length, 1, "onDrop fires once");
     assert.strictEqual(drops[0].position, "before");
-    assert.deepEqual(drops[0].source.data, { id: 1 });
-    assert.strictEqual(drops[0].source.kind, "row");
+    assert.deepEqual(drops[0].source.data, { type: "row", id: 1 });
+    assert.strictEqual(drops[0].source.type, "row");
   });
 
-  test("kind discriminator gates compatibility", async function (assert) {
+  test("type discriminator gates compatibility", async function (assert) {
     let dropped = false;
     const onDrop = () => {
       dropped = true;
@@ -56,7 +58,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       <template>
         <div
           id="src"
-          {{dDragAndDropSource kind="row" data=(hash id=1)}}
+          {{dDragAndDropSource type="row" data=(hash id=1)}}
         >src</div>
         <div
           id="tgt"
@@ -68,7 +70,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     const dataTransfer = new DataTransfer();
     await dragFromTo("#src", "#tgt", { dataTransfer });
 
-    assert.false(dropped, "onDrop is not called for foreign kinds");
+    assert.false(dropped, "onDrop is not called for foreign types");
   });
 
   test("source toggles is-dragging during the drag", async function (assert) {
@@ -76,7 +78,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       <template>
         <div
           id="src"
-          {{dDragAndDropSource kind="row" data=(hash id=1)}}
+          {{dDragAndDropSource type="row" data=(hash id=1)}}
         >src</div>
       </template>
     );
@@ -96,7 +98,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       <template>
         <div
           id="src"
-          {{dDragAndDropSource kind="row" data=(hash id=1)}}
+          {{dDragAndDropSource type="row" data=(hash id=1)}}
         >src</div>
         <div
           id="tgt"
@@ -156,7 +158,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       <template>
         <div
           id="src"
-          {{dDragAndDropSource kind="row" data=(hash id=1)}}
+          {{dDragAndDropSource type="row" data=(hash id=1)}}
         >src</div>
         <div
           id="outer"
@@ -186,7 +188,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     assert.deepEqual(
       events,
       ["inner"],
-      "only the inner target receives the drop (stopPropagation gates the outer)"
+      "only the deepest accepted target receives the drop"
     );
   });
 });

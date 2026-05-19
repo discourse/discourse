@@ -1,9 +1,7 @@
 // @ts-check
 import { registerDestructor } from "@ember/destroyable";
-import { service } from "@ember/service";
+import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import Modifier from "ember-modifier";
-import { bind } from "discourse/lib/decorators";
-import discourseLater from "discourse/lib/later";
 
 /**
  * Per-axis CSS class names toggled while the cursor is hovering with a
@@ -20,8 +18,10 @@ const POSITION_CLASSES = Object.freeze({
 
 /**
  * Marks an element as a drop target compatible with the
- * `drag-and-drop-source` vocabulary. Call from a row, container, or a
- * fixed-position drop zone.
+ * `dDragAndDropSource` vocabulary. Backed by Pragmatic Drag and Drop's
+ * `dropTargetForElements` — events are rAF-batched, the modifier
+ * doesn't need to track enter-depth or debounce dragleave flicker
+ * by hand.
  *
  * Smart row mode — position is computed from the cursor against the
  * element's midpoint:
@@ -33,9 +33,8 @@ const POSITION_CLASSES = Object.freeze({
  * }}>...</li>
  * ```
  *
- * Fixed-position mode — for explicit "before" / "after" / "inside" zones
- * (e.g. the visual-editor's drop strips) where the slot is decided by
- * geometry, not by the cursor:
+ * Fixed-position mode — for explicit `"before"` / `"after"` / `"inside"`
+ * zones where the slot is decided by geometry, not the cursor:
  *
  * ```hbs
  * <div {{dDragAndDropTarget
@@ -45,36 +44,46 @@ const POSITION_CLASSES = Object.freeze({
  * }}></div>
  * ```
  *
- * Nested-target behaviour: when multiple `drag-and-drop-target`-decorated
- * elements are stacked, the deepest accepted match wins. We achieve that
- * with two idioms native to HTML5 DnD:
- *   1. `dragenter`/`dragleave` use a depth counter so spurious leaves
- *      from crossing inner DOM children don't clear the indicator.
- *   2. `dragover`/`drop` call `event.stopPropagation()` once the source's
- *      kind is accepted, so an ancestor target doesn't double-handle.
- * A parent target whose `accepts` matches still receives `onDragEnter` —
- * it just doesn't claim the *drop*. This lets a section highlight while
- * a link inside it is being hovered, for example.
+ * Args (named):
+ *  - `accepts` — string or array of strings. The dragged source's
+ *    `type` must be in this list for the target to engage. Omit to
+ *    accept any source.
+ *  - `position` — fixed `"before"` / `"after"` / `"inside"`. When set,
+ *    `axis` and the midpoint logic are ignored.
+ *  - `axis` — `"y"` (default) or `"x"`. Drives the indicator class
+ *    selection and the smart-row position math.
+ *  - `canDrop` — `({source, input}) => boolean`. Synchronous gate.
+ *    Source is `{type, data, element}` — the shape the matching
+ *    `dDragAndDropSource` published.
+ *  - `getData` — `() => object`. Optional target-side metadata that
+ *    PDND attaches to its `DropTargetRecord`; consumers reading
+ *    `source.dropTargets` see it under `.data`.
+ *  - `getDropEffect` — `({source, input}) => "copy" | "move" | "link"`.
+ *    Determines the cursor feedback browsers show.
+ *  - `getIsSticky` — `() => boolean`. Enables PDND's sticky-target
+ *    semantics (the target stays "current" briefly after the cursor
+ *    leaves, useful for hover-to-expand patterns).
+ *  - `indicator` — `false` to suppress the `is-drag-*` indicator
+ *    class toggling (defaults to `true`).
+ *  - `onDragEnter` / `onDrag` / `onDragLeave` / `onDrop` —
+ *    `({source, position, location, element}) => void`. `onDrag` is
+ *    PDND's throttled drag-progress event; it fires when the input
+ *    or the drop-target hierarchy updates while this target is
+ *    active.
+ *
+ * Nested targets: PDND walks the DOM and only reports the *deepest*
+ * accepted target in `location.current.dropTargets[0]`, so an ancestor
+ * decorated with this modifier doesn't double-handle a drop the child
+ * already claimed.
  */
 export default class DDragAndDropTargetModifier extends Modifier {
-  @service dragAndDrop;
-
-  element;
-  accepts;
-  position;
-  axis = "y";
-  onDragEnter;
-  onDragLeave;
-  onDrop;
-  canDrop;
-
-  enterDepth = 0;
-  activeClasses = new Set();
-  leaveTimer = null;
+  #cleanup = null;
+  #element = null;
+  #activeClass = null;
 
   constructor(owner, args) {
     super(owner, args);
-    registerDestructor(this, (instance) => instance.cleanup());
+    registerDestructor(this, (instance) => instance.#detach());
   }
 
   modify(
@@ -84,187 +93,161 @@ export default class DDragAndDropTargetModifier extends Modifier {
       accepts,
       position,
       axis = "y",
+      canDrop,
+      getData,
+      getDropEffect,
+      getIsSticky,
       onDragEnter,
+      onDrag,
       onDragLeave,
       onDrop,
-      canDrop,
+      indicator = true,
     } = {}
   ) {
-    if (this.element && this.element !== element) {
-      this.cleanup();
+    if (this.#element && this.#element !== element) {
+      this.#detach();
     }
-    if (!this.element) {
-      element.addEventListener("dragenter", this.handleDragEnter);
-      element.addEventListener("dragover", this.handleDragOver);
-      element.addEventListener("dragleave", this.handleDragLeave);
-      element.addEventListener("drop", this.handleDrop);
-    }
-    this.element = element;
-    this.accepts = accepts;
-    this.position = position;
-    this.axis = axis;
-    this.onDragEnter = onDragEnter;
-    this.onDragLeave = onDragLeave;
-    this.onDrop = onDrop;
-    this.canDrop = canDrop;
-  }
+    this.#element = element;
+    this.#detach();
 
-  /** Whether the in-flight drag is allowed to drop here. */
-  get isAccepted() {
-    if (!this.dragAndDrop.isAccepted(this.accepts)) {
-      return false;
-    }
-    if (this.canDrop) {
-      return this.canDrop({ source: this.dragAndDrop.currentDrag }) !== false;
-    }
-    return true;
-  }
+    const acceptList = this.#normaliseAccepts(accepts);
+    const acceptsType = (type) =>
+      acceptList.length === 0 || acceptList.includes(type);
 
-  /**
-   * Computes whether the cursor is in the "before" or "after" half of the
-   * element along the configured axis. Returns the fixed `position` arg
-   * when one was supplied.
-   */
-  resolvePosition(event) {
-    if (this.position) {
-      return this.position;
-    }
-    const rect = this.element.getBoundingClientRect();
-    if (this.axis === "x") {
-      return event.clientX < rect.left + rect.width / 2 ? "before" : "after";
-    }
-    return event.clientY < rect.top + rect.height / 2 ? "before" : "after";
-  }
+    const resolvePosition = (input) => {
+      if (position) {
+        return position;
+      }
+      const rect = element.getBoundingClientRect();
+      if (axis === "x") {
+        return input.clientX < rect.left + rect.width / 2 ? "before" : "after";
+      }
+      return input.clientY < rect.top + rect.height / 2 ? "before" : "after";
+    };
 
-  /**
-   * Toggles the per-axis indicator class (e.g. `is-drag-above`) for the
-   * resolved position. We track which class is currently active so we can
-   * clear it cleanly when the drag leaves or the position flips.
-   */
-  applyIndicator(position) {
-    const className = POSITION_CLASSES[position]?.[this.axis];
-    if (!className) {
-      return;
-    }
-    if (this.activeClasses.has(className)) {
-      return;
-    }
-    for (const stale of this.activeClasses) {
-      this.element.classList.remove(stale);
-    }
-    this.activeClasses.clear();
-    this.element.classList.add(className);
-    this.activeClasses.add(className);
-  }
+    const sourceFromPDND = (pdndSource) => ({
+      type: pdndSource.data?.type ?? null,
+      data: pdndSource.data ?? {},
+      element: pdndSource.element ?? null,
+    });
 
-  clearIndicators() {
-    for (const className of this.activeClasses) {
-      this.element.classList.remove(className);
-    }
-    this.activeClasses.clear();
-  }
+    // PDND fires lifecycle events on every active drop target in the
+    // hierarchy. The old ui-kit contract was "deepest accepted target
+    // wins" — match that here by short-circuiting on every callback
+    // except when this element is at the top of the `dropTargets`
+    // bubble stack.
+    const isDeepest = (location) =>
+      location.current.dropTargets[0]?.element === element;
 
-  @bind
-  handleDragEnter(event) {
-    this.enterDepth++;
-    if (this.enterDepth !== 1) {
-      // Cursor crossed into a child node we already had under us; the
-      // boundary was crossed earlier and we already fired onDragEnter.
-      return;
-    }
-    if (!this.isAccepted) {
-      return;
-    }
-    if (this.leaveTimer) {
-      // The cursor briefly left and came back before the deferred clear
-      // ran. Cancel the pending clear so the indicator doesn't flicker.
-      this.leaveTimer = null;
-    }
-    this.onDragEnter?.({
-      source: this.dragAndDrop.currentDrag,
-      element: this.element,
-      position: this.position ?? null,
-      event,
+    this.#cleanup = dropTargetForElements({
+      element,
+      canDrop: ({ source, input }) => {
+        if (!acceptsType(source.data?.type)) {
+          return false;
+        }
+        if (!canDrop) {
+          return true;
+        }
+        return (
+          canDrop({ source: sourceFromPDND(source), input, element }) !== false
+        );
+      },
+      getData: getData ? () => getData() : undefined,
+      getDropEffect: getDropEffect
+        ? ({ source, input }) =>
+            getDropEffect({ source: sourceFromPDND(source), input, element })
+        : undefined,
+      getIsSticky: getIsSticky ? () => getIsSticky() === true : undefined,
+      onDragEnter: ({ source, location }) => {
+        if (!isDeepest(location)) {
+          return;
+        }
+        const pos = resolvePosition(location.current.input);
+        if (indicator) {
+          this.#applyIndicator(pos, axis);
+        }
+        onDragEnter?.({
+          source: sourceFromPDND(source),
+          position: pos,
+          location,
+          element,
+        });
+      },
+      onDrag: ({ source, location }) => {
+        if (!isDeepest(location)) {
+          return;
+        }
+        const pos = resolvePosition(location.current.input);
+        if (indicator) {
+          this.#applyIndicator(pos, axis);
+        }
+        onDrag?.({
+          source: sourceFromPDND(source),
+          position: pos,
+          location,
+          element,
+        });
+      },
+      onDragLeave: ({ source, location }) => {
+        this.#clearIndicators();
+        onDragLeave?.({
+          source: sourceFromPDND(source),
+          position: null,
+          location,
+          element,
+        });
+      },
+      onDrop: ({ source, location }) => {
+        if (!isDeepest(location)) {
+          return;
+        }
+        const pos = resolvePosition(location.current.input);
+        this.#clearIndicators();
+        onDrop?.({
+          source: sourceFromPDND(source),
+          position: pos,
+          location,
+          element,
+        });
+      },
     });
   }
 
-  @bind
-  handleDragOver(event) {
-    if (!this.isAccepted) {
-      return;
+  #normaliseAccepts(accepts) {
+    if (!accepts) {
+      return [];
     }
-    // preventDefault is the HTML5 contract that says "I can accept this
-    // drop"; without it the drop event is never dispatched. stopPropagation
-    // ensures an ancestor drop-target doesn't also claim this drag — the
-    // deepest accepted target wins.
-    event.preventDefault();
-    event.stopPropagation();
-    const position = this.resolvePosition(event);
-    this.applyIndicator(position);
+    if (Array.isArray(accepts)) {
+      return accepts;
+    }
+    return [accepts];
   }
 
-  @bind
-  handleDragLeave(event) {
-    this.enterDepth = Math.max(0, this.enterDepth - 1);
-    if (this.enterDepth !== 0) {
+  #applyIndicator(position, axis) {
+    const className = POSITION_CLASSES[position]?.[axis];
+    if (!className) {
       return;
     }
-    // 10ms deferred clear: hides flicker when the cursor crosses
-    // internal DOM siblings — a transient dragleave fires, immediately
-    // followed by a dragenter on the sibling, and we don't want the
-    // indicator to blink off in between. Inline ad-hoc DnD code in
-    // `app/components/sidebar/section-form-link.gjs` and
-    // `plugins/discourse-doc-categories/.../section.gjs` predates this
-    // modifier and reimplements the same trick by hand; future PRs can
-    // collapse them onto this implementation.
-    //
-    // Note: by the time `discourseLater` fires, `event.currentTarget` has
-    // been cleared by the browser (it's only valid synchronously inside
-    // the original event handler). Consumers reading positional metadata
-    // should take it from the modifier-supplied `position` / `element`,
-    // not from `event.currentTarget` — the latter is null after the
-    // deferred microtask.
-    const myToken = (this.leaveTimer = {});
-    discourseLater(() => {
-      if (this.leaveTimer === myToken && this.enterDepth === 0) {
-        this.clearIndicators();
-        this.leaveTimer = null;
-        this.onDragLeave?.({
-          source: this.dragAndDrop.currentDrag,
-          element: this.element,
-          position: this.position ?? null,
-          event,
-        });
-      }
-    }, 10);
+    if (this.#activeClass === className) {
+      return;
+    }
+    if (this.#activeClass) {
+      this.#element.classList.remove(this.#activeClass);
+    }
+    this.#element.classList.add(className);
+    this.#activeClass = className;
   }
 
-  @bind
-  handleDrop(event) {
-    this.enterDepth = 0;
-    this.leaveTimer = null;
-    if (!this.isAccepted) {
-      this.clearIndicators();
-      return;
+  #clearIndicators() {
+    if (this.#activeClass) {
+      this.#element.classList.remove(this.#activeClass);
+      this.#activeClass = null;
     }
-    event.preventDefault();
-    event.stopPropagation();
-    const position = this.resolvePosition(event);
-    const source = this.dragAndDrop.currentDrag;
-    this.clearIndicators();
-    this.onDrop?.({ source, position, element: this.element, event });
   }
 
-  cleanup() {
-    if (!this.element) {
-      return;
-    }
-    this.element.removeEventListener("dragenter", this.handleDragEnter);
-    this.element.removeEventListener("dragover", this.handleDragOver);
-    this.element.removeEventListener("dragleave", this.handleDragLeave);
-    this.element.removeEventListener("drop", this.handleDrop);
-    this.clearIndicators();
-    this.enterDepth = 0;
-    this.leaveTimer = null;
+  #detach() {
+    this.#cleanup?.();
+    this.#cleanup = null;
+    this.#clearIndicators();
   }
 }

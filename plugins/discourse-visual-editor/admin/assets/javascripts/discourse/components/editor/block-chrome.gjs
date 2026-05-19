@@ -628,7 +628,7 @@ export default class BlockChrome extends Component {
   /**
    * Drop-target gate — rejects drops that would re-insert a block onto its
    * own zones (a no-op anyway) and consults the editor service for outlet-
-   * level allowed/denied checks. The modifier filters drags whose `kind`
+   * level allowed/denied checks. The modifier filters drags whose `type`
    * isn't `"ve-block"` or `"ve-palette-block"`, so this only fires for
    * our own payloads.
    *
@@ -638,7 +638,7 @@ export default class BlockChrome extends Component {
    */
   @action
   canDropOnThisBlock({ source }) {
-    if (source?.kind === "ve-palette-block") {
+    if (source?.type === "ve-palette-block") {
       return this.visualEditor.canInsertBlockAt({
         blockName: source.data?.blockName,
         targetOutletName: this.args.outletName,
@@ -653,14 +653,16 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Adapts the core modifier's `{data, event}` drag-start payload into the
-   * shape `visualEditor.startDrag` expects (a flat
-   * `{blockKey, outletName}`). The data was attached at the `draggable-item`
-   * call site as `(hash blockKey=… outletName=…)`.
+   * Adapts the source modifier's `{source}` drag-start payload into
+   * the shape `visualEditor.startDrag` expects (a flat
+   * `{blockKey, outletName}`). The data was attached at the
+   * `dDragAndDropSource` call site as `(hash blockKey=… outletName=…)`
+   * and exposed back to us under `source.data` (with `source.type`
+   * carrying the discriminator string).
    */
   @action
-  handleDragStart({ data }) {
-    this.visualEditor.startDrag(data);
+  handleDragStart({ source }) {
+    this.visualEditor.startDrag(source.data);
   }
 
   /**
@@ -786,11 +788,11 @@ export default class BlockChrome extends Component {
             class="visual-editor-block-handle"
             title={{i18n "visual_editor.canvas.drag_handle_title"}}
             {{dDragAndDropSource
-              kind="ve-block"
+              type="ve-block"
               data=(hash blockKey=@blockKey outletName=@outletName)
-              dragImage=this._chromeEl
+              dragPreview=this._chromeEl
               onDragStart=this.handleDragStart
-              onDragEnd=this.visualEditor.endDrag
+              onDrop=this.visualEditor.endDrag
             }}
           >
             {{dIcon "grip-lines"}}

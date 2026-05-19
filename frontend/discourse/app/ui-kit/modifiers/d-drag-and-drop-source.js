@@ -1,140 +1,146 @@
 // @ts-check
 import { registerDestructor } from "@ember/destroyable";
 import { service } from "@ember/service";
+import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import Modifier from "ember-modifier";
-import { bind } from "discourse/lib/decorators";
-
-const DND_MIME_PREFIX = "application/x-discourse-dnd";
 
 /**
  * Marks an element as a drag source for the Discourse drag-and-drop
- * vocabulary shared with `drag-and-drop-target`. Use it on rows, cards,
- * or block handles that the user should be able to grab and reorder via
- * HTML5 drag-and-drop.
+ * vocabulary, paired with `dDragAndDropTarget` on the receiving side.
+ * Backed by Atlassian's Pragmatic Drag and Drop primitives (`draggable`
+ * from `@atlaskit/pragmatic-drag-and-drop`) for rAF-batched events,
+ * cleaner lifecycle, and a path to auto-scroll / accessibility helpers
+ * later.
  *
  * ```hbs
  * <li {{dDragAndDropSource
- *   kind="sidebar-link"
+ *   type="sidebar-link"
  *   data=this.link
+ *   dragPreview=this.previewEl
+ *   canDrag=this.canDrag
  *   onDragStart=this.handleDragStart
- *   onDragEnd=this.handleDragEnd
+ *   onDrop=this.handleDragEnd
+ *   getDropEffect=this.dropEffect
  * }}>...</li>
  * ```
  *
- * The `kind` discriminator is encoded as a custom MIME type on the drag
- * event's `dataTransfer.types` so drop targets can sniff which kind is in
- * flight during `dragover` (where `dataTransfer` *values* are hidden by
- * the browser for security but types remain readable). The full payload
- * (`{kind, data, sourceElement}`) lives on the `drag-and-drop` service
- * for the duration of the drag.
+ * Args (named):
+ *  - `type` — discriminator string. Targets filter on this via their
+ *    `accepts` arg. Stamped onto `source.data.type` so callbacks
+ *    receive it with the rest of the payload.
+ *  - `data` — static payload object the source attaches to the drag.
+ *    Merged with `{type}` and exposed as `source.data` in target
+ *    callbacks.
+ *  - `getInitialData` — alternative to `data` for dynamic payloads.
+ *    Called once just before `dragstart`; merged with `{type}`.
+ *  - `dragPreview` — optional `Element` to use as the native drag
+ *    preview. Defaults to the source element if omitted.
+ *  - `canDrag` — `({source, input}) => boolean`. Returning `false`
+ *    blocks the drag from starting.
+ *  - `onDragStart` — `({source, input}) => void`. Fires once the
+ *    drag is confirmed; receives `{type, data, element}` as `source`.
+ *  - `onDrop` — `({source, location}) => void`. Fires when the drag
+ *    ends (a successful drop OR a cancellation). Receives the same
+ *    `source` shape and the full PDND location history.
+ *  - `disabled` — when `true`, the modifier detaches the underlying
+ *    `draggable()`. Used by consumers that conditionally suppress
+ *    dragging (e.g. read-only modes).
  *
- * Toggles `is-dragging` on the source element while the drag is active,
- * matching the foundation styles in
+ * Adds the `is-dragging` class to the source element while a drag is
+ * active so consumers can style it via
  * `app/assets/stylesheets/common/foundation/draggable.scss`.
  */
 export default class DDragAndDropSourceModifier extends Modifier {
   @service dragAndDrop;
 
-  element;
-  data;
-  kind;
-  dragImage;
-  onDragStart;
-  onDragEnd;
-  disabled = false;
+  #cleanup = null;
+  #element = null;
 
   constructor(owner, args) {
     super(owner, args);
-    registerDestructor(this, (instance) => instance.cleanup());
+    registerDestructor(this, (instance) => instance.#detach());
   }
 
   modify(
     element,
     _positional,
-    { kind, data, dragImage, onDragStart, onDragEnd, disabled = false } = {}
+    {
+      type,
+      data,
+      getInitialData,
+      dragPreview,
+      canDrag,
+      onDragStart,
+      onDrop,
+      disabled = false,
+    } = {}
   ) {
-    if (this.element && this.element !== element) {
-      // Ember reuses modifier instances when the host element identity is
-      // stable; we never expect the element to change underneath us. Bail
-      // defensively rather than leak listeners on the previous element.
-      this.cleanup();
+    if (this.#element && this.#element !== element) {
+      // Ember reuses modifier instances when the host element identity
+      // is stable; we never expect the element to change underneath us.
+      // Detach defensively rather than leak listeners on the previous
+      // element.
+      this.#detach();
     }
-    this.element = element;
-    this.kind = kind;
-    this.data = data;
-    this.dragImage = dragImage;
-    this.onDragStart = onDragStart;
-    this.onDragEnd = onDragEnd;
-    this.disabled = disabled;
+    this.#element = element;
+    this.#detach();
 
     if (disabled) {
-      element.removeAttribute("draggable");
-      element.removeEventListener("dragstart", this.handleDragStart);
-      element.removeEventListener("dragend", this.handleDragEnd);
       return;
     }
 
-    element.setAttribute("draggable", "true");
-    element.addEventListener("dragstart", this.handleDragStart);
-    element.addEventListener("dragend", this.handleDragEnd);
-  }
-
-  @bind
-  handleDragStart(event) {
-    if (!event.dataTransfer) {
-      return;
-    }
-    event.dataTransfer.effectAllowed = "move";
-    // Stamp the kind as a custom MIME type. Browsers expose `dataTransfer
-    // .types` to drop targets during `dragover`, but hide actual values —
-    // by encoding the kind in the type itself we can sniff it without
-    // leaking sensitive payload data cross-origin.
-    event.dataTransfer.setData(`${DND_MIME_PREFIX}/${this.kind}`, "");
-    if (this.dragImage) {
-      event.dataTransfer.setDragImage(this.dragImage, 0, 0);
-    }
-    this.dragAndDrop.setCurrentDrag({
-      kind: this.kind,
-      data: this.data,
-      sourceElement: this.element,
+    this.#cleanup = draggable({
+      element,
+      canDrag: canDrag
+        ? ({ input }) =>
+            canDrag({ source: this.#buildPartialSource(type, data), input }) !==
+            false
+        : undefined,
+      onGenerateDragPreview: dragPreview
+        ? ({ nativeSetDragImage }) => {
+            nativeSetDragImage?.(dragPreview, 0, 0);
+          }
+        : undefined,
+      getInitialData: () => {
+        const resolved = getInitialData?.() ?? data ?? {};
+        return { type, ...resolved };
+      },
+      onDragStart: (event) => {
+        element.classList.add("is-dragging");
+        const sourcePayload = {
+          type,
+          data: event.source.data,
+          element,
+        };
+        this.dragAndDrop.setCurrentDrag(sourcePayload);
+        onDragStart?.({
+          source: sourcePayload,
+          input: event.location?.current?.input,
+        });
+      },
+      onDrop: (event) => {
+        element.classList.remove("is-dragging");
+        this.dragAndDrop.clearCurrentDrag();
+        const sourcePayload = {
+          type,
+          data: event.source.data,
+          element,
+        };
+        onDrop?.({ source: sourcePayload, location: event.location });
+      },
     });
-    this.element.classList.add("is-dragging");
-    this.onDragStart?.({ data: this.data, event });
   }
 
-  @bind
-  handleDragEnd(event) {
-    this.element.classList.remove("is-dragging");
-    this.dragAndDrop.clearCurrentDrag();
-    this.onDragEnd?.({ data: this.data, event });
+  #buildPartialSource(type, data) {
+    // For `canDrag`, `getInitialData` hasn't run yet so we don't have the
+    // merged payload PDND would otherwise expose. Build a best-effort
+    // shape from the declared args.
+    return { type, data, element: this.#element };
   }
 
-  cleanup() {
-    if (!this.element) {
-      return;
-    }
-    this.element.removeEventListener("dragstart", this.handleDragStart);
-    this.element.removeEventListener("dragend", this.handleDragEnd);
-    this.element.removeAttribute("draggable");
-    this.element.classList.remove("is-dragging");
+  #detach() {
+    this.#cleanup?.();
+    this.#cleanup = null;
+    this.#element?.classList.remove("is-dragging");
   }
-}
-
-/**
- * Reads the `kind` of the in-flight drag from a `DragEvent`'s
- * `dataTransfer.types`. Used by the `drag-and-drop-target` modifier when
- * it wants to filter on `kind` without reaching into the
- * `drag-and-drop` service (relevant when the type sniff happens *before*
- * state is read, e.g. native dragenter from outside the application).
- *
- * @param {DragEvent} event
- * @returns {string|null}
- */
-export function dragKindFromEvent(event) {
-  for (const type of event.dataTransfer?.types ?? []) {
-    if (type.startsWith(`${DND_MIME_PREFIX}/`)) {
-      return type.slice(DND_MIME_PREFIX.length + 1);
-    }
-  }
-  return null;
 }

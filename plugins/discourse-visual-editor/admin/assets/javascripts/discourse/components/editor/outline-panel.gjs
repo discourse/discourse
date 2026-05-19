@@ -368,29 +368,32 @@ export default class OutlinePanel extends Component {
   }
 
   /**
-   * Adapts the core `draggable-item` modifier's `{data, event}` shape into
-   * the flat `{blockKey, outletName}` argument the editor service expects.
+   * Adapts the source modifier's `{source}` payload into the flat
+   * `{blockKey, outletName}` argument the editor service expects.
+   * The data was attached at the `dDragAndDropSource` call site as
+   * `(hash blockKey=… outletName=…)` and exposed back under
+   * `source.data`.
    */
   @action
-  handleRowDragStart({ data }) {
-    this.visualEditor.startDrag(data);
+  handleRowDragStart({ source }) {
+    this.visualEditor.startDrag(source.data);
   }
 
   /**
    * Drop-target for an outline row. Maps every drop into a `before`
    * action — the outline is a flat ordered list, so "drop on row X"
-   * reads as "place above row X". Branches on `source.kind` to support
+   * reads as "place above row X". Branches on `source.type` to support
    * both moves (existing block dragged within the tree) and inserts
    * (palette block dropped onto an outline row).
    *
    * @param {string} outletName
    * @param {Object} row - Row produced by `walkAllOutlets`.
-   * @param {{ source: { kind: string, data: Object } }} target
+   * @param {{ source: { type: string, data: Object } }} target
    */
   @action
   applyRowDrop(outletName, row, target) {
     const { source } = target;
-    if (source?.kind === "ve-palette-block") {
+    if (source?.type === "ve-palette-block") {
       this.visualEditor.insertBlock({
         blockName: source.data.blockName,
         defaultArgs: source.data.defaultArgs,
@@ -628,12 +631,12 @@ export default class OutlinePanel extends Component {
                   style={{rowPadding row.depth}}
                   {{on "click" (fn this.selectRow group.outletName row)}}
                   {{dDragAndDropSource
-                    kind="ve-block"
+                    type="ve-block"
                     data=(hash
                       blockKey=row.blockKey outletName=group.outletName
                     )
                     onDragStart=this.handleRowDragStart
-                    onDragEnd=this.visualEditor.endDrag
+                    onDrop=this.visualEditor.endDrag
                   }}
                   {{dDragAndDropTarget
                     accepts=this.acceptedDragKinds

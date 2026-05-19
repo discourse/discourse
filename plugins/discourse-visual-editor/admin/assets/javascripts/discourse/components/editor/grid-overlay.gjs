@@ -453,7 +453,7 @@ export default class GridOverlay extends Component {
       });
     }
     if (kind === "replace") {
-      return source.kind === "ve-palette-block"
+      return source.type === "ve-palette-block"
         ? i18n("visual_editor.canvas.drop_preview.fill_slot", {
             name: sourceName,
           })
@@ -467,7 +467,7 @@ export default class GridOverlay extends Component {
       });
     }
     // occupy / fallback
-    return source.kind === "ve-palette-block"
+    return source.type === "ve-palette-block"
       ? i18n("visual_editor.canvas.drop_preview.add_to_cell", {
           name: sourceName,
         })
@@ -477,14 +477,14 @@ export default class GridOverlay extends Component {
   }
 
   #sourceDisplayName(source) {
-    if (source.kind === "ve-palette-block") {
+    if (source.type === "ve-palette-block") {
       return (
         this.visualEditor._lookupBlockDisplayName(source.data.blockName) ||
         source.data.blockName ||
         "block"
       );
     }
-    if (source.kind === "ve-block") {
+    if (source.type === "ve-block") {
       const located = this.visualEditor._findEntryAndOutletSync(
         source.data.blockKey
       );
@@ -534,11 +534,11 @@ export default class GridOverlay extends Component {
           gridKey,
           dropCell,
           direction: descriptor.kind === "line-column" ? "left" : "up",
-          sourceKey: source.kind === "ve-block" ? source.data?.blockKey : null,
+          sourceKey: source.type === "ve-block" ? source.data?.blockKey : null,
           paletteBlockName:
-            source.kind === "ve-palette-block" ? source.data?.blockName : null,
+            source.type === "ve-palette-block" ? source.data?.blockName : null,
           paletteDefaultArgs:
-            source.kind === "ve-palette-block"
+            source.type === "ve-palette-block"
               ? source.data?.defaultArgs
               : null,
         },
@@ -571,7 +571,7 @@ export default class GridOverlay extends Component {
     if (column == null || row == null) {
       return null;
     }
-    if (source.kind === "ve-palette-block") {
+    if (source.type === "ve-palette-block") {
       return {
         action: "insertBlockAtCell",
         args: {
@@ -583,7 +583,7 @@ export default class GridOverlay extends Component {
         },
       };
     }
-    if (source.kind === "ve-block") {
+    if (source.type === "ve-block") {
       return {
         action: "moveBlockToCell",
         args: {
@@ -691,7 +691,7 @@ export default class GridOverlay extends Component {
     const source = this.dragAndDrop.currentDrag;
     if (
       !source ||
-      (source.kind !== "ve-block" && source.kind !== "ve-palette-block")
+      (source.type !== "ve-block" && source.type !== "ve-palette-block")
     ) {
       return;
     }
@@ -753,7 +753,7 @@ export default class GridOverlay extends Component {
     // entirely when the cursor is hovering THIS grid and the source
     // either IS this grid's layout or an ancestor of it.
     const sourceKey =
-      source?.kind === "ve-block" ? source.data?.blockKey : null;
+      source?.type === "ve-block" ? source.data?.blockKey : null;
     if (sourceKey && this._sourceCoversTarget(sourceKey, this.args.gridKey)) {
       return null;
     }
@@ -996,7 +996,7 @@ export default class GridOverlay extends Component {
             };
       const direction = descriptor.kind === "line-column" ? "left" : "up";
       const sourceKey =
-        source?.kind === "ve-block" ? source.data?.blockKey : null;
+        source?.type === "ve-block" ? source.data?.blockKey : null;
       // Only same-grid sources free a cell; cross-grid arrivals don't.
       let sourceInGrid = null;
       if (sourceKey) {
@@ -1139,7 +1139,7 @@ export default class GridOverlay extends Component {
     const placement = parsePlacement(slot.containerArgs);
     const slotKey = entryKey(slot);
     if (zone === "center") {
-      if (source?.kind !== "ve-block") {
+      if (source?.type !== "ve-block") {
         return null;
       }
       if (source.data?.blockKey === slotKey) {

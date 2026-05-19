@@ -8,7 +8,10 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import { i18n } from "discourse-i18n";
+
+const VE_DRAG_TYPES = ["ve-block", "ve-palette-block"];
 import BlockBreadcrumb from "./block-breadcrumb";
 import ConditionsFloatingPanel from "./conditions-floating-panel";
 import DropPreview from "./drop-preview";
@@ -198,7 +201,11 @@ export default class EditorShell extends Component {
 
   <template>
     {{#if this.visualEditor.isActive}}
-      <div class={{this.shellClasses}} {{didInsert this.setupBodyClasses}}>
+      <div
+        class={{this.shellClasses}}
+        {{didInsert this.setupBodyClasses}}
+        {{dDragAndDropAutoScroll target="window" types=VE_DRAG_TYPES}}
+      >
         <div class="visual-editor-toolbar">
           <div class="toolbar-left">
             {{dIcon "wand-magic-sparkles"}}

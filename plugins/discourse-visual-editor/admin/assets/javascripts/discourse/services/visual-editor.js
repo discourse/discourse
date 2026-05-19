@@ -150,7 +150,7 @@ export default class VisualEditorService extends Service {
    * `onDragStart` (palette + chrome + outline rows); cleared by
    * `endDrag`.
    *
-   * @type {{kind: string, data: Object}|null}
+   * @type {{type: string, data: Object}|null}
    */
   @tracked dragSource = null;
   /**
@@ -2123,7 +2123,7 @@ export default class VisualEditorService extends Service {
     this.dragSourceKey = blockKey;
     this.dragSourceOutlet = outletName;
     this.dragSource = {
-      kind: "ve-block",
+      type: "ve-block",
       data: { blockKey, outletName },
     };
     document.body.classList.add("visual-editor-dragging");
@@ -2131,7 +2131,7 @@ export default class VisualEditorService extends Service {
 
   /**
    * Records the start of a palette-driven drag. Mirrors `startDrag`
-   * but with the `ve-palette-block` kind so dragover-time consumers
+   * but with the `ve-palette-block` type so dragover-time consumers
    * can pick the right label / dispatch action. Called from
    * `PaletteEntry`'s `onDragStart`.
    *
@@ -2140,18 +2140,27 @@ export default class VisualEditorService extends Service {
   @action
   startPaletteDrag({ blockName, defaultArgs }) {
     this.dragSource = {
-      kind: "ve-palette-block",
+      type: "ve-palette-block",
       data: { blockName, defaultArgs },
     };
     document.body.classList.add("visual-editor-dragging");
   }
 
   /**
-   * Resets drag state regardless of whether the drag completed in a drop or
-   * was cancelled. The `editor-draggable` modifier always fires `onDrop`
-   * (Pragmatic dnd's nomenclature — "drop" includes the cancelled case
-   * where `location.current.dropTargets` is empty), so this is the single
-   * cleanup point.
+   * Resets source-side drag state at the end of a drag (drop OR
+   * cancellation — PDND's `draggable.onDrop` fires for both). This
+   * deliberately does NOT clear `_lastDropPreview` / `activeDropPreview`:
+   * PDND fires source `onDrop` BEFORE drop-target `onDrop` within the
+   * same event, and our dispatch handlers (`dispatchActiveDrop`, plus
+   * the native fallback path in `container-drop-target.js`) read those
+   * fields. Clearing them here would race with dispatch.
+   *
+   * The dispatch-side state IS cleared, but by `dispatchActiveDrop`
+   * itself once it has consumed the descriptor — that's the single
+   * source of truth for those fields. For a cancelled drag (no drop
+   * target was over the cursor), `_lastDropPreview` lingers harmlessly
+   * until the next dragover overwrites it or a `clearActiveDropPreview`
+   * fires from a dragleave.
    */
   @action
   endDrag() {
@@ -2159,8 +2168,6 @@ export default class VisualEditorService extends Service {
     this.dragSourceOutlet = null;
     this.dragSource = null;
     this.activeDropTarget = null;
-    this.activeDropPreview = null;
-    this._lastDropPreview = null;
     document.body.classList.remove("visual-editor-dragging");
   }
 
