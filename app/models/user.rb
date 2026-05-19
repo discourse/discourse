@@ -206,6 +206,8 @@ class User < ActiveRecord::Base
 
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
+  after_commit :deactivate_anonymous_shadow_users!, on: :update, if: :deactivated?
+  after_commit :suspend_anonymous_shadow_users!, on: :update, if: :newly_suspended?
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -1474,7 +1476,6 @@ class User < ActiveRecord::Base
 
   def deactivate(performed_by)
     self.update!(active: false)
-    deactivate_anonymous_shadow_users!
 
     if reviewable = ReviewableUser.pending.find_by(target: self)
       reviewable.perform(performed_by, :delete_user)
@@ -1739,13 +1740,6 @@ class User < ActiveRecord::Base
     SiteSetting.allow_anonymous_mode && trust_level >= 1 && !!anonymous_user_master
   end
 
-  def suspend_anonymous_shadow_users!(suspended_at)
-    update_anonymous_shadow_users!(
-      suspended_at: suspended_at,
-      suspended_till: self[:suspended_till],
-    )
-  end
-
   def is_singular_admin?
     User.where(admin: true).where.not(id: id).human_users.blank?
   end
@@ -1753,6 +1747,11 @@ class User < ActiveRecord::Base
   def logged_out
     MessageBus.publish "/logout/#{self.id}", self.id, user_ids: [self.id]
     DiscourseEvent.trigger(:user_logged_out, self)
+  end
+
+  def log_out!
+    PushNotificationPusher.clear_subscriptions(self)
+    logged_out
   end
 
   def logged_in
@@ -2250,19 +2249,35 @@ class User < ActiveRecord::Base
     update_anonymous_shadow_users!(active: false)
   end
 
+  def suspend_anonymous_shadow_users!
+    update_anonymous_shadow_users!(
+      suspended_at: self[:suspended_at] || Time.zone.now,
+      suspended_till: self[:suspended_till],
+    )
+  end
+
+  def deactivated?
+    saved_change_to_active? && !active?
+  end
+
+  def newly_suspended?
+    (saved_change_to_suspended_till? || saved_change_to_suspended_at?) && suspended?
+  end
+
   def update_anonymous_shadow_users!(attributes)
-    shadows = anonymous_shadow_users.to_a
+    shadows = User.where(id: anonymous_user_shadows.select(:user_id)).to_a
     return if shadows.empty?
 
+    shadow_user_ids = shadows.map(&:id)
     now = Time.zone.now
-    User.where(id: shadows.map(&:id)).update_all(attributes.merge(updated_at: now))
-    AnonymousUser.where(master_user_id: id).update_all(active: false, updated_at: now)
 
-    shadows.each do |shadow|
-      shadow.user_auth_tokens.destroy_all
-      PushNotificationPusher.clear_subscriptions(shadow)
-      shadow.logged_out
+    User.transaction do
+      User.where(id: shadow_user_ids).update_all(attributes.merge(updated_at: now))
+      AnonymousUser.where(master_user_id: id).update_all(active: false, updated_at: now)
+      UserAuthToken.where(user_id: shadow_user_ids).destroy_all
     end
+
+    shadows.each(&:log_out!)
   end
 
   def main_user_record

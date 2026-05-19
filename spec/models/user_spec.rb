@@ -706,6 +706,32 @@ RSpec.describe User do
     end
   end
 
+  describe "#deactivate" do
+    fab!(:admin)
+
+    fab!(:master_user) { Fabricate(:user, trust_level: TrustLevel[3]) }
+
+    before do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+    end
+
+    it "deactivates and logs out anonymous shadow users", :aggregate_failures do
+      shadow_user = AnonymousShadowCreator.get(master_user)
+      UserAuthToken.generate!(user_id: shadow_user.id)
+
+      messages =
+        MessageBus.track_publish("/logout/#{shadow_user.id}") { master_user.deactivate(admin) }
+
+      expect(shadow_user.reload[:active]).to eq(false)
+      expect(shadow_user.user_auth_tokens).to be_empty
+      expect(shadow_user.anonymous_user_master.reload.active).to eq(false)
+      expect(messages.size).to eq(1)
+      expect(messages[0].user_ids).to eq([shadow_user.id])
+      expect(messages[0].data).to eq(shadow_user.id)
+    end
+  end
+
   describe "delete posts in batches" do
     fab!(:post1, :post)
     fab!(:user) { post1.user }
@@ -2726,6 +2752,27 @@ RSpec.describe User do
         User.where(id: main.id).delete_all
         anon.reload
         expect(anon.silenced_till).to be_nil
+      end
+    end
+  end
+
+  describe "#suspended?" do
+    context "when the user is an anonymous shadow" do
+      fab!(:master_user) do
+        Fabricate(:user, suspended_at: Time.zone.now, suspended_till: 1.day.from_now)
+      end
+      fab!(:shadow_user) { Fabricate(:user, trust_level: TrustLevel[1]) }
+
+      before do
+        SiteSetting.allow_anonymous_mode = true
+        AnonymousUser.create!(user: shadow_user, master_user:, active: true)
+      end
+
+      it "uses the shadow user's own suspension state", :aggregate_failures do
+        expect(shadow_user).to be_anonymous
+        expect(shadow_user).to be_active
+        expect(shadow_user.suspended_till).to be_nil
+        expect(shadow_user).not_to be_suspended
       end
     end
   end

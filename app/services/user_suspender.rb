@@ -39,9 +39,7 @@ class UserSuspender
           reviewable_id: @reviewable_id,
         )
     end
-    @user.suspend_anonymous_shadow_users!(suspended_at)
-    PushNotificationPusher.clear_subscriptions(@user)
-    @user.logged_out
+    @user.log_out!
 
     if @message.present?
       Jobs.enqueue(
