@@ -136,7 +136,7 @@ describe "Solved | Shared issue button" do
 
       shared_issue_button.click
       expect(shared_issue_button).to have_active
-      expect(shared_issue_button).to have_count(2)
+      expect(shared_issue_button).to have_count(1)
     end
   end
 end
