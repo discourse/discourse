@@ -7,13 +7,11 @@ class UserArchivedMessage < ActiveRecord::Base
   def self.move_to_inbox!(user_id, topic)
     topic_id = topic.id
 
-    if (
-         TopicUser.where(
-           user_id: user_id,
-           topic_id: topic_id,
-           notification_level: TopicUser.notification_levels[:muted],
-         ).exists?
-       )
+    if TopicUser.where(
+         user_id: user_id,
+         topic_id: topic_id,
+         notification_level: TopicUser.notification_levels[:muted],
+       ).exists?
       return
     end
 

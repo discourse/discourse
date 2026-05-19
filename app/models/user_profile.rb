@@ -35,8 +35,8 @@ class UserProfile < ActiveRecord::Base
     if saved_change_to_profile_background_upload_id? ||
          saved_change_to_card_background_upload_id? || saved_change_to_bio_raw?
       upload_ids =
-        [profile_background_upload_id, card_background_upload_id] +
-          Upload.extract_upload_ids(bio_raw)
+        [self.profile_background_upload_id, self.card_background_upload_id] +
+          Upload.extract_upload_ids(self.bio_raw)
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
@@ -62,24 +62,24 @@ class UserProfile < ActiveRecord::Base
   end
 
   def recook_bio
-    bio_raw_will_change!
+    self.bio_raw_will_change!
     cook
   end
 
   def upload_card_background(upload)
-    update!(card_background_upload: upload)
+    self.update!(card_background_upload: upload)
   end
 
   def clear_card_background
-    update!(card_background_upload: nil)
+    self.update!(card_background_upload: nil)
   end
 
   def upload_profile_background(upload)
-    update!(profile_background_upload: upload)
+    self.update!(profile_background_upload: upload)
   end
 
   def clear_profile_background
-    update!(profile_background_upload: nil)
+    self.update!(profile_background_upload: nil)
   end
 
   def self.rebake_old(limit)
@@ -88,11 +88,9 @@ class UserProfile < ActiveRecord::Base
       .where("bio_cooked_version IS NULL OR bio_cooked_version < ?", BAKED_VERSION)
       .limit(limit)
       .each do |p|
-        begin
-          p.rebake!
-        rescue => e
-          problems << { profile: p, ex: e }
-        end
+        p.rebake!
+      rescue => e
+        problems << { profile: p, ex: e }
       end
     problems
   end
@@ -133,7 +131,7 @@ class UserProfile < ActiveRecord::Base
         type: type,
       ).create_for(user.id)
 
-    if (is_card_background)
+    if is_card_background
       user.user_profile.upload_card_background(upload)
     else
       user.user_profile.upload_profile_background(upload)
@@ -155,7 +153,7 @@ class UserProfile < ActiveRecord::Base
       Jobs.enqueue_in(
         SiteSetting.editing_grace_period,
         :pull_user_profile_hotlinked_images,
-        user_id: user_id,
+        user_id: self.user_id,
       )
     end
   end
@@ -167,9 +165,9 @@ class UserProfile < ActiveRecord::Base
   end
 
   def cooked
-    if bio_raw.present?
+    if self.bio_raw.present?
       PrettyText.cook(
-        bio_raw,
+        self.bio_raw,
         omit_nofollow: user.has_trust_level?(TrustLevel[3]) && !SiteSetting.tl3_links_no_follow,
       )
     else
@@ -178,7 +176,7 @@ class UserProfile < ActiveRecord::Base
   end
 
   def cook
-    if bio_raw.present?
+    if self.bio_raw.present?
       if bio_raw_changed?
         self.bio_cooked = cooked
         self.bio_cooked_version = BAKED_VERSION
@@ -194,21 +192,19 @@ class UserProfile < ActiveRecord::Base
 
   def website_domain_validator
     allowed_domains = SiteSetting.allowed_user_website_domains
-    return if (allowed_domains.blank? || website.blank?)
+    return if allowed_domains.blank? || self.website.blank?
 
     domain =
       begin
-        URI.parse(website).host
+        URI.parse(self.website).host
       rescue URI::Error
       end
     if allowed_domains.split("|").exclude?(domain)
-      errors.add :base,
-                 (
-                   I18n.t(
-                     "user.website.domain_not_allowed",
-                     domains: allowed_domains.split("|").join(", "),
-                   )
-                 )
+      self.errors.add :base,
+                      I18n.t(
+                        "user.website.domain_not_allowed",
+                        domains: allowed_domains.split("|").join(", "),
+                      )
     end
   end
 

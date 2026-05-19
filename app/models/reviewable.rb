@@ -354,7 +354,7 @@ class Reviewable < ActiveRecord::Base
   # the result of the operation and whether the status of the reviewable changed.
   def perform(performed_by, action_id, args = nil)
     args ||= {}
-    perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
+    perform_method = :"perform_#{aliases[action_id] || action_id}"
     guardian = args[:guardian] || Guardian.new(performed_by)
 
     validate_action!(guardian, action_id, perform_method, args)

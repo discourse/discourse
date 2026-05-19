@@ -74,7 +74,7 @@ class Plugin::Instance
   def resolved_dir
     @resolved_dir ||=
       if File.symlink?(root_dir)
-        File.expand_path(File.readlink(root_dir), "#{Rails.root}/plugins")
+        File.expand_path(File.readlink(root_dir), "#{Rails.root.join("plugins")}")
       else
         root_dir
       end
@@ -677,14 +677,12 @@ class Plugin::Instance
 
   def notify_after_initialize
     initializers.each do |callback|
-      begin
-        callback.call(self)
-      rescue ActiveRecord::StatementInvalid => e
-        # When running `db:migrate` for the first time on a new database,
-        # plugin initializers might try to use models.
-        # Tolerate it.
-        raise e unless e.message.try(:include?, "PG::UndefinedTable")
-      end
+      callback.call(self)
+    rescue ActiveRecord::StatementInvalid => e
+      # When running `db:migrate` for the first time on a new database,
+      # plugin initializers might try to use models.
+      # Tolerate it.
+      raise e unless e.message.try(:include?, "PG::UndefinedTable")
     end
   end
 
@@ -1526,7 +1524,7 @@ class Plugin::Instance
   protected
 
   def self.js_path
-    File.expand_path "#{Rails.root}/app/assets/generated"
+    File.expand_path "#{Rails.root.join("app/assets/generated")}"
   end
 
   def extra_js_file_path
@@ -1549,7 +1547,7 @@ class Plugin::Instance
   end
 
   def ensure_images_symlink!
-    link_from = "#{Rails.root}/app/assets/generated/#{directory_name}/images"
+    link_from = "#{Rails.root.join("app/assets/generated/#{directory_name}/images")}"
     link_target = "#{directory}/assets/images"
 
     if Dir.exist? link_target

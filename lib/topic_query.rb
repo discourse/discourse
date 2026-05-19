@@ -846,7 +846,7 @@ class TopicQuery
       result = result.references(:categories)
 
       if !@options[:order]
-        filter = (options[:filter] || options[:f])
+        filter = options[:filter] || options[:f]
         # category default sort order
         sort_order, sort_ascending =
           Category.where(id: category_id).pick(:sort_order, :sort_ascending)
@@ -959,7 +959,7 @@ class TopicQuery
         )
     end
 
-    if (filter = (options[:filter] || options[:f])) && @user
+    if (filter = options[:filter] || options[:f]) && @user
       action = (PostActionType.types[:like] if filter == "liked")
       if action
         result =
@@ -1195,8 +1195,8 @@ class TopicQuery
   end
 
   def allowed_messages(messages, params)
-    user_ids = (params[:target_user_ids] || [])
-    group_ids = ((params[:target_group_ids] - params[:my_group_ids]) || [])
+    user_ids = params[:target_user_ids] || []
+    group_ids = (params[:target_group_ids] - params[:my_group_ids]) || []
 
     if user_ids.present?
       messages =

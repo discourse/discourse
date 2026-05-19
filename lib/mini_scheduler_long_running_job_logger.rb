@@ -43,14 +43,12 @@ class MiniSchedulerLongRunningJobLogger
                 end
 
               warning_duration =
-                begin
-                  if job_frequency_minutes < 30.minutes
-                    30.minutes
-                  elsif job_frequency_minutes < 2.hours
-                    job_frequency_minutes
-                  else
-                    2.hours
-                  end
+                if job_frequency_minutes < 30.minutes
+                  30.minutes
+                elsif job_frequency_minutes < 2.hours
+                  job_frequency_minutes
+                else
+                  2.hours
                 end
 
               next if job_started_at >= (Time.zone.now - warning_duration)

@@ -37,7 +37,7 @@ class OptimizedImage < ActiveRecord::Base
     return if upload.try(:sha1).blank?
 
     # no extension so try to guess it
-    upload.fix_image_extension if (!upload.extension)
+    upload.fix_image_extension if !upload.extension
 
     if !upload.extension.match?(IM_DECODERS)
       if opts[:raise_on_error]
@@ -206,7 +206,7 @@ class OptimizedImage < ActiveRecord::Base
     # such as generating the loading upload thumbnail, we force the format,
     # and this allows us to use the forced format in that case.
     extension = nil
-    if (opts[:format] && path != ext_path)
+    if opts[:format] && path != ext_path
       extension = File.extname(path)[1..-1]
     else
       extension = File.extname(opts[:filename] || ext_path || path)[1..-1]
@@ -254,7 +254,7 @@ class OptimizedImage < ActiveRecord::Base
         -interlace
         none
         -profile
-        #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
+        #{Rails.root.join("vendor/data/RT_sRGB.icm")}
         #{to}
       ],
     )
@@ -283,7 +283,7 @@ class OptimizedImage < ActiveRecord::Base
       -interlace
       none
       -profile
-      #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
+      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
     }
 
     instructions << "-quality" << opts[:quality].to_s if opts[:quality]
@@ -310,7 +310,7 @@ class OptimizedImage < ActiveRecord::Base
       -resize
       #{dimensions}
       -profile
-      #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
+      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
       #{to}
     }
   end

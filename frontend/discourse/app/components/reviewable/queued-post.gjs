@@ -15,6 +15,11 @@ import { i18n } from "discourse-i18n";
 
 export default class ReviewableQueuedPost extends Component {
   @service modal;
+  @service currentUser;
+
+  get canViewRawEmail() {
+    return this.currentUser?.can_view_raw_email;
+  }
 
   @action
   showRawEmail(event) {
@@ -38,9 +43,13 @@ export default class ReviewableQueuedPost extends Component {
           {{dCategoryBadge @reviewable.category}}
           <ReviewableTags @tags={{@reviewable.payload.tags}} />
           {{#if @reviewable.payload.via_email}}
-            <a href {{on "click" this.showRawEmail}} class="show-raw-email">
+            {{#if this.canViewRawEmail}}
+              <a href {{on "click" this.showRawEmail}} class="show-raw-email">
+                {{dIcon "envelope" title="post.via_email"}}
+              </a>
+            {{else}}
               {{dIcon "envelope" title="post.via_email"}}
-            </a>
+            {{/if}}
           {{/if}}
         </ReviewableTopicLink>
       </div>

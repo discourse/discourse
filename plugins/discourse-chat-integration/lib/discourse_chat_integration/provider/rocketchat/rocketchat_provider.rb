@@ -19,7 +19,7 @@ module DiscourseChatIntegration::Provider::RocketchatProvider
     elsif topic.category
       category =
         (
-          if (topic.category.parent_category)
+          if topic.category.parent_category
             "[#{topic.category.parent_category.name}/#{topic.category.name}]"
           else
             "[#{topic.category.name}]"

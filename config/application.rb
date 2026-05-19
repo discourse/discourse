@@ -123,7 +123,7 @@ module Discourse
 
     # auto-load locales in plugins
     # NOTE: we load both client & server locales since some might be used by PrettyText
-    config.i18n.load_path += Dir["#{Rails.root}/plugins/*/config/locales/*.yml"]
+    config.i18n.load_path += Dir["#{Rails.root.join("plugins/*/config/locales/*.yml")}"]
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"

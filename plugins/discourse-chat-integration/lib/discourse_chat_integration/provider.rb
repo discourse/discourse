@@ -91,7 +91,7 @@ module DiscourseChatIntegration
         engine =
           provider
             .constants
-            .select { |constant| constant.to_s =~ (/Engine$/) && (constant.to_s != "HookEngine") }
+            .select { |constant| constant.to_s =~ /Engine$/ && (constant.to_s != "HookEngine") }
             .map(&provider.method(:const_get))
             .first
 

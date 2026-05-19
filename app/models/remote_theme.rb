@@ -87,13 +87,15 @@ class RemoteTheme < ActiveRecord::Base
   def self.import_theme_from_directory(
     directory,
     theme_id: nil,
-    allow_out_of_sequence_migration: false
+    allow_out_of_sequence_migration: false,
+    before_save: nil
   )
     update_theme(
       ThemeStore::DirectoryImporter.new(directory),
       update_components: "none",
       theme_id: theme_id,
       allow_out_of_sequence_migration: allow_out_of_sequence_migration,
+      before_save: before_save,
     )
   end
 
@@ -103,7 +105,8 @@ class RemoteTheme < ActiveRecord::Base
     theme_id: nil,
     update_components: nil,
     run_migrations: true,
-    allow_out_of_sequence_migration: false
+    allow_out_of_sequence_migration: false,
+    before_save: nil
   )
     importer.import!
 
@@ -139,6 +142,7 @@ class RemoteTheme < ActiveRecord::Base
         already_in_transaction: true,
         run_migrations:,
         allow_out_of_sequence_migration:,
+        before_save: before_save,
       )
 
       if existing && update_components.present? && update_components != "none"
@@ -243,7 +247,8 @@ class RemoteTheme < ActiveRecord::Base
     raise_if_theme_save_fails: true,
     already_in_transaction: false,
     run_migrations: true,
-    allow_out_of_sequence_migration: false
+    allow_out_of_sequence_migration: false,
+    before_save: nil
   )
     cleanup = false
 
@@ -383,6 +388,8 @@ class RemoteTheme < ActiveRecord::Base
       update_theme_color_schemes(theme, theme_info["color_schemes"]) unless theme.component
 
       save!
+
+      before_save&.call(theme)
 
       if raise_if_theme_save_fails
         theme.save!

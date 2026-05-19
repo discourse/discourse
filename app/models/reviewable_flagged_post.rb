@@ -41,7 +41,7 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def post
-    @post ||= (target || Post.with_deleted.find_by(id: target_id))
+    @post ||= target || Post.with_deleted.find_by(id: target_id)
   end
 
   def build_actions(actions, guardian, args)

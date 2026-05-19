@@ -28,10 +28,7 @@ after_initialize do
     end
   end
 
-  SeedFu.fixture_paths << Rails
-    .root
-    .join("plugins", "discourse-narrative-bot", "db", "fixtures")
-    .to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-narrative-bot/db/fixtures").to_s
 
   Mime::Type.register "image/svg+xml", :svg
 

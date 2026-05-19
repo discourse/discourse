@@ -2,7 +2,7 @@
 
 describe "Block conditions" do
   fab!(:theme) do
-    theme_dir = "#{Rails.root}/spec/fixtures/themes/dev-tools-test-theme"
+    theme_dir = "#{Rails.root.join("spec/fixtures/themes/dev-tools-test-theme")}"
     theme = RemoteTheme.import_theme_from_directory(theme_dir)
     Theme.find(SiteSetting.default_theme_id).child_themes << theme
     theme

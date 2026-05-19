@@ -6,7 +6,7 @@ module Migrations
       QueryResult = Data.define(:rows, :column_count)
 
       COPY_BATCH_SIZE = 1_000
-      SKIP_ROW_MARKER = :"$skip"
+      SKIP_ROW_MARKER = :$skip
 
       def initialize
         @encoder = PG::TextEncoder::CopyRow.new

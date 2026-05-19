@@ -288,7 +288,7 @@ class SessionController < ApplicationController
       text = nil
 
       # If there's a problem with the email we can explain that
-      if (e.record.is_a?(User) && e.record.errors[:primary_email].present?)
+      if e.record.is_a?(User) && e.record.errors[:primary_email].present?
         if e.record.email.blank?
           text = I18n.t("discourse_connect.no_email")
         else

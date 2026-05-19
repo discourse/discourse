@@ -47,7 +47,7 @@ end
 require_relative "lib/chat/engine"
 
 after_initialize do
-  register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
+  register_seedfu_fixtures(Rails.root.join("plugins/chat/db/fixtures"))
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 

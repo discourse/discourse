@@ -352,9 +352,9 @@ class ColorScheme < ActiveRecord::Base
   validate :no_edits_for_remote_copies, on: :update
   validates_associated :color_scheme_colors
 
-  BASE_COLORS_FILE = "#{Rails.root}/app/assets/stylesheets/common/foundation/colors.scss"
+  BASE_COLORS_FILE = "#{Rails.root.join("app/assets/stylesheets/common/foundation/colors.scss")}"
   COLOR_TRANSFORMATION_FILE =
-    "#{Rails.root}/app/assets/stylesheets/common/foundation/color_transformations.scss"
+    "#{Rails.root.join("app/assets/stylesheets/common/foundation/color_transformations.scss")}"
 
   @mutex = Mutex.new
 

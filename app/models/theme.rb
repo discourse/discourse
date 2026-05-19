@@ -454,7 +454,7 @@ class Theme < ActiveRecord::Base
     return "" if theme_id.blank?
 
     theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
-    resolved = (resolve_baked_field(theme_ids, target.to_sym, field) || "")
+    resolved = resolve_baked_field(theme_ids, target.to_sym, field) || ""
     resolved = resolved.gsub(ThemeField::CSP_NONCE_PLACEHOLDER, csp_nonce) if csp_nonce
     resolved.html_safe
   end

@@ -127,7 +127,7 @@ class ReviewablePost < Reviewable
   private
 
   def post
-    @post ||= (target || Post.with_deleted.find_by(id: target_id))
+    @post ||= target || Post.with_deleted.find_by(id: target_id)
   end
 end
 

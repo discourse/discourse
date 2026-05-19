@@ -37,9 +37,12 @@ class Report
   ]
 
   ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads topic_view_stats]
+  IP_ADDRESS_REPORTS = %w[suspicious_logins]
 
-  def self.hidden?(type, admin:)
-    return true if !admin && ADMIN_ONLY_REPORTS.include?(type)
+  def self.hidden?(type, guardian:)
+    return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
+    return true if !guardian.is_admin? && !guardian.can_see_ip? && IP_ADDRESS_REPORTS.include?(type)
+
     hidden_reports =
       SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
     hidden_reports.include?(type)
@@ -408,7 +411,7 @@ class Report
     report.total = data.sum(:count)
 
     report.prev30Days =
-      data.where("date >= ? AND date < ?", (report.start_date - 31.days), report.start_date).sum(
+      data.where("date >= ? AND date < ?", report.start_date - 31.days, report.start_date).sum(
         :count,
       )
   end

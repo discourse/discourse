@@ -24,7 +24,8 @@ module Plugin
 
     def self.read_manifest(plugin_directory_name)
       maybe_cache("manifest_#{plugin_directory_name}") do
-        manifest_path = "#{Rails.root}/app/assets/generated/#{plugin_directory_name}/manifest.json"
+        manifest_path =
+          "#{Rails.root.join("app/assets/generated/#{plugin_directory_name}/manifest.json")}"
         JSON.parse(File.read(manifest_path))
       rescue Errno::ENOENT
         {}
@@ -61,7 +62,7 @@ module Plugin
     end
 
     def compile_js_bundle(plugin)
-      base_output_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}"
+      base_output_dir = "#{Rails.root.join("app/assets/generated/#{plugin.directory_name}")}"
       js_dir = "#{base_output_dir}/js/plugins"
       map_dir = "#{base_output_dir}/map/plugins"
 

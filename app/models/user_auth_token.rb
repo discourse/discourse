@@ -240,8 +240,8 @@ class UserAuthToken < ActiveRecord::Base
   end
 
   def rotate!(info = nil)
-    user_agent = (info && info[:user_agent] || self.user_agent)
-    client_ip = (info && info[:client_ip] || self.client_ip)
+    user_agent = info && info[:user_agent] || self.user_agent
+    client_ip = info && info[:client_ip] || self.client_ip
 
     token = SecureRandom.hex(16)
 

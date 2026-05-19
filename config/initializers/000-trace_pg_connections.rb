@@ -80,7 +80,7 @@ if ENV["TRACE_PG_CONNECTIONS"]
     ]
 
     LOG_ACCESS_METHODS.each do |method|
-      new_method = "#{method}_without_logging".to_sym
+      new_method = :"#{method}_without_logging"
       alias_method new_method, method
 
       define_method(method) { |*args, &blk| log_access { send(new_method, *args, &blk) } }

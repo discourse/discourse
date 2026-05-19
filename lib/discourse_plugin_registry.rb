@@ -138,7 +138,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :reviewable_types do |singleton|
     singleton.define_singleton_method("reviewable_types_lookup") do
-      public_send(:"_raw_reviewable_types")
+      public_send(:_raw_reviewable_types)
         .filter_map { |h| { plugin: h[:plugin].name, klass: h[:value] } if h[:plugin].enabled? }
         .uniq
     end

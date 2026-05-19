@@ -260,14 +260,12 @@ class ImportScripts::Smf2 < ImportScripts::Base
         ORDER BY id_attach ASC
       SQL
       attachments.map! do |a|
-        begin
-          import_attachment(post, a)
-        rescue StandardError
-          (
-            puts $!
-            nil
-          )
-        end
+        import_attachment(post, a)
+      rescue StandardError
+        (
+          puts $!
+          nil
+        )
       end
       begin
         post[:raw] = convert_message_body(message[:body], attachments, ignore_quotes: ignore_quotes)
@@ -504,7 +502,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       if use_count.keys.length < attachments.select(&:present?).length
         body = "#{body}\n\n---"
         attachments.each_with_index do |upload, num|
-          "#{body}\n\n#{get_upload_markdown(upload)}" if upload.present? && use_count[num] == (0)
+          "#{body}\n\n#{get_upload_markdown(upload)}" if upload.present? && use_count[num] == 0
         end
       end
     end

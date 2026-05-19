@@ -501,10 +501,21 @@ module Chat
     private
 
     def self.permissions(channel)
-      {
-        user_ids: channel.allowed_user_ids.presence,
-        group_ids: channel.allowed_group_ids.presence,
-      }.compact
+      group_ids = channel.allowed_group_ids.presence
+      if group_ids.blank? && channel.category_channel? && !channel.read_restricted?
+        group_ids = chat_allowed_group_ids
+      end
+
+      { user_ids: channel.allowed_user_ids.presence, group_ids: group_ids }.compact
+    end
+
+    def self.chat_allowed_group_ids
+      Chat
+        .allowed_group_ids
+        .map do |group_id|
+          group_id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:trust_level_0] : group_id
+        end
+        .uniq
     end
 
     def self.anonymous_guardian

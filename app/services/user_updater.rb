@@ -66,8 +66,8 @@ class UserUpdater
   NOTIFICATION_SCHEDULE_ATTRS = -> do
     attrs = [:enabled]
     7.times do |n|
-      attrs.push("day_#{n}_start_time".to_sym)
-      attrs.push("day_#{n}_end_time".to_sym)
+      attrs.push(:"day_#{n}_start_time")
+      attrs.push(:"day_#{n}_end_time")
     end
     { user_notification_schedule: attrs }
   end.call
@@ -252,7 +252,7 @@ class UserUpdater
           (user_notification_schedule.nil? || user_notification_schedule.save) &&
           user_profile.save && user.save
 
-      if saved && (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
+      if saved && name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0
         StaffActionLogger.new(@actor).log_name_change(
           user.id,
           old_user_name,

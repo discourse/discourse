@@ -249,7 +249,7 @@ module Jobs
     end
 
     def available_disk_space
-      100 - DiskSpace.percent_free("#{Rails.root}/public/uploads")
+      100 - DiskSpace.percent_free("#{Rails.public_path.join("uploads")}")
     end
   end
 end

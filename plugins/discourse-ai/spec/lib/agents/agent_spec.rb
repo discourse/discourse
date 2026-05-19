@@ -318,7 +318,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
   describe ".sync_external_registry!" do
     fab!(:fake_plugin) do
       plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin.path = "#{Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb")}"
       plugin
     end
 

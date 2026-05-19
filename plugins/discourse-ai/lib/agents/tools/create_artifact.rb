@@ -90,7 +90,7 @@ module DiscourseAi
         end
 
         def in_progress(specification:, source: nil)
-          source = (<<~HTML) if source.present?
+          source = <<~HTML if source.present?
             ### Source
 
             ````

@@ -450,12 +450,10 @@ class S3Helper
   end
 
   def fetch_bucket_cors_rules
-    begin
-      s3_resource.client.get_bucket_cors(bucket: @s3_bucket_name).cors_rules&.map(&:to_h) || []
-    rescue Aws::S3::Errors::NoSuchCORSConfiguration
-      # no rule
-      []
-    end
+    s3_resource.client.get_bucket_cors(bucket: @s3_bucket_name).cors_rules&.map(&:to_h) || []
+  rescue Aws::S3::Errors::NoSuchCORSConfiguration
+    # no rule
+    []
   end
 
   def default_s3_options

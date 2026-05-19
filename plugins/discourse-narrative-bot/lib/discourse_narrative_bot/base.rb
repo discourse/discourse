@@ -60,7 +60,7 @@ module DiscourseNarrativeBot
           old_data = @data.dup
 
           new_post =
-            if (@skip && @state != :end)
+            if @skip && @state != :end
               skip_tutorial(next_state)
             else
               send(action)
