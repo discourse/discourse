@@ -562,11 +562,11 @@ acceptance(`Prioritize Full Name (new composer actions)`, function (needs) {
 
   test("Reply to post use full name", async function (assert) {
     await visit("/t/short-topic-with-two-posts/54079");
-    await click("article#post_3 button.reply");
+    await click("article#post_2 button.reply");
 
     assert.dom(".composer-actions-trigger").includesText(
       i18n("composer.composer_actions.reply_to_post.label", {
-        postUsername: "tms",
+        postUsername: "james, john, the third",
       })
     );
   });

@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { prioritizeNameFallback } from "discourse/lib/settings";
 import {
   applyBehaviorTransformer,
   applyValueTransformer,
@@ -165,7 +166,7 @@ export default class ComposerActions extends Component {
       if (isInSlowMode) {
         labelText = i18n("composer.composer_actions.slow_mode_reply");
       } else if (isReplyingToPost) {
-        labelText = this._replyToPostLabel(this.post.username);
+        labelText = this._replyToPostLabel(this._postDisplayName(this.post));
       } else {
         labelText = this._replyToTopicLabel();
       }
@@ -183,6 +184,16 @@ export default class ComposerActions extends Component {
       actions: availableActions,
       hasActions: availableActions.length > 0,
     };
+  }
+
+  _postDisplayName(post) {
+    if (!post) {
+      return "User";
+    }
+    if (post === this.post && this.replyOptions?.userLink?.anchor) {
+      return this.replyOptions.userLink.anchor;
+    }
+    return prioritizeNameFallback(post.name, post.username) || "User";
   }
 
   // Builds the "Reply to a post by <user>" label as trusted HTML with span
@@ -292,7 +303,7 @@ export default class ComposerActions extends Component {
     ) {
       const postForLabel = currentPost || _postSnapshot;
       const actionObj = {
-        name: this._replyToPostLabel(postForLabel?.username || "User"),
+        name: this._replyToPostLabel(this._postDisplayName(postForLabel)),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
         id: "reply_to_post",
@@ -338,7 +349,7 @@ export default class ComposerActions extends Component {
       _topicSnapshot
     ) {
       const actionObj = {
-        name: this._replyToPostLabel(_postSnapshot.username || "User"),
+        name: this._replyToPostLabel(this._postDisplayName(_postSnapshot)),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
         id: "reply_to_post",
