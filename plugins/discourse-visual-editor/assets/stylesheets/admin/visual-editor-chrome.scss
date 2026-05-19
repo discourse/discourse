@@ -3225,14 +3225,22 @@ body.visual-editor-active {
 
 .visual-editor-drop-preview {
   position: fixed;
+  top: 0;
+  left: 0;
   pointer-events: none;
   z-index: z("modal", "content");
   border-radius: 4px;
   border: 2px solid var(--tertiary);
   background: rgb(0 119 204 / 0.18);
+
+  /* `transform` is composited (no layout, no paint) so position
+     updates per dragover stay cheap. `width` / `height` still go
+     through layout but change far less often than position during
+     a drag. `will-change: transform` hints the compositor to keep
+     this element on its own layer. */
+  will-change: transform;
   transition:
-    top 80ms ease-out,
-    left 80ms ease-out,
+    transform 80ms ease-out,
     width 80ms ease-out,
     height 80ms ease-out;
 

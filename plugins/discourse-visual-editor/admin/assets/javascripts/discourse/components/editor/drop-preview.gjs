@@ -16,9 +16,12 @@ import { trustHTML } from "@ember/template";
  * simultaneously at grid edges; this component replaces both.
  *
  * The descriptor's `geometry` is in viewport coordinates (`top`,
- * `left`, `width`, `height` in CSS pixels), so the overlay uses
- * `position: fixed` to anchor against the viewport regardless of
- * which scroll container the original drag started in.
+ * `left`, `width`, `height` in CSS pixels). The overlay uses
+ * `position: fixed` anchored at `top: 0; left: 0` and `translate3d`
+ * to reach the target rectangle — translate is composited (no layout
+ * or paint), where `top`/`left` writes force layout on every
+ * dragover. Width / height still need to update with the descriptor
+ * but those change far less frequently than position during a drag.
  *
  * `null` descriptor = no overlay rendered (`{{#if}}` guard at the
  * top of the template), so when scopes clear their preview the
@@ -37,7 +40,7 @@ export default class DropPreview extends Component {
       return null;
     }
     return trustHTML(
-      `top: ${g.top}px; left: ${g.left}px; ` +
+      `transform: translate3d(${g.left}px, ${g.top}px, 0); ` +
         `width: ${g.width}px; height: ${g.height}px;`
     );
   }

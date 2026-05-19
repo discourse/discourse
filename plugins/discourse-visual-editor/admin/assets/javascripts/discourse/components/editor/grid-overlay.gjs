@@ -22,6 +22,68 @@ import { entryKey } from "../../lib/mutate-layout";
 import EmptyCellPlaceholder from "./empty-cell-placeholder";
 
 /**
+ * Shallow equivalence check for drop-preview descriptors. Returns
+ * true when `a` and `b` would produce the same rendered overlay so
+ * `setDropPreview` can short-circuit the tracked write + mirror.
+ *
+ * Compares every field that influences either the overlay paint
+ * (kind, column.start/end, row.start/end, line, variant, validity)
+ * or the geometry pre-stamped at hit-test time in collapsed mode
+ * (`_collapsedRect` coords + `_collapsedZone`).
+ */
+function descriptorsEqual(a, b) {
+  if (a === b) {
+    return true;
+  }
+  if (!a || !b) {
+    return false;
+  }
+  if (a.kind !== b.kind) {
+    return false;
+  }
+  if (a.variant !== b.variant) {
+    return false;
+  }
+  if (a.line !== b.line) {
+    return false;
+  }
+  if (!!a._invalid !== !!b._invalid) {
+    return false;
+  }
+  if (a._collapsedZone !== b._collapsedZone) {
+    return false;
+  }
+  if (a.column?.start !== b.column?.start) {
+    return false;
+  }
+  if (a.column?.end !== b.column?.end) {
+    return false;
+  }
+  if (a.row?.start !== b.row?.start) {
+    return false;
+  }
+  if (a.row?.end !== b.row?.end) {
+    return false;
+  }
+  const ra = a._collapsedRect;
+  const rb = b._collapsedRect;
+  if (!!ra !== !!rb) {
+    return false;
+  }
+  if (ra && rb) {
+    if (
+      ra.top !== rb.top ||
+      ra.left !== rb.left ||
+      ra.width !== rb.width ||
+      ra.height !== rb.height
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
  * Edit-mode affordances for a selected `ve:layout` in grid mode.
  *
  * Rather than render a separate grid that sits ON TOP of the layout
@@ -115,6 +177,31 @@ export default class GridOverlay extends Component {
    */
   acceptedDropKinds = ["ve-block", "ve-palette-block"];
   /**
+   * Per-drag geometry cache. Populated lazily on the first dragover
+   * of a session (keyed on the drag source's reference identity in
+   * `dragAndDrop.currentDrag`); refreshed when the window resizes or
+   * any element on the page scrolls (which may shift the grid's
+   * viewport-relative position); cleared when no drag is in flight.
+   *
+   * Avoids 2-3 synchronous layout reads per dragover —
+   * `getBoundingClientRect()` and `getComputedStyle().fontSize` /
+   * threshold computation. Hot during typical drags.
+   *
+   * Shape: `{source, gridRect, isCollapsed}` or `null`.
+   */
+  #dragCache = null;
+  /**
+   * Refreshes the cached gridRect + isCollapsed without dropping the
+   * cache identity. Bound to window `resize` and `scroll` so coords
+   * stay current if the page reflows during a drag.
+   */
+  #invalidateDragGeometry = () => {
+    if (this.#dragCache && this._gridElement) {
+      this.#dragCache.gridRect = this._gridElement.getBoundingClientRect();
+      this.#dragCache.isCollapsed = this.#computeIsCollapsed();
+    }
+  };
+  /**
    * Cell currently in "pick a block" mode. `null` when no picker is
    * open. Stored here (rather than per-cell state) so clicking another
    * `+` swaps the picker over instead of opening a second one.
@@ -173,6 +260,8 @@ export default class GridOverlay extends Component {
         true
       );
     }
+    window.removeEventListener("resize", this.#invalidateDragGeometry);
+    window.removeEventListener("scroll", this.#invalidateDragGeometry, true);
     this.visualEditor.unregisterGridOverlay(this.args.gridKey, this);
   }
 
@@ -227,6 +316,14 @@ export default class GridOverlay extends Component {
    * track-math path is correct).
    */
   get isCollapsed() {
+    const cache = this.#activeDragContext();
+    if (cache) {
+      return cache.isCollapsed;
+    }
+    return this.#computeIsCollapsed();
+  }
+
+  #computeIsCollapsed() {
     const gridEl = this._gridElement;
     if (!gridEl) {
       return false;
@@ -242,6 +339,38 @@ export default class GridOverlay extends Component {
       parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     const thresholdRem = autoCollapse === "compact" ? 15 : 40;
     return gridEl.getBoundingClientRect().width < thresholdRem * remPx;
+  }
+
+  /**
+   * Returns the current drag's cached geometry, or `null` when no
+   * drag is in flight. Populates the cache lazily on the first call
+   * of a drag session (keyed on `dragAndDrop.currentDrag`'s reference
+   * identity). Invalidated by `resize` / `scroll` listeners installed
+   * in `captureGridElement`.
+   */
+  #activeDragContext() {
+    const source = this.dragAndDrop.currentDrag;
+    if (!source) {
+      this.#dragCache = null;
+      return null;
+    }
+    if (this.#dragCache?.source !== source) {
+      this.#dragCache = {
+        source,
+        gridRect: this._gridElement?.getBoundingClientRect() ?? null,
+        isCollapsed: this.#computeIsCollapsed(),
+      };
+    }
+    return this.#dragCache;
+  }
+
+  /** Cached `gridRect` for hit-test / geometry callers. */
+  #getGridRect() {
+    return (
+      this.#activeDragContext()?.gridRect ??
+      this._gridElement?.getBoundingClientRect() ??
+      null
+    );
   }
 
   /**
@@ -319,9 +448,25 @@ export default class GridOverlay extends Component {
    * `dropPreview` drives the rendered overlay via reactivity;
    * `_lastDropPreview` survives the cleanup that fires just before
    * `applyCellDrop` / `applySlotDrop` reads it.
+   *
+   * Short-circuits when the incoming descriptor is shape-equivalent
+   * to the current one — the cursor sitting in one cell still fires
+   * dragover at ~60 Hz, and without this gate every event triggered
+   * a tracked invalidation + re-render + mirror call. Comparison
+   * covers the fields that influence the rendered overlay (kind,
+   * placement, variant, validity, hit rect / zone in collapsed mode).
    */
   @action
   setDropPreview(descriptor) {
+    if (descriptorsEqual(this.dropPreview, descriptor)) {
+      // Still bump `_lastDropPreview` for the drop dispatch path — the
+      // earlier `dragover` already wrote it; this is defensive in case
+      // a caller passes a fresh-but-equivalent descriptor object.
+      if (descriptor) {
+        this._lastDropPreview = descriptor;
+      }
+      return;
+    }
     this.dropPreview = descriptor;
     if (descriptor) {
       this._lastDropPreview = descriptor;
@@ -357,7 +502,11 @@ export default class GridOverlay extends Component {
       this.visualEditor.setActiveDropPreview(null);
       return;
     }
-    const gridRect = this._gridElement.getBoundingClientRect();
+    const gridRect = this.#getGridRect();
+    if (!gridRect) {
+      this.visualEditor.setActiveDropPreview(null);
+      return;
+    }
     const geometry = {
       top: gridRect.top + gridRel.top,
       left: gridRect.left + gridRel.left,
@@ -483,6 +632,18 @@ export default class GridOverlay extends Component {
     this._gridDragLeaveHandler = (e) => this._handleGridDragLeave(e);
     gridEl.addEventListener("dragover", this._gridDragOverHandler, true);
     gridEl.addEventListener("dragleave", this._gridDragLeaveHandler, true);
+    // Refresh the per-drag geometry cache when the page reflows (any
+    // resize) or when any scroll container moves (capture-phase
+    // listener catches scrolls on nested overflow containers too, not
+    // just window scroll). Keeps cached `gridRect` viewport coords
+    // valid through layout shifts during a drag.
+    window.addEventListener("resize", this.#invalidateDragGeometry, {
+      passive: true,
+    });
+    window.addEventListener("scroll", this.#invalidateDragGeometry, {
+      passive: true,
+      capture: true,
+    });
   }
 
   @action
@@ -695,7 +856,10 @@ export default class GridOverlay extends Component {
     if (!tracks) {
       return null;
     }
-    const gridRect = this._gridElement.getBoundingClientRect();
+    const gridRect = this.#getGridRect();
+    if (!gridRect) {
+      return null;
+    }
     const x = event.clientX - gridRect.left;
     const y = event.clientY - gridRect.top;
 
@@ -1309,7 +1473,10 @@ export default class GridOverlay extends Component {
     if (!rect) {
       return null;
     }
-    const gridRect = this._gridElement.getBoundingClientRect();
+    const gridRect = this.#getGridRect();
+    if (!gridRect) {
+      return null;
+    }
     const stroke = 4;
 
     if (descriptor.kind === "rect") {

@@ -1,156 +1,236 @@
-# Drag-and-drop overhaul: single drop indicator + operation feedback
+# Visual-editor DnD overhaul — quick wins → descriptor consolidation → PDND-backed core primitives
 
 ## Context
 
-The editor currently runs **two independent drop-target systems** that both paint visual feedback during a drag:
+After the collapsed-grid fixes shipped, the visual editor's DnD code is ~3500-4500 LOC across:
 
-1. **Per-block sibling/inside strip zones** — physical 4px `.visual-editor-drop-zone` DOM elements around every block (`block-chrome.gjs:768-953`), each its own `dDragAndDropTarget` modifier instance. They eat real layout space all the time, and an active one flashes a tinted band.
-2. **Grid-level capture-phase dragover handler** — `GridOverlay` installs `addEventListener("dragover", ..., true)` on the grid `<div>` (`grid-overlay.gjs:297-301`) and writes a `dropPreview` descriptor consumed by an absolute-positioned overlay element (`.visual-editor-grid-drop-overlay`, with `--rect-swap`/`--rect-replace`/`--rect-move`/`--line-column`/`--line-row` variants).
+- `grid-overlay.gjs` (1515 LOC) — admin component, owns the grid-internal DnD pipeline.
+- `container-drop-target.js` (791 LOC) — admin modifier, owns the linear (stack/row/slot) DnD pipeline.
+- `grid-tile-drag.js` (224 LOC) — resize-handle drag, separate from the DnD modifiers.
+- `drop-preview.gjs` (61 LOC) — single shell-mounted overlay.
+- `outline-panel.gjs` — outline-list reordering.
+- ~25 DnD-related methods on `services/visual-editor.js`.
 
-Both fire at grid cell edges. The chrome's `--before` strip lights up at the same time the grid overlay paints a `--line-column`. The outline panel rows can flash too (`outline-panel.gjs:638-642`), and empty grid cells run their own `+` affordance independently. Users see **multiple simultaneous drop indicators** with no idea which one represents the real drop.
+The audit surfaced **two pain points**:
 
-There is also **no operation feedback** — the drop preview is colored rectangles/lines but never carries text. Users can't tell whether a drop will insert, move, replace, or swap until after they let go. The "Drop here to add inside" copy is inconsistent (shown sometimes, not others) and the inside-drop strip is "janky" per the user.
+1. **Maintainability.** Two parallel descriptor pipelines coexist. The *linear* pipeline (`container-drop-target.js`) embeds a `{action, args}` dispatch payload in its descriptor; `service.dispatchActiveDrop()` runs the action by name. The *grid* pipeline (`grid-overlay.gjs`) carries no dispatch payload; it mirrors a label-only descriptor to the service, keeps its own `_lastDropPreview` slot, and dispatches via a custom switch on `descriptor.kind` / `variant`. Two state slots, two descriptor shapes, two dispatch tables. Tracing any single gesture means reading both files. The recent "drop duplicates instead of moves" bug was hard to diagnose precisely because of this divergence.
 
-Goal: a single drop indicator at any moment, painted by ONE authority per drag, that says exactly what operation will happen to which target. Invalid targets simply don't light up.
+2. **Perceived responsiveness.** Editor DnD feels laggy on top of the architectural complexity:
+   - `dropPreview` is `@tracked`; every `dragover` writes to it unconditionally — 60 Hz re-renders during stationary hover.
+   - The overlay positions via `top` / `left` (forces layout + paint) rather than `transform` (compositor-only).
+   - 2-3 `getBoundingClientRect()` / `getComputedStyle()` reads per dragover — synchronous layout flushes.
+   - `dDragAndDropTarget` toggles CSS indicator classes per dragover in bubble phase.
+   - No rAF batching.
+   - No auto-scroll — tall layouts on small viewports stall at the canvas edge.
 
-## Approach
+## Goals
 
-### 1. Single drop-preview authority
+Two simultaneous outcomes, equally important:
 
-One **drop coordinator** owns the active descriptor for an entire drag. There is exactly one `<DropPreview>` element painted on screen during a drag — never two.
+1. **Best DnD experience in the visual editor.** Smooth, responsive, no jank. One descriptor pipeline. Auto-scroll, eventual a11y on the horizon.
+2. **Best reusable DnD infrastructure in Discourse core.** A clean, PDND-backed modifier + service API in `ui-kit` that any other plugin or core feature can pick up. The visual editor is the proving ground for this infra, but the infra outlives the plugin's use of it.
 
-**File**: new `assets/javascripts/discourse/components/editor/drop-preview.gjs`. Renders an absolutely-positioned overlay (`<div class="visual-editor-drop-preview">`) anchored to the canvas root. Listens to a single tracked `activeDropPreview` on the `visualEditor` service:
+The plugin is currently the only consumer of `dDragAndDropSource` / `dDragAndDropTarget` across Discourse (greps confirmed: 2 / 3 consumer files all under `plugins/discourse-visual-editor/`). That gives us licence to **redesign the core API freely** rather than preserve its byte-identical surface. The integration test in `frontend/discourse/tests/integration/ui-kit/modifiers/drag-and-drop-test.gjs` gets rewritten to match the new contract.
 
+## Phase 1 — Quick perceived-perf wins (1 day, no library, no architecture change)
+
+Three small changes, immediate visible crispness, zero risk. Independent of Phases 2/3.
+
+**Changes:**
+
+- **`drop-preview.gjs`**: switch overlay positioning from `top: <y>px; left: <x>px;` to `transform: translate3d(<x>px, <y>px, 0);` + keep `width`/`height` for size. Promotes the overlay to its own compositor layer; reposition no longer triggers layout/paint. Add `will-change: transform` while the overlay is mounted with a non-null preview.
+
+- **`grid-overlay.gjs setDropPreview`**: shallow-compare incoming descriptor against `this.dropPreview` before the tracked write. Compare `kind`, `column.start/end`, `row.start/end`, `line`, `variant`, `_invalid`, `_collapsedRect` coords. Skip the assignment if unchanged. Eliminates redundant re-renders during stationary hover.
+
+- **`grid-overlay.gjs`**: cache `gridRect` (from `getBoundingClientRect`) and `isCollapsed` for the lifetime of a single drag. Capture on the first dragover; invalidate on `window` `resize` and `scroll`; clear on drop / dragend. Avoids 2-3 sync layout reads per dragover.
+
+**Files modified:**
+- `plugins/discourse-visual-editor/admin/assets/javascripts/discourse/components/editor/drop-preview.gjs`
+- `plugins/discourse-visual-editor/admin/assets/javascripts/discourse/components/editor/grid-overlay.gjs`
+
+## Phase 2 — Descriptor consolidation (3-4 days, no library)
+
+Goal: **one descriptor shape, one state slot, one dispatch path** for both grid and linear DnD.
+
+The linear contract today is the right one: descriptor carries an embedded `dispatch: {action, args}` payload, and `service.dispatchActiveDrop()` looks up `service[action]` and calls it with `args`. We extend this contract to the grid pipeline so grid dispatches go through the same channel.
+
+**Grid descriptor generators (`_slotDescriptorForZone`, `_cellDescriptorForZone` in `grid-overlay.gjs`)** — embed a `dispatch` field at hit-test time. Mapping:
+
+| Descriptor | dispatch |
+|---|---|
+| `rect` / `swap` | `{action: "swapSlotPlacements", args: {slotKeyA, slotKeyB}}` |
+| `rect` / `replace` | `{action: "replaceSlot", args: {targetSlotKey, sourceSlotKey}}` |
+| `rect` / `move` + palette | `{action: "insertBlockAtCell", args: {gridKey, blockName, defaultArgs, column, row}}` |
+| `rect` / `move` + ve-block | `{action: "moveBlockToCell", args: {gridKey, sourceKey, column, row}}` |
+| `line-row` / `line-column` | `{action: "insertWithShift", args: {gridKey, dropCell, direction, sourceKey \| paletteBlockName, paletteDefaultArgs}}` |
+
+**Single state slot.** `grid-overlay.gjs` writes directly to `service.setActiveDropPreview(descriptor)`. No more local `_lastDropPreview` field on the overlay, no more `_mirrorToActivePreview`. Service's `_lastDropPreview` is the single source of truth.
+
+**Geometry pre-stamped on the descriptor in viewport coords** (matching `container-drop-target.js` today) — no more grid-relative → viewport conversion at the consumer.
+
+**Drop handlers become one-liners.** Empty cells' `onDrop` and the grid-cell-leaf `onLeafDrop` both become:
 ```js
-{
-  kind: "insert" | "replace" | "swap" | "shift" | "inside" | "occupy",
-  geometry: { top, left, width, height }, // absolute viewport-relative
-  variant: "valid" | "invalid",           // drives color
-  label: "Move Heading after Paragraph",  // operation feedback (i18n key + interpolation)
-}
+event => { visualEditor.dispatchActiveDrop(); visualEditor.endDrag(); }
+```
+Delete: `applyCellDrop`, `applySlotDrop`, `_dispatchDrop`, `_dispatchInsertWithShift`, `_mirrorToActivePreview`, `_unifiedKindFor`, `_labelFor`, `_sourceDisplayName`, `_slotKeyAtPlacement`, the local `_lastDropPreview` field and `setDropPreview` action — all in `grid-overlay.gjs`.
+
+**Document the unified contract** at the top of `container-drop-target.js`: every drop descriptor is `{geometry, kind, validity, label, dispatch: {action, args}, [optional grid-specific fields]}`.
+
+**Service surface stays the same** for dispatch endpoints — they already exist. The `setDropPreview` / `clearDropPreview` / `getLastDropPreview` / `registerGridOverlay` / `unregisterGridOverlay` routing methods become deletable (no callers after the consolidation).
+
+**Files modified:**
+- `plugins/discourse-visual-editor/admin/assets/javascripts/discourse/components/editor/grid-overlay.gjs` (~400 LOC reduction)
+- `plugins/discourse-visual-editor/admin/assets/javascripts/discourse/modifiers/container-drop-target.js` (~20 LOC)
+- `plugins/discourse-visual-editor/admin/assets/javascripts/discourse/services/visual-editor.js` (delete dead routing methods, ~50 LOC)
+
+## Phase 3 — PDND-backed core primitives + best-fit API redesign (5-7 days)
+
+Goal: rewrite the ui-kit DnD modifiers and service against [Pragmatic Drag and Drop](https://atlassian.design/components/pragmatic-drag-and-drop/about), free to redesign the public API. Plugin consumers migrate to the new API.
+
+### 3a. Deps go in core, not plugin
+
+PDND is published as ESM under Apache-2.0. Discourse's pnpm workspace shares `frontend/discourse/`'s dependencies with all packages including plugins, so the deps live there:
+
+- `frontend/discourse/package.json` — add `@atlaskit/pragmatic-drag-and-drop` (~5 KB) and `@atlaskit/pragmatic-drag-and-drop-auto-scroll` (~3 KB).
+- Confirm Embroider resolves the imports from plugin code.
+
+### 3b. Redesigned modifier + service API in `frontend/discourse/app/ui-kit/`
+
+Free to break the existing API surface. Aiming for PDND's conceptual model with Ember-idiomatic ergonomics.
+
+**`d-drag-and-drop-source` (Source modifier)**:
+
+```hbs
+{{dDragAndDropSource
+  type="ve-block"            {{! was "kind" — aligns with PDND's "type" }}
+  data=(hash blockKey=@blockKey outletName=@outletName)
+                                   {{! or getInitialData=(fn this.getData) for dynamic }}
+  dragPreview=this.chromeEl  {{! element ref for the drag image }}
+  canDrag=this.canDrag       {{! NEW: synchronous gate, return false to block start }}
+  onDragStart=this.onStart   {{! callback receives {source, input} }}
+  onDrop=this.onEnd          {{! renamed from onDragEnd; matches PDND }}
+  getDropEffect=this.effect  {{! NEW: "copy"|"move"|"link" per drag, optional }}
+}}
 ```
 
-Mount once at the editor shell level (`editor/shell.gjs`); a single render path means impossible-to-have-two-overlays-by-construction.
+**`d-drag-and-drop-target` (Drop-target modifier)**:
 
-**Move the responsibility out of `GridOverlay`** — its `dropPreview` becomes a *contributor* to the service-level coordinator, not a parallel renderer. `GridOverlay.overlayStyle` + the `--rect-*`/`--line-*` overlay element get deleted.
+```hbs
+{{dDragAndDropTarget
+  accepts=(array "ve-block" "ve-palette-block")
+                                   {{! array or single string }}
+  canDrop=this.canDrop       {{! ({source, input, element}) => boolean }}
+  getData=this.getDropData   {{! optional, returns target-side metadata }}
+  getIsSticky=this.sticky    {{! NEW: PDND's sticky drop-target semantics }}
+  onDragEnter=this.onEnter
+  onDrag=this.onDrag         {{! PDND: only fires when drag data changes, NOT every mousemove }}
+  onDragLeave=this.onLeave
+  onDrop=this.onDrop
+  indicator=true             {{! optional smart-row indicator (was implicit) }}
+  axis="y"                   {{! "x" / "y", drives indicator + auto-position }}
+}}
+```
 
-### 2. Replace per-block strip zones with edge detection
+**`d-drag-and-drop-auto-scroll` (NEW Auto-scroll modifier)**:
 
-Today every block has three 4px `<div>` drop-zone children (`--before`, `--after`, `--inside`). They take layout space, they each have their own modifier instance, and they each paint independently.
+```hbs
+{{!-- Attached to a scroll container; auto-scrolls that element when a compatible drag is in flight. --}}
+<div class="visual-editor-canvas"
+  {{dDragAndDropAutoScroll types=(array "ve-block" "ve-palette-block") axis="vertical"}}
+>
 
-Replace them with **a single dragover handler at each layout-container boundary** (chrome of stack/row/grid containers). The handler:
+{{!-- Attached to <body> (or the document root) for window auto-scroll. --}}
+{{dDragAndDropAutoScroll target="window" types=this.acceptedTypes}}
+```
 
-1. On `dragover`, reads the cursor's position relative to the container's bounding box.
-2. Projects the cursor onto the container's children — for stack/row layouts, finds the nearest gap (between child N and N+1, or before the first / after the last).
-3. Computes the operation:
-   - cursor in the upper third of a child → INSERT before
-   - cursor in the lower third → INSERT after
-   - cursor in the middle third, and the child IS a container → INSIDE
-   - cursor in the middle third, and the child is a slot → REPLACE
-   - cursor in the middle third, and the child is a regular block → no overlay (no valid landing)
-4. Validates the drop via `canDropAt` / `canInsertBlockAt` — if invalid, descriptor is `{variant: "invalid"}` (or null, if we don't want to flash anything for invalid).
-5. Writes `visualEditor.activeDropPreview = descriptor`.
+Wraps `autoScrollForElements` / `autoScrollWindowForElements` from `@atlaskit/pragmatic-drag-and-drop-auto-scroll/element`. `types` filters which drag types trigger the scroll. Putting auto-scroll on a *modifier attached to the scroll container* (rather than a top-level shell setup) keeps the API declarative, reusable, and localizes the cleanup to component teardown.
 
-`drop` handler: read the captured descriptor, dispatch to `insertBlock` / `moveBlock` / `fillSlot` / `moveBlockIntoSlot` accordingly.
+**`dragAndDrop` service (`frontend/discourse/app/services/drag-and-drop.js`)** — rewire to PDND's monitor:
 
-This deletes the per-element `.visual-editor-drop-zone` DOM elements entirely. The container's chrome owns ONE dragover listener; the overlay paints ONE rectangle/line.
+```js
+@service dragAndDrop;
+// tracked: dragAndDrop.currentDrag = {type, data, source: <element>} | null
+// tracked: dragAndDrop.isActive = boolean
+// method: dragAndDrop.accepts(typeOrTypes) — supports string or array
+```
 
-### 3. Grid drop-site selection unified
+Backed by `monitorForElements({onDragStart, onDrop})` set up once at service init. Same public-getter shape as today but with `type` instead of `kind`.
 
-`GridOverlay`'s existing math (`_descriptorFromCursor`, `_computeZone`, `_cellDescriptorForZone`, `_slotDescriptorForZone`) is correct — it stays. The change: instead of writing to its own `dropPreview` and painting its own overlay element, it writes to `visualEditor.activeDropPreview` in the same shape the container handlers use. One source of truth.
+### 3c. Migration of plugin consumers (5 files)
 
-The `+` empty-cell placeholders in `GridOverlay` are PERSISTENT affordances (not drag previews) — they stay rendered, but **during a drag they fade to low opacity** so the unified overlay is unambiguously the drop indicator. CSS-only — `body.visual-editor-dragging .visual-editor-grid-cell { opacity: 0.3 }`.
+Touch each consumer once to switch `kind` → `type`, adopt `canDrag` / `canDrop` / `getDropEffect` where they sharpen behavior, and use the new auto-scroll modifier where useful:
 
-### 4. Operation-feedback label
+- `block-chrome.gjs` — drag handle: `kind` → `type`, add `canDrag` (refuse if block is locked / not editable), add `getDropEffect="move"` for clarity.
+- `palette-entry.gjs` — palette tile: `kind` → `type`, add `getDropEffect="copy"`.
+- `outline-panel.gjs` — outline rows: `kind` → `type` on both source and target.
+- `container-drop-target.js` modifier — still owns its own listeners but reads `visualEditor.dragSource.type` (was `.kind`). Update one field name throughout.
+- `grid-overlay.gjs` — same renames, post-Phase-2 surface.
 
-The descriptor's `label` field is rendered inside the overlay as a small badge — top-left corner, 12px font, contrasting background, never overlapping the geometry it labels.
+Mount `dDragAndDropAutoScroll target="window"` once at the editor shell (a small additive change in `shell.gjs`), so auto-scroll lights up window scroll when a `ve-block` / `ve-palette-block` drag is in flight.
 
-**Label computation** (the coordinator builds it):
+### 3d. Test contract rewrite
 
-| Source kind | Operation | Label |
-|---|---|---|
-| `ve-palette-block` | `insert` (before/after) | `"Add {BlockName} here"` |
-| `ve-palette-block` | `inside` | `"Add {BlockName} inside {ContainerName}"` |
-| `ve-palette-block` | `replace` (ve:slot) | `"Fill slot with {BlockName}"` |
-| `ve-palette-block` | `occupy` (grid cell) | `"Add {BlockName} to cell"` |
-| `ve-block` | `insert` | `"Move {BlockName} here"` |
-| `ve-block` | `inside` | `"Move {BlockName} inside {ContainerName}"` |
-| `ve-block` | `replace` (ve:slot) | `"Move {BlockName} into slot"` |
-| `ve-block` | `swap` (grid) | `"Swap with {TargetBlockName}"` |
-| `ve-block` | `shift` (grid edge) | `"Insert before / after — neighbors shift"` |
-| any | `invalid` | overlay hidden, OR `"Can't drop here"` with red variant |
+`frontend/discourse/tests/integration/ui-kit/modifiers/drag-and-drop-test.gjs` gets rewritten against the new API. Test names preserved where the semantic still holds:
 
-Block display names come from `getBlockDisplayMetadata(component).displayName` (already used by the palette + outline).
+- source + target handshake fires onDrop with source data
+- type discriminator gates compatibility (was "kind discriminator")
+- source toggles is-dragging during the drag
+- smart row mode resolves position from cursor midpoint
+- nested targets — innermost accepting target wins drop
+- NEW: canDrag short-circuits dragstart
+- NEW: canDrop short-circuits drop
+- NEW: getDropEffect propagates to the dataTransfer effect
+- NEW: auto-scroll engages while a matching type is in flight
 
-### 5. Validation gates the visual feedback
-
-Today: invalid targets still light up; the drop just silently fails. New rule: **the overlay only renders when the drop would succeed**.
-
-Predicates already exist (`canDropOnThisBlock`, `canInsertBlockAt`, `canDropAt`). Move their results into the descriptor:
-
-- The coordinator computes the operation tentatively (where would it land?).
-- Then validates via the existing predicates.
-- If invalid → set `activeDropPreview = null` (no overlay) OR `variant: "invalid"` (red-tinted overlay with a "Can't drop here" label). I'd default to `null` so the user just doesn't see a target — much quieter UX. We can re-introduce the red variant later if "no feedback at all" turns out to be confusing.
-
-### 6. Drag-session lifecycle
-
-A single drag has a clear lifecycle the coordinator owns:
-
-- `dragstart` on a source → `visualEditor.startDrag(source)` (existing). Service sets `body.visual-editor-dragging` class + `activeDropPreview = null`.
-- `dragover` on any registered scope (container chrome, grid overlay) → scope handler reads cursor, computes descriptor, writes `activeDropPreview`. Capture-phase listener at the canvas root catches "off-canvas" dragover and clears the descriptor.
-- `drop` on the originating scope's drop modifier → read `_lastDropPreview` (sticky descriptor, captured the tick before clear), dispatch the resulting operation.
-- `dragend` / `dragleave-canvas` → clear `activeDropPreview`, remove `body.visual-editor-dragging`.
-
-The chrome's existing `dDragAndDropTarget` modifiers are replaced by ONE container-level handler per layout. The outline panel keeps its own simple "drop here" pattern (it's a sidebar, doesn't compete with the canvas).
-
-### 7. Outline panel drag stays as-is
-
-The outline's drop indicators are sidebar tree rows — they don't compete visually with the canvas because they're on a different surface. Leave that path alone; it can keep its built-in `dDragAndDropTarget` highlight.
-
-## Files to add
-
-- `plugins/discourse-visual-editor/assets/javascripts/discourse/components/editor/drop-preview.gjs` — single overlay element + label, mounted at shell level. Reads `visualEditor.activeDropPreview`.
-- `plugins/discourse-visual-editor/assets/javascripts/discourse/modifiers/container-drop-target.js` — replaces the per-block strip modifiers. Attached to each layout's container element (the `<div>` that holds the children list). One handler per container; ONE descriptor at a time.
-
-## Files to modify
-
-- `services/visual-editor.js` — add `@tracked activeDropPreview`, `setActiveDropPreview(descriptor)`, `clearActiveDropPreview()`. Add `describeDropOperation(source, target, position)` returning `{kind, label, validity}` so chrome/overlay/outline call into a single labelling helper.
-- `components/editor/block-chrome.gjs` — delete the `--before` / `--after` / `--inside` drop-zone children and their template branches (lines ~768-953). Replace with a single `containerDropTarget` modifier on the chrome wrapping a container block. Stack-mode chromes only need this; leaf-block chromes drop the target entirely (their parent container handles it). `canDropOnThisBlock` / `canDropOnSlot` / `applyDrop` consolidate into `applyContainerDrop({descriptor, source})`.
-- `components/editor/grid-overlay.gjs` — keep the math (`_descriptorFromCursor`, `_computeZone`, etc.); delete `dropPreview` tracked state, `overlayStyle`, `overlayVariantClass`, and the `.visual-editor-grid-drop-overlay` element. Write into `visualEditor.activeDropPreview` instead.
-- `components/editor/shell.gjs` — mount `<DropPreview />` at the canvas root.
-- `assets/stylesheets/visual-editor.scss` — delete `.visual-editor-drop-zone` rules; add `.visual-editor-drop-preview` (the single overlay) with one valid + one invalid variant; add `body.visual-editor-dragging .visual-editor-grid-cell { opacity: 0.3 }`.
-- `config/locales/client.en.yml` — add `canvas.drop_preview.*` keys for the operation labels.
-
-## Existing primitives reused
-
-- **Cursor → cell math** (grid): `_readGridTracks`, `_cursorToCell`, `_computeZone` in `grid-overlay.gjs` — stays untouched, only its output destination changes.
-- **Drop predicates**: `canDropOnThisBlock` (`block-chrome.gjs:657`), `canInsertBlockAt` (`visual-editor.js:2165`), `canDropAt` — combine into one helper `validateDrop(source, target, position)` on the service.
-- **Drop dispatch**: `moveBlock`, `insertBlock`, `fillSlot`, `moveBlockIntoSlot`, `swapSlotPlacements`, `insertBlockAtCell` — keep, called from the unified drop dispatcher.
-- **Block display names**: `getBlockDisplayMetadata(component).displayName` — for label interpolation.
-- **`body.visual-editor-active`** class — sister class `body.visual-editor-dragging` follows the same pattern for drag-only CSS gating.
-
-## Verification
-
-After `bin/rails server` is up and a homepage has a registered layout with multiple blocks:
-
-1. `bin/lint --fix --recent` — clean.
-2. `bin/qunit plugins/discourse-visual-editor/test/javascripts/unit/lib/mutate-layout-test.gjs` — existing tests green.
-3. Drag a palette block over a stack-mode container with three children. Confirm:
-   - Exactly ONE drop indicator at any cursor position (no double-highlight near boundaries).
-   - Label reads "Add Heading here" (or whichever block).
-   - Moving the cursor between gaps glides the indicator without flashing two.
-4. Drag a canvas block over a grid-mode layout. Confirm:
-   - Exactly ONE indicator (single rect, single line — not a chrome strip + grid overlay).
-   - Label changes between "Move X here", "Swap with Y", "Insert before — neighbors shift" depending on cursor position.
-5. Drag a palette block over a `ve:slot`. Confirm label says "Fill slot with X" and only the slot lights up.
-6. Drag a palette block of type `ve:heading` onto an outlet with `deniedOutlets: ['sidebar-blocks']` set. Confirm NO overlay appears anywhere over that outlet (validation gates the visual).
-7. Drop. Confirm the operation matches the label that was visible before release.
-8. Visually: empty grid cells fade to 30% opacity during drag (they're persistent affordances, not drag previews).
-9. Outline-panel drag still works as today (separate surface, unchanged).
+The unit test (`tests/unit/services/drag-and-drop-test.js`) gets renamed assertions for `type` and `accepts`.
 
 ## Out of scope (defer)
 
-- Animated overlay transitions (the current grid overlay glides; the new one can match later).
-- Keyboard-driven drop preview (today's drag is mouse-only; keyboard reordering is a separate feature).
-- A "Can't drop here" red variant — start with `null` (no overlay) for invalid, revisit if users miss the feedback.
-- Refactoring the outline panel drop pattern — leave as-is.
+- `@atlaskit/pragmatic-drag-and-drop-hitbox` (closest-edge / `attachInstruction`) — clean refactor target for `container-drop-target.js`'s `computeDescriptor` and friends (~200 LOC). Doesn't help responsiveness; bundle with a future linear-DnD cleanup.
+- `pragmatic-drag-and-drop-flourish` (drop-success animation) — polish, defer.
+- Keyboard / a11y DnD (`pragmatic-drag-and-drop-live-region` + Atlassian's keyboard pattern) — separate phase, separate scope. Real a11y win but not in this overhaul.
+- `grid-tile-drag.js` (resize handle) — uses raw pointer events, not the DnD modifiers. Unaffected by all phases.
+
+## Verification
+
+**After Phase 1:**
+- `bin/lint --fix --recent` + `bin/qunit plugins/discourse-visual-editor/test/javascripts/` — all 160 tests pass.
+- Manual: drag a card around a 6×2 grid. Overlay glides smoothly. DevTools Performance: dragover handler self-time visibly reduced; far fewer `dropPreview` invalidations.
+
+**After Phase 2:**
+- Same automated tests pass.
+- Manual smoke of every dispatch semantic in both grid and stack/row modes: swap (Shift+drag), replace, shift-insert (edge zones), move-to-empty-cell, move-into-container, fill-slot, outline-panel reorder.
+- Grep confirms `_lastDropPreview` exists only on the service.
+
+**After Phase 3:**
+- `bin/qunit frontend/discourse/tests/integration/ui-kit/modifiers/drag-and-drop-test.gjs` — all rewritten tests pass.
+- `bin/qunit plugins/discourse-visual-editor/test/javascripts/` — all editor tests pass.
+- Manual: tall layout in a small viewport. Drag a card past the canvas edge — window auto-scroll engages. Drag from palette across a long page — same.
+- DevTools Performance: PDND's rAF batching visible — one `onDrag` callback per frame, not 3-4.
+- Confirm no plugin or core file outside the migrated set still imports the old API (no `kind=` on a DnD source/target site).
+
+## Risks
+
+- **Rewriting ui-kit modifiers and changing the public API.** Mitigation: only this plugin consumes them today (verified by grep). The integration test rewrite captures the new contract. Land Phase 3 in its own PR for isolated review/revert.
+- **PDND's `onDrag` only fires on drag-data change, not per mousemove.** The smart-row position-indicator logic (toggling `is-drag-above` / `is-drag-below` on cursor crossing midpoint) needs an additional `pointermove` listener attached *inside* the modifier (since PDND's stock callbacks won't suffice). Validate against the rewritten integration test's smart-row case. Highest-risk part of Phase 3.
+- **Descriptor consolidation in Phase 2 changes `dispatchActiveDrop`'s payload variants.** Dispatch endpoints already exist; we're just routing to them by name. Full qunit pass + the manual smoke matrix above. Revert is one commit.
+- **`pragmatic-drag-and-drop` is ESM-only.** Embroider handles ESM in Discourse's stack. Smoke-test the production build after adding the dep.
+- **Auto-scroll attached to `<body>` via a modifier needs careful placement.** The body element isn't typically the place we attach modifiers in Discourse. If awkward, fall back to a service-method API: `dragAndDrop.enableWindowAutoScroll({types, axis})` returning a cleanup. Either way the *interface* is declarative.
+
+## Recommended commit boundaries
+
+- **1 commit** Phase 1 (transform + diffing + caching). Title: `DEV: discourse-visual-editor — quick DnD perf wins`.
+- **2-3 commits** Phase 2 (split between "extend grid descriptors with embedded dispatch" + "route all grid drops through dispatchActiveDrop, delete redundant glue").
+- **3-4 commits** Phase 3:
+  - `DEV: core — add Pragmatic DnD deps`
+  - `DEV: ui-kit — redesign d-drag-and-drop modifiers on Pragmatic DnD`
+  - `DEV: ui-kit — add d-drag-and-drop-auto-scroll modifier`
+  - `DEV: discourse-visual-editor — migrate to redesigned DnD API + window auto-scroll`
+
+## Files at a glance
+
+- **Phase 1** (plugin only, 2 files): `drop-preview.gjs`, `grid-overlay.gjs`.
+- **Phase 2** (plugin only, 3 files): `grid-overlay.gjs` (major), `container-drop-target.js` (minor), `services/visual-editor.js` (dead-code removal).
+- **Phase 3** (core + plugin):
+  - Core: `frontend/discourse/package.json`, `app/ui-kit/modifiers/d-drag-and-drop-source.js`, `d-drag-and-drop-target.js`, NEW `d-drag-and-drop-auto-scroll.js`, `services/drag-and-drop.js`, integration test + unit test.
+  - Plugin: `block-chrome.gjs`, `palette-entry.gjs`, `outline-panel.gjs`, `container-drop-target.js`, `grid-overlay.gjs`, `shell.gjs`.
