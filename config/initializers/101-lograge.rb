@@ -66,7 +66,7 @@ if DiscourseLograge.enabled?
       )
 
       config.lograge.custom_payload do |controller|
-        begin
+        
           username =
             begin
               controller.current_user&.username if controller.respond_to?(:current_user)
@@ -87,12 +87,12 @@ if DiscourseLograge.enabled?
             "Failed to append custom payload: #{e.message}\n#{e.backtrace.join("\n")}",
           )
           {}
-        end
+        
       end
 
       config.lograge.custom_options =
         lambda do |event|
-          begin
+          
             exceptions = %w[controller action format id]
 
             params = event.payload[:params].except(*exceptions)
@@ -151,7 +151,7 @@ if DiscourseLograge.enabled?
               "Failed to append custom options: #{e.message}\n#{e.backtrace.join("\n")}",
             )
             {}
-          end
+          
         end
 
       config.lograge.formatter = Lograge::Formatters::Logstash.new
