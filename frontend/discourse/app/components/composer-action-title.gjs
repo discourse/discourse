@@ -146,28 +146,30 @@ export default class ComposerActionTitle extends Component {
   <template>
     <div class="composer-action-title" ...attributes>
       {{#if this.siteSettings.enable_new_composer_actions}}
-        <ComposerActionsNew
-          @composerModel={{this.model}}
-          @replyOptions={{this.model.replyOptions}}
-          @action={{this.model.action}}
-          @tabindex={{this.tabindex}}
-          @topic={{this.model.topic}}
-          @post={{this.model.post}}
-          @options={{hash mobilePlacementStrategy="fixed"}}
-        />
+        <span class="action-title" role="heading" aria-level="1">
+          <ComposerActionsNew
+            @composerModel={{this.model}}
+            @replyOptions={{this.model.replyOptions}}
+            @action={{this.model.action}}
+            @tabindex={{this.tabindex}}
+            @topic={{this.model.topic}}
+            @post={{this.model.post}}
+            @options={{hash mobilePlacementStrategy="fixed"}}
+          />
 
-        {{#if this.replyTargetSegment}}
-          {{#if this.canEditReplyTo}}
-            <DButton
-              @action={{this.openChangeReplyToModal}}
-              @title="composer.change_reply_to.open"
-              @translatedLabel={{this.replyTargetSegment}}
-              class="composer-edit-reply-to btn-default"
-            />
-          {{else}}
-            {{this.replyTargetSegment}}
+          {{#if this.replyTargetSegment}}
+            {{#if this.canEditReplyTo}}
+              <DButton
+                @action={{this.openChangeReplyToModal}}
+                @title="composer.change_reply_to.open"
+                @translatedLabel={{this.replyTargetSegment}}
+                class="composer-edit-reply-to btn-default"
+              />
+            {{else}}
+              {{this.replyTargetSegment}}
+            {{/if}}
           {{/if}}
-        {{/if}}
+        </span>
       {{else}}
         <ComposerActionsOld
           @composerModel={{this.model}}
