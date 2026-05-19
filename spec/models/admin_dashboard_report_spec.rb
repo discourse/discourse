@@ -48,6 +48,8 @@ RSpec.describe AdminDashboardReport do
   end
 
   describe "default position" do
+    before { described_class.delete_all }
+
     it "assigns position 1 when there are no existing rows" do
       record = described_class.create!(source: "core_report", identifier: "signups")
       expect(record.position).to eq(1)

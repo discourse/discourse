@@ -290,11 +290,11 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "leaves data null for sections without a builder yet" do
-        SiteSetting.admin_dashboard_sections = "highlights|traffic"
+        SiteSetting.admin_dashboard_sections = "highlights|engagement"
         get "/admin/dashboard.json"
 
-        traffic = response.parsed_body["sections"].find { |s| s["id"] == "traffic" }
-        expect(traffic["data"]).to be_nil
+        engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
+        expect(engagement["data"]).to be_nil
       end
 
       describe "reports section data" do
