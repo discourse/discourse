@@ -15,11 +15,16 @@ RSpec.describe ConvertAiTranslationTargetCategoriesToExcludedCategories do
 
   around { |example| ActiveRecord::Migration.suppress_messages { example.run } }
 
-  before { enable_current_plugin }
+  before do
+    enable_current_plugin
+    delete_settings
+  end
 
-  after do
+  after { delete_settings }
+
+  def delete_settings
     connection.execute(
-      "DELETE FROM site_settings WHERE name IN ('ai_translation_target_categories', 'ai_translation_excluded_categories')",
+      "DELETE FROM site_settings WHERE name IN ('ai_translation_target_categories', 'ai_translation_excluded_categories', 'ai_translation_enabled')",
     )
   end
 
@@ -58,7 +63,20 @@ RSpec.describe ConvertAiTranslationTargetCategoriesToExcludedCategories do
       expect(setting_exists?("ai_translation_target_categories")).to eq(false)
     end
 
-    it "excludes all categories for existing sites with an empty target list" do
+    it "converts saved target categories when translation is disabled" do
+      store_setting("ai_translation_enabled", "f", data_type: 5)
+      store_setting("ai_translation_target_categories", category_1.id.to_s)
+
+      migration.up
+
+      excluded_category_ids =
+        setting_value("ai_translation_excluded_categories").split("|").map(&:to_i)
+      expect(excluded_category_ids).to contain_exactly(*(all_category_ids - [category_1.id]))
+      expect(setting_exists?("ai_translation_target_categories")).to eq(false)
+    end
+
+    it "excludes all categories for existing sites with translation enabled and an empty target list" do
+      store_setting("ai_translation_enabled", "t", data_type: 5)
       store_setting("ai_translation_target_categories", "")
 
       migration.up
@@ -69,12 +87,32 @@ RSpec.describe ConvertAiTranslationTargetCategoriesToExcludedCategories do
       expect(setting_exists?("ai_translation_target_categories")).to eq(false)
     end
 
-    it "excludes all categories for existing sites without a stored target list" do
+    it "does not store an excluded list for disabled sites with an empty target list" do
+      store_setting("ai_translation_enabled", "f", data_type: 5)
+      store_setting("ai_translation_target_categories", "")
+
+      migration.up
+
+      expect(setting_value("ai_translation_excluded_categories")).to be_nil
+      expect(setting_exists?("ai_translation_target_categories")).to eq(false)
+    end
+
+    it "excludes all categories for existing sites with translation enabled and without a stored target list" do
+      store_setting("ai_translation_enabled", "t", data_type: 5)
+
       migration.up
 
       excluded_category_ids =
         setting_value("ai_translation_excluded_categories").split("|").map(&:to_i)
       expect(excluded_category_ids).to contain_exactly(*all_category_ids)
+    end
+
+    it "does not store an excluded list for disabled sites without a stored target list" do
+      store_setting("ai_translation_enabled", "f", data_type: 5)
+
+      migration.up
+
+      expect(setting_value("ai_translation_excluded_categories")).to be_nil
     end
 
     it "does not store an excluded list when all existing categories were targets" do
