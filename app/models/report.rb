@@ -39,14 +39,9 @@ class Report
   ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads topic_view_stats]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
 
-  def self.hidden?(type, guardian: nil, admin: nil, can_see_ip: false)
-    if guardian
-      admin = guardian.is_admin?
-      can_see_ip = guardian.can_see_ip?
-    end
-
-    return true if !admin && ADMIN_ONLY_REPORTS.include?(type)
-    return true if !admin && !can_see_ip && IP_ADDRESS_REPORTS.include?(type)
+  def self.hidden?(type, guardian:)
+    return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
+    return true if !guardian.is_admin? && !guardian.can_see_ip? && IP_ADDRESS_REPORTS.include?(type)
 
     hidden_reports =
       SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
