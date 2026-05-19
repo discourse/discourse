@@ -317,7 +317,7 @@ discourse_ai:
     upcoming_change:
       status: "alpha"
       impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/star-common-ai-conversations/403285"
+      learn_more_url: "https://meta.discourse.org/t/-/403285"
   ai_bot_enabled_llms:
     default: ""
     client: true
