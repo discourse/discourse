@@ -105,6 +105,14 @@ module TurboTests
     protected
 
     def check_for_migrations
+      # In CI, migrations are applied by a dedicated step before tests run, so
+      # the master-process recheck is redundant. Skipping it lets us avoid
+      # booting the full Rails app in the master.
+      return if ENV["CI"]
+
+      require "rails"
+      require File.expand_path("../../../config/environment", __FILE__)
+
       ActiveRecord::Tasks::DatabaseTasks.migrations_paths = %w[db/migrate db/post_migrate]
       ActiveRecord::Migration.check_all_pending!
     rescue ActiveRecord::PendingMigrationError

@@ -6,16 +6,30 @@ require "open3"
 require "fileutils"
 require "json"
 require "rspec"
-require "rails"
-require File.expand_path("../../config/environment", __FILE__)
+
+# Without booting the full Rails app, Zeitwerk autoloading is unavailable in
+# the master process, so each `TurboTests` file must be required explicitly.
+# A handful of `ActiveSupport` core extensions (`blank?`, `present?`,
+# `symbolize_keys`) used by the formatters and runner are pulled in directly
+# rather than via the full `active_support/all` require.
+require "active_support"
+require "active_support/core_ext/object/blank"
+require "active_support/core_ext/hash/keys"
 
 require "parallel_tests"
 require "parallel_tests/rspec/runner"
 
 require "./lib/turbo_tests/reporter"
-require "./lib/turbo_tests/runner"
-require "./lib/turbo_tests/json_rows_formatter"
+require "./lib/turbo_tests/json_example"
+require "./lib/turbo_tests/base_formatter"
+require "./lib/turbo_tests/progress_formatter"
 require "./lib/turbo_tests/documentation_formatter"
+require "./lib/turbo_tests/json_rows_formatter"
+require "./lib/turbo_tests/flaky/manager"
+require "./lib/turbo_tests/flaky/failed_example"
+require "./lib/turbo_tests/flaky/failures_logger_formatter"
+require "./lib/turbo_tests/flaky/flaky_detector_formatter"
+require "./lib/turbo_tests/runner"
 
 RSpec.configure do |config|
   # this is an unusual config option because it is used by the formatter, not just the runner
