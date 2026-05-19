@@ -5631,18 +5631,20 @@ en:
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
-      synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      synonyms_description:
+        one: "The synonym %{synonyms} will be replaced with %{base_tag_name}."
+        other: "The synonyms %{synonyms} will be replaced with %{base_tag_name}."
       synonyms_inline: "These synonyms will be replaced with %{base_tag_name}:"
       save: "Save name and description of the tag"
       tag_groups_info:
-        one: 'This tag belongs to the group "%{tag_groups}".'
-        other: "This tag belongs to these groups: %{tag_groups}."
+        one: 'This tag belongs to the tag group "%{tag_groups}".'
+        other: "This tag belongs to these tag groups: %{tag_groups}."
       tag_groups_info_prefix:
-        one: "This tag belongs to the group "
-        other: "This tag belongs to these groups: "
+        one: "This tag belongs to the tag group "
+        other: "This tag belongs to these tag groups: "
       category_restrictions:
-        one: "It can only be used in this category:"
-        other: "It can only be used in these categories:"
+        one: "It can only be used in the %{categories} category."
+        other: "It can only be used in these categories: %{categories}."
       restricted_to: "Restricted to"
       no_synonyms: "This tag has no synonyms."
       edit_synonyms: "Edit Synonyms"

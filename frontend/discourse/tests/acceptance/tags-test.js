@@ -471,6 +471,52 @@ acceptance("Tag info", function (needs) {
     );
   });
 
+  test("tag info button toggles a read-only info panel for non-editors", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: false, can_edit_tags: false });
+
+    await visit("/tag/planters/12");
+    assert.dom("#show-tag-info").exists("info button is shown to everyone");
+    assert.dom("#edit-tag").doesNotExist("non-editors don't see the wrench");
+    assert
+      .dom("#show-tag-info")
+      .hasAttribute("aria-pressed", "false", "button starts unpressed");
+
+    await click("#show-tag-info");
+    assert.dom(".tag-info .tag-name").exists("panel renders the tag");
+    assert
+      .dom(".tag-info .tag-associations")
+      .includesText("Gardening", "panel lists tag groups");
+    assert
+      .dom('.tag-info .synonyms-list [data-tag-name="containers"]')
+      .exists("first synonym is rendered");
+    assert
+      .dom('.tag-info .synonyms-list [data-tag-name="planter"]')
+      .exists("second synonym is rendered");
+    assert.dom(".tag-info .badge-category").exists("panel lists categories");
+    assert
+      .dom("#show-tag-info")
+      .hasAttribute("aria-pressed", "true", "button is pressed when open");
+
+    await click("#show-tag-info");
+    assert.dom(".tag-info").doesNotExist("clicking again hides the panel");
+    assert
+      .dom("#show-tag-info")
+      .hasAttribute(
+        "aria-pressed",
+        "false",
+        "button returns to unpressed state"
+      );
+  });
+
+  test("tag info panel is hidden when not on a tag page", async function (assert) {
+    await visit("/tag/planters/12");
+    await click("#show-tag-info");
+    assert.dom(".tag-info").exists();
+
+    await visit("/latest");
+    assert.dom(".tag-info").doesNotExist("panel is gone outside tag routes");
+  });
+
   test("can filter tags page by category", async function (assert) {
     await visit("/tag/planters/12");
 
@@ -847,11 +893,11 @@ acceptance("Tag settings page", function (needs) {
     );
   });
 
-  test("clicking tag info button navigates to settings page", async function (assert) {
+  test("clicking edit tag button navigates to settings page", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
 
     await visit("/tag/test-tag/100");
-    await click("#show-tag-info");
+    await click("#edit-tag");
 
     assert.strictEqual(
       currentURL(),

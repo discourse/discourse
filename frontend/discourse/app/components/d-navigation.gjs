@@ -133,6 +133,16 @@ export default class DNavigation extends Component {
     );
   }
 
+  @computed("tag", "tag.name", "additionalTags", "category")
+  get showTagInfoButton() {
+    return (
+      this.tag &&
+      this.tag.name !== "none" &&
+      !this.additionalTags &&
+      !this.category
+    );
+  }
+
   @computed(
     "category.can_edit",
     "tag",
@@ -232,6 +242,16 @@ export default class DNavigation extends Component {
     this.createTopic();
   }
 
+  @action
+  editTag() {
+    this.router.transitionTo(
+      "tag.edit.tab",
+      this.tag.slug,
+      this.tag.id,
+      "general"
+    );
+  }
+
   <template>
     <BreadCrumbs
       @categories={{this.categories}}
@@ -315,8 +335,23 @@ export default class DNavigation extends Component {
         {{/if}}
 
         {{#if this.showTagEdit}}
-          <TagInfoButton @tag={{this.tag}} @currentUser={{this.currentUser}} />
+          <DButton
+            @action={{this.editTag}}
+            @icon="wrench"
+            @ariaLabel="tagging.edit"
+            @title="tagging.edit"
+            id="edit-tag"
+            class="btn-default"
+          />
         {{/if}}
+      {{/if}}
+
+      {{#if this.showTagInfoButton}}
+        <TagInfoButton
+          @toggleInfo={{@toggleTagInfo}}
+          @active={{@showTagInfo}}
+          @loading={{@loadingTagInfo}}
+        />
       {{/if}}
 
       <PluginOutlet

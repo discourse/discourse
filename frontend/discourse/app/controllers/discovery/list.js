@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DismissNew from "discourse/components/modal/dismiss-new";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -47,18 +48,22 @@ export function addDiscoveryQueryParam(p, opts) {
 
 @disableImplicitInjections
 export default class DiscoveryListController extends Controller {
+  @service appEvents;
   @service composer;
   @service siteSettings;
   @service currentUser;
   @service router;
+  @service store;
   @service topicTrackingState;
   @service modal;
 
   @tracked model;
-
+  @tracked showTagInfo = false;
+  @tracked tagInfo = null;
+  @tracked loadingTagInfo = false;
   queryParams = Object.keys(queryParams);
-
   bulkSelectHelper = new BulkSelectHelper(this);
+  #loadedTagId = null;
 
   constructor() {
     super(...arguments);
@@ -67,6 +72,12 @@ export default class DiscoveryListController extends Controller {
     }
 
     this.bulkSelectHelper.onResetNew = () => this.resetNew();
+    this.appEvents.on("tag-info:updated", this, this.onTagInfoUpdated);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("tag-info:updated", this, this.onTagInfoUpdated);
   }
 
   // NOTE: (martin) Please keep this in tact for now, will remove once we have
@@ -210,6 +221,91 @@ export default class DiscoveryListController extends Controller {
   changeNewListSubset(subset) {
     this.subset = subset;
     this.model.list.updateNewListSubsetParam(subset);
+  }
+
+  async #fetchTagInfo(tagKey) {
+    this.loadingTagInfo = true;
+    try {
+      const result = await this.store.find("tag-info", tagKey);
+
+      // discard if a newer tag became current while this fetch was in flight
+      const currentTagKey = this.model.tag?.id || this.model.tag?.name;
+      if (currentTagKey !== tagKey) {
+        return;
+      }
+
+      result.synonyms = result.synonyms.map((s) =>
+        this.store.createRecord("tag", s)
+      );
+      this.tagInfo = result;
+      this.#loadedTagId = tagKey;
+    } catch (e) {
+      popupAjaxError(e);
+      throw e;
+    } finally {
+      this.loadingTagInfo = false;
+    }
+  }
+
+  @action
+  async toggleTagInfo() {
+    if (this.showTagInfo) {
+      this.showTagInfo = false;
+      return;
+    }
+
+    const tagKey = this.model.tag?.id || this.model.tag?.name;
+    if (!tagKey) {
+      return;
+    }
+
+    if (!this.tagInfo || this.#loadedTagId !== tagKey) {
+      try {
+        await this.#fetchTagInfo(tagKey);
+      } catch {
+        return;
+      }
+    }
+
+    this.showTagInfo = true;
+  }
+
+  @action
+  onTagInfoUpdated(tagId) {
+    if (this.#loadedTagId !== tagId) {
+      return;
+    }
+
+    if (this.showTagInfo) {
+      this.#fetchTagInfo(tagId).catch(() => {
+        this.tagInfo = null;
+        this.#loadedTagId = null;
+        this.showTagInfo = false;
+      });
+    } else {
+      this.tagInfo = null;
+      this.#loadedTagId = null;
+    }
+  }
+
+  @action
+  syncTagInfo() {
+    const tagKey = this.model.tag?.id || this.model.tag?.name;
+
+    if (!this.model.tag || this.#loadedTagId === tagKey) {
+      return;
+    }
+
+    if (this.showTagInfo) {
+      this.#fetchTagInfo(tagKey).catch(() => {
+        this.tagInfo = null;
+        this.#loadedTagId = null;
+        this.showTagInfo = false;
+      });
+    } else {
+      this.tagInfo = null;
+      this.#loadedTagId = null;
+    }
   }
 
   @action
