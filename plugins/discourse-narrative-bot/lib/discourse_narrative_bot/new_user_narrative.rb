@@ -556,7 +556,7 @@ module DiscourseNarrativeBot
           .where(user_id: @user.id)
           .where(
             "post_action_type_id IN (?)",
-            (PostActionType.flag_types.values - [PostActionType.types[:inappropriate]]),
+            PostActionType.flag_types.values - [PostActionType.types[:inappropriate]],
           )
           .destroy_all
       end

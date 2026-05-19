@@ -230,7 +230,7 @@ export default class DButton extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <this.wrapperElement
       href={{@href}}
       type={{unless @href (or @type "button")}}

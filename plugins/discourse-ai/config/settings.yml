@@ -310,6 +310,14 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/bot"
+  enable_ai_bot_starred_conversations:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403285"
   ai_bot_enabled_llms:
     default: ""
     client: true

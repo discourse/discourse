@@ -25,6 +25,23 @@ describe "Crawler hreflang tags" do
       expect(response.body).to include("?#{Discourse::LOCALE_PARAM}=ja")
     end
 
+    it "uses hyphens instead of underscores in hreflang attribute for region-qualified locales" do
+      SiteSetting.content_localization_supported_locales = "en|pt_BR|zh_CN"
+
+      get "/t/#{post.topic.slug}/#{post.topic.id}",
+          headers: {
+            "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
+
+      expect(response.body).to include('hreflang="pt-BR"')
+      expect(response.body).to include('hreflang="zh-CN"')
+      expect(response.body).not_to include('hreflang="pt_BR"')
+      expect(response.body).not_to include('hreflang="zh_CN"')
+
+      expect(response.body).to include("?#{Discourse::LOCALE_PARAM}=pt_BR")
+      expect(response.body).to include("?#{Discourse::LOCALE_PARAM}=zh_CN")
+    end
+
     it "doesn't include hreflang tags for normal users" do
       get "/t/#{post.topic.slug}/#{post.topic.id}"
 

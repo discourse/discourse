@@ -401,7 +401,7 @@ export default class NestedPost extends Component {
             >
               {{#if this.expanded}}
                 <span class="nested-post__depth-line-icon">
-                  {{dIcon "nested-circle-minus"}}
+                  {{dIcon "discourse-circle-minus"}}
                 </span>
               {{/if}}
             </button>
@@ -415,7 +415,7 @@ export default class NestedPost extends Component {
               data-post-number={{@post.post_number}}
               {{on "click" this.toggleExpanded}}
             >
-              {{dIcon "nested-circle-plus"}}
+              {{dIcon "discourse-circle-plus"}}
               {{#if this.isDeletedPlaceholder}}
                 <span class="nested-post__collapsed-username">{{i18n
                     "nested_replies.deleted_post_placeholder"
@@ -545,6 +545,20 @@ export default class NestedPost extends Component {
                         @replyToPost={{fn @replyToPost @post @depth}}
                         @share={{this.share}}
                         @showFlags={{fn @showFlags @post}}
+                        @changeNotice={{fn @changeNotice @post}}
+                        @changePostOwner={{fn @changePostOwner @post}}
+                        @grantBadge={{fn @grantBadge @post}}
+                        @lockPost={{fn @lockPost @post}}
+                        @unlockPost={{fn @unlockPost @post}}
+                        @permanentlyDeletePost={{fn
+                          @permanentlyDeletePost
+                          @post
+                        }}
+                        @rebakePost={{fn @rebakePost @post}}
+                        @showPagePublish={{@showPagePublish}}
+                        @togglePostType={{fn @togglePostType @post}}
+                        @toggleWiki={{fn @toggleWiki @post}}
+                        @unhidePost={{fn @unhidePost @post}}
                         @toggleLike={{this.toggleLike}}
                         @toggleReplies={{unless
                           this.atMaxDepth
@@ -597,6 +611,17 @@ export default class NestedPost extends Component {
               @recoverPost={{@recoverPost}}
               @showFlags={{@showFlags}}
               @showHistory={{@showHistory}}
+              @changeNotice={{@changeNotice}}
+              @changePostOwner={{@changePostOwner}}
+              @grantBadge={{@grantBadge}}
+              @lockPost={{@lockPost}}
+              @unlockPost={{@unlockPost}}
+              @permanentlyDeletePost={{@permanentlyDeletePost}}
+              @rebakePost={{@rebakePost}}
+              @showPagePublish={{@showPagePublish}}
+              @togglePostType={{@togglePostType}}
+              @toggleWiki={{@toggleWiki}}
+              @unhidePost={{@unhidePost}}
               @collapseParent={{this.toggleExpanded}}
               @highlightParentLine={{this.highlightLine}}
               @unhighlightParentLine={{this.unhighlightLine}}

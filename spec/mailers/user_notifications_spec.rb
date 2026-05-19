@@ -724,11 +724,6 @@ RSpec.describe UserNotifications do
         expect(body).not_to include("%{optional_cat}")
         expect(body).not_to include("%{optional_pm}")
         expect(body).not_to include("%{optional_re}")
-
-        TranslationOverride.revert!(
-          I18n.locale,
-          ["user_notifications.user_replied.text_body_template"],
-        )
       end
     end
 

@@ -1432,6 +1432,30 @@ RSpec.describe InvitesController do
         expect(EmailToken.hash_token(job_args["email_token"])).to eq(tokens.first.token_hash)
       end
 
+      it "redeems pending email invites after email confirmation" do
+        pending_email_invite =
+          Fabricate(:invite, invited_by: Fabricate(:user), email: "target@example.com")
+
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email: pending_email_invite.email,
+              password: "verystrongpassword",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
+        expect(invite.reload.redemption_count).to eq(1)
+        invited_user = User.find_by_email(pending_email_invite.email)
+        expect(invited_user).to be_present
+        expect(Invite.exists?(pending_email_invite.id)).to eq(true)
+
+        email_token = Jobs::CriticalUserEmail.jobs.first["args"].first["email_token"]
+        EmailToken.confirm(email_token, scope: EmailToken.scopes[:signup])
+
+        expect(pending_email_invite.reload).to be_redeemed
+        expect(pending_email_invite.invited_users.first.user).to eq(invited_user)
+      end
+
       it "does not automatically log in the user if their email matches an existing user's and shows an error" do
         Fabricate(:user, email: "test@example.com")
         put "/invites/show/#{invite.invite_key}.json",

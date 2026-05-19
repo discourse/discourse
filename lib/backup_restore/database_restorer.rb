@@ -76,16 +76,14 @@ module BackupRestore
         end
 
       IO.popen(restore_dump_command) do |pipe|
-        begin
-          while line = pipe.readline
-            logs << line
-            last_line = line
-          end
-        rescue EOFError
-          # finished reading...
-        ensure
-          psql_running = false
+        while line = pipe.readline
+          logs << line
+          last_line = line
         end
+      rescue EOFError
+        # finished reading...
+      ensure
+        psql_running = false
       end
 
       logs << ""

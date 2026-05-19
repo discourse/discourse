@@ -45,6 +45,10 @@ module NestedReplies
         self
       end
 
+      def ids
+        map(&:id)
+      end
+
       def pluck(*columns)
         if columns.one?
           map(&columns.first)

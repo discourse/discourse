@@ -147,13 +147,15 @@ module DiscourseAi
       end
 
       def test
-        RateLimiter.new(current_user, "llm_test_#{current_user.id}", 3, 1.minute).performed!
+        RateLimiter.new(current_user, "llm_test_#{current_user.id}", 6, 1.minute).performed!
+
+        validator = DiscourseAi::Configuration::LlmValidator.new
 
         # For seeded models, test the existing model directly since provider/url/api_key are hidden
         if params.dig(:ai_llm, :id).present?
           existing_model = LlmModel.find_by(id: params[:ai_llm][:id])
           if existing_model&.seeded?
-            DiscourseAi::Configuration::LlmValidator.new.run_test(existing_model)
+            validator.run_test(existing_model)
             return render json: { success: true }
           end
         end
@@ -162,13 +164,13 @@ module DiscourseAi
         llm_model = LlmModel.new(ai_llm_params.merge(display_name: "LLM test"))
 
         if llm_model.valid?
-          DiscourseAi::Configuration::LlmValidator.new.run_test(llm_model)
+          validator.run_test(llm_model)
           render json: { success: true }
         else
           render json: { success: false, validation_errors: llm_model.errors.full_messages }
         end
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed => e
-        render json: { success: false, error: e.message }
+        render json: { success: false, error: e.message, failed_mode: validator&.last_failed_mode }
       end
 
       private

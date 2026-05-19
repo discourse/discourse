@@ -146,7 +146,7 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
         parsed.dig(:usage, :output_tokens) || parsed.dig(:delta, :usage, :output_tokens)
     elsif parsed[:type] == "message_stop"
       # bedrock has this ...
-      if bedrock_stats = parsed.dig("amazon-bedrock-invocationMetrics".to_sym)
+      if bedrock_stats = parsed.dig(:"amazon-bedrock-invocationMetrics")
         @input_tokens = bedrock_stats[:inputTokenCount] || @input_tokens
         @output_tokens = bedrock_stats[:outputTokenCount] || @output_tokens
       end

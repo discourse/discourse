@@ -607,7 +607,7 @@ class UsersController < ApplicationController
   end
 
   def changing_case_of_own_username(target_user, username)
-    target_user && username.downcase == (target_user.username.downcase)
+    target_user && username.downcase == target_user.username.downcase
   end
 
   # Used for checking availability of a username and will return suggestions
@@ -718,11 +718,11 @@ class UsersController < ApplicationController
     # Handle custom fields
     user_fields = UserField.all
     if user_fields.present?
-      field_params = params[:user_fields] || {}
       fields = user.custom_fields
 
       user_fields.each do |f|
-        field_val = field_params[f.id.to_s]
+        field_val = clean_custom_field_values(f)
+        field_val = nil if field_val == "false"
         if field_val.blank?
           return fail_with("login.missing_user_field") if f.required?
         else
@@ -2106,7 +2106,7 @@ class UsersController < ApplicationController
   end
 
   def clean_custom_field_values(field)
-    field_values = params[:user_fields][field.id.to_s]
+    field_values = params.dig(:user_fields, field.id.to_s)
 
     return field_values if field_values.nil? || field_values.empty?
 
@@ -2248,12 +2248,10 @@ class UsersController < ApplicationController
     allowed_actions = %w[show update destroy]
 
     http_verbs.any? do |verb|
-      begin
-        path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
-        allowed_actions.exclude?(path[:action])
-      rescue ActionController::RoutingError
-        false
-      end
+      path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
+      allowed_actions.exclude?(path[:action])
+    rescue ActionController::RoutingError
+      false
     end
   end
 

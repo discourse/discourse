@@ -37,7 +37,7 @@ export default class FKControlSelect extends FKBaseControl {
       id={{@field.id}}
       name={{@field.name}}
       aria-invalid={{if @field.error "true"}}
-      aria-describedby={{if @field.error @field.errorId}}
+      aria-describedby={{@field.describedBy}}
       ...attributes
     >
       {{yield (hash Option=(component SelectOption selected=@field.value))}}

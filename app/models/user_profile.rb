@@ -88,11 +88,9 @@ class UserProfile < ActiveRecord::Base
       .where("bio_cooked_version IS NULL OR bio_cooked_version < ?", BAKED_VERSION)
       .limit(limit)
       .each do |p|
-        begin
-          p.rebake!
-        rescue => e
-          problems << { profile: p, ex: e }
-        end
+        p.rebake!
+      rescue => e
+        problems << { profile: p, ex: e }
       end
     problems
   end
@@ -133,7 +131,7 @@ class UserProfile < ActiveRecord::Base
         type: type,
       ).create_for(user.id)
 
-    if (is_card_background)
+    if is_card_background
       user.user_profile.upload_card_background(upload)
     else
       user.user_profile.upload_profile_background(upload)
@@ -194,7 +192,7 @@ class UserProfile < ActiveRecord::Base
 
   def website_domain_validator
     allowed_domains = SiteSetting.allowed_user_website_domains
-    return if (allowed_domains.blank? || self.website.blank?)
+    return if allowed_domains.blank? || self.website.blank?
 
     domain =
       begin
@@ -203,11 +201,9 @@ class UserProfile < ActiveRecord::Base
       end
     if allowed_domains.split("|").exclude?(domain)
       self.errors.add :base,
-                      (
-                        I18n.t(
-                          "user.website.domain_not_allowed",
-                          domains: allowed_domains.split("|").join(", "),
-                        )
+                      I18n.t(
+                        "user.website.domain_not_allowed",
+                        domains: allowed_domains.split("|").join(", "),
                       )
     end
   end

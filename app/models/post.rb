@@ -282,7 +282,7 @@ class Post < ActiveRecord::Base
 
   def matches_recent_post?
     post_id = Discourse.redis.get(unique_post_key)
-    post_id != (nil) && post_id.to_i != (id)
+    post_id != nil && post_id.to_i != id
   end
 
   def raw_hash
@@ -828,32 +828,30 @@ class Post < ActiveRecord::Base
       .limit(limit)
       .pluck(:id)
       .each do |id|
+        break if !limiter.can_perform?
+
+        post = Post.find(id)
+        post.rebake!(priority: priority)
+
         begin
-          break if !limiter.can_perform?
+          limiter.performed! if rate_limiter
+        rescue RateLimiter::LimitExceeded
+          break
+        end
+      rescue => e
+        problems << { post: post, ex: e }
 
-          post = Post.find(id)
-          post.rebake!(priority: priority)
+        attempts = post.custom_fields["rebake_attempts"].to_i
 
-          begin
-            limiter.performed! if rate_limiter
-          rescue RateLimiter::LimitExceeded
-            break
-          end
-        rescue => e
-          problems << { post: post, ex: e }
-
-          attempts = post.custom_fields["rebake_attempts"].to_i
-
-          if attempts > 3
-            post.update_columns(baked_version: BAKED_VERSION)
-            Discourse.warn_exception(
-              e,
-              message: "Can not rebake post# #{post.id} after 3 attempts, giving up",
-            )
-          else
-            post.custom_fields["rebake_attempts"] = attempts + 1
-            post.save_custom_fields
-          end
+        if attempts > 3
+          post.update_columns(baked_version: BAKED_VERSION)
+          Discourse.warn_exception(
+            e,
+            message: "Can not rebake post# #{post.id} after 3 attempts, giving up",
+          )
+        else
+          post.custom_fields["rebake_attempts"] = attempts + 1
+          post.save_custom_fields
         end
       end
     problems
@@ -1285,6 +1283,7 @@ end
 #  post_number             :integer          not null
 #  post_type               :integer          default(1), not null
 #  public_version          :integer          default(1), not null
+#  qa_vote_count           :integer          default(0)
 #  quote_count             :integer          default(0), not null
 #  raw                     :text             not null
 #  raw_email               :text
@@ -1332,6 +1331,8 @@ end
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE
 #  index_posts_on_topic_id_and_reply_to_post_number       (topic_id,reply_to_post_number)
 #  index_posts_on_topic_id_and_sort_order                 (topic_id,sort_order)
+#  index_posts_on_updated_at_for_locale_detection         (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
+#  index_posts_on_updated_at_for_localization             (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
 #  index_posts_on_user_id_and_created_at                  (user_id,created_at)
 #  index_posts_user_and_likes                             (user_id,like_count DESC,created_at DESC) WHERE (post_number > 1)
 #

@@ -28,7 +28,7 @@ class SidebarSectionLink < ActiveRecord::Base
   end
 
   def ensure_supported_linkable_type
-    if (!SUPPORTED_LINKABLE_TYPES.include?(self.linkable_type)) ||
+    if !SUPPORTED_LINKABLE_TYPES.include?(self.linkable_type) ||
          (self.linkable_type == "Tag" && !SiteSetting.tagging_enabled)
       self.errors.add(
         :linkable_type,

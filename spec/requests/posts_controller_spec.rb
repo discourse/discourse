@@ -836,6 +836,52 @@ RSpec.describe PostsController do
       end
     end
 
+    context "when logged in as a category group moderator who cannot see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "prevents editing a post in a topic the user cannot see" do
+        put "/posts/#{private_post.id}.json", params: { post: { raw: "edited body" } }
+
+        expect(response.status).to eq(403)
+        expect(private_post.reload.raw).not_to eq("edited body")
+      end
+    end
+
+    context "when logged in as a category group moderator who can see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "allows editing a post in a topic the user can see" do
+        put "/posts/#{private_post.id}.json", params: { post: { raw: "edited body" } }
+
+        expect(response.status).to eq(200)
+        expect(private_post.reload.raw).to eq("edited body")
+      end
+    end
+
     it "can not change category to a disallowed category" do
       post = create_post
       sign_in(post.user)
@@ -1835,6 +1881,41 @@ RSpec.describe PostsController do
         expect(topic.visible).to eq(true)
       end
 
+      it "prevents regular users from replying to whispers" do
+        sign_in(admin)
+        post "/posts.json",
+             params: {
+               raw: "this is the first post with enough words",
+               title: "this is a topic title for whispers",
+             }
+        expect(response.status).to eq(200)
+
+        topic_id = response.parsed_body["topic_id"]
+        post "/posts.json",
+             params: {
+               raw: "this is a staff-only whisper",
+               topic_id: topic_id,
+               reply_to_post_number: 1,
+               whisper: true,
+             }
+        expect(response.status).to eq(200)
+
+        whisper_post_number = response.parsed_body["post_number"]
+        sign_in(user)
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "replying to a whisper over http",
+                 topic_id: topic_id,
+                 reply_to_post_number: whisper_post_number,
+               }
+        end.not_to change { Post.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(I18n.t(:topic_not_found))
+      end
+
       describe "posts_controller_create_user modifier" do
         fab!(:different_user, :admin)
 
@@ -2689,6 +2770,19 @@ RSpec.describe PostsController do
       it "ensures anyone can see the revisions" do
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(200)
+      end
+
+      context "when names are disabled" do
+        before { SiteSetting.enable_names = false }
+
+        it "does not expose the acting user's name" do
+          post_revision.user.update!(name: "Hidden Editor")
+
+          get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["acting_user_name"]).to eq(nil)
+        end
       end
     end
 

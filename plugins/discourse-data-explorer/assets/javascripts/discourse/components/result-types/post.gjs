@@ -10,7 +10,7 @@ const Post = <template>
     >
       <div class="title">
         <div class="quote-controls">
-          {{! template-lint-disable no-invalid-link-text }}
+          {{! eslint-disable ember/template-no-invalid-link-text }}
           <a
             href="/t/via-quote/{{@ctx.post.topic_id}}/{{@ctx.post.post_number}}"
             title="go to the quoted post"

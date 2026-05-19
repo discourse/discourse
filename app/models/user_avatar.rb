@@ -27,61 +27,59 @@ class UserAvatar < ActiveRecord::Base
 
   def update_gravatar!
     DistributedMutex.synchronize("update_gravatar_#{user_id}") do
-      begin
-        self.update!(last_gravatar_download_attempt: Time.zone.now)
+      self.update!(last_gravatar_download_attempt: Time.zone.now)
 
-        max = Discourse.avatar_sizes.max
+      max = Discourse.avatar_sizes.max
 
-        # The user could be deleted before this executes
-        return if user.blank? || user.primary_email.blank?
+      # The user could be deleted before this executes
+      return if user.blank? || user.primary_email.blank?
 
-        email_hash = @@custom_user_gravatar_email_hash[user_id] || user.email_hash
-        gravatar_url =
-          "https://#{SiteSetting.gravatar_base_url}/avatar/#{email_hash}.png?s=#{max}&d=404&reset_cache=#{SecureRandom.urlsafe_base64(5)}"
+      email_hash = @@custom_user_gravatar_email_hash[user_id] || user.email_hash
+      gravatar_url =
+        "https://#{SiteSetting.gravatar_base_url}/avatar/#{email_hash}.png?s=#{max}&d=404&reset_cache=#{SecureRandom.urlsafe_base64(5)}"
 
-        if SiteSetting.verbose_upload_logging
-          Rails.logger.warn("Verbose Upload Logging: Downloading gravatar from #{gravatar_url}")
-        end
+      if SiteSetting.verbose_upload_logging
+        Rails.logger.warn("Verbose Upload Logging: Downloading gravatar from #{gravatar_url}")
+      end
 
-        # follow redirects in case gravatar change rules on us
-        tempfile =
-          FileHelper.download(
-            gravatar_url,
-            max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-            tmp_file_name: "gravatar",
-            skip_rate_limit: true,
-            verbose: false,
-            follow_redirect: true,
-          )
+      # follow redirects in case gravatar change rules on us
+      tempfile =
+        FileHelper.download(
+          gravatar_url,
+          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+          tmp_file_name: "gravatar",
+          skip_rate_limit: true,
+          verbose: false,
+          follow_redirect: true,
+        )
 
-        if tempfile
-          ext = File.extname(tempfile)
-          ext = ".png" if ext.blank?
+      if tempfile
+        ext = File.extname(tempfile)
+        ext = ".png" if ext.blank?
 
-          upload =
-            UploadCreator.new(
-              tempfile,
-              "gravatar#{ext}",
-              origin: gravatar_url,
-              type: "avatar",
-              for_gravatar: true,
-            ).create_for(user_id)
+        upload =
+          UploadCreator.new(
+            tempfile,
+            "gravatar#{ext}",
+            origin: gravatar_url,
+            type: "avatar",
+            for_gravatar: true,
+          ).create_for(user_id)
 
-          if gravatar_upload_id != upload.id
-            User.transaction do
-              if gravatar_upload_id && user.uploaded_avatar_id == gravatar_upload_id
-                user.update!(uploaded_avatar_id: upload.id)
-              end
-
-              self.update!(gravatar_upload: upload)
+        if gravatar_upload_id != upload.id
+          User.transaction do
+            if gravatar_upload_id && user.uploaded_avatar_id == gravatar_upload_id
+              user.update!(uploaded_avatar_id: upload.id)
             end
+
+            self.update!(gravatar_upload: upload)
           end
         end
-      rescue OpenURI::HTTPError => e
-        raise e if e.io&.status&.[](0).to_i != 404
-      ensure
-        tempfile&.close!
       end
+    rescue OpenURI::HTTPError => e
+      raise e if e.io&.status&.[](0).to_i != 404
+    ensure
+      tempfile&.close!
     end
   end
 
@@ -199,14 +197,12 @@ class UserAvatar < ActiveRecord::Base
     warnings_reported = 0
 
     ids.each do |id|
-      begin
-        OptimizedImage.find(id).destroy!
-      rescue ActiveRecord::RecordNotFound
-      rescue => e
-        if warnings_reported < 10
-          Discourse.warn_exception(e, message: "Failed to remove optimized image")
-          warnings_reported += 1
-        end
+      OptimizedImage.find(id).destroy!
+    rescue ActiveRecord::RecordNotFound
+    rescue => e
+      if warnings_reported < 10
+        Discourse.warn_exception(e, message: "Failed to remove optimized image")
+        warnings_reported += 1
       end
     end
   end

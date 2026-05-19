@@ -983,14 +983,14 @@ class Category < ActiveRecord::Base
 
   def self.query_parent_category(parent_slug)
     encoded_parent_slug = CGI.escape(parent_slug) if SiteSetting.slug_generation_method == "encoded"
-    self.where(slug: (encoded_parent_slug || parent_slug), parent_category_id: nil).pick(:id) ||
+    self.where(slug: encoded_parent_slug || parent_slug, parent_category_id: nil).pick(:id) ||
       self.where(id: parent_slug.to_i).pick(:id)
   end
 
   def self.query_category(slug_or_id, parent_category_id)
     encoded_slug_or_id = CGI.escape(slug_or_id) if SiteSetting.slug_generation_method == "encoded"
     self.where(
-      slug: (encoded_slug_or_id || slug_or_id),
+      slug: encoded_slug_or_id || slug_or_id,
       parent_category_id: parent_category_id,
     ).first || self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
   end
@@ -1001,7 +1001,7 @@ class Category < ActiveRecord::Base
 
   def has_children?
     return @has_children if defined?(@has_children)
-    @has_children = (id && Category.where(parent_category_id: id).exists?)
+    @has_children = id && Category.where(parent_category_id: id).exists?
   end
 
   def uncategorized?

@@ -196,7 +196,7 @@ class Topic < ActiveRecord::Base
             max_emojis: true,
             unique_among: {
               unless:
-                Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },
+                Proc.new { |t| SiteSetting.allow_duplicate_topic_titles? || t.private_message? },
               message: :has_already_been_used,
               allow_blank: true,
               case_sensitive: false,
@@ -1468,7 +1468,7 @@ class Topic < ActiveRecord::Base
     post = self.ordered_posts.first
 
     html = post.cooked
-    if (guardian && ContentLocalization.show_translated_post?(post, guardian))
+    if guardian && ContentLocalization.show_translated_post?(post, guardian)
       html = post.get_localization&.cooked.presence || html
     end
 
@@ -1716,7 +1716,7 @@ class Topic < ActiveRecord::Base
     elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
       if duration_minutes > 0
         first_reply_created_at =
-          (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
+          self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now
         topic_timer.duration_minutes = duration_minutes
         topic_timer.execute_at = first_reply_created_at + duration_minutes.minutes
         topic_timer.created_at = first_reply_created_at
@@ -2330,21 +2330,23 @@ end
 #
 # Indexes
 #
-#  idx_topics_front_page                   (deleted_at,visible,archetype,category_id,id)
-#  idx_topics_user_id_deleted_at           (user_id) WHERE (deleted_at IS NULL)
-#  idxtopicslug                            (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
-#  index_topics_on_bannered_until          (bannered_until) WHERE (bannered_until IS NOT NULL)
-#  index_topics_on_bumped_at_public        (bumped_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
-#  index_topics_on_category_id             (category_id) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
-#  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
-#  index_topics_on_external_id             (external_id) UNIQUE WHERE (external_id IS NOT NULL)
-#  index_topics_on_id_and_deleted_at       (id,deleted_at)
-#  index_topics_on_id_filtered_banner      (id) UNIQUE WHERE (((archetype)::text = 'banner'::text) AND (deleted_at IS NULL))
-#  index_topics_on_image_upload_id         (image_upload_id)
-#  index_topics_on_lower_title             (lower((title)::text))
-#  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
-#  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally
-#  index_topics_on_pinned_until            (pinned_until) WHERE (pinned_until IS NOT NULL)
-#  index_topics_on_timestamps_private      (bumped_at,created_at,updated_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text = 'private_message'::text))
-#  index_topics_on_updated_at_public       (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
+#  idx_topics_front_page                            (deleted_at,visible,archetype,category_id,id)
+#  idx_topics_user_id_deleted_at                    (user_id) WHERE (deleted_at IS NULL)
+#  idxtopicslug                                     (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
+#  index_topics_on_bannered_until                   (bannered_until) WHERE (bannered_until IS NOT NULL)
+#  index_topics_on_bumped_at_public                 (bumped_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
+#  index_topics_on_category_id                      (category_id) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
+#  index_topics_on_created_at_and_visible           (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
+#  index_topics_on_external_id                      (external_id) UNIQUE WHERE (external_id IS NOT NULL)
+#  index_topics_on_id_and_deleted_at                (id,deleted_at)
+#  index_topics_on_id_filtered_banner               (id) UNIQUE WHERE (((archetype)::text = 'banner'::text) AND (deleted_at IS NULL))
+#  index_topics_on_image_upload_id                  (image_upload_id)
+#  index_topics_on_lower_title                      (lower((title)::text))
+#  index_topics_on_pinned_at                        (pinned_at) WHERE (pinned_at IS NOT NULL)
+#  index_topics_on_pinned_globally                  (pinned_globally) WHERE pinned_globally
+#  index_topics_on_pinned_until                     (pinned_until) WHERE (pinned_until IS NOT NULL)
+#  index_topics_on_timestamps_private               (bumped_at,created_at,updated_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text = 'private_message'::text))
+#  index_topics_on_updated_at_for_locale_detection  (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
+#  index_topics_on_updated_at_for_localization      (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
+#  index_topics_on_updated_at_public                (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #

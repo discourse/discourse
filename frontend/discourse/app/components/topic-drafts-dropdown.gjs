@@ -121,7 +121,7 @@ export default class TopicDraftsDropdown extends Component {
           @onRegisterApi={{this.onRegisterApi}}
           @modalForMobile={{true}}
           aria-label={{i18n "drafts.dropdown.title"}}
-          class={{@btnTypeClass}}
+          class={{@draftMenuClasses}}
         >
           <DDropdownMenu as |dropdown|>
             {{#each this.drafts as |draft|}}

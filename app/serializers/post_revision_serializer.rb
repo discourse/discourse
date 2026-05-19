@@ -34,7 +34,7 @@ class PostRevisionSerializer < ApplicationSerializer
   # Creates a field called field_name_changes with previous and
   # current members if a field has changed in this revision
   def self.add_compared_field(field)
-    changes_name = "#{field}_changes".to_sym
+    changes_name = :"#{field}_changes"
 
     self.attributes changes_name
     define_method(changes_name) { { previous: previous[field], current: current[field] } }
@@ -102,6 +102,10 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def acting_user_name
     user.name
+  end
+
+  def include_acting_user_name?
+    SiteSetting.enable_names?
   end
 
   def avatar_template

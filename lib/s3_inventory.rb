@@ -46,66 +46,62 @@ class S3Inventory
     end
 
     DistributedMutex.synchronize("s3_inventory_list_missing_#{type}", validity: 30.minutes) do
-      begin
-        download_and_decompress_files if !@preloaded_inventory_file
+      download_and_decompress_files if !@preloaded_inventory_file
 
-        multisite_prefix = Discourse.store.upload_path
+      multisite_prefix = Discourse.store.upload_path
 
-        ActiveRecord::Base.transaction do
-          begin
-            connection.exec(
-              "CREATE TEMP TABLE #{tmp_table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))",
-            )
+      ActiveRecord::Base.transaction do
+        connection.exec(
+          "CREATE TEMP TABLE #{tmp_table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))",
+        )
 
-            connection.copy_data("COPY #{tmp_table_name} FROM STDIN CSV") do
-              for_each_inventory_row do |row|
-                key = row[CSV_KEY_INDEX]
+        connection.copy_data("COPY #{tmp_table_name} FROM STDIN CSV") do
+          for_each_inventory_row do |row|
+            key = row[CSV_KEY_INDEX]
 
-                next if Rails.configuration.multisite && key.exclude?(multisite_prefix)
-                next if key.exclude?("#{type}/")
+            next if Rails.configuration.multisite && key.exclude?(multisite_prefix)
+            next if key.exclude?("#{type}/")
 
-                url = File.join(Discourse.store.absolute_base_url, key)
-                connection.put_copy_data("#{CGI.unescape(url)},#{row[CSV_ETAG_INDEX]}\n")
-              end
-            end
+            url = File.join(Discourse.store.absolute_base_url, key)
+            connection.put_copy_data("#{CGI.unescape(url)},#{row[CSV_ETAG_INDEX]}\n")
+          end
+        end
 
-            table_name = @model.table_name
+        table_name = @model.table_name
 
-            # backfilling etags
-            connection.async_exec(
-              "UPDATE #{table_name}
+        # backfilling etags
+        connection.async_exec(
+          "UPDATE #{table_name}
               SET etag = #{tmp_table_name}.etag
               FROM #{tmp_table_name}
               WHERE #{table_name}.etag IS NULL AND
                 #{table_name}.url = #{tmp_table_name}.url",
-            )
+        )
 
-            uploads = @scope.where("updated_at < ?", inventory_date)
+        uploads = @scope.where("updated_at < ?", inventory_date)
 
-            missing_uploads =
-              uploads.joins(
-                "LEFT JOIN #{tmp_table_name} ON #{tmp_table_name}.etag = #{table_name}.etag",
-              ).where("#{tmp_table_name}.etag IS NULL")
+        missing_uploads =
+          uploads.joins(
+            "LEFT JOIN #{tmp_table_name} ON #{tmp_table_name}.etag = #{table_name}.etag",
+          ).where("#{tmp_table_name}.etag IS NULL")
 
-            exists_with_different_etag =
-              missing_uploads
-                .joins(
-                  "LEFT JOIN #{tmp_table_name} inventory2 ON inventory2.url = #{table_name}.url",
-                )
-                .where.not(inventory2: { etag: nil })
-                .pluck(:id)
+        exists_with_different_etag =
+          missing_uploads
+            .joins("LEFT JOIN #{tmp_table_name} inventory2 ON inventory2.url = #{table_name}.url")
+            .where.not(inventory2: { etag: nil })
+            .pluck(:id)
 
-            # marking as verified/not verified
-            if @model == Upload
-              sql_params = {
-                inventory_date: inventory_date,
-                invalid_etag: Upload.verification_statuses[:invalid_etag],
-                s3_file_missing_confirmed: Upload.verification_statuses[:s3_file_missing_confirmed],
-                verified: Upload.verification_statuses[:verified],
-                seeded_id_threshold: @model::SEEDED_ID_THRESHOLD,
-              }
+        # marking as verified/not verified
+        if @model == Upload
+          sql_params = {
+            inventory_date: inventory_date,
+            invalid_etag: Upload.verification_statuses[:invalid_etag],
+            s3_file_missing_confirmed: Upload.verification_statuses[:s3_file_missing_confirmed],
+            verified: Upload.verification_statuses[:verified],
+            seeded_id_threshold: @model::SEEDED_ID_THRESHOLD,
+          }
 
-              DB.exec(<<~SQL, sql_params)
+          DB.exec(<<~SQL, sql_params)
                 UPDATE #{table_name}
                 SET verification_status = :verified
                 WHERE etag IS NOT NULL
@@ -121,7 +117,7 @@ class S3Inventory
                     )
               SQL
 
-              DB.exec(<<~SQL, sql_params)
+          DB.exec(<<~SQL, sql_params)
                 UPDATE #{table_name}
                 SET verification_status = :invalid_etag
                 WHERE verification_status <> :invalid_etag
@@ -135,34 +131,32 @@ class S3Inventory
                         WHERE #{tmp_table_name}.etag = #{table_name}.etag
                     )
               SQL
-            end
+        end
 
-            if (missing_count = missing_uploads.count) > 0
-              missing_uploads
-                .select(:id, :url)
-                .find_each do |upload|
-                  if exists_with_different_etag.include?(upload.id)
-                    log "#{upload.url} has different etag"
-                  else
-                    log upload.url
-                  end
-                end
-
-              log "#{missing_count} of #{uploads.count} #{@scope.name.underscore.pluralize} are missing"
-              if exists_with_different_etag.present?
-                log "#{exists_with_different_etag.count} of these are caused by differing etags"
-                log "Null the etag column and re-run for automatic backfill"
+        if (missing_count = missing_uploads.count) > 0
+          missing_uploads
+            .select(:id, :url)
+            .find_each do |upload|
+              if exists_with_different_etag.include?(upload.id)
+                log "#{upload.url} has different etag"
+              else
+                log upload.url
               end
             end
 
-            set_missing_s3_discourse_stats(missing_count)
-          ensure
-            connection.exec("DROP TABLE #{tmp_table_name}") unless connection.nil?
+          log "#{missing_count} of #{uploads.count} #{@scope.name.underscore.pluralize} are missing"
+          if exists_with_different_etag.present?
+            log "#{exists_with_different_etag.count} of these are caused by differing etags"
+            log "Null the etag column and re-run for automatic backfill"
           end
         end
+
+        set_missing_s3_discourse_stats(missing_count)
       ensure
-        cleanup!
+        connection.exec("DROP TABLE #{tmp_table_name}") unless connection.nil?
       end
+    ensure
+      cleanup!
     end
   end
 

@@ -354,7 +354,7 @@ class TopicTrackingState
           #{sql}
         )
         SELECT *, (
-          SELECT JSON_AGG(JSON_BUILD_OBJECT('id', tags.id, 'name', tags.name, 'slug', tags.slug))
+          SELECT JSON_AGG(JSON_BUILD_OBJECT('id', tags.id))
           FROM topic_tags
           JOIN tags ON tags.id = topic_tags.tag_id
           WHERE topic_id = tags_included_cte.topic_id
@@ -581,8 +581,8 @@ class TopicTrackingState
     groups.each do |group|
       member = group.members.include?(user_id)
 
-      member_writing = (write_event && member)
-      non_member_reading = (!write_event && !member)
+      member_writing = write_event && member
+      non_member_reading = !write_event && !member
       next if non_member_reading || member_writing
 
       groups_to_update << group

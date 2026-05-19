@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  category_types:
+    events:
+      name: "Wydarzenia"
+      title: "wydarzenia"
+      description: "Miejsce, w którym członkowie mogą wyszukiwać i omawiać nadchodzące wydarzenia we wspólnym kalendarzu."
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Przeczytaj wydarzenia w kalendarzu"
@@ -66,7 +71,32 @@ pl_PL:
     event_participation_buttons: "Lista przycisków umożliwiających udział w wydarzeniu, z których mogą korzystać użytkownicy."
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
+    enable_events_category_type_setup: "Włącza opcję typu kategorii „Zdarzenia” podczas konfiguracji tworzenia kategorii. Uwaga: aby ta opcja zadziałała, opcja „Włącz uproszczone tworzenie kategorii” musi być włączona."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        label: "Domyślny widok kalendarza"
+        day: "Dzień"
+        week: "Tydzień"
+        month: "Miesiąc"
+        year: "Rok"
+      display_weekends:
+        label: "Wyświetl weekendy"
+      discourse_post_event_allowed_on_groups:
+        label: "Grupy mogące tworzyć wydarzenia"
+      use_local_event_date:
+        label: "Format daty wydarzenia"
+        local: "Data lokalna (np. 20 kwietnia)"
+        relative: "Czas względny (np. w ciągu 2 dni)"
+      sort_categories_by_event_start_date_enabled:
+        label: "Sortowanie tematów"
+        event_date: "Data wydarzenia"
+        latest_post: "Najnowsza aktywność wpisów"
+      sidebar_show_upcoming_events:
+        label: 'Pokaż link „Nadchodzące wydarzenia” w menu nawigacyjnym'
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - Wszystkie wydarzenia"
+      my_events_feed_name: "%{site_title} - Moje wydarzenia"
     invite_user_notification: "%{username} zaprosił Cię do: %{description}"
     calendar_must_be_in_first_post: "Tag kalendarza może być użyty tylko w pierwszym poście tematu."
     more_than_one_calendar: "W poście nie można umieścić więcej niż jednego kalendarza."

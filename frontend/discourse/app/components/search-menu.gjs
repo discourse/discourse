@@ -404,10 +404,10 @@ export default class SearchMenu extends Component {
   }
 
   <template>
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class={{this.classNames}}
       {{didInsert this.setupEventListeners}}
-      {{! template-lint-disable no-invalid-interactive }}
       {{on "keydown" this.onKeydown}}
     >
       <div class="search-input-wrapper">

@@ -12,7 +12,7 @@
   "dependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.29.2",
-    "@babel/standalone": "^7.29.2",
+    "@babel/standalone": "^7.29.4",
     "@csstools/postcss-light-dark-function": "^3.0.0",
     "@rollup/browser": "^4.60.3",
     "@rollup/plugin-babel": "^7.0.0",
@@ -26,6 +26,7 @@
     "ember-cli-htmlbars": "^7.0.1",
     "ember-source": "~6.10.0",
     "ember-this-fallback": "^0.4.0",
+    "esbuild": "^0.28.0",
     "fastestsmallesttextencoderdecoder": "^1.0.22",
     "magic-string": "^0.30.21",
     "path-browserify": "^1.0.1",
@@ -36,7 +37,7 @@
     "postcss-nesting": "^14.0.0",
     "readable-stream": "^4.7.0",
     "source-map-js": "^1.2.1",
-    "terser": "^5.46.2"
+    "terser": "^5.47.1"
   },
   "engines": {
     "node": ">= 20",

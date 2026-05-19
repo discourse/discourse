@@ -44,7 +44,7 @@ class PostRevisor
     def apply_tag_changes(tag_value)
       return unless guardian.can_tag_topics?
 
-      prev_tags = topic.tags.map(&:name)
+      prev_tags = topic.tags.map(&:name).sort
       return if tag_value.blank? && prev_tags.blank?
 
       success = DiscourseTagging.tag_topic(topic, guardian, tag_value)
@@ -54,8 +54,8 @@ class PostRevisor
         return
       end
 
-      new_tags = topic.tags.map(&:name)
-      return if prev_tags.sort == new_tags.sort
+      new_tags = topic.tags.map(&:name).sort
+      return if prev_tags == new_tags
 
       record_change("tags", prev_tags, new_tags)
       DB.after_commit do
@@ -113,7 +113,7 @@ class PostRevisor
     tracked_topic_fields[field] = block
 
     # Define it in the serializer unless it already has been defined
-    if PostRevisionSerializer.instance_methods(false).exclude?("#{field}_changes".to_sym)
+    if PostRevisionSerializer.instance_methods(false).exclude?(:"#{field}_changes")
       PostRevisionSerializer.add_compared_field(field)
     end
   end
@@ -346,23 +346,19 @@ class PostRevisor
     return false if !successfully_saved_post_and_topic
 
     # Lock the post by default if the appropriate setting is true
-    if (
-         SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
-           @editor.staff? && @editor != Discourse.system_user && !@post.user&.staff?
-       )
+    if SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
+         @editor.staff? && @editor != Discourse.system_user && !@post.user&.staff?
       PostLocker.new(@post, @editor).lock
     end
 
     # We log staff/group moderator edits to posts
     if (
-         (
-           @editor.staff? ||
-             (
-               @post.is_category_description? &&
-                 guardian.can_edit_category_description?(@post.topic.category)
-             )
-         ) && @editor.id != @post.user_id && @fields.has_key?("raw") && !@opts[:skip_staff_log]
-       )
+         @editor.staff? ||
+           (
+             @post.is_category_description? &&
+               guardian.can_edit_category_description?(@post.topic.category)
+           )
+       ) && @editor.id != @post.user_id && @fields.has_key?("raw") && !@opts[:skip_staff_log]
       StaffActionLogger.new(@editor).log_post_edit(@post, old_raw: old_raw)
     end
 

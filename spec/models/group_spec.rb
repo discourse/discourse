@@ -447,33 +447,29 @@ RSpec.describe Group do
     end
 
     it "does not reset the localized name" do
-      begin
-        I18n.locale = SiteSetting.default_locale = "fi"
+      I18n.locale = SiteSetting.default_locale = "fi"
 
-        group = Group.find(Group::AUTO_GROUPS[:everyone])
-        group.update!(name: I18n.t("groups.default_names.everyone"))
+      group = Group.find(Group::AUTO_GROUPS[:everyone])
+      group.update!(name: I18n.t("groups.default_names.everyone"))
 
-        Group.refresh_automatic_group!(:everyone)
+      Group.refresh_automatic_group!(:everyone)
 
-        expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
+      expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
 
-        I18n.locale = SiteSetting.default_locale = "en"
+      I18n.locale = SiteSetting.default_locale = "en"
 
-        Group.refresh_automatic_group!(:everyone)
+      Group.refresh_automatic_group!(:everyone)
 
-        expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
-      end
+      expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
     end
 
     it "uses the localized name if name has not been taken" do
-      begin
-        I18n.locale = SiteSetting.default_locale = "de"
+      I18n.locale = SiteSetting.default_locale = "de"
 
-        group = Group.refresh_automatic_group!(:staff)
+      group = Group.refresh_automatic_group!(:staff)
 
-        expect(group.name).to_not eq("staff")
-        expect(group.name).to eq(I18n.t("groups.default_names.staff"))
-      end
+      expect(group.name).to_not eq("staff")
+      expect(group.name).to eq(I18n.t("groups.default_names.staff"))
     end
 
     it "does not use the localized name if name has already been taken when switching to a the english locale" do

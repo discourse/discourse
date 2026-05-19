@@ -259,7 +259,7 @@ module PrettyText
       buffer << "__pt = __DiscourseMarkdownIt.withCustomFeatures(__pluginFeatures).withOptions(__optInput);"
 
       # Be careful disabling sanitization. We allow for custom emails
-      buffer << ("__pt.disableSanitizer();") if opts[:sanitize] == false
+      buffer << "__pt.disableSanitizer();" if opts[:sanitize] == false
 
       opts = context.eval(buffer)
 
@@ -539,23 +539,21 @@ module PrettyText
     doc
       .css("a[href]")
       .each do |a|
-        begin
-          href = a["href"].to_s
-          next if href.blank?
-          next if href.start_with?("mailto:")
-          next if href.start_with?(Discourse.base_url)
-          next if URI(href).host.present?
+        href = a["href"].to_s
+        next if href.blank?
+        next if href.start_with?("mailto:")
+        next if href.start_with?(Discourse.base_url)
+        next if URI(href).host.present?
 
-          a["href"] = (
-            if href.start_with?(Discourse.base_path)
-              "#{Discourse.base_url_no_prefix}#{href}"
-            else
-              "#{Discourse.base_url}#{href}"
-            end
-          )
-        rescue URI::Error
-          # leave it
-        end
+        a["href"] = (
+          if href.start_with?(Discourse.base_path)
+            "#{Discourse.base_url_no_prefix}#{href}"
+          else
+            "#{Discourse.base_url}#{href}"
+          end
+        )
+      rescue URI::Error
+        # leave it
       end
   end
 

@@ -411,6 +411,11 @@ module DiscourseAi
       end
 
       def self.handle_spam(post, log, triggering_user_id: nil)
+        if post_has_existing_flag?(post)
+          log.update!(error: "skipped because post already has a flag")
+          return
+        end
+
         url = "#{Discourse.base_url}/admin/plugins/discourse-ai/ai-spam"
         reason = I18n.t("discourse_ai.spam_detection.flag_reason", url: url)
 
@@ -464,6 +469,10 @@ module DiscourseAi
         )
 
         Topic.where(id: post.topic_id).update_all(visible: false) if post.post_number == 1
+      end
+
+      def self.post_has_existing_flag?(post)
+        PostAction.active.flags.where(post: post).exists?
       end
     end
   end

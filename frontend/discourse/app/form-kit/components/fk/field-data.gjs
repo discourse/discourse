@@ -180,6 +180,32 @@ export default class FKFieldData extends Component {
     return (this.args.errors ?? {})[this.name];
   }
 
+  get descriptionId() {
+    return `${this.id}-description`;
+  }
+
+  get helpTextId() {
+    return `${this.id}-help-text`;
+  }
+
+  get describedBy() {
+    const ids = [];
+
+    if (this.description) {
+      ids.push(this.descriptionId);
+    }
+
+    if (this.helpText) {
+      ids.push(this.helpTextId);
+    }
+
+    if (this.error) {
+      ids.push(this.errorId);
+    }
+
+    return ids.length ? ids.join(" ") : undefined;
+  }
+
   /**
    * Indicates whether to show the field's title.
    * Defaults to `true`.

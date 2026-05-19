@@ -3,6 +3,10 @@
 module DiscourseAi
   module Configuration
     class LlmValidator
+      TEST_PROMPT = "How much is 1 + 1?"
+
+      attr_reader :last_failed_mode
+
       def initialize(opts = {})
         @opts = opts
       end
@@ -31,16 +35,18 @@ module DiscourseAi
       end
 
       def run_test(val)
-        DiscourseAi::Completions::Llm
-          .proxy(val)
-          .generate(
-            "How much is 1 + 1?",
-            user: @opts[:user] || Discourse.system_user,
-            feature_name: "llm_validator",
-            temperature: 0.7,
-            top_p: 0.9,
-          )
-          .present?
+        llm = DiscourseAi::Completions::Llm.proxy(val)
+
+        @last_failed_mode = :non_streaming
+        raise empty_response_error if probe(llm).blank?
+
+        @last_failed_mode = :streaming
+        streamed = +""
+        probe(llm) { |partial| streamed << partial.to_s if partial.is_a?(String) }
+        raise empty_response_error if streamed.blank?
+
+        @last_failed_mode = nil
+        true
       end
 
       def is_using(llm_model)
@@ -73,6 +79,25 @@ module DiscourseAi
           ai_summarization_enabled
           ai_translation_enabled
         ]
+      end
+
+      private
+
+      def probe(llm, &blk)
+        llm.generate(
+          TEST_PROMPT,
+          user: @opts[:user] || Discourse.system_user,
+          feature_name: "llm_validator",
+          temperature: 0.7,
+          top_p: 0.9,
+          &blk
+        )
+      end
+
+      def empty_response_error
+        DiscourseAi::Completions::Endpoints::Base::CompletionFailed.new(
+          I18n.t("discourse_ai.llm.configuration.empty_response"),
+        )
       end
     end
   end
