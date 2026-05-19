@@ -8,7 +8,7 @@ import * as fs from "fs";
 
 const WORKER_PATH = "./rolldown-worker.mjs";
 const REBUILD_IN_FLIGHT_FILE = "./dist/manifest/.rebuild-in-flight";
-const WATCH_DIR = "./app";
+const WATCH_DIR = ".";
 const shutdown = new AbortController();
 
 let child = null;
@@ -37,6 +37,7 @@ function readPendingFiles() {
 async function waitForFileChange() {
   const watcher = chokidar.watch(WATCH_DIR, {
     ignoreInitial: true,
+    ignored: "node_modules",
   });
   try {
     await once(watcher, "all", { signal: shutdown.signal });
