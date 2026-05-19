@@ -46,7 +46,7 @@ RSpec.describe "upcoming change metadata integrity checks" do
     it "#{label} is valid" do
       metadata = setting[:upcoming_change]
       allowed_keys = %i[status impact learn_more_url allow_enabled_for]
-      required_keys = %i[status impact]
+      required_keys = %i[status impact learn_more_url]
       unsupported_keys = metadata.keys - allowed_keys
       missing_keys = required_keys - metadata.keys
       valid_statuses = UpcomingChanges.statuses.keys
