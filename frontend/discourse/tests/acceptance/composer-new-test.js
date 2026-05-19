@@ -121,6 +121,28 @@ acceptance(`Composer (new composer actions)`, function (needs) {
           .dom(".save-or-cancel button")
           .hasText(i18n("composer.create_topic"));
       });
+
+      test("topic context is cleared after a successful save", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await click("article#post_3 button.reply");
+        await fillIn(".d-editor-input", "this is a successful reply");
+        await click("#reply-control button.create");
+
+        await visit("/");
+        await click("#create-topic");
+        await click(".composer-actions-trigger");
+
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
+          .doesNotExist(
+            "reply_to_topic is not surfaced after the previous composer was saved"
+          );
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_post']")
+          .doesNotExist(
+            "reply_to_post is not surfaced after the previous composer was saved"
+          );
+      });
     }
   );
 

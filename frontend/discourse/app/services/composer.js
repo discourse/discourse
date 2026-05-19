@@ -873,6 +873,7 @@ export default class ComposerService extends Service {
     event.preventDefault();
     DiscourseURL.routeTo(this.get("model.createdPost.url"));
     this.close();
+    _clearComposerActionsSnapshotsNew();
   }
 
   @action
@@ -1396,6 +1397,7 @@ export default class ComposerService extends Service {
 
           return this.destroyDraft().then(() => {
             this.close();
+            _clearComposerActionsSnapshotsNew();
             return result;
           });
         }
@@ -1421,6 +1423,7 @@ export default class ComposerService extends Service {
         if (result.responseJson.route_to) {
           // TODO: await this:
           this.destroyDraft();
+          _clearComposerActionsSnapshotsNew();
           if (result.responseJson.message) {
             return this.dialog.alert({
               message: result.responseJson.message,
@@ -1433,6 +1436,7 @@ export default class ComposerService extends Service {
         }
 
         this.close();
+        _clearComposerActionsSnapshotsNew();
 
         this.currentUser.set("any_posts", true);
 
@@ -1503,6 +1507,7 @@ export default class ComposerService extends Service {
 
       this.set("model.loading", false);
       this.close();
+      _clearComposerActionsSnapshotsNew();
       this.toasts.success({
         duration: "short",
         data: {
@@ -1904,6 +1909,7 @@ export default class ComposerService extends Service {
       this._saveDraft(true);
       this.model.clearState();
       this.close();
+      _clearComposerActionsSnapshotsNew();
       this.appEvents.trigger("composer:cancelled");
       this.skipAutoSave = false;
       return true;
