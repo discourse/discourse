@@ -528,6 +528,7 @@ export default class ComposerActions extends Component {
   }
 
   async _replyFromExisting(options, post, topic) {
+    this._clearUnsupportedToggles(options);
     await this.composer.destroyDraft();
     this.composer.close();
     await this.composer.open({
@@ -538,26 +539,39 @@ export default class ComposerActions extends Component {
   }
 
   async _openComposer(options) {
+    this._clearUnsupportedToggles(options);
     this.composer.closeComposer();
     await this.composer.open(options);
     this._reapplyToggles(options);
   }
 
+  _clearUnsupportedToggles(options) {
+    if (options.action !== REPLY) {
+      options.whisper = false;
+      options.noBump = false;
+    }
+
+    if (options.action !== CREATE_TOPIC) {
+      options.unlistTopic = false;
+    }
+  }
+
   // composer.open() / model.open() pick up `whisper` and `noBump` from opts but
-  // not `unlistTopic`, so make sure all three toggle states survive a mode
-  // switch (reply-to-topic <-> reply-to-post, etc.)
+  // not `unlistTopic`, so make sure supported toggle states survive a mode
+  // switch (reply-to-topic <-> reply-to-post, etc.) without leaking into modes
+  // that do not support them.
   _reapplyToggles(options) {
     const model = this.composer.model;
     if (!model) {
       return;
     }
-    if (options.unlistTopic) {
+    if (model.creatingTopic && options.unlistTopic) {
       model.set("unlistTopic", true);
     }
-    if (options.whisper) {
+    if (model.replyingToTopic && options.whisper) {
       model.set("whisper", true);
     }
-    if (options.noBump) {
+    if (model.replyingToTopic && options.noBump) {
       model.set("noBump", true);
     }
   }

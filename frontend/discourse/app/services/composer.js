@@ -1685,6 +1685,8 @@ export default class ComposerService extends Service {
 
     tags = await this.filterTags(tags);
 
+    _clearComposerActionsSnapshotsNew();
+
     return this.open({
       prioritizedCategoryId: categoryId,
       topicCategoryId: categoryId,
@@ -1703,6 +1705,9 @@ export default class ComposerService extends Service {
   @action
   async openNewMessage({ title, body, recipients, hasGroups, tags }) {
     tags = await this.filterTags(tags);
+
+    _clearComposerActionsSnapshotsNew();
+
     return this.open({
       action: Composer.PRIVATE_MESSAGE,
       recipients,

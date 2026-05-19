@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
@@ -90,6 +90,8 @@ acceptance(`Composer (new composer actions)`, function (needs) {
     "Composer can switch between new topic and new PM in different contexts",
     function () {
       test("within post/topic context", async function (assert) {
+        const composer = this.owner.lookup("service:composer");
+
         await visit("/t/this-is-a-test-topic/54081");
         await click(".topic-post[data-post-number='1'] button.reply");
         await click(".composer-actions-trigger");
@@ -100,14 +102,19 @@ acceptance(`Composer (new composer actions)`, function (needs) {
           .doesNotExist("New message option is not present when in reply mode");
         await click(".composer-actions-trigger");
 
-        await click("#reply-control .discard-button");
         await visit("/");
-        await click("#create-topic");
+        await composer.openNewTopic();
+        await settled();
         await click(".composer-actions-trigger");
         assert
           .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
           .doesNotExist(
             "stale topic context is cleared when opening a fresh new-topic composer"
+          );
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_post']")
+          .doesNotExist(
+            "stale post context is cleared when opening a fresh new-topic composer"
           );
 
         await click("[data-action-id='create_private_message']");
@@ -120,6 +127,29 @@ acceptance(`Composer (new composer actions)`, function (needs) {
         assert
           .dom(".save-or-cancel button")
           .hasText(i18n("composer.create_topic"));
+      });
+
+      test("fresh new message clears stale reply context", async function (assert) {
+        const composer = this.owner.lookup("service:composer");
+
+        await visit("/t/this-is-a-test-topic/54081");
+        await click(".topic-post[data-post-number='1'] button.reply");
+
+        await visit("/");
+        await composer.openNewMessage({ recipients: "shade" });
+        await settled();
+
+        await click(".composer-actions-trigger");
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
+          .doesNotExist(
+            "stale topic context is cleared when opening a fresh message composer"
+          );
+        assert
+          .dom(".composer-actions-dropdown [data-action-id='reply_to_post']")
+          .doesNotExist(
+            "stale post context is cleared when opening a fresh message composer"
+          );
       });
 
       test("topic context is cleared after a successful save", async function (assert) {
@@ -166,8 +196,11 @@ acceptance(`Composer (new composer actions)`, function (needs) {
 
     await click("#create-topic");
     assert
-      .dom(".reply-details .whisper .d-icon-far-eye-slash")
+      .dom(".composer-whisper-indicator.--whispering")
       .doesNotExist("should reset the state of the composer's model");
+    assert
+      .dom(".save-or-cancel button .d-icon-far-eye-slash")
+      .doesNotExist("the save button should not use the whisper icon");
 
     await click(".composer-actions-trigger");
     await click(".composer-toggle-unlisted");
@@ -182,8 +215,11 @@ acceptance(`Composer (new composer actions)`, function (needs) {
 
     await click(".topic-post[data-post-number='1'] button.reply");
     assert
-      .dom(".reply-details .whisper")
+      .dom(".composer-whisper-indicator.--whispering")
       .doesNotExist("should reset the state of the composer's model");
+    assert
+      .dom(".composer-whisper-indicator.--public")
+      .exists("the closed-state whisper indicator shows the reply is public");
   });
 
   test("Composer whisper toggle not shown when replying to whisper", async function (assert) {

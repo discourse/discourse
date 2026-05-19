@@ -395,6 +395,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
   });
 
   test("create topic mode shows correct actions and unlisted toggle", async function (assert) {
+    const composer = this.owner.lookup("service:composer");
     const composerActions = composerActionsDropdown();
     updateCurrentUser({ admin: true });
 
@@ -411,6 +412,31 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     assert
       .dom(".composer-toggle-unlisted")
       .exists("unlisted toggle is visible for staff in create topic mode");
+
+    await click(".composer-toggle-unlisted");
+    composer.model.set("noBump", true);
+
+    assert
+      .dom(
+        ".composer-toggle-unlisted .d-toggle-switch__checkbox[aria-checked='true']"
+      )
+      .exists("unlisted toggle is on after click");
+
+    await composerActions.selectRowByValue("create_private_message");
+
+    assert.false(
+      composer.model.unlistTopic,
+      "unlisted state is cleared when switching to a private message"
+    );
+    assert.false(
+      composer.model.noBump,
+      "no-bump state is cleared when switching to a private message"
+    );
+
+    await composerActions.expand();
+    assert
+      .dom(".composer-toggle-unlisted")
+      .doesNotExist("unlisted toggle is not shown in private message mode");
   });
 
   test("create topic mode does not show reply_as_new_topic", async function (assert) {
