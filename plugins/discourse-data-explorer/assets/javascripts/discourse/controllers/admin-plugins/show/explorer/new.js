@@ -26,8 +26,12 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedName = "";
   @tracked generatedDescription = "";
   @tracked mode = "ai";
+  @tracked schema = null;
+  @tracked hideSchema = false;
+  @tracked manualSql = "SELECT 1";
 
   currentGenerationId = null;
+  manualFormData = { name: "", description: "" };
   _aiGenerationTimer = null;
 
   get aiQueriesEnabled() {
@@ -48,6 +52,16 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
+  updateHideSchema(value) {
+    this.hideSchema = value;
+  }
+
+  @action
+  updateManualSql(value) {
+    this.manualSql = value;
+  }
+
+  @action
   async create({ name, description }) {
     try {
       this.loading = true;
@@ -55,6 +69,7 @@ export default class AdminPluginsExplorerNew extends Controller {
         .createRecord("query", {
           name: name.trim(),
           description: description?.trim(),
+          sql: this.manualSql,
         })
         .save();
       this.toasts.success({
@@ -203,6 +218,10 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedName = "";
     this.generatedDescription = "";
     this.mode = "ai";
+    this.schema = null;
+    this.hideSchema = false;
+    this.manualSql = "SELECT 1";
     this.loading = false;
+    this.manualFormData = { name: "", description: "" };
   }
 }
