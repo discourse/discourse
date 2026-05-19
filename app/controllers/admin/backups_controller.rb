@@ -7,6 +7,7 @@ class Admin::BackupsController < Admin::AdminController
   include ExternalUploadHelpers
 
   before_action :ensure_backups_enabled
+  before_action :ensure_valid_backup_id, only: %i[show email destroy restore]
   skip_before_action :check_xhr, only: %i[index show logs check_backup_chunk upload_backup_chunk]
   skip_before_action :ensure_backups_enabled, only: %i[show status index email]
 
@@ -271,6 +272,11 @@ class Admin::BackupsController < Admin::AdminController
     !!(/\A[a-zA-Z0-9\._\-]+\z/ =~ filename)
   end
 
+  def ensure_valid_backup_id
+    backup_id = params.fetch(:id)
+    raise Discourse::NotFound unless valid_filename?(backup_id) && valid_extension?(backup_id)
+  end
+
   def render_error(message_key)
     render json: failed_json.merge(message: I18n.t(message_key))
   end
@@ -293,17 +299,15 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def create_direct_multipart_upload
-    begin
-      yield
-    rescue BackupRestore::BackupStore::StorageError => err
-      message =
-        debug_upload_error(
-          err,
-          I18n.t("upload.create_multipart_failure", additional_detail: err.message),
-        )
-      raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
-    rescue BackupRestore::BackupStore::BackupFileExists
-      raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.file_exists"))
-    end
+    yield
+  rescue BackupRestore::BackupStore::StorageError => err
+    message =
+      debug_upload_error(
+        err,
+        I18n.t("upload.create_multipart_failure", additional_detail: err.message),
+      )
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
+  rescue BackupRestore::BackupStore::BackupFileExists
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.file_exists"))
   end
 end

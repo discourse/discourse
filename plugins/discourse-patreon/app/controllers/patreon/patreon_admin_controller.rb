@@ -29,11 +29,9 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def is_number?(string)
-    begin
-      true if Float(string)
-    rescue StandardError
-      false
-    end
+    true if Float(string)
+  rescue StandardError
+    false
   end
 
   def edit
@@ -65,12 +63,10 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def sync_groups
-    begin
-      Patreon::Patron.sync_groups
-      render json: success_json
-    rescue => e
-      render json: { message: e.message }, status: :internal_server_error
-    end
+    Patreon::Patron.sync_groups
+    render json: success_json
+  rescue => e
+    render json: { message: e.message }, status: :internal_server_error
   end
 
   def update_data

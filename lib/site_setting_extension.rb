@@ -321,26 +321,24 @@ module SiteSettingExtension
   end
 
   def theme_site_settings_json_uncached(theme_id)
-    begin
-      # There are a few legit scenarios where the current
-      # theme ID may be blank, such as safe mode. In this
-      # case it will be better to return default site setting
-      # values rather than to cause random/undefined behaviour
-      # in the UI.
-      if theme_id.blank?
-        MultiJson.dump(ThemeSiteSetting.generate_defaults_map)
-      else
-        MultiJson.dump(theme_site_settings[theme_id])
-      end
-    rescue => err
-      # If something goes wrong here we really need to be aware of it in tests.
-      raise err if Rails.env.test?
-
-      Rails.logger.error(
-        "Error while generating theme_site_settings_json_uncached for theme ID #{theme_id}: #{err.message}",
-      )
-      nil
+    # There are a few legit scenarios where the current
+    # theme ID may be blank, such as safe mode. In this
+    # case it will be better to return default site setting
+    # values rather than to cause random/undefined behaviour
+    # in the UI.
+    if theme_id.blank?
+      MultiJson.dump(ThemeSiteSetting.generate_defaults_map)
+    else
+      MultiJson.dump(theme_site_settings[theme_id])
     end
+  rescue => err
+    # If something goes wrong here we really need to be aware of it in tests.
+    raise err if Rails.env.test?
+
+    Rails.logger.error(
+      "Error while generating theme_site_settings_json_uncached for theme ID #{theme_id}: #{err.message}",
+    )
+    nil
   end
 
   def all_settings(
@@ -679,12 +677,10 @@ module SiteSettingExtension
   end
 
   def process_message(message)
-    begin
-      MessageBus.on_connect.call(message.site_id)
-      refresh!
-    ensure
-      MessageBus.on_disconnect.call(message.site_id)
-    end
+    MessageBus.on_connect.call(message.site_id)
+    refresh!
+  ensure
+    MessageBus.on_disconnect.call(message.site_id)
   end
 
   def process_id
@@ -1361,9 +1357,10 @@ module SiteSettingExtension
   def default_uploads
     @default_uploads ||= {}
 
-    @default_uploads[provider.current_site] ||= begin
-      Upload.where("id < ?", Upload::SEEDED_ID_THRESHOLD).pluck(:id, :url).to_h
-    end
+    @default_uploads[provider.current_site] ||= Upload
+      .where("id < ?", Upload::SEEDED_ID_THRESHOLD)
+      .pluck(:id, :url)
+      .to_h
   end
 
   def uploads

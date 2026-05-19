@@ -282,7 +282,7 @@ class Post < ActiveRecord::Base
 
   def matches_recent_post?
     post_id = Discourse.redis.get(unique_post_key)
-    post_id != (nil) && post_id.to_i != (id)
+    post_id != nil && post_id.to_i != id
   end
 
   def raw_hash
@@ -828,32 +828,30 @@ class Post < ActiveRecord::Base
       .limit(limit)
       .pluck(:id)
       .each do |id|
+        break if !limiter.can_perform?
+
+        post = Post.find(id)
+        post.rebake!(priority: priority)
+
         begin
-          break if !limiter.can_perform?
+          limiter.performed! if rate_limiter
+        rescue RateLimiter::LimitExceeded
+          break
+        end
+      rescue => e
+        problems << { post: post, ex: e }
 
-          post = Post.find(id)
-          post.rebake!(priority: priority)
+        attempts = post.custom_fields["rebake_attempts"].to_i
 
-          begin
-            limiter.performed! if rate_limiter
-          rescue RateLimiter::LimitExceeded
-            break
-          end
-        rescue => e
-          problems << { post: post, ex: e }
-
-          attempts = post.custom_fields["rebake_attempts"].to_i
-
-          if attempts > 3
-            post.update_columns(baked_version: BAKED_VERSION)
-            Discourse.warn_exception(
-              e,
-              message: "Can not rebake post# #{post.id} after 3 attempts, giving up",
-            )
-          else
-            post.custom_fields["rebake_attempts"] = attempts + 1
-            post.save_custom_fields
-          end
+        if attempts > 3
+          post.update_columns(baked_version: BAKED_VERSION)
+          Discourse.warn_exception(
+            e,
+            message: "Can not rebake post# #{post.id} after 3 attempts, giving up",
+          )
+        else
+          post.custom_fields["rebake_attempts"] = attempts + 1
+          post.save_custom_fields
         end
       end
     problems

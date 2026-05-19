@@ -30,10 +30,8 @@ class EditDirectoryColumnsController < ApplicationController
 
     directory_column_params[:directory_columns].values.each do |column_data|
       existing_column = directory_columns.detect { |c| c.id == column_data[:id].to_i }
-      if (
-           existing_column.enabled != ActiveModel::Type::Boolean.new.cast(column_data[:enabled]) ||
-             existing_column.position != column_data[:position].to_i
-         )
+      if existing_column.enabled != ActiveModel::Type::Boolean.new.cast(column_data[:enabled]) ||
+           existing_column.position != column_data[:position].to_i
         new_value, previous_value =
           staff_action_logger.edit_directory_columns_details(column_data, existing_column)
 

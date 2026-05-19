@@ -89,18 +89,16 @@ RSpec.describe Migration::ColumnDropper do
     end
 
     it "should prevent updates to the readonly column" do
-      begin
-        DB.exec <<~SQL
+      DB.exec <<~SQL
         UPDATE #{table_name}
         SET email = 'testing@email.com'
         WHERE topic_id = 1;
         SQL
-      rescue PG::RaiseException => e
-        [
-          "Discourse: email in #{table_name} is readonly",
-          "discourse_functions.raise_table_with_readonly_column_email_readonly()",
-        ].each { |message| expect(e.message).to include(message) }
-      end
+    rescue PG::RaiseException => e
+      [
+        "Discourse: email in #{table_name} is readonly",
+        "discourse_functions.raise_table_with_readonly_column_email_readonly()",
+      ].each { |message| expect(e.message).to include(message) }
     end
 
     it "should allow updates to the other columns" do

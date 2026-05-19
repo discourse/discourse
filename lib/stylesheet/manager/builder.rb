@@ -153,14 +153,12 @@ class Stylesheet::Manager::Builder
   # digest encodes the things that trigger a recompile
   def digest
     @digest ||=
-      begin
-        if is_theme?
-          theme_digest
-        elsif is_color_scheme?
-          color_scheme_digest
-        else
-          default_digest
-        end
+      if is_theme?
+        theme_digest
+      elsif is_color_scheme?
+        color_scheme_digest
+      else
+        default_digest
       end
   end
 

@@ -208,14 +208,12 @@ class ThemeField < ActiveRecord::Base
 
     fallback_data =
       fallback_fields.each_with_index.map do |field, index|
-        begin
-          field.raw_translation_data(internal: internal)
-        rescue ThemeTranslationParser::InvalidYaml
-          # If this is the locale with the error, raise it.
-          # If not, let the other theme_field raise the error when it processes itself
-          raise if field.id == id
-          {}
-        end
+        field.raw_translation_data(internal: internal)
+      rescue ThemeTranslationParser::InvalidYaml
+        # If this is the locale with the error, raise it.
+        # If not, let the other theme_field raise the error when it processes itself
+        raise if field.id == id
+        {}
       end
 
     # TODO: Deduplicate the fallback data in the same way as JSLocaleHelper#load_translations_merged
@@ -678,21 +676,19 @@ class ThemeField < ActiveRecord::Base
   end
 
   def upsert_svg_sprite!
-    begin
-      content = upload.content
-    rescue => e
-      Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
+    content = upload.content
+  rescue => e
+    Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
+  else
+    if content.length > SvgSprite::MAX_THEME_SPRITE_SIZE
+      Rails.logger.warn(
+        "can't store theme svg sprite for theme #{theme_id} and upload #{upload_id}, sprite too big",
+      )
     else
-      if content.length > SvgSprite::MAX_THEME_SPRITE_SIZE
-        Rails.logger.warn(
-          "can't store theme svg sprite for theme #{theme_id} and upload #{upload_id}, sprite too big",
-        )
-      else
-        ThemeSvgSprite.upsert(
-          { theme_id: theme_id, upload_id: upload_id, sprite: content },
-          unique_by: :theme_id,
-        )
-      end
+      ThemeSvgSprite.upsert(
+        { theme_id: theme_id, upload_id: upload_id, sprite: content },
+        unique_by: :theme_id,
+      )
     end
   end
 

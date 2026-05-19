@@ -38,7 +38,7 @@ class TopicTimer < BaseTimer
   # which change the topic's status straight away and set a timer to do the
   # opposite action in the future.
   after_save do
-    if (saved_change_to_execute_at? || saved_change_to_user_id?)
+    if saved_change_to_execute_at? || saved_change_to_user_id?
       if status_type == TopicTimer.types[:silent_close] || status_type == TopicTimer.types[:close]
         topic.update_status("closed", false, user) if topic.closed?
       end

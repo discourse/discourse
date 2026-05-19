@@ -2103,26 +2103,56 @@ RSpec.describe Report do
   end
 
   describe ".hidden?" do
-    context "when admin is true" do
+    fab!(:report_admin, :admin)
+    fab!(:report_moderator, :moderator)
+
+    let(:admin_guardian) { report_admin.guardian }
+    let(:moderator_guardian) { report_moderator.guardian }
+
+    context "when the user is an admin" do
       it "returns false for regular reports" do
-        expect(Report.hidden?("topics", admin: true)).to eq(false)
+        expect(Report.hidden?("topics", guardian: admin_guardian)).to eq(false)
       end
 
       it "returns false for admin-only reports" do
         Report::ADMIN_ONLY_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, admin: true)).to eq(false)
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
+        end
+      end
+
+      it "returns false for IP reports" do
+        SiteSetting.moderators_view_ips = false
+
+        Report::IP_ADDRESS_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
         end
       end
     end
 
-    context "when admin is false" do
+    context "when the user is not an admin" do
       it "returns false for regular reports" do
-        expect(Report.hidden?("topics", admin: false)).to eq(false)
+        expect(Report.hidden?("topics", guardian: moderator_guardian)).to eq(false)
       end
 
       it "returns true for admin-only reports" do
         Report::ADMIN_ONLY_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, admin: false)).to eq(true)
+          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(true)
+        end
+      end
+
+      it "returns true for IP reports when IP viewing is disabled" do
+        SiteSetting.moderators_view_ips = false
+
+        Report::IP_ADDRESS_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(true)
+        end
+      end
+
+      it "returns false for IP reports when IP viewing is enabled" do
+        SiteSetting.moderators_view_ips = true
+
+        Report::IP_ADDRESS_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(false)
         end
       end
     end
@@ -2132,13 +2162,13 @@ RSpec.describe Report do
 
       it "hides pageview reports" do
         Report::HIDDEN_PAGEVIEW_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, admin: true)).to eq(true)
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
         end
       end
 
       it "does not hide legacy pageview reports" do
         Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, admin: true)).to eq(false)
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
         end
       end
     end
@@ -2148,13 +2178,13 @@ RSpec.describe Report do
 
       it "does not hide pageview reports" do
         Report::HIDDEN_PAGEVIEW_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, admin: true)).to eq(false)
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
         end
       end
 
       it "hides legacy pageview reports" do
         Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, admin: true)).to eq(true)
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
         end
       end
     end

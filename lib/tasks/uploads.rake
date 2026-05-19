@@ -34,29 +34,27 @@ def gather_uploads
     .where("url ~ '^\/uploads\/'")
     .where("url !~ ?", "^\/uploads\/#{current_db}")
     .find_each do |upload|
-      begin
-        old_db = upload.url[%r{\A/uploads/([^/]+)/}, 1]
-        from = upload.url.dup
-        to = upload.url.sub("/uploads/#{old_db}/", "/uploads/#{current_db}/")
-        source = "#{public_directory}#{from}"
-        destination = "#{public_directory}#{to}"
+      old_db = upload.url[%r{\A/uploads/([^/]+)/}, 1]
+      from = upload.url.dup
+      to = upload.url.sub("/uploads/#{old_db}/", "/uploads/#{current_db}/")
+      source = "#{public_directory}#{from}"
+      destination = "#{public_directory}#{to}"
 
-        # create destination directory & copy file unless it already exists
-        unless file_exists?(destination)
-          `mkdir -p '#{File.dirname(destination)}'`
-          `cp --link '#{source}' '#{destination}'`
-        end
-
-        # ensure file has been successfully copied over
-        raise unless file_exists?(destination)
-
-        # remap links in db
-        DbHelper.remap(from, to)
-      rescue StandardError
-        putc "!"
-      else
-        putc "."
+      # create destination directory & copy file unless it already exists
+      unless file_exists?(destination)
+        `mkdir -p '#{File.dirname(destination)}'`
+        `cp --link '#{source}' '#{destination}'`
       end
+
+      # ensure file has been successfully copied over
+      raise unless file_exists?(destination)
+
+      # remap links in db
+      DbHelper.remap(from, to)
+    rescue StandardError
+      putc "!"
+    else
+      putc "."
     end
 
   puts "", "Done!"
@@ -72,16 +70,14 @@ task "uploads:backfill_shas" => :environment do
     Upload
       .where(sha1: nil)
       .find_each do |u|
-        begin
-          path = Discourse.store.path_for(u)
-          sha1 = Upload.generate_digest(path)
-          u.sha1 = u.secure? ? SecureRandom.hex(20) : sha1
-          u.original_sha1 = u.secure? ? sha1 : nil
-          u.save!
-          putc "."
-        rescue => e
-          puts "Skipping #{u.original_filename} (#{u.url}) #{e.message}"
-        end
+        path = Discourse.store.path_for(u)
+        sha1 = Upload.generate_digest(path)
+        u.sha1 = u.secure? ? SecureRandom.hex(20) : sha1
+        u.original_sha1 = u.secure? ? sha1 : nil
+        u.save!
+        putc "."
+      rescue => e
+        puts "Skipping #{u.original_filename} (#{u.url}) #{e.message}"
       end
   end
   puts "", "Done"
@@ -102,14 +98,12 @@ end
 
 def migrate_to_s3_all_sites
   RailsMultisite::ConnectionManagement.each_connection do
-    begin
-      migrate_to_s3
-    rescue RuntimeError => e
-      if ENV["SKIP_FAILED"]
-        puts e
-      else
-        raise e unless ENV["SKIP_FAILED"]
-      end
+    migrate_to_s3
+  rescue RuntimeError => e
+    if ENV["SKIP_FAILED"]
+      puts e
+    else
+      raise e unless ENV["SKIP_FAILED"]
     end
   end
 end
@@ -227,8 +221,8 @@ def clean_up_uploads
       sha1 = Upload.generate_digest(file_path)
       url = file_path.split(public_directory, 2)[1]
 
-      if (Upload.where(sha1: sha1).empty? && Upload.where(url: url).empty?) &&
-           (OptimizedImage.where(sha1: sha1).empty? && OptimizedImage.where(url: url).empty?)
+      if Upload.where(sha1: sha1).empty? && Upload.where(url: url).empty? &&
+           OptimizedImage.where(sha1: sha1).empty? && OptimizedImage.where(url: url).empty?
         FileUtils.rm(file_path)
         putc "#"
       else
@@ -544,11 +538,9 @@ def sync_access_control(async: true, concurrency: 10)
         .map do |upload|
           Concurrent::Future.execute(executor:) do
             RailsMultisite::ConnectionManagement.with_connection(current_db) do
-              begin
-                Discourse.store.update_upload_access_control(upload, remove_existing_acl: true)
-              rescue => error
-                errors << "Error updating access control for upload #{upload.url}: #{error.message}"
-              end
+              Discourse.store.update_upload_access_control(upload, remove_existing_acl: true)
+            rescue => error
+              errors << "Error updating access control for upload #{upload.url}: #{error.message}"
             end
           end
         end

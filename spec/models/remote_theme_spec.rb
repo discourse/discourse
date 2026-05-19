@@ -670,7 +670,7 @@ RSpec.describe RemoteTheme do
         I18n.t(
           "themes.import_error.about_json_too_big",
           limit:
-            ActiveSupport::NumberHelper.number_to_human_size((RemoteTheme::MAX_METADATA_FILE_SIZE)),
+            ActiveSupport::NumberHelper.number_to_human_size(RemoteTheme::MAX_METADATA_FILE_SIZE),
         ),
       )
     end

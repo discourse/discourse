@@ -14,7 +14,7 @@ class RemoveDuplicateChatMentionNotifications < ActiveRecord::Migration[8.0]
   # retry inserted another `Notification` row for the same mention. The
   # follow-up fix landed on 2026-04-30; this sweeps up rows created in
   # between.
-  WINDOW_START = "2026-04-29".freeze
+  WINDOW_START = "2026-04-29"
 
   def up
     affected_user_ids = DB.query_single(<<~SQL, type: CHAT_MENTION_TYPE, since: WINDOW_START)

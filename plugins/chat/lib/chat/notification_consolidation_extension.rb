@@ -53,7 +53,7 @@ module Chat
               data.merge(
                 username: consolidated_data[:username],
                 username2: consolidated_data[:username2],
-                user_ids: (consolidated_data[:user_ids].concat(data[:user_ids])).uniq,
+                user_ids: consolidated_data[:user_ids].concat(data[:user_ids]).uniq,
               )
             end
           end,

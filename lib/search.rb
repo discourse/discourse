@@ -206,7 +206,7 @@ class Search
       return Time.zone.now.beginning_of_week(str.downcase.to_sym)
     end
 
-    if idx = (Date::MONTHNAMES.find_index(titlecase) || Date::ABBR_MONTHNAMES.find_index(titlecase))
+    if idx = Date::MONTHNAMES.find_index(titlecase) || Date::ABBR_MONTHNAMES.find_index(titlecase)
       delta = Time.zone.now.month - idx
       delta += 12 if delta < 0
       Time.zone.now.beginning_of_month.months_ago(delta)
@@ -677,7 +677,7 @@ class Search
       # try a possible tag match
       tag_id, target_tag_id = Tag.where_name(category_slug).pick(:id, :target_tag_id)
       tag_id = target_tag_id || tag_id
-      if (tag_id)
+      if tag_id
         posts.where(<<~SQL, tag_id)
           topics.id IN (
             SELECT DISTINCT(tt.topic_id)
