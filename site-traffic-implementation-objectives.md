@@ -24,13 +24,13 @@ Source: post #1 of the [Site Traffic section topic](https://dev.discourse.org/t/
 
 - Section heading
 - Headline summary (pageview total + period-over-period trend)
-- Logged-in share KPI (public communities only)
-- Filter pills (Logged in / Anonymous / Crawlers — public communities only)
+- Logged-in share KPI (public communities only; hidden when login is required)
+- Chart legend controls for visible series
 - Pageview chart with adaptive bucketing
 
 **Out of v1 (deferred):**
 
-- "See details" drill-down to the existing Site Traffic report — deferred because the legacy report looks visually different and behaves differently from the redesigned section (different filters, different bucketing, different x-axis style), so a one-click handoff would feel like a context break rather than a continuation. Revisit once the legacy report is reskinned, or once we know what extra detail admins want and can build a dedicated drill-down view.
+- "See details" drill-down to the existing Site Traffic report — deferred until the dashboard section and dedicated report have a clearly designed handoff. v1 improves chart parity, but the drill-down interaction itself is not part of this release.
 - AI-generated insights paragraph
 - Traffic spike callout
 - Average session KPI
@@ -44,9 +44,9 @@ Source: post #1 of the [Site Traffic section topic](https://dev.discourse.org/t/
 
 ## Layout
 
-A single section card. Top-down: section heading → headline + KPI row → filter pills → chart. On private communities, the headline expands full-width since the KPI is hidden. The section is responsive: elements stack on narrow viewports.
+A single section card. Top-down: section heading → headline + KPI row → chart legend → chart. On login-required communities, the headline expands full-width since the logged-in share KPI is hidden. The section is responsive: elements stack on narrow viewports.
 
-The Top referrers and Top countries cards show each row's share first, followed by the pageview count in brackets, e.g., `42% (12.3k)`. Top referrers excludes same-site/internal referrers, but includes Direct traffic because it helps admins understand how much traffic landed without a referrer. Malformed referrers are excluded from the ranked list; each row's percentage is its share of overall human pageviews for the selected period.
+Top referrers, Top countries, and narrative insight blocks are out of v1. The spike branch may keep clearly labelled placeholder content for visual exploration, but production v1 must not present placeholder values as real traffic data.
 
 ## Section heading text
 
@@ -59,7 +59,7 @@ The section is titled "Site traffic", rendered in a section-header style.
 These define what numbers mean across the section. They are referenced by the objectives below.
 
 - **Pageview total** is the count of *human* pageviews — logged-in members and anonymous visitors. Crawler traffic is **not** counted in the headline number; it's shown separately in the chart for context.
-- **On private communities**, the pageview total is logged-in pageviews only. (Anonymous and crawler traffic on a private site is incidental — login-page hits and similar — and is excluded.)
+- **When login is required**, the pageview total is logged-in pageviews only. Anonymous, embedded, and crawler traffic are excluded from the section because they do not represent the admin-facing traffic breakdown for a login-required site.
 - **The logged-in share KPI** is the percentage of human pageviews that came from logged-in members. It excludes crawlers by definition; it's about people, not bots.
 - **Date range behavior comes from `db-date-range`.** Site Traffic does not define its own preset boundaries, timezone handling, or custom-range picker behavior. It consumes the start and end dates produced by the shared redesigned-dashboard date range control.
 - **Period presets**:
@@ -109,7 +109,7 @@ Date input behavior is owned by the shared dashboard date range control and the 
 
 2.2 The heading text is translatable.
 
-2.3 The section's outer chrome — frame, border, header row, content padding, and inter-row spacing — is delegated to the shared `Dashboard::Section` component (introduced in #39841) so the section reads visually identical to the other dashboard sections (Highlights, Reports, Engagement). Site Traffic only owns the body content (headline, KPI, filter pills, chart). Future refinements to the section frame (e.g., header action slot, expand/collapse, drag-to-reorder) come from `Dashboard::Section` rather than being reimplemented here.
+2.3 The section's outer chrome — frame, border, header row, content padding, and inter-row spacing — is delegated to the shared dashboard section structure so the section reads visually identical to the other dashboard sections (Highlights, Reports, Engagement). Site Traffic only owns the body content (headline, KPI, legend, chart). Future refinements to the section frame (e.g., header action slot, expand/collapse, drag-to-reorder) come from the shared dashboard section structure rather than being reimplemented here.
 
 ### 3. Dashboard date range
 
@@ -168,13 +168,13 @@ For `db-date-range` presets, the tooltip duration mirrors the selected preset: `
 
 4.6a The dash between the period descriptor and trend phrase is neutral text color, not trend-colored. Only the words and percentage in the trend phrase carry the trend color.
 
-4.7 The headline is shown on both public and private communities.
+4.7 The headline is shown on both public and login-required communities.
 
 ### 5. Logged-in share KPI
 
 5.1 On a **public community**, the logged-in share KPI is visible alongside the headline.
 
-5.2 On a **private community**, the KPI is hidden (logged-in share would always be ~100%, offering no signal). The headline expands to use the freed space.
+5.2 When **login is required**, the KPI is hidden (logged-in share would always be ~100%, offering no signal). The headline expands to use the freed space.
 
 5.3 The KPI shows the share of human pageviews that came from logged-in members, as an integer percentage.
 
@@ -186,25 +186,21 @@ For `db-date-range` presets, the tooltip duration mirrors the selected preset: `
 
 5.7 The KPI does not show a period-over-period trend in v1.
 
-### 6. Filter pills
+### 6. Chart legend controls
 
-6.1 On public communities, three filter pills sit between the KPI row and the chart: **Logged in**, **Anonymous**, **Crawlers**. Each has a colored swatch matching its chart series.
+6.1 On public communities, the chart legend sits between the KPI row and the chart. It controls the visible chart series: **Logged in**, **Anonymous**, **Embedded** when embedding is configured, and **Crawlers**.
 
-6.2 On first load, Logged in and Anonymous are selected; Crawlers is **off**, so the initial chart shows only human traffic. Admins opt into crawler traffic by clicking its pill.
+6.2 On first load, human traffic series are visible and Crawlers is hidden, so the initial chart emphasizes human pageviews. Admins opt into crawler traffic through the chart legend.
 
-6.3 Clicking a pill toggles whether its series is shown in the chart. Toggling is instant — no waiting for the server.
+6.3 Clicking a legend item toggles whether its series is shown in the chart. Toggling is instant — no waiting for the server.
 
-6.3a **Alt-click to solo a filter**: alt-clicking (Option-click on macOS) a filter pill activates only that pill and deactivates the others — a "solo" view of one series. Alt-clicking the soloed pill again restores all filters to active. This matches the common solo-toggle convention in analytics dashboards (e.g., Grafana, Datadog). The basic-click behavior in §6.3 is unchanged.
+6.4 Legend state is handled by the shared report chart component so the dashboard chart and dedicated Site Traffic report behave consistently.
 
-6.4 At least one pill must remain selected. Admins cannot turn off the last active filter (the chart is never empty by user choice).
+6.5 Inactive legend items are visually distinguishable from active ones through the shared report chart legend treatment.
 
-6.5 **Inactive pills are visually distinguishable from active ones via a swatch-color treatment** — for example, a hollow outline of the series color rather than a filled swatch — *not* via a strikethrough or other text decoration on the label. This rule ensures the inactive state is recognizable across all swatch colors, including very light ones.
+6.6 When login is required, only logged-in traffic is shown and no extra legend controls are needed.
 
-6.6 On private communities, no filter pills are shown (only logged-in traffic exists).
-
-6.7 Pills have a clear pressed/unpressed state.
-
-6.8 Pill labels are translatable.
+6.7 Legend labels are translatable.
 
 ### 7. Pageviews chart
 
@@ -221,24 +217,23 @@ The same rules apply to preset and custom periods of equivalent length.
 
 **This is a server-side guarantee**: the API endpoint returns one entry per day in the selected period, regardless of whether the underlying request log has rows for those days. Days with no recorded data return zero counts. The frontend can rely on the response being complete and does not need to fill gaps client-side.
 
-7.3 On public communities, bars stack: Logged in at the bottom, Anonymous in the middle, Crawlers on top. Each color matches its filter pill.
+7.3 On public communities, bars stack in the order returned by the backend. Logged in, Anonymous, Embedded when configured, and Crawlers each use the shared report chart color assigned to that series.
 
-7.4 On private communities, only the Logged in series renders.
+7.4 When login is required, only the Logged in series renders.
 
 7.5 **X-axis labels stay readable across all periods**:
 - The label format is appropriate to the bucket type: a day + month for daily and weekly bucketing (the weekly label is the **first day of data in that bucket** — bucket Monday for full weeks, period start for the leftmost partial week), a month name for monthly.
 - **Unified year rule**: when a period spans calendar boundaries, **every** label includes the year (e.g., `22 Dec 2025`, `23 Dec 2025`, …, `1 Jan 2026`, …). When a period stays within one calendar year, no labels include the year (e.g., `8 Mar`, `15 Mar`). This produces a consistent axis format across the period — no asymmetric mix of short and long labels.
 - **Monthly bucketing** always includes the year on every label, regardless of whether it spans years, since the year-or-longer scale at this bucket size almost always crosses calendar boundaries and the small label count leaves room for the extra characters.
 - **Density is automatic, not pinned**: the chart picks how many labels fit at the current width rather than forcing every bar to be labeled. Even short ranges like Last 7 days and Last 30 days do not label every single bar — labels thin to a comfortable density. Cross-year daily ranges show fewer labels than same-year daily ranges of equal length because each cross-year label is wider.
-- **The first and last bars are always labeled**, regardless of any density thinning that the chart engine applies in between. Even if the auto-density algorithm would normally skip them — e.g., because the labels would crowd the chart edges — the first and last positions are pinned so admins always see the start and end of their selection on the x-axis.
 
-7.6 **Today's bucket is always rendered.** For preset periods (which always end today) and custom ranges that end today, today's bucket is always the rightmost bar in the chart and its x-axis label is always pinned, regardless of whether today has any recorded pageviews. The label format follows §7.5 for the bucket size in use (daily: today's day; weekly: that week's Monday; monthly: today's month + year). The label renders in the same color as every other label — admins identify "today" by it being the rightmost slot, not by visual styling.
+7.6 **Today's bucket is always rendered.** For preset periods (which always end today) and custom ranges that end today, today's bucket is always the rightmost bar in the chart, regardless of whether today has any recorded pageviews. The label format follows §7.5 for the bucket size in use (daily: today's day; weekly: that week's Monday; monthly: today's month + year). The label renders in the same color as every other label — admins identify "today" by it being the rightmost slot, not by visual styling.
 
-7.6a **Zero is treated as a data point.** Every bucket renders with a minimum visible bar height — including today before any traffic has been counted, an empty day in a quiet period, and tiny buckets whose values would otherwise round to zero pixels at the current y-axis scale. Without this, low-value or zero-value buckets disappear into the chart background and admins lose confirmation that the slot is in range. The minimum height is enforced per stacked series, so the cue is consistent across daily, weekly, and monthly bucketing.
+7.6a **Zero is treated as a data point.** Every bucket exists in the chart data, including today before any traffic has been counted, an empty day in a quiet period, and partial buckets at the start or end of a range.
 
 7.6b **Axis label visual style**: tick labels on both the X and Y axes are rendered in a **muted text tone** (theme-aware — readable in both light and dark mode but visibly lighter than body text) and a **smaller font size than body text**. The labels should recede visually so the chart bars and shape dominate.
 
-7.7 **Y-axis labels are always round numbers.** Admins never see awkward intermediate steps like 164k or 327k. The axis steps clearly (0 / 200k / 400k / 600k / 800k, or 0 / 1M / 2M / 3M, etc.). Abbreviated labels never include decimal multipliers — the axis shows "1M", not "1.5M"; "200k", not "250k".
+7.7 Y-axis labels are generated by the shared chart component. The dashboard section does not own a separate y-axis formatter.
 
 7.8 The Y-axis starts at 0.
 
@@ -252,37 +247,37 @@ The title shape alone identifies the bucket size; no separate "Daily / Weekly / 
 
 7.10 The tooltip explicitly distinguishes "Pageviews" (humans) from "Crawlers", so admins see at a glance that the headline number doesn't include crawlers.
 
-7.10a **Empty-day tooltip**: hovering a bar whose visible series all have a value of 0 (e.g., a day or week with no recorded pageviews — including today before any traffic has been counted) still shows the tooltip with "0" values for each visible series and a "Total: 0". Admins can confirm a day or bucket is genuinely zero rather than missing.
+7.10a **Empty buckets**: buckets with no visible traffic still exist in the chart data and render as zero values. Tooltip behavior follows the shared report chart component.
 
 7.10b **Each bar describes its actual data span.** The bar's x-axis label and tooltip both anchor to the **first day of data in that bucket** — bucket Monday for full weeks, period start for the leftmost partial week, first-of-month for full months, period start for the leftmost partial month. The tooltip end is the **last day of data in the bucket** — bucket Sunday / last-of-month for full buckets, period end for the rightmost partial bucket. So x-axis label and tooltip start always agree, and the tooltip never projects beyond data we have. Examples for a weekly Last 3 months period starting Saturday Feb 7 and ending today (May 7): the leftmost bar's x-axis label is "7 Feb" and its tooltip reads "7 Feb – 8 Feb 2026"; the rightmost bar's label is "4 May" and its tooltip reads "4 May – 7 May 2026"; middle bars show the full bucket Monday → Sunday. When the data span reduces to a single day the tooltip shows that day alone. Monthly partial buckets keep the month + year title since clamping doesn't add information beyond what the title already implies.
 
 ### 8. Graph state handling
 
-8.1 **Loading state — page-level slider plus immediate section dim**: the section reuses Discourse's existing **page loading slider** (the thin animated bar at the top of the page that Discourse uses during navigation, controlled by the `page_loading_indicator` site setting). When data is being fetched (period change, custom-range update, retry), the section triggers the page-level slider just like a navigation event would, so admins see a familiar "loading" affordance at the top of the page. In addition, the section card dims to a reduced opacity **immediately on click** so the admin gets explicit visual confirmation that their action was registered — there is no delay before the dim starts. When new data arrives, the card snaps back to full opacity and the slider completes its animation. Throughout the dim, the previous period's headline, KPI, filter pills, and chart stay visible (faded) so the admin sees the old context until the new data lands. The period selector stays outside the dim and remains interactive. Initial first load also triggers the slider and dims the (initially empty) card.
+8.1 **Loading state — page-level slider plus immediate section dim**: the section reuses Discourse's existing **page loading slider** (the thin animated bar at the top of the page that Discourse uses during navigation, controlled by the `page_loading_indicator` site setting). When data is being fetched (period change, custom-range update), the section triggers the page-level slider just like a navigation event would, so admins see a familiar "loading" affordance at the top of the page. In addition, the section card dims to a reduced opacity **immediately on click** so the admin gets explicit visual confirmation that their action was registered — there is no delay before the dim starts. When new data arrives, the card snaps back to full opacity and the slider completes its animation. Throughout the dim, the previous period's headline, KPI, legend, and chart stay visible (faded) so the admin sees the old context until the new data lands. The period selector stays outside the dim and remains interactive. Initial first load also triggers the slider and dims the (initially empty) card.
 
-8.2 **Empty (no human pageviews in the period)**: the chart renders normally with every bucket at zero — the per-bucket minimum visible bar height from §7.6a keeps every slot visible. There is no separate empty-state overlay or message. The headline still reads "0 pageviews ...". Filter pills still render on public communities.
+8.2 **Empty (no human pageviews in the period)**: the chart renders normally with every bucket at zero. There is no separate empty-state overlay or message. The headline still reads "0 pageviews ...". Legend controls still render on public communities.
 
-8.3 A period with zero human pageviews but some crawler traffic is treated the same way on first load because Crawlers is off by default (§6.2): the chart shows zero-height bars for the human series until an admin turns on the Crawlers filter.
+8.3 A period with zero human pageviews but some crawler traffic is treated the same way on first load because Crawlers is hidden by default (§6.2): the chart shows zero values for the human series until an admin turns on Crawlers in the legend.
 
 8.4 **Brand-new community** (no tracked traffic yet): the chart renders cleanly as all-zero bars — no broken layout, no stuck spinner, no empty-state overlay.
 
 8.5 **Custom range entirely before tracking started**: the chart renders cleanly as all-zero bars.
 
-8.6 **Error**: when fetching fails, the chart area shows an error state with a retry control. The section heading and period selector remain interactive.
+8.6 **Error**: when fetching fails, the chart area shows an error state that asks the admin to refresh the page. The section heading and period selector remain interactive.
 
 8.7 **Period partially predates tracking**: the chart silently starts at the first available date. The headline suppresses the trend phrase if the prior period would extend before tracking began.
 
 ### 9. Drill-down — deferred
 
-A "See details" link to the existing `/admin/reports/site_traffic` page was originally planned for v1. It is **deferred** because the legacy report renders with different bucketing, a different x-axis treatment, and a different filter model from the redesigned section, so jumping into it from this section would feel like a context break rather than a continuation. The section ships without a drill-down in v1; admins still reach the legacy report through the existing admin nav. Revisit once the legacy report is reskinned to match, or once we know which extra detail admins actually want and can design a dedicated drill-down view rather than reusing the legacy page as-is.
+A "See details" link to the existing `/admin/reports/site_traffic` page was originally planned for v1. It is **deferred** until the handoff is designed intentionally. The section ships without a drill-down in v1; admins still reach the dedicated Site Traffic report through the existing admin nav.
 
 ### 10. Responsiveness & accessibility
 
 10.1 The section is usable at typical desktop widths without horizontal scroll.
 
-10.2 On narrow viewports, controls stack vertically (KPI below headline, filter pills wrapping, chart resizing) and remain usable.
+10.2 On narrow viewports, controls stack vertically (KPI below headline, chart legend wrapping, chart resizing) and remain usable.
 
-10.3 Chart, KPI tooltip, and filter pills meet WCAG AA contrast standards.
+10.3 Chart, KPI tooltip, and chart legend controls meet WCAG AA contrast standards.
 
 10.4 All visible text is translatable.
 
@@ -290,7 +285,7 @@ A "See details" link to the existing `/admin/reports/site_traffic` page was orig
 
 11.1 Switching periods feels fast — the section returns selected and prior counts in a single fetch.
 
-11.2 Toggling filter pills is instant — no server round-trip is needed.
+11.2 Toggling chart legend items is instant — no server round-trip is needed.
 
 11.3 Rapid period changes never show stale data — the section always reflects the most recent selection.
 
@@ -302,11 +297,51 @@ A "See details" link to the existing `/admin/reports/site_traffic` page was orig
 
 ---
 
+## Dashboard response contract
+
+The traffic section data returned by the dashboard API uses this shape:
+
+```json
+{
+  "kpis": {
+    "browser_pageviews": {
+      "value": 12345,
+      "percent_change": 9,
+      "comparison_period": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-30"
+      }
+    },
+    "logged_in_share": {
+      "value": 42
+    }
+  },
+  "pageview_series": [
+    {
+      "req": "page_view_logged_in_browser",
+      "label": "Logged in",
+      "color": "#4B3CE0",
+      "data": [
+        {
+          "x": "2026-05-01",
+          "y": 123,
+          "end_date": "2026-05-01"
+        }
+      ]
+    }
+  ]
+}
+```
+
+`percent_change` and `comparison_period` are omitted when there is no meaningful trend. `logged_in_share` is omitted when login is required. The section's selected period lives at the dashboard response level, not inside the section data, because all dashboard sections share the same date range.
+
+---
+
 ## Engineering contract (non-functional, must hold)
 
 These are the few engineering choices that are part of the section's risk profile and rollback safety, called out so they aren't reinterpreted later.
 
-- **Backend isolation**: the section's data is served independently from the legacy site traffic backend. The existing module's query, payload shape, and endpoint are not modified. This guarantees the legacy chart and any external consumer of the legacy report cannot regress because of changes in this section.
+- **Shared chart contract**: the dashboard section uses the same chart-series contract and shared stacked-chart component as the dedicated Site Traffic report. The backend still owns dashboard-specific business logic such as KPI totals, trend suppression, login-required behavior, embedded-series eligibility, and authorization, but the chart data shape intentionally stays aligned with the report so visual and bucketing improvements apply consistently.
 - **Server-side validation**: the date and authorization rules in §1a and §1b apply at the API layer too, not just in the UI. The UI's checks are conveniences for admins; the server is the authority.
 
 ---
