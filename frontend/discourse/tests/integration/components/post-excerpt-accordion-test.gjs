@@ -1,4 +1,4 @@
-import { click, render } from "@ember/test-helpers";
+import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostExcerptAccordion from "discourse/components/post/post-excerpt-accordion";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -235,6 +235,8 @@ module("Integration | Component | PostExcerptAccordion", function (hooks) {
         />
       </template>
     );
+
+    await waitFor(".d-post-excerpt-accordion-item[data-overflowing='false']");
 
     assert
       .dom(".d-post-excerpt-accordion-item")
