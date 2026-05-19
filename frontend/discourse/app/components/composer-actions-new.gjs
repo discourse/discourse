@@ -5,7 +5,6 @@ import { action, get } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
-import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import {
@@ -167,9 +166,9 @@ export default class ComposerActions extends Component {
       if (isInSlowMode) {
         labelText = i18n("composer.composer_actions.slow_mode_reply");
       } else if (isReplyingToPost) {
-        labelText = this._replyToPostLabel(this._postDisplayName(this.post));
+        labelText = this._postDisplayName(this.post);
       } else {
-        labelText = this._replyToTopicLabel();
+        labelText = i18n("composer.composer_actions.reply_to_topic.trigger");
       }
     } else if (currentAction === EDIT) {
       labelText = i18n("composer.composer_actions.edit_post");
@@ -195,35 +194,6 @@ export default class ComposerActions extends Component {
       return this.replyOptions.userLink.anchor;
     }
     return prioritizeNameFallback(post.name, post.username) || "User";
-  }
-
-  // Builds the "Reply to a post by <user>" label as trusted HTML with span
-  // wrappers so CSS can target / hide the prefix on small viewports while
-  // keeping the username visible.
-  _replyToPostLabel(username) {
-    const prefix = escapeExpression(
-      i18n("composer.composer_actions.reply_to_post.label_prefix")
-    );
-    const user = escapeExpression(username || "");
-    return trustHTML(
-      `<span class="composer-action-label__prefix">${prefix}</span> ` +
-        `<span class="composer-action-label__user">${user}</span>`
-    );
-  }
-
-  // Same split treatment as _replyToPostLabel so CSS can hide the prefix on
-  // small viewports while keeping the noun visible.
-  _replyToTopicLabel() {
-    const prefix = escapeExpression(
-      i18n("composer.composer_actions.reply_to_topic.label_prefix")
-    );
-    const noun = escapeExpression(
-      i18n("composer.composer_actions.reply_to_topic.label_noun")
-    );
-    return trustHTML(
-      `<span class="composer-action-label__prefix">${prefix}</span> ` +
-        `<span class="composer-action-label__topic">${noun}</span>`
-    );
   }
 
   _computeAvailableActions() {
@@ -304,7 +274,9 @@ export default class ComposerActions extends Component {
     ) {
       const postForLabel = currentPost || _postSnapshot;
       const actionObj = {
-        name: this._replyToPostLabel(this._postDisplayName(postForLabel)),
+        name: i18n("composer.composer_actions.reply_to_post.label", {
+          postUsername: this._postDisplayName(postForLabel),
+        }),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
         id: "reply_to_post",
@@ -327,7 +299,7 @@ export default class ComposerActions extends Component {
           this.replyOptions?.topicLink))
     ) {
       const actionObj = {
-        name: this._replyToTopicLabel(),
+        name: i18n("composer.composer_actions.reply_to_topic.label"),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
         icon: "share",
         id: "reply_to_topic",
@@ -350,7 +322,9 @@ export default class ComposerActions extends Component {
       _topicSnapshot
     ) {
       const actionObj = {
-        name: this._replyToPostLabel(this._postDisplayName(_postSnapshot)),
+        name: i18n("composer.composer_actions.reply_to_post.label", {
+          postUsername: this._postDisplayName(_postSnapshot),
+        }),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
         id: "reply_to_post",
@@ -363,7 +337,7 @@ export default class ComposerActions extends Component {
     // CREATE_TOPIC/CREATE_SHARED_DRAFT)
     if (inCreateTopicLike && !this.isEditing && _topicSnapshot) {
       const actionObj = {
-        name: this._replyToTopicLabel(),
+        name: i18n("composer.composer_actions.reply_to_topic.label"),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
         icon: "share",
         id: "reply_to_topic",
@@ -429,7 +403,7 @@ export default class ComposerActions extends Component {
       _topicSnapshot
     ) {
       const actionObj = {
-        name: this._replyToTopicLabel(),
+        name: i18n("composer.composer_actions.reply_to_topic.label"),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
         icon: "share",
         id: "reply_to_topic",

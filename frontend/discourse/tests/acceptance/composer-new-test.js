@@ -51,12 +51,12 @@ acceptance(`Composer (new composer actions)`, function (needs) {
     await click("#post_1 .reply.create");
     assert
       .dom(".composer-actions-trigger")
-      .includesText(i18n("composer.composer_actions.reply_to_topic.label"));
+      .includesText(i18n("composer.composer_actions.reply_to_topic.trigger"));
 
     await click("#post_1 .reply.create");
     assert
       .dom(".composer-actions-trigger")
-      .includesText(i18n("composer.composer_actions.reply_to_topic.label"));
+      .includesText(i18n("composer.composer_actions.reply_to_topic.trigger"));
   });
 
   test("Composer can toggle whispers when whisperer user", async function (assert) {
@@ -213,7 +213,7 @@ acceptance(`Composer (new composer actions)`, function (needs) {
     assert
       .dom(".composer-actions-trigger")
       .includesText(
-        i18n("composer.composer_actions.reply_to_topic.label"),
+        i18n("composer.composer_actions.reply_to_topic.trigger"),
         "the mode should be: reply to topic"
       );
 

@@ -95,7 +95,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
 
     assert
       .dom(".composer-actions-trigger")
-      .includesText(i18n("composer.composer_actions.reply_to_topic.label"));
+      .includesText(i18n("composer.composer_actions.reply_to_topic.trigger"));
     assert
       .dom(".d-editor-input")
       .hasValue("test replying to topic when initially replied to post");
@@ -198,7 +198,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
 
     assert
       .dom(".composer-actions-trigger")
-      .includesText(i18n("composer.composer_actions.reply_to_topic.label"));
+      .includesText(i18n("composer.composer_actions.reply_to_topic.trigger"));
     assert.dom(".d-editor-input").hasValue(quote);
 
     await composerActions.expand();
@@ -213,11 +213,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     await composerActions.selectRowByValue("reply_to_post");
     await composerActions.expand();
 
-    assert.dom(".composer-actions-trigger").includesText(
-      i18n("composer.composer_actions.reply_to_post.label", {
-        postUsername: "tms",
-      })
-    );
+    assert.dom(".composer-actions-trigger").includesText("tms");
     assert.dom(".d-editor-input").hasValue(quote);
     assert.strictEqual(
       composerActions.rowByIndex(0).value(),
@@ -380,12 +376,9 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
 
-    assert.dom(".composer-actions-trigger").includesText(
-      i18n("composer.composer_actions.reply_to_post.label", {
-        postUsername: "codinghorror",
-      }),
-      "shows reply to post label"
-    );
+    assert
+      .dom(".composer-actions-trigger")
+      .includesText("codinghorror", "shows reply to post label");
   });
 
   test("trigger shows correct label for create topic mode", async function (assert) {
@@ -533,11 +526,7 @@ acceptance(`Prioritize Username (new composer actions)`, function (needs) {
     await visit("/t/short-topic-with-two-posts/54079");
     await click("article#post_2 button.reply");
 
-    assert.dom(".composer-actions-trigger").includesText(
-      i18n("composer.composer_actions.reply_to_post.label", {
-        postUsername: "james_john",
-      })
-    );
+    assert.dom(".composer-actions-trigger").includesText("james_john");
   });
 
   test("Quotes use username", async function (assert) {
@@ -564,11 +553,9 @@ acceptance(`Prioritize Full Name (new composer actions)`, function (needs) {
     await visit("/t/short-topic-with-two-posts/54079");
     await click("article#post_2 button.reply");
 
-    assert.dom(".composer-actions-trigger").includesText(
-      i18n("composer.composer_actions.reply_to_post.label", {
-        postUsername: "james, john, the third",
-      })
-    );
+    assert
+      .dom(".composer-actions-trigger")
+      .includesText("james, john, the third");
   });
 
   test("Quotes use full name", async function (assert) {

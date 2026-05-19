@@ -3344,7 +3344,6 @@ en:
         edit: Edit
         reply_to_post:
           label: Reply to a post by %{postUsername}
-          label_prefix: "Reply to a post by"
           desc: Reply to a specific post
         reply_as_new_topic:
           label: Reply as linked topic
@@ -3355,8 +3354,7 @@ en:
           desc: Create new message starting with same recipients
         reply_to_topic:
           label: Reply to topic
-          label_prefix: "Reply to"
-          label_noun: topic
+          trigger: Topic
           desc: Reply to the topic, not any specific post
         toggle_whisper:
           label: Toggle whisper
