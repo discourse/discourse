@@ -21,6 +21,7 @@ import NestedPost from "./nested/post";
 import NestedSortSelector from "./nested/sort-selector";
 
 export default class Nested extends Component {
+  @service appEvents;
   @service currentUser;
   @service header;
   @service screenTrack;
@@ -29,9 +30,29 @@ export default class Nested extends Component {
   @tracked cloakBelow = 0;
   viewportTracker = new PostStreamViewportTracker();
 
+  constructor() {
+    super(...arguments);
+    this.appEvents.on("keyboard:move-selection", this, this.maybeLoadMoreRoots);
+  }
+
   willDestroy() {
     super.willDestroy(...arguments);
+    this.appEvents.off(
+      "keyboard:move-selection",
+      this,
+      this.maybeLoadMoreRoots
+    );
     this.viewportTracker.destroy();
+  }
+
+  @action
+  maybeLoadMoreRoots({ selectedArticle, articles }) {
+    if (!this.args.hasMoreRoots || this.args.loadingMore) {
+      return;
+    }
+    if (selectedArticle === articles[articles.length - 1]) {
+      this.args.loadMoreRoots?.();
+    }
   }
 
   get flatViewUrl() {

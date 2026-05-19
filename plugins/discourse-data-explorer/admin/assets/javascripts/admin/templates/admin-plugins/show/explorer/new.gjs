@@ -2,23 +2,34 @@ import { on } from "@ember/modifier";
 import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DTextField from "discourse/ui-kit/d-text-field";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import QueryModeSwitch from "discourse/plugins/discourse-data-explorer/discourse/components/query-mode-switch";
 
 export default <template>
   <div class="admin-detail">
-    <BackButton
-      @route="adminPlugins.show.explorer.index"
-      @label="explorer.queries"
-    />
+    <div class="query-new__top-bar">
+      <BackButton
+        @route="adminPlugins.show.explorer.index"
+        @label="explorer.queries"
+      />
+
+      {{#if @controller.aiQueriesEnabled}}
+        <QueryModeSwitch
+          @value={{@controller.mode}}
+          @onChange={{@controller.setMode}}
+        />
+      {{/if}}
+    </div>
 
     {{#if @controller.aiQueriesEnabled}}
       <div class="query-new query-new--ai-first">
-        {{#unless @controller.showManualForm}}
+        {{#if (eq @controller.mode "ai")}}
           <div class="query-new__ai-section">
             <label class="query-new__ai-label">
               <span>{{i18n "explorer.ai.description_title"}}</span>
@@ -53,11 +64,6 @@ export default <template>
                   @label="explorer.ai.generate"
                   @disabled={{@controller.aiGenerating}}
                   class="btn-primary query-new__generate-btn"
-                />
-                <DButton
-                  @action={{@controller.toggleManualForm}}
-                  @label="explorer.ai.write_manually"
-                  class="btn-transparent query-new__toggle-link"
                 />
               {{/if}}
 
@@ -119,9 +125,9 @@ export default <template>
               />
             </div>
           {{/if}}
-        {{/unless}}
+        {{/if}}
 
-        {{#if @controller.showManualForm}}
+        {{#if (eq @controller.mode "manual")}}
           <Form
             @data={{@controller.model}}
             @onSubmit={{@controller.create}}
@@ -149,12 +155,6 @@ export default <template>
             </form.Field>
             <form.Actions>
               <form.Submit @label="explorer.create" @icon="plus" />
-              <DButton
-                @action={{@controller.toggleAiForm}}
-                @icon="discourse-sparkles"
-                @label="explorer.ai.description_title"
-                class="btn-transparent query-new__toggle-link"
-              />
             </form.Actions>
           </Form>
         {{/if}}

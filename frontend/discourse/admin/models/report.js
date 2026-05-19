@@ -63,31 +63,31 @@ export default class Report extends EmberObject {
     } else if (grouping === "weekly" || grouping === "monthly") {
       const isoKind = grouping === "weekly" ? "isoWeek" : "month";
       const kind = grouping === "weekly" ? "week" : "month";
-      const startMoment = moment(model.start_date, "YYYY-MM-DD");
+      const selectedStart = Report.#dateMoment(model.start_date);
+      const selectedEnd = Report.#dateMoment(model.end_date);
 
       let currentIndex = 0;
-      let currentStart = startMoment.clone().startOf(isoKind);
-      let currentEnd = startMoment.clone().endOf(isoKind);
-      const transformedData = [
-        {
-          x: currentStart.format("YYYY-MM-DD"),
-          y: 0,
-        },
-      ];
+      let currentStart = selectedStart.clone().startOf(isoKind);
+      let currentEnd = selectedStart.clone().endOf(isoKind);
+      const bucketStart = () => moment.max(currentStart, selectedStart);
+      const bucketEnd = () => moment.min(currentEnd, selectedEnd);
+      const bucket = () => ({
+        x: bucketStart().format("YYYY-MM-DD"),
+        y: 0,
+        end_date: bucketEnd().format("YYYY-MM-DD"),
+      });
+      const transformedData = [bucket()];
 
       let appliedAverage = false;
       data.forEach((d) => {
-        const date = moment(d.x, "YYYY-MM-DD");
+        const date = Report.#dateMoment(d.x);
 
-        if (
-          !date.isSame(currentStart) &&
-          !date.isBetween(currentStart, currentEnd)
-        ) {
+        while (date.isAfter(currentEnd)) {
           if (model.average) {
             transformedData[currentIndex].y = applyAverage(
               transformedData[currentIndex].y,
-              currentStart,
-              currentEnd
+              bucketStart(),
+              bucketEnd()
             );
 
             appliedAverage = true;
@@ -96,25 +96,18 @@ export default class Report extends EmberObject {
           currentIndex += 1;
           currentStart = currentStart.add(1, kind).startOf(isoKind);
           currentEnd = currentEnd.add(1, kind).endOf(isoKind);
-        } else {
-          appliedAverage = false;
+          transformedData[currentIndex] = bucket();
         }
 
-        if (transformedData[currentIndex]) {
-          transformedData[currentIndex].y += d.y;
-        } else {
-          transformedData[currentIndex] = {
-            x: d.x,
-            y: d.y,
-          };
-        }
+        transformedData[currentIndex].y += d.y;
+        appliedAverage = false;
       });
 
       if (model.average && !appliedAverage) {
         transformedData[currentIndex].y = applyAverage(
           transformedData[currentIndex].y,
-          currentStart,
-          moment(model.end_date).subtract(1, "day") // remove 1 day as model end date is at 00:00 of next day
+          bucketStart(),
+          bucketEnd()
         );
       }
 
@@ -197,6 +190,18 @@ export default class Report extends EmberObject {
 
       return model;
     });
+  }
+
+  static #dateMoment(value) {
+    if (moment.isMoment(value)) {
+      return value.clone().startOf("day");
+    }
+
+    if (value instanceof Date) {
+      return moment(value).startOf("day");
+    }
+
+    return moment.utc(value).startOf("day");
   }
 
   average = false;

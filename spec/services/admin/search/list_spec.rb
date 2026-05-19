@@ -85,7 +85,7 @@ RSpec.describe Admin::Search::List do
         expect(result.themes_and_components.map { |theme| theme[:name] }).to eq(
           ["Alpha Theme", "Beta Component", "Foundation", "Horizon"],
         )
-        expect(result.reports.length).to eq(Reports::ListQuery.call(admin: true).length)
+        expect(result.reports.length).to eq(Reports::ListQuery.call(guardian: guardian).length)
         expect(result.upcoming_changes.length).to be > 0
         expect(
           result.upcoming_changes.find { |change| change[:setting] == :enable_upload_debug_mode },
