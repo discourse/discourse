@@ -50,7 +50,7 @@ module DiscourseSolved
 
     def can_unaccept_answer?(topic, post)
       can_accept_answer?(topic, post) ||
-        (is_staff? && topic&.solved&.topic_answers&.exists?(answer_post_id: post.id))
+        (is_staff? && topic&.solved&.topic_answers&.any? { |ta| ta.answer_post_id == post.id })
     end
 
     def can_create_shared_issue?(topic)
