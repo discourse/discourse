@@ -163,9 +163,7 @@ export default class ComposerActions extends Component {
         this.replyOptions?.userAvatar &&
         this.replyOptions?.userLink;
 
-      if (isInSlowMode) {
-        labelText = i18n("composer.composer_actions.slow_mode_reply");
-      } else if (isReplyingToPost) {
+      if (isReplyingToPost) {
         labelText = this._postDisplayName(this.post);
       } else {
         labelText = i18n("composer.composer_actions.reply_to_topic.trigger");

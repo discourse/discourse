@@ -4,6 +4,7 @@ import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import Draft from "discourse/models/draft";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
@@ -577,6 +578,34 @@ acceptance(`Prioritize Full Name (new composer actions)`, function (needs) {
       .dom(".d-editor-input")
       .hasValue(
         '[quote="james_john, post:2, topic:54079"]\nThis is a short topic.\n[/quote]\n\n'
+      );
+  });
+});
+
+acceptance(`Slow Mode (new composer actions)`, function (needs) {
+  needs.user();
+  needs.settings({ enable_new_composer_actions: true });
+  needs.pretender((server, helper) => {
+    server.get("/t/130.json", () => {
+      const json = cloneJSON(topicFixtures["/t/130.json"]);
+      json.slow_mode_seconds = 600;
+      json.slow_mode_enabled_until = "2040-01-01T04:00:00.000Z";
+      return helper.response(json);
+    });
+  });
+
+  test("trigger shows the regular reply label with the slow-mode icon", async function (assert) {
+    await visit("/t/internationalization-localization/130");
+    await click("article#post_1 button.reply");
+
+    assert
+      .dom(".composer-actions-trigger svg.d-icon-hourglass-start")
+      .exists("uses the slow-mode hourglass icon");
+    assert
+      .dom(".composer-actions-trigger")
+      .includesText(
+        i18n("composer.composer_actions.reply_to_topic.trigger"),
+        "falls back to the standard reply-to-topic trigger label"
       );
   });
 });
