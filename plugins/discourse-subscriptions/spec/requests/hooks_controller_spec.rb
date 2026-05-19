@@ -37,7 +37,10 @@ RSpec.describe DiscourseSubscriptions::HooksController do
     end
     let(:group) { Fabricate(:group, name: "subscribers-group") }
     let(:client_reference_id) do
-      user.signed_id(purpose: DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_PURPOSE)
+      user.signed_id(
+        expires_in: DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_EXPIRES_IN,
+        purpose: DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_PURPOSE,
+      )
     end
 
     let(:event_data) do
@@ -195,6 +198,25 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         expect(response.status).to eq 200
       end
 
+      it "accepts a secondary email that belongs to the signed user" do
+        secondary_email = "secondary-#{user.id}@example.com"
+        ::UserEmail.create!(user: user, email: secondary_email, primary: false)
+        data = checkout_session_completed_data.deep_dup
+        data[:object][:customer_email] = secondary_email
+        ::Stripe::Webhook.stubs(:construct_event).returns(
+          type: "checkout.session.completed",
+          data: data,
+        )
+
+        expect { post "/s/hooks.json" }.to change { user.reload.groups.count }.by(1)
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(group.reload.users).to contain_exactly(user)
+          expect(DiscourseSubscriptions::Customer.order(:id).last.user_id).to eq(user.id)
+        end
+      end
+
       describe "completing the subscription" do
         it "adds the user to the group when completing the transaction" do
           expect { post "/s/hooks.json" }.to change { user.groups.count }.by(1)
@@ -214,7 +236,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
       end
     end
 
-    describe "checkout.session.completed with metadata user id" do
+    describe "checkout.session.completed with unsigned metadata user id" do
       fab!(:other_user, :user)
 
       before do
@@ -254,26 +276,17 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object][:customer_email] = other_user.email
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session
-          .stubs(:list_line_items)
-          .with(
-            checkout_session_completed_data[:object][:id],
-            { limit: 1 },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
-          .returns(list_line_items_data)
-
-        ::Stripe::Subscription.stubs(:update).returns({})
+        ::Stripe::Checkout::Session.expects(:list_line_items).never
+        ::Stripe::Subscription.expects(:update).never
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
-      it "uses the signed client reference" do
-        expect { post "/s/hooks.json" }.to change { user.reload.groups.count }.by(1)
+      it "rejects the mismatched checkout email" do
+        expect { post "/s/hooks.json" }.not_to change { DiscourseSubscriptions::Customer.count }
 
         aggregate_failures do
-          expect(response.status).to eq(200)
-          expect(group.reload.users).to contain_exactly(user)
-          expect(DiscourseSubscriptions::Customer.order(:id).last.user_id).to eq(user.id)
+          expect(response.status).to eq(422)
+          expect(group.reload.users).to be_empty
         end
       end
     end
@@ -286,32 +299,18 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object][:customer_email] = other_user.email
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session
-          .stubs(:list_line_items)
-          .with(
-            checkout_session_completed_data[:object][:id],
-            { limit: 1 },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
-          .returns(list_line_items_data)
-
+        ::Stripe::Checkout::Session.expects(:list_line_items).never
+        ::Stripe::Customer.expects(:create).never
+        ::Stripe::Subscription.expects(:update).never
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
-        ::Stripe::Customer
-          .expects(:create)
-          .with({ email: user.email }, DiscourseSubscriptions::Stripe.request_opts)
-          .returns(id: "cus_1234")
       end
 
-      it "creates the Stripe customer for the signed user" do
-        expect { post "/s/hooks.json" }.to change { user.reload.groups.count }.by(1)
+      it "rejects before creating a Stripe customer" do
+        expect { post "/s/hooks.json" }.not_to change { DiscourseSubscriptions::Customer.count }
 
         aggregate_failures do
-          expect(response.status).to eq(200)
-          expect(group.reload.users).to contain_exactly(user)
-          expect(DiscourseSubscriptions::Customer.order(:id).last).to have_attributes(
-            user_id: user.id,
-            customer_id: "cus_1234",
-          )
+          expect(response.status).to eq(422)
+          expect(group.reload.users).to be_empty
         end
       end
     end

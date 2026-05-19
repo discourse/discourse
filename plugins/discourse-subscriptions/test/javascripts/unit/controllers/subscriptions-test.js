@@ -41,6 +41,16 @@ module("Unit | Controller | subscriptions", function (hooks) {
     );
   });
 
+  test("returns empty content when current user reference is missing", async function (assert) {
+    this.currentUser.email = "user@example.com";
+
+    const controller = this.owner.lookup("controller:subscriptions");
+
+    await settled();
+
+    assert.strictEqual(controller.pricingTable, "");
+  });
+
   test("returns no products when pricing table is not configured", function (assert) {
     const siteSettings = this.owner.lookup("service:site-settings");
     siteSettings.discourse_subscriptions_pricing_table_id = "";

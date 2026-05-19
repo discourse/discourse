@@ -22,6 +22,21 @@ RSpec.describe CurrentUserSerializer do
     ).to eq(user)
   end
 
+  it "expires the signed checkout session user reference" do
+    user_reference = serializer.discourse_subscriptions_checkout_session_user_reference
+
+    freeze_time(
+      (DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_EXPIRES_IN + 1.second).from_now,
+    ) do
+      expect(
+        User.find_signed(
+          user_reference,
+          purpose: DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_PURPOSE,
+        ),
+      ).to be_nil
+    end
+  end
+
   it "omits the user reference when pricing tables are disabled" do
     SiteSetting.discourse_subscriptions_pricing_table_enabled = false
 

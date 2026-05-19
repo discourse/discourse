@@ -46,7 +46,9 @@ module DiscourseSubscriptions
         email = checkout_session[:customer_email]
         return render_json_error "email not found" if !email
 
-        return render_json_error "user not found" if !::User.find_by_username_or_email(email)
+        if !checkout_session_email_belongs_to_user?(email, user)
+          return render_json_error "user not found"
+        end
 
         if checkout_session[:customer].nil?
           customer = ::Stripe::Customer.create({ email: user.email }, stripe_request_opts)
@@ -136,6 +138,10 @@ module DiscourseSubscriptions
     end
 
     private
+
+    def checkout_session_email_belongs_to_user?(email, user)
+      ::UserEmail.exists?(user_id: user.id, email: ::Email.downcase(email))
+    end
 
     def trusted_checkout_session_user(checkout_session)
       client_reference_id =
