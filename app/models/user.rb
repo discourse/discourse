@@ -75,6 +75,7 @@ class User < ActiveRecord::Base
           foreign_key: :master_user_id,
           class_name: "AnonymousUser",
           dependent: :destroy
+  has_many :anonymous_user_shadows, foreign_key: :master_user_id, class_name: "AnonymousUser"
   has_one :invited_user, dependent: :destroy
   has_one :user_notification_schedule, dependent: :destroy
   has_one :user_password, class_name: "UserPassword", dependent: :destroy, autosave: true
@@ -131,6 +132,7 @@ class User < ActiveRecord::Base
 
   has_one :master_user, through: :anonymous_user_master
   has_one :shadow_user, through: :anonymous_user_shadow, source: :user
+  has_many :anonymous_shadow_users, through: :anonymous_user_shadows, source: :user
 
   has_one :profile_background_upload, through: :user_profile
   has_one :card_background_upload, through: :user_profile
@@ -1472,6 +1474,7 @@ class User < ActiveRecord::Base
 
   def deactivate(performed_by)
     self.update!(active: false)
+    deactivate_anonymous_shadow_users!
 
     if reviewable = ReviewableUser.pending.find_by(target: self)
       reviewable.perform(performed_by, :delete_user)
@@ -1734,6 +1737,13 @@ class User < ActiveRecord::Base
 
   def anonymous?
     SiteSetting.allow_anonymous_mode && trust_level >= 1 && !!anonymous_user_master
+  end
+
+  def suspend_anonymous_shadow_users!(suspended_at)
+    update_anonymous_shadow_users!(
+      suspended_at: suspended_at,
+      suspended_till: self[:suspended_till],
+    )
   end
 
   def is_singular_admin?
@@ -2235,6 +2245,25 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def deactivate_anonymous_shadow_users!
+    update_anonymous_shadow_users!(active: false)
+  end
+
+  def update_anonymous_shadow_users!(attributes)
+    shadows = anonymous_shadow_users.to_a
+    return if shadows.empty?
+
+    now = Time.zone.now
+    User.where(id: shadows.map(&:id)).update_all(attributes.merge(updated_at: now))
+    AnonymousUser.where(master_user_id: id).update_all(active: false, updated_at: now)
+
+    shadows.each do |shadow|
+      shadow.user_auth_tokens.destroy_all
+      PushNotificationPusher.clear_subscriptions(shadow)
+      shadow.logged_out
+    end
+  end
 
   def main_user_record
     (anonymous? && master_user) ? master_user : self

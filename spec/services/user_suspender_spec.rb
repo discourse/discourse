@@ -65,6 +65,24 @@ RSpec.describe UserSuspender do
       expect(messages[0].data).to eq(user.id)
     end
 
+    it "suspends and logs out anonymous shadow accounts" do
+      freeze_time
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+      shadow_user = AnonymousShadowCreator.get(user)
+      UserAuthToken.generate!(user_id: shadow_user.id)
+
+      messages = MessageBus.track_publish("/logout/#{shadow_user.id}") { suspend_user }
+
+      expect(shadow_user.reload[:suspended_till]).to be_within_one_second_of(5.hours.from_now)
+      expect(shadow_user[:suspended_at]).to be_within_one_second_of(Time.zone.now)
+      expect(shadow_user.user_auth_tokens).to be_empty
+      expect(shadow_user.anonymous_user_master.reload.active).to eq(false)
+      expect(messages.size).to eq(1)
+      expect(messages[0].user_ids).to eq([shadow_user.id])
+      expect(messages[0].data).to eq(shadow_user.id)
+    end
+
     it "fires a user_suspended event" do
       freeze_time
       events = DiscourseEvent.track_events(:user_suspended) { suspend_user }

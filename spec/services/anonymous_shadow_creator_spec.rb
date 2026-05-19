@@ -18,6 +18,14 @@ RSpec.describe AnonymousShadowCreator do
       expect(AnonymousShadowCreator.get(user)).to eq(nil)
     end
 
+    it "returns no shadow if the user is suspended or inactive" do
+      user.update!(suspended_at: Time.zone.now, suspended_till: 1.day.from_now)
+      expect(AnonymousShadowCreator.get(user)).to eq(nil)
+
+      user.update!(active: false, suspended_at: nil, suspended_till: nil)
+      expect(AnonymousShadowCreator.get(user)).to eq(nil)
+    end
+
     it "returns no shadow if must_approve_users is true and user is not approved" do
       SiteSetting.must_approve_users = true
       expect(AnonymousShadowCreator.get(Fabricate.build(:user, approved: false))).to eq(nil)
