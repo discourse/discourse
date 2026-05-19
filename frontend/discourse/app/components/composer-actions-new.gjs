@@ -700,7 +700,7 @@ export default class ComposerActions extends Component {
               {{/each}}
               {{#unless data.actions.length}}
                 <div class="composer-actions-btn">
-                  No actions available
+                  {{i18n "composer.composer_actions.no_actions_available"}}
                 </div>
               {{/unless}}
 

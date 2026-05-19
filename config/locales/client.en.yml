@@ -3377,7 +3377,8 @@ en:
         toggle_unlisted:
           label: Toggle unlisted
           desc: "Unlisted topics are only accessible by direct link"
-        edit_post: "Editing Post"
+        edit_post: "Editing post"
+        no_actions_available: "No actions available"
 
       reload: "Reload"
       ignore: "Ignore"
