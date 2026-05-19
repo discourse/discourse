@@ -193,7 +193,7 @@ RSpec.describe Guardian do
     it "respects the group's messageable_level" do
       Group::ALIAS_LEVELS.each do |level, _|
         group.update!(messageable_level: Group::ALIAS_LEVELS[level])
-        user_output = level == :everyone ? true : false
+        user_output = level == :everyone
         admin_output = level != :nobody
         mod_output = %i[nobody only_admins].exclude?(level)
 
