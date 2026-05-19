@@ -124,6 +124,7 @@ export default <template>
           @sort={{@controller.sort}}
           @jumpToRootPage={{@controller.jumpToRootPage}}
           @firstLoadedPage={{@controller.firstLoadedPage}}
+          @rootNodes={{@controller.rootNodes}}
         />
       {{/if}}
     {{/if}}

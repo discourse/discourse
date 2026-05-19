@@ -16,30 +16,48 @@ export default class NestedTopicTimeline extends Component {
   @tracked latchedProgress = null;
   @tracked viewportWide = true;
 
-  trackViewport = modifier(() => {
-    this.#scrollHandler = () => this.#scheduleUpdate();
+  trackActiveRoot = modifier(() => {
+    this.#unsubscribeRegistry = this.nestedRootElements.subscribe(
+      this.#handleRegistryChange
+    );
 
-    window.addEventListener("scroll", this.#scrollHandler, { passive: true });
-    window.addEventListener("resize", this.#scrollHandler, { passive: true });
+    this.#resizeHandler = () => this.#rebuildObserver();
+    window.addEventListener("resize", this.#resizeHandler, { passive: true });
 
-    this.#scheduleUpdate();
+    this.#rebuildObserver();
 
     return () => {
-      window.removeEventListener("scroll", this.#scrollHandler);
-      window.removeEventListener("resize", this.#scrollHandler);
-      this.#scrollHandler = null;
-      if (this.#rafHandle != null) {
-        cancelAnimationFrame(this.#rafHandle);
-        this.#rafHandle = null;
-      }
+      this.#unsubscribeRegistry?.();
+      this.#unsubscribeRegistry = null;
+      window.removeEventListener("resize", this.#resizeHandler);
+      this.#resizeHandler = null;
+      this.#observer?.disconnect();
+      this.#observer = null;
+      this.#aboveAnchor.clear();
     };
   });
+
+  // Post-numbers currently above the anchor line. Updated only when an
+  // IntersectionObserver entry fires — no per-scroll-frame work.
+  #aboveAnchor = new Set();
+  #observer = null;
+  #unsubscribeRegistry = null;
+  #resizeHandler = null;
   #mediaQuery = null;
   #onMediaChange = () => (this.viewportWide = this.#mediaQuery.matches);
-
-  #rafHandle = null;
-
-  #scrollHandler = null;
+  #handleRegistryChange = (type, postNumber, element) => {
+    if (!this.#observer) {
+      return;
+    }
+    if (type === "register") {
+      this.#observer.observe(element);
+    } else {
+      this.#observer.unobserve(element);
+      if (this.#aboveAnchor.delete(postNumber)) {
+        this.#recomputeActive();
+      }
+    }
+  };
 
   constructor() {
     super(...arguments);
@@ -122,43 +140,75 @@ export default class NestedTopicTimeline extends Component {
     });
   }
 
-  #scheduleUpdate() {
-    if (this.#rafHandle != null) {
-      return;
+  #rebuildObserver() {
+    this.#observer?.disconnect();
+    this.#aboveAnchor.clear();
+
+    const anchorY = (this.header.headerOffset ?? 0) + 16;
+
+    // rootMargin shrinks the top of the viewport by anchorY, so:
+    //   - Threshold 1 fires when the element's top crosses anchorY
+    //     (entering/leaving "fully below anchor")
+    //   - Threshold 0 fires when the element's bottom crosses anchorY
+    //     (entering/leaving "any part below anchor")
+    // We use entry.boundingClientRect.top to determine which side of the
+    // anchor the element is on — no rect read on the scroll path.
+    this.#observer = new IntersectionObserver(
+      (entries) => this.#handleEntries(entries, anchorY),
+      {
+        rootMargin: `-${anchorY}px 0px 0px 0px`,
+        threshold: [0, 1],
+      }
+    );
+
+    for (const el of this.nestedRootElements.elements()) {
+      this.#observer.observe(el);
     }
-    this.#rafHandle = requestAnimationFrame(() => {
-      this.#rafHandle = null;
-      this.#updateActive();
-    });
   }
 
-  #updateActive() {
-    const ordered = this.nestedRootElements.elementsInOrder();
-    if (ordered.length === 0) {
-      return;
-    }
-
-    const headerOffset = this.header.headerOffset ?? 0;
-    const anchorY = headerOffset + 16;
-
-    let bestDomIndex = -1;
-    let bestTop = -Infinity;
-
-    for (let i = 0; i < ordered.length; i++) {
-      const { top } = ordered[i];
-      if (top <= anchorY && top > bestTop) {
-        bestTop = top;
-        bestDomIndex = i;
+  #handleEntries(entries, anchorY) {
+    let changed = false;
+    for (const entry of entries) {
+      const postNumber = this.nestedRootElements.postNumberFor(entry.target);
+      if (postNumber == null) {
+        continue;
+      }
+      const top = entry.boundingClientRect.top;
+      // top < anchorY means the element's top edge has scrolled past the
+      // anchor line, regardless of whether it's still partly visible.
+      if (top < anchorY) {
+        if (!this.#aboveAnchor.has(postNumber)) {
+          this.#aboveAnchor.add(postNumber);
+          changed = true;
+        }
+      } else if (this.#aboveAnchor.delete(postNumber)) {
+        changed = true;
       }
     }
-
-    if (bestDomIndex < 0) {
-      bestDomIndex = 0;
+    if (changed) {
+      this.#recomputeActive();
     }
+  }
 
+  // The active root is the bottom-most one currently above the anchor line —
+  // i.e. the one the user is most likely reading. With rootNodes already in
+  // DOM order, we iterate from the bottom and stop on the first match.
+  #recomputeActive() {
     const pageSize = this.summary?.page_size;
     if (!pageSize) {
       return;
+    }
+
+    let activeDomIndex = 0;
+    if (this.#aboveAnchor.size > 0) {
+      const rootNodes = this.args.rootNodes ?? [];
+      for (let i = rootNodes.length - 1; i >= 0; i--) {
+        const postNumber = rootNodes[i]?.post?.post_number;
+        if (postNumber != null && this.#aboveAnchor.has(postNumber)) {
+          activeDomIndex = i;
+          break;
+        }
+      }
     }
 
     const firstPage = this.args.firstLoadedPage ?? 0;
@@ -166,7 +216,7 @@ export default class NestedTopicTimeline extends Component {
     // top of total ordering but aren't re-rendered, so offset for them.
     const pinnedOffset =
       firstPage === 0 ? 0 : (this.summary?.pinned_count ?? 0);
-    const globalIndex = pinnedOffset + firstPage * pageSize + bestDomIndex;
+    const globalIndex = pinnedOffset + firstPage * pageSize + activeDomIndex;
 
     if (globalIndex !== this.activeGlobalIndex) {
       this.activeGlobalIndex = globalIndex;
@@ -217,7 +267,7 @@ export default class NestedTopicTimeline extends Component {
       <aside
         class="nested-topic-timeline"
         aria-label={{i18n "nested_replies.topic_timeline.aria_label"}}
-        {{this.trackViewport}}
+        {{this.trackActiveRoot}}
       >
         <button
           type="button"
