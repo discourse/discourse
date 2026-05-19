@@ -68,10 +68,8 @@ after_initialize do
     ].each { |klass| klass.include(DiscourseSolved::TopicAnswerMixin) }
   end
 
-  if SiteSetting.solved_enabled
-    register_category_list_topics_preloader_associations({ solved: :topic_answers })
-  end
-  register_topic_preloader_associations({ solved: :topic_answers }) if SiteSetting.solved_enabled
+  register_category_list_topics_preloader_associations(:solved) if SiteSetting.solved_enabled
+  register_topic_preloader_associations(:solved) if SiteSetting.solved_enabled
   Search.custom_topic_eager_load { [:solved] } if SiteSetting.solved_enabled
 
   TopicView.on_preload do |topic_view|
@@ -247,7 +245,7 @@ after_initialize do
     scope.can_unaccept_answer?(topic, object) && accepted_answer
   end
   add_to_serializer(:post, :accepted_answer) do
-    topic&.solved&.topic_answers&.any? { |ta| ta.answer_post_id == object.id }
+    topic&.solved&.topic_answers&.exists?(answer_post_id: object.id)
   end
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
 
