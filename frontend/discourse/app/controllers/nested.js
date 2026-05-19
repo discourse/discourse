@@ -297,12 +297,12 @@ export default class NestedController extends Controller {
 
   @action
   changePostOwner(post) {
-    return this.#topicController.changePostOwner(post);
+    return this.#topicRoute.changeOwner(post);
   }
 
   @action
   grantBadge(post) {
-    return this.#topicController.grantBadge(post);
+    return this.#topicRoute.showGrantBadgeModal(post);
   }
 
   @action
