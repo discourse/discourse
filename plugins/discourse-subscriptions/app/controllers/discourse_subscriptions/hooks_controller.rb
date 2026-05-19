@@ -49,7 +49,7 @@ module DiscourseSubscriptions
         return render_json_error "user not found" if !::User.find_by_username_or_email(email)
 
         if checkout_session[:customer].nil?
-          customer = ::Stripe::Customer.create({ email: email }, stripe_request_opts)
+          customer = ::Stripe::Customer.create({ email: user.email }, stripe_request_opts)
           customer_id = customer[:id]
         else
           customer_id = checkout_session[:customer]

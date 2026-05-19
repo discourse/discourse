@@ -38,7 +38,7 @@ export default class SubscriptionsController extends Controller {
 
       if (this.currentUser) {
         if (!this.email || !clientReferenceId) {
-          throw new Error("Pricing table not configured");
+          return "";
         }
 
         return trustHTML(`<stripe-pricing-table

@@ -214,7 +214,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
       end
     end
 
-    describe "checkout.session.completed with conflicting user bindings" do
+    describe "checkout.session.completed with metadata user id" do
       fab!(:other_user, :user)
 
       before do
@@ -235,7 +235,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
-      it "uses the signed client reference" do
+      it "ignores unsigned metadata" do
         expect { post "/s/hooks.json" }.to change { user.reload.groups.count }.by(1)
 
         aggregate_failures do
@@ -274,6 +274,44 @@ RSpec.describe DiscourseSubscriptions::HooksController do
           expect(response.status).to eq(200)
           expect(group.reload.users).to contain_exactly(user)
           expect(DiscourseSubscriptions::Customer.order(:id).last.user_id).to eq(user.id)
+        end
+      end
+    end
+
+    describe "checkout.session.completed without customer and with conflicting email" do
+      fab!(:other_user, :user)
+
+      before do
+        data = checkout_session_completed_data_one_off.deep_dup
+        data[:object][:customer_email] = other_user.email
+        event = { type: "checkout.session.completed", data: data }
+
+        ::Stripe::Checkout::Session
+          .stubs(:list_line_items)
+          .with(
+            checkout_session_completed_data[:object][:id],
+            { limit: 1 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
+          .returns(list_line_items_data)
+
+        ::Stripe::Webhook.stubs(:construct_event).returns(event)
+        ::Stripe::Customer
+          .expects(:create)
+          .with({ email: user.email }, DiscourseSubscriptions::Stripe.request_opts)
+          .returns(id: "cus_1234")
+      end
+
+      it "creates the Stripe customer for the signed user" do
+        expect { post "/s/hooks.json" }.to change { user.reload.groups.count }.by(1)
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(group.reload.users).to contain_exactly(user)
+          expect(DiscourseSubscriptions::Customer.order(:id).last).to have_attributes(
+            user_id: user.id,
+            customer_id: "cus_1234",
+          )
         end
       end
     end
@@ -377,7 +415,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
         ::Stripe::Customer
           .stubs(:create)
-          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .with({ email: user.email }, DiscourseSubscriptions::Stripe.request_opts)
           .returns(id: "cus_1234")
       end
 
