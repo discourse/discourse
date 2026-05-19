@@ -12,6 +12,7 @@ import processNode from "../lib/process-node";
 export default class NestedRoute extends Route {
   @service composer;
   @service header;
+  @service nestedRootElements;
   @service nestedViewCache;
   @service router;
   @service screenTrack;
@@ -138,6 +139,7 @@ export default class NestedRoute extends Route {
     this._saveToCache(controller);
 
     controller.unsubscribe();
+    this.nestedRootElements.clear();
     this.screenTrack.stop();
   }
 
