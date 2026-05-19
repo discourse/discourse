@@ -2265,19 +2265,19 @@ class User < ActiveRecord::Base
   end
 
   def update_anonymous_shadow_users!(attributes)
-    shadows = User.where(id: anonymous_user_shadows.select(:user_id)).to_a
-    return if shadows.empty?
+    anonymous_user_shadows
+      .includes(:user)
+      .find_each do |anonymous_user_shadow|
+        shadow = anonymous_user_shadow.user
 
-    shadow_user_ids = shadows.map(&:id)
-    now = Time.zone.now
+        User.transaction do
+          shadow.update!(attributes)
+          anonymous_user_shadow.update!(active: false)
+          shadow.user_auth_tokens.destroy_all
+        end
 
-    User.transaction do
-      User.where(id: shadow_user_ids).update_all(attributes.merge(updated_at: now))
-      AnonymousUser.where(master_user_id: id).update_all(active: false, updated_at: now)
-      UserAuthToken.where(user_id: shadow_user_ids).destroy_all
-    end
-
-    shadows.each(&:log_out!)
+        shadow.log_out!
+      end
   end
 
   def main_user_record
