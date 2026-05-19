@@ -16,7 +16,6 @@ acceptance(
     needs.settings({
       calendar_enabled: true,
       discourse_post_event_enabled: true,
-      enable_events_category_type_setup: true,
       events_calendar_categories: "1",
     });
     needs.pretender(eventsPretender);
@@ -58,33 +57,11 @@ acceptance(
     needs.settings({
       calendar_enabled: true,
       discourse_post_event_enabled: true,
-      enable_events_category_type_setup: true,
       events_calendar_categories: "1",
     });
     needs.pretender(eventsPretender);
 
     test("keeps the default label and icon", async function (assert) {
-      await visit("/c/bug/1");
-
-      assert.dom("#create-topic").hasText(i18n("topic.create"));
-      assert.dom("#create-topic .d-icon-far-pen-to-square").exists();
-    });
-  }
-);
-
-acceptance(
-  "Events Create Topic Button - feature flag disabled",
-  function (needs) {
-    needs.user({ can_create_discourse_post_event: true });
-    needs.settings({
-      calendar_enabled: true,
-      discourse_post_event_enabled: true,
-      enable_events_category_type_setup: false,
-      events_calendar_categories: "1",
-    });
-    needs.pretender(eventsPretender);
-
-    test("keeps the default label and icon in an events category", async function (assert) {
       await visit("/c/bug/1");
 
       assert.dom("#create-topic").hasText(i18n("topic.create"));

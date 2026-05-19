@@ -44,9 +44,6 @@ export default {
 
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
-    if (!siteSettings.enable_events_category_type_setup) {
-      return;
-    }
     withPluginApi((api) =>
       initializeEventsCreateTopicButton(api, siteSettings)
     );
