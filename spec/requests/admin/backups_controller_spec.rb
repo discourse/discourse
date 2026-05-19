@@ -231,6 +231,13 @@ RSpec.describe Admin::BackupsController do
 
         expect(response.status).to eq(404)
       end
+
+      it "returns 404 for invalid backup ids" do
+        token = EmailBackupToken.set(admin.id)
+        get "/admin/backups/..%2Fsecond%2F#{backup_filename}.json", params: { token: token }
+
+        expect(response.status).to eq(404)
+      end
     end
 
     shared_examples "backup inaccessible" do
@@ -280,6 +287,11 @@ RSpec.describe Admin::BackupsController do
 
       it "doesn't remove the backup if not found" do
         delete "/admin/backups/#{backup_filename}.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 for invalid backup ids" do
+        delete "/admin/backups/..%2Fsecond%2F#{backup_filename}.json"
         expect(response.status).to eq(404)
       end
 
@@ -384,6 +396,15 @@ RSpec.describe Admin::BackupsController do
           post "/admin/backups/#{backup_filename}/restore.json", params: { client_id: "foo" }
           expect(response.status).to eq(200)
         end
+      end
+
+      it "returns 404 for invalid backup ids" do
+        post "/admin/backups/..%2Fsecond%2F#{backup_filename}/restore.json",
+             params: {
+               client_id: "foo",
+             }
+
+        expect(response.status).to eq(404)
       end
     end
 
@@ -922,6 +943,12 @@ RSpec.describe Admin::BackupsController do
 
       it "returns 404 when the backup does not exist" do
         put "/admin/backups/#{backup_filename}.json"
+
+        expect(response).to be_not_found
+      end
+
+      it "returns 404 for invalid backup ids" do
+        put "/admin/backups/..%2Fsecond%2F#{backup_filename}.json"
 
         expect(response).to be_not_found
       end

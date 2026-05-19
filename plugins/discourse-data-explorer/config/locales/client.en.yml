@@ -20,6 +20,10 @@ en:
       default_query_notice: "This is a default query, the SQL cannot be edited. To edit the SQL, create a new query."
       queries: "Queries"
       query_created: "Query created!"
+      mode:
+        label: "Query authoring mode"
+        manual: "Write SQL"
+        ai: "Generate with AI"
       or: "or"
       admins_only: "The data explorer is only available to admins."
       allow_groups: "Allow groups to access this query"

@@ -4,7 +4,7 @@ class Admin::ReportsController < Admin::StaffController
   REPORTS_LIMIT = 50
 
   def index
-    render_json_dump(reports: Reports::ListQuery.call(admin: current_user.admin?))
+    render_json_dump(reports: Reports::ListQuery.call(guardian: guardian))
   end
 
   def bulk
@@ -20,7 +20,7 @@ class Admin::ReportsController < Admin::StaffController
         report = nil
         report = Report.find_cached(report_type, args) if (report_params[:cache])
 
-        if Report.hidden?(report_type, admin: current_user.admin?)
+        if Report.hidden?(report_type, guardian: guardian)
           report = Report._get(report_type, args)
           report.error = :not_found
         end
@@ -49,7 +49,7 @@ class Admin::ReportsController < Admin::StaffController
     report_type = params[:type]
 
     raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
-    raise Discourse::NotFound if Report.hidden?(report_type, admin: current_user.admin?)
+    raise Discourse::NotFound if Report.hidden?(report_type, guardian: guardian)
 
     args = parse_params(params)
     args[:current_user] = current_user
