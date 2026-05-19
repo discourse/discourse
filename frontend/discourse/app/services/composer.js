@@ -7,6 +7,7 @@ import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
+import { _clearSnapshots as _clearComposerActionsSnapshotsNew } from "discourse/components/composer-actions-new";
 import ChangeReplyTo from "discourse/components/modal/change-reply-to";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
@@ -1867,6 +1868,7 @@ export default class ComposerService extends Service {
                 .then(() => {
                   this.model.clearState();
                   this.close();
+                  _clearComposerActionsSnapshotsNew();
                 })
                 .finally(() => {
                   this.appEvents.trigger("composer:cancelled");
@@ -1882,6 +1884,7 @@ export default class ComposerService extends Service {
           .then(() => {
             this.model.clearState();
             this.close();
+            _clearComposerActionsSnapshotsNew();
           })
           .finally(() => {
             this.appEvents.trigger("composer:cancelled");
