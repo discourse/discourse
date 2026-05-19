@@ -46,7 +46,7 @@ Source: post #1 of the [Site Traffic section topic](https://dev.discourse.org/t/
 
 A single section card. Top-down: section heading → headline + KPI row → chart legend → chart. On login-required communities, the headline expands full-width since the logged-in share KPI is hidden. The section is responsive: elements stack on narrow viewports.
 
-Top referrers, Top countries, and narrative insight blocks are out of v1. The spike branch may keep clearly labelled placeholder content for visual exploration, but production v1 must not present placeholder values as real traffic data.
+Top referrers, Top countries, and narrative insight blocks are out of v1. The spike branch uses the shipped dashboard headline, logged-in share, and chart implementation as the source of truth and may keep clearly labelled placeholder content for narrative visual exploration. Top referrers and Top countries can use real data to explore the ranked-card design. Production v1 must not present placeholder values as real traffic data.
 
 ## Section heading text
 

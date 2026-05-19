@@ -1,219 +1,47 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { trustHTML } from "@ember/template";
-import { modifier } from "ember-modifier";
-import {
-  PERIOD_CUSTOM,
-  PERIOD_LAST_3_MONTHS,
-  PERIOD_LAST_7_DAYS,
-  PERIOD_LAST_30_DAYS,
-} from "discourse/admin/components/dashboard/date-range";
+import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardSection from "discourse/admin/components/dashboard/section";
-import Report from "discourse/admin/models/report";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { number } from "discourse/lib/formatter";
-import loadChartJS from "discourse/lib/load-chart-js";
-import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
 import DButton from "discourse/ui-kit/d-button";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 const REPORT_TYPE = "site_traffic_summary";
-
-const SERIES = {
-  LOGGED_IN: "page_view_logged_in_browser",
-  ANON: "page_view_anon_browser",
-  CRAWLER: "page_view_crawler",
-};
-
-const SERIES_COLORS = {
-  [SERIES.LOGGED_IN]: "#4B3CE0",
-  [SERIES.ANON]: "#9C8DEC",
-  [SERIES.CRAWLER]: "#D5CDF7",
+const PERIOD_COPY_KEYS = {
+  last_7_days: {
+    headline: "admin.dashboard.site_traffic.headline.last_7_days",
+    comparisonTooltip:
+      "admin.dashboard.site_traffic.comparison_tooltip.previous_7_days",
+  },
+  last_30_days: {
+    headline: "admin.dashboard.site_traffic.headline.last_30_days",
+    comparisonTooltip:
+      "admin.dashboard.site_traffic.comparison_tooltip.previous_30_days",
+  },
+  last_3_months: {
+    headline: "admin.dashboard.site_traffic.headline.last_3_months",
+    comparisonTooltip:
+      "admin.dashboard.site_traffic.comparison_tooltip.previous_3_months",
+  },
 };
 
 function ymd(date) {
-  return moment.utc(date).format("YYYY-MM-DD");
-}
-
-function dashboardDateToUtcDay(date) {
-  return moment.utc(moment(date).format("YYYY-MM-DD"), "YYYY-MM-DD");
-}
-
-function bucketingForLength(days) {
-  if (days <= 31) {
-    return "daily";
-  }
-  if (days < 365) {
-    return "weekly";
-  }
-  return "monthly";
-}
-
-// Aggregate a per-day series into bucket totals. Each bucket's `start` is the
-// first day of *actual data* in that bucket (period start for the leftmost
-// partial bucket, bucket Monday/first-of-month otherwise) and `end` is the
-// last day of actual data. The bar's x-axis label and tooltip both anchor to
-// `start` so what you see is what the bar represents.
-function bucketize(seriesData, bucketing) {
-  if (bucketing === "daily") {
-    return seriesData.map((d) => ({ start: d.x, end: d.x, total: d.y }));
-  }
-  const buckets = new Map();
-  for (const d of seriesData) {
-    let groupKey;
-    if (bucketing === "weekly") {
-      groupKey = moment
-        .utc(d.x, "YYYY-MM-DD")
-        .startOf("isoWeek")
-        .format("YYYY-MM-DD");
-    } else {
-      groupKey = `${d.x.substring(0, 7)}-01`;
-    }
-    const existing = buckets.get(groupKey);
-    if (existing) {
-      existing.total += d.y;
-      existing.end = d.x;
-    } else {
-      buckets.set(groupKey, { start: d.x, end: d.x, total: d.y });
-    }
-  }
-  return Array.from(buckets.values());
-}
-
-function abbreviationHasDecimal(value) {
-  const abs = Math.abs(value);
-  if (abs < 1e3) {
-    return false;
-  }
-  if (abs < 1e6) {
-    return abs % 1e3 !== 0;
-  }
-  if (abs < 1e9) {
-    return abs % 1e6 !== 0;
-  }
-  return abs % 1e9 !== 0;
-}
-
-// Pick a y-axis step that fits maxTicks ticks AND never produces decimal
-// abbreviations on tick labels (no "1.5M", no "250k") — §7.7.
-function pickRoundStep(maxValue, maxTicks) {
-  if (!maxValue || maxValue <= 0) {
-    return 1;
-  }
-  const targetSteps = Math.max(1, maxTicks - 1);
-  const candidates = [1, 2, 5];
-  for (let pow = 0; pow < 13; pow++) {
-    for (const c of candidates) {
-      const step = c * Math.pow(10, pow);
-      if (Math.ceil(maxValue / step) > targetSteps) {
-        continue;
-      }
-      let bad = false;
-      const numTicks = Math.ceil(maxValue / step) + 1;
-      for (let i = 0; i < numTicks && !bad; i++) {
-        if (abbreviationHasDecimal(i * step)) {
-          bad = true;
-        }
-      }
-      if (!bad) {
-        return step;
-      }
-    }
-  }
-  return Math.pow(10, 13);
-}
-
-// Format a number for the y-axis: "0", "20k", "1M", "3M". Never "20.0k" or
-// "1.5M" — `pickRoundStep` only chooses steps whose ticks land on whole-power
-// abbreviation boundaries, so this rounder is safe.
-function formatRoundAbbr(value) {
-  if (!value) {
-    return "0";
-  }
-  const sign = value < 0 ? "-" : "";
-  const abs = Math.abs(value);
-  if (abs >= 1e9) {
-    return `${sign}${Math.round(abs / 1e9)}G`;
-  }
-  if (abs >= 1e6) {
-    return `${sign}${Math.round(abs / 1e6)}M`;
-  }
-  if (abs >= 1e3) {
-    return `${sign}${Math.round(abs / 1e3)}k`;
-  }
-  return `${sign}${abs}`;
-}
-
-// Pick the indexes that render an x-axis label given a total count and a max
-// density. Uses a fixed integer stride so the gaps between labels are uniform
-// (no jitter from cumulative rounding); always pins the first and last
-// indexes per §7.5. The last gap can be shorter than `stride` since the last
-// index is pinned independently.
-function computeVisibleIndexes(total, maxLabels) {
-  if (total <= 0) {
-    return new Set();
-  }
-  if (total <= maxLabels) {
-    return new Set(Array.from({ length: total }, (_, i) => i));
-  }
-  const stride = Math.ceil((total - 1) / (maxLabels - 1));
-  const result = new Set();
-  for (let i = 0; i < total; i += stride) {
-    result.add(i);
-  }
-  result.add(total - 1);
-  return result;
-}
-
-function formatBucketLabel(key, bucketing, spansYears) {
-  const m = moment.utc(key, "YYYY-MM-DD");
-  if (bucketing === "monthly") {
-    return m.format("MMM YYYY");
-  }
-  if (spansYears) {
-    return m.format("D MMM YYYY");
-  }
-  return m.format("D MMM");
-}
-
-function formatTooltipTitle(bucket, bucketing) {
-  // Both the x-axis label and the tooltip use `bucket.start`, so they always
-  // describe the same bucket boundary. `bucket.end` is the actual last day
-  // of data in the bucket — already clamped to the period inside `bucketize`,
-  // so partial first/last weeks just work.
-  const start = moment.utc(bucket.start, "YYYY-MM-DD");
-  if (bucketing === "monthly") {
-    return start.format("MMM YYYY");
-  }
-  if (bucketing === "weekly") {
-    const end = moment.utc(bucket.end, "YYYY-MM-DD");
-    if (start.isSame(end, "day")) {
-      return start.format("D MMM YYYY");
-    }
-    if (start.year() !== end.year()) {
-      return `${start.format("D MMM YYYY")} – ${end.format("D MMM YYYY")}`;
-    }
-    return `${start.format("D MMM")} – ${end.format("D MMM YYYY")}`;
-  }
-  return start.format("ddd, D MMM YYYY");
-}
-
-function cssVar(name) {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(name)
-    .trim();
+  return moment
+    .utc(moment(date).format("YYYY-MM-DD"), "YYYY-MM-DD")
+    .format("YYYY-MM-DD");
 }
 
 let regionNames;
 
 function regionDisplayName(countryCode) {
   const code = countryCode?.toUpperCase();
+
   if (!code) {
     return "";
   }
@@ -225,10 +53,9 @@ function regionDisplayName(countryCode) {
   try {
     regionNames ||= new Intl.DisplayNames(
       [document.documentElement.lang || "en"],
-      {
-        type: "region",
-      }
+      { type: "region" }
     );
+
     return regionNames.of(code) || code;
   } catch {
     return code;
@@ -237,6 +64,7 @@ function regionDisplayName(countryCode) {
 
 function countryFlag(countryCode) {
   const code = countryCode?.toUpperCase();
+
   if (!/^[A-Z]{2}$/.test(code)) {
     return "";
   }
@@ -249,6 +77,7 @@ function countryFlag(countryCode) {
 function countryLabel(countryCode) {
   const flag = countryFlag(countryCode);
   const name = regionDisplayName(countryCode);
+
   return [flag, name].filter(Boolean).join(" ");
 }
 
@@ -258,44 +87,14 @@ function rankedCountLabel(count) {
   });
 }
 
-// Reactive Chart.js wrapper: builds the chart on first render and rebuilds
-// from scratch whenever `chartConfig` changes (period swap, filter pill
-// toggle). Chart.js init is fast enough that a full rebuild is fine.
-const renderChart = modifier(function (element, [chartConfig]) {
-  if (!chartConfig) {
-    return;
-  }
-  let chart;
-  let cancelled = false;
-  loadChartJS().then((Chart) => {
-    if (cancelled) {
-      return;
-    }
-    chart = new Chart(element.getContext("2d"), chartConfig);
-  });
-  return () => {
-    cancelled = true;
-    chart?.destroy();
-  };
-});
-
 export default class AdminDashboardSiteTraffic extends Component {
-  @service siteSettings;
   @service loadingSlider;
 
-  @tracked model = null;
-  @tracked modelPeriod = null;
+  @tracked report = null;
   @tracked isLoading = false;
   @tracked errored = false;
 
-  hiddenSeries = new DeferredTrackedSet([SERIES.CRAWLER]);
-  pillIsActive = (req) => !this.hiddenSeries.has(req);
-  swatchStyle = (color, isActive) => {
-    const c = color || "transparent";
-    return isActive
-      ? trustHTML(`background-color: ${c}; border-color: ${c};`)
-      : trustHTML(`background-color: transparent; border-color: ${c};`);
-  };
+  hiddenLabels = ["page_view_crawler"];
   _requestSeq = 0;
 
   constructor() {
@@ -303,303 +102,8 @@ export default class AdminDashboardSiteTraffic extends Component {
     this.fetchReport();
   }
 
-  get isPublicSite() {
-    return !this.siteSettings.login_required;
-  }
-
-  get startDate() {
-    return dashboardDateToUtcDay(this.args.startDate).startOf("day");
-  }
-
-  get endDate() {
-    return dashboardDateToUtcDay(this.args.endDate).startOf("day");
-  }
-
-  get periodDescriptor() {
-    // Anchor the descriptor to the period the *displayed model* came from so
-    // the headline doesn't briefly mix a new period descriptor with stale
-    // counts during a fetch (§3.6).
-    const period = this.modelPeriod ?? this.args.period;
-    return i18n(`admin.dashboard.site_traffic.period_descriptor.${period}`);
-  }
-
-  get modelStartDate() {
-    return this.model?.start_date
-      ? moment.utc(this.model.start_date, "YYYY-MM-DD").startOf("day")
-      : null;
-  }
-
-  get modelEndDate() {
-    return this.model?.end_date
-      ? moment.utc(this.model.end_date, "YYYY-MM-DD").startOf("day")
-      : null;
-  }
-
-  get bucketing() {
-    if (!this.modelStartDate || !this.modelEndDate) {
-      return "daily";
-    }
-    const days = this.modelEndDate.diff(this.modelStartDate, "days") + 1;
-    return bucketingForLength(days);
-  }
-
-  get spansYears() {
-    if (!this.modelStartDate || !this.modelEndDate) {
-      return false;
-    }
-    return this.modelStartDate.year() !== this.modelEndDate.year();
-  }
-
-  get currentTotals() {
-    return this.model?.related_data?.current_totals;
-  }
-
-  get priorTotals() {
-    return this.model?.related_data?.prior_totals;
-  }
-
-  humanTotal(totals) {
-    if (!totals) {
-      return 0;
-    }
-    const loggedIn = totals[SERIES.LOGGED_IN] || 0;
-    const anon = totals[SERIES.ANON] || 0;
-    return this.isPublicSite ? loggedIn + anon : loggedIn;
-  }
-
-  get headlineCount() {
-    return this.humanTotal(this.currentTotals);
-  }
-
-  get priorHeadlineCount() {
-    return this.humanTotal(this.priorTotals);
-  }
-
-  get hasTrendCoverage() {
-    const firstDate = this.model?.related_data?.first_browser_pageview_date;
-    const priorStart = this.model?.related_data?.prior_start_date;
-    if (!firstDate || !priorStart) {
-      return false;
-    }
-    return moment.utc(priorStart).isSameOrAfter(moment.utc(firstDate));
-  }
-
-  get trendDelta() {
-    if (!this.hasTrendCoverage) {
-      return null;
-    }
-    const current = this.headlineCount;
-    const prior = this.priorHeadlineCount;
-    if (prior === 0 || current === prior) {
-      return null;
-    }
-    const rawPct = ((current - prior) / prior) * 100;
-    if (Math.abs(rawPct) < 0.05) {
-      return null;
-    }
-    if (Math.abs(rawPct) < 1) {
-      return (Math.sign(rawPct) * Math.round(Math.abs(rawPct) * 10)) / 10;
-    }
-    return Math.round(rawPct);
-  }
-
-  get trendDirection() {
-    if (this.trendDelta === null) {
-      return null;
-    }
-    return this.trendDelta < 0 ? "down" : "up";
-  }
-
-  get headlineCountText() {
-    const formattedCount = number(this.headlineCount);
-    return i18n("admin.dashboard.site_traffic.headline.count", {
-      count: this.headlineCount,
-      formattedCount,
-      periodDescriptor: this.periodDescriptor,
-    });
-  }
-
-  get trendPhraseText() {
-    if (this.trendDelta === null) {
-      return null;
-    }
-    const directionLabel = i18n(
-      `admin.dashboard.site_traffic.headline.direction_${this.trendDirection}`
-    );
-    return i18n("admin.dashboard.site_traffic.headline.trend_phrase", {
-      direction: directionLabel,
-      delta: Math.abs(this.trendDelta),
-    });
-  }
-
-  get trendComparisonDuration() {
-    const period = this.modelPeriod ?? this.args.period;
-    if (period === PERIOD_LAST_7_DAYS) {
-      return i18n("admin.dashboard.site_traffic.headline.duration.last_7_days");
-    }
-    if (period === PERIOD_LAST_30_DAYS) {
-      return i18n(
-        "admin.dashboard.site_traffic.headline.duration.last_30_days"
-      );
-    }
-    if (period === PERIOD_LAST_3_MONTHS) {
-      return i18n(
-        "admin.dashboard.site_traffic.headline.duration.last_3_months"
-      );
-    }
-    if (period === PERIOD_CUSTOM && this.modelStartDate && this.modelEndDate) {
-      const days = this.modelEndDate.diff(this.modelStartDate, "days") + 1;
-      if (days === 1) {
-        return null;
-      }
-      return i18n("admin.dashboard.site_traffic.headline.duration.days", {
-        count: days,
-      });
-    }
-    return null;
-  }
-
-  // Tooltip shown when admins hover the `?` icon next to the trend phrase.
-  // Names the prior period the trend is being compared against (§4.4c) so
-  // "up 9%" / "down 12%" isn't a bare claim — admins can verify which
-  // window the comparison uses.
-  get trendComparisonTooltip() {
-    const priorStart = this.model?.related_data?.prior_start_date;
-    const priorEnd = this.model?.related_data?.prior_end_date;
-    if (!priorStart || !priorEnd) {
-      return null;
-    }
-    const start = moment.utc(priorStart, "YYYY-MM-DD");
-    const end = moment.utc(priorEnd, "YYYY-MM-DD");
-    const sameYear = start.year() === end.year();
-    const range = sameYear
-      ? `${start.format("D MMM")} – ${end.format("D MMM YYYY")}`
-      : `${start.format("D MMM YYYY")} – ${end.format("D MMM YYYY")}`;
-    if (this.modelPeriod === PERIOD_CUSTOM && !this.trendComparisonDuration) {
-      return i18n(
-        "admin.dashboard.site_traffic.headline.trend_tooltip_previous_day",
-        { range }
-      );
-    }
-    return i18n("admin.dashboard.site_traffic.headline.trend_tooltip", {
-      duration: this.trendComparisonDuration,
-      range,
-    });
-  }
-
-  get loggedInSharePercent() {
-    if (!this.currentTotals) {
-      return 0;
-    }
-    const loggedIn = this.currentTotals[SERIES.LOGGED_IN] || 0;
-    const anon = this.currentTotals[SERIES.ANON] || 0;
-    const denom = loggedIn + anon;
-    if (denom === 0) {
-      return 0;
-    }
-    return Math.round((loggedIn / denom) * 100);
-  }
-
-  get filterPills() {
-    const pills = [
-      {
-        req: SERIES.LOGGED_IN,
-        label: i18n("admin.dashboard.site_traffic.filters.logged_in"),
-        color: SERIES_COLORS[SERIES.LOGGED_IN],
-      },
-    ];
-    if (this.isPublicSite) {
-      pills.push({
-        req: SERIES.ANON,
-        label: i18n("admin.dashboard.site_traffic.filters.anonymous"),
-        color: SERIES_COLORS[SERIES.ANON],
-      });
-      pills.push({
-        req: SERIES.CRAWLER,
-        label: i18n("admin.dashboard.site_traffic.filters.crawlers"),
-        color: SERIES_COLORS[SERIES.CRAWLER],
-      });
-    }
-    return pills;
-  }
-
-  // Aggregated bucket totals per series, keyed by req. All series share the
-  // same bucket keys (same date range, same bucketing).
-  get bucketsBySeries() {
-    if (!this.model?.data) {
-      return new Map();
-    }
-    const allowed = this.isPublicSite
-      ? [SERIES.LOGGED_IN, SERIES.ANON, SERIES.CRAWLER]
-      : [SERIES.LOGGED_IN];
-    const result = new Map();
-    for (const series of this.model.data) {
-      if (!allowed.includes(series.req)) {
-        continue;
-      }
-      result.set(series.req, bucketize(series.data, this.bucketing));
-    }
-    return result;
-  }
-
-  // The shared bucket spine (same shape across all series): one entry per
-  // bucket, with `start`/`end`/`total`. Any series's bucket array works since
-  // they all aggregate the same period with the same bucketing.
-  get buckets() {
-    const first = this.bucketsBySeries.values().next().value;
-    return first ?? [];
-  }
-
-  // Date strings used as the chart's category labels and as a stable lookup
-  // key for tooltip → bucket mapping.
-  get bucketStarts() {
-    return this.buckets.map((b) => b.start);
-  }
-
-  get visibleSeriesReqs() {
-    return Array.from(this.bucketsBySeries.keys()).filter(
-      (req) => !this.hiddenSeries.has(req)
-    );
-  }
-
-  // Max stack height across all visible (non-hidden) buckets. Used to pick
-  // a clean y-axis step.
-  get visibleStackHeight() {
-    const visibleReqs = this.visibleSeriesReqs;
-    if (visibleReqs.length === 0) {
-      return 0;
-    }
-    const total = this.buckets.length;
-    let max = 0;
-    for (let i = 0; i < total; i++) {
-      let sum = 0;
-      for (const req of visibleReqs) {
-        sum += this.bucketsBySeries.get(req)[i]?.total || 0;
-      }
-      if (sum > max) {
-        max = sum;
-      }
-    }
-    return max;
-  }
-
-  get xMaxLabels() {
-    // Cross-year daily/weekly labels are wider (have year), so reduce density.
-    if (this.bucketing === "daily") {
-      return this.spansYears ? 8 : 12;
-    }
-    if (this.bucketing === "weekly") {
-      return this.spansYears ? 8 : 14;
-    }
-    return 60; // monthly: ≤13 buckets, label them all.
-  }
-
-  get xVisibleIndexes() {
-    return computeVisibleIndexes(this.buckets.length, this.xMaxLabels);
-  }
-
   get topReferrers() {
-    return (this.model?.related_data?.top_referrers || []).map((referrer) => ({
+    return (this.report?.related_data?.top_referrers || []).map((referrer) => ({
       label: referrer.source_name,
       countLabel: rankedCountLabel(referrer.count),
       percent: referrer.percent,
@@ -611,7 +115,7 @@ export default class AdminDashboardSiteTraffic extends Component {
   }
 
   get topCountries() {
-    return (this.model?.related_data?.top_countries || []).map((country) => ({
+    return (this.report?.related_data?.top_countries || []).map((country) => ({
       label: countryLabel(country.country_code),
       countLabel: rankedCountLabel(country.count),
       percent: country.percent,
@@ -622,232 +126,191 @@ export default class AdminDashboardSiteTraffic extends Component {
     return this.topCountries.length > 0;
   }
 
-  // Build the Chart.js config from scratch in one place. Category x-axis
-  // means bars at integer indexes 0..N-1, equal-width slots, labels rendered
-  // exactly under their bars. No timezone math anywhere — `keys` are opaque
-  // strings, only formatted (with `moment.utc`) at label render time.
-  get chartConfig() {
-    if (this.bucketsBySeries.size === 0) {
+  get browserPageviews() {
+    return this.args.traffic?.kpis?.browser_pageviews?.value ?? 0;
+  }
+
+  get headlineText() {
+    return i18n(this.#headlineKey(this.args.period), {
+      count: this.browserPageviews,
+      formatted_count: this.formatHeadlineCount(this.browserPageviews),
+    });
+  }
+
+  get trend() {
+    const browserPageviewsKpi = this.args.traffic?.kpis?.browser_pageviews;
+    const percentChange = browserPageviewsKpi?.percent_change;
+
+    if (percentChange === null || percentChange === undefined) {
       return null;
     }
-    const buckets = this.buckets;
-    const labels = this.bucketStarts;
-    const bucketing = this.bucketing;
-    const spansYears = this.spansYears;
-    const visibleIndexes = this.xVisibleIndexes;
 
-    const themeDefault = cssVar("--primary-medium");
-    const gridColor = cssVar("--primary-very-low");
-    const tooltipBg = cssVar("--primary");
-    const tooltipFg = cssVar("--secondary");
+    return browserPageviewsKpi;
+  }
 
-    // Render order matters: stack from logged-in (bottom) → anon → crawlers
-    // (top), §7.3.
-    const seriesOrder = [SERIES.LOGGED_IN, SERIES.ANON, SERIES.CRAWLER].filter(
-      (req) => this.bucketsBySeries.has(req)
+  get trendDirection() {
+    return this.trend?.percent_change > 0 ? "up" : "down";
+  }
+
+  get trendText() {
+    if (!this.trend) {
+      return null;
+    }
+
+    return i18n(`admin.dashboard.site_traffic.trend.${this.trendDirection}`, {
+      percent: this.formatTrendPercent(Math.abs(this.trend.percent_change)),
+    });
+  }
+
+  get comparisonTooltipText() {
+    const tooltip = this.#comparisonTooltip(
+      this.args.period,
+      this.trend?.comparison_period
     );
 
-    const datasets = seriesOrder.map((req) => ({
-      label: this.seriesLabel(req),
-      data: this.bucketsBySeries.get(req).map((b) => b.total),
-      backgroundColor: SERIES_COLORS[req],
-      stack: "pageviews-stack",
-      hidden: this.hiddenSeries.has(req),
-      borderRadius: 2,
-      maxBarThickness: 30,
-      // §7.6b — every bucket renders a visible bar even when its value is 0.
-      minBarLength: 3,
-      // Stash req so the tooltip footer can split humans vs crawlers.
-      req,
-    }));
+    if (!tooltip) {
+      return null;
+    }
 
-    const pageviewsLabel = i18n(
-      "admin.dashboard.site_traffic.chart.tooltip.pageviews"
-    );
-    const crawlersLabel = i18n(
-      "admin.dashboard.site_traffic.chart.tooltip.crawlers"
-    );
+    return i18n(tooltip.key, {
+      count: tooltip.count,
+      ...this.#formatComparisonDates(tooltip.startDate, tooltip.endDate),
+    });
+  }
 
+  get showLoggedInShare() {
+    const loggedInShare = this.args.traffic?.kpis?.logged_in_share?.value;
+    return loggedInShare !== null && loggedInShare !== undefined;
+  }
+
+  get loggedInShare() {
+    return `${this.args.traffic?.kpis?.logged_in_share?.value ?? 0}%`;
+  }
+
+  get chartModel() {
     return {
-      type: "bar",
-      data: { labels, datasets },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 300 },
-        hover: { mode: "index" },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            mode: "index",
-            intersect: false,
-            backgroundColor: tooltipBg,
-            titleColor: tooltipFg,
-            bodyColor: tooltipFg,
-            footerColor: tooltipFg,
-            titleMarginBottom: 16,
-            footerMarginTop: 16,
-            padding: { left: 20, right: 20, top: 12, bottom: 12 },
-            bodySpacing: 8,
-            cornerRadius: 8,
-            boxPadding: 4,
-            callbacks: {
-              title: (items) =>
-                formatTooltipTitle(buckets[items[0].dataIndex], bucketing),
-              beforeFooter: (items) => {
-                let humans = 0;
-                let crawlers = 0;
-                let crawlersVisible = false;
-                for (const item of items) {
-                  const v = parseInt(item.parsed.y || 0, 10);
-                  const r = item.dataset.req;
-                  if (r === SERIES.CRAWLER) {
-                    crawlers += v;
-                    crawlersVisible = true;
-                  } else if (r === SERIES.LOGGED_IN || r === SERIES.ANON) {
-                    humans += v;
-                  }
-                }
-                const lines = [`${pageviewsLabel}: ${humans.toLocaleString()}`];
-                if (crawlersVisible) {
-                  lines.push(`${crawlersLabel}: ${crawlers.toLocaleString()}`);
-                }
-                return lines;
-              },
-            },
-          },
-        },
-        scales: {
-          x: {
-            type: "category",
-            stacked: true,
-            offset: true,
-            grid: { display: false },
-            ticks: {
-              autoSkip: false,
-              maxRotation: 0,
-              minRotation: 0,
-              color: themeDefault,
-              font: { size: 11 },
-              callback(value, index) {
-                if (!visibleIndexes.has(index)) {
-                  return "";
-                }
-                return formatBucketLabel(labels[index], bucketing, spansYears);
-              },
-            },
-          },
-          y: {
-            type: "linear",
-            beginAtZero: true,
-            stacked: true,
-            grid: { color: gridColor },
-            ticks: {
-              font: { size: 11 },
-              color: themeDefault,
-              callback: formatRoundAbbr,
-              stepSize: pickRoundStep(this.visibleStackHeight, 6),
-              maxTicksLimit: 6,
-              maxRotation: 0,
-            },
-          },
-        },
-      },
+      start_date: this.args.startDate,
+      end_date: this.args.endDate,
+      data: this.args.traffic?.pageview_series ?? [],
     };
   }
 
-  seriesLabel(req) {
-    if (req === SERIES.LOGGED_IN) {
-      return i18n("admin.dashboard.site_traffic.filters.logged_in");
-    }
-    if (req === SERIES.ANON) {
-      return i18n("admin.dashboard.site_traffic.filters.anonymous");
-    }
-    return i18n("admin.dashboard.site_traffic.filters.crawlers");
-  }
-
-  @action
-  togglePill(req, event) {
-    if (event?.altKey) {
-      this.soloPill(req);
-      return;
-    }
-    if (this.hiddenSeries.has(req)) {
-      this.hiddenSeries.delete(req);
-      return;
-    }
-    const visiblePills = this.filterPills.filter(
-      (p) => !this.hiddenSeries.has(p.req)
-    );
-    if (visiblePills.length <= 1) {
-      return;
-    }
-    this.hiddenSeries.add(req);
-  }
-
-  @action
-  soloPill(req) {
-    const allReqs = this.filterPills.map((p) => p.req);
-    const currentlyActive = allReqs.filter((r) => !this.hiddenSeries.has(r));
-    if (currentlyActive.length === 1 && currentlyActive[0] === req) {
-      for (const r of allReqs) {
-        this.hiddenSeries.delete(r);
-      }
-      return;
-    }
-    for (const r of allReqs) {
-      if (r === req) {
-        this.hiddenSeries.delete(r);
-      } else {
-        this.hiddenSeries.add(r);
-      }
-    }
+  get chartOptions() {
+    return {
+      hideYAxisGridLines: true,
+      hiddenLabels: this.hiddenLabels,
+      legendPosition: "top",
+    };
   }
 
   @action
   async fetchReport() {
     this._requestSeq += 1;
     const mySeq = this._requestSeq;
-    const fetchPeriod = this.args.period;
+
     this.isLoading = true;
     this.errored = false;
-    try {
-      this.loadingSlider?.transitionStarted();
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn("loadingSlider.transitionStarted failed:", e);
-    }
+    this.loadingSlider?.transitionStarted();
 
     try {
       const json = await ajax(`/admin/reports/${REPORT_TYPE}`, {
         data: {
-          start_date: ymd(this.startDate),
-          end_date: ymd(this.endDate),
+          start_date: ymd(this.args.startDate),
+          end_date: ymd(this.args.endDate),
         },
       });
+
       if (mySeq !== this._requestSeq) {
         return;
       }
-      const model = Report.create({ type: REPORT_TYPE });
-      model.setProperties(json.report);
-      this.model = model;
-      this.modelPeriod = fetchPeriod;
+
+      this.report = json.report;
     } catch {
       if (mySeq !== this._requestSeq) {
         return;
       }
+
       this.errored = true;
     } finally {
       if (mySeq === this._requestSeq) {
         this.isLoading = false;
-        try {
-          this.loadingSlider?.transitionEnded();
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.warn("loadingSlider.transitionEnded failed:", e);
-        }
+        this.loadingSlider?.transitionEnded();
       }
     }
+  }
+
+  formatHeadlineCount(value) {
+    if (value >= 1_000_000) {
+      const formatted = I18n.toNumber(value / 1_000_000, { precision: 1 });
+      return `${formatted.replace(/[,.]0$/, "")}M`;
+    }
+
+    if (value >= 1_000) {
+      return `${I18n.toNumber(Math.round(value / 1_000), { precision: 0 })}k`;
+    }
+
+    return I18n.toNumber(value, { precision: 0 });
+  }
+
+  formatTrendPercent(value) {
+    const precision = value < 1 ? 1 : 0;
+    return `${I18n.toNumber(value, { precision })}%`;
+  }
+
+  #dateFrom(value) {
+    return moment(value, "YYYY-MM-DD");
+  }
+
+  #inclusiveDayCount(startDate, endDate) {
+    return this.#dateFrom(endDate).diff(this.#dateFrom(startDate), "days") + 1;
+  }
+
+  #headlineKey(period) {
+    return (
+      PERIOD_COPY_KEYS[period]?.headline ??
+      "admin.dashboard.site_traffic.headline.selected_period"
+    );
+  }
+
+  #comparisonTooltip(period, comparisonPeriod) {
+    if (!comparisonPeriod) {
+      return null;
+    }
+
+    const startDate = comparisonPeriod.start_date;
+    const endDate = comparisonPeriod.end_date;
+    const tooltip = { startDate, endDate };
+    const presetKey = PERIOD_COPY_KEYS[period]?.comparisonTooltip;
+
+    if (presetKey) {
+      return { ...tooltip, key: presetKey };
+    }
+
+    return {
+      ...tooltip,
+      count: this.#inclusiveDayCount(startDate, endDate),
+      key: "admin.dashboard.site_traffic.comparison_tooltip.previous_days",
+    };
+  }
+
+  #formatComparisonDates(startDate, endDate) {
+    const start = this.#dateFrom(startDate);
+    const end = this.#dateFrom(endDate);
+    const dateWithYear = (date) =>
+      date.format(i18n("dates.long_with_year_no_time"));
+    const dateWithoutYear = (date) =>
+      date.format(i18n("dates.long_no_year_no_time"));
+
+    if (start.isSame(end, "day")) {
+      const date = dateWithYear(start);
+      return { start: date, end: date };
+    }
+
+    if (start.year() === end.year()) {
+      return { start: dateWithoutYear(start), end: dateWithYear(end) };
+    }
+
+    return { start: dateWithYear(start), end: dateWithYear(end) };
   }
 
   <template>
@@ -858,92 +321,94 @@ export default class AdminDashboardSiteTraffic extends Component {
         {{if this.isLoading 'admin-dashboard-site-traffic--loading'}}"
       {{didUpdate this.fetchReport @startDate @endDate @period}}
     >
-      <div class="admin-dashboard-site-traffic__summary">
-        <div class="admin-dashboard-site-traffic__headline">
-          {{#if this.model}}
-            <p class="admin-dashboard-site-traffic__headline-text">
-              {{this.headlineCountText}}
-              {{#if this.trendPhraseText}}
-                —
-                <span
-                  class="admin-dashboard-site-traffic__trend admin-dashboard-site-traffic__trend--{{this.trendDirection}}"
-                >{{this.trendPhraseText}}</span>
-                {{#if this.trendComparisonTooltip}}
-                  <DTooltip
-                    class="admin-dashboard-site-traffic__trend-info"
-                    @icon="circle-info"
-                  >
-                    <:content>{{this.trendComparisonTooltip}}</:content>
-                  </DTooltip>
-                {{/if}}
-              {{/if}}
-            </p>
-          {{/if}}
+      <div class="db-section__subheader">
+        <div class="db-section__subintro">
+          <h3 class="db-traffic__headline">
+            {{this.headlineText}}
+            {{#if this.trend}}
+              <span class="db-traffic__headline-separator"> - </span>
+              <span
+                class="db-traffic__trend {{concat '--' this.trendDirection}}"
+              >
+                {{this.trendText}}
+                <DTooltip
+                  class="db-traffic__info"
+                  @identifier="site-traffic-comparison-tooltip"
+                  @icon="circle-info"
+                >
+                  <:content>{{this.comparisonTooltipText}}</:content>
+                </DTooltip>
+              </span>
+            {{/if}}
+          </h3>
+          <p>
+            Placeholder: Logged-in traffic is growing steadily. Two spikes on
+            Mar 8-9 drove a burst of anonymous visitors who didn't log in,
+            pulling the logged-in share down slightly to 38%.
+          </p>
         </div>
 
-        {{#if this.isPublicSite}}
-          <div class="admin-dashboard-site-traffic__kpi-row">
-            <div class="admin-dashboard-site-traffic__kpi">
-              <div class="admin-dashboard-site-traffic__kpi-value">
-                {{this.loggedInSharePercent}}%
+        {{#if this.showLoggedInShare}}
+          <div class="db-section__metrics">
+            <div class="db-section__metric">
+              <div class="db-section__metric-number">
+                {{this.loggedInShare}}
               </div>
-              <div class="admin-dashboard-site-traffic__kpi-label">
-                <span>{{i18n "admin.dashboard.site_traffic.kpi.label"}}</span>
+              <div class="db-section__metric-label">
+                {{i18n
+                  "admin.dashboard.site_traffic.kpi.logged_in_share.label"
+                }}
                 <DTooltip
+                  class="db-traffic__info"
+                  @identifier="site-traffic-logged-in-share-tooltip"
                   @icon="circle-info"
-                  @content={{i18n "admin.dashboard.site_traffic.kpi.tooltip"}}
-                />
+                >
+                  <:content>
+                    {{i18n
+                      "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
+                    }}
+                  </:content>
+                </DTooltip>
               </div>
             </div>
           </div>
         {{/if}}
       </div>
 
-      {{#if this.isPublicSite}}
-        <div
-          class="admin-dashboard-site-traffic__pills"
-          role="group"
-          aria-label={{i18n "admin.dashboard.site_traffic.heading"}}
-        >
-          {{#each this.filterPills as |pill|}}
-            <button
-              type="button"
-              class="admin-dashboard-site-traffic__pill
-                {{if
-                  (this.pillIsActive pill.req)
-                  'admin-dashboard-site-traffic__pill--active'
-                }}"
-              aria-pressed={{if (this.pillIsActive pill.req) "true" "false"}}
-              {{on "click" (fn this.togglePill pill.req)}}
-            >
-              <span
-                class="admin-dashboard-site-traffic__pill-swatch"
-                style={{this.swatchStyle
-                  pill.color
-                  (this.pillIsActive pill.req)
-                }}
-              ></span>
-              {{pill.label}}
-            </button>
-          {{/each}}
+      <div class="db-section__callout">
+        Placeholder: Spikes on Mar 8 and Mar 9 - a Hacker News post linking to
+        the plugin release docs drove a surge in anonymous pageviews.
+      </div>
+
+      {{#if @fetchError}}
+        <div class="db-section__traffic-chart">
+          <div class="db-section__traffic-chart-message" role="alert">
+            {{i18n "admin.dashboard.site_traffic.fetch_error"}}
+          </div>
+        </div>
+      {{else if @traffic}}
+        <div class="db-section__traffic-chart">
+          <AdminReportStackedChart
+            @model={{this.chartModel}}
+            @options={{this.chartOptions}}
+            class="db-section__traffic-chart-canvas"
+          />
+        </div>
+      {{else}}
+        <div class="db-section__traffic-chart">
+          <div class="db-section__traffic-chart-shell"></div>
         </div>
       {{/if}}
 
-      <div class="admin-dashboard-site-traffic__chart">
-        {{#if this.errored}}
-          <div class="admin-dashboard-site-traffic__error">
-            <p>{{i18n "admin.dashboard.site_traffic.chart.error"}}</p>
-            <DButton
-              @label="admin.dashboard.site_traffic.chart.retry"
-              @action={{this.fetchReport}}
-            />
-          </div>
-        {{else if this.chartConfig}}
-          <div class="admin-dashboard-site-traffic__chart-canvas">
-            <canvas {{renderChart this.chartConfig}}></canvas>
-          </div>
-        {{/if}}
-      </div>
+      {{#if this.errored}}
+        <div class="admin-dashboard-site-traffic__error">
+          <p>{{i18n "admin.dashboard.site_traffic.chart.error"}}</p>
+          <DButton
+            @label="admin.dashboard.site_traffic.chart.retry"
+            @action={{this.fetchReport}}
+          />
+        </div>
+      {{/if}}
 
       <div class="admin-dashboard-site-traffic__ranked-row">
         <section class="admin-dashboard-site-traffic__ranked-card">
