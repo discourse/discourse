@@ -142,15 +142,13 @@ class Search
         urls = Set.new
         cooked.scan(Discourse::Utils::URI_REGEXP) { urls << $& }
         urls.each do |url|
-          begin
-            case File.extname(URI(url).path || "")
-            when Oneboxer::VIDEO_REGEX
-              cooked.gsub!(url, I18n.t("search.video"))
-            when Oneboxer::AUDIO_REGEX
-              cooked.gsub!(url, I18n.t("search.audio"))
-            end
-          rescue URI::InvalidURIError
+          case File.extname(URI(url).path || "")
+          when Oneboxer::VIDEO_REGEX
+            cooked.gsub!(url, I18n.t("search.video"))
+          when Oneboxer::AUDIO_REGEX
+            cooked.gsub!(url, I18n.t("search.audio"))
           end
+        rescue URI::InvalidURIError
         end
       end
 

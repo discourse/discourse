@@ -65,3 +65,6 @@ Lint/SymbolConversion:
 
 Style/RedundantParentheses:
   Enabled: true
+
+Style/RedundantBegin:
+  Enabled: true

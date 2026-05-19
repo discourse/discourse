@@ -2189,24 +2189,20 @@ class BulkImport::Base
       begin
         @raw_connection.copy_data(sql, @encoder) do
           rows.each do |row|
-            begin
-              if (mapped = yield(row))
-                processed = send(process_method_name, mapped)
-                imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
-                imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
-                unless processed[:skip]
-                  @raw_connection.put_copy_data columns.map { |c| processed[c] }
-                end
-              end
-              rows_created += 1
-              if rows_created % 100 == 0
-                print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
-              end
-            rescue => e
-              puts "\n"
-              puts "ERROR: #{e.message}"
-              puts e.backtrace.join("\n")
+            if (mapped = yield(row))
+              processed = send(process_method_name, mapped)
+              imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
+              imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
+              @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
             end
+            rows_created += 1
+            if rows_created % 100 == 0
+              print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
+            end
+          rescue => e
+            puts "\n"
+            puts "ERROR: #{e.message}"
+            puts e.backtrace.join("\n")
           end
         end
       rescue => e

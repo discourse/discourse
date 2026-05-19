@@ -722,14 +722,12 @@ class PostMover
 
   def posts
     @posts ||=
-      begin
-        Post
-          .where(topic: @original_topic, id: post_ids)
-          .where.not(post_type: Post.types[:small_action])
-          .where.not(raw: "")
-          .order(:created_at)
-          .tap { |posts| raise Discourse::InvalidParameters.new(:post_ids) if posts.empty? }
-      end
+      Post
+        .where(topic: @original_topic, id: post_ids)
+        .where.not(post_type: Post.types[:small_action])
+        .where.not(raw: "")
+        .order(:created_at)
+        .tap { |posts| raise Discourse::InvalidParameters.new(:post_ids) if posts.empty? }
   end
 
   def update_last_post_stats

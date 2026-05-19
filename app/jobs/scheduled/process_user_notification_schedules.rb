@@ -9,14 +9,12 @@ module Jobs
         .enabled
         .includes(:user)
         .each do |schedule|
-          begin
-            schedule.create_do_not_disturb_timings
-          rescue => e
-            Discourse.warn_exception(
-              e,
-              message: "Failed to process user_notification_schedule with ID #{schedule.id}",
-            )
-          end
+          schedule.create_do_not_disturb_timings
+        rescue => e
+          Discourse.warn_exception(
+            e,
+            message: "Failed to process user_notification_schedule with ID #{schedule.id}",
+          )
         end
     end
   end

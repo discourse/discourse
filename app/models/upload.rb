@@ -559,93 +559,87 @@ class Upload < ActiveRecord::Base
         remap_scope = nil
 
         scope.each do |upload|
-          begin
-            # keep track of the url
-            previous_url = upload.url.dup
-            # where is the file currently stored?
-            external = previous_url =~ %r{\A//}
-            # download if external
-            if external
-              url = SiteSetting.scheme + ":" + previous_url
+          # keep track of the url
+          previous_url = upload.url.dup
+          # where is the file currently stored?
+          external = previous_url =~ %r{\A//}
+          # download if external
+          if external
+            url = SiteSetting.scheme + ":" + previous_url
 
-              begin
-                retries ||= 0
+            begin
+              retries ||= 0
 
-                file =
-                  FileHelper.download(
-                    url,
-                    max_file_size: max_file_size_kb,
-                    tmp_file_name: "discourse",
-                    follow_redirect: true,
-                  )
-              rescue OpenURI::HTTPError
-                retry if (retries += 1) < 1
-                next
-              end
-
-              path = file.path
-            else
-              path = local_store.path_for(upload)
-            end
-            # compute SHA if missing
-            upload.sha1 = Upload.generate_digest(path) if upload.sha1.blank?
-
-            # store to new location & update the filesize
-            File.open(path) do |f|
-              upload.url = Discourse.store.store_upload(f, upload)
-              upload.filesize = f.size
-              upload.save!(validate: false)
-            end
-            # remap the URLs
-            DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
-
-            DbHelper.remap(
-              previous_url,
-              upload.url,
-              excluded_tables: %w[
-                posts
-                post_search_data
-                incoming_emails
-                notifications
-                single_sign_on_records
-                stylesheet_cache
-                topic_search_data
-                users
-                user_emails
-                draft_sequences
-                optimized_images
-              ],
-            )
-
-            remap_scope ||=
-              begin
-                Post
-                  .with_deleted
-                  .where(
-                    "raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'",
-                  )
-                  .select(:id, :raw, :cooked)
-                  .all
-              end
-
-            remap_scope.each do |post|
-              post.raw.gsub!(previous_url, upload.url)
-              post.cooked.gsub!(previous_url, upload.url)
-              if post.changed?
-                Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked)
-              end
+              file =
+                FileHelper.download(
+                  url,
+                  max_file_size: max_file_size_kb,
+                  tmp_file_name: "discourse",
+                  follow_redirect: true,
+                )
+            rescue OpenURI::HTTPError
+              retry if (retries += 1) < 1
+              next
             end
 
-            upload.optimized_images.find_each(&:destroy!)
-            upload.rebake_posts_on_old_scheme
-            # remove the old file (when local)
-            FileUtils.rm(path, force: true) unless external
-          rescue => e
-            problems << { upload: upload, ex: e }
-          ensure
-            file&.unlink
-            file&.close
+            path = file.path
+          else
+            path = local_store.path_for(upload)
           end
+          # compute SHA if missing
+          upload.sha1 = Upload.generate_digest(path) if upload.sha1.blank?
+
+          # store to new location & update the filesize
+          File.open(path) do |f|
+            upload.url = Discourse.store.store_upload(f, upload)
+            upload.filesize = f.size
+            upload.save!(validate: false)
+          end
+          # remap the URLs
+          DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
+
+          DbHelper.remap(
+            previous_url,
+            upload.url,
+            excluded_tables: %w[
+              posts
+              post_search_data
+              incoming_emails
+              notifications
+              single_sign_on_records
+              stylesheet_cache
+              topic_search_data
+              users
+              user_emails
+              draft_sequences
+              optimized_images
+            ],
+          )
+
+          remap_scope ||=
+            Post
+              .with_deleted
+              .where("raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'")
+              .select(:id, :raw, :cooked)
+              .all
+
+          remap_scope.each do |post|
+            post.raw.gsub!(previous_url, upload.url)
+            post.cooked.gsub!(previous_url, upload.url)
+            if post.changed?
+              Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked)
+            end
+          end
+
+          upload.optimized_images.find_each(&:destroy!)
+          upload.rebake_posts_on_old_scheme
+          # remove the old file (when local)
+          FileUtils.rm(path, force: true) unless external
+        rescue => e
+          problems << { upload: upload, ex: e }
+        ensure
+          file&.unlink
+          file&.close
         end
       end
     end

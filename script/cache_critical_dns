@@ -186,12 +186,12 @@ class SRVName
         targets = dns_client.getresources(@name, Resolv::DNS::Resource::IN::SRV)
         targets.delete_if { |t| !@prio_filter.within_threshold?(t.priority) }
         targets.each do |t|
-          begin
+          
             Name.new(t.target.to_s).resolve.each do |ra|
               results << ResolvedAddress.new(address: ra.address, priority: t.priority)
             end
           rescue Resolv::ResolvError, Resolv::ResolvTimeout
-          end
+          
         end
       end
     end

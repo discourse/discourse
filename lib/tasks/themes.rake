@@ -288,40 +288,38 @@ def update_themes(version_cache: Concurrent::Map.new)
     .includes(:remote_theme)
     .where(enabled: true, auto_update: true)
     .find_each do |theme|
-      begin
-        theme.transaction do
-          remote_theme = theme.remote_theme
-          next if remote_theme.blank? || remote_theme.remote_url.blank?
-          prefix = "[db:#{RailsMultisite::ConnectionManagement.current_db}] '#{theme.name}' - "
-          puts "#{prefix} checking..."
+      theme.transaction do
+        remote_theme = theme.remote_theme
+        next if remote_theme.blank? || remote_theme.remote_url.blank?
+        prefix = "[db:#{RailsMultisite::ConnectionManagement.current_db}] '#{theme.name}' - "
+        puts "#{prefix} checking..."
 
-          cache_key =
-            "#{remote_theme.remote_url}:#{remote_theme.branch}:#{Digest::SHA256.hexdigest(remote_theme.private_key.to_s)}"
+        cache_key =
+          "#{remote_theme.remote_url}:#{remote_theme.branch}:#{Digest::SHA256.hexdigest(remote_theme.private_key.to_s)}"
 
-          if version_cache[cache_key] == remote_theme.remote_version && !remote_theme.out_of_date?
-            puts "#{prefix} up to date (cached from previous lookup)"
-            next
-          end
-
-          remote_theme.update_remote_version
-
-          version_cache.put_if_absent(cache_key, remote_theme.remote_version)
-
-          if remote_theme.out_of_date?
-            puts "#{prefix} updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
-            remote_theme.update_from_remote(already_in_transaction: true)
-          else
-            puts "#{prefix} up to date"
-          end
-
-          if remote_theme.last_error_text.present?
-            raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
-          end
+        if version_cache[cache_key] == remote_theme.remote_version && !remote_theme.out_of_date?
+          puts "#{prefix} up to date (cached from previous lookup)"
+          next
         end
-      rescue => e
-        $stderr.puts "[#{RailsMultisite::ConnectionManagement.current_db}] Failed to update '#{theme.name}' (#{theme.id}): #{e}"
-        raise if ENV["RAISE_THEME_ERRORS"] == "1"
+
+        remote_theme.update_remote_version
+
+        version_cache.put_if_absent(cache_key, remote_theme.remote_version)
+
+        if remote_theme.out_of_date?
+          puts "#{prefix} updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
+          remote_theme.update_from_remote(already_in_transaction: true)
+        else
+          puts "#{prefix} up to date"
+        end
+
+        if remote_theme.last_error_text.present?
+          raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
+        end
       end
+    rescue => e
+      $stderr.puts "[#{RailsMultisite::ConnectionManagement.current_db}] Failed to update '#{theme.name}' (#{theme.id}): #{e}"
+      raise if ENV["RAISE_THEME_ERRORS"] == "1"
     end
 
   true

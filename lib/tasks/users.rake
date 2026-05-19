@@ -178,12 +178,10 @@ task "users:anonymize_all" => :environment do
 
   system_user = Discourse.system_user
   non_staff_users.each do |user|
-    begin
-      UserAnonymizer.new(user, system_user).make_anonymous
-      print_status(anonymized += 1, total)
-    rescue StandardError
-      # skip
-    end
+    UserAnonymizer.new(user, system_user).make_anonymous
+    print_status(anonymized += 1, total)
+  rescue StandardError
+    # skip
   end
 
   puts "", "#{total} users anonymized.", ""

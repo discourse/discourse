@@ -334,12 +334,10 @@ task "posts:delete_all_likes" => :environment do
   total = post_actions.count
 
   post_actions.each do |post_action|
-    begin
-      post_action.remove_act!(Discourse.system_user)
-      print_status(likes_deleted += 1, total)
-    rescue StandardError
-      # skip
-    end
+    post_action.remove_act!(Discourse.system_user)
+    print_status(likes_deleted += 1, total)
+  rescue StandardError
+    # skip
   end
 
   UserStat.update_all(likes_given: 0, likes_received: 0) # clear user likes stats
@@ -707,19 +705,17 @@ def recover_uploads_from_index(path)
       end
 
       File.open(found) do |f|
-        begin
-          upload = UploadCreator.new(f, "upload").create_for(post.user_id)
-          if upload && upload.url
-            post.raw = post.raw.sub(url, upload.url)
-            changed = true
-          else
-            puts "Skipping #{url} in #{post.full_url} unable to create upload (unknown error)"
-            next
-          end
-        rescue Discourse::InvalidAccess
-          puts "Skipping #{url} in #{post.full_url} unable to create upload (bad format)"
+        upload = UploadCreator.new(f, "upload").create_for(post.user_id)
+        if upload && upload.url
+          post.raw = post.raw.sub(url, upload.url)
+          changed = true
+        else
+          puts "Skipping #{url} in #{post.full_url} unable to create upload (unknown error)"
           next
         end
+      rescue Discourse::InvalidAccess
+        puts "Skipping #{url} in #{post.full_url} unable to create upload (bad format)"
+        next
       end
     end
     if changed

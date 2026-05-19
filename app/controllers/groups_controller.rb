@@ -423,19 +423,17 @@ class GroupsController < ApplicationController
       skip_email ||= params.key?(:notify_users) && !notify
 
       emails.each do |email|
-        begin
-          Invite.generate(current_user, email:, group_ids:, skip_email:)
-        rescue RateLimiter::LimitExceeded => e
-          return(
-            render_json_error(
-              I18n.t(
-                "invite.rate_limit",
-                count: SiteSetting.max_invites_per_day,
-                time_left: e.time_left,
-              ),
-            )
+        Invite.generate(current_user, email:, group_ids:, skip_email:)
+      rescue RateLimiter::LimitExceeded => e
+        return(
+          render_json_error(
+            I18n.t(
+              "invite.rate_limit",
+              count: SiteSetting.max_invites_per_day,
+              time_left: e.time_left,
+            ),
           )
-        end
+        )
       end
 
       render json: success_json.merge!(usernames: uniq_users.map(&:username), emails: emails)
@@ -757,30 +755,28 @@ class GroupsController < ApplicationController
     end
 
     hijack do
-      begin
-        raise Discourse::InvalidParameters if params[:ssl_mode].blank?
+      raise Discourse::InvalidParameters if params[:ssl_mode].blank?
 
-        settings.delete(:ssl_mode)
+      settings.delete(:ssl_mode)
 
-        if Group.smtp_ssl_modes.values.exclude?(params[:ssl_mode].to_i)
-          raise Discourse::InvalidParameters.new("SSL mode must be valid")
-        end
-
-        final_settings =
-          settings.merge(
-            enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
-            enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
-          ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
-        EmailSettingsValidator.validate_as_user(
-          current_user,
-          "smtp",
-          **final_settings.to_h.symbolize_keys,
-        )
-
-        render json: success_json
-      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
-        render_json_error(EmailSettingsExceptionHandler.friendly_exception_message(err, email_host))
+      if Group.smtp_ssl_modes.values.exclude?(params[:ssl_mode].to_i)
+        raise Discourse::InvalidParameters.new("SSL mode must be valid")
       end
+
+      final_settings =
+        settings.merge(
+          enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
+          enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
+        ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
+      EmailSettingsValidator.validate_as_user(
+        current_user,
+        "smtp",
+        **final_settings.to_h.symbolize_keys,
+      )
+
+      render json: success_json
+    rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
+      render_json_error(EmailSettingsExceptionHandler.friendly_exception_message(err, email_host))
     end
   end
 

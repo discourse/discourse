@@ -88,11 +88,9 @@ class UserProfile < ActiveRecord::Base
       .where("bio_cooked_version IS NULL OR bio_cooked_version < ?", BAKED_VERSION)
       .limit(limit)
       .each do |p|
-        begin
-          p.rebake!
-        rescue => e
-          problems << { profile: p, ex: e }
-        end
+        p.rebake!
+      rescue => e
+        problems << { profile: p, ex: e }
       end
     problems
   end
