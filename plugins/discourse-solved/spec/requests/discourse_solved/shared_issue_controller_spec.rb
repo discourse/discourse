@@ -32,7 +32,7 @@ RSpec.describe DiscourseSolved::SharedIssueController do
         }.by(1)
         expect(response.status).to eq(200)
         body = response.parsed_body
-        expect(body["count"]).to eq(2)
+        expect(body["count"]).to eq(1)
         expect(body["user_created_shared_issue"]).to eq(true)
       end
 

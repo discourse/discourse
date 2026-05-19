@@ -11,7 +11,11 @@ export default class AdminDashboardRoute extends DiscourseRoute {
   }
 
   activate() {
-    const controller = this.controllerFor("admin.dashboard");
+    scrollTop();
+  }
+
+  setupController(controller) {
+    super.setupController(...arguments);
 
     if (this.siteSettings.dashboard_improvements) {
       controller.fetchSections();
@@ -19,7 +23,5 @@ export default class AdminDashboardRoute extends DiscourseRoute {
       controller.fetchProblems();
       controller.fetchDashboard();
     }
-
-    scrollTop();
   }
 }

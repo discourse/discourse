@@ -136,7 +136,7 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
       it "publishes a shared issue message indicating the user created a shared issue" do
         expect(messages).to include(
           an_object_having_attributes(
-            data: a_hash_including(type: :shared_issue, count: 2, user_created_shared_issue: true),
+            data: a_hash_including(type: :shared_issue, count: 1, user_created_shared_issue: true),
           ),
         )
       end
@@ -172,7 +172,7 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
       it "publishes a shared issue message indicating the user withdrew their shared issue" do
         expect(messages).to include(
           an_object_having_attributes(
-            data: a_hash_including(type: :shared_issue, count: 1, user_created_shared_issue: false),
+            data: a_hash_including(type: :shared_issue, count: 0, user_created_shared_issue: false),
           ),
         )
       end

@@ -532,6 +532,46 @@ RSpec.describe PostGuardian do
       expect(guardian.can_edit_post?(post)).to eq(false)
     end
 
+    context "when category group moderation is enabled" do
+      before { SiteSetting.enable_category_group_moderation = true }
+
+      it "returns false for a category group moderator who cannot see the topic" do
+        mod_group = Fabricate(:group)
+        cat_mod_user = Fabricate(:user)
+        private_cat = Fabricate(:private_category, group: Fabricate(:group))
+        private_t = Fabricate(:topic, category: private_cat)
+        private_p = Fabricate(:post, topic: private_t)
+        Fabricate(:category_moderation_group, category: private_cat, group: mod_group)
+        mod_group.add(cat_mod_user)
+
+        expect(Guardian.new(cat_mod_user).can_edit_post?(private_p)).to eq(false)
+      end
+
+      it "returns true for a category group moderator who can see the topic" do
+        mod_group = Fabricate(:group)
+        cat_mod_user = Fabricate(:user)
+        private_cat = Fabricate(:private_category, group: mod_group)
+        private_t = Fabricate(:topic, category: private_cat)
+        private_p = Fabricate(:post, topic: private_t)
+        Fabricate(:category_moderation_group, category: private_cat, group: mod_group)
+        mod_group.add(cat_mod_user)
+
+        expect(Guardian.new(cat_mod_user).can_edit_post?(private_p)).to eq(true)
+      end
+    end
+
+    it "returns false for edit_all_post_groups user who cannot see the topic" do
+      edit_group = Fabricate(:group)
+      edit_user = Fabricate(:user)
+      private_cat = Fabricate(:private_category, group: Fabricate(:group))
+      private_t = Fabricate(:topic, category: private_cat)
+      private_p = Fabricate(:post, topic: private_t)
+      edit_group.add(edit_user)
+      SiteSetting.edit_all_post_groups = edit_group.id.to_s
+
+      expect(Guardian.new(edit_user).can_edit_post?(private_p)).to eq(false)
+    end
+
     it "returns true even if the topic is closed" do
       topic.update!(closed: true)
 
@@ -1292,6 +1332,26 @@ RSpec.describe PostGuardian do
       SiteSetting.view_raw_email_allowed_groups = "1|2|14"
 
       expect(Guardian.new(trust_level_0).can_view_raw_email?(post)).to be_falsey
+    end
+
+    it "returns false when the post is nil even for an allowed user" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_4).can_view_raw_email?(nil)).to be_falsey
+    end
+  end
+
+  describe "#can_view_raw_emails?" do
+    it "returns true for a user in an allowed group" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_4).can_view_raw_emails?).to be_truthy
+    end
+
+    it "returns false for a user not in an allowed group" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_0).can_view_raw_emails?).to be_falsey
     end
   end
 

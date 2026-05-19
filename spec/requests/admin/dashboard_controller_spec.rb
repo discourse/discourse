@@ -96,6 +96,15 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
+    context "when anonymous" do
+      it "denies access with a 404 response" do
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
     describe "sections payload" do
       before do
         SiteSetting.dashboard_improvements = true
@@ -104,13 +113,143 @@ RSpec.describe Admin::DashboardController do
         sign_in(admin)
       end
 
-      def highlights_data
-        sections = response.parsed_body["sections"]
-        sections.find { |s| s["id"] == "highlights" }&.dig("data")
+      let(:section_payloads) do
+        response.parsed_body["sections"].index_by { |section| section["id"] }
+      end
+
+      context "with highlights_data" do
+        let(:highlights_data) { section_payloads["highlights"]&.dig("data") }
+
+        it "returns the highlights payload for the selected dates" do
+          Fabricate(:user, created_at: Time.zone.local(2026, 4, 10))
+          Fabricate(:user, created_at: Time.zone.local(2026, 4, 15))
+          Fabricate(:user, created_at: Time.zone.local(2026, 3, 10))
+
+          get "/admin/dashboard.json", params: { start_date: "2026-04-01", end_date: "2026-04-28" }
+
+          expect(response.status).to eq(200)
+          expect(highlights_data).to eq(
+            "kpis" => [
+              {
+                "type" => "new_signups",
+                "value" => 2,
+                "previous_value" => 1,
+                "percent_change" => 100.0,
+                "report_type" => "signups",
+                "report_query" => {
+                  "start_date" => "2026-04-01",
+                  "end_date" => "2026-04-28",
+                },
+              },
+              {
+                "type" => "dau_mau",
+                "value" => nil,
+                "previous_value" => nil,
+                "percent_change" => nil,
+                "report_type" => "dau_by_mau",
+                "report_query" => {
+                  "start_date" => "2026-04-01",
+                  "end_date" => "2026-04-28",
+                },
+              },
+              {
+                "type" => "new_contributors",
+                "value" => nil,
+                "previous_value" => 0,
+                "percent_change" => nil,
+                "report_type" => "new_contributors",
+                "report_query" => {
+                  "start_date" => "2026-04-01",
+                  "end_date" => "2026-04-28",
+                },
+              },
+            ],
+          )
+        end
+      end
+
+      context "with traffic_data" do
+        let(:traffic_data) { section_payloads["traffic"]&.dig("data") }
+
+        it "returns the site traffic payload for the selected dates" do
+          SiteSetting.use_legacy_pageviews = false
+          SiteSetting.embed_topics_list = true
+
+          Fabricate(:embeddable_host)
+          Fabricate(:logged_in_browser_application_request, date: "2026-04-28", count: 1)
+          Fabricate(:anonymous_browser_application_request, date: "2026-04-29", count: 2)
+
+          Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)
+          Fabricate(:anonymous_browser_application_request, date: "2026-05-02", count: 20)
+
+          Fabricate(:embedded_application_request, date: "2026-05-02", count: 4)
+          Fabricate(:crawler_application_request, date: "2026-05-03", count: 3)
+
+          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
+
+          expect(traffic_data).to eq(
+            "kpis" => {
+              "browser_pageviews" => {
+                "value" => 30,
+                "percent_change" => 900,
+                "comparison_period" => {
+                  "start_date" => "2026-04-28",
+                  "end_date" => "2026-04-30",
+                },
+              },
+              "logged_in_share" => {
+                "value" => 33,
+              },
+            },
+            "pageview_series" => [
+              {
+                "req" => "page_view_logged_in_browser",
+                "label" => I18n.t("reports.site_traffic.xaxis.page_view_logged_in_browser"),
+                "color" => "#4B3CE0",
+                "data" => [
+                  { "x" => "2026-05-01", "y" => 10 },
+                  { "x" => "2026-05-02", "y" => 0 },
+                  { "x" => "2026-05-03", "y" => 0 },
+                ],
+              },
+              {
+                "req" => "page_view_anon_browser",
+                "label" => I18n.t("reports.site_traffic.xaxis.page_view_anon_browser"),
+                "color" => "#9C8DEC",
+                "data" => [
+                  { "x" => "2026-05-01", "y" => 0 },
+                  { "x" => "2026-05-02", "y" => 20 },
+                  { "x" => "2026-05-03", "y" => 0 },
+                ],
+              },
+              {
+                "req" => "page_view_embed",
+                "label" => I18n.t("reports.site_traffic.xaxis.page_view_embed"),
+                "color" => "#E6E1F8",
+                "data" => [
+                  { "x" => "2026-05-01", "y" => 0 },
+                  { "x" => "2026-05-02", "y" => 4 },
+                  { "x" => "2026-05-03", "y" => 0 },
+                ],
+              },
+              {
+                "req" => "page_view_crawler",
+                "label" => I18n.t("reports.site_traffic.xaxis.page_view_crawler"),
+                "color" => "#D5CDF7",
+                "data" => [
+                  { "x" => "2026-05-01", "y" => 0 },
+                  { "x" => "2026-05-02", "y" => 0 },
+                  { "x" => "2026-05-03", "y" => 3 },
+                ],
+              },
+            ],
+          )
+        end
       end
 
       it "is omitted when dashboard_improvements is disabled" do
         SiteSetting.dashboard_improvements = false
+
         get "/admin/dashboard.json"
 
         expect(response.status).to eq(200)
@@ -118,15 +257,23 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["configuration"]).to be_nil
       end
 
-      it "includes a highlights section with kpis" do
-        get "/admin/dashboard.json"
+      it "falls back to default dates when date params are malformed" do
+        get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
 
         expect(response.status).to eq(200)
-        expect(highlights_data["kpis"]).to be_an(Array)
+        expect(section_payloads.keys).to contain_exactly(
+          "highlights",
+          "reports",
+          "traffic",
+          "engagement",
+        )
+        expect(section_payloads.dig("highlights", "data")).to be_present
+        expect(section_payloads.dig("traffic", "data")).to be_present
       end
 
       it "returns the sections as an ordered array of {id, data}" do
         SiteSetting.admin_dashboard_sections = "reports|highlights"
+
         get "/admin/dashboard.json"
 
         ids = response.parsed_body["sections"].map { |s| s["id"] }
@@ -135,6 +282,7 @@ RSpec.describe Admin::DashboardController do
 
       it "omits hidden sections from the data payload" do
         SiteSetting.admin_dashboard_sections = "highlights|reports"
+
         get "/admin/dashboard.json"
 
         ids = response.parsed_body["sections"].map { |s| s["id"] }
@@ -143,66 +291,32 @@ RSpec.describe Admin::DashboardController do
 
       it "leaves data null for sections without a builder yet" do
         SiteSetting.admin_dashboard_sections = "highlights|reports"
+
         get "/admin/dashboard.json"
 
         reports = response.parsed_body["sections"].find { |s| s["id"] == "reports" }
         expect(reports["data"]).to be_nil
       end
 
-      it "returns the documented payload shape for new_signups" do
-        freeze_time(Time.utc(2026, 4, 28, 12, 0, 0)) do
-          Fabricate(:user, created_at: 5.days.ago)
-          get "/admin/dashboard.json", params: { start_date: "2026-03-01", end_date: "2026-04-28" }
-
-          kpis = highlights_data["kpis"]
-          signups = kpis.find { |k| k["type"] == "new_signups" }
-
-          expect(signups).to include(
-            "type" => "new_signups",
-            "report_type" => "signups",
-            "report_query" => {
-              "start_date" => "2026-03-01",
-              "end_date" => "2026-04-28",
-            },
-          )
-          expect(signups["value"]).to be >= 1
-          expect(signups).to have_key("previous_value")
-          expect(signups).to have_key("percent_change")
-        end
-      end
-
-      it "honours start_date and end_date query params" do
-        Fabricate(:user, created_at: 2.days.ago)
-        get "/admin/dashboard.json",
-            params: {
-              start_date: 7.days.ago.strftime("%Y-%m-%d"),
-              end_date: Date.current.strftime("%Y-%m-%d"),
-            }
-
-        expect(response.status).to eq(200)
-        expect(highlights_data["kpis"]).to be_an(Array)
-      end
-
-      it "ignores malformed date params and falls back to defaults" do
-        get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
-
-        expect(response.status).to eq(200)
-        expect(highlights_data).to be_present
-      end
-
       it "denies non-staff users" do
         sign_in(user)
+
         get "/admin/dashboard.json"
 
         expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
       end
 
       it "allows moderators and returns the sections payload" do
         sign_in(moderator)
+
         get "/admin/dashboard.json"
 
         expect(response.status).to eq(200)
-        expect(highlights_data).to be_present
+        expect(response.parsed_body["sections"].map { |section| section["id"] }).to include(
+          "highlights",
+          "traffic",
+        )
       end
 
       it "omits version_check when the flag is on" do
@@ -235,18 +349,22 @@ RSpec.describe Admin::DashboardController do
       it "is included for admins and lists every known section with a visibility flag" do
         SiteSetting.admin_dashboard_sections = "highlights|reports"
         sign_in(admin)
+
         get "/admin/dashboard.json"
 
         configuration = response.parsed_body["configuration"]
         expect(configuration).to be_present
+
         ids = configuration["sections"].map { |s| s["id"] }
         expect(ids).to match_array(%w[highlights reports traffic engagement])
+
         visible = configuration["sections"].select { |s| s["visible"] }.map { |s| s["id"] }
         expect(visible).to eq(%w[highlights reports])
       end
 
       it "is omitted for moderators" do
         sign_in(moderator)
+
         get "/admin/dashboard.json"
 
         expect(response.status).to eq(200)
@@ -256,6 +374,7 @@ RSpec.describe Admin::DashboardController do
       it "is omitted when dashboard_improvements is disabled" do
         SiteSetting.dashboard_improvements = false
         sign_in(admin)
+
         get "/admin/dashboard.json"
 
         expect(response.parsed_body).not_to have_key("configuration")
@@ -271,6 +390,7 @@ RSpec.describe Admin::DashboardController do
 
     it "returns 204 and writes the site setting for admins" do
       sign_in(admin)
+
       put "/admin/dashboard/configuration.json",
           params: {
             sections: [
@@ -286,6 +406,7 @@ RSpec.describe Admin::DashboardController do
 
     it "drops unknown section ids silently" do
       sign_in(admin)
+
       put "/admin/dashboard/configuration.json",
           params: {
             sections: [{ id: "frobnitz", visible: true }, { id: "highlights", visible: true }],
@@ -297,6 +418,7 @@ RSpec.describe Admin::DashboardController do
 
     it "coerces non-boolean visible values" do
       sign_in(admin)
+
       put "/admin/dashboard/configuration.json",
           params: {
             sections: [
@@ -311,6 +433,7 @@ RSpec.describe Admin::DashboardController do
 
     it "treats an empty sections array as hide-everything" do
       sign_in(admin)
+
       put "/admin/dashboard/configuration.json", params: { sections: [] }
 
       expect(response.status).to eq(204)
@@ -319,6 +442,7 @@ RSpec.describe Admin::DashboardController do
 
     it "treats a missing sections key the same as an empty array" do
       sign_in(admin)
+
       put "/admin/dashboard/configuration.json"
 
       expect(response.status).to eq(204)
@@ -327,6 +451,7 @@ RSpec.describe Admin::DashboardController do
 
     it "returns 404 for moderators" do
       sign_in(moderator)
+
       put "/admin/dashboard/configuration.json",
           params: {
             sections: [{ id: "highlights", visible: true }],
@@ -346,12 +471,14 @@ RSpec.describe Admin::DashboardController do
 
     it "reflects the new configuration for moderators on a subsequent GET" do
       sign_in(admin)
+
       put "/admin/dashboard/configuration.json",
           params: {
             sections: [{ id: "highlights", visible: true }],
           }
 
       sign_in(moderator)
+
       get "/admin/dashboard.json"
 
       ids = response.parsed_body["sections"].map { |s| s["id"] }

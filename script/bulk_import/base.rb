@@ -723,6 +723,7 @@ class BulkImport::Base
     category_id
     visible
     closed
+    archived
     pinned_at
     pinned_until
     pinned_globally
