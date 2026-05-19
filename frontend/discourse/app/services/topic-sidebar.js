@@ -10,4 +10,9 @@ export default class TopicSidebarService extends Service {
     this.topic = Topic.create({ id: topicId });
     this.topic.postStream.refresh();
   }
+
+  clearSelectedTopic() {
+    this.selectedTopicId = null;
+    this.topic = null;
+  }
 }

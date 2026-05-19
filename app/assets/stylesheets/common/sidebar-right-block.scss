@@ -1,5 +1,26 @@
 .sidebar-right {
+  position: sticky;
+  top: var(--header-offset, 60px);
+  align-self: flex-start;
+  height: calc(100vh - var(--header-offset, 60px));
+
   &__container {
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &__layout {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__block {
+    flex: 1;
+    min-height: 0;
+    display: flex;
   }
 }
