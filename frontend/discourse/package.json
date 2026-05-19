@@ -105,7 +105,7 @@
     "@embroider/core": "^4.4.6",
     "@embroider/macros": "^1.16.12",
     "@embroider/router": "^3.0.6",
-    "@embroider/vite": "1.4.3",
+    "@embroider/vite": "^1.7.2",
     "@floating-ui/dom": "^1.7.5",
     "@glimmer/component": "^2.0.0",
     "@rollup/plugin-babel": "github:davidtaylorhq/rollup-plugins#babel-parallel-built&path:/packages/babel",
