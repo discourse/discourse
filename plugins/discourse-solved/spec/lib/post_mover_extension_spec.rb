@@ -47,6 +47,20 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
       expect(destination_topic.reload.solved.topic_answers.first.answer_post_id).not_to eq(reply.id)
     end
 
+    it "moving multiple answers to a single topic only keeps the first accepted" do
+      Fabricate(:topic_answer, solved_topic: solved, post: another_reply)
+      target_topic = Fabricate(:topic_with_op)
+
+      topic.move_posts(admin, [reply.id, another_reply.id], destination_topic_id: target_topic.id)
+
+      expect(topic.reload.solved).to be_nil
+      expect(target_topic.reload.solved.topic_answers.count).to eq(1)
+      expect(target_topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
+      expect(target_topic.posts[1].id).to eq(reply.id)
+      expect(target_topic.posts[2].id).to eq(another_reply.id)
+      expect(DiscourseSolved::TopicAnswer.find_by(answer_post_id: another_reply.id)).to be_nil
+    end
+
     describe "with multiple solutions enabled" do
       before { SiteSetting.solved_allow_multiple_solutions = true }
 

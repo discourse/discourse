@@ -19,7 +19,7 @@ module DiscourseSolved
           topic_answers_to_move.each do |ta|
             target_can_have_more_answers =
               SiteSetting.solved_allow_multiple_solutions ||
-                !target_solved_topic&.topic_answers.present?
+                !target_solved_topic&.topic_answers&.reload.present?
 
             if target_allows_answers && target_can_have_more_answers
               ta.update!(solved_topic: target_solved_topic)
