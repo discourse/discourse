@@ -363,6 +363,18 @@ table.group-reports {
   margin: 10px 0;
 }
 
+.query-new__top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  margin-bottom: 0.5em;
+
+  .back-button {
+    margin: 0;
+  }
+}
+
 .query-new--ai-first {
   max-width: 720px;
 
