@@ -69,10 +69,8 @@ class PostCreator
 
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title]&.include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw]&.include?("\u0000")
-    opts[:visible] = false if (
-      (opts[:visible].nil? && opts[:hidden_reason_id].present?) ||
-        (opts[:embed_url].present? && SiteSetting.embed_unlisted?)
-    )
+    opts[:visible] = false if (opts[:visible].nil? && opts[:hidden_reason_id].present?) ||
+      (opts[:embed_url].present? && SiteSetting.embed_unlisted?)
 
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
   end
@@ -235,7 +233,7 @@ class PostCreator
     end
 
     if !opts[:import_mode] && !opts[:reviewed_queued_post]
-      handle_spam if (@spam || @post)
+      handle_spam if @spam || @post
 
       ReviewablePost.queue_for_review_if_possible(@post, @user) if !@spam && @post && errors.blank?
     end

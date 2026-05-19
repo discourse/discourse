@@ -174,7 +174,7 @@ task "users:anonymize_all" => :environment do
   anonymized = 0
 
   confirm_anonymize = ask("Are you sure you want to anonymize #{total} users? (Y/n)")
-  exit 1 unless (confirm_anonymize == "" || confirm_anonymize.downcase == "y")
+  exit 1 unless confirm_anonymize == "" || confirm_anonymize.downcase == "y"
 
   system_user = Discourse.system_user
   non_staff_users.each do |user|

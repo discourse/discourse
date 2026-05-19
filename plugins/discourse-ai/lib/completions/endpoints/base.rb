@@ -469,7 +469,7 @@ module DiscourseAi
           ProblemCheck::AiLlmStatus.fast_track_problem!(
             llm_model,
             failures_count,
-            (FAIL_TTL / 1.hour),
+            FAIL_TTL / 1.hour,
           )
         end
 

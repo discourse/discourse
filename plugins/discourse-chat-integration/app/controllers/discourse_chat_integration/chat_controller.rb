@@ -20,7 +20,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
           id: provider_klass::PROVIDER_NAME,
           channel_parameters:
             (
-              if (defined?(provider_klass::CHANNEL_PARAMETERS))
+              if defined?(provider_klass::CHANNEL_PARAMETERS)
                 provider_klass::CHANNEL_PARAMETERS
               else
                 []

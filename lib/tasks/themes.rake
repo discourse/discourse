@@ -249,7 +249,7 @@ end
 
 desc "Install themes & theme components"
 task "themes:install" => :environment do |task, args|
-  theme_args = (STDIN.tty?) ? "" : STDIN.read
+  theme_args = STDIN.tty? ? "" : STDIN.read
   use_json = theme_args == ""
 
   theme_args =

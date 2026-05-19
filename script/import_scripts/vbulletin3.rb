@@ -585,7 +585,7 @@ LEFT OUTER JOIN #{TABLE_PREFIX}avatar a ON a.avatarid = u.avatarid
       category.default_list_filter = "none"
     end
 
-    if (forum["is_category_only"] == 1 && access[:public_access] == 1)
+    if forum["is_category_only"] == 1 && access[:public_access] == 1
       puts "\t#{category.name} is a public category only"
       category.permissions = { everyone: :readonly }
       category.save()

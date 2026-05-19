@@ -607,7 +607,7 @@ class UsersController < ApplicationController
   end
 
   def changing_case_of_own_username(target_user, username)
-    target_user && username.downcase == (target_user.username.downcase)
+    target_user && username.downcase == target_user.username.downcase
   end
 
   # Used for checking availability of a username and will return suggestions

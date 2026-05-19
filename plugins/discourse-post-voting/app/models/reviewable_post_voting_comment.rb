@@ -25,7 +25,7 @@ class ReviewablePostVotingComment < Reviewable
   end
 
   def comment
-    @comment ||= (target || PostVotingComment.with_deleted.find_by(id: target_id))
+    @comment ||= target || PostVotingComment.with_deleted.find_by(id: target_id)
   end
 
   def comment_creator

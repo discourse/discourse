@@ -24,7 +24,7 @@ module ChatSystemHelpers
     user.activate
     user.user_option.update!(chat_enabled: true)
     Group.refresh_automatic_group!(:trust_level_0)
-    Group.refresh_automatic_group!("trust_level_#{user.trust_level}".to_sym)
+    Group.refresh_automatic_group!(:"trust_level_#{user.trust_level}")
     channel.add(user)
   end
 

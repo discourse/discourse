@@ -1065,7 +1065,7 @@ class Group < ActiveRecord::Base
 
     domains =
       Group.get_valid_email_domains(self.automatic_membership_email_domains) do |domain|
-        self.errors.add :base, (I18n.t("groups.errors.invalid_domain", domain: domain))
+        self.errors.add :base, I18n.t("groups.errors.invalid_domain", domain: domain)
       end
 
     max_domains = SiteSetting.max_automatic_membership_email_domains

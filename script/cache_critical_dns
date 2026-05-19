@@ -326,39 +326,39 @@ HEALTH_CHECKS = Hash.new(
   # unknown keys (like services defined at runtime) are assumed to be healthy
   lambda { |addr| true }
 ).merge!({
-  "DISCOURSE_DB_HOST": lambda { |addr|
+  DISCOURSE_DB_HOST: lambda { |addr|
     postgres_healthcheck(
       host: addr,
       user: ENV["DISCOURSE_DB_USERNAME"] || DEFAULT_DB_NAME,
       dbname: ENV["DISCOURSE_DB_NAME"] || DEFAULT_DB_NAME,
       port: ENV["DISCOURSE_DB_PORT"] || DEFAULT_DB_PORT,
       password: ENV["DISCOURSE_DB_PASSWORD"])},
-  "DISCOURSE_DB_REPLICA_HOST": lambda { |addr|
+  DISCOURSE_DB_REPLICA_HOST: lambda { |addr|
     postgres_healthcheck(
       host: addr,
       user: ENV["DISCOURSE_DB_USERNAME"] || DEFAULT_DB_NAME,
       dbname: ENV["DISCOURSE_DB_NAME"] || DEFAULT_DB_NAME,
       port: ENV["DISCOURSE_DB_REPLICA_PORT"] || DEFAULT_DB_PORT,
       password: ENV["DISCOURSE_DB_PASSWORD"])},
-  "DISCOURSE_REDIS_HOST": lambda { |addr|
+  DISCOURSE_REDIS_HOST: lambda { |addr|
     redis_healthcheck(
       host: addr,
       port: env_as_int("DISCOURSE_REDIS_PORT", DEFAULT_REDIS_PORT),
       username: ENV["DISCOURSE_REDIS_USERNAME"],
       password: ENV["DISCOURSE_REDIS_PASSWORD"])},
-  "DISCOURSE_REDIS_REPLICA_HOST": lambda { |addr|
+  DISCOURSE_REDIS_REPLICA_HOST: lambda { |addr|
     redis_healthcheck(
       host: addr,
       port: env_as_int("DISCOURSE_REDIS_PORT", DEFAULT_REDIS_PORT),
       username: ENV["DISCOURSE_REDIS_USERNAME"],
       password: ENV["DISCOURSE_REDIS_PASSWORD"])},
-  "DISCOURSE_MESSAGE_BUS_REDIS_HOST": lambda { |addr|
+  DISCOURSE_MESSAGE_BUS_REDIS_HOST: lambda { |addr|
     redis_healthcheck(
       host: addr,
       port: env_as_int("DISCOURSE_MESSAGE_BUS_REDIS_PORT", DEFAULT_REDIS_PORT),
       username: ENV["DISCOURSE_MESSAGE_BUS_REDIS_USERNAME"],
       password: ENV["DISCOURSE_MESSAGE_BUS_REDIS_PASSWORD"])},
-  "DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_HOST": lambda { |addr|
+  DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_HOST: lambda { |addr|
     redis_healthcheck(
       host: addr,
       port: env_as_int("DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_PORT", DEFAULT_REDIS_PORT),

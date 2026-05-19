@@ -221,8 +221,8 @@ def clean_up_uploads
       sha1 = Upload.generate_digest(file_path)
       url = file_path.split(public_directory, 2)[1]
 
-      if (Upload.where(sha1: sha1).empty? && Upload.where(url: url).empty?) &&
-           (OptimizedImage.where(sha1: sha1).empty? && OptimizedImage.where(url: url).empty?)
+      if Upload.where(sha1: sha1).empty? && Upload.where(url: url).empty? &&
+           OptimizedImage.where(sha1: sha1).empty? && OptimizedImage.where(url: url).empty?
         FileUtils.rm(file_path)
         putc "#"
       else

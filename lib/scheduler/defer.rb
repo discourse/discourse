@@ -113,7 +113,7 @@ module Scheduler
         @thread =
           Thread.new do
             Thread.current.abort_on_exception = true if Rails.env.test?
-            do_work while (!@finish || !@queue.empty?)
+            do_work while !@finish || !@queue.empty?
           end if !@thread&.alive?
       end
     end

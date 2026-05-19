@@ -2775,7 +2775,7 @@ HTML
     # basically it is super hard to remember every single rare letter when there are
     # so many, so ruby tags provide a hint.
     #
-    html = (<<~MD).strip
+    html = <<~MD.strip
       <ruby lang="je">
         <rb lang="je">X</rb>
         漢 <rp>(</rp><rt lang="je"> ㄏㄢˋ </rt><rp>)</rp>

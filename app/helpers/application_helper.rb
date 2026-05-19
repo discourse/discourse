@@ -398,7 +398,7 @@ module ApplicationHelper
   end
 
   private def generate_twitter_card_metadata(result, opts)
-    img_url = (opts[:x_summary_large_image].presence || opts[:image])
+    img_url = opts[:x_summary_large_image].presence || opts[:image]
 
     # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
     if img_url.ends_with?(".svg")
@@ -942,7 +942,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "light" if cookie.present?
 
-    !!(current_user&.user_option&.light_mode_forced?)
+    !!current_user&.user_option&.light_mode_forced?
   end
 
   def forced_dark_mode?
@@ -951,7 +951,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "dark" if cookie.present?
 
-    !!(current_user&.user_option&.dark_mode_forced?)
+    !!current_user&.user_option&.dark_mode_forced?
   end
 
   def light_color_hex_for_name(name)

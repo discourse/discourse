@@ -93,7 +93,7 @@ class UploadsController < ApplicationController
     params.permit(short_urls: [])
     uploads = []
 
-    if (params[:short_urls] && params[:short_urls].length > 0)
+    if params[:short_urls] && params[:short_urls].length > 0
       PrettyText::Helpers
         .lookup_upload_urls(params[:short_urls])
         .each do |short_url, paths|

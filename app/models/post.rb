@@ -282,7 +282,7 @@ class Post < ActiveRecord::Base
 
   def matches_recent_post?
     post_id = Discourse.redis.get(unique_post_key)
-    post_id != (nil) && post_id.to_i != (id)
+    post_id != nil && post_id.to_i != id
   end
 
   def raw_hash
