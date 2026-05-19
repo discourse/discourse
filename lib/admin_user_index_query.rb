@@ -8,7 +8,7 @@ class AdminUserIndexQuery
     guardian: nil,
     **kwargs
   )
-    @params = kwargs.present? ? params.merge(kwargs) : params
+    @params = params.merge(kwargs)
     @query = initialize_query_with_order(klass)
     @trust_levels = trust_levels
     @guardian = guardian
