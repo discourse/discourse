@@ -6,7 +6,8 @@ first_solution_query = <<~SQL
            SELECT p.id AS post_id, p.user_id, dsst.created_at,
               ROW_NUMBER() OVER (PARTITION BY p.user_id ORDER BY dsst.created_at) AS row_number
            FROM discourse_solved_solved_topics dsst
-              JOIN badge_posts p ON dsst.answer_post_id = p.id
+              JOIN discourse_solved_topic_answers dsta ON dsta.solved_topic_id = dsst.id
+              JOIN badge_posts p ON dsta.answer_post_id = p.id
               JOIN topics t ON p.topic_id = t.id
            WHERE p.user_id <> t.user_id -- ignore topics solved by OP
               AND (:backfill OR p.id IN (:post_ids))
