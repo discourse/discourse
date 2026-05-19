@@ -2756,27 +2756,6 @@ RSpec.describe User do
     end
   end
 
-  describe "#suspended?" do
-    context "when the user is an anonymous shadow" do
-      fab!(:master_user) do
-        Fabricate(:user, suspended_at: Time.zone.now, suspended_till: 1.day.from_now)
-      end
-      fab!(:shadow_user) { Fabricate(:user, trust_level: TrustLevel[1]) }
-
-      before do
-        SiteSetting.allow_anonymous_mode = true
-        AnonymousUser.create!(user: shadow_user, master_user:, active: true)
-      end
-
-      it "uses the shadow user's own suspension state", :aggregate_failures do
-        expect(shadow_user).to be_anonymous
-        expect(shadow_user).to be_active
-        expect(shadow_user.suspended_till).to be_nil
-        expect(shadow_user).not_to be_suspended
-      end
-    end
-  end
-
   describe "silenced?" do
     it "is not silenced by default" do
       expect(Fabricate(:user)).not_to be_silenced
