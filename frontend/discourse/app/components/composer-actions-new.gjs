@@ -23,6 +23,7 @@ import {
   REPLY,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DTextField from "discourse/ui-kit/d-text-field";
@@ -703,7 +704,7 @@ export default class ComposerActions extends Component {
                   </DButton>
                 </dropdown.item>
               {{/each}}
-              {{#unless data.actions.length}}
+              {{#unless (or data.actions.length this.hasToggles)}}
                 <div class="composer-actions-btn">
                   {{i18n "composer.composer_actions.no_actions_available"}}
                 </div>
