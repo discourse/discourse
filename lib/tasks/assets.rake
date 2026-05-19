@@ -6,7 +6,7 @@ task "assets:precompile:build" do
 
     raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
-    compile_command = "EMBER_ENV=production #{Rails.root}/script/assemble_ember_build.rb"
+    compile_command = "EMBER_ENV=production #{Rails.root.join("script/assemble_ember_build.rb")}"
 
     only_ember_precompile_build_remaining = (ARGV.last == "assets:precompile:build")
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
@@ -67,7 +67,7 @@ rescue StandardError
 end
 
 def assets_path
-  "#{Rails.root}/public/assets"
+  "#{Rails.public_path.join("assets")}"
 end
 
 def gzip(path)
@@ -148,7 +148,7 @@ task "assets:precompile:compress_js": "environment" do
 
   if GlobalSetting.fallback_assets_path.present?
     begin
-      FileUtils.cp_r("#{Rails.root}/public/assets/.", GlobalSetting.fallback_assets_path)
+      FileUtils.cp_r("#{Rails.public_path.join("assets/.")}", GlobalSetting.fallback_assets_path)
     rescue => e
       STDERR.puts "Failed to backup assets to #{GlobalSetting.fallback_assets_path}"
       STDERR.puts e

@@ -4,7 +4,7 @@ require "file_helper"
 
 RSpec.describe FileHelper do
   let(:url) { "https://eviltrout.com/trout.png" }
-  let(:png) { File.read("#{Rails.root}/spec/fixtures/images/cropped.png") }
+  let(:png) { File.read("#{Rails.root.join("spec/fixtures/images/cropped.png")}") }
 
   before do
     stub_request(:any, %r{https://eviltrout.com})

@@ -86,8 +86,8 @@ module Discourse
       rescue Errno::ENOENT
       end
 
-      FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
-      temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
+      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
 
       File.open(temp_destination, "w") do |fd|
         fd.write(contents)
@@ -105,8 +105,8 @@ module Discourse
       rescue Errno::ENOENT, Errno::EINVAL
       end
 
-      FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
-      temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
+      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
       execute_command("ln", "-s", source, temp_destination)
 
       # Remove existing symlink first to prevent FileUtils.mv from moving
@@ -343,7 +343,7 @@ module Discourse
     @plugins = []
     @plugins_by_name = {}
     Plugin::Instance
-      .find_all("#{Rails.root}/plugins")
+      .find_all("#{Rails.root.join("plugins")}")
       .each do |p|
         v = p.metadata.required_version || Discourse::VERSION::STRING
         if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)

@@ -65,7 +65,7 @@ Discourse::Application.configure do
 
   # Catch missing translations during test runs.
   config.i18n.raise_on_missing_translations = true
-  config.i18n.load_path += Dir[Rails.root.join("spec", "support", "locales", "**", "*.yml")]
+  config.i18n.load_path += Dir[Rails.root.join("spec/support/locales/**/*.yml")]
 
   config.after_initialize do
     ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|

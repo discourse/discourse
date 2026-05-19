@@ -261,7 +261,7 @@ module BackupRestore
     end
 
     def local_uploads_directory
-      @local_uploads_directory ||= File.join(Rails.root, "public", Discourse.store.upload_path)
+      @local_uploads_directory ||= Rails.public_path.join(Discourse.store.upload_path).to_s
     end
 
     def has_local_uploads?
@@ -291,7 +291,7 @@ module BackupRestore
           upload_directory,
           failure_message: "Failed to archive uploads.",
           success_status_codes: [0, 1],
-          chdir: File.join(Rails.root, "public"),
+          chdir: Rails.public_path.to_s,
         )
       else
         log "No local uploads found. Skipping archiving of local uploads..."

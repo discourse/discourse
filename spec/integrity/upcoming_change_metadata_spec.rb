@@ -2,8 +2,8 @@
 
 def upcoming_change_setting_files
   [
-    File.join(Rails.root, "config", "site_settings.yml"),
-    *Dir["#{Rails.root}/plugins/*/config/settings.yml"].sort,
+    Rails.root.join("config/site_settings.yml").to_s,
+    *Dir["#{Rails.root.join("plugins/*/config/settings.yml")}"].sort,
   ]
 end
 
@@ -15,7 +15,7 @@ def each_upcoming_change_setting
         next if opts[:upcoming_change].blank?
 
         setting = {
-          file: file.delete_prefix("#{Rails.root}/"),
+          file: file.delete_prefix("#{Rails.root.join("")}"),
           setting_name: setting_name,
           default: default,
           options: opts,

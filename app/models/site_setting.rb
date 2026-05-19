@@ -116,7 +116,7 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
-  load_settings(File.join(Rails.root, "config", "site_settings.yml"))
+  load_settings(Rails.root.join("config/site_settings.yml").to_s)
 
   if Rails.env.test?
     SAMPLE_TEST_PLUGIN =
@@ -127,7 +127,7 @@ class SiteSetting < ActiveRecord::Base
     Discourse.plugins_by_name[SAMPLE_TEST_PLUGIN.name] = SAMPLE_TEST_PLUGIN
 
     load_settings(
-      File.join(Rails.root, "spec", "support", "sample_plugin_site_settings.yml"),
+      Rails.root.join("spec/support/sample_plugin_site_settings.yml").to_s,
       plugin: SAMPLE_TEST_PLUGIN.name,
     )
   end
@@ -136,7 +136,7 @@ class SiteSetting < ActiveRecord::Base
     allowed_plugins = GlobalSetting.plugins_to_load
     plugin_allowed = ->(name) { allowed_plugins.nil? || allowed_plugins.include?(name) }
 
-    Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
+    Dir[Rails.root.join("plugins/*/config/settings.yml").to_s].each do |file|
       plugin_name = file.split("/")[-3]
       load_settings(file, plugin: plugin_name) if plugin_allowed.call(plugin_name)
     end
@@ -144,7 +144,7 @@ class SiteSetting < ActiveRecord::Base
     # Sometimes plugins need to define their own fake site settings for testing
     if Rails.env.test?
       Dir[
-        File.join(Rails.root, "plugins", "*", "spec", "support", "dummy_plugin_site_settings.yml")
+        Rails.root.join("plugins/*/spec/support/dummy_plugin_site_settings.yml").to_s
       ].each do |file|
         plugin_name = file.split("/")[-4]
         load_settings(file, plugin: plugin_name) if plugin_allowed.call(plugin_name)

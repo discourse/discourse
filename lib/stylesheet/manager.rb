@@ -16,7 +16,7 @@ class Stylesheet::Manager
   CACHE_PATH = "tmp/stylesheet-cache"
   private_constant :CACHE_PATH
 
-  MANIFEST_DIR = "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
+  MANIFEST_DIR = "#{Rails.root.join("tmp/cache/assets/#{Rails.env}")}"
   THEME_REGEX = /_theme(_rtl)?\z/
   COLOR_SCHEME_STYLESHEET = "color_definitions"
 
@@ -167,9 +167,9 @@ class Stylesheet::Manager
 
   def self.list_files
     globs = [
-      "#{Rails.root}/app/assets/stylesheets/**/*.*css",
-      "#{Rails.root}/app/assets/images/**/*.*",
-      "#{Rails.root}/lib/stylesheet/*.rb",
+      "#{Rails.root.join("app/assets/stylesheets/**/*.*css")}",
+      "#{Rails.root.join("app/assets/images/**/*.*")}",
+      "#{Rails.root.join("lib/stylesheet/*.rb")}",
     ]
 
     Discourse.plugins.each do |plugin|
@@ -194,7 +194,7 @@ class Stylesheet::Manager
   private_class_method :fs_assets_hash
 
   def self.cache_fullpath
-    path = "#{Rails.root}/#{CACHE_PATH}"
+    path = "#{Rails.root.join("#{CACHE_PATH}")}"
     return path if !Rails.env.test?
     File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
   end

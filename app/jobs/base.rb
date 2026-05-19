@@ -124,7 +124,7 @@ module Jobs
       end
 
       def self.log_path
-        @@log_path ||= "#{Rails.root}/log/sidekiq.log"
+        @@log_path ||= "#{Rails.root.join("log/sidekiq.log")}"
       end
 
       def self.logger

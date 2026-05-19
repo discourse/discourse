@@ -54,7 +54,7 @@ module BackupRestore
       Dir[Rails.root.join(Migration::SafeMigrate.post_migration_path, "**/*.rb")] +
         Dir[Rails.root.join("db/migrate/*.rb")] +
         Dir[Rails.root.join("plugins/**", Migration::SafeMigrate.post_migration_path, "**/*.rb")] +
-        Dir[Rails.root.join("plugins/**", "db/migrate/*.rb")]
+        Dir[Rails.root.join("plugins/**/db/migrate/*.rb")]
     end
 
     protected
