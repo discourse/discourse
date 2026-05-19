@@ -448,6 +448,9 @@ importers:
       '@glimmer/component':
         specifier: ^2.0.0
         version: 2.0.0
+      '@rolldown/pluginutils':
+        specifier: 1.0.0
+        version: 1.0.0
       '@rollup/plugin-babel':
         specifier: github:davidtaylorhq/rollup-plugins#babel-parallel-built&path:/packages/babel
         version: https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/2eaf15b4a514c029f2ed0bc6c868b04002f38991#path:/packages/babel(@babel/core@7.29.0)(rollup@4.59.0)

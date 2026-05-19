@@ -1,8 +1,7 @@
 import { babel } from "@rollup/plugin-babel";
-import { parse as oxcParse } from "oxc-parser";
-import { walk } from "zimmerframe";
+import { and, code, id, include, not, or } from "@rolldown/pluginutils";
 
-const babelRequiredImports = new Set([
+const babelRequiredImports = [
   // Templates
   "@ember/template-compiler",
   "@ember/template-compilation",
@@ -15,39 +14,42 @@ const babelRequiredImports = new Set([
   "@glimmer/env",
   "@ember/debug",
   "@ember/application/deprecations",
-]);
+];
+
+function escapeRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+const importsRegex = new RegExp(
+  babelRequiredImports.map(escapeRegExp).join("|")
+);
+
+const decoratorRegex = /(?<![\w'"`])(?<!\*\s)(?<!\/\/[^\n]*)@\w+/;
+//                      └────┬─────┘└───┬───┘└──────┬──────┘└┬─┘
+//                           │          │           │         │
+//                           │          │           │         └── the `@decorator`
+//                           │          │           └── not on a `//` line comment
+//                           │          └── not a JSDoc tag (`* @param`)
+//                           └── not mid-identifier or inside a string
+
+const nodeModulesPattern = /\/node_modules\//;
 
 export default function maybeBabel(config) {
-  return babel({
-    ...config,
-    async filter(id, code) {
-      const estree = await oxcParse(id, code);
+  const plugin = babel(config);
 
-      let hasDecorators = false;
-      let hasBabelRequiredImport = false;
+  // Extract existing regex filter from babel plugin
+  const extensionRegex = plugin.transform.filter.id;
 
-      walk(
-        estree.program,
-        /* state */ {},
-        {
-          Decorator(_node, { stop }) {
-            hasDecorators = true;
-            stop();
-          },
-          ImportDeclaration(node, { stop }) {
-            if (babelRequiredImports.has(node.source.value)) {
-              hasBabelRequiredImport = true;
-              stop();
-            }
-          },
-        }
-      );
-
-      return (
-        hasDecorators ||
-        hasBabelRequiredImport ||
-        id.includes("decorators-test.js") // only file in core with legacy decorators
-      );
-    },
-  });
+  plugin.transform.filter = [
+    include(
+      and(
+        id(extensionRegex), // Is one of the babel-supported extensions
+        or(
+          code(importsRegex), // Imports one of our listed modules
+          and(not(id(nodeModulesPattern)), code(decoratorRegex)) // Is local app code which uses a decorator
+        )
+      )
+    ),
+  ];
+  return plugin;
 }
