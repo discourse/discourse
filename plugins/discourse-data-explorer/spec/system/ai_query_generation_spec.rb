@@ -16,7 +16,7 @@ RSpec.describe "Data Explorer AI query generation" do
 
       expect(page).to have_css(".query-new")
       expect(page).to have_no_css(".query-mode-switch")
-      expect(page).to have_css(".query-new__manual-form")
+      expect(page).to have_css(".query-new [data-name='name']")
       expect(page).to have_no_css(".query-new__ai-section")
     end
   end
