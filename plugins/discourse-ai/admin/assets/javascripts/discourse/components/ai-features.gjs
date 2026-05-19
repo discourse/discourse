@@ -44,7 +44,7 @@ export default class AiFeatures extends Component {
         label: i18n("discourse_ai.features.nav.enabled"),
       },
       {
-        value: NOTENABLED,
+        value: NOT_ENABLED,
         label: i18n("discourse_ai.features.nav.not_enabled"),
       },
     ];
