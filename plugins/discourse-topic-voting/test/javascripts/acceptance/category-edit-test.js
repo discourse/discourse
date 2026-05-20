@@ -4,6 +4,14 @@ import pretender from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
+function latestCategorySavePayload() {
+  const request = pretender.handledRequests.findLast(
+    ({ method, url }) => method === "PUT" && /^\/categories\/\d+$/.test(url)
+  );
+
+  return JSON.parse(request.requestBody);
+}
+
 acceptance("Category Edit | Topic Voting", function (needs) {
   needs.user();
   needs.settings({ topic_voting_enabled: true });
@@ -13,10 +21,7 @@ acceptance("Category Edit | Topic Voting", function (needs) {
     await formKit().field("custom_fields.enable_topic_voting").toggle();
     await click(".admin-changes-banner .btn-primary");
 
-    const payload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const payload = latestCategorySavePayload();
     assert.true(
       payload.custom_fields.enable_topic_voting,
       "enable_topic_voting should be boolean true"
@@ -32,10 +37,7 @@ acceptance("Category Edit | Topic Voting", function (needs) {
 
     await click(".admin-changes-banner .btn-primary");
 
-    const payload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const payload = latestCategorySavePayload();
     assert.false(
       payload.custom_fields.enable_topic_voting,
       "enable_topic_voting should be boolean false"
@@ -47,10 +49,7 @@ acceptance("Category Edit | Topic Voting", function (needs) {
     await formKit().field("search_priority").select("1");
     await click(".admin-changes-banner .btn-primary");
 
-    const payload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const payload = latestCategorySavePayload();
     assert.strictEqual(
       payload.custom_fields?.enable_topic_voting,
       undefined,

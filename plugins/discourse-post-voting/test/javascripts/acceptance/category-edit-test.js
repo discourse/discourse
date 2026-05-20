@@ -4,6 +4,14 @@ import pretender from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
+function latestCategorySavePayload() {
+  const request = pretender.handledRequests.findLast(
+    ({ method, url }) => method === "PUT" && /^\/categories\/\d+$/.test(url)
+  );
+
+  return JSON.parse(request.requestBody);
+}
+
 acceptance("Category Edit", function (needs) {
   needs.user();
   needs.settings({ post_voting_enabled: true });
@@ -16,10 +24,7 @@ acceptance("Category Edit", function (needs) {
 
     await click(".admin-changes-banner .btn-primary");
 
-    const payload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const payload = latestCategorySavePayload();
     assert.true(payload.custom_fields.create_as_post_voting_default);
   });
 
@@ -31,10 +36,7 @@ acceptance("Category Edit", function (needs) {
 
     await click(".admin-changes-banner .btn-primary");
 
-    const payload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const payload = latestCategorySavePayload();
     assert.true(payload.custom_fields.only_post_voting_in_this_category);
   });
 });

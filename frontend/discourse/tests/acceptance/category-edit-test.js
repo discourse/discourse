@@ -7,6 +7,14 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
+function latestCategorySavePayload() {
+  const request = pretender.handledRequests.findLast(
+    ({ method, url }) => method === "PUT" && /^\/categories\/\d+$/.test(url)
+  );
+
+  return JSON.parse(request.requestBody);
+}
+
 acceptance("Category Edit", function (needs) {
   needs.user();
   needs.settings({ email_in: true, tagging_enabled: true });
@@ -106,10 +114,7 @@ acceptance("Category Edit", function (needs) {
 
     await click(".admin-changes-banner .btn-primary");
 
-    const payload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const payload = latestCategorySavePayload();
     assert.deepEqual(payload.allowed_tags, ["monkey"]);
     assert.deepEqual(payload.allowed_tag_groups, ["TagGroup1"]);
 
@@ -121,10 +126,7 @@ acceptance("Category Edit", function (needs) {
 
     await click(".admin-changes-banner .btn-primary");
 
-    const removePayload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const removePayload = latestCategorySavePayload();
     assert.deepEqual(removePayload.allowed_tags, []);
     assert.deepEqual(removePayload.allowed_tag_groups, []);
   });
@@ -194,6 +196,8 @@ acceptance("Category Edit", function (needs) {
   });
 
   test("Nested subcategory error when saving", async function (assert) {
+    this.siteSettings.max_category_nesting = 3;
+
     await visit("/c/bug/edit");
 
     const categoryChooser = selectKit(".category-chooser.single-select");
@@ -441,10 +445,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { moderators: 1 });
     });
 
@@ -457,10 +458,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { custom_group: 1 });
     });
 
@@ -473,10 +471,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { moderators: 1 });
     });
 
@@ -492,10 +487,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { moderators: 1 });
     });
 
@@ -508,10 +500,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { everyone: 3, staff: 1 });
     });
 
@@ -524,10 +513,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { custom_group: 1 });
     });
   }

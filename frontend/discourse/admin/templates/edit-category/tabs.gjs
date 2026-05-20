@@ -135,6 +135,7 @@ export default class Tabs extends Component {
             (i18n "category.save")
             (i18n "category.create_category")
           }}
+          @saveButtonId="save-category"
           @discardLabel={{i18n "form_kit.reset"}}
           @save={{@controller.formApi.submit}}
           @discard={{@controller.formApi.reset}}
