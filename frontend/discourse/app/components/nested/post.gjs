@@ -52,6 +52,11 @@ export default class NestedPost extends Component {
     }
     const rect = element.getBoundingClientRect();
     window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
+
+    // Defer the event to avoid backtracking re-render errors during the render phase
+    Promise.resolve().then(() => {
+      this.appEvents.trigger("nested-replies:scroll-restored");
+    });
   });
 
   @tracked _childWasCreated = false;
