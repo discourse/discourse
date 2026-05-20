@@ -181,6 +181,18 @@ export default class ProsemirrorTextManipulation {
     );
   }
 
+  applyLink(url) {
+    const { state, dispatch } = this.view;
+    const { from, to, empty } = state.selection;
+    if (empty) {
+      return;
+    }
+    dispatch(
+      state.tr.addMark(from, to, state.schema.marks.link.create({ href: url }))
+    );
+    this.focus();
+  }
+
   addText(sel, text) {
     const doc = this.convertFromMarkdown(text);
 
