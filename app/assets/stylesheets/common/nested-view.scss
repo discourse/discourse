@@ -1,19 +1,11 @@
 @use "lib/viewport";
 
-.nested-topic-layout {
-  // Read in NestedTopicTimeline to drive matchMedia.
-  --nested-timeline-min-width: 925px;
-  display: grid;
-  grid-template-areas: "content timeline";
-  grid-template-columns: auto auto;
-  margin-bottom: var(--below-topic-margin);
-
-  &__content {
-    grid-area: content;
-  }
-}
-
+// ── Top-level nested view ──────────────────────────────────────────
 .nested-view {
+  background: var(--secondary);
+  margin: 0 auto;
+  padding: var(--space-4);
+  border-radius: var(--d-border-radius-large);
   max-width: calc(
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
       var(--topic-avatar-width)
@@ -23,11 +15,6 @@
     margin-bottom: 1em;
     padding-bottom: 0.75em;
     border-bottom: 1px solid var(--primary-low);
-  }
-
-  &__loading-previous,
-  &__loading-next {
-    overflow-anchor: none;
   }
 
   &__title {
@@ -1084,51 +1071,5 @@
 html.footer-nav-visible {
   .nested-view__floating-actions {
     bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom) + 1em);
-  }
-}
-
-.nested-topic-timeline {
-  grid-area: timeline;
-  align-self: start;
-  position: sticky;
-
-  // Matches the sticky offset exactly so the aside doesn't jump between
-  // its natural (scrollY=0) and pinned (scrollY>0) y-positions — the
-  // jump is what made it look like the load-previous spinner was
-  // "pushing" the timeline down.
-  top: calc(var(--header-offset, 60px) + 1.5em);
-  margin-left: 1em;
-  width: 7em;
-  z-index: 50;
-
-  &__endpoint {
-    appearance: none;
-    background: none;
-    border: 0;
-    display: block;
-    font: inherit;
-    color: var(--primary-med-or-secondary-med);
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    text-align: left;
-
-    &:hover,
-    &:focus {
-      color: var(--primary);
-    }
-  }
-
-  &__endpoint--start {
-    margin: var(--space-2) 0;
-  }
-
-  &__endpoint--end {
-    margin-top: var(--space-2);
-  }
-
-  &__scrubber {
-    height: 320px;
-    margin-left: var(--space-half);
   }
 }

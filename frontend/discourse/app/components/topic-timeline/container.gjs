@@ -3,19 +3,18 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { actionDescriptionHtml } from "discourse/components/post-action-description";
-import TimelineScrubber, {
-  SCROLLER_HEIGHT,
-} from "discourse/components/timeline-scrubber";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
 import UserTip from "discourse/components/user-tip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { bind, debounce } from "discourse/lib/decorators";
+import domUtils from "discourse/lib/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
 import { and, not, or } from "discourse/truth-helpers";
@@ -26,7 +25,9 @@ import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import BackButton from "./back-button";
+import Scroller from "./scroller";
 
+export const SCROLLER_HEIGHT = 50;
 const DEFAULT_MIN_SCROLLAREA_HEIGHT = 170;
 const DEFAULT_MAX_SCROLLAREA_HEIGHT = 300;
 const LAST_READ_HEIGHT = 20;
@@ -70,9 +71,16 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked lastReadPercentage = null;
   @tracked lastRead;
   @tracked lastReadTop;
+  @tracked before;
+  @tracked after;
+  @tracked timelineScrollareaStyle;
+  @tracked dragging = false;
   @tracked excerpt = "";
 
   intersectionObserver = null;
+  scrollareaElement = null;
+  scrollerElement = null;
+  dragOffset = null;
 
   constructor() {
     super(...arguments);
@@ -176,6 +184,18 @@ export default class TopicTimelineScrollArea extends Component {
     );
   }
 
+  get style() {
+    return trustHTML(`height: ${this.scrollareaHeight}px`);
+  }
+
+  get beforePadding() {
+    return trustHTML(`height: ${this.before}px`);
+  }
+
+  get afterPadding() {
+    return trustHTML(`height: ${this.after}px`);
+  }
+
   get showDockedButton() {
     return this.site.desktopView && this.hasBackPosition && !this.showButton;
   }
@@ -244,16 +264,16 @@ export default class TopicTimelineScrollArea extends Component {
     );
   }
 
-  get keyboardStep() {
-    return this.total ? 1 / this.total : 0.05;
-  }
-
   get lastReadHeight() {
     return Math.round(this.lastReadPercentage * this.scrollareaHeight);
   }
 
   @bind
   calculatePosition() {
+    this.timelineScrollareaStyle = trustHTML(
+      `height: ${this.scrollareaHeight}px`
+    );
+
     const topic = this.args.model;
     const postStream = topic.postStream;
     this.total = postStream.filteredPostsCount;
@@ -262,10 +282,30 @@ export default class TopicTimelineScrollArea extends Component {
       this.clamp(Math.floor(this.total * this.percentage), 0, this.total) + 1;
 
     this.current = this.clamp(this.scrollPosition, 1, this.total);
-    this.date = this.#dateForPostIndex(this.current);
+    const daysAgo = postStream.closestDaysAgoFor(this.current);
 
+    let date;
+    if (daysAgo === undefined) {
+      const post = postStream.posts.find(
+        (p) => p.id === postStream.stream[this.current]
+      );
+
+      if (post) {
+        date = new Date(post.created_at);
+      }
+    } else if (daysAgo !== null) {
+      date = new Date();
+      date.setDate(date.getDate() - daysAgo || 0);
+    } else {
+      date = null;
+    }
+
+    this.date = date;
+
+    const lastReadNumber = topic.last_read_post_number;
     const lastReadId = topic.last_read_post_id;
-    if (lastReadId && topic.last_read_post_number) {
+
+    if (lastReadId && lastReadNumber) {
       const idx = postStream.stream.indexOf(lastReadId) + 1;
       this.lastRead = idx;
       this.lastReadPercentage = this._percentFor(topic, idx);
@@ -276,6 +316,9 @@ export default class TopicTimelineScrollArea extends Component {
       this.updateScrollPosition(this.current);
     }
 
+    this.before = this.scrollareaRemaining() * this.percentage;
+    this.after = this.scrollareaHeight - this.before - SCROLLER_HEIGHT;
+
     if (this.percentage === null) {
       return;
     }
@@ -284,29 +327,10 @@ export default class TopicTimelineScrollArea extends Component {
       this.lastReadTop = Math.round(
         this.lastReadPercentage * this.scrollareaHeight
       );
-      const scrollerTop =
-        this.percentage * (this.scrollareaHeight - SCROLLER_HEIGHT);
       this.showButton =
-        scrollerTop + SCROLLER_HEIGHT - 5 < this.lastReadTop ||
-        scrollerTop > this.lastReadTop + 25;
+        this.before + SCROLLER_HEIGHT - 5 < this.lastReadTop ||
+        this.before > this.lastReadTop + 25;
     }
-  }
-
-  #dateForPostIndex(index) {
-    const postStream = this.args.model.postStream;
-    const daysAgo = postStream.closestDaysAgoFor(index);
-    if (daysAgo === undefined) {
-      const post = postStream.posts.find(
-        (p) => p.id === postStream.stream[index]
-      );
-      return post ? new Date(post.created_at) : null;
-    }
-    if (daysAgo !== null) {
-      const date = new Date();
-      date.setDate(date.getDate() - daysAgo || 0);
-      return date;
-    }
-    return null;
   }
 
   @debounce(50)
@@ -343,8 +367,50 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   @action
-  handleCommit(progress) {
-    this.percentage = this.clamp(progress);
+  updatePercentage(e) {
+    e.preventDefault();
+
+    const currentCursorY = e.pageY || e.touches[0].pageY;
+
+    const desiredScrollerCentre = currentCursorY - this.dragOffset;
+
+    const areaTop = domUtils.offset(this.scrollareaElement).top;
+    const areaHeight = this.scrollareaElement.offsetHeight;
+    const scrollerHeight = this.scrollerElement.offsetHeight;
+
+    // The range of possible positions for the centre of the scroller
+    const scrollableTop = areaTop + scrollerHeight / 2;
+    const scrollableHeight = areaHeight - scrollerHeight;
+
+    this.percentage = this.clamp(
+      parseFloat(desiredScrollerCentre - scrollableTop) / scrollableHeight
+    );
+    this.commit();
+  }
+
+  @bind
+  didStartDrag(event) {
+    const y = event.pageY || event.touches[0].pageY;
+
+    const scrollerCentre =
+      domUtils.offset(this.scrollerElement).top +
+      this.scrollerElement.offsetHeight / 2;
+
+    this.dragOffset = y - scrollerCentre;
+    this.dragging = true;
+  }
+
+  @bind
+  dragMove(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.updatePercentage(event);
+  }
+
+  @bind
+  didEndDrag() {
+    this.dragging = false;
+    this.dragOffset = null;
     this.commit();
   }
 
@@ -359,18 +425,6 @@ export default class TopicTimelineScrollArea extends Component {
   @action
   goBack() {
     this.args.jumpToIndex(this.lastRead);
-  }
-
-  @action
-  jumpToStart(event) {
-    event.preventDefault();
-    this.handleCommit(0);
-  }
-
-  @action
-  jumpToEnd(event) {
-    event.preventDefault();
-    this.handleCommit(1);
   }
 
   dockCheck() {
@@ -412,15 +466,21 @@ export default class TopicTimelineScrollArea extends Component {
   commit() {
     this.calculatePosition();
 
-    if (this.current === this.scrollPosition) {
-      this.args.jumpToIndex(this.current);
-    } else {
-      this.args.jumpEnd();
+    if (!this.dragging) {
+      if (this.current === this.scrollPosition) {
+        this.args.jumpToIndex(this.current);
+      } else {
+        this.args.jumpEnd();
+      }
     }
   }
 
   clamp(p, min = 0.0, max = 1.0) {
     return Math.max(Math.min(p, max), min);
+  }
+
+  scrollareaRemaining() {
+    return this.scrollareaHeight - SCROLLER_HEIGHT;
   }
 
   _percentFor(topic, postIndex) {
@@ -439,23 +499,13 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   @action
-  currentAt(progress) {
-    const total = this.total;
-    if (!total) {
-      return 1;
-    }
-    const pos = this.clamp(Math.floor(total * progress), 0, total) + 1;
-    return this.clamp(pos, 1, total);
+  registerScrollarea(element) {
+    this.scrollareaElement = element;
   }
 
   @action
-  dateAt(progress) {
-    return this.#dateForPostIndex(this.currentAt(progress));
-  }
-
-  @action
-  formatTimelineDate(date) {
-    return timelineDate(date);
+  registerScroller(element) {
+    this.scrollerElement = element;
   }
 
   <template>
@@ -541,10 +591,10 @@ export default class TopicTimelineScrollArea extends Component {
       <div class="timeline-scrollarea-wrapper">
         <div class="timeline-date-wrapper">
           <a
+            {{on "click" this.updatePercentage}}
             href={{@model.firstPostUrl}}
             title={{i18n "topic_entrance.jump_top_button_title"}}
             class="start-date"
-            {{on "click" this.jumpToStart}}
           >
             <span>
               {{this.startDate}}
@@ -552,54 +602,51 @@ export default class TopicTimelineScrollArea extends Component {
           </a>
         </div>
 
-        <TimelineScrubber
-          class="topic-timeline-scrubber"
-          @progress={{this.percentage}}
-          @height={{this.scrollareaHeight}}
-          @ariaLabel={{i18n "topic.progress.title"}}
-          @ariaValueText={{i18n
-            "topic.timeline.replies_short"
-            current=this.current
-            total=this.total
-          }}
-          @keyboardStep={{this.keyboardStep}}
-          @onCommit={{this.handleCommit}}
+        <div
+          class="timeline-scrollarea"
+          style={{this.timelineScrollareaStyle}}
+          {{didInsert this.registerScrollarea}}
         >
-          <:track>
-            {{#if (and this.hasBackPosition this.showButton)}}
-              <div class="timeline-last-read" style={{this.lastReadStyle}}>
-                {{dIcon "minus" class="progress"}}
-                <BackButton @onGoBack={{this.goBack}} />
-              </div>
-            {{/if}}
-          </:track>
-          <:handle as |progress dragging|>
-            <div class="timeline-replies">
-              {{i18n
-                "topic.timeline.replies_short"
-                current=(this.currentAt progress)
-                total=this.total
-              }}
-            </div>
-            {{#let (this.dateAt progress) as |scrubDate|}}
-              {{#if scrubDate}}
-                <div class="timeline-ago">
-                  {{this.formatTimelineDate scrubDate}}
-                </div>
-              {{/if}}
-            {{/let}}
-            {{! Hide while dragging so it doesn't fight the moving handle. }}
-            {{#if (and this.showDockedButton (not dragging))}}
+          {{! eslint-disable ember/template-no-invalid-interactive }}
+          <div
+            {{on "click" this.updatePercentage}}
+            style={{this.beforePadding}}
+            class="timeline-padding"
+          ></div>
+
+          <Scroller
+            @current={{this.current}}
+            @total={{this.total}}
+            @onGoBack={{this.onGoBack}}
+            @fullscreen={{@fullscreen}}
+            @showDockedButton={{this.showDockedButton}}
+            @date={{this.date}}
+            @didStartDrag={{this.didStartDrag}}
+            @dragMove={{this.dragMove}}
+            @didEndDrag={{this.didEndDrag}}
+            {{didInsert this.registerScroller}}
+          />
+
+          {{! eslint-disable ember/template-no-invalid-interactive }}
+          <div
+            {{on "click" this.updatePercentage}}
+            style={{this.afterPadding}}
+            class="timeline-padding"
+          ></div>
+
+          {{#if (and this.hasBackPosition this.showButton)}}
+            <div class="timeline-last-read" style={{this.lastReadStyle}}>
+              {{dIcon "minus" class="progress"}}
               <BackButton @onGoBack={{this.goBack}} />
-            {{/if}}
-          </:handle>
-        </TimelineScrubber>
+            </div>
+          {{/if}}
+        </div>
 
         <div class="timeline-date-wrapper">
           <a
+            {{on "click" this.updatePercentage}}
             href={{@model.lastPostUrl}}
             class="now-date"
-            {{on "click" this.jumpToEnd}}
           >
             <span>
               {{dAgeWithTooltip this.nowDate this.nowDateOptions}}
