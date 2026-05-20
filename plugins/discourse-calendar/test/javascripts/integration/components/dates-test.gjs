@@ -217,7 +217,7 @@ module("Integration | Component | Dates", function (hooks) {
       assert
         .dom(".event-dates")
         .hasText(
-          "Mon, Oct 6 10:00 AM → 11:00 AM (Brisbane)",
+          "Mon, Oct 6 12:00 AM → 1:00 AM (UTC)",
           "`endsAt` should show time only"
         );
     });
