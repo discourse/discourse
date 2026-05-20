@@ -380,6 +380,7 @@ after_initialize do
       DiscourseSolved::SolvedTopic
         .joins(topic_answers: :post)
         .where(topic_id: topics.map(&:id))
+        .distinct
         .pluck("discourse_solved_solved_topics.topic_id", "posts.user_id")
         .each_with_object({}) { |(topic_id, user_id), h| (h[topic_id] ||= []) << user_id }
 
