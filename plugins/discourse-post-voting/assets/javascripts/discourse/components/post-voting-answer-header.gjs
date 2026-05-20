@@ -14,6 +14,13 @@ export default class PostVotingAnswerHeader extends Component {
       return false;
     }
 
+    if (
+      !args.topicPageQueryParams ||
+      !args.actions?.updateTopicPageQueryParams
+    ) {
+      return false;
+    }
+
     const repliesToPostNumber =
       args.topicPageQueryParams.replies_to_post_number;
     const positionInStream =
@@ -36,7 +43,7 @@ export default class PostVotingAnswerHeader extends Component {
 
   get sortedByActivity() {
     return (
-      this.args.outletArgs.topicPageQueryParams.filter ===
+      this.args.outletArgs.topicPageQueryParams?.filter ===
       ORDER_BY_ACTIVITY_FILTER
     );
   }
