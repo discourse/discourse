@@ -35,7 +35,6 @@ export default class NestedPost extends Component {
   @service capabilities;
   @service currentUser;
   @service modal;
-  @service nestedRootElements;
   @service site;
   @service siteSettings;
 
@@ -58,15 +57,6 @@ export default class NestedPost extends Component {
     Promise.resolve().then(() => {
       this.appEvents.trigger("nested-replies:scroll-restored");
     });
-  });
-
-  registerRoot = modifier((element) => {
-    if (this.args.depth !== 0) {
-      return;
-    }
-    const postNumber = this.args.post?.post_number;
-    this.nestedRootElements.register(postNumber, element);
-    return () => this.nestedRootElements.unregister(postNumber);
   });
 
   @tracked _childWasCreated = false;
@@ -357,7 +347,6 @@ export default class NestedPost extends Component {
       }}
       style={{this.cloakingData.style}}
       {{this.restoreScroll}}
-      {{this.registerRoot}}
       {{! At depth 0, register wrapper with cloaking observer (captures full subtree height).
           At deeper depths, register as trackOnly (viewport tracking only, no cloaking). }}
       {{@registerPost @post trackOnly=(not this.isRoot)}}

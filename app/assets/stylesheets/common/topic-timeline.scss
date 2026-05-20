@@ -152,13 +152,10 @@
         border-left: none;
         max-width: 120px;
 
-        // Fullscreen mode renders the rail on the right edge; flip the
-        // pill so the grip sits against it.
         .timeline-scroller {
           position: relative;
           margin-right: -1.5em;
           padding-right: 1.5em;
-          flex-direction: row-reverse;
           justify-content: flex-end;
 
           .timeline-scroller-content {
@@ -171,8 +168,16 @@
           }
 
           .timeline-handle {
+            float: none;
             width: 11px;
+            position: relative;
+            right: -6px;
           }
+        }
+
+        .timeline-padding {
+          margin-left: 0;
+          margin-right: -1em;
         }
       }
     }
@@ -232,8 +237,79 @@
       color: var(--primary-med-or-secondary-med);
     }
 
-    .topic-timeline-scrubber .back-button {
-      margin-top: var(--space-4);
+    .timeline-scrollarea {
+      margin-top: 0.5em;
+      margin-left: 0.5em;
+      border-left: 1px solid var(--topic-timeline-border-color);
+      position: relative;
+      max-width: 100%;
+      transform: translateZ(0);
+    }
+
+    .timeline-padding {
+      transition: height 0.15s ease-out;
+      cursor: pointer;
+
+      // this element has a click event
+      // the negative margin lets this element overlap
+      // the scrollarea's vertical track and thus it
+      // enables taps on the track to work
+      margin-left: -1em;
+
+      .widget-dragging & {
+        transition: none;
+      }
+
+      .dragging & {
+        transition: none;
+      }
+    }
+
+    .timeline-handle {
+      border-radius: 0.8em;
+      width: 0.35em;
+      background-color: var(--topic-timeline-handle-color);
+      height: 100%;
+      float: left;
+      flex-shrink: 0;
+      z-index: z("base") + 1;
+      outline: 1px solid transparent;
+      margin-left: 0.5px;
+    }
+
+    .timeline-scroller-content {
+      box-sizing: border-box;
+      max-width: 100%;
+      overflow: hidden;
+      padding-left: var(--space-4);
+      position: absolute; // prevents text length from impacting width
+      max-height: 3em; // this hides the date when the count + date would wrap to more than 2 lines
+    }
+
+    .timeline-ago {
+      color: var(--primary-med-or-secondary-med);
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .timeline-scroller {
+      @include unselectable;
+      margin-left: -0.22em;
+      cursor: ns-resize;
+      display: flex;
+      align-items: center;
+
+      .back-button {
+        margin-top: var(--space-4);
+      }
+    }
+
+    .timeline-replies {
+      overflow: hidden;
+      overflow-wrap: break-word;
+      font-weight: bold;
     }
 
     .timeline-last-read {

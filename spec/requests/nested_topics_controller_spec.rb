@@ -269,7 +269,7 @@ RSpec.describe NestedTopicsController, type: :request do
     end
 
     it "paginates with has_more_roots" do
-      (NestedReplies::TreeLoader::ROOTS_PER_PAGE + 1).times do
+      NestedReplies::TreeLoader::ROOTS_PER_PAGE.times do
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       end
       sign_in(user)

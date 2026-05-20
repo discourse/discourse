@@ -1,28 +1,6 @@
-import { click, currentURL, triggerEvent, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-
-async function scrubTimelineTo(progress) {
-  const rail = document.querySelector(".timeline-scrollarea");
-  const rect = rail.getBoundingClientRect();
-  const scroller = rail.querySelector(".timeline-scroller");
-  const scrollerHeight = scroller.getBoundingClientRect().height || 50;
-  const travel = Math.max(1, rect.height - scrollerHeight);
-  const clientY = rect.top + scrollerHeight / 2 + travel * progress;
-
-  await triggerEvent(rail, "pointerdown", {
-    clientY,
-    pointerId: 1,
-    button: 0,
-    buttons: 1,
-  });
-  await triggerEvent(rail, "pointerup", {
-    clientY,
-    pointerId: 1,
-    button: 0,
-    buttons: 0,
-  });
-}
 
 acceptance("Glimmer Topic Timeline", function (needs) {
   needs.user({
@@ -385,11 +363,9 @@ acceptance("Glimmer Topic Timeline", function (needs) {
     assert.dom("[data-post-number='11']").exists();
   });
 
-  test("clicking the timeline rail updates the position", async function (assert) {
+  test("clicking the timeline padding updates the position", async function (assert) {
     await visit("/t/internationalization-localization/280/2");
-    // The rail is now a single pointer surface (no padding divs);
-    // clicking anywhere on it commits a jump.
-    await scrubTimelineTo(0.75);
+    await click(".timeline-scrollarea .timeline-padding");
     assert.false(
       currentURL().includes("/280/2"),
       "The position of the currently viewed post has been updated from it's initial position"
