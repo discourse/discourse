@@ -325,6 +325,21 @@ acceptance("Param Input", function (needs) {
       });
     });
 
+    server.post("/admin/plugins/discourse-data-explorer/queries/3/run", () => {
+      return helper.response({
+        success: true,
+        errors: [],
+        duration: 1.0,
+        result_count: 1,
+        params: { months_ago: "1" },
+        columns: ["?column?"],
+        default_limit: 1000,
+        relations: {},
+        colrender: {},
+        rows: [[1]],
+      });
+    });
+
     server.get("/admin/plugins/discourse-data-explorer/queries/4", () => {
       return helper.response({
         query: {
@@ -407,8 +422,7 @@ acceptance("Param Input", function (needs) {
       ".query-editor .ace_text-input",
       "-- [params]\n-- int :months_ago = 1\n\nSELECT 1"
     );
-    await click(".query-editor .ace_text-input"); // enables `Save Changes` button
-    await click(".query-action-bar__left .btn-save-query");
+    await click(".query-run-split__primary");
     assert.dom(".query-params input").exists();
   });
 

@@ -301,11 +301,14 @@ acceptance("Run Query", function (needs) {
 
     await click(".query-run-split__primary");
 
+    assert.dom("canvas").exists("the chart was rendered by default");
+
+    await click(".query-results-modes input[value='table']");
+
     assert
       .dom("div.query-results table tbody tr")
       .exists({ count: 2 }, "the table with query results was rendered");
 
-    assert.dom("canvas").exists("the chart was rendered");
     assert
       .dom(".query-results-modes")
       .exists("the chart/table toggle buttons were rendered");
@@ -357,7 +360,7 @@ acceptance("Run Query", function (needs) {
         }
       });
 
-    await click(".result-header .query-result-download-buttons");
+    await click(".query-action-bar__right .query-result-download-buttons");
     await click(".query-result-export__results-json");
 
     await finishedForm;
@@ -417,9 +420,7 @@ acceptance("Run Query", function (needs) {
   test("automatically runs query when run query parameter is present", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/2?run");
 
-    assert
-      .dom("div.query-results table tbody tr")
-      .exists({ count: 1 }, "query results should be displayed");
+    assert.dom("div.query-results").exists("query results should be displayed");
   });
 
   test("automatically runs query when run query parameter is present on group report route", async function (assert) {

@@ -37,7 +37,9 @@ module("Integration | Component | query-result", function (hooks) {
       );
 
     assert.dom("div.result-about").exists("renders a query summary");
-    assert.dom("canvas").exists("renders the chart above the table");
+    assert.dom("canvas").exists("renders the chart by default");
+
+    await click(".query-results-modes input[value='table']");
 
     assert.dom("table thead tr th:nth-child(1)").hasText("user_name");
     assert.dom("table thead tr th:nth-child(2)").hasText("like_count");
@@ -136,7 +138,7 @@ module("Integration | Component | query-result", function (hooks) {
 module("Integration | Component | query-result | chart", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("renders the chart above the table for chartable results", async function (assert) {
+  test("renders the chart by default and the toggle for chartable results", async function (assert) {
     const content = {
       colrender: [],
       result_count: 2,
@@ -149,11 +151,14 @@ module("Integration | Component | query-result | chart", function (hooks) {
 
     await render(<template><QueryResult @content={{content}} /></template>);
 
-    assert.dom("canvas").exists("the chart was rendered");
-    assert.dom("table").exists("the table was rendered");
+    assert.dom("canvas").exists("the chart was rendered by default");
     assert
       .dom(".query-results-modes")
-      .exists("the chart/table toggle buttons are rendered");
+      .exists("the chart/table toggle is rendered");
+
+    await click(".query-results-modes input[value='table']");
+
+    assert.dom("table").exists("table renders after switching view");
   });
 
   test("renders a chart when data has two columns and numbers in the second column", async function (assert) {
