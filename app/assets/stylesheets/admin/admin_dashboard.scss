@@ -458,6 +458,10 @@ h1 {
     opacity: 0.55;
   }
 
+  &__subintro {
+    max-width: none;
+  }
+
   &__headline {
     margin: 0;
     font-size: var(--font-up-3-rem);
@@ -475,6 +479,7 @@ h1 {
     gap: var(--space-1);
     font-size: inherit;
     line-height: inherit;
+    white-space: nowrap;
 
     &.--up {
       color: var(--success);
