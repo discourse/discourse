@@ -39,6 +39,7 @@ en:
     enable_solved_tags: "Tags that will allow users to select solutions."
     prioritize_solved_topics_in_search: "Prioritize solved topics in search results."
     enable_support_category_type_setup: "Enables the Support category type option during category creation setup. Note that 'enable simplified category creation' must be enabled for this to take effect."
+    enable_solved_shared_issues: "Adds a “Me too” button to unsolved topics in support categories, letting members signal they’re experiencing the same issue and opt into notifications about the topic's solution. Note: You must enable the “Enable support type category setup” upcoming change to use this feature."
     show_who_marked_solved: "Show who marked the topic as solved. This is indicated in the topic's first post, and the answer post in a tooltip."
 
     keywords:

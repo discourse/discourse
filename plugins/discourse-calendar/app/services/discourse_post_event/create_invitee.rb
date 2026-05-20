@@ -8,6 +8,7 @@ module DiscoursePostEvent
       attribute :event_id, :integer
       attribute :status, :symbol
       attribute :user_id, :integer
+      attribute :recurring, :boolean, default: false
 
       validates :event_id, presence: true
       validates :status, inclusion: { in: Invitee.statuses.keys }
@@ -50,7 +51,7 @@ module DiscoursePostEvent
     end
 
     def create_invitee(user:, event:, params:)
-      Invitee.create_attendance!(user.id, event.id, params.status)
+      Invitee.create_attendance!(user.id, event.id, params.status, recurring: params.recurring)
     end
   end
 end

@@ -63,6 +63,25 @@ enable_your_feature_name:
 
 **Optional:** Add `learn_more_url: "https://..."` for documentation link.
 
+**Optional:** Add `allow_enabled_for:` to restrict which "Enabled for" dropdown options the admin can choose. Accepts any subset of `everyone`, `staff`, `specific_groups`. "No one" is always available. If `everyone` is included it must be the only value. Omit the key to allow all options (the default).
+
+```yaml
+upcoming_change:
+  status: "experimental"
+  impact: "feature,all_members"
+  allow_enabled_for:
+    - staff
+    - specific_groups
+```
+
+| Value | Dropdown options |
+|---|---|
+| *(omitted)* | No one, Everyone, Staff, Specific group(s) |
+| `[everyone]` | No one, Everyone |
+| `[staff]` | No one, Staff |
+| `[specific_groups]` | No one, Specific group(s) |
+| `[staff, specific_groups]` | No one, Staff, Specific group(s) |
+
 ### 2. Add Translation
 
 Add to `config/locales/server.en.yml` under `site_settings:`:

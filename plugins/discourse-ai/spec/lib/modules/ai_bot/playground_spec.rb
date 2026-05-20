@@ -385,7 +385,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
 
         content = prompt.messages[1][:content]
         # this is fragile by design, mainly so the example can be ultra clear
-        expected = (<<~TEXT).strip
+        expected = <<~TEXT.strip
           You are replying inside a Discourse chat channel. Here is a summary of the conversation so far:
           {{{
           #{user.username}: (a magic thread)
@@ -691,7 +691,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         # 1. we set context to 4
         # 2. however PromptMessagesBuilder will enforce rules of starting with :user and ending with it
         # so one of the model messages is dropped
-        expected = (<<~TEXT).strip
+        expected = <<~TEXT.strip
           user: request 3
           model: response 3
           user: Hello
@@ -1234,7 +1234,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     after { DiscourseAi::AiBot::PostStreamer.on_callback = nil }
 
     it "should be able to cancel a completion halfway through" do
-      body = (<<~STRING).strip
+      body = <<~STRING.strip
       event: message_start
       data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
 

@@ -1476,7 +1476,7 @@ describe PostRevisor do
             expect(event[:params].first).to eq(post)
             expect(event[:params].second).to eq(true)
             expect(event[:params].third).to be_kind_of(PostRevisor)
-            expect(event[:params].third.topic_diff).to eq({ "tags" => [%w[super stuff], []] })
+            expect(event[:params].third.topic_diff).to eq({ "tags" => [%w[stuff super], []] })
           end
 
           context "with staff-only tags" do

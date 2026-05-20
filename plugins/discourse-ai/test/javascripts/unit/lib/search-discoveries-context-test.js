@@ -41,4 +41,29 @@ module("Unit | Lib | search-discoveries-context", function () {
       isScopedSearch({ searchContext: { type: "private_messages" } })
     );
   });
+
+  test("returns true when the term filters to PMs", function (assert) {
+    ["in:messages", "in:personal", "in:personal-direct", "in:all-pms"].forEach(
+      (filter) => {
+        assert.true(
+          isScopedSearch({ activeGlobalSearchTerm: `keyword ${filter}` }),
+          `${filter} scopes the search to PMs`
+        );
+      }
+    );
+
+    assert.true(
+      isScopedSearch({ activeGlobalSearchTerm: "keyword IN:Messages" }),
+      "PM filter detection is case-insensitive"
+    );
+  });
+
+  test("returns false for non-PM `in:` filters", function (assert) {
+    assert.false(
+      isScopedSearch({ activeGlobalSearchTerm: "keyword in:title" })
+    );
+    assert.false(
+      isScopedSearch({ activeGlobalSearchTerm: "keyword in:bookmarks" })
+    );
+  });
 });

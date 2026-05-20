@@ -3,7 +3,13 @@
 module DiscourseSolved::TopicExtension
   extend ActiveSupport::Concern
 
-  prepended { has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy }
+  prepended do
+    has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy
+    has_many :shared_issues,
+             class_name: "DiscourseSolved::SharedIssue",
+             foreign_key: :topic_id,
+             dependent: :delete_all
+  end
 
   def solved_auto_close_hours
     hours = category&.solved_auto_close_hours || 0
@@ -15,7 +21,7 @@ module DiscourseSolved::TopicExtension
     return unless answer_post = solved.answer_post
 
     answer_post_user = answer_post.user || Discourse.system_user
-    accepter = solved.accepter || self.user || Discourse.system_user
+    accepter = solved.accepter || user || Discourse.system_user
 
     excerpt = SiteSetting.solved_quote_length > 0 ? answer_post.cooked : nil
 

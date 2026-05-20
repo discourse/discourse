@@ -103,7 +103,7 @@ after_initialize do
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
 
-  register_seedfu_fixtures(Rails.root.join("plugins", "discourse-ai", "db", "fixtures", "agents"))
+  register_seedfu_fixtures(Rails.root.join("plugins/discourse-ai/db/fixtures/agents"))
 
   [
     DiscourseAi::Embeddings::EntryPoint.new,
@@ -140,6 +140,11 @@ after_initialize do
     Guardian.prepend DiscourseAi::GuardianExtensions
     Topic.prepend DiscourseAi::TopicExtensions
     Post.prepend DiscourseAi::PostExtensions
+  end
+
+  # AI bots reply via `skip_guardian: true`, so the reachability warning is misleading.
+  register_modifier(:composer_mention_user_reason) do |reason, user|
+    DiscourseAi::AiBot::EntryPoint.all_bot_ids.include?(user.id) ? nil : reason
   end
 
   register_modifier(:post_should_secure_uploads?) do |_, _, topic|

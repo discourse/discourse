@@ -73,9 +73,10 @@ export default class TagUtils extends Service {
     input = input
       .trim()
       .replace(/\s+/g, "-")
-      .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/g, "")
+      .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=%\\`^\s|\{\}"<>]+/g, "")
       .replace(/-{2,}/g, "-")
-      .substring(0, this.siteSettings.max_tag_length);
+      .substring(0, this.siteSettings.max_tag_length)
+      .replace(/^\.+|\.+$/g, "");
 
     if (this.siteSettings.force_lowercase_tags) {
       input = input.toLowerCase();

@@ -10,8 +10,8 @@ module DiscourseReactions
     has_many :users, through: :reaction_users
     belongs_to :post
 
-    scope :positive, -> { where(reaction_value: self.positive_reactions) }
-    scope :negative_or_neutral, -> { where(reaction_value: self.negative_or_neutral_reactions) }
+    scope :positive, -> { where(reaction_value: positive_reactions) }
+    scope :negative_or_neutral, -> { where(reaction_value: negative_or_neutral_reactions) }
     scope :by_user,
           ->(user) do
             joins(:reaction_users).where(discourse_reactions_reaction_users: { user_id: user.id })
@@ -58,12 +58,12 @@ end
 # Table name: discourse_reactions_reactions
 #
 #  id                   :bigint           not null, primary key
-#  post_id              :integer
 #  reaction_type        :integer
-#  reaction_value       :string
 #  reaction_users_count :integer
+#  reaction_value       :string
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  post_id              :integer
 #
 # Indexes
 #

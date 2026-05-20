@@ -35,7 +35,7 @@ module PostGuardian
     taken = opts[:taken_actions].try(:keys).to_a
     post_action_type_view = opts[:post_action_type_view] || PostActionTypeView.new
     is_flag =
-      if (opts[:notify_flag_types] && opts[:additional_message_types])
+      if opts[:notify_flag_types] && opts[:additional_message_types]
         opts[:notify_flag_types][action_key] || opts[:additional_message_types][action_key]
       else
         post_action_type_view.notify_flag_types[action_key] ||
@@ -63,7 +63,7 @@ module PostGuardian
         return false if is_flag && post.hidden?
 
         # post made by staff, but we don't allow staff flags
-        return false if is_flag && (!SiteSetting.allow_flagging_staff?) && post&.user&.staff?
+        return false if is_flag && !SiteSetting.allow_flagging_staff? && post&.user&.staff?
 
         if is_flag && post_action_type_view.disabled_flag_types.keys.include?(action_key)
           return false
@@ -158,19 +158,21 @@ module PostGuardian
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
-    if is_in_edit_post_groups? || is_category_group_moderator?(post.topic&.category)
-      return can_create_post?(post.topic)
+    # Staff in edit groups skip visibility (e.g. deleted topics); non-staff must pass it
+    if is_in_edit_post_groups?
+      return can_create_post?(post.topic) if is_staff?
+      return can_create_post?(post.topic) if can_see_post_topic?(post)
+      return false
     end
     return false if !can_see_post_topic?(post)
+    return can_create_post?(post.topic) if is_category_group_moderator?(post.topic&.category)
 
     return false if post.topic&.archived? || post.user_deleted || post.deleted_at
 
     # Editing a shared draft.
-    if (
-         can_see_post?(post) && can_create_post?(post.topic) &&
-           post.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
-           can_see_category?(post.topic.category) && can_see_shared_draft?
-       )
+    if can_see_post?(post) && can_create_post?(post.topic) &&
+         post.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
+         can_see_category?(post.topic.category) && can_see_shared_draft?
       return true
     end
 
@@ -232,10 +234,7 @@ module PostGuardian
 
     # You can delete your own posts
     if is_my_own?(post)
-      if (
-           SiteSetting.max_post_deletions_per_minute < 1 ||
-             SiteSetting.max_post_deletions_per_day < 1
-         )
+      if SiteSetting.max_post_deletions_per_minute < 1 || SiteSetting.max_post_deletions_per_day < 1
         return false
       end
       return true if !post.user_deleted?
@@ -260,14 +259,11 @@ module PostGuardian
     return false unless post
 
     # PERF, vast majority of the time topic will not be deleted
-    topic = (post.topic || Topic.with_deleted.find(post.topic_id)) if post.topic_id
+    topic = post.topic || Topic.with_deleted.find(post.topic_id) if post.topic_id
     return true if can_moderate_topic?(topic) && !!post.deleted_at
 
     if is_my_own?(post)
-      if (
-           SiteSetting.max_post_deletions_per_minute < 1 ||
-             SiteSetting.max_post_deletions_per_day < 1
-         )
+      if SiteSetting.max_post_deletions_per_minute < 1 || SiteSetting.max_post_deletions_per_day < 1
         return false
       end
       return true if post.user_deleted && !post.deleted_at
@@ -394,8 +390,12 @@ module PostGuardian
     is_staff?
   end
 
+  def can_view_raw_emails?
+    @user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
+  end
+
   def can_view_raw_email?(post)
-    post && @user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
+    post && can_view_raw_emails?
   end
 
   def can_unhide?(post)

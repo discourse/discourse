@@ -272,6 +272,8 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label={{button.label}}
             @translatedLabel={{button.translatedLabel}}
+            @title={{button.title}}
+            @translatedTitle={{button.translatedTitle}}
             @icon={{button.icon}}
             class={{dConcatClass "btn btn-transparent" button.className}}
             @action={{fn this.extraAction button}}

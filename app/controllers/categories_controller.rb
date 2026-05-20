@@ -185,13 +185,20 @@ class CategoriesController < ApplicationController
 
       if category_type.present? &&
            UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
+        type_class = Categories::TypeRegistry.get(category_type.to_sym)
+        allowed_setting_keys = type_class&.configuration_schema_keys(:category_settings) || []
+        type_settings = params[:category_type_settings]&.slice(*allowed_setting_keys)&.permit!
+
         Categories::Configure.call(
           guardian:,
           params: {
             category_id: @category.id,
             category_type:,
             site_setting_configuration_values: params[:category_type_site_settings],
-            category_configuration_values: category_params[:custom_fields],
+            category_configuration_values: [
+              category_params[:custom_fields],
+              type_settings,
+            ].compact.reduce(:merge),
           },
         ) do |result|
           on_failed_policy(:type_is_available) do
@@ -238,6 +245,26 @@ class CategoriesController < ApplicationController
       if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
         manage_category_types(cat, pending_custom_fields || {})
         cat.reload
+      end
+
+      if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user) &&
+           params[:category_type_settings].present?
+        # Re-run configure_category for each matching type so per-type
+        # category_settings (e.g. events_calendar_default_view) are persisted on
+        # edit, not just on create. Each type only sees its own keys so it
+        # cannot be invoked spuriously for other types' settings.
+        cat.category_types.each_key do |type_id|
+          type_class = Categories::TypeRegistry.get(type_id)
+          next unless type_class
+
+          type_values =
+            params[:category_type_settings].slice(
+              *type_class.configuration_schema_keys(:category_settings),
+            )
+          next if type_values.empty?
+
+          type_class.configure_category(cat, guardian:, configuration_values: type_values)
+        end
       end
 
       merge_pending_custom_fields!(cat, pending_custom_fields)

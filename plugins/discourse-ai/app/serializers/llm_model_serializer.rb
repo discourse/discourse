@@ -40,7 +40,7 @@ class LlmModelSerializer < ApplicationSerializer
   def used_by
     llm_usage =
       (
-        if (scope && scope[:llm_usage])
+        if scope && scope[:llm_usage]
           scope[:llm_usage]
         else
           DiscourseAi::Configuration::LlmEnumerator.global_usage

@@ -411,7 +411,7 @@ en:
       <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
     not_found_template_link: |
       <p>This invitation to <a href="%{base_url}">%{site_name}</a> can no longer be redeemed. Please ask the person who invited you to send you a new invitation.</p>
-    existing_user_cannot_redeem: "This invitation cannot be redeemed. Please ask the person who invited you to send you a new invitation."
+    existing_user_cannot_redeem: "This invitation isn't available for your email address. Sign in with another account, or ask for a new invitation."
     existing_user_already_redemeed: "You have already redeemed this invite link."
     user_exists: "There's no need to invite <b>%{email}</b>, they already have an account!"
     invite_exists: "You already invited <b>%{email}</b>."
@@ -1422,9 +1422,9 @@ en:
     site_traffic:
       title: "Site traffic"
       xaxis:
-        page_view_anon_browser: "Pageviews (anonymous)"
-        page_view_logged_in_browser: "Pageviews (logged in)"
-        page_view_crawler: "Known crawlers"
+        page_view_anon_browser: "Anonymous"
+        page_view_logged_in_browser: "Logged in"
+        page_view_crawler: "Crawlers"
         page_view_embed: "Embedded pageviews"
         page_view_other: "Other traffic"
       yaxis: "Day"
@@ -1875,7 +1875,7 @@ en:
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A list of custom email headers"
-    email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
+    email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>Customizing specific system email templates on Meta</a>."
     simple_email_subject: "When enabled, the email subject lines will be more concise, containing only the essential information. This makes it easier for users to quickly understand the purpose of the email at a glance."
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
     enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up 2FA."
@@ -2070,7 +2070,7 @@ en:
     google_oauth2_client_secret: "Client secret of your Google application."
     google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for the possible values."
     google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> for more details."
-    google_oauth2_hd_groups: "Retrieve users' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings). For more information see https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups: "Retrieve users' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings). For more information, see <a target=\"_blank\" href=\"https://meta.discourse.org/t/226850\">this Meta topic</a>."
     google_oauth2_hd_groups_service_account_admin_email: "An email address belonging to a Google Workspace administrator account. Will be used with the service account credentials to fetch group information."
     google_oauth2_hd_groups_service_account_json: "JSON formatted key information for the Service Account. Will be used to fetch group information."
     google_oauth2_verbose_logging: "Log verbose Google OAuth2 related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2106,7 +2106,7 @@ en:
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."
     s3_use_acls: "AWS recommends not using ACLs on S3 buckets; only uncheck this option if intend to configure permissions policies on the configured `s3_upload_bucket` and `s3_backup_bucket`."
-    enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 for more details."
+    enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see <a target=\"_blank\" href=\"https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469\">this Meta topic</a> for more details."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
     backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings. When changing this to S3 from Local, you must run the `s3:ensure_cors_rules` rake task."
@@ -2430,7 +2430,7 @@ en:
     email_in: "Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories."
     email_in_allowed_groups: "Groups that are allowed to post new topics via email. Admins and moderators can always post new topics via email."
 
-    email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
+    email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358' target='_blank'>this Meta topic</a> for instructions on how to configure this."
     email_in_spam_header: "Selects the specific email header to use for identifying spam. This option can be X-Spam-Flag, X-Spam-Status, or X-SES-Spam-Verdict, and the email is tagged as spam based on the header's value. For instance, if the chosen setting is X-Spam-Flag, an email with this header value set to YES would be classified as spam."
 
     enable_smtp: "Enable SMTP for sending notifications for group messages."
@@ -2586,6 +2586,7 @@ en:
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_full_app: "Enable full app mode for embedded comments. When enabled, embedded comments will load the full Discourse application in an iframe, allowing users to interact with topics directly"
+    embed_full_app_signin_flow: "When full app mode is enabled, intercept logged-out actions inside the iframe with a guided flow that opens a top-level sign-in tab that auto-closes on success. Only enable this when the embed is same-site to the host page (e.g. `forum.example.com` on `blog.example.com`) or when `same site cookies` is set to `None` — otherwise the iframe will not receive the session cookie after sign-in."
     suppress_third_party_analytics_in_embed: "Skip rendering third-party analytics scripts (Google Tag Manager, Google Analytics, Adobe Analytics) when Discourse is loaded inside a full app embed iframe. Prevents duplicate pageviews and tag firing when the host page already loads the same scripts."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
@@ -2749,6 +2750,7 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
+    admin_dashboard_sections: "Sections shown on the redesigned admin dashboard, in display order. Managed via the Configure menu on the dashboard."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
@@ -2819,6 +2821,7 @@ en:
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
+    enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
     dashboard_improvements: "Improvements to navigation, design, and usability for the Discourse admin dashboard."
@@ -3252,6 +3255,7 @@ en:
       unused_staged_user: "Unused staged user"
       fixed_primary_email: "Fixed primary email for staged user"
       same_ip_address: "Same IP address (%{ip_address}) as other users"
+      same_ip_address_user: "Same IP address as %{username}"
       inactive_user: "Inactive user"
       reviewable_reject_auto: "Auto handle queued reviewables"
       reviewable_reject: "Reviewable user rejected"

@@ -252,6 +252,22 @@ module("Integration | Component | query-result | chart", function (hooks) {
     assert.dom("canvas").exists("renders a chart canvas");
   });
 
+  test("renders charts with null label values", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 2,
+      columns: ["user_name", "like_count"],
+      rows: [
+        [null, 10],
+        ["user2", 20],
+      ],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert.dom("canvas").exists("renders a chart canvas");
+  });
+
   test("renders a multi-series chart", async function (assert) {
     const content = {
       colrender: [],

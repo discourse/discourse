@@ -21,6 +21,7 @@ import NestedPost from "./nested/post";
 import NestedSortSelector from "./nested/sort-selector";
 
 export default class Nested extends Component {
+  @service appEvents;
   @service currentUser;
   @service header;
   @service screenTrack;
@@ -29,9 +30,29 @@ export default class Nested extends Component {
   @tracked cloakBelow = 0;
   viewportTracker = new PostStreamViewportTracker();
 
+  constructor() {
+    super(...arguments);
+    this.appEvents.on("keyboard:move-selection", this, this.maybeLoadMoreRoots);
+  }
+
   willDestroy() {
     super.willDestroy(...arguments);
+    this.appEvents.off(
+      "keyboard:move-selection",
+      this,
+      this.maybeLoadMoreRoots
+    );
     this.viewportTracker.destroy();
+  }
+
+  @action
+  maybeLoadMoreRoots({ selectedArticle, articles }) {
+    if (!this.args.hasMoreRoots || this.args.loadingMore) {
+      return;
+    }
+    if (selectedArticle === articles[articles.length - 1]) {
+      this.args.loadMoreRoots?.();
+    }
   }
 
   get flatViewUrl() {
@@ -81,6 +102,17 @@ export default class Nested extends Component {
         @editPost={{@editPost}}
         @showHistory={{@showHistory}}
         @replyToPost={{@replyToPost}}
+        @changeNotice={{@changeNotice}}
+        @changePostOwner={{@changePostOwner}}
+        @grantBadge={{@grantBadge}}
+        @lockPost={{@lockPost}}
+        @unlockPost={{@unlockPost}}
+        @permanentlyDeletePost={{@permanentlyDeletePost}}
+        @rebakePost={{@rebakePost}}
+        @showPagePublish={{@showPagePublish}}
+        @togglePostType={{@togglePostType}}
+        @toggleWiki={{@toggleWiki}}
+        @unhidePost={{@unhidePost}}
         @showPostMenu={{true}}
         @registerPost={{this.viewportTracker.registerPost}}
       />
@@ -141,6 +173,17 @@ export default class Nested extends Component {
             @recoverPost={{@recoverPost}}
             @showFlags={{@showFlags}}
             @showHistory={{@showHistory}}
+            @changeNotice={{@changeNotice}}
+            @changePostOwner={{@changePostOwner}}
+            @grantBadge={{@grantBadge}}
+            @lockPost={{@lockPost}}
+            @unlockPost={{@unlockPost}}
+            @permanentlyDeletePost={{@permanentlyDeletePost}}
+            @rebakePost={{@rebakePost}}
+            @showPagePublish={{@showPagePublish}}
+            @togglePostType={{@togglePostType}}
+            @toggleWiki={{@toggleWiki}}
+            @unhidePost={{@unhidePost}}
             @expansionState={{@expansionState}}
             @fetchedChildrenCache={{@fetchedChildrenCache}}
             @scrollAnchor={{@scrollAnchor}}

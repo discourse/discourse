@@ -10,6 +10,12 @@ pl_PL:
       site_settings:
         categories:
           discourse_solved: "Rozwiązanie Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Zaakceptowane rozwiązania"
+              tooltip: "Liczba tematów, w których w tym okresie znajdował się wpis oznaczony jako rozwiązanie."
   js:
     notifications:
       alt:
@@ -63,6 +69,14 @@ pl_PL:
       confirm_solved_removal: "Ta zmiana spowoduje wyłączenie rozwiązań dla tego tematu i usunięcie zaakceptowanego rozwiązania."
       confirm_solved_removal_confirm: "Potwierdź"
       confirm_solved_removal_cancel: "Anuluj"
+      shared_issue:
+        label:
+          one: "Ja również (%{count})"
+          few: "Ja również (%{count})"
+          many: "Ja również (%{count})"
+          other: "Ja również (%{count})"
+        title: "Ja również mam ten problem"
+        author_title: "Rozpocząłeś ten temat"
       no_answer:
         title: Czy odpowiedź na twoje pytanie została udzielona?
         description: "Podświetl odpowiedź i pomóż innym, korzystając z przycisku rozwiązania pod prawidłową odpowiedzią."

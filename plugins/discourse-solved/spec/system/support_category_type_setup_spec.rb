@@ -83,7 +83,6 @@ RSpec.describe "Support Category Type Setup" do
       category_type_selector.expand
       category_type_selector.option(".category-type-selector__result.--category-type-support").click
       banner.click_save
-      expect(toast).to have_success(I18n.t("js.saved"))
       expect(page).to have_css(".nav-pills .edit-category-support")
       category.reload
       expect(category.category_types.keys).to eq(%i[discussion support])

@@ -26,7 +26,7 @@ end
 require_relative "lib/discourse_reactions/engine"
 
 after_initialize do
-  SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-reactions", "db", "fixtures").to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-reactions/db/fixtures").to_s
 
   %w[
     app/controllers/discourse_reactions/custom_reactions_controller.rb
@@ -479,7 +479,7 @@ after_initialize do
   add_to_serializer(:topic_view, :valid_reactions) { DiscourseReactions::Reaction.valid_reactions }
 
   add_model_callback(User, :before_destroy) do
-    DiscourseReactions::ReactionUser.where(user_id: self.id).delete_all
+    DiscourseReactions::ReactionUser.where(user_id: id).delete_all
   end
 
   add_report("reactions") do |report|

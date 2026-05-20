@@ -925,6 +925,7 @@ ja:
           min_input_length_message:
             other: "メッセージは %{count} 文字以上である必要があります"
           messages_sidebar_title: "会話"
+          starred: "スター付き"
           today: "今日"
           last_7_days: "過去 7 日間"
           last_30_days: "過去 30 日間"

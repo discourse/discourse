@@ -39,7 +39,7 @@ end
 require_relative "lib/discourse_solved/engine"
 
 after_initialize do
-  SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-solved/db/fixtures").to_s
 
   UserUpdater::OPTION_ATTR.push(:notify_on_solved)
   add_to_serializer(:user_option, :notify_on_solved) { object.notify_on_solved }
@@ -50,6 +50,7 @@ after_initialize do
     ::WebHook.prepend(DiscourseSolved::WebHookExtension)
     ::TopicViewSerializer.prepend(DiscourseSolved::TopicViewSerializerExtension)
     ::Topic.prepend(DiscourseSolved::TopicExtension)
+    ::User.prepend(DiscourseSolved::UserExtension)
     ::Category.prepend(DiscourseSolved::CategoryExtension)
     ::PostSerializer.prepend(DiscourseSolved::PostSerializerExtension)
     ::PostMover.prepend(DiscourseSolved::PostMoverExtension)
@@ -230,6 +231,23 @@ after_initialize do
   end
   add_to_serializer(:post, :accepted_answer) { topic&.solved&.answer_post_id == object.id }
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
+
+  add_to_serializer(
+    :topic_view,
+    :shared_issue_count,
+    include_condition: -> { scope.shared_issue_visible?(object.topic) },
+  ) { DiscourseSolved::SharedIssue.count_for(object.topic) }
+  add_to_serializer(
+    :topic_view,
+    :user_created_shared_issue,
+    include_condition: -> { scope.shared_issue_visible?(object.topic) && scope.user.present? },
+  ) { DiscourseSolved::SharedIssue.exists?(topic_id: object.topic.id, user_id: scope.user.id) }
+  add_to_serializer(:topic_view, :can_create_shared_issue) do
+    scope.can_create_shared_issue?(object.topic)
+  end
+  add_to_serializer(:topic_view, :shared_issue_visible) do
+    scope.shared_issue_visible?(object.topic)
+  end
 
   on(:post_destroyed) do |post|
     DiscourseSolved::UnacceptAnswer.call(

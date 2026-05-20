@@ -146,6 +146,28 @@ export default class BulkSelectTopicsDropdown extends Component {
           currentUser.staff && topics.every((t) => !t.isPrivateMessage),
       },
       {
+        id: "enable-nested-replies",
+        icon: "nested-thread",
+        name: i18n("topic_bulk_actions.enable_nested_replies.name"),
+        visible: ({ topics, currentUser, siteSettings }) =>
+          currentUser.staff &&
+          siteSettings.nested_replies_enabled &&
+          !siteSettings.nested_replies_default &&
+          !topics.some((t) => t.isPrivateMessage) &&
+          topics.some((t) => !t.is_nested_view),
+      },
+      {
+        id: "disable-nested-replies",
+        icon: "nested-thread",
+        name: i18n("topic_bulk_actions.disable_nested_replies.name"),
+        visible: ({ topics, currentUser, siteSettings }) =>
+          currentUser.staff &&
+          siteSettings.nested_replies_enabled &&
+          !siteSettings.nested_replies_default &&
+          !topics.some((t) => t.isPrivateMessage) &&
+          topics.some((t) => t.is_nested_view),
+      },
+      {
         id: "unlist-topics",
         icon: "far-eye-slash",
         name: i18n("topic_bulk_actions.unlist_topics.name"),
@@ -342,6 +364,24 @@ export default class BulkSelectTopicsDropdown extends Component {
         this.showBulkTopicActionsModal("unpin", "unpin_topics", {
           description: i18n("topic_bulk_actions.unpin_topics.description"),
           confirmButtonTranslationKey: "topics.bulk.confirm_unpin_topics",
+        });
+        break;
+      case "enable-nested-replies":
+        this.showBulkTopicActionsModal(actionId, "enable_nested_replies", {
+          description: i18n(
+            "topic_bulk_actions.enable_nested_replies.description"
+          ),
+          confirmButtonTranslationKey:
+            "topics.bulk.confirm_enable_nested_replies",
+        });
+        break;
+      case "disable-nested-replies":
+        this.showBulkTopicActionsModal(actionId, "disable_nested_replies", {
+          description: i18n(
+            "topic_bulk_actions.disable_nested_replies.description"
+          ),
+          confirmButtonTranslationKey:
+            "topics.bulk.confirm_disable_nested_replies",
         });
         break;
       case "defer":

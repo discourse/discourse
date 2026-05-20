@@ -250,6 +250,12 @@ describe OmniAuth::Strategies::OpenIDConnect do
           )
           expect(@app_called).to eq(false)
         end
+
+        it "exposes id_token_info alongside the userinfo raw_info" do
+          expect(strategy.callback_phase[0]).to eq(200)
+          expect(strategy.extra[:raw_info]["email"]).to eq("userinfoemail@example.com")
+          expect(strategy.extra[:id_token_info]["email"]).to eq("tokenemail@example.com")
+        end
       end
     end
   end

@@ -18,7 +18,9 @@ RSpec.describe UploadsController do
 
       let(:logo) { Rack::Test::UploadedFile.new(logo_file) }
       let(:fake_jpg) { Rack::Test::UploadedFile.new(file_from_fixtures("fake.jpg")) }
-      let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
+      let(:text_file) do
+        Rack::Test::UploadedFile.new(File.new("#{Rails.root.join("LICENSE.txt")}"))
+      end
 
       context "when rate limited" do
         before { RateLimiter.enable }
@@ -277,7 +279,9 @@ RSpec.describe UploadsController do
     context "when system user is logged in" do
       before { sign_in(system_user) }
 
-      let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
+      let(:text_file) do
+        Rack::Test::UploadedFile.new(File.new("#{Rails.root.join("LICENSE.txt")}"))
+      end
 
       it "properly returns errors if system_user_max_attachment_size_kb is not set" do
         SiteSetting.authorized_extensions = "*"

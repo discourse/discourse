@@ -99,13 +99,6 @@ RSpec.describe EmailStyle do
           )
         end
 
-        after do
-          TranslationOverride.revert!(
-            SiteSetting.default_locale,
-            ["user_notifications.signup.text_body_template"],
-          )
-        end
-
         it "applies customizations when translation override exists" do
           expect(mail_html.scan('<h1 style="color:red">FOR YOU</h1>').count).to eq(1)
           expect(mail_html.scan("CLICK THAT LINK").count).to eq(1)

@@ -369,6 +369,8 @@ de:
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
         supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
+        translatable_categories: "Übersetzbare Kategorien"
+        translatable_categories_description: "Es werden nur Inhalte aus den ausgewählten Kategorien übersetzt. Unterkategorien müssen separat hinzugefügt werden."
         admin_actions:
           translation_settings: "Übersetzungseinstellungen"
           localization_settings: "Lokalisierungseinstellungen"
@@ -396,6 +398,9 @@ de:
         theme_translations:
           translate:
             label: "Übersetzen"
+            title: "In alle unterstützten Sprachen übersetzen, wobei die ausgewählte Sprache als Ausgangssprache dient"
+            queued: "Übersetzung in Warteschlange"
+            failed: "Übersetzung konnte nicht in die Warteschlange gestellt werden"
         translations_menu:
           translate:
             label: "Beitrag übersetzen"
@@ -759,7 +764,14 @@ de:
         oauth_client_id: "OAuth Client-ID"
         oauth_client_secret: "OAuth Client-Geheimnis"
         oauth_scopes: "OAuth Bereiche"
+        oauth_authorization_params: "Parameter der OAuth-Autorisierung"
+        oauth_authorization_params_help: "Optionales JSON-Objekt, das in die Autorisierungsanfrage eingefügt wird. Verwende „null“, um einen Standardparameter zu entfernen."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "Parameter des OAuth-Tokens"
+        oauth_token_params_help: "Optionales JSON-Objekt, das in Token-Anfragen eingefügt wird. Verwende „null“, um einen Standardparameter zu entfernen."
         oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Aktualisierungstoken erforderlich"
+        oauth_require_refresh_token_help: "Die OAuth-Verbindung ist fehlgeschlagen, wenn der Anbieter kein Aktualisierungstoken zurückgibt."
         oauth_json_object_required: "%{field} muss ein JSON-Objekt sein."
         oauth_show_advanced_options: "Erweiterte Optionen anzeigen"
         oauth_hide_advanced_options: "Erweiterte Optionen ausblenden"
@@ -1113,6 +1125,12 @@ de:
           title: "KI-Interaktion ansehen"
           copy_request: "Anfrage kopieren"
           copy_response: "Antwort kopieren"
+          this_turn: "Diese Runde:"
+          whole_conversation: "Unterhaltung"
+          tokens_summary: "%{request_tokens} eingehend → %{response_tokens} ausgehend"
+          cache_both: "(Cache %{read} lesen, %{write} schreiben)"
+          cache_read_only: "(Cache %{read} lesen)"
+          cache_write_only: "(Cache %{write} schreiben)"
           request: "Anfrage"
           response: "Antwort"
           next_log: "Weiter"
@@ -1161,6 +1179,7 @@ de:
             one: "Nachricht muss mindestens %{count} Zeichen lang sein"
             other: "Nachricht muss mindestens %{count} Zeichen lang sein"
           messages_sidebar_title: "Unterhaltungen"
+          starred: "Mit Sternchen"
           today: "Heute"
           last_7_days: "Letzte 7 Tage"
           last_30_days: "Letzte 30 Tage"

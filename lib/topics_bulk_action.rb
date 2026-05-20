@@ -35,6 +35,8 @@ class TopicsBulkAction
       unpin
       convert_to_public_topic
       convert_to_private_message
+      enable_nested_view
+      disable_nested_view
     ]
   end
 
@@ -297,6 +299,26 @@ class TopicsBulkAction
         post = t.ordered_posts.first
         PostDestroyer.new(@user, post).destroy if post
       end
+    end
+  end
+
+  def enable_nested_view
+    toggle_nested_view(enabled: true)
+  end
+
+  def disable_nested_view
+    toggle_nested_view(enabled: false)
+  end
+
+  def toggle_nested_view(enabled:)
+    return unless SiteSetting.nested_replies_enabled
+    return if SiteSetting.nested_replies_default
+
+    topics.each do |t|
+      next if t.private_message?
+
+      result = NestedTopic::Toggle.call(guardian: guardian, params: { topic_id: t.id, enabled: })
+      @changed_ids << t.id if result.success?
     end
   end
 

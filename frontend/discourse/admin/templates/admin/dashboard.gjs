@@ -10,12 +10,13 @@ import { i18n } from "discourse-i18n";
 export default <template>
   {{#if @controller.siteSettings.dashboard_improvements}}
     <RedesignedAdminDashboard
-      @period={{@controller.safePeriod}}
-      @startDate={{@controller.startDate}}
-      @endDate={{@controller.endDate}}
+      @requestedPeriod={{@controller.safePeriod}}
+      @requestedStartDate={{@controller.startDate}}
+      @requestedEndDate={{@controller.endDate}}
       @setPeriod={{@controller.setPeriod}}
       @setCustomDateRange={{@controller.setCustomDateRange}}
-      @sections={{@controller.sections}}
+      @loadedSections={{@controller.loadedSections}}
+      @updateConfiguration={{@controller.updateConfiguration}}
       @loadingSections={{@controller.loadingSections}}
       @sectionsFetchError={{@controller.sectionsFetchError}}
     />

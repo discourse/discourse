@@ -549,7 +549,7 @@ export default class ChatMessage extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     {{#if this.shouldRender}}
       {{#if this.includeSeparator}}
         <ChatMessageSeparator
