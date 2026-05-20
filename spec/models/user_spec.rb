@@ -732,6 +732,34 @@ RSpec.describe User do
     end
   end
 
+  describe "anonymous shadow users" do
+    fab!(:master_user) { Fabricate(:user, trust_level: TrustLevel[3]) }
+
+    before do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+    end
+
+    it "suspends and logs out shadows when the master user is suspended", :aggregate_failures do
+      freeze_time
+      shadow_user = AnonymousShadowCreator.get(master_user)
+      UserAuthToken.generate!(user_id: shadow_user.id)
+
+      messages =
+        MessageBus.track_publish("/logout/#{shadow_user.id}") do
+          master_user.update!(suspended_at: Time.zone.now, suspended_till: 1.day.from_now)
+        end
+
+      expect(shadow_user.reload[:suspended_till]).to be_within_one_second_of(1.day.from_now)
+      expect(shadow_user[:suspended_at]).to be_within_one_second_of(Time.zone.now)
+      expect(shadow_user.user_auth_tokens).to be_empty
+      expect(shadow_user.anonymous_user_master.reload.active).to eq(false)
+      expect(messages.size).to eq(1)
+      expect(messages[0].user_ids).to eq([shadow_user.id])
+      expect(messages[0].data).to eq(shadow_user.id)
+    end
+  end
+
   describe "delete posts in batches" do
     fab!(:post1, :post)
     fab!(:user) { post1.user }
