@@ -331,6 +331,7 @@ export default class PluginsExplorerController extends Controller {
       try {
         await this.save();
       } catch {
+        // save() already shows popupAjaxError
         return;
       }
     }

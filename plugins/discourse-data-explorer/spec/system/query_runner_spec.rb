@@ -56,11 +56,7 @@ RSpec.describe "Data explorer query runner" do
 
       expect(page).to have_css(".query-run-split__primary", text: I18n.t("js.explorer.run"))
 
-      page.execute_script(<<~JS)
-        const editor = document.querySelector(".query-editor .ace_editor").env.editor;
-        editor.setValue("SELECT 2", 1);
-        document.querySelector(".query-editor .ace_editor").click();
-      JS
+      PageObjects::Components::AceEditor.new.set_input("SELECT 2")
 
       expect(page).to have_css(".query-run-split__primary", text: I18n.t("js.explorer.saverun"))
     end
