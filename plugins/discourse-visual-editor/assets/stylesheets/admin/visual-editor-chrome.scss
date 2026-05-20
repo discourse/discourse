@@ -426,28 +426,30 @@ body.visual-editor-active {
   }
 
   /* Canvas-only empty state for blocks whose image-upload args are all
-     empty (currently `ve:image`). Compact dashed card so a fresh drop
-     doesn't claim the eventual image's intrinsic dimensions on the canvas.
-     Block templates render nothing in this state; the chrome paints this
-     in their place. Visual language matches the grid-cell drop targets
-     (dashed orange border) so it reads as canvas chrome, not block content. */
+     empty (currently `ve:image`). The chrome already paints its own
+     dashed border + tint around the block, so the empty state is just
+     a centred icon + label.
+
+     Two layers: the outer flexbox spans the chrome's content area and
+     centres along both axes; the inner __content shrink-wraps the icon
+     + label so they read as a single visual unit no matter how wide
+     the surrounding cell happens to be. */
 
   .visual-editor-block-chrome__image-empty {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    width: 100%;
     min-height: 8rem;
-    padding: 1.5rem;
-    border: 1px dashed var(--visual-editor-block-color);
-    border-radius: 3px;
-    background: rgb(217 119 6 / 4%);
     color: var(--primary-medium);
-    transition:
-      background 80ms ease-out,
-      border-color 80ms ease-out;
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
 
     .d-icon {
       font-size: var(--font-up-3);

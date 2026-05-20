@@ -3,10 +3,12 @@ import { i18n } from "discourse-i18n";
 
 const EmptyImageState = <template>
   <div class="visual-editor-block-chrome__image-empty">
-    {{dIcon "image"}}
-    <span class="visual-editor-block-chrome__image-empty-label">
-      {{i18n "visual_editor.canvas.image_empty_label"}}
-    </span>
+    <div class="visual-editor-block-chrome__image-empty-content">
+      {{dIcon "image"}}
+      <span class="visual-editor-block-chrome__image-empty-label">
+        {{i18n "visual_editor.canvas.image_empty_label"}}
+      </span>
+    </div>
   </div>
 </template>;
 
