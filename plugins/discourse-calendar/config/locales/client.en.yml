@@ -444,6 +444,9 @@ en:
         end_date_placeholder: "End date"
         location_placeholder: "Add location or URL"
         max_attendees_placeholder: "Unlimited attendees"
+        max_attendees_display:
+          one: "Max %{count} attendee"
+          other: "Max %{count} attendees"
         no_rsvps_label: "Not collecting attendance"
         description_placeholder: "Add event description"
         all_day: "All day"

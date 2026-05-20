@@ -2,7 +2,7 @@ import { camelize } from "@ember/string";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import EventNodeView from "../components/event-node-view";
-import { buildEventPreview } from "../initializers/discourse-post-event-decorator";
+import { buildEventPreview } from "../lib/event-preview";
 import { defaultReminderFor, reminderToBBCode } from "../lib/raw-event-helper";
 
 export const EVENT_ATTRIBUTES = {

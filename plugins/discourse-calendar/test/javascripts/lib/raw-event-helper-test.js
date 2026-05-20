@@ -1,8 +1,11 @@
 import { module, test } from "qunit";
 import {
   attendanceTransition,
+  buildEventBlock,
   buildParams,
   defaultReminderFor,
+  parseEventBlock,
+  parseReminders,
   reconcileDefaultReminder,
   reminderToBBCode,
   removeEvent,
@@ -101,6 +104,43 @@ module("Unit | Lib | raw-event-helper", function () {
       ),
       '[event location="Berlin"]\n[/event]',
       "omits whitespace-only name parameter"
+    );
+  });
+
+  test("parseEventBlock extracts attrs and description, buildEventBlock round-trips", function (assert) {
+    const raw =
+      'preface\n[event start="2024-06-15 10:00" name="Demo"]\nbody line\n[/event]\ntail';
+    const parsed = parseEventBlock(raw);
+
+    assert.deepEqual(parsed.attrs, { start: "2024-06-15 10:00", name: "Demo" });
+    assert.strictEqual(parsed.description, "body line");
+    assert.strictEqual(
+      parsed.full,
+      '[event start="2024-06-15 10:00" name="Demo"]\nbody line\n[/event]'
+    );
+
+    assert.strictEqual(
+      buildEventBlock(parsed.attrs, parsed.description),
+      parsed.full,
+      "buildEventBlock round-trips parsed values"
+    );
+  });
+
+  test("parseEventBlock returns null when no event tag", function (assert) {
+    assert.strictEqual(parseEventBlock("no event here"), null);
+    assert.strictEqual(parseEventBlock(""), null);
+    assert.strictEqual(parseEventBlock(null), null);
+  });
+
+  test("parseReminders converts comma-separated BBCode into reminder objects", function (assert) {
+    assert.deepEqual(parseReminders(""), []);
+    assert.deepEqual(parseReminders(null), []);
+    assert.deepEqual(
+      parseReminders("notification.15.minutes,bumpTopic.-1.hours"),
+      [
+        { type: "notification", value: 15, unit: "minutes", period: "before" },
+        { type: "bumpTopic", value: 1, unit: "hours", period: "after" },
+      ]
     );
   });
 

@@ -68,6 +68,32 @@ acceptance("Post event - composer", function (needs) {
       );
   });
 
+  test("composer event builder - compact screen pre-populates defaults", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
+    await click(".toolbar-menu__options-trigger");
+    await click(
+      `button[title='${i18n("discourse_post_event.builder_modal.attach")}']`
+    );
+
+    const modal = ".post-event-builder-modal";
+
+    assert
+      .dom(`${modal} input.composer-event__date-input`)
+      .hasAnyValue(
+        "start date is pre-populated when the compact view first opens"
+      );
+    assert
+      .dom(`${modal} input.composer-event__time-input`)
+      .hasAnyValue("start time is pre-populated");
+    assert
+      .dom(`${modal} .composer-event__reminder-value`)
+      .hasAnyValue("default reminder is pre-populated");
+  });
+
   test("composer event builder - the timezone case", async function (assert) {
     await visit("/");
 

@@ -87,6 +87,23 @@ describe "Post event" do
     end
   end
 
+  context "with markdown-mode preview" do
+    it "renders the compact editor in the preview pane pre-populated from the textarea BBCode" do
+      visit("/new-topic")
+      find(".toolbar-menu__options-trigger").click
+      click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
+      post_event_form_page.fill_location("HQ").submit
+
+      preview = composer.preview
+      expect(preview).to have_css(".composer-event-node")
+      expect(preview.find(".composer-event__location-input").value).to eq("HQ")
+      expect(preview.find(".composer-event__date-input", match: :first).value).not_to(
+        be_empty,
+        "start date should be populated from the inserted BBCode",
+      )
+    end
+  end
+
   context "with max attendees" do
     it "updates the going button label from Full after toggling" do
       going = I18n.t("js.discourse_post_event.models.invitee.status.going")

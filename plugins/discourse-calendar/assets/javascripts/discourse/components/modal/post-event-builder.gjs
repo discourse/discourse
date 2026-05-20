@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
@@ -21,7 +21,9 @@ import { i18n } from "discourse-i18n";
 import {
   attendanceTransition,
   buildParams,
+  defaultEventState,
   defaultReminderFor,
+  getCustomFieldNames,
   reconcileDefaultReminder,
 } from "../../lib/raw-event-helper";
 import CompactEventEditor from "../compact-event-editor";
@@ -356,9 +358,7 @@ export default class PostEventBuilder extends Component {
   }
 
   get allowedCustomFields() {
-    return this.siteSettings.discourse_post_event_allowed_custom_fields
-      .split("|")
-      .filter(Boolean);
+    return getCustomFieldNames(this.siteSettings);
   }
 
   get addReminderDisabled() {
@@ -397,6 +397,83 @@ export default class PostEventBuilder extends Component {
     return i18n("discourse_post_event.composer.name_placeholder");
   }
 
+  get compactInitialState() {
+    return {
+      ...defaultEventState(),
+      name: this.event.name ?? null,
+      location: this.event.location ?? null,
+      description: this.event.description ?? "",
+      timezone: this.event.timezone ?? "UTC",
+      status: this.event.status ?? "public",
+      maxAttendees: this.event.maxAttendees ?? null,
+      allDay: !!this.allDay,
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      reminders: this.event.reminders ?? [],
+      recurrence: this.event.recurrence ?? null,
+      recurrenceUntil: this.event.recurrenceUntil ?? null,
+      showLocalTime: !!this.event.showLocalTime,
+      chatEnabled: !!this.event.chatEnabled,
+      minimal: !!this.event.minimal,
+      url: this.event.url ?? null,
+      image:
+        this.event.imageUpload?.short_url ??
+        this.event.imageUpload?.url ??
+        null,
+      allowedGroups: (this.event.rawInvitees || []).join(",") || null,
+      closed: !!this.event.isClosed,
+      customFields: { ...(this.event.customFields || {}) },
+    };
+  }
+
+  @action
+  urlTester(value) {
+    return /^(https?:\/\/|www\.|mailto:)/i.test(value);
+  }
+
+  @action
+  onCompactChange(state) {
+    this.event.name = state.name;
+    this.event.location = state.location || "";
+    this.event.description = state.description;
+    this.event.timezone = state.timezone;
+    this.event.status = state.status;
+    this.event.maxAttendees = state.maxAttendees;
+    this.event.showLocalTime = state.showLocalTime;
+    this.event.chatEnabled = state.chatEnabled;
+    this.event.minimal = state.minimal;
+    this.event.url = state.url;
+    this.event.recurrence = state.recurrence;
+    this.event.recurrenceUntil = state.recurrenceUntil;
+    this.event.reminders = state.reminders;
+    this.event.rawInvitees = state.allowedGroups
+      ? state.allowedGroups.split(",")
+      : [];
+    this.event.allDay = state.allDay;
+    this.event.startsAt = state.startsAt;
+    this.event.endsAt = state.endsAt;
+    this.event.isClosed = state.closed;
+    this.event.imageUpload = state.image ? { url: state.image } : null;
+    this.event.customFields = EmberObject.create({
+      ...(state.customFields || {}),
+    });
+    this.allDay = state.allDay;
+    this.startsAt = state.startsAt;
+    this.endsAt = state.endsAt;
+
+    if (state.status === "standalone") {
+      this.attendanceMode = "none";
+    } else if (state.maxAttendees) {
+      this.attendanceMode = "upTo";
+      this.previousMaxAttendees = state.maxAttendees;
+    } else {
+      this.attendanceMode = "unlimited";
+    }
+    if (state.status && state.status !== "standalone") {
+      this.previousRsvpStatus = state.status;
+    }
+  }
+
   @action
   toggleAdvanced() {
     if (this.isAdvancedScreen) {
@@ -409,21 +486,6 @@ export default class PostEventBuilder extends Component {
       this.formData = this.#snapshotFormData();
       this.screen = "advanced";
     }
-  }
-
-  @action
-  updateName(value) {
-    this.event.name = value;
-  }
-
-  @action
-  updateLocation(value) {
-    this.event.location = value || "";
-  }
-
-  @action
-  updateDescription(value) {
-    this.event.description = value;
   }
 
   #captureConfig() {
@@ -443,35 +505,6 @@ export default class PostEventBuilder extends Component {
     if (next !== this.event.reminders) {
       this.event.reminders = next;
     }
-  }
-
-  @action
-  updateStart(newMoment) {
-    if (!newMoment) {
-      return;
-    }
-    const prev = this.#captureConfig();
-    const tz = this.event.timezone || "UTC";
-    const m = newMoment.clone().tz(tz);
-    this.event.startsAt = m;
-    this.startsAt = m;
-    this.#reconcileReminder(prev);
-  }
-
-  @action
-  updateEnd(newMoment) {
-    const prev = this.#captureConfig();
-    if (!newMoment) {
-      this.event.endsAt = null;
-      this.endsAt = null;
-      this.#reconcileReminder(prev);
-      return;
-    }
-    const tz = this.event.timezone || "UTC";
-    const m = newMoment.clone().tz(tz);
-    this.event.endsAt = m;
-    this.endsAt = m;
-    this.#reconcileReminder(prev);
   }
 
   @action
@@ -504,25 +537,6 @@ export default class PostEventBuilder extends Component {
       this.event.endsAt = newEnd;
     }
     this.#reconcileReminder(prev);
-  }
-
-  // for the compact view's CompactEventEditor
-  @action
-  updateMaxAttendees(value) {
-    if (value === 0) {
-      this.setAttendanceMode("none");
-      return;
-    }
-    if (value > 0) {
-      this.#applyUpToValue(value);
-      return;
-    }
-    this.event.maxAttendees = null;
-  }
-
-  @action
-  updateReminders(reminders) {
-    this.event.reminders = reminders || [];
   }
 
   @action
@@ -1240,27 +1254,10 @@ export default class PostEventBuilder extends Component {
           {{else}}
             <div class="composer-event-node">
               <CompactEventEditor
-                @name={{@model.event.name}}
-                @location={{@model.event.location}}
-                @description={{@model.event.description}}
-                @maxAttendees={{@model.event.maxAttendees}}
-                @reminders={{@model.event.reminders}}
-                @startsAt={{this.startsAt}}
-                @endsAt={{this.endsAt}}
-                @allDay={{this.allDay}}
-                @timezone={{@model.event.timezone}}
-                @userTimezone={{this.userTimezone}}
-                @status={{@model.event.status}}
-                @statusText={{this.statusText}}
-                @namePlaceholder={{this.eventNamePlaceholder}}
-                @onUpdateName={{this.updateName}}
-                @onUpdateLocation={{this.updateLocation}}
-                @onUpdateDescription={{this.updateDescription}}
-                @onUpdateStart={{this.updateStart}}
-                @onUpdateEnd={{this.updateEnd}}
-                @onUpdateAllDay={{this.updateAllDay}}
-                @onUpdateMaxAttendees={{this.updateMaxAttendees}}
-                @onUpdateReminders={{this.updateReminders}}
+                @initialState={{this.compactInitialState}}
+                @urlTester={{this.urlTester}}
+                @onChange={{this.onCompactChange}}
+                @hideAdvanced={{true}}
               />
             </div>
           {{/if}}
