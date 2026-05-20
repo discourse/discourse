@@ -223,6 +223,17 @@ export default class NestedPostChildren extends Component {
             @recoverPost={{@recoverPost}}
             @showFlags={{@showFlags}}
             @showHistory={{@showHistory}}
+            @changeNotice={{@changeNotice}}
+            @changePostOwner={{@changePostOwner}}
+            @grantBadge={{@grantBadge}}
+            @lockPost={{@lockPost}}
+            @unlockPost={{@unlockPost}}
+            @permanentlyDeletePost={{@permanentlyDeletePost}}
+            @rebakePost={{@rebakePost}}
+            @showPagePublish={{@showPagePublish}}
+            @togglePostType={{@togglePostType}}
+            @toggleWiki={{@toggleWiki}}
+            @unhidePost={{@unhidePost}}
             @collapseParent={{@collapseParent}}
             @highlightParentLine={{@highlightParentLine}}
             @unhighlightParentLine={{@unhighlightParentLine}}

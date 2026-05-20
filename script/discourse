@@ -366,7 +366,7 @@ class DiscourseCLI < Thor
   end
 
   def do_remap(from, to)
-    begin
+    
       remap_options = {
         verbose: true,
         skip_max_length_violations: options[:skip_max_length_violations],
@@ -390,7 +390,7 @@ class DiscourseCLI < Thor
       puts "Error: #{ex}"
       puts "The remap has only been partially applied due to the error above. Please re-run the script again."
       exit(1)
-    end
+    
   end
 end
 

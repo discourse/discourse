@@ -1363,7 +1363,7 @@ RSpec.describe Report do
 
         ip = [81, 2, 69, 142]
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS
           .any_instance
           .stubs(:getname)

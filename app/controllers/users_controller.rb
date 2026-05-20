@@ -607,7 +607,7 @@ class UsersController < ApplicationController
   end
 
   def changing_case_of_own_username(target_user, username)
-    target_user && username.downcase == (target_user.username.downcase)
+    target_user && username.downcase == target_user.username.downcase
   end
 
   # Used for checking availability of a username and will return suggestions
@@ -2248,12 +2248,10 @@ class UsersController < ApplicationController
     allowed_actions = %w[show update destroy]
 
     http_verbs.any? do |verb|
-      begin
-        path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
-        allowed_actions.exclude?(path[:action])
-      rescue ActionController::RoutingError
-        false
-      end
+      path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
+      allowed_actions.exclude?(path[:action])
+    rescue ActionController::RoutingError
+      false
     end
   end
 

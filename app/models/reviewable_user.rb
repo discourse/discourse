@@ -59,7 +59,7 @@ class ReviewableUser < Reviewable
     if args[:send_email] != false && SiteSetting.must_approve_users?
       Jobs.enqueue(:critical_user_email, type: "signup_after_approval", user_id: target.id)
     end
-    StaffActionLogger.new(performed_by).log_user_approve(target, reviewable_id: self.id)
+    StaffActionLogger.new(performed_by).log_user_approve(target, reviewable_id: id)
 
     create_result(:success, :approved)
   end
@@ -88,7 +88,7 @@ class ReviewableUser < Reviewable
         scrubbed_reason: reason,
         scrubbed_at:,
       }
-      self.save!
+      save!
 
       result = create_result(:success)
 
@@ -109,12 +109,12 @@ class ReviewableUser < Reviewable
         self.reject_reason = args[:reject_reason]
 
         # Without this, we end up sending the email even if this reject_reason is too long.
-        self.validate!
+        validate!
 
         if args[:send_email] && SiteSetting.must_approve_users?
           # Execute job instead of enqueue because user has to exists to send email
           Jobs::CriticalUserEmail.new.execute(
-            { type: :signup_after_reject, user_id: target.id, reject_reason: self.reject_reason },
+            { type: :signup_after_reject, user_id: target.id, reject_reason: reject_reason },
           )
         end
 
@@ -126,7 +126,7 @@ class ReviewableUser < Reviewable
         else
           I18n.t("user.destroy_reasons.reviewable_reject")
         end
-        delete_args[:reviewable_id] = self.id
+        delete_args[:reviewable_id] = id
 
         destroyer.destroy(target, delete_args)
       rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess

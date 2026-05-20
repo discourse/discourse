@@ -10,7 +10,7 @@ import { i18n } from "discourse-i18n";
 export default class AiHelperCustomPrompt extends Component {
   @action
   sendInput(event) {
-    if (event.key !== "Enter") {
+    if (event.key !== "Enter" || event.isComposing) {
       return;
     }
     return this.args.submit(this.args.promptArgs);

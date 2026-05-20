@@ -5,5 +5,5 @@ module Searchable
 
   PRIORITIES = Enum.new(ignore: 1, very_low: 2, low: 3, normal: 0, high: 4, very_high: 5)
 
-  included { has_one "#{self.name.underscore}_search_data".to_sym, dependent: :destroy }
+  included { has_one :"#{name.underscore}_search_data", dependent: :destroy }
 end

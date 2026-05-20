@@ -155,7 +155,7 @@ module Onebox
         end
 
         def match
-          @match ||= @url.match(self.raw_regexp)
+          @match ||= @url.match(raw_regexp)
         end
 
         def sha1
@@ -188,12 +188,12 @@ module Onebox
 
             if @lang == "stl" && link.match?(%r{\Ahttps?://(www\.)?github\.com.*/blob/})
               @model_file = @lang.dup
-              @raw = "https://render.githubusercontent.com/view/solid?url=" + self.raw_template(m)
+              @raw = "https://render.githubusercontent.com/view/solid?url=" + raw_template(m)
             else
               contents =
                 URI
-                  .parse(self.raw_template(m))
-                  .open({ read_timeout: timeout }.merge(self.auth_headers(m)))
+                  .parse(raw_template(m))
+                  .open({ read_timeout: timeout }.merge(auth_headers(m)))
                   .read
 
               if contents.encoding == Encoding::BINARY || contents.bytes.include?(0)

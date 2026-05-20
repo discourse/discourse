@@ -10,13 +10,10 @@ describe "AdminFilterControls" do
   before do
     sign_in(admin)
 
-    poll_plugin =
-      Plugin::Instance.parse_from_source(File.join(Rails.root, "plugins", "poll", "plugin.rb"))
+    poll_plugin = Plugin::Instance.parse_from_source(Rails.root.join("plugins/poll/plugin.rb").to_s)
 
     spoiler_alert_plugin =
-      Plugin::Instance.parse_from_source(
-        File.join(Rails.root, "plugins", "spoiler-alert", "plugin.rb"),
-      )
+      Plugin::Instance.parse_from_source(Rails.root.join("plugins/spoiler-alert/plugin.rb").to_s)
 
     Discourse.stubs(:plugins_sorted_by_name).returns([poll_plugin, spoiler_alert_plugin])
   end

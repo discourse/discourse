@@ -168,7 +168,7 @@ describe "Post event" do
   it "can create, close, and open an event" do
     visit "/new-topic"
     title = "My upcoming l33t event"
-    tomorrow = (1.day.from_now).strftime("%Y-%m-%d")
+    tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
     composer.fill_title(title)
     composer.fill_content <<~MD
       [event start="#{tomorrow} 13:37" status="public"]

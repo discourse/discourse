@@ -20,7 +20,7 @@ class ApiKey < ActiveRecord::Base
   after_initialize :generate_key
 
   def generate_key
-    if !self.key_hash
+    if !key_hash
       @key ||= SecureRandom.hex(32) # Not saved to DB
       self.truncated_key = key[0..3]
       self.key_hash = ApiKey.hash_key(key)

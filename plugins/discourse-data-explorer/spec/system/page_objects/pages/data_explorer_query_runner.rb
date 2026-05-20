@@ -82,6 +82,14 @@ module PageObjects
         self
       end
 
+      def fill_new_query_sql(text)
+        page.execute_script(
+          "document.querySelector('.query-new .editor-panel .ace_editor').env.editor.setValue(arguments[0], 1);",
+          text,
+        )
+        self
+      end
+
       def submit_new_query
         page.find(".query-new .btn-primary").click
         self

@@ -19,11 +19,9 @@ module DiscourseAi
 
         def schedule_block(&block)
           thread_pool.post do
-            begin
-              block.call
-            rescue StandardError => e
-              Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
-            end
+            block.call
+          rescue StandardError => e
+            Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
           end
         end
 
@@ -42,39 +40,37 @@ module DiscourseAi
           tool_results: nil
         )
           schedule_block do
-            begin
-              if custom_tools.present? || resume_token.present?
-                stream_custom_tool_reply(
-                  io: io,
-                  agent: agent,
-                  user: user,
-                  topic: topic,
-                  query: query,
-                  custom_instructions: custom_instructions,
-                  current_user: current_user,
-                  custom_tools: custom_tools,
-                  resume_token: resume_token,
-                  tool_results: tool_results,
-                )
-              else
-                stream_standard_reply(
-                  io: io,
-                  agent: agent,
-                  user: user,
-                  topic: topic,
-                  query: query,
-                  custom_instructions: custom_instructions,
-                  current_user: current_user,
-                )
-              end
-            rescue StandardError => e
-              # make it a tiny bit easier to debug in dev, this is tricky
-              # multi-threaded code that exhibits various limitations in rails
-              p e if Rails.env.local?
-              Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
-            ensure
-              io.close
+            if custom_tools.present? || resume_token.present?
+              stream_custom_tool_reply(
+                io: io,
+                agent: agent,
+                user: user,
+                topic: topic,
+                query: query,
+                custom_instructions: custom_instructions,
+                current_user: current_user,
+                custom_tools: custom_tools,
+                resume_token: resume_token,
+                tool_results: tool_results,
+              )
+            else
+              stream_standard_reply(
+                io: io,
+                agent: agent,
+                user: user,
+                topic: topic,
+                query: query,
+                custom_instructions: custom_instructions,
+                current_user: current_user,
+              )
             end
+          rescue StandardError => e
+            # make it a tiny bit easier to debug in dev, this is tricky
+            # multi-threaded code that exhibits various limitations in rails
+            p e if Rails.env.local?
+            Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
+          ensure
+            io.close
           end
         end
 
