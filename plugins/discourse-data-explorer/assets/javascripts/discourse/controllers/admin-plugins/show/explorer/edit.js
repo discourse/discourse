@@ -7,9 +7,13 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
+import KeyValueStore from "discourse/lib/key-value-store";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
+import { chartability } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
+
+const viewStore = new KeyValueStore("discourse_data_explorer_");
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
@@ -17,26 +21,66 @@ export default class PluginsExplorerController extends Controller {
 
   @tracked params;
   @tracked editingName = false;
-  @tracked editingQuery = false;
   @tracked loading = false;
   @tracked showResults = false;
-  @tracked hideSchema = false;
   @tracked results = this.model.results;
   @tracked dirty = false;
   @tracked isCachedResult = false;
+  @tracked view = "table";
 
   queryParams = ["params"];
-  explain = false;
   order = null;
   form = null;
   shouldAutoRun = false;
+  _pristine = null;
+
+  constructor() {
+    super(...arguments);
+    if (this.model?.results) {
+      this.initView();
+    }
+    if (this.model) {
+      this.snapshotPristine();
+    }
+  }
+
+  snapshotPristine() {
+    if (!this.model) {
+      return;
+    }
+    this._pristine = {
+      name: this.model.name ?? "",
+      description: this.model.description ?? "",
+      sql: this.model.sql ?? "",
+      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+    };
+    this.dirty = false;
+  }
+
+  recomputeDirty() {
+    if (!this._pristine) {
+      this.dirty = true;
+      return;
+    }
+    const current = {
+      name: this.model.name ?? "",
+      description: this.model.description ?? "",
+      sql: this.model.sql ?? "",
+      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+    };
+    this.dirty =
+      current.name !== this._pristine.name ||
+      current.description !== this._pristine.description ||
+      current.sql !== this._pristine.sql ||
+      current.group_ids !== this._pristine.group_ids;
+  }
 
   get saveDisabled() {
     return !this.dirty;
   }
 
   get runDisabled() {
-    return this.dirty;
+    return this.model.destroyed;
   }
 
   get parsedParams() {
@@ -54,6 +98,10 @@ export default class PluginsExplorerController extends Controller {
     return this.model.is_default;
   }
 
+  get editingQuery() {
+    return !this.editDisabled && !this.model.destroyed;
+  }
+
   get editorDisabled() {
     return this.model.destroyed;
   }
@@ -66,13 +114,47 @@ export default class PluginsExplorerController extends Controller {
       });
   }
 
+  get hasResults() {
+    return !!this.results?.rows?.length;
+  }
+
+  get runButtonLabel() {
+    return this.dirty ? "explorer.saverun" : "explorer.run";
+  }
+
+  get viewItems() {
+    return [
+      { value: "chart", icon: "signal" },
+      { value: "table", icon: "table" },
+    ];
+  }
+
+  initView() {
+    const queryId = this.model?.id;
+    const stored = queryId ? viewStore.get(`view_${queryId}`) : null;
+    if (stored === "chart" || stored === "table") {
+      this.view = stored;
+    } else {
+      this.view = chartability(this.results).chartable ? "chart" : "table";
+    }
+  }
+
+  @action
+  setView(value) {
+    this.view = value;
+    const queryId = this.model?.id;
+    if (queryId) {
+      viewStore.set({ key: `view_${queryId}`, value });
+    }
+  }
+
   @action
   async save() {
     try {
       this.loading = true;
       await this.model.save();
 
-      this.dirty = false;
+      this.snapshotPristine();
       this.editingName = false;
     } catch (error) {
       popupAjaxError(error);
@@ -80,11 +162,6 @@ export default class PluginsExplorerController extends Controller {
     } finally {
       this.loading = false;
     }
-  }
-
-  @action
-  saveAndRun() {
-    this.save().then(() => this.run());
   }
 
   async _importQuery(file) {
@@ -157,28 +234,13 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   updateGroupIds(value) {
-    this.dirty = true;
     this.model.set("group_ids", value);
-  }
-
-  @action
-  updateHideSchema(value) {
-    this.hideSchema = value;
+    this.recomputeDirty();
   }
 
   @action
   editName() {
     this.editingName = true;
-  }
-
-  @action
-  editQuery() {
-    this.editingQuery = true;
-  }
-
-  @action
-  download() {
-    window.open(this.model.downloadUrl, "_blank");
   }
 
   @action
@@ -200,7 +262,7 @@ export default class PluginsExplorerController extends Controller {
       if (!this.model.group_ids || !Array.isArray(this.model.group_ids)) {
         this.model.set("group_ids", []);
       }
-      this.dirty = false;
+      this.snapshotPristine();
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -243,7 +305,16 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   setDirty() {
-    this.dirty = true;
+    this.recomputeDirty();
+  }
+
+  @action
+  updateSql(value) {
+    if (this.model.sql === value) {
+      return;
+    }
+    this.model.set("sql", value);
+    this.recomputeDirty();
   }
 
   @action
@@ -252,7 +323,18 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  async run() {
+  async run(explain = false) {
+    // catch any dirty state that onChange may not have flushed yet
+    this.recomputeDirty();
+
+    if (this.dirty) {
+      try {
+        await this.save();
+      } catch {
+        return;
+      }
+    }
+
     let params = null;
     if (this.model.hasParams) {
       try {
@@ -280,7 +362,7 @@ export default class PluginsExplorerController extends Controller {
         type: "POST",
         data: {
           params: JSON.stringify(params),
-          explain: this.explain,
+          explain,
         },
       }
     )
@@ -292,6 +374,7 @@ export default class PluginsExplorerController extends Controller {
           return;
         }
         this.showResults = true;
+        this.initView();
       })
       .catch((err) => {
         this.showResults = false;
