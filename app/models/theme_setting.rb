@@ -29,7 +29,7 @@ class ThemeSetting < ActiveRecord::Base
           objects: json_value,
         )
 
-      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
+      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
     end
 
     if theme.theme_modifier_set.refresh_theme_setting_modifiers(
