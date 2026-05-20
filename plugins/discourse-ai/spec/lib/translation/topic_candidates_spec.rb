@@ -67,10 +67,18 @@ describe DiscourseAi::Translation::TopicCandidates do
     describe "category and PM filtering" do
       fab!(:target_category, :category)
       fab!(:non_target_category, :category)
+      fab!(:group)
       fab!(:pm, :private_message_topic)
-      fab!(:group_pm) { Fabricate(:private_message_topic, allowed_groups: [Fabricate(:group)]) }
+      fab!(:group_pm) { Fabricate(:private_message_topic, allowed_groups: [group]) }
       fab!(:target_topic) { Fabricate(:topic, category: target_category) }
       fab!(:non_target_topic) { Fabricate(:topic, category: non_target_category) }
+
+      it "includes topics from private categories by default" do
+        private_category = Fabricate(:private_category, group:)
+        private_topic = Fabricate(:topic, category: private_category)
+
+        expect(DiscourseAi::Translation::TopicCandidates.get).to include(private_topic)
+      end
 
       it "does not include excluded categories" do
         SiteSetting.ai_translation_excluded_categories = non_target_category.id.to_s

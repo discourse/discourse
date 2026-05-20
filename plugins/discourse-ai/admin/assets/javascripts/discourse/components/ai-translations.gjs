@@ -56,13 +56,13 @@ export default class AiTranslations extends Component {
   constructor() {
     super(...arguments);
     this._checkCredits();
-    this._loadTargetCategories();
+    this._loadExcludedCategories();
     if (this.enabled) {
       this._loadProgress();
     }
   }
 
-  async _loadTargetCategories() {
+  async _loadExcludedCategories() {
     const ids = this.args.model?.excluded_category_ids || [];
     if (ids.length) {
       this.excludedCategories = await Category.asyncFindByIds(ids);

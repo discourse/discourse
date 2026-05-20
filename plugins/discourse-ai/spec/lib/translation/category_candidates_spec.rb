@@ -11,6 +11,13 @@ describe DiscourseAi::Translation::CategoryCandidates do
       expect(categories).to include(category_1, category_2)
     end
 
+    it "returns private categories by default" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      SiteSetting.ai_translation_excluded_categories = ""
+
+      expect(DiscourseAi::Translation::CategoryCandidates.get).to include(private_category)
+    end
+
     it "does not return excluded categories" do
       included = Fabricate(:category)
       excluded = Fabricate(:category)

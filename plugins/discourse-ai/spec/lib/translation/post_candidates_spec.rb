@@ -51,16 +51,22 @@ describe DiscourseAi::Translation::PostCandidates do
     describe "category and PM filtering" do
       fab!(:target_category, :category)
       fab!(:non_target_category, :category)
+      fab!(:group)
       fab!(:pm_post) { Fabricate(:post, topic: Fabricate(:private_message_topic)) }
       fab!(:group_pm_post) do
-        Fabricate(
-          :post,
-          topic: Fabricate(:private_message_topic, allowed_groups: [Fabricate(:group)]),
-        )
+        Fabricate(:post, topic: Fabricate(:private_message_topic, allowed_groups: [group]))
       end
       fab!(:target_post) { Fabricate(:post, topic: Fabricate(:topic, category: target_category)) }
       fab!(:non_target_post) do
         Fabricate(:post, topic: Fabricate(:topic, category: non_target_category))
+      end
+
+      it "includes posts from private categories by default" do
+        private_category = Fabricate(:private_category, group:)
+        private_post = Fabricate(:post, topic: Fabricate(:topic, category: private_category))
+        SiteSetting.ai_translation_personal_messages = "none"
+
+        expect(DiscourseAi::Translation::PostCandidates.get).to include(private_post)
       end
 
       it "does not include posts from excluded categories" do
@@ -200,6 +206,19 @@ describe DiscourseAi::Translation::PostCandidates do
       expect(result[:translation_progress]).to all(include(done: 0, total: 0))
       expect(result[:total]).to eq(0)
       expect(result[:posts_with_detected_locale]).to eq(0)
+    end
+
+    it "uses excluded categories in the cache key" do
+      Post.delete_all
+      excluded_category = Fabricate(:category)
+      Fabricate(:post, locale: "en_GB", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post, locale: "fr", topic: Fabricate(:topic, category: excluded_category))
+
+      SiteSetting.ai_translation_excluded_categories = ""
+      expect(described_class.get_completion_all_locales[:total]).to eq(2)
+
+      SiteSetting.ai_translation_excluded_categories = excluded_category.id.to_s
+      expect(described_class.get_completion_all_locales[:total]).to eq(1)
     end
 
     it "returns progress grouped by base locale (of en_GB) and correct totals" do

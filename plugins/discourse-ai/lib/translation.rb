@@ -38,6 +38,8 @@ module DiscourseAi
         SiteSetting.ai_translation_backfill_max_age_days > 0
     end
 
+    # AI translation intentionally treats every category, including read-restricted
+    # categories, as eligible unless admins add it to the exclusion setting.
     def self.excluded_category_ids
       SiteSetting.ai_translation_excluded_categories.to_s.split("|").map(&:to_i)
     end
