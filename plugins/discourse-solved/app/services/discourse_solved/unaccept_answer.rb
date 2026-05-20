@@ -76,6 +76,33 @@ class DiscourseSolved::UnacceptAnswer
     topic_answer.destroy!
     solved = topic.solved
     solved.destroy! if solved && solved.topic_answers.none?
+
+    # TODO: Remove after post-deploy migration DropDiscourseSolvedRemovedColumns is promoted
+    # If there's a SolvedTopic and a remaining TopicAnswer, update to the latest remaining
+    legacy_columns_exist =
+      ActiveRecord::Base.connection.column_exists?(
+        :discourse_solved_solved_topics,
+        :answer_post_id,
+      ) &&
+        ActiveRecord::Base.connection.column_exists?(
+          :discourse_solved_solved_topics,
+          :accepter_user_id,
+        )
+
+    if solved&.topic_answers&.any? && legacy_columns_exist
+      latest = solved.topic_answers.max_by(&:created_at)
+      DB.exec(
+        <<~SQL,
+        UPDATE discourse_solved_solved_topics
+           SET answer_post_id = :post_id,
+               accepter_user_id = :user_id
+         WHERE id = :solved_topic_id
+      SQL
+        solved_topic_id: solved.id,
+        post_id: latest.answer_post_id,
+        user_id: latest.accepter_user_id,
+      )
+    end
   end
 
   def unaccepted_solution_webhooks_active

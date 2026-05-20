@@ -206,6 +206,30 @@ class DiscourseSolved::AcceptAnswer
   end
 
   def create_topic_answer(solved_topic:, post:, guardian:)
-    DiscourseSolved::TopicAnswer.create!(solved_topic:, post:, accepter: guardian.user)
+    topic_answer =
+      DiscourseSolved::TopicAnswer.create!(solved_topic:, post:, accepter: guardian.user)
+
+    # TODO: Remove after post-deploy migration DropDiscourseSolvedRemovedColumns is promoted
+    # Dual-write to old table for backward compatibility during rolling deploy
+    legacy_columns_exist =
+      ActiveRecord::Base.connection.column_exists?(
+        :discourse_solved_solved_topics,
+        :answer_post_id,
+      ) &&
+        ActiveRecord::Base.connection.column_exists?(
+          :discourse_solved_solved_topics,
+          :accepter_user_id,
+        )
+
+    if legacy_columns_exist
+      DB.exec(<<~SQL, solved_topic_id: solved_topic.id, post_id: post.id, user_id: guardian.user.id)
+      UPDATE discourse_solved_solved_topics
+        SET answer_post_id = :post_id,
+          accepter_user_id = :user_id
+      WHERE id = :solved_topic_id
+    SQL
+    end
+
+    topic_answer
   end
 end
