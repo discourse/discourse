@@ -1,6 +1,12 @@
 // @ts-check
 import { modifier } from "ember-modifier";
+import { registerDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
+
+const ACCEPTED_KINDS = ["ve-block", "ve-palette-block"];
+
+/** Outer-edge band (px) where drops fall through to the parent container. */
+const EDGE_BAND = 12;
 
 /**
  * One drop target per layout container. Replaces the per-block
@@ -30,29 +36,14 @@ import { i18n } from "discourse-i18n";
  */
 export default modifier(
   (chromeElement, [visualEditor, containerKey, outletName, mode]) => {
-    if (mode === "grid" || mode == null) {
-      // Grids own their own dragover handler (see GridOverlay);
-      // leaf blocks (mode === null) never act as drop targets on
-      // their own — their parent container handles drops near them.
+    // `grid`: the GridOverlay owns the layout's grid div directly.
+    // `grid-cell-leaf`: drops on a leaf positioned in a grid cell
+    //   bubble up via PDND's "closest ancestor target" resolution
+    //   to the grid's drop target.
+    // `null`: leaves in stack / row containers — the parent container
+    //   chrome handles drops near them.
+    if (mode === "grid" || mode === "grid-cell-leaf" || mode == null) {
       return () => {};
-    }
-
-    // Grid-positioned leaves: the grid overlay's capture-phase
-    // dragover already published the active descriptor (with an
-    // embedded dispatch payload) to the service; here we just route
-    // the drop event into the unified `dispatchActiveDrop`. The
-    // source modifier's `onDragEnd` callback handles `endDrag`, so
-    // we don't call it explicitly.
-    if (mode === "grid-cell-leaf") {
-      function onLeafDrop(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        visualEditor.dispatchActiveDrop();
-      }
-      chromeElement.addEventListener("drop", onLeafDrop);
-      return () => {
-        chromeElement.removeEventListener("drop", onLeafDrop);
-      };
     }
 
     const isSlot = mode === "slot";
@@ -104,121 +95,77 @@ export default modifier(
       return containerElement;
     }
 
-    function onDragOver(event) {
-      const source = visualEditor.dragSource;
-      if (!source) {
-        return;
+    // Edge-band defer. When this modifier instance is on a CHROME
+    // (not the outlet boundary itself), drops within 12px of any
+    // outer edge fall through to the parent container so the user
+    // can insert a sibling AT THE PARENT level. Without this, a
+    // container chrome (e.g. ve:layout in stack mode at outlet
+    // root) consumes EVERY drop over its bbox, leaving no way to
+    // reach the outlet boundary's drop logic.
+    //
+    // Returning `false` from `canDrop` excludes this target from
+    // PDND's resolution, which then walks up to the next ancestor
+    // target — exactly the "fall through to parent" semantics we
+    // want. The outlet boundary (containerKey === null) is the
+    // root, so there's no parent to defer to; slot chromes also
+    // opt out since slots are always single-cell inside a grid and
+    // the grid owns sibling moves at the parent level.
+    function isInEdgeBand(input) {
+      if (containerKey == null || isSlot) {
+        return false;
       }
-      // Grid-overlay defer. The grid overlay attaches a capture-phase
-      // dragover listener on its `.ve-layout--grid` div, which sets
-      // the unified `activeDropPreview` to a grid-level descriptor
-      // (swap / shift / replace / occupy) before the event reaches
-      // any chrome's bubble-phase handler. If we ran the normal
-      // projection logic here, we'd overwrite the grid overlay's
-      // descriptor with an outer-container one — e.g. dragover on
-      // a card inside a grid bubbles up to the outlet boundary,
-      // which would write "INSERT before Layout" and clobber the
-      // grid's "swap with X" descriptor. Detect "the dragover
-      // target is inside a `.ve-layout--grid` that's nested inside
-      // MY chromeElement" and bail out — the grid overlay owns it.
-      const targetGrid = event.target?.closest?.(".ve-layout--grid");
-      if (
-        targetGrid &&
-        targetGrid !== chromeElement &&
-        chromeElement.contains(targetGrid)
-      ) {
-        return;
-      }
-      // Edge-band defer. When this modifier instance is on a CHROME
-      // (not the outlet boundary itself), drops within 12px of any
-      // outer edge bubble up to the parent container so the user
-      // can insert a sibling AT THE PARENT level. Without this, a
-      // container chrome (e.g. ve:layout in stack mode at outlet
-      // root) consumes EVERY dragover over its bbox via the
-      // `stopPropagation` below, leaving no way to reach the
-      // outlet boundary's drop logic. The outlet boundary itself
-      // is identified by `containerKey === null` and skips this
-      // check — it's the root, so there's no parent to defer to.
-      // Slot chromes also opt out: a slot is always single-cell
-      // inside a grid, and the grid overlay owns sibling moves at
-      // the parent level.
-      if (containerKey != null && !isSlot) {
-        const rect = chromeElement.getBoundingClientRect();
-        const BAND = 12;
-        const inEdgeBand =
-          event.clientY < rect.top + BAND ||
-          event.clientY > rect.bottom - BAND ||
-          event.clientX < rect.left + BAND ||
-          event.clientX > rect.right - BAND;
-        if (inEdgeBand) {
-          return;
-        }
+      const rect = chromeElement.getBoundingClientRect();
+      return (
+        input.clientY < rect.top + EDGE_BAND ||
+        input.clientY > rect.bottom - EDGE_BAND ||
+        input.clientX < rect.left + EDGE_BAND ||
+        input.clientX > rect.right - EDGE_BAND
+      );
+    }
+
+    function descriptorFor(source, input) {
+      if (isSlot) {
+        return buildSlotChromeDescriptor({
+          visualEditor,
+          chromeElement,
+          containerKey,
+          source,
+        });
       }
       const container = resolveContainer();
       if (!container) {
-        return;
+        return null;
       }
-      event.preventDefault();
-      // `stopPropagation` so nested containers don't both write to
-      // `activeDropPreview` — the deepest container wins (Pragmatic
-      // dnd uses the same idiom in its own dDragAndDropTarget).
-      event.stopPropagation();
-      // Always "move" — the `dDragAndDropSource` modifier hardcodes
-      // `effectAllowed = "move"` regardless of source kind. If the
-      // target sets `dropEffect = "copy"`, the browser rejects the
-      // drop because copy isn't in the allowed set, and the user
-      // sees the no-entry cursor with no drop firing.
-      event.dataTransfer.dropEffect = "move";
-
-      const descriptor = isSlot
-        ? buildSlotChromeDescriptor({
-            visualEditor,
-            chromeElement,
-            containerKey,
-            source,
-          })
-        : computeDescriptor({
-            visualEditor,
-            container,
-            event,
-            containerKey,
-            outletName,
-            axis,
-            source,
-          });
-      if (!descriptor) {
-        visualEditor.setActiveDropPreview(null);
-        return;
-      }
-      visualEditor.setActiveDropPreview(descriptor);
+      return computeDescriptor({
+        visualEditor,
+        container,
+        input,
+        containerKey,
+        outletName,
+        axis,
+        source,
+      });
     }
 
-    function onDragLeave(event) {
-      // Clear only when the pointer truly leaves THIS chrome (not
-      // when moving between children inside it). `relatedTarget` is
-      // the element the cursor entered next; if it's still inside
-      // `chromeElement`, we're not leaving.
-      if (event.relatedTarget && chromeElement.contains(event.relatedTarget)) {
-        return;
-      }
-      visualEditor.clearActiveDropPreview();
-    }
-
-    function onDrop(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      visualEditor.dispatchActiveDrop();
-    }
-
-    chromeElement.addEventListener("dragover", onDragOver);
-    chromeElement.addEventListener("dragleave", onDragLeave);
-    chromeElement.addEventListener("drop", onDrop);
-
-    return () => {
-      chromeElement.removeEventListener("dragover", onDragOver);
-      chromeElement.removeEventListener("dragleave", onDragLeave);
-      chromeElement.removeEventListener("drop", onDrop);
-    };
+    return registerDropTarget(chromeElement, () => ({
+      accepts: ACCEPTED_KINDS,
+      indicator: false,
+      canDrop: ({ input }) => !isInEdgeBand(input),
+      onDragEnter: ({ source, location }) => {
+        const descriptor = descriptorFor(source, location.current.input);
+        visualEditor.setActiveDropPreview(descriptor);
+      },
+      onDrag: ({ source, location }) => {
+        const descriptor = descriptorFor(source, location.current.input);
+        visualEditor.setActiveDropPreview(descriptor);
+      },
+      onDragLeave: () => {
+        visualEditor.clearActiveDropPreview();
+      },
+      onDrop: () => {
+        visualEditor.dispatchActiveDrop();
+      },
+    }));
   }
 );
 
@@ -248,7 +195,7 @@ export default modifier(
 function computeDescriptor({
   visualEditor,
   container,
-  event,
+  input,
   containerKey,
   outletName,
   axis,
@@ -264,7 +211,7 @@ function computeDescriptor({
       return chrome ? { wrapper, chrome } : null;
     })
     .filter(Boolean);
-  const cursor = axis === "x" ? event.clientX : event.clientY;
+  const cursor = axis === "x" ? input.clientX : input.clientY;
 
   // Find first child whose far edge is past the cursor. That's the
   // candidate "this child or before it".

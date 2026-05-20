@@ -7,7 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
-import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import { registerDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 // `grid-math` is in the universal bundle (its `parsePlacement` is
 // called by the live-page `ve-layout.gjs`); this component is
@@ -153,9 +153,9 @@ export default class GridOverlay extends Component {
     this._pickingCell?.row === cell.row;
 
   /**
-   * Accept palette drops AND existing-block drops. Both route through
-   * the shared `handleDrop` action, which dispatches the descriptor
-   * already published by the dragover handler.
+   * Accept palette drops AND existing-block drops. The grid-level
+   * drop target dispatches whichever descriptor the dragover handler
+   * has already published.
    */
   acceptedDropKinds = ["ve-block", "ve-palette-block"];
   /**
@@ -175,7 +175,7 @@ export default class GridOverlay extends Component {
 
   /**
    * The most recently published intermediate descriptor for this
-   * drag. Drives the dragover diff in `_handleGridDragOver` — if the
+   * drag. Drives the dragover diff in `#publishFromDrag` — if the
    * next dragover produces a shape-equivalent intermediate, we skip
    * the rebuild + service publish entirely. Cleared on dragleave.
    *
@@ -194,6 +194,11 @@ export default class GridOverlay extends Component {
       this.#dragCache.isCollapsed = this.#computeIsCollapsed();
     }
   };
+  /**
+   * Cleanup function returned by `registerDropTarget` for the grid
+   * container's PDND drop target. Invoked once on destroy.
+   */
+  #gridDropTargetCleanup = null;
   /**
    * Cell currently in "pick a block" mode. `null` when no picker is
    * open. Stored here (rather than per-cell state) so clicking another
@@ -218,30 +223,10 @@ export default class GridOverlay extends Component {
   /** Drop-preview overlay element ref, captured on its own insert. */
   _overlayElement = null;
 
-  /**
-   * Lazily-installed dragover / dragleave handlers attached to the
-   * grid container itself (not to per-cell children). Captured here
-   * so `willDestroy` can detach them.
-   */
-  _gridDragOverHandler = null;
-  _gridDragLeaveHandler = null;
-
   willDestroy() {
     super.willDestroy(...arguments);
-    if (this._gridElement && this._gridDragOverHandler) {
-      this._gridElement.removeEventListener(
-        "dragover",
-        this._gridDragOverHandler,
-        true
-      );
-    }
-    if (this._gridElement && this._gridDragLeaveHandler) {
-      this._gridElement.removeEventListener(
-        "dragleave",
-        this._gridDragLeaveHandler,
-        true
-      );
-    }
+    this.#gridDropTargetCleanup?.();
+    this.#gridDropTargetCleanup = null;
     window.removeEventListener("resize", this.#invalidateDragGeometry);
     window.removeEventListener("scroll", this.#invalidateDragGeometry, true);
   }
@@ -608,23 +593,31 @@ export default class GridOverlay extends Component {
     if (!gridEl) {
       return;
     }
-    // Drive the overlay descriptor from a single grid-level dragover
-    // listener so the overlay appears as soon as the cursor enters the
+    // Drive the overlay descriptor from a single grid-level drop
+    // target so the overlay appears as soon as the cursor enters the
     // grid — not only when it's over a specific cell or slot. The
     // cursor's pixel position resolves to a cell coordinate via the
     // grid's resolved track sizes, then to a zone within that cell. A
     // line variant in the gap between two cells stays positioned in
     // that gap even when the cursor is mid-traverse between cells.
     //
-    // Capture phase: the per-cell `dDragAndDropTarget` modifier calls
-    // `event.stopPropagation()` in its own dragover handler, which
-    // would suppress this listener if we attached on the bubble phase.
-    // Using `capture: true` ensures we observe the event before the
-    // modifier sees (and stops) it.
-    this._gridDragOverHandler = (e) => this._handleGridDragOver(e);
-    this._gridDragLeaveHandler = (e) => this._handleGridDragLeave(e);
-    gridEl.addEventListener("dragover", this._gridDragOverHandler, true);
-    gridEl.addEventListener("dragleave", this._gridDragLeaveHandler, true);
+    // The grid is the SOLE PDND target for the whole grid surface:
+    // empty cells, slot chromes, and grid-positioned leaf chromes all
+    // route their drops here via PDND's "closest ancestor" target
+    // resolution. That keeps descriptor compute centralised — only
+    // this component knows about the grid's resolved tracks.
+    this.#gridDropTargetCleanup = registerDropTarget(gridEl, () => ({
+      accepts: this.acceptedDropKinds,
+      indicator: false,
+      onDragEnter: ({ source, location }) =>
+        this.#publishFromDrag(source, location),
+      onDrag: ({ source, location }) => this.#publishFromDrag(source, location),
+      onDragLeave: () => {
+        this.#lastIntermediate = null;
+        this.visualEditor.setActiveDropPreview(null);
+      },
+      onDrop: this.handleDrop,
+    }));
     // Refresh the per-drag geometry cache when the page reflows (any
     // resize) or when any scroll container moves (capture-phase
     // listener catches scrolls on nested overflow containers too, not
@@ -639,6 +632,25 @@ export default class GridOverlay extends Component {
     });
   }
 
+  /**
+   * Builds an intermediate descriptor from the current drag location
+   * and publishes it to the unified preview if it differs from the
+   * last one. Used by both `onDragEnter` and `onDrag` so the overlay
+   * shows up immediately on entry and tracks the cursor continuously.
+   *
+   * @param {{type: string, data: Object, element: Element}} source
+   * @param {{current: {input: Object}}} location
+   */
+  #publishFromDrag(source, location) {
+    const input = location.current.input;
+    const intermediate = this._descriptorFromCursor(input, source);
+    if (descriptorsEqual(this.#lastIntermediate, intermediate)) {
+      return;
+    }
+    this.#lastIntermediate = intermediate;
+    this.#publishUnified(intermediate, source);
+  }
+
   @action
   captureGhost(element) {
     this._ghostElement = element;
@@ -650,12 +662,13 @@ export default class GridOverlay extends Component {
   }
 
   /**
-   * Unified drop handler for grid drop targets — empty cells, plus
-   * the grid-cell-leaf path that routes here from `container-drop-
-   * target.js`. Dispatch payload was already embedded in the active
-   * descriptor at hit-test time; `dispatchActiveDrop` runs it by
-   * action name. `endDrag` is dispatched by the source modifier's
-   * `onDragEnd` callback, so this handler doesn't call it.
+   * Grid-level drop handler. PDND routes every drop within the grid
+   * surface (empty cells, slot chromes, grid-positioned leaves) here
+   * via "closest ancestor target" resolution, since the grid div is
+   * the sole PDND drop target for the surface. The dispatch payload
+   * was already embedded in the active descriptor at hit-test time;
+   * `dispatchActiveDrop` runs it by action name. `endDrag` is
+   * dispatched by the source modifier's `onDrop` callback.
    */
   @action
   handleDrop() {
@@ -680,56 +693,6 @@ export default class GridOverlay extends Component {
   }
 
   /**
-   * Grid-level dragover handler. Fires on every mouse move while a
-   * compatible drag is in flight and the cursor is anywhere inside
-   * the grid (gaps between cells included). Computes a descriptor
-   * from the cursor's pixel position via the grid's resolved tracks,
-   * so the overlay tracks the cursor continuously rather than
-   * waiting for it to enter a child element.
-   */
-  _handleGridDragOver(event) {
-    const source = this.dragAndDrop.currentDrag;
-    if (
-      !source ||
-      (source.type !== "ve-block" && source.type !== "ve-palette-block")
-    ) {
-      return;
-    }
-    // Must call preventDefault on dragover so the subsequent `drop`
-    // event fires (HTML5 DnD spec). The per-empty-cell
-    // `dDragAndDropTarget` modifiers do this for the cells they own,
-    // but grid-positioned leaves (occupied cells like A / B in a
-    // 6×2 grid) rely solely on this capture-phase handler to
-    // qualify their drop event.
-    event.preventDefault();
-    const intermediate = this._descriptorFromCursor(event, source);
-    if (descriptorsEqual(this.#lastIntermediate, intermediate)) {
-      // Cursor sitting in the same hit zone — descriptor didn't
-      // change shape, skip the publish to avoid a tracked re-render
-      // at ~60 Hz during stationary hover.
-      return;
-    }
-    this.#lastIntermediate = intermediate;
-    this.#publishUnified(intermediate, source);
-  }
-
-  /**
-   * Clears the overlay when the cursor leaves the grid entirely.
-   * `dragleave` ALSO fires when the cursor crosses from the grid
-   * into a child; suppress that case by checking whether the
-   * `relatedTarget` (the element the cursor moved INTO) is still
-   * inside the grid.
-   */
-  _handleGridDragLeave(event) {
-    const rt = event.relatedTarget;
-    if (rt && this._gridElement?.contains(rt)) {
-      return;
-    }
-    this.#lastIntermediate = null;
-    this.visualEditor.setActiveDropPreview(null);
-  }
-
-  /**
    * Translates the cursor's pixel coordinates within the grid into a
    * drop-preview descriptor. Algorithm:
    *  1. Read resolved track widths / heights / gaps via
@@ -747,7 +710,7 @@ export default class GridOverlay extends Component {
    * resolved track range or the source can't drop on the resolved
    * target (e.g. palette block onto an occupied slot's center).
    */
-  _descriptorFromCursor(event, source) {
+  _descriptorFromCursor(input, source) {
     // The source can never be dropped onto itself or into any of its
     // own descendants — that would create a cycle. Hide the overlay
     // entirely when the cursor is hovering THIS grid and the source
@@ -759,7 +722,7 @@ export default class GridOverlay extends Component {
     }
 
     if (this.isCollapsed) {
-      return this._descriptorFromCursorCollapsed(event, source, sourceKey);
+      return this._descriptorFromCursorCollapsed(input, source, sourceKey);
     }
 
     const tracks = this._readGridTracks();
@@ -770,8 +733,8 @@ export default class GridOverlay extends Component {
     if (!gridRect) {
       return null;
     }
-    const x = event.clientX - gridRect.left;
-    const y = event.clientY - gridRect.top;
+    const x = input.clientX - gridRect.left;
+    const y = input.clientY - gridRect.top;
 
     const cell = this._cursorToCell(x, y, tracks);
     if (!cell) {
@@ -797,7 +760,7 @@ export default class GridOverlay extends Component {
       descriptor = this._slotDescriptorForZone({
         slot,
         zone,
-        shift: event.shiftKey,
+        shift: input.shiftKey,
         source,
       });
     } else {
@@ -844,8 +807,8 @@ export default class GridOverlay extends Component {
    * `_computeOverlayGeometry` (via its own collapsed branch) consume
    * it the same way.
    */
-  _descriptorFromCursorCollapsed(event, source, sourceKey) {
-    const el = document.elementFromPoint(event.clientX, event.clientY);
+  _descriptorFromCursorCollapsed(input, source, sourceKey) {
+    const el = document.elementFromPoint(input.clientX, input.clientY);
     if (!el || !this._gridElement.contains(el)) {
       return null;
     }
@@ -862,7 +825,7 @@ export default class GridOverlay extends Component {
       }
       const rect = emptyEl.getBoundingClientRect();
       const zone = this._computeZoneCollapsed(
-        event.clientY - rect.top,
+        input.clientY - rect.top,
         rect.height
       );
       const base = this._cellDescriptorForZone({ column: col, row }, zone);
@@ -888,13 +851,13 @@ export default class GridOverlay extends Component {
         }
         const rect = candidate.getBoundingClientRect();
         const zone = this._computeZoneCollapsed(
-          event.clientY - rect.top,
+          input.clientY - rect.top,
           rect.height
         );
         const base = this._slotDescriptorForZone({
           slot,
           zone,
-          shift: event.shiftKey,
+          shift: input.shiftKey,
           source,
         });
         return this._finishCollapsedDescriptor(
@@ -1547,10 +1510,6 @@ export default class GridOverlay extends Component {
             style={{this.cellStyle cell}}
             data-col={{cell.column}}
             data-row={{cell.row}}
-            {{dDragAndDropTarget
-              accepts=this.acceptedDropKinds
-              onDrop=this.handleDrop
-            }}
           >
             <EmptyCellPlaceholder
               @palette={{this.palette}}
