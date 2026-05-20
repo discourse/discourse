@@ -317,6 +317,90 @@ RSpec.describe CategorySerializer do
     end
   end
 
+  describe "tag-related attributes" do
+    fab!(:moderator)
+    fab!(:visible_tag) { Fabricate(:tag, name: "visible-tag") }
+    fab!(:hidden_tag) { Fabricate(:tag, name: "hidden-tag") }
+    fab!(:visible_tag_group) { Fabricate(:tag_group, name: "visible-group") }
+
+    fab!(:admin_only_tag_group) do
+      Fabricate(:tag_group, name: "admin-only-group", permissions: { "admins" => 1 })
+    end
+
+    fab!(:required_admin_only_tag_group) do
+      Fabricate(:tag_group, name: "required-admin-group", permissions: { "admins" => 1 })
+    end
+
+    before do
+      SiteSetting.tagging_enabled = true
+
+      admin_only_tag_group.tags << hidden_tag
+      category.tags << visible_tag
+      category.tags << hidden_tag
+      category.tag_groups << visible_tag_group
+      category.tag_groups << admin_only_tag_group
+      category.update!(
+        category_required_tag_groups: [
+          CategoryRequiredTagGroup.new(tag_group: required_admin_only_tag_group, min_count: 2),
+        ],
+      )
+    end
+
+    it "omits name-bearing fields and returns min_count-only required_tag_groups for a regular user" do
+      json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
+
+      expect(json).not_to have_key(:allowed_tags)
+      expect(json).not_to have_key(:allowed_tag_groups)
+      expect(json[:required_tag_groups]).to eq([{ min_count: 2 }])
+    end
+
+    it "omits name-bearing fields and returns min_count-only required_tag_groups for an anonymous viewer" do
+      json = described_class.new(category, scope: Guardian.new, root: false).as_json
+
+      expect(json).not_to have_key(:allowed_tags)
+      expect(json).not_to have_key(:allowed_tag_groups)
+      expect(json[:required_tag_groups]).to eq([{ min_count: 2 }])
+    end
+
+    it "includes restricted tag and tag-group names for an admin" do
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:allowed_tags]).to contain_exactly(
+        { id: visible_tag.id, name: visible_tag.name, slug: visible_tag.slug },
+        { id: hidden_tag.id, name: hidden_tag.name, slug: hidden_tag.slug },
+      )
+      expect(json[:allowed_tag_groups]).to contain_exactly(
+        visible_tag_group.name,
+        admin_only_tag_group.name,
+      )
+      expect(json[:required_tag_groups]).to eq(
+        [{ name: required_admin_only_tag_group.name, min_count: 2 }],
+      )
+    end
+
+    it "filters admin-only tag and tag-group names for a moderator who can edit the category" do
+      SiteSetting.moderators_manage_categories = true
+
+      json = described_class.new(category, scope: Guardian.new(moderator), root: false).as_json
+
+      expect(json[:allowed_tags]).to contain_exactly(
+        { id: visible_tag.id, name: visible_tag.name, slug: visible_tag.slug },
+      )
+      expect(json[:allowed_tag_groups]).to contain_exactly(visible_tag_group.name)
+      expect(json[:required_tag_groups]).to eq([])
+    end
+
+    it "omits all tag-related fields when tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json).not_to have_key(:allowed_tags)
+      expect(json).not_to have_key(:allowed_tag_groups)
+      expect(json).not_to have_key(:required_tag_groups)
+    end
+  end
+
   describe "#category_type_settings" do
     let(:type_a) do
       Class.new(Categories::Types::Base) do

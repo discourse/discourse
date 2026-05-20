@@ -774,18 +774,6 @@
             "navigate_to_first_post_after_read": {
               "type": "boolean"
             },
-            "allowed_tags": {
-              "type": "array",
-              "items": {
-
-              }
-            },
-            "allowed_tag_groups": {
-              "type": "array",
-              "items": {
-
-              }
-            },
             "allow_global_tags": {
               "type": "boolean"
             },
@@ -796,15 +784,11 @@
                   "type": "object",
                   "additionalProperties": false,
                   "properties": {
-                    "name": {
-                      "type": "string"
-                    },
                     "min_count": {
                       "type": "integer"
                     }
                   },
                   "required": [
-                    "name",
                     "min_count"
                   ]
                 }
@@ -884,8 +868,6 @@
             "default_list_filter",
             "minimum_required_tags",
             "navigate_to_first_post_after_read",
-            "allowed_tags",
-            "allowed_tag_groups",
             "allow_global_tags",
             "required_tag_groups",
             "read_only_banner",

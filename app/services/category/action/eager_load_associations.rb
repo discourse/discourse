@@ -4,15 +4,13 @@ class Category::Action::EagerLoadAssociations < Service::ActionBase
   option :categories, []
   option :guardian
 
-  ASSOCIATIONS = [
-    :uploaded_logo,
-    :uploaded_logo_dark,
-    :uploaded_background,
-    :uploaded_background_dark,
-    :tags,
-    :tag_groups,
-    :form_templates,
-    { category_required_tag_groups: :tag_group },
+  ASSOCIATIONS = %i[
+    uploaded_logo
+    uploaded_logo_dark
+    uploaded_background
+    uploaded_background_dark
+    category_required_tag_groups
+    form_templates
   ].freeze
 
   def call

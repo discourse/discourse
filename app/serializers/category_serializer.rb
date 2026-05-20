@@ -20,6 +20,8 @@ class CategorySerializer < SiteCategorySerializer
   attributes :locale,
              :read_restricted,
              :available_groups,
+             :allowed_tags,
+             :allowed_tag_groups,
              :auto_close_hours,
              :auto_close_based_on_last_post,
              :group_permissions,
@@ -177,5 +179,41 @@ class CategorySerializer < SiteCategorySerializer
   def available_category_types
     return [] if !SiteSetting.enable_simplified_category_creation
     Categories::TypeRegistry.list(only_visible: true)
+  end
+
+  def include_allowed_tags?
+    SiteSetting.tagging_enabled && scope && scope.can_edit?(object)
+  end
+
+  def allowed_tags
+    hidden = scope.hidden_tag_names
+    object
+      .tags
+      .reject { |tag| hidden.include?(tag.name) }
+      .map { |tag| { id: tag.id, name: tag.name, slug: tag.slug } }
+  end
+
+  def include_allowed_tag_groups?
+    SiteSetting.tagging_enabled && scope && scope.can_edit?(object)
+  end
+
+  def allowed_tag_groups
+    tag_groups = object.tag_groups.to_a
+    return [] if tag_groups.empty?
+
+    visible_ids = TagGroup.visible(scope).where(id: tag_groups.map(&:id)).pluck(:id).to_set
+    tag_groups.select { |tg| visible_ids.include?(tg.id) }.map(&:name)
+  end
+
+  def required_tag_groups
+    return super unless scope&.can_edit?(object)
+
+    required = object.category_required_tag_groups.to_a
+    return [] if required.empty?
+
+    visible_ids = TagGroup.visible(scope).where(id: required.map(&:tag_group_id)).pluck(:id).to_set
+    required
+      .select { |crtg| visible_ids.include?(crtg.tag_group_id) }
+      .map { |crtg| { name: crtg.tag_group&.name, min_count: crtg.min_count } }
   end
 end

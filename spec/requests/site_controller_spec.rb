@@ -76,6 +76,70 @@ RSpec.describe SiteController do
     end
   end
 
+  describe "#site" do
+    fab!(:admin)
+    fab!(:user)
+    fab!(:category)
+    fab!(:tag)
+    fab!(:public_tag_group, :tag_group)
+    fab!(:hidden_tag) { Fabricate(:tag, name: "leaked-tag") }
+
+    fab!(:staff_tag_group) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+    end
+
+    before do
+      SiteSetting.tagging_enabled = true
+
+      category.tags << tag
+      category.tag_groups << public_tag_group
+      category.update!(
+        category_required_tag_groups: [
+          CategoryRequiredTagGroup.new(tag_group: staff_tag_group, min_count: 1),
+        ],
+      )
+    end
+
+    after do
+      Site.clear_cache
+      Discourse.redis.del("site_json", "site_json_seq", "site_json_version")
+    end
+
+    def serialized_category
+      get "/site.json"
+      expect(response.status).to eq(200)
+      response.parsed_body["categories"].find { |c| c["id"] == category.id }
+    end
+
+    it "omits name-bearing tag fields from category payloads for anonymous users" do
+      payload = serialized_category
+
+      expect(payload).not_to have_key("allowed_tags")
+      expect(payload).not_to have_key("allowed_tag_groups")
+      expect(payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
+    end
+
+    it "omits name-bearing tag fields from category payloads for regular users" do
+      sign_in(user)
+
+      payload = serialized_category
+
+      expect(payload).not_to have_key("allowed_tags")
+      expect(payload).not_to have_key("allowed_tag_groups")
+      expect(payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
+    end
+
+    it "omits name-bearing tag fields from category payloads for admins" do
+      sign_in(admin)
+
+      payload = serialized_category
+
+      expect(payload).not_to have_key("allowed_tags")
+      expect(payload).not_to have_key("allowed_tag_groups")
+      expect(payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
+    end
+  end
+
   describe "#statistics" do
     after { DiscoursePluginRegistry.reset! }
 
