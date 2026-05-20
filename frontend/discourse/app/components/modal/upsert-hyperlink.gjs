@@ -71,7 +71,7 @@ export default class UpsertHyperlink extends Component {
     });
 
     this.selectedRow = -1;
-    document.querySelector("input.link-text").focus();
+    document.querySelector("input.link-text")?.focus();
   }
 
   async triggerSearch(linkUrl) {
