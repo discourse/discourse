@@ -47,13 +47,6 @@ export default modifier(
       function onLeafDrop(event) {
         event.preventDefault();
         event.stopPropagation();
-        // No source-state guard — by the time this bubble-phase
-        // listener fires, PDND's source.onDrop has already cleared
-        // `visualEditor.dragSource` (PDND dispatches source.onDrop
-        // BEFORE the native drop event finishes bubbling). The
-        // dispatch-side state (`_lastDropPreview`) is what matters,
-        // and `dispatchActiveDrop` reads it directly and no-ops
-        // gracefully when absent.
         visualEditor.dispatchActiveDrop();
       }
       chromeElement.addEventListener("drop", onLeafDrop);
@@ -214,12 +207,6 @@ export default modifier(
     function onDrop(event) {
       event.preventDefault();
       event.stopPropagation();
-      // See the comment on `onLeafDrop` above — by the time this
-      // bubble-phase native listener fires, `visualEditor.dragSource`
-      // has already been cleared by PDND's source.onDrop dispatch.
-      // The dispatch-side state in `_lastDropPreview` is the source of
-      // truth for what to dispatch; `dispatchActiveDrop` reads it
-      // directly and no-ops gracefully when absent.
       visualEditor.dispatchActiveDrop();
     }
 

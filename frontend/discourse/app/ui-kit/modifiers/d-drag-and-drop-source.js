@@ -1,5 +1,6 @@
 // @ts-check
 import { registerDestructor } from "@ember/destroyable";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import Modifier from "ember-modifier";
@@ -19,9 +20,8 @@ import Modifier from "ember-modifier";
  * imported only by the ui-kit modifier files. Consumers (plugins, core
  * features) talk to this helper, not to PDND directly.
  *
- * The consumer's `onDrop` callback fires after PDND's full drop
- * dispatch chain — see the inline comment at the `queueMicrotask`
- * call below for the spec guarantee that backs the ordering.
+ * The consumer's `onDrop` callback is deferred to the next task so it
+ * fires after the drop event has finished propagating.
  *
  * @param {HTMLElement} element - The element to mark draggable.
  * @param {() => Object} getArgsRef - Closure returning the latest args.
@@ -92,31 +92,11 @@ export function registerDraggable(element, getArgsRef) {
       };
       const location = event.location;
 
-      // PDND dispatches source.onDrop BEFORE target.onDrop in the
-      // same drop event (see `make-adapter.js::dispatchEvent` in
-      // PDND). Native bubble-phase drop listeners on non-PDND
-      // elements run later still, inside the same task. If the
-      // consumer's callback (typically a drag-end cleanup that
-      // clears shared dispatch state) ran synchronously here, it
-      // would wipe state that downstream handlers still need to
-      // read — and any consumer who didn't notice this ordering
-      // detail would silently race.
-      //
-      // Microtask deferral makes that impossible by construction.
-      // Per the HTML spec, microtasks queued during a task drain at
-      // the END of that task, before any new task can start. The
-      // drop event's entire propagation (capture + target + bubble)
-      // is one task; our microtask fires after every synchronous
-      // listener for this drop. Microtasks run FIFO, and we schedule
-      // ours from PDND's source.onDrop — which fires FIRST in PDND's
-      // chain — so this callback runs before any other microtask
-      // queued during the same drop event.
-      //
-      // Net effect for consumers: `onDrop` is a "drag finished, do
-      // your cleanup" hook. By the time it fires, every other
-      // handler has consumed whatever state it needed. Touching any
-      // shared field is safe.
-      queueMicrotask(() => {
+      // `next` defers the consumer to the next task, so it fires
+      // after the current drop event finishes propagating —
+      // including bubble-phase listeners that may still need to
+      // read shared dispatch state.
+      next(() => {
         consumerOnDrop?.({ source: sourcePayload, location });
       });
     },
