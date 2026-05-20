@@ -84,7 +84,10 @@ response = harness.get("/some/path", headers: {
 
 ## CI
 
-Not yet wired to CI. Phase-1 goal is local-only validation while we
-shake out the harness. CI integration is a follow-up that needs the
-infra team to either install nginx into `discourse/discourse_test:release`
-or add a dedicated job that uses an image with nginx pre-installed.
+Runs as a dedicated GitHub Actions workflow
+(`.github/workflows/nginx-tests.yml`) triggered when
+`config/nginx.sample.conf`, `spec/nginx/**`, or the workflow file
+itself change. Uses the `discourse/discourse_test:release` image, so
+the nginx under test is the same build (including brotli) that ships
+to production. `NGINX_TESTS_REQUIRED=1` is set in CI so a missing nginx
+is a hard failure rather than a silent skip.
