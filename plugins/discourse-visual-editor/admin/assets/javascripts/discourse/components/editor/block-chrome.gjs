@@ -20,11 +20,13 @@ import {
   parsePlacement,
   placementsOverlap,
 } from "discourse/plugins/discourse-visual-editor/discourse/lib/grid-math";
+import { entryHasEmptyImageUploadArgs } from "../../lib/empty-image-upload";
 import { entryKey } from "../../lib/mutate-layout";
 import containerDropTarget from "../../modifiers/container-drop-target";
 import gridTileDrag from "../../modifiers/grid-tile-drag";
 import BlockToolbar from "./block-toolbar";
 import EmptyCellPlaceholder from "./empty-cell-placeholder";
+import EmptyImageState from "./empty-image-state";
 import GridOverlay from "./grid-overlay";
 
 /**
@@ -502,6 +504,26 @@ export default class BlockChrome extends Component {
     return !entry?.children?.length;
   }
 
+  /**
+   * `true` when the wrapped block declares one or more `image-upload` args
+   * AND none of them currently hold an uploaded image. Drives the canvas-
+   * only empty-state card so blocks like `ve:image` don't render either a
+   * giant placeholder graphic or an invisible nothing while the author
+   * hasn't picked an image yet. Block templates stay agnostic — they keep
+   * rendering nothing for empty image args; the chrome shows the affordance
+   * around that void.
+   *
+   * @returns {boolean}
+   */
+  get hasEmptyImageUploadArgs() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.visualEditor.structuralVersion;
+    const entry = this.visualEditor._findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
+    return entryHasEmptyImageUploadArgs(this.metadata?.args, entry?.args);
+  }
+
   /** @returns {string} */
   get displayName() {
     return this.metadata?.shortName ?? this.args.blockName;
@@ -820,8 +842,14 @@ export default class BlockChrome extends Component {
               class="visual-editor-block-chrome__content"
               style={{this.contentStyle}}
             >
-              <@WrappedComponent />
+              {{#if this.hasEmptyImageUploadArgs}}
+                <EmptyImageState />
+              {{else}}
+                <@WrappedComponent />
+              {{/if}}
             </div>
+          {{else if this.hasEmptyImageUploadArgs}}
+            <EmptyImageState />
           {{else}}
             <@WrappedComponent />
           {{/if}}

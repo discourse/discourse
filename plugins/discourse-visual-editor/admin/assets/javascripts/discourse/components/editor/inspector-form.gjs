@@ -93,9 +93,33 @@ export default class InspectorForm extends Component {
    * mutations would invalidate this getter and cascade through Form's
    * render path. Form takes the snapshot once at construction; FKFormData
    * is the source of truth for the inputs from there on.
+   *
+   * Image-upload args are stored in the layout as the full upload object
+   * (`{ url, width, height, ... }`) so `DLightDarkImg` can render them
+   * without an extra lookup. FormKit's `FKControlImage` (and the
+   * `UppyImageUploader` it wraps), however, expects the field value to
+   * be a URL string. Project just the `url` for FormKit's view; the
+   * layout keeps the rich object via the dedicated `@onSet` handler
+   * (`onFieldSet`).
    */
   get values() {
-    return this.visualEditor.selectedBlockData?.argsSnapshot ?? {};
+    const raw = this.visualEditor.selectedBlockData?.argsSnapshot ?? {};
+    const schema = this.schema;
+    if (!schema) {
+      return raw;
+    }
+    let projected = null;
+    for (const [name, def] of Object.entries(schema)) {
+      if (def?.ui?.control !== "image-upload") {
+        continue;
+      }
+      const value = raw[name];
+      if (value && typeof value === "object" && value.url) {
+        projected ??= { ...raw };
+        projected[name] = value.url;
+      }
+    }
+    return projected ?? raw;
   }
 
   /**
@@ -120,10 +144,22 @@ export default class InspectorForm extends Component {
    * own draft data. We invoke both: `set` keeps the form responsive and
    * the inputs in sync; `updateSelectedArg` pushes the change to the
    * editor service so the canvas re-renders with the new args.
+   *
+   * For image-upload args we split the projection: FormKit's draft gets
+   * the URL string so `UppyImageUploader` can paint its preview, while
+   * the layout stores the full upload object (`{ url, width, height, ... }`)
+   * that downstream renderers like `DLightDarkImg` consume. The full
+   * object reaches us here because `FKControlImage.setImage` forwards
+   * `UppyImageUploader.onUploadDone`'s payload verbatim.
    */
   @action
   async onFieldSet(value, ctx) {
-    await ctx.set(ctx.name, value);
+    const argDef = this.schema?.[ctx.name];
+    const isImageUpload = argDef?.ui?.control === "image-upload";
+    const formValue =
+      isImageUpload && value && typeof value === "object" ? value.url : value;
+
+    await ctx.set(ctx.name, formValue);
     this.visualEditor.updateSelectedArg(ctx.name, value);
   }
 
@@ -159,6 +195,12 @@ export default class InspectorForm extends Component {
                       <radio.Radio @value={{option}}>{{option}}</radio.Radio>
                     {{/each}}
                   </formField.Control>
+                {{else if (eq field.control "image-upload")}}
+                  {{! FKControlImage forwards @type to UppyImageUploader, which
+                      requires a non-empty value (used as the MessageBus channel
+                      and the upload-type tag). "composer" is the generic
+                      catch-all type used elsewhere for free-form image uploads. }}
+                  <formField.Control @type="composer" />
                 {{else}}
                   <formField.Control placeholder={{field.placeholder}} />
                 {{/if}}

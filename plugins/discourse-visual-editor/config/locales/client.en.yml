@@ -153,6 +153,14 @@ en:
           dismissable: "Allow dismiss"
           cookie_key: "Dismiss key"
           cookie_key_help: "Identifier for this banner's dismiss cookie. Leave blank to share state with other banners that don't set a key."
+        image:
+          image_label: "Image"
+          dark_label: "Dark mode variant"
+          dark_help: "Shown when the site is in dark mode. Falls back to the main image when empty."
+          alt_label: "Alt text"
+          alt_help: "Describe the image for screen readers."
+          link_label: "Link URL"
+          caption_label: "Caption"
         featured_categories:
           categories: "Categories"
           categories_help: "Category IDs separated by `|` (e.g. `1|3|7`)."
@@ -318,6 +326,7 @@ en:
         delete_block_title: "Delete this block"
         empty_outlet_hint: "Drag a block from the palette to fill this outlet"
         empty_container_hint: "Drag a block here"
+        image_empty_label: "Add an image"
         ghost:
           condition_failed: "This block's conditions aren't met right now, so it won't render on the live page. Adjust its conditions, or simulate a different viewport / persona, to preview it here."
           unknown_block: "This block name isn't registered — it likely refers to a renamed or removed block. Pick a replacement or remove the entry."

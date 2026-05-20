@@ -425,6 +425,40 @@ body.visual-editor-active {
     min-width: 0;
   }
 
+  /* Canvas-only empty state for blocks whose image-upload args are all
+     empty (currently `ve:image`). Compact dashed card so a fresh drop
+     doesn't claim the eventual image's intrinsic dimensions on the canvas.
+     Block templates render nothing in this state; the chrome paints this
+     in their place. Visual language matches the grid-cell drop targets
+     (dashed orange border) so it reads as canvas chrome, not block content. */
+
+  .visual-editor-block-chrome__image-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 8rem;
+    padding: 1.5rem;
+    border: 1px dashed var(--visual-editor-block-color);
+    border-radius: 3px;
+    background: rgb(217 119 6 / 4%);
+    color: var(--primary-medium);
+    transition:
+      background 80ms ease-out,
+      border-color 80ms ease-out;
+
+    .d-icon {
+      font-size: var(--font-up-3);
+      opacity: 0.7;
+    }
+
+    &-label {
+      font-size: var(--font-down-1);
+    }
+  }
+
   /* Floating block toolbar (Phase 7p.2). Mounted inside a selected
      chrome, anchors above the block. Quick actions: move up / move
      down / duplicate / delete. Replaces the corner-badge delete

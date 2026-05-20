@@ -173,8 +173,24 @@
 }
 
 .ve-image {
+  display: block;
   max-width: 100%;
   height: auto;
+  margin: 0;
+
+  img,
+  picture {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  &__caption {
+    margin-top: 0.5rem;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    text-align: center;
+  }
 }
 
 .ve-columns {
