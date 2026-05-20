@@ -82,7 +82,7 @@ acceptance("Category New", function (needs) {
       .dom(".required-tag-group-row .select-kit-header[data-value='TagGroup1']")
       .exists("shows saved required tag group");
 
-    assert.dom(".edit-category-title h2").hasText(
+    assert.dom(".d-page-header__title").hasText(
       i18n("category.edit_dialog_title", {
         categoryName: "testing",
       })
@@ -194,6 +194,8 @@ acceptance("Category text color", function (needs) {
 
   test("Category text color is set based on contrast", async function (assert) {
     await visit("/new-category");
+    await click(".category-show-advanced-tabs-toggle");
+    await click(".edit-category-images a");
 
     assert.strictEqual(
       formKit().field("text_color").value(),
@@ -201,8 +203,10 @@ acceptance("Category text color", function (needs) {
       "has the default text color"
     );
 
+    await click(".edit-category-general a");
     await fillIn("input.category-name", "testing");
     await formKit().field("color").fillIn("EEEEEE");
+    await click(".edit-category-images a");
 
     assert.strictEqual(
       formKit().field("text_color").value(),
@@ -217,9 +221,10 @@ acceptance("New category preview", function (needs) {
 
   test("Category badge color appears and updates", async function (assert) {
     await visit("/new-category");
+    await click(".form-kit__control-radio[value='square']");
 
     let previewBadgeColor = document
-      .querySelector(".category-style .badge-category")
+      .querySelector(".edit-category-tab-general .badge-category")
       .style.getPropertyValue("--category-badge-color")
       .trim();
 
@@ -228,7 +233,7 @@ acceptance("New category preview", function (needs) {
     await formKit().field("color").fillIn("FF00FF");
 
     previewBadgeColor = document
-      .querySelector(".category-style .badge-category")
+      .querySelector(".edit-category-tab-general .badge-category")
       .style.getPropertyValue("--category-badge-color")
       .trim();
 

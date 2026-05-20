@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 
 function latestCategorySavePayload() {
   const request = pretender.handledRequests.findLast(
-    ({ method, url }) => method === "PUT" && /^\/categories\/\d+$/.test(url)
+    ({ method, requestBody }) => method === "PUT" && requestBody
   );
 
   return JSON.parse(request.requestBody);
@@ -32,7 +32,9 @@ acceptance("Category Edit", function (needs) {
     assert.dom(".category-breadcrumb .badge-category").hasText("bug");
     assert.dom(".badge-category__wrapper .badge-category").hasText("bug");
     await fillIn("input.category-name", "testing");
-    assert.dom(".category-style .badge-category__name").hasText("testing");
+    assert
+      .dom(".edit-category-tab-general .badge-category__name")
+      .hasText("testing");
 
     await click(".category-show-advanced-tabs-toggle");
 
@@ -142,7 +144,7 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
 
     const names = [...categoryChooser.rows()].map((row) => row.dataset.name);
-    assert.true(names.includes("(no category)"));
+    assert.true(Boolean(categoryChooser.clearButton()));
     assert.false(names.includes("Uncategorized"));
   });
 
@@ -157,7 +159,7 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
 
     const names = [...categoryChooser.rows()].map((row) => row.dataset.name);
-    assert.true(names.includes("(no category)"));
+    assert.true(Boolean(categoryChooser.clearButton()));
     assert.false(names.includes("Uncategorized"));
   });
 

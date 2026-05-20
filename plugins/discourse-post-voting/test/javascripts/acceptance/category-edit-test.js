@@ -6,7 +6,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 function latestCategorySavePayload() {
   const request = pretender.handledRequests.findLast(
-    ({ method, url }) => method === "PUT" && /^\/categories\/\d+$/.test(url)
+    ({ method, requestBody }) => method === "PUT" && requestBody
   );
 
   return JSON.parse(request.requestBody);
