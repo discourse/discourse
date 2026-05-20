@@ -190,7 +190,7 @@ export default class DashboardTraffic extends Component {
     >
       <div class="db-traffic {{if @loading 'is-loading'}}">
         <div class="db-section__subheader">
-          <div class="db-section__subintro db-traffic__subintro">
+          <div class="db-section__subintro">
             <h3 class="db-traffic__headline">
               {{this.headlineText}}
               {{#if this.trend}}

@@ -177,8 +177,6 @@ h1 {
   }
 
   &__subintro {
-    max-width: 60ch;
-
     p {
       font-size: var(--font-down-1-rem);
       color: var(--primary-high);
@@ -456,10 +454,6 @@ h1 {
 
   &.is-loading {
     opacity: 0.55;
-  }
-
-  &__subintro {
-    max-width: none;
   }
 
   &__headline {
