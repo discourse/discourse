@@ -6,6 +6,7 @@ import deprecated from "discourse/lib/deprecated";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { helperContext } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
+import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
 
 async function withEngine(name, ...args) {
   const engine = await waitForPromise(import("discourse/static/markdown-it"));
@@ -157,18 +158,13 @@ export function humanizeList(listItems) {
 // Based on the BBCode parser regex: [^\s\]]+ for unquoted values
 const BBCODE_REQUIRES_QUOTES_PATTERN = /[\s\]]/;
 
-// Standard ASCII quotes used for BBCode attribute quoting
-const DOUBLE_QUOTE = '"';
-const SINGLE_QUOTE = "'";
-
 /**
  * Serializes a value for use in a BBCode attribute.
  *
  * Automatically determines whether quotes are needed based on the value content.
  * Quotes are required when the value contains whitespace or `]` characters.
- * When the value contains quotation marks, alternates quote style to avoid
- * breaking BBCode parsing. If both quote types are present, double quotes
- * in the value are stripped as a last resort.
+ * When the value contains quotation marks, cycles through supported quote pairs
+ * to find one that doesn't conflict with the value's content.
  *
  * @param {string|null|undefined} value - The attribute value to serialize
  * @param {string} name - The attribute name
@@ -178,6 +174,7 @@ const SINGLE_QUOTE = "'";
  * serializeBBCodeAttr("12:00:00", "time") // returns ' time=12:00:00'
  * serializeBBCodeAttr("YYYY-MM-DD HH:mm", "format") // returns ' format="YYYY-MM-DD HH:mm"'
  * serializeBBCodeAttr('Design "Gems"', "channel") // returns " channel='Design \"Gems\"'"
+ * serializeBBCodeAttr("Sam's \"Release\"", "title") // returns ' title=«Sam's "Release"»'
  * serializeBBCodeAttr(null, "time") // returns ''
  */
 export function serializeBBCodeAttr(value, name) {
@@ -192,18 +189,15 @@ export function serializeBBCodeAttr(value, name) {
     return ` ${name}=${stringValue}`;
   }
 
-  const hasDoubleQuote = stringValue.includes(DOUBLE_QUOTE);
-  const hasSingleQuote = stringValue.includes(SINGLE_QUOTE);
-
-  if (!hasDoubleQuote) {
-    return ` ${name}="${stringValue}"`;
-  } else if (!hasSingleQuote) {
-    return ` ${name}='${stringValue}'`;
-  } else {
-    // Both quote types present - strip double quotes as last resort
-    const stripped = stringValue.replaceAll(DOUBLE_QUOTE, "");
-    return stripped ? ` ${name}="${stripped}"` : "";
+  for (const pair of QUOTATION_MARKS) {
+    const [open, close] = pair;
+    if (!stringValue.includes(open) && !stringValue.includes(close)) {
+      return ` ${name}=${open}${stringValue}${close}`;
+    }
   }
+
+  // Unreachable in practice - would require all 18 quote characters in value
+  return ` ${name}="${stringValue.replaceAll('"', "")}"`;
 }
 
 /**

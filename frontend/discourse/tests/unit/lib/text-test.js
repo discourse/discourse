@@ -9,6 +9,7 @@ import {
   parseMentions,
   serializeBBCodeAttr,
 } from "discourse/lib/text";
+import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
 
 module("Unit | Utility | text", function (hooks) {
   setupTest(hooks);
@@ -125,16 +126,48 @@ module("Unit | Utility | text | serializeBBCodeAttr", function () {
     );
   });
 
-  test("strips double quotes when both quote types present", function (assert) {
+  test("uses guillemets when both ASCII quote types present", function (assert) {
     assert.strictEqual(
-      serializeBBCodeAttr(`it's "great"`, "title"),
-      ' title="it\'s great"'
+      serializeBBCodeAttr(`Sam's "Release" discussion`, "title"),
+      ` title=«Sam's "Release" discussion»`
     );
   });
 
-  test("returns empty when stripping leaves empty value", function (assert) {
-    // Edge case: value with whitespace that becomes empty after stripping "
-    assert.strictEqual(serializeBBCodeAttr(`"' "`, "name"), ` name="' "`);
+  test("uses non-conflicting delimiter and preserves value", function (assert) {
+    QUOTATION_MARKS.forEach((pair, index) => {
+      const [open, close] = pair;
+
+      // Create a value containing all delimiter characters except the one being tested
+      let conflictingChars = Array.from(QUOTATION_MARKS);
+      conflictingChars = conflictingChars.filter(
+        (p) => !p.includes(open) && !p.includes(close)
+      );
+      conflictingChars = conflictingChars.join("");
+      const value = `test ${conflictingChars} value`;
+      const result = serializeBBCodeAttr(value, "attr");
+
+      // Find which delimiter was used
+      const usedPair = QUOTATION_MARKS.find(
+        ([o, c]) => result.startsWith(` attr=${o}`) && result.endsWith(c)
+      );
+
+      // Assert a non-conflicting delimiter was used
+      const hasConflict =
+        usedPair &&
+        !value.includes(usedPair[0]) &&
+        !value.includes(usedPair[1]);
+
+      assert.true(
+        hasConflict,
+        `delimiter ${index} (${open}${close}): a non-conflicting delimiter is used`
+      );
+
+      // Assert the value is preserved
+      assert.true(
+        result.includes(value),
+        `delimiter ${index} (${open}${close}): value is preserved`
+      );
+    });
   });
 });
 
