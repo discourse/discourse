@@ -1,9 +1,9 @@
-import { ember } from "@embroider/vite";
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
+import optimizedEmber from "./lib/optimized-ember.mjs";
 import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
 
 writeResolverConfig(
@@ -105,7 +105,7 @@ export function buildConfig({ devMode } = {}) {
     preserveEntrySignatures: "strict",
     plugins: [
       viteAliasPlugin({ entries: aliases }),
-      ember(),
+      optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({
         babelHelpers: "runtime",
