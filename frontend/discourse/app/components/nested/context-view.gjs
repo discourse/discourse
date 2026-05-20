@@ -150,6 +150,17 @@ export default class NestedContextView extends Component {
         @topic={{@topic}}
         @editPost={{@editPost}}
         @showHistory={{@showHistory}}
+        @changeNotice={{@changeNotice}}
+        @changePostOwner={{@changePostOwner}}
+        @grantBadge={{@grantBadge}}
+        @lockPost={{@lockPost}}
+        @unlockPost={{@unlockPost}}
+        @permanentlyDeletePost={{@permanentlyDeletePost}}
+        @rebakePost={{@rebakePost}}
+        @showPagePublish={{@showPagePublish}}
+        @togglePostType={{@togglePostType}}
+        @toggleWiki={{@toggleWiki}}
+        @unhidePost={{@unhidePost}}
         @registerPost={{this.viewportTracker.registerPost}}
       />
 
@@ -217,6 +228,17 @@ export default class NestedContextView extends Component {
               @recoverPost={{@recoverPost}}
               @showFlags={{@showFlags}}
               @showHistory={{@showHistory}}
+              @changeNotice={{@changeNotice}}
+              @changePostOwner={{@changePostOwner}}
+              @grantBadge={{@grantBadge}}
+              @lockPost={{@lockPost}}
+              @unlockPost={{@unlockPost}}
+              @permanentlyDeletePost={{@permanentlyDeletePost}}
+              @rebakePost={{@rebakePost}}
+              @showPagePublish={{@showPagePublish}}
+              @togglePostType={{@togglePostType}}
+              @toggleWiki={{@toggleWiki}}
+              @unhidePost={{@unhidePost}}
               @expansionState={{@expansionState}}
               @fetchedChildrenCache={{@fetchedChildrenCache}}
               @scrollAnchor={{@scrollAnchor}}

@@ -193,7 +193,7 @@ RSpec.describe Guardian do
     it "respects the group's messageable_level" do
       Group::ALIAS_LEVELS.each do |level, _|
         group.update!(messageable_level: Group::ALIAS_LEVELS[level])
-        user_output = level == :everyone ? true : false
+        user_output = level == :everyone
         admin_output = level != :nobody
         mod_output = %i[nobody only_admins].exclude?(level)
 
@@ -1869,12 +1869,10 @@ RSpec.describe Guardian do
     end
 
     it "should not allow an admin to grant admin access to a non real user" do
-      begin
-        Discourse.system_user.update!(admin: false)
-        expect(Guardian.new(admin).can_grant_admin?(Discourse.system_user)).to be(false)
-      ensure
-        Discourse.system_user.update!(admin: true)
-      end
+      Discourse.system_user.update!(admin: false)
+      expect(Guardian.new(admin).can_grant_admin?(Discourse.system_user)).to be(false)
+    ensure
+      Discourse.system_user.update!(admin: true)
     end
   end
 
@@ -1925,12 +1923,10 @@ RSpec.describe Guardian do
     end
 
     it "should not allow an admin to grant moderation to a non real user" do
-      begin
-        Discourse.system_user.update!(moderator: false)
-        expect(Guardian.new(admin).can_grant_moderation?(Discourse.system_user)).to be(false)
-      ensure
-        Discourse.system_user.update!(moderator: true)
-      end
+      Discourse.system_user.update!(moderator: false)
+      expect(Guardian.new(admin).can_grant_moderation?(Discourse.system_user)).to be(false)
+    ensure
+      Discourse.system_user.update!(moderator: true)
     end
   end
 

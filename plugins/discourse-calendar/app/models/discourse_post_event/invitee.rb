@@ -71,16 +71,16 @@ module DiscoursePostEvent
     end
 
     def sync_chat_channel_members
-      return if !self.event.chat_enabled?
-      ChatChannelSync.sync(self.event)
+      return if !event.chat_enabled?
+      ChatChannelSync.sync(event)
     end
 
     def update_topic_tracking!
-      topic_id = self.event.post.topic.id
-      user_id = self.user.id
+      topic_id = event.post.topic.id
+      user_id = user.id
       tracking = :regular
 
-      case self.status
+      case status
       when Invitee.statuses[:going]
         tracking = :watching
       when Invitee.statuses[:interested]

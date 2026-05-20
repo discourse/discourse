@@ -2,7 +2,7 @@
 module DiscourseDataExplorer
   class ResultFormatConverter
     def self.convert(file_type, result, opts = {})
-      self.new(result, opts).send("to_#{file_type}")
+      new(result, opts).send("to_#{file_type}")
     end
 
     def initialize(result, opts)

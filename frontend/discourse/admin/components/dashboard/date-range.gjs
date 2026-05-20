@@ -24,12 +24,12 @@ export function calculatePresetStartDate(period) {
   const today = moment();
   switch (period) {
     case PERIOD_LAST_7_DAYS:
-      return today.subtract(7, "days").startOf("day").toDate();
+      return today.subtract(6, "days").startOf("day").toDate();
     case PERIOD_LAST_3_MONTHS:
-      return today.subtract(3, "months").startOf("day").toDate();
+      return today.subtract(3, "months").add(1, "day").startOf("day").toDate();
     case PERIOD_LAST_30_DAYS:
     default:
-      return today.subtract(30, "days").startOf("day").toDate();
+      return today.subtract(29, "days").startOf("day").toDate();
   }
 }
 

@@ -63,7 +63,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
     context "when using function chaining" do
       it "yields a loading placeholder while proceeds to invoke the command" do
         tool = DiscourseAi::Agents::Tools::ListCategories.new({}, bot_user: nil, llm: nil)
-        partial_placeholder = +(<<~HTML)
+        partial_placeholder = +<<~HTML
         <details>
           <summary>#{tool.summary}</summary>
           <p></p>

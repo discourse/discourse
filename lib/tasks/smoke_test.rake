@@ -14,7 +14,7 @@ task "smoke:test" do
 
   url = ENV["URL"]
   if !url
-    require "#{Rails.root}/config/environment"
+    require "#{Rails.root.join("config/environment")}"
     url = Discourse.base_url
   end
 
@@ -63,7 +63,7 @@ task "smoke:test" do
 
   node_arguments = []
   node_arguments << "--inspect-brk" if ENV["DEBUG_NODE"]
-  node_arguments << "#{Rails.root}/test/smoke-test.mjs"
+  node_arguments << "#{Rails.root.join("test/smoke-test.mjs")}"
   node_arguments << url
 
   IO

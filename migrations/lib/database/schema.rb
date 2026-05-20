@@ -100,7 +100,7 @@ module Migrations
 
       def self.plugin_manifest
         @plugin_manifest ||=
-          DSL::PluginManifest.new(manifest_path:, plugins_path: File.join(Rails.root, "plugins"))
+          DSL::PluginManifest.new(manifest_path:, plugins_path: Rails.root.join("plugins").to_s)
       end
 
       # --- Validation, Resolution & Generation ---

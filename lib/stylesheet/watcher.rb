@@ -35,12 +35,10 @@ module Stylesheet
 
     def start
       Thread.new do
-        begin
-          worker_loop while true
-        rescue => e
-          STDERR.puts "CSS change notifier crashed \n#{e}"
-          start
-        end
+        worker_loop while true
+      rescue => e
+        STDERR.puts "CSS change notifier crashed \n#{e}"
+        start
       end
 
       listener_opts = { ignore: [/node_modules/], only: /\.s?css\z/ }
@@ -50,10 +48,10 @@ module Stylesheet
         begin
           plugins_paths =
             Dir
-              .glob("#{Rails.root}/plugins/*")
+              .glob("#{Rails.root.join("plugins/*")}")
               .map do |file|
                 if File.symlink?(file)
-                  File.expand_path(File.readlink(file), "#{Rails.root}/plugins")
+                  File.expand_path(File.readlink(file), "#{Rails.root.join("plugins")}")
                 else
                   file
                 end

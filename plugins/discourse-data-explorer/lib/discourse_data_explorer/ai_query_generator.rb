@@ -63,23 +63,30 @@ module DiscourseDataExplorer
           -- int             :num = 3
           -- bigint          :big = 12345678912345
           -- boolean         :flag
-          -- null boolean    :opt_flag = #null
+          -- null boolean    :opt_flag
           -- string          :name = default value
-          -- date            :date = 14 jul 2015
-          -- time            :time = 5:02 pm
-          -- datetime        :datetime = 14 jul 2015 5:02 pm
+          -- date            :start_date = #{(Date.today - 30).strftime("%Y-%m-%d")}
+          -- date            :end_date = #{Date.today.strftime("%Y-%m-%d")}
+          -- time            :time = 17:02
+          -- datetime        :datetime = #{Date.today.strftime("%Y-%m-%d")} 17:02
           -- double          :ratio = 3.1415
-          -- user_id         :user = system
+          -- user_id         :user
           -- post_id         :post
           -- topic_id        :topic
           -- int_list        :ids = 1,2,3
           -- string_list     :names = a,b,c
-          -- category_id     :category = meta
-          -- group_id        :group = admins
-          -- user_list       :users = system,discobot
+          -- category_id     :category
+          -- group_id        :group
+          -- user_list       :users
           -- current_user_id :me
-        Prefix with "null" for optional params.
-        Today is #{Date.today.strftime("%Y-%m-%d")}. Date param defaults MUST be real dates like #{Date.today.strftime("%Y-%m-%d")}, NEVER natural language like "today" or "3 months ago".
+
+        ### Parameter rules
+        - For category_id, group_id, user_id, user_list, post_id, topic_id, badge_id: OMIT the default value entirely (or use `null` prefix).
+        - Optional params: prefix the type with "null" and OMIT the default. The "null" prefix is the optional marker; do NOT use `= #null` as a default value (e.g. write `-- null category_id :category`, NOT `-- category_id :category = #null`).
+        - Date param defaults MUST be real ISO dates in YYYY-MM-DD form (today is #{Date.today.strftime("%Y-%m-%d")}). NEVER use natural-language defaults like "today", "yesterday", "3 months ago", or "14 jul 2015". For a date range, name params `:start_date` and `:end_date`.
+        - Plural nouns → list-style param TYPES. Apply this rule independently to EACH plural noun in the prompt; don't skip one. Only `int_list`, `string_list`, `user_list`, `group_list` accept multiple values — single-value types like `category_id`, `user_id`, `topic_id` do NOT. Example: "Get topics for selected categories and tags." → `-- null int_list :category_ids` AND `-- null string_list :tag_names` (BOTH list types).
+        - `ANY(:param)` and `:param IN (...)` REQUIRE :param to be a list-type (`int_list`, `string_list`, etc.). With single-value types (`category_id`, `user_id`, etc.), use `column = :param` instead. Mismatching the param type with array usage is a runtime error ("op ANY/ALL (array) requires array on right side").
+        - First-person prompts ("my posts", "queries about me", "topics I've replied to") MUST use `current_user_id` — this auto-injects the requester's user id at run time. Do NOT use `user_id :user = system` for "my" queries.
 
         ## Discourse domain knowledge
         - topics.archetype: 'regular' = topics, 'private_message' = PMs. Default to 'regular'.

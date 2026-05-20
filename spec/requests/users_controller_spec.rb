@@ -5201,7 +5201,7 @@ RSpec.describe UsersController do
     end
 
     describe "auth token IP visibility" do
-      before { DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb")) }
+      before { DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s) }
 
       let!(:token) do
         UserAuthToken.generate!(

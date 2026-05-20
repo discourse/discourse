@@ -91,7 +91,7 @@ module PageObjects
           raise "'unchecked?' is only supported for control type: #{control_type}"
         end
 
-        expect(self.value).to eq(false)
+        expect(value).to eq(false)
       end
 
       def checked?
@@ -99,11 +99,11 @@ module PageObjects
           raise "'checked?' is only supported for control type: #{control_type}"
         end
 
-        expect(self.value).to eq(true)
+        expect(value).to eq(true)
       end
 
       def has_value?(expected_value)
-        expect(self.value).to eq(expected_value)
+        expect(value).to eq(expected_value)
       end
 
       def has_errors?(*messages)

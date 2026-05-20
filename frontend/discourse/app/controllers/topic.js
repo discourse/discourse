@@ -1323,8 +1323,7 @@ export default class TopicController extends Controller {
 
   @action
   changePostOwner(post) {
-    this.selectedPostIds = [post.id];
-    this.send("changeOwner");
+    this.send("changeOwner", post);
   }
 
   @action
@@ -1339,8 +1338,7 @@ export default class TopicController extends Controller {
 
   @action
   grantBadge(post) {
-    this.selectedPostIds = [post.id];
-    this.send("showGrantBadgeModal");
+    this.send("showGrantBadgeModal", post);
   }
 
   @action

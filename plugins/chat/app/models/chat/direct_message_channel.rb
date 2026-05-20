@@ -21,7 +21,7 @@ module Chat
     end
 
     def generate_auto_slug
-      self.slug.blank?
+      slug.blank?
     end
 
     # Group DMs are DMs with > 2 users

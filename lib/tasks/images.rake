@@ -3,7 +3,7 @@
 require "file_helper"
 
 task "images:compress" => :environment do
-  images = Dir.glob("#{Rails.root}/app/**/*.png")
+  images = Dir.glob("#{Rails.root.join("app/**/*.png")}")
   image_sizes = images.map { |i| [i, File.size(i)] }.to_h
 
   images.each do |path|

@@ -96,7 +96,8 @@ class UserBadgesController < ApplicationController
       end
 
       if route = Discourse.route_for(params[:reason])
-        if route[:controller] == "topics" && route[:action] == "show"
+        if (route[:controller] == "topics" && route[:action] == "show") ||
+             route[:controller] == "nested_topics"
           topic_id = (route[:id] || route[:topic_id]).to_i
           post_number = route[:post_number] || 1
           post_id = Post.find_by(topic_id: topic_id, post_number: post_number)&.id if topic_id > 0
@@ -183,6 +184,10 @@ class UserBadgesController < ApplicationController
 
   def is_badge_reason_valid?(reason)
     route = Discourse.route_for(reason)
-    route && (route[:controller] == "posts" || route[:controller] == "topics")
+    route &&
+      (
+        route[:controller] == "posts" || route[:controller] == "topics" ||
+          route[:controller] == "nested_topics"
+      )
   end
 end

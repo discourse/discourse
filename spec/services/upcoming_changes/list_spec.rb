@@ -58,7 +58,7 @@ RSpec.describe UpcomingChanges::List do
       end
 
       it "includes the image_url if there is an image for the change in public/images" do
-        Rails.stubs(:public_path).returns(File.join(Rails.root, "spec", "fixtures"))
+        Rails.stubs(:public_path).returns(Rails.root.join("spec/fixtures").to_s)
 
         results = result.upcoming_changes
         mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }

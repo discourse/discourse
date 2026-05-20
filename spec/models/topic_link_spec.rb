@@ -254,7 +254,7 @@ RSpec.describe TopicLink do
 
         other_topic.reload
         reflection_link = other_topic.topic_links.first
-        expect(reflection_link.url.length).to be > (TopicLink.max_url_length)
+        expect(reflection_link.url.length).to be > TopicLink.max_url_length
         expect(reflection_link.url).to eq(topic_url)
       end
     end

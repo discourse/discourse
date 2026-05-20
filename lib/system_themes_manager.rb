@@ -9,7 +9,7 @@ class SystemThemesManager
     theme_id = Theme::CORE_THEMES[theme_name]
     raise Discourse::InvalidParameters unless theme_id
 
-    theme_dir = "#{Rails.root}/themes/#{theme_name}"
+    theme_dir = "#{Rails.root.join("themes/#{theme_name}")}"
 
     is_initial_install = !Theme.exists?(id: theme_id)
 

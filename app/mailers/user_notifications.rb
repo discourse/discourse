@@ -78,7 +78,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.suspicious_login",
       locale: user_locale(user),
       client_ip: opts[:client_ip],
-      location: (location.presence || I18n.t("staff_action_logs.unknown")),
+      location: location.presence || I18n.t("staff_action_logs.unknown"),
       browser: I18n.t("user_auth_tokens.browser.#{browser}"),
       device: I18n.t("user_auth_tokens.device.#{device}"),
       os: I18n.t("user_auth_tokens.os.#{os}"),
@@ -730,7 +730,7 @@ class UserNotifications < ActionMailer::Base
     else
       reached_limit = SiteSetting.max_emails_per_day_per_user > 0
       reached_limit &&=
-        (EmailLog.where(user_id: user.id).where("created_at > ?", 1.day.ago).count) >=
+        EmailLog.where(user_id: user.id).where("created_at > ?", 1.day.ago).count >=
           (SiteSetting.max_emails_per_day_per_user - 1)
 
       in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to

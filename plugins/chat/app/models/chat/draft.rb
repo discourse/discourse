@@ -9,8 +9,8 @@ module Chat
 
     validate :data_length
     def data_length
-      if self.data && self.data.length > SiteSetting.max_chat_draft_length
-        self.errors.add(:base, I18n.t("chat.errors.draft_too_long"))
+      if data && data.length > SiteSetting.max_chat_draft_length
+        errors.add(:base, I18n.t("chat.errors.draft_too_long"))
       end
     end
   end

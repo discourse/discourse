@@ -236,9 +236,7 @@ class TopicQuery
 
     def group
       @group ||=
-        begin
-          Group.where("name ilike ?", @options[:group_name]).select(:id, :publish_read_state).first
-        end
+        Group.where("name ilike ?", @options[:group_name]).select(:id, :publish_read_state).first
     end
 
     def user_first_unread_pm_at(user)

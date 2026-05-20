@@ -58,10 +58,7 @@ module DiscourseAi
         end
 
         def llm_user
-          @llm_user ||=
-            begin
-              post&.user || @bot_user
-            end
+          @llm_user ||= post&.user || @bot_user
         end
 
         def post
