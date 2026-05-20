@@ -192,12 +192,13 @@ export default class QueriesEdit extends Component {
                 @translatedLabel={{i18n "explorer.view.label"}}
                 class="query-results-modes"
               />
-              <QueryResultDownloadButtons
-                @query={{@controller.model}}
-                @content={{@controller.results}}
-                @includeQueryExport={{true}}
-              />
             {{/if}}
+            <QueryResultDownloadButtons
+              @query={{@controller.model}}
+              @content={{@controller.results}}
+              @includeQueryExport={{true}}
+            />
+
             {{#if @controller.model.destroyed}}
               <DButton
                 @action={{@controller.recover}}

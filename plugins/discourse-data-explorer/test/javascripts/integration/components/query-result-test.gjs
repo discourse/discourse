@@ -357,16 +357,16 @@ module("Integration | Component | query-result | chart", function (hooks) {
       <template><QueryResult @content={{content}} @query={{query}} /></template>
     );
 
-    await click(".query-results-modes input[value='chart']");
-    assert.dom(".query-results-chart").exists("chart shown after switching");
+    await click(".query-results-modes input[value='table']");
+    assert.dom("table").exists("table shown after switching");
+    assert.dom("canvas").doesNotExist("chart is hidden");
 
     await render(
       <template><QueryResult @content={{content}} @query={{query}} /></template>
     );
 
-    assert
-      .dom(".query-results-chart")
-      .exists("chart view restored from localStorage");
+    assert.dom("table").exists("table view restored from localStorage");
+    assert.dom("canvas").doesNotExist("chart still hidden after rerender");
   });
 
   test("toggle is always visible when rows exist (even for non-chartable data)", async function (assert) {

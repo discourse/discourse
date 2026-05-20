@@ -12,12 +12,16 @@ import { i18n } from "discourse-i18n";
 import { QUERY_RESULT_MAX_LIMIT } from "discourse/plugins/discourse-data-explorer/discourse/lib/constants";
 
 export default class QueryResultDownloadButtons extends Component {
+  get hasResults() {
+    return !!this.args.content?.rows?.length;
+  }
+
   get params() {
-    return this.args.content.params;
+    return this.args.content?.params;
   }
 
   get explainText() {
-    return this.args.content.explain;
+    return this.args.content?.explain;
   }
 
   @action
@@ -102,20 +106,22 @@ export default class QueryResultDownloadButtons extends Component {
       </:trigger>
       <:content as |dMenu|>
         <DDropdownMenu as |dropdown|>
-          <dropdown.item>
-            <DButton
-              @action={{fn this.downloadResultJson dMenu}}
-              @label="explorer.export_as.results_json"
-              class="btn-transparent query-result-export__results-json"
-            />
-          </dropdown.item>
-          <dropdown.item>
-            <DButton
-              @action={{fn this.downloadResultCsv dMenu}}
-              @label="explorer.export_as.results_csv"
-              class="btn-transparent query-result-export__results-csv"
-            />
-          </dropdown.item>
+          {{#if this.hasResults}}
+            <dropdown.item>
+              <DButton
+                @action={{fn this.downloadResultJson dMenu}}
+                @label="explorer.export_as.results_json"
+                class="btn-transparent query-result-export__results-json"
+              />
+            </dropdown.item>
+            <dropdown.item>
+              <DButton
+                @action={{fn this.downloadResultCsv dMenu}}
+                @label="explorer.export_as.results_csv"
+                class="btn-transparent query-result-export__results-csv"
+              />
+            </dropdown.item>
+          {{/if}}
           {{#if @includeQueryExport}}
             <dropdown.item>
               <DButton

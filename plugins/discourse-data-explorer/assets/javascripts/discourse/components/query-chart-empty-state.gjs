@@ -19,7 +19,7 @@ export default class QueryChartEmptyState extends Component {
 
   <template>
     <div class="query-chart-empty-state">
-      {{dIcon "chart-column" class="query-chart-empty-state__icon"}}
+      {{dIcon "chart-line" class="query-chart-empty-state__icon"}}
       <p class="query-chart-empty-state__message">{{this.message}}</p>
       <DButton
         @action={{@onViewAsTable}}
