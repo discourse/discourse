@@ -111,7 +111,8 @@ export function buildConfig({ devMode } = {}) {
         babelHelpers: "runtime",
         extensions,
         parallel: true,
-        skipPreflightCheck: true,
+        skipPreflightCheck: true, // Skip per-file config verification
+        babelrc: false, // Skip per-file `.babelrc`/`.babelignore` checks
       }),
       wrapTestModulesPlugin(),
       {

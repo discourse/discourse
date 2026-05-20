@@ -1,5 +1,5 @@
-import { babel } from "@rollup/plugin-babel";
 import { and, code, id, include, not, or } from "@rolldown/pluginutils";
+import { babel } from "@rollup/plugin-babel";
 
 const babelRequiredImports = [
   // Templates
