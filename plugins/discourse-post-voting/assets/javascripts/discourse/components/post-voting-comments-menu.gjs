@@ -33,10 +33,10 @@ export default class PostVotingCommentsMenu extends Component {
     this.fetchComments().then(() => {
       schedule("afterRender", () => {
         const textArea = document.querySelector(
-          `#post_${this.args.postNumber} .post-voting-comments__composer .post-voting-comments__composer-textarea`
+          `#post_${this.args.postNumber} .post-voting-comments__composer .post-voting-comments__composer-textarea, [data-post-number="${this.args.postNumber}"] .post-voting-comments__composer .post-voting-comments__composer-textarea`
         );
-        textArea.focus();
-        textArea.select();
+        textArea?.focus();
+        textArea?.select();
       });
     });
   }
