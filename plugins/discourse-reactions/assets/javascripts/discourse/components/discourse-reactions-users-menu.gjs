@@ -100,6 +100,7 @@ export default class DiscourseReactionsUsersMenu extends Component {
     <PostUsersMenu
       @fetchUsers={{this.fetchUsers}}
       @titleText={{this.titleText}}
+      @totalUsers={{this.post.reaction_users_count}}
     >
       <:header as |resetAndReload|>
         {{this.registerReset resetAndReload}}

@@ -5,7 +5,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import DUserLink from "discourse/ui-kit/d-user-link";
@@ -41,6 +40,15 @@ export default class PostUsersMenu extends Component {
       return trustHTML(`min-height: ${this.bodyMinHeight}px`);
     }
     return null;
+  }
+
+  get skeletonRows() {
+    if (!this.loading || !this.args.totalUsers) {
+      return [];
+    }
+
+    const count = Math.min(this.args.totalUsers - this.users.length, PAGE_SIZE);
+    return Array.from({ length: Math.max(count, 0) });
   }
 
   @action
@@ -130,10 +138,21 @@ export default class PostUsersMenu extends Component {
               {{/if}}
             </div>
           {{/each}}
-          <DConditionalLoadingSpinner
-            @condition={{this.loading}}
-            @size="small"
-          />
+          {{#each this.skeletonRows}}
+            <div
+              class="post-users-popup__item post-users-popup__skeleton-item"
+              aria-hidden="true"
+            >
+              <div class="post-users-popup__skeleton-avatar"></div>
+              <div class="post-users-popup__user-info">
+                <div class="post-users-popup__skeleton-name"></div>
+                {{#unless this.siteSettings.prioritize_username_in_ux}}
+                  <div class="post-users-popup__skeleton-username"></div>
+                {{/unless}}
+              </div>
+              <div class="post-users-popup__skeleton-reaction"></div>
+            </div>
+          {{/each}}
         </DLoadMore>
       </div>
     </div>

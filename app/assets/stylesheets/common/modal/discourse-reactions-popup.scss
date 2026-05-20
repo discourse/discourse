@@ -15,6 +15,7 @@
 }
 
 .post-users-popup {
+  --skeleton-shimmer-rgb: #{hexToRGB($primary-50)};
   width: 250px;
   background: var(--secondary);
   color: var(--primary);
@@ -187,12 +188,70 @@
     }
   }
 
-  .loading-container {
-    display: flex;
-    justify-content: center;
+  &__skeleton-item {
+    pointer-events: none;
+  }
 
-    .spinner {
-      margin: var(--space-3);
+  &__skeleton-avatar,
+  &__skeleton-name,
+  &__skeleton-username,
+  &__skeleton-reaction {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(
+        90deg,
+        rgb(var(--skeleton-shimmer-rgb), 0) 0,
+        rgb(var(--skeleton-shimmer-rgb), 0.3) 50%,
+        rgb(var(--skeleton-shimmer-rgb), 0.5) 100%
+      );
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: post-users-popup-shimmer 1.25s infinite;
+      }
+    }
+  }
+
+  &__skeleton-avatar {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    @include viewport.until(sm) {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  &__skeleton-name {
+    height: 12px;
+    width: 60%;
+  }
+
+  &__skeleton-username {
+    height: 10px;
+    width: 40%;
+    margin-top: var(--space-1);
+  }
+
+  &__skeleton-reaction {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  @keyframes post-users-popup-shimmer {
+    100% {
+      transform: translateX(100%);
     }
   }
 }
