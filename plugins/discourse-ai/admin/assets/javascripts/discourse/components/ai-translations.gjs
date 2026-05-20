@@ -221,7 +221,7 @@ export default class AiTranslations extends Component {
   }
 
   @action
-  updateSelectedCategories(categories) {
+  updateExcludedCategories(categories) {
     this.excludedCategories = categories;
   }
 
@@ -584,7 +584,7 @@ export default class AiTranslations extends Component {
                 <div class="ai-translations__category-input-row">
                   <CategorySelector
                     @categories={{this.excludedCategories}}
-                    @onChange={{this.updateSelectedCategories}}
+                    @onChange={{this.updateExcludedCategories}}
                   />
                   {{#if this.categoriesChanged}}
                     <div class="setting-controls">
