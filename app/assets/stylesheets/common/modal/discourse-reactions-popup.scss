@@ -139,6 +139,8 @@
   }
 
   .avatar {
+    background: var(--primary-low);
+
     @include viewport.until(sm) {
       width: 32px;
       height: 32px;
@@ -220,8 +222,8 @@
   }
 
   &__skeleton-avatar {
-    width: 25px;
-    height: 25px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     flex-shrink: 0;
 
@@ -234,19 +236,25 @@
   &__skeleton-name {
     height: 12px;
     width: 60%;
+    margin-top: 2px;
   }
 
   &__skeleton-username {
     height: 10px;
     width: 40%;
-    margin-top: var(--space-1);
+    margin-top: var(--space-2);
   }
 
   &__skeleton-reaction {
-    width: 14px;
-    height: 14px;
+    width: 1.15em;
+    height: 1.15em;
     flex-shrink: 0;
     margin-left: auto;
+
+    @include viewport.until(sm) {
+      width: 1.25em;
+      height: 1.25em;
+    }
   }
 
   @keyframes post-users-popup-shimmer {

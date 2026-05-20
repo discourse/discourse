@@ -12,6 +12,22 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const PAGE_SIZE = 30;
 
+const SkeletonRow = <template>
+  <div
+    class="post-users-popup__item post-users-popup__skeleton-item"
+    aria-hidden="true"
+  >
+    <div class="post-users-popup__skeleton-avatar"></div>
+    <div class="post-users-popup__user-info">
+      <div class="post-users-popup__skeleton-name"></div>
+      {{#unless @prioritizeUsername}}
+        <div class="post-users-popup__skeleton-username"></div>
+      {{/unless}}
+    </div>
+    <div class="post-users-popup__skeleton-reaction"></div>
+  </div>
+</template>;
+
 export default class PostUsersMenu extends Component {
   @service siteSettings;
   @service site;
@@ -139,19 +155,9 @@ export default class PostUsersMenu extends Component {
             </div>
           {{/each}}
           {{#each this.skeletonRows}}
-            <div
-              class="post-users-popup__item post-users-popup__skeleton-item"
-              aria-hidden="true"
-            >
-              <div class="post-users-popup__skeleton-avatar"></div>
-              <div class="post-users-popup__user-info">
-                <div class="post-users-popup__skeleton-name"></div>
-                {{#unless this.siteSettings.prioritize_username_in_ux}}
-                  <div class="post-users-popup__skeleton-username"></div>
-                {{/unless}}
-              </div>
-              <div class="post-users-popup__skeleton-reaction"></div>
-            </div>
+            <SkeletonRow
+              @prioritizeUsername={{this.siteSettings.prioritize_username_in_ux}}
+            />
           {{/each}}
         </DLoadMore>
       </div>
