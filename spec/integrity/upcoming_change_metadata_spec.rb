@@ -46,13 +46,15 @@ RSpec.describe "upcoming change metadata integrity checks" do
     it "#{label} is valid" do
       metadata = setting[:upcoming_change]
       allowed_keys = %i[status impact learn_more_url allow_enabled_for]
-      required_keys = %i[status impact learn_more_url]
+      required_keys = %i[status impact]
       unsupported_keys = metadata.keys - allowed_keys
       missing_keys = required_keys - metadata.keys
       valid_statuses = UpcomingChanges.statuses.keys
       status = metadata[:status].to_sym
       impact = metadata[:impact]
       impact_parts = impact.is_a?(String) ? impact.split(",") : []
+      learn_more_url = metadata[:learn_more_url]
+      allow_enabled_for = metadata[:allow_enabled_for]
 
       aggregate_failures do
         expect(setting[:options][:hidden]).to eq(true), "#{label} must set `hidden: true`"
@@ -67,11 +69,6 @@ RSpec.describe "upcoming change metadata integrity checks" do
         expect(valid_statuses).to include(status),
         "#{label} has invalid upcoming_change status #{status.inspect}. Valid statuses: #{valid_statuses.join(", ")}"
 
-        if metadata[:learn_more_url].present?
-          expect(metadata[:learn_more_url]).to match(%r{\Ahttps://meta\.discourse\.org/t/-/\d+\z}),
-          "#{label} upcoming_change.learn_more_url must match https://meta.discourse.org/t/-/NNNN, do not include the topic slug"
-        end
-
         expect(impact_parts.length).to eq(2),
         "#{label} must set upcoming_change.impact as `type,role`, got #{impact.inspect}"
 
@@ -84,12 +81,23 @@ RSpec.describe "upcoming change metadata integrity checks" do
           "#{label} has invalid upcoming_change impact role #{impact_role.inspect}. Valid roles: #{valid_upcoming_change_impact_roles.join(", ")}"
         end
 
-        if metadata.key?(:allow_enabled_for)
-          allow = metadata[:allow_enabled_for]
-          valid_values = %w[everyone staff specific_groups]
-          allow_strings = Array(allow).map(&:to_s)
+        if status != :conceptual
+          aggregate_failures do
+            expect(learn_more_url).to be_present,
+            "#{label} must set `upcoming_change.learn_more_url` when status is not `conceptual`"
 
-          expect(allow).to be_an(Array),
+            if learn_more_url.present?
+              expect(learn_more_url).to match(%r{\Ahttps://meta\.discourse\.org/t/-/\d+\z}),
+              "#{label} upcoming_change.learn_more_url must match https://meta.discourse.org/t/-/NNNN, do not include the topic slug"
+            end
+          end
+        end
+
+        if allow_enabled_for.present?
+          valid_values = %w[everyone staff specific_groups]
+          allow_strings = Array(allow_enabled_for).map(&:to_s)
+
+          expect(allow_enabled_for).to be_an(Array),
           "#{label} `upcoming_change.allow_enabled_for` must be an array"
           expect(allow_strings).not_to be_empty,
           "#{label} `upcoming_change.allow_enabled_for` must not be empty"
