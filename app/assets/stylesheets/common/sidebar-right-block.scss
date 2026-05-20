@@ -1,8 +1,10 @@
 .sidebar-right {
   position: sticky;
-  top: var(--header-offset, 60px);
-  align-self: flex-start;
-  height: calc(100vh - var(--header-offset, 60px));
+  top: var(--main-outlet-offset);
+  background: var(--d-sidebar-background);
+  height: calc(var(--composer-vh, 1dvh) * 100 - var(--main-outlet-offset, 0px));
+  align-self: start;
+  overflow-y: auto;
 
   &__container {
     height: 100%;
