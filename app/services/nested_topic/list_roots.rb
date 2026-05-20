@@ -19,6 +19,7 @@ class NestedTopic::ListRoots
   step :expand_reply_trees
   step :prepare_posts
   step :serialize_roots
+  step :attach_root_summary
   only_if(:initial_page) { step :enrich_with_topic_metadata }
   only_if(:final_page) { step :attach_suggested_and_related }
 
@@ -55,20 +56,26 @@ class NestedTopic::ListRoots
 
   def load_roots(params:, loader:, topic_view:)
     pinned_post_ids = topic_view.topic.nested_topic&.pinned_post_ids.presence
+    context[:all_pinned_post_ids] = pinned_post_ids
     scope = loader.root_posts_scope(params.sort)
-    scope = scope.where.not(id: pinned_post_ids) if pinned_post_ids.present?
-    roots =
-      scope.offset(params.page * NestedReplies::TreeLoader::ROOTS_PER_PAGE).limit(
-        NestedReplies::TreeLoader::ROOTS_PER_PAGE,
-      )
-    context[:roots] = loader.load_posts_for_tree(roots).to_a
-    context[:has_more_roots] = context[:roots].size == NestedReplies::TreeLoader::ROOTS_PER_PAGE
+
+    # Deleted pinned roots aren't promoted; let them fall through to
+    # render as [deleted] placeholders instead of vanishing.
+    if pinned_post_ids.present?
+      promotable_pinned_ids = loader.promotable_pinned_post_ids(pinned_post_ids)
+      scope = scope.where.not(id: promotable_pinned_ids) if promotable_pinned_ids.present?
+    end
+
+    page_size = NestedReplies::TreeLoader::ROOTS_PER_PAGE
+    roots = scope.offset(params.page * page_size).limit(page_size + 1)
+    roots = loader.load_posts_for_tree(roots).to_a
+    context[:has_more_roots] = roots.size > page_size
+    context[:roots] = roots.first(page_size)
   end
 
-  def promote_pinned_roots(loader:, topic_view:, roots:)
-    pinned_post_ids = topic_view.topic.nested_topic&.pinned_post_ids.presence
-    context[:pinned_post_ids] = pinned_post_ids
-    context[:roots] = loader.promote_pinned_roots(roots, pinned_post_ids)
+  def promote_pinned_roots(loader:, all_pinned_post_ids:, roots:)
+    context[:pinned_post_ids] = all_pinned_post_ids
+    context[:roots] = loader.promote_pinned_roots(roots, all_pinned_post_ids)
   end
 
   def expand_reply_trees(loader:, params:, roots:)
@@ -126,6 +133,10 @@ class NestedTopic::ListRoots
     response[:sort] = params.sort
     response[:message_bus_last_id] = topic_view.message_bus_last_id
     response[:pinned_post_ids] = pinned_post_ids if pinned_post_ids.present?
+  end
+
+  def attach_root_summary(params:, loader:, all_pinned_post_ids:, response:)
+    response[:root_summary] = loader.root_summary(params.sort, pinned_post_ids: all_pinned_post_ids)
   end
 
   def attach_suggested_and_related(serializer:, response:)

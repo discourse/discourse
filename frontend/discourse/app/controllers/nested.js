@@ -18,8 +18,10 @@ export default class NestedController extends Controller {
   @service store;
   @service dialog;
   @service currentUser;
+  @service header;
   @service messageBus;
   @service modal;
+  @service nestedRootElements;
   @service nestedViewCache;
   @service router;
   @service site;
@@ -28,8 +30,11 @@ export default class NestedController extends Controller {
   @tracked opPost;
   @tracked rootNodes = [];
   @tracked page = 0;
+  @tracked firstLoadedPage = 0;
   @tracked hasMoreRoots = false;
   @tracked loadingMore = false;
+  @tracked loadingPreviousRoots = false;
+  @tracked loadingNextRoots = false;
   @tracked sort;
   @tracked messageBusLastId;
   @tracked postNumber;
@@ -42,6 +47,7 @@ export default class NestedController extends Controller {
   @tracked newRootPostIds = [];
   @tracked editingTopic = false;
   @tracked pinnedPostIds = [];
+  @tracked rootSummary = null;
   // Persisted in the URL across in-topic navigation by design — once a
   // user lands via a consolidated reply notification, browsing within
   // the topic keeps the collapsed view, and the URL is shareable in that
@@ -99,6 +105,168 @@ export default class NestedController extends Controller {
     return this.#topicController.minimumRequiredTags;
   }
 
+  get hasMoreRootsBefore() {
+    return this.firstLoadedPage > 0;
+  }
+
+  @action
+  async jumpToRootPage(
+    targetPage,
+    targetPostNumber = null,
+    targetRootOffset = 0
+  ) {
+    if (this.loadingMore) {
+      return;
+    }
+    if (
+      targetPage >= this.firstLoadedPage &&
+      targetPage <= this.page &&
+      this.rootNodes.length > 0
+    ) {
+      const inWindow =
+        targetPostNumber && this.#scrollToLoadedRoot(targetPostNumber);
+      if (!inWindow) {
+        this.#scrollToLoadedRootPage(targetPage, targetRootOffset);
+      }
+      return;
+    }
+
+    this.loadingMore = true;
+    try {
+      const data = await ajax(
+        `/n/${this.topic.slug}/${this.topic.id}.json?page=${targetPage}&sort=${this.sort}`
+      );
+
+      const newNodes = (data.roots || []).map((root) =>
+        this.#processNode(root)
+      );
+
+      const scrollTargetPostNumber =
+        targetPostNumber ??
+        newNodes[targetRootOffset]?.post?.post_number ??
+        newNodes[0]?.post?.post_number ??
+        null;
+
+      this.rootNodes = newNodes;
+      this.firstLoadedPage = data.page;
+      this.page = data.page;
+      this.hasMoreRoots = data.has_more_roots || false;
+      this.rootSummary = data.root_summary ?? this.rootSummary;
+      this.#assignSuggestedAndRelated(data);
+
+      if (scrollTargetPostNumber != null) {
+        const element = await this.nestedRootElements.waitForElement(
+          scrollTargetPostNumber
+        );
+        this.#scrollToRootWrapper(element);
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingMore = false;
+    }
+  }
+
+  #scrollToLoadedRootPage(targetPage, targetRootOffset = 0) {
+    const ordered = this.nestedRootElements.elementsInOrder();
+    if (ordered.length === 0) {
+      return;
+    }
+
+    const pageSize = this.rootSummary?.page_size;
+    if (!pageSize) {
+      this.#scrollToRootWrapper(ordered[0].el);
+      return;
+    }
+
+    let targetIndex =
+      (targetPage - this.firstLoadedPage) * pageSize + targetRootOffset;
+    if (this.firstLoadedPage === 0 && targetPage > 0) {
+      const pinnedIds = new Set(this.pinnedPostIds);
+      targetIndex += this.rootNodes.filter((node) =>
+        pinnedIds.has(node.post.id)
+      ).length;
+    }
+
+    const clamped = Math.max(0, Math.min(targetIndex, ordered.length - 1));
+    this.#scrollToRootWrapper(ordered[clamped].el);
+  }
+
+  @action
+  async loadPreviousRoots() {
+    if (this.loadingMore || !this.hasMoreRootsBefore) {
+      return;
+    }
+
+    // Preserving the first visible root's viewport top keeps the user's
+    // reading position stationary across the prepend.
+    const ordered = this.nestedRootElements.elementsInOrder();
+    const anchor = ordered[0] ?? null;
+    const anchorPostNumber = anchor?.postNumber ?? null;
+    const anchorTopBefore = anchor?.el.getBoundingClientRect().top ?? null;
+
+    this.loadingMore = true;
+    this.loadingPreviousRoots = true;
+    try {
+      const targetPage = this.firstLoadedPage - 1;
+      const data = await ajax(
+        `/n/${this.topic.slug}/${this.topic.id}.json?page=${targetPage}&sort=${this.sort}`
+      );
+
+      const newNodes = (data.roots || []).map((root) =>
+        this.#processNode(root)
+      );
+
+      this.rootNodes = [...newNodes, ...this.rootNodes];
+      this.firstLoadedPage = data.page;
+      this.rootSummary = data.root_summary ?? this.rootSummary;
+      this.#assignSuggestedAndRelated(data);
+
+      const newFirstPostNumber = newNodes[0]?.post?.post_number;
+      if (newFirstPostNumber != null) {
+        await this.nestedRootElements.waitForElement(newFirstPostNumber);
+      }
+
+      if (anchorPostNumber != null && anchorTopBefore != null) {
+        const liveAnchor = this.nestedRootElements.getElement(anchorPostNumber);
+        if (liveAnchor) {
+          const anchorTopAfter = liveAnchor.getBoundingClientRect().top;
+          const delta = anchorTopAfter - anchorTopBefore;
+          if (delta !== 0) {
+            window.scrollBy({ top: delta, behavior: "auto" });
+          }
+        }
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingPreviousRoots = false;
+      this.loadingMore = false;
+    }
+  }
+
+  #scrollToLoadedRoot(postNumber) {
+    if (!postNumber) {
+      return false;
+    }
+    const element = this.nestedRootElements.getElement(postNumber);
+    if (!element) {
+      return false;
+    }
+    this.#scrollToRootWrapper(element);
+    return true;
+  }
+
+  #scrollToRootWrapper(wrapper) {
+    if (!wrapper) {
+      return;
+    }
+    const headerOffset = this.header.headerOffset ?? 0;
+    const top =
+      wrapper.getBoundingClientRect().top + window.scrollY - headerOffset - 8;
+    window.scrollTo({ top, behavior: "auto" });
+  }
+
   @action
   async loadMoreRoots() {
     if (this.loadingMore || !this.hasMoreRoots) {
@@ -106,6 +274,7 @@ export default class NestedController extends Controller {
     }
 
     this.loadingMore = true;
+    this.loadingNextRoots = true;
     try {
       const nextPage = this.page + 1;
       const data = await ajax(
@@ -119,10 +288,12 @@ export default class NestedController extends Controller {
       this.rootNodes = [...this.rootNodes, ...newNodes];
       this.page = data.page;
       this.hasMoreRoots = data.has_more_roots || false;
+      this.rootSummary = data.root_summary ?? this.rootSummary;
       this.#assignSuggestedAndRelated(data);
     } catch (e) {
       popupAjaxError(e);
     } finally {
+      this.loadingNextRoots = false;
       this.loadingMore = false;
     }
   }
@@ -229,9 +400,14 @@ export default class NestedController extends Controller {
         }
       );
 
+      const wasPinned = this.pinnedPostIds.includes(post.id);
       this.pinnedPostIds = result.pinned_post_ids || [];
+      const isPinned = this.pinnedPostIds.includes(post.id);
+      if (wasPinned !== isPinned) {
+        this.#updateRootSummary({ pinnedDelta: isPinned ? 1 : -1 });
+      }
 
-      if (this.pinnedPostIds.includes(post.id)) {
+      if (isPinned) {
         // Move newly pinned post to front of rootNodes
         const idx = this.rootNodes.findIndex((n) => n.post.id === post.id);
         if (idx > 0) {
@@ -512,6 +688,7 @@ export default class NestedController extends Controller {
 
       if (isRoot) {
         if (data.user_id === this.currentUser?.id) {
+          this.#updateRootSummary({ totalDelta: 1 });
           this.rootNodes = [{ post, children: [] }, ...this.rootNodes];
         } else {
           this.newRootPostIds = [...this.newRootPostIds, data.id];
@@ -587,8 +764,10 @@ export default class NestedController extends Controller {
   }
 
   #markPostDeletedLocally(postId) {
+    let deletedPost = null;
     for (const post of this.postRegistry.values()) {
       if (post.id === postId) {
+        deletedPost = post;
         post.set("deleted_at", new Date());
         post.set("deleted_post_placeholder", true);
         if (!this.currentUser?.staff) {
@@ -596,6 +775,16 @@ export default class NestedController extends Controller {
         }
         break;
       }
+    }
+
+    if (
+      deletedPost &&
+      this.pinnedPostIds.includes(postId) &&
+      (!deletedPost.reply_to_post_number ||
+        deletedPost.reply_to_post_number === 1)
+    ) {
+      this.pinnedPostIds = this.pinnedPostIds.filter((id) => id !== postId);
+      this.#updateRootSummary({ pinnedDelta: -1 });
     }
   }
 
@@ -624,6 +813,7 @@ export default class NestedController extends Controller {
     }
 
     if (newNodes.length > 0) {
+      this.#updateRootSummary({ totalDelta: newNodes.length });
       this.rootNodes = [...newNodes, ...this.rootNodes];
     }
   }
@@ -643,6 +833,31 @@ export default class NestedController extends Controller {
 
   #processNode(nodeData) {
     return processNode(this.store, this.topic, nodeData);
+  }
+
+  #updateRootSummary({ totalDelta = 0, pinnedDelta = 0 } = {}) {
+    if (!this.rootSummary) {
+      return;
+    }
+
+    const total = Math.max(0, (this.rootSummary.total ?? 0) + totalDelta);
+    const pinnedCount = Math.max(
+      0,
+      Math.min(total, (this.rootSummary.pinned_count ?? 0) + pinnedDelta)
+    );
+    const pageSize = this.rootSummary.page_size;
+    const unpinnedTotal = Math.max(0, total - pinnedCount);
+    const pageCount =
+      total === 0 || !pageSize
+        ? 0
+        : Math.max(1, Math.ceil(unpinnedTotal / pageSize));
+
+    this.rootSummary = {
+      ...this.rootSummary,
+      total,
+      page_count: pageCount,
+      pinned_count: pinnedCount,
+    };
   }
 
   #assignSuggestedAndRelated(data) {
