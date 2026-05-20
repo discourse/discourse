@@ -26,6 +26,9 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
         },
       },
     )
+
+    # No upcoming change notifications are sent for new sites
+    UpcomingChanges.stubs(:should_notify_admins?).returns(true)
   end
 
   fab!(:admin_1, :admin)
