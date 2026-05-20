@@ -28,6 +28,7 @@ import {
 } from "discourse/plugins/discourse-visual-editor/discourse/lib/grid-math";
 import { resolveTemplateLayout } from "../lib/grid-templates";
 import {
+  clearValidatorStamps,
   cloneEntryForPaste,
   cloneLayoutForDraft,
   entryKey,
@@ -1730,11 +1731,8 @@ export default class VisualEditorService extends Service {
     // rollback a no-op.
     this._captureInitialSnapshot(entry, prev);
 
-    const next = new Map();
-    for (const [argName, value] of pending) {
-      next.set(argName, value);
-      entry.args[argName] = value;
-    }
+    const next = new Map(pending);
+    this._writeArgs(entry, next);
 
     this._undoStack.push({ kind: "args", entry, prev, next });
     this._redoStack.length = 0;
@@ -2030,20 +2028,34 @@ export default class VisualEditorService extends Service {
 
   /**
    * Writes a `Map<argName, value>` of arg values into `entry.args`. Used by
-   * undo, redo, and reset. Each assignment goes through the `trackedObject`
-   * proxy so reactive readers re-evaluate.
+   * the keystroke flush, undo, redo, and reset. Each assignment goes through
+   * the `trackedObject` proxy so reactive readers re-evaluate.
+   *
+   * `null` and `undefined` are treated as "no value" and delete the key
+   * instead of writing it. `""` / `0` / `false` are written as-is — they're
+   * valid scalar values for string / number / boolean args.
+   *
+   * Also clears any soft-failure stamps the validator may have written
+   * onto the entry (`__failureType`, `__failureReason`, `__visible`).
+   * Validation is layer-scoped and only re-runs on republish, so stamps
+   * persist on in-place arg mutations and the outline / inspector would
+   * keep showing a stale error even after the author fixes the offending
+   * value. Clearing on mutate is safe: our write path can't introduce
+   * new validator-rejected values (null/undefined become deletes), and
+   * the next structural change re-validates the whole layer.
    */
   _writeArgs(entry, args) {
     if (!entry?.args) {
       return;
     }
     for (const [argName, value] of args) {
-      if (value === undefined) {
+      if (value == null) {
         delete entry.args[argName];
       } else {
         entry.args[argName] = value;
       }
     }
+    clearValidatorStamps(entry);
   }
 
   /**

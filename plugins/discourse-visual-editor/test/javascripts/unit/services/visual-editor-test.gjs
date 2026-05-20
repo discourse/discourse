@@ -156,6 +156,63 @@ module(
         assert.false(await this.editor.undo());
         assert.false(await this.editor.redo());
       });
+
+      test("setting an arg to null deletes the key", async function (assert) {
+        // FormKit emits `null` when a text input is cleared. The validator
+        // rejects null (typeof null === "object" !== "string"), so the
+        // editor's contract is: cleared field → key omitted from args.
+        await editArg(this.editor, "title", "Edited");
+        await editArg(this.editor, "title", null);
+        assert.false(
+          "title" in this.editor.selectedBlockData.args,
+          "the title key is absent from args"
+        );
+      });
+
+      test("setting an arg to undefined deletes the key", async function (assert) {
+        await editArg(this.editor, "title", "Edited");
+        await editArg(this.editor, "title", undefined);
+        assert.false(
+          "title" in this.editor.selectedBlockData.args,
+          "the title key is absent from args"
+        );
+      });
+
+      test("setting an arg to empty string writes the empty string", async function (assert) {
+        // `""` is a valid string the user may have intentionally typed.
+        // Only `null` / `undefined` are stripped.
+        await editArg(this.editor, "title", "");
+        assert.true(
+          "title" in this.editor.selectedBlockData.args,
+          "the title key stays present"
+        );
+        assert.strictEqual(this.editor.selectedBlockData.args.title, "");
+      });
+
+      test("editing an arg clears stale validator soft-failure stamps", async function (assert) {
+        // `markEntrySoftFailure` (in core's validator) stamps these
+        // directly on the entry when permissive validation finds a
+        // problem. They persist past the underlying fix until the next
+        // layer republish; the live arg-write needs to clear them so
+        // the outline / inspector stop showing the stale error.
+        const entry = this.editor.selectedBlockData.args;
+        // Look up the live entry (the bound args' parent) and stamp it
+        // as the validator would.
+        const located = this.editor._findEntryAndOutletSync(
+          this.editor.selectedBlockKey
+        );
+        located.entry.__failureType = "structural-invalid";
+        located.entry.__failureReason = "stale";
+        located.entry.__visible = false;
+
+        await editArg(this.editor, "title", "Edited");
+
+        assert.false("__failureType" in located.entry);
+        assert.false("__failureReason" in located.entry);
+        assert.false("__visible" in located.entry);
+        // Sanity: the entry's args mutation still landed.
+        assert.strictEqual(entry.title, "Edited");
+      });
     });
 
     module("moveBlock", function (innerHooks) {

@@ -573,11 +573,18 @@ export function cloneLayoutForDraft(layout) {
 
 function cloneEntryForDraft(entry) {
   const clone = { ...entry };
+  // Drop validation-stamping side fields the source layer's validator
+  // may have set. They describe the source layer's state, not the
+  // draft's — keeping them would surface stale error chrome on entries
+  // whose data we then sanitise via `stripNullish` below.
+  clearValidatorStamps(clone);
   if (entry.args) {
     // Spread runs the `trackedObject` proxy's getters, materialising the
     // current values into a fresh plain object that will be re-wrapped at
-    // publish time.
-    clone.args = { ...entry.args };
+    // publish time. Also strips null/undefined values: the editor's
+    // contract is "cleared field = key omitted", so any null persisted by
+    // an older version of the write path self-heals here.
+    clone.args = stripNullish({ ...entry.args });
   }
   if (entry.containerArgs) {
     clone.containerArgs = cloneContainerArgs(entry.containerArgs);
@@ -586,6 +593,39 @@ function cloneEntryForDraft(entry) {
     clone.children = entry.children.map(cloneEntryForDraft);
   }
   return clone;
+}
+
+/**
+ * Removes keys whose value is `null` or `undefined`. Used to enforce the
+ * editor's "cleared field = key omitted" contract on freshly-cloned args
+ * objects — `""`, `0`, `false` are kept as valid scalar values.
+ *
+ * @param {Object} obj - Mutated in place; also returned for chaining.
+ * @returns {Object}
+ */
+function stripNullish(obj) {
+  for (const key of Object.keys(obj)) {
+    if (obj[key] == null) {
+      delete obj[key];
+    }
+  }
+  return obj;
+}
+
+/**
+ * Removes the soft-failure stamps core's permissive validator may have
+ * written onto an entry (`__failureType`, `__failureReason`, `__visible`).
+ * Used both when cloning an entry for the draft layer (the source layer's
+ * stamps don't apply to the draft) and after a live arg mutation (the
+ * outline / inspector read these directly and validation only re-runs on
+ * layer republish, so stale stamps would persist past the underlying fix).
+ *
+ * @param {Object} entry - Mutated in place.
+ */
+export function clearValidatorStamps(entry) {
+  delete entry.__failureType;
+  delete entry.__failureReason;
+  delete entry.__visible;
 }
 
 /**
@@ -627,7 +667,7 @@ function cloneContainerArgs(containerArgs) {
   for (const namespace of Object.keys(containerArgs)) {
     const bag = containerArgs[namespace];
     clone[namespace] =
-      bag !== null && typeof bag === "object" ? { ...bag } : bag;
+      bag !== null && typeof bag === "object" ? stripNullish({ ...bag }) : bag;
   }
   return clone;
 }

@@ -432,6 +432,63 @@ module("Unit | Discourse Visual Editor | mutate-layout", function () {
       );
     });
 
+    test("strips null and undefined args during clone", function (assert) {
+      // Self-heal for layouts persisted before the write-side fix landed
+      // (FormKit cleared text inputs used to land as `null` in args).
+      const layout = [
+        {
+          block: LeafBlock,
+          args: {
+            title: "Hi",
+            name: null,
+            role: undefined,
+            ctaLabel: "",
+            count: 0,
+            enabled: false,
+          },
+          containerArgs: {
+            grid: { column: "1", row: null, align: undefined },
+          },
+        },
+      ];
+
+      const cloned = cloneLayoutForDraft(layout);
+
+      assert.deepEqual(cloned[0].args, {
+        title: "Hi",
+        ctaLabel: "",
+        count: 0,
+        enabled: false,
+      });
+      assert.deepEqual(cloned[0].containerArgs.grid, {
+        column: "1",
+      });
+    });
+
+    test("strips validator soft-failure stamps from the source entry", function (assert) {
+      // The source layer's validator may have stamped `__failureType` /
+      // `__failureReason` / `__visible` on its entries. Those describe
+      // the source layer's state, not the draft's — and the draft's own
+      // validator will re-stamp if the issue is real. Carrying them
+      // over would paint stale error chrome on entries whose args we
+      // then sanitise in `cloneEntryForDraft`.
+      const layout = [
+        {
+          block: LeafBlock,
+          args: { title: "Hi" },
+          __failureType: "structural-invalid",
+          __failureReason: "stale message from a previous validation pass",
+          __visible: false,
+        },
+      ];
+
+      const cloned = cloneLayoutForDraft(layout);
+
+      assert.false("__failureType" in cloned[0]);
+      assert.false("__failureReason" in cloned[0]);
+      assert.false("__visible" in cloned[0]);
+    });
+
     test("cloneEntryForPaste also deep-clones containerArgs", function (assert) {
       const entry = {
         block: LeafBlock,
