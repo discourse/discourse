@@ -2147,20 +2147,14 @@ export default class VisualEditorService extends Service {
   }
 
   /**
-   * Resets source-side drag state at the end of a drag (drop OR
-   * cancellation — PDND's `draggable.onDrop` fires for both). This
-   * deliberately does NOT clear `_lastDropPreview` / `activeDropPreview`:
-   * PDND fires source `onDrop` BEFORE drop-target `onDrop` within the
-   * same event, and our dispatch handlers (`dispatchActiveDrop`, plus
-   * the native fallback path in `container-drop-target.js`) read those
-   * fields. Clearing them here would race with dispatch.
-   *
-   * The dispatch-side state IS cleared, but by `dispatchActiveDrop`
-   * itself once it has consumed the descriptor — that's the single
-   * source of truth for those fields. For a cancelled drag (no drop
-   * target was over the cursor), `_lastDropPreview` lingers harmlessly
-   * until the next dragover overwrites it or a `clearActiveDropPreview`
-   * fires from a dragleave.
+   * Resets drag state at the end of a drag (drop OR cancellation —
+   * PDND's `draggable.onDrop` fires for both). Wired as the source
+   * modifier's `onDrop` consumer callback, which the modifier
+   * defers via `queueMicrotask` until after PDND's full dispatch
+   * chain plus any native bubble-phase listeners have fired. By the
+   * time this runs, every drop handler that could read shared
+   * state has already consumed it — clearing everything here is
+   * just final cleanup.
    */
   @action
   endDrag() {
@@ -2168,6 +2162,8 @@ export default class VisualEditorService extends Service {
     this.dragSourceOutlet = null;
     this.dragSource = null;
     this.activeDropTarget = null;
+    this.activeDropPreview = null;
+    this._lastDropPreview = null;
     document.body.classList.remove("visual-editor-dragging");
   }
 
