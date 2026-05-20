@@ -16,12 +16,191 @@ const POSITION_CLASSES = Object.freeze({
   inside: { y: "is-drag-inside", x: "is-drag-inside" },
 });
 
+function normaliseAccepts(accepts) {
+  if (!accepts) {
+    return [];
+  }
+  if (Array.isArray(accepts)) {
+    return accepts;
+  }
+  return [accepts];
+}
+
+function sourceFromPDND(pdndSource, element) {
+  return {
+    type: pdndSource.data?.type ?? null,
+    data: pdndSource.data ?? {},
+    element: pdndSource.element ?? element ?? null,
+  };
+}
+
+/**
+ * Imperative drop-target registration backed by Pragmatic Drag and
+ * Drop. Wraps `dropTargetForElements` with the deepest-target filter,
+ * `is-drag-above` / `is-drag-below` indicator classes, and the
+ * source-payload normalisation the modifier exposes.
+ *
+ * Use this directly when you've captured an element ref outside your
+ * own template (e.g. via `didInsert` on a sibling marker, or after
+ * walking the DOM) and can't attach the `{{dDragAndDropTarget}}`
+ * modifier. The modifier class is a thin wrapper around this
+ * function for the template-based common case.
+ *
+ * Library-agnostic by design: `@atlaskit/pragmatic-drag-and-drop` is
+ * imported only by the ui-kit modifier files. Consumers (plugins,
+ * core features) talk to this helper, not to PDND directly.
+ *
+ * @param {Element} element - The element to register as a drop target.
+ * @param {() => Object} getArgsRef - Closure returning the latest args.
+ *   PDND callbacks read this on every invocation, so arg changes take
+ *   effect without re-registering. Args shape matches the modifier:
+ *   `accepts` (string | string[] | undefined), `position`, `axis`,
+ *   `canDrop`, `getData`, `getDropEffect`, `getIsSticky`,
+ *   `onDragEnter`, `onDrag`, `onDragLeave`, `onDrop`, `indicator`.
+ * @returns {() => void} Cleanup function. Caller invokes it once on
+ *   teardown (modifier destroy, component willDestroy, etc.).
+ */
+export function registerDropTarget(element, getArgsRef) {
+  let activeClass = null;
+
+  const applyIndicator = (position, axis) => {
+    const className = POSITION_CLASSES[position]?.[axis];
+    if (!className || activeClass === className) {
+      return;
+    }
+    if (activeClass) {
+      element.classList.remove(activeClass);
+    }
+    element.classList.add(className);
+    activeClass = className;
+  };
+
+  const clearIndicators = () => {
+    if (activeClass) {
+      element.classList.remove(activeClass);
+      activeClass = null;
+    }
+  };
+
+  const acceptsType = (type) => {
+    const list = normaliseAccepts(getArgsRef().accepts);
+    return list.length === 0 || list.includes(type);
+  };
+
+  const resolvePosition = (input) => {
+    const args = getArgsRef();
+    if (args.position) {
+      return args.position;
+    }
+    const axis = args.axis ?? "y";
+    const rect = element.getBoundingClientRect();
+    if (axis === "x") {
+      return input.clientX < rect.left + rect.width / 2 ? "before" : "after";
+    }
+    return input.clientY < rect.top + rect.height / 2 ? "before" : "after";
+  };
+
+  // PDND fires lifecycle events on every active drop target in the
+  // hierarchy. The contract here is "deepest accepted target wins":
+  // short-circuit on every callback unless this element is at the top
+  // of the `dropTargets` bubble stack.
+  const isDeepest = (location) =>
+    location.current.dropTargets[0]?.element === element;
+
+  const cleanup = dropTargetForElements({
+    element,
+    canDrop: ({ source, input }) => {
+      if (!acceptsType(source.data?.type)) {
+        return false;
+      }
+      const args = getArgsRef();
+      if (!args.canDrop) {
+        return true;
+      }
+      return (
+        args.canDrop({
+          source: sourceFromPDND(source, element),
+          input,
+          element,
+        }) !== false
+      );
+    },
+    getData: () => getArgsRef().getData?.() ?? {},
+    getDropEffect: ({ source, input }) => {
+      const args = getArgsRef();
+      return args.getDropEffect?.({
+        source: sourceFromPDND(source, element),
+        input,
+        element,
+      });
+    },
+    getIsSticky: () => getArgsRef().getIsSticky?.() === true,
+    onDragEnter: ({ source, location }) => {
+      if (!isDeepest(location)) {
+        return;
+      }
+      const args = getArgsRef();
+      const pos = resolvePosition(location.current.input);
+      if (args.indicator !== false) {
+        applyIndicator(pos, args.axis ?? "y");
+      }
+      args.onDragEnter?.({
+        source: sourceFromPDND(source, element),
+        position: pos,
+        location,
+        element,
+      });
+    },
+    onDrag: ({ source, location }) => {
+      if (!isDeepest(location)) {
+        return;
+      }
+      const args = getArgsRef();
+      const pos = resolvePosition(location.current.input);
+      if (args.indicator !== false) {
+        applyIndicator(pos, args.axis ?? "y");
+      }
+      args.onDrag?.({
+        source: sourceFromPDND(source, element),
+        position: pos,
+        location,
+        element,
+      });
+    },
+    onDragLeave: ({ source, location }) => {
+      clearIndicators();
+      getArgsRef().onDragLeave?.({
+        source: sourceFromPDND(source, element),
+        position: null,
+        location,
+        element,
+      });
+    },
+    onDrop: ({ source, location }) => {
+      if (!isDeepest(location)) {
+        return;
+      }
+      const pos = resolvePosition(location.current.input);
+      clearIndicators();
+      getArgsRef().onDrop?.({
+        source: sourceFromPDND(source, element),
+        position: pos,
+        location,
+        element,
+      });
+    },
+  });
+
+  return () => {
+    cleanup();
+    clearIndicators();
+  };
+}
+
 /**
  * Marks an element as a drop target compatible with the
- * `dDragAndDropSource` vocabulary. Backed by Pragmatic Drag and Drop's
- * `dropTargetForElements` — events are rAF-batched, the modifier
- * doesn't need to track enter-depth or debounce dragleave flicker
- * by hand.
+ * `dDragAndDropSource` vocabulary. Thin Ember-modifier wrapper around
+ * {@link registerDropTarget}.
  *
  * Smart row mode — position is computed from the cursor against the
  * element's midpoint:
@@ -52,14 +231,14 @@ const POSITION_CLASSES = Object.freeze({
  *    `axis` and the midpoint logic are ignored.
  *  - `axis` — `"y"` (default) or `"x"`. Drives the indicator class
  *    selection and the smart-row position math.
- *  - `canDrop` — `({source, input}) => boolean`. Synchronous gate.
- *    Source is `{type, data, element}` — the shape the matching
+ *  - `canDrop` — `({source, input, element}) => boolean`. Synchronous
+ *    gate. Source is `{type, data, element}` — the shape the matching
  *    `dDragAndDropSource` published.
  *  - `getData` — `() => object`. Optional target-side metadata that
  *    PDND attaches to its `DropTargetRecord`; consumers reading
  *    `source.dropTargets` see it under `.data`.
- *  - `getDropEffect` — `({source, input}) => "copy" | "move" | "link"`.
- *    Determines the cursor feedback browsers show.
+ *  - `getDropEffect` — `({source, input, element}) => "copy" | "move"
+ *    | "link"`. Determines the cursor feedback browsers show.
  *  - `getIsSticky` — `() => boolean`. Enables PDND's sticky-target
  *    semantics (the target stays "current" briefly after the cursor
  *    leaves, useful for hover-to-expand patterns).
@@ -71,183 +250,34 @@ const POSITION_CLASSES = Object.freeze({
  *    or the drop-target hierarchy updates while this target is
  *    active.
  *
- * Nested targets: PDND walks the DOM and only reports the *deepest*
- * accepted target in `location.current.dropTargets[0]`, so an ancestor
- * decorated with this modifier doesn't double-handle a drop the child
- * already claimed.
+ * Nested targets: only the deepest accepted target receives the
+ * lifecycle callbacks, so an ancestor decorated with this modifier
+ * doesn't double-handle a drop the child already claimed.
  */
 export default class DDragAndDropTargetModifier extends Modifier {
   #cleanup = null;
   #element = null;
-  #activeClass = null;
+  #args = {};
 
   constructor(owner, args) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.#detach());
   }
 
-  modify(
-    element,
-    _positional,
-    {
-      accepts,
-      position,
-      axis = "y",
-      canDrop,
-      getData,
-      getDropEffect,
-      getIsSticky,
-      onDragEnter,
-      onDrag,
-      onDragLeave,
-      onDrop,
-      indicator = true,
-    } = {}
-  ) {
+  modify(element, _positional, args = {}) {
     if (this.#element && this.#element !== element) {
       this.#detach();
     }
     this.#element = element;
-    this.#detach();
-
-    const acceptList = this.#normaliseAccepts(accepts);
-    const acceptsType = (type) =>
-      acceptList.length === 0 || acceptList.includes(type);
-
-    const resolvePosition = (input) => {
-      if (position) {
-        return position;
-      }
-      const rect = element.getBoundingClientRect();
-      if (axis === "x") {
-        return input.clientX < rect.left + rect.width / 2 ? "before" : "after";
-      }
-      return input.clientY < rect.top + rect.height / 2 ? "before" : "after";
-    };
-
-    const sourceFromPDND = (pdndSource) => ({
-      type: pdndSource.data?.type ?? null,
-      data: pdndSource.data ?? {},
-      element: pdndSource.element ?? null,
-    });
-
-    // PDND fires lifecycle events on every active drop target in the
-    // hierarchy. The old ui-kit contract was "deepest accepted target
-    // wins" — match that here by short-circuiting on every callback
-    // except when this element is at the top of the `dropTargets`
-    // bubble stack.
-    const isDeepest = (location) =>
-      location.current.dropTargets[0]?.element === element;
-
-    this.#cleanup = dropTargetForElements({
-      element,
-      canDrop: ({ source, input }) => {
-        if (!acceptsType(source.data?.type)) {
-          return false;
-        }
-        if (!canDrop) {
-          return true;
-        }
-        return (
-          canDrop({ source: sourceFromPDND(source), input, element }) !== false
-        );
-      },
-      getData: getData ? () => getData() : undefined,
-      getDropEffect: getDropEffect
-        ? ({ source, input }) =>
-            getDropEffect({ source: sourceFromPDND(source), input, element })
-        : undefined,
-      getIsSticky: getIsSticky ? () => getIsSticky() === true : undefined,
-      onDragEnter: ({ source, location }) => {
-        if (!isDeepest(location)) {
-          return;
-        }
-        const pos = resolvePosition(location.current.input);
-        if (indicator) {
-          this.#applyIndicator(pos, axis);
-        }
-        onDragEnter?.({
-          source: sourceFromPDND(source),
-          position: pos,
-          location,
-          element,
-        });
-      },
-      onDrag: ({ source, location }) => {
-        if (!isDeepest(location)) {
-          return;
-        }
-        const pos = resolvePosition(location.current.input);
-        if (indicator) {
-          this.#applyIndicator(pos, axis);
-        }
-        onDrag?.({
-          source: sourceFromPDND(source),
-          position: pos,
-          location,
-          element,
-        });
-      },
-      onDragLeave: ({ source, location }) => {
-        this.#clearIndicators();
-        onDragLeave?.({
-          source: sourceFromPDND(source),
-          position: null,
-          location,
-          element,
-        });
-      },
-      onDrop: ({ source, location }) => {
-        if (!isDeepest(location)) {
-          return;
-        }
-        const pos = resolvePosition(location.current.input);
-        this.#clearIndicators();
-        onDrop?.({
-          source: sourceFromPDND(source),
-          position: pos,
-          location,
-          element,
-        });
-      },
-    });
-  }
-
-  #normaliseAccepts(accepts) {
-    if (!accepts) {
-      return [];
-    }
-    if (Array.isArray(accepts)) {
-      return accepts;
-    }
-    return [accepts];
-  }
-
-  #applyIndicator(position, axis) {
-    const className = POSITION_CLASSES[position]?.[axis];
-    if (!className) {
-      return;
-    }
-    if (this.#activeClass === className) {
-      return;
-    }
-    if (this.#activeClass) {
-      this.#element.classList.remove(this.#activeClass);
-    }
-    this.#element.classList.add(className);
-    this.#activeClass = className;
-  }
-
-  #clearIndicators() {
-    if (this.#activeClass) {
-      this.#element.classList.remove(this.#activeClass);
-      this.#activeClass = null;
+    this.#args = args ?? {};
+    if (!this.#cleanup) {
+      this.#cleanup = registerDropTarget(element, () => this.#args);
     }
   }
 
   #detach() {
     this.#cleanup?.();
     this.#cleanup = null;
-    this.#clearIndicators();
+    this.#element = null;
   }
 }
