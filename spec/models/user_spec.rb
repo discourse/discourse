@@ -706,9 +706,8 @@ RSpec.describe User do
     end
   end
 
-  describe "#deactivate" do
+  describe "anonymous shadow users" do
     fab!(:admin)
-
     fab!(:master_user) { Fabricate(:user, trust_level: TrustLevel[3]) }
 
     before do
@@ -716,7 +715,7 @@ RSpec.describe User do
       SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
     end
 
-    it "deactivates and logs out anonymous shadow users", :aggregate_failures do
+    it "deactivates and logs out anonymous shadow users when deactivated", :aggregate_failures do
       shadow_user = AnonymousShadowCreator.get(master_user)
       UserAuthToken.generate!(user_id: shadow_user.id)
 
@@ -730,17 +729,8 @@ RSpec.describe User do
       expect(messages[0].user_ids).to eq([shadow_user.id])
       expect(messages[0].data).to eq(shadow_user.id)
     end
-  end
 
-  describe "anonymous shadow users" do
-    fab!(:master_user) { Fabricate(:user, trust_level: TrustLevel[3]) }
-
-    before do
-      SiteSetting.allow_anonymous_mode = true
-      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
-    end
-
-    it "suspends and logs out shadows when the master user is suspended", :aggregate_failures do
+    it "suspends and logs out anonymous shadow users when suspended", :aggregate_failures do
       freeze_time
       shadow_user = AnonymousShadowCreator.get(master_user)
       UserAuthToken.generate!(user_id: shadow_user.id)
