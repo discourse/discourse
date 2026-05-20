@@ -126,5 +126,17 @@ describe "User preferences | Profile" do
 
       expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
     end
+
+    it "redirects back to the original destination after filling required fields" do
+      visit("/hot")
+
+      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
+
+      find(".user-field-favourite-pokemon input").fill_in(with: "Mudkip")
+      find(".user-field-updated-terms input").check
+      find(".save-button .btn-primary").click
+
+      expect(page).to have_current_path("/hot")
+    end
   end
 end

@@ -872,6 +872,8 @@ class ApplicationController < ActionController::Base
       return
     end
 
+    cookies[:destination_url] = destination_url.presence
+
     redirect_path = path("/u/#{current_user.encoded_username}/preferences/profile")
     second_factor_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
     allowed_paths = [redirect_path, second_factor_path, path("/admin"), path("/safe-mode")]
