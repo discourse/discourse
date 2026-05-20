@@ -26,14 +26,19 @@ class AddDiscourseSolvedTopicAnswers < ActiveRecord::Migration[8.0]
     change_column_null :discourse_solved_solved_topics, :accepter_user_id, true
 
     execute <<~SQL
-      DROP TRIGGER IF EXISTS discourse_solved_sync_to_answers
+      DROP TRIGGER IF EXISTS solved_trigger_old_answers_to_new
         ON discourse_solved_solved_topics;
-      DROP TRIGGER IF EXISTS discourse_solved_sync_delete_to_answers
+      DROP TRIGGER IF EXISTS solved_trigger_old_answer_deletes_to_new
+        ON discourse_solved_solved_topics;
+      DROP TRIGGER IF EXISTS solved_trigger_new_answers_to_old
+        ON discourse_solved_solved_topics;
+      DROP TRIGGER IF EXISTS solved_trigger_new_answer_deletes_to_old
         ON discourse_solved_solved_topics;
     SQL
 
+    # Sync accepted answers in old code to the new model
     execute <<~SQL
-      CREATE OR REPLACE FUNCTION discourse_solved_sync_old_answers_to_new()
+      CREATE OR REPLACE FUNCTION solved_sync_old_answers_to_new()
       RETURNS TRIGGER AS $$
       BEGIN
         INSERT INTO discourse_solved_topic_answers
@@ -50,15 +55,16 @@ class AddDiscourseSolvedTopicAnswers < ActiveRecord::Migration[8.0]
     SQL
 
     execute <<~SQL
-      CREATE TRIGGER discourse_solved_trigger_sync_old_answers_to_new
+      CREATE TRIGGER solved_trigger_old_answers_to_new
       AFTER INSERT OR UPDATE OF answer_post_id ON discourse_solved_solved_topics
       FOR EACH ROW
-      WHEN (NEW.answer_post_id IS NOT NULL)
-      EXECUTE FUNCTION discourse_solved_sync_old_answers_to_new();
+      WHEN (pg_trigger_depth() < 1 AND NEW.answer_post_id IS NOT NULL)
+      EXECUTE FUNCTION solved_sync_old_answers_to_new();
     SQL
 
+    # Sync unaccepted answers in old code to the new model
     execute <<~SQL
-      CREATE OR REPLACE FUNCTION discourse_solved_sync_old_answer_deletes_to_new()
+      CREATE OR REPLACE FUNCTION solved_sync_old_answer_deletes_to_new()
       RETURNS TRIGGER AS $$
       BEGIN
         DELETE FROM discourse_solved_topic_answers WHERE solved_topic_id = OLD.id;
@@ -68,25 +74,88 @@ class AddDiscourseSolvedTopicAnswers < ActiveRecord::Migration[8.0]
     SQL
 
     execute <<~SQL
-      CREATE TRIGGER discourse_solved_trigger_sync_old_answer_deletes_to_new
+      CREATE TRIGGER solved_trigger_old_answer_deletes_to_new
       AFTER DELETE ON discourse_solved_solved_topics
       FOR EACH ROW
-      EXECUTE FUNCTION discourse_solved_sync_old_answer_deletes_to_new();
+      WHEN (pg_trigger_depth() < 1)
+      EXECUTE FUNCTION solved_sync_old_answer_deletes_to_new();
+    SQL
+
+    # Sync accepted answers in new code to the old model (use newest accepted answer)
+    execute <<~SQL
+      CREATE OR REPLACE FUNCTION solved_sync_new_answers_to_old()
+      RETURNS TRIGGER AS $$
+      BEGIN
+        UPDATE discourse_solved_solved_topics
+          SET answer_post_id = NEW.answer_post_id,
+              accepter_user_id = NEW.accepter_user_id
+        WHERE id = NEW.solved_topic_id;
+
+        RETURN NEW;
+      END;
+      $$ LANGUAGE plpgsql;
+    SQL
+
+    execute <<~SQL
+      CREATE TRIGGER solved_trigger_new_answers_to_old
+      AFTER INSERT ON discourse_solved_topic_answers
+      FOR EACH ROW
+      WHEN (pg_trigger_depth() < 1)
+      EXECUTE FUNCTION solved_sync_new_answers_to_old();
+    SQL
+
+    # Sync unaccepted answers in new code to the old model
+    # If any TopicAnswers are left, store the newest one in the SolvedTopic.
+    # If not, then the SolvedTopic is about to be deleted in either
+    # UnacceptAnswer.unmark_as_solved or AcceptAnswer.revoke_previous_accepted_answer
+    execute <<~SQL
+      CREATE OR REPLACE FUNCTION solved_sync_new_answer_deletes_to_old()
+      RETURNS TRIGGER AS $$
+      BEGIN
+        UPDATE discourse_solved_solved_topics sst
+          SET answer_post_id = ta.answer_post_id,
+              accepter_user_id = ta.accepter_user_id
+          FROM (
+            SELECT answer_post_id, accepter_user_id
+              FROM discourse_solved_topic_answers
+            WHERE solved_topic_id = OLD.solved_topic_id
+            ORDER BY created_at DESC
+            LIMIT 1
+          ) ta
+        WHERE sst.id = OLD.solved_topic_id;
+
+        RETURN OLD;
+      END;
+      $$ LANGUAGE plpgsql;
+    SQL
+
+    execute <<~SQL
+      CREATE TRIGGER solved_trigger_new_answer_deletes_to_old
+      AFTER DELETE ON discourse_solved_topic_answers
+      FOR EACH ROW
+      WHEN (pg_trigger_depth() < 1)
+      EXECUTE FUNCTION solved_sync_new_answer_deletes_to_old();
     SQL
   end
 
   def down
     execute <<~SQL
-      DROP TRIGGER IF EXISTS discourse_solved_trigger_sync_old_answers_to_new
+      DROP TRIGGER IF EXISTS solved_trigger_old_answers_to_new
         ON discourse_solved_solved_topics;
-      DROP TRIGGER IF EXISTS discourse_solved_trigger_sync_old_answer_deletes_to_new
+      DROP TRIGGER IF EXISTS solved_trigger_old_answer_deletes_to_new
         ON discourse_solved_solved_topics;
-      DROP FUNCTION IF EXISTS discourse_solved_sync_old_answers_to_new();
-      DROP FUNCTION IF EXISTS discourse_solved_sync_old_answer_deletes_to_new();
+      DROP TRIGGER IF EXISTS solved_trigger_new_answers_to_old
+        ON discourse_solved_solved_topics;
+      DROP TRIGGER IF EXISTS solved_trigger_new_answer_deletes_to_old
+        ON discourse_solved_solved_topics;
+      DROP FUNCTION IF EXISTS solved_sync_old_answers_to_new();
+      DROP FUNCTION IF EXISTS solved_sync_old_answer_deletes_to_new();
+      DROP FUNCTION IF EXISTS solved_sync_new_answers_to_old();
+      DROP FUNCTION IF EXISTS solved_sync_new_answer_deletes_to_old();
     SQL
 
     # Backfill legacy columns from topic_answers before restoring NOT NULL.
-    # If a topic has multiple solutions (new feature), keep only the most recent.
+    # If a topic has multiple solutions, keep only the most recent.
     execute <<~SQL
       UPDATE discourse_solved_solved_topics st
          SET answer_post_id = latest.answer_post_id,
@@ -100,7 +169,7 @@ class AddDiscourseSolvedTopicAnswers < ActiveRecord::Migration[8.0]
        WHERE st.id = latest.solved_topic_id
     SQL
 
-    # Drop any solved_topic rows with no remaining answers as a failsafe
+    # Drop any orphaned solved_topic rows with no remaining answers as a failsafe
     # before restoring the not null constraints
     execute <<~SQL
       DELETE FROM discourse_solved_solved_topics

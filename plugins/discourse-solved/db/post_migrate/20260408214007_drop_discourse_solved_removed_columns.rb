@@ -4,12 +4,18 @@ class DropDiscourseSolvedRemovedColumns < ActiveRecord::Migration[8.0]
 
   def up
     execute <<~SQL
-      DROP TRIGGER IF EXISTS discourse_solved_trigger_sync_old_answers_to_new
+      DROP TRIGGER IF EXISTS solved_trigger_old_answers_to_new
         ON discourse_solved_solved_topics;
-      DROP TRIGGER IF EXISTS discourse_solved_trigger_sync_old_answer_deletes_to_new
+      DROP TRIGGER IF EXISTS solved_trigger_old_answer_deletes_to_new
         ON discourse_solved_solved_topics;
-      DROP FUNCTION IF EXISTS discourse_solved_sync_old_answers_to_new();
-      DROP FUNCTION IF EXISTS discourse_solved_sync_old_answer_deletes_to_new();
+      DROP TRIGGER IF EXISTS solved_trigger_new_answers_to_old
+        ON discourse_solved_topic_answers;
+      DROP TRIGGER IF EXISTS solved_trigger_new_answer_deletes_to_old
+        ON discourse_solved_topic_answers;
+      DROP FUNCTION IF EXISTS solved_sync_old_answers_to_new();
+      DROP FUNCTION IF EXISTS solved_sync_old_answer_deletes_to_new();
+      DROP FUNCTION IF EXISTS solved_sync_new_answers_to_old();
+      DROP FUNCTION IF EXISTS solved_sync_new_answer_deletes_to_old();
     SQL
 
     # Failsafe to backfill answers which weren't caught by the triggers just in case
