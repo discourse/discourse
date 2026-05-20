@@ -77,6 +77,7 @@ export function buildConfig({ devMode } = {}) {
     experimental: {
       incrementalBuild: true,
       resolveNewUrlToAsset: true,
+      nativeMagicString: true,
     },
     moduleTypes: {
       ".wasm": "asset",
