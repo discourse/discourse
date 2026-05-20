@@ -45,6 +45,7 @@ describe "Upcoming Events" do
   end
 
   describe "popup invitees on recurring events" do
+    fab!(:category)
     fab!(:going_recurring_user, :user)
     fab!(:going_once_user, :user)
     let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
