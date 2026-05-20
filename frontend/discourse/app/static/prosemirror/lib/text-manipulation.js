@@ -339,7 +339,7 @@ export default class ProsemirrorTextManipulation {
     let index = 0;
 
     const value = this.autocompleteHandler.getValue();
-    const match = value.match(/\B:(\w*)$/);
+    const match = value.match(/\B:([\p{L}\p{N}_]*)$/u);
     if (match) {
       index = value.length - match.index;
     }

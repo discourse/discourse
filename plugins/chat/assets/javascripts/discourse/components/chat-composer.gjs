@@ -440,7 +440,7 @@ export default class ChatComposer extends Component {
   onSelectEmoji(emoji, context = {}) {
     const textareaInteractor = this.composer.textarea;
 
-    if (context.emojiTermStart && context.emojiTermStart) {
+    if (context?.emojiTermStart != null) {
       const value = textareaInteractor.textarea.value;
       const valueUpToCursor = `${value.substring(0, context.emojiTermStart)}:${emoji}: `;
       const valueAfterCursor = value.substring(context.emojiTermEnd + 1);
@@ -580,7 +580,8 @@ export default class ChatComposer extends Component {
 
           if (currentValue && currentCaretPos !== undefined) {
             const textBeforeCursor = currentValue.substring(0, currentCaretPos);
-            const incompleteMatch = textBeforeCursor.match(/(:[\w-]+)$/);
+            const incompleteMatch =
+              textBeforeCursor.match(/(:[\p{L}\p{N}_-]+)$/u);
 
             if (incompleteMatch) {
               emojiContext = {
