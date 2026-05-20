@@ -33,14 +33,17 @@ function staticEmbroiderAliases() {
 function filteredEmberResolver() {
   const plugin = resolver();
   plugin.resolveId = {
-    filter: include(
-      or(
-        // @embroider/* could be dynamic modules
-        id(/^@embroider\//),
-        // /-embroider-* need access to the app-tree-merge result so that addon-contributed app-tree-merge modules are available in compatModules
-        importerId(/\/-embroider-/)
-      )
-    ),
+    // Rolldown only honours a resolveId filter when it's an array of expressions.
+    filter: [
+      include(
+        or(
+          // @embroider/* could be dynamic modules
+          id(/^@embroider\//),
+          // /-embroider-* need access to the app-tree-merge result so that addon-contributed app-tree-merge modules are available in compatModules
+          importerId(/\/-embroider-/)
+        )
+      ),
+    ],
     handler: plugin.resolveId,
   };
   return plugin;
