@@ -600,6 +600,10 @@ export default class CompactEventEditor extends Component {
           }
 
           this.#emitChange();
+          // Modal-driven updates are discrete commits, not interim keystrokes.
+          // Tell the wrapper to flush immediately rather than wait for blur,
+          // since focus returns to the gear button (inside the wrapper).
+          this.args.onCommit?.();
         },
       },
     });

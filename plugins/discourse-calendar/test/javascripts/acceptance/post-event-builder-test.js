@@ -26,9 +26,11 @@ acceptance("Post event - composer", function (needs) {
       `button[title='${i18n("discourse_post_event.builder_modal.attach")}']`
     );
 
-    const modal = ".post-event-builder-modal";
+    // Toolbar inserts inline when the preview is visible; click the gear to
+    // open the modal on the advanced screen.
+    await click(".d-editor-preview .composer-event__more-dropdown button");
 
-    await click(`${modal} .d-modal__footer .advanced-settings`);
+    const modal = ".post-event-builder-modal";
 
     const timezoneInput = selectKit(
       `${modal} [data-name="timezone"] .timezone-input`
@@ -68,7 +70,7 @@ acceptance("Post event - composer", function (needs) {
       );
   });
 
-  test("composer event builder - compact screen pre-populates defaults", async function (assert) {
+  test("composer event builder - inline preview pre-populates defaults", async function (assert) {
     await visit("/");
     await click("#create-topic");
     const categoryChooser = selectKit(".category-chooser");
@@ -79,18 +81,16 @@ acceptance("Post event - composer", function (needs) {
       `button[title='${i18n("discourse_post_event.builder_modal.attach")}']`
     );
 
-    const modal = ".post-event-builder-modal";
+    const preview = ".d-editor-preview";
 
     assert
-      .dom(`${modal} input.composer-event__date-input`)
-      .hasAnyValue(
-        "start date is pre-populated when the compact view first opens"
-      );
+      .dom(`${preview} input.composer-event__date-input`)
+      .hasAnyValue("start date is pre-populated in the inline preview editor");
     assert
-      .dom(`${modal} input.composer-event__time-input`)
+      .dom(`${preview} input.composer-event__time-input`)
       .hasAnyValue("start time is pre-populated");
     assert
-      .dom(`${modal} .composer-event__reminder-value`)
+      .dom(`${preview} .composer-event__reminder-value`)
       .hasAnyValue("default reminder is pre-populated");
   });
 
@@ -122,9 +122,10 @@ acceptance("Post event - composer", function (needs) {
         `button[title='${i18n("discourse_post_event.builder_modal.attach")}']`
       );
 
-      const modal = ".post-event-builder-modal";
+      // Toolbar inserts inline; click gear to open the modal on advanced.
+      await click(".d-editor-preview .composer-event__more-dropdown button");
 
-      await click(`${modal} .d-modal__footer .advanced-settings`);
+      const modal = ".post-event-builder-modal";
 
       // Select the date
       await fillIn(`${modal} .from input[type=date]`, "2022-07-01");

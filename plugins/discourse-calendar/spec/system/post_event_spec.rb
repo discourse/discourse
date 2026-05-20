@@ -76,7 +76,11 @@ describe "Post event" do
       visit("/new-topic")
       find(".toolbar-menu__options-trigger").click
       click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
-      post_event_form_page.fill_description("foo\nbar").fill_timezone(timezone).submit
+
+      # Toolbar inserts inline; fill the description in the preview editor and
+      # focus out to flush back to raw.
+      composer.preview.find(".composer-event__description-textarea").fill_in(with: "foo\nbar")
+      find(".d-editor-input").click
 
       expect(composer).to have_value <<~EVENT.strip
         [event start="2025-06-15 15:00" status="public" timezone="#{timezone}" end="2025-06-15 16:00" reminders="notification.15.minutes"]
@@ -88,19 +92,18 @@ describe "Post event" do
   end
 
   context "with markdown-mode preview" do
-    it "renders the compact editor in the preview pane pre-populated from the textarea BBCode" do
+    it "inserts BBCode inline and renders the compact editor in the preview pane pre-populated" do
       visit("/new-topic")
       find(".toolbar-menu__options-trigger").click
       click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
-      post_event_form_page.fill_location("HQ").submit
 
       preview = composer.preview
       expect(preview).to have_css(".composer-event-node")
-      expect(preview.find(".composer-event__location-input").value).to eq("HQ")
       expect(preview.find(".composer-event__date-input", match: :first).value).not_to(
         be_empty,
         "start date should be populated from the inserted BBCode",
       )
+      expect(composer).to have_value(/\[event /)
     end
   end
 
@@ -133,7 +136,8 @@ describe "Post event" do
       find(".toolbar-menu__options-trigger").click
       click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
 
-      find(".post-event-builder-modal .d-modal__footer .advanced-settings").click
+      # Toolbar inserts inline; click gear to open the modal on advanced.
+      find(".d-editor-preview .composer-event__more-dropdown button").click
 
       tz_select =
         PageObjects::Components::SelectKit.new(".post-event-builder-modal .timezone-input")
@@ -405,7 +409,9 @@ describe "Post event" do
     composer.fill_title("Test event with updates")
     find(".toolbar-menu__options-trigger").click
     find("button[title='#{I18n.t("js.discourse_post_event.builder_modal.attach")}']").click
-    find(".d-modal .d-modal__footer .advanced-settings").click
+
+    # Toolbar inserts inline; click gear to open the modal on advanced.
+    find(".d-editor-preview .composer-event__more-dropdown button").click
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     form.field("eventType").select("private")

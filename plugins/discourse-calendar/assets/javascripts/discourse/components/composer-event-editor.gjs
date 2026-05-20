@@ -70,6 +70,7 @@ export default class ComposerEventEditor extends Component {
     this.flush();
   }
 
+  @action
   flush() {
     if (!this.#pendingState) {
       return;
@@ -122,6 +123,7 @@ export default class ComposerEventEditor extends Component {
         @initialState={{this.initialState}}
         @urlTester={{this.urlTester}}
         @onChange={{this.onChange}}
+        @onCommit={{this.flush}}
         @onDelete={{this.onDelete}}
       />
     </div>
