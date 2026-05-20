@@ -6,19 +6,14 @@ import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import Modifier from "ember-modifier";
 
 /**
- * Imperative draggable registration backed by Pragmatic Drag and Drop.
- * Wraps `draggable()` with the source-payload normalisation, the
- * `is-dragging` class on the source element, and the consumer-onDrop
- * deferral that hides PDND's source-before-target dispatch ordering.
- *
- * Use this directly when you need a draggable from imperative code and
- * can't attach the `{{dDragAndDropSource}}` modifier. The modifier
- * class is a thin wrapper around this function for the template-based
- * common case.
+ * Module-private helper that wraps PDND's `draggable()` with the
+ * source-payload normalisation, the `is-dragging` class on the source
+ * element, and the consumer-onDrop deferral that hides PDND's
+ * source-before-target dispatch ordering. Called by the default-
+ * exported modifier below.
  *
  * Library-agnostic by design: `@atlaskit/pragmatic-drag-and-drop` is
- * imported only by the ui-kit modifier files. Consumers (plugins, core
- * features) talk to this helper, not to PDND directly.
+ * imported only by the ui-kit modifier files.
  *
  * The consumer's `onDrop` callback is deferred to the next task so it
  * fires after the drop event has finished propagating.
@@ -32,7 +27,7 @@ import Modifier from "ember-modifier";
  * @returns {() => void} Cleanup function. Caller invokes it once on
  *   teardown.
  */
-export function registerDraggable(element, getArgsRef) {
+function registerDragAndDropSource(element, getArgsRef) {
   const cleanup = draggable({
     element,
     canDrag: ({ input }) => {
@@ -142,7 +137,7 @@ export function registerDraggable(element, getArgsRef) {
  *  - `onDrop` — `({source, location}) => void`. Fires AFTER PDND's
  *    full drop dispatch (target callbacks, monitor callbacks, native
  *    bubble listeners). Safe to clear shared dispatch state from this
- *    callback — see the implementation note on `registerDraggable`.
+ *    callback — see the deferral note on `registerDragAndDropSource`.
  *  - `disabled` — when `true`, the modifier detaches the underlying
  *    draggable registration. Used by consumers that conditionally
  *    suppress dragging (e.g. read-only modes).
@@ -177,8 +172,8 @@ export default class DDragAndDropSourceModifier extends Modifier {
     // Wrap the consumer's onDragStart / onDrop so the dragAndDrop
     // service sees setCurrentDrag / clearCurrentDrag bracketed around
     // the consumer's callbacks. The service interaction lives in the
-    // modifier (which has the `@service` injection); `registerDraggable`
-    // itself is service-free so it stays usable from any context.
+    // modifier (which has the `@service` injection); the helper
+    // itself is service-free.
     const consumerOnDragStart = args.onDragStart;
     const consumerOnDrop = args.onDrop;
     this.#args = {
@@ -188,15 +183,15 @@ export default class DDragAndDropSourceModifier extends Modifier {
         consumerOnDragStart?.(payload);
       },
       onDrop: (payload) => {
-        // Runs in the microtask scheduled by `registerDraggable` —
-        // already deferred past PDND's full dispatch.
+        // Runs after the helper's `next()` deferral — past PDND's full
+        // drop dispatch.
         this.dragAndDrop.clearCurrentDrag();
         consumerOnDrop?.(payload);
       },
     };
 
     if (!this.#cleanup) {
-      this.#cleanup = registerDraggable(element, () => this.#args);
+      this.#cleanup = registerDragAndDropSource(element, () => this.#args);
     }
   }
 

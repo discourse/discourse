@@ -1,6 +1,8 @@
 // @ts-check
-import { modifier } from "ember-modifier";
-import { registerDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import { registerDestructor } from "@ember/destroyable";
+import { service } from "@ember/service";
+import Modifier from "ember-modifier";
+import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
 const ACCEPTED_KINDS = ["ve-block", "ve-palette-block"];
@@ -17,37 +19,57 @@ const EDGE_BAND = 12;
  * that — by construction there can never be more than one drop
  * indicator on screen.
  *
- * Args (positional):
- *   1. `visualEditor` — the editor service (state lives there so the
- *      single overlay component can read it).
- *   2. `containerKey` — the layout block's composite key. Used in
- *      dispatch payloads so the service knows which container is
- *      the drop target.
- *   3. `outletName` — the outlet the container lives in. Same.
- *   4. `mode` — `"stack"`, `"row"`, or `"grid"`. Drives axis math.
- *      Grid mode is handled by the existing GridOverlay; this
- *      modifier handles stack / row only.
+ * Args (named):
+ *  - `containerKey` — the layout block's composite key. Used in
+ *    dispatch payloads so the service knows which container is the
+ *    drop target. `null` (or omitted) for the outlet boundary.
+ *  - `outletName` — the outlet the container lives in.
+ *  - `mode` — `"stack"`, `"row"`, `"slot"`, `"grid"`, `"grid-cell-leaf"`,
+ *    or `null`. Drives axis math and registration:
+ *      - `"stack"` / `"row"` / `"slot"`: register as a drop target.
+ *      - `"grid"`: GridOverlay owns the grid div directly; no-op here.
+ *      - `"grid-cell-leaf"`: drops on a leaf in a grid cell bubble
+ *        up via PDND's "closest ancestor target" resolution to the
+ *        grid's drop target; no-op here.
+ *      - `null`: leaf in a stack / row container; the parent
+ *        container chrome handles drops near it.
  *
  * The modifier reads child geometry from the container's DOM
  * children. Each direct child of the container is treated as one
  * candidate landing site; the cursor's axis position projects onto
  * the children's bounding rects to pick a gap (insert) or a
  * middle-third zone (inside / replace / no-op).
+ *
+ * Re-registers on `containerKey` / `outletName` / `mode` changes:
+ * `mode` is the consequential one (toggles whether to register at
+ * all); the others rarely change. `dropTargetForElements` is cheap,
+ * so re-registration on rare arg changes is fine.
  */
-export default modifier(
-  (chromeElement, [visualEditor, containerKey, outletName, mode]) => {
-    // `grid`: the GridOverlay owns the layout's grid div directly.
-    // `grid-cell-leaf`: drops on a leaf positioned in a grid cell
-    //   bubble up via PDND's "closest ancestor target" resolution
-    //   to the grid's drop target.
-    // `null`: leaves in stack / row containers — the parent container
-    //   chrome handles drops near them.
+export default class ContainerDropTargetModifier extends Modifier {
+  @service visualEditor;
+
+  #cleanup = null;
+
+  constructor(owner, args) {
+    super(owner, args);
+    registerDestructor(this, (instance) => instance.#detach());
+  }
+
+  modify(
+    chromeElement,
+    _positional,
+    { containerKey = null, outletName, mode }
+  ) {
+    this.#detach();
+
     if (mode === "grid" || mode === "grid-cell-leaf" || mode == null) {
-      return () => {};
+      return;
     }
 
+    const { visualEditor } = this;
     const isSlot = mode === "slot";
     const axis = mode === "row" ? "x" : "y";
+
     // Find the container element where block-chrome-wrappers are
     // direct siblings — that's the geometry `computeDescriptor`
     // projects the cursor onto.
@@ -70,7 +92,7 @@ export default modifier(
     // parent IS the container. Falls back to the chrome itself when
     // there are no descendant blocks (empty container case).
     let containerElement = null;
-    function resolveContainer() {
+    const resolveContainer = () => {
       if (isSlot) {
         return chromeElement;
       }
@@ -93,7 +115,7 @@ export default modifier(
       }
       containerElement = chromeElement;
       return containerElement;
-    }
+    };
 
     // Edge-band defer. When this modifier instance is on a CHROME
     // (not the outlet boundary itself), drops within 12px of any
@@ -110,7 +132,7 @@ export default modifier(
     // root, so there's no parent to defer to; slot chromes also
     // opt out since slots are always single-cell inside a grid and
     // the grid owns sibling moves at the parent level.
-    function isInEdgeBand(input) {
+    const isInEdgeBand = (input) => {
       if (containerKey == null || isSlot) {
         return false;
       }
@@ -121,9 +143,9 @@ export default modifier(
         input.clientX < rect.left + EDGE_BAND ||
         input.clientX > rect.right - EDGE_BAND
       );
-    }
+    };
 
-    function descriptorFor(source, input) {
+    const descriptorFor = (source, input) => {
       if (isSlot) {
         return buildSlotChromeDescriptor({
           visualEditor,
@@ -145,29 +167,30 @@ export default modifier(
         axis,
         source,
       });
-    }
+    };
 
-    return registerDropTarget(chromeElement, () => ({
+    this.#cleanup = registerDragAndDropTarget(chromeElement, () => ({
       accepts: ACCEPTED_KINDS,
       indicator: false,
       canDrop: ({ input }) => !isInEdgeBand(input),
-      onDragEnter: ({ source, location }) => {
-        const descriptor = descriptorFor(source, location.current.input);
-        visualEditor.setActiveDropPreview(descriptor);
-      },
-      onDrag: ({ source, location }) => {
-        const descriptor = descriptorFor(source, location.current.input);
-        visualEditor.setActiveDropPreview(descriptor);
-      },
-      onDragLeave: () => {
-        visualEditor.clearActiveDropPreview();
-      },
-      onDrop: () => {
-        visualEditor.dispatchActiveDrop();
-      },
+      onDragEnter: ({ source, location }) =>
+        visualEditor.setActiveDropPreview(
+          descriptorFor(source, location.current.input)
+        ),
+      onDrag: ({ source, location }) =>
+        visualEditor.setActiveDropPreview(
+          descriptorFor(source, location.current.input)
+        ),
+      onDragLeave: () => visualEditor.clearActiveDropPreview(),
+      onDrop: () => visualEditor.dispatchActiveDrop(),
     }));
   }
-);
+
+  #detach() {
+    this.#cleanup?.();
+    this.#cleanup = null;
+  }
+}
 
 /**
  * Picks the drop descriptor for the current cursor position inside

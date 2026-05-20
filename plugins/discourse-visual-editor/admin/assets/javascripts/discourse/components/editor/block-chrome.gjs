@@ -739,13 +739,12 @@ export default class BlockChrome extends Component {
           data-ve-block-key={{@blockKey}}
           data-ve-empty={{this.isEmptyContainer}}
           {{didInsert this.captureChromeEl}}
-          {{on "click" this.onClick}}
           {{containerDropTarget
-            this.visualEditor
-            @blockKey
-            @outletName
-            this.containerDropMode
+            containerKey=@blockKey
+            outletName=@outletName
+            mode=this.containerDropMode
           }}
+          {{on "click" this.onClick}}
           role="button"
           tabindex="0"
         >

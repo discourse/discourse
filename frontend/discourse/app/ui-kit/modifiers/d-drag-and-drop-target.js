@@ -1,7 +1,6 @@
 // @ts-check
-import { registerDestructor } from "@ember/destroyable";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import Modifier from "ember-modifier";
+import { modifier } from "ember-modifier";
 
 /**
  * Per-axis CSS class names toggled while the cursor is hovering with a
@@ -43,7 +42,7 @@ function sourceFromPDND(pdndSource, element) {
  * Use this directly when you've captured an element ref outside your
  * own template (e.g. via `didInsert` on a sibling marker, or after
  * walking the DOM) and can't attach the `{{dDragAndDropTarget}}`
- * modifier. The modifier class is a thin wrapper around this
+ * modifier. The modifier itself is a thin wrapper around this
  * function for the template-based common case.
  *
  * Library-agnostic by design: `@atlaskit/pragmatic-drag-and-drop` is
@@ -60,7 +59,7 @@ function sourceFromPDND(pdndSource, element) {
  * @returns {() => void} Cleanup function. Caller invokes it once on
  *   teardown (modifier destroy, component willDestroy, etc.).
  */
-export function registerDropTarget(element, getArgsRef) {
+export function registerDragAndDropTarget(element, getArgsRef) {
   let activeClass = null;
 
   const applyIndicator = (position, axis) => {
@@ -200,7 +199,7 @@ export function registerDropTarget(element, getArgsRef) {
 /**
  * Marks an element as a drop target compatible with the
  * `dDragAndDropSource` vocabulary. Thin Ember-modifier wrapper around
- * {@link registerDropTarget}.
+ * {@link registerDragAndDropTarget}.
  *
  * Smart row mode — position is computed from the cursor against the
  * element's midpoint:
@@ -254,30 +253,10 @@ export function registerDropTarget(element, getArgsRef) {
  * lifecycle callbacks, so an ancestor decorated with this modifier
  * doesn't double-handle a drop the child already claimed.
  */
-export default class DDragAndDropTargetModifier extends Modifier {
-  #cleanup = null;
-  #element = null;
-  #args = {};
-
-  constructor(owner, args) {
-    super(owner, args);
-    registerDestructor(this, (instance) => instance.#detach());
-  }
-
-  modify(element, _positional, args = {}) {
-    if (this.#element && this.#element !== element) {
-      this.#detach();
-    }
-    this.#element = element;
-    this.#args = args ?? {};
-    if (!this.#cleanup) {
-      this.#cleanup = registerDropTarget(element, () => this.#args);
-    }
-  }
-
-  #detach() {
-    this.#cleanup?.();
-    this.#cleanup = null;
-    this.#element = null;
-  }
-}
+export default modifier((element, _positional, args) =>
+  // Pass `args` through to the closure WITHOUT reading any property of
+  // it here. Reading args.X inside the body would mark its tag consumed
+  // and force the modifier to re-run (re-registering PDND) on every
+  // change. The closure reads fresh values inside PDND's callbacks.
+  registerDragAndDropTarget(element, () => args)
+);

@@ -1,20 +1,14 @@
 // @ts-check
-import { registerDestructor } from "@ember/destroyable";
 import {
   autoScrollForElements,
   autoScrollWindowForElements,
 } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
-import Modifier from "ember-modifier";
+import { modifier } from "ember-modifier";
 
 /**
- * Imperative auto-scroll registration backed by Pragmatic Drag and
- * Drop. Wraps `autoScrollForElements` (element-scoped) and
- * `autoScrollWindowForElements` (window-scoped) behind one shape.
- *
- * Use this when you can't attach the `{{dDragAndDropAutoScroll}}`
- * modifier — e.g. setting up window auto-scroll without anchoring to
- * a specific element in your template. The modifier class is a thin
- * wrapper around this function for the template-based common case.
+ * Module-private helper that wraps PDND's `autoScrollForElements` /
+ * `autoScrollWindowForElements` behind one shape. Called by the
+ * default-exported modifier below.
  *
  * Library-agnostic by design: PDND auto-scroll is imported only here.
  *
@@ -27,7 +21,7 @@ import Modifier from "ember-modifier";
  * @returns {() => void} Cleanup function. Caller invokes it once on
  *   teardown.
  */
-export function registerAutoScroll(getArgsRef) {
+function registerDragAndDropAutoScroll(getArgsRef) {
   const matchesType = ({ source }) => {
     const types = getArgsRef().types;
     const list = Array.isArray(types) ? types : types ? [types] : [];
@@ -54,8 +48,14 @@ export function registerAutoScroll(getArgsRef) {
 }
 
 /**
+ * @typedef {Object} AutoScrollNamedArgs
+ * @property {string | string[]} [types]
+ * @property {"vertical" | "horizontal" | "all"} [axis]
+ * @property {"element" | "window"} [target]
+ */
+
+/**
  * Enables PDND auto-scroll while a compatible drag is in flight.
- * Thin Ember-modifier wrapper around {@link registerAutoScroll}.
  *
  * Attach to a scroll container to auto-scroll that container when
  * the cursor approaches its edges:
@@ -83,25 +83,20 @@ export function registerAutoScroll(getArgsRef) {
  *  - `target` — `"element"` (default — scroll the host element)
  *    or `"window"` (scroll the window; element is ignored).
  */
-export default class DDragAndDropAutoScrollModifier extends Modifier {
-  #cleanup = null;
-  #args = {};
-
-  constructor(owner, args) {
-    super(owner, args);
-    registerDestructor(this, (instance) => instance.#detach());
-  }
-
-  modify(element, _positional, args = {}) {
-    const { types, axis = "vertical", target = "element" } = args;
-    this.#args = { types, axis, target, element };
-    if (!this.#cleanup) {
-      this.#cleanup = registerAutoScroll(() => this.#args);
-    }
-  }
-
-  #detach() {
-    this.#cleanup?.();
-    this.#cleanup = null;
-  }
-}
+export default modifier(
+  /**
+   * @param {HTMLElement} element
+   * @param {unknown[]} _positional
+   * @param {AutoScrollNamedArgs} args
+   */
+  (element, _positional, args) =>
+    // Read args INSIDE the closure, not via destructure in the body —
+    // a destructure here would mark the args' tags consumed and force
+    // the modifier to re-run (re-registering PDND) on every change.
+    registerDragAndDropAutoScroll(() => ({
+      types: args.types,
+      axis: args.axis ?? "vertical",
+      target: args.target ?? "element",
+      element,
+    }))
+);

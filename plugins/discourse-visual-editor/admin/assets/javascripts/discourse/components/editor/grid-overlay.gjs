@@ -7,7 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
-import { registerDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 // `grid-math` is in the universal bundle (its `parsePlacement` is
 // called by the live-page `ve-layout.gjs`); this component is
@@ -195,7 +195,7 @@ export default class GridOverlay extends Component {
     }
   };
   /**
-   * Cleanup function returned by `registerDropTarget` for the grid
+   * Cleanup function returned by `registerDragAndDropTarget` for the grid
    * container's PDND drop target. Invoked once on destroy.
    */
   #gridDropTargetCleanup = null;
@@ -606,7 +606,7 @@ export default class GridOverlay extends Component {
     // route their drops here via PDND's "closest ancestor" target
     // resolution. That keeps descriptor compute centralised — only
     // this component knows about the grid's resolved tracks.
-    this.#gridDropTargetCleanup = registerDropTarget(gridEl, () => ({
+    this.#gridDropTargetCleanup = registerDragAndDropTarget(gridEl, () => ({
       accepts: this.acceptedDropKinds,
       indicator: false,
       onDragEnter: ({ source, location }) =>

@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -189,6 +190,64 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       events,
       ["inner"],
       "only the deepest accepted target receives the drop"
+    );
+  });
+
+  test("target modifier picks up arg changes without re-registering", async function (assert) {
+    // The modifier runs `modify()` only once (its body reads no tracked
+    // arg properties), so PDND is registered just once. The closure
+    // around `args` must still see updated values when tracked args
+    // change. This guards against the modifier going stale after an
+    // arg update.
+    const state = new (class {
+      @tracked accepted = "row";
+      @tracked dropped = null;
+      handleDrop = (payload) => (this.dropped = payload.source.type);
+    })();
+
+    await render(
+      <template>
+        <div
+          id="src-row"
+          {{dDragAndDropSource type="row" data=(hash id=1)}}
+        >src-row</div>
+        <div
+          id="src-card"
+          {{dDragAndDropSource type="card" data=(hash id=2)}}
+        >src-card</div>
+        <div
+          id="tgt"
+          {{dDragAndDropTarget accepts=state.accepted onDrop=state.handleDrop}}
+        >tgt</div>
+      </template>
+    );
+
+    let dataTransfer = new DataTransfer();
+    await dragFromTo("#src-row", "#tgt", { dataTransfer });
+    assert.strictEqual(
+      state.dropped,
+      "row",
+      "drops the type currently in `accepts`"
+    );
+
+    state.accepted = "card";
+    state.dropped = null;
+    await settled();
+
+    dataTransfer = new DataTransfer();
+    await dragFromTo("#src-row", "#tgt", { dataTransfer });
+    assert.strictEqual(
+      state.dropped,
+      null,
+      "after arg update, the old accepted type is rejected"
+    );
+
+    dataTransfer = new DataTransfer();
+    await dragFromTo("#src-card", "#tgt", { dataTransfer });
+    assert.strictEqual(
+      state.dropped,
+      "card",
+      "after arg update, the new accepted type fires onDrop"
     );
   });
 });

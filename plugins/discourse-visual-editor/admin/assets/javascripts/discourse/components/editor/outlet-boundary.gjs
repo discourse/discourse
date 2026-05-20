@@ -1,6 +1,4 @@
 // @ts-check
-import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import containerDropTarget from "../../modifiers/container-drop-target";
 import EditorEmptyOutletDropZone from "./editor-empty-outlet-drop-zone";
@@ -18,36 +16,32 @@ import EditorEmptyOutletDropZone from "./editor-empty-outlet-drop-zone";
  * can drop multiple top-level blocks into the outlet (the chrome of an
  * existing top-level block only covers drops INSIDE that block — without
  * this modifier there was no way to add a second sibling at the outlet
- * level once the first block existed). `containerKey` is passed as
- * `null` so `container-drop-target.js` recognises this as an outlet root
- * and dispatches inserts/moves against `targetOutletName` alone.
+ * level once the first block existed). `containerKey` is omitted (defaults
+ * to `null`) so `container-drop-target.js` recognises this as an outlet
+ * root and dispatches inserts/moves against `outletName` alone.
  *
  * When `blockCount === 0`, the `BlockOutletRootContainer` renders
  * nothing, so we still render `<EditorEmptyOutletDropZone>` as a pure
  * visual affordance (its own dragdrop handlers were removed — drops are
  * handled by THIS boundary's modifier).
  */
-export default class OutletBoundary extends Component {
-  @service visualEditor;
-
-  <template>
-    <div
-      class="visual-editor-outlet-boundary"
-      data-outlet-name={{@outletName}}
-      {{containerDropTarget this.visualEditor null @outletName "stack"}}
-    >
-      <span class="visual-editor-outlet-boundary__badge">
-        {{dIcon "cubes"}}
-        <span>{{@outletName}}</span>
-        {{#if @blockCount}}
-          <span class="visual-editor-outlet-boundary__count">·
-            {{@blockCount}}</span>
-        {{/if}}
-      </span>
-      {{yield}}
-      {{#unless @blockCount}}
-        <EditorEmptyOutletDropZone @outletName={{@outletName}} />
-      {{/unless}}
-    </div>
-  </template>
-}
+<template>
+  <div
+    class="visual-editor-outlet-boundary"
+    data-outlet-name={{@outletName}}
+    {{containerDropTarget mode="stack" outletName=@outletName}}
+  >
+    <span class="visual-editor-outlet-boundary__badge">
+      {{dIcon "cubes"}}
+      <span>{{@outletName}}</span>
+      {{#if @blockCount}}
+        <span class="visual-editor-outlet-boundary__count">·
+          {{@blockCount}}</span>
+      {{/if}}
+    </span>
+    {{yield}}
+    {{#unless @blockCount}}
+      <EditorEmptyOutletDropZone @outletName={{@outletName}} />
+    {{/unless}}
+  </div>
+</template>
