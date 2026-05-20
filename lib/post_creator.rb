@@ -291,14 +291,13 @@ class PostCreator
 
     post.word_count = post.raw.scan(/[[:word:]]+/).size
 
-    increase_posts_count =
-      !post.topic&.private_message? || post.post_type != Post.types[:small_action]
+    staff_only = post.whisper? || post.routine_small_action?
     post.post_number ||=
       Topic.next_post_number(
         post.topic_id,
         reply: post.reply_to_post_number.present?,
-        post_type: post.post_type,
-        post: increase_posts_count,
+        staff_only: staff_only,
+        post: !staff_only,
       )
 
     cooking_options = post.cooking_options || {}
@@ -521,12 +520,15 @@ class PostCreator
   def update_topic_stats
     attrs = { updated_at: Time.now }
 
-    if @post.post_type != Post.types[:whisper] && !@opts[:silent]
-      attrs[:last_posted_at] = @post.created_at
-      attrs[:last_post_user_id] = @post.user_id
-      attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
-      attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
-      attrs[:bumped_at] = @post.created_at unless @post.no_bump
+    if !@post.whisper? && !@opts[:silent]
+      unless @post.routine_small_action?
+        attrs[:last_posted_at] = @post.created_at
+        attrs[:last_post_user_id] = @post.user_id
+        attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
+        attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
+      end
+      no_bump = @opts.key?(:no_bump) ? @opts[:no_bump] : @post.routine_small_action?
+      attrs[:bumped_at] = @post.created_at unless no_bump
     end
 
     @topic.update_columns(attrs)

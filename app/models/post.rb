@@ -200,6 +200,25 @@ class Post < ActiveRecord::Base
     post_type == Post.types[:whisper]
   end
 
+  def small_action?
+    post_type == Post.types[:small_action]
+  end
+
+  # A "routine" small action — system-generated (pin/close/autoclose/etc.)
+  # that hasn't been edited by a user to add a note. Routine small actions
+  # don't contribute to topic stats (reply count, last poster, bumped_at).
+  # Once a user edits the post to add content, it's treated like a regular
+  # reply.
+  def routine_small_action?
+    small_action? && (raw.blank? || version <= 1)
+  end
+
+  # SQL counterpart of `routine_small_action?`.
+  def self.routine_small_action_sql
+    "(post_type = #{types[:small_action]} AND " \
+      "((raw IS NULL OR TRIM(raw) = '') OR version <= 1))"
+  end
+
   def add_detail(key, value, extra = nil)
     post_details.build(key: key, value: value, extra: extra)
   end

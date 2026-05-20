@@ -279,9 +279,18 @@ describe "Topic bulk select" do
       topic_page.watch_topic
       expect(topic_page).to have_read_post(1)
 
+      # Navigate user away from topic before creating the reply,
+      # otherwise the user's browser auto-reads it via MessageBus
+      visit("/latest")
+
       # Bulk close the topic as an admin
       using_session(:admin) do
         sign_in(admin)
+
+        # Add an unread reply before closing (must happen after user
+        # navigated away from the topic to avoid auto-reading it)
+        create_post(topic_id: topic.id, user: admin)
+
         visit("/latest")
         topic_list_header.click_bulk_select_button
         topic_list.click_topic_checkbox(topics.third)
@@ -292,7 +301,7 @@ describe "Topic bulk select" do
         expect(topic_list).to have_closed_status(topics.third)
       end
 
-      # Check that the user did receive a new post notification badge
+      # User still sees unread badge because there was an unread reply
       visit("/latest")
       expect(topic_list).to have_unread_badge(topics.third)
     end

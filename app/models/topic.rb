@@ -883,14 +883,9 @@ class Topic < ActiveRecord::Base
         .first
         .to_i
 
-    # PM small_action posts only bump highest_staff_post_number, not
-    # highest_post_number, matching the exclusion in reset_highest.
-    staff_only = opts[:post_type] == Post.types[:whisper]
-    staff_only ||=
-      opts[:post_type] == Post.types[:small_action] &&
-        Topic.where(id: topic_id, archetype: Archetype.private_message).exists?
-
-    if staff_only
+    # Whispers and content-less small actions only bump highest_staff_post_number,
+    # not highest_post_number, matching the exclusion in reset_highest.
+    if opts[:staff_only]
       result = DB.query_single(<<~SQL, highest, topic_id)
         UPDATE topics
         SET highest_staff_post_number = ? + 1
@@ -933,14 +928,14 @@ class Topic < ActiveRecord::Base
                count(*) posts_count,
                max(created_at) last_posted_at
         FROM posts
-        WHERE deleted_at IS NULL AND post_type <> 4
+        WHERE deleted_at IS NULL AND #{counts_toward_stats_sql}
         GROUP BY topic_id
       ),
       Z as (
         SELECT topic_id,
                SUM(COALESCE(posts.word_count, 0)) word_count
         FROM posts
-        WHERE deleted_at IS NULL AND post_type <> 4
+        WHERE deleted_at IS NULL AND #{counts_toward_stats_sql}
         GROUP BY topic_id
       )
       UPDATE topics
@@ -952,53 +947,6 @@ class Topic < ActiveRecord::Base
         word_count = Z.word_count
       FROM X, Y, Z
       WHERE
-        topics.archetype <> 'private_message' AND
-        X.topic_id = topics.id AND
-        Y.topic_id = topics.id AND
-        Z.topic_id = topics.id AND (
-          topics.highest_staff_post_number <> X.highest_post_number OR
-          topics.highest_post_number <> Y.highest_post_number OR
-          topics.last_posted_at <> Y.last_posted_at OR
-          topics.posts_count <> Y.posts_count OR
-          topics.word_count <> Z.word_count
-        )
-    SQL
-
-    DB.exec <<~SQL
-      WITH
-      X as (
-        SELECT topic_id,
-               COALESCE(MAX(post_number), 0) highest_post_number
-        FROM posts
-        WHERE deleted_at IS NULL
-        GROUP BY topic_id
-      ),
-      Y as (
-        SELECT topic_id,
-               coalesce(MAX(post_number), 0) highest_post_number,
-               count(*) posts_count,
-               max(created_at) last_posted_at
-        FROM posts
-        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
-        GROUP BY topic_id
-      ),
-      Z as (
-        SELECT topic_id,
-                SUM(COALESCE(posts.word_count, 0)) word_count
-        FROM posts
-        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
-        GROUP BY topic_id
-      )
-      UPDATE topics
-      SET
-        highest_staff_post_number = X.highest_post_number,
-        highest_post_number = Y.highest_post_number,
-        last_posted_at = Y.last_posted_at,
-        posts_count = Y.posts_count,
-        word_count = Z.word_count
-      FROM X, Y, Z
-      WHERE
-        topics.archetype = 'private_message' AND
         X.topic_id = topics.id AND
         Y.topic_id = topics.id AND
         Z.topic_id = topics.id AND (
@@ -1011,13 +959,16 @@ class Topic < ActiveRecord::Base
     SQL
   end
 
+  # SQL fragment for "post is counted in topic stats": excludes whispers and
+  # routine small actions. A small action that a user has edited to add
+  # content is still counted (per Post.routine_small_action_sql).
+  def self.counts_toward_stats_sql
+    "post_type <> #{Post.types[:whisper]} AND NOT #{Post.routine_small_action_sql}"
+  end
+
   # If a post is deleted we have to update our highest post counters and last post information
   def self.reset_highest(topic_id)
-    archetype = Topic.where(id: topic_id).pick(:archetype)
-
-    # ignore small_action replies for private messages
-    post_type =
-      archetype == Archetype.private_message ? " AND post_type <> #{Post.types[:small_action]}" : ""
+    filter = counts_toward_stats_sql
 
     result = DB.query_single(<<~SQL, topic_id:)
       UPDATE topics
@@ -1031,36 +982,31 @@ class Topic < ActiveRecord::Base
           SELECT COALESCE(MAX(post_number), 0) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
-                post_type <> 4
-                #{post_type}
+                #{filter}
         ),
         posts_count = (
           SELECT count(*) FROM posts
           WHERE deleted_at IS NULL AND
                 topic_id = :topic_id AND
-                post_type <> 4
-                #{post_type}
+                #{filter}
         ),
         word_count = (
           SELECT SUM(COALESCE(posts.word_count, 0)) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
-                post_type <> 4
-                #{post_type}
+                #{filter}
         ),
         last_posted_at = (
           SELECT MAX(created_at) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
-                post_type <> 4
-                #{post_type}
+                #{filter}
         ),
         last_post_user_id = COALESCE((
           SELECT user_id FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
-                post_type <> 4
-                #{post_type}
+                #{filter}
           ORDER BY created_at desc
           LIMIT 1
         ), last_post_user_id)
@@ -1399,7 +1345,7 @@ class Topic < ActiveRecord::Base
   def update_statistics!
     feature_topic_users
     update_action_counts
-    self.highest_post_number = Topic.reset_highest(id)
+    update_column(:highest_post_number, Topic.reset_highest(id))
   end
 
   def update_action_counts

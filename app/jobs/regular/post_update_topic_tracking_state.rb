@@ -17,7 +17,7 @@ module Jobs
         TopicTrackingState.publish_unmuted(post.topic)
         if post.post_number > 1
           TopicTrackingState.publish_muted(post.topic)
-          TopicTrackingState.publish_unread(post)
+          TopicTrackingState.publish_unread(post) if post.post_type != Post.types[:small_action]
         end
         TopicTrackingState.publish_latest(post.topic) unless post.whisper?
       end

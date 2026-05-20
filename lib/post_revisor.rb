@@ -759,6 +759,15 @@ class PostRevisor
 
     return true if @post.is_first_post? && @post.wiki? && post_changes.any?
 
+    # A small action becomes "counted as reply" only once a user has edited
+    # it to add content. Treat that promotion like a fresh reply and bump.
+    if @post.small_action? && (raw_change = post_changes["raw"])
+      old_raw, new_raw = raw_change
+      old_version = @post.saved_change_to_version&.first.to_i
+      was_routine = old_raw.to_s.strip.blank? || old_version <= 1
+      return true if was_routine && new_raw.to_s.strip.present?
+    end
+
     false
   end
 

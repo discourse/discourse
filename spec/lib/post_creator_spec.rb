@@ -1224,7 +1224,7 @@ RSpec.describe PostCreator do
         expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(i)
       end
 
-      expect(topic.word_count).to eq(0)
+      expect(topic.word_count).to be_nil
 
       p2 = Fabricate(:post, topic: topic)
       Topic.reset_highest(topic.id)
@@ -1239,7 +1239,7 @@ RSpec.describe PostCreator do
       expect(topic.word_count).to eq([p1, p2, p3].sum(&:word_count))
     end
 
-    it "does not bump highest_post_number for small_action posts in PMs" do
+    it "does not bump highest_post_number for content-less small_action posts in PMs" do
       topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
       Fabricate(:post, topic: topic)
       topic.reload
@@ -1249,7 +1249,6 @@ RSpec.describe PostCreator do
 
       PostCreator.create!(
         Discourse.system_user,
-        raw: "topic unlisted",
         topic_id: topic.id,
         post_type: Post.types[:small_action],
         action_code: "visible.disabled",
@@ -1257,6 +1256,187 @@ RSpec.describe PostCreator do
       )
       topic.reload
 
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(2)
+    end
+
+    it "does not bump stats for small_action posts without content" do
+      post = create_post(raw: "hello world topic")
+      topic = post.topic
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(1)
+      expect(topic.posts_count).to eq(1)
+
+      last_posted_at_before = topic.last_posted_at
+      last_post_user_id_before = topic.last_post_user_id
+      bumped_at_before = topic.bumped_at
+
+      freeze_time 1.hour.from_now
+
+      PostCreator.create!(
+        Discourse.system_user,
+        topic_id: topic.id,
+        post_type: Post.types[:small_action],
+        action_code: "closed.enabled",
+        skip_validations: true,
+      )
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(2)
+      expect(topic.posts_count).to eq(1)
+      expect(topic.reply_count).to eq(0)
+      expect(topic.last_posted_at).to eq_time(last_posted_at_before)
+      expect(topic.last_post_user_id).to eq(last_post_user_id_before)
+      expect(topic.bumped_at).to eq_time(bumped_at_before)
+
+      topic.update_columns(
+        highest_staff_post_number: 0,
+        highest_post_number: 0,
+        posts_count: 0,
+        word_count: 0,
+        last_posted_at: 1.year.ago,
+      )
+
+      Topic.reset_highest(topic.id)
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(2)
+      expect(topic.posts_count).to eq(1)
+      expect(topic.last_posted_at).to eq_time(last_posted_at_before)
+    end
+
+    it "does not count a freshly-created small_action with content (autoclose) as a reply" do
+      post = create_post(raw: "hello world topic")
+      topic = post.topic
+      topic.reload
+
+      bumped_at_before = topic.bumped_at
+      last_posted_at_before = topic.last_posted_at
+
+      freeze_time 1.hour.from_now
+
+      PostCreator.create!(
+        Discourse.system_user,
+        raw: "Closed automatically due to inactivity.",
+        topic_id: topic.id,
+        post_type: Post.types[:small_action],
+        action_code: "autoclosed.enabled",
+        skip_validations: true,
+      )
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(2)
+      expect(topic.posts_count).to eq(1)
+      expect(topic.last_posted_at).to eq_time(last_posted_at_before)
+      expect(topic.bumped_at).to eq_time(bumped_at_before)
+    end
+
+    it "promotes a small_action post to a reply when a user edits to add content" do
+      post = create_post(raw: "hello world topic")
+      topic = post.topic
+      topic.reload
+
+      bumped_at_before = topic.bumped_at
+      last_posted_at_before = topic.last_posted_at
+
+      freeze_time 1.hour.from_now
+
+      small_action =
+        PostCreator.create!(
+          Discourse.system_user,
+          topic_id: topic.id,
+          post_type: Post.types[:small_action],
+          action_code: "closed.enabled",
+          skip_validations: true,
+        )
+      topic.reload
+
+      expect(topic.posts_count).to eq(1)
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.bumped_at).to eq_time(bumped_at_before)
+
+      freeze_time 2.hours.from_now
+
+      admin = Fabricate(:admin)
+      small_action.revise(
+        admin,
+        { raw: "Closed because the issue was resolved." },
+        skip_validations: true,
+      )
+      topic.reload
+
+      expect(topic.posts_count).to eq(2)
+      expect(topic.highest_post_number).to eq(2)
+      expect(topic.highest_staff_post_number).to eq(2)
+      expect(topic.last_posted_at).to be > last_posted_at_before
+      expect(topic.bumped_at).to be > bumped_at_before
+    end
+
+    it "promotes an autoclose small_action when a user edits it to add a note" do
+      post = create_post(raw: "hello world topic")
+      topic = post.topic
+      topic.reload
+
+      bumped_at_before = topic.bumped_at
+
+      small_action =
+        PostCreator.create!(
+          Discourse.system_user,
+          raw: "Closed automatically due to inactivity.",
+          topic_id: topic.id,
+          post_type: Post.types[:small_action],
+          action_code: "autoclosed.enabled",
+          skip_validations: true,
+        )
+      topic.reload
+
+      expect(topic.posts_count).to eq(1)
+      expect(topic.bumped_at).to eq_time(bumped_at_before)
+
+      freeze_time 1.hour.from_now
+
+      admin = Fabricate(:admin)
+      small_action.revise(
+        admin,
+        { raw: "Closed for inactivity. Reopen the topic if you have more info." },
+        skip_validations: true,
+      )
+      topic.reload
+
+      expect(topic.posts_count).to eq(2)
+      expect(topic.highest_post_number).to eq(2)
+      expect(topic.bumped_at).to be > bumped_at_before
+    end
+
+    it "demotes a small_action post when a user edits to remove its content" do
+      post = create_post(raw: "hello world topic")
+      topic = post.topic
+      topic.reload
+
+      small_action =
+        PostCreator.create!(
+          Discourse.system_user,
+          topic_id: topic.id,
+          post_type: Post.types[:small_action],
+          action_code: "closed.enabled",
+          skip_validations: true,
+        )
+      admin = Fabricate(:admin)
+      small_action.revise(admin, { raw: "Closing this for now." }, skip_validations: true)
+      topic.reload
+
+      expect(topic.posts_count).to eq(2)
+      expect(topic.highest_post_number).to eq(2)
+
+      small_action.revise(admin, { raw: "" }, skip_validations: true)
+      topic.reload
+
+      expect(topic.posts_count).to eq(1)
       expect(topic.highest_post_number).to eq(1)
       expect(topic.highest_staff_post_number).to eq(2)
     end

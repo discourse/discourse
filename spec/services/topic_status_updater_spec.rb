@@ -23,8 +23,10 @@ RSpec.describe TopicStatusUpdater do
 
     expect(post.topic.posts.count).to eq(2)
 
+    # Small action posts don't bump highest_post_number, so pretend_read
+    # is a no-op and last_read stays at the last real post.
     tu = TopicUser.find_by(user_id: user.id)
-    expect(tu.last_read_post_number).to eq(2)
+    expect(tu.last_read_post_number).to eq(1)
   end
 
   it "respects topics_unread_when_closed preference for private messages" do
@@ -61,6 +63,23 @@ RSpec.describe TopicStatusUpdater do
 
     tu_wants_read = TopicUser.find_by(user: user_wants_read, topic: post.topic)
     expect(tu_wants_read.last_read_post_number).to eq(1)
+  end
+
+  it "does not advance last_read_post_number when closing a regular topic" do
+    post = create_post
+    user_tracking = Fabricate(:user)
+
+    TopicUser.update_last_read(user_tracking, post.topic.id, 1, 1, 0)
+    PostTiming.create!(topic: post.topic, post_number: 1, user: user_tracking, msecs: 1000)
+
+    TopicStatusUpdater.new(post.topic, admin).update!("closed", true)
+
+    post.topic.reload
+    expect(post.topic.highest_post_number).to eq(1)
+    expect(post.topic.highest_staff_post_number).to eq(2)
+
+    tu = TopicUser.find_by(user: user_tracking, topic: post.topic)
+    expect(tu.last_read_post_number).to eq(1)
   end
 
   it "adds an autoclosed message" do

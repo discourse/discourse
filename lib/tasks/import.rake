@@ -430,6 +430,7 @@ def update_topics
         FROM posts p
        WHERE NOT hidden
          AND deleted_at IS NULL
+         AND NOT #{Post.routine_small_action_sql}
     GROUP BY topic_id
   )
   UPDATE topics
