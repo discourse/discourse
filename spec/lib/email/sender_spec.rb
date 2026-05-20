@@ -1089,4 +1089,28 @@ RSpec.describe Email::Sender do
       expect { email_sender.send }.to raise_error(Net::SMTPUnknownError)
     end
   end
+
+  context "with Net::SMTPFatalError" do
+    let(:message) { Mail::Message.new(to: "eviltrout@test.domain", body: "test body") }
+    let(:email_sender) { Email::Sender.new(message, :valid_type) }
+
+    it "stores the SMTP response string as custom reason" do
+      error = Net::SMTPFatalError.new("552-5.7.0 This message was blocked")
+      smtp_response =
+        Net::SMTP::Response.new(
+          "552",
+          "552-5.7.0 This message was blocked because its content presents a potential\n552 5.7.0 issue",
+        )
+      error.define_singleton_method(:response) { smtp_response }
+      message.expects(:deliver!).raises(error)
+
+      expect { email_sender.send }.to change(SkippedEmailLog, :count).by(1)
+
+      skipped_email_log = SkippedEmailLog.last
+      expect(skipped_email_log.reason_type).to eq(SkippedEmailLog.reason_types[:custom])
+      expect(skipped_email_log.custom_reason).to eq(
+        "552-5.7.0 This message was blocked because its content presents a potential\n552 5.7.0 issue",
+      )
+    end
+  end
 end
