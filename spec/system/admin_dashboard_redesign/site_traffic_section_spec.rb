@@ -127,4 +127,69 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     expect(traffic).to have_no_comparison_tooltip
     expect(traffic).to have_chart
   end
+
+  context "with top countries and top referrers cards" do
+    before do
+      SiteSetting.persist_browser_pageview_events = true
+      Discourse.stubs(:current_hostname).returns("test.localhost")
+      Discourse.cache.clear
+    end
+
+    it "does not show the cards when persist_browser_pageview_events is off" do
+      SiteSetting.persist_browser_pageview_events = false
+
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_no_top_countries_card
+      expect(traffic).to have_no_top_referrers_card
+    end
+
+    it "shows ranked top countries and top referrers when events exist in the period",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      2.times do
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "US",
+          normalized_referrer: "news.ycombinator.com/item?id=42",
+          created_at: "2026-05-12",
+        )
+      end
+      Fabricate(
+        :browser_pageview_event,
+        country_code: "GB",
+        normalized_referrer: "reddit.com/r/discourse",
+        created_at: "2026-05-12",
+      )
+      Fabricate(
+        :browser_pageview_event,
+        country_code: "DE",
+        normalized_referrer: nil,
+        created_at: "2026-05-12",
+      )
+
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_top_country_rows(
+        [
+          { country: "US", percent: 50 },
+          { country: "DE", percent: 25 },
+          { country: "GB", percent: 25 },
+        ],
+      )
+      expect(traffic).to have_top_referrer_rows(
+        [{ referrer: "news.ycombinator.com/item?id=42" }, { referrer: "reddit.com/r/discourse" }],
+      )
+    end
+
+    it "shows an empty state in both cards when no events qualify",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_top_countries_empty_state
+      expect(traffic).to have_top_referrers_empty_state
+    end
+  end
 end

@@ -721,6 +721,7 @@ class Middleware::RequestTracker
         country_code: payload[:country_code],
         asn: payload[:asn],
         referrer: payload[:referrer],
+        normalized_referrer: BrowserPageviewReferrerInspector.normalize(payload[:referrer]),
         user_agent: payload[:user_agent],
         session_id: payload[:session_id],
         user_id: payload[:user_id],

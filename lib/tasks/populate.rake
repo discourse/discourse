@@ -69,3 +69,8 @@ desc "Populates sample data for the admin dashboard"
 task "admin_dashboard:populate" => ["db:load_config"] do |_, args|
   DiscourseDev::ApplicationRequest.populate!
 end
+
+desc "Enables persist_browser_pageview_events and seeds matching events + application_requests"
+task "browser_pageview_events:populate", [:count] => ["db:load_config"] do |_, args|
+  DiscourseDev::BrowserPageviewEvent.populate!(count: args[:count]&.to_i)
+end

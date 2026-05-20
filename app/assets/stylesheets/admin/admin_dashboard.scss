@@ -447,6 +447,7 @@ h1 {
 }
 
 .db-traffic {
+  --db-traffic-card-min-height: 12rem;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -489,38 +490,86 @@ h1 {
   }
 
   &__list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: var(--space-4);
+    row-gap: var(--space-2);
     list-style: none;
     margin: 0;
     padding: 0;
-  }
-
-  &__list-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
     font-size: var(--font-down-1-rem);
   }
 
-  &__name {
-    overflow: hidden;
-    color: var(--primary-high);
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  &__list-row {
+    display: contents;
   }
 
-  &__value {
-    flex: 0 0 auto;
+  &__metric {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    justify-self: end;
+  }
+
+  &__name,
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  &__name {
+    color: var(--primary-high);
+  }
+
+  &__link {
+    color: inherit;
+    text-decoration: none;
+
+    &:visited {
+      color: inherit;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
+    }
+  }
+
+  &__list-shell {
+    height: var(--db-traffic-card-min-height);
+    border-radius: var(--d-border-radius-large);
+    background: linear-gradient(
+      135deg,
+      var(--primary-very-low),
+      var(--primary-low)
+    );
+  }
+
+  &__percent {
     color: var(--primary);
-    font-weight: 600;
   }
 
   &__count {
     color: var(--primary-medium);
-    font-weight: 400;
+  }
+
+  &__list-empty {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__list-error {
+    color: var(--danger);
+    font-size: var(--font-down-1-rem);
   }
 }
 

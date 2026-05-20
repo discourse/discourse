@@ -2188,5 +2188,11 @@ RSpec.describe Report do
         end
       end
     end
+
+    it "always hides browser pageview reports" do
+      Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+        expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
+      end
+    end
   end
 end
