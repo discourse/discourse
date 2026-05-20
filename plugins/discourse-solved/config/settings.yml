@@ -74,4 +74,7 @@ discourse_solved:
       status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402498"
+  discourse_solved_admin_dashboard_seeded:
+    default: false
+    hidden: true
 

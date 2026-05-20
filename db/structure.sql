@@ -262,6 +262,39 @@ ALTER SEQUENCE public.ad_plugin_impressions_id_seq OWNED BY public.ad_plugin_imp
 
 
 --
+-- Name: admin_dashboard_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admin_dashboard_reports (
+    id bigint NOT NULL,
+    "position" integer NOT NULL,
+    source character varying NOT NULL,
+    identifier character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: admin_dashboard_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.admin_dashboard_reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: admin_dashboard_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.admin_dashboard_reports_id_seq OWNED BY public.admin_dashboard_reports.id;
+
+
+--
 -- Name: admin_notices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -11335,6 +11368,13 @@ ALTER TABLE ONLY public.ad_plugin_impressions ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: admin_dashboard_reports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_dashboard_reports ALTER COLUMN id SET DEFAULT nextval('public.admin_dashboard_reports_id_seq'::regclass);
+
+
+--
 -- Name: admin_notices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -13364,6 +13404,14 @@ ALTER TABLE ONLY public.ad_plugin_house_ads
 
 ALTER TABLE ONLY public.ad_plugin_impressions
     ADD CONSTRAINT ad_plugin_impressions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admin_dashboard_reports admin_dashboard_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_dashboard_reports
+    ADD CONSTRAINT admin_dashboard_reports_pkey PRIMARY KEY (id);
 
 
 --
@@ -16335,6 +16383,20 @@ CREATE INDEX index_ad_plugin_impressions_on_created_at ON public.ad_plugin_impre
 --
 
 CREATE INDEX index_ad_plugin_impressions_on_user_id ON public.ad_plugin_impressions USING btree (user_id);
+
+
+--
+-- Name: index_admin_dashboard_reports_on_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_admin_dashboard_reports_on_position ON public.admin_dashboard_reports USING btree ("position");
+
+
+--
+-- Name: index_admin_dashboard_reports_on_source_and_identifier; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_admin_dashboard_reports_on_source_and_identifier ON public.admin_dashboard_reports USING btree (source, identifier);
 
 
 --
@@ -20871,6 +20933,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260513024004'),
 ('20260512061336'),
 ('20260511145109'),
+('20260511080033'),
 ('20260511044542'),
 ('20260510232238'),
 ('20260507083943'),

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Admin::DashboardController < Admin::StaffController
+  BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
+
+  before_action :ensure_dashboard_improvements_enabled, only: %i[bulk_reports]
+
   def index
     if SiteSetting.dashboard_improvements
       visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
@@ -90,6 +94,33 @@ class Admin::DashboardController < Admin::StaffController
     end
   end
 
+  def bulk_reports
+    raise Discourse::InvalidParameters.new(:items) if !params[:items].is_a?(Array)
+    if params[:items].size > AdminDashboardReport::VISIBLE_CAP
+      raise Discourse::InvalidParameters.new(:items)
+    end
+
+    items =
+      params
+        .permit(items: %i[source identifier])
+        .fetch(:items, [])
+        .map do |entry|
+          source = entry[:source]
+          identifier = entry[:identifier]
+          raise Discourse::InvalidParameters.new(:items) if source.blank? || identifier.blank?
+          { source: source.to_s, identifier: identifier.to_s }
+        end
+
+    permitted_filters = params.permit(filters: BULK_REPORTS_FILTER_KEYS).fetch(:filters, nil)
+    filters = permitted_filters.present? ? permitted_filters.to_h.symbolize_keys : {}
+
+    hijack do
+      render_json_dump(
+        AdminDashboard::Reports::BulkFetch.call(items: items, filters: filters, guardian: guardian),
+      )
+    end
+  end
+
   private
 
   def section_data(id)
@@ -98,10 +129,16 @@ class Admin::DashboardController < Admin::StaffController
       AdminDashboardHighlights.build(start_date: params[:start_date], end_date: params[:end_date])
     when "traffic"
       AdminDashboardSiteTraffic.build(start_date: params[:start_date], end_date: params[:end_date])
+    when "reports"
+      AdminDashboard::Reports::Section.build(guardian: guardian)
     end
   end
 
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
+  end
+
+  def ensure_dashboard_improvements_enabled
+    raise Discourse::NotFound if !SiteSetting.dashboard_improvements
   end
 end

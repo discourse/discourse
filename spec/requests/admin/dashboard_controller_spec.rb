@@ -290,12 +290,37 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "leaves data null for sections without a builder yet" do
-        SiteSetting.admin_dashboard_sections = "highlights|reports"
-
+        SiteSetting.admin_dashboard_sections = "highlights|engagement"
         get "/admin/dashboard.json"
 
-        reports = response.parsed_body["sections"].find { |s| s["id"] == "reports" }
-        expect(reports["data"]).to be_nil
+        engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
+        expect(engagement["data"]).to be_nil
+      end
+
+      describe "reports section data" do
+        before { AdminDashboardReport.delete_all }
+
+        def reports_data
+          response.parsed_body["sections"].find { |s| s["id"] == "reports" }&.dig("data")
+        end
+
+        it "returns an empty items list when no rows exist" do
+          get "/admin/dashboard.json"
+
+          expect(response.status).to eq(200)
+          expect(reports_data).to eq("items" => [])
+        end
+
+        it "serializes configured rows resolved via the registered providers" do
+          AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+
+          get "/admin/dashboard.json"
+
+          items = reports_data["items"]
+          expect(items.size).to eq(1)
+          expect(items.first).to include("source" => "core_report", "identifier" => "signups")
+          expect(items.first["title"]).to be_present
+        end
       end
 
       it "denies non-staff users" do
@@ -757,6 +782,138 @@ RSpec.describe Admin::DashboardController do
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+  end
+
+  describe "POST /admin/dashboard/reports/bulk" do
+    before { SiteSetting.dashboard_improvements = true }
+
+    let(:fake_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "fake_source"
+        def self.fetch_many(identifiers, guardian:, filters: {})
+          identifiers.each_with_object({}) do |id, h|
+            h[id.to_s] = { id: id.to_s, filters: filters }
+          end
+        end
+      end
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == fake_provider
+      end
+    end
+
+    context "when not signed in" do
+      it "denies access" do
+        post "/admin/dashboard/reports/bulk.json", params: { items: [] }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as a non-admin" do
+      before { sign_in(user) }
+
+      it "denies access" do
+        post "/admin/dashboard/reports/bulk.json", params: { items: [] }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as an admin" do
+      before { sign_in(admin) }
+
+      it "returns 404 when the dashboard_improvements feature flag is off" do
+        SiteSetting.dashboard_improvements = false
+        post "/admin/dashboard/reports/bulk.json", params: { items: [] }
+        expect(response.status).to eq(404)
+      end
+
+      it "returns items in the order they were requested" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [
+                 { source: "fake_source", identifier: "a" },
+                 { source: "fake_source", identifier: "b" },
+                 { source: "fake_source", identifier: "c" },
+               ],
+             }
+
+        expect(response.status).to eq(200)
+        items = response.parsed_body["items"]
+        expect(items.map { |i| i["identifier"] }).to eq(%w[a b c])
+        expect(items.map { |i| i["source"] }).to eq(%w[fake_source fake_source fake_source])
+      end
+
+      it "returns each requested item's data, keyed by identifier" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [
+                 { source: "fake_source", identifier: "a" },
+                 { source: "fake_source", identifier: "b" },
+               ],
+             }
+
+        expect(response.status).to eq(200)
+        items = response.parsed_body["items"]
+        expect(items.map { |i| [i["identifier"], i["data"]["id"]] }).to eq([%w[a a], %w[b b]])
+      end
+
+      it "returns data: nil for items whose source has no registered provider" do
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [{ source: "totally_unregistered", identifier: "x" }],
+             }
+
+        expect(response.status).to eq(200)
+        items = response.parsed_body["items"]
+        expect(items.size).to eq(1)
+        expect(items.first["data"]).to be_nil
+        expect(items.first["source"]).to eq("totally_unregistered")
+      end
+
+      it "returns data shaped by the dashboard filters" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [{ source: "fake_source", identifier: "x" }],
+               filters: {
+                 start_date: "2026-01-01",
+                 end_date: "2026-01-31",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        data = response.parsed_body["items"].first["data"]
+        expect(data["filters"]).to include("start_date" => "2026-01-01", "end_date" => "2026-01-31")
+      end
+
+      it "rejects requests with more than AdminDashboardReport::VISIBLE_CAP items" do
+        items =
+          (AdminDashboardReport::VISIBLE_CAP + 1).times.map do |i|
+            { source: "x", identifier: i.to_s }
+          end
+        post "/admin/dashboard/reports/bulk.json", params: { items: items }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects items missing source or identifier" do
+        post "/admin/dashboard/reports/bulk.json", params: { items: [{ source: "fake_source" }] }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects requests with a non-array items field" do
+        post "/admin/dashboard/reports/bulk.json", params: { items: "not_an_array" }
+        expect(response.status).to eq(400)
       end
     end
   end
