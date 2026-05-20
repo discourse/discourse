@@ -33,7 +33,6 @@ function staticEmbroiderAliases() {
 function filteredEmberResolver() {
   const plugin = resolver();
   plugin.resolveId = {
-    // Rolldown only honours a resolveId filter when it's an array of expressions.
     filter: [
       include(
         or(
