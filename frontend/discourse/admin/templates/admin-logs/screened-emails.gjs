@@ -1,8 +1,8 @@
 import { fn } from "@ember/helper";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -22,7 +22,7 @@ export default <template>
 
   <br />
 
-  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+  <DConditionalLoadingSpinner @condition={{@controller.loading}}>
     {{#if @controller.model.length}}
 
       <table class="screened-emails grid">
@@ -52,10 +52,10 @@ export default <template>
                   }}</div>{{item.match_count}}</td>
               <td class="last_match_at"><div class="label">{{i18n
                     "admin.logs.last_match_at"
-                  }}</div>{{ageWithTooltip item.last_match_at}}</td>
+                  }}</div>{{dAgeWithTooltip item.last_match_at}}</td>
               <td class="created_at"><div class="label">{{i18n
                     "admin.logs.created_at"
-                  }}</div>{{ageWithTooltip item.created_at}}</td>
+                  }}</div>{{dAgeWithTooltip item.created_at}}</td>
               <td class="ip_address">{{item.ip_address}}</td>
               <td class="action">
                 <DButton
@@ -72,5 +72,5 @@ export default <template>
     {{else}}
       {{i18n "search.no_results"}}
     {{/if}}
-  </ConditionalLoadingSpinner>
+  </DConditionalLoadingSpinner>
 </template>

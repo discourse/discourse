@@ -291,6 +291,10 @@ class GlobalSetting
     end
   end
 
+  def self.sendmail_settings
+    { arguments: %w[-i] }
+  end
+
   class BaseProvider
     def self.coerce(setting)
       return setting == "true" if setting == "true" || setting == "false"
@@ -384,14 +388,29 @@ class GlobalSetting
   end
 
   def self.load_plugins?
-    if ENV["LOAD_PLUGINS"] == "1"
-      true
-    elsif ENV["LOAD_PLUGINS"] == "0"
-      false
-    elsif Rails.env.test?
-      false
+    load_plugins_filter != :none
+  end
+
+  def self.plugins_to_load
+    filter = load_plugins_filter
+    filter.is_a?(Array) ? filter : nil
+  end
+
+  # Returns `:all`, `:none`, or an array of plugin directory names.
+  def self.load_plugins_filter
+    case ENV["LOAD_PLUGINS"]
+    when "0"
+      :none
+    when "1"
+      :all
+    when nil, ""
+      Rails.env.test? ? :none : :all
     else
-      true
+      unless Rails.env.local?
+        raise "LOAD_PLUGINS=#{ENV["LOAD_PLUGINS"].inspect} is only supported in development/test"
+      end
+      ENV["LOAD_PLUGINS"].split(",").map { |p| File.basename(p.strip) }.reject(&:empty?)
     end
   end
+  private_class_method :load_plugins_filter
 end

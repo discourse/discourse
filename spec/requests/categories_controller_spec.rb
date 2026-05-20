@@ -483,6 +483,21 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(422)
         end
 
+        it "rejects invalid emoji names" do
+          post "/categories.json",
+               params: {
+                 name: "Emoji Category",
+                 color: "ff0",
+                 text_color: "fff",
+                 style_type: "emoji",
+                 emoji: %(<img src=x onerror="alert('xss')">),
+               }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include("Emoji is invalid")
+          expect(Category.find_by(name: "Emoji Category")).to be_nil
+        end
+
         it "returns errors with invalid group" do
           category = Fabricate(:category, user: admin)
           readonly = CategoryGroup.permission_types[:readonly]
@@ -553,7 +568,28 @@ RSpec.describe CategoriesController do
           expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq(
             [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
           )
-          expect(UserHistory.count).to eq(1)
+          expect(UserHistory.count).to eq(2) # 1 + 1 (bootstrap first admin)
+        end
+
+        it "creates a category with posting review mode" do
+          group = Fabricate(:group)
+
+          post "/categories.json",
+               params: {
+                 name: "Review Category",
+                 category_setting_attributes: {
+                   topic_posting_review_mode: "everyone_except",
+                   reply_posting_review_mode: "everyone",
+                 },
+                 topic_posting_review_group_ids: [group.id],
+               }
+
+          expect(response.status).to eq(200)
+
+          category = Category.find(response.parsed_body["category"]["id"])
+          expect(category.category_setting.topic_posting_review_mode).to eq("everyone_except")
+          expect(category.topic_posting_review_group_ids).to contain_exactly(group.id)
+          expect(category.category_setting.reply_posting_review_mode).to eq("everyone")
         end
 
         it "creates category with description containing markdown" do
@@ -594,6 +630,7 @@ RSpec.describe CategoriesController do
                   "id" => "discussion",
                   "name" => I18n.t("category_types.discussion.name"),
                   "title" => "discussion",
+                  "visible" => true,
                 },
               },
             )
@@ -743,7 +780,7 @@ RSpec.describe CategoriesController do
 
         expect do delete "/categories/#{category.slug}.json" end.to change(Category, :count).by(-1)
         expect(response.status).to eq(200)
-        expect(UserHistory.count).to eq(1)
+        expect(UserHistory.count).to eq(2) # 1 + 1 (bootstrap first admin)
         expect(TopicTimer.where(id: id).exists?).to eq(false)
       end
     end
@@ -974,7 +1011,7 @@ RSpec.describe CategoriesController do
                 },
               }
           expect(response.status).to eq(200)
-          expect(UserHistory.count).to eq(2)
+          expect(UserHistory.count).to eq(3) # 2 + 1 (bootstrap first admin)
         end
 
         it "does not log false permission changes when everyone group name is localized" do
@@ -1183,6 +1220,49 @@ RSpec.describe CategoriesController do
           put "/categories/#{category.id}.json", params: { moderating_group_ids: [] }
           expect(response.status).to eq(200)
           expect(category.reload.moderating_groups).to be_blank
+        end
+
+        it "sets topic_posting_review_mode to everyone" do
+          put "/categories/#{category.id}.json",
+              params: {
+                category_setting_attributes: {
+                  topic_posting_review_mode: "everyone",
+                },
+              }
+          expect(response.status).to eq(200)
+          category.reload
+          expect(category.category_setting.topic_posting_review_mode).to eq("everyone")
+        end
+
+        it "sets topic_posting_review_mode to everyone_except with group IDs" do
+          put "/categories/#{category.id}.json",
+              params: {
+                category_setting_attributes: {
+                  topic_posting_review_mode: "everyone_except",
+                },
+                topic_posting_review_group_ids: [mod_group_1.id, mod_group_2.id],
+              }
+          expect(response.status).to eq(200)
+          category.reload
+          expect(category.category_setting.topic_posting_review_mode).to eq("everyone_except")
+          expect(category.topic_posting_review_group_ids).to contain_exactly(
+            mod_group_1.id,
+            mod_group_2.id,
+          )
+        end
+
+        it "sets reply_posting_review_mode to no_one_except with group IDs" do
+          put "/categories/#{category.id}.json",
+              params: {
+                category_setting_attributes: {
+                  reply_posting_review_mode: "no_one_except",
+                },
+                reply_posting_review_group_ids: [mod_group_3.id],
+              }
+          expect(response.status).to eq(200)
+          category.reload
+          expect(category.category_setting.reply_posting_review_mode).to eq("no_one_except")
+          expect(category.reply_posting_review_group_ids).to contain_exactly(mod_group_3.id)
         end
 
         it "can correctly convert blank strings to appropriate null values" do

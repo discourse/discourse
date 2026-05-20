@@ -95,6 +95,268 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
       end
     end
+
+    describe "sections payload" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        SiteSetting.admin_dashboard_sections = "highlights|reports|traffic|engagement"
+        Discourse.cache.clear
+        sign_in(admin)
+      end
+
+      def highlights_data
+        sections = response.parsed_body["sections"]
+        sections.find { |s| s["id"] == "highlights" }&.dig("data")
+      end
+
+      it "is omitted when dashboard_improvements is disabled" do
+        SiteSetting.dashboard_improvements = false
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_nil
+        expect(response.parsed_body["configuration"]).to be_nil
+      end
+
+      it "includes a highlights section with kpis" do
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(highlights_data["kpis"]).to be_an(Array)
+      end
+
+      it "returns the sections as an ordered array of {id, data}" do
+        SiteSetting.admin_dashboard_sections = "reports|highlights"
+        get "/admin/dashboard.json"
+
+        ids = response.parsed_body["sections"].map { |s| s["id"] }
+        expect(ids).to eq(%w[reports highlights])
+      end
+
+      it "omits hidden sections from the data payload" do
+        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        get "/admin/dashboard.json"
+
+        ids = response.parsed_body["sections"].map { |s| s["id"] }
+        expect(ids).not_to include("traffic", "engagement")
+      end
+
+      it "leaves data null for sections without a builder yet" do
+        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        get "/admin/dashboard.json"
+
+        reports = response.parsed_body["sections"].find { |s| s["id"] == "reports" }
+        expect(reports["data"]).to be_nil
+      end
+
+      it "returns the documented payload shape for new_signups" do
+        freeze_time(Time.utc(2026, 4, 28, 12, 0, 0)) do
+          Fabricate(:user, created_at: 5.days.ago)
+          get "/admin/dashboard.json", params: { start_date: "2026-03-01", end_date: "2026-04-28" }
+
+          kpis = highlights_data["kpis"]
+          signups = kpis.find { |k| k["type"] == "new_signups" }
+
+          expect(signups).to include(
+            "type" => "new_signups",
+            "report_type" => "signups",
+            "report_query" => {
+              "start_date" => "2026-03-01",
+              "end_date" => "2026-04-28",
+            },
+          )
+          expect(signups["value"]).to be >= 1
+          expect(signups).to have_key("previous_value")
+          expect(signups).to have_key("percent_change")
+        end
+      end
+
+      it "honours start_date and end_date query params" do
+        Fabricate(:user, created_at: 2.days.ago)
+        get "/admin/dashboard.json",
+            params: {
+              start_date: 7.days.ago.strftime("%Y-%m-%d"),
+              end_date: Date.current.strftime("%Y-%m-%d"),
+            }
+
+        expect(response.status).to eq(200)
+        expect(highlights_data["kpis"]).to be_an(Array)
+      end
+
+      it "ignores malformed date params and falls back to defaults" do
+        get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
+
+        expect(response.status).to eq(200)
+        expect(highlights_data).to be_present
+      end
+
+      it "denies non-staff users" do
+        sign_in(user)
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "allows moderators and returns the sections payload" do
+        sign_in(moderator)
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(highlights_data).to be_present
+      end
+
+      it "omits version_check when the flag is on" do
+        SiteSetting.version_checks = true
+        DiscourseUpdates.expects(:check_version).never
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to have_key("version_check")
+      end
+
+      it "still includes version_check when the flag is off" do
+        SiteSetting.dashboard_improvements = false
+        SiteSetting.version_checks = true
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to have_key("version_check")
+      end
+    end
+
+    describe "configuration payload" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        Discourse.cache.clear
+      end
+
+      it "is included for admins and lists every known section with a visibility flag" do
+        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        sign_in(admin)
+        get "/admin/dashboard.json"
+
+        configuration = response.parsed_body["configuration"]
+        expect(configuration).to be_present
+        ids = configuration["sections"].map { |s| s["id"] }
+        expect(ids).to match_array(%w[highlights reports traffic engagement])
+        visible = configuration["sections"].select { |s| s["visible"] }.map { |s| s["id"] }
+        expect(visible).to eq(%w[highlights reports])
+      end
+
+      it "is omitted for moderators" do
+        sign_in(moderator)
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to have_key("configuration")
+      end
+
+      it "is omitted when dashboard_improvements is disabled" do
+        SiteSetting.dashboard_improvements = false
+        sign_in(admin)
+        get "/admin/dashboard.json"
+
+        expect(response.parsed_body).not_to have_key("configuration")
+      end
+    end
+  end
+
+  describe "#update_configuration" do
+    before do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.admin_dashboard_sections = "highlights|reports|traffic|engagement"
+    end
+
+    it "returns 204 and writes the site setting for admins" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [
+              { id: "reports", visible: true },
+              { id: "highlights", visible: true },
+              { id: "traffic", visible: false },
+            ],
+          }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("reports|highlights")
+    end
+
+    it "drops unknown section ids silently" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "frobnitz", visible: true }, { id: "highlights", visible: true }],
+          }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("highlights")
+    end
+
+    it "coerces non-boolean visible values" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [
+              { id: "highlights", visible: "true" },
+              { id: "reports", visible: "false" },
+              { id: "engagement", visible: "1" },
+            ],
+          }
+
+      expect(SiteSetting.admin_dashboard_sections).to eq("highlights|engagement")
+    end
+
+    it "treats an empty sections array as hide-everything" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json", params: { sections: [] }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("")
+    end
+
+    it "treats a missing sections key the same as an empty array" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json"
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("")
+    end
+
+    it "returns 404 for moderators" do
+      sign_in(moderator)
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "highlights", visible: true }],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for anonymous users" do
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "highlights", visible: true }],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "reflects the new configuration for moderators on a subsequent GET" do
+      sign_in(admin)
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "highlights", visible: true }],
+          }
+
+      sign_in(moderator)
+      get "/admin/dashboard.json"
+
+      ids = response.parsed_body["sections"].map { |s| s["id"] }
+      expect(ids).to eq(["highlights"])
+    end
   end
 
   describe "#problems" do
@@ -158,6 +420,8 @@ RSpec.describe Admin::DashboardController do
 
   describe "#new_features" do
     after { DiscourseUpdates.clean_state }
+
+    before { UpcomingChanges.stubs(:permanent_upcoming_changes).returns([]) }
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -281,16 +545,22 @@ RSpec.describe Admin::DashboardController do
 
       context "when a permanent upcoming change exists and the feed is empty" do
         before do
-          mock_upcoming_change_metadata(
-            {
-              enable_upload_debug_mode: {
-                impact: "other,developers",
-                status: :permanent,
-                impact_type: "other",
-                impact_role: "developers",
-                learn_more_url: "https://meta.discourse.org/t/-/1234",
+          UpcomingChanges.unstub(:permanent_upcoming_changes)
+          UpcomingChanges.stubs(:permanent_upcoming_changes).returns(
+            [
+              {
+                setting: :enable_upload_debug_mode,
+                humanized_name: SiteSetting.humanized_names(:enable_upload_debug_mode),
+                description: SiteSetting.description(:enable_upload_debug_mode),
+                upcoming_change: {
+                  learn_more_url: "https://meta.discourse.org/t/-/1234",
+                  image: {
+                    url:
+                      "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+                  },
+                },
               },
-            },
+            ],
           )
           UpcomingChanges.stubs(:image_exists?).returns(true)
           UpcomingChanges.stubs(:image_data).returns(

@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed, getProperties } from "@ember/object";
-import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -58,6 +57,8 @@ const SIMPLIFIED_FIELD_LIST = [
   "all_topics_wiki",
   "allow_unlimited_owner_edits_on_first_post",
   "moderating_group_ids",
+  "topic_posting_review_group_ids",
+  "reply_posting_review_group_ids",
   "auto_close_hours",
   "auto_close_based_on_last_post",
   "default_view",
@@ -115,14 +116,17 @@ export default class EditCategoryTabsController extends Controller {
   validators = [];
   textColors = ["000000", "FFFFFF"];
 
-  @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
-
   /**
    * Callbacks registered by tab components that are invoked when the form
    * is reset, allowing child components to clean up their own state.
    * @type {Function[]}
    */
   afterResetCallbacks = [];
+
+  @computed("showTooltip", "model.cannot_delete_reason")
+  get showDeleteReason() {
+    return this.showTooltip && this.model?.cannot_delete_reason;
+  }
 
   @action
   initFormData() {
@@ -152,11 +156,21 @@ export default class EditCategoryTabsController extends Controller {
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
 
       data.category_type_site_settings = {};
+      data.category_type_settings = {
+        ...(this.model.category_type_settings ?? {}),
+      };
+      data.category_types = Object.keys(this.model.categoryTypes ?? {});
 
       Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
         categoryType.configuration_schema.category_custom_fields?.forEach(
           (field) => {
             data.custom_fields[field.key] ??= field.default;
+          }
+        );
+
+        categoryType.configuration_schema.category_settings?.forEach(
+          (field) => {
+            data.category_type_settings[field.key] ??= field.default;
           }
         );
 
@@ -365,6 +379,9 @@ export default class EditCategoryTabsController extends Controller {
     this.set("saving", true);
 
     try {
+      const previousTypes = new Set(
+        Object.keys(this.model.categoryTypes ?? {})
+      );
       const result = await this.model.save();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
@@ -372,6 +389,22 @@ export default class EditCategoryTabsController extends Controller {
       if (lostAccess) {
         this.router.transitionTo(`discovery.${defaultHomepage()}`);
         return;
+      }
+
+      if (this.siteSettings.enable_simplified_category_creation) {
+        const newTypes = Object.keys(result.category.category_types ?? {});
+        const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
+        if (typeWasAdded) {
+          if (this.model.id) {
+            window.location.reload();
+          } else {
+            window.location = this.router.urlFor(
+              "editCategory",
+              Category.slugFor(updatedModel)
+            );
+          }
+          return;
+        }
       }
 
       this.set("saving", false);

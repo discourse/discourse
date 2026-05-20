@@ -24,6 +24,44 @@ RSpec.describe "Viewing User Menu" do
     end
   end
 
+  describe "when clicking a notification in the bookmarks tab" do
+    fab!(:post)
+    fab!(:bookmark) { Fabricate(:bookmark, user: user, bookmarkable: post) }
+    fab!(:bookmark_reminder) do
+      Fabricate(
+        :notification,
+        user: user,
+        topic: post.topic,
+        post_number: post.post_number,
+        notification_type: Notification.types[:bookmark_reminder],
+        data: {
+          bookmark_id: bookmark.id,
+          bookmarkable_type: bookmark.bookmarkable_type,
+          bookmarkable_id: bookmark.bookmarkable_id,
+          title: post.topic.title,
+          bookmark_name: "reminder",
+        }.to_json,
+      )
+    end
+
+    it "does not raise a JS error on click" do
+      sign_in(user)
+      visit("/latest")
+
+      page_errors = []
+      page.driver.with_playwright_page do |pw_page|
+        pw_page.on("pageerror", ->(error) { page_errors << error.message })
+      end
+
+      user_menu.open
+      user_menu.click_bookmarks_tab
+      find("#quick-access-bookmarks li.bookmark-reminder a").click
+
+      expect(page).to have_current_path(%r{/t/})
+      expect(page_errors).to be_empty
+    end
+  end
+
   describe "when viewing replies notifications tab" do
     fab!(:topic)
 

@@ -9,7 +9,7 @@ export default class AssignedTopicList extends Component {
     return (
       context.currentUser?.can_assign &&
       args.group.can_show_assigned_tab &&
-      args.group.assignment_count > 0
+      args.group.can_see_members
     );
   }
 

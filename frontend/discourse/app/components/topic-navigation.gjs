@@ -8,6 +8,7 @@ import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import EmbedMode from "discourse/lib/embed-mode";
 import discourseLater from "discourse/lib/later";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import SwipeEvents from "discourse/lib/swipe-events";
@@ -52,7 +53,7 @@ export default class TopicNavigation extends Component {
 
     if (this.info.topicProgressExpanded) {
       this.info.set("renderTimeline", true);
-    } else if (this.site.mobileView) {
+    } else if (this.site.mobileView || EmbedMode.enabled) {
       this.info.set("renderTimeline", false);
     } else {
       const composerHeight =
@@ -119,6 +120,11 @@ export default class TopicNavigation extends Component {
   composerClosed() {
     this.set("composerOpen", false);
     this._checkSize();
+  }
+
+  @bind
+  _toggleExpansion() {
+    this.info.toggleProperty("topicProgressExpanded");
   }
 
   _collapseFullscreen(postId, delay = 500) {
@@ -231,7 +237,8 @@ export default class TopicNavigation extends Component {
     this.appEvents
       .on("topic:current-post-scrolled", this, this._topicScrolled)
       .on("topic:jump-to-post", this, this._collapseFullscreen)
-      .on("topic:keyboard-trigger", this, this.keyboardTrigger);
+      .on("topic:keyboard-trigger", this, this.keyboardTrigger)
+      .on("topic:toggle-progress-expansion", this, this._toggleExpansion);
 
     if (this.site.desktopView) {
       this._desktopListenersActive = true;
@@ -262,7 +269,8 @@ export default class TopicNavigation extends Component {
     this.appEvents
       .off("topic:current-post-scrolled", this, this._topicScrolled)
       .off("topic:jump-to-post", this, this._collapseFullscreen)
-      .off("topic:keyboard-trigger", this, this.keyboardTrigger);
+      .off("topic:keyboard-trigger", this, this.keyboardTrigger)
+      .off("topic:toggle-progress-expansion", this, this._toggleExpansion);
 
     $(window).off("click.hide-fullscreen");
 

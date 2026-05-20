@@ -1,13 +1,17 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BackToForum extends Component {
   @service routeHistory;
 
   get href() {
+    if (this.args.href) {
+      return this.args.href;
+    }
+
     const lastForumUrl = this.routeHistory.history.find((url) => {
       return !url.startsWith("/admin") && !url.startsWith("/chat");
     });
@@ -23,7 +27,7 @@ export default class BackToForum extends Component {
 
   <template>
     <a href={{this.href}} class="sidebar-sections__back-to-forum">
-      {{icon "arrow-left"}}
+      {{dIcon "arrow-left"}}
 
       <span>{{i18n "sidebar.back_to_forum"}}</span>
     </a>

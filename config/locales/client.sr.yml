@@ -330,6 +330,8 @@ sr:
       pill: "Predloženo"
       pm_title: "Predložene poruke"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Omogućeno"
       start_posting:
         back: "Nazad"
     about:
@@ -425,8 +427,6 @@ sr:
           other: "Napravljeno pre %{count} godina"
     bookmarked:
       title: "Markiraj"
-      edit_bookmark: "Uredi marker"
-      clear_bookmarks: "Očisti markere"
       help:
         bookmark: "Klikni da označite ovu temu"
         edit_bookmark: "Klikni da izmeniš oznaku na postu u ovoj temi"
@@ -443,12 +443,12 @@ sr:
       create: "Označi"
       edit: "Izmeni oznaku"
       not_bookmarked: "obeleži ovu poruku"
+      topic_bookmark: "Tema"
       remove_reminder_keep_bookmark: "Uklonite podsetnik i sačuvajte obeleživač"
       created_with_reminder: "Obeležili ste ovu poruku sa podsetnikom %{date}. %{name}"
       created_with_reminder_generic: "Obeležili ste ovu poruku sa podsetnikom %{date}. %{name}"
       delete: "Ukloni obeleživač"
       confirm_delete: "Da li ste sigurni da želite da uklonite ovaj obeleživač? Podsetnik će takođe biti uklonjen."
-      confirm_clear: "Da li ste sigurni da želite da uklonite sve obeleživače sa ove teme?"
       save: "Sačuvaj"
       no_timezone: 'Još niste podesili vremensku zonu. Nećete moći postaviti podsetnike. Podesite sada <a href="%{basePath}/my/preferences/profile">na vašem profilu</a>.'
       invalid_custom_datetime: "Uneti datum i vreme nisu važeći. Pokušajte ponovo."
@@ -514,6 +514,9 @@ sr:
           one: "+%{count} drugi nacrt"
           few: "+%{count} drugih nacrta"
           other: "+%{count} drugih nacrta"
+    embed_mode:
+      signin_flow:
+        cancel: "Odustani"
     topic_count_all:
       one: "Pogledajte %{count} novu temu"
       few: "Pogledajte%{count} novih tema"
@@ -1168,13 +1171,8 @@ sr:
       notifications: "Obaveštenja"
       statistics: "Statistike"
       desktop_notifications:
-        label: "Notifikacije Uživo"
         not_supported: "Notifikacije nisu podržane u ovom pregledaču. Izvinite."
-        perm_default: "Uključi Notifikacije"
-        perm_denied_btn: "Dozvola Odbijena"
         perm_denied_expl: "Niste dozvolili notifikacije. Dopustitke notifikacije preko podešavanja pregledača."
-        disable: "Isključi Notifikacije"
-        enable: "Uključi Notifikacije"
         each_browser_note: "Napomena: Morate da promenite ovo podešavanje na svakom pregledaču koji koristite. Sve notifikacije će biti isključene ukoliko pauzirate notifikacije iz korsničkog menija, bez obzira na ovo podešavanje."
         consent_prompt: "Da li želite notifikacije uživo kada ljudi odgovore na vaše postove?"
       dismiss: "Odbaci"
@@ -1773,6 +1771,7 @@ sr:
       upload_description: "Ovde opišite stvar koju učitavate"
       list_item: "Predmet popisa"
       wrap_modal:
+        attribute_value: "Vriednost"
         apply: "Primeni"
       help: "Markdown pomoć pri izmenama"
       modal_ok: "U redu"
@@ -1848,6 +1847,7 @@ sr:
             before: pre
         views:
           label: Pregledi
+    header_panel: "Header"
     new_item: "novo"
     go_back: "idi nazad"
     not_logged_in_user: "stranica korisnika sa sažetkom trenutnih aktivnosti i postavki"
@@ -1894,6 +1894,18 @@ sr:
         name: "Arhiviraj"
       delete_topics:
         name: "Obriši"
+    nested_replies:
+      sort:
+        label: "Sortiraj po"
+        top: "Top"
+        new: "Novo"
+      collapsed_replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
+      collapse: "Spusti"
+      no_replies: "Bez odgovora, još uvek."
+      pinned_reply: "Zakvačeno"
     topic:
       create: "Nova Tema"
       archive_message:
@@ -2086,8 +2098,6 @@ sr:
           actions: "Akcije"
           edit: "Izmeni"
           delete: "Obriši"
-        post_language_selector:
-          none: "Ništa"
       errors:
         create: "Žao nam je, dogodila se greška pri otvaranju tvoje poruke. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška pri izmenjivanju tvoje poruke. Molimo pokušajte ponovo."
@@ -2196,6 +2206,8 @@ sr:
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez naloga"
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
       review_group_name: "ime grupe"
+      posting_review_modes:
+        everyone: "Svi"
       this_year: "ove godine"
       none_subcategory_text: "Ništa"
       visibility:
@@ -2215,7 +2227,7 @@ sr:
           normal: "Normalno"
           high: "Visoko"
       sort_options:
-        default: "zadato"
+        default: "Подразумевано"
         likes: "Lajkovi"
         views: "Pregledi"
         posts: "Poruka"
@@ -2382,43 +2394,41 @@ sr:
       counter: "%curr% od %total%"
     keyboard_shortcuts_help:
       title: "Prečice na tastaturi"
+      description_header: "Opis"
       jump_to:
         title: "Skoči Na"
-        latest: "%{shortcut} Poslednje"
-        new: "%{shortcut} Novo"
-        unread: "%{shortcut} Nepročitano"
-        categories: "%{shortcut} Kategorije"
-        top: "%{shortcut} Najaktivnije"
+        home: "Home"
+        latest: "Poslednje"
+        new: "Novo"
+        unread: "Nepročitano"
+        categories: "Kategorije"
+        top: "Top"
+        bookmarks: "Markiraj"
+        profile: "Profil"
+        messages: "Poruke"
+        drafts: "Skice"
       navigation:
         title: "Navigacija"
-        jump: "%{shortcut} Idi na poruku #"
-        back: "%{shortcut} Nazad"
-        up_down: "%{shortcut} Premesti odabrano &uarr; &darr;"
-        open: "%{shortcut} Otvori odabranu temu"
-        next_prev: "%{shortcut} Sledeći/predhodni deo"
+        back: "Nazad"
+        up_down: "Premesti odabrano &uarr; &darr;"
       application:
         title: "Aplikacija"
-        notifications: "%{shortcut} Otvori obaveštenja"
-        user_profile_menu: "%{shortcut} Otvori korisnički meni"
-        show_incoming_updated_topics: "%{shortcut} Pokaži ažurirane teme"
-        help: "%{shortcut} Otvori pomoć za tastaturu"
+        search: "Pretraži"
+        log_out: "Odjava"
+      composing:
+        preformatted: "Pred-formatirani tekst"
+        blockquote: "izdvojeni citat"
+      bookmarks:
+        later_today: "Kasnije ovog dana"
+        later_this_week: "Kasnije ove sedmice"
+        tomorrow: "Sutra"
+        next_week: "Sledeće sedmice"
+        next_month: "Naredni mesec"
+        next_business_day: "Naredni radni dan"
+        custom: "Prilagođen datum i vreme"
+        delete: "Obriši oznaku"
       actions:
         title: "Akcije"
-        pin_unpin_topic: "%{shortcut} Zakvači/Odkvači temu"
-        share_topic: "%{shortcut} Podeli temu"
-        share_post: "%{shortcut} Podijeli poruku"
-        reply_as_new_topic: "%{shortcut} Odgovori u linkovanoj temi"
-        reply_topic: "%{shortcut} Odgovori u temu"
-        reply_post: "%{shortcut} Odgovori na poruku"
-        quote_post: "%{shortcut} Citiraj poruku"
-        like: "%{shortcut} Lajkuj poruku"
-        flag: "%{shortcut} Označi poruku zastavom"
-        bookmark: "%{shortcut} Markiraj poruku"
-        edit: "%{shortcut} Izmeni poruku"
-        delete: "%{shortcut} Obriši poruku"
-        mark_muted: "%{shortcut} Utišaj poruku"
-        mark_tracking: "%{shortcut} Prati temu"
-        mark_watching: "%{shortcut} Posmatraj temu"
       admin:
         title: "Admin"
     badges:
@@ -2628,6 +2638,8 @@ sr:
           admins: "Admini"
           moderators: "Moderatori"
           staff: "Osoblje"
+        impact_types:
+          other_type: "Ostalo"
         filter:
           all: "Sve"
           enabled: "Omogućeno"
@@ -2686,6 +2698,11 @@ sr:
           sub_pages:
             logs:
               title: "Logovi"
+        problem_checks:
+          status: "Status"
+          ignore: "Ignoriši"
+          more_options:
+            title: "Više opcija"
         reports:
           sub_pages:
             settings:
@@ -2729,7 +2746,7 @@ sr:
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         installed_version: "Instalirano"
         latest_version: "Poslednje"
-        dismiss_notice: "Odbaci"
+        dismiss_notice: "Ignoriši"
         new_features:
           learn_more: "Saznaj više..."
         last_checked: "Zadnje provereno"
@@ -2742,6 +2759,10 @@ sr:
         backups: "Sigurnosne kopije"
         general_tab: "Opšti"
         security_tab: "Sigurnost"
+        period:
+          last_7_days: "Последњих 7 дана"
+          last_30_days: "Последњих 30 дана"
+          custom: "Posebna"
         reports:
           today: "Danas"
           yesterday: "Juče"
@@ -3072,6 +3093,7 @@ sr:
         ip_address: "IP"
         topic_id: "ID Teme"
         post_id: "ID Poruke"
+        reviewable_id: "Pregled"
         delete: "Obriši"
         edit: "Izmeni"
         save: "Sačuvaj"

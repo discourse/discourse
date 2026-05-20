@@ -1,14 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import { action, computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import AdminReportTableHeader from "discourse/admin/components/admin-report-table-header";
 import AdminReportTableRow from "discourse/admin/components/admin-report-table-row";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { makeArray } from "discourse/lib/helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const PAGES_LIMIT = 8;
@@ -18,9 +17,16 @@ export default class AdminReportTable extends Component {
   sortable = false;
   sortDirection = 1;
 
-  @alias("options.perPage") perPage;
-
   page = 0;
+
+  @computed("options.perPage")
+  get perPage() {
+    return this.options?.perPage;
+  }
+
+  set perPage(value) {
+    set(this, "options.perPage", value);
+  }
 
   @computed("model.computedLabels.length")
   get twoColumns() {
@@ -192,7 +198,7 @@ export default class AdminReportTable extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "admin-report-table"
         (if this.sortable "sortable")
         (if this.twoColumns "two-columns")

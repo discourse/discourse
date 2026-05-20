@@ -1,6 +1,33 @@
 # frozen_string_literal: true
 
 module UpcomingChanges
+  # Some upcoming changes make no sense to display to admins,
+  # for example ones related to Horizon theme makes no sense to
+  # display if Horizon is not installed or is disabled, a change
+  # might modify how site behavior works if another setting is enabled,
+  # and so on.
+  #
+  # You can define any should_display_<upcoming_change_name>? method to control
+  # whether an upcoming change should be displayed to admins, and if the
+  # method is undefined the change will always be displayed.
+  #
+  # Keep in mind this is called from UpcomingChanges::List service,
+  # which loops over every change in an N1 depending on the filters admins
+  # have selected, so caching may be appropriate at times.
+  class ConditionalDisplay
+    def self.should_display?(upcoming_change_name)
+      if respond_to?("should_display_#{upcoming_change_name}?")
+        return public_send("should_display_#{upcoming_change_name}?")
+      end
+
+      true
+    end
+
+    def self.should_display_enable_horizon_high_context_topic_cards?
+      Themes::Action::HorizonHighContextTopicCardsToggled.should_display_upcoming_change?
+    end
+  end
+
   def self.user_enabled_reasons
     @user_enabled_reasons ||=
       ::Enum.new(
@@ -24,6 +51,13 @@ module UpcomingChanges
       )
   end
 
+  # Mostly used for testing, to allow stubbing the SiteSetting provider,
+  # like for SiteSettingExtension spec. This is not ideal, but the SiteSettingExtension spec
+  # is extremely gnarly.
+  def self.settings_provider
+    SiteSetting
+  end
+
   def self.previous_status_value(status)
     status_value = self.statuses[status.to_sym]
     self.statuses.values.select { |value| value < status_value }.max || -100
@@ -39,7 +73,7 @@ module UpcomingChanges
   end
 
   def self.image_path(change_setting_name)
-    plugin_name = SiteSetting.plugins[change_setting_name.to_sym]
+    plugin_name = settings_provider.plugins[change_setting_name.to_sym]
     if plugin_name.present?
       File.join("plugins", plugin_name, "images", "upcoming_changes", "#{change_setting_name}.png")
     else
@@ -66,7 +100,7 @@ module UpcomingChanges
 
   def self.change_metadata(change_setting_name)
     change_setting_name = change_setting_name.to_sym
-    SiteSetting.upcoming_change_metadata[change_setting_name] || {}
+    settings_provider.upcoming_change_metadata[change_setting_name] || {}
   end
 
   def self.not_yet_stable?(change_setting_name)
@@ -97,35 +131,69 @@ module UpcomingChanges
     ).order(created_at: :desc)
   end
 
+  def self.exists?(change_setting_name)
+    change_metadata(change_setting_name.to_sym).present?
+  end
+
   # We dynamically determine if an upcoming change is enabled
   # or disabled based on the current status of the change as well
   # as whether the admin has manually toggled the change.
   #
   # @param change_setting_name [Symbol] The name of the upcoming change
   # @return [Boolean]
-  def self.resolved_value(change_setting_name)
+  def self.enabled?(change_setting_name)
+    change_setting_name = change_setting_name.to_sym
+
+    if !exists?(change_setting_name)
+      raise ArgumentError, "Unknown upcoming change: #{change_setting_name}"
+    end
+
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes
     # is false.
     #
     # If the change is permanent though, the admin has no choice
     # in the matter.
-    if SiteSetting.modified.key?(change_setting_name) &&
+    if settings_provider.setting_modified_from_default?(change_setting_name) &&
          UpcomingChanges.change_status(change_setting_name) != :permanent
-      SiteSetting.current[change_setting_name]
+      settings_provider.current[change_setting_name]
 
       # The change has reached the promotion status and is forcibly
       # enabled, admins can still disable it.
     elsif UpcomingChanges.meets_or_exceeds_status?(
           change_setting_name,
-          SiteSetting.promote_upcoming_changes_on_status.to_sym,
+          settings_provider.promote_upcoming_changes_on_status.to_sym,
         ) || UpcomingChanges.change_status(change_setting_name) == :permanent
       true
     else
       # Otherwise use the default value, which for upcoming changes
       # is false.
-      SiteSetting.defaults[change_setting_name]
+      settings_provider.defaults[change_setting_name]
     end
+  end
+
+  # The `allow_enabled_for` metadata for an upcoming change, or nil if unset.
+  # When nil, every "Enabled for" dropdown option is permitted. Otherwise it
+  # is an array containing any subset of [:everyone, :staff, :specific_groups].
+  def self.allow_enabled_for(change_setting_name)
+    change_metadata(change_setting_name)[:allow_enabled_for]
+  end
+
+  # Whether a setting's `allow_enabled_for` permits a given dropdown target.
+  # `:no_one` is always allowed. Returns true when the metadata is absent.
+  def self.target_allowed?(change_setting_name, target)
+    return true if target.to_sym == :no_one
+    allow = allow_enabled_for(change_setting_name)
+    return true if allow.nil?
+    allow.include?(target.to_sym)
+  end
+
+  # True when the setting's `allow_enabled_for` permits any group-based target
+  # (`:staff` or `:specific_groups`). When metadata is absent, groups are allowed.
+  def self.groups_target_allowed?(change_setting_name)
+    allow = allow_enabled_for(change_setting_name)
+    return true if allow.nil?
+    allow.include?(:staff) || allow.include?(:specific_groups)
   end
 
   def self.has_groups?(change_setting_name)
@@ -134,7 +202,7 @@ module UpcomingChanges
 
   def self.group_ids_for(change_setting_name)
     change_setting_name = change_setting_name.to_sym
-    SiteSetting.site_setting_group_ids[change_setting_name].presence || []
+    settings_provider.site_setting_group_ids[change_setting_name].presence || []
   end
 
   # Checks if a given upcoming change is enabled for a user,
@@ -148,7 +216,7 @@ module UpcomingChanges
   # @return [Boolean]
   def self.enabled_for_user?(change_setting_name, user)
     change_setting_name = change_setting_name.to_sym
-    setting_enabled = SiteSetting.public_send(change_setting_name)
+    setting_enabled = UpcomingChanges.enabled?(change_setting_name)
 
     # Anon users can only have upcoming changes enabled if it's set for Everyone
     if user.blank?
@@ -200,7 +268,7 @@ module UpcomingChanges
     guardian_visible_group_ids = Group.visible_groups(acting_guardian.user).pluck(:id)
     user_belonging_to_group_ids = user.belonging_to_group_ids
 
-    SiteSetting.upcoming_change_site_settings.filter_map do |name|
+    settings_provider.upcoming_change_site_settings.filter_map do |name|
       next if UpcomingChanges.change_status(name) == :conceptual
       enabled = user.upcoming_change_enabled?(name)
       has_groups = UpcomingChanges.has_groups?(name)
@@ -226,8 +294,8 @@ module UpcomingChanges
 
       {
         name:,
-        humanized_name: SiteSetting.humanized_name(name),
-        description: SiteSetting.description(name),
+        humanized_name: settings_provider.humanized_name(name),
+        description: settings_provider.description(name),
         enabled:,
         specific_groups:,
         reason:,
@@ -249,7 +317,7 @@ module UpcomingChanges
   # @example
   #   enabled_for_with_groups(:new_feature, true, { 1 => "Group 1", 2 => "Group 2" })
   def self.enabled_for_with_groups(setting_name, setting_value, upcoming_change_selected_groups)
-    group_ids_for_setting = SiteSetting.site_setting_group_ids[setting_name]
+    group_ids_for_setting = settings_provider.site_setting_group_ids[setting_name]
     setting_groups =
       upcoming_change_selected_groups.values_at(*group_ids_for_setting).join(
         ",",
@@ -259,7 +327,21 @@ module UpcomingChanges
       if !setting_value
         "no_one"
       elsif setting_groups.blank?
-        "everyone"
+        # When `allow_enabled_for` excludes `:everyone` and the change is enabled
+        # without an admin-configured scope (typically because it was auto-promoted
+        # past the promotion threshold) we surface the broadest allowed target as
+        # the dropdown's selected value, since `"everyone"` is no longer a valid
+        # option. Backend access (`enabled_for_user?`) is unchanged — until the
+        # admin picks a scope, the change is still effectively on for everyone.
+        allow = allow_enabled_for(setting_name)
+        if allow.nil? || allow.include?(:everyone)
+          "everyone"
+        elsif allow.include?(:staff)
+          # Have to do this because the staff auto group name is localized
+          upcoming_change_selected_groups[Group::AUTO_GROUPS[:staff]]
+        else
+          "groups"
+        end
       else
         if group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
           # Have to do this because the staff auto group name is localized
@@ -275,6 +357,7 @@ module UpcomingChanges
   def self.clear_caches!
     Discourse.cache.delete(current_statuses_cache_key)
     Discourse.cache.delete(permanent_upcoming_changes_cache_key)
+    DiscourseUpdates.clear_latest_new_feature_created_at_cache
   end
 
   def self.current_statuses_cache_key
@@ -325,12 +408,20 @@ module UpcomingChanges
     Discourse
       .cache
       .fetch(permanent_upcoming_changes_cache_key) do
-        UpcomingChanges::List.call(
-          guardian: Discourse.system_user.guardian,
-          options: {
-            filter_statuses: [:permanent],
-          },
-        )&.upcoming_changes
+        result =
+          UpcomingChanges::List.call(
+            guardian: Discourse.system_user.guardian,
+            options: {
+              filter_statuses: [:permanent],
+            },
+          )
+
+        if !result.success? && Rails.env.local?
+          puts result.inspect_steps
+          raise
+        end
+
+        result.upcoming_changes
       end
   end
 
@@ -341,5 +432,14 @@ module UpcomingChanges
   # and we can stub this method in rspec.
   def self.should_notify_admins?
     Migration::Helpers.existing_site? || Rails.env.development?
+  end
+
+  # Some upcoming changes have a depends_on relationship with other settings,
+  # where it doesn't make sense to show the dependent settings in the site
+  # settings UI unless the upcoming change is enabled.
+  #
+  # This is done via depends_on and depends_behavior: hidden in site_settings.yml.
+  def self.find_dependents_for_change(change_setting_name)
+    settings_provider.type_supervisor.dependencies.dependents(change_setting_name.to_s)
   end
 end

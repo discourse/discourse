@@ -7,7 +7,6 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
 
   fab!(:admin_user, :admin)
   fab!(:user)
-  fab!(:guardian) { Guardian.new(user) }
   fab!(:group0, :group)
   fab!(:group1, :group)
   fab!(:group2, :group)
@@ -30,6 +29,8 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
       user: admin_user,
     )
   end
+
+  let(:guardian) { Guardian.new(user) }
 
   before do
     SiteSetting.data_explorer_enabled = true

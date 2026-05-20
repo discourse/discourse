@@ -36,7 +36,7 @@ class Report
     page_view_logged_in_reqs
   ]
 
-  ADMIN_ONLY_REPORTS = %w[top_uploads]
+  ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads topic_view_stats]
 
   def self.hidden?(type, admin:)
     return true if !admin && ADMIN_ONLY_REPORTS.include?(type)
@@ -76,7 +76,6 @@ class Report
     trust_level_growth
     user_flagging_ratio
     user_to_user_private_messages
-    web_crawlers
     web_hook_events_daily_aggregate
   ]
 
@@ -102,7 +101,7 @@ class Report
   include Reports::Posts
   include Reports::ProfileViews
   include Reports::Signups
-  include Reports::StaffLogins
+  include Reports::AdminLogins
   include Reports::StorageStats
   include Reports::SuspiciousLogins
   include Reports::SystemPrivateMessages

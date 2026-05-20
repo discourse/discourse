@@ -267,7 +267,6 @@ sv:
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
     not_found_template_link: |
       <p>Denna inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>
-    existing_user_cannot_redeem: "Denna inbjudan kan inte lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig."
     existing_user_already_redemeed: "Du har redan löst in den här inbjudningslänken."
     user_exists: "Det finns ingen anledning att bjuda in <b>%{email}</b>, de har redan ett konto!"
     invite_exists: "Du har redan bjudit in <b>%{email}</b>."
@@ -326,7 +325,13 @@ sv:
   deleted_topic: "Hoppsan! Detta ämne har tagits bort och är inte längre tillgängligt."
   delete_topic_failed: "Det uppstod ett fel när det ämnet skulle tas bort. Kontakta webbplatsens administratör."
   reading_time: "Lästid"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} min 🕑"
   likes: "Gillningar"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Hoppsan! Du har redan utfört den här åtgärden. Kan du försöka uppdatera sidan?"
   too_many_replies:
     one: "Tyvärr är nya användare tillfälligt begränsade till %{count} svar i samma ämne."
@@ -481,6 +486,7 @@ sv:
       admins: "administratörer"
       moderators: "moderatorer"
       staff: "personal"
+      anonymous: "anonym"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -655,7 +661,6 @@ sv:
       one: "%{count} gillning"
       other: "%{count} gillningar"
     cannot_permanently_delete:
-      many_posts: "Det här ämnet har återskapade inlägg. Radera dem permanent innan du raderar ämnet permanent."
       wait_or_different_admin: "Du måste vänta %{time_left} innan du tar bort detta inlägg permanent eller så måste en annan administratör göra det."
   rate_limiter:
     slow_down: "Du har utfört den här åtgärden för många gånger, försök igen senare."
@@ -1250,6 +1255,8 @@ sv:
       xaxis: "Dag"
     page_view_logged_in_browser_reqs:
       xaxis: "Dag"
+    page_view_embed_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrund"
       xaxis: "Dag"
@@ -1307,7 +1314,7 @@ sv:
         os: Operativsystem
         login_time: Inloggningstid
       description: "Detaljer om nya inloggningar som skiljer sig misstänksamt från tidigare inloggningar."
-    staff_logins:
+    admin_logins:
       title: "Administratörsinloggningar"
       labels:
         user: Användare
@@ -1470,7 +1477,6 @@ sv:
     opengraph_image: "Standard Open Graph bild, används när sidan inte har någon annan lämplig bild. Om detta lämnas tomt används large_icon."
     x_summary_large_image: "Twitter-kortets 'summary large image' (bör vara minst 280 i bredd och minst 150 i höjd, kan inte vara .svg). Om den lämnas tom skapas istället vanlig metadata för kort med hjälp av opengraph_image, så länge den inte också är en .svg"
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specificeras här måste ha en SPF-, DKIM- och reverse PTR-post korrekt inställd för att e-post ska levereras."
-    email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Ger mer information till användarna om varför de inte kan komma åt ett visst ämne. Notera: Det här är mindre säkert eftersom användare vet om att en URL länkar till ett giltigt ämne."
     force_https: "Tvinga din webbplats att endast använda HTTPS. VARNING: bocka INTE i det här innan du kan verifiera att HTTPS verkligen fungerar överallt! Har du kontrollerat din CDN, alla sociala inloggningar och alla externa logotyper/beroenden för att säkerställa att de alla också är HTTPS-kompatibla?"
     summary_score_threshold: "Minsta poäng för att ett inlägg ska inkluderas i 'Sammanfatta det här ämnet'"
@@ -1839,7 +1845,6 @@ sv:
     pop3_polling_delete_from_server: "Ta bort e-postmeddelanden från servern. NOTERA! Om du inaktiverar detta bör du rensa din inkorg manuellt"
     log_mail_processing_failures: "Logga alla behandlingsfel för e-post till <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Tillåt användare att lägga upp nya ämnen via e-post. När du har aktiverat den här inställningen kan du konfigurera inkommande e-postadresser för grupper och kategorier."
-    email_in_authserv_id: "Identifieraren för tjänsten som utför autentiseringskontroller av inkommande e-postmeddelanden. Se <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> för instruktioner om hur du konfigurerar detta."
     enable_smtp: "Aktivera SMTP för att skicka aviseringar för gruppmeddelanden."
     email_prefix: "[label] används i ämnesraden för e-post. Om ej ifylld sätts standardrubriken 'title'."
     email_site_title: "Webbplatsens titel som används som avsändare för e-post från webbplatsen. Om ej ifylld sätts standardtiteln 'title'. Använd det alternativet om din titel innehåller tecken som inte tillåts i e-posts avsändarsträngar."
@@ -2020,9 +2025,7 @@ sv:
     share_quote_visibility: "Avgör när du ska visa citatdelningsknappar: aldrig, endast till anonyma användare eller för alla användare. "
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
-    use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
-    splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
     default_navigation_menu_categories: "Valda kategorier visas som standard under navigeringsmenyns sektion Kategorier."
     default_navigation_menu_tags: "Valda taggar visas som standard under navigeringsmenyns sektion Taggar."
     page_loading_indicator: "Konfigurera laddningsindikatorn som visas under sidnavigeringar i Discourse. 'Spinnare' är en indikator som tar upp hela sidan. 'Skjutreglage' visar ett smalt fält högst upp på skärmen."
@@ -2212,7 +2215,6 @@ sv:
     not_available: "Inte tillgänglig. Testa %{suggestion}?"
     something_already_taken: "Något gick fel. Kanske har användarnamnet eller e-postadressen redan registrerats. Testa Glömt lösenord-länken."
     omniauth_error_unknown: "Något gick fel med din inloggning, vi ber dig försöka igen."
-    omniauth_confirm_title: "Logga in genom %{provider}"
     omniauth_confirm_button: "Fortsätt"
     authenticator_error_no_valid_email: "Det tillåts inga e-postadresser som är kopplade till %{account}. Du kan behöva konfigurera ditt konto med en annan e-postadress."
     new_registrations_disabled: "Nya kontoregistreringar är för närvarande inte tillåtna."
@@ -2687,7 +2689,6 @@ sv:
       text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas. \n\nDitt svarsmeddelande skickades från en blockerad e-postadress. Försök skicka meddelandet från en annan e-postadress, eller [kontakta personal](%{base_url}/about).\n"
     email_reject_not_allowed_email:
       title: "E-posten avslås, ej tillåten e-post"
-      subject_template: "[%{email_prefix}] E-postfel -- Blockerad e-post"
       text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas. \n\nDitt svarsmeddelande skickades från en blockerad e-postadress. Försök skicka meddelandet från en annan e-postadress, eller [kontakta personal](%{base_url}/about). \n"
     email_reject_inactive_user:
       title: "E-posten avslås, inaktiverad användare"
@@ -2840,7 +2841,6 @@ sv:
         Ditt konto har inte rättigheter att svara på ämnet. Om du tror att det här är ett misstag, [kontakta personal](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-posten avslås; svar på sammanfattning"
-      subject_template: "[%{email_prefix}] E-postfel -- Svar på sammanfattning"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
@@ -2923,7 +2923,6 @@ sv:
       text_body_template: "Inställningen `download_remote_images_to_local` har inaktiverats eftersom diskutrymmet har nått sin övre gräns."
     new_user_of_the_month:
       title: "Du är Månadens nya användare!"
-      subject_template: "Grattis, du har tilldelats utmärkelsen ** Månadens nya användare för %{month_year}**. : Trofén:\n\nDenna utmärkelse beviljas endast till två nya användare per månad och den kommer att visas permanent på [sidan för utmärkelser] (%{url}).\n\nDu har snabbt blivit en värdefull medlem i vår gemenskap. Tack för att du gick med och fortsätt med det fantastiska arbetet!"
       text_body_template: |
         Grattis, du har tilldelats utmärkelsen ** Månadens nya användare för %{month_year}**. :trophy:
 
@@ -3183,6 +3182,7 @@ sv:
     account_exists:
       title: "Konto finns redan"
       subject_template: "[%{email_prefix}] Konto finns redan"
+      subject_template_improved: "Konto finns redan"
       text_body_template: |
         Du försökte precis skapa ett konto hos %{site_name} eller försökte ändra e-postmeddelandet till ett konto för %{email}. Det finns dock redan ett konto för %{email}.
 
@@ -3194,6 +3194,7 @@ sv:
     account_second_factor_disabled:
       title: "Tvåfaktorsautentisering inaktiverad"
       subject_template: "[%{email_prefix}] Tvåfaktorsautentisering inaktiverad"
+      subject_template_improved: "Tvåfaktorsautentisering inaktiverad"
     digest:
       since_last_visit: "Sedan ditt senaste besök"
       new_topics: "Nya ämnen"
@@ -3206,6 +3207,7 @@ sv:
       popular_posts: "Populära inlägg"
       more_new: "Nytt för er"
       subject_template: "[%{email_prefix}] Sammanfattning"
+      subject_template_improved: "Sammanfattning"
       unsubscribe: "Den här sammanfattningen skickas från %{site_link} när vi inte har sett dig på ett tag. Ändra %{email_preferences_link}, eller %{unsubscribe_link} för att avprenumerera."
       your_email_settings: "dina e-postinställningar"
       click_here: "klicka här"
@@ -3224,18 +3226,18 @@ sv:
       title: "Logga in via länk"
       preview: "Logga in via länk."
       subject_template: "[%{email_prefix}] Logga in via länk"
+      subject_template_improved: "Logga in via länk"
       text_body_template: "Här är din länk för att logga in hos [%{site_name}](%{base_url}). \n\nOm du inte begärde denna länk kan du utan vidare ignorera detta e-postmeddelande. \n\nKlicka på följande länk för att logga in: \n%{base_url}/session/email-login/%{email_token}\n"
     set_password:
       title: "Välj lösenord"
-      subject_template: "[%{email_prefix}] Ange lösenord"
       text_body_template: "Någon har begärt att lägga till ett lösenord för ditt konto hos [%{site_name}](%{base_url}). Du kan också logga in genom att använda någon av våra alternativa onlinetjänster (Google eller Facebook, etc) som är kopplat till din validerade e-postadress. \n\nOm du inte gjorde denna begäran så kan du utan vidare ignorera det här e-postmeddelandet.\n\nFölj nedanstående länk för att välja ett nytt lösenord:\n%{base_url}/u/password-reset/%{email_token}\n"
     admin_login:
       title: "Administratörsinloggning"
       subject_template: "[%{email_prefix}] Logga in"
+      subject_template_improved: "Inloggning"
       text_body_template: "Någon bad om att få logga in på ditt konto hos [%{site_name}](%{base_url}). \n\nOm det inte var på din begäran kan du utan vidare ignorera detta e-postmeddelande. \n\nKlicka på följande länk för att logga in: \n%{base_url}/session/email-login/%{email_token}\n"
     account_created:
       title: "Konto skapat"
-      subject_template: "[%{email_prefix}] Ditt nya konto"
       text_body_template: "Ett nytt konto har skapats för dig på %{site_name}\n\nKlicka på följande länk för att välja ett nytt lösenord för ditt nya konto: \n%{base_url}/u/password-reset/%{email_token}\n"
     confirm_new_email:
       title: "Bekräfta den nya e-postadressen"
@@ -3332,7 +3334,6 @@ sv:
         Om länken ovan inte är klickbar, försök kopiera och klistra in den i adressfältet i din webbläsare.
     suspicious_login:
       title: "Ny inloggningsvarning"
-      subject_template: "[%{site_name}] Ny inloggning från %{location}"
       text_body_template: "Hej, \n\nVi noterade en inloggning från en enhet eller plats som du vanligtvis inte använder. Var det du?\n\n - Plats: %{location} (%{client_ip})\n - Webbläsare: %{browser}\n - Enhet: %{device} – %{os}\n\nOm det var du, toppen! Du behöver inte göra något mer. \n\nOm det inte var du, ber vi dig [granska dina befintliga sessioner](%{base_url}/my/preferences/security) samt överväga att ändra ditt lösenord.\n"
     post_approved:
       title: "Ditt inlägg godkändes"
@@ -3976,7 +3977,6 @@ sv:
       restricted_to:
         one: '"%{tag_name}" är begränsad till kategorin %{category_names}'
         other: '"%{tag_name}" är begränsad till följande kategorier: %{category_names}'
-      synonym: 'Synonymer tillåts inte. Använd "%{tag_name}" istället.'
       has_synonyms: '"%{tag_name}" kan inte användas eftersom den har synonymer.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Taggen "%{tags}" kan inte användas i kategorin "%{category}". Ta bort den.'

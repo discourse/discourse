@@ -405,10 +405,10 @@ class UserAction < ActiveRecord::Base
 
       current_user_id = -2
       current_user_id = guardian.user.id if guardian.user
-      builder.where(
-        "NOT COALESCE(p.hidden, false) OR p.user_id = :current_user_id",
-        current_user_id: current_user_id,
-      )
+      builder.where(<<~SQL, current_user_id: current_user_id)
+        NOT COALESCE(p.hidden, p2.hidden, false) OR
+        CASE WHEN p.id IS NULL THEN p2.user_id ELSE p.user_id END = :current_user_id
+      SQL
     end
 
     visible_post_types = Topic.visible_post_types(guardian.user)
@@ -417,10 +417,13 @@ class UserAction < ActiveRecord::Base
       visible_post_types: visible_post_types,
     )
 
-    builder.where("t.visible") if guardian.user&.id != user_id && !guardian.is_staff?
+    if !guardian.is_staff? && (guardian.user.nil? || guardian.user.id != user_id)
+      builder.where("t.visible")
+    end
 
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)
     filter_categories(builder, guardian)
+    filter_ignored_users(builder, guardian)
   end
 
   def self.filter_private_messages(builder, user_id, guardian, ignore_private_messages = false)
@@ -467,6 +470,20 @@ class UserAction < ActiveRecord::Base
     builder
   end
 
+  def self.filter_ignored_users(builder, guardian)
+    return unless guardian&.user
+
+    builder.where(<<~SQL, current_user_id: guardian.user.id)
+      NOT EXISTS (
+        SELECT 1 FROM ignored_users ig
+        INNER JOIN users iu ON iu.id = ig.ignored_user_id
+        WHERE ig.user_id = :current_user_id
+          AND ig.ignored_user_id = a.acting_user_id
+          AND ig.ignored_user_id <> :current_user_id
+      )
+    SQL
+  end
+
   def self.require_parameters(data, *params)
     params.each { |p| raise Discourse::InvalidParameters.new(p) if data[p].nil? }
   end
@@ -478,13 +495,13 @@ end
 #
 #  id              :integer          not null, primary key
 #  action_type     :integer          not null
-#  user_id         :integer          not null
-#  target_topic_id :integer
-#  target_post_id  :integer
-#  target_user_id  :integer
-#  acting_user_id  :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  acting_user_id  :integer
+#  target_post_id  :integer
+#  target_topic_id :integer
+#  target_user_id  :integer
+#  user_id         :integer          not null
 #
 # Indexes
 #

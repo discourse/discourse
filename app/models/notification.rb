@@ -11,6 +11,11 @@ class Notification < ActiveRecord::Base
 
   MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS = 24
 
+  # Bucket key used by nested-topic :replied consolidation for replies
+  # to the topic root (post 1) and for posts with no parent. Frontend
+  # mirror: TOPIC_ROOT_BUCKET in lib/notification-types/replied.js.
+  TOPIC_ROOT_BUCKET = 1
+
   validates :data, presence: true
   validates :notification_type, presence: true
 
@@ -163,11 +168,13 @@ class Notification < ActiveRecord::Base
         chat_watched_thread: 40,
         upcoming_change_available: 41,
         upcoming_change_automatically_promoted: 42,
+        boost: 43, # Used by https://github.com/discourse/discourse-boosts
+        suggested_edit_created: 44, # Used by https://github.com/discourse/discourse/tree/main/plugins/discourse-suggested-edits
+        suggested_edit_accepted: 45, # Used by https://github.com/discourse/discourse/tree/main/plugins/discourse-suggested-edits
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
         circles_activity: 900, # Used by https://github.com/discourse/discourse-circles
-        boost: 43, # Used by https://github.com/discourse/discourse-boosts
       )
   end
 
@@ -280,7 +287,10 @@ class Notification < ActiveRecord::Base
   end
 
   def url
-    topic.presence&.relative_url(post_number)
+    return if topic.blank?
+    return consolidated_nested_replied_url if consolidated_nested_replied?
+
+    topic.relative_url(post_number)
   end
 
   def post
@@ -419,6 +429,20 @@ class Notification < ActiveRecord::Base
 
   protected
 
+  # We build /n/ directly here rather than letting /t/ redirect because
+  # the redirect strips the query string we need (sort, collapse_replies).
+  def consolidated_nested_replied?
+    notification_type == Notification.types[:replied] && data_hash["consolidated_count"].to_i > 1 &&
+      data_hash["reply_to_post_number"].present?
+  end
+
+  def consolidated_nested_replied_url
+    bucket = data_hash["reply_to_post_number"].to_i
+    slug_segment = topic.slug.present? ? "/#{topic.slug}" : ""
+    bucket_segment = bucket > TOPIC_ROOT_BUCKET ? "/#{bucket}" : ""
+    "#{Discourse.base_path}/n#{slug_segment}/#{topic.id}#{bucket_segment}?sort=new&collapse_replies=true"
+  end
+
   def refresh_notification_count
     User.find_by(id: user_id)&.publish_notifications_state if user_id
   end
@@ -438,17 +462,17 @@ end
 #
 # Table name: notifications
 #
-#  notification_type :integer          not null
-#  user_id           :integer          not null
+#  id                :bigint           not null, primary key
 #  data              :string(1000)     not null
+#  high_priority     :boolean          default(FALSE), not null
+#  notification_type :integer          not null
+#  post_number       :integer
 #  read              :boolean          default(FALSE), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  topic_id          :integer
-#  post_number       :integer
 #  post_action_id    :integer
-#  high_priority     :boolean          default(FALSE), not null
-#  id                :bigint           not null, primary key
+#  topic_id          :integer
+#  user_id           :integer          not null
 #
 # Indexes
 #

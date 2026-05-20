@@ -21,7 +21,7 @@ RSpec.describe "uploads" do
       parameter name: :params, in: :body, schema: expected_request_schema
 
       let(:params) do
-        { "type" => "avatar", "user_id" => admin.id, "synchronous" => true, "file" => logo }
+        { "upload_type" => "avatar", "user_id" => admin.id, "synchronous" => true, "file" => logo }
       end
 
       produces "application/json"
@@ -29,9 +29,16 @@ RSpec.describe "uploads" do
         expected_response_schema = load_spec_schema("upload_create_response")
         schema(expected_response_schema)
 
-        # Skipping this test for now until https://github.com/rswag/rswag/issues/348
-        # is resolved. This still allows the docs to be generated for this endpoint though.
-        xit
+        # rswag's submit_request does not correctly serialize multipart/form-data
+        # from an `in: :body` parameter (see rswag/rswag#348), so we issue the
+        # request manually and validate only the response against the schema.
+        it "returns a valid response" do
+          post "/uploads.json", params: params
+          expect(response.status).to eq(200)
+
+          schemer = JSONSchemer.schema(expected_response_schema)
+          expect(schemer.valid?(JSON.parse(response.body))).to eq(true)
+        end
       end
     end
   end

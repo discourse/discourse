@@ -1,11 +1,11 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
+import { tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { empty, reads } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
 import {
   addUniqueValueToArray,
   removeValueFromArray,
@@ -14,12 +14,11 @@ import {
 import { makeArray } from "discourse/lib/helpers";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
 
 @classNames("value-list")
 export default class ValueList extends Component {
   @autoTrackedArray collection = null;
-
-  @empty("newValue") inputInvalid;
 
   inputDelimiter = null;
   inputType = null;
@@ -27,7 +26,24 @@ export default class ValueList extends Component {
   values = null;
   onChange = null;
 
-  @reads("addKey") noneKey;
+  @tracked _noneKeyOverride;
+
+  @computed("newValue")
+  get inputInvalid() {
+    return isEmpty(this.newValue);
+  }
+
+  @computed("addKey")
+  get noneKey() {
+    if (this._noneKeyOverride !== undefined) {
+      return this._noneKeyOverride;
+    }
+    return this.addKey;
+  }
+
+  set noneKey(value) {
+    this._noneKeyOverride = value;
+  }
 
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);

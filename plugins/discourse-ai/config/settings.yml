@@ -310,6 +310,13 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/bot"
+  enable_ai_bot_starred_conversations:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
   ai_bot_enabled_llms:
     default: ""
     client: true
@@ -354,6 +361,14 @@ discourse_ai:
     default: ""
     secret: true
     area: "ai-features/bot"
+  ai_bot_enable_docked_composer:
+    default: false
+    hidden: true
+    client: true
+    area: "ai-features/bot"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
   ai_discover_enabled:
     default: false
     client: true
@@ -481,6 +496,13 @@ discourse_ai:
     min: 0
     max: 20000
     client: false
+    area: "ai-features/translation"
+
+  ai_translation_backfill_parallel_jobs:
+    default: 1
+    min: 1
+    max: 10
+    hidden: true
     area: "ai-features/translation"
 
   ai_translation_verbose_logs:

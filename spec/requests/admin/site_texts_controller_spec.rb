@@ -335,6 +335,11 @@ RSpec.describe Admin::SiteTextsController do
         expect(response.status).to eq(200)
         returned_ids = response.parsed_body["site_texts"].map { |t| t["id"] }
         expect((returned_ids & Admin::SiteTextsController::RESTRICTED_KEYS.to_a)).to be_empty
+
+        get "/admin/customize/site_texts.json", params: { q: "powered_by", locale: }
+        expect(response.status).to eq(200)
+        returned_ids = response.parsed_body["site_texts"].map { |t| t["id"] }
+        expect(returned_ids).not_to include("js.powered_by_discourse")
       end
     end
 
@@ -967,7 +972,7 @@ RSpec.describe Admin::SiteTextsController do
             I18n.t("staff_category_name", locale: :de),
           )
           expect(Topic.find(SiteSetting.guidelines_topic_id).title).to eq(
-            I18n.t("guidelines_topic.title", locale: :de),
+            I18n.t("guidelines_topic.guidelines_title", locale: :de),
           )
         end
       end

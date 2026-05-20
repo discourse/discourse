@@ -120,14 +120,14 @@ end
 # Table name: watched_words
 #
 #  id                    :integer          not null, primary key
-#  word                  :string           not null
 #  action                :integer          not null
+#  case_sensitive        :boolean          default(FALSE), not null
+#  html                  :boolean          default(FALSE), not null
+#  replacement           :string
+#  word                  :string           not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  replacement           :string
-#  case_sensitive        :boolean          default(FALSE), not null
 #  watched_word_group_id :bigint
-#  html                  :boolean          default(FALSE), not null
 #
 # Indexes
 #

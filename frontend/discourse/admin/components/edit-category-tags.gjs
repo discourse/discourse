@@ -1,20 +1,31 @@
 import { Input } from "@ember/component";
 import { array, fn, hash } from "@ember/helper";
-import { action, set } from "@ember/object";
-import { and, empty } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { isEmpty } from "@ember/utils";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategoryTags extends buildCategoryPanel("tags") {
-  @empty("category.allowed_tags") allowedTagsEmpty;
-  @empty("category.allowed_tag_groups") allowedTagGroupsEmpty;
-  @and("allowedTagsEmpty", "allowedTagGroupsEmpty") disableAllowGlobalTags;
+  @computed("category.allowed_tags.length")
+  get allowedTagsEmpty() {
+    return isEmpty(this.category?.allowed_tags);
+  }
+
+  @computed("category.allowed_tag_groups.length")
+  get allowedTagGroupsEmpty() {
+    return isEmpty(this.category?.allowed_tag_groups);
+  }
+
+  @computed("allowedTagsEmpty", "allowedTagGroupsEmpty")
+  get disableAllowGlobalTags() {
+    return this.allowedTagsEmpty && this.allowedTagGroupsEmpty;
+  }
 
   @action
   onTagGroupChange(rtg, valueArray) {
@@ -46,7 +57,7 @@ export default class EditCategoryTags extends buildCategoryPanel("tags") {
       <label for="category-minimum-tags">
         {{i18n "category.minimum_required_tags"}}
       </label>
-      <TextField
+      <DTextField
         @value={{this.category.minimum_required_tags}}
         @id="category-minimum-tags"
         @type="number"
@@ -117,7 +128,7 @@ export default class EditCategoryTags extends buildCategoryPanel("tags") {
       <section class="field-item required-tag-groups">
         {{#each this.category.required_tag_groups as |rtg|}}
           <div class="required-tag-group-row">
-            <TextField @value={{rtg.min_count}} @type="number" @min="1" />
+            <DTextField @value={{rtg.min_count}} @type="number" @min="1" />
             <TagGroupChooser
               @tagGroups={{if rtg.name (array rtg.name) (array)}}
               @onChange={{fn this.onTagGroupChange rtg}}

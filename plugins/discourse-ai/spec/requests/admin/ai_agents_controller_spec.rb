@@ -31,7 +31,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       get "/admin/plugins/discourse-ai/ai-agents.json"
       tools = response.parsed_body["meta"]["tools"]
       tool_ids = tools.map { |t| t["id"] }
-      expect(tool_ids).to include("ValidateSql")
       expect(tool_ids).to include("RunSql")
     end
 
@@ -202,17 +201,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           SiteSetting.default_locale,
           "discourse_ai.ai_bot.agents.general.description",
           "Général Description",
-        )
-      end
-
-      after do
-        TranslationOverride.revert!(
-          SiteSetting.default_locale,
-          "discourse_ai.ai_bot.agents.general.name",
-        )
-        TranslationOverride.revert!(
-          SiteSetting.default_locale,
-          "discourse_ai.ai_bot.agents.general.description",
         )
       end
 

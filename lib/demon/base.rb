@@ -225,18 +225,30 @@ class Demon::Base
 
   def monitor_parent
     Thread.new do
-      while true
-        begin
-          unless alive?(@parent_pid)
-            Process.kill "TERM", Process.pid
-            sleep 10
-            Process.kill "KILL", Process.pid
-          end
-        rescue => e
-          log("URGENT monitoring thread had an exception #{e}", level: :error)
-        end
+      loop do
+        monitor_parent_tick
         sleep 1
       end
+    end
+  end
+
+  def monitor_parent_tick
+    if !alive?(@parent_pid)
+      Process.kill "TERM", Process.pid
+      sleep 10
+      Process.kill "KILL", Process.pid
+    end
+  rescue Exception => e
+    log_error(e)
+  end
+
+  def log_error(e)
+    log("URGENT monitoring thread had an exception #{e.class}: #{e.message}", level: :error)
+  rescue Exception
+    # Fall back to STDERR if the logger is broken
+    begin
+      $stderr.puts("[#{self.class}##{Process.pid}] monitor-parent: #{e.class}: #{e.message}")
+    rescue StandardError
     end
   end
 

@@ -15,13 +15,20 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   padding-bottom: 0.2rem;
 }
 
-html.ios-device.composer-open body {
+html.ios-device:not(.ipados-device:not(.keyboard-visible)).composer-open body {
   overflow: hidden;
 }
 
 html.ios-device.has-full-page-chat body {
   position: fixed;
-  overflow: scroll;
+  overflow: hidden;
+}
+
+html.ios-device.has-full-page-chat body #main-outlet {
+  .c-routes.--channel-info {
+    @include chat-height;
+    overflow-y: auto;
+  }
 }
 
 .uppy-is-drag-over .chat-composer .drop-a-file {

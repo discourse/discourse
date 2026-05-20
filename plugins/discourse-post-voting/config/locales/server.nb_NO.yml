@@ -8,8 +8,6 @@ nb_NO:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Ingen handling"
         agree_and_suspend:
           description: "Si deg enig med rapportering og steng ute bruker. "
         agree_and_silence:

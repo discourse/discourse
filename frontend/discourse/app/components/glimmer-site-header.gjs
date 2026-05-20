@@ -6,7 +6,6 @@ import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
-import concatClass from "discourse/helpers/concat-class";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -17,7 +16,8 @@ import {
   shouldCloseMenu,
 } from "discourse/lib/swipe-events";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import swipe from "discourse/modifiers/swipe";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import Header from "./header";
 import ImpersonationNotice from "./impersonation-notice";
 
@@ -112,10 +112,11 @@ export default class GlimmerSiteHeader extends Component {
     );
 
     // Tends to be zero, but is set higher when on iPad PWA with the 'footer-navigation' at top of screen
-    const headerCssTop = parseInt(
-      window.getComputedStyle(this._headerWrap).getPropertyValue("top"),
-      10
-    );
+    const headerCssTop =
+      parseInt(
+        window.getComputedStyle(this._headerWrap).getPropertyValue("top"),
+        10
+      ) || 0;
 
     let headerWrapBottom =
       this._headerWrap.getBoundingClientRect().bottom - overscrollPx;
@@ -431,12 +432,12 @@ export default class GlimmerSiteHeader extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         (unless this.slideInMode "drop-down-mode")
         "d-header-wrap"
       }}
       {{didInsert this.setupHeader}}
-      {{swipe
+      {{dSwipe
         onDidStartSwipe=this.onSwipeStart
         onDidEndSwipe=this.onSwipeEnd
         onDidCancelSwipe=this.onSwipeCancel

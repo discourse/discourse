@@ -249,7 +249,11 @@ vi:
   deleted_topic: "Ôi! Chủ đề này đã bị xóa và không còn khả dụng nữa."
   delete_topic_failed: "Đã xảy ra lỗi khi xóa chủ đề đó. Vui lòng liên hệ với quản trị viên của trang web."
   reading_time: "Thời gian đọc"
+  reading_time_minutes:
+    other: "%{count} phút 🕑"
   likes: "Lượt Thích"
+  likes_count:
+    other: "%{count} ❤"
   too_many_replies:
     other: "Xin lỗi bạn, người dùng mới tạm thời bị giới hạn với %{count} câu trả lời trong một chủ đề."
   max_consecutive_replies:
@@ -385,6 +389,7 @@ vi:
       admins: "quản trị"
       moderators: "điều hành"
       staff: "nhân viên"
+      anonymous: "ẩn danh"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -934,6 +939,8 @@ vi:
       xaxis: "Ngày"
     page_view_logged_in_browser_reqs:
       xaxis: "Ngày"
+    page_view_embed_reqs:
+      xaxis: "Ngày"
     http_background_reqs:
       title: "Hình nền"
       xaxis: "Ngày"
@@ -982,10 +989,10 @@ vi:
         user: Thành viên
         location: Vị trí
       description: "Chi tiết về thông tin đăng nhập mới khác biệt đáng ngờ với thông tin đăng nhập trước đó."
-    staff_logins:
+    admin_logins:
       title: "Đăng nhập quản trị viên"
       labels:
-        user: Thành viên
+        user: Người dùng
         location: Vị trí
         login_at: Đăng nhập lúc
       description: "Danh sách thời gian đăng nhập của quản trị viên với các địa điểm."
@@ -1256,7 +1263,6 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     pop3_polling_delete_from_server: "Xóa email khỏi máy chủ. LƯU Ý: Nếu bạn tắt tính năng này, bạn nên dọn dẹp hộp thư đến của mình theo cách thủ công"
-    email_in_authserv_id: "Mã định danh của dịch vụ đang thực hiện kiểm tra xác thực đối với các email đến. Xem <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> để biết hướng dẫn về cách định cấu hình."
     email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
     email_site_title: "Tên website được sử dụng là tên người gửi email, mặc định là 'title' nếu không thiết lập. Nếu 'title' có chứa ký tự không được phép trong chuỗi người gửi email, sử dụng thiết lập này."
     minimum_topics_similar: "Có bao nhiêu chủ đề cần phải có trước các chủ đề tương tự được giới thiệu khi soạn thảo chủ đề mới."
@@ -1520,7 +1526,6 @@ vi:
     not_available: "Không có sẵn. Thử %{suggestion}?"
     something_already_taken: "Có lỗi xảy ra, tên đăng nhập hoặc email đã được đăng ký. Thử sử dụng chức năng quên mật khẩu."
     omniauth_error_unknown: "Đã xảy ra lỗi khi xử lý thông tin đăng nhập của bạn, vui lòng thử lại."
-    omniauth_confirm_title: "Đăng nhập bằng %{provider}"
     omniauth_confirm_button: "Tiếp tục"
     authenticator_error_no_valid_email: "Không có địa chỉ email nào được liên kết với %{account} được phép. Bạn có thể cần phải định cấu hình tài khoản của mình bằng một địa chỉ email khác."
     new_registrations_disabled: "Đăng ký tài khoản mới không được cho phép tại thời điểm này."
@@ -1812,7 +1817,6 @@ vi:
       text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
     new_user_of_the_month:
       title: "Bạn là thành viên mới của tháng!"
-      subject_template: "Bạn là một thành viên mới của tháng!"
       text_body_template: |
         Xin chúc mừng, bạn đã giành được giải thưởng ** Người dùng mới của tháng với giá %{month_year}**. :trophy:
 
@@ -1947,6 +1951,7 @@ vi:
     account_second_factor_disabled:
       title: "Xác thực hai yếu tố bị vô hiệu hóa"
       subject_template: "[%{email_prefix}] Đã tắt Xác thực hai yếu tố"
+      subject_template_improved: "Xác thực hai yếu tố bị vô hiệu hóa"
     digest:
       since_last_visit: "Kể từ lần truy cập cuối của bạn"
       new_topics: "Chủ đề mới"
@@ -1955,6 +1960,7 @@ vi:
       popular_topics: "Những chủ đề phổ biến"
       join_the_discussion: "Đọc Tiếp"
       more_new: "Mới cho bạn"
+      subject_template_improved: "Tóm tắt"
       unsubscribe: "Tóm tắt này được gửi từ %{site_link} khi chúng tôi không gặp bạn trong một thời gian. Thay đổi %{email_preferences_link}hoặc %{unsubscribe_link} để hủy đăng ký."
       click_here: "bấm vào đây"
     forgot_password:
@@ -1968,6 +1974,8 @@ vi:
 
         Nhấp vào liên kết sau để chọn mật khẩu:
         %{base_url}/u/password-reset/%{email_token}
+    admin_login:
+      subject_template_improved: "Đăng nhập"
     confirm_new_email_via_admin:
       text_body_template: |
         Xác nhận địa chỉ email mới của bạn cho %{site_name} bằng cách nhấp vào liên kết sau:
@@ -1985,8 +1993,6 @@ vi:
         %{new_email}
     signup_after_approval:
       subject_template: "Bạn đã được kiểm duyệt ở %{site_name}!"
-    suspicious_login:
-      subject_template: "[%{site_name}] Đăng nhập mới từ %{location}"
     post_approved:
       title: "Tút của bạn đã được phê duyệt"
       subject_template: "[%{site_name}] Tút của bạn đã được phê duyệt"

@@ -3,7 +3,13 @@
 module DiscourseSolved::TopicExtension
   extend ActiveSupport::Concern
 
-  prepended { has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy }
+  prepended do
+    has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy
+    has_many :shared_issues,
+             class_name: "DiscourseSolved::SharedIssue",
+             foreign_key: :topic_id,
+             dependent: :delete_all
+  end
 
   def solved_auto_close_hours
     hours = category&.solved_auto_close_hours || 0
@@ -23,6 +29,7 @@ module DiscourseSolved::TopicExtension
       post_number: answer_post.post_number,
       username: answer_post_user.username,
       name: answer_post_user.name,
+      avatar_template: answer_post_user.avatar_template,
       excerpt:,
     }
 

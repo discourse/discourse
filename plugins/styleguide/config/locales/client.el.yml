@@ -7,6 +7,8 @@
 el:
   js:
     styleguide:
+      categories:
+        syntax: Σύνταξη
       sections:
         bem:
           title: "BEM"
@@ -52,6 +54,8 @@ el:
           title: "Περισσότερα Θέματα"
         post_menu:
           title: "Μενού ανάρτησης"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Κενή κατάσταση"
         tooltips:

@@ -168,10 +168,10 @@ end
 # Table name: screened_ip_addresses
 #
 #  id            :integer          not null, primary key
-#  ip_address    :inet             not null
 #  action_type   :integer          not null
-#  match_count   :integer          default(0), not null
+#  ip_address    :inet             not null
 #  last_match_at :datetime
+#  match_count   :integer          default(0), not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #

@@ -1,20 +1,15 @@
 /* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { alias, not } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import List from "discourse/components/topic-list/list";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class BasicTopicList extends Component {
   @service site;
-
-  @alias("topicList.loadingMore") loadingMore;
-
-  @not("loaded") loading;
 
   init() {
     super.init(...arguments);
@@ -22,6 +17,20 @@ export default class BasicTopicList extends Component {
     if (topicList) {
       this._initFromTopicList(topicList);
     }
+  }
+
+  @computed("topicList.loadingMore")
+  get loadingMore() {
+    return this.topicList?.loadingMore;
+  }
+
+  set loadingMore(value) {
+    set(this, "topicList.loadingMore", value);
+  }
+
+  @computed("loaded")
+  get loading() {
+    return !this.loaded;
   }
 
   @computed("topicList.loaded")
@@ -91,7 +100,7 @@ export default class BasicTopicList extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{this.loading}}>
+    <DConditionalLoadingSpinner @condition={{this.loading}}>
       {{#if this.topics}}
         <List
           @showPosters={{this.showPosters}}
@@ -114,6 +123,6 @@ export default class BasicTopicList extends Component {
           </div>
         {{/unless}}
       {{/if}}
-    </ConditionalLoadingSpinner>
+    </DConditionalLoadingSpinner>
   </template>
 }

@@ -4,7 +4,15 @@ import { i18n } from "discourse-i18n";
 
 export default class FeatureVotingSettingsUpsert extends Component {
   static shouldRender(args, context) {
-    return context.siteSettings.enable_simplified_category_creation;
+    if (!context.siteSettings.enable_simplified_category_creation) {
+      return false;
+    }
+
+    const handledByIdeasTab =
+      args.category?.isType("ideas") &&
+      context.siteSettings.enable_ideas_category_type_setup;
+
+    return !handledByIdeasTab;
   }
 
   get enableTopicVoting() {
@@ -27,6 +35,7 @@ export default class FeatureVotingSettingsUpsert extends Component {
             @title={{i18n "topic_voting.allow_topic_voting"}}
             @onSet={{this.onToggleTopicVoting}}
             @type="checkbox"
+            @format="full"
             as |field|
           >
             <field.Control checked={{this.enableTopicVoting}} />

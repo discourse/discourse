@@ -1,21 +1,24 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { sort } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import CategoryTitleLink from "discourse/components/category-title-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import discourseTag from "discourse/helpers/discourse-tag";
+import { arraySortedByProperties } from "discourse/lib/array-tools";
 import { slugify } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class TagList extends Component {
   isPrivateMessage = false;
 
-  @sort("tags", "sortProperties") sortedTags;
+  @computed("tags", "sortProperties")
+  get sortedTags() {
+    return arraySortedByProperties(this.tags, this.sortProperties);
+  }
 
   @computed("titleKey")
   get title() {
@@ -46,7 +49,7 @@ export default class TagList extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "tags-list"
         "tag-list"
         this.categoryClass
@@ -69,7 +72,7 @@ export default class TagList extends Component {
       {{/if}}
       {{#each this.sortedTags as |tag|}}
         <div class="tag-box">
-          {{discourseTag
+          {{dDiscourseTag
             tag
             description=tag.description
             isPrivateMessage=this.isPrivateMessage
@@ -77,7 +80,7 @@ export default class TagList extends Component {
             tagsForUser=this.tagsForUser
           }}
           {{#if tag.pmOnly}}
-            {{icon "envelope"}}
+            {{dIcon "envelope"}}
           {{/if}}
           {{#if tag.totalCount}}
             <span class="tag-count">

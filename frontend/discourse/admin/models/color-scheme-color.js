@@ -1,22 +1,28 @@
 /* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { observes, on } from "@ember-decorators/object";
 import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
-import { propertyNotEqual } from "discourse/lib/computed";
+import { deepEqual } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 
 export default class ColorSchemeColor extends EmberObject {
   @tracked hex;
 
   @tracked originalHex;
+  @tracked default_hex;
 
   // Whether the current value is different than Discourse's default color scheme.
-  @propertyNotEqual("hex", "default_hex") overridden;
 
   init(object) {
     super.init(...arguments);
     this.originalHex = object.hex;
+  }
+
+  @dependentKeyCompat
+  get overridden() {
+    return !deepEqual(this.hex, this.default_hex);
   }
 
   discardColorChange() {

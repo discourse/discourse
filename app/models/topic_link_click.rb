@@ -122,11 +122,11 @@ end
 # Table name: topic_link_clicks
 #
 #  id            :integer          not null, primary key
-#  topic_link_id :integer          not null
-#  user_id       :integer
+#  ip_address    :inet
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  ip_address    :inet
+#  topic_link_id :integer          not null
+#  user_id       :integer
 #
 # Indexes
 #

@@ -341,10 +341,16 @@ RSpec.describe DiscourseAi::Agents::Agent do
       described_class.instance_variable_set(:@external_tools_by_name, nil)
     end
 
+    before do
+      # reset cache so sync runs fresh
+      reset_external_registry!
+    end
+
     after do
       DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
         entry[:value][:module_name] == :test_module
       end
+      # remove fake entries from the registry
       reset_external_registry!
     end
 

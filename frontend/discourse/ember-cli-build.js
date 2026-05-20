@@ -124,25 +124,14 @@ module.exports = function (defaults) {
     discourseRoot + "/frontend/discourse/public/assets/scripts/module-shims.js"
   );
 
-  const discoursePluginsTree = app.project
-    .findAddonByName("discourse-plugins")
-    .generatePluginsTree(app.tests);
-
   app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
-  const pluginTrees = applyTerser(discoursePluginsTree);
-
-  if (process.env.SKIP_CORE_BUILD) {
-    return pluginTrees;
-  }
-
   let extraPublicTrees = [
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     applyTerser(generateScriptsTree(app)),
-    pluginTrees,
   ];
 
   const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";
@@ -192,6 +181,7 @@ module.exports = function (defaults) {
         entry: {
           "assets/media-optimization-bundle.js": {
             import: "./static/media-optimization-bundle",
+            chunkLoading: "import-scripts",
             runtime: false,
           },
         },

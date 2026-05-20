@@ -10,6 +10,7 @@ class UserHistory < ActiveRecord::Base
   belongs_to :post
   belongs_to :topic
   belongs_to :category
+  belongs_to :reviewable, optional: true
 
   # Each value in the context should be shorter than this
   MAX_CONTEXT_LENGTH = 50_000
@@ -166,6 +167,7 @@ class UserHistory < ActiveRecord::Base
         upcoming_change_toggled: 122,
         change_site_setting_groups: 123,
         upcoming_change_available: 124,
+        notified_about_composer_education: 125,
       )
   end
 
@@ -469,22 +471,23 @@ end
 #
 #  id             :integer          not null, primary key
 #  action         :integer          not null
-#  acting_user_id :integer
-#  target_user_id :integer
+#  admin_only     :boolean          default(FALSE)
+#  context        :string
+#  custom_type    :string
 #  details        :text
+#  email          :string
+#  ip_address     :string
+#  new_value      :text
+#  previous_value :text
+#  subject        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  context        :string
-#  ip_address     :string
-#  email          :string
-#  subject        :text
-#  previous_value :text
-#  new_value      :text
-#  topic_id       :integer
-#  admin_only     :boolean          default(FALSE)
-#  post_id        :integer
-#  custom_type    :string
+#  acting_user_id :integer
 #  category_id    :integer
+#  post_id        :integer
+#  reviewable_id  :bigint
+#  target_user_id :integer
+#  topic_id       :integer
 #
 # Indexes
 #
@@ -492,6 +495,7 @@ end
 #  index_user_histories_on_action_and_id                           (action,id)
 #  index_user_histories_on_category_id                             (category_id)
 #  index_user_histories_on_post_id                                 (post_id)
+#  index_user_histories_on_reviewable_id                           (reviewable_id)
 #  index_user_histories_on_subject_and_id                          (subject,id)
 #  index_user_histories_on_target_user_id_and_id                   (target_user_id,id)
 #  index_user_histories_on_topic_id_and_target_user_id_and_action  (topic_id,target_user_id,action)

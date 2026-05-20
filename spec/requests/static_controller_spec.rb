@@ -162,9 +162,13 @@ RSpec.describe StaticController do
       it "should return the right response for /faq" do
         get "/faq"
 
+        expect(response).to redirect_to("/guidelines")
+
+        get "/guidelines"
+
         expect(response.status).to eq(200)
-        expect(response.body).to include(I18n.t("js.faq"))
-        expect(response.body).to include("<title>FAQ - Discourse</title>")
+        expect(response.body).to include(I18n.t("js.guidelines"))
+        expect(response.body).to include("<title>Guidelines - Discourse</title>")
       end
     end
 
@@ -239,23 +243,33 @@ RSpec.describe StaticController do
           get "/#{page_name}"
           expect(response).to redirect_to "/login"
         end
+      end
 
-        it "#{page_name} page loads for logged in user" do
+      it "guidelines page loads for logged in user" do
+        sign_in(Fabricate(:user))
+
+        get "/guidelines"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(I18n.t("js.guidelines"))
+      end
+
+      %w[faq rules conduct].each do |page_name|
+        it "#{page_name} page redirects to guidelines for logged in user" do
           sign_in(Fabricate(:user))
 
           get "/#{page_name}"
 
-          expect(response.status).to eq(200)
-          expect(response.body).to include(I18n.t("js.guidelines"))
+          expect(response).to redirect_to("/guidelines")
         end
       end
     end
 
     context "with crawler view" do
       it "should include correct title" do
-        get "/faq", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+        get "/guidelines", headers: { "HTTP_USER_AGENT" => "Googlebot" }
         expect(response.status).to eq(200)
-        expect(response.body).to include("<title>FAQ - Discourse</title>")
+        expect(response.body).to include("<title>Guidelines - Discourse</title>")
       end
     end
 
@@ -293,13 +307,13 @@ RSpec.describe StaticController do
             current_user&.locale == "pl" ? "test_some_other_topic_id" : "test_some_topic_id"
           end
 
-        get "/faq"
+        get "/guidelines"
 
         expect(response.status).to eq(200)
         expect(response.body).to include("Regular FAQ")
 
         sign_in(Fabricate(:user, locale: "pl"))
-        get "/faq"
+        get "/guidelines"
 
         expect(response.status).to eq(200)
         expect(response.body).to include("Polish FAQ")

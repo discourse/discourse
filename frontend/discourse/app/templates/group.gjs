@@ -1,15 +1,15 @@
 import { trustHTML } from "@ember/template";
-import AvatarFlair from "discourse/components/avatar-flair";
-import DButton from "discourse/components/d-button";
 import GroupInfo from "discourse/components/group-info";
 import GroupMembershipButton from "discourse/components/group-membership-button";
 import GroupNavigation from "discourse/components/group-navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { and, or } from "discourse/truth-helpers";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -38,7 +38,7 @@ export default <template>
           )
         }}
           <div class="group-avatar-flair">
-            <AvatarFlair
+            <DAvatarFlair
               @flairName={{@controller.model.name}}
               @flairUrl={{or
                 @controller.model.flair_icon
@@ -56,7 +56,7 @@ export default <template>
           {{#if (and @controller.canManageGroup @controller.model.automatic)}}
             <DTooltip class="group-automatic-tooltip">
               <:trigger>
-                {{icon "gear"}}
+                {{dIcon "gear"}}
                 {{i18n "admin.groups.manage.membership.automatic"}}
               </:trigger>
               <:content>

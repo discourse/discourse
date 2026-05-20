@@ -207,9 +207,6 @@ ja:
               description: "オプション。これらの機能を持つ投稿のみにトリガーを制限します"
           created: 作成
           edited: 編集
-          topics: すべてのトピック
-          personal_messages: 個人メッセージ
-          public_topics: 公開トピック (すべてのセキュリティ保護されたカテゴリを除く)
           with_images: 画像
           with_links: リンク
           with_code: コード

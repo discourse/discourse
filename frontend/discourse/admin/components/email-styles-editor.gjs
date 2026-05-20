@@ -1,19 +1,31 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class EmailStylesEditor extends Component {
   @service dialog;
 
-  @reads("fieldName") editorId;
+  @tracked _editorIdOverride;
+
+  @computed("fieldName")
+  get editorId() {
+    if (this._editorIdOverride !== undefined) {
+      return this._editorIdOverride;
+    }
+    return this.fieldName;
+  }
+
+  set editorId(value) {
+    this._editorIdOverride = value;
+  }
 
   @computed("fieldName")
   get currentEditorMode() {

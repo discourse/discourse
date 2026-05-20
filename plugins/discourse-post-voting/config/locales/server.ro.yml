@@ -8,8 +8,6 @@ ro:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Nicio acțiune"
         agree_and_suspend:
           title: "Suspendă utilizatorul"
         agree_and_silence:

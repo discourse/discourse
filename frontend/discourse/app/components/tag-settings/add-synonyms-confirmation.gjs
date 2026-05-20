@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import InterpolatedTranslation from "discourse/components/interpolated-translation";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 
 export default class AddSynonymsConfirmation extends Component {
   get synonymNames() {
@@ -12,7 +12,7 @@ export default class AddSynonymsConfirmation extends Component {
 
   <template>
     <p>
-      <InterpolatedTranslation
+      <DInterpolatedTranslation
         @key="tagging.settings.add_synonyms_confirm"
         as |Placeholder|
       >
@@ -22,7 +22,7 @@ export default class AddSynonymsConfirmation extends Component {
         <Placeholder @name="tagName">
           <b>{{this.tagName}}</b>
         </Placeholder>
-      </InterpolatedTranslation>
+      </DInterpolatedTranslation>
     </p>
   </template>
 }

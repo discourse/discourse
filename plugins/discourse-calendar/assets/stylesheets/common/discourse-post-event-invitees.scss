@@ -1,24 +1,17 @@
 .post-event-invitees-modal {
   .loading-container {
     height: 40vh;
-    overflow-y: scroll;
+    overflow-y: auto;
 
     .no-users {
+      margin-top: var(--space-4);
       text-align: center;
       font-size: var(--font-up-1);
     }
   }
 
   .invitees-type-filter {
-    margin-bottom: 9px;
-    display: flex;
-
-    .btn {
-      width: calc(100% / 3);
-      margin: 0;
-      border-radius: 0;
-      padding: 0.75em 0;
-    }
+    margin: 0 0 -1px 0;
   }
 
   .filter {
@@ -46,7 +39,6 @@
       }
 
       .user {
-        max-width: 175px;
         display: flex;
         align-items: center;
         white-space: nowrap;
@@ -73,10 +65,5 @@
         }
       }
     }
-  }
-
-  .possible-invitees {
-    margin-top: 1em;
-    background-color: var(--primary-very-low);
   }
 }

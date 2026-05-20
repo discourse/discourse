@@ -156,7 +156,7 @@ class GroupsController < ApplicationController
     group = Group.find(params[:id])
     guardian.ensure_can_edit!(group) if !guardian.can_admin_group?(group)
 
-    group_attributes = group_params(automatic: group.automatic)
+    group_attributes = group_params(automatic: group.automatic, group:)
     reset_group_email_settings_if_disabled!(group, group_attributes)
 
     categories, tags = []
@@ -415,7 +415,7 @@ class GroupsController < ApplicationController
       notify = params[:notify_users]&.to_s == "true"
 
       uniq_users = users.uniq
-      uniq_users.each { |user| add_user_to_group(group, user, notify) }
+      add_users_to_group(group, uniq_users, notify)
 
       group_ids = [group.id]
 
@@ -479,7 +479,7 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidAccess unless group.public_admission
 
     return if group.users.exists?(id: current_user.id)
-    add_user_to_group(group, current_user)
+    add_users_to_group(group, [current_user])
   end
 
   def handle_membership_request
@@ -572,23 +572,25 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new("user_ids or usernames or user_emails must be present")
     end
 
-    removed_users = []
-    skipped_users = []
+    removed_user_ids = GroupManager.new(group).remove(users.map(&:id))
+    GroupActionLogger.new(current_user, group).bulk_log_remove_users_from_group(removed_user_ids)
+
+    removed_usernames = []
+    skipped_usernames = []
 
     users.each do |user|
-      if group.remove(user)
-        removed_users << user.username
-        GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
+      if removed_user_ids.include?(user.id)
+        removed_usernames << user.username
       else
         if group.users.exclude? user
-          skipped_users << user.username
+          skipped_usernames << user.username
         else
           raise Discourse::InvalidParameters
         end
       end
     end
 
-    render json: success_json.merge!(usernames: removed_users, skipped_usernames: skipped_users)
+    render json: success_json.merge!(usernames: removed_usernames, skipped_usernames:)
   end
 
   def leave
@@ -684,12 +686,17 @@ class GroupsController < ApplicationController
   end
 
   def search
-    include_everyone = params[:include_everyone] == "true"
+    include_everyone =
+      (params[:include_everyone] == "true" || params[:include_pseudogroups] == "true")
+    include_pseudogroups = params[:include_pseudogroups] == "true"
     order = ["name"]
     groups =
-      Group.visible_groups(current_user, order, include_everyone: include_everyone).includes(
-        :flair_upload,
-      )
+      Group.visible_groups(
+        current_user,
+        order,
+        include_everyone: include_everyone,
+        include_pseudogroups: include_pseudogroups,
+      ).includes(:flair_upload)
 
     if (term = params[:term]).present?
       groups =
@@ -785,17 +792,16 @@ class GroupsController < ApplicationController
 
   private
 
-  def add_user_to_group(group, user, notify = false)
-    group.add(user)
-    GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-    group.notify_added_to_group(user) if notify
-  rescue ActiveRecord::RecordNotUnique
-    # Under concurrency, we might attempt to insert two records quickly and hit a DB
-    # constraint. In this case we can safely ignore the error and act as if the user
-    # was added to the group.
+  def add_users_to_group(group, users, notify = false)
+    user_ids = users.map(&:id)
+    added_user_ids = GroupManager.new(group).add(user_ids)
+    GroupActionLogger.new(current_user, group).bulk_log_add_users_to_group(added_user_ids)
+    if notify && added_user_ids.present?
+      Jobs.enqueue(:notify_users_added_to_group, user_ids: added_user_ids, group_id: group.id)
+    end
   end
 
-  def group_params(automatic: false)
+  def group_params(automatic: false, group: nil)
     attributes = %i[
       bio_raw
       default_notification_level
@@ -835,13 +841,16 @@ class GroupsController < ApplicationController
         :primary_group,
         :name,
         :grant_trust_level,
-        :automatic_membership_email_domains,
         :publish_read_state,
         :allow_unknown_sender_topic_replies,
       )
 
       custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
       attributes << { custom_fields: custom_fields } if custom_fields.present?
+    end
+
+    if !automatic && group && guardian.can_admin_group?(group)
+      attributes.push(:automatic_membership_email_domains)
     end
 
     if !automatic || current_user.admin

@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { TOAST } from "discourse/float-kit/lib/constants";
 import withEventValue from "discourse/helpers/with-event-value";
-import IconPicker from "discourse/select-kit/components/icon-picker";
+import DButton from "discourse/ui-kit/d-button";
+import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
@@ -86,7 +86,6 @@ export default class Toasts extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-potential-path-strings }}
     <StyleguideExample @title="Toasts service">
       <StyleguideComponent @tag="default">
         <:actions>
@@ -189,10 +188,8 @@ export default class Toasts extends Component {
           />
         </Row>
         <Row @name="[@options.data.icon]">
-          <IconPicker
-            @name="icon"
+          <DIconGridPicker
             @value={{this.icon}}
-            @options={{hash maximum=1}}
             @onChange={{fn (mut this.icon)}}
           />
         </Row>

@@ -6,9 +6,9 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { not } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class TagChooserField extends Component {
@@ -161,7 +161,7 @@ export default class TagChooserField extends Component {
         <label class="form-template-field__label">
           {{@attributes.label}}
           {{#if @validations.required}}
-            {{icon "asterisk" class="form-template-field__required-indicator"}}
+            {{dIcon "asterisk" class="form-template-field__required-indicator"}}
           {{/if}}
         </label>
       {{/if}}

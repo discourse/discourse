@@ -40,6 +40,7 @@ class UserUpdater
     email_in_reply_to
     like_notification_frequency
     notify_on_linked_posts
+    enable_upcoming_change_available_notifications
     include_tl0_in_digests
     theme_ids
     allow_private_messages
@@ -59,6 +60,7 @@ class UserUpdater
     watched_precedence_over_muted
     topics_unread_when_closed
     composition_mode
+    show_original_content
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
@@ -258,7 +260,7 @@ class UserUpdater
         )
       end
       DiscourseEvent.trigger(:within_user_updater_transaction, user, attributes)
-    rescue Addressable::URI::InvalidURIError => e
+    rescue Addressable::URI::InvalidURIError
       # Prevent 500 for crazy url input
       return saved
     end

@@ -117,3 +117,5 @@ uk:
         char_counter:
           title: "Лічильник символів"
           placeholder: "Введіть свій текст тут..."
+        segmented_control:
+          title: "Сегментний контроль (група перемикачів кнопки)"

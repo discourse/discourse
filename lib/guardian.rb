@@ -13,6 +13,7 @@ require "guardian/sidebar_guardian"
 require "guardian/staff_action_log_guardian"
 require "guardian/tag_guardian"
 require "guardian/topic_guardian"
+require "guardian/upload_guardian"
 require "guardian/user_guardian"
 require "guardian/localization_guardian"
 
@@ -32,6 +33,7 @@ class Guardian
   include StaffActionLogGuardian
   include TagGuardian
   include TopicGuardian
+  include UploadGuardian
   include UserGuardian
 
   class AnonymousUser
@@ -100,7 +102,7 @@ class Guardian
     end
 
     def in_any_groups?(group_ids)
-      false
+      group_ids.include?(Group::AUTO_GROUPS[:anonymous])
     end
   end
 

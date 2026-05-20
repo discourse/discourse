@@ -29,26 +29,13 @@ after_initialize do
 
   register_problem_check ProblemCheck::ChannelErrors
 
-  on(:site_setting_changed) do |setting_name, old_value, new_value|
-    is_enabled_setting = setting_name == :chat_integration_telegram_enabled
-    is_access_token = setting_name == :chat_integration_telegram_access_token
-
-    if (is_enabled_setting || is_access_token)
-      enabled =
-        is_enabled_setting ? new_value == true : SiteSetting.chat_integration_telegram_enabled
-
-      if enabled && SiteSetting.chat_integration_telegram_access_token.present?
-        Scheduler::Defer.later("Setup Telegram Webhook") do
-          DiscourseChatIntegration::Provider::TelegramProvider.setup_webhook
-        end
-      end
-    end
-  end
-
   on(:post_created) do |post|
     # This will run for every post, even PMs. Don't worry, they're filtered out later.
-    time = SiteSetting.chat_integration_delay_seconds.seconds
-    Jobs.enqueue_in(time, :notify_chats, post_id: post.id)
+    Jobs.enqueue_in(
+      SiteSetting.chat_integration_delay_seconds.seconds,
+      :notify_chats,
+      post_id: post.id,
+    )
   end
 
   add_admin_route "chat_integration.menu_title",

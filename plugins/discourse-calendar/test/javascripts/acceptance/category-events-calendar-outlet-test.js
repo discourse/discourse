@@ -32,64 +32,58 @@ const eventsPretender = (server, helper) => {
   });
 };
 
-acceptance(
-  "Discourse Calendar - Category Events Calendar Outlet None",
-  function (needs) {
-    needs.user();
-    needs.settings({
-      calendar_enabled: true,
-      discourse_post_event_enabled: true,
-      events_calendar_categories: "1",
-      calendar_categories: "",
-      calendar_categories_outlet: "none",
-    });
+acceptance("Category Events Calendar Outlet None", function (needs) {
+  needs.user();
+  needs.settings({
+    calendar_enabled: true,
+    discourse_post_event_enabled: true,
+    events_calendar_categories: "1",
+    calendar_categories: "",
+    calendar_categories_outlet: "none",
+  });
 
-    needs.pretender(eventsPretender);
+  needs.pretender(eventsPretender);
 
-    test("don't display calendars if outlet option is none", async function (assert) {
-      await visit("/c/bug/1");
+  test("don't display calendars if outlet option is none", async function (assert) {
+    await visit("/c/bug/1");
 
-      assert
-        .dom("#category-events-calendar")
-        .doesNotExist("Category Events calendar div does not exist");
+    assert
+      .dom("#category-events-calendar")
+      .doesNotExist("Category Events calendar div does not exist");
 
-      assert
-        .dom(".category-calendar")
-        .doesNotExist("Category calendar div does not exist");
-    });
-  }
-);
+    assert
+      .dom(".category-calendar")
+      .doesNotExist("Category calendar div does not exist");
+  });
+});
 
-acceptance(
-  "Discourse Calendar - Category Events Calendar Outlet Container Top",
-  function (needs) {
-    needs.user();
-    needs.settings({
-      calendar_enabled: true,
-      discourse_post_event_enabled: true,
-      events_calendar_categories: "1",
-      calendar_categories: "",
-      calendar_categories_outlet: "discovery-list-container-top",
-    });
+acceptance("Category Events Calendar Outlet Container Top", function (needs) {
+  needs.user();
+  needs.settings({
+    calendar_enabled: true,
+    discourse_post_event_enabled: true,
+    events_calendar_categories: "1",
+    calendar_categories: "",
+    calendar_categories_outlet: "discovery-list-container-top",
+  });
 
-    needs.pretender(eventsPretender);
+  needs.pretender(eventsPretender);
 
-    test("display the specific calendar for the discovery-list-container-top outlet", async function (assert) {
-      await visit("/c/bug/1");
+  test("display the specific calendar for the discovery-list-container-top outlet", async function (assert) {
+    await visit("/c/bug/1");
 
-      assert
-        .dom("#category-events-calendar")
-        .exists("Category Events calendar div exists");
+    assert
+      .dom("#category-events-calendar")
+      .exists("Category Events calendar div exists");
 
-      assert
-        .dom(".category-calendar")
-        .doesNotExist("Category calendar div does not exist");
-    });
-  }
-);
+    assert
+      .dom(".category-calendar")
+      .doesNotExist("Category calendar div does not exist");
+  });
+});
 
 acceptance(
-  "Discourse Calendar - Category Events Calendar Outlet Container before-topic-list-body",
+  "Category Events Calendar Outlet Container before-topic-list-body",
   function (needs) {
     needs.user();
     needs.settings({
@@ -111,7 +105,7 @@ acceptance(
 );
 
 acceptance(
-  "Discourse Calendar - Category Events Calendar Outlet Container discovery-list-container-top",
+  "Category Events Calendar Outlet Container discovery-list-container-top",
   function (needs) {
     needs.user();
     needs.settings({

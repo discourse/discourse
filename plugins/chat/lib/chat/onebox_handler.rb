@@ -37,12 +37,19 @@ module Chat
     private
 
     def self.build_args(url, chat_channel)
-      args = {
+      {
         channel_id: chat_channel.id,
         channel_name: chat_channel.name,
-        is_category: chat_channel.category_channel?,
-        color: chat_channel.category_channel? ? chat_channel.chatable.color : nil,
+        color: chat_channel.chatable.color,
+        channel_badge: build_channel_badge(chat_channel),
       }
+    end
+
+    def self.build_channel_badge(chat_channel)
+      return Emoji.codes_to_img(":#{chat_channel.emoji}:") if chat_channel.emoji.present?
+
+      color = chat_channel.chatable.color
+      %(<span class="category-chat-badge" style="color: ##{color}"><svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg></span>)
     end
 
     def self.render_thread_onebox(args, thread)

@@ -1,16 +1,15 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import { computed } from "@ember/object";
-import { alias, equal } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import ChooseTopic from "discourse/components/choose-topic";
-import RadioButton from "discourse/components/radio-button";
-import TextField from "discourse/components/text-field";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { and } from "discourse/truth-helpers";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export const NEW_TOPIC_SELECTION = "new_topic";
@@ -24,18 +23,45 @@ export default class ChatToTopicSelector extends Component {
   newMessageSelection = NEW_MESSAGE_SELECTION;
   selection = null;
 
-  @equal("selection", NEW_TOPIC_SELECTION) newTopic;
-  @equal("selection", EXISTING_TOPIC_SELECTION) existingTopic;
-  @equal("selection", NEW_MESSAGE_SELECTION) newMessage;
-  @alias("site.can_create_tag") canAddTags;
-  @alias("site.can_tag_pms") canTagMessages;
-
   topicTitle = null;
   categoryId = null;
   tags = null;
   selectedTopicId = null;
   chatMessageIds = null;
   chatChannelId = null;
+
+  @computed("selection")
+  get newTopic() {
+    return this.selection === NEW_TOPIC_SELECTION;
+  }
+
+  @computed("selection")
+  get existingTopic() {
+    return this.selection === EXISTING_TOPIC_SELECTION;
+  }
+
+  @computed("selection")
+  get newMessage() {
+    return this.selection === NEW_MESSAGE_SELECTION;
+  }
+
+  @computed("site.can_create_tag")
+  get canAddTags() {
+    return this.site?.can_create_tag;
+  }
+
+  set canAddTags(value) {
+    set(this, "site.can_create_tag", value);
+  }
+
+  @computed("site.can_tag_pms")
+  get canTagMessages() {
+    return this.site?.can_tag_pms;
+  }
+
+  set canTagMessages(value) {
+    set(this, "site.can_tag_pms", value);
+  }
 
   @computed()
   get newTopicInstruction() {
@@ -56,7 +82,7 @@ export default class ChatToTopicSelector extends Component {
     <div class="chat-to-topic-selector" ...attributes>
       <div class="radios">
         <label class="radio-label" for="move-to-new-topic">
-          <RadioButton
+          <DRadioButton
             @id="move-to-new-topic"
             @name="move-to-entity"
             @value={{this.newTopicSelection}}
@@ -66,7 +92,7 @@ export default class ChatToTopicSelector extends Component {
         </label>
 
         <label class="radio-label" for="move-to-existing-topic">
-          <RadioButton
+          <DRadioButton
             @id="move-to-existing-topic"
             @name="move-to-entity"
             @value={{this.existingTopicSelection}}
@@ -77,7 +103,7 @@ export default class ChatToTopicSelector extends Component {
 
         {{#if this.allowNewMessage}}
           <label class="radio-label" for="move-to-new-message">
-            <RadioButton
+            <DRadioButton
               @id="move-to-new-message"
               @name="move-to-entity"
               @value={{this.newMessageSelection}}
@@ -96,7 +122,7 @@ export default class ChatToTopicSelector extends Component {
             {{i18n "topic.split_topic.topic_name"}}
           </label>
 
-          <TextField
+          <DTextField
             @value={{this.topicTitle}}
             @placeholderKey="composer.title_placeholder"
             @id="split-topic-name"
@@ -140,7 +166,7 @@ export default class ChatToTopicSelector extends Component {
             {{i18n "topic.move_to_new_message.message_title"}}
           </label>
 
-          <TextField
+          <DTextField
             @value={{this.topicTitle}}
             @placeholderKey="composer.title_placeholder"
             @id="split-message-title"

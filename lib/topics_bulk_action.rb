@@ -27,9 +27,16 @@ class TopicsBulkAction
       change_tags
       append_tags
       remove_tags
+      manage_tags
       relist
       dismiss_topics
       reset_bump_dates
+      pin
+      unpin
+      convert_to_public_topic
+      convert_to_private_message
+      enable_nested_view
+      disable_nested_view
     ]
   end
 
@@ -168,6 +175,31 @@ class TopicsBulkAction
     end
   end
 
+  def convert_to_public_topic
+    bulk_convert(from_pm: true) { |c| c.convert_to_public_topic(@operation[:category_id]) }
+  end
+
+  def convert_to_private_message
+    bulk_convert(from_pm: false, &:convert_to_private_message)
+  end
+
+  def bulk_convert(from_pm:)
+    silent = @operation.fetch(:silent, true)
+
+    topics.each do |t|
+      next if t.private_message? != from_pm
+      next unless guardian.can_convert_topic?(t)
+
+      yield TopicConverter.new(t, @user, silent: silent)
+
+      if t.errors.any?
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      elsif t.reload.private_message? != from_pm
+        @changed_ids << t.id
+      end
+    end
+  end
+
   def change_notification_level
     notification_level_id = @operation[:notification_level_id]
 
@@ -232,6 +264,26 @@ class TopicsBulkAction
     end
   end
 
+  def pin
+    status = @operation[:pinned_globally] ? "pinned_globally" : "pinned"
+    topics.each do |t|
+      if guardian.can_moderate?(t)
+        t.update_status(status, true, @user, until: @operation[:pinned_until])
+        @changed_ids << t.id
+      end
+    end
+  end
+
+  def unpin
+    topics.each do |t|
+      if guardian.can_moderate?(t) && t.pinned_at
+        status = t.pinned_globally ? "pinned_globally" : "pinned"
+        t.update_status(status, false, @user)
+        @changed_ids << t.id
+      end
+    end
+  end
+
   def archive
     topics.each do |t|
       if guardian.can_moderate?(t)
@@ -250,49 +302,80 @@ class TopicsBulkAction
     end
   end
 
+  def enable_nested_view
+    toggle_nested_view(enabled: true)
+  end
+
+  def disable_nested_view
+    toggle_nested_view(enabled: false)
+  end
+
+  def toggle_nested_view(enabled:)
+    return unless SiteSetting.nested_replies_enabled
+    return if SiteSetting.nested_replies_default
+
+    topics.each do |t|
+      next if t.private_message?
+
+      result = NestedTopic::Toggle.call(guardian: guardian, params: { topic_id: t.id, enabled: })
+      @changed_ids << t.id if result.success?
+    end
+  end
+
   def change_tags
     tags = resolve_tag_names || []
-
-    topics_with_tags.each do |t|
-      next unless guardian.can_edit?(t)
-      next unless t.first_post
-
-      if t.first_post.revise(@user, { tags: tags }, bulk_tag_opts)
-        @changed_ids << t.id
-      else
-        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
-      end
-    end
+    topics_with_tags.each { |t| apply_tag_revision(t, tags) }
   end
 
   def append_tags
     tags = resolve_tag_names || []
-
     return if tags.blank?
 
     topics_with_tags.each do |t|
-      next unless guardian.can_edit?(t)
-      next unless t.first_post
-
       merged = t.tags.map(&:name) | tags
-      if t.first_post.revise(@user, { tags: merged }, bulk_tag_opts)
-        @changed_ids << t.id
-      else
-        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
-      end
+      apply_tag_revision(t, merged)
     end
   end
 
   def remove_tags
-    topics_with_tags.each do |t|
-      next unless guardian.can_edit?(t)
-      next unless t.first_post
+    topics_with_tags.each { |t| apply_tag_revision(t, []) }
+  end
 
-      if t.first_post.revise(@user, { tags: [] }, bulk_tag_opts)
-        @changed_ids << t.id
-      else
-        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
+  def manage_tags
+    add_ids = (@operation[:add_tag_ids] || []).map(&:to_i)
+    remove_ids = (@operation[:remove_tag_ids] || []).map(&:to_i)
+    replace_pairs =
+      (@operation[:replace_tags] || []).map { |e| [e[:from_tag_id].to_i, e[:to_tag_id].to_i] }
+
+    valid_ids = Tag.where(id: (add_ids + remove_ids + replace_pairs).flatten).pluck(:id)
+    add_ids &= valid_ids
+    remove_ids &= valid_ids
+    replace_map =
+      replace_pairs.each_with_object({}) do |(from_id, to_id), map|
+        map[from_id] ||= to_id if valid_ids.include?(from_id) && valid_ids.include?(to_id)
       end
+
+    topics_with_tags.each do |t|
+      current = t.tags.map(&:id)
+      base = @operation[:remove_all_tags] ? [] : current - remove_ids
+      final = (base | add_ids).map { |id| replace_map[id] || id }.uniq
+
+      next if final.sort == current.sort
+
+      apply_tag_revision(t, Tag.where(id: final).pluck(:name))
+    end
+  end
+
+  def apply_tag_revision(topic, tag_names)
+    return false unless guardian.can_edit?(topic)
+    return false unless topic.first_post
+
+    if topic.first_post.revise(@user, { tags: tag_names }, bulk_tag_opts)
+      @changed_ids << topic.id
+      true
+    else
+      topic.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      false
     end
   end
 

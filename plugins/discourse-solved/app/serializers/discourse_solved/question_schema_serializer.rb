@@ -2,7 +2,7 @@
 
 class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
   # attributes are camelCase as the Q&A schema spec requires it
-  attributes :name, :text, :upvoteCount, :answerCount, :datePublished, :author
+  attributes :answerCount, :author, :dateModified, :datePublished, :name, :text, :upvoteCount
 
   def serializable_hash
     hash = { "@type" => "Question" }.merge(super)
@@ -40,6 +40,10 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
 
   def datePublished
     object.created_at
+  end
+
+  def dateModified
+    object.first_post&.last_version_at || object.created_at
   end
 
   def author

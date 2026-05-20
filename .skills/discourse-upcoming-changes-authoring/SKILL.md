@@ -22,9 +22,13 @@ Key methods to understand:
 - `stats_for_user(user:, acting_guardian:)` — Returns per-change status for a user including *why* they have/don't have access (the `user_enabled_reasons` enum).
 - `current_statuses` / `permanent_upcoming_changes` — Cached lookups keyed by git version (one-time cost per deploy). Cleared by `clear_caches!` and automatically when `TrackNotifyStatusChanges` detects changes.
 
+**`UpcomingChanges::ConditionalDisplay`** (defined inside `lib/upcoming_changes.rb`) — Hides individual upcoming changes from the admin UI when they don't make sense in the current context (e.g. a Horizon-related change on a site without Horizon installed). Define a `should_display_<upcoming_change_name>?` class method on it to gate a specific change; if no method is defined, the change is always displayed. See [Conditional Display](#conditional-display) below.
+
 **`app/models/upcoming_change_event.rb`** — Audit trail. Every lifecycle event (added, removed, status change, manual toggle, admin notification) is recorded here. Has unique indexes to prevent duplicate events of specific types per change.
 
-**`lib/site_setting_extension.rb`** — Where `upcoming_change:` metadata in `site_settings.yml` gets parsed. When a setting is registered with this metadata, it stores the parsed result in `@upcoming_change_metadata` and defines a `{name}_groups_map` method. The `impact` string is split into `impact_type` and `impact_role`.
+**`lib/site_setting_extension.rb`** — Where `upcoming_change:` metadata in `site_settings.yml` gets parsed. When a setting is registered with this metadata, it stores the parsed result in `@upcoming_change_metadata` and defines a `{name}_groups_map` method. The `impact` string is split into `impact_type` and `impact_role`. Also handles `upcoming_change_default_override:` metadata — see [Default Overrides](#default-overrides) below.
+
+**`lib/site_settings/defaults_provider.rb`** — Manages the default values for all settings, including upcoming change default overrides. Tracks which overrides are active via `@active_upcoming_change_overrides` and applies them when resolving defaults. Provides `upcoming_change_override_metadata` for the frontend to display warnings about changed defaults.
 
 **`app/models/site_setting_group.rb`** — Stores group restrictions for settings. Group IDs are pipe-separated strings (`"1|2|3"`). The `setting_group_ids` class method returns a hash used for in-memory caching.
 
@@ -34,8 +38,8 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 
 | Service | Purpose |
 |---------|---------|
-| `List` | Admin-only, fetches all changes with metadata, group data, and images |
-| `Toggle` | Admin enable/disable — updates SiteSetting, clears groups if `disallow_enabled_for_groups`, logs staff action, fires DiscourseEvent |
+| `List` | Admin-only, fetches all changes with metadata, group data, and images. Filters out changes whose `ConditionalDisplay.should_display?` returns false. |
+| `Toggle` | Admin enable/disable — updates SiteSetting, clears groups when neither `staff` nor `specific_groups` is in `allow_enabled_for`, validates the requested target against `allow_enabled_for`, logs staff action, fires DiscourseEvent |
 | `Track` | Orchestrator called by the scheduled job — delegates to three action sub-services |
 | `TrackNotifyAddedChanges` | Compares current settings against event history, creates `added` events |
 | `TrackRemovedChanges` | Creates `removed` events for settings no longer present |
@@ -82,6 +86,66 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 
 **`app/services/problem_check/upcoming_change_stable_opted_out.rb`** — Warns admins hourly if they've opted out of a stable/permanent change.
 
+### Default Overrides
+
+Upcoming changes can override the default value of a *different* site setting when enabled. This allows feature rollouts to change related setting defaults without breaking admin customizations.
+
+#### Metadata Format
+
+A setting declares a default override with the `upcoming_change_default_override` key in `config/site_settings.yml`:
+
+```yaml
+# The upcoming change setting (the "trigger")
+increase_suggested_topics_max_days_old_default:
+  default: false
+  type: bool
+  upcoming_change:
+    status: experimental
+    impact: "site_setting_default,all_members"
+
+# The setting whose default changes (the "target")
+suggested_topics_max_days_old:
+  default: 365
+  type: integer
+  upcoming_change_default_override:
+    upcoming_change: increase_suggested_topics_max_days_old_default
+    new_default: 1000
+```
+
+When `increase_suggested_topics_max_days_old_default` is enabled (either manually by admin or via auto-promotion), the default value of `suggested_topics_max_days_old` changes from `365` to `1000`. The `impact` field on the trigger setting should include `site_setting_default` as its `impact_type`.
+
+#### How It Works
+
+1. **Registration** — `lib/site_setting_extension.rb` parses `upcoming_change_default_override` during setting registration and stores it in `upcoming_change_default_overrides` (a hash keyed by setting name).
+
+2. **Activation** — During `SiteSetting.refresh!`, each override is checked: if `UpcomingChanges.enabled?(override[:upcoming_change])` returns true, the override is activated via `defaults.activate_upcoming_change_override`. The setting's current value is updated to `new_default` **only if the admin has not manually modified it**.
+
+3. **Default resolution** — `DefaultsProvider#all` applies active overrides when resolving defaults, so code reading `SiteSetting.defaults[:setting_name]` gets the overridden value.
+
+4. **Frontend display** — `DefaultsProvider#upcoming_change_override_metadata` returns `{ old_default:, new_default:, change_setting_name: }` for active overrides. The site settings UI (`admin/components/site-setting.gjs`) shows a warning linking to the upcoming changes page.
+
+#### Key Behaviors
+
+- **Non-destructive**: If an admin has manually set a custom value for the target setting, the override does not apply — it only affects the default.
+- **Reversible**: Disabling the upcoming change deactivates the override and restores the original default.
+- **Default-locale only**: Overrides currently only apply on the default locale.
+
+### Conditional Display
+
+Some upcoming changes only make sense to show admins under certain conditions — for example, a Horizon-themed change is irrelevant if Horizon isn't installed, or a change might only apply when another setting is enabled. `UpcomingChanges::ConditionalDisplay` (in `lib/upcoming_changes.rb`) lets the framework hide a change from the admin UI without removing it from `site_settings.yml`.
+
+#### How It Works
+
+1. **Filtering** — `UpcomingChanges::List#fetch_upcoming_changes` calls `UpcomingChanges::ConditionalDisplay.should_display?(setting_name)` on every change after the status filter, before group/image enrichment. Changes that return `false` are dropped from the result entirely.
+2. **Resolution** — `should_display?` checks for a class method named `should_display_<upcoming_change_name>?` on `ConditionalDisplay`. If defined, its return value is used; otherwise the change is always displayed (returns `true`).
+3. **Definition site** — Add the gating method directly to the `ConditionalDisplay` class, typically next to (or inside) the relevant subsystem's code — e.g. a Horizon-specific gate can live with the Horizon code as long as `UpcomingChanges::ConditionalDisplay` is reopened to define it. Group related gates together for discoverability.
+
+#### Key Behaviors
+
+- **Display-only**: This affects whether the change appears in the admin UI list, not whether it's enabled. `enabled?` / `enabled_for_user?` still resolve normally — code paths gated on the change continue to work.
+- **N+1 by design**: `should_display?` is called once per change in the loop. If a gating method does expensive work (DB queries, plugin lookups), memoize inside the method to avoid repeated cost.
+- **Notifications still fire**: Conditional display only filters the `List` service result. `TrackNotifyAddedChanges`, `NotifyPromotions`, etc. do not consult `ConditionalDisplay`, so admins may still receive notifications about a hidden change. Consider this when designing the gate — usually the gate should reflect a long-lived condition (plugin missing, theme not installed) rather than transient state.
+
 ## Key Design Decisions
 
 ### Caching Strategy
@@ -102,7 +166,11 @@ Notifications for `added` and `promoted` changes are skipped on new sites (deter
 
 ### Group-Based Access
 
-Group restrictions use a separate `SiteSettingGroup` model rather than storing groups on the setting itself. This allows the caching layer (`site_setting_group_ids`) to work independently. When `disallow_enabled_for_groups` is set in metadata, the UI only shows Everyone/No One options. Group IDs are pipe-separated in the DB for efficient single-row storage.
+Group restrictions use a separate `SiteSettingGroup` model rather than storing groups on the setting itself. This allows the caching layer (`site_setting_group_ids`) to work independently. Group IDs are pipe-separated in the DB for efficient single-row storage.
+
+The `allow_enabled_for` metadata key on an upcoming change restricts which "Enabled for" dropdown options the admin sees. It accepts an array of any subset of `[everyone, staff, specific_groups]`; the `No one` option is always present and cannot be removed. When the key is omitted, all four options are shown (the permissive default). Rule: if `everyone` is present it must be the only value — `everyone` cannot combine with `staff` or `specific_groups`. The integrity spec enforces these rules. Server-side enforcement lives in `UpcomingChanges::Toggle` (validates the target when no groups are configured) and `SiteSetting::UpsertGroups` (validates group selection: a `[staff]`-only selection needs `staff` allowed; any other selection needs `specific_groups` allowed). When neither `staff` nor `specific_groups` is in the allow list, `Toggle` also clears any stale `SiteSettingGroup` records.
+
+**Auto-promoted display:** When `allow_enabled_for` excludes `:everyone` and a change is enabled without an explicit admin selection (typically because it reached the promotion threshold), `enabled_for_with_groups` returns the broadest allowed display target — the staff group name if `:staff` is permitted, otherwise `"groups"`. This is display-only; `enabled_for_user?` is unchanged and still treats the change as on for all users until the admin scopes it via the dropdown.
 
 ### Event Idempotency
 
@@ -133,6 +201,70 @@ The three main components to know:
 
 State is managed via `trackedObject` for reactivity. API calls go through `ajax()` directly in the item component.
 
+### Restricting "Enabled for" options
+
+To constrain which dropdown options an admin can pick for a change, add `allow_enabled_for` to its `upcoming_change:` metadata:
+
+```yaml
+my_upcoming_change_setting:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: experimental
+    impact: feature,all_members
+    allow_enabled_for:
+      - staff
+      - specific_groups
+```
+
+Valid value sets:
+
+| `allow_enabled_for` | Dropdown options shown |
+|---|---|
+| *(omitted)* | No one, Everyone, Staff, Specific group(s) |
+| `[everyone]` | No one, Everyone |
+| `[staff]` | No one, Staff |
+| `[specific_groups]` | No one, Specific group(s) |
+| `[staff, specific_groups]` | No one, Staff, Specific group(s) |
+
+`everyone` cannot be combined with `staff` or `specific_groups` — when present, it must be the only value. `No one` is always available. The integrity spec rejects invalid combinations.
+
+### Adding a Conditional Display Rule
+
+To hide an upcoming change from the admin UI under certain conditions:
+
+1. Reopen `UpcomingChanges::ConditionalDisplay` and define a class method named `should_display_<upcoming_change_name>?` that returns a boolean:
+   ```ruby
+   module UpcomingChanges
+     class ConditionalDisplay
+       def self.should_display_enable_horizon_blah?
+         Discourse.plugins_by_name["horizon"].present?
+       end
+     end
+   end
+   ```
+2. Place the reopen near the related subsystem (e.g. inside the Horizon plugin) so the gate lives with the code that owns the condition.
+3. If the check is expensive, memoize inside the method — `List` calls `should_display?` once per change.
+4. No registration step is needed; `should_display?` finds the method dynamically via `respond_to?`.
+5. Test by stubbing the predicate — see [Testing Conditional Display](#testing-conditional-display).
+
+### Adding a Default Override
+
+To make an upcoming change control the default of another setting:
+
+1. Add `upcoming_change_default_override` metadata to the **target** setting in `config/site_settings.yml`:
+   ```yaml
+   target_setting:
+     default: original_value
+     upcoming_change_default_override:
+       upcoming_change: trigger_setting_name
+       new_default: new_value
+   ```
+2. Ensure the **trigger** setting has `impact: "site_setting_default,..."` in its `upcoming_change:` metadata
+3. The override activates automatically when the trigger is enabled — no additional code needed
+4. Test with `mock_upcoming_change_default_overrides` — see [Mocking Default Overrides](#mocking-default-overrides)
+
 ### Changing Resolution Logic
 
 All value resolution goes through `resolved_value` in `lib/upcoming_changes.rb`. If you need to change how settings are evaluated (e.g., adding a new override condition), this is the single place to modify. The method checks in order: permanent status, admin manual override, auto-promotion threshold.
@@ -156,7 +288,67 @@ mock_upcoming_change_metadata(
 )
 ```
 
-Always clean up with `clear_mocked_upcoming_change_metadata` in an `after` block (or the helper handles it automatically depending on context). The helper is defined in `spec/support/helpers.rb`.
+### Mocking Default Overrides
+
+Use `mock_upcoming_change_default_overrides` to set up override metadata in tests — never modify `site_settings.yml`:
+
+```ruby
+mock_upcoming_change_default_overrides(
+  {
+    suggested_topics_max_days_old: {
+      upcoming_change: :increase_suggested_topics_max_days_old_default,
+      new_default: 1000,
+    },
+  },
+)
+
+# Enable the trigger setting and refresh to activate the override
+SiteSetting.increase_suggested_topics_max_days_old_default = true
+SiteSetting.refresh!
+
+# Now SiteSetting.suggested_topics_max_days_old returns 1000 (the overridden default)
+```
+
+To test that the override does NOT apply when the admin has customized the target setting:
+
+```ruby
+# Admin sets a custom value before the override activates
+SiteSetting.suggested_topics_max_days_old = 730
+SiteSetting.increase_suggested_topics_max_days_old_default = true
+SiteSetting.refresh!
+
+# Override is not applied — admin's explicit choice is preserved
+expect(SiteSetting.suggested_topics_max_days_old).to eq(730)
+```
+
+### Testing Conditional Display
+
+Stub the predicate method directly on `UpcomingChanges::ConditionalDisplay` rather than redefining it — this avoids leaking method definitions across examples:
+
+```ruby
+UpcomingChanges::ConditionalDisplay
+  .stubs(:should_display_enable_upload_debug_mode?)
+  .returns(false)
+```
+
+For unit tests of `ConditionalDisplay` itself (where you need to verify dispatch), use `define_singleton_method` in `before` and `remove_method` in `after` to clean up:
+
+```ruby
+before do
+  UpcomingChanges::ConditionalDisplay.define_singleton_method(
+    :should_display_enable_upload_debug_mode?,
+  ) { false }
+end
+
+after do
+  UpcomingChanges::ConditionalDisplay.singleton_class.send(
+    :remove_method,
+    :should_display_enable_upload_debug_mode?,
+  )
+end
+```
+
+When testing `UpcomingChanges::List`, assert the change is/isn't present in `result.upcoming_changes` by `:setting` key.
 
 ### Cache Clearing in Tests
 
@@ -210,6 +402,7 @@ Notification type tests create notifications with `Notification.create()` and ve
 | Event model | `app/models/upcoming_change_event.rb` |
 | Group model | `app/models/site_setting_group.rb` |
 | Settings integration | `lib/site_setting_extension.rb` (search for `upcoming_change`) |
+| Defaults provider | `lib/site_settings/defaults_provider.rb` (default override activation/resolution) |
 | Services | `app/services/upcoming_changes/*.rb` |
 | Group upsert | `app/services/site_setting/upsert_groups.rb` |
 | Controller | `admin/config/upcoming_changes_controller.rb` |

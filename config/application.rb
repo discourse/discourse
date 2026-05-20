@@ -20,8 +20,9 @@ if GlobalSetting.load_plugins?
   # Support for plugins to register custom setting providers. They can do this
   # by having a file, `register_provider.rb` in their root that will be run
   # at this point.
-
+  allowed_plugins = GlobalSetting.plugins_to_load
   Dir.glob(File.join(File.dirname(__FILE__), "../plugins", "*", "register_provider.rb")) do |p|
+    next if allowed_plugins && !allowed_plugins.include?(File.basename(File.dirname(p)))
     require p
   end
 end
@@ -166,6 +167,9 @@ module Discourse
 
     require "middleware/csp_script_nonce_injector"
     config.middleware.insert_after(ActionDispatch::Flash, Middleware::CspScriptNonceInjector)
+
+    require "middleware/track_view_session_id_injector"
+    config.middleware.insert_after(ActionDispatch::Flash, Middleware::TrackViewSessionIdInjector)
 
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)

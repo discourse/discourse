@@ -2,16 +2,15 @@
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { empty, equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import WatchedWord from "discourse/admin/models/watched-word";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import WatchedWords from "discourse/select-kit/components/watched-words";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -24,10 +23,25 @@ export default class WatchedWordForm extends Component {
   selectedTags = [];
   words = [];
 
-  @empty("words") submitDisabled;
-  @equal("actionKey", "replace") canReplace;
-  @equal("actionKey", "tag") canTag;
-  @equal("actionKey", "link") canLink;
+  @computed("words.length")
+  get submitDisabled() {
+    return isEmpty(this.words);
+  }
+
+  @computed("actionKey")
+  get canReplace() {
+    return this.actionKey === "replace";
+  }
+
+  @computed("actionKey")
+  get canTag() {
+    return this.actionKey === "tag";
+  }
+
+  @computed("actionKey")
+  get canLink() {
+    return this.actionKey === "link";
+  }
 
   @computed("siteSettings.watched_words_regular_expressions")
   get placeholderKey() {
@@ -152,7 +166,7 @@ export default class WatchedWordForm extends Component {
           <label for="watched-replacement">{{i18n
               "admin.watched_words.form.replace_label"
             }}</label>
-          <TextField
+          <DTextField
             @id="watched-replacement"
             @value={{this.replacement}}
             @disabled={{this.formSubmitted}}
@@ -185,7 +199,7 @@ export default class WatchedWordForm extends Component {
           <label for="watched-link">{{i18n
               "admin.watched_words.form.link_label"
             }}</label>
-          <TextField
+          <DTextField
             @id="watched-link"
             @value={{this.replacement}}
             @disabled={{this.formSubmitted}}

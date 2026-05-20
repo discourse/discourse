@@ -14,7 +14,7 @@ function containerSelector(user, options = {}) {
   return `.chat-user-avatar${onlineSelector} .chat-user-avatar__container[data-user-card=${user.username}] .avatar[title=${user.username}]`;
 }
 
-module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
+module("Component | <ChatUserAvatar />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("when user is not online", async function (assert) {

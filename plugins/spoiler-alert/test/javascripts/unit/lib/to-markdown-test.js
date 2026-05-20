@@ -3,7 +3,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import toMarkdown from "discourse/lib/to-markdown";
 import { initializeSpoiler } from "discourse/plugins/spoiler-alert/initializers/spoiler-alert";
 
-module("Spoiler Alert | Unit | to-markdown", function (hooks) {
+module("Unit | to-markdown", function (hooks) {
   hooks.beforeEach(function () {
     withPluginApi(initializeSpoiler);
   });

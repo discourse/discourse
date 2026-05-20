@@ -216,17 +216,17 @@ end
 # Table name: bookmarks
 #
 #  id                     :bigint           not null, primary key
-#  user_id                :bigint           not null
+#  auto_delete_preference :integer          default(0), not null
+#  bookmarkable_type      :string
 #  name                   :string(100)
+#  pinned                 :boolean          default(FALSE)
 #  reminder_at            :datetime
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
 #  reminder_last_sent_at  :datetime
 #  reminder_set_at        :datetime
-#  auto_delete_preference :integer          default(0), not null
-#  pinned                 :boolean          default(FALSE)
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
 #  bookmarkable_id        :bigint
-#  bookmarkable_type      :string
+#  user_id                :bigint           not null
 #
 # Indexes
 #

@@ -1,12 +1,11 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
-import { or } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import WatchedWordTestingModal from "discourse/admin/components/modal/watched-word-testing";
 import { ajax } from "discourse/lib/ajax";
-import { fmt } from "discourse/lib/computed";
 import { i18n } from "discourse-i18n";
 
 export default class AdminWatchedWordsActionController extends Controller {
@@ -16,11 +15,15 @@ export default class AdminWatchedWordsActionController extends Controller {
 
   @tracked actionNameKey = null;
 
-  @fmt("actionNameKey", "/admin/customize/watched_words/action/%@/download")
-  downloadLink;
+  @dependentKeyCompat
+  get downloadLink() {
+    return `/admin/customize/watched_words/action/${this.actionNameKey}/download`;
+  }
 
-  @or("adminWatchedWords.showWords", "adminWatchedWords.filter")
-  showWordsList;
+  @computed("adminWatchedWords.showWords", "adminWatchedWords.filter")
+  get showWordsList() {
+    return this.adminWatchedWords?.showWords || this.adminWatchedWords?.filter;
+  }
 
   get currentAction() {
     return this.adminWatchedWords.allWatchedWords.find(

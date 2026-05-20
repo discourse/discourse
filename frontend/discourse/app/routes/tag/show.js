@@ -192,6 +192,8 @@ export default class TagShowRoute extends DiscourseRoute {
           name: mainTagData.name,
           slug: mainTagData.slug,
           staff: mainTagData.staff,
+          description: mainTagData.description,
+          topic_count: mainTagData.topic_count,
         });
       } else if (!additionalTags) {
         // tag was a synonym, redirect to canonical tag URL

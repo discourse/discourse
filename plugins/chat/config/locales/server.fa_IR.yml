@@ -70,6 +70,10 @@ fa_IR:
       and_x_others:
         one: "و %{count} نفر دیگر"
         other: "و %{count} نفر دیگر"
+  discourse_push_notifications:
+    actions:
+      chat_reply:
+        title: پاسخ
   discourse_automation:
     scriptables:
       send_chat_message:

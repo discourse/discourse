@@ -73,6 +73,7 @@ module SvgSprite
         code
         code-branch
         comment
+        comments
         compress
         copy
         crosshairs
@@ -87,6 +88,8 @@ module SvgSprite
         discourse-bookmark-clock
         discourse-chevron-collapse
         discourse-chevron-expand
+        discourse-circle-minus
+        discourse-circle-plus
         discourse-compress
         discourse-dnd
         discourse-emojis
@@ -110,6 +113,7 @@ module SvgSprite
         ellipsis
         ellipsis-vertical
         envelope
+        expand
         eye
         eye-dropper
         eye-slash
@@ -181,6 +185,7 @@ module SvgSprite
         gift
         globe
         grip-lines
+        grip-vertical
         hand-point-right
         handshake-angle
         hashtag
@@ -212,6 +217,7 @@ module SvgSprite
         minus
         mobile-screen-button
         moon
+        nested-thread
         paintbrush
         palette
         paper-plane

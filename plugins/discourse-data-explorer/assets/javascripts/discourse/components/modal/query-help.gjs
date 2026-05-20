@@ -1,5 +1,5 @@
 import { trustHTML } from "@ember/template";
-import DModal from "discourse/components/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const QueryHelp = <template>

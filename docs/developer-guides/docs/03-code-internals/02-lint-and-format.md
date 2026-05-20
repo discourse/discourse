@@ -81,16 +81,7 @@ Checks:
 
 Checks:
 
-- `eslint`
-
-### GJS template linting
-
-- `frontend/**/*.gjs`
-- matching plugin and theme `.gjs` files
-
-Checks:
-
-- `ember-template-lint`
+- `eslint` (with `eslint-plugin-ember`'s `template-*` rules covering the template portion of `.gjs` files)
 
 ### SCSS linting
 
@@ -129,7 +120,6 @@ Auto-fix is configured for:
 
 - `prettier --write`
 - `eslint --fix`
-- `ember-template-lint --fix`
 - `stylelint --fix`
 - `rubocop -A`
 - `syntax_tree` (`stree write`)

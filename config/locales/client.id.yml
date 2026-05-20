@@ -254,10 +254,10 @@ id:
       pill: "Disarankan"
       pm_title: "Pesan Yang Disarankan"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Diaktifkan"
       start_posting:
         back: "Kembali"
-      spread_the_word:
-        copied_to_clipboard: "Tautan disalin ke papan klip!"
     about:
       simple_title: "Tentang"
       title: "Tentang %{title}"
@@ -289,8 +289,6 @@ id:
         other: "%{formatted_number} Anggota"
     bookmarked:
       title: "Penandaan"
-      edit_bookmark: "Edit Bookmark"
-      clear_bookmarks: "Bersihkan Penandaan"
       help:
         bookmark: "Klik untuk bookmark topik ini"
         edit_bookmark: "Klik untuk mengedit bookmark pada post di topik ini"
@@ -303,12 +301,12 @@ id:
       create: "Buat penanda"
       edit: "Sunting penanda"
       not_bookmarked: "tandai pos ini"
+      topic_bookmark: "Topik"
       remove_reminder_keep_bookmark: "Hapus pengingat dan simpan penanda"
       created_with_reminder: "Anda telah menandai kiriman ini dengan pengingat %{date}. %{name}"
       created_with_reminder_generic: "Anda telah menandai kiriman ini dengan pengingat %{date}. %{name}"
       delete: "Hapus Bookmark"
       confirm_delete: "Yakin ingin menghapus penanda ini? Pengingat juga akan dihapus."
-      confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
       save: "Simpan"
       no_timezone: 'Anda belum menetapkan zona waktu. Anda tidak akan dapat mengatur pengingat. Tetapkan satu <a href="%{basePath}/my/preferences/profile">di profil Anda</a> .'
       invalid_custom_datetime: "Tanggal dan waktu yang Anda berikan tidak valid, silakan coba lagi."
@@ -358,6 +356,9 @@ id:
       remove_confirmation: "Anda yakin ingin menghapus rancangan ini?"
       new_topic: "Konsep topik baru"
       new_private_message: "Rancangan pesan pribadi baru"
+    embed_mode:
+      signin_flow:
+        cancel: "Batal"
     topic_count_all:
       other: "Lihat %{count} topik baru"
     topic_count_categories:
@@ -989,7 +990,6 @@ id:
         mute_option: "Bisukan"
         normal_option: "normal"
       notification_schedule:
-        title: "Jadwal Notifikasi"
         label: "Aktifkan jadwal notifikasi khusus"
         midnight: "Tengah malam"
         none: "Tidak ada"
@@ -1030,13 +1030,8 @@ id:
       notifications: "Pemberitahuan"
       statistics: "Statistik"
       desktop_notifications:
-        label: "Pemberitahuan Langsung"
         not_supported: "Pemberitahuan tidak didukung pada browser ini. Maaf."
-        perm_default: "Aktifkan Pemberitahuan"
-        perm_denied_btn: "Izin ditolak"
         perm_denied_expl: "Anda menolak izin untuk pemberitahuan. Izinkan pemberitahuan melalui pengaturan browser anda."
-        disable: "Tidak membolehkan Notifikasi"
-        enable: "Membolehkan Notifikasi"
       dismiss: "Bubar"
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
@@ -1746,6 +1741,7 @@ id:
         post:
           count:
             label: Pos
+    header_panel: "Header"
     new_item: "baru"
     user_menu:
       tabs:
@@ -1777,7 +1773,6 @@ id:
         move_messages_to_inbox: "Pindah ke Kotak Masuk"
         selected_count:
           other: "%{count} dipilih"
-        choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
         error_topic_count:
           other: "%{count} topik"
       none:
@@ -1797,6 +1792,17 @@ id:
         name: "Hapus"
       defer:
         name: "Tandai Belum Dibaca"
+    nested_replies:
+      sort:
+        new: "Baru"
+      load_more_children:
+        other: "%{count} jawaban lainnya"
+      collapsed_replies:
+        other: "%{count} balasan"
+      collapse: "Persempit"
+      no_replies: "Belum ada balasan"
+      deleted_post_placeholder: "[dihapus]"
+      ignored_post_placeholder: "[diabaikan]"
     topic:
       create: "Topik Baru"
       archive_message:
@@ -1907,13 +1913,14 @@ id:
       has_replies:
         other: "%{count} Balasan"
       has_replies_count: "%{count}"
+      likes_popup:
+        title:
+          other: "%{count} suka"
       localizations:
         table:
           actions: "Aksi"
           edit: "Ubah"
           delete: "Hapus"
-        post_language_selector:
-          none: "Tidak ada"
       errors:
         upload: "Maaf, terjadi kesalahan saat mengunggah %{file_name}. Silakan coba lagi."
         backup_too_large: "Maaf, file cadangan terlalu besar."
@@ -1979,6 +1986,8 @@ id:
         create: "Buat"
       email_in_tooltip: "Anda dapat memisahkan beberapa alamat email dengan karakter |."
       review_group_name: "nama grup"
+      posting_review_modes:
+        everyone: "Semua orang"
       none_subcategory_text: "Tidak ada"
       visibility:
         public: "Umum"
@@ -2002,7 +2011,7 @@ id:
           low: "Rendah"
           high: "Tinggi"
       sort_options:
-        default: "asal"
+        default: "Asal"
         likes: "Suka"
         posts: "Pos"
         activity: "Aktifitas"
@@ -2109,16 +2118,44 @@ id:
     lightbox:
       close: "Tutup (Esc)"
     keyboard_shortcuts_help:
+      description_header: "Deskripsi"
+      search_aliases:
+        shift: "shift"
       jump_to:
-        new: "%{shortcut} Baru"
+        home: "Beranda"
+        latest: "Terbaru"
+        new: "Baru"
+        unread: "Belum dibaca"
+        unseen: "Tak terlihat"
+        categories: "Kategori"
+        bookmarks: "Markah"
+        profile: "Profil"
+        messages: "Pesan"
+        drafts: "Konsep"
       navigation:
         title: "Navigasi"
+        back: "Kembali"
       application:
         title: "Aplikasi"
-        notifications: "%{shortcut} Buka notifikasi"
+        search: "Cari"
+        log_out: "Keluar"
+      composing:
+        preformatted: "Teks terformat"
+        blockquote: "Blok Kutipan"
+      bookmarks:
+        later_today: "Nanti hari ini"
+        later_this_week: "Nanti pekan ini"
+        tomorrow: "Besok"
+        next_week: "Minggu depan"
+        next_month: "Bulan depan"
+        next_business_day: "Hari kerja berikutnya"
+        custom: "Tanggal dan waktu tersuai"
+        delete: "Hapus penanda"
       actions:
         title: "Aksi"
-        defer: "%{shortcut} Tandai topik sebagai belum dibaca"
+        reply_topic: "Balas ke topik"
+        delete: "Hapus postingan"
+        defer: "Tandai topik sebagai belum dibaca"
       admin:
         title: "Admin"
     badges:
@@ -2344,6 +2381,8 @@ id:
         impact_roles:
           moderators: "Moderator"
           staff: "Staf"
+        impact_types:
+          other_type: "Lainnya"
         filter:
           all: "Semua"
           enabled: "Diaktifkan"
@@ -2386,6 +2425,9 @@ id:
           sub_pages:
             logs:
               title: "Log"
+        problem_checks:
+          status: "Status"
+          ignore: "Abaikan"
         reports:
           sub_pages:
             settings:
@@ -2406,7 +2448,7 @@ id:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
         latest_version: "Terbaru"
-        dismiss_notice: "Bubar"
+        dismiss_notice: "Abaikan"
         last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"
         moderators: "Moderator:"
@@ -2417,6 +2459,9 @@ id:
         report_filter_any: "apa saja"
         disabled: Dinonaktifkan
         custom_date_range: Rentang tanggal tertentu
+        period:
+          last_7_days: "7 hari terakhir"
+          last_30_days: "30 hari terakhir"
         reports:
           last_7_days: "7 terakhir"
           last_30_days: "30 terakhir"
@@ -2694,6 +2739,7 @@ id:
         action: "Aksi"
         created_at: "Dibuat"
         ip_address: "IP"
+        reviewable_id: "Ulasan"
         delete: "Hapus"
         edit: "Ubah"
         save: "Simpan"

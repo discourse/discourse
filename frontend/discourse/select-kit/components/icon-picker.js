@@ -3,6 +3,7 @@ import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
+import deprecated from "discourse/lib/deprecated";
 import { isDevelopment } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import {
@@ -26,6 +27,11 @@ const MAX_RESULTS_RETURNED = 200;
 export default class IconPicker extends MultiSelectComponent {
   init() {
     super.init(...arguments);
+
+    deprecated(
+      "IconPicker (SelectKit) is deprecated. Use `DIconGridPicker` instead.",
+      { id: "discourse.icon-picker", since: "2026.3" }
+    );
 
     this._cachedIconsList = null;
     this._resultCount = 0;

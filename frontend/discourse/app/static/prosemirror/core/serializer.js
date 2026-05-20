@@ -2,6 +2,7 @@ import {
   defaultMarkdownSerializer,
   MarkdownSerializerState,
 } from "prosemirror-markdown";
+import { buildTypographyReverseMap } from "discourse/static/prosemirror/extensions/typographer-replacements";
 
 export default class Serializer {
   #afterSerializers;
@@ -10,6 +11,15 @@ export default class Serializer {
     this.nodes = includeDefault ? { ...defaultMarkdownSerializer.nodes } : {};
     this.nodes.hard_break = (state) =>
       state.write(state.inTable ? "<br>" : "\n");
+
+    const siteSettings = pluginParams.getContext?.().siteSettings;
+    const reverseTypography = buildReverseTypography(
+      buildTypographyReverseMap(siteSettings)
+    );
+
+    this.nodes.text = (state, node) => {
+      state.text(reverseTypography(node.text), !state.inAutolink);
+    };
 
     this.marks = includeDefault ? { ...defaultMarkdownSerializer.marks } : {};
 
@@ -60,4 +70,19 @@ export default class Serializer {
       Object.assign(this.marks, serializer);
     }
   }
+}
+
+function buildReverseTypography(map) {
+  if (!Object.keys(map).length) {
+    return (text) => text;
+  }
+
+  const re = new RegExp(
+    Object.keys(map)
+      .map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      .join("|"),
+    "g"
+  );
+
+  return (text) => text.replace(re, (char) => map[char]);
 }

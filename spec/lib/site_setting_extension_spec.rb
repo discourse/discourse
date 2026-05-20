@@ -155,6 +155,33 @@ RSpec.describe SiteSettingExtension do
         %Q|{"default_locale":"#{SiteSetting.default_locale}","upload_type":"a_new_url","string_type":"changed"}|,
       )
     end
+
+    context "when the provider value equals the YAML default" do
+      it "does not mark a normal setting as modified from default" do
+        settings.setting(:hello, 1)
+        settings.provider.save(:hello, 1, SiteSetting.types[:integer])
+        settings.refresh!
+
+        expect(settings.setting_modified_from_default?(:hello)).to eq(false)
+      end
+
+      it "still marks an upcoming change setting as modified from default so admins can opt out" do
+        settings.setting(
+          :upcoming_change_opt_out_flag,
+          false,
+          upcoming_change: {
+            status: :experimental,
+            impact: "feature,staff",
+          },
+        )
+        UpcomingChanges.stubs(:settings_provider).returns(settings)
+
+        settings.provider.save(:upcoming_change_opt_out_flag, false, SiteSetting.types[:bool])
+        settings.refresh!
+
+        expect(settings.setting_modified_from_default?(:upcoming_change_opt_out_flag)).to eq(true)
+      end
+    end
   end
 
   describe "DiscourseEvent" do
@@ -697,9 +724,7 @@ RSpec.describe SiteSettingExtension do
               },
             )
             settings.refresh!
-            allow(UpcomingChanges).to receive(:resolved_value).with(:enable_cool_thing).and_return(
-              true,
-            )
+            allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
           end
 
           it "is present in all_settings" do
@@ -720,9 +745,7 @@ RSpec.describe SiteSettingExtension do
               },
             )
             settings.refresh!
-            allow(UpcomingChanges).to receive(:resolved_value).with(:enable_cool_thing).and_return(
-              true,
-            )
+            allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
           end
 
           it "is present in all_settings" do
@@ -744,6 +767,12 @@ RSpec.describe SiteSettingExtension do
             settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
           ).not_to be_blank
         end
+
+        it "serializes depends_on and the matching humanized names" do
+          setting = settings.all_settings.find { |s| s[:setting] == :cool_thing_image }
+          expect(setting[:depends_on]).to eq([:enable_cool_thing])
+          expect(setting[:depends_on_humanized_names]).to eq(["Enable cool thing"])
+        end
       end
 
       context "when the depends_on setting is false" do
@@ -752,8 +781,11 @@ RSpec.describe SiteSettingExtension do
           settings.refresh!
         end
 
-        it "is not present in all_settings" do
-          expect(settings.all_settings.find { |s| s[:setting] == :cool_thing_image }).to be_blank
+        it "is still present in all_settings so the UI can reactively hide/disable it" do
+          setting = settings.all_settings.find { |s| s[:setting] == :cool_thing_image }
+          expect(setting).not_to be_blank
+          expect(setting[:depends_on]).to eq([:enable_cool_thing])
+          expect(setting[:depends_behavior]).to eq(:hidden)
         end
       end
 
@@ -768,8 +800,8 @@ RSpec.describe SiteSettingExtension do
           settings.refresh!
         end
 
-        it "is not present in all_settings" do
-          expect(settings.all_settings.find { |s| s[:setting] == :orphan_setting }).to be_blank
+        it "is still present in all_settings (visibility handled client-side)" do
+          expect(settings.all_settings.find { |s| s[:setting] == :orphan_setting }).not_to be_blank
         end
       end
 
@@ -804,6 +836,8 @@ RSpec.describe SiteSettingExtension do
       settings.setting(:superman_identity, "Clark Kent", hidden: true)
       settings.refresh!
     end
+
+    after { DiscoursePluginRegistry.reset! }
 
     it "is in the `hidden_settings` collection" do
       expect(settings.hidden_settings.include?(:superman_identity)).to eq(true)
@@ -1357,7 +1391,7 @@ RSpec.describe SiteSettingExtension do
 
     it "is included in all_settings output" do
       setting = SiteSetting.all_settings.find { |s| s[:setting] == :whispers_allowed_groups }
-      expect(setting[:disallowed_groups]).to eq("0")
+      expect(setting[:disallowed_groups]).to eq("0|4|5")
     end
   end
 
@@ -1715,6 +1749,43 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])
       expect(SiteSetting.exclude_rel_nofollow_domains_map).to eq([])
     end
+
+    describe "granular_anonymous_and_logged_in_groups_permissions read-time swap" do
+      let(:everyone_id) { Group::AUTO_GROUPS[:everyone] }
+      let(:logged_in_id) { Group::AUTO_GROUPS[:logged_in_users] }
+
+      it "returns the stored ids unchanged when the upcoming change is disabled" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
+        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([everyone_id, 11])
+      end
+
+      it "swaps 0 for logged_in_users when the upcoming change is enabled" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
+        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([logged_in_id, 11])
+      end
+
+      it "dedups when logged_in_users is already stored alongside everyone" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|#{logged_in_id}|1"
+        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([logged_in_id, 1])
+      end
+
+      it "leaves the stored database value untouched" do
+        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+        SiteSetting.experimental_new_new_view_groups_map # trigger getter
+
+        expect(SiteSetting.experimental_new_new_view_groups).to eq("#{everyone_id}|11")
+      end
+
+      it "does not affect category_list settings" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+        SiteSetting.digest_suppress_categories = "#{everyone_id}|4"
+        expect(SiteSetting.digest_suppress_categories_map).to eq([everyone_id, 4])
+      end
+    end
   end
 
   describe "keywords" do
@@ -1892,6 +1963,150 @@ RSpec.describe SiteSettingExtension do
           "changed",
           { details: "Updated via Rails console via test plugin" },
         ).once
+      end
+    end
+  end
+
+  describe "upcoming_change_default_override" do
+    before do
+      settings.setting(
+        :increase_suggested_topics_max_days_old_default,
+        false,
+        upcoming_change: {
+          status: :experimental,
+          impact: "site_setting_default,all_members",
+        },
+      )
+      settings.setting(
+        :suggested_topics_max_days_old,
+        365,
+        upcoming_change_default_override: {
+          upcoming_change: "increase_suggested_topics_max_days_old_default",
+          new_default: 1000,
+        },
+      )
+      settings.setting(:promote_upcoming_changes_on_status, "stable")
+      UpcomingChanges.stubs(:settings_provider).returns(settings)
+    end
+
+    context "when the linked upcoming change is active" do
+      before do
+        settings.provider.save(
+          :increase_suggested_topics_max_days_old_default,
+          true,
+          SiteSetting.types[:bool],
+        )
+        settings.refresh!
+      end
+
+      it "returns the override default" do
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+      end
+    end
+
+    context "when the linked upcoming change is not active" do
+      it "returns the YAML default" do
+        expect(settings.suggested_topics_max_days_old).to eq(365)
+      end
+    end
+
+    context "when the linked upcoming change is enabled via add_override!" do
+      it "immediately applies the override default without needing refresh!" do
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+      end
+
+      it "immediately reverts the override default when disabled" do
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, false)
+        expect(settings.suggested_topics_max_days_old).to eq(365)
+      end
+
+      it "does not override a manually set target setting value" do
+        settings.add_override!(:suggested_topics_max_days_old, 730)
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, true)
+        expect(settings.suggested_topics_max_days_old).to eq(730)
+      end
+    end
+
+    context "when the linked upcoming change is reset via remove_override!" do
+      it "immediately reverts the override default" do
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+
+        settings.remove_override!(:increase_suggested_topics_max_days_old_default)
+
+        expect(settings.increase_suggested_topics_max_days_old_default).to eq(false)
+        expect(settings.suggested_topics_max_days_old).to eq(365)
+        expect(
+          settings.defaults.upcoming_change_override_metadata(:suggested_topics_max_days_old),
+        ).to be_nil
+      end
+
+      it "reapplies the override default when a manual opt out is removed after auto-promotion" do
+        settings.add_override!(:promote_upcoming_changes_on_status, "experimental")
+        settings.refresh!
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, false)
+        expect(settings.suggested_topics_max_days_old).to eq(365)
+
+        settings.remove_override!(:increase_suggested_topics_max_days_old_default)
+
+        expect(settings.increase_suggested_topics_max_days_old_default).to eq(true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+      end
+    end
+
+    context "when admin opts out of the target setting after the override is active" do
+      before do
+        settings.provider.save(
+          :increase_suggested_topics_max_days_old_default,
+          true,
+          SiteSetting.types[:bool],
+        )
+        settings.refresh!
+      end
+
+      it "preserves the admin's explicit value across refresh, even when it equals the original default" do
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+
+        settings.provider.save(:suggested_topics_max_days_old, 365, SiteSetting.types[:integer])
+        settings.refresh!
+
+        expect(settings.suggested_topics_max_days_old).to eq(365)
+      end
+    end
+
+    describe "all_settings effective default" do
+      context "when the linked upcoming change is active" do
+        before do
+          UpcomingChanges.stubs(:settings_provider).returns(settings)
+          settings.provider.save(
+            :increase_suggested_topics_max_days_old_default,
+            true,
+            SiteSetting.types[:bool],
+          )
+          settings.refresh!
+        end
+
+        it "shows the override default in all_settings" do
+          setting = settings.all_settings.find { |s| s[:setting] == :suggested_topics_max_days_old }
+          expect(setting[:default]).to eq("1000")
+        end
+
+        it "does not show the setting as overridden when value matches effective default" do
+          setting = settings.all_settings.find { |s| s[:setting] == :suggested_topics_max_days_old }
+          expect(setting[:value]).to eq(setting[:default])
+        end
+      end
+
+      context "when the linked upcoming change is not active" do
+        it "shows the original YAML default in all_settings" do
+          setting = settings.all_settings.find { |s| s[:setting] == :suggested_topics_max_days_old }
+          expect(setting[:default]).to eq("365")
+        end
       end
     end
   end

@@ -130,6 +130,8 @@ module DiscourseAutomation
           new_context["_serialized_#{k}"] = { "class" => "Symbol", "value" => v.to_s }
         elsif v.is_a?(ActiveRecord::Base)
           new_context["_serialized_#{k}"] = { "class" => v.class.name, "id" => v.id }
+        elsif v.is_a?(Date) || v.is_a?(Time)
+          new_context[k] = v.iso8601
         else
           new_context[k] = v
         end
@@ -255,11 +257,11 @@ end
 # Table name: discourse_automation_automations
 #
 #  id                 :bigint           not null, primary key
+#  enabled            :boolean          default(FALSE), not null
 #  name               :string
 #  script             :string           not null
-#  enabled            :boolean          default(FALSE), not null
+#  trigger            :string
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  last_updated_by_id :integer          not null
-#  trigger            :string
 #

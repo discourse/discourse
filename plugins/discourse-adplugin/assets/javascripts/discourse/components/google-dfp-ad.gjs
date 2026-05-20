@@ -1,12 +1,11 @@
-import { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import RSVP from "rsvp";
-import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import AdComponent from "./ad-component";
 
@@ -250,9 +249,23 @@ export default class GoogleDfpAd extends AdComponent {
   loadedGoogletag = false;
   lastAdRefresh = null;
 
-  @alias("size.width") width;
+  @computed("size.width")
+  get width() {
+    return this.size?.width;
+  }
 
-  @alias("size.height") height;
+  set width(value) {
+    set(this, "size.width", value);
+  }
+
+  @computed("size.height")
+  get height() {
+    return this.size?.height;
+  }
+
+  set height(value) {
+    set(this, "size.height", value);
+  }
 
   @computed
   get size() {
@@ -437,7 +450,7 @@ export default class GoogleDfpAd extends AdComponent {
   }
 
   <template>
-    <div class={{concatClass "google-dfp-ad" this.adUnitClass}} ...attributes>
+    <div class={{dConcatClass "google-dfp-ad" this.adUnitClass}} ...attributes>
       {{#if this.showAd}}
         {{#if this.site.mobileView}}
           <div class="google-dfp-ad-label" style={{this.adTitleStyleMobile}}><h2

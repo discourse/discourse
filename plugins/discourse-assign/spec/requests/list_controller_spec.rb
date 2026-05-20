@@ -90,7 +90,8 @@ describe ListController do
     it "returns the correct more_topics_url with a unicode group name" do
       SiteSetting.unicode_usernames = true
 
-      unicode_group = Fabricate(:group, name: "管理员")
+      unicode_group =
+        Fabricate(:group, name: "管理员", assignable_level: Group::ALIAS_LEVELS[:everyone])
       unicode_group.add(user)
       SiteSetting.assign_allowed_on_groups += "|#{unicode_group.id}"
 

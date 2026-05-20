@@ -15,9 +15,27 @@ import {
 import { NodeSelection, Selection, TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
+
+function isPlainTextFragment(fragment, schema) {
+  return fragment.content.every((node) => {
+    if (node.isText) {
+      return node.marks.length === 0;
+    }
+
+    if (node.type === schema.nodes.hard_break) {
+      return true;
+    }
+
+    if (node.type === schema.nodes.paragraph) {
+      return isPlainTextFragment(node.content, schema);
+    }
+
+    return false;
+  });
+}
 
 /**
  * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
@@ -42,6 +60,8 @@ export default class ProsemirrorTextManipulation {
   state = trackedObject({});
   convertFromMarkdown;
   convertToMarkdown;
+  splitNonEmptyLines;
+  buildListNode;
 
   constructor(
     owner,
@@ -50,6 +70,8 @@ export default class ProsemirrorTextManipulation {
       view,
       convertFromMarkdown,
       convertToMarkdown,
+      splitNonEmptyLines,
+      buildListNode,
       commands,
       customState,
     }
@@ -59,6 +81,8 @@ export default class ProsemirrorTextManipulation {
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
+    this.splitNonEmptyLines = splitNonEmptyLines;
+    this.buildListNode = buildListNode;
     this.commands = commands;
     this.customState = customState;
 
@@ -113,7 +137,7 @@ export default class ProsemirrorTextManipulation {
   }
 
   autocomplete(options) {
-    return DAutocompleteModifier.setupAutocomplete(
+    return dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.view.dom,
       this.autocompleteHandler,
@@ -210,6 +234,35 @@ export default class ProsemirrorTextManipulation {
       return null;
     };
 
+    const replaceSelectionWithList = (targetType) => {
+      const { state } = this.view;
+      const selectedContent = state.selection.content().content;
+
+      if (!isPlainTextFragment(selectedContent, this.schema)) {
+        return false;
+      }
+
+      const selectedText = state.doc.textBetween(
+        state.selection.from,
+        state.selection.to,
+        "\n",
+        "\n"
+      );
+      const lines = this.splitNonEmptyLines(selectedText);
+
+      if (lines.length <= 1) {
+        return false;
+      }
+
+      const listNode = this.buildListNode(this.schema, targetType, lines);
+
+      this.view.dispatch(
+        state.tr.replaceSelectionWith(listNode).scrollIntoView()
+      );
+
+      return true;
+    };
+
     if (exampleKey === "list_item") {
       const targetType =
         head === "* "
@@ -244,6 +297,11 @@ export default class ProsemirrorTextManipulation {
           };
         }
       } else {
+        if (replaceSelectionWithList(targetType)) {
+          this.focus();
+          return;
+        }
+
         // Not in a list - wrap in the target type
         command = wrapInList(targetType);
       }

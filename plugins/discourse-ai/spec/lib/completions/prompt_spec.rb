@@ -85,6 +85,22 @@ RSpec.describe DiscourseAi::Completions::Prompt do
       expect(encoded.first[:mime_type]).to eq("application/pdf")
       expect(encoded.first[:kind]).to eq(:document)
     end
+
+    it "can encode documents without encoding images" do
+      image_upload =
+        UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
+      prompt.push(
+        type: :user,
+        content: ["mixed uploads", { upload_id: image_upload.id }, { upload_id: pdf_upload.id }],
+      )
+
+      encoded =
+        prompt.encoded_uploads(prompt.messages.last, allow_images: false, allow_documents: true)
+
+      expect(encoded.length).to eq(1)
+      expect(encoded.first[:kind]).to eq(:document)
+      expect(encoded.first[:filename]).to eq("document.pdf")
+    end
   end
 
   describe "#push" do

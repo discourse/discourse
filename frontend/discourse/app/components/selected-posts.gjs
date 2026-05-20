@@ -2,9 +2,9 @@
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { tagName } from "@ember-decorators/component";
-import CountI18n from "discourse/components/count-i18n";
-import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -12,7 +12,7 @@ export default class SelectedPosts extends Component {
   <template>
     <div ...attributes>
       <p>
-        <CountI18n
+        <DCountI18n
           @key="topic.multi_select.description"
           @count={{this.selectedPostsCount}}
         />

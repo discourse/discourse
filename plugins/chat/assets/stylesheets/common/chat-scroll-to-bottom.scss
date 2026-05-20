@@ -1,37 +1,27 @@
 .chat-scroll-to-bottom {
   display: flex;
   justify-content: center;
-  margin: 0 1rem;
   position: relative;
-
-  &__arrow {
-    display: flex;
-    background: var(--primary-medium);
-    border-radius: 100%;
-    align-items: center;
-    justify-content: center;
-    height: 32px;
-    width: 32px;
-    position: relative;
-  }
 
   &__button {
     align-items: center;
     justify-content: center;
+    gap: var(--space-2);
     position: absolute;
-    flex-direction: column;
+    height: 2rem;
     bottom: -25px;
-    background: none;
+    padding: 0 var(--space-2);
+    background: var(--primary-medium);
     opacity: 0;
     transition:
       opacity 0.25s ease,
       transform 0.5s ease;
     transform: scale(0.1);
-    padding: 0;
     z-index: z("dropdown");
+    color: var(--secondary);
 
     .d-icon {
-      color: var(--secondary);
+      color: inherit;
     }
 
     > * {
@@ -70,5 +60,9 @@
         }
       }
     }
+  }
+
+  &__new-messages {
+    font-size: var(--font-down-1-rem);
   }
 }

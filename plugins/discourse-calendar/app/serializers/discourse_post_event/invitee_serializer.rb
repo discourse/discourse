@@ -2,7 +2,7 @@
 
 module DiscoursePostEvent
   class InviteeSerializer < ApplicationSerializer
-    attributes :id, :status, :user, :post_id, :meta
+    attributes :id, :status, :recurring, :user, :post_id, :meta
 
     def status
       object.status ? Invitee.statuses[object.status] : nil

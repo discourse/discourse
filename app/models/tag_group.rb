@@ -3,6 +3,7 @@
 class TagGroup < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
   validates :name, uniqueness: { case_sensitive: false }
+  validate :ensure_permissions_not_empty, on: :update
 
   scope :where_name,
         ->(name) do
@@ -106,6 +107,10 @@ class TagGroup < ActiveRecord::Base
     end
   end
 
+  def ensure_permissions_not_empty
+    errors.add(:base, I18n.t("tags.groups.errors.empty_permissions")) if @permissions&.empty?
+  end
+
   def remove_parent_from_group
     tags.delete(parent_tag) if tags.include?(parent_tag)
   end
@@ -144,10 +149,10 @@ end
 #
 #  id            :integer          not null, primary key
 #  name          :string(100)      not null
+#  one_per_topic :boolean          default(FALSE)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  parent_tag_id :integer
-#  one_per_topic :boolean          default(FALSE)
 #
 # Indexes
 #

@@ -360,6 +360,7 @@ acceptance("Tag info", function (needs) {
               name: "planters",
               slug: "planters",
               topic_count: 1,
+              description: "A tag about planters",
             },
           ],
           topics: [],
@@ -372,6 +373,7 @@ acceptance("Tag info", function (needs) {
       "/tags/c/feature/2/planters/12/l/latest.json",
       "/tags/c/feature/2/planters/12/l/hot.json",
       "/tags/c/feature/2/none/planters/12/l/latest.json",
+      "/tags/c/bug/1/planters/12/l/latest.json",
     ].forEach((url) => {
       server.get(url, () => {
         return helper.response({
@@ -457,6 +459,18 @@ acceptance("Tag info", function (needs) {
     });
   });
 
+  test("tag model includes description from topic list", async function (assert) {
+    await visit("/tag/planters/12");
+
+    const router = this.owner.lookup("service:router");
+    const tag = router.currentRoute.attributes.tag;
+    assert.strictEqual(
+      tag.description,
+      "A tag about planters",
+      "tag model has the description from topic list tags"
+    );
+  });
+
   test("can filter tags page by category", async function (assert) {
     await visit("/tag/planters/12");
 
@@ -529,6 +543,33 @@ acceptance("Tag info", function (needs) {
     await click("#create-topic");
     let composer = this.owner.lookup("service:composer");
     assert.deepEqual(composer.get("model").tags, []);
+  });
+
+  test("shows combined admin dropdown on tag+category route when user can edit both", async function (assert) {
+    updateCurrentUser({ admin: true, can_edit_tags: true });
+
+    await visit("/tags/c/bug/1/planters/12");
+
+    assert
+      .dom(".tag-category-admin-dropdown")
+      .exists("shows the combined admin dropdown");
+    assert
+      .dom(".edit-category")
+      .doesNotExist("does not show separate edit category button");
+    assert
+      .dom("#show-tag-info")
+      .doesNotExist("does not show separate tag info button");
+  });
+
+  test("shows separate buttons when user can only edit category", async function (assert) {
+    updateCurrentUser({ admin: false, can_edit_tags: false });
+
+    await visit("/tags/c/bug/1/planters/12");
+
+    assert.dom(".edit-category").exists("shows separate edit category button");
+    assert
+      .dom(".tag-category-admin-dropdown")
+      .doesNotExist("does not show the combined admin dropdown");
   });
 });
 

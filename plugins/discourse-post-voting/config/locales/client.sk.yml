@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 sk:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: Hlasovanie o príspevkoch
   post_voting:
     reviewables:
       comment_already_handled: "Ďakujeme, ale tento komentár sme už preskúmali a rozhodli sme, že ho netreba znova označiť."

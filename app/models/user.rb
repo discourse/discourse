@@ -254,8 +254,9 @@ class User < ActiveRecord::Base
   # Information if user was authenticated with OAuth
   attr_accessor :authenticated_with_oauth
 
-  # Flag used when admin is impersonating a user
+  # Attributes used when admin is impersonating a user
   attr_accessor :is_impersonating
+  attr_accessor :impersonation_expires_at
 
   scope :with_email,
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
@@ -544,9 +545,32 @@ class User < ActiveRecord::Base
   end
 
   def in_any_groups?(group_ids)
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
-      (is_system_user? && (Group.auto_groups_between(:admins, :trust_level_4) & group_ids).any?) ||
-      (group_ids & belonging_to_group_ids).any?
+    # The :everyone short-circuit means any logged-in user matches a group_list
+    # containing group id 0. This conflates "all logged-in users" with "everyone
+    # including anon" and is gated behind the granular pseudogroups upcoming
+    # change.
+    everyone_shortcut =
+      !SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
+        group_ids.include?(Group::AUTO_GROUPS[:everyone])
+
+    logged_in_shortcut = group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+
+    return true if everyone_shortcut || logged_in_shortcut
+
+    # Sometimes the system user doesn't have their auto groups
+    # from some strange edge case, this handles it.
+    if (
+         is_system_user? &&
+           (
+             (
+               Group.auto_groups_between(:admins, :trust_level_4) - [Group::AUTO_GROUPS[:anonymous]]
+             ) & group_ids
+           ).any?
+       )
+      return true
+    end
+
+    (group_ids & belonging_to_group_ids).any?
   end
 
   def belonging_to_group_ids
@@ -1032,12 +1056,14 @@ class User < ActiveRecord::Base
   end
 
   def create_visit_record!(date, opts = {})
+    visit =
+      user_visits.create!(
+        visited_at: date,
+        posts_read: opts[:posts_read] || 0,
+        mobile: opts[:mobile] || false,
+      )
     user_stat.update_column(:days_visited, user_stat.days_visited + 1)
-    user_visits.create!(
-      visited_at: date,
-      posts_read: opts[:posts_read] || 0,
-      mobile: opts[:mobile] || false,
-    )
+    visit
   end
 
   def visit_record_for(date)
@@ -1046,6 +1072,8 @@ class User < ActiveRecord::Base
 
   def update_visit_record!(date)
     create_visit_record!(date) unless visit_record_for(date)
+  rescue ActiveRecord::RecordNotUnique
+    # concurrent "Updating Last Seen" defer block already inserted
   end
 
   def update_timezone_if_missing(timezone)
@@ -1341,8 +1369,18 @@ class User < ActiveRecord::Base
     user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
   end
 
+  def full_silence_reason
+    text = silenced_record.try(:details) if silenced?
+    return text if text.blank?
+    PrettyText.cleanup(text.gsub("\n", "<br>"))
+  end
+
   def silence_reason
-    PrettyText.cleanup(silenced_record.try(:details)) if silenced?
+    if details = full_silence_reason
+      return details.split("<br>")[0]
+    end
+
+    nil
   end
 
   def silenced_at
@@ -2207,6 +2245,12 @@ class User < ActiveRecord::Base
 
     if SiteSetting.default_navigation_menu_categories.present?
       categories_to_update = SiteSetting.default_navigation_menu_categories.split("|")
+      categories_to_update =
+        DiscoursePluginRegistry.apply_modifier(
+          :default_navigation_categories,
+          categories_to_update,
+          user: self,
+        )
 
       SidebarSectionLinksUpdater.update_category_section_links(
         self,
@@ -2307,43 +2351,43 @@ end
 # Table name: users
 #
 #  id                        :integer          not null, primary key
-#  username                  :string(60)       not null
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
-#  name                      :string
-#  last_posted_at            :datetime
 #  active                    :boolean          default(FALSE), not null
-#  username_lower            :string(60)       not null
-#  last_seen_at              :datetime
 #  admin                     :boolean          default(FALSE), not null
-#  last_emailed_at           :datetime
-#  trust_level               :integer          not null
 #  approved                  :boolean          default(FALSE), not null
-#  approved_by_id            :integer
 #  approved_at               :datetime
+#  date_of_birth             :date
+#  first_seen_at             :datetime
+#  flag_level                :integer          default(0), not null
+#  group_locked_trust_level  :integer
+#  ip_address                :inet
+#  last_emailed_at           :datetime
+#  last_posted_at            :datetime
+#  last_seen_at              :datetime
+#  locale                    :string(10)
+#  manual_locked_trust_level :integer
+#  moderator                 :boolean          default(FALSE)
+#  name                      :string
 #  previous_visit_at         :datetime
+#  registration_ip_address   :inet
+#  required_fields_version   :integer
+#  secure_identifier         :string
+#  silenced_till             :datetime
+#  staged                    :boolean          default(FALSE), not null
 #  suspended_at              :datetime
 #  suspended_till            :datetime
-#  date_of_birth             :date
-#  views                     :integer          default(0), not null
-#  flag_level                :integer          default(0), not null
-#  ip_address                :inet
-#  moderator                 :boolean          default(FALSE)
 #  title                     :string
-#  uploaded_avatar_id        :integer
-#  locale                    :string(10)
-#  primary_group_id          :integer
-#  registration_ip_address   :inet
-#  staged                    :boolean          default(FALSE), not null
-#  first_seen_at             :datetime
-#  silenced_till             :datetime
-#  group_locked_trust_level  :integer
-#  manual_locked_trust_level :integer
-#  secure_identifier         :string
+#  trust_level               :integer          not null
+#  username                  :string(60)       not null
+#  username_lower            :string(60)       not null
+#  views                     :integer          default(0), not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  approved_by_id            :integer
 #  flair_group_id            :integer
 #  last_seen_reviewable_id   :integer
-#  required_fields_version   :integer
+#  primary_group_id          :integer
 #  seen_notification_id      :bigint           default(0), not null
+#  uploaded_avatar_id        :integer
 #
 # Indexes
 #

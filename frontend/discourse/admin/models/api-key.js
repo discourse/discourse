@@ -1,11 +1,13 @@
 import { computed } from "@ember/object";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
-import { fmt } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
 
 export default class ApiKey extends RestModel {
-  @fmt("truncated_key", "%@ ...") truncatedKey;
+  @computed("truncated_key")
+  get truncatedKey() {
+    return `${this.truncated_key} ...`;
+  }
 
   @computed("_user")
   get user() {

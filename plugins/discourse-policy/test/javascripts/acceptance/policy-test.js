@@ -14,7 +14,7 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
-acceptance("Discourse Policy - post", function (needs) {
+acceptance("post", function (needs) {
   needs.user();
 
   needs.settings({
@@ -62,7 +62,7 @@ acceptance("Discourse Policy - post", function (needs) {
 
     assert.strictEqual(
       raw.trim(),
-      '[policy reminder="daily" version="1" groups="staff"]\nI accept this policy\n[/policy]'
+      '[policy groups="staff" version="1" reminder="daily"]\nI accept this policy\n[/policy]'
     );
   });
 

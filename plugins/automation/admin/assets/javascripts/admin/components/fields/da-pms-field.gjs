@@ -5,10 +5,9 @@ import { action } from "@ember/object";
 import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DEditor from "discourse/components/d-editor";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
+import DButton from "discourse/ui-kit/d-button";
+import DEditor from "discourse/ui-kit/d-editor";
 import { i18n } from "discourse-i18n";
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
@@ -68,11 +67,7 @@ export default class PmsField extends BaseField {
             <DAFieldLabel @label={{this.rawLabel}} @field={{@field}} />
             <div class="controls">
               <div class="field-wrapper">
-                <DEditor
-                  @value={{pm.raw}}
-                  @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.rich}}
-                  @processPreview={{false}}
-                />
+                <DEditor @value={{pm.raw}} />
 
                 {{#if this.displayPlaceholders}}
                   <PlaceholdersList

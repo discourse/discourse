@@ -1,17 +1,23 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class GoogleSearch extends Component {
-  @alias("siteSettings.login_required") hidden;
+  @computed("siteSettings.login_required")
+  get hidden() {
+    return this.siteSettings?.login_required;
+  }
+
+  set hidden(value) {
+    set(this, "siteSettings.login_required", value);
+  }
 
   @computed
   get siteUrl() {
@@ -20,7 +26,7 @@ export default class GoogleSearch extends Component {
 
   <template>
     <div
-      class={{concatClass "google-search-form" (if this.hidden "hidden")}}
+      class={{dConcatClass "google-search-form" (if this.hidden "hidden")}}
       ...attributes
     >
       <PluginOutlet

@@ -3,6 +3,20 @@
 require_dependency "reviewable"
 
 class ReviewableAiToolAction < Reviewable
+  def created_new!
+    super
+
+    self.topic ||= target_post&.topic
+    self.category_id ||= topic&.category_id
+  end
+
+  def target_post
+    return @target_post if defined?(@target_post)
+
+    post_id = target&.post_id
+    @target_post = post_id ? Post.find_by(id: post_id) : nil
+  end
+
   def build_actions(actions, guardian, args)
     return actions if !pending?
 
@@ -92,26 +106,26 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
-#  type                    :string           not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
-#  version                 :integer          default(0), not null
+#  force_review            :boolean          default(FALSE), not null
 #  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
+#  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
+#  version                 :integer          default(0), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
-#  type_source             :string           default("unknown"), not null
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #

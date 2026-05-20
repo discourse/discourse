@@ -119,6 +119,7 @@ class DiscoursePluginRegistry
   define_filtered_register :search_handlers
 
   define_filtered_register :stats
+  define_filtered_register :admin_dashboard_highlight_kpis
   define_filtered_register :bookmarkables
 
   define_filtered_register :list_suggested_for_providers
@@ -241,9 +242,7 @@ class DiscoursePluginRegistry
 
   def self.seed_paths
     result = SeedFu.fixture_paths.dup
-    unless Rails.env.test? && ENV["LOAD_PLUGINS"] != "1"
-      seed_path_builders.each { |b| result += b.call }
-    end
+    seed_path_builders.each { |b| result += b.call } if GlobalSetting.load_plugins?
     result.uniq
   end
 

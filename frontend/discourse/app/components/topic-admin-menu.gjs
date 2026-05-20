@@ -2,17 +2,21 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
+import DiscourseURL from "discourse/lib/url";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class TopicAdminMenu extends Component {
   @service adminTopicMenuButtons;
   @service currentUser;
+  @service siteSettings;
 
   @action
   onRegisterApi(api) {
@@ -82,6 +86,45 @@ export default class TopicAdminMenu extends Component {
     );
   }
 
+  get showNestedRepliesToggle() {
+    return (
+      this.siteSettings.nested_replies_enabled &&
+      !this.siteSettings.nested_replies_default &&
+      this.currentUser?.staff
+    );
+  }
+
+  get nestedRepliesToggleLabel() {
+    return this.args.topic.get("is_nested_view")
+      ? "nested_replies.topic_admin_menu.disable_nested_replies"
+      : "nested_replies.topic_admin_menu.enable_nested_replies";
+  }
+
+  @action
+  async toggleNestedReplies() {
+    await this.dMenu.close();
+    const topic = this.args.topic;
+    const newValue = !topic.get("is_nested_view");
+    const topicId = topic.get("id");
+    const slug = topic.get("slug");
+
+    try {
+      await ajax(`/n/${slug}/${topicId}/toggle`, {
+        type: "PUT",
+        data: { enabled: newValue },
+      });
+      topic.set("is_nested_view", newValue);
+
+      if (newValue) {
+        DiscourseURL.routeTo(`/n/${slug}/${topicId}`);
+      } else {
+        DiscourseURL.routeTo(`/t/${slug}/${topicId}`);
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
   <template>
     {{#if this.showAdminButton}}
       <DMenu
@@ -92,10 +135,10 @@ export default class TopicAdminMenu extends Component {
         @triggerClass="btn-default btn-icon toggle-admin-menu {{@buttonClasses}}"
       >
         <:trigger>
-          {{icon "wrench"}}
+          {{dIcon "wrench"}}
         </:trigger>
         <:content>
-          <DropdownMenu as |dropdown|>
+          <DDropdownMenu as |dropdown|>
             {{#if
               (or
                 this.currentUser.canManageTopic
@@ -266,7 +309,13 @@ export default class TopicAdminMenu extends Component {
               </dropdown.item>
             {{/if}}
 
-            {{#if (or this.currentUser.staff this.extraButtons.length)}}
+            {{#if
+              (or
+                this.currentUser.staff
+                this.showNestedRepliesToggle
+                this.extraButtons.length
+              )
+            }}
               <dropdown.divider />
 
               {{#if this.currentUser.staff}}
@@ -279,19 +328,29 @@ export default class TopicAdminMenu extends Component {
                 </dropdown.item>
               {{/if}}
 
+              {{#if this.showNestedRepliesToggle}}
+                <dropdown.item class="topic-admin-nested-replies">
+                  <DButton
+                    @label={{this.nestedRepliesToggleLabel}}
+                    @action={{this.toggleNestedReplies}}
+                    @icon="nested-thread"
+                  />
+                </dropdown.item>
+              {{/if}}
+
               {{#each this.extraButtons as |button|}}
                 <dropdown.item>
                   <DButton
                     @label={{button.label}}
                     @translatedLabel={{button.translatedLabel}}
                     @icon={{button.icon}}
-                    class={{concatClass "btn-transparent" button.className}}
+                    class={{dConcatClass "btn-transparent" button.className}}
                     @action={{fn this.onExtraButtonAction button.action}}
                   />
                 </dropdown.item>
               {{/each}}
             {{/if}}
-          </DropdownMenu>
+          </DDropdownMenu>
         </:content>
       </DMenu>
     {{/if}}

@@ -8,7 +8,7 @@ class UpcomingChanges::Toggle
   options { attribute :log_change, default: true }
 
   params do
-    attribute :setting_name, :string
+    attribute :setting_name, :symbol
     attribute :enabled, :boolean
     validates :setting_name, presence: true
     validates :enabled, inclusion: [true, false]
@@ -20,9 +20,10 @@ class UpcomingChanges::Toggle
 
   policy :current_user_is_admin
   policy :setting_is_available
+  policy :allowed_enabled_for_target
   transaction { step :toggle }
 
-  step :clear_groups_if_disallowed
+  step :clear_groups_if_groups_not_allowed
 
   only_if(:should_log_change) do
     step :log_change
@@ -43,13 +44,21 @@ class UpcomingChanges::Toggle
 
   def toggle(params:, guardian:, options:)
     context[:previous_value] = SiteSetting.public_send(params.setting_name)
-
     SiteSetting.send("#{params.setting_name}=", params.enabled)
   end
 
-  def clear_groups_if_disallowed(params:)
-    metadata = SiteSetting.upcoming_change_metadata[params.setting_name.to_sym]
-    return if !metadata || !metadata[:disallow_enabled_for_groups]
+  def allowed_enabled_for_target(params:)
+    return true if !params.enabled
+
+    # When enabling with no groups configured, the resulting target is "everyone".
+    # Otherwise the group target is validated by SiteSetting::UpsertGroups.
+    return true if SiteSettingGroup.exists?(name: params.setting_name)
+
+    UpcomingChanges.target_allowed?(params.setting_name, :everyone)
+  end
+
+  def clear_groups_if_groups_not_allowed(params:)
+    return if UpcomingChanges.groups_target_allowed?(params.setting_name)
 
     SiteSettingGroup.find_by(name: params.setting_name)&.destroy!
     SiteSetting.refresh_site_setting_group_ids!

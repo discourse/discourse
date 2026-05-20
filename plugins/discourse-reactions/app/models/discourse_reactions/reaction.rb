@@ -24,6 +24,16 @@ module DiscourseReactions
       ]
     end
 
+    def self.valid?(reaction_value)
+      return false if reaction_value.blank?
+
+      if SiteSetting.discourse_reactions_allow_any_emoji
+        Emoji.exists?(reaction_value)
+      else
+        valid_reactions.include?(reaction_value)
+      end
+    end
+
     def self.main_reaction_id
       SiteSetting.discourse_reactions_reaction_for_like.gsub("-", "")
     end
@@ -48,12 +58,12 @@ end
 # Table name: discourse_reactions_reactions
 #
 #  id                   :bigint           not null, primary key
-#  post_id              :integer
 #  reaction_type        :integer
-#  reaction_value       :string
 #  reaction_users_count :integer
+#  reaction_value       :string
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  post_id              :integer
 #
 # Indexes
 #

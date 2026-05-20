@@ -772,6 +772,171 @@ describe DiscoursePostEvent::Event do
       end
     end
   end
+
+  describe ".update_from_raw" do
+    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+    fab!(:upload)
+
+    context "with image" do
+      before do
+        post.update!(
+          raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
+        )
+        post.rebake!
+        DiscoursePostEvent::Event.update_from_raw(post)
+        post.reload
+      end
+
+      it "resolves image to image_upload_id and creates UploadReference" do
+        expect(post.event.image_upload_id).to eq(upload.id)
+        expect(UploadReference.exists?(upload_id: upload.id, target: post.event)).to eq(true)
+      end
+
+      it "clears image_upload_id when image is removed" do
+        post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
+        post.rebake!
+        DiscoursePostEvent::Event.update_from_raw(post)
+        post.reload
+
+        expect(post.event.image_upload_id).to be_nil
+        expect(UploadReference.exists?(upload_id: upload.id, target: post.event)).to eq(false)
+      end
+    end
+
+    describe "post.image_upload_id sync on post_process_cooked" do
+      fab!(:topic) { Fabricate(:topic, user: user) }
+
+      it "sets post.image_upload_id from the event image after post processing" do
+        post =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
+          )
+        post.rebake!
+        DiscoursePostEvent::Event.update_from_raw(post)
+        post.reload
+        CookedPostProcessor.new(post).post_process
+
+        post.reload
+        expect(post.image_upload_id).to eq(upload.id)
+      end
+
+      it "sets topic.image_upload_id when the post is the first post" do
+        post = topic.first_post || Fabricate(:post, topic: topic, user: user, post_number: 1)
+        post.update!(
+          raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
+        )
+        post.rebake!
+        DiscoursePostEvent::Event.update_from_raw(post)
+        post.reload
+        CookedPostProcessor.new(post).post_process
+
+        post.reload
+        topic.reload
+        expect(topic.image_upload_id).to eq(upload.id)
+      end
+
+      it "does not override post.image_upload_id when event has no image" do
+        other_upload = Fabricate(:upload)
+        post =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            raw: "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.url})",
+          )
+        post.rebake!
+        DiscoursePostEvent::Event.update_from_raw(post)
+        post.reload
+        CookedPostProcessor.new(post).post_process
+
+        post.reload
+        expect(post.image_upload_id).not_to eq(nil)
+        expect(post.event.image_upload_id).to be_nil
+      end
+    end
+
+    context "with an image from a different secure post" do
+      fab!(:private_upload_owner, :user)
+      fab!(:private_upload_recipient, :user)
+      fab!(:private_upload_post) do
+        Fabricate(
+          :private_message_post,
+          user: private_upload_owner,
+          recipient: private_upload_recipient,
+        )
+      end
+      fab!(:private_upload) do
+        Fabricate(
+          :secure_upload,
+          user: private_upload_owner,
+          access_control_post: private_upload_post,
+        )
+      end
+
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+
+        post.update!(
+          raw: "[event start=\"2020-04-24 14:15\" image=\"#{private_upload.url}\"]\n[/event]",
+        )
+        post.rebake!
+      end
+
+      it "does not associate the upload" do
+        DiscoursePostEvent::Event.update_from_raw(post)
+        post.reload
+
+        expect(post.event.image_upload_id).to be_nil
+        expect(UploadReference.exists?(upload_id: private_upload.id, target: post.event)).to eq(
+          false,
+        )
+      end
+    end
+  end
+
+  describe "post/topic image_upload_id sync on post_edited" do
+    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
+    fab!(:upload)
+
+    it "syncs event image to post and topic when image is added" do
+      PostRevisor.new(post).revise!(
+        user,
+        raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
+      )
+      post.reload
+      topic.reload
+
+      expect(post.image_upload_id).to eq(upload.id)
+      expect(topic.image_upload_id).to eq(upload.id)
+    end
+
+    it "does not clear post image_upload_id when event has no image but post has inline images" do
+      other_upload = Fabricate(:upload)
+      PostRevisor.new(post).revise!(
+        user,
+        raw: "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.short_url})",
+      )
+      CookedPostProcessor.new(post).post_process
+      post.reload
+
+      PostRevisor.new(post).revise!(
+        user,
+        raw:
+          "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.short_url})\nupdated text",
+      )
+      post.reload
+
+      expect(post.image_upload_id).to eq(other_upload.id)
+    end
+  end
 end
 
 describe DiscoursePostEvent::Event, "#capacity" do

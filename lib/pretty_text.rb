@@ -200,12 +200,19 @@ module PrettyText
       custom_emoji = {}
       Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
 
+      allowed_iframes =
+        DiscoursePluginRegistry.apply_modifier(
+          :pretty_text_allowed_iframes,
+          SiteSetting.allowed_iframes.split("|"),
+        )
+
       # note, any additional options added to __optInput here must be
       # also be added to the buildOptions function in pretty-text.js,
       # otherwise they will be discarded
       buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
+        __optInput.allowedIframes = #{allowed_iframes.to_json};
         #{"__optInput.disableEmojis = true" if opts[:disable_emojis]}
         __paths = #{paths_json};
         __optInput.getURL = __getURL;

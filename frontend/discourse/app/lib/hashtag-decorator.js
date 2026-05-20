@@ -89,10 +89,9 @@ export function generatePlaceholderHashtagHTML(type, spanEl, data) {
     link.dataset.emoji = data.emoji;
   }
 
-  const hashtagTypeClass = new getHashtagTypeClasses()[type];
-  link.innerHTML = `${hashtagTypeClass.generateIconHTML(
-    data
-  )}<span>${emojiUnescape(data.text)}</span>`;
+  const hashtagTypeClass = getHashtagTypeClasses()[type];
+  const iconHTML = hashtagTypeClass?.generateIconHTML(data) ?? "";
+  link.innerHTML = `${iconHTML}<span>${emojiUnescape(data.text)}</span>`;
   spanEl.replaceWith(link);
 }
 

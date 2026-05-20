@@ -150,6 +150,21 @@ acceptance(`Composer`, function (needs) {
     );
   });
 
+  test("fires resize event after width transition", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const appEvents = this.container.lookup("service:app-events");
+    let resizedTriggered = false;
+    appEvents.on("composer:resized", () => (resizedTriggered = true));
+
+    await triggerEvent("#reply-control", "transitionend", {
+      propertyName: "max-width",
+    });
+
+    assert.true(resizedTriggered, "composer:resized is triggered");
+  });
+
   test("composer controls", async function (assert) {
     await visit("/");
     assert.dom("#create-topic").exists("the create button is visible");

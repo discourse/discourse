@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   assignedToGroupPath,
@@ -45,11 +45,17 @@ export default class AssignedToFirstPost extends Component {
     });
   }
 
+  get hasIndirectAssignments() {
+    return this.indirectlyAssignedTo
+      ? Object.keys(this.indirectlyAssignedTo).length > 0
+      : false;
+  }
+
   get isAssigned() {
     return !!(
       this.assignedToUser ||
       this.assignedToGroup ||
-      this.args.post?.topic?.indirectly_assigned_to
+      this.hasIndirectAssignments
     );
   }
 
@@ -74,7 +80,7 @@ export default class AssignedToFirstPost extends Component {
   <template>
     {{#if this.isAssigned}}
       <p class="assigned-to">
-        {{icon this.icon}}
+        {{dIcon this.icon}}
         {{#if this.assignedToUser}}
           <span class="assignee">
             <span class="assigned-to--user">
@@ -112,7 +118,7 @@ export default class AssignedToFirstPost extends Component {
             {{i18n "discourse_assign.assigned"}}
           </span>
         {{/if}}
-        {{#if this.indirectlyAssignedTo}}
+        {{#if this.hasIndirectAssignments}}
           {{#each
             this.indirectAssignments key="postId"
             as |indirectAssignment|

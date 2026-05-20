@@ -14,10 +14,27 @@ de:
     chat_integration:
       menu_title: "Chat-Integrationen"
       settings: "Einstellungen"
+      nav:
+        providers: "Anbieter"
+        providers_description: "Konfiguriere die Integration von Chat-Anbietern"
+      add_provider: "Anbieter hinzufügen"
+      more_providers: "Mehr"
+      empty_state:
+        title: "Verbinde deine Chat-Plattform"
+        body: "Sende Benachrichtigungen von Discourse an den Chat deines Teams. Wähle einen Anbieter, um loszulegen."
+      channels_title: "Kanäle"
+      no_channels: "Es wurden noch keine Kanäle konfiguriert."
+      channel_actions: "Kanalaktionen"
+      add_first_channel: "Füge deinen ersten %{provider} Kanal hinzu"
       channels_with_errors: "Das letzte Versenden von Nachrichten ist bei einigen Kanälen dieses Providers fehlgeschlagen. Klicke auf das/die Fehlersymbol(e), um mehr zu erfahren."
       channel_exception: "Ein unbekannter Fehler ist aufgetreten, als zuletzt eine Nachricht an diesen Kanal gesendet wurde."
       group_mention_template: "Erwähnungen von: @%{name}"
       group_message_template: "Nachrichten an: @%{name}"
+      choose_group: "(Wähle eine Gruppe)"
+      all_categories: "(Alle Kategorien)"
+      all_tags: "(Alle Schlagwörter)"
+      create_rule: "Regel erstellen"
+      add_channel: "Kanal hinzufügen"
       delete_channel: "Löschen"
       test_channel: "Test"
       edit_channel: "Bearbeiten"
@@ -25,11 +42,14 @@ de:
       test_modal:
         title: "Test-Nachricht senden"
         topic: "Thema"
+        send: "Test-Nachricht senden"
         close: "Schließen"
         error: "Ein unbekannter Fehler ist beim Senden der Nachricht aufgetreten. Bitte überprüfe die Website-Protokolle für weitere Informationen."
         success: "Nachricht erfolgreich versendet"
       type:
         normal: Normal
+        group_message: Gruppennachricht
+        group_mention: Gruppenerwähnung
       filter:
         mute: 'Stummschalten'
         follow: 'Nur erster Beitrag'
@@ -50,6 +70,9 @@ de:
           ok: "Gültig"
           fail: "Ungültiges Format"
       edit_rule_modal:
+        edit_title: Regel bearbeiten
+        create_title: Regel erstellen
+        save: Regel speichern
         cancel: Abbrechen
         provider: Anbieter
         type: Art
@@ -70,7 +93,9 @@ de:
           param:
             identifier:
               title: Kanal
+              help: "Zum Beispiel #kanal oder @benutzername"
           errors:
+            auth_error: "Das angegebene Authentifizierungstoken ist ungültig"
             action_prohibited: "Der Bot hat keine Berechtigung, in diesem Kanal zu schreiben"
             channel_not_found: "Der angegebene Kanal existiert nicht auf Slack"
         telegram:
@@ -93,6 +118,7 @@ de:
               help: "Ein Name, um den Kanal zu beschreiben. Dieser wird nicht verwendet, um die Verbindung mit Discord herzustellen."
             webhook_url:
               title: Webhook-URL
+              help: Die Webhook-URL, die in den Einstellungen deines Discord-Servers erstellt wurde. Sie sollte im Format `https://discord.com/api/webhooks/<webhook-id>/<webhook-token>` sein.
         guilded:
           title: "Guilded"
           param:
@@ -107,6 +133,7 @@ de:
           param:
             identifier:
               title: Kanal
+              help: "Zum Beispiel #kanal oder @benutzername"
           errors:
             channel_not_found: "Der angegebene Kanal existiert nicht in Mattermost"
         matrix:
@@ -137,6 +164,7 @@ de:
           param:
             identifier:
               title: Kanal
+              help: "Zum Beispiel #kanal oder @benutzername"
           errors:
             invalid_channel: "Dieser Kanal exisitert nicht in Rocket Chat"
         gitter:
@@ -144,6 +172,7 @@ de:
           param:
             name:
               title: "Name"
+              help: "Der Name eines Gitter-Raums, zum Beispiel gitterHQ/services"
             webhook_url:
               title: "Webhook-URL"
               help: "Die URL, welche beim Erstellen einer neuen Integration in einem Gitter-Raum angegeben wird."

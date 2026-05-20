@@ -3,8 +3,6 @@
 RSpec.describe FormTemplatesController do
   fab!(:user)
 
-  before { SiteSetting.enable_form_templates = true }
-
   describe "#index" do
     fab!(:form_template)
     fab!(:form_template_2, :form_template)

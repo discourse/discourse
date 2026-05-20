@@ -20,7 +20,6 @@ pt:
     remind_assigns: "Lembrar usuários(as) sobre atribuições pendentes."
     remind_assigns_frequency: "Frequência para lembrar usuários(as) sobre tópicos atribuídos."
     max_assigned_topics: "Quantidade máxima de tópicos que podem ser atribuídos a um(a) usuário(a)."
-    assign_allowed_on_groups: "Usuários(as) nestes grupos têm permissão para atribuir tópicos e podem receber atribuições de tópicos."
     enable_assign_status: "Adicionar um campo de status personalizável para cada atribuição."
     assign_statuses: "Lista de status disponíveis para cada atribuição. O primeiro status é o status aplicado a toda atribuição nova."
     errors:

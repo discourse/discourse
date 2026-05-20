@@ -1,12 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { i18n as computedI18n, propertyNotEqual } from "discourse/lib/computed";
+import { deepEqual } from "discourse/lib/object";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -15,13 +15,24 @@ export default class HouseAdsSetting extends Component {
   saving = false;
   savingStatus = "";
 
-  @computedI18n("name", "admin.adplugin.house_ads.%@.title") title;
-  @computedI18n("name", "admin.adplugin.house_ads.%@.description") help;
-  @propertyNotEqual("adValue", "value") changed;
-
   init() {
     super.init(...arguments);
     this.set("adValue", this.get("value"));
+  }
+
+  @computed("name")
+  get title() {
+    return i18n(`admin.adplugin.house_ads.${this.name}.title`);
+  }
+
+  @computed("name")
+  get help() {
+    return i18n(`admin.adplugin.house_ads.${this.name}.description`);
+  }
+
+  @computed("adValue", "value")
+  get changed() {
+    return !deepEqual(this.adValue, this.value);
   }
 
   @action
@@ -67,7 +78,7 @@ export default class HouseAdsSetting extends Component {
   <template>
     <div class="house-ads-setting" ...attributes>
       <label for={{this.name}}>{{this.title}}</label>
-      <TextField @value={{this.adValue}} @classNames="house-ads-text-input" />
+      <DTextField @value={{this.adValue}} @classNames="house-ads-text-input" />
       <div class="setting-controls">
         {{#if this.changed}}
           <DButton class="ok" @action={{this.save}} @icon="check" />

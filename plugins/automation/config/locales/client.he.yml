@@ -208,9 +208,6 @@ he:
               description: "הגדרת רשות, להגביל את ההזנקה רק לפוסטים עם התכונות האלו"
           created: נוצר
           edited: נערכו
-          topics: כל הנושאים
-          personal_messages: הודעות פרטיות
-          public_topics: נושאים ציבוריים (להחריג את כל הקטגוריות המאובטחות)
           with_images: תמונות
           with_links: קישורים
           with_code: קוד

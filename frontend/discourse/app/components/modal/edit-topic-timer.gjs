@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export const CLOSE_STATUS_TYPE = "close";
@@ -145,7 +145,7 @@ export default class EditTopicTimer extends Component {
           this.args.closeModal();
         } else {
           const topicTimer = this.createDefaultTimer();
-          this.topicTime = topicTimer;
+          this.topicTimer = topicTimer;
           this.args.model.setTopicTimer(topicTimer);
           this.onChangeInput(null, null);
         }
@@ -210,6 +210,15 @@ export default class EditTopicTimer extends Component {
     }
 
     let statusType = this.topicTimer.status_type;
+
+    if (
+      statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE &&
+      !this.topicTimer.category_id
+    ) {
+      this.flash = i18n("topic.topic_status_update.category_required");
+      return;
+    }
+
     if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
       statusType = CLOSE_STATUS_TYPE;
     }

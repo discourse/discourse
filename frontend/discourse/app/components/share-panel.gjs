@@ -1,22 +1,44 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action, computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DTextarea from "discourse/components/d-textarea";
 import ShareSource from "discourse/components/share-source";
 import discourseLater from "discourse/lib/later";
 import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
+import DTextarea from "discourse/ui-kit/d-textarea";
 import { i18n } from "discourse-i18n";
 
 export default class SharePanel extends Component {
   tagName = null;
 
-  @alias("panel.model.type") type;
-  @alias("panel.model.topic") topic;
-  @alias("panel.model.topic.category.read_restricted") privateCategory;
+  @computed("panel.model.type")
+  get type() {
+    return this.panel?.model?.type;
+  }
+
+  set type(value) {
+    set(this, "panel.model.type", value);
+  }
+
+  @computed("panel.model.topic")
+  get topic() {
+    return this.panel?.model?.topic;
+  }
+
+  set topic(value) {
+    set(this, "panel.model.topic", value);
+  }
+
+  @computed("panel.model.topic.category.read_restricted")
+  get privateCategory() {
+    return this.panel?.model?.topic?.category?.read_restricted;
+  }
+
+  set privateCategory(value) {
+    set(this, "panel.model.topic.category.read_restricted", value);
+  }
 
   @computed("topic.{isPrivateMessage,invisible,category}")
   get sources() {

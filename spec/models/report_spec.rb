@@ -1352,7 +1352,7 @@ RSpec.describe Report do
     end
   end
 
-  describe "report_staff_logins" do
+  describe "report_admin_logins" do
     let(:joffrey) { Fabricate(:admin, username: "joffrey") }
     let(:robin) { Fabricate(:admin, username: "robin") }
     let(:james) { Fabricate(:user, username: "james") }
@@ -1385,7 +1385,7 @@ RSpec.describe Report do
         )
         UserAuthToken.log(action: "generate", user_id: james.id)
 
-        report = Report.find("staff_logins")
+        report = Report.find("admin_logins")
 
         expect(report.data.length).to eq(3)
         expect(report.data[0][:username]).to eq("joffrey")
@@ -1604,6 +1604,59 @@ RSpec.describe Report do
         expect(page_view_logged_in_browser_report[:data].sum { |d| d[:y] }).to eql(6)
         expect(page_view_anon_browser_report[:data].sum { |d| d[:y] }).to eql(1)
         expect(page_view_other_report[:data].sum { |d| d[:y] }).to eql(3)
+      end
+    end
+  end
+
+  describe "site_traffic" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      Theme.clear_default!
+    end
+
+    let(:reports) { Report.find("site_traffic") }
+
+    context "with no data" do
+      it "works" do
+        reports.data.each { |report| expect(report[:data]).to be_empty }
+      end
+    end
+
+    context "with data" do
+      before do
+        CachedCounting.reset
+        CachedCounting.enable
+        ApplicationRequest.enable
+      end
+
+      after do
+        CachedCounting.reset
+        ApplicationRequest.disable
+        CachedCounting.disable
+      end
+
+      it "exposes embedded pageviews as their own series without polluting other series" do
+        Fabricate(:embeddable_host)
+
+        2.times { ApplicationRequest.increment!(:page_view_anon) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        3.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        2.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        4.times { ApplicationRequest.increment!(:page_view_embed) }
+        CachedCounting.flush
+
+        embed_series = reports.data.find { |r| r[:req] == "page_view_embed" }
+        other_series = reports.data.find { |r| r[:req] == "page_view_other" }
+
+        expect(embed_series[:data][0][:y]).to eq(4)
+        expect(other_series[:data][0][:y]).to eq(2)
+      end
+
+      it "omits the embedded pageviews series when no embeddable host is configured" do
+        4.times { ApplicationRequest.increment!(:page_view_embed) }
+        CachedCounting.flush
+
+        expect(reports.data.map { |r| r[:req] }).not_to include("page_view_embed")
       end
     end
   end

@@ -7,12 +7,12 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { and, not } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
@@ -47,7 +47,6 @@ import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatChannel extends Component {
   @service capabilities;
-  @service chat;
   @service chatApi;
   @service chatChannelsManager;
   @service chatDraftsManager;
@@ -499,7 +498,9 @@ export default class ChatChannel extends Component {
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
-      this.paneState.clearPendingMessages();
+      if (this.paneState.userIsPresent) {
+        this.paneState.clearPendingMessages();
+      }
       this.fetchMoreMessages({ direction: FUTURE });
       this.chatChannelScrollPositions.delete(this.args.channel.id);
     } else {
@@ -602,7 +603,6 @@ export default class ChatChannel extends Component {
         stagedMessage.cooked = "";
         stagedMessage.error = error.jqXHR.responseJSON.errors[0];
       } else {
-        this.chat.markNetworkAsUnreliable();
         stagedMessage.error = "network_error";
       }
     }
@@ -627,9 +627,6 @@ export default class ChatChannel extends Component {
       .sendMessage(this.args.channel.id, data)
       .catch((error) => {
         this._onSendError(data.staged_id, error);
-      })
-      .then(() => {
-        this.chat.markNetworkAsReliable();
       })
       .finally(() => {
         this.pane.sending = false;
@@ -706,7 +703,7 @@ export default class ChatChannel extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "chat-channel"
         (if this.messagesLoader.loading "loading")
         (if this.pane.sending "chat-channel--sending")
@@ -760,6 +757,7 @@ export default class ChatChannel extends Component {
       <ChatScrollToBottomArrow
         @onScrollToBottom={{this.scrollToLatestMessage}}
         @isVisible={{this.paneState.hasPendingContentBelow}}
+        @channel={{@channel}}
       />
 
       {{#if this.pane.selectingMessages}}

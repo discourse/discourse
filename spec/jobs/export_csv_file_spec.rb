@@ -34,8 +34,7 @@ RSpec.describe Jobs::ExportCsvFile do
         expect(system_message.first_post.raw).to eq(
           I18n.t(
             "system_messages.csv_export_succeeded.text_body_template",
-            download_link:
-              "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.filesize} Bytes)",
+            download_link: UploadMarkdown.new(upload).attachment_markdown,
           ).chomp,
         )
 
@@ -219,7 +218,7 @@ RSpec.describe Jobs::ExportCsvFile do
         client_ip: "1.1.1.1",
         created_at: "2010-01-01",
       )
-      exporter.extra["name"] = "staff_logins"
+      exporter.extra["name"] = "admin_logins"
 
       report = export_report
 

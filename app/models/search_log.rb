@@ -175,14 +175,14 @@ end
 # Table name: search_logs
 #
 #  id                 :integer          not null, primary key
-#  term               :string           not null
-#  user_id            :integer
 #  ip_address         :inet
-#  search_result_id   :integer
-#  search_type        :integer          not null
-#  created_at         :datetime         not null
 #  search_result_type :integer
+#  search_type        :integer          not null
+#  term               :string           not null
 #  user_agent         :string(2000)
+#  created_at         :datetime         not null
+#  search_result_id   :integer
+#  user_id            :integer
 #
 # Indexes
 #

@@ -28,6 +28,11 @@ module Oneboxer
       "http://www.dropbox.com",
       "http://store.steampowered.com",
       "http://vimeo.com",
+      "https://reddit.com",
+      "https://www.reddit.com",
+      "https://old.reddit.com",
+      "https://np.reddit.com",
+      "https://new.reddit.com",
       "https://www.youtube.com",
       "https://youtu.be",
       "https://twitter.com",
@@ -120,6 +125,13 @@ module Oneboxer
   def self.invalidate(url)
     Discourse.cache.delete(onebox_cache_key(url))
     Discourse.cache.delete(onebox_failed_cache_key(url))
+  end
+
+  def self.inline_data_for(url)
+    engine_class = engine(url)
+    return if engine_class.nil? || !engine_class.method_defined?(:inline_data)
+
+    engine_class.new(url).inline_data
   end
 
   # Parse URLs out of HTML, returning the document when finished.

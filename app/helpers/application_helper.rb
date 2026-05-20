@@ -71,6 +71,12 @@ module ApplicationHelper
     ContentSecurityPolicy.nonce_placeholder(response.headers)
   end
 
+  def track_view_session_id_placeholder
+    response.headers[
+      ::Middleware::TrackViewSessionIdInjector::PLACEHOLDER_HEADER
+    ] ||= "[[track_view_session_id_placeholder_#{SecureRandom.hex}]]"
+  end
+
   def shared_session_key
     if SiteSetting.long_polling_base_url != "/" && current_user
       sk = "shared_session_key"
@@ -369,9 +375,17 @@ module ApplicationHelper
 
     if opts[:read_time] && opts[:read_time] > 0 && opts[:like_count] && opts[:like_count] > 0
       result << tag(:meta, name: "twitter:label1", value: I18n.t("reading_time"))
-      result << tag(:meta, name: "twitter:data1", value: "#{opts[:read_time]} mins 🕑")
+      result << tag(
+        :meta,
+        name: "twitter:data1",
+        value: I18n.t("reading_time_minutes", count: opts[:read_time]),
+      )
       result << tag(:meta, name: "twitter:label2", value: I18n.t("likes"))
-      result << tag(:meta, name: "twitter:data2", value: "#{opts[:like_count]} ❤")
+      result << tag(
+        :meta,
+        name: "twitter:data2",
+        value: I18n.t("likes_count", count: opts[:like_count]),
+      )
     end
 
     if opts[:published_time]
@@ -419,11 +433,22 @@ module ApplicationHelper
     end
   end
 
-  def discourse_track_view_session_tag
-    return if !SiteSetting.trigger_browser_pageview_events
-    <<~HTML.html_safe
-      <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
-    HTML
+  def discourse_pageview_tracking_meta_tags
+    if !SiteSetting.trigger_browser_pageview_events &&
+         !SiteSetting.use_beacon_for_browser_page_views &&
+         !SiteSetting.persist_browser_pageview_events
+      return ""
+    end
+
+    tags = +""
+    tags << tag.meta(
+      name: "discourse-track-view-session-id",
+      content: track_view_session_id_placeholder,
+    )
+    if SiteSetting.use_beacon_for_browser_page_views
+      tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
+    end
+    tags.html_safe
   end
 
   def gsub_emoji_to_unicode(str)
@@ -513,17 +538,8 @@ module ApplicationHelper
     end
   end
 
-  def include_splash_screen?
-    # A bit basic for now but will be expanded later
-    SiteSetting.splash_screen
-  end
-
   def custom_splash_screen_enabled?
-    return @custom_splash_screen_enabled if defined?(@custom_splash_screen_enabled)
-
-    @custom_splash_screen_enabled =
-      UpcomingChanges.enabled_for_user?(:enable_custom_splash_screen, current_user) &&
-        SiteSetting.splash_screen_image.is_a?(Upload)
+    @custom_splash_screen_enabled ||= SiteSetting.splash_screen_image.is_a?(Upload)
   end
 
   def splash_screen_image_animated?
@@ -742,20 +758,34 @@ module ApplicationHelper
     ).presence
   end
 
+  def crawler_post_schema_hash(post, topic)
+    @crawler_post_schema_hash ||= {}
+    @crawler_post_schema_hash[post.id] ||= begin
+      default = {
+        itemprop: "comment",
+        itemscope: true,
+        itemtype: "http://schema.org/Comment",
+      } unless post.is_first_post?
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_post_schema, default || {}, post, topic)
+    end
+  end
+
   def crawler_post_schema(post, topic)
-    default = {
-      itemprop: "comment",
-      itemscope: true,
-      itemtype: "http://schema.org/Comment",
-    } unless post.is_first_post?
-    tag.attributes(
-      DiscoursePluginRegistry.apply_modifier(
-        :topic_crawler_post_schema,
-        default || {},
-        post,
-        topic,
-      ),
-    )
+    tag.attributes(crawler_post_schema_hash(post, topic))
+  end
+
+  def crawler_post_schema_overridden?(post, topic)
+    hash = crawler_post_schema_hash(post, topic)
+    itemprop = hash[:itemprop]
+    (itemprop.present? && itemprop != "comment") || hash[:data].present?
+  end
+
+  def crawler_post_emits_microdata?(post, topic)
+    post.is_first_post? || crawler_post_schema_hash(post, topic)[:itemscope]
+  end
+
+  def crawler_post_schema_skip?(post, topic)
+    DiscoursePluginRegistry.apply_modifier(:topic_crawler_skip_post, false, post, topic)
   end
 
   # If there is plugin HTML return that, otherwise yield to the template

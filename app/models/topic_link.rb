@@ -46,6 +46,7 @@ class TopicLink < ActiveRecord::Base
              MIN(ftl.user_id) AS user_id,
              SUM(clicks) AS clicks
       FROM topic_links AS ftl
+      JOIN posts AS source_posts ON ftl.post_id = source_posts.id
       LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
       LEFT JOIN categories AS c ON c.id = ft.category_id
       LEFT JOIN posts AS target_posts ON ftl.link_post_id = target_posts.id
@@ -56,6 +57,7 @@ class TopicLink < ActiveRecord::Base
     SQL
 
     builder.where("ftl.topic_id = :topic_id", topic_id: topic_id)
+    apply_source_post_visibility_filters(builder, guardian, source_post: "source_posts")
     apply_link_visibility_filters(
       builder,
       link: "ftl",
@@ -208,6 +210,16 @@ class TopicLink < ActiveRecord::Base
     SQL
   end
   private_class_method :apply_link_visibility_filters
+
+  def self.apply_source_post_visibility_filters(builder, guardian, source_post:)
+    builder.where("#{source_post}.deleted_at IS NULL")
+    builder.where(
+      "#{source_post}.post_type IN (:visible_post_types)",
+      visible_post_types: Topic.visible_post_types(guardian.user),
+    )
+    builder.where("#{source_post}.hidden = false") unless guardian.is_staff?
+  end
+  private_class_method :apply_source_post_visibility_filters
 
   private
 
@@ -425,22 +437,22 @@ end
 # Table name: topic_links
 #
 #  id            :integer          not null, primary key
-#  topic_id      :integer          not null
-#  post_id       :integer
-#  user_id       :integer          not null
-#  url           :string           not null
+#  clicks        :integer          default(0), not null
+#  crawled_at    :datetime
 #  domain        :string(100)      not null
+#  extension     :string(10)
 #  internal      :boolean          default(FALSE), not null
-#  link_topic_id :integer
+#  quote         :boolean          default(FALSE), not null
+#  reflection    :boolean          default(FALSE)
+#  title         :string
+#  url           :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  reflection    :boolean          default(FALSE)
-#  clicks        :integer          default(0), not null
 #  link_post_id  :integer
-#  title         :string
-#  crawled_at    :datetime
-#  quote         :boolean          default(FALSE), not null
-#  extension     :string(10)
+#  link_topic_id :integer
+#  post_id       :integer
+#  topic_id      :integer          not null
+#  user_id       :integer          not null
 #
 # Indexes
 #

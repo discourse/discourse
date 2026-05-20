@@ -80,6 +80,11 @@ export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];
 
 export const INVITE_DESCRIPTION_MAX_LENGTH = 100;
 
+export const POSTING_REVIEW_GROUP_BASED_MODES = [
+  "everyone_except",
+  "no_one_except",
+];
+
 export const USER_OPTION_COMPOSITION_MODES = { markdown: 0, rich: 1 };
 
 export const UPCOMING_CHANGES_USER_ENABLED_REASONS = {

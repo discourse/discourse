@@ -221,18 +221,18 @@ end
 #
 # Table name: user_profiles
 #
-#  user_id                      :integer          not null, primary key
-#  location                     :string(3000)
-#  website                      :string(3000)
-#  bio_raw                      :text
 #  bio_cooked                   :text
-#  dismissed_banner_key         :integer
 #  bio_cooked_version           :integer
+#  bio_raw                      :text
+#  dismissed_banner_key         :integer
+#  location                     :string(3000)
 #  views                        :integer          default(0), not null
-#  profile_background_upload_id :integer
+#  website                      :string(3000)
 #  card_background_upload_id    :integer
-#  granted_title_badge_id       :bigint
 #  featured_topic_id            :integer
+#  granted_title_badge_id       :bigint
+#  profile_background_upload_id :integer
+#  user_id                      :integer          not null, primary key
 #
 # Indexes
 #

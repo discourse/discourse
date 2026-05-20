@@ -300,7 +300,6 @@ tr_TR:
       retry_staged_message:
         title: "Ağ hatası"
         action: "Tekrar gönderilsin mi?"
-      unreliable_network: "Ağ güvenilir değil, mesaj gönderme ve taslağı kaydetme çalışmayabilir"
       bookmark_message: "Yer İmi"
       bookmark_message_edit: "Yer İmini Düzenle"
       restore: "Silinen mesajı geri yükle"

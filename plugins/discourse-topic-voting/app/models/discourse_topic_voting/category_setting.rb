@@ -44,9 +44,9 @@ end
 # Table name: topic_voting_category_settings
 #
 #  id          :bigint           not null, primary key
-#  category_id :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  category_id :integer
 #
 # Indexes
 #

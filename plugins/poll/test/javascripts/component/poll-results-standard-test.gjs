@@ -34,7 +34,7 @@ const PRELOADEDVOTERS = {
   ],
 };
 
-module("Poll | Component | poll-results-standard", function (hooks) {
+module("Component | poll-results-standard", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the standard results Component correctly", async function (assert) {

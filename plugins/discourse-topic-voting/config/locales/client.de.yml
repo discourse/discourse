@@ -5,24 +5,30 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_topic_voting: "Discourse Themenabstimmung"
   js:
     category:
       sort_options:
         votes: "Stimmen"
     topic_voting:
+      category_type_ideas:
+        title: "Ideen"
       notification_label:
         vote_released: "Stimme zurückgegeben"
       title: "Themenabstimmung"
       reached_limit: "Du hast keine Stimmen mehr. Entferne eine bestehende Stimme!"
       list_votes: "Deine Stimmen auflisten"
-      votes_nav_help: "Themen mit den meisten Stimmen"
+      votes_nav_help: "Themen mit den meisten Stimmen aller Zeiten"
+      hot_nav_help: "Die aktuellsten Themen, einschließlich derer, bei denen kürzlich abgestimmt wurde"
       voted: "Du hast für dieses Thema gestimmt"
       allow_topic_voting: "Benutzern erlauben, für Themen in dieser Kategorie zu stimmen"
       vote_title: "Abstimmen"
       vote_title_plural: "Stimmen"
-      voted_title: "Abgestimmt"
-      voting_closed_title: "Geschlossen"
-      voting_limit: "Limit"
+      voting_closed_description: "Die Abstimmung für dieses Thema ist geschlossen"
       see_votes: "Du hast noch %{count}/%{max} Stimmen übrig"
       locked: "Gesperrt"
       locked_description: "Erhöhe deine Vertrauensstufe, um abzustimmen"
@@ -33,12 +39,17 @@ de:
         one: "Stimme"
         other: "Stimmen"
       remove_vote: "Stimme entfernen"
+      watch_topic: "Mich über neue Beiträge benachrichtigen"
+      no_votes_yet: "Bisher hat noch niemand dafür gestimmt"
+      and_more_voters: "und %{count} weitere …"
+      show_voters: "Anzeigen, wer abgestimmt hat"
+      vote_count_thousands: "%{count} T."
       no_votes_title_self: "Du hast noch für kein Thema gestimmt"
       no_votes_title_others: "%{username} hat noch für kein Thema gestimmt"
     filters:
       votes:
         title: "Stimmen"
-        help: "Themen mit den meisten Stimmen"
+        help: "Themen mit den meisten Stimmen aller Zeiten"
       my_votes:
         title: "Meine Stimmen"
         help: "Themen, über die du abgestimmt hast"

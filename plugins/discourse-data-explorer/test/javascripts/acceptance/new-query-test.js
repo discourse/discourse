@@ -2,7 +2,7 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Data Explorer Plugin | New Query", function (needs) {
+acceptance("New Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 

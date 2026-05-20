@@ -25,7 +25,7 @@ function unsolvedTopicFixture() {
 
 const STORAGE_KEY = "discourse-solved-hide-category-change-confirmation";
 
-acceptance("Discourse Solved | Solved Removal Confirmation", function (needs) {
+acceptance("Solved Removal Confirmation", function (needs) {
   needs.user({ admin: true });
 
   needs.settings({

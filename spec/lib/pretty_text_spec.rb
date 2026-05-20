@@ -1927,6 +1927,37 @@ RSpec.describe PrettyText do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
     end
 
+    tag_with_periods = Fabricate(:tag, name: "sam.i.am")
+    Fabricate(:topic, tags: [tag_with_periods])
+    cooked = PrettyText.cook(" #sam.i.am", user_id: user.id)
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag_with_periods.url,
+        "data-type": "tag",
+        "data-slug": tag_with_periods.name,
+        "data-id": tag_with_periods.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+
+    cooked = PrettyText.cook(" #known::tag.", user_id: user.id)
+    expect(cooked).to include("</a>.")
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)", user_id: user.id)
 
     html = <<~HTML
@@ -2591,6 +2622,27 @@ HTML
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
+    end
+
+    it "handles attachment filenames with markdown characters" do
+      SiteSetting.authorized_extensions = "txt"
+
+      {
+        "_test_file_.txt" => "<em>",
+        "*test*.txt" => "<em>",
+        "**bold**.txt" => "<strong>",
+        "~~strike~~.txt" => "<s>",
+        "`code`.txt" => "<code>",
+      }.each do |filename, bad_tag|
+        upload = Fabricate(:upload, original_filename: filename, extension: "txt")
+        markdown = UploadMarkdown.new(upload).to_markdown
+        cooked = PrettyText.cook(markdown)
+
+        expect(cooked).to include('class="attachment"'),
+        "expected attachment class for filename: #{filename}\nmarkdown: #{markdown}\ncooked: #{cooked}"
+        expect(cooked).not_to include(bad_tag),
+        "unexpected #{bad_tag} for filename: #{filename}\nmarkdown: #{markdown}\ncooked: #{cooked}"
+      end
     end
 
     it "can place a blank image if we can not find the upload" do

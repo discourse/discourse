@@ -182,6 +182,7 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/sendgrid.json",
            headers: {
+             "Content-Type" => "application/json",
              "X-Twilio-Email-Event-Webhook-Signature" =>
                "MEUCIGHQVtGj+Y3LkG9fLcxf3qfI10QysgDWmMOVmxG0u6ZUAiEAyBiXDWzM+uOe5W0JuG+luQAbPIqHh89M15TluLtEZtM=",
              "X-Twilio-Email-Event-Webhook-Timestamp" => "1600112502",
@@ -198,6 +199,7 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/sendgrid.json",
            headers: {
+             "Content-Type" => "application/json",
              "X-Twilio-Email-Event-Webhook-Signature" =>
                "MEUCIQCtIHJeH93Y+qpYeWrySphQgpNGNr/U+UyUlBkU6n7RAwIgJTz2C+8a8xonZGi6BpSzoQsbVRamr2nlxFDWYNH3j/0=",
              "X-Twilio-Email-Event-Webhook-Timestamp" => "1600112502",
@@ -213,6 +215,7 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/sendgrid.json",
            headers: {
+             "Content-Type" => "application/json",
              "X-Twilio-Email-Event-Webhook-Signature" =>
                "MEUCIQCtIHJeH93Y+qpYeWrySphQgpNGNr/U+UyUlBkU6n7RAwIgJTz2C+8a8xonZGi6BpSzoQsbVRamr2nlxFDWYNH3j/0=",
              "X-Twilio-Email-Event-Webhook-Timestamp" => "1600112502",
@@ -229,6 +232,7 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/sendgrid.json",
            headers: {
+             "Content-Type" => "application/json",
              "X-Twilio-Email-Event-Webhook-Timestamp" => "1600112492",
            },
            params:
@@ -243,6 +247,7 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/sendgrid.json",
            headers: {
+             "Content-Type" => "application/json",
              "X-Twilio-Email-Event-Webhook-Signature" =>
                "MEUCIGHQVtGj+Y3LkG9fLcxf3qfI10QysgDWmMOVmxG0u6ZUAiEAyBiXDWzM+uOe5W0JuG+luQAbPIqHh89M15TluLtEZtM=",
            },
